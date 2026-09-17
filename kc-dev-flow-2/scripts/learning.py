@@ -18,6 +18,14 @@ class Invalid(ValueError):
     pass
 
 
+class Blocked(Invalid):
+    """A new claim was refused because an in-flight sibling job holds the store."""
+
+    def __init__(self, message, blocking):
+        super().__init__(message)
+        self.blocking = blocking
+
+
 def require(condition, message):
     if not condition:
         raise Invalid(message)
@@ -259,6 +267,67 @@ def inspect_delivery(directory, result_digest):
     return raw, digest, record
 
 
+def release_record(value):
+    keys(value, "schema_version owner reason result_digest delivery_digest authority")
+    require(type(value["schema_version"]) is int and value["schema_version"] == 1, "release schema_version")
+    for field in ("owner", "reason", "authority"):
+        text(value[field])
+    for field in ("result_digest", "delivery_digest"):
+        require(isinstance(value[field], str) and re.fullmatch(r"[0-9a-f]{64}", value[field]), f"release {field}")
+    return value
+
+
+def inspect_release(directory):
+    path = directory / "release.json"
+    raw = path.read_bytes() if path.exists() else None
+    digest = hashlib.sha256(b"missing" if raw is None else raw).hexdigest()
+    record = None
+    if raw is not None:
+        try:
+            record = release_record(strict_json(raw))
+        except (ValueError, TypeError, KeyError, UnicodeError):
+            record = None
+    return raw, digest, record
+
+
+def release_valid(release, result_digest, delivery_digest):
+    return release is not None and release["result_digest"] == result_digest and release["delivery_digest"] == delivery_digest
+
+
+def sibling_status(path):
+    """Blocking classification for one sibling job directory against the hold predicate table."""
+    _, result_digest, record = inspect(path)
+    if record is None:
+        return True, {"job": path.name, "record": "uncertain", "delivery": None, "released": False}
+    if record["state"] == "pending":
+        return True, {"job": path.name, "record": "pending", "delivery": None, "released": False}
+    if record["proposal"] is None:
+        return False, None
+    delivery_raw, delivery_digest, delivery = inspect_delivery(path, result_digest)
+    release_raw, _, release = inspect_release(path)
+    released = release_raw is not None
+    valid_release = release_valid(release, result_digest, delivery_digest)
+    if delivery is not None:
+        if delivery["state"] == "open":
+            return True, {"job": path.name, "record": "completed", "delivery": "open", "released": released}
+        if delivery["state"] in ("merged", "closed"):
+            return False, None
+        observed_state = delivery["observation"]["state"] if delivery["observation"] else None
+        if observed_state == "absent" and valid_release:
+            return False, None
+        return True, {"job": path.name, "record": "completed", "delivery": "uncertain", "released": released}
+    delivery_state = "missing" if delivery_raw is None else "uncertain"
+    if delivery_state == "missing" and valid_release:
+        return False, None
+    return True, {"job": path.name, "record": "completed", "delivery": delivery_state, "released": released}
+
+
+def blocking_siblings(home, key):
+    return [info for path in sorted(home.glob("*"))
+            if path.is_dir() and path.name != key and re.fullmatch(r"[0-9a-f]{64}", path.name)
+            for blocks, info in [sibling_status(path)] if blocks]
+
+
 def notice(directory):
     result = view(directory)
     if result["state"] == "missing":
@@ -268,7 +337,15 @@ def notice(directory):
     if delivery:
         shown.update({k: v for k, v in delivery.items() if k != "token"})
     result["delivery"] = shown
-    result["notice_digest"] = hashlib.sha256(encoded([result["digest"], digest])).hexdigest()
+    release_raw, release_digest, release = inspect_release(directory)
+    digest_parts = [result["digest"], digest]
+    if release_raw is not None:
+        release_shown = {"state": "uncertain" if release is None else "released", "digest": release_digest}
+        if release is not None:
+            release_shown.update(release)
+        result["release"] = release_shown
+        digest_parts.append(release_digest)
+    result["notice_digest"] = hashlib.sha256(encoded(digest_parts)).hexdigest()
     try:
         acknowledged = read_json(directory / "acknowledgement.json")
         keys(acknowledged, "digest")
@@ -291,6 +368,8 @@ def delivery_operation(args, directory):
                 "delivery requires a completed result with changes")
         raw, digest, record = inspect_delivery(directory, result_digest)
         if args.command == "delivery-claim":
+            release_raw, _, _ = inspect_release(directory)
+            require(release_raw is None, "job is released; released jobs gain no delivery authority")
             plan = delivery_plan(read_json(args.plan), directory.name, result_digest)
             text(args.owner)
             if raw is not None:
@@ -320,6 +399,9 @@ def delivery_operation(args, directory):
             plan = delivery_plan(read_json(args.plan), directory.name, result_digest)
             observed = observation(read_json(args.observation), plan)
             require(observed["state"] != "unknown", "unknown provider result cannot authorize recovery")
+            if observed["state"] == "absent":
+                release_raw, _, _ = inspect_release(directory)
+                require(release_raw is None, "job is released; absent reconciliation refused")
             if record:
                 require(record["plan"] == plan, "recovery cannot change reviewed plan")
                 previous = record["observation"]
@@ -345,6 +427,34 @@ def delivery_operation(args, directory):
         return output
 
 
+def release_operation(args, directory):
+    require(directory.is_dir(), "job missing")
+    with locked(directory):
+        text(args.owner)
+        text(args.reason)
+        _, result_digest, record = inspect(directory)
+        require(record is not None and record["state"] == "completed" and record["proposal"] is not None,
+                "release requires a completed result with changes")
+        delivery_raw, delivery_digest, delivery = inspect_delivery(directory, result_digest)
+        release_raw, _, _ = inspect_release(directory)
+        if release_raw is not None:
+            return notice(directory)
+        require(args.expected == notice(directory)["notice_digest"], "notice changed since presentation")
+        if delivery is not None:
+            require(delivery["state"] not in ("open", "merged", "closed"),
+                    "delivery is open, merged or closed; release refused")
+            observed_state = delivery["observation"]["state"] if delivery["observation"] else None
+            require(observed_state == "absent",
+                    "delivery uncertain and not reconciled to absent; use delivery-recover first")
+        else:
+            require(delivery_raw is None, "delivery record is torn; reconcile before release")
+        payload = {"schema_version": 1, "owner": args.owner, "reason": args.reason,
+                   "result_digest": result_digest, "delivery_digest": delivery_digest,
+                   "authority": "caller attestation"}
+        atomic_write(directory / "release.json", encoded(payload))
+        return notice(directory)
+
+
 def pending(value, owner, recovery=None):
     text(owner)
     return {"schema_version": 1, "state": "pending", "input": value, "owner": owner,
@@ -364,6 +474,9 @@ def operate(args):
     if args.command.startswith("delivery-") or args.command == "ack":
         require(re.fullmatch(r"[0-9a-f]{64}", args.job), "invalid job identifier")
         return delivery_operation(args, home / args.job)
+    if args.command == "release":
+        require(re.fullmatch(r"[0-9a-f]{64}", args.job), "invalid job identifier")
+        return release_operation(args, home / args.job)
     value = pack(read_json(args.input)) if args.command in ("claim", "recover") else None
     if value is not None:
         if reasons := eligibility(value):
@@ -378,11 +491,20 @@ def operate(args):
     created = False
     if args.command == "claim":
         home.mkdir(parents=True, exist_ok=True)
-        try:
-            directory.mkdir()
-            created = True
-        except FileExistsError:
-            pass
+        if not directory.is_dir():
+            # Sibling of home, not inside it: a lock file inside home would perturb
+            # home.iterdir() counts that other callers (notices, the race test) rely on.
+            with (home.parent / "learning.lock").open("a") as store:
+                fcntl.flock(store, fcntl.LOCK_EX)
+                try:
+                    if not directory.is_dir():
+                        if blocking := blocking_siblings(home, key):
+                            raise Blocked("learning job in flight; settle or release the blocking job first",
+                                          blocking)
+                        directory.mkdir()
+                        created = True
+                finally:
+                    fcntl.flock(store, fcntl.LOCK_UN)
     require(directory.is_dir(), "job missing; claim it explicitly")
     with locked(directory):
         raw, digest, record = inspect(directory)
@@ -459,10 +581,16 @@ def main():
     for name in ("expected", "reason", "input", "owner"):
         recover.add_argument("--" + name, required=True)
     recover.add_argument("--owner-state", choices=("running", "unknown", "stopped"), required=True)
+    release = commands.add_parser("release")
+    for name in ("job", "expected", "owner", "reason"):
+        release.add_argument("--" + name, required=True)
     try:
         result = operate(parser.parse_args())
     except (Invalid, OSError, ValueError, subprocess.CalledProcessError) as error:
-        print(json.dumps({"state": "error", "error": str(error)}))
+        payload = {"state": "error", "error": str(error)}
+        if isinstance(error, Blocked):
+            payload["blocking"] = error.blocking
+        print(json.dumps(payload, ensure_ascii=False))
         return 1
     print(json.dumps(result, ensure_ascii=False))
     return 0
