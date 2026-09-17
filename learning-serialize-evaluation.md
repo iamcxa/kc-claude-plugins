@@ -29,6 +29,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-09-17T03:23:59Z
 ---
 
 Two closed tasks were evaluated for learning while neither learning PR had merged.
