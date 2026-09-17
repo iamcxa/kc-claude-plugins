@@ -198,7 +198,7 @@ class LearningTests(unittest.TestCase):
                 "spec=importlib.util.spec_from_file_location('learning',sys.argv[1]); "
                 "m=importlib.util.module_from_spec(spec); spec.loader.exec_module(m); "
                 "original=m.blocking_siblings; "
-                "m.blocking_siblings=lambda *a,**k: (time.sleep(0.3), original(*a,**k))[1]; "
+                "m.blocking_siblings=lambda *a,**k: [original(*a,**k), time.sleep(0.3)][0]; "
                 "sys.argv=sys.argv[1:]; sys.exit(m.main())")
         inputs = []
         for suffix in ("race-a", "race-b"):
