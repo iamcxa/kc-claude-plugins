@@ -1,7 +1,7 @@
 ---
 id:
 title: serialize learning evaluation while another learning job is in flight
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -66,8 +66,11 @@ gates:
                 reason: Captain approved validation attempt 3 PASSED at candidate 93258e23 with the recorded limits.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-17T03:23:59Z
+verdict: PASSED
+completed: 2026-09-17T08:09:59Z
+archived: 2026-09-17T08:09:59Z
 ---
 
 Two closed tasks were evaluated for learning while neither learning PR had merged.
