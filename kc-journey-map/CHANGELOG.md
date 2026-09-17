@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.3.0...kc-journey-map-v0.4.0) (2026-09-16)
+
+
+### Features
+
+* **kc-journey-map:** add human-led architecture review ([#463](https://github.com/iamcxa/kc-claude-plugins/issues/463)) ([6570fca](https://github.com/iamcxa/kc-claude-plugins/commit/6570fca94936745a225f2e8fa301869746b20ac7))
+* **kc-journey-map:** open a linked document chapter in a canvas popup ([#468](https://github.com/iamcxa/kc-claude-plugins/issues/468)) ([ba444ed](https://github.com/iamcxa/kc-claude-plugins/commit/ba444ed9b2afc1b6b353286322c9ea5828fed0d6))
+* **kc-journey-map:** store images, share a board ad hoc, save it to the repo ([#466](https://github.com/iamcxa/kc-claude-plugins/issues/466)) ([64ed82b](https://github.com/iamcxa/kc-claude-plugins/commit/64ed82b399949582adb7a861c55ae6ad00cd3e0f))
+
 ## [0.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.2.1...kc-journey-map-v0.3.0) (2026-09-14)
 
 

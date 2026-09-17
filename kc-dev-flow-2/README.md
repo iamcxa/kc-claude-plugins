@@ -65,6 +65,12 @@ use `/kc-dev-flow-2:dev`, not a bare `/dev`; Codex shorthand resolution remains
 unverified. Earlier six-skill model reads and later seven-skill discovery do not
 prove the new entry executes correctly.
 
+If this package is not yet installed, follow [Controlled trial](#controlled-trial)
+for the exact Claude and Codex install commands. If the project has no adopted
+Spacedock workflow, follow the [SD adoption reference](references/sd/adoption.md)
+directly; the entry only detects and reports that gap, it does not install or
+adopt on its own.
+
 ## Framework
 
 The First Officer (FO) recommends a profile, records the user's selection and

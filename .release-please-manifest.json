@@ -4,9 +4,9 @@
   "kc-nightwatch": "0.5.1",
   "kc-hyperfocus": "1.6.4",
   "kc-team-ops": "1.8.0",
-  "kc-journey-map": "0.3.0",
+  "kc-journey-map": "0.4.0",
   "kc-pr-flow": "1.12.0",
   "kc-dev-flow": "4.6.0",
   "kc-ship-flow": "0.3.0",
-  "kc-dev-flow-2": "0.1.0"
+  "kc-dev-flow-2": "0.2.0"
 }
