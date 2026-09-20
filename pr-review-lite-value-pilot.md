@@ -150,3 +150,15 @@ The single recommendation is to approve this development-first design into an im
 ### Summary
 
 Prepared one reviewable development-only launch proposal using the existing optional CLI worker path, with four USD 4.9612 stopping thresholds (USD 19.8448 nominal total); proposed treatment allocation is USD 2.4806 outer plus USD 2.4806 across all capability attempts. Recommend one Captain decision accepting that backend-and-budget-stop proposal, including unbounded in-flight overshoot risk; if an absolute invoice ceiling remains required, hold rather than build a new enforcement system. The approved native design, original 20-file/6,600-line/1,903-focused-line limits, historical records and separate unfunded five-pair evaluation remain intact; this is readiness only, not completed product implementation or validation PASS.
+
+### Feedback Cycles
+
+#### FO readiness disposition — 2026-09-20
+
+The three assigned readiness outputs are delivered; the checkpoint does not complete product implementation or satisfy the later live quality/time criteria. State remains implementation at the explicit Captain backend/spend decision. Do not dispatch validation or launch a model call from this report alone.
+
+- **Needs decision — experiment method.** The approved attended native Lite comparison requires a total 120-second capability deadline. The source sets that requirement; the inspected native documentation did not establish enforcement, which is missing evidence rather than a demonstrated defect. The retained CLI adapter has a source-owned communicate timeout and process-group cleanup. Selecting it changes the treatment method and permits conclusions only about the CLI-backed route. FO recommends that small method revision for one development pair; no native-proof claim or new enforcement project follows.
+- **Needs decision — budget interpretation, coupled to the selected method.** The proposed USD 19.8448 is the sum of budget-stop settings, not a substantiated maximum bill. Existing vendor documentation says stopping follows reaching reported spend; this review found no bound on in-flight overshoot. Separate CLI workers require their own receipts added once to the outer receipt. FO recommends presenting the exact one-pair, stop-threshold proposal for Captain acceptance, with failure ending the pair and no replacement/repair runs. No spending grant exists yet.
+- **Retained limits.** Legacy admission, model availability, calibration, startup/configuration parity and live cancellation/usage remain unexecuted. Node syntax and deterministic plan output prove only those narrow checks. The .mjs sample's missing test-evidence signal is recorded and is not silently corrected or treated as rendered-UI proof. Original product and historical workflow bytes remain unchanged.
+
+Before any accepted launch, carry the exact Captain method/spend decision into the task and run assignment, settle the recorded operational prerequisites, and preserve all raw failures. If the Captain requires a strict invoice maximum, hold with that specific unmet requirement. The FO has authorized neither product repair nor experiment execution in this disposition.
