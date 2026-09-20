@@ -170,3 +170,21 @@ The Captain replied `核准` to the presented one-development-pair proposal: use
 FO will first dispatch the retained implementation owner for the single admission call and its no-model setup/readbacks, then drive the remaining authorized comparison only while the frozen prerequisites hold. Human calibration-key confirmation is requested separately and remains pending until the actual Captain answer; approval of spend is not fabricated calibration evidence. Admission may run independently before that answer. Admission mismatch, invalidity, execution failure, budget stop or unavailable required evidence ends the pair; preserve raw evidence, actual known/unknown cost and not-run portions. No silent retry, fallback, target replacement, source repair or budget reset is authorized.
 
 This is an implementation-stage experiment checkpoint under the approved Pilot, not a new workflow gate. The preparation report remains historical. Return all outcomes to FO; further stage advancement requires the actual comparison outcome and its proper review route.
+
+
+## Stage Report: implementation (cycle 2)
+
+- FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
+  Exact source/runtime checks passed, but the intended auth-only preflight entered a model session before registration without a budget/deadline flag; stopped as operator execution error. Intended admission was not run.
+- DONE: Preserve unedited stream, command, terminal, model/configuration and actual usage evidence; compare actual six-mode legacy admission with the frozen candidate planner and report proceed or stop without forcing Lite, repairing outputs, rerunning or changing target.
+  [Checkpoint](pr-review-lite-value-pilot/admission-checkpoint/README.md) retains raw transcript/input privately, command and interruption evidence; original stdout/stderr and final cost are unavailable. Actual legacy modes are absent, so no eligibility comparison/pass is claimed and disposition is STOP.
+- DONE: Write and commit a task-scoped checkpoint and report to FO with exact cost/unknowns and any pending human calibration/timing prerequisite; run no review arm or judge until FO resumes the same authorized attempt.
+  [Sanitized summary and hashes](pr-review-lite-value-pilot/admission-checkpoint/summary.json): four unique observed main message IDs, 8 input / 17,490 cache-write / 36,809 cache-read / 3,047 output tokens; final dollars and additional Max billing unknown. Human calibration/timing remain unperformed; pair stopped.
+- DONE: Bound unintended effects and terminate owned work.
+  Effective snapshot shows Opus 5 and Bash/Glob/Grep/Read; three denied tools, two successful local Globs and one git rev-parse; no Agent/write/network tool observed. Product and target tracked trees clean, 74 plugin files unchanged, original launch PIDs/matching run CLIs absent.
+- SKIPPED: Intended admission, control, treatment, calibration, judge, replay/replacement, product repair and stage/gate transition.
+  Failure ends this pair; accidental preflight is not eligible comparison evidence. Direct auth subcommand, explicit DEVNULL and a pre-launch deadline are remediation guidance only, not a retry authorization.
+
+### Summary
+
+The bounded experiment segment failed before valid admission because our auth-check invocation entered a model path and inherited its enclosing Python script as user input. The process was stopped and the pair remains stopped; raw transcript plus observed partial usage are retained, while missing final cost and lost stdout/stderr remain unknown/unavailable. This is operator execution failure, not candidate behavior or Lite quality; status stays implementation and no further model step, product change or validation was performed.

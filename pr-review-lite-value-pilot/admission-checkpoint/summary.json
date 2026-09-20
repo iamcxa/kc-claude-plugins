@@ -1,0 +1,82 @@
+{
+  "status": "STOP_OPERATOR_PREFLIGHT_ERROR",
+  "recorded_utc": "2026-09-20T02:10:49Z",
+  "accidental_session_id": "156002d7-7954-4b78-bf32-ccbc0fb9488d",
+  "intended_steps": {
+    "admission": "not run as intended",
+    "control": "not run",
+    "treatment": "not run",
+    "calibration": "not run",
+    "judge": "not run"
+  },
+  "registered_before_accidental_calls": false,
+  "eligible_comparison_evidence": false,
+  "auth_lane": "claude.ai Max",
+  "observed_model": "claude-opus-5",
+  "commanded_effort": "high",
+  "effective_effort": "unverified; no independent runtime field retained",
+  "effective_tool_names": [
+    "Bash",
+    "Glob",
+    "Grep",
+    "Read"
+  ],
+  "unique_observed_main_message_ids": 4,
+  "assistant_record_count": 11,
+  "observed_usage_subtotals": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 17490,
+    "cache_read_input_tokens": 36809,
+    "output_tokens": 3047
+  },
+  "usage_completeness": "unknown: terminated session, no final host receipt, possible in-flight/background usage not captured",
+  "final_host_cost_usd": null,
+  "additional_billed_dollars": null,
+  "accidental_command_budget_flag": false,
+  "accidental_command_deadline_flag": false,
+  "termination": "SIGTERM to PID 39866; original PIDs 39866/39865/39745 no longer present",
+  "child_exit_code": null,
+  "enclosing_python_exit_code": 1,
+  "original_stdout_retained": false,
+  "original_stderr_retained": false,
+  "tool_effects": {
+    "denied_bash": 2,
+    "denied_glob": 1,
+    "successful_glob": 2,
+    "successful_git_rev_parse": 1,
+    "agent_dispatches_observed": 0,
+    "write_tools_observed": 0,
+    "network_tools_observed": 0
+  },
+  "tracked_product_changes": false,
+  "tracked_target_changes": false,
+  "pinned_control_files_changed": 0,
+  "private_evidence_root": "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v2/.worktrees/spacedock-ensign-pr-review-lite-value-pilot/.context/pr-review-lite-value-pilot/runs/dev434/registration",
+  "private_evidence_sha256": {
+    "live-sample.json": "018c2f5a8d9fabdc9ca0322ad983c930c94b798aeab503f09398157ab3f15b66",
+    "configured-auth.stdout": "37fca9dae76d3bfa755fac9db385f538fd02af367ad9d6a8cabcb6aa3a938d1b",
+    "accidental-submitted-user-text.txt": "df8b468f08ac48b0cef7814af300b1562b22842ce7c0ca7c90ce12ed62cc62ac",
+    "configured-auth-interruption.json": "2d96ab41f93adac83493ac72158bd0287880c5cff9ac4b892c97fed12510ba77",
+    "failed-auth-command.json": "9a34137304c49aae741ff71fe43953b235e661d63c64cac98b3f8704522bc4bd",
+    "configured-auth.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "plugin-files.json": "7838490242cfb55160f3a0e9613cf2a466d5a581c98274d87e681d2c2cbc91e0",
+    "failed-auth-summary.private.json": "ac4fe09b299cabf90a5b9d9da7a379cb9c0f93ee6da33d1250b26d0fb5a6f268",
+    "process-readback.json": "f3c4d8b1c9634fc2d59efd02803832d006da98b3f99ab8d1a3afaf55dc609b02",
+    "failed-auth-session.raw.jsonl": "65c4764bdd0f78ee81efd5b3b028e0344bf47a895ba08fadc02a44055c86defa",
+    "preflight.json": "f8bec0dae8da51fec4e28f3eea7e3ad2688b8babf6dde4bd39346eb43158222c",
+    "configured-auth-check.json": "0bd79ddf4bcc7ab94e02cc52c376589eaf514d4d5339b13f9329785c9d181cc4",
+    "effective-snapshot-summary.json": "50e361219b2c5f93dafb5c8f12e513a2432a787fb3aefe2e4c2da0a5e5eee815"
+  },
+  "actual_legacy_modes": null,
+  "frozen_candidate_modes": {
+    "agent_tier": "lite",
+    "pr_archetype": "bugfix",
+    "full_pass": false,
+    "probe_required": false,
+    "cross_model": false,
+    "noise_filter": false
+  },
+  "human_calibration": "pending; never inferred",
+  "arm_external_timing": "not started; no human stopwatch claimed",
+  "next": "FO reports stopped pair. No replay, replacement, budget reset, next model step or product repair."
+}
