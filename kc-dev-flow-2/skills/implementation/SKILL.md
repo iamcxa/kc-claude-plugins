@@ -32,5 +32,9 @@ loads the current selected references. End the dispatch context with a short
 profile/boundary reminder rather than another copy of the rules.
 When work changes retained documents or behavior they describe, read
 [retained-document practices](../../references/retained-documents.md).
-Return the stage output and unresolved decisions to FO using the existing SD
-report contract; this skill grants no state, approval or delivery authority.
+Return the stage output and unresolved decisions to FO in a stage report
+Spacedock 0.27.2 parses by exact form: a `## Stage Report: <stage>` heading with
+nothing else on that line, then unindented `- DONE: <item>`, `- SKIPPED: <item>`,
+or `- FAILED: <item>` bullets — not `- [x]`. Checklist parsing stops at the first
+`### ` sub-heading, so put any `### ` sections after the bullets, not inside them.
+This skill grants no state, approval or delivery authority.

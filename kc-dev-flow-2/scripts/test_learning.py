@@ -572,6 +572,14 @@ class LearningTests(unittest.TestCase):
                         "--owner-state", owner_state, "--reason", "Synthetic owner stopped; provider lookup inspected",
                         "--owner", "new-owner", "--plan", self.plan, "--observation", self.observed(plan, state), code=code)
 
+    def reissue(self, claim, plan, state, owner="delivery-owner", owner_state="running", expected=None, code=0):
+        # A live owner honestly attests running/unknown (never a false "stopped") and asks for
+        # its own lost token back; matches the delivery-claim owner used by deliver().
+        record = self.cli("notices", "--all")["notices"][0]
+        return self.cli("delivery-recover", "--job", claim["job"], "--expected", expected or record["delivery"]["digest"],
+                        "--owner-state", owner_state, "--reason", "Synthetic lost token; owner still running",
+                        "--owner", owner, "--plan", self.plan, "--observation", self.observed(plan, state), code=code)
+
     def test_notices_no_directory_creation_and_digest_ack(self):
         self.assertEqual(self.cli("notices"), {"notices": []})
         self.assertEqual(self.cli("notices", "--all"), {"notices": []})
@@ -674,6 +682,55 @@ class LearningTests(unittest.TestCase):
         archived = list(path.parent.glob("prior-delivery-*.json"))
         self.assertEqual(len(archived), 1)
         self.assertEqual(archived[0].read_bytes(), b'{"state":')
+
+    def test_delivery_reissue_to_same_owner_without_stopped_attestation(self):
+        claim, plan = self.delivery_fixture()
+        original = self.deliver(claim)
+        # A different owner gets no honest-attestation shortcut; it still needs --owner-state stopped.
+        blocked = self.reissue(claim, plan, "absent", owner="someone-else", code=1)
+        self.assertIn("stopped", blocked["error"])
+        # The live owner reissues honestly (no false "stopped" claim) before anything was sent.
+        renewed = self.reissue(claim, plan, "absent")
+        self.assertTrue(renewed["delivery_claimed"])
+        self.assertNotEqual(original["delivery_token"], renewed["delivery_token"])
+        # The lost token is dead; the reissued one works.
+        self.cli("delivery-record", "--job", claim["job"], "--token", original["delivery_token"],
+                 "--observation", self.observed(plan, "open"), code=1)
+        opened = self.cli("delivery-record", "--job", claim["job"], "--token", renewed["delivery_token"],
+                          "--observation", self.observed(plan, "open"))
+        self.assertEqual(opened["delivery"]["state"], "open")
+
+    def test_delivery_reissue_requires_confirmed_absent_observation(self):
+        claim, plan = self.delivery_fixture()
+        self.deliver(claim)
+        # A same-owner, honestly-running reissue attempt still needs its own confirmed-absent
+        # check; an already-found result does not authorize skipping the stopped attestation.
+        refused = self.reissue(claim, plan, "open", code=1)
+        self.assertIn("stopped", refused["error"])
+        # An unknown provider result is refused on its own, unrelated, ground either way.
+        unknown = self.reissue(claim, plan, "unknown", code=1)
+        self.assertIn("unknown provider result", unknown["error"])
+
+    def test_delivery_reissue_refused_once_anything_is_observed(self):
+        claim, plan = self.delivery_fixture()
+        first = self.deliver(claim)
+        self.cli("delivery-record", "--job", claim["job"], "--token", first["delivery_token"],
+                 "--observation", self.observed(plan, "open"))
+        before = (self.record_path(claim["job"]).parent / "delivery.json").read_bytes()
+        refused = self.reissue(claim, plan, "absent", code=1)
+        self.assertIn("stopped", refused["error"])
+        self.assertEqual((self.record_path(claim["job"]).parent / "delivery.json").read_bytes(), before)
+
+    def test_delivery_reissue_refused_after_merged_stays_non_regressing(self):
+        claim, plan = self.delivery_fixture()
+        first = self.deliver(claim)
+        self.cli("delivery-record", "--job", claim["job"], "--token", first["delivery_token"],
+                 "--observation", self.observed(plan, "merged", draft=False))
+        before = (self.record_path(claim["job"]).parent / "delivery.json").read_bytes()
+        refused = self.reissue(claim, plan, "absent", code=1)
+        self.assertIn("stopped", refused["error"])
+        self.assertEqual((self.record_path(claim["job"]).parent / "delivery.json").read_bytes(), before)
+        self.assertEqual(self.cli("notices")["notices"][0]["delivery"]["state"], "merged")
 
 
 if __name__ == "__main__":

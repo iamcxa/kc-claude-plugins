@@ -392,13 +392,21 @@ def delivery_operation(args, directory):
             record = {**record, "state": observed["state"] if observed["state"] != "unknown" else "uncertain",
                       "observation": observed}
         else:
-            require(args.owner_state == "stopped", "verify delivery owner stopped before recovery")
-            require(args.expected == digest, "delivery changed since observation")
             text(args.reason)
             text(args.owner)
+            require(args.expected == digest, "delivery changed since observation")
             plan = delivery_plan(read_json(args.plan), directory.name, result_digest)
             observed = observation(read_json(args.observation), plan)
             require(observed["state"] != "unknown", "unknown provider result cannot authorize recovery")
+            # A live owner cannot honestly attest --owner-state stopped. Reissuing to the
+            # same owner is safe without that attestation only when nothing has been sent
+            # under the lost token yet (no stored observation) and the caller's own
+            # confirmed-absent provider check proves it still hasn't.
+            self_reissue = (record is not None and record["observation"] is None
+                             and record["owner"] == args.owner and observed["state"] == "absent")
+            require(args.owner_state == "stopped" or self_reissue,
+                    "verify delivery owner stopped before recovery, or reissue as the same "
+                    "owner with no prior delivery observation and a confirmed-absent check")
             if observed["state"] == "absent":
                 release_raw, _, _ = inspect_release(directory)
                 require(release_raw is None, "job is released; absent reconciliation refused")
@@ -416,9 +424,11 @@ def delivery_operation(args, directory):
                 require(archive.read_bytes() == prior, "delivery recovery archive conflict")
             else:
                 atomic_write(archive, prior)
+            owner_state = ("stopped (caller attestation)" if args.owner_state == "stopped"
+                            else "reissued to same owner (confirmed-absent observation)")
             record = {"schema_version": 1, "state": observed["state"] if observed["state"] != "absent" else "uncertain",
                       "owner": args.owner, "token": secrets.token_hex(32), "plan": plan, "observation": observed,
-                      "recovery": {"prior_digest": digest, "reason": args.reason, "owner_state": "stopped (caller attestation)"}}
+                      "recovery": {"prior_digest": digest, "reason": args.reason, "owner_state": owner_state}}
         atomic_write(directory / "delivery.json", encoded(record))
         output = notice(directory)
         if args.command in ("delivery-claim", "delivery-recover"):
