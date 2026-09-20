@@ -4,7 +4,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-pr-review-lite-value-pilot
 pr:
 gates:
     version: 1
