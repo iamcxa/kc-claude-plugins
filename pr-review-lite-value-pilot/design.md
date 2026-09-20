@@ -26,10 +26,10 @@ The useful unit is one attended review, from Kent's start message to delivery of
 
 ```mermaid
 flowchart TD
-  A[Captain approves design] --> B{Separate spend authority and host controls ready?}
+  A[Captain approves design and model-free readiness only] --> C[Operator pins development PR, versions, model and host controls]
+  C --> B{Separate spend authority and existing budget controls ready?}
   B -->|No| Z[Hold: no further model calls]
-  B -->|Yes| C[Operator pins one development PR and both versions]
-  C --> D[Paid control triage and deterministic Lite admission]
+  B -->|Yes| D[Paid control triage and deterministic Lite admission]
   D -->|Ineligible or unavailable| Z
   D -->|Both Lite| E[Captain start message; operator starts observation]
   E --> F{Frozen arm}
@@ -55,7 +55,7 @@ flowchart TD
   M --> P
 ```
 
-Mermaid CLI 11.17.0 from the already-installed local cache rendered the image to `.context/pr-review-lite-value-pilot/journey.png`; the same image is retained here. The image was visually inspected after correcting the missing second-arm loop and the post-admission hold label. Actors, paid-admission boundary, separate starts for both arms, failure stop, quality-before-time order and excluded human posting wait match the prose. A complete output includes the confirmation request; confirmation itself is outside timing. The failure path intentionally stops this one development pair rather than purchasing a replacement. Rendering establishes diagram agreement, not runtime behavior. Reproduction needs Mermaid CLI and its browser; no product dependency was installed.
+Mermaid CLI 11.17.0 from the already-installed local cache rendered the image to `.context/pr-review-lite-value-pilot/journey.png`; the same image is retained here. The image was visually inspected after correcting the missing second-arm loop and the post-admission hold label. Actors, model-free readiness before separate spend approval, paid-admission boundary, separate starts for both arms, failure stop, quality-before-time order and excluded human posting wait match the prose. A complete output includes the confirmation request; confirmation itself is outside timing. The failure path intentionally stops this one development pair rather than purchasing a replacement. Rendering establishes diagram agreement, not runtime behavior. Reproduction needs Mermaid CLI and its browser; no product dependency was installed.
 
 ## Current evidence and scope accounting
 
@@ -146,6 +146,8 @@ Report costs separately with honest unknowns; these quality/time gates are uncha
 
 ## Recommended next decision
 
-Approve or revise this minimal development-first design at the design review. Recommend keeping the current candidate and original limits, with no preparatory product build. The unresolved material authority is whether to fund the bounded development comparison; the USD 19.8448 proposal becomes actionable only after the exact development PR, model/host, calibration material and enforceable aggregate spend mechanism are recorded. Those execution prerequisites are not silently approved by accepting the design. Wider evaluation, product changes and delivery stay outside this decision.
+Approve this design **with the next implementation stage limited to model-free readiness preparation**. That single decision would authorize the assigned worker to select and freeze one exact development PR from read-only metadata, name the installed host/model/tool policy, retain calibration examples, and document how the existing supervised operator and host controls bound and reconcile the proposed spend. It would authorize no product edit, corpus-admission call, model experiment, paid judge or new budget-enforcement system.
+
+The readiness output is a concrete launch package for a later explicit spend decision, including the proposed USD 19.8448 ceiling and any actual enforcement/attribution limitation. If existing controls cannot support that ceiling, report the limitation and stop; do not build a platform or silently redefine a hard cap as a timer. The Captain owns that later spend authority. The first officer must carry this narrow scope into the next dispatch if design approval advances the workflow to implementation; normal stage advancement alone cannot fund or execute the experiment. Wider evaluation, product repairs and delivery remain outside that scope.
 
 Profile reminder: Pilot, attended limited real use, one integrated journey; stage work ends here. No gate was prepared, recorded or consumed by this worker.

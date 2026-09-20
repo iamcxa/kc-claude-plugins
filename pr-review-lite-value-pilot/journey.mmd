@@ -1,8 +1,8 @@
 flowchart TD
-  A[Captain approves design] --> B{Separate spend authority and host controls ready?}
+  A[Captain approves design and model-free readiness only] --> C[Operator pins development PR, versions, model and host controls]
+  C --> B{Separate spend authority and existing budget controls ready?}
   B -->|No| Z[Hold: no further model calls]
-  B -->|Yes| C[Operator pins one development PR and both versions]
-  C --> D[Paid control triage and deterministic Lite admission]
+  B -->|Yes| D[Paid control triage and deterministic Lite admission]
   D -->|Ineligible or unavailable| Z
   D -->|Both Lite| E[Captain start message; operator starts observation]
   E --> F{Frozen arm}
