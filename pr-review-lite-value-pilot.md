@@ -414,3 +414,18 @@ validation PASS is possible. Calibration and judge were not run. State remains
 implementation; no product, PR, review, merge, release, default or stage change
 was made. This Cloud attempt has no authority for adapter repair, another arm or
 model launch, calibration, judge, or delivery.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: Pinpoint the current child-custody gaps with code references and fail-capable, model-free evidence, separating demonstrated boundary behavior from missing or unknown effects.
+  [Sanitized evidence](pr-review-lite-value-pilot/remediation-proposal/evidence.json) records six success children, six nonzero children and one timeout child using a local stub. It demonstrates broad denylist environment propagation, discarded stderr/exit metadata and lost partial timeout stdout, while confirming child/descendant cleanup. It does not claim a real secret leak, provider effect, hook/plugin load, mutation or cost.
+- DONE: Propose the smallest integrated correction with exact seams, secret-safe propagation, durable terminal custody, startup-surface checks, immutable-candidate handling and FO launch ordering.
+  [English proposal](pr-review-lite-value-pilot/remediation-proposal/proposal.md) changes only the existing protocol implementation and its focused test file, reuses prepare/collect and exclusive-storage interfaces, preserves normal provisioned Cloud OAuth in place while allowlisting non-auth environment state, separates configured argv/settings evidence from observed init/hook/plugin behavior, and requires a committed/pushed independent preflight PASS before any exclusive launch claim. Bare mode is explicitly inapplicable on the current Cloud because its recorded model-free auth status was false.
+- DONE: Split implementation from validation and specify falsifiable checks, STOP conditions, exact size disposition and future comparison preregistration.
+  Against original denominator `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`, replacement budgets are 161 nonfocused source lines and 135 focused test lines. Eligibility remains exactly within 18 files / at most 5,884 total / at most 1,903 focused, beneath unchanged 20 / 6,600 / 1,903 caps. Old admission/control remain standalone only; a new comparison requires a newly approved immutable candidate and fresh preregistered arms.
+- SKIPPED: Product/source edit, provider/model invocation, dependency install, compatibility claim, calibration, judge, experiment replay, commit/push, PR/post/merge, and stage or gate advancement.
+  These remain outside this model-free proposal authority. The all-three calibration key is still unrecorded and irrelevant to this unit.
+
+### Summary
+
+The current boundary was exercised without a model and the correction is now reviewable, but no fix exists yet. The proposal replaces the direct subprocess lane in place, retains useful protocol interfaces, and makes custody/startup/terminal evidence and pre-launch ordering falsifiable. Pilot status remains implementation; the stopped comparison stays stopped and FO retains state-sync ownership.

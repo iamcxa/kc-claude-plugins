@@ -1,0 +1,120 @@
+{
+  "schema": "pr-review-lite-remediation-evidence/v1",
+  "evidence_type": "sanitized_no_model_probe",
+  "provider_or_model_invoked": false,
+  "candidate_commit": "0d2e3164ccd2d60006688c5443717b818825a305",
+  "original_denominator": "3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8",
+  "source": {
+    "path": "kc-pr-flow/scripts/review-capability.py",
+    "sha256": "a34ee7de60aac5a70c8d39b628618008345be212980ea38d7b58bbc10e7e2cc0",
+    "references": {
+      "exclusive_store": "335-340",
+      "mechanical_process_custody": "628-680",
+      "current_direct_dispatch": "957-1084",
+      "host_prepare_collect": "1844-1956",
+      "current_direct_argv_and_main": "2074-2106"
+    }
+  },
+  "private_probe": {
+    "script_sha256": "8b92b66e9fa98af6a922b763b97eb3e2f07e53193d11ba25999fe675e32a537e",
+    "result_sha256": "5b2fcf8d413920c4ee64c66e2d23f2447b1c3d599ce03d754d1cad193d3828cb",
+    "method": "Local executable stub named claude exercised the actual full CLI entrypoint for success and nonzero exit; direct dispatch was exercised for timeout with a TERM-ignoring descendant.",
+    "secret_safety": "Only controlled stub argv, environment key names, allowlisted nonsecret control values, and boolean presence checks were captured. No environment value, credential value, secret-derived hash, or broad process listing was retained."
+  },
+  "observations": {
+    "success": {
+      "child_count": 6,
+      "outer_exit_code": 0,
+      "attempt_outcomes": ["succeeded"],
+      "stdin_kinds": ["fifo"],
+      "child_environment_key_count": 108,
+      "controlled_unrelated_sentinel_forwarded_to_all_children": true,
+      "excluded_fake_git_token_keys_forwarded": [],
+      "stderr_emissions": 6,
+      "retained_provider_stderr_files": 0,
+      "attempt_or_audit_exit_metadata_present": false
+    },
+    "nonzero_exit": {
+      "child_count": 6,
+      "stub_exit_code": 23,
+      "outer_exit_code": 0,
+      "attempt_outcomes": ["terminal_failure"],
+      "controlled_unrelated_sentinel_forwarded_to_all_children": true,
+      "excluded_fake_git_token_keys_forwarded": [],
+      "stderr_emissions": 6,
+      "retained_provider_stderr_files": 0,
+      "attempt_or_audit_exit_metadata_present": false
+    },
+    "timeout": {
+      "child_count": 1,
+      "attempt_outcomes": ["terminal_failure"],
+      "emitted_partial_stdout_bytes": 23,
+      "retained_provider_raw_bytes": 0,
+      "stderr_emissions": 1,
+      "retained_provider_stderr_files": 0,
+      "attempt_or_audit_exit_metadata_present": false,
+      "child_alive_after_cleanup": false,
+      "term_ignoring_descendant_alive_after_cleanup": false
+    },
+    "controlled_child_argv": {
+      "present_controls": [
+        "--print",
+        "--model",
+        "--effort",
+        "--output-format=json",
+        "--tools=<empty>",
+        "--strict-mcp-config",
+        "--mcp-config=<empty>",
+        "--json-schema",
+        "--system-prompt",
+        "--max-budget-usd"
+      ],
+      "absent_controls": [
+        "--restricted",
+        "--safe-mode",
+        "--setting-sources",
+        "--settings",
+        "--include-hook-events",
+        "--debug-file",
+        "--plugin-dir"
+      ]
+    }
+  },
+  "demonstrated": [
+    "An unrelated parent environment key crosses the current denylist boundary.",
+    "Child stderr is discarded and exit/terminal metadata is not retained.",
+    "Timeout loses already-emitted partial stdout from the retained provider raw artifact.",
+    "Current process-group cleanup removed both the direct child and its TERM-ignoring descendant in the fixture.",
+    "The current child command requests empty tools and MCP but lacks the listed settings, hook, debug, and restricted/safe-mode controls."
+  ],
+  "not_demonstrated_or_unknown": [
+    "No real credential disclosure, provider call, plugin or hook load, marketplace action, fallback, mutation, billing event, or remote effect was observed.",
+    "No adapter child ran during the stopped treatment and its treatment cost remains unknown.",
+    "Effective settings and hooks are not exposed by the current one-object output; effective model/tools/MCP/plugins have no current startup receipt.",
+    "Compatibility of the proposed argv, environment allowlist, stream parser, and managed settings behavior is unproven."
+  ],
+  "registered_cloud_auth_constraint": {
+    "source": ".context/pr-review-lite-value-pilot/runs/dev434-cloud1/registration/registration.md:23",
+    "normal_mode": {
+      "auth": "provisioned_first_party_oauth",
+      "logged_in": true
+    },
+    "bare_mode": {
+      "logged_in": false,
+      "disposition": "inapplicable_on_current_cloud"
+    },
+    "custody_rule": "Preserve access to the provisioned auth source in place; record only auth mode/status and never credential paths or values."
+  },
+  "size_baseline": {
+    "changed_files": 18,
+    "total_changed_lines": 5884,
+    "focused_changed_lines": 1903,
+    "caps": {
+      "changed_files": 20,
+      "total_changed_lines": 6600,
+      "focused_changed_lines": 1903
+    },
+    "removable_direct_source_lines": 161,
+    "replaceable_direct_test_function_lines": 135
+  }
+}
