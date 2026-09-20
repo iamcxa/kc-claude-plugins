@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pr-review-lite-value-pilot:ideation:attempt-1:revision-1",
+  "question": "Approve the Lite development-first design and enter implementation limited to model-free readiness preparation, with experiment spend and product edits still held?",
+  "artifacts": [
+    {
+      "id": "artifact:pr-review-lite-value-pilot:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a7eef5e205d5a404e4cb0f5c2c77f89956893afc/pr-review-lite-value-pilot/design.md",
+      "rev": "sha256:6d118d01b77fd6149405c448c969749c001e398f98db1ba824474ec7b0e7e33f",
+      "mediaType": "text/markdown",
+      "summary": "Ideation completed all three assigned outputs. Reuse the existing default-off candidate; focused limit is fully used; static compatibility is not runtime proof. Approve only exact-input and host/budget readiness preparation, no product edits or experimental calls. USD 19.8448 is a later development-only spend proposal, not current authority; the separate five-pair quality and 33.3% gates remain unchanged."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:pr-review-lite-value-pilot:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/a7eef5e205d5a404e4cb0f5c2c77f89956893afc/pr-review-lite-value-pilot.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:5b422b7b3dc1b8f873dee7ecd15336ee8abc54761324db15e4c6d72813ec43a1"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:pr-review-lite-value-pilot:ideation:attempt-1:revision-1:item-3",
+      "uri": "git-root://main/6bf62d1d7d3c343a97c973a7abd7424d03676437/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:7931ef3be4004ea76a80d127c95e0e6b9bf4225adb365b9e993c53cebeb2a873"
+    }
+  ]
+}

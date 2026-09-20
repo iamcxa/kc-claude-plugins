@@ -28,6 +28,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:pr-review-lite-value-pilot:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:pr-review-lite-value-pilot-ideation-1
+              briefing:
+                id: briefing:pr-review-lite-value-pilot:ideation:attempt-1:revision-1
+                digest: sha256:856daeeb6ce8f637986edc32cf3b30c1c0b84b457ea9e909da0b1610c06af757
+                room-ref: ./pr-review-lite-value-pilot/review/ideation/briefing-1
 started: 2026-09-20T01:13:40Z
 ---
 
