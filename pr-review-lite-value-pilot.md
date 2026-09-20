@@ -196,3 +196,21 @@ Dispatch one implementation worker for registered no-model setup and at most one
 ### Summary
 
 The bounded experiment segment failed before valid admission because our auth-check invocation entered a model path and inherited its enclosing Python script as user input. The process was stopped and the pair remains stopped; raw transcript plus observed partial usage are retained, while missing final cost and lost stdout/stderr remain unknown/unavailable. This is operator execution failure, not candidate behavior or Lite quality; status stays implementation and no further model step, product change or validation was performed.
+
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Register one newly authorized attempt before any model call, preserving the failed first run and its unknown cost; demonstrate the corrected non-model invocation cannot inherit input or escape its timeout.
+  [Replacement checkpoint](pr-review-lite-value-pilot/admission-retry1-checkpoint/README.md): approval registered before launch; literal-argument/empty-stdin and TERM-ignoring timeout probes passed; subcommand-first auth exited 0 with DEVNULL and durable outputs; all first-attempt hashes remain unchanged.
+- FAILED: Execute at most one frozen legacy admission call with the approved model, effective configuration, durable raw outputs, explicit timeout and USD 4.9612 cost-stop setting; compare actual six modes with the candidate planner and retain any failure without retry.
+  One call launched with exact startup model/tools/control-plugin and 1,200-second external watchdog; stopped at 27.04 seconds after a denied directory-listing command and unexpected CLI marketplace refresh. No legacy modes/final receipt; candidate modes match the frozen expectation but cannot establish agreement.
+- DONE: Commit a sanitized task checkpoint with attributable effects, usage and unknowns; stop before review arms, calibration or judge for FO routing, without product changes or stage advancement.
+  [Summary](pr-review-lite-value-pilot/admission-retry1-checkpoint/summary.json) binds raw argv, prompts, outputs, debug and transcript hashes; four unique main messages show partial 8 input / 25,752 cache-write / 52,551 cache-read / 2,196 output tokens. Final/current/previous/cumulative dollars remain unknown; no further model step occurred.
+- DONE: Bound stop effects and source preservation.
+  SIGTERM yielded wrapper exit -15 and absent process group; 74 control files match pinned Git, product/target tracked status is clean, runtime and old-run hashes match. Denied `rtk ls` had an allowed Glob alternative; CLI pull/clone refresh was outside model tools, with successful mutation unproven and marketplace before-state absent.
+- SKIPPED: Review arms, calibration, judge, configuration/product repair, additional attempt, validation, PR and gate transition.
+  These are outside this dispatch or prohibited after STOP; no human calibration or external stopwatch evidence was inferred. No nested worker was spawned.
+
+### Summary
+
+The corrected non-model invocation and pre-launch deadline were exercised, and exactly one registered admission ran; this replacement still stopped without a usable eligibility result or final cost receipt. The frozen CLI configuration did not prevent an unexpected background marketplace refresh, so operability remains unproven; product behavior and quality were not tested, and no configuration repair or further attempt is authorized. This is a committed implementation checkpoint for FO routing, not completed implementation, validation PASS or a new gate.

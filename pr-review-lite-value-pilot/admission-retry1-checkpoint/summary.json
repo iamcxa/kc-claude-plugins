@@ -1,0 +1,202 @@
+{
+  "status": "STOP_UNEXPECTED_HOST_EFFECT",
+  "recorded_utc": "2026-09-20T02:31:51Z",
+  "attempt": "dev434-retry1",
+  "approval": "核准重跑",
+  "registration_before_model": true,
+  "intentional_model_launches": 1,
+  "model_only_preflight_calls": 0,
+  "admission_complete": false,
+  "eligible_comparison_evidence": false,
+  "actual_legacy_modes": null,
+  "candidate_modes": {
+    "agent_tier": "lite",
+    "pr_archetype": "bugfix",
+    "full_pass": false,
+    "probe_required": false,
+    "cross_model": false,
+    "noise_filter": false
+  },
+  "comparison": "unavailable: no legacy output; do not substitute planner",
+  "model": "claude-opus-5",
+  "observed_assistant_models": [
+    "claude-opus-5"
+  ],
+  "commanded_effort": "high",
+  "independent_effective_effort": "not present in retained init or final receipt",
+  "cli_version": "2.1.273",
+  "tools": [
+    "Bash",
+    "Glob",
+    "Grep",
+    "Read"
+  ],
+  "plugins": [
+    {
+      "name": "kc-pr-flow",
+      "path": "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v2/.worktrees/spacedock-ensign-pr-review-lite-value-pilot/.context/pr-review-lite-value-pilot/runs/dev434-retry1/admission/kc-pr-flow",
+      "source": "kc-pr-flow@inline",
+      "version": "1.12.0"
+    }
+  ],
+  "mcp_servers": [],
+  "settings": {
+    "disableAllHooks": true,
+    "autoMemoryEnabled": false,
+    "enabledPlugins": {}
+  },
+  "setting_sources": [],
+  "hooks_evidence": "debug: plugin hooks skipped; zero total hooks in registry; no hook lifecycle execution in stream",
+  "bare": false,
+  "fallback_configured": false,
+  "auth_lane": "claude.ai Max OAuth/keychain",
+  "auth_check": "subcommand-first auth status --json; DEVNULL; stdout/stderr opened before subprocess; gtimeout 15s plus 1s KILL; exit 0",
+  "non_model_smokes": {
+    "stdin": {
+      "argv": [
+        "rtk",
+        "proxy",
+        "python3",
+        "-c",
+        "import sys,json; print(json.dumps({\"argv\":sys.argv[1:],\"stdin\":sys.stdin.read()}))",
+        "auth",
+        "status",
+        "--json"
+      ],
+      "exit": 0,
+      "elapsed": 0.03997570800129324,
+      "stdin": "DEVNULL",
+      "result": {
+        "argv": [
+          "auth",
+          "status",
+          "--json"
+        ],
+        "stdin": ""
+      }
+    },
+    "timeout": {
+      "exit": 137,
+      "elapsed": 0.44835037500888575,
+      "stdin": "DEVNULL",
+      "outcome": "TERM-ignoring harmless process bounded by preinstalled gtimeout KILL fallback"
+    }
+  },
+  "budget_stop_usd": 4.9612,
+  "allocations_usd": {
+    "admission": 4.9612,
+    "control": 4.9612,
+    "treatment_outer": 2.4806,
+    "treatment_capabilities": 2.4806,
+    "calibration_and_judge": 4.9612
+  },
+  "budget_interpretation": "reported-cost stopping threshold; possible unbounded in-flight overshoot, not invoice guarantee",
+  "final_receipt_present": false,
+  "final_host_cost_usd": null,
+  "additional_billed_dollars": null,
+  "previous_attempt_final_cost_usd": null,
+  "proven_cumulative_invoice_usd": null,
+  "usage_completeness": "partial observed main messages only; interrupted in-flight usage may be absent; not whole-session provider receipt",
+  "unique_observed_main_message_ids": 4,
+  "observed_usage_subtotals": {
+    "input_tokens": 8,
+    "cache_creation_input_tokens": 25752,
+    "cache_read_input_tokens": 52551,
+    "output_tokens": 2196
+  },
+  "process": {
+    "started_utc": "2026-09-20T02:27:29Z",
+    "watchdog_pid": 11283,
+    "exit_code": -15,
+    "elapsed_seconds": 27.042375541001093,
+    "finished_utc": "2026-09-20T02:27:56Z",
+    "group_alive_after_wait": false
+  },
+  "tool_effects": {
+    "read_success": 4,
+    "grep_success": 3,
+    "bash_denied": 1,
+    "denied_command": "rtk ls /Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v2/.worktrees/spacedock-ensign-pr-review-lite-value-pilot/.context/pr-review-lite-value-pilot/runs/dev434-retry1/admission/kc-pr-flow/reference/",
+    "denial_reason": "dontAsk; Bash allowlist contains git/rtk git patterns, not rtk ls",
+    "necessity": "directory discovery supported triage but Bash listing was not indispensable; Glob was allowed",
+    "agent_dispatches": 0,
+    "write_tools": 0,
+    "network_tools": 0
+  },
+  "host_background_effect": {
+    "source": "CLI debug, outside model tool calls",
+    "marketplace": "cargento-marketplace",
+    "path": "~/.claude/plugins/marketplaces/spacedock-dev-cargento",
+    "events": [
+      "cache corrupted or missing; refetch",
+      "git pull at marketplace path failed",
+      "git clone git@github.com:spacedock-dev/cargento.git attempted with 120000ms timeout",
+      "marketplace.json unavailable during delisted-plugin check"
+    ],
+    "post_readback": "directory absent; git rev-parse/status exit 128",
+    "before_state": "not captured",
+    "successful_remote_mutation": "not evidenced; pull/clone are fetch operations, no push observed",
+    "successful_tree_mutation": "unknown; no before snapshot, no attributed clone success",
+    "configured_auto_updater": "DISABLE_AUTOUPDATER=1 did not suppress this observed marketplace refresh"
+  },
+  "integrity": {
+    "product_head": "6bf62d1d7d3c343a97c973a7abd7424d03676437",
+    "product_status": "",
+    "target_head": "29007f90fc628ae40faf2903dd02d9895f4dcffe",
+    "target_status": "",
+    "control_files_checked": 74,
+    "control_mismatches": [],
+    "runtime_sha256": "953e9880dbcb0b70f31c1f508de6a3fd389753d131688557fd992da9184693fb",
+    "runtime_matches": true,
+    "old_attempt_artifact_mismatches": [],
+    "marketplace_present": false,
+    "marketplace_head": {
+      "exit": 128,
+      "stdout": ""
+    },
+    "marketplace_status": {
+      "exit": 128,
+      "stdout": ""
+    },
+    "marketplace_before_state": "not captured; cannot establish net tree change or ownership of existing changes"
+  },
+  "remaining_steps": {
+    "control": "not run",
+    "treatment": "not run",
+    "calibration": "not run",
+    "judge": "not run"
+  },
+  "human_calibration": "all-three confirmation pending; no inferred acceptance",
+  "human_stopwatch": "not started; local process time is not arm time",
+  "operability": "not demonstrated under frozen configuration; unattended marketplace side effect violates retained no-unexplained-effect boundary; no repair or retry performed",
+  "private_evidence_root": "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v2/.worktrees/spacedock-ensign-pr-review-lite-value-pilot/.context/pr-review-lite-value-pilot/runs/dev434-retry1",
+  "private_evidence_sha256": {
+    "registration/approval.json": "22ad4872bb8becda8e9bd7ae953756e25ac00a5553f6195a0403bdede5bcc3a9",
+    "registration/launch.json": "61285bcbe24c1dfd912afdcb93f535014f0b417b793c7c3251ffef83eb4d78f6",
+    "registration/launch-once.py": "0218c15e3aaebbb2b745f24767d740facad9ac4fe009b7651ed917e7941788b7",
+    "registration/auth.stdout": "37fca9dae76d3bfa755fac9db385f538fd02af367ad9d6a8cabcb6aa3a938d1b",
+    "registration/auth.stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "registration/auth.json": "be21e195c8f81a0b1bf2ef7c92899937af5964050a877a36ba3d82e8e63301cf",
+    "registration/cli-help.stdout": "ae85d661e9c086f05637ebcd868f5702b477ff6e55e2e65b8ada7807cd51a4b6",
+    "registration/auth-status-help.stdout": "c93dc6b8f067eeea492bbe3b167e03fbc9e8478b8c7a9a3cc978b6edcf173e41",
+    "registration/stdin-smoke.json": "31482c02b659080400721be5ec0eaeb91a3b16d02aa80e28bd6d486610af822c",
+    "registration/deadline-smoke.json": "36eb97533cf76ef6becd3d1bc0223ade160309396b5d5c1cd0e1eb2cc780217b",
+    "registration/planner-input.json": "36c2c43a4403840d4227feb7d0bc4e2e0b2558a9a7e85be17480c340c8f57cdd",
+    "registration/planner-output.json": "3cc960a5c2a92b4bcbefecef69dbfc66347f92bcd3f347e0c575636adc019cee",
+    "registration/plugin-files.json": "1a42f747f31f8f8ee3006e193271a49cffc5f2b0908cbb82585636de56ccda85",
+    "admission/prompt.txt": "a6a48f096d45a034f72f9720a99e3c7dbb33ecd155ba7d6aced54bd6ed93d666",
+    "admission/sample.json": "018c2f5a8d9fabdc9ca0322ad983c930c94b798aeab503f09398157ab3f15b66",
+    "admission/input.patch": "1a88db01f8bc155c6434b37c626e949824953d7fa9b52828d7cd6db32cd5a914",
+    "admission/stream.jsonl": "74aa7c031b37a5a033404e6ba850c9c0b4cf5fd3cc29ad2c531d5c2f82c2dd37",
+    "admission/stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "admission/debug.log": "517fb16efe9c9d60ac21712dca2f903ad106eb53439fcf66d5436dde561d5c8d",
+    "admission/session.raw.jsonl": "fb0cc361b399de4ffe36b5965aa033771447b2e350e5892587bafa16990c00a1",
+    "admission/process.json": "488671129ca1db73ce494ff761a48301e7668a2378af2f8576aec84a343e409d",
+    "admission/operator-stop.json": "cee9c4368d3bd80814fb0884d7a004a7be9d2a8b79730f2c53a8a676318477df",
+    "admission/usage.private.json": "55580cfb91f9d4ffb52a57df47ffb4909f77dba87aabde2f2928fc42cec1d00c",
+    "admission/observed-tools.private.json": "9ad618f948f2ae5b14b07351cf8fbac88a92dbf58ec181a2e95c08da62d66446",
+    "admission/process-readback.raw": "1953e8c3bcf7f9fc1a81f670f5beacf6be3f080d4c3408dc8c42e3b2de0cc928",
+    "admission/integrity.json": "e1274c2d5a144a4be87594303125355ab56e85aa7b46221ae7c7a6735dafdf51",
+    "admission/marketplace-debug-context.private.txt": "d195837ee9ccd6d4e8c55984b60483c896a4e1176ad10188c9926d7a260cbaf5"
+  }
+}
