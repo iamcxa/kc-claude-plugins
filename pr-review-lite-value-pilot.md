@@ -1,6 +1,6 @@
 ---
 title: Prove a useful Lite PR review journey before wider evaluation
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -27,7 +27,7 @@ gates:
                 reason: 'Captain replied 可以 to the presented dev2 Pilot successor direction on 2026-09-20: preserve old records, prove one complete development-sample journey before wider evaluation, retain quality and 33.3% thresholds; authorize task recording and ideation only, stop at design review.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Resume the approved kc-pr-flow improvement under dev2 by first establishing whether one complete Lite review journey preserves useful review quality while reducing end-to-end time and cost. This is a successor product task, not a workflow-refit task, a fifth layer of the old PR stack, or a declaration that the previous validation passed.
