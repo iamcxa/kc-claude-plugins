@@ -36,6 +36,17 @@ gates:
                 id: briefing:pr-review-lite-value-pilot:ideation:attempt-1:revision-1
                 digest: sha256:856daeeb6ce8f637986edc32cf3b30c1c0b84b457ea9e909da0b1610c06af757
                 room-ref: ./pr-review-lite-value-pilot/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pr-review-lite-value-pilot:ideation:1
+                briefing: briefing:pr-review-lite-value-pilot:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-20T01:30:03.785094Z"
+                decision: approve
+                reason: 'Captain replied ok on 2026-09-20 to design Briefing 856daeeb: approve implementation limited to model-free comparison preparation, fixing the PR, revisions, model/tools and cost observation. No product changes or experimental spend; return a concrete launch package for separate authorization.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-20T01:13:40Z
 ---
 
