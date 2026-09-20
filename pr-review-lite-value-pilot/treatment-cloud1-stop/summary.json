@@ -34,6 +34,19 @@
   "termination_signal": 15,
   "stream_event_count": 26,
   "result_event_count": 0,
+  "partial_outer_usage": {
+    "basis": "sum of latest observed snapshots for 5 unique outer message IDs; incomplete",
+    "input_tokens": 10,
+    "cache_creation_input_tokens": 74175,
+    "cache_read_input_tokens": 217768,
+    "output_tokens": 17
+  },
+  "observed_outer_tool_calls": {
+    "Skill": 1,
+    "Read": 2,
+    "Bash": 4,
+    "Write": 0
+  },
   "complete_review": false,
   "confirmation_request": false,
   "end_review_marker": false,

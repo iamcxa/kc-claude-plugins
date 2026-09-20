@@ -29,6 +29,13 @@ unknown and must not be treated as zero. No capability child call, retry,
 reviewer judgment, finalization, complete treatment review, confirmation request,
 or `END REVIEW` occurred.
 
+Five unique outer message IDs expose only partial snapshots: 10 input, 74,175
+cache-create, 217,768 cache-read and 17 output tokens when summed by unique
+message ID. These are retained diagnostics, not a complete usage receipt and not
+a basis for reconstructing dollars. The observed tools were one Skill load, two
+Reads and four Bash calls; there was no Write, adapter process or provider raw
+envelope.
+
 Admission and control remain valid standalone evidence from this Cloud attempt;
 the comparison is invalid and cannot be scored. Calibration and adjudication were
 not run. The missing all-three calibration-key confirmation is still unrecorded,

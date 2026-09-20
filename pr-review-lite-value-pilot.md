@@ -368,7 +368,10 @@ reviewer finalization, confirmation request or posting occurred. FO had launched
 the outer process before the requested ensign preflight reply arrived. This
 operator sequencing error consumed the treatment launch and is not repaired or
 replayed. The interrupted outer call emitted no final result receipt, so its
-cost is unknown rather than zero.
+cost is unknown rather than zero. Five unique outer messages expose incomplete
+snapshots totaling 10 input / 74,175 cache-create / 217,768 cache-read / 17 output
+tokens; these do not reconstruct a complete receipt or dollar amount. No adapter
+capability child or provider envelope exists.
 
 [Treatment STOP checkpoint](pr-review-lite-value-pilot/treatment-cloud1-stop/README.md)
 binds the private raw stream/debug hashes and exact not-run work. Admission and
