@@ -28,6 +28,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-09-20T01:13:40Z
 ---
 
 Resume the approved kc-pr-flow improvement under dev2 by first establishing whether one complete Lite review journey preserves useful review quality while reducing end-to-end time and cost. This is a successor product task, not a workflow-refit task, a fifth layer of the old PR stack, or a declaration that the previous validation passed.
