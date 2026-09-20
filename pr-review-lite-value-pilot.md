@@ -172,6 +172,14 @@ FO will first dispatch the retained implementation owner for the single admissio
 This is an implementation-stage experiment checkpoint under the approved Pilot, not a new workflow gate. The preparation report remains historical. Return all outcomes to FO; further stage advancement requires the actual comparison outcome and its proper review route.
 
 
+#### Captain retry approval — 2026-09-20
+
+The Captain explicitly replied `核准重跑` after the stopped preflight report and the proposed correction of the launch invocation. This authorizes one new attempt of the same development comparison with the existing PR, immutable revisions, model/effort, CLI treatment, cost-stop allocations and failure rules. Use a new private run directory and preserve the entire failed first attempt. Its unknown dollar cost remains unknown and is not erased by the new authorization or included as zero in any total. The new nominal USD 19.8448 settings are stopping thresholds, not a hard cumulative bill including the previous incident.
+
+First correct the operator invocation: use proven subcommand grammar, explicit stdin isolation for non-model subprocesses, durable stdout/stderr capture and an external timeout before launch. Never allow an auth/help check to inherit the orchestration script or enter interactive mode. No product change, new enforcement platform, model fallback, replacement PR, further whole-attempt retry or product delivery is authorized.
+
+Dispatch one implementation worker for registered no-model setup and at most one legacy admission call, then report to FO before the review arms or judge. The former implementation worker is absent from the live roster; the replacement owns the existing clean task worktree. The Captain's `ok` after the explanation acknowledges calibration case 1's meaning; it is not a fabricated approval of all three answers or externally observed arm timing. Those remaining prerequisites must be handled before dependent calls. State remains implementation.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
