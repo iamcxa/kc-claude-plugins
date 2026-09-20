@@ -1,0 +1,83 @@
+{
+  "status": "STOP_CLOUD_ATTEMPT",
+  "attempt": "dev434-cloud1",
+  "arm": "treatment",
+  "recorded_utc": "2026-09-20T03:23:07.108467604Z",
+  "workspace_id": "4815161d-63b0-44dc-b08d-8f5f43a3caee",
+  "session_id": "d0e0b07a-6089-46aa-b035-61e910797310",
+  "outer_session_id": "be68abef-9503-4745-a6b3-cf8c4f48db14",
+  "source_revision": "0d2e3164ccd2d60006688c5443717b818825a305",
+  "plugin_version": "1.12.0",
+  "model": "claude-opus-5",
+  "commanded_effort": "high",
+  "cli_version": "2.1.274",
+  "flags": {
+    "typed": "on",
+    "profiled": "on",
+    "shadow": "off",
+    "once_only_post": "off"
+  },
+  "outer_budget_stop_usd": 2.4806,
+  "capability_budget_stop_usd": 2.4806,
+  "outer_final_receipt_present": false,
+  "outer_reported_cost_usd": null,
+  "outer_cost_status": "unknown_due_cancelled_in_flight_call",
+  "capability_adapter_invoked": false,
+  "capability_model_calls_observed": 0,
+  "capability_retries_observed": 0,
+  "capability_receipts": [],
+  "start_utc": "2026-09-20T03:21:23.287772779Z",
+  "first_stream_timestamp": "2026-09-20T03:21:26.783Z",
+  "last_stream_timestamp": "2026-09-20T03:21:52.033Z",
+  "process_absence_observed_by_utc": "2026-09-20T03:22:16.603525066Z",
+  "launch_exit": 143,
+  "termination_signal": 15,
+  "stream_event_count": 26,
+  "result_event_count": 0,
+  "complete_review": false,
+  "confirmation_request": false,
+  "end_review_marker": false,
+  "stop_reason": "Pinned adapter child launches cannot produce the mandatory Cloud per-process settings/hooks/plugins and durable argv/env/stdout/stderr custody evidence; outer launch was cancelled before adapter invocation.",
+  "operator_sequence_error": "The FO started the outer treatment before the requested ensign preflight reply arrived; this consumes the one authorized treatment launch and is not replayed.",
+  "adapter_gaps": [
+    "child argv omits --restricted, empty setting sources, explicit settings and explicit empty plugin surface",
+    "child prompt uses in-memory PIPE rather than an explicit prompt file",
+    "child stdout and stderr are PIPEs rather than preopened durable files",
+    "child stderr is discarded",
+    "exact child argv and environment-key names are not retained",
+    "child JSON output has no startup/init receipt to verify effective settings, hooks and plugins"
+  ],
+  "outer_init": {
+    "tools": ["Bash", "Glob", "Grep", "Read", "Skill", "Write"],
+    "mcp_servers": [],
+    "permission_mode": "dontAsk",
+    "plugins": ["kc-pr-flow@inline:1.12.0", "pr-review-toolkit@inline"]
+  },
+  "raw_hashes": {
+    "stream_jsonl_sha256": "e54fa36ed1772936eb2db148588a75b88aa651dbe336575613c53b88c39c3ed7",
+    "debug_log_sha256": "1e9fd1c02727c742720bb6db7d4ef61d3ec2e581db6d142282bb6e18cb8f2068",
+    "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prompt_sha256": "9c0da379b9af03cf26e8a9ba02b2c1f122f26b1e8b85cb444d0698dab967a908",
+    "driver_sha256": "ca21355da5db14f8782f21a100802028dd381d3a7ad2171daf5262c93537dc24"
+  },
+  "comparison": {
+    "admission": "pass, USD 0.46017775000000005 reported once",
+    "control": "pass, USD 4.599209500000001 reported once",
+    "treatment": "stopped incomplete, outer cost unknown",
+    "calibration": "not run",
+    "adjudication": "not run",
+    "quality_frozen": false,
+    "time_cost_unsealed": false,
+    "decision": "invalid comparison; no saving, quality, promotion or validation claim"
+  },
+  "not_run": [
+    "capability workers",
+    "treatment reviewer judgment and finalization",
+    "blind calibration",
+    "blind adjudication",
+    "time/cost threshold scoring",
+    "five-pair proposal execution"
+  ],
+  "authority": "No repair, replay, replacement arm, additional model call, calibration, judge, product change, posting or delivery is authorized.",
+  "next": "Captain must decide separately whether to fund and authorize a source-visible adapter custody change and a later fresh comparison; this stopped attempt cannot continue."
+}

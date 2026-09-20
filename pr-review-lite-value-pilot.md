@@ -347,3 +347,34 @@ The bounded experiment segment failed before valid admission because our auth-ch
 ### Summary
 
 The corrected non-model invocation and pre-launch deadline were exercised, and exactly one registered admission ran; this replacement still stopped without a usable eligibility result or final cost receipt. The frozen CLI configuration did not prevent an unexpected background marketplace refresh, so operability remains unproven; product behavior and quality were not tested, and no configuration repair or further attempt is authorized. This is a committed implementation checkpoint for FO routing, not completed implementation, validation PASS or a new gate.
+
+
+#### Cloud treatment STOP and attempt termination — 2026-09-20
+
+The one authorized Cloud attempt is stopped. Its treatment interval began at
+`2026-09-20T03:21:23.287772779Z`; the outer `claude-opus-5` process initialized
+with the pinned treatment plugin and began reading frozen inputs. Before the
+repository-owned adapter was invoked, the implementation ensign's read-only
+preflight identified a mandatory Cloud custody gap in the unchanged adapter:
+its separate child CLI calls do not retain durable child stderr, exact argv and
+environment-key evidence, or a startup receipt proving effective empty
+settings/hooks/plugins, and their argv omits the registered outer isolation
+flags. Inherited traffic controls and `--tools ''` do not prove those missing
+surfaces.
+
+FO cancelled the treatment process group immediately after receiving that
+finding. The launch ended by SIGTERM / exit 143; no adapter child, retry,
+reviewer finalization, confirmation request or posting occurred. FO had launched
+the outer process before the requested ensign preflight reply arrived. This
+operator sequencing error consumed the treatment launch and is not repaired or
+replayed. The interrupted outer call emitted no final result receipt, so its
+cost is unknown rather than zero.
+
+[Treatment STOP checkpoint](pr-review-lite-value-pilot/treatment-cloud1-stop/README.md)
+binds the private raw stream/debug hashes and exact not-run work. Admission and
+control remain standalone evidence, but treatment is incomplete, so no blind
+quality adjudication, time/cost scoring, saving claim, promotion proposal or
+validation PASS is possible. Calibration and judge were not run. State remains
+implementation; no product, PR, review, merge, release, default or stage change
+was made. This Cloud attempt has no authority for adapter repair, another arm or
+model launch, calibration, judge, or delivery.
