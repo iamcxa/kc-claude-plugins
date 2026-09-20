@@ -1,0 +1,12 @@
+{
+  "README.md": "22cae2fceeecd89a5d32d1f5c52689ffc3687660da7adda0581a3b4840bf8502",
+  "calibration.md": "be7fd22babae8e70996d574b9946a97dfc9a17994fccfc55c7cff06013ce5d58",
+  "checks.json": "9b20fdaed430db21acfae1fb3f31727c32d338c2b7d3f81984c26b7819c7dff0",
+  "claude-help.txt": "ae85d661e9c086f05637ebcd868f5702b477ff6e55e2e65b8ada7807cd51a4b6",
+  "evidence.json": "7b100f810c2a4a331d0fb69c01bf11131a92c771154a4d104010e3bc2cfee773",
+  "planner-input.json": "36c2c43a4403840d4227feb7d0bc4e2e0b2558a9a7e85be17480c340c8f57cdd",
+  "planner-output.json": "3cc960a5c2a92b4bcbefecef69dbfc66347f92bcd3f347e0c575636adc019cee",
+  "runbook.md": "a390f760a4a223ead5420b8a794d3a0f93873b0dd643038fe889df2b6e35e70c",
+  "sample.json": "018c2f5a8d9fabdc9ca0322ad983c930c94b798aeab503f09398157ab3f15b66",
+  "sample.patch": "1a88db01f8bc155c6434b37c626e949824953d7fa9b52828d7cd6db32cd5a914"
+}

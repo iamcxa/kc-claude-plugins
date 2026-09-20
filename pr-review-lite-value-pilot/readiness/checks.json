@@ -1,0 +1,54 @@
+[
+  {
+    "check": "Node syntax only",
+    "path": "kc-journey-map/lib/storymap.mjs",
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "check": "Node syntax only",
+    "path": "kc-journey-map/lib/storymap.test.mjs",
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "check": "bash -n only; no command executed",
+    "block": 1,
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "check": "bash -n only; no command executed",
+    "block": 2,
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "check": "bash -n only; no command executed",
+    "block": 3,
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "check": "bash -n only; no command executed",
+    "block": 4,
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "check": "bash -n only; no command executed",
+    "block": 5,
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "check": "bash -n only; no command executed",
+    "block": 6,
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "check": "All retained JSON parsed",
+    "exit_code": 0
+  }
+]

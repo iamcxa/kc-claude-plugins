@@ -130,3 +130,23 @@ Record the admitted seed, bind and record the Captain's already-given initial ap
 ### Summary
 
 The single recommendation is to approve this development-first design into an implementation stage restricted to model-free readiness preparation, reusing the current candidate and original limits. Product value, live host reliability, enforceable aggregate spend, independent validation and delivery remain unproven; the next dispatch may freeze execution inputs and document existing supervised budget controls, but separate explicit spend authority is required for a later development launch. This is completed ideation evidence only, with no model experiment, product edit, old-state change or gate advancement.
+
+
+## Stage Report: implementation
+
+- DONE: Freeze one concrete development PR and exact control/treatment, model/effort, host/tool, timeout, run-order and calibration inputs using read-only evidence; distinguish provisional sample selection from the later paid eligibility decision.
+  [Readiness package](pr-review-lite-value-pilot/readiness/README.md): PR iamcxa/kc-claude-plugins#434, immutable source/patch, pinned plugin/runtime/toolkit, Opus 5/high, control-first order and synthetic calibration; legacy eligibility and human calibration checks remain pending.
+- DONE: Verify existing host/operator timing, cancellation, aggregate parent/child usage and budget controls without model calls, then prepare a concrete launch package with attributable evidence, precise commands/prompt templates, cost proposal and any actual blocker.
+  [Runbook](pr-review-lite-value-pilot/readiness/runbook.md) and [audit](pr-review-lite-value-pilot/readiness/evidence.json): documentation/source inspection plus local timeout smoke; native total-attempt deadline remains unproven, while the existing optional CLI backend contains 120-second communicate timeout/process-group cancellation.
+- DONE: Commit the task-specific readiness artifact and implementation Stage Report, preserve product bytes and old records, and stop before every experimental/admission/judge call or stage transition for the Captain's separate spend decision.
+  This path-scoped state commit contains this report and readiness companions only; owned product worktree remains clean at 6bf62d1d7d3c343a97c973a7abd7424d03676437; status remains implementation and no gate operation was performed.
+- FAILED: Substantiate a strict USD 19.8448 aggregate maximum charge from inspected controls.
+  Documented CLI budgets stop at reported spend; in-flight overshoot has no established upper bound. Separate CLI capability costs are not included in the outer native-tree receipt and must be reconciled once per attempt.
+- DONE: Check the package without executing an experiment.
+  [Checks](pr-review-lite-value-pilot/readiness/checks.json): exact target files pass Node syntax-only checks, six shell templates pass bash -n, retained JSON parses, and actual candidate plan() selects Lite; malformed syntax/schema or different planner modes would fail these bounded checks, which do not establish review quality or model reliability.
+- SKIPPED: Product implementation, model/admission/judge calls, dependency installation, independent validation, PR creation, product push, merge, release and gate transition.
+  These are outside this checkpoint's authorization; no nested worker, model prompt or target mutation was made. Calibration examples are frozen but not human-approved; paid control triage is not inferred.
+
+### Summary
+
+Prepared one reviewable development-only launch proposal using the existing optional CLI worker path, with four USD 4.9612 stopping thresholds (USD 19.8448 nominal total); proposed treatment allocation is USD 2.4806 outer plus USD 2.4806 across all capability attempts. Recommend one Captain decision accepting that backend-and-budget-stop proposal, including unbounded in-flight overshoot risk; if an absolute invoice ceiling remains required, hold rather than build a new enforcement system. The approved native design, original 20-file/6,600-line/1,903-focused-line limits, historical records and separate unfunded five-pair evaluation remain intact; this is readiness only, not completed product implementation or validation PASS.

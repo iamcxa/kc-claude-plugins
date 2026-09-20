@@ -1,0 +1,31 @@
+{
+  "schema": "kc-pr-flow.planner-input/v1",
+  "identity": {
+    "schema": "kc-pr-flow.intake-identity/v1",
+    "repository": "iamcxa/kc-claude-plugins",
+    "pr_number": 434,
+    "base_sha": "33ffd50b217004411f58277cf986ccee7974fe55",
+    "head_sha": "29007f90fc628ae40faf2903dd02d9895f4dcffe",
+    "intake_id": "dev434-readiness"
+  },
+  "protocol_major": 1,
+  "requested": "auto",
+  "full_pass": false,
+  "shape": [
+    {
+      "path": "kc-journey-map/lib/storymap.mjs",
+      "added": 5,
+      "deleted": 2,
+      "binary": false
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.test.mjs",
+      "added": 28,
+      "deleted": 0,
+      "binary": false
+    }
+  ],
+  "pr_archetype": "bugfix",
+  "test_commands": [],
+  "concerns": []
+}

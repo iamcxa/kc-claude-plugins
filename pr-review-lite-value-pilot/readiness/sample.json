@@ -1,0 +1,32 @@
+{
+  "additions": 33,
+  "author": {
+    "id": "MDQ6VXNlcjE1MjI4MDg=",
+    "is_bot": false,
+    "login": "iamcxa",
+    "name": "Kent Chen"
+  },
+  "baseRefOid": "33ffd50b217004411f58277cf986ccee7974fe55",
+  "body": "## What was wrong\n\n`oneJourneyH` was a literal `70`, and the banner drew at `oneJourneyH - 10`. Every other box on the story map sizes itself with `fitHeight`. Any `one_journey` sentence wrapping past two lines lost its last one \u2014 silently, because a tldraw geo draws its overflow outside itself rather than complaining.\n\nOn the board that surfaced it: **60px drawn against 112px of text**, and the closing clause was simply not on the page.\n\nSame class as #431 \u2014 a dimension asserted rather than measured \u2014 found while confirming that fix in an exported image.\n\n## The fix\n\nHoist the width that was already being computed inline, measure the same string the label will hold, keep the 10px the draw subtracts back.\n\n```js\nconst oneJourneyW = Math.max(600, steps.length * PITCH - 20)\nconst oneJourneyH = model.one_journey ? fitHeight(`ONE JOURNEY\\n${model.one_journey}`, oneJourneyW) + 10 : 0\n```\n\n## Evidence\n\n- **77/77 model tests pass**, up from 75.\n- **Boot-and-render smoke passes**: 262 shapes across 5 pages, round trip clean.\n- **Rendered and looked at.** The example board exports with the banner intact \u2014 the sentence now ends in \"kept in the file.\" instead of stopping mid-clause. Screenshotted and read, not just written.\n- **Re-rendered a real 49-story board**: banner went from 60px to 112px against the same text.\n\nTwo tests, three mutations, all three fail both tests:\n\n| Mutation | Result |\n|---|---|\n| restore the literal `70` | both fail |\n| measure at `oneJourneyW * 3` | both fail |\n| drop the `+ 10` the draw subtracts | both fail |\n\n## Why the second test is the one that matters\n\nThe targeted test pins this banner. The broad one asserts **no geo on the page is shorter than the text inside it** \u2014 and it caught exactly one shape, this one. So the invariant already held everywhere else, and the class is now closed rather than the instance patched. If a future box is added with a guessed height, that test fails before anyone has to notice it in an image.\n\n## without-it unanswered\n\n- The broad test walks `type === 'geo'` with non-empty text. A `note` grows at runtime via `growY`, so notes are out of its reach by construction, not by oversight \u2014 but nothing states that anywhere except this sentence.\n\n\ud83e\udd16 Generated with [Claude Code](https://claude.com/claude-code)",
+  "deletions": 2,
+  "files": [
+    {
+      "path": "kc-journey-map/lib/storymap.mjs",
+      "additions": 5,
+      "deletions": 2,
+      "changeType": "MODIFIED"
+    },
+    {
+      "path": "kc-journey-map/lib/storymap.test.mjs",
+      "additions": 28,
+      "deletions": 0,
+      "changeType": "MODIFIED"
+    }
+  ],
+  "headRefOid": "29007f90fc628ae40faf2903dd02d9895f4dcffe",
+  "mergedAt": "2026-09-14T06:33:12Z",
+  "number": 434,
+  "state": "MERGED",
+  "title": "fix(kc-journey-map): measure the one-journey banner instead of assuming 70px",
+  "url": "https://github.com/iamcxa/kc-claude-plugins/pull/434"
+}

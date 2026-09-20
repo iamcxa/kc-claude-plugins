@@ -1,0 +1,142 @@
+{
+  "schema": "kc-pr-flow.review-plan/v1",
+  "identity": {
+    "schema": "kc-pr-flow.intake-identity/v1",
+    "repository": "iamcxa/kc-claude-plugins",
+    "pr_number": 434,
+    "base_sha": "33ffd50b217004411f58277cf986ccee7974fe55",
+    "head_sha": "29007f90fc628ae40faf2903dd02d9895f4dcffe",
+    "intake_id": "dev434-readiness"
+  },
+  "plan_rev": 1,
+  "profile": "lite",
+  "requested": "auto",
+  "recommended": "lite",
+  "signals": [],
+  "questions": [
+    "code_correctness",
+    "documentation_accuracy",
+    "goal_alignment",
+    "security_risk",
+    "silent_failure"
+  ],
+  "manifests": [
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1",
+      "id": "code_correctness",
+      "version": 1,
+      "questions": [
+        "code_correctness"
+      ],
+      "required_evidence": [
+        "diff_hunks"
+      ],
+      "optional_evidence": [
+        "repository_rules",
+        "related_source"
+      ],
+      "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1",
+      "id": "documentation_accuracy",
+      "version": 1,
+      "questions": [
+        "documentation_accuracy"
+      ],
+      "required_evidence": [
+        "diff_hunks"
+      ],
+      "optional_evidence": [
+        "repository_rules"
+      ],
+      "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1",
+      "id": "goal_alignment",
+      "version": 1,
+      "questions": [
+        "goal_alignment"
+      ],
+      "required_evidence": [
+        "diff_hunks"
+      ],
+      "required_any_evidence": [
+        "pr_body",
+        "issue",
+        "review_comment"
+      ],
+      "optional_evidence": [
+        "pr_body",
+        "issue",
+        "review_comment"
+      ],
+      "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1",
+      "id": "security_risk",
+      "version": 1,
+      "questions": [
+        "security_risk"
+      ],
+      "required_evidence": [
+        "diff_hunks"
+      ],
+      "optional_evidence": [
+        "repository_rules"
+      ],
+      "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    },
+    {
+      "schema": "kc-pr-flow.capability-manifest/v1",
+      "id": "silent_failure",
+      "version": 1,
+      "questions": [
+        "silent_failure"
+      ],
+      "required_evidence": [
+        "diff_hunks"
+      ],
+      "optional_evidence": [
+        "related_source"
+      ],
+      "trust_tier": "repository-read-only",
+      "input_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityRequest",
+      "output_schema_ref": "review-capability-v1.schema.json#/$defs/CapabilityResult"
+    }
+  ],
+  "expansion_reserve": 0,
+  "timeout_seconds": 120,
+  "retry_cap": 1,
+  "concerns": [],
+  "test_commands": [],
+  "review_config": {
+    "schema": "kc-pr-flow.review-config/v1",
+    "capabilities": [
+      "code_correctness",
+      "documentation_accuracy",
+      "goal_alignment",
+      "security_risk",
+      "silent_failure"
+    ],
+    "modes": {
+      "agent_tier": "lite",
+      "pr_archetype": "bugfix",
+      "full_pass": false,
+      "probe_required": false,
+      "cross_model": false,
+      "noise_filter": false
+    }
+  },
+  "plan_hash": "41f6ecd80369b683539a75d97279cd140381707fb28ea3b22c8d70d387a2e536"
+}

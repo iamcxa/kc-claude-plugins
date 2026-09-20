@@ -1,0 +1,68 @@
+diff --git a/kc-journey-map/lib/storymap.mjs b/kc-journey-map/lib/storymap.mjs
+index fb589f82..126685f3 100644
+--- a/kc-journey-map/lib/storymap.mjs
++++ b/kc-journey-map/lib/storymap.mjs
+@@ -45,7 +45,10 @@ export function buildStoryMap(model, room = null, progress = null) {
+ 	)
+ 	const hasOwnership = (model.ownership ?? []).length > 0
+ 	const Y_BAND = Y_PERSONA + headH + GAP
+-	const oneJourneyH = model.one_journey ? 70 : 0
++	// Every other box measures its text; this one took a literal 70 and clipped the
++	// last line of any sentence that wrapped past two.
++	const oneJourneyW = Math.max(600, steps.length * PITCH - 20)
++	const oneJourneyH = model.one_journey ? fitHeight(`ONE JOURNEY\n${model.one_journey}`, oneJourneyW) + 10 : 0
+ 	const Y_BACKBONE = Y_BAND + (hasOwnership ? bandH + GAP : 0) + oneJourneyH
+ 	const Y_STORIES = Y_BACKBONE + 260
+ 
+@@ -93,7 +96,7 @@ export function buildStoryMap(model, room = null, progress = null) {
+ 				text: `ONE JOURNEY\n${model.one_journey}`,
+ 				x: X0,
+ 				y: Y_BACKBONE - oneJourneyH,
+-				w: Math.max(600, steps.length * PITCH - 20),
++				w: oneJourneyW,
+ 				h: oneJourneyH - 10,
+ 				index: ix[n++],
+ 				parentId,
+diff --git a/kc-journey-map/lib/storymap.test.mjs b/kc-journey-map/lib/storymap.test.mjs
+index 4cf50f71..1b02b3a2 100644
+--- a/kc-journey-map/lib/storymap.test.mjs
++++ b/kc-journey-map/lib/storymap.test.mjs
+@@ -3,6 +3,7 @@ import { test } from 'node:test'
+ import { buildStoryMap } from './storymap.mjs'
+ import { buildJourneyBoard } from './render.mjs'
+ import { fixtureModel as model } from './fixture.mjs'
++import { fitHeight } from './records.mjs'
+ import { createTLSchema } from '@tldraw/tlschema'
+ 
+ const kinds = (put) => new Set(put.map((r) => r.meta?.journey?.kind).filter(Boolean))
+@@ -139,3 +140,30 @@ test('a question grows its row, so the row beneath it stays clear', () => {
+ 	const q = kindOf(put, 'story-question')[0]
+ 	assert.ok(byId(put, 'shape:sm-story-below').y > q.y + q.props.h, 'the next row starts inside the question box')
+ })
++
++// Every other box on the page takes its height from fitHeight; the banner took a
++// literal 70. Measured on a real board: 60px drawn against 88px of text.
++const labelText = (s) => s.props.richText.content.flatMap((p) => (p.content ?? []).map((t) => t.text ?? '')).join('\n')
++
++test('the one-journey banner is tall enough for its sentence', () => {
++	const long = { ...model, one_journey: 'A person asks for the thing once, and it arrives without them checking twice, and nobody has to be told which queue it went into or who is holding it now.' }
++	const banner = kindOf(buildStoryMap(long), 'one-journey')[0]
++	assert.ok(banner, 'no banner drawn')
++	assert.ok(
++		banner.props.h >= fitHeight(labelText(banner), banner.props.w),
++		`banner is ${banner.props.h}px for ${fitHeight(labelText(banner), banner.props.w)}px of text`
++	)
++})
++
++test('no drawn label is shorter than the text inside it', () => {
++	const long = { ...model, one_journey: 'A sentence long enough to wrap more than twice at the width this banner is given, which is how the clipping was first seen.' }
++	for (const s of buildStoryMap(long)) {
++		if (s.type !== 'geo' || !s.props?.richText) continue
++		const text = labelText(s)
++		if (!text.trim()) continue
++		assert.ok(
++			s.props.h >= fitHeight(text, s.props.w),
++			`${s.meta?.journey?.kind ?? s.id} is ${s.props.h}px for ${fitHeight(text, s.props.w)}px of text`
++		)
++	}
++})

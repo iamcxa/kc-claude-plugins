@@ -1,0 +1,164 @@
+{
+  "observed_at_utc": "2026-09-20T01:35:45Z",
+  "worktree": "/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v2/.worktrees/spacedock-ensign-pr-review-lite-value-pilot",
+  "code_head": "6bf62d1d7d3c343a97c973a7abd7424d03676437",
+  "code_branch": "spacedock-ensign/pr-review-lite-value-pilot",
+  "initial_code_status": "",
+  "sample_patch_sha256": "1a88db01f8bc155c6434b37c626e949824953d7fa9b52828d7cd6db32cd5a914",
+  "sample_diff_numstat": "5\t2\tkc-journey-map/lib/storymap.mjs\n28\t0\tkc-journey-map/lib/storymap.test.mjs\n",
+  "sample_merge_base": "33ffd50b217004411f58277cf986ccee7974fe55",
+  "sample_head_tree": "1a89abd27e21abd6fac332b4616486bb6a9f5121",
+  "versions": {
+    "claude": "2.1.273 (Claude Code)",
+    "codex": "codex-cli 0.153.4",
+    "node": "v24.18.0",
+    "npm": "11.12.0",
+    "python": "Python 3.11.14",
+    "git": "git version 2.50.1 (Apple Git-155)",
+    "gh": "gh version 2.92.0 (2026-04-28)",
+    "jq": "jq-1.7.1-apple",
+    "timeout": "timeout (GNU coreutils) 9.4"
+  },
+  "claude_binary": "/Users/kent/.local/share/claude/versions/2.1.273",
+  "claude_binary_sha256": "953e9880dbcb0b70f31c1f508de6a3fd389753d131688557fd992da9184693fb",
+  "claude_help_sha256": "ae85d661e9c086f05637ebcd868f5702b477ff6e55e2e65b8ada7807cd51a4b6",
+  "recommended_model": "claude-opus-5",
+  "recommended_effort": "high",
+  "model_evidence": {
+    "path": "/Users/kent/.claude/projects/-Users-kent-conductor-workspaces-kc-claude-plugins-colombo/4fb62b19-ba0b-40e4-a255-7764f9e02c1e.jsonl",
+    "model_message_counts": {
+      "claude-opus-5": 1921,
+      "<synthetic>": 3
+    },
+    "note": "Only model keys inspected; no prompts or credentials retained. Past use is not a current entitlement test."
+  },
+  "toolkit_install": "/Users/kent/.claude/plugins/cache/claude-plugins-official/pr-review-toolkit/c447c3207a42",
+  "toolkit_version": "c447c3207a42",
+  "toolkit_file_sha256": {
+    ".claude-plugin/plugin.json": "7aa64c91a9316ef3641df115414c07c7caee8f48368815dc2950483598321865",
+    ".in_use/2471": "036751e970472a5c5e705f5a35b120a8fd5ee1bb09fe2cd1d1b9c59618eeb098",
+    ".in_use/68320": "d701abd4e2ebfaa11183c04f39f6227c1cd49804145785d49622d5c8dde776fd",
+    ".in_use/71946": "fae0d1f5b1c77d72e544ecdd61a151d12bae11b6fbd624fac202d5637c5a062d",
+    ".in_use/88003": "259df71169ccbfd808f233480198e230407cecb0b2cfb661b4896a8ca909be07",
+    ".in_use/88117": "7eabab6c8b676d33715ee165d62458a6e70859b821e3c0a9739624fb40b6d5bb",
+    "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
+    "README.md": "364cb1d46aa64a01016e4ef5f41dfea5bd5e3cf530459409a376feba93dd2b49",
+    "agents/code-reviewer.md": "019395c3ce457460115cc703e2f4a86fed4bbe560dc58355051c4d877155d366",
+    "agents/code-simplifier.md": "976ddb22b84bc5a714216531a75db5e73169554add6b953442beeedb49b56891",
+    "agents/comment-analyzer.md": "4a9c1f2eb8234a4b9231983e75739663d512e1aed242388964a165a719b84698",
+    "agents/pr-test-analyzer.md": "fcb1cde9ba7b21694b508766a8d6a79bc91bed9982f828f816210059934f46b4",
+    "agents/silent-failure-hunter.md": "fa9b0daec5a267e7e66435cc48b3328301fc9f70c3af259fe248881327a1babc",
+    "agents/type-design-analyzer.md": "c1cf67843d3c4fd27ddf6b24aa92521414b16c01610e7f7e87212c7b8681198d",
+    "commands/review-pr.md": "5e70c17293a044e1bf9d092c80b5da8b4fd5802ebb07dc53993dec4ba7ce2fc4"
+  },
+  "timer_probe": {
+    "command": "gtimeout --signal=TERM --kill-after=1s 0.1s /bin/sleep 5",
+    "exit_code": 124,
+    "elapsed_seconds": 0.10793275000469293,
+    "stdout": "",
+    "stderr": "",
+    "proves": "Local command timeout only, not native child cancellation or spend."
+  },
+  "order_coin": 0,
+  "arm_order": [
+    "control",
+    "treatment"
+  ],
+  "candidate_counts": [
+    {
+      "path": ".github/workflows/review-evaluation-tests.yml",
+      "added": 5,
+      "deleted": 1
+    },
+    {
+      "path": ".github/workflows/review-runtime-tests.yml",
+      "added": 23,
+      "deleted": 0
+    },
+    {
+      "path": "ARCHITECTURE.md",
+      "added": 49,
+      "deleted": 1
+    },
+    {
+      "path": "PRODUCT.md",
+      "added": 17,
+      "deleted": 0
+    },
+    {
+      "path": "docs/superpowers/specs/2026-09-05-kc-pr-review-capability-protocol-v1.md",
+      "added": 1261,
+      "deleted": 0
+    },
+    {
+      "path": "kc-pr-flow/CLAUDE.md",
+      "added": 39,
+      "deleted": 1
+    },
+    {
+      "path": "kc-pr-flow/README.md",
+      "added": 30,
+      "deleted": 0
+    },
+    {
+      "path": "kc-pr-flow/agents/review-capability-worker.md",
+      "added": 58,
+      "deleted": 0
+    },
+    {
+      "path": "kc-pr-flow/docs/review-runtime.md",
+      "added": 169,
+      "deleted": 0
+    },
+    {
+      "path": "kc-pr-flow/schemas/review-capability-catalog-v1.json",
+      "added": 97,
+      "deleted": 0
+    },
+    {
+      "path": "kc-pr-flow/schemas/review-capability-v1.schema.json",
+      "added": 447,
+      "deleted": 0
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-ablation.test.sh",
+      "added": 6,
+      "deleted": 1
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-capability-corpus.tsv",
+      "added": 8,
+      "deleted": 0
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-capability.py",
+      "added": 2142,
+      "deleted": 0
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-capability.test.py",
+      "added": 1214,
+      "deleted": 0
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-runtime.sh",
+      "added": 51,
+      "deleted": 14
+    },
+    {
+      "path": "kc-pr-flow/scripts/review-runtime.test.sh",
+      "added": 126,
+      "deleted": 4
+    },
+    {
+      "path": "kc-pr-flow/skills/kc-pr-review/SKILL.md",
+      "added": 120,
+      "deleted": 0
+    }
+  ],
+  "candidate_total_files": 18,
+  "candidate_total_changed_lines": 5884,
+  "target_node_modules_present": false,
+  "paid_calls_executed": 0,
+  "candidate_focused_changed_lines": 1903
+}
