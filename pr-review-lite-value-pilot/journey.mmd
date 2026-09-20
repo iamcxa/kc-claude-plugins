@@ -1,0 +1,28 @@
+flowchart TD
+  A[Captain approves design] --> B{Separate spend authority and host controls ready?}
+  B -->|No| Z[Hold: no further model calls]
+  B -->|Yes| C[Operator pins one development PR and both versions]
+  C --> D[Paid control triage and deterministic Lite admission]
+  D -->|Ineligible or unavailable| Z
+  D -->|Both Lite| E[Captain start message; operator starts observation]
+  E --> F{Frozen arm}
+  F -->|Control: flags off| G[Existing default review and synthesis]
+  F -->|Treatment: flags on| H[Planner freezes questions; builder prepares evidence and tests]
+  H --> I[Host dispatches Read-only workers; collects raw attempts]
+  I --> J[Existing review agent judges; validator checks coverage and receipt]
+  G --> K{Complete review and confirmation request delivered?}
+  J --> K
+  H -->|Missing goals or evidence| X[Retain incomplete or failed result; cancel outstanding work]
+  I -->|Timeout, spend, expansion or invalid result| X
+  J -->|Head drift or incomplete coverage| X
+  K -->|No| X
+  K -->|Yes| L[Operator records end; retain output and provider usage]
+  X --> M[Keep failure visible; no successful timing sample]
+  L --> V{Both frozen arms finished?}
+  V -->|No| E
+  V -->|Yes| N[Independent judge freezes quality before timing disclosure]
+  N --> O{Quality preserved and saving mechanism supported?}
+  O -->|No| P[Recommend simplify or stop; return to Captain]
+  O -->|Yes| Q[Recommend separately funded five-pair blind evaluation]
+  L -. User confirmation and posting are outside comparison .-> R[Captain retains posting authority; preview only]
+  M --> P

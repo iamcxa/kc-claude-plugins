@@ -1,0 +1,202 @@
+{
+  "observed_date": "2026-09-20",
+  "historical_base": "3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8",
+  "candidate": "0d2e3164ccd2d60006688c5443717b818825a305",
+  "integration": "6bf62d1d7d3c343a97c973a7abd7424d03676437",
+  "git_numstat": [
+    [
+      "5",
+      "1",
+      ".github/workflows/review-evaluation-tests.yml"
+    ],
+    [
+      "23",
+      "0",
+      ".github/workflows/review-runtime-tests.yml"
+    ],
+    [
+      "49",
+      "1",
+      "ARCHITECTURE.md"
+    ],
+    [
+      "17",
+      "0",
+      "PRODUCT.md"
+    ],
+    [
+      "1261",
+      "0",
+      "docs/superpowers/specs/2026-09-05-kc-pr-review-capability-protocol-v1.md"
+    ],
+    [
+      "39",
+      "1",
+      "kc-pr-flow/CLAUDE.md"
+    ],
+    [
+      "30",
+      "0",
+      "kc-pr-flow/README.md"
+    ],
+    [
+      "58",
+      "0",
+      "kc-pr-flow/agents/review-capability-worker.md"
+    ],
+    [
+      "169",
+      "0",
+      "kc-pr-flow/docs/review-runtime.md"
+    ],
+    [
+      "97",
+      "0",
+      "kc-pr-flow/schemas/review-capability-catalog-v1.json"
+    ],
+    [
+      "447",
+      "0",
+      "kc-pr-flow/schemas/review-capability-v1.schema.json"
+    ],
+    [
+      "6",
+      "1",
+      "kc-pr-flow/scripts/review-ablation.test.sh"
+    ],
+    [
+      "8",
+      "0",
+      "kc-pr-flow/scripts/review-capability-corpus.tsv"
+    ],
+    [
+      "2142",
+      "0",
+      "kc-pr-flow/scripts/review-capability.py"
+    ],
+    [
+      "1214",
+      "0",
+      "kc-pr-flow/scripts/review-capability.test.py"
+    ],
+    [
+      "51",
+      "14",
+      "kc-pr-flow/scripts/review-runtime.sh"
+    ],
+    [
+      "126",
+      "4",
+      "kc-pr-flow/scripts/review-runtime.test.sh"
+    ],
+    [
+      "120",
+      "0",
+      "kc-pr-flow/skills/kc-pr-review/SKILL.md"
+    ]
+  ],
+  "changed_files": 18,
+  "total_changed_lines": 5884,
+  "focused_rows": [
+    [
+      "97",
+      "0",
+      "kc-pr-flow/schemas/review-capability-catalog-v1.json"
+    ],
+    [
+      "447",
+      "0",
+      "kc-pr-flow/schemas/review-capability-v1.schema.json"
+    ],
+    [
+      "6",
+      "1",
+      "kc-pr-flow/scripts/review-ablation.test.sh"
+    ],
+    [
+      "8",
+      "0",
+      "kc-pr-flow/scripts/review-capability-corpus.tsv"
+    ],
+    [
+      "1214",
+      "0",
+      "kc-pr-flow/scripts/review-capability.test.py"
+    ],
+    [
+      "126",
+      "4",
+      "kc-pr-flow/scripts/review-runtime.test.sh"
+    ]
+  ],
+  "focused_lines": 1903,
+  "main_changed_overlap": [
+    "ARCHITECTURE.md"
+  ],
+  "corpus_data_rows": 0,
+  "ledger": {
+    "source": "/Users/kent/.claude/audit/pr-daemon-usage.jsonl",
+    "sha256": "a6e8fc70c891f2840300cc132a2fa15fbe8c00080b9a95fe1fc1e90b20a7872c",
+    "total_rows": 90,
+    "qualifying_count": 6,
+    "qualifying_rows": [
+      {
+        "timestamp": "2026-03-15T07:42:51Z",
+        "cost_usd": 0.6997,
+        "duration_ms": 190287,
+        "input_tokens": 4709,
+        "output_tokens": 8167,
+        "cache_create_tokens": 90617,
+        "cache_read_tokens": 744174
+      },
+      {
+        "timestamp": "2026-03-15T17:16:44Z",
+        "cost_usd": 4.9612,
+        "duration_ms": 660246,
+        "input_tokens": 24,
+        "output_tokens": 19243,
+        "cache_create_tokens": 122626,
+        "cache_read_tokens": 1873023
+      },
+      {
+        "timestamp": "2026-03-15T17:51:59Z",
+        "cost_usd": 0.962,
+        "duration_ms": 333853,
+        "input_tokens": 19,
+        "output_tokens": 15627,
+        "cache_create_tokens": 99590,
+        "cache_read_tokens": 1180233
+      },
+      {
+        "timestamp": "2026-03-15T18:41:57Z",
+        "cost_usd": 2.6592,
+        "duration_ms": 544350,
+        "input_tokens": 2600,
+        "output_tokens": 20470,
+        "cache_create_tokens": 99689,
+        "cache_read_tokens": 2306014
+      },
+      {
+        "timestamp": "2026-03-15T19:05:14Z",
+        "cost_usd": 1.4105,
+        "duration_ms": 522282,
+        "input_tokens": 32,
+        "output_tokens": 18076,
+        "cache_create_tokens": 124789,
+        "cache_read_tokens": 2237758
+      },
+      {
+        "timestamp": "2026-03-15T20:00:05Z",
+        "cost_usd": 0.6864,
+        "duration_ms": 157945,
+        "input_tokens": 16,
+        "output_tokens": 7401,
+        "cache_create_tokens": 85942,
+        "cache_read_tokens": 843397
+      }
+    ],
+    "max_usd": 4.9612,
+    "attribution": "Review-bearing daemon iterations, not isolated new-arm review prices; no model/version field in source."
+  },
+  "candidate_pr_query": []
+}

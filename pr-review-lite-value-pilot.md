@@ -83,3 +83,31 @@ Verified by: A budget proposal derived from existing usage or explicitly unknown
 ## Current authorization
 
 Record the admitted seed, bind and record the Captain's already-given initial approval, and dispatch ideation through the dev2 workflow. Return a concrete design gate; do not advance to implementation automatically.
+
+
+## Ideation design
+
+[PRFAQ and comparison plan](pr-review-lite-value-pilot/design.md), [rendered journey](pr-review-lite-value-pilot/journey.png), [Mermaid source](pr-review-lite-value-pilot/journey.mmd), and [sanitized source/count/usage audit](pr-review-lite-value-pilot/source-audit.json).
+
+## Stage Report: ideation
+
+- DONE: Reconcile current candidate and historical approvals into a minimal Pilot PRFAQ with a rendered, semantically checked Mermaid flow and a keep/change/defer mapping.
+  Design FAQ, current-evidence reconciliation, flow and mapping preserve the supervised path; installed Mermaid CLI rendered the image, which was inspected and corrected for both-arm sequencing and admission-stop wording.
+- DONE: Produce a falsifiable one-development-PR comparison and separate five-pair blind acceptance plan, with existing instrument evidence, a concrete budget proposal or exact missing cost input, and no experiment execution.
+  Design specifies exact version policy, full externally observed time, quality-first scoring, failure retention and simplification rule; proposed development-only USD 19.8448 includes admission, both arms and judge work, with actual native spend enforcement still unverified.
+- DONE: Audit candidate limits and current-main compatibility without mutating product, then write and commit the ideation Stage Report and design in the task state, naming unresolved Captain decisions and stopping at design review.
+  Source audit pins candidate 0d2e3164 and main 6bf62d1d; 18 files / 5,884 total / 1,903 focused fit original limits; only ARCHITECTURE.md overlaps main changes, at separate inspected hunks. Task-scoped state commit contains this report; no product or gate mutation.
+- DONE: AC-1 — intended user, attended journey, minimal scope, owners and stop/rollback paths.
+  Design FAQ plus rendered flow were cross-checked against candidate skill, worker and adapter seams; visual semantic check passed, future live execution remains unverified.
+- DONE: AC-2 — falsifiable development completion and saving mechanism.
+  One-PR plan names unchanged control triage, both opt-in flags, exact versions, external endpoints, all overhead, calibrated quality and failure rules; native lane timing and cost must come from actual host observations, not null sidecar fields.
+- DONE: AC-3 — proportional implementation/adoption decision.
+  Keep/change/defer table and read-only original-denominator count audit recommend reuse before product changes; focused headroom is zero and static compatibility is not tested integration.
+- DONE: AC-4 — separate held-out five-pair acceptance without denominator drift.
+  Exactly five effective slots plus one unavailable-to-both-only backup, no accepted Critical/High control misses, no extra aggregate false positives, complete coverage, aggregate 0.333 and three-of-five individual 0.333 retained; corpus has zero rows, evaluation not run.
+- DONE: AC-5 — separate spend, delivery and learning evidence.
+  Six existing numeric ledger entries support only the USD 4.9612 historical planning ceiling; design does not authorize spend, product changes, independent paid review, five-pair runs, delivery or learning.
+
+### Summary
+
+The smallest recommendation is to accept or revise the development-first design, reuse the current default-off candidate and retain the original limits. Product value, live host reliability, enforceable aggregate spend, independent validation and delivery remain unproven; exact execution inputs and spend authority are required before a later development launch. This is completed ideation evidence only, with no model experiment, product edit, old-state change or gate advancement.
