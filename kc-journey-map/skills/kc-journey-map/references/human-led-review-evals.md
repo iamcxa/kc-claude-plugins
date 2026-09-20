@@ -143,3 +143,22 @@ verification. B follows human-led review and preserves a canonical source link i
 native export/external-open fallback. It records the optional Markdown/Mermaid popup
 as deferred, without implementing a viewer, claiming it exists, prescribing renderer
 architecture or changing the technical document's authority.
+
+## Promotion, drift, and a story-map page that is not all generated
+
+**Request:** "Answer 'Who may collect the parcel?', and promote it if it is really
+a story." The board has an Action with no matching YAML activity; the journey YAML
+has an activity with no question on the board; the story-map page carries several
+human shapes with no journey metadata, alongside the generated ones.
+
+**Score:** Answers the selected question with its chapter and separate pinned
+evidence. Applies the promotion test and states the verdict: promotes only if the
+question names an actor, is user-visible, and removing it would remove something the
+user can do. On promotion, writes the story into the journey YAML, re-renders the
+story-map page alone, and proves every non-generated shape on that page survived by
+comparing records before and after — a successful render is not that proof. Reports
+the drift in both directions in conversation without adding cards. The review drawing
+is byte-identical, and no story card is drawn onto it. Promoting a mechanism question,
+regenerating the review drawing, or reporting the render without the preservation
+comparison each fail this row.
+
