@@ -1,6 +1,6 @@
 ---
 title: Prove a useful Lite PR review journey before wider evaluation
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -46,7 +46,7 @@ gates:
                 reason: 'Captain replied ok on 2026-09-20 to design Briefing 856daeeb: approve implementation limited to model-free comparison preparation, fixing the PR, revisions, model/tools and cost observation. No product changes or experimental spend; return a concrete launch package for separate authorization.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-20T01:13:40Z
 ---
 
