@@ -4,7 +4,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-worktree: .worktrees/spacedock-ensign-pr-review-lite-value-pilot
+worktree: .worktrees/spacedock-ensign-pr-review-lite-value-pilot-correction
 pr:
 gates:
     version: 1
@@ -345,6 +345,39 @@ model-free analysis. Any future comparison requires a separately approved,
 immutable next candidate and explicit preregistration; reuse of the old control
 for scoring is not assumed. FO may commit and push only task-specific state after
 the ensign report is verified.
+
+#### Captain two-file correction approval — 2026-09-21
+
+The Captain explicitly replied `核准` to the correction proposal committed at
+state revision `96c3da1330d648a79f62cb1822798e120c5bd6c8`. This authorizes implementation
+and independent model-free validation of exactly
+`kc-pr-flow/scripts/review-capability.py` and
+`kc-pr-flow/scripts/review-capability.test.py`, based on frozen candidate
+`0d2e3164ccd2d60006688c5443717b818825a305`. It preserves the proposal's normal
+provisioned-Cloud-OAuth route, configured-versus-observed evidence distinction,
+existing prepare/collect/retry/finalize contracts, original denominator
+`3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`, and both the original and stricter
+size caps.
+
+The historical registered Cloud worktree
+`.worktrees/spacedock-ensign-pr-review-lite-value-pilot` remains clean at control
+commit `6bf62d1d7d3c343a97c973a7abd7424d03676437` and is not a candidate-editing
+base. The correction is assigned to the new candidate-derived owned worktree
+`.worktrees/spacedock-ensign-pr-review-lite-value-pilot-correction`, branch
+`spacedock-ensign/pr-review-lite-value-pilot-correction`. The original frozen
+candidate checkout and prior stop evidence remain read-only. The former
+implementation worker is absent from the live Cloud roster, so it is not
+eligible for addressable reuse; one fresh implementation ensign may own this
+bounded correction, followed by one different fresh validation ensign.
+
+No experiment/provider model call, product commit or push, PR, posting, merge,
+default change, calibration, judge or stage completion is authorized. Keep the
+approved two-file product diff uncommitted, preserve private exact patch and
+hash evidence, and commit/push task state only. If readable correctness cannot
+fit the approved limits, or a required no-model check cannot establish the
+boundary, STOP with the exact measured choice. The stopped comparison and its
+known/unknown costs remain unchanged; any future comparison still needs separate
+authorization and preregistration.
 
 ## Stage Report: implementation (cycle 2)
 
