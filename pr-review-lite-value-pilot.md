@@ -261,6 +261,31 @@ its hash is `fdf607a07bbdf6efd037ec0b7350b00e2525e6853412850ef23a52cdf389a57f`.
 Experiment model launches at this boundary remain zero. The one authorized Cloud
 admission may now start; arms and judge retain their independent prerequisites.
 
+#### Cloud admission result — 2026-09-20
+
+The single authorized Cloud admission completed successfully; see
+[checkpoint](pr-review-lite-value-pilot/admission-cloud1-checkpoint/README.md) and
+[sanitized summary](pr-review-lite-value-pilot/admission-cloud1-checkpoint/summary.json).
+The final host receipt reports `claude-opus-5`, success, one result,
+USD 0.46017775000000005 estimated/list-basis cost, 16 input / 31,223 cache-write /
+169,858 cache-read / 7,201 output tokens, and no permission denials. Process elapsed
+was 80.384955883 seconds; this is admission setup evidence, not an arm timing sample
+or an invoice guarantee.
+
+Actual legacy triage returned Lite / bugfix with `full_pass`, `probe_required`,
+`cross_model` and `noise_filter` all false. It matches the unmodified candidate
+planner on identical frozen PR metadata. Effective startup reported only the
+pinned control plugin 1.12.0, Opus 5, Read/Grep/Glob/Bash, zero MCP servers, and
+`dontAsk`; debug evidence reports zero active hooks, no declared marketplace,
+plugin auto-update skipped and no marketplace pull/clone. No fallback, Agent,
+write, web/MCP call, permission denial or tracked mutation was observed. Raw stream,
+stderr, debug, argv source, prompt and process readback remain private with hashes.
+
+Admission therefore permits the retained next step, control first, without forcing
+a mode or reusing its analysis inside either arm. Its USD 4.50102225 unspent
+threshold is non-transferable. Control has not started; calibration-key confirmation
+is still pending and blocks only judge calibration, not the two arms.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
