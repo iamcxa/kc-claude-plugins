@@ -286,6 +286,33 @@ a mode or reusing its analysis inside either arm. Its USD 4.50102225 unspent
 threshold is non-transferable. Control has not started; calibration-key confirmation
 is still pending and blocks only judge calibration, not the two arms.
 
+#### Cloud control result — 2026-09-20
+
+The retained first arm completed successfully; see
+[checkpoint](pr-review-lite-value-pilot/control-cloud1-checkpoint/README.md) and
+[sanitized summary](pr-review-lite-value-pilot/control-cloud1-checkpoint/summary.json).
+External elapsed from before checkout/acquisition through FO observation of the
+complete review, normal confirmation request and literal `END REVIEW` was
+409.872228384 seconds. The one inclusive native-tree final receipt reports
+USD 4.599209500000001 list-basis host cost, below its USD 4.9612 stop, with Opus 5
+only. Unspent threshold is non-transferable.
+
+The arm reacquired the frozen target/metadata, exported the control plugin and
+toolkit inside the timed interval, used the registered common runtime and flags,
+and produced a full legacy review with four declared review workers, eight proposed
+inline comments, five advisory items, limitations and a non-posting confirmation
+menu. Both permitted syntax checks passed. No dependency install, build, full test,
+browser, posting, source edit, fallback, marketplace refresh, MCP/web use or tracked
+mutation occurred. One Grep used a malformed path outside the target and was denied;
+the same evidence was obtained through allowed in-target reads, so this was retained
+as a non-required denial rather than concealed or repaired by operator intervention.
+The complete output remains unedited and is not supplied to treatment.
+
+Control is valid for the registered comparison. Treatment has not started. The
+next arm must independently reacquire all material and use the CLI-backed candidate
+route; it may not consume control findings, timing or cost. Human confirmation of
+the three-case calibration key remains pending and still blocks judge calibration.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
