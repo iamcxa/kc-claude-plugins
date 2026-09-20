@@ -198,6 +198,37 @@ Cloud Linux paths and executable hashes necessarily replace the Mac-specific hos
 
 The local FO prepares a self-contained handoff containing task/state locations, source pins, current approvals/stops and the needed non-secret skill/toolkit bytes. After Cloud ownership is acknowledged, local task-state writes stop. A Cloud acknowledgement must prove remote Linux execution with CONDUCTOR_IS_LOCAL=0; workspace creation alone is not experiment execution or a guarantee against Cloud service suspension. The original acceptance/quality requirements and human calibration evidence boundary remain visible.
 
+#### Cloud ownership registration — 2026-09-20
+
+Kent's local FO acknowledged the observed Linux / `CONDUCTOR_IS_LOCAL=0`
+readback in message `0026379b-0cf9-4653-bcb9-e97cfc520002` and stopped all
+local task-state writes. Cloud workspace
+`4815161d-63b0-44dc-b08d-8f5f43a3caee`, session
+`d0e0b07a-6089-46aa-b035-61e910797310`, is the sole owner of the next
+task-state, dispatch and evidence actions. Operator link:
+`conductor://workspace?id=4815161d-63b0-44dc-b08d-8f5f43a3caee&session=d0e0b07a-6089-46aa-b035-61e910797310`.
+
+The historical predecessor worktree was
+`/Users/kent/conductor/workspaces/kc-claude-plugins/montpellier-v2/.worktrees/spacedock-ensign-pr-review-lite-value-pilot`.
+It is not accessed from Cloud. Its workflow-relative registration
+`.worktrees/spacedock-ensign-pr-review-lite-value-pilot` maps through the normal
+Spacedock stamped implementation dispatch to the isolated Cloud root
+`/home/vercel-sandbox/kc-claude-plugins/.worktrees/spacedock-ensign-pr-review-lite-value-pilot`.
+The Cloud launch checkout is `/home/vercel-sandbox/kc-claude-plugins` on
+`conductor/pr-review-lite-cloud` at control commit
+`6bf62d1d7d3c343a97c973a7abd7424d03676437`; that ambient branch is not renamed.
+The separate state checkout is `docs/dev2/.spacedock-state` on
+`spacedock-state/dev2`.
+
+No local experiment process was running at transfer. The two prior Mac STOP
+records, hashes and unknown costs remain separate and are not pooled with this
+one authorized Cloud attempt. Cloud/orchestration/service cost is separate from
+the four reported-cost stopping envelopes; the nominal USD 19.8448 is neither a
+Cloud-fee cap nor an invoice guarantee. This ownership acknowledgement adds no
+model run, product edit, delivery or retry authority. Human confirmation of the
+complete three-case calibration key remains pending in this Cloud session; setup
+and the one admission may proceed independently, but judge calibration may not.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
