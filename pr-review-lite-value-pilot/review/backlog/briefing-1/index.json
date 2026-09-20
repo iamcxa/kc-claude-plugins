@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pr-review-lite-value-pilot:backlog:attempt-1:revision-1",
+  "question": "Proceed with the Captain-approved dev2 Pilot direction into ideation only?",
+  "artifacts": [
+    {
+      "id": "artifact:pr-review-lite-value-pilot:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f93aff2f22debe65a1c9c31433c2ccb755c56617/pr-review-lite-value-pilot.md",
+      "rev": "sha256:efae8836e7e9526c9af6343d7c77b8d683f076020cfc15e7ba33055f031a96b8",
+      "mediaType": "text/markdown",
+      "summary": "Preserve old work; design one complete attended Lite comparison before a separate five-pair blind evaluation. Captain approved this direction in chat. No product implementation or experiment spend is authorized; stop at design review."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:pr-review-lite-value-pilot:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/6bf62d1d7d3c343a97c973a7abd7424d03676437/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:7931ef3be4004ea76a80d127c95e0e6b9bf4225adb365b9e993c53cebeb2a873"
+    }
+  ]
+}

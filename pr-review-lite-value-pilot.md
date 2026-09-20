@@ -6,6 +6,17 @@ profile: pilot
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:pr-review-lite-value-pilot:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:pr-review-lite-value-pilot-backlog-1
+              briefing:
+                id: briefing:pr-review-lite-value-pilot:backlog:attempt-1:revision-1
+                digest: sha256:7a7170e5e7d1cf19d17b37cd1f3dd76590f6a84f5050c4838a386eccdc7f6d57
+                room-ref: ./pr-review-lite-value-pilot/review/backlog/briefing-1
 ---
 
 Resume the approved kc-pr-flow improvement under dev2 by first establishing whether one complete Lite review journey preserves useful review quality while reducing end-to-end time and cost. This is a successor product task, not a workflow-refit task, a fifth layer of the old PR stack, or a declaration that the previous validation passed.
