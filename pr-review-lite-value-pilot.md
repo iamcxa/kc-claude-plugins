@@ -313,6 +313,39 @@ next arm must independently reacquire all material and use the CLI-backed candid
 route; it may not consume control findings, timing or cost. Human confirmation of
 the three-case calibration key remains pending and still blocks judge calibration.
 
+#### Captain model-free remediation-proposal continuation — 2026-09-21
+
+After asking for progress, the Captain explicitly replied `繼續` to the proposed
+next step: produce a concrete correction plan for the stopped treatment
+subprocess-isolation and evidence gaps. Cloud workspace
+`4815161d-63b0-44dc-b08d-8f5f43a3caee`, session
+`d0e0b07a-6089-46aa-b035-61e910797310`, retains sole task-state ownership; this
+follow-up must not depend on the local Mac.
+
+This continuation authorizes one same-stage implementation ensign to produce an
+English, reviewable correction proposal and sanitized evidence from bounded
+model-free checks. It may inspect pinned source, use existing fixtures/stubs, and
+run one-off private probes that never invoke Claude or another provider. It must
+separate missing/unknown evidence from demonstrated unsafe behavior, identify the
+smallest integrated source seam and material alternatives, preserve secret-safe
+child-process custody, define fail-capable implementation/validation checks and
+stop conditions, and assess the proposed change against the original
+`3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8` denominator and unchanged 20-file /
+6,600-total-line / 1,903-focused-line caps. With zero focused-line headroom, it
+must demonstrate a credible within-cap simplification or surface the exact
+Captain cap/scope decision; it may not reset the denominator or silently add a
+wrapper.
+
+No experiment/provider model call, new whole-attempt spend, product/source edit,
+product commit or push, PR, posting, merge, default change, calibration or judge
+is authorized. The stopped Cloud attempt, valid standalone admission/control
+evidence, incomplete treatment and unknown treatment cost remain unchanged. The
+all-three calibration answer key is still unrecorded but does not block this
+model-free analysis. Any future comparison requires a separately approved,
+immutable next candidate and explicit preregistration; reuse of the old control
+for scoring is not assumed. FO may commit and push only task-specific state after
+the ensign report is verified.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
