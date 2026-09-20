@@ -171,6 +171,15 @@ caller-recorded fact, not a mechanical GitHub check or a grant to use a PR branc
 Subsequent work reads the currently adopted integration version of learning.md;
 pending or closed-unmerged proposals are not active practices.
 
+If the delivery token itself is lost while its owner is still the running
+session — not an owner-stopped recovery — do not attest `--owner-state stopped`;
+that would be false. Call `delivery-recover` with the identical `--owner` used at
+`delivery-claim`, an honest `--owner-state running` or `unknown`, and a freshly
+confirmed-absent observation. The CLI accepts this reissue only when the delivery
+still has no recorded observation (nothing was sent under the lost token); a
+different owner, or any existing observation (open, merged or otherwise), still
+requires a genuine stopped attestation.
+
 ## Present the result
 
 Read `learning.py --repo CODE_ROOT notices` and tell the user the relevant
