@@ -229,6 +229,38 @@ model run, product edit, delivery or retry authority. Human confirmation of the
 complete three-case calibration key remains pending in this Cloud session; setup
 and the one admission may proceed independently, but judge calibration may not.
 
+#### Cloud pre-model boundary — 2026-09-20
+
+The private Cloud registration at
+`.context/pr-review-lite-value-pilot/runs/dev434-cloud1/registration/registration.md`
+is complete before any experiment model launch; SHA-256
+`44291112f8d48c92c8c6d46c59a68fc62645e88fc7d0966401b8497424726c07`.
+It records exact Linux runtime/tool versions, normal Cloud OAuth auth with failed
+bare-auth eligibility, pinned control/treatment/toolkit and target identities,
+stable toolkit hash parity, ancestor instruction inventory, per-process traffic
+controls, envelope separation, and the no-local-callback boundary.
+
+Non-model checks passed: live PR base/head/title/body/files match the frozen
+sample; patch hash remains
+`1a88db01f8bc155c6434b37c626e949824953d7fa9b52828d7cd6db32cd5a914`;
+both allowed `node --check` commands pass; the pure unmodified candidate planner
+returns Lite/bugfix/four false modes on identical metadata; treatment totals
+remain 18 files / 5,884 total changed lines / 1,903 focused lines against the
+original denominator; source checkouts are clean; Cloud timeout and empty-stdin
+smokes pass. A failed shared-clone setup exposed missing promisor blobs and was
+preserved unused; the independent remote target clone is complete and clean.
+
+Spacedock's stamped implementation dispatch created and registered the isolated
+Cloud worktree at the recorded relative path, branch
+`spacedock-ensign/pr-review-lite-value-pilot`, HEAD
+`6bf62d1d7d3c343a97c973a7abd7424d03676437`. The sole implementation ensign is
+`/root/spacedock_ensign_pr_review_lite_value_pilot_implementation`; no extra helper
+was spawned. The admission launch file is syntax-checked, single-claim, prompt-file
+fed, externally bounded, process-group isolated, and has preopened raw streams;
+its hash is `fdf607a07bbdf6efd037ec0b7350b00e2525e6853412850ef23a52cdf389a57f`.
+Experiment model launches at this boundary remain zero. The one authorized Cloud
+admission may now start; arms and judge retain their independent prerequisites.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
