@@ -109,6 +109,29 @@ against Actions and questions on the board. Report it in conversation. Adding ca
 for what it finds still needs the human, under the existing rule against unsolicited
 question cards.
 
+## Questions go forward into the YAML
+
+Promotion moves a finding backward, from a board question into the story spine.
+The forward direction is its twin: before a named release is built, each of its
+stories carries the design questions that have to be settled first.
+
+On explicit authorization for a named release, write each story's open design
+question into that story's `questions:` list. A question the human asked on a
+review board stays the human's, in their wording; the rest are the agent's
+proposals. Same authorization shape as promotion — a named scope, never a blanket
+fill of every silent story.
+
+**A story may not reach `status: exists` while it carries an open question.** That
+is the convergence rule, and it is a lint rather than an intention. Without it a
+forward board fills with question cards that look like progress and are never
+closed — the failure the rule against unsolicited question cards already prevents,
+arriving through the front door instead.
+
+The design pass is finite: it ends when no story in the release is silent, each
+carrying a settled question or a `deferred` one with its reason. Questions raised
+later, while building, are the mechanism ones and cannot be predicted; each is
+answered with pinned evidence in the same round or deferred with a named reason.
+
 ## Incremental canvas work
 
 Use [canvas.md](canvas.md) for applicable service lifecycle and sizing mechanics.
