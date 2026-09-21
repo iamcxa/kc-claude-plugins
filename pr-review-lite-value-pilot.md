@@ -1281,3 +1281,32 @@ The product half of the correction closes the trusted-host credential leak and t
 ### Summary
 
 Delivery custody now resolves identities independently from the fixed contract and atomic prelaunch claim, cross-checks two exclusive supervisor attestations plus terminal state, recomputes the fixed archive, and requires the unique later Conductor `agentMessage` to bind the verified archive digest as well as run/claim identities. The exact prior forgery/archive-drift trigger and adjacent substitution/replay cases fail without receipts; the production packet remains unclaimed and every check was model-free. Independent validation decides this final correction round.
+
+## Stage Report: validation (cycle 7)
+
+- DONE: Bind final permitted re-review to feedback-round-2 packet seal 8c67fd7210f1e80c9574d0ffeefadf158874bcd4a18c422b31f98f835c9d0ff4 and correction seal 6be987885fc6776b25d211a166c6fbaf11ea9bef367164df9452adb07a068ef0; verify unchanged product tree da967d72a879701573cd82064bdb066db8b46353, 18 / 5,882 / 1,897 accounting, rejected packet/counterexample preservation and absent production claim/output/archive.
+  All 25 correction and 13,197 packet rows verify. Private index still writes product tree `da967d72…`; patch is `52f82d6a…`, source/test/catalog remain `2a49430a…` / `021f9888…` / `630006b4…`, and accounting is exact 18 / 5,882 / 1,897. Rejected-v2 seal `719e0e80…` and cycle-6 counterexample `c99db339…` remain exact; producer is paused and production claim, delivery receipt, outputs and archive are absent.
+- DONE: Independently reproduce the prior forged-terminal plus appended-archive attack and adjacent claim/run/attestation/archive/pre-cursor/logical-ID/ambiguity/replay substitutions; require failure before receipt, while one valid nested agentMessage binds contract run identity, atomic claim ID/marker, recomputed fixed archive digest and top-level data[].receivedAt exactly once.
+  Validator receipt `validator-custody-probe.json` SHA-256 `90555129…` records every attack exiting 1 with no receipt: prior combined forgery/drift, archive-only drift, terminal/claim/run substitution, one or all wrong attestations, wrong message claim/run/archive, and a pre-cursor row carrying a logical message ID. No-message, two-match ambiguity and replay also fail; the sole valid later row exits 0 and binds run/claim/archive while receipt `received_at` byte-matches top-level `data[].receivedAt`.
+- DONE: Reconfirm by harmless local execution that preflight-before-claim, fixed 900-second deadline, process-group cleanup/partial evidence, exact-once dispatch/finalize/archive/cost and human-only delivery remain executable; return final PASSED or REJECTED without product edit or provider/model call, and identify any rejection as the feedback-cycle escalation stop.
+  Sealed/external/auth/target/output/session mismatches all fail before claim/dispatch. The disposable success has one dispatch, finalize, USD 0.25 cost and archive with exact 900-second wall/monotonic deltas; duplicate launch leaves those counts unchanged, missing cost creates no archive, and timeout records `kill_sent`, 24 partial bytes and no survivor. Recorder only queries and exclusively records delivery; posting remains false/human-only.
+
+### Actual checks and limits
+
+- Compliant revalidation start receipt `validation-start.json` SHA-256 `c10e505b…` records the task-owned disposable/model-free authority boundary, no credential access, no production claim and no provider/model call. The prior platform cyber-risk refusal remains actual restriction evidence; it was neither relabeled nor bypassed.
+- Source inspection confirms the recorder resolves run identity from sealed contract, claim ID/marker/cursor from atomic `claim.json`, and archive identity from two matching exclusive attestations plus terminal corroboration and current fixed-path hash/size. It checks the claim digest before querying Conductor and requires a later session index/row.
+- The production preflight was inspected only through its sanitized fields (`loggedIn:true/oauth_token/firstParty` and environment key names); no token value or credential file was accessed. No dependency/test rerun, product/planning edit, commit/push, PR, posting or paid action occurred.
+- This proves model-free custody mechanics, not resistance to a fully compromised trusted host that can rewrite every local and external anchor. It does not establish provider compatibility, nested-agent output, billing, review quality, preview usefulness, public end-to-end timing, saving, two-day fit or release readiness.
+
+### Findings
+
+- No Material, Deferred-risk or Polish finding was observed within the authorized trusted-host integration boundary. The cycle-6 exact-custody trigger is closed on the feedback-round-2 snapshot.
+
+### Verdict and authority
+
+- **PASSED** for feedback-round-2 packet seal `8c67fd72…`. This final same-validator re-review does not activate the rejection escalation stop.
+- PASS supports only FO presentation of one concrete paid-proof decision. It grants no paid launch, provider/model call, posting, product/planning mutation, commit, push, PR, merge, release or fit authority; prior 1,050.402098-second trial timing remains unchanged.
+
+### Summary
+
+The final packet independently roots delivery in the sealed run, atomic prelaunch claim, duplicate archive attestations, recomputed archive bytes and one authoritative later server row. All custody substitutions now fail before receipt while valid exact-once supervision/delivery succeeds model-free, so the feedback-round-2 snapshot is **PASSED** with production untouched and paid/runtime outcomes still unverified.
