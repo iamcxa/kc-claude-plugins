@@ -20,8 +20,9 @@ himself: three to six steps, five minutes or less, each naming the action and th
 expected observation, written for someone outside this session — an exact command
 or URL, no internal identifier to look up, no secret in the text. State what it
 does not cover, so a pass is not mistaken for proof of the whole change. When the
-change has no user-visible surface, substitute the smallest observable command
-whose output he can read, rather than omitting the script silently.
+change has no user-visible surface, the script says so and substitutes the
+smallest observable command whose output he can read, rather than being
+omitted silently.
 
 Report verdict, artifact identity, evidence and material limits in the existing
 SD stage report. A code repair returns through implementation feedback; scope or
