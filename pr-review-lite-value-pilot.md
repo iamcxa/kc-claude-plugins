@@ -644,6 +644,41 @@ Model wall time remains separately 168.485361777s. This delivery receipt changes
 no run/archive byte; a later transcript `receivedAt`, if supplied, may refine only
 transport latency.
 
+Relay subsequently supplied the actual final public `agentMessage receivedAt` as
+`2026-09-21T03:47:12.791Z`. From the same authoritative start, actual
+preparation-through-Cloud-public-report delivery is 1,050.402098s / 17m30.402s,
+150.402098s beyond the 900-second total. Model and archive still completed before
+the fixed deadline. Preserve the earlier receipt-creation endpoint separately;
+this correction changes no immutable run/archive byte.
+
+#### Captain child-auth and mjs-selection repair approval — 2026-09-21
+
+Kent answered `確認` to implement exactly two observed defects: supported child
+review authentication handoff and `.mjs` test selection, followed by model-free
+validation before considering any further paid proof. Diagnose actual ownership
+and supported Cloud/CLI auth behavior before editing; never copy, scrape, expose or
+serialize credentials, weaken global settings or bypass host security. If the
+runtime cannot support child auth, return the exact evidenced architectural
+choice instead of a speculative repair.
+
+Use a new isolated successor owned by this task, based on current main + candidate
++ immutable correction snapshot, while keeping the frozen correction worktree,
+trial/proposal archives, canonical map and live canvas unchanged. Product edits
+and validation are authorized only for these two defects; product/planning commit,
+push, PR, posting and paid/provider/model calls are not. Retain denominator
+`3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8` and stricter 18 files / 5,884 total
+changed lines / 1,903 focused lines. Use useful simplification to stay within the
+zero-headroom boundary or return the exact smallest cap/scope tradeoff after
+bounded diagnosis.
+
+Focused tests must reproduce the real auth configuration/dispatch seam without
+provider calls or secret values and prove `.mjs` changes select/execute the supplied
+fixture command, including affected cleanup/no-duplicate and unsupported-auth STOP
+behavior. Reuse existing implementation and validation owners; do not add a
+standing harness, duplicate reviewer, broad green-suite rerun or new planning loop.
+Task-state-only sync remains authorized, and passing model-free checks does not
+accept 17-story membership or establish two-day fit.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
