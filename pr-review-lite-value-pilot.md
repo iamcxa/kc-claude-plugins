@@ -1,6 +1,6 @@
 ---
 title: Prove a useful Lite PR review journey before wider evaluation
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -408,6 +408,30 @@ snapshot cannot truthfully enter a prepared validation gate that requires a
 committed clean artifact. No briefing or gate decision was manufactured. Task
 status returns to implementation for the correction; the rejected validation
 report and state commit `854c132f2eebdcf56b70086741aebcfd0822de84` remain durable.
+
+#### FO correction-cycle completion checkpoint — 2026-09-21
+
+Correction-cycle patch
+`0df289237ac4efe1872aa9f367478e16ca6f037c5482004459eb80087b6ec709`
+passed fresh independent model-free revalidation at state commit
+`db264621f1d38eab2d15dad30b78c7944b408ce4`. The validator-owned SIGTERM
+counterexample observed exactly one `supervisor_cancelled` receipt after group
+cleanup, retained both partial streams, found no surviving child or
+TERM-ignoring descendant and no later lane, and left product bytes unchanged.
+The four narrow regression checks, artifact hashes, AST parse and diff check
+also passed. Exact cumulative size is 18 files / 5,884 changed lines / 1,903
+focused lines, with the two changed files at 2,142 / 1,214 lines: every stricter
+cap is met with zero headroom.
+
+This is a validation checkpoint, not a prepared gate or delivery approval.
+Product commit authority remains explicitly withheld, so the uncommitted
+candidate cannot satisfy the workflow gate's clean committed-artifact premise;
+FO does not manufacture a briefing, binding or approval. Task status remains
+implementation pending the Captain's separate review/approval of the exact
+product commit. No provider/model call, product commit/push, PR, delivery,
+experiment replay, calibration or judge occurred. Real-CLI compatibility,
+provider behavior, billing, review quality and time saving remain unverified;
+the stopped comparison and all known/unknown costs remain unchanged.
 
 ## Stage Report: implementation (cycle 2)
 
