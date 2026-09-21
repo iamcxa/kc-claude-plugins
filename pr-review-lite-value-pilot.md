@@ -475,3 +475,28 @@ The current boundary was exercised without a model and the correction is now rev
 ### Summary
 
 The bounded correction now gives each local-stub child explicit argv/environment custody, immutable private inputs, durable streams and exactly one terminal receipt, process-group timeout cleanup, and separate configured-versus-observed startup evidence while preserving provisioned OAuth in place. This is model-free fixture evidence, not a real-CLI compatibility claim; the original incomplete run and 47/48 bounded run remain separate limits, and the stopped treatment remains stopped. Pilot boundary: old admission/control are standalone only, and any future comparison still requires a newly approved immutable candidate and complete preregistration rather than reuse.
+
+## Stage Report: validation
+
+- DONE: Independently identify and inspect the exact uncommitted two-file snapshot, private patch/hashes/receipts, and frozen-candidate basis; verify no product bytes changed during review.
+  Branch `spacedock-ensign/pr-review-lite-value-pilot-correction` remained at base `0d2e3164ccd2d60006688c5443717b818825a305` with only the two approved files modified; source `dbe9e9…`, test `0dc2dc…`, and binary patch `4462ef…` matched `SHA256SUMS`, `correction.patch`, and the final post-probe snapshot.
+- FAILED: Adversarially validate goal sufficiency and minimal necessity across the required model-free success/failure/timeout/cleanup/startup-surface/tamper/mutation/STOP-order/exact-once boundaries, using existing evidence plus only the smallest bounded counterexamples needed.
+  Existing local-stub evidence covers ordinary success/nonzero/timeout/startup/tamper/replay/STOP/retry paths, but the bounded supervisor-cancellation counterexample exited the supervisor by SIGTERM (`-15`) with zero terminal receipts and both the provider stub and TERM-ignoring descendant still alive until validation cleanup.
+- DONE: Return PASSED or REJECTED with actual checks, cap measurements, configured-versus-observed limits, aggregate-run history, and any concrete finding; do not repair, commit, invoke a provider, or imply experiment compatibility/delivery.
+  **REJECTED**; validation changed no product byte, ran no provider/model, made no repair/product commit/push/PR, and does not claim experiment compatibility, delivery, quality, or savings.
+
+### Actual checks and limits
+
+- `sha256sum -c` passed all six private entries; current `git diff --binary` is byte-identical to `correction.patch`, and final status/hash repetition proves the review left the two-file snapshot unchanged.
+- Against denominator `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`: 18 files, 5,856 additions + 22 deletions = 5,878 changed lines; the six declared focused rows total 1,892 additions + 5 deletions = 1,897. These fit stricter 18 / 5,884 / 1,903 and original 20 / 6,600 / 1,903 limits.
+- Current file sizes are source 2,142 and test 1,208 lines, within 2,142 / 1,214. Fresh AST parsing and `git diff --check` passed; either syntax damage or whitespace errors would fail these checks.
+- Evidence-only aggregate history remains distinct: the original unbounded run has no durable terminal log and is `incomplete_keyboard_interrupt`; `full-suite.log` is the bounded 47/48 run with the empty-selection executable error; hashed rerun stdout/stderr record the separately corrected 48/48 run in 418.956s, exit 0.
+- Configured argv/settings/nonsecret traffic controls and the local stub's observed init/hooks are separate in receipts. Effective real CLI settings, provisioned-auth behavior, managed surfaces, network/mutation behavior, billing, and provider compatibility remain unverified; receipt explicitly sets `real_cli_compatibility_claimed: false`.
+
+### Finding
+
+- **Material — supervisor cancellation escapes child custody and exact-once evidence.** Released/normal workflow: an attended Lite direct run can be stopped by its supervisor/operator. Observable harm: SIGTERM leaves no sealed terminal receipt and leaves the isolated child process group running, so streams, cleanup and cost cannot be reconciled. Protected boundary: `value-ac[AC-2]` requires complete failures to remain visible, and `contract[pr-review-lite-value-pilot/remediation-proposal/proposal.md#smallest-integrated-source-change]` requires supervisor cancellation to produce exactly one receipt after group cleanup. Trigger: `.context/pr-review-lite-value-pilot/correction/validation-supervisor-cancel-probe.txt` records `terminal_receipts: 0`, both processes alive, then validation-owned cleanup. This is owned implementation scope, but validation made no repair; route through FO before any correction or rerun.
+
+### Summary
+
+The immutable candidate and receipts are internally bound, under every configured size cap, and preserve the three aggregate outcomes and real-provider limit honestly. Goal sufficiency fails at the accepted cancellation boundary, so the exact candidate is REJECTED despite the corrected 48/48 fixture suite; minimal necessity remains bounded to the approved two-file seam, and any repair requires FO disposition and fresh independent validation. Pilot reminder: this is a model-free limited-use custody assessment, not compatibility, experiment, delivery, or production evidence.
