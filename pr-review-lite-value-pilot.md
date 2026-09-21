@@ -831,6 +831,32 @@ old paid control remains standalone; any future comparison needs a fresh immutab
 candidate, explicit authority and preregistered arms. The unrecorded three-case
 calibration key is irrelevant to this no-model correction unit.
 
+#### Validation-cycle-8 packet-layout and fixture correction — 2026-09-21
+
+Validation cycle 8 accepted the schema and semantic-index mechanisms but rejected
+candidate tree `2ed391676559af970e7b3d371ca1d9920550d757` / packet seal
+`19d9d58e…` on one owned Material packaging finding: the proposed handoff already
+contained empty `launch-claim/`, so exact production preflight returned
+`claim_or_output_already_exists` before the supervisor could atomically create it.
+The Captain explicitly authorized the same implementation owner to repair that
+finding and the separately proven fixture defect without mutating the rejected
+snapshot or validator evidence at state `f2180f24…`.
+
+Create a new private successor with no claim path at sealed handoff. Preserve the
+existing supervisor's exclusive post-preflight `claim.mkdir()` and duplicate
+refusal; do not add an operator delete/reset step. Retain all source/contract,
+HEAD/tree/semantic-index/cleanliness, archive, server-row, identity and duplicate
+custody checks. Prove the actual production packet preflight passes in place without
+mutation, and retain harmless index refresh plus semantic tamper falsifiers.
+
+In the already-counted `review-capability.test.py`, stage exactly the fixture-created
+`example.py` before its existing commit. Preserve every assertion and the prior red
+full-suite/isolated receipts; rerun only that exact method, plus directly justified
+schema/custody checks, and do not rerun the full suite. Keep denominator `3b37000a…`
+and 18 / 5,884 / 1,903 caps. No provider/model/network/paid action, production claim,
+product/planning commit or push, PR, posting, merge or compatibility claim is
+authorized. Return the immutable successor to the same validator.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
@@ -1439,3 +1465,22 @@ The installed local validator now accepts the same typed result contract without
 ### Summary
 
 The candidate fixes the installed CLI's local schema rejection without weakening typed output, and its disposable index-custody logic is narrow and fail-closed. It is still **REJECTED** because the immutable production packet includes an empty `launch-claim/` directory that deterministically trips its own preflight before atomic claim; the unrelated unchanged red fixture remains an explicit bounded validation limit rather than being waived or relabeled green.
+
+## Stage Report: implementation (cycle 22)
+
+- DONE: Preserve the rejected candidate, packet, validation evidence and state while rooting one new feedback successor.
+  Rejected tree `2ed39167…`, packet seal `19d9d58e…`, correction seal `9d1e6b22…` and validator state `f2180f24…` reverify unchanged. New task-private root is `.context/pr-review-lite-value-pilot/schema-index-correction-r2/`; no rejected or active snapshot was edited.
+- DONE: Package the atomic claim boundary so the documented one-shot route is executable without cleanup/reset.
+  Successor packet contains no `launch-claim` path; existing post-preflight exclusive `claim.mkdir()` remains the sole creator and duplicate refusal is unchanged. Actual sealed `preflight()` ran in place under a 60-second bound with only auth/session calls replaced by nonsecret no-network stubs; it exited 0 with exact manifest/binary/source/contract/HEAD/tree/index/clean checks, claim absent before/after, zero output/archive files and packet bytes/directories unchanged (`production-preflight.stdout` `3da672c9…`). The first wrapper attempt is retained exit 1 because its post-check tested iterator truthiness after preflight completed; no packet byte changed.
+- DONE: Repair only the proven fixture setup and rerun exactly the formerly failing method once.
+  One line stages the fixture-created `example.py` before its existing commit; no assertion or product behavior is skipped. Under a 60-second TERM/KILL deadline the exact method passed both parameter rows in 1.843s (`isolated-fixture.stderr` `22c7e8ce…`). The old 48-method/428.412s exit-1 suite and isolated two-error receipt remain immutable; the full suite was not rerun.
+- DONE: Reconfirm the installed schema boundary and semantic-index/custody counterexamples without provider access.
+  Focused transitive-schema test passed in 1.202s; candidate schema byte-matches the rejected accepted schema. Installed Claude Code 2.1.274 `--bare --init-only --json-schema`, with auth keys removed, empty HOME, blocked proxies and no tools/MCP, exited 0 with empty streams. The 120-second local-stub custody probe exited 0 / `core_ok:true`: harmless index-byte refresh delivered with unchanged index tree, while staged index, tracked/untracked content, HEAD, claim/archive/server-row/duplicate attacks failed without receipt; timeout retained 24 bytes, KILLed after TERM and left no process.
+- DONE: Seal exact review identity and remain within the original denominator caps.
+  Product tree is `5a94970dc7d6471bebb6c09450b8a05862876f67`; rejected-parent patch/private index are `da6777e…` / `1fe4ed77…`. Source/test/catalog are 2,146 / 1,209 / 97 lines at `a52ec3ca…` / `fb030e91…` / `630006b4…`; the one added test line yields exact 18 / 5,883 aggregate / 1,898 focused against `3b37000a…`, within 18 / 5,884 / 1,903. Packet run identity is `pr-review-lite-value-pilot-schema-index-r2-20260921`; its 13,195-row seal is `d4bfd7ff…`, and the 45-row correction seal is `fe9b7a5f…`. JSON/syntax, required hashes, `git diff --check`, new/rejected seals and zero mutable packet files pass. Full receipt is `schema-index-correction-r2/README.md` (`10c002da…`).
+- SKIPPED: Full-suite replay, provider/model/network/paid invocation, production claim/delivery, credential access/copy, dependency or global-setting action, product/planning commit or push, PR, posting, merge, comparison, calibration, judge, gate, release and fit decision.
+  This is a model-free Pilot correction for the same validator's rerun. It proves neither provider compatibility nor useful review output, billing, saving, public delivery, two-day fit or production readiness; the old control remains standalone and any future comparison needs fresh authority and preregistration.
+
+### Summary
+
+The sealed successor now arrives with the atomic claim path genuinely absent, so its real preflight succeeds without mutation and the supervisor retains exact-once creation and duplicate refusal. The single fixture setup omission is repaired without weakening assertions, all directly affected model-free checks pass within the fixed caps, and the producer is paused for the same validator on tree `5a94970d…` / packet `d4bfd7ff…` with no provider or production action.
