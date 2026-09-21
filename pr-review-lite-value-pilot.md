@@ -639,3 +639,16 @@ The correction closes only the validated supervisor-cancellation escape and reta
 ### Summary
 
 The correction resolves the sole prior Material finding at the exact immutable snapshot: supervisor SIGTERM now yields durable terminal evidence only after process-group cleanup, and the prior direct-dispatch contracts remain green under narrow independent checks. **PASSED** within the Pilot's model-free limited-use boundary, with no real-provider, experiment, delivery, quality or savings conclusion.
+
+## Stage Report: implementation (cycle 7)
+
+- DONE: Create the complete intent-only kc-pr-flow Lite story map and concise companion notes in the separate planning worktree, preserving the settled Traditional Chinese backbone, proposed-story boundary, correction evidence limits, and development-alignment rule without selecting a release.
+  `review-a-pr.yaml` contains the six accepted activities and 18 proposed stories with no release/status/evidence fields; `README.md` preserves the one pending Kent whole-map decision, experiment/correction limits, Draft PR reference boundary, and alignment rule.
+- DONE: Use the pinned repository kc-journey-map map-from-conversation, cell-contract and canvas contracts to parse, render the default editable story map, read it back, visually inspect wording/order/legibility, and preserve a native snapshot plus private screenshot when supported.
+  Source parsing asserted 6 activities/18 stories and the map-mode omissions; render reconciled 35 shapes, readback reported no reword/reorder/conflict/duplicate/unclaimed/missing item, and Chromium inspection found no blank card, overflow or overlap. Native snapshot SHA-256 is `e948d0326ea7a1c29e52ee80458ec47d7e7d4678366a8b8a14c6aa3d368ae82f`; private full-map PNG is `88bb6720…`.
+- DONE: Leave only authorized uncommitted planning artifacts in the planning worktree, keep the frozen correction patch byte-identical, retain exact hashes/service provenance/review URL or documented fallback, and append a truthful implementation-stage checkpoint without product/experiment/delivery claims.
+  Planning branch remains at `07f9745…` with only `docs/journey/kc-pr-flow/{review-a-pr.yaml,README.md,review-a-pr.tldr}` untracked (hashes `c4c92997…`, `f242ba0b…`, `e948d032…`; private patch `211d92fe…`). Correction base `0d2e316…` still has only the approved two-file diff and matches patch `0df28923…`, source `129ab490…`, test `761574b9…`, and its full manifest. Owned tldraw `5.4.0` service remains running on API/canvas/share ports `5858/3737/3738` with PIDs `920623/920606/921468`, tunnel PID `920741`, and verified internal review URL recorded in the companion README.
+
+### Summary
+
+The whole-journey draft is ready for Kent's review as an intent-only YAML authority, native editable snapshot, readable companion and visually inspected canvas; story details remain proposals and no release is selected. This checkpoint makes no product commit, experiment, compatibility, delivery, quality or savings claim, and the sole pending human decision is whether the whole map matches Kent's intended use.
