@@ -550,6 +550,34 @@ use bounded read-only diff, merge-tree, existing evidence/duration inspection an
 entry-path tracing to establish estimate/fit; any irreducible live provider/model
 proof remains a separate explicit authority and budget decision.
 
+#### Captain single treatment live-proof approval — 2026-09-21
+
+Kent answered `准` to the exact single-live-proof proposal. This authorizes one
+treatment-only live proof in the existing Conductor Cloud isolation against the
+already-frozen ordinary development PR #434, using current main plus candidate
+`0d2e3164ccd2d60006688c5443717b818825a305` and immutable correction patch
+`0df289237ac4efe1872aa9f367478e16ca6f037c5482004459eb80087b6ec709` through the
+recorded direct CLI method. Posting remains off. The authorized reported-cost
+stopping thresholds are outer USD 2.4806 plus capability attempts aggregate USD
+2.4806; nominal USD 4.9612 is not a hard invoice maximum, and in-flight or
+missing-receipt cost remains unknown.
+
+Complete read-only preflight before any chargeable launch, then retain durable
+supervisory and model timing, complete raw/partial/failure outputs, terminal and
+final receipts, every reported cost, preview/gaps/next decision, and tree status.
+Identity or effective-surface drift, or an unmet required timeout/cost/output
+control, stops before launch. There is no top-level replay after a terminal trial
+outcome and no silent method/model/threshold substitution.
+
+This is runtime-feasibility and unpublished-preview evidence only. It is not a
+control/treatment comparison, broader evaluation, quality/time-saving proof,
+17-story membership acceptance, product/planning commit or push, source repair,
+review publication, PR, merge, release or delivery authority. Canonical journey,
+planning drafts, live canvas, frozen product bytes and correction custody remain
+unchanged. After the one terminal outcome, the existing planning owner may update
+only the grounded fit conclusion and draft as warranted; task-state-only sync is
+authorized.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
