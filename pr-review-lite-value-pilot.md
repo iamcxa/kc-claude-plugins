@@ -997,3 +997,35 @@ The revised proof cleared the exact outer isolation problem but stopped safely a
 ### Summary
 
 The approved source defects now have one bounded three-file repair: `.mjs` activates and executes supplied test evidence, and child dispatch derives first-party OAuth availability from the exact child environment instead of trusting a caller flag, with one-terminal fail-closed behavior. Model-free checks pass and the result is two cumulative lines smaller. Auth diagnosis also preserves the remaining architectural limit: the trusted host can inherit its provisioned credential, while cycle 14's restricted agent-tool process cannot; no fixture result is promoted into an end-to-end authenticated-child claim.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Bind validation to repair tree 5ef0691b04b23d41615729b81156fc10328b5abb and patch SHA-256 3f1996722e02e1ca3eaea1c8176eddf513a4021c25b1efd9f6a4caa61938ec52; prove producer is paused, the three result-file hashes remain exact, and frozen correction/planning/trial artifacts remain unchanged.
+  Private index still writes tree `5ef0691…`; patch `3f199672…`, archive `85115ad…`, source `ed08349…`, test `1aba454…`, and catalog `630006b…` repeated after validation with a clean successor status and no matching producer process. Correction manifest, R1 manifest, sealed proposal, and cycle-14 run/output manifests pass; canonical YAML/TLDR retain `f4a676…` / `5a4cb4…`.
+- FAILED: Independently attack the real child-auth seam model-free: preserve loggedIn:false/authMethod:none in the credential-less child environment, verify trusted-host in-process inheritance only through the supported auth-status surface without secret values, and falsify unsupported/wrong/missing auth, one-terminal STOP, no Popen, cleanup and no duplicate/retry behavior. Do not equate fixture green with authenticated nested-agent completion.
+  Real CLI status reproduced trusted inherited `loggedIn:true/oauth_token/firstParty` and credential-less `loggedIn:false/none/firstParty` without secret output; dict-shaped missing/wrong/nonzero cases stop once with no provider start, but valid JSON `[]` and `null` raise `AttributeError` before attempt initialization and produce zero terminal receipts.
+- DONE: Independently prove a real .mjs Git change activates code_change and selects/executes the supplied harmless test command exactly once, while relevant non-code behavior is not accidentally broadened; use only narrow fail-capable local fixtures under an external deadline.
+  A fresh Git `.mjs` fixture selected `code_change`/`test_evidence`, executed one supplied command once, and retained one completed exit-0 observation; a Markdown-only shape selected neither signal nor command. The 30-second TERM/KILL-bounded probe exited 0.
+- DONE: Audit exact repair and cumulative accounting against denominator 3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8 and maxima 18 files / 5,884 aggregate / 1,903 focused, then report PASSED or REJECTED with material findings, remaining provider/runtime-placement limits, and no product mutation.
+  **REJECTED** with one owned Material finding; exact cumulative accounting is 18 files / 5,882 aggregate / 1,897 focused, source/test/catalog sizes 2,146 / 1,208 / 97, and validation made no product edit, provider/model call, install, commit/push/PR, delivery, release or fit claim.
+
+### Actual checks and limits
+
+- Validator receipts: `real-auth-status-probe.jsonl` `f945940…`; `auth-shape-stop-probe.jsonl` `113210c…`; `mjs-selection-probe.json` `3a3ceac…`; cumulative receipt `453a74a…`. Every process-running probe had an external deadline and durable stdout/stderr/exit evidence under `repair-child-auth-mjs/validation-cycle15/`.
+- Wrong-method, logged-false, empty-object and nonzero auth-status cases each yielded one `setup_failure`, `cleanup=not_started`, one attempt, no retry and no provider marker. The `[]`/`null` counterexamples yielded `AttributeError`, zero attempts and zero terminals; provider launch still remained safely absent.
+- Repair delta is exactly catalog `1+/1-`, source `5+/1-`, test `25+/31-`. Replacing the three already-added rows in the frozen correction's denominator numstat gives 5,860 additions + 22 deletions = 5,882 aggregate; the established six focused rows give 1,892 additions + 5 deletions = 1,897. The implementation report's 1,901 focused total is a conservative four-line overstatement and does not change cap eligibility.
+- Cycle-14 delivery timing remains 1,050.402098s / 17m30.402s, 150.402098s beyond the 900-second total. This repair and validation do not reset that evidence or reopen the consumed paid authority.
+
+### Findings
+
+- **Material — non-object auth-status JSON bypasses the promised one-terminal STOP.** Released/normal workflow: direct Lite dispatch relies on the installed CLI's supported JSON auth-status boundary and must fail closed for unsupported, wrong or missing auth. Observable harm: a syntactically valid but wrong top-level shape terminates orchestration with an uncaught exception and no durable terminal/attempt evidence, making the failure invisible to the normal receipt path. Protected boundary: `value-ac[AC-2]` requires complete failures to remain visible, and `captain-ruling[2026-09-21]` requires unsupported-auth STOP, cleanup and no duplicate/retry behavior. Trigger: private `auth-shape-stop-probe.jsonl` records both `array` and `null` with `error: AttributeError`, `attempts: 0`, `receipts: 0`, and `provider_started: false`. This is owned three-file repair scope, but validation made no fix; route through FO.
+- **Polish — focused accounting is not exact.** The report says 1,901; recomputation with the task's established focused-path set gives 1,897. No cap, product behavior or user-visible boundary is threatened; correct the record when FO next writes state.
+
+### Remaining limits and authority
+
+- Model-free status proves only that the trusted host's already-provisioned credential is inherited through the supported status surface. Cycle 14's credential-less model-tool process remains unauthenticated; no authenticated nested-agent/provider completion, billing, review preview, quality, saving, two-day fit or release readiness is established.
+- The candidate remains uncommitted and frozen. Validation rejection is observational, authorizes no repair or rerun, and does not alter planning, trial, correction, product, delivery or gate authority.
+
+### Summary
+
+The exact cycle-15 repair preserves frozen artifacts, fits all caps, correctly activates `.mjs`, and honestly distinguishes trusted-host credential inheritance from cycle-14's unauthenticated child topology. It is nevertheless **REJECTED** because two valid-JSON wrong-shape auth responses escape the required one-terminal fail-closed receipt path; any correction must return through FO and receive fresh independent validation.
