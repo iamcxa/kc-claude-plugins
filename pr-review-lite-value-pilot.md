@@ -543,3 +543,30 @@ The immutable candidate and receipts are internally bound, under every configure
 ### Summary
 
 The correction closes only the validated supervisor-cancellation escape and retains the existing direct-dispatch lifecycle and evidence boundaries. The prior aggregate history remains historical and was not replayed; this implementer makes no validation or real-CLI compatibility claim, and the stopped comparison remains stopped. Pilot boundary: the exact zero-headroom snapshot now requires fresh independent re-review before any gate or future separately preregistered comparison.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Bind and independently re-review new uncommitted patch 0df289237ac4efe1872aa9f367478e16ca6f037c5482004459eb80087b6ec709 without modifying it; confirm the old rejected snapshot/evidence remain distinct.
+  Base `0d2e3164ccd2d60006688c5443717b818825a305` and branch `spacedock-ensign/pr-review-lite-value-pilot-correction` retain only the two approved modifications; new source `129ab4…`, test `761574…`, and patch `0df289…` match private evidence, while prior patch `4462ef…` and its aggregate logs remain separately hashed under `correction/`.
+- DONE: Re-run the bounded supervisor-cancellation counterexample and the smallest necessary regression checks, verifying exactly one terminal receipt, retained partial streams, TERM/KILL/reap, no survivor or later lane, and no regression of configured-versus-observed/normal-OAuth contracts.
+  Validator-owned SIGTERM probe passed with supervisor `-15`, one `supervisor_cancelled` terminal, `kill_sent`, 188 stdout / 15 stderr bytes, no live child/descendant and no ordinal-2 path; four success/retry-STOP/startup-surface/tamper-replay tests passed in 52.748s under an external 180s TERM/KILL deadline.
+- DONE: Return PASSED or REJECTED with exact checks, immutable hashes, cap measurements and remaining limits; make no provider/model call, repair, product commit, delivery or experiment claim.
+  **PASSED** for the approved model-free correction; validation made no product change, provider/model call, repair, product commit/push/PR, delivery action, or experiment/compatibility claim.
+
+### Actual checks and acceptance evidence
+
+- `sha256sum -c` passed every artifact listed in the correction-cycle manifest (source, test, patch, and three checks' stdout/stderr); current `git diff --binary` is byte-identical to `correction-cycle1.patch`. Final status and hashes repeated after validation, proving product bytes did not change.
+- The independent probe, not the producer test, sent SIGTERM only after the stub emitted partial streams and launched a TERM-ignoring descendant. Removing the temporary handler, cancellation polling, group cleanup, receipt sealing, signal restoration/re-delivery, or STOP ordering would fail its exit/receipt/stream/process/ordinal assertions.
+- Fresh regression tests independently exercised successful configured/observed separation and nonserialized normal-OAuth receipt, retry/nonzero/STOP behavior, ten invalid startup/stream surfaces, and preexisting/tampered/replayed artifacts. Any acceptance of a wrong surface, leaked auth value, retry after STOP, or receipt overwrite would fail.
+- Against denominator `3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`, exact totals are 18 files, 5,862 additions + 22 deletions = 5,884 changed lines; declared focused rows are 1,898 additions + 5 deletions = 1,903. File sizes are source 2,142 and test 1,214 lines: exactly at all stricter 18 / 5,884 / 1,903 and 2,142 / 1,214 limits, and within original 20 / 6,600 / 1,903 caps.
+- Fresh AST parsing and `git diff --check` passed. The prior unbounded KeyboardInterrupt, 47/48 bounded run, and corrected 48/48 run remain historical and distinct; validation did not duplicate the full aggregate because this repair is isolated and the narrow affected checks are fail-capable.
+
+### Remaining limits and authority
+
+- Configured argv/settings/nonsecret controls remain separate from locally observed stub init/hooks. Real CLI flag/auth/settings behavior, managed surfaces, provider execution, network/mutation effects, billing, review quality, time saving and compatibility remain unverified.
+- Goal sufficiency now passes for the accepted model-free cancellation-custody outcome, and minimal necessity remains the approved in-place two-file seam with zero stricter-cap headroom. Any further product change invalidates this exact validation.
+- Validation PASS is neither experiment, delivery nor merge authority. The candidate remains deliberately uncommitted; FO must preserve the stopped comparison and route any future preregistered provider experiment or delivery decision through its separate authority boundary.
+
+### Summary
+
+The correction resolves the sole prior Material finding at the exact immutable snapshot: supervisor SIGTERM now yields durable terminal evidence only after process-group cleanup, and the prior direct-dispatch contracts remain green under narrow independent checks. **PASSED** within the Pilot's model-free limited-use boundary, with no real-provider, experiment, delivery, quality or savings conclusion.
