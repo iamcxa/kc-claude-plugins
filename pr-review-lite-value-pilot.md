@@ -1952,3 +1952,26 @@ Feedback round 1 repairs only the R5 cost-custody ordering defect: rejected stru
 ### Summary
 
 The net-neutral two-file successor closes the R5 failed-terminal accounting finding without weakening startup authority or accepting rejected review output. Focused fixtures retain unique valid cost exactly once, keep invalid/ambiguous cost unknown, and preserve the six-stream R4 USD 1.210485 replay, so independent verdict is PASSED within the stated offline limits.
+
+## Stage Report: implementation (cycle 30 — commit/trial preparation)
+
+- DONE: Produce an exact prospective-commit review from the frozen R5 round-1 PASS candidate without modifying product bytes: record actual worktree/branch/HEAD/dirty-and-staged state, full HEAD-relative two-file patch and hash/counts, accumulated behavior, existing validation/limits, remote branch and relevant PR state, proposed English commit title, and exact eventual staging list.
+  State began clean/origin-matched at `18b80bc6233af8ee69b9a2b920accd243b80d783`. The real correction worktree remains branch/HEAD `spacedock-ensign/pr-review-lite-value-pilot-r5-accounting-correction` / `0d2e3164…`, zero staged and exactly two dirty scripts. Full patch is `a12841c2…`, 55,496 bytes, 294+/294-. The minimal correction title is `fix(kc-pr-flow): harden Lite provider custody and typed output`; its exact three paths are catalog, source and test, with no budget-policy file or change.
+- DONE: Independently reconcile HEAD plus proposed blobs with validated private-index tree fd9b3a244e965157e3c48f5fba527b6670dc07b2, including catalog/runtime/plugin/marketplace identities; clearly reject false exact-tree parity, identify the minimal three-file kc-pr-flow subtree parity path, and recommend the smallest integration step without changing source, the real index, branches, commits, or PRs.
+  Two scripts over HEAD write `0d34ba12…` and differ from validation at the catalog. Adding validated catalog blob `10284f91…` writes `1922e7c8…`; its `kc-pr-flow` subtree `3dc6c1f7…` exactly matches `fd9b3a24…`, while whole-tree parity is explicitly false. The catalog's sole delta adds `mjs` to `code_change`. Runtime/manifests and the kc-pr-flow marketplace entry remain byte-identical at 1.12.0; marketplace differences belong only to kc-plugin-forge, kc-team-ops/journey-map, kc-dev-flow, kc-ship-flow and kc-dev-flow-2 and must not be staged.
+- DONE: Prepare one honest subsequent real-trial proposal grounded in the passed R4/R5 evidence: fixed PR434 snapshot, six dimensions, Claude Opus 5/high trusted-host route, timing/retry/receipt/failure/cost boundaries, consumed-packet prohibition, current equal-split budget defect and allocation caveat, exact prelaunch work still required, and one next decision; write task companions, append a truthful preparation checkpoint, state-sync, and stop without tests, reviewer, provider/model/JEV call, claim, packet seal, product/planning commit, push, PR, posting, merge, or source mutation.
+  Companions are under `pr-review-lite-value-pilot/commit-trial-preparation/`; manifest SHA-256 is `9f0ed50a640a74a3f30f4559a2ce26137aa1f628c0628aad7d51fd715d9bb68a`. They separate: (1) the already validated exact three-file correction commit, (2) later explicit per-lane allocation implementation/validation before any new packet, and (3) a still-later paid launch decision. R4 is consumed and equal split must not repeat.
+- SKIPPED: Product/planning mutation or staging, test/reviewer run, model/provider/JEV/network inference, paid proof, live claim, packet seal, product commit/push/PR/post/merge and release/fit decision.
+  Read-only Git/GitHub readback found remote feature `0d2e3164…`, no open PR for either feature/correction branch, and PR434 MERGED at frozen base/head `33ffd50b…` / `29007f90…`; the future target is that immutable snapshot, not a live PR.
+
+### Feedback Cycles
+
+#### Captain-directed commit/trial preparation — 2026-09-22 (no correction-round increment)
+
+- **Authority:** Kent replied exactly `繼續` to preparing the reviewable commit diff and subsequent real-trial proposal. This is state-only preparation, not source mutation, commit, packet, claim or paid-proof authority.
+- **Readiness finding:** the exact two dirty scripts are reviewable but not the complete correction commit: .mjs selection depends on the third validated catalog path. The three-file correction is already independently PASSED and does not depend on a budget-policy change; equal split is instead a separate blocker for another paid proof.
+- **Single next choice:** authorize or decline only the minimal exact three-file correction materialization and commit. A later budget-allocation implementation/validation and a still-later one-packet paid launch each require separate authority.
+
+### Summary
+
+The complete two-file diff and one honest future-trial proposal are now durable without touching product bytes. Independent projection prevents a false parity claim and separates the already validated three-file correction commit from later budget implementation and paid launch; Pilot limits, consumed evidence and distinct authorities remain explicit.

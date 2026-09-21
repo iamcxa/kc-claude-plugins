@@ -1,0 +1,141 @@
+{
+  "schema": "pr-review-lite-commit-trial-preparation/v1",
+  "status": "reviewable_not_commit_or_launch_ready",
+  "state_authority": "18b80bc6233af8ee69b9a2b920accd243b80d783",
+  "authority": {
+    "captain_reply": "繼續",
+    "scope": "read-only product preparation plus state companions",
+    "product_mutation": false,
+    "product_commit_or_push": false,
+    "provider_or_model_invoked": false,
+    "claim_created": false
+  },
+  "artifacts": {
+    "prospective-two-file.patch": {
+      "sha256": "a12841c2ec853cfa886f636a6e7e911f7134acc0e830b82621e0e421979a90e9",
+      "bytes": 55496
+    },
+    "commit-review.md": {
+      "sha256": "5ccb59cfcd8ee296347e02923927a269faf1643f6f11c597abf7ff4d42d1d35b",
+      "bytes": 8935
+    },
+    "real-trial-proposal.md": {
+      "sha256": "b50878f173a2cb839f6a4aab476360bd0feb927273088efd3fdb605d1d3ff256",
+      "bytes": 7603
+    }
+  },
+  "product_worktree": {
+    "path": "/home/vercel-sandbox/kc-claude-plugins/.worktrees/spacedock-ensign-pr-review-lite-value-pilot-r5-accounting-correction",
+    "branch": "spacedock-ensign/pr-review-lite-value-pilot-r5-accounting-correction",
+    "head": "0d2e3164ccd2d60006688c5443717b818825a305",
+    "staged_paths": [],
+    "dirty_paths": [
+      "kc-pr-flow/scripts/review-capability.py",
+      "kc-pr-flow/scripts/review-capability.test.py"
+    ],
+    "files": {
+      "kc-pr-flow/scripts/review-capability.py": {
+        "sha256": "a7a5e169133d8a2ac70723508d35ef1661b1c1d885276488869393ec903cc5f2",
+        "bytes": 94317,
+        "head_delta": {"insertions": 145, "deletions": 143}
+      },
+      "kc-pr-flow/scripts/review-capability.test.py": {
+        "sha256": "0074f5b279edc4478b5ecbcb37962a78dd04ac7d1236809e1894d05d45d3665e",
+        "bytes": 82691,
+        "head_delta": {"insertions": 149, "deletions": 151}
+      }
+    },
+    "prospective_two_file_tree": "0d34ba122130c0f77558c4ef1510e89a23078f7e",
+    "prospective_two_file_kc_pr_flow_subtree": "2d8194aeff6e40b6d2260d5c99d2d5170f03dd05"
+  },
+  "validated_candidate": {
+    "tree": "fd9b3a244e965157e3c48f5fba527b6670dc07b2",
+    "kc_pr_flow_subtree": "3dc6c1f76c952f2b189006190fc9032d7cdbcfb4",
+    "round_1_seal_sha256": "39f694dc6660576be6b4a3b60dcb47f2cda69f1efd71164648d1b4e43e578637",
+    "validation_cycle": 15,
+    "verdict": "PASSED",
+    "evidence_boundary": "offline"
+  },
+  "integration_projection": {
+    "tree": "1922e7c86493f01923baa54824396ba9ffce25b4",
+    "kc_pr_flow_subtree": "3dc6c1f76c952f2b189006190fc9032d7cdbcfb4",
+    "whole_tree_equals_validated_candidate": false,
+    "kc_pr_flow_subtree_equals_validated_candidate": true,
+    "paths": [
+      "kc-pr-flow/schemas/review-capability-catalog-v1.json",
+      "kc-pr-flow/scripts/review-capability.py",
+      "kc-pr-flow/scripts/review-capability.test.py"
+    ],
+    "head_delta": {"insertions": 295, "deletions": 295}
+  },
+  "correction_commit": {
+    "proposed_title": "fix(kc-pr-flow): harden Lite provider custody and typed output",
+    "paths": [
+      "kc-pr-flow/schemas/review-capability-catalog-v1.json",
+      "kc-pr-flow/scripts/review-capability.py",
+      "kc-pr-flow/scripts/review-capability.test.py"
+    ],
+    "catalog_diff": "add mjs to the code_change path pattern",
+    "budget_policy_in_scope": false,
+    "independent_validation_verdict": "PASSED",
+    "commit_authorized": false
+  },
+  "catalog": {
+    "head_blob": "d2846063b65959b97861b3b6e16b34c145f219cc",
+    "head_sha256": "c4194fbfb83c1fbb92f7d550e9b162022d80c34e4cc559239f37471f6f87fe48",
+    "validated_blob": "10284f91b492e2eb144a821fa34b46603681fad0",
+    "validated_sha256": "630006b4351569d2674e2e0fb6229cd826c995624668ba4bc49d1d35571b1da9",
+    "validated_bytes": 6797,
+    "behavioral_difference": "validated code_change path pattern includes mjs"
+  },
+  "unchanged_plugin_surfaces": {
+    "review_runtime_blob": "f61d421e8ac18339319ff1e63b505e1bba6f5e78",
+    "claude_manifest_blob": "1d00b7d4a58ee9a4d86fb3f20b35724b1d1434e8",
+    "codex_manifest_blob": "12a597ac6b26746d14906e9e95c876bb61ca64cf",
+    "plugin_version": "1.12.0",
+    "marketplace_entry_canonical_sha256": "f21576646aa9f520cf7cb5aa82a843579e7a8066b3d805af32c3d7f0509f04b6",
+    "whole_marketplace_head_blob": "697c5752d3351ee2f4b77b5166058c7636601754",
+    "whole_marketplace_validated_blob": "ac7a86c6f152460325e6ba4e2eacb4b52d9e61c6",
+    "unrelated_marketplace_deltas": [
+      "kc-plugin-forge 1.9.1 to 1.10.0",
+      "kc-team-ops description change and 1.7.0 to 1.8.0; journey keywords moved",
+      "new kc-journey-map 0.4.1",
+      "kc-dev-flow 4.3.0 to 4.6.0",
+      "new kc-ship-flow 0.3.0",
+      "new kc-dev-flow-2 0.3.0"
+    ],
+    "marketplace_staged_for_correction": false,
+    "version_bump_implied": false
+  },
+  "remote_readback": {
+    "feature_branch": "feature/kc-pr-review-capability-protocol-pilot",
+    "feature_branch_sha": "0d2e3164ccd2d60006688c5443717b818825a305",
+    "open_pr_for_feature_branch": false,
+    "open_pr_for_correction_branch": false,
+    "pr434": {
+      "state": "MERGED",
+      "base": "33ffd50b217004411f58277cf986ccee7974fe55",
+      "head": "29007f90fc628ae40faf2903dd02d9895f4dcffe",
+      "url": "https://github.com/iamcxa/kc-claude-plugins/pull/434"
+    }
+  },
+  "consumed_r4": {
+    "packet": "c2e2f36638854ef311e4356f317d6c43684b3b2b270a0d192c086e0b0cc94960",
+    "claim": "5fe533e6-9127-4f10-b5e3-136663064aa2",
+    "archive": "b0d424c24b8e99a543f4dc3e8c62b8f6e7df6d474e20ffc6d5e6372ac23515b0",
+    "delivery_receipt": "32fc50e849670ce5ed089e45199307884f3b978894b697653a9d8522e8728737",
+    "relaunch_permitted": false
+  },
+  "trial_readiness": {
+    "launch_ready": false,
+    "fresh_packet_exists": false,
+    "current_budget_policy": "equal split USD 2.4806 / 12",
+    "current_budget_policy_recommended_for_repeat": false,
+    "sequencing": [
+      "minimal exact three-file correction materialization and commit",
+      "later per-lane budget-allocation implementation and validation",
+      "later exact fresh-packet paid launch"
+    ],
+    "next_decision": "authorize or decline only the minimal exact three-file correction materialization and commit"
+  }
+}
