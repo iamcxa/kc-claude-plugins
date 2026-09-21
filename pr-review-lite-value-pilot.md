@@ -1628,3 +1628,30 @@ Cycle 24 produces a minimal two-line product correction and a task-private recor
 ### Summary
 
 The provider schema is an exact explicit-object projection of the authoritative contract and passes all authorized local negative cases, while the corrected live Conductor argv works with the existing token-only environment and uniquely finds the known row. Validation nevertheless returns **REJECTED** because the recorder has no non-advancing cursor guard and loops indefinitely on a valid-shape repeated-cursor page. The consumed proof and new candidate remain immutable, unclaimed and free of live processes.
+
+## Stage Report: implementation (cycle 25)
+
+- DONE: Preserve the cycle-10 rejected successor, consumed proof and all prior receipts while creating a distinct packet-only successor.
+  State authority began at `26506529a0af389b18c11cb5c4a368c3db8698ed`. Rejected tree/packet/correction/contract `82599c6f…` / `8c589855…` / `f5d508ed…` / `643a9912…` remain byte-exact; corrected verification covers all 14,504 rejected files at inventory `5295204f…`, all rejected anchors, and the consumed 13,281-file inventory. One initial inventory wrapper failed because it expanded the inventory path after `cd`; that receipt is retained and the corrected invocation exits 0.
+- DONE: Add the smallest readable fail-closed guard for non-advancing and already-seen cursors without changing product behavior.
+  `record_delivery.py` seeds `seen` with the sealed boundary ID, requires each `hasMore:true` final-row ID to be a new nonempty string, adds it before continuing, and otherwise raises `delivery_query_pagination_invalid`. Patch `e0ddc470…` is the only executable delta; it imposes neither cursor ordering nor an arbitrary page cap. Product index stays `bbd638af…` and writes unchanged tree `82599c6f2d0791a23e0f7d578561051894d2d178`.
+- DONE: Exercise all requested cursor falsifiers and the affected adjacent custody paths with local fixtures only.
+  Bounded custody exits 0 / `core_ok:true` (`custody-probe.stdout` `4b39a027…`): repeated-current and cursor-two-to-cursor-one cycle each exit 1 with no receipt; empty and non-string cursors still fail; normal two-page and four-page routes terminate at their unique later row. Removing membership checking restores the cycle-10 timeout behavior. Duplicate, ambiguity, claim/terminal/archive/attestation, semantic index/content/HEAD and timeout cleanup counterexamples remain green; timeout retains 24 bytes, sends KILL after TERM and leaves no process.
+- DONE: Re-freeze the exact unclaimed packet and verify its unchanged real-interface boundary.
+  Run identity is `pr-review-lite-value-pilot-provider-schema-recorder-r2-20260921`; packet/contract/recorder/correction are `4f959e990c4a8573b2ba335df9c025f865c009311d7c74e5bd6e0b14de7e3880` / `285741817c6ab7528eecc7d84b43813e3b31733f95e764b4ddaa3eaeec3133ca` / `7bdb813b8571bc2618a6f2f00a9e59167c668c71e6c864cd9cb97136ac9b60e5` / `954a5ecae793e51ed6f73a2b1b2ad5fc9ea66353ed2dca262d74f9274c6c3ded`. All 13,208 packet and 48 correction rows verify. No-network in-place preflight passes unchanged with claim absent, mutable file count zero and target HEAD/tree/index/clean exact.
+- DONE: Keep fixed product accounting and preserve the prior successful live read as evidence rather than replaying it.
+  Packet comparison finds only README, self-manifest, contract and recorder changed; 13,206 other files are byte-identical, including dispatcher/schema bytes. Product tree is unchanged, so ledger remains 18 / 5,883 / 1,898 against original denominator `3b37000a…` and caps 18 / 5,884 / 1,903. Cycle 10's successful six-page token-only Conductor read remains the supported real-interface evidence; this round changed only post-response termination and made no live query.
+- SKIPPED: Product/schema edits, full suite, provider/model/prompt/paid call, live Conductor query, production claim/replay, credential value or transcript-body retention, product/planning commit or push, PR, posting, merge, dependency/global-config action, gate, release and fit decision.
+  Historical full-suite failure and local schema/provider-acceptance limits remain distinct. This packet correction proves no useful review output, billing, saving, sealed production delivery, two-day fit or production readiness; task stays implementation pending the same validator.
+
+### Feedback Cycles
+
+#### Validation cycle 10 no-loop disposition — 2026-09-21
+
+- **Material finding accepted and repaired:** a valid string cursor equal to the current or any earlier cursor is now rejected before another query. The correction covers immediate repetition and arbitrary finite cursor cycles while preserving normal opaque-cursor pagination.
+- **Scope disposition:** no product change was necessary. The schema tree, live-read argv/environment, unique-row matching, server `receivedAt`, claim/archive/Git custody and duplicate refusal remain unchanged; only packet recorder termination and bound identity changed.
+- **Review route:** same-validator re-review must bind product tree `82599c6f…`, packet `4f959e99…`, contract `28574181…`, correction `954a5eca…` and unclaimed run identity `pr-review-lite-value-pilot-provider-schema-recorder-r2-20260921`. This report grants no launch or replay authority.
+
+### Summary
+
+Cycle 25 closes the single cycle-10 packet finding with a seen-cursor guard and direct repeated-current/earlier-cycle counterexamples. Product bytes and cap ledger remain unchanged, rejected and consumed artifacts reverify, and the new unclaimed packet is frozen for the same validator with no external or paid action.
