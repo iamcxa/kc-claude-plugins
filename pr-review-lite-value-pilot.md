@@ -603,6 +603,34 @@ cost/time and changed per-invocation execution boundary, or the one material met
 choice if no bounded supported configuration exists. The accepted two-day
 development appetite remains separate from watchdogs and per-attempt spend.
 
+#### Captain revised single live-proof approval — 2026-09-21
+
+Kent answered `准` to exactly the sealed `r1-live-proof-proposal-2` packet:
+`PROPOSAL-SHA256SUMS` SHA-256
+`cf2ebbfd9ef7e4af0e506f378d16bdb5350a14127f43a95363908770f67c16c4`
+and `command-contract.json` SHA-256
+`42e00c5877085615c77d05d872c7c05bd801556ced8f9f80c437d514e94db61e`.
+This is a fresh authorization for one paid outer launch through the prepared
+restricted sandbox and no other packet or method.
+
+The authorized contract is `claude-opus-5` / high, posting off, explicit
+`Bash,Read,Write`, only the two complete no-wildcard dispatcher/finalize Bash
+rules, `KC_PR_FLOW_PROFILED_REVIEW=on`, outer and capability-attempt aggregate
+reported-cost stopping thresholds USD 2.4806 each, a 900-second total watchdog,
+120 seconds per capability attempt, the sealed adapter-internal exit-75 retry and
+zero top-level retries. Nominal USD 4.9612 is not a hard invoice cap. Paid startup
+must fail closed before direct dispatch on any missing, broadened or mismatched
+tool/permission/path surface.
+
+Start a new external supervisory clock before FO checks/dispatch and preserve
+model-only, preparation-through-archive and preparation-through-Cloud-FO-report
+delivery timing separately; do not reset the old trial. Reuse completed model-free
+checks and recheck only launch-time hashes/identity/auth/cleanliness/claim/output/
+deadline guards before one atomic claim and launch. Archive all raw/partial output,
+costs, receipts and cleanup on either outcome. This approval grants no product or
+planning commit, repair, posting, comparison, five-pair evaluation, release
+membership acceptance or two-day-fit claim; task-state sync remains authorized.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
