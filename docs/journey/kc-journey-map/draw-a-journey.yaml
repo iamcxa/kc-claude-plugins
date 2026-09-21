@@ -89,6 +89,22 @@ steps:
     state: "nothing — the file is the only state; the contract and the lint result are both derived"
     readmodel: "the release contract document, and the lint's violation list"
 
+  - id: share
+    card: "Puts the board in front of someone who has no checkout"
+    activity: "Let someone else in"
+    stories:
+      - {id: hand-someone-a-link-to-board, card: "Hand someone a link to the board", release: null, status: exists, evidence: startTunnel}
+      - {id: land-on-the-board-i-shared, card: "Have them land on the board I shared, not an empty one", release: null, status: gap}
+      - {id: share-without-edit-rights, card: "Let them read it without handing over edit rights", release: null, status: gap}
+      - {id: know-a-link-i-sent-has-died, card: "Know that a link I already sent has stopped working", release: null, status: gap}
+    system:
+      - "server/tunnel.ts -> a cloudflared quick tunnel onto JOURNEY_SHARE_PORT; the canvas API is deliberately never the target"
+      - "vite.share.config.mts proxies /connect/ and /uploads/ only; every other path returns the SPA shell"
+      - "server/client/App.tsx takes the room from ?room= and falls back to a room named default"
+      - "tunnelStatus reports running from the child process and targetUp from a socket to the target; neither observes the public URL"
+    cites: [kc-claude-plugins]
+    rules: [share-is-not-read-only, link-dies-with-the-process]
+
   - id: workshop
     card: "Moves the cards around with other people"
     activity: "Talk over it"
@@ -202,6 +218,10 @@ rules:
     text: "The per-release contract is generated from the journey file on every run; there is no hand-edit path"
   - id: grep-is-the-check
     text: "A lint that can be made to fire on a real defect is a check; one that cannot is decoration"
+  - id: share-is-not-read-only
+    text: "The shared front-end syncs over the same /connect/ channel the canvas uses; a link holder edits the board"
+  - id: link-dies-with-the-process
+    text: "A quick tunnel's hostname cannot be chosen and is not reused; every restart invalidates a link already sent"
   - id: lossy-inverse
     text: "Lane 2 and lane 3 have no honest inverse — canvas text cannot be mapped back to a rule id"
   - id: ambiguity-refused
