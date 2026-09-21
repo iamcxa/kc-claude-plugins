@@ -16,7 +16,9 @@ These are operator instructions, not runtime enforcement or a new renderer.
   the conversation's language alone does not change the drawing's language.
 - A question can inform a later user story. It is not automatically an actionable
   or user-visible story, a task, or accepted release scope. Create those artifacts
-  when the human requests that separate planning step.
+  when the human requests that separate planning step. That step is promotion into
+  the journey YAML — see [Stories live in the YAML](#stories-live-in-the-yaml) —
+  never a story card drawn onto the review page.
 - Answer one selected question per turn, then wait for human feedback. Explicit
   batch permission applies to the specified questions; it does not authorize filling
   every remaining card. If no question is selected and the intent is ambiguous,
@@ -78,13 +80,44 @@ Use a native shape URL for the answer, or a native bookmark with its asset recor
 so the canonical chapter survives copying/export. Do not use a localhost or transient
 preview URL as the technical document's canonical identity.
 
+## Stories live in the YAML
+
+A review board carries Actions and questions. Stories are not drawn onto it: the
+journey YAML is their only source, and the story-map page is its rendering. A story
+drawn onto the review page would be a second copy with no rule for which one wins.
+
+**Every Story owes at least one Question. A Question owes no Story.** The asymmetry
+is deliberate. Questions do surface missing stories, so a Story with no Question and
+an Activity with no Story are both worth reporting. But mechanism questions — "what
+if the store reports a write it did not make" — name no actor and are not
+user-visible; they belong under other questions as subquestions, and a Story invented
+above one would invent an actor with it.
+
+**Promotion** moves a question's finding into the story spine. It requires explicit
+authorization for the named question, and all three of: it names an actor; it is
+user-visible; removing it would remove something the user can do. Write the story
+into the journey YAML, then re-render the story-map page alone.
+
+**Re-rendering must preserve what it did not generate.** A story-map page usually
+carries human shapes added on top of the generated ones, without journey metadata.
+Compare the page's records before and after and confirm every non-generated shape
+survived; a successful render is not that proof. Without this check, promotion
+silently deletes the human's work.
+
+**Coverage is a drift report, both directions**: activities and stories in the YAML
+against Actions and questions on the board. Report it in conversation. Adding cards
+for what it finds still needs the human, under the existing rule against unsolicited
+question cards.
+
 ## Incremental canvas work
 
 Use [canvas.md](canvas.md) for applicable service lifecycle and sizing mechanics.
 In this mode, the native drawing preserves human layout and question ownership;
-technical documents own design meaning. Do not regenerate it from YAML, apply
-story-status lints or release handoff requirements, force standard boards, or run
-generated-map readback to convert the human's questions into stories.
+technical documents own design meaning. Never regenerate the review drawing from
+YAML. Do not apply story-status lints or release handoff requirements to it, force
+standard boards, or convert the human's questions into stories unasked. An
+authorized promotion re-renders the story-map page only, under
+[Stories live in the YAML](#stories-live-in-the-yaml).
 
 1. Read a fresh native snapshot before each incremental patch. Identify the selected
    question, its page/parent, nearby records and existing bindings. Back up that

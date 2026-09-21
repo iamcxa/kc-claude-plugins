@@ -28,7 +28,7 @@ is judged against.
 
 | Mode | Trigger | Output |
 |---|---|---|
-| **human-led architecture review** | human-drawn actions and questions; the human directs the review | one short bound answer, its owning technical chapter, then separate evidence — `references/human-led-review.md` |
+| **human-led architecture review** | human-drawn actions and questions; the human directs the review | one short bound answer, its owning technical chapter, then separate evidence; stories stay in the journey YAML and reach it only by authorized promotion — `references/human-led-review.md` |
 | **map** | nothing is built yet, or the question is what to build | a story map with releases, drawn from a conversation — `references/map-from-conversation.md` |
 | **plan-release** | planning/resuming an existing board or preparing a selected release for development | reviewed Development Brief, or draft with the missing decision — `references/map-from-conversation.md` |
 | **draw** | no journey exists yet | the board, derived from code |
