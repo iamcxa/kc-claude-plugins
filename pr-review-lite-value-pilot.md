@@ -1,6 +1,6 @@
 ---
 title: Prove a useful Lite PR review journey before wider evaluation
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -378,6 +378,36 @@ fit the approved limits, or a required no-model check cannot establish the
 boundary, STOP with the exact measured choice. The stopped comparison and its
 known/unknown costs remain unchanged; any future comparison still needs separate
 authorization and preregistration.
+
+#### FO validation finding disposition — correction cycle 1 — 2026-09-21
+
+The fresh validation worker rejected immutable patch
+`4462ef038f19c2e7eaf943729e800e640f66e02076ffb89025cb93af434de140` on one
+owned Material finding. Released/normal workflow: an attended Lite direct run
+may be stopped by its supervisor/operator. Observable harm: the bounded
+SIGTERM counterexample left no terminal receipt and left both the provider stub
+and its TERM-ignoring descendant alive until validator cleanup. Protected
+boundary: `value-ac[AC-2]` requires complete failures to stay visible, and the
+approved proposal requires supervisor cancellation to seal exactly one receipt
+after process-group cleanup. Trigger evidence:
+`.context/pr-review-lite-value-pilot/correction/validation-supervisor-cancel-probe.txt`
+records return code `-15`, zero terminal receipts and both processes alive.
+
+FO disposition is **fix within approved scope** under the Captain's explicit
+authorization for findings to return through the normal correction route. The
+implementation owner may change only the same two approved files and must add
+the smallest readable supervisor-signal custody path plus a falsifier that
+proves TERM/KILL/reap, retained partial streams and exactly one terminal receipt.
+Preserve all existing behavior, evidence distinctions, normal OAuth handling,
+private prior receipts and size caps. No provider/model call, product commit or
+push, new file, wrapper, scope expansion or experiment is authorized. The same
+independent validator must re-review the corrected immutable snapshot.
+
+Because product commit authority is deliberately held, this uncommitted
+snapshot cannot truthfully enter a prepared validation gate that requires a
+committed clean artifact. No briefing or gate decision was manufactured. Task
+status returns to implementation for the correction; the rejected validation
+report and state commit `854c132f2eebdcf56b70086741aebcfd0822de84` remain durable.
 
 ## Stage Report: implementation (cycle 2)
 
