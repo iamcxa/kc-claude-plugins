@@ -857,6 +857,47 @@ and 18 / 5,884 / 1,903 caps. No provider/model/network/paid action, production c
 product/planning commit or push, PR, posting, merge or compatibility claim is
 authorized. Return the immutable successor to the same validator.
 
+#### Authorized schema/index-r2 paid proof outcome — 2026-09-21
+
+The single authorized proof used product tree
+`5a94970dc7d6471bebb6c09450b8a05862876f67`, packet seal `d4bfd7ff…`,
+run `pr-review-lite-value-pilot-schema-index-r2-20260921`, atomic claim
+`69871045-742f-4102-9073-70cba123a2ae` and delivery marker
+`f99a3e9a-a1b8-4df7-a537-3a0b0e84836e`. External FO timing began at
+`2026-09-21T11:26:30.591990760Z`; supervisor start was `11:27:36.631823Z`,
+archive was `11:30:10.732133Z`, and Conductor public `agentMessage`
+`6e6c6df7-c166-46db-8ad4-96f0a7eeff7b` has manually observed server
+`receivedAt 11:31:00.717Z`.
+
+Outcome is **STOP / incomplete**. All six authenticated `claude-opus-5` / high
+children reached init with tool `StructuredOutput`, then the provider/API returned
+HTTP 400: `tools.1.custom.input_schema.type: Field required`. Final events are
+`is_error`; they report zero input/output tokens and event `total_cost_usd` 0,
+while adapter terminal costs are null. No capability result exists, finalization
+records all six required questions as gaps, and there are zero findings, comments
+or GitHub calls. Supervisor USD 0.00 is only the sum of its nullable receipts;
+external, subscription and Cloud costs remain unknown, not zero. Model inference
+duration is unavailable.
+
+Finalization succeeded. Immutable archive `run.tar` is 1,064,960 bytes with exact
+SHA-256 `86522f74f4a8f2cb10efa5039eea97ae62e30366e762d7ca749c48d6cfb13f15`.
+The sealed recorder was attempted exactly once and failed before receipt with
+`delivery_query_failed`; `delivery-receipt.json` is absent. A manual supported
+Conductor read observed the exact public row and server timestamp above, but that
+is explicitly not a sealed receipt. Observed configuration difference: the sealed
+recorder environment allowlist carried its token but omitted the API URL/key used
+by the actual CLI. Its relationship to the query failure is an evidence-based
+inference, not a repaired or replayed causal proof.
+
+FO-to-archive is 220.140142240s and FO-to-public observation is 270.125009240s;
+supervisor-to-archive is 154.100310s and supervisor-to-public is 204.085177s.
+The six concurrent child processes span 1.388466288s wall and 7.917922001s summed
+child time. No owned process remains and posting stayed off. Prior paid trials,
+the historical full-suite failure and the exact-method green result remain separate
+and unchanged. The grant is consumed: no repair, retry, provider rerun, product or
+planning mutation, publication or delivery authority remains; status stays
+implementation and future work requires separate authorization.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
@@ -1511,3 +1552,22 @@ The sealed successor now arrives with the atomic claim path genuinely absent, so
 ### Summary
 
 The same validator confirms that the successor packet now arrives without the claim path, passes its real in-place preflight without mutation, creates the claim only through the supervisor, and retains narrow semantic-index and exact-once custody under fresh counterexamples. The sole fixture setup line makes the exact formerly failing method pass both cases while preserving the old full-suite failure as an explicit limit. The immutable cycle-22 snapshot is therefore **PASSED** for its authorized model-free correction scope, with no product mutation or provider claim.
+
+## Stage Report: implementation (cycle 23)
+
+- DONE: Bind the single authorized paid proof to the exact validated successor and preserve its independent timing/identity endpoints.
+  Product tree `5a94970d…`, packet `d4bfd7ff…`, run `pr-review-lite-value-pilot-schema-index-r2-20260921`, claim `69871045-742f-4102-9073-70cba123a2ae` and marker `f99a3e9a-a1b8-4df7-a537-3a0b0e84836e` remained fixed. FO start was `11:26:30.591990760Z`, supervisor start `11:27:36.631823Z`, archive `11:30:10.732133Z`, and manually observed Conductor row `6e6c6df7-c166-46db-8ad4-96f0a7eeff7b` has server `receivedAt 11:31:00.717Z`.
+- FAILED: Produce a capability result or useful Lite review preview.
+  All six authenticated Opus 5/high children reached init with `StructuredOutput`, then failed on provider/API 400 `tools.1.custom.input_schema.type: Field required`; final events are `is_error`, adapter terminal costs are null and no capability result exists. Finalization truthfully records six required gaps with zero findings/comments/GitHub calls. The child processes span 1.388466288s concurrently / 7.917922001s summed; model inference duration is unavailable.
+- DONE: Preserve finalization, archive and cost evidence without converting nullable receipts into billing claims.
+  Finalization succeeded; archive is 1,064,960 bytes / exact SHA-256 `86522f74f4a8f2cb10efa5039eea97ae62e30366e762d7ca749c48d6cfb13f15`. Child final events report zero input/output tokens and event cost 0, while adapter costs remain null; supervisor USD 0.00 is only its local sum. External, subscription and Cloud costs remain unknown, not zero. Posting stayed off.
+- FAILED: Complete the sealed public-delivery receipt.
+  The recorder was attempted exactly once and failed `delivery_query_failed`; no delivery receipt exists. Manual supported Conductor read confirms the exact public row/timestamp but is not a sealed receipt. The sealed environment allowlist was observed to contain its token while omitting the actual CLI API URL/key; that difference is recorded as an inference about the query failure, not a proven repair or retry.
+- DONE: Close the consumed run with total-time endpoints and no owned process.
+  FO-to-archive/public are 220.140142240s / 270.125009240s; supervisor-to-archive/public are 154.100310s / 204.085177s. No owned process remains. Prior paid trials, the historical full-suite failure and the corrected exact-method pass remain distinct and immutable.
+- SKIPPED: Recorder/environment repair, retry/replay, another provider/model call, product/planning mutation, product/planning commit or push, PR, posting, merge, comparison, calibration, judge, gate, release and fit decision.
+  The single proof authority is consumed. Outcome is **STOP / incomplete**; it establishes neither useful review quality, known total cost, saving, sealed public delivery, two-day fit nor production readiness. Task status remains implementation and any future work requires separate authorization.
+
+### Summary
+
+The validated successor passed local startup boundaries and all six authenticated children reached model initialization, but the provider rejected the generated `StructuredOutput` tool schema before any review result. Finalization and archive custody completed, while the sole sealed delivery query also failed and remains distinct from the manual server-row observation. All evidence is preserved, no repair or rerun occurred, and the Pilot remains stopped in implementation.
