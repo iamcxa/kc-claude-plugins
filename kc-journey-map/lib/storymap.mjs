@@ -1,6 +1,6 @@
 
 import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
-import { normalizeStory } from './model.mjs'
+import { normalizeStory, openQuestions } from './model.mjs'
 
 const PITCH = 240
 const X0 = 300
@@ -162,6 +162,7 @@ export function buildStoryMap(model, room = null, progress = null) {
 			meta: tag(band.id ?? 'unassigned', 'release-label'),
 		})
 
+		const questionsHeight = (story) => openQuestions(story ?? {}).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(q.ask, STORY_W), 0)
 		const perColumn = new Map()
 		for (const story of band.stories) {
 			const list = perColumn.get(story.step.id) ?? []
@@ -174,7 +175,7 @@ export function buildStoryMap(model, room = null, progress = null) {
 		const columns = [...perColumn.values()]
 		const rowTop = [bandTop]
 		for (let j = 0; j < rows; j++) {
-			const q = Math.max(0, ...columns.map((l) => (l[j]?.question ? fitHeight(l[j].question, STORY_W) : 0)))
+			const q = Math.max(0, ...columns.map((l) => questionsHeight(l[j])))
 			rowTop.push(rowTop[j] + STORY_PITCH + (q ? q + QUESTION_GAP : 0))
 		}
 
@@ -188,23 +189,28 @@ export function buildStoryMap(model, room = null, progress = null) {
 					meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
 				})
 
-				if (story.question) {
+				let qy = y + STORY_H + QUESTION_GAP
+				for (const question of openQuestions(story)) {
+					const h = fitHeight(question.ask, STORY_W)
 					put.push({
 						...label({
-							id: `shape:sm-story-question-${story.id}`,
-							text: `? ${story.question}`,
+							id: `shape:sm-question-${story.id}-${question.id}`,
+							text: `? ${question.ask}`,
 							x,
-							y: y + STORY_H + QUESTION_GAP,
+							y: qy,
 							w: STORY_W,
-							h: fitHeight(story.question, STORY_W),
+							h,
 							index: ix[n++],
 							parentId,
 							color: 'violet',
 							size: 's',
 							align: 'start',
 						}),
-						meta: tag(story.id, 'story-question'),
+						// The question id binds to its review-board card; the story id keeps the
+						// layout checks able to find the card a question hangs under.
+						meta: { journey: { nodeId: question.id, kind: 'question', story: story.id } },
 					})
+					qy += h + QUESTION_GAP
 				}
 			})
 		}

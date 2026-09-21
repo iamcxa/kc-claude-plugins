@@ -1,7 +1,7 @@
 
 import { execFileSync } from 'node:child_process'
 import { extname, resolve, sep } from 'node:path'
-import { iterStories, STORY_STATUSES } from './model.mjs'
+import { iterStories, openQuestions, STORY_STATUSES } from './model.mjs'
 
 // Prose/data matches must not count as executable evidence.
 const EXECUTABLE_EXTENSIONS = new Set(['.mjs', '.cjs', '.js', '.jsx', '.mts', '.cts', '.ts', '.tsx', '.py', '.rb', '.sh', '.bash', '.zsh'])
@@ -39,6 +39,13 @@ export function lintExistsWithoutEvidence(model) {
 }
 
 // Exclude generated self-citations; quoting a symbol is not executable evidence.
+export function lintExistsWithOpenQuestion(model) {
+	return iterStories(model)
+		.filter((s) => s.status === 'exists' && openQuestions(s).length)
+		.map((s) => ({ lint: 'exists-with-open-question', story: s.id, release: s.release,
+			detail: `story ${s.id} is marked exists while these questions are still open: ${openQuestions(s).map((q) => q.id).join(', ')}` }))
+}
+
 export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [] } = {}) {
 	if (!repoRoot) throw new Error('lintEvidenceNotFound needs repoRoot to grep against')
 	const ignore = new Set([journeyPath, ...exclude].filter(Boolean).map((p) => resolve(p)))
@@ -54,5 +61,5 @@ export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [
 }
 
 export function lintJourney(model, opts = {}) {
-	return [...lintNoStatus(model), ...lintExistsWithoutEvidence(model), ...lintEvidenceNotFound(model, opts)]
+	return [...lintNoStatus(model), ...lintExistsWithoutEvidence(model), ...lintExistsWithOpenQuestion(model), ...lintEvidenceNotFound(model, opts)]
 }

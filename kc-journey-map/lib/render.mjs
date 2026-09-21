@@ -7,7 +7,7 @@ import { DocumentRecordType, TLDOCUMENT_ID } from '@tldraw/tlschema'
 import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
-import { normalizeStory, storyStatusLabel } from './model.mjs'
+import { normalizeStory, openQuestions, storyStatusLabel } from './model.mjs'
 
 const STORY_PITCH = 240
 const STORY_W = 220
@@ -54,7 +54,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		})(),
 		story.status && ['exists', 'gap', 'unverified'].includes(story.status) ? null : storyStatusLabel(story.status),
 		story.evidence ? `Evidence: ${story.evidence}` : 'No story evidence recorded.',
-		story.question && `? ${story.question}`,
+		...openQuestions(story).map((q) => `? ${q.ask}`),
 	].filter(Boolean).join('\n')
 	const systemText = (step) => [
 		'SHARED ACTIVITY CONTEXT',

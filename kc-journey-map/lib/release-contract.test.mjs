@@ -42,3 +42,27 @@ test('release contract preserves all three story states', () => {
 	assert.deepEqual(releaseContractRows(model, 'r1').rows.map((r) => r.status), ['gap', 'unverified', 'exists'])
 	assert.match(buildReleaseContract(model, 'r1'), /\| unverified \| unverified \|/)
 })
+
+const asked = {
+	journey: 'demo',
+	releases: [{ id: 'r1', name: 'RELEASE 1', goal: 'Ship the thin line.' }],
+	rules: [],
+	steps: [{ id: 's', stories: [
+		{ id: 'a', card: 'Settled', release: 'r1', status: 'gap', questions: [
+			{ id: 'a1', ask: 'Already decided?', status: 'answered' },
+			{ id: 'a2', ask: 'Still deciding?', status: 'open' },
+		] },
+		{ id: 'b', card: 'All settled', release: 'r1', status: 'gap', questions: [{ id: 'b1', ask: 'Was decided?', status: 'answered' }] },
+	] }],
+}
+
+test('the contract column carries only open questions, so it reads as what is still missing', () => {
+	const doc = buildReleaseContract(asked, 'r1', { journeyPath: 'demo.yaml' })
+	assert.match(doc, /Still deciding\?/, 'an open question is missing from the contract')
+	assert.doesNotMatch(doc, /Already decided\?/, 'an answered question still fills the column')
+})
+
+test('a story whose questions are all answered shows an empty column, not a stale one', () => {
+	const row = buildReleaseContract(asked, 'r1', { journeyPath: 'demo.yaml' }).split('\n').find((l) => l.startsWith('| All settled'))
+	assert.match(row, /\| — \|/, 'a fully answered story did not fall back to the dash')
+})

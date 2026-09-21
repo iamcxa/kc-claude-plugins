@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { lintEvidenceNotFound, lintExistsWithoutEvidence, lintJourney, lintNoStatus } from './lint.mjs'
+import { lintEvidenceNotFound, lintExistsWithOpenQuestion, lintExistsWithoutEvidence, lintJourney, lintNoStatus } from './lint.mjs'
 
 const model = (steps) => ({ steps })
 
@@ -125,4 +125,26 @@ test('lint rejects unsupported status and accepts gap, unverified and exists', (
 	const dir = tempRepo()
 	const violations = lintJourney(m, { repoRoot: dir })
 	assert.deepEqual(violations.map((v) => [v.lint, v.story]), [['invalid-status', 'made-up']])
+})
+
+test('lintExistsWithOpenQuestion fires on exists with an open question, not on a settled one', () => {
+	const m = model([{ id: 's', stories: [
+		{ id: 's-0', card: 'x', status: 'exists', evidence: 'X', questions: [{ id: 'q1', ask: 'Who?', status: 'open' }] },
+		{ id: 's-1', card: 'y', status: 'exists', evidence: 'Y', questions: [{ id: 'q2', ask: 'Who?', status: 'answered' }] },
+		{ id: 's-2', card: 'z', status: 'gap', questions: [{ id: 'q3', ask: 'Who?', status: 'open' }] },
+	] }])
+	const v = lintExistsWithOpenQuestion(m)
+	assert.deepEqual(v.map((x) => x.story), ['s-0'])
+	assert.match(v[0].detail, /q1/)
+})
+
+test('the singular question field is sugar, so it reaches the same gate', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X', question: 'Who owns this?' }] }])
+	assert.deepEqual(lintExistsWithOpenQuestion(m).map((x) => x.story), ['s-0'])
+})
+
+test('a deferred question does not hold a story back', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X',
+		questions: [{ id: 'q', ask: 'Later?', status: 'deferred', because: 'belongs to the reminder release' }] }] }])
+	assert.deepEqual(lintExistsWithOpenQuestion(m), [])
 })
