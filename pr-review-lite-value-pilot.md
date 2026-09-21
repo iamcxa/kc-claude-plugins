@@ -530,3 +530,16 @@ The bounded correction now gives each local-stub child explicit argv/environment
 ### Summary
 
 The immutable candidate and receipts are internally bound, under every configured size cap, and preserve the three aggregate outcomes and real-provider limit honestly. Goal sufficiency fails at the accepted cancellation boundary, so the exact candidate is REJECTED despite the corrected 48/48 fixture suite; minimal necessity remains bounded to the approved two-file seam, and any repair requires FO disposition and fresh independent validation. Pilot reminder: this is a model-free limited-use custody assessment, not compatibility, experiment, delivery, or production evidence.
+
+## Stage Report: implementation (cycle 6)
+
+- DONE: Repair only the proven supervisor-SIGTERM custody defect so cancellation cleans the child process group, retains partial streams, and seals exactly one terminal receipt.
+  Direct dispatch now temporarily handles SIGTERM as a STOP/cancellation marker, polls it during each child wait, performs TERM / 0.2-second grace / KILL / reap before hashing durable streams and exclusively sealing `supervisor_cancelled`, restores the prior handler, and only then re-delivers SIGTERM; normal OAuth and configured-versus-observed evidence are unchanged.
+- DONE: Add a bounded local-stub regression that fails on the rejected snapshot and proves TERM/KILL/reap, no surviving child/descendant, exact terminal evidence, STOP ordering, and preserved existing contracts.
+  The forked-supervisor regression waits for partial stdout/stderr and a TERM-ignoring descendant, terminates the supervisor, and fails unless it exits `-15` after exactly one `kill_sent` terminal receipt, no live child/descendant and no ordinal-2 attempt; it passed in 1.026s, the six affected custody checks passed in 54.648s, and the existing CLI handoff/finalization check passed in 44.449s, each under an external TERM/KILL watchdog and using local stubs only.
+- DONE: Re-run only necessary bounded checks, preserve prior receipts separately, keep the two-file uncommitted snapshot readable and within every approved cap, and report its new exact identity for independent re-review.
+  New private evidence is isolated under `.context/pr-review-lite-value-pilot/correction-cycle1/`; old rejected patch `4462ef038f19c2e7eaf943729e800e640f66e02076ffb89025cb93af434de140` remains unchanged. New patch `0df289237ac4efe1872aa9f367478e16ca6f037c5482004459eb80087b6ec709` leaves only the approved files modified and uncommitted: source 2,142 lines / `129ab4901b5050326e3eade4f9a1cc464ee4e80755feaae0062b97b5aa7dced4`, test 1,214 lines / `761574b9b74643a75a9b92f582964b267e4cf08555c307c580dcde285ffd1164`; denominator totals are exactly 18 files / 5,884 aggregate / 1,903 focused, with read-only compile, JSON, checksums and `git diff --check` green.
+
+### Summary
+
+The correction closes only the validated supervisor-cancellation escape and retains the existing direct-dispatch lifecycle and evidence boundaries. The prior aggregate history remains historical and was not replayed; this implementer makes no validation or real-CLI compatibility claim, and the stopped comparison remains stopped. Pilot boundary: the exact zero-headroom snapshot now requires fresh independent re-review before any gate or future separately preregistered comparison.
