@@ -679,6 +679,35 @@ standing harness, duplicate reviewer, broad green-suite rerun or new planning lo
 Task-state-only sync remains authorized, and passing model-free checks does not
 accept 17-story membership or establish two-day fit.
 
+#### Captain trusted-host dispatcher acceptance — 2026-09-21
+
+Kent accepted the supported architecture: the already-authenticated Conductor
+Cloud host executes the existing review dispatcher; its isolated CLI children
+inherit the host's already-provisioned first-party OAuth through the normal
+supported process environment, and durable review results return to the
+assistant for separate judgment and finalization. This is the placement decision,
+not a request to revisit auth architecture and not permission to expose, copy,
+serialize or acquire a credential.
+
+Prepare the smallest model-free integration packet around PASSED tree
+`44fa4e1b50771c921be130c857cf99ab6f7179c8`. Prefer existing runtime paths and
+make zero product changes if they already support host start → child auth/dispatch
+→ durable results → assistant judgment/finalization. Preserve process-group
+cleanup, partial streams, terminal and cost receipts, zero duplicate launch or
+finalize, supervisory/model timing separation, and human-only publication. A
+sanitized `claude auth status --json` probe under the exact child environment is
+allowed; no provider/model call is authorized.
+
+Before any future paid proof, preserve the observed missing-`@tldraw/utils` test
+failure and prepare dependencies only inside the exact private target. An existing
+cache may be used only if package and lock bytes match exactly; otherwise use the
+repo-supported checked-in frozen lockfile with no upgrade, global install,
+lifecycle scripts, tracked source/lock mutation, service, credential operation or
+sealed-archive mutation. Rerun only the exact formerly failing supplied test once,
+retain pass/fail and provenance, and re-freeze the target. This remains proposal
+preparation: every earlier paid grant is consumed, posting is off, and a future
+single proof requires fresh explicit authority.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
@@ -1071,3 +1100,22 @@ The valid-JSON `[]`/`null` auth-status hole is closed with an object-type guard 
 ### Summary
 
 The cycle-16 object-type guard closes the rejected auth-status shape hole across every valid JSON non-object and the prior missing/wrong/nonzero cases, each with one durable fail-closed terminal and no provider/retry. `.mjs` still selects and runs the supplied test exactly once, Markdown remains test-inactive, all frozen artifacts and exact cap accounting hold, and the corrected snapshot is **PASSED** without product mutation or any model/paid call. The trusted-host versus credential-less nested-runtime boundary remains explicitly unproven end to end.
+
+## Stage Report: implementation (cycle 17)
+
+- DONE: Record Kent's accepted trusted-host execution boundary in the task Feedback Cycles and existing R1 planning artifacts, preserving correction tree 44fa4e1b50771c921be130c857cf99ab6f7179c8, every older archive, canonical journey, the two-day appetite distinction, and the corrected prior-trial delivery time 1050.402098s.
+  Feedback now binds the already-authenticated Conductor Cloud host to direct dispatcher execution and separate assistant judgment/finalization. Planning hashes are README `61998a0e…`, proposal `b51cad0d…`, brief `8a07197a…`; canonical YAML/TLDR remain `f4a67609…` / `5a4cb497…`. Prior trial start `03:29:42.388902907Z`, receipt creation `03:45:37.762085092Z`, public delivery `03:47:12.791Z`, 1,050.402098s total and +150.402098s over 900 remain distinct from the accepted two-day investment appetite.
+- DONE: Using only existing runtime paths, make an exact reviewable host start -> inherited child auth/dispatch -> durable result/evidence -> assistant preview/finalization handoff that preserves supervisory/model timing separation, bounded timeout/cancellation/process-group cleanup, cost/receipt collection, exact-once custody and human-only publication authority; verify the precise intended child auth environment and changed handoff behavior model-free without secrets or provider calls.
+  `trusted-host-integration/contract.json` SHA-256 `275d042c…` specifies the exact direct dispatcher/finalize argv, allowlisted inherited keys, 900s supervisor / 120s attempt / 10s auth limits, one exit-75 retry, zero top-level retries, USD 2.4806 aggregate child reported-cost stop, durable streams/terminals/reviewer request/result and posting off. Exact-env status retained only `loggedIn:true`, `authMethod:oauth_token`, `apiProvider:firstParty` (`bd9938bf…`); no token value or credential file was read or persisted.
+- DONE: Exercise the custody transition, durable stdout/stderr/terminal/result, partial evidence on timeout/cancel, process-group cleanup, no duplicate launch/finalize, exact-once cost accounting, and posting/approval remaining off with harmless existing fixtures, reusing cycle-15/16 evidence where unchanged.
+  Three existing fail-capable fixtures completed in 97.022s, exit 0: they fail on env leakage, missing stream/terminal/cost, surviving descendants, changed final bytes or duplicate finalize. Cycle 15/16 remains the independent fail-closed wrong/missing/non-object auth and `.mjs` exact-once evidence; no broad suite was repeated.
+- DONE: Resolve the supplied-test dependency preflight only inside the exact private target, preserve its failure, use an exact cache or the checked-in frozen lockfile, rerun the formerly failing command once, and re-freeze the boundary without tracked mutation.
+  The initial exact test receipt remains exit 1 with missing `@tldraw/utils`. A nonmatching nearby cache was rejected; `npm ci --offline --ignore-scripts --no-audit --no-fund` used unchanged package/lock `f7f87af…` / `3fc55725…`, installed `@tldraw/utils` 5.4.0, and exited 0. The sole rerun passed 14/14 in 219ms; installed-tree digest is `0f7cd2d9…`, target HEAD/tree remain `29007f90…` / `1a89abd2…`, tracked status clean, and the target was re-frozen read-only.
+- DONE: Determine whether any product byte beyond the PASSED correction snapshot is necessary; if none, seal a no-product-change integration packet with exact commands/inputs/outputs/hashes and one bounded future-proof proposal.
+  No product change is necessary. Packet README / manifest hashes are `33f0da44…` / `64d8fad2…`; copied dispatcher parity is byte-exact, candidate tree writes `44fa4e1b…`, and source/test/catalog remain `1026961f…` / `021f9888…` / `630006b4…`. Exact cumulative product accounting stays 18 / 5,882 / 1,897 against 18 / 5,884 / 1,903; the proposal is explicitly unauthorized and has no launch claim.
+- SKIPPED: Provider/model call, paid startup, replay of either consumed trial, posting, product/planning commit or push, product successor, dependency upgrade or network fetch, global install, lifecycle script, service, PR, merge, release membership/fit acceptance and delivery.
+  This stage used only model-free status, existing local fixtures and one offline frozen-lock install. Real child startup/result, billing, five-lane quality, decision-ready preview, supervisory delivery time and two-day fit remain paid-only unknowns requiring fresh authority.
+
+### Summary
+
+Kent's trusted-host placement composes with the existing PASSED runtime without any new product byte. The sealed packet proves supported inherited auth availability, local custody/cancellation/finalization and a clean dependency-prepared target, while preserving the original failure receipts and every prior timing/archive boundary. One exact posting-off future proof is prepared but not authorized; no provider/model call occurred.
