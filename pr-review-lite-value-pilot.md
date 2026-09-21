@@ -535,6 +535,21 @@ reviewed. The immutable two-file correction remains an uncommitted possible
 dependency rather than delivered functionality; existing product caps and the
 stopped comparison remain unchanged.
 
+#### Captain R1 time appetite — 2026-09-21
+
+After the local relay presented examples `半天、1 天或 2 天`, Kent answered `2`.
+The relay explicitly interprets that answer as **two days** of development plus
+integration and validation investment. Record `budget.appetite=2` and
+`budget.unit=days`, with this user message and relay interpretation as the basis.
+
+This is an investment ceiling, not an estimate, schedule/deadline guarantee,
+fresh spending grant, or acceptance of the proposed 17-story membership, fit,
+product/planning commit, implementation, provider/model experiment, publication,
+delivery, PR, merge or release. Do not ask Kent for appetite again. Planning may
+use bounded read-only diff, merge-tree, existing evidence/duration inspection and
+entry-path tracing to establish estimate/fit; any irreducible live provider/model
+proof remains a separate explicit authority and budget decision.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
