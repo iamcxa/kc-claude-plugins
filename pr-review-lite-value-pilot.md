@@ -512,6 +512,29 @@ Its private export and public download both hash to
 the existing editable viewer remains
 `https://sends-messaging-ellis-seeing.trycloudflare.com/?room=pr-review-lite-whole-journey`.
 
+#### Captain R1 goal acceptance — 2026-09-21
+
+Kent replied `好` to this exact first-release goal: `你指定一個一般小型 PR，助理先理解目的，交付有證據、清楚標示缺口的審查預覽，讓你能決定下一步`.
+Necessary constraints include clarification when information is missing or
+contradictory, cancellation, and visible failure evidence; actual comment
+publication is deferred. A real PR must reach a decision-ready preview, and unit
+tests alone cannot establish that user outcome.
+
+This accepts the release goal only. It does not accept exact story membership,
+the removal-test assessment, development/validation appetite or fit, a numeric
+estimate, product/planning commit, product implementation, provider/model
+experiment, delivery, publication, PR, merge or release. The local relay has
+asked Kent asynchronously for the development-plus-validation time appetite as
+an investment ceiling; that answer is pending and must not be inferred from old
+dollar stops, story count, line count or silence, nor requested again here.
+
+Planning may preserve a pre-cut canonical baseline and prepare a scratch R1
+candidate, assessment and dev2-format draft Development Brief. Canonical release
+membership remains unchanged until exact membership, fit and acceptance are
+reviewed. The immutable two-file correction remains an uncommitted possible
+dependency rather than delivered functionality; existing product caps and the
+stopped comparison remain unchanged.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
