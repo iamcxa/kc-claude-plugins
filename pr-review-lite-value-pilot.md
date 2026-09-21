@@ -1740,3 +1740,28 @@ Feedback round 2 closes the two cycle-11 packet findings with a strict response-
 ### Summary
 
 R3 bounds page acquisition, kills stalled query process groups, rejects malformed `hasMore`, preserves finite cursor and custody behavior, and completes its single authorized sanitized host read in 6.768551 seconds. It is nevertheless **REJECTED** because the clock is not checked through message iteration or before receipt storage: a production-recorder fixture created a receipt at 1.122667 seconds under a sealed one-second total deadline. All product and prior evidence remain immutable; no provider/model or product action occurred, and any next correction cycle requires the pinned human escalation.
+
+## Stage Report: implementation (map-mode planning checkpoint)
+
+- DONE: Record Kent's exact `可以` authorization as a bounded design alignment only.
+  The authorization permits updating the existing `review-a-pr` journey to compare an explicit LLM baseline and an optional JEV hybrid through one proposed decision interface. It does not accept implementation, release membership, fit, provider access, spend, publication or delivery. The task remains in implementation; validation cycle 12 remains **REJECTED**, and the next correction remains on Captain-escalation **HOLD**.
+- DONE: Preserve the accepted journey and R1 boundaries while adding proposed variants.
+  Persona, all six activity IDs, all 19 prior story IDs and their relative order, the four-story purpose order, and the exact proposed 17-story R1 membership are unchanged. Six unassigned proposed story IDs were added: `bind-pr-head-and-purpose`, `select-decision-mode`, `use-llm-baseline`, `use-hybrid-jev-questions`, `see-provider-fallback`, and `route-uncertain-judgment`. Decision mode is explicitly separate from Lite/Standard/Full coverage tier and the dev2 Pilot profile.
+- DONE: Write the design-only common interface and evidence/release recommendation.
+  The proposal binds exact PR/head/purpose and evidence references; bounded questions/rubrics; supported/contradicted/insufficient-evidence verdicts; provider/model/version provenance; separate deterministic integrity and semantic judgment; probability distribution/model confidence distinct from evidence validity; GPT/Claude-owned cited explanation; usage/cost unknowns; timeout/retry/fallback; and human-only publication. Official TypeSafe sources support Choice/Score/Noul and the confidence caveat. Direct repository checks confirm `cross-model.sh` supports Codex/Gemini only, Step 4-shadow forbids extra model dispatch, and triage's default-6 confidence is an inline self-rating rather than a standalone call.
+- DONE: Verify the map-mode delta without handoff or canvas claims.
+  YAML parse, stable-ID/order, purpose-order, no release/status/evidence claims, exact R1-membership, decision/coverage/profile separation, source-link and wording checks pass. Canonical YAML changed from `f4a6760975ae796a5f799f9f029849c1b51ba922b5e02780987afa469ab25908` to `20849b407a0eeeae6b5d24adf663b9a26c8b9034e067b2459e362472bb2156e8`; `.tldr` remains byte-identical at `5a4cb497f37089810b0b0e986badf26b43826552cf4f237b1059e5079f0ebd09`. Historical canvas readback remains evidence for the old snapshot only. Its service processes are absent and old hostname does not resolve, so no service was rebuilt and no new visual/share verification is claimed.
+- SKIPPED: Journey handoff, release selection, implementation/runtime/schema change, canvas rebuild, `.tldr` update, model/provider/JEV API call, credential action, paid trial, product/planning commit or push, PR/post/merge, gate/status transition and repair-cycle continuation.
+  The independently usable LLM baseline plus common interface is recommended first; JEV remains a later opt-in experiment unless a separately authorized evaluation inside the accepted two-day appetite/value boundary supports it.
+
+### Feedback Cycles
+
+#### Captain map-mode authorization receipt — 2026-09-21 (no correction-round increment)
+
+- **Authorization:** Kent replied exactly `可以` to the bounded map-mode design alignment. This accepts only the planning comparison and common-interface proposal described above.
+- **Preserved disposition:** this receipt neither opens nor completes a repair feedback round and does not change the feedback count. Validation cycle 12's **REJECTED** verdict and Captain-escalation **HOLD** remain exact and controlling.
+- **Unresolved decision:** whether to authorize a later private-data-safe JEV experiment after the LLM baseline interface is reviewable, with exact evidence, provider/version, budget, timeout/retry/fallback, independent labels and stop rules. Until then, the hybrid is only an unassigned proposed journey variant.
+
+### Summary
+
+The existing whole journey now exposes explicit decision-mode choice, an independently usable GPT/Claude baseline, and a bounded JEV hybrid proposal without changing R1 membership or the consumed repair record. The common interface keeps integrity, semantic judgment, uncertainty, provider fallback, cost and publication authority separate. Canvas service is unavailable, so the authoritative delivery is YAML plus Markdown and the prior `.tldr` remains unchanged; cycle 12 REJECTED / Captain-escalation HOLD remains in force.
