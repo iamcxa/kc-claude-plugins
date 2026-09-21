@@ -739,6 +739,36 @@ credential value/file operation, posting, product/planning commit, push or PR is
 authorized. The same validator must review the resealed correction before any paid
 decision.
 
+#### Validation-cycle-6 exact-custody correction — 2026-09-21
+
+Validation cycle 6 accepted the product credential/mutation correction but rejected
+the delivery recorder on one owned Material finding: after a disposable run, forged
+terminal claim/marker fields plus appended archive bytes still produced a successful
+delivery receipt. The recorder trusted mutable terminal identities and did not
+cross-check the atomic prelaunch claim or current fixed archive bytes.
+
+Correct only the delivery-custody packet on a new task-private revision. Preserve
+product tree `da967d72a879701573cd82064bdb066db8b46353`, patch `52f82d6a…`,
+18 / 5,882 / 1,897 accounting, both rejected packet revisions and cycle-6
+counterexample `c99db339…` byte-for-byte. The recorder must derive run identity from
+the fixed sealed contract and claim/marker/cursor from the atomic prelaunch claim,
+require terminal and supervisor-produced archive attestations to match those sources,
+and recompute the current fixed archive hash/size before querying delivery.
+
+The unique later server-stored nested `agentMessage` must bind run identity, claim ID,
+delivery marker and archive digest before exclusive receipt creation. Missing or
+changed attestations, terminal/archive/claim mismatch, archive byte drift, ambiguity,
+pre-cursor or logical-ID substitution and replay must fail without a receipt. Retain
+one actual 900-second monotonic deadline, preclaim checks, process-group cleanup,
+partial streams, exact terminal/cost/finalize/archive custody, regular-file Conductor
+paging and separate archive/server-delivery times. This detects post-run drift in the
+one-shot operator workflow; it is not a sandbox against a fully compromised trusted
+host. No production claim, provider/model call, paid proof, dependency/test action,
+credential operation, product/planning commit/push, PR, posting or fit/release decision
+is authorized. This is feedback round 2; the same validator re-reviews once, and any
+further rejection stops at the workflow escalation boundary rather than starting a
+third correction round.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
@@ -1230,3 +1260,24 @@ The two cycle-5 integration findings now have a bounded correction: supplied tes
 ### Summary
 
 The product half of the correction closes the trusted-host credential leak and target-mutation path, and most supervisor controls withstand independent model-free counterexamples. The corrected snapshot is nevertheless **REJECTED** because the delivery recorder accepts forged terminal identities and a changed archive, breaking the exact custody its successful receipt claims; production remained unclaimed and no provider/model call occurred.
+
+## Stage Report: implementation (cycle 19)
+
+- DONE: Bind feedback round 2 to validation cycle 6's exact counterexample and preserve product plus both rejected packet revisions.
+  The new task-private root is `trusted-host-integration-correction-r2/`; only its packet is changed. Product tree remains `da967d72a879701573cd82064bdb066db8b46353`, correction patch/snapshot/index remain `52f82d6a…` / `1aa3eaad…` / `633db092…`, and source/test/catalog remain `2a49430a…` / `021f9888…` / `630006b4…`. Accounting remains exactly 18 / 5,882 / 1,897 within 18 / 5,884 / 1,903. Rejected v1 manifest `64d8fad2…`, rejected v2 correction seal `719e0e80…`, and validator counterexample `c99db339…` remain byte-exact; product/planning bytes were not edited.
+- DONE: Root delivery identity in the sealed contract and atomic prelaunch claim rather than mutable terminal fields.
+  Contract schema v3 supplies fixed run identity `pr-review-lite-value-pilot-custody-r2-20260921`. Before launch, claim schema v2 binds that identity, contract digest, UUID claim ID, UUID delivery marker, fixed start/deadline and actual Conductor transcript-row cursor. The terminal must match every claim field; the recorder independently reads contract and claim and rejects any mismatch instead of adopting terminal identities.
+- DONE: Bind archive custody redundantly and recompute the current fixed archive before delivery observation.
+  After exact-once finalize, the supervisor creates the archive and exclusively writes identical `pr-review-lite-archive-attestation/v1` objects at `archive/archive.json` and `launch-claim/archive-attestation.json`, then copies the same object into its terminal. Each attestation binds the prelaunch-claim digest, run identity, claim ID, marker, fixed resolved archive path, SHA-256, size and archive time. The recorder requires all three copies to agree with claim/contract, validates the claim digest, requires the terminal archive endpoint to match, and recomputes current `archive/run.tar` hash and size before any Conductor query.
+- DONE: Require the unique server delivery row to bind independently resolved claim, run and archive identities.
+  The recorder verifies the packet manifest, then uses only the claim's actual row cursor with the supported `conductor session message ... --after <row> --limit 100 --json` regular-file paging path. A match must be a later session-indexed top-level agent row whose nested item is `agentMessage` and contains run identity, claim ID, marker and verified archive digest. Exactly one match is required. The exclusive receipt records those identities, top-level server `receivedAt`, archive hash/size/time and the unchanged preparation-through-delivery/deadline comparison; ambiguity and replay remain fail-closed.
+- DONE: Falsify the cycle-6 trigger and adjacent custody substitutions with disposable model-free runs while preserving the prior supervisor controls.
+  `custody-probe.json` SHA-256 `2b26a697…` exits 0. The original forged-terminal plus appended-archive trigger now exits 1 with `receipt_created:false`; separate archive-only drift, terminal forgery, claim/run mismatch, missing and changed custody attestation, pre-cursor row and logical-message-ID substitution all exit 1 before receipt. Valid delivery still rejects no message, two-message ambiguity and replay, then accepts exactly one nested server row and binds receipt claim/run/archive identities. Preclaim seal/external/auth/target/output/session refusals remain before claim; one success retains exact 900-second wall/monotonic delta, one dispatch/finalize/archive and USD 0.25 cost; missing successful cost refuses archive; timeout retains partial bytes, records `cleanup=kill_sent` and leaves no process.
+- DONE: Seal the production-shaped packet and pass its real model-free preflight without consuming it.
+  New 13,197-row packet seal is `8c67fd7210f1e80c9574d0ffeefadf158874bcd4a18c422b31f98f835c9d0ff4`; packet README/contract/supervisor/recorder are `1632d4ed…` / `e6e7c76b…` / `1e854b92…` / `ebf373ec…`. Both Conductor queries preserve the supported subcommand-first `... --limit 100 --json` shape. Final production preflight receipt `8e904205…` exits 0 with sanitized supported `loggedIn:true/oauth_token/firstParty`, exact target `29007f90…` / `1a89abd2…`, sealed/external hashes and actual transcript row `7b7ff4bb…`; production claim remains absent and output/archive remain empty. Root receipt is `77f14b53…`; the 25-entry correction seal is `6be98788…` and verifies.
+- SKIPPED: Production claim, dispatcher/provider/model launch, paid proof, assistant judgment/finalize, archive/public delivery, dependency action or supplied-test rerun, login, credential read/output/copy, global setting, product/planning commit or push, PR, posting, merge, gate, release and fit decision.
+  This is post-run drift detection for the one-shot trusted-host workflow, not protection from a fully compromised trusted host able to rewrite every local and external receipt anchor. Cycle 14's 1,050.402098-second actual delivery remains immutable. The packet stays `proposal_only_not_authorized`; the same validation owner must re-review this feedback-round-2 seal once. A further rejection stops at escalation rather than opening another correction round.
+
+### Summary
+
+Delivery custody now resolves identities independently from the fixed contract and atomic prelaunch claim, cross-checks two exclusive supervisor attestations plus terminal state, recomputes the fixed archive, and requires the unique later Conductor `agentMessage` to bind the verified archive digest as well as run/claim identities. The exact prior forgery/archive-drift trigger and adjacent substitution/replay cases fail without receipts; the production packet remains unclaimed and every check was model-free. Independent validation decides this final correction round.
