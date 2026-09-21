@@ -708,6 +708,37 @@ retain pass/fail and provenance, and re-freeze the target. This remains proposal
 preparation: every earlier paid grant is consumed, posting is off, and a future
 single proof requires fresh explicit authority.
 
+#### Validation-cycle-5 integration correction — 2026-09-21
+
+Validation cycle 5 rejected the trusted-host packet on two owned Material findings
+without reopening the PASSED auth/`.mjs` basis or Kent's accepted host placement.
+First, supplied mechanical tests inherited the trusted host OAuth variable and
+could dirty the target before review dispatch. Second, the packet described atomic
+claim and the 900-second lifecycle but had no sealed executable supervisor or
+authoritative public-delivery receipt path.
+
+Correct only those boundaries on a new task-private successor from PASSED tree
+`44fa4e1b50771c921be130c857cf99ab6f7179c8`. Mechanical tests must receive no
+auth-bearing or caller-only environment, while review CLI children retain normal
+supported trusted-host credential inheritance. Bind exact HEAD plus full Git
+cleanliness immediately before and after supplied tests; pre-existing or test-made
+mutation must produce the existing durable `INVALIDATED/identity_change` STOP before
+review Popen. Preserve validator evidence and the rejected packet byte-for-byte.
+
+Create a separate one-shot executable packet that begins one fixed 900-second
+monotonic clock before all preflight, performs every hash/identity/auth/dependency/
+output/session check before atomic claim, owns dispatch, assistant judgment wait,
+finalize and archive, and refuses duplicate launch/finalize. It must retain partial
+streams and process-group cleanup on timeout/cancel, reconcile one terminal per
+attempt, require and sum successful costs exactly once, and keep publication human
+only. After the assistant publishes the unique claim ID and delivery marker, a
+separate fail-closed recorder may use the supported Conductor session-message surface
+after an actual transcript-row cursor to store only server `receivedAt` and timing;
+a logical message-create ID is not a cursor. No provider/model call, paid proof,
+credential value/file operation, posting, product/planning commit, push or PR is
+authorized. The same validator must review the resealed correction before any paid
+decision.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
@@ -1149,3 +1180,24 @@ Kent's trusted-host placement composes with the existing PASSED runtime without 
 ### Summary
 
 The sealed packet is hash-consistent and its existing child custody/finalization code plus frozen-lock dependency preparation are supported, but it is not safe or concretely executable for a paid proof. Supplied PR tests inherit the trusted host OAuth variable, and the atomic claim/total supervisor/delivery receipt has no sealed operation. Validation therefore returns **REJECTED** on the two confirmed Material findings without product mutation, dependency/test rerun or model call.
+
+## Stage Report: implementation (cycle 18)
+
+- DONE: Bind the authorized correction to validation cycle 5's exact PASSED product parent and preserve the rejected integration packet byte-for-byte.
+  The new task-private successor starts from tree `44fa4e1b50771c921be130c857cf99ab6f7179c8`; baseline index/archive are `8d8175d5…` / `5eebda57…`. The rejected packet remains README `33f0da4480b3678ad07a89f12068c0fd2031a9fc35d6620ae5b25edbbfe46ce0`, contract `275d042cc1b123d181b0c2702e8aa80a2197283f1352d6fb90e6506e29d79e0d`, and manifest `64d8fad2c790953f3358b1abdd68bc39ad08e3c342377d2371f80f40161e8216`. Planning HEAD/status remains `07f9745…` plus its existing untracked planning directory; no planning/product commit, push or PR exists.
+- DONE: Keep supplied mechanical tests outside the trusted-host credential boundary and fail closed on target mutation before review dispatch.
+  Only `kc-pr-flow/scripts/review-capability.py` changes, `4+/4-`: the supplied-test `Popen` receives a narrow PATH/locale/TMP/SSL environment with no OAuth, HOME/config, proxy or caller-only review variables. Exact target HEAD plus full tracked/untracked cleanliness is checked immediately before and after supplied tests; pre-dirty and test-dirtied targets return the existing durable `INVALIDATED/identity_change` STOP before any review child Popen, while review CLI dispatch retains normal supported OAuth inheritance. The fail-capable boundary probe (`88e60ed9…`) records `clean_oauth_present:false`, a clean exit-0 test, pre-dirty test-not-started, and mutation with no review bundle; no secret value was read or emitted.
+- DONE: Preserve focused compatibility and reseal a net-neutral immutable product correction.
+  Three existing focused tests—`.mjs` supplied-test exact once, independent mechanical/worker deadlines, and isolated exact child custody/accounting—passed in 54.186s with exit 0 and `OK` (`narrow-tests.stderr` `a54d8693…`). Repair tree is `da967d72a879701573cd82064bdb066db8b46353`; exact correction patch `52f82d6a…`, snapshot `1aa3eaad…`, and index `633db092…`. Source/test/catalog hashes are `2a49430a…` / `021f9888…` / `630006b4…` and sizes remain 2,146 / 1,208 / 97. Against denominator `3b37000a…`, the validation-established ledger remains exactly 18 files / 5,882 aggregate / 1,897 focused, within 18 / 5,884 / 1,903; no cap or denominator changed.
+- DONE: Replace prose-only host custody with one hash-sealed executable claim/supervision/archive/delivery packet without consuming it.
+  The separate proposal-only `trusted-host-integration-correction/packet` has 13,197 sealed files; manifest `b2781c34…`, contract `e8e62b38…`, supervisor `5d12d7f6…`, and delivery recorder `23baafc2…`. One supervisor records preparation start plus fixed monotonic 900-second deadline before preflight, verifies all sealed/external hashes, clean target/dependencies, supported auth, empty outputs and an actual Conductor transcript-row cursor, then atomically claims once and owns dispatch, assistant judgment wait, finalize and archive. Duplicate claim/finalize is refused; every child has process-group TERM/KILL cleanup and fsynced partial streams; exact attempt terminals and non-null successful costs are reconciled/summed once. Posting remains off and publication human-only.
+- DONE: Prove the supervisor and authoritative delivery-observation boundaries with model-free counterexamples, then pass final production preflight without claim.
+  The final probe (`f2806868…`, exit 0) covers success, duplicate refusal, sealed tamper before claim, timeout, SIGTERM cancellation, missing dispatch evidence, missing successful cost, pending-delivery refusal, one nested public `agentMessage` match and duplicate-delivery refusal. Timeout and cancellation both record `cleanup=kill_sent`, no living process and retained partial bytes. A superseded failed probe is preserved because it exposed leader-only cleanup before the group-aware correction. All 13,197 manifest rows independently verify (`sealed-verify.stdout` `db2c6186…`). Final production preflight (`0e4c321a…`, exit 0) passed supported `loggedIn:true/oauth_token/firstParty`, exact target `29007f90…` / `1a89abd2…`, packet/external hashes and Conductor session binding with actual boundary row `aac1a52f…`; claim remained absent and output/archive remained empty. It retained status fields and environment key names only, never credential values or transcript bodies.
+- DONE: Bind archive and public-delivery timing without confusing local creation with server receipt.
+  After any separately authorized future run, the supervisor terminal is only `awaiting_public_delivery` and exposes a unique claim ID plus delivery marker. The assistant must publish both. The fail-closed recorder then pages the bound Cloud session after the actual pre-claim row cursor through regular files, accepts exactly one nested `agentMessage` containing both identities, and exclusively records Conductor `receivedAt`, preparation-through-public-delivery seconds, the unchanged fixed deadline comparison and the distinct archive endpoint. No logical message-create ID is treated as a cursor. Until this receipt exists, delivery timing remains incomplete.
+- SKIPPED: Production claim creation, dispatcher/provider/model launch, paid proof, reviewer judgment/finalization, delivery publication/receipt, dependency reinstall or supplied-test rerun, login, credential value/file operation, global setting change, product/planning commit or push, PR, posting, comparison, gate, release and fit acceptance.
+  The packet remains `proposal_only_not_authorized`. Real child output, billing, review quality, decision-ready preview, end-to-end time, saving and two-day fit remain paid-only unknowns. Cycle 14's start `03:29:42.388902907Z`, receipt creation `03:45:37.762085092Z`, actual public delivery `03:47:12.791Z`, 1,050.402098s total and +150.402098s over 900 remain immutable and are not reset by this correction. The same validator must independently review tree `da967d72…`, packet seal `b2781c34…` and the retained counterexamples before any paid decision.
+
+### Summary
+
+The two cycle-5 integration findings now have a bounded correction: supplied tests cannot inherit the trusted-host credential and any target mutation stops before review dispatch, while a separate sealed executable enforces one claim, one unreset deadline, child-group cleanup, partial evidence, exact terminal/cost accounting, archive identity and server-owned public-delivery timing. All checks were model-free, the production claim remains absent, and complete receipt `trusted-host-integration-correction/README.md` is SHA-256 `9057bdddacb0e018b7b7f063660b896ef165f3a0946b7b11d0060eba0c43caf1`; the 61-entry correction evidence seal is `719e0e80feecb544a766ec09ffc779ed090b03cb1d9881f4eed5a914d886670d`. Independent validation, not implementation, decides whether the correction passes.
