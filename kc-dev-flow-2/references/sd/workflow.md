@@ -113,13 +113,14 @@ the exact artifact against the accepted profile outcome. It assesses the work;
 it does not silently take over implementation. Rejection uses the supported
 feedback path after the distinct FO disposition described below.
 
-- **Outputs:** Independent verdict, primary evidence and unverified obligations
-  recorded in the existing SD Stage Report.
+- **Outputs:** Independent verdict, primary evidence, a minimal acceptance script
+  and unverified obligations recorded in the existing SD Stage Report.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
-  and limits, and the user's pending delivery decision. Before recommending
-  delivery, FO confirms both goal sufficiency and minimal necessity from the
-  same candidate's existing route evidence. Passing checks or approval replace
-  neither condition; approval is not merge.
+  and limits, and the user's pending delivery decision. FO presents the stage's
+  minimal acceptance script itself at the gate, not a pointer into the report.
+  Before recommending delivery, FO confirms both goal sufficiency and minimal
+  necessity from the same candidate's existing route evidence. Passing checks or
+  approval replace neither condition; approval is not merge.
 
 ### `done`
 
