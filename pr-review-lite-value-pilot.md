@@ -578,6 +578,31 @@ unchanged. After the one terminal outcome, the existing planning owner may updat
 only the grounded fit conclusion and draft as warranted; task-state-only sync is
 authorized.
 
+#### Captain follow-up direction after consumed live proof — 2026-09-21
+
+The single paid treatment grant is consumed and its cycle-12 archive is immutable.
+Kent directs the existing owner to prepare, without another approval question, the
+smallest concrete **model-free** next-launch proposal in a new private scratch
+location. It must specify the exact input/output layout and command/settings delta
+needed to make the intended direct dispatcher reachable and executable, and run
+existing fail-capable static/local checks for paths, permissions, argv/tool
+configuration and custody.
+
+This follow-up authorizes reversible proposal preparation and task-state sync only.
+It does not authorize a provider/model call, another top-level trial, mutation of
+the consumed packet, product/correction/canonical bytes, product or planning
+commit, dependency installation, global setting, new entity, standing harness or
+reviewer. Do not invent CLI flags or treat static checks as proof of the actual
+model tool surface. If that surface remains observable only during paid startup,
+record it as a fail-closed next-run condition.
+
+Return an exact diff/command/layout proposal, checks actually run and remaining
+runtime uncertainty. Only after this preparation may one Captain decision be
+presented: whether to authorize the prepared single paid proof with explicit
+cost/time and changed per-invocation execution boundary, or the one material method
+choice if no bounded supported configuration exists. The accepted two-day
+development appetite remains separate from watchdogs and per-attempt spend.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
