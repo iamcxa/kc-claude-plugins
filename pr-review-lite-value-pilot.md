@@ -491,7 +491,11 @@ optionally add special risks or constraints.
 
 The associated cards should express `助理先整理既有資訊`,
 `內容清楚就沿用並摘要說明`, and `缺漏或矛盾時按需補充`, while retaining the
-separate optional special-concern story. This is accepted map intent only: it is
+separate optional special-concern story. Preserve the normal-path priority: place
+the clear-information reuse-and-summary card immediately after the assistant-reads-
+PR-body card, followed by the optional special-risk card and then the missing-or-
+contradictory-information variant; preserving IDs must not freeze the old card
+positions. This is accepted map intent only: it is
 not an implementation, delivery, compatibility or experiment claim, selects no
 release, and grants no product/planning commit, provider/model call, publication,
 gate, PR, merge or release authority. The canonical YAML, companion README and
@@ -672,3 +676,16 @@ The correction resolves the sole prior Material finding at the exact immutable s
 ### Summary
 
 The whole-journey draft is ready for Kent's review as an intent-only YAML authority, native editable snapshot, readable companion and visually inspected canvas; story details remain proposals and no release is selected. This checkpoint makes no product commit, experiment, compatibility, delivery, quality or savings claim, and the sole pending human decision is whether the whole map matches Kent's intended use.
+
+## Stage Report: implementation (cycle 8)
+
+- DONE: Update only the purpose activity and its associated story cards/README decision note, preserving every existing ID and all unrelated journey content; retain the optional special-risk story.
+  Clean pre-edit room readback preceded the change. `provide-purpose` is now `確認審查目的`; all three existing IDs remain stable with accepted wording, and the ordered cards show the normal path first (`explain-intended-outcome`, added `reuse-clear-purpose-summary`), then optional `add-important-risks`, then exception `clarify-missing-purpose`. A comparison against the prior private patch showed no unrelated YAML change; README records Kent's exact `確認採用此方式` decision and current canvas checkpoint.
+- DONE: Reconcile current live-room edits before redraw, then render the same room, export the updated native snapshot and full-map PNG, and obtain a clean readback plus visual evidence of the changed cards.
+  Room `pr-review-lite-whole-journey` had no pre-edit peer/native drift; redraw reconciled 36 shapes and final readback reports no reword/reorder/conflict/duplicate/unclaimed/missing item. Updated `.tldr` SHA-256 is `5a4cb497f37089810b0b0e986badf26b43826552cf4f237b1059e5079f0ebd09`; private full-map PNG `/home/vercel-sandbox/kc-claude-plugins/.context/pr-review-lite-value-pilot/journey-map/review-a-pr-story-map.png` is `0af8e85c76278f96f7430dfd6151ad6561236f74d87fbdc25fb8dbbeed991bfc`, visually checked for the requested normal-path/exception order, wording, blank cards, clipping, overflow and overlap.
+- DONE: Report exact paths, hashes, public viewer/PNG evidence, unchanged correction-patch custody, and all remaining intent-only limits without committing planning/product files or launching models.
+  Uncommitted planning authority remains exactly `docs/journey/kc-pr-flow/{review-a-pr.yaml,README.md,review-a-pr.tldr}` with hashes `f4a67609…`, `b4fc9d95…`, `5a4cb497…`; private patch is `b2f6f1d7…`. The verified editable viewer is `https://sends-messaging-ellis-seeing.trycloudflare.com/?room=pr-review-lite-whole-journey` (tldraw `5.4.0`, API/canvas/share/tunnel PIDs `925422/925405/925366/925492`); updated Cloud screenshot is private hash `7fb69038…`, and the PNG was not uploaded. Frozen correction custody remains only the two approved files at base `0d2e316…`, with patch `0df28923…`, source `129ab490…`, test `761574b9…`, and full manifest green.
+
+### Summary
+
+The accepted purpose refinement is represented as intent only: the assistant organizes and reuses clear PR-body context without requiring a reply, while Kent clarifies only gaps/contradictions and may optionally add special concerns. No release/status/evidence claim, implementation, planning/product commit, model/provider call, experiment, gate, PR, merge, delivery or publication occurred; the existing whole-map review decision remains the only pending human decision.
