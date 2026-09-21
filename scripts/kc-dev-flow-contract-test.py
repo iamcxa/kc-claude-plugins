@@ -4,14 +4,17 @@
 from __future__ import annotations
 
 import ast
+import atexit
 import importlib.util
 import hashlib
 import json
 import os
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
+from datetime import date, datetime
 from pathlib import Path
 
 
@@ -2141,6 +2144,34 @@ plan_flow_fixtures = [
 ]
 for fixture in plan_flow_fixtures:
     require(fixture.is_file(), f"missing {fixture}")
+
+_plan_fixture_dir = tempfile.mkdtemp(prefix="plan-flow-dated-")
+atexit.register(shutil.rmtree, _plan_fixture_dir, True)
+_ISO_DATE = re.compile(r"(?<!\d)\d{4}-\d{2}-\d{2}(?!\d)")
+
+
+def dated_plan_fixture(fixture_path: Path) -> Path:
+    """Re-date a snapshot so plan-lint L10's 14-day bound is measured from the run date.
+
+    The snapshots carry the absolute dates they were captured with; one shared
+    offset moves the newest of them to today and keeps every interval between
+    them, so what the fixture asserts is its age relative to the run.
+    """
+    text = fixture_path.read_text()
+    captured = sorted({date.fromisoformat(m.group()) for m in _ISO_DATE.finditer(text)})
+    require(bool(captured), f"fixture {fixture_path} carries no date to re-date")
+    offset = datetime.utcnow().date() - captured[-1]
+    if offset.days <= 0:
+        return fixture_path
+    shifted = _ISO_DATE.sub(
+        lambda m: (date.fromisoformat(m.group()) + offset).isoformat(), text
+    )
+    dated = Path(_plan_fixture_dir) / fixture_path.name
+    dated.write_text(shifted, encoding="utf-8")
+    return dated
+
+
+plan_flow_fixtures = [dated_plan_fixture(fixture) for fixture in plan_flow_fixtures]
 
 lint_correct = (ROOT / "scripts/fixtures/plan-flow/dev89-runA-reverified.snapshot.json").read_text()
 lint_cmd = [sys.executable, str(plan_lint), "lint", str(plan_flow_fixtures[0])]

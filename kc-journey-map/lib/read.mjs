@@ -192,9 +192,9 @@ export function diffAgainstModel(shapes, model) {
 }
 
 // Preserve untouched YAML wrapping when writing individual edits.
-const WRITE_OPTS = { lineWidth: 0, flowCollectionPadding: false }
+export const WRITE_OPTS = { lineWidth: 0, flowCollectionPadding: false }
 
-const findStep = (steps, id) => steps.items.find((item) => item.get('id') === id)
+export const findStep = (steps, id) => steps.items.find((item) => item.get('id') === id)
 
 export function applyDiff(path, diff, outPath = path) {
 	const doc = parseDocument(readFileSync(path, 'utf8'))

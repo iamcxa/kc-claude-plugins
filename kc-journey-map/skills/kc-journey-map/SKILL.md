@@ -1,6 +1,6 @@
 ---
 name: kc-journey-map
-description: Draw or check a user journey, prepare a selected release for development, add an editable Mermaid sequence companion, or answer architecture questions on a human-drawn journey canvas. Triggers on "journey map", "user journey", "畫 user journey", "journey vs reality", "fill the journey board", "plan this release", "準備這個 release 開發", "sequence companion", or human-led architecture review. Generated maps use repository YAML; human-led review preserves the drawing and connects one question at a time to technical documentation and separate implementation evidence.
+description: Draw or check a user journey, prepare a selected release for development, add one deferred story to an existing journey, add an editable Mermaid sequence companion, or answer architecture questions on a human-drawn journey canvas. Triggers on "journey map", "user journey", "畫 user journey", "journey vs reality", "fill the journey board", "plan this release", "準備這個 release 開發", "add a story to the journey", "not in this release", "記一個延後的功能", "sequence companion", or human-led architecture review. Generated maps use repository YAML; human-led review preserves the drawing and connects one question at a time to technical documentation and separate implementation evidence.
 ---
 
 # Journey Map
@@ -34,6 +34,7 @@ is judged against.
 | **draw** | no journey exists yet | the board, derived from code |
 | **check** | a journey exists — board, screenshot, or a list of cards | the mismatch table **first**, then the corrected board |
 | **sequence companion** | a sequence is requested, or handoffs/branches need explanation alongside a journey | an optional native editable page from repository `.mmd` — `references/sequence.md` |
+| **add-story** | a capability was named and deferred in conversation ("not in this release") and a journey for it already exists | one appended `gap` story under its step, no evidence, no `release` — see "Adding one deferred story" below |
 
 Claude and Codex use this same entrypoint and sequence reference. Offer a sequence
 companion when actors, handoffs, or branches would clarify a journey; do not make it
@@ -55,6 +56,41 @@ or start development. Claude and Codex share these planning and handoff instruct
 
 In check mode the mismatches are the deliverable. Do not quietly redraw someone's board
 into the "right" answer: quote their card, state the code fact, name the verdict.
+
+## Adding one deferred story
+
+A capability named and set aside mid-conversation — "the shop should be able to create
+a booking itself, but not this release" — is not nothing. It belongs in the journey the
+moment it is said, not only when someone next runs draw or check.
+
+```bash
+node lib/journey-add-story.mjs docs/journey/<slug>.yaml <stepId> <storyId> "<card>"
+```
+
+- `<card>` is the words the person used for the capability, quoted — not a rewrite. Same
+  rule as check mode's "do not silently rewrite someone's card text."
+- The story is always written `status: gap`, no `evidence` — nothing has been read to
+  support it yet — and no `release`: a deferred capability is scheduled by a separate
+  decision, not invented here.
+- Name the step it belongs to from what was said. If that is unclear, ask; do not guess
+  and place it wherever the diff looks smallest (`references/canvas.md`'s `unclaimed`
+  handling is the same instinct — an ambiguous placement is a question, not a default).
+- This appends one story to one step and nothing else: it does not re-derive other
+  stories' evidence, resolve open questions, or touch a human-drawn canvas
+  (`lib/add-story.test.mjs` asserts the single-line diff).
+- On a map-mode-only journey (no story carries `status` yet — `references/map-from-conversation.md`),
+  the added story still gets `gap` as this operation requires; the pre-existing
+  `no-status` lint findings on every other story are not this operation's to fix.
+- Then run `node lib/journey-lint.mjs <journey.yaml> <repoRoot>` — omitting `<repoRoot>`
+  checks evidence against the plugin directory, not your repository, and fails
+  confusingly (see "Verify before presenting" below).
+- Re-render only if a canvas room for this journey is already open: query
+  `http://127.0.0.1:${JOURNEY_API_PORT:-5858}/health` and check whether the room id —
+  the file's `journey:` field, unless the last render passed a different `roomId` —
+  appears in its `rooms` list (`GET /doc` would silently create the room, which
+  proves nothing — `/health` only reports rooms that already exist on disk). If the API
+  is unreachable or the room is not listed, no board is open; a file edit alone does not
+  need a canvas started for it.
 
 ## Process
 
@@ -98,8 +134,10 @@ user requests it or the conversation context justifies an image; if exported, op
 inspect it. Do not repeat unrelated outputs before returning an updated live link.
 
 **6. Report.** Draw mode: the board, the release contract per release
-(`node lib/journey-contract.mjs`), and `node lib/journey-lint.mjs` run against the file — cite
-what it found, not just that it ran. Check mode: the mismatch table first.
+(`node lib/journey-contract.mjs`), and `node lib/journey-lint.mjs <file> <repoRoot>` run
+against the file — cite what it found, not just that it ran. Without `<repoRoot>` the
+evidence check runs against the plugin directory instead of your repository and every
+`exists` story fails confusingly. Check mode: the mismatch table first.
 
 For optional local task development progress, use the sibling
 `../kc-journey-progress/SKILL.md`. Its derived display leaves authored status and
@@ -181,7 +219,9 @@ route can reach.
 ## Verify before presenting
 
 - In draw/check mode, every story carries a `status`; every `exists` story carries `evidence`.
-- For evidence checks, `node lib/journey-lint.mjs <file>` exits 0; run it and report its findings.
+- For evidence checks, `node lib/journey-lint.mjs <file> <repoRoot>` exits 0; run it and
+  report its findings. Omitting `<repoRoot>` checks the plugin directory, not your
+  repository, and reports evidence missing that is actually there.
 - Journey-board status cards, or the story-map-only report, name merge and deployment state.
 - The current or changed canvas views passed the visual check in Process step 5.
 - Check mode: every mismatch row names a file or route, not an impression.

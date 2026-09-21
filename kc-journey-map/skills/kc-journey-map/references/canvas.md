@@ -183,6 +183,10 @@ node lib/journey-contract.mjs docs/journey/<slug>.yaml <releaseId> [--out <path>
 tracked content — a symbol added in the same uncommitted change as the story that cites it
 needs `git add` before the lint sees it too.
 
+`[repoRoot]` looks optional but is not, in practice: omit it and the evidence check runs
+`git grep` against the plugin directory instead of the repository the journey describes,
+so real evidence reports as missing and every `exists` story fails.
+
 The function map is **Event Modeling** (Adam Dymitruk's swimlane form) over the journey's own
 columns: Command,
 Event, State, Read model. The vocabulary is fmodel's tactical grammar borrowed as nouns —
