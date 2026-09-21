@@ -1684,3 +1684,35 @@ Cycle 25 closes the single cycle-10 packet finding with a seen-cursor guard and 
 ### Summary
 
 The packet correctly rejects current and already-seen cursors and preserves normal finite opaque pagination plus all adjacent custody checks. It remains **REJECTED** because an unbounded sequence of unique valid cursors still loops until externally killed; this is the same no-loop boundary after its authorized feedback correction, so the feedback bound is exhausted. Product, rejected and consumed artifacts remain immutable and no external or paid action occurred.
+
+## Stage Report: implementation (cycle 26)
+
+- DONE: Preserve the cycle-11 rejected successor, validator statement, earlier successors and consumed proof while creating a distinct packet-only successor.
+  State authority began at `7809aa7fecdcb71dc498c85503dfebd62a9432f1`. R2 packet/correction/contract `4f959e99…` / `954a5eca…` / `28574181…`, its cycle-11 receipts, r1's 14,504-row inventory `5295204f…`, and the consumed 13,281-row inventory/archive `5a1a12bd…` / `86522f74…` reverify unchanged.
+- DONE: Add one sealed total pagination deadline and strict JSON-boolean `hasMore` validation.
+  R3 `record_delivery.py` requires positive-integer `delivery_query_timeout_seconds`, gives each child only monotonic remaining time, checks expiry after decode, TERM/KILL-cleans the process group, and rejects nonboolean `hasMore` before receipt. Existing new/nonempty/seen cursor rules, unique delivery matching, server `receivedAt`, Git custody and duplicate refusal remain intact.
+- DONE: Exercise the new failure boundaries and adjacent custody with task-local fixtures.
+  The 120-second externally bounded probe exits 0 / `core_ok:true`: an infinite unique-cursor stream stops internally after 27 pages at its sealed one-second deadline/no receipt; a TERM-ignoring query leader and descendant are gone before return; current/earlier cycles still stop; string `false`, null, 0, 1, object and list reject; boolean false one-page and boolean true two-/four-page paths succeed.
+- DONE: Recheck the affected supported-host read under the exact production deadline.
+  Exactly one read-only call through the successor's actual `query_page`, sealed argv and inherited token-only environment terminated in 5.737333s within 10s and found known row `6e6c6df7-c166-46db-8ad4-96f0a7eeff7b` at server `receivedAt` `2026-09-21T11:31:00.717Z` exactly once. Evidence retains no transcript body or credential value; no claim, delivery receipt or packet output was created.
+- DONE: Freeze and identify the unclaimed successor without changing product accounting.
+  Run `pr-review-lite-value-pilot-provider-schema-recorder-r3-20260921`; packet/contract/recorder/correction are `593958ccd6dc0acc27d812bbdf085f549c9936169d087dab2f8aaae31317a321` / `ff994b8e6e6e976b33f3067e3e31c9b02c1f9d5fccd4a0e3b01a9c6828c6e260` / `134aa706f0f92028bd7ec83532fa77552e47e5a6a657c5d76780cbb6af2a5649` / `dc5d43d17fed7247d26ae9437b8f6def5383a2c847949c868e5c3ef91a3abb34`. All 13,208 packet and 84 correction rows verify; claim is absent, mutable outputs empty and owned process count zero.
+- DONE: Keep product tree, private index and fixed cap ledger exact.
+  Product tree/index remain `82599c6f2d0791a23e0f7d578561051894d2d178` / `bbd638af371865e3cd174cb076b79de4ef8fe68be1c320574e5847b9b319b96e`; r2/r3 indexes are byte-identical. Ledger remains 18 / 5,883 / 1,898 against denominator `3b37000a…` and caps 18 / 5,884 / 1,903. Packet diff is exactly README, self-manifest, contract and recorder; 13,193 other regular files match r2.
+- FAILED: First combined preservation wrapper used the r1 inventory manifest from the wrong working directory.
+  The retained wrapper misleadingly ended 0 because later checks passed, while its named r1 subcheck was 1. A separate corrected 14,504-row invocation from the proper root exits 0; no file was changed or omitted.
+- SKIPPED: Provider/model/prompt/paid call, production claim/replay, transcript-body or credential-value retention, broad/full suite, product/planning mutation or commit/push, PR, posting, merge, dependency/global-config action, gate, release and fit decision.
+  The live read proves only this host's changed query-deadline boundary. Provider acceptance, useful output, billing, saving, sealed production delivery, compatibility, two-day fit and production readiness remain unverified.
+
+### Feedback Cycles
+
+#### Validation cycle 11 termination/shape disposition — feedback round 2 — 2026-09-21
+
+- **Material findings accepted and repaired:** the sealed recorder now bounds an always-advancing valid-cursor stream across the whole pagination operation and strictly refuses every nonboolean `hasMore` shape before receipt.
+- **Prior validator statement preserved:** cycle 11's text that “the feedback bound is exhausted” remains unchanged above. The FO's pinned-rule count is authoritative and additive: validation cycle 10 opened round 1; implementation cycle 25 plus validation cycle 11 completed round 1; cycle 11's new rejection opened round 2. The rule escalates on cycle 3 instead of running a fourth round.
+- **Scope disposition:** no product/schema/argv/environment change was needed. This round changes only packet recorder/contract identity and its task-private proof; the one live query was required solely because the new 10-second sealed deadline could not inherit unrestricted timing evidence.
+- **Review route:** same-validator re-review must bind product tree/index `82599c6f…` / `bbd638af…`, packet `593958cc…`, contract `ff994b8e…`, recorder `134aa706…`, correction `dc5d43d1…`, and unclaimed run `pr-review-lite-value-pilot-provider-schema-recorder-r3-20260921`. No launch, replay or delivery authority follows.
+
+### Summary
+
+Feedback round 2 closes the two cycle-11 packet findings with a strict response-shape gate and an executable total pagination deadline with child process-group custody. Local falsifiers and one sanitized current-host integration read pass, all prior artifacts remain immutable, product accounting is unchanged, and the producer is paused for the same validator.
