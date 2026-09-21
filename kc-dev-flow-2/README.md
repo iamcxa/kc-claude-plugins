@@ -136,6 +136,11 @@ unique content and rendered diagram agreement. Validation also checks whether
 its decisive checks can catch relevant errors, reusing existing counterexamples.
 These conditional practices add no mandatory architecture file or global audit.
 
+FO also owns landing a ruling that outlives the task, written by the implementation
+worker and checked at validation — see [workflow](references/sd/workflow.md)'s
+Decision records. A capability a user will get, named in conversation and
+deferred, belongs on the product's journey map instead.
+
 The [workflow source](references/sd/workflow.md) defines limited FO design
 corrections and nonblocking dispositions. Template adoption grants no editing
 permission; approved decisions and worker evidence remain protected.

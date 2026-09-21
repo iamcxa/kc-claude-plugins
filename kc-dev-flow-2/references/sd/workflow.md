@@ -20,6 +20,7 @@ stages:
       worktree: true
       context-sections:
         - Review-finding disposition
+        - Decision records
         - Delivery authority
     - name: validation
       worktree: true
@@ -28,6 +29,7 @@ stages:
       gate: true
       context-sections:
         - Review-finding disposition
+        - Decision records
         - Delivery authority
     - name: done
       terminal: true
@@ -172,6 +174,24 @@ does not establish Material.
 Materiality and ownership are independent. Owned Material is eligible for an
 FO-authorized fix; out-of-scope Material holds as Needs decision. Deferred risk
 or Polish may use the recorded FO decline above within existing risk acceptance.
+
+## Decision records
+
+A ruling settled at a gate, in a worker report, or mid-stage feedback — a rule
+about the product, a constraint, or a direction later work must respect — is
+landed in the project's decision record before the next gate is presented, at
+latest by the terminal approval; an FO instruction, not a new SD check. A ruling
+that governs only this task's own work stays in the task. Locate the project's
+existing convention (a decisions directory, an architecture document, whatever it
+already uses) by reading, not assuming a name; absent one, create `docs/adr/` and
+make this decision its first record, not an empty directory ahead of one. This is
+not the gate `resolution.reason` or the SD stage report, which describe this
+task's own work and do not outlive it; carry the Captain's own wording where he
+gave one. The implementation worker writes the record into the candidate, same as
+any other change; validation checks it is present for a settled ruling and returns
+a missing one through the existing feedback route; FO confirms it before presenting
+the gate — FO owns that it lands, not authoring it. A deferred user-facing
+capability belongs on the product's journey map, not here.
 
 ## Delivery authority
 
