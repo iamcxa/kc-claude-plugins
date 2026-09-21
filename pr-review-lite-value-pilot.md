@@ -4,7 +4,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-worktree: .worktrees/spacedock-ensign-pr-review-lite-value-pilot-correction
+worktree: .worktrees/spacedock-ensign-pr-review-lite-value-pilot-journey-map
 pr:
 gates:
     version: 1
@@ -432,6 +432,51 @@ product commit. No provider/model call, product commit/push, PR, delivery,
 experiment replay, calibration or judge occurred. Real-CLI compatibility,
 provider behavior, billing, review quality and time saving remain unverified;
 the stopped comparison and all known/unknown costs remain unchanged.
+
+#### Captain whole-journey development alignment — 2026-09-21
+
+The Captain replied `可以，我們之後就以旅程圖為開發方向對齊`, accepting the
+whole kc-pr-flow Lite user journey as the alignment source for subsequent
+development. This authorizes one map-author ensign to create and render an
+intent-only story map from the accepted conversation. It does not authorize the
+pending two-file product commit, a release slice, publication, experiment,
+provider/model call, PR, merge or release.
+
+Settled input is Kent reviewing an ordinary small PR with the assistant, seeking
+a complete evidence-backed review, clear findings and remaining gaps, and retained
+human choice over correction or publishing; interruption stays visible and
+accountable. The accepted backbone is: select a PR; provide the review purpose;
+start the review; wait or cancel; understand results and gaps; decide on
+corrections or publishing comments. User-facing cards use plain Traditional
+Chinese. Derived story detail remains proposed until Kent reviews the whole map.
+Map mode therefore omits story status/evidence claims and release assignment, and
+must not manufacture UI, autonomous publishing, retries or background services.
+
+A complete `origin/main` tree-name inspection at verified revision
+`07f9745efb081c8a86e9c028b68d43720c137fc7` found no prior canonical kc-pr-flow
+journey source. The task companion `pr-review-lite-value-pilot/journey.mmd` is an
+experiment-operation flow and remains a companion rather than the product journey.
+Canonical planning targets are `docs/journey/kc-pr-flow/review-a-pr.yaml`, its
+concise `README.md`, and an optional native `.tldr` snapshot. They belong to the
+separate owned planning worktree
+`.worktrees/spacedock-ensign-pr-review-lite-value-pilot-journey-map`, branch
+`spacedock-ensign/pr-review-lite-value-pilot-journey-map`, based on that verified
+`origin/main`; no planning file enters the zero-headroom correction worktree.
+
+The independently validated correction patch
+`0df289237ac4efe1872aa9f367478e16ca6f037c5482004459eb80087b6ec709`
+remains byte-for-byte separate and uncommitted. Its local-stub cancellation custody
+PASS belongs under the wait/cancel story's companion notes; real provider
+compatibility and end-to-end user benefit remain unverified, the 48/48 aggregate
+predates the narrow cancellation repair, and prior incomplete/failed attempts stay
+visible. Draft PRs #352-355 are references only.
+
+Accepted alignment rule: every proposed change names the user activity/story and
+the complete observable outcome it serves; branch/test progress is distinct from
+user delivery acceptance. This adds no CI gate, schema, harness or global policy.
+The one-development comparison followed by a separately approved five-pair
+quality/time gate remains the plan, not current experiment authority. No first
+release may be selected or marked ready before Kent reviews the whole map.
 
 ## Stage Report: implementation (cycle 2)
 
