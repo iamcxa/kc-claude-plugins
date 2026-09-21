@@ -1907,3 +1907,28 @@ The offline successor admits only the observed CLI 2.1.274 schema-output metadat
 ### Summary
 
 The exact R4 replay regression is repaired for the six observed streams, startup authority remains narrow, and the two-file candidate fits its frozen caps. Independent validation nevertheless found one material accounting hole at structural stream rejection: valid unique spend is discarded and downstream stop accounting sees zero, so the verdict is REJECTED with no candidate correction.
+
+## Stage Report: implementation (cycle 29 — R5 feedback round 1)
+
+- DONE: Preserve the R5 REJECTED report, consumed R4 packet/claim/archive/receipt, and the pre-correction R5 candidate identities byte-for-byte; record this as feedback round 1 for the R5 failed-terminal accounting finding family, not stage-report cycle 14.
+  State began clean/origin-matched at `2fc142df…`. Rejected R5 remains tree/index/patch/seal `cd7c54ad…` / `c7a86632…` / `42348f58…` / `5f4b577e…`; its manifest reverifies. Consumed R4 packet/archive/delivery remain `c2e2f366…` / `b0d424c2…` / `32fc50e8…`. Validation cycle 14's Material finding and REJECTED verdict are unchanged.
+- DONE: In only kc-pr-flow/scripts/review-capability.py and kc-pr-flow/scripts/review-capability.test.py, retain a unique valid final-event cost and provider_result_event provenance before hook/missing-init/result-before-init structural rejection while keeping every such review result failed and unusable; keep missing, duplicate, conflicting, malformed, boolean, negative, and nonfinite cost unknown.
+  Cost and actual final-event count are classified before the structural guard; the provider envelope is admitted only after that guard and valid-cost check. Hook, missing-init and result-first still return zero accepted results and `terminal_failure`, while duplicate/conflicting/missing/null/boolean/negative/nonfinite cases retain null cost/source and fail.
+- DONE: Prove with focused offline fixtures that hook, missing-init, and result-before-init each remain failed but retain exactly USD 0.01 and reach the unchanged downstream aggregation/stop consumer once; prove ambiguous/invalid cost remains unknown and rejected; preserve the byte-exact six-stream R4 replay total USD 1.210485.
+  Exact startup/shape method passes in `12.286s` under `timeout --signal=TERM --kill-after=2s 120s`. A task-private probe drives each case through byte-preserved R4 `supervise.py:costs()`: the three structural failures each aggregate one USD `0.01` receipt and cross a `0.005` stop threshold; seven unknown cases aggregate zero. Final R4 replay exits 0 in `0.565385639s`, all six costs once at USD `1.210485`.
+- DONE: Keep the readable two-file change within the fixed denominator and caps (18 files / 5,884 aggregate / 1,903 focused), create distinct immutable successor identities and task-private evidence, append the implementation correction report and authorized Feedback Cycles record, state-sync, then pause without provider/model calls or product commit/push/PR/post/merge.
+  New branch/worktree `spacedock-ensign/pr-review-lite-value-pilot-r5-accounting-correction` / `/home/vercel-sandbox/kc-claude-plugins/.worktrees/spacedock-ensign-pr-review-lite-value-pilot-r5-accounting-correction` remains at HEAD `0d2e3164…` with exactly two modified files. Tree/index/source/test/patch are `fd9b3a24…` / `4e72153f…` / `a7a5e169…` / `0074f5b2…` / `5c32aaf0…`; R5 feedback delta is 6+/6- and 5+/5-, net zero. Ledger stays exactly `18 / 5,884 / 1,899` against denominator `3b37000a…`.
+- SKIPPED: Provider/model/JEV/network call, live claim, paid proof, credential access, broad/full suite, product/planning commit or push, PR, posting, merge, release and fit decision.
+  The first combined local-stub run's nonfinite-envelope serialization error is preserved at `f2352e44…`, not hidden; the exact affected rerun is green. Offline evidence does not prove provider acceptance, useful review quality, savings, calibration, two-day fit or release readiness.
+
+### Feedback Cycles
+
+#### R5 unique-valid-final-cost loss — feedback round 1 — 2026-09-22
+
+- **Authority and routing:** the FO classified validation cycle 14's four-field finding Material/owned and confirmed it remains inside Kent's accepted startup/cost correction batch. The generated journey-map root remains task/state/private-evidence home; the FO explicitly authorized the separate new isolated product successor from R5 ownership. Neither the old R5 worktree nor journey-map product/planning bytes changed.
+- **Correction:** the unique valid final cost now survives structural rejection with `provider_result_event` provenance and actual final-event count, while review evidence stays unusable. Ambiguous or invalid cost stays unknown. No aggregate consumer or policy changed.
+- **Candidate for the same validator:** task-private packet `.context/pr-review-lite-value-pilot/provider-init-cost-correction-r5-round1/` has seal `39f694dc6660576be6b4a3b60dcb47f2cda69f1efd71164648d1b4e43e578637`; validate candidate tree `fd9b3a244e965157e3c48f5fba527b6670dc07b2` against rejected R5 tree `cd7c54ad…`. The producer is paused; no further mutation or execution is authorized by this report.
+
+### Summary
+
+Feedback round 1 repairs only the R5 cost-custody ordering defect: rejected structural streams remain rejected but no longer erase a unique valid provider cost. Focused local-stub evidence reaches the unchanged sealed consumer exactly once, unknown cases stay null, R4 replay remains USD 1.210485, and the net-neutral two-file successor is frozen for the same validator under Pilot/offline boundaries.
