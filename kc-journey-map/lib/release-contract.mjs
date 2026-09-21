@@ -1,5 +1,5 @@
 
-import { iterStories } from './model.mjs'
+import { iterStories, openQuestions } from './model.mjs'
 
 export function releaseContractRows(model, releaseId) {
 	const release = (model.releases ?? []).find((r) => r.id === releaseId)
@@ -27,7 +27,8 @@ export function buildReleaseContract(model, releaseId, { journeyPath = model.jou
 	for (const row of rows) {
 		const status = row.status ?? '**MISSING**'
 		const evidence = row.evidence ? `\`${row.evidence}\`` : '—'
-		const question = row.question ?? '—'
+		const open = openQuestions(row)
+		const question = open.length ? open.map((q) => q.ask).join('<br>') : '—'
 		const rules = row.rules.length ? row.rules.map((id) => `\`${id}\` — ${rulesById.get(id) ?? id}`).join('; ') : '—'
 		lines.push(`| ${row.card} | ${status} | ${evidence} | ${question} | ${rules} |`)
 	}
