@@ -478,6 +478,26 @@ The one-development comparison followed by a separately approved five-pair
 quality/time gate remains the plan, not current experiment authority. No first
 release may be selected or marked ready before Kent reviews the whole map.
 
+#### Captain purpose-activity refinement — 2026-09-21
+
+The Captain replied `確認採用此方式`, accepting a refinement of only the existing
+purpose activity and its associated stories/notes while preserving stable IDs and
+all other journey content. Rename the activity from `提供審查目的` to
+`確認審查目的`. The assistant first reads the PR body and organizes the change
+purpose, expected outcome and scope. When those are clear, it reuses them and
+briefly states its understanding at review start without requiring a human reply.
+Only missing or contradictory information requires Kent to clarify; Kent may still
+optionally add special risks or constraints.
+
+The associated cards should express `助理先整理既有資訊`,
+`內容清楚就沿用並摘要說明`, and `缺漏或矛盾時按需補充`, while retaining the
+separate optional special-concern story. This is accepted map intent only: it is
+not an implementation, delivery, compatibility or experiment claim, selects no
+release, and grants no product/planning commit, provider/model call, publication,
+gate, PR, merge or release authority. The canonical YAML, companion README and
+existing native snapshot may be reconciled and redrawn in the same room by the
+existing map author; task-state recording/sync remains authorized.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
