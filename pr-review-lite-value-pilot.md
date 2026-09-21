@@ -1,6 +1,6 @@
 ---
 title: Prove a useful Lite PR review journey before wider evaluation
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
