@@ -769,6 +769,39 @@ is authorized. This is feedback round 2; the same validator re-reviews once, and
 further rejection stops at the workflow escalation boundary rather than starting a
 third correction round.
 
+#### Authorized trusted-host paid proof outcome — 2026-09-21
+
+The one separately authorized proof used feedback-round-2 run identity
+`pr-review-lite-value-pilot-custody-r2-20260921`, atomic claim
+`d745d42c-42e2-4c6e-b766-564e27c26de5` and delivery marker
+`e93579e8-e39f-4103-ab8f-9518e10ea48e`. Authoritative FO preparation began at
+`2026-09-21T09:41:21.939288687Z`; the supervisor began at `09:42:11.278189Z` and
+archived at `09:46:22.697866Z`. Conductor later showed public `agentMessage`
+`0ce3a9cd-51fc-4bfb-aeb5-731a2d96f00d` with server `receivedAt`
+`09:47:00.451Z`.
+
+Outcome is **STOP / incomplete**. The targeted storymap test passed, but all six
+review lanes exited 1 before init/final because the installed CLI rejected
+`--json-schema` with the draft-2020-12 meta-schema reference. No capability result
+exists; the separately finalized decision records all six required questions as
+incomplete. Aggregate reported cost is USD 0.00 only because all per-child cost
+receipts are null; external/provider billing remains unknown, not zero. Posting stayed
+off and the GitHub call log is empty.
+
+Archive `4fee56dc48bdc402c8f239c2ac037d32f8f749ec4d385b2581ad6aba0eb1dd5a`
+is preserved. The sealed recorder was attempted exactly once after public delivery
+and correctly refused before receipt creation: `SEALED.sha256` expected target
+`.git/index` `5a20ea0d…`, while current bytes were `904ca286…`. Its stderr is retained;
+there was no repair, reseal or rerun. Therefore `09:47:00.451Z` is manual Conductor
+server observation, explicitly not a sealed delivery receipt.
+
+Timing remains separated: FO preparation-to-archive 300.758577313s; FO
+preparation-to-public 338.511711313s; supervisor-to-archive 251.419677s;
+supervisor-to-public 289.172811s. The six concurrent child processes span
+0.416245478s wall and total 2.309377513s summed child time. No owned process remains.
+The consumed proof is not useful-review or cost evidence, implementation status stays
+open, and any future paid run requires separate authorization.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
@@ -1310,3 +1343,22 @@ Delivery custody now resolves identities independently from the fixed contract a
 ### Summary
 
 The final packet independently roots delivery in the sealed run, atomic prelaunch claim, duplicate archive attestations, recomputed archive bytes and one authoritative later server row. All custody substitutions now fail before receipt while valid exact-once supervision/delivery succeeds model-free, so the feedback-round-2 snapshot is **PASSED** with production untouched and paid/runtime outcomes still unverified.
+
+## Stage Report: implementation (cycle 20)
+
+- DONE: Record the one authorized paid proof against the exact feedback-round-2 identity without resetting its supervisory clock or relabeling manual delivery observation.
+  FO preparation began `2026-09-21T09:41:21.939288687Z`; supervisor claim `d745d42c-42e2-4c6e-b766-564e27c26de5` for run `pr-review-lite-value-pilot-custody-r2-20260921` began `09:42:11.278189Z` with marker `e93579e8-e39f-4103-ab8f-9518e10ea48e`. Claim receipt is `46076bbc…`. Archive endpoint is `09:46:22.697866Z`; public Conductor row `0ce3a9cd-51fc-4bfb-aeb5-731a2d96f00d` has manually observed server `receivedAt 09:47:00.451Z`.
+- FAILED: Produce any capability-lane review result or useful Lite review preview.
+  The targeted `node --test kc-journey-map/lib/storymap.test.mjs` observation completed exit 0, but all six capability children concurrently exited 1 before init/final. Each stderr is the same 122-byte CLI rejection: `--json-schema` is invalid because no schema exists for the draft-2020-12 meta-schema key/reference. Every lane terminal is `terminal_failure/exited`, `cleanup=not_started`, with empty stdout/raw result, null init/final and null cost. `dispatched.json` (`c7416dee…`) therefore has six absent results; the assistant's separate finalization honestly records all six questions `incomplete_required`, not review findings (`result.json` `43137812…`, audit `22d31bd…`).
+- DONE: Preserve exact costs, archive, publication and non-mutation evidence without inferring unavailable billing.
+  Supervisor accounting reports USD 0.00 aggregate because every child receipt cost is null; external/provider billing is unknown, not zero. The six children span 0.416245478s wall and total 2.309377513s summed child time. Posting remained off, rendered GitHub call log and inline comments are empty, and no GitHub mutation occurred. Identical archive attestations are `b4f21d95…`; immutable archive `run.tar` is 952,320 bytes / `4fee56dc48bdc402c8f239c2ac037d32f8f749ec4d385b2581ad6aba0eb1dd5a`; supervisor terminal/stdout are `2a679660…` / `14de0f66…`.
+- FAILED: Complete the sealed public-delivery receipt.
+  The recorder was attempted once after public delivery and correctly failed before Conductor query or receipt creation. Its manifest check expected `sandbox/target/.git/index` SHA-256 `5a20ea0d…`, while current bytes were `904ca286…`; retained stderr is `8933b18d…`, stdout is empty, and `delivery-receipt.json` is absent. No repair, reseal or rerun occurred. Accordingly `09:47:00.451Z` remains manually observed Conductor server evidence, not a sealed delivery receipt.
+- DONE: Keep total timing endpoints distinct and close task-owned execution.
+  FO preparation-to-archive is 300.758577313s and preparation-to-public observation is 338.511711313s. Supervisor-to-archive is 251.419677s and supervisor-to-public observation is 289.172811s. Archive and observed public message are within the 900-second supervisor deadline, but timing success does not rescue the missing review results or receipt. No owned supervisor, recorder or review-capability process remains.
+- SKIPPED: Schema compatibility repair, recorder/index repair, retry/replay, another provider/model launch, dependency/test rerun, product/planning mutation, product/planning commit or push, PR, posting, merge, release and fit decision.
+  The paid authority is consumed. Outcome is **STOP / incomplete**; implementation status remains open. This run establishes neither useful review quality nor known paid cost, saving or two-day fit. Any future paid proof requires separate authorization.
+
+### Summary
+
+The authorized trusted-host proof completed its bounded supervision and archive quickly, but every review lane stopped before model initialization because the installed CLI rejected the draft-2020-12 JSON Schema; the only review result is an honest six-gap incomplete decision. The sole sealed-recorder attempt then refused a changed target Git-index byte hash before receipt creation. All raw evidence is preserved, no process or GitHub action remains, the public server timestamp is labeled manual-only, and the task stays in implementation with no rerun authority.
