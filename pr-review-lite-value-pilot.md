@@ -1789,3 +1789,30 @@ R3 bounds page acquisition, kills stalled query process groups, rejects malforme
 ### Summary
 
 The existing whole journey now exposes explicit decision-mode choice, an independently usable GPT/Claude baseline, and a bounded JEV hybrid proposal without changing R1 membership or the consumed repair record. The common interface keeps integrity, semantic judgment, uncertainty, provider fallback, cost and publication authority separate. Canvas service is unavailable, so the authoritative delivery is YAML plus Markdown and the prior `.tldr` remains unchanged; cycle 12 REJECTED / Captain-escalation HOLD remains in force.
+
+## Stage Report: implementation (cycle 27 — Captain-authorized extra round)
+
+- DONE: Produce a distinct immutable task-private successor whose only behavioral correction enforces the existing sealed monotonic total deadline through message processing and immediately before exclusive receipt storage, without changing product bytes, planning files, deadline semantics, provider/schema logic, or old packets.
+  R4 reuses R3's `query_deadline` and adds one local check after decode, before/after every message iteration, after the loop and directly before `store`; expiry raises `delivery_query_deadline_exceeded` before the exclusive store. Recorder delta is 8+/2-. Packet diff is only README, self-manifest, contract identity/hash and recorder; 13,193 other regular files match R3.
+- DONE: Run focused model-free exact-boundary checks that preserve the original 1.122667-second defect evidence and prove finite timely success plus no receipt for expiry during/after iteration and immediately before storage, with only relevant adjacent pagination, cleanup, custody, and exact-once regressions.
+  Cycle-12 receipt manifest preserves `6481012d…` / 1.122667s / successful late receipt. R4's exact iteration-delay shape exits 1 at 1.119450s with no stdout, receipt or store call; the distinct pre-store delay exits 1 at 1.117897s with no receipt/store; timely finite delivery exits 0 at 0.018540s with one store, and duplicate invocation fails while its receipt hash stays exact.
+- DONE: Freeze and report exact successor packet/contract/recorder/correction identities, minimal diff, unchanged product tree/index and cap ledger, preserved credentials/evidence boundaries, and no live owned test process; perform no provider/model/JEV call, paid proof, commit/push, publication, release, fit claim, or further correction.
+  Run is `pr-review-lite-value-pilot-provider-schema-recorder-r4-20260921`; packet/contract/recorder/correction are `c2e2f36638854ef311e4356f317d6c43684b3b2b270a0d192c086e0b0cc94960` / `3097cc48c118c0e0cb9b2f9f6c9f0a6e57ee2bcc34cfcfa182a118bfc74b5f76` / `b3e564750f1f8e0fbf24a8668587bdd594ce29a7811881eb1a28fd8f1dbd0008` / `4202ad74c60a1076c00f985defeade46592b0e6fe45f2a2171c746f205c901f7`. All 13,208 packet and 117 correction rows verify; claim is absent, mutable outputs empty and owned process count zero.
+- DONE: Preserve finite pagination, strict boolean `hasMore`, seen-cursor rejection, child process-group cleanup, exact-head/semantic Git custody, claim/exact-once behavior, prior evidence and credential boundaries.
+  The 120-second externally bounded local-stub suite exits 0 / `core_ok:true`: finite one-/two-/four-page paths succeed; malformed shapes and repeated/earlier cursors fail; infinite unique pagination stops internally; stalled query and supervisor process groups leave no survivors; Git/claim/terminal/archive/ambiguity/duplicate tampering remains fail-closed. In-place no-network preflight exits 0 and leaves packet bytes unchanged.
+- DONE: Preserve fixed product accounting and the accepted planning direction.
+  Product tree/index remain `82599c6f2d0791a23e0f7d578561051894d2d178` / `bbd638af371865e3cd174cb076b79de4ef8fe68be1c320574e5847b9b319b96e`, byte-identical to R3, so ledger remains 18 / 5,883 / 1,898 against denominator `3b37000a…` and caps 18 / 5,884 / 1,903. All six recorded LLM-first/JEV-later planning hashes reverify unchanged.
+- SKIPPED: Live Conductor query, provider/model/JEV/prompt/paid call, formal PR trial, production claim/replay, credential value or transcript-body retention, broad/full suite, product/planning mutation or commit/push, PR, posting, merge, release and fit decision.
+  The changed seam begins only after a successful decoded response; prior sanitized host-read evidence is preserved but not claimed as proof of this correction. This proposal proves no provider acceptance, useful output, billing, saving, production delivery, compatibility, two-day fit or release readiness.
+
+### Feedback Cycles
+
+#### Captain-authorized post-escalation extra correction — 2026-09-21
+
+- **Human override applied exactly once:** Kent's `准` authorized this R4 correction and one recheck by the same original validator. It does not reset or renumber prior rounds, alter validation cycle 12, or authorize any subsequent repair.
+- **Preservation:** R3 packet/correction `593958cc…` / `dc5d43d1…` and all cycle-12 validation receipts independently reverify; no R3 or prior byte was changed.
+- **Review route and stop:** same original validator must bind product tree/index `82599c6f…` / `bbd638af…`, R4 packet `c2e2f366…`, contract `3097cc48…`, recorder `b3e56475…`, correction `4202ad74…`, and the unclaimed R4 run above. No automatic reviewer round, launch, replay, formal proof or delivery authority follows from this report.
+
+### Summary
+
+The one human-authorized extra correction now carries the existing total deadline through message handling and the final exclusive-store boundary. Both late counterexamples fail without entering storage, timely exact-once behavior and adjacent custody remain green, prior/product/planning artifacts are unchanged, and the producer is paused for the same original validator under Pilot boundaries.
