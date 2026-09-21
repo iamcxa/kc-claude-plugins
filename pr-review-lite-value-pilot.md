@@ -631,6 +631,19 @@ costs, receipts and cleanup on either outcome. This approval grants no product o
 planning commit, repair, posting, comparison, five-pair evaluation, release
 membership acceptance or two-day-fit claim; task-state sync remains authorized.
 
+#### Revised proof Cloud FO delivery receipt — 2026-09-21
+
+Cycle 14 archived at `2026-09-21T03:42:01.949939478Z`, which is
+739.561036571s / 12m19.561s from the authoritative revised-proof start
+`2026-09-21T03:29:42.388902907Z`. After FO readback of the sealed output/run
+manifests, outer receipt, parser zero-model proof, five lane terminals, cleanup,
+fit drafts and unchanged product/canonical identities, the Cloud-side public
+report delivery receipt was written at `2026-09-21T03:45:37.762085092Z`:
+955.373182297s / 15m55.373s preparation-through-Cloud-FO-report delivery.
+Model wall time remains separately 168.485361777s. This delivery receipt changes
+no run/archive byte; a later transcript `receivedAt`, if supplied, may refine only
+transport latency.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
