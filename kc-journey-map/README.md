@@ -95,6 +95,7 @@ deleted to make a re-render clean.
 | **draw** | No journey exists yet and you want one from the code | The board, derived from entry points |
 | **check** | A journey already exists — board, screenshot, or a list of cards | The mismatch table first, then the corrected board |
 | **sequence companion** | Actors, handoffs or branches need explaining alongside a journey | An editable Mermaid sequence page rendered from a repository `.mmd` |
+| **add-story** | A capability was named and deferred in conversation, and the journey already exists | One appended `gap` story under its step, no evidence, no `release` |
 
 Map mode asserts intent, so it cites nothing and badges nothing. Draw and check mode are
 evidence modes: no cell from memory, and a recalled fact from a previous session is a
@@ -127,14 +128,15 @@ file.
 Run from the plugin directory. Paths are relative to your repository.
 
 ```bash
-node lib/journey-render.mjs   docs/journey/<slug>.yaml [roomId] [--pages story-map,journey-board,function-map]
-node lib/journey-lint.mjs     docs/journey/<slug>.yaml [repoRoot]
-node lib/journey-contract.mjs docs/journey/<slug>.yaml <releaseId> [--out <path>]
-node lib/journey-read.mjs     docs/journey/<slug>.yaml <roomId> [--write] [--out <path>]
-node lib/journey-export.mjs   <roomId> <out.png> [pageId]
-node lib/journey-tldr.mjs     export <roomId> <out.tldr>
-node lib/journey-tldr.mjs     import <in.tldr> <roomId>
-node lib/journey-progress.mjs docs/journey/<slug>.yaml --workflow-dir <dir> [--draw <room> --pages …]
+node lib/journey-render.mjs    docs/journey/<slug>.yaml [roomId] [--pages story-map,journey-board,function-map]
+node lib/journey-add-story.mjs docs/journey/<slug>.yaml <stepId> <storyId> "<card>"
+node lib/journey-lint.mjs      docs/journey/<slug>.yaml [repoRoot]   # omitting repoRoot checks the plugin dir, not your repo
+node lib/journey-contract.mjs  docs/journey/<slug>.yaml <releaseId> [--out <path>]
+node lib/journey-read.mjs      docs/journey/<slug>.yaml <roomId> [--write] [--out <path>]
+node lib/journey-export.mjs    <roomId> <out.png> [pageId]
+node lib/journey-tldr.mjs      export <roomId> <out.tldr>
+node lib/journey-tldr.mjs      import <in.tldr> <roomId>
+node lib/journey-progress.mjs  docs/journey/<slug>.yaml --workflow-dir <dir> [--draw <room> --pages …]
 ```
 
 `journey-tldr.mjs import` replaces the entire target document, including manually drawn
