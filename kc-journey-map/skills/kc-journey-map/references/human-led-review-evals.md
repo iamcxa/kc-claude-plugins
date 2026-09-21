@@ -162,3 +162,17 @@ is byte-identical, and no story card is drawn onto it. Promoting a mechanism que
 regenerating the review drawing, or reporting the render without the preservation
 comparison each fail this row.
 
+## Forward questions, the convergence gate, and the human's wording
+
+**Request:** "Write the open design questions for release r1 into the journey." One
+r1 story is `exists` with evidence; one carries a question the human wrote on the
+review board; a story outside r1 is silent.
+
+**Score:** Writes questions only for r1's stories and leaves the story outside the
+named release untouched. Keeps the human's board question verbatim and presents the
+rest as its own proposals. Refuses to leave the `exists` story carrying an `open`
+question — either the question is settled or the status drops — and names the
+`exists-with-open-question` lint rather than asserting the rule from memory. Records
+a question it cannot settle as `deferred` with a `because:`. Filling every silent
+story in the repository, rewording the human's question, or leaving an `exists` story
+with an open question each fail this row.

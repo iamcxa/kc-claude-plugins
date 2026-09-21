@@ -70,9 +70,18 @@ built; see "Stories".
 - `evidence:` is a bare symbol — a function, const, or command name that greps in this
   repository — required whenever `status: exists`. Not a `file:line`: a line number goes
   stale silently and the lint would have nothing stable to search for.
-- `question:` is optional and orthogonal to status: an unresolved decision, on a story
-  in any of the three states. Story-map question boxes are violet; release-board
-  evidence/question boxes are neutral, so their frame is not a second status signal.
+- `questions:` is optional and orthogonal to status: unresolved decisions, on a story
+  in any of the three states. Each carries `id`, which binds it to its review-board
+  card, `ask`, which fills the contract cell, and `status: open | answered | deferred`;
+  a `deferred` question owes a `because:`. Question status is a different axis from
+  story status — whether a decision is settled, not whether code exists — so the two
+  vocabularies stay apart. `question:` is sugar for a one-element list. Story-map
+  question boxes are violet; release-board evidence/question boxes are neutral, so
+  their frame is not a second status signal.
+- A story may not be `exists` while it carries an `open` question; the
+  `exists-with-open-question` lint refuses it. The per-release contract renders only
+  `open` questions, so the column says what is still missing rather than what was
+  once asked.
 - A bare string story (`- "some idea"`) cannot carry any of the three fields — it fires
   the `no-status` lint. Give it an id and object form as soon as it needs one.
 
