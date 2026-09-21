@@ -802,6 +802,35 @@ supervisor-to-public 289.172811s. The six concurrent child processes span
 The consumed proof is not useful-review or cost evidence, implementation status stays
 open, and any future paid run requires separate authorization.
 
+#### Captain schema/index model-free correction continuation — 2026-09-21
+
+After the STOP at state revision `7bb4365309c5102884b6cdf7ce27bc2cf46c3e81`,
+the Captain explicitly replied `繼續` and authorized exactly two model-free
+corrections: installed-CLI output-schema compatibility at the actual local schema
+validator while retaining typed constraints, and a new task-private packet whose
+receipt is not invalidated by harmless Git index stat-cache refresh. The latter must
+still reject semantic staged/index changes, tracked or untracked content changes,
+HEAD/tree/identity drift, claim/archive tampering, ambiguous server rows and duplicate
+delivery.
+
+Use a separate immutable successor rooted in product tree
+`da967d72a879701573cd82064bdb066db8b46353`. Preserve the consumed packet, claim,
+archive, raw streams, manual timestamp and failed recorder byte-for-byte. Product
+scope remains the least necessary existing two-file surface, with task-private
+packet/operator files permitted; no standing harness or CI is added. Denominator
+`3b37000a16ca2eadad0cb5dfd8e43a5f1d06f0f8`, current 18 / 5,882 / 1,897 ledger,
+and 18 / 5,884 / 1,903 caps remain fixed.
+
+Only installed/local no-provider schema validation and disposable local stubs are
+authorized. Do not weaken or replace the schema validator, fabricate a result, use
+the network/provider/model, create a production claim, post, commit/push product or
+planning bytes, open a PR, merge or claim production compatibility. Preserve normal
+provisioned OAuth for any separately authorized future Cloud path; bare mode is
+inapplicable there and may be used only to isolate a no-auth local parser probe. The
+old paid control remains standalone; any future comparison needs a fresh immutable
+candidate, explicit authority and preregistered arms. The unrecorded three-case
+calibration key is irrelevant to this no-model correction unit.
+
 ## Stage Report: implementation (cycle 2)
 
 - FAILED: Freeze and register the single approved CLI-backed development attempt, verify immutable input/runtime/plugin bindings and no-model launch prerequisites, then execute at most one existing legacy-control admission call within its USD 4.9612 budget-stop threshold.
@@ -1362,3 +1391,24 @@ The final packet independently roots delivery in the sealed run, atomic prelaunc
 ### Summary
 
 The authorized trusted-host proof completed its bounded supervision and archive quickly, but every review lane stopped before model initialization because the installed CLI rejected the draft-2020-12 JSON Schema; the only review result is an honest six-gap incomplete decision. The sole sealed-recorder attempt then refused a changed target Git-index byte hash before receipt creation. All raw evidence is preserved, no process or GitHub action remains, the public server timestamp is labeled manual-only, and the task stays in implementation with no rerun authority.
+
+## Stage Report: implementation (cycle 21)
+
+- DONE: Root a separate immutable correction in the exact stopped candidate while preserving every consumed run byte.
+  Task-private root is `.context/pr-review-lite-value-pilot/schema-index-correction/`; parent product tree is `da967d72a879701573cd82064bdb066db8b46353`, corrected tree is `2ed391676559af970e7b3d371ca1d9920550d757`, correction patch is `0c5ba39145cf99e45fbca65b4858fedf30631d42be59bc8b5fc02c4104d564a4`, and private index is `f82868452ae808d5d5db8a67d14bf9a5fbe1d512e295f86b0d3cb66a7736e9e2`. The 13,282-file frozen R2 inventory `ea975951…` re-verifies exit 0, so its packet/claim/archive/raw streams/manual timestamp/failed recorder remain byte-exact. Product/planning bytes remain uncommitted.
+- DONE: Correct installed-CLI schema compatibility without weakening typed output.
+  `/conductor/bin/claude` 2.1.274 (`15e2d051…`) rejects the exact old generated schema at its own model-free `--init-only --json-schema` boundary with exit 1 and the draft-2020-12 meta-schema error. Omitting only the optional top-level `$schema` makes the candidate-generated schema exit 0 with empty stdout/stderr under empty bare HOME and blocked proxies; root `$ref`, transitive `$defs`, required fields, enums and `additionalProperties` constraints remain. The focused transitive-schema test passes `OK` in 1.067s. Bare is probe isolation only, not a future Cloud auth route, and this is local parser acceptance rather than provider/production compatibility.
+- DONE: Replace index-byte custody with an exact single exclusion plus independent semantic Git custody.
+  New packet schema v4 / claim schema v3 excludes exactly `sandbox/target/.git/index` from the byte seal; both supervisor and recorder reject another exclusion or a manifest row for that path, then require exact HEAD, committed tree, `git write-tree` semantic index tree and empty tracked/untracked porcelain status. Claim and terminal bind all four facts. Existing source/dependency/contract hashes, atomic claim, archive attestations/current bytes, run/claim/marker/cursor identities, unique later server row and exclusive duplicate receipt checks remain. Packet has 13,195 immutable rows; seal/contract/supervisor/recorder are `19d9d58e…` / `db9ee40e…` / `257c8def…` / `b6b499bc…`; seal verification exits 0 and claim/archive/output/receipt directories are empty.
+- DONE: Falsify incidental-versus-semantic index handling and retain adjacent custody/cleanup failures with local stubs.
+  The externally bounded 120-second probe completed exit 0 in 8.8s (`custody-probe.stdout` `3b1e6694…`, `core_ok:true`). Harmless stat-cache refresh changed index bytes while preserving the semantic index tree and valid delivery succeeded. Staged semantic index, tracked content, untracked content and HEAD changes each exited 1 with no receipt; prior seal/external/auth/session/output, claim/archive/terminal/attestation/cursor/ambiguity/replay/duplicate attacks also failed closed. Timeout retained 24 partial bytes, sent KILL after TERM and left no leader/descendant. Every child was a disposable local stub; no provider or network path ran.
+- FAILED: Obtain a green full affected Python suite.
+  One externally bounded run executed all 48 methods in 428.412s and exited 1. The unchanged `test_unsupported_material_is_missing_not_invalid_caller_schema` errored in both parameter rows before the schema seam because it writes new untracked `example.py` and invokes `git commit -qam`, which stages nothing. The Captain-requested isolated 60-second rerun reproduced both errors in 0.946s. The test is byte-identical to the parent (`021f9888…`) and the parent-to-candidate patch contains only the schema line. This is a real source-owned, out-of-scope red fixture, not relabeled green, provider failure or timeout; no test edit or full-suite replay was made.
+- DONE: Preserve exact caps and identify the review candidate without resetting the denominator.
+  Product correction is one source replacement (`1+/1-`); source/test/catalog stay 2,146 / 1,208 / 97 lines with hashes `a52ec3ca…` / `021f9888…` / `630006b4…`. Because the changed source is already an added denominator row and its length is unchanged, cumulative accounting remains exactly 18 files / 5,882 aggregate / 1,897 focused against `3b37000a…`, within fixed 18 / 5,884 / 1,903 caps. `git diff --check`, JSON, syntax, required-hash, new-seal and frozen-old-packet checks pass. Full receipt `schema-index-correction/README.md` is `200dc2f9…`; its 50-row correction seal is `9d1e6b22…` and verifies. Producer is paused at tree `2ed39167…` and packet run identity `pr-review-lite-value-pilot-schema-index-r1-20260921` for fresh independent review.
+- SKIPPED: Provider/model/paid/network invocation, production claim or delivery, credential access/copy, dependency action, global configuration, standing harness/CI, product/planning commit or push, PR, posting, merge, comparison reuse, calibration, judge, gate, release and fit decision.
+  The prior proof and control remain standalone and consumed. This model-free correction does not prove provider compatibility, useful review output, cost, saving, public delivery, two-day fit or production readiness; a future comparison requires a separately approved immutable candidate and fresh preregistration.
+
+### Summary
+
+The installed local validator now accepts the same typed result contract without its unsupported optional draft annotation, and a separately sealed packet distinguishes harmless Git index serialization drift from semantic repository drift while preserving exact claim/archive/server-delivery custody. The two authorized boundaries have fail-capable model-free evidence and remain within the original cap ledger. The unchanged aggregate fixture is honestly red and retained for independent disposition; product bytes are uncommitted, the successor is unclaimed, and no provider/model process ran.
