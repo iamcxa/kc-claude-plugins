@@ -1,6 +1,6 @@
 
-import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
-import { normalizeStory, openQuestions } from './model.mjs'
+import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus, storyProgress, releaseProgressText, connector, connectorBindings, QUESTION_STATUS_COLORS } from './records.mjs'
+import { normalizeStory, questionCardText } from './model.mjs'
 
 const PITCH = 240
 const X0 = 300
@@ -25,7 +25,10 @@ export function buildStoryMap(model, room = null, progress = null) {
 
 	const parentId = STORY_PAGE_ID
 	const maxStories = Math.max(0, ...steps.map((s) => (s.stories ?? []).length))
-	const ix = indexes(Math.max(24, steps.length * (maxStories + 4) + (model.releases?.length ?? 0) * 2 + 24))
+	// Each question needs 2 index slots (card + connector arrow); its bindings need none.
+	const totalQuestions = steps.flatMap((step) => (step.stories ?? []).map((story, j) => normalizeStory(step, story, j)))
+		.reduce((sum, s) => sum + (s.questions?.length ?? 0), 0)
+	const ix = indexes(Math.max(24, steps.length * (maxStories + 4) + (model.releases?.length ?? 0) * 2 + 24) + totalQuestions * 2)
 	let n = 0
 
 	const nowTexts = (model.now ?? []).map((item) =>
@@ -162,7 +165,7 @@ export function buildStoryMap(model, room = null, progress = null) {
 			meta: tag(band.id ?? 'unassigned', 'release-label'),
 		})
 
-		const questionsHeight = (story) => openQuestions(story ?? {}).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(q.ask, STORY_W), 0)
+		const questionsHeight = (story) => (story?.questions ?? []).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(questionCardText(q), STORY_W), 0)
 		const perColumn = new Map()
 		for (const story of band.stories) {
 			const list = perColumn.get(story.step.id) ?? []
@@ -184,25 +187,27 @@ export function buildStoryMap(model, room = null, progress = null) {
 			list.forEach((story, j) => {
 				const x = X0 + i * PITCH
 				const y = rowTop[j]
+				const storyShapeId = `shape:sm-story-${story.id}`
 				put.push({
-					...note({ id: `shape:sm-story-${story.id}`, text: story.card, x, y, index: ix[n++], parentId, color: 'yellow' }),
+					...note({ id: storyShapeId, text: story.card, x, y, index: ix[n++], parentId, color: 'yellow' }),
 					meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
 				})
 
 				let qy = y + STORY_H + QUESTION_GAP
-				for (const question of openQuestions(story)) {
-					const h = fitHeight(question.ask, STORY_W)
+				for (const question of story.questions ?? []) {
+					const h = fitHeight(questionCardText(question), STORY_W)
+					const questionId = `shape:sm-question-${story.id}-${question.id}`
 					put.push({
 						...label({
-							id: `shape:sm-question-${story.id}-${question.id}`,
-							text: `? ${question.ask}`,
+							id: questionId,
+							text: questionCardText(question),
 							x,
 							y: qy,
 							w: STORY_W,
 							h,
 							index: ix[n++],
 							parentId,
-							color: 'violet',
+							color: QUESTION_STATUS_COLORS[question.status] ?? 'grey',
 							size: 's',
 							align: 'start',
 						}),
@@ -210,6 +215,14 @@ export function buildStoryMap(model, room = null, progress = null) {
 						// layout checks able to find the card a question hangs under.
 						meta: { journey: { nodeId: question.id, kind: 'question', story: story.id } },
 					})
+					const linkId = `shape:sm-qlink-${story.id}-${question.id}`
+					put.push({
+						...connector({ id: linkId, parentId, index: ix[n++], color: 'grey' }),
+						meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
+					})
+					put.push(...connectorBindings(linkId, storyShapeId, questionId).map((b) => ({
+						...b, meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
+					})))
 					qy += h + QUESTION_GAP
 				}
 			})

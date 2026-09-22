@@ -75,9 +75,13 @@ built; see "Stories".
   card, `ask`, which fills the contract cell, and `status: open | answered | deferred`;
   a `deferred` question owes a `because:`. Question status is a different axis from
   story status — whether a decision is settled, not whether code exists — so the two
-  vocabularies stay apart. `question:` is sugar for a one-element list. Story-map
-  question boxes are violet; release-board evidence/question boxes are neutral, so
-  their frame is not a second status signal.
+  vocabularies stay apart. `question:` is sugar for a one-element list.
+- Every question is its own card on both the story map and the journey board, bound to
+  its story card by a native arrow — never text folded into the evidence cell, which
+  stops being readable once a story asks six. Color and a printed status word carry the
+  three states at a glance: violet/`OPEN`, green/`ANSWERED`, grey/`DEFERRED`; a deferred
+  card also carries its `because:`. `lintQuestionStatus` rejects an unsupported status
+  and a `deferred` question with no `because:`.
 - A story may not be `exists` while it carries an `open` question; the
   `exists-with-open-question` lint refuses it. The per-release contract renders only
   `open` questions, so the column says what is still missing rather than what was

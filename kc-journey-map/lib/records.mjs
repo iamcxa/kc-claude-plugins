@@ -115,6 +115,47 @@ export function page({ id, name, index = 'a1' }) {
 
 export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }
 
+export const QUESTION_STATUS_COLORS = { open: 'violet', answered: 'green', deferred: 'grey' }
+
+// A native arrow, bound at both ends. Coordinates are the placeholder tldraw's own
+// ExtractBindings migration leaves once a terminal is bound — the editor resolves the
+// real path from the bound shapes, not from start/end.
+export function connector({ id, index = 'a1', parentId = 'page:page', color = 'grey' }) {
+	return {
+		...base(id, 0, 0, index, parentId),
+		type: 'arrow',
+		props: {
+			kind: 'arc',
+			labelColor: 'black',
+			color,
+			fill: 'none',
+			dash: 'draw',
+			size: 's',
+			arrowheadStart: 'none',
+			arrowheadEnd: 'arrow',
+			font: 'draw',
+			start: { x: 0, y: 0 },
+			end: { x: 0, y: 0 },
+			bend: 0,
+			richText: richText(''),
+			labelPosition: 0.5,
+			scale: 1,
+			elbowMidPoint: 0.5,
+		},
+	}
+}
+
+// Binding records are separate from the arrow shape; both terminals must be removed
+// together or a stale binding outlives the shapes it once pointed at.
+export function connectorBindings(connectorId, fromShapeId, toShapeId) {
+	return [
+		{ id: `binding:${connectorId}-from`, typeName: 'binding', type: 'arrow', fromId: connectorId, toId: fromShapeId,
+			meta: {}, props: { terminal: 'start', normalizedAnchor: { x: 0.5, y: 0.5 }, isExact: false, isPrecise: false, snap: 'none' } },
+		{ id: `binding:${connectorId}-to`, typeName: 'binding', type: 'arrow', fromId: connectorId, toId: toShapeId,
+			meta: {}, props: { terminal: 'end', normalizedAnchor: { x: 0.5, y: 0.5 }, isExact: false, isPrecise: false, snap: 'none' } },
+	]
+}
+
 // Child borders preserve story coordinates used by release readback.
 export function storyBorder(story) {
 	const status = story.meta?.journey?.progress?.status ?? story.meta?.journey?.status

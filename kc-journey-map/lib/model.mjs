@@ -23,6 +23,14 @@ const normalizeQuestions = (story, storyId) => {
 
 export const openQuestions = (story) => (story.questions ?? []).filter((q) => q.status === 'open')
 
+// A status word survives a greyscale export or a colorblind reader where the card
+// color alone would not; a deferred card also carries the reason it was parked.
+export const questionCardText = (q) => [
+	q.status === 'answered' ? 'ANSWERED' : q.status === 'deferred' ? 'DEFERRED' : 'OPEN',
+	q.ask,
+	q.status === 'deferred' && q.because ? `because: ${q.because}` : null,
+].filter(Boolean).join('\n')
+
 export const normalizeStory = (step, story, j) => {
 	if (typeof story === 'string') {
 		const id = `${step.id}-${j}`

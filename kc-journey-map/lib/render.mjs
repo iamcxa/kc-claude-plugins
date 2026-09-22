@@ -4,10 +4,10 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { DocumentRecordType, TLDOCUMENT_ID } from '@tldraw/tlschema'
-import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
+import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText, connector, connectorBindings, QUESTION_STATUS_COLORS } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
-import { normalizeStory, openQuestions, storyStatusLabel } from './model.mjs'
+import { normalizeStory, storyStatusLabel, questionCardText } from './model.mjs'
 
 const STORY_PITCH = 240
 const STORY_W = 220
@@ -16,6 +16,7 @@ const X0 = 320
 const LANE_X = 20
 const LANE_W = 270
 const GAP = 40
+const QUESTION_GAP = 10
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
 // Shared activity rules are context, not proof that each story exists.
@@ -36,7 +37,9 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	const idp = `shape:jm-${release?.id ?? 'all'}-`
 	const rulesById = new Map((model.rules ?? []).map((r) => [r.id, r.text]))
 	const put = []
-	const ix = indexes(20 + groups.length * 4 + groups.reduce((sum, g) => sum + g.stories.length * 2, 0))
+	// Each question needs 2 index slots (card + connector arrow); its bindings need none.
+	const questionSlots = groups.reduce((sum, g) => sum + g.stories.reduce((s, story) => s + (story.questions?.length ?? 0) * 2, 0), 0)
+	const ix = indexes(20 + groups.length * 4 + groups.reduce((sum, g) => sum + g.stories.length * 2, 0) + questionSlots)
 	let n = 0
 	const box = (slug, nodeId, kind, text, x, y, w, h, color = 'black', extra = {}) => {
 		put.push({
@@ -54,8 +57,10 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		})(),
 		story.status && ['exists', 'gap', 'unverified'].includes(story.status) ? null : storyStatusLabel(story.status),
 		story.evidence ? `Evidence: ${story.evidence}` : 'No story evidence recorded.',
-		...openQuestions(story).map((q) => `? ${q.ask}`),
 	].filter(Boolean).join('\n')
+	// A question is its own card, connected to the story card by a native arrow — not
+	// text folded into the evidence cell, which stops reading once a story asks six.
+	const questionsHeight = (story) => (story.questions ?? []).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(questionCardText(q), STORY_W), 0)
 	const systemText = (step) => [
 		'SHARED ACTIVITY CONTEXT',
 		...(step.system?.length ? step.system.map((l) => `• ${l}`) : ['No system flow recorded.']),
@@ -69,7 +74,11 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	const storyY = activityH + GAP
 	const proofY = storyY + 200 + 20
 	const proofH = Math.max(184, ...groups.flatMap((g) => g.stories.map((s) => fitHeight(proofText(s), STORY_W))))
-	const systemY = proofY + proofH + GAP
+	const proofBottom = proofY + proofH
+	// A story's own open questions may stack taller than every other story's proof box;
+	// the system lane must clear the tallest column, not just the shared proof height.
+	const systemY = Math.max(proofBottom + GAP, ...groups.flatMap((g) => g.stories.map((s) =>
+		questionsHeight(s) ? proofBottom + QUESTION_GAP + questionsHeight(s) + GAP : 0)))
 	const systemH = Math.max(180, ...groups.map((g) => fitHeight(systemText(g.step), g.w)))
 	const rulesY = systemY + systemH + GAP
 	const rulesH = Math.max(160, ...groups.map((g) => fitHeight(ruleText(g.step), g.w)))
@@ -87,13 +96,36 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		}
 		stories.forEach((story, j) => {
 			const sx = x + j * STORY_PITCH + (stories.length === 1 ? (w - STORY_W) / 2 : 0)
+			const storyShapeId = `${idp}story-${story.id}`
 			put.push({
-				...note({ id: `${idp}story-${story.id}`, parentId, text: story.card,
+				...note({ id: storyShapeId, parentId, text: story.card,
 					x: sx + 10, y: storyY, index: ix[n++], color: 'yellow' }),
 				meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
 			})
 			box(`proof-${story.id}`, story.id, 'story-proof', proofText(story), sx, proofY, STORY_W, proofH,
 				'grey')
+
+			let qy = proofBottom + QUESTION_GAP
+			for (const question of story.questions ?? []) {
+				const h = fitHeight(questionCardText(question), STORY_W)
+				const questionId = `${idp}question-${story.id}-${question.id}`
+				put.push({
+					...label({ id: questionId, parentId, text: questionCardText(question), x: sx, y: qy, w: STORY_W, h,
+						index: ix[n++], color: QUESTION_STATUS_COLORS[question.status] ?? 'grey', size: 's', align: 'start', verticalAlign: 'start' }),
+					// The question id binds to its story-map twin; the story id lets a layout
+					// check find the card a question hangs under.
+					meta: { journey: { nodeId: question.id, kind: 'question', story: story.id } },
+				})
+				const linkId = `${idp}qlink-${story.id}-${question.id}`
+				put.push({
+					...connector({ id: linkId, parentId, index: ix[n++], color: 'grey' }),
+					meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
+				})
+				put.push(...connectorBindings(linkId, storyShapeId, questionId).map((b) => ({
+					...b, meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
+				})))
+				qy += h + QUESTION_GAP
+			}
 		})
 		box(`sys-${step.id}`, step.id, 'system', systemText(step), x, systemY, w, systemH)
 		box(`rules-${step.id}`, step.id, 'constraints', ruleText(step), x, rulesY, w, rulesH, 'blue')

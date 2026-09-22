@@ -28,7 +28,42 @@ test('shared flow and constraints appear once per activity and story proof stays
 	assert.match(text(kind(records, 'system')[0]), /SHARED ACTIVITY CONTEXT\n• Calls the shared service/)
 	assert.match(text(kind(records, 'constraints')[0]), /SHARED ACTIVITY CONSTRAINTS\n• One unique name/)
 	assert.match(text(kind(records, 'story-proof').find((s) => s.meta.journey.nodeId === 'a-0')), /^Evidence: NamesIt/)
-	assert.match(text(kind(records, 'story-proof').find((s) => s.meta.journey.nodeId === 'b-see')), /^No story evidence recorded.\n\? Should delivery be push or pull/)
+	// A question is a card of its own now, not text folded into the evidence cell.
+	const bSeeProof = kind(records, 'story-proof').find((s) => s.meta.journey.nodeId === 'b-see')
+	assert.equal(text(bSeeProof), 'No story evidence recorded.')
+	assert.doesNotMatch(text(bSeeProof), /push or pull/)
+})
+
+test('an open question is drawn as its own card, connected to its story by a native arrow', () => {
+	const records = buildJourneyBoard(fixtureModel, { release: fixtureModel.releases[0] })
+	const question = kind(records, 'question').find((q) => q.meta.journey.story === 'b-see')
+	assert.ok(question, 'no question card drawn for b-see')
+	assert.match(text(question), /^OPEN\nShould delivery be push or pull\?/)
+	assert.equal(question.props.color, 'violet')
+
+	const story = kind(records, 'story').find((s) => s.meta.journey.nodeId === 'b-see')
+	const link = records.find((r) => r.type === 'arrow' && r.meta?.journey?.kind === 'question-link' && r.meta.journey.story === 'b-see')
+	assert.ok(link, 'no connector drawn between the question and its story')
+	const bindings = records.filter((r) => r.typeName === 'binding' && r.fromId === link.id)
+	assert.equal(bindings.length, 2)
+	assert.deepEqual(new Set(bindings.map((b) => b.toId)), new Set([story.id, question.id]))
+})
+
+test('answered, deferred and open questions read differently at a glance', () => {
+	const model = structuredClone(fixtureModel)
+	model.steps[0].stories[0].status = 'gap'
+	delete model.steps[0].stories[0].evidence
+	model.steps[0].stories[0].questions = [
+		{ id: 'q-open', ask: 'Still open', status: 'open' },
+		{ id: 'q-answered', ask: 'Now settled', status: 'answered' },
+		{ id: 'q-deferred', ask: 'Parked for now', status: 'deferred', because: 'waiting on design' },
+	]
+	const records = buildJourneyBoard(model, { release: model.releases[0] })
+	const byId = (id) => kind(records, 'question').find((q) => q.meta.journey.nodeId === id)
+	assert.equal(byId('q-open').props.color, 'violet')
+	assert.equal(byId('q-answered').props.color, 'green')
+	assert.equal(byId('q-deferred').props.color, 'grey')
+	assert.match(text(byId('q-deferred')), /because: waiting on design/)
 })
 
 test('long questions and shared content have fitted boxes and do not overlap later rows', () => {
