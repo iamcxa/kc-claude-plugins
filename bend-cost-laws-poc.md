@@ -4,7 +4,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge:
-worktree:
+worktree: .worktrees/spacedock-ensign-bend-cost-laws-poc
 pr:
 gates:
     version: 1
@@ -28,6 +28,7 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-09-22T01:53:09Z
 ---
 
 Decide whether later PR-flow development should adopt a law-checked executable cost-decision component rather than relying only on schema-shaped summaries.
