@@ -1,5 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { createTLSchema } from '@tldraw/tlschema'
 import { buildJourneyBoard, buildAllPages, staleRecordIds } from './render.mjs'
 import { fixtureModel } from './fixture.mjs'
 import { fitHeight, note, storyBorder } from './records.mjs'
@@ -161,4 +162,33 @@ test('a partial redraw removes a stale question connector along with its binding
 	const removed = staleRecordIds(current, buildAllPages(fixtureModel, null, ['journey-board']))
 	assert.ok(removed.includes(staleLink.id))
 	for (const binding of staleBindings) assert.ok(removed.includes(binding.id), `${binding.id} outlived the arrow it hung off`)
+})
+
+// A story-status border is parented to its story shape, not the page — one hop of
+// parentId is not enough to find the page a nested shape belongs to.
+test('a removed story takes its nested status border with it', () => {
+	const current = buildAllPages(fixtureModel, null, ['story-map'])
+	assert.ok(current.some((r) => r.id === 'shape:sm-story-a-0-status-border'), 'fixture draws no border, so this proves nothing')
+	const model = structuredClone(fixtureModel)
+	model.steps[0].stories.splice(0, 1)
+	const removed = staleRecordIds(current, buildAllPages(model, null, ['story-map']))
+	assert.ok(removed.includes('shape:sm-story-a-0'))
+	assert.ok(removed.includes('shape:sm-story-a-0-status-border'), 'the border outlived the story it was drawn on')
+})
+
+test('every record, including a connector arrow and its bindings, validates against the tldraw schema', () => {
+	const model = structuredClone(fixtureModel)
+	model.steps[0].stories[0].questions = ['a', 'b', 'c', 'd', 'e', 'f'].map((id, k) => ({ id, ask: `Question ${k}`, status: ['open', 'answered', 'deferred'][k % 3], because: 'because' }))
+	const schema = createTLSchema()
+	for (const selection of [['story-map'], ['journey-board'], ['story-map', 'journey-board', 'function-map']]) {
+		const records = buildAllPages(model, 'schema-check', selection)
+		const ids = records.map((r) => r.id)
+		assert.equal(new Set(ids).size, ids.length, `${selection.join(',')} produced a duplicate id`)
+		for (const r of records) {
+			assert.ok(schema.types[r.typeName], `${selection.join(',')}: unknown typeName "${r.typeName}" on ${r.id}`)
+			assert.doesNotThrow(() => schema.types[r.typeName].validate(r), `${selection.join(',')}: ${r.typeName} ${r.id} failed schema validation`)
+		}
+		assert.ok(records.some((r) => r.type === 'arrow'), `${selection.join(',')} drew no connector arrow for a 6-question story`)
+		assert.ok(records.some((r) => r.typeName === 'binding'), `${selection.join(',')} drew no binding for a 6-question story`)
+	}
 })

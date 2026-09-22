@@ -208,7 +208,17 @@ export function staleRecordIds(currentRecords, put) {
 	const wanted = new Set(put.map((r) => r.id))
 	const scopedPageIds = new Set(put.filter((r) => r.typeName === 'page').map((r) => r.id))
 	const shapesById = new Map(currentRecords.filter((r) => r.typeName === 'shape').map((r) => [r.id, r]))
-	const pageIdOf = (r) => (r.typeName === 'binding' ? shapesById.get(r.fromId)?.parentId : r.parentId)
+	// A shape's own parentId is its page for every top-level shape, but storyBorder
+	// nests a border under its story shape — walk the chain, not just one hop.
+	const pageIdOfShape = (shape) => {
+		const seen = new Set()
+		for (let cur = shape; cur && !seen.has(cur.id); cur = shapesById.get(cur.parentId)) {
+			if (String(cur.parentId).startsWith('page:')) return cur.parentId
+			seen.add(cur.id)
+		}
+		return undefined
+	}
+	const pageIdOf = (r) => (r.typeName === 'binding' ? pageIdOfShape(shapesById.get(r.fromId)) : pageIdOfShape(r))
 	return currentRecords
 		.filter((r) => (r.typeName === 'shape' || r.typeName === 'binding') && r.meta?.journey && !wanted.has(r.id))
 		.filter((r) => scopedPageIds.has(pageIdOf(r)))
