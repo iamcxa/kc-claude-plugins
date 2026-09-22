@@ -113,6 +113,12 @@ export function page({ id, name, index = 'a1' }) {
 	return { id, typeName: 'page', name, index, meta: {} }
 }
 
+export function pageIndex(position, start = 'a5') {
+	let index = start
+	for (let step = 0; step < position; step++) index = getIndexAbove(index)
+	return index
+}
+
 export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }
 
 // Child borders preserve story coordinates used by release readback.

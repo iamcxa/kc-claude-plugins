@@ -2,6 +2,7 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { buildJourneyBoard, buildAllPages } from './render.mjs'
 import { fixtureModel } from './fixture.mjs'
+import { sortByIndex, validateIndexKey } from '@tldraw/utils'
 import { fitHeight, note, storyBorder } from './records.mjs'
 
 const kind = (records, kind) => records.filter((s) => s.meta?.journey?.kind === kind)
@@ -90,4 +91,14 @@ test('story border geometry follows measured height and scale without moving the
 	assert.equal(storyBorder(note({ id: 'shape:plain', text: 'Plain note', x: 0, y: 0 })), null)
 	story.meta.journey.status = 'not-a-status'
 	assert.equal(storyBorder(story), null)
+})
+
+test('every board page carries an index key tldraw accepts, however many releases there are', () => {
+	const model = structuredClone(fixtureModel)
+	model.releases = Array.from({ length: 9 }, (_, i) => ({ id: `r${i + 1}`, name: `RELEASE ${i + 1}`, goal: 'One outcome.' }))
+	const pages = buildAllPages(model, null, ['story-map', 'journey-board']).filter((r) => r.typeName === 'page')
+	assert.equal(pages.length, 10)
+	for (const p of pages) assert.doesNotThrow(() => validateIndexKey(p.index), `${p.name} got index ${p.index}`)
+	assert.equal(new Set(pages.map((p) => p.index)).size, pages.length)
+	assert.deepEqual([...pages].sort(sortByIndex).map((p) => p.name), pages.map((p) => p.name))
 })
