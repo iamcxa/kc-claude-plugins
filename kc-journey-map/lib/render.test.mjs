@@ -102,3 +102,14 @@ test('every board page carries an index key tldraw accepts, however many release
 	assert.equal(new Set(pages.map((p) => p.index)).size, pages.length)
 	assert.deepEqual([...pages].sort(sortByIndex).map((p) => p.name), pages.map((p) => p.name))
 })
+
+test('a release board keeps a story\'s answered questions next to its open ones', () => {
+	const model = structuredClone(fixtureModel)
+	model.steps[1].stories[0].questions = [
+		{ id: 'live', ask: 'Should delivery be push or pull?', status: 'open' },
+		{ id: 'settled', ask: 'Who pays for the delivery?', status: 'answered' },
+	]
+	const proof = kind(buildJourneyBoard(model, { release: model.releases[0] }), 'story-proof')
+		.find((s) => s.meta.journey.nodeId === 'b-see')
+	assert.match(text(proof), /\? Should delivery be push or pull\?\n✓ Who pays for the delivery\?/)
+})

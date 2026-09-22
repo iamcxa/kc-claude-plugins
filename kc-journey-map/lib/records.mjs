@@ -121,6 +121,8 @@ export function pageIndex(position, start = 'a5') {
 
 export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }
 
+export const QUESTION_MARKS = { open: { color: 'violet', mark: '?' }, answered: { color: 'light-blue', mark: '✓' } }
+
 // Child borders preserve story coordinates used by release readback.
 export function storyBorder(story) {
 	const status = story.meta?.journey?.progress?.status ?? story.meta?.journey?.status

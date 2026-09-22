@@ -167,3 +167,26 @@ test('no drawn label is shorter than the text inside it', () => {
 		)
 	}
 })
+
+test('an answered question is drawn as well, told apart from an open one', () => {
+	const asked = {
+		releases: [{ id: 'r', name: 'Release' }],
+		steps: [{ id: 'a', card: 'Act', stories: [
+			{ id: 'both', card: 'Asks', release: 'r', status: 'gap', questions: [
+				{ id: 'settled', ask: 'Who owns the key?', status: 'answered' },
+				{ id: 'live', ask: 'What if it is lost?', status: 'open' },
+			] },
+			{ id: 'below', card: 'Next', release: 'r', status: 'gap' },
+		] }],
+	}
+	const put = buildStoryMap(asked)
+	const drawn = kindOf(put, 'question')
+	assert.deepEqual(drawn.map((q) => q.meta.journey.nodeId), ['settled', 'live'])
+	const [settled, live] = drawn
+	assert.notEqual(settled.props.color, live.props.color)
+	assert.equal(labelText(settled), '✓ Who owns the key?')
+	assert.equal(labelText(live), '? What if it is lost?')
+	assert.ok(byId(put, 'shape:sm-story-below').y > settled.y + settled.props.h + live.props.h,
+		'the row beneath starts inside the questions')
+})
+

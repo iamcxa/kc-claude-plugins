@@ -4,7 +4,7 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { DocumentRecordType, TLDOCUMENT_ID } from '@tldraw/tlschema'
-import { fitHeight, indexes, label, note, page, pageIndex, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
+import { QUESTION_MARKS, fitHeight, indexes, label, note, page, pageIndex, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
 import { normalizeStory, openQuestions, storyStatusLabel } from './model.mjs'
@@ -54,7 +54,8 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		})(),
 		story.status && ['exists', 'gap', 'unverified'].includes(story.status) ? null : storyStatusLabel(story.status),
 		story.evidence ? `Evidence: ${story.evidence}` : 'No story evidence recorded.',
-		...openQuestions(story).map((q) => `? ${q.ask}`),
+		...openQuestions(story).map((q) => `${QUESTION_MARKS.open.mark} ${q.ask}`),
+		...(story.questions ?? []).filter((q) => q.status === 'answered').map((q) => `${QUESTION_MARKS.answered.mark} ${q.ask}`),
 	].filter(Boolean).join('\n')
 	const systemText = (step) => [
 		'SHARED ACTIVITY CONTEXT',
