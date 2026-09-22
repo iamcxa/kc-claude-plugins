@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { lintEvidenceNotFound, lintExistsWithOpenQuestion, lintExistsWithoutEvidence, lintJourney, lintNoStatus } from './lint.mjs'
+import { lintEvidenceNotFound, lintExistsWithOpenQuestion, lintExistsWithoutEvidence, lintJourney, lintNoStatus, lintQuestionStatus } from './lint.mjs'
 
 const model = (steps) => ({ steps })
 
@@ -147,4 +147,29 @@ test('a deferred question does not hold a story back', () => {
 	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X',
 		questions: [{ id: 'q', ask: 'Later?', status: 'deferred', because: 'belongs to the reminder release' }] }] }])
 	assert.deepEqual(lintExistsWithOpenQuestion(m), [])
+})
+
+test('a mistyped question status is caught, not silently read as settled', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'gap',
+		questions: [{ id: 'q', ask: 'Who?', status: 'opne' }] }] }])
+	const v = lintQuestionStatus(m)
+	assert.deepEqual(v.map((x) => x.story), ['s-0'])
+	assert.match(v[0].detail, /unsupported status "opne"/)
+})
+
+test('a deferred question without a because is caught', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'gap',
+		questions: [{ id: 'q', ask: 'Who?', status: 'deferred' }] }] }])
+	const v = lintQuestionStatus(m)
+	assert.deepEqual(v.map((x) => x.story), ['s-0'])
+	assert.match(v[0].detail, /deferred without a "because"/)
+})
+
+test('open, answered, and a reasoned deferral all pass lintQuestionStatus', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'gap', questions: [
+		{ id: 'q1', ask: 'A?', status: 'open' },
+		{ id: 'q2', ask: 'B?', status: 'answered' },
+		{ id: 'q3', ask: 'C?', status: 'deferred', because: 'later release' },
+	] }] }])
+	assert.deepEqual(lintQuestionStatus(m), [])
 })

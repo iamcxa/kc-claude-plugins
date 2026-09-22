@@ -1,7 +1,7 @@
 
 import { execFileSync } from 'node:child_process'
 import { extname, resolve, sep } from 'node:path'
-import { iterStories, openQuestions, STORY_STATUSES } from './model.mjs'
+import { iterStories, openQuestions, QUESTION_STATUSES, STORY_STATUSES } from './model.mjs'
 
 // Prose/data matches must not count as executable evidence.
 const EXECUTABLE_EXTENSIONS = new Set(['.mjs', '.cjs', '.js', '.jsx', '.mts', '.cts', '.ts', '.tsx', '.py', '.rb', '.sh', '.bash', '.zsh'])
@@ -38,6 +38,18 @@ export function lintExistsWithoutEvidence(model) {
 		.map((s) => ({ lint: 'exists-without-evidence', story: s.id, release: s.release, detail: `story ${s.id} is marked exists but carries no evidence symbol` }))
 }
 
+// A typo'd status (`opne`) reads as not-open to `openQuestions` and sails past the
+// exists-with-open-question gate below — the one check that makes this feature mean
+// anything. Catch the typo, and the deferral that never says why.
+export function lintQuestionStatus(model) {
+	return iterStories(model).flatMap((s) => (s.questions ?? [])
+		.filter((q) => !QUESTION_STATUSES.includes(q.status) || (q.status === 'deferred' && !q.because))
+		.map((q) => ({ lint: 'invalid-question-status', story: s.id, release: s.release,
+			detail: QUESTION_STATUSES.includes(q.status)
+				? `question ${q.id} on story ${s.id} is deferred without a "because"`
+				: `question ${q.id} on story ${s.id} has unsupported status "${q.status}"; use ${QUESTION_STATUSES.join(', ')}` })))
+}
+
 // Exclude generated self-citations; quoting a symbol is not executable evidence.
 export function lintExistsWithOpenQuestion(model) {
 	return iterStories(model)
@@ -61,5 +73,5 @@ export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [
 }
 
 export function lintJourney(model, opts = {}) {
-	return [...lintNoStatus(model), ...lintExistsWithoutEvidence(model), ...lintExistsWithOpenQuestion(model), ...lintEvidenceNotFound(model, opts)]
+	return [...lintNoStatus(model), ...lintExistsWithoutEvidence(model), ...lintQuestionStatus(model), ...lintExistsWithOpenQuestion(model), ...lintEvidenceNotFound(model, opts)]
 }
