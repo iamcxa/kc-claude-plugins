@@ -166,24 +166,36 @@ export function buildAllPages(model, room = null, selection = DEFAULT_PROJECTION
 	return PROJECTION_KEYS.filter((key) => chosen.includes(key)).flatMap((key) => PROJECTIONS[key](model, room, progress))
 }
 
-// Untagged shapes belong to the user and must survive redraw.
+// Untagged shapes belong to the user and must survive redraw. A partial redraw
+// (`--pages journey-board`) rebuilds only some pages; a tagged shape or binding whose
+// page this render did not touch belongs to a different --pages run and must survive
+// too — scope removal to the pages this render actually produced, not to every tagged
+// record in the room. A binding carries no parentId of its own; look up the page of
+// the connector shape it hangs off (`fromId`) instead.
+export function staleRecordIds(currentRecords, put) {
+	const wanted = new Set(put.map((r) => r.id))
+	const scopedPageIds = new Set(put.filter((r) => r.typeName === 'page').map((r) => r.id))
+	const shapesById = new Map(currentRecords.filter((r) => r.typeName === 'shape').map((r) => [r.id, r]))
+	const pageIdOf = (r) => (r.typeName === 'binding' ? shapesById.get(r.fromId)?.parentId : r.parentId)
+	return currentRecords
+		.filter((r) => (r.typeName === 'shape' || r.typeName === 'binding') && r.meta?.journey && !wanted.has(r.id))
+		.filter((r) => scopedPageIds.has(pageIdOf(r)))
+		.map((r) => r.id)
+}
+
 export async function renderToRoom({ path, room, selection, progress = null, api = API }) {
 	const model = loadJourney(path)
 	const roomId = room ?? model.journey
 
 	const put = buildAllPages(model, roomId, selection, progress)
-	const wanted = new Set(put.map((r) => r.id))
 
 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())
-	const currentDocument = current.snapshot?.documents?.find((d) => d.state.id === TLDOCUMENT_ID)?.state
+	const currentRecords = (current.snapshot?.documents ?? []).map((d) => d.state)
+	const currentDocument = currentRecords.find((r) => r.id === TLDOCUMENT_ID)
 	// Re-rendering projects the canonical YAML title into tldraw's native name.
 	const document = DocumentRecordType.create({ ...currentDocument, id: TLDOCUMENT_ID,
 		name: typeof model.title === 'string' ? model.title.trim() : '' })
-	// Preserve manually created pages.
-	const remove = (current.snapshot?.documents ?? [])
-		.map((d) => d.state)
-		.filter((r) => r.typeName === 'shape' && r.meta?.journey && !wanted.has(r.id))
-		.map((r) => r.id)
+	const remove = staleRecordIds(currentRecords, put)
 
 	const res = await fetch(`${api}/doc?room=${roomId}`, {
 		method: 'PATCH',

@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { buildJourneyBoard, buildAllPages } from './render.mjs'
+import { buildJourneyBoard, buildAllPages, staleRecordIds } from './render.mjs'
 import { fixtureModel } from './fixture.mjs'
 import { fitHeight, note, storyBorder } from './records.mjs'
 
@@ -90,4 +90,40 @@ test('story border geometry follows measured height and scale without moving the
 	assert.equal(storyBorder(note({ id: 'shape:plain', text: 'Plain note', x: 0, y: 0 })), null)
 	story.meta.journey.status = 'not-a-status'
 	assert.equal(storyBorder(story), null)
+})
+
+// Bit twice on 2026-09-21 (142 shapes, then 141): `--pages journey-board` computed
+// `remove` from every tagged shape in the room, not just the pages this render drew,
+// and wiped the story-map page it never touched.
+test('a partial redraw does not delete another page it did not draw', () => {
+	const full = buildAllPages(fixtureModel, null, ['story-map', 'journey-board'])
+	const storyMapPage = full.find((r) => r.typeName === 'page' && r.id === 'page:page')
+	const boardPage = full.find((r) => r.typeName === 'page' && r.id !== 'page:page')
+	const staleOnBoard = { id: 'shape:jm-stale', typeName: 'shape', type: 'geo', parentId: boardPage.id, meta: { journey: { nodeId: 'gone', kind: 'story-proof' } } }
+	const humanOnBoard = { id: 'shape:human-note', typeName: 'shape', type: 'note', parentId: boardPage.id, meta: {} }
+	const current = [...full, staleOnBoard, humanOnBoard]
+
+	const put = buildAllPages(fixtureModel, null, ['journey-board'])
+	const removed = staleRecordIds(current, put)
+
+	assert.ok(removed.includes('shape:jm-stale'), 'a stale shape on the redrawn page must go')
+	assert.ok(!removed.includes('shape:human-note'), 'an untagged human shape must survive')
+	for (const shape of full.filter((r) => r.typeName === 'shape' && r.parentId === storyMapPage.id)) {
+		assert.ok(!removed.includes(shape.id), `story-map shape ${shape.id} was wiped by a journey-board-only redraw`)
+	}
+})
+
+test('a partial redraw removes a stale question connector along with its bindings', () => {
+	const full = buildAllPages(fixtureModel, null, ['journey-board'])
+	const boardPage = full.find((r) => r.typeName === 'page')
+	const staleLink = { id: 'shape:jm-stale-link', typeName: 'shape', type: 'arrow', parentId: boardPage.id, meta: { journey: { nodeId: 'gone-q', kind: 'question-link', story: 'gone' } } }
+	const staleBindings = [
+		{ id: 'binding:jm-stale-link-from', typeName: 'binding', type: 'arrow', fromId: staleLink.id, toId: 'shape:jm-r1-story-b-see', meta: { journey: { nodeId: 'gone-q', kind: 'question-link', story: 'gone' } } },
+		{ id: 'binding:jm-stale-link-to', typeName: 'binding', type: 'arrow', fromId: staleLink.id, toId: 'shape:jm-stale-question', meta: { journey: { nodeId: 'gone-q', kind: 'question-link', story: 'gone' } } },
+	]
+	const current = [...full, staleLink, ...staleBindings]
+
+	const removed = staleRecordIds(current, buildAllPages(fixtureModel, null, ['journey-board']))
+	assert.ok(removed.includes(staleLink.id))
+	for (const binding of staleBindings) assert.ok(removed.includes(binding.id), `${binding.id} outlived the arrow it hung off`)
 })

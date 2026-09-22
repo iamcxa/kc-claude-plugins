@@ -289,9 +289,12 @@ node lib/journey-read.mjs   docs/journey/<slug>.yaml <roomId> --out <other.yaml>
 original alone; it writes the target even when nothing applied, because a caller who asked
 for a save-as should end up with that file.
 
-**Render is a reconcile.** Shapes the renderer owns that the model no longer produces
-are removed; shapes a person drew by hand carry no `meta.journey` and are never touched.
-A sticky someone added during a workshop survives every re-render.
+**Render is a reconcile, scoped to the pages drawn this call.** Shapes the renderer owns
+that the model no longer produces are removed; shapes a person drew by hand carry no
+`meta.journey` and are never touched. A sticky someone added during a workshop survives
+every re-render. `--pages journey-board` only reconciles journey-board pages — a
+story-map page this call did not draw is untouched, even though its shapes also carry
+`meta.journey`.
 
 **Wording round-trips across projections.** `lib/read.mjs` reads activity headings and
 story cards on the story map and release boards, plus legacy `step-card` records.
