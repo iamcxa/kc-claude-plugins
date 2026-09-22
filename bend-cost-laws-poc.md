@@ -28,6 +28,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:bend-cost-laws-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:bend-cost-laws-poc-validation-1
+              briefing:
+                id: briefing:bend-cost-laws-poc:validation:attempt-1:revision-1
+                digest: sha256:ef1f698f54d1d0e021d60f60f836e0ab145dca8549f25c1b05d2053f25d23f06
+                room-ref: ./bend-cost-laws-poc/review/validation/briefing-1
 started: 2026-09-22T01:53:09Z
 ---
 
