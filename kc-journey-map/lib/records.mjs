@@ -96,11 +96,15 @@ export const pageLink = (room, pageId) => `http://localhost:3737/?room=${room}&d
 const LINE_H = { s: 24, m: 32 }
 const CHARS_PER_100PX = { s: 8.7, m: 6.5 }
 
+// A CJK or fullwidth glyph occupies two of the character widths measured above.
+const WIDE = /[\u1100-\u115f\u2e80-\u303e\u3041-\u33ff\u3400-\u4dbf\u4e00-\u9fff\ua000-\ua4cf\ua960-\ua97f\uac00-\ud7a3\uf900-\ufaff\ufe10-\ufe19\ufe30-\ufe6f\uff00-\uff60\uffe0-\uffe6]/u
+const drawnWidth = (line) => [...line].reduce((w, glyph) => w + (WIDE.test(glyph) ? 2 : 1), 0)
+
 export function fitHeight(text, width, size = 's', padding = 40) {
 	const perLine = Math.max(8, Math.floor((width / 100) * CHARS_PER_100PX[size]))
 	const lines = String(text)
 		.split('\n')
-		.reduce((n, line) => n + Math.max(1, Math.ceil(line.length / perLine)), 0)
+		.reduce((n, line) => n + Math.max(1, Math.ceil(drawnWidth(line) / perLine)), 0)
 	return Math.ceil(lines * LINE_H[size] + padding)
 }
 
