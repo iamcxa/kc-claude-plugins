@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:bend-cost-laws-poc:backlog:attempt-1:revision-1",
+  "question": "Approve the recorded dev2 POC profile, 3600-second fixed budget, three cost laws, disposable Bend boundary and independent validation?",
+  "artifacts": [
+    {
+      "id": "artifact:bend-cost-laws-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/904b03e5b5809436e643296d6c467b259dfefd4c/bend-cost-laws-poc.md",
+      "rev": "sha256:cbecd8cade7d391df409ca103c8b8c7c50d9efe45385758c00c543e93dbcdb30",
+      "mediaType": "text/markdown",
+      "summary": "Kent selected dev2 POC and approved the three-law executable Bend cost experiment with a 60-minute total Cloud ceiling and fixed deadline 2026-09-22T02:36:36.984Z."
+    }
+  ]
+}

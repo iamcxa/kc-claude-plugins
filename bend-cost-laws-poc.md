@@ -6,6 +6,17 @@ profile: poc
 merge:
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:bend-cost-laws-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:bend-cost-laws-poc-backlog-1
+              briefing:
+                id: briefing:bend-cost-laws-poc:backlog:attempt-1:revision-1
+                digest: sha256:04e4ca3b19d9f838692a506fb7b4d11411cd3d8f5f9f4168284789711426cea7
+                room-ref: ./bend-cost-laws-poc/review/backlog/briefing-1
 ---
 
 Decide whether later PR-flow development should adopt a law-checked executable cost-decision component rather than relying only on schema-shaped summaries.
