@@ -1,6 +1,6 @@
 ---
 title: Prove executable Bend cost laws across the consumer boundary
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge:
@@ -27,7 +27,7 @@ gates:
                 reason: Kent answered 60 分鐘（建議） after already accepting dev2 POC and the three-law experiment; this accepts the recorded fixed budget and bounded implementation plus independent validation.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Decide whether later PR-flow development should adopt a law-checked executable cost-decision component rather than relying only on schema-shaped summaries.
