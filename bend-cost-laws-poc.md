@@ -1,6 +1,6 @@
 ---
 title: Prove executable Bend cost laws across the consumer boundary
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge:
