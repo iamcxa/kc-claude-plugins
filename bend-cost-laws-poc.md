@@ -17,6 +17,17 @@ gates:
                 id: briefing:bend-cost-laws-poc:backlog:attempt-1:revision-1
                 digest: sha256:04e4ca3b19d9f838692a506fb7b4d11411cd3d8f5f9f4168284789711426cea7
                 room-ref: ./bend-cost-laws-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:bend-cost-laws-poc:backlog:1
+                briefing: briefing:bend-cost-laws-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-22T01:52:10.972891257Z"
+                decision: approve
+                reason: Kent answered 60 分鐘（建議） after already accepting dev2 POC and the three-law experiment; this accepts the recorded fixed budget and bounded implementation plus independent validation.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Decide whether later PR-flow development should adopt a law-checked executable cost-decision component rather than relying only on schema-shaped summaries.
