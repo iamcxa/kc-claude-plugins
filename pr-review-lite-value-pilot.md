@@ -1975,3 +1975,27 @@ The net-neutral two-file successor closes the R5 failed-terminal accounting find
 ### Summary
 
 The complete two-file diff and one honest future-trial proposal are now durable without touching product bytes. Independent projection prevents a false parity claim and separates the already validated three-file correction commit from later budget implementation and paid launch; Pilot limits, consumed evidence and distinct authorities remain explicit.
+
+## Stage Report: implementation (cycle 31 — exact correction commit)
+
+- DONE: Reverify the owned product worktree root, branch, HEAD, status, and zero staged changes.
+  The exact owned root was `/home/vercel-sandbox/kc-claude-plugins/.worktrees/spacedock-ensign-pr-review-lite-value-pilot-r5-accounting-correction`; branch `spacedock-ensign/pr-review-lite-value-pilot-r5-accounting-correction` began at required HEAD `0d2e3164ccd2d60006688c5443717b818825a305`, zero staged, with only the two frozen scripts dirty.
+- DONE: Require the frozen script hashes and materialize only the already validated catalog blob.
+  Source/test SHA-256 reverified as `a7a5e169133d8a2ac70723508d35ef1661b1c1d885276488869393ec903cc5f2` / `0074f5b279edc4478b5ecbcb37962a78dd04ac7d1236809e1894d05d45d3665e`. The sole added worktree path was the one-line catalog correction, producing exact blob `10284f91b492e2eb144a821fa34b46603681fad0` and SHA-256 `630006b4351569d2674e2e0fb6229cd826c995624668ba4bc49d1d35571b1da9`.
+- DONE: Stage exactly the three authorized kc-pr-flow paths, pass the cached diff check, and require the supplied tree identities before commit.
+  Cached paths were only catalog/source/test; no unstaged path remained; `git diff --cached --check` exited 0. The staged tree/subtree were exactly `1922e7c86493f01923baa54824396ba9ffce25b4` / `3dc6c1f76c952f2b189006190fc9032d7cdbcfb4`, with numstat 1+/1-, 145+/143- and 149+/151-.
+- DONE: Commit with exact title and verify parent, commit tree, changed paths, hashes, and clean status.
+  Commit `b284bf30ba12c7c9a6b76b651d9da13ae29b35ea` has exact title `fix(kc-pr-flow): harden Lite provider custody and typed output`, parent `0d2e3164ccd2d60006688c5443717b818825a305`, tree/subtree `1922e7c8…` / `3dc6c1f7…`, exactly the three authorized paths and the required content hashes. Final product status is clean.
+- SKIPPED: Already-green test rerun, product push/PR/merge, marketplace/version/budget-policy edit, provider/model/JEV call, paid proof, claim, packet action and Bend research.
+  No byte drift was detected, so the dispatch explicitly required retaining prior independent PASS evidence rather than rerunning tests. Commit authority did not grant any delivery, budget or paid-launch authority.
+
+### Feedback Cycles
+
+#### Captain-authorized exact three-file correction commit — 2026-09-22 (no correction-round increment)
+
+- **Authority used:** only the already independently validated catalog/source/test projection was committed. The earlier preparation companions remain immutable snapshots of the pre-commit state.
+- **Boundary after commit:** budget allocation remains a separate future implementation decision; a fresh packet and any paid launch remain later separate decisions. Commit `b284bf30…` was not pushed and no PR was created.
+
+### Summary
+
+The validated Lite provider-custody correction is now one clean local three-file commit with exact supplied parent, tree, subtree, paths and hashes. Pilot evidence remains unchanged; product delivery, budget policy and paid proof remain outside this authorization.
