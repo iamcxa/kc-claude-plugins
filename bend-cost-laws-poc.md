@@ -57,3 +57,16 @@ Verified by: a deliberate unsafe or foreign dependency control whose exit status
 
 **AC-5**: The POC is bounded, reproducible and disposable.
 Verified by: exact source/toolchain/artifact hashes, elapsed breakdown, independent fresh-validator verdict, no owned process remaining, and an explicit statement of what is unproved.
+
+## Stage Report: implementation
+
+- DONE: Produce one disposable integrated path where recorded/synthetic terminal JSON is explicitly normalized, actual pinned-Bend checked pure logic runs, and the caller consumes its decision.
+  Code commit `edc803201c9417f299a3e7b503f3a6fd05229b17`; `node test.mjs` ran pinned Bend, then the JS caller parsed/asserted 1234 complete for failed review, 800 complete for a duplicate identity, and incomplete known-subtotal for unknown/ambiguous/invalid.
+- DONE: Demonstrate all three frozen laws plus retained-cost, dedup, and unknown-handling mutations that the proof/check or consumer assertion rejects; an unsafe exit-zero control must not qualify as proof.
+  Bend printed `All terms check.`; semantic mutants were rejected at `failed_review_retains_known`, `duplicate_identity_contributes_once`, and `unknown_is_incomplete`; the exit-zero no-Bend control lacked both required evidence signals. The 2026-09-22T02:05Z full run took real 1.533s.
+- DONE: Freeze exact source/toolchain/artifact hashes, timing, failed attempts, trust boundaries and cleanup before the fixed 2026-09-22T02:36:36.984Z deadline.
+  Freeze at 02:07:06Z: source `a49524265bdfa5753a4bf38e25f0574a705dd868`; archive `91c0e2640f8d2e3e73fd3dd62ed4d178ce9a6f7ce8f8980b4dc4abf7a6f9ccd4`; binary `d9c0dad1f77be6a13dd8dcc16aef4f59047a956a2744f25d5c220cb8de384693`; Base `e5639663177f2de93ef34867c029698aa4e68a98d46629f0b15452b67b99d798`; artifact commit `edc803201c9417f299a3e7b503f3a6fd05229b17`. Preflight 516.016s plus 1,313s resumed wall = 1,829.016s before freeze; no owned process remained at 02:07:58Z and task-local `.context` is retained only for validation, then removable with the disposable worktree.
+
+### Summary
+
+The provisional POC exercised pinned Bend 2.0.25 across the real generated-input Node consumer boundary without product/plugin edits, provider calls, credentials, delivery, or invoice/savings claims. Failed attempts are preserved: the initially assumed extracted path did not exist, `bend --version` is unsupported, and `/usr/bin/time` was absent; the successful route used the archive layout and shell timing. Fresh validation must decide whether same-ID conflicting valid costs (`8.00` then `99.00`) make the current first-wins `complete:true` decision ambiguous, and must challenge the weak unsafe control with otherwise valid-looking fabricated Bend/consumer evidence; unproved boundaries also include JS/JSON/string identity, the prebuilt compiler and source-to-binary provenance, process/stdout parsing, arbitrary receipt counts, provider truth, currency, and production integration.
