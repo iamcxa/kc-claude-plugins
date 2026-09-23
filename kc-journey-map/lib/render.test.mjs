@@ -271,7 +271,7 @@ test('a removed story takes its nested status border with it', () => {
 	assert.ok(removed.includes('shape:sm-story-a-0-status-border'), 'the border outlived the story it was drawn on')
 })
 
-test('every record validates against the tldraw schema, including the story map\'s question connectors', () => {
+test('every record validates against the tldraw schema', () => {
 	const model = structuredClone(fixtureModel)
 	model.steps[0].stories[0].questions = ['a', 'b', 'c', 'd', 'e', 'f'].map((id, k) => ({ id, ask: `Question ${k}`, status: ['open', 'answered', 'deferred'][k % 3], because: 'because' }))
 	const schema = createTLSchema()
@@ -282,10 +282,6 @@ test('every record validates against the tldraw schema, including the story map\
 		for (const r of records) {
 			assert.ok(schema.types[r.typeName], `${selection.join(',')}: unknown typeName "${r.typeName}" on ${r.id}`)
 			assert.doesNotThrow(() => schema.types[r.typeName].validate(r), `${selection.join(',')}: ${r.typeName} ${r.id} failed schema validation`)
-		}
-		if (selection.includes('story-map')) {
-			assert.ok(records.some((r) => r.type === 'arrow'), `${selection.join(',')} drew no connector arrow for a 6-question story`)
-			assert.ok(records.some((r) => r.typeName === 'binding'), `${selection.join(',')} drew no binding for a 6-question story`)
 		}
 	}
 })

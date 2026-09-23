@@ -17,7 +17,6 @@ test('the story map draws every element the method calls for', () => {
 		'activity',
 		'story',
 		'story-border', 'status-legend',
-		'question',
 		'ownership',
 		'release-line',
 		'release-label',
@@ -107,66 +106,23 @@ test('story map borders all three states and counts exists alone', () => {
 
 // Measured on a real board before the fix: 170px of 200 hidden, the card on top.
 // A question is a note, with no props.w/h of its own — its footprint is the same
-// nominal size 's' square the generator reserves space for everywhere else.
 const spans = (r) => ({ x1: r.x, y1: r.y, x2: r.x + NOTE_SIZE.s, y2: r.y + NOTE_SIZE.s })
 const overlap = (a, b) => Math.min(a.x2, b.x2) - Math.max(a.x1, b.x1) > 1 && Math.min(a.y2, b.y2) - Math.max(a.y1, b.y1) > 1
 
-test('a question never renders underneath another story card', () => {
-	const questions = kindOf(buildStoryMap(model), 'question')
-	assert.ok(questions.length, 'fixture draws no question, so this proves nothing')
-	const cards = kindOf(buildStoryMap(model), 'story').map((s) => ({ id: s.meta.journey.nodeId, box: { x1: s.x, y1: s.y, x2: s.x + 200, y2: s.y + 200 + s.props.growY } }))
-	for (const q of questions) {
-		const hit = cards.find((c) => c.id !== q.meta.journey.story && overlap(spans(q), c.box))
-		assert.equal(hit, undefined, `question on ${q.meta.journey.story} is covered by story ${hit?.id}`)
+// The story map is the whole journey's definition — persona, activities, stories and
+// release slices. Questions and answers are detail for a zoomed-in release board, so the
+// story map draws none of them, whatever the stories carry.
+test('the story map draws no question, answer or connector, even when stories carry questions', () => {
+	const withQuestions = structuredClone(model)
+	withQuestions.steps[1].stories[0].questions = [
+		{ id: 'q1', ask: 'Open one' },
+		{ id: 'q2', ask: 'Settled one', answer: 'Push, per the ADR.', doc: 'https://example.com/adr#q1' },
+	]
+	const put = buildStoryMap(withQuestions)
+	for (const kind of ['question', 'answer', 'question-link', 'answer-link']) {
+		assert.equal(kindOf(put, kind).length, 0, `story map drew a ${kind}`)
 	}
-})
-
-test('a question is drawn under its own story, in its own column', () => {
-	const put = buildStoryMap(model)
-	for (const q of kindOf(put, 'question')) {
-		const own = byId(put, `shape:sm-story-${q.meta.journey.story}`)
-		assert.equal(q.x, own.x, `question on ${q.meta.journey.story} is not in its story's column`)
-		assert.ok(q.y >= own.y + 200, `question on ${q.meta.journey.story} does not sit below its story`)
-	}
-})
-
-test('an answered question is a note directly under its question note, bound by a connector', () => {
-	const withAnswer = structuredClone(model)
-	withAnswer.steps[1].stories[0].questions = [{ id: 'q1', ask: 'Should delivery be push or pull?', answer: 'Push, per the ADR.', doc: 'https://example.com/adr#q1' }]
-	delete withAnswer.steps[1].stories[0].question
-	const put = buildStoryMap(withAnswer)
-	const q = kindOf(put, 'question')[0]
-	const a = kindOf(put, 'answer')[0]
-	assert.equal(q.type, 'note')
-	assert.equal(a.type, 'note')
-	assert.equal(a.props.color, 'light-blue')
-	assert.equal(a.props.url, 'https://example.com/adr#q1')
-	assert.equal(a.x, q.x)
-	assert.ok(a.y > q.y)
-
-	const link = put.find((r) => r.type === 'arrow' && r.meta?.journey?.kind === 'answer-link')
-	assert.ok(link, 'no connector drawn between the question and its answer')
-	const bindings = put.filter((r) => r.typeName === 'binding' && r.fromId === link.id)
-	assert.deepEqual(new Set(bindings.map((b) => b.toId)), new Set([q.id, a.id]))
-})
-
-// A question is a note now, so its rendered height is a runtime concern (growY) the
-// generator does not compute from text length — unlike the old geo card, a long
-// question no longer grows the row itself. What still holds: the row below an
-// answered question clears both the question's and its answer's nominal footprint.
-test('the row below a story clears its questions, and an answered one clears its answer too', () => {
-	const tall = {
-		releases: [{ id: 'r', name: 'Release' }],
-		steps: [{ id: 'a', card: 'Act', stories: [
-			{ id: 'q', card: 'Asks', release: 'r', status: 'gap', questions: [{ id: 'q1', ask: 'x'.repeat(400), answer: 'y'.repeat(400) }] },
-			{ id: 'below', card: 'Next', release: 'r', status: 'gap' },
-		] }],
-	}
-	const put = buildStoryMap(tall)
-	const q = kindOf(put, 'question')[0]
-	const a = kindOf(put, 'answer')[0]
-	assert.ok(a.y > q.y, "the answer sits below its own question")
-	assert.ok(byId(put, 'shape:sm-story-below').y > a.y + NOTE_SIZE.s, 'the next row starts inside the answer box')
+	assert.equal(put.filter((r) => r.type === 'arrow' || r.typeName === 'binding').length, 0, 'story map drew a connector')
 })
 
 // Every other box on the page takes its height from fitHeight; the banner took a

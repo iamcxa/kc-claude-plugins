@@ -1,6 +1,6 @@
 
-import { fitHeight, indexes, label, page, releaseLine, withStoryStatus, releaseProgressText, connector, connectorBindings, activityCard, storyCard, questionCard, answerCard, NOTE_SIZE } from './records.mjs'
-import { normalizeStory, isQuestionAnswered } from './model.mjs'
+import { fitHeight, indexes, label, page, releaseLine, withStoryStatus, releaseProgressText, connector, activityCard, storyCard, NOTE_SIZE } from './records.mjs'
+import { normalizeStory } from './model.mjs'
 
 const PITCH = 240
 const X0 = 300
@@ -11,7 +11,6 @@ const Y_PERSONA = 40
 const BAND_H = 60
 const STORY_PITCH = 250
 const STORY_H = NOTE_SIZE.m
-const QUESTION_GAP = 10
 const GAP = 40
 
 export const STORY_PAGE_ID = 'page:page'
@@ -27,8 +26,7 @@ export function buildStoryMap(model, room = null, progress = null) {
 	// Each question needs 2 index slots (card + connector arrow), and an answered one
 	// needs 2 more (its own card + connector); bindings need none.
 	const allStories = steps.flatMap((step) => (step.stories ?? []).map((story, j) => normalizeStory(step, story, j)))
-	const questionSlots = allStories.reduce((sum, s) => sum + (s.questions ?? []).reduce((qs, q) => qs + 2 + (isQuestionAnswered(q) ? 2 : 0), 0), 0)
-	const ix = indexes(Math.max(24, steps.length * (maxStories + 4) + (model.releases?.length ?? 0) * 2 + 24) + questionSlots)
+	const ix = indexes(Math.max(24, steps.length * (maxStories + 4) + (model.releases?.length ?? 0) * 2 + 24))
 	let n = 0
 
 	const nowTexts = (model.now ?? []).map((item) =>
@@ -153,25 +151,15 @@ export function buildStoryMap(model, room = null, progress = null) {
 			meta: tag(band.id ?? 'unassigned', 'release-label'),
 		})
 
-		// A note has no computed height; each question reserves its own and its answer's
-		// nominal footprint (size 's'), stacked in one column below the story.
-		const questionsHeight = (story) => (story?.questions ?? []).reduce((h, q, k) =>
-			h + (k ? QUESTION_GAP : 0) + NOTE_SIZE.s + (isQuestionAnswered(q) ? QUESTION_GAP + NOTE_SIZE.s : 0), 0)
 		const perColumn = new Map()
 		for (const story of band.stories) {
 			const list = perColumn.get(story.step.id) ?? []
 			list.push(story)
 			perColumn.set(story.step.id, list)
 		}
-		// Beside the card puts the question in the next column's lane, where that column's
-		// card covers it and the surviving sliver reads as the neighbour's question.
 		const rows = Math.max(1, ...[...perColumn.values()].map((l) => l.length))
-		const columns = [...perColumn.values()]
 		const rowTop = [bandTop]
-		for (let j = 0; j < rows; j++) {
-			const q = Math.max(0, ...columns.map((l) => questionsHeight(l[j])))
-			rowTop.push(rowTop[j] + STORY_PITCH + (q ? q + QUESTION_GAP : 0))
-		}
+		for (let j = 0; j < rows; j++) rowTop.push(rowTop[j] + STORY_PITCH)
 
 		for (const [stepId, list] of perColumn) {
 			const i = steps.findIndex((s) => s.id === stepId)
@@ -180,37 +168,6 @@ export function buildStoryMap(model, room = null, progress = null) {
 				const y = rowTop[j]
 				const storyShapeId = `shape:sm-story-${story.id}`
 				put.push(storyCard({ id: storyShapeId, story, x, y, index: ix[n++], parentId, progress, model }))
-
-				// Questions stack in one column below the story; each answered question's
-				// answer sits directly beneath it, before the next question.
-				let qy = y + STORY_H + QUESTION_GAP
-				for (const question of story.questions ?? []) {
-					const questionId = `shape:sm-question-${story.id}-${question.id}`
-					put.push(questionCard({ id: questionId, question, story: story.id, x, y: qy, index: ix[n++], parentId }))
-					const linkId = `shape:sm-qlink-${story.id}-${question.id}`
-					put.push({
-						...connector({ id: linkId, parentId, index: ix[n++], color: 'grey' }),
-						meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
-					})
-					put.push(...connectorBindings(linkId, storyShapeId, questionId).map((b) => ({
-						...b, meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
-					})))
-					qy += NOTE_SIZE.s + QUESTION_GAP
-
-					if (isQuestionAnswered(question)) {
-						const answerId = `shape:sm-answer-${story.id}-${question.id}`
-						put.push(answerCard({ id: answerId, question, story: story.id, x, y: qy, index: ix[n++], parentId }))
-						const alinkId = `shape:sm-alink-${story.id}-${question.id}`
-						put.push({
-							...connector({ id: alinkId, parentId, index: ix[n++], color: 'grey' }),
-							meta: { journey: { nodeId: question.id, kind: 'answer-link', story: story.id } },
-						})
-						put.push(...connectorBindings(alinkId, questionId, answerId).map((b) => ({
-							...b, meta: { journey: { nodeId: question.id, kind: 'answer-link', story: story.id } },
-						})))
-						qy += NOTE_SIZE.s + QUESTION_GAP
-					}
-				}
 			})
 		}
 
