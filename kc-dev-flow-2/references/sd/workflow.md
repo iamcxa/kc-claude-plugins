@@ -71,12 +71,14 @@ direction alignment with the Captain is needed before the next declared stage
 and why; a
 stated reason is the whole record when not needed. On the five-stage route, FO
 also records a `Surfaces:` line under the same heading: any of `ui`, `db`,
-or `none`, read from the change surface rather than the diff.
+or `none`, read from the change surface rather than the diff, and next to it
+a `Visible change:` line: one sentence on what a user sees or operates
+differently, or `Visible change: none`.
 
 - **Gate content:** Show the selected variant/profile, proposed outcome, scope,
   exclusions and evidence needed before the next declared stage starts, the
-  `## FO alignment` need and reason, and the recorded `Surfaces:` line on the
-  five-stage route.
+  `## FO alignment` need and reason, and the recorded `Surfaces:` and
+  `Visible change:` lines on the five-stage route.
 
 ### `ideation`
 
@@ -94,9 +96,12 @@ substitution.
 - **Gate content:** Present PRFAQ/Mermaid with matching actors, order, branches,
   approvals and stops, acceptance evidence/limits, and each recorded
   `Surfaces:` value's artifact. The gate is not presentable without the
-  artifact each recorded surface owes. Required diagram defects or missing
-  current-stage evidence block recommendation and gate preparation/presentation;
-  honest unverified future checks do not.
+  artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
+  `python3 <package>/scripts/design_surfaces.py check <task>`; a non-zero exit
+  means the gate is not presentable, and FO includes the checker's output in
+  the gate material. Required diagram defects or missing current-stage
+  evidence block recommendation and gate preparation/presentation; honest
+  unverified future checks do not.
   FO may correct design prose/Mermaid to reflect established decisions under an
   actual Captain grant covering that task's exact design section; reuse a matching
   standing grant. Template adoption grants no authority. Record the decision basis;

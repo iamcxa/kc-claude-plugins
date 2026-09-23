@@ -125,7 +125,8 @@ FO leads direction and requests research only when it can change a decision;
 workers author the bounded deliverable. For a route that includes ideation,
 use a PRFAQ with Mermaid whose actors, order, branches and approval boundaries
 match the prose. FO's recorded `Surfaces:` line picks the owed artifact: a `ui`
-preview, a `db` schema, or `none` for PRFAQ/Mermaid alone.
+preview, a `db` schema, or `none` for PRFAQ/Mermaid alone; `scripts/design_surfaces.py`
+checks the markers and artifacts are actually present before the gate.
 Write material corrections back to the same definition before user approval.
 Implementation follows approved scope; validation checks the exact result and
 returns repairs through the supported feedback route. POC must not gain
@@ -240,6 +241,7 @@ and its dependencies. Run from a complete checkout's repository root:
 python3 kc-dev-flow-2/scripts/lint-skills.py
 python3 kc-dev-flow-2/scripts/test_lint_skills.py
 python3 kc-dev-flow-2/scripts/test_learning.py
+python3 kc-dev-flow-2/scripts/test_design_surfaces.py
 python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /absolute/path/to/active-spacedock
 ```
 

@@ -3,9 +3,9 @@
 FO owns goal and direction alignment. Before design, check `## FO alignment` in
 the task file; when the heading is absent, when it records alignment as needed
 with no `Result:` line, or when the route includes ideation and records no
-`Surfaces:` line, stop and report instead of starting the design. Ask for
-research when missing facts can change the decision; the worker authors the
-requested artifact, not user approval.
+`Surfaces:` or no `Visible change:` line, stop and report instead of starting
+the design. Ask for research when missing facts can change the decision; the
+worker authors the requested artifact, not user approval.
 Prefer the smallest working mechanism for the accepted goal. Before proposing an
 existing-code capability change, apply the [bounded existing-code check](../implementation/principles.md#existing-code-capability-check);
 use or repair what exists before adding a replacement. Record its conclusion in
@@ -14,14 +14,16 @@ Use one PRFAQ with a future-facing proposition, short FAQ and acceptance evidenc
 plan. Mermaid must match the prose's actors, order, alternatives and stops.
 Each recorded `Surfaces:` value owes its own artifact, fidelity before prettiness:
 - `ui` (a person sees or operates it; read from the surface, not the diff) —
-  a short text proposal first, then a preview of it, run and operable for an
-  interactive surface rather than a static screenshot; use a mechanism the
-  repository already has, mark it disposable, and add no online resource
-  without Captain approval.
+  a `UI proposal:` line with the short text proposal first, then a `Preview:`
+  line naming the preview, run and operable for an interactive surface rather
+  than a static screenshot; use a mechanism the repository already has, mark
+  it disposable, and add no online resource without Captain approval.
 - `db` (schema, migration or row-level security change) — the schema change
   shown explicitly (a column table, or a Mermaid `erDiagram` when relations
-  change) and the migration source of truth named.
-`none` uses the PRFAQ/Mermaid alone. The gate is not presentable without the
+  change) and a `Migration source:` line naming the migration source of truth.
+`none` uses the PRFAQ/Mermaid alone. Before reporting, run
+`python3 <package>/scripts/design_surfaces.py check <task>` and cite its
+output in the Stage Report. The gate is not presentable without the
 artifact each recorded surface owes. Reconcile material research and feedback
 into the same definition before handoff. Correct contradictions in depicted or
 required boundaries and missing current-stage evidence before reporting completion;
