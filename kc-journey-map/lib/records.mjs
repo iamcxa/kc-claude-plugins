@@ -170,7 +170,7 @@ export function questionCard({ id, question, story, x, y, index, parentId }) {
 // hand-drawn sample this shape's construction was read from.
 export function answerCard({ id, question, story, x, y, index, parentId }) {
 	return {
-		...note({ id, text: question.answer ?? '', x, y, index, parentId, color: 'light-blue', size: 's', url: question.doc ?? '' }),
+		...note({ id, text: question.answer ?? '', x, y, index, parentId, color: 'light-violet', size: 's', url: question.doc ?? '' }),
 		meta: { journey: { nodeId: question.id, kind: 'answer', story } },
 	}
 }

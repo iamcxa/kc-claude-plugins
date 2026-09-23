@@ -15,10 +15,13 @@ test('release boards show exactly the selected stories in yellow, grouped by gre
 	assert.deepEqual(stories.map((s) => s.meta.journey.nodeId), ['a-0', 'a-2', 'b-see', 'c-read'])
 	assert.ok(stories.every((s) => s.props.color === 'yellow'))
 	assert.ok(kind(records, 'activity').every((s) => s.props.color === 'green'))
-	// The activity note has no props.w of its own; the flow card still spans the group's
-	// full width, so it is the group-span reference the stories are checked against.
+	// Every card on the board is a note; a step's flow card sits in its activity's column,
+	// and that step's stories start there.
 	const flowA = kind(records, 'flow').find((f) => f.meta.journey.nodeId === 'a')
-	assert.ok(stories.slice(0, 2).every((s) => s.x >= flowA.x && s.x + 200 <= flowA.x + flowA.props.w))
+	const activityA = kind(records, 'activity').find((f) => f.meta.journey.nodeId === 'a')
+	assert.equal(flowA.type, 'note')
+	assert.equal(flowA.x, activityA.x)
+	assert.ok(stories.slice(0, 2).every((s) => s.x >= activityA.x))
 })
 
 test('an activity or story card is structurally identical between the story map and the release board for the same node', () => {
@@ -62,11 +65,11 @@ test('a flow card is drawn once per system: line and a constraint card once per 
 
 	const flowA = kind(records, 'flow').find((s) => s.meta.journey.nodeId === 'a')
 	assert.equal(text(flowA), 'Calls the shared service')
-	assert.deepEqual([flowA.props.color, flowA.props.fill], ['light-blue', 'solid'])
+	assert.deepEqual([flowA.type, flowA.props.color], ['note', 'light-blue'])
 
 	const constraintA = kind(records, 'constraint').find((s) => s.meta.journey.nodeId === 'a')
 	assert.equal(text(constraintA), 'One unique name')
-	assert.deepEqual([constraintA.props.color, constraintA.props.fill], ['orange', 'solid'])
+	assert.deepEqual([constraintA.type, constraintA.props.color], ['note', 'orange'])
 
 	const flowB = kind(records, 'flow').find((s) => s.meta.journey.nodeId === 'b')
 	assert.equal(text(flowB), 'No system flow recorded.')
@@ -122,7 +125,7 @@ test('an answered question draws an answer note to its right on the same row; an
 
 	const answered = answerById('q-answered')
 	assert.equal(answered.type, 'note')
-	assert.equal(answered.props.color, 'light-blue')
+	assert.equal(answered.props.color, 'light-violet')
 	assert.equal(text(answered), 'It is the owner.')
 	assert.equal(answered.y, questionById('q-answered').y, 'the answer sits on its own question\'s row')
 	assert.ok(answered.x > questionById('q-answered').x, 'the answer sits to the right of its question')
@@ -147,10 +150,10 @@ test('long lines have fitted flow/constraint cards, and cards stack top to botto
 	model.rules = [{ id: 'long', text: 'A constraint. '.repeat(70) }]
 	model.steps[0].rules = ['long']
 	const records = buildJourneyBoard(model)
-	// Only flow/constraint/status/legend cards are geo and fitHeight-measured — activity,
-	// story, question and answer are notes with a fixed nominal footprint instead.
+	// Boxes (the header and status) are sized to their text; every note grows to its text.
 	const boxes = records.filter((s) => s.type === 'geo' && text(s))
 	for (const s of boxes) assert.ok(s.props.h >= fitHeight(text(s), s.props.w), `${s.id} is too short`)
+	const height = (s) => s.type === 'note' ? 200 + s.props.growY : s.props.h
 
 	const activities = kind(records, 'activity')
 	const flows = kind(records, 'flow')
@@ -158,8 +161,8 @@ test('long lines have fitted flow/constraint cards, and cards stack top to botto
 	const stories = kind(records, 'story')
 	const questions = kind(records, 'question')
 	assert.ok(Math.max(...activities.map((s) => s.y)) + NOTE_SIZE.m <= Math.min(...flows.map((s) => s.y)))
-	assert.ok(Math.max(...flows.map((s) => s.y + s.props.h)) <= Math.min(...constraints.map((s) => s.y)))
-	assert.ok(Math.max(...constraints.map((s) => s.y + s.props.h)) < Math.min(...stories.map((s) => s.y)))
+	assert.ok(Math.max(...flows.map((s) => s.y + height(s))) <= Math.min(...constraints.map((s) => s.y)))
+	assert.ok(Math.max(...constraints.map((s) => s.y + height(s))) < Math.min(...stories.map((s) => s.y)))
 	assert.ok(Math.max(...stories.map((s) => s.y)) + NOTE_SIZE.m < Math.min(...questions.map((s) => s.y)))
 })
 
@@ -184,13 +187,17 @@ test('both projections border all three states and count exists alone; the relea
 	// also carry withStoryStatus's separate horizontal legend.
 	assert.equal(kind(records, 'status-legend').length, 0)
 	const legend = kind(records, 'board-legend')
-	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'status-exists' && s.props.color === 'green'))
-	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'status-gap' && s.props.color === 'red'))
-	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'status-unverified' && s.props.color === 'violet'))
+	// The legend is made of the board's own cards: a shrunken note per kind, and for each
+	// status a shrunken story note wearing that status's border.
+	assert.ok(legend.every((s) => s.type === 'note'), 'a legend entry is not a note')
+	const legendBorder = (id) => kind(records, 'board-legend-border').find((b) => b.meta.journey.nodeId === id)
+	assert.equal(legendBorder('status-exists').props.color, 'green')
+	assert.equal(legendBorder('status-gap').props.color, 'red')
+	assert.equal(legendBorder('status-unverified').props.color, 'violet')
 	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'flow' && s.props.color === 'light-blue'))
 	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'constraint' && s.props.color === 'orange'))
 	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'question' && s.props.color === 'light-green'))
-	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'answer' && s.props.color === 'light-blue'))
+	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'answer' && s.props.color === 'light-violet'))
 
 	for (const page of buildAllPages(model, null, ['story-map', 'journey-board']).filter((r) => r.typeName === 'page')) {
 		const all = buildAllPages(model, null, ['story-map', 'journey-board'])

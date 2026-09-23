@@ -4,7 +4,7 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { DocumentRecordType, TLDOCUMENT_ID } from '@tldraw/tlschema'
-import { fitHeight, indexes, label, page, pageLink, releaseLine, withStoryStatus, releaseProgressText, connector, connectorBindings, activityCard, storyCard, questionCard, answerCard, NOTE_SIZE } from './records.mjs'
+import { fitHeight, indexes, label, page, pageLink, releaseLine, withStoryStatus, releaseProgressText, connector, connectorBindings, activityCard, storyCard, questionCard, answerCard, note, storyBorder, NOTE_SIZE } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
 import { normalizeStory, isQuestionAnswered } from './model.mjs'
@@ -31,16 +31,17 @@ const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 // colour or an outline means. Whether a question is answered is shown by whether an
 // answer card hangs under it, not by this legend or the question card itself.
 const BOARD_LEGEND = [
-	{ nodeId: 'activity', text: 'ACTIVITY', color: 'green', extra: {} },
-	{ nodeId: 'flow', text: 'FLOW — one card per system: line', color: 'light-blue', extra: { fill: 'solid' } },
-	{ nodeId: 'constraint', text: 'CONSTRAINT — one card per rule', color: 'orange', extra: { fill: 'solid' } },
-	{ nodeId: 'story', text: 'STORY', color: 'yellow', extra: { fill: 'solid' } },
-	{ nodeId: 'question', text: 'QUESTION', color: 'light-green', extra: { fill: 'solid' } },
-	{ nodeId: 'answer', text: 'ANSWER — hangs under an answered question', color: 'light-blue', extra: { fill: 'solid' } },
-	{ nodeId: 'status-exists', text: 'STORY BORDER: EXISTS', color: 'green', extra: { dash: 'solid' } },
-	{ nodeId: 'status-gap', text: 'STORY BORDER: GAP', color: 'red', extra: { dash: 'solid' } },
-	{ nodeId: 'status-unverified', text: 'STORY BORDER: UNVERIFIED', color: 'violet', extra: { dash: 'solid' } },
+	{ nodeId: 'activity', text: 'ACTIVITY', color: 'green' },
+	{ nodeId: 'flow', text: 'FLOW', color: 'light-blue' },
+	{ nodeId: 'constraint', text: 'CONSTRAINT', color: 'orange' },
+	{ nodeId: 'story', text: 'STORY', color: 'yellow' },
+	{ nodeId: 'question', text: 'QUESTION', color: 'light-green' },
+	{ nodeId: 'answer', text: 'ANSWER', color: 'light-violet' },
+	{ nodeId: 'status-exists', text: 'EXISTS', color: 'yellow', status: 'exists' },
+	{ nodeId: 'status-gap', text: 'GAP', color: 'yellow', status: 'gap' },
+	{ nodeId: 'status-unverified', text: 'UNVERIFIED', color: 'yellow', status: 'unverified' },
 ]
+const LEGEND_SCALE = 0.45
 
 // Shared activity rules are context, not proof that each story exists.
 export const boardPageId = (releaseId) => (releaseId ? `page:jm-board-${releaseId}` : 'page:jm-board-all')
@@ -104,17 +105,28 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	// replaces — a short activity's cards just leave blank space, not a row that creeps
 	// up under a neighbour's taller stack.
 	const flowY = activityH + GAP
-	const flowH = Math.max(60, ...groups.map((g) => stackHeight(flowLines(g.step), g.w)))
+	const noteStack = (lines) => lines.reduce((h, l, k) => h + (k ? QUESTION_GAP : 0) + NOTE_W + note({ id: 'shape:m', text: l, x: 0, y: 0, size: 's' }).props.growY, 0)
+	const flowH = Math.max(60, ...groups.map((g) => noteStack(flowLines(g.step))))
 	const constraintY = flowY + flowH + GAP
-	const constraintH = Math.max(60, ...groups.map((g) => stackHeight(constraintLines(g.step), g.w)))
+	const constraintH = Math.max(60, ...groups.map((g) => noteStack(constraintLines(g.step))))
 	const storyY = constraintY + constraintH + GAP
 
-	let ly = 0
-	for (const entry of BOARD_LEGEND) {
-		const h = fitHeight(entry.text, LANE_W)
-		box(`legend-${entry.nodeId}`, entry.nodeId, 'board-legend', entry.text, LANE_X, ly, LANE_W, h, entry.color, entry.extra)
-		ly += h + 6
-	}
+	// The legend is made of the board's own cards, shrunk, so reading it is the same as
+	// reading the board: a sample note per kind, and a sample story for each status border.
+	BOARD_LEGEND.forEach((entry, k) => {
+		const side = 200 * LEGEND_SCALE
+		const lx = LANE_X + (k % 2) * (side + 10)
+		const ly = Math.floor(k / 2) * (side + 10)
+		const sample = { ...note({ id: `${idp}legend-${entry.nodeId}`, text: entry.text, x: lx, y: ly, index: ix[n++], parentId, color: entry.color, size: 's' }),
+			meta: { journey: { nodeId: entry.nodeId, kind: 'board-legend', ...(entry.status ? { status: entry.status } : {}) } } }
+		sample.props.scale = LEGEND_SCALE
+		sample.props.growY = 0
+		put.push(sample)
+		if (entry.status) {
+			const border = storyBorder({ ...sample, meta: { journey: { kind: 'story', nodeId: entry.nodeId, status: entry.status } } })
+			put.push({ ...border, id: `${sample.id}-border`, meta: { journey: { kind: 'board-legend-border', nodeId: entry.nodeId } } })
+		}
+	})
 
 	for (const group of groups) {
 		const { step, stories, x, w } = group
@@ -122,21 +134,19 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		// differently. Left-aligned on the group, unlike the flow/constraint cards below it
 		// which still span the group's full width — this is the release board's own
 		// addition, not shared with the story map.
-		put.push(activityCard({ id: `${idp}card-${step.id}`, step, x, y: 0, index: ix[n++], parentId }))
+		put.push(activityCard({ id: `${idp}card-${step.id}`, step, x: x + 10, y: 0, index: ix[n++], parentId }))
 
-		let fy = flowY
-		flowLines(step).forEach((line, k) => {
-			const h = fitHeight(line, w)
-			box(`flow-${step.id}-${k}`, step.id, 'flow', line, x, fy, w, h, 'light-blue', { fill: 'solid' })
-			fy += h + QUESTION_GAP
-		})
-
-		let cy = constraintY
-		constraintLines(step).forEach((line, k) => {
-			const h = fitHeight(line, w)
-			box(`constraint-${step.id}-${k}`, step.id, 'constraint', line, x, cy, w, h, 'orange', { fill: 'solid' })
-			cy += h + QUESTION_GAP
-		})
+		const stack = (lines, kind, color, top) => {
+			let y = top
+			lines.forEach((line, k) => {
+				const card = { ...note({ id: `${idp}${kind}-${step.id}-${k}`, text: line, x: x + 10, y, index: ix[n++], parentId, color, size: 's' }),
+					meta: tag(step.id, kind) }
+				put.push(card)
+				y += NOTE_W + card.props.growY + QUESTION_GAP
+			})
+		}
+		stack(flowLines(step), 'flow', 'light-blue', flowY)
+		stack(constraintLines(step), 'constraint', 'orange', constraintY)
 
 		if (!stories.length) {
 			box(`empty-${step.id}`, step.id, 'empty-stories', 'No stories recorded.', x, storyY, w, NOTE_SIZE.m, 'grey')
