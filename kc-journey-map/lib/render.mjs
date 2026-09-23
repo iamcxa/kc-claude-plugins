@@ -122,7 +122,8 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		sample.props.scale = LEGEND_SCALE
 		sample.props.growY = 0
 		if (entry.box) {
-			box(`legend-${entry.nodeId}`, entry.nodeId, 'board-legend', entry.text, lx, ly, side, side, entry.color, { fill: 'semi' })
+			box(`legend-${entry.nodeId}`, entry.nodeId, 'board-legend', entry.text, lx, ly, side, side, entry.color, { fill: 'semi', align: 'middle', verticalAlign: 'middle' })
+			put[put.length - 1].props.scale = LEGEND_SCALE
 			return
 		}
 		put.push(sample)
