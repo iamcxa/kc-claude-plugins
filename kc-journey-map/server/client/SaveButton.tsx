@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react'
 import { serializeTldrawJson, useEditor } from 'tldraw'
 
-// `targetUp` is absent from an older server; unknown must not read as down.
-type Status = { running: boolean; url: string | null; targetUp?: boolean }
-
-// A shared page gets the SPA fallback HTML here, so the content type decides, not the status.
+// A viewer front-end answers with the SPA fallback HTML here, so the content type decides.
 async function call<T>(path: string, method: 'GET' | 'POST' | 'DELETE', body?: unknown): Promise<T | null> {
 	try {
 		const res = await fetch(path, {
@@ -22,16 +19,16 @@ async function call<T>(path: string, method: 'GET' | 'POST' | 'DELETE', body?: u
 	}
 }
 
-export function ShareButton({ roomId }: { roomId: string }) {
+export function SaveButton({ roomId }: { roomId: string }) {
 	const editor = useEditor()
-	const [status, setStatus] = useState<Status | null>(null)
 	const [busy, setBusy] = useState(false)
 	const [note, setNote] = useState<string | null>(null)
 	const [name, setName] = useState<string | null>(null)
 	const [exists, setExists] = useState(false)
+	const [canSave, setCanSave] = useState(false)
 
 	useEffect(() => {
-		call<Status>('/tunnel', 'GET').then(setStatus).catch(() => setStatus(null))
+		call<{ dir: string }>('/save', 'GET').then((r) => setCanSave(r !== null)).catch(() => setCanSave(false))
 	}, [])
 
 	useEffect(() => {
@@ -41,7 +38,7 @@ export function ShareButton({ roomId }: { roomId: string }) {
 			.catch(() => setExists(false))
 	}, [name])
 
-	if (!status) return null
+	if (!canSave) return null
 
 	const guard = async (work: () => Promise<void>) => {
 		setBusy(true)
@@ -54,19 +51,6 @@ export function ShareButton({ roomId }: { roomId: string }) {
 			setBusy(false)
 		}
 	}
-
-	const toggleTunnel = () =>
-		guard(async () => {
-			const next = await call<Status>('/tunnel', status.running ? 'DELETE' : 'POST')
-			if (next) setStatus(next)
-		})
-
-	const copy = () =>
-		guard(async () => {
-			if (!status.url) return
-			await navigator.clipboard.writeText(status.url)
-			setNote('link copied')
-		})
 
 	const download = () =>
 		guard(async () => {
@@ -117,20 +101,6 @@ export function ShareButton({ roomId }: { roomId: string }) {
 					</button>
 				</>
 			)}
-			{status.running && status.url && (
-				<>
-					<span style={{ fontSize: 11, userSelect: 'all', opacity: 0.8 }}>{status.url}</span>
-					<button type="button" className="tlui-button" disabled={busy} onClick={copy}>
-						copy link
-					</button>
-				</>
-			)}
-			{status.running && status.targetUp === false && (
-				<span style={{ fontSize: 11, color: '#b00' }}>share front-end is down</span>
-			)}
-			<button type="button" className="tlui-button" disabled={busy} onClick={toggleTunnel}>
-				{busy ? '…' : status.running ? 'stop sharing' : 'share'}
-			</button>
 		</div>
 	)
 }

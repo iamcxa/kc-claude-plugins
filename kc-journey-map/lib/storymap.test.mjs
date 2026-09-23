@@ -151,3 +151,10 @@ test('no drawn label is shorter than the text inside it', () => {
 		)
 	}
 })
+
+test('a CJK label is measured by the width its glyphs take, not how many there are', () => {
+	const han = '這是一段中文說明。'.repeat(6)
+	assert.equal(fitHeight(han, 300), fitHeight('a'.repeat(han.length * 2), 300),
+		`${han.length} CJK glyphs were not measured as ${han.length * 2} character widths`)
+	assert.ok(fitHeight(han, 300) > fitHeight('a'.repeat(han.length), 300))
+})

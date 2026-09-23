@@ -4,7 +4,7 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { DocumentRecordType, TLDOCUMENT_ID } from '@tldraw/tlschema'
-import { fitHeight, indexes, label, page, pageLink, releaseLine, withStoryStatus, releaseProgressText, activityCard, storyCard, questionCard, answerCard, note, storyBorder, NOTE_SIZE } from './records.mjs'
+import { fitHeight, indexes, label, page, pageIndex, pageLink, releaseLine, withStoryStatus, releaseProgressText, activityCard, storyCard, questionCard, answerCard, note, storyBorder, NOTE_SIZE } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
 import { normalizeStory, isQuestionAnswered } from './model.mjs'
@@ -202,7 +202,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	const statusH = fitHeight(statusText, statusW)
 
 	const title = release ? `${release.name} — stories, flow & constraints` : 'Journey board'
-	put.unshift(page({ id: parentId, name: title, index: release ? `a${5 + (model.releases ?? []).findIndex((r) => r.id === release.id)}` : 'a2' }))
+	put.unshift(page({ id: parentId, name: title, index: release ? pageIndex((model.releases ?? []).findIndex((r) => r.id === release.id)) : 'a2' }))
 	if (release) {
 		const stories = groups.flatMap((g) => g.stories)
 		const text = `${release.name}\n${release.goal ?? ''}\n\n${progress ? releaseProgressText(progress, model, release.id) : `${stories.filter((s) => s.status === 'exists').length}/${stories.length} stories exist`}\n← back to the story map`

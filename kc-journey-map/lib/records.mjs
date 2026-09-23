@@ -107,12 +107,10 @@ export const pageLink = (room, pageId) => `http://localhost:3737/?room=${room}&d
 const LINE_H = { s: 24, m: 32 }
 const CHARS_PER_100PX = { s: 8.7, m: 6.5 }
 
-// A CJK or other full-width character takes about two Latin columns; counting it as one
-// under-sized every Chinese card, so its text ran out of the box.
+// A CJK or fullwidth glyph occupies two of the character widths measured above.
+const WIDE = /[\u1100-\u115f\u2e80-\u303e\u3041-\u33ff\u3400-\u4dbf\u4e00-\u9fff\ua000-\ua4cf\ua960-\ua97f\uac00-\ud7a3\uf900-\ufaff\ufe10-\ufe19\ufe30-\ufe6f\uff00-\uff60\uffe0-\uffe6]/u
 export function textWidth(line) {
-	let w = 0
-	for (const ch of String(line)) w += /[\u1100-\u115f\u2e80-\ua4cf\uac00-\ud7a3\uf900-\ufaff\ufe30-\ufe4f\uff00-\uff60\uffe0-\uffe6]/u.test(ch) ? 2 : 1
-	return w
+	return [...String(line)].reduce((w, glyph) => w + (WIDE.test(glyph) ? 2 : 1), 0)
 }
 
 export function fitHeight(text, width, size = 's', padding = 40) {
@@ -130,6 +128,12 @@ export function indexes(n) {
 
 export function page({ id, name, index = 'a1' }) {
 	return { id, typeName: 'page', name, index, meta: {} }
+}
+
+export function pageIndex(position, start = 'a5') {
+	let index = start
+	for (let step = 0; step < position; step++) index = getIndexAbove(index)
+	return index
 }
 
 export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }

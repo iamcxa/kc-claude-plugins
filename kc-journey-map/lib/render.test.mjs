@@ -4,6 +4,7 @@ import { createTLSchema } from '@tldraw/tlschema'
 import { buildJourneyBoard, buildAllPages, staleRecordIds } from './render.mjs'
 import { buildStoryMap } from './storymap.mjs'
 import { fixtureModel } from './fixture.mjs'
+import { sortByIndex, validateIndexKey } from '@tldraw/utils'
 import { fitHeight, note, storyBorder, NOTE_SIZE } from './records.mjs'
 
 const kind = (records, kind) => records.filter((s) => s.meta?.journey?.kind === kind)
@@ -311,4 +312,14 @@ test('the status sits in the header row beside the release, whatever the questio
 	assert.equal(status.y, release.y, 'the status is not on the release header row')
 	assert.ok(status.x > release.x, 'the status is not to the right of the release')
 	for (const q of records.filter((r) => r.meta?.journey?.kind === 'question')) assert.ok(status.y < q.y)
+})
+
+test('every board page carries an index key tldraw accepts, however many releases there are', () => {
+	const model = structuredClone(fixtureModel)
+	model.releases = Array.from({ length: 9 }, (_, i) => ({ id: `r${i + 1}`, name: `RELEASE ${i + 1}`, goal: 'One outcome.' }))
+	const pages = buildAllPages(model, null, ['story-map', 'journey-board']).filter((r) => r.typeName === 'page')
+	assert.equal(pages.length, 10)
+	for (const p of pages) assert.doesNotThrow(() => validateIndexKey(p.index), `${p.name} got index ${p.index}`)
+	assert.equal(new Set(pages.map((p) => p.index)).size, pages.length)
+	assert.deepEqual([...pages].sort(sortByIndex).map((p) => p.name), pages.map((p) => p.name))
 })

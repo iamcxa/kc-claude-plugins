@@ -8,7 +8,7 @@ import { parseGithubBlobUrl } from '../../lib/repo-doc.mjs'
 import { storyBorder } from '../../lib/records.mjs'
 import { DocPopup, type DocTarget } from './DocPopup'
 import './doc-popup.css'
-import { ShareButton } from './ShareButton'
+import { SaveButton } from './SaveButton'
 import { addSequencePage } from './sequence'
 
 // Falls back to the page's own origin so the /connect proxy (see vite.config.mts)
@@ -103,7 +103,7 @@ export default function App() {
 }
 
 function RoomCanvas({ roomId }: { roomId: string }) {
-	const components = useMemo(() => ({ SharePanel: () => <ShareButton roomId={roomId} /> }), [roomId])
+	const components = useMemo(() => ({ SharePanel: () => <SaveButton roomId={roomId} /> }), [roomId])
 	const store = useSync({
 		uri: `${SERVER_URL}/connect/${roomId}`,
 		assets: canvasAssets,
