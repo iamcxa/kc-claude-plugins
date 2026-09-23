@@ -1,5 +1,19 @@
 # Changelog
 
+## [1.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.4.1...kc-journey-map-v1.0.0) (2026-09-23)
+
+
+### ⚠ BREAKING CHANGES
+
+* **kc-journey-map:** draw answered questions, render past five releases and CJK, drop the built-in tunnel ([#490](https://github.com/iamcxa/kc-claude-plugins/issues/490))
+
+### Features
+
+* **kc-journey-map:** add one deferred story to an existing journey ([#482](https://github.com/iamcxa/kc-claude-plugins/issues/482)) ([302e0d6](https://github.com/iamcxa/kc-claude-plugins/commit/302e0d6b19a31ac0863336d47f10d63868123ca2))
+* **kc-journey-map:** draw answered questions, render past five releases and CJK, drop the built-in tunnel ([#490](https://github.com/iamcxa/kc-claude-plugins/issues/490)) ([dbe7b6f](https://github.com/iamcxa/kc-claude-plugins/commit/dbe7b6fcd0aa884c01ccc41c6426785e43f5f74d))
+* **kc-journey-map:** gate exists on its open questions, and list them ([#488](https://github.com/iamcxa/kc-claude-plugins/issues/488)) ([b8a4e68](https://github.com/iamcxa/kc-claude-plugins/commit/b8a4e68616e556cf751f26003e252c15d7b7409d))
+* **kc-journey-map:** release board as a zoomed-in story map, with questions, answers and readback ([#491](https://github.com/iamcxa/kc-claude-plugins/issues/491)) ([54b9a76](https://github.com/iamcxa/kc-claude-plugins/commit/54b9a76b9c2701dff4d6c53319f9a49b826af0d1))
+
 ## [0.4.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.4.0...kc-journey-map-v0.4.1) (2026-09-17)
 
 
