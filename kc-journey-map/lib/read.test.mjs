@@ -21,6 +21,17 @@ test('a freshly rendered board reports no drift', () => {
 	assert.deepEqual(diffAgainstModel(rendered(), fixtureModel), clean)
 })
 
+test('two stories may each carry a question q1 without reading as duplicated or deleted', () => {
+	const model = structuredClone(fixtureModel)
+	const inRelease = model.steps.flatMap((step) => step.stories).filter((st) => typeof st === 'object' && st.release)
+	const [a, b] = inRelease.filter((st) => st.release === inRelease[0].release)
+	assert.ok(a && b, 'fixture needs two stories in one release')
+	a.questions = [{ id: 'q1', ask: 'First story question?', answer: 'First answer.' }]
+	b.questions = [{ id: 'q1', ask: 'Second story question?', answer: 'Second answer.' }]
+	const shapes = [...buildJourneyBoard(model), ...buildStoryMap(model)].filter((r) => r.typeName === 'shape')
+	assert.deepEqual(diffAgainstModel(shapes, model), clean)
+})
+
 test('rewording an activity on the story map is seen', () => {
 	const shapes = rendered()
 	find(shapes, 'shape:sm-act-b').props.richText = rt('Receives the thing')

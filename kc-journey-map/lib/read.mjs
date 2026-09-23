@@ -30,14 +30,19 @@ export async function readRoom({ room, api = API }) {
 const byKind = (shapes, kind) => shapes.filter((s) => s.meta?.journey?.kind === kind)
 
 // tldraw duplicates metadata verbatim, so duplicated node IDs cannot be trusted.
-function duplicatesOf(shapes) {
+const nodeKey = (s) => s.meta.journey.nodeId
+// Question IDs are unique only within their story.
+const noteKey = (story, id) => `${story}/${id}`
+const qaKey = (s) => noteKey(s.meta.journey.story, s.meta.journey.nodeId)
+
+function duplicatesOf(shapes, key = nodeKey) {
 	const seen = new Map()
-	for (const s of shapes) seen.set(s.meta.journey.nodeId, (seen.get(s.meta.journey.nodeId) ?? 0) + 1)
+	for (const s of shapes) seen.set(key(s), (seen.get(key(s)) ?? 0) + 1)
 	return [...seen.entries()].filter(([, n]) => n > 1).map(([id]) => id)
 }
 
-const indexByNode = (shapes, dupes) =>
-	new Map(shapes.filter((s) => !dupes.includes(s.meta.journey.nodeId)).map((s) => [s.meta.journey.nodeId, s]))
+const indexByNode = (shapes, dupes, key = nodeKey) =>
+	new Map(shapes.filter((s) => !dupes.includes(key(s))).map((s) => [key(s), s]))
 
 const orderOf = (map) =>
 	[...map.entries()].sort((a, b) => a[1].x - b[1].x).map(([id]) => id)
@@ -78,14 +83,14 @@ function questionsAndAnswers(shapes, perBoard, duplicated, model) {
 	for (const b of perBoard) {
 		const pg = pageName(b.pid)
 		const storiesOnPage = indexByNode(b.stories, duplicated)
-		const questionsOnPage = indexByNode(b.questions, duplicated)
-		const answersOnPage = indexByNode(b.answers, duplicated)
+		const questionsOnPage = indexByNode(b.questions, duplicated, qaKey)
+		const answersOnPage = indexByNode(b.answers, duplicated, qaKey)
 
 		for (const [storyId] of storiesOnPage) {
 			const story = modelStories.get(storyId)
 			if (!story) continue
 			for (const q of story.questions ?? []) {
-				const qShape = questionsOnPage.get(q.id)
+				const qShape = questionsOnPage.get(noteKey(storyId, q.id))
 				if (!qShape) {
 					questionsDeleted.push({ story: storyId, step: story.step.id, id: q.id, was: q.ask, page: pg })
 					continue
@@ -95,7 +100,7 @@ function questionsAndAnswers(shapes, perBoard, duplicated, model) {
 					questionsReworded.push({ story: storyId, step: story.step.id, id: q.id, was: q.ask, now: nowAsk, page: pg })
 
 				if (!isQuestionAnswered(q)) continue
-				const aShape = answersOnPage.get(q.id)
+				const aShape = answersOnPage.get(noteKey(storyId, q.id))
 				if (!aShape) {
 					answersDeleted.push({ story: storyId, step: story.step.id, question: q.id, was: { answer: q.answer, doc: q.doc }, page: pg })
 					continue
@@ -111,8 +116,8 @@ function questionsAndAnswers(shapes, perBoard, duplicated, model) {
 		// A story's own x is already its questions' x (records.mjs draws both at the same
 		// column offset); an answer's slot is its question's x shifted one pitch to the right.
 		const storyAnchors = [...storiesOnPage.entries()].map(([nodeId, s]) => ({ nodeId, x: s.x, y: s.y }))
-		const questionAnchors = [...questionsOnPage.entries()].map(([nodeId, s]) => ({
-			nodeId, story: s.meta.journey.story, x: s.x, y: s.y, answered: answersOnPage.has(nodeId),
+		const questionAnchors = [...questionsOnPage.entries()].map(([key, s]) => ({
+			nodeId: s.meta.journey.nodeId, story: s.meta.journey.story, x: s.x, y: s.y, answered: answersOnPage.has(key),
 		}))
 		const untagged = shapes
 			.filter((s) => s.parentId === b.pid && !s.meta?.journey && (s.type === 'note' || s.type === 'geo'))
@@ -175,7 +180,7 @@ export function diffAgainstModel(shapes, model) {
 	const activities = byKind(story, 'activity')
 	const stories = byKind(story, 'story')
 	const duplicated = [...new Set([
-		...perBoard.flatMap((b) => [...duplicatesOf([...b.cards, ...b.activities]), ...duplicatesOf(b.stories), ...duplicatesOf(b.questions), ...duplicatesOf(b.answers)]),
+		...perBoard.flatMap((b) => [...duplicatesOf([...b.cards, ...b.activities]), ...duplicatesOf(b.stories), ...duplicatesOf(b.questions, qaKey), ...duplicatesOf(b.answers, qaKey)]),
 		...duplicatesOf(activities), ...duplicatesOf(stories),
 	])]
 	const cardBy = indexByNode(cards, duplicated)
