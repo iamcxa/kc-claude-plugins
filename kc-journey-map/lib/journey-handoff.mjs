@@ -3,6 +3,7 @@
 import { createHash } from 'node:crypto'
 import { existsSync, readFileSync, writeFileSync } from 'node:fs'
 import { parse } from 'yaml'
+import { normalizeStory, openQuestions } from './model.mjs'
 
 const hash = (value) => createHash('sha256').update(value).digest('hex')
 const canonical = (value) => JSON.stringify(value, (_, v) =>
@@ -21,6 +22,11 @@ function check(baseline, model, assessment) {
 	require(assessment.version === 1, 'unsupported assessment version')
 	require(release && text(release.goal) && assessment.goal === release.goal, 'release goal missing or differs from assessment')
 	require(selected.length > 0, 'selected release has no stories')
+	for (const step of model.steps ?? []) (step.stories ?? []).forEach((story, j) => {
+		if (story?.release !== assessment.release) return
+		const open = openQuestions(normalizeStory(step, story, j))
+		require(open.length === 0, `open questions on ${story.id}: ${open.map((q) => q.id).join(', ')}; answer, defer with because, or link the decision record before handoff`)
+	})
 	for (const source of [baseline, model]) {
 		const allIds = stories(source).map((story) => story?.id)
 		require(allIds.every(text) && new Set(allIds).size === allIds.length, 'source requires explicit unique story IDs')
