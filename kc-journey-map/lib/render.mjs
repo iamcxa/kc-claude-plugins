@@ -4,7 +4,7 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { DocumentRecordType, TLDOCUMENT_ID } from '@tldraw/tlschema'
-import { fitHeight, indexes, label, page, pageLink, releaseLine, withStoryStatus, releaseProgressText, connector, connectorBindings, activityCard, storyCard, questionCard, answerCard, note, storyBorder, NOTE_SIZE } from './records.mjs'
+import { fitHeight, indexes, label, page, pageLink, releaseLine, withStoryStatus, releaseProgressText, activityCard, storyCard, questionCard, answerCard, note, storyBorder, NOTE_SIZE } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
 import { normalizeStory, isQuestionAnswered } from './model.mjs'
@@ -77,7 +77,6 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		return lines
 	}
 	const constraintLines = (step) => step.rules?.length ? step.rules.map((id) => rulesById.get(id) ?? id) : ['No constraints recorded.']
-	const stackHeight = (lines, w) => lines.reduce((h, l, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(l, w), 0)
 
 	// Each question needs 2 index slots (card + connector arrow), and an answered one
 	// needs 2 more (its own answer card + connector); bindings need none.
