@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import { buildStoryMap } from './storymap.mjs'
 import { buildJourneyBoard } from './render.mjs'
 import { fixtureModel as model } from './fixture.mjs'
-import { fitHeight, NOTE_SIZE } from './records.mjs'
+import { fitHeight } from './records.mjs'
 import { createTLSchema } from '@tldraw/tlschema'
 
 const kinds = (put) => new Set(put.map((r) => r.meta?.journey?.kind).filter(Boolean))
@@ -105,8 +105,6 @@ test('story map borders all three states and counts exists alone', () => {
 })
 
 // Measured on a real board before the fix: 170px of 200 hidden, the card on top.
-const spans = (r) => ({ x1: r.x, y1: r.y, x2: r.x + NOTE_SIZE.s, y2: r.y + NOTE_SIZE.s })
-const overlap = (a, b) => Math.min(a.x2, b.x2) - Math.max(a.x1, b.x1) > 1 && Math.min(a.y2, b.y2) - Math.max(a.y1, b.y1) > 1
 
 // The story map is the whole journey's definition — persona, activities, stories and
 // release slices. Questions and answers are detail for a zoomed-in release board, so the
