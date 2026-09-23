@@ -85,14 +85,9 @@ export function diffAgainstModel(shapes, model) {
 	const observations = (records, id) => records.filter((s) => s.meta.journey.nodeId === id)
 	const resolveWording = (id, field, was, records, step = null) => {
 		if (duplicated.includes(id)) return
-		// A release-board story card carries its evidence symbol as a trailing line now
-		// (records.mjs / render.mjs); only the first line is the card wording this compares
-		// against, on either projection — the story-map card has never had a second line.
 		const changed = records.map((s) => ({
 			page: pageName(s.parentId),
-			now: s.meta.journey.kind === 'step-card' ? stripNumber(plain(s.props?.richText))
-				: s.meta.journey.kind === 'story' ? plain(s.props?.richText).split('\n')[0]
-				: plain(s.props?.richText),
+			now: s.meta.journey.kind === 'step-card' ? stripNumber(plain(s.props?.richText)) : plain(s.props?.richText),
 		})).filter((s) => s.now && s.now !== was)
 		const words = [...new Set(changed.map((s) => s.now))]
 		if (words.length > 1) {

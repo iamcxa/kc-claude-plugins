@@ -127,11 +127,11 @@ test('lint rejects unsupported status and accepts gap, unverified and exists', (
 	assert.deepEqual(violations.map((v) => [v.lint, v.story]), [['invalid-status', 'made-up']])
 })
 
-test('lintExistsWithOpenQuestion fires on exists with an open question, not on a settled one', () => {
+test('lintExistsWithOpenQuestion fires on exists with an unanswered question, not on an answered one', () => {
 	const m = model([{ id: 's', stories: [
-		{ id: 's-0', card: 'x', status: 'exists', evidence: 'X', questions: [{ id: 'q1', ask: 'Who?', status: 'open' }] },
-		{ id: 's-1', card: 'y', status: 'exists', evidence: 'Y', questions: [{ id: 'q2', ask: 'Who?', status: 'answered' }] },
-		{ id: 's-2', card: 'z', status: 'gap', questions: [{ id: 'q3', ask: 'Who?', status: 'open' }] },
+		{ id: 's-0', card: 'x', status: 'exists', evidence: 'X', questions: [{ id: 'q1', ask: 'Who?' }] },
+		{ id: 's-1', card: 'y', status: 'exists', evidence: 'Y', questions: [{ id: 'q2', ask: 'Who?', answer: 'The owner does.' }] },
+		{ id: 's-2', card: 'z', status: 'gap', questions: [{ id: 'q3', ask: 'Who?' }] },
 	] }])
 	const v = lintExistsWithOpenQuestion(m)
 	assert.deepEqual(v.map((x) => x.story), ['s-0'])
@@ -143,10 +143,25 @@ test('the singular question field is sugar, so it reaches the same gate', () => 
 	assert.deepEqual(lintExistsWithOpenQuestion(m).map((x) => x.story), ['s-0'])
 })
 
-test('a deferred question does not hold a story back', () => {
+test('a question answered only by a doc link does not hold a story back', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X',
+		questions: [{ id: 'q', ask: 'Who?', doc: 'https://example.com/adr#q1' }] }] }])
+	assert.deepEqual(lintExistsWithOpenQuestion(m), [])
+})
+
+test('a deferred question with a because does not hold a story back — the reason becomes its answer', () => {
 	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X',
 		questions: [{ id: 'q', ask: 'Later?', status: 'deferred', because: 'belongs to the reminder release' }] }] }])
 	assert.deepEqual(lintExistsWithOpenQuestion(m), [])
+})
+
+// A bare legacy `status: answered` claimed a settled question without ever showing an
+// answer. The new rule reads literally: unless there is text or a link to show, nothing
+// answers it — a claim with nothing to show is not a shown answer.
+test('a legacy "answered" status with no answer text or doc still holds a story back', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X',
+		questions: [{ id: 'q', ask: 'Who?', status: 'answered' }] }] }])
+	assert.deepEqual(lintExistsWithOpenQuestion(m).map((x) => x.story), ['s-0'])
 })
 
 test('a mistyped question status is caught, not silently read as settled', () => {

@@ -49,10 +49,10 @@ const asked = {
 	rules: [],
 	steps: [{ id: 's', stories: [
 		{ id: 'a', card: 'Settled', release: 'r1', status: 'gap', questions: [
-			{ id: 'a1', ask: 'Already decided?', status: 'answered' },
-			{ id: 'a2', ask: 'Still deciding?', status: 'open' },
+			{ id: 'a1', ask: 'Already decided?', answer: 'Yes, in the ADR.' },
+			{ id: 'a2', ask: 'Still deciding?' },
 		] },
-		{ id: 'b', card: 'All settled', release: 'r1', status: 'gap', questions: [{ id: 'b1', ask: 'Was decided?', status: 'answered' }] },
+		{ id: 'b', card: 'All settled', release: 'r1', status: 'gap', questions: [{ id: 'b1', ask: 'Was decided?', answer: 'Yes.' }] },
 	] }],
 }
 

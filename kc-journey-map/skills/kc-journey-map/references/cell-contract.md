@@ -71,24 +71,33 @@ built; see "Stories".
   repository — required whenever `status: exists`. Not a `file:line`: a line number goes
   stale silently and the lint would have nothing stable to search for.
 - `questions:` is optional and orthogonal to status: unresolved decisions, on a story
-  in any of the three states. Each carries `id`, which binds it to its review-board
-  card, `ask`, which fills the contract cell, and `status: open | answered | deferred`;
-  a `deferred` question owes a `because:`. Question status is a different axis from
-  story status — whether a decision is settled, not whether code exists — so the two
-  vocabularies stay apart. `question:` is sugar for a one-element list.
-- Every question is its own card on both the story map and the journey board, bound to
-  its story card by a native arrow — never text folded into the story card, which
-  stops being readable once a story asks six. A printed status word always carries the
-  three states at a glance (`OPEN`/`ANSWERED`/`DEFERRED`); a deferred card also carries
-  its `because:`. The two surfaces carry status differently: the story map still colors
-  the card by status (violet/`OPEN`, green/`ANSWERED`, grey/`DEFERRED`); the journey
-  board fills every question card light-green — colour there means "question", not
-  status — and carries `open` vs. settled in the outline instead, dashed for `open`,
-  solid for `answered` or `deferred`. `lintQuestionStatus` rejects an unsupported status
-  and a `deferred` question with no `because:`.
-- A story may not be `exists` while it carries an `open` question; the
+  in any status. Each carries `id`, which binds it to its board card, `ask`, which
+  fills the contract cell, and optionally `answer:` (a short paragraph) and/or `doc:`
+  (a link to the technical document chapter that answers it) — either or both. A
+  question is answered when it carries one of these; question answeredness is a
+  different axis from story status — whether a decision is settled, not whether code
+  exists — so the two vocabularies stay apart. `question:` is sugar for a one-element
+  list. The earlier shape — `status: open | answered | deferred`, with a `deferred`
+  question owing a `because:` — is still read: a `deferred` question's `because:`
+  becomes its answer text when no explicit `answer:` was authored (its reason for
+  parking is itself an answer to show); a bare legacy `status: answered` with no
+  `answer:`/`doc:` text now reads as **unanswered** — a claim with nothing to show is
+  not a shown answer. `lintQuestionStatus` still rejects an unsupported `status:` value
+  and a `deferred` question with no `because:`, when a `status:` is present at all.
+- Every question is its own `note` — not a `geo` rectangle — on both the story map and
+  the journey board, bound to its story by a native arrow: never text folded into the
+  story card, which stops being readable once a story asks six, and never a status word
+  or a dashed/solid outline on the card itself. **Whether a question is answered is
+  shown by whether an answer note hangs under it, nothing else.** An answer is its own
+  note directly under its question, bound by a short native arrow: a short paragraph
+  in the note's text, a link in the note's own `url` prop, or both. The story map
+  stacks a story's questions in one vertical column, each answer directly under its own
+  question; the journey board spreads a story's questions out horizontally instead, as
+  the Captain laid them out by hand, with each answer still straight below its own
+  question.
+- A story may not be `exists` while any of its questions has no answer; the
   `exists-with-open-question` lint refuses it. The per-release contract renders only
-  `open` questions, so the column says what is still missing rather than what was
+  unanswered questions, so the column says what is still missing rather than what was
   once asked.
 - A bare string story (`- "some idea"`) cannot carry any of the three fields — it fires
   the `no-status` lint. Give it an id and object form as soon as it needs one.

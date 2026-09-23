@@ -1,9 +1,12 @@
 
 export const STORY_STATUSES = ['gap', 'unverified', 'exists']
 export const QUESTION_STATUSES = ['open', 'answered', 'deferred']
-export const storyStatusLabel = (status) => STORY_STATUSES.includes(status) ? status.toUpperCase() : 'UNASSESSED'
 
-// `question:` is sugar for a one-element list; both authored forms land here.
+// `question:` is sugar for a one-element list; both authored forms land here. `status:`
+// and `because:` are the earlier shapes (pre-`answer:`/`doc:`) — still read so an older
+// file does not break. A `deferred` question's `because:` becomes its answer when no
+// explicit `answer:` was given: "parked, for this reason" is itself an answer to show,
+// not a third state the card needs to distinguish.
 const normalizeQuestions = (story, storyId) => {
 	const authored = Array.isArray(story.questions)
 		? story.questions
@@ -15,21 +18,20 @@ const normalizeQuestions = (story, storyId) => {
 		return {
 			id: asked.id ?? `${storyId}-q${k}`,
 			ask: asked.ask,
-			status: asked.status ?? 'open',
+			status: asked.status,
 			because: asked.because,
+			answer: asked.answer ?? (asked.status === 'deferred' && asked.because ? asked.because : undefined),
+			doc: asked.doc,
 		}
 	})
 }
 
-export const openQuestions = (story) => (story.questions ?? []).filter((q) => q.status === 'open')
+// A question is answered when there is something to show for it — an answer card hangs
+// under it, nothing else. A bare legacy `status: answered` with no text or link now
+// reads as unanswered: a claim with nothing to show is not a shown answer.
+export const isQuestionAnswered = (q) => Boolean(q.answer) || Boolean(q.doc)
 
-// A status word survives a greyscale export or a colorblind reader where the card
-// color alone would not; a deferred card also carries the reason it was parked.
-export const questionCardText = (q) => [
-	q.status === 'answered' ? 'ANSWERED' : q.status === 'deferred' ? 'DEFERRED' : 'OPEN',
-	q.ask,
-	q.status === 'deferred' && q.because ? `because: ${q.because}` : null,
-].filter(Boolean).join('\n')
+export const openQuestions = (story) => (story.questions ?? []).filter((q) => !isQuestionAnswered(q))
 
 export const normalizeStory = (step, story, j) => {
 	if (typeof story === 'string') {

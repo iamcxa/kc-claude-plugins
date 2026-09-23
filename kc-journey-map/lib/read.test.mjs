@@ -241,9 +241,11 @@ test('a release-only board cannot reorder the full journey or change membership 
 
 test('hand-added notes use the activity span on their own release page', () => {
 	const shapes = releaseBoards()
+	// The activity card is a note now, with no props.w of its own; its anchor falls back
+	// to the nominal note width, so a hand-added note well inside that span still resolves.
 	const a = find(shapes, 'shape:jm-r1-card-a')
 	shapes.push({ id: 'shape:hand', typeName: 'shape', type: 'note', parentId: a.parentId,
-		x: a.x + a.props.w - 200, y: a.y + 900, props: { richText: rt('Another question') } })
+		x: a.x + 50, y: a.y + 900, props: { richText: rt('Another question') } })
 	assert.equal(diffAgainstModel(shapes, fixtureModel).unclaimed[0].column, 'a')
 })
 

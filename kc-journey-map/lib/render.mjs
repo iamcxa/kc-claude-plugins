@@ -4,33 +4,36 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { DocumentRecordType, TLDOCUMENT_ID } from '@tldraw/tlschema'
-import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText, connector, connectorBindings } from './records.mjs'
+import { fitHeight, indexes, label, page, pageLink, releaseLine, withStoryStatus, releaseProgressText, connector, connectorBindings, activityCard, storyCard, questionCard, answerCard, NOTE_SIZE } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
-import { normalizeStory, storyStatusLabel, questionCardText } from './model.mjs'
+import { normalizeStory, isQuestionAnswered } from './model.mjs'
 
 const STORY_PITCH = 240
 const STORY_W = 220
-const STORY_H = 200
 const GROUP_GAP = 60
 const X0 = 320
 const LANE_X = 20
 const LANE_W = 270
 const GAP = 40
 const QUESTION_GAP = 10
+// Questions spread out horizontally beneath their story, not stacked in one column —
+// this is the release board's own zoom-in layout, not shared with the story map, which
+// keeps its single vertical column.
+const QUESTION_PITCH = NOTE_SIZE.s + QUESTION_GAP
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
 // Every card colour the release board draws, plus the story-status border it does not
 // explain on its own — one legend, top-left, so a reader never has to guess what a
-// colour or an outline means. QUESTION shows both outline states since colour alone no
-// longer carries a question's status.
+// colour or an outline means. Whether a question is answered is shown by whether an
+// answer card hangs under it, not by this legend or the question card itself.
 const BOARD_LEGEND = [
 	{ nodeId: 'activity', text: 'ACTIVITY', color: 'green', extra: {} },
 	{ nodeId: 'flow', text: 'FLOW — one card per system: line', color: 'light-blue', extra: { fill: 'solid' } },
 	{ nodeId: 'constraint', text: 'CONSTRAINT — one card per rule', color: 'orange', extra: { fill: 'solid' } },
 	{ nodeId: 'story', text: 'STORY', color: 'yellow', extra: { fill: 'solid' } },
-	{ nodeId: 'question-open', text: 'QUESTION — OPEN', color: 'light-green', extra: { fill: 'solid', dash: 'dashed' } },
-	{ nodeId: 'question-settled', text: 'QUESTION — ANSWERED or DEFERRED', color: 'light-green', extra: { fill: 'solid', dash: 'solid' } },
+	{ nodeId: 'question', text: 'QUESTION', color: 'light-green', extra: { fill: 'solid' } },
+	{ nodeId: 'answer', text: 'ANSWER — hangs under an answered question', color: 'light-blue', extra: { fill: 'solid' } },
 	{ nodeId: 'status-exists', text: 'STORY BORDER: EXISTS', color: 'green', extra: { dash: 'solid' } },
 	{ nodeId: 'status-gap', text: 'STORY BORDER: GAP', color: 'red', extra: { dash: 'solid' } },
 	{ nodeId: 'status-unverified', text: 'STORY BORDER: UNVERIFIED', color: 'violet', extra: { dash: 'solid' } },
@@ -68,8 +71,10 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	const constraintLines = (step) => step.rules?.length ? step.rules.map((id) => rulesById.get(id) ?? id) : ['No constraints recorded.']
 	const stackHeight = (lines, w) => lines.reduce((h, l, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(l, w), 0)
 
-	// Each question needs 2 index slots (card + connector arrow); its bindings need none.
-	const questionSlots = groups.reduce((sum, g) => sum + g.stories.reduce((s, story) => s + (story.questions?.length ?? 0) * 2, 0), 0)
+	// Each question needs 2 index slots (card + connector arrow), and an answered one
+	// needs 2 more (its own answer card + connector); bindings need none.
+	const questionSlots = groups.reduce((sum, g) => sum + g.stories.reduce((s, story) =>
+		s + (story.questions ?? []).reduce((qs, q) => qs + 2 + (isQuestionAnswered(q) ? 2 : 0), 0), 0), 0)
 	const flowConstraintSlots = groups.reduce((sum, g) => sum + flowLines(g.step).length + constraintLines(g.step).length, 0)
 	const ix = indexes(24 + BOARD_LEGEND.length + groups.length * 2 + flowConstraintSlots
 		+ groups.reduce((sum, g) => sum + g.stories.length, 0) + questionSlots)
@@ -81,20 +86,16 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 			meta: tag(nodeId, kind),
 		})
 	}
-	const activityText = (step) => step.activity ?? step.card
-	const storyCardText = (story) => [
-		story.card,
-		progress && (() => {
-			const p = storyProgress(progress, model, story)
-			return `Local tasks: ${p.doneTasks ?? 0}/${p.requiredTasks ?? 0} done\n${p.taskIds?.join(', ') || p.diagnostic}`
-		})(),
-		story.status && ['exists', 'gap', 'unverified'].includes(story.status) ? null : storyStatusLabel(story.status),
-		// The evidence symbol is this card's last line, not a separate cell.
-		story.evidence ? `Evidence: ${story.evidence}` : 'No story evidence recorded.',
-	].filter(Boolean).join('\n')
-	const questionsHeight = (story) => (story.questions ?? []).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(questionCardText(q), STORY_W), 0)
+	// A story's own open questions may stack wider than one story's worth; reserve one
+	// question row plus, when any question here is answered, one answer row beneath it.
+	const questionsHeight = (story) => (story.questions ?? []).length
+		? NOTE_SIZE.s + QUESTION_GAP + ((story.questions ?? []).some(isQuestionAnswered) ? NOTE_SIZE.s + QUESTION_GAP : 0)
+		: 0
 
-	const activityH = Math.max(120, ...groups.map((g) => fitHeight(activityText(g.step), g.w)))
+	// A note's rendered height is a runtime concern (growY), not something this generator
+	// computes ahead of time — the story map has never tried to for its own activity or
+	// story notes, and the release board's now the same shared note, so it stops trying too.
+	const activityH = NOTE_SIZE.m
 	// Flow, then constraints, then stories. Every group shares one flow band and one
 	// constraint band sized to the tallest column, exactly like the shared rows this
 	// replaces — a short activity's cards just leave blank space, not a row that creeps
@@ -114,7 +115,11 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 
 	for (const group of groups) {
 		const { step, stories, x, w } = group
-		box(`card-${step.id}`, step.id, 'activity', activityText(step), x, 0, w, activityH, 'green')
+		// Same builder the story map uses for the same step, so the two cannot draw it
+		// differently. Left-aligned on the group, unlike the flow/constraint cards below it
+		// which still span the group's full width — this is the release board's own
+		// addition, not shared with the story map.
+		put.push(activityCard({ id: `${idp}card-${step.id}`, step, x, y: 0, index: ix[n++], parentId }))
 
 		let fy = flowY
 		flowLines(step).forEach((line, k) => {
@@ -131,29 +136,25 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		})
 
 		if (!stories.length) {
-			box(`empty-${step.id}`, step.id, 'empty-stories', 'No stories recorded.', x, storyY, w, STORY_H, 'grey')
+			box(`empty-${step.id}`, step.id, 'empty-stories', 'No stories recorded.', x, storyY, w, NOTE_SIZE.m, 'grey')
 		}
 		stories.forEach((story, j) => {
 			const sx = x + j * STORY_PITCH + (stories.length === 1 ? (w - STORY_W) / 2 : 0)
 			const storyShapeId = `${idp}story-${story.id}`
-			put.push({
-				...note({ id: storyShapeId, parentId, text: storyCardText(story),
-					x: sx + 10, y: storyY, index: ix[n++], color: 'yellow' }),
-				meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
-			})
+			// Same builder the story map uses for the same story — its text is `story.card`
+			// alone; evidence and task progress live in the release contract and story-status
+			// meta, not on the card, so the two projections cannot draw the same story two
+			// different ways.
+			put.push(storyCard({ id: storyShapeId, story, x: sx + 10, y: storyY, index: ix[n++], parentId, progress, model }))
 
-			let qy = storyY + STORY_H + QUESTION_GAP
-			for (const question of story.questions ?? []) {
-				const h = fitHeight(questionCardText(question), STORY_W)
+			// Questions spread left to right beneath the story, as laid out by hand on the
+			// live canvas — not stacked in one column. Each answered question's answer sits
+			// straight below that question, before the next question's column.
+			story.questions?.forEach((question, k) => {
+				const qx = sx + k * QUESTION_PITCH
+				const qy = storyY + NOTE_SIZE.m + QUESTION_GAP
 				const questionId = `${idp}question-${story.id}-${question.id}`
-				put.push({
-					...label({ id: questionId, parentId, text: questionCardText(question), x: sx, y: qy, w: STORY_W, h,
-						index: ix[n++], color: 'light-green', fill: 'solid', dash: question.status === 'open' ? 'dashed' : 'solid',
-						size: 's', align: 'start', verticalAlign: 'start' }),
-					// The question id binds to its story-map twin; the story id lets a layout
-					// check find the card a question hangs under.
-					meta: { journey: { nodeId: question.id, kind: 'question', story: story.id } },
-				})
+				put.push(questionCard({ id: questionId, question, story: story.id, x: qx, y: qy, index: ix[n++], parentId }))
 				const linkId = `${idp}qlink-${story.id}-${question.id}`
 				put.push({
 					...connector({ id: linkId, parentId, index: ix[n++], color: 'grey' }),
@@ -162,13 +163,26 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 				put.push(...connectorBindings(linkId, storyShapeId, questionId).map((b) => ({
 					...b, meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
 				})))
-				qy += h + QUESTION_GAP
-			}
+
+				if (isQuestionAnswered(question)) {
+					const ay = qy + NOTE_SIZE.s + QUESTION_GAP
+					const answerId = `${idp}answer-${story.id}-${question.id}`
+					put.push(answerCard({ id: answerId, question, story: story.id, x: qx, y: ay, index: ix[n++], parentId }))
+					const alinkId = `${idp}alink-${story.id}-${question.id}`
+					put.push({
+						...connector({ id: alinkId, parentId, index: ix[n++], color: 'grey' }),
+						meta: { journey: { nodeId: question.id, kind: 'answer-link', story: story.id } },
+					})
+					put.push(...connectorBindings(alinkId, questionId, answerId).map((b) => ({
+						...b, meta: { journey: { nodeId: question.id, kind: 'answer-link', story: story.id } },
+					})))
+				}
+			})
 		})
 	}
 
-	const boardBottom = storyY + Math.max(STORY_H, ...groups.flatMap((g) => g.stories.map((s) =>
-		STORY_H + (questionsHeight(s) ? QUESTION_GAP + questionsHeight(s) : 0))))
+	const boardBottom = storyY + Math.max(NOTE_SIZE.m, ...groups.flatMap((g) => g.stories.map((s) =>
+		NOTE_SIZE.m + (questionsHeight(s) ? QUESTION_GAP + questionsHeight(s) : 0))))
 
 	const s = model.status ?? {}
 	const statusText = [

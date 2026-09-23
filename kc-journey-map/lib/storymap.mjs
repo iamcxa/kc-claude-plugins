@@ -1,6 +1,6 @@
 
-import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus, storyProgress, releaseProgressText, connector, connectorBindings, QUESTION_STATUS_COLORS } from './records.mjs'
-import { normalizeStory, questionCardText } from './model.mjs'
+import { fitHeight, indexes, label, page, releaseLine, withStoryStatus, releaseProgressText, connector, connectorBindings, activityCard, storyCard, questionCard, answerCard, NOTE_SIZE } from './records.mjs'
+import { normalizeStory, isQuestionAnswered } from './model.mjs'
 
 const PITCH = 240
 const X0 = 300
@@ -10,8 +10,7 @@ const LEFT_W = 250
 const Y_PERSONA = 40
 const BAND_H = 60
 const STORY_PITCH = 250
-const STORY_W = 200
-const STORY_H = 200
+const STORY_H = NOTE_SIZE.m
 const QUESTION_GAP = 10
 const GAP = 40
 
@@ -25,10 +24,11 @@ export function buildStoryMap(model, room = null, progress = null) {
 
 	const parentId = STORY_PAGE_ID
 	const maxStories = Math.max(0, ...steps.map((s) => (s.stories ?? []).length))
-	// Each question needs 2 index slots (card + connector arrow); its bindings need none.
-	const totalQuestions = steps.flatMap((step) => (step.stories ?? []).map((story, j) => normalizeStory(step, story, j)))
-		.reduce((sum, s) => sum + (s.questions?.length ?? 0), 0)
-	const ix = indexes(Math.max(24, steps.length * (maxStories + 4) + (model.releases?.length ?? 0) * 2 + 24) + totalQuestions * 2)
+	// Each question needs 2 index slots (card + connector arrow), and an answered one
+	// needs 2 more (its own card + connector); bindings need none.
+	const allStories = steps.flatMap((step) => (step.stories ?? []).map((story, j) => normalizeStory(step, story, j)))
+	const questionSlots = allStories.reduce((sum, s) => sum + (s.questions ?? []).reduce((qs, q) => qs + 2 + (isQuestionAnswered(q) ? 2 : 0), 0), 0)
+	const ix = indexes(Math.max(24, steps.length * (maxStories + 4) + (model.releases?.length ?? 0) * 2 + 24) + questionSlots)
 	let n = 0
 
 	const nowTexts = (model.now ?? []).map((item) =>
@@ -113,19 +113,7 @@ export function buildStoryMap(model, room = null, progress = null) {
 
 	steps.forEach((step, i) => {
 		const x = X0 + i * PITCH
-
-		put.push({
-			...note({
-				id: `shape:sm-act-${step.id}`,
-				text: step.activity ?? step.card,
-				x,
-				y: Y_BACKBONE,
-				index: ix[n++],
-				parentId,
-				color: 'green',
-			}),
-			meta: tag(step.id, 'activity'),
-		})
+		put.push(activityCard({ id: `shape:sm-act-${step.id}`, step, x, y: Y_BACKBONE, index: ix[n++], parentId }))
 	})
 
 	const releases = model.releases ?? []
@@ -165,7 +153,10 @@ export function buildStoryMap(model, room = null, progress = null) {
 			meta: tag(band.id ?? 'unassigned', 'release-label'),
 		})
 
-		const questionsHeight = (story) => (story?.questions ?? []).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(questionCardText(q), STORY_W), 0)
+		// A note has no computed height; each question reserves its own and its answer's
+		// nominal footprint (size 's'), stacked in one column below the story.
+		const questionsHeight = (story) => (story?.questions ?? []).reduce((h, q, k) =>
+			h + (k ? QUESTION_GAP : 0) + NOTE_SIZE.s + (isQuestionAnswered(q) ? QUESTION_GAP + NOTE_SIZE.s : 0), 0)
 		const perColumn = new Map()
 		for (const story of band.stories) {
 			const list = perColumn.get(story.step.id) ?? []
@@ -188,33 +179,14 @@ export function buildStoryMap(model, room = null, progress = null) {
 				const x = X0 + i * PITCH
 				const y = rowTop[j]
 				const storyShapeId = `shape:sm-story-${story.id}`
-				put.push({
-					...note({ id: storyShapeId, text: story.card, x, y, index: ix[n++], parentId, color: 'yellow' }),
-					meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
-				})
+				put.push(storyCard({ id: storyShapeId, story, x, y, index: ix[n++], parentId, progress, model }))
 
+				// Questions stack in one column below the story; each answered question's
+				// answer sits directly beneath it, before the next question.
 				let qy = y + STORY_H + QUESTION_GAP
 				for (const question of story.questions ?? []) {
-					const h = fitHeight(questionCardText(question), STORY_W)
 					const questionId = `shape:sm-question-${story.id}-${question.id}`
-					put.push({
-						...label({
-							id: questionId,
-							text: questionCardText(question),
-							x,
-							y: qy,
-							w: STORY_W,
-							h,
-							index: ix[n++],
-							parentId,
-							color: QUESTION_STATUS_COLORS[question.status] ?? 'grey',
-							size: 's',
-							align: 'start',
-						}),
-						// The question id binds to its review-board card; the story id keeps the
-						// layout checks able to find the card a question hangs under.
-						meta: { journey: { nodeId: question.id, kind: 'question', story: story.id } },
-					})
+					put.push(questionCard({ id: questionId, question, story: story.id, x, y: qy, index: ix[n++], parentId }))
 					const linkId = `shape:sm-qlink-${story.id}-${question.id}`
 					put.push({
 						...connector({ id: linkId, parentId, index: ix[n++], color: 'grey' }),
@@ -223,7 +195,21 @@ export function buildStoryMap(model, room = null, progress = null) {
 					put.push(...connectorBindings(linkId, storyShapeId, questionId).map((b) => ({
 						...b, meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
 					})))
-					qy += h + QUESTION_GAP
+					qy += NOTE_SIZE.s + QUESTION_GAP
+
+					if (isQuestionAnswered(question)) {
+						const answerId = `shape:sm-answer-${story.id}-${question.id}`
+						put.push(answerCard({ id: answerId, question, story: story.id, x, y: qy, index: ix[n++], parentId }))
+						const alinkId = `shape:sm-alink-${story.id}-${question.id}`
+						put.push({
+							...connector({ id: alinkId, parentId, index: ix[n++], color: 'grey' }),
+							meta: { journey: { nodeId: question.id, kind: 'answer-link', story: story.id } },
+						})
+						put.push(...connectorBindings(alinkId, questionId, answerId).map((b) => ({
+							...b, meta: { journey: { nodeId: question.id, kind: 'answer-link', story: story.id } },
+						})))
+						qy += NOTE_SIZE.s + QUESTION_GAP
+					}
 				}
 			})
 		}

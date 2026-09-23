@@ -2,8 +2,9 @@ import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createTLSchema } from '@tldraw/tlschema'
 import { buildJourneyBoard, buildAllPages, staleRecordIds } from './render.mjs'
+import { buildStoryMap } from './storymap.mjs'
 import { fixtureModel } from './fixture.mjs'
-import { fitHeight, note, storyBorder } from './records.mjs'
+import { fitHeight, note, storyBorder, NOTE_SIZE } from './records.mjs'
 
 const kind = (records, kind) => records.filter((s) => s.meta?.journey?.kind === kind)
 const text = (s) => s.props.richText.content.map((p) => (p.content ?? []).map((t) => t.text ?? '').join('')).join('\n')
@@ -14,8 +15,27 @@ test('release boards show exactly the selected stories in yellow, grouped by gre
 	assert.deepEqual(stories.map((s) => s.meta.journey.nodeId), ['a-0', 'a-2', 'b-see', 'c-read'])
 	assert.ok(stories.every((s) => s.props.color === 'yellow'))
 	assert.ok(kind(records, 'activity').every((s) => s.props.color === 'green'))
-	const a = kind(records, 'activity')[0]
-	assert.ok(stories.slice(0, 2).every((s) => s.x >= a.x && s.x + 200 <= a.x + a.props.w))
+	// The activity note has no props.w of its own; the flow card still spans the group's
+	// full width, so it is the group-span reference the stories are checked against.
+	const flowA = kind(records, 'flow').find((f) => f.meta.journey.nodeId === 'a')
+	assert.ok(stories.slice(0, 2).every((s) => s.x >= flowA.x && s.x + 200 <= flowA.x + flowA.props.w))
+})
+
+test('an activity or story card is structurally identical between the story map and the release board for the same node', () => {
+	const board = buildJourneyBoard(fixtureModel, { release: fixtureModel.releases[0] })
+	const map = buildStoryMap(fixtureModel)
+	const cardShape = (s) => ({ type: s.type, color: s.props.color, size: s.props.size, richText: s.props.richText })
+
+	const boardActivity = kind(board, 'activity').find((s) => s.meta.journey.nodeId === 'a')
+	const mapActivity = kind(map, 'activity').find((s) => s.meta.journey.nodeId === 'a')
+	assert.deepEqual(cardShape(boardActivity), cardShape(mapActivity))
+
+	const boardStory = kind(board, 'story').find((s) => s.meta.journey.nodeId === 'a-0')
+	const mapStory = kind(map, 'story').find((s) => s.meta.journey.nodeId === 'a-0')
+	assert.deepEqual(cardShape(boardStory), cardShape(mapStory))
+	// Status border treatment is the same shared storyBorder() call either way.
+	const borderStyle = (border) => ({ color: border.props.color, dash: border.props.dash, size: border.props.size, isLocked: border.isLocked })
+	assert.deepEqual(borderStyle(storyBorder(boardStory)), borderStyle(storyBorder(mapStory)))
 })
 
 test('the release board draws no lane boxes', () => {
@@ -28,7 +48,7 @@ test('the release board draws no lane boxes', () => {
 	}
 })
 
-test('a flow card is drawn once per system: line and a constraint card once per rule id; evidence lives in the story card', () => {
+test('a flow card is drawn once per system: line and a constraint card once per rule id', () => {
 	const model = structuredClone(fixtureModel)
 	model.steps[0].system = ['Calls the shared service']
 	model.steps[0].rules = ['unique']
@@ -51,21 +71,22 @@ test('a flow card is drawn once per system: line and a constraint card once per 
 	const flowB = kind(records, 'flow').find((s) => s.meta.journey.nodeId === 'b')
 	assert.equal(text(flowB), 'No system flow recorded.')
 
+	// The story card's text is exactly `story.card`, same as the story map — evidence
+	// lives in the release contract and the story-status border, not on this card.
 	const storyA0 = kind(records, 'story').find((s) => s.meta.journey.nodeId === 'a-0')
-	assert.match(text(storyA0), /Evidence: NamesIt$/)
-
-	// A question is a card of its own, not text folded into the story card.
+	assert.equal(text(storyA0), 'Names it')
 	const bSee = kind(records, 'story').find((s) => s.meta.journey.nodeId === 'b-see')
-	assert.match(text(bSee), /No story evidence recorded\.$/)
-	assert.doesNotMatch(text(bSee), /push or pull/)
+	assert.equal(text(bSee), 'Sees it arrive')
 })
 
-test('an open question is drawn as its own card, connected to its story by a native arrow', () => {
+test('a question is drawn as its own note, connected to its story by a native arrow', () => {
 	const records = buildJourneyBoard(fixtureModel, { release: fixtureModel.releases[0] })
 	const question = kind(records, 'question').find((q) => q.meta.journey.story === 'b-see')
 	assert.ok(question, 'no question card drawn for b-see')
-	assert.match(text(question), /^OPEN\nShould delivery be push or pull\?/)
-	assert.deepEqual([question.props.color, question.props.fill, question.props.dash], ['light-green', 'solid', 'dashed'])
+	assert.equal(question.type, 'note')
+	// No OPEN label, no dashed/solid outline — an unanswered question just carries the ask.
+	assert.equal(text(question), 'Should delivery be push or pull?')
+	assert.equal(question.props.color, 'light-green')
 
 	const story = kind(records, 'story').find((s) => s.meta.journey.nodeId === 'b-see')
 	const link = records.find((r) => r.type === 'arrow' && r.meta?.journey?.kind === 'question-link' && r.meta.journey.story === 'b-see')
@@ -73,34 +94,61 @@ test('an open question is drawn as its own card, connected to its story by a nat
 	const bindings = records.filter((r) => r.typeName === 'binding' && r.fromId === link.id)
 	assert.equal(bindings.length, 2)
 	assert.deepEqual(new Set(bindings.map((b) => b.toId)), new Set([story.id, question.id]))
+
+	// b-see's question carries neither answer: nor doc:, so no answer note is drawn.
+	assert.equal(kind(records, 'answer').find((a) => a.meta.journey.story === 'b-see'), undefined)
 })
 
-test('open, answered and deferred questions share one fill; only the outline tells them apart', () => {
+test('an answered question draws an answer note under it with a bound connector; an unanswered one draws none', () => {
 	const model = structuredClone(fixtureModel)
 	model.steps[0].stories[0].status = 'gap'
 	delete model.steps[0].stories[0].evidence
 	model.steps[0].stories[0].questions = [
-		{ id: 'q-open', ask: 'Still open', status: 'open' },
-		{ id: 'q-answered', ask: 'Now settled', status: 'answered' },
+		{ id: 'q-open', ask: 'Still open' },
+		{ id: 'q-answered', ask: 'Now settled', answer: 'It is the owner.' },
+		{ id: 'q-linked', ask: 'Where is this written up?', doc: 'https://example.com/adr#q1' },
 		{ id: 'q-deferred', ask: 'Parked for now', status: 'deferred', because: 'waiting on design' },
 	]
 	const records = buildJourneyBoard(model, { release: model.releases[0] })
-	const byId = (id) => kind(records, 'question').find((q) => q.meta.journey.nodeId === id)
-	// Colour means kind (question), not status — fill is light-green for all three.
-	for (const id of ['q-open', 'q-answered', 'q-deferred']) assert.equal(byId(id).props.color, 'light-green')
-	assert.equal(byId('q-open').props.dash, 'dashed')
-	assert.equal(byId('q-answered').props.dash, 'solid')
-	assert.equal(byId('q-deferred').props.dash, 'solid')
-	assert.match(text(byId('q-deferred')), /because: waiting on design/)
+	const questionById = (id) => kind(records, 'question').find((q) => q.meta.journey.nodeId === id)
+	const answerById = (id) => kind(records, 'answer').find((a) => a.meta.journey.nodeId === id)
+
+	// Colour means kind, not status — every question note is the same light-green.
+	for (const id of ['q-open', 'q-answered', 'q-linked', 'q-deferred']) {
+		assert.equal(questionById(id).type, 'note')
+		assert.equal(questionById(id).props.color, 'light-green')
+	}
+
+	assert.equal(answerById('q-open'), undefined, 'an unanswered question draws no answer note')
+
+	const answered = answerById('q-answered')
+	assert.equal(answered.type, 'note')
+	assert.equal(answered.props.color, 'light-blue')
+	assert.equal(text(answered), 'It is the owner.')
+	assert.equal(answered.x, questionById('q-answered').x, 'the answer sits straight below its own question')
+	assert.ok(answered.y > questionById('q-answered').y)
+
+	assert.equal(answerById('q-linked').props.url, 'https://example.com/adr#q1')
+
+	// A deferred question's `because` becomes its answer text when no explicit answer
+	// was authored — its reason for parking is itself an answer to show.
+	assert.equal(text(answerById('q-deferred')), 'waiting on design')
+
+	const alink = records.find((r) => r.type === 'arrow' && r.meta?.journey?.kind === 'answer-link' && r.meta.journey.nodeId === 'q-answered')
+	assert.ok(alink, 'no connector drawn between the question and its answer')
+	const bindings = records.filter((r) => r.typeName === 'binding' && r.fromId === alink.id)
+	assert.deepEqual(new Set(bindings.map((b) => b.toId)), new Set([questionById('q-answered').id, answered.id]))
 })
 
-test('long lines have fitted cards and stack top to bottom: activity, flow, constraints, stories, questions', () => {
+test('long lines have fitted flow/constraint cards, and cards stack top to bottom: activity, flow, constraints, stories, questions', () => {
 	const model = structuredClone(fixtureModel)
 	model.steps[0].stories[0].question = 'A long question that needs an answer. '.repeat(15)
 	model.steps[0].system = ['A long system explanation. '.repeat(30)]
 	model.rules = [{ id: 'long', text: 'A constraint. '.repeat(70) }]
 	model.steps[0].rules = ['long']
 	const records = buildJourneyBoard(model)
+	// Only flow/constraint/status/legend cards are geo and fitHeight-measured — activity,
+	// story, question and answer are notes with a fixed nominal footprint instead.
 	const boxes = records.filter((s) => s.type === 'geo' && text(s))
 	for (const s of boxes) assert.ok(s.props.h >= fitHeight(text(s), s.props.w), `${s.id} is too short`)
 
@@ -109,10 +157,10 @@ test('long lines have fitted cards and stack top to bottom: activity, flow, cons
 	const constraints = kind(records, 'constraint')
 	const stories = kind(records, 'story')
 	const questions = kind(records, 'question')
-	assert.ok(Math.max(...activities.map((s) => s.y + s.props.h)) <= Math.min(...flows.map((s) => s.y)))
+	assert.ok(Math.max(...activities.map((s) => s.y)) + NOTE_SIZE.m <= Math.min(...flows.map((s) => s.y)))
 	assert.ok(Math.max(...flows.map((s) => s.y + s.props.h)) <= Math.min(...constraints.map((s) => s.y)))
 	assert.ok(Math.max(...constraints.map((s) => s.y + s.props.h)) < Math.min(...stories.map((s) => s.y)))
-	assert.ok(Math.max(...stories.map((s) => s.y + 200)) < Math.min(...questions.map((s) => s.y)))
+	assert.ok(Math.max(...stories.map((s) => s.y)) + NOTE_SIZE.m < Math.min(...questions.map((s) => s.y)))
 })
 
 test('unsliced journeys retain unassigned stories and activities without stories', () => {
@@ -129,7 +177,9 @@ test('both projections border all three states and count exists alone; the relea
 	const model = { releases: [{ id: 'r', name: 'Release' }], steps: [{ id: 'a', card: 'Act', stories: ['gap', 'unverified', 'exists'].map((status) => ({ id: status, card: status, release: 'r', status })) }] }
 	const records = buildJourneyBoard(model, { release: model.releases[0] })
 	assert.deepEqual(kind(records, 'story-border').map((s) => s.props.color), ['red', 'violet', 'green'])
-	assert.ok(kind(records, 'story').every((s) => text(s).endsWith('No story evidence recorded.')))
+	// The card text is exactly `story.card`, same as the story map — status is carried by
+	// the border only, not by a line of text on the card.
+	assert.deepEqual(kind(records, 'story').map((s) => text(s)), ['gap', 'unverified', 'exists'])
 	// The board draws its own legend (card colours + story-status borders); it does not
 	// also carry withStoryStatus's separate horizontal legend.
 	assert.equal(kind(records, 'status-legend').length, 0)
@@ -139,8 +189,8 @@ test('both projections border all three states and count exists alone; the relea
 	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'status-unverified' && s.props.color === 'violet'))
 	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'flow' && s.props.color === 'light-blue'))
 	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'constraint' && s.props.color === 'orange'))
-	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'question-open' && s.props.dash === 'dashed'))
-	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'question-settled' && s.props.dash === 'solid'))
+	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'question' && s.props.color === 'light-green'))
+	assert.ok(legend.some((s) => s.meta.journey.nodeId === 'answer' && s.props.color === 'light-blue'))
 
 	for (const page of buildAllPages(model, null, ['story-map', 'journey-board']).filter((r) => r.typeName === 'page')) {
 		const all = buildAllPages(model, null, ['story-map', 'journey-board'])
@@ -152,9 +202,9 @@ test('both projections border all three states and count exists alone; the relea
 	assert.deepEqual(kind(buildAllPages(model, null, ['story-map']), 'status-legend').map((s) => text(s).split('\n')[0]), ['EXISTS', 'GAP', 'UNVERIFIED'])
 	assert.match(text(kind(records, 'release-label')[0]), /1\/3 stories exist/)
 	delete model.steps[0].stories[0].status
-	// UNASSESSED is a status line inside the story card, after the card text and before
-	// the evidence line, not a whole card of its own.
-	assert.deepEqual(text(kind(buildJourneyBoard(model), 'story')[0]).split('\n'), ['gap', 'UNASSESSED', 'No story evidence recorded.'])
+	// A missing/unsupported status draws no border (storyBorder returns null) but the
+	// card text is unaffected — status was never a line of text on either projection.
+	assert.equal(text(kind(buildJourneyBoard(model), 'story')[0]), 'gap')
 })
 
 test('story border geometry follows measured height and scale without moving the story', () => {

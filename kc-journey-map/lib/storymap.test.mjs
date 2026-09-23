@@ -3,7 +3,7 @@ import { test } from 'node:test'
 import { buildStoryMap } from './storymap.mjs'
 import { buildJourneyBoard } from './render.mjs'
 import { fixtureModel as model } from './fixture.mjs'
-import { fitHeight } from './records.mjs'
+import { fitHeight, NOTE_SIZE } from './records.mjs'
 import { createTLSchema } from '@tldraw/tlschema'
 
 const kinds = (put) => new Set(put.map((r) => r.meta?.journey?.kind).filter(Boolean))
@@ -106,7 +106,9 @@ test('story map borders all three states and counts exists alone', () => {
 })
 
 // Measured on a real board before the fix: 170px of 200 hidden, the card on top.
-const spans = (r) => ({ x1: r.x, y1: r.y, x2: r.x + r.props.w, y2: r.y + r.props.h })
+// A question is a note, with no props.w/h of its own — its footprint is the same
+// nominal size 's' square the generator reserves space for everywhere else.
+const spans = (r) => ({ x1: r.x, y1: r.y, x2: r.x + NOTE_SIZE.s, y2: r.y + NOTE_SIZE.s })
 const overlap = (a, b) => Math.min(a.x2, b.x2) - Math.max(a.x1, b.x1) > 1 && Math.min(a.y2, b.y2) - Math.max(a.y1, b.y1) > 1
 
 test('a question never renders underneath another story card', () => {
@@ -128,17 +130,43 @@ test('a question is drawn under its own story, in its own column', () => {
 	}
 })
 
-test('a question grows its row, so the row beneath it stays clear', () => {
+test('an answered question is a note directly under its question note, bound by a connector', () => {
+	const withAnswer = structuredClone(model)
+	withAnswer.steps[1].stories[0].questions = [{ id: 'q1', ask: 'Should delivery be push or pull?', answer: 'Push, per the ADR.', doc: 'https://example.com/adr#q1' }]
+	delete withAnswer.steps[1].stories[0].question
+	const put = buildStoryMap(withAnswer)
+	const q = kindOf(put, 'question')[0]
+	const a = kindOf(put, 'answer')[0]
+	assert.equal(q.type, 'note')
+	assert.equal(a.type, 'note')
+	assert.equal(a.props.color, 'light-blue')
+	assert.equal(a.props.url, 'https://example.com/adr#q1')
+	assert.equal(a.x, q.x)
+	assert.ok(a.y > q.y)
+
+	const link = put.find((r) => r.type === 'arrow' && r.meta?.journey?.kind === 'answer-link')
+	assert.ok(link, 'no connector drawn between the question and its answer')
+	const bindings = put.filter((r) => r.typeName === 'binding' && r.fromId === link.id)
+	assert.deepEqual(new Set(bindings.map((b) => b.toId)), new Set([q.id, a.id]))
+})
+
+// A question is a note now, so its rendered height is a runtime concern (growY) the
+// generator does not compute from text length — unlike the old geo card, a long
+// question no longer grows the row itself. What still holds: the row below an
+// answered question clears both the question's and its answer's nominal footprint.
+test('the row below a story clears its questions, and an answered one clears its answer too', () => {
 	const tall = {
 		releases: [{ id: 'r', name: 'Release' }],
 		steps: [{ id: 'a', card: 'Act', stories: [
-			{ id: 'q', card: 'Asks', release: 'r', status: 'gap', question: 'x'.repeat(400) },
+			{ id: 'q', card: 'Asks', release: 'r', status: 'gap', questions: [{ id: 'q1', ask: 'x'.repeat(400), answer: 'y'.repeat(400) }] },
 			{ id: 'below', card: 'Next', release: 'r', status: 'gap' },
 		] }],
 	}
 	const put = buildStoryMap(tall)
 	const q = kindOf(put, 'question')[0]
-	assert.ok(byId(put, 'shape:sm-story-below').y > q.y + q.props.h, 'the next row starts inside the question box')
+	const a = kindOf(put, 'answer')[0]
+	assert.ok(a.y > q.y, "the answer sits below its own question")
+	assert.ok(byId(put, 'shape:sm-story-below').y > a.y + NOTE_SIZE.s, 'the next row starts inside the answer box')
 })
 
 // Every other box on the page takes its height from fitHeight; the banner took a

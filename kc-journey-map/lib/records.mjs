@@ -21,7 +21,7 @@ const base = (id, x, y, index, parentId) => ({
 	meta: {},
 })
 
-export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', color = 'green', size = 'm' }) {
+export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', color = 'green', size = 'm', url = '' }) {
 	return {
 		...base(id, x, y, index, parentId),
 		type: 'note',
@@ -35,13 +35,19 @@ export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', col
 			growY: 0,
 			// Zero passes schema validation but renders invisible note text.
 			fontSizeAdjustment: 1,
-			url: '',
+			url,
 			scale: 1,
 			textLastEditedBy: null,
 			richText: richText(text),
 		},
 	}
 }
+
+// A note shape has no w/h prop — its footprint is a fixed square per size preset,
+// grown at runtime by the editor. This is the nominal footprint the generator uses for
+// its own layout math, the same way it already treated story/activity notes before any
+// of this file had a name for it.
+export const NOTE_SIZE = { m: 200, s: 130 }
 
 const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', align = 'middle', verticalAlign = 'middle', url = '', dash = 'draw' }) => ({
 	...base(id, x, y, index, parentId),
@@ -117,7 +123,46 @@ export function page({ id, name, index = 'a1' }) {
 
 export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }
 
-export const QUESTION_STATUS_COLORS = { open: 'violet', answered: 'green', deferred: 'grey' }
+// The release board is a zoom-in of the story map onto one slice, not a parallel style —
+// both projections call these instead of building their own note, so an activity or
+// story card cannot drift between them the way two independent constructors already did
+// once (a geo label vs. a note, aligned differently, carrying a trailing evidence line
+// only one of the two ever had).
+export function activityCard({ id, step, x, y, index, parentId }) {
+	return {
+		...note({ id, text: step.activity ?? step.card, x, y, index, parentId, color: 'green' }),
+		meta: { journey: { nodeId: step.id, kind: 'activity' } },
+	}
+}
+
+export function storyCard({ id, story, x, y, index, parentId, progress = null, model = null }) {
+	return {
+		...note({ id, text: story.card, x, y, index, parentId, color: 'yellow' }),
+		meta: { journey: { nodeId: story.id, kind: 'story',
+			...(progress ? { progress: storyProgress(progress, model, story) } : {}),
+			...(story.status ? { status: story.status } : {}) } },
+	}
+}
+
+// Whether a question is answered is shown by whether an answer card hangs under it,
+// nothing else — no status word, no dashed/solid outline. Both surfaces draw the same
+// note for the same reason item 1 above does.
+export function questionCard({ id, question, story, x, y, index, parentId }) {
+	return {
+		...note({ id, text: question.ask, x, y, index, parentId, color: 'light-green', size: 's' }),
+		meta: { journey: { nodeId: question.id, kind: 'question', story } },
+	}
+}
+
+// A short paragraph, a link to the technical document that answers it, or both — the
+// text lives in the note, the link lives in the note's own url prop, exactly like the
+// hand-drawn sample this shape's construction was read from.
+export function answerCard({ id, question, story, x, y, index, parentId }) {
+	return {
+		...note({ id, text: question.answer ?? '', x, y, index, parentId, color: 'light-blue', size: 's', url: question.doc ?? '' }),
+		meta: { journey: { nodeId: question.id, kind: 'answer', story } },
+	}
+}
 
 // A native arrow, bound at both ends. Coordinates are the placeholder tldraw's own
 // ExtractBindings migration leaves once a terminal is bound — the editor resolves the

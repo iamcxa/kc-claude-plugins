@@ -40,22 +40,26 @@ export function lintExistsWithoutEvidence(model) {
 
 // A typo'd status (`opne`) reads as not-open to `openQuestions` and sails past the
 // exists-with-open-question gate below — the one check that makes this feature mean
-// anything. Catch the typo, and the deferral that never says why.
+// anything. Catch the typo, and the deferral that never says why. `status:` is now the
+// earlier shape (answered-ness reads from `answer:`/`doc:` instead) — a question that
+// never carried one is not a violation, so this only fires when a `status:` is present.
 export function lintQuestionStatus(model) {
 	return iterStories(model).flatMap((s) => (s.questions ?? [])
-		.filter((q) => !QUESTION_STATUSES.includes(q.status) || (q.status === 'deferred' && !q.because))
+		.filter((q) => q.status !== undefined && (!QUESTION_STATUSES.includes(q.status) || (q.status === 'deferred' && !q.because)))
 		.map((q) => ({ lint: 'invalid-question-status', story: s.id, release: s.release,
 			detail: QUESTION_STATUSES.includes(q.status)
 				? `question ${q.id} on story ${s.id} is deferred without a "because"`
 				: `question ${q.id} on story ${s.id} has unsupported status "${q.status}"; use ${QUESTION_STATUSES.join(', ')}` })))
 }
 
-// Exclude generated self-citations; quoting a symbol is not executable evidence.
+// "Open" now means unanswered: no `answer:` text, no `doc:` link, and no legacy
+// `status: answered`/`deferred` carrying one either. A story cannot be exists while any
+// of its questions has no answer.
 export function lintExistsWithOpenQuestion(model) {
 	return iterStories(model)
 		.filter((s) => s.status === 'exists' && openQuestions(s).length)
 		.map((s) => ({ lint: 'exists-with-open-question', story: s.id, release: s.release,
-			detail: `story ${s.id} is marked exists while these questions are still open: ${openQuestions(s).map((q) => q.id).join(', ')}` }))
+			detail: `story ${s.id} is marked exists while these questions have no answer: ${openQuestions(s).map((q) => q.id).join(', ')}` }))
 }
 
 export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [] } = {}) {

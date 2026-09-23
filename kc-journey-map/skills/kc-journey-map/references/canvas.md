@@ -138,28 +138,37 @@ node lib/journey-render.mjs docs/journey/<slug>.yaml [roomId] [--pages story-map
 | **Release contract**, one per release | generated document, not canvas | authored story status, evidence and shared rule ids for one release — `lib/journey-contract.mjs` |
 | **Function map** (`function-map`, opt-in) | canvas, one page | what does each step decide, and what becomes true when it does |
 
-**Journey boards use stories as the review unit, and they are cards only — no lane
-rectangles.** Each release page stacks, top to bottom, under each green activity
-heading (`activity`, falling back to `card`): one light-blue flow card per `system:`
-line, one orange constraint card per rule id (showing that rule's text), then the
-release's yellow story cards, then — directly under its own story — one light-green
-question card per question. A step with neither `system:` nor `rules:` still gets one
-placeholder card of each kind, so the render never reads as having silently dropped a
-step's flow or constraints. Cards sit straight below what they belong to with short
-connectors, not long diagonals, so a release with many stories does not become a
-tangle of crossing lines. With no releases, the whole-journey board also shows
-unassigned stories and marks activities that have no stories yet.
+**The release board is a zoom-in of the story map onto one slice, not a parallel
+style.** Its activity and story cards are drawn by the exact same builders the story
+map uses (`records.mjs:activityCard`, `records.mjs:storyCard`) — same shape type
+(`note`), same colour, same size, same status border, same text (`story.card` alone;
+evidence and task progress live in the release contract and the story-status meta, not
+on the card). What the release board adds sits below: one light-blue flow card per
+`system:` line, one orange constraint card per rule id (showing that rule's text) —
+still `geo` rectangles spanning the group's full width, unlike the note-sized activity
+above them — then the release's story notes, then each story's own questions. A step
+with neither `system:` nor `rules:` still gets one placeholder card of each kind, so
+the render never reads as having silently dropped a step's flow or constraints. With
+no releases, the whole-journey board also shows unassigned stories and marks
+activities that have no stories yet.
 
-Colour means kind, never status, and a small legend in each page's top-left names
-every card colour plus the story-status border so a reader never has to guess: flow
-(light-blue), constraint (orange), story (yellow), question (light-green), and the
-`exists`/`gap`/`unverified` story borders (green/red/violet). A question's own status
-is carried by its outline, not a second colour — dashed for `open`, solid for
-`answered` or `deferred` — because every fill a new card kind could use that is not
-already a story-status border colour is scarce. Story cards carry a solid 10 px status
-border (`records.mjs:storyBorder`) with the same green/red/violet colours the legend
-explains; a story's evidence symbol is the last line of its own card, not a separate
-cell. `EXISTS` describes implementation evidence, not delivery acceptance.
+**Questions and answers are `note` shapes, not `geo` rectangles** — a note has the
+native "+" handles on its edges that let a reader add an adjacent card in one click.
+Colour means kind, never status: question notes are light-green, answer notes are
+light-blue (matching the flow card's colour is intentional — both read as
+"informational" — but a different shape and position tell them apart). A small legend
+in each release page's top-left names every card colour plus the story-status border
+so a reader never has to guess. There is no OPEN label and no dashed/solid outline on
+a question any more — **whether a question is answered is shown by whether an answer
+note hangs under it, nothing else.** Questions on the release board spread out
+horizontally beneath their story rather than stacking in one column, as the Captain
+laid them out by hand; the story map keeps its single vertical column, with each
+answer note directly under its own question, before the next question. Every question
+or answer is bound to what it hangs under by a native tldraw arrow
+(`records.mjs:connector` + `connectorBindings`), so the connection survives an editor
+drag. Story cards carry a solid 10 px status border (`records.mjs:storyBorder`) with
+green/red/violet for `exists`/`gap`/`unverified`; `EXISTS` describes implementation
+evidence, not delivery acceptance.
 
 `records.mjs:storyBorder` keeps each story as a native yellow note with a locked,
 empty geo child. `App.tsx:syncStoryBorders` updates that child after note creation
@@ -247,7 +256,9 @@ steps:
         release: …
         status: exists      # gap | unverified | exists — required for evidence checks
         evidence: …          # a bare symbol that greps in the repo; required when status is exists
-        question: …          # optional — an unresolved decision, drawn violet
+        questions:            # optional — unresolved decisions, one card per question
+          - {id: …, ask: …, answer: …, doc: …}   # answer: a short paragraph, doc: a link to the chapter that answers it — either or both
+        question: …          # sugar for a single-element questions: list
 ownership:
   - {id: …, owner: …, from: <stepId>, to: <stepId>, note: …}
 slices:
