@@ -400,18 +400,35 @@ def delivery_operation(args, directory):
             require(observed["state"] != "unknown", "unknown provider result cannot authorize recovery")
             # A live owner cannot honestly attest --owner-state stopped. Reissuing to the
             # same owner is safe without that attestation only when nothing has been sent
-            # under the lost token yet (no stored observation) and the caller's own
-            # confirmed-absent provider check proves it still hasn't.
-            self_reissue = (record is not None and record["observation"] is None
-                             and record["owner"] == args.owner and observed["state"] == "absent")
-            require(args.owner_state == "stopped" or self_reissue,
-                    "verify delivery owner stopped before recovery, or reissue as the same "
-                    "owner with no prior delivery observation and a confirmed-absent check")
+            # under the lost token yet (no stored observation): either the caller's own
+            # confirmed-absent check proves it still hasn't, or an open/merged observation
+            # matching the supplied plan proves it already has, by hand.
+            same_owner_unclaimed = (record is not None and record["observation"] is None
+                                     and record["owner"] == args.owner)
+            self_reissue = same_owner_unclaimed and observed["state"] == "absent"
+            already_sent = (same_owner_unclaimed and args.owner_state in ("running", "unknown")
+                             and observed["state"] in ("open", "merged"))
+            # The same lost-token gap can recur one step later: the token needed to
+            # report an already-recorded "open" PR's merge or close is the one that's lost.
+            previously_open = (record is not None and record["owner"] == args.owner
+                                and record["observation"] is not None
+                                and record["observation"]["state"] == "open")
+            advance_open = (previously_open and args.owner_state in ("running", "unknown")
+                             and observed["state"] in ("merged", "closed"))
+            require(args.owner_state == "stopped" or self_reissue or already_sent or advance_open,
+                    "verify delivery owner stopped before recovery, reissue as the same owner "
+                    "with no prior delivery observation and a confirmed-absent check, reconcile "
+                    "as the same owner with no prior delivery observation and an open or merged "
+                    "observation matching the supplied plan, or advance the same owner's own "
+                    "recorded open observation to merged or closed for the identical PR")
             if observed["state"] == "absent":
                 release_raw, _, _ = inspect_release(directory)
                 require(release_raw is None, "job is released; absent reconciliation refused")
             if record:
-                require(record["plan"] == plan, "recovery cannot change reviewed plan")
+                # already_sent names the plan as delivered, not reviewed: the candidate may
+                # have changed (e.g. a requested rewrite) after the original plan was claimed.
+                if not already_sent:
+                    require(record["plan"] == plan, "recovery cannot change reviewed plan")
                 previous = record["observation"]
                 if previous and previous["pr"]:
                     require(observed["pr"] == previous["pr"], "cannot replace or forget observed PR")
@@ -425,6 +442,8 @@ def delivery_operation(args, directory):
             else:
                 atomic_write(archive, prior)
             owner_state = ("stopped (caller attestation)" if args.owner_state == "stopped"
+                            else "reconciled to same owner (delivery already sent)" if already_sent
+                            else "reconciled to same owner (recorded observation advanced)" if advance_open
                             else "reissued to same owner (confirmed-absent observation)")
             record = {"schema_version": 1, "state": observed["state"] if observed["state"] != "absent" else "uncertain",
                       "owner": args.owner, "token": secrets.token_hex(32), "plan": plan, "observation": observed,
@@ -432,7 +451,8 @@ def delivery_operation(args, directory):
         atomic_write(directory / "delivery.json", encoded(record))
         output = notice(directory)
         if args.command in ("delivery-claim", "delivery-recover"):
-            output["delivery_token"] = record["token"]
+            if args.command == "delivery-claim" or not (already_sent or advance_open):
+                output["delivery_token"] = record["token"]
             output["delivery_claimed"] = args.command == "delivery-claim" or observed["state"] == "absent"
         return output
 

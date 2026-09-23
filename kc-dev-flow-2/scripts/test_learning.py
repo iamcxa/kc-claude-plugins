@@ -703,10 +703,6 @@ class LearningTests(unittest.TestCase):
     def test_delivery_reissue_requires_confirmed_absent_observation(self):
         claim, plan = self.delivery_fixture()
         self.deliver(claim)
-        # A same-owner, honestly-running reissue attempt still needs its own confirmed-absent
-        # check; an already-found result does not authorize skipping the stopped attestation.
-        refused = self.reissue(claim, plan, "open", code=1)
-        self.assertIn("stopped", refused["error"])
         # An unknown provider result is refused on its own, unrelated, ground either way.
         unknown = self.reissue(claim, plan, "unknown", code=1)
         self.assertIn("unknown provider result", unknown["error"])
@@ -731,6 +727,101 @@ class LearningTests(unittest.TestCase):
         self.assertIn("stopped", refused["error"])
         self.assertEqual((self.record_path(claim["job"]).parent / "delivery.json").read_bytes(), before)
         self.assertEqual(self.cli("notices")["notices"][0]["delivery"]["state"], "merged")
+
+    def test_delivery_recover_reconciles_already_sent_pr(self):
+        for state, owner_state in (("open", "running"), ("merged", "unknown")):
+            with self.subTest(state=state, owner_state=owner_state):
+                self.reset_store()
+                self.pack["task_id"] = f"already-sent-{state}"
+                self.write_pack()
+                claim, plan = self.delivery_fixture()
+                sent = self.deliver(claim)
+                # The Captain asked for a rewrite before the by-hand push; the recovery's
+                # plan names the candidate actually delivered, not the one originally claimed.
+                rewritten = {**plan, "candidate_commit": "e" * 40}
+                self.plan.write_text(json.dumps(rewritten))
+                digest = self.cli("notices", "--all")["notices"][0]["delivery"]["digest"]
+                reconciled = self.cli("delivery-recover", "--job", claim["job"], "--expected", digest,
+                                      "--owner-state", owner_state, "--reason", "Synthetic by-hand delivery reconciliation",
+                                      "--owner", "delivery-owner", "--plan", self.plan,
+                                      "--observation", self.observed(rewritten, state, draft=False))
+                self.assertNotIn("delivery_token", reconciled)
+                self.assertFalse(reconciled["delivery_claimed"])
+                self.assertEqual(reconciled["delivery"]["state"], state)
+                self.assertEqual(reconciled["delivery"]["plan"]["candidate_commit"], "e" * 40)
+                # The lost token that was never used to send anything is now dead too.
+                self.cli("delivery-record", "--job", claim["job"], "--token", sent["delivery_token"],
+                         "--observation", self.observed(rewritten, state, draft=False), code=1)
+
+    def test_delivery_recover_already_sent_refuses_different_owner(self):
+        claim, plan = self.delivery_fixture()
+        self.deliver(claim)
+        refused = self.reissue(claim, plan, "open", owner="someone-else", code=1)
+        self.assertIn("stopped", refused["error"])
+
+    def test_delivery_recover_already_sent_refuses_existing_observation(self):
+        # An already-recorded "open" observation defeats the already_sent shortcut (which
+        # requires none recorded yet); re-observing "open" is not the advance-to-merged/closed
+        # case either, so this still needs a genuine stopped attestation.
+        claim, plan = self.delivery_fixture()
+        first = self.deliver(claim)
+        self.cli("delivery-record", "--job", claim["job"], "--token", first["delivery_token"],
+                 "--observation", self.observed(plan, "open"))
+        refused = self.reissue(claim, plan, "open", code=1)
+        self.assertIn("stopped", refused["error"])
+
+    def test_delivery_recover_already_sent_refuses_closed_observation(self):
+        claim, plan = self.delivery_fixture()
+        self.deliver(claim)
+        refused = self.reissue(claim, plan, "closed", code=1)
+        self.assertIn("stopped", refused["error"])
+
+    def open_delivery(self, claim, plan):
+        first = self.deliver(claim)
+        self.cli("delivery-record", "--job", claim["job"], "--token", first["delivery_token"],
+                 "--observation", self.observed(plan, "open", draft=False))
+        return first
+
+    def advance(self, claim, plan, state, owner="delivery-owner", owner_state="running", observation=None, code=0):
+        record = self.cli("notices", "--all")["notices"][0]
+        return self.cli("delivery-recover", "--job", claim["job"], "--expected", record["delivery"]["digest"],
+                        "--owner-state", owner_state, "--reason", "Synthetic same-owner observation advance",
+                        "--owner", owner, "--plan", self.plan,
+                        "--observation", observation or self.observed(plan, state, draft=False), code=code)
+
+    def test_delivery_recover_advances_own_open_observation_to_merged(self):
+        claim, plan = self.delivery_fixture()
+        self.open_delivery(claim, plan)
+        advanced = self.advance(claim, plan, "merged")
+        self.assertNotIn("delivery_token", advanced)
+        self.assertFalse(advanced["delivery_claimed"])
+        self.assertEqual(advanced["delivery"]["state"], "merged")
+
+    def test_delivery_recover_advances_own_open_observation_to_closed(self):
+        claim, plan = self.delivery_fixture()
+        self.open_delivery(claim, plan)
+        advanced = self.advance(claim, plan, "closed", owner_state="unknown")
+        self.assertNotIn("delivery_token", advanced)
+        self.assertFalse(advanced["delivery_claimed"])
+        self.assertEqual(advanced["delivery"]["state"], "closed")
+
+    def test_delivery_recover_advance_refuses_different_pr(self):
+        claim, plan = self.delivery_fixture()
+        self.open_delivery(claim, plan)
+        mismatched = self.observed(plan, "merged", draft=False)
+        value = json.loads(mismatched.read_text())
+        value["pr"] = "example/project#9"
+        mismatched.write_text(json.dumps(value))
+        refused = self.advance(claim, plan, "merged", observation=mismatched, code=1)
+        self.assertIn("observed PR", refused["error"])
+
+    def test_delivery_recover_advance_refuses_regression_from_merged(self):
+        claim, plan = self.delivery_fixture()
+        first = self.deliver(claim)
+        self.cli("delivery-record", "--job", claim["job"], "--token", first["delivery_token"],
+                 "--observation", self.observed(plan, "merged", draft=False))
+        refused = self.advance(claim, plan, "open", code=1)
+        self.assertIn("stopped", refused["error"])
 
 
 if __name__ == "__main__":

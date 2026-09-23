@@ -178,6 +178,17 @@ that would be false. Call `delivery-recover` with the identical `--owner` used a
 confirmed-absent observation. The CLI accepts this reissue only when the delivery
 still has no recorded observation (nothing was sent under the lost token); a
 different owner, or any existing observation (open, merged or otherwise), still
+requires a genuine stopped attestation. If instead the delivery was already sent
+by hand under the lost token — an open or merged PR matching the supplied plan,
+which may now name a rewritten candidate — the same honest `--owner-state running`
+or `unknown` call records that observation without a stopped attestation; it grants
+no new delivery token, so nothing further can be sent under this reconciliation.
+The same gap can recur after a token-authenticated `open` observation, when the
+token needed to later report its merge or close is the one that got lost: the
+identical owner, still honest about `running` or `unknown`, may advance that own
+recorded `open` observation to `merged` or `closed` for the identical PR (same
+repository, branch, marker, candidate_commit and PR) with no new delivery token;
+a different PR, a different candidate, or any regression from `merged` still
 requires a genuine stopped attestation.
 
 ## Present the result
