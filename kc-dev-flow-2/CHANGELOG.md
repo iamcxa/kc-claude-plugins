@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.3.0...kc-dev-flow-2-v0.4.0) (2026-09-23)
+
+
+### Features
+
+* **kc-dev-flow-2:** add Decision records as an FO responsibility ([#481](https://github.com/iamcxa/kc-claude-plugins/issues/481)) ([e8280d8](https://github.com/iamcxa/kc-claude-plugins/commit/e8280d8ee737beebb050c1ab350211a63d375121))
+* **kc-dev-flow-2:** require a Captain-run acceptance script at validation gates ([#480](https://github.com/iamcxa/kc-claude-plugins/issues/480)) ([cc9ab70](https://github.com/iamcxa/kc-claude-plugins/commit/cc9ab70f9a1a5e5aa9726ed12a900a1bf04d35e4))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** document the stage report form and unblock a lost delivery token ([#477](https://github.com/iamcxa/kc-claude-plugins/issues/477)) ([bcf3c5c](https://github.com/iamcxa/kc-claude-plugins/commit/bcf3c5ce21233bc2ce0d7f4075fbffae28ed1d6f))
+
 ## [0.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.2.0...kc-dev-flow-2-v0.3.0) (2026-09-17)
 
 
