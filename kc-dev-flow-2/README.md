@@ -124,7 +124,8 @@ still needs a separate behavioral test.
 FO leads direction and requests research only when it can change a decision;
 workers author the bounded deliverable. For a route that includes ideation,
 use a PRFAQ with Mermaid whose actors, order, branches and approval boundaries
-match the prose. Add a suitable design-skill preview or HTML draft when needed.
+match the prose. FO's recorded `Surfaces:` line picks the owed artifact: a `ui`
+preview, a `db` schema, an `api` contract, or `none` for PRFAQ/Mermaid alone.
 Write material corrections back to the same definition before user approval.
 Implementation follows approved scope; validation checks the exact result and
 returns repairs through the supported feedback route. POC must not gain
