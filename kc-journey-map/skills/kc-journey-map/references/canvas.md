@@ -140,13 +140,35 @@ node lib/journey-render.mjs docs/journey/<slug>.yaml [roomId] [--pages story-map
 | **Release contract**, one per release | generated document, not canvas | authored story status, evidence and shared rule ids for one release — `lib/journey-contract.mjs` |
 | **Function map** (`function-map`, opt-in) | canvas, one page | what does each step decide, and what becomes true when it does |
 
-**Journey boards use stories as the review unit.** Each release page shows its selected
-stories as yellow cards under green activity headings (`activity`, falling back to
-`card`). Each story has a solid 10 px status border: green for `exists`, red for `gap`,
-violet for `unverified`, with one legend per page. Neutral boxes below retain evidence
-and questions. `EXISTS` describes implementation evidence, not delivery acceptance.
-With no releases, the whole-journey board also shows unassigned stories and marks
+**The release board is a zoom-in of the story map onto one slice, not a parallel
+style.** Its activity and story cards are drawn by the exact same builders the story
+map uses (`records.mjs:activityCard`, `records.mjs:storyCard`) — same shape type
+(`note`), same colour, same size, same status border, same text (`story.card` alone;
+evidence and task progress live in the release contract and the story-status meta, not
+on the card). What the release board adds sits below: one light-blue flow card per
+`system:` line, one orange constraint card per rule id (showing that rule's text) —
+still `geo` rectangles spanning the group's full width, unlike the note-sized activity
+above them — then the release's story notes, then each story's own questions. A step
+with neither `system:` nor `rules:` still gets one placeholder card of each kind, so
+the render never reads as having silently dropped a step's flow or constraints. With
+no releases, the whole-journey board also shows unassigned stories and marks
 activities that have no stories yet.
+
+**Questions and answers are `note` shapes, not `geo` rectangles** — a note has the
+native "+" handles on its edges that let a reader add an adjacent card in one click.
+Colour means kind, never status: question notes are light-green, answer notes are
+light-violet. A small legend in each release page's top-left names every card colour
+plus the story-status border so a reader never has to guess. There is no OPEN label and
+no dashed/solid outline on a question any more — **whether a question is answered is
+shown by whether an answer note hangs under it, nothing else.** Questions on the
+release board spread out horizontally beneath their story rather than stacking in one
+column, as the Captain laid them out by hand; the story map keeps its single vertical
+column, with each answer note directly under its own question, before the next
+question. Position alone carries the relationship — no connectors are drawn, and every
+gap on the grid is the same, which is what makes a hand-added note's position readable
+(see "Reading back a story's questions" below). Story cards carry a solid 10 px status
+border (`records.mjs:storyBorder`) with green/red/violet for `exists`/`gap`/`unverified`;
+`EXISTS` describes implementation evidence, not delivery acceptance.
 
 `records.mjs:storyBorder` keeps each story as a native yellow note with a locked,
 empty geo child. `App.tsx:syncStoryBorders` updates that child after note creation
@@ -157,11 +179,12 @@ PNG, SVG and `.tldr` exports include standard shapes; other tldraw hosts retain
 the saved border geometry, while subsequent height/scale edits need this canvas
 for synchronization. `node --test lib/render.test.mjs` checks generated geometry.
 
-System flow and constraints span each activity group once. The file currently stores
-`system`, `cites`, `rules` and `note` on the activity, so the board labels them as shared
-context with no recorded mapping to individual stories. It does not copy those claims
-into each story's evidence. This is a **release story detail board**, not a sequence
-diagram: left-to-right story order alone does not establish calls or causality.
+Flow and constraint cards span each activity group once, not once per story. The file
+currently stores `system`, `cites`, `rules` and `note` on the activity, so the board
+draws them as shared context with no recorded mapping to individual stories. It does
+not copy those claims into each story's evidence. This is a **release story detail
+board**, not a sequence diagram: left-to-right story order alone does not establish
+calls or causality.
 
 **The release contract is generated, never authored.** It reads the stories in a release
 and prints their status, evidence symbol, and shared activity rule ids in a document.
@@ -233,7 +256,9 @@ steps:
         release: …
         status: exists      # gap | unverified | exists — required for evidence checks
         evidence: …          # a bare symbol that greps in the repo; required when status is exists
-        question: …          # optional — an unresolved decision, drawn violet
+        questions:            # optional — unresolved decisions, one card per question
+          - {id: …, ask: …, answer: …, doc: …}   # answer: a short paragraph, doc: a link to the chapter that answers it — either or both
+        question: …          # sugar for a single-element questions: list
 ownership:
   - {id: …, owner: …, from: <stepId>, to: <stepId>, note: …}
 slices:
@@ -291,9 +316,12 @@ node lib/journey-read.mjs   docs/journey/<slug>.yaml <roomId> --out <other.yaml>
 original alone; it writes the target even when nothing applied, because a caller who asked
 for a save-as should end up with that file.
 
-**Render is a reconcile.** Shapes the renderer owns that the model no longer produces
-are removed; shapes a person drew by hand carry no `meta.journey` and are never touched.
-A sticky someone added during a workshop survives every re-render.
+**Render is a reconcile, scoped to the pages drawn this call.** Shapes the renderer owns
+that the model no longer produces are removed; shapes a person drew by hand carry no
+`meta.journey` and are never touched. A sticky someone added during a workshop survives
+every re-render. `--pages journey-board` only reconciles journey-board pages — a
+story-map page this call did not draw is untouched, even though its shapes also carry
+`meta.journey`.
 
 **Wording round-trips across projections.** `lib/read.mjs` reads activity headings and
 story cards on the story map and release boards, plus legacy `step-card` records.
@@ -308,9 +336,10 @@ cannot reorder the whole journey. Release membership and story priority are read
 the story map; dragging cards on a release detail board does not change either.
 
 **`--write` applies a subset.** It applies wording, supported column order, story-map
-release membership and story priority. Status, evidence, questions, system flow and
-constraints are display-only here; edit those in the journey file. Constraint text
-cannot be mapped back to rule ids without guessing.
+release membership and story priority, plus a release board's questions and answers
+(below). Status, evidence, system flow and constraints stay display-only here; edit
+those in the journey file. Constraint text cannot be mapped back to rule ids without
+guessing.
 
 | Report | Meaning |
 |---|---|
@@ -321,8 +350,29 @@ cannot be mapped back to rule ids without guessing.
 | `releaseMoved` | a story crossed a release boundary on the story map |
 | `storiesReordered` | stories changed priority within a story-map activity and release |
 | `duplicated` | a node id occurs more than once within a page's activity or story cards |
-| `unclaimed` | an untagged note or geo, with its page and activity column when unambiguous; straddling cards carry `candidates`. Arrows and bare text shapes are not read |
+| `unclaimed` | an untagged note or geo not read as a question or answer, with its page and activity column when unambiguous; straddling or far-off cards carry `candidates` instead. Arrows and bare text shapes are not read |
 | `missing` | the file has an activity with no activity shape among the selected pages |
+| `questionsAdded` / `answersAdded` | a hand-added note placed as a new question or answer |
+| `questionsReworded` / `answersReworded` | a generated question or answer note's text or link changed |
+| `questionsDeleted` / `answersDeleted` | a generated question or answer note is gone from the canvas — reported, never applied |
+
+### Reading back a story's questions
+
+A story's own note sits at the same x as its questions below it; a question's own
+note sits one pitch (`QUESTION_PITCH`, `render.mjs`) to the left of its answer. A
+hand-added note lands exactly on that grid because tldraw's native "+" handle places it
+there — below a note for a new question, beside it for an answer — so `read.mjs`
+classifies a hand-added note by nearest slot within `QUESTION_GAP` (the render's own
+gutter between one story's answer slot and its neighbour's question column) and refuses
+to guess when two slots are equally close. A generated question or answer note that is
+simply gone is reported in `questionsDeleted`/`answersDeleted`, never removed from the
+file — deleting a question is a decision to show, not to infer.
+
+`--write` appends new questions (`questions:` list, converting a lone `question:` sugar
+entry the first time a story needs one), rewrites `ask`/`answer`/`doc` on existing
+entries, then removes exactly the hand-added notes it just wrote into the file — nothing
+else on the canvas, and nothing at all with `--out`, which leaves the source file and
+the room untouched.
 
 `applyDiff` skips activity/card/story wording if the file no longer matches the
 value read for that edit; read the canvas again before applying a fresh diff.
@@ -338,7 +388,7 @@ For the pinned tldraw 5.4.0 runtime:
   renders the label at font-size 0px — a blank sticky, and the server cannot catch it.
   Build every record with `lib/records.mjs`; never hand-write one.
 - **A geo box does not grow to fit its label.** Text past the bottom edge is drawn
-  outside the box. `fitHeight()` sizes lane 2 and lane 3 from their content.
+  outside the box. `fitHeight()` sizes every card from its own content.
 
 ## Licence
 

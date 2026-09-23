@@ -21,7 +21,7 @@ const base = (id, x, y, index, parentId) => ({
 	meta: {},
 })
 
-export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', color = 'green', size = 'm' }) {
+export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', color = 'green', size = 'm', url = '' }) {
 	return {
 		...base(id, x, y, index, parentId),
 		type: 'note',
@@ -32,10 +32,12 @@ export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', col
 			align: 'middle',
 			verticalAlign: 'middle',
 			labelColor: 'black',
-			growY: 0,
+			// A note is 200 wide and 200 tall until its text needs more; tldraw grows it only
+			// when edited by hand, so a written note must carry its own growth or overflow.
+			growY: Math.max(0, fitHeight(text, NOTE_W_PX, size === 's' ? 's' : 'm', 60) - NOTE_W_PX),
 			// Zero passes schema validation but renders invisible note text.
 			fontSizeAdjustment: 1,
-			url: '',
+			url,
 			scale: 1,
 			textLastEditedBy: null,
 			richText: richText(text),
@@ -43,14 +45,20 @@ export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', col
 	}
 }
 
-const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', align = 'middle', verticalAlign = 'middle', url = '' }) => ({
+// A note shape has no w/h prop — its footprint is a fixed square per size preset,
+// grown at runtime by the editor. This is the nominal footprint the generator uses for
+// its own layout math.
+export const NOTE_SIZE = { m: 200, s: 130 }
+const NOTE_W_PX = 200
+
+const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', align = 'middle', verticalAlign = 'middle', url = '', dash = 'draw' }) => ({
 	...base(id, x, y, index, parentId),
 	type: 'geo',
 	props: {
 		w,
 		h,
 		geo: 'rectangle',
-		dash: 'draw',
+		dash,
 		growY: 0,
 		url,
 		scale: 1,
@@ -85,8 +93,10 @@ export function label({
 	align = 'middle',
 	verticalAlign = 'middle',
 	url = '',
+	fill = 'none',
+	dash = 'draw',
 }) {
-	return geo({ id, x, y, w, h, index, parentId, color, fill: 'none', text, size, align, verticalAlign, url })
+	return geo({ id, x, y, w, h, index, parentId, color, fill, text, size, align, verticalAlign, url, dash })
 }
 
 // tldraw normalizes deep-link camera bounds; the page ID is sufficient.
@@ -98,13 +108,15 @@ const CHARS_PER_100PX = { s: 8.7, m: 6.5 }
 
 // A CJK or fullwidth glyph occupies two of the character widths measured above.
 const WIDE = /[\u1100-\u115f\u2e80-\u303e\u3041-\u33ff\u3400-\u4dbf\u4e00-\u9fff\ua000-\ua4cf\ua960-\ua97f\uac00-\ud7a3\uf900-\ufaff\ufe10-\ufe19\ufe30-\ufe6f\uff00-\uff60\uffe0-\uffe6]/u
-const drawnWidth = (line) => [...line].reduce((w, glyph) => w + (WIDE.test(glyph) ? 2 : 1), 0)
+export function textWidth(line) {
+	return [...String(line)].reduce((w, glyph) => w + (WIDE.test(glyph) ? 2 : 1), 0)
+}
 
 export function fitHeight(text, width, size = 's', padding = 40) {
 	const perLine = Math.max(8, Math.floor((width / 100) * CHARS_PER_100PX[size]))
 	const lines = String(text)
 		.split('\n')
-		.reduce((n, line) => n + Math.max(1, Math.ceil(drawnWidth(line) / perLine)), 0)
+		.reduce((n, line) => n + Math.max(1, Math.ceil(textWidth(line) / perLine)), 0)
 	return Math.ceil(lines * LINE_H[size] + padding)
 }
 
@@ -125,7 +137,80 @@ export function pageIndex(position, start = 'a5') {
 
 export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }
 
-export const QUESTION_MARKS = { open: { color: 'violet', mark: '?' }, answered: { color: 'light-blue', mark: '✓' } }
+// Both projections call these instead of building their own note, so an activity or
+// story card cannot drift between them.
+export function activityCard({ id, step, x, y, index, parentId }) {
+	return {
+		...note({ id, text: step.activity ?? step.card, x, y, index, parentId, color: 'green' }),
+		meta: { journey: { nodeId: step.id, kind: 'activity' } },
+	}
+}
+
+export function storyCard({ id, story, x, y, index, parentId, progress = null, model = null }) {
+	return {
+		...note({ id, text: story.card, x, y, index, parentId, color: 'yellow' }),
+		meta: { journey: { nodeId: story.id, kind: 'story',
+			...(progress ? { progress: storyProgress(progress, model, story) } : {}),
+			...(story.status ? { status: story.status } : {}) } },
+	}
+}
+
+// Whether a question is answered is shown by whether an answer card hangs under it,
+// nothing else — no status word, no dashed/solid outline.
+export function questionCard({ id, question, story, x, y, index, parentId }) {
+	return {
+		...note({ id, text: question.ask, x, y, index, parentId, color: 'light-green', size: 's' }),
+		meta: { journey: { nodeId: question.id, kind: 'question', story } },
+	}
+}
+
+// A short paragraph, a link to the technical document that answers it, or both — the
+// text lives in the note, the link lives in the note's own url prop.
+export function answerCard({ id, question, story, x, y, index, parentId }) {
+	return {
+		...note({ id, text: question.answer ?? '', x, y, index, parentId, color: 'light-violet', size: 's', url: question.doc ?? '' }),
+		meta: { journey: { nodeId: question.id, kind: 'answer', story } },
+	}
+}
+
+// A native arrow, bound at both ends. Coordinates are the placeholder tldraw's own
+// ExtractBindings migration leaves once a terminal is bound — the editor resolves the
+// real path from the bound shapes, not from start/end.
+export function connector({ id, index = 'a1', parentId = 'page:page', color = 'grey' }) {
+	return {
+		...base(id, 0, 0, index, parentId),
+		type: 'arrow',
+		props: {
+			kind: 'arc',
+			labelColor: 'black',
+			color,
+			fill: 'none',
+			dash: 'draw',
+			size: 's',
+			arrowheadStart: 'none',
+			arrowheadEnd: 'arrow',
+			font: 'draw',
+			start: { x: 0, y: 0 },
+			end: { x: 0, y: 0 },
+			bend: 0,
+			richText: richText(''),
+			labelPosition: 0.5,
+			scale: 1,
+			elbowMidPoint: 0.5,
+		},
+	}
+}
+
+// Binding records are separate from the arrow shape; both terminals must be removed
+// together or a stale binding outlives the shapes it once pointed at.
+export function connectorBindings(connectorId, fromShapeId, toShapeId) {
+	return [
+		{ id: `binding:${connectorId}-from`, typeName: 'binding', type: 'arrow', fromId: connectorId, toId: fromShapeId,
+			meta: {}, props: { terminal: 'start', normalizedAnchor: { x: 0.5, y: 0.5 }, isExact: false, isPrecise: false, snap: 'none' } },
+		{ id: `binding:${connectorId}-to`, typeName: 'binding', type: 'arrow', fromId: connectorId, toId: toShapeId,
+			meta: {}, props: { terminal: 'end', normalizedAnchor: { x: 0.5, y: 0.5 }, isExact: false, isPrecise: false, snap: 'none' } },
+	]
+}
 
 // Child borders preserve story coordinates used by release readback.
 export function storyBorder(story) {
@@ -153,9 +238,14 @@ export function releaseProgressText(progress, model, releaseId) {
 	return release ? `${release.doneStories}/${release.totalStories} stories development-complete\n${release.acceptance}` : 'Development progress unverified'
 }
 
-export function withStoryStatus(records, progress = null) {
+// legend: false lets a caller draw its own status-border legend (the journey board
+// folds it into one top-left legend alongside its card colours) without losing the
+// status border itself, which every story still needs regardless of who explains it.
+export function withStoryStatus(records, progress = null, { legend: showLegend = true } = {}) {
 	const parentId = records.find((r) => r.typeName === 'page').id
 	const shapes = records.filter((r) => r.typeName === 'shape')
+	const borders = shapes.map(storyBorder).filter(Boolean)
+	if (!showLegend) return [...records, ...borders]
 	const captionText = progress
 		? `DEVELOPMENT PROGRESS — local Spacedock tasks\nObserved: ${progress.observedAt}\nSource: ${progress.source}\nTask completion is not delivery acceptance or proof of usability.${progress.diagnostic ? `\n${progress.diagnostic}` : ''}`
 		: 'Story status is not delivery acceptance.'
@@ -179,5 +269,5 @@ export function withStoryStatus(records, progress = null) {
 	const caption = label({ id: `shape:${parentId.slice(5)}-status-legend-caption`, parentId,
 		x: 300, y: y + 100, w: 1120, h: captionH, text: captionText, color: 'grey', size: 's', index: getIndexAbove(index) })
 	caption.meta = { journey: { kind: 'status-legend-caption', nodeId: 'status-legend' } }
-	return [...records, ...shapes.map(storyBorder).filter(Boolean), ...legend, caption]
+	return [...records, ...borders, ...legend, caption]
 }

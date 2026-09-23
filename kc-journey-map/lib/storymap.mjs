@@ -1,5 +1,5 @@
 
-import { QUESTION_MARKS, fitHeight, indexes, label, note, page, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
+import { fitHeight, indexes, label, page, releaseLine, withStoryStatus, releaseProgressText, activityCard, storyCard } from './records.mjs'
 import { normalizeStory } from './model.mjs'
 
 const PITCH = 240
@@ -10,9 +10,6 @@ const LEFT_W = 250
 const Y_PERSONA = 40
 const BAND_H = 60
 const STORY_PITCH = 250
-const STORY_W = 200
-const STORY_H = 200
-const QUESTION_GAP = 10
 const GAP = 40
 
 export const STORY_PAGE_ID = 'page:page'
@@ -110,19 +107,7 @@ export function buildStoryMap(model, room = null, progress = null) {
 
 	steps.forEach((step, i) => {
 		const x = X0 + i * PITCH
-
-		put.push({
-			...note({
-				id: `shape:sm-act-${step.id}`,
-				text: step.activity ?? step.card,
-				x,
-				y: Y_BACKBONE,
-				index: ix[n++],
-				parentId,
-				color: 'green',
-			}),
-			meta: tag(step.id, 'activity'),
-		})
+		put.push(activityCard({ id: `shape:sm-act-${step.id}`, step, x, y: Y_BACKBONE, index: ix[n++], parentId }))
 	})
 
 	const releases = model.releases ?? []
@@ -145,7 +130,9 @@ export function buildStoryMap(model, room = null, progress = null) {
 		}
 
 		const existsCount = band.id ? band.stories.filter((s) => s.status === 'exists').length : null
-		const text = `${band.name}\n${band.goal ?? ''}${band.id ? `\n\n${progress ? releaseProgressText(progress, model, band.id) : `${existsCount}/${band.stories.length} exist`}` : ''}`.trim()
+		// The story map names each slice; its goal belongs to the release board's own header,
+		// where there is room for it.
+		const text = `${band.name}${band.id ? `\n${progress ? releaseProgressText(progress, model, band.id) : `${existsCount}/${band.stories.length} exist`}` : ''}`.trim()
 		put.push({
 			...label({
 				id: `shape:sm-rellabel-${band.id ?? 'unassigned'}`,
@@ -162,57 +149,23 @@ export function buildStoryMap(model, room = null, progress = null) {
 			meta: tag(band.id ?? 'unassigned', 'release-label'),
 		})
 
-		const questionsHeight = (story) => (story?.questions ?? []).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(q.ask, STORY_W), 0)
 		const perColumn = new Map()
 		for (const story of band.stories) {
 			const list = perColumn.get(story.step.id) ?? []
 			list.push(story)
 			perColumn.set(story.step.id, list)
 		}
-		// Beside the card puts the question in the next column's lane, where that column's
-		// card covers it and the surviving sliver reads as the neighbour's question.
 		const rows = Math.max(1, ...[...perColumn.values()].map((l) => l.length))
-		const columns = [...perColumn.values()]
 		const rowTop = [bandTop]
-		for (let j = 0; j < rows; j++) {
-			const q = Math.max(0, ...columns.map((l) => questionsHeight(l[j])))
-			rowTop.push(rowTop[j] + STORY_PITCH + (q ? q + QUESTION_GAP : 0))
-		}
+		for (let j = 0; j < rows; j++) rowTop.push(rowTop[j] + STORY_PITCH)
 
 		for (const [stepId, list] of perColumn) {
 			const i = steps.findIndex((s) => s.id === stepId)
 			list.forEach((story, j) => {
 				const x = X0 + i * PITCH
 				const y = rowTop[j]
-				put.push({
-					...note({ id: `shape:sm-story-${story.id}`, text: story.card, x, y, index: ix[n++], parentId, color: 'yellow' }),
-					meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
-				})
-
-				let qy = y + STORY_H + QUESTION_GAP
-				for (const question of story.questions ?? []) {
-					const h = fitHeight(question.ask, STORY_W)
-					const drawn = QUESTION_MARKS[question.status] ?? QUESTION_MARKS.open
-					put.push({
-						...label({
-							id: `shape:sm-question-${story.id}-${question.id}`,
-							text: `${drawn.mark} ${question.ask}`,
-							x,
-							y: qy,
-							w: STORY_W,
-							h,
-							index: ix[n++],
-							parentId,
-							color: drawn.color,
-							size: 's',
-							align: 'start',
-						}),
-						// The question id binds to its review-board card; the story id keeps the
-						// layout checks able to find the card a question hangs under.
-						meta: { journey: { nodeId: question.id, kind: 'question', story: story.id } },
-					})
-					qy += h + QUESTION_GAP
-				}
+				const storyShapeId = `shape:sm-story-${story.id}`
+				put.push(storyCard({ id: storyShapeId, story, x, y, index: ix[n++], parentId, progress, model }))
 			})
 		}
 

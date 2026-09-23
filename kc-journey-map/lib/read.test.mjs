@@ -2,7 +2,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { diffAgainstModel } from './read.mjs'
-import { buildJourneyBoard } from './render.mjs'
+import { buildJourneyBoard, QUESTION_PITCH } from './render.mjs'
 import { buildStoryMap } from './storymap.mjs'
 import { fixtureModel } from './fixture.mjs'
 
@@ -14,7 +14,8 @@ const rendered = () => [...board(), ...story()]
 const BOARD = 'shape:jm-all-'
 
 const find = (shapes, id) => shapes.find((s) => s.id === id)
-const clean = { reordered: null, reorderConflict: null, reworded: [], rewordConflict: [], releaseMoved: [], storiesReordered: [], duplicated: [], unclaimed: [], missing: [] }
+const clean = { reordered: null, reorderConflict: null, reworded: [], rewordConflict: [], releaseMoved: [], storiesReordered: [], duplicated: [], unclaimed: [], missing: [],
+	questionsAdded: [], questionsReworded: [], questionsDeleted: [], answersAdded: [], answersReworded: [], answersDeleted: [] }
 
 test('a freshly rendered board reports no drift', () => {
 	assert.deepEqual(diffAgainstModel(rendered(), fixtureModel), clean)
@@ -243,7 +244,7 @@ test('hand-added notes use the activity span on their own release page', () => {
 	const shapes = releaseBoards()
 	const a = find(shapes, 'shape:jm-r1-card-a')
 	shapes.push({ id: 'shape:hand', typeName: 'shape', type: 'note', parentId: a.parentId,
-		x: a.x + a.props.w - 200, y: a.y + 900, props: { richText: rt('Another question') } })
+		x: a.x + 50, y: a.y + 900, props: { richText: rt('Another question') } })
 	assert.equal(diffAgainstModel(shapes, fixtureModel).unclaimed[0].column, 'a')
 })
 
@@ -310,3 +311,165 @@ for (const field of ['activity', 'card']) {
 		assert.equal(readFileSync(path, 'utf8'), before)
 	})
 }
+
+test('a hand-added note under a story becomes a new question', () => {
+	const shapes = releaseBoards()
+	const storyShape = find(shapes, 'shape:jm-r1-story-a-0')
+	shapes.push({ id: 'shape:hand-q', typeName: 'shape', type: 'note', parentId: storyShape.parentId,
+		x: storyShape.x, y: storyShape.y + 250, props: { richText: rt('Is this synchronous?') } })
+	const diff = diffAgainstModel(shapes, fixtureModel)
+	assert.deepEqual(diff.questionsAdded,
+		[{ story: 'a-0', step: 'a', id: 'a-0-q0', ask: 'Is this synchronous?', page: 'board:r1', shapeId: 'shape:hand-q' }])
+	assert.deepEqual(diff.answersAdded, [])
+	assert.equal(diff.unclaimed.length, 0)
+})
+
+test('a hand-added note beside an open question becomes its answer', () => {
+	const shapes = releaseBoards()
+	const q = find(shapes, 'shape:jm-r1-question-b-see-b-see-q0')
+	shapes.push({ id: 'shape:hand-a', typeName: 'shape', type: 'note', parentId: q.parentId,
+		x: q.x + QUESTION_PITCH, y: q.y, props: { richText: rt('Push, with a retry queue.'), url: 'https://example.com/delivery' } })
+	const diff = diffAgainstModel(shapes, fixtureModel)
+	assert.deepEqual(diff.answersAdded, [{ story: 'b-see', step: 'b', question: 'b-see-q0',
+		answer: 'Push, with a retry queue.', doc: 'https://example.com/delivery', page: 'board:r1', shapeId: 'shape:hand-a' }])
+	assert.deepEqual(diff.questionsAdded, [])
+})
+
+test('editing a generated question note updates its ask', () => {
+	const shapes = releaseBoards()
+	find(shapes, 'shape:jm-r1-question-b-see-b-see-q0').props.richText = rt('Should delivery retry automatically?')
+	const diff = diffAgainstModel(shapes, fixtureModel)
+	assert.deepEqual(diff.questionsReworded, [{ story: 'b-see', step: 'b', id: 'b-see-q0',
+		was: 'Should delivery be push or pull?', now: 'Should delivery retry automatically?', page: 'board:r1' }])
+})
+
+test('editing a generated answer note updates its answer and doc', () => {
+	const model = structuredClone(fixtureModel)
+	delete model.steps[1].stories[0].question
+	model.steps[1].stories[0].questions = [{ id: 'b-see-q0', ask: 'Should delivery be push or pull?', answer: 'Push.', doc: 'https://example.com/old' }]
+	const shapes = releaseBoards(model)
+	const a = find(shapes, 'shape:jm-r1-answer-b-see-b-see-q0')
+	a.props.richText = rt('Push, confirmed by the delivery team.')
+	a.props.url = 'https://example.com/new'
+	const diff = diffAgainstModel(shapes, model)
+	assert.deepEqual(diff.answersReworded, [{ story: 'b-see', step: 'b', question: 'b-see-q0',
+		was: { answer: 'Push.', doc: 'https://example.com/old' },
+		now: { answer: 'Push, confirmed by the delivery team.', doc: 'https://example.com/new' }, page: 'board:r1' }])
+})
+
+test('deleting a generated question note is reported, not silently applied', () => {
+	const shapes = releaseBoards().filter((s) => s.id !== 'shape:jm-r1-question-b-see-b-see-q0')
+	const diff = diffAgainstModel(shapes, fixtureModel)
+	assert.deepEqual(diff.questionsDeleted,
+		[{ story: 'b-see', step: 'b', id: 'b-see-q0', was: 'Should delivery be push or pull?', page: 'board:r1' }])
+	const path = onDisk()
+	const before = readFileSync(path, 'utf8')
+	applyDiff(path, diff)
+	assert.equal(readFileSync(path, 'utf8'), before, 'a reported deletion must not be written')
+})
+
+test('deleting a generated answer note is reported, not silently applied', () => {
+	const model = structuredClone(fixtureModel)
+	delete model.steps[1].stories[0].question
+	model.steps[1].stories[0].questions = [{ id: 'b-see-q0', ask: 'Should delivery be push or pull?', answer: 'Push.' }]
+	const shapes = releaseBoards(model).filter((s) => s.id !== 'shape:jm-r1-answer-b-see-b-see-q0')
+	const diff = diffAgainstModel(shapes, model)
+	assert.deepEqual(diff.answersDeleted,
+		[{ story: 'b-see', step: 'b', question: 'b-see-q0', was: { answer: 'Push.', doc: undefined }, page: 'board:r1' }])
+})
+
+test('a note exactly on a neighbouring story column is its question, not the open answer slot 20px away', () => {
+	// a-0 with one open question reserves the same STORY_PITCH width as no question at all,
+	// so a-2's own column sits only QUESTION_GAP (10px) past a-0's answer slot — the
+	// collision the tolerance has to resolve, not just avoid by luck.
+	const model = structuredClone(fixtureModel)
+	model.steps[0].stories[0].questions = [{ id: 'a-0-q0', ask: 'Confirmed by whom?' }]
+	const shapes = releaseBoards(model)
+	const q = find(shapes, 'shape:jm-r1-question-a-0-a-0-q0')
+	const storyA2 = find(shapes, 'shape:jm-r1-story-a-2')
+	shapes.push({ id: 'shape:hand-col', typeName: 'shape', type: 'note', parentId: q.parentId,
+		x: storyA2.x, y: q.y, props: { richText: rt('A question about confirming it') } })
+	const diff = diffAgainstModel(shapes, model)
+	assert.deepEqual(diff.answersAdded, [])
+	assert.equal(diff.questionsAdded.length, 1)
+	assert.equal(diff.questionsAdded[0].story, 'a-2')
+})
+
+test('the mirror: a note exactly on the open answer slot is that answer, not the neighbouring column', () => {
+	const model = structuredClone(fixtureModel)
+	model.steps[0].stories[0].questions = [{ id: 'a-0-q0', ask: 'Confirmed by whom?' }]
+	const shapes = releaseBoards(model)
+	const q = find(shapes, 'shape:jm-r1-question-a-0-a-0-q0')
+	shapes.push({ id: 'shape:hand-row', typeName: 'shape', type: 'note', parentId: q.parentId,
+		x: q.x + QUESTION_PITCH, y: q.y, props: { richText: rt('By the requester.') } })
+	const diff = diffAgainstModel(shapes, model)
+	assert.deepEqual(diff.questionsAdded, [])
+	assert.equal(diff.answersAdded.length, 1)
+	assert.equal(diff.answersAdded[0].question, 'a-0-q0')
+})
+
+test('a note exactly between the two slots is reported, never guessed', () => {
+	const model = structuredClone(fixtureModel)
+	model.steps[0].stories[0].questions = [{ id: 'a-0-q0', ask: 'Confirmed by whom?' }]
+	const shapes = releaseBoards(model)
+	const q = find(shapes, 'shape:jm-r1-question-a-0-a-0-q0')
+	const storyA2 = find(shapes, 'shape:jm-r1-story-a-2')
+	const x = (q.x + QUESTION_PITCH + storyA2.x) / 2
+	shapes.push({ id: 'shape:hand-amb', typeName: 'shape', type: 'note', parentId: q.parentId,
+		x, y: q.y, props: { richText: rt('Which one is this?') } })
+	const diff = diffAgainstModel(shapes, model)
+	assert.deepEqual(diff.questionsAdded, [])
+	assert.deepEqual(diff.answersAdded, [])
+	assert.ok(diff.unclaimed.some((u) => u.id === 'shape:hand-amb'))
+})
+
+test('an unrelated hand-added note is not read as a question or answer', () => {
+	const shapes = releaseBoards()
+	shapes.push({ id: 'shape:hand-note', typeName: 'shape', type: 'note', parentId: 'page:jm-board-r1',
+		x: 5000, y: 5000, props: { richText: rt('Lunch on Thursday?') } })
+	const diff = diffAgainstModel(shapes, fixtureModel)
+	assert.equal(diff.questionsAdded.length, 0)
+	assert.equal(diff.answersAdded.length, 0)
+	assert.ok(diff.unclaimed.some((u) => u.id === 'shape:hand-note'))
+})
+
+test('a new question is appended to the story it belongs to', () => {
+	const shapes = releaseBoards()
+	const storyShape = find(shapes, 'shape:jm-r1-story-a-0')
+	shapes.push({ id: 'shape:hand-new-q', typeName: 'shape', type: 'note', parentId: storyShape.parentId,
+		x: storyShape.x, y: storyShape.y + 250, props: { richText: rt('Is this synchronous?') } })
+	const diff = diffAgainstModel(shapes, fixtureModel)
+	const path = onDisk()
+	applyDiff(path, diff, path)
+	const after = parse(readFileSync(path, 'utf8'))
+	const written = after.steps[0].stories.find((s) => s.id === 'a-0')
+	assert.deepEqual(written.questions, [{ id: 'a-0-q0', ask: 'Is this synchronous?' }])
+})
+
+test('a new answer is attached to its question, upgrading question sugar to a map', () => {
+	const shapes = releaseBoards()
+	const q = find(shapes, 'shape:jm-r1-question-b-see-b-see-q0')
+	shapes.push({ id: 'shape:hand-new-a', typeName: 'shape', type: 'note', parentId: q.parentId,
+		x: q.x + QUESTION_PITCH, y: q.y, props: { richText: rt('Push.'), url: 'https://example.com/answer' } })
+	const diff = diffAgainstModel(shapes, fixtureModel)
+	const path = onDisk()
+	applyDiff(path, diff, path)
+	const after = parse(readFileSync(path, 'utf8'))
+	const written = after.steps[1].stories.find((s) => s.id === 'b-see')
+	assert.deepEqual(written.questions, [{ id: 'b-see-q0', ask: 'Should delivery be push or pull?', answer: 'Push.', doc: 'https://example.com/answer' }])
+	assert.equal(written.question, undefined)
+})
+
+test('applying a new question reports only its own shape as absorbed, leaving an unrelated note alone', () => {
+	const shapes = releaseBoards()
+	const storyShape = find(shapes, 'shape:jm-r1-story-a-0')
+	shapes.push({ id: 'shape:hand-q2', typeName: 'shape', type: 'note', parentId: storyShape.parentId,
+		x: storyShape.x, y: storyShape.y + 250, props: { richText: rt('Is this synchronous?') } })
+	shapes.push({ id: 'shape:hand-unrelated', typeName: 'shape', type: 'note', parentId: storyShape.parentId,
+		x: 9000, y: 9000, props: { richText: rt('Unrelated note') } })
+	const diff = diffAgainstModel(shapes, fixtureModel)
+	const path = onDisk()
+	const { applied, absorbed } = applyDiff(path, diff, path)
+	assert.ok(applied.some((a) => a.includes('a-0')))
+	assert.deepEqual(absorbed.map((a) => a.shapeId), ['shape:hand-q2'])
+})

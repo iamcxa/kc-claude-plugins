@@ -5,7 +5,7 @@ import { execFileSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { lintEvidenceNotFound, lintExistsWithOpenQuestion, lintExistsWithoutEvidence, lintJourney, lintNoStatus } from './lint.mjs'
+import { lintEvidenceNotFound, lintExistsWithOpenQuestion, lintExistsWithoutEvidence, lintJourney, lintNoStatus, lintQuestionStatus } from './lint.mjs'
 
 const model = (steps) => ({ steps })
 
@@ -127,11 +127,11 @@ test('lint rejects unsupported status and accepts gap, unverified and exists', (
 	assert.deepEqual(violations.map((v) => [v.lint, v.story]), [['invalid-status', 'made-up']])
 })
 
-test('lintExistsWithOpenQuestion fires on exists with an open question, not on a settled one', () => {
+test('lintExistsWithOpenQuestion fires on exists with an unanswered question, not on an answered one', () => {
 	const m = model([{ id: 's', stories: [
-		{ id: 's-0', card: 'x', status: 'exists', evidence: 'X', questions: [{ id: 'q1', ask: 'Who?', status: 'open' }] },
-		{ id: 's-1', card: 'y', status: 'exists', evidence: 'Y', questions: [{ id: 'q2', ask: 'Who?', status: 'answered' }] },
-		{ id: 's-2', card: 'z', status: 'gap', questions: [{ id: 'q3', ask: 'Who?', status: 'open' }] },
+		{ id: 's-0', card: 'x', status: 'exists', evidence: 'X', questions: [{ id: 'q1', ask: 'Who?' }] },
+		{ id: 's-1', card: 'y', status: 'exists', evidence: 'Y', questions: [{ id: 'q2', ask: 'Who?', answer: 'The owner does.' }] },
+		{ id: 's-2', card: 'z', status: 'gap', questions: [{ id: 'q3', ask: 'Who?' }] },
 	] }])
 	const v = lintExistsWithOpenQuestion(m)
 	assert.deepEqual(v.map((x) => x.story), ['s-0'])
@@ -143,8 +143,57 @@ test('the singular question field is sugar, so it reaches the same gate', () => 
 	assert.deepEqual(lintExistsWithOpenQuestion(m).map((x) => x.story), ['s-0'])
 })
 
-test('a deferred question does not hold a story back', () => {
+test('a question answered only by a doc link does not hold a story back', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X',
+		questions: [{ id: 'q', ask: 'Who?', doc: 'https://example.com/adr#q1' }] }] }])
+	assert.deepEqual(lintExistsWithOpenQuestion(m), [])
+})
+
+test('a deferred question with a because does not hold a story back — the reason becomes its answer', () => {
 	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X',
 		questions: [{ id: 'q', ask: 'Later?', status: 'deferred', because: 'belongs to the reminder release' }] }] }])
 	assert.deepEqual(lintExistsWithOpenQuestion(m), [])
+})
+
+test('a legacy "answered" status with no answer text or doc still holds a story back', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X',
+		questions: [{ id: 'q', ask: 'Who?', status: 'answered' }] }] }])
+	assert.deepEqual(lintExistsWithOpenQuestion(m).map((x) => x.story), ['s-0'])
+})
+
+test('a mistyped question status is caught, not silently read as settled', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'gap',
+		questions: [{ id: 'q', ask: 'Who?', status: 'opne' }] }] }])
+	const v = lintQuestionStatus(m)
+	assert.deepEqual(v.map((x) => x.story), ['s-0'])
+	assert.match(v[0].detail, /unsupported status "opne"/)
+})
+
+test('a deferred question without a because is caught', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'gap',
+		questions: [{ id: 'q', ask: 'Who?', status: 'deferred' }] }] }])
+	const v = lintQuestionStatus(m)
+	assert.deepEqual(v.map((x) => x.story), ['s-0'])
+	assert.match(v[0].detail, /deferred without a "because"/)
+})
+
+test('open, answered, and a reasoned deferral all pass lintQuestionStatus', () => {
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'gap', questions: [
+		{ id: 'q1', ask: 'A?', status: 'open' },
+		{ id: 'q2', ask: 'B?', status: 'answered' },
+		{ id: 'q3', ask: 'C?', status: 'deferred', because: 'later release' },
+	] }] }])
+	assert.deepEqual(lintQuestionStatus(m), [])
+})
+
+test('a card past the text limit is reported as advisory, and a short one is not', async () => {
+	const { longCards, CARD_TEXT_LIMIT } = await import('./lint.mjs')
+	const model = { steps: [{ id: 's', stories: [
+		{ id: 'short', card: '看這家店的服務', questions: [{ id: 'q1', ask: '短問題', answer: '短答案' }] },
+		{ id: 'long', card: '字'.repeat(CARD_TEXT_LIMIT), questions: [{ id: 'q1', ask: 'ok', answer: '答'.repeat(CARD_TEXT_LIMIT) }] },
+	] }] }
+	const notes = longCards(model)
+	assert.ok(notes.some((n) => n.startsWith('story long')), 'a long story card was not reported')
+	assert.ok(notes.some((n) => n.startsWith('answer long/q1')), 'a long answer was not reported')
+	assert.ok(!notes.some((n) => n.includes('short')), 'a short card was reported')
 })
