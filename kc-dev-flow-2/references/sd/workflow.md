@@ -215,6 +215,11 @@ PR stage. Observe the actual repository-qualified PR merge before recording its
 landed sentinel and running SD merge guard to finalize/archive. CI green, PR
 creation, gate approval and a locally manufactured sentinel do not prove merge.
 
+A PR delivers only the commit on its head. Before asking for merge, FO confirms the
+PR head equals the candidate the latest passing validation report names; a repair
+validated after the PR was opened reaches the PR only when that exact commit is
+pushed to its branch.
+
 ## Workflow State
 
 The README and `_mods` stay in the code repository; mutable task state lives in

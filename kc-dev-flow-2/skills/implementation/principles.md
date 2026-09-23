@@ -12,6 +12,8 @@ alone does not authorize deletion. Cut unmapped surfaces within approved scope,
 prefer a materially smaller equivalent route, and keep repeated explanations in
 one home. Record temporary scaffolding's concrete removal condition when added;
 an enduring guard instead names its invariant. Counts are diagnostic, not quotas.
+Do not use `git stash`: every worktree and session of a repository shares one
+stash stack. Set work aside with a commit.
 
 When feedback requests repair, change the approved defect scope and identify
 what needs rechecking. Return scope/profile changes or unresolved inputs to FO.
