@@ -20,7 +20,10 @@ const QUESTION_GAP = 10
 // Questions spread out horizontally beneath their story, not stacked in one column —
 // this is the release board's own zoom-in layout, not shared with the story map, which
 // keeps its single vertical column.
-const QUESTION_PITCH = NOTE_SIZE.s + QUESTION_GAP
+// tldraw draws every note 200 wide whatever its size prop, which only scales the font —
+// pitching questions by NOTE_SIZE.s packed six notes into the width of four.
+const NOTE_W = 200
+const QUESTION_PITCH = NOTE_W + 30
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
 // Every card colour the release board draws, plus the story-status border it does not
@@ -48,7 +51,9 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		const stories = (step.stories ?? []).map((story, j) => normalizeStory(step, story, j))
 			.filter((story) => !release || story.release === release.id)
 		if (release && !stories.length) return null
-		const w = Math.max(300, stories.length * STORY_PITCH - 20)
+		const questionRow = (story) => (story.questions?.length ?? 0) * QUESTION_PITCH
+		const w = Math.max(300, stories.length * STORY_PITCH - 20,
+			stories.reduce((sum, story) => sum + Math.max(STORY_PITCH, questionRow(story)), 0) - 20)
 		const group = { step, stories, x: right, w }
 		right += w + GROUP_GAP
 		return group
@@ -89,7 +94,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	// A story's own open questions may stack wider than one story's worth; reserve one
 	// question row plus, when any question here is answered, one answer row beneath it.
 	const questionsHeight = (story) => (story.questions ?? []).length
-		? NOTE_SIZE.s + QUESTION_GAP + ((story.questions ?? []).some(isQuestionAnswered) ? NOTE_SIZE.s + QUESTION_GAP : 0)
+		? NOTE_W + QUESTION_GAP + ((story.questions ?? []).some(isQuestionAnswered) ? NOTE_W + 60 : 0)
 		: 0
 
 	// A note's rendered height is a runtime concern (growY), not something this generator
@@ -139,7 +144,8 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 			box(`empty-${step.id}`, step.id, 'empty-stories', 'No stories recorded.', x, storyY, w, NOTE_SIZE.m, 'grey')
 		}
 		stories.forEach((story, j) => {
-			const sx = x + j * STORY_PITCH + (stories.length === 1 ? (w - STORY_W) / 2 : 0)
+			const before = stories.slice(0, j).reduce((sum, st) => sum + Math.max(STORY_PITCH, (st.questions?.length ?? 0) * QUESTION_PITCH), 0)
+			const sx = x + before + (stories.length === 1 && !story.questions?.length ? (w - STORY_W) / 2 : 0)
 			const storyShapeId = `${idp}story-${story.id}`
 			// Same builder the story map uses for the same story — its text is `story.card`
 			// alone; evidence and task progress live in the release contract and story-status
@@ -165,7 +171,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 				})))
 
 				if (isQuestionAnswered(question)) {
-					const ay = qy + NOTE_SIZE.s + QUESTION_GAP
+					const ay = qy + NOTE_W + 60
 					const answerId = `${idp}answer-${story.id}-${question.id}`
 					put.push(answerCard({ id: answerId, question, story: story.id, x: qx, y: ay, index: ix[n++], parentId }))
 					const alinkId = `${idp}alink-${story.id}-${question.id}`
