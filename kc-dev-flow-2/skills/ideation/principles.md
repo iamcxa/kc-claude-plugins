@@ -21,8 +21,6 @@ Each recorded `Surfaces:` value owes its own artifact, fidelity before prettines
 - `db` (schema, migration or row-level security change) — the schema change
   shown explicitly (a column table, or a Mermaid `erDiagram` when relations
   change) and the migration source of truth named.
-- `api` (API, server function or CLI interface change) — the exact
-  input/output shape including error cases, or the one named check that pins it.
 `none` uses the PRFAQ/Mermaid alone. The gate is not presentable without the
 artifact each recorded surface owes. Reconcile material research and feedback
 into the same definition before handoff. Correct contradictions in depicted or

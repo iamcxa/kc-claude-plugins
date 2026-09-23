@@ -71,7 +71,7 @@ direction alignment with the Captain is needed before the next declared stage
 and why; a
 stated reason is the whole record when not needed. On the five-stage route, FO
 also records a `Surfaces:` line under the same heading: any of `ui`, `db`,
-`api`, or `none`, read from the change surface rather than the diff.
+or `none`, read from the change surface rather than the diff.
 
 - **Gate content:** Show the selected variant/profile, proposed outcome, scope,
   exclusions and evidence needed before the next declared stage starts, the
