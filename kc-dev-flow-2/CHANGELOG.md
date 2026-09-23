@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.4.0...kc-dev-flow-2-v0.5.0) (2026-09-23)
+
+
+### Features
+
+* **kc-dev-flow-2:** check PR head, added comments, screenshots and stash use at delivery ([#496](https://github.com/iamcxa/kc-claude-plugins/issues/496)) ([7e193c4](https://github.com/iamcxa/kc-claude-plugins/commit/7e193c4b44d5aae022de9260b55b88f5ecada650))
+
 ## [0.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.3.0...kc-dev-flow-2-v0.4.0) (2026-09-23)
 
 
