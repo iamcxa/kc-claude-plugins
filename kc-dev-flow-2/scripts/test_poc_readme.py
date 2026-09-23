@@ -28,6 +28,10 @@ class DeriveTests(unittest.TestCase):
         self.assertEqual(lines[entry + 1], "      gate: true")
         self.assertEqual(poc.derive(SOURCE), "\n".join(expected))
 
+    def test_the_source_has_no_link_that_breaks_once_copied_into_an_adopter(self):
+        import re
+        self.assertEqual(re.findall(r"\]\((?!https?://)[^)#]+\)", SOURCE), [])
+
     def test_check_reports_drift_and_accepts_a_fresh_derivation(self):
         with tempfile.TemporaryDirectory() as d:
             five, poc_path = Path(d, "five.md"), Path(d, "poc.md")
