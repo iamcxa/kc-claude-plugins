@@ -4,9 +4,7 @@ export const QUESTION_STATUSES = ['open', 'answered', 'deferred']
 
 // `question:` is sugar for a one-element list; both authored forms land here. `status:`
 // and `because:` are the earlier shapes (pre-`answer:`/`doc:`) — still read so an older
-// file does not break. A `deferred` question's `because:` becomes its answer when no
-// explicit `answer:` was given: "parked, for this reason" is itself an answer to show,
-// not a third state the card needs to distinguish.
+// file does not break.
 const normalizeQuestions = (story, storyId) => {
 	const authored = Array.isArray(story.questions)
 		? story.questions
@@ -26,9 +24,8 @@ const normalizeQuestions = (story, storyId) => {
 	})
 }
 
-// A question is answered when there is something to show for it — an answer card hangs
-// under it, nothing else. A bare legacy `status: answered` with no text or link now
-// reads as unanswered: a claim with nothing to show is not a shown answer.
+// A bare legacy `status: answered` with no `answer:` text or `doc:` link reads as
+// unanswered — a claim with nothing to show is not a shown answer.
 export const isQuestionAnswered = (q) => Boolean(q.answer) || Boolean(q.doc)
 
 export const openQuestions = (story) => (story.questions ?? []).filter((q) => !isQuestionAnswered(q))

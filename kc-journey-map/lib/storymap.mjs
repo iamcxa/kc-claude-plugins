@@ -1,5 +1,5 @@
 
-import { fitHeight, indexes, label, page, releaseLine, withStoryStatus, releaseProgressText, connector, activityCard, storyCard, NOTE_SIZE } from './records.mjs'
+import { fitHeight, indexes, label, page, releaseLine, withStoryStatus, releaseProgressText, activityCard, storyCard } from './records.mjs'
 import { normalizeStory } from './model.mjs'
 
 const PITCH = 240
@@ -10,7 +10,6 @@ const LEFT_W = 250
 const Y_PERSONA = 40
 const BAND_H = 60
 const STORY_PITCH = 250
-const STORY_H = NOTE_SIZE.m
 const GAP = 40
 
 export const STORY_PAGE_ID = 'page:page'
@@ -23,9 +22,6 @@ export function buildStoryMap(model, room = null, progress = null) {
 
 	const parentId = STORY_PAGE_ID
 	const maxStories = Math.max(0, ...steps.map((s) => (s.stories ?? []).length))
-	// Each question needs 2 index slots (card + connector arrow), and an answered one
-	// needs 2 more (its own card + connector); bindings need none.
-	const allStories = steps.flatMap((step) => (step.stories ?? []).map((story, j) => normalizeStory(step, story, j)))
 	const ix = indexes(Math.max(24, steps.length * (maxStories + 4) + (model.releases?.length ?? 0) * 2 + 24))
 	let n = 0
 

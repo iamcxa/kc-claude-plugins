@@ -242,8 +242,6 @@ test('a release-only board cannot reorder the full journey or change membership 
 
 test('hand-added notes use the activity span on their own release page', () => {
 	const shapes = releaseBoards()
-	// The activity card is a note now, with no props.w of its own; its anchor falls back
-	// to the nominal note width, so a hand-added note well inside that span still resolves.
 	const a = find(shapes, 'shape:jm-r1-card-a')
 	shapes.push({ id: 'shape:hand', typeName: 'shape', type: 'note', parentId: a.parentId,
 		x: a.x + 50, y: a.y + 900, props: { richText: rt('Another question') } })
@@ -313,10 +311,6 @@ for (const field of ['activity', 'card']) {
 		assert.equal(readFileSync(path, 'utf8'), before)
 	})
 }
-
-// A story's own note sits at the same x as its questions below it; QUESTION_PITCH to the
-// right of a question is its answer slot. These reuse those exact offsets rather than
-// picking arbitrary coordinates, so a passing test proves the real placement rule.
 
 test('a hand-added note under a story becomes a new question', () => {
 	const shapes = releaseBoards()

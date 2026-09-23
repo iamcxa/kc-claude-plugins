@@ -17,9 +17,6 @@ const LANE_X = 20
 const LANE_W = 270
 const GAP = 40
 export const QUESTION_GAP = 10
-// Questions spread out horizontally beneath their story, not stacked in one column —
-// this is the release board's own zoom-in layout, not shared with the story map, which
-// keeps its single vertical column.
 // tldraw draws every note 200 wide whatever its size prop, which only scales the font —
 // pitching questions by NOTE_SIZE.s packed six notes into the width of four.
 const NOTE_W = 200
@@ -28,10 +25,6 @@ const NOTE_W = 200
 export const QUESTION_PITCH = NOTE_W + 20
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
-// Every card colour the release board draws, plus the story-status border it does not
-// explain on its own — one legend, top-left, so a reader never has to guess what a
-// colour or an outline means. Whether a question is answered is shown by whether an
-// answer card hangs under it, not by this legend or the question card itself.
 const BOARD_LEGEND = [
 	{ nodeId: 'activity', text: 'ACTIVITY', color: 'green' },
 	{ nodeId: 'flow', text: 'FLOW', color: 'light-blue', box: true },
@@ -66,10 +59,8 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	const rulesById = new Map((model.rules ?? []).map((r) => [r.id, r.text]))
 	const put = []
 
-	// system: and rules: belong to the step, not to each story — drawing them per story
-	// would repeat them once per story in the step. One card per line/rule instead of one
-	// aggregated box; a step with neither still gets one placeholder card so the render
-	// never reads as having silently dropped a step's flow or constraints.
+	// A step with neither system: nor rules: still gets one placeholder card of each kind,
+	// so the render never reads as having silently dropped a step's flow or constraints.
 	const flowLines = (step) => {
 		const lines = step.system?.length ? [...step.system] : ['No system flow recorded.']
 		const extra = [step.cites?.length && `[${step.cites.join(', ')}]`, step.note?.trim()].filter(Boolean).join('\n')
@@ -78,8 +69,6 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	}
 	const constraintLines = (step) => step.rules?.length ? step.rules.map((id) => rulesById.get(id) ?? id) : ['No constraints recorded.']
 
-	// Each question needs 2 index slots (card + connector arrow), and an answered one
-	// needs 2 more (its own answer card + connector); bindings need none.
 	const questionSlots = groups.reduce((sum, g) => sum + g.stories.reduce((s, story) =>
 		s + (story.questions ?? []).reduce((qs, q) => qs + 2 + (isQuestionAnswered(q) ? 2 : 0), 0), 0), 0)
 	const flowConstraintSlots = groups.reduce((sum, g) => sum + flowLines(g.step).length + constraintLines(g.step).length, 0)
@@ -93,18 +82,11 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 			meta: tag(nodeId, kind),
 		})
 	}
-	// A story's own open questions may stack wider than one story's worth; reserve one
-	// question row plus, when any question here is answered, one answer row beneath it.
 	const questionsHeight = (story) => (story.questions ?? []).length * QUESTION_PITCH
 
 	// A note's rendered height is a runtime concern (growY), not something this generator
-	// computes ahead of time — the story map has never tried to for its own activity or
-	// story notes, and the release board's now the same shared note, so it stops trying too.
+	// computes ahead of time.
 	const activityH = NOTE_SIZE.m
-	// Flow, then constraints, then stories. Every group shares one flow band and one
-	// constraint band sized to the tallest column, exactly like the shared rows this
-	// replaces — a short activity's cards just leave blank space, not a row that creeps
-	// up under a neighbour's taller stack.
 	const flowY = activityH + GAP
 	const bullets = (lines) => lines.length > 1 ? lines.map((l) => `• ${l}`).join('\n') : lines[0]
 	const flowH = Math.max(60, ...groups.map((g) => fitHeight(bullets(flowLines(g.step)), g.w - 10)))
@@ -112,8 +94,6 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	const constraintH = Math.max(60, ...groups.map((g) => fitHeight(bullets(constraintLines(g.step)), g.w - 10)))
 	const storyY = constraintY + constraintH + GAP
 
-	// The legend is made of the board's own cards, shrunk, so reading it is the same as
-	// reading the board: a sample note per kind, and a sample story for each status border.
 	BOARD_LEGEND.forEach((entry, k) => {
 		const side = 200 * LEGEND_SCALE
 		const lx = LANE_X + (k % 2) * (side + 10)
@@ -136,14 +116,8 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 
 	for (const group of groups) {
 		const { step, stories, x, w } = group
-		// Same builder the story map uses for the same step, so the two cannot draw it
-		// differently. Left-aligned on the group, unlike the flow/constraint cards below it
-		// which still span the group's full width — this is the release board's own
-		// addition, not shared with the story map.
 		put.push(activityCard({ id: `${idp}card-${step.id}`, step, x: x + 10, y: 0, index: ix[n++], parentId }))
 
-		// Flow and constraints are context for the step, read as one block each: several
-		// lines become a bullet list inside one box rather than a stack of cards.
 		const block = (lines, kind, color, top) => {
 			const text = bullets(lines)
 			box(`${kind}-${step.id}`, step.id, kind, text, x + 10, top, w - 10, fitHeight(text, w - 10), color, { fill: 'semi' })
@@ -158,18 +132,11 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 			const before = stories.slice(0, j).reduce((sum, st) => sum + Math.max(STORY_PITCH, (st.questions?.length ? ((st.questions ?? []).some(isQuestionAnswered) ? 2 : 1) : 0) * QUESTION_PITCH), 0)
 			const sx = x + before + (stories.length === 1 && !story.questions?.length ? (w - STORY_W) / 2 : 0)
 			const storyShapeId = `${idp}story-${story.id}`
-			// Same builder the story map uses for the same story — its text is `story.card`
-			// alone; evidence and task progress live in the release contract and story-status
-			// meta, not on the card, so the two projections cannot draw the same story two
-			// different ways.
 			put.push(storyCard({ id: storyShapeId, story, x: sx + 10, y: storyY, index: ix[n++], parentId, progress, model }))
 
-			// Questions spread left to right beneath the story, as laid out by hand on the
-			// live canvas — not stacked in one column. Each answered question's answer sits
-			// straight below that question, before the next question's column.
-			// Questions stack straight down under their story and each answer sits to the right of
-			// its own question, on the same row. Position says what belongs to what, so no
-			// connectors are drawn and every gap on the grid is the same.
+			// Questions stack straight down under their story; each answer sits to the right
+			// of its own question, on the same row. Position ties an answer to its question —
+			// no connector is drawn.
 			story.questions?.forEach((question, k) => {
 				const qx = sx + 10
 				const qy = storyY + NOTE_SIZE.m + QUESTION_GAP + k * QUESTION_PITCH
@@ -195,8 +162,6 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		s.irreversible && `Irreversible: ${s.irreversible}`,
 	].filter(Boolean).join('\n')
 	const boardW = Math.max(600, right - GROUP_GAP - X0)
-	// The header row holds the release on the left and its status on the right. Below the
-	// board, the status moved with whichever story carried the most questions.
 	const headerW = release ? Math.floor((boardW - GAP) / 2) : boardW
 	const statusW = headerW
 	const statusH = fitHeight(statusText, statusW)

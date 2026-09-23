@@ -39,11 +39,8 @@ export function lintExistsWithoutEvidence(model) {
 		.map((s) => ({ lint: 'exists-without-evidence', story: s.id, release: s.release, detail: `story ${s.id} is marked exists but carries no evidence symbol` }))
 }
 
-// A typo'd status (`opne`) reads as not-open to `openQuestions` and sails past the
-// exists-with-open-question gate below — the one check that makes this feature mean
-// anything. Catch the typo, and the deferral that never says why. `status:` is now the
-// earlier shape (answered-ness reads from `answer:`/`doc:` instead) — a question that
-// never carried one is not a violation, so this only fires when a `status:` is present.
+// A typo'd status silently reads as not-open to `openQuestions`, bypassing the
+// exists-with-open-question gate below.
 export function lintQuestionStatus(model) {
 	return iterStories(model).flatMap((s) => (s.questions ?? [])
 		.filter((q) => q.status !== undefined && (!QUESTION_STATUSES.includes(q.status) || (q.status === 'deferred' && !q.because)))
@@ -53,9 +50,6 @@ export function lintQuestionStatus(model) {
 				: `question ${q.id} on story ${s.id} has unsupported status "${q.status}"; use ${QUESTION_STATUSES.join(', ')}` })))
 }
 
-// "Open" now means unanswered: no `answer:` text, no `doc:` link, and no legacy
-// `status: answered`/`deferred` carrying one either. A story cannot be exists while any
-// of its questions has no answer.
 export function lintExistsWithOpenQuestion(model) {
 	return iterStories(model)
 		.filter((s) => s.status === 'exists' && openQuestions(s).length)

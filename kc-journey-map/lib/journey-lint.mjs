@@ -16,8 +16,6 @@ const repoRoot = repoRootArg ? resolve(repoRootArg) : PKG_ROOT
 const model = loadModel(path)
 const violations = lintJourney(model, { repoRoot, journeyPath: resolve(path) })
 for (const v of violations) console.log(`${v.lint}: ${v.detail}`)
-// A card is read at a glance; past about forty full-width characters it is a paragraph.
-// Advisory only — it never fails the lint.
 for (const note of longCards(model)) console.log(`long-card (advisory): ${note}`)
 console.log(violations.length ? `\n${violations.length} violation(s)` : '\nall lints pass')
 process.exit(violations.length ? 1 : 0)

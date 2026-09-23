@@ -47,8 +47,7 @@ export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', col
 
 // A note shape has no w/h prop — its footprint is a fixed square per size preset,
 // grown at runtime by the editor. This is the nominal footprint the generator uses for
-// its own layout math, the same way it already treated story/activity notes before any
-// of this file had a name for it.
+// its own layout math.
 export const NOTE_SIZE = { m: 200, s: 130 }
 const NOTE_W_PX = 200
 
@@ -138,11 +137,8 @@ export function pageIndex(position, start = 'a5') {
 
 export const STORY_STATUS_COLORS = { exists: 'green', gap: 'red', unverified: 'violet' }
 
-// The release board is a zoom-in of the story map onto one slice, not a parallel style —
-// both projections call these instead of building their own note, so an activity or
-// story card cannot drift between them the way two independent constructors already did
-// once (a geo label vs. a note, aligned differently, carrying a trailing evidence line
-// only one of the two ever had).
+// Both projections call these instead of building their own note, so an activity or
+// story card cannot drift between them.
 export function activityCard({ id, step, x, y, index, parentId }) {
 	return {
 		...note({ id, text: step.activity ?? step.card, x, y, index, parentId, color: 'green' }),
@@ -160,8 +156,7 @@ export function storyCard({ id, story, x, y, index, parentId, progress = null, m
 }
 
 // Whether a question is answered is shown by whether an answer card hangs under it,
-// nothing else — no status word, no dashed/solid outline. Both surfaces draw the same
-// note for the same reason item 1 above does.
+// nothing else — no status word, no dashed/solid outline.
 export function questionCard({ id, question, story, x, y, index, parentId }) {
 	return {
 		...note({ id, text: question.ask, x, y, index, parentId, color: 'light-green', size: 's' }),
@@ -170,8 +165,7 @@ export function questionCard({ id, question, story, x, y, index, parentId }) {
 }
 
 // A short paragraph, a link to the technical document that answers it, or both — the
-// text lives in the note, the link lives in the note's own url prop, exactly like the
-// hand-drawn sample this shape's construction was read from.
+// text lives in the note, the link lives in the note's own url prop.
 export function answerCard({ id, question, story, x, y, index, parentId }) {
 	return {
 		...note({ id, text: question.answer ?? '', x, y, index, parentId, color: 'light-violet', size: 's', url: question.doc ?? '' }),

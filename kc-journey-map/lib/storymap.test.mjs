@@ -105,7 +105,6 @@ test('story map borders all three states and counts exists alone', () => {
 })
 
 // Measured on a real board before the fix: 170px of 200 hidden, the card on top.
-// A question is a note, with no props.w/h of its own — its footprint is the same
 const spans = (r) => ({ x1: r.x, y1: r.y, x2: r.x + NOTE_SIZE.s, y2: r.y + NOTE_SIZE.s })
 const overlap = (a, b) => Math.min(a.x2, b.x2) - Math.max(a.x1, b.x1) > 1 && Math.min(a.y2, b.y2) - Math.max(a.y1, b.y1) > 1
 

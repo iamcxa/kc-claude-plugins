@@ -155,9 +155,6 @@ test('a deferred question with a because does not hold a story back — the reas
 	assert.deepEqual(lintExistsWithOpenQuestion(m), [])
 })
 
-// A bare legacy `status: answered` claimed a settled question without ever showing an
-// answer. The new rule reads literally: unless there is text or a link to show, nothing
-// answers it — a claim with nothing to show is not a shown answer.
 test('a legacy "answered" status with no answer text or doc still holds a story back', () => {
 	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'X',
 		questions: [{ id: 'q', ask: 'Who?', status: 'answered' }] }] }])
