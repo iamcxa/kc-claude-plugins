@@ -21,8 +21,16 @@ the route currently needed:
 
 | Selected profile | Workflow directory example | Source adaptation |
 | --- | --- | --- |
-| `poc` | `docs/dev2-poc` | Remove the entire ideation state entry and `### ideation` stage section (the heading uses backticks); keep backlog, implementation, validation, done |
+| `poc` | `docs/dev2-poc` | Generated, never hand-edited: `scripts/poc_readme.py derive` removes the ideation state entry and the `### ideation` section; backlog, implementation, validation and done stay byte-identical |
 | `pilot` or `prod` | `docs/dev2` | Keep the source's five stages; profile selects skill references per task |
+
+Maintain one README by hand. When both routes are adopted, commission or refit the
+five-stage README first, then regenerate the POC README from it:
+`python3 {package}/scripts/poc_readme.py derive docs/dev2/README.md > docs/dev2-poc/README.md`.
+When only POC is adopted, derive from this package's [workflow source](workflow.md)
+and resolve its template values the same way. After any change to the five-stage
+README, regenerate; `poc_readme.py check docs/dev2-poc/README.md docs/dev2/README.md`
+exits 1 with the drift as a diff.
 
 Both routes preserve backlog/validation gates, implementation/validation
 `worktree: true`, fresh validation and `feedback-to: implementation`. Copy the
