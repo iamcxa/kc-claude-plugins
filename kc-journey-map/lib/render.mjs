@@ -82,11 +82,12 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 			meta: tag(nodeId, kind),
 		})
 	}
-	const questionsHeight = (story) => (story.questions ?? []).length * QUESTION_PITCH
+	// records.mjs:note already sizes each written note's growY; stack by that, not the nominal square.
+	const grown = (text, size = 'm') => NOTE_W + note({ id: 'shape:measure', text: text ?? '', x: 0, y: 0, size }).props.growY
+	const rowPitch = (q) => Math.max(grown(q.ask, 's'), isQuestionAnswered(q) ? grown(q.answer, 's') : 0) + QUESTION_PITCH - NOTE_W
+	const questionsHeight = (story) => (story.questions ?? []).reduce((h, q) => h + rowPitch(q), 0)
 
-	// A note's rendered height is a runtime concern (growY), not something this generator
-	// computes ahead of time.
-	const activityH = NOTE_SIZE.m
+	const activityH = Math.max(NOTE_SIZE.m, ...groups.map((g) => grown(g.step.activity ?? g.step.card)))
 	const flowY = activityH + GAP
 	const bullets = (lines) => lines.length > 1 ? lines.map((l) => `• ${l}`).join('\n') : lines[0]
 	const flowH = Math.max(60, ...groups.map((g) => fitHeight(bullets(flowLines(g.step)), g.w - 10)))
@@ -137,21 +138,22 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 			// Questions stack straight down under their story; each answer sits to the right
 			// of its own question, on the same row. Position ties an answer to its question —
 			// no connector is drawn.
-			story.questions?.forEach((question, k) => {
+			let qy = storyY + grown(story.card) + QUESTION_GAP
+			story.questions?.forEach((question) => {
 				const qx = sx + 10
-				const qy = storyY + NOTE_SIZE.m + QUESTION_GAP + k * QUESTION_PITCH
 				const questionId = `${idp}question-${story.id}-${question.id}`
 				put.push(questionCard({ id: questionId, question, story: story.id, x: qx, y: qy, index: ix[n++], parentId }))
 				if (isQuestionAnswered(question)) {
 					const answerId = `${idp}answer-${story.id}-${question.id}`
 					put.push(answerCard({ id: answerId, question, story: story.id, x: qx + QUESTION_PITCH, y: qy, index: ix[n++], parentId }))
 				}
+				qy += rowPitch(question)
 			})
 		})
 	}
 
 	const boardBottom = storyY + Math.max(NOTE_SIZE.m, ...groups.flatMap((g) => g.stories.map((s) =>
-		NOTE_SIZE.m + (questionsHeight(s) ? QUESTION_GAP + questionsHeight(s) : 0))))
+		grown(s.card) + (questionsHeight(s) ? QUESTION_GAP + questionsHeight(s) : 0))))
 
 	const s = model.status ?? {}
 	const statusText = [

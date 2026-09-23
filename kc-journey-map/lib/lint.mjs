@@ -89,6 +89,16 @@ export function longCards(model) {
 				if (textWidth(q.answer ?? '') > CARD_TEXT_LIMIT) out.push(`answer ${story.id}/${q.id} is ${textWidth(q.answer)} columns wide — put detail behind its doc link`)
 			}
 		}
+		(step.system ?? []).forEach((line, i) => {
+			if (textWidth(line) > CARD_TEXT_LIMIT) out.push(`flow ${step.id} line ${i + 1} is ${textWidth(line)} columns wide`)
+		})
+		if (textWidth(step.note ?? '') > CARD_TEXT_LIMIT) out.push(`note ${step.id} is ${textWidth(step.note)} columns wide`)
+	}
+	for (const rule of model.rules ?? []) {
+		if (textWidth(rule.text ?? '') > CARD_TEXT_LIMIT) out.push(`rule ${rule.id} is ${textWidth(rule.text)} columns wide`)
+	}
+	for (const [field, value] of Object.entries(model.status ?? {})) {
+		if (typeof value === 'string' && textWidth(value) > CARD_TEXT_LIMIT) out.push(`status ${field} is ${textWidth(value)} columns wide`)
 	}
 	return out
 }
