@@ -1,6 +1,6 @@
 
-import { fitHeight, indexes, label, note, page, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
-import { normalizeStory, openQuestions } from './model.mjs'
+import { QUESTION_MARKS, fitHeight, indexes, label, note, page, releaseLine, withStoryStatus, storyProgress, releaseProgressText } from './records.mjs'
+import { normalizeStory } from './model.mjs'
 
 const PITCH = 240
 const X0 = 300
@@ -162,7 +162,7 @@ export function buildStoryMap(model, room = null, progress = null) {
 			meta: tag(band.id ?? 'unassigned', 'release-label'),
 		})
 
-		const questionsHeight = (story) => openQuestions(story ?? {}).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(q.ask, STORY_W), 0)
+		const questionsHeight = (story) => (story?.questions ?? []).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(q.ask, STORY_W), 0)
 		const perColumn = new Map()
 		for (const story of band.stories) {
 			const list = perColumn.get(story.step.id) ?? []
@@ -190,19 +190,20 @@ export function buildStoryMap(model, room = null, progress = null) {
 				})
 
 				let qy = y + STORY_H + QUESTION_GAP
-				for (const question of openQuestions(story)) {
+				for (const question of story.questions ?? []) {
 					const h = fitHeight(question.ask, STORY_W)
+					const drawn = QUESTION_MARKS[question.status] ?? QUESTION_MARKS.open
 					put.push({
 						...label({
 							id: `shape:sm-question-${story.id}-${question.id}`,
-							text: `? ${question.ask}`,
+							text: `${drawn.mark} ${question.ask}`,
 							x,
 							y: qy,
 							w: STORY_W,
 							h,
 							index: ix[n++],
 							parentId,
-							color: 'violet',
+							color: drawn.color,
 							size: 's',
 							align: 'start',
 						}),

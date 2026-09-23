@@ -73,9 +73,10 @@ canvas and `agent-browser`; it is not a dependency-free fallback.
   `vite.config.mts` forwards the sync socket to the doc API, so no separate port needs opening.
 - Doc API: `http://127.0.0.1:5858` (loopback only — reachability comes from the board's proxy, not
   from widening this bind)
-- Share board: `npm run share` serves the same rooms on `http://127.0.0.1:3738` for viewers. It
-  proxies the board and its images and nothing else; the operator endpoints exist only on the
-  board above, so a viewer cannot control the tunnel or write into the repository.
+- Viewer board: `npm run share` serves the same rooms on `http://127.0.0.1:3738`. It proxies the
+  board and its images and nothing else; the operator endpoints exist only on the board above, so
+  a viewer cannot write into the repository. This is the port to point a tunnel at — the board's
+  own port is not.
 
 `JOURNEY_API_PORT`, `JOURNEY_CANVAS_PORT` and `JOURNEY_SHARE_PORT` move all three; the preflight,
 the export scripts and the proxies read the same variables, so a second canvas does not need any
@@ -105,11 +106,12 @@ redrawing; the renderer does not apply them to the source automatically.
 so the same record resolves against whatever host each viewer typed. A `.tldr` export inlines
 the bytes as a data URL, which makes the file self-contained and large.
 
-**Sharing.** The board's top-right panel opens a Cloudflare quick tunnel to the share
-front-end and shows the URL; stopping it closes the tunnel, and so does stopping the doc API.
-The tunnel is refused with 409 when the share front-end is not running, and the panel says so
-when a front-end dies under a tunnel that is still open — Cloudflare serves 502 for that, which
-looks like a broken link rather than a stopped process.
+**Reaching someone off this machine.** There is no tunnel control here; run your own
+(`ngrok http 3738`, or any equivalent) against the viewer board above, and stop it when the
+discussion ends. That server sets `allowedHosts: true`, so a tunnel hostname needs no
+configuration; the board's own port does, through `JOURNEY_ALLOWED_HOSTS`. Send the URL **with
+its `?room=` query** — without one a viewer lands on the empty `default` room, and what they
+report is a blank page.
 
 **Saving.** The same panel writes the board to `JOURNEY_SAVE_DIR` (`./docs/journey`) under a
 name you confirm, or downloads a `.tldr` through the browser when the repository is not where
@@ -118,8 +120,8 @@ button reads `overwrite` when the target already exists — these files are usua
 so an overwrite has no undo.
 
 **There is no identity check on a shared board.** Anyone holding the link can edit or clear
-it. That is the whole access control, which is why the tunnel is meant for one ad-hoc
-discussion and not for a standing URL.
+it. That is the whole access control, which is why a tunnel to it belongs to one ad-hoc
+discussion and not to a standing URL.
 
 ## Three projections, drawn by request
 
@@ -345,6 +347,6 @@ not an open-source one. It permits use in a Development Environment — internal
 development, testing or staging, not reachable by customers or the public. It forbids
 Production use without a commercial licence and forbids interfering with licence-key
 enforcement, which is why the board shows a "Get a license for production" watermark.
-Do not deploy this board for anyone outside the team. A quick tunnel puts the board on a
-public hostname, so the link belongs to the people in that discussion and the tunnel is closed
-when it ends.
+Do not deploy this board for anyone outside the team. A tunnel puts the board on a public
+hostname, so the link belongs to the people in that discussion and the tunnel is closed when it
+ends.

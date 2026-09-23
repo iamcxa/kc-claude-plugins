@@ -17,7 +17,7 @@ trap cleanup EXIT
 # Use this process's startup log; a shared-port health check can hit another canvas.
 LOG="$ROOMS_DIR/server.log"
 JOURNEY_ROOMS_DIR="$ROOMS_DIR" JOURNEY_ASSETS_DIR="$ROOMS_DIR/assets" JOURNEY_SAVE_DIR="$ROOMS_DIR/save" \
-  JOURNEY_SHARE_PORT=1 npx tsx ./server/canvas-server.ts >"$LOG" 2>&1 &
+  npx tsx ./server/canvas-server.ts >"$LOG" 2>&1 &
 SERVER_PID=$!
 
 for _ in $(seq 1 60); do
@@ -75,7 +75,6 @@ DRIFT=$(node lib/journey-read.mjs "$EXAMPLE" "$ROOM" | node -e 'let s="";process
 
 echo "ok  round trip clean"
 
-# No tunnel is ever opened here: POST /tunnel is asserted against a front-end that is down.
 ASSETS_DIR="$ROOMS_DIR/assets"
 SAVE_DIR="$ROOMS_DIR/save"
 mkdir -p "$SAVE_DIR"
@@ -97,9 +96,3 @@ curl -sf -X POST -H 'Content-Type: application/json' \
   "http://127.0.0.1:$PORT/save" >/dev/null || { echo "FAIL: save rejected a valid board"; exit 1; }
 [ -f "$SAVE_DIR/escape.tldr" ] || { echo "FAIL: a traversing name escaped the save directory"; exit 1; }
 echo "ok  save confined"
-
-curl -sf "http://127.0.0.1:$PORT/tunnel" | grep -q '"running":false' || { echo "FAIL: a tunnel is reported before one was asked for"; exit 1; }
-curl -sf "http://127.0.0.1:$PORT/tunnel" | grep -q '"targetUp":false' || { echo "FAIL: a missing share front-end is reported as up"; exit 1; }
-GUARD=$(curl -s -o /dev/null -w '%{http_code}' -X POST "http://127.0.0.1:$PORT/tunnel")
-[ "$GUARD" = "409" ] || { echo "FAIL: expected 409 with no share front-end running, got $GUARD"; exit 1; }
-echo "ok  tunnel refuses a missing front-end"
