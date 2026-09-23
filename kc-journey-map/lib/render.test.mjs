@@ -19,7 +19,7 @@ test('release boards show exactly the selected stories in yellow, grouped by gre
 	// and that step's stories start there.
 	const flowA = kind(records, 'flow').find((f) => f.meta.journey.nodeId === 'a')
 	const activityA = kind(records, 'activity').find((f) => f.meta.journey.nodeId === 'a')
-	assert.equal(flowA.type, 'note')
+	assert.equal(flowA.type, 'geo')
 	assert.equal(flowA.x, activityA.x)
 	assert.ok(stories.slice(0, 2).every((s) => s.x >= activityA.x))
 })
@@ -51,9 +51,9 @@ test('the release board draws no lane boxes', () => {
 	}
 })
 
-test('a flow card is drawn once per system: line and a constraint card once per rule id', () => {
+test('each step gets one flow box and one constraint box, several lines becoming a bullet list', () => {
 	const model = structuredClone(fixtureModel)
-	model.steps[0].system = ['Calls the shared service']
+	model.steps[0].system = ['Calls the shared service', 'Keeps one copy']
 	model.steps[0].rules = ['unique']
 	model.rules = [{ id: 'unique', text: 'One unique name' }]
 	const records = buildJourneyBoard(model, { release: model.releases[0] })
@@ -64,12 +64,12 @@ test('a flow card is drawn once per system: line and a constraint card once per 
 	assert.equal(kind(records, 'constraint').length, 3)
 
 	const flowA = kind(records, 'flow').find((s) => s.meta.journey.nodeId === 'a')
-	assert.equal(text(flowA), 'Calls the shared service')
-	assert.deepEqual([flowA.type, flowA.props.color], ['note', 'light-blue'])
+	assert.equal(text(flowA), '• Calls the shared service\n• Keeps one copy')
+	assert.deepEqual([flowA.type, flowA.props.color], ['geo', 'light-blue'])
 
 	const constraintA = kind(records, 'constraint').find((s) => s.meta.journey.nodeId === 'a')
 	assert.equal(text(constraintA), 'One unique name')
-	assert.deepEqual([constraintA.type, constraintA.props.color], ['note', 'orange'])
+	assert.deepEqual([constraintA.type, constraintA.props.color], ['geo', 'orange'])
 
 	const flowB = kind(records, 'flow').find((s) => s.meta.journey.nodeId === 'b')
 	assert.equal(text(flowB), 'No system flow recorded.')
@@ -189,7 +189,8 @@ test('both projections border all three states and count exists alone; the relea
 	const legend = kind(records, 'board-legend')
 	// The legend is made of the board's own cards: a shrunken note per kind, and for each
 	// status a shrunken story note wearing that status's border.
-	assert.ok(legend.every((s) => s.type === 'note'), 'a legend entry is not a note')
+	// Flow and constraint samples are boxes like the board's own; every other entry is a note.
+	assert.ok(legend.every((s) => s.type === (['flow', 'constraint'].includes(s.meta.journey.nodeId) ? 'geo' : 'note')), 'a legend entry does not match the board')
 	const legendBorder = (id) => kind(records, 'board-legend-border').find((b) => b.meta.journey.nodeId === id)
 	assert.equal(legendBorder('status-exists').props.color, 'green')
 	assert.equal(legendBorder('status-gap').props.color, 'red')
