@@ -64,7 +64,8 @@ body. Use bold **AC-N** declarations with individual evidence clauses.
 The user selects the compatible profile and approves outcome, scope and budget.
 FO records the choice; this boundary has no worker or placeholder report. FO
 also records, under a `## FO alignment` heading in the task file, whether FO
-direction alignment with the Captain is needed before ideation and why; a
+direction alignment with the Captain is needed before the next declared stage
+and why; a
 stated reason is the whole record when not needed.
 
 - **Gate content:** Show the selected variant/profile, proposed outcome, scope,
