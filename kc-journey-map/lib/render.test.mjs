@@ -79,7 +79,7 @@ test('a flow card is drawn once per system: line and a constraint card once per 
 	assert.equal(text(bSee), 'Sees it arrive')
 })
 
-test('a question is drawn as its own note, connected to its story by a native arrow', () => {
+test('a question is drawn as its own note, straight below its story, with no connector', () => {
 	const records = buildJourneyBoard(fixtureModel, { release: fixtureModel.releases[0] })
 	const question = kind(records, 'question').find((q) => q.meta.journey.story === 'b-see')
 	assert.ok(question, 'no question card drawn for b-see')
@@ -89,17 +89,16 @@ test('a question is drawn as its own note, connected to its story by a native ar
 	assert.equal(question.props.color, 'light-green')
 
 	const story = kind(records, 'story').find((s) => s.meta.journey.nodeId === 'b-see')
-	const link = records.find((r) => r.type === 'arrow' && r.meta?.journey?.kind === 'question-link' && r.meta.journey.story === 'b-see')
-	assert.ok(link, 'no connector drawn between the question and its story')
-	const bindings = records.filter((r) => r.typeName === 'binding' && r.fromId === link.id)
-	assert.equal(bindings.length, 2)
-	assert.deepEqual(new Set(bindings.map((b) => b.toId)), new Set([story.id, question.id]))
+	// Position says what belongs to what: same column as the story, below it, no arrow.
+	assert.equal(question.x, story.x)
+	assert.ok(question.y > story.y)
+	assert.equal(records.filter((r) => r.type === 'arrow' || r.typeName === 'binding').length, 0, 'the release board draws no connectors')
 
 	// b-see's question carries neither answer: nor doc:, so no answer note is drawn.
 	assert.equal(kind(records, 'answer').find((a) => a.meta.journey.story === 'b-see'), undefined)
 })
 
-test('an answered question draws an answer note under it with a bound connector; an unanswered one draws none', () => {
+test('an answered question draws an answer note to its right on the same row; an unanswered one draws none', () => {
 	const model = structuredClone(fixtureModel)
 	model.steps[0].stories[0].status = 'gap'
 	delete model.steps[0].stories[0].evidence
@@ -125,8 +124,13 @@ test('an answered question draws an answer note under it with a bound connector;
 	assert.equal(answered.type, 'note')
 	assert.equal(answered.props.color, 'light-blue')
 	assert.equal(text(answered), 'It is the owner.')
-	assert.equal(answered.x, questionById('q-answered').x, 'the answer sits straight below its own question')
-	assert.ok(answered.y > questionById('q-answered').y)
+	assert.equal(answered.y, questionById('q-answered').y, 'the answer sits on its own question\'s row')
+	assert.ok(answered.x > questionById('q-answered').x, 'the answer sits to the right of its question')
+	// Questions stack down one column at an even pitch.
+	const ys = ['q-open', 'q-answered', 'q-linked', 'q-deferred'].map((id) => questionById(id).y)
+	const gaps = ys.slice(1).map((y, k) => y - ys[k])
+	assert.equal(new Set(gaps).size, 1, `questions are not evenly spaced: ${gaps}`)
+	assert.equal(new Set(['q-open', 'q-answered', 'q-linked', 'q-deferred'].map((id) => questionById(id).x)).size, 1, 'questions are not in one column')
 
 	assert.equal(answerById('q-linked').props.url, 'https://example.com/adr#q1')
 
@@ -134,10 +138,6 @@ test('an answered question draws an answer note under it with a bound connector;
 	// was authored — its reason for parking is itself an answer to show.
 	assert.equal(text(answerById('q-deferred')), 'waiting on design')
 
-	const alink = records.find((r) => r.type === 'arrow' && r.meta?.journey?.kind === 'answer-link' && r.meta.journey.nodeId === 'q-answered')
-	assert.ok(alink, 'no connector drawn between the question and its answer')
-	const bindings = records.filter((r) => r.typeName === 'binding' && r.fromId === alink.id)
-	assert.deepEqual(new Set(bindings.map((b) => b.toId)), new Set([questionById('q-answered').id, answered.id]))
 })
 
 test('long lines have fitted flow/constraint cards, and cards stack top to bottom: activity, flow, constraints, stories, questions', () => {
@@ -271,7 +271,7 @@ test('a removed story takes its nested status border with it', () => {
 	assert.ok(removed.includes('shape:sm-story-a-0-status-border'), 'the border outlived the story it was drawn on')
 })
 
-test('every record, including a connector arrow and its bindings, validates against the tldraw schema', () => {
+test('every record validates against the tldraw schema, including the story map\'s question connectors', () => {
 	const model = structuredClone(fixtureModel)
 	model.steps[0].stories[0].questions = ['a', 'b', 'c', 'd', 'e', 'f'].map((id, k) => ({ id, ask: `Question ${k}`, status: ['open', 'answered', 'deferred'][k % 3], because: 'because' }))
 	const schema = createTLSchema()
@@ -283,7 +283,9 @@ test('every record, including a connector arrow and its bindings, validates agai
 			assert.ok(schema.types[r.typeName], `${selection.join(',')}: unknown typeName "${r.typeName}" on ${r.id}`)
 			assert.doesNotThrow(() => schema.types[r.typeName].validate(r), `${selection.join(',')}: ${r.typeName} ${r.id} failed schema validation`)
 		}
-		assert.ok(records.some((r) => r.type === 'arrow'), `${selection.join(',')} drew no connector arrow for a 6-question story`)
-		assert.ok(records.some((r) => r.typeName === 'binding'), `${selection.join(',')} drew no binding for a 6-question story`)
+		if (selection.includes('story-map')) {
+			assert.ok(records.some((r) => r.type === 'arrow'), `${selection.join(',')} drew no connector arrow for a 6-question story`)
+			assert.ok(records.some((r) => r.typeName === 'binding'), `${selection.join(',')} drew no binding for a 6-question story`)
+		}
 	}
 })

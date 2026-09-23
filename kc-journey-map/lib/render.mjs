@@ -23,7 +23,7 @@ const QUESTION_GAP = 10
 // tldraw draws every note 200 wide whatever its size prop, which only scales the font —
 // pitching questions by NOTE_SIZE.s packed six notes into the width of four.
 const NOTE_W = 200
-const QUESTION_PITCH = NOTE_W + 30
+const QUESTION_PITCH = NOTE_W + 20
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
 // Every card colour the release board draws, plus the story-status border it does not
@@ -51,7 +51,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		const stories = (step.stories ?? []).map((story, j) => normalizeStory(step, story, j))
 			.filter((story) => !release || story.release === release.id)
 		if (release && !stories.length) return null
-		const questionRow = (story) => (story.questions?.length ?? 0) * QUESTION_PITCH
+		const questionRow = (story) => ((story.questions ?? []).some(isQuestionAnswered) ? 2 : 1) * QUESTION_PITCH
 		const w = Math.max(300, stories.length * STORY_PITCH - 20,
 			stories.reduce((sum, story) => sum + Math.max(STORY_PITCH, questionRow(story)), 0) - 20)
 		const group = { step, stories, x: right, w }
@@ -93,9 +93,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	}
 	// A story's own open questions may stack wider than one story's worth; reserve one
 	// question row plus, when any question here is answered, one answer row beneath it.
-	const questionsHeight = (story) => (story.questions ?? []).length
-		? NOTE_W + QUESTION_GAP + ((story.questions ?? []).some(isQuestionAnswered) ? NOTE_W + 60 : 0)
-		: 0
+	const questionsHeight = (story) => (story.questions ?? []).length * QUESTION_PITCH
 
 	// A note's rendered height is a runtime concern (growY), not something this generator
 	// computes ahead of time — the story map has never tried to for its own activity or
@@ -144,7 +142,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 			box(`empty-${step.id}`, step.id, 'empty-stories', 'No stories recorded.', x, storyY, w, NOTE_SIZE.m, 'grey')
 		}
 		stories.forEach((story, j) => {
-			const before = stories.slice(0, j).reduce((sum, st) => sum + Math.max(STORY_PITCH, (st.questions?.length ?? 0) * QUESTION_PITCH), 0)
+			const before = stories.slice(0, j).reduce((sum, st) => sum + Math.max(STORY_PITCH, (st.questions?.length ? ((st.questions ?? []).some(isQuestionAnswered) ? 2 : 1) : 0) * QUESTION_PITCH), 0)
 			const sx = x + before + (stories.length === 1 && !story.questions?.length ? (w - STORY_W) / 2 : 0)
 			const storyShapeId = `${idp}story-${story.id}`
 			// Same builder the story map uses for the same story — its text is `story.card`
@@ -156,32 +154,17 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 			// Questions spread left to right beneath the story, as laid out by hand on the
 			// live canvas — not stacked in one column. Each answered question's answer sits
 			// straight below that question, before the next question's column.
+			// Questions stack straight down under their story and each answer sits to the right of
+			// its own question, on the same row. Position says what belongs to what, so no
+			// connectors are drawn and every gap on the grid is the same.
 			story.questions?.forEach((question, k) => {
-				const qx = sx + k * QUESTION_PITCH
-				const qy = storyY + NOTE_SIZE.m + QUESTION_GAP
+				const qx = sx + 10
+				const qy = storyY + NOTE_SIZE.m + QUESTION_GAP + k * QUESTION_PITCH
 				const questionId = `${idp}question-${story.id}-${question.id}`
 				put.push(questionCard({ id: questionId, question, story: story.id, x: qx, y: qy, index: ix[n++], parentId }))
-				const linkId = `${idp}qlink-${story.id}-${question.id}`
-				put.push({
-					...connector({ id: linkId, parentId, index: ix[n++], color: 'grey' }),
-					meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
-				})
-				put.push(...connectorBindings(linkId, storyShapeId, questionId).map((b) => ({
-					...b, meta: { journey: { nodeId: question.id, kind: 'question-link', story: story.id } },
-				})))
-
 				if (isQuestionAnswered(question)) {
-					const ay = qy + NOTE_W + 60
 					const answerId = `${idp}answer-${story.id}-${question.id}`
-					put.push(answerCard({ id: answerId, question, story: story.id, x: qx, y: ay, index: ix[n++], parentId }))
-					const alinkId = `${idp}alink-${story.id}-${question.id}`
-					put.push({
-						...connector({ id: alinkId, parentId, index: ix[n++], color: 'grey' }),
-						meta: { journey: { nodeId: question.id, kind: 'answer-link', story: story.id } },
-					})
-					put.push(...connectorBindings(alinkId, questionId, answerId).map((b) => ({
-						...b, meta: { journey: { nodeId: question.id, kind: 'answer-link', story: story.id } },
-					})))
+					put.push(answerCard({ id: answerId, question, story: story.id, x: qx + QUESTION_PITCH, y: qy, index: ix[n++], parentId }))
 				}
 			})
 		})
