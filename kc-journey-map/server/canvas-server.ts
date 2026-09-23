@@ -8,7 +8,6 @@ import { loadAsset, storeAsset } from './assets'
 import { readRepoDoc } from './repo-doc'
 import { activeRooms, listRooms, makeOrLoadRoom, sanitizeRoomId } from './rooms'
 import { saveBoard, saveDir, saveTarget } from './save'
-import { startTunnel, stopTunnel, tunnelStatus } from './tunnel'
 
 // Separate ports keep checks from mutating another running canvas.
 const PORT = Number(process.env.JOURNEY_API_PORT ?? 5858)
@@ -100,19 +99,6 @@ app.register(async (app) => {
 			return res.status(400).send({ error: 'owner, repo and refPath are required' })
 		}
 		return await readRepoDoc(owner, repo, refPath)
-	})
-
-	app.get('/tunnel', async () => await tunnelStatus())
-
-	app.post('/tunnel', async (_req, res) => {
-		const result = await startTunnel()
-		if ('error' in result) return res.status(result.status).send({ error: result.error })
-		return { ...(await tunnelStatus()), url: result.url }
-	})
-
-	app.delete('/tunnel', async () => {
-		const stopped = stopTunnel()
-		return { stopped, ...(await tunnelStatus()) }
 	})
 
 	app.get('/health', async () => ({

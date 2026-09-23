@@ -21,8 +21,6 @@ export default defineConfig(() => ({
 			'/connect': { target: API, ws: true },
 			'/uploads/': { target: API },
 			'/repo-doc': { target: API },
-			// Operator-only, and deliberately absent from vite.share.config.mts.
-			'/tunnel': { target: API },
 			'/save': { target: API },
 		},
 	},

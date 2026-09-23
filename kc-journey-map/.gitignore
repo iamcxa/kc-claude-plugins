@@ -7,6 +7,5 @@ node_modules/
 # Local native state; export or read back edits before deleting rooms.
 .rooms/
 
-# Uploaded images and the tunnel's own log; a .tldr export carries the image bytes.
+# Uploaded images; a .tldr export carries the image bytes.
 .assets/
-.tunnel.log
