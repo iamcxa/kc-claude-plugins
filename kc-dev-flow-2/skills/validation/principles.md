@@ -10,6 +10,12 @@ or removal? Check that remaining surfaces map to the goal, a named falsifier,
 safety boundary or required lifecycle obligation; a deletion earns its place by
 the same standard as retention. Use existing evidence, not a new proof harness.
 
+Read every comment the candidate adds. A comment that narrates the change, restates
+the code beside it, cites a line number or marks a section is a repair finding.
+When the change alters what a user sees, the evidence includes a screenshot of the
+changed screen at the candidate; reading the code or a passing render test is not
+seeing it.
+
 For a decisive check, identify evidence that it detects the relevant known error.
 Reuse applicable negative or mutation evidence; only when it is missing, run the
 smallest counterexample needed. Do not rerun every check or an already-green suite
