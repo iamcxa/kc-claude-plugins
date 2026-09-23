@@ -80,6 +80,33 @@ for (const [name, mutate, message] of [
 	assert.equal(existsSync(out), false)
 })
 
+test('an open question on a selected story refuses handoff; an answered or deferred one does not', (t) => {
+	for (const [question, refused] of [
+		[{ id: 'q1', ask: 'Who may see arrival?' }, true],
+		[{ id: 'q1', ask: 'Who may see arrival?', answer: 'Only the sender.' }, false],
+		[{ id: 'q1', ask: 'Who may see arrival?', status: 'deferred', because: 'Decided in the next release.' }, false],
+	]) {
+		const f = fixture(t)
+		for (const path of [f.paths[0], f.paths[1]]) {
+			const model = parse(readFileSync(path, 'utf8'))
+			model.steps[1].stories[0].questions = [question]
+			writeFileSync(path, stringify(model))
+		}
+		f.assessment.baseline_sha256 = hash(readFileSync(f.paths[0]))
+		f.assessment.source_sha256 = hash(readFileSync(f.paths[1]))
+		const out = join(f.dir, 'handoff.md')
+		if (refused) {
+			const result = f.run('--digest')
+			assert.notEqual(result.status, 0)
+			assert.match(result.stderr, /open questions on track: q1/)
+		} else {
+			f.accept()
+			assert.equal(f.run('--out', out).status, 0)
+		}
+		assert.equal(existsSync(out), !refused)
+	}
+})
+
 test('an earlier output is not silently overwritten or presented as a current pass', (t) => {
 	const f = fixture(t); f.accept()
 	const out = join(f.dir, 'handoff.md')
