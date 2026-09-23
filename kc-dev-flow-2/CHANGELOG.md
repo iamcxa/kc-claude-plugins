@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.6.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.5.0...kc-dev-flow-2-v0.6.0) (2026-09-23)
+
+
+### Features
+
+* **kc-dev-flow-2:** default workflow workers to sonnet ([#502](https://github.com/iamcxa/kc-claude-plugins/issues/502)) ([4a33f11](https://github.com/iamcxa/kc-claude-plugins/commit/4a33f1176a8051d7ace8c0d8712596546a5585c3))
+* **kc-dev-flow-2:** derive the POC workflow README from the five-stage one and check drift ([#499](https://github.com/iamcxa/kc-claude-plugins/issues/499)) ([9c75b0a](https://github.com/iamcxa/kc-claude-plugins/commit/9c75b0aafe9b530ac038f43e850bc3c775ebb235))
+* **kc-dev-flow-2:** require ADR-format decision records and a per-document verdict on affected documents ([#500](https://github.com/iamcxa/kc-claude-plugins/issues/500)) ([32c705d](https://github.com/iamcxa/kc-claude-plugins/commit/32c705d62aca63e9cdbc3979c512a2e31ba57213))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** name package files in the workflow source instead of linking them ([#501](https://github.com/iamcxa/kc-claude-plugins/issues/501)) ([47b089f](https://github.com/iamcxa/kc-claude-plugins/commit/47b089f49b1a2cc2d0b48040fdb060c52d75d1c7))
+* **kc-dev-flow-2:** reconcile a delivery already sent under a lost token without a false stopped attestation ([#497](https://github.com/iamcxa/kc-claude-plugins/issues/497)) ([b64079c](https://github.com/iamcxa/kc-claude-plugins/commit/b64079c020d1663d90a7159843091611d1b2c45f))
+
 ## [0.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.4.0...kc-dev-flow-2-v0.5.0) (2026-09-23)
 
 
