@@ -77,10 +77,14 @@ built; see "Stories".
   story status — whether a decision is settled, not whether code exists — so the two
   vocabularies stay apart. `question:` is sugar for a one-element list.
 - Every question is its own card on both the story map and the journey board, bound to
-  its story card by a native arrow — never text folded into the evidence cell, which
-  stops being readable once a story asks six. Color and a printed status word carry the
-  three states at a glance: violet/`OPEN`, green/`ANSWERED`, grey/`DEFERRED`; a deferred
-  card also carries its `because:`. `lintQuestionStatus` rejects an unsupported status
+  its story card by a native arrow — never text folded into the story card, which
+  stops being readable once a story asks six. A printed status word always carries the
+  three states at a glance (`OPEN`/`ANSWERED`/`DEFERRED`); a deferred card also carries
+  its `because:`. The two surfaces carry status differently: the story map still colors
+  the card by status (violet/`OPEN`, green/`ANSWERED`, grey/`DEFERRED`); the journey
+  board fills every question card light-green — colour there means "question", not
+  status — and carries `open` vs. settled in the outline instead, dashed for `open`,
+  solid for `answered` or `deferred`. `lintQuestionStatus` rejects an unsupported status
   and a `deferred` question with no `because:`.
 - A story may not be `exists` while it carries an `open` question; the
   `exists-with-open-question` lint refuses it. The per-release contract renders only

@@ -138,13 +138,28 @@ node lib/journey-render.mjs docs/journey/<slug>.yaml [roomId] [--pages story-map
 | **Release contract**, one per release | generated document, not canvas | authored story status, evidence and shared rule ids for one release — `lib/journey-contract.mjs` |
 | **Function map** (`function-map`, opt-in) | canvas, one page | what does each step decide, and what becomes true when it does |
 
-**Journey boards use stories as the review unit.** Each release page shows its selected
-stories as yellow cards under green activity headings (`activity`, falling back to
-`card`). Each story has a solid 10 px status border: green for `exists`, red for `gap`,
-violet for `unverified`, with one legend per page. Neutral boxes below retain evidence
-and questions. `EXISTS` describes implementation evidence, not delivery acceptance.
-With no releases, the whole-journey board also shows unassigned stories and marks
-activities that have no stories yet.
+**Journey boards use stories as the review unit, and they are cards only — no lane
+rectangles.** Each release page stacks, top to bottom, under each green activity
+heading (`activity`, falling back to `card`): one light-blue flow card per `system:`
+line, one orange constraint card per rule id (showing that rule's text), then the
+release's yellow story cards, then — directly under its own story — one light-green
+question card per question. A step with neither `system:` nor `rules:` still gets one
+placeholder card of each kind, so the render never reads as having silently dropped a
+step's flow or constraints. Cards sit straight below what they belong to with short
+connectors, not long diagonals, so a release with many stories does not become a
+tangle of crossing lines. With no releases, the whole-journey board also shows
+unassigned stories and marks activities that have no stories yet.
+
+Colour means kind, never status, and a small legend in each page's top-left names
+every card colour plus the story-status border so a reader never has to guess: flow
+(light-blue), constraint (orange), story (yellow), question (light-green), and the
+`exists`/`gap`/`unverified` story borders (green/red/violet). A question's own status
+is carried by its outline, not a second colour — dashed for `open`, solid for
+`answered` or `deferred` — because every fill a new card kind could use that is not
+already a story-status border colour is scarce. Story cards carry a solid 10 px status
+border (`records.mjs:storyBorder`) with the same green/red/violet colours the legend
+explains; a story's evidence symbol is the last line of its own card, not a separate
+cell. `EXISTS` describes implementation evidence, not delivery acceptance.
 
 `records.mjs:storyBorder` keeps each story as a native yellow note with a locked,
 empty geo child. `App.tsx:syncStoryBorders` updates that child after note creation
@@ -155,11 +170,12 @@ PNG, SVG and `.tldr` exports include standard shapes; other tldraw hosts retain
 the saved border geometry, while subsequent height/scale edits need this canvas
 for synchronization. `node --test lib/render.test.mjs` checks generated geometry.
 
-System flow and constraints span each activity group once. The file currently stores
-`system`, `cites`, `rules` and `note` on the activity, so the board labels them as shared
-context with no recorded mapping to individual stories. It does not copy those claims
-into each story's evidence. This is a **release story detail board**, not a sequence
-diagram: left-to-right story order alone does not establish calls or causality.
+Flow and constraint cards span each activity group once, not once per story. The file
+currently stores `system`, `cites`, `rules` and `note` on the activity, so the board
+draws them as shared context with no recorded mapping to individual stories. It does
+not copy those claims into each story's evidence. This is a **release story detail
+board**, not a sequence diagram: left-to-right story order alone does not establish
+calls or causality.
 
 **The release contract is generated, never authored.** It reads the stories in a release
 and prints their status, evidence symbol, and shared activity rule ids in a document.
@@ -339,7 +355,7 @@ For the pinned tldraw 5.4.0 runtime:
   renders the label at font-size 0px — a blank sticky, and the server cannot catch it.
   Build every record with `lib/records.mjs`; never hand-write one.
 - **A geo box does not grow to fit its label.** Text past the bottom edge is drawn
-  outside the box. `fitHeight()` sizes lane 2 and lane 3 from their content.
+  outside the box. `fitHeight()` sizes every card from its own content.
 
 ## Licence
 

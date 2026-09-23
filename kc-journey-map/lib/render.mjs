@@ -4,13 +4,14 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 import { readFileSync } from 'node:fs'
 import { parse } from 'yaml'
 import { DocumentRecordType, TLDOCUMENT_ID } from '@tldraw/tlschema'
-import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText, connector, connectorBindings, QUESTION_STATUS_COLORS } from './records.mjs'
+import { fitHeight, indexes, label, note, page, pageLink, releaseLine, withStoryStatus, storyProgress, releaseProgressText, connector, connectorBindings } from './records.mjs'
 import { STORY_PAGE_ID, buildStoryMap } from './storymap.mjs'
 import { buildFunctionMap } from './funcmap.mjs'
 import { normalizeStory, storyStatusLabel, questionCardText } from './model.mjs'
 
 const STORY_PITCH = 240
 const STORY_W = 220
+const STORY_H = 200
 const GROUP_GAP = 60
 const X0 = 320
 const LANE_X = 20
@@ -18,6 +19,22 @@ const LANE_W = 270
 const GAP = 40
 const QUESTION_GAP = 10
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
+
+// Every card colour the release board draws, plus the story-status border it does not
+// explain on its own — one legend, top-left, so a reader never has to guess what a
+// colour or an outline means. QUESTION shows both outline states since colour alone no
+// longer carries a question's status.
+const BOARD_LEGEND = [
+	{ nodeId: 'activity', text: 'ACTIVITY', color: 'green', extra: {} },
+	{ nodeId: 'flow', text: 'FLOW — one card per system: line', color: 'light-blue', extra: { fill: 'solid' } },
+	{ nodeId: 'constraint', text: 'CONSTRAINT — one card per rule', color: 'orange', extra: { fill: 'solid' } },
+	{ nodeId: 'story', text: 'STORY', color: 'yellow', extra: { fill: 'solid' } },
+	{ nodeId: 'question-open', text: 'QUESTION — OPEN', color: 'light-green', extra: { fill: 'solid', dash: 'dashed' } },
+	{ nodeId: 'question-settled', text: 'QUESTION — ANSWERED or DEFERRED', color: 'light-green', extra: { fill: 'solid', dash: 'solid' } },
+	{ nodeId: 'status-exists', text: 'STORY BORDER: EXISTS', color: 'green', extra: { dash: 'solid' } },
+	{ nodeId: 'status-gap', text: 'STORY BORDER: GAP', color: 'red', extra: { dash: 'solid' } },
+	{ nodeId: 'status-unverified', text: 'STORY BORDER: UNVERIFIED', color: 'violet', extra: { dash: 'solid' } },
+]
 
 // Shared activity rules are context, not proof that each story exists.
 export const boardPageId = (releaseId) => (releaseId ? `page:jm-board-${releaseId}` : 'page:jm-board-all')
@@ -37,9 +54,25 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	const idp = `shape:jm-${release?.id ?? 'all'}-`
 	const rulesById = new Map((model.rules ?? []).map((r) => [r.id, r.text]))
 	const put = []
+
+	// system: and rules: belong to the step, not to each story — drawing them per story
+	// would repeat them once per story in the step. One card per line/rule instead of one
+	// aggregated box; a step with neither still gets one placeholder card so the render
+	// never reads as having silently dropped a step's flow or constraints.
+	const flowLines = (step) => {
+		const lines = step.system?.length ? [...step.system] : ['No system flow recorded.']
+		const extra = [step.cites?.length && `[${step.cites.join(', ')}]`, step.note?.trim()].filter(Boolean).join('\n')
+		if (extra) lines[lines.length - 1] = `${lines[lines.length - 1]}\n${extra}`
+		return lines
+	}
+	const constraintLines = (step) => step.rules?.length ? step.rules.map((id) => rulesById.get(id) ?? id) : ['No constraints recorded.']
+	const stackHeight = (lines, w) => lines.reduce((h, l, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(l, w), 0)
+
 	// Each question needs 2 index slots (card + connector arrow); its bindings need none.
 	const questionSlots = groups.reduce((sum, g) => sum + g.stories.reduce((s, story) => s + (story.questions?.length ?? 0) * 2, 0), 0)
-	const ix = indexes(20 + groups.length * 4 + groups.reduce((sum, g) => sum + g.stories.length * 2, 0) + questionSlots)
+	const flowConstraintSlots = groups.reduce((sum, g) => sum + flowLines(g.step).length + constraintLines(g.step).length, 0)
+	const ix = indexes(24 + BOARD_LEGEND.length + groups.length * 2 + flowConstraintSlots
+		+ groups.reduce((sum, g) => sum + g.stories.length, 0) + questionSlots)
 	let n = 0
 	const box = (slug, nodeId, kind, text, x, y, w, h, color = 'black', extra = {}) => {
 		put.push({
@@ -48,70 +81,75 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 			meta: tag(nodeId, kind),
 		})
 	}
-	const lane = (slug, text, y, h) => box(`lane-${slug}`, `lane-${slug}`, 'lane-label', text, LANE_X, y, LANE_W, h, 'grey')
 	const activityText = (step) => step.activity ?? step.card
-	const proofText = (story) => [
+	const storyCardText = (story) => [
+		story.card,
 		progress && (() => {
 			const p = storyProgress(progress, model, story)
 			return `Local tasks: ${p.doneTasks ?? 0}/${p.requiredTasks ?? 0} done\n${p.taskIds?.join(', ') || p.diagnostic}`
 		})(),
 		story.status && ['exists', 'gap', 'unverified'].includes(story.status) ? null : storyStatusLabel(story.status),
+		// The evidence symbol is this card's last line, not a separate cell.
 		story.evidence ? `Evidence: ${story.evidence}` : 'No story evidence recorded.',
 	].filter(Boolean).join('\n')
-	// A question is its own card, connected to the story card by a native arrow — not
-	// text folded into the evidence cell, which stops reading once a story asks six.
 	const questionsHeight = (story) => (story.questions ?? []).reduce((h, q, k) => h + (k ? QUESTION_GAP : 0) + fitHeight(questionCardText(q), STORY_W), 0)
-	const systemText = (step) => [
-		'SHARED ACTIVITY CONTEXT',
-		...(step.system?.length ? step.system.map((l) => `• ${l}`) : ['No system flow recorded.']),
-		step.cites?.length && `[${step.cites.join(', ')}]`,
-		step.note?.trim(),
-	].filter(Boolean).join('\n')
-	const ruleText = (step) => ['SHARED ACTIVITY CONSTRAINTS',
-		...(step.rules?.length ? step.rules.map((id) => `• ${rulesById.get(id) ?? id}`) : ['No constraints recorded.']),
-	].join('\n')
-	const activityH = Math.max(fitHeight('ACTIVITIES\nshared groups', LANE_W), ...groups.map((g) => fitHeight(activityText(g.step), g.w)))
-	const storyY = activityH + GAP
-	const proofY = storyY + 200 + 20
-	const proofH = Math.max(184, ...groups.flatMap((g) => g.stories.map((s) => fitHeight(proofText(s), STORY_W))))
-	const proofBottom = proofY + proofH
-	// A story's own open questions may stack taller than every other story's proof box;
-	// the system lane must clear the tallest column, not just the shared proof height.
-	const systemY = Math.max(proofBottom + GAP, ...groups.flatMap((g) => g.stories.map((s) =>
-		questionsHeight(s) ? proofBottom + QUESTION_GAP + questionsHeight(s) + GAP : 0)))
-	const systemH = Math.max(180, ...groups.map((g) => fitHeight(systemText(g.step), g.w)))
-	const rulesY = systemY + systemH + GAP
-	const rulesH = Math.max(160, ...groups.map((g) => fitHeight(ruleText(g.step), g.w)))
 
-	lane('activity', 'ACTIVITIES\nshared groups', 0, activityH)
-	lane('journey', 'RELEASE STORIES\nwhat a person can do', storyY, 200)
-	lane('evidence', 'STORY EVIDENCE\nevidence and open questions', proofY, proofH)
-	lane('system', 'SYSTEM FLOW\nshared by the activity; story mapping not recorded', systemY, systemH)
-	lane('constraints', 'CONSTRAINTS\nshared by the activity; story mapping not recorded', rulesY, rulesH)
+	const activityH = Math.max(120, ...groups.map((g) => fitHeight(activityText(g.step), g.w)))
+	// Flow, then constraints, then stories. Every group shares one flow band and one
+	// constraint band sized to the tallest column, exactly like the shared rows this
+	// replaces — a short activity's cards just leave blank space, not a row that creeps
+	// up under a neighbour's taller stack.
+	const flowY = activityH + GAP
+	const flowH = Math.max(60, ...groups.map((g) => stackHeight(flowLines(g.step), g.w)))
+	const constraintY = flowY + flowH + GAP
+	const constraintH = Math.max(60, ...groups.map((g) => stackHeight(constraintLines(g.step), g.w)))
+	const storyY = constraintY + constraintH + GAP
 
-	for (const { step, stories, x, w } of groups) {
+	let ly = 0
+	for (const entry of BOARD_LEGEND) {
+		const h = fitHeight(entry.text, LANE_W)
+		box(`legend-${entry.nodeId}`, entry.nodeId, 'board-legend', entry.text, LANE_X, ly, LANE_W, h, entry.color, entry.extra)
+		ly += h + 6
+	}
+
+	for (const group of groups) {
+		const { step, stories, x, w } = group
 		box(`card-${step.id}`, step.id, 'activity', activityText(step), x, 0, w, activityH, 'green')
+
+		let fy = flowY
+		flowLines(step).forEach((line, k) => {
+			const h = fitHeight(line, w)
+			box(`flow-${step.id}-${k}`, step.id, 'flow', line, x, fy, w, h, 'light-blue', { fill: 'solid' })
+			fy += h + QUESTION_GAP
+		})
+
+		let cy = constraintY
+		constraintLines(step).forEach((line, k) => {
+			const h = fitHeight(line, w)
+			box(`constraint-${step.id}-${k}`, step.id, 'constraint', line, x, cy, w, h, 'orange', { fill: 'solid' })
+			cy += h + QUESTION_GAP
+		})
+
 		if (!stories.length) {
-			box(`empty-${step.id}`, step.id, 'empty-stories', 'No stories recorded.', x, storyY, w, 200, 'grey')
+			box(`empty-${step.id}`, step.id, 'empty-stories', 'No stories recorded.', x, storyY, w, STORY_H, 'grey')
 		}
 		stories.forEach((story, j) => {
 			const sx = x + j * STORY_PITCH + (stories.length === 1 ? (w - STORY_W) / 2 : 0)
 			const storyShapeId = `${idp}story-${story.id}`
 			put.push({
-				...note({ id: storyShapeId, parentId, text: story.card,
+				...note({ id: storyShapeId, parentId, text: storyCardText(story),
 					x: sx + 10, y: storyY, index: ix[n++], color: 'yellow' }),
 				meta: { journey: { nodeId: story.id, kind: 'story', ...(progress ? { progress: storyProgress(progress, model, story) } : {}), ...(story.status ? { status: story.status } : {}) } },
 			})
-			box(`proof-${story.id}`, story.id, 'story-proof', proofText(story), sx, proofY, STORY_W, proofH,
-				'grey')
 
-			let qy = proofBottom + QUESTION_GAP
+			let qy = storyY + STORY_H + QUESTION_GAP
 			for (const question of story.questions ?? []) {
 				const h = fitHeight(questionCardText(question), STORY_W)
 				const questionId = `${idp}question-${story.id}-${question.id}`
 				put.push({
 					...label({ id: questionId, parentId, text: questionCardText(question), x: sx, y: qy, w: STORY_W, h,
-						index: ix[n++], color: QUESTION_STATUS_COLORS[question.status] ?? 'grey', size: 's', align: 'start', verticalAlign: 'start' }),
+						index: ix[n++], color: 'light-green', fill: 'solid', dash: question.status === 'open' ? 'dashed' : 'solid',
+						size: 's', align: 'start', verticalAlign: 'start' }),
 					// The question id binds to its story-map twin; the story id lets a layout
 					// check find the card a question hangs under.
 					meta: { journey: { nodeId: question.id, kind: 'question', story: story.id } },
@@ -127,9 +165,10 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 				qy += h + QUESTION_GAP
 			}
 		})
-		box(`sys-${step.id}`, step.id, 'system', systemText(step), x, systemY, w, systemH)
-		box(`rules-${step.id}`, step.id, 'constraints', ruleText(step), x, rulesY, w, rulesH, 'blue')
 	}
+
+	const boardBottom = storyY + Math.max(STORY_H, ...groups.flatMap((g) => g.stories.map((s) =>
+		STORY_H + (questionsHeight(s) ? QUESTION_GAP + questionsHeight(s) : 0))))
 
 	const s = model.status ?? {}
 	const statusText = [
@@ -140,7 +179,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		s.irreversible && `Irreversible: ${s.irreversible}`,
 	].filter(Boolean).join('\n')
 	const statusW = Math.max(600, right - GROUP_GAP - X0)
-	box('status', 'status', 'status', statusText, X0, rulesY + rulesH + 100, statusW, fitHeight(statusText, statusW), 'red')
+	box('status', 'status', 'status', statusText, X0, boardBottom + 100, statusW, fitHeight(statusText, statusW), 'red')
 
 	const title = release ? `${release.name} — stories, flow & constraints` : 'Journey board'
 	put.unshift(page({ id: parentId, name: title, index: release ? `a${5 + (model.releases ?? []).findIndex((r) => r.id === release.id)}` : 'a2' }))
@@ -153,7 +192,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 	}
 	const slice = (model.slices ?? [])[0]
 	if (slice) {
-		const y = rulesY + rulesH + 50
+		const y = boardBottom + 50
 		put.push({
 			...releaseLine({ id: `${idp}slice-line`, x: LANE_X, y, w: right - LANE_X, index: ix[n++], parentId }),
 			meta: tag(slice.id, 'slice-line'),
@@ -161,7 +200,7 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		const text = `SLICE\n${slice.outcome}`
 		box('slice-label', slice.id, 'slice-label', text, LANE_X, y + 50, LANE_W, fitHeight(text, LANE_W))
 	}
-	return withStoryStatus(put, progress)
+	return withStoryStatus(put, progress, { legend: false })
 }
 
 export function loadJourney(path) {

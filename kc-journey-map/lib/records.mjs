@@ -43,14 +43,14 @@ export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', col
 	}
 }
 
-const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', align = 'middle', verticalAlign = 'middle', url = '' }) => ({
+const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', align = 'middle', verticalAlign = 'middle', url = '', dash = 'draw' }) => ({
 	...base(id, x, y, index, parentId),
 	type: 'geo',
 	props: {
 		w,
 		h,
 		geo: 'rectangle',
-		dash: 'draw',
+		dash,
 		growY: 0,
 		url,
 		scale: 1,
@@ -85,8 +85,10 @@ export function label({
 	align = 'middle',
 	verticalAlign = 'middle',
 	url = '',
+	fill = 'none',
+	dash = 'draw',
 }) {
-	return geo({ id, x, y, w, h, index, parentId, color, fill: 'none', text, size, align, verticalAlign, url })
+	return geo({ id, x, y, w, h, index, parentId, color, fill, text, size, align, verticalAlign, url, dash })
 }
 
 // tldraw normalizes deep-link camera bounds; the page ID is sufficient.
@@ -182,9 +184,14 @@ export function releaseProgressText(progress, model, releaseId) {
 	return release ? `${release.doneStories}/${release.totalStories} stories development-complete\n${release.acceptance}` : 'Development progress unverified'
 }
 
-export function withStoryStatus(records, progress = null) {
+// legend: false lets a caller draw its own status-border legend (the journey board
+// folds it into one top-left legend alongside its card colours) without losing the
+// status border itself, which every story still needs regardless of who explains it.
+export function withStoryStatus(records, progress = null, { legend: showLegend = true } = {}) {
 	const parentId = records.find((r) => r.typeName === 'page').id
 	const shapes = records.filter((r) => r.typeName === 'shape')
+	const borders = shapes.map(storyBorder).filter(Boolean)
+	if (!showLegend) return [...records, ...borders]
 	const captionText = progress
 		? `DEVELOPMENT PROGRESS — local Spacedock tasks\nObserved: ${progress.observedAt}\nSource: ${progress.source}\nTask completion is not delivery acceptance or proof of usability.${progress.diagnostic ? `\n${progress.diagnostic}` : ''}`
 		: 'Story status is not delivery acceptance.'
@@ -208,5 +215,5 @@ export function withStoryStatus(records, progress = null) {
 	const caption = label({ id: `shape:${parentId.slice(5)}-status-legend-caption`, parentId,
 		x: 300, y: y + 100, w: 1120, h: captionH, text: captionText, color: 'grey', size: 's', index: getIndexAbove(index) })
 	caption.meta = { journey: { kind: 'status-legend-caption', nodeId: 'status-legend' } }
-	return [...records, ...shapes.map(storyBorder).filter(Boolean), ...legend, caption]
+	return [...records, ...borders, ...legend, caption]
 }
