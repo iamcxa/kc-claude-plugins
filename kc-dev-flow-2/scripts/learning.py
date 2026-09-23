@@ -398,18 +398,13 @@ def delivery_operation(args, directory):
             plan = delivery_plan(read_json(args.plan), directory.name, result_digest)
             observed = observation(read_json(args.observation), plan)
             require(observed["state"] != "unknown", "unknown provider result cannot authorize recovery")
-            # A live owner cannot honestly attest --owner-state stopped. Reissuing to the
-            # same owner is safe without that attestation only when nothing has been sent
-            # under the lost token yet (no stored observation): either the caller's own
-            # confirmed-absent check proves it still hasn't, or an open/merged observation
-            # matching the supplied plan proves it already has, by hand.
+            # A live owner cannot honestly attest --owner-state stopped; without it, a
+            # same-owner recovery may record what was sent but never gains a new token.
             same_owner_unclaimed = (record is not None and record["observation"] is None
                                      and record["owner"] == args.owner)
             self_reissue = same_owner_unclaimed and observed["state"] == "absent"
             already_sent = (same_owner_unclaimed and args.owner_state in ("running", "unknown")
                              and observed["state"] in ("open", "merged"))
-            # The same lost-token gap can recur one step later: the token needed to
-            # report an already-recorded "open" PR's merge or close is the one that's lost.
             previously_open = (record is not None and record["owner"] == args.owner
                                 and record["observation"] is not None
                                 and record["observation"]["state"] == "open")
@@ -425,8 +420,7 @@ def delivery_operation(args, directory):
                 release_raw, _, _ = inspect_release(directory)
                 require(release_raw is None, "job is released; absent reconciliation refused")
             if record:
-                # already_sent names the plan as delivered, not reviewed: the candidate may
-                # have changed (e.g. a requested rewrite) after the original plan was claimed.
+                # A delivered candidate may differ from the claimed plan after a requested rewrite.
                 if not already_sent:
                     require(record["plan"] == plan, "recovery cannot change reviewed plan")
                 previous = record["observation"]

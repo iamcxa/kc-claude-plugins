@@ -736,8 +736,6 @@ class LearningTests(unittest.TestCase):
                 self.write_pack()
                 claim, plan = self.delivery_fixture()
                 sent = self.deliver(claim)
-                # The Captain asked for a rewrite before the by-hand push; the recovery's
-                # plan names the candidate actually delivered, not the one originally claimed.
                 rewritten = {**plan, "candidate_commit": "e" * 40}
                 self.plan.write_text(json.dumps(rewritten))
                 digest = self.cli("notices", "--all")["notices"][0]["delivery"]["digest"]
@@ -749,7 +747,6 @@ class LearningTests(unittest.TestCase):
                 self.assertFalse(reconciled["delivery_claimed"])
                 self.assertEqual(reconciled["delivery"]["state"], state)
                 self.assertEqual(reconciled["delivery"]["plan"]["candidate_commit"], "e" * 40)
-                # The lost token that was never used to send anything is now dead too.
                 self.cli("delivery-record", "--job", claim["job"], "--token", sent["delivery_token"],
                          "--observation", self.observed(rewritten, state, draft=False), code=1)
 
@@ -760,9 +757,6 @@ class LearningTests(unittest.TestCase):
         self.assertIn("stopped", refused["error"])
 
     def test_delivery_recover_already_sent_refuses_existing_observation(self):
-        # An already-recorded "open" observation defeats the already_sent shortcut (which
-        # requires none recorded yet); re-observing "open" is not the advance-to-merged/closed
-        # case either, so this still needs a genuine stopped attestation.
         claim, plan = self.delivery_fixture()
         first = self.deliver(claim)
         self.cli("delivery-record", "--job", claim["job"], "--token", first["delivery_token"],
