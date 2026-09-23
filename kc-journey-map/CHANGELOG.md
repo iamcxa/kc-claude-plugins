@@ -1,5 +1,17 @@
 # Changelog
 
+## [1.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.0.0...kc-journey-map-v1.1.0) (2026-09-23)
+
+
+### Features
+
+* **kc-journey-map:** interrogate a release's stories before handoff, and refuse handoff on open questions ([#493](https://github.com/iamcxa/kc-claude-plugins/issues/493)) ([dd7c3c0](https://github.com/iamcxa/kc-claude-plugins/commit/dd7c3c064ab3ee460b080f5db7b7b2186d6051e3))
+
+
+### Bug Fixes
+
+* **kc-journey-map:** key readback question and answer notes by story ([#495](https://github.com/iamcxa/kc-claude-plugins/issues/495)) ([cef23ad](https://github.com/iamcxa/kc-claude-plugins/commit/cef23adeea19dca07dacdc1651c831a0e191974b))
+
 ## [1.0.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v0.4.1...kc-journey-map-v1.0.0) (2026-09-23)
 
 
