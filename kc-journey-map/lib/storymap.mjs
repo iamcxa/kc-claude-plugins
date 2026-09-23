@@ -134,7 +134,9 @@ export function buildStoryMap(model, room = null, progress = null) {
 		}
 
 		const existsCount = band.id ? band.stories.filter((s) => s.status === 'exists').length : null
-		const text = `${band.name}\n${band.goal ?? ''}${band.id ? `\n\n${progress ? releaseProgressText(progress, model, band.id) : `${existsCount}/${band.stories.length} exist`}` : ''}`.trim()
+		// The story map names each slice; its goal belongs to the release board's own header,
+		// where there is room for it.
+		const text = `${band.name}${band.id ? `\n${progress ? releaseProgressText(progress, model, band.id) : `${existsCount}/${band.stories.length} exist`}` : ''}`.trim()
 		put.push({
 			...label({
 				id: `shape:sm-rellabel-${band.id ?? 'unassigned'}`,

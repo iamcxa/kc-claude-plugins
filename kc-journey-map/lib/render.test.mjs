@@ -285,3 +285,11 @@ test('every record validates against the tldraw schema', () => {
 		}
 	}
 })
+
+test('a note grows to fit its text, and a full-width character counts as two columns', async () => {
+	const { note, textWidth } = await import('./records.mjs')
+	assert.equal(textWidth('ab'), 2)
+	assert.equal(textWidth('代碼'), 4)
+	assert.equal(note({ id: 'shape:x', text: '短', x: 0, y: 0 }).props.growY, 0, 'a short note grew')
+	assert.ok(note({ id: 'shape:y', text: '很長的中文'.repeat(20), x: 0, y: 0, size: 's' }).props.growY > 0, 'a long Chinese note did not grow')
+})

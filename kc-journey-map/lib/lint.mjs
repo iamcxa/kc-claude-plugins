@@ -2,6 +2,7 @@
 import { execFileSync } from 'node:child_process'
 import { extname, resolve, sep } from 'node:path'
 import { iterStories, openQuestions, QUESTION_STATUSES, STORY_STATUSES } from './model.mjs'
+import { textWidth } from './records.mjs'
 
 // Prose/data matches must not count as executable evidence.
 const EXECUTABLE_EXTENSIONS = new Set(['.mjs', '.cjs', '.js', '.jsx', '.mts', '.cts', '.ts', '.tsx', '.py', '.rb', '.sh', '.bash', '.zsh'])
@@ -78,4 +79,22 @@ export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [
 
 export function lintJourney(model, opts = {}) {
 	return [...lintNoStatus(model), ...lintExistsWithoutEvidence(model), ...lintQuestionStatus(model), ...lintExistsWithOpenQuestion(model), ...lintEvidenceNotFound(model, opts)]
+}
+
+// Card text past this width reads as a paragraph; detail belongs behind an answer's doc link.
+export const CARD_TEXT_LIMIT = 80
+
+export function longCards(model) {
+	const out = []
+	for (const step of model.steps ?? []) {
+		for (const story of step.stories ?? []) {
+			if (typeof story !== 'object') continue
+			if (textWidth(story.card ?? '') > CARD_TEXT_LIMIT) out.push(`story ${story.id} card is ${textWidth(story.card)} columns wide`)
+			for (const q of story.questions ?? []) {
+				if (textWidth(q.ask ?? '') > CARD_TEXT_LIMIT) out.push(`question ${story.id}/${q.id} is ${textWidth(q.ask)} columns wide`)
+				if (textWidth(q.answer ?? '') > CARD_TEXT_LIMIT) out.push(`answer ${story.id}/${q.id} is ${textWidth(q.answer)} columns wide — put detail behind its doc link`)
+			}
+		}
+	}
+	return out
 }

@@ -188,3 +188,15 @@ test('open, answered, and a reasoned deferral all pass lintQuestionStatus', () =
 	] }] }])
 	assert.deepEqual(lintQuestionStatus(m), [])
 })
+
+test('a card past the text limit is reported as advisory, and a short one is not', async () => {
+	const { longCards, CARD_TEXT_LIMIT } = await import('./lint.mjs')
+	const model = { steps: [{ id: 's', stories: [
+		{ id: 'short', card: '看這家店的服務', questions: [{ id: 'q1', ask: '短問題', answer: '短答案' }] },
+		{ id: 'long', card: '字'.repeat(CARD_TEXT_LIMIT), questions: [{ id: 'q1', ask: 'ok', answer: '答'.repeat(CARD_TEXT_LIMIT) }] },
+	] }] }
+	const notes = longCards(model)
+	assert.ok(notes.some((n) => n.startsWith('story long')), 'a long story card was not reported')
+	assert.ok(notes.some((n) => n.startsWith('answer long/q1')), 'a long answer was not reported')
+	assert.ok(!notes.some((n) => n.includes('short')), 'a short card was reported')
+})

@@ -32,7 +32,9 @@ export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', col
 			align: 'middle',
 			verticalAlign: 'middle',
 			labelColor: 'black',
-			growY: 0,
+			// A note is 200 wide and 200 tall until its text needs more; tldraw grows it only
+			// when edited by hand, so a written note must carry its own growth or overflow.
+			growY: Math.max(0, fitHeight(text, NOTE_W_PX, size === 's' ? 's' : 'm', 60) - NOTE_W_PX),
 			// Zero passes schema validation but renders invisible note text.
 			fontSizeAdjustment: 1,
 			url,
@@ -48,6 +50,7 @@ export function note({ id, text, x, y, index = 'a1', parentId = 'page:page', col
 // its own layout math, the same way it already treated story/activity notes before any
 // of this file had a name for it.
 export const NOTE_SIZE = { m: 200, s: 130 }
+const NOTE_W_PX = 200
 
 const geo = ({ id, x, y, w, h, index, parentId, color, fill, text, size = 'm', align = 'middle', verticalAlign = 'middle', url = '', dash = 'draw' }) => ({
 	...base(id, x, y, index, parentId),
@@ -104,11 +107,19 @@ export const pageLink = (room, pageId) => `http://localhost:3737/?room=${room}&d
 const LINE_H = { s: 24, m: 32 }
 const CHARS_PER_100PX = { s: 8.7, m: 6.5 }
 
+// A CJK or other full-width character takes about two Latin columns; counting it as one
+// under-sized every Chinese card, so its text ran out of the box.
+export function textWidth(line) {
+	let w = 0
+	for (const ch of String(line)) w += /[\u1100-\u115f\u2e80-\ua4cf\uac00-\ud7a3\uf900-\ufaff\ufe30-\ufe4f\uff00-\uff60\uffe0-\uffe6]/u.test(ch) ? 2 : 1
+	return w
+}
+
 export function fitHeight(text, width, size = 's', padding = 40) {
 	const perLine = Math.max(8, Math.floor((width / 100) * CHARS_PER_100PX[size]))
 	const lines = String(text)
 		.split('\n')
-		.reduce((n, line) => n + Math.max(1, Math.ceil(line.length / perLine)), 0)
+		.reduce((n, line) => n + Math.max(1, Math.ceil(textWidth(line) / perLine)), 0)
 	return Math.ceil(lines * LINE_H[size] + padding)
 }
 
