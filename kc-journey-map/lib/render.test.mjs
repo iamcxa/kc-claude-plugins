@@ -92,6 +92,24 @@ test('a question is drawn as its own note, straight below its story, with no con
 	assert.equal(kind(records, 'answer').find((a) => a.meta.journey.story === 'b-see'), undefined)
 })
 
+test('a grown story or question pushes the notes below it down instead of covering them', () => {
+	const model = structuredClone(fixtureModel)
+	const story = model.steps[0].stories[0]
+	story.card = 'Open the review page automatically when the gate is ready'
+	story.questions = [
+		{ id: 'long', ask: 'A question long enough to grow its note. '.repeat(4), answer: 'An answer. '.repeat(12) },
+		{ id: 'next', ask: 'The next question' },
+	]
+	const records = buildJourneyBoard(model)
+	const bottom = (s) => s.y + 200 + s.props.growY
+	const card = kind(records, 'story').find((s) => s.meta.journey.nodeId === story.id)
+	const [first, second] = ['long', 'next'].map((id) => kind(records, 'question').find((q) => q.meta.journey.nodeId === id))
+	const answer = kind(records, 'answer').find((a) => a.meta.journey.nodeId === 'long')
+	assert.ok(card.props.growY > 0 && first.props.growY > 0 && answer.props.growY > 0, 'the fixture did not grow its notes')
+	assert.ok(first.y > bottom(card), 'the first question covers its grown story')
+	assert.ok(second.y > Math.max(bottom(first), bottom(answer)), 'the next question covers a grown question or answer')
+})
+
 test('an answered question draws an answer note to its right on the same row; an unanswered one draws none', () => {
 	const model = structuredClone(fixtureModel)
 	model.steps[0].stories[0].status = 'gap'

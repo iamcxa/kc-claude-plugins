@@ -197,3 +197,14 @@ test('a card past the text limit is reported as advisory, and a short one is not
 	assert.ok(notes.some((n) => n.startsWith('answer long/q1')), 'a long answer was not reported')
 	assert.ok(!notes.some((n) => n.includes('short')), 'a short card was reported')
 })
+
+test('a long flow line, step note, rule or status field is reported as advisory', async () => {
+	const { longCards, CARD_TEXT_LIMIT } = await import('./lint.mjs')
+	const long = 'x'.repeat(CARD_TEXT_LIMIT + 1)
+	const model = {
+		steps: [{ id: 's', system: ['short', long], note: long, stories: [] }],
+		rules: [{ id: 'short-rule', text: 'short' }, { id: 'long-rule', text: long }],
+		status: { as_of: '2026-09-23', unproven: long },
+	}
+	assert.deepEqual(longCards(model).map((n) => n.split(' is ')[0]), ['flow s line 2', 'note s', 'rule long-rule', 'status unproven'])
+})
