@@ -293,3 +293,14 @@ test('a note grows to fit its text, and a full-width character counts as two col
 	assert.equal(note({ id: 'shape:x', text: '短', x: 0, y: 0 }).props.growY, 0, 'a short note grew')
 	assert.ok(note({ id: 'shape:y', text: '很長的中文'.repeat(20), x: 0, y: 0, size: 's' }).props.growY > 0, 'a long Chinese note did not grow')
 })
+
+test('the status sits in the header row beside the release, whatever the questions below', () => {
+	const model = structuredClone(fixtureModel)
+	model.steps[0].stories[0].questions = Array.from({ length: 8 }, (_, k) => ({ id: `q${k}`, ask: `Question ${k}` }))
+	const records = buildJourneyBoard(model, { release: model.releases[0] })
+	const status = records.find((r) => r.meta?.journey?.kind === 'status')
+	const release = records.find((r) => r.meta?.journey?.kind === 'release-label')
+	assert.equal(status.y, release.y, 'the status is not on the release header row')
+	assert.ok(status.x > release.x, 'the status is not to the right of the release')
+	for (const q of records.filter((r) => r.meta?.journey?.kind === 'question')) assert.ok(status.y < q.y)
+})

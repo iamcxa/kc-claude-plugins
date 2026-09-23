@@ -181,17 +181,24 @@ export function buildJourneyBoard(model, { release = null, room = null, progress
 		s.undeployed && `Undeployed: ${s.undeployed}`,
 		s.irreversible && `Irreversible: ${s.irreversible}`,
 	].filter(Boolean).join('\n')
-	const statusW = Math.max(600, right - GROUP_GAP - X0)
-	box('status', 'status', 'status', statusText, X0, boardBottom + 100, statusW, fitHeight(statusText, statusW), 'red')
+	const boardW = Math.max(600, right - GROUP_GAP - X0)
+	// The header row holds the release on the left and its status on the right. Below the
+	// board, the status moved with whichever story carried the most questions.
+	const headerW = release ? Math.floor((boardW - GAP) / 2) : boardW
+	const statusW = headerW
+	const statusH = fitHeight(statusText, statusW)
 
 	const title = release ? `${release.name} — stories, flow & constraints` : 'Journey board'
 	put.unshift(page({ id: parentId, name: title, index: release ? `a${5 + (model.releases ?? []).findIndex((r) => r.id === release.id)}` : 'a2' }))
 	if (release) {
 		const stories = groups.flatMap((g) => g.stories)
 		const text = `${release.name}\n${release.goal ?? ''}\n\n${progress ? releaseProgressText(progress, model, release.id) : `${stories.filter((s) => s.status === 'exists').length}/${stories.length} stories exist`}\n← back to the story map`
-		const h = fitHeight(text, statusW)
-		box('release', release.id, 'release-label', text, X0, -h - GAP, statusW, h, 'blue',
+		const h = Math.max(fitHeight(text, headerW), statusH)
+		box('release', release.id, 'release-label', text, X0, -h - GAP, headerW, h, 'blue',
 			{ url: room ? pageLink(room, STORY_PAGE_ID) : '' })
+		box('status', 'status', 'status', statusText, X0 + headerW + GAP, -h - GAP, statusW, h, 'red')
+	} else {
+		box('status', 'status', 'status', statusText, X0, -statusH - GAP, statusW, statusH, 'red')
 	}
 	const slice = (model.slices ?? [])[0]
 	if (slice) {
