@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.1.0...kc-journey-map-v1.1.1) (2026-09-23)
+
+
+### Bug Fixes
+
+* **kc-journey-map:** stack release-board notes by their grown height, and flag long flow, rule and status text ([#503](https://github.com/iamcxa/kc-claude-plugins/issues/503)) ([0bc541e](https://github.com/iamcxa/kc-claude-plugins/commit/0bc541e3d24d740be92c76f333601045292e118c))
+
 ## [1.1.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.0.0...kc-journey-map-v1.1.0) (2026-09-23)
 
 
