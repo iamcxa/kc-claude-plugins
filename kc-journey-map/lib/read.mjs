@@ -4,6 +4,8 @@ const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_A
 
 import { readFileSync, writeFileSync } from 'node:fs'
 import { parse, parseDocument } from 'yaml'
+import { QUESTION_GAP, QUESTION_PITCH } from './render.mjs'
+import { isQuestionAnswered, iterStories } from './model.mjs'
 
 const STORY_PAGE = 'page:page'
 const BOARD_PREFIX = 'page:jm-board-'
@@ -55,6 +57,106 @@ function placeUnderColumn(shape, anchors) {
 	return { column: null, candidates: scored.map((s) => ({ step: s.nodeId, overlap: Number(s.frac.toFixed(2)) })) }
 }
 
+// Native tldraw "+" lands a new note exactly on the grid render.mjs itself draws: a new
+// question keeps its source's x (added downward) and a new answer keeps its source's y
+// (added sideways). QUESTION_GAP is that render's own gutter between one story's answer
+// slot and its neighbour's question column — the two can sit as little as 20px apart, so
+// the same gutter is also the tolerance a hand-placed note must land inside to read
+// unambiguously as one or the other, never both.
+const PLACEMENT_TOL = QUESTION_GAP
+
+// Read a board page's hand-added notes as new questions/answers, and its generated
+// question/answer notes for edits or deletions — against the model's own declared
+// questions, not the page's own layout math, so a dragged story or question still reads
+// correctly relative to wherever it actually sits.
+function questionsAndAnswers(shapes, perBoard, duplicated, model) {
+	const modelStories = new Map(iterStories(model).map((s) => [s.id, s]))
+	const questionsAdded = [], questionsReworded = [], questionsDeleted = []
+	const answersAdded = [], answersReworded = [], answersDeleted = []
+	const claimedIds = new Set()
+
+	for (const b of perBoard) {
+		const pg = pageName(b.pid)
+		const storiesOnPage = indexByNode(b.stories, duplicated)
+		const questionsOnPage = indexByNode(b.questions, duplicated)
+		const answersOnPage = indexByNode(b.answers, duplicated)
+
+		for (const [storyId] of storiesOnPage) {
+			const story = modelStories.get(storyId)
+			if (!story) continue
+			for (const q of story.questions ?? []) {
+				const qShape = questionsOnPage.get(q.id)
+				if (!qShape) {
+					questionsDeleted.push({ story: storyId, step: story.step.id, id: q.id, was: q.ask, page: pg })
+					continue
+				}
+				const nowAsk = plain(qShape.props?.richText)
+				if (nowAsk && nowAsk !== q.ask)
+					questionsReworded.push({ story: storyId, step: story.step.id, id: q.id, was: q.ask, now: nowAsk, page: pg })
+
+				if (!isQuestionAnswered(q)) continue
+				const aShape = answersOnPage.get(q.id)
+				if (!aShape) {
+					answersDeleted.push({ story: storyId, step: story.step.id, question: q.id, was: { answer: q.answer, doc: q.doc }, page: pg })
+					continue
+				}
+				const nowAnswer = plain(aShape.props?.richText) || undefined
+				const nowDoc = aShape.props?.url || undefined
+				if (nowAnswer !== q.answer || nowDoc !== q.doc)
+					answersReworded.push({ story: storyId, step: story.step.id, question: q.id,
+						was: { answer: q.answer, doc: q.doc }, now: { answer: nowAnswer, doc: nowDoc }, page: pg })
+			}
+		}
+
+		// A story's own x is already its questions' x (records.mjs draws both at the same
+		// column offset); an answer's slot is its question's x shifted one pitch to the right.
+		const storyAnchors = [...storiesOnPage.entries()].map(([nodeId, s]) => ({ nodeId, x: s.x, y: s.y }))
+		const questionAnchors = [...questionsOnPage.entries()].map(([nodeId, s]) => ({
+			nodeId, story: s.meta.journey.story, x: s.x, y: s.y, answered: answersOnPage.has(nodeId),
+		}))
+		const untagged = shapes
+			.filter((s) => s.parentId === b.pid && !s.meta?.journey && (s.type === 'note' || s.type === 'geo'))
+			.sort((a, c) => a.y - c.y || a.x - c.x)
+		const usedIds = new Map()
+
+		for (const shape of untagged) {
+			const text = plain(shape.props?.richText)
+			const url = shape.props?.url || ''
+			if (!text && !url) continue
+
+			const columnHits = storyAnchors
+				.filter((s) => shape.y > s.y)
+				.map((s) => ({ kind: 'question', story: s.nodeId, d: Math.abs(shape.x - s.x) }))
+			const rowHits = questionAnchors
+				.filter((q) => !q.answered)
+				.map((q) => ({ kind: 'answer', question: q.nodeId, story: q.story,
+					d: Math.max(Math.abs(shape.x - (q.x + QUESTION_PITCH)), Math.abs(shape.y - q.y)) }))
+			const passing = [...columnHits, ...rowHits].filter((c) => c.d <= PLACEMENT_TOL).sort((a, c) => a.d - c.d)
+			if (passing.length !== 1) continue // none, or a tie inside the gutter — leave for the generic unclaimed report
+
+			const hit = passing[0]
+			if (hit.kind === 'answer') {
+				answersAdded.push({ story: hit.story, step: modelStories.get(hit.story)?.step.id, question: hit.question,
+					...(text ? { answer: text } : {}), ...(url ? { doc: url } : {}), page: pg, shapeId: shape.id })
+				claimedIds.add(shape.id)
+				continue
+			}
+			if (!text) continue // a link-only note that matched no row cannot become a question
+			const storyId = hit.story
+			const used = usedIds.get(storyId) ?? new Set(questionAnchors.filter((q) => q.story === storyId).map((q) => q.nodeId))
+			let k = 0
+			while (used.has(`${storyId}-q${k}`)) k++
+			const id = `${storyId}-q${k}`
+			used.add(id)
+			usedIds.set(storyId, used)
+			questionsAdded.push({ story: storyId, step: modelStories.get(storyId)?.step.id, id, ask: text, page: pg, shapeId: shape.id })
+			claimedIds.add(shape.id)
+			questionAnchors.push({ nodeId: id, story: storyId, x: shape.x, y: shape.y, answered: false })
+		}
+	}
+	return { questionsAdded, questionsReworded, questionsDeleted, answersAdded, answersReworded, answersDeleted, claimedIds }
+}
+
 export function diffAgainstModel(shapes, model) {
 	const steps = model.steps ?? []
 	const modelOrder = steps.map((s) => s.id)
@@ -65,14 +167,15 @@ export function diffAgainstModel(shapes, model) {
 
 	const perBoard = boardPages.map((pid) => {
 		const page = shapes.filter((s) => s.parentId === pid)
-		return { pid, cards: byKind(page, 'step-card'), activities: byKind(page, 'activity'), stories: byKind(page, 'story') }
+		return { pid, cards: byKind(page, 'step-card'), activities: byKind(page, 'activity'), stories: byKind(page, 'story'),
+			questions: byKind(page, 'question'), answers: byKind(page, 'answer') }
 	})
 	const wholeBoard = perBoard.find((b) => b.pid === `${BOARD_PREFIX}all`)
 	const cards = wholeBoard ? [...wholeBoard.cards, ...wholeBoard.activities] : []
 	const activities = byKind(story, 'activity')
 	const stories = byKind(story, 'story')
 	const duplicated = [...new Set([
-		...perBoard.flatMap((b) => [...duplicatesOf([...b.cards, ...b.activities]), ...duplicatesOf(b.stories)]),
+		...perBoard.flatMap((b) => [...duplicatesOf([...b.cards, ...b.activities]), ...duplicatesOf(b.stories), ...duplicatesOf(b.questions), ...duplicatesOf(b.answers)]),
 		...duplicatesOf(activities), ...duplicatesOf(stories),
 	])]
 	const cardBy = indexByNode(cards, duplicated)
@@ -175,8 +278,10 @@ export function diffAgainstModel(shapes, model) {
 		.map(([nodeId, s]) => ({ nodeId, x: s.x, w: s.props?.w ?? NOTE_W }))]))
 	const storyAnchors = [...actBy.entries()].map(([nodeId, s]) => ({ nodeId, x: s.x }))
 
+	const qa = questionsAndAnswers(shapes, perBoard, duplicated, model)
+
 	const unclaimed = shapes
-		.filter((s) => !s.meta?.journey && (s.type === 'note' || s.type === 'geo'))
+		.filter((s) => !s.meta?.journey && (s.type === 'note' || s.type === 'geo') && !qa.claimedIds.has(s.id))
 		.map((s) => {
 			const page = pageName(s.parentId)
 			const anchors = page === 'storymap' ? storyAnchors : page.startsWith('board:') ? (boardAnchors.get(s.parentId) ?? []) : []
@@ -188,13 +293,53 @@ export function diffAgainstModel(shapes, model) {
 	const presentSteps = new Set([...legacyCards, ...allActivities].map((s) => s.meta.journey.nodeId))
 	const missing = modelOrder.filter((id) => !presentSteps.has(id) && !duplicated.includes(id))
 
-	return { reordered, reorderConflict, reworded, rewordConflict, releaseMoved, storiesReordered, duplicated, unclaimed, missing }
+	return { reordered, reorderConflict, reworded, rewordConflict, releaseMoved, storiesReordered, duplicated, unclaimed, missing,
+		questionsAdded: qa.questionsAdded, questionsReworded: qa.questionsReworded, questionsDeleted: qa.questionsDeleted,
+		answersAdded: qa.answersAdded, answersReworded: qa.answersReworded, answersDeleted: qa.answersDeleted }
 }
 
 // Preserve untouched YAML wrapping when writing individual edits.
 export const WRITE_OPTS = { lineWidth: 0, flowCollectionPadding: false }
 
 export const findStep = (steps, id) => steps.items.find((item) => item.get('id') === id)
+
+// A story is found by its explicit id, falling back to the same `${step}-${index}`
+// default `normalizeStory` uses — the only way a bare-string story can be located at all.
+function findStoryNode(steps, stepId, storyId) {
+	const list = findStep(steps, stepId)?.get('stories')
+	const j = list?.items.findIndex((s, idx) => ((s.get ? s.get('id') : null) ?? `${stepId}-${idx}`) === storyId)
+	return j >= 0 ? list.items[j] : null
+}
+
+// A story's questions may be authored three ways: a `questions:` list, the singular
+// `question:` sugar, or neither. Every write path converges on a `questions:` list so a
+// new question always has somewhere to land, preserving whatever sugar entry already
+// existed rather than re-deriving its text.
+function ensureQuestionsList(doc, storyNode) {
+	const existingList = storyNode.get('questions')
+	if (existingList) return existingList
+	const sugar = storyNode.has('question') ? storyNode.get('question', true) : null
+	if (storyNode.has('question')) storyNode.delete('question')
+	const list = doc.createNode(sugar ? [sugar] : [])
+	storyNode.set('questions', list)
+	return list
+}
+
+const questionKey = (item, storyId, j) => (item?.get ? item.get('id') : null) ?? `${storyId}-q${j}`
+
+const findQuestionIndex = (list, storyId, questionId) =>
+	list.items.findIndex((item, j) => questionKey(item, storyId, j) === questionId)
+
+// Upgrading a bare-string question to a map is only needed to attach a field a plain
+// string cannot hold (answer/doc); rewording its ask alone stays a plain replacement,
+// exactly like a bare-string story already does.
+function questionAsMap(doc, list, storyId, index) {
+	const item = list.items[index]
+	if (item?.get) return item
+	const upgraded = doc.createNode({ id: questionKey(item, storyId, index), ask: String(item) })
+	list.items[index] = upgraded
+	return upgraded
+}
 
 export function applyDiff(path, diff, outPath = path) {
 	const doc = parseDocument(readFileSync(path, 'utf8'))
@@ -254,6 +399,78 @@ export function applyDiff(path, diff, outPath = path) {
 		applied.push(`reprioritised stories under ${step}`)
 	}
 
+	// Shape ids of hand-added notes whose content is now confirmed written into this file —
+	// safe for the caller to remove from the room, and nothing else.
+	const absorbed = []
+
+	for (const { story, step, id, ask, page, shapeId } of diff.questionsAdded) {
+		const storyNode = findStoryNode(steps, step, story)
+		if (!storyNode?.get) {
+			skipped.push(`${story} could not take a new question — story is a bare string, give it an id first`)
+			continue
+		}
+		const list = ensureQuestionsList(doc, storyNode)
+		list.items.push(doc.createNode({ id, ask }))
+		applied.push(`added question ${id} to ${story}`)
+		absorbed.push({ shapeId, page })
+	}
+
+	for (const { story, step, id, was, now } of diff.questionsReworded) {
+		const storyNode = findStoryNode(steps, step, story)
+		if (!storyNode?.get) continue
+		const list = ensureQuestionsList(doc, storyNode)
+		const j = findQuestionIndex(list, story, id)
+		if (j < 0) continue
+		const item = list.items[j]
+		if ((item.get ? item.get('ask') : String(item)) !== was) {
+			skipped.push(`${id} wording changed in the file — read the canvas again`)
+			continue
+		}
+		if (item.get) item.set('ask', now)
+		else list.items[j] = doc.createNode(now)
+		applied.push(`reworded question ${id}`)
+	}
+
+	for (const { story, step, question, answer, doc: docUrl, page, shapeId } of diff.answersAdded) {
+		const storyNode = findStoryNode(steps, step, story)
+		if (!storyNode?.get) {
+			skipped.push(`${question} answer could not be attached — story is a bare string, give it an id first`)
+			continue
+		}
+		const list = ensureQuestionsList(doc, storyNode)
+		const j = findQuestionIndex(list, story, question)
+		if (j < 0) {
+			skipped.push(`${question} answer could not be attached — question not found in the file`)
+			continue
+		}
+		const item = questionAsMap(doc, list, story, j)
+		if (answer !== undefined) item.set('answer', answer)
+		if (docUrl !== undefined) item.set('doc', docUrl)
+		applied.push(`answered question ${question}`)
+		absorbed.push({ shapeId, page })
+	}
+
+	for (const { story, step, question, was, now } of diff.answersReworded) {
+		const storyNode = findStoryNode(steps, step, story)
+		if (!storyNode?.get) continue
+		const list = ensureQuestionsList(doc, storyNode)
+		const j = findQuestionIndex(list, story, question)
+		if (j < 0) continue
+		const item = list.items[j]
+		const currentAnswer = item.get ? item.get('answer') : undefined
+		const currentDoc = item.get ? item.get('doc') : undefined
+		if (currentAnswer !== was.answer || currentDoc !== was.doc) {
+			skipped.push(`${question} answer changed in the file — read the canvas again`)
+			continue
+		}
+		const mapped = questionAsMap(doc, list, story, j)
+		if (now.answer !== undefined) mapped.set('answer', now.answer)
+		else mapped.delete('answer')
+		if (now.doc !== undefined) mapped.set('doc', now.doc)
+		else mapped.delete('doc')
+		applied.push(`reworded answer to ${question}`)
+	}
+
 	if (diff.rewordConflict.length)
 		skipped.push(`${diff.rewordConflict.length} wording conflict(s) across projections — resolve on the canvas`)
 
@@ -267,7 +484,20 @@ export function applyDiff(path, diff, outPath = path) {
 	}
 
 	if (applied.length || outPath !== path) writeFileSync(outPath, doc.toString(WRITE_OPTS))
-	return { applied, skipped, wrote: applied.length || outPath !== path ? outPath : null }
+	return { applied, skipped, wrote: applied.length || outPath !== path ? outPath : null, absorbed }
 }
 
 export const loadModel = (path) => parse(readFileSync(path, 'utf8'))
+
+// Deletes exactly the given shape ids from the room — the same incremental PATCH
+// contract render.mjs:renderToRoom uses, but with nothing to `put`: this only removes
+// hand-added notes readback has already absorbed into the file, never redraws anything.
+export async function removeAbsorbedNotes({ room, ids, api = API }) {
+	if (!ids.length) return { status: 200, removed: 0 }
+	const res = await fetch(`${api}/doc?room=${room}`, {
+		method: 'PATCH',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ remove: ids }),
+	})
+	return { status: res.status, removed: ids.length, body: await res.text() }
+}

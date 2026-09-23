@@ -16,14 +16,16 @@ const X0 = 320
 const LANE_X = 20
 const LANE_W = 270
 const GAP = 40
-const QUESTION_GAP = 10
+export const QUESTION_GAP = 10
 // Questions spread out horizontally beneath their story, not stacked in one column —
 // this is the release board's own zoom-in layout, not shared with the story map, which
 // keeps its single vertical column.
 // tldraw draws every note 200 wide whatever its size prop, which only scales the font —
 // pitching questions by NOTE_SIZE.s packed six notes into the width of four.
 const NOTE_W = 200
-const QUESTION_PITCH = NOTE_W + 20
+// Exported so read.mjs can recognise a hand-placed note by the same grid this file draws
+// it on, instead of guessing a second tolerance.
+export const QUESTION_PITCH = NOTE_W + 20
 const tag = (nodeId, kind) => ({ journey: { nodeId, kind } })
 
 // Every card colour the release board draws, plus the story-status border it does not

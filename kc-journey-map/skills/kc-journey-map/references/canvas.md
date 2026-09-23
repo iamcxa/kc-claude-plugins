@@ -155,20 +155,18 @@ activities that have no stories yet.
 **Questions and answers are `note` shapes, not `geo` rectangles** — a note has the
 native "+" handles on its edges that let a reader add an adjacent card in one click.
 Colour means kind, never status: question notes are light-green, answer notes are
-light-blue (matching the flow card's colour is intentional — both read as
-"informational" — but a different shape and position tell them apart). A small legend
-in each release page's top-left names every card colour plus the story-status border
-so a reader never has to guess. There is no OPEN label and no dashed/solid outline on
-a question any more — **whether a question is answered is shown by whether an answer
-note hangs under it, nothing else.** Questions on the release board spread out
-horizontally beneath their story rather than stacking in one column, as the Captain
-laid them out by hand; the story map keeps its single vertical column, with each
-answer note directly under its own question, before the next question. Every question
-or answer is bound to what it hangs under by a native tldraw arrow
-(`records.mjs:connector` + `connectorBindings`), so the connection survives an editor
-drag. Story cards carry a solid 10 px status border (`records.mjs:storyBorder`) with
-green/red/violet for `exists`/`gap`/`unverified`; `EXISTS` describes implementation
-evidence, not delivery acceptance.
+light-violet. A small legend in each release page's top-left names every card colour
+plus the story-status border so a reader never has to guess. There is no OPEN label and
+no dashed/solid outline on a question any more — **whether a question is answered is
+shown by whether an answer note hangs under it, nothing else.** Questions on the
+release board spread out horizontally beneath their story rather than stacking in one
+column, as the Captain laid them out by hand; the story map keeps its single vertical
+column, with each answer note directly under its own question, before the next
+question. Position alone carries the relationship — no connectors are drawn, and every
+gap on the grid is the same, which is what makes a hand-added note's position readable
+(see "Reading back a story's questions" below). Story cards carry a solid 10 px status
+border (`records.mjs:storyBorder`) with green/red/violet for `exists`/`gap`/`unverified`;
+`EXISTS` describes implementation evidence, not delivery acceptance.
 
 `records.mjs:storyBorder` keeps each story as a native yellow note with a locked,
 empty geo child. `App.tsx:syncStoryBorders` updates that child after note creation
@@ -336,9 +334,10 @@ cannot reorder the whole journey. Release membership and story priority are read
 the story map; dragging cards on a release detail board does not change either.
 
 **`--write` applies a subset.** It applies wording, supported column order, story-map
-release membership and story priority. Status, evidence, questions, system flow and
-constraints are display-only here; edit those in the journey file. Constraint text
-cannot be mapped back to rule ids without guessing.
+release membership and story priority, plus a release board's questions and answers
+(below). Status, evidence, system flow and constraints stay display-only here; edit
+those in the journey file. Constraint text cannot be mapped back to rule ids without
+guessing.
 
 | Report | Meaning |
 |---|---|
@@ -349,8 +348,29 @@ cannot be mapped back to rule ids without guessing.
 | `releaseMoved` | a story crossed a release boundary on the story map |
 | `storiesReordered` | stories changed priority within a story-map activity and release |
 | `duplicated` | a node id occurs more than once within a page's activity or story cards |
-| `unclaimed` | an untagged note or geo, with its page and activity column when unambiguous; straddling cards carry `candidates`. Arrows and bare text shapes are not read |
+| `unclaimed` | an untagged note or geo not read as a question or answer, with its page and activity column when unambiguous; straddling or far-off cards carry `candidates` instead. Arrows and bare text shapes are not read |
 | `missing` | the file has an activity with no activity shape among the selected pages |
+| `questionsAdded` / `answersAdded` | a hand-added note placed as a new question or answer |
+| `questionsReworded` / `answersReworded` | a generated question or answer note's text or link changed |
+| `questionsDeleted` / `answersDeleted` | a generated question or answer note is gone from the canvas — reported, never applied |
+
+### Reading back a story's questions
+
+A story's own note sits at the same x as its questions below it; a question's own
+note sits one pitch (`QUESTION_PITCH`, `render.mjs`) to the left of its answer. A
+hand-added note lands exactly on that grid because tldraw's native "+" handle places it
+there — below a note for a new question, beside it for an answer — so `read.mjs`
+classifies a hand-added note by nearest slot within `QUESTION_GAP` (the render's own
+gutter between one story's answer slot and its neighbour's question column) and refuses
+to guess when two slots are equally close. A generated question or answer note that is
+simply gone is reported in `questionsDeleted`/`answersDeleted`, never removed from the
+file — deleting a question is a decision to show, not to infer.
+
+`--write` appends new questions (`questions:` list, converting a lone `question:` sugar
+entry the first time a story needs one), rewrites `ask`/`answer`/`doc` on existing
+entries, then removes exactly the hand-added notes it just wrote into the file — nothing
+else on the canvas, and nothing at all with `--out`, which leaves the source file and
+the room untouched.
 
 `applyDiff` skips activity/card/story wording if the file no longer matches the
 value read for that edit; read the canvas again before applying a fresh diff.
