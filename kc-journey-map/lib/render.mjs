@@ -254,11 +254,30 @@ export function staleRecordIds(currentRecords, put) {
 		.map((r) => r.id)
 }
 
-export async function renderToRoom({ path, room, selection, progress = null, api = API }) {
+const shapeText = (record) =>
+	[(record.props?.richText?.content ?? []).map((p) => (p.content ?? []).map((t) => t.text ?? '').join('')).join('\n'), record.props?.url ?? '']
+		.join('\u0000')
+
+// A generated shape remembers the text it was drawn with, so a later render can tell a
+// person's edit on the canvas from a change in the YAML.
+export const withRenderedText = (records) =>
+	records.map((r) => (r.typeName === 'shape' && r.meta?.journey
+		? { ...r, meta: { ...r.meta, journey: { ...r.meta.journey, rendered: shapeText(r) } } }
+		: r))
+
+export function handEditedIds(currentRecords, put, remove) {
+	const touched = new Set([...put.map((r) => r.id), ...remove])
+	return currentRecords
+		.filter((r) => r.typeName === 'shape' && touched.has(r.id) && typeof r.meta?.journey?.rendered === 'string')
+		.filter((r) => shapeText(r) !== r.meta.journey.rendered)
+		.map((r) => r.id)
+}
+
+export async function renderToRoom({ path, room, selection, progress = null, api = API, force = false }) {
 	const model = loadJourney(path)
 	const roomId = room ?? model.journey
 
-	const put = buildAllPages(model, roomId, selection, progress)
+	const put = withRenderedText(buildAllPages(model, roomId, selection, progress))
 
 	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())
 	const currentRecords = (current.snapshot?.documents ?? []).map((d) => d.state)
@@ -267,6 +286,8 @@ export async function renderToRoom({ path, room, selection, progress = null, api
 	const document = DocumentRecordType.create({ ...currentDocument, id: TLDOCUMENT_ID,
 		name: typeof model.title === 'string' ? model.title.trim() : '' })
 	const remove = staleRecordIds(currentRecords, put)
+	const edited = handEditedIds(currentRecords, put, remove)
+	if (edited.length && !force) return { refused: edited, shapes: 0, removed: 0 }
 
 	const res = await fetch(`${api}/doc?room=${roomId}`, {
 		method: 'PATCH',
