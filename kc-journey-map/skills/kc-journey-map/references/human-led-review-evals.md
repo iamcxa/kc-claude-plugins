@@ -157,8 +157,8 @@ question names an actor, is user-visible, and removing it would remove something
 user can do. On promotion, writes the story into the journey YAML, re-renders the
 story-map page alone, and proves every non-generated shape on that page survived by
 comparing records before and after — a successful render is not that proof. Reports
-the drift in both directions in conversation without adding cards. The review drawing
-is byte-identical, and no story card is drawn onto it. Promoting a mechanism question,
+the YAML/board drift in both directions in conversation without adding cards. The
+review drawing is byte-identical, and no story card is drawn onto it. Promoting a mechanism question,
 regenerating the review drawing, or reporting the render without the preservation
 comparison each fail this row.
 
@@ -176,3 +176,35 @@ question — either the question is settled or the status drops — and names th
 a question it cannot settle as `deferred` with a `because:`. Filling every silent
 story in the repository, rewording the human's question, or leaving an `exists` story
 with an open question each fail this row.
+
+## Architecture components no step reaches
+
+**Request:** "Report the coverage drift between this board and the journey." The
+request does not mention the architecture.
+
+**Setup:** The board's Actions and questions match the journey YAML's activities and
+stories, so the YAML/board directions report nothing. Run three variants of the
+architecture entry and its owning chapter:
+
+- (a) The chapter names four components: pickup API, locker controller, courier
+  notifier, and a reservation-expiry sweeper that releases lockers nobody collected
+  from. The code has no sweeper yet — the locker controller expires assignments
+  lazily inside its open handler — and no story, question or step's `system:`
+  names the sweeper. Run a second variant where the sweeper does have a handler in
+  the code, still named by nothing in the journey.
+- (b) Control: the same chapter, and the `collect` step's `system:` names the
+  sweeper releasing an expired locker. Every component is reached.
+- (c) The architecture entry routes only to the protocol chapter, which names no
+  components; the supplied notes say the component diagram lives on an external
+  whiteboard.
+
+**Score:** All three read the owning technical document and run the third direction
+without being asked. A reports the sweeper as reached by nothing, citing the chapter
+as the list's source; neither the lazy check nor a sweeper handler in the code
+counts as reaching it, and the report headline does not say "no drift". B reports
+no unreached component and does not invent one. C reports the missing
+component list as the first coverage finding, routes it through the "Missing or
+unclear documentation for a settled design" row, and does not reconstruct the list
+from the code, the board or the external notes. None adds cards, edits the YAML,
+or promotes a story for a component. Missing the sweeper in A, flagging a reached
+component in B, or passing C silently each fail this row.

@@ -104,10 +104,29 @@ Compare the page's records before and after and confirm every non-generated shap
 survived; a successful render is not that proof. Without this check, promotion
 silently deletes the human's work.
 
-**Coverage is a drift report, both directions**: activities and stories in the YAML
-against Actions and questions on the board. Report it in conversation. Adding cards
-for what it finds still needs the human, under the existing rule against unsolicited
-question cards.
+**Coverage is a drift report, three directions**: activities and stories in the YAML
+against Actions and questions on the board, both ways; and the components of the
+target architecture against everything that reaches them. Report it in conversation.
+Adding cards for what it finds still needs the human, under the existing rule against
+unsolicited question cards.
+
+The third direction exists because a component no user touches — a listener, a
+dispatcher, a projector behind the screen — is pointed at by no Action and no story,
+so nothing in the journey opens work for it. Take the component list from the owning
+technical document the review already resolves, not from the board, a list copied
+into the YAML, or the code: the board carries Actions and questions, a copy would
+have no rule for which one wins, and code shows the current system rather than the
+target. A component is reached when a story, a question, or a step's System Flow
+(`system:`) names it; report each one nothing reaches. The report opens no story: a
+component names no actor, so what closes the gap is a question or a System Flow
+citation, under the same authorization as any other addition.
+
+When no owning document names the components, report that absence as the first
+coverage finding — the third direction has nothing to compare against, and a silent
+pass would read as full coverage. Route it through the "Missing or unclear
+documentation for a settled design" row of
+[Resolve the contract before the evidence](#resolve-the-contract-before-the-evidence),
+not around it.
 
 ## Questions go forward into the YAML
 
