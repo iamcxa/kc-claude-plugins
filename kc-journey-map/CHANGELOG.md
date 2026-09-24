@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.1.2...kc-journey-map-v1.2.0) (2026-09-24)
+
+
+### Features
+
+* **kc-journey-map:** report architecture components no journey step reaches ([#511](https://github.com/iamcxa/kc-claude-plugins/issues/511)) ([f4ef7ae](https://github.com/iamcxa/kc-claude-plugins/commit/f4ef7ae1a970c4fb358b5dbd2eaed9e591d4dd13))
+
 ## [1.1.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.1.1...kc-journey-map-v1.1.2) (2026-09-24)
 
 
