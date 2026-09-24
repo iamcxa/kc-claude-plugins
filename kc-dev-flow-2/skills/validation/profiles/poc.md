@@ -3,7 +3,9 @@
 For a fresh POC, independently assess the recorded proof against the unchanged
 decision, falsifier, budget and stop point. Return the observed outcome and what
 it does not prove; do not add production readiness or permanent architecture
-requirements.
+requirements. Independently check the exact artifact for the shared profile's
+boundary crossing and record `boundary-crossed:` when found, whether or not
+implementation reported it.
 
 For an already authorized direct POC, this stage position is the existing human
 terminal gate over proof recorded during implementation, not a worker dispatch.

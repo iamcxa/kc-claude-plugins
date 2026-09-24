@@ -92,7 +92,9 @@ a separate four-stage workflow while Pilot/Prod share the five-stage definition.
 Only adopt the needed route. Profile remains a user choice on each task and
 selects skill rules, not graph transitions. FO holds a profile/graph mismatch;
 that check is an instruction, not a new runtime enforcement mechanism.
-POC skips ideation and currently uses independent validation. Direct POC
+POC skips ideation and currently uses independent validation. A POC whose proof
+creates state or a seam that must outlive the session records `boundary-crossed:`,
+and FO returns that choice to the user at the validation gate. Direct POC
 eligibility and special Production recovery are **not implemented or proven**.
 
 ## Authority and loading
@@ -131,7 +133,8 @@ before the gate.
 Write material corrections back to the same definition before user approval.
 Implementation follows approved scope; validation checks the exact result and
 returns repairs through the supported feedback route. POC must not gain
-an ideation stage or extra design gate through this convention.
+an ideation stage or extra design gate through this convention; its boundary
+crossing is a report marker, not a design gate.
 
 When work changes retained documents or behavior they describe, stage skills load
 one [document reference](references/retained-documents.md) for affected claims,
