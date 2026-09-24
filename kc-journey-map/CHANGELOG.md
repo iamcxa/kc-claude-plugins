@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.1.1...kc-journey-map-v1.1.2) (2026-09-24)
+
+
+### Bug Fixes
+
+* **kc-journey-map:** refuse a render that would overwrite a canvas edit ([#504](https://github.com/iamcxa/kc-claude-plugins/issues/504)) ([6b8b8eb](https://github.com/iamcxa/kc-claude-plugins/commit/6b8b8eb01e6010493887f27be6bd05610bdcfcbb))
+
 ## [1.1.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.1.0...kc-journey-map-v1.1.1) (2026-09-23)
 
 

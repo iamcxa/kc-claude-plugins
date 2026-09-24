@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.6.0...kc-dev-flow-2-v0.7.0) (2026-09-24)
+
+
+### Features
+
+* **kc-dev-flow-2:** require design artifacts by change surface at ideation ([#505](https://github.com/iamcxa/kc-claude-plugins/issues/505)) ([81a906c](https://github.com/iamcxa/kc-claude-plugins/commit/81a906cb1fd82568fb224af38c9d82d1097e700b))
+
 ## [0.6.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.5.0...kc-dev-flow-2-v0.6.0) (2026-09-23)
 
 
