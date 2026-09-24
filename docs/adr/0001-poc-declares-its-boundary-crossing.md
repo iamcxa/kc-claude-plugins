@@ -4,7 +4,7 @@ Date: 2026-09-24
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -19,12 +19,13 @@ stopped proof only on an exceeded limit or needed user intervention; `pilot.md`
 has a "Return to profile selection if …" list, but POC had none. The baseline
 kc-dev-flow keeps such a list in `choose-work-profile` § Promotion ("persistent
 valuable state, … beyond-session operation, or retry/recovery duty"), but only
-at profile selection; no later stage looks for a crossing. The existing doc-impact and retained-document checks fire only on touched paths,
-so an architecture held outside the repository never reaches them.
+at profile selection; no later stage looks for a crossing. The existing
+doc-impact and retained-document checks fire only on touched paths, so an
+architecture held outside the repository never reaches them.
 
 ## Decision
 
-**Words:** 「若本次 proof 產生任何需跨 session／跨回合保存的狀態，或建立了外部系統需長期維護的接縫（seam），視同越過 POC 邊界：停止 product proof，在回報中標記 `boundary-crossed: persistent-state`（附一句證據），並將此事實交回 planning 決定升級（Pilot+）或明確丟棄——不得在 POC 下繼續擴充此類工作。」 — task brief relayed by Kent, 2026-09-24; Kent's ruling on this record is pending
+**Words:** 「確認」 — Kent, 2026-09-24, accepting this record, drafted from the task brief he relayed: 「若本次 proof 產生任何需跨 session／跨回合保存的狀態，或建立了外部系統需長期維護的接縫（seam），視同越過 POC 邊界：停止 product proof，在回報中標記 `boundary-crossed: persistent-state`（附一句證據），並將此事實交回 planning 決定升級（Pilot+）或明確丟棄——不得在 POC 下繼續擴充此類工作。」
 
 **Options considered:**
 - a POC-declared `boundary-crossed:` report marker, raised by implementation and independently by validation, presented by FO at the existing validation gate
