@@ -120,7 +120,7 @@ def exercise(base, binary, sd_root):
                 assert "kc-dev-flow:" not in definition
                 if stage == "ideation":
                     gate = definition.split("**Gate content:**", 1)[1]
-                    assert "PRFAQ" in gate and "Mermaid" in gate
+                    assert "PRFAQ" in gate and "Mermaid" in gate and "Surfaces" in gate and "not presentable" in gate
                 else:
                     assert "## Review-finding disposition" in definition
 

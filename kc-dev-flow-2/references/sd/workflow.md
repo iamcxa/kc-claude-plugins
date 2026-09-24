@@ -69,28 +69,39 @@ FO records the choice; this boundary has no worker or placeholder report. FO
 also records, under a `## FO alignment` heading in the task file, whether FO
 direction alignment with the Captain is needed before the next declared stage
 and why; a
-stated reason is the whole record when not needed.
+stated reason is the whole record when not needed. On the five-stage route, FO
+also records a `Surfaces:` line under the same heading: any of `ui`, `db`,
+or `none`, read from the change surface rather than the diff, and next to it
+a `Visible change:` line: one sentence on what a user sees or operates
+differently, or `Visible change: none`.
 
 - **Gate content:** Show the selected variant/profile, proposed outcome, scope,
-  exclusions and evidence needed before the next declared stage starts, and the
-  `## FO alignment` need and reason.
+  exclusions and evidence needed before the next declared stage starts, the
+  `## FO alignment` need and reason, and the recorded `Surfaces:` and
+  `Visible change:` lines on the five-stage route.
 
 ### `ideation`
 
 The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using the
 work item's recorded variant/profile and the skill's own profile routing table.
 FO aligns direction and requests research when it can change a decision; the
-worker authors the PRFAQ and optional preview. When `## FO alignment` records
-alignment as needed, FO records the alignment result as a `Result:` line
-before dispatching the worker. Missing skill or profile authority requires a
-hold report rather than a baseline or default-profile substitution.
+worker authors the PRFAQ and the artifact each recorded surface owes. When
+`## FO alignment` records alignment as needed, FO records the alignment result
+as a `Result:` line before dispatching the worker. Missing skill or profile
+authority requires a hold report rather than a baseline or default-profile
+substitution.
 
 - **Outputs:** Current design definition and acceptance criteria with reproducible
   evidence clauses; unresolved decisions identified for the user.
 - **Gate content:** Present PRFAQ/Mermaid with matching actors, order, branches,
-  approvals and stops, acceptance evidence/limits, and a preview when relevant.
-  Required diagram defects or missing current-stage evidence block recommendation
-  and gate preparation/presentation; honest unverified future checks do not.
+  approvals and stops, acceptance evidence/limits, and each recorded
+  `Surfaces:` value's artifact. The gate is not presentable without the
+  artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
+  `python3 <package>/scripts/design_surfaces.py check <task>`; a non-zero exit
+  means the gate is not presentable, and FO includes the checker's output in
+  the gate material. Required diagram defects or missing current-stage
+  evidence block recommendation and gate preparation/presentation; honest
+  unverified future checks do not.
   FO may correct design prose/Mermaid to reflect established decisions under an
   actual Captain grant covering that task's exact design section; reuse a matching
   standing grant. Template adoption grants no authority. Record the decision basis;
