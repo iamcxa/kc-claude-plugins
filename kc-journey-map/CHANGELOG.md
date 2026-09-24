@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.2.0...kc-journey-map-v1.2.1) (2026-09-24)
+
+
+### Bug Fixes
+
+* **kc-journey-map:** add a story without rewriting the rest of the journey file ([#513](https://github.com/iamcxa/kc-claude-plugins/issues/513)) ([5a5b28a](https://github.com/iamcxa/kc-claude-plugins/commit/5a5b28aea5681d17143f2282e7786a0bf48e5b73))
+
 ## [1.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.1.2...kc-journey-map-v1.2.0) (2026-09-24)
 
 
