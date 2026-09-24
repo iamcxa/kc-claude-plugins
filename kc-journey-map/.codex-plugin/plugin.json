@@ -1,6 +1,6 @@
 {
   "name": "kc-journey-map",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Draw and inspect user journeys on an editable native canvas, with optional release details, evidence checks, and portable tldraw or PNG exports.",
   "author": {
     "name": "Kent Chen",
