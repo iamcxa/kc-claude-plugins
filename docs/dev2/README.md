@@ -10,6 +10,7 @@ stages:
   defaults:
     worktree: false
     concurrency: 1
+    model: sonnet
   states:
     - name: backlog
       initial: true
@@ -20,6 +21,8 @@ stages:
       worktree: true
       context-sections:
         - Review-finding disposition
+        - Decision records
+        - Affected documents
         - Delivery authority
     - name: validation
       worktree: true
@@ -28,6 +31,8 @@ stages:
       gate: true
       context-sections:
         - Review-finding disposition
+        - Decision records
+        - Affected documents
         - Delivery authority
     - name: done
       terminal: true
@@ -62,29 +67,41 @@ body. Use bold **AC-N** declarations with individual evidence clauses.
 The user selects the compatible profile and approves outcome, scope and budget.
 FO records the choice; this boundary has no worker or placeholder report. FO
 also records, under a `## FO alignment` heading in the task file, whether FO
-direction alignment with the Captain is needed before ideation and why; a
-stated reason is the whole record when not needed.
+direction alignment with the Captain is needed before the next declared stage
+and why; a
+stated reason is the whole record when not needed. On the five-stage route, FO
+also records a `Surfaces:` line under the same heading: any of `ui`, `db`,
+or `none`, read from the change surface rather than the diff, and next to it
+a `Visible change:` line: one sentence on what a user sees or operates
+differently, or `Visible change: none`.
 
 - **Gate content:** Show the selected variant/profile, proposed outcome, scope,
-  exclusions and evidence needed before the next declared stage starts, and the
-  `## FO alignment` need and reason.
+  exclusions and evidence needed before the next declared stage starts, the
+  `## FO alignment` need and reason, and the recorded `Surfaces:` and
+  `Visible change:` lines on the five-stage route.
 
 ### `ideation`
 
 The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using the
 work item's recorded variant/profile and the skill's own profile routing table.
 FO aligns direction and requests research when it can change a decision; the
-worker authors the PRFAQ and optional preview. When `## FO alignment` records
-alignment as needed, FO records the alignment result as a `Result:` line
-before dispatching the worker. Missing skill or profile authority requires a
-hold report rather than a baseline or default-profile substitution.
+worker authors the PRFAQ and the artifact each recorded surface owes. When
+`## FO alignment` records alignment as needed, FO records the alignment result
+as a `Result:` line before dispatching the worker. Missing skill or profile
+authority requires a hold report rather than a baseline or default-profile
+substitution.
 
 - **Outputs:** Current design definition and acceptance criteria with reproducible
   evidence clauses; unresolved decisions identified for the user.
 - **Gate content:** Present PRFAQ/Mermaid with matching actors, order, branches,
-  approvals and stops, acceptance evidence/limits, and a preview when relevant.
-  Required diagram defects or missing current-stage evidence block recommendation
-  and gate preparation/presentation; honest unverified future checks do not.
+  approvals and stops, acceptance evidence/limits, and each recorded
+  `Surfaces:` value's artifact. The gate is not presentable without the
+  artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
+  `python3 <package>/scripts/design_surfaces.py check <task>`; a non-zero exit
+  means the gate is not presentable, and FO includes the checker's output in
+  the gate material. Required diagram defects or missing current-stage
+  evidence block recommendation and gate preparation/presentation; honest
+  unverified future checks do not.
   FO may correct design prose/Mermaid to reflect established decisions under an
   actual Captain grant covering that task's exact design section; reuse a matching
   standing grant. Template adoption grants no authority. Record the decision basis;
@@ -113,13 +130,14 @@ the exact artifact against the accepted profile outcome. It assesses the work;
 it does not silently take over implementation. Rejection uses the supported
 feedback path after the distinct FO disposition described below.
 
-- **Outputs:** Independent verdict, primary evidence and unverified obligations
-  recorded in the existing SD Stage Report.
+- **Outputs:** Independent verdict, primary evidence, a minimal acceptance script
+  and unverified obligations recorded in the existing SD Stage Report.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
-  and limits, and the user's pending delivery decision. Before recommending
-  delivery, FO confirms both goal sufficiency and minimal necessity from the
-  same candidate's existing route evidence. Passing checks or approval replace
-  neither condition; approval is not merge.
+  and limits, and the user's pending delivery decision. FO presents the stage's
+  minimal acceptance script itself at the gate, not a pointer into the report.
+  Before recommending delivery, FO confirms both goal sufficiency and minimal
+  necessity from the same candidate's existing route evidence. Passing checks or
+  approval replace neither condition; approval is not merge.
 
 ### `done`
 
@@ -172,6 +190,34 @@ Materiality and ownership are independent. Owned Material is eligible for an
 FO-authorized fix; out-of-scope Material holds as Needs decision. Deferred risk
 or Polish may use the recorded FO decline above within existing risk acceptance.
 
+## Decision records
+
+A ruling settled at a gate, in a worker report, or mid-stage feedback — a rule
+about the product, a constraint, or a direction later work must respect — is
+landed as an ADR before the next gate is presented, at latest by the terminal
+approval. A ruling that governs only this task's own work stays in the task.
+Write one file per decision, `docs/adr/NNNN-short-title.md`, in the
+ADR format of the kc-dev-flow-2 package's `references/adr-template.md`: Nygard's sections as adr-tools writes them, with
+the decider's own words and the options considered inside Decision. Create
+`docs/adr/` with this record if it is absent. A decision document that predates
+this format may stay as one record marked `Status: Legacy`; new rulings get their
+own files. This is not the gate `resolution.reason` or the SD stage report.
+The implementation worker writes the record into the candidate and names the ADR
+numbers it added or changed in its report; validation runs
+`python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and returns a
+failure or a missing record through the existing feedback route; FO confirms it
+before presenting the gate. A deferred user-facing capability belongs on the
+product's journey map, not here.
+
+## Affected documents
+
+Implementation runs `python3 <package>/scripts/doc_impact.py <base> <candidate>`
+and records, for each listed document, `updated` or `unaffected: <reason>` in its
+stage report; validation reruns it at the candidate and checks every listed
+document carries one. The list finds candidates by the paths and declared names
+the change touched; it does not decide relevance. Make the update itself by the
+retained-document practices in the package's `references/retained-documents.md`.
+
 ## Delivery authority
 
 The adopted `_mods/pr-merge.md` is the unmodified mod from the activated SD
@@ -193,6 +239,11 @@ Use SD's pending terminal approval and existing merge hook; do not invent anothe
 PR stage. Observe the actual repository-qualified PR merge before recording its
 landed sentinel and running SD merge guard to finalize/archive. CI green, PR
 creation, gate approval and a locally manufactured sentinel do not prove merge.
+
+A PR delivers only the commit on its head. Before asking for merge, FO confirms the
+PR head equals the candidate the latest passing validation report names; a repair
+validated after the PR was opened reaches the PR only when that exact commit is
+pushed to its branch.
 
 ## Workflow State
 
