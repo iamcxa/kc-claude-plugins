@@ -137,7 +137,11 @@ feedback path after the distinct FO disposition described below.
   minimal acceptance script itself at the gate, not a pointer into the report.
   Before recommending delivery, FO confirms both goal sufficiency and minimal
   necessity from the same candidate's existing route evidence. Passing checks or
-  approval replace neither condition; approval is not merge.
+  approval replace neither condition; approval is not merge. When a POC report
+  records `boundary-crossed:`, FO shows the marker and its evidence with the
+  user's choice between profile selection and removing the crossing work with
+  recorded cleanup through the feedback route, and does not recommend
+  delivering that work as POC.
 
 ### `done`
 
