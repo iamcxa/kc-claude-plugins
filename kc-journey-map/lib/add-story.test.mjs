@@ -88,3 +88,44 @@ test('addStory refuses missing stepId, id or card', (t) => {
 	assert.throws(() => addStory(path, { stepId: 'find-shop', card: 'y' }), /needs id/)
 	assert.throws(() => addStory(path, { stepId: 'find-shop', id: 'x' }), /needs card/)
 })
+
+// A journey written by a person or another tool: sequences not indented under
+// their key, and a long card folded at its own width. Neither is the shape this
+// module's serializer would choose, so re-serializing the file rewrites both.
+const WRAPPED = `journey: wrapped
+one_journey: A sentence long enough that the file's own writer folded it across two lines, which
+  the serializer this module uses would unfold into one.
+steps:
+- id: enter
+  card: Enter this review
+  stories:
+  - id: first
+    card: The first story, whose card is also long enough that it was folded by the file's writer
+      onto a second line
+    release: r1
+    status: gap
+  rules:
+  - some-rule
+- id: read
+  card: Read it
+`
+
+test('addStory appends only the new story to a file whose wrapping and indentation it would not choose', (t) => {
+	const { path } = fixture(t)
+	writeFileSync(path, WRAPPED)
+	addStory(path, { stepId: 'enter', id: 'second', card: 'Show the current version number somewhere, so after an update I can tell which one I am on' })
+	const after = readFileSync(path, 'utf8')
+	const added = '  - id: second\n    status: gap\n    card: Show the current version number somewhere, so after an update I can tell which one I am on\n'
+	assert.equal(after, WRAPPED.replace('    status: gap\n  rules:', `    status: gap\n${added}  rules:`), 'only the new story is added; every other byte is unchanged')
+	const model = loadModel(path)
+	assert.deepEqual(model.steps[0].stories.map((s) => s.id), ['first', 'second'])
+	assert.deepEqual(model.steps[0].rules, ['some-rule'], 'the step keys after stories stay attached to the same step')
+})
+
+test('addStory adds a stories list to a step that has none, in the indentation the file already uses', (t) => {
+	const { path } = fixture(t)
+	writeFileSync(path, WRAPPED)
+	addStory(path, { stepId: 'read', id: 'only', card: 'The first story here' })
+	const after = readFileSync(path, 'utf8')
+	assert.equal(after, `${WRAPPED}  stories:\n  - id: only\n    status: gap\n    card: The first story here\n`)
+})

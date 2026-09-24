@@ -78,7 +78,7 @@ node lib/journey-add-story.mjs docs/journey/<slug>.yaml <stepId> <storyId> "<car
   handling is the same instinct — an ambiguous placement is a question, not a default).
 - This appends one story to one step and nothing else: it does not re-derive other
   stories' evidence, resolve open questions, or touch a human-drawn canvas
-  (`lib/add-story.test.mjs` asserts the single-line diff).
+  (`lib/add-story.test.mjs` asserts that only the new story's lines change, even in a file whose wrapping and indentation this plugin would not have written).
 - On a map-mode-only journey (no story carries `status` yet — `references/map-from-conversation.md`),
   the added story still gets `gap` as this operation requires; the pre-existing
   `no-status` lint findings on every other story are not this operation's to fix.
