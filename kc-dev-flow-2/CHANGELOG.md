@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.8.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.7.0...kc-dev-flow-2-v0.8.0) (2026-09-24)
+
+
+### Features
+
+* **kc-dev-flow-2:** declare POC boundary crossings at the validation gate ([#509](https://github.com/iamcxa/kc-claude-plugins/issues/509)) ([2342a9c](https://github.com/iamcxa/kc-claude-plugins/commit/2342a9c6a2b4f1a7786dfdb6dda1bd52b5e6e8a6))
+
 ## [0.7.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.6.0...kc-dev-flow-2-v0.7.0) (2026-09-24)
 
 
