@@ -107,7 +107,7 @@
       "name": "kc-journey-map",
       "source": "./kc-journey-map",
       "description": "Draw and inspect user journeys on an editable native canvas, with optional release details, evidence checks, and portable tldraw or PNG exports.",
-      "version": "1.2.0",
+      "version": "1.2.1",
       "keywords": [
         "journey-map",
         "user-journey",
