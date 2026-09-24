@@ -1,0 +1,73 @@
+name: kc-dev-flow-2 tests
+
+on:
+  pull_request:
+    paths:
+      - "kc-dev-flow-2/**"
+      - ".github/workflows/kc-dev-flow-2-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-dev-flow-2/**"
+      - ".github/workflows/kc-dev-flow-2-tests.yml"
+
+permissions:
+  contents: read
+
+env:
+  # SPACEDOCK_SHA256 and the ref in "Checkout pinned Spacedock plugin root"
+  # pin the same release; bump both together.
+  SPACEDOCK_VERSION: v0.27.2
+  SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+
+jobs:
+  unit-tests:
+    name: unit tests (python3)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: lint-skills.py
+        run: python3 kc-dev-flow-2/scripts/lint-skills.py
+
+      - name: test_lint_skills.py
+        run: python3 kc-dev-flow-2/scripts/test_lint_skills.py
+
+      - name: test_design_surfaces.py
+        run: python3 kc-dev-flow-2/scripts/test_design_surfaces.py
+
+      - name: test_adr_doc_checks.py
+        run: python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py
+
+      - name: test_poc_readme.py
+        run: python3 kc-dev-flow-2/scripts/test_poc_readme.py
+
+      - name: test_learning.py
+        run: python3 kc-dev-flow-2/scripts/test_learning.py
+
+      - name: Checkout pinned Spacedock plugin root
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: spacedock-dev/spacedock
+          ref: 4d158a484ec73e184861067f8ed1e20087fdc26a # tag v0.27.2, pinned by commit
+          persist-credentials: false
+          path: .sd-plugin-root
+
+      - name: Install pinned Spacedock
+        run: |
+          set -euo pipefail
+          asset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64.tar.gz"
+          curl -fsSL -o /tmp/spacedock.tar.gz \
+            "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"
+          echo "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/spacedock.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          install -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: test_sd_dispatch.py
+        run: python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"
