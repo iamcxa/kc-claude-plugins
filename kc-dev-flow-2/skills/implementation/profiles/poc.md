@@ -3,6 +3,7 @@
 Build the smallest real path that can falsify the recorded assumption within
 the accepted budget. Record observed outcome, elapsed limit, primary evidence,
 cleanup and what the proof leaves unanswered; avoid production scaffolding.
+Record `boundary-crossed:` as the shared profile defines it when it applies.
 
 For an already authorized direct POC route, record proof during implementation
 for the existing validation terminal gate. Do not invent direct-route eligibility
