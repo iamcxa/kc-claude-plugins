@@ -319,7 +319,9 @@ for a save-as should end up with that file.
 **Render is a reconcile, scoped to the pages drawn this call.** Shapes the renderer owns
 that the model no longer produces are removed; shapes a person drew by hand carry no
 `meta.journey` and are never touched. A sticky someone added during a workshop survives
-every re-render. `--pages journey-board` only reconciles journey-board pages — a
+every re-render. A generated shape whose text was edited on the canvas since the last
+render stops the render, which names it; keep the edit with `journey-read.mjs --write`
+or overwrite it with `--force`. `--pages journey-board` only reconciles journey-board pages — a
 story-map page this call did not draw is untouched, even though its shapes also carry
 `meta.journey`.
 

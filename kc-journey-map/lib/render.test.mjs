@@ -310,3 +310,17 @@ test('every board page carries an index key tldraw accepts, however many release
 	assert.equal(new Set(pages.map((p) => p.index)).size, pages.length)
 	assert.deepEqual([...pages].sort(sortByIndex).map((p) => p.name), pages.map((p) => p.name))
 })
+
+import { handEditedIds, withRenderedText } from './render.mjs'
+
+test('a generated shape edited on the canvas blocks the render that would overwrite it', () => {
+	const rich = (text) => ({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] })
+	const drawn = withRenderedText([{ typeName: 'shape', id: 'shape:a', props: { richText: rich('原本') }, meta: { journey: { nodeId: 'a' } } }])[0]
+	const edited = { ...drawn, props: { richText: rich('手改') } }
+	const next = withRenderedText([{ ...drawn, props: { richText: rich('新版') } }])
+	assert.deepEqual(handEditedIds([drawn], next, []), [])
+	assert.deepEqual(handEditedIds([edited], next, []), ['shape:a'])
+	assert.deepEqual(handEditedIds([edited], [], ['shape:a']), ['shape:a'])
+	const legacy = { ...edited, meta: { journey: { nodeId: 'a' } } }
+	assert.deepEqual(handEditedIds([legacy], next, []), [])
+})
