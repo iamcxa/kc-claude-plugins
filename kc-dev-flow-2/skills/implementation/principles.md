@@ -12,6 +12,8 @@ alone does not authorize deletion. Cut unmapped surfaces within approved scope,
 prefer a materially smaller equivalent route, and keep repeated explanations in
 one home. Record temporary scaffolding's concrete removal condition when added;
 an enduring guard instead names its invariant. Counts are diagnostic, not quotas.
+Before reporting completion, run `python3 <package>/scripts/comment_ratio.py <base> HEAD`
+and report its output with the stage report.
 Do not use `git stash`: every worktree and session of a repository shares one
 stash stack. Set work aside with a commit.
 

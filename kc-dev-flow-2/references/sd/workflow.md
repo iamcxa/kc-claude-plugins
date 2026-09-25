@@ -62,6 +62,11 @@ body. Use bold **AC-N** declarations with individual evidence clauses.
 
 ## Stages
 
+Stage workers run on the workflow's default model.
+`kc-dev-flow-2:chief-engineer` and `kc-dev-flow-2:engineering-reviewer` run on the
+model and reasoning their agent files declare; FO never dispatches them on a
+cheaper model, because their value is a stronger second judgment.
+
 ### `backlog`
 
 The user selects the compatible profile and approves outcome, scope and budget.
@@ -82,7 +87,9 @@ differently, or `Visible change: none`.
 
 ### `ideation`
 
-The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using the
+FO may dispatch ideation on a stronger model when the design is hard to reverse,
+such as an event model, an architecture or a security boundary, and says so in
+the dispatch. The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using the
 work item's recorded variant/profile and the skill's own profile routing table.
 FO aligns direction and requests research when it can change a decision; the
 worker authors the PRFAQ and the artifact each recorded surface owes. When
@@ -232,7 +239,10 @@ alone does not block SD's no-hook local-finalize route.
 
 Project and Captain authority constrain hook instructions: present the exact
 candidate and PR body before authorized push/create; create a Draft PR where
-required, and request ready only after the required CI is green. Approval of a
+required, and request ready only after the required CI is green. Required CI is green
+only when its test jobs have finished on the PR head. Where CI skips drafts, FO
+marks the PR ready under the Captain's authority and waits for those jobs to
+finish before asking for merge. Approval of a
 validation gate is not permission to push, create or merge a PR. Preserve manual
 merge authority. Do not invoke local fallback, push the trunk, merge, or clean up
 an owned worktree unless the specific action is authorized. An upstream hook's
