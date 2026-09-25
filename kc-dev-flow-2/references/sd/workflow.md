@@ -240,10 +240,9 @@ alone does not block SD's no-hook local-finalize route.
 Project and Captain authority constrain hook instructions: present the exact
 candidate and PR body before authorized push/create; create a Draft PR where
 required, and request ready only after the required CI is green. Required CI is green
-only when its test jobs ran on the PR head; a summary that passes while those jobs
-were skipped, as some projects do for drafts, is not green. Where CI skips drafts,
-FO marks the PR ready under the Captain's authority and waits for the test jobs
-before asking for merge. Approval of a
+only when its test jobs have finished on the PR head. Where CI skips drafts, FO
+marks the PR ready under the Captain's authority and waits for those jobs to
+finish before asking for merge. Approval of a
 validation gate is not permission to push, create or merge a PR. Preserve manual
 merge authority. Do not invoke local fallback, push the trunk, merge, or clean up
 an owned worktree unless the specific action is authorized. An upstream hook's
