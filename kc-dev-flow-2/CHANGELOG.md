@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.8.0...kc-dev-flow-2-v0.9.0) (2026-09-25)
+
+
+### Features
+
+* **kc-dev-flow-2:** keep review roles on their declared model, measure added comments, and wait for CI test jobs before merge ([#515](https://github.com/iamcxa/kc-claude-plugins/issues/515)) ([2f1ef55](https://github.com/iamcxa/kc-claude-plugins/commit/2f1ef55335a2447d57b2823f2304a0db0bd6b461))
+
 ## [0.8.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.7.0...kc-dev-flow-2-v0.8.0) (2026-09-24)
 
 

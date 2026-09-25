@@ -175,7 +175,7 @@
       "name": "kc-dev-flow-2",
       "source": "./kc-dev-flow-2",
       "description": "Optional experimental development flow with profile principles, stage skills, and retained advisory roles.",
-      "version": "0.8.0",
+      "version": "0.9.0",
       "keywords": [
         "development-workflow",
         "experimental",
