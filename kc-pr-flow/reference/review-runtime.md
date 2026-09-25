@@ -162,6 +162,10 @@ A pointer binds repository, 40-character object SHA, kind-specific locator data,
 
 `verify-evidence` currently rehydrates only `git_blob` pointers. It verifies a safe local Git worktree, normalizes HTTPS/SSH/scp-like GitHub origin forms to `owner/repository` for this comparison only, and checks object type `blob` plus the exact content hash. That normalization does not apply to event or review-key construction. Other pointer kinds return typed `unavailable` status. A mismatch cannot support a finding or authority decision.
 
+## Delta receipts
+
+Production shadow produces receipt-ready v2 events without routing; it never invokes the receipt command or changes the legacy review result.
+
 ## CLI and library API
 
 All commands print compact JSON except `config-hash`, which prints a hash, and CLI usage/errors on standard error.
@@ -172,13 +176,14 @@ All commands print compact JSON except `config-hash`, which prints a hash, and C
 | `append --event-file FILE` | Append each candidate JSONL line to its managed run. `-` reads standard input. Returns counts for appended, duplicate, quarantined, and blocked records. |
 | `validate --event-file FILE` | Stream and validate event envelopes independently, then return valid/invalid counts. It does not enforce authoritative cross-event relationships. `-` reads standard input. |
 | `replay --event-file FILE` | Validate a complete authoritative log, enforce chronological relationships, and rebuild the deterministic `review-projection/v1`. |
+| `receipt --event-file FILE --config-file FILE --repo-worktree DIR` | A read-only receipt authority that snapshots caller files once, internally replays the terminal log, and emits a deterministic `kc-pr-flow.review-delta-receipt/v2` bound to raw Git objects. It has no routing, timing, network, or posting authority. |
 | `show --event-file FILE` | Return a compact `review-summary/v1` with exact run identity and lane, candidate, finding, uncertain, and usage counts. |
 | `config-hash ...` | Normalize the effective v1 review configuration and return its canonical hash. Options are `--agent-tier`, `--pr-archetype`, `--full-pass`, `--probe-required`, `--cross-model`, `--noise-filter`, and comma-separated `--capabilities`; omitted options use the defaults above. |
 | `observe --event-file FILE --expected-head SHA --expected-review-key HASH` | Read-only replay plus exact-head/key check. Returns typed `observed` or `not_observed` status and never mutates the log. |
 | `rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID` | Replay one complete terminal receipt, verify exact identity and evidence, and emit one closed `InteractiveCollationDecision/v1`. It never appends or performs recovery or remote behavior. |
 | `decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID` | Validate closed exact-head CI/test/head observations, invoke `rehydrate-interactive` once from the supplied producer sources and identity, and emit one advisory `MergeReadinessDecision/v1`. It accepts no caller decision and performs no network, post, authorization, or merge operation. |
 | `review-key ...` | Validate repository, PR, base, head, and config inputs and print their canonical review key. It uses the same construction as events, evidence, and the collector. |
-| `shadow --observation-file FILE ...` | Best-effort production seam. `--enabled` overrides `KC_PR_FLOW_REVIEW_SHADOW`; enabled collection also requires `--head-check-status` and, when successful, `--live-head`. It accepts exactly one closed `ShadowObservation/v1` (`kc-pr-flow.shadow-observation/v1`) file, persists a fresh `run.started`, builds and preflight-replays the remaining complete lifecycle before appending those events, then observes once. Every dependency, validation, head, append, or replay failure returns typed `not_observed` and fails open only to the unchanged legacy review. A post-start failure may leave an incomplete non-authoritative run for increment 2.3 recovery. |
+| `shadow --observation-file FILE --repo-worktree DIR ...` | Best-effort production seam. `--enabled` overrides `KC_PR_FLOW_REVIEW_SHADOW`; enabled collection requires the explicit raw-object worktree plus `--head-check-status` and, when successful, `--live-head`. It emits a receipt-ready v2 lifecycle but does not mint a receipt. Every dependency, validation, head, append, or replay failure returns typed `not_observed` and fails open only to the unchanged legacy review. A post-start failure may leave an incomplete non-authoritative run for increment 2.3 recovery. |
 | `verify-evidence --pointer-json FILE --repo DIR` | Verify one pointer from a private snapshot against the local repository. |
 | `compare-usage --left-json FILE --right-json FILE` | Compare two private usage snapshots under the provenance rules above. |
 
