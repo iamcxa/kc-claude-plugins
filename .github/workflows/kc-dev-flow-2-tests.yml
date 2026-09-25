@@ -46,6 +46,9 @@ jobs:
       - name: test_poc_readme.py
         run: python3 kc-dev-flow-2/scripts/test_poc_readme.py
 
+      - name: test_comment_ratio.py
+        run: python3 kc-dev-flow-2/scripts/test_comment_ratio.py
+
       - name: test_learning.py
         run: python3 kc-dev-flow-2/scripts/test_learning.py
 

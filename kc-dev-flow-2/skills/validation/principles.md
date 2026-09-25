@@ -12,6 +12,8 @@ the same standard as retention. Use existing evidence, not a new proof harness.
 
 Read every comment the candidate adds. A comment that narrates the change, restates
 the code beside it, cites a line number or marks a section is a repair finding.
+Measure them with `python3 <package>/scripts/comment_ratio.py <base> <candidate>`
+and report its output; where the project states a baseline ratio, compare to it.
 When the change alters what a user sees, the evidence includes a screenshot of the
 changed screen at the candidate; reading the code or a passing render test is not
 seeing it.
