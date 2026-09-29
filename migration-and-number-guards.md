@@ -3,7 +3,7 @@ title: An applied migration is never edited, and parallel tasks never pick the s
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「可以」 to the FO''s dev2 fix batching, batch A first'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Two adopter defects from qnow dogfooding (2026-09-29) that dev2 never checked: an unmerged migration edited in place after it reached a persistent database, and parallel tasks choosing the same migration and ADR numbers.
