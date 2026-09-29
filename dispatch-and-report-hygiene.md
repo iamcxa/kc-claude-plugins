@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:dispatch-and-report-hygiene:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:dispatch-and-report-hygiene-backlog-1
+              briefing:
+                id: briefing:dispatch-and-report-hygiene:backlog:attempt-1:revision-1
+                digest: sha256:3d7eb68063e7caa0a0a5ba0193029cb4e98dcee67ba791fbd0c188aa4d0b24d8
+                room-ref: ./dispatch-and-report-hygiene/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dispatch-and-report-hygiene:backlog:1
+                briefing: briefing:dispatch-and-report-hygiene:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-29T23:28:24.783586Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「可以」 to the FO''s dev2 fix batching, batch A first'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Four dispatch and report defects from qnow dogfooding (2026-09-28..30) that cost retries or leaked secrets.

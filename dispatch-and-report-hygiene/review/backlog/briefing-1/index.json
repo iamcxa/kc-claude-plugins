@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dispatch-and-report-hygiene:backlog:attempt-1:revision-1",
+  "question": "Admit dispatch-and-report-hygiene (dev2 fix batch A) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:dispatch-and-report-hygiene:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d537da16ec998fa858c3c3efb6ab223dc835aa17/dispatch-and-report-hygiene.md",
+      "rev": "sha256:90d39efd20e2aaabaf5e0aafd781bb8c6a4f8df9345baf41862afc78401d98b6",
+      "mediaType": "text/markdown",
+      "summary": "Batch A guardrail from qnow dogfooding; Captain approved the batching."
+    }
+  ]
+}
