@@ -3,7 +3,7 @@ title: Dispatches name the reachable FO, the package's script paths and the secr
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「可以」 to the FO''s dev2 fix batching, batch A first'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Four dispatch and report defects from qnow dogfooding (2026-09-28..30) that cost retries or leaked secrets.
