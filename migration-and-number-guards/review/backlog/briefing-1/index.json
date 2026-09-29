@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:migration-and-number-guards:backlog:attempt-1:revision-1",
+  "question": "Admit migration-and-number-guards (dev2 fix batch A) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:migration-and-number-guards:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c148d7f9a156e32c7003c3a3a8308b20488052ff/migration-and-number-guards.md",
+      "rev": "sha256:f2d10e914fbf87826e21220b2d9966096c29135389b6778d894a367c2e986d13",
+      "mediaType": "text/markdown",
+      "summary": "Batch A guardrail from qnow dogfooding; Captain approved the batching."
+    }
+  ]
+}

@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:migration-and-number-guards:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:migration-and-number-guards-backlog-1
+              briefing:
+                id: briefing:migration-and-number-guards:backlog:attempt-1:revision-1
+                digest: sha256:ef34424671bef98e8094e1614440348a9c83b4777ac1fac9f4eac2283820fa41
+                room-ref: ./migration-and-number-guards/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:migration-and-number-guards:backlog:1
+                briefing: briefing:migration-and-number-guards:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-29T23:28:15.323516Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「可以」 to the FO''s dev2 fix batching, batch A first'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Two adopter defects from qnow dogfooding (2026-09-29) that dev2 never checked: an unmerged migration edited in place after it reached a persistent database, and parallel tasks choosing the same migration and ADR numbers.
