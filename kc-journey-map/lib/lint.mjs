@@ -5,20 +5,20 @@ import { iterStories, openQuestions, QUESTION_STATUSES, STORY_STATUSES } from '.
 import { textWidth } from './records.mjs'
 
 // Prose/data matches must not count as executable evidence.
-const EXECUTABLE_EXTENSIONS = new Set(['.mjs', '.cjs', '.js', '.jsx', '.mts', '.cts', '.ts', '.tsx', '.py', '.rb', '.sh', '.bash', '.zsh'])
+const EXECUTABLE_EXTENSIONS = new Set(['.mjs', '.cjs', '.js', '.jsx', '.mts', '.cts', '.ts', '.tsx', '.py', '.rb', '.sh', '.bash', '.zsh', '.go'])
 
 const isWorkflowFile = (f) => /\.ya?ml$/.test(f) && f.split(sep).includes('.github') && f.includes(`${sep}workflows${sep}`)
 
 const isExecutableFile = (f) => EXECUTABLE_EXTENSIONS.has(extname(f)) || isWorkflowFile(f)
 
 // git grep returns tracked paths relative to cwd, not necessarily the repository root.
-function filesCiting(symbol, repoRoot) {
+function filesCiting(symbol, repoRoot, ref) {
 	try {
-		const out = execFileSync('git', ['grep', '-l', '-w', '-F', symbol], { cwd: repoRoot, encoding: 'utf8' })
+		const out = execFileSync('git', ['grep', '-l', '-w', '-F', symbol, ...(ref ? [ref] : [])], { cwd: repoRoot, encoding: 'utf8' })
 		return out
 			.split('\n')
 			.filter(Boolean)
-			.map((f) => resolve(repoRoot, f))
+			.map((f) => resolve(repoRoot, ref ? f.slice(ref.length + 1) : f))
 			.filter(isExecutableFile)
 	} catch (err) {
 		if (err.status === 1) return [] // git grep's own code for "no match", not a failure
@@ -57,18 +57,23 @@ export function lintExistsWithOpenQuestion(model) {
 			detail: `story ${s.id} is marked exists while these questions have no answer: ${openQuestions(s).map((q) => q.id).join(', ')}` }))
 }
 
-export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [] } = {}) {
+const QUALIFIED_EVIDENCE = /^([A-Za-z0-9][\w.-]*):(\S+)$/
+
+export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [], repos = {} } = {}) {
 	if (!repoRoot) throw new Error('lintEvidenceNotFound needs repoRoot to grep against')
 	const ignore = new Set([journeyPath, ...exclude].filter(Boolean).map((p) => resolve(p)))
 	return iterStories(model)
 		.filter((s) => s.evidence)
-		.filter((s) => filesCiting(s.evidence, repoRoot).filter((f) => !ignore.has(f)).length === 0)
-		.map((s) => ({
-			lint: 'evidence-not-found',
-			story: s.id,
-			release: s.release,
-			detail: `evidence "${s.evidence}" for story ${s.id} does not grep in any executable file outside the journey file`,
-		}))
+		.flatMap((s) => {
+			const qualified = QUALIFIED_EVIDENCE.exec(s.evidence)
+			const repo = qualified ? repos[qualified[1]] : { root: repoRoot }
+			if (!repo) return [{ lint: 'evidence-repo-unknown', story: s.id, release: s.release,
+				detail: `evidence "${s.evidence}" for story ${s.id} names repository "${qualified[1]}"; pass it with --repo ${qualified[1]}=<path>[@ref]` }]
+			const symbol = qualified ? qualified[2] : s.evidence
+			if (filesCiting(symbol, repo.root, repo.ref).filter((f) => !ignore.has(f)).length) return []
+			return [{ lint: 'evidence-not-found', story: s.id, release: s.release,
+				detail: `evidence "${s.evidence}" for story ${s.id} does not grep in any executable file outside the journey file` }]
+		})
 }
 
 export function lintJourney(model, opts = {}) {
