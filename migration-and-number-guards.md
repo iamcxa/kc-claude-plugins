@@ -55,6 +55,8 @@ Captain 2026-09-30, approving the FO's batching of the dev2 fixes: 「可以」 
 Evidence (qnow, 2026-09-21..29): qnow migration 0005 was edited by PR #1207 after production applied it (PR #1204), and every production deploy failed with "migration has been modified after being applied" for about a week unnoticed; the uat branch database stuck the same way when an unmerged 0012 was edited after a uat deploy; two unmerged tasks both created migration 0012; ADR numbers 0021–0028 were reassigned several times. Netlify's documentation: never edit an applied migration; revert and add a new one; the production branch cannot be reset, non-production branches can.
 Non-goals (ideation, 2026-09-30): a documented reset procedure for the uat database (open question 1 in Design); issue #529 (an ideation worktree for ADR drafts); checking `meta/` snapshot or journal files; linting migration SQL content; timestamp-numbered adopters (carlove); detecting a deploy nobody recorded; a script that writes task files; automatic renumbering; edits to any adopter repository.
 
+Captain 2026-09-30, approving the design: 「准」 — the exit for a migration already applied at a non-production shared environment (qnow's uat) that must be renumbered is to reset that database branch through Netlify's database-branch reset API (non-production branches re-fork from production; the production branch cannot be reset), not a compensating migration; document the step, do not build a wrapper.
+
 ## Acceptance criteria
 
 **AC-1**: A candidate that modifies or deletes a migration file present at its merge-base with the base branch is refused, including a comment-only edit; adding a new migration and the journal entry is accepted.
