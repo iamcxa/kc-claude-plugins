@@ -3,7 +3,7 @@ title: An applied migration is never edited, and parallel tasks never pick the s
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -66,10 +66,13 @@ gates:
                     source: ~/.claude/CLAUDE.md, Autonomous action boundaries
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-30T00:48:39Z
 worktree: .worktrees/spacedock-ensign-migration-and-number-guards
 pr: pr-merge:533
+verdict: PASSED
+completed: 2026-09-30T04:18:23Z
+archived: 2026-09-30T04:18:24Z
 ---
 
 Two adopter defects from qnow dogfooding (2026-09-29) that dev2 never checked: an unmerged migration edited in place after it reached a persistent database, and parallel tasks choosing the same migration and ADR numbers.
