@@ -261,7 +261,6 @@ def exercise(base, binary, sd_root):
             assert run(["git", "-C", workflow, "rev-parse", "HEAD"]).stdout == code_head
             assert not run(["git", "-C", workflow, "status", "--porcelain"]).stdout.strip()
 
-        # A report ending "FAILED: none." is refused by SD with no line named; the checklist read names it.
         workflow, entity = seed("failed-none", "implementation")
         stamped(workflow, entity, "implementation")
         report = ("\n## Stage Report: implementation\n\n"

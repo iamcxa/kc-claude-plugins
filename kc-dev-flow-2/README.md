@@ -252,7 +252,9 @@ python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /absolute/pat
 
 Lint reuses `scripts/skill-frontmatter-lint.sh` scoped to this tree and checks
 declared route coverage, applicability values, exact paths, required principles
-and skill namespaces. It does not parse rule prose or prove route-following,
+and skill namespaces, and that every package script named in `skills/` and
+`references/` is written `<package>/scripts/NAME` and that a skill using `<package>`
+carries a `Package root:` line. It does not parse rule prose or prove route-following,
 unknown-profile refusal, gate execution or cross-host parity.
 The [Agent Skills specification](https://agentskills.io/specification) defines
 frontmatter and directory conventions; complete format validation is a separate
@@ -268,9 +270,10 @@ activation: SD can finalize locally when no hook or blocking record exists.
 
 The CLI test copies the workflow source into disposable code/state repositories.
 It checks six stage/host handoffs, stage-definition fetches, PRFAQ/Mermaid gate
-context, finding disposition and delivery authority. Both route graphs across
-three profiles exercise synthetic gate successors and stamped implementation /
-validation worktree reuse. Fresh validation is declared configuration, not an
+context, the `## Dispatch facts` section, finding disposition and delivery authority,
+and that a report ending `- FAILED: none.` is refused by SD and named by its
+checklist read. Both route graphs across three profiles exercise synthetic gate
+successors and stamped implementation / validation worktree reuse. Fresh validation is declared configuration, not an
 executed independent worker. Copied canonical hook discovery and merge-guard
 arming pass; the missing-hook control demonstrates local finalization's limit.
 Existing wrong-stage, removed-stage, AC-scanner and host-marker controls remain.
