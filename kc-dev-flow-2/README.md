@@ -133,6 +133,9 @@ dispatched; its default mode checks the markers, the artifacts, a usable
 `## Acceptance criteria` section and any `## Captain amendments` before the gate.
 A change the Captain makes after accepting a design is recorded there and applied
 by the next worker, as [workflow](references/sd/workflow.md) states.
+A task that belongs to a release on a journey map triggers one whole-journey review
+of that release before its tasks are split; [workflow](references/sd/workflow.md)
+gives the signals and the single checkpoint.
 Write material corrections back to the same definition before user approval.
 Implementation follows approved scope; validation checks the exact result and
 returns repairs through the supported feedback route. POC must not gain
