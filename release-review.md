@@ -3,7 +3,7 @@ title: A release is re-reviewed as one whole journey before its tasks are split,
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「還沒做好的故事，每張旅程圖分開算」 — design approved with the unit: stories whose status is not exists, counted per journey file'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-30T10:02:06Z
 ---
 
