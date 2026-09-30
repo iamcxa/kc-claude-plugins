@@ -176,13 +176,13 @@ The replacement criterion is appended to `## Acceptance criteria` as a new `**AC
 
 ### Captain's minimal acceptance script (for the implementation candidate)
 
-Set `PKG` to the candidate checkout's `kc-dev-flow-2` directory and `SD` to a Spacedock v0.27.2 source checkout.
+Set `PKG` to the candidate's `kc-dev-flow-2` directory (worktree `.worktrees/spacedock-ensign-ideation-gaps`, commit `7e4798909fab`) and `SD` to the activated Spacedock plugin root, the directory that contains `mods/pr-merge.md` (`spacedock` 0.27.2 must be on PATH).
 
-1. `python3 $PKG/scripts/test_design_surfaces.py` prints `OK`; this covers the seed mode, the criteria rule and the amendment rules with their mutation cases.
-2. `python3 $PKG/scripts/test_sd_dispatch.py --sd-plugin-root $SD` exits 0; its parity cases ran the real `spacedock status --read --ac-scan` on the fixtures.
-3. In an empty directory, write a task with `## FO alignment` (`Surfaces: none`, `Visible change: none`) and no acceptance criteria; `python3 $PKG/scripts/design_surfaces.py check task.md` exits 1 and names `## Acceptance criteria`; add `## Acceptance criteria` with `**AC-1**: x`; it exits 0.
-4. Add `## Captain amendments` with `### Amendment 1` holding `Captain: 「x」` and `Supersedes: AC-1`; `check` exits 1 saying AC-1 is superseded but still declared; move the block out of `## Acceptance criteria`, add `**AC-2**: y`; it exits 0.
-5. `python3 $PKG/scripts/design_surfaces.py check --seed task.md` on a seed with `Surfaces: ui` and no `UI proposal:` exits 0.
+1. `python3 $PKG/scripts/test_design_surfaces.py` ends with `OK` (19 tests); it covers the seed mode, the criteria rule and the amendment rules with their mutation cases.
+2. `python3 $PKG/scripts/test_sd_dispatch.py --sd-plugin-root $SD` exits 0 and its last PASS line reads "criteria and amendment fixtures agree with the real --ac-scan"; those cases ran the real `spacedock status --read --ac-scan` on the fixtures.
+3. In an empty directory, write `task.md` holding `# T`, then `## FO alignment` with `Surfaces: none` and `Visible change: none`, and no acceptance criteria. `python3 $PKG/scripts/design_surfaces.py check task.md` prints `task.md: missing '## Acceptance criteria' section` and exits 1. Append `## Acceptance criteria` and `**AC-1**: x`; it prints `design surfaces presentable` and exits 0.
+4. Append `## Captain amendments`, `### Amendment 1`, `Captain: 「x」` and `Supersedes: AC-1`. `check` prints `'### Amendment 1' supersedes AC-1 but it is still declared in '## Acceptance criteria'` and exits 1. Replace `**AC-1**: x` with `**AC-2**: y` (in a real task the old block moves under `Superseded text:` in the entry); it exits 0.
+5. Write `seed.md` with `## FO alignment`, `Surfaces: ui` and `Visible change: a user sees a label`, no `UI proposal:`. `check --seed seed.md` prints `FO alignment recorded` and exits 0; `check seed.md` exits 1 naming the missing `UI proposal:`, `Preview:` and `## Acceptance criteria`.
 Not covered: that an FO follows the steps (prose), that a worker's script follows an amendment (AC-4(b), one probe), and that ideation writes no repository file (no enforcement point).
 
 ## Number guards
@@ -215,3 +215,32 @@ ADR: 0005
 ### Summary
 
 Nothing needs a Spacedock change: 0.27.2 reads no task body at dispatch or gate prepare, so the design extends `design_surfaces.py` with a `--seed` mode, a criteria rule and an amendment rule, adds FO steps to `workflow.md`, and adds short worker rules. The amendment route rests on one measured fact (moving a superseded criterion out of the section is the only form `--ac-scan` respects without a per-stage bullet) and one Captain ruling (FO records, next worker moves). Throwaway checkouts under `/tmp` are removed.
+
+## Stage Report: implementation
+
+- DONE: Implement ideation-gaps' approved design (Captain 2026-09-30 「准」, option A: the FO records his words in `## Captain amendments`, the next dispatched worker moves superseded criteria; the AC-4(b) live probe stays for validation): every row of the design's "Package change" table.
+  All seven rows are in commit 7e4798909fab (base 05b772b7, branch spacedock-ensign/ideation-gaps): design_surfaces.py, its two test files, workflow.md, the three principles.md, adoption.md plus README.md, ADR 0005.
+- DONE: Every AC with the evidence its "Verified by" names that implementation can produce, including each named mutation and the parity cases against the real `spacedock status --read --ac-scan`; AC-4(b) is validation's, do not run it.
+  Per-AC lines below; test_design_surfaces.py 19 OK (7 mutation cases), test_sd_dispatch.py exit 0 on spacedock 0.27.2 (its criteria and amendment cases fail against the old design_surfaces.py and against a disjointness mutation, run).
+- DONE: ADR 0005 in docs/adr (the task's `## Number guards` holds `ADR: 0005`); the decider's words are the Captain's 「准」 at the ideation gate on 2026-09-30 with option A.
+  docs/adr/0005-a-captain-amendment-is-recorded-by-fo-and-moved-by-the-next-worker.md; `adr_lint.py docs/adr --require 0005` exit 0 (5 ADRs); Words line is 「准」 plus the FO-recorded gate reason.
+- DONE: Follow this repo's CLAUDE.md: Conventional Commits scoped `feat(kc-dev-flow-2): …`, no version edits, stage files explicitly; the candidate's own `kc-dev-flow-2/scripts/comment_ratio.py` from 05b772b7 to the candidate exits 0; `/Users/kent/.claude/plugins/local/kc-dev-flow-2/scripts/doc_impact.py` reported; exact candidate SHA; the Captain-run minimal acceptance script rewritten against the shipped text.
+  Candidate 7e4798909fabd69fc6b3fc95ec92199f02efbbca, ten files staged by name, no version edits; comment_ratio "code lines 252, comment lines 6, 2.4%" exit 0 (the 6 are `##` heading lines inside test fixtures); number_guards check PASS, base 05b772b7 head 7e4798909fab; doc_impact listed README.md (updated) and references/sd/adoption.md (updated); acceptance script in the Design section rewritten and its steps 3-5 run in an empty directory.
+- DONE: AC-1 the FO learns the FO-alignment record is missing before it spawns the worker
+  `check --seed` in design_surfaces.py; SeedModeTests (4 refusal cases exit 1, ui seed exit 0 under --seed and 1 without, and mutations dropping the heading rule and running artifact rules in seed mode each fail their case); test_sd_dispatch prints the backlog stage definition with the seed step and a copy without the bullet prints none; limit as designed, a skipping FO still dispatches.
+- DONE: AC-2 an ideation report cannot reach the gate without a usable `## Acceptance criteria`
+  CriteriaTests (11 fixtures, mutations accepting `- AC-1:`, dropping the empty rule, case-sensitive heading each fail); test_sd_dispatch runs 10 fixtures through the real `--ac-scan --json` and the shipped check and asserts the same verdict; I probed the grammar first (bold must close without an inner `*`, heading ends at the next `## ` line, fences not skipped) and the rule follows it.
+- DONE: AC-3 a Captain amendment has one supported record
+  AmendmentTests (no `Captain:` line or empty words, superseded id still declared including a re-declared id, relocated/none/no-amendment/fenced example exit 0; mutations dropping disjointness, the Captain rule and the fence skip each fail); real `--ac-scan` lists AC-1 only on the relocated fixture, lists AC-2 in place, and as evidenced with a SKIPPED bullet, and `check` exits 0, 1, 1.
+- DONE: AC-4 the later stages and the Captain's acceptance script follow the amendment
+  (a) implementation and validation principles.md carry the sentence, lint-skills.py exit 0 and test_lint_skills.py 21 OK, text presence only; (b) the live N=1-per-arm probe is validation's and was not run.
+- DONE: AC-5 an ideation-time ADR draft lives in the task file with no number until FO reserves it
+  ideation principles.md, workflow.md `### ideation`, Decision records and Number guards say it; test_number_guards RecheckTests.test_an_added_adr_number_the_task_did_not_reserve_is_refused and ...already_on_the_base_is_refused OK (17 tests OK); lint-skills and test_lint_skills OK; limit: the no-file rule has no enforcement point, the sentence is the whole control.
+- DONE: AC-6 the rules reach the FO, the worker and the adopter
+  FO steps in workflow.md, worker rules in the three principles.md, adoption.md new section and README.md updated; no CI change; test_sd_dispatch proves the README text reaches a stage definition; test_poc_readme 4 OK after keeping the word "ideation" out of every shared section.
+- DONE: AC-7 the ruling is an ADR
+  ADR 0005 committed; `adr_lint.py docs/adr --require 0005` exit 0 and `number_guards.py check` exit 0.
+
+### Summary
+
+Every Package-change row is implemented in one commit; the real `ideation-gaps.md` itself passes the new `check` (its fenced example record is skipped, the false-positive class the design named). One addition is outside the table: `Captain amendments` is now a `context-sections` entry of implementation and validation in workflow.md so a worker sees the record format and the move rule without opening the README; validation may weigh it as a decision, not an unmapped surface. Limits: AC-4(b) is not run; that FO records an amendment, runs the seed check and that ideation writes no repository file are prose with no enforcement point (`check` refuses only a skipped move).
