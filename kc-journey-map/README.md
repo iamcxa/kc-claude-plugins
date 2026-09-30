@@ -190,7 +190,8 @@ reads `JOURNEY_ROOMS_DIR`, defaulting to `./.rooms` relative to the service work
 member task carrying the complete `journey-required-tasks` declaration. `lib/progress.mjs`
 reports anything partial, conflicting or drifted as unverified rather than as progress. A task
 that names this journey but a release and story the map does not hold is listed under `orphans`,
-and the command exits 1.
+and the command exits 1. Known limit: a closed task that names a story since removed
+from the map stays an orphan, so the command keeps exiting 1 until that task's fields are cleared.
 
 ## References
 

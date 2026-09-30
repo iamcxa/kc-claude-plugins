@@ -16,7 +16,7 @@ node <plugin-root>/lib/journey-progress.mjs <journey.yaml> --workflow-dir <workf
 Omitting `--pages` draws the story map. Refresh-only prints JSON. `JOURNEY_API`
 selects the existing canvas endpoint. Exit 1 accompanies unverified observations,
 an orphan (a task that names this journey but a release and story the map does not
-hold, listed under `orphans` with its slug, short id, release and story), or a failed draw; exit 2 reports invalid arguments/input. A failed draw retains the
+hold, listed under `orphans` with its slug, short id, release and story; a closed task naming a story since removed from the map stays listed until its fields are cleared), or a failed draw; exit 2 reports invalid arguments/input. A failed draw retains the
 computed observation in the error output, without claiming that it was drawn.
 
 ## Declare the required work in its existing tasks

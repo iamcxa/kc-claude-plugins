@@ -22,8 +22,19 @@ accept membership. Ask one decision at a time.
 Walk from the person's first situation to the observable finish, one step at a time,
 and for each actor who acts in it. Record one row per step and actor:
 
-| Step | Actor | Observable outcome | Story | Task or `none` | Status |
-| --- | --- | --- | --- | --- | --- |
+| Step | Actor | Observable outcome | Identity | Context | Shown | Story | Task or `none` | Status |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+
+Fill the three middle columns from what the release delivers at that step, not from what
+the actor could infer:
+
+- **Identity**: who the actor is at this step, and how the product knows it.
+- **Context**: which tenant, brand or account they act in, and how that is chosen or shown.
+- **Shown**: what the screen or output tells this actor at this step, including their own
+  identity and context.
+
+Write `unknown` where the map, the stories and the tasks do not say. Do not fill a cell
+from what the product probably does.
 
 Name every hole. There are four classes:
 
@@ -32,10 +43,11 @@ Name every hole. There are four classes:
 | step with no story | someone must act here and no story lets them |
 | story with no task | the map promises it and nothing builds it |
 | task with no story | work admitted into the release that the map does not hold (`journey-progress.mjs` lists these as `orphans`) |
-| actor without identity or context | a person acts in a step but the release gives them no way to be signed in, or no context to act on |
+| actor without identity or context | in a step, the Identity, Context or Shown cell of any actor is `unknown`, missing or ambiguous: they cannot be told who they are, which tenant, brand or account they act in, or the screen or output does not show it |
 
 A hole sends the worker back to step 1. Cover the whole path even when only one task
-changed: a hole between two tasks is the defect this mode exists to find.
+changed: a hole between two tasks is the defect this mode exists to find. Check the
+three cells for every actor at every step, not only where a story mentions them.
 
 ## 3. Check the slice
 

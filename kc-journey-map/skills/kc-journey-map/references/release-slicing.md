@@ -33,7 +33,7 @@ replaces it) prints `slice-size (advisory)` from `journey-lint.mjs`. Split the s
 into sub-slices, or record why not in that release's `slice_because`, which turns the
 line into `slice-size (accepted)`. The count is a cue for how much a reader holds at
 once, not a fit test: fit stays appetite versus estimate, and `journey-handoff.mjs`
-checks no story count (`lib/journey-handoff.test.mjs`, the seven-story case), and it
+checks no story count (`lib/journey-handoff.test.mjs`, test `a release of more than five stories that do not exist yet is not refused for its count`), and it
 allows a `slice_limit` or the selected release's `slice_because` added after the pre-cut
 copy. When releases in several journey files are one demo, add their counts by hand.
 
