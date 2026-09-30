@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-review:validation:attempt-2:revision-1",
+  "question": "AC-5 neutral replay improved but misses a strict reading (office identity 2/2, brand context 1 strong + 1 weak, go-live raised only as a story-less task). Accept as improved and observe on the next real release review, or add a check that walks the release goal's own finish and replay again?",
+  "artifacts": [
+    {
+      "id": "artifact:release-review:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/e7b2b708ff6a4f6c375f001171ac2dbd7b5fc652/release-review.md",
+      "rev": "sha256:a92cf2901764a8f1508abb82642861be0686a9e33bbe7b86e36fb4c1355881b8",
+      "mediaType": "text/markdown",
+      "summary": "Deterministic work stands: 168 tests, lint, group scoping, generic wording, F2-F4; connector isolation now proven; each run raises each hole at least weakly."
+    }
+  ]
+}

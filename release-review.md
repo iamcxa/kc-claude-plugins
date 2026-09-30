@@ -61,6 +61,22 @@ gates:
                 at: "2026-09-30T15:14:29.636124Z"
                 decision: revise
                 reason: 'Captain 2026-09-30: 「退回補強」 — the review-release walk records, per step, each actor''s identity, tenant or brand context and what the screen shows (generic, not the known answers); fix Polish F3 and F4; re-run the AC-5 replay with a neutral prompt; F2 recorded as a known limit'
+            - id: gate-attempt:release-review-validation-2
+              briefing:
+                id: briefing:release-review:validation:attempt-2:revision-1
+                digest: sha256:3b11a58b9dd02ddde58ce0077a64444b384cdd728d0f29d9c7d71638c0739a12
+                room-ref: ./release-review/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-review:validation:2
+                briefing: briefing:release-review:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-30T15:25:21.898484Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「好」 — accept the review-release reference as improved (AC-5: office identity 2/2, brand context 1 strong + 1 weak, go-live raised as a story-less task); the release-goal-finish check is a follow-up to decide on the next real release review; open two PRs, kc-journey-map first'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-30T10:02:06Z
 worktree: .worktrees/spacedock-ensign-release-review
 ---
