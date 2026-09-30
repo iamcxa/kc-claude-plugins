@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:dispatch-and-report-hygiene:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:dispatch-and-report-hygiene-ideation-1
+              briefing:
+                id: briefing:dispatch-and-report-hygiene:ideation:attempt-1:revision-1
+                digest: sha256:f2446fc48e47ac2133a7fc632c4fadde34c341f480f3618f04e4660426bc5e45
+                room-ref: ./dispatch-and-report-hygiene/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dispatch-and-report-hygiene:ideation:1
+                briefing: briefing:dispatch-and-report-hygiene:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T04:11:29.495698Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「准」 — dispatch facts section, FAILED-only rule, secret guard documented not shipped'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Four dispatch and report defects from qnow dogfooding (2026-09-28..30) that cost retries or leaked secrets.

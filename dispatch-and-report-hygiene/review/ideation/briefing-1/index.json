@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dispatch-and-report-hygiene:ideation:attempt-1:revision-1",
+  "question": "Approve dispatch-and-report-hygiene's design (a Dispatch facts section every worker stage receives: FO signal name, package script path from the loaded skill, FAILED-only-when-unmet, one secret wrapper) and document the secret guard instead of shipping it?",
+  "artifacts": [
+    {
+      "id": "artifact:dispatch-and-report-hygiene:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d0c70bc460b04c4bd80f19eaeae58125f044aa12/dispatch-and-report-hygiene.md",
+      "rev": "sha256:655030909f12be908eccb9d9ab2d4d9bbb6909e8e022a78f3ab22d5aea7f5c34",
+      "mediaType": "text/markdown",
+      "summary": "Workers learn the four dispatch facts from the package; script paths come from the loaded skill's own version; the secret guard is documented in adoption.md, not shipped as a plugin hook."
+    }
+  ]
+}
