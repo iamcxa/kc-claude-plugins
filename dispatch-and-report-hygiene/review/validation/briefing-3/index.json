@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dispatch-and-report-hygiene:validation:attempt-3:revision-1",
+  "question": "Accept dispatch-and-report-hygiene's validation PASSED on candidate a88175e9 and open its Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:dispatch-and-report-hygiene:validation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/23885105718f576e05ae984bac5c551f8f9f5707/dispatch-and-report-hygiene.md",
+      "rev": "sha256:6eec424d3f019de9a194a7f01de8e3d5fb681b60ba807266f3033bf5248efa60",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 3 PASSED: suites and falsifiers pass; AC-6 with the candidate only: FO wrote the package root unprompted, worker made no search, one accepted signal to main, no FAILED bullet, status --set accepted; sanitize 0/0/0."
+    }
+  ]
+}

@@ -70,6 +70,25 @@ gates:
                 at: "2026-09-30T06:49:56.83577Z"
                 decision: revise
                 reason: 'Captain 2026-09-30: 「准」 — every dispatch''s FO scope notes carry the absolute package root, checklists name scripts as <package>/scripts/NAME.py; back to implementation, then re-run AC-6'
+            - id: gate-attempt:dispatch-and-report-hygiene-validation-3
+              briefing:
+                id: briefing:dispatch-and-report-hygiene:validation:attempt-3:revision-1
+                digest: sha256:fc507d43d074ba8b33227ffa114384d445019eaaa567d38f03370a66a9ddbcba
+                room-ref: ./dispatch-and-report-hygiene/review/validation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dispatch-and-report-hygiene:validation:3
+                briefing: briefing:dispatch-and-report-hygiene:validation:attempt-3:revision-1
+                by: agent:first-officer
+                at: "2026-09-30T07:03:27.883414Z"
+                decision: approve
+                reason: Validation PASSED on a88175e9; opening a Draft PR only; merge stays with the Captain
+                conn:
+                    quote: 'No ask on a repo Kent owns: push a branch and open a Draft PR once the work cleared its own bar'
+                    source: ~/.claude/CLAUDE.md, Autonomous action boundaries
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-30T04:12:30Z
 worktree: .worktrees/spacedock-ensign-dispatch-and-report-hygiene
 ---
