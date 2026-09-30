@@ -3,7 +3,7 @@ title: Dispatches name the reachable FO, the package's script paths and the secr
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
