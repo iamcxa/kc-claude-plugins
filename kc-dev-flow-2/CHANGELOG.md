@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.0...kc-dev-flow-2-v0.10.1) (2026-09-30)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** a repair's validation recheck waits for the repair, and a failed push does not freeze a migration ([#544](https://github.com/iamcxa/kc-claude-plugins/issues/544)) ([893ba0d](https://github.com/iamcxa/kc-claude-plugins/commit/893ba0d89d168d7457f635f247806b1d93863924))
+
 ## [0.10.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.9.0...kc-dev-flow-2-v0.10.0) (2026-09-30)
 
 
