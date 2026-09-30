@@ -83,8 +83,11 @@ frontmatter; the package does not rewrite an adopter's README.
 The FO steps (the backlog seed check, the amendment record, ADR number reservation at
 implementation dispatch) live in `workflow.md`: an adopter receives them by re-syncing
 its workflow README from `workflow.md`, the same per-adopter three-way merge as above.
-The worker rules and `<package>/scripts/design_surfaces.py` arrive with the package. Until the
-README is re-synced, the adopter's FO does not run the seed check.
+The amendment rule a worker follows (record format, move duty, run-`check` clause) reaches it
+the same way, through that re-sync, not with the package; the ideation worker rules and
+`<package>/scripts/design_surfaces.py` arrive with the package. Until the README is
+re-synced, the adopter's FO does not run the seed check and its workers do not see the
+amendment rule.
 
 ## Secret reads
 

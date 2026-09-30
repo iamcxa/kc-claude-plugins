@@ -76,7 +76,10 @@ the parity test in `scripts/test_sd_dispatch.py` fails if a Spacedock release ch
 it. The live probe at validation (one Sonnet run per arm, the candidate package and
 origin/main 05b772b7, the same scratch task whose design described the old flow) had both
 arms write an acceptance script that follows the amendment and never runs the superseded
-behaviour, so the two `principles.md` sentences it was meant to justify were removed, as this
-decision said they would be. Limit: N=1 per arm, one model, and the probe ran after the
-superseded criterion had been moved; the effect of the record before the move is unmeasured.
-Reopen if Spacedock adds a task-body hook at dispatch or `gate prepare`.
+behaviour, so the two `principles.md` sentences it was meant to justify were removed. The
+approved design named that outcome as the removal condition; this ADR named the reopen
+condition, which has fired and been applied. Limit: N=1 per arm, one model; the probe ran
+after the superseded criterion had been moved, so the effect of the record before the move
+is unmeasured; and it exercised the validation worker's acceptance script only, not the
+implementation worker's move duty. Reopen if Spacedock adds a task-body hook at dispatch or
+`gate prepare`.
