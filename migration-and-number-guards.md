@@ -69,6 +69,7 @@ gates:
                 state: pending
 started: 2026-09-30T00:48:39Z
 worktree: .worktrees/spacedock-ensign-migration-and-number-guards
+pr: 533
 ---
 
 Two adopter defects from qnow dogfooding (2026-09-29) that dev2 never checked: an unmerged migration edited in place after it reached a persistent database, and parallel tasks choosing the same migration and ADR numbers.
