@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:ideation-gaps:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:ideation-gaps-backlog-1
+              briefing:
+                id: briefing:ideation-gaps:backlog:attempt-1:revision-1
+                digest: sha256:fbe74a0bac085b447c809aaa05c821d96c03387f9c852d2efbdde42e4b1e5705
+                room-ref: ./ideation-gaps/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ideation-gaps:backlog:1
+                briefing: briefing:ideation-gaps:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T08:32:40.061687Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「可以」 to the FO''s split of batch C, this part first'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Four ideation-stage gaps from qnow dogfooding (2026-09-26..30) that each cost a worker round, a hand rewrite at a gate, or a drifting ADR number.

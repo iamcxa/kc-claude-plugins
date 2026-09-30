@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ideation-gaps:backlog:attempt-1:revision-1",
+  "question": "Admit ideation-gaps (batch C part 1: #517, #518, #519, #529) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:ideation-gaps:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d5e0fd30ced561ba8ccbb0e81718091fb52b07a0/ideation-gaps.md",
+      "rev": "sha256:943d73b7c6ea89b23c6b2315aa7678eb297a35c2abb6b392d6b15f9d9dda806c",
+      "mediaType": "text/markdown",
+      "summary": "Batch C part 1 of the dev2 fixes: FO alignment precheck, acceptance-criteria precheck, Captain amendment record, ADR draft location."
+    }
+  ]
+}
