@@ -3,7 +3,7 @@ title: A delivery PR's review rounds stop by rule, a small fix does not queue be
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「請你關掉 523, 524，然後繼續 B」'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Three review-cadence defects from qnow dogfooding (2026-09-28..29) that each cost extra full cycles or hours of waiting.
