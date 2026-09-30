@@ -78,6 +78,17 @@ lane live in `workflow.md`: an adopter that already has a workflow README receiv
 them by re-syncing that README from `workflow.md`, a per-adopter three-way merge that keeps its own
 frontmatter; the package does not rewrite an adopter's README.
 
+## Ideation checks and Captain amendments
+
+The FO steps (the backlog seed check, the amendment record, ADR number reservation at
+implementation dispatch) live in `workflow.md`: an adopter receives them by re-syncing
+its workflow README from `workflow.md`, the same per-adopter three-way merge as above.
+The amendment rule a worker follows (record format, move duty, run-`check` clause) reaches it
+the same way, through that re-sync, not with the package; the ideation worker rules and
+`<package>/scripts/design_surfaces.py` arrive with the package. Until the README is
+re-synced, the adopter's FO does not run the seed check and its workers do not see the
+amendment rule.
+
 ## Secret reads
 
 The package ships no secret guard. The `Secrets:` line of the workflow's

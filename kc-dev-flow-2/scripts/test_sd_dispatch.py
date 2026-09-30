@@ -20,6 +20,8 @@ ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
               "For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev)",
               "From round 3 a finding that is neither does not start a repair cycle",
               "`Follow-up:` line to that task's Scope")
+SEED_STEP = "design_surfaces.py check --seed"
+FO_RECORD = "\n## FO alignment\n\nSurfaces: none\nVisible change: none\n"
 LANE_RULE = ("`concurrency` limits only what `status --next` proposes",
              "are dispatched at once in the entity's own worktree")
 
@@ -173,6 +175,68 @@ def exercise(base, binary, sd_root):
         for ac in mapped:
             assert len(ac["citations"]) == 1, mapped
             assert ac["citations"][0]["text"] == f"- SKIPPED: {ac['id']} not verified; synthetic parser mapping only.", ac
+
+        repo, entity = seed("criteria-parity", "ideation")
+        header = entity.read_text().split("\n## Scope", 1)[0] + FO_RECORD
+        report = "\n## Stage Report: ideation\n\nSynthetic parser context only; no worker ran.\n"
+        checker = ROOT / "scripts/design_surfaces.py"
+
+        def parity(body, extra=""):
+            entity.write_text(header + body + report + extra)
+            scanned = run([binary, "status", "--workflow-dir", repo, "--read", entity.stem, "--ac-scan", "--json"],
+                          repo, expected=None)
+            ids = [ac["id"] for ac in json.loads(scanned.stdout)["acs"]] if scanned.returncode == 0 else []
+            checked = run(["python3", checker, "check", entity], repo, expected=None)
+            return ids, checked
+
+        for label, body, has_criterion in (
+                ("absent", "", False),
+                ("level-1 heading", "\n# Acceptance criteria\n**AC-1**: x\n", False),
+                ("plain list", "\n## Acceptance criteria\n- AC-1: x\n", False),
+                ("empty section", "\n## Acceptance criteria\n\n## Notes\n**AC-2**: y\n", False),
+                ("unclosed bold", "\n## Acceptance criteria\n**AC-1 x\n", False),
+                ("lowercase heading", "\n## acceptance criteria\n**AC-1**: x\n", True),
+                ("trailing space", "\n## Acceptance criteria \n**AC-1**: x\n", True),
+                ("leading space", "\n ## Acceptance criteria\n**AC-1**: x\n", True),
+                ("leading tab", "\n\t## Acceptance criteria\n**AC-1**: x\n", True),
+                ("leading no-break space", "\n\xa0## Acceptance criteria\n**AC-1**: x\n", True),
+                ("trailing no-break space", "\n## Acceptance criteria\xa0\n**AC-1**: x\n", True),
+                ("uppercase heading", "\n## ACCEPTANCE CRITERIA\n**AC-1**: x\n", True),
+                ("two spaces inside", "\n## Acceptance  criteria\n**AC-1**: x\n", False),
+                ("labelled", "\n## Acceptance criteria\n**AC-1 (VALUE)**: x\n", True),
+                ("valid", "\n## Acceptance criteria\n**AC-1**: x\nVerified by: y\n", True),
+                ("fenced declaration", "\n## Acceptance criteria\n```\n**AC-1**: x\n```\n", True)):
+            ids, checked = parity(body)
+            assert bool(ids) == has_criterion, (label, ids)
+            assert (checked.returncode == 0) == has_criterion, (label, checked.stdout)
+            if not has_criterion:
+                assert "cceptance criteria" in checked.stdout, (label, checked.stdout)
+
+        criteria = "\n## Acceptance criteria\n\n**AC-1**: kept.\n{old}"
+        amendment = ("\n## Captain amendments\n\n### Amendment 1 — 2026-09-30, chat\n"
+                     "Captain: 「drop AC-2」 (chat)\nSupersedes: AC-2\n{moved}")
+        old = "**AC-2**: replaced outcome.\nVerified by: y\n"
+        ids, checked = parity(criteria.format(old="") + amendment.format(moved="Superseded text:\n" + old))
+        assert ids == ["AC-1"] and checked.returncode == 0, (ids, checked.stdout)
+        ids, checked = parity(criteria.format(old="**AC-2** (superseded by amendment 1): replaced outcome.\n")
+                              + amendment.format(moved=""))
+        assert ids == ["AC-1", "AC-2"] and checked.returncode == 1, (ids, checked.stdout)
+        assert "supersedes AC-2 but it is still declared" in checked.stdout, checked.stdout
+        ids, checked = parity(criteria.format(old="**AC-2** (superseded by amendment 1): replaced outcome.\n")
+                              + amendment.format(moved=""), "\n- SKIPPED: AC-2 superseded by amendment 1\n")
+        evidenced = json.loads(run([binary, "status", "--workflow-dir", repo, "--read", entity.stem, "--ac-scan", "--json"],
+                                   repo).stdout)["acs"]
+        assert ids == ["AC-1", "AC-2"] and checked.returncode == 1, (ids, checked.stdout)
+        assert [bool(ac["citations"]) for ac in evidenced] == [False, True], evidenced
+
+        backlog = run([binary, "dispatch", "show-stage-def", "--workflow-dir", repo, "--stage", "backlog"], repo).stdout
+        assert SEED_STEP in backlog, "backlog stage definition lacks the seed check"
+        source = TEMPLATE.read_text()
+        trimmed = re.sub(r"- \*\*Seed check:\*\*.*?(?=\n### )", "", source, flags=re.DOTALL)
+        assert trimmed != source
+        workflow, _ = seed("no-seed-step", "backlog", trimmed)
+        bare = run([binary, "dispatch", "show-stage-def", "--workflow-dir", workflow, "--stage", "backlog"], workflow).stdout
+        assert "### `backlog`" in bare and SEED_STEP not in bare, "seed step still printed"
 
         repo, entity = seed("host-detection", "ideation")
         payload = request(repo, entity, "ideation", "claude")
@@ -341,6 +405,7 @@ def exercise(base, binary, sd_root):
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
         print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot")
+        print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
         for artifact in artifacts:
