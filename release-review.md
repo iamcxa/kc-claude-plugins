@@ -321,3 +321,54 @@ Recommend hold, not PASSED and not REJECTED: the deterministic work (AC-1 to AC-
 ### Summary
 
 The release walk table now records, per step and actor, what the actor knows (identity), which tenant, brand or account they act in (context), and what the screen or output shows them, and an unknown or ambiguous cell is the existing hole class. Wording is generic and cues no specific hole. F3, F4 and the F2 limit are done; whether the reference now passes AC-5 is untested and is validation's replay.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Re-review candidate 88ddf0cc73a4e580125570c7a5020702c6457f02 against the Captain-authorized correction; reproduce on a `git archive` copy.
+  `npm ci` then `node --test lib/*.test.mjs` in kc-journey-map: 168 pass, 0 fail; `skill-frontmatter-lint.sh` exit 0 (55 SKILL.md); `git diff --name-only b7a45bed 88ddf0cc` lists 4 files, all under `kc-journey-map/**`, none under `kc-dev-flow-2/**`; the code worktree `git status --short` is empty.
+- DONE: Read the new walk columns and judge whether the wording is generic; confirm F3, F4 and the F2 limit sentence.
+  `release-review.md` adds Identity, Context and Shown columns plus an `unknown`-not-inferred rule and widens the hole class; a grep of the added lines for adopter product, screen, role and brand-hole words matches only the substring in "delivers", and "tenant, brand or account" is the Captain's own authorized wording, so it is generic; F4 cites the test `a release of more than five stories that do not exist yet is not refused for its count`, which exists in `lib/journey-handoff.test.mjs`; the F2 limit is in `kc-journey-map/README.md` and `kc-journey-progress/SKILL.md` next to `orphans`; F3 is in this entity's Design script step 3 ("the `orphans` list is the discriminator"), not in a repository file.
+- FAILED: Re-run AC-5's replay twice with a neutral prompt and pass only if both runs name all three holes issue #520 records.
+  Each run met two of the three holes in substance and the third only weakly, so "both runs name all three" is not met on a strict reading; per-hole grading and the quoted rows are in Findings; the Captain owns the threshold for an agent-run check (same as cycle 1).
+
+### Replay record
+
+Isolation: snapshot `git archive 88ddf0cc` at /tmp/rr2/g1; `DISABLE_PLUGIN_AUTOLOAD=1 claude --setting-sources local --plugin-dir /tmp/rr2/g1/kc-journey-map --strict-mcp-config --model claude-sonnet-5-5 --permission-mode dontAsk --allowedTools "Read Glob Grep Skill" -p`. Init lists `kc-journey-map` at the snapshot path plus two builtins; `mcp_servers` is empty (connector isolation now proven, a cycle-1 limit closed); both runs called Skill `kc-journey-map:kc-journey-map` then Read the snapshot's `release-review.md`, then read the two journey files and `task-list.md`. Inputs: the same qnow journey files (identical to `git show cebce1173`) and the same reconstructed task list (dev2 state branch at 2026-09-29 14:42) as cycle 1.
+
+Prompt, verbatim: "Use the kc-journey-map skill in its review-release mode on release r2. The journey files are docs/journey/qnow-owner.yaml and docs/journey/qnow-shop.yaml, and the task list is task-list.md, all in the current directory. Work read-only: do not edit any file and do not run commands. Give the walk table and the hole list."
+
+| | Run 1 | Run 2 |
+| --- | --- | --- |
+| Wall time | 63 s (API 60.5 s) | 47 s (API 45.2 s) |
+| Tokens (input / cache-create / cache-read / output) | 6 / 33,832 / 52,983 / 7,900 | 6 / 33,832 / 52,983 / 6,289 |
+
+Hole 1, no brand context in the owner app.
+- Run 1: found. Row `| find-shop | Owner (anonymous) | ... | Shop and branch from the entry code | Branch name only, not unique, no brand or address (owner q5) ...`; row `| sign-in-and-book | Owner | ... | Customer record is per brand (ADR 25). Nothing says it is shown | Unknown |`; row `| manage-account | Owner | ... | This brand only (q1). How the owner gets into a brand context without a shop link is `unknown` | Unknown |`; hole bullet "The owner is never shown which shop they are in. The shop is identified only by a non-unique branch name (q5)." and "an owner opening the app without a shop link has no stated context."
+- Run 2: weaker. Hole bullet "The owner is never told which shop they are in beyond the non-unique branch name (`enter-by-shop-qr` q5, an open gap). None of the three r2 owner stories says what the owner sees."; row `| sign-in-and-book | car owner | ... | customer record shared by brand | pending screen; identity display not stated |`; `| manage-account | ... | this brand only |`. It names shop context, not brand context or merged bookings.
+
+Hole 2, the office cannot show who is signed in: found in both.
+- Run 1: row `| staff-sign-in | Manager / reception | ... | Refusal text only. Nothing says the office shows the signed-in name, branch or role |`; hole "Staff are not shown their own name, branch or role after sign-in."
+- Run 2: hole "After sign-in, staff are not shown their own identity, branch or role. `office-shows-role-screens` is gap, and only the refusal text is specified."
+
+Hole 3, no task takes a real shop live on production: weak in run 1, moderate in run 2; neither says no task does it.
+- Run 1: under "Task with no story": "`production-on-qnow-tw-clerk-live` matters: a real shop needs the production Clerk instance and the qnow.tw QR path (ADR 0009)." Its onboard-shop rows are gaps but do not tie go-live to the release goal.
+- Run 2: "`production-on-qnow-tw-clerk-live` has no story or step for going live on the production Clerk instance, yet r2's goal is 'first real shop goes live'."
+
+Other holes raised, both runs: the three owner r2 gap stories and seven shop r1 stories have no task; a long list of story-less tasks; `shop-edits-booking` against rule `price-fixed-at-submit` (ADR 27); operator identity unknown; stale `preauthorise-staff-phone` and `revoke-staff` statuses; the owner status card's "three stories" against five stories carrying `release: r2`; the shop notes calling its release "RELEASE 2"; slice count 14 by hand (3 owner, 11 shop). Both runs treat shop r1 as r2's counterpart and ask the Captain to confirm it.
+
+### Findings
+
+- **F1, AC-5 replay: Needs decision.** Fields: released user is a Captain running review-release; harm is a walk that raises the office-identity and brand-context holes but frames go-live as a story-less task rather than a missing path; value `value-ac[AC-5]`; trigger is the two neutral runs. Against cycle 1 (both missed brand context, office identity adjacent only) the correction moved the office-identity hole from missed to found in 2 of 2 and brand context from missed to found in 1 of 2 (weaker in the other). The remaining gap is structural: the walk's finish is the person's finish, so a release goal whose finish is an act no story walks (taking the shop live) surfaces only as a task-with-no-story; whether that needs a fifth check, such as walking the release goal's own finish, is the Captain's call and is not a change I made.
+- **F2, closed task naming a since-removed story keeps exit 1: Deferred risk**, now stated as a known limit in README and the progress SKILL.md, as authorized.
+- **F3 and F4: closed** (present as authorized).
+
+### Acceptance script
+
+1. `cd kc-journey-map && npm ci && node --test lib/*.test.mjs` on a `git archive 88ddf0cc` copy: 168 pass, 0 fail.
+2. Run `claude` with the isolation recipe above and the verbatim prompt in a directory holding qnow's two journey files at `cebce1173` and a task list: the Skill loads from the snapshot, and the output should carry the Identity, Context and Shown columns with `unknown` cells.
+3. Read the output for the office-identity hole (found in both runs here), the brand-context hole (found in run 1, weak in run 2) and the go-live hole (raised only as a story-less task).
+Does not cover: the replay's non-determinism (n = 2 per cycle) or that the task list is my reconstruction, dated after `cebce1173`.
+
+### Summary
+
+The deterministic work stands (168 tests, lint, group scoping, generic wording, F2 to F4). The replay improved but does not meet "both runs name all three holes": office identity found twice, brand context found once and weakly once, go-live only as a story-less task twice. Recommend hold on AC-5 for the Captain to rule: accept the reference as improved, or add a check that walks the release goal's own finish.
