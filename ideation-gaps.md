@@ -184,6 +184,10 @@ Set `PKG` to the candidate checkout's `kc-dev-flow-2` directory and `SD` to a Sp
 5. `python3 $PKG/scripts/design_surfaces.py check --seed task.md` on a seed with `Surfaces: ui` and no `UI proposal:` exits 0.
 Not covered: that an FO follows the steps (prose), that a worker's script follows an amendment (AC-4(b), one probe), and that ideation writes no repository file (no enforcement point).
 
+## Number guards
+
+ADR: 0005
+
 ## Stage Report: ideation
 
 - DONE: (1) Where the FO learns before spawning an ideation worker that the task lacks `## FO alignment`, and what Spacedock 0.27.2 already offers
