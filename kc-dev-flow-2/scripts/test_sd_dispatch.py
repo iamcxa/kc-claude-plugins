@@ -96,9 +96,14 @@ def exercise(base, binary, sd_root):
                 payload_path.write_text(json.dumps(payload))
                 checklist_path = base / "transport-checklist.txt"
                 checklist_path.write_text("Synthetic dispatch only; no worker execution\n")
+                notes_path = base / "transport-scope-notes.txt"
+                package_root = ROOT
+                notes_path.write_text(f"Package root: {package_root}\n"
+                                      f"Run {package_root}/scripts/comment_ratio.py from the base to HEAD.\n")
                 result = run([binary, "dispatch", "build", "--workflow-dir", repo,
                               "--entity-path", entity, "--stage", stage, "--host", host,
-                              "--checklist-file", checklist_path, "--stamp"], repo)
+                              "--checklist-file", checklist_path, "--scope-notes-file", notes_path,
+                              "--stamp"], repo)
                 run([binary, "dispatch", "build", "--validate-only", payload_path], repo)
                 envelope = json.loads(result.stdout)
                 artifact = Path(envelope["dispatch_file_path"])
@@ -123,6 +128,9 @@ def exercise(base, binary, sd_root):
                 for label in ("Signal", "Package", "Secrets"):
                     assert f"- **{label}:**" in facts, (stage, label)
                 assert "dispatch show-stage-def" in body and f"--stage {stage}" in body
+                assert f"Package root: {package_root}\n" in body, (host, stage)
+                assert f"{package_root}/scripts/comment_ratio.py" in body, (host, stage)
+                assert body.index("Package root:") < body.index("Synthetic dispatch only"), (host, stage)
                 if stage == "ideation":
                     gate = definition.split("**Gate content:**", 1)[1]
                     assert "PRFAQ" in gate and "Mermaid" in gate and "Surfaces" in gate and "not presentable" in gate
@@ -292,7 +300,7 @@ def exercise(base, binary, sd_root):
         print(f"PASS ({version}): 6 stage/host dispatch handoffs; wrong-stage and missing-stage refusals")
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
-        print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
+        print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
         for artifact in artifacts:

@@ -45,7 +45,9 @@ An explicit valid selection is sufficient; FO records it with the variant in
 the work item through the existing workflow. Recommendation is not selection.
 
 Hand the resolved project root, explicit workflow directory, work item, approved
-selection/scope and bounded outcome to `spacedock:first-officer`. Retain that
+selection/scope and bounded outcome to `spacedock:first-officer`, with this
+skill's `Package root:` value, which FO writes into the scope notes of every
+worker dispatch. Retain that
 workflow directory as `--workflow-dir` on SD commands; cwd alone is not the
 binding. If FO is already active, continue there. SD owns stage selection, live
 worker availability, dispatch, reports, gates and recovery; a resumed FO does

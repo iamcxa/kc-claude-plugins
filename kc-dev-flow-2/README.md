@@ -272,6 +272,7 @@ activation: SD can finalize locally when no hook or blocking record exists.
 The CLI test copies the workflow source into disposable code/state repositories.
 It checks six stage/host handoffs, stage-definition fetches, PRFAQ/Mermaid gate
 context, the `## Dispatch facts` section, finding disposition and delivery authority,
+that scope notes naming the package root reach the dispatch file ahead of the checklist,
 and that a report ending `- FAILED: none.` is refused by SD and named by its
 checklist read. Both route graphs across three profiles exercise synthetic gate
 successors and stamped implementation / validation worktree reuse. Fresh validation is declared configuration, not an

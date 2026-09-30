@@ -74,7 +74,12 @@ model and reasoning their agent files declare; FO never dispatches them on a
 cheaper model, because their value is a stronger second judgment.
 
 FO resolves `<package>` in this workflow from the `Package root:` line of
-`kc-dev-flow-2:dev`. When `status --set` refuses to leave a stage, run
+`kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path
+as a `Package root: <absolute path>` line in its scope notes
+(`--scope-notes-file`), which land in the dispatch file the worker reads first.
+A checklist or scope-notes line that names a package script writes
+`<package>/scripts/NAME.py` with the absolute root substituted, never the bare
+script name. When `status --set` refuses to leave a stage, run
 `status --workflow-dir <dir> --read <task> --stage <stage> --checklist`, return
 any line it reports as neither DONE nor SKIPPED to the worker, and do not edit the
 worker's report. The refusal itself does not say why; other causes are a missing
@@ -180,8 +185,9 @@ Spacedock inlines this section into each stage whose `context-sections` lists it
   there (spacedock-dev/spacedock #523, #608); do not try it first and do not
   describe a fallback in the report.
 - **Package:** `<package>` in stage text is the `Package root:` line of the
-  kc-dev-flow-2 skill you loaded. Run package scripts only from it; never search
-  the filesystem, `/tmp` or another install for them.
+  kc-dev-flow-2 skill you loaded; your dispatch's scope notes state the same path,
+  and if they differ, use the skill's. Run package scripts only from it; never
+  search the filesystem, `/tmp` or another install for them.
 - **Secrets:** `<wrapper>` is the only route to a development secret: run a
   command that needs one as `<wrapper> <command>`. Never read or print a value.
   If a guard refuses a command that only mentions a secret-reading tool, rephrase
