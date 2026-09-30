@@ -3,7 +3,7 @@ title: A repair's validation recheck waits for the repair, and a failed push doe
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「同意」 — fix both in the package, release 0.10.1, re-sync the two adopter READMEs'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Two wording defects in kc-dev-flow-2 0.10.0 `references/sd/workflow.md`, found by an external review of an adopter's workflow sync (qnow PR #1248, 2026-09-30).
