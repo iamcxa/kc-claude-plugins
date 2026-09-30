@@ -3,7 +3,7 @@ title: A delivery PR's review rounds stop by rule, a small fix does not queue be
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
