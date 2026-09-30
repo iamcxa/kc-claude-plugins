@@ -153,11 +153,11 @@ Reused: the task-field reader, the `long-card (advisory)` pattern, `release-slic
 
 One ruling: the unit of a "thing". Recommendation: a story whose status is not `exists`, counted per journey file. Stories that already exist do not count. The two alternatives and their qnow counts are in the table above.
 
-### Captain-run acceptance script (after PR 1 merges; qnow `next` at or after `ddc58ea90`)
+### Captain-run acceptance script (after PR 1 merges and kc-journey-map is synced locally; qnow `next` at or after `ddc58ea90`)
 
-1. `node lib/journey-lint.mjs docs/journey/qnow-owner.yaml .` (from the installed kc-journey-map) prints a `slice-size (advisory)` line for `r3` and exits 0.
-2. Add `slice_limit: 6` to that file: the line disappears. Restore it.
-3. `spacedock status --workflow-dir docs/dev2 --set <task> journey=qnow-owner journey-release=r3 journey-story=<story-id-not-on-the-map>`, then `node lib/journey-progress.mjs docs/journey/qnow-owner.yaml --workflow-dir docs/dev2`: it lists that task under `orphans` and exits 1. Clear the fields afterwards.
+1. From the installed kc-journey-map: `node lib/journey-lint.mjs docs/journey/qnow-owner.yaml <qnow-repo-root>`. It prints `slice-size (advisory): release r3 holds 6 stories that do not exist yet (limit 5); split into sub-slices or record slice_because`, then `all lints pass`, and exits 0.
+2. Add a top-level `slice_limit: 6` to that file: the `slice-size` line disappears. Restore it, then add `slice_because: <text>` to the `r3` entry under `releases:`: the line becomes `slice-size (accepted): release r3 holds 6 stories that do not exist yet (limit 5) because <text>`. Restore the file. A `slice_limit` of `0`, `"5"` or `2.5` prints `invalid-slice-limit: ...` and exits 1.
+3. `spacedock status --workflow-dir docs/dev2 --set <task> journey=<the map's own journey: value> journey-release=r3 journey-story=<story-id-not-on-the-map>` on a task with a valid stored id, then `node lib/journey-progress.mjs docs/journey/qnow-owner.yaml --workflow-dir docs/dev2`. It prints JSON whose `orphans` is `[{"slug": "<task>", "id": "<short id>", "release": "r3", "story": "<that story id>"}]` and exits 1. Clear the three fields afterwards.
 
 ## Acceptance criteria
 
@@ -226,3 +226,36 @@ ADR: 0006
 ### Summary
 
 The release is re-reviewed at four signals but run once, at one implementation checkpoint, and skipped when a task delivers an already-mapped story; kc-journey-map owns the walk and the advisory `slice-size` line, kc-dev-flow-2 owns when FO asks, in two PRs. The one Captain ruling is the unit: open stories per journey file, against all stories, steps, tasks or a count across files (qnow: 1, 3, 0 and 5 releases flagged). Deferred and flagged: a task delivering several stories cannot carry a story list, no qnow task carries the fields yet, and `Release review:` is a procedure line no script checks.
+
+## Stage Report: implementation
+
+- DONE: Implement release-review's approved design as two commit groups so the FO can open two PRs, no commit touching both plugins
+  Group 1 ends ffeb5c0a60d193013008834f138d2a0a9c6d8343 (only `kc-journey-map/**` and `docs/adr/`); group 2 ends b7a45bed49f3f4fa9f92808bd297948638bda26f (only `kc-dev-flow-2/**`); `git diff --name-only` per group filtered for other paths prints nothing; no version edit.
+- DONE: Every AC with the evidence its "Verified by" names that implementation can produce, including each falsifier; AC-5's replay left to validation
+  Per-AC lines below; at g1 `node --test lib/*.test.mjs` 168 pass; at g2 `lint-skills.py`, seven `test_*.py`, `test_sd_dispatch.py` (spacedock 0.27.2 CLI, cache 0.27.0 plugin root) and `skill-frontmatter-lint.sh` exit 0. Tests ran with the plugin's declared deps present (node_modules symlink, removed); a fresh worktree needs `npm ci` in `kc-journey-map/`.
+- DONE: The task file has two identical `## Acceptance criteria` sections; keep the first, remove the duplicate, change no criterion text beyond the Captain's unit ruling
+  `grep -c '^## Acceptance criteria'` prints 1 (line 162), so nothing was removed; no criterion text changed, AC-1 and AC-2 already carry the unit (not `exists`, per journey file), recorded also in the gate reason and ADR 0006.
+- DONE: ADR 0006 in docs/adr with the Captain's words, generic reason only
+  `docs/adr/0006-a-slice-holds-five-open-stories-by-default.md`, words 「還沒做好的故事，每張旅程圖分開算」, ideation gate 2026-09-30; `adr_lint.py docs/adr --require 6` exit 0 at g1 (installed 0.9.0 copy and the candidate's copy); no adopter name in the diff or commit messages (grep 0).
+- DONE: Repository conventions, comment ratio, doc_impact, the SHA ending each group, the acceptance script rewritten against the shipped text
+  Commits `feat(kc-journey-map): ...` and `feat(kc-dev-flow-2): ...`, files staged by name; candidate `comment_ratio.py 2bd1bfab HEAD` exit 0 (154 code lines, 3 comment lines, 1.9%); installed `doc_impact.py 2bd1bfab HEAD` printed 0 documents mention what changed; `### Captain-run acceptance script` rewritten to the shipped line and JSON shapes.
+- DONE: AC-1 slice-size advisory line, exit unchanged
+  `lib/lint.test.mjs`: 6 open print the line, 5 open or 1 exists + 5 open print none, CLI exits 0 with the line and `all lints pass`; mutations `>` to `>=` fails 4 tests, dropping the `exists` filter fails 1, `process.exit(violations.length || oversizedSlices(model).length ...)` fails 1; limit: per-file count.
+- DONE: AC-2 `slice_limit`, `invalid-slice-limit`, `slice_because`
+  Same file: `slice_limit: 6` silences 6 open, `0`/`"5"`/`2.5`/`-1`/`null`/`true` each give one violation and the CLI exits 1; `slice_because` prints `(accepted) ... because ...`, empty or blank keeps the advisory; mutations `?? default` (no validity check) and bare `because` (no non-empty check) each fail 1.
+- DONE: AC-3 count never refuses a handoff; release-slicing.md sentence
+  `lib/journey-handoff.test.mjs`: 7-open-story handoff exits 0; a mutation adding `selected.length <= 5` to the oversized check fails 1; a new case (`slice_because`/`slice_limit` added after the pre-cut copy) failed before I allowed them in `withoutCuts` and the selected release, passes now; prose in `release-slicing.md`.
+- DONE: AC-4 `orphans` in journey-progress
+  `lib/progress.test.mjs`: pure `findOrphans` case (mapped, wrong story, wrong release, wrong pair, half-set, other-journey ignored) and a real-`spacedock` case (orphan listed; refresh CLI exit 0 clean, exit 1 with the orphan); mutations `filter(() => false)` fails 2, removing `orphans.length` from the exit condition fails 1.
+- DONE: AC-5 `review-release` mode and reference; lints stay green; the replay is validation's
+  `SKILL.md` mode row and `references/release-review.md` (order, walk table, four hole classes, hand-added counts); `skill-frontmatter-lint.sh` and node tests green; the qnow replay was not run.
+- DONE: AC-6 dev2 signals, checkpoint, `Release review:` line, journey fields
+  `references/sd/workflow.md` backlog bullet and template note, README pointer; `lint-skills.py` and the `test_*.py` green; scratch rehearsal in /tmp with the real template: `status --set` wrote the three fields, `journey-progress.mjs` listed only the unmapped-story task as an orphan and exited 1. The FO holding the task is prose, not run; nothing checks the `Release review:` line.
+- DONE: AC-7 two Conventional-Commit groups, scoped, no version edits
+  Titles `feat(kc-journey-map): ...` and `feat(kc-dev-flow-2): ...`; per-group file lists above; sanitize-check and CI checks are for the PRs.
+- DONE: AC-8 one ADR lints clean
+  `adr_lint.py docs/adr --require 6` prints `6 ADR file(s) checked, 0 legacy`, exit 0, at g1.
+
+### Summary
+
+Two commit groups on `spacedock-ensign/release-review`: kc-journey-map (advisory `slice-size` line, `slice_limit`, `slice_because`, `orphans` with exit 1, `review-release` mode, ADR 0006) then kc-dev-flow-2 (signals, single checkpoint, `Release review:` line, optional journey fields). One fix beyond the design: `journey-handoff.mjs` refused a candidate that recorded `slice_because` or `slice_limit` after the pre-cut copy, so it now allows both. The existing progress CLI test's decoy task became an orphan, so it now uses another journey. Limits: the AC-5 replay and the FO's hold behaviour are unrun; the qnow files were not re-linted here.
