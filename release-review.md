@@ -79,7 +79,7 @@ gates:
                 state: pending
 started: 2026-09-30T10:02:06Z
 worktree: .worktrees/spacedock-ensign-release-review
-pr: 538
+pr: 540
 ---
 
 A release gains tasks one at a time and nothing checks that together they still form one complete journey; batch C part 2 of the dev2 fixes.
