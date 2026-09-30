@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:migration-and-number-guards:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:migration-and-number-guards-ideation-1
+              briefing:
+                id: briefing:migration-and-number-guards:ideation:attempt-1:revision-1
+                digest: sha256:182a1d79a56f5676ad22bdd049e09d3a9a35b0b87a6beb69d003a684b1645dd9
+                room-ref: ./migration-and-number-guards/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:migration-and-number-guards:ideation:1
+                briefing: briefing:migration-and-number-guards:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T00:48:07.164593Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「准」 — including the uat exit: reset the non-production database branch through Netlify''s database-branch reset API instead of a compensating migration'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Two adopter defects from qnow dogfooding (2026-09-29) that dev2 never checked: an unmerged migration edited in place after it reached a persistent database, and parallel tasks choosing the same migration and ADR numbers.
