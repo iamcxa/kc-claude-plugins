@@ -3,7 +3,7 @@ title: A release can opt out of its journey-board page, and a re-render removes 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「同意，手畫的不刪除」 — design approved; a stale board page holding hand-drawn shapes is kept with them, only generated shapes are removed'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-30T15:35:15Z
 ---
 
