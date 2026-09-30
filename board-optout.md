@@ -26,6 +26,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-09-30T15:35:15Z
 ---
 
 kc-journey-map renders a board page for every release and re-renders recreate or keep pages the map no longer wants; issue #541.
