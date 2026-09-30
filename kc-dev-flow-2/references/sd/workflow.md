@@ -259,9 +259,12 @@ applied deploys from the `## Number guards` section of the task file.
   the enforcement, and the fix is reverting the edit and writing a new migration.
 - **Renumber.** A candidate whose number was taken (R3, R5) renumbers and returns
   to implementation. When an `Applied at:` commit holds the migration, FO holds
-  for the Captain: reset that non-production database branch through Netlify's
-  database-branch reset API (production cannot be reset), then renumber. This
-  step is documented, not wrapped in a tool.
+  for the Captain: reset that non-production database branch, then renumber.
+  The reset is one Netlify Open API call, `netlify api resetSiteDatabaseBranch --data '{"site_id":"<site>","branch_id":"<branch>"}' > /dev/null`
+  (`netlify api --list` shows the method). It applies to non-production branches
+  only; the production branch cannot be reset. The response carries connection
+  strings, so redirect it to `/dev/null` and read the result from the next
+  deploy. This step is documented, not wrapped in a tool.
 
 ## Delivery authority
 

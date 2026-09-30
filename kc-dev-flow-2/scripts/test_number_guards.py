@@ -179,6 +179,16 @@ class RecheckTests(unittest.TestCase):
             self.assertIn("FAIL R4", out)
             self.assertIn("R4 skipped", fx.check()[1])
 
+    def test_an_added_adr_number_the_task_did_not_reserve_is_refused(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
+            fx = base_repo(tmp)
+            fx.commit("adr", **{"docs__adr__0002-mine.md": "x"})
+            code, out = fx.check(task=task_file(td, "ADR: 0003"))
+            self.assertEqual(code, 1, out)
+            self.assertIn("FAIL R4", out)
+            self.assertIn("0002-mine.md", out)
+            self.assertEqual(fx.check(task=task_file(td, "ADR: 0002"))[0], 0)
+
     def test_a_number_written_outside_the_number_guards_section_reserves_nothing(self):
         with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
             fx = base_repo(tmp)
