@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:ideation-gaps:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:ideation-gaps-ideation-1
+              briefing:
+                id: briefing:ideation-gaps:ideation:attempt-1:revision-1
+                digest: sha256:71e1bd09f86c947370051e9a3c7625b7736b1bbe00ea40f5eab522ff134579cb
+                room-ref: ./ideation-gaps/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ideation-gaps:ideation:1
+                briefing: briefing:ideation-gaps:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T08:52:38.828068Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「准」 — design approved with option A (FO records his words in ## Captain amendments, the next worker moves superseded criteria); the AC-4(b) live probe kept'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-30T08:33:02Z
 ---
 

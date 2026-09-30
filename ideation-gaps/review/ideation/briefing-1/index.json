@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ideation-gaps:ideation:attempt-1:revision-1",
+  "question": "Approve ideation-gaps' design (design_surfaces check --seed before the backlog gate; check refuses a missing or empty acceptance-criteria section; a Captain amendments section where the FO records his words and the next worker moves superseded criteria; ADR drafts unnumbered in the task until the FO reserves at implementation dispatch), with option A for who moves criteria?",
+  "artifacts": [
+    {
+      "id": "artifact:ideation-gaps:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/38aed889b8955cb1621aa4d60b90d953f209cdb4/ideation-gaps.md",
+      "rev": "sha256:8d35261b38d7f3ba7414fbc3028d782b78c0e13a70b52f557b28eaac8813be83",
+      "mediaType": "text/markdown",
+      "summary": "Package-only; Spacedock 0.27.2 reads no task body at dispatch or gate prepare; relocating a superseded criterion is the only form --ac-scan respects; seven ACs; ADR needed."
+    }
+  ]
+}
