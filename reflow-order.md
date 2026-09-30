@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:reflow-order:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:reflow-order-backlog-1
+              briefing:
+                id: briefing:reflow-order:backlog:attempt-1:revision-1
+                digest: sha256:4b628894a916d1e6843597f002039f255bfe88cef4d8ff8a7aadb33d28755137
+                room-ref: ./reflow-order/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:reflow-order:backlog:1
+                briefing: briefing:reflow-order:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T15:58:47.656068Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「同意」 — fix both in the package, release 0.10.1, re-sync the two adopter READMEs'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Two wording defects in kc-dev-flow-2 0.10.0 `references/sd/workflow.md`, found by an external review of an adopter's workflow sync (qnow PR #1248, 2026-09-30).

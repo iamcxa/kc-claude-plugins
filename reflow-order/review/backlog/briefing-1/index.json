@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:reflow-order:backlog:attempt-1:revision-1",
+  "question": "Admit reflow-order (Codex P1/P2 on the 0.10.0 workflow text) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:reflow-order:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3c39b379d8230d55b58b5efc09dae89fa0fd1f79/reflow-order.md",
+      "rev": "sha256:7b5aef3adb8a258d6c4db579dbddebfdb4e6af1a0fd66dad3fefc41e31d1c07f",
+      "mediaType": "text/markdown",
+      "summary": "Two wording fixes in workflow.md, patch release 0.10.1, then re-sync #542 and qnow #1248."
+    }
+  ]
+}
