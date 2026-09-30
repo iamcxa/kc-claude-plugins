@@ -77,12 +77,14 @@ cheaper model, because their value is a stronger second judgment.
 
 `concurrency` limits only what `status --next` proposes (Spacedock 0.27.2 does not
 slot-check a reflow dispatch; `<package>/scripts/test_sd_dispatch.py` builds one while another
-entity holds the only `implementation` slot). A feedback-reflow repair,
-the validation recheck of that repair, and an FO fix authorized under Review-finding
-disposition step 3 are dispatched at once in the entity's own worktree, after the
-existing overlap check against running worktrees; they do not wait for another
-entity's worker in the same stage. A repair that outgrows what its assignment names
-returns to FO as a scope change.
+entity holds the only `implementation` slot). A feedback-reflow repair and an FO fix
+authorized under Review-finding disposition step 3 are dispatched at once in the
+entity's own worktree, after the existing overlap check against running worktrees; they
+do not wait for another entity's worker in the same stage. The validation recheck of
+that repair or fix does not wait for another entity's worker either, but it is
+dispatched only after the repair or fix has completed and committed its candidate, so
+the validator reads the bytes that will be delivered. A repair that outgrows what its
+assignment names returns to FO as a scope change.
 
 FO resolves `<package>` in this workflow from the `Package root:` line of
 `kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path
@@ -378,8 +380,13 @@ applied deploys from the `## Number guards` section of the task file.
 - **Applied.** Before any push of a candidate to a persistent shared environment
   (a non-production database branch), FO records `Applied at: <environment> <sha>`
   for the commit being pushed. A migration in that commit is then frozen for the
-  task: edit, delete and renumber fail `check`. Git cannot see what a database
-  applied, so an unrecorded deploy is not detected.
+  task: edit, delete and renumber fail `check`. When the push is rejected or the
+  deploy is confirmed not to have run for that commit (the push's non-zero output,
+  or the environment's own deploy record showing no deploy of it), FO replaces that
+  one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
+  no longer frozen. Without that confirmation the line stays and Renumber holds for
+  the Captain. Git cannot see what a database applied, so an unrecorded deploy is
+  not detected.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
   runs at implementation exit, at validation and, after `git fetch`, on the PR
   head before FO asks for merge. Exit 1 lists `FAIL R1..R5` lines; exit 2 is a

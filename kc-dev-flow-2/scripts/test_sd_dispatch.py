@@ -23,7 +23,21 @@ ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
 SEED_STEP = "design_surfaces.py check --seed"
 FO_RECORD = "\n## FO alignment\n\nSurfaces: none\nVisible change: none\n"
 LANE_RULE = ("`concurrency` limits only what `status --next` proposes",
-             "are dispatched at once in the entity's own worktree")
+             "are dispatched at once in the entity's own worktree",
+             "do not wait for another entity's worker in the same stage",
+             "is dispatched only after the repair or fix has completed and committed its candidate",
+             "replaces that one line with `Not applied: <environment> <sha> - <evidence>`",
+             "Without that confirmation the line stays")
+OLD_LANE = ("A feedback-reflow repair, the validation recheck of that repair, and an FO fix authorized under "
+            "Review-finding disposition step 3 are dispatched at once in the entity's own worktree, after the "
+            "existing overlap check against running worktrees; they do not wait for another entity's worker "
+            "in the same stage.")
+LANE_FORBIDDEN = ("the validation recheck of that repair, and an FO fix",)
+
+
+def lane_gaps(text):
+    flat = " ".join(text.split())
+    return ([p for p in LANE_RULE if p not in flat], [p for p in LANE_FORBIDDEN if p in flat])
 
 
 def exercise(base, binary, sd_root):
@@ -364,8 +378,14 @@ def exercise(base, binary, sd_root):
         run(advance, workflow)
 
         source = " ".join(TEMPLATE.read_text().split())
-        for phrase in LANE_RULE:
-            assert phrase in source, phrase
+        assert lane_gaps(source) == ([], []), lane_gaps(source)
+        old_lane = re.sub(r"A feedback-reflow repair and an FO fix.*?will be delivered\.", OLD_LANE, source)
+        old_lane = re.sub(r"When the push is rejected.*?Renumber holds for the Captain\. ", "", old_lane)
+        assert old_lane != source and OLD_LANE in old_lane
+        missing, forbidden = lane_gaps(old_lane)
+        assert len(missing) == 3 and forbidden == list(LANE_FORBIDDEN), (missing, forbidden)
+        no_wait = source.replace("do not wait for another entity's worker in the same stage", "")
+        assert lane_gaps(no_wait)[0] == [LANE_RULE[2]], lane_gaps(no_wait)
         trimmed = re.sub(r"^5\. A round is one verdict.*?(?=\n\n)", "", TEMPLATE.read_text(),
                          flags=re.DOTALL | re.MULTILINE)
         assert trimmed != TEMPLATE.read_text()
@@ -404,7 +424,7 @@ def exercise(base, binary, sd_root):
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
-        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot")
+        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
