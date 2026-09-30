@@ -3,7 +3,7 @@ title: Ideation cannot start without FO alignment, reach its gate without accept
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「准」 — design approved with option A (FO records his words in ## Captain amendments, the next worker moves superseded criteria); the AC-4(b) live probe kept'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-30T08:33:02Z
 ---
 
