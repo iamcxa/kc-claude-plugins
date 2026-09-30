@@ -3,7 +3,7 @@ title: Ideation cannot start without FO alignment, reach its gate without accept
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -66,10 +66,13 @@ gates:
                     source: ~/.claude/CLAUDE.md, Autonomous action boundaries
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-30T08:33:02Z
 worktree: .worktrees/spacedock-ensign-ideation-gaps
 pr: pr-merge:537
+verdict: PASSED
+completed: 2026-09-30T09:55:24Z
+archived: 2026-09-30T09:55:24Z
 ---
 
 Four ideation-stage gaps from qnow dogfooding (2026-09-26..30) that each cost a worker round, a hand rewrite at a gate, or a drifting ADR number.
