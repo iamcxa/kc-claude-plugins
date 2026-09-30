@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:review-cadence:backlog:attempt-1:revision-1",
+  "question": "Admit review-cadence (batch B: #521, #522, #525) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:review-cadence:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b6f0111be5c69403354f838e7073b7f86e736c4d/review-cadence.md",
+      "rev": "sha256:f155bf2b670ee65b062b9e3f786bdc2fa394c6c29eb657dd9aaa6952fff0b052",
+      "mediaType": "text/markdown",
+      "summary": "Batch B of the dev2 fixes: review-round stopping rule, small-fix lane, comment-ratio threshold."
+    }
+  ]
+}

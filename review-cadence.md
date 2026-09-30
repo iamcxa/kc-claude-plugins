@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:review-cadence:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:review-cadence-backlog-1
+              briefing:
+                id: briefing:review-cadence:backlog:attempt-1:revision-1
+                digest: sha256:608d22d74a1f3b6b267bee3a16ae8a3ef907fbb3b465410173b7caa42e93050a
+                room-ref: ./review-cadence/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:review-cadence:backlog:1
+                briefing: briefing:review-cadence:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T07:22:01.817477Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「請你關掉 523, 524，然後繼續 B」'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Three review-cadence defects from qnow dogfooding (2026-09-28..29) that each cost extra full cycles or hours of waiting.
