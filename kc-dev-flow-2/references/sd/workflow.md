@@ -119,6 +119,28 @@ differently, or `Visible change: none`.
   seed owes no artifact yet, the worker authors it, and the `Result:` line is not
   checked. An FO that skips this step still dispatches; the worker's own check is
   the backstop.
+- **Release review:** Applies to a task that belongs to a release on a journey map
+  (`journey`, `journey-release`, `journey-story`); a task with no release, such as a
+  bug, infrastructure or workflow maintenance, is outside it. Four signals: (1) a task
+  admitted into a release; (2) a Captain scope ruling that moves a story or task into
+  or out of a release or changes its goal; (3) a UAT failure that crosses two or more
+  tasks; (4) a batch about to enter implementation. Signals 1 and 2 only mark the
+  release changed: FO names the release and the signal in the task's `## FO alignment`
+  reason. A task whose `journey-story` is already on the map in that release, with the
+  release's story set unchanged since its latest `Release review:` line, passes with
+  that one check and marks nothing. Signal 4 is the single checkpoint: at the first
+  implementation dispatch for a release marked changed, FO dispatches a fresh worker
+  with kc-journey-map's `review-release` mode, then splits tasks from its output; an
+  unchanged release proceeds. One review covers every change since the last. Signal 3
+  runs the review at once. FO writes no map and no candidate; the Captain accepts
+  membership in conversation or at this gate. FO records under `## FO alignment` either
+  `Release review: <journey>/<release-id> at <journey-file commit>` or
+  `Release review: not needed: <reason>`; no script checks that line. When FO approves
+  a task into a release story at this gate it sets the three fields with
+  `spacedock status --workflow-dir <dir> --set <task> journey=<the map's journey: value> journey-release=<id> journey-story=<id>`;
+  a worker never edits frontmatter. Where the adopter tracks completion with
+  kc-journey-progress, FO also writes `journey-required-tasks` (full task ids) and
+  `journey-mapping-complete: true` on one task per story at the review's split step.
 
 ### `ideation`
 
@@ -437,3 +459,9 @@ pr:
 **AC-1**: <Observable outcome.>
 Verified by: <Reproducible evidence and its limits.>
 ```
+
+Optional frontmatter, absent until used: `journey`, `journey-release` and
+`journey-story`, set by FO with `status --set` when the task belongs to a release
+story (see `backlog`, Release review). `journey` holds the map's own `journey:` value,
+not its file name. A placeholder comment would sit beside the real values once
+`status --set` filled them, so the template carries none.
