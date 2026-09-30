@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dispatch-and-report-hygiene:validation:attempt-2:revision-1",
+  "question": "AC-6 failed again with the candidate loaded: the worker ran find / for comment_ratio.py before it read Dispatch facts, triggered by an FO checklist naming the script bare. Send back to implementation so every dispatch's FO scope notes carry the absolute package root and checklists name scripts as \u003cpackage\u003e/scripts/NAME.py, then re-run AC-6?",
+  "artifacts": [
+    {
+      "id": "artifact:dispatch-and-report-hygiene:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/92dd78aaca4279b2a042ee765fdd753023bb2ae8/dispatch-and-report-hygiene.md",
+      "rev": "sha256:efc367c1d69ffafa6e165c16c62739a8c66d53049a4ca6f3c0883d369f9552cf",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 2: candidate skill loaded and resolved Package root; signal to main, no FAILED bullet, status --set all PASS; one filesystem-wide find in the worker's first batched command FAIL."
+    }
+  ]
+}

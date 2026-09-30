@@ -57,6 +57,19 @@ gates:
                 by: agent:first-officer
                 at: "2026-09-30T04:53:38.490912Z"
                 reason: 'Captain 2026-09-30: 「重跑」 — re-run AC-6 with the candidate package loaded in isolated Claude state'
+            - id: gate-attempt:dispatch-and-report-hygiene-validation-2
+              briefing:
+                id: briefing:dispatch-and-report-hygiene:validation:attempt-2:revision-1
+                digest: sha256:e57baea97dcc71b656f37c513d707be30088e4fe56f5b0de97124c3f4151a08e
+                room-ref: ./dispatch-and-report-hygiene/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dispatch-and-report-hygiene:validation:2
+                briefing: briefing:dispatch-and-report-hygiene:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-09-30T06:49:56.83577Z"
+                decision: revise
+                reason: 'Captain 2026-09-30: 「准」 — every dispatch''s FO scope notes carry the absolute package root, checklists name scripts as <package>/scripts/NAME.py; back to implementation, then re-run AC-6'
 started: 2026-09-30T04:12:30Z
 worktree: .worktrees/spacedock-ensign-dispatch-and-report-hygiene
 ---
