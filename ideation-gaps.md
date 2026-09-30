@@ -45,6 +45,28 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:ideation-gaps:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:ideation-gaps-validation-1
+              briefing:
+                id: briefing:ideation-gaps:validation:attempt-1:revision-1
+                digest: sha256:ee4ad76a29f8e444e4ed8aa0f03a639aa7763441279ace7c4ebacc8fa871a2f2
+                room-ref: ./ideation-gaps/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ideation-gaps:validation:1
+                briefing: briefing:ideation-gaps:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-30T09:37:43.832826Z"
+                decision: approve
+                reason: Validation PASSED on de57e913 plus the FO-authorized docs-only Polish fix 797e7729 (diff read by the FO); Turkish i case-folding declined as a Deferred risk; opening a Draft PR only; merge stays with the Captain
+                conn:
+                    quote: 'No ask on a repo Kent owns: push a branch and open a Draft PR once the work cleared its own bar'
+                    source: ~/.claude/CLAUDE.md, Autonomous action boundaries
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-30T08:33:02Z
 worktree: .worktrees/spacedock-ensign-ideation-gaps
 ---

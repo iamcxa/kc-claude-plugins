@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ideation-gaps:validation:attempt-1:revision-1",
+  "question": "Accept ideation-gaps' validation PASSED (cycle 2, plus a docs-only Polish fix at 797e7729) and open its Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:ideation-gaps:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/eef46dc369a951671605f81a25848aabfcdf5735/ideation-gaps.md",
+      "rev": "sha256:7425d068e0a214d3504a262b385603ddf915ec117612af144878524dc33ca744",
+      "mediaType": "text/markdown",
+      "summary": "Routed repairs hold; heading fuzz 976 to 0 divergences; worker sentences removed per the approved design's probe rule; sanitize 0/0/0; one Deferred risk (Turkish i case folding) declined."
+    }
+  ]
+}
