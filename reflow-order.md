@@ -45,6 +45,28 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:reflow-order:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:reflow-order-validation-1
+              briefing:
+                id: briefing:reflow-order:validation:attempt-1:revision-1
+                digest: sha256:b3621201634c64026c9ba3b4d88c2112848bdb8abefab5914137dd3ceb09066f
+                room-ref: ./reflow-order/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:reflow-order:validation:1
+                briefing: briefing:reflow-order:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-30T16:14:25.333476Z"
+                decision: approve
+                reason: Validation PASSED on 10658a7f; opening a Draft PR only; merge stays with the Captain
+                conn:
+                    quote: 'No ask on a repo Kent owns: push a branch and open a Draft PR once the work cleared its own bar'
+                    source: ~/.claude/CLAUDE.md, Autonomous action boundaries
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-30T15:58:54Z
 worktree: .worktrees/spacedock-ensign-reflow-order
 ---

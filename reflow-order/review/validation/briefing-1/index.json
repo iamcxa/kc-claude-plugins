@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:reflow-order:validation:attempt-1:revision-1",
+  "question": "Accept reflow-order's validation PASSED on 10658a7f and open its Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:reflow-order:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/bc3e0663160b1626ddd4b6bdbe214bd555dca517/reflow-order.md",
+      "rev": "sha256:931c38a9d5cfcf525075d85f2bbcc05343abb5dc3349246d65dd67f5ffa6a491",
+      "mediaType": "text/markdown",
+      "summary": "Both Codex findings closed; lane_gaps falsifier red on 0.10.0 text; Not-applied test with mutation; four files; sanitize 0/0/0."
+    }
+  ]
+}
