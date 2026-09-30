@@ -204,6 +204,10 @@ Does not cover: a real Netlify deploy, the uat database, an actual FO dispatch, 
 
 One stdlib test file adds one step to `.github/workflows/kc-dev-flow-2-tests.yml` (the file lists each test by name; a test not listed there runs nowhere). CI minutes per PR: not measured.
 
+## Number guards
+
+ADR: 0002
+
 ## Stage Report: ideation
 
 - DONE: Design, in the task file, the kc-dev-flow-2 package change for issues #524 and #523 — (1) an applied migration is never edited: detection at implementation and validation, the unmerged-but-applied case, the fix always a new migration
