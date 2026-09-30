@@ -3,7 +3,7 @@ title: A release can opt out of its journey-board page, and a re-render removes 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -66,10 +66,13 @@ gates:
                     source: ~/.claude/CLAUDE.md, Autonomous action boundaries
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-30T15:35:15Z
 worktree: .worktrees/spacedock-ensign-board-optout
 pr: pr-merge:543
+verdict: PASSED
+completed: 2026-09-30T16:39:27Z
+archived: 2026-09-30T16:39:27Z
 ---
 
 kc-journey-map renders a board page for every release and re-renders recreate or keep pages the map no longer wants; issue #541.
