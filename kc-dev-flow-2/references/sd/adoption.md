@@ -70,9 +70,12 @@ installing the mod does not grant those actions or mechanically enforce them.
 lines are added) or that cite task numbering, review provenance, a PR or issue
 number or a `file:line`. An adopter sets its own value with
 `comment-ratio-max: <percent>` in its workflow README frontmatter; `--max` overrides
-both for one run. The review-round rule and the repair lane live in `workflow.md`:
-an adopter that already has a workflow README receives them by re-syncing that
-README from `workflow.md`, a per-adopter three-way merge that keeps its own
+both for one run. The citation scan is a pattern list: it also flags a `#333` colour,
+`step #1`, a URL fragment, an asyncio "Task 3", "a code review of the parser" and
+"the Codex CLI" (1 false positive in 38 hits on the last 150 commits of the package
+repository's main); reword such a comment. The review-round rule and the repair
+lane live in `workflow.md`: an adopter that already has a workflow README receives
+them by re-syncing that README from `workflow.md`, a per-adopter three-way merge that keeps its own
 frontmatter; the package does not rewrite an adopter's README.
 
 ## Secret reads

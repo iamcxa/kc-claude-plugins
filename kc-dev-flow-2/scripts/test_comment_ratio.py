@@ -49,7 +49,7 @@ class CountTests(unittest.TestCase):
 
 
 class CliTests(unittest.TestCase):
-    def run_tool(self, added, *extra, readme=None):
+    def run_tool(self, added, *extra, readme=None, base=None):
         with tempfile.TemporaryDirectory() as repo:
             git = lambda *a: subprocess.run(["git", "-C", repo, *a], check=True, capture_output=True, text=True)
             git("init", "-q")
@@ -58,7 +58,7 @@ class CliTests(unittest.TestCase):
             Path(repo, "a.ts").write_text("// old\nconst a = 1;\n")
             git("add", ".")
             git("commit", "-qm", "base")
-            base = git("rev-parse", "HEAD").stdout.strip()
+            head = git("rev-parse", "HEAD").stdout.strip()
             Path(repo, "a.ts").write_text("// old\nconst a = 1;\n" + "".join(line + "\n" for line in added))
             git("commit", "-qam", "candidate")
             args = list(extra)
@@ -68,7 +68,7 @@ class CliTests(unittest.TestCase):
                     Path(repo, "wf/README.md").write_text(readme)
                 args += ["--workflow-dir", str(Path(repo, "wf"))]
             return subprocess.run(
-                ["python3", str(ROOT / "scripts/comment_ratio.py"), base, "HEAD", "--repo", repo, *args],
+                ["python3", str(ROOT / "scripts/comment_ratio.py"), base or head, "HEAD", "--repo", repo, *args],
                 capture_output=True, text=True,
             )
 
@@ -124,6 +124,10 @@ class CliTests(unittest.TestCase):
         cases = {
             "task numbering": "// Decision 3: keep this",
             "task numbering cycle": "// added in cycle-2",
+            "task numbering Round": "// Round 3 fix",
+            "task numbering AC": "// AC-1 covers this",
+            "task numbering Finding": "// Finding 4 is closed here",
+            "task numbering Task": "// Task 7 moved this",
             "review provenance Codex": "// Codex asked for this",
             "review provenance review of": "// after the review of the head",
             "review follow-up": "// per the review follow-up",
@@ -137,6 +141,13 @@ class CliTests(unittest.TestCase):
                 done = self.run_tool([comment, "const b = 2;"])
                 self.assertEqual(done.returncode, 1, done.stdout)
                 self.assertIn(f"CITE a.ts: {comment}", done.stdout)
+
+    def test_an_unresolvable_ref_exits_2_with_one_line_naming_it(self):
+        done = self.run_tool(["const b = 2;"], base="nope")
+        self.assertEqual(done.returncode, 2, done.stderr)
+        self.assertEqual(len(done.stderr.strip().splitlines()), 1, done.stderr)
+        self.assertIn("nope", done.stderr)
+        self.assertNotIn("Traceback", done.stderr)
 
     def test_a_line_naming_an_adr_is_exempt_and_plain_comments_pass(self):
         for comment in ("// Decision 3 is ADR 0004", "// Round 2 is in docs/adr/0004-x.md", "// retry is idempotent"):

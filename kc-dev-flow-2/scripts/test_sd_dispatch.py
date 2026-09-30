@@ -17,6 +17,7 @@ TEMPLATE = ROOT / "references/sd/workflow.md"
 STAGES = ("ideation", "implementation", "validation")
 ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
               "or labelled P1 by the reviewer, blocks in every round",
+              "For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev)",
               "From round 3 a finding that is neither does not start a repair cycle",
               "`Follow-up:` line to that task's Scope")
 LANE_RULE = ("`concurrency` limits only what `status --next` proposes",

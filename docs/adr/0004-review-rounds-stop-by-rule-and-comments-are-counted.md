@@ -10,9 +10,10 @@ Accepted
 
 Two delivery PRs in an adopting project each took four rounds of an external
 reviewer; in one the only P1 came in round one, and the Captain ruled the stop ad hoc;
-a two-line P1 repair waited about 1h40 behind another task's worker in
-the same stage; candidates reached validation at 12.6, 7.5 and 6.4 percent
-added-comment ratio against a 5 percent target and each needed a trim round, and a
+a two-line P1 repair waited about 1h40 for its implementation dispatch while
+another task's worker held the same stage (the state history is consistent with
+`concurrency: 1` being read as a hard cap; the cause is not proven); candidates reached validation at 12.6, 7.5 and 6.4
+percent added-comment ratio against a 5 percent target and each needed a trim round, and a
 comment cited its task's own numbering. Read 2026-09-30 in the task's ideation,
 from the adopter's task files and issues #521, #522 and #525. Spacedock 0.27.2
 reads `concurrency` only for `status --next`; a feedback-reflow dispatch built
@@ -21,9 +22,13 @@ is 3 percent, his target 5 percent.
 
 ## Decision
 
-**Words:** 「核准」 — Captain, 2026-09-30, at the ideation gate of `review-cadence`
+**Words:** Captain, all 2026-09-30, in order (ideation gate `review-cadence`, then its validation gate):
 
-**Words, amendments approved with it:** the package defaults the comment-ratio maximum to 5 percent, overridable by the adopter's workflow README key or `--max`; the round rule applies to any external reviewer of the delivery (Codex on the PR, RoboRev or another), not Codex only. Recorded from the gate resolution of 2026-09-30.
+- 「套件本身不設預設值 => 為何不要預設就是「基準 3%、目標 5%」？你有想到其他案例是要極端少註解或是明顯拉大閥門數量的嗎？」
+- 「此外審查輪數目前應該沒有考慮搭配使用 roborev 的狀況對嗎？它應該也會有一樣的問題，每次審查都有機會找到狀況，要一併考慮，還是等整合用了遇到再說？」
+- 「專案可以自己改，具體是怎麼改？改 adoptor 的 readme.md 嗎？」
+- 「核准」, approving the design with two amendments: the package default is 5 percent, overridable by `comment-ratio-max:` or `--max`; the round rule (N = 2) applies to any external reviewer.
+- 「退回補」 at the validation gate: four repairs, and the constructed false-positive classes of the citation scan declined as a known limit.
 
 **Options considered:**
 - rounds 1 and 2 as today; from round 3 only a Material finding or a reviewer P1 starts a repair cycle and the rest become recorded follow-ups (chosen, N = 2)
@@ -51,8 +56,11 @@ A real defect a reviewer labels below P1 and the first officer does not assess M
 is deferred to a follow-up from round 3. The round count, the lane and the follow-up
 recording are prose the first officer applies; nothing mechanical enforces them, and
 only an adopter's next delivery PR shows whether they hold. The citation scan finds its
-named classes only, and a `#123` in a comment that is not an issue number is a false
-positive. The 20-line floor is a choice, not a measurement. A reviewer that does not
-label a P1 needs the first officer to map its blocking severity. Reopen if a follow-up
-proves to have been a Material defect, or if Spacedock adds a slot check to the reflow
-path.
+named classes only, and it also flags text that only looks like a citation: a `#333`
+colour, `step #1`, a URL fragment, an asyncio "Task 3", "a code review of the parser",
+"the Codex CLI". Measured on the last 150 commits of origin/main: 38 hits, 1 false
+positive. The Captain declined a fix for these classes as a known limit. The
+20-line floor is a choice, not a measurement. For a reviewer with no P1 label, its
+highest severity level counts as P1 (`workflow.md` item 5, e.g. RoboRev). Reopen if a
+follow-up proves to have been a Material defect, or if Spacedock adds a slot check to
+the reflow path.

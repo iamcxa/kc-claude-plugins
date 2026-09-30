@@ -2,7 +2,8 @@
 """Count the comment lines a candidate adds against the non-blank code lines it adds, per file and in total.
 
 Exit 1 when the ratio is above the maximum (with at least FLOOR code lines added) or an added comment
-cites task numbering, review provenance, a PR or issue number, or a file:line. Exit 2 on a bad maximum.
+cites task numbering, review provenance, a PR or issue number, or a file:line.
+Exit 2 on a bad maximum or a ref git cannot diff.
 Maximum: --max, else `comment-ratio-max:` in the workflow README frontmatter, else DEFAULT_MAX.
 """
 import argparse
@@ -102,10 +103,15 @@ def main(argv=None):
         print(f"error: {error}", file=sys.stderr)
         return 2
     pathspec = [f"*{ext}" for ext in LINE]
-    diff = subprocess.run(
+    run = subprocess.run(
         ["git", "-C", args.repo, "diff", "-U0", f"{args.base}...{args.candidate}", "--", *pathspec],
-        capture_output=True, text=True, check=True,
-    ).stdout
+        capture_output=True, text=True,
+    )
+    if run.returncode:
+        detail = (run.stderr.strip().splitlines() or ["git diff failed"])[-1]
+        print(f"error: cannot diff {args.base}...{args.candidate}: {detail}", file=sys.stderr)
+        return 2
+    diff = run.stdout
     found = []
     added, comments = count(diff, found)
     total, total_comments = sum(added.values()), sum(comments.values())

@@ -227,7 +227,9 @@ consequential FO quick work and rejected gates.
    (Codex on the PR, RoboRev or another); FO counts rounds and records the count in
    the committed gate summary. A finding assessed Material, or labelled P1 by the
    reviewer, blocks in every round: a reviewer P1 is fixed and revalidated, or waived by the
-   Captain with the reason recorded (step 4). Rounds 1 and 2 follow steps 1 to 4.
+   Captain with the reason recorded (step 4). For an external reviewer that has no
+   P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds 1 and 2
+   follow steps 1 to 4.
    From round 3 a finding that is neither does not start a repair cycle: FO declines
    it in the committed gate summary, naming the finding and its home, and adds a
    `Follow-up:` line to that task's Scope, the open task whose Scope edits the
