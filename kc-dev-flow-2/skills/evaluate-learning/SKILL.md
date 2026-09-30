@@ -7,6 +7,10 @@ description: Evaluate explicitly supplied closed-task evidence for conditional p
 
 Invocation: `kc-dev-flow-2:evaluate-learning`
 
+Package root: ${CLAUDE_PLUGIN_ROOT}
+`<package>` in this skill and its linked files is this root. If the value above
+is not an absolute path, the root is two directories above this `SKILL.md`.
+
 This is a bounded independent evaluation, not an SD stage or a closure detector.
 Read the [framework](../../README.md), supplied task's approved scope and project
 rules, and its selected shared profile: [poc](../../references/profiles/poc.md),
@@ -44,7 +48,7 @@ pending proposals as project rules or claim this helper verifies adoption.
 
 ## Local recorder
 
-Use [learning.py](../../scripts/learning.py) with an explicit repository and JSON
+Use the [learning recorder](../../scripts/learning.py) with an explicit repository and JSON
 files. It uses the Git common directory so linked worktrees in one clone share
 claims using POSIX file locks and atomic file replacement on a local filesystem;
 separate clones/machines and distributed filesystem locking are outside this
@@ -55,9 +59,9 @@ accidental cross-job completion by cooperating callers, not access by another
 process that can read the same local files.
 
 ```sh
-python3 /absolute/plugin/scripts/learning.py --repo /absolute/project claim --input pack.json --owner session-handle
-python3 /absolute/plugin/scripts/learning.py --repo /absolute/project read --job JOB
-python3 /absolute/plugin/scripts/learning.py --repo /absolute/project complete --job JOB --token TOKEN --result evaluation.json
+python3 <package>/scripts/learning.py --repo /absolute/project claim --input pack.json --owner session-handle
+python3 <package>/scripts/learning.py --repo /absolute/project read --job JOB
+python3 <package>/scripts/learning.py --repo /absolute/project complete --job JOB --token TOKEN --result evaluation.json
 ```
 
 The strict pack shape is:
@@ -95,7 +99,7 @@ the old owner stopped, explicit recovery can preserve the prior bytes, revoke
 its token and claim a new attempt:
 
 ```sh
-python3 /absolute/plugin/scripts/learning.py --repo /absolute/project recover --job JOB \
+python3 <package>/scripts/learning.py --repo /absolute/project recover --job JOB \
   --expected DIGEST --owner-state stopped --reason 'Observed session ended; no completed evaluation' \
   --input pack.json --owner new-session-handle
 ```

@@ -96,9 +96,14 @@ def exercise(base, binary, sd_root):
                 payload_path.write_text(json.dumps(payload))
                 checklist_path = base / "transport-checklist.txt"
                 checklist_path.write_text("Synthetic dispatch only; no worker execution\n")
+                notes_path = base / "transport-scope-notes.txt"
+                package_root = ROOT
+                notes_path.write_text(f"Package root: {package_root}\n"
+                                      f"Run {package_root}/scripts/comment_ratio.py from the base to HEAD.\n")
                 result = run([binary, "dispatch", "build", "--workflow-dir", repo,
                               "--entity-path", entity, "--stage", stage, "--host", host,
-                              "--checklist-file", checklist_path, "--stamp"], repo)
+                              "--checklist-file", checklist_path, "--scope-notes-file", notes_path,
+                              "--stamp"], repo)
                 run([binary, "dispatch", "build", "--validate-only", payload_path], repo)
                 envelope = json.loads(result.stdout)
                 artifact = Path(envelope["dispatch_file_path"])
@@ -118,6 +123,14 @@ def exercise(base, binary, sd_root):
                 definition = run(fetches[0], repo).stdout
                 assert f"kc-dev-flow-2:{stage}" in definition
                 assert "kc-dev-flow:" not in definition
+                assert "## Dispatch facts" in definition, stage
+                facts = definition.split("## Dispatch facts", 1)[1].split("\n## ", 1)[0]
+                for label in ("Signal", "Package", "Secrets"):
+                    assert f"- **{label}:**" in facts, (stage, label)
+                assert "dispatch show-stage-def" in body and f"--stage {stage}" in body
+                assert f"Package root: {package_root}\n" in body, (host, stage)
+                assert f"{package_root}/scripts/comment_ratio.py" in body, (host, stage)
+                assert body.index("Package root:") < body.index("Synthetic dispatch only"), (host, stage)
                 if stage == "ideation":
                     gate = definition.split("**Gate content:**", 1)[1]
                     assert "PRFAQ" in gate and "Mermaid" in gate and "Surfaces" in gate and "not presentable" in gate
@@ -256,6 +269,26 @@ def exercise(base, binary, sd_root):
             assert run(["git", "-C", workflow, "rev-parse", "HEAD"]).stdout == code_head
             assert not run(["git", "-C", workflow, "status", "--porcelain"]).stdout.strip()
 
+        workflow, entity = seed("failed-none", "implementation")
+        stamped(workflow, entity, "implementation")
+        report = ("\n## Stage Report: implementation\n\n"
+                  "- SKIPPED: Synthetic transport check; execute no worker or delivery hook\n"
+                  "  Synthetic parser input only; no product work or acceptance.\n")
+        summary = "\n### Summary\n\nSynthetic complete-format report, not worker evidence.\n"
+        entity.write_text(entity.read_text() + report + "- FAILED: none.\n  Nothing failed.\n" + summary)
+        run(["git", "-C", entity.parent, "add", "--", entity.name])
+        run(["git", "-C", entity.parent, "commit", "-m", "test: report ending FAILED none"])
+        advance = [binary, "status", "--workflow-dir", workflow, "--set", entity.stem, "status=validation", "started"]
+        refused = run(advance, workflow, expected=None)
+        assert refused.returncode != 0 and "durable, complete" in refused.stderr + refused.stdout, refused
+        named = run([binary, "status", "--workflow-dir", workflow, "--read", entity.stem,
+                     "--stage", "implementation", "--checklist"], workflow).stdout
+        assert "status=FAILED" in named and "text=none." in named, named
+        entity.write_text(entity.read_text().replace("- FAILED: none.\n  Nothing failed.\n", ""))
+        run(["git", "-C", entity.parent, "add", "--", entity.name])
+        run(["git", "-C", entity.parent, "commit", "-m", "test: report without the FAILED bullet"])
+        run(advance, workflow)
+
         # Missing registration is not fail-closed in upstream SD: demonstrate the limit.
         workflow, entity = seed("no-hook", "validation", profile="poc", with_mod=False)
         boot = run([binary, "status", "--workflow-dir", workflow, "--boot"], workflow).stdout
@@ -267,6 +300,7 @@ def exercise(base, binary, sd_root):
         print(f"PASS ({version}): 6 stage/host dispatch handoffs; wrong-stage and missing-stage refusals")
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
+        print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
         for artifact in artifacts:

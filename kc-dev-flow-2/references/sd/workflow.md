@@ -17,9 +17,12 @@ stages:
       gate: true
     - name: ideation
       gate: true
+      context-sections:
+        - Dispatch facts
     - name: implementation
       worktree: true
       context-sections:
+        - Dispatch facts
         - Review-finding disposition
         - Decision records
         - Affected documents
@@ -31,6 +34,7 @@ stages:
       feedback-to: implementation
       gate: true
       context-sections:
+        - Dispatch facts
         - Review-finding disposition
         - Decision records
         - Affected documents
@@ -68,6 +72,18 @@ Stage workers run on the workflow's default model.
 `kc-dev-flow-2:chief-engineer` and `kc-dev-flow-2:engineering-reviewer` run on the
 model and reasoning their agent files declare; FO never dispatches them on a
 cheaper model, because their value is a stronger second judgment.
+
+FO resolves `<package>` in this workflow from the `Package root:` line of
+`kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path
+as a `Package root: <absolute path>` line in its scope notes
+(`--scope-notes-file`), which land in the dispatch file the worker reads first.
+A checklist or scope-notes line that names a package script writes
+`<package>/scripts/NAME.py` with the absolute root substituted, never the bare
+script name. When `status --set` refuses to leave a stage, run
+`status --workflow-dir <dir> --read <task> --stage <stage> --checklist`, return
+any line it reports as neither DONE nor SKIPPED to the worker, and do not edit the
+worker's report. The refusal itself does not say why; other causes are a missing
+evidence line or Summary and an uncommitted report.
 
 ### `backlog`
 
@@ -158,6 +174,24 @@ The terminal state remains behind SD's merge-finalize boundary. Consuming a
 terminal gate approval is not completion; a live run requires the declared
 delivery evidence and successful `merge guard` with an explicit verdict.
 Apply Delivery authority below; a pending PR or missing hook is not completion.
+
+## Dispatch facts
+
+Spacedock inlines this section into each stage whose `context-sections` lists it.
+
+- **Signal:** send the completion message once, to the first officer by the name
+  your session lists as addressable (`main` under Claude Code dispatch). The
+  completion block's `team-lead` is Spacedock's default and is not registered
+  there (spacedock-dev/spacedock #523, #608); do not try it first and do not
+  describe a fallback in the report.
+- **Package:** `<package>` in stage text is the `Package root:` line of the
+  kc-dev-flow-2 skill you loaded; your dispatch's scope notes state the same path,
+  and if they differ, use the skill's. Run package scripts only from it; never
+  search the filesystem, `/tmp` or another install for them.
+- **Secrets:** `<wrapper>` is the only route to a development secret: run a
+  command that needs one as `<wrapper> <command>`. Never read or print a value.
+  If a guard refuses a command that only mentions a secret-reading tool, rephrase
+  it; do not split, encode or wrap the command to pass the guard.
 
 ## Review-finding disposition
 

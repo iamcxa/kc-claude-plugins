@@ -18,7 +18,8 @@ When changing lint behavior, run `python3 kc-dev-flow-2/scripts/test_lint_skills
 and add a mutation only for a material failure the check is meant to catch.
 Use an available Agent Skills specification validator for broader authoring
 format checks; the bundled CLI reuses the repository's basic frontmatter check
-and validates declared routing structure, not the full standard or agent behavior.
+and validates declared routing structure and package script paths, not the full
+standard or agent behavior.
 
 Report the exact changed files, static results and untested behavioral claims.
 Do not infer permission to register/install the bundle, execute SD stages,

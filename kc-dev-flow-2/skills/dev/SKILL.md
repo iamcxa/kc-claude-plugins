@@ -7,6 +7,10 @@ description: Start or resume kc-dev-flow-2 work by resolving the project, task, 
 
 Invocation: `kc-dev-flow-2:dev`
 
+Package root: ${CLAUDE_PLUGIN_ROOT}
+`<package>` in this skill and its linked files is this root. If the value above
+is not an absolute path, the root is two directories above this `SKILL.md`.
+
 Read the [framework](../../README.md). This is a start/resume entry, not a worker
 stage or a second workflow controller. Claude's packaged command is
 `/kc-dev-flow-2:dev`; bare `/dev` is not a promised cross-host alias.
@@ -16,7 +20,7 @@ item from the request and authoritative project/task records. Reuse established
 context; do not guess between projects or tasks. Read applicable project
 conventions and the existing context needed for the requested work.
 
-After resolving the code root, run the packaged `scripts/learning.py --repo
+After resolving the code root, run `<package>/scripts/learning.py --repo
 <absolute-code-root> notices`. Present relevant unread learning results to the
 user, distinguishing pending/uncertain, no-change, local proposal, PR and observed
 merge; pending proposals are not active rules. Only after actual presentation,
@@ -41,7 +45,9 @@ An explicit valid selection is sufficient; FO records it with the variant in
 the work item through the existing workflow. Recommendation is not selection.
 
 Hand the resolved project root, explicit workflow directory, work item, approved
-selection/scope and bounded outcome to `spacedock:first-officer`. Retain that
+selection/scope and bounded outcome to `spacedock:first-officer`, with this
+skill's `Package root:` value, which FO writes into the scope notes of every
+worker dispatch. Retain that
 workflow directory as `--workflow-dir` on SD commands; cwd alone is not the
 binding. If FO is already active, continue there. SD owns stage selection, live
 worker availability, dispatch, reports, gates and recovery; a resumed FO does

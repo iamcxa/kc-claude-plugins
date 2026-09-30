@@ -7,6 +7,10 @@ description: Implement the accepted outcome for a dispatched kc-dev-flow-2 task 
 
 Invocation: `kc-dev-flow-2:implementation`
 
+Package root: ${CLAUDE_PLUGIN_ROOT}
+`<package>` in this skill and its linked files is this root. If the value above
+is not an absolute path, the root is two directories above this `SKILL.md`.
+
 Read the [framework](../../README.md) for authority and stage ownership.
 Required inputs: the exact work item, recorded variant/profile, current stage,
 approved scope and the stage's available artifact/evidence. Resolve inconsistencies
@@ -37,4 +41,6 @@ Spacedock 0.27.2 parses by exact form: a `## Stage Report: <stage>` heading with
 nothing else on that line, then unindented `- DONE: <item>`, `- SKIPPED: <item>`,
 or `- FAILED: <item>` bullets — not `- [x]`. Checklist parsing stops at the first
 `### ` sub-heading, so put any `### ` sections after the bullets, not inside them.
+`FAILED:` marks only an item that was not met; a report with nothing failed has
+no `FAILED:` bullet, and a summary such as "FAILED: none" is never a bullet.
 This skill grants no state, approval or delivery authority.
