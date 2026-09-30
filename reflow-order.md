@@ -3,7 +3,7 @@ title: A repair's validation recheck waits for the repair, and a failed push doe
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-10-01: 「ok」 — design approved with a failed push replacing its Applied at line by ''Not applied: <env> <sha> - <evidence>'''
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-30T15:58:54Z
 ---
 
