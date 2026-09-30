@@ -3,7 +3,7 @@ title: A release can opt out of its journey-board page, and a re-render removes 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
