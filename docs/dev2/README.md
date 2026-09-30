@@ -17,12 +17,17 @@ stages:
       gate: true
     - name: ideation
       gate: true
+      context-sections:
+        - Dispatch facts
     - name: implementation
       worktree: true
       context-sections:
+        - Dispatch facts
         - Review-finding disposition
         - Decision records
+        - Captain amendments
         - Affected documents
+        - Number guards
         - Delivery authority
     - name: validation
       worktree: true
@@ -30,9 +35,12 @@ stages:
       feedback-to: implementation
       gate: true
       context-sections:
+        - Dispatch facts
         - Review-finding disposition
         - Decision records
+        - Captain amendments
         - Affected documents
+        - Number guards
         - Delivery authority
     - name: done
       terminal: true
@@ -62,6 +70,32 @@ body. Use bold **AC-N** declarations with individual evidence clauses.
 
 ## Stages
 
+Stage workers run on the workflow's default model.
+`kc-dev-flow-2:chief-engineer` and `kc-dev-flow-2:engineering-reviewer` run on the
+model and reasoning their agent files declare; FO never dispatches them on a
+cheaper model, because their value is a stronger second judgment.
+
+`concurrency` limits only what `status --next` proposes (Spacedock 0.27.2 does not
+slot-check a reflow dispatch; `<package>/scripts/test_sd_dispatch.py` builds one while another
+entity holds the only `implementation` slot). A feedback-reflow repair,
+the validation recheck of that repair, and an FO fix authorized under Review-finding
+disposition step 3 are dispatched at once in the entity's own worktree, after the
+existing overlap check against running worktrees; they do not wait for another
+entity's worker in the same stage. A repair that outgrows what its assignment names
+returns to FO as a scope change.
+
+FO resolves `<package>` in this workflow from the `Package root:` line of
+`kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path
+as a `Package root: <absolute path>` line in its scope notes
+(`--scope-notes-file`), which land in the dispatch file the worker reads first.
+A checklist or scope-notes line that names a package script writes
+`<package>/scripts/NAME.py` with the absolute root substituted, never the bare
+script name. When `status --set` refuses to leave a stage, run
+`status --workflow-dir <dir> --read <task> --stage <stage> --checklist`, return
+any line it reports as neither DONE nor SKIPPED to the worker, and do not edit the
+worker's report. The refusal itself does not say why; other causes are a missing
+evidence line or Summary and an uncommitted report.
+
 ### `backlog`
 
 The user selects the compatible profile and approves outcome, scope and budget.
@@ -79,10 +113,40 @@ differently, or `Visible change: none`.
   exclusions and evidence needed before the next declared stage starts, the
   `## FO alignment` need and reason, and the recorded `Surfaces:` and
   `Visible change:` lines on the five-stage route.
+- **Seed check:** On the five-stage route, before `gate prepare`, FO runs
+  `python3 <package>/scripts/design_surfaces.py check --seed <task>` and holds the
+  gate until it exits 0. It reads the `## FO alignment` record only: a `ui` or `db`
+  seed owes no artifact yet, the worker authors it, and the `Result:` line is not
+  checked. An FO that skips this step still dispatches; the worker's own check is
+  the backstop.
+- **Release review:** Applies to a task that belongs to a release on a journey map
+  (`journey`, `journey-release`, `journey-story`); a task with no release, such as a
+  bug, infrastructure or workflow maintenance, is outside it. Four signals: (1) a task
+  admitted into a release; (2) a Captain scope ruling that moves a story or task into
+  or out of a release or changes its goal; (3) a UAT failure that crosses two or more
+  tasks; (4) a batch about to enter implementation. Signals 1 and 2 only mark the
+  release changed: FO names the release and the signal in the task's `## FO alignment`
+  reason. A task whose `journey-story` is already on the map in that release, with the
+  release's story set unchanged since its latest `Release review:` line, passes with
+  that one check and marks nothing. Signal 4 is the single checkpoint: at the first
+  implementation dispatch for a release marked changed, FO dispatches a fresh worker
+  with kc-journey-map's `review-release` mode, then splits tasks from its output; an
+  unchanged release proceeds. One review covers every change since the last. Signal 3
+  runs the review at once. FO writes no map and no candidate; the Captain accepts
+  membership in conversation or at this gate. FO records under `## FO alignment` either
+  `Release review: <journey>/<release-id> at <journey-file commit>` or
+  `Release review: not needed: <reason>`; no script checks that line. When FO approves
+  a task into a release story at this gate it sets the three fields with
+  `spacedock status --workflow-dir <dir> --set <task> journey=<the map's journey: value> journey-release=<id> journey-story=<id>`;
+  a worker never edits frontmatter. Where the adopter tracks completion with
+  kc-journey-progress, FO also writes `journey-required-tasks` (full task ids) and
+  `journey-mapping-complete: true` on one task per story at the review's split step.
 
 ### `ideation`
 
-The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using the
+FO may dispatch ideation on a stronger model when the design is hard to reverse,
+such as an event model, an architecture or a security boundary, and says so in
+the dispatch. The default ensign invokes `kc-dev-flow-2:ideation` before useful work, using the
 work item's recorded variant/profile and the skill's own profile routing table.
 FO aligns direction and requests research when it can change a decision; the
 worker authors the PRFAQ and the artifact each recorded surface owes. When
@@ -90,6 +154,8 @@ worker authors the PRFAQ and the artifact each recorded surface owes. When
 as a `Result:` line before dispatching the worker. Missing skill or profile
 authority requires a hold report rather than a baseline or default-profile
 substitution.
+Ideation writes no repository file, branch or commit: the design, the criteria and any
+ADR draft live in the task file, and a draft carries no ADR number.
 
 - **Outputs:** Current design definition and acceptance criteria with reproducible
   evidence clauses; unresolved decisions identified for the user.
@@ -97,8 +163,9 @@ substitution.
   approvals and stops, acceptance evidence/limits, and each recorded
   `Surfaces:` value's artifact. The gate is not presentable without the
   artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
-  `python3 <package>/scripts/design_surfaces.py check <task>`; a non-zero exit
-  means the gate is not presentable, and FO includes the checker's output in
+  `python3 <package>/scripts/design_surfaces.py check <task>`; a non-zero exit,
+  including a missing `## Acceptance criteria` section or one that declares no
+  criterion, means the gate is not presentable, and FO includes the checker's output in
   the gate material. Required diagram defects or missing current-stage
   evidence block recommendation and gate preparation/presentation; honest
   unverified future checks do not.
@@ -118,7 +185,8 @@ substitution.
 The default ensign invokes `kc-dev-flow-2:implementation` before useful work,
 using the recorded profile and approved scope. Produce the bounded integrated
 result and its evidence. Missing inputs require a hold; scope/profile changes
-return to the affected user decision. Apply Review-finding disposition to repairs.
+return to the affected user decision. Apply Review-finding disposition to repairs;
+a repair is dispatched under the lane in Stages.
 
 - **Outputs:** Exact delivered artifact, checks actually run, and material limits
   recorded in the existing SD Stage Report.
@@ -128,7 +196,8 @@ return to the affected user decision. Apply Review-finding disposition to repair
 A fresh ensign invokes `kc-dev-flow-2:validation` before useful work and checks
 the exact artifact against the accepted profile outcome. It assesses the work;
 it does not silently take over implementation. Rejection uses the supported
-feedback path after the distinct FO disposition described below.
+feedback path after the distinct FO disposition described below. Its recheck of a
+repair is dispatched under the lane in Stages.
 
 - **Outputs:** Independent verdict, primary evidence, a minimal acceptance script
   and unverified obligations recorded in the existing SD Stage Report.
@@ -150,6 +219,24 @@ terminal gate approval is not completion; a live run requires the declared
 delivery evidence and successful `merge guard` with an explicit verdict.
 Apply Delivery authority below; a pending PR or missing hook is not completion.
 
+## Dispatch facts
+
+Spacedock inlines this section into each stage whose `context-sections` lists it.
+
+- **Signal:** send the completion message once, to the first officer by the name
+  your session lists as addressable (`main` under Claude Code dispatch). The
+  completion block's `team-lead` is Spacedock's default and is not registered
+  there (spacedock-dev/spacedock #523, #608); do not try it first and do not
+  describe a fallback in the report.
+- **Package:** `<package>` in stage text is the `Package root:` line of the
+  kc-dev-flow-2 skill you loaded; your dispatch's scope notes state the same path,
+  and if they differ, use the skill's. Run package scripts only from it; never
+  search the filesystem, `/tmp` or another install for them.
+- **Secrets:** `<wrapper>` is the only route to a development secret: run a
+  command that needs one as `<wrapper> <command>`. Never read or print a value.
+  If a guard refuses a command that only mentions a secret-reading tool, rephrase
+  it; do not split, encode or wrap the command to pass the guard.
+
 ## Review-finding disposition
 
 Apply this checkpoint to findings from implementation, validation, detached audits,
@@ -169,6 +256,18 @@ consequential FO quick work and rejected gates.
 4. Scope, value, threshold, tolerance, risk-acceptance and acceptance-criteria
    changes require the Captain. Material findings cannot use the record-only lane;
    hold/route-for-decision forbids repair and reviewer rerun.
+5. A round is one verdict of an external reviewer of the delivery on the PR head
+   (Codex on the PR, RoboRev or another); FO counts rounds and records the count in
+   the committed gate summary. A finding assessed Material, or labelled P1 by the
+   reviewer, blocks in every round: a reviewer P1 is fixed and revalidated, or waived by the
+   Captain with the reason recorded (step 4). For an external reviewer that has no
+   P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds 1 and 2
+   follow steps 1 to 4.
+   From round 3 a finding that is neither does not start a repair cycle: FO declines
+   it in the committed gate summary, naming the finding and its home, and adds a
+   `Follow-up:` line to that task's Scope, the open task whose Scope edits the
+   finding's file, else a new backlog task from `spacedock new`. The terminal gate
+   lists each follow-up and its home.
 
 Before repair authorization, product bytes and the recorded candidate revision stay
 unchanged. Read-only inspection, non-mutating reproductions, existing tests and
@@ -206,12 +305,50 @@ the decider's own words and the options considered inside Decision. Create
 `docs/adr/` with this record if it is absent. A decision document that predates
 this format may stay as one record marked `Status: Legacy`; new rulings get their
 own files. This is not the gate `resolution.reason` or the SD stage report.
+A design names an ADR by its ruling and the file's short title, with no number; FO
+reserves the number when it dispatches implementation (Number guards) and the
+implementation worker writes `docs/adr/<reserved number>-<short-title>.md`.
 The implementation worker writes the record into the candidate and names the ADR
 numbers it added or changed in its report; validation runs
 `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and returns a
 failure or a missing record through the existing feedback route; FO confirms it
 before presenting the gate. A deferred user-facing capability belongs on the
 product's journey map, not here.
+
+## Captain amendments
+
+A change the Captain makes to what he has accepted, whether at a gate approval,
+during implementation or at a validation gate, is an amendment. A change he asks for
+while the gate that would accept it is still open is not one: he calls `revise` and
+that stage's worker reworks it.
+
+FO appends one entry per amendment to the task's `## Captain amendments` section and
+changes nothing else in it. FO adds no words of its own and does not move or rewrite a criterion:
+
+```
+## Captain amendments
+
+### Amendment 1 — <date>, <gate or chat>
+Captain: 「<his words, verbatim>」 (where he said them)
+Supersedes: <acceptance-criterion ids, or none>
+Design: <optional: the design paragraph it overrides>
+```
+
+FO names the amendment in the next dispatch's checklist. That worker (implementation,
+or the repair worker on a feedback route) moves each superseded criterion's block verbatim
+from `## Acceptance criteria` into its entry under a `Superseded text:` line, writes any
+replacement as a new `**AC-N**` under a fresh id that says "Amended by Captain, amendment N",
+and never reuses an id. A superseded criterion and the design paragraph named by
+`Design:` are withdrawn; evidence and the Captain's acceptance script follow
+`## Acceptance criteria` plus the entries.
+
+`python3 <package>/scripts/design_surfaces.py check <task>` exits 1 when an entry has no
+`Captain:` line or a superseded id is still declared in `## Acceptance criteria`;
+implementation and validation run it, and exit 1 is a repair finding returned through feedback.
+Between FO's record and the worker's move the task shows both, and the check says so.
+It cannot see a skipped record, only the state after a skipped move; a moved block is
+not scanned by `spacedock status --read --ac-scan`, which is why relocation, not
+annotation in place, is the route.
 
 ## Affected documents
 
@@ -221,6 +358,42 @@ stage report; validation reruns it at the candidate and checks every listed
 document carries one. The list finds candidates by the paths and declared names
 the change touched; it does not decide relevance. Make the update itself by the
 retained-document practices in the package's `references/retained-documents.md`.
+
+## Number guards
+
+Applies when the task's `Surfaces:` includes `db`, or its design lands an ADR.
+`<package>/scripts/number_guards.py` takes its values from this workflow's README
+frontmatter (`--workflow-dir <workflow-dir>`): `trunk:`, the optional
+`migrations-path:` (the adopter's migration directory) and `adr-path:` (default
+`docs/adr`); a flag of the same name overrides. It reads a task's numbers and
+applied deploys from the `## Number guards` section of the task file.
+
+- **Reserve.** Before an implementation dispatch, FO runs `git fetch`, then
+  `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
+  once per kind the task needs, when the implementation dispatch is built and not
+  earlier. FO records each printed `Migration: NNNN` /
+  `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as
+  dispatch scope notes. One number per kind per task; a task needing more returns
+  to FO.
+- **Applied.** Before any push of a candidate to a persistent shared environment
+  (a non-production database branch), FO records `Applied at: <environment> <sha>`
+  for the commit being pushed. A migration in that commit is then frozen for the
+  task: edit, delete and renumber fail `check`. Git cannot see what a database
+  applied, so an unrecorded deploy is not detected.
+- **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
+  runs at implementation exit, at validation and, after `git fetch`, on the PR
+  head before FO asks for merge. Exit 1 lists `FAIL R1..R5` lines; exit 2 is a
+  configuration error, which returns to FO as a hold. A migration on the base
+  branch must not change, comment-only edits included; `check` exit 1 (R1, R2) is
+  the enforcement, and the fix is reverting the edit and writing a new migration.
+- **Renumber.** A candidate whose number was taken (R3, R5) renumbers and returns
+  to implementation. When an `Applied at:` commit holds the migration, FO holds
+  for the Captain: reset that non-production database branch, then renumber.
+  The reset is one Netlify Open API call, `netlify api resetSiteDatabaseBranch --data '{"site_id":"<site>","branch_id":"<branch>"}' > /dev/null`
+  (`netlify api --list` shows the method). It applies to non-production branches
+  only; the production branch cannot be reset. The response carries connection
+  strings, so redirect it to `/dev/null` and read the result from the next
+  deploy. This step is documented, not wrapped in a tool.
 
 ## Delivery authority
 
@@ -232,7 +405,10 @@ alone does not block SD's no-hook local-finalize route.
 
 Project and Captain authority constrain hook instructions: present the exact
 candidate and PR body before authorized push/create; create a Draft PR where
-required, and request ready only after the required CI is green. Approval of a
+required, and request ready only after the required CI is green. Required CI is green
+only when its test jobs have finished on the PR head. Where CI skips drafts, FO
+marks the PR ready under the Captain's authority and waits for those jobs to
+finish before asking for merge. Approval of a
 validation gate is not permission to push, create or merge a PR. Preserve manual
 merge authority. Do not invoke local fallback, push the trunk, merge, or clean up
 an owned worktree unless the specific action is authorized. An upstream hook's
@@ -283,3 +459,9 @@ pr:
 **AC-1**: <Observable outcome.>
 Verified by: <Reproducible evidence and its limits.>
 ```
+
+Optional frontmatter, absent until used: `journey`, `journey-release` and
+`journey-story`, set by FO with `status --set` when the task belongs to a release
+story (see `backlog`, Release review). `journey` holds the map's own `journey:` value,
+not its file name. A placeholder comment would sit beside the real values once
+`status --set` filled them, so the template carries none.
