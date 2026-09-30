@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:patch-0102:backlog:attempt-1:revision-1",
+  "question": "Admit patch-0102 (five Codex round-2 findings, collision rule) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:patch-0102:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/677010f4b88e3c9b7a49de71ccf2fee4e4fc79f5/patch-0102.md",
+      "rev": "sha256:9156477a7b254c76ed8f6c14b0de1e298c5d278220ab970289fde4d1d960872d",
+      "mediaType": "text/markdown",
+      "summary": "Patch release 0.10.2; then re-sync qnow #1248."
+    }
+  ]
+}

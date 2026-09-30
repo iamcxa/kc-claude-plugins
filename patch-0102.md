@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:patch-0102:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:patch-0102-backlog-1
+              briefing:
+                id: briefing:patch-0102:backlog:attempt-1:revision-1
+                digest: sha256:4d758e558ed98c10fb64213b9f75657770cd87cd85b4ae91fd03ceabaa4c283a
+                room-ref: ./patch-0102/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:patch-0102:backlog:1
+                briefing: briefing:patch-0102:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T17:15:34.507831Z"
+                decision: approve
+                reason: 'Captain 2026-10-01: 「准」 — fix the five package findings as 0.10.2 with the collision rule: applied task keeps its number, the unapplied one renumbers; recreate only when both are applied to a non-resettable database'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Five gaps in kc-dev-flow-2 0.10.1 `references/sd/workflow.md`, found by an external review of an adopter's workflow sync (qnow PR #1248, round 2, 2026-10-01); patch release 0.10.2.
