@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.3.0...kc-journey-map-v1.4.0) (2026-09-30)
+
+
+### Features
+
+* **kc-journey-map:** let a release opt out of its journey-board page and retire stale board pages ([#543](https://github.com/iamcxa/kc-claude-plugins/issues/543)) ([d114ac6](https://github.com/iamcxa/kc-claude-plugins/commit/d114ac663705b2181ac66d38e098b01af6181e44))
+
 ## [1.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.2.1...kc-journey-map-v1.3.0) (2026-09-30)
 
 
