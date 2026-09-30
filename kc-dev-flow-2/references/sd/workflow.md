@@ -170,7 +170,7 @@ Apply Delivery authority below; a pending PR or missing hook is not completion.
 
 ## Dispatch facts
 
-Spacedock inlines this section into every worker stage.
+Spacedock inlines this section into each stage whose `context-sections` lists it.
 
 - **Signal:** send the completion message once, to the first officer by the name
   your session lists as addressable (`main` under Claude Code dispatch). The
