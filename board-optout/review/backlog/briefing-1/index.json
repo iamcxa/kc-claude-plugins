@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:board-optout:backlog:attempt-1:revision-1",
+  "question": "Admit board-optout (#541, board: false) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:board-optout:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a269274db02ab47e783fc903e1cbf52d37d183f0/board-optout.md",
+      "rev": "sha256:4d4d8c4d2edbbe214d6c37960afd360d85f4967b8b13c1ac294bea474a8d9b9c",
+      "mediaType": "text/markdown",
+      "summary": "kc-journey-map: per-release board: false, stale board pages removed on re-render."
+    }
+  ]
+}

@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:board-optout:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:board-optout-backlog-1
+              briefing:
+                id: briefing:board-optout:backlog:attempt-1:revision-1
+                digest: sha256:15a058efec68f0580ecaad4722f6fcb1425df6055f0d045fbeebd42ba10cf5b1
+                room-ref: ./board-optout/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:board-optout:backlog:1
+                briefing: briefing:board-optout:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T15:35:00.840201Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「做board: false 可以」'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 kc-journey-map renders a board page for every release and re-renders recreate or keep pages the map no longer wants; issue #541.
