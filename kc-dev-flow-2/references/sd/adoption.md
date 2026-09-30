@@ -63,6 +63,18 @@ The workflow's Delivery authority constrains the upstream mod's local fallback,
 trunk push and non-Draft defaults. Preserve project Draft/CI/manual merge rules;
 installing the mod does not grant those actions or mechanically enforce them.
 
+## Comment ratio and review rounds
+
+`<package>/scripts/comment_ratio.py` fails a candidate whose added comments exceed
+5 percent of its added code lines (the package default, once at least 20 code
+lines are added) or that cite task numbering, review provenance, a PR or issue
+number or a `file:line`. An adopter sets its own value with
+`comment-ratio-max: <percent>` in its workflow README frontmatter; `--max` overrides
+both for one run. The review-round rule and the repair lane live in `workflow.md`:
+an adopter that already has a workflow README receives them by re-syncing that
+README from `workflow.md`, a per-adopter three-way merge that keeps its own
+frontmatter; the package does not rewrite an adopter's README.
+
 ## Secret reads
 
 The package ships no secret guard. The `Secrets:` line of the workflow's

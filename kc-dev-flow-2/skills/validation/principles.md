@@ -12,8 +12,12 @@ the same standard as retention. Use existing evidence, not a new proof harness.
 
 Read every comment the candidate adds. A comment that narrates the change, restates
 the code beside it, cites a line number or marks a section is a repair finding.
-Measure them with `python3 <package>/scripts/comment_ratio.py <base> <candidate>`
-and report its output; where the project states a baseline ratio, compare to it.
+Measure them with
+`python3 <package>/scripts/comment_ratio.py <base> <candidate> --workflow-dir <workflow-dir>`
+and report its output. Exit 1 (a ratio above the maximum, or a comment citing task
+numbering, review provenance, a PR or issue number or a `file:line`) is a repair
+finding returned through feedback; exit 2 is a configuration error that returns to FO.
+The citation scan finds the named classes only, so still read every added comment.
 When the task has a `## Number guards` section, rerun its `check` at the candidate; exit 1 or 2 is
 a repair finding returned through feedback.
 When the change alters what a user sees, the evidence includes a screenshot of the

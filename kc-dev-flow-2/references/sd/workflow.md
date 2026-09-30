@@ -73,6 +73,15 @@ Stage workers run on the workflow's default model.
 model and reasoning their agent files declare; FO never dispatches them on a
 cheaper model, because their value is a stronger second judgment.
 
+`concurrency` limits only what `status --next` proposes (Spacedock 0.27.2 does not
+slot-check a reflow dispatch; `<package>/scripts/test_sd_dispatch.py` builds one while another
+entity holds the only `implementation` slot). A feedback-reflow repair,
+the validation recheck of that repair, and an FO fix authorized under Review-finding
+disposition step 3 are dispatched at once in the entity's own worktree, after the
+existing overlap check against running worktrees; they do not wait for another
+entity's worker in the same stage. A repair that outgrows what its assignment names
+returns to FO as a scope change.
+
 FO resolves `<package>` in this workflow from the `Package root:` line of
 `kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path
 as a `Package root: <absolute path>` line in its scope notes
@@ -143,7 +152,8 @@ substitution.
 The default ensign invokes `kc-dev-flow-2:implementation` before useful work,
 using the recorded profile and approved scope. Produce the bounded integrated
 result and its evidence. Missing inputs require a hold; scope/profile changes
-return to the affected user decision. Apply Review-finding disposition to repairs.
+return to the affected user decision. Apply Review-finding disposition to repairs;
+a repair is dispatched under the lane in Stages.
 
 - **Outputs:** Exact delivered artifact, checks actually run, and material limits
   recorded in the existing SD Stage Report.
@@ -153,7 +163,8 @@ return to the affected user decision. Apply Review-finding disposition to repair
 A fresh ensign invokes `kc-dev-flow-2:validation` before useful work and checks
 the exact artifact against the accepted profile outcome. It assesses the work;
 it does not silently take over implementation. Rejection uses the supported
-feedback path after the distinct FO disposition described below.
+feedback path after the distinct FO disposition described below. Its recheck of a
+repair is dispatched under the lane in Stages.
 
 - **Outputs:** Independent verdict, primary evidence, a minimal acceptance script
   and unverified obligations recorded in the existing SD Stage Report.
@@ -212,6 +223,16 @@ consequential FO quick work and rejected gates.
 4. Scope, value, threshold, tolerance, risk-acceptance and acceptance-criteria
    changes require the Captain. Material findings cannot use the record-only lane;
    hold/route-for-decision forbids repair and reviewer rerun.
+5. A round is one verdict of an external reviewer of the delivery on the PR head
+   (Codex on the PR, RoboRev or another); FO counts rounds and records the count in
+   the committed gate summary. A finding assessed Material, or labelled P1 by the
+   reviewer, blocks in every round: a reviewer P1 is fixed and revalidated, or waived by the
+   Captain with the reason recorded (step 4). Rounds 1 and 2 follow steps 1 to 4.
+   From round 3 a finding that is neither does not start a repair cycle: FO declines
+   it in the committed gate summary, naming the finding and its home, and adds a
+   `Follow-up:` line to that task's Scope, the open task whose Scope edits the
+   finding's file, else a new backlog task from `spacedock new`. The terminal gate
+   lists each follow-up and its home.
 
 Before repair authorization, product bytes and the recorded candidate revision stay
 unchanged. Read-only inspection, non-mutating reproductions, existing tests and
