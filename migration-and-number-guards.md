@@ -265,3 +265,48 @@ The design is one stdlib script (`reserve`, `check`) plus a `## Number guards` w
 ### Summary
 
 The stdlib script, 16 tests (CI step added, README command list updated), workflow section, principles paragraphs and ADR 0002 are committed; the uat exit (Netlify database-branch reset) is documented in the section's Renumber bullet, no wrapper built. FO action before validation: `check --task` on this candidate exits 1 (R4) on `docs/adr/0002-...` until the task file carries a `## Number guards` section with `ADR: 0002`, verified by running it; I did not write that FO-owned section. Signalled `main` as the dispatch text says (the boilerplate block said `team-lead`).
+
+## Stage Report: validation
+
+- DONE: Independent verdict on candidate aff49ab3c6c66140f896f7feb4ec7e9743896deb (base b753d344) against the approved design and AC-1..AC-6
+  Verdict PASSED; every AC reproduced below from an `git archive` copy of the candidate in /tmp (worktree `git status --short` empty, HEAD still aff49ab3); one Polish finding (R4 ADR half untested) and three limits, none blocking.
+- DONE: Captain's uat ruling honoured: documented reset of the non-production database branch through Netlify's reset API, no wrapper
+  `## Number guards` "Renumber." bullet in `references/sd/workflow.md` and ADR 0002 Decision carry it; no wrapper script exists in the diff (8 files). Limit: Netlify's public docs (Troubleshooting page, fetched 2026-09-30) say only "Reset is only available for non-production branches" and name no endpoint, so the documented step is a pointer, not a runnable command; unverified.
+- DONE: Ran the new test file and the CI workflow's list of suites
+  `lint-skills`, `test_lint_skills`, `test_design_surfaces`, `test_adr_doc_checks`, `test_poc_readme`, `test_comment_ratio`, `test_number_guards` (16 tests), `test_learning` (33) all exit 0; `test_sd_dispatch.py` PASS on spacedock 0.27.2 binary, but with the local 0.27.0 plugin root because no 0.27.2 root is on this machine (CI pins 0.27.2).
+- DONE: Real qnow history, read-only (qnow-adopt-dev2 at ddc58ea90, `git status` clean before and after): `8f624f6a6^..8f624f6a6` fails R1 naming 0005, `7c8e288ac^..7c8e288ac` passes
+  Output `FAIL R1: apps/qnow-api/netlify/database/migrations/0005_slots_by_capacity.sql: M since the merge-base; ...` exit=1; the other run `PASS: no findings` exit=0.
+- DONE: An `Applied at:` line freezes an unmerged migration
+  Throwaway repo /tmp/vg-repo: edit of unmerged 0003 with the record exits 1 (`FAIL R2 ... applied at uat`), same edit unrecorded exits 0, renumber 0003 to 0004 with the record exits 1 (R2 `D`), unresolvable sha exits 2.
+- DONE: `reserve --kind migration` twice with two task files never collides and never fills a gap
+  On qnow base 7c8e288ac: task a 0013; with a's line written, b 0014; a again 0013; sibling holding 0020 gives 0021 not 0014; ADR reserve gives 0028 (base max 0027).
+- DONE: A missing or wrong base exits 2 loudly
+  No `--base` and no workflow dir: `no base: pass --base, or --workflow-dir ...` exit 2; `no-such-ref` as base or head: `cannot resolve base|head 'no-such-ref'` exit 2; path `apps/nope`: `no migration file matching NNNN_name.sql ...` exit 2; `reserve` without a path exits 2.
+- DONE: `check --task` on this task and on the candidate
+  With the FO's `## Number guards` / `ADR: 0002`: `migration guard skipped: no migrations-path declared`, `PASS: no findings`, exit 0 (base b753d344c7c6, head aff49ab3c6c6); a copy of the task without the section: `FAIL R4 ... docs/adr/0002-...: number 0002 is not in the task's ADR: lines`, exit 1; `reserve --kind adr` on this task returns `ADR: 0002`.
+- DONE: Remove each guard in a throwaway copy and show a test fails
+  15 mutations run in /tmp/vg-mut (layout `scripts/` so the test finds the script): R1, R2, R3 (both halves), R4 migration, R5, sibling scan, gap fill, base-tip read, skip message, db-surface-without-path, empty-dir, unresolvable applied sha, task lines read outside the section each fail 1-3 tests; R4 ADR half (`number not in facts["adr"]`) removed fails none.
+- DONE: ADR 0002 with adr_lint, the workflow.md section, both principles paragraphs
+  `adr_lint.py docs/adr --require 2`: `2 ADR file(s) checked, 0 legacy` exit 0; ADR Decision quotes the Captain's 「准」 and the reset ruling; `show-stage-def` on a scratch workflow prints `## Number guards` for implementation and validation; `dispatch build --scope-notes-file` put `Migration: 0013` / `ADR: 0002` in the dispatch file; principles paragraphs read, consistent with the script (frozen migrations exempt from comment trims; validation reruns `check`).
+- DONE: CI workflow lists the new test; `comment_ratio.py` and `doc_impact.py` reported; every added comment line read
+  `kc-dev-flow-2-tests.yml` has step `test_number_guards.py`; `comment_ratio.py b753d344 aff49ab3`: `code lines 402, comment lines 1, 0.2%` (repo baseline 3.0%); `doc_impact.py`: one document, `kc-dev-flow-2/README.md`, updated (command list, one line); the tool does not count docstrings: the module docstring (R1-R5 legend, exit codes, limits; it is the `--help` text) and one function docstring are the only added comment text, test file has none; no narration or line-number citations found.
+- DONE: Never wrote to the qnow checkout
+  qnow `git status --short` empty before and after every run; all fixtures and copies are under /tmp.
+
+### Finding for FO disposition
+
+- **Polish (advisory):** the ADR half of R4 (an added ADR number not in the task's `ADR:` lines) has no test that fails when it is removed, although AC-4 says "an added migration or ADR number not in the task's reserved lines" is refused. Behaviour is correct: the real candidate with its `ADR: 0002` line passes, without it exits 1 (see `check --task` item). Not material: no observed harm, the behaviour holds; a one-test addition would close the gap if the Captain wants AC-4's ADR clause falsified.
+
+### Summary
+
+PASSED. The candidate reproduces every AC: real qnow history gives R1 on 0005 (exit 1) and a clean pass on the 0012 add; `Applied at:` freezing, non-colliding reserve, and loud exit-2 misconfiguration all reproduce; 14 of 15 guard mutations fail a test. Unverified or limited: the ADR-R4 mutation survives (Polish), the reset step names Netlify's API without an endpoint Netlify documents, `test_sd_dispatch` ran on a 0.27.0 plugin root instead of CI's pinned 0.27.2, no Netlify deploy or real FO dispatch was exercised, and an unrecorded uat deploy is not detected (design limit).
+
+### Minimal acceptance script (Captain; `PKG` is a checkout of the merged package, `Q` is ~/conductor/repos/qnow-adopt-dev2, `MP=apps/qnow-api/netlify/database/migrations`)
+
+1. `python3 $PKG/kc-dev-flow-2/scripts/number_guards.py check --repo $Q --migrations-path $MP --base 8f624f6a6^ --head 8f624f6a6; echo exit=$?` expect a `FAIL R1:` line naming `0005_slots_by_capacity.sql` and `exit=1`.
+2. Same command with `--base 7c8e288ac^ --head 7c8e288ac`: expect `PASS: no findings` and `exit=0`.
+3. `mkdir -p /tmp/ng-demo && : > /tmp/ng-demo/a.md && python3 $PKG/kc-dev-flow-2/scripts/number_guards.py reserve --kind migration --repo $Q --migrations-path $MP --base 7c8e288ac --state-dir /tmp/ng-demo --task /tmp/ng-demo/a.md` expect `Migration: 0013`.
+4. `printf '## Number guards\nMigration: 0013\n' > /tmp/ng-demo/a.md; : > /tmp/ng-demo/b.md`, then step 3 with `--task /tmp/ng-demo/b.md`: expect `Migration: 0014`.
+5. Step 1 with `--base no-such-ref`: expect `number_guards: cannot resolve base 'no-such-ref' ...` and `exit=2`.
+
+Does not cover: a real Netlify deploy or the reset step, the uat database, an actual FO dispatch, timestamp-numbered adopters, snapshot JSON, an unrecorded deploy.
