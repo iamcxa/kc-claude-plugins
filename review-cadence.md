@@ -3,7 +3,7 @@ title: A delivery PR's review rounds stop by rule, a small fix does not queue be
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「核准」 — with two amendments he approved: the package defaults comment-ratio-max to 5 (his standing rule: baseline 3%, target 5%), overridable by the adopter''s workflow README key or --max; the round rule (N = 2) applies to any external reviewer (Codex, RoboRev, others), not Codex only'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-30T07:22:23Z
 ---
 
