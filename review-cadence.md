@@ -286,3 +286,29 @@ Recommendation: PASSED with one FAILED evidence item. Suites, item-5 and lane fa
 ### Summary
 
 The four repairs are in one commit on top of 408e8bf84c8f: each task-numbering alternative has its own case, an undiffable ref exits 2 with one line, ADR 0004 carries the Captain's words verbatim and no unproven cause, and item 5 counts a reviewer's highest severity as P1 when it has no P1 label. The false-positive classes are stated as a known limit in adoption.md and the ADR. Limit unchanged: the round rule and the lane are prose an FO applies.
+
+## Stage Report: validation (cycle 2)
+- DONE: Reproduce the CI workflow's suite list on a `git archive` copy of e98bd8b2f8e2 (one commit on 408e8bf84c8f)
+  lint-skills, test_lint_skills, test_design_surfaces, test_adr_doc_checks, test_poc_readme, test_comment_ratio (14 tests), test_number_guards, test_learning and test_sd_dispatch (plugin root = v0.27.2 archive, the CI pin 4d158a48) each exit 0.
+- DONE: Remove each of AC, Finding, Task, Round and Decision from the task-numbering pattern; each fails its own case
+  Removing AC, Finding, Task fails only subtest `task numbering AC`/`Finding`/`Task`; Round fails `task numbering Round` plus the with-or-without-maximum test; Decision fails `task numbering`; Cycle (extra) fails `task numbering cycle`; before the repair AC, Finding and Task left the suite green.
+- DONE: `comment_ratio.py nope main` exits 2 with one line and no traceback, and the test fails when the check is disabled
+  With `--repo` a real repository: `error: cannot diff nope...main: fatal: bad revision 'nope...main'`, exit 2, no Traceback; replacing `if run.returncode:` by `if False:` fails `test_an_unresolvable_ref_exits_2_with_one_line_naming_it` (`0 != 2`).
+- DONE: Remove the item-5 highest-severity sentence from workflow.md; test_sd_dispatch.py fails
+  Run on a mutated copy: exit 1, `AssertionError: ('claude', 'implementation', 'For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev)')`; the unmutated copy exits 0.
+- DONE: Read ADR 0004 with adr_lint; Words match the Captain's five quotes verbatim and in order; Context states no unproven cause
+  `adr_lint.py docs/adr --require 0004` exit 0; a script checked each of the five quoted strings from the feedback context is a substring of the ADR, in that order; Context says the state history is consistent with `concurrency: 1` read as a cap and the cause is not proven.
+- DONE: Read the known-limit text in adoption.md and every added comment line
+  adoption.md `## Comment ratio and review rounds` names the six constructed classes and 1 false positive in 38 hits (the cycle 1 measurement, not re-run); the range diff adds no `#`, `//` or block comment in code (grep over `*.py`), only the module docstring line in comment_ratio.py.
+- DONE: Run the candidate's own `comment_ratio.py` from 348c6876 to the candidate
+  `code lines 200, comment lines 0, 0.0%`, `maximum 5% (package default) met`, exit 0; `number_guards.py check --base 348c6876 --head e98bd8b2f8e2` exit 0; `doc_impact.py 408e8bf8 e98bd8b2` lists README (`review`, test commands only) and adoption.md (`updated`).
+- DONE: Run the Captain acceptance script as written
+  Steps 2 to 7 in a `mktemp -d` repository against the archive copy print the named output with exits 0, 1, 1, 0, 2 and `OK` (14 tests); step 6 prints one line `error: cannot diff nope...main: fatal: bad revision 'nope...main'`.
+- DONE: Note findings for FO disposition (Polish, none Material) and unverified obligations
+  (1) ADR Context says the P1 repair "waited about 1h40 for its implementation dispatch", but the design's 1h40 is validation-approve 11:57 to cycle-3 report 13:39 and the dispatch time is not recorded; (2) outside a git repository the exit-2 line ends in git's usage text (`--output <file> ...`), naming the refs but not the cause; (3) item 5 says a reviewer's "highest severity level" counts as P1, and `roborev review --help` lists critical, high, medium, low, so for RoboRev it reads as critical while `.roborev.toml` `review_min_severity = "high"` — as the Captain worded it, not a defect; unverified: an FO applying the round rule or the lane, RoboRev itself, any adopter README, the 1 in 38 rate (not re-run).
+- DONE: Confirm the code worktree is unchanged
+  `git status --short` in the code worktree is empty, HEAD is e98bd8b2f8e2354ce75f3bc739b9a657416705b7; spikes and mutation copies only under /tmp (rc-val, rc-val-sd, rc-mut).
+
+### Summary
+
+Recommendation: PASSED. All four Captain-authorized repairs reproduce: each task-numbering alternative fails its own case, an unresolvable ref exits 2 with one line and a test that fails when the check is off, ADR 0004 carries the Captain's five quotes verbatim with no unproven cause, and the item-5 sentence is asserted by test_sd_dispatch.py. Cycle 1's other results are untouched by this diff except where re-run above. Three Polish observations and the unverified obligations are listed for FO disposition; none is Material.
