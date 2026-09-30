@@ -3,7 +3,7 @@ title: A release is re-reviewed as one whole journey before its tasks are split,
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「我們來解決 520 問題」, with the five-per-slice rule folded in'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 A release gains tasks one at a time and nothing checks that together they still form one complete journey; batch C part 2 of the dev2 fixes.
