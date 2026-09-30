@@ -69,7 +69,9 @@ built; see "Stories".
   A symbol lookup checks citation consistency, not the complete execution boundary.
 - `evidence:` is a bare symbol — a function, const, or command name that greps in this
   repository — required whenever `status: exists`. Not a `file:line`: a line number goes
-  stale silently and the lint would have nothing stable to search for.
+  stale silently and the lint would have nothing stable to search for. A symbol in another
+  repository is written `<name>:<Symbol>` and linted with `--repo <name>=<path>[@ref]`; a
+  name that was not passed is refused, never grepped in this repository.
 - `questions:` is optional and orthogonal to status: unresolved decisions, on a story
   in any status. Each carries `id`, which binds it to its board card, `ask`, which
   fills the contract cell, and optionally `answer:` (a short paragraph) and/or `doc:`

@@ -234,3 +234,5 @@ route can reach.
 If the journey crosses repositories — a client in one, a server in another — cite each side
 separately and say which repo was read. A board that mixes two repos' facts without saying
 so is the most expensive mistake this skill can make, because every cell still looks right.
+Evidence from the other repository is `evidence: <name>:<Symbol>`, linted with
+`node lib/journey-lint.mjs <file> <repoRoot> --repo <name>=<path>[@ref]`.

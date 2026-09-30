@@ -208,3 +208,47 @@ test('a long flow line, step note, rule or status field is reported as advisory'
 	}
 	assert.deepEqual(longCards(model).map((n) => n.split(' is ')[0]), ['flow s line 2', 'note s', 'rule long-rule', 'status unproven'])
 })
+
+function otherRepo() {
+	const dir = mkdtempSync(join(tmpdir(), 'journey-lint-other-'))
+	execFileSync('git', ['init', '-q', '-b', 'main'], { cwd: dir })
+	execFileSync('git', ['config', 'user.email', 'a@b.c'], { cwd: dir })
+	execFileSync('git', ['config', 'user.name', 'test'], { cwd: dir })
+	writeFileSync(join(dir, 'tui.go'), 'package main\n\nfunc GoSymbol() {}\n')
+	execFileSync('git', ['add', '-A'], { cwd: dir })
+	execFileSync('git', ['commit', '-q', '-m', 'init'], { cwd: dir })
+	return dir
+}
+
+test('evidence qualified with another repository greps that repository, Go included', () => {
+	const repoRoot = tempRepo()
+	const other = otherRepo()
+	const m = model([{ id: 's', stories: [
+		{ id: 's-0', card: 'x', status: 'exists', evidence: 'other:GoSymbol' },
+		{ id: 's-1', card: 'y', status: 'exists', evidence: 'other:RealSymbol' },
+	] }])
+	const v = lintEvidenceNotFound(m, { repoRoot, repos: { other: { root: other } } })
+	assert.deepEqual(v.map((x) => [x.lint, x.story]), [['evidence-not-found', 's-1']], 'RealSymbol lives in the primary repo only, so qualifying it with the other repo must fail')
+})
+
+test('evidence naming a repository that was not passed is refused, not grepped in the primary repo', () => {
+	const repoRoot = tempRepo()
+	const m = model([{ id: 's', stories: [{ id: 's-0', card: 'x', status: 'exists', evidence: 'other:RealSymbol' }] }])
+	const v = lintEvidenceNotFound(m, { repoRoot })
+	assert.deepEqual(v.map((x) => [x.lint, x.story]), [['evidence-repo-unknown', 's-0']])
+})
+
+test('a repository passed with a ref greps that ref, not the working tree', () => {
+	const repoRoot = tempRepo()
+	const other = otherRepo()
+	execFileSync('git', ['checkout', '-q', '-b', 'feature'], { cwd: other })
+	writeFileSync(join(other, 'branch.go'), 'package main\n\nfunc BranchOnly() {}\n')
+	execFileSync('git', ['add', '-A'], { cwd: other })
+	execFileSync('git', ['commit', '-q', '-m', 'branch'], { cwd: other })
+	const m = model([{ id: 's', stories: [
+		{ id: 's-0', card: 'x', status: 'exists', evidence: 'other:BranchOnly' },
+		{ id: 's-1', card: 'y', status: 'exists', evidence: 'other:GoSymbol' },
+	] }])
+	const v = lintEvidenceNotFound(m, { repoRoot, repos: { other: { root: other, ref: 'main' } } })
+	assert.deepEqual(v.map((x) => x.story), ['s-0'], 'BranchOnly is in the checked-out working tree but not on main')
+})
