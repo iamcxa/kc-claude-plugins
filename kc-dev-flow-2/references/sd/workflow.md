@@ -23,6 +23,7 @@ stages:
         - Review-finding disposition
         - Decision records
         - Affected documents
+        - Number guards
         - Delivery authority
     - name: validation
       worktree: true
@@ -33,6 +34,7 @@ stages:
         - Review-finding disposition
         - Decision records
         - Affected documents
+        - Number guards
         - Delivery authority
     - name: done
       terminal: true
@@ -228,6 +230,41 @@ stage report; validation reruns it at the candidate and checks every listed
 document carries one. The list finds candidates by the paths and declared names
 the change touched; it does not decide relevance. Make the update itself by the
 retained-document practices in the package's `references/retained-documents.md`.
+
+## Number guards
+
+Applies when the task's `Surfaces:` includes `db`, or its design lands an ADR.
+`<package>/scripts/number_guards.py` takes its values from this workflow's README
+frontmatter (`--workflow-dir <workflow-dir>`): `trunk:`, the optional
+`migrations-path:` (the adopter's migration directory) and `adr-path:` (default
+`docs/adr`); a flag of the same name overrides. It reads a task's numbers and
+applied deploys from the `## Number guards` section of the task file.
+
+- **Reserve.** Before an implementation dispatch, FO runs `git fetch`, then
+  `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
+  once per kind the task needs. FO records each printed `Migration: NNNN` /
+  `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as
+  dispatch scope notes. One number per kind per task; a task needing more returns
+  to FO.
+- **Applied.** Before any push of a candidate to a persistent shared environment
+  (a non-production database branch), FO records `Applied at: <environment> <sha>`
+  for the commit being pushed. A migration in that commit is then frozen for the
+  task: edit, delete and renumber fail `check`. Git cannot see what a database
+  applied, so an unrecorded deploy is not detected.
+- **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
+  runs at implementation exit, at validation and, after `git fetch`, on the PR
+  head before FO asks for merge. Exit 1 lists `FAIL R1..R5` lines; exit 2 is a
+  configuration error, which returns to FO as a hold. A migration on the base
+  branch must not change, comment-only edits included; `check` exit 1 (R1, R2) is
+  the enforcement, and the fix is reverting the edit and writing a new migration.
+- **Renumber.** A candidate whose number was taken (R3, R5) renumbers and returns
+  to implementation. When an `Applied at:` commit holds the migration, FO holds
+  for the Captain: reset that non-production database branch, then renumber.
+  The reset is one Netlify Open API call, `netlify api resetSiteDatabaseBranch --data '{"site_id":"<site>","branch_id":"<branch>"}' > /dev/null`
+  (`netlify api --list` shows the method). It applies to non-production branches
+  only; the production branch cannot be reset. The response carries connection
+  strings, so redirect it to `/dev/null` and read the result from the next
+  deploy. This step is documented, not wrapped in a tool.
 
 ## Delivery authority
 
