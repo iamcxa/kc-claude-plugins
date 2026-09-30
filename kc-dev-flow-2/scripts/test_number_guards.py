@@ -179,6 +179,14 @@ class RecheckTests(unittest.TestCase):
             self.assertIn("FAIL R4", out)
             self.assertIn("R4 skipped", fx.check()[1])
 
+    def test_a_number_written_outside_the_number_guards_section_reserves_nothing(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
+            fx = base_repo(tmp)
+            fx.commit("outside", **{mig(99, "op"): "SELECT 1;\n"})
+            code, out = fx.check(task=task_file(td, "Migration: 0006"))
+            self.assertEqual(code, 1, out)
+            self.assertIn("FAIL R4", out)
+
     def test_an_added_adr_number_already_on_the_base_is_refused(self):
         with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
             fx = base_repo(tmp)
