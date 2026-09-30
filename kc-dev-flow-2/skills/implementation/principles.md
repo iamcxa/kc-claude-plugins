@@ -22,6 +22,12 @@ When the task has a `## Number guards` section, use only the numbers it lists, r
 `python3 <package>/scripts/number_guards.py check` as that section states and report its
 output and base SHA; a migration on the base branch or recorded as applied is frozen,
 so it is exempt from comment trims and from cutting unmapped surfaces.
+When the task has `## Captain amendments`, read them before the design, move each
+superseded criterion as `workflow.md` states, run
+`python3 <package>/scripts/design_surfaces.py check <task>` (exit 1 is a repair finding
+returned through feedback), treat each `Supersedes:` criterion as withdrawn, and derive
+evidence from `## Acceptance criteria` plus the amendments, never from a superseded
+criterion or design paragraph.
 Do not use `git stash`: every worktree and session of a repository shares one
 stash stack. Set work aside with a commit.
 

@@ -25,6 +25,7 @@ stages:
         - Dispatch facts
         - Review-finding disposition
         - Decision records
+        - Captain amendments
         - Affected documents
         - Number guards
         - Delivery authority
@@ -37,6 +38,7 @@ stages:
         - Dispatch facts
         - Review-finding disposition
         - Decision records
+        - Captain amendments
         - Affected documents
         - Number guards
         - Delivery authority
@@ -111,6 +113,12 @@ differently, or `Visible change: none`.
   exclusions and evidence needed before the next declared stage starts, the
   `## FO alignment` need and reason, and the recorded `Surfaces:` and
   `Visible change:` lines on the five-stage route.
+- **Seed check:** On the five-stage route, before `gate prepare`, FO runs
+  `python3 <package>/scripts/design_surfaces.py check --seed <task>` and holds the
+  gate until it exits 0. It reads the `## FO alignment` record only: a `ui` or `db`
+  seed owes no artifact yet, the worker authors it, and the `Result:` line is not
+  checked. An FO that skips this step still dispatches; the worker's own check is
+  the backstop.
 
 ### `ideation`
 
@@ -124,6 +132,8 @@ worker authors the PRFAQ and the artifact each recorded surface owes. When
 as a `Result:` line before dispatching the worker. Missing skill or profile
 authority requires a hold report rather than a baseline or default-profile
 substitution.
+Ideation writes no repository file, branch or commit: the design, the criteria and any
+ADR draft live in the task file, and a draft carries no ADR number.
 
 - **Outputs:** Current design definition and acceptance criteria with reproducible
   evidence clauses; unresolved decisions identified for the user.
@@ -131,8 +141,9 @@ substitution.
   approvals and stops, acceptance evidence/limits, and each recorded
   `Surfaces:` value's artifact. The gate is not presentable without the
   artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
-  `python3 <package>/scripts/design_surfaces.py check <task>`; a non-zero exit
-  means the gate is not presentable, and FO includes the checker's output in
+  `python3 <package>/scripts/design_surfaces.py check <task>`; a non-zero exit,
+  including a missing `## Acceptance criteria` section or one that declares no
+  criterion, means the gate is not presentable, and FO includes the checker's output in
   the gate material. Required diagram defects or missing current-stage
   evidence block recommendation and gate preparation/presentation; honest
   unverified future checks do not.
@@ -272,12 +283,49 @@ the decider's own words and the options considered inside Decision. Create
 `docs/adr/` with this record if it is absent. A decision document that predates
 this format may stay as one record marked `Status: Legacy`; new rulings get their
 own files. This is not the gate `resolution.reason` or the SD stage report.
+A design names an ADR by its ruling and the file's short title, with no number; FO
+reserves the number when it dispatches implementation (Number guards) and the
+implementation worker writes `docs/adr/<reserved number>-<short-title>.md`.
 The implementation worker writes the record into the candidate and names the ADR
 numbers it added or changed in its report; validation runs
 `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and returns a
 failure or a missing record through the existing feedback route; FO confirms it
 before presenting the gate. A deferred user-facing capability belongs on the
 product's journey map, not here.
+
+## Captain amendments
+
+A change the Captain makes to what he has accepted, whether at a gate approval,
+during implementation or at a validation gate, is an amendment. A change he asks for
+while the gate that would accept it is still open is not one: he calls `revise` and
+that stage's worker reworks it.
+
+FO appends one entry per amendment to the task's `## Captain amendments` section and
+changes nothing else in it. FO adds no words of its own and does not move or rewrite a criterion:
+
+```
+## Captain amendments
+
+### Amendment 1 — <date>, <gate or chat>
+Captain: 「<his words, verbatim>」 (where he said them)
+Supersedes: <acceptance-criterion ids, or none>
+Design: <optional: the design paragraph it overrides>
+```
+
+FO names the amendment in the next dispatch's checklist. That worker (implementation,
+or the repair worker on a feedback route) moves each superseded criterion's block verbatim
+from `## Acceptance criteria` into its entry under a `Superseded text:` line, writes any
+replacement as a new `**AC-N**` under a fresh id that says "Amended by Captain, amendment N",
+and never reuses an id. A superseded criterion and the design paragraph named by
+`Design:` are withdrawn; evidence and the Captain's acceptance script follow
+`## Acceptance criteria` plus the entries.
+
+`python3 <package>/scripts/design_surfaces.py check <task>` exits 1 when an entry has no
+`Captain:` line or a superseded id is still declared in `## Acceptance criteria`.
+Between FO's record and the worker's move the task shows both, and the check says so.
+It cannot see a skipped record, only the state after a skipped move; a moved block is
+not scanned by `spacedock status --read --ac-scan`, which is why relocation, not
+annotation in place, is the route.
 
 ## Affected documents
 
@@ -299,7 +347,8 @@ applied deploys from the `## Number guards` section of the task file.
 
 - **Reserve.** Before an implementation dispatch, FO runs `git fetch`, then
   `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
-  once per kind the task needs. FO records each printed `Migration: NNNN` /
+  once per kind the task needs, when the implementation dispatch is built and not
+  earlier. FO records each printed `Migration: NNNN` /
   `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as
   dispatch scope notes. One number per kind per task; a task needing more returns
   to FO.

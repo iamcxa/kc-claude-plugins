@@ -24,7 +24,14 @@ Each recorded `Surfaces:` value owes its own artifact, fidelity before prettines
 `none` uses the PRFAQ/Mermaid alone. Before reporting, run
 `python3 <package>/scripts/design_surfaces.py check <task>` and cite its
 output in the Stage Report. The gate is not presentable without the
-artifact each recorded surface owes. Reconcile material research and feedback
+artifact each recorded surface owes, or without a usable `## Acceptance criteria`
+section: the first line that is exactly that heading (any case), up to the next
+`## ` line, must hold at least one `**AC-<id>**` bold declaration, the grammar
+`spacedock status --read --ac-scan` reads; a `- AC-1:` list is not one.
+Ideation writes no repository file, branch or commit; the design, the criteria and
+any ADR draft live in the task file. A design that lands an ADR names the ruling and
+the file's short title, with no ADR number: FO reserves the number when it dispatches
+implementation. Reconcile material research and feedback
 into the same definition before handoff. Correct contradictions in depicted or
 required boundaries and missing current-stage evidence before reporting completion;
 if blocked, report the concrete gap. Future implementation checks may remain unverified.
