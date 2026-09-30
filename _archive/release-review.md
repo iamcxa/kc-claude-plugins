@@ -3,7 +3,7 @@ title: A release is re-reviewed as one whole journey before its tasks are split,
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -76,10 +76,13 @@ gates:
                 reason: 'Captain 2026-09-30: 「好」 — accept the review-release reference as improved (AC-5: office identity 2/2, brand context 1 strong + 1 weak, go-live raised as a story-less task); the release-goal-finish check is a follow-up to decide on the next real release review; open two PRs, kc-journey-map first'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-30T10:02:06Z
 worktree: .worktrees/spacedock-ensign-release-review
 pr: pr-merge:540
+verdict: PASSED
+completed: 2026-09-30T15:34:21Z
+archived: 2026-09-30T15:34:22Z
 ---
 
 A release gains tasks one at a time and nothing checks that together they still form one complete journey; batch C part 2 of the dev2 fixes.
