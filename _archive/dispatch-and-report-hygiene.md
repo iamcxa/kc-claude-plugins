@@ -3,7 +3,7 @@ title: Dispatches name the reachable FO, the package's script paths and the secr
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -88,10 +88,13 @@ gates:
                     source: ~/.claude/CLAUDE.md, Autonomous action boundaries
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-30T04:12:30Z
 worktree: .worktrees/spacedock-ensign-dispatch-and-report-hygiene
 pr: pr-merge:535
+verdict: PASSED
+completed: 2026-09-30T07:48:53Z
+archived: 2026-09-30T07:48:54Z
 ---
 
 Four dispatch and report defects from qnow dogfooding (2026-09-28..30) that cost retries or leaked secrets.
