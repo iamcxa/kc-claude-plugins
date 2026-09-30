@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:review-cadence:validation:attempt-2:revision-1",
+  "question": "Accept review-cadence's validation PASSED (cycle 2, plus a one-phrase ADR wording fix at a8079edf) and open its Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:review-cadence:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/fcae5f0305a22ba60df2ccb334f6c052066867a3/review-cadence.md",
+      "rev": "sha256:6ec05d703ea3dd11e7540ecabd180107b8b05ae72cf96b26e686f124db2955ff",
+      "mediaType": "text/markdown",
+      "summary": "Four Captain-authorized repairs reproduce; suites and mutations pass; ADR 0004 carries the Captain's words verbatim; sanitize 0/0/0."
+    }
+  ]
+}

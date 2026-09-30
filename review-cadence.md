@@ -61,6 +61,25 @@ gates:
                 at: "2026-09-30T08:16:00.945753Z"
                 decision: revise
                 reason: 'Captain 2026-09-30: 「退回補」 — four repairs: AC/Finding/Task citation tests; unresolvable ref exits 2; ADR 0004 verbatim words and no unproven cause; item 5 maps a reviewer without P1 labels by its highest severity; constructed false-positive classes declined as a known limit'
+            - id: gate-attempt:review-cadence-validation-2
+              briefing:
+                id: briefing:review-cadence:validation:attempt-2:revision-1
+                digest: sha256:8197e25df3ca5cc58d67046aae94cbbb06fa6bb440fa28dfb0e9898986226da3
+                room-ref: ./review-cadence/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:review-cadence:validation:2
+                briefing: briefing:review-cadence:validation:attempt-2:revision-1
+                by: agent:first-officer
+                at: "2026-09-30T08:28:36.79654Z"
+                decision: approve
+                reason: Validation PASSED on e98bd8b2 plus the FO-authorized one-phrase ADR fix a8079edf (diff read by the FO); opening a Draft PR only; merge stays with the Captain
+                conn:
+                    quote: 'No ask on a repo Kent owns: push a branch and open a Draft PR once the work cleared its own bar'
+                    source: ~/.claude/CLAUDE.md, Autonomous action boundaries
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-30T07:22:23Z
 worktree: .worktrees/spacedock-ensign-review-cadence
 ---
