@@ -26,6 +26,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-09-30T17:15:41Z
 ---
 
 Five gaps in kc-dev-flow-2 0.10.1 `references/sd/workflow.md`, found by an external review of an adopter's workflow sync (qnow PR #1248, round 2, 2026-10-01); patch release 0.10.2.
