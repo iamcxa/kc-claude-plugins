@@ -177,6 +177,10 @@ Result: the FO delegates these questions to ideation, which decides each with it
 Surfaces: none
 Visible change: none
 
+## Number guards
+
+ADR: 0004
+
 ## Stage Report: ideation
 
 - DONE: Design, in the task file, the kc-dev-flow-2 package change for issues #521, #522 and #525 (stopping rule, small-rework lane, comment-ratio threshold and citation rule)
