@@ -221,3 +221,32 @@ The three fixes are a package-only change: a round rule in Review-finding dispos
 ### Summary
 
 The package now stops external-review rounds by rule (item 5 in Review-finding disposition), states the repair lane in Stages, and `comment_ratio.py` exits 1 above a 5 percent default maximum (README key or `--max` override, 20-line floor) and on a comment citing task numbering, review provenance, a PR or issue number or a `file:line`; ADR 0004 records the ruling with the Captain's two amendments. Limits: the round rule and the lane are prose an FO applies and only an adopter's next delivery PR observes them; the citation scan finds its named classes only (`#333` in a comment is a false positive); an external reviewer without a P1 label needs the FO to map its blocking severity, which the Captain has not ruled on; the FO's note that origin/main is d0f91b48 is stale (it is 348c6876, a descendant).
+
+## Stage Report: validation
+- DONE: Reproduce the CI workflow's suite list on a `git archive` copy of 408e8bf84c8f
+  lint-skills, test_lint_skills, test_design_surfaces, test_adr_doc_checks, test_poc_readme, test_comment_ratio (13), test_number_guards, test_learning and test_sd_dispatch (Spacedock 0.27.2, plugin root = v0.27.2 archive) each exit 0.
+- DONE: Reproduce each `test_comment_ratio.py` mutation the report names, one at a time
+  `>` to `>=` fails at-the-maximum and README-override; floor dropped fails 5-of-5 and two more; `--max` ignored fails at-the-maximum and README-override; ADR exemption removed fails both ADR cases; Decision, cycle, Codex, review of, review follow-up, reviewer's, `#N`, `file:line`, Round each fail their own case only; floor 20 to 5, default 5 to 10 and README key ignored also fail.
+- DONE: Reproduce the item-5 falsifier in test_sd_dispatch.py, and the reflow-while-slot-held case
+  Deleting item 5 from `workflow.md` fails at "A round is one verdict..." (claude, implementation); deleting the lane phrase fails the LANE_RULE assert; a shim `spacedock` refusing `--feedback-reflow` fails the lane build (exit 1), so the case does catch a future slot check; the clean run builds the reflow with exit 0 while the other entity holds `implementation`.
+- DONE: Run `comment_ratio.py` on the qnow replay with the default maximum
+  Base 3414d21a4: `34523b7ca` 218/3404 = 6.4%, exit 1, FAIL plus 34 CITE lines (design: 6.4%, 34); `bd0deaf1a` 128/3314 = 3.9%, ratio met but exit 1 on 3 CITE lines (`Decision 9`, two `AC-1`; design: 3.9%, 3). The design says "would exit 0 on the ratio"; the exit code of the whole run is 1.
+- DONE: Judge the citation scan's false-positive rate on this repository's history
+  Last 150 commits of origin/main (348c6876, combined diff): 38 CITE hits of 495 added comments (7.7%); all but one name a real task numbering, PR or issue number. The false positive class seen: markdown fixture text inside a Python string starting with `#` (`## Stage Report: implementation (cycle 2)`, poc-close-guard.test.py). Constructed and confirmed by running `cited()`: `#333` colour, `step #1` ordinal, URL fragment `docs#2`, "Task 3" of asyncio, "a code review of the parser", "the Codex CLI" all flag; the last 340 commits also flag 66 hits of issue or `file:line` citations in e2e-pipeline comments (`#88`, `codegen.js:1994`), which are the rule working, not false positives.
+- DONE: Read ADR 0004 (adr_lint), workflow.md item 5 and lane paragraph, both principles files, adoption.md, every added comment line, `doc_impact.py`
+  `adr_lint.py docs/adr --require 0004` exit 0; `number_guards.py check --base 348c6876 --head 408e8bf8` exit 0; `doc_impact.py`: README `review` (names only the two unchanged test commands, so unaffected holds), adoption.md `updated`; `comment_ratio.py 348c6876 408e8bf8` 179 code lines, 0 comment lines, exit 0; the diff adds no `#` or `//` comment, only a 5-line module docstring in comment_ratio.py.
+- DONE: Run the Captain acceptance script as written
+  Steps 2 to 5 printed the named output and exits 0, 1, 1, 0; step 6 `test_comment_ratio.py` OK; run in a `mktemp -d` repository against the archive copy.
+- DONE: State, as a finding for the FO, how the round rule treats an external reviewer with no P1 label as shipped
+  Item 5 blocks a finding only if the FO assesses it Material or the reviewer labels it P1; it names no mapping from another reviewer's severity, so a RoboRev finding (repo `.roborev.toml` sets `review_min_severity = "high"`, no P1 vocabulary) that the FO does not assess Material starts no repair cycle from round 3 and becomes a follow-up; rounds 1 and 2 follow steps 1 to 4. ADR 0004 Consequences says the FO "needs to map its blocking severity", which `workflow.md` (the FO's text) does not say.
+- DONE: Worktree unchanged
+  `git status --short` in the code worktree is empty; spikes and mutation copies only under /tmp.
+
+Findings (Polish or Deferred risk, none Material by the four fields; the FO dispositions):
+- The `AC`, `Finding` and `Task` alternatives of the task-numbering pattern have no test case: removing each leaves `test_comment_ratio.py` green (run), against the implementation report's "each CITE alternative removed (its case)". `AC-N` is the class the qnow replay's three misses belong to.
+- ADR 0004 Context says the two-line P1 repair "waited about 1h40 behind another task's worker"; the design calls the cause "consistent with the state history, not proven", and the ADR's amendment "Words" are the FO's paraphrase of the gate reason, not the Captain's verbatim words (labelled "Recorded from the gate resolution").
+- `comment_ratio.py` with an unresolvable ref prints a CalledProcessError traceback and exits 1, the same code as a trim; a validator reading exit 1 as a repair finding would misroute it.
+
+### Summary
+
+Verdict: PASSED. Every AC-1..AC-6 check and both Captain amendments reproduced on a clean archive of 408e8bf84c8f; the qnow replay matches the design's numbers, and the acceptance script prints what it says. The three findings above are Polish and the RoboRev-severity gap is open for the Captain, unruled here.
