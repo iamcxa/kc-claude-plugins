@@ -281,3 +281,28 @@ Scratch under `/tmp/gaps-val` only.
 ### Summary
 
 The three routed repairs are in one commit on top of the validated candidate: the two worker sentences are gone (the workflow.md context-sections entry stays and now carries the run-`check` clause), both headings match Spacedock's rule, and every named mutation fails its case. Limits: AC-4's probe was N=1 per arm in the post-move state, and the heading rule follows `findAcceptanceCriteria` as read in Spacedock 0.27.2 (the parity test and the fuzz fail if a release changes it).
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Re-review candidate de57e9137ef1b4afa13c50be5ef512965eee6513 (one commit on 7e4798909fab) against the three FO-routed repairs; cycle 1's other results stand unless this diff touches them
+  Recommend PASSED: the diff (8 files, one commit) touches only the two headings, the two removed sentences, one workflow.md clause, AC-4, ADR 0005 and their tests; nothing found is Material; worktree `git status --short` empty, HEAD de57e9137ef1.
+- DONE: Reproduce on a `git archive` copy: the CI suite list (Spacedock v0.27.2 root at 4d158a48, binary 0.27.2)
+  lint-skills, test_lint_skills (21), test_design_surfaces (22), test_adr_doc_checks (5), test_poc_readme (4), test_comment_ratio (14), test_number_guards (17), test_learning (33) and test_sd_dispatch (6 PASS lines) all exit 0.
+- DONE: The principles sentences gone and lint green
+  `grep -i amendment` over `skills/` finds nothing; lint-skills and test_lint_skills exit 0; `dispatch show-stage-def` on the candidate workflow.md for implementation (216 lines) and validation (226) each carries the `## Captain amendments` section and the run-`check` clause once (run in /tmp/gaps-val2/sdstage).
+- DONE: New heading fixtures agree with the real `spacedock status --read --ac-scan --json` and fail when the old column-0 anchor is restored
+  test_sd_dispatch parity (leading space/tab/NBSP, trailing NBSP, uppercase, two-spaces-inside) passes against the real scan; with `AC_HEADING` restored to `^## Acceptance criteria[ \t\r]*$` it aborts at 'leading space' and test_design_surfaces fails the four whitespace cases plus its own mutation test.
+- DONE: The amendments-heading case and its mutation
+  `## Captain Amendments` with no `Captain:` and a still-declared id exits 1 with both messages on the candidate and 0 on a copy without `re.I`; that copy fails three test_design_surfaces cases, the mutation test and the any-case test (two headings).
+- DONE: Rerun the cycle-1 heading fuzz against the candidate and report divergences
+  cycle-1 fuzz (8448 cases): 0 divergences (was 976); the extended fuzz (17820 cases, adds NBSP, U+3000, VT/FF, NEL, U+2028, U+202F, ZWSP, BOM, C0): 0 divergences; a new 18-heading case-folding probe finds 4 divergences, `crİterİa`, `crİteria`, `crıterıa`, `crıteria` (finding 2).
+- DONE: Judge the implementer's one judgment call (the run-`check` clause moved into workflow.md `## Captain amendments`)
+  Keep (finding 1, Polish): it is one sentence in the section both stages already inline, AC-4 as rewritten names workflow.md as the carrier of exactly that sentence, and it adds no surface the Captain did not approve; no test asserts it reaches a stage definition, only my run above does.
+- DONE: ADR 0005 and AC-4 against the measured probe result and its stated limit; `adr_lint`; added comment lines; `comment_ratio.py`; the Captain acceptance script as written
+  `adr_lint.py docs/adr --require 0005` exit 0; ADR Words 「准」 matches the gate reason; `comment_ratio.py 05b772b7 de57e913` (candidate's script) 285 code, 6 comment, 2.1%, exit 0, the 6 are markdown `##` lines in test-fixture strings, the diff adds no Python `#` comment; `doc_impact.py` lists README.md and adoption.md, both changed; acceptance steps 1-5 ran as written with the stated messages and exits; ADR/AC-4 state the result and "N=1 per arm, one model, post-move state", but see finding 4.
+- DONE: Findings (none Material; each Deferred risk or Polish, FO may decline within existing risk acceptance)
+  1 Polish: judgment call above. 2 Deferred risk: Python `re.I` folds `İ`/`ı` to `i` and Go `EqualFold` does not, so `check` accepts a heading `## Acceptance crİteria` that `--ac-scan` reads as no section (the lenient direction: gate opens, scan then fails); trigger hypothetical (needs a dotted or dotless capital i typed into the heading), material only if a worker types one; the same divergence already existed at 7e4798909fab; fix direction `re.I | re.A` on `AC_HEADING` (verified 0 of 18 diverge, test_design_surfaces then fails only the case-sensitive-mutation test, whose replace string must follow) plus one fixture. 3 Polish: adoption.md still says the worker rules arrive with the package, but the amendment worker rule now reaches a worker only through the README re-sync (an un-synced adopter also has no FO record step, so no new loss). 4 Polish: AC-4's and ADR 0005's limits omit that the probe exercised the validation script only, not the implementation worker's move duty (cycle 1 recorded it), and ADR 0005 says the sentences were removed "as this decision said"; the design said it, the ADR only named the reopen condition.
+
+### Summary
+
+Recommend PASSED: the three routed repairs hold, all named and new mutations are caught, the heading fuzz goes from 976 divergences to 0 on both corpora, and the Captain acceptance script ran as written. One new Deferred risk (case-folding of `İ`/`ı`) and three Polish items are for FO to decline or route; nothing is Material. Scratch under `/tmp/gaps-val2` only; the code worktree is unchanged.
