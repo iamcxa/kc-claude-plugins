@@ -258,3 +258,46 @@ Does not cover: Codex, a real qnow dispatch, a real secret read, whether any ado
 ### Summary
 
 The package now states its own root in each skill that uses `<package>` (lint-enforced), carries the FAILED rule in the three stage skills, and ships `## Dispatch facts` through `context-sections`; the secret guard is documented in adoption.md and recorded in ADR 0003 with no hook. Not run: AC-1(b) and AC-6 (validation's) and Codex expansion. Known limit: a session that follows Spacedock's own "do not send completion to main" sentence over the Signal bullet still sees the old fallback.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on candidate c12de14252595a27060a9918870423957007038d against the approved design and AC-1..AC-6 (recommend REJECTED on AC-6 only)
+  Candidate SHA verified in the code worktree (`git rev-parse HEAD` = c12de142, `git status --short` empty before and after); five ACs and every static check below pass, AC-6 fails its "no `find` for a script" line (see Findings).
+- DONE: Run the CI workflow's suite list on the candidate (a `git archive` copy under /tmp)
+  `lint-skills.py` and `test_lint_skills.py` (21), `test_design_surfaces`, `test_adr_doc_checks`, `test_poc_readme`, `test_comment_ratio`, `test_learning`, `test_sd_dispatch.py --sd-plugin-root <SD 0.27.0 cache>` (spacedock 0.27.2) all exit 0; CI checks out the v0.27.2 plugin root, this run used the 0.27.0 cache root.
+- DONE: AC-1(a) lint cases and the `Package root:` falsifier in a /tmp copy
+  Mutated copies with bare `comment_ratio.py`, `/absolute/plugin/scripts/`, `{package}/scripts/` and a machine path each exit 1 naming `skills/implementation/principles.md`; deleting the `Package root:` line of `skills/implementation/SKILL.md` exits 1 with "uses <package> but has no 'Package root:' line"; the unmodified tree exits 0.
+- DONE: AC-2 and AC-4 via test_sd_dispatch.py, and judge the stated AC-2 deviation
+  Removing the ideation `context-sections` block makes the test fail with `AssertionError: ideation` (exit 1); the `FAILED: none.` report is refused ("durable, complete"), `--checklist` prints `status=FAILED` and `text=none.`, and `--set` exits 0 once the bullet is gone; deviation (dispatch file carries the fetch command, facts arrive in its output) is not material because the dispatch file itself shows that fetch command and `show-stage-def` prints the facts after the stage prose, so the design's "before the completion block" sentence is Polish.
+- DONE: AC-1(b) `claude -p --plugin-dir` probe from a /tmp copy of the candidate package
+  Printed `Package root: /tmp/val-plug/kc-dev-flow-2` (exit 0) and `/tmp/val-plug/kc-dev-flow-2/scripts/comment_ratio.py` exists; the implementation report's step-3 command line exits 1 ("Input must be provided") because `--allowedTools Skill "<prompt>"` swallows the prompt.
+- FAILED: AC-6 real-worker run from a scratch workflow carrying the candidate workflow.md (one Sonnet ensign, spawned as a teammate)
+  Not met on one line: the worker's first Bash call ended with `find /tmp/val-scratch/cand -name comment_ratio.py -not -path '*/node_modules/*' | head` (empty result, scratch dir only, run before it loaded the skill); the other three lines passed (details in Findings).
+- DONE: Build the merge of the candidate with origin/main (b2024574) in /tmp and rerun the suites and show-stage-def
+  Clean merge (no conflicts); all nine CI-list suites including `test_number_guards.py` exit 0, `adr_lint.py docs/adr --require 0002 0003` exit 0 (3 ADR files), `skill-frontmatter-lint.sh` exit 0; `show-stage-def` for implementation and validation each print `## Dispatch facts` (Signal, Package, Secrets) and `## Number guards`.
+- DONE: Read ADR 0003 with adr_lint, every added comment line, adoption.md "Secret reads", hooks/ PreToolUse, comment_ratio.py and doc_impact.py, and the Captain acceptance script against the shipped text
+  ADR 0003 quotes the Captain's 「准」 matching the ideation gate record; `git diff` adds no `#` comment lines in `scripts/*.py`; no machine-local path in adoption.md, the ADR, workflow.md or skills; no `hooks/` in the package and none in the diffstat; `comment_ratio.py b753d344 c12de142` = 71 code / 0 comment lines; `doc_impact.py` lists three documents, all marked `updated` in the implementation report; acceptance script step 3 was wrong as shipped and is corrected below.
+- SKIPPED: If this session cannot spawn the AC-6 ensign as a teammate, report AC-6 as FAILED naming what blocked it
+  The teammate spawn worked (Agent, `spacedock:ensign`, model sonnet, name `spacedock-ensign-ac6hello-implementation`), so this clause did not apply; AC-6 failed on its own criteria above.
+
+### Findings and limits
+
+- Confound, stated before the run: the worker loaded `kc-dev-flow-2:implementation` from this session's installed 0.9.0 (base `b753d344`), which has no `Package root:` line (grep count 0); the worker reported this and took the root from the skill's base directory. So this run grades Signal, the FAILED rule's absence and Dispatch-facts arrival only; Package-root resolution is graded by AC-1(b). The worker also could not see the candidate's FAILED-rule sentence, which lives in the skill. `<wrapper>` stayed literal in the scratch dispatch (the unresolved-template case in the design).
+- AC-6 lines (transcript `agent-a2a2e8800d6cc915d.jsonl`): (1) one `SendMessage` in total: `to: main`, result `{"success":true,"message":"Message queued for the main conversation's next turn."}`; the FO confirms exactly one message arrived and none earlier: PASS. (2) `find /tmp/val-scratch/cand -name comment_ratio.py ...` in Bash call 1, same command that fetched the stage definition, so the facts had not been read: FAIL as worded, not a filesystem-wide search; no `mdfind`, no `ls -R`, and later runs used `<package>` from the skill's directory. (3) report has 0 `FAILED` bullets (commit c7a8ace in the scratch state): PASS. (4) `status --set ac6hello status=validation started` exit 0, `--checklist` shows three DONE: PASS.
+- Classification (advisory): AC-6 is Needs decision. No candidate change would stop a worker from running a `find` in the same command that first fetches its stage text; a clean grading needs the candidate installed as the loaded plugin (Captain's call, outside this stage's /tmp-only scope) or a Captain ruling that the find, scoped to the scratch repo, is acceptable at N=1.
+- Polish: the design sentence that the section "reaches the worker at the top of its stage text, before the completion block" is wrong; `show-stage-def` prints it after the stage prose and the dispatch file only carries the fetch command.
+- Limits: Codex expansion not probed; N=1 worker; CI minutes and tokens not measured; validation ran against the 0.27.0 Spacedock plugin cache with the 0.27.2 binary, not the CI's v0.27.2 plugin root.
+
+### Captain acceptance script (rewritten against the shipped text; `PKG` is a checkout of the merged package, run from any directory)
+
+1. `python3 $PKG/kc-dev-flow-2/scripts/lint-skills.py; echo exit=$?` prints `PASS: basic frontmatter, declared profile routes, role bindings and package script paths` and `exit=0` (ran).
+2. `cp -R $PKG/kc-dev-flow-2 /tmp/acc-kdf2 && printf '\nRun python3 comment_ratio.py a b\n' >> /tmp/acc-kdf2/skills/implementation/principles.md && python3 $PKG/kc-dev-flow-2/scripts/lint-skills.py --root /tmp/acc-kdf2; echo exit=$?` prints `FAIL: skills/implementation/principles.md: script comment_ratio.py is named without <package>/scripts/` and `exit=1` (ran).
+3. `mkdir /tmp/acc-plug && cp -R $PKG/kc-dev-flow-2 /tmp/acc-plug/ && cd /tmp && claude -p "Invoke the skill kc-dev-flow-2:implementation and print only its Package root line" --model haiku --plugin-dir /tmp/acc-plug/kc-dev-flow-2 --allowedTools=Skill < /dev/null` prints `Package root: /tmp/acc-plug/kc-dev-flow-2`; `ls /tmp/acc-plug/kc-dev-flow-2/scripts/comment_ratio.py` shows the file (ran with the prompt first, and with `--allowedTools=Skill`).
+4. `python3 $PKG/kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root <active Spacedock plugin root>; echo exit=$?` prints a fourth line beginning `PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts` and `exit=0` (ran).
+5. Read the AC-6 receipt above: one send to `main` accepted, no `FAILED` bullet, `status --set` exit 0, and the one scratch-dir `find` that fails the criterion.
+
+Does not cover: Codex, a real qnow dispatch, a real secret read, whether any adopter installs a guard, Package-root resolution by a dispatched worker.
+
+### Summary
+
+Recommend REJECTED, on AC-6 alone: the real worker sent one accepted completion to `main`, wrote a report with no FAILED bullet and got `status --set` accepted, but its first command included a `find` for `comment_ratio.py` (scratch dir only), which the design's pass rule forbids. AC-1(a), AC-1(b), AC-2, AC-4, AC-5, ADR 0003 and the merge with origin/main (clean, all suites exit 0) pass; the implementation report's acceptance script step 3 was wrong as shipped and is corrected here. The run also could not grade Package-root resolution because the loaded skill was the installed 0.9.0; the FO or Captain should decide between re-running with the candidate installed or accepting AC-6 with that limit.
