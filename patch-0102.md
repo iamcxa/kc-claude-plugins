@@ -3,7 +3,7 @@ title: A goal change marks a release changed, any shared non-production database
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-10-01: 「准」 — fix the five package findings as 0.10.2 with the collision rule: applied task keeps its number, the unapplied one renumbers; recreate only when both are applied to a non-resettable database'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Five gaps in kc-dev-flow-2 0.10.1 `references/sd/workflow.md`, found by an external review of an adopter's workflow sync (qnow PR #1248, round 2, 2026-10-01); patch release 0.10.2.
