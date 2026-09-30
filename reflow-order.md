@@ -3,7 +3,7 @@ title: A repair's validation recheck waits for the repair, and a failed push doe
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
