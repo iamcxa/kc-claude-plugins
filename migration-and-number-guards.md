@@ -310,3 +310,6 @@ PASSED. The candidate reproduces every AC: real qnow history gives R1 on 0005 (e
 5. Step 1 with `--base no-such-ref`: expect `number_guards: cannot resolve base 'no-such-ref' ...` and `exit=2`.
 
 Does not cover: a real Netlify deploy or the reset step, the uat database, an actual FO dispatch, timestamp-numbered adopters, snapshot JSON, an unrecorded deploy.
+
+- DONE: Validation follow-ups on aff49ab3c: an ADR-half R4 test, and a runnable uat reset step
+  New commit `83cad4f70a3654c5eed465f1a0530fd8230aac22` on top (no amend, no push): `test_an_added_adr_number_the_task_did_not_reserve_is_refused` fails when the ADR half of R4 is removed (17 tests pass unmutated); the Renumber bullet in `references/sd/workflow.md` now carries the `netlify api` reset command, non-production only, output to /dev/null, not run.
