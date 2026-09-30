@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:reflow-order:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:reflow-order-ideation-1
+              briefing:
+                id: briefing:reflow-order:ideation:attempt-1:revision-1
+                digest: sha256:b17defe01321c47b4a4ad8ddd0a62394b848784d792a962b6c02b1efaa2ac8bf
+                room-ref: ./reflow-order/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:reflow-order:ideation:1
+                briefing: briefing:reflow-order:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T16:04:10.713944Z"
+                decision: approve
+                reason: 'Captain 2026-10-01: 「ok」 — design approved with a failed push replacing its Applied at line by ''Not applied: <env> <sha> - <evidence>'''
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-30T15:58:54Z
 ---
 

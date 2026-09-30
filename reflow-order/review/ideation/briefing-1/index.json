@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:reflow-order:ideation:attempt-1:revision-1",
+  "question": "Approve reflow-order's design: the recheck dispatches only after the repair commits; a failed push replaces its Applied at line with 'Not applied: \u003cenv\u003e \u003csha\u003e - \u003cevidence\u003e' (instead of deleting it); ADR 0004 amended in place; tests with 0.10.0-text falsifiers?",
+  "artifacts": [
+    {
+      "id": "artifact:reflow-order:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/69414a250849e476d04058eaa5d8b34bc1b50566/reflow-order.md",
+      "rev": "sha256:ecd80cc7a055bcbb367906c8e7f65820293bb6f242233ed0b2086ff85e818740",
+      "mediaType": "text/markdown",
+      "summary": "Two wording fixes, no number_guards.py change (its ^Applied at: pattern ignores Not applied:), six ACs."
+    }
+  ]
+}
