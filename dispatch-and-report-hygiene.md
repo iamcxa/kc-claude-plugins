@@ -3,7 +3,7 @@ title: Dispatches name the reachable FO, the package's script paths and the secr
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「准」 — dispatch facts section, FAILED-only rule, secret guard documented not shipped'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Four dispatch and report defects from qnow dogfooding (2026-09-28..30) that cost retries or leaked secrets.
