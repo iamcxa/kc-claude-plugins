@@ -86,6 +86,13 @@ export function lintSliceLimit(model) {
 	return [{ lint: 'invalid-slice-limit', detail: `slice_limit ${JSON.stringify(model.slice_limit)} is not a positive integer` }]
 }
 
+// The renderer reads `board !== false`, so a string "false" would still draw the board.
+export function lintReleaseBoard(model) {
+	return (model.releases ?? [])
+		.filter((r) => r && typeof r === 'object' && r.board !== undefined && typeof r.board !== 'boolean')
+		.map((r) => ({ lint: 'invalid-board', release: r.id, detail: `release ${r.id} has board ${JSON.stringify(r.board)}; use true or false` }))
+}
+
 // Advisory: count is a load cue for a reader, not a fit test; fit stays with the handoff appetite check.
 export function oversizedSlices(model) {
 	const limit = validSliceLimit(model.slice_limit) ? model.slice_limit : DEFAULT_SLICE_LIMIT
@@ -101,7 +108,7 @@ export function oversizedSlices(model) {
 }
 
 export function lintJourney(model, opts = {}) {
-	return [...lintNoStatus(model), ...lintExistsWithoutEvidence(model), ...lintQuestionStatus(model), ...lintExistsWithOpenQuestion(model), ...lintSliceLimit(model), ...lintEvidenceNotFound(model, opts)]
+	return [...lintNoStatus(model), ...lintExistsWithoutEvidence(model), ...lintQuestionStatus(model), ...lintExistsWithOpenQuestion(model), ...lintSliceLimit(model), ...lintReleaseBoard(model), ...lintEvidenceNotFound(model, opts)]
 }
 
 // Card text past this width reads as a paragraph; detail belongs behind an answer's doc link.

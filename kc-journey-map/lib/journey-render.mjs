@@ -24,6 +24,12 @@ if (r.refused) {
 	process.exit(1)
 }
 console.log(r.status, r.shapes, 'shapes ->', r.body)
+for (const id of r.removedPages ?? []) console.log(`removed board page ${id}`)
+for (const k of r.keptPages ?? []) {
+	console.log(k.humanShapes
+		? `kept board page ${k.id}: it holds ${k.humanShapes} shape(s) drawn by hand; only its generated shapes were removed`
+		: `kept board page ${k.id}: it is the last page in the room; its generated shapes were removed`)
+}
 for (const c of r.coverage ?? []) {
 	const gap = c.missing.length ? `  not touched: ${c.missing.join(', ')}` : ''
 	console.log(`  ${c.release}: covers ${c.covered}/${c.of} activities${gap}`)

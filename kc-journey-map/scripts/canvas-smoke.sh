@@ -75,6 +75,79 @@ DRIFT=$(node lib/journey-read.mjs "$EXAMPLE" "$ROOM" | node -e 'let s="";process
 
 echo "ok  round trip clean"
 
+OPTED_OUT="$ROOMS_DIR/opted-out.yaml"
+sed 's/{id: r2,/{id: r2, board: false,/' "$EXAMPLE" >"$OPTED_OUT"
+grep -q 'board: false' "$OPTED_OUT" || { echo "FAIL: the example no longer has the release this check opts out"; exit 1; }
+
+# boardState prints `<pageId> <shapeCount> <humanCount>` for every board page in the room.
+boardState() {
+  node - "$1" "$PORT" <<'NODE'
+const [room, port] = process.argv.slice(2)
+const doc = await fetch(`http://127.0.0.1:${port}/doc?room=${room}`).then((r) => r.json())
+const records = doc.snapshot.documents.map((d) => d.state)
+const shapes = records.filter((r) => r.typeName === 'shape')
+for (const page of records.filter((r) => r.typeName === 'page' && r.id.startsWith('page:jm-board-'))) {
+  const own = shapes.filter((s) => s.parentId === page.id)
+  console.log(page.id, own.length, own.filter((s) => !s.meta?.journey).length)
+}
+NODE
+}
+
+BEFORE=$(boardState "$ROOM")
+R1_BEFORE=$(echo "$BEFORE" | grep '^page:jm-board-r1 ')
+echo "$BEFORE" | grep -q '^page:jm-board-r2 ' || { echo "FAIL: the first render drew no r2 board"; exit 1; }
+OUT=$(node lib/journey-render.mjs "$OPTED_OUT" "$ROOM" --pages journey-board)
+echo "$OUT" | grep -q '^removed board page page:jm-board-r2$' || { echo "FAIL: the render did not report removing the r2 board: $OUT"; exit 1; }
+AFTER=$(boardState "$ROOM")
+echo "$AFTER" | grep -q '^page:jm-board-r2 ' && { echo "FAIL: the r2 board page survived board: false"; exit 1; }
+[ "$(echo "$AFTER" | grep '^page:jm-board-r1 ')" = "$R1_BEFORE" ] || { echo "FAIL: the r1 board changed"; exit 1; }
+node lib/journey-render.mjs "$OPTED_OUT" "$ROOM" --pages story-map >/dev/null
+node - "$ROOM" "$PORT" <<'NODE'
+const [room, port] = process.argv.slice(2)
+const doc = await fetch(`http://127.0.0.1:${port}/doc?room=${room}`).then((r) => r.json())
+const shapes = doc.snapshot.documents.map((d) => d.state).filter((r) => r.typeName === 'shape')
+if (shapes.some((s) => s.parentId === 'page:jm-board-r2' || String(s.id).startsWith('shape:jm-r2-'))) {
+  console.error('FAIL: shapes of the removed r2 board are still in the room')
+  process.exit(1)
+}
+if (!shapes.some((s) => String(s.id).startsWith('shape:sm-'))) {
+  console.error('FAIL: the story map lost its shapes')
+  process.exit(1)
+}
+NODE
+echo "ok  board: false removes its board page and nothing else"
+
+KEEP_ROOM="$ROOM-keep"
+node lib/journey-render.mjs "$EXAMPLE" "$KEEP_ROOM" --pages story-map,journey-board >/dev/null
+node - "$KEEP_ROOM" "$PORT" <<'NODE'
+const [room, port] = process.argv.slice(2)
+const { note } = await import('./lib/records.mjs')
+const hand = { ...note({ id: 'shape:hand-smoke', text: 'kept by hand', x: 0, y: 0, index: 'a1', parentId: 'page:jm-board-r2' }), meta: {} }
+const res = await fetch(`http://127.0.0.1:${port}/doc?room=${room}`, {
+  method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ put: [hand], remove: [] }),
+})
+if (res.status !== 200) { console.error(`FAIL: could not add the hand-made note, got ${res.status}`); process.exit(1) }
+NODE
+node - "$KEEP_ROOM" "$PORT" <<'NODE'
+const [room, port] = process.argv.slice(2)
+const doc = await fetch(`http://127.0.0.1:${port}/doc?room=${room}`).then((r) => r.json())
+const card = doc.snapshot.documents.map((d) => d.state).find((r) => r.id === 'shape:jm-r2-story-choose-pickup-day')
+card.props.richText = { type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text: 'edited on the canvas' }] }] }
+const res = await fetch(`http://127.0.0.1:${port}/doc?room=${room}`, {
+  method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ put: [card], remove: [] }),
+})
+if (res.status !== 200) { console.error(`FAIL: could not edit the card, got ${res.status}`); process.exit(1) }
+NODE
+if node lib/journey-render.mjs "$OPTED_OUT" "$KEEP_ROOM" --pages journey-board >"$ROOMS_DIR/refused.log" 2>&1; then
+  echo "FAIL: a card edited on a stale board page did not stop the render"; exit 1
+fi
+grep -q 'shape:jm-r2-story-choose-pickup-day' "$ROOMS_DIR/refused.log" || { echo "FAIL: the refusal did not name the edited card"; cat "$ROOMS_DIR/refused.log"; exit 1; }
+echo "ok  an edited card on a stale board page stops the render"
+OUT=$(node lib/journey-render.mjs "$OPTED_OUT" "$KEEP_ROOM" --pages journey-board --force)
+echo "$OUT" | grep -q '^kept board page page:jm-board-r2: it holds 1 shape(s) drawn by hand' || { echo "FAIL: the render did not report the kept page: $OUT"; exit 1; }
+[ "$(boardState "$KEEP_ROOM" | grep '^page:jm-board-r2 ')" = "page:jm-board-r2 1 1" ] || { echo "FAIL: the kept page should hold only the hand-made note"; boardState "$KEEP_ROOM"; exit 1; }
+echo "ok  a board page holding a hand-made note is kept with it, even with --force"
+
 ASSETS_DIR="$ROOMS_DIR/assets"
 SAVE_DIR="$ROOMS_DIR/save"
 mkdir -p "$SAVE_DIR"

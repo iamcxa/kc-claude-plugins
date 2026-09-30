@@ -152,7 +152,9 @@ above them — then the release's story notes, then each story's own questions. 
 with neither `system:` nor `rules:` still gets one placeholder card of each kind, so
 the render never reads as having silently dropped a step's flow or constraints. With
 no releases, the whole-journey board also shows unassigned stories and marks
-activities that have no stories yet.
+activities that have no stories yet. A release with `board: false` gets no page; when
+every release opts out no board is drawn at all, and the whole-journey board is only
+for a journey with no `releases:` key.
 
 **Questions and answers are `note` shapes, not `geo` rectangles** — a note has the
 native "+" handles on its edges that let a reader add an adjacent card in one click.
@@ -261,6 +263,8 @@ steps:
         question: …          # sugar for a single-element questions: list
 ownership:
   - {id: …, owner: …, from: <stepId>, to: <stepId>, note: …}
+releases:
+  - {id: …, name: …, goal: …, board: false}   # board is optional; false draws no journey-board page for this release, its story-map band stays
 slices:
   - {id: …, outcome: …}    # the outcome is the label at the line's left edge
 ```
@@ -324,6 +328,16 @@ render stops the render, which names it; keep the edit with `journey-read.mjs --
 or overwrite it with `--force`. `--pages journey-board` only reconciles journey-board pages — a
 story-map page this call did not draw is untouched, even though its shapes also carry
 `meta.journey`.
+
+A render that selects `journey-board` also removes the board pages (ids starting
+`page:jm-board-`) it no longer draws — a release with `board: false`, a release deleted
+from the file, and the whole-journey page once releases exist — with their generated
+shapes and bindings, in the same write. A stale board page that holds a shape without
+`meta.journey` is kept with those shapes, with or without `--force`; only its generated
+shapes are removed, and the render prints the kept page id and how many hand-drawn shapes
+it holds. The render never removes the last page in the room. A person-made page has a
+different id and is never touched. A generated shape on a stale page that was edited on the
+canvas stops the render as it does on any page.
 
 **Wording round-trips across projections.** `lib/read.mjs` reads activity headings and
 story cards on the story map and release boards, plus legacy `step-card` records.

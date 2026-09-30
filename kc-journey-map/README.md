@@ -112,7 +112,7 @@ Selected per render call with `--pages`; the story map is the default.
 | Surface | Kind | Answers |
 |---|---|---|
 | **Story map** (`story-map`) | Canvas, one page | What should we build, what is the smallest useful slice, which stories exist today |
-| **Journey board** (`journey-board`) | Canvas, one page per release | Given we want *this* release, what does the system do today and what is missing |
+| **Journey board** (`journey-board`) | Canvas, one page per release (a release with `board: false` has none) | Given we want *this* release, what does the system do today and what is missing |
 | **Function map** (`function-map`) | Canvas, one page | What does each step decide, and what becomes true when it does |
 | **Release contract** | Generated document, not canvas | Authored story status, evidence and shared rule ids for one release |
 
@@ -153,8 +153,10 @@ content — import into a fresh room unless you mean to overwrite.
 | `exists-without-evidence` | A story marked `exists` with no `evidence` symbol |
 | `evidence-not-found` | An `evidence` symbol that no longer greps anywhere in the repository outside the journey file itself |
 
-Two more checks sit beside them. `invalid-slice-limit` fires on a top-level `slice_limit` that is
-not a positive integer. `slice-size (advisory)` is a printed line, not a violation and not an
+Three more checks sit beside them. `invalid-slice-limit` fires on a top-level `slice_limit` that is
+not a positive integer. `invalid-board` fires on a `board` value on a `releases:` entry that is
+present and not `true` or `false`; `board: false` draws no journey-board page for that release,
+and the renderer treats any other value as `true`. `slice-size (advisory)` is a printed line, not a violation and not an
 exit code: a release with more than five stories whose status is not `exists` (counted per journey
 file; `slice_limit` replaces five) should split into sub-slices, or carry `slice_because` on its
 `releases:` entry, which prints `slice-size (accepted)` instead.

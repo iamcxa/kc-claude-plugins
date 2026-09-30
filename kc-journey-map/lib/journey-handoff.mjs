@@ -45,6 +45,7 @@ function check(baseline, model, assessment) {
 	for (const oldRelease of baseline.releases ?? []) {
 		const current = model.releases?.find((entry) => entry.id === oldRelease.id)
 		const before = { ...oldRelease }, after = { ...current }
+		delete before.board; delete after.board
 		if (oldRelease.id === assessment.release) for (const key of ['goal', 'slice_because']) { delete before[key]; delete after[key] }
 		require(same(before, after), `existing release changed beyond selected goal: ${oldRelease.id}`)
 	}

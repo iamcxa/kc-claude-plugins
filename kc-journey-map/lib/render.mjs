@@ -208,7 +208,7 @@ export function releaseCoverage(model) {
 const journeyBoardPages = (model, room, progress) => {
 	const releases = model.releases ?? []
 	return releases.length
-		? releases.flatMap((release) => buildJourneyBoard(model, { release, room, progress }))
+		? releases.filter((release) => release.board !== false).flatMap((release) => buildJourneyBoard(model, { release, room, progress }))
 		: buildJourneyBoard(model, { room, progress })
 }
 
@@ -220,8 +220,10 @@ export const PROJECTIONS = {
 export const PROJECTION_KEYS = Object.keys(PROJECTIONS)
 export const DEFAULT_PROJECTIONS = ['story-map']
 
+const chosenProjections = (selection) => (selection?.length ? selection : DEFAULT_PROJECTIONS)
+
 export function buildAllPages(model, room = null, selection = DEFAULT_PROJECTIONS, progress = null) {
-	const chosen = selection?.length ? selection : DEFAULT_PROJECTIONS
+	const chosen = chosenProjections(selection)
 	const unknown = chosen.filter((key) => !PROJECTIONS[key])
 	if (unknown.length) throw new Error(`unknown projection(s): ${unknown.join(', ')}`)
 	return PROJECTION_KEYS.filter((key) => chosen.includes(key)).flatMap((key) => PROJECTIONS[key](model, room, progress))
@@ -236,6 +238,14 @@ export function buildAllPages(model, room = null, selection = DEFAULT_PROJECTION
 export function staleRecordIds(currentRecords, put) {
 	const wanted = new Set(put.map((r) => r.id))
 	const scopedPageIds = new Set(put.filter((r) => r.typeName === 'page').map((r) => r.id))
+	const pageIdOf = pageResolver(currentRecords)
+	return currentRecords
+		.filter((r) => (r.typeName === 'shape' || r.typeName === 'binding') && r.meta?.journey && !wanted.has(r.id))
+		.filter((r) => scopedPageIds.has(pageIdOf(r)))
+		.map((r) => r.id)
+}
+
+function pageResolver(currentRecords) {
 	const shapesById = new Map(currentRecords.filter((r) => r.typeName === 'shape').map((r) => [r.id, r]))
 	// A shape's own parentId is its page for every top-level shape, but storyBorder
 	// nests a border under its story shape — walk the chain, not just one hop.
@@ -247,11 +257,35 @@ export function staleRecordIds(currentRecords, put) {
 		}
 		return undefined
 	}
-	const pageIdOf = (r) => (r.typeName === 'binding' ? pageIdOfShape(shapesById.get(r.fromId)) : pageIdOfShape(r))
-	return currentRecords
-		.filter((r) => (r.typeName === 'shape' || r.typeName === 'binding') && r.meta?.journey && !wanted.has(r.id))
-		.filter((r) => scopedPageIds.has(pageIdOf(r)))
-		.map((r) => r.id)
+	return (r) => (r.typeName === 'binding' ? pageIdOfShape(shapesById.get(r.fromId)) : pageIdOfShape(r))
+}
+
+export const BOARD_PAGE_PREFIX = 'page:jm-board-'
+
+// Only a journey-board render may retire board pages: a story-map-only render draws none,
+// so every board page in the room would look unwanted. A page with a hand-drawn shape
+// (no meta.journey) stays and loses only its generated records; so does the last page
+// the room would otherwise have.
+export function staleBoardPages(currentRecords, put, selection) {
+	const none = { pages: [], kept: [], records: [] }
+	if (!chosenProjections(selection).includes('journey-board')) return none
+	const produced = new Set(put.filter((r) => r.typeName === 'page').map((r) => r.id))
+	const pages = currentRecords.filter((r) => r.typeName === 'page')
+	const stale = new Set(pages.filter((p) => p.id.startsWith(BOARD_PAGE_PREFIX) && !produced.has(p.id)).map((p) => p.id))
+	if (!stale.size) return none
+	const pageIdOf = pageResolver(currentRecords)
+	const human = new Map()
+	const records = []
+	for (const r of currentRecords) {
+		if ((r.typeName !== 'shape' && r.typeName !== 'binding') || !stale.has(pageIdOf(r))) continue
+		if (r.meta?.journey) records.push(r.id)
+		else if (r.typeName === 'shape') human.set(pageIdOf(r), (human.get(pageIdOf(r)) ?? 0) + 1)
+	}
+	const kept = [...stale].filter((id) => human.has(id)).map((id) => ({ id, humanShapes: human.get(id) }))
+	const pageIds = [...stale].filter((id) => !human.has(id))
+	const survivors = pages.filter((p) => !pageIds.includes(p.id)).length + [...produced].filter((id) => !pages.some((p) => p.id === id)).length
+	if (!survivors) kept.push({ id: pageIds.shift(), humanShapes: 0 })
+	return { pages: pageIds, kept, records }
 }
 
 const shapeText = (record) =>
@@ -285,7 +319,8 @@ export async function renderToRoom({ path, room, selection, progress = null, api
 	// Re-rendering projects the canonical YAML title into tldraw's native name.
 	const document = DocumentRecordType.create({ ...currentDocument, id: TLDOCUMENT_ID,
 		name: typeof model.title === 'string' ? model.title.trim() : '' })
-	const remove = staleRecordIds(currentRecords, put)
+	const board = staleBoardPages(currentRecords, put, selection)
+	const remove = [...staleRecordIds(currentRecords, put), ...board.records, ...board.pages]
 	const edited = handEditedIds(currentRecords, put, remove)
 	if (edited.length && !force) return { refused: edited, shapes: 0, removed: 0 }
 
@@ -294,5 +329,5 @@ export async function renderToRoom({ path, room, selection, progress = null, api
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ put: [document, ...put], remove }),
 	})
-	return { status: res.status, body: await res.text(), shapes: put.length, removed: remove.length, coverage: releaseCoverage(model) }
+	return { status: res.status, body: await res.text(), shapes: put.length, removed: remove.length, removedPages: board.pages, keptPages: board.kept, coverage: releaseCoverage(model) }
 }

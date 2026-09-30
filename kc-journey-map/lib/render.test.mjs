@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
 import { createTLSchema } from '@tldraw/tlschema'
-import { buildJourneyBoard, buildAllPages, staleRecordIds } from './render.mjs'
+import { buildJourneyBoard, buildAllPages, staleRecordIds, staleBoardPages, handEditedIds, withRenderedText } from './render.mjs'
 import { buildStoryMap } from './storymap.mjs'
 import { fixtureModel } from './fixture.mjs'
 import { sortByIndex, validateIndexKey } from '@tldraw/utils'
@@ -311,8 +311,6 @@ test('every board page carries an index key tldraw accepts, however many release
 	assert.deepEqual([...pages].sort(sortByIndex).map((p) => p.name), pages.map((p) => p.name))
 })
 
-import { handEditedIds, withRenderedText } from './render.mjs'
-
 test('a generated shape edited on the canvas blocks the render that would overwrite it', () => {
 	const rich = (text) => ({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] })
 	const drawn = withRenderedText([{ typeName: 'shape', id: 'shape:a', props: { richText: rich('原本') }, meta: { journey: { nodeId: 'a' } } }])[0]
@@ -323,4 +321,92 @@ test('a generated shape edited on the canvas blocks the render that would overwr
 	assert.deepEqual(handEditedIds([edited], [], ['shape:a']), ['shape:a'])
 	const legacy = { ...edited, meta: { journey: { nodeId: 'a' } } }
 	assert.deepEqual(handEditedIds([legacy], next, []), [])
+})
+
+const optedOut = () => {
+	const model = structuredClone(fixtureModel)
+	model.releases[1].board = false
+	return model
+}
+const pageIds = (records) => records.filter((r) => r.typeName === 'page').map((r) => r.id)
+
+test('a release with board false gets no board page and keeps its story-map band', () => {
+	assert.deepEqual(pageIds(buildAllPages(optedOut(), null, ['journey-board'])), ['page:jm-board-r1'])
+	const withoutIndex = (records) => records.map(({ index, ...rest }) => rest)
+	assert.deepEqual(withoutIndex(buildAllPages(optedOut(), null, ['story-map'])), withoutIndex(buildAllPages(fixtureModel, null, ['story-map'])))
+	assert.ok(buildAllPages(optedOut(), null, ['story-map']).some((r) => r.id.includes('r2') || r.meta?.journey?.nodeId === 'r2'), 'the r2 band is missing from the story map')
+})
+
+test('every release opting out draws no board; no releases key draws the whole-journey board', () => {
+	const none = structuredClone(fixtureModel)
+	for (const release of none.releases) release.board = false
+	assert.deepEqual(buildAllPages(none, null, ['journey-board']), [])
+	const whole = structuredClone(fixtureModel)
+	delete whole.releases
+	assert.deepEqual(pageIds(buildAllPages(whole, null, ['journey-board'])), ['page:jm-board-all'])
+})
+
+const room = (model, selection = ['story-map', 'journey-board']) => buildAllPages(model, null, selection)
+const boardShape = (page, id, meta = { journey: { nodeId: id, kind: 'story' } }) =>
+	({ id: `shape:${id}`, typeName: 'shape', type: 'note', parentId: page, meta })
+
+test('a re-render retires board pages it no longer draws: opted out, removed from the file, and the whole-journey page', () => {
+	const current = room(fixtureModel)
+	const shapes = current.filter((r) => r.typeName === 'shape')
+	const onR2 = (r) => r.parentId === 'page:jm-board-r2' || (shapes.some((p) => p.id === r.parentId) && onR2(shapes.find((p) => p.id === r.parentId)))
+	const generated = shapes.filter(onR2).map((r) => r.id)
+	assert.ok(generated.some((id) => id.endsWith('-status-border')), 'the fixture draws no nested border, so this proves nothing')
+
+	const out = staleBoardPages(current, buildAllPages(optedOut(), null, ['journey-board']), ['journey-board'])
+	assert.deepEqual(out.pages, ['page:jm-board-r2'])
+	assert.deepEqual(out.kept, [])
+	assert.deepEqual(out.records.sort(), generated.sort())
+
+	const dropped = structuredClone(fixtureModel)
+	dropped.releases.pop()
+	assert.deepEqual(staleBoardPages(current, room(dropped, ['journey-board']), ['journey-board']).pages, ['page:jm-board-r2'])
+
+	const whole = structuredClone(fixtureModel)
+	delete whole.releases
+	const withAll = [...current, ...buildAllPages(whole, null, ['journey-board'])]
+	assert.deepEqual(staleBoardPages(withAll, buildAllPages(fixtureModel, null, ['journey-board']), ['journey-board']).pages, ['page:jm-board-all'])
+})
+
+test('a stale board page holding a hand-drawn shape is kept with it; other pages are never touched', () => {
+	const human = boardShape('page:jm-board-r2', 'human-note', {})
+	const person = { id: 'page:xyz', typeName: 'page', name: 'Notes' }
+	const current = [...room(fixtureModel), human, person, { id: 'page:jm-funcmap', typeName: 'page', name: 'Function map' }]
+	const out = staleBoardPages(current, buildAllPages(optedOut(), null, ['journey-board']), ['journey-board'])
+	assert.deepEqual(out.pages, [])
+	assert.deepEqual(out.kept, [{ id: 'page:jm-board-r2', humanShapes: 1 }])
+	assert.ok(!out.records.includes(human.id), 'the hand-drawn note was listed for removal')
+	assert.ok(out.records.some((id) => current.find((r) => r.id === id)?.parentId === 'page:jm-board-r2'), 'generated shapes stayed')
+	for (const id of ['page:xyz', 'page:jm-funcmap', 'page:page']) assert.ok(!out.pages.includes(id))
+})
+
+test('a render that does not select journey-board removes no board page', () => {
+	const out = staleBoardPages(room(fixtureModel), buildAllPages(optedOut(), null, ['story-map']), ['story-map'])
+	assert.deepEqual(out, { pages: [], kept: [], records: [] })
+	assert.deepEqual(staleBoardPages(room(fixtureModel), buildAllPages(optedOut(), null, ['story-map']), undefined), { pages: [], kept: [], records: [] })
+})
+
+test('a generated card edited on a stale board page stops the render', () => {
+	const rich = (text) => ({ type: 'doc', content: [{ type: 'paragraph', content: [{ type: 'text', text }] }] })
+	const current = withRenderedText(room(fixtureModel))
+	const card = current.find((r) => r.typeName === 'shape' && r.parentId === 'page:jm-board-r2' && r.meta?.journey?.kind === 'story')
+	card.props = { ...card.props, richText: rich('edited by hand') }
+	const put = buildAllPages(optedOut(), null, ['journey-board'])
+	const board = staleBoardPages(current, put, ['journey-board'])
+	assert.ok(handEditedIds(current, put, [...board.records, ...board.pages]).includes(card.id))
+	assert.deepEqual(handEditedIds(current, put, []), [], 'the edit is only visible once the stale removal list is built')
+})
+
+test('the render never removes the last page in the room', () => {
+	const only = room(fixtureModel, ['journey-board']).filter((r) => r.id !== 'page:jm-board-r1' && r.parentId !== 'page:jm-board-r1')
+	assert.deepEqual(pageIds(only), ['page:jm-board-r2'])
+	const none = structuredClone(fixtureModel)
+	for (const release of none.releases) release.board = false
+	const out = staleBoardPages(only, buildAllPages(none, null, ['journey-board']), ['journey-board'])
+	assert.deepEqual(out.pages, [])
+	assert.deepEqual(out.kept, [{ id: 'page:jm-board-r2', humanShapes: 0 }])
 })
