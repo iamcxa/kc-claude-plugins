@@ -43,8 +43,10 @@ Material, or labelled P1 by the external reviewer, blocks in every round; a revi
 is fixed and revalidated or waived by the Captain with the reason recorded. From the
 third round a finding that is neither starts no repair cycle and becomes a follow-up in
 the committed gate summary and a `Follow-up:` line in a task's Scope. A feedback-reflow
-repair, its validation recheck and an authorized first-officer fix are dispatched at
-once in the entity's own worktree; `concurrency` limits only what `status --next`
+repair and an authorized first-officer fix are dispatched at once in the entity's own
+worktree, and the validation recheck of either is dispatched after the repair or fix
+has completed and committed its candidate; none waits for another entity's worker,
+and `concurrency` limits only what `status --next`
 proposes (Spacedock 0.27.2; `scripts/test_sd_dispatch.py` builds a reflow dispatch while another entity holds the slot). `comment_ratio.py` exits 1 when added comments exceed the maximum (default 5
 percent, `comment-ratio-max:` in the workflow README, `--max` for one run) with at least
 20 code lines added, and when an added comment cites task numbering, review provenance,
@@ -64,3 +66,5 @@ positive. The Captain declined a fix for these classes as a known limit. The
 highest severity level counts as P1 (`workflow.md` item 5, e.g. RoboRev). Reopen if a
 follow-up proves to have been a Material defect, or if Spacedock adds a slot check to
 the reflow path.
+
+Amended 2026-10-01: the validation recheck is dispatched after the repair completes and commits, not at once with it (`workflow.md` Stages).

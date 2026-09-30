@@ -109,6 +109,14 @@ class AppliedFreezeTests(unittest.TestCase):
         unrecorded = task_file(self.task_dir.name, "Migration: 0006")
         self.assertEqual(self.fx.check(task=unrecorded)[0], 0)
 
+    def test_a_not_applied_line_in_place_of_the_record_leaves_the_edit_unfrozen(self):
+        self.fx.commit("edit", **{mig(6, "op"): "SELECT 66;\n"})
+        for line in (f"Not applied: uat {self.applied} - push rejected", f"Not applied: uat {self.applied}"):
+            code, out = self.fx.check(task=task_file(self.task_dir.name, "Migration: 0006", line))
+            self.assertEqual(code, 0, out)
+        code, out = self.fx.check(task=task_file(self.task_dir.name, "Migration: 0006", self.line))
+        self.assertEqual((code, "FAIL R2" in out), (1, True), out)
+
     def test_renumbering_an_applied_migration_is_refused(self):
         self.fx.commit("renumber", **{mig(6, "op"): None, mig(8, "op"): "SELECT 6;\n"})
         recorded = task_file(self.task_dir.name, "Migration: 0006", "Migration: 0008", self.line)
