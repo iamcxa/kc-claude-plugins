@@ -209,6 +209,12 @@ class CriteriaTests(unittest.TestCase):
         "unclosed bold": ("## Acceptance criteria\n**AC-1 x\n", False),
         "lowercase heading": ("## acceptance criteria\n**AC-1**: x\n", True),
         "trailing space": ("## Acceptance criteria \n**AC-1**: x\n", True),
+        "leading space": (" ## Acceptance criteria\n**AC-1**: x\n", True),
+        "leading tab": ("\t## Acceptance criteria\n**AC-1**: x\n", True),
+        "leading no-break space": ("\xa0## Acceptance criteria\n**AC-1**: x\n", True),
+        "trailing no-break space": ("## Acceptance criteria\xa0\n**AC-1**: x\n", True),
+        "uppercase heading": ("## ACCEPTANCE CRITERIA\n**AC-1**: x\n", True),
+        "two spaces inside": ("## Acceptance  criteria\n**AC-1**: x\n", False),
         "labelled": ("## Acceptance criteria\n**AC-1 (VALUE)**: x\n", True),
         "valid": ("## Acceptance criteria\n**AC-1**: x\nVerified by: y\n", True),
         "after a sub-heading": ("## Acceptance criteria\n### Group\n**AC-1**: x\n", True),
@@ -238,10 +244,18 @@ class CriteriaTests(unittest.TestCase):
         self.assertEqual(self.errors(empty, mutant), [])
 
     def test_mutation_matching_the_heading_case_sensitively_fails_its_case(self):
-        mutant = mutated(r'r"^## Acceptance criteria[ \t\r]*$", re.I)', r'r"^## Acceptance criteria[ \t\r]*$")')
+        mutant = mutated('## Acceptance criteria{GO_SPACE}$", re.I)', '## Acceptance criteria{GO_SPACE}$")')
         lower = "## acceptance criteria\n**AC-1**: x\n"
         self.assertEqual(self.errors(lower), [])
         self.assertTrue(self.errors(lower, mutant))
+
+    def test_mutation_restoring_the_column_zero_anchor_fails_its_cases(self):
+        mutant = mutated('rf"^{GO_SPACE}## Acceptance criteria{GO_SPACE}$"', 'r"^## Acceptance criteria[ \\t\\r]*$"')
+        for label in ("leading space", "leading tab", "leading no-break space", "trailing no-break space"):
+            with self.subTest(label):
+                criteria = self.FIXTURES[label][0]
+                self.assertEqual(self.errors(criteria), [])
+                self.assertTrue(self.errors(criteria, mutant))
 
 
 class AmendmentTests(unittest.TestCase):
@@ -270,6 +284,21 @@ class AmendmentTests(unittest.TestCase):
         self.assertTrue(any("supersedes AC-2 but it is still declared" in e for e in errors), errors)
         redeclared = self.errors(AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-1"), "**AC-1**: new text.\n")
         self.assertTrue(any("supersedes AC-1" in e for e in redeclared), redeclared)
+
+    def test_the_amendments_heading_matches_in_any_case_and_with_surrounding_space(self):
+        for heading in ("## Captain Amendments", "## CAPTAIN AMENDMENTS", " ## Captain amendments", "## Captain amendments\xa0"):
+            with self.subTest(heading):
+                text = AMENDMENT.replace("## Captain amendments", heading).replace("Captain: 「keep the count per slot」 (gate reason)\n", "")
+                errors = self.errors(text)
+                self.assertTrue(any("no 'Captain:' line" in e for e in errors), errors)
+                self.assertTrue(any("supersedes AC-2 but it is still declared" in e for e in self.errors(
+                    AMENDMENT.replace("## Captain amendments", heading), BOTH)))
+
+    def test_mutation_matching_the_amendments_heading_case_sensitively_fails_its_case(self):
+        mutant = mutated('## Captain amendments{GO_SPACE}$", re.I)', '## Captain amendments{GO_SPACE}$")')
+        text = AMENDMENT.replace("## Captain amendments", "## Captain Amendments")
+        self.assertTrue(self.errors(text, BOTH))
+        self.assertEqual(self.errors(text, BOTH, mutant), [])
 
     def test_mutation_dropping_the_disjointness_rule_fails_its_case(self):
         mutant = mutated("& declared", "& set()")

@@ -20,11 +20,6 @@ finding returned through feedback; exit 2 is a configuration error that returns 
 The citation scan finds the named classes only, so still read every added comment.
 When the task has a `## Number guards` section, rerun its `check` at the candidate; exit 1 or 2 is
 a repair finding returned through feedback.
-When the task has `## Captain amendments`, read them before the design, run
-`python3 <package>/scripts/design_surfaces.py check <task>` (exit 1 is a repair finding
-returned through feedback), treat each `Supersedes:` criterion as withdrawn, and derive
-evidence and the acceptance script from `## Acceptance criteria` plus the amendments,
-never from a superseded criterion or design paragraph.
 When the change alters what a user sees, the evidence includes a screenshot of the
 changed screen at the candidate; reading the code or a passing render test is not
 seeing it.

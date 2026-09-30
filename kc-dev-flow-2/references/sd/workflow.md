@@ -321,7 +321,8 @@ and never reuses an id. A superseded criterion and the design paragraph named by
 `## Acceptance criteria` plus the entries.
 
 `python3 <package>/scripts/design_surfaces.py check <task>` exits 1 when an entry has no
-`Captain:` line or a superseded id is still declared in `## Acceptance criteria`.
+`Captain:` line or a superseded id is still declared in `## Acceptance criteria`;
+implementation and validation run it, and exit 1 is a repair finding returned through feedback.
 Between FO's record and the worker's move the task shows both, and the check says so.
 It cannot see a skipped record, only the state after a skipped move; a moved block is
 not scanned by `spacedock status --read --ac-scan`, which is why relocation, not

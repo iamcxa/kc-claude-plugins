@@ -25,8 +25,8 @@ Each recorded `Surfaces:` value owes its own artifact, fidelity before prettines
 `python3 <package>/scripts/design_surfaces.py check <task>` and cite its
 output in the Stage Report. The gate is not presentable without the
 artifact each recorded surface owes, or without a usable `## Acceptance criteria`
-section: the first line that is exactly that heading (any case), up to the next
-`## ` line, must hold at least one `**AC-<id>**` bold declaration, the grammar
+section: the first line that equals that heading in any case once surrounding
+whitespace is trimmed, up to the next `## ` line, must hold at least one `**AC-<id>**` bold declaration, the grammar
 `spacedock status --read --ac-scan` reads; a `- AC-1:` list is not one.
 Ideation writes no repository file, branch or commit; the design, the criteria and
 any ADR draft live in the task file. A design that lands an ADR names the ruling and

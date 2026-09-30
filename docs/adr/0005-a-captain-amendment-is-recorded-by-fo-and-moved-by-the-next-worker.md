@@ -56,9 +56,13 @@ of AC-4(b) kept for validation.
 The rule later work must follow: an amendment has one record, `## Captain amendments`,
 in the form `workflow.md` gives; its `Supersedes:` criteria are withdrawn and are
 moved, not annotated; `check` exits 1 for an entry without `Captain:` and for a
-superseded id still declared. The FO runs `check --seed` before the backlog gate and
-holds it until it exits 0. Ideation writes no repository file, branch or commit, and
-names an ADR by ruling and short title with no number.
+superseded id still declared. The heading is matched like Spacedock's own: any case,
+surrounding whitespace ignored. The record and the move rule reach a dispatched
+implementation or validation worker through `Captain amendments` in that stage's
+`context-sections` in `workflow.md`, not through a sentence in its `principles.md`.
+The FO runs `check --seed` before the backlog gate and holds it until it exits 0.
+Ideation writes no repository file, branch or commit, and names an ADR by ruling and
+short title with no number.
 
 ## Consequences
 
@@ -69,5 +73,10 @@ and nothing blocks an ideation worker from writing a file. An adopter receives t
 steps by re-syncing its workflow README from `workflow.md`; until then its FO does not
 run the seed check. The criteria rule follows `--ac-scan`'s grammar as read in 0.27.2;
 the parity test in `scripts/test_sd_dispatch.py` fails if a Spacedock release changes
-it. Reopen if the live probe at validation shows the worker sentences change nothing, or
-if Spacedock adds a task-body hook at dispatch or `gate prepare`.
+it. The live probe at validation (one Sonnet run per arm, the candidate package and
+origin/main 05b772b7, the same scratch task whose design described the old flow) had both
+arms write an acceptance script that follows the amendment and never runs the superseded
+behaviour, so the two `principles.md` sentences it was meant to justify were removed, as this
+decision said they would be. Limit: N=1 per arm, one model, and the probe ran after the
+superseded criterion had been moved; the effect of the record before the move is unmeasured.
+Reopen if Spacedock adds a task-body hook at dispatch or `gate prepare`.

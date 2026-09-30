@@ -197,6 +197,12 @@ def exercise(base, binary, sd_root):
                 ("unclosed bold", "\n## Acceptance criteria\n**AC-1 x\n", False),
                 ("lowercase heading", "\n## acceptance criteria\n**AC-1**: x\n", True),
                 ("trailing space", "\n## Acceptance criteria \n**AC-1**: x\n", True),
+                ("leading space", "\n ## Acceptance criteria\n**AC-1**: x\n", True),
+                ("leading tab", "\n\t## Acceptance criteria\n**AC-1**: x\n", True),
+                ("leading no-break space", "\n\xa0## Acceptance criteria\n**AC-1**: x\n", True),
+                ("trailing no-break space", "\n## Acceptance criteria\xa0\n**AC-1**: x\n", True),
+                ("uppercase heading", "\n## ACCEPTANCE CRITERIA\n**AC-1**: x\n", True),
+                ("two spaces inside", "\n## Acceptance  criteria\n**AC-1**: x\n", False),
                 ("labelled", "\n## Acceptance criteria\n**AC-1 (VALUE)**: x\n", True),
                 ("valid", "\n## Acceptance criteria\n**AC-1**: x\nVerified by: y\n", True),
                 ("fenced declaration", "\n## Acceptance criteria\n```\n**AC-1**: x\n```\n", True)):
