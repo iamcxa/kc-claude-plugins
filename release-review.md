@@ -191,6 +191,10 @@ Result: the FO delegates these questions to ideation, which decides each with it
 Surfaces: none
 Visible change: none
 
+## Number guards
+
+ADR: 0006
+
 ## Stage Report: ideation
 
 - DONE: Design the change for issue #520 with the five-per-slice rule: signals, task fields, unit and check, ownership (questions 1 to 4)
