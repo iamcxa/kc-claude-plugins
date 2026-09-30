@@ -3,7 +3,7 @@ title: A release can opt out of its journey-board page, and a re-render removes 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「做board: false 可以」'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 kc-journey-map renders a board page for every release and re-renders recreate or keep pages the map no longer wants; issue #541.
