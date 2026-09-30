@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dispatch-and-report-hygiene:validation:attempt-1:revision-1",
+  "question": "Validation recommends REJECTED on AC-6 only (one scoped find for comment_ratio.py, run by a worker that loaded the installed 0.9.0 skill, not the candidate). Re-run AC-6 with the candidate loaded, or accept with that limit?",
+  "artifacts": [
+    {
+      "id": "artifact:dispatch-and-report-hygiene:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/957c16744cb294f8607561f1412dfd35d256ba5e/dispatch-and-report-hygiene.md",
+      "rev": "sha256:ee343afe0ac643431278ac77465536c65afaaad440212f84c19ac26b2f5d3748",
+      "mediaType": "text/markdown",
+      "summary": "AC-1..AC-5, ADR 0003 and the merge with main pass; AC-6: signal to main once PASS, no FAILED bullet PASS, status --set PASS, one scratch-dir find FAIL; run confounded by the installed 0.9.0 skill."
+    }
+  ]
+}

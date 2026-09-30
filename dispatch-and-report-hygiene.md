@@ -45,6 +45,18 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:dispatch-and-report-hygiene:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:dispatch-and-report-hygiene-validation-1
+              briefing:
+                id: briefing:dispatch-and-report-hygiene:validation:attempt-1:revision-1
+                digest: sha256:357f014ae431faa6df3fcf7c0b4e00608cab8e37eabc1e7f051881c76b21a109
+                room-ref: ./dispatch-and-report-hygiene/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-09-30T04:53:38.490912Z"
+                reason: 'Captain 2026-09-30: 「重跑」 — re-run AC-6 with the candidate package loaded in isolated Claude state'
 started: 2026-09-30T04:12:30Z
 worktree: .worktrees/spacedock-ensign-dispatch-and-report-hygiene
 ---
@@ -301,3 +313,31 @@ Does not cover: Codex, a real qnow dispatch, a real secret read, whether any ado
 ### Summary
 
 Recommend REJECTED, on AC-6 alone: the real worker sent one accepted completion to `main`, wrote a report with no FAILED bullet and got `status --set` accepted, but its first command included a `find` for `comment_ratio.py` (scratch dir only), which the design's pass rule forbids. AC-1(a), AC-1(b), AC-2, AC-4, AC-5, ADR 0003 and the merge with origin/main (clean, all suites exit 0) pass; the implementation report's acceptance script step 3 was wrong as shipped and is corrected here. The run also could not grade Package-root resolution because the loaded skill was the installed 0.9.0; the FO or Captain should decide between re-running with the candidate installed or accepting AC-6 with that limit.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Re-run AC-6 only on candidate c12de14252595a27060a9918870423957007038d with the candidate package as the only kc-dev-flow-2 the worker can load
+  `git archive c12de142` snapshot at `/tmp/val2/snap`; headless `claude --setting-sources local --plugin-dir <snap>/kc-dev-flow-2 --plugin-dir <Spacedock 0.27.0 root>` with `DISABLE_PLUGIN_AUTOLOAD=1` run from `/tmp/val2/runtime` was the FO and built the dispatch (`dispatch build --stamp`) and spawned one Sonnet `spacedock:ensign` teammate; init lists exactly `kc-dev-flow-2` at the snapshot path and `spacedock`.
+- DONE: Prove the loaded skill was the candidate (`Package root:` line naming the snapshot path)
+  The worker's Skill call 7 (`kc-dev-flow-2:implementation`) returned "Base directory for this skill: /tmp/val2/snap/kc-dev-flow-2/skills/implementation ... Package root: /tmp/val2/snap/kc-dev-flow-2"; it then ran scripts as `python3 /tmp/val2/snap/kc-dev-flow-2/scripts/comment_ratio.py 312f5da HEAD` (exit 0) and `doc_impact.py`.
+- FAILED: Pass only with no failed SendMessage, no `find`/`mdfind`/`ls -R` search for a script, no FAILED bullet in its report, and `status --set` accepting it
+  Not met on one line: worker Bash call 6 ends with `find / -name comment_ratio.py -not -path '*/node_modules/*' 2>/dev/null | head`, a filesystem-wide search (about 66 s, 5.4 s to 71.9 s in the progress events) that printed ten paths; the other three lines passed (Findings).
+- DONE: If the worker still searches before it reads the stage text, say at which call and what it had read by then
+  Call 6 of 12, the same command that first fetched the stage text (`show-stage-def ...; cat <entity>; git status; git log; find / ...`); by then it had read only calls 3-5: the dispatch file, `ensign-shared-core.md` and `claude-ensign-runtime.md`; it had not read `## Dispatch facts` or loaded the skill (call 7).
+- DONE: Report tokens and wall time of the run
+  Wall time 99 s (start 1790744121, exit 1790744220); worker 30,160 tokens, 10 tool uses, 83 s (task_progress); FO session over its three turns: input 16, cache creation 10,976, cache read 117,183, output 1,213 tokens; `total_cost_usd` is imputed and not quoted.
+
+### Findings and limits
+
+- Excerpts: (1) `SendMessage {"to":"main", ...}` returned `{"success":true,"message":"Message queued for the main conversation's next turn."}` and the FO reported the completion message recipient as `main`; no earlier send: PASS. (2) the `find /` above, call 6: FAIL; no `mdfind` or `ls -R` anywhere in the 12 calls; after the skill load every script ran from `/tmp/val2/snap/kc-dev-flow-2`. (3) the report in the scratch state (commit d4bb784) has 3 DONE bullets and no `FAILED`: PASS. (4) the FO ran `status --set ac6hello status=validation` and printed `status: implementation -> validation`, exit 0: PASS.
+- Trigger: the FO-authored checklist item in the dispatch file reads "run the package comment_ratio.py from the base commit to HEAD" (copied from the first run's checklist), which names the script with no root; the worker searched for it in the same batched command that fetched the Dispatch facts, so the section that says "never search the filesystem" could not have been read first. Same shape as the first run (scratch-dir `find` in call 1), wider scope this time.
+- Classification (advisory): Needs decision. The candidate's text cannot precede a command the worker composes before reading it; whether the rule is met depends on the dispatch file, which the FO writes. Options for the FO or Captain: an FO-authored `--scope-notes-file` carrying the Package sentence (lands in the dispatch file the worker reads first; not tried here), a checklist that writes `<package>/scripts/...`, or accept N=2 as showing Dispatch facts do not preempt a batched first command.
+- Limits: N=1 per run; user-level `~/.claude/CLAUDE.md` still loads in the headless session (`--bare` would drop it but also plugins and keychain auth); a permission allowlist (`Bash,Read,Write,Edit,Glob,Grep,Agent,SendMessage,Skill,ToolSearch`) was used instead of bypass; the Spacedock plugin root was the 0.27.0 cache with the 0.27.2 binary, as in the first run; `spacedock:first-officer` was not loaded in the headless FO, so its own completion-handling text was not in play.
+
+### Captain acceptance script (AC-6 receipt, rewritten against this run)
+
+5. Read the AC-6 receipt above: one send to `main` accepted, no `FAILED` bullet, `status --set` exit 0, and one `find /` for `comment_ratio.py` in the worker's first Bash call. Evidence: `/tmp/val2/logs/fo.jsonl` (stream-json, worker events carry `parent_tool_use_id`), scratch repo `/tmp/val2/scratch`.
+
+### Summary
+
+Recommend REJECTED on AC-6 only (the other results from the first run stand): with the candidate as the only loaded kc-dev-flow-2, the worker sent one accepted completion to `main`, resolved `<package>` from the skill's `Package root:` line, wrote a report with no FAILED bullet and got `status --set` accepted, but its first batched Bash call ran `find / -name comment_ratio.py`, before it had read the Dispatch facts. The gap is in what the worker reads before the stage text arrives, not in the candidate's text; the FO or Captain should choose between the dispatch-file options above and accepting the limit.
