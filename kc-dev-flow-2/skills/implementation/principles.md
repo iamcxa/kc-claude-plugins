@@ -12,8 +12,12 @@ alone does not authorize deletion. Cut unmapped surfaces within approved scope,
 prefer a materially smaller equivalent route, and keep repeated explanations in
 one home. Record temporary scaffolding's concrete removal condition when added;
 an enduring guard instead names its invariant. Counts are diagnostic, not quotas.
-Before reporting completion, run `python3 <package>/scripts/comment_ratio.py <base> HEAD`
-and report its output with the stage report.
+Before reporting completion, run
+`python3 <package>/scripts/comment_ratio.py <base> HEAD --workflow-dir <workflow-dir>`
+and report its output with the stage report. Exit 1 is a trim: cut the comments
+above the maximum, and cite an ADR or a greppable symbol instead of task numbering,
+review provenance, a PR or issue number or a `file:line`. Exit 2 is a configuration
+error that returns to FO.
 When the task has a `## Number guards` section, use only the numbers it lists, run
 `python3 <package>/scripts/number_guards.py check` as that section states and report its
 output and base SHA; a migration on the base branch or recorded as applied is frozen,

@@ -15,6 +15,13 @@ import uuid
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "references/sd/workflow.md"
 STAGES = ("ideation", "implementation", "validation")
+ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
+              "or labelled P1 by the reviewer, blocks in every round",
+              "For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev)",
+              "From round 3 a finding that is neither does not start a repair cycle",
+              "`Follow-up:` line to that task's Scope")
+LANE_RULE = ("`concurrency` limits only what `status --next` proposes",
+             "are dispatched at once in the entity's own worktree")
 
 
 def exercise(base, binary, sd_root):
@@ -136,6 +143,9 @@ def exercise(base, binary, sd_root):
                     assert "PRFAQ" in gate and "Mermaid" in gate and "Surfaces" in gate and "not presentable" in gate
                 else:
                     assert "## Review-finding disposition" in definition
+                    flat = " ".join(definition.split())
+                    for phrase in ROUND_RULE:
+                        assert phrase in flat, (host, stage, phrase)
 
         repo, entity = seed("ac-format", "ideation")
         declarations = entity.read_text() + "\n" + "\n".join(
@@ -289,6 +299,35 @@ def exercise(base, binary, sd_root):
         run(["git", "-C", entity.parent, "commit", "-m", "test: report without the FAILED bullet"])
         run(advance, workflow)
 
+        source = " ".join(TEMPLATE.read_text().split())
+        for phrase in LANE_RULE:
+            assert phrase in source, phrase
+        trimmed = re.sub(r"^5\. A round is one verdict.*?(?=\n\n)", "", TEMPLATE.read_text(),
+                         flags=re.DOTALL | re.MULTILINE)
+        assert trimmed != TEMPLATE.read_text()
+        workflow, entity = seed("no-round-rule", "implementation", trimmed)
+        bare = run([binary, "dispatch", "show-stage-def", "--workflow-dir", workflow, "--stage", "implementation"], workflow).stdout
+        assert "## Review-finding disposition" in bare
+        assert not any(phrase in " ".join(bare.split()) for phrase in ROUND_RULE), "item 5 still inlined"
+
+        workflow, holder = seed("lane", "implementation")
+        stamped(workflow, holder, "implementation")
+        repair = holder.with_name(holder.name.replace("-lane.md", "-lane-repair.md"))
+        repair.write_text(re.sub(r"^(worktree|started):.*\n", "", holder.read_text().replace(holder.stem, repair.stem),
+                                 flags=re.MULTILINE))
+        run(["git", "-C", repair.parent, "add", "--", repair.name])
+        run(["git", "-C", repair.parent, "commit", "-m", "test: second entity in the same stage"])
+        stamped(workflow, repair, "implementation")
+        feedback = base / "lane-feedback.txt"
+        feedback.write_text("Synthetic feedback: repair the named finding only.\n")
+        built = run([binary, "dispatch", "build", "--workflow-dir", workflow, "--entity-path", repair,
+                     "--stage", "implementation", "--checklist-file", checklist,
+                     "--feedback-context-file", feedback, "--feedback-reflow", "--host", "codex"], workflow)
+        envelope = json.loads(built.stdout)
+        artifacts.append(Path(envelope["dispatch_file_path"]))
+        assert token in artifacts[-1].name and str(repair) in artifacts[-1].read_text()
+        assert "Synthetic feedback: repair the named finding only." in artifacts[-1].read_text()
+
         # Missing registration is not fail-closed in upstream SD: demonstrate the limit.
         workflow, entity = seed("no-hook", "validation", profile="poc", with_mod=False)
         boot = run([binary, "status", "--workflow-dir", workflow, "--boot"], workflow).stdout
@@ -301,6 +340,7 @@ def exercise(base, binary, sd_root):
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
+        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
         for artifact in artifacts:
