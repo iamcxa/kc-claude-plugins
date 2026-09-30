@@ -289,3 +289,44 @@ Limits, not proven: a room with zero pages and a browser tab open on a removed p
 7. Cleanup: `kill $(cat /tmp/kjm-accept.pid)`, `rm -rf /tmp/kjm-accept /tmp/kjm-accept.yaml /tmp/kjm-accept.pid`.
 
 Does not cover: a room with zero pages, a person-made page named like a board page, adopter journeys. Steps 1 to 5 were run against the candidate on 2026-09-30 with the outputs above; step 6 was not run (needs a browser).
+
+## Stage Report: validation
+
+- DONE: Independent verdict on candidate ea15b5ed1ddd38564a6dec198318c9e65e623b5e (spacedock-ensign/board-optout, base c3b3d5ad) against the approved design, ACs and both Captain rulings
+  Verdict PASSED with one Deferred-risk finding (human arrow binding left dangling, below); diff is 12 files, all under `kc-journey-map/` or `docs/adr/`; worktree `git status --short` empty and HEAD equals the candidate.
+- DONE: Reproduce on a `git archive` copy after `npm ci`: `node --test lib/*.test.mjs`, `scripts/canvas-smoke.sh`, `skill-frontmatter-lint.sh`
+  179/179 pass; smoke exit 0 with `ok  board: false removes its board page and nothing else`, `ok  an edited card on a stale board page stops the render`, `ok  a board page holding a hand-made note is kept with it, even with --force`; frontmatter lint "all skill directories have valid frontmatter".
+- DONE: Each named mutation, one at a time, on /tmp copies (a no-op copy first passed 179/179, so failures are the mutation's)
+  Drop `board !== false` filter: 7 fail (AC-1/3/4/5/6/7 cases); empty-list fallback to whole-journey board: fails "every release opting out" and "last page"; drop `lintReleaseBoard`: 2 lint cases fail; drop `delete before.board`: handoff case fails; treat every shape as generated: "hand-drawn shape is kept" fails; drop survivors guard: "never removes the last page" fails; drop `journey-board` selection guard: "does not select journey-board" fails; filter releases in `storymap.mjs`: the story-map band case fails. Smoke mutations: no board removal list fails "the r2 board page survived"; hand-edit check without the removal list fails "a card edited on a stale board page did not stop the render".
+- DONE: Captain acceptance script steps 1-5 as written, against a throwaway server (port 5871, rooms under /tmp)
+  Step 2 pages `page:page, page:jm-board-r1, page:jm-board-r2`; step 3 printed `removed board page page:jm-board-r2` leaving `page:page, page:jm-board-r1`; step 4 same two pages and r2's band still on the story-map page; step 5 `invalid-board: release r2 has board "false"; use true or false`, `exit=1`.
+- DONE: Step 6 without a browser: write a non-generated note onto the stale page through the room API, then re-render
+  Room `keep`, note plus a human arrow added to `page:jm-board-r2`, `board: false`, `--pages journey-board`: exit 0, `kept board page page:jm-board-r2: it holds 2 shape(s) drawn by hand; only its generated shapes were removed`; page and both human shapes survived, all 19 generated shapes gone, r1 page (23) and story page (17) unchanged.
+- DONE: A human arrow bound to a removed generated card
+  Observed: the arrow and the note stay, the removal leaves the human binding record in the room with `toId` naming a shape that no longer exists (`from=true to=false`); the implementation report's "loses only that binding" is wrong, because a human binding has no `meta.journey` and is not in the removal list.
+- DONE: ADR 0007 through adr_lint, words against the gate record, README and canvas.md changes, every added comment line
+  `adr_lint.py docs/adr --require 0007`: "7 ADR file(s) checked, 0 legacy", exit 0; its two quoted words match the backlog and ideation gate `resolution.reason` verbatim; `number_guards.py check` PASS; `doc_impact.py` lists only `docs/journey/kc-journey-map/README.md` (report marks it `unaffected` with a reason, which holds: its journey file sets no `board`); README and canvas.md text matches the shipped behaviour I ran.
+- DONE: Candidate's own-repo `comment_ratio.py` from c3b3d5ad, and adopter-name sanitize of the diff
+  `kc-dev-flow-2/scripts/comment_ratio.py c3b3d5ad ea15b5ed`: "code lines 181, comment lines 5, 2.8%", exit 0, under the repo's stated 3.0% baseline; 5 lib comment lines each state a fact the code cannot (why the selection guard exists, why lint must catch a string "false"); a grep of the added lines for adopter, org, person and path markers found nothing.
+- DONE: Goal sufficiency and minimal necessity at this candidate
+  Every changed file maps to an AC: `render.mjs`, `lint.mjs`, `journey-handoff.mjs`, `journey-render.mjs` (report lines), their tests, the smoke extension (AC-4/5/6 wiring), README/canvas.md/ADR (AC-10); `read.mjs`, `storymap.mjs` and the server are untouched and needed no change.
+
+### Findings
+
+- Deferred risk: a human arrow bound to a removed generated card leaves a dangling binding record. Trigger evidence observed on the real server (above); harm unobserved: whether a tldraw client shows an error or ignores it was not tried (no browser here). The same class already applies to any removed generated card on a rendered page, by reading `staleRecordIds` (unchanged), not run. Becomes Material if a browser open on the kept page errors, blanks or crashes on the dangling binding.
+- Polish: `canvas.md` says a person-made page "is never touched"; the enforcement point is the `page:jm-board-` prefix filter (unit-tested, not tried in a browser), which the ADR states and canvas.md does not. The comment `# boardState prints ...` in `canvas-smoke.sh` restates the helper.
+
+### Summary
+
+PASSED at ea15b5ed. The opt-out, the lint, the handoff seam, the stale-page removal, the hand-drawn keep rule (also under `--force`), the hand-edit refusal and the story-map band all hold on a real server, and each named mutation makes its own check fail. One Deferred risk (dangling human binding) and two Polish items are recorded, none blocking; not verified: a browser tab on a removed page, a room with zero pages, a person-made page in a browser, minutes added to the smoke job.
+
+### Minimal acceptance script (Node 22.13 or later; `KJM` is a checkout of the merged code; one `npm ci` in `$KJM/kc-journey-map`; run each step in the same shell)
+
+1. `cd $KJM/kc-journey-map && export JOURNEY_API=http://127.0.0.1:5871 && (JOURNEY_API_PORT=5871 JOURNEY_ROOMS_DIR=/tmp/kjm-accept npx tsx server/canvas-server.ts >/dev/null 2>&1 & echo $! >/tmp/kjm-accept.pid) && cp skills/kc-journey-map/references/journey.example.yaml /tmp/kjm-accept.yaml`, then repeat `curl -s $JOURNEY_API/health` until it answers.
+2. `node lib/journey-render.mjs /tmp/kjm-accept.yaml accept --pages story-map,journey-board`, then list pages with `curl -s "$JOURNEY_API/doc?room=accept" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).snapshot.documents.map(d=>d.state).filter(r=>r.typeName==="page").map(r=>r.id).join("\n")))'`. Expect `page:page`, `page:jm-board-r1`, `page:jm-board-r2`.
+3. `sed -i '' 's/{id: r2,/{id: r2, board: false,/' /tmp/kjm-accept.yaml && node lib/journey-render.mjs /tmp/kjm-accept.yaml accept --pages journey-board`, then the page list. Expect the line `removed board page page:jm-board-r2` and only `page:page`, `page:jm-board-r1` left.
+4. `node lib/journey-render.mjs /tmp/kjm-accept.yaml accept --pages story-map`, then the page list. Expect the same two pages (a story-map render removes no board page).
+5. `sed -i '' 's/board: false/board: "false"/' /tmp/kjm-accept.yaml && node lib/journey-lint.mjs /tmp/kjm-accept.yaml; echo exit=$?`. Expect `invalid-board: release r2 has board "false"; use true or false` and `exit=1`.
+6. Cleanup: `kill $(cat /tmp/kjm-accept.pid); rm -rf /tmp/kjm-accept /tmp/kjm-accept.yaml /tmp/kjm-accept.pid`.
+
+Does not cover: a hand-drawn sticky kept on a stale page in a real browser (I proved it through the room API: page and shapes kept, generated shapes removed), a browser tab open on a removed page, a room with zero pages, a person-made page named like a board page, adopter journeys, CI minutes.
