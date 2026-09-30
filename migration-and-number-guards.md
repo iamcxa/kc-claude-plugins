@@ -236,3 +236,28 @@ One stdlib test file adds one step to `.github/workflows/kc-dev-flow-2-tests.yml
 ### Summary
 
 The design is one stdlib script (`reserve`, `check`) plus a `## Number guards` workflow section, with two optional adopter frontmatter keys. Findings that shaped it: the qnow 0005 break was a three-line comment trim, so the guard fires on any modification and the comment-trim pass exempts frozen migrations; uat state cannot be read from git, so the FO records `Applied at:` before a shared push. One non-blocking Captain question remains (uat reset versus compensating migration); the FO should also settle the ADR-number order with `dispatch-and-report-hygiene`. Followed the dispatch's explicit signal target `main` (the completion block said `team-lead`).
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design: `number_guards.py` (`check`, `reserve`), its test wired into `kc-dev-flow-2-tests.yml`, `## Number guards` in `references/sd/workflow.md`, the implementation and validation principles paragraphs with the frozen-migration exemption, the two optional adopter keys, ADR 0002
+  Candidate `aff49ab3c6c66140f896f7feb4ec7e9743896deb` on `spacedock-ensign/migration-and-number-guards`, base `b753d344` (commits a8883a5c, aff49ab3); the section is in `context-sections` of both stages; `migrations-path:`/`adr-path:` are documented in the section and read from the workflow README, not added to the template frontmatter; `adr_lint.py docs/adr --require 2` passes.
+- DONE: AC-1 a candidate that edits or deletes a base migration is refused, a new migration with its journal entry is accepted
+  `test_a_comment_trim_of_a_base_migration_is_refused_and_...` (qnow #1207 shape) and `test_deleting_a_base_migration_is_refused`; mutation "touched files ignored" fails 5 tests; real qnow `8f624f6a6^..8f624f6a6` prints `FAIL R1: .../0005_slots_by_capacity.sql: M since the merge-base; ...` exit 1, `7c8e288ac` exit 0.
+- DONE: AC-2 `Applied at:` freezes an unmerged migration
+  `AppliedFreezeTests` (edit exits 1 naming the sha, renumber 0006 to 0008 exits 1, no record exits 0, absent sha exits 2 "cannot resolve applied commit (uat)"); removing R2 fails 2 tests.
+- DONE: AC-3 `reserve` never collides and never fills a gap
+  `ReserveTests`: a gets 0013, b 0014, a again 0013, ADR base 0001+0003 gives 0004; "ignore sibling task files" and "fill the gap" mutations each fail it.
+- DONE: AC-4 pre-merge recheck against the base tip
+  `RecheckTests`: base gains 0013 exits 1 naming `0013_other.sql`, renumber to 0014 exits 0; out-of-order 0006 under base max 0007, unreserved number (R4) and ADR 0002 already on base (R5) each exit 1; R3, R4, R5 each removed fails its test.
+- DONE: AC-5 the rules reach both workers and the dispatch
+  `spacedock dispatch show-stage-def` on a scratch copy prints `## Number guards` for implementation and validation; `dispatch build --scope-notes-file` wrote `Migration: 0013` into the dispatch file; `test_sd_dispatch.py` PASS (spacedock 0.27.2), `lint-skills.py` and `test_lint_skills.py` PASS; `test_poc_readme.py` PASS.
+- DONE: AC-6 misconfiguration exits 2 loudly
+  `MisconfigurationTests`: `Surfaces: db` without a path, path absent at base, directory with no `.sql`, `no-such-ref` (real qnow run: `cannot resolve base 'no-such-ref'` exit 2) each exit 2 with the cause; no key prints `migration guard skipped: no migrations-path declared`, removing the print fails a test.
+- DONE: Follow CLAUDE.md: Conventional Commits `feat(kc-dev-flow-2): ...`, no version edits, files staged explicitly, comments carry only facts the code cannot state
+  `git status` clean after both commits; `comment_ratio.py b753d344 HEAD`: `code lines 402, comment lines 1, 0.2%` (the one line is the shebang); `doc_impact.py`: one document, `kc-dev-flow-2/README.md`: updated (test command list).
+- DONE: The Captain-run minimal acceptance script
+  The design's five steps were run against `~/conductor/repos/qnow` with the shipped script: FAIL R1 line and exit=1, exit=0, `Migration: 0013`, `Migration: 0014`, and exit=2 with `cannot resolve base 'no-such-ref'`; each `check` also prints `base <sha> head <sha> merge-base <sha>` and `PASS: no findings` when clean.
+
+### Summary
+
+The stdlib script, 16 tests (CI step added, README command list updated), workflow section, principles paragraphs and ADR 0002 are committed; the uat exit (Netlify database-branch reset) is documented in the section's Renumber bullet, no wrapper built. FO action before validation: `check --task` on this candidate exits 1 (R4) on `docs/adr/0002-...` until the task file carries a `## Number guards` section with `ADR: 0002`, verified by running it; I did not write that FO-owned section. Signalled `main` as the dispatch text says (the boilerplate block said `team-lead`).
