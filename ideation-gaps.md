@@ -3,7 +3,7 @@ title: Ideation cannot start without FO alignment, reach its gate without accept
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「可以」 to the FO''s split of batch C, this part first'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Four ideation-stage gaps from qnow dogfooding (2026-09-26..30) that each cost a worker round, a hand rewrite at a gate, or a drifting ADR number.
