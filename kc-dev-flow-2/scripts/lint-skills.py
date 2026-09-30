@@ -16,6 +16,9 @@ DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 BASIC_LINT = DEFAULT_ROOT.parent / "scripts/skill-frontmatter-lint.sh"
 LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 NAMESPACE = re.compile(r"\bkc-dev-flow(?:-[a-z0-9]+)*:[a-z0-9-]+\b")
+PACKAGE_ROOT = re.compile(r"^Package root: \S", re.MULTILINE)
+UNBOUND_ROOT = re.compile(r"\{package\}|/absolute/plugin")
+BOUND_SCRIPT_DIR = re.compile(r"(?:<package>/|(?:\.\./)+|kc-dev-flow-2/)scripts/")
 
 
 def lint_tree(root, basic_lint=BASIC_LINT):
@@ -63,6 +66,23 @@ def lint_tree(root, basic_lint=BASIC_LINT):
         for call in NAMESPACE.findall(read(path)):
             if call not in {f"{VARIANT}:{skill}" for skill in skills}:
                 errors.append(f"{path.relative_to(root)}: unknown variant skill {call}")
+
+    names = sorted((p.name for p in (root / "scripts").glob("*") if p.suffix in (".py", ".sh")),
+                   key=len, reverse=True)
+    script = re.compile(r"(?P<dir>[^\s`'\"(\[]*scripts/)?(?<![\w-])(?P<name>"
+                        + "|".join(map(re.escape, names)) + r")(?![\w-])")
+    for path in sorted(list((root / "skills").rglob("*.md")) + list((root / "references").rglob("*.md"))):
+        text = read(path)
+        where = path.relative_to(root)
+        if UNBOUND_ROOT.search(text):
+            errors.append(f"{where}: package path must be <package>/scripts/NAME, not {{package}} or /absolute/plugin")
+        for match in script.finditer(text):
+            if not (match["dir"] and BOUND_SCRIPT_DIR.fullmatch(match["dir"])):
+                errors.append(f"{where}: script {match['name']} is named without <package>/scripts/")
+    for folder in sorted((root / "skills").glob("*")):
+        if any("<package>" in read(md) for md in folder.rglob("*.md")) and not PACKAGE_ROOT.search(
+                read(folder / "SKILL.md")):
+            errors.append(f"skills/{folder.name}/SKILL.md: uses <package> but has no 'Package root:' line")
 
     for stage in STAGES:
         folder = root / "skills" / stage
@@ -132,7 +152,7 @@ def main():
         for error in errors:
             print("FAIL:", error)
         return 1
-    print("PASS: basic frontmatter, declared profile routes and role bindings")
+    print("PASS: basic frontmatter, declared profile routes, role bindings and package script paths")
     print("Not checked: full Agent Skills conformance or host/workflow behavior")
     return 0
 

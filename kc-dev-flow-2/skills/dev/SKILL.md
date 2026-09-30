@@ -7,6 +7,10 @@ description: Start or resume kc-dev-flow-2 work by resolving the project, task, 
 
 Invocation: `kc-dev-flow-2:dev`
 
+Package root: ${CLAUDE_PLUGIN_ROOT}
+`<package>` in this skill and its linked files is this root. If the value above
+is not an absolute path, the root is two directories above this `SKILL.md`.
+
 Read the [framework](../../README.md). This is a start/resume entry, not a worker
 stage or a second workflow controller. Claude's packaged command is
 `/kc-dev-flow-2:dev`; bare `/dev` is not a promised cross-host alias.
@@ -16,7 +20,7 @@ item from the request and authoritative project/task records. Reuse established
 context; do not guess between projects or tasks. Read applicable project
 conventions and the existing context needed for the requested work.
 
-After resolving the code root, run the packaged `scripts/learning.py --repo
+After resolving the code root, run `<package>/scripts/learning.py --repo
 <absolute-code-root> notices`. Present relevant unread learning results to the
 user, distinguishing pending/uncertain, no-change, local proposal, PR and observed
 merge; pending proposals are not active rules. Only after actual presentation,

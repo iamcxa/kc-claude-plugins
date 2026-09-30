@@ -4,6 +4,7 @@
 import importlib.util
 from pathlib import Path
 import shutil
+import subprocess
 import sys
 import tempfile
 import unittest
@@ -94,6 +95,35 @@ class RouteMutationTests(unittest.TestCase):
         self.change("agents/chief-engineer.md", '["kc-dev-flow-2:chief-engineer"]', '["kc-dev-flow:chief-engineer"]')
         self.refuses("opus/xhigh policy changed")
         self.refuses("expected exact variant skill binding")
+
+    def test_bare_script_name(self):
+        self.change("skills/implementation/principles.md", "<package>/scripts/comment_ratio.py", "comment_ratio.py")
+        self.refuses("skills/implementation/principles.md: script comment_ratio.py is named without")
+
+    def test_script_named_by_link_label_only(self):
+        self.change("skills/learn/SKILL.md", "[learning recorder]", "[learning.py]")
+        self.refuses("skills/learn/SKILL.md: script learning.py is named without")
+
+    def test_machine_path_placeholder(self):
+        self.change("skills/learn/SKILL.md", "<package>/scripts/learning.py --repo \"$CODE_ROOT\" release",
+                    "/absolute/plugin/scripts/learning.py --repo \"$CODE_ROOT\" release")
+        self.refuses("skills/learn/SKILL.md: package path must be <package>/scripts/NAME")
+
+    def test_brace_placeholder(self):
+        self.change("references/sd/adoption.md", "python3 <package>/scripts/poc_readme.py derive",
+                    "python3 {package}/scripts/poc_readme.py derive")
+        self.refuses("references/sd/adoption.md: package path must be <package>/scripts/NAME")
+
+    def test_package_placeholder_without_root_line(self):
+        self.change("skills/implementation/SKILL.md", "Package root: ${CLAUDE_PLUGIN_ROOT}\n", "")
+        self.refuses("skills/implementation/SKILL.md: uses <package> but has no 'Package root:' line")
+
+    def test_cli_exits_one_naming_the_file(self):
+        self.change("skills/implementation/principles.md", "<package>/scripts/comment_ratio.py", "comment_ratio.py")
+        result = subprocess.run([sys.executable, str(ROOT / "scripts/lint-skills.py"), "--root", str(self.root)],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 1)
+        self.assertIn("skills/implementation/principles.md", result.stdout)
 
     def test_existing_frontmatter_validator_is_used(self):
         path = self.root / "skills/validation/SKILL.md"

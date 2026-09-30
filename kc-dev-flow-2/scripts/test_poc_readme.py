@@ -24,7 +24,8 @@ class DeriveTests(unittest.TestCase):
         entry = lines.index("    - name: ideation")
         start = lines.index("### `ideation`")
         end = lines.index("### `implementation`")
-        expected = lines[:entry] + lines[entry + 2:start] + lines[end:]
+        after = next(i for i in range(entry + 1, len(lines)) if not lines[i].startswith("      "))
+        expected = lines[:entry] + lines[after:start] + lines[end:]
         self.assertEqual(lines[entry + 1], "      gate: true")
         self.assertEqual(poc.derive(SOURCE), "\n".join(expected))
 

@@ -21,22 +21,22 @@ the route currently needed:
 
 | Selected profile | Workflow directory example | Source adaptation |
 | --- | --- | --- |
-| `poc` | `docs/dev2-poc` | Generated, never hand-edited: `scripts/poc_readme.py derive` removes the ideation state entry and the `### ideation` section; backlog, implementation, validation and done stay byte-identical |
+| `poc` | `docs/dev2-poc` | Generated, never hand-edited: `<package>/scripts/poc_readme.py derive` removes the ideation state entry and the `### ideation` section; backlog, implementation, validation and done stay byte-identical |
 | `pilot` or `prod` | `docs/dev2` | Keep the source's five stages; profile selects skill references per task |
 
 Maintain one README by hand. When both routes are adopted, commission or refit the
 five-stage README first, then regenerate the POC README from it:
-`python3 {package}/scripts/poc_readme.py derive docs/dev2/README.md > docs/dev2-poc/README.md`.
+`python3 <package>/scripts/poc_readme.py derive docs/dev2/README.md > docs/dev2-poc/README.md`.
 When only POC is adopted, derive from this package's [workflow source](workflow.md)
 and resolve its template values the same way. After any change to the five-stage
-README, regenerate; `poc_readme.py check docs/dev2-poc/README.md docs/dev2/README.md`
+README, regenerate; `python3 <package>/scripts/poc_readme.py check docs/dev2-poc/README.md docs/dev2/README.md`
 exits 1 with the drift as a diff.
 
 Both routes preserve backlog/validation gates, implementation/validation
 `worktree: true`, fresh validation and `feedback-to: implementation`. Copy the
-source into the approved workflow's `README.md`, resolve template values and
-project trunk and ID policy, and stamp commissioning metadata through SD's existing
-procedure. The source uses slug IDs; commission may propose its collaborative
+source into the approved workflow's `README.md`, resolve template values
+(including `<wrapper>`, below) and project trunk and ID policy, and stamp
+commissioning metadata through SD's existing procedure. The source uses slug IDs; commission may propose its collaborative
 SD-B32 ID policy. Preserve an existing workflow's approved ID style.
 Stage prose calls exact `kc-dev-flow-2:` skills; `context-sections` carries shared
 disposition/delivery rules. Do not introduce unsupported `stage.skill` fields or
@@ -63,6 +63,23 @@ The workflow's Delivery authority constrains the upstream mod's local fallback,
 trunk push and non-Draft defaults. Preserve project Draft/CI/manual merge rules;
 installing the mod does not grant those actions or mechanically enforce them.
 
+## Secret reads
+
+The package ships no secret guard. The `Secrets:` line of the workflow's
+`## Dispatch facts` is text a worker can ignore; enforcement is the adopter's or
+the user's. Resolve its `<wrapper>` to the one script that runs a
+command with the development secrets in its environment, or to "this project
+declares no wrapper; run no command that reads a secret value".
+An adopter that wants enforcement installs a `PreToolUse` Bash hook in its own or
+the user's settings, with this contract:
+
+- it exits 2 on a command that reads a secret value (for example a hosting
+  provider's environment or database API, a password manager's value read, a
+  keychain password read), and its message names `<wrapper>`;
+- the patterns are the adopter's, since they follow its stack;
+- a refused command that only mentions a reader is rephrased, never split or encoded;
+- Codex has no equivalent hook, so there the `Secrets:` line is the only control.
+
 ## Before activation
 
 Review the concrete README, state mapping, exact stage-skill availability and
@@ -75,7 +92,7 @@ Missing hook, incompatible graph, missing skill or unresolved authority holds
 activation. Once approved, hand the same project/workflow/task binding to FO;
 normal SD dispatch and gate lifecycle take over.
 
-The source-repository `test_sd_dispatch.py --sd-plugin-root <active-sd-root>`
+The source-repository `kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root <active-sd-root>`
 checks both adapted graphs, copied canonical mod registration and split-root
 worktree handoff in disposable repositories. Synthetic gate decisions are test
 inputs, not user approval. It does not execute models, hook bodies or remote PR
