@@ -198,6 +198,10 @@ Does not cover: Codex, a real qnow dispatch, a real secret read, whether any ado
 
 No new script, no new CI step: `lint-skills.py`, `test_lint_skills.py` and `test_sd_dispatch.py` already run in `.github/workflows/kc-dev-flow-2-tests.yml`. CI minutes per PR: not measured. The AC-6 run is one Sonnet ensign on a trivial task: tokens not measured. Adopter cost: one refit or merge of `workflow.md` for the section and the FO paragraph.
 
+## Number guards
+
+ADR: 0003
+
 ## Stage Report: ideation
 
 - DONE: Design, in the task file, the kc-dev-flow-2 package change for issues #526, #527, #528 and #530 — (1) dispatches address the dispatching FO by the name the runtime actually exposes
