@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:release-review:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:release-review-backlog-1
+              briefing:
+                id: briefing:release-review:backlog:attempt-1:revision-1
+                digest: sha256:9ed3face13f8058974233b4bd608ebce32dfc43463aa6f2ab0c9ac0d7ffaa090
+                room-ref: ./release-review/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-review:backlog:1
+                briefing: briefing:release-review:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T10:01:33.899771Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「我們來解決 520 問題」, with the five-per-slice rule folded in'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 A release gains tasks one at a time and nothing checks that together they still form one complete journey; batch C part 2 of the dev2 fixes.

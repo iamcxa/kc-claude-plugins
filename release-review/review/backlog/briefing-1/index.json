@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-review:backlog:attempt-1:revision-1",
+  "question": "Admit release-review (#520 plus the five-per-slice rule) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:release-review:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/671221e5e615e3a9e8464bfcdd66446081fd8f8a/release-review.md",
+      "rev": "sha256:ecb6ee90206836d53ff75f2e3199783b58f5477ede0c7bf64390a57b553af9e4",
+      "mediaType": "text/markdown",
+      "summary": "Batch C part 2: whole-journey release re-review signals, task journey fields, five-per-slice advisory rule; touches kc-dev-flow-2 and kc-journey-map."
+    }
+  ]
+}
