@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:board-optout:validation:attempt-1:revision-1",
+  "question": "Accept board-optout's validation PASSED on ea15b5ed and open its Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:board-optout:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f87aa7d6c6984d889c3b625b9d8123e0f5216acf/board-optout.md",
+      "rev": "sha256:87fb24c3ee37319eff4410c6e268a75d3e251f1281c16621463ff18ec2c44a6b",
+      "mediaType": "text/markdown",
+      "summary": "179/179 tests, smoke and acceptance steps 1-5 pass on a real server; hand-drawn shapes kept under --force; one Deferred risk (dangling human arrow binding, same class as existing card removal) declined; two Polish declined."
+    }
+  ]
+}

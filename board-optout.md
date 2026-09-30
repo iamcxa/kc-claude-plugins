@@ -45,6 +45,28 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:board-optout:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:board-optout-validation-1
+              briefing:
+                id: briefing:board-optout:validation:attempt-1:revision-1
+                digest: sha256:d3940e39ac1d2c24b401396a82b2b62c40ed00e8a9eec753928946ad449dbc41
+                room-ref: ./board-optout/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:board-optout:validation:1
+                briefing: briefing:board-optout:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-30T16:08:48.394723Z"
+                decision: approve
+                reason: Validation PASSED on ea15b5ed; the dangling human-binding Deferred risk and two Polish items declined and listed in the PR; opening a Draft PR only; merge stays with the Captain
+                conn:
+                    quote: 'No ask on a repo Kent owns: push a branch and open a Draft PR once the work cleared its own bar'
+                    source: ~/.claude/CLAUDE.md, Autonomous action boundaries
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-30T15:35:15Z
 worktree: .worktrees/spacedock-ensign-board-optout
 ---
