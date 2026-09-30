@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:board-optout:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:board-optout-ideation-1
+              briefing:
+                id: briefing:board-optout:ideation:attempt-1:revision-1
+                digest: sha256:72809938ee218829618b0975a41971485c834642a4d2f93c13702c5fb6da98c9
+                room-ref: ./board-optout/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:board-optout:ideation:1
+                briefing: briefing:board-optout:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T15:54:39.652705Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「同意，手畫的不刪除」 — design approved; a stale board page holding hand-drawn shapes is kept with them, only generated shapes are removed'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-30T15:35:15Z
 ---
 

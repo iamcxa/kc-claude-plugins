@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:board-optout:ideation:attempt-1:revision-1",
+  "question": "Approve board-optout's design (board: false read only by journeyBoardPages, invalid-board lint, re-render removes board pages it did not produce, handoff comparison ignores board) and rule: a stale board page with hand-drawn notes is kept with the notes (recommended), the render refuses, or --force deletes it?",
+  "artifacts": [
+    {
+      "id": "artifact:board-optout:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1ffb19170444539fe01f8912a8034efd469813af/board-optout.md",
+      "rev": "sha256:eec2bd0ce461e077a6981b777118793bae69523c087fa1711784fdbd49afaa8a",
+      "mediaType": "text/markdown",
+      "summary": "Reproduced: a hand-deleted board returns, a removed release's page keeps 15 shapes, no code removes a page; room writer already accepts page ids in remove; ADR needed."
+    }
+  ]
+}
