@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:release-review:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:release-review-ideation-1
+              briefing:
+                id: briefing:release-review:ideation:attempt-1:revision-1
+                digest: sha256:1e03919017629bab8d5734b0daca2c570adb1ff1cc3eaf9a71d1c57a8b87dad1
+                room-ref: ./release-review/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-review:ideation:1
+                briefing: briefing:release-review:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T10:13:20.156801Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「還沒做好的故事，每張旅程圖分開算」 — design approved with the unit: stories whose status is not exists, counted per journey file'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-30T10:02:06Z
 ---
 

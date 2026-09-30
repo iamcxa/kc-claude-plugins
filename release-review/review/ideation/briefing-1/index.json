@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-review:ideation:attempt-1:revision-1",
+  "question": "Approve release-review's design (four signals, one review checkpoint before implementation, kc-journey-map review-release mode, journey fields on tasks with orphans failing journey-progress, advisory five-per-slice line, two PRs kc-journey-map first) and rule the unit of a thing (recommended: stories not yet existing, per journey file)?",
+  "artifacts": [
+    {
+      "id": "artifact:release-review:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/71eb8444ea8d3d9a7b5c543a2f752664754e39a5/release-review.md",
+      "rev": "sha256:66459b7c77643b8762960facba0efd3951f9b46eb63b0d35c0abd38ec2f04dd0",
+      "mediaType": "text/markdown",
+      "summary": "qnow counts: per-file open stories flag owner r3 only; across files r3, r13, r11, r9, r17; all stories flag shipped releases; steps flag none."
+    }
+  ]
+}
