@@ -247,6 +247,7 @@ python3 kc-dev-flow-2/scripts/test_lint_skills.py
 python3 kc-dev-flow-2/scripts/test_learning.py
 python3 kc-dev-flow-2/scripts/test_design_surfaces.py
 python3 kc-dev-flow-2/scripts/test_comment_ratio.py
+python3 kc-dev-flow-2/scripts/test_number_guards.py
 python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /absolute/path/to/active-spacedock
 ```
 
