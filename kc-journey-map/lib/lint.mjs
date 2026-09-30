@@ -76,8 +76,32 @@ export function lintEvidenceNotFound(model, { repoRoot, journeyPath, exclude = [
 		})
 }
 
+export const DEFAULT_SLICE_LIMIT = 5
+
+const validSliceLimit = (v) => typeof v === 'number' && Number.isInteger(v) && v > 0
+
+// A typo'd limit would otherwise read as the default and silence nothing.
+export function lintSliceLimit(model) {
+	if (model.slice_limit === undefined || validSliceLimit(model.slice_limit)) return []
+	return [{ lint: 'invalid-slice-limit', detail: `slice_limit ${JSON.stringify(model.slice_limit)} is not a positive integer` }]
+}
+
+// Advisory: count is a load cue for a reader, not a fit test; fit stays with the handoff appetite check.
+export function oversizedSlices(model) {
+	const limit = validSliceLimit(model.slice_limit) ? model.slice_limit : DEFAULT_SLICE_LIMIT
+	const open = new Map()
+	for (const s of iterStories(model)) if (s.release && s.status !== 'exists') open.set(s.release, (open.get(s.release) ?? 0) + 1)
+	return [...open].filter(([, n]) => n > limit).map(([id, n]) => {
+		const because = (model.releases ?? []).find((r) => r.id === id)?.slice_because
+		const held = `release ${id} holds ${n} stories that do not exist yet (limit ${limit})`
+		return typeof because === 'string' && because.trim()
+			? { kind: 'accepted', text: `${held} because ${because.trim()}` }
+			: { kind: 'advisory', text: `${held}; split into sub-slices or record slice_because` }
+	})
+}
+
 export function lintJourney(model, opts = {}) {
-	return [...lintNoStatus(model), ...lintExistsWithoutEvidence(model), ...lintQuestionStatus(model), ...lintExistsWithOpenQuestion(model), ...lintEvidenceNotFound(model, opts)]
+	return [...lintNoStatus(model), ...lintExistsWithoutEvidence(model), ...lintQuestionStatus(model), ...lintExistsWithOpenQuestion(model), ...lintSliceLimit(model), ...lintEvidenceNotFound(model, opts)]
 }
 
 // Card text past this width reads as a paragraph; detail belongs behind an answer's doc link.

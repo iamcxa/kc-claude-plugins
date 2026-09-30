@@ -16,6 +16,15 @@ export function taskListing(response) {
 	return entities
 }
 
+const onMap = (model) => new Set((model.steps ?? []).flatMap((step) => (step.stories ?? []).map((s) => key([model.journey, s?.release, s?.id]))))
+
+// A task that names this journey but a release/story pair the map does not hold was admitted before the map was updated.
+export function findOrphans(model, rows) {
+	const wanted = onMap(model)
+	return rows.filter((r) => r.journey === model.journey && !wanted.has(key(tuple(r))))
+		.map((r) => ({ slug: r.slug, id: r.id, release: r['journey-release'] ?? null, story: r['journey-story'] ?? null }))
+}
+
 export function calculateProgress(model, tasks, diagnostic = null) {
 	const releases = model.releases ?? []
 	const stories = (model.steps ?? []).flatMap((step) => step.stories ?? [])
@@ -53,12 +62,14 @@ export function readProgress(model, workflowDir) {
 		return JSON.parse(execFileSync('spacedock', ['status', '--workflow-dir', source, ...args, '--json'],
 			{ encoding: 'utf8', timeout, maxBuffer: 8 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] }))
 	}
-	let tasks = [], diagnostic = null
+	let tasks = [], orphans = [], diagnostic = null
 	try {
-		const wanted = new Set((model.steps ?? []).flatMap((s) => (s.stories ?? []).map((t) => key([model.journey, t?.release, t?.id]))))
+		const wanted = onMap(model)
 		const selected = (rows) => rows.filter((r) => wanted.has(key(tuple(r))))
 		const list = () => taskListing(run('--archived', '--all-fields', '--limit', '0'))
-		const initial = selected(list())
+		const listed = list()
+		orphans = findOrphans(model, listed)
+		const initial = selected(listed)
 		const read = (ref) => {
 			const resolved = run('--resolve', ref, '--archived')
 			if (!nonempty(resolved.path) || !nonempty(resolved.stored_id)) fail('Ambiguous task resolution')
@@ -85,7 +96,7 @@ export function readProgress(model, workflowDir) {
 		if (stamp(initial) !== stamp(selected(list()))) fail('Task listing changed during observation; refresh again')
 	} catch (error) { diagnostic = `Local task observation unavailable: ${String(error.message).slice(0, 300)}` }
 	const stories = calculateProgress(model, tasks, diagnostic)
-	return { schema: 'journey-progress/v1', journey: model.journey, source, observedAt: new Date().toISOString(), diagnostic, stories,
+	return { schema: 'journey-progress/v1', journey: model.journey, source, observedAt: new Date().toISOString(), diagnostic, orphans, stories,
 		releases: (model.releases ?? []).map((release) => {
 			const members = stories.filter((s) => s.release === release.id)
 			const doneStories = members.filter((s) => s.status === 'exists').length

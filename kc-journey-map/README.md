@@ -153,6 +153,12 @@ content — import into a fresh room unless you mean to overwrite.
 | `exists-without-evidence` | A story marked `exists` with no `evidence` symbol |
 | `evidence-not-found` | An `evidence` symbol that no longer greps anywhere in the repository outside the journey file itself |
 
+Two more checks sit beside them. `invalid-slice-limit` fires on a top-level `slice_limit` that is
+not a positive integer. `slice-size (advisory)` is a printed line, not a violation and not an
+exit code: a release with more than five stories whose status is not `exists` (counted per journey
+file; `slice_limit` replaces five) should split into sub-slices, or carry `slice_because` on its
+`releases:` entry, which prints `slice-size (accepted)` instead.
+
 `evidence-not-found` uses `git grep`, so it only sees tracked content: a symbol added in the
 same uncommitted change as the story citing it needs `git add` before the lint can see it.
 
@@ -182,7 +188,10 @@ reads `JOURNEY_ROOMS_DIR`, defaulting to `./.rooms` relative to the service work
 `kc-journey-progress` needs each opted-in task to carry scalar `journey`,
 `journey-release` and `journey-story` matching explicit ids in the journey file, with one
 member task carrying the complete `journey-required-tasks` declaration. `lib/progress.mjs`
-reports anything partial, conflicting or drifted as unverified rather than as progress.
+reports anything partial, conflicting or drifted as unverified rather than as progress. A task
+that names this journey but a release and story the map does not hold is listed under `orphans`,
+and the command exits 1. Known limit: a closed task that names a story since removed
+from the map stays an orphan, so the command keeps exiting 1 until that task's fields are cleared.
 
 ## References
 
@@ -194,6 +203,7 @@ Packaged with the skill, under `skills/kc-journey-map/references/`:
 | `canvas.md` | Canvas startup, projection selection, native editing, export and safe readback |
 | `map-from-conversation.md` | Map mode and plan-release mode |
 | `release-slicing.md` | Proposing release boundaries and preparing a development handoff |
+| `release-review.md` | `review-release`: walking a changed release as one journey before its tasks are split |
 | `sequence.md` | The optional Mermaid sequence companion |
 | `journey.example.yaml` + `example/` | A worked fictional book-pickup fixture |
 

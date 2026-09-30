@@ -138,3 +138,31 @@ test('the first cut may assign unplaced whole-map stories and retain deferred re
 	f.accept()
 	assert.equal(f.run('--out', join(f.dir, 'first-cut.md')).status, 0)
 })
+
+test('a release of more than five stories that do not exist yet is not refused for its count', (t) => {
+	const f = fixture(t)
+	const extra = ['a', 'b', 'c', 'd', 'e'].map((id) => ({ id, card: `Story ${id}`, release: 'r1' }))
+	for (const path of [f.paths[0], f.paths[1]]) {
+		const model = parse(readFileSync(path, 'utf8'))
+		model.steps[0].stories.push(...extra)
+		writeFileSync(path, stringify(model))
+	}
+	f.assessment.baseline_sha256 = hash(readFileSync(f.paths[0]))
+	f.assessment.source_sha256 = hash(readFileSync(f.paths[1]))
+	f.assessment.retained.push(...extra.map(({ id }) => ({ id, necessary: true, breaks: 'outcome', reason: `The path breaks without ${id}` })))
+	assert.equal(parse(readFileSync(f.paths[1], 'utf8')).steps.flatMap((s) => s.stories).filter((s) => s.release === 'r1').length, 7)
+	f.accept()
+	const result = f.run('--out', join(f.dir, 'handoff.md'))
+	assert.equal(result.status, 0, result.stderr)
+})
+
+test('recording slice_because or slice_limit after the pre-cut copy does not refuse the handoff', (t) => {
+	const f = fixture(t)
+	f.source.releases[0].slice_because = 'One demo, the reader sees it whole'
+	f.source.slice_limit = 8
+	writeFileSync(f.paths[1], stringify(f.source))
+	f.assessment.source_sha256 = hash(readFileSync(f.paths[1]))
+	f.accept()
+	const result = f.run('--out', join(f.dir, 'handoff.md'))
+	assert.equal(result.status, 0, result.stderr)
+})

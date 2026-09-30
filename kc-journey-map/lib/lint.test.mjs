@@ -1,11 +1,13 @@
 
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
 import { mkdirSync, mkdtempSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import { lintEvidenceNotFound, lintExistsWithOpenQuestion, lintExistsWithoutEvidence, lintJourney, lintNoStatus, lintQuestionStatus } from './lint.mjs'
+import { fileURLToPath } from 'node:url'
+import { stringify } from 'yaml'
+import { lintEvidenceNotFound, lintExistsWithOpenQuestion, lintExistsWithoutEvidence, lintJourney, lintNoStatus, lintQuestionStatus, oversizedSlices } from './lint.mjs'
 
 const model = (steps) => ({ steps })
 
@@ -251,4 +253,69 @@ test('a repository passed with a ref greps that ref, not the working tree', () =
 	] }])
 	const v = lintEvidenceNotFound(m, { repoRoot, repos: { other: { root: other, ref: 'main' } } })
 	assert.deepEqual(v.map((x) => x.story), ['s-0'], 'BranchOnly is in the checked-out working tree but not on main')
+})
+
+const sliced = (open, { exists = 0, ...extra } = {}) => ({
+	releases: [{ id: 'r1', goal: 'g' }],
+	steps: [{ id: 's', stories: [
+		...Array.from({ length: open }, (_, i) => ({ id: `o${i}`, card: 'x', release: 'r1', status: i % 2 ? 'unverified' : 'gap' })),
+		...Array.from({ length: exists }, (_, i) => ({ id: `e${i}`, card: 'x', release: 'r1', status: 'exists', evidence: 'Sym' })),
+	] }],
+	...extra,
+})
+
+test('a release with more than five stories that do not exist yet is reported, five is not', () => {
+	assert.deepEqual(oversizedSlices(sliced(6)), [{ kind: 'advisory',
+		text: 'release r1 holds 6 stories that do not exist yet (limit 5); split into sub-slices or record slice_because' }])
+	assert.deepEqual(oversizedSlices(sliced(5)), [])
+})
+
+test('stories that already exist are not counted', () => {
+	assert.deepEqual(oversizedSlices(sliced(5, { exists: 1 })), [])
+	assert.equal(oversizedSlices(sliced(6, { exists: 3 }))[0].text.includes('holds 6 stories'), true)
+})
+
+test('a story with no status counts as not existing, and a story with no release counts for no release', () => {
+	const m = sliced(5)
+	m.steps[0].stories.push({ id: 'bare', card: 'x', release: 'r1' }, { id: 'free', card: 'x' }, 'plain string')
+	assert.match(oversizedSlices(m)[0].text, /holds 6 stories/)
+})
+
+test('slice_limit replaces the default and anything but a positive integer is a violation', () => {
+	assert.deepEqual(oversizedSlices(sliced(6, { slice_limit: 6 })), [])
+	assert.equal(oversizedSlices(sliced(6, { slice_limit: 3 }))[0].text.includes('(limit 3)'), true)
+	for (const bad of [0, '5', 2.5, -1, null, true]) {
+		const violations = lintJourney(sliced(6, { slice_limit: bad }), { repoRoot: tmpdir() }).filter((v) => v.lint === 'invalid-slice-limit')
+		assert.equal(violations.length, 1, `slice_limit ${JSON.stringify(bad)} was not refused`)
+		assert.match(oversizedSlices(sliced(6, { slice_limit: bad }))[0].text, /\(limit 5\)/)
+	}
+	assert.deepEqual(lintJourney(sliced(6, { slice_limit: 6 }), { repoRoot: tmpdir() }).filter((v) => v.lint === 'invalid-slice-limit'), [])
+})
+
+test('slice_because turns the advisory into an accepted line, an empty one does not', () => {
+	const m = sliced(6)
+	m.releases[0].slice_because = 'one demo, the reader sees it whole'
+	assert.deepEqual(oversizedSlices(m), [{ kind: 'accepted', text: 'release r1 holds 6 stories that do not exist yet (limit 5) because one demo, the reader sees it whole' }])
+	for (const empty of ['', '   ', null]) {
+		m.releases[0].slice_because = empty
+		assert.equal(oversizedSlices(m)[0].kind, 'advisory')
+	}
+})
+
+test('journey-lint prints the slice-size line and its exit code is unchanged by it', () => {
+	const dir = mkdtempSync(join(tmpdir(), 'journey-lint-slice-'))
+	const cli = fileURLToPath(new URL('./journey-lint.mjs', import.meta.url))
+	const run = (model) => {
+		const path = join(dir, 'j.yaml')
+		writeFileSync(path, stringify(model))
+		return spawnSync(process.execPath, [cli, path, dir], { encoding: 'utf8' })
+	}
+	const over = run(sliced(6))
+	assert.equal(over.status, 0, over.stdout)
+	assert.match(over.stdout, /^slice-size \(advisory\): release r1 holds 6 stories that do not exist yet \(limit 5\); split into sub-slices or record slice_because$/m)
+	assert.match(over.stdout, /all lints pass/)
+	assert.doesNotMatch(run(sliced(5)).stdout, /slice-size/)
+	const bad = run(sliced(6, { slice_limit: 0 }))
+	assert.equal(bad.status, 1)
+	assert.match(bad.stdout, /^invalid-slice-limit: /m)
 })
