@@ -10,7 +10,7 @@ Accepted
 
 Two delivery PRs in an adopting project each took four rounds of an external
 reviewer; in one the only P1 came in round one, and the Captain ruled the stop ad hoc;
-a two-line P1 repair waited about 1h40 for its implementation dispatch while
+a two-line P1 repair took about 1h40 from the validation approval to its report (dispatch time not recorded) while
 another task's worker held the same stage (the state history is consistent with
 `concurrency: 1` being read as a hard cap; the cause is not proven); candidates reached validation at 12.6, 7.5 and 6.4
 percent added-comment ratio against a 5 percent target and each needed a trim round, and a
