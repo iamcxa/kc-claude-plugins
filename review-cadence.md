@@ -82,6 +82,7 @@ gates:
                 state: pending
 started: 2026-09-30T07:22:23Z
 worktree: .worktrees/spacedock-ensign-review-cadence
+pr: 536
 ---
 
 Three review-cadence defects from qnow dogfooding (2026-09-28..29) that each cost extra full cycles or hours of waiting.
