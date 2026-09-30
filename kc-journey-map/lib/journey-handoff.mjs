@@ -37,6 +37,7 @@ function check(baseline, model, assessment) {
 	const withoutCuts = (source) => {
 		const result = structuredClone(source)
 		delete result.releases
+		delete result.slice_limit
 		for (const step of result.steps ?? []) for (const story of step.stories ?? []) delete story.release
 		return result
 	}
@@ -44,7 +45,7 @@ function check(baseline, model, assessment) {
 	for (const oldRelease of baseline.releases ?? []) {
 		const current = model.releases?.find((entry) => entry.id === oldRelease.id)
 		const before = { ...oldRelease }, after = { ...current }
-		if (oldRelease.id === assessment.release) { delete before.goal; delete after.goal }
+		if (oldRelease.id === assessment.release) for (const key of ['goal', 'slice_because']) { delete before[key]; delete after[key] }
 		require(same(before, after), `existing release changed beyond selected goal: ${oldRelease.id}`)
 	}
 

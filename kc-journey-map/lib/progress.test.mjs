@@ -5,10 +5,10 @@ import { mkdtempSync, mkdirSync, writeFileSync, readFileSync, rmSync } from 'nod
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { execFileSync, spawn } from 'node:child_process'
+import { execFileSync, spawn, spawnSync } from 'node:child_process'
 import { once } from 'node:events'
 import { stringify } from 'yaml'
-import { readProgress, taskListing } from './progress.mjs'
+import { findOrphans, readProgress, taskListing } from './progress.mjs'
 import { buildAllPages, loadJourney } from './render.mjs'
 import { storyBorder, richText } from './records.mjs'
 import { diffAgainstModel, applyDiff, readRoom } from './read.mjs'
@@ -139,7 +139,9 @@ test('derived projections use three borders without entering story wording or so
 })
 
 test('actual refresh CLI draws to isolated canvas and native-compatible readback preserves bytes', async (t) => {
-	const f = fixture(t), before = f.bytes(), room = 'progress-test'
+	const f = fixture(t), room = 'progress-test'
+	f.tasks[4].journey = 'other'; f.save()
+	const before = f.bytes()
 	const server = spawn(process.execPath, ['--import', 'tsx', 'server/canvas-server.ts'], { cwd: plugin,
 		env: { ...process.env, JOURNEY_API_PORT: '0', JOURNEY_ROOMS_DIR: join(f.root, 'rooms') }, stdio: ['ignore', 'pipe', 'pipe'] })
 	t.after(async () => { if (server.exitCode === null) { server.kill(); await once(server, 'exit') } })
@@ -171,4 +173,28 @@ test('actual refresh CLI draws to isolated canvas and native-compatible readback
 	const expected = structuredClone(model); expected.steps[0].stories[0].card = 'Review the required tasks'
 	assert.deepEqual(loadJourney(f.path), expected)
 	assert.deepEqual(f.bytes().slice(1), before.slice(1))
+})
+
+test('a task naming this journey but a release and story the map does not hold is an orphan', () => {
+	const row = (slug, journey, release, story) => ({ slug, id: slug, journey, 'journey-release': release, 'journey-story': story })
+	const rows = [row('mapped', 'demo', 'R1', 'alpha'), row('ghost-story', 'demo', 'R1', 'ghost'), row('ghost-release', 'demo', 'R9', 'alpha'),
+		row('wrong-pair', 'demo', 'R2', 'alpha'), row('other-journey', 'other', 'R9', 'ghost'), { slug: 'no-journey', id: 'no-journey' },
+		{ slug: 'half', id: 'half', journey: 'demo' }]
+	assert.deepEqual(findOrphans(model, rows).map((o) => o.slug), ['ghost-story', 'ghost-release', 'wrong-pair', 'half'])
+	assert.deepEqual(findOrphans(model, rows)[0], { slug: 'ghost-story', id: 'ghost-story', release: 'R1', story: 'ghost' })
+	assert.deepEqual(findOrphans(model, rows.slice(0, 1)), [])
+})
+
+test('the real reader lists orphans from the task listing and the refresh CLI exits 1 on them', (t) => {
+	const f = fixture(t)
+	assert.deepEqual(f.read().orphans.map((o) => [o.slug, o.release, o.story]), [['e', 'R2', 'alpha']])
+	const cliPath = join(plugin, 'lib/journey-progress.mjs')
+	const refresh = () => spawnSync(process.execPath, [cliPath, f.path, '--workflow-dir', f.workflow], { encoding: 'utf8' })
+	f.tasks[1].status = 'done'; f.tasks[2].status = 'done'; f.tasks[4].journey = 'other'; f.save()
+	const clean = refresh()
+	assert.deepEqual([clean.status, JSON.parse(clean.stdout).orphans], [0, []], clean.stderr)
+	f.tasks[4].journey = 'demo'; f.tasks[4]['journey-story'] = 'ghost'; f.save()
+	const held = refresh()
+	assert.equal(held.status, 1)
+	assert.deepEqual(JSON.parse(held.stdout).orphans, [{ slug: 'e', id: 'e0', release: 'R2', story: 'ghost' }])
 })

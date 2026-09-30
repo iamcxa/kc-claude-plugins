@@ -27,6 +27,16 @@ separately from the user's appetite. Story count, lines of code and an unsupport
 agent guess do not establish fit. If fit is unknown, investigate the uncertainty
 or propose a bounded learning journey with its own observable result.
 
+A slice is also read whole by people. Count the stories in it whose status is not
+`exists`, per journey file: more than five (the default; a top-level `slice_limit`
+replaces it) prints `slice-size (advisory)` from `journey-lint.mjs`. Split the slice
+into sub-slices, or record why not in that release's `slice_because`, which turns the
+line into `slice-size (accepted)`. The count is a cue for how much a reader holds at
+once, not a fit test: fit stays appetite versus estimate, and `journey-handoff.mjs`
+checks no story count (`lib/journey-handoff.test.mjs`, the seven-story case), and it
+allows a `slice_limit` or the selected release's `slice_because` added after the pre-cut
+copy. When releases in several journey files are one demo, add their counts by hand.
+
 When the candidate is oversized, incomplete or contains optional retained stories,
 produce a smaller complete proposal before offering development handoff. Do not
 merely warn and continue to a ready brief. If further reduction changes the user's

@@ -2,7 +2,7 @@
 import { fileURLToPath } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 import { loadModel } from './read.mjs'
-import { lintJourney, longCards } from './lint.mjs'
+import { lintJourney, longCards, oversizedSlices } from './lint.mjs'
 
 const args = process.argv.slice(2)
 const repos = {}
@@ -29,5 +29,6 @@ const model = loadModel(path)
 const violations = lintJourney(model, { repoRoot, journeyPath: resolve(path), repos })
 for (const v of violations) console.log(`${v.lint}: ${v.detail}`)
 for (const note of longCards(model)) console.log(`long-card (advisory): ${note}`)
+for (const slice of oversizedSlices(model)) console.log(`slice-size (${slice.kind}): ${slice.text}`)
 console.log(violations.length ? `\n${violations.length} violation(s)` : '\nall lints pass')
 process.exit(violations.length ? 1 : 0)
