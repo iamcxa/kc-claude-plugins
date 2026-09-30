@@ -204,3 +204,42 @@ No new CI job or runtime; the two suites already run per kc-dev-flow-2 PR. Not m
 ### Summary
 
 Two wording fixes, four files, no new mechanism. Only detail beyond the Captain's 「同意」 is that the replaced line becomes `Not applied: ... - <evidence>` rather than a silent deletion; FO may ask the Captain, otherwise a plain deletion is a one-line change. Nothing else needs a Captain ruling; nothing was implemented or committed to the repository.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design touching only kc-dev-flow-2/** and docs/adr/0004-*.md
+  Candidate `10658a7f1f530c8618a699d34db78139dfe26476` on `spacedock-ensign/reflow-order` (base c3b3d5ad); `git diff --stat` shows 4 files: `workflow.md`, `test_sd_dispatch.py`, `test_number_guards.py`, ADR 0004 (AC-6).
+- DONE: AC-1 lane paragraph says the recheck is dispatched only after the repair or fix commits
+  `lane_gaps()` in `test_sd_dispatch.py` returns `([], [])` on the real template; on the real 0.10.0 file (`git show c3b3d5ad:...`) it returns the missing after-commit, `Not applied:` and `Without that confirmation` phrases plus the forbidden "the validation recheck of that repair, and an FO fix".
+- DONE: AC-2 the lane still waits for no other entity's worker
+  The existing `concurrency` and "at once in the entity's own worktree" phrases stay asserted and the reflow build with the slot held still passes; deleting "do not wait for another entity's worker in the same stage" makes `lane_gaps` report exactly that phrase.
+- DONE: AC-3 Applied bullet keeps record-before-push and adds the confirmed-no-run replacement
+  `workflow.md` `**Applied.**` bullet now carries the `Not applied: <environment> <sha> - <evidence>` replacement and "Without that confirmation the line stays"; a fixture holding the 0.10.0 lane and bullet reports 3 missing phrases and 1 forbidden phrase in `test_sd_dispatch.py` (asserted).
+- DONE: AC-4 `number_guards.py check` treats `Not applied:` as no record
+  New `test_a_not_applied_line_in_place_of_the_record_leaves_the_edit_unfrozen`: `Not applied:` lines (with and without evidence) exit 0, the `Applied at:` line exits 1 with `FAIL R2`; mutation `^(?:Applied at|Not applied):` in `number_guards.py` fails this test alone (18 tests, 1 failure), restored after; `number_guards.py` unchanged.
+- DONE: AC-5 ADR 0004 corrected and amended once; ADR 0002 unchanged
+  Decision sentence rewritten and one `Amended 2026-10-01:` line added to Consequences (the Captain's quoted words untouched); `adr_lint.py docs/adr --require 0004` exits 0 (6 files). Read-back against `workflow.md` is by hand only, not enforced. The amendment carries the implementation date, not the landing date; FO may change it at merge.
+- DONE: AC-6 scope holds to the four files and comment_ratio passes
+  `comment_ratio.py c3b3d5ad HEAD` (candidate's own script) exit 0: 29 code lines, 0 comment lines, 0.0%.
+- DONE: CI suite list green
+  Ran lint-skills, test_lint_skills, test_design_surfaces, test_adr_doc_checks, test_poc_readme, test_comment_ratio, test_number_guards (18 OK), test_learning all exit 0; `test_sd_dispatch.py --sd-plugin-root` on Spacedock 0.27.2 prints all PASS lines.
+- DONE: `doc_impact.py` reported for base c3b3d5ad and the candidate
+  README.md: unaffected: it only lists the `test_number_guards.py` and `test_sd_dispatch.py` invocations, not the lane or Applied wording. references/sd/adoption.md: unaffected: it only names `test_sd_dispatch.py --sd-plugin-root`. No other document mentions the recheck or `Applied at:` except ADR 0002 (unaffected: it says what `check` refuses, not when the record is written).
+- DONE: Captain-run minimal acceptance script rewritten against the shipped text
+  Below; commands run from the candidate and their output matched.
+
+### Captain acceptance script (`$PKG` is a checkout of the merged code)
+
+    cd $PKG/kc-dev-flow-2
+    grep -n "dispatched only after the repair or fix has completed and committed" references/sd/workflow.md   # 1 hit, Stages
+    grep -n "the validation recheck of that repair, and an FO fix" references/sd/workflow.md                   # no hit
+    grep -n "replaces" references/sd/workflow.md                                                               # Applied bullet: Not applied: <environment> <sha> - <evidence>
+    python3 scripts/test_number_guards.py                                                                      # 18 tests OK, includes the Not-applied test
+    SPACEDOCK_BIN=$(command -v spacedock) python3 scripts/test_sd_dispatch.py --sd-plugin-root <activated spacedock root>   # PASS lines, incl. lane and Applied wording
+    python3 scripts/adr_lint.py ../docs/adr                                                                    # 6 ADR file(s) checked, exit 0
+    git show c3b3d5ad:kc-dev-flow-2/references/sd/workflow.md > /tmp/old.md   # falsifier: the check on the 0.10.0 file reports gaps
+    python3 -c "import sys; sys.path.insert(0,'scripts'); import test_sd_dispatch as t; print(t.lane_gaps(open('/tmp/old.md').read()))"   # 3 missing, 1 forbidden
+
+### Summary
+
+Two wording fixes, one rule test and one ADR amendment landed as a single `fix(kc-dev-flow-2)` commit; no version edit, `number_guards.py` unchanged. The wording checks assert phrases, not FO behaviour; the recheck ordering and the `Not applied:` confirmation stay FO prose. Nothing needs a Captain ruling beyond the design's noted `Not applied:` replacement.
