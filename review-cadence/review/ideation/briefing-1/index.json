@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:review-cadence:ideation:attempt-1:revision-1",
+  "question": "Approve review-cadence's design: round rule with N=2 (Material or reviewer P1 always blocks; from round 3 the rest become follow-ups), the repair lane sentence, comment_ratio.py --max with a 20-line floor and a citation scan, no package default for the ratio (qnow 5%)?",
+  "artifacts": [
+    {
+      "id": "artifact:review-cadence:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0342a3c67a4fbbeb5d49094f0185453fa3137500/review-cadence.md",
+      "rev": "sha256:8b6e13da9ce8be9676c664d8f449058118d7652f29e090769f22bf4449b9bee8",
+      "mediaType": "text/markdown",
+      "summary": "Package-only change; Spacedock 0.27.2 never slot-checks a reflow repair, so the lane needs no upstream change; replay: PR #1243 rounds 3-4 would start no cycle; qnow 34523b7ca would fail at 6.4% and on 34 citation comments."
+    }
+  ]
+}

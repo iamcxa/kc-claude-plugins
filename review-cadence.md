@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:review-cadence:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:review-cadence-ideation-1
+              briefing:
+                id: briefing:review-cadence:ideation:attempt-1:revision-1
+                digest: sha256:986837622b1c9cb0d262d85b48f44fb29a72139d78295422d404ace99c1ab94b
+                room-ref: ./review-cadence/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:review-cadence:ideation:1
+                briefing: briefing:review-cadence:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T07:43:44.12037Z"
+                decision: approve
+                reason: 'Captain 2026-09-30: 「核准」 — with two amendments he approved: the package defaults comment-ratio-max to 5 (his standing rule: baseline 3%, target 5%), overridable by the adopter''s workflow README key or --max; the round rule (N = 2) applies to any external reviewer (Codex, RoboRev, others), not Codex only'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-30T07:22:23Z
 ---
 
