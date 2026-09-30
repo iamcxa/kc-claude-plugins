@@ -14,6 +14,8 @@ Read every comment the candidate adds. A comment that narrates the change, resta
 the code beside it, cites a line number or marks a section is a repair finding.
 Measure them with `python3 <package>/scripts/comment_ratio.py <base> <candidate>`
 and report its output; where the project states a baseline ratio, compare to it.
+When the task has a `## Number guards` section, rerun its `check` at the candidate; exit 1 or 2 is
+a repair finding returned through feedback.
 When the change alters what a user sees, the evidence includes a screenshot of the
 changed screen at the candidate; reading the code or a passing render test is not
 seeing it.

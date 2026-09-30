@@ -14,6 +14,10 @@ one home. Record temporary scaffolding's concrete removal condition when added;
 an enduring guard instead names its invariant. Counts are diagnostic, not quotas.
 Before reporting completion, run `python3 <package>/scripts/comment_ratio.py <base> HEAD`
 and report its output with the stage report.
+When the task has a `## Number guards` section, use only the numbers it lists, run
+`python3 <package>/scripts/number_guards.py check` as that section states and report its
+output and base SHA; a migration on the base branch or recorded as applied is frozen,
+so it is exempt from comment trims and from cutting unmapped surfaces.
 Do not use `git stash`: every worktree and session of a repository shares one
 stash stack. Set work aside with a commit.
 
