@@ -3,7 +3,7 @@ title: A release is re-reviewed as one whole journey before its tasks are split,
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
