@@ -3,7 +3,7 @@ title: A delivery PR's review rounds stop by rule, a small fix does not queue be
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -79,10 +79,13 @@ gates:
                     source: ~/.claude/CLAUDE.md, Autonomous action boundaries
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-30T07:22:23Z
 worktree: .worktrees/spacedock-ensign-review-cadence
 pr: pr-merge:536
+verdict: PASSED
+completed: 2026-09-30T08:48:41Z
+archived: 2026-09-30T08:48:41Z
 ---
 
 Three review-cadence defects from qnow dogfooding (2026-09-28..29) that each cost extra full cycles or hours of waiting.
