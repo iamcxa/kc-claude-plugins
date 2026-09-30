@@ -3,7 +3,7 @@ title: Ideation cannot start without FO alignment, reach its gate without accept
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
