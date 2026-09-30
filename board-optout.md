@@ -246,3 +246,46 @@ ADR: 0007
 ### Summary
 
 The change is one optional release field read in `journeyBoardPages`, one lint, and a stale-board-page step in `renderToRoom` that removes pages with the `page:jm-board-` prefix the render did not produce, keeping any page that holds a human-drawn shape and never the last page. Read-back needs no change. One Captain decision remains (keep a page with hand-drawn notes); ADR 0007 is reserved. Spikes ran under `/tmp` only and are cleaned up.
+
+## Stage Report: implementation
+
+- DONE: Implement board-optout's approved design (Captain 2026-09-30 「做board: false 可以」 and 「同意，手畫的不刪除」: a stale board page holding hand-drawn shapes is kept with them, only generated shapes are removed, with or without --force), touching only kc-journey-map/** and docs/adr/.
+  Candidate `ea15b5ed1ddd38564a6dec198318c9e65e623b5e` on `spacedock-ensign/board-optout` (base c3b3d5ad), one commit, 12 files, all under `kc-journey-map/` or `docs/adr/`; no version edits, files staged by name, nothing pushed.
+- DONE: Every AC with the evidence its "Verified by" names that implementation can produce, including each falsifier; the canvas-room checks run against a throwaway /tmp room, never a shared or adopter room.
+  `node --test lib/*.test.mjs` 179/179 (168 before); `scripts/canvas-smoke.sh` passes against a throwaway server and temp rooms dir; mutation falsifiers each ran and failed as named, below.
+- DONE: AC-1 and AC-3 (`board` read in `journeyBoardPages`; no whole-journey fallback once releases exist)
+  `render.test.mjs` "a release with board false…" and "every release opting out…"; dropping the `board !== false` filter fails both, falling back to `buildJourneyBoard` on an empty list fails the all-opted-out case. Limit: the story-map deep-equal ignores `index`, because two identical `buildAllPages` calls already differ in index keys (measured).
+- DONE: AC-2 and AC-9 (`invalid-board` lint; handoff ignores `board`)
+  `lint.test.mjs` covers `'false'`, `0`, `null` (one violation each) and `true`/`false`/absent (none) plus a CLI run asserting exit 1 and the detail line; dropping `lintReleaseBoard` from `lintJourney` fails both. `journey-handoff.test.mjs`: a `board: false` change on a non-selected release passes, a `name` change still fails with the existing message; removing `delete before.board` fails the first.
+- DONE: AC-4, AC-5, AC-6, AC-8 (`staleBoardPages` in `renderToRoom`)
+  Unit: removal of opted-out, deleted-release and whole-journey pages; page with a hand-drawn shape kept (only generated records listed); `page:xyz` and `page:jm-funcmap` untouched; story-map-only render removes nothing; edited card on a stale page listed by `handEditedIds`; last page kept. Mutations that fail a test: treat every shape as generated (AC-5), drop the survivors guard (AC-8), drop the `journey-board` selection guard (story-map-only case).
+  Smoke (real server): r2 page and all `shape:jm-r2-*` gone, r1 page shape counts unchanged, story map intact; a card edited on the stale page stops the render (exit 1, names the card); with `--force` the page holding one hand-made note survives with only that note and the CLI prints the kept page. Smoke mutations: dropping the removal list fails "the r2 board page survived"; computing hand edits without the removal list fails "a card edited on a stale board page did not stop the render".
+- DONE: AC-7 (`read.mjs` unchanged)
+  `read.test.mjs` new case: shapes without the r2 board give empty `questionsDeleted`, `answersDeleted`, `missing`; a hand note left on `page:jm-board-r2` gives one `unclaimed` on `board:r2`. `git diff` shows no change to `lib/read.mjs`.
+- DONE: ADR 0007 in docs/adr (the task's `## Number guards` holds `ADR: 0007`), words 「做board: false 可以」 and 「同意，手畫的不刪除」, generic reason only.
+  `docs/adr/0007-a-release-opts-out-of-its-board-with-an-explicit-field.md`; `adr_lint.py docs/adr --require 0007` exits 0 (7 files); `number_guards.py check --base c3b3d5ad --task <this entity>` PASS; no adopter named.
+- DONE: Follow this repo's CLAUDE.md: `feat(kc-journey-map): …`, no version edits, stage files explicitly; `node --test lib/*.test.mjs` and `skill-frontmatter-lint.sh` green; `comment_ratio.py` from c3b3d5ad exits 0; `doc_impact.py` reported; exact candidate SHA; the Captain-run minimal acceptance script rewritten against the shipped text.
+  Commit subject `feat(kc-journey-map): let a release opt out of its journey-board page and retire stale board pages`; frontmatter lint "all skill directories have valid frontmatter"; `comment_ratio.py c3b3d5ad HEAD`: "code lines 181, comment lines 5, 2.8%", exit 0 (first draft was 5.9%, fixed by keeping an existing comment in place); script below was run end to end against a throwaway server on port 5871.
+
+### Summary
+
+`board: false` on a release removes its journey-board page; the story map keeps the band, a non-boolean value is `invalid-board`, and `journey-handoff` ignores the field. A `--pages journey-board` render now also removes board pages it no longer draws in the same PATCH, keeps a page that holds a hand-drawn shape (removing only generated shapes, with or without `--force`), and never removes the last page. No package capability was added beyond the design; `read.mjs`, `storymap.mjs` and the server are unchanged.
+
+Affected documents (`doc_impact.py c3b3d5ad HEAD` listed one; two more were updated by hand):
+- `kc-journey-map/README.md`: updated (lint table sentence for `invalid-board`, journey-board row).
+- `kc-journey-map/skills/kc-journey-map/references/canvas.md`: updated (releases fields, all-opted-out rule, "Render is a reconcile" paragraph).
+- `docs/journey/kc-journey-map/README.md` (listed): unaffected: it records this package's own four-page verification capture and its journey file sets no `board`, so its command and expected pages are unchanged.
+
+Limits, not proven: a room with zero pages and a browser tab open on a removed page were not exercised (AC-8 is a precaution); a person-made page is safe only because its id differs from `page:jm-board-*` (not tried in a browser); minutes added to the smoke job per PR not measured. The removal list also includes bindings carrying `meta.journey` on a stale page, as `staleRecordIds` does; a human arrow bound to a removed generated card loses only that binding by the same rule, not tested.
+
+### Captain acceptance script (rewritten against the shipped output; `KJM` is a checkout of the merged code, Node 22.13 or later, `npm ci` once in `$KJM/kc-journey-map`)
+
+1. `cd $KJM/kc-journey-map && export JOURNEY_API=http://127.0.0.1:5871 && (JOURNEY_API_PORT=5871 JOURNEY_ROOMS_DIR=/tmp/kjm-accept npx tsx server/canvas-server.ts & echo $! >/tmp/kjm-accept.pid) && cp skills/kc-journey-map/references/journey.example.yaml /tmp/kjm-accept.yaml`, then wait until `curl -s $JOURNEY_API/health` answers.
+2. `node lib/journey-render.mjs /tmp/kjm-accept.yaml accept --pages story-map,journey-board`, then list the pages: `curl -s "$JOURNEY_API/doc?room=accept" | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>console.log(JSON.parse(s).snapshot.documents.map(d=>d.state).filter(r=>r.typeName==="page").map(r=>r.id).join("\n")))'`. Expect `page:page`, `page:jm-board-r1`, `page:jm-board-r2`.
+3. `sed -i '' 's/{id: r2,/{id: r2, board: false,/' /tmp/kjm-accept.yaml`, then `node lib/journey-render.mjs /tmp/kjm-accept.yaml accept --pages journey-board` and the page list again. Expect the output line `removed board page page:jm-board-r2`, and only `page:page` and `page:jm-board-r1` left.
+4. `node lib/journey-render.mjs /tmp/kjm-accept.yaml accept --pages story-map` then the page list. Expect the same two ids as after step 3 (a story-map render removes no board page); open the room in a canvas to see r2's band still on the story-map page.
+5. `sed -i '' 's/board: false/board: "false"/' /tmp/kjm-accept.yaml && node lib/journey-lint.mjs /tmp/kjm-accept.yaml; echo exit=$?`. Expect `invalid-board: release r2 has board "false"; use true or false` and `exit=1` (the `long-card (advisory)` lines are unrelated).
+6. Optional, needs a browser: `npm run canvas` on free default ports, render the example into room `accept`, open it, draw one sticky on the RELEASE 2 tab, set `board: false` on r2, re-render with `--pages journey-board`. Expect the output line `kept board page page:jm-board-r2: it holds 1 shape(s) drawn by hand; only its generated shapes were removed`, and the RELEASE 2 tab left with only your sticky.
+7. Cleanup: `kill $(cat /tmp/kjm-accept.pid)`, `rm -rf /tmp/kjm-accept /tmp/kjm-accept.yaml /tmp/kjm-accept.pid`.
+
+Does not cover: a room with zero pages, a person-made page named like a board page, adopter journeys. Steps 1 to 5 were run against the candidate on 2026-09-30 with the outputs above; step 6 was not run (needs a browser).
