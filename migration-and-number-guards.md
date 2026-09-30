@@ -3,7 +3,7 @@ title: An applied migration is never edited, and parallel tasks never pick the s
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-09-30: 「准」 — including the uat exit: reset the non-production database branch through Netlify''s database-branch reset API instead of a compensating migration'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Two adopter defects from qnow dogfooding (2026-09-29) that dev2 never checked: an unmerged migration edited in place after it reached a persistent database, and parallel tasks choosing the same migration and ADR numbers.
