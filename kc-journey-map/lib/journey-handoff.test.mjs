@@ -166,3 +166,20 @@ test('recording slice_because or slice_limit after the pre-cut copy does not ref
 	const result = f.run('--out', join(f.dir, 'handoff.md'))
 	assert.equal(result.status, 0, result.stderr)
 })
+
+test('board on a non-selected release is not a change to it; any other field still is', (t) => {
+	const restage = (mutate) => {
+		const f = fixture(t)
+		mutate(f.source)
+		writeFileSync(f.paths[1], stringify(f.source))
+		f.assessment.source_sha256 = hash(readFileSync(f.paths[1]))
+		return f
+	}
+	const allowed = restage((source) => { source.releases[1].board = false })
+	allowed.accept()
+	const result = allowed.run('--out', join(allowed.dir, 'handoff.md'))
+	assert.equal(result.status, 0, result.stderr)
+	const refused = restage((source) => { source.releases[1].name = 'Renamed' }).run('--digest')
+	assert.notEqual(refused.status, 0)
+	assert.match(refused.stderr, /existing release changed beyond selected goal: later/)
+})

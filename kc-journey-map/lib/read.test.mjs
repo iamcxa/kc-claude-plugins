@@ -484,3 +484,18 @@ test('applying a new question reports only its own shape as absorbed, leaving an
 	assert.ok(applied.some((a) => a.includes('a-0')))
 	assert.deepEqual(absorbed.map((a) => a.shapeId), ['shape:hand-q2'])
 })
+
+test('a room whose r2 board page was removed reports no drift for it; a kept page with a human note reports it unclaimed', () => {
+	const model = structuredClone(fixtureModel)
+	model.releases[1].board = false
+	model.steps[0].stories.find((st) => st.id === 'a-1').questions = [{ id: 'q1', ask: 'Which day?', answer: 'Monday.' }]
+	const shapes = buildAllPages(model, null, ['story-map', 'journey-board']).filter((r) => r.typeName === 'shape')
+	assert.ok(!shapes.some((s) => s.parentId === 'page:jm-board-r2'))
+	const diff = diffAgainstModel(shapes, model)
+	assert.deepEqual([diff.questionsDeleted, diff.answersDeleted, diff.missing], [[], [], []])
+
+	const note = { id: 'shape:hand-r2', typeName: 'shape', type: 'note', parentId: 'page:jm-board-r2', x: 400, y: 400, props: { richText: rt('Ask the librarian') } }
+	const kept = diffAgainstModel([...shapes, note], model)
+	assert.equal(kept.unclaimed.length, 1)
+	assert.equal(kept.unclaimed[0].page, 'board:r2')
+})

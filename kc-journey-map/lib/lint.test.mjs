@@ -319,3 +319,27 @@ test('journey-lint prints the slice-size line and its exit code is unchanged by 
 	assert.equal(bad.status, 1)
 	assert.match(bad.stdout, /^invalid-slice-limit: /m)
 })
+
+const boarded = (board) => ({ ...sliced(1), releases: [{ id: 'r1', name: 'R1', ...(board === undefined ? {} : { board }) }] })
+
+test('a board value that is present and not a boolean is a violation naming the release', () => {
+	for (const bad of ['false', 0, null]) {
+		const violations = lintJourney(boarded(bad), { repoRoot: tmpdir() }).filter((v) => v.lint === 'invalid-board')
+		assert.equal(violations.length, 1, `board ${JSON.stringify(bad)} was not refused`)
+		assert.equal(violations[0].release, 'r1')
+		assert.match(violations[0].detail, /release r1 has board/)
+	}
+	for (const ok of [true, false, undefined]) {
+		assert.deepEqual(lintJourney(boarded(ok), { repoRoot: tmpdir() }).filter((v) => v.lint === 'invalid-board'), [])
+	}
+})
+
+test('journey-lint exits 1 on a non-boolean board and names the release', () => {
+	const dir = mkdtempSync(join(tmpdir(), 'journey-lint-board-'))
+	const cli = fileURLToPath(new URL('./journey-lint.mjs', import.meta.url))
+	const path = join(dir, 'j.yaml')
+	writeFileSync(path, stringify(boarded('false')))
+	const bad = spawnSync(process.execPath, [cli, path, dir], { encoding: 'utf8' })
+	assert.equal(bad.status, 1)
+	assert.match(bad.stdout, /^invalid-board: release r1 has board "false"; use true or false$/m)
+})
