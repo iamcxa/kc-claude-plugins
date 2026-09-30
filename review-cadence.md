@@ -45,6 +45,22 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:review-cadence:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:review-cadence-validation-1
+              briefing:
+                id: briefing:review-cadence:validation:attempt-1:revision-1
+                digest: sha256:b58e0a0e0778cd0da16384803badc57be77ce3799a87f0adfed827fcd01c4b5c
+                room-ref: ./review-cadence/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:review-cadence:validation:1
+                briefing: briefing:review-cadence:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T08:16:00.945753Z"
+                decision: revise
+                reason: 'Captain 2026-09-30: 「退回補」 — four repairs: AC/Finding/Task citation tests; unresolvable ref exits 2; ADR 0004 verbatim words and no unproven cause; item 5 maps a reviewer without P1 labels by its highest severity; constructed false-positive classes declined as a known limit'
 started: 2026-09-30T07:22:23Z
 worktree: .worktrees/spacedock-ensign-review-cadence
 ---

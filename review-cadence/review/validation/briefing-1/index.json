@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:review-cadence:validation:attempt-1:revision-1",
+  "question": "Validation PASSED with gaps: send review-cadence back to implementation for four repairs (tests for AC/Finding/Task citations; unresolvable ref exits 2; ADR 0004 verbatim words and no unproven cause; item 5 maps a reviewer without P1 labels by its highest severity), declining the constructed false-positive classes as a known limit?",
+  "artifacts": [
+    {
+      "id": "artifact:review-cadence:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/15013f721e5ef7e536d21abdd55a8a326a51c73a/review-cadence.md",
+      "rev": "sha256:0ee51e72bd3305f45a80df859f5fa8612e86394f92f1630f6f8fac491c947248",
+      "mediaType": "text/markdown",
+      "summary": "Suites, falsifiers, qnow replay and acceptance script reproduce; AC-4 mutation gap for AC/Finding/Task; bad ref gives traceback exit 1; ADR words paraphrased; RoboRev severity unmapped; real false-positive rate 1 of 38."
+    }
+  ]
+}
