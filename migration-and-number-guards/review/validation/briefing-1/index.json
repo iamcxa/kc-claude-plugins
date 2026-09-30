@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:migration-and-number-guards:validation:attempt-1:revision-1",
+  "question": "Accept migration-and-number-guards' validation PASSED on candidate 83cad4f70a36 and open its Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:migration-and-number-guards:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/145330b4199e9ec5e84ed845eb698bcec80c4542/migration-and-number-guards.md",
+      "rev": "sha256:43d1be326f85c07b4ce96993f63c2215f73c53e9b6e73bcade59e59ba8a8c7c7",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED: real qnow history fails R1 on 0005 and passes the 0012 add; reserve never collides; bad base exits 2; 16 of 16 mutations caught after the polish commit; sanitize-check CONDITIONAL PASS (0 block, 2 accepted warns)."
+    }
+  ]
+}

@@ -45,6 +45,28 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:migration-and-number-guards:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:migration-and-number-guards-validation-1
+              briefing:
+                id: briefing:migration-and-number-guards:validation:attempt-1:revision-1
+                digest: sha256:65b04e0c053aa7bd7b64706375afc4d8b2e038e11db47e32dcd8da5a385e8952
+                room-ref: ./migration-and-number-guards/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:migration-and-number-guards:validation:1
+                briefing: briefing:migration-and-number-guards:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-09-30T01:12:51.784862Z"
+                decision: approve
+                reason: Validation PASSED on 83cad4f70a36; opening a Draft PR only; merge stays with the Captain
+                conn:
+                    quote: 'No ask on a repo Kent owns: push a branch and open a Draft PR once the work cleared its own bar'
+                    source: ~/.claude/CLAUDE.md, Autonomous action boundaries
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-30T00:48:39Z
 worktree: .worktrees/spacedock-ensign-migration-and-number-guards
 ---
