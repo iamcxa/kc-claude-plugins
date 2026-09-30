@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.3.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.2.1...kc-journey-map-v1.3.0) (2026-09-30)
+
+
+### Features
+
+* **kc-journey-map:** lint evidence that lives in another repository ([#532](https://github.com/iamcxa/kc-claude-plugins/issues/532)) ([348c687](https://github.com/iamcxa/kc-claude-plugins/commit/348c6876f8bd82fb3f3ae2bba6633b689f6ec179))
+* **kc-journey-map:** review a release as one journey, warn on oversized slices and list orphan tasks ([#538](https://github.com/iamcxa/kc-claude-plugins/issues/538)) ([d3c79ba](https://github.com/iamcxa/kc-claude-plugins/commit/d3c79ba5c20b6e6374f716dce77d83ca8139c605))
+
 ## [1.2.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.2.0...kc-journey-map-v1.2.1) (2026-09-24)
 
 

@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.10.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.9.0...kc-dev-flow-2-v0.10.0) (2026-09-30)
+
+
+### Features
+
+* **kc-dev-flow-2:** check the ideation seed and acceptance criteria, record Captain amendments, keep ADR drafts unnumbered ([#537](https://github.com/iamcxa/kc-claude-plugins/issues/537)) ([2bd1bfa](https://github.com/iamcxa/kc-claude-plugins/commit/2bd1bfab0b3b72070536a62cbbb788d26d8ce776))
+* **kc-dev-flow-2:** refuse edits to applied migrations and reserve migration and ADR numbers per task ([#533](https://github.com/iamcxa/kc-claude-plugins/issues/533)) ([b202457](https://github.com/iamcxa/kc-claude-plugins/commit/b202457454a07eef151b763c92b5e3876aba2192))
+* **kc-dev-flow-2:** review a changed release as one journey before its tasks are split ([#540](https://github.com/iamcxa/kc-claude-plugins/issues/540)) ([fffe58e](https://github.com/iamcxa/kc-claude-plugins/commit/fffe58e889d7005cb0775a18ddca6181cb3b5dc1))
+* **kc-dev-flow-2:** state the package root, completion recipient and secret wrapper in every dispatch ([#535](https://github.com/iamcxa/kc-claude-plugins/issues/535)) ([d0f91b4](https://github.com/iamcxa/kc-claude-plugins/commit/d0f91b4832d9ec3e25d29b0ef778fdd5472aa203))
+* **kc-dev-flow-2:** stop review rounds by rule, dispatch repairs at once, and enforce the added-comment maximum ([#536](https://github.com/iamcxa/kc-claude-plugins/issues/536)) ([05b772b](https://github.com/iamcxa/kc-claude-plugins/commit/05b772b7ffef31553c7fd625dd74fdfe240910d1))
+
 ## [0.9.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.8.0...kc-dev-flow-2-v0.9.0) (2026-09-25)
 
 
