@@ -312,3 +312,7 @@ The four repairs are in one commit on top of 408e8bf84c8f: each task-numbering a
 ### Summary
 
 Recommendation: PASSED. All four Captain-authorized repairs reproduce: each task-numbering alternative fails its own case, an unresolvable ref exits 2 with one line and a test that fails when the check is off, ADR 0004 carries the Captain's five quotes verbatim with no unproven cause, and the item-5 sentence is asserted by test_sd_dispatch.py. Cycle 1's other results are untouched by this diff except where re-run above. Three Polish observations and the unverified obligations are listed for FO disposition; none is Material.
+
+### Polish fix
+
+FO-authorized (validation cycle 2 finding 1, step 3): ADR 0004 Context now says the P1 repair "took about 1h40 from the validation approval to its report (dispatch time not recorded)"; nothing else changed. New candidate a8079edf89052650be4f6ad5864205dd9a0c81fa (one file); `adr_lint.py docs/adr --require 0004` and `test_adr_doc_checks.py` exit 0.
