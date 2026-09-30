@@ -69,7 +69,7 @@ gates:
                 state: pending
 started: 2026-09-30T15:58:54Z
 worktree: .worktrees/spacedock-ensign-reflow-order
-pr: 544
+pr: pr-merge:544
 ---
 
 Two wording defects in kc-dev-flow-2 0.10.0 `references/sd/workflow.md`, found by an external review of an adopter's workflow sync (qnow PR #1248, 2026-09-30).
