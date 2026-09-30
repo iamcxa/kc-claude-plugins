@@ -91,6 +91,7 @@ gates:
                 state: pending
 started: 2026-09-30T04:12:30Z
 worktree: .worktrees/spacedock-ensign-dispatch-and-report-hygiene
+pr: 535
 ---
 
 Four dispatch and report defects from qnow dogfooding (2026-09-28..30) that cost retries or leaked secrets.
