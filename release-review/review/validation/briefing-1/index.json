@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-review:validation:attempt-1:revision-1",
+  "question": "AC-5 replay failed twice (walk missed brand context, office identity only adjacent, real-shop-live found). Return to implementation to make the actor identity-and-context check an explicit per-step walk column (generic, not the known answers) plus Polish F3/F4, then re-run the replay with a neutral prompt; or accept the reference as is?",
+  "artifacts": [
+    {
+      "id": "artifact:release-review:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0aed9157676c3f94ffef6df7322ebdec2196eb81/release-review.md",
+      "rev": "sha256:26f9598018e121116c249b4820d55a959b9edf7c9b9881982ce35dbe426a246a",
+      "mediaType": "text/markdown",
+      "summary": "Deterministic parts sound: 168 node tests at both group SHAs, 12 of 12 mutations caught, qnow lint flags owner r3 only as designed, handoff fix required; AC-5 is the Captain's threshold."
+    }
+  ]
+}

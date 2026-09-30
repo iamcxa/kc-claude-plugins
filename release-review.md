@@ -45,6 +45,22 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:release-review:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:release-review-validation-1
+              briefing:
+                id: briefing:release-review:validation:attempt-1:revision-1
+                digest: sha256:41283136e1aedb8d84d044c27608c5ab5cba5f6eda2db2d11832804221ca56ad
+                room-ref: ./release-review/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-review:validation:1
+                briefing: briefing:release-review:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-09-30T15:14:29.636124Z"
+                decision: revise
+                reason: 'Captain 2026-09-30: 「退回補強」 — the review-release walk records, per step, each actor''s identity, tenant or brand context and what the screen shows (generic, not the known answers); fix Polish F3 and F4; re-run the AC-5 replay with a neutral prompt; F2 recorded as a known limit'
 started: 2026-09-30T10:02:06Z
 worktree: .worktrees/spacedock-ensign-release-review
 ---
