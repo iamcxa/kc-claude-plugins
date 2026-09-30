@@ -3,7 +3,7 @@ title: An applied migration is never edited, and parallel tasks never pick the s
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
