@@ -3,7 +3,7 @@ title: A revise at the validation gate goes back to implementation, not to the v
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -66,10 +66,13 @@ gates:
                     source: ~/.claude/CLAUDE.md, Autonomous action boundaries
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-01T03:05:36Z
 worktree: .worktrees/spacedock-ensign-patch-0103
 pr: pr-merge:553
+verdict: PASSED
+completed: 2026-10-01T04:34:59Z
+archived: 2026-10-01T04:34:59Z
 ---
 
 One wording defect in kc-dev-flow-2 0.10.2 `references/sd/workflow.md` `## Captain amendments`, found as a P1 in round 3 of an external review of an adopter's workflow sync (qnow PR #1248, commit 39bf550, 2026-10-01); patch release 0.10.3.
