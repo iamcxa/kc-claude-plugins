@@ -3,7 +3,7 @@ title: A revise at the validation gate goes back to implementation, not to the v
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-10-01: 「可以」 — the three-case revise sentence approved'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-01T03:05:36Z
 ---
 
