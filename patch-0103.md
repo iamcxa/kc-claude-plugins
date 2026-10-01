@@ -176,3 +176,25 @@ The fix is a rewording of one sentence in `workflow.md`, with no new mechanism: 
 ### Summary
 
 The `## Captain amendments` paragraph now sends a `revise` at a gate with a `feedback-to` to that target with the stage's worker re-reviewing, keeps a worker stage without `feedback-to` with its own worker, and leaves `backlog` with FO or the author. The Captain's 「Ａ」 replaced the named-`ideation` wording after the POC derivation test failed; the structural wording keeps the derived POC README correct. The test's `backlog-revise` swap was re-aimed and `feedback-revise` added, and the seven-fix PASS line was updated.
+
+## Stage Report: validation
+- DONE: Reproduce the full kc-dev-flow-2 CI suite list on a `git archive` copy of d511cecf (test_sd_dispatch.py with the Spacedock v0.27.2 plugin root, including test_poc_readme.py)
+  All nine `kc-dev-flow-2-tests.yml` commands exit 0 (lint-skills, test_lint_skills, test_design_surfaces, test_adr_doc_checks, test_poc_readme, test_comment_ratio, test_number_guards, test_learning, test_sd_dispatch with a clone of spacedock-dev/spacedock at 4d158a48 = v0.27.2 and the 0.27.2 binary); the fifth PASS line names `feedback-revise`.
+- DONE: Falsifier: the new test on the 0.10.2 workflow.md exits 1 naming feedback-revise
+  A120eb75 tree plus the candidate test.py exits 1 with both the 0.27.0 and 0.27.2 roots; `fix_gaps` shows only `feedback-revise` with both `need` phrases missing and the 0.10.2 clause kept, every other entry `([], [])`. Three more mutations of the candidate workflow.md (target replaced by "the stage", the no-`feedback-to` clause deleted, "re-reviews" changed to "reworks") each make the test exit 1.
+- DONE: Two-file scope and no AC-1 in force
+  `git diff --stat a120eb75 d511cecf` lists only `workflow.md` (+4 -3) and `test_sd_dispatch.py` (+9 -4); `spacedock status --read --ac-scan --stage implementation` lists AC-6, AC-2, AC-3, AC-4, AC-5 and no AC-1; `design_surfaces.py check` exits 0.
+- DONE: Read the shipped sentence against the round-3 Codex P1 on qnow #1248 commit 39bf550 and say whether it is closed
+  The P1 (comment 4151250815, "Route validation-gate revisions back to implementation") is closed: `workflow.md` gives `validation` `feedback-to: implementation` and `gate: true`, and the shipped sentence sends a revise at such a gate to the target with the validation worker re-reviewing; `ideation` (gate, no `feedback-to`) keeps its worker and `backlog` stays with FO, so no gated stage is left without an owner.
+- DONE: Read the derived POC README sentence (`poc_readme.py derive`) and say whether it reads correctly without ideation
+  Derived README (4 stages) carries the identical sentence; it reads correctly, validation to implementation and backlog to FO, and its first clause has no stage to apply to (implementation has no gate), which is vacuous but not wrong; test_poc_readme.py exits 0.
+- DONE: Every added comment line, and the candidate's own comment_ratio.py from a120eb75
+  No added line of `test_sd_dispatch.py` contains `#`; `comment_ratio.py a120eb75 HEAD` prints "code lines 9, comment lines 0, 0.0%", exit 0 (floor of 20 code lines not reached, so not enforced).
+- DONE: Run the Captain acceptance script as written
+  Steps 1 and 2 run in a clone of the candidate branch: step 1 prints the structural sentence, step 2 exits 0 with `feedback-revise` on the fifth PASS line. Step 3 run with a `git archive` of a120eb75 in place of `git worktree add`, to leave the code worktree's metadata untouched: exit 1, `feedback-revise` missing both phrases; copies removed.
+- DONE: Confirm the code worktree is clean
+  `git status --short` empty and HEAD still d511cecf after all runs; every spike and mutation copy was under /tmp.
+
+### Summary
+
+Recommend PASSED for d511cecf: the shipped sentence closes the qnow #1248 round-3 P1, the falsifier fails on the 0.10.2 text and passes on the new text, scope is two files, and the derived POC README reads correctly. Not verified: a live Captain `revise` through Spacedock at a validation gate (routing is read from the existing `feedback-to` declaration and the test reads template text only). Polish, not blocking: the design text says `feedback-revise` is on the "sixth" PASS line, it is the fifth, which the Captain script already says.
