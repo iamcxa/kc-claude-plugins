@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:poc-no-migrations:backlog:attempt-1:revision-1",
+  "question": "Admit poc-no-migrations (POC touches no migration file) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:poc-no-migrations:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3b537ab7d72adf52b0972eb32024de949636fdde/poc-no-migrations.md",
+      "rev": "sha256:05e8977dc103ac24ba006ab3baa4636cca1706b21ba9d9c40687fee67a66d184",
+      "mediaType": "text/markdown",
+      "summary": "Closes the waived round-4 P1 on qnow #1248 with a POC rule and a migrations-directory check."
+    }
+  ]
+}

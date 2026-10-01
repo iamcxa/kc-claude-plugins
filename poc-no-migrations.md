@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:poc-no-migrations:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:poc-no-migrations-backlog-1
+              briefing:
+                id: briefing:poc-no-migrations:backlog:attempt-1:revision-1
+                digest: sha256:e389818b33a780a92218611ad1159a107a101bd23466415e2870916cf2e0c86a
+                room-ref: ./poc-no-migrations/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:poc-no-migrations:backlog:1
+                briefing: briefing:poc-no-migrations:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-01T05:16:53.369004Z"
+                decision: approve
+                reason: 'Captain 2026-10-01: 「ok」 — POC touches no migration file; a task needing one is promoted to pilot; POC delivery checks the migrations directory is unchanged'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 The POC route never activates number guards (it records no `Surfaces:`), so a POC migration would get no reserved number and no freeze; the Captain ruled that a POC does not touch migrations at all.
