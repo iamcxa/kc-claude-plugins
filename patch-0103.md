@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:patch-0103:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:patch-0103-ideation-1
+              briefing:
+                id: briefing:patch-0103:ideation:attempt-1:revision-1
+                digest: sha256:fa3bccca4b89fab216ec9f945cbd9ed7edde2207045af72acb3c8b5d2db5dc8b
+                room-ref: ./patch-0103/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:patch-0103:ideation:1
+                briefing: briefing:patch-0103:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-01T03:14:42.361044Z"
+                decision: approve
+                reason: 'Captain 2026-10-01: 「可以」 — the three-case revise sentence approved'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-01T03:05:36Z
 ---
 

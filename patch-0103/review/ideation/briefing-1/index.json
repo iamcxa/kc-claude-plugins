@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:patch-0103:ideation:attempt-1:revision-1",
+  "question": "Approve patch-0103's one-sentence rewording (revise at a feedback stage's gate goes to its feedback-to stage; ideation keeps its worker; backlog stays with FO or the author)?",
+  "artifacts": [
+    {
+      "id": "artifact:patch-0103:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/409cab238b08f614b9513908d9bf1fd187afbb89/patch-0103.md",
+      "rev": "sha256:ae6b378bb4c67487de5c85e0bbb30a911f394bd0a5e767b9041069da2272d1c1",
+      "mediaType": "text/markdown",
+      "summary": "No new mechanism; falsifier proven on 0.10.2 text; no ADR amendment."
+    }
+  ]
+}
