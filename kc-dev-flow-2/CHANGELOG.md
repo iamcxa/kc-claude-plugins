@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.4](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.3...kc-dev-flow-2-v0.10.4) (2026-10-01)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** a POC task changes no migration file and check enforces it ([#555](https://github.com/iamcxa/kc-claude-plugins/issues/555)) ([a822c3e](https://github.com/iamcxa/kc-claude-plugins/commit/a822c3e31521de37ed04b7798113995dd2f1fc38))
+
 ## [0.10.3](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.2...kc-dev-flow-2-v0.10.3) (2026-10-01)
 
 
