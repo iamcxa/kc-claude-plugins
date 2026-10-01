@@ -3,7 +3,7 @@ title: A POC task adds or edits no migration file, and POC delivery checks the m
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-10-01: 「ok」 — POC touches no migration file; a task needing one is promoted to pilot; POC delivery checks the migrations directory is unchanged'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 The POC route never activates number guards (it records no `Surfaces:`), so a POC migration would get no reserved number and no freeze; the Captain ruled that a POC does not touch migrations at all.
