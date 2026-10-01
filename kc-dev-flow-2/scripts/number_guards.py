@@ -8,7 +8,7 @@ check   exit 0 clean, 1 findings, 2 misconfiguration. Rules: R1 a migration pres
 reserve prints 'Migration: NNNN' or 'ADR: NNNN' (one above the base tip and every other task file, never
         filling a gap); a task that already holds a line gets it back. One number per kind per task.
 Limits: only files named NNNN_name.sql count as migrations, so meta/_journal.json and snapshots are not checked;
-a deploy nobody recorded as 'Applied at:' is not detected; run 'git fetch' first, the base tip is what is local.
+a deploy nobody recorded as 'Applied at:' is not detected; run 'git -C <repo> fetch' first, the base tip is what is local.
 Task lines are read from the task's '## Number guards' section.
 """
 import argparse

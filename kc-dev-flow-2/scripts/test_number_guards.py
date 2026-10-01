@@ -124,6 +124,18 @@ class AppliedFreezeTests(unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("FAIL R2", out)
 
+    def test_an_applied_task_whose_number_the_base_took_renumbers_once_its_line_is_replaced(self):
+        self.fx.git("checkout", "-q", "main")
+        self.fx.commit("other landed", **{mig(6, "other"): "SELECT 2;\n"})
+        self.fx.git("checkout", "-q", "feature")
+        code, out = self.fx.check(task=task_file(self.task_dir.name, "Migration: 0006", self.line))
+        self.assertEqual((code, "FAIL R3" in out), (1, True), out)
+        self.fx.commit("renumber", **{mig(6, "op"): None, mig(7, "op"): "SELECT 6;\n"})
+        code, out = self.fx.check(task=task_file(self.task_dir.name, "Migration: 0007", self.line))
+        self.assertEqual((code, "FAIL R2" in out), (1, True), out)
+        reset = f"Not applied: uat {self.applied} - database reset"
+        self.assertEqual(self.fx.check(task=task_file(self.task_dir.name, "Migration: 0007", reset))[0], 0)
+
     def test_a_recorded_commit_absent_from_the_clone_is_a_configuration_error(self):
         task = task_file(self.task_dir.name, "Migration: 0006", "Applied at: uat " + "0" * 40)
         code, out = self.fx.check(task=task)
@@ -150,6 +162,23 @@ class ReserveTests(unittest.TestCase):
             self.assertEqual(reserve(a), (0, "Migration: 0013\n"))
             fx.commit("adrs", **{"docs__adr__0001-a.md": "x", "docs__adr__0003-c.md": "x"})
             self.assertEqual(reserve(b, "adr"), (0, "ADR: 0004\n"))
+
+    def test_a_task_that_loses_a_collision_reserves_again_above_the_one_that_keeps_its_number(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as state:
+            fx = base_repo(tmp, top=12)
+            fx.git("checkout", "-q", "main")
+            keeps, loses = Path(state, "keeps.md"), Path(state, "loses.md")
+            keeps.write_text("## Number guards\nMigration: 0013\nApplied at: uat " + "a" * 40 + "\n")
+            loses.write_text("## Number guards\nMigration: 0013\n")
+
+            def reserve(task):
+                return fx.run("reserve", "--kind", "migration", "--repo", tmp, "--migrations-path", MIGRATIONS,
+                              "--base", "main", "--state-dir", state, "--task", str(task))
+
+            self.assertEqual(reserve(loses), (0, "Migration: 0013\n"))
+            loses.write_text("## Number guards\n")
+            self.assertEqual(reserve(loses), (0, "Migration: 0014\n"))
+            self.assertEqual(reserve(keeps), (0, "Migration: 0013\n"))
 
 
 class RecheckTests(unittest.TestCase):
