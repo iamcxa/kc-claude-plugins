@@ -23,6 +23,7 @@ export function StickyBackbone() {
 					id: shape.id,
 					text: renderPlaintextFromRichText(editor, shape.props.richText),
 					fill: getColorValue(colors, shape.props.color, 'noteFill'),
+					ink: getColorValue(colors, shape.props.color, 'noteText'),
 					left: topLeft.x,
 					width: bottomRight.x - topLeft.x,
 					bottom: bottomRight.y,
@@ -37,7 +38,7 @@ export function StickyBackbone() {
 	return (
 		<div className="sticky-backbone" style={{ height: PIN_TOP + STRIP_H + 8, fontSize: cards.fontSize }} data-testid="sticky-backbone">
 			{cards.placed.map((card) => (
-				<div key={card.id} className="sticky-backbone__card" title={card.text} style={{ top: PIN_TOP, height: STRIP_H, left: card.left, width: card.width, background: card.fill }}>
+				<div key={card.id} className="sticky-backbone__card" title={card.text} style={{ top: PIN_TOP, height: STRIP_H, left: card.left, width: card.width, background: card.fill, color: card.ink }}>
 					{card.text}
 				</div>
 			))}
