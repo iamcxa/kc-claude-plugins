@@ -9,6 +9,7 @@ import { storyBorder } from '../../lib/records.mjs'
 import { DocPopup, type DocTarget } from './DocPopup'
 import './doc-popup.css'
 import { SaveButton } from './SaveButton'
+import { StickyBackbone } from './StickyBackbone'
 import { addSequencePage } from './sequence'
 
 // Falls back to the page's own origin so the /connect proxy (see vite.config.mts)
@@ -103,7 +104,10 @@ export default function App() {
 }
 
 function RoomCanvas({ roomId }: { roomId: string }) {
-	const components = useMemo(() => ({ SharePanel: () => <SaveButton roomId={roomId} /> }), [roomId])
+	const components = useMemo(
+		() => ({ SharePanel: () => <SaveButton roomId={roomId} />, InFrontOfTheCanvas: StickyBackbone }),
+		[roomId]
+	)
 	const store = useSync({
 		uri: `${SERVER_URL}/connect/${roomId}`,
 		assets: canvasAssets,

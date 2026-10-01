@@ -4,3 +4,29 @@ html, body, #root {
 	height: 100%;
 	overscroll-behavior: none;
 }
+
+.sticky-backbone {
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	overflow: hidden;
+	background: var(--tl-color-background);
+	border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+}
+.sticky-backbone__card {
+	position: absolute;
+	box-sizing: border-box;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 2px 4px;
+	overflow: hidden;
+	border-radius: 4px;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+	font-family: 'tldraw_draw', sans-serif;
+	font-weight: 600;
+	line-height: 1.25;
+	overflow-wrap: anywhere;
+	text-align: center;
+}
