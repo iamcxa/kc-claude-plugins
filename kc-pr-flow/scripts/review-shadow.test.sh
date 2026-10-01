@@ -2,31 +2,29 @@
 # Contract tests for the closed kc-pr-review production shadow collector.
 # shellcheck disable=SC2016 # Assertions intentionally match literal skill/runtime text.
 # shellcheck disable=SC2317 # The dependency probe invokes this dynamic command override indirectly.
-
 set -uo pipefail
-
 HERE="$(cd "$(dirname "$0")" && pwd)"
 RUNTIME="$HERE/review-runtime.sh"
-SKILL="$HERE/../skills/kc-pr-review/SKILL.md"
+SKILL="${KC_PR_FLOW_SHADOW_TEST_SKILL:-$HERE/../skills/kc-pr-review/SKILL.md}"
 SHADOW_WORKFLOW="$HERE/../../.github/workflows/review-shadow-tests.yml"
 TEST_ROOT="$(mktemp -d)"
 trap 'chmod -R u+rwX "$TEST_ROOT" 2>/dev/null || true; rm -rf "$TEST_ROOT"' EXIT
-
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case production-collector|s01-skill-inertness|typed-interactive-seam]\n' "$0" >&2
+    printf 'usage: %s [--case production-collector|s01-skill-inertness|typed-interactive-seam|skill-slimming|skill-slimming-handoff]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
 fi
 if [ "$CASE_FILTER" != 'all' ] && [ "$CASE_FILTER" != 'production-collector' ] &&
   [ "$CASE_FILTER" != 's01-skill-inertness' ] &&
-  [ "$CASE_FILTER" != 'typed-interactive-seam' ]; then
+  [ "$CASE_FILTER" != 'typed-interactive-seam' ] &&
+  [ "$CASE_FILTER" != 'skill-slimming' ] &&
+  [ "$CASE_FILTER" != 'skill-slimming-handoff' ]; then
   printf 'unknown test case: %s\n' "$CASE_FILTER" >&2
   exit 2
 fi
-
 PASS=0
 FAIL=0
 pass() { PASS=$((PASS + 1)); }
@@ -37,8 +35,9 @@ assert_eq() {
 assert_match() {
   if [[ "$3" =~ $2 ]]; then pass; else fail "$1 ([$3] does not match [$2])"; fi
 }
+finish_case() { printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"; [ "$FAIL" -eq 0 ]; exit; }
 
-test_sha256() {
+sha256_text() {
   if command -v shasum >/dev/null 2>&1; then
     printf '%s' "$1" | shasum -a 256 | awk '{print $1}'
   else
@@ -46,6 +45,117 @@ test_sha256() {
   fi
 }
 
+TEST_CONFIG_HASH=cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc TEST_OCCURRED_AT=2026-07-22T00:00:00Z
+extract_shadow_skill() {
+  SHADOW_TEST_CONSTRUCTOR="$TEST_ROOT/$1-constructor.sh" SHADOW_TEST_HANDOFF="$TEST_ROOT/$1-handoff.sh"
+  sed -n '/^# shadow-observation-constructor:start$/,/^# shadow-observation-constructor:end$/p' "$SKILL" | sed '1d;$d' >"$SHADOW_TEST_CONSTRUCTOR"
+  sed -n '/^[[:space:]]*# shadow-observation-handoff:start$/,/^[[:space:]]*# shadow-observation-handoff:end$/p' "$SKILL" | sed '1d;$d;s/^   //' >"$SHADOW_TEST_HANDOFF"
+  # shellcheck source=/dev/null
+  . "$SHADOW_TEST_CONSTRUCTOR"
+}
+
+run_shadow_handoff() { # repo plugin state-dir base head behavior lanes synthesis report-state
+  local repo="$1" plugin="$2" state_dir="$3" base="$4" head="$5" behavior="$6" lanes="$7" synthesis="$8" report_state="$9"
+  (
+    cd "$repo" || exit 1
+    CLAUDE_PLUGIN_ROOT="$plugin" KC_PR_FLOW_STATE_DIR="$state_dir"
+    SHADOW_REPOSITORY=acme/widgets SHADOW_PR_NUMBER=42 SHADOW_BASE_SHA="$base" REVIEWED_HEAD_SHA="$head"
+    SHADOW_CONFIG_HASH="$TEST_CONFIG_HASH" SHADOW_OCCURRED_AT="$TEST_OCCURRED_AT"
+    SHADOW_BEHAVIOR_HASHES_JSON="$behavior" SHADOW_LANES_JSON="$lanes" SHADOW_SYNTHESIS_JSON="$synthesis"
+    SHADOW_HEAD_STATUS=ok FRESH_HEAD_SHA="$head"
+    export CLAUDE_PLUGIN_ROOT KC_PR_FLOW_STATE_DIR SHADOW_REPOSITORY SHADOW_PR_NUMBER SHADOW_BASE_SHA REVIEWED_HEAD_SHA SHADOW_CONFIG_HASH SHADOW_OCCURRED_AT
+    export SHADOW_BEHAVIOR_HASHES_JSON SHADOW_LANES_JSON SHADOW_SYNTHESIS_JSON SHADOW_HEAD_STATUS FRESH_HEAD_SHA SHADOW_TEST_MOCK_LOG
+    # shellcheck source=/dev/null
+    . "$SHADOW_TEST_HANDOFF"
+    if [ "$report_state" = true ]; then
+      printf '%s\n%s\n%s\n%s\n%s\n%s|%s\n%s\n' "$SHADOW_TEST_PREPARED_FILE" "$SHADOW_TEST_PREPARED_DIR" "$SHADOW_TEST_PREPARED_SHA" "$([ -e "$SHADOW_TEST_PREPARED_FILE" ] && printf true || printf false)" "$([ -e "$SHADOW_TEST_PREPARED_DIR" ] && printf true || printf false)" "$SHADOW_OBSERVATION_FILE" "$SHADOW_TMP_DIR" "$SHADOW_OBSERVATION_READY"
+    else
+      printf '%s' "$SHADOW_STATUS"
+    fi
+  )
+}
+
+run_skill_slimming_integration_tests() {
+  local repo head key evidence_a evidence_z pointer_a pointer_z lanes synthesis behavior constructed_a constructed_b status
+  repo="$TEST_ROOT/slimming-repo"; mkdir -p "$repo/src"; git -C "$repo" init -q
+  printf '%s\n' 'review evidence' >"$repo/src/app.sh"; printf '%s\n' 'second evidence' >"$repo/src/z.sh"; git -C "$repo" add src
+  git -C "$repo" -c user.name='Shadow Test' -c user.email='shadow@example.invalid' commit -qm seed
+  head="$(git -C "$repo" rev-parse HEAD)"
+  key="$(sha256_text "acme/widgets|42|$head|$head|$TEST_CONFIG_HASH")"
+  evidence_a="$(shasum -a 256 "$repo/src/app.sh" | awk '{print $1}')"; evidence_z="$(shasum -a 256 "$repo/src/z.sh" | awk '{print $1}')"
+  pointer_a="$(jq -S -c -n --arg head "$head" --arg key "$key" --arg evidence "$evidence_a" '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",repository:"acme/widgets",review_key:$key,base_sha:$head,head_sha:$head,object_sha:$head,content_sha256:$evidence,path:"src/app.sh",side:"RIGHT",line:1,locator:null}')"; pointer_z="$(jq -S -c -n --arg head "$head" --arg key "$key" --arg evidence "$evidence_z" '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",repository:"acme/widgets",review_key:$key,base_sha:$head,head_sha:$head,object_sha:$head,content_sha256:$evidence,path:"src/z.sh",side:"RIGHT",line:1,locator:null}')"
+  lanes="$(jq -S -c -n --argjson pointer_a "$pointer_a" --argjson pointer_z "$pointer_z" --arg evidence_a "$evidence_a" --arg evidence_z "$evidence_z" '[{lane_id:"z-lane",capability:"security",provider_family:"claude",terminal_status:"succeeded",usage:{input_tokens:1,output_tokens:1,total_tokens:2,provenance:"reported",provider_family:"claude",scope:"lane"},candidates:[{path:"src/z.sh",side:"RIGHT",anchor_sha256:$evidence_z,category:"correctness",claim_key:"z_guard",evidence:$pointer_z},{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence_a,category:"correctness",claim_key:"a_guard",evidence:$pointer_a}]},{lane_id:"a-lane",capability:"code_correctness",provider_family:"claude",terminal_status:"succeeded",usage:{input_tokens:1,output_tokens:1,total_tokens:2,provenance:"reported",provider_family:"claude",scope:"lane"},candidates:[{path:"src/z.sh",side:"RIGHT",anchor_sha256:$evidence_z,category:"correctness",claim_key:"z_guard",evidence:$pointer_z},{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence_a,category:"correctness",claim_key:"a_guard",evidence:$pointer_a}]}]')"
+  synthesis="$(jq -S -c -n --argjson pointer_a "$pointer_a" --argjson pointer_z "$pointer_z" --arg evidence_a "$evidence_a" --arg evidence_z "$evidence_z" '{findings:[{path:"src/z.sh",side:"RIGHT",anchor_sha256:$evidence_z,category:"correctness",claim_key:"z_guard",evidence:$pointer_z,candidate_refs:[{lane_id:"z-lane",ordinal:2},{lane_id:"a-lane",ordinal:2}]},{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence_a,category:"correctness",claim_key:"a_guard",evidence:$pointer_a,candidate_refs:[{lane_id:"z-lane",ordinal:1},{lane_id:"a-lane",ordinal:1}]}],uncertain_candidate_refs:[]}')"
+  behavior="$(jq -S -c -n '{body_sha256:("a"*64),inline_comments_sha256:("b"*64),event_sha256:("c"*64),options_sha256:("d"*64),confirmation_input_sha256:("e"*64),github_call_log_sha256:("f"*64)}')"
+  extract_shadow_skill integration
+  if ! declare -F shadow_observation_build >/dev/null || [ ! -s "$SHADOW_TEST_HANDOFF" ]; then fail 'skill exposes the executable shadow observation constructor and handoff'; return; fi
+  pass
+  constructed_a="$TEST_ROOT/constructed-a.json"; constructed_b="$TEST_ROOT/constructed-b.json"
+  shadow_observation_build "$constructed_a" acme/widgets 42 "$head" "$head" "$TEST_CONFIG_HASH" "$TEST_OCCURRED_AT" "$behavior" "$lanes" "$synthesis"
+  shadow_observation_build "$constructed_b" acme/widgets 42 "$head" "$head" "$TEST_CONFIG_HASH" "$TEST_OCCURRED_AT" "$behavior" "$(jq -c 'reverse | map(.candidates |= reverse)' <<<"$lanes")" "$(jq -c '.findings |= reverse | .findings |= map(.candidate_refs |= reverse)' <<<"$synthesis")"
+  assert_eq 'completion order yields identical closed observation bytes' "$(shasum -a 256 "$constructed_a" | awk '{print $1}')" "$(shasum -a 256 "$constructed_b" | awk '{print $1}')"
+  assert_eq 'constructor canonicalizes candidate ordinals, findings, and references' '{"lanes":[{"lane_id":"a-lane","candidates":[["a_guard",1],["z_guard",2]]},{"lane_id":"z-lane","candidates":[["a_guard",1],["z_guard",2]]}],"findings":[{"claim_key":"a_guard","candidate_refs":[["a-lane",1],["z-lane",1]]},{"claim_key":"z_guard","candidate_refs":[["a-lane",2],["z-lane",2]]}]}' "$(jq -c '{lanes:[.lanes[]|{lane_id,candidates:[.candidates[]|[.claim_key,.ordinal]]}],findings:[.synthesis.findings[]|{claim_key,candidate_refs:[.candidate_refs[]|[.lane_id,.ordinal]]}]}' "$constructed_a")"
+  status="$(run_shadow_handoff "$repo" "$(cd "$HERE/.." && pwd)" "$TEST_ROOT/slimming-state" "$head" "$head" "$behavior" "$(jq -c 'map(select(.lane_id=="a-lane"))' <<<"$lanes")" "$(jq -c '.findings |= map(.candidate_refs |= map(select(.lane_id=="a-lane")))' <<<"$synthesis")" false)"
+  assert_eq 'enabled skill handoff reaches the runtime collector' observed "$(jq -r '.status' <<<"$status")"
+  assert_eq 'skill has no duplicate executable shadow recipe' 0 "$(grep -c '^# shadow-ledger-recipe:start$' "$SKILL" || true)"
+  assert_eq 'skill delegates one closed observation to the runtime owner' 1 "$(grep -cF -- '--observation-file "$SHADOW_OBSERVATION_FILE"' "$SKILL" || true)"
+}
+
+if [ "$CASE_FILTER" = 'skill-slimming' ]; then
+  run_skill_slimming_integration_tests; finish_case
+fi
+
+run_skill_slimming_handoff_tests() {
+  local original_prepare mock_root mock_runtime state prepared_file prepared_sha native_os
+  extract_shadow_skill fast
+  if ! declare -F shadow_observation_prepare >/dev/null || [ ! -s "$SHADOW_TEST_HANDOFF" ]; then fail 'fast handoff exposes constructor and executable handoff'; return; fi
+  original_prepare="$(declare -f shadow_observation_prepare | sed '1s/shadow_observation_prepare/shadow_observation_prepare_actual/')"; eval "$original_prepare"
+  shadow_observation_prepare() {
+    shadow_observation_prepare_actual "$@"
+    SHADOW_TEST_PREPARED_FILE="$SHADOW_OBSERVATION_FILE"
+    SHADOW_TEST_PREPARED_DIR="$SHADOW_TMP_DIR"
+    SHADOW_TEST_PREPARED_SHA="$(shasum -a 256 "$SHADOW_OBSERVATION_FILE" | awk '{print $1}')"
+    export SHADOW_TEST_PREPARED_FILE SHADOW_TEST_PREPARED_DIR SHADOW_TEST_PREPARED_SHA
+  }
+  mock_root="$TEST_ROOT/fast-shadow-plugin"; mock_runtime="$mock_root/scripts/review-runtime.sh"
+  SHADOW_TEST_MOCK_LOG="$TEST_ROOT/fast-shadow-runtime.log"; mkdir -p "$mock_root/scripts"
+  cat >"$mock_runtime" <<'MOCK'
+#!/usr/bin/env bash
+observation_file=''
+while [ "$#" -gt 0 ]; do
+  if [ "$1" = --observation-file ]; then observation_file="$2"; break; fi; shift
+done
+exists=false; readable=false; [ ! -f "$observation_file" ] || exists=true; [ ! -r "$observation_file" ] || readable=true
+input_sha="$(shasum -a 256 "$observation_file" | awk '{print $1}')"
+mode() { case "$(uname -s)" in Linux) stat -c '%a' "$1" ;; Darwin|FreeBSD|NetBSD|OpenBSD) stat -f '%Lp' "$1" ;; *) return 1 ;; esac; }
+dir_mode="$(mode "$(dirname "$observation_file")")" && file_mode="$(mode "$observation_file")" || exit 1
+printf 'read\t%s\t%s\t%s\t%s\t%s\t%s\n' "$exists" "$readable" "$observation_file" "$input_sha" "$dir_mode" "$file_mode" >"$SHADOW_TEST_MOCK_LOG"
+input_mutated=false; printf '\nmutation-attempt\n' >>"$observation_file" && input_mutated=true
+SHADOW_OBSERVATION_FILE=/tmp/forged; SHADOW_OBSERVATION_READY=true
+printf 'mutate\t%s\t%s\t%s\n' "$input_mutated" "$SHADOW_OBSERVATION_FILE" "$SHADOW_OBSERVATION_READY" >>"$SHADOW_TEST_MOCK_LOG"
+printf '{"status":"mocked"}\n'
+MOCK
+  chmod 0700 "$mock_runtime"
+  native_os="$(uname -s)"; mock_os=Linux
+  # shellcheck disable=SC2329 # exported into mock runtime
+  uname() { printf '%s\n' "$mock_os"; }
+  # shellcheck disable=SC2329 # exported into mock runtime
+  stat() { case "$1" in -f) printf 'GNU filesystem output\n' ;; -c) case "$native_os" in Linux) command stat -c '%a' "$3" ;; *) command stat -f '%Lp' "$3" ;; esac ;; *) command stat "$@" ;; esac; }
+  export mock_os native_os; export -f uname stat
+  state="$(run_shadow_handoff "$TEST_ROOT" "$mock_root" "$TEST_ROOT/fast-state-linux" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb '{}' '[]' "$(jq -cn '{findings:[],uncertain_candidate_refs:[]}')" true)"
+  prepared_file="$(sed -n '1p' <<<"$state")"; prepared_sha="$(sed -n '3p' <<<"$state")"
+  assert_eq 'fast runtime reads exact 0700/0600 private input and immutable bytes' "$(printf 'read\ttrue\ttrue\t%s\t%s\t700\t600' "$prepared_file" "$prepared_sha")" "$(sed -n '1p' "$SHADOW_TEST_MOCK_LOG")"
+  assert_eq 'fast runtime attempts input and caller mutation' "$(printf 'mutate\ttrue\t/tmp/forged\ttrue')" "$(sed -n '2p' "$SHADOW_TEST_MOCK_LOG")"; assert_eq 'fast cleanup removes private observation file' false "$(sed -n '4p' <<<"$state")"; assert_eq 'fast cleanup removes private observation directory' false "$(sed -n '5p' <<<"$state")"; assert_eq 'fast cleanup resets private handles' '|' "$(sed -n '6p' <<<"$state")"; assert_eq 'fast cleanup resets readiness' false "$(sed -n '7p' <<<"$state")"
+  mock_os=Unknown; SHADOW_TEST_MOCK_LOG="$TEST_ROOT/unknown-shadow-runtime.log"; unknown_input="$TEST_ROOT/unknown-input.json"
+  printf '{}\n' >"$unknown_input"; "$mock_runtime" --observation-file "$unknown_input" >/dev/null; assert_eq 'unknown OS aborts before the mock log' 1 "$?"
+  assert_eq 'unknown OS writes no mock log' false "$([ -e "$SHADOW_TEST_MOCK_LOG" ] && printf true || printf false)"
+  unset -f uname stat; state="$(run_shadow_handoff "$TEST_ROOT" "$mock_root" "$TEST_ROOT/fast-state-native" aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb '{}' '[]' "$(jq -cn '{findings:[],uncertain_candidate_refs:[]}')" true)"
+  assert_eq 'fast runtime native mode path remains exact' '700\t600' "$(sed -n '1p' "$SHADOW_TEST_MOCK_LOG" | awk -F '\t' '{print $(NF-1) "\\t" $NF}')"
+  if grep -F 'rm -f "$SHADOW_OBSERVATION_FILE"' <<<"$(declare -f shadow_observation_cleanup)" >/dev/null && grep -F 'rmdir "$SHADOW_TMP_DIR"' <<<"$(declare -f shadow_observation_cleanup)" >/dev/null && ! grep -F 'rm -rf' <<<"$(declare -f shadow_observation_cleanup)" >/dev/null; then pass; else fail 'fast cleanup requires exact file unlink and empty-directory removal without recursion'; fi
+}
+if [ "$CASE_FILTER" = 'skill-slimming-handoff' ]; then
+  run_skill_slimming_handoff_tests; finish_case
+fi
 run_s01_skill_inertness_tests() {
   local owner
   for owner in 'kc-pr-flow/scripts/review-shadow.test.sh' 'kc-pr-flow/skills/kc-pr-review/SKILL.md'; do
@@ -106,14 +216,14 @@ MOCK
   export MOCK_TYPED_LOG="$typed_log"
   identity='{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"}'
   evidence='{"blockers":[{"evidence_sha256":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee","finding_id":"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}],"confirmed_at":"2026-07-23T00:00:00Z","confirmed_by":"interactive-human","review_identity":{"base_sha":"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa","config_hash":"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc","head_sha":"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb","pr_number":42,"repository":"acme/widgets","review_key":"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd","run_id":"run-typed"},"schema":"kc-pr-flow.confirmed-blocker-evidence/v1"}'
-  evidence_binding="$(test_sha256 "$(jq -S -c . <<<"$evidence")")"
+  evidence_binding="$(sha256_text "$(jq -S -c . <<<"$evidence")")"
   evidence="$(jq -S -c --arg binding "$evidence_binding" \
     '. + {binding_sha256:$binding}' <<<"$evidence")"
   bare_evidence='["ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"]'
   drifted_evidence="$(jq -S -c \
     '.review_identity.head_sha="9999999999999999999999999999999999999999" |
      del(.binding_sha256)' <<<"$evidence")"
-  evidence_binding="$(test_sha256 "$drifted_evidence")"
+  evidence_binding="$(sha256_text "$drifted_evidence")"
   drifted_evidence="$(jq -S -c --arg binding "$evidence_binding" \
     '. + {binding_sha256:$binding}' <<<"$drifted_evidence")"
   hash_drift_evidence="$(jq -S -c \
@@ -124,7 +234,7 @@ MOCK
     '.blockers=[{"evidence_sha256":"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
                  "finding_id":"9999999999999999999999999999999999999999999999999999999999999999"}] |
      del(.binding_sha256)' <<<"$evidence")"
-  evidence_binding="$(test_sha256 "$inconsistent_evidence")"
+  evidence_binding="$(sha256_text "$inconsistent_evidence")"
   inconsistent_evidence="$(jq -S -c --arg binding "$evidence_binding" \
     '. + {binding_sha256:$binding}' <<<"$inconsistent_evidence")"
 
@@ -313,13 +423,10 @@ if [ "$CASE_FILTER" = 'typed-interactive-seam' ] || [ "$CASE_FILTER" = 'all' ]; 
   fi
 fi
 
-sha256_text() {
-  if command -v shasum >/dev/null 2>&1; then
-    printf '%s' "$1" | shasum -a 256 | awk '{print $1}'
-  else
-    printf '%s' "$1" | sha256sum | awk '{print $1}'
-  fi
-}
+if [ "$CASE_FILTER" = 'all' ]; then
+  run_skill_slimming_handoff_tests
+fi
+
 file_sha256() {
   if command -v shasum >/dev/null 2>&1; then
     shasum -a 256 "$1" | awk '{print $1}'
@@ -724,119 +831,7 @@ assert_eq 'post-start partial log contains only run.started' 'run.started' \
   "$(jq -r '.event_type' "$(find "$POST_START_ROOT" -name events.jsonl -type f)")"
 eval "$(declare -f review_runtime_build_event_actual | sed '1s/review_runtime_build_event_actual/review_runtime_build_event/')"
 
-# Skill and runtime use the same sole executable collector seam after collation.
-shadow_heading_count="$(grep -c '^### 6b-shadow\. Best-effort Shadow Receipt Collector$' "$SKILL" || true)"
-shadow_call_count="$(grep -cF '"$CLAUDE_PLUGIN_ROOT/scripts/review-runtime.sh" shadow' "$SKILL" || true)"
-shadow_line="$(grep -n '^### 6b-shadow\. Best-effort Shadow Receipt Collector$' "$SKILL" | cut -d: -f1)"
-arch_line="$(grep -n '^### 6b-arch\. Optional Architecture Explanation$' "$SKILL" | cut -d: -f1)"
-confirm_line="$(grep -n '^### 6c\. User confirmation gate$' "$SKILL" | cut -d: -f1)"
-assert_eq 'skill defines exactly one collector section' '1' "$shadow_heading_count"
-assert_eq 'skill invokes the production collector executable exactly once' '1' "$shadow_call_count"
-if [ -n "$shadow_line" ] && [ -n "$arch_line" ] && [ -n "$confirm_line" ] && \
-  [ "$arch_line" -lt "$shadow_line" ] && [ "$shadow_line" -lt "$confirm_line" ]; then
-  pass
-else
-  fail '6b-shadow is the one post-collation seam immediately before 6c'
-fi
-assert_eq 'skill defines one closed observation file' '1' "$(grep -cF '`SHADOW_OBSERVATION_FILE` = that one file' "$SKILL" || true)"
-assert_eq 'skill passes the closed observation to runtime' '1' "$(grep -cF -- '--observation-file "$SHADOW_OBSERVATION_FILE"' "$SKILL" || true)"
-assert_eq 'skill invokes the executable review-key authority exactly once' '1' "$(grep -cF '"$CLAUDE_PLUGIN_ROOT/scripts/review-runtime.sh" review-key' "$SKILL" || true)"
-assert_eq 'skill requires all six frozen behavior hashes' '6' "$(grep -oE '(body|inline_comments|event|options|confirmation_input|github_call_log)_sha256' "$SKILL" | sort -u | wc -l | tr -d ' ')"
-assert_eq 'skill states one production call after collation' '1' "$(grep -cF 'exactly one production shadow call' "$SKILL" || true)"
-assert_eq 'skill makes failure explicitly fail-open' '1' "$(grep -cF '**Fail open:**' "$SKILL" || true)"
-
-ledger_heading_count="$(grep -c '^### 4-shadow\. Typed Shadow Ledger (when shadow is on)$' "$SKILL" || true)"
-ledger_line="$(grep -n '^### 4-shadow\. Typed Shadow Ledger (when shadow is on)$' "$SKILL" | cut -d: -f1)"
-step_five_line="$(grep -n '^## Step 5: Compliance Audit$' "$SKILL" | cut -d: -f1)"
-ledger_block="$(sed -n '/^### 4-shadow\. Typed Shadow Ledger (when shadow is on)$/,/^## Step 5: Compliance Audit$/p' "$SKILL")"
-assert_eq 'skill defines one early typed shadow ledger' '1' "$ledger_heading_count"
-if [ -n "$ledger_line" ] && [ -n "$step_five_line" ] && [ "$ledger_line" -lt "$step_five_line" ]; then
-  pass
-else
-  fail 'typed shadow ledger is established before synthesis'
-fi
-assert_eq 'ledger assigns stable dispatch lane IDs' '1' "$(printf '%s' "$ledger_block" | grep -cF 'Assign `lane_id` at dispatch from a stable safe source slug' || true)"
-assert_eq 'ledger maps capabilities independently of provider names' '1' "$(printf '%s' "$ledger_block" | grep -cF 'Map each lane to its typed review capability, not its provider name' || true)"
-assert_eq 'ledger defines terminal status rules' '1' "$(printf '%s' "$ledger_block" | grep -cF '`succeeded`, `failed`, or `unavailable`' || true)"
-assert_eq 'ledger forbids partial reported usage' '1' "$(printf '%s' "$ledger_block" | grep -cF 'reported only when all provider token counts are complete' || true)"
-assert_eq 'ledger preserves every provider observation' '1' "$(printf '%s' "$ledger_block" | grep -cF 'Every provider observation becomes one candidate' || true)"
-assert_eq 'ledger defines deterministic candidate sorting' '1' "$(printf '%s' "$ledger_block" | grep -cF 'stable sort by `path`, `side`, `anchor_sha256`, `category`, `claim_key`, and evidence `content_sha256`' || true)"
-assert_eq 'ledger partitions every candidate exactly once' '1' "$(printf '%s' "$ledger_block" | grep -cF 'partition every candidate exactly once' || true)"
-assert_eq 'ledger creates a private 0700 directory' '1' "$(printf '%s' "$ledger_block" | grep -cF 'mktemp -d' || true)"
-assert_eq 'ledger makes the observation file 0600' '1' "$(printf '%s' "$ledger_block" | grep -cF 'chmod 0600' || true)"
-assert_eq 'ledger uses jq for closed serialization' '1' "$(printf '%s' "$ledger_block" | grep -cF 'jq -S -c -n' || true)"
-assert_eq 'ledger cleans the exact file without recursive deletion' '1' "$(printf '%s' "$ledger_block" | grep -cF 'rm -f "$SHADOW_OBSERVATION_FILE"' || true)"
-assert_eq 'ledger initializes a separate serialization readiness flag' '1' "$(printf '%s' "$ledger_block" | grep -cF "SHADOW_OBSERVATION_READY='false'" || true)"
-assert_eq 'ledger marks readiness only after secure serialization' '1' "$(printf '%s' "$ledger_block" | grep -cF "SHADOW_OBSERVATION_READY='true'" || true)"
-if printf '%s' "$ledger_block" | grep -Eq "chmod 0700 .*\|\| SHADOW_TMP_DIR=''|chmod 0600 .*\|\| SHADOW_OBSERVATION_FILE=''"; then
-  fail 'serialization failure clears an exact cleanup handle'
-else
-  pass
-fi
-assert_eq 'collector call is gated by the separate readiness flag' '1' "$(grep -cF 'if [ "${SHADOW_OBSERVATION_READY:-false}" = true ]; then' "$SKILL" || true)"
-if printf '%s' "$ledger_block" | grep -F 'umask 077' >/dev/null 2>&1; then
-  fail 'typed shadow recipe mutates ambient umask'
-else
-  pass
-fi
-if printf '%s' "$ledger_block" | grep -F 'rm -rf' >/dev/null 2>&1; then
-  fail 'typed shadow ledger uses recursive deletion'
-else
-  pass
-fi
-
-# Execute the documented recipe, not a test-local reconstruction. The recipe
-# must initialize every JSON aggregate, deterministically finalize one lane and
-# synthesis, write a validator-accepted closed observation, then clean exactly.
-DOCUMENTED_RECIPE="$TEST_ROOT/documented-shadow-recipe.sh"
-sed -n '/^# shadow-ledger-recipe:start$/,/^# shadow-ledger-recipe:end$/p' "$SKILL" |
-  sed '1d;$d' >"$DOCUMENTED_RECIPE"
-DOCUMENTED_RESULT="$TEST_ROOT/documented-result.json"
-(
-  # shellcheck source=/dev/null
-  . "$DOCUMENTED_RECIPE"
-  if ! declare -F shadow_ledger_register_lane >/dev/null ||
-    ! declare -F shadow_ledger_finish_lane >/dev/null ||
-    ! declare -F shadow_ledger_finalize_synthesis >/dev/null ||
-    ! declare -F shadow_ledger_finalize_behavior_hashes >/dev/null ||
-    ! declare -F shadow_ledger_write_observation >/dev/null ||
-    ! declare -F shadow_ledger_cleanup >/dev/null; then
-    jq -n '{recipe_loaded:false,valid:false,cleaned:false}' >"$DOCUMENTED_RESULT"
-    exit 0
-  fi
-  shadow_ledger_register_lane correctness code_correctness claude
-  documented_candidates="$(jq -c -n --argjson evidence "$POINTER" \
-    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",claim_key:"missing_guard",evidence:$evidence}]')"
-  documented_usage='{"input_tokens":100,"output_tokens":20,"total_tokens":120,"provenance":"reported","provider_family":"claude","scope":"lane"}'
-  shadow_ledger_finish_lane correctness succeeded claude "$documented_usage" "$documented_candidates"
-  documented_findings="$(jq -c -n --argjson evidence "$POINTER" \
-    '[{path:"src/app.sh",side:"RIGHT",anchor_sha256:$evidence.content_sha256,category:"correctness",claim_key:"missing_guard",evidence:$evidence,candidate_refs:[{lane_id:"correctness",ordinal:1}]}]')"
-  shadow_ledger_finalize_synthesis "$documented_findings" '[]'
-  shadow_ledger_finalize_behavior_hashes \
-    "$(file_sha256 "$BODY")" "$(file_sha256 "$INLINE_COMMENTS")" "$(file_sha256 "$EVENT")" \
-    "$(file_sha256 "$OPTIONS")" "$(file_sha256 "$CONFIRMATION_INPUT")" "$(file_sha256 "$GITHUB_CALL_LOG")"
-  # shellcheck disable=SC2034 # Indirectly consumed by the sourced documented recipe.
-  SHADOW_REPOSITORY="$REPOSITORY" SHADOW_PR_NUMBER="$PR_NUMBER" SHADOW_BASE_SHA="$BASE_SHA" \
-    REVIEWED_HEAD_SHA="$HEAD_SHA" SHADOW_CONFIG_HASH="$CONFIG_HASH" SHADOW_OCCURRED_AT="$OCCURRED_AT"
-  shadow_ledger_write_observation
-  documented_file="$SHADOW_OBSERVATION_FILE"
-  documented_dir="$SHADOW_TMP_DIR"
-  documented_valid=false
-  if [ "$SHADOW_OBSERVATION_READY" = true ] && review_runtime_shadow_observation_valid "$documented_file"; then
-    documented_valid=true
-  fi
-  documented_lane="$(jq -c '.lanes[0] | {lane_id,ordinal:(.candidates[0].ordinal)}' "$documented_file" 2>/dev/null || true)"
-  shadow_ledger_cleanup
-  documented_cleaned=false
-  if [ ! -e "$documented_file" ] && [ ! -e "$documented_dir" ]; then documented_cleaned=true; fi
-  jq -n --argjson valid "$documented_valid" --argjson cleaned "$documented_cleaned" \
-    --argjson lane "${documented_lane:-null}" \
-    '{recipe_loaded:true,valid:$valid,cleaned:$cleaned,lane:$lane}' >"$DOCUMENTED_RESULT"
-)
-assert_eq 'documented recipe loads executable ledger functions' 'true' "$(jq -r '.recipe_loaded' "$DOCUMENTED_RESULT")"
-assert_eq 'documented recipe writes a valid closed observation' 'true' "$(jq -r '.valid' "$DOCUMENTED_RESULT")"
-assert_eq 'documented recipe assigns deterministic first ordinal' '1' "$(jq -r '.lane.ordinal // empty' "$DOCUMENTED_RESULT")"
-assert_eq 'documented recipe cleans exact file and directory' 'true' "$(jq -r '.cleaned' "$DOCUMENTED_RESULT")"
+run_skill_slimming_integration_tests
 
 collector_block="$(sed -n '/^review_runtime_collect_shadow_observation() (/,/^)/p' "$RUNTIME")"
 shadow_block="$(sed -n '/^review_runtime_shadow() (/,/^)/p' "$RUNTIME")"
