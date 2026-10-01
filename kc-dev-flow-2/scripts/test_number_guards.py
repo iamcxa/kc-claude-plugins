@@ -247,6 +247,57 @@ class RecheckTests(unittest.TestCase):
             self.assertIn("0002-b.md", out)
 
 
+class PocFreezeTests(unittest.TestCase):
+    def poc_task(self, tmp, profile="poc"):
+        path = Path(tmp, "task.md")
+        path.write_text(f"---\nprofile: {profile}\n---\n\n## Number guards\n")
+        return path
+
+    def test_any_change_under_the_migrations_directory_fails_r6_for_a_poc_task_and_names_the_path(self):
+        changes = {
+            "add": {mig(6, "poc"): "SELECT 2;\n"},
+            "edit": {mig(5, "m5"): "SELECT 9;\n"},
+            "delete": {mig(4, "m4"): None},
+            "journal": {f"{MIGRATIONS}__meta___journal.json": '{"entries":[1,2]}\n'},
+            "snapshot": {f"{MIGRATIONS}__meta__0005_snapshot.json": "{}\n"},
+        }
+        for name, files in changes.items():
+            with self.subTest(change=name), tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
+                fx = base_repo(tmp)
+                fx.commit(name, **files)
+                code, out = fx.check(task=self.poc_task(td))
+                self.assertEqual(code, 1, out)
+                for path in files:
+                    self.assertIn(f"FAIL R6: {path.replace('__', '/')}", out)
+
+    def test_no_r6_for_a_non_poc_task_for_no_change_or_for_a_migration_that_landed_on_the_base_later(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
+            fx = base_repo(tmp)
+            journal = {f"{MIGRATIONS}__meta___journal.json": '{"entries":[1,2]}\n'}
+            fx.commit("journal", **journal)
+            self.assertEqual(fx.check(task=self.poc_task(td, "pilot"))[0], 0)
+            fx.git("reset", "-q", "--hard", "main")
+            self.assertEqual(fx.check(task=self.poc_task(td))[0], 0)
+            fx.git("checkout", "-q", "main")
+            fx.commit("later base migration", **{mig(6, "later"): "SELECT 3;\n"})
+            fx.git("checkout", "-q", "feature")
+            fx.commit("unrelated", other="x")
+            code, out = fx.check(task=self.poc_task(td))
+            self.assertEqual(code, 0, out)
+            fx.commit("journal", **journal)
+            code, out = fx.check(task=self.poc_task(td))
+            self.assertEqual((code, "_journal.json" in out, "0006_later" in out), (1, True, False), out)
+
+    def test_a_poc_task_without_a_migrations_path_is_skipped_and_exits_0(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
+            fx = base_repo(tmp)
+            fx.commit("add", **{mig(6, "poc"): "SELECT 2;\n"})
+            code, out = fx.run("check", "--repo", tmp, "--base", "main", "--head", "feature",
+                               "--task", str(self.poc_task(td)))
+            self.assertEqual(code, 0, out)
+            self.assertIn("migration guard skipped", out)
+
+
 class MisconfigurationTests(unittest.TestCase):
     def test_a_db_surface_without_a_migrations_path_exits_2(self):
         with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
