@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:patch-0103:backlog:attempt-1:revision-1",
+  "question": "Admit patch-0103 (round-3 P1: validation-gate revise routing) to ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:patch-0103:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/277ecdbe1d1c2da08b72aefc2497659f308fd65f/patch-0103.md",
+      "rev": "sha256:746a94ad26338c26e03b7ab3a60a67c2676107d82674525c0b2d090cf233b567",
+      "mediaType": "text/markdown",
+      "summary": "One sentence in Captain amendments; patch release 0.10.3; then re-sync four adopters."
+    }
+  ]
+}

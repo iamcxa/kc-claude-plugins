@@ -4,6 +4,28 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:patch-0103:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:patch-0103-backlog-1
+              briefing:
+                id: briefing:patch-0103:backlog:attempt-1:revision-1
+                digest: sha256:2ae64f6340df422fc95a80ae1b1256978bc0253f8580b650090b8f3103e641d1
+                room-ref: ./patch-0103/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:patch-0103:backlog:1
+                briefing: briefing:patch-0103:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-01T03:05:30.733944Z"
+                decision: approve
+                reason: 'Captain 2026-10-01: 「修完再合併」 — fix the round-3 P1 before qnow #1248 merges'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 One wording defect in kc-dev-flow-2 0.10.2 `references/sd/workflow.md` `## Captain amendments`, found as a P1 in round 3 of an external review of an adopter's workflow sync (qnow PR #1248, commit 39bf550, 2026-10-01); patch release 0.10.3.
