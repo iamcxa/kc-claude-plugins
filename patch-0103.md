@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-01T03:05:36Z
+worktree: .worktrees/spacedock-ensign-patch-0103
 ---
 
 One wording defect in kc-dev-flow-2 0.10.2 `references/sd/workflow.md` `## Captain amendments`, found as a P1 in round 3 of an external review of an adopter's workflow sync (qnow PR #1248, commit 39bf550, 2026-10-01); patch release 0.10.3.
