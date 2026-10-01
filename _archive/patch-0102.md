@@ -3,7 +3,7 @@ title: A goal change marks a release changed, any shared non-production database
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -66,10 +66,13 @@ gates:
                     source: ~/.claude/CLAUDE.md, Autonomous action boundaries
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-09-30T17:15:41Z
 worktree: .worktrees/spacedock-ensign-patch-0102
 pr: pr-merge:549
+verdict: PASSED
+completed: 2026-10-01T02:10:03Z
+archived: 2026-10-01T02:10:03Z
 ---
 
 Five gaps in kc-dev-flow-2 0.10.1 `references/sd/workflow.md`, found by an external review of an adopter's workflow sync (qnow PR #1248, round 2, 2026-10-01); patch release 0.10.2.
