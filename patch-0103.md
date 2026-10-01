@@ -3,7 +3,7 @@ title: A revise at the validation gate goes back to implementation, not to the v
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
