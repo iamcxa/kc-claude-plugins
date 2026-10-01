@@ -3,7 +3,7 @@ title: A goal change marks a release changed, any shared non-production database
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-10-01: 「可以」 — design approved with the coupled rule: a migration on the base branch counts as applied; of two applied unmerged tasks the first to merge keeps its number'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-09-30T17:15:41Z
 ---
 
