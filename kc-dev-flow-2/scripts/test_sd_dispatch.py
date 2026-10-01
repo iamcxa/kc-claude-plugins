@@ -40,6 +40,68 @@ def lane_gaps(text):
     return ([p for p in LANE_RULE if p not in flat], [p for p in LANE_FORBIDDEN if p in flat])
 
 
+FIXES = {
+    "goal-change": dict(
+        need=("the same story ids and the same release and story `goal` text",
+              "changes the goal of the release, a story or a task"),
+        old=("with the release's story set unchanged since its latest `Release review:` line",),
+        swaps=((r"A task whose `journey-story` is already on the map in that release passes with that one check.*?"
+                r"in that task's `## FO alignment` reason\.",
+                "A task whose `journey-story` is already on the map in that release, with the release's story set "
+                "unchanged since its latest `Release review:` line, passes with that one check and marks nothing."),
+               (r"changes the goal of the release, a story or a task", "changes its goal"))),
+    "shared-environment": dict(
+        need=("persistent shared non-production environment",
+              "a separate hosting project such as a staging project"),
+        old=("persistent shared environment (a non-production database branch)",),
+        swaps=((r"persistent shared non-production environment \(a database branch, or a separate hosting project.*?"
+                r"own production database\)",
+                "persistent shared environment (a non-production database branch)"),)),
+    "collision": dict(
+        need=("the task whose migration is applied keeps it and the other, unapplied task renumbers",
+              "deletes its `Migration:` line", "a shared non-production database that cannot be reset",
+              "is deleted and recreated by the Captain", "the one that merges first keeps the number",
+              "`Not applied: <environment> <sha> - database reset`",
+              "the line stays and the migration counts as applied"),
+        old=("Renumber holds for the Captain", "- **Renumber.**"),
+        swaps=((r"- \*\*Collision\.\*\*.*?(?= ## Delivery authority)",
+                "- **Renumber.** A candidate whose number was taken (R3, R5) renumbers and returns to implementation. "
+                "When an `Applied at:` commit holds the migration, FO holds for the Captain: reset that non-production "
+                "database branch, then renumber. It applies to non-production branches only; the production branch "
+                "cannot be reset."),
+               (r"the line stays and the migration counts as applied", "the line stays and Renumber holds for the Captain"))),
+    "clear-release-fields": dict(
+        need=("journey= journey-release= journey-story= journey-required-tasks= journey-mapping-complete=",
+              "moves that list and `journey-mapping-complete: true` to another member of the story"),
+        old=(),
+        swaps=((r"When signal 2 moves a task out of a release, FO clears.*?declaration matches its members\.", ""),)),
+    "backlog-revise": dict(
+        need=("at `backlog`, which dispatches no worker, FO revises",),
+        old=("he calls `revise` and that stage's worker reworks it",),
+        swaps=((r"he calls `revise`; at a stage that dispatches a worker.*?asks the proposal's author to\.",
+                "he calls `revise` and that stage's worker reworks it."),)),
+    "fetch-the-inspected-repo": dict(
+        need=("FO runs `git -C <repo> fetch`, then", "after `git -C <repo> fetch`, on the PR head"),
+        old=("FO runs `git fetch`, then", "after `git fetch`, on the PR head"),
+        swaps=((r"FO runs `git -C <repo> fetch`, then", "FO runs `git fetch`, then"),
+               (r"after `git -C <repo> fetch`, on the PR head", "after `git fetch`, on the PR head"))),
+}
+
+
+def fix_gaps(text):
+    flat = " ".join(text.split())
+    return {name: ([p for p in fix["need"] if p not in flat], [p for p in fix["old"] if p in flat])
+            for name, fix in FIXES.items()}
+
+
+def at_0_10_1(text, name):
+    flat = " ".join(text.split())
+    for pattern, old in FIXES[name]["swaps"]:
+        flat, count = re.subn(pattern, lambda _: old, flat)
+        assert count == 1, (name, pattern, count)
+    return flat
+
+
 def exercise(base, binary, sd_root):
     token = uuid.uuid4().hex[:10]
     artifacts = []
@@ -380,12 +442,17 @@ def exercise(base, binary, sd_root):
         source = " ".join(TEMPLATE.read_text().split())
         assert lane_gaps(source) == ([], []), lane_gaps(source)
         old_lane = re.sub(r"A feedback-reflow repair and an FO fix.*?will be delivered\.", OLD_LANE, source)
-        old_lane = re.sub(r"When the push is rejected.*?Renumber holds for the Captain\. ", "", old_lane)
+        old_lane = re.sub(r"When the push is rejected.*?the migration counts as applied\. ", "", old_lane)
         assert old_lane != source and OLD_LANE in old_lane
         missing, forbidden = lane_gaps(old_lane)
         assert len(missing) == 3 and forbidden == list(LANE_FORBIDDEN), (missing, forbidden)
         no_wait = source.replace("do not wait for another entity's worker in the same stage", "")
         assert lane_gaps(no_wait)[0] == [LANE_RULE[2]], lane_gaps(no_wait)
+        assert all(gap == ([], []) for gap in fix_gaps(source).values()), fix_gaps(source)
+        for name, fix in FIXES.items():
+            for other, (missing, kept) in fix_gaps(at_0_10_1(source, name)).items():
+                want = (list(fix["need"]), list(fix["old"])) if other == name else ([], [])
+                assert (missing, kept) == want, (name, other, missing, kept)
         trimmed = re.sub(r"^5\. A round is one verdict.*?(?=\n\n)", "", TEMPLATE.read_text(),
                          flags=re.DOTALL | re.MULTILINE)
         assert trimmed != TEMPLATE.read_text()
@@ -424,7 +491,7 @@ def exercise(base, binary, sd_root):
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
-        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps")
+        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the six 0.10.2 fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, fetch-the-inspected-repo) are each asserted present, and each reverted alone to its 0.10.1 text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
