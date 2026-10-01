@@ -178,3 +178,40 @@ Visible change: none
 ### Summary
 
 The POC rule is one bullet in `workflow.md` Number guards, the section both POC workers already receive and that `poc_readme.py derive` keeps, plus rule R6 in `check` (a task with `profile: poc` may not change anything under `migrations-path:`). Finding: 0.10.3 `check --task` already refuses an added or edited `.sql` through R1/R4; the real gaps were that nothing tells a POC to run it and that journal and snapshot files pass, which R6 and the bullet close. One Captain confirmation is needed: the failure goes through the existing `boundary-crossed` gate (promote or remove with cleanup), a superset of "promoted to pilot".
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design (R6 in `number_guards.py` check for `profile: poc`, the `workflow.md` Number guards POC bullet, failure through the boundary-crossed gate) plus the ADR 0002 amendment line
+  candidate `9815640d612566ae6a82cd089cd15d16208ff9cf` on `spacedock-ensign/poc-no-migrations` (not pushed), 5 files +83/-4: bullet text verbatim from Design; also `FAIL R1..R5` became `R1..R6` in the Check bullet; ADR 0002 line cites 「ok」 (no migration file) and 「可以」 (R6 and the crossing); no new ADR number added.
+- DONE: AC-1 derived POC README carries the rule
+  `test_poc_readme.py` new test exit 0 on the candidate; on 0.10.3 (origin/main throwaway worktree) it errors, 1 error.
+- DONE: AC-2 R6 for a poc task, scoped to the task's own changes
+  `PocFreezeTests`: add/edit/delete/journal/snapshot each exit 1 naming the path; non-poc, no-change and base-landed migration exit 0 and a later journal change flags only the journal. On 0.10.3 the 5 subtests and the scoping test fail (6 failures).
+- DONE: AC-3 no `migrations-path:` is skipped and said so
+  no-path test: exit 0 with "migration guard skipped"; the bullet's last sentence states the limit. It passes on 0.10.3 too (existing behaviour), so it is not a falsifier.
+- DONE: AC-4 failure is a `boundary-crossed: persistent-state` crossing, not repaired in place
+  derived-README test asserts `boundary-crossed: persistent-state` and "not repaired in place" in the POC bullet; the gate behaviour is existing ADR 0001, not retested.
+- DONE: AC-5 whole CI unit list passes on the candidate
+  exit 0 for lint-skills.py, test_lint_skills.py, test_design_surfaces.py, test_adr_doc_checks.py, test_poc_readme.py, test_comment_ratio.py, test_number_guards.py, test_learning.py and test_sd_dispatch.py (`--sd-plugin-root` = spacedock v0.27.2 commit 4d158a48); PR CI jobs not yet run (no PR).
+- DONE: AC-6 ADR 0002 amendment line and ADR checks
+  one paragraph appended to `docs/adr/0002-*.md`; `adr_lint.py docs/adr` exit 0 (7 files), `test_adr_doc_checks.py` exit 0.
+- DONE: AC-7 Captain-run script on the shipped text
+  run by me against the candidate: exits 1, 0, 1 (FAIL R6 on the add and on the journal-only change); on 0.10.3 the exits are 1, 0, 0. The Captain's own run is still his.
+- DONE: `comment_ratio.py` from the base, `doc_impact.py`, `design_surfaces.py check`, `number_guards.py check`
+  `comment_ratio.py origin/main HEAD` exit 0 (64 code lines, 0 comment lines); `design_surfaces.py check` exit 0; `number_guards.py check --base origin/main --head HEAD` exit 0.
+- DONE: Affected documents (`doc_impact.py origin/main HEAD`)
+  lists one document: `kc-dev-flow-2/README.md` (via `test_number_guards.py`): unaffected: it only lists the unchanged test command, and describes no R-rule or POC migration behaviour.
+
+### Summary
+
+R6 is in `check` for `profile: poc` tasks, the POC bullet sits in `workflow.md` Number guards (kept by `poc_readme.py derive`), and ADR 0002 carries the amendment. Falsifier runs on the 0.10.3 text give 6 failures in `test_number_guards.py` and 1 error in `test_poc_readme.py`, matching the design. Note for the Captain's script: an added migration prints both `FAIL R4` (no `Migration:` line) and `FAIL R6`; no version edit, nothing pushed.
+
+### Captain-run acceptance script (shipped text)
+
+The script in `## Captain-run minimal acceptance script` runs unchanged against the shipped text with `PKG` = the candidate's `kc-dev-flow-2` directory; only its expected output is rewritten. Run by me on candidate `9815640d`:
+
+    1st check: FAIL R4 (0002_poc.sql not in Migration: lines) and FAIL R6 (A under the migrations directory), exit=1
+    2nd check (migration removed): PASS, exit=0
+    3rd check (journal only): FAIL R6 db/migrations/meta/_journal.json: A, exit=1
+
+On 0.10.3 the three exits are 1 (R4 only), 0, 0.
