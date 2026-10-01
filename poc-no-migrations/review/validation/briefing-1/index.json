@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:poc-no-migrations:validation:attempt-1:revision-1",
+  "question": "Accept poc-no-migrations' validation PASSED on 9815640d and open its Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:poc-no-migrations:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e4dfa87f00340ab6030628118b286c7b897f3575/poc-no-migrations.md",
+      "rev": "sha256:6adc05455b30d0ed411acdbe9ff0bcfd196ef2e633d24287a536e3e2a9cd94da",
+      "mediaType": "text/markdown",
+      "summary": "R6 and the POC bullet; falsifiers fail on 0.10.3; three mutations caught; round-4 P1 closed in the package; sanitize 0/0/0."
+    }
+  ]
+}

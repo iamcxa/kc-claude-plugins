@@ -45,6 +45,28 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:poc-no-migrations:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:poc-no-migrations-validation-1
+              briefing:
+                id: briefing:poc-no-migrations:validation:attempt-1:revision-1
+                digest: sha256:e9b926182df17a654f77f5c00ab0375ae25d644acaa33c7e21aeed0b82d6d8e6
+                room-ref: ./poc-no-migrations/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:poc-no-migrations:validation:1
+                briefing: briefing:poc-no-migrations:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-10-01T17:44:39.504527Z"
+                decision: approve
+                reason: Validation PASSED on 9815640d; opening a Draft PR only; merge stays with the Captain
+                conn:
+                    quote: 'No ask on a repo Kent owns: push a branch and open a Draft PR once the work cleared its own bar'
+                    source: ~/.claude/CLAUDE.md, Autonomous action boundaries
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-01T05:17:00Z
 worktree: .worktrees/spacedock-ensign-poc-no-migrations
 ---
