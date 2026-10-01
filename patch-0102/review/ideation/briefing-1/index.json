@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:patch-0102:ideation:attempt-1:revision-1",
+  "question": "Approve patch-0102's design (six spike-proven edits, no number_guards logic change) and the coupled rule: a migration on the base branch counts as applied, and of two applied unmerged tasks the first to merge keeps its number?",
+  "artifacts": [
+    {
+      "id": "artifact:patch-0102:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b3fdb695490587f8eed61bb580eb27930bf2aa93/patch-0102.md",
+      "rev": "sha256:42318ee14cec40ea129d782309ffc95c85f7bc04f25bb139a8ed8ba89adff4bd",
+      "mediaType": "text/markdown",
+      "summary": "Five passages plus the git -C fetch fix; falsifier per fix; ADR 0002 one amendment line; reset or recreate still holds for the Captain."
+    }
+  ]
+}

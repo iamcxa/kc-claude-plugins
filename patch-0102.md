@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:patch-0102:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:patch-0102-ideation-1
+              briefing:
+                id: briefing:patch-0102:ideation:attempt-1:revision-1
+                digest: sha256:5b6840a0dd6beb4dbaa316a30165c2d9b2fce2e5183878d8523f17f21ba805a4
+                room-ref: ./patch-0102/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:patch-0102:ideation:1
+                briefing: briefing:patch-0102:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-01T00:59:28.494893Z"
+                decision: approve
+                reason: 'Captain 2026-10-01: 「可以」 — design approved with the coupled rule: a migration on the base branch counts as applied; of two applied unmerged tasks the first to merge keeps its number'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-09-30T17:15:41Z
 ---
 
