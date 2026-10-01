@@ -429,3 +429,7 @@ Captain acceptance script (from a checkout of 581991fa; needs a clone of github.
 3. In `kc-dev-flow-2/`: `python3 scripts/adr_lint.py ../docs/adr --require 2` prints `7 ADR file(s) checked, 0 legacy`, exit 0.
 4. `git diff --stat origin/main` (origin/main at a12de311) lists five files: ADR 0002, workflow.md, number_guards.py and the two test files.
 Does not cover: whether FO applies the prose (goal-change skip check, collision rule, field clearing) correctly in a live run, the adopter's secret wrapper, or the adopter's re-sync of #1248.
+
+### Polish fix
+
+FO-authorized Polish fix (validation finding "AC wording"): the ADR 0002 amendment line now cites 「准」 at the backlog gate for the environment freeze and the collision rule, and 「可以」 at the ideation gate for base-branch-counts-as-applied and first-to-merge-keeps-the-number; quoted words verbatim, nothing else on the line or in the commit changed. New candidate SHA b88732c289d8f7d77a3617f72a83c785e2a7bea8 (on 581991fa, one file, one line). `adr_lint.py ../docs/adr --require 2` printed `7 ADR file(s) checked, 0 legacy`, exit 0; `test_adr_doc_checks.py` exit 0. Not pushed.
