@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:patch-0102:validation:attempt-1:revision-1",
+  "question": "Accept patch-0102's validation PASSED (581991fa plus the one-line ADR 0002 attribution fix b88732c2) and open its Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:patch-0102:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5b935133c8d65d77907673edbe468f7befccfb4f/patch-0102.md",
+      "rev": "sha256:07ce2abbf20945281c50eb1b48501c550d1848aff79e20015cf1d62bc0fac02f",
+      "mediaType": "text/markdown",
+      "summary": "Five Codex round-2 package findings closed; six falsifiers, two tests, mutations; sanitize 0/0/0; two Polish declined."
+    }
+  ]
+}

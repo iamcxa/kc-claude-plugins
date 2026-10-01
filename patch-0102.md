@@ -45,6 +45,28 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:patch-0102:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:patch-0102-validation-1
+              briefing:
+                id: briefing:patch-0102:validation:attempt-1:revision-1
+                digest: sha256:6a1ab7dc81fbc126e7bf70aaaf2d1f713cbbb12314b49e34742067cda907d806
+                room-ref: ./patch-0102/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:patch-0102:validation:1
+                briefing: briefing:patch-0102:validation:attempt-1:revision-1
+                by: agent:first-officer
+                at: "2026-10-01T01:14:30.314549Z"
+                decision: approve
+                reason: Validation PASSED on 581991fa plus the FO-authorized one-line ADR fix b88732c2 (diff read by the FO); two Polish declined; opening a Draft PR only; merge stays with the Captain
+                conn:
+                    quote: 'No ask on a repo Kent owns: push a branch and open a Draft PR once the work cleared its own bar'
+                    source: ~/.claude/CLAUDE.md, Autonomous action boundaries
+              application:
+                target-stage: done
+                state: pending
 started: 2026-09-30T17:15:41Z
 worktree: .worktrees/spacedock-ensign-patch-0102
 ---
