@@ -4,10 +4,11 @@
 check   exit 0 clean, 1 findings, 2 misconfiguration. Rules: R1 a migration present at the merge-base is
         modified or deleted; R2 the same against every 'Applied at: <env> <sha>' commit; R3 an added migration
         number is not above the base tip's highest; R4 an added migration or ADR number is not in the task's
-        'Migration:' / 'ADR:' lines; R5 an added ADR number exists on the base tip.
+        'Migration:' / 'ADR:' lines; R5 an added ADR number exists on the base tip; R6 a task whose frontmatter says
+        'profile: poc' differs from the merge-base anywhere under the migrations directory.
 reserve prints 'Migration: NNNN' or 'ADR: NNNN' (one above the base tip and every other task file, never
         filling a gap); a task that already holds a line gets it back. One number per kind per task.
-Limits: only files named NNNN_name.sql count as migrations, so meta/_journal.json and snapshots are not checked;
+Limits: only files named NNNN_name.sql count as migrations, so meta/_journal.json and snapshots are not checked (R6 does check them);
 a deploy nobody recorded as 'Applied at:' is not detected; run 'git -C <repo> fetch' first, the base tip is what is local.
 Task lines are read from the task's '## Number guards' section.
 """
@@ -68,6 +69,7 @@ def task_facts(path):
         "migration": {int(n) for n in re.findall(r"^Migration:[ \t]*(\d+)[ \t]*$", body, re.M)},
         "adr": {int(n) for n in re.findall(r"^ADR:[ \t]*(\d+)[ \t]*$", body, re.M)},
         "applied": re.findall(r"^Applied at:[ \t]*(\S+)[ \t]+([0-9a-f]{7,40})[ \t]*$", body, re.M),
+        "poc": frontmatter(task).get("profile") == "poc",
         "surfaces": set(re.split(r"[\s,]+", surfaces.group(1).strip())) if surfaces else set(),
     }
 
@@ -152,6 +154,11 @@ def check(args):
                 fail("R3", path, f"number {number:04d} is not above the base maximum {top:04d}")
             if facts is not None and number not in facts["migration"]:
                 fail("R4", path, f"number {number:04d} is not in the task's Migration: lines")
+        if facts and facts["poc"]:
+            for line in git(repo, "diff", "--name-status", "--no-renames", merge_base, head,
+                            "--", directory.rstrip("/") + "/").splitlines():
+                status, path = line.split("\t", 1)
+                fail("R6", path, f"{status} under the migrations directory; a POC task changes none of it")
     else:
         out.append("migration guard skipped: no migrations-path declared")
     adr_base = numbered(repo, base, cfg["adr"], ADR)

@@ -29,6 +29,16 @@ class DeriveTests(unittest.TestCase):
         self.assertEqual(lines[entry + 1], "      gate: true")
         self.assertEqual(poc.derive(SOURCE), "\n".join(expected))
 
+    def test_the_derived_poc_readme_carries_the_migration_rule_to_both_worker_stages(self):
+        derived = poc.derive(SOURCE)
+        bullet = next(b for b in derived.split("\n- **") if b.startswith("POC.**"))
+        for phrase in ("migrations-path:", "FAIL R6", "boundary-crossed: persistent-state", "not repaired in\n  place"):
+            self.assertIn(phrase, bullet)
+        for stage in ("implementation", "validation"):
+            start = derived.index(f"    - name: {stage}\n")
+            end = derived.index("\n    - name:", start)
+            self.assertIn("        - Number guards", derived[start:end])
+
     def test_the_source_has_no_link_that_breaks_once_copied_into_an_adopter(self):
         import re
         self.assertEqual(re.findall(r"\]\((?!https?://)[^)#]+\)", SOURCE), [])

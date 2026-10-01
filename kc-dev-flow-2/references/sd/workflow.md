@@ -378,7 +378,7 @@ retained-document practices in the package's `references/retained-documents.md`.
 
 ## Number guards
 
-Applies when the task's `Surfaces:` includes `db`, or its design lands an ADR.
+Applies when the task's `Surfaces:` includes `db`, or its design lands an ADR; the POC bullet below applies to every `poc` task.
 `<package>/scripts/number_guards.py` takes its values from this workflow's README
 frontmatter (`--workflow-dir <workflow-dir>`): `trunk:`, the optional
 `migrations-path:` (the adopter's migration directory) and `adr-path:` (default
@@ -405,10 +405,19 @@ applied deploys from the `## Number guards` section of the task file.
   not detected.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
   runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR
-  head before FO asks for merge. Exit 1 lists `FAIL R1..R5` lines; exit 2 is a
+  head before FO asks for merge. Exit 1 lists `FAIL R1..R6` lines; exit 2 is a
   configuration error, which returns to FO as a hold. A migration on the base
   branch must not change, comment-only edits included; `check` exit 1 (R1, R2) is
   the enforcement, and the fix is reverting the edit and writing a new migration.
+- **POC.** A task whose recorded `profile` is `poc` adds, edits and deletes no migration
+  file and reserves no number. When the README declares `migrations-path:`, `check` runs
+  for it at the same three points; it reads `profile: poc` from the task's frontmatter,
+  and exit 1 `FAIL R6` lists each path under that directory that differs from the
+  merge-base, `meta/` and files not named `NNNN_name.sql` included. A `FAIL R6` crosses the
+  POC boundary (a schema change persists across sessions): the worker records
+  `boundary-crossed: persistent-state` naming the path, and the task is not repaired in
+  place; FO presents the marker at the validation gate. Without `migrations-path:` the
+  migration rules are skipped, so a POC is not guarded until the README declares it.
 - **Collision.** When two tasks hold one migration number (`check` reports R3 or R5 on
   the later candidate; nothing compares task files), the task whose migration is applied
   keeps it and the other, unapplied task renumbers, so no reset is needed. A migration
