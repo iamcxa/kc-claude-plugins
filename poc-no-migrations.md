@@ -3,7 +3,7 @@ title: A POC task adds or edits no migration file, and POC delivery checks the m
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
