@@ -69,7 +69,7 @@ gates:
                 state: pending
 started: 2026-10-01T05:17:00Z
 worktree: .worktrees/spacedock-ensign-poc-no-migrations
-pr: 555
+pr: pr-merge:555
 ---
 
 The POC route never activates number guards (it records no `Surfaces:`), so a POC migration would get no reserved number and no freeze; the Captain ruled that a POC does not touch migrations at all.
