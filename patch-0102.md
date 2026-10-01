@@ -3,7 +3,7 @@ title: A goal change marks a release changed, any shared non-production database
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
