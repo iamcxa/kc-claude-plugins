@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:patch-0103:validation:attempt-1:revision-1",
+  "question": "Accept patch-0103's validation PASSED on d511cecf and open its Draft PR?",
+  "artifacts": [
+    {
+      "id": "artifact:patch-0103:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0875ce658356dc09d91ecffb7dd08e5480fe17ef/patch-0103.md",
+      "rev": "sha256:74867da07bb045f9d45527ea382557c7050e508f054ccfc3cfb78f2b97c2dbe0",
+      "mediaType": "text/markdown",
+      "summary": "Round-3 P1 closed; falsifier and three extra mutations fail on wrong text; POC derivation reads correctly; ac-scan lists only in-force criteria; sanitize 0/0/0."
+    }
+  ]
+}
