@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.3](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.2...kc-dev-flow-2-v0.10.3) (2026-10-01)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** send a validation-gate revise to implementation ([#553](https://github.com/iamcxa/kc-claude-plugins/issues/553)) ([53bbe40](https://github.com/iamcxa/kc-claude-plugins/commit/53bbe4029dddadf8d122b1856af19f511b0d66c2))
+
 ## [0.10.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.1...kc-dev-flow-2-v0.10.2) (2026-10-01)
 
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.4.0...kc-journey-map-v1.5.0) (2026-10-01)
+
+
+### Features
+
+* **kc-journey-map:** pin the activity row to the top while panning down ([#548](https://github.com/iamcxa/kc-claude-plugins/issues/548)) ([89482f1](https://github.com/iamcxa/kc-claude-plugins/commit/89482f157cb9a8365211c97423a4832c2b8c62f1))
+
 ## [1.4.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.3.0...kc-journey-map-v1.4.0) (2026-09-30)
 
 
