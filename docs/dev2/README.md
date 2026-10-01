@@ -125,12 +125,15 @@ differently, or `Visible change: none`.
   (`journey`, `journey-release`, `journey-story`); a task with no release, such as a
   bug, infrastructure or workflow maintenance, is outside it. Four signals: (1) a task
   admitted into a release; (2) a Captain scope ruling that moves a story or task into
-  or out of a release or changes its goal; (3) a UAT failure that crosses two or more
-  tasks; (4) a batch about to enter implementation. Signals 1 and 2 only mark the
+  or out of a release or changes the goal of the release, a story or a task; (3) a UAT
+  failure that crosses two or more tasks; (4) a batch about to enter implementation. Signals 1 and 2 only mark the
   release changed: FO names the release and the signal in the task's `## FO alignment`
-  reason. A task whose `journey-story` is already on the map in that release, with the
-  release's story set unchanged since its latest `Release review:` line, passes with
-  that one check and marks nothing. Signal 4 is the single checkpoint: at the first
+  reason. A task whose `journey-story` is already on the map in that release passes with
+  that one check and marks nothing when, since its latest `Release review:` line, the
+  journey file still holds the same story ids and the same release and story `goal`
+  text and no Captain ruling has changed the goal of the release, a story or a task.
+  A changed goal is signal 2 although no story id moved; FO marks the release
+  changed in that task's `## FO alignment` reason. Signal 4 is the single checkpoint: at the first
   implementation dispatch for a release marked changed, FO dispatches a fresh worker
   with kc-journey-map's `review-release` mode, then splits tasks from its output; an
   unchanged release proceeds. One review covers every change since the last. Signal 3
@@ -143,6 +146,15 @@ differently, or `Visible change: none`.
   a worker never edits frontmatter. Where the adopter tracks completion with
   kc-journey-progress, FO also writes `journey-required-tasks` (full task ids) and
   `journey-mapping-complete: true` on one task per story at the review's split step.
+  When signal 2 moves a task out of a release, FO clears its release fields with
+  `spacedock status --workflow-dir <dir> --set <task> journey= journey-release= journey-story= journey-required-tasks= journey-mapping-complete=`
+  (a field set to nothing is cleared) and, where kc-journey-progress is tracking,
+  removes the task's full id from `journey-required-tasks` on the declaring task of
+  its old story; when the cleared task was the declaring one, FO moves that list and
+  `journey-mapping-complete: true` to another member of the story. A task moved to
+  another story gets the new values from the set command above and its id is added to
+  that story's list. kc-journey-progress reports a story unverified until its
+  declaration matches its members.
 
 ### `ideation`
 
@@ -321,8 +333,10 @@ product's journey map, not here.
 
 A change the Captain makes to what he has accepted, whether at a gate approval,
 during implementation or at a validation gate, is an amendment. A change he asks for
-while the gate that would accept it is still open is not one: he calls `revise` and
-that stage's worker reworks it.
+while the gate that would accept it is still open is not one: he calls `revise`; at a stage
+that dispatches a worker, that stage's worker reworks it, and at `backlog`, which
+dispatches no worker, FO revises the recorded outcome, scope or budget, or asks the
+proposal's author to.
 
 FO appends one entry per amendment to the task's `## Captain amendments` section and
 changes nothing else in it. FO adds no words of its own and does not move or rewrite a criterion:
@@ -370,35 +384,44 @@ frontmatter (`--workflow-dir <workflow-dir>`): `trunk:`, the optional
 `docs/adr`); a flag of the same name overrides. It reads a task's numbers and
 applied deploys from the `## Number guards` section of the task file.
 
-- **Reserve.** Before an implementation dispatch, FO runs `git fetch`, then
+- **Reserve.** Before an implementation dispatch, FO runs `git -C <repo> fetch`, then
   `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
   once per kind the task needs, when the implementation dispatch is built and not
   earlier. FO records each printed `Migration: NNNN` /
   `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as
   dispatch scope notes. One number per kind per task; a task needing more returns
   to FO.
-- **Applied.** Before any push of a candidate to a persistent shared environment
-  (a non-production database branch), FO records `Applied at: <environment> <sha>`
+- **Applied.** Before any push of a candidate to a persistent shared non-production
+  environment (a database branch, or a separate hosting project such as a staging
+  project whose database is that project's own production database), FO records `Applied at: <environment> <sha>`
   for the commit being pushed. A migration in that commit is then frozen for the
   task: edit, delete and renumber fail `check`. When the push is rejected or the
   deploy is confirmed not to have run for that commit (the push's non-zero output,
   or the environment's own deploy record showing no deploy of it), FO replaces that
   one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
-  no longer frozen. Without that confirmation the line stays and Renumber holds for
-  the Captain. Git cannot see what a database applied, so an unrecorded deploy is
+  no longer frozen. Without that confirmation the line stays and the migration counts
+  as applied. Git cannot see what a database applied, so an unrecorded deploy is
   not detected.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
-  runs at implementation exit, at validation and, after `git fetch`, on the PR
+  runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR
   head before FO asks for merge. Exit 1 lists `FAIL R1..R5` lines; exit 2 is a
   configuration error, which returns to FO as a hold. A migration on the base
   branch must not change, comment-only edits included; `check` exit 1 (R1, R2) is
   the enforcement, and the fix is reverting the edit and writing a new migration.
-- **Renumber.** A candidate whose number was taken (R3, R5) renumbers and returns
-  to implementation. When an `Applied at:` commit holds the migration, FO holds
-  for the Captain: reset that non-production database branch, then renumber.
-  The reset is one Netlify Open API call, `netlify api resetSiteDatabaseBranch --data '{"site_id":"<site>","branch_id":"<branch>"}' > /dev/null`
-  (`netlify api --list` shows the method). It applies to non-production branches
-  only; the production branch cannot be reset. The response carries connection
+- **Collision.** When two tasks hold one migration number (`check` reports R3 or R5 on
+  the later candidate; nothing compares task files), the task whose migration is applied
+  keeps it and the other, unapplied task renumbers, so no reset is needed. A migration
+  counts as applied when its task has an `Applied at:` line or it is on the base branch;
+  when both tasks are applied and neither is on the base branch, the one that merges
+  first keeps the number. The renumbering task deletes its `Migration:` line, FO runs
+  `reserve` again, and the task returns to implementation with the new number in its
+  scope notes. When the renumbering task has an `Applied at:` line, its environment's
+  database holds a migration no branch will carry, and FO holds for the Captain: a
+  database branch is reset, and a shared non-production database that cannot be reset
+  (a separate project's own database) is deleted and recreated by the Captain. FO then
+  replaces the line with `Not applied: <environment> <sha> - database reset` so that
+  `check` accepts the renumber. A branch reset is one Netlify Open API call, `netlify api resetSiteDatabaseBranch --data '{"site_id":"<site>","branch_id":"<branch>"}' > /dev/null`
+  (`netlify api --list` shows the method). The response carries connection
   strings, so redirect it to `/dev/null` and read the result from the next
   deploy. This step is documented, not wrapped in a tool.
 
