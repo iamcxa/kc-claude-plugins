@@ -3,7 +3,7 @@ title: A revise at the validation gate goes back to implementation, not to the v
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-10-01: 「修完再合併」 — fix the round-3 P1 before qnow #1248 merges'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 One wording defect in kc-dev-flow-2 0.10.2 `references/sd/workflow.md` `## Captain amendments`, found as a P1 in round 3 of an external review of an adopter's workflow sync (qnow PR #1248, commit 39bf550, 2026-10-01); patch release 0.10.3.
