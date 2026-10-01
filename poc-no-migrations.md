@@ -3,7 +3,7 @@ title: A POC task adds or edits no migration file, and POC delivery checks the m
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-10-01: 「可以」 — design approved; an R6 failure goes through the existing boundary-crossed gate, where the Captain chooses promotion to pilot or removing the migration with cleanup'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-01T05:17:00Z
 ---
 
