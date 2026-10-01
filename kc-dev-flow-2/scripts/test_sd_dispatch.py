@@ -77,9 +77,14 @@ FIXES = {
         swaps=((r"When signal 2 moves a task out of a release, FO clears.*?declaration matches its members\.", ""),)),
     "backlog-revise": dict(
         need=("at `backlog`, which dispatches no worker, FO revises",),
-        old=("he calls `revise` and that stage's worker reworks it",),
-        swaps=((r"he calls `revise`; at a stage that dispatches a worker.*?asks the proposal's author to\.",
-                "he calls `revise` and that stage's worker reworks it."),)),
+        old=(),
+        swaps=((r"; and at `backlog`, which dispatches no worker.*?asks the proposal's author to\.", "."),)),
+    "feedback-revise": dict(
+        need=("at a stage whose gate has a `feedback-to`, the revision goes to that target and the stage's worker re-reviews it",
+              "at a stage with no `feedback-to` that dispatches a worker, that stage's worker reworks it"),
+        old=("at a stage that dispatches a worker, that stage's worker reworks it",),
+        swaps=((r"at a stage with no `feedback-to` that dispatches a worker, that stage's worker reworks it; at a stage whose gate has a `feedback-to`.*?re-reviews it;",
+                "at a stage that dispatches a worker, that stage's worker reworks it,"),)),
     "fetch-the-inspected-repo": dict(
         need=("FO runs `git -C <repo> fetch`, then", "after `git -C <repo> fetch`, on the PR head"),
         old=("FO runs `git fetch`, then", "after `git fetch`, on the PR head"),
@@ -491,7 +496,7 @@ def exercise(base, binary, sd_root):
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
-        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the six 0.10.2 fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, fetch-the-inspected-repo) are each asserted present, and each reverted alone to its 0.10.1 text reports only its own gaps")
+        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the seven wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:

@@ -334,9 +334,10 @@ product's journey map, not here.
 A change the Captain makes to what he has accepted, whether at a gate approval,
 during implementation or at a validation gate, is an amendment. A change he asks for
 while the gate that would accept it is still open is not one: he calls `revise`; at a stage
-that dispatches a worker, that stage's worker reworks it, and at `backlog`, which
-dispatches no worker, FO revises the recorded outcome, scope or budget, or asks the
-proposal's author to.
+with no `feedback-to` that dispatches a worker, that stage's worker reworks it; at a stage
+whose gate has a `feedback-to`, the revision goes to that target and the stage's worker
+re-reviews it; and at `backlog`, which dispatches no worker, FO revises the recorded outcome,
+scope or budget, or asks the proposal's author to.
 
 FO appends one entry per amendment to the task's `## Captain amendments` section and
 changes nothing else in it. FO adds no words of its own and does not move or rewrite a criterion:
