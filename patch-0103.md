@@ -26,6 +26,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-10-01T03:05:36Z
 ---
 
 One wording defect in kc-dev-flow-2 0.10.2 `references/sd/workflow.md` `## Captain amendments`, found as a P1 in round 3 of an external review of an adopter's workflow sync (qnow PR #1248, commit 39bf550, 2026-10-01); patch release 0.10.3.
