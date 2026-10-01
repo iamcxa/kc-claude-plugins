@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.1...kc-dev-flow-2-v0.10.2) (2026-10-01)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** close five release-review and number-guard workflow gaps ([#549](https://github.com/iamcxa/kc-claude-plugins/issues/549)) ([04557aa](https://github.com/iamcxa/kc-claude-plugins/commit/04557aa6f6e9e7a53e810a42eda9e21f353aed77))
+
 ## [0.10.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.0...kc-dev-flow-2-v0.10.1) (2026-09-30)
 
 
