@@ -69,6 +69,7 @@ gates:
                 state: pending
 started: 2026-09-30T17:15:41Z
 worktree: .worktrees/spacedock-ensign-patch-0102
+pr: 549
 ---
 
 Five gaps in kc-dev-flow-2 0.10.1 `references/sd/workflow.md`, found by an external review of an adopter's workflow sync (qnow PR #1248, round 2, 2026-10-01); patch release 0.10.2.
