@@ -215,3 +215,34 @@ The script in `## Captain-run minimal acceptance script` runs unchanged against 
     3rd check (journal only): FAIL R6 db/migrations/meta/_journal.json: A, exit=1
 
 On 0.10.3 the three exits are 1 (R4 only), 0, 0.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on candidate 9815640d612566ae6a82cd089cd15d16208ff9cf (base 63878a03) against the approved design, AC-1..AC-7 and the Captain's rulings 「ok」 / 「可以」
+  PASSED recommended; `git archive` of the exact SHA; worktree `git status --short` empty, HEAD 9815640d; diff is exactly the five files (ADR 0002, `workflow.md`, `number_guards.py`, `test_number_guards.py`, `test_poc_readme.py`), +83/-4.
+- DONE: Full kc-dev-flow-2 CI list on the archive, including test_poc_readme.py and test_sd_dispatch.py with the v0.27.2 root
+  all 9 commands exit 0 (lint-skills, test_lint_skills, test_design_surfaces, test_adr_doc_checks, test_poc_readme, test_comment_ratio, test_number_guards 23 tests, test_learning, test_sd_dispatch with spacedock-v1 archive of 4d158a48); PR CI itself not run (no PR yet).
+- DONE: Falsifier on the 0.10.3 text (base `number_guards.py` + base `workflow.md`, candidate tests)
+  test_number_guards 6 failures (add/edit/delete/journal/snapshot subtests assert `FAIL R6` naming the path, plus the scoping test) and test_poc_readme 1 error (bullet absent, StopIteration); the new tests fail exactly when R6 and the bullet are absent.
+- DONE: Named mutations on a candidate copy: remove R6, ignore `profile: poc`, compare against base tip instead of merge-base
+  remove R6 gives 6 failures; `poc` forced True gives 5 (non-poc scoping test plus 4 older tests); `poc` forced False gives 6; base tip instead of merge-base gives 1 (the base-landed-migration test), so each mutation is caught by PocFreezeTests.
+- DONE: Derived POC README (`poc_readme.py derive` on the candidate `workflow.md`) carries the bullet and it reads correctly
+  derived README has the `POC.` bullet in `## Number guards`, `Number guards` is in `context-sections` of implementation and validation, only one `ideation` word (existing line 60); `profile: <selected-profile>` is in the task template and `persistent-state` is a defined value in `references/profiles/poc.md`; qnow #1248 head's POC README already declares `migrations-path: apps/qnow-api/netlify/database/migrations`, so the rule would apply there once refreshed.
+- DONE: Round-4 Codex P1 on qnow #1248 (`docs/dev2-poc/README.md`, "Activate number guards for POC database work")
+  closed in the package, not in qnow: a `poc` task can no longer add or edit a migration unseen, because `check` activates by `profile: poc` (the P1's second offered remedy) and fails R6; qnow's #1248 README stays unchanged until it is re-derived after release, which the Captain's ruling waives for that PR.
+- DONE: ADR 0002 amendment line and `adr_lint.py`
+  quoted words 「ok」 and 「可以」 match the two gate resolution reasons verbatim; `adr_lint.py docs/adr` and `--require 2` exit 0 (7 files); no new ADR number was owed.
+- DONE: Every added comment line and `comment_ratio.py 63878a03 9815640d` (candidate's own script, `--workflow-dir` docs/dev2)
+  exit 0, code lines 64, comment lines 0 (0.0%, max 5%); no added `#` comment; the two edited docstring lines in `number_guards.py` state R6 and the corrected journal/snapshot limit, which the code cannot say.
+- DONE: Affected documents and design checks at the candidate
+  `doc_impact.py 63878a03 9815640d` lists `kc-dev-flow-2/README.md` and implementation recorded it `unaffected` with a reason; `design_surfaces.py check` exit 0; the task has no `## Number guards` section and is not `poc`, so no task-level `check` applies.
+- DONE: Captain acceptance script, run as written from the entity text with PKG = candidate archive, and on the 0.10.3 archive
+  candidate exits 1 (FAIL R4 and FAIL R6 on the added migration), 0, 1 (FAIL R6 on `meta/_journal.json`); 0.10.3 gives 1 (R4 only), 0, 0, so only steps 1 and 3 by their R6 text discriminate.
+- DONE: Minimal necessity and goal sufficiency at the same candidate
+  every changed surface maps to the Captain's wording or a named falsifier (R6 closes the journal/snapshot gap that passed `check` on 0.10.3; the bullet is the only text both POC workers receive; ADR line is the decision record); nothing to remove.
+
+### Summary
+
+PASSED recommended for 9815640d. Material limits, none a defect against the approved design: enforcement is an instruction plus a `check` that someone must run (the validation skill's own "rerun `check` when the task has `## Number guards`" does not fire for a POC task, so the validation worker relies on the inlined bullet); a POC with no `migrations-path:` is unguarded; the repo's own `docs/dev2/README.md` and qnow's `docs/dev2-poc/README.md` get the rule only on a later refresh; the ADR 0002 Consequences sentence "snapshot and journal files not covered" stays true for non-POC tasks only (Polish, no loss).
+
+Captain acceptance script (3 steps, under 5 minutes, in `## Captain-run minimal acceptance script`, with PKG the PR-head `kc-dev-flow-2`): (1) POC branch adds `0002_poc.sql`, expect `exit=1` with `FAIL R6`; (2) remove it, expect `exit=0`; (3) add only `meta/_journal.json`, expect `exit=1` with `FAIL R6`. Does not cover: PR CI jobs on the PR head, a real adopter's POC task end to end, the validation-gate `boundary-crossed` presentation (existing ADR 0001, not retested), or an unrecorded deploy.
