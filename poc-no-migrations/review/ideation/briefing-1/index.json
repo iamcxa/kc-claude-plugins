@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:poc-no-migrations:ideation:attempt-1:revision-1",
+  "question": "Approve poc-no-migrations' design (one Number guards bullet that the POC route keeps; check rule R6: a profile: poc task may not change anything under migrations-path) and route an R6 failure through the existing boundary-crossed gate (promote to pilot, or remove the migration with cleanup)?",
+  "artifacts": [
+    {
+      "id": "artifact:poc-no-migrations:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/618e576fe7858fb2fa7f0f37bdf2ce754ef4cd85/poc-no-migrations.md",
+      "rev": "sha256:dbb8bca7ae0adfd7c8d2d13d734f3af087f62944d1639807d7e93fbd44c0482c",
+      "mediaType": "text/markdown",
+      "summary": "0.10.3 check already refuses added or edited .sql via R1/R4; gaps were that POC never runs it and journal/snapshot files pass; R6 closes both."
+    }
+  ]
+}

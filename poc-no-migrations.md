@@ -26,6 +26,25 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:poc-no-migrations:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:poc-no-migrations-ideation-1
+              briefing:
+                id: briefing:poc-no-migrations:ideation:attempt-1:revision-1
+                digest: sha256:4991c941553bac17a96bc7b302fade61f4f9831dacedd429bbc09f146b542b05
+                room-ref: ./poc-no-migrations/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:poc-no-migrations:ideation:1
+                briefing: briefing:poc-no-migrations:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-01T05:29:43.838505Z"
+                decision: approve
+                reason: 'Captain 2026-10-01: 「可以」 — design approved; an R6 failure goes through the existing boundary-crossed gate, where the Captain chooses promotion to pilot or removing the migration with cleanup'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-01T05:17:00Z
 ---
 
