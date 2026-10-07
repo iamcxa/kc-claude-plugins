@@ -57,6 +57,10 @@ Relayed by the peer session dhaka-32 on 2026-10-07 (not yet confirmed by the Cap
 Wanted behaviour (relayed): on re-render, an annotation that overlapped a generated card moves with that card, or the render at least reports which annotations would be stranded instead of doing it silently; a test fails on today's renderer.
 Non-goals: moving annotations that overlapped no generated card; changing the YAML-is-authority rule.
 
+## Number guards
+
+ADR: 0008
+
 ## Design
 
 ### PRFAQ
