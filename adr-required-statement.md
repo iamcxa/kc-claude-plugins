@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:adr-required-statement:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:adr-required-statement-ideation-1
+              briefing:
+                id: briefing:adr-required-statement:ideation:attempt-1:revision-1
+                digest: sha256:0f92f4576b3d4f38667071e93b9a47b6f0d8c030ee618a5fea2843f77507394b
+                room-ref: ./adr-required-statement/review/ideation/briefing-1
 started: 2026-10-07T14:17:33Z
 ---
 

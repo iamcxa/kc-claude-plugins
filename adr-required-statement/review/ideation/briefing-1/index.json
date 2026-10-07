@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-required-statement:ideation:attempt-1:revision-1",
+  "question": "Approve the design with its four decisions as recommended (none under a yes ruling only when citing an existing ADR; two required lines per task; one adopter sync PR per adopter after release; this approval confirms the relayed request)?",
+  "artifacts": [
+    {
+      "id": "artifact:adr-required-statement:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fb8962e4286e84de2099682e9c4d955af040f437/adr-required-statement.md",
+      "rev": "sha256:e7edfda84cdd0c60c4c2da8603b5c7dd4d843f89e9a673d1286163e75e903e51",
+      "mediaType": "text/markdown",
+      "summary": "Design: adr_lint.py gains --task; FO alignment records 'Product ruling: yes: \u003cwords\u003e' or 'no'; the implementation report records 'ADRs: \u003cnumbers\u003e' or 'ADRs: none: \u003creason\u003e'; the check runs at implementation exit and validation and fails on a missing or malformed line; POC owes the same two lines; 7 ACs replay the subspace-tab-icon case; four Captain decisions."
+    }
+  ]
+}
