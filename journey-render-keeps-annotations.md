@@ -53,6 +53,17 @@ gates:
                 id: briefing:journey-render-keeps-annotations:validation:attempt-1:revision-1
                 digest: sha256:4b57ef92e2cde553c71c24290b2f5b6936d794267e647fffb68891be06d39944
                 room-ref: ./journey-render-keeps-annotations/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-render-keeps-annotations:validation:1
+                briefing: briefing:journey-render-keeps-annotations:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-07T14:58:22.095084Z"
+                decision: approve
+                reason: 'Captain 2026-10-07: 「核准標註」 — approve delivery of 6efe82b8 as a Draft PR to main'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-07T13:55:27Z
 worktree: .worktrees/spacedock-ensign-journey-render-keeps-annotations
 ---
