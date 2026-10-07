@@ -134,7 +134,7 @@ ADR: 0009
 
 ### Amendment 1 — 2026-10-08, ideation gate
 Captain: 「可以」 (chat, 2026-10-08, accepting the FO's proposed change to decision 4)
-Supersedes: none
+Supersedes: AC-10 (its "before that task's next dispatch" backfill clause; FO corrected this field 2026-10-08 after validation Finding 1)
 Design: Unresolved decision 4 — replaced by the accepted proposal: in-flight adopter tasks get their Captain-rulings ledger on touch, when each next passes a gate, not backfilled up front; after the next 10 delivered tasks the FO reports the ledger lines added and the missing ADRs the ledger caught, and proposes removing the rule if it caught none.
 Superseded text: 4. Adopter sync, unchanged from cycle 1: one separate sync PR per adopter after release, package first, none in this PR; each adopter's open tasks need an FO backfill (qnow had 20 in flight). Recommend: as stated.
 
