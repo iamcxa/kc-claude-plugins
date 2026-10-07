@@ -70,6 +70,13 @@ Relayed by the peer session dhaka-32 on 2026-10-07, quoting the Captain's approv
 Direction relayed as the Captain's (shape is the worker's to design): the implementation report states which ADRs it added, or `none` with a reason, and an absent statement fails validation; the FO alignment section marks whether the Captain's words set a product rule. Accepted cost (relayed): one more required line per task, POC included.
 Non-goals: back-filling ADRs in adopters; changing the ADR template.
 
+## Captain rulings
+
+- R1 Source: fo-alignment, gate-attempt:adr-required-statement-backlog-1. Words: 「要，交給上游修」 Product rule: yes: held by 0009
+- R2 Source: gate-attempt:adr-required-statement-ideation-1. Words: 「退回設計」 Product rule: no: routes this task's design back to ideation
+- R3 Source: gate-attempt:adr-required-statement-ideation-2. Words: 「可以」 Proposal: 「every Captain ruling the FO records gets a Captain rulings ledger line marking whether it sets a rule for the product」 Product rule: yes: held by 0009
+- R4 Source: amendment 1. Words: 「可以」 Proposal: 「in-flight adopter tasks get their Captain-rulings ledger on touch, when each next passes a gate, not backfilled up front」 Product rule: yes: held by 0009
+
 ## Acceptance criteria
 
 Package tests are `python3 -m unittest discover -s kc-dev-flow-2/scripts` from the repository root (CI runs `test_adr_doc_checks.py` and `test_poc_readme.py` as named steps in `.github/workflows/kc-dev-flow-2-tests.yml`; no CI change). `<fixture>` means synthetic task text inside `kc-dev-flow-2/scripts/test_adr_doc_checks.py`: gate records in the real key shape (`gates.records[].attempts[].resolution` with `by`, `decision`, `reason`, optional `conn.quote` and `conn.source`; optional `withdrawal.reason`), values invented, no adopter file or word copied. Base observed 2026-10-07 at package 0.10.4 (repository HEAD `ca368cee`, `python3 -m unittest discover -s kc-dev-flow-2/scripts`: 123 tests OK): `adr_lint.py <adr-dir>` exits 0 on an empty directory and on valid records, and `adr_lint.py <adr-dir> --task <file>` exits 2 (unrecognized argument). So every new test below fails at base and passes at the candidate.
