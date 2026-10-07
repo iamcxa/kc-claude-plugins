@@ -112,11 +112,11 @@ Verified by: `python3 kc-dev-flow-2/scripts/test_poc_readme.py` including a new 
 **AC-9** Existing behavior is unchanged: the whole `unittest discover` run still passes (123 tests at base plus the new ones), and `adr_lint.py <dir> --require N` without `--task` prints and exits as before.
 Verified by: the full run at the candidate; `test_legacy_is_skipped_but_cannot_satisfy_a_required_record` still passes.
 
-**AC-10** `references/sd/adoption.md` states the order that does not break an adopter: update the package first, then re-sync the workflow README (a README that names `--task` before the script has it exits 2), and FO writes the ledger of each task open at sync before that task's next dispatch, one batched entry for its past bare approvals.
-Verified by: reading the sentence at the candidate. Limit: prose; no script tests the order.
-
 **AC-11** Amended by Captain, amendment 1. The package text carries the amendment: `references/sd/workflow.md` § Decision records says a task open when a repository first takes the rule gets its ledger on touch (when it next reaches a gate, or when the check first reports a gap, if sooner), and that after 10 tasks delivered under the rule the FO reports the ledger lines added and the missing ADRs the ledger caught and proposes removing the rule if it caught none; `references/sd/adoption.md` § Captain rulings ledger states the same order.
 Verified by: reading both texts at the candidate; `test_poc_readme.py` asserts `on touch` and `Once 10 tasks have been delivered` reach the derived POC README. Limit: prose; the 10-task report is FO procedure and nothing counts the tasks.
+
+**AC-12** Amended by Captain, amendment 1, replacing AC-10. `references/sd/adoption.md` § Captain rulings ledger states the order that does not break an adopter: an adopter updates the package first, then re-syncs its workflow README (a README that names `--task` before the script has it exits 2); a task open at sync is not backfilled up front, and FO writes its `## Captain rulings` on touch, when the task next reaches a gate and before the dispatch that follows, with one batched entry for its past bare approvals. AC-11 holds the same on-touch order in `workflow.md`.
+Verified by: reading the sentence at the candidate. Limit: prose; no script tests the order.
 
 ## FO alignment
 
@@ -137,6 +137,8 @@ Captain: 「可以」 (chat, 2026-10-08, accepting the FO's proposed change to d
 Supersedes: AC-10 (its "before that task's next dispatch" backfill clause; FO corrected this field 2026-10-08 after validation Finding 1)
 Design: Unresolved decision 4 — replaced by the accepted proposal: in-flight adopter tasks get their Captain-rulings ledger on touch, when each next passes a gate, not backfilled up front; after the next 10 delivered tasks the FO reports the ledger lines added and the missing ADRs the ledger caught, and proposes removing the rule if it caught none.
 Superseded text: 4. Adopter sync, unchanged from cycle 1: one separate sync PR per adopter after release, package first, none in this PR; each adopter's open tasks need an FO backfill (qnow had 20 in flight). Recommend: as stated.
+Superseded text: **AC-10** `references/sd/adoption.md` states the order that does not break an adopter: update the package first, then re-sync the workflow README (a README that names `--task` before the script has it exits 2), and FO writes the ledger of each task open at sync before that task's next dispatch, one batched entry for its past bare approvals.
+Verified by: reading the sentence at the candidate. Limit: prose; no script tests the order.
 
 ## Design
 
@@ -320,3 +322,16 @@ Finding 1 (Polish, FO-owned record): amendment 1 says `Supersedes: none`, but AC
 Finding 2 (Polish): ADR 0009's "Proposal he approved" is a worker composite inside 「」, found in no task text; the Captain words above it are verbatim. Finding 3 (Deferred risk): the union test cannot see a first-report-only mutant and no test uses 'OK' in capitals; would become Material if a repair cycle's ADR number went unchecked. Also disclosed: 可以 is in the script's bare-approval set though AC-2 lists four words.
 Unverified: PR-head run is FO procedure (`merge guard` never runs the script); the 10-task checkpoint is counted by nothing; adopter READMEs (including this repository's `docs/dev2/README.md`) are not synced, so this task's own PR-head run follows the package text, not its README; whether a `no` mark is true is judgement; no replay used the adopters' ADR directories as of delivery.
 Acceptance script (about 5 minutes, checkout of 36c0e746): (1) `python3 -m unittest discover -s kc-dev-flow-2/scripts` prints `Ran 147 tests` and `OK`. (2) `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --task <path of this task file>` prints `task rulings covered`, exit 0. (3) Copy the task file, delete its `## Captain rulings` section, rerun on the copy: exit 1, five `is not cited by any ruling entry` lines plus `no '## Captain rulings' section`. (4) Run `--validation` on the original: exit 0 now; delete one `R<n>: agree:` line in a copy: exit 1 `R<n> has no validation verdict`. (5) `python3 kc-dev-flow-2/scripts/poc_readme.py derive kc-dev-flow-2/references/sd/workflow.md | grep -c 'adr_lint.py docs/adr --task'` prints 1 or more. Does not cover: any adopter's README or ADR directory, the PR-head run, the merge guard, or whether the FO's marks are true.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: ADR 0009 holds only verbatim text inside 「」, and amendment 1's superseded AC-10 block is moved with its replacement criterion written
+  Candidate b73a69c2 (one commit off 36c0e746, ADR file only). "Proposal he approved" now quotes three spans of the ideation gate reasons (two from the 「退回設計」 reason, one from the 「可以」 reason); the cycle-2 design is a labelled paraphrase outside 「」. A script check of all 9 「」 segments in the ADR against the task text (whitespace-normalised, YAML `''` unescaped): 9 of 9 found. AC-10's block moved verbatim into amendment 1 as a second `Superseded text:` line and removed from `## Acceptance criteria`; replacement written as new AC-12 ("Amended by Captain, amendment 1, replacing AC-10": package first, then README re-sync, ledger on touch at the next gate before the dispatch that follows); AC-11 untouched and consistent (same on-touch order in workflow.md, adoption.md). Task-file edits are uncommitted until the state commit below.
+- DONE: Full package suite, adr_lint --require 9 and --task, poc_readme.py check green at the recorded new SHA
+  At b73a69c2: `unittest discover -s kc-dev-flow-2/scripts` 147 tests OK; `adr_lint.py docs/adr --require 9` exit 0; `adr_lint.py docs/adr --task <this task>` exit 0 ("task rulings covered"); `design_surfaces.py check <this task>` exit 0 (before the move it exited 1 on the still-declared AC-10); `poc_readme.py derive` then `check` exit 0 (workflow.md and adoption.md untouched since 36c0e746).
+
+### Summary
+
+ADRs: 0009
+
+Finding 1 and Finding 2 are repaired; Finding 3 declined per the assignment. Flag for FO: ledger entry R3's `Proposal: 「every Captain ruling the FO records gets a Captain rulings ledger line ...」` is also a worker composite found in no allowed task source; it is FO-owned and not in this repair's scope, and `adr_lint --task` does not read it because R3 is `held by 0009`, so FO decides whether to replace it with a verbatim ideation-gate-reason span.
