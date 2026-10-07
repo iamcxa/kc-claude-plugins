@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.5.0...kc-journey-map-v1.5.1) (2026-10-07)
+
+
+### Bug Fixes
+
+* **kc-journey-map:** a re-render carries hand-drawn shapes with the cards they overlap ([#558](https://github.com/iamcxa/kc-claude-plugins/issues/558)) ([73594b9](https://github.com/iamcxa/kc-claude-plugins/commit/73594b9396b5d361254a71fe2be3d0eb1b386bdc))
+
 ## [1.5.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.4.0...kc-journey-map-v1.5.0) (2026-10-01)
 
 
