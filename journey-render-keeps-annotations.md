@@ -157,3 +157,37 @@ Visible change: A re-render keeps a hand-drawn frame or sticky note on the card 
 ### Summary
 
 The renderer keeps hand-drawn shapes at absolute positions and has no association to cards, so a row that grows strands every annotation on the cards below; the recorded repair was a pure per-card delta, which a small function over overlap geometry reproduces. Two recorded disagreements are stated in the design rather than hidden: a 28px-overlap frame the rule carries and the hand repair left, and the sticky grazing two cards that a centre-in-card rule would miss. All preview material uses the packaged fictional journey; the personal-name snapshots stay outside the repository. Extra committed path beyond the entity: `journey-render-keeps-annotations/preview/` (README, two PNGs, four small scripts).
+
+## Stage Report: implementation
+
+- DONE: The approved carry rule built in kc-journey-map's render path: an annotation without meta.journey that overlaps (positive area) generated cards that all move by one delta moves by that delta; disagreeing deltas or a removed card leave it in place and listed; no-overlap annotations untouched; every carried and stranded annotation printed
+  `carryAnnotations` in `kc-journey-map/lib/render.mjs`, called by `renderToRoom` after the `handEditedIds` refusal; carried records ride the one existing PATCH; CLI prints `carried <id> (dx, dy) with <cards>` / `stranded <id>: <reason> <cards>`. Candidate commits a70ef464 (fix), 41d6e0e3 (test).
+- DONE: AC-1..AC-7 each run as written, AC-1 failing on today's renderToRoom and passing after, AC-2's snapshot-derived geometry fixture, and canvas.md's "never touched" sentence changed to match the code
+  AC-1 test "a re-render moves a hand-drawn shape..." fails with the carry call replaced by empty lists (today's behaviour: frame y 926 vs expected 1426) and passes after. AC-2 fixture `lib/fixtures/render-annotation-geometry.json` (130 geometry-only records, opaque ids; hygiene asserted in the test): 8 carried, 7 equal the hand repair, the 8th is the 252x304 frame carried by +750, 66 untouched, 0 stranded. AC-3 unit tests (cards-disagree, card-removed, edge/flow/nested/text/other-page/stays in neither list). AC-4 a/b/c tests (`--pages journey-board` leaves a story-map shape; second render carries nothing and PATCHes no annotation; refused render sends no PATCH). AC-5 `scripts/canvas-smoke.sh` step run on a throwaway server: note moved 500 with its card; fails with carry removed. AC-6 CLI test matches the three lines; `progress.test.mjs` asserts `drawn.carried`/`drawn.stranded` in `journey-progress --draw` JSON. AC-7 `canvas.md` "Render is a reconcile" rewritten plus a new paragraph (rule, reasons, not-covered list, `staleRecordIds`/`carryAnnotations` named as enforcement); no other doc made the claim.
+- DONE: kc-journey-map's own tests and lints green, sanitize-check clean for the plugin, recorded candidate SHA
+  `node --test lib/*.test.mjs` 188/188, `npm run typecheck`, `npm run doctor`, `scripts/canvas-smoke.sh`, `scripts/skill-frontmatter-lint.sh` pass (npm ci in the worktree; timeouts 300-500s). Sanitize-check over the plugin tree (56 files): no REJECT, BLOCK or WARN hit. Candidate SHA 41d6e0e3 (branch spacedock-ensign/journey-render-keeps-annotations, base ca368cee); not pushed, no PR.
+
+### Falsifiers (each mutation run on the real test file, then restored)
+
+- carry call replaced by empty lists: AC-1 and CLI tests fail. `overlap > 0` to `>= 0`: AC-1, CLI, no-overlap, AC-2 fail. removed-card branch off: card-removed test fails. disagree branch off: AC-1, CLI, cards-disagree fail. zero-delta guard off: second-render and stays tests fail. moved records dropped from PATCH: AC-1 fails. `flow` added to anchor kinds: no-overlap test fails.
+
+### Affected documents (doc_impact.py ca368cee HEAD)
+
+- `kc-journey-map/skills/kc-journey-map/references/canvas.md`: updated
+- `docs/journey/kc-journey-map/README.md`: unaffected: it only shows the unchanged `journey-render.mjs` invocation
+
+### Comment ratio
+
+`comment_ratio.py ca368cee HEAD`: code lines 240, comment lines 9, 3.8%; maximum 5% met (render.test.mjs 5/190, render.mjs 4/47).
+
+### Limits and items for FO
+
+- No ADR number was reserved for this task (no `## Number guards` section), so Decision 1 (carry) is recorded in `canvas.md` only; if FO wants an ADR for the guarantee change it needs a number.
+- The AC-2 fixture is reduced to the 74 hand shapes plus generated shapes overlapping any of them (a dropped card overlaps no annotation, so R's result is unchanged); the derivation ran on the full recorded data (put 1293, remove 16) outside the repo, snapshots not copied.
+- Geo shapes use `w`/`h` unscaled, as AC text says; no recorded hand geo has a scale other than 1. Shape rotation is ignored (unrotated box).
+- The carry reports are printed even if the PATCH fails; the status line precedes them.
+- `design_surfaces.py check` exit 0. Number guards, migrations: not applicable.
+
+### Summary
+
+The render now computes, from pre-render positions and inside the same call, which hand-drawn shapes sit on cards it moves, shifts them by the shared offset in the same PATCH, and lists every carried and stranded shape. The recorded incident reproduces: 8 carried, 7 identical to the hand repair, one extra frame named as the only place the rule and the hand repair differ. Candidate is 41d6e0e3, unpushed.
