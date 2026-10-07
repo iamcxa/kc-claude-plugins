@@ -330,7 +330,7 @@ canvas since the last render stops the render, which names it; keep the edit wit
 reconciles journey-board pages — a story-map page this call did not draw is untouched, even
 though its shapes also carry `meta.journey`.
 
-**A hand-drawn shape follows the cards it overlaps.** When a render moves generated cards
+**A hand-drawn shape follows the cards it overlaps** (ADR 0008). When a render moves generated cards
 (a row gains stories), a hand-drawn shape parented directly to the page whose box overlaps,
 with positive area, a story, activity, question or answer card that the same call redraws
 or removes moves by the cards' shared offset (`carryAnnotations`). The render computes it
