@@ -74,7 +74,7 @@ Non-goals: back-filling ADRs in adopters; changing the ADR template.
 
 - R1 Source: fo-alignment, gate-attempt:adr-required-statement-backlog-1. Words: 「要，交給上游修」 Product rule: yes: held by 0009
 - R2 Source: gate-attempt:adr-required-statement-ideation-1. Words: 「退回設計」 Product rule: no: routes this task's design back to ideation
-- R3 Source: gate-attempt:adr-required-statement-ideation-2. Words: 「可以」 Proposal: 「every Captain ruling the FO records gets a Captain rulings ledger line marking whether it sets a rule for the product」 Product rule: yes: held by 0009
+- R3 Source: gate-attempt:adr-required-statement-ideation-2. Words: 「可以」 Proposal: 「approve cycle-2 design with decisions 1-3 as recommended」 Product rule: yes: held by 0009
 - R4 Source: amendment 1. Words: 「可以」 Proposal: 「in-flight adopter tasks get their Captain-rulings ledger on touch, when each next passes a gate, not backfilled up front」 Product rule: yes: held by 0009
 
 ## Acceptance criteria
