@@ -67,6 +67,7 @@ gates:
 started: 2026-10-07T13:55:27Z
 worktree: .worktrees/spacedock-ensign-journey-render-keeps-annotations
 mod-block: merge:pr-merge
+pr: "#558"
 ---
 
 `renderToRoom` in `kc-journey-map/lib/render.mjs` recomputes generated card positions from the journey YAML and refuses only when a generated shape was hand-edited (`handEditedIds`); shapes without `meta.journey` — hand frames, sticky notes, and the `discuss-merged-*` / `discuss-halo-*` frames — keep their absolute position. When a release row gains stories, the cards below move and those annotations are left beside empty space, silently.
