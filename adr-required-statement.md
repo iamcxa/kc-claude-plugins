@@ -59,6 +59,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-07T14:17:33Z
+worktree: .worktrees/spacedock-ensign-adr-required-statement
 ---
 
 `references/sd/workflow.md` § Decision records requires an ADR for a ruling "settled at a gate, in a worker report, or mid-stage feedback" that later work must respect, and validation runs `adr_lint.py docs/adr --require <numbers>` only for the numbers the implementation report names. A ruling stated when the task is created (in FO alignment, before backlog) is not named by the trigger, and a report that names no ADR gives validation nothing to check, so a missing record passes silently.
