@@ -1,6 +1,6 @@
 ---
 title: A product ruling cannot reach the terminal gate without its ADR going unnoticed
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
