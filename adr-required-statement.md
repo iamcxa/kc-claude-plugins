@@ -68,6 +68,7 @@ Release review: not needed: package process defect, no journey story.
 Needed at ideation: no Captain alignment before ideation; ideation checks the change against the POC derivation (poc_readme.py) and every adopter-synced surface, and returns any change to what a POC task owes.
 Surfaces: none
 Visible change: none
+Product ruling: yes: 「要，交給上游修」 (relayed by dhaka-32, confirmed by the Captain 2026-10-07 「核准 adr-required-statement，以 Pilot 進入設計」)
 
 ## Design
 
