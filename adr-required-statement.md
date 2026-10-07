@@ -47,6 +47,17 @@ gates:
                 id: briefing:adr-required-statement:ideation:attempt-2:revision-1
                 digest: sha256:839b274b0f5e4d79859f3e34332da7e2f455a240af803348c4e7ff9f502c97c4
                 room-ref: ./adr-required-statement/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-required-statement:ideation:2
+                briefing: briefing:adr-required-statement:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-07T16:04:46.800528Z"
+                decision: approve
+                reason: 'Captain 2026-10-08: 「可以」 — approve cycle-2 design with decisions 1-3 as recommended and decision 4 amended (adopter backfill on touch at the task''s next gate, not up front; checkpoint after the next 10 delivered tasks)'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-07T14:17:33Z
 ---
 
