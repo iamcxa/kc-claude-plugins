@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-required-statement:backlog:attempt-1:revision-1",
+  "question": "Approve adr-required-statement as a Pilot task and start ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:adr-required-statement:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b119bbd9c79ab9d1a1210a4f8302e23dfd9187f1/adr-required-statement.md",
+      "rev": "sha256:ae227b9bcb0c10f3125516e41055cebe653932561032fbf8fee68130ef11f3e4",
+      "mediaType": "text/markdown",
+      "summary": "kc-dev-flow-2 defect relayed by dhaka-32: a product ruling stated at task creation can ship without an ADR because the trigger does not name it and validation only checks ADR numbers the report names; relayed direction: required ADR statement in the implementation report (or none with a reason), absent fails validation; alignment marks whether the Captain's words set a product rule; Pilot."
+    }
+  ]
+}
