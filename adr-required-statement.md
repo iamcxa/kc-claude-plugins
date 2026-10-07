@@ -58,6 +58,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:adr-required-statement:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:adr-required-statement-validation-1
+              briefing:
+                id: briefing:adr-required-statement:validation:attempt-1:revision-1
+                digest: sha256:8de84c22df06b87ec706b0cd394d57e2c612cd67f4d4c5f7df6f51cb4ede1300
+                room-ref: ./adr-required-statement/review/validation/briefing-1
 started: 2026-10-07T14:17:33Z
 worktree: .worktrees/spacedock-ensign-adr-required-statement
 ---

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-required-statement:validation:attempt-1:revision-1",
+  "question": "Validation PASSED at b73a69c2 (Captain-rulings ledger, adr_lint --task, ADR 0009). Approve delivery: push and open a Draft PR to main?",
+  "artifacts": [
+    {
+      "id": "artifact:adr-required-statement:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ba817630a3ec404e43b8a061d976f1776c2ed444/adr-required-statement.md",
+      "rev": "sha256:71121682b5025a60edf46c084d75c6a51e2f93b151f1ffe5e5e08458f819bab7",
+      "mediaType": "text/markdown",
+      "summary": "PASSED at b73a69c2: 23 new tests fail at base 0.10.4; the four audited cases replayed on real task files are caught; POC README carries the rule; this task's own ledger passes adr_lint --task with ADRs: 0009; every quoted span verbatim. FO declines Finding 3 (two surviving mutants, Deferred) and Finding 4 (a stale AC id in a surfaces table; Polish). After release, one sync PR per adopter; in-flight tasks get their ledger on touch; checkpoint after 10 delivered tasks."
+    }
+  ]
+}
