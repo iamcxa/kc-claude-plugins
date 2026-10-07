@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-render-keeps-annotations:validation:attempt-1:revision-1",
+  "question": "Validation PASSED at 6efe82b8 (carry rule, ADR 0008). Approve delivery: push and open a Draft PR to main?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-render-keeps-annotations:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7d561368627e4068bbf700d4f0ebb897d5dc9680/journey-render-keeps-annotations.md",
+      "rev": "sha256:dc18ae44f97de9813106f99c6461f7e6c2e28baee410eabd9013c82d274dc5f9",
+      "mediaType": "text/markdown",
+      "summary": "PASSED at 6efe82b8102f: 188/188 plugin tests; carry branches re-falsified; recorded snapshots give 8 carried, 7 equal to the hand repair, 66 untouched, 0 stranded; fixture geometry-only; ADR 0008 quotes the Captain verbatim; sanitize-check clean; canvas smoke shows a hand note moving 500 with its card. No repair finding."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-render-keeps-annotations:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/7d561368627e4068bbf700d4f0ebb897d5dc9680/journey-render-keeps-annotations/validation/candidate-carried.png",
+      "mediaType": "application/octet-stream",
+      "rev": "sha256:9d42dfb1be33342ae6f3313ff6703756441e09b6e1c767af9095562b70599a3a"
+    }
+  ]
+}

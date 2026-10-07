@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:journey-render-keeps-annotations:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:journey-render-keeps-annotations-validation-1
+              briefing:
+                id: briefing:journey-render-keeps-annotations:validation:attempt-1:revision-1
+                digest: sha256:4b57ef92e2cde553c71c24290b2f5b6936d794267e647fffb68891be06d39944
+                room-ref: ./journey-render-keeps-annotations/review/validation/briefing-1
 started: 2026-10-07T13:55:27Z
 worktree: .worktrees/spacedock-ensign-journey-render-keeps-annotations
 ---
