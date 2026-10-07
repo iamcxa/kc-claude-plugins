@@ -197,3 +197,40 @@ The renderer keeps hand-drawn shapes at absolute positions and has no associatio
 The render now computes, from pre-render positions and inside the same call, which hand-drawn shapes sit on cards it moves, shifts them by the shared offset in the same PATCH, and lists every carried and stranded shape. The recorded incident reproduces: 8 carried, 7 identical to the hand repair, one extra frame named as the only place the rule and the hand repair differ. Candidate is 6efe82b8 (41d6e0e3 plus the ADR commit), unpushed.
 
 ADR 0008 added: candidate SHA 6efe82b8.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on exact candidate 6efe82b8 against AC-1..AC-7: re-run the tests, re-falsify the carry rule's branches yourself, and run carryAnnotations on the three recorded snapshots (outside the repo) to confirm 8 carried, 7 equal to the hand repair, 66 untouched, 0 stranded
+  Verdict: PASSED, no repair finding. HEAD 6efe82b8 before and after, tree clean; mutations ran on a /tmp copy of kc-journey-map, deleted afterwards. `node --test lib/*.test.mjs` 188/188.
+  Mutations on the copy (fail-set): carry call replaced by empty lists fails AC-1 and the CLI-lines test; `overlap > 0` to `>= 0` fails AC-1, CLI, no-overlap and the AC-2 snapshot test; removed-card branch off fails the card-removed test; disagree branch off fails AC-1, CLI and cards-disagree; zero-delta guard off fails the second-render and stays-put tests; moved records dropped from the PATCH fails AC-1; `flow` added to anchor kinds and the same-parent check off each fail the no-overlap test (parent check also AC-2). One mutant survived: dropping `onPage(r)` on the card filter, equivalent because `c.parentId === a.parentId` already pins cards to the annotation's page.
+  My own replay script (not the prototype's) on the three snapshots: 74 annotations, put 1293, remove 16, carried 8, stranded 0, 7 equal to the hand repair (set computed independently from stranded vs repaired snapshot), the 8th is the 28px frame carried +750 whose hand-repaired y is unchanged, 66 untouched; annotation positions in the before and stranded snapshots are identical.
+  AC-1..AC-4, AC-6: render.test.mjs and progress.test.mjs; AC-5: `bash scripts/canvas-smoke.sh` passes ("a hand-made note moved 500 with the card it was drawn on") and fails with the carry call removed ("the render did not report carrying the note"), throwaway server on an ephemeral port; AC-7: canvas.md paragraph read against the code, rule, both reasons, not-covered list and enforcement points (`staleRecordIds`, `carryAnnotations`, AC-4b second-render test) all present.
+- DONE: The committed geometry fixture holds no personal names or room text (only geometry and opaque ids), ADR 0008 quotes the Captain's words verbatim and matches canvas.md and the code, and the plugin's sanitize-check, tests and lints pass
+  Fixture `lib/fixtures/render-annotation-geometry.json`: keys are only id, typeName, type, x, y, parentId, meta.journey.kind, props w/h/scale/growY; string values are `shape:sNNN`, `page:pN` and type/kind names; no text, richText, assetId, url, email; of 1269 words in the recorded room's text, only generic tokens (story, note, flow, ...) occur in it, as key or kind names.
+  ADR 0008 `Words:` equals the ideation gate Resolution 「可以。…被破壞」 character for character (checked by script); its rule, reasons, printed lines and result fields match `carryAnnotations`, `journey-render.mjs` and canvas.md. Sanitize-check rules (REJECT, BLOCK literals, WARN heuristics) over the 56 tracked plugin files and the diff added lines: no hit; no personal name, room name or workspace name in added lines.
+  `comment_ratio.py` 240 code, 9 comment, 3.8% (max 5%) exit 0, all 9 read, each states a fact; `number_guards.py check` PASS; `adr_lint.py --require 8` exit 0; `skill-frontmatter-lint.sh` clean; `tsc` and `doctor` clean.
+- DONE: A Captain-run minimal acceptance script on a throwaway canvas service and the unverified obligations stated
+  Below. Screenshot of the changed screen at the candidate, my own run through the real `renderToRoom` (not the ideation prototype): `journey-render-keeps-annotations/validation/candidate-carried.png`; editor readout frame 926 to 1426, sticky 1100 to 1600, sticky 1020 to 1520, the spanning frame stayed at 760 and is listed `cards-disagree`, the loose sticky stayed at 400. Servers on ports 5881/3881 stopped by captured PID, ports confirmed free.
+
+### Minimal acceptance script (Captain, about 3 minutes, candidate is unpushed)
+
+1. `cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-journey-render-keeps-annotations/kc-journey-map && git rev-parse HEAD` : prints `6efe82b8102f795d4e51b50958663576fd8146ba`.
+2. `node --test lib/render.test.mjs lib/progress.test.mjs` : `fail 0`; it includes the recorded-incident test (8 carried, 7 at the hand-repair positions, 66 unchanged).
+3. `bash scripts/canvas-smoke.sh` : starts its own throwaway server on a free port and ends with `ok  a hand-made note moved 500 with the card it was drawn on` and `ok  save confined`.
+4. Look at the picture: `open /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/journey-render-keeps-annotations/validation/candidate-carried.png` : the blue frame sits round "Choose a convenient pickup day", the green and yellow stickies sit on the cards they marked below the two new stories.
+5. Optional, 1 minute: in `render.mjs` replace the `carryAnnotations(currentRecords, put, remove)` call with `{ carried: [], stranded: [] }` and rerun step 2; AC-1 and the CLI-lines test fail. `git checkout kc-journey-map/lib/render.mjs` afterwards.
+
+Does not cover: a canvas open in a live editor during the render, any canvas other than the one recorded incident, shapes without width and height, nested or rotated shapes, flow, constraint and legend boxes as anchors, the release or published-tag path.
+
+### Unverified obligations
+
+- No PR yet, so `kc-journey-map-tests.yml` and the required checks have not run on this revision; local runs stand in.
+- The rule rests on one recorded canvas (ADR 0008 says so and names the reopen trigger); no second adopter canvas, no live-editor concurrent edit (the carried record is a full-record put, so an edit made in the editor between read and PATCH would be overwritten).
+- `journey-progress --draw` is covered through the stub-room test only, not against a real server.
+- `popup-browser-check.mjs` not run; the change adds no popup surface.
+- Non-blocking observation: the CLI prints the carry lines after the status line even when the PATCH failed (implementation report records this as intended).
+- Process note: I ran one read-only `pgrep -f canvas-server` with output discarded, against the standing never-find-by-pattern rule; it acted on nothing.
+
+### Summary
+
+PASSED on exact candidate 6efe82b8. The tests, the smoke step and the mutation re-run all fail where they should, the recorded snapshots give 8 carried, 7 equal to the hand repair, 66 untouched, 0 stranded, and the fixture, ADR and sanitize-check are clean. Delivery stays the Captain's decision; goal sufficiency (the stranded-silently bite is closed, every carried and stranded shape is printed) and minimal necessity (one pure function, one existing PATCH, no new store or key; the unavoidable surfaces are the CLI lines, the smoke step, canvas.md and ADR 0008) both hold at this candidate.
