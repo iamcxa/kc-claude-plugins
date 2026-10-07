@@ -1,6 +1,6 @@
 ---
 title: A journey-map re-render keeps hand-drawn annotations on the cards they marked
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-10-07: 「可以。標註跟著卡片移動，不能判斷的列出來，因為如果沒跟著動，那畫面會變得很奇怪，而要怎樣跟著動，做最近一次更新的 agent 才知道彼此的關係，不然很可能手寫標記會被破壞」 — Decision 1 = carry'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-07T13:55:27Z
 ---
 
