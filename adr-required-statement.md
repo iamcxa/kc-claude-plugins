@@ -115,6 +115,17 @@ Surfaces: none
 Visible change: none
 Product ruling: yes: 「要，交給上游修」 (relayed by dhaka-32, confirmed by the Captain 2026-10-07 「核准 adr-required-statement，以 Pilot 進入設計」)
 
+## Number guards
+
+ADR: 0009
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-08, ideation gate
+Captain: 「可以」 (chat, approving the FO's proposal to amend decision 4: adopter tasks already in flight get their Captain-rulings ledger on touch — when each next passes a gate — not backfilled up front; after the next 10 delivered tasks the FO reports the ledger lines added and the missing ADRs it caught, and proposes removing the rule if it caught none)
+Supersedes: none
+Design: Unresolved decision 4 (adopter sync and up-front FO backfill of open tasks)
+
 ## Design
 
 Profile Pilot: one bounded change to a package script and the workflow text adopters re-sync, real seams exercised by test, no new production obligation.
