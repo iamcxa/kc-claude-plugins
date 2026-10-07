@@ -169,7 +169,7 @@ The renderer keeps hand-drawn shapes at absolute positions and has no associatio
 - DONE: AC-1..AC-7 each run as written, AC-1 failing on today's renderToRoom and passing after, AC-2's snapshot-derived geometry fixture, and canvas.md's "never touched" sentence changed to match the code
   AC-1 test "a re-render moves a hand-drawn shape..." fails with the carry call replaced by empty lists (today's behaviour: frame y 926 vs expected 1426) and passes after. AC-2 fixture `lib/fixtures/render-annotation-geometry.json` (130 geometry-only records, opaque ids; hygiene asserted in the test): 8 carried, 7 equal the hand repair, the 8th is the 252x304 frame carried by +750, 66 untouched, 0 stranded. AC-3 unit tests (cards-disagree, card-removed, edge/flow/nested/text/other-page/stays in neither list). AC-4 a/b/c tests (`--pages journey-board` leaves a story-map shape; second render carries nothing and PATCHes no annotation; refused render sends no PATCH). AC-5 `scripts/canvas-smoke.sh` step run on a throwaway server: note moved 500 with its card; fails with carry removed. AC-6 CLI test matches the three lines; `progress.test.mjs` asserts `drawn.carried`/`drawn.stranded` in `journey-progress --draw` JSON. AC-7 `canvas.md` "Render is a reconcile" rewritten plus a new paragraph (rule, reasons, not-covered list, `staleRecordIds`/`carryAnnotations` named as enforcement); no other doc made the claim.
 - DONE: kc-journey-map's own tests and lints green, sanitize-check clean for the plugin, recorded candidate SHA
-  `node --test lib/*.test.mjs` 188/188, `npm run typecheck`, `npm run doctor`, `scripts/canvas-smoke.sh`, `scripts/skill-frontmatter-lint.sh` pass (npm ci in the worktree; timeouts 300-500s). Sanitize-check: REJECT and BLOCK patterns over the 56-file plugin tree, local-path WARN over the tree, and all WARN patterns (ticket, PR ref, email, path) over this diff's added lines: no hit. Candidate SHA 41d6e0e3 (branch spacedock-ensign/journey-render-keeps-annotations, base ca368cee); not pushed, no PR.
+  `node --test lib/*.test.mjs` 188/188, `npm run typecheck`, `npm run doctor`, `scripts/canvas-smoke.sh`, `scripts/skill-frontmatter-lint.sh` pass (npm ci in the worktree; timeouts 300-500s). Sanitize-check: REJECT and BLOCK patterns over the 56-file plugin tree, local-path WARN over the tree, and all WARN patterns (ticket, PR ref, email, path) over this diff's added lines: no hit. Candidate SHA 6efe82b8 incl. ADR commit; code at 41d6e0e3 (branch spacedock-ensign/journey-render-keeps-annotations, base ca368cee); not pushed, no PR.
 
 ### Falsifiers (each mutation run on the real test file, then restored)
 
@@ -186,7 +186,7 @@ The renderer keeps hand-drawn shapes at absolute positions and has no associatio
 
 ### Limits and items for FO
 
-- No ADR number was reserved for this task (no `## Number guards` section), so Decision 1 (carry) is recorded in `canvas.md` only; if FO wants an ADR for the guarantee change it needs a number.
+- ADR 0008 (reserved by FO after the first report) records the carry ruling: `docs/adr/0008-a-re-render-carries-hand-drawn-shapes-with-the-cards-they-overlap.md`, commit 6efe82b8; `canvas.md` points at it. `adr_lint.py docs/adr --require 8` exit 0 (8 files); `number_guards.py check` PASS, base ca368cee head 6efe82b8.
 - The AC-2 fixture is reduced to the 74 hand shapes plus generated shapes overlapping any of them (a dropped card overlaps no annotation, so R's result is unchanged); `carryAnnotations` run on the full recorded data outside the repo (put 1293, remove 16): 8 carried, 0 stranded, 7 equal to the hand repair, same as on the fixture; snapshots not copied.
 - Geo shapes use `w`/`h` unscaled, as AC text says; no recorded hand geo has a scale other than 1. Shape rotation is ignored (unrotated box).
 - The carry reports are printed even if the PATCH fails; the status line precedes them.
@@ -194,4 +194,6 @@ The renderer keeps hand-drawn shapes at absolute positions and has no associatio
 
 ### Summary
 
-The render now computes, from pre-render positions and inside the same call, which hand-drawn shapes sit on cards it moves, shifts them by the shared offset in the same PATCH, and lists every carried and stranded shape. The recorded incident reproduces: 8 carried, 7 identical to the hand repair, one extra frame named as the only place the rule and the hand repair differ. Candidate is 41d6e0e3, unpushed.
+The render now computes, from pre-render positions and inside the same call, which hand-drawn shapes sit on cards it moves, shifts them by the shared offset in the same PATCH, and lists every carried and stranded shape. The recorded incident reproduces: 8 carried, 7 identical to the hand repair, one extra frame named as the only place the rule and the hand repair differ. Candidate is 6efe82b8 (41d6e0e3 plus the ADR commit), unpushed.
+
+ADR 0008 added: candidate SHA 6efe82b8.
