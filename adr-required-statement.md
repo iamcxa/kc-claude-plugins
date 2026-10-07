@@ -1,6 +1,6 @@
 ---
 title: A product ruling cannot reach the terminal gate without its ADR going unnoticed
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -57,7 +57,7 @@ gates:
                 reason: 'Captain 2026-10-08: 「可以」 — approve cycle-2 design with decisions 1-3 as recommended and decision 4 amended (adopter backfill on touch at the task''s next gate, not up front; checkpoint after the next 10 delivered tasks)'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-07T14:17:33Z
 ---
 
