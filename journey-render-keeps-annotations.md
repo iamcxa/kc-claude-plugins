@@ -1,6 +1,6 @@
 ---
 title: A journey-map re-render keeps hand-drawn annotations on the cards they marked
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-10-07: 「核准這張任務以 Pilot 進入設計」 — confirms the request relayed by dhaka-32'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 `renderToRoom` in `kc-journey-map/lib/render.mjs` recomputes generated card positions from the journey YAML and refuses only when a generated shape was hand-edited (`handEditedIds`); shapes without `meta.journey` — hand frames, sticky notes, and the `discuss-merged-*` / `discuss-halo-*` frames — keep their absolute position. When a release row gains stories, the cards below move and those annotations are left beside empty space, silently.
