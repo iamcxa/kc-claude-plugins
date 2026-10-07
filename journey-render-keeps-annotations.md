@@ -34,6 +34,17 @@ gates:
                 id: briefing:journey-render-keeps-annotations:ideation:attempt-1:revision-1
                 digest: sha256:e4d22c209d8a13797c48ce7443e0da5fd5e95c22a6582b99f0ad7679fa266b3e
                 room-ref: ./journey-render-keeps-annotations/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-render-keeps-annotations:ideation:1
+                briefing: briefing:journey-render-keeps-annotations:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-07T14:13:52.357062Z"
+                decision: approve
+                reason: 'Captain 2026-10-07: 「可以。標註跟著卡片移動，不能判斷的列出來，因為如果沒跟著動，那畫面會變得很奇怪，而要怎樣跟著動，做最近一次更新的 agent 才知道彼此的關係，不然很可能手寫標記會被破壞」 — Decision 1 = carry'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-07T13:55:27Z
 ---
 
