@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-render-keeps-annotations:backlog:attempt-1:revision-1",
+  "question": "Approve journey-render-keeps-annotations as a Pilot task and start ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-render-keeps-annotations:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/47d62ebadfe77aa741d6c688e43f624053431bea/journey-render-keeps-annotations.md",
+      "rev": "sha256:352861c963c073d99e0c19b6845c66521bfa13d3f32dbb7f776a74231ea40bc3",
+      "mediaType": "text/markdown",
+      "summary": "kc-journey-map defect relayed by dhaka-32: a re-render strands hand-drawn annotations when the cards they mark move; fix keeps them on their card or reports them; Pilot; Surfaces ui."
+    }
+  ]
+}

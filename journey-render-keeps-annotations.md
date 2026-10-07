@@ -4,6 +4,17 @@ status: backlog
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
+gates:
+    version: 1
+    records:
+        - id: gate:journey-render-keeps-annotations:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:journey-render-keeps-annotations-backlog-1
+              briefing:
+                id: briefing:journey-render-keeps-annotations:backlog:attempt-1:revision-1
+                digest: sha256:53739e52c6aba71edfb2c323921f36fe3949cc2b8f87e64f1964b2afe0fda63e
+                room-ref: ./journey-render-keeps-annotations/review/backlog/briefing-1
 ---
 
 `renderToRoom` in `kc-journey-map/lib/render.mjs` recomputes generated card positions from the journey YAML and refuses only when a generated shape was hand-edited (`handEditedIds`); shapes without `meta.journey` — hand frames, sticky notes, and the `discuss-merged-*` / `discuss-halo-*` frames — keep their absolute position. When a release row gains stories, the cards below move and those annotations are left beside empty space, silently.
