@@ -1,6 +1,6 @@
 ---
 title: A journey-map re-render keeps hand-drawn annotations on the cards they marked
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -63,11 +63,14 @@ gates:
                 reason: 'Captain 2026-10-07: 「核准標註」 — approve delivery of 6efe82b8 as a Draft PR to main'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-07T13:55:27Z
 worktree: .worktrees/spacedock-ensign-journey-render-keeps-annotations
-mod-block: merge:pr-merge
+mod-block:
 pr: pr-merge:558
+verdict: PASSED
+completed: 2026-10-07T16:00:37Z
+archived: 2026-10-07T16:00:37Z
 ---
 
 `renderToRoom` in `kc-journey-map/lib/render.mjs` recomputes generated card positions from the journey YAML and refuses only when a generated shape was hand-edited (`handEditedIds`); shapes without `meta.journey` — hand frames, sticky notes, and the `discuss-merged-*` / `discuss-halo-*` frames — keep their absolute position. When a release row gains stories, the cards below move and those annotations are left beside empty space, silently.
