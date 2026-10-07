@@ -15,6 +15,17 @@ gates:
                 id: briefing:adr-required-statement:backlog:attempt-1:revision-1
                 digest: sha256:8a925c22da40c37234b8d7ded48b97bba9bc03c489dba0d092448ddd3154b48b
                 room-ref: ./adr-required-statement/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-required-statement:backlog:1
+                briefing: briefing:adr-required-statement:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-07T14:17:26.037406Z"
+                decision: approve
+                reason: 'Captain 2026-10-07: 「核准 adr-required-statement，以 Pilot 進入設計」 — confirms the request relayed by dhaka-32'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 `references/sd/workflow.md` § Decision records requires an ADR for a ruling "settled at a gate, in a worker report, or mid-stage feedback" that later work must respect, and validation runs `adr_lint.py docs/adr --require <numbers>` only for the numbers the implementation report names. A ruling stated when the task is created (in FO alignment, before backlog) is not named by the trigger, and a report that names no ADR gives validation nothing to check, so a missing record passes silently.
