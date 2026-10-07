@@ -148,6 +148,44 @@ echo "$OUT" | grep -q '^kept board page page:jm-board-r2: it holds 1 shape(s) dr
 [ "$(boardState "$KEEP_ROOM" | grep '^page:jm-board-r2 ')" = "page:jm-board-r2 1 1" ] || { echo "FAIL: the kept page should hold only the hand-made note"; boardState "$KEEP_ROOM"; exit 1; }
 echo "ok  a board page holding a hand-made note is kept with it, even with --force"
 
+CARRY_ROOM="$ROOM-carry"
+GROWN="$ROOMS_DIR/grown.yaml"
+node - "$EXAMPLE" "$GROWN" <<'NODE'
+const { readFileSync, writeFileSync } = await import('node:fs')
+const { parse, stringify } = await import('yaml')
+const [source, target] = process.argv.slice(2)
+const model = parse(readFileSync(source, 'utf8'))
+model.steps[0].stories.push(
+  { id: 'smoke-two', card: 'Reserve a second copy', release: 'r1', status: 'unverified' },
+  { id: 'smoke-three', card: 'Reserve a third copy', release: 'r1', status: 'unverified' })
+writeFileSync(target, stringify(model))
+NODE
+node lib/journey-render.mjs "$EXAMPLE" "$CARRY_ROOM" --pages story-map >/dev/null
+BEFORE_XY=$(node - "$CARRY_ROOM" "$PORT" <<'NODE'
+const [room, port] = process.argv.slice(2)
+const { note } = await import('./lib/records.mjs')
+const url = `http://127.0.0.1:${port}/doc?room=${room}`
+const doc = await fetch(url).then((r) => r.json())
+const card = doc.snapshot.documents.map((d) => d.state).find((r) => r.id === 'shape:sm-story-choose-pickup-day')
+const hand = { ...note({ id: 'shape:hand-carry-smoke', text: 'marks a card', x: card.x + 20, y: card.y + 20, index: 'a1', parentId: card.parentId }), meta: {} }
+const res = await fetch(url, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ put: [hand], remove: [] }) })
+if (res.status !== 200) { console.error(`FAIL: could not add the hand-made note, got ${res.status}`); process.exit(1) }
+console.log(hand.y, card.y)
+NODE
+)
+OUT=$(node lib/journey-render.mjs "$GROWN" "$CARRY_ROOM" --pages story-map)
+echo "$OUT" | grep -q '^carried shape:hand-carry-smoke (0, [0-9]*) with shape:sm-story-choose-pickup-day$' || { echo "FAIL: the render did not report carrying the note: $OUT"; exit 1; }
+node - "$CARRY_ROOM" "$PORT" $BEFORE_XY <<'NODE'
+const [room, port, noteY, cardY] = process.argv.slice(2)
+const doc = await fetch(`http://127.0.0.1:${port}/doc?room=${room}`).then((r) => r.json())
+const byId = new Map(doc.snapshot.documents.map((d) => [d.state.id, d.state]))
+const delta = byId.get('shape:sm-story-choose-pickup-day').y - Number(cardY)
+if (!delta) { console.error('FAIL: adding stories moved no card, so this step proves nothing'); process.exit(1) }
+const got = byId.get('shape:hand-carry-smoke').y
+if (got !== Number(noteY) + delta) { console.error(`FAIL: the card moved ${delta} but the note went from ${noteY} to ${got}`); process.exit(1) }
+console.log(`ok  a hand-made note moved ${delta} with the card it was drawn on`)
+NODE
+
 ASSETS_DIR="$ROOMS_DIR/assets"
 SAVE_DIR="$ROOMS_DIR/save"
 mkdir -p "$SAVE_DIR"

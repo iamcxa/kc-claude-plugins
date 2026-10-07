@@ -155,6 +155,7 @@ test('actual refresh CLI draws to isolated canvas and native-compatible readback
 	assert.throws(() => run('--workflow-dir', f.workflow, '--draw', room, '--pages', 'invalid'), /usage/)
 	const result = JSON.parse(run('--workflow-dir', f.workflow, '--draw', room, '--pages', 'story-map,journey-board'))
 	assert.equal(result.drawn.status, 200)
+	assert.deepEqual([result.drawn.carried, result.drawn.stranded], [[], []])
 	assert.throws(() => execFileSync(process.execPath, ['lib/journey-progress.mjs', f.path, '--workflow-dir', f.workflow, '--draw', room],
 		{ cwd: plugin, env: { ...process.env, JOURNEY_API: 'http://127.0.0.1:0' }, stdio: 'pipe' }), (error) => {
 		const refusal = JSON.parse(error.stderr)
