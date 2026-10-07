@@ -322,12 +322,28 @@ for a save-as should end up with that file.
 
 **Render is a reconcile, scoped to the pages drawn this call.** Shapes the renderer owns
 that the model no longer produces are removed; shapes a person drew by hand carry no
-`meta.journey` and are never touched. A sticky someone added during a workshop survives
-every re-render. A generated shape whose text was edited on the canvas since the last
-render stops the render, which names it; keep the edit with `journey-read.mjs --write`
-or overwrite it with `--force`. `--pages journey-board` only reconciles journey-board pages — a
-story-map page this call did not draw is untouched, even though its shapes also carry
-`meta.journey`.
+`meta.journey` and are never removed (`staleRecordIds` selects only shapes with
+`meta.journey`), and are moved only as the next paragraph says. A sticky someone added
+during a workshop survives every re-render. A generated shape whose text was edited on the
+canvas since the last render stops the render, which names it; keep the edit with
+`journey-read.mjs --write` or overwrite it with `--force`. `--pages journey-board` only
+reconciles journey-board pages — a story-map page this call did not draw is untouched, even
+though its shapes also carry `meta.journey`.
+
+**A hand-drawn shape follows the cards it overlaps** (ADR 0008). When a render moves generated cards
+(a row gains stories), a hand-drawn shape parented directly to the page whose box overlaps,
+with positive area, a story, activity, question or answer card that the same call redraws
+or removes moves by the cards' shared offset (`carryAnnotations`). The render computes it
+from the positions the cards had before that render, stores nothing on the shape, and so a
+second render of the same file carries nothing. A shape over cards that move by different
+offsets, or over a card the render removes, stays where it is. A shape that overlaps no card
+is not moved and not listed. The render prints `carried <id> (dx, dy) with <card ids>` and
+`stranded <id>: cards-disagree|card-removed <card ids>` for every shape it carried or could
+not place; `journey-progress.mjs --draw` returns them as `drawn.carried` and
+`drawn.stranded`. A note's box is 200 wide and `200 + growY` tall, times its `scale`; any
+other shape with `w` and `h` uses them. Not covered: shapes without `w` and `h` (text,
+arrows, strokes), shapes nested in another shape, rotation (the unrotated box decides), flow,
+constraint and legend boxes as cards, and cards on a page this call did not draw.
 
 A render that selects `journey-board` also removes the board pages (ids starting
 `page:jm-board-`) it no longer draws — a release with `board: false`, a release deleted

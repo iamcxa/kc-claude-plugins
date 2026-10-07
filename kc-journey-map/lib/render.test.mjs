@@ -1,11 +1,19 @@
 import assert from 'node:assert/strict'
 import { test } from 'node:test'
+import { execFile } from 'node:child_process'
+import { createServer } from 'node:http'
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { dirname, join } from 'node:path'
+import { promisify } from 'node:util'
+import { fileURLToPath } from 'node:url'
+import { parse, stringify } from 'yaml'
 import { createTLSchema } from '@tldraw/tlschema'
-import { buildJourneyBoard, buildAllPages, staleRecordIds, staleBoardPages, handEditedIds, withRenderedText } from './render.mjs'
+import { buildJourneyBoard, buildAllPages, staleRecordIds, staleBoardPages, handEditedIds, withRenderedText, carryAnnotations, renderToRoom } from './render.mjs'
 import { buildStoryMap } from './storymap.mjs'
 import { fixtureModel } from './fixture.mjs'
 import { sortByIndex, validateIndexKey } from '@tldraw/utils'
-import { fitHeight, note, storyBorder, NOTE_SIZE } from './records.mjs'
+import { fitHeight, label, note, richText, storyBorder, NOTE_SIZE } from './records.mjs'
 
 const kind = (records, kind) => records.filter((s) => s.meta?.journey?.kind === kind)
 const text = (s) => s.props.richText.content.map((p) => (p.content ?? []).map((t) => t.text ?? '').join('')).join('\n')
@@ -409,4 +417,204 @@ test('the render never removes the last page in the room', () => {
 	const out = staleBoardPages(only, buildAllPages(none, null, ['journey-board']), ['journey-board'])
 	assert.deepEqual(out.pages, [])
 	assert.deepEqual(out.kept, [{ id: 'page:jm-board-r2', humanShapes: 0 }])
+})
+
+const PKG_ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
+const EXAMPLE = join(PKG_ROOT, 'skills/kc-journey-map/references/journey.example.yaml')
+
+const stubRoom = async (run) => {
+	const store = new Map()
+	const patches = []
+	const server = createServer((req, res) => {
+		if (req.method === 'GET') {
+			res.setHeader('content-type', 'application/json')
+			return res.end(JSON.stringify({ snapshot: { documents: [...store.values()].map((state) => ({ state })) } }))
+		}
+		let body = ''
+		req.on('data', (chunk) => { body += chunk })
+		req.on('end', () => {
+			const patch = JSON.parse(body)
+			patches.push(patch)
+			for (const r of patch.put ?? []) store.set(r.id, r)
+			for (const id of patch.remove ?? []) store.delete(id)
+			res.end('{}')
+		})
+	})
+	await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve))
+	try {
+		return await run({ api: `http://127.0.0.1:${server.address().port}`, store, patches })
+	} finally {
+		server.closeAllConnections()
+		server.close()
+	}
+}
+
+// Two stories added to the first activity push the r2 stories of the example down by 500.
+const exampleBeforeAndAfter = (t) => {
+	const dir = mkdtempSync(join(tmpdir(), 'render-carry-'))
+	t.after(() => rmSync(dir, { recursive: true, force: true }))
+	const model = parse(readFileSync(EXAMPLE, 'utf8'))
+	const before = join(dir, 'before.yaml')
+	writeFileSync(before, stringify(model))
+	model.steps[0].stories.push(
+		{ id: 'reserve-two', card: 'Reserve a second copy', release: 'r1', status: 'unverified' },
+		{ id: 'reserve-three', card: 'Reserve a third copy', release: 'r1', status: 'unverified' })
+	const after = join(dir, 'after.yaml')
+	writeFileSync(after, stringify(model))
+	return { before, after }
+}
+
+const CARD = {
+	moved: 'shape:sm-story-choose-pickup-day',
+	alsoMoved: 'shape:sm-story-receive-reminder',
+	stays: 'shape:sm-story-reserve-copy',
+}
+
+// Draws the example, then adds hand-drawn shapes: a frame round one moving card, a sticky across two
+// moving cards, a tall frame across a moving and a staying card, and a sticky touching no card.
+const drawWithAnnotations = async ({ before }, room) => {
+	await renderToRoom({ path: before, room: 'carry', api: room.api })
+	const at = (id) => room.store.get(id)
+	const hand = (record) => ({ ...record, meta: {} })
+	const moved = at(CARD.moved)
+	const alsoMoved = at(CARD.alsoMoved)
+	const stays = at(CARD.stays)
+	const shapes = [
+		hand(label({ id: 'shape:hand-frame', text: 'discussed', x: alsoMoved.x - 26, y: alsoMoved.y - 26, w: 252, h: 304, index: 'a8', color: 'light-blue', size: 's' })),
+		hand(note({ id: 'shape:hand-both', text: 'across two cards', x: 450, y: moved.y + 50, index: 'a9', parentId: 'page:page' })),
+		hand(label({ id: 'shape:hand-tall', text: 'across a card that stays', x: stays.x - 10, y: stays.y - 22, w: 240, h: moved.y + 250 - stays.y, index: 'a7', color: 'red', size: 's' })),
+		hand(note({ id: 'shape:hand-loose', text: 'nowhere near', x: 3000, y: 3000, index: 'a6', parentId: 'page:page' })),
+	]
+	for (const s of shapes) room.store.set(s.id, s)
+	return { moved, alsoMoved, positions: Object.fromEntries(shapes.map((s) => [s.id, [s.x, s.y]])) }
+}
+
+test('a re-render moves a hand-drawn shape with the cards it overlaps and lists the one it cannot place', async (t) => {
+	const files = exampleBeforeAndAfter(t)
+	await stubRoom(async (room) => {
+		const { moved, alsoMoved, positions } = await drawWithAnnotations(files, room)
+		const out = await renderToRoom({ path: files.after, room: 'carry', api: room.api })
+
+		assert.equal(out.status, 200)
+		assert.deepEqual([room.store.get(CARD.moved).y - moved.y, room.store.get(CARD.alsoMoved).y - alsoMoved.y], [500, 500], 'the example stopped moving its cards')
+		const now = (id) => [room.store.get(id).x, room.store.get(id).y]
+		const [frameX, frameY] = positions['shape:hand-frame']
+		const [bothX, bothY] = positions['shape:hand-both']
+		assert.deepEqual(now('shape:hand-frame'), [frameX, frameY + 500])
+		assert.deepEqual(now('shape:hand-both'), [bothX, bothY + 500])
+		assert.deepEqual(now('shape:hand-tall'), positions['shape:hand-tall'])
+		assert.deepEqual(now('shape:hand-loose'), positions['shape:hand-loose'])
+		assert.deepEqual(out.carried, [
+			{ id: 'shape:hand-frame', cards: [CARD.alsoMoved], dx: 0, dy: 500 },
+			{ id: 'shape:hand-both', cards: [CARD.moved, CARD.alsoMoved], dx: 0, dy: 500 },
+		])
+		assert.deepEqual(out.stranded, [{ id: 'shape:hand-tall', reason: 'cards-disagree', cards: [CARD.moved, CARD.stays] }])
+	})
+})
+
+test('a render leaves a shape on a page it did not draw, and a second render of the same file carries nothing', async (t) => {
+	const files = exampleBeforeAndAfter(t)
+	await stubRoom(async (room) => {
+		const { positions } = await drawWithAnnotations(files, room)
+		const boardsOnly = await renderToRoom({ path: files.after, room: 'carry', api: room.api, selection: ['journey-board'] })
+		assert.deepEqual([boardsOnly.carried, boardsOnly.stranded], [[], []])
+		assert.equal(room.store.get(CARD.moved).y, 952, 'the story map was redrawn although it was not selected')
+		for (const [id, xy] of Object.entries(positions)) assert.deepEqual([room.store.get(id).x, room.store.get(id).y], xy)
+
+		await renderToRoom({ path: files.after, room: 'carry', api: room.api })
+		const settled = Object.fromEntries(Object.keys(positions).map((id) => [id, [room.store.get(id).x, room.store.get(id).y]]))
+		const again = await renderToRoom({ path: files.after, room: 'carry', api: room.api })
+		assert.deepEqual([again.carried, again.stranded], [[], []])
+		for (const id of Object.keys(positions)) {
+			assert.deepEqual([room.store.get(id).x, room.store.get(id).y], settled[id])
+			assert.ok(!room.patches.at(-1).put.some((r) => r.id === id), `${id} was written by a render that moved nothing`)
+		}
+	})
+})
+
+test('a render refused for a hand-edited card writes nothing and carries nothing', async (t) => {
+	const files = exampleBeforeAndAfter(t)
+	await stubRoom(async (room) => {
+		const { positions } = await drawWithAnnotations(files, room)
+		const card = room.store.get(CARD.stays)
+		room.store.set(card.id, { ...card, props: { ...card.props, richText: richText('edited on the canvas') } })
+		const sent = room.patches.length
+		const out = await renderToRoom({ path: files.after, room: 'carry', api: room.api })
+		assert.deepEqual(out.refused, [CARD.stays])
+		assert.equal(out.carried, undefined)
+		assert.equal(room.patches.length, sent, 'a refused render still sent a PATCH')
+		for (const [id, xy] of Object.entries(positions)) assert.deepEqual([room.store.get(id).x, room.store.get(id).y], xy)
+	})
+})
+
+const run = promisify(execFile)
+
+test('the render CLI prints one line per carried and per stranded shape', async (t) => {
+	const files = exampleBeforeAndAfter(t)
+	await stubRoom(async (room) => {
+		await drawWithAnnotations(files, room)
+		const { stdout } = await run(process.execPath, ['lib/journey-render.mjs', files.after, 'carry'], { cwd: PKG_ROOT, env: { ...process.env, JOURNEY_API: room.api } })
+		const lines = stdout.split('\n')
+		assert.ok(lines.includes(`carried shape:hand-frame (0, 500) with ${CARD.alsoMoved}`), stdout)
+		assert.ok(lines.includes(`carried shape:hand-both (0, 500) with ${CARD.moved}, ${CARD.alsoMoved}`), stdout)
+		assert.ok(lines.includes(`stranded shape:hand-tall: cards-disagree ${CARD.moved}, ${CARD.stays}`), stdout)
+		assert.equal(lines.filter((l) => /^(carried|stranded) /.test(l)).length, 3, 'a shape touching no card was listed')
+	})
+})
+
+const card = (id, x, y, kind = 'story') => ({ id, typeName: 'shape', type: 'note', x, y, parentId: 'page:p', props: { scale: 1, growY: 0 }, meta: { journey: { kind } } })
+const hand = (id, x, y, extra = {}) => ({ id, typeName: 'shape', type: 'note', x, y, parentId: 'page:p', props: { scale: 1, growY: 0 }, meta: {}, ...extra })
+const movedBy = (record, dy) => ({ ...record, y: record.y + dy })
+
+test('a shape over cards that move differently is returned as cards-disagree, never moved', () => {
+	const a = card('shape:a', 0, 0), b = card('shape:b', 300, 0)
+	const across = hand('shape:across', 150, 0)
+	const out = carryAnnotations([a, b, across], [movedBy(a, 100), b], [])
+	assert.deepEqual(out, { carried: [], stranded: [{ id: 'shape:across', reason: 'cards-disagree', cards: ['shape:a', 'shape:b'] }] })
+})
+
+test('a shape over a card this render removes is returned as card-removed, never moved', () => {
+	const a = card('shape:a', 0, 0)
+	const out = carryAnnotations([a, hand('shape:over', 100, 100)], [], ['shape:a'])
+	assert.deepEqual(out, { carried: [], stranded: [{ id: 'shape:over', reason: 'card-removed', cards: ['shape:a'] }] })
+})
+
+test('a shape that overlaps no card with positive area is in neither list', () => {
+	const a = card('shape:a', 0, 0)
+	const edge = hand('shape:edge', 200, 0)
+	const flow = { ...card('shape:flow', 1000, 0, 'flow'), type: 'geo', props: { w: 200, h: 200 } }
+	const overFlow = hand('shape:over-flow', 1100, 100)
+	const elsewhere = { ...hand('shape:other-page', 100, 100), parentId: 'page:q' }
+	const nested = hand('shape:nested', 100, 100, { parentId: 'shape:frame' })
+	const text = { ...hand('shape:text', 100, 100), type: 'text', props: { w: 80 } }
+	const out = carryAnnotations([a, edge, flow, overFlow, elsewhere, nested, text], [movedBy(a, 100), movedBy(flow, 100)], [])
+	assert.deepEqual(out, { carried: [], stranded: [] })
+})
+
+test('a shape over a card that stays put is not carried and not listed', () => {
+	const a = card('shape:a', 0, 0)
+	assert.deepEqual(carryAnnotations([a, hand('shape:over', 100, 100)], [a], []), { carried: [], stranded: [] })
+})
+
+test('the recorded incident: 8 shapes are carried, 7 to where the hand repair put them', () => {
+	const raw = readFileSync(join(PKG_ROOT, 'lib/fixtures/render-annotation-geometry.json'), 'utf8')
+	assert.ok(!/richText|assetId|"url"|"nodeId"/.test(raw), 'the geometry fixture holds text, a url, a node id or an asset reference')
+	const { current, put, remove, repaired } = JSON.parse(raw)
+	assert.ok(current.every((r) => Object.keys(r).sort().join() === 'id,meta,parentId,props,type,typeName,x,y'))
+
+	const { carried, stranded } = carryAnnotations(current, put, remove)
+	const annotations = current.filter((r) => !r.meta.journey)
+	assert.equal(annotations.length, 74)
+	assert.deepEqual(stranded, [])
+	assert.equal(carried.length, 8)
+	const at = new Map(current.map((r) => [r.id, r]))
+	const toRepair = carried.filter((c) => repaired[c.id])
+	assert.equal(toRepair.length, 7)
+	for (const c of toRepair) assert.deepEqual([at.get(c.id).x + c.dx, at.get(c.id).y + c.dy], [repaired[c.id].x, repaired[c.id].y], c.id)
+
+	// Where the rule and the hand repair differ: a 252 x 304 frame whose corner overlaps a card by 28px.
+	// The hand repair left it in place; the rule keeps its offset to the card, so it moves by that card's delta.
+	const [extra] = carried.filter((c) => !repaired[c.id])
+	assert.deepEqual([at.get(extra.id).props.w, at.get(extra.id).props.h, extra.dx, extra.dy], [252, 304, 0, 750])
+	assert.equal(annotations.length - carried.length, 66)
 })
