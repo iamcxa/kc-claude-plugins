@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:journey-render-keeps-annotations:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:journey-render-keeps-annotations-ideation-1
+              briefing:
+                id: briefing:journey-render-keeps-annotations:ideation:attempt-1:revision-1
+                digest: sha256:e4d22c209d8a13797c48ce7443e0da5fd5e95c22a6582b99f0ad7679fa266b3e
+                room-ref: ./journey-render-keeps-annotations/review/ideation/briefing-1
 started: 2026-10-07T13:55:27Z
 ---
 

@@ -1,0 +1,31 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-render-keeps-annotations:ideation:attempt-1:revision-1",
+  "question": "Approve the design with Decision 1 = carry: on re-render an annotation that overlaps a moved card moves with it, anything unplaceable is listed, and canvas.md's 'never touched' becomes 'moved only with the card it overlaps, always reported'?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-render-keeps-annotations:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1209b5664235bc16408ef841ceed6862e6a0629e/journey-render-keeps-annotations.md",
+      "rev": "sha256:e546f17b6b80c71b72e95217681fab5acce2f8ca3b38b6678b26cb18dfd8404d",
+      "mediaType": "text/markdown",
+      "summary": "Ideation: one overlap rule reproduces the recorded hand repair on 7 of 7 stranded annotations (plus one 28px frame the hand repair left); 66 of 74 annotations touch no card and stay; unplaceable ones are listed; 7 ACs, AC-1 fails on today's renderToRoom; preview before/after renders; one Captain decision: carry (recommended) vs report-only."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-render-keeps-annotations:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/1209b5664235bc16408ef841ceed6862e6a0629e/journey-render-keeps-annotations/preview/carried.png",
+      "mediaType": "application/octet-stream",
+      "rev": "sha256:87123c123dda36dfaf5ccfb1442266f63d02f8bbdca8aa1a8e136dc194a020eb"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:journey-render-keeps-annotations:ideation:attempt-1:revision-1:item-3",
+      "uri": "git-root://state/1209b5664235bc16408ef841ceed6862e6a0629e/journey-render-keeps-annotations/preview/today.png",
+      "mediaType": "application/octet-stream",
+      "rev": "sha256:547cc3cc9f45ed7984639944ee3c6a1534b6724a80fbdcdaa90186331ffe2ae4"
+    }
+  ]
+}
