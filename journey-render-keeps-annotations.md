@@ -15,6 +15,17 @@ gates:
                 id: briefing:journey-render-keeps-annotations:backlog:attempt-1:revision-1
                 digest: sha256:53739e52c6aba71edfb2c323921f36fe3949cc2b8f87e64f1964b2afe0fda63e
                 room-ref: ./journey-render-keeps-annotations/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-render-keeps-annotations:backlog:1
+                briefing: briefing:journey-render-keeps-annotations:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-07T13:55:08.870201Z"
+                decision: approve
+                reason: 'Captain 2026-10-07: 「核准這張任務以 Pilot 進入設計」 — confirms the request relayed by dhaka-32'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 `renderToRoom` in `kc-journey-map/lib/render.mjs` recomputes generated card positions from the journey YAML and refuses only when a generated shape was hand-edited (`handEditedIds`); shapes without `meta.journey` — hand frames, sticky notes, and the `discuss-merged-*` / `discuss-halo-*` frames — keep their absolute position. When a release row gains stories, the cards below move and those annotations are left beside empty space, silently.
