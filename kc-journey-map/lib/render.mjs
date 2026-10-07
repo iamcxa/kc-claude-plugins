@@ -307,6 +307,52 @@ export function handEditedIds(currentRecords, put, remove) {
 		.map((r) => r.id)
 }
 
+const ANCHOR_KINDS = new Set(['story', 'activity', 'question', 'answer'])
+
+const footprint = (s) => {
+	const p = s.props ?? {}
+	if (s.type === 'note') {
+		const k = p.scale ?? 1
+		return [s.x, s.y, s.x + NOTE_W * k, s.y + (NOTE_W + (p.growY ?? 0)) * k]
+	}
+	return typeof p.w === 'number' && typeof p.h === 'number' ? [s.x, s.y, s.x + p.w, s.y + p.h] : null
+}
+
+const overlapArea = (a, b) =>
+	Math.max(0, Math.min(a[2], b[2]) - Math.max(a[0], b[0])) * Math.max(0, Math.min(a[3], b[3]) - Math.max(a[1], b[1]))
+
+// A hand-drawn shape (no meta.journey, parented to a page) that overlaps generated cards
+// follows them when this render moves them. Every overlapped card must move by one (dx, dy);
+// otherwise the shape stays and is returned as stranded. Positions come from currentRecords,
+// so the relation exists only inside the render that moves the cards.
+export function carryAnnotations(currentRecords, put, remove) {
+	const shapes = currentRecords.filter((r) => r.typeName === 'shape')
+	const next = new Map(put.map((r) => [r.id, r]))
+	const gone = new Set(remove)
+	const onPage = (r) => String(r.parentId).startsWith('page:')
+	const cards = shapes.filter((r) => ANCHOR_KINDS.has(r.meta?.journey?.kind) && onPage(r) && (next.has(r.id) || gone.has(r.id)))
+		.map((r) => ({ id: r.id, parentId: r.parentId, x: r.x, y: r.y, box: footprint(r) })).filter((c) => c.box)
+	const carried = []
+	const stranded = []
+	for (const a of shapes) {
+		if (a.meta?.journey || !onPage(a) || next.has(a.id) || gone.has(a.id)) continue
+		const box = footprint(a)
+		if (!box) continue
+		const touched = cards.filter((c) => c.parentId === a.parentId && overlapArea(box, c.box) > 0)
+		if (!touched.length) continue
+		const ids = touched.map((c) => c.id).sort()
+		if (touched.some((c) => gone.has(c.id))) {
+			stranded.push({ id: a.id, reason: 'card-removed', cards: ids })
+			continue
+		}
+		const deltas = touched.map((c) => [next.get(c.id).x - c.x, next.get(c.id).y - c.y])
+		const [dx, dy] = deltas[0]
+		if (deltas.some(([x, y]) => x !== dx || y !== dy)) stranded.push({ id: a.id, reason: 'cards-disagree', cards: ids })
+		else if (dx || dy) carried.push({ id: a.id, cards: ids, dx, dy })
+	}
+	return { carried, stranded }
+}
+
 export async function renderToRoom({ path, room, selection, progress = null, api = API, force = false }) {
 	const model = loadJourney(path)
 	const roomId = room ?? model.journey
@@ -323,11 +369,14 @@ export async function renderToRoom({ path, room, selection, progress = null, api
 	const remove = [...staleRecordIds(currentRecords, put), ...board.records, ...board.pages]
 	const edited = handEditedIds(currentRecords, put, remove)
 	if (edited.length && !force) return { refused: edited, shapes: 0, removed: 0 }
+	const { carried, stranded } = carryAnnotations(currentRecords, put, remove)
+	const byId = new Map(currentRecords.map((r) => [r.id, r]))
+	const moved = carried.map(({ id, dx, dy }) => ({ ...byId.get(id), x: byId.get(id).x + dx, y: byId.get(id).y + dy }))
 
 	const res = await fetch(`${api}/doc?room=${roomId}`, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
-		body: JSON.stringify({ put: [document, ...put], remove }),
+		body: JSON.stringify({ put: [document, ...put, ...moved], remove }),
 	})
-	return { status: res.status, body: await res.text(), shapes: put.length, removed: remove.length, removedPages: board.pages, keptPages: board.kept, coverage: releaseCoverage(model) }
+	return { status: res.status, body: await res.text(), shapes: put.length, removed: remove.length, removedPages: board.pages, keptPages: board.kept, carried, stranded, coverage: releaseCoverage(model) }
 }
