@@ -1,0 +1,26 @@
+---
+title: A journey-map re-render keeps hand-drawn annotations on the cards they marked
+status: backlog
+variant: kc-dev-flow-2
+profile: pilot
+merge: pr
+---
+
+`renderToRoom` in `kc-journey-map/lib/render.mjs` recomputes generated card positions from the journey YAML and refuses only when a generated shape was hand-edited (`handEditedIds`); shapes without `meta.journey` — hand frames, sticky notes, and the `discuss-merged-*` / `discuss-halo-*` frames — keep their absolute position. When a release row gains stories, the cards below move and those annotations are left beside empty space, silently.
+
+## Scope
+
+Relayed by the peer session dhaka-32 on 2026-10-07 (not yet confirmed by the Captain in this session): the Captain asked for an upstream fix of this defect through this workflow, profile Pilot. Evidence it reported: team canvas room relay-spacedock-review-draft, 2026-10-06/07, kc-journey-map 1.5.0; two stories added to one release moved the cards below by +500 and another row by +2910; 7 annotations were stranded and repaired by hand (shift each by the delta of the card it overlapped before the render). Room snapshots before and after: /tmp/draft-room.json and /tmp/draft-after-fix.json on this machine.
+Wanted behaviour (relayed): on re-render, an annotation that overlapped a generated card moves with that card, or the render at least reports which annotations would be stranded instead of doing it silently; a test fails on today's renderer.
+Non-goals: moving annotations that overlapped no generated card; changing the YAML-is-authority rule.
+
+## Acceptance criteria
+
+To be written at ideation.
+
+## FO alignment
+
+Release review: not needed: plugin defect, not on a product journey release.
+Needed at ideation: no Captain alignment before ideation; ideation chooses move-with-card versus report-only from the two snapshots, and returns the choice if it changes what a human-drawn canvas guarantees.
+Surfaces: ui
+Visible change: A re-render keeps a hand-drawn frame or sticky note on the card it marked instead of leaving it behind.
