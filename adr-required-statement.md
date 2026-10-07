@@ -122,9 +122,9 @@ ADR: 0009
 ## Captain amendments
 
 ### Amendment 1 — 2026-10-08, ideation gate
-Captain: 「可以」 (chat, approving the FO's proposal to amend decision 4: adopter tasks already in flight get their Captain-rulings ledger on touch — when each next passes a gate — not backfilled up front; after the next 10 delivered tasks the FO reports the ledger lines added and the missing ADRs it caught, and proposes removing the rule if it caught none)
+Captain: 「可以」 (chat, 2026-10-08, accepting the FO's proposed change to decision 4)
 Supersedes: none
-Design: Unresolved decision 4 (adopter sync and up-front FO backfill of open tasks)
+Design: Unresolved decision 4 — replaced by the accepted proposal: in-flight adopter tasks get their Captain-rulings ledger on touch, when each next passes a gate, not backfilled up front; after the next 10 delivered tasks the FO reports the ledger lines added and the missing ADRs the ledger caught, and proposes removing the rule if it caught none.
 
 ## Design
 
