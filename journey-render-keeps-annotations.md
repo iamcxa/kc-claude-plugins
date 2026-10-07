@@ -1,6 +1,6 @@
 ---
 title: A journey-map re-render keeps hand-drawn annotations on the cards they marked
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
