@@ -34,6 +34,14 @@ gates:
                 id: briefing:adr-required-statement:ideation:attempt-1:revision-1
                 digest: sha256:0f92f4576b3d4f38667071e93b9a47b6f0d8c030ee618a5fea2843f77507394b
                 room-ref: ./adr-required-statement/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-required-statement:ideation:1
+                briefing: briefing:adr-required-statement:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-07T15:38:58.5949Z"
+                decision: revise
+                reason: 'Captain 2026-10-07: 「退回設計」 on the FO''s recommendation after the four-repo audit: 3 of 4 recent misses were rulings made mid-flight (after backlog), so (1) FO judges and records ''product rule or not'' at every Captain ruling — gates, amendments, acceptance — not only at alignment; (2) validation checks an ''ADRs: none: <reason>'' against every recorded Captain ruling, not only its format'
 started: 2026-10-07T14:17:33Z
 ---
 
