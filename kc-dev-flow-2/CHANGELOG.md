@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.6](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.5...kc-dev-flow-2-v0.10.6) (2026-10-09)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** plural task numbering, package rules in learning coverage, state commits through SD ([#572](https://github.com/iamcxa/kc-claude-plugins/issues/572)) ([e6bc63e](https://github.com/iamcxa/kc-claude-plugins/commit/e6bc63e9f5178050c276e6cc55e6d1239ccbb1f9))
+
 ## [0.10.5](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.4...kc-dev-flow-2-v0.10.5) (2026-10-09)
 
 
