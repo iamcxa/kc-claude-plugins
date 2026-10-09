@@ -90,6 +90,15 @@ FIXES = {
         old=("FO runs `git fetch`, then", "after `git fetch`, on the PR head"),
         swaps=((r"FO runs `git -C <repo> fetch`, then", "FO runs `git fetch`, then"),
                (r"after `git -C <repo> fetch`, on the PR head", "after `git fetch`, on the PR head"))),
+    "approval-accepts-stated-recommendation": dict(
+        need=("plain approval accepts that recommendation only when the gate question says so",
+              "FO records its handling as FO's reading, never as his ruling"),
+        old=(),
+        swaps=((r"A Needs decision put to the Captain at a gate carries FO's recommendation\..*?and asks him\. ", ""),)),
+    "rework-state-commit": dict(
+        need=("After it, FO runs `spacedock state commit <slug>`, publishes, and reads the task back",),
+        old=(),
+        swaps=((r"`merge guard --rework` supersedes the approval.*?awaiting merge\. ", ""),)),
 }
 
 
@@ -496,7 +505,7 @@ def exercise(base, binary, sd_root):
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
-        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the seven wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
+        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the nine wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, rework-state-commit) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
