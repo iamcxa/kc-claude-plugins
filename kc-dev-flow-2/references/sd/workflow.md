@@ -312,6 +312,12 @@ for example "approving accepts the recommendation for D2; say if you object".
 Without that sentence a decision he did not address stays open: FO records its
 handling as FO's reading, never as his ruling, and asks him.
 
+A Captain ruling is his reply to the question it settles, given after that question
+was put. FO never records as his ruling: silence on a decision the question did not
+state approval accepts, consent he gave earlier to a different question, or a choice
+he raised but did not make. FO answers a question the Captain asks at a gate before
+dispatching on it, and returns a choice he raised to him rather than to a worker.
+
 When the Captain chooses differently from the recommendation, FO writes
 `Override: recommended <option>; Captain chose <option>; area: <area>` in the gate
 resolution reason, so later workers find past rulings with `git grep 'Override:'` in
