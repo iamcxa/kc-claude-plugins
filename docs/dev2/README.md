@@ -85,16 +85,19 @@ the validator reads the bytes that will be delivered. A repair that outgrows wha
 assignment names returns to FO as a scope change.
 
 FO resolves `<package>` in this workflow from the `Package root:` line of
-`kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path
-as a `Package root: <absolute path>` line in its scope notes
-(`--scope-notes-file`), which land in the dispatch file the worker reads first.
-A checklist or scope-notes line that names a package script writes
-`<package>/scripts/NAME.py` with the absolute root substituted, never the bare
-script name. When `status --set` refuses to leave a stage, run
-`status --workflow-dir <dir> --read <task> --stage <stage> --checklist`, return
-any line it reports as neither DONE nor SKIPPED to the worker, and do not edit the
-worker's report. The refusal itself does not say why; other causes are a missing
-evidence line or Summary and an uncommitted report.
+`kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path as a
+`Package root: <absolute path>` line in its scope notes (`--scope-notes-file`),
+which land in the dispatch file the worker reads first. FO saves those scope notes,
+the checklist, the model it dispatches on and the SHA it dispatches from as
+`<task>/dispatch/<stage>-<cycle>.md` in the state checkout, committed with that
+dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so the instruction
+a worker followed outlives the session that wrote it. A checklist or scope-notes
+line that names a package script writes `<package>/scripts/NAME.py` with the
+absolute root substituted, never the bare script name. When `status --set` refuses
+to leave a stage, run `status --workflow-dir <dir> --read <task> --stage <stage>
+--checklist`, return any line it reports as neither DONE nor SKIPPED to the worker,
+and do not edit the worker's report. The refusal itself does not say why; other
+causes are a missing evidence line or Summary and an uncommitted report.
 
 ### `backlog`
 
