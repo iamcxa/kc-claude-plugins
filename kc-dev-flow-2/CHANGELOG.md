@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.12.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.11.0...kc-dev-flow-2-v0.12.0) (2026-10-09)
+
+
+### Features
+
+* **kc-dev-flow-2:** budget the workflow template's words and refuse repeated passages ([#579](https://github.com/iamcxa/kc-claude-plugins/issues/579)) ([7b84465](https://github.com/iamcxa/kc-claude-plugins/commit/7b84465e4e678d7da6e736d1c81ac75ceab4ea76))
+
 ## [0.11.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.6...kc-dev-flow-2-v0.11.0) (2026-10-09)
 
 
