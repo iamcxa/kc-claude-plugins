@@ -118,6 +118,24 @@ class RouteMutationTests(unittest.TestCase):
         self.change("skills/implementation/SKILL.md", "Package root: ${CLAUDE_PLUGIN_ROOT}\n", "")
         self.refuses("skills/implementation/SKILL.md: uses <package> but has no 'Package root:' line")
 
+    def test_workflow_over_its_word_budget(self):
+        path = self.root / "references/sd/workflow.md"
+        words = len(path.read_text().split())
+        path.write_text(path.read_text() + "\nfiller" * (lint.WORKFLOW_WORD_BUDGET - words + 1))
+        self.refuses(f"exceeds the budget of {lint.WORKFLOW_WORD_BUDGET}")
+
+    def test_a_passage_copied_from_the_workflow_into_another_file(self):
+        source = (self.root / "references/sd/workflow.md").read_text()
+        passage = " ".join(source.split("## Affected documents", 1)[1].split()[:20])
+        path = self.root / "skills/validation/principles.md"
+        path.write_text(path.read_text() + "\n" + passage.upper() + "\n")
+        self.refuses("skills/validation/principles.md: repeats")
+
+    def test_the_known_overlap_is_listed_and_a_new_one_is_not(self):
+        self.assertEqual(lint.lint_tree(self.root), [])
+        self.change("skills/implementation/principles.md", "\n", "\nIdeation writes no repository file, branch or commit; the design, the criteria and any ADR draft live in the task file.\n")
+        self.refuses("skills/implementation/principles.md: repeats")
+
     def test_cli_exits_one_naming_the_file(self):
         self.change("skills/implementation/principles.md", "<package>/scripts/comment_ratio.py", "comment_ratio.py")
         result = subprocess.run([sys.executable, str(ROOT / "scripts/lint-skills.py"), "--root", str(self.root)],

@@ -18,6 +18,12 @@ LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
 NAMESPACE = re.compile(r"\bkc-dev-flow(?:-[a-z0-9]+)*:[a-z0-9-]+\b")
 PACKAGE_ROOT = re.compile(r"^Package root: \S", re.MULTILINE)
 UNBOUND_ROOT = re.compile(r"\{package\}|/absolute/plugin")
+WORKFLOW = "references/sd/workflow.md"
+# Raise only in a change that says why the adopted README must grow.
+WORKFLOW_WORD_BUDGET = 4600
+DUPLICATE_RUN = 12
+# Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
+KNOWN_DUPLICATES = {("skills/ideation/principles.md", "ideation writes no repository file branch or commit")}
 BOUND_SCRIPT_DIR = re.compile(r"(?:<package>/|(?:\.\./)+|kc-dev-flow-2/)scripts/")
 
 
@@ -139,6 +145,44 @@ def lint_tree(root, basic_lint=BASIC_LINT):
             errors.append(f"{role} agent: expected exact variant skill binding")
         if (fields.get("model"), fields.get("reasoning")) != ("opus", "xhigh"):
             errors.append(f"{role} agent: existing opus/xhigh policy changed")
+    errors += workflow_size_and_duplicates(root)
+    return errors
+
+
+def normalized_words(text):
+    return re.findall(r"[a-z0-9<>/_.\-]+", text.lower().replace("`", ""))
+
+
+def workflow_size_and_duplicates(root):
+    path = root / WORKFLOW
+    if not path.is_file():
+        return [f"{WORKFLOW}: missing"]
+    text = path.read_text()
+    errors = []
+    count = len(text.split())
+    if count > WORKFLOW_WORD_BUDGET:
+        errors.append(f"{WORKFLOW}: {count} words exceeds the budget of {WORKFLOW_WORD_BUDGET}; "
+                      "shorten it, or raise WORKFLOW_WORD_BUDGET in lint-skills.py with the reason in the same change")
+    words = normalized_words(text)
+    runs = {" ".join(words[i:i + DUPLICATE_RUN]) for i in range(len(words) - DUPLICATE_RUN + 1)}
+    others = set(root.glob("skills/**/*.md")) | set(root.glob("references/**/*.md")) | set(root.glob("agents/*.md"))
+    for other in sorted(others):
+        relative = str(other.relative_to(root))
+        if relative == WORKFLOW:
+            continue
+        theirs = normalized_words(other.read_text())
+        i = 0
+        while i <= len(theirs) - DUPLICATE_RUN:
+            if " ".join(theirs[i:i + DUPLICATE_RUN]) not in runs:
+                i += 1
+                continue
+            end = i + DUPLICATE_RUN
+            while end < len(theirs) and " ".join(theirs[end - DUPLICATE_RUN + 1:end + 1]) in runs:
+                end += 1
+            passage = " ".join(theirs[i:end])
+            if not any(relative == known and passage.startswith(opening) for known, opening in KNOWN_DUPLICATES):
+                errors.append(f"{relative}: repeats {end - i} words of {WORKFLOW}: '{passage[:80]}'")
+            i = end
     return errors
 
 
@@ -152,7 +196,9 @@ def main():
         for error in errors:
             print("FAIL:", error)
         return 1
+    count = len((args.root / WORKFLOW).read_text().split())
     print("PASS: basic frontmatter, declared profile routes, role bindings and package script paths")
+    print(f"{WORKFLOW}: {count} of {WORKFLOW_WORD_BUDGET} words; no unlisted passage repeats it")
     print("Not checked: full Agent Skills conformance or host/workflow behavior")
     return 0
 
