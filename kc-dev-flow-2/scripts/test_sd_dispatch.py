@@ -97,11 +97,11 @@ FIXES = {
         swaps=((r"A Needs decision put to the Captain at a gate carries FO's recommendation\..*?and asks him\. ", ""),)),
     "state-commits-through-sd": dict(
         need=("FO commits task state only through SD commands",
-              "never by staging the state checkout with `git add -A` or `git add .`"),
+              "each with `--workflow-dir <dir>`), never by staging the state checkout with `git add -A` or `git add .`"),
         old=(),
         swaps=((r"FO commits task state only through SD commands.*?into another task's commit\. ", ""),)),
     "rework-state-commit": dict(
-        need=("After it, FO runs `spacedock state commit <slug>`, publishes, and reads the task back",),
+        need=("After it, FO runs `spacedock state commit <slug> --workflow-dir <dir>`, publishes, and reads the task back",),
         old=(),
         swaps=((r"`merge guard --rework` supersedes the approval.*?awaiting merge\. ", ""),)),
 }
