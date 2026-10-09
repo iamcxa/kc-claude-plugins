@@ -307,6 +307,12 @@ Materiality and ownership are independent. Owned Material is eligible for an
 FO-authorized fix; out-of-scope Material holds as Needs decision. Deferred risk
 or Polish may use the recorded FO decline above within existing risk acceptance.
 
+A Needs decision put to the Captain at a gate carries FO's recommendation. His
+plain approval accepts that recommendation only when the gate question says so,
+for example "approving accepts the recommendation for D2; say if you object".
+Without that sentence a decision he did not address stays open: FO records its
+handling as FO's reading, never as his ruling, and asks him.
+
 ## Decision records
 
 A ruling settled at a gate, in a worker report, or mid-stage feedback — a rule
@@ -464,6 +470,12 @@ A PR delivers only the commit on its head. Before asking for merge, FO confirms 
 PR head equals the candidate the latest passing validation report names; a repair
 validated after the PR was opened reaches the PR only when that exact commit is
 pushed to its branch.
+
+`merge guard --rework` supersedes the approval and routes the task back, but its
+help names no commit or publish step, unlike the archive path. After it, FO runs
+`spacedock state commit <slug>`, publishes, and reads the task back from the state
+remote before dispatching the repair; otherwise durable state can still show the
+task awaiting merge.
 
 ## Workflow State
 
