@@ -313,27 +313,33 @@ for example "approving accepts the recommendation for D2; say if you object".
 Without that sentence a decision he did not address stays open: FO records its
 handling as FO's reading, never as his ruling, and asks him.
 
+When the Captain chooses differently from the recommendation, FO writes
+`Override: recommended <option>; Captain chose <option>; area: <area>` in the gate
+resolution reason, so later workers find past rulings with `git grep 'Override:'` in
+the state checkout.
+
 ## Decision records
 
-A ruling settled at a gate, in a worker report, or mid-stage feedback — a rule
-about the product, a constraint, or a direction later work must respect — is
-landed as an ADR before the next gate is presented, at latest by the terminal
-approval. A ruling that governs only this task's own work stays in the task.
-Write one file per decision, `docs/adr/NNNN-short-title.md`, in the
-ADR format of the kc-dev-flow-2 package's `references/adr-template.md`: Nygard's sections as adr-tools writes them, with
-the decider's own words and the options considered inside Decision. Create
-`docs/adr/` with this record if it is absent. A decision document that predates
-this format may stay as one record marked `Status: Legacy`; new rulings get their
-own files. This is not the gate `resolution.reason` or the SD stage report.
-A design names an ADR by its ruling and the file's short title, with no number; FO
-reserves the number when it dispatches implementation (Number guards) and the
-implementation worker writes `docs/adr/<reserved number>-<short-title>.md`.
-The implementation worker writes the record into the candidate and names the ADR
-numbers it added or changed in its report; validation runs
-`python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and returns a
-failure or a missing record through the existing feedback route; FO confirms it
-before presenting the gate. A deferred user-facing capability belongs on the
-product's journey map, not here.
+A ruling settled at a gate, in a worker report, or mid-stage feedback — a rule about
+the product, a constraint, or a direction later work must respect — is landed as an
+ADR before the next gate is presented, at latest by the terminal approval. A ruling
+that governs only this task's own work stays in the task. Write one file per
+decision, `docs/adr/NNNN-short-title.md`, in the ADR format of the kc-dev-flow-2
+package's `references/adr-template.md`: Nygard's sections as adr-tools writes them,
+with the decider's own words, the options considered and the option recommended
+inside Decision; `<package>/scripts/adr_lint.py --require` refuses a required record
+without the recommended line. Create `docs/adr/` with this record if it is absent. A
+decision document that predates this format may stay as one record marked `Status:
+Legacy`; new rulings get their own files. This is not the gate `resolution.reason`
+or the SD stage report. A design names an ADR by its ruling and the file's short
+title, with no number; FO reserves the number when it dispatches implementation
+(Number guards) and the implementation worker writes `docs/adr/<reserved
+number>-<short-title>.md`. The implementation worker writes the record into the
+candidate and names the ADR numbers it added or changed in its report; validation
+runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and
+returns a failure or a missing record through the existing feedback route; FO
+confirms it before presenting the gate. A deferred user-facing capability belongs on
+the product's journey map, not here.
 
 ## Captain amendments
 

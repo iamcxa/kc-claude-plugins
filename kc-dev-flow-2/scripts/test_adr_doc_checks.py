@@ -49,6 +49,12 @@ class AdrLintTests(unittest.TestCase):
             with self.subTest(label):
                 self.assertEqual(self.run_lint({"0002-first.md": text}), 1)
 
+    def test_a_required_record_needs_the_recommended_line_and_an_old_one_does_not(self):
+        old = record(2).replace("**Recommended:**", "Recommended:")
+        self.assertEqual(self.run_lint({"0002-first.md": old}), 0)
+        self.assertEqual(self.run_lint({"0002-first.md": old}, "2"), 1)
+        self.assertEqual(self.run_lint({"0002-first.md": old, "0003-second.md": record(3)}, "3"), 0)
+
     def test_file_names_and_numbers(self):
         self.assertEqual(self.run_lint({"2-first.md": record(2)}), 1)
         self.assertEqual(self.run_lint({"0002-first.md": record(2), "0002-second.md": record(2)}), 1)

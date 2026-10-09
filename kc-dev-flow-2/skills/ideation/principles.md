@@ -39,5 +39,8 @@ In the existing Stage Report checklist, name each acceptance criterion separatel
 actual current evidence or an honest not-yet-verified statement. A range such as
 AC-1..AC-3 is not per-criterion mapping; a future proof plan is not a passed result.
 Return only unresolved material scope, interface, acceptance-criteria or authority
-choices to FO. Keep routine wording and test placement in the recommendation,
+choices to FO. Before recommending one, read the ADRs in its area and the `Override:`
+lines in the gate records (`git -C <workflow dir>/.spacedock-state grep -n 'Override:'`);
+when a past ruling went against a similar recommendation, name it and follow it or
+say why not. Keep routine wording and test placement in the recommendation,
 not separate user decisions. Do not begin implementation.

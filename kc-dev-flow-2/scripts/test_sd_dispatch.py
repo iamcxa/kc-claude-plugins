@@ -95,6 +95,17 @@ FIXES = {
               "FO records its handling as FO's reading, never as his ruling"),
         old=(),
         swaps=((r"A Needs decision put to the Captain at a gate carries FO's recommendation\..*?and asks him\. ", ""),)),
+    "override-record": dict(
+        need=("`Override: recommended <option>; Captain chose <option>; area: <area>`",
+              "later workers find past rulings with `git grep 'Override:'`"),
+        old=(),
+        swaps=((r"When the Captain chooses differently from the recommendation, FO writes.*?in the state checkout\. ", ""),)),
+    "adr-recommended": dict(
+        need=("the options considered and the option recommended inside Decision",
+              "`<package>/scripts/adr_lint.py --require` refuses a required record without the recommended line"),
+        old=("the decider's own words and the options considered inside Decision",),
+        swaps=((r"the decider's own words, the options considered and the option recommended inside Decision; `<package>/scripts/adr_lint\.py --require` refuses a required record without the recommended line\.",
+                "the decider's own words and the options considered inside Decision."),)),
     "state-commits-through-sd": dict(
         need=("FO commits task state only through SD commands",
               "each with `--workflow-dir <dir>`), never by staging the state checkout with `git add -A` or `git add .`"),
@@ -510,7 +521,7 @@ def exercise(base, binary, sd_root):
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
-        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the ten wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, state-commits-through-sd, rework-state-commit) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
+        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the twelve wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, override-record, adr-recommended, state-commits-through-sd, rework-state-commit) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
