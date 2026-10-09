@@ -27,7 +27,10 @@ rejections/corrections and existing learning. Debrief may add context; it is not
 required and cannot replace primary evidence. The caller must supply these facts:
 the helper validates their structure/eligibility, not their truth or completeness.
 Missing attribution, an existing rule covering the practice, or no applicable
-case supports no-change. Passing tests, reading a rule or an agent's assertion
+case supports no-change. An existing rule means the project's rules, the selected
+profile, and the principles of each stage the task ran
+(`<package>/skills/<stage>/principles.md`); name the rule. A practice one of them
+already states is no-change even when a worker did not follow it. Passing tests, reading a rule or an agent's assertion
 alone does not establish that the practice improved the outcome.
 
 - **add:** identify a project condition, changed action and observed avoided error

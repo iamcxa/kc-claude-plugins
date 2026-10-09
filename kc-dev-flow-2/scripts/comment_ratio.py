@@ -22,7 +22,7 @@ BLOCK = {".ts", ".tsx", ".js", ".mjs", ".sql"}
 DEFAULT_MAX = 5.0
 FLOOR = 20
 CITES = {
-    "task numbering": re.compile(r"\b(?:Decision|AC|Round|Cycle|Finding|Task)[ -]\d+\b", re.IGNORECASE),
+    "task numbering": re.compile(r"\b(?:Decisions?|ACs?|Rounds?|Cycles?|Findings?|Tasks?)[ -]\d+\b", re.IGNORECASE),
     "review provenance": re.compile(r"\bCodex\b|\breview of\b|\breview follow-up\b|\breviewer's\b", re.IGNORECASE),
     "PR or issue number": re.compile(r"#\d+\b"),
     "file:line": re.compile(r"\.(?:py|ts|tsx|js|mjs|sql|md|json|ya?ml|sh):\d+\b"),

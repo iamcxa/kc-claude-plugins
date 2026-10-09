@@ -486,6 +486,10 @@ Implementation and validation share the task's registered code worktree; validat
 uses a fresh worker. POC uses independent validation in this variant; direct POC
 eligibility and special Production recovery routes are not implemented.
 
+FO commits task state only through SD commands (`gate record`, `state commit <slug>`),
+never by staging the state checkout with `git add -A` or `git add .`: a broad add
+sweeps a worker's uncommitted report into another task's commit.
+
 ## Task Template
 
 ```markdown
