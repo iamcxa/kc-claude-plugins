@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.11.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.6...kc-dev-flow-2-v0.11.0) (2026-10-09)
+
+
+### Features
+
+* **kc-dev-flow-2:** learn lists package-issue candidates, and rulings record the recommendation ([#576](https://github.com/iamcxa/kc-claude-plugins/issues/576)) ([fcc5a41](https://github.com/iamcxa/kc-claude-plugins/commit/fcc5a417bb523b7cb6200c003efd8e5b01cfb374))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** state commit instructions carry --workflow-dir ([#574](https://github.com/iamcxa/kc-claude-plugins/issues/574)) ([ff26e72](https://github.com/iamcxa/kc-claude-plugins/commit/ff26e7247bb96969e0ea88203142f5575dbb6ab4))
+
 ## [0.10.6](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.5...kc-dev-flow-2-v0.10.6) (2026-10-09)
 
 
