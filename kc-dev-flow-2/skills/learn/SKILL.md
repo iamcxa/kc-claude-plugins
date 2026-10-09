@@ -209,3 +209,5 @@ Then list for the Captain, as kc-dev-flow-2 package-issue candidates, each no-ch
 reason that names an enforcement gap, a package rule or profile that already states
 the practice a worker did not follow, or a package script defect, together with any
 package defect he supplies from a session debrief. File none without his approval.
+When no session debrief covers the task, say so in the same list: defects seen only
+in a session, not in the task's records, are not in it.
