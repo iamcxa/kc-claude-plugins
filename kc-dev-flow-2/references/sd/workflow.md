@@ -473,9 +473,9 @@ pushed to its branch.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs
-`spacedock state commit <slug>`, publishes, and reads the task back from the state
-remote before dispatching the repair; otherwise durable state can still show the
-task awaiting merge.
+`spacedock state commit <slug> --workflow-dir <dir>`, publishes, and reads the task
+back from the state remote before dispatching the repair; otherwise durable state
+can still show the task awaiting merge.
 
 ## Workflow State
 
@@ -486,9 +486,10 @@ Implementation and validation share the task's registered code worktree; validat
 uses a fresh worker. POC uses independent validation in this variant; direct POC
 eligibility and special Production recovery routes are not implemented.
 
-FO commits task state only through SD commands (`gate record`, `state commit <slug>`),
-never by staging the state checkout with `git add -A` or `git add .`: a broad add
-sweeps a worker's uncommitted report into another task's commit.
+FO commits task state only through SD commands (`gate record`, `state commit
+<slug>`, each with `--workflow-dir <dir>`), never by staging the state checkout with
+`git add -A` or `git add .`: a broad add sweeps a worker's uncommitted report into
+another task's commit.
 
 ## Task Template
 
