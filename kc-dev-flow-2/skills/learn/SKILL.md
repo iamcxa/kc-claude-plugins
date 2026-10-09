@@ -204,3 +204,10 @@ run `ack --job JOB --expected NOTICE_DIGEST` for each presented snapshot. Never 
 merely because results entered agent context. A changed snapshot rejects stale
 ack; a crash after presentation may cause a repeat. Invocation of `dev` performs
 this same notice step; there is no every-session startup guarantee or hook.
+
+Then list for the Captain, as kc-dev-flow-2 package-issue candidates, each no-change
+reason that names an enforcement gap, a package rule or profile that already states
+the practice a worker did not follow, or a package script defect, together with any
+package defect he supplies from a session debrief. File none without his approval.
+When no session debrief covers the task, say so in the same list: defects seen only
+in a session, not in the task's records, are not in it.
