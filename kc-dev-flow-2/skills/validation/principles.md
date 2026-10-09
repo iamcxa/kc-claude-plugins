@@ -20,6 +20,9 @@ finding returned through feedback; exit 2 is a configuration error that returns 
 The citation scan finds the named classes only, so still read every added comment.
 When the task has a `## Number guards` section, rerun its `check` at the candidate; exit 1 or 2 is
 a repair finding returned through feedback.
+Read the task's dispatch records (`<task>/dispatch/` in the state checkout) for the
+implementation cycles you validate; a missing record, or a requirement in it that
+traces to no accepted criterion or Captain ruling, is a finding for FO.
 When the change alters what a user sees, the evidence includes a screenshot of the
 changed screen at the candidate; reading the code or a passing render test is not
 seeing it.
