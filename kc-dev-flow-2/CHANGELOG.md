@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.13.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.12.0...kc-dev-flow-2-v0.13.0) (2026-10-09)
+
+
+### Features
+
+* **kc-dev-flow-2:** save each dispatch's instruction with the task, and validation reads it ([#582](https://github.com/iamcxa/kc-claude-plugins/issues/582)) ([cf62851](https://github.com/iamcxa/kc-claude-plugins/commit/cf62851339043cf3843f081488a71abf3ab403ec))
+
 ## [0.12.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.11.0...kc-dev-flow-2-v0.12.0) (2026-10-09)
 
 
