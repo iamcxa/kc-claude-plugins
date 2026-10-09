@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.10.5](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.4...kc-dev-flow-2-v0.10.5) (2026-10-09)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** approval accepts a recommendation only when the gate says so, and a rework is committed ([#568](https://github.com/iamcxa/kc-claude-plugins/issues/568)) ([63ac3db](https://github.com/iamcxa/kc-claude-plugins/commit/63ac3db94c3fed97bb3ef62498097f1ff331bab6))
+
 ## [0.10.4](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.10.3...kc-dev-flow-2-v0.10.4) (2026-10-01)
 
 
