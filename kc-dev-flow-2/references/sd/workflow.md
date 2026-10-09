@@ -75,10 +75,8 @@ Stage workers run on the workflow's default model.
 model and reasoning their agent files declare; FO never dispatches them on a
 cheaper model, because their value is a stronger second judgment.
 
-`concurrency` limits only what `status --next` proposes (Spacedock 0.27.2 does not
-slot-check a reflow dispatch; `<package>/scripts/test_sd_dispatch.py` builds one while another
-entity holds the only `implementation` slot). A feedback-reflow repair and an FO fix
-authorized under Review-finding disposition step 3 are dispatched at once in the
+`concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
+FO fix authorized under Review-finding disposition step 3 are dispatched at once in the
 entity's own worktree, after the existing overlap check against running worktrees; they
 do not wait for another entity's worker in the same stage. The validation recheck of
 that repair or fix does not wait for another entity's worker either, but it is
@@ -117,10 +115,8 @@ differently, or `Visible change: none`.
   `Visible change:` lines on the five-stage route.
 - **Seed check:** On the five-stage route, before `gate prepare`, FO runs
   `python3 <package>/scripts/design_surfaces.py check --seed <task>` and holds the
-  gate until it exits 0. It reads the `## FO alignment` record only: a `ui` or `db`
-  seed owes no artifact yet, the worker authors it, and the `Result:` line is not
-  checked. An FO that skips this step still dispatches; the worker's own check is
-  the backstop.
+  gate until it exits 0. An FO that skips this step still dispatches; the worker's own
+  check is the backstop.
 - **Release review:** Applies to a task that belongs to a release on a journey map
   (`journey`, `journey-release`, `journey-story`); a task with no release, such as a
   bug, infrastructure or workflow maintenance, is outside it. Four signals: (1) a task
@@ -228,10 +224,10 @@ repair is dispatched under the lane in Stages.
 
 ### `done`
 
-The terminal state remains behind SD's merge-finalize boundary. Consuming a
-terminal gate approval is not completion; a live run requires the declared
-delivery evidence and successful `merge guard` with an explicit verdict.
-Apply Delivery authority below; a pending PR or missing hook is not completion.
+Consuming a terminal gate approval is not completion (`spacedock merge guard --help`);
+a live run requires the declared delivery evidence and successful `merge guard` with
+an explicit verdict. Apply Delivery authority below; a pending PR or missing hook is
+not completion.
 
 ## Dispatch facts
 
@@ -325,19 +321,18 @@ the product, a constraint, or a direction later work must respect — is landed 
 ADR before the next gate is presented, at latest by the terminal approval. A ruling
 that governs only this task's own work stays in the task. Write one file per
 decision, `docs/adr/NNNN-short-title.md`, in the ADR format of the kc-dev-flow-2
-package's `references/adr-template.md`: Nygard's sections as adr-tools writes them,
-with the decider's own words, the options considered and the option recommended
-inside Decision; `<package>/scripts/adr_lint.py --require` refuses a required record
-without the recommended line. Create `docs/adr/` with this record if it is absent. A
-decision document that predates this format may stay as one record marked `Status:
-Legacy`; new rulings get their own files. This is not the gate `resolution.reason`
-or the SD stage report. A design names an ADR by its ruling and the file's short
-title, with no number; FO reserves the number when it dispatches implementation
-(Number guards) and the implementation worker writes `docs/adr/<reserved
-number>-<short-title>.md`. The implementation worker writes the record into the
-candidate and names the ADR numbers it added or changed in its report; validation
-runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and
-returns a failure or a missing record through the existing feedback route; FO
+package's `references/adr-template.md`, with the decider's own words, the options
+considered and the option recommended inside Decision;
+`<package>/scripts/adr_lint.py --require` refuses a required record without the
+recommended line. Create `docs/adr/` with this record if it is absent. A decision
+document that predates this format may stay as one record marked `Status: Legacy`.
+This is not the gate `resolution.reason` or the SD stage report. A design names an ADR
+by its ruling and the file's short title, with no number; FO reserves the number when
+it dispatches implementation (Number guards) and the implementation worker writes
+`docs/adr/<reserved number>-<short-title>.md`. The implementation worker writes the
+record into the candidate and names the ADR numbers it added or changed in its report;
+validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`
+and returns a failure or a missing record through the existing feedback route; FO
 confirms it before presenting the gate. A deferred user-facing capability belongs on
 the product's journey map, not here.
 
@@ -374,9 +369,7 @@ and never reuses an id. A superseded criterion and the design paragraph named by
 `python3 <package>/scripts/design_surfaces.py check <task>` exits 1 when an entry has no
 `Captain:` line or a superseded id is still declared in `## Acceptance criteria`;
 implementation and validation run it, and exit 1 is a repair finding returned through feedback.
-Between FO's record and the worker's move the task shows both, and the check says so.
-It cannot see a skipped record, only the state after a skipped move; a moved block is
-not scanned by `spacedock status --read --ac-scan`, which is why relocation, not
+It cannot see a skipped record, only the state after a skipped move; relocation, not
 annotation in place, is the route.
 
 ## Affected documents
@@ -384,18 +377,16 @@ annotation in place, is the route.
 Implementation runs `python3 <package>/scripts/doc_impact.py <base> <candidate>`
 and records, for each listed document, `updated` or `unaffected: <reason>` in its
 stage report; validation reruns it at the candidate and checks every listed
-document carries one. The list finds candidates by the paths and declared names
-the change touched; it does not decide relevance. Make the update itself by the
-retained-document practices in the package's `references/retained-documents.md`.
+document carries one. Make the update itself by the retained-document practices in
+the package's `references/retained-documents.md`.
 
 ## Number guards
 
 Applies when the task's `Surfaces:` includes `db`, or its design lands an ADR; the POC bullet below applies to every `poc` task.
-`<package>/scripts/number_guards.py` takes its values from this workflow's README
-frontmatter (`--workflow-dir <workflow-dir>`): `trunk:`, the optional
-`migrations-path:` (the adopter's migration directory) and `adr-path:` (default
-`docs/adr`); a flag of the same name overrides. It reads a task's numbers and
-applied deploys from the `## Number guards` section of the task file.
+`<package>/scripts/number_guards.py` takes `trunk:`, the optional `migrations-path:`
+(the adopter's migration directory) and `adr-path:` (default `docs/adr`) from this workflow's README
+frontmatter (`--workflow-dir <workflow-dir>`) and a task's numbers and applied
+deploys from its `## Number guards` section; `--help` lists the flags.
 
 - **Reserve.** Before an implementation dispatch, FO runs `git -C <repo> fetch`, then
   `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
@@ -413,20 +404,18 @@ applied deploys from the `## Number guards` section of the task file.
   or the environment's own deploy record showing no deploy of it), FO replaces that
   one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
   no longer frozen. Without that confirmation the line stays and the migration counts
-  as applied. Git cannot see what a database applied, so an unrecorded deploy is
-  not detected.
+  as applied.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
   runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR
-  head before FO asks for merge. Exit 1 lists `FAIL R1..R6` lines; exit 2 is a
-  configuration error, which returns to FO as a hold. A migration on the base
-  branch must not change, comment-only edits included; `check` exit 1 (R1, R2) is
-  the enforcement, and the fix is reverting the edit and writing a new migration.
+  head before FO asks for merge. Exit 2 is a configuration error, which returns to FO
+  as a hold. A migration on the base branch must not change, comment-only edits
+  included; the fix for an R1 or R2 finding is reverting the edit and writing a new
+  migration.
 - **POC.** A task whose recorded `profile` is `poc` adds, edits and deletes no migration
   file and reserves no number. When the README declares `migrations-path:`, `check` runs
-  for it at the same three points; it reads `profile: poc` from the task's frontmatter,
-  and exit 1 `FAIL R6` lists each path under that directory that differs from the
-  merge-base, `meta/` and files not named `NNNN_name.sql` included. A `FAIL R6` crosses the
-  POC boundary (a schema change persists across sessions): the worker records
+  for it at the same three points, and exit 1 `FAIL R6` lists each path under that
+  directory that differs from the merge-base. A `FAIL R6` crosses the POC boundary
+  (a schema change persists across sessions): the worker records
   `boundary-crossed: persistent-state` naming the path, and the task is not repaired in
   place; FO presents the marker at the validation gate. Without `migrations-path:` the
   migration rules are skipped, so a POC is not guarded until the README declares it.
@@ -488,9 +477,8 @@ can still show the task awaiting merge.
 The README and `_mods` stay in the code repository; mutable task state lives in
 `.spacedock-state`, an ignored linked checkout of this workflow's distinct orphan
 state branch. Commission/refit owns setup; a fresh clone uses SD state init.
-Implementation and validation share the task's registered code worktree; validation
-uses a fresh worker. POC uses independent validation in this variant; direct POC
-eligibility and special Production recovery routes are not implemented.
+POC uses independent validation in this variant; direct POC eligibility and special
+Production recovery routes are not implemented.
 
 FO commits task state only through SD commands (`gate record`, `state commit
 <slug>`, each with `--workflow-dir <dir>`), never by staging the state checkout with
