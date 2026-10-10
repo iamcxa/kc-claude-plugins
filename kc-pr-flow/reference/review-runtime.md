@@ -212,6 +212,23 @@ Git configuration, and global attributes. It reads bounded exact Git objects, va
 base/head state before and after routing, and has no model, timing, network, confirmation, or
 posting authority.
 
+Review timing is a separate, model-free runtime surface:
+
+```bash
+bash scripts/review-runtime.sh timing-start --review-key HASH --mode MODE --output STATE
+bash scripts/review-runtime.sh timing-mark --timing-file STATE --phase PHASE
+bash scripts/review-runtime.sh timing-finish --timing-file STATE \
+  --lane-durations-file LANES --output RECEIPT
+```
+
+It uses a monotonic clock and requires the ordered boundaries `identity_and_plan`, `inventory`,
+`required_lanes_critical_path`, `collector`, `targeted_verification_critical_path`,
+`collation_and_draft`, and `confirmation_ready`. The terminal
+`kc-pr-flow.review-timing/v1` receipt keeps parallel lane observations separate and excludes
+collector time from `review_to_confirmation_ready`. Hosted CI, unrelated queue, and human wait
+remain separate nullable attribution rather than being inferred. Publication is private and
+no-clobber; an accidental concurrent writer fails closed without a background lock lifecycle.
+
 The paired scorer is a separate source-safe CLI:
 
 ```bash
@@ -233,6 +250,16 @@ It snapshots and validates a closed `kc-pr-flow.review-benchmark-pair/v1` corpus
 Promotion is fail-closed and ordered: G1 valid bound inputs, G2 complete required capability coverage, G3 external behavior parity, G4 zero lost expected must-fix findings, then G5 efficiency. G5 branch A requires complete same-provider/scope reported usage and median token reduction of at least 20%. Branch B requires median local terminal-collation cost no greater than 60% of a designed full rerun.
 
 Branch B uses one optional corpus-owned `local-measurement-binding/v1`. The binding covers the raw terminal artifact SHA, recomputed decision SHA, `full-review-rerun-control/v1` SHA, treatment and control units, `canonical-artifact-bytes/v1`, and a canonical binding SHA. The control receipt is captured from the designed full rerun and records the sanitized full-review artifact SHA and its canonical byte units. `measure-local` safe-snapshots the raw receipt and control, invokes only fresh `rehydrate-interactive`, counts the canonical decision bytes, and emits zero model and remote calls. It does not invoke replay as a full-rerun substitute. The scorer independently rechecks the decision, producer, and measurement-binding hashes and requires every observation field to equal the paired binding, so a caller-resealed self-hash or arbitrary unit value is ineligible. Later gates cannot repair an earlier failure.
+
+`review-real-pair-score.py score --corpus FILE --published-sha256 HASH` is a distinct
+post-publication scorer. The caller supplies the separately published raw-file hash; a mismatch
+returns `initial`. Its internally sealed field corpus requires
+at least five preregistered terminal pairs and frozen blind adjudication. Invalid, incomplete,
+unfrozen, or fallback-mismatched input returns `initial` before scoring. Valid input must first
+reach 90% overall recall, 100% Critical/High recall, and no treatment false-positive regression.
+Only then is the median paired `review_to_confirmation_ready` reduction evaluated against 33.3%.
+The committed shape fixture is `real-pair-shape-only`; it can validate the interface but cannot
+enter field scoring or produce a promotion candidate.
 
 ## Failure policy
 

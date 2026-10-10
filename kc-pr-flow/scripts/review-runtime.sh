@@ -272,6 +272,191 @@ review_runtime_remove_private_snapshot_dir() {
   rmdir "$snapshot_dir" 2>/dev/null || true
 }
 
+review_runtime_monotonic_ms() {
+  python3 -c 'import time; print(time.monotonic_ns() // 1_000_000)'
+}
+
+review_runtime_timing_phase_index() {
+  case "$1" in
+    identity_and_plan) printf '0\n' ;;
+    inventory) printf '1\n' ;;
+    required_lanes_critical_path) printf '2\n' ;;
+    collector) printf '3\n' ;;
+    targeted_verification_critical_path) printf '4\n' ;;
+    collation_and_draft) printf '5\n' ;;
+    confirmation_ready) printf '6\n' ;;
+    *) return 1 ;;
+  esac
+}
+
+review_runtime_timing_state_hash() {
+  jq -S -c 'del(.content_sha256)' "$1" | review_runtime_sha256
+}
+
+review_runtime_timing_state_valid() {
+  local state_file="$1" actual_hash
+  review_runtime_json_has_unique_members "$(cat "$state_file")" >/dev/null 2>&1 || return 1
+  jq -e '
+    def exact_keys($required): type == "object" and (keys | sort) == ($required | sort);
+    def safe_int: type == "number" and floor == . and . >= 0 and . <= 9007199254740991;
+    def hash64: type == "string" and test("^[0-9a-f]{64}$");
+    def mode: . == "initial" or . == "delta" or . == "resolve";
+    def phase: . == "identity_and_plan" or . == "inventory" or
+      . == "required_lanes_critical_path" or . == "collector" or
+      . == "targeted_verification_critical_path" or . == "collation_and_draft" or
+      . == "confirmation_ready";
+    exact_keys(["content_sha256","marks","mode","review_key","schema","start_ms"]) and
+    .schema == "kc-pr-flow.review-timing-state/v2" and (.review_key | hash64) and
+    (.content_sha256 | hash64) and (.mode | mode) and (.start_ms | safe_int) and
+    (.marks | type == "array" and length <= 7 and all(.[];
+      exact_keys(["monotonic_ms","phase"]) and (.monotonic_ms | safe_int) and (.phase | phase))) and
+    ([.marks[].phase] == ["identity_and_plan","inventory","required_lanes_critical_path",
+      "collector","targeted_verification_critical_path","collation_and_draft","confirmation_ready"][:(.marks | length)]) and
+    ([.start_ms] + [.marks[].monotonic_ms] | . == sort)
+  ' "$state_file" >/dev/null 2>&1 || return 1
+  actual_hash="$(review_runtime_timing_state_hash "$state_file")" || return 1
+  [ "$actual_hash" = "$(jq -r '.content_sha256' "$state_file")" ]
+}
+
+review_runtime_timing_with_hash() {
+  local value="$1" hash
+  hash="$(printf '%s' "$value" | jq -S -c . | review_runtime_sha256)" || return
+  jq -S -c --arg hash "$hash" '. + {content_sha256:$hash}' <<<"$value"
+}
+
+# A same-directory hard link provides no-clobber publication for a new file.
+# The transient mkdir serializes cooperating accidental writers only; it is not
+# a background process or a same-user attacker defense.
+review_runtime_write_new_private_json() (
+  local value="$1" output_file="$2" parent temporary
+  parent="$(dirname "$output_file")" || return 74
+  review_runtime_real_directory "$parent" || return 74
+  if [ -e "$output_file" ] || [ -L "$output_file" ]; then return 2; fi
+  temporary="$(mktemp "$parent/.review-timing.XXXXXX")" || return 74
+  trap 'rm -f "$temporary" 2>/dev/null || true' EXIT
+  umask 077
+  printf '%s\n' "$value" >"$temporary" || return 74
+  chmod 0600 "$temporary" || return 74
+  ln "$temporary" "$output_file" 2>/dev/null || return 75
+  rm -f "$temporary" || return 74
+)
+
+review_runtime_timing_start() {
+  local review_key="$1" mode="$2" output_file="$3" start_ms without_hash state
+  [[ "$review_key" =~ ^[0-9a-f]{64}$ ]] || return 3
+  case "$mode" in initial | delta | resolve) ;; *) return 3 ;; esac
+  start_ms="$(review_runtime_monotonic_ms)" || return 69
+  review_runtime_positive_safe_integer "$start_ms" || return 3
+  without_hash="$(jq -S -c -n --arg review_key "$review_key" --arg mode "$mode" \
+    --argjson start_ms "$start_ms" '{schema:"kc-pr-flow.review-timing-state/v2",
+      review_key:$review_key,mode:$mode,start_ms:$start_ms,marks:[]}')" || return
+  state="$(review_runtime_timing_with_hash "$without_hash")" || return
+  review_runtime_write_new_private_json "$state" "$output_file"
+}
+
+review_runtime_timing_mark() (
+  local timing_file="$1" phase="$2" lock snapshot_dir snapshot state now_ms expected_index
+  local without_hash new_state parent temporary
+  expected_index="$(review_runtime_timing_phase_index "$phase")" || return 3
+  lock="$timing_file.lock"
+  mkdir "$lock" 2>/dev/null || return 75
+  trap 'rmdir "$lock" 2>/dev/null || true' EXIT
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  snapshot="$snapshot_dir/timing-state.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$snapshot"; rmdir "$lock" 2>/dev/null || true' EXIT
+  review_runtime_snapshot_regular_file "$timing_file" "$snapshot" 'timing state' 1048576 || return
+  review_runtime_timing_state_valid "$snapshot" || return 3
+  [ "$(jq '.marks | length' "$snapshot")" = "$expected_index" ] || return 3
+  now_ms="$(review_runtime_monotonic_ms)" || return 69
+  review_runtime_positive_safe_integer "$now_ms" || return 3
+  [ "$now_ms" -ge "$(jq -r '[.start_ms,.marks[].monotonic_ms] | max' "$snapshot")" ] || return 3
+  without_hash="$(jq -S -c --arg phase "$phase" --argjson now_ms "$now_ms" \
+    'del(.content_sha256) | .marks += [{monotonic_ms:$now_ms,phase:$phase}]' "$snapshot")" || return
+  new_state="$(review_runtime_timing_with_hash "$without_hash")" || return
+  parent="$(dirname "$timing_file")" || return 74
+  review_runtime_real_directory "$parent" || return 74
+  temporary="$(mktemp "$parent/.review-timing.XXXXXX")" || return 74
+  trap 'rm -f "$temporary" 2>/dev/null || true; review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$snapshot"; rmdir "$lock" 2>/dev/null || true' EXIT
+  umask 077
+  printf '%s\n' "$new_state" >"$temporary" || return 74
+  chmod 0600 "$temporary" || return 74
+  mv -f "$temporary" "$timing_file" || return 74
+)
+
+review_runtime_timing_lanes_valid() {
+  local lane_file="$1"
+  review_runtime_json_has_unique_members "$(cat "$lane_file")" >/dev/null 2>&1 || return 1
+  jq -e '
+    def exact_keys($required): type == "object" and (keys | sort) == ($required | sort);
+    def token: type == "string" and test("^[a-z][a-z0-9._-]{0,63}$");
+    def safe_int: type == "number" and floor == . and . >= 0 and . <= 9007199254740991;
+    type == "array" and all(.[]; exact_keys(["duration_ms","lane_id","provider_family"]) and
+      (.duration_ms | safe_int) and (.lane_id | token) and (.provider_family | token)) and
+    ([.[].lane_id] == ([.[].lane_id] | sort | unique))
+  ' "$lane_file" >/dev/null 2>&1
+}
+
+review_runtime_external_wait_valid() {
+  jq -e '
+    def exact_keys($required): type == "object" and (keys | sort) == ($required | sort);
+    def safe_int: type == "number" and floor == . and . >= 0 and . <= 9007199254740991;
+    exact_keys(["hosted_ci","human_wait","schema","unrelated_queue"]) and
+    .schema == "kc-pr-flow.external-wait-attribution/v1" and
+    (.hosted_ci | safe_int) and (.human_wait | safe_int) and (.unrelated_queue | safe_int)
+  ' "$1" >/dev/null 2>&1
+}
+
+review_runtime_timing_finish() (
+  local timing_file="$1" lane_file="$2" output_file="$3" external_file="${4-}"
+  local snapshot_dir state lanes attribution_snapshot='' external receipt
+  snapshot_dir="$(review_runtime_private_snapshot_dir)" || return 74
+  state="$snapshot_dir/timing-state.json"
+  lanes="$snapshot_dir/lane-durations.json"
+  trap 'review_runtime_remove_private_snapshot_dir "$snapshot_dir" "$state" "$lanes" "$attribution_snapshot"' EXIT
+  review_runtime_snapshot_regular_file "$timing_file" "$state" 'timing state' 1048576 || return
+  review_runtime_snapshot_regular_file "$lane_file" "$lanes" 'lane durations' 1048576 || return
+  review_runtime_timing_state_valid "$state" || return 3
+  [ "$(jq '.marks | length' "$state")" = 7 ] || return 3
+  review_runtime_timing_lanes_valid "$lanes" || return 3
+  external='{"hosted_ci":null,"human_wait":null,"unrelated_queue":null}'
+  if [ -n "$external_file" ]; then
+    attribution_snapshot="$snapshot_dir/external-attribution.json"
+    review_runtime_snapshot_regular_file "$external_file" "$attribution_snapshot" \
+      'external wait attribution' 1048576 || return
+    review_runtime_json_has_unique_members "$(cat "$attribution_snapshot")" >/dev/null 2>&1 || return 3
+    review_runtime_external_wait_valid "$attribution_snapshot" || return 3
+    external="$(jq -S -c 'del(.schema)' "$attribution_snapshot")" || return
+  fi
+  receipt="$(jq -S -c -e -n --slurpfile state "$state" --slurpfile lanes "$lanes" \
+    --argjson external "$external" '
+    $state[0] as $s | $s.marks as $m |
+    ($m[0].monotonic_ms - $s.start_ms) as $identity |
+    ($m[1].monotonic_ms - $m[0].monotonic_ms) as $inventory |
+    ($m[2].monotonic_ms - $m[1].monotonic_ms) as $required |
+    ($m[3].monotonic_ms - $m[2].monotonic_ms) as $collector |
+    ($m[4].monotonic_ms - $m[3].monotonic_ms) as $targeted |
+    ($m[5].monotonic_ms - $m[4].monotonic_ms) as $collation |
+    ($m[6].monotonic_ms - $s.start_ms) as $wall |
+    ([$external.hosted_ci,$external.human_wait,$external.unrelated_queue] |
+      if all(.[]; type == "number") then add else 0 end) as $external_wait |
+    ($wall - $identity - $inventory - $collector - $external_wait) as $review |
+    select($review >= 0) |
+    {
+      schema:"kc-pr-flow.review-timing/v1",review_key:$s.review_key,mode:$s.mode,
+      durations_ms:{identity_and_plan:$identity,inventory:$inventory,
+        required_lanes_critical_path:$required,collector:$collector,
+        targeted_verification_critical_path:$targeted,collation_and_draft:$collation,
+        wall_to_confirmation_ready:$wall,review_to_confirmation_ready:$review},
+      attribution_ms:{agent_critical_path:$required,collector:$collector,
+        hosted_ci:$external.hosted_ci,unrelated_queue:$external.unrelated_queue,
+        human_wait:$external.human_wait},
+      lane_durations_ms:$lanes[0]
+    }
+  ')" || return
+  review_runtime_write_new_private_json "$receipt" "$output_file" || return
+  printf '%s\n' "$receipt"
+)
+
 review_runtime_state_root() {
   printf '%s\n' "${KC_PR_FLOW_STATE_DIR:-${XDG_STATE_HOME:-$HOME/.local/state}/kc-pr-flow}"
 }
@@ -3612,7 +3797,67 @@ review_runtime_main_compare_usage() {
 }
 
 review_runtime_usage() {
-  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|receipt --event-file FILE --config-file FILE --repo-worktree DIR|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|verify-evidence ...|compare-usage ...}' >&2
+  printf '%s\n' 'usage: review-runtime.sh {start ...|config-hash ...|review-key ...|validate --event-file FILE|append --event-file FILE|replay --event-file FILE|receipt --event-file FILE --config-file FILE --repo-worktree DIR|show --event-file FILE|observe --event-file FILE --expected-head SHA --expected-review-key HASH|rehydrate-interactive --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|decide-merge-readiness --observations-file FILE --event-file FILE --policy-file FILE --repo-worktree DIR --repo OWNER/REPO --pr N --base SHA --head SHA --config-hash HASH --review-key HASH --run-id ID|shadow --observation-file FILE ...|timing-start --review-key HASH --mode MODE --output FILE|timing-mark --timing-file FILE --phase PHASE|timing-finish --timing-file FILE --lane-durations-file FILE [--external-attribution-file FILE] --output FILE|verify-evidence ...|compare-usage ...}' >&2
+}
+
+review_runtime_main_timing_start() {
+  local review_key='' mode='' output_file=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --review-key | --mode | --output)
+        [ "$#" -ge 2 ] || return 2
+        case "$1" in
+          --review-key) review_key="$2" ;;
+          --mode) mode="$2" ;;
+          --output) output_file="$2" ;;
+        esac
+        shift 2
+        ;;
+      *) return 2 ;;
+    esac
+  done
+  [ -n "$review_key" ] && [ -n "$mode" ] && [ -n "$output_file" ] || return 2
+  review_runtime_timing_start "$review_key" "$mode" "$output_file"
+}
+
+review_runtime_main_timing_mark() {
+  local timing_file='' phase=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --timing-file | --phase)
+        [ "$#" -ge 2 ] || return 2
+        case "$1" in
+          --timing-file) timing_file="$2" ;;
+          --phase) phase="$2" ;;
+        esac
+        shift 2
+        ;;
+      *) return 2 ;;
+    esac
+  done
+  [ -n "$timing_file" ] && [ -n "$phase" ] || return 2
+  review_runtime_timing_mark "$timing_file" "$phase"
+}
+
+review_runtime_main_timing_finish() {
+  local timing_file='' lane_file='' output_file='' external_file=''
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --timing-file | --lane-durations-file | --external-attribution-file | --output)
+        [ "$#" -ge 2 ] || return 2
+        case "$1" in
+          --timing-file) timing_file="$2" ;;
+          --lane-durations-file) lane_file="$2" ;;
+          --external-attribution-file) external_file="$2" ;;
+          --output) output_file="$2" ;;
+        esac
+        shift 2
+        ;;
+      *) return 2 ;;
+    esac
+  done
+  [ -n "$timing_file" ] && [ -n "$lane_file" ] && [ -n "$output_file" ] || return 2
+  review_runtime_timing_finish "$timing_file" "$lane_file" "$output_file" "$external_file"
 }
 
 review_runtime_main_start() {
@@ -3664,6 +3909,9 @@ review_runtime_main() {
     rehydrate-interactive) review_runtime_main_rehydrate_interactive "$@" ;;
     decide-merge-readiness) review_runtime_main_decide_merge_readiness "$@" ;;
     shadow) review_runtime_main_shadow "$@" ;;
+    timing-start) review_runtime_main_timing_start "$@" ;;
+    timing-mark) review_runtime_main_timing_mark "$@" ;;
+    timing-finish) review_runtime_main_timing_finish "$@" ;;
     verify-evidence) review_runtime_main_verify_evidence "$@" ;;
     compare-usage) review_runtime_main_compare_usage "$@" ;;
     *)
