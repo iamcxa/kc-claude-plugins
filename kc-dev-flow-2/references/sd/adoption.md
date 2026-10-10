@@ -115,6 +115,15 @@ the user's settings, with this contract:
 - a refused command that only mentions a reader is rephrased, never split or encoded;
 - Codex has no equivalent hook, so there the `Secrets:` line is the only control.
 
+## Resetting a branch database
+
+`workflow.md` Number guards (Collision) holds for the Captain to reset a branch
+database; the reset goes through the hosting provider's own API, and the package
+wraps none. One provider's example (Netlify): a branch reset is one Open API call,
+`netlify api resetSiteDatabaseBranch --data '{"site_id":"<site>","branch_id":"<branch>"}' > /dev/null`
+(`netlify api --list` shows the method). The response carries connection strings, so
+redirect it to `/dev/null` and read the result from the next deploy.
+
 ## Before activation
 
 Review the concrete README, state mapping, exact stage-skill availability and

@@ -20,7 +20,7 @@ PACKAGE_ROOT = re.compile(r"^Package root: \S", re.MULTILINE)
 UNBOUND_ROOT = re.compile(r"\{package\}|/absolute/plugin")
 WORKFLOW = "references/sd/workflow.md"
 # Raise only in a change that says why the adopted README must grow.
-WORKFLOW_WORD_BUDGET = 4579
+WORKFLOW_WORD_BUDGET = 4471
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
 KNOWN_DUPLICATES = {
