@@ -28,7 +28,6 @@ stages:
         - Captain amendments
         - Affected documents
         - Number guards
-        - Delivery authority
     - name: validation
       worktree: true
       fresh: true
@@ -41,7 +40,6 @@ stages:
         - Captain amendments
         - Affected documents
         - Number guards
-        - Delivery authority
     - name: done
       terminal: true
 ---
@@ -85,16 +83,19 @@ the validator reads the bytes that will be delivered. A repair that outgrows wha
 assignment names returns to FO as a scope change.
 
 FO resolves `<package>` in this workflow from the `Package root:` line of
-`kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path
-as a `Package root: <absolute path>` line in its scope notes
-(`--scope-notes-file`), which land in the dispatch file the worker reads first.
-A checklist or scope-notes line that names a package script writes
-`<package>/scripts/NAME.py` with the absolute root substituted, never the bare
-script name. When `status --set` refuses to leave a stage, run
-`status --workflow-dir <dir> --read <task> --stage <stage> --checklist`, return
-any line it reports as neither DONE nor SKIPPED to the worker, and do not edit the
-worker's report. The refusal itself does not say why; other causes are a missing
-evidence line or Summary and an uncommitted report.
+`kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path as a
+`Package root: <absolute path>` line in its scope notes (`--scope-notes-file`),
+which land in the dispatch file the worker reads first. FO saves those scope notes,
+the checklist, the model it dispatches on and the SHA it dispatches from as
+`<task>/dispatch/<stage>-<cycle>.md` in the state checkout, committed with that
+dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so the instruction
+a worker followed outlives the session that wrote it. A checklist or scope-notes
+line that names a package script writes `<package>/scripts/NAME.py` with the
+absolute root substituted, never the bare script name. When `status --set` refuses
+to leave a stage, run `status --workflow-dir <dir> --read <task> --stage <stage>
+--checklist`, return any line it reports as neither DONE nor SKIPPED to the worker,
+and do not edit the worker's report. The refusal itself does not say why; other
+causes are a missing evidence line or Summary and an uncommitted report.
 
 ### `backlog`
 
@@ -144,13 +145,10 @@ differently, or `Visible change: none`.
   `journey-mapping-complete: true` on one task per story at the review's split step.
   When signal 2 moves a task out of a release, FO clears its release fields with
   `spacedock status --workflow-dir <dir> --set <task> journey= journey-release= journey-story= journey-required-tasks= journey-mapping-complete=`
-  (a field set to nothing is cleared) and, where kc-journey-progress is tracking,
-  removes the task's full id from `journey-required-tasks` on the declaring task of
-  its old story; when the cleared task was the declaring one, FO moves that list and
-  `journey-mapping-complete: true` to another member of the story. A task moved to
-  another story gets the new values from the set command above and its id is added to
-  that story's list. kc-journey-progress reports a story unverified until its
-  declaration matches its members.
+  (a field set to nothing is cleared). Where kc-journey-progress is tracking, follow its
+  skill for the lists; when the cleared task was the declaring one, FO moves that list and
+  `journey-mapping-complete: true` to another member of the story. kc-journey-progress
+  reports a story unverified until its declaration matches its members.
 
 ### `ideation`
 
@@ -186,9 +184,7 @@ ADR draft live in the task file, and a draft carries no ADR number.
   evidence, prior reports, approvals and verdicts. Withdraw an affected open binding
   before editing, then reprepare through the applicable SD lifecycle. Other
   corrections require an authorized author; hold where no supported route applies,
-  without inventing same-stage rework. Present a concise recommendation, including
-  routine details; ask about unresolved material scope, interface, acceptance or
-  authority choices. Corrections neither replace user approval nor advance stages.
+  without inventing same-stage rework. Corrections neither replace user approval nor advance stages.
 
 ### `implementation`
 
@@ -249,11 +245,32 @@ Spacedock inlines this section into each stage whose `context-sections` lists it
 
 ## Review-finding disposition
 
+Before repair authorization, product bytes and the recorded candidate revision stay
+unchanged. Read-only inspection, non-mutating reproductions, existing tests and
+throwaway-checkout probes are allowed. Report/gate commits may advance repository
+HEAD without changing the candidate. Validators recommend `PASSED` or `REJECTED`;
+new findings or changed evidence re-enter this checkpoint.
+
+The four evidence fields are released user and normal workflow; observable harm;
+affected value acceptance criterion or non-negotiable boundary; and trigger
+evidence. Field 3 uses `value-ac[AC-N]`, `captain-ruling[YYYY-MM-DD]`, or
+`contract[repo/relative/path#anchor]` plus a nonblank claim. `none:` with a rationale
+does not establish Material.
+
+- **Material:** all four fields establish supported-workflow harm to a protected
+  boundary or value acceptance criterion.
+- **Deferred risk:** hypothetical, unsupported, unobserved or unpromised trigger;
+  record what would make it material.
+- **Polish:** no current user-visible loss or protected boundary is at risk.
+- **Needs decision:** the task cannot own the scope, product or compatibility call.
+
+## FO steps: review findings
+
 Apply this checkpoint to findings from implementation, validation, detached audits,
 consequential FO quick work and rejected gates.
 
 1. Reviewers observe; workers' classifications and `actor:ensign` Resolutions are
-   advisory. Preserve findings and assess the four evidence fields below, separating
+   advisory. Preserve findings and assess the four evidence fields above, separating
    materiality, ownership and disposition. Missing required evidence or unresolved
    classification requires investigation or hold.
 2. Within approved boundaries, FO may explicitly decline evidenced Deferred risk
@@ -279,25 +296,8 @@ consequential FO quick work and rejected gates.
    finding's file, else a new backlog task from `spacedock new`. The terminal gate
    lists each follow-up and its home.
 
-Before repair authorization, product bytes and the recorded candidate revision stay
-unchanged. Read-only inspection, non-mutating reproductions, existing tests and
-throwaway-checkout probes are allowed. Report/gate commits may advance repository
-HEAD without changing the candidate. Validators recommend `PASSED` or `REJECTED`;
-new findings or changed evidence re-enter this checkpoint. Rejection routing carries
-evidence, classifications, authorized dispositions and assignment without re-triage.
-
-The four evidence fields are released user and normal workflow; observable harm;
-affected value acceptance criterion or non-negotiable boundary; and trigger
-evidence. Field 3 uses `value-ac[AC-N]`, `captain-ruling[YYYY-MM-DD]`, or
-`contract[repo/relative/path#anchor]` plus a nonblank claim. `none:` with a rationale
-does not establish Material.
-
-- **Material:** all four fields establish supported-workflow harm to a protected
-  boundary or value acceptance criterion.
-- **Deferred risk:** hypothetical, unsupported, unobserved or unpromised trigger;
-  record what would make it material.
-- **Polish:** no current user-visible loss or protected boundary is at risk.
-- **Needs decision:** the task cannot own the scope, product or compatibility call.
+Rejection routing carries evidence, classifications, authorized dispositions and assignment
+without re-triage.
 
 Materiality and ownership are independent. Owned Material is eligible for an
 FO-authorized fix; out-of-scope Material holds as Needs decision. Deferred risk
@@ -309,6 +309,12 @@ for example "approving accepts the recommendation for D2; say if you object".
 Without that sentence a decision he did not address stays open: FO records its
 handling as FO's reading, never as his ruling, and asks him.
 
+A Captain ruling is his reply to the question it settles, given after that question
+was put. FO never records as his ruling: silence on a decision the question did not
+state approval accepts, consent he gave earlier to a different question, or a choice
+he raised but did not make. FO answers a question the Captain asks at a gate before
+dispatching on it, and returns a choice he raised to him rather than to a worker.
+
 When the Captain chooses differently from the recommendation, FO writes
 `Override: recommended <option>; Captain chose <option>; area: <area>` in the gate
 resolution reason, so later workers find past rulings with `git grep 'Override:'` in
@@ -316,24 +322,29 @@ the state checkout.
 
 ## Decision records
 
+Write one file per decision, `docs/adr/NNNN-short-title.md`, in the ADR format of the
+kc-dev-flow-2 package's `references/adr-template.md`, with the decider's own words, the
+options considered and the option recommended inside Decision;
+`<package>/scripts/adr_lint.py --require` refuses a required record without the
+recommended line. An older record a change touches without that line takes
+`**Recommended:** not recorded`, never a reconstructed recommendation. Create `docs/adr/`
+with this record if it is absent. A decision document that predates this format may stay
+as one record marked `Status: Legacy`.
+This is not the gate `resolution.reason` or the SD stage report. The implementation
+worker writes the record into the candidate and names the ADR numbers it added or
+changed in its report; validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`
+and returns a failure or a missing record through the existing feedback route.
+
+## FO steps: decision records
+
 A ruling settled at a gate, in a worker report, or mid-stage feedback — a rule about
 the product, a constraint, or a direction later work must respect — is landed as an
 ADR before the next gate is presented, at latest by the terminal approval. A ruling
-that governs only this task's own work stays in the task. Write one file per
-decision, `docs/adr/NNNN-short-title.md`, in the ADR format of the kc-dev-flow-2
-package's `references/adr-template.md`, with the decider's own words, the options
-considered and the option recommended inside Decision;
-`<package>/scripts/adr_lint.py --require` refuses a required record without the
-recommended line. Create `docs/adr/` with this record if it is absent. A decision
-document that predates this format may stay as one record marked `Status: Legacy`.
-This is not the gate `resolution.reason` or the SD stage report. A design names an ADR
+that governs only this task's own work stays in the task. A design names an ADR
 by its ruling and the file's short title, with no number; FO reserves the number when
 it dispatches implementation (Number guards) and the implementation worker writes
-`docs/adr/<reserved number>-<short-title>.md`. The implementation worker writes the
-record into the candidate and names the ADR numbers it added or changed in its report;
-validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`
-and returns a failure or a missing record through the existing feedback route; FO
-confirms it before presenting the gate. A deferred user-facing capability belongs on
+`docs/adr/<reserved number>-<short-title>.md`. FO confirms the validation ADR lint
+passes before presenting the gate. A deferred user-facing capability belongs on
 the product's journey map, not here.
 
 ## Captain amendments
@@ -388,23 +399,9 @@ Applies when the task's `Surfaces:` includes `db`, or its design lands an ADR; t
 frontmatter (`--workflow-dir <workflow-dir>`) and a task's numbers and applied
 deploys from its `## Number guards` section; `--help` lists the flags.
 
-- **Reserve.** Before an implementation dispatch, FO runs `git -C <repo> fetch`, then
-  `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
-  once per kind the task needs, when the implementation dispatch is built and not
-  earlier. FO records each printed `Migration: NNNN` /
-  `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as
-  dispatch scope notes. One number per kind per task; a task needing more returns
-  to FO.
-- **Applied.** Before any push of a candidate to a persistent shared non-production
-  environment (a database branch, or a separate hosting project such as a staging
-  project whose database is that project's own production database), FO records `Applied at: <environment> <sha>`
-  for the commit being pushed. A migration in that commit is then frozen for the
-  task: edit, delete and renumber fail `check`. When the push is rejected or the
-  deploy is confirmed not to have run for that commit (the push's non-zero output,
-  or the environment's own deploy record showing no deploy of it), FO replaces that
-  one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
-  no longer frozen. Without that confirmation the line stays and the migration counts
-  as applied.
+- **Reserve.** One number per kind per task; a task needing more returns to FO.
+- **Applied.** A migration in a commit recorded `Applied at:` is frozen for the task:
+  edit, delete and renumber fail `check`.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
   runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR
   head before FO asks for merge. Exit 2 is a configuration error, which returns to FO
@@ -417,8 +414,28 @@ deploys from its `## Number guards` section; `--help` lists the flags.
   directory that differs from the merge-base. A `FAIL R6` crosses the POC boundary
   (a schema change persists across sessions): the worker records
   `boundary-crossed: persistent-state` naming the path, and the task is not repaired in
-  place; FO presents the marker at the validation gate. Without `migrations-path:` the
-  migration rules are skipped, so a POC is not guarded until the README declares it.
+  place.
+
+## FO steps: number guards
+
+- **Reserve.** Before an implementation dispatch, FO runs `git -C <repo> fetch`, then
+  `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
+  once per kind the task needs, when the implementation dispatch is built and not
+  earlier. FO records each printed `Migration: NNNN` /
+  `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as
+  dispatch scope notes.
+- **Applied.** Before any push of a candidate to a persistent shared non-production
+  environment (a database branch, or a separate hosting project such as a staging
+  project whose database is that project's own production database), FO records `Applied at: <environment> <sha>`
+  for the commit being pushed. When the push is rejected or the
+  deploy is confirmed not to have run for that commit (the push's non-zero output,
+  or the environment's own deploy record showing no deploy of it), FO replaces that
+  one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
+  no longer frozen. Without that confirmation the line stays and the migration counts
+  as applied.
+- **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
+  validation gate. Without `migrations-path:` the migration rules are skipped, so a POC
+  is not guarded until the README declares it.
 - **Collision.** When two tasks hold one migration number (`check` reports R3 or R5 on
   the later candidate; nothing compares task files), the task whose migration is applied
   keeps it and the other, unapplied task renumbers, so no reset is needed. A migration
@@ -431,10 +448,8 @@ deploys from its `## Number guards` section; `--help` lists the flags.
   database branch is reset, and a shared non-production database that cannot be reset
   (a separate project's own database) is deleted and recreated by the Captain. FO then
   replaces the line with `Not applied: <environment> <sha> - database reset` so that
-  `check` accepts the renumber. A branch reset is one Netlify Open API call, `netlify api resetSiteDatabaseBranch --data '{"site_id":"<site>","branch_id":"<branch>"}' > /dev/null`
-  (`netlify api --list` shows the method). The response carries connection
-  strings, so redirect it to `/dev/null` and read the result from the next
-  deploy. This step is documented, not wrapped in a tool.
+  `check` accepts the renumber. A branch database is reset through the provider's own API; `adoption.md` gives one
+  provider's example. This step is documented, not wrapped in a tool.
 
 ## Delivery authority
 
@@ -454,7 +469,7 @@ validation gate is not permission to push, create or merge a PR. Preserve manual
 merge authority. Do not invoke local fallback, push the trunk, merge, or clean up
 an owned worktree unless the specific action is authorized. An upstream hook's
 default fallback is not that grant. A failure holds delivery pending an explicit
-choice. These are orchestration instructions, not added mechanical guardrails.
+choice.
 
 Use SD's pending terminal approval and existing merge hook; do not invent another
 PR stage. Observe the actual repository-qualified PR merge before recording its
@@ -477,8 +492,8 @@ can still show the task awaiting merge.
 The README and `_mods` stay in the code repository; mutable task state lives in
 `.spacedock-state`, an ignored linked checkout of this workflow's distinct orphan
 state branch. Commission/refit owns setup; a fresh clone uses SD state init.
-POC uses independent validation in this variant; direct POC eligibility and special
-Production recovery routes are not implemented.
+POC uses independent validation in this variant, and special Production recovery
+routes are not implemented.
 
 FO commits task state only through SD commands (`gate record`, `state commit
 <slug>`, each with `--workflow-dir <dir>`), never by staging the state checkout with
@@ -512,7 +527,5 @@ Verified by: <Reproducible evidence and its limits.>
 ```
 
 Optional frontmatter, absent until used: `journey`, `journey-release` and
-`journey-story`, set by FO with `status --set` when the task belongs to a release
-story (see `backlog`, Release review). `journey` holds the map's own `journey:` value,
-not its file name. A placeholder comment would sit beside the real values once
+`journey-story`, set by FO at Release review (see `backlog`). A placeholder comment would sit beside the real values once
 `status --set` filled them, so the template carries none.
