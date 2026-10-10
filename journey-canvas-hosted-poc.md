@@ -4,6 +4,17 @@ status: backlog
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
+gates:
+    version: 1
+    records:
+        - id: gate:journey-canvas-hosted-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:journey-canvas-hosted-poc-backlog-1
+              briefing:
+                id: briefing:journey-canvas-hosted-poc:backlog:attempt-1:revision-1
+                digest: sha256:e3fe666e2d522ac685f009e7f466a7aaf913516fa9da75b1d37c7bbb6099e4a1
+                room-ref: ./journey-canvas-hosted-poc/review/backlog/briefing-1
 ---
 
 kc-journey-map's canvas is a tldraw 5.4 room synced over WebSocket by a local Node service (server/canvas-server.ts, @tldraw/sync 5.4.0); boards live on this machine and disappear from view when it is off. subspace-relay is hosted on Netlify, whose functions do not hold long-lived WebSocket connections, so relay's hosting does not carry over as is.

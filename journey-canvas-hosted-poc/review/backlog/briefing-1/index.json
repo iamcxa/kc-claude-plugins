@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-canvas-hosted-poc:backlog:attempt-1:revision-1",
+  "question": "開這兩張任務嗎？一張是 qnow 的「旅程圖合併並照新順序重排」，一張是 kc-claude-plugins 的「畫布線上化 POC」。",
+  "artifacts": [
+    {
+      "id": "artifact:journey-canvas-hosted-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c80cd11a60c78fbcf6c765354c8c545fa9163e16/journey-canvas-hosted-poc.md",
+      "rev": "sha256:79d34da52eaa6fd6891557fca341e15691bca1a47132554b5c4576dc726d0dd8",
+      "mediaType": "text/markdown",
+      "summary": "Proof of concept: host a kc-journey-map canvas room, shareable by link, persistent, edit access limited."
+    }
+  ]
+}
