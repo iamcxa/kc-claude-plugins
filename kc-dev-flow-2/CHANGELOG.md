@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.14.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.13.0...kc-dev-flow-2-v0.14.0) (2026-10-10)
+
+
+### Features
+
+* **kc-dev-flow-2:** a Captain ruling must answer the question it settles ([#585](https://github.com/iamcxa/kc-claude-plugins/issues/585)) ([7d97d3a](https://github.com/iamcxa/kc-claude-plugins/commit/7d97d3aa15ed443be1d6fb0e7dff25c264a090e5))
+* **kc-dev-flow-2:** give each worker only the workflow text it acts on ([#587](https://github.com/iamcxa/kc-claude-plugins/issues/587)) ([4064fb5](https://github.com/iamcxa/kc-claude-plugins/commit/4064fb5c42812c79fa9320560f670c4a6c5ae576))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** an older ADR a change touches says the recommendation was not recorded ([#589](https://github.com/iamcxa/kc-claude-plugins/issues/589)) ([097bfea](https://github.com/iamcxa/kc-claude-plugins/commit/097bfeae9751746a3d101d5530b4411fc4368e14))
+
 ## [0.13.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.12.0...kc-dev-flow-2-v0.13.0) (2026-10-09)
 
 
