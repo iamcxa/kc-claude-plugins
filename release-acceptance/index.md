@@ -15,6 +15,17 @@ gates:
                 id: briefing:release-acceptance:backlog:attempt-1:revision-1
                 digest: sha256:fa927076e3055c589fe222ea4a518267f677c3558ec59384e1bf7689a8d03077
                 room-ref: ./review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-acceptance:backlog:1
+                briefing: briefing:release-acceptance:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-10T14:33:03.440418Z"
+                decision: approve
+                reason: 'Captain 2026-10-10: 「現在開」, answering the FO''s question "在 kc-claude-plugins 的 dev2 工作流程，把 #571 立成一張任務進設計，R3、R4 兩份驗收報告當作證據。要現在開嗎？"'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Issue iamcxa/kc-claude-plugins#571: a release is reviewed as one journey before its tasks are split, but nothing enforces that review, and nothing walks a release as a whole after its stories are built.
