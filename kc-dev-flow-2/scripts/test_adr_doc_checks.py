@@ -55,6 +55,43 @@ class AdrLintTests(unittest.TestCase):
         self.assertEqual(self.run_lint({"0002-first.md": old}, "2"), 1)
         self.assertEqual(self.run_lint({"0002-first.md": old, "0003-second.md": record(3)}, "3"), 0)
 
+    def lint_output(self, args):
+        import contextlib, io
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = adr.main(args)
+        return code, out.getvalue()
+
+    def test_since_requires_every_record_changed_after_the_base_and_no_other(self):
+        old = record(2).replace("**Recommended:**", "Recommended:")
+        with tempfile.TemporaryDirectory() as d:
+            git = lambda *a: subprocess.run(["git", "-C", d, *a], check=True, capture_output=True, text=True).stdout
+            git("init", "-q")
+            for n in (2, 3, 4):
+                Path(d, f"000{n}-r.md").write_text(old.replace("# 2.", f"# {n}."))
+            git("add", ".")
+            git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", "base")
+            base = git("rev-parse", "HEAD").strip()
+            Path(d, "0003-r.md").write_text(Path(d, "0003-r.md").read_text() + "\nAmended.\n")
+            Path(d, "0005-r.md").write_text(old.replace("# 2.", "# 5."))
+            code, out = self.lint_output([d, "--since", base])
+            self.assertEqual(code, 1)
+            self.assertIn("required ADR 0003", out)
+            self.assertIn("required ADR 0005", out)
+            self.assertNotIn("0002", out)
+            self.assertNotIn("0004", out)
+            for n in (3, 5):
+                f = Path(d, f"000{n}-r.md")
+                f.write_text(f.read_text().replace("**Options considered:**", "**Recommended:** not recorded\n\n**Options considered:**"))
+            self.assertEqual(self.lint_output([d, "--since", base])[0], 0)
+            self.assertEqual(self.lint_output([d, "--since", "no-such-commit"])[0], 2)
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "0002-r.md").write_text(record(2))
+            self.assertEqual(self.lint_output([d, "--since", "HEAD"])[0], 2)
+            code, out = self.lint_output([d])
+            self.assertEqual(code, 0)
+            self.assertIn("changed records not checked", out)
+
     def test_an_amended_older_record_says_not_recorded_and_the_refusal_says_how(self):
         old = record(2).replace("**Recommended:**", "Recommended:")
         amended = old.replace("**Options considered:**", "**Recommended:** not recorded\n\n**Options considered:**")

@@ -89,7 +89,8 @@ which land in the dispatch file the worker reads first. FO saves those scope not
 the checklist, the model it dispatches on and the SHA it dispatches from as
 `<task>/dispatch/<stage>-<cycle>.md` in the state checkout, committed with that
 dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so the instruction
-a worker followed outlives the session that wrote it. A checklist or scope-notes
+a worker followed outlives the session that wrote it. A follow-up message to a worker FO
+resumes is a dispatch too, and its record carries the same parts. A checklist or scope-notes
 line that names a package script writes `<package>/scripts/NAME.py` with the
 absolute root substituted, never the bare script name. When `status --set` refuses
 to leave a stage, run `status --workflow-dir <dir> --read <task> --stage <stage>
@@ -332,8 +333,11 @@ with this record if it is absent. A decision document that predates this format 
 as one record marked `Status: Legacy`.
 This is not the gate `resolution.reason` or the SD stage report. The implementation
 worker writes the record into the candidate and names the ADR numbers it added or
-changed in its report; validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`
-and returns a failure or a missing record through the existing feedback route.
+changed in its report.
+Validation runs `python3 <package>/scripts/adr_lint.py docs/adr --since <base>`, which
+requires every record the candidate added or changed, plus `--require <numbers>` for any
+number the implementation report names; exit 1 or a missing record returns through the
+existing feedback route, and exit 2 is a configuration error that returns to FO.
 
 ## FO steps: decision records
 
