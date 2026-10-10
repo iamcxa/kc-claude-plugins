@@ -28,7 +28,6 @@ stages:
         - Captain amendments
         - Affected documents
         - Number guards
-        - Delivery authority
     - name: validation
       worktree: true
       fresh: true
@@ -41,7 +40,6 @@ stages:
         - Captain amendments
         - Affected documents
         - Number guards
-        - Delivery authority
     - name: done
       terminal: true
 ---
@@ -252,11 +250,32 @@ Spacedock inlines this section into each stage whose `context-sections` lists it
 
 ## Review-finding disposition
 
+Before repair authorization, product bytes and the recorded candidate revision stay
+unchanged. Read-only inspection, non-mutating reproductions, existing tests and
+throwaway-checkout probes are allowed. Report/gate commits may advance repository
+HEAD without changing the candidate. Validators recommend `PASSED` or `REJECTED`;
+new findings or changed evidence re-enter this checkpoint.
+
+The four evidence fields are released user and normal workflow; observable harm;
+affected value acceptance criterion or non-negotiable boundary; and trigger
+evidence. Field 3 uses `value-ac[AC-N]`, `captain-ruling[YYYY-MM-DD]`, or
+`contract[repo/relative/path#anchor]` plus a nonblank claim. `none:` with a rationale
+does not establish Material.
+
+- **Material:** all four fields establish supported-workflow harm to a protected
+  boundary or value acceptance criterion.
+- **Deferred risk:** hypothetical, unsupported, unobserved or unpromised trigger;
+  record what would make it material.
+- **Polish:** no current user-visible loss or protected boundary is at risk.
+- **Needs decision:** the task cannot own the scope, product or compatibility call.
+
+## FO steps: review findings
+
 Apply this checkpoint to findings from implementation, validation, detached audits,
 consequential FO quick work and rejected gates.
 
 1. Reviewers observe; workers' classifications and `actor:ensign` Resolutions are
-   advisory. Preserve findings and assess the four evidence fields below, separating
+   advisory. Preserve findings and assess the four evidence fields above, separating
    materiality, ownership and disposition. Missing required evidence or unresolved
    classification requires investigation or hold.
 2. Within approved boundaries, FO may explicitly decline evidenced Deferred risk
@@ -282,25 +301,8 @@ consequential FO quick work and rejected gates.
    finding's file, else a new backlog task from `spacedock new`. The terminal gate
    lists each follow-up and its home.
 
-Before repair authorization, product bytes and the recorded candidate revision stay
-unchanged. Read-only inspection, non-mutating reproductions, existing tests and
-throwaway-checkout probes are allowed. Report/gate commits may advance repository
-HEAD without changing the candidate. Validators recommend `PASSED` or `REJECTED`;
-new findings or changed evidence re-enter this checkpoint. Rejection routing carries
-evidence, classifications, authorized dispositions and assignment without re-triage.
-
-The four evidence fields are released user and normal workflow; observable harm;
-affected value acceptance criterion or non-negotiable boundary; and trigger
-evidence. Field 3 uses `value-ac[AC-N]`, `captain-ruling[YYYY-MM-DD]`, or
-`contract[repo/relative/path#anchor]` plus a nonblank claim. `none:` with a rationale
-does not establish Material.
-
-- **Material:** all four fields establish supported-workflow harm to a protected
-  boundary or value acceptance criterion.
-- **Deferred risk:** hypothetical, unsupported, unobserved or unpromised trigger;
-  record what would make it material.
-- **Polish:** no current user-visible loss or protected boundary is at risk.
-- **Needs decision:** the task cannot own the scope, product or compatibility call.
+Rejection routing carries evidence, classifications, authorized dispositions and assignment
+without re-triage.
 
 Materiality and ownership are independent. Owned Material is eligible for an
 FO-authorized fix; out-of-scope Material holds as Needs decision. Deferred risk
@@ -325,24 +327,27 @@ the state checkout.
 
 ## Decision records
 
-A ruling settled at a gate, in a worker report, or mid-stage feedback — a rule about
-the product, a constraint, or a direction later work must respect — is landed as an
-ADR before the next gate is presented, at latest by the terminal approval. A ruling
-that governs only this task's own work stays in the task. Write one file per
-decision, `docs/adr/NNNN-short-title.md`, in the ADR format of the kc-dev-flow-2
-package's `references/adr-template.md`, with the decider's own words, the options
-considered and the option recommended inside Decision;
+Write one file per decision, `docs/adr/NNNN-short-title.md`, in the ADR format of the
+kc-dev-flow-2 package's `references/adr-template.md`, with the decider's own words, the
+options considered and the option recommended inside Decision;
 `<package>/scripts/adr_lint.py --require` refuses a required record without the
 recommended line. Create `docs/adr/` with this record if it is absent. A decision
 document that predates this format may stay as one record marked `Status: Legacy`.
-This is not the gate `resolution.reason` or the SD stage report. A design names an ADR
+This is not the gate `resolution.reason` or the SD stage report. The implementation
+worker writes the record into the candidate and names the ADR numbers it added or
+changed in its report; validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`
+and returns a failure or a missing record through the existing feedback route.
+
+## FO steps: decision records
+
+A ruling settled at a gate, in a worker report, or mid-stage feedback — a rule about
+the product, a constraint, or a direction later work must respect — is landed as an
+ADR before the next gate is presented, at latest by the terminal approval. A ruling
+that governs only this task's own work stays in the task. A design names an ADR
 by its ruling and the file's short title, with no number; FO reserves the number when
 it dispatches implementation (Number guards) and the implementation worker writes
-`docs/adr/<reserved number>-<short-title>.md`. The implementation worker writes the
-record into the candidate and names the ADR numbers it added or changed in its report;
-validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`
-and returns a failure or a missing record through the existing feedback route; FO
-confirms it before presenting the gate. A deferred user-facing capability belongs on
+`docs/adr/<reserved number>-<short-title>.md`. FO confirms the validation ADR lint
+passes before presenting the gate. A deferred user-facing capability belongs on
 the product's journey map, not here.
 
 ## Captain amendments
@@ -397,23 +402,9 @@ Applies when the task's `Surfaces:` includes `db`, or its design lands an ADR; t
 frontmatter (`--workflow-dir <workflow-dir>`) and a task's numbers and applied
 deploys from its `## Number guards` section; `--help` lists the flags.
 
-- **Reserve.** Before an implementation dispatch, FO runs `git -C <repo> fetch`, then
-  `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
-  once per kind the task needs, when the implementation dispatch is built and not
-  earlier. FO records each printed `Migration: NNNN` /
-  `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as
-  dispatch scope notes. One number per kind per task; a task needing more returns
-  to FO.
-- **Applied.** Before any push of a candidate to a persistent shared non-production
-  environment (a database branch, or a separate hosting project such as a staging
-  project whose database is that project's own production database), FO records `Applied at: <environment> <sha>`
-  for the commit being pushed. A migration in that commit is then frozen for the
-  task: edit, delete and renumber fail `check`. When the push is rejected or the
-  deploy is confirmed not to have run for that commit (the push's non-zero output,
-  or the environment's own deploy record showing no deploy of it), FO replaces that
-  one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
-  no longer frozen. Without that confirmation the line stays and the migration counts
-  as applied.
+- **Reserve.** One number per kind per task; a task needing more returns to FO.
+- **Applied.** A migration in a commit recorded `Applied at:` is frozen for the task:
+  edit, delete and renumber fail `check`.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
   runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR
   head before FO asks for merge. Exit 2 is a configuration error, which returns to FO
@@ -426,8 +417,28 @@ deploys from its `## Number guards` section; `--help` lists the flags.
   directory that differs from the merge-base. A `FAIL R6` crosses the POC boundary
   (a schema change persists across sessions): the worker records
   `boundary-crossed: persistent-state` naming the path, and the task is not repaired in
-  place; FO presents the marker at the validation gate. Without `migrations-path:` the
-  migration rules are skipped, so a POC is not guarded until the README declares it.
+  place.
+
+## FO steps: number guards
+
+- **Reserve.** Before an implementation dispatch, FO runs `git -C <repo> fetch`, then
+  `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
+  once per kind the task needs, when the implementation dispatch is built and not
+  earlier. FO records each printed `Migration: NNNN` /
+  `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as
+  dispatch scope notes.
+- **Applied.** Before any push of a candidate to a persistent shared non-production
+  environment (a database branch, or a separate hosting project such as a staging
+  project whose database is that project's own production database), FO records `Applied at: <environment> <sha>`
+  for the commit being pushed. When the push is rejected or the
+  deploy is confirmed not to have run for that commit (the push's non-zero output,
+  or the environment's own deploy record showing no deploy of it), FO replaces that
+  one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
+  no longer frozen. Without that confirmation the line stays and the migration counts
+  as applied.
+- **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
+  validation gate. Without `migrations-path:` the migration rules are skipped, so a POC
+  is not guarded until the README declares it.
 - **Collision.** When two tasks hold one migration number (`check` reports R3 or R5 on
   the later candidate; nothing compares task files), the task whose migration is applied
   keeps it and the other, unapplied task renumbers, so no reset is needed. A migration

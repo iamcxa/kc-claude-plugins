@@ -22,13 +22,29 @@ When the task has a `## Number guards` section, use only the numbers it lists, r
 `python3 <package>/scripts/number_guards.py check` as that section states and report its
 output and base SHA; a migration on the base branch or recorded as applied is frozen,
 so it is exempt from comment trims and from cutting unmapped surfaces.
+One number per kind per task; a task needing more returns to FO. A migration on the base
+branch must not change, comment-only edits included; the fix for an R1 or R2 finding is
+reverting the edit and writing a new migration.
 Do not use `git stash`: every worktree and session of a repository shares one
 stash stack. Set work aside with a commit.
+Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless
+the specific action is authorized.
 
 When feedback requests repair, change the approved defect scope and identify
 what needs rechecking. Return scope/profile changes or unresolved inputs to FO.
 Report changes, evidence, limits and remaining work in the SD stage report;
 a worker report is not a gate approval or stage transition.
+
+Write one file per decision, `docs/adr/NNNN-short-title.md`, in the ADR format of the
+kc-dev-flow-2 package's `references/adr-template.md`, with the decider's own words, the
+options considered and the option recommended inside Decision;
+`<package>/scripts/adr_lint.py --require` refuses a required record without the
+recommended line. Create `docs/adr/` with this record if it is absent. A decision
+document that predates this format may stay as one record marked `Status: Legacy`.
+This is not the gate `resolution.reason` or the SD stage report. The implementation
+worker writes the record into the candidate and names the ADR numbers it added or
+changed in its report.
+
 
 ## Existing-code capability check
 

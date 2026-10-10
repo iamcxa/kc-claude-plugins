@@ -20,6 +20,8 @@ ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
               "For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev)",
               "From round 3 a finding that is neither does not start a repair cycle",
               "`Follow-up:` line to that task's Scope")
+WORKER_RULE = ("Before repair authorization, product bytes and the recorded candidate revision stay unchanged",
+               "The four evidence fields are", "- **Needs decision:**")
 SEED_STEP = "design_surfaces.py check --seed"
 FO_RECORD = "\n## FO alignment\n\nSurfaces: none\nVisible change: none\n"
 LANE_RULE = ("`concurrency` limits only what `status --next` proposes",
@@ -250,6 +252,7 @@ def exercise(base, binary, sd_root):
                 assert f"kc-dev-flow-2:{stage}" in definition
                 assert "kc-dev-flow:" not in definition
                 assert "## Dispatch facts" in definition, stage
+                assert "## FO steps" not in definition and "## Delivery authority" not in definition, ("FO-only section reached a stage", host, stage)
                 facts = definition.split("## Dispatch facts", 1)[1].split("\n## ", 1)[0]
                 for label in ("Signal", "Package", "Secrets"):
                     assert f"- **{label}:**" in facts, (stage, label)
@@ -263,8 +266,11 @@ def exercise(base, binary, sd_root):
                 else:
                     assert "## Review-finding disposition" in definition
                     flat = " ".join(definition.split())
-                    for phrase in ROUND_RULE:
-                        assert phrase in flat, (host, stage, phrase)
+                    assert [p for p in WORKER_RULE if p not in flat] == [], ("worker-visible rule missing", host, stage)
+                    assert [p for p in ROUND_RULE if p in flat] == [], ("round rule reached a worker", host, stage)
+
+        template_flat = " ".join(TEMPLATE.read_text().split())
+        assert [p for p in ROUND_RULE if p not in template_flat] == [], "round rule missing from workflow.md"
 
         repo, entity = seed("ac-format", "ideation")
         declarations = entity.read_text() + "\n" + "\n".join(
@@ -494,13 +500,13 @@ def exercise(base, binary, sd_root):
             for other, (missing, kept) in fix_gaps(at_0_10_1(source, name)).items():
                 want = (list(fix["need"]), list(fix["old"])) if other == name else ([], [])
                 assert (missing, kept) == want, (name, other, missing, kept)
-        trimmed = re.sub(r"^5\. A round is one verdict.*?(?=\n\n)", "", TEMPLATE.read_text(),
-                         flags=re.DOTALL | re.MULTILINE)
-        assert trimmed != TEMPLATE.read_text()
-        workflow, entity = seed("no-round-rule", "implementation", trimmed)
-        bare = run([binary, "dispatch", "show-stage-def", "--workflow-dir", workflow, "--stage", "implementation"], workflow).stdout
-        assert "## Review-finding disposition" in bare
-        assert not any(phrase in " ".join(bare.split()) for phrase in ROUND_RULE), "item 5 still inlined"
+        leaked = re.sub(r"(    - name: implementation\n.*?        - Number guards\n)", r'\1        - "FO steps: review findings"\n',
+                        TEMPLATE.read_text(), count=1, flags=re.DOTALL)
+        assert leaked != TEMPLATE.read_text()
+        workflow, entity = seed("round-rule-leak", "implementation", leaked)
+        leak = run([binary, "dispatch", "show-stage-def", "--workflow-dir", workflow, "--stage", "implementation"], workflow).stdout
+        assert "## FO steps: review findings" in leak, "listed FO section not inlined"
+        assert [p for p in ROUND_RULE if p not in " ".join(leak.split())] == [], "round rule not inlined when its section is listed"
 
         workflow, holder = seed("lane", "implementation")
         stamped(workflow, holder, "implementation")
@@ -532,7 +538,7 @@ def exercise(base, binary, sd_root):
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
-        print("PASS: the round rule is inlined into both worker stages and absent from a fixture without item 5; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the fourteen wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, consent-rules, dispatch-record, override-record, adr-recommended, state-commits-through-sd, rework-state-commit) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
+        print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the fourteen wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, consent-rules, dispatch-record, override-record, adr-recommended, state-commits-through-sd, rework-state-commit) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
