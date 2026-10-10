@@ -1,6 +1,6 @@
 ---
 title: A kc-journey-map canvas room runs on a hosted service, survives this machine being off, and can be shared by link with edit access limited to people the Captain allows
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-10-10: 「同意」, answering the FO''s question 「開這兩張任務嗎？一張是 qnow 的「旅程圖合併並照新順序重排」，一張是 kc-claude-plugins 的「畫布線上化 POC」。」'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 kc-journey-map's canvas is a tldraw 5.4 room synced over WebSocket by a local Node service (server/canvas-server.ts, @tldraw/sync 5.4.0); boards live on this machine and disappear from view when it is off. subspace-relay is hosted on Netlify, whose functions do not hold long-lived WebSocket connections, so relay's hosting does not carry over as is.
