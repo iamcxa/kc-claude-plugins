@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.14.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.14.0...kc-dev-flow-2-v0.14.1) (2026-10-10)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** validation checks every ADR the candidate changed, without typed numbers ([#590](https://github.com/iamcxa/kc-claude-plugins/issues/590)) ([03045a4](https://github.com/iamcxa/kc-claude-plugins/commit/03045a47ea850266b46dad557229343bd56e1d04))
+
 ## [0.14.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.13.0...kc-dev-flow-2-v0.14.0) (2026-10-10)
 
 
