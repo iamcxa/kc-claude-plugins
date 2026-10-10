@@ -145,13 +145,10 @@ differently, or `Visible change: none`.
   `journey-mapping-complete: true` on one task per story at the review's split step.
   When signal 2 moves a task out of a release, FO clears its release fields with
   `spacedock status --workflow-dir <dir> --set <task> journey= journey-release= journey-story= journey-required-tasks= journey-mapping-complete=`
-  (a field set to nothing is cleared) and, where kc-journey-progress is tracking,
-  removes the task's full id from `journey-required-tasks` on the declaring task of
-  its old story; when the cleared task was the declaring one, FO moves that list and
-  `journey-mapping-complete: true` to another member of the story. A task moved to
-  another story gets the new values from the set command above and its id is added to
-  that story's list. kc-journey-progress reports a story unverified until its
-  declaration matches its members.
+  (a field set to nothing is cleared). Where kc-journey-progress is tracking, follow its
+  skill for the lists; when the cleared task was the declaring one, FO moves that list and
+  `journey-mapping-complete: true` to another member of the story. kc-journey-progress
+  reports a story unverified until its declaration matches its members.
 
 ### `ideation`
 
@@ -187,9 +184,7 @@ ADR draft live in the task file, and a draft carries no ADR number.
   evidence, prior reports, approvals and verdicts. Withdraw an affected open binding
   before editing, then reprepare through the applicable SD lifecycle. Other
   corrections require an authorized author; hold where no supported route applies,
-  without inventing same-stage rework. Present a concise recommendation, including
-  routine details; ask about unresolved material scope, interface, acceptance or
-  authority choices. Corrections neither replace user approval nor advance stages.
+  without inventing same-stage rework. Corrections neither replace user approval nor advance stages.
 
 ### `implementation`
 
@@ -451,10 +446,8 @@ deploys from its `## Number guards` section; `--help` lists the flags.
   database branch is reset, and a shared non-production database that cannot be reset
   (a separate project's own database) is deleted and recreated by the Captain. FO then
   replaces the line with `Not applied: <environment> <sha> - database reset` so that
-  `check` accepts the renumber. A branch reset is one Netlify Open API call, `netlify api resetSiteDatabaseBranch --data '{"site_id":"<site>","branch_id":"<branch>"}' > /dev/null`
-  (`netlify api --list` shows the method). The response carries connection
-  strings, so redirect it to `/dev/null` and read the result from the next
-  deploy. This step is documented, not wrapped in a tool.
+  `check` accepts the renumber. A branch database is reset through the provider's own API; `adoption.md` gives one
+  provider's example. This step is documented, not wrapped in a tool.
 
 ## Delivery authority
 
@@ -474,7 +467,7 @@ validation gate is not permission to push, create or merge a PR. Preserve manual
 merge authority. Do not invoke local fallback, push the trunk, merge, or clean up
 an owned worktree unless the specific action is authorized. An upstream hook's
 default fallback is not that grant. A failure holds delivery pending an explicit
-choice. These are orchestration instructions, not added mechanical guardrails.
+choice.
 
 Use SD's pending terminal approval and existing merge hook; do not invent another
 PR stage. Observe the actual repository-qualified PR merge before recording its
@@ -497,8 +490,8 @@ can still show the task awaiting merge.
 The README and `_mods` stay in the code repository; mutable task state lives in
 `.spacedock-state`, an ignored linked checkout of this workflow's distinct orphan
 state branch. Commission/refit owns setup; a fresh clone uses SD state init.
-POC uses independent validation in this variant; direct POC eligibility and special
-Production recovery routes are not implemented.
+POC uses independent validation in this variant, and special Production recovery
+routes are not implemented.
 
 FO commits task state only through SD commands (`gate record`, `state commit
 <slug>`, each with `--workflow-dir <dir>`), never by staging the state checkout with
@@ -532,7 +525,5 @@ Verified by: <Reproducible evidence and its limits.>
 ```
 
 Optional frontmatter, absent until used: `journey`, `journey-release` and
-`journey-story`, set by FO with `status --set` when the task belongs to a release
-story (see `backlog`, Release review). `journey` holds the map's own `journey:` value,
-not its file name. A placeholder comment would sit beside the real values once
+`journey-story`, set by FO at Release review (see `backlog`). A placeholder comment would sit beside the real values once
 `status --set` filled them, so the template carries none.
