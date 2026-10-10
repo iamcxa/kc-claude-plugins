@@ -18,3 +18,11 @@ Budget and stop condition: to be set at ideation.
 ## Acceptance criteria
 
 To be written at ideation.
+
+## FO alignment
+
+Release: none (package workflow change; kc-claude-plugins has no journey map).
+Release review: not needed: no release.
+Needed at ideation: the design of both halves (the kc-dev-flow-2 rule and task, the kc-journey-map mode) and the contract between them, against the existing Release review rule in kc-dev-flow-2 references/sd/workflow.md and kc-journey-map's review-release mode.
+Surfaces: none
+Visible change: none
