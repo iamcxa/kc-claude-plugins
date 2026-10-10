@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:release-acceptance:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:release-acceptance-ideation-1
+              briefing:
+                id: briefing:release-acceptance:ideation:attempt-1:revision-1
+                digest: sha256:e116df03a231a92b70ed0f22b9a4c4bca407b794c88f948e2e32d76796a25de9
+                room-ref: ./review/ideation/briefing-1
 ---
 
 Issue iamcxa/kc-claude-plugins#571: a release is reviewed as one journey before its tasks are split, but nothing enforces that review, and nothing walks a release as a whole after its stories are built.

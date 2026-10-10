@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-acceptance:ideation:attempt-1:revision-1",
+  "question": "Approve the release-acceptance design (issue #571) for implementation? Seven Captain decisions with recommendations; decisions 1 (environment and credentials slot) and 3 (package script vs a Spacedock-side refusal) change the shape most.",
+  "artifacts": [
+    {
+      "id": "artifact:release-acceptance:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ca34b79e00225cfc7eb11a7fe39fa1fbc58141e2/release-acceptance/index.md",
+      "rev": "sha256:b8d8fcb6dd0c146d5ef20d206c1fdcde73d0495356ac0656a78f5b0312cfb263",
+      "mediaType": "text/markdown",
+      "summary": "kc-dev-flow-2: one acceptance task per release opened from kc-journey-progress's existing 'pending delivery acceptance' label; a fresh walker; a release-acceptance/v1 report; defect routing (one owner -\u003e that task, no story -\u003e bug task, none or several owners -\u003e review-release, signal 3); release_review.py check run by FO before the first implementation dispatch and by the worker as a backstop (spacedock dispatch build has no precondition input). kc-journey-map: an accept-release mode printing a release-walk/v1 list and turning the report into proposed map edits. Two producer-owned schemas, no shared code. R3 and R4 walks as fixtures."
+    }
+  ]
+}
