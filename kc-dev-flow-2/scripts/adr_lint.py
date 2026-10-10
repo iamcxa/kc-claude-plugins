@@ -2,6 +2,7 @@
 """Check a docs/adr directory against the dev2 ADR format; exit 1 on any violation."""
 import argparse
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -60,8 +61,19 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("adr_dir")
     parser.add_argument("--require", nargs="*", default=[], help="ADR numbers this change must add or update")
+    parser.add_argument("--since", help="base commit; every record added or changed since it is required")
     args = parser.parse_args(argv)
     root = Path(args.adr_dir)
+    required = list(args.require)
+    if args.since:
+        diff = subprocess.run(["git", "-C", str(root), "diff", "--name-only", "--relative", "--diff-filter=AMR",
+                               args.since, "--", "."], capture_output=True, text=True)
+        if diff.returncode:
+            print(f"--since {args.since}: {diff.stderr.strip() or 'git diff failed'}")
+            return 2
+        untracked = subprocess.run(["git", "-C", str(root), "ls-files", "--others", "--exclude-standard", "--", "."],
+                                   capture_output=True, text=True).stdout
+        required += [m.group(1) for m in map(NAME.match, (diff.stdout + untracked).split()) if m]
     errors, files = [], {}
     for path in sorted(root.glob("*.md")):
         if path.name in SKIP:
@@ -80,8 +92,7 @@ def main(argv=None):
         errors += found
         if is_legacy:
             legacy.add(number)
-    for raw in args.require:
-        number = int(raw)
+    for number, raw in {int(raw): raw for raw in reversed(required)}.items():
         if number not in files:
             errors.append(f"required ADR {raw} does not exist")
         elif number in legacy:
@@ -92,7 +103,8 @@ def main(argv=None):
     for error in errors:
         print(error)
     if not errors:
-        print(f"{len(files)} ADR file(s) checked, {len(legacy)} legacy")
+        unchecked = "" if args.since or args.require else "; changed records not checked (no --since or --require)"
+        print(f"{len(files)} ADR file(s) checked, {len(legacy)} legacy{unchecked}")
     return 1 if errors else 0
 
 
