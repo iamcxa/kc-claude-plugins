@@ -4,6 +4,17 @@ status: backlog
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
+gates:
+    version: 1
+    records:
+        - id: gate:release-acceptance:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:release-acceptance-backlog-1
+              briefing:
+                id: briefing:release-acceptance:backlog:attempt-1:revision-1
+                digest: sha256:fa927076e3055c589fe222ea4a518267f677c3558ec59384e1bf7689a8d03077
+                room-ref: ./review/backlog/briefing-1
 ---
 
 Issue iamcxa/kc-claude-plugins#571: a release is reviewed as one journey before its tasks are split, but nothing enforces that review, and nothing walks a release as a whole after its stories are built.

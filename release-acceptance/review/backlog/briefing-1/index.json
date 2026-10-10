@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-acceptance:backlog:attempt-1:revision-1",
+  "question": "Open the release-acceptance task (issue #571) and start ideation?",
+  "artifacts": [
+    {
+      "id": "artifact:release-acceptance:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/aaf949b5b5eb40273a5666a90f078d92e68b0fa2/release-acceptance/index.md",
+      "rev": "sha256:3e34b1928f582ce6627dc0d64c47b41008f923f88152cf9b391c5f1b7b95a364",
+      "mediaType": "text/markdown",
+      "summary": "Release-scale acceptance as a standard mechanism: kc-dev-flow-2 owns when the acceptance task opens, who walks, what the report carries and how failures route back to release review; kc-journey-map gets a mode that produces the walk list and takes the result back; joined by a declared contract. Also enforce the pre-implementation release review at dispatch. Evidence: the R3 and R4 hand-run walks."
+    }
+  ]
+}
