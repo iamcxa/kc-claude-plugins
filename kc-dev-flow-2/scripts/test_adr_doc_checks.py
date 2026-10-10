@@ -55,6 +55,18 @@ class AdrLintTests(unittest.TestCase):
         self.assertEqual(self.run_lint({"0002-first.md": old}, "2"), 1)
         self.assertEqual(self.run_lint({"0002-first.md": old, "0003-second.md": record(3)}, "3"), 0)
 
+    def test_an_amended_older_record_says_not_recorded_and_the_refusal_says_how(self):
+        old = record(2).replace("**Recommended:**", "Recommended:")
+        amended = old.replace("**Options considered:**", "**Recommended:** not recorded\n\n**Options considered:**")
+        self.assertEqual(self.run_lint({"0002-first.md": amended}, "2"), 0)
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "0002-first.md").write_text(old)
+            import contextlib, io
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                self.assertEqual(adr.main([d, "--require", "2"]), 1)
+            self.assertIn("not recorded", out.getvalue())
+
     def test_file_names_and_numbers(self):
         self.assertEqual(self.run_lint({"2-first.md": record(2)}), 1)
         self.assertEqual(self.run_lint({"0002-first.md": record(2), "0002-second.md": record(2)}), 1)
