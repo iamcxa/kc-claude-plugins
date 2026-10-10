@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-canvas-hosted-poc:ideation:attempt-1:revision-1",
+  "question": "Approve the hosted-canvas POC design? Approving accepts the recommendations for decisions 1-5 (Cloudflare Workers + Durable Object; Free plan in a Cloudflare account you name; one email allowlist via a hostname-based Access app plus one service token; tldraw's 100-day trial key; Pilot as a disposable trial with teardown); say if you object.",
+  "artifacts": [
+    {
+      "id": "artifact:journey-canvas-hosted-poc:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1aa5e94fd157d7fa741bad7731292e0108f99cf1/journey-canvas-hosted-poc.md",
+      "rev": "sha256:3edf4edb5144b7f4b134698de419cda403d90eb8e4202c040cfe0a4f1f04182d",
+      "mediaType": "text/markdown",
+      "summary": "tldraw sync-cloudflare template at v5.4.0 behind a hostname-based Cloudflare Access app; Netlify ruled out for the sync by its documented function limits; Node server on Fly as the fallback. Untested and written as stop triggers: Free-plan CPU on a 1262-record PATCH, Access letting the WebSocket upgrade through, the Zero Trust seat count. tldraw's license forbids production use without a key; the POC uses the 100-day trial key."
+    }
+  ]
+}

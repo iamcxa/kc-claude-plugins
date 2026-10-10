@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:journey-canvas-hosted-poc:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:journey-canvas-hosted-poc-ideation-1
+              briefing:
+                id: briefing:journey-canvas-hosted-poc:ideation:attempt-1:revision-1
+                digest: sha256:7439918e35094f22c047538343fec94351565b57f1c0955f8d2d8d1e5a87e291
+                room-ref: ./journey-canvas-hosted-poc/review/ideation/briefing-1
 ---
 
 kc-journey-map's canvas is a tldraw 5.4 room synced over WebSocket by a local Node service (server/canvas-server.ts, @tldraw/sync 5.4.0); boards live on this machine and disappear from view when it is off. subspace-relay is hosted on Netlify, whose functions do not hold long-lived WebSocket connections, so relay's hosting does not carry over as is.
