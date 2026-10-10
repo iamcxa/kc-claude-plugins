@@ -331,8 +331,10 @@ Write one file per decision, `docs/adr/NNNN-short-title.md`, in the ADR format o
 kc-dev-flow-2 package's `references/adr-template.md`, with the decider's own words, the
 options considered and the option recommended inside Decision;
 `<package>/scripts/adr_lint.py --require` refuses a required record without the
-recommended line. Create `docs/adr/` with this record if it is absent. A decision
-document that predates this format may stay as one record marked `Status: Legacy`.
+recommended line. An older record amended now takes `**Recommended:** not recorded`,
+never a reconstructed recommendation. Create `docs/adr/` with this record if it is
+absent. A decision document that predates this format may stay as one record marked
+`Status: Legacy`.
 This is not the gate `resolution.reason` or the SD stage report. The implementation
 worker writes the record into the candidate and names the ADR numbers it added or
 changed in its report; validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`

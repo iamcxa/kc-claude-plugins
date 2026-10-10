@@ -97,6 +97,10 @@ FIXES = {
               "FO records its handling as FO's reading, never as his ruling"),
         old=(),
         swaps=((r"A Needs decision put to the Captain at a gate carries FO's recommendation\..*?and asks him\. ", ""),)),
+    "adr-not-recorded": dict(
+        need=("An older record amended now takes `**Recommended:** not recorded`, never a reconstructed recommendation",),
+        old=(),
+        swaps=((r"An older record amended now takes `\*\*Recommended:\*\* not recorded`, never a reconstructed recommendation\. ", ""),)),
     "consent-rules": dict(
         need=("A Captain ruling is his reply to the question it settles, given after that question was put",
               "consent he gave earlier to a different question, or a choice he raised but did not make",
@@ -538,7 +542,7 @@ def exercise(base, binary, sd_root):
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
-        print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the fourteen wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, consent-rules, dispatch-record, override-record, adr-recommended, state-commits-through-sd, rework-state-commit) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
+        print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the fifteen wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, adr-not-recorded, consent-rules, dispatch-record, override-record, adr-recommended, state-commits-through-sd, rework-state-commit) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:

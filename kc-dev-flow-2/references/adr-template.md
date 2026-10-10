@@ -18,7 +18,7 @@ What forced the decision, with the evidence and where it came from.
 - the chosen option
 - each alternative, one line; `none — a direct instruction` when there were none
 
-**Recommended:** the option the worker or FO recommended; `none — a direct instruction` when there was no recommendation
+**Recommended:** the option the worker or FO recommended; `none — a direct instruction` when there was no recommendation; `not recorded` on an older record amended now
 
 The rule later work must follow, stated plainly.
 

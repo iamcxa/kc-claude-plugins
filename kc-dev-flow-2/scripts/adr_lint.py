@@ -87,7 +87,8 @@ def main(argv=None):
         elif number in legacy:
             errors.append(f"required ADR {raw} is a legacy record; a new ruling needs its own file")
         elif "**Recommended:**" not in "\n".join(sections(files[number].read_text()).get("Decision", [])):
-            errors.append(f"required ADR {raw}: Decision needs a '**Recommended:**' line")
+            errors.append(f"required ADR {raw}: Decision needs a '**Recommended:**' line; a record written "
+                          "before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation")
     for error in errors:
         print(error)
     if not errors:
