@@ -20,10 +20,20 @@ PACKAGE_ROOT = re.compile(r"^Package root: \S", re.MULTILINE)
 UNBOUND_ROOT = re.compile(r"\{package\}|/absolute/plugin")
 WORKFLOW = "references/sd/workflow.md"
 # Raise only in a change that says why the adopted README must grow.
-WORKFLOW_WORD_BUDGET = 4538
+WORKFLOW_WORD_BUDGET = 4562
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
-KNOWN_DUPLICATES = {("skills/ideation/principles.md", "ideation writes no repository file branch or commit")}
+KNOWN_DUPLICATES = {
+    ("skills/ideation/principles.md", "ideation writes no repository file branch or commit"),
+    # Dual presence for one release; remove the workflow copy next release.
+    ("skills/implementation/principles.md", "one number per kind per task a task needing more"),
+    ("skills/implementation/principles.md", "a migration on the base branch must not change"),
+    ("skills/implementation/principles.md", "write one file per decision"),
+    ("skills/validation/principles.md", "validation runs python3 <package>/scripts/adr_lint.py"),
+    # The workflow copy stays for FO (Delivery authority); workers no longer receive that section.
+    ("skills/implementation/principles.md", "do not invoke local fallback push the trunk"),
+    ("skills/validation/principles.md", "do not invoke local fallback push the trunk"),
+}
 BOUND_SCRIPT_DIR = re.compile(r"(?:<package>/|(?:\.\./)+|kc-dev-flow-2/)scripts/")
 
 

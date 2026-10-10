@@ -38,8 +38,11 @@ source into the approved workflow's `README.md`, resolve template values
 (including `<wrapper>`, below) and project trunk and ID policy, and stamp
 commissioning metadata through SD's existing procedure. The source uses slug IDs; commission may propose its collaborative
 SD-B32 ID policy. Preserve an existing workflow's approved ID style.
-Stage prose calls exact `kc-dev-flow-2:` skills; `context-sections` carries shared
-disposition/delivery rules. Do not introduce unsupported `stage.skill` fields or
+Stage prose calls exact `kc-dev-flow-2:` skills; `context-sections` lists only the
+sections a stage's worker acts on (dispatch facts, the classification vocabulary, decision
+records, amendments, affected documents, number guards). The FO steps for finding
+disposition, decision records and number guards, and delivery authority, are sections no
+worker receives. Do not introduce unsupported `stage.skill` fields or
 profile-conditioned transitions. Check profile/graph compatibility before new
 work or resume dispatch; a mismatch holds the affected action for the user.
 
@@ -76,7 +79,13 @@ both for one run. The citation scan is a pattern list: it also flags a `#333` co
 repository's main); reword such a comment. The review-round rule and the repair
 lane live in `workflow.md`: an adopter that already has a workflow README receives
 them by re-syncing that README from `workflow.md`, a per-adopter three-way merge that keeps its own
-frontmatter; the package does not rewrite an adopter's README.
+frontmatter; the package does not rewrite an adopter's README. Update the plugin before
+re-syncing a README: worker rules also copied into the skills' `principles.md` arrive with
+the plugin, so once the workflow copy is removed a README re-synced first leaves those
+workers without them. The re-sync must take the new `context-sections` lists together with
+the section text. The merge keeps the adopter's frontmatter, so an old list keeps
+delivering FO-only text such as Delivery authority to workers, and a list naming a section
+the README lacks makes Spacedock refuse every dispatch.
 
 ## Ideation checks and Captain amendments
 
