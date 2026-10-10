@@ -98,9 +98,9 @@ FIXES = {
         old=(),
         swaps=((r"A Needs decision put to the Captain at a gate carries FO's recommendation\..*?and asks him\. ", ""),)),
     "adr-not-recorded": dict(
-        need=("An older record amended now takes `**Recommended:** not recorded`, never a reconstructed recommendation",),
+        need=("An older record a change touches without that line takes `**Recommended:** not recorded`, never a reconstructed recommendation",),
         old=(),
-        swaps=((r"An older record amended now takes `\*\*Recommended:\*\* not recorded`, never a reconstructed recommendation\. ", ""),)),
+        swaps=((r"An older record a change touches without that line takes `\*\*Recommended:\*\* not recorded`, never a reconstructed recommendation\. ", ""),)),
     "consent-rules": dict(
         need=("A Captain ruling is his reply to the question it settles, given after that question was put",
               "consent he gave earlier to a different question, or a choice he raised but did not make",
