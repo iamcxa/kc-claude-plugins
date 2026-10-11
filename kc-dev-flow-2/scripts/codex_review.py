@@ -5,7 +5,7 @@ Usage: codex_review.py <owner/repo> <pr>
 The latest Codex result on the head decides, and its evidence id is printed so a round
 is counted once per id.
 Exit 0 clean: that result is a "Codex Review:" comment naming the head as its reviewed
-  commit, or Codex's summary marking the head completed.
+  commit, or Codex's summary marking the head completed with no finding on the head before it.
 Exit 1 findings: that result is a Codex review, or line finding, made on the head.
 Exit 2 configuration error: bad arguments or a gh call that failed.
 Exit 3 running: Codex's eyes reaction is on the pull request.
@@ -56,8 +56,9 @@ def state(repo, pr, call=gh, pages=pages):
         if c["body"].startswith(SUMMARY):
             for m in MARKER.finditer(c["body"].split("\n## ", 1)[0]):
                 meta = json.loads(m.group(1))
+                found_before = any(e[2] == 1 and e[0] <= c["updated_at"] for e in evidence)
                 if (meta.get("repository") == repo and str(meta.get("pullRequestNumber")) == str(pr)
-                        and meta.get("headSha") == head and meta.get("status") == "completed"):
+                        and meta.get("headSha") == head and meta.get("status") == "completed" and not found_before):
                     evidence.append((c["updated_at"], f"summary:{c['id']}@{c['updated_at']}", 0, "summary marks the head completed"))
     if call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"] != head:
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"

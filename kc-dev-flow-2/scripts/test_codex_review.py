@@ -96,6 +96,12 @@ class CodexReviewTests(unittest.TestCase):
                                 inline=[finding(HEAD, "P1", review_id=5), finding(HEAD, review_id=6, ident=12)])
         self.assertIn("1 line finding(s), 0 at P0/P1; evidence=review:6", line)
 
+    def test_a_completed_summary_after_findings_is_not_clean(self):
+        self.assertEqual(self.check(reviews=[review(HEAD, at=T1)], inline=[finding(HEAD)], comments=[marker(HEAD, "completed", at=T2)])[0], 1)
+        self.assertEqual(self.check(reviews=[review(HEAD, at=T2)], inline=[finding(HEAD)], comments=[marker(HEAD, "completed", at=T1)])[0], 1)
+        self.assertEqual(self.check(reviews=[review(HEAD, at=T1)], inline=[finding(HEAD)],
+                                    comments=[marker(HEAD, "completed", at=T2), said(HEAD[:10], at="2026-10-10T12:00:00Z")])[0], 0)
+
     def test_a_head_that_moves_while_reading_has_no_verdict(self):
         self.assertEqual(self.check(comments=[said(HEAD[:10])], heads=(HEAD, OLD))[0], 4)
 
