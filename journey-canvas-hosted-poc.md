@@ -34,6 +34,14 @@ gates:
                 id: briefing:journey-canvas-hosted-poc:ideation:attempt-1:revision-1
                 digest: sha256:7439918e35094f22c047538343fec94351565b57f1c0955f8d2d8d1e5a87e291
                 room-ref: ./journey-canvas-hosted-poc/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-canvas-hosted-poc:ideation:1
+                briefing: briefing:journey-canvas-hosted-poc:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-11T06:11:33.300177Z"
+                decision: hold
+                reason: 'Captain 2026-10-11 on the Cloudflare Workers + Durable Object design: 「不要走這個方案，事實上這也不是“正式環境”只是把臨時環境由本地搬到某個線上。relay 走 exe.dev 就蠻好的，但是那邊也是要付費。先說明為何 Netlify 撐不住即時同步」. Design not taken; direction open (exe.dev noted as paid).'
 ---
 
 kc-journey-map's canvas is a tldraw 5.4 room synced over WebSocket by a local Node service (server/canvas-server.ts, @tldraw/sync 5.4.0); boards live on this machine and disappear from view when it is off. subspace-relay is hosted on Netlify, whose functions do not hold long-lived WebSocket connections, so relay's hosting does not carry over as is.
