@@ -149,9 +149,10 @@ FIXES = {
                 ", naming the finding and its home, and adds a `Follow-up:` line to that task's Scope, the open task whose Scope edits the finding's file, else a new backlog task from `spacedock new`. The terminal gate lists each follow-up and its home."),
                (r"A `Follow-up:` line in Scope is not accepted scope by itself.*?It records which, and why\. ", ""))),
     "decline-settled": dict(
-        need=("does not report it again unless the candidate changes",),
+        need=("does not report it again unless the candidate changes",
+              "or new evidence would make it Material"),
         old=(),
-        swaps=((r" A finding FO declined in a committed gate summary or under `### FO declines` is settled:.*?the lines it names\.", ""),)),
+        swaps=((r" A finding FO declined in a committed gate summary or under `### FO declines` is settled:.*?would make it Material\.", ""),)),
     "late-decline": dict(
         need=("FO writes the decline under `### FO declines`",),
         old=(),
@@ -169,6 +170,7 @@ FIXES = {
                (r"`Asked:` is required when his words do not name what they settle, such as 「同意第三點」\. ", ""))),
     "send-back": dict(
         need=("Sending an approved task back to an earlier stage",
+              "`spacedock status --workflow-dir <dir> --set <slug> status=<stage>`",
               "that stage's gate is approved again before the task moves on"),
         old=(),
         swaps=((r"Sending an approved task back to an earlier stage.*?before the task moves on\. ", ""),)),
@@ -192,6 +194,10 @@ FIXES = {
               "keeps `<package>/scripts/pr_watch.py wait` running in the background"),
         old=(),
         swaps=((r"FO adds each PR it opens or pushes to with.*?instead of waiting to be told\. ", ""),)),
+    "one-number-per-kind": dict(
+        need=("a task holds one number per kind, and a task needing a second ADR or migration returns to FO",),
+        old=(),
+        swaps=((r"; a task holds one number per kind, and a task needing a second ADR or migration returns to FO\.", "."),)),
     "override-record": dict(
         need=("`Override: recommended <option>; Captain chose <option>; area: <area>`",
               "later workers find past rulings with `git grep 'Override:'`"),
