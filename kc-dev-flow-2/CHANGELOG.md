@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.16.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.15.1...kc-dev-flow-2-v0.16.0) (2026-10-11)
+
+
+### Features
+
+* **kc-dev-flow-2:** maintain-flow replays a closed task before a behaviour change ships ([#598](https://github.com/iamcxa/kc-claude-plugins/issues/598)) ([ce66abd](https://github.com/iamcxa/kc-claude-plugins/commit/ce66abddb8a6f49623ffa31d4ee02b953f14c72a))
+
 ## [0.15.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.15.0...kc-dev-flow-2-v0.15.1) (2026-10-11)
 
 
