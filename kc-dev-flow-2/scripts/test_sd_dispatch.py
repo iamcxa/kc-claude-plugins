@@ -187,6 +187,11 @@ FIXES = {
         need=("`python3 <package>/scripts/dispatch_records.py <task folder>`",),
         old=(),
         swaps=((r", and run `python3 <package>/scripts/dispatch_records\.py <task folder>`; a missing or incomplete record \(its exit 1\),", "; a missing record,"),)),
+    "pr-watch": dict(
+        need=("FO adds each PR it opens or pushes to with `python3 <package>/scripts/pr_watch.py add",
+              "keeps `<package>/scripts/pr_watch.py wait` running in the background"),
+        old=(),
+        swaps=((r"FO adds each PR it opens or pushes to with.*?instead of waiting to be told\. ", ""),)),
     "override-record": dict(
         need=("`Override: recommended <option>; Captain chose <option>; area: <area>`",
               "later workers find past rulings with `git grep 'Override:'`"),

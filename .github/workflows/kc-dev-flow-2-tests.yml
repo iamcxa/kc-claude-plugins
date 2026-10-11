@@ -58,6 +58,9 @@ jobs:
       - name: test_dispatch_records.py
         run: python3 kc-dev-flow-2/scripts/test_dispatch_records.py
 
+      - name: test_pr_watch.py
+        run: python3 kc-dev-flow-2/scripts/test_pr_watch.py
+
       - name: test_learning.py
         run: python3 kc-dev-flow-2/scripts/test_learning.py
 

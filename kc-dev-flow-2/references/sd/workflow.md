@@ -503,6 +503,11 @@ PR head equals the candidate the latest passing validation report names; a repai
 validated after the PR was opened reaches the PR only when that exact commit is
 pushed to its branch.
 
+FO adds each PR it opens or pushes to with `python3 <package>/scripts/pr_watch.py add
+<owner/repo>#<N>` and keeps `<package>/scripts/pr_watch.py wait` running in the
+background while one is open; its exit names the merge, close, conflict, CI or Codex
+change, and FO acts on it then instead of waiting to be told.
+
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs
 `spacedock state commit <slug> --workflow-dir <dir>`, publishes, and reads the task
