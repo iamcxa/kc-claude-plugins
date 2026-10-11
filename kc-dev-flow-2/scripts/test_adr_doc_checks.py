@@ -92,6 +92,19 @@ class AdrLintTests(unittest.TestCase):
             self.assertEqual(code, 0)
             self.assertIn("changed records not checked", out)
 
+    def test_since_lets_a_legacy_record_take_a_forward_line(self):
+        legacy = "# Old architecture notes\n\nStatus: Legacy\n\nfree-form text\n"
+        with tempfile.TemporaryDirectory() as d:
+            git = lambda *a: subprocess.run(["git", "-C", d, *a], check=True, capture_output=True, text=True).stdout
+            git("init", "-q")
+            Path(d, "0001-old.md").write_text(legacy)
+            git("add", ".")
+            git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", "base")
+            base = git("rev-parse", "HEAD").strip()
+            Path(d, "0001-old.md").write_text(legacy + "\n> Amended by ADR 0002.\n")
+            self.assertEqual(self.lint_output([d, "--since", base])[0], 0)
+            self.assertEqual(self.lint_output([d, "--since", base, "--require", "1"])[0], 1)
+
     def test_an_amended_older_record_says_not_recorded_and_the_refusal_says_how(self):
         old = record(2).replace("**Recommended:**", "Recommended:")
         amended = old.replace("**Options considered:**", "**Recommended:** not recorded\n\n**Options considered:**")
