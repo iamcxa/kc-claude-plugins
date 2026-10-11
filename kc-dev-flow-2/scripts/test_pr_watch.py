@@ -55,6 +55,20 @@ class PrWatchTests(unittest.TestCase):
             code, out = self.run_main(["wait", "1"], [snap(mergeable="CONFLICTING", codex="findings")], state)
             self.assertIn("codex clean -> findings", out)
 
+    def test_wait_ignores_a_start_and_wakes_on_its_outcome(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(checks="none", codex="not-reviewed")], state)
+            code, out = self.run_main(["wait", "1"], [snap(checks="pending", codex="running"),
+                                                       snap(checks="green", codex="running")], state)
+            self.assertIn("checks pending -> green", out)
+            self.assertNotIn("none -> pending", out)
+            code, out = self.run_main(["wait", "1"], [snap(codex="running", head="bbbbbbbbb"),
+                                                       snap(codex="findings", head="bbbbbbbbb")], state)
+            self.assertIn("codex running -> findings", out)
+            self.assertEqual(watch.outcome("mergeable", "CONFLICTING", "UNKNOWN"), True)
+            self.assertEqual(watch.outcome("mergeable", "MERGEABLE", "UNKNOWN"), False)
+
     def test_wait_on_an_empty_list_ends_and_a_bad_ref_is_a_configuration_error(self):
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")

@@ -3,7 +3,10 @@
 
   pr_watch.py [--state FILE] add owner/repo#N ...   add PRs to the watch list
   pr_watch.py [--state FILE] check                  print each PR and the changes since the last look
-  pr_watch.py [--state FILE] wait [SECONDS]         poll until something changes, print it and exit 0
+  pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
+
+An outcome is a merge or close, a draft flip, a new or cleared conflict, CI turning green
+or failing, or a Codex verdict; a check or review that only starts is recorded silently.
 
 A merged or closed PR is reported once, then dropped. The codex column comes from the
 sibling codex_review.py when it is present. Exit 2 is a configuration error.
@@ -19,6 +22,12 @@ DEFAULT_STATE = Path.home() / ".local/state/kc-dev-flow-2/pr-watch.json"
 CODEX = Path(__file__).with_name("codex_review.py")
 FIELDS = "state,isDraft,mergeable,headRefOid,statusCheckRollup,title"
 TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex")
+OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING", "MERGEABLE"},
+            "checks": {"failing", "green"}, "codex": {"clean", "findings", "error"}}
+
+
+def outcome(key, old, new):
+    return key in OUTCOMES and (OUTCOMES[key] is None or new in OUTCOMES[key] or (key == "mergeable" and old == "CONFLICTING"))
 
 
 def gh(*args):
@@ -62,13 +71,14 @@ def sweep(state, look=look):
         except (RuntimeError, KeyError, ValueError) as error:
             rows.append(f"{ref}: not read ({str(error)[:80]})")
             continue
-        moved = [f"{k} {old.get(k)} -> {now.get(k)}" for k in TRACKED if old.get(k) != now.get(k)]
+        moved = [k for k in TRACKED if old.get(k) != now.get(k)]
         if moved:
-            changes.append(f"{ref} {now['title']}: " + "; ".join(moved))
+            line = f"{ref} {now['title']}: " + "; ".join(f"{k} {old.get(k)} -> {now.get(k)}" for k in moved)
+            changes.append((line, any(outcome(k, old.get(k), now.get(k)) for k in moved)))
         rows.append(f"{ref:34} {now['state']:7} draft={now['draft']!s:5} {now['mergeable']:11} "
                     f"checks={now['checks']:8} codex={now['codex']:12} {now['title']}")
         seen[ref] = now
-    reported = {line.split(" ")[0] for line in changes}
+    reported = {line.split(" ")[0] for line, _ in changes}
     kept = {ref: s for ref, s in seen.items() if s["state"] == "OPEN" or ref in reported}
     state.parent.mkdir(parents=True, exist_ok=True)
     state.write_text(json.dumps(kept, indent=1))
@@ -98,13 +108,13 @@ def main(argv=None, look=look, sleep=time.sleep):
             return 0
         if opts.command == "check":
             changes, rows, _ = sweep(opts.state, look)
-            print("\n".join(rows + (changes or ["no change since the last look"])))
+            print("\n".join(rows + ([line for line, _ in changes] or ["no change since the last look"])))
             return 0
         every = int(opts.args[0]) if opts.args else 60
         while True:
             changes, _, watching = sweep(opts.state, look)
-            if changes or not watching:
-                print("\n".join(changes) or "watch list is empty")
+            if any(decisive for _, decisive in changes) or not watching:
+                print("\n".join(line for line, _ in changes) or "watch list is empty")
                 return 0
             sleep(every)
     except (RuntimeError, KeyError, ValueError, OSError) as error:
