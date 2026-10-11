@@ -18,6 +18,9 @@ Then:
 - The late-decline step shows `spacedock state commit` without `<slug>` and `--workflow-dir <dir>` (Codex P2; `## Workflow State` already requires both).
 - `Not applied:` is not accepted as the validation deploy record, so a confirmed skipped deploy reads as a missing record (Codex P2).
 - A finding repeated in a later round would be filed as a second backlog task; reuse the existing one (Codex P2).
+Also, folded in from backlog task `review-followups-0102` (round 3 of qnow PR #1248, 2026-10-01; both still true on 0.15.1, checked 2026-10-11):
+- The FO recovery step writes `status --workflow-dir <dir> --read <task> --stage <stage> --checklist` without the `spacedock` executable; write `spacedock status ...`.
+- `## Number guards` applies when "its design lands an ADR", so an ADR first required by a ruling in an implementation report, a validation report or mid-stage feedback gets no reserved number. Apply the guard whenever the task lands an ADR, and reserve the number when the need appears.
 - Non-goals: to be set at ideation.
 
 ## Acceptance criteria
