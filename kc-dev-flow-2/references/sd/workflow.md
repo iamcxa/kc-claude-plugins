@@ -297,13 +297,16 @@ consequential FO quick work and rejected gates.
 4. Scope, value, threshold, tolerance, risk-acceptance and acceptance-criteria
    changes require the Captain. Material findings cannot use the record-only lane;
    hold/route-for-decision forbids repair and reviewer rerun.
-5. A round is one verdict of an external reviewer of the delivery on the PR head
-   (Codex on the PR, RoboRev or another); FO counts rounds and records the count in
-   the committed gate summary. A finding assessed Material, or labelled P1 by the
-   reviewer, blocks in every round: a reviewer P1 is fixed and revalidated, or waived by the
-   Captain with the reason recorded (step 4). For an external reviewer that has no
-   P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds 1 and 2
-   follow steps 1 to 4.
+5. A round is one verdict of an external reviewer of the delivery on the PR head (Codex
+   on the PR, RoboRev or another); FO counts rounds and records the count in the
+   committed gate summary. Where Codex reviews the PR, FO reads each round with `python3
+   <package>/scripts/codex_review.py <owner/repo> <pr>`: exit 0 is a clean round on the
+   head, exit 1 its findings, exit 3 or 4 no verdict on the head yet, so the round is
+   not counted and merge is not asked for; FO counts one round per `evidence=` id it
+   prints. A finding assessed Material, or labelled P1 by the reviewer, blocks in every
+   round: a reviewer P1 is fixed and revalidated, or waived by the Captain with the
+   reason recorded (step 4). For an external reviewer that has no P1 label, its highest
+   severity level counts as P1 (e.g. RoboRev). Rounds 1 and 2 follow steps 1 to 4.
    From round 3 a finding that is neither does not start a repair cycle: FO declines
    it in the committed gate summary, naming the finding, and files it as a new backlog
    task with `spacedock new` whose body carries the finding and the decline reason; it

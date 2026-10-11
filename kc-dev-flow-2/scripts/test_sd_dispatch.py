@@ -127,6 +127,12 @@ FIXES = {
         old=("validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`",),
         swaps=((r"\. Validation runs `python3 <package>/scripts/adr_lint\.py docs/adr --since <base>`.*?returns to FO\.",
                 "; validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and returns a failure or a missing record through the existing feedback route."),)),
+    "codex-round": dict(
+        need=("FO reads each round with `python3 <package>/scripts/codex_review.py <owner/repo> <pr>`",
+              "so the round is not counted and merge is not asked for",
+              "FO counts one round per `evidence=` id it prints"),
+        old=(),
+        swaps=((r" Where Codex reviews the PR, FO reads each round.*?`evidence=` id it prints\.", ""),)),
     "applied-none": dict(
         need=("FO records `Applied: none as of <candidate sha>`",
               "reports the missing record to FO instead of re-checking deploys"),
