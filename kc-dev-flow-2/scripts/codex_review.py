@@ -8,7 +8,7 @@ Exit 0 clean: no review running, none of Codex's findings were made on the head,
 Exit 1 findings: Codex made line findings or a review on the head commit.
 Exit 2 configuration error: bad arguments or a gh call that failed.
 Exit 3 running: Codex's eyes reaction is on the pull request.
-Exit 4 not reviewed: no Codex evidence covers the head commit yet.
+Exit 4 not reviewed: no Codex evidence covers the head commit yet, or the head moved while reading.
 """
 import json
 import re
@@ -47,6 +47,8 @@ def state(repo, pr, call=gh, pages=pages):
              for m in REVIEWED.finditer(c["body"]) if head.startswith(m.group(1))]
     markers = [m for m in markers if m.get("repository") == repo and str(m.get("pullRequestNumber")) == str(pr)]
     p1 = sum(bool(P1.search(c["body"])) for c in inline)
+    if call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"] != head:
+        return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
     if any(r["content"] == "eyes" for r in reactions):
         return 3, f"running: Codex is reviewing {head[:9]}"
     if inline or reviews:

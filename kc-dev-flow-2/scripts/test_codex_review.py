@@ -18,9 +18,11 @@ def marker(sha, status, repo="o/r", pr=1, lead="<!-- codex-pull-request-review-s
     return f"{lead}<!-- codex-security-review:v1 {meta} -->\n## Codex Review Summary"
 
 
-def fake(reactions=(), inline=(), reviews=(), comments=()):
+def fake(reactions=(), inline=(), reviews=(), comments=(), heads=(HEAD,)):
+    seen = iter(list(heads) + [heads[-1]] * 5)
+
     def call(*args):
-        return {"headRefOid": HEAD}
+        return {"headRefOid": next(seen)}
 
     def pages(path):
         if path.endswith("/reactions"):
@@ -77,6 +79,9 @@ class CodexReviewTests(unittest.TestCase):
         self.assertEqual(self.check(comments=said(HEAD[:10], user=PERSON))[0], 4)
         self.assertEqual(self.check(comments=said(HEAD[:10], lead="Quoting an old note:"))[0], 4)
         self.assertEqual(self.check(comments=said(HEAD[:10]), inline=[finding(HEAD)])[0], 1)
+
+    def test_a_head_that_moves_while_reading_has_no_verdict(self):
+        self.assertEqual(self.check(comments=[{"user": BOT, "body": marker(HEAD, "completed")}], heads=(HEAD, OLD))[0], 4)
 
     def test_a_failed_gh_call_or_bad_arguments_is_a_configuration_error(self):
         with contextlib.redirect_stdout(io.StringIO()):
