@@ -95,8 +95,10 @@ def main(argv=None):
     for number, raw in {int(raw): raw for raw in reversed(required)}.items():
         if number not in files:
             errors.append(f"required ADR {raw} does not exist")
-        elif number in legacy:
+        elif number in legacy and raw in args.require:
             errors.append(f"required ADR {raw} is a legacy record; a new ruling needs its own file")
+        elif number in legacy:
+            continue
         elif "**Recommended:**" not in "\n".join(sections(files[number].read_text()).get("Decision", [])):
             errors.append(f"required ADR {raw}: Decision needs a '**Recommended:**' line; a record written "
                           "before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation")

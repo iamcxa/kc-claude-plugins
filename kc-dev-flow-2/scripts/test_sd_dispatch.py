@@ -19,7 +19,7 @@ ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
               "or labelled P1 by the reviewer, blocks in every round",
               "For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev)",
               "From round 3 a finding that is neither does not start a repair cycle",
-              "`Follow-up:` line to that task's Scope")
+              "files it as a new backlog task with `spacedock new`")
 WORKER_RULE = ("Before repair authorization, product bytes and the recorded candidate revision stay unchanged",
                "The four evidence fields are", "- **Needs decision:**")
 SEED_STEP = "design_surfaces.py check --seed"
@@ -44,7 +44,7 @@ def lane_gaps(text):
 
 FIXES = {
     "goal-change": dict(
-        need=("the same story ids and the same release and story `goal` text",
+        need=("the same release and story `goal` text",
               "changes the goal of the release, a story or a task"),
         old=("with the release's story set unchanged since its latest `Release review:` line",),
         swaps=((r"A task whose `journey-story` is already on the map in that release passes with that one check.*?"
@@ -60,7 +60,7 @@ FIXES = {
                 r"own production database\)",
                 "persistent shared environment (a non-production database branch)"),)),
     "collision": dict(
-        need=("the task whose migration is applied keeps it and the other, unapplied task renumbers",
+        need=("the other, unapplied task renumbers",
               "deletes its `Migration:` line", "a shared non-production database that cannot be reset",
               "is deleted and recreated by the Captain", "the one that merges first keeps the number",
               "`Not applied: <environment> <sha> - database reset`",
@@ -74,7 +74,7 @@ FIXES = {
                (r"the line stays and the migration counts as applied", "the line stays and Renumber holds for the Captain"))),
     "clear-release-fields": dict(
         need=("journey= journey-release= journey-story= journey-required-tasks= journey-mapping-complete=",
-              "moves that list and `journey-mapping-complete: true` to another member of the story"),
+              "`journey-mapping-complete: true` to another member of the story"),
         old=(),
         swaps=((r"When signal 2 moves a task out of a release, FO clears.*?declaration matches its members\.", ""),)),
     "backlog-revise": dict(
@@ -82,8 +82,8 @@ FIXES = {
         old=(),
         swaps=((r"; and at `backlog`, which dispatches no worker.*?asks the proposal's author to\.", "."),)),
     "feedback-revise": dict(
-        need=("at a stage whose gate has a `feedback-to`, the revision goes to that target and the stage's worker re-reviews it",
-              "at a stage with no `feedback-to` that dispatches a worker, that stage's worker reworks it"),
+        need=("the stage's worker re-reviews it",
+              "at a stage with no `feedback-to` that dispatches a worker"),
         old=("at a stage that dispatches a worker, that stage's worker reworks it",),
         swaps=((r"at a stage with no `feedback-to` that dispatches a worker, that stage's worker reworks it; at a stage whose gate has a `feedback-to`.*?re-reviews it;",
                 "at a stage that dispatches a worker, that stage's worker reworks it,"),)),
@@ -93,31 +93,37 @@ FIXES = {
         swaps=((r"FO runs `git -C <repo> fetch`, then", "FO runs `git fetch`, then"),
                (r"after `git -C <repo> fetch`, on the PR head", "after `git fetch`, on the PR head"))),
     "approval-accepts-stated-recommendation": dict(
-        need=("plain approval accepts that recommendation only when the gate question says so",
+        need=("accepts that recommendation only when the gate question says so",
               "FO records its handling as FO's reading, never as his ruling"),
         old=(),
         swaps=((r"A Needs decision put to the Captain at a gate carries FO's recommendation\..*?and asks him\. ", ""),)),
     "adr-not-recorded": dict(
-        need=("An older record a change touches without that line takes `**Recommended:** not recorded`, never a reconstructed recommendation",),
+        file="skills/implementation/principles.md",
+        need=("takes `**Recommended:** not recorded`, never a reconstructed recommendation",
+              "a change touches without that line",),
         old=(),
         swaps=((r"An older record a change touches without that line takes `\*\*Recommended:\*\* not recorded`, never a reconstructed recommendation\. ", ""),)),
     "consent-rules": dict(
-        need=("A Captain ruling is his reply to the question it settles, given after that question was put",
-              "consent he gave earlier to a different question, or a choice he raised but did not make",
-              "returns a choice he raised to him rather than to a worker"),
+        need=("A Captain ruling is his reply to the question it settles",
+              "given after that question was put",
+              "consent he gave earlier to a different question",
+              "a choice he raised but did not make",
+              "returns a choice he raised to him"),
         old=(),
         swaps=((r"A Captain ruling is his reply to the question it settles.*?rather than to a worker\. ", ""),)),
     "dispatch-record": dict(
-        need=("FO saves those scope notes, the checklist, the model it dispatches on and the SHA it dispatches from as `<task>/dispatch/<stage>-<cycle>.md`",
-              "so the instruction a worker followed outlives the session that wrote it"),
+        need=("the SHA it dispatches from as `<task>/dispatch/<stage>-<cycle>.md`",
+              "outlives the session that wrote it",
+              "`## Checklist` and `## Scope notes` sections",
+              "a `Dispatched:` line with the full SHA, a `Model:` line"),
         old=(),
         swaps=((r"FO saves those scope notes, the checklist, the model it dispatches on.*?outlives the session that wrote it\. ", ""),)),
     "resumed-dispatch": dict(
-        need=("A follow-up message to a worker FO resumes is a dispatch too, and its record carries the same parts",),
+        need=("A follow-up message to a worker FO resumes is a dispatch",),
         old=(),
         swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, and its record carries the same parts\. ", ""),)),
     "adr-since": dict(
-        need=("Validation runs `python3 <package>/scripts/adr_lint.py docs/adr --since <base>`, which requires every record the candidate added or changed",),
+        need=("which requires every record the candidate added or changed",),
         old=("validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`",),
         swaps=((r"\. Validation runs `python3 <package>/scripts/adr_lint\.py docs/adr --since <base>`.*?returns to FO\.",
                 "; validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and returns a failure or a missing record through the existing feedback route."),)),
@@ -127,12 +133,67 @@ FIXES = {
               "FO counts one round per `evidence=` id it prints"),
         old=(),
         swaps=((r" Where Codex reviews the PR, FO reads each round.*?`evidence=` id it prints\.", ""),)),
+    "applied-none": dict(
+        need=("FO records `Applied: none as of <candidate sha>`",
+              "reports the missing record to FO instead of re-checking deploys"),
+        old=(),
+        swaps=((r"When FO dispatches validation and nothing was pushed for the task.*?has a skipped record\. ", ""),
+               (r" `Applied: none as of <sha>` records that nothing was pushed.*?instead of re-checking deploys\.", ""))),
+    "follow-up-reason": dict(
+        need=("whose body carries the finding and the decline reason",
+              "it never enters an open task's Scope",
+              "assesses it against its stated reason and earlier rulings",
+              "returns the line to FO as a Needs decision"),
+        old=(),
+        swaps=((r", naming the finding, and files it as a new backlog task.*?The terminal gate lists each such task\.",
+                ", naming the finding and its home, and adds a `Follow-up:` line to that task's Scope, the open task whose Scope edits the finding's file, else a new backlog task from `spacedock new`. The terminal gate lists each follow-up and its home."),
+               (r"A `Follow-up:` line in Scope is not accepted scope by itself.*?It records which, and why\. ", ""))),
+    "decline-settled": dict(
+        need=("does not report it again unless the candidate changes",),
+        old=(),
+        swaps=((r" A finding FO declined in a committed gate summary or under `### FO declines` is settled:.*?the lines it names\.", ""),)),
+    "late-decline": dict(
+        need=("FO writes the decline under `### FO declines`",),
+        old=(),
+        swaps=((r"When that summary is already consumed, FO writes the decline.*?lists each entry there\. ", ""),)),
+    "repair-push-grant": dict(
+        need=("approval also covers later external-review rounds on the same PR",
+              "a scope change and the merge still go to him"),
+        old=(),
+        swaps=((r", except as follows\. FO's delivery gate question.*?the merge still go to him\.", "."),)),
+    "asked-line": dict(
+        need=("Asked: <the question or proposal he answered",
+              "`Asked:` is required when his words do not name"),
+        old=(),
+        swaps=((r"Asked: <the question or proposal he answered, verbatim, or the commit holding it> ", ""),
+               (r"`Asked:` is required when his words do not name what they settle, such as 「同意第三點」\. ", ""))),
+    "send-back": dict(
+        need=("Sending an approved task back to an earlier stage",
+              "that stage's gate is approved again before the task moves on"),
+        old=(),
+        swaps=((r"Sending an approved task back to an earlier stage.*?before the task moves on\. ", ""),)),
+    "adr-lint-output": dict(
+        need=("the `<package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit code",),
+        old=(),
+        swaps=((r" the `<package>/scripts/adr_lint\.py docs/adr --since <base>` command run with its exit code,", ""),)),
+    "ideation-follow-up": dict(
+        file="skills/ideation/principles.md",
+        need=("as a proposal, not accepted scope",
+              "otherwise return it to FO as a Needs decision"),
+        old=(),
+        swaps=((r"Treat each `Follow-up:` line in Scope.*?which, and why\. ", ""),)),
+    "dispatch-records-check": dict(
+        file="skills/validation/principles.md",
+        need=("`python3 <package>/scripts/dispatch_records.py <task folder>`",),
+        old=(),
+        swaps=((r", and run `python3 <package>/scripts/dispatch_records\.py <task folder>`; a missing or incomplete record \(its exit 1\),", "; a missing record,"),)),
     "override-record": dict(
         need=("`Override: recommended <option>; Captain chose <option>; area: <area>`",
               "later workers find past rulings with `git grep 'Override:'`"),
         old=(),
         swaps=((r"When the Captain chooses differently from the recommendation, FO writes.*?in the state checkout\. ", ""),)),
     "adr-recommended": dict(
+        file="skills/implementation/principles.md",
         need=("the options considered and the option recommended inside Decision",
               "`<package>/scripts/adr_lint.py --require` refuses a required record without the recommended line"),
         old=("the decider's own words and the options considered inside Decision",),
@@ -140,28 +201,35 @@ FIXES = {
                 "the decider's own words and the options considered inside Decision."),)),
     "state-commits-through-sd": dict(
         need=("FO commits task state only through SD commands",
-              "each with `--workflow-dir <dir>`), never by staging the state checkout with `git add -A` or `git add .`"),
+              "never by staging the state checkout with `git add -A`"),
         old=(),
         swaps=((r"FO commits task state only through SD commands.*?into another task's commit\. ", ""),)),
     "rework-state-commit": dict(
-        need=("After it, FO runs `spacedock state commit <slug> --workflow-dir <dir>`, publishes, and reads the task back",),
+        need=("publishes, and reads the task back from the state remote",),
         old=(),
         swaps=((r"`merge guard --rework` supersedes the approval.*?awaiting merge\. ", ""),)),
 }
 
 
-def fix_gaps(text):
-    flat = " ".join(text.split())
-    return {name: ([p for p in fix["need"] if p not in flat], [p for p in fix["old"] if p in flat])
+def pinned_texts():
+    files = {fix.get("file", "references/sd/workflow.md") for fix in FIXES.values()}
+    return {path: " ".join((ROOT / path).read_text().split()) for path in files}
+
+
+def fix_gaps(texts):
+    def text(fix):
+        return texts[fix.get("file", "references/sd/workflow.md")]
+    return {name: ([p for p in fix["need"] if p not in text(fix)], [p for p in fix["old"] if p in text(fix)])
             for name, fix in FIXES.items()}
 
 
-def at_0_10_1(text, name):
-    flat = " ".join(text.split())
+def at_0_10_1(texts, name):
+    path = FIXES[name].get("file", "references/sd/workflow.md")
+    flat = texts[path]
     for pattern, old in FIXES[name]["swaps"]:
         flat, count = re.subn(pattern, lambda _: old, flat)
         assert count == 1, (name, pattern, count)
-    return flat
+    return {**texts, path: flat}
 
 
 def exercise(base, binary, sd_root):
@@ -514,9 +582,10 @@ def exercise(base, binary, sd_root):
         assert len(missing) == 3 and forbidden == list(LANE_FORBIDDEN), (missing, forbidden)
         no_wait = source.replace("do not wait for another entity's worker in the same stage", "")
         assert lane_gaps(no_wait)[0] == [LANE_RULE[2]], lane_gaps(no_wait)
-        assert all(gap == ([], []) for gap in fix_gaps(source).values()), fix_gaps(source)
+        texts = pinned_texts()
+        assert all(gap == ([], []) for gap in fix_gaps(texts).values()), fix_gaps(texts)
         for name, fix in FIXES.items():
-            for other, (missing, kept) in fix_gaps(at_0_10_1(source, name)).items():
+            for other, (missing, kept) in fix_gaps(at_0_10_1(texts, name)).items():
                 want = (list(fix["need"]), list(fix["old"])) if other == name else ([], [])
                 assert (missing, kept) == want, (name, other, missing, kept)
         leaked = re.sub(r"(    - name: implementation\n.*?        - Number guards\n)", r'\1        - "FO steps: review findings"\n',
@@ -557,7 +626,7 @@ def exercise(base, binary, sd_root):
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
-        print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the seventeen wording fixes (goal-change, shared-environment, collision, clear-release-fields, backlog-revise, feedback-revise, fetch-the-inspected-repo, approval-accepts-stated-recommendation, adr-not-recorded, consent-rules, dispatch-record, resumed-dispatch, adr-since, override-record, adr-recommended, state-commits-through-sd, rework-state-commit) are each asserted present, and each reverted alone to its previous text reports only its own gaps")
+        print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the " + str(len(FIXES)) + " wording fixes (" + ", ".join(FIXES) + ") are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
