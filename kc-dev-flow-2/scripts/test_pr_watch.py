@@ -97,6 +97,23 @@ class PrWatchTests(unittest.TestCase):
         self.assertEqual(watch.look(REF, view=view("MERGED"), review=review)["codex"], "-")
         self.assertEqual(asked, [("o/r", "1")])
 
+    def test_a_pr_added_while_a_sweep_runs_stays_watched(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap()], state)
+
+            def look_and_add(ref):
+                watch.update(state, put={"o/r#2": snap(title="added meanwhile")})
+                return snap()
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "check"], look=look_and_add)
+            self.assertEqual(set(json.loads(state.read_text())), {REF, "o/r#2"})
+
+    def test_help_exits_zero(self):
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(watch.main(["--help"]), 0)
+            self.assertEqual(watch.main(["no-such-command"]), 2)
+
     def test_codex_column_is_a_dash_without_the_sibling_reader(self):
         missing = Path(tempfile.gettempdir(), "no-such-codex-review.py")
         old, watch.CODEX = watch.CODEX, missing

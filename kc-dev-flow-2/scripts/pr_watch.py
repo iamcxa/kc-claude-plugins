@@ -12,7 +12,10 @@ A merged or closed PR is reported once, then dropped. The codex column comes fro
 sibling codex_review.py when it is present. Exit 2 is a configuration error.
 """
 import argparse
+import contextlib
+import fcntl
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
@@ -62,8 +65,32 @@ def look(ref, view=gh, review=codex):
     return snap
 
 
+def load(state):
+    return json.loads(state.read_text()) if state.exists() else {}
+
+
+@contextlib.contextmanager
+def locked(state):
+    state.parent.mkdir(parents=True, exist_ok=True)
+    with open(state.with_suffix(".lock"), "w") as lock:
+        fcntl.flock(lock, fcntl.LOCK_EX)
+        yield
+
+
+def update(state, put=(), drop=()):
+    with locked(state):
+        current = load(state)
+        current.update(dict(put))
+        for ref in drop:
+            current.pop(ref, None)
+        temp = state.with_suffix(".tmp")
+        temp.write_text(json.dumps(current, indent=1))
+        os.replace(temp, state)
+        return current
+
+
 def sweep(state, look=look):
-    seen = json.loads(state.read_text()) if state.exists() else {}
+    seen = load(state)
     changes, rows = [], []
     for ref, old in seen.items():
         try:
@@ -79,10 +106,9 @@ def sweep(state, look=look):
                     f"checks={now['checks']:8} codex={now['codex']:12} {now['title']}")
         seen[ref] = now
     reported = {line.split(" ")[0] for line, _ in changes}
-    kept = {ref: s for ref, s in seen.items() if s["state"] == "OPEN" or ref in reported}
-    state.parent.mkdir(parents=True, exist_ok=True)
-    state.write_text(json.dumps(kept, indent=1))
-    return changes, rows, bool(kept)
+    done = [ref for ref, s in seen.items() if s["state"] != "OPEN" and ref not in reported]
+    current = update(state, put={r: s for r, s in seen.items() if r not in done}, drop=done)
+    return changes, rows, bool(current)
 
 
 def main(argv=None, look=look, sleep=time.sleep):
@@ -92,18 +118,14 @@ def main(argv=None, look=look, sleep=time.sleep):
     parser.add_argument("args", nargs="*")
     try:
         opts = parser.parse_args(argv)
-    except SystemExit:
-        return 2
+    except SystemExit as stop:
+        return 0 if stop.code == 0 else 2
     try:
         if opts.command == "add":
             if not opts.args or not all("/" in r and "#" in r for r in opts.args):
                 print("add needs owner/repo#N")
                 return 2
-            seen = json.loads(opts.state.read_text()) if opts.state.exists() else {}
-            for ref in opts.args:
-                seen[ref] = look(ref)
-            opts.state.parent.mkdir(parents=True, exist_ok=True)
-            opts.state.write_text(json.dumps(seen, indent=1))
+            seen = update(opts.state, put={ref: look(ref) for ref in opts.args})
             print(f"watching {len(seen)} PR(s)")
             return 0
         if opts.command == "check":
