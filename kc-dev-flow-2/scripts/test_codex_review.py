@@ -18,11 +18,9 @@ def marker(sha, status, repo="o/r", pr=1, lead="<!-- codex-pull-request-review-s
     return f"{lead}<!-- codex-security-review:v1 {meta} -->\n## Codex Review Summary"
 
 
-def fake(reactions=(), inline=(), reviews=(), comments=(), head_date="2026-10-10T10:00:00Z"):
+def fake(reactions=(), inline=(), reviews=(), comments=()):
     def call(*args):
-        if args[0] == "pr":
-            return {"headRefOid": HEAD}
-        return {"commit": {"committer": {"date": head_date}}}
+        return {"headRefOid": HEAD}
 
     def pages(path):
         if path.endswith("/reactions"):
@@ -69,8 +67,16 @@ class CodexReviewTests(unittest.TestCase):
         below = "<!-- codex-pull-request-review-summary -->\n## Codex Review Summary\n" + marker(HEAD, "completed", lead="")
         self.assertEqual(self.check(comments=[{"user": BOT, "body": below}])[0], 4)
         self.assertEqual(self.check(comments=[{"user": PERSON, "body": marker(HEAD, "completed")}])[0], 4)
-        self.assertEqual(self.check(reactions=[{"user": BOT, "content": "+1", "created_at": "2026-10-10T11:00:00Z"}])[0], 0)
-        self.assertEqual(self.check(reactions=[{"user": BOT, "content": "+1", "created_at": "2026-10-10T09:00:00Z"}])[0], 4)
+        self.assertEqual(self.check(reactions=[{"user": BOT, "content": "+1", "created_at": "2026-10-10T11:00:00Z"}])[0], 4)
+
+    def test_a_codex_review_comment_naming_the_head_is_clean(self):
+        def said(sha, user=BOT, lead="Codex Review: Didn't find any major issues."):
+            return [{"user": user, "body": f"{lead}\n\n**Reviewed commit:** `{sha}`\n"}]
+        self.assertEqual(self.check(comments=said(HEAD[:10]))[0], 0)
+        self.assertEqual(self.check(comments=said(OLD[:10]))[0], 4)
+        self.assertEqual(self.check(comments=said(HEAD[:10], user=PERSON))[0], 4)
+        self.assertEqual(self.check(comments=said(HEAD[:10], lead="Quoting an old note:"))[0], 4)
+        self.assertEqual(self.check(comments=said(HEAD[:10]), inline=[finding(HEAD)])[0], 1)
 
     def test_a_failed_gh_call_or_bad_arguments_is_a_configuration_error(self):
         with contextlib.redirect_stdout(io.StringIO()):
