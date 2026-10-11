@@ -6,10 +6,10 @@ with no `Result:` line, or when the route includes ideation and records no
 `Surfaces:` or no `Visible change:` line, stop and report instead of starting
 the design. Ask for research when missing facts can change the decision; the
 worker authors the requested artifact, not user approval.
-Treat each `Follow-up:` line in Scope as a finding FO declined, with its reason. Adopt
-it into the design only if no accepted criterion, Captain ruling or journey contract
-depends on the behaviour it changes; otherwise return it to FO as a Needs decision, and
-say in the design which, and why.
+Treat each `Follow-up:` line in Scope as a proposal, not accepted scope. Adopt it
+into the design only if no accepted criterion, Captain ruling or journey contract
+depends on the behaviour it changes; otherwise return it to FO as a Needs decision,
+and say in the design which, and why.
 Prefer the smallest working mechanism for the accepted goal. Before proposing an
 existing-code capability change, apply the [bounded existing-code check](../implementation/principles.md#existing-code-capability-check);
 use or repair what exists before adding a replacement. Record its conclusion in

@@ -19,7 +19,7 @@ ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
               "or labelled P1 by the reviewer, blocks in every round",
               "For an external reviewer that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev)",
               "From round 3 a finding that is neither does not start a repair cycle",
-              "`Follow-up:` line to that task's Scope")
+              "files it as a new backlog task with `spacedock new`")
 WORKER_RULE = ("Before repair authorization, product bytes and the recorded candidate revision stay unchanged",
                "The four evidence fields are", "- **Needs decision:**")
 SEED_STEP = "design_surfaces.py check --seed"
@@ -134,12 +134,14 @@ FIXES = {
         swaps=((r"When FO dispatches validation and nothing was pushed for the task.*?has a skipped record\. ", ""),
                (r" `Applied: none as of <sha>` records that nothing was pushed.*?instead of re-checking deploys\.", ""))),
     "follow-up-reason": dict(
-        need=("the line carries the finding and the decline reason",
-              "assesses it against that reason and earlier rulings",
+        need=("whose body carries the finding and the decline reason",
+              "it never enters an open task's Scope",
+              "assesses it against its stated reason and earlier rulings",
               "returns the line to FO as a Needs decision"),
         old=(),
-        swaps=((r"; the line carries the finding and the decline reason\.", "."),
-               (r"A `Follow-up:` line in Scope is a declined finding.*?It records which, and why\. ", ""))),
+        swaps=((r", naming the finding, and files it as a new backlog task.*?The terminal gate lists each such task\.",
+                ", naming the finding and its home, and adds a `Follow-up:` line to that task's Scope, the open task whose Scope edits the finding's file, else a new backlog task from `spacedock new`. The terminal gate lists each follow-up and its home."),
+               (r"A `Follow-up:` line in Scope is not accepted scope by itself.*?It records which, and why\. ", ""))),
     "decline-settled": dict(
         need=("does not report it again unless the candidate changes",),
         old=(),
@@ -170,7 +172,7 @@ FIXES = {
         swaps=((r" the `<package>/scripts/adr_lint\.py docs/adr --since <base>` command run with its exit code,", ""),)),
     "ideation-follow-up": dict(
         file="skills/ideation/principles.md",
-        need=("as a finding FO declined, with its reason",
+        need=("as a proposal, not accepted scope",
               "otherwise return it to FO as a Needs decision"),
         old=(),
         swaps=((r"Treat each `Follow-up:` line in Scope.*?which, and why\. ", ""),)),

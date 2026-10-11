@@ -268,9 +268,8 @@ does not establish Material.
 - **Polish:** no current user-visible loss or protected boundary is at risk.
 - **Needs decision:** the task cannot own the scope, product or compatibility call.
 
-A `Follow-up:` line in Scope is a declined finding with its reason, not accepted
-scope: the first stage of the receiving task to meet it assesses it against that reason
-and earlier rulings. It builds the line only when the change alters no behaviour that an
+A `Follow-up:` line in Scope is not accepted scope by itself: the first stage of the
+receiving task to meet it assesses it against its stated reason and earlier rulings. It builds the line only when the change alters no behaviour that an
 accepted criterion, a Captain ruling or a journey contract relies on; otherwise it
 returns the line to FO as a Needs decision. It records which, and why.
 A finding FO declined in a committed gate summary or under `### FO declines` is settled:
@@ -306,11 +305,9 @@ consequential FO quick work and rejected gates.
    P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds 1 and 2
    follow steps 1 to 4.
    From round 3 a finding that is neither does not start a repair cycle: FO declines
-   it in the committed gate summary, naming the finding and its home, and adds a
-   `Follow-up:` line to that task's Scope, the open task whose Scope edits the
-   finding's file, else a new backlog task from `spacedock new`; the line carries the
-   finding and the decline reason. The terminal gate
-   lists each follow-up and its home.
+   it in the committed gate summary, naming the finding, and files it as a new backlog
+   task with `spacedock new` whose body carries the finding and the decline reason; it
+   never enters an open task's Scope. The terminal gate lists each such task.
 
 Rejection routing carries evidence, classifications, authorized dispositions and assignment
 without re-triage.
