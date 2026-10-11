@@ -33,6 +33,21 @@ format checks; the bundled CLI reuses the repository's basic frontmatter check
 and validates declared routing structure and package script paths, not the full
 standard or agent behavior.
 
-Report the exact changed files, static results and untested behavioral claims.
+## Behaviour replay
+
+A change that claims a worker will act differently is shown before release, because
+wording tests prove only that the text is there. Pick a closed adopter task whose record
+holds the old behaviour, and build its dispatch twice with
+`python3 kc-dev-flow-2/scripts/replay_dispatch.py build`: once at the last release tag
+and once at the change, from the same state and code commits, with a checklist that
+names no rule under test. Run each as a fresh worker on the same model, once on the
+release and at least twice on the change; `--inject` adds the FO record a rule
+depends on, such as a decline. Report a table of runs by outcome, then run
+`python3 kc-dev-flow-2/scripts/replay_dispatch.py cleanup`. A rule only FO acts on cannot be replayed: a fresh FO
+answers scenario questions from the README alone, including one where the rule must not
+apply. A replay that contradicts the claim stops the change; after two rewordings that
+still fail, take a structural option to the Captain instead of a third.
+
+Report the exact changed files, static results, replay table and untested behavioral claims.
 Do not infer permission to register/install the bundle, execute SD stages,
 install hooks, launch experiments, post externally or commit from a lint pass.
