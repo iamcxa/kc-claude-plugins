@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.15.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.15.0...kc-dev-flow-2-v0.15.1) (2026-10-11)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** three 0.15.0 workflow gaps found by Codex on an adopter sync ([#596](https://github.com/iamcxa/kc-claude-plugins/issues/596)) ([a26efa4](https://github.com/iamcxa/kc-claude-plugins/commit/a26efa4fe8e6ea92030667a3611cdfbdbf4c4359))
+
 ## [0.15.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.14.0...kc-dev-flow-2-v0.15.0) (2026-10-11)
 
 
