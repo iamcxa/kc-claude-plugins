@@ -15,7 +15,8 @@ import subprocess
 import sys
 
 BOT = "chatgpt-codex-connector[bot]"
-MARKER = re.compile(r"codex-[a-z-]*review:v1 (\{.*?\}) -->")
+SUMMARY = "<!-- codex-pull-request-review-summary -->"
+MARKER = re.compile(r"^<!-- codex-[a-z-]+-review:v1 (\{[^\n]*\}) -->$", re.M)
 P1 = re.compile(r"!\[P[01] Badge\]")
 
 
@@ -39,7 +40,9 @@ def state(repo, pr, call=gh, pages=pages):
     reviews = [r for r in pages(f"repos/{repo}/pulls/{pr}/reviews")
                if r["user"]["login"] == BOT and r.get("commit_id") == head]
     markers = [json.loads(m.group(1)) for c in pages(f"repos/{repo}/issues/{pr}/comments")
-               if c["user"]["login"] == BOT for m in MARKER.finditer(c["body"])]
+               if c["user"]["login"] == BOT and c["body"].startswith(SUMMARY)
+               for m in MARKER.finditer(c["body"].split("\n## ", 1)[0])]
+    markers = [m for m in markers if m.get("repository") == repo and str(m.get("pullRequestNumber")) == str(pr)]
     p1 = sum(bool(P1.search(c["body"])) for c in inline)
     if any(r["content"] == "eyes" for r in reactions):
         return 3, f"running: Codex is reviewing {head[:9]}"

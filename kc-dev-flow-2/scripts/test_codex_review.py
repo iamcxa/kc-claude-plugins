@@ -13,8 +13,9 @@ HEAD, OLD = "a" * 40, "b" * 40
 BOT, PERSON = {"login": codex.BOT}, {"login": "someone"}
 
 
-def marker(sha, status):
-    return f'<!-- codex-security-review:v1 {{"headSha":"{sha}","status":"{status}"}} -->\n## Codex Review Summary'
+def marker(sha, status, repo="o/r", pr=1, lead="<!-- codex-pull-request-review-summary -->\n"):
+    meta = f'{{"headSha":"{sha}","status":"{status}","repository":"{repo}","pullRequestNumber":{pr}}}'
+    return f"{lead}<!-- codex-security-review:v1 {meta} -->\n## Codex Review Summary"
 
 
 def fake(reactions=(), inline=(), reviews=(), comments=(), head_date="2026-10-10T10:00:00Z"):
@@ -59,6 +60,14 @@ class CodexReviewTests(unittest.TestCase):
         self.assertEqual(self.check(comments=[{"user": BOT, "body": marker(HEAD, "completed")}])[0], 0)
         self.assertEqual(self.check(comments=[{"user": BOT, "body": marker(OLD, "completed")}])[0], 4)
         self.assertEqual(self.check(comments=[{"user": BOT, "body": marker(HEAD, "running")}])[0], 4)
+
+    def test_a_marker_outside_codex_summary_or_for_another_pr_is_ignored(self):
+        quoted = "Suggested change:\n" + marker(HEAD, "completed", lead="")
+        self.assertEqual(self.check(comments=[{"user": BOT, "body": quoted}])[0], 4)
+        self.assertEqual(self.check(comments=[{"user": BOT, "body": marker(HEAD, "completed", pr=2)}])[0], 4)
+        self.assertEqual(self.check(comments=[{"user": BOT, "body": marker(HEAD, "completed", repo="x/y")}])[0], 4)
+        below = "<!-- codex-pull-request-review-summary -->\n## Codex Review Summary\n" + marker(HEAD, "completed", lead="")
+        self.assertEqual(self.check(comments=[{"user": BOT, "body": below}])[0], 4)
         self.assertEqual(self.check(comments=[{"user": PERSON, "body": marker(HEAD, "completed")}])[0], 4)
         self.assertEqual(self.check(reactions=[{"user": BOT, "content": "+1", "created_at": "2026-10-10T11:00:00Z"}])[0], 0)
         self.assertEqual(self.check(reactions=[{"user": BOT, "content": "+1", "created_at": "2026-10-10T09:00:00Z"}])[0], 4)
