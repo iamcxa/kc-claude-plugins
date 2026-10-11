@@ -273,7 +273,8 @@ receiving task to meet it assesses it against its stated reason and earlier ruli
 accepted criterion, a Captain ruling or a journey contract relies on; otherwise it
 returns the line to FO as a Needs decision. It records which, and why.
 A finding FO declined in a committed gate summary or under `### FO declines` is settled:
-a later validator does not report it again unless the candidate changes the lines it names.
+a later validator does not report it again unless the candidate changes the lines or the
+evidence the decline names, or new evidence would make it Material.
 
 ## FO steps: review findings
 
@@ -285,12 +286,12 @@ consequential FO quick work and rejected gates.
    materiality, ownership and disposition. Missing required evidence or unresolved
    classification requires investigation or hold.
 2. Within approved boundaries, FO may explicitly decline evidenced Deferred risk or
-   Polish in the existing committed gate summary, naming the finding, reason and
-   candidate revision. When that summary is already consumed, FO writes the decline
-   under `### FO declines` in the task file, committed with `spacedock state commit`,
-   and the terminal gate lists each entry there. This FO-authored decision requires no
-   live worker or reviewer rerun for acknowledgement; preserve worker reports and
-   verdicts.
+   Polish in the existing committed gate summary, naming the finding, reason, candidate
+   revision and the lines or evidence it rests on. When that summary is already
+   consumed, FO writes the decline under `### FO declines` in the task file, committed
+   with `spacedock state commit`, and the terminal gate lists each entry there. This
+   FO-authored decision requires no live worker or reviewer rerun for acknowledgement;
+   preserve worker reports and verdicts.
 3. Repairs require worker investigation without candidate mutation, distinct FO
    `fix` authorization through the runtime's addressable-worker boundary, then
    independent validation. Without that authorization, hold.
@@ -390,8 +391,9 @@ and the Captain's acceptance script follow `## Acceptance criteria` plus the ent
 
 Sending an approved task back to an earlier stage, such as a design redo a release
 review asks for, is the Captain's decision and is recorded as an amendment whose
-`Design:` names what is redone; FO then runs `spacedock status --set <slug>
-status=<stage>`, and that stage's gate is approved again before the task moves on.
+`Design:` names what is redone; FO then runs `spacedock status --workflow-dir <dir>
+--set <slug> status=<stage>`, and that stage's gate is approved again before the task
+moves on.
 
 `python3 <package>/scripts/design_surfaces.py check <task>` exits 1 when an entry has no
 `Captain:` line or a superseded id is still declared in `## Acceptance criteria`;
@@ -436,7 +438,8 @@ deploys from its `## Number guards` section; `--help` lists the flags.
 - **Reserve.** Before an implementation dispatch, FO runs `git -C <repo> fetch`, then
   `python3 <package>/scripts/number_guards.py reserve --kind migration|adr --workflow-dir <workflow-dir> --repo <repo> --task <task file>`
   once per kind the task needs, when the implementation dispatch is built and not
-  earlier. FO records each printed `Migration: NNNN` /
+  earlier; a task holds one number per kind, and a task needing a second ADR or
+  migration returns to FO. FO records each printed `Migration: NNNN` /
   `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as
   dispatch scope notes.
 - **Applied.** Before any push of a candidate to a persistent shared non-production
