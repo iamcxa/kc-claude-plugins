@@ -123,7 +123,8 @@ FIXES = {
         old=(),
         swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, and its record carries the same parts\. ", ""),)),
     "adr-since": dict(
-        need=("which requires every record the candidate added or changed",),
+        need=("for each `ADR:` number the task's `## Number guards` reserves",
+              "which requires every record the candidate added or changed",),
         old=("validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`",),
         swaps=((r"\. Validation runs `python3 <package>/scripts/adr_lint\.py docs/adr --since <base>`.*?returns to FO\.",
                 "; validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and returns a failure or a missing record through the existing feedback route."),)),
@@ -135,12 +136,14 @@ FIXES = {
         swaps=((r" Where Codex reviews the PR, FO reads each round.*?`evidence=` id it prints\.", ""),)),
     "applied-none": dict(
         need=("FO records `Applied: none as of <candidate sha>`",
-              "reports the missing record to FO instead of re-checking deploys"),
+              "reports the missing record to FO instead of re-checking deploys",
+              "a validator that finds none of `Applied at:`, `Not applied:` or `Applied: none`"),
         old=(),
         swaps=((r"When FO dispatches validation and nothing was pushed for the task.*?has a skipped record\. ", ""),
                (r" `Applied: none as of <sha>` records that nothing was pushed.*?instead of re-checking deploys\.", ""))),
     "follow-up-reason": dict(
-        need=("whose body carries the finding and the decline reason",
+        need=("names the backlog task that already holds it when a later round repeats it",
+              "whose body carries the finding and the decline reason",
               "it never enters an open task's Scope",
               "assesses it against its stated reason and earlier rulings",
               "returns the line to FO as a Needs decision"),
@@ -154,7 +157,8 @@ FIXES = {
         old=(),
         swaps=((r" A finding FO declined in a committed gate summary or under `### FO declines` is settled:.*?would make it Material\.", ""),)),
     "late-decline": dict(
-        need=("FO writes the decline under `### FO declines`",),
+        need=("committed with `spacedock state commit <slug> --workflow-dir <dir>`, and the terminal gate",
+              "FO writes the decline under `### FO declines`",),
         old=(),
         swaps=((r"When that summary is already consumed, FO writes the decline.*?lists each entry there\. ", ""),)),
     "repair-push-grant": dict(
@@ -198,6 +202,22 @@ FIXES = {
         need=("a task holds one number per kind, and a task needing a second ADR or migration returns to FO",),
         old=(),
         swaps=((r"; a task holds one number per kind, and a task needing a second ADR or migration returns to FO\.", "."),)),
+    "codex-presence": dict(
+        need=("A PR on which Codex has left no review, comment or reaction is not Codex-reviewed",),
+        old=(),
+        swaps=((r" A PR on which Codex has left no review, comment or reaction is not Codex-reviewed.*?other reviewers\.", ""),)),
+    "codex-rerequest": dict(
+        need=("it comments `@codex review` there",),
+        old=(),
+        swaps=((r" After FO pushes a repair to a Codex-reviewed PR.*?no new review by itself\.", ""),)),
+    "status-executable": dict(
+        need=("run `spacedock status --workflow-dir <dir>",),
+        old=(),
+        swaps=((r"run `spacedock status --workflow-dir <dir>", "run `status --workflow-dir <dir>"),)),
+    "late-ruling-adr": dict(
+        need=("including one first required by a ruling in a worker report or mid-stage feedback",),
+        old=(),
+        swaps=((r", or the task lands an ADR, including one first required by a ruling in a worker report or mid-stage feedback, whose number FO reserves before the next dispatch;", ", or its design lands an ADR;"),)),
     "override-record": dict(
         need=("`Override: recommended <option>; Captain chose <option>; area: <area>`",
               "later workers find past rulings with `git grep 'Override:'`"),

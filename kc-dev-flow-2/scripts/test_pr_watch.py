@@ -68,6 +68,8 @@ class PrWatchTests(unittest.TestCase):
             self.assertIn("codex running -> findings", out)
             self.assertEqual(watch.outcome("mergeable", "CONFLICTING", "UNKNOWN"), True)
             self.assertEqual(watch.outcome("mergeable", "MERGEABLE", "UNKNOWN"), False)
+            self.assertEqual(watch.outcome("mergeable", "UNKNOWN", "MERGEABLE"), False)
+            self.assertEqual(watch.outcome("mergeable", "MERGEABLE", "CONFLICTING"), True)
 
     def test_wait_on_an_empty_list_ends_and_a_bad_ref_is_a_configuration_error(self):
         with tempfile.TemporaryDirectory() as d:
@@ -107,6 +109,13 @@ class PrWatchTests(unittest.TestCase):
                 return snap()
             with contextlib.redirect_stdout(io.StringIO()):
                 watch.main(["--state", str(state), "check"], look=look_and_add)
+            self.assertEqual(set(json.loads(state.read_text())), {REF, "o/r#2"})
+
+    def test_a_state_file_named_like_the_lock_keeps_its_list(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "watch.lock")
+            self.run_main(["add", REF], [snap()], state)
+            self.run_main(["add", "o/r#2"], [snap(title="second")], state)
             self.assertEqual(set(json.loads(state.read_text())), {REF, "o/r#2"})
 
     def test_help_exits_zero(self):

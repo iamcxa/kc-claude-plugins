@@ -21,9 +21,10 @@ The citation scan finds the named classes only, so still read every added commen
 When the task has a `## Number guards` section, rerun its `check` at the candidate; exit 1 is a repair
 finding returned through feedback and exit 2 is a configuration error that returns to FO.
 Validation runs `python3 <package>/scripts/adr_lint.py docs/adr --since <base>`, which
-requires every record the candidate added or changed, plus `--require <numbers>` for any
-number the implementation report names; exit 1 or a missing record returns through the
-existing feedback route, and exit 2 is a configuration error that returns to FO.
+requires every record the candidate added or changed, plus `--require <numbers>` for
+each `ADR:` number the task's `## Number guards` reserves and any number the
+implementation report names; exit 1 or a missing record returns through the existing
+feedback route, and exit 2 is a configuration error that returns to FO.
 Read the task's dispatch records (`<task>/dispatch/` in the state checkout) for the
 implementation cycles you validate, and run
 `python3 <package>/scripts/dispatch_records.py <task folder>`; a missing or incomplete

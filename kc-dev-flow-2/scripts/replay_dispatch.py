@@ -4,12 +4,13 @@
   replay_dispatch.py build --run-dir DIR --package-repo PATH --package-ref REF
       --adopter-readme FILE --readme-base-ref REF --state-repo PATH --state-commit SHA
       --task SLUG --code-repo PATH --code-commit SHA --stage STAGE
-      --checklist FILE [--scope FILE] [--inject FILE] [--spacedock BIN]
+      --checklist FILE [--scope FILE] [--inject FILE] [--patch FILE] [--spacedock BIN]
   replay_dispatch.py cleanup --run-dir DIR
 
 build exports the package at REF, merges the adopter README from the package version it was
 synced to (--readme-base-ref) onto REF, checks out the task's state and code at the given
-commits, appends --inject to the task file when given, and runs `spacedock dispatch build`.
+commits, appends --inject to the task file and applies --patch (a git diff of the state
+checkout) when given, and runs `spacedock dispatch build`.
 The dispatch file is copied to DIR/dispatch.md, since every build writes the same shared path.
 Exit 1 on a failed step, 2 on bad arguments.
 """
@@ -70,6 +71,9 @@ def build(a):
     task = entity(state, a.task)
     if a.inject:
         task.write_text(task.read_text() + Path(a.inject).read_text())
+    if a.patch:
+        git(state, "apply", str(Path(a.patch).resolve()))
+    if a.inject or a.patch:
         git(state, "-c", "user.name=replay", "-c", "user.email=replay@localhost", "commit", "-qam", "replay: inject")
     code = run / "code"
     git(a.code_repo, "worktree", "add", "--detach", str(code), a.code_commit)
@@ -111,6 +115,7 @@ def main(argv=None):
         b.add_argument(f"--{flag}", required=True)
     b.add_argument("--scope")
     b.add_argument("--inject")
+    b.add_argument("--patch")
     b.add_argument("--spacedock", default="spacedock")
     c = sub.add_parser("cleanup")
     c.add_argument("--run-dir", required=True)

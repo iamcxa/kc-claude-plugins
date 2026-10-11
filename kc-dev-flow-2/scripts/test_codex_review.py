@@ -34,13 +34,15 @@ def finding(original, badge="P2", review_id=5, at=T1, ident=11):
             "body": f"**<sub><sub>![{badge} Badge](https://img.shields.io/badge/{badge}-yellow)</sub></sub> fix it**"}
 
 
-def fake(reactions=(), inline=(), reviews=(), comments=(), heads=(HEAD,)):
+def fake(reactions=(), inline=(), reviews=(), comments=(), heads=(HEAD,), trigger_reactions=None):
     seen = iter(list(heads) + [heads[-1]] * 5)
 
     def call(*args):
         return {"headRefOid": next(seen)}
 
     def pages(path):
+        if "/issues/comments/" in path:
+            return list((trigger_reactions or {}).get(int(path.split("/")[-2]), []))
         if path.endswith("/reactions"):
             return list(reactions)
         if path.endswith("/reviews"):
@@ -53,6 +55,22 @@ class CodexReviewTests(unittest.TestCase):
     def check(self, **kw):
         call, pages = fake(**kw)
         return codex.state("o/r", "1", call=call, pages=pages)
+
+    def test_eyes_on_the_latest_codex_review_comment_means_running(self):
+        old = {"id": 39, "user": PERSON, "created_at": T1, "body": "@codex review"}
+        trigger = {"id": 40, "user": PERSON, "created_at": T2, "body": "@codex review"}
+        eyes = [{"user": BOT, "content": "eyes"}]
+        self.assertEqual(self.check(comments=[said(HEAD[:10]), old, trigger], trigger_reactions={40: eyes})[0], 3)
+        self.assertEqual(self.check(comments=[said(HEAD[:10]), old, trigger], trigger_reactions={39: eyes})[0], 0)
+        self.assertEqual(self.check(comments=[said(HEAD[:10]), trigger],
+                                    trigger_reactions={40: [{"user": PERSON, "content": "eyes"}]})[0], 0)
+
+    def test_a_missing_gh_is_a_configuration_error(self):
+        with mock.patch.object(codex.subprocess, "run", side_effect=FileNotFoundError("gh")):
+            with self.assertRaises(RuntimeError):
+                codex.gh("api", "x")
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(codex.main(["o/r", "1"]), 2)
 
     def test_eyes_means_running(self):
         self.assertEqual(self.check(reactions=[{"user": BOT, "content": "eyes"}], comments=[said(HEAD[:10])])[0], 3)

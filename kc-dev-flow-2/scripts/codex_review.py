@@ -28,7 +28,10 @@ REVIEWED = re.compile(r"^\*\*Reviewed commit:\*\* `([0-9a-f]{7,40})`$", re.M)
 
 
 def gh(*args):
-    done = subprocess.run(["gh", *args], capture_output=True, text=True)
+    try:
+        done = subprocess.run(["gh", *args], capture_output=True, text=True)
+    except OSError as error:
+        raise RuntimeError(f"gh not runnable: {error}") from error
     if done.returncode:
         raise RuntimeError(done.stderr.strip() or f"gh {' '.join(args)} failed")
     return json.loads(done.stdout or "null")
@@ -45,7 +48,12 @@ def state(repo, pr, call=gh, pages=pages):
               if c["user"]["login"] == BOT and c.get("original_commit_id") == head]
     reviews = [r for r in pages(f"repos/{repo}/pulls/{pr}/reviews")
                if r["user"]["login"] == BOT and r.get("commit_id") == head]
-    issue = [c for c in pages(f"repos/{repo}/issues/{pr}/comments") if c["user"]["login"] == BOT]
+    comments = pages(f"repos/{repo}/issues/{pr}/comments")
+    issue = [c for c in comments if c["user"]["login"] == BOT]
+    triggers = [c for c in comments if "@codex review" in (c.get("body") or "")]
+    if triggers:
+        reactions += [r for r in pages(f"repos/{repo}/issues/comments/{triggers[-1]['id']}/reactions")
+                      if r["user"]["login"] == BOT]
     evidence = []
 
     def badges(*bodies):
