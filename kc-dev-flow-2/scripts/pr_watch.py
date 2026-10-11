@@ -25,7 +25,7 @@ DEFAULT_STATE = Path.home() / ".local/state/kc-dev-flow-2/pr-watch.json"
 CODEX = Path(__file__).with_name("codex_review.py")
 FIELDS = "state,isDraft,mergeable,headRefOid,statusCheckRollup,title"
 TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex")
-OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING", "MERGEABLE"},
+OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
             "checks": {"failing", "green"}, "codex": {"clean", "findings", "error"}}
 
 
@@ -72,7 +72,7 @@ def load(state):
 @contextlib.contextmanager
 def locked(state):
     state.parent.mkdir(parents=True, exist_ok=True)
-    with open(state.with_suffix(".lock"), "w") as lock:
+    with open(state.with_name(state.name + ".lock"), "w") as lock:
         fcntl.flock(lock, fcntl.LOCK_EX)
         yield
 
@@ -83,7 +83,7 @@ def update(state, put=(), drop=()):
         current.update(dict(put))
         for ref in drop:
             current.pop(ref, None)
-        temp = state.with_suffix(".tmp")
+        temp = state.with_name(state.name + ".tmp")
         temp.write_text(json.dumps(current, indent=1))
         os.replace(temp, state)
         return current

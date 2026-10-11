@@ -88,6 +88,16 @@ class ReplayDispatchTests(unittest.TestCase):
         self.assertIn("TEST HARNESS", scope)
         self.assertIn("dispatch for implementation", (self.run_dir / "dispatch.md").read_text())
 
+    def test_patch_edits_the_task_and_is_committed(self):
+        patch = self.t / "edit.diff"
+        patch.write_text("--- a/task-a.md\n+++ b/task-a.md\n@@ -3 +3 @@\n-Body.\n+Body, edited.\n")
+        code, out = self.build("--patch", str(patch))
+        self.assertEqual(code, 0, out)
+        state = self.run_dir / "wf/.spacedock-state"
+        self.assertIn("Body, edited.", (state / "task-a.md").read_text())
+        status = subprocess.run(["git", "-C", str(state), "status", "--short"], capture_output=True, text=True).stdout
+        self.assertEqual(status, "")
+
     def test_a_readme_from_another_base_or_a_missing_task_fails(self):
         self.readme.write_text("---\nstages: y\n---\nUnrelated.\n\nRule two, other.\n")
         code, out = self.build()
