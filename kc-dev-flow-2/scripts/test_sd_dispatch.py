@@ -123,9 +123,10 @@ FIXES = {
                 "; validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and returns a failure or a missing record through the existing feedback route."),)),
     "codex-round": dict(
         need=("FO reads each round with `python3 <package>/scripts/codex_review.py <owner/repo> <pr>`",
-              "so the round is not counted and merge is not asked for"),
+              "so the round is not counted and merge is not asked for",
+              "FO counts one round per `evidence=` id it prints"),
         old=(),
-        swaps=((r" Where Codex reviews the PR, FO reads each round.*?merge is not asked for\.", ""),)),
+        swaps=((r" Where Codex reviews the PR, FO reads each round.*?`evidence=` id it prints\.", ""),)),
     "override-record": dict(
         need=("`Override: recommended <option>; Captain chose <option>; area: <area>`",
               "later workers find past rulings with `git grep 'Override:'`"),
