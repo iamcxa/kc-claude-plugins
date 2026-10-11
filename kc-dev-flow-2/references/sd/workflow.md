@@ -84,19 +84,21 @@ assignment names returns to FO as a scope change.
 
 FO resolves `<package>` in this workflow from the `Package root:` line of
 `kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path as a
-`Package root: <absolute path>` line in its scope notes (`--scope-notes-file`),
-which land in the dispatch file the worker reads first. FO saves those scope notes,
-the checklist, the model it dispatches on and the SHA it dispatches from as
-`<task>/dispatch/<stage>-<cycle>.md` in the state checkout, committed with that
-dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so the instruction
-a worker followed outlives the session that wrote it. A follow-up message to a worker FO
-resumes is a dispatch too, and its record carries the same parts. A checklist or scope-notes
-line that names a package script writes `<package>/scripts/NAME.py` with the
-absolute root substituted, never the bare script name. When `status --set` refuses
-to leave a stage, run `status --workflow-dir <dir> --read <task> --stage <stage>
---checklist`, return any line it reports as neither DONE nor SKIPPED to the worker,
-and do not edit the worker's report. The refusal itself does not say why; other
-causes are a missing evidence line or Summary and an uncommitted report.
+`Package root: <absolute path>` line in its scope notes (`--scope-notes-file`), which
+land in the dispatch file the worker reads first. FO saves those scope notes, the
+checklist, the model it dispatches on and the SHA it dispatches from as
+`<task>/dispatch/<stage>-<cycle>.md` in the state checkout (a `Dispatched:` line with
+the full SHA, a `Model:` line, and `## Checklist` and `## Scope notes` sections),
+committed with that dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so
+the instruction a worker followed outlives the session that wrote it. A follow-up
+message to a worker FO resumes is a dispatch too, and its record carries the same parts.
+A checklist or scope-notes line that names a package script writes
+`<package>/scripts/NAME.py` with the absolute root substituted, never the bare script
+name. When `status --set` refuses to leave a stage, run `status --workflow-dir <dir>
+--read <task> --stage <stage> --checklist`, return any line it reports as neither DONE
+nor SKIPPED to the worker, and do not edit the worker's report. The refusal itself does
+not say why; other causes are a missing evidence line or Summary and an uncommitted
+report.
 
 ### `backlog`
 
@@ -206,8 +208,9 @@ it does not silently take over implementation. Rejection uses the supported
 feedback path after the distinct FO disposition described below. Its recheck of a
 repair is dispatched under the lane in Stages.
 
-- **Outputs:** Independent verdict, primary evidence, a minimal acceptance script
-  and unverified obligations recorded in the existing SD Stage Report.
+- **Outputs:** Independent verdict, primary evidence, a minimal acceptance script, the
+  `<package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit
+  code, and unverified obligations recorded in the existing SD Stage Report.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
   and limits, and the user's pending delivery decision. FO presents the stage's
   minimal acceptance script itself at the gate, not a pointer into the report.
@@ -265,6 +268,12 @@ does not establish Material.
 - **Polish:** no current user-visible loss or protected boundary is at risk.
 - **Needs decision:** the task cannot own the scope, product or compatibility call.
 
+A `Follow-up:` line in Scope is a declined finding with its reason, not accepted
+scope: the first stage of the receiving task to meet it assesses it against that reason
+and earlier rulings, and records adopted or not adopted with a reason before building it.
+A finding FO declined in a committed gate summary or under `### FO declines` is settled:
+a later validator does not report it again unless the candidate changes the lines it names.
+
 ## FO steps: review findings
 
 Apply this checkpoint to findings from implementation, validation, detached audits,
@@ -274,10 +283,13 @@ consequential FO quick work and rejected gates.
    advisory. Preserve findings and assess the four evidence fields above, separating
    materiality, ownership and disposition. Missing required evidence or unresolved
    classification requires investigation or hold.
-2. Within approved boundaries, FO may explicitly decline evidenced Deferred risk
-   or Polish in the existing committed gate summary, naming the finding, reason
-   and candidate revision. This FO-authored decision requires no live worker or
-   reviewer rerun for acknowledgement; preserve worker reports and verdicts.
+2. Within approved boundaries, FO may explicitly decline evidenced Deferred risk or
+   Polish in the existing committed gate summary, naming the finding, reason and
+   candidate revision. When that summary is already consumed, FO writes the decline
+   under `### FO declines` in the task file, committed with `spacedock state commit`,
+   and the terminal gate lists each entry there. This FO-authored decision requires no
+   live worker or reviewer rerun for acknowledgement; preserve worker reports and
+   verdicts.
 3. Repairs require worker investigation without candidate mutation, distinct FO
    `fix` authorization through the runtime's addressable-worker boundary, then
    independent validation. Without that authorization, hold.
@@ -294,7 +306,8 @@ consequential FO quick work and rejected gates.
    From round 3 a finding that is neither does not start a repair cycle: FO declines
    it in the committed gate summary, naming the finding and its home, and adds a
    `Follow-up:` line to that task's Scope, the open task whose Scope edits the
-   finding's file, else a new backlog task from `spacedock new`. The terminal gate
+   finding's file, else a new backlog task from `spacedock new`; the line carries the
+   finding and the decline reason. The terminal gate
    lists each follow-up and its home.
 
 Rejection routing carries evidence, classifications, authorized dispositions and assignment
@@ -323,17 +336,7 @@ the state checkout.
 
 ## Decision records
 
-Write one file per decision, `docs/adr/NNNN-short-title.md`, in the ADR format of the
-kc-dev-flow-2 package's `references/adr-template.md`, with the decider's own words, the
-options considered and the option recommended inside Decision;
-`<package>/scripts/adr_lint.py --require` refuses a required record without the
-recommended line. An older record a change touches without that line takes
-`**Recommended:** not recorded`, never a reconstructed recommendation. Create `docs/adr/`
-with this record if it is absent. A decision document that predates this format may stay
-as one record marked `Status: Legacy`.
-This is not the gate `resolution.reason` or the SD stage report. The implementation
-worker writes the record into the candidate and names the ADR numbers it added or
-changed in its report.
+The implementation worker writes one ADR file per decision by its stage principles.
 Validation runs `python3 <package>/scripts/adr_lint.py docs/adr --since <base>`, which
 requires every record the candidate added or changed, plus `--require <numbers>` for any
 number the implementation report names; exit 1 or a missing record returns through the
@@ -369,17 +372,24 @@ changes nothing else in it. FO adds no words of its own and does not move or rew
 
 ### Amendment 1 — <date>, <gate or chat>
 Captain: 「<his words, verbatim>」 (where he said them)
+Asked: <the question or proposal he answered, verbatim, or the commit holding it>
 Supersedes: <acceptance-criterion ids, or none>
 Design: <optional: the design paragraph it overrides>
 ```
 
-FO names the amendment in the next dispatch's checklist. That worker (implementation,
-or the repair worker on a feedback route) moves each superseded criterion's block verbatim
+`Asked:` is required when his words do not name what they settle, such as 「同意第三點」. FO
+names the amendment in the next dispatch's checklist. That worker (implementation, or
+the repair worker on a feedback route) moves each superseded criterion's block verbatim
 from `## Acceptance criteria` into its entry under a `Superseded text:` line, writes any
-replacement as a new `**AC-N**` under a fresh id that says "Amended by Captain, amendment N",
-and never reuses an id. A superseded criterion and the design paragraph named by
-`Design:` are withdrawn; evidence and the Captain's acceptance script follow
+replacement as a new `**AC-N**` under a fresh id that says "Amended by Captain,
+amendment N", and never reuses an id. A superseded criterion and the design paragraph
+named by `Design:` are withdrawn; evidence and the Captain's acceptance script follow
 `## Acceptance criteria` plus the entries.
+
+Sending an approved task back to an earlier stage, such as a design redo a release
+review asks for, is the Captain's decision and is recorded as an amendment whose
+`Design:` names what is redone; FO then runs `spacedock status --set <slug>
+status=<stage>`, and that stage's gate is approved again before the task moves on.
 
 `python3 <package>/scripts/design_surfaces.py check <task>` exits 1 when an entry has no
 `Captain:` line or a superseded id is still declared in `## Acceptance criteria`;
@@ -403,15 +413,14 @@ Applies when the task's `Surfaces:` includes `db`, or its design lands an ADR; t
 frontmatter (`--workflow-dir <workflow-dir>`) and a task's numbers and applied
 deploys from its `## Number guards` section; `--help` lists the flags.
 
-- **Reserve.** One number per kind per task; a task needing more returns to FO.
 - **Applied.** A migration in a commit recorded `Applied at:` is frozen for the task:
-  edit, delete and renumber fail `check`.
+  edit, delete and renumber fail `check`. `Applied: none as of <sha>` records that
+  nothing was pushed up to that commit; a validator that finds neither line reports
+  the missing record to FO instead of re-checking deploys.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
   runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR
   head before FO asks for merge. Exit 2 is a configuration error, which returns to FO
-  as a hold. A migration on the base branch must not change, comment-only edits
-  included; the fix for an R1 or R2 finding is reverting the edit and writing a new
-  migration.
+  as a hold.
 - **POC.** A task whose recorded `profile` is `poc` adds, edits and deletes no migration
   file and reserves no number. When the README declares `migrations-path:`, `check` runs
   for it at the same three points, and exit 1 `FAIL R6` lists each path under that
@@ -436,7 +445,9 @@ deploys from its `## Number guards` section; `--help` lists the flags.
   or the environment's own deploy record showing no deploy of it), FO replaces that
   one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
   no longer frozen. Without that confirmation the line stays and the migration counts
-  as applied.
+  as applied. When FO dispatches validation and nothing was pushed for the task, FO
+  records `Applied: none as of <candidate sha>`, so a task with neither line has a
+  skipped record.
 - **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
   validation gate. Without `migrations-path:` the migration rules are skipped, so a POC
   is not guarded until the README declares it.
@@ -463,17 +474,22 @@ package. Before delivery, confirm the file still matches the reviewed source
 registered. Missing/changed delivery configuration requires a hold: `merge: pr`
 alone does not block SD's no-hook local-finalize route.
 
-Project and Captain authority constrain hook instructions: present the exact
-candidate and PR body before authorized push/create; create a Draft PR where
-required, and request ready only after the required CI is green. Required CI is green
-only when its test jobs have finished on the PR head. Where CI skips drafts, FO
-marks the PR ready under the Captain's authority and waits for those jobs to
-finish before asking for merge. Approval of a
-validation gate is not permission to push, create or merge a PR. Preserve manual
-merge authority. Do not invoke local fallback, push the trunk, merge, or clean up
-an owned worktree unless the specific action is authorized. An upstream hook's
-default fallback is not that grant. A failure holds delivery pending an explicit
-choice.
+Project and Captain authority constrain hook instructions: present the exact candidate
+and PR body before authorized push/create; create a Draft PR where required, and request
+ready only after the required CI is green. Required CI is green only when its test jobs
+have finished on the PR head. Where CI skips drafts, FO marks the PR ready under the
+Captain's authority and waits for those jobs to finish before asking for merge. Approval
+of a validation gate is not permission to push, create or merge a PR, except as follows.
+FO's delivery gate question says that approval also covers later external-review rounds
+on the same PR. Under that approval, a repair whose validation passes with no Material
+or Needs decision finding is recorded by FO under that grant (`gate record --actor
+agent:first-officer` with `--conn-quote` and `--conn-source` naming his approval) and
+pushed to that PR's branch, after FO confirms the pushed commit is the candidate the
+report names. A rejected repair, a Needs decision, a scope change and the merge still go
+to him. Preserve manual merge authority. Do not invoke local fallback, push the trunk,
+merge, or clean up an owned worktree unless the specific action is authorized. An
+upstream hook's default fallback is not that grant. A failure holds delivery pending an
+explicit choice.
 
 Use SD's pending terminal approval and existing merge hook; do not invent another
 PR stage. Observe the actual repository-qualified PR merge before recording its

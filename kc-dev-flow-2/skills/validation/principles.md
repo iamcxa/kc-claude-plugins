@@ -25,8 +25,10 @@ requires every record the candidate added or changed, plus `--require <numbers>`
 number the implementation report names; exit 1 or a missing record returns through the
 existing feedback route, and exit 2 is a configuration error that returns to FO.
 Read the task's dispatch records (`<task>/dispatch/` in the state checkout) for the
-implementation cycles you validate; a missing record, or a requirement in it that
-traces to no accepted criterion or Captain ruling, is a finding for FO.
+implementation cycles you validate, and run
+`python3 <package>/scripts/dispatch_records.py <task folder>`; a missing or incomplete
+record (its exit 1), or a requirement in it that traces to no accepted criterion or
+Captain ruling, is a finding for FO.
 When the change alters what a user sees, the evidence includes a screenshot of the
 changed screen at the candidate; reading the code or a passing render test is not
 seeing it.
