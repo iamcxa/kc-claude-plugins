@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.15.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.14.0...kc-dev-flow-2-v0.15.0) (2026-10-11)
+
+
+### Features
+
+* **kc-dev-flow-2:** FO watches the PRs it opens and learns their changes itself ([#594](https://github.com/iamcxa/kc-claude-plugins/issues/594)) ([2c9183f](https://github.com/iamcxa/kc-claude-plugins/commit/2c9183f49989390d80a2ccffb713de7b25de87de))
+* **kc-dev-flow-2:** read a Codex PR review round from the PR itself ([#593](https://github.com/iamcxa/kc-claude-plugins/issues/593)) ([2b165d4](https://github.com/iamcxa/kc-claude-plugins/commit/2b165d4b1b0ec58414484f88c9aaa433fbeb7c8f))
+* **kc-dev-flow-2:** settle the batch-2 workflow rulings ([#592](https://github.com/iamcxa/kc-claude-plugins/issues/592)) ([8134645](https://github.com/iamcxa/kc-claude-plugins/commit/8134645d09b31248343373cf199bfe43b33e8ec3))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** validation checks every ADR the candidate changed, without typed numbers ([#590](https://github.com/iamcxa/kc-claude-plugins/issues/590)) ([03045a4](https://github.com/iamcxa/kc-claude-plugins/commit/03045a47ea850266b46dad557229343bd56e1d04))
+
 ## [0.14.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.13.0...kc-dev-flow-2-v0.14.0) (2026-10-10)
 
 
