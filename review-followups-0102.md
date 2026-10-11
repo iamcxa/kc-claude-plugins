@@ -10,6 +10,8 @@ Follow-ups declined from a repair cycle under the review-round rule (round 3 of 
 
 ## Scope
 
+Folded 2026-10-11 into backlog task `workflow-gaps-from-qnow-1270`, which carries both follow-ups; this task holds nothing further.
+
 Captain 2026-10-01: 「修完再合併」 — the round-3 P1 is fixed in `patch-0103`; the round-3 P2s are recorded here as follow-ups, not repaired in that cycle.
 Follow-up: `references/sd/workflow.md` FO recovery step writes `status --workflow-dir <dir> --read <task> --stage <stage> --checklist` without the `spacedock` executable; write `spacedock status ...` (reviewer P2).
 Follow-up: `## Number guards` applies when "its design lands an ADR"; an ADR first required by a ruling in an implementation report, a validation report or mid-stage feedback gets no reserved number; apply the guard whenever the task lands an ADR, and reserve when the need appears (reviewer P2).
