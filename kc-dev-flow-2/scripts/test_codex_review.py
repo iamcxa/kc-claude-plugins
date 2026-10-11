@@ -24,8 +24,8 @@ def said(sha, at=T1, ident=7, user=BOT, lead="Codex Review: Didn't find any majo
     return {"id": ident, "user": user, "created_at": at, "body": f"{lead}\n\n**Reviewed commit:** `{sha}`\n"}
 
 
-def review(sha, at=T1, ident=5):
-    return {"id": ident, "user": BOT, "commit_id": sha, "submitted_at": at}
+def review(sha, at=T1, ident=5, body="### Codex Review"):
+    return {"id": ident, "user": BOT, "commit_id": sha, "submitted_at": at, "body": body}
 
 
 def finding(original, badge="P2", review_id=5, at=T1, ident=11):
@@ -60,7 +60,7 @@ class CodexReviewTests(unittest.TestCase):
     def test_findings_made_on_the_head_count_and_carried_ones_do_not(self):
         code, line = self.check(reviews=[review(HEAD)], inline=[finding(HEAD, "P1"), finding(HEAD, ident=12), finding(OLD, review_id=4)])
         self.assertEqual(code, 1)
-        self.assertIn("2 line finding(s), 1 at P0/P1", line)
+        self.assertIn("2 line finding(s), 2 badge(s), 1 at P0/P1", line)
         self.assertIn("evidence=review:5", line)
         self.assertEqual(self.check(inline=[finding(OLD, review_id=4)])[0], 4)
         self.assertEqual(self.check(reviews=[review(OLD)])[0], 4)
@@ -94,13 +94,30 @@ class CodexReviewTests(unittest.TestCase):
     def test_only_the_latest_reviews_own_findings_are_counted(self):
         code, line = self.check(reviews=[review(HEAD, at=T1, ident=5), review(HEAD, at=T2, ident=6)],
                                 inline=[finding(HEAD, "P1", review_id=5), finding(HEAD, review_id=6, ident=12)])
-        self.assertIn("1 line finding(s), 0 at P0/P1; evidence=review:6", line)
+        self.assertIn("1 line finding(s), 1 badge(s), 0 at P0/P1; evidence=review:6", line)
 
     def test_a_completed_summary_after_findings_is_not_clean(self):
         self.assertEqual(self.check(reviews=[review(HEAD, at=T1)], inline=[finding(HEAD)], comments=[marker(HEAD, "completed", at=T2)])[0], 1)
         self.assertEqual(self.check(reviews=[review(HEAD, at=T2)], inline=[finding(HEAD)], comments=[marker(HEAD, "completed", at=T1)])[0], 1)
         self.assertEqual(self.check(reviews=[review(HEAD, at=T1)], inline=[finding(HEAD)],
                                     comments=[marker(HEAD, "completed", at=T2), said(HEAD[:10], at="2026-10-10T12:00:00Z")])[0], 0)
+
+    def test_every_codex_output_shape_with_a_badge_blocks_and_only_no_issues_is_clean(self):
+        p1 = "![P1 Badge](https://img.shields.io/badge/P1-orange) body finding"
+        code, line = self.check(reviews=[review(HEAD, body=p1)])
+        self.assertEqual(code, 1)
+        self.assertIn("1 at P0/P1", line)
+        self.assertEqual(self.check(reviews=[review(HEAD, body="Codex Review: Didn't find any major issues.")])[0], 0)
+        self.assertEqual(self.check(reviews=[review(HEAD, body="no badge, no verdict text")])[0], 1)
+        self.assertEqual(self.check(reviews=[review(HEAD, body="Codex Review: Didn't find any major issues. " + p1)])[0], 1)
+        self.assertEqual(self.check(comments=[said(HEAD[:10], lead="Codex Review: here is a note.")])[0], 4)
+        named = {"id": 3, "user": BOT, "created_at": T1, "body": f"{p1}\n\n**Reviewed commit:** `{HEAD[:10]}`"}
+        loose = {"id": 4, "user": BOT, "created_at": T1, "body": p1}
+        other = {"id": 6, "user": BOT, "created_at": T1, "body": f"{p1}\n\n**Reviewed commit:** `{OLD[:10]}`"}
+        self.assertEqual(self.check(comments=[named])[0], 1)
+        self.assertEqual(self.check(comments=[loose])[0], 1)
+        self.assertEqual(self.check(comments=[other])[0], 4)
+        self.assertEqual(self.check(comments=[named, marker(HEAD, "completed", at=T2)])[0], 1)
 
     def test_a_head_that_moves_while_reading_has_no_verdict(self):
         self.assertEqual(self.check(comments=[said(HEAD[:10])], heads=(HEAD, OLD))[0], 4)

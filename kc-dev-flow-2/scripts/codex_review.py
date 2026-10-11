@@ -4,9 +4,11 @@
 Usage: codex_review.py <owner/repo> <pr>
 The latest Codex result on the head decides, and its evidence id is printed so a round
 is counted once per id.
-Exit 0 clean: that result is a "Codex Review:" comment naming the head as its reviewed
-  commit, or Codex's summary marking the head completed with no finding on the head before it.
-Exit 1 findings: that result is a Codex review, or line finding, made on the head.
+Exit 0 clean: that result is Codex's "Didn't find any major issues" on the head, as a
+  comment naming the head or a badge-free review of it, or its summary marking the head
+  completed with no finding on the head before it.
+Exit 1 findings: that result carries a severity badge on the head, in a review, a line
+  comment, or a comment that names the head or names no commit (fail closed).
 Exit 2 configuration error: bad arguments or a gh call that failed.
 Exit 3 running: Codex's eyes reaction is on the pull request.
 Exit 4 not reviewed: no Codex evidence covers the head commit yet, or the head moved while reading.
@@ -20,6 +22,8 @@ BOT = "chatgpt-codex-connector[bot]"
 SUMMARY = "<!-- codex-pull-request-review-summary -->"
 MARKER = re.compile(r"^<!-- codex-[a-z-]+-review:v1 (\{[^\n]*\}) -->$", re.M)
 P1 = re.compile(r"!\[P[01] Badge\]")
+BADGE = re.compile(r"!\[P\d Badge\]")
+CLEAN = "Didn't find any major issues"
 REVIEWED = re.compile(r"^\*\*Reviewed commit:\*\* `([0-9a-f]{7,40})`$", re.M)
 
 
@@ -43,16 +47,30 @@ def state(repo, pr, call=gh, pages=pages):
                if r["user"]["login"] == BOT and r.get("commit_id") == head]
     issue = [c for c in pages(f"repos/{repo}/issues/{pr}/comments") if c["user"]["login"] == BOT]
     evidence = []
+
+    def badges(*bodies):
+        return sum(len(BADGE.findall(b or "")) for b in bodies), sum(len(P1.findall(b or "")) for b in bodies)
+
+    def names_head(body):
+        return any(head.startswith(m.group(1)) for m in REVIEWED.finditer(body or ""))
+
     for r in reviews:
-        own = [c for c in inline if c.get("pull_request_review_id") == r["id"]]
-        p1 = sum(bool(P1.search(c["body"])) for c in own)
-        evidence.append((r["submitted_at"], f"review:{r['id']}", 1, f"{len(own)} line finding(s), {p1} at P0/P1"))
-    loose = [c for c in inline if c.get("pull_request_review_id") not in {r["id"] for r in reviews}]
-    for c in loose:
-        evidence.append((c["created_at"], f"comment:{c['id']}", 1, "1 line finding"))
+        own = [c["body"] for c in inline if c.get("pull_request_review_id") == r["id"]]
+        found, p1 = badges(r.get("body"), *own)
+        if not own and not found and CLEAN in (r.get("body") or ""):
+            evidence.append((r["submitted_at"], f"review:{r['id']}", 0, "Codex review says no issues"))
+        else:
+            evidence.append((r["submitted_at"], f"review:{r['id']}", 1,
+                             f"{len(own)} line finding(s), {max(found, len(own))} badge(s), {p1} at P0/P1"))
+    for c in [c for c in inline if c.get("pull_request_review_id") not in {r["id"] for r in reviews}]:
+        evidence.append((c["created_at"], f"comment:{c['id']}", 1, f"1 line finding, {badges(c['body'])[1]} at P0/P1"))
     for c in issue:
-        if c["body"].startswith("Codex Review:") and any(head.startswith(m.group(1)) for m in REVIEWED.finditer(c["body"])):
-            evidence.append((c["created_at"], f"comment:{c['id']}", 0, "Codex Review comment names the head"))
+        found, p1 = badges(c["body"])
+        if found and (names_head(c["body"]) or not REVIEWED.search(c["body"])):
+            evidence.append((c["created_at"], f"comment:{c['id']}", 1, f"{found} finding(s) in a comment, {p1} at P0/P1"))
+        elif c["body"].startswith("Codex Review:") and CLEAN in c["body"] and names_head(c["body"]):
+            evidence.append((c["created_at"], f"comment:{c['id']}", 0, "Codex Review comment says no issues on the head"))
+    for c in issue:
         if c["body"].startswith(SUMMARY):
             for m in MARKER.finditer(c["body"].split("\n## ", 1)[0]):
                 meta = json.loads(m.group(1))
