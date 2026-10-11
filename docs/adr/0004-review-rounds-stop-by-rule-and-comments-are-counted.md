@@ -6,6 +6,8 @@ Date: 2026-09-30
 
 Accepted
 
+> Amended by ADR 0010: from round 3 a declined finding becomes its own backlog task, not a `Follow-up:` line in a task's Scope.
+
 ## Context
 
 Two delivery PRs in an adopting project each took four rounds of an external
@@ -37,6 +39,8 @@ is 3 percent, his target 5 percent.
 - a repair lane keyed on the repair's size — rejected: size is unknown before dispatch; ownership of a worktree and an authorized assignment are known
 - ship no comment-ratio default and let each adopter declare it — rejected by the Captain's amendment
 - a five-percent default with an adopter key and a `--max` override (chosen)
+
+**Recommended:** not recorded
 
 A delivery PR's review rounds are counted by the first officer. A finding assessed
 Material, or labelled P1 by the external reviewer, blocks in every round; a reviewer P1
