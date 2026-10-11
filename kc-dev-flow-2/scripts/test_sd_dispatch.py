@@ -135,10 +135,11 @@ FIXES = {
                (r" `Applied: none as of <sha>` records that nothing was pushed.*?instead of re-checking deploys\.", ""))),
     "follow-up-reason": dict(
         need=("the line carries the finding and the decline reason",
-              "assesses it against that reason and earlier rulings"),
+              "assesses it against that reason and earlier rulings",
+              "returns the line to FO as a Needs decision"),
         old=(),
         swaps=((r"; the line carries the finding and the decline reason\.", "."),
-               (r"A `Follow-up:` line in Scope is a declined finding.*?with a reason before building it\. ", ""))),
+               (r"A `Follow-up:` line in Scope is a declined finding.*?It records which, and why\. ", ""))),
     "decline-settled": dict(
         need=("does not report it again unless the candidate changes",),
         old=(),
@@ -169,9 +170,10 @@ FIXES = {
         swaps=((r" the `<package>/scripts/adr_lint\.py docs/adr --since <base>` command run with its exit code,", ""),)),
     "ideation-follow-up": dict(
         file="skills/ideation/principles.md",
-        need=("as a finding FO declined, with its reason",),
+        need=("as a finding FO declined, with its reason",
+              "otherwise return it to FO as a Needs decision"),
         old=(),
-        swaps=((r"Treat each `Follow-up:` line in Scope.*?whether you adopt it and why\. ", ""),)),
+        swaps=((r"Treat each `Follow-up:` line in Scope.*?which, and why\. ", ""),)),
     "dispatch-records-check": dict(
         file="skills/validation/principles.md",
         need=("`python3 <package>/scripts/dispatch_records.py <task folder>`",),

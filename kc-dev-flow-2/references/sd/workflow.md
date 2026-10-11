@@ -270,7 +270,9 @@ does not establish Material.
 
 A `Follow-up:` line in Scope is a declined finding with its reason, not accepted
 scope: the first stage of the receiving task to meet it assesses it against that reason
-and earlier rulings, and records adopted or not adopted with a reason before building it.
+and earlier rulings. It builds the line only when the change alters no behaviour that an
+accepted criterion, a Captain ruling or a journey contract relies on; otherwise it
+returns the line to FO as a Needs decision. It records which, and why.
 A finding FO declined in a committed gate summary or under `### FO declines` is settled:
 a later validator does not report it again unless the candidate changes the lines it names.
 
@@ -378,13 +380,13 @@ Design: <optional: the design paragraph it overrides>
 ```
 
 `Asked:` is required when his words do not name what they settle, such as 「同意第三點」. FO
-names the amendment in the next dispatch's checklist. That worker (implementation, or
-the repair worker on a feedback route) moves each superseded criterion's block verbatim
-from `## Acceptance criteria` into its entry under a `Superseded text:` line, writes any
-replacement as a new `**AC-N**` under a fresh id that says "Amended by Captain,
-amendment N", and never reuses an id. A superseded criterion and the design paragraph
-named by `Design:` are withdrawn; evidence and the Captain's acceptance script follow
-`## Acceptance criteria` plus the entries.
+names the amendment in the next dispatch's checklist. That worker (implementation, the
+repair worker on a feedback route, or the worker of the stage a task is sent back to)
+moves each superseded criterion's block verbatim from `## Acceptance criteria` into its
+entry under a `Superseded text:` line, writes any replacement as a new `**AC-N**` under
+a fresh id that says "Amended by Captain, amendment N", and never reuses an id. A
+superseded criterion and the design paragraph named by `Design:` are withdrawn; evidence
+and the Captain's acceptance script follow `## Acceptance criteria` plus the entries.
 
 Sending an approved task back to an earlier stage, such as a design redo a release
 review asks for, is the Captain's decision and is recorded as an amendment whose
