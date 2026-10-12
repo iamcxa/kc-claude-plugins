@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.19.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.18.0...kc-dev-flow-2-v0.19.0) (2026-10-12)
+
+
+### Features
+
+* **kc-dev-flow-2:** FO checks the loaded package is not older than the workflow README before each dispatch ([#610](https://github.com/iamcxa/kc-claude-plugins/issues/610)) ([f9d2dc8](https://github.com/iamcxa/kc-claude-plugins/commit/f9d2dc8aced2f5560f6f2cb0ea21bb1766dd986f))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** pr_watch reads Codex review only for a PR added with --codex ([#609](https://github.com/iamcxa/kc-claude-plugins/issues/609)) ([6396786](https://github.com/iamcxa/kc-claude-plugins/commit/639678689b3bf4705f05b97b9aae69b9b55481cb))
+
 ## [0.18.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.17.0...kc-dev-flow-2-v0.18.0) (2026-10-12)
 
 
