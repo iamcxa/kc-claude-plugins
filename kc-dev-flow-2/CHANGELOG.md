@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.18.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.17.0...kc-dev-flow-2-v0.18.0) (2026-10-12)
+
+
+### Features
+
+* **kc-dev-flow-2:** learn extension at archive, decision ledger, observer and decide-by-precedent ([#605](https://github.com/iamcxa/kc-claude-plugins/issues/605)) ([5345420](https://github.com/iamcxa/kc-claude-plugins/commit/5345420e8e137079c2044d97f3ce1b0d86744265))
+
 ## [0.17.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.16.0...kc-dev-flow-2-v0.17.0) (2026-10-12)
 
 
