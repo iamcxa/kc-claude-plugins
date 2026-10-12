@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.17.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.16.0...kc-dev-flow-2-v0.17.0) (2026-10-12)
+
+
+### Features
+
+* **kc-dev-flow-2:** optional extensions, with codex review and a roborev gate as the first two ([#603](https://github.com/iamcxa/kc-claude-plugins/issues/603)) ([49c670c](https://github.com/iamcxa/kc-claude-plugins/commit/49c670cb1a7a806043973fa7c1552fc17a0ddae8))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** close eight workflow gaps and four script findings (batch 3) ([4361b36](https://github.com/iamcxa/kc-claude-plugins/commit/4361b36040303e056c172e40cca2454e3165f77b))
+
 ## [0.16.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.15.1...kc-dev-flow-2-v0.16.0) (2026-10-11)
 
 
