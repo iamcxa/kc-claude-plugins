@@ -103,6 +103,8 @@ Repository-level [product](./PRODUCT.md) and [architecture](./ARCHITECTURE.md) c
 
 ### [kc-dev-flow](./kc-dev-flow/)
 
+**No longer maintained.** New work uses [kc-dev-flow-2](#kc-dev-flow-2).
+
 Profile-native development routes for Claude Code and Codex. One minimal shared
 core preserves local authority while POC, Pilot, and Production load different
 base and stage contracts. `chief-engineer` advises normal delivery;
@@ -120,18 +122,21 @@ before updating the installed plugin used for ordinary continuation.
 /plugin install kc-dev-flow@kc-claude-plugins
 ```
 
-### [kc-dev-flow-2 (experimental)](./kc-dev-flow-2/)
+### [kc-dev-flow-2](./kc-dev-flow-2/)
 
-Optional experimental flow with a thin start/resume entry, profile principles,
-stage skills, and retained advisory roles. It requires explicit selection and
-Spacedock orchestration; existing kc-dev-flow projects are not migrated.
+A development workflow run by Spacedock, with a thin start/resume entry, profile
+principles, stage skills and advisory roles. It requires explicit selection and an
+adopted Spacedock workflow; kc-dev-flow projects are not migrated automatically.
 
-**Use when:** You want a controlled trial and accept the documented omissions.
-Full safeguard parity, learning automation, and a one-third size reduction are
-not established. No released tag exists yet. Follow the package's
-[local trial instructions](./kc-dev-flow-2/README.md#controlled-trial) and
+**Use when:** You run development through Spacedock and accept the documented
+limits. Optional extensions (Codex review, roborev, learning at task archive) are listed per adopter.
+See the package [README](./kc-dev-flow-2/README.md) and
 [validation limits](./kc-dev-flow-2/VALIDATION.md); Claude's entry is
 `/kc-dev-flow-2:dev`, and Codex shorthand remains unverified.
+
+```bash
+/plugin install kc-dev-flow-2@kc-claude-plugins
+```
 
 ## Adding to Your Project
 
@@ -155,7 +160,7 @@ Add to `.claude/settings.json`:
     "kc-team-ops@kc-claude-plugins": true,
     "kc-journey-map@kc-claude-plugins": true,
     "kc-pr-flow@kc-claude-plugins": true,
-    "kc-dev-flow@kc-claude-plugins": true
+    "kc-dev-flow-2@kc-claude-plugins": true
   }
 }
 ```

@@ -1,5 +1,7 @@
 # KC Dev Flow
 
+> **No longer maintained.** New work uses [kc-dev-flow-2](../kc-dev-flow-2/README.md).
+
 Load development constraints in proportion to work risk, so agent behavior is
 just sufficient without losing verification or authority boundaries.
 
