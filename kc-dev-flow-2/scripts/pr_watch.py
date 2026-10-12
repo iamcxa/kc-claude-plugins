@@ -15,6 +15,7 @@ import argparse
 import contextlib
 import fcntl
 import json
+import re
 import os
 from pathlib import Path
 import subprocess
@@ -22,14 +23,16 @@ import sys
 import time
 
 DEFAULT_STATE = Path.home() / ".local/state/kc-dev-flow-2/pr-watch.json"
-CODEX = Path(__file__).with_name("codex_review.py")
+CODEX = Path(__file__).resolve().parents[1] / "extensions/codex/codex_review.py"
 FIELDS = "state,isDraft,mergeable,headRefOid,statusCheckRollup,title"
-TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex")
+TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex", "codex-evidence")
 OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
             "checks": {"failing", "green"}, "codex": {"clean", "findings", "error"}}
 
 
 def outcome(key, old, new):
+    if key == "codex-evidence":
+        return new not in ("-", None)
     return key in OUTCOMES and (OUTCOMES[key] is None or new in OUTCOMES[key] or (key == "mergeable" and old == "CONFLICTING"))
 
 
@@ -51,9 +54,11 @@ def checks(rollup):
 
 def codex(repo, number):
     if not CODEX.exists():
-        return "-"
+        return "-", "-"
     done = subprocess.run([sys.executable, str(CODEX), repo, number], capture_output=True, text=True)
-    return {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed"}.get(done.returncode, "error")
+    evidence = re.search(r"evidence=(\S+)", done.stdout)
+    verdict = {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed"}.get(done.returncode, "error")
+    return verdict, evidence.group(1) if evidence else "-"
 
 
 def look(ref, view=gh, review=codex):
@@ -61,7 +66,7 @@ def look(ref, view=gh, review=codex):
     d = view("pr", "view", number, "--repo", repo, "--json", FIELDS)
     snap = {"state": d["state"], "draft": d["isDraft"], "mergeable": d["mergeable"],
             "checks": checks(d["statusCheckRollup"]), "head": d["headRefOid"][:9], "title": d["title"][:60]}
-    snap["codex"] = review(repo, number) if d["state"] == "OPEN" else "-"
+    snap["codex"], snap["codex-evidence"] = review(repo, number) if d["state"] == "OPEN" else ("-", "-")
     return snap
 
 

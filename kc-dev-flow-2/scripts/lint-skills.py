@@ -20,7 +20,7 @@ PACKAGE_ROOT = re.compile(r"^Package root: \S", re.MULTILINE)
 UNBOUND_ROOT = re.compile(r"\{package\}|/absolute/plugin")
 WORKFLOW = "references/sd/workflow.md"
 # Raise only in a change that says why the adopted README must grow.
-WORKFLOW_WORD_BUDGET = 5023
+WORKFLOW_WORD_BUDGET = 5074
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
 KNOWN_DUPLICATES = {
@@ -80,18 +80,24 @@ def lint_tree(root, basic_lint=BASIC_LINT):
             if call not in {f"{VARIANT}:{skill}" for skill in skills}:
                 errors.append(f"{path.relative_to(root)}: unknown variant skill {call}")
 
-    names = sorted((p.name for p in (root / "scripts").glob("*") if p.suffix in (".py", ".sh")),
-                   key=len, reverse=True)
-    script = re.compile(r"(?P<dir>[^\s`'\"(\[]*scripts/)?(?<![\w-])(?P<name>"
+    homes = {p.name: ("scripts/", BOUND_SCRIPT_DIR) for p in (root / "scripts").glob("*") if p.suffix in (".py", ".sh")}
+    for p in (root / "extensions").glob("*/*"):
+        if p.suffix in (".py", ".sh"):
+            home = f"extensions/{p.parent.name}/"
+            homes[p.name] = (home, re.compile(r"(?:<package>/|kc-dev-flow-2/)" + re.escape(home)))
+    names = sorted(homes, key=len, reverse=True)
+    script = re.compile(r"(?P<dir>[^\s`'\"(\[]*(?:scripts|extensions/[\w-]+)/)?(?<![\w-])(?P<name>"
                         + "|".join(map(re.escape, names)) + r")(?![\w-])")
-    for path in sorted(list((root / "skills").rglob("*.md")) + list((root / "references").rglob("*.md"))):
+    docs = [*(root / "skills").rglob("*.md"), *(root / "references").rglob("*.md"), *(root / "extensions").rglob("*.md")]
+    for path in sorted(docs):
         text = read(path)
         where = path.relative_to(root)
         if UNBOUND_ROOT.search(text):
             errors.append(f"{where}: package path must be <package>/scripts/NAME, not {{package}} or /absolute/plugin")
         for match in script.finditer(text):
-            if not (match["dir"] and BOUND_SCRIPT_DIR.fullmatch(match["dir"])):
-                errors.append(f"{where}: script {match['name']} is named without <package>/scripts/")
+            home, bound = homes[match["name"]]
+            if not (match["dir"] and bound.fullmatch(match["dir"])):
+                errors.append(f"{where}: script {match['name']} is named without <package>/{home}")
     for folder in sorted((root / "skills").glob("*")):
         if any("<package>" in read(md) for md in folder.rglob("*.md")) and not PACKAGE_ROOT.search(
                 read(folder / "SKILL.md")):

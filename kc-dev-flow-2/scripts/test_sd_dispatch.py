@@ -128,12 +128,6 @@ FIXES = {
         old=("validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>`",),
         swaps=((r"\. Validation runs `python3 <package>/scripts/adr_lint\.py docs/adr --since <base>`.*?returns to FO\.",
                 "; validation runs `python3 <package>/scripts/adr_lint.py docs/adr --require <numbers>` and returns a failure or a missing record through the existing feedback route."),)),
-    "codex-round": dict(
-        need=("FO reads each round with `python3 <package>/scripts/codex_review.py <owner/repo> <pr>`",
-              "so the round is not counted and merge is not asked for",
-              "FO counts one round per `evidence=` id it prints"),
-        old=(),
-        swaps=((r" Where Codex reviews the PR, FO reads each round.*?`evidence=` id it prints\.", ""),)),
     "applied-none": dict(
         need=("FO records `Applied: none as of <candidate sha>`",
               "reports the missing record to FO instead of re-checking deploys",
@@ -202,14 +196,6 @@ FIXES = {
         need=("a task holds one number per kind, and a task needing a second ADR or migration returns to FO",),
         old=(),
         swaps=((r"; a task holds one number per kind, and a task needing a second ADR or migration returns to FO\.", "."),)),
-    "codex-presence": dict(
-        need=("A PR on which Codex has left no review, comment or reaction is not Codex-reviewed",),
-        old=(),
-        swaps=((r" A PR on which Codex has left no review, comment or reaction is not Codex-reviewed.*?other reviewers\.", ""),)),
-    "codex-rerequest": dict(
-        need=("it comments `@codex review` there",),
-        old=(),
-        swaps=((r" After FO pushes a repair to a Codex-reviewed PR.*?no new review by itself\.", ""),)),
     "status-executable": dict(
         need=("run `spacedock status --workflow-dir <dir>",),
         old=(),
@@ -218,6 +204,29 @@ FIXES = {
         need=("including one first required by a ruling in a worker report or mid-stage feedback",),
         old=(),
         swaps=((r", or the task lands an ADR, including one first required by a ruling in a worker report or mid-stage feedback, whose number FO reserves before the next dispatch;", ", or its design lands an ADR;"),)),
+    "extensions-core": dict(
+        need=("This README's frontmatter `extensions:` lists the ones this repository uses",
+              "an unlisted extension is not probed and adds nothing",
+              "never counts as a clean result",
+              "A merge ask names each listed reviewer that was not read"),
+        old=(),
+        swaps=((r"Extensions are optional accessories in `<package>/extensions/<name>/`.*?the Captain decides\. ", ""),)),
+    "codex-round": dict(
+        file="extensions/codex/EXTENSION.md",
+        need=("FO reads each round with `python3 <package>/extensions/codex/codex_review.py <owner/repo> <pr>`",
+              "so the round is not counted and merge is not asked for",
+              "counts one round per `evidence=` id it prints",
+              "it comments `@codex review` there"),
+        old=(),
+        swaps=((r"FO reads each round with.*?no new review by itself\. ", ""),)),
+    "roborev-gate": dict(
+        file="extensions/roborev/EXTENSION.md",
+        need=("`python3 <package>/extensions/roborev/roborev_gate.py --repo <worktree> --base <base sha>`",
+              "at most twice",
+              "never counts as clean",
+              "`roborev review --local` is not used"),
+        old=(),
+        swaps=((r"\*\*Instruction FO adds to the scope notes:\*\*.*?this local gate never is\.", ""),)),
     "override-record": dict(
         need=("`Override: recommended <option>; Captain chose <option>; area: <area>`",
               "later workers find past rulings with `git grep 'Override:'`"),

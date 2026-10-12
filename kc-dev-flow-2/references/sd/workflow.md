@@ -4,6 +4,7 @@ entity-type: task
 id-style: slug
 entity-label: task
 entity-label-plural: tasks
+extensions: []
 state: .spacedock-state
 trunk: main
 stages:
@@ -300,23 +301,17 @@ consequential FO quick work and rejected gates.
    hold/route-for-decision forbids repair and reviewer rerun.
 5. A round is one verdict of an external reviewer of the delivery on the PR head (Codex
    on the PR, RoboRev or another); FO counts rounds and records the count in the
-   committed gate summary. Where Codex reviews the PR, FO reads each round with `python3
-   <package>/scripts/codex_review.py <owner/repo> <pr>`: exit 0 is a clean round on the
-   head, exit 1 its findings, exit 3 or 4 no verdict on the head yet, so the round is
-   not counted and merge is not asked for; FO counts one round per `evidence=` id it
-   prints. A PR on which Codex has left no review, comment or reaction is not
-   Codex-reviewed, and its rounds come from its other reviewers. After FO pushes a
-   repair to a Codex-reviewed PR, it comments `@codex review` there, because a push
-   brings no new review by itself. A finding assessed Material, or labelled P1 by the
-   reviewer, blocks in every round: a reviewer P1 is fixed and revalidated, or waived by
-   the Captain with the reason recorded (step 4). For an external reviewer that has no
-   P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds 1 and 2
-   follow steps 1 to 4. From round 3 a finding that is neither does not start a repair
-   cycle: FO declines it in the committed gate summary, naming the finding, and files it
-   as a new backlog task with `spacedock new` whose body carries the finding and the
-   decline reason, or names the backlog task that already holds it when a later round
-   repeats it; it never enters an open task's Scope. The terminal gate lists each such
-   task.
+   committed gate summary. A reviewer that a listed extension covers is read the way its
+   `EXTENSION.md` says (`## Extensions`). A finding assessed Material, or labelled P1 by
+   the reviewer, blocks in every round: a reviewer P1 is fixed and revalidated, or
+   waived by the Captain with the reason recorded (step 4). For an external reviewer
+   that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds
+   1 and 2 follow steps 1 to 4. From round 3 a finding that is neither does not start a
+   repair cycle: FO declines it in the committed gate summary, naming the finding, and
+   files it as a new backlog task with `spacedock new` whose body carries the finding
+   and the decline reason, or names the backlog task that already holds it when a later
+   round repeats it; it never enters an open task's Scope. The terminal gate lists each
+   such task.
 
 Rejection routing carries evidence, classifications, authorized dispositions and assignment
 without re-triage.
@@ -523,6 +518,19 @@ help names no commit or publish step, unlike the archive path. After it, FO runs
 `spacedock state commit <slug> --workflow-dir <dir>`, publishes, and reads the task
 back from the state remote before dispatching the repair; otherwise durable state
 can still show the task awaiting merge.
+
+## Extensions
+
+Extensions are optional accessories in `<package>/extensions/<name>/`, each described by
+its `EXTENSION.md`: what it needs, the stage or FO step it joins, the instruction it
+adds, how its result is read, and what happens when it cannot run. This README's
+frontmatter `extensions:` lists the ones this repository uses; an unlisted extension is
+not probed and adds nothing. For a listed extension FO follows its `EXTENSION.md`: at a
+worker dispatch of its stage FO adds its instruction line to the scope notes, and at its
+FO step FO reads the result as the file says. A listed extension that cannot run is
+reported as `<name> not run: <reason>` in the stage report or gate summary, and never
+counts as a clean result. A merge ask names each listed reviewer that was not read, and
+the Captain decides.
 
 ## Workflow State
 

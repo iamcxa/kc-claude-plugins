@@ -15,7 +15,7 @@ REF = "o/r#1"
 
 def snap(**kw):
     base = {"state": "OPEN", "draft": False, "mergeable": "MERGEABLE", "checks": "green",
-            "head": "aaaaaaaaa", "title": "feat: x", "codex": "clean"}
+            "head": "aaaaaaaaa", "title": "feat: x", "codex": "clean", "codex-evidence": "comment:1"}
     return {**base, **kw}
 
 
@@ -71,6 +71,17 @@ class PrWatchTests(unittest.TestCase):
             self.assertEqual(watch.outcome("mergeable", "UNKNOWN", "MERGEABLE"), False)
             self.assertEqual(watch.outcome("mergeable", "MERGEABLE", "CONFLICTING"), True)
 
+    def test_a_new_codex_verdict_with_the_same_word_still_wakes_wait(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap()], state)
+            code, out = self.run_main(["wait", "1"], [snap(codex="running", **{"codex-evidence": "-"}),
+                                                       snap(**{"codex-evidence": "comment:2"})], state)
+            self.assertIn("codex-evidence - -> comment:2", out)
+
+    def test_the_codex_reader_is_found_in_its_extension(self):
+        self.assertTrue(watch.CODEX.exists(), watch.CODEX)
+
     def test_wait_on_an_empty_list_ends_and_a_bad_ref_is_a_configuration_error(self):
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
@@ -94,7 +105,7 @@ class PrWatchTests(unittest.TestCase):
             return lambda *a: {"state": state, "isDraft": False, "mergeable": "MERGEABLE", "headRefOid": "a" * 40,
                                "statusCheckRollup": [{"conclusion": "SUCCESS"}], "title": "feat: x"}
         asked = []
-        review = lambda repo, n: asked.append((repo, n)) or "findings"
+        review = lambda repo, n: asked.append((repo, n)) or ("findings", "review:5")
         self.assertEqual(watch.look(REF, view=view("OPEN"), review=review)["codex"], "findings")
         self.assertEqual(watch.look(REF, view=view("MERGED"), review=review)["codex"], "-")
         self.assertEqual(asked, [("o/r", "1")])
@@ -127,7 +138,7 @@ class PrWatchTests(unittest.TestCase):
         missing = Path(tempfile.gettempdir(), "no-such-codex-review.py")
         old, watch.CODEX = watch.CODEX, missing
         try:
-            self.assertEqual(watch.codex("o/r", "1"), "-")
+            self.assertEqual(watch.codex("o/r", "1"), ("-", "-"))
         finally:
             watch.CODEX = old
 
