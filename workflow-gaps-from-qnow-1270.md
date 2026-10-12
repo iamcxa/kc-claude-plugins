@@ -10,6 +10,8 @@ Declined from round 2 of Codex's review of iamcxa/qnow#1270 (the 0.15.1 adopter 
 
 ## Scope
 
+Resolved 2026-10-12 by #601 (released in kc-dev-flow-2 0.16.1, adopters on 0.17.0): all eight items, checked with a behaviour replay and FO scenario questions; nothing left to build here.
+
 First, because they bit or nearly bit:
 - Reserved ADR numbers are not required at validation: `--since <base>` plus report-named `--require` misses an ADR that was reserved but neither written nor named. Build `--require` from the task's `## Number guards` `ADR:` lines (Codex P2; the same class as ADR 0022 missing 「也隱藏」 on 2026-10-10; this gap predates #590).
 - After a repair push, the workflow never says to request `@codex review`, so `codex_review.py` stays at exit 4 and FO holds the merge ask (Codex P2; fails safe, but stalls).
