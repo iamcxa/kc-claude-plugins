@@ -50,7 +50,7 @@ the Engineering Reviewer rename; see [validation scope](VALIDATION.md) for the
 historical evidence and its limits.
 
 Spacedock's plugin and CLI are required for orchestration. A project must have an
-explicitly selected experimental variant/profile and an approved workflow before
+explicitly selected variant/profile and an approved workflow before
 stage work. Follow the [SD adoption reference](references/sd/adoption.md) through
 SD commission/refit; invoking the entry does not rewrite a project workflow.
 

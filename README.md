@@ -103,6 +103,8 @@ Repository-level [product](./PRODUCT.md) and [architecture](./ARCHITECTURE.md) c
 
 ### [kc-dev-flow](./kc-dev-flow/)
 
+**No longer maintained.** New work uses [kc-dev-flow-2](#kc-dev-flow-2).
+
 Profile-native development routes for Claude Code and Codex. One minimal shared
 core preserves local authority while POC, Pilot, and Production load different
 base and stage contracts. `chief-engineer` advises normal delivery;
@@ -120,7 +122,7 @@ before updating the installed plugin used for ordinary continuation.
 /plugin install kc-dev-flow@kc-claude-plugins
 ```
 
-### [kc-dev-flow-2 (experimental)](./kc-dev-flow-2/)
+### [kc-dev-flow-2](./kc-dev-flow-2/)
 
 A development workflow run by Spacedock, with a thin start/resume entry, profile
 principles, stage skills and advisory roles. It requires explicit selection and an

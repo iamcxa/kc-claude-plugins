@@ -1,7 +1,6 @@
 # Validation scope
 
-This is an optional experimental package, not a replacement certification for
-kc-dev-flow. The packaged core comes from source commit
+This file records the package's validation evidence and its limits. The packaged core comes from source commit
 179b54eea2694806e9c268affb67c573dfdda632 (30 files before packaging). That source
 added the thin `dev` entry and conditional document/check guidance after the
 historical trials below. Those trials did not execute this final package.
