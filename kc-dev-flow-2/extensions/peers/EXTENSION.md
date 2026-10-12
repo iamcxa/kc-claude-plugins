@@ -16,7 +16,8 @@ guessing or asking the Captain to relay. A repository uses it by listing `peers`
   every restart, so it does not identify a role. The first time FO needs a role, it asks
   the Captain which session holds it; he names it by its Conductor session link, which
   stays the same, and by its listed name if he can see it. Without the listed name, FO
-  sends one read-only probe to every listed session asking it to report its session id,
+  sends one read-only probe to every listed peer session, never to its own workers or
+  teammates the host lists alongside them, asking it to report its session id,
   takes the session whose reply matches the link, and tells the others to ignore the
   probe; if no reply matches, it asks the Captain for the listed name. It notes `Peer: <role> = <session id> (Captain, <date>); listed as <name>`, and
   after a failed send it maps the id to the current name the same way. It never picks a
