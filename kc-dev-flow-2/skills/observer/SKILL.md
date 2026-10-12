@@ -33,7 +33,8 @@ Check at least: a Captain ruling quotes his words and answers a question put bef
 an approval read as accepting a recommendation has that sentence in its question; a
 decision by `agent:first-officer` carries the grant it relies on; an `Override:` line
 exists where his choice differs from the stated recommendation; a `Precedent:` names an
-ADR whose Words line it quotes and is not one of the always-asked kinds; amendments and
+ADR and quotes its Words line, or its decision sentence when marked `(no Words line)`,
+and is not one of the always-asked kinds; amendments and
 `Asked:` lines follow `## Captain amendments`; declines follow step 5 of review findings.
 
 For a task whose `Surfaces:` include `db`, whose ideation ran on a stronger model, or
