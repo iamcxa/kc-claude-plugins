@@ -124,9 +124,9 @@ for package, package_config in packages.items():
             continue
 
         extra_file_type = extra_file.get("type")
-        if extra_file_type != "json":
+        if extra_file_type not in ("json", "generic"):
             failures.append(
-                f"{package}: unsupported extra-file type {extra_file_type!r}; expected 'json'"
+                f"{package}: unsupported extra-file type {extra_file_type!r}; expected 'json' or 'generic'"
             )
             rows.append((package, configured_path, effective_path, "INVALID"))
             continue
@@ -148,6 +148,18 @@ for package, package_config in packages.items():
                 f"{package}: resolved path does not exist: {configured_path} -> {effective_path}"
             )
             rows.append((package, configured_path, effective_path, "MISSING"))
+            continue
+
+        if extra_file_type == "generic":
+            with open(absolute_path, encoding="utf-8") as handle:
+                marked = [line for line in handle if "x-release-please-version" in line]
+            if len(marked) != 1 or not re.search(r"\b\d+\.\d+\.\d+\b", marked[0]):
+                failures.append(
+                    f"{package}: generic file {effective_path} needs exactly one x-release-please-version line with a version; found {len(marked)}"
+                )
+                rows.append((package, configured_path, effective_path, "NO MATCH"))
+                continue
+            rows.append((package, configured_path, effective_path, "ok"))
             continue
 
         try:
