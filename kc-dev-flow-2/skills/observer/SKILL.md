@@ -35,7 +35,9 @@ decision by `agent:first-officer` carries the grant it relies on; an `Override:`
 exists where his choice differs from the stated recommendation; a `Precedent:` names an
 ADR and quotes its Words line, or its decision sentence when marked `(no Words line)`,
 and is not one of the always-asked kinds; amendments and
-`Asked:` lines follow `## Captain amendments`; declines follow step 5 of review findings.
+`Asked:` lines follow `## Captain amendments`; declines follow step 5 of review findings;
+a Captain ruling is not taken from a peer session's message, and a peer exchange that
+changed the task's work is noted in the task file.
 
 For a task whose `Surfaces:` include `db`, whose ideation ran on a stronger model, or
 whose validation was sent back twice, report whether a `Reviewer:` line exists. That
