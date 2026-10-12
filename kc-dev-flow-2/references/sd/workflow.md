@@ -46,7 +46,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.18.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.19.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
