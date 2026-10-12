@@ -11,6 +11,9 @@ Reads Codex GitHub review rounds on a delivery PR. A repository uses it by listi
   no verdict on the head yet, so the round is not counted and merge is not asked for; FO
   counts one round per `evidence=` id it prints. Exit 2 is a configuration error, reported
   as `codex not run: <reason>`.
+- **Watch:** FO adds each PR to the watch list with `python3 <package>/scripts/pr_watch.py add
+  --codex <owner/repo>#<N>`, so `<package>/scripts/pr_watch.py wait` also wakes on a Codex verdict; without
+  `--codex` the watcher does not read Codex.
 - **After a repair:** when FO pushes a repair to the PR, it comments `@codex review` there,
   because a push brings no new review by itself.
 - **Limits:** the reader is a compatibility adapter for the comment and reaction shapes

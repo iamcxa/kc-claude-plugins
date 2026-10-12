@@ -144,7 +144,7 @@
     {
       "name": "kc-dev-flow",
       "source": "./kc-dev-flow",
-      "description": "Profile-native POC, Pilot, and Production delivery routes that load one minimal authority core plus only the selected stage contract in Claude Code or Codex",
+      "description": "No longer maintained; use kc-dev-flow-2. Profile-native POC, Pilot, and Production delivery routes that load one minimal authority core plus only the selected stage contract in Claude Code or Codex",
       "version": "4.6.0",
       "keywords": [
         "development-workflow",
@@ -174,11 +174,10 @@
     {
       "name": "kc-dev-flow-2",
       "source": "./kc-dev-flow-2",
-      "description": "Optional experimental development flow with profile principles, stage skills, and retained advisory roles.",
-      "version": "0.18.0",
+      "description": "Development workflow run by Spacedock, with profile principles, stage skills, advisory roles, an observer and optional extensions.",
+      "version": "0.19.0",
       "keywords": [
         "development-workflow",
-        "experimental",
         "profiles",
         "claude-code",
         "codex"

@@ -1,19 +1,18 @@
 # Dev-flow 2
 
-An optional experimental alternative to kc-dev-flow. It provides a thin
-start/resume entry, profile principles, stage skills, retained advisory roles,
-read-only routing lint, and an adoptable Spacedock workflow with a POC adaptation.
-Existing kc-dev-flow projects stay on their selected variant; this package does
-not migrate them automatically or claim full safeguard parity or a one-third
-size reduction. Learning uses an explicitly invoked evaluation/delivery loop;
-there is no custom runtime loader, installed hook, background launcher or automatic
-adoption.
+A development workflow run by Spacedock. It provides a thin start/resume entry,
+profile principles, stage skills, advisory roles (Chief Engineer, Engineering
+Reviewer), a read-only Observer, optional extensions, read-only routing lint, and an adoptable
+Spacedock workflow with a POC adaptation. A kc-dev-flow project is not migrated
+automatically. Learning runs when invoked by hand or, in a repository that lists the
+`learn` extension, by FO when it archives a task; there is no custom runtime loader,
+installed hook, background launcher or automatic adoption.
 
 ## Controlled trial
 
-This candidate includes Claude Code and Codex manifests. Its 0.1.0 metadata
-bootstraps the repository's new-component policy; no released tag exists yet.
-Use a reviewed checkout for a controlled local trial. For Claude Code, launch
+Releases are published to this marketplace as `kc-dev-flow-2-vX.Y.Z` tags with
+Claude Code and Codex manifests. A reviewed checkout can still be used for a
+controlled local trial. For Claude Code, launch
 from the intended project with the checkout's absolute package path:
 
 ```sh
@@ -51,7 +50,7 @@ the Engineering Reviewer rename; see [validation scope](VALIDATION.md) for the
 historical evidence and its limits.
 
 Spacedock's plugin and CLI are required for orchestration. A project must have an
-explicitly selected experimental variant/profile and an approved workflow before
+explicitly selected variant/profile and an approved workflow before
 stage work. Follow the [SD adoption reference](references/sd/adoption.md) through
 SD commission/refit; invoking the entry does not rewrite a project workflow.
 
@@ -164,7 +163,31 @@ Git history and SD records do not prove which content was used at a historical
 stage entry. This package does not fix the baseline's skipped-pin bug or
 claim equivalent tamper detection.
 
-## Manual learning loop
+## Extensions
+
+Optional tools join as extensions in [`extensions/`](extensions/), each described by its
+`EXTENSION.md`. An adopter lists the ones it uses under `extensions:` in its workflow
+README frontmatter; an unlisted extension is not probed and changes nothing. The
+workflow's `## Extensions` section is the rule FO follows.
+
+| Extension | Joins | Adds |
+| --- | --- | --- |
+| [codex](extensions/codex/EXTENSION.md) | FO review rounds and the merge ask | reads Codex GitHub review rounds on the PR head |
+| [roborev](extensions/roborev/EXTENSION.md) | implementation, before the report | a local roborev review of the committed changes |
+| [learn](extensions/learn/EXTENSION.md) | FO, right after a task is archived | runs `learn` and the observer, and presents both results |
+
+## Learning loop
+
+The loop runs on three lines. Project learning: `learn` evaluates one closed task and
+may propose a root learning.md rule as a Draft PR. Package improvement: the
+[observer](skills/observer/SKILL.md) reads what FO wrote into one task's state
+against the workflow rules, at archive and when a maintainer reads an adopter's first
+task after a release, and a rule broken in two tasks becomes a package change under
+`maintain-flow`. Deciding for the Captain: `scripts/decision_ledger.py` derives every
+gate ruling from the task files SD already writes, and FO decides only within the
+delegation ladder of [ADR 0011](https://github.com/iamcxa/kc-claude-plugins/blob/main/docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md);
+[ADR 0009](https://github.com/iamcxa/kc-claude-plugins/blob/main/docs/adr/0009-self-improvement-is-a-three-position-switch-unlocked-by-change-class.md)
+keeps package self-improvement manual.
 
 Use [`kc-dev-flow-2:learn`](skills/learn/SKILL.md) for one explicitly named closed
 task. FO verifies committed SD archive state and the original repository-qualified
@@ -251,13 +274,13 @@ and its dependencies. Run from a complete checkout's repository root:
 
 ```sh
 python3 kc-dev-flow-2/scripts/lint-skills.py
-python3 kc-dev-flow-2/scripts/test_lint_skills.py
-python3 kc-dev-flow-2/scripts/test_learning.py
-python3 kc-dev-flow-2/scripts/test_design_surfaces.py
-python3 kc-dev-flow-2/scripts/test_comment_ratio.py
-python3 kc-dev-flow-2/scripts/test_number_guards.py
 python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /absolute/path/to/active-spacedock
 ```
+
+Every other test file is listed in `.github/workflows/kc-dev-flow-2-tests.yml`, which
+CI runs on each change to this package; run the same commands from there.
+[`kc-dev-flow-2:maintain-flow`](skills/maintain-flow/SKILL.md) holds the rules for
+changing the package: the workflow word budget, behaviour replay and observing adopters.
 
 Lint reuses `scripts/skill-frontmatter-lint.sh` scoped to this tree and checks
 declared route coverage, applicability values, exact paths, required principles

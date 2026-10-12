@@ -70,6 +70,9 @@ jobs:
       - name: test_decision_ledger.py
         run: python3 kc-dev-flow-2/scripts/test_decision_ledger.py
 
+      - name: test_package_version.py
+        run: python3 kc-dev-flow-2/scripts/test_package_version.py
+
       - name: test_learning.py
         run: python3 kc-dev-flow-2/scripts/test_learning.py
 

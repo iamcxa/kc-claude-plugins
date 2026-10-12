@@ -24,7 +24,7 @@ class PrWatchTests(unittest.TestCase):
         seq = iter(looks)
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
-            code = watch.main(["--state", str(state), *args], look=lambda ref: next(seq), sleep=lambda s: None)
+            code = watch.main(["--state", str(state), *args], look=lambda ref, **kw: next(seq), sleep=lambda s: None)
         return code, out.getvalue()
 
     def test_checks_rollup_reads_failing_pending_green_and_none(self):
@@ -89,7 +89,7 @@ class PrWatchTests(unittest.TestCase):
             self.assertEqual(self.run_main(["add", "not-a-ref"], [], state)[0], 2)
 
     def test_a_pr_that_cannot_be_read_stays_watched(self):
-        def fail(ref):
+        def fail(ref, **kw):
             raise RuntimeError("gh: not found")
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
@@ -106,16 +106,44 @@ class PrWatchTests(unittest.TestCase):
                                "statusCheckRollup": [{"conclusion": "SUCCESS"}], "title": "feat: x"}
         asked = []
         review = lambda repo, n: asked.append((repo, n)) or ("findings", "review:5")
-        self.assertEqual(watch.look(REF, view=view("OPEN"), review=review)["codex"], "findings")
-        self.assertEqual(watch.look(REF, view=view("MERGED"), review=review)["codex"], "-")
+        self.assertEqual(watch.look(REF, view=view("OPEN"), review=review, with_codex=True)["codex"], "findings")
+        self.assertEqual(watch.look(REF, view=view("MERGED"), review=review, with_codex=True)["codex"], "-")
+        self.assertEqual(watch.look(REF, view=view("OPEN"), review=review)["codex"], "-")
         self.assertEqual(asked, [("o/r", "1")])
+
+    def test_codex_is_read_only_for_a_pr_added_with_codex(self):
+        calls = []
+
+        def look(ref, with_codex=False):
+            calls.append((ref, with_codex))
+            return {**snap(codex="clean" if with_codex else "-"), "watch-codex": with_codex}
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "add", REF], look=look)
+                watch.main(["--state", str(state), "add", "--codex", "o/r#2"], look=look)
+                watch.main(["--state", str(state), "check"], look=look)
+            self.assertEqual(calls, [(REF, False), ("o/r#2", True), (REF, False), ("o/r#2", True)])
+
+    def test_an_entry_saved_before_the_codex_flag_keeps_reading_codex(self):
+        calls = []
+
+        def look(ref, with_codex=False):
+            calls.append(with_codex)
+            return snap()
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: snap()}))
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "check"], look=look)
+            self.assertEqual(calls, [True])
 
     def test_a_pr_added_while_a_sweep_runs_stays_watched(self):
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
             self.run_main(["add", REF], [snap()], state)
 
-            def look_and_add(ref):
+            def look_and_add(ref, **kw):
                 watch.update(state, put={"o/r#2": snap(title="added meanwhile")})
                 return snap()
             with contextlib.redirect_stdout(io.StringIO()):

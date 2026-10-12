@@ -90,6 +90,21 @@ for P in $PLUGINS; do
   [ "$MK" != "$PJ" ] && MISMATCH="$MISMATCH marketplace.json=$MK"
   [ "$CX" != "-" ] && [ "$CX" != "$PJ" ] && MISMATCH="$MISMATCH codex=$CX"
   [ "$HM" != "-" ] && [ "$HM" != "$PJ" ] && MISMATCH="$MISMATCH hermes=$HM"
+  for GV in $(python3 - "$REPO_DIR" "$P" <<'PY'
+import json, os, re, sys
+repo, package = sys.argv[1:]
+config = json.load(open(os.path.join(repo, "release-please-config.json")))
+for extra in config.get("packages", {}).get(package, {}).get("extra-files", []):
+    if isinstance(extra, dict) and extra.get("type") == "generic":
+        path = extra["path"]
+        path = path.lstrip("/") if path.startswith("/") else os.path.join(package, path)
+        line = next((l for l in open(os.path.join(repo, path)) if "x-release-please-version" in l), "")
+        found = re.search(r"\b\d+\.\d+\.\d+\b", line)
+        print(f"{path}={found.group(0) if found else 'none'}")
+PY
+  ); do
+    [ "${GV#*=}" != "$PJ" ] && MISMATCH="$MISMATCH $GV"
+  done
 
   if [ -n "$MISMATCH" ]; then
     printf "%-18s %-9s %-9s %-9s %-9s %-9s STALE (expect %s; got%s)\n" "$P" "$RP" "$PJ" "$MK" "$CX" "$HM" "$PJ" "$MISMATCH"
