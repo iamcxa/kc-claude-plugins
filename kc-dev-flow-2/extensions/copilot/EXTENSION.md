@@ -28,5 +28,6 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   no verdict otherwise, never as clean. Copilot may write the review body in another
   language; the reader keys only on those markers and on the reviewed commit. On
   2026-10-12 a request took about two minutes to answer. Each review uses the requesting
-  account's Copilot allowance. Whether a request after a push reviews the new head has
-  not been observed yet; the reader counts only a review whose commit is the head.
+  account's Copilot allowance. On 2026-10-12 a request made three seconds after a push was
+  answered five minutes later with a review of the new head; the reader still counts only
+  a review whose commit is the head.
