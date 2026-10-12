@@ -65,6 +65,15 @@ class CopilotReviewTest(unittest.TestCase):
         code, out = self.run_state([review(11, breakdown)])
         self.assertIn("2 finding(s), approval not recommended; 1 at High or above", out)
 
+    def test_a_previously_missed_count_without_rows_is_a_finding(self):
+        body = CLEAN + "\n<details>\n<summary><strong>Previously missed (1)</strong></summary>\n</details>\n"
+        self.assertEqual(self.run_state([review(12, body)])[0], 1)
+
+    def test_a_late_review_of_an_older_commit_does_not_hide_a_request_on_the_head(self):
+        reviews = [review(1, CLEAN, at="2026-10-12T08:00:00Z"),
+                   review(2, FINDINGS, commit=OLD, at="2026-10-12T08:10:00Z")]
+        self.assertEqual(self.run_state(reviews, timeline=[asked("2026-10-12T08:05:00Z")])[0], 3)
+
     def test_the_findings_none_layout_is_clean(self):
         self.assertEqual(self.run_state([review(9, FINDINGS_NONE)])[0], 0)
 

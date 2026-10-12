@@ -29,6 +29,7 @@ RESOLVED = re.compile(r"<summary><strong>\d+ resolved since last review</strong>
 APPROVED = "Approval recommended"
 ZERO = re.compile(r"(?:\*\*|<strong>)0 open findings?(?:\*\*|</strong>)|\*\*Findings:\*\*\s*None")
 ITEM = re.compile(r"^\s*(?:- |<summary>)")
+MISSED = re.compile(r"Previously missed \((\d+)\)")
 TOP = {"Critical", "High"}
 
 
@@ -51,12 +52,13 @@ def verdict(body, lines):
         levels = [level for row in RESOLVED.sub("", body).splitlines() if ITEM.match(row)
                   for level in SEVERITY.findall(row)]
         approved = APPROVED in body
-        if approved and not levels and not lines:
+        missed = int(m.group(1)) if (m := MISSED.search(body)) else 0
+        if approved and not levels and not lines and not missed:
             if ZERO.search(body):
                 return 0, "approval recommended, no finding listed"
             return None, "an approval with no zero-findings statement"
         top = sum(level in TOP for level in levels)
-        count = max(len(levels), len(lines), 0 if approved else 1)
+        count = max(len(levels), missed, len(lines), 0 if approved else 1)
         return 1, (f"{count} finding(s){'' if approved else ', approval not recommended'}; "
                    f"{top} at High or above")
     if m := LEGACY.search(body):
@@ -76,7 +78,7 @@ def state(repo, pr, call=gh, pages=pages):
              if e.get("event") == "review_requested"
              and (e.get("requested_reviewer") or {}).get("login") in {"Copilot", BOT}]
     on_head = sorted((r for r in reviews if r.get("commit_id") == head), key=lambda r: r["submitted_at"])
-    last_review = max((r["submitted_at"] for r in reviews), default="")
+    last_review = max((r["submitted_at"] for r in on_head), default="")
     if call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"] != head:
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
     if asked and max(asked) > last_review:
