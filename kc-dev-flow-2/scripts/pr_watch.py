@@ -100,10 +100,12 @@ def locked(state):
         yield
 
 
-def update(state, put=(), drop=()):
+def update(state, put=(), drop=(), keep_flags=False):
     with locked(state):
         current = load(state)
-        current.update(dict(put))
+        for ref, snap in dict(put).items():
+            flags = {k: v for k, v in current.get(ref, {}).items() if k.startswith("watch-")} if keep_flags else {}
+            current[ref] = {**snap, **flags}
         for ref in drop:
             current.pop(ref, None)
         temp = state.with_name(state.name + ".tmp")
@@ -131,7 +133,7 @@ def sweep(state, look=look):
         seen[ref] = {**old, **now}
     reported = {line.split(" ")[0] for line, _ in changes}
     done = [ref for ref, s in seen.items() if s["state"] != "OPEN" and ref not in reported]
-    current = update(state, put={r: s for r, s in seen.items() if r not in done}, drop=done)
+    current = update(state, put={r: s for r, s in seen.items() if r not in done}, drop=done, keep_flags=True)
     return changes, rows, bool(current)
 
 

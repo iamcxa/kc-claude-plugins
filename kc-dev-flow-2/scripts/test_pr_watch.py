@@ -196,6 +196,18 @@ class PrWatchTests(unittest.TestCase):
                 watch.main(["--state", str(state), "check"], look=look_and_add)
             self.assertEqual(set(json.loads(state.read_text())), {REF, "o/r#2"})
 
+    def test_a_reviewer_flag_set_while_a_sweep_runs_survives_the_sweep(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: {**snap(), "watch-copilot": False}}))
+
+            def look_and_enable(ref, **kw):
+                watch.update(state, put={REF: {**snap(), "watch-copilot": True}})
+                return {**snap(), "watch-copilot": False}
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "check"], look=look_and_enable)
+            self.assertTrue(json.loads(state.read_text())[REF]["watch-copilot"])
+
     def test_a_state_file_named_like_the_lock_keeps_its_list(self):
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "watch.lock")
