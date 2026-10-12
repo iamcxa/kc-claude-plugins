@@ -21,12 +21,14 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   is not counted and merge is not asked for. FO counts one round per `evidence=` id it
   prints. Copilot's High severity, and any level above it, counts as P1. Exit 2 is a
   configuration error, reported as `copilot not run: <reason>`.
-- **Limits:** the reader does not depend on how Copilot lays out its overview, which changed
-  three times in the reviews read for this extension (`**0 open findings**`, `<strong>N open
-  findings</strong>` with a "Previously missed" list, `**Findings:** None`). A
-  `ccr-overview-v2` review is clean only when it says "Approval recommended", shows no
-  severity icon outside its "resolved since last review" list and has no line comment;
-  every other icon or line comment is a finding. The older "Pull request overview" is clean
+- **Limits:** the reader is a compatibility adapter for three undocumented overview layouts
+  Copilot posted in 2026 (`**0 open findings**`, `<strong>N open findings</strong>` with a
+  "Previously missed" list, and `**Findings:** None`); it keys on the `ccr-overview-v2`
+  marker, the English "Approval recommended" heading, list and `<summary>` rows, and the
+  severity icons' `alt` text, so a new layout reads as no verdict until the reader learns
+  it. A `ccr-overview-v2` review is clean only when it says "Approval recommended", states
+  zero findings, lists no finding row outside its "resolved since last review" list and
+  has no line comment; each other finding row or line comment is one finding. The older "Pull request overview" is clean
   when it "generated no comments". It does not use a documented API, and a shape it does
   not recognize is never clean. Copilot may write the review body in another
   language; the reader keys only on those markers and on the reviewed commit. On

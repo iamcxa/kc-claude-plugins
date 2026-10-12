@@ -4,9 +4,9 @@
 Usage: copilot_review.py <owner/repo> <pr>
 The latest Copilot review of the head decides, and its evidence id is printed so a round
 is counted once per id.
-Exit 0 clean: that review says "Approval recommended" and lists no finding (no severity
-  icon outside its "resolved since last review" list), or (older format) "generated no
-  comments"; and it has no line comment.
+Exit 0 clean: that review says "Approval recommended", says "0 open findings" or
+  "Findings: None", and lists no finding item; or (older format) it "generated no
+  comments". Either way it has no line comment.
 Exit 1 findings: that review lists a finding, has a line comment, or does not recommend
   approval; each severity icon or line comment is one finding (fail closed).
 Exit 2 configuration error: bad arguments or a gh call that failed.
@@ -27,6 +27,8 @@ LEGACY = re.compile(r"generated (no|\d+) comments?")
 SEVERITY = re.compile(r'alt="(Critical|High|Medium|Low) severity"')
 RESOLVED = re.compile(r"<summary><strong>\d+ resolved since last review</strong></summary>.*?</details>", re.S)
 APPROVED = "Approval recommended"
+ZERO = re.compile(r"(?:\*\*|<strong>)0 open findings?(?:\*\*|</strong>)|\*\*Findings:\*\*\s*None")
+ITEM = re.compile(r"^\s*(?:- |<summary>)")
 TOP = {"Critical", "High"}
 
 
@@ -46,10 +48,13 @@ def pages(path):
 
 def verdict(body, lines):
     if OVERVIEW in body:
-        levels = SEVERITY.findall(RESOLVED.sub("", body))
+        levels = [level for row in RESOLVED.sub("", body).splitlines() if ITEM.match(row)
+                  for level in SEVERITY.findall(row)]
         approved = APPROVED in body
         if approved and not levels and not lines:
-            return 0, "approval recommended, no finding listed"
+            if ZERO.search(body):
+                return 0, "approval recommended, no finding listed"
+            return None, "an approval with no zero-findings statement"
         top = sum(level in TOP for level in levels)
         count = max(len(levels), len(lines), 0 if approved else 1)
         return 1, (f"{count} finding(s){'' if approved else ', approval not recommended'}; "

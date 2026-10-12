@@ -53,6 +53,18 @@ class CopilotReviewTest(unittest.TestCase):
         self.assertEqual(code, 0)
         self.assertIn("evidence=review:1", out)
 
+    def test_an_approval_without_a_zero_findings_statement_is_no_verdict(self):
+        body = "<!-- ccr-overview-v2 -->\n\n### 🟢 Approval recommended\n\nLooks fine.\n"
+        self.assertEqual(self.run_state([review(10, body)])[0], 4)
+
+    def test_a_severity_breakdown_is_not_counted_again(self):
+        breakdown = ("<!-- ccr-overview-v2 -->\n\n### 🟡 Changes recommended\n\n**Findings:** "
+                     + ICON.format("High") + " 1 " + ICON.format("Medium") + " 1\n\n<details open>\n"
+                     "<summary><strong>Open (2)</strong></summary>\n\n- " + ICON.format("High")
+                     + " a\n- " + ICON.format("Medium") + " b\n</details>\n")
+        code, out = self.run_state([review(11, breakdown)])
+        self.assertIn("2 finding(s), approval not recommended; 1 at High or above", out)
+
     def test_the_findings_none_layout_is_clean(self):
         self.assertEqual(self.run_state([review(9, FINDINGS_NONE)])[0], 0)
 
