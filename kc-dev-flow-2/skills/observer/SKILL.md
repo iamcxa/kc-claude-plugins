@@ -36,9 +36,9 @@ exists where his choice differs from the stated recommendation; a `Precedent:` n
 ADR and quotes its Words line, or its decision sentence when marked `(no Words line)`,
 and is not one of the always-asked kinds; amendments and
 `Asked:` lines follow `## Captain amendments`; declines follow step 5 of review findings.
-Where RULES list `peers` under `extensions:`, also check that a Captain ruling is not taken
-from a peer session's message and that a peer exchange that changed the task's work is
-noted in the task file.
+Where RULES list `peers` under `extensions:`, also check that no Captain ruling in the task
+rests on a peer exchange the task file records; an exchange the file does not record is
+outside what state shows.
 
 For a task whose `Surfaces:` include `db`, whose ideation ran on a stronger model, or
 whose validation was sent back twice, report whether a `Reviewer:` line exists. That

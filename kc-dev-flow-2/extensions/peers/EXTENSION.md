@@ -15,10 +15,12 @@ guessing or asking the Captain to relay. A repository uses it by listing `peers`
 - **Address:** a message goes to the name the host lists, and that name can change on
   every restart, so it does not identify a role. The first time FO needs a role, it asks
   the Captain which session holds it; he names it by its Conductor session link, which
-  stays the same. FO then sends a probe to the listed session in that workspace asking it
-  to confirm its Conductor session id, and notes `Peer: <role> = <session id> (Captain,
-  <date>); listed as <name>`. After a failed send it maps the id to the current name the
-  same way. It does not guess from names, working directories or recency. A peer is
+  stays the same, and by its listed name if he can see it. Without the listed name, FO
+  sends one read-only probe to every listed session asking it to report its session id,
+  takes the session whose reply matches the link, and tells the others to ignore the
+  probe. It notes `Peer: <role> = <session id> (Captain, <date>); listed as <name>`, and
+  after a failed send it maps the id to the current name the same way. It never picks a
+  session by its name, working directory or recency. A peer is
   another session, not one of FO's own workers, even where the host reaches both with the
   same tool.
 - **Message:** one question per message, opening with "if this is not you, say so", stating
