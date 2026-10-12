@@ -10,6 +10,8 @@ Declined under the round-3 rule from the third external review round (Codex) of 
 
 ## Scope
 
+Resolved 2026-10-12 by #601 (0.16.1): the lock and temp files append to the state file's name, so a `--state` ending in `.lock` keeps its list. Nothing left to build here.
+
 - Finding (P2, `pr_watch.py` lock path): `state.with_suffix(".lock")` equals the state file when `--state` already ends in `.lock`, and opening the lock with mode "w" truncates the watch list. Decline reason: it needs a caller to pick a `.lock` name for the state file; the default path ends in `.json`, and FO's rule passes no `--state`.
 - Non-goals: to be set at ideation.
 
