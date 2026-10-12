@@ -25,6 +25,9 @@ OVERVIEW = "<!-- ccr-overview-v2 -->"
 OPEN = re.compile(r"(?:\*\*|<strong>)(\d+) open findings?(?:\*\*|</strong>)")
 LEGACY = re.compile(r"generated (no|\d+) comments?")
 SEVERITY = re.compile(r'alt="(Critical|High|Medium|Low) severity"')
+MISSED = re.compile(r"Previously missed \((\d+)\)")
+RESOLVED = re.compile(r"<summary><strong>\d+ resolved since last review</strong></summary>.*?</details>", re.S)
+APPROVED = "Approval recommended"
 TOP = {"Critical", "High"}
 
 
@@ -44,12 +47,15 @@ def pages(path):
 
 def verdict(body, lines):
     if OVERVIEW in body and (m := OPEN.search(body)):
-        found = int(m.group(1))
-        if found == 0 and not lines:
-            return 0, "0 open findings"
-        levels = SEVERITY.findall(body)
-        top = sum(level in TOP for level in levels)
-        return 1, f"{max(found, len(lines))} open finding(s), {top} at High or above"
+        opened = int(m.group(1))
+        missed = int(MISSED.search(body).group(1)) if MISSED.search(body) else 0
+        approved = APPROVED in body
+        if opened == 0 and missed == 0 and approved and not lines:
+            return 0, "approval recommended, 0 open findings"
+        top = sum(level in TOP for level in SEVERITY.findall(RESOLVED.sub("", body)))
+        count = max(opened + missed, len(lines), 0 if approved else 1)
+        return 1, (f"{count} finding(s): {opened} open, {missed} previously missed"
+                   f"{'' if approved else ', approval not recommended'}; {top} at High or above")
     if m := LEGACY.search(body):
         if m.group(1) == "no" and not lines:
             return 0, "generated no comments"

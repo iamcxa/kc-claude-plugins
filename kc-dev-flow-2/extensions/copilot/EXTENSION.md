@@ -22,8 +22,10 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   prints. Copilot's High severity, and any level above it, counts as P1. Exit 2 is a
   configuration error, reported as `copilot not run: <reason>`.
 - **Limits:** the reader reads the review shapes Copilot posted in 2026: the
-  `ccr-overview-v2` overview with "N open findings" and severity icons, and the older
-  "Pull request overview" that "generated no comments". It does not use a documented API. A
+  `ccr-overview-v2` overview, clean only with "Approval recommended", "0 open findings" and
+  no "Previously missed" item (a "Needs a closer look" review with 0 open findings carried
+  one), with severity icons counted outside the "resolved since last review" list; and the
+  older "Pull request overview" that "generated no comments". It does not use a documented API. A
   shape it does not recognize reads as findings when Copilot left a line comment and as
   no verdict otherwise, never as clean. Copilot may write the review body in another
   language; the reader keys only on those markers and on the reviewed commit. On
