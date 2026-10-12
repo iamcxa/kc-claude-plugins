@@ -58,8 +58,14 @@ class CopilotReviewTest(unittest.TestCase):
         self.assertEqual(self.run_state([review(3, LEGACY_CLEAN)])[0], 0)
         self.assertEqual(self.run_state([review(3, LEGACY_CLEAN.replace("no comments", "2 comments"))])[0], 1)
 
-    def test_an_unknown_shape_is_never_clean(self):
-        self.assertEqual(self.run_state([review(4, "Looks good to me!")])[0], 4)
+    def test_an_escaped_findings_count_is_read(self):
+        escaped = FINDINGS.replace("<strong>", "&lt;strong&gt;").replace("</strong>", "&lt;/strong&gt;")
+        self.assertEqual(self.run_state([review(2, escaped)])[0], 1)
+
+    def test_an_unknown_shape_is_never_clean_and_prints_no_evidence(self):
+        code, out = self.run_state([review(4, "Looks good to me!")])
+        self.assertEqual(code, 4)
+        self.assertNotIn("evidence=", out)
         self.assertEqual(self.run_state([review(4, "Looks good to me!")], [line(10, 4)])[0], 1)
 
     def test_a_review_of_an_older_commit_does_not_cover_the_head(self):

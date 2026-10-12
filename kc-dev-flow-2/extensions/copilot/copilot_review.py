@@ -13,6 +13,7 @@ Exit 3 requested: Copilot was asked to review after its last review and has not 
 Exit 4 not reviewed: no Copilot review of the head commit, an unknown review shape with
   no line comment, or the head moved while reading.
 """
+import html
 import json
 import re
 import subprocess
@@ -75,9 +76,9 @@ def state(repo, pr, call=gh, pages=pages):
         return 4, f"not reviewed: no Copilot review covers {head[:9]}"
     latest = on_head[-1]
     own = [c for c in lines if c.get("pull_request_review_id") == latest["id"]]
-    code, detail = verdict(latest.get("body") or "", own)
+    code, detail = verdict(html.unescape(latest.get("body") or ""), own)
     if code is None:
-        return 4, f"not reviewed: {detail} on {head[:9]}; evidence=review:{latest['id']}"
+        return 4, f"not reviewed: {detail} on {head[:9]} (review {latest['id']})"
     word = "findings" if code else "clean"
     return code, f"{word} on {head[:9]}: {detail}; evidence=review:{latest['id']} at {latest['submitted_at']}"
 

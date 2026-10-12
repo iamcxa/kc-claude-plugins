@@ -151,7 +151,11 @@ def main(argv=None, look=look, sleep=time.sleep):
             if not opts.args or not all("/" in r and "#" in r for r in opts.args):
                 print("add needs owner/repo#N")
                 return 2
-            seen = update(opts.state, put={ref: look(ref, with_codex=opts.codex, with_copilot=opts.copilot) for ref in opts.args})
+            known = load(opts.state)
+            seen = update(opts.state, put={ref: look(
+                ref, with_codex=opts.codex or known.get(ref, {}).get("watch-codex", ref in known),
+                with_copilot=opts.copilot or known.get(ref, {}).get("watch-copilot", False))
+                for ref in opts.args})
             print(f"watching {len(seen)} PR(s)")
             return 0
         if opts.command == "check":

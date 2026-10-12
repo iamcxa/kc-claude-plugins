@@ -9,7 +9,7 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   review findings, step 5 (counting external-review rounds), and the merge ask.
 - **Request:** FO runs `gh pr edit <N> --repo <owner/repo> --add-reviewer @copilot` when the
   PR is marked ready and after each push. If the PR timeline then shows no
-  `review_requested` event for Copilot, FO requests it with `gh api -X POST
+  `review_requested` event for Copilot newer than that push, FO requests it with `gh api -X POST
   repos/<owner/repo>/pulls/<N>/requested_reviewers -f 'reviewers[]=copilot-pull-request-reviewer[bot]'`.
   FO does not mention `@copilot` in a PR comment: Copilot reads a mention as a request for
   new work, and kc-pr-flow saw spurious PRs and duplicate reviews from it.

@@ -148,6 +148,21 @@ class PrWatchTests(unittest.TestCase):
             self.assertEqual(code, 0)
             self.assertIn("copilot-evidence review:1 -> review:9", out.getvalue())
 
+    def test_adding_a_watched_pr_again_keeps_its_reviewer_flags(self):
+        calls = []
+
+        def look(ref, with_codex=False, with_copilot=False, **kw):
+            calls.append((with_codex, with_copilot))
+            return {**snap(), "watch-codex": with_codex, "watch-copilot": with_copilot}
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "add", "--codex", REF], look=look)
+                watch.main(["--state", str(state), "add", "--copilot", REF], look=look)
+                watch.main(["--state", str(state), "add", REF], look=look)
+                watch.main(["--state", str(state), "add", "o/r#2"], look=look)
+            self.assertEqual(calls, [(True, False), (True, True), (True, True), (False, False)])
+
     def test_a_sweep_keeps_keys_its_own_look_does_not_return(self):
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
