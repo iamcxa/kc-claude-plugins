@@ -185,8 +185,8 @@ against the workflow rules, at archive and when a maintainer reads an adopter's 
 task after a release, and a rule broken in two tasks becomes a package change under
 `maintain-flow`. Deciding for the Captain: `scripts/decision_ledger.py` derives every
 gate ruling from the task files SD already writes, and FO decides only within the
-delegation ladder of [ADR 0011](../docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md);
-[ADR 0009](../docs/adr/0009-self-improvement-is-a-three-position-switch-unlocked-by-change-class.md)
+delegation ladder of [ADR 0011](https://github.com/iamcxa/kc-claude-plugins/blob/main/docs/adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md);
+[ADR 0009](https://github.com/iamcxa/kc-claude-plugins/blob/main/docs/adr/0009-self-improvement-is-a-three-position-switch-unlocked-by-change-class.md)
 keeps package self-improvement manual.
 
 Use [`kc-dev-flow-2:learn`](skills/learn/SKILL.md) for one explicitly named closed
