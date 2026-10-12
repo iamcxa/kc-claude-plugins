@@ -12,12 +12,15 @@ guessing or asking the Captain to relay. A repository uses it by listing `peers`
   cross-repository contract or release order, who owns a PR, release or shared resource,
   the state of another repository's change, or a claim about another repository that FO
   would otherwise assume. FO does not ask a peer for a decision that is the Captain's.
-- **Address:** session names a host lists can change on every restart, so FO addresses a
-  peer by the session id the Captain confirmed for its role (a Conductor session link). The
-  first time FO needs a role, it asks the Captain which session holds it and notes
-  `Peer: <role> = <session id> (Captain, <date>)` in its own record; it does not guess from
-  names, working directories or recency. A peer is another session, not one of FO's own
-  workers, even where the host reaches both with the same tool.
+- **Address:** a message goes to the name the host lists, and that name can change on
+  every restart, so it does not identify a role. The first time FO needs a role, it asks
+  the Captain which session holds it; he names it by its Conductor session link, which
+  stays the same. FO then sends a probe to the listed session in that workspace asking it
+  to confirm its Conductor session id, and notes `Peer: <role> = <session id> (Captain,
+  <date>); listed as <name>`. After a failed send it maps the id to the current name the
+  same way. It does not guess from names, working directories or recency. A peer is
+  another session, not one of FO's own workers, even where the host reaches both with the
+  same tool.
 - **Message:** one question per message, opening with "if this is not you, say so", stating
   whether it is read-only or asks for an action, and naming the commit, PR or date it rests
   on. A send that fails (stale address, unknown session) is followed by listing the
@@ -35,10 +38,13 @@ guessing or asking the Captain to relay. A repository uses it by listing `peers`
 - **Record:** FO notes each exchange that changes a task's work in that task's file
   (peer, question, answer, date), since peer messages appear only in the two sessions.
 - **Host bindings:**
-  - Claude Code: list with `ListAgents`, message with `SendMessage`; a message wakes the
-    peer. Peers and FO's own workers are both reached with `SendMessage`.
+  - Claude Code: list with `ListAgents` and message the listed name with `SendMessage`; a
+    message wakes the peer. A session reads its own id from `$CLAUDE_CODE_SESSION_ID`, the
+    id in its Conductor session link, so the probe asks the peer to report that value.
+    Peers and FO's own workers are both reached with `SendMessage`.
   - Codex: not covered. `codex agents` lists sessions and `codex queue` reached a local
     session on 2026-10-12, but the message did not wake it and did not appear in Conductor.
   - Other hosts: not covered.
-- **Limits:** messages reach only live sessions of the same harness on this machine; a
-  session of another harness, or a cloud session, is not reachable through this extension.
+- **Limits:** messages reach only the live sessions the host lists for its own harness
+  (on Claude Code this can include Remote Control sessions on other machines); a session
+  of another harness is not reachable through this extension.
