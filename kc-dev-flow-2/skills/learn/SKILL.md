@@ -1,6 +1,6 @@
 ---
 name: learn
-description: Manually complete a named task's learning loop from verified SD closure and original merged PR through independent evaluation, optional reviewed learning.md Draft PR, and durable local notices.
+description: Complete a named task's learning loop, by hand or at archive through the learn extension, from verified SD closure and original merged PR through independent evaluation, optional reviewed learning.md Draft PR, and durable local notices.
 ---
 
 # Learn
@@ -12,7 +12,9 @@ Package root: ${CLAUDE_PLUGIN_ROOT}
 is not an absolute path, the root is two directories above this `SKILL.md`.
 
 Run under the existing First Officer (FO) orchestration. This is an explicit
-named-task operation, not a scanner, new SD stage, hook or background launcher.
+named-task operation, run by hand or by FO at archive when the repository lists the
+[learn extension](../../extensions/learn/EXTENSION.md); it is not a scanner, new SD
+stage, hook or background launcher.
 Read the [framework](../../README.md) and preserve project/Captain authority.
 Resolve the absolute code root and workflow directory, exact archived task slug,
 activated SD executable and package, and original code repository. Retain

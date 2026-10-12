@@ -96,6 +96,10 @@ class RouteMutationTests(unittest.TestCase):
         self.refuses("opus/xhigh policy changed")
         self.refuses("expected exact variant skill binding")
 
+    def test_observer_keeps_its_declared_model(self):
+        self.change("agents/observer.md", "model: sonnet", "model: inherit")
+        self.refuses("observer agent: existing sonnet/high policy changed")
+
     def test_bare_script_name(self):
         self.change("skills/implementation/principles.md", "<package>/scripts/comment_ratio.py", "comment_ratio.py")
         self.refuses("skills/implementation/principles.md: script comment_ratio.py is named without")

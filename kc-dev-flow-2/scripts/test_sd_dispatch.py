@@ -232,6 +232,19 @@ FIXES = {
               "later workers find past rulings with `git grep 'Override:'`"),
         old=(),
         swaps=((r"When the Captain chooses differently from the recommendation, FO writes.*?in the state checkout\. ", ""),)),
+    "precedent": dict(
+        need=("`Precedent: ADR <number> — 「<that ADR's Words line>」`",
+              "an ADR on one of them is never a `Precedent:` line"),
+        old=(),
+        swaps=((r"A decision an accepted ADR already settles is not asked again:.*?never a `Precedent:` line\. ", ""),)),
+    "reviewer-record": dict(
+        need=("`Reviewer: <agent> <model> <date> — <question>`",
+              "`kc-dev-flow-2:observer` run on the model and reasoning their agent files declare"),
+        old=("FO never dispatches them on a cheaper model",),
+        swaps=((r"`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and `kc-dev-flow-2:observer` run on.*?<date> — <question>`\.",
+                "`kc-dev-flow-2:chief-engineer` and `kc-dev-flow-2:engineering-reviewer` run on the "
+                "model and reasoning their agent files declare; FO never dispatches them on a "
+                "cheaper model, because their value is a stronger second judgment."),)),
     "adr-recommended": dict(
         file="skills/implementation/principles.md",
         need=("the options considered and the option recommended inside Decision",

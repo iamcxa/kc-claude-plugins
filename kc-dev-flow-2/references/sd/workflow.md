@@ -70,9 +70,10 @@ body. Use bold **AC-N** declarations with individual evidence clauses.
 ## Stages
 
 Stage workers run on the workflow's default model.
-`kc-dev-flow-2:chief-engineer` and `kc-dev-flow-2:engineering-reviewer` run on the
-model and reasoning their agent files declare; FO never dispatches them on a
-cheaper model, because their value is a stronger second judgment.
+`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and
+`kc-dev-flow-2:observer` run on the model and reasoning their agent files declare, never
+a cheaper one. FO records each chief-engineer or engineering-reviewer call under the
+task's `## FO alignment` as `Reviewer: <agent> <model> <date> — <question>`.
 
 `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
 FO fix authorized under Review-finding disposition step 3 are dispatched at once in the
@@ -232,8 +233,6 @@ not completion.
 
 ## Dispatch facts
 
-Spacedock inlines this section into each stage whose `context-sections` lists it.
-
 - **Signal:** send the completion message once, to the first officer by the name
   your session lists as addressable (`main` under Claude Code dispatch). The
   completion block's `team-lead` is Spacedock's default and is not registered
@@ -325,6 +324,12 @@ plain approval accepts that recommendation only when the gate question says so,
 for example "approving accepts the recommendation for D2; say if you object".
 Without that sentence a decision he did not address stays open: FO records its
 handling as FO's reading, never as his ruling, and asks him.
+
+A decision an accepted ADR already settles is not asked again: FO applies it and states it
+in the gate summary as `Precedent: ADR <number> — 「<that ADR's Words line>」`, and the
+Captain may reopen it. Authority, a gate approval, a merge, an outward-facing action, an
+irreversible change and money are always asked, whatever an ADR says, and an ADR on one
+of them is never a `Precedent:` line.
 
 A Captain ruling is his reply to the question it settles, given after that question
 was put. FO never records as his ruling: silence on a decision the question did not

@@ -53,6 +53,20 @@ answers scenario questions from the README alone, including one where the rule m
 apply. A replay that contradicts the claim stops the change; after two rewordings that
 still fail, take a structural option to the Captain instead of a third.
 
+## Observe adopters
+
+FO grading its own work misses what an outside reader finds, so after each release the
+maintainer reads the first task each adopter archives on it. Dispatch
+`kc-dev-flow-2:observer` with that adopter's state checkout, the slug and its README;
+`python3 kc-dev-flow-2/scripts/decision_ledger.py <state> --summary` adds the counts of
+rulings, delegated decisions, overrides and later amendments per area. Find every
+reported quote in git before acting on it and retract one that is not there. Send each
+confirmed finding to the FO that owns the task, with the quote and the ruling it needs,
+and record the ruling it gets. A rule broken in two tasks becomes a package change: a
+script check with a mutation test when the rule is objective, otherwise a rewording
+shown by Behaviour replay. Read the adopters' workflow sync PRs too: their external
+review reads the package text as a reviewer outside the package does.
+
 Report the exact changed files, static results, replay table and untested behavioral claims.
 Do not infer permission to register/install the bundle, execute SD stages,
 install hooks, launch experiments, post externally or commit from a lint pass.
