@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.19.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.19.0...kc-dev-flow-2-v0.19.1) (2026-10-12)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** an ADR without a Words line can still be a precedent, quoted by its decision sentence ([#612](https://github.com/iamcxa/kc-claude-plugins/issues/612)) ([fcc6bc3](https://github.com/iamcxa/kc-claude-plugins/commit/fcc6bc3fafd116addf0283f0938e4584f2738011))
+
 ## [0.19.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.18.0...kc-dev-flow-2-v0.19.0) (2026-10-12)
 
 

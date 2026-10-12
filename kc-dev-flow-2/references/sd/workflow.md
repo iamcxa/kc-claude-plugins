@@ -46,7 +46,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.19.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.19.1 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -330,7 +330,8 @@ handling as FO's reading, never as his ruling, and asks him.
 
 A decision an accepted ADR already settles is not asked again: FO applies it and states it
 in the gate summary as `Precedent: ADR <number> — 「<that ADR's Words line>」`, and the
-Captain may reopen it. Authority, a gate approval, a merge, an outward-facing action, an
+Captain may reopen it. An ADR with no Words line is quoted by the decision sentence it
+applies, as `Precedent: ADR <number> (no Words line) — 「<that sentence>」`. Authority, a gate approval, a merge, an outward-facing action, an
 irreversible change and money are always asked, whatever an ADR says, and an ADR on one
 of them is never a `Precedent:` line.
 

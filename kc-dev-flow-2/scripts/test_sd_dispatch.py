@@ -239,7 +239,8 @@ FIXES = {
         swaps=((r" Before each worker dispatch FO runs `python3 <package>/scripts/package_version\.py <this README>`;.*?the session runs the newer one\.", ""),)),
     "precedent": dict(
         need=("`Precedent: ADR <number> — 「<that ADR's Words line>」`",
-              "an ADR on one of them is never a `Precedent:` line"),
+              "an ADR on one of them is never a `Precedent:` line",
+              "`Precedent: ADR <number> (no Words line) — 「<that sentence>」`"),
         old=(),
         swaps=((r"A decision an accepted ADR already settles is not asked again:.*?never a `Precedent:` line\. ", ""),)),
     "reviewer-record": dict(
