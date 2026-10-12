@@ -52,8 +52,11 @@ jobs:
       - name: test_number_guards.py
         run: python3 kc-dev-flow-2/scripts/test_number_guards.py
 
-      - name: test_codex_review.py
-        run: python3 kc-dev-flow-2/scripts/test_codex_review.py
+      - name: extensions/codex/test_codex_review.py
+        run: python3 kc-dev-flow-2/extensions/codex/test_codex_review.py
+
+      - name: extensions/roborev/test_roborev_gate.py
+        run: python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py
 
       - name: test_dispatch_records.py
         run: python3 kc-dev-flow-2/scripts/test_dispatch_records.py

@@ -33,6 +33,11 @@ format checks; the bundled CLI reuses the repository's basic frontmatter check
 and validates declared routing structure and package script paths, not the full
 standard or agent behavior.
 
+An optional tool joins as an extension: a folder `kc-dev-flow-2/extensions/<name>/` holding
+its scripts, their tests and an `EXTENSION.md` in the shape of the existing ones. The workflow
+mentions extensions only in its `## Extensions` section and the README's `extensions:` list,
+so a repository that lists none is unchanged.
+
 ## Behaviour replay
 
 A change that claims a worker will act differently is shown before release, because

@@ -104,6 +104,10 @@ class RouteMutationTests(unittest.TestCase):
         self.change("skills/learn/SKILL.md", "[learning recorder]", "[learning.py]")
         self.refuses("skills/learn/SKILL.md: script learning.py is named without")
 
+    def test_extension_script_named_without_its_extension_path(self):
+        self.change("extensions/roborev/EXTENSION.md", "<package>/extensions/roborev/roborev_gate.py", "<package>/scripts/roborev_gate.py")
+        self.refuses("extensions/roborev/EXTENSION.md: script roborev_gate.py is named without <package>/extensions/roborev/")
+
     def test_machine_path_placeholder(self):
         self.change("skills/learn/SKILL.md", "<package>/scripts/learning.py --repo \"$CODE_ROOT\" release",
                     "/absolute/plugin/scripts/learning.py --repo \"$CODE_ROOT\" release")
