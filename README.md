@@ -127,11 +127,15 @@ stage skills, and retained advisory roles. It requires explicit selection and
 Spacedock orchestration; existing kc-dev-flow projects are not migrated.
 
 **Use when:** You want a controlled trial and accept the documented omissions.
-Full safeguard parity, learning automation, and a one-third size reduction are
-not established. No released tag exists yet. Follow the package's
-[local trial instructions](./kc-dev-flow-2/README.md#controlled-trial) and
+Full safeguard parity and a one-third size reduction are not established. Optional
+extensions (Codex review, roborev, learning at task archive) are listed per adopter.
+See the package [README](./kc-dev-flow-2/README.md) and
 [validation limits](./kc-dev-flow-2/VALIDATION.md); Claude's entry is
 `/kc-dev-flow-2:dev`, and Codex shorthand remains unverified.
+
+```bash
+/plugin install kc-dev-flow-2@kc-claude-plugins
+```
 
 ## Adding to Your Project
 

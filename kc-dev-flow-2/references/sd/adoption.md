@@ -124,6 +124,14 @@ wraps none. One provider's example (Netlify): a branch reset is one Open API cal
 (`netlify api --list` shows the method). The response carries connection strings, so
 redirect it to `/dev/null` and read the result from the next deploy.
 
+## Extensions
+
+An adopter lists the optional extensions it uses under `extensions:` in its workflow
+README frontmatter, for example `extensions: [codex, learn]`; the line sits above
+`state:`, where the package template puts it, so a three-way re-sync merges it cleanly.
+Each `<package>/extensions/<name>/EXTENSION.md` names what that extension needs; check
+it is available before listing it. An empty list changes nothing.
+
 ## Before activation
 
 Review the concrete README, state mapping, exact stage-skill availability and
