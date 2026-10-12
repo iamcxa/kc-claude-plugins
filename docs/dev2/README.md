@@ -46,6 +46,7 @@ stages:
 ---
 
 # Development workflow
+<!-- kc-dev-flow-2 0.19.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -85,7 +86,9 @@ the validator reads the bytes that will be delivered. A repair that outgrows wha
 assignment names returns to FO as a scope change.
 
 FO resolves `<package>` in this workflow from the `Package root:` line of
-`kc-dev-flow-2:dev`. Every worker dispatch FO builds carries that absolute path as a
+`kc-dev-flow-2:dev`. Before each worker dispatch FO runs `python3 <package>/scripts/package_version.py
+<this README>`; exit 1 means the session loaded an older package than this README was synced
+from, and FO holds the dispatch until the session runs the newer one. Every worker dispatch FO builds carries that absolute path as a
 `Package root: <absolute path>` line in its scope notes (`--scope-notes-file`), which
 land in the dispatch file the worker reads first. FO saves those scope notes, the
 checklist, the model it dispatches on and the SHA it dispatches from as
