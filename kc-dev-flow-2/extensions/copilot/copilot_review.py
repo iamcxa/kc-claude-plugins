@@ -4,10 +4,11 @@
 Usage: copilot_review.py <owner/repo> <pr>
 The latest Copilot review of the head decides, and its evidence id is printed so a round
 is counted once per id.
-Exit 0 clean: that review says "0 open findings", or (older format) "generated no
-  comments", and has no line comment.
-Exit 1 findings: that review has open findings or line comments, or a shape this reader
-  does not know together with a line comment (fail closed).
+Exit 0 clean: that review says "Approval recommended" and lists no finding (no severity
+  icon outside its "resolved since last review" list), or (older format) "generated no
+  comments"; and it has no line comment.
+Exit 1 findings: that review lists a finding, has a line comment, or does not recommend
+  approval; each severity icon or line comment is one finding (fail closed).
 Exit 2 configuration error: bad arguments or a gh call that failed.
 Exit 3 requested: Copilot was asked to review after its last review and has not answered.
 Exit 4 not reviewed: no Copilot review of the head commit, an unknown review shape with
@@ -22,10 +23,8 @@ import sys
 BOT = "copilot-pull-request-reviewer[bot]"
 LINE_AUTHORS = {"Copilot", BOT}
 OVERVIEW = "<!-- ccr-overview-v2 -->"
-OPEN = re.compile(r"(?:\*\*|<strong>)(\d+) open findings?(?:\*\*|</strong>)")
 LEGACY = re.compile(r"generated (no|\d+) comments?")
 SEVERITY = re.compile(r'alt="(Critical|High|Medium|Low) severity"')
-MISSED = re.compile(r"Previously missed \((\d+)\)")
 RESOLVED = re.compile(r"<summary><strong>\d+ resolved since last review</strong></summary>.*?</details>", re.S)
 APPROVED = "Approval recommended"
 TOP = {"Critical", "High"}
@@ -46,16 +45,15 @@ def pages(path):
 
 
 def verdict(body, lines):
-    if OVERVIEW in body and (m := OPEN.search(body)):
-        opened = int(m.group(1))
-        missed = int(MISSED.search(body).group(1)) if MISSED.search(body) else 0
+    if OVERVIEW in body:
+        levels = SEVERITY.findall(RESOLVED.sub("", body))
         approved = APPROVED in body
-        if opened == 0 and missed == 0 and approved and not lines:
-            return 0, "approval recommended, 0 open findings"
-        top = sum(level in TOP for level in SEVERITY.findall(RESOLVED.sub("", body)))
-        count = max(opened + missed, len(lines), 0 if approved else 1)
-        return 1, (f"{count} finding(s): {opened} open, {missed} previously missed"
-                   f"{'' if approved else ', approval not recommended'}; {top} at High or above")
+        if approved and not levels and not lines:
+            return 0, "approval recommended, no finding listed"
+        top = sum(level in TOP for level in levels)
+        count = max(len(levels), len(lines), 0 if approved else 1)
+        return 1, (f"{count} finding(s){'' if approved else ', approval not recommended'}; "
+                   f"{top} at High or above")
     if m := LEGACY.search(body):
         if m.group(1) == "no" and not lines:
             return 0, "generated no comments"

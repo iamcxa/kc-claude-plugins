@@ -208,6 +208,18 @@ class PrWatchTests(unittest.TestCase):
                 watch.main(["--state", str(state), "check"], look=look_and_enable)
             self.assertTrue(json.loads(state.read_text())[REF]["watch-copilot"])
 
+    def test_an_add_that_read_the_list_earlier_does_not_turn_a_flag_off(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: {**snap(), "watch-copilot": False}}))
+
+            def look_while_another_add_enables(ref, **kw):
+                watch.update(state, put={REF: {**snap(), "watch-copilot": True}}, keep_flags=True)
+                return {**snap(), "watch-copilot": False}
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "add", REF], look=look_while_another_add_enables)
+            self.assertTrue(json.loads(state.read_text())[REF]["watch-copilot"])
+
     def test_a_state_file_named_like_the_lock_keeps_its_list(self):
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "watch.lock")

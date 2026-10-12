@@ -21,13 +21,14 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   is not counted and merge is not asked for. FO counts one round per `evidence=` id it
   prints. Copilot's High severity, and any level above it, counts as P1. Exit 2 is a
   configuration error, reported as `copilot not run: <reason>`.
-- **Limits:** the reader reads the review shapes Copilot posted in 2026: the
-  `ccr-overview-v2` overview, clean only with "Approval recommended", "0 open findings" and
-  no "Previously missed" item (a "Needs a closer look" review with 0 open findings carried
-  one), with severity icons counted outside the "resolved since last review" list; and the
-  older "Pull request overview" that "generated no comments". It does not use a documented API. A
-  shape it does not recognize reads as findings when Copilot left a line comment and as
-  no verdict otherwise, never as clean. Copilot may write the review body in another
+- **Limits:** the reader does not depend on how Copilot lays out its overview, which changed
+  three times in the reviews read for this extension (`**0 open findings**`, `<strong>N open
+  findings</strong>` with a "Previously missed" list, `**Findings:** None`). A
+  `ccr-overview-v2` review is clean only when it says "Approval recommended", shows no
+  severity icon outside its "resolved since last review" list and has no line comment;
+  every other icon or line comment is a finding. The older "Pull request overview" is clean
+  when it "generated no comments". It does not use a documented API, and a shape it does
+  not recognize is never clean. Copilot may write the review body in another
   language; the reader keys only on those markers and on the reviewed commit. On
   2026-10-12 a request took about two minutes to answer. Each review uses the requesting
   account's Copilot allowance. On 2026-10-12 a request made three seconds after a push was

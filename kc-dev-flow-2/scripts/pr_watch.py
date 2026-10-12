@@ -104,8 +104,9 @@ def update(state, put=(), drop=(), keep_flags=False):
     with locked(state):
         current = load(state)
         for ref, snap in dict(put).items():
-            flags = {k: v for k, v in current.get(ref, {}).items() if k.startswith("watch-")} if keep_flags else {}
-            current[ref] = {**snap, **flags}
+            old = current.get(ref, {})
+            flags = {k: bool(old.get(k)) or bool(snap.get(k)) for k in {**old, **snap} if k.startswith("watch-")}
+            current[ref] = {**snap, **flags} if keep_flags else snap
         for ref in drop:
             current.pop(ref, None)
         temp = state.with_name(state.name + ".tmp")
@@ -157,7 +158,7 @@ def main(argv=None, look=look, sleep=time.sleep):
             seen = update(opts.state, put={ref: look(
                 ref, with_codex=opts.codex or known.get(ref, {}).get("watch-codex", ref in known),
                 with_copilot=opts.copilot or known.get(ref, {}).get("watch-copilot", False))
-                for ref in opts.args})
+                for ref in opts.args}, keep_flags=True)
             print(f"watching {len(seen)} PR(s)")
             return 0
         if opts.command == "check":
