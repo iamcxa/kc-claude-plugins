@@ -4,7 +4,8 @@ entity-type: task
 id-style: slug
 entity-label: task
 entity-label-plural: tasks
-extensions: [codex, learn]
+extensions: [roborev, codex, copilot, learn]
+second-reviewer: copilot
 state: .spacedock-state
 trunk: main
 stages:
@@ -46,7 +47,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.19.1 x-release-please-version -->
+<!-- kc-dev-flow-2 0.20.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -539,7 +540,12 @@ worker dispatch of its stage FO adds its instruction line to the scope notes, an
 FO step FO reads the result as the file says. A listed extension that cannot run is
 reported as `<name> not run: <reason>` in the stage report or gate summary, and never
 counts as a clean result. A merge ask names each listed reviewer that was not read, and
-the Captain decides.
+the Captain decides. Where two remote reviewers are listed, frontmatter `second-reviewer:`
+names the one that joins only when a trigger holds: the task's `Surfaces:` include `db`,
+its profile is `prod`, a dispatch said its design is hard to reverse, the change touches authority,
+approval, merge or review rules, or the Captain asks. FO records `second reviewer: <name>
+because <trigger>` or `second reviewer: not triggered` in the gate summary, and an
+untriggered second reviewer is not named as unread.
 
 ## Workflow State
 
