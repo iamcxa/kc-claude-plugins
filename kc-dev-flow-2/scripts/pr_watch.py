@@ -128,7 +128,7 @@ def sweep(state, look=look):
         rows.append(f"{ref:34} {now['state']:7} draft={now['draft']!s:5} {now['mergeable']:11} "
                     f"checks={now['checks']:8} codex={now['codex']:12} "
                     f"copilot={now.get('copilot', '-'):12} {now['title']}")
-        seen[ref] = now
+        seen[ref] = {**old, **now}
     reported = {line.split(" ")[0] for line, _ in changes}
     done = [ref for ref, s in seen.items() if s["state"] != "OPEN" and ref not in reported]
     current = update(state, put={r: s for r, s in seen.items() if r not in done}, drop=done)
