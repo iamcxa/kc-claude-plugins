@@ -174,6 +174,7 @@ workflow's `## Extensions` section is the rule FO follows.
 | --- | --- | --- |
 | [codex](extensions/codex/EXTENSION.md) | FO review rounds and the merge ask | reads Codex GitHub review rounds on the PR head |
 | [roborev](extensions/roborev/EXTENSION.md) | implementation, before the report | a local roborev review of the committed changes |
+| [copilot](extensions/copilot/EXTENSION.md) | FO review rounds, each push and the merge ask | requests and reads GitHub Copilot review rounds on the PR head |
 | [learn](extensions/learn/EXTENSION.md) | FO, right after a task is archived | runs `learn` and the observer, and presents both results |
 
 ## Learning loop

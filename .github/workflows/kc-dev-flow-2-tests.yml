@@ -58,6 +58,9 @@ jobs:
       - name: extensions/roborev/test_roborev_gate.py
         run: python3 kc-dev-flow-2/extensions/roborev/test_roborev_gate.py
 
+      - name: extensions/copilot/test_copilot_review.py
+        run: python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py
+
       - name: test_dispatch_records.py
         run: python3 kc-dev-flow-2/scripts/test_dispatch_records.py
 

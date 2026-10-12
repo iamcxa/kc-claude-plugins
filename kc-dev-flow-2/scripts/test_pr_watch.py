@@ -110,11 +110,14 @@ class PrWatchTests(unittest.TestCase):
         self.assertEqual(watch.look(REF, view=view("MERGED"), review=review, with_codex=True)["codex"], "-")
         self.assertEqual(watch.look(REF, view=view("OPEN"), review=review)["codex"], "-")
         self.assertEqual(asked, [("o/r", "1")])
+        self.assertEqual(watch.look(REF, view=view("OPEN"), review_copilot=review)["copilot"], "-")
+        self.assertEqual(asked, [("o/r", "1")])
+        self.assertEqual(watch.look(REF, view=view("OPEN"), review_copilot=review, with_copilot=True)["copilot"], "findings")
 
     def test_codex_is_read_only_for_a_pr_added_with_codex(self):
         calls = []
 
-        def look(ref, with_codex=False):
+        def look(ref, with_codex=False, **kw):
             calls.append((ref, with_codex))
             return {**snap(codex="clean" if with_codex else "-"), "watch-codex": with_codex}
         with tempfile.TemporaryDirectory() as d:
@@ -125,10 +128,30 @@ class PrWatchTests(unittest.TestCase):
                 watch.main(["--state", str(state), "check"], look=look)
             self.assertEqual(calls, [(REF, False), ("o/r#2", True), (REF, False), ("o/r#2", True)])
 
+    def test_copilot_is_read_only_for_a_pr_added_with_copilot_and_its_verdict_wakes(self):
+        calls = []
+
+        def look(ref, with_copilot=False, **kw):
+            calls.append((ref, with_copilot))
+            self.assertLess(len(calls), 10, "wait never woke on the new Copilot evidence")
+            return {**snap(), "copilot": "clean",
+                    "copilot-evidence": "review:1" if len(calls) < 3 else "review:9", "watch-copilot": with_copilot}
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                watch.main(["--state", str(state), "add", REF], look=look)
+                watch.main(["--state", str(state), "add", "--copilot", "o/r#2"], look=look)
+                code = watch.main(["--state", str(state), "wait", "1"], look=look, sleep=lambda s: None)
+            self.assertEqual(calls[:2], [(REF, False), ("o/r#2", True)])
+            self.assertEqual(calls[2:4], [(REF, False), ("o/r#2", True)])
+            self.assertEqual(code, 0)
+            self.assertIn("copilot-evidence review:1 -> review:9", out.getvalue())
+
     def test_an_entry_saved_before_the_codex_flag_keeps_reading_codex(self):
         calls = []
 
-        def look(ref, with_codex=False):
+        def look(ref, with_codex=False, **kw):
             calls.append(with_codex)
             return snap()
         with tempfile.TemporaryDirectory() as d:

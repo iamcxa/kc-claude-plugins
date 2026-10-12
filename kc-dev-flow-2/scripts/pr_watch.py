@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
 """Watch the pull requests FO opened and report what changed since the last look.
 
-  pr_watch.py [--state FILE] add [--codex] owner/repo#N ...
-                                                    add PRs; --codex also reads Codex review
+  pr_watch.py [--state FILE] add [--codex] [--copilot] owner/repo#N ...
+                                                    add PRs; --codex / --copilot also read that review
   pr_watch.py [--state FILE] check                  print each PR and the changes since the last look
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
 
 An outcome is a merge or close, a draft flip, a new or cleared conflict, CI turning green
 or failing, or a Codex verdict; a check or review that only starts is recorded silently.
 
-A merged or closed PR is reported once, then dropped. The codex column is read only for a
-PR added with --codex, from the codex extension's reader when it is present. Exit 2 is a
-configuration error.
+A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
+only for a PR added with --codex or --copilot, from that extension's reader when it is
+present. Exit 2 is a configuration error.
 """
 import argparse
 import contextlib
@@ -26,14 +26,17 @@ import time
 
 DEFAULT_STATE = Path.home() / ".local/state/kc-dev-flow-2/pr-watch.json"
 CODEX = Path(__file__).resolve().parents[1] / "extensions/codex/codex_review.py"
+COPILOT = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_review.py"
 FIELDS = "state,isDraft,mergeable,headRefOid,statusCheckRollup,title"
-TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex", "codex-evidence")
+TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex", "codex-evidence",
+           "copilot", "copilot-evidence")
 OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
-            "checks": {"failing", "green"}, "codex": {"clean", "findings", "error"}}
+            "checks": {"failing", "green"}, "codex": {"clean", "findings", "error"},
+            "copilot": {"clean", "findings", "error"}}
 
 
 def outcome(key, old, new):
-    if key == "codex-evidence":
+    if key.endswith("-evidence"):
         return new not in ("-", None)
     return key in OUTCOMES and (OUTCOMES[key] is None or new in OUTCOMES[key] or (key == "mergeable" and old == "CONFLICTING"))
 
@@ -54,16 +57,24 @@ def checks(rollup):
     return "green" if states else "none"
 
 
-def codex(repo, number):
-    if not CODEX.exists():
+def reader(script, repo, number):
+    if not script.exists():
         return "-", "-"
-    done = subprocess.run([sys.executable, str(CODEX), repo, number], capture_output=True, text=True)
+    done = subprocess.run([sys.executable, str(script), repo, number], capture_output=True, text=True)
     evidence = re.search(r"evidence=(\S+)", done.stdout)
     verdict = {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed"}.get(done.returncode, "error")
     return verdict, evidence.group(1) if evidence else "-"
 
 
-def look(ref, view=gh, review=codex, with_codex=False):
+def codex(repo, number):
+    return reader(CODEX, repo, number)
+
+
+def copilot(repo, number):
+    return reader(COPILOT, repo, number)
+
+
+def look(ref, view=gh, review=codex, with_codex=False, with_copilot=False, review_copilot=copilot):
     repo, number = ref.split("#")
     d = view("pr", "view", number, "--repo", repo, "--json", FIELDS)
     snap = {"state": d["state"], "draft": d["isDraft"], "mergeable": d["mergeable"],
@@ -71,6 +82,9 @@ def look(ref, view=gh, review=codex, with_codex=False):
     read = with_codex and d["state"] == "OPEN"
     snap["codex"], snap["codex-evidence"] = review(repo, number) if read else ("-", "-")
     snap["watch-codex"] = with_codex
+    read = with_copilot and d["state"] == "OPEN"
+    snap["copilot"], snap["copilot-evidence"] = review_copilot(repo, number) if read else ("-", "-")
+    snap["watch-copilot"] = with_copilot
     return snap
 
 
@@ -103,7 +117,7 @@ def sweep(state, look=look):
     changes, rows = [], []
     for ref, old in seen.items():
         try:
-            now = look(ref, with_codex=old.get("watch-codex", True))
+            now = look(ref, with_codex=old.get("watch-codex", True), with_copilot=old.get("watch-copilot", False))
         except (RuntimeError, KeyError, ValueError) as error:
             rows.append(f"{ref}: not read ({str(error)[:80]})")
             continue
@@ -112,7 +126,8 @@ def sweep(state, look=look):
             line = f"{ref} {now['title']}: " + "; ".join(f"{k} {old.get(k)} -> {now.get(k)}" for k in moved)
             changes.append((line, any(outcome(k, old.get(k), now.get(k)) for k in moved)))
         rows.append(f"{ref:34} {now['state']:7} draft={now['draft']!s:5} {now['mergeable']:11} "
-                    f"checks={now['checks']:8} codex={now['codex']:12} {now['title']}")
+                    f"checks={now['checks']:8} codex={now['codex']:12} "
+                    f"copilot={now.get('copilot', '-'):12} {now['title']}")
         seen[ref] = now
     reported = {line.split(" ")[0] for line, _ in changes}
     done = [ref for ref, s in seen.items() if s["state"] != "OPEN" and ref not in reported]
@@ -125,6 +140,7 @@ def main(argv=None, look=look, sleep=time.sleep):
     parser.add_argument("--state", type=Path, default=DEFAULT_STATE)
     parser.add_argument("command", choices=["add", "check", "wait"])
     parser.add_argument("--codex", action="store_true")
+    parser.add_argument("--copilot", action="store_true")
     parser.add_argument("args", nargs="*")
     try:
         opts = parser.parse_intermixed_args(argv)
@@ -135,7 +151,7 @@ def main(argv=None, look=look, sleep=time.sleep):
             if not opts.args or not all("/" in r and "#" in r for r in opts.args):
                 print("add needs owner/repo#N")
                 return 2
-            seen = update(opts.state, put={ref: look(ref, with_codex=opts.codex) for ref in opts.args})
+            seen = update(opts.state, put={ref: look(ref, with_codex=opts.codex, with_copilot=opts.copilot) for ref in opts.args})
             print(f"watching {len(seen)} PR(s)")
             return 0
         if opts.command == "check":
