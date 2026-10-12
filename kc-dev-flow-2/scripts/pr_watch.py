@@ -7,7 +7,8 @@
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
 
 An outcome is a merge or close, a draft flip, a new or cleared conflict, CI turning green
-or failing, or a Codex verdict; a check or review that only starts is recorded silently.
+or failing, a Codex verdict, or Copilot answering the head; a check or review that only
+starts is recorded silently.
 
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
 only for a PR added with --codex or --copilot, from that extension's reader when it is
@@ -32,7 +33,7 @@ TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex", "codex-evid
            "copilot", "copilot-evidence")
 OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
             "checks": {"failing", "green"}, "codex": {"clean", "findings", "error"},
-            "copilot": {"clean", "findings", "error"}}
+            "copilot": {"answered", "error"}}
 
 
 def outcome(key, old, new):
@@ -57,12 +58,12 @@ def checks(rollup):
     return "green" if states else "none"
 
 
-def reader(script, repo, number):
+def reader(script, repo, number, words=None):
     if not script.exists():
         return "-", "-"
     done = subprocess.run([sys.executable, str(script), repo, number], capture_output=True, text=True)
     evidence = re.search(r"evidence=(\S+)", done.stdout)
-    verdict = {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed"}.get(done.returncode, "error")
+    verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed"}).get(done.returncode, "error")
     return verdict, evidence.group(1) if evidence else "-"
 
 
@@ -71,7 +72,7 @@ def codex(repo, number):
 
 
 def copilot(repo, number):
-    return reader(COPILOT, repo, number)
+    return reader(COPILOT, repo, number, {0: "answered", 3: "requested", 4: "not-reviewed"})
 
 
 def look(ref, view=gh, review=codex, with_codex=False, with_copilot=False, review_copilot=copilot):
@@ -106,7 +107,7 @@ def update(state, put=(), drop=(), keep_flags=False):
         for ref, snap in dict(put).items():
             old = current.get(ref, {})
             flags = {k: bool(old.get(k)) or bool(snap.get(k)) for k in {**old, **snap} if k.startswith("watch-")}
-            current[ref] = {**snap, **flags} if keep_flags else snap
+            current[ref] = {**old, **snap, **flags} if keep_flags else snap
         for ref in drop:
             current.pop(ref, None)
         temp = state.with_name(state.name + ".tmp")

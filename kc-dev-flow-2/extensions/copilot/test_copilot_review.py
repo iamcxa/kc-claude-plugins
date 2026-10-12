@@ -12,19 +12,9 @@ spec.loader.exec_module(cr)
 HEAD = "a" * 40
 OLD = "b" * 40
 REPO, PR = "o/r", "7"
-ICON = '<img src="x.png" alt="{} severity" width="62">'
-CLEAN = "<!-- ccr-overview-v2 -->\n\n### 🟢 Approval recommended\n\n版本一致。\n\n**0 open findings**\n"
-FINDINGS = ("<!-- ccr-overview-v2 -->\n\n### 🟡 Changes recommended\n\n<details open>\n"
-            "<summary><strong>2 open findings</strong></summary>\n\n- " + ICON.format("High")
-            + " ordering\n- " + ICON.format("Medium") + " quota\n</details>\n")
-RESOLVED_BLOCK = ("<details>\n<summary><strong>2 resolved since last review</strong></summary>\n\n- "
-                  + ICON.format("High") + " fixed\n- " + ICON.format("High") + " fixed too\n</details>\n")
-CLOSER_LOOK = ("<!-- ccr-overview-v2 -->\n\n### 🔵 Needs a closer look\n\nA race remains.\n\n**0 open findings**\n\n"
-               + RESOLVED_BLOCK + "<details>\n<summary><strong>Previously missed (1)</strong></summary>\n\n"
-               "<details>\n<summary>" + ICON.format("Medium") + " Preserve updates</summary>\nbody\n</details>\n</details>\n")
-FINDINGS_NONE = ("<!-- ccr-overview-v2 -->\n\n## Copilot review overview\n\n### 🟢 Approval recommended\n\n"
-                 "Consistent.\n\n**Review effort:** Balanced  \n**Findings:** None\n")
-LEGACY_CLEAN = "## Pull request overview\n\nCopilot reviewed 19 out of 19 changed files and generated no comments.\n"
+APPROVAL = "<!-- ccr-overview-v2 -->\n\n### 🟢 Approval recommended\n\n版本一致。\n\n**0 open findings**\n"
+CHANGES = "<!-- ccr-overview-v2 -->\n\n### 🟡 Changes recommended\n\n<summary><strong>2 open findings</strong></summary>\n"
+LEGACY = "## Pull request overview\n\nCopilot reviewed 19 out of 19 changed files and generated no comments.\n"
 
 
 def review(rid, body, commit=HEAD, at="2026-10-12T08:21:29Z"):
@@ -48,90 +38,38 @@ class CopilotReviewTest(unittest.TestCase):
                 f"repos/{REPO}/issues/{PR}/timeline": list(timeline)}
         return cr.state(REPO, PR, call=call, pages=lambda path: data[path])
 
-    def test_zero_open_findings_on_the_head_is_clean(self):
-        code, out = self.run_state([review(1, CLEAN)], timeline=[asked("2026-10-12T08:19:28Z")])
+    def test_an_answer_on_the_head_names_the_review_its_heading_and_line_comments(self):
+        code, out = self.run_state([review(2, CHANGES)], [line(10, 2), line(11, 2), line(12, 9)],
+                                   timeline=[asked("2026-10-12T08:19:28Z")])
         self.assertEqual(code, 0)
-        self.assertIn("evidence=review:1", out)
+        self.assertIn('"🟡 Changes recommended", 2 line comment(s); evidence=review:2', out)
 
-    def test_an_approval_without_a_zero_findings_statement_is_no_verdict(self):
-        body = "<!-- ccr-overview-v2 -->\n\n### 🟢 Approval recommended\n\nLooks fine.\n"
-        self.assertEqual(self.run_state([review(10, body)])[0], 4)
+    def test_the_answer_is_reported_the_same_whatever_copilot_found(self):
+        self.assertIn('"🟢 Approval recommended"', self.run_state([review(1, APPROVAL)])[1])
+        self.assertIn('"Pull request overview"', self.run_state([review(3, LEGACY)])[1])
+        self.assertIn('"no heading"', self.run_state([review(4, "Looks good")])[1])
 
-    def test_a_severity_breakdown_is_not_counted_again(self):
-        breakdown = ("<!-- ccr-overview-v2 -->\n\n### 🟡 Changes recommended\n\n**Findings:** "
-                     + ICON.format("High") + " 1 " + ICON.format("Medium") + " 1\n\n<details open>\n"
-                     "<summary><strong>Open (2)</strong></summary>\n\n- " + ICON.format("High")
-                     + " a\n- " + ICON.format("Medium") + " b\n</details>\n")
-        code, out = self.run_state([review(11, breakdown)])
-        self.assertIn("2 finding(s), approval not recommended; 1 at High or above", out)
+    def test_the_latest_review_of_the_head_is_named(self):
+        reviews = [review(1, CHANGES, at="2026-10-12T08:00:00Z"), review(2, APPROVAL, at="2026-10-12T09:00:00Z")]
+        self.assertIn("evidence=review:2", self.run_state(reviews)[1])
 
-    def test_a_previously_missed_count_without_rows_is_a_finding(self):
-        body = CLEAN + "\n<details>\n<summary><strong>Previously missed (1)</strong></summary>\n</details>\n"
-        self.assertEqual(self.run_state([review(12, body)])[0], 1)
-
-    def test_a_late_review_of_an_older_commit_does_not_hide_a_request_on_the_head(self):
-        reviews = [review(1, CLEAN, at="2026-10-12T08:00:00Z"),
-                   review(2, FINDINGS, commit=OLD, at="2026-10-12T08:10:00Z")]
-        self.assertEqual(self.run_state(reviews, timeline=[asked("2026-10-12T08:05:00Z")])[0], 3)
-
-    def test_the_findings_none_layout_is_clean(self):
-        self.assertEqual(self.run_state([review(9, FINDINGS_NONE)])[0], 0)
-
-    def test_a_previously_missed_finding_under_zero_open_is_not_clean(self):
-        code, out = self.run_state([review(5, CLOSER_LOOK)])
-        self.assertEqual(code, 1)
-        self.assertIn("1 finding(s), approval not recommended; 0 at High", out)
-
-    def test_a_previously_missed_finding_blocks_even_under_an_approval_heading(self):
-        body = CLOSER_LOOK.replace("🔵 Needs a closer look", "🟢 Approval recommended")
-        self.assertEqual(self.run_state([review(8, body)])[0], 1)
-
-    def test_zero_findings_without_an_approval_heading_is_not_clean(self):
-        body = CLEAN.replace("🟢 Approval recommended", "🔵 Needs a closer look")
-        self.assertEqual(self.run_state([review(6, body)])[0], 1)
-
-    def test_resolved_findings_are_not_counted(self):
-        code, out = self.run_state([review(7, FINDINGS + RESOLVED_BLOCK)])
-        self.assertIn("1 at High or above", out)
-
-    def test_open_findings_count_high_as_the_top_level(self):
-        code, out = self.run_state([review(2, FINDINGS)], [line(10, 2), line(11, 2)])
-        self.assertEqual(code, 1)
-        self.assertIn("2 finding(s), approval not recommended; 1 at High or above", out)
-
-    def test_a_line_comment_on_a_zero_count_review_is_still_a_finding(self):
-        self.assertEqual(self.run_state([review(1, CLEAN)], [line(10, 1)])[0], 1)
-
-    def test_the_older_overview_format(self):
-        self.assertEqual(self.run_state([review(3, LEGACY_CLEAN)])[0], 0)
-        self.assertEqual(self.run_state([review(3, LEGACY_CLEAN.replace("no comments", "2 comments"))])[0], 1)
-
-    def test_an_escaped_findings_count_is_read(self):
-        escaped = FINDINGS.replace("<strong>", "&lt;strong&gt;").replace("</strong>", "&lt;/strong&gt;")
-        self.assertEqual(self.run_state([review(2, escaped)])[0], 1)
-
-    def test_an_unknown_shape_is_never_clean_and_prints_no_evidence(self):
-        code, out = self.run_state([review(4, "Looks good to me!")])
-        self.assertEqual(code, 4)
-        self.assertNotIn("evidence=", out)
-        self.assertEqual(self.run_state([review(4, "Looks good to me!")], [line(10, 4)])[0], 1)
-
-    def test_a_review_of_an_older_commit_does_not_cover_the_head(self):
-        code, out = self.run_state([review(1, CLEAN, commit=OLD)])
-        self.assertEqual(code, 4)
-        self.assertIn("no Copilot review covers", out)
-
-    def test_a_request_after_the_last_review_is_running(self):
-        code, _ = self.run_state([review(1, CLEAN, at="2026-10-12T08:00:00Z")],
+    def test_a_request_after_the_head_review_is_still_waiting(self):
+        code, _ = self.run_state([review(1, APPROVAL, at="2026-10-12T08:00:00Z")],
                                  timeline=[asked("2026-10-12T08:05:00Z")])
         self.assertEqual(code, 3)
 
-    def test_the_latest_review_of_the_head_decides(self):
-        reviews = [review(1, FINDINGS, at="2026-10-12T08:00:00Z"), review(2, CLEAN, at="2026-10-12T09:00:00Z")]
-        self.assertEqual(self.run_state(reviews, [line(10, 1)])[0], 0)
+    def test_a_late_review_of_an_older_commit_does_not_answer_a_request_on_the_head(self):
+        reviews = [review(1, APPROVAL, at="2026-10-12T08:00:00Z"),
+                   review(2, CHANGES, commit=OLD, at="2026-10-12T08:10:00Z")]
+        self.assertEqual(self.run_state(reviews, timeline=[asked("2026-10-12T08:05:00Z")])[0], 3)
+
+    def test_a_review_of_an_older_commit_does_not_cover_the_head(self):
+        code, out = self.run_state([review(1, APPROVAL, commit=OLD)])
+        self.assertEqual(code, 4)
+        self.assertNotIn("evidence=", out)
 
     def test_a_head_that_moves_while_reading_is_not_reviewed(self):
-        self.assertEqual(self.run_state([review(1, CLEAN)], heads=(HEAD, OLD))[0], 4)
+        self.assertEqual(self.run_state([review(1, APPROVAL)], heads=(HEAD, OLD))[0], 4)
 
     def test_bad_arguments_are_a_configuration_error(self):
         with contextlib.redirect_stdout(io.StringIO()):

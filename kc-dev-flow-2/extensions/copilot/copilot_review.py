@@ -1,36 +1,22 @@
 #!/usr/bin/env python3
-"""Report the GitHub Copilot review state of a pull request's head commit.
+"""Report whether GitHub Copilot has answered a review request on a pull request's head.
 
 Usage: copilot_review.py <owner/repo> <pr>
-The latest Copilot review of the head decides, and its evidence id is printed so a round
-is counted once per id.
-Exit 0 clean: that review says "Approval recommended", says "0 open findings" or
-  "Findings: None", and lists no finding item; or (older format) it "generated no
-  comments". Either way it has no line comment.
-Exit 1 findings: that review lists a finding, has a line comment, or does not recommend
-  approval; each severity icon or line comment is one finding (fail closed).
+This reader does not judge what Copilot found; FO reads the review it names.
+Exit 0 answered: Copilot reviewed the head commit after its latest request. The line names
+  the review (evidence=review:<id>, one round per id), its heading line, and how many line
+  comments belong to it.
 Exit 2 configuration error: bad arguments or a gh call that failed.
-Exit 3 requested: Copilot was asked to review after its last review and has not answered.
-Exit 4 not reviewed: no Copilot review of the head commit, an unknown review shape with
-  no line comment, or the head moved while reading.
+Exit 3 requested: Copilot was asked after its latest review of the head and has not answered.
+Exit 4 not reviewed: no Copilot review of the head commit, or the head moved while reading.
 """
 import html
 import json
-import re
 import subprocess
 import sys
 
 BOT = "copilot-pull-request-reviewer[bot]"
 LINE_AUTHORS = {"Copilot", BOT}
-OVERVIEW = "<!-- ccr-overview-v2 -->"
-LEGACY = re.compile(r"generated (no|\d+) comments?")
-SEVERITY = re.compile(r'alt="(Critical|High|Medium|Low) severity"')
-RESOLVED = re.compile(r"<summary><strong>\d+ resolved since last review</strong></summary>.*?</details>", re.S)
-APPROVED = "Approval recommended"
-ZERO = re.compile(r"(?:\*\*|<strong>)0 open findings?(?:\*\*|</strong>)|\*\*Findings:\*\*\s*None")
-ITEM = re.compile(r"^\s*(?:- |<summary>)")
-MISSED = re.compile(r"Previously missed \((\d+)\)")
-TOP = {"Critical", "High"}
 
 
 def gh(*args):
@@ -47,27 +33,12 @@ def pages(path):
     return [item for page in gh("api", "--paginate", "--slurp", path) for item in page]
 
 
-def verdict(body, lines):
-    if OVERVIEW in body:
-        levels = [level for row in RESOLVED.sub("", body).splitlines() if ITEM.match(row)
-                  for level in SEVERITY.findall(row)]
-        approved = APPROVED in body
-        missed = int(m.group(1)) if (m := MISSED.search(body)) else 0
-        if approved and not levels and not lines and not missed:
-            if ZERO.search(body):
-                return 0, "approval recommended, no finding listed"
-            return None, "an approval with no zero-findings statement"
-        top = sum(level in TOP for level in levels)
-        count = max(len(levels), missed, len(lines), 0 if approved else 1)
-        return 1, (f"{count} finding(s){'' if approved else ', approval not recommended'}; "
-                   f"{top} at High or above")
-    if m := LEGACY.search(body):
-        if m.group(1) == "no" and not lines:
-            return 0, "generated no comments"
-        return 1, f"{len(lines) or m.group(1)} comment(s), no severity given"
-    if lines:
-        return 1, f"{len(lines)} line comment(s) in a review shape this reader does not know"
-    return None, "a review shape this reader does not know"
+def heading(body):
+    for row in html.unescape(body).splitlines():
+        row = row.strip()
+        if row.startswith("### ") or row.startswith("## Pull request overview"):
+            return row.lstrip("# ").strip()
+    return "no heading"
 
 
 def state(repo, pr, call=gh, pages=pages):
@@ -78,20 +49,16 @@ def state(repo, pr, call=gh, pages=pages):
              if e.get("event") == "review_requested"
              and (e.get("requested_reviewer") or {}).get("login") in {"Copilot", BOT}]
     on_head = sorted((r for r in reviews if r.get("commit_id") == head), key=lambda r: r["submitted_at"])
-    last_review = max((r["submitted_at"] for r in on_head), default="")
     if call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"] != head:
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
-    if asked and max(asked) > last_review:
-        return 3, f"requested: Copilot was asked at {max(asked)} and has not reviewed since; head {head[:9]}"
+    if asked and max(asked) > max((r["submitted_at"] for r in on_head), default=""):
+        return 3, f"requested: Copilot was asked at {max(asked)} and has not reviewed {head[:9]} since"
     if not on_head:
         return 4, f"not reviewed: no Copilot review covers {head[:9]}"
     latest = on_head[-1]
-    own = [c for c in lines if c.get("pull_request_review_id") == latest["id"]]
-    code, detail = verdict(html.unescape(latest.get("body") or ""), own)
-    if code is None:
-        return 4, f"not reviewed: {detail} on {head[:9]} (review {latest['id']})"
-    word = "findings" if code else "clean"
-    return code, f"{word} on {head[:9]}: {detail}; evidence=review:{latest['id']} at {latest['submitted_at']}"
+    own = sum(c.get("pull_request_review_id") == latest["id"] for c in lines)
+    return 0, (f"answered on {head[:9]}: \"{heading(latest.get('body') or '')}\", {own} line comment(s); "
+               f"evidence=review:{latest['id']} at {latest['submitted_at']}")
 
 
 def main(argv=None):

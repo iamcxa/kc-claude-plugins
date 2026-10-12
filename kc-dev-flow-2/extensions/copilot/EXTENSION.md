@@ -14,25 +14,22 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   FO does not mention `@copilot` in a PR comment: Copilot reads a mention as a request for
   new work, and kc-pr-flow saw spurious PRs and duplicate reviews from it.
 - **Watch:** FO adds the PR with `python3 <package>/scripts/pr_watch.py add --copilot
-  <owner/repo>#<N>`, so `<package>/scripts/pr_watch.py wait` also wakes on a Copilot verdict.
-- **Read:** FO reads each round with `python3 <package>/extensions/copilot/copilot_review.py
-  <owner/repo> <pr>`: exit 0 is a clean round on the head, exit 1 its findings, exit 3
-  (requested, not yet answered) or 4 (no review of the head) is no verdict, so the round
-  is not counted and merge is not asked for. FO counts one round per `evidence=` id it
-  prints. Copilot's High severity, and any level above it, counts as P1. Exit 2 is a
-  configuration error, reported as `copilot not run: <reason>`.
-- **Limits:** the reader is a compatibility adapter for three undocumented overview layouts
-  Copilot posted in 2026 (`**0 open findings**`, `<strong>N open findings</strong>` with a
-  "Previously missed" list, and `**Findings:** None`); it keys on the `ccr-overview-v2`
-  marker, the English "Approval recommended" heading, list and `<summary>` rows, and the
-  severity icons' `alt` text, so a new layout reads as no verdict until the reader learns
-  it. A `ccr-overview-v2` review is clean only when it says "Approval recommended", states
-  zero findings, lists no finding row outside its "resolved since last review" list and
-  has no line comment; each other finding row or line comment is one finding. The older "Pull request overview" is clean
-  when it "generated no comments". It does not use a documented API, and a shape it does
-  not recognize is never clean. Copilot may write the review body in another
-  language; the reader keys only on those markers and on the reviewed commit. On
-  2026-10-12 a request took about two minutes to answer. Each review uses the requesting
-  account's Copilot allowance. On 2026-10-12 a request made three seconds after a push was
-  answered five minutes later with a review of the new head; the reader still counts only
-  a review whose commit is the head.
+  <owner/repo>#<N>`, so `<package>/scripts/pr_watch.py wait` also wakes when Copilot answers.
+- **Read:** `python3 <package>/extensions/copilot/copilot_review.py <owner/repo> <pr>` says
+  only whether Copilot has answered the head: exit 0 names the review (`evidence=review:<id>`,
+  one round per id), its heading line and its line-comment count; exit 3 (requested, not
+  answered) or 4 (no review of the head) is no verdict, so the round is not counted and
+  merge is not asked for; exit 2 is a configuration error, reported as `copilot not run:
+  <reason>`. On exit 0 FO reads that review with `gh api repos/<owner/repo>/pulls/<N>/reviews/<id>`
+  and its line comments, and records the round in the committed gate summary with the
+  heading line quoted. The round is clean only when Copilot recommends approval and lists
+  no open or previously missed finding and no line comment; otherwise each finding goes
+  through FO steps: review findings, and Copilot's High severity, or any level above it,
+  counts as P1.
+- **Limits:** Copilot's review text has no documented format and changed layout three times
+  in the reviews read for this extension, so the script does not judge it; whether a round
+  is clean is FO's reading, and the observer can check that reading against the quoted
+  heading. Copilot may write the review body in another language. On 2026-10-12 a request
+  was answered in about two minutes, and a request made three seconds after a push was
+  answered five minutes later with a review of the new head. Each review uses the
+  requesting account's Copilot allowance.

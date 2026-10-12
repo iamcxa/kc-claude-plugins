@@ -134,7 +134,7 @@ class PrWatchTests(unittest.TestCase):
         def look(ref, with_copilot=False, **kw):
             calls.append((ref, with_copilot))
             self.assertLess(len(calls), 10, "wait never woke on the new Copilot evidence")
-            return {**snap(), "copilot": "clean",
+            return {**snap(), "copilot": "answered",
                     "copilot-evidence": "review:1" if len(calls) < 3 else "review:9", "watch-copilot": with_copilot}
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
@@ -219,6 +219,28 @@ class PrWatchTests(unittest.TestCase):
             with contextlib.redirect_stdout(io.StringIO()):
                 watch.main(["--state", str(state), "add", REF], look=look_while_another_add_enables)
             self.assertTrue(json.loads(state.read_text())[REF]["watch-copilot"])
+
+    def test_the_copilot_reader_reports_an_answer_not_a_verdict(self):
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d, "copilot_review.py")
+            fake.write_text("print('answered on aaa: x; evidence=review:5 at t')\nraise SystemExit(0)\n")
+            old, watch.COPILOT = watch.COPILOT, fake
+            try:
+                self.assertEqual(watch.copilot("o/r", "1"), ("answered", "review:5"))
+            finally:
+                watch.COPILOT = old
+
+    def test_a_save_keeps_fields_another_writer_added_meanwhile(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: snap()}))
+
+            def look_while_a_newer_watcher_writes(ref, **kw):
+                watch.update(state, put={REF: {**snap(), "future-field": "kept"}}, keep_flags=True)
+                return snap()
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "check"], look=look_while_a_newer_watcher_writes)
+            self.assertEqual(json.loads(state.read_text())[REF]["future-field"], "kept")
 
     def test_a_state_file_named_like_the_lock_keeps_its_list(self):
         with tempfile.TemporaryDirectory() as d:
