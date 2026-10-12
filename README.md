@@ -122,13 +122,12 @@ before updating the installed plugin used for ordinary continuation.
 
 ### [kc-dev-flow-2 (experimental)](./kc-dev-flow-2/)
 
-Optional experimental flow with a thin start/resume entry, profile principles,
-stage skills, and retained advisory roles. It requires explicit selection and
-Spacedock orchestration; existing kc-dev-flow projects are not migrated.
+A development workflow run by Spacedock, with a thin start/resume entry, profile
+principles, stage skills and advisory roles. It requires explicit selection and an
+adopted Spacedock workflow; kc-dev-flow projects are not migrated automatically.
 
-**Use when:** You want a controlled trial and accept the documented omissions.
-Full safeguard parity and a one-third size reduction are not established. Optional
-extensions (Codex review, roborev, learning at task archive) are listed per adopter.
+**Use when:** You run development through Spacedock and accept the documented
+limits. Optional extensions (Codex review, roborev, learning at task archive) are listed per adopter.
 See the package [README](./kc-dev-flow-2/README.md) and
 [validation limits](./kc-dev-flow-2/VALIDATION.md); Claude's entry is
 `/kc-dev-flow-2:dev`, and Codex shorthand remains unverified.

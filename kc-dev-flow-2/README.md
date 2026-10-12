@@ -1,11 +1,10 @@
 # Dev-flow 2
 
-An optional experimental alternative to kc-dev-flow. It provides a thin
-start/resume entry, profile principles, stage skills, retained advisory roles,
-read-only routing lint, and an adoptable Spacedock workflow with a POC adaptation.
-Existing kc-dev-flow projects stay on their selected variant; this package does
-not migrate them automatically or claim full safeguard parity or a one-third
-size reduction. Learning runs when invoked by hand or, in a repository that lists the
+A development workflow run by Spacedock. It provides a thin start/resume entry,
+profile principles, stage skills, advisory roles (Chief Engineer, Engineering
+Reviewer), a read-only Observer, optional extensions, read-only routing lint, and an adoptable
+Spacedock workflow with a POC adaptation. A kc-dev-flow project is not migrated
+automatically. Learning runs when invoked by hand or, in a repository that lists the
 `learn` extension, by FO when it archives a task; there is no custom runtime loader,
 installed hook, background launcher or automatic adoption.
 
