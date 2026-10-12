@@ -160,7 +160,7 @@ Add to `.claude/settings.json`:
     "kc-team-ops@kc-claude-plugins": true,
     "kc-journey-map@kc-claude-plugins": true,
     "kc-pr-flow@kc-claude-plugins": true,
-    "kc-dev-flow@kc-claude-plugins": true
+    "kc-dev-flow-2@kc-claude-plugins": true
   }
 }
 ```

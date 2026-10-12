@@ -13,7 +13,7 @@ on his behalf: 「讓 FO 可以依據 ADR 以及自我學習與改進的結果�
 2026-10-12). ADR 0009 covers the same direction for package self-improvement only, and
 left open how work is triggered when a task closes.
 
-Two facts measured on 2026-10-12 over one adopter's state branch (65 archived task files)
+Two facts measured on 2026-10-12 over one adopter's state branch (its active and archived task files)
 bear on it. `python3 kc-dev-flow-2/scripts/decision_ledger.py` read 168 gate resolutions and
 15 withdrawals, matching `grep -c` of `decision:`, `resolution:` and `withdrawal:` lines;
 9 resolutions were recorded by `agent:first-officer` under a quoted grant. No gate record

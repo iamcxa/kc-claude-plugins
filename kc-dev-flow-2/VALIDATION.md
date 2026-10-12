@@ -1,6 +1,44 @@
 # Validation scope
 
-This file records the package's validation evidence and its limits. The packaged core comes from source commit
+This file records the package's validation evidence and its limits.
+
+## Field use, measured 2026-10-12
+
+Read from the archived task files on the dev2 and dev2-poc state branches of the four
+adopting repositories (this one and three product repositories), from local Claude Code
+session logs, and from local Codex session logs. Counts are of archived task files'
+frontmatter, not of companion files.
+
+| Claim | Evidence |
+| --- | --- |
+| Tasks run end to end | 89 archived tasks: 78 pilot, 2 prod, 9 POC |
+| Delivery through a merged PR | 83 of them record `pr: pr-merge:`; every pilot and prod task, and 3 of the 9 POC tasks |
+| The `dev` entry runs | `kc-dev-flow-2:dev` was invoked through the Skill tool in 8 adopter sessions |
+| Engineering Reviewer runs | 11 dispatches in real work, 2026-09-17 to 2026-10-07 |
+| Learning delivery | 3 learning.md Draft PRs created by `learn` were merged in one product repository (2026-09-20, 09-23, 10-08) |
+| Observer | one run on an archived task reported 3 FO rule violations, each found in git by quote and commit |
+
+## Still unproven or not built
+
+- **Codex as the host:** no Codex session log references a dev2 stage skill, so Codex
+  shorthand resolution, Codex worker inheritance and Claude/Codex lifecycle parity are
+  untested. Every FO above ran in Claude Code.
+- **Chief Engineer:** never dispatched; its behaviour is unobserved.
+- **Production recovery exceptions:** not implemented; two prod tasks ran the normal route.
+- **Direct POC eligibility:** not implemented; POC is used only when the user selects it.
+- **Stage-entry content:** the skipped-stage-pin bug is not fixed and content at stage
+  entry is not sealed. Dispatch records pin the package root and dispatch commit, not
+  the content a worker read.
+- **Gate correctness:** not proven. The observer and the decision ledger measure FO's
+  gate records after the fact; they do not prevent a wrong record.
+
+Use explicit workflow paths and check the live worker roster after resuming an
+orchestrator; a resumed orchestrator does not establish that an old worker exists.
+
+## Before field use
+
+The sections below are the evidence gathered before field use and keep their own
+limits. The packaged core comes from source commit
 179b54eea2694806e9c268affb67c573dfdda632 (30 files before packaging). That source
 added the thin `dev` entry and conditional document/check guidance after the
 historical trials below. Those trials did not execute this final package.
@@ -70,13 +108,7 @@ summary. It proves local installation/discovery of the adoption content, not
 model execution, entry behavior, reference following or remote publication.
 Maintenance lint requires the full source repository's frontmatter checker.
 
-The baseline skipped-stage-pin bug is not
-fixed; historical stage-entry content sealing is omitted. Direct POC eligibility,
-Production recovery exceptions, retained-role execution across hosts, automated
-gate correctness, and complete Claude/Codex lifecycle parity remain unproven.
-Use explicit workflow paths and check the live worker roster after resuming an
-orchestrator; a resumed orchestrator does not establish that an old worker exists.
-These limits remain until separately scoped evidence establishes otherwise.
+The limits that still hold are listed under "Still unproven or not built" above.
 
 ## Local learning recorder
 
