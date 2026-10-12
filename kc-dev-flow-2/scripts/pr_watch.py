@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """Watch the pull requests FO opened and report what changed since the last look.
 
-  pr_watch.py [--state FILE] add owner/repo#N ...   add PRs to the watch list
+  pr_watch.py [--state FILE] add [--codex] owner/repo#N ...
+                                                    add PRs; --codex also reads Codex review
   pr_watch.py [--state FILE] check                  print each PR and the changes since the last look
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
 
 An outcome is a merge or close, a draft flip, a new or cleared conflict, CI turning green
 or failing, or a Codex verdict; a check or review that only starts is recorded silently.
 
-A merged or closed PR is reported once, then dropped. The codex column comes from the
-sibling codex_review.py when it is present. Exit 2 is a configuration error.
+A merged or closed PR is reported once, then dropped. The codex column is read only for a
+PR added with --codex, from the codex extension's reader when it is present. Exit 2 is a
+configuration error.
 """
 import argparse
 import contextlib
@@ -61,12 +63,14 @@ def codex(repo, number):
     return verdict, evidence.group(1) if evidence else "-"
 
 
-def look(ref, view=gh, review=codex):
+def look(ref, view=gh, review=codex, with_codex=False):
     repo, number = ref.split("#")
     d = view("pr", "view", number, "--repo", repo, "--json", FIELDS)
     snap = {"state": d["state"], "draft": d["isDraft"], "mergeable": d["mergeable"],
             "checks": checks(d["statusCheckRollup"]), "head": d["headRefOid"][:9], "title": d["title"][:60]}
-    snap["codex"], snap["codex-evidence"] = review(repo, number) if d["state"] == "OPEN" else ("-", "-")
+    read = with_codex and d["state"] == "OPEN"
+    snap["codex"], snap["codex-evidence"] = review(repo, number) if read else ("-", "-")
+    snap["watch-codex"] = with_codex
     return snap
 
 
@@ -99,7 +103,7 @@ def sweep(state, look=look):
     changes, rows = [], []
     for ref, old in seen.items():
         try:
-            now = look(ref)
+            now = look(ref, with_codex=old.get("watch-codex", True))
         except (RuntimeError, KeyError, ValueError) as error:
             rows.append(f"{ref}: not read ({str(error)[:80]})")
             continue
@@ -120,9 +124,10 @@ def main(argv=None, look=look, sleep=time.sleep):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--state", type=Path, default=DEFAULT_STATE)
     parser.add_argument("command", choices=["add", "check", "wait"])
+    parser.add_argument("--codex", action="store_true")
     parser.add_argument("args", nargs="*")
     try:
-        opts = parser.parse_args(argv)
+        opts = parser.parse_intermixed_args(argv)
     except SystemExit as stop:
         return 0 if stop.code == 0 else 2
     try:
@@ -130,7 +135,7 @@ def main(argv=None, look=look, sleep=time.sleep):
             if not opts.args or not all("/" in r and "#" in r for r in opts.args):
                 print("add needs owner/repo#N")
                 return 2
-            seen = update(opts.state, put={ref: look(ref) for ref in opts.args})
+            seen = update(opts.state, put={ref: look(ref, with_codex=opts.codex) for ref in opts.args})
             print(f"watching {len(seen)} PR(s)")
             return 0
         if opts.command == "check":
