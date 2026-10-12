@@ -54,7 +54,8 @@ P2 finding.
 ## Consequences
 
 Nothing here is built. Semi-auto first needs a trigger at task close; closure is a
-Spacedock event, not a harness event, and that question is open. Full-auto per class
+Spacedock event, not a harness event; ADR 0011 answers it for adopters that list the learn
+extension, which runs at archive and also sets out how FO decides for the Captain. Full-auto per class
 needs the `Override:` and `**Recommended:**` records from 0.11.0 to accumulate before
 any class can show a track record. Until then the position is manual, and merging stays
 the Captain's. Reopen this record if the per-class record cannot be measured, or if an

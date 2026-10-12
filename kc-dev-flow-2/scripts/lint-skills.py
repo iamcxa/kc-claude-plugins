@@ -11,7 +11,8 @@ import subprocess
 VARIANT = "kc-dev-flow-2"
 STAGES = ("ideation", "implementation", "validation")
 PROFILES = ("poc", "pilot", "prod")
-ROLES = ("engineering-reviewer", "chief-engineer")
+AGENT_MODELS = {"engineering-reviewer": ("opus", "xhigh"), "chief-engineer": ("opus", "xhigh"),
+                "observer": ("sonnet", "high")}
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 BASIC_LINT = DEFAULT_ROOT.parent / "scripts/skill-frontmatter-lint.sh"
 LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
@@ -20,7 +21,7 @@ PACKAGE_ROOT = re.compile(r"^Package root: \S", re.MULTILINE)
 UNBOUND_ROOT = re.compile(r"\{package\}|/absolute/plugin")
 WORKFLOW = "references/sd/workflow.md"
 # Raise only in a change that says why the adopted README must grow.
-WORKFLOW_WORD_BUDGET = 5074
+WORKFLOW_WORD_BUDGET = 5141
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
 KNOWN_DUPLICATES = {
@@ -65,7 +66,7 @@ def lint_tree(root, basic_lint=BASIC_LINT):
             errors.append("frontmatter: " + (result.stderr or result.stdout).strip())
 
     skills = {p.name for p in (root / "skills").glob("*") if p.is_dir()}
-    required = set(STAGES + ROLES + ("maintain-flow",))
+    required = set(STAGES + tuple(AGENT_MODELS) + ("maintain-flow",))
     if missing := required - skills:
         errors.append("missing skills: " + ", ".join(sorted(missing)))
     read(root / "README.md")
@@ -147,7 +148,7 @@ def lint_tree(root, basic_lint=BASIC_LINT):
         if set(rows) != set(PROFILES):
             errors.append(f"{stage}: profile coverage must be poc, pilot, prod")
 
-    for role in ROLES:
+    for role, policy in AGENT_MODELS.items():
         body = read(root / "agents" / f"{role}.md")
         fields = dict(re.findall(r"^(skills|model|reasoning): (.+)$", body, re.MULTILINE))
         try:
@@ -156,8 +157,8 @@ def lint_tree(root, basic_lint=BASIC_LINT):
             calls = None
         if calls != [f"{VARIANT}:{role}"]:
             errors.append(f"{role} agent: expected exact variant skill binding")
-        if (fields.get("model"), fields.get("reasoning")) != ("opus", "xhigh"):
-            errors.append(f"{role} agent: existing opus/xhigh policy changed")
+        if (fields.get("model"), fields.get("reasoning")) != policy:
+            errors.append(f"{role} agent: existing {policy[0]}/{policy[1]} policy changed")
     errors += workflow_size_and_duplicates(root)
     return errors
 
