@@ -101,13 +101,14 @@ def locked(state):
         yield
 
 
-def update(state, put=(), drop=(), keep_flags=False):
+def update(state, put=(), drop=(), keep_flags=False, expected=None):
     with locked(state):
         current = load(state)
         for ref, snap in dict(put).items():
             old = current.get(ref, {})
             flags = {k: bool(old.get(k)) or bool(snap.get(k)) for k in {**old, **snap} if k.startswith("watch-")}
-            current[ref] = {**old, **snap, **flags} if keep_flags else snap
+            newer = expected is not None and any(old.get(k) != expected.get(ref, {}).get(k) for k in TRACKED)
+            current[ref] = {**old, **flags} if newer else {**old, **snap, **flags} if keep_flags else snap
         for ref in drop:
             current.pop(ref, None)
         temp = state.with_name(state.name + ".tmp")
@@ -118,6 +119,7 @@ def update(state, put=(), drop=(), keep_flags=False):
 
 def sweep(state, look=look):
     seen = load(state)
+    start = {ref: dict(entry) for ref, entry in seen.items()}
     changes, rows = [], []
     for ref, old in seen.items():
         try:
@@ -135,7 +137,7 @@ def sweep(state, look=look):
         seen[ref] = {**old, **now}
     reported = {line.split(" ")[0] for line, _ in changes}
     done = [ref for ref, s in seen.items() if s["state"] != "OPEN" and ref not in reported]
-    current = update(state, put={r: s for r, s in seen.items() if r not in done}, drop=done, keep_flags=True)
+    current = update(state, put={r: s for r, s in seen.items() if r not in done}, drop=done, keep_flags=True, expected=start)
     return changes, rows, bool(current)
 
 

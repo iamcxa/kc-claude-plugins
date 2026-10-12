@@ -242,6 +242,19 @@ class PrWatchTests(unittest.TestCase):
                 watch.main(["--state", str(state), "check"], look=look_while_a_newer_watcher_writes)
             self.assertEqual(json.loads(state.read_text())[REF]["future-field"], "kept")
 
+    def test_a_slow_sweep_does_not_roll_back_a_newer_observation(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: snap(copilot="requested", **{"copilot-evidence": "-"})}))
+
+            def slow_look(ref, **kw):
+                newer = snap(copilot="answered", **{"copilot-evidence": "review:9"})
+                watch.update(state, put={REF: newer}, keep_flags=True)
+                return snap(copilot="requested", **{"copilot-evidence": "-"})
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "check"], look=slow_look)
+            self.assertEqual(json.loads(state.read_text())[REF]["copilot-evidence"], "review:9")
+
     def test_a_state_file_named_like_the_lock_keeps_its_list(self):
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "watch.lock")
