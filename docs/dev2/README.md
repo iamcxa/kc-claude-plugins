@@ -4,6 +4,7 @@ entity-type: task
 id-style: slug
 entity-label: task
 entity-label-plural: tasks
+extensions: [codex]
 state: .spacedock-state
 trunk: main
 stages:
@@ -94,10 +95,10 @@ the instruction a worker followed outlives the session that wrote it. A follow-u
 message to a worker FO resumes is a dispatch too, and its record carries the same parts.
 A checklist or scope-notes line that names a package script writes
 `<package>/scripts/NAME.py` with the absolute root substituted, never the bare script
-name. When `status --set` refuses to leave a stage, run `status --workflow-dir <dir>
---read <task> --stage <stage> --checklist`, return any line it reports as neither DONE
-nor SKIPPED to the worker, and do not edit the worker's report. The refusal itself does
-not say why; other causes are a missing evidence line or Summary and an uncommitted
+name. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
+<dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
+DONE nor SKIPPED to the worker, and do not edit the worker's report. The refusal itself
+does not say why; other causes are a missing evidence line or Summary and an uncommitted
 report.
 
 ### `backlog`
@@ -289,9 +290,9 @@ consequential FO quick work and rejected gates.
    Polish in the existing committed gate summary, naming the finding, reason, candidate
    revision and the lines or evidence it rests on. When that summary is already
    consumed, FO writes the decline under `### FO declines` in the task file, committed
-   with `spacedock state commit`, and the terminal gate lists each entry there. This
-   FO-authored decision requires no live worker or reviewer rerun for acknowledgement;
-   preserve worker reports and verdicts.
+   with `spacedock state commit <slug> --workflow-dir <dir>`, and the terminal gate
+   lists each entry there. This FO-authored decision requires no live worker or reviewer
+   rerun for acknowledgement; preserve worker reports and verdicts.
 3. Repairs require worker investigation without candidate mutation, distinct FO
    `fix` authorization through the runtime's addressable-worker boundary, then
    independent validation. Without that authorization, hold.
@@ -300,18 +301,17 @@ consequential FO quick work and rejected gates.
    hold/route-for-decision forbids repair and reviewer rerun.
 5. A round is one verdict of an external reviewer of the delivery on the PR head (Codex
    on the PR, RoboRev or another); FO counts rounds and records the count in the
-   committed gate summary. Where Codex reviews the PR, FO reads each round with `python3
-   <package>/scripts/codex_review.py <owner/repo> <pr>`: exit 0 is a clean round on the
-   head, exit 1 its findings, exit 3 or 4 no verdict on the head yet, so the round is
-   not counted and merge is not asked for; FO counts one round per `evidence=` id it
-   prints. A finding assessed Material, or labelled P1 by the reviewer, blocks in every
-   round: a reviewer P1 is fixed and revalidated, or waived by the Captain with the
-   reason recorded (step 4). For an external reviewer that has no P1 label, its highest
-   severity level counts as P1 (e.g. RoboRev). Rounds 1 and 2 follow steps 1 to 4.
-   From round 3 a finding that is neither does not start a repair cycle: FO declines
-   it in the committed gate summary, naming the finding, and files it as a new backlog
-   task with `spacedock new` whose body carries the finding and the decline reason; it
-   never enters an open task's Scope. The terminal gate lists each such task.
+   committed gate summary. A reviewer that a listed extension covers is read the way its
+   `EXTENSION.md` says (`## Extensions`). A finding assessed Material, or labelled P1 by
+   the reviewer, blocks in every round: a reviewer P1 is fixed and revalidated, or
+   waived by the Captain with the reason recorded (step 4). For an external reviewer
+   that has no P1 label, its highest severity level counts as P1 (e.g. RoboRev). Rounds
+   1 and 2 follow steps 1 to 4. From round 3 a finding that is neither does not start a
+   repair cycle: FO declines it in the committed gate summary, naming the finding, and
+   files it as a new backlog task with `spacedock new` whose body carries the finding
+   and the decline reason, or names the backlog task that already holds it when a later
+   round repeats it; it never enters an open task's Scope. The terminal gate lists each
+   such task.
 
 Rejection routing carries evidence, classifications, authorized dispositions and assignment
 without re-triage.
@@ -341,9 +341,10 @@ the state checkout.
 
 The implementation worker writes one ADR file per decision by its stage principles.
 Validation runs `python3 <package>/scripts/adr_lint.py docs/adr --since <base>`, which
-requires every record the candidate added or changed, plus `--require <numbers>` for any
-number the implementation report names; exit 1 or a missing record returns through the
-existing feedback route, and exit 2 is a configuration error that returns to FO.
+requires every record the candidate added or changed, plus `--require <numbers>` for
+each `ADR:` number the task's `## Number guards` reserves and any number the
+implementation report names; exit 1 or a missing record returns through the existing
+feedback route, and exit 2 is a configuration error that returns to FO.
 
 ## FO steps: decision records
 
@@ -411,7 +412,7 @@ the package's `references/retained-documents.md`.
 
 ## Number guards
 
-Applies when the task's `Surfaces:` includes `db`, or its design lands an ADR; the POC bullet below applies to every `poc` task.
+Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, including one first required by a ruling in a worker report or mid-stage feedback, whose number FO reserves before the next dispatch; the POC bullet below applies to every `poc` task.
 `<package>/scripts/number_guards.py` takes `trunk:`, the optional `migrations-path:`
 (the adopter's migration directory) and `adr-path:` (default `docs/adr`) from this workflow's README
 frontmatter (`--workflow-dir <workflow-dir>`) and a task's numbers and applied
@@ -419,8 +420,9 @@ deploys from its `## Number guards` section; `--help` lists the flags.
 
 - **Applied.** A migration in a commit recorded `Applied at:` is frozen for the task:
   edit, delete and renumber fail `check`. `Applied: none as of <sha>` records that
-  nothing was pushed up to that commit; a validator that finds neither line reports
-  the missing record to FO instead of re-checking deploys.
+  nothing was pushed up to that commit; a validator that finds none of `Applied at:`,
+  `Not applied:` or `Applied: none` reports the missing record to FO instead of
+  re-checking deploys.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
   runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR
   head before FO asks for merge. Exit 2 is a configuration error, which returns to FO
@@ -516,6 +518,19 @@ help names no commit or publish step, unlike the archive path. After it, FO runs
 `spacedock state commit <slug> --workflow-dir <dir>`, publishes, and reads the task
 back from the state remote before dispatching the repair; otherwise durable state
 can still show the task awaiting merge.
+
+## Extensions
+
+Extensions are optional accessories in `<package>/extensions/<name>/`, each described by
+its `EXTENSION.md`: what it needs, the stage or FO step it joins, the instruction it
+adds, how its result is read, and what happens when it cannot run. This README's
+frontmatter `extensions:` lists the ones this repository uses; an unlisted extension is
+not probed and adds nothing. For a listed extension FO follows its `EXTENSION.md`: at a
+worker dispatch of its stage FO adds its instruction line to the scope notes, and at its
+FO step FO reads the result as the file says. A listed extension that cannot run is
+reported as `<name> not run: <reason>` in the stage report or gate summary, and never
+counts as a clean result. A merge ask names each listed reviewer that was not read, and
+the Captain decides.
 
 ## Workflow State
 
