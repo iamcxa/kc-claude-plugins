@@ -219,6 +219,27 @@ expect_failure_contains "rejects an implicit first-release version" \
   "top-level initial-version must be '0.1.0'" \
   env REPO_DIR_OVERRIDE="$MISSING_INITIAL_VERSION" bash "$CONFIG_CHECK"
 
+GENERIC_FILE="$TMP_DIR/generic-file"
+cp -R "$VALID" "$GENERIC_FILE"
+printf '# Notes\n<!-- alpha 1.0.0 x-release-please-version -->\n' > "$GENERIC_FILE/alpha/NOTES.md"
+git -C "$GENERIC_FILE" add alpha/NOTES.md
+python3 - "$GENERIC_FILE/release-please-config.json" <<'PY'
+import json, sys
+path = sys.argv[1]
+data = json.load(open(path))
+data["packages"]["alpha"]["extra-files"].append({"type": "generic", "path": "NOTES.md"})
+json.dump(data, open(path, "w"))
+PY
+expect_success "accepts a generic extra-file with one annotated version line" \
+  env REPO_DIR_OVERRIDE="$GENERIC_FILE" bash "$CONFIG_CHECK"
+
+UNMARKED_GENERIC="$TMP_DIR/unmarked-generic"
+cp -R "$GENERIC_FILE" "$UNMARKED_GENERIC"
+printf '# Notes\nversion 1.0.0\n' > "$UNMARKED_GENERIC/alpha/NOTES.md"
+expect_failure_contains "rejects a generic extra-file without an annotated version line" \
+  "needs exactly one x-release-please-version line" \
+  env REPO_DIR_OVERRIDE="$UNMARKED_GENERIC" bash "$CONFIG_CHECK"
+
 CHANGED_INITIAL_VERSION="$TMP_DIR/changed-initial-version"
 cp -R "$VALID" "$CHANGED_INITIAL_VERSION"
 python3 - "$CHANGED_INITIAL_VERSION/release-please-config.json" <<'PY'

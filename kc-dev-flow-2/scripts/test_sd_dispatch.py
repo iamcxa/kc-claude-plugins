@@ -232,6 +232,11 @@ FIXES = {
               "later workers find past rulings with `git grep 'Override:'`"),
         old=(),
         swaps=((r"When the Captain chooses differently from the recommendation, FO writes.*?in the state checkout\. ", ""),)),
+    "package-version": dict(
+        need=("Before each worker dispatch FO runs `python3 <package>/scripts/package_version.py <this README>`",
+              "FO holds the dispatch until the session runs the newer one"),
+        old=(),
+        swaps=((r" Before each worker dispatch FO runs `python3 <package>/scripts/package_version\.py <this README>`;.*?the session runs the newer one\.", ""),)),
     "precedent": dict(
         need=("`Precedent: ADR <number> — 「<that ADR's Words line>」`",
               "an ADR on one of them is never a `Precedent:` line"),
