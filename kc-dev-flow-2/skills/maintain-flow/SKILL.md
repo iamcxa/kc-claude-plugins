@@ -56,8 +56,10 @@ still fail, take a structural option to the Captain instead of a third.
 ## Observe adopters
 
 FO grading its own work misses what an outside reader finds, so after each release the
-maintainer reads the first task each adopter archives on it. Dispatch
-`kc-dev-flow-2:observer` with that adopter's state checkout, the slug and its README;
+maintainer reads the first task each adopter archives on it. Where the adopter lists
+`learn`, that task's `observer.md` is the report; otherwise dispatch
+`kc-dev-flow-2:observer` with that adopter's state checkout, the slug and its README.
+Before counting a rule as broken twice, read the other tasks' `observer.md` files too;
 `python3 kc-dev-flow-2/scripts/decision_ledger.py <state> --summary` adds the counts of
 rulings, delegated decisions, overrides and later amendments per area. Find every
 reported quote in git before acting on it and retract one that is not there. Send each
