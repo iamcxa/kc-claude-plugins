@@ -18,7 +18,7 @@ guessing or asking the Captain to relay. A repository uses it by listing `peers`
   stays the same, and by its listed name if he can see it. Without the listed name, FO
   sends one read-only probe to every listed session asking it to report its session id,
   takes the session whose reply matches the link, and tells the others to ignore the
-  probe. It notes `Peer: <role> = <session id> (Captain, <date>); listed as <name>`, and
+  probe; if no reply matches, it asks the Captain for the listed name. It notes `Peer: <role> = <session id> (Captain, <date>); listed as <name>`, and
   after a failed send it maps the id to the current name the same way. It never picks a
   session by its name, working directory or recency. A peer is
   another session, not one of FO's own workers, even where the host reaches both with the

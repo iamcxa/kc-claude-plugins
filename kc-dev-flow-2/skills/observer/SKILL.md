@@ -37,8 +37,9 @@ ADR and quotes its Words line, or its decision sentence when marked `(no Words l
 and is not one of the always-asked kinds; amendments and
 `Asked:` lines follow `## Captain amendments`; declines follow step 5 of review findings.
 Where RULES list `peers` under `extensions:`, also check that no Captain ruling in the task
-rests on a peer exchange the task file records; an exchange the file does not record is
-outside what state shows.
+quotes a peer's words, or a peer's report of the Captain, in place of his own; a ruling he
+made in his own words after reading peer data is his. An exchange the file does not record
+is outside what state shows.
 
 For a task whose `Surfaces:` include `db`, whose ideation ran on a stronger model, or
 whose validation was sent back twice, report whether a `Reviewer:` line exists. That
