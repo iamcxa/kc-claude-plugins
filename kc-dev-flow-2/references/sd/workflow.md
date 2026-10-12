@@ -4,9 +4,9 @@ entity-type: task
 id-style: slug
 entity-label: task
 entity-label-plural: tasks
+extensions: []
 state: .spacedock-state
 trunk: main
-extensions: []
 stages:
   defaults:
     worktree: false
