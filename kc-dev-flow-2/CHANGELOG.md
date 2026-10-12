@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.20.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.19.1...kc-dev-flow-2-v0.20.0) (2026-10-12)
+
+
+### Features
+
+* **kc-dev-flow-2:** a second remote reviewer joins only when a recorded trigger holds ([#618](https://github.com/iamcxa/kc-claude-plugins/issues/618)) ([2c249ec](https://github.com/iamcxa/kc-claude-plugins/commit/2c249ec712f582c1b81fe61b3af4b3b3e8065988))
+* **kc-dev-flow-2:** copilot extension requests GitHub Copilot review and waits for its answer on the head ([#616](https://github.com/iamcxa/kc-claude-plugins/issues/616)) ([df01c81](https://github.com/iamcxa/kc-claude-plugins/commit/df01c819d13591366dcb1b28277b06ef6a9114b1))
+* **kc-dev-flow-2:** the learn extension saves the observer report in the task's state ([#614](https://github.com/iamcxa/kc-claude-plugins/issues/614)) ([ac6dc6e](https://github.com/iamcxa/kc-claude-plugins/commit/ac6dc6edfbf305aa31ad4855a7b646899140669c))
+
 ## [0.19.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.19.0...kc-dev-flow-2-v0.19.1) (2026-10-12)
 
 
