@@ -18,4 +18,5 @@ README frontmatter.
 - **Limits:** `roborev review --local` is not used: it exits 0 with findings, stores no
   result, and reviews an older commit against the current files. roborev findings are
   development feedback for the worker, not an external review round, and validation stays
-  independent of them.
+  independent of them. A RoboRev review posted on the PR is an external round under FO steps:
+  review findings, step 5; this local gate never is.

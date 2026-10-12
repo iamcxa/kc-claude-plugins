@@ -207,9 +207,10 @@ FIXES = {
     "extensions-core": dict(
         need=("This README's frontmatter `extensions:` lists the ones this repository uses",
               "an unlisted extension is not probed and adds nothing",
-              "never counts as a clean result"),
+              "never counts as a clean result",
+              "A merge ask names each listed reviewer that was not read"),
         old=(),
-        swaps=((r"Extensions are optional accessories in `<package>/extensions/<name>/`.*?never counts as a clean result\. ", ""),)),
+        swaps=((r"Extensions are optional accessories in `<package>/extensions/<name>/`.*?the Captain decides\. ", ""),)),
     "codex-round": dict(
         file="extensions/codex/EXTENSION.md",
         need=("FO reads each round with `python3 <package>/extensions/codex/codex_review.py <owner/repo> <pr>`",
@@ -225,7 +226,7 @@ FIXES = {
               "never counts as clean",
               "`roborev review --local` is not used"),
         old=(),
-        swaps=((r"\*\*Instruction FO adds to the scope notes:\*\*.*?independent of them\.", ""),)),
+        swaps=((r"\*\*Instruction FO adds to the scope notes:\*\*.*?this local gate never is\.", ""),)),
     "override-record": dict(
         need=("`Override: recommended <option>; Captain chose <option>; area: <area>`",
               "later workers find past rulings with `git grep 'Override:'`"),

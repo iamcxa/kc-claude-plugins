@@ -522,13 +522,15 @@ can still show the task awaiting merge.
 ## Extensions
 
 Extensions are optional accessories in `<package>/extensions/<name>/`, each described by
-its `EXTENSION.md`: what it needs, the stage or FO step it joins, the instruction it adds,
-how its result is read, and what happens when it cannot run. This README's frontmatter
-`extensions:` lists the ones this repository uses; an unlisted extension is not probed and
-adds nothing. For a listed extension FO follows its `EXTENSION.md`: at a worker dispatch of
-its stage FO adds its instruction line to the scope notes, and at its FO step FO reads the
-result as the file says. A listed extension that cannot run is reported as `<name> not
-run: <reason>` in the stage report or gate summary, and never counts as a clean result.
+its `EXTENSION.md`: what it needs, the stage or FO step it joins, the instruction it
+adds, how its result is read, and what happens when it cannot run. This README's
+frontmatter `extensions:` lists the ones this repository uses; an unlisted extension is
+not probed and adds nothing. For a listed extension FO follows its `EXTENSION.md`: at a
+worker dispatch of its stage FO adds its instruction line to the scope notes, and at its
+FO step FO reads the result as the file says. A listed extension that cannot run is
+reported as `<name> not run: <reason>` in the stage report or gate summary, and never
+counts as a clean result. A merge ask names each listed reviewer that was not read, and
+the Captain decides.
 
 ## Workflow State
 
