@@ -237,6 +237,11 @@ FIXES = {
               "FO holds the dispatch until the session runs the newer one"),
         old=(),
         swaps=((r" Before each worker dispatch FO runs `python3 <package>/scripts/package_version\.py <this README>`;.*?the session runs the newer one\.", ""),)),
+    "second-reviewer": dict(
+        need=("frontmatter `second-reviewer:` names the one that joins only when a trigger holds",
+              "an untriggered second reviewer is not named as unread"),
+        old=(),
+        swaps=((r" Where two remote reviewers are listed, frontmatter `second-reviewer:`.*?is not named as unread\.", ""),)),
     "precedent": dict(
         need=("`Precedent: ADR <number> — 「<that ADR's Words line>」`",
               "an ADR on one of them is never a `Precedent:` line",

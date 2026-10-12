@@ -25,7 +25,10 @@ inlines. `kc-dev-flow-2/scripts/lint-skills.py` refuses a file over its word bud
 12 or more words that another package file repeats; raising the budget or listing
 an overlap is a change that says why.
 
-Run `python3 kc-dev-flow-2/scripts/lint-skills.py` from the repository root.
+Run `python3 kc-dev-flow-2/scripts/lint-skills.py` from the repository root. Before each push
+of a package change, run `python3 kc-dev-flow-2/extensions/roborev/roborev_gate.py --repo
+<worktree> --base <merge base>` and fix what it reports inside the change: a maintainer
+change is not dispatched through FO, so no implementation stage runs it.
 When changing lint behavior, run `python3 kc-dev-flow-2/scripts/test_lint_skills.py`
 and add a mutation only for a material failure the check is meant to catch.
 Use an available Agent Skills specification validator for broader authoring

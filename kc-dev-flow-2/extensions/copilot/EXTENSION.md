@@ -7,7 +7,9 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   available to the account that requests it.
 - **Joins:** FO delivery: when a PR is marked ready, after a repair push, FO steps: review
   findings, step 5 (counting external-review rounds), and the merge ask.
-- **When:** Copilot reviews draw on a limited allowance. FO requests one only for a PR whose
+- **When:** Copilot reviews draw on a limited allowance. Where the README names `copilot` as
+  `second-reviewer:`, FO requests it only when the workflow's second-reviewer trigger holds
+  (`## Extensions`). Either way, FO requests one only for a PR whose
   title type is `feat`, `fix`, `refactor` or `perf`, when it is marked ready; for any other
   PR it records `copilot skipped: <type> PR` and does not wait for Copilot. After the first
   round FO requests Copilot again only after pushing a repair for a Copilot P1 finding. After
