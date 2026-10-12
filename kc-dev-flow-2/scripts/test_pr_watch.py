@@ -110,11 +110,14 @@ class PrWatchTests(unittest.TestCase):
         self.assertEqual(watch.look(REF, view=view("MERGED"), review=review, with_codex=True)["codex"], "-")
         self.assertEqual(watch.look(REF, view=view("OPEN"), review=review)["codex"], "-")
         self.assertEqual(asked, [("o/r", "1")])
+        self.assertEqual(watch.look(REF, view=view("OPEN"), review_copilot=review)["copilot"], "-")
+        self.assertEqual(asked, [("o/r", "1")])
+        self.assertEqual(watch.look(REF, view=view("OPEN"), review_copilot=review, with_copilot=True)["copilot"], "findings")
 
     def test_codex_is_read_only_for_a_pr_added_with_codex(self):
         calls = []
 
-        def look(ref, with_codex=False):
+        def look(ref, with_codex=False, **kw):
             calls.append((ref, with_codex))
             return {**snap(codex="clean" if with_codex else "-"), "watch-codex": with_codex}
         with tempfile.TemporaryDirectory() as d:
@@ -125,10 +128,53 @@ class PrWatchTests(unittest.TestCase):
                 watch.main(["--state", str(state), "check"], look=look)
             self.assertEqual(calls, [(REF, False), ("o/r#2", True), (REF, False), ("o/r#2", True)])
 
+    def test_copilot_is_read_only_for_a_pr_added_with_copilot_and_its_verdict_wakes(self):
+        calls = []
+
+        def look(ref, with_copilot=False, **kw):
+            calls.append((ref, with_copilot))
+            self.assertLess(len(calls), 10, "wait never woke on the new Copilot evidence")
+            return {**snap(), "copilot": "answered",
+                    "copilot-evidence": "review:1" if len(calls) < 3 else "review:9", "watch-copilot": with_copilot}
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                watch.main(["--state", str(state), "add", REF], look=look)
+                watch.main(["--state", str(state), "add", "--copilot", "o/r#2"], look=look)
+                code = watch.main(["--state", str(state), "wait", "1"], look=look, sleep=lambda s: None)
+            self.assertEqual(calls[:2], [(REF, False), ("o/r#2", True)])
+            self.assertEqual(calls[2:4], [(REF, False), ("o/r#2", True)])
+            self.assertEqual(code, 0)
+            self.assertIn("copilot-evidence review:1 -> review:9", out.getvalue())
+
+    def test_adding_a_watched_pr_again_keeps_its_reviewer_flags(self):
+        calls = []
+
+        def look(ref, with_codex=False, with_copilot=False, **kw):
+            calls.append((with_codex, with_copilot))
+            return {**snap(), "watch-codex": with_codex, "watch-copilot": with_copilot}
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "add", "--codex", REF], look=look)
+                watch.main(["--state", str(state), "add", "--copilot", REF], look=look)
+                watch.main(["--state", str(state), "add", REF], look=look)
+                watch.main(["--state", str(state), "add", "o/r#2"], look=look)
+            self.assertEqual(calls, [(True, False), (True, True), (True, True), (False, False)])
+
+    def test_a_sweep_keeps_keys_its_own_look_does_not_return(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: {**snap(), "watch-later": True}}))
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "check"], look=lambda ref, **kw: snap())
+            self.assertTrue(json.loads(state.read_text())[REF]["watch-later"])
+
     def test_an_entry_saved_before_the_codex_flag_keeps_reading_codex(self):
         calls = []
 
-        def look(ref, with_codex=False):
+        def look(ref, with_codex=False, **kw):
             calls.append(with_codex)
             return snap()
         with tempfile.TemporaryDirectory() as d:
@@ -149,6 +195,65 @@ class PrWatchTests(unittest.TestCase):
             with contextlib.redirect_stdout(io.StringIO()):
                 watch.main(["--state", str(state), "check"], look=look_and_add)
             self.assertEqual(set(json.loads(state.read_text())), {REF, "o/r#2"})
+
+    def test_a_reviewer_flag_set_while_a_sweep_runs_survives_the_sweep(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: {**snap(), "watch-copilot": False}}))
+
+            def look_and_enable(ref, **kw):
+                watch.update(state, put={REF: {**snap(), "watch-copilot": True}})
+                return {**snap(), "watch-copilot": False}
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "check"], look=look_and_enable)
+            self.assertTrue(json.loads(state.read_text())[REF]["watch-copilot"])
+
+    def test_an_add_that_read_the_list_earlier_does_not_turn_a_flag_off(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: {**snap(), "watch-copilot": False}}))
+
+            def look_while_another_add_enables(ref, **kw):
+                watch.update(state, put={REF: {**snap(), "watch-copilot": True}}, keep_flags=True)
+                return {**snap(), "watch-copilot": False}
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "add", REF], look=look_while_another_add_enables)
+            self.assertTrue(json.loads(state.read_text())[REF]["watch-copilot"])
+
+    def test_the_copilot_reader_reports_an_answer_not_a_verdict(self):
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d, "copilot_review.py")
+            fake.write_text("print('answered on aaa: x evidence=review:9; evidence=review:5 at t')\nraise SystemExit(0)\n")
+            old, watch.COPILOT = watch.COPILOT, fake
+            try:
+                self.assertEqual(watch.copilot("o/r", "1"), ("answered", "review:5"))
+            finally:
+                watch.COPILOT = old
+
+    def test_a_save_keeps_fields_another_writer_added_meanwhile(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: snap()}))
+
+            def look_while_a_newer_watcher_writes(ref, **kw):
+                watch.update(state, put={REF: {**snap(), "future-field": "kept"}}, keep_flags=True)
+                return snap()
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "check"], look=look_while_a_newer_watcher_writes)
+            self.assertEqual(json.loads(state.read_text())[REF]["future-field"], "kept")
+
+    def test_a_slow_sweep_does_not_roll_back_a_newer_observation(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            state.write_text(json.dumps({REF: snap(copilot="requested", **{"copilot-evidence": "-"})}))
+
+            def slow_look(ref, **kw):
+                newer = snap(copilot="answered", **{"copilot-evidence": "review:9"})
+                watch.update(state, put={REF: newer}, keep_flags=True)
+                return snap(copilot="requested", **{"copilot-evidence": "-"})
+            with contextlib.redirect_stdout(io.StringIO()):
+                watch.main(["--state", str(state), "check"], look=slow_look)
+            self.assertEqual(json.loads(state.read_text())[REF]["copilot-evidence"], "review:9")
 
     def test_a_state_file_named_like_the_lock_keeps_its_list(self):
         with tempfile.TemporaryDirectory() as d:
