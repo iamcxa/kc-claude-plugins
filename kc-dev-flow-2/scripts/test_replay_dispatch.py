@@ -109,6 +109,15 @@ class ReplayDispatchTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("not found", out)
 
+    def test_cleanup_after_a_failed_build_still_removes_its_worktrees(self):
+        code, _ = self.build("--scope", str(self.t / "missing-scope.txt"))
+        self.assertEqual(code, 1)
+        with contextlib.redirect_stdout(io.StringIO()):
+            replay.main(["cleanup", "--run-dir", str(self.run_dir)])
+        for name in ("state", "code"):
+            trees = subprocess.run(["git", "-C", str(self.t / name), "worktree", "list"], capture_output=True, text=True).stdout
+            self.assertNotIn("runs/r1", trees)
+
     def test_cleanup_removes_both_worktrees(self):
         self.assertEqual(self.build()[0], 0)
         with contextlib.redirect_stdout(io.StringIO()):

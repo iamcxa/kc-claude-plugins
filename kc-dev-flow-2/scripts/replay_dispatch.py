@@ -67,6 +67,9 @@ def build(a):
         raise RuntimeError("README merge conflicted; the adopter README is not from --readme-base-ref")
     (wf / "README.md").write_text(merged.stdout)
     state = wf / ".spacedock-state"
+    code = run / "code"
+    (run / "replay.json").write_text(json.dumps({"state_repo": str(Path(a.state_repo).resolve()), "state": str(state),
+                                                 "code_repo": str(Path(a.code_repo).resolve()), "code": str(code)}))
     git(a.state_repo, "worktree", "add", "--detach", str(state), a.state_commit)
     task = entity(state, a.task)
     if a.inject:
@@ -75,7 +78,6 @@ def build(a):
         git(state, "apply", str(Path(a.patch).resolve()))
     if a.inject or a.patch:
         git(state, "-c", "user.name=replay", "-c", "user.email=replay@localhost", "commit", "-qam", "replay: inject")
-    code = run / "code"
     git(a.code_repo, "worktree", "add", "--detach", str(code), a.code_commit)
     (wf / ".worktrees").mkdir()
     (wf / ".worktrees" / f"spacedock-ensign-{a.task}").symlink_to(code)
@@ -91,8 +93,6 @@ def build(a):
     if done.returncode:
         raise RuntimeError(f"dispatch build: {done.stderr.strip()[:300]}")
     shutil.copy(json.loads(done.stdout)["dispatch_file_path"], run / "dispatch.md")
-    (run / "replay.json").write_text(json.dumps({"state_repo": str(Path(a.state_repo).resolve()), "state": str(state),
-                                                 "code_repo": str(Path(a.code_repo).resolve()), "code": str(code)}))
     print(f"{run / 'dispatch.md'}")
 
 
