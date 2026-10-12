@@ -17,7 +17,7 @@ supplies only these inputs, never its own account of the task:
 
 - `STATE`: the state checkout; `TASK`: the task slug; `RULES`: the adopted workflow README.
 - `FROM` and `TO`: state commits bounding the window. When not given, `FROM` is the
-  commit that added the task file and `TO` is the commit that archived it.
+  commit that added the task file and `TO` is the state checkout's `HEAD`.
 
 ## Read
 
