@@ -23,10 +23,12 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   <owner/repo>#<N>`, so `<package>/scripts/pr_watch.py wait` also wakes when Copilot answers.
 - **Read:** `python3 <package>/extensions/copilot/copilot_review.py <owner/repo> <pr>` says
   only whether Copilot has answered the head: exit 0 names the review (`evidence=review:<id>`,
-  one round per id), its heading line and its line-comment count; exit 3 (requested, not
-  answered) or 4 (no review of the head) is no verdict, so the round is not counted and
-  merge is not asked for; exit 2 is a configuration error, reported as `copilot not run:
-  <reason>`. On exit 0 FO reads that review with `gh api repos/<owner/repo>/pulls/<N>/reviews/<id>`
+  one round per id), its heading line and its line-comment count; exit 3 (a request newer
+  than Copilot's latest review) or 4 (no review of the head) is no verdict and the round is
+  not counted. FO does not ask for merge while a request it made is unanswered; with no
+  review of the head after a push it chose not to re-request, the merge ask names Copilot
+  as not read, as **When** says. Exit 2 is a configuration error, reported as `copilot not
+  run: <reason>`. On exit 0 FO reads that review with `gh api repos/<owner/repo>/pulls/<N>/reviews/<id>`
   and its line comments, and records the round in the committed gate summary with the
   heading line quoted. The round is clean only when Copilot recommends approval and lists
   no open or previously missed finding and no line comment; otherwise each finding goes

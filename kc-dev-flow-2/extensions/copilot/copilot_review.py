@@ -7,7 +7,7 @@ Exit 0 answered: Copilot reviewed the head commit after its latest request. The 
   the review (evidence=review:<id>, one round per id), its heading line, and how many line
   comments belong to it.
 Exit 2 configuration error: bad arguments or a gh call that failed.
-Exit 3 requested: Copilot was asked after its latest review of the head and has not answered.
+Exit 3 requested: Copilot was asked after its latest review of any commit and has not answered.
 Exit 4 not reviewed: no Copilot review of the head commit, or the head moved while reading.
 """
 import html
@@ -51,7 +51,7 @@ def state(repo, pr, call=gh, pages=pages):
     on_head = sorted((r for r in reviews if r.get("commit_id") == head), key=lambda r: r["submitted_at"])
     if call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"] != head:
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
-    if asked and max(asked) > max((r["submitted_at"] for r in on_head), default=""):
+    if asked and max(asked) > max((r["submitted_at"] for r in reviews), default=""):
         return 3, f"requested: Copilot was asked at {max(asked)} and has not reviewed {head[:9]} since"
     if not on_head:
         return 4, f"not reviewed: no Copilot review covers {head[:9]}"

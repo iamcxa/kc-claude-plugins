@@ -64,10 +64,11 @@ class CopilotReviewTest(unittest.TestCase):
                                  timeline=[asked("2026-10-12T08:05:00Z")])
         self.assertEqual(code, 3)
 
-    def test_a_late_review_of_an_older_commit_does_not_answer_a_request_on_the_head(self):
-        reviews = [review(1, APPROVAL, at="2026-10-12T08:00:00Z"),
-                   review(2, CHANGES, commit=OLD, at="2026-10-12T08:10:00Z")]
-        self.assertEqual(self.run_state(reviews, timeline=[asked("2026-10-12T08:05:00Z")])[0], 3)
+    def test_an_answered_request_on_an_older_head_is_not_still_pending(self):
+        reviews = [review(1, CHANGES, commit=OLD, at="2026-10-12T08:10:00Z")]
+        code, out = self.run_state(reviews, timeline=[asked("2026-10-12T08:05:00Z")])
+        self.assertEqual(code, 4)
+        self.assertIn("no Copilot review covers", out)
 
     def test_a_review_of_an_older_commit_does_not_cover_the_head(self):
         code, out = self.run_state([review(1, APPROVAL, commit=OLD)])
