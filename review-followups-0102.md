@@ -10,6 +10,8 @@ Follow-ups declined from a repair cycle under the review-round rule (round 3 of 
 
 ## Scope
 
+Resolved 2026-10-12: both items were carried by `workflow-gaps-from-qnow-1270` and fixed in #601 (0.16.1). Nothing left to build here.
+
 Folded 2026-10-11 into backlog task `workflow-gaps-from-qnow-1270`, which carries both follow-ups; this task holds nothing further.
 
 Captain 2026-10-01: 「修完再合併」 — the round-3 P1 is fixed in `patch-0103`; the round-3 P2s are recorded here as follow-ups, not repaired in that cycle.
