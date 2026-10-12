@@ -5,10 +5,16 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
 
 - **Needs:** `gh` 2.92 or later authenticated for the repository, and Copilot code review
   available to the account that requests it.
-- **Joins:** FO delivery: when a PR is marked ready, after each push to it, FO steps:
-  review findings, step 5 (counting external-review rounds), and the merge ask.
-- **Request:** FO runs `gh pr edit <N> --repo <owner/repo> --add-reviewer @copilot` when the
-  PR is marked ready and after each push. If the PR timeline then shows no
+- **Joins:** FO delivery: when a PR is marked ready, after a repair push, FO steps: review
+  findings, step 5 (counting external-review rounds), and the merge ask.
+- **When:** Copilot reviews draw on a limited allowance. FO requests one only for a PR whose
+  title type is `feat`, `fix`, `refactor` or `perf`, when it is marked ready; for any other
+  PR it records `copilot skipped: <type> PR` and does not wait for Copilot. After the first
+  round FO requests Copilot again only after pushing a repair for a Copilot P1 finding. After
+  any other push the merge ask names Copilot as not read on the head, with the last commit
+  it reviewed, and the Captain decides.
+- **Request:** FO runs `gh pr edit <N> --repo <owner/repo> --add-reviewer @copilot`. If the PR
+  timeline then shows no
   `review_requested` event for Copilot newer than that push, FO requests it with `gh api -X POST
   repos/<owner/repo>/pulls/<N>/requested_reviewers -f 'reviewers[]=copilot-pull-request-reviewer[bot]'`.
   FO does not mention `@copilot` in a PR comment: Copilot reads a mention as a request for
@@ -31,5 +37,6 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   is clean is FO's reading, and the observer can check that reading against the quoted
   heading. Copilot may write the review body in another language. On 2026-10-12 a request
   was answered in about two minutes, and a request made three seconds after a push was
-  answered five minutes later with a review of the new head. Each review uses the
-  requesting account's Copilot allowance.
+  answered five minutes later with a review of the new head. On 2026-10-12 a `gh pr edit
+  --add-reviewer @copilot` after a push left no `review_requested` event, and the API
+  request above then reached Copilot.
