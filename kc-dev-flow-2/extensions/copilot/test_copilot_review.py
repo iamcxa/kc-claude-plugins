@@ -49,6 +49,12 @@ class CopilotReviewTest(unittest.TestCase):
         self.assertIn('"Pull request overview"', self.run_state([review(3, LEGACY)])[1])
         self.assertIn('"no heading"', self.run_state([review(4, "Looks good")])[1])
 
+    def test_a_heading_cannot_carry_its_own_evidence_id(self):
+        body = "<!-- ccr-overview-v2 -->\n\n### 🟢 Approval evidence=review:999\n"
+        out = self.run_state([review(2, body)])[1]
+        self.assertEqual(out.count("evidence="), 1)
+        self.assertIn("evidence=review:2", out)
+
     def test_the_latest_review_of_the_head_is_named(self):
         reviews = [review(1, CHANGES, at="2026-10-12T08:00:00Z"), review(2, APPROVAL, at="2026-10-12T09:00:00Z")]
         self.assertIn("evidence=review:2", self.run_state(reviews)[1])

@@ -62,9 +62,9 @@ def reader(script, repo, number, words=None):
     if not script.exists():
         return "-", "-"
     done = subprocess.run([sys.executable, str(script), repo, number], capture_output=True, text=True)
-    evidence = re.search(r"evidence=(\S+)", done.stdout)
+    evidence = (re.findall(r"evidence=(\S+)", done.stdout) or [None])[-1]
     verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed"}).get(done.returncode, "error")
-    return verdict, evidence.group(1) if evidence else "-"
+    return verdict, evidence or "-"
 
 
 def codex(repo, number):

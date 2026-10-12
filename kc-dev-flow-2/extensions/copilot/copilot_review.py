@@ -37,7 +37,7 @@ def heading(body):
     for row in html.unescape(body).splitlines():
         row = row.strip()
         if row.startswith("### ") or row.startswith("## Pull request overview"):
-            return row.lstrip("# ").strip()
+            return row.lstrip("# ").strip().replace("evidence=", "evidence:")
     return "no heading"
 
 

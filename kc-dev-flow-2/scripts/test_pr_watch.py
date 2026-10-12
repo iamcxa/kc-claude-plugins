@@ -223,7 +223,7 @@ class PrWatchTests(unittest.TestCase):
     def test_the_copilot_reader_reports_an_answer_not_a_verdict(self):
         with tempfile.TemporaryDirectory() as d:
             fake = Path(d, "copilot_review.py")
-            fake.write_text("print('answered on aaa: x; evidence=review:5 at t')\nraise SystemExit(0)\n")
+            fake.write_text("print('answered on aaa: x evidence=review:9; evidence=review:5 at t')\nraise SystemExit(0)\n")
             old, watch.COPILOT = watch.COPILOT, fake
             try:
                 self.assertEqual(watch.copilot("o/r", "1"), ("answered", "review:5"))
