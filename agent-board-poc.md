@@ -36,6 +36,10 @@ gates:
                 id: briefing:agent-board-poc:validation:attempt-1:revision-1
                 digest: sha256:6d8d68ab6a193d4fed3b5001f5d7d181b43e3c0d7401b1d7f5ba2e12a70190c9
                 room-ref: ./agent-board-poc/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-10-13T10:52:28.642148Z"
+                reason: Captain asked for a Conductor-hosted Codex check after revision-1 was bound; its result must be in the reviewed snapshot
 started: 2026-10-13T08:57:55Z
 ---
 
