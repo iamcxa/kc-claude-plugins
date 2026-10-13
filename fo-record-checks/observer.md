@@ -1,0 +1,37 @@
+Observer report for `fo-record-checks`. State window: first commit `c93f14ca` to `HEAD` `1a37e75e`, spacedock-state/dev2. Rules: the workflow README synced from kc-dev-flow-2 0.21.0.
+
+violation | rule: "A checklist or scope-notes line that names a package script writes `<package>/scripts/NAME.py` with the absolute root substituted, never the bare script name." (Stages) | evidence: `fo-record-checks/dispatch/ideation-1.md` line 8 "extending the dispatch_records.py pattern"; `implementation-1.md` lines 8 and 10 "dispatch_records.py --names", "lint-skills.py budget raise", "roborev_gate.py evidence= line", "lint-skills.py green"; `validation-1.md` line 11 "adr_lint.py docs/adr --since <base>". The Checklist sections hold all of these. Commits `276813f5`, `afb12c4e`, `170a0f15`. I checked the names against the 0.21.0 package scripts and extensions. `delivery_gate.py` was not a package script then, so I excluded it. The `implementation-1` scope notes do give `roborev_gate.py` with its full path.
+
+ok | rule: "dispatch ... a `Dispatched:` line with the full SHA, a `Model:` line, and `## Checklist` and `## Scope notes` sections", plus a `Package root: <absolute path>` line (Stages) | evidence: all three records carry "Dispatched: e2524e93025dd0d5d9217b4d722c2b169d01fda6", "Model: sonnet" and "Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.21.0". `dispatch_records.py fo-record-checks` printed "3 dispatch record(s) complete", exit 0.
+
+ok | rule: "A Captain ruling is his reply to the question it settles, given after that question was put." (FO steps: review findings) | evidence: all three rulings are `by: person:captain` and quote 「開」, 「准」, 「准」. Each briefing was committed before its resolution. Backlog: `ea43ac39` 18:57:10 before 18:57:38. Ideation: `49f14f6f` 19:14:33 before 19:21:32. Validation: `e95fe01c` 19:52:37 before 20:00:31. The ledger holds no `agent:first-officer` decision on this task.
+
+ok | rule: "His plain approval accepts that recommendation only when the gate question says so" (FO steps: review findings) | evidence: the ideation question ends "Approving accepts the recommendations for D1 (...) and D2 (...)" (ledger row, `99337191`). The Captain's choices matched the recommendations, so no `Override:` was owed.
+
+ok | rule: "FO's delivery gate question says that approval also covers later external-review rounds on the same PR." (Delivery authority) | evidence: the validation question ends "Approval also covers later external-review rounds on this PR, per Delivery authority." (`1a37e75e`).
+
+ok | rule: "FO records `second reviewer: <name> because <trigger>` ... A listed extension that cannot run is reported as `<name> not run: <reason>`" (Extensions) | evidence: the validation briefing says "Second reviewer: copilot because the change adds a check before the merge ask (merge rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back." (`e95fe01c`).
+
+ok | rule: "`Precedent: ADR <number> — 「<that ADR's Words line>」`" (FO steps: review findings) | evidence: the briefing has "Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」". ADR 0013 on origin/main (`6d0f8da9`, before the gate) has that text as the first of two spans in its Words line. The second span, 「准」, is not quoted. The topic is not an always-asked kind.
+
+ok | rule: "FO may explicitly decline evidenced Deferred risk or Polish in the existing committed gate summary, naming the finding, reason, candidate revision and the lines or evidence it rests on." (step 2) | evidence: the briefing has "FO declines at candidate 63dfff51: Deferred risk, prefix-of-equal-length compare ... (archived reports record 8 characters ... none observed); ..." for all five non-corroboration findings in the validation report.
+
+ok | rule: "Scope, value, threshold, tolerance, risk-acceptance and acceptance-criteria changes require the Captain." (step 4) | evidence: the implementation added a fifth `workflow.md` sentence, beyond AC-6's "four wording changes". The validation question names it: "five workflow.md sentences, the fifth added in implementation". The Captain answered 「准」. No `## Captain amendments` entry was owed, because the change did not come from him.
+
+ok | rule: "FO records ... whether FO direction alignment ... is needed ... and a `Surfaces:` line ... `Visible change:`" and "`Release review: not needed: <reason>`" (backlog) | evidence: "Alignment: not needed before ideation; the Captain asked for the fix." / "Release review: not needed: workflow maintenance, on no journey map." / "Surfaces: none" / "Visible change: none" (`c93f14ca`). No `Result:` line was owed.
+
+observed | `Reviewer:` line | evidence: absent. `Surfaces: none`, ideation `Model: sonnet`, and one validation cycle, so none of the three conditions held. No line was owed.
+
+can't tell | rule: "FO runs the stage's minimal acceptance script exactly as written ..., then presents every step in full beside its observed output, never a pointer or a shortened step." (validation) | evidence: the briefing summary only condenses it: "FO ran its six acceptance steps as written in env -i bash: every step matched (...)". The full presentation to the Captain was in chat, outside state.
+
+can't tell | rule: "Before recommending delivery, FO confirms both goal sufficiency and minimal necessity" (validation) | evidence: absent from the task file and the briefings. A chat confirmation is outside state.
+
+can't tell | rule: "Before asking for merge, FO confirms the PR head equals the candidate the latest passing validation report names" (Delivery authority) | evidence: the question names "#640 head 63dfff51" and the report is "PASSED on 63dfff51". Whether FO read the head from `gh` is outside state, and the merge ask comes after this window.
+
+can't tell | rule: "A round is one verdict of an external reviewer ... FO counts rounds and records the count in the committed gate summary." (step 5) | evidence: "External rounds: Codex 1 (comment:6144832870, clean)." The form is right. Whether that comment is on the head is on the PR, outside state.
+
+can't tell | rule: "present the exact candidate and PR body before authorized push/create" (Delivery authority) | evidence: `implementation-1.md` says "Open as Draft." PR #640 existed before the validation gate. State holds no grant and no PR-body presentation. Chat is outside state.
+
+can't tell | rule: "A ruling settled at a gate ... a direction later work must respect — is landed as an ADR before the next gate is presented, at latest by the terminal approval." (FO steps: decision records) | evidence: the design says "No ADR drafted ... Say if the drop reasons should stand as a rule for later work". Neither gate question asked this, and no ADR was added in the window. Whether D1's drops are such a ruling takes a reading of meaning.
+
+Coverage: I read fully the task file at HEAD, the three dispatch records, the three briefings, the ledger rows for this task, and the README sections that name FO. I sampled commit stats for all 18 task commits (none touched another task's files). I ran the `dispatch_records.py` default mode from the 0.22.0 script. Not evaluated: the backlog "Seed check" run (leaves no state record) and `peers`. The `peers` rule did not apply, since no ruling quotes a peer. Number guards did not apply (`Surfaces: none`, no ADR landed). The task is not archived, so I read no merge sentinel.
