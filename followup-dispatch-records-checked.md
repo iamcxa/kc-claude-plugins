@@ -34,6 +34,17 @@ gates:
                 id: briefing:followup-dispatch-records-checked:ideation:attempt-1:revision-1
                 digest: sha256:823e90874ba08411f5007ea16f591d85292a62e264808d5413c1dd9ae2d37e59
                 room-ref: ./followup-dispatch-records-checked/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:followup-dispatch-records-checked:ideation:1
+                briefing: briefing:followup-dispatch-records-checked:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T23:43:32.933712Z"
+                decision: approve
+                reason: Captain approved the design (「准」), accepting the stated recommendations D1 (a follow-up record carries its items, never a pointer, with one README clause and a budget raise of about 20 words) and D2 (validation-time check only).
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-13T15:57:28Z
 ---
 
