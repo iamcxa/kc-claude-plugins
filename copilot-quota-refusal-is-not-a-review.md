@@ -53,6 +53,17 @@ gates:
                 id: briefing:copilot-quota-refusal-is-not-a-review:validation:attempt-1:revision-1
                 digest: sha256:7fec71e8458d917d0856f0bc8a9887f08774e5aea4fba3481517f1d547d3c3e2
                 room-ref: ./copilot-quota-refusal-is-not-a-review/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:copilot-quota-refusal-is-not-a-review:validation:1
+                briefing: briefing:copilot-quota-refusal-is-not-a-review:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T07:46:03.416624Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「准」 to the validation gate question "Deliver #630 head 22d9cc94 ...: FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority."'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T06:56:42Z
 worktree: .worktrees/spacedock-ensign-copilot-quota-refusal-is-not-a-review
 pr: iamcxa/kc-claude-plugins#630
