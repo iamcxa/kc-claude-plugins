@@ -17,6 +17,17 @@ gates:
                 id: briefing:agent-board-poc:backlog:attempt-1:revision-1
                 digest: sha256:f74b07571bde05cf0684e29537791bb1dfe82754b2c50b987aef97f929d0af8d
                 room-ref: ./agent-board-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:agent-board-poc:backlog:1
+                briefing: briefing:agent-board-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T08:56:52.329629Z"
+                decision: approve
+                reason: 'Captain approved outcome, scope, non-goals, budget and stop condition: 「准」 (2026-10-13 chat)'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Claude Code sessions can message each other and wake the receiver, but nothing crosses
