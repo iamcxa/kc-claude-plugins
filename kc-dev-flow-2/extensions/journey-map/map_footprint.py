@@ -48,7 +48,8 @@ FOOTER = (
     "read the ADR before removing or renaming a field."
 )
 DATE = re.compile(r"^\d{4}-\d{2}-\d{2}$")
-AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})[^\n]*\n(?:[^\n]*\n)*?Captain: ([^\n]*)", re.M)
+AMENDMENT = re.compile(
+    r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})[^\n]*\n(?:(?!#{1,3} )[^\n]*\n)*?Captain: ([^\n]*)", re.M)
 FOOTPRINTS_LINE = re.compile(r"^Map footprints:[ \t]*(.*)$", re.M)
 
 
@@ -260,14 +261,15 @@ def cmd_check(args):
 
 def state_dir(workflow):
     readme = workflow / "README.md"
-    if readme.is_file():
-        fm, _ = dl.split_task(readme.read_text())
-        state = top_level(fm or []).get("state")
-        if state:
-            if not (workflow / state).is_dir():
-                raise ValueError(f"{readme} declares state {state!r} but {workflow / state} is not a directory")
-            return workflow / state
-    return workflow
+    if not readme.is_file():
+        raise ValueError(f"{workflow} is not a workflow directory: {readme} does not exist")
+    fm, _ = dl.split_task(readme.read_text())
+    state = top_level(fm or []).get("state")
+    if not state:
+        return workflow
+    if not (workflow / state).is_dir():
+        raise ValueError(f"{readme} declares state {state!r} but {workflow / state} is not a directory")
+    return workflow / state
 
 
 def cmd_audit(args):
@@ -275,6 +277,8 @@ def cmd_audit(args):
         print("audit needs --since YYYY-MM-DD: the date the adopter lists the extension", file=sys.stderr)
         return 2
     archive = state_dir(Path(args.workflow_dir)) / "_archive"
+    if not archive.is_dir():
+        print(f"archive none: {archive} does not exist")
     unrecorded = invalid = 0
     for path in sorted(archive.glob("*.md")):
         if path.name == "README.md":

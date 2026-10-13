@@ -170,7 +170,27 @@ class CheckTests(Base):
         self.assertEqual((code, "journey-footprint/v2" in err), (1, True))
 
 
+class AmendmentTests(Base):
+    def test_an_amendment_with_no_captain_line_is_not_a_source_and_does_not_borrow_the_next(self):
+        path = self.task(declared="Map footprints: 0 in footprints.jsonl\n")
+        text = path.read_text().replace(
+            "### Amendment 1 — 2026-10-14, chat\nCaptain: 「保留六個月」 (in chat)\n",
+            "### Amendment 1 — 2026-10-14, chat\nNote: nobody spoke\n\n"
+            "### Amendment 2 — 2026-10-20, chat\nCaptain: 「保留六個月」 (in chat)\n")
+        path.write_text(text)
+        task = mf.Task(path)
+        self.assertNotIn("amendment:1", task.sources)
+        self.assertEqual(task.sources["amendment:2"], ("2026-10-20", "「保留六個月」 (in chat)"))
+        code, _, err = self.add(path, source="amendment:1", words="保留六個月")
+        self.assertEqual((code, "does not resolve" in err), (1, True))
+        self.assertEqual(self.add(path, source="amendment:2", words="保留六個月")[0], 0)
+
+
 class AuditTests(Base):
+    def setUp(self):
+        super().setUp()
+        (self.tmp / "README.md").write_text("---\ncommissioned-by: test\n---\n")
+
     def test_audit_needs_since_and_counts_unrecorded_and_invalid_from_the_cutover(self):
         self.task("a", archived=True)
         self.task("b", archived=True, declared="Map footprints: not needed: approvals only\n")
@@ -195,6 +215,18 @@ class AuditTests(Base):
         self.assertEqual((code, "unrecorded" in out, ".spacedock-state" in err), (2, False, True))
         (self.tmp / ".spacedock-state" / "_archive").mkdir(parents=True)
         self.assertEqual(run("audit", self.tmp, "--since", "2026-10-13")[0], 0)
+
+    def test_a_path_that_is_not_a_workflow_directory_is_an_error_not_a_clean_audit(self):
+        for target in (self.tmp / "no-such-dir", self.tmp / "README.md", self.tmp / "empty"):
+            (self.tmp / "empty").mkdir(exist_ok=True)
+            code, out, err = run("audit", target, "--since", "2026-10-13")
+            self.assertEqual((code, "unrecorded" in out, str(target) in err), (2, False, True), target)
+
+    def test_a_valid_workflow_with_no_archive_directory_is_a_stated_zero(self):
+        code, out, _ = run("audit", self.tmp, "--since", "2026-10-13")
+        self.assertEqual(code, 0)
+        self.assertIn(f"archive none: {self.tmp / '_archive'} does not exist", out)
+        self.assertIn("unrecorded 0", out)
 
 
 class SchemaTests(Base):
