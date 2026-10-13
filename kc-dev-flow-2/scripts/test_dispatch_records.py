@@ -21,7 +21,11 @@ Model: sonnet
 ## Scope notes
 
 Package root: /abs/kc-dev-flow-2
+Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).
 """
+
+
+MAIN_LINE = "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).\n"
 
 
 class DispatchRecordTests(unittest.TestCase):
@@ -45,7 +49,8 @@ class DispatchRecordTests(unittest.TestCase):
             "'Dispatched:' line": COMPLETE.replace("22d372bffe5d6352d65ef7c7520a311596caec3d", "22d372bff"),
             "'Model:' line": COMPLETE.replace("Model: sonnet\n", ""),
             "'## Checklist' section": COMPLETE.replace("1. Independent verdict on the exact candidate\n", ""),
-            "'## Scope notes' section": COMPLETE.replace("## Scope notes\n\nPackage root: /abs/kc-dev-flow-2\n", ""),
+            "'## Scope notes' section": COMPLETE.replace("## Scope notes\n\nPackage root: /abs/kc-dev-flow-2\n" + MAIN_LINE, ""),
+            "scope-notes line naming main": COMPLETE.replace(MAIN_LINE, ""),
         }
         for part, text in cases.items():
             with self.subTest(part):
@@ -54,6 +59,19 @@ class DispatchRecordTests(unittest.TestCase):
                 self.assertIn(f"implementation-3.md: needs", out)
                 self.assertIn(part, out)
                 self.assertNotIn("validation-1.md", out)
+
+    def test_the_completion_recipient_line_is_judged_by_its_recipient_and_its_section(self):
+        for line in ("Completion message to `main`.", "completion to `main`", "Send your phase-1 report and your completion message to main."):
+            with self.subTest(line):
+                self.assertEqual(self.check({"a-1.md": COMPLETE.replace(MAIN_LINE, line + "\n")})[0], 0)
+        for label, text in (
+                ("team-lead", COMPLETE.replace(MAIN_LINE, "Send completion to team-lead.\n")),
+                ("another branch", COMPLETE.replace(MAIN_LINE, "Send your completion message to `main-branch`.\n")),
+                ("outside the section", COMPLETE.replace(MAIN_LINE, "").replace("1. Independent", MAIN_LINE + "1. Independent"))):
+            with self.subTest(label):
+                code, out = self.check({"a-1.md": text})
+                self.assertEqual(code, 1)
+                self.assertIn("a-1.md: needs a scope-notes line naming main as the completion recipient", out)
 
     def test_a_task_without_records_fails(self):
         self.assertEqual(self.check({})[0], 1)

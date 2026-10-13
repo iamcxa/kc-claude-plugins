@@ -22,6 +22,7 @@ ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
               "files it as a new backlog task with `spacedock new`")
 WORKER_RULE = ("Before repair authorization, product bytes and the recorded candidate revision stay unchanged",
                "The four evidence fields are", "- **Needs decision:**")
+MAIN_LINE = "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here)."
 SEED_STEP = "design_surfaces.py check --seed"
 FO_RECORD = "\n## FO alignment\n\nSurfaces: none\nVisible change: none\n"
 LANE_RULE = ("`concurrency` limits only what `status --next` proposes",
@@ -272,6 +273,15 @@ FIXES = {
         need=("publishes, and reads the task back from the state remote",),
         old=(),
         swaps=((r"`merge guard --rework` supersedes the approval.*?awaiting merge\. ", ""),)),
+    "scope-notes-main-line": dict(
+        need=("also carry ``Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).``",),
+        old=(),
+        swaps=((r" Those scope notes, and every follow-up message to a live worker, also carry .*?does not see the Signal fact\.", ""),)),
+    "scope-notes-main-line-skill": dict(
+        file="skills/dev/SKILL.md",
+        need=("follow-up message with a line telling the worker to send its completion message to `main`",),
+        old=(),
+        swaps=((r" and follow-up message with a line telling the worker to send its completion message to `main`, because the completion block Spacedock appends names `team-lead`\.", "."),)),
 }
 
 
@@ -378,6 +388,7 @@ def exercise(base, binary, sd_root):
                 notes_path = base / "transport-scope-notes.txt"
                 package_root = ROOT
                 notes_path.write_text(f"Package root: {package_root}\n"
+                                      f"{MAIN_LINE}\n"
                                       f"Run {package_root}/scripts/comment_ratio.py from the base to HEAD.\n")
                 result = run([binary, "dispatch", "build", "--workflow-dir", repo,
                               "--entity-path", entity, "--stage", stage, "--host", host,
@@ -411,6 +422,9 @@ def exercise(base, binary, sd_root):
                 assert f"Package root: {package_root}\n" in body, (host, stage)
                 assert f"{package_root}/scripts/comment_ratio.py" in body, (host, stage)
                 assert body.index("Package root:") < body.index("Synthetic dispatch only"), (host, stage)
+                assert MAIN_LINE in body and body.index(MAIN_LINE) < body.index("### Completion checklist"), (host, stage)
+                if host == "claude":
+                    assert 'SendMessage(to="team-lead"' in body, (host, stage)
                 if stage == "ideation":
                     gate = definition.split("**Gate content:**", 1)[1]
                     assert "PRFAQ" in gate and "Mermaid" in gate and "Surfaces" in gate and "not presentable" in gate
@@ -689,7 +703,7 @@ def exercise(base, binary, sd_root):
         print(f"PASS ({version}): 6 stage/host dispatch handoffs; wrong-stage and missing-stage refusals")
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
-        print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root carried into the dispatch file; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
+        print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
         print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the " + str(len(FIXES)) + " wording fixes (" + ", ".join(FIXES) + ") are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")

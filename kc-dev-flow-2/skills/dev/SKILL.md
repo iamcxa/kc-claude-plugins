@@ -52,7 +52,8 @@ the work item through the existing workflow. Recommendation is not selection.
 Hand the resolved project root, explicit workflow directory, work item, approved
 selection/scope and bounded outcome to `spacedock:first-officer`, with this
 skill's `Package root:` value, which FO writes into the scope notes of every
-worker dispatch. Retain that
+worker dispatch and follow-up message with a line telling the worker to send its completion
+message to `main`, because the completion block Spacedock appends names `team-lead`. Retain that
 workflow directory as `--workflow-dir` on SD commands; cwd alone is not the
 binding. If FO is already active, continue there. SD owns stage selection, live
 worker availability, dispatch, reports, gates and recovery; a resumed FO does
