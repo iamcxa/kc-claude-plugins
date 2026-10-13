@@ -327,6 +327,10 @@ Verified by: the script run and a `diff` of its output against these figures, wi
 
 Limits across the criteria: release-please version bumps appear only on the Release PR after merge, so no criterion here shows a bump; a consumer can lag a MINOR; reconcile and audit cannot see a ruling the Captain made in chat and nobody recorded, and `stale-open` is the only net for it; the baselines in AC-4 and AC-6 use repositories outside this one.
 
+## Number guards
+
+ADR: 0012
+
 ## Captain amendments
 
 ### Amendment 1 — 2026-10-13, ideation gate approval
