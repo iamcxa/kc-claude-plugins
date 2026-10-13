@@ -196,3 +196,19 @@ The check gets two rules and no marker: every record needs an absolute `Package 
 
 ### Summary
 Both rules, tests, the D1 clause and the budget raise are implemented and reproduce the design's replays; PR #642 is Draft. CI is red on one pinned-sentence test in a file outside the design's list, returned to FO with a one-line proposed repair.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: FO ruling on #642: end the FIXES["resumed-dispatch"] swap regex in test_sd_dispatch.py with `parts(?:, including [^.]*)?\. `, keep AC-6's wording
+  Commit 12670427 (`fix(kc-dev-flow-2): test_sd_dispatch pin tolerates the follow-up record clause`), one line in kc-dev-flow-2/scripts/test_sd_dispatch.py; pushed without force.
+- DONE: Show the pin still fails when the sentence is removed
+  With the whole "A follow-up message ... same parts, including ..." sentence deleted from references/sd/workflow.md, test_sd_dispatch.py raises AssertionError listing the wording-fix gaps; workflow.md restored by git checkout.
+- DONE: run test_sd_dispatch.py and the full local suite
+  test_sd_dispatch.py (`--sd-plugin-root` spacedock 0.27.0 cache, binary 0.27.2) all PASS; test_dispatch_records.py (13), test_replay_dispatch.py, test_lint_skills.py OK; lint-skills.py exit 0 at 5581 of 5581.
+- DONE: roborev_gate.py again
+  `clean on 12670427e; evidence=roborev:642` (base 656543f4).
+- DONE: CI green on the PR head including test_observer_recovery.py
+  PR head 12670427, run 38487042985: unit tests (python3) pass with test_sd_dispatch.py, test_observer_check.py, test_observer_recovery.py success; version parity, multi-profile route gate, GitGuardian pass. PR #642 stays Draft.
+
+### Summary
+The pinned-sentence failure is repaired in the one file FO added to the change; all checks on #642 are green at 12670427. The first cycle's FAILED item (CI green) is now met.
