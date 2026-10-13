@@ -3,7 +3,7 @@ title: The copilot extension reads a quota-limit refusal as "Copilot not run", n
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-10-13: 「是」 to the backlog gate question "Schedule this task now as Pilot and enter ideation", after asking 「Copilot 的 task是否可以先排？因為顯然會接下來一直遇到此問題」; profile pilot selected.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 On 2026-10-13 FO requested Copilot on iamcxa/kc-claude-plugins #627 and #628 (task `journey-map-dev2-contract`). Six seconds later Copilot left a COMMENTED review on each: "Copilot was unable to review this pull request because the user who requested the review has reached their quota limit." `python3 <package>/extensions/copilot/copilot_review.py iamcxa/kc-claude-plugins 627` printed `answered on 32db12730: "no heading", 0 line comment(s); evidence=review:5499757433` and exited 0 (the same for #628, review:5499757731). Exit 0 is the reader's "answered" result, so a quota refusal reads like a review of the head with no findings unless FO reads the body.
