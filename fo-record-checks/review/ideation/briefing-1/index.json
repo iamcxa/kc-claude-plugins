@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-record-checks:ideation:attempt-1:revision-1",
+  "question": "Accept the design (dispatch_records.py --names flags a bare package script name in a dispatch record before dispatch build; a new delivery_gate.py, run before the gate that asks for merge, holds when the PR head differs from the latest passing validation candidate or a triggered second reviewer has no stated outcome; four workflow.md sentences; the Result: line and Precedent: form dropped with reasons) and enter implementation? Approving accepts the recommendations for D1 (three checks, two wording changes, two drops) and D2 (hold on any head difference: FO revalidates the new head or tells the Captain before asking).",
+  "artifacts": [
+    {
+      "id": "artifact:fo-record-checks:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/10e1dd5f421fa7651791b629aad08cf576869d37/fo-record-checks.md",
+      "rev": "sha256:35f17566036179497df0239c3f1598725f8b390bf0a281e384cce3cc82c59608",
+      "mediaType": "text/markdown",
+      "summary": "Ideation complete: design_surfaces.py check presentable. Chain: Spacedock dispatch build and gate prepare do not read their text; dispatch_records.py passes all three observer-named tasks and has no FO run point; no adopter has a record checker. Measured on archived state: bare package-script names in 38 of 60 dispatch records, 8 tasks; PR head differed from the validated candidate in 2 of 5 parseable tasks (observer-before-merge-guard, migration-and-number-guards); the second-reviewer outcome missing in 1 of 3 summaries that name one. Dropped: Result: line (the observed record read not needed; a check would have passed it) and Precedent: form (absence not decidable from text). AC-1..AC-8 with falsifiers; prototypes outside the repository reproduce the replays; AC-8 is a live gh run. Shared with learn-delivery-follow-through: workflow.md Delivery authority (different sentences), lint-skills.py budget (this task raises it), tests workflow. Limits: exit 2 is common on older task files (16 of 21); wiring is prose."
+    }
+  ]
+}
