@@ -512,6 +512,11 @@ Both heads pass: the contract checks, the splice-only fold and the counts behave
   - P2 #628 `journey-fold.mjs` (around line 72): a block-style question that is the last node, in a file with no trailing newline, gets `answer:` glued to the last line. Insert a newline at a non-newline EOF.
   - Validation Polish: add a test asserting `journey-reconcile` exits 1 on a duplicate story id.
   - For the Captain at the validation gate: keep or drop the smoke workflow's `push: branches: [main]` trigger (a second CI run per merge).
+- Cycle 2 (FO, 2026-10-13): validation cycle 2 recommended PASSED on #627 c811de1f and #628 f320d6d3, and FO ran its acceptance script as written (`env -i` bash, every step as expected). Codex review round 2 (#627 review:5499467449, #628 review:5499479672) left two P1 and two P2, all to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck. Fresh implementation worker: the context-budget probe found no transcript for the cycle-2 worker.
+  - P1 #627 `map_footprint.py` (around line 277): a nonexistent or mistyped workflow directory makes `audit` glob a missing `_archive` and print `unrecorded 0` / `invalid 0`, exit 0. Same class as cycle 1's P1: no path error may produce a clean audit.
+  - P2 #627 `map_footprint.py` (around line 51): the amendment regex crosses the next `### Amendment` heading when an amendment has no `Captain:` line, giving it the later amendment's words and date and losing the later one.
+  - P1 #628 `journey-fold.mjs` (around line 101): `already` is decided from `source.ref` alone, so an answer reworded after folding is neither restored nor reported as a conflict, and reconcile does not count it in `unfolded`. Require the stored answer and status to match.
+  - P2 #628 `journey-fold.mjs` (around line 46): two questions with the same id inside one story fold into the first; require exactly one match.
 
 ## Stage Report: implementation (cycle 2)
 
