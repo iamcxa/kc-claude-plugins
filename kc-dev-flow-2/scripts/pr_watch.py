@@ -7,8 +7,11 @@
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
 
 An outcome is a merge or close, a draft flip, a new or cleared conflict, CI turning green
-or failing, a Codex verdict, or Copilot answering the head; a check or review that only
+or failing, a Codex verdict, or Copilot answering or refusing the head; a check or review that only
 starts is recorded silently.
+
+A Codex or Copilot outcome already there when add first looks is printed as "already" and
+reported by the next wait, once.
 
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
 only for a PR added with --codex or --copilot, from that extension's reader when it is
@@ -33,7 +36,7 @@ TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex", "codex-evid
            "copilot", "copilot-evidence")
 OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
             "checks": {"failing", "green"}, "codex": {"clean", "findings", "error"},
-            "copilot": {"answered", "error"}}
+            "copilot": {"answered", "not-run", "error"}}
 
 
 def outcome(key, old, new):
@@ -72,7 +75,7 @@ def codex(repo, number):
 
 
 def copilot(repo, number):
-    return reader(COPILOT, repo, number, {0: "answered", 3: "requested", 4: "not-reviewed"})
+    return reader(COPILOT, repo, number, {0: "answered", 3: "requested", 4: "not-reviewed", 5: "not-run"})
 
 
 def look(ref, view=gh, review=codex, with_codex=False, with_copilot=False, review_copilot=copilot):
@@ -158,11 +161,19 @@ def main(argv=None, look=look, sleep=time.sleep):
                 print("add needs owner/repo#N")
                 return 2
             known = load(opts.state)
-            seen = update(opts.state, put={ref: look(
-                ref, with_codex=opts.codex or known.get(ref, {}).get("watch-codex", ref in known),
-                with_copilot=opts.copilot or known.get(ref, {}).get("watch-copilot", False))
-                for ref in opts.args}, keep_flags=True)
-            print(f"watching {len(seen)} PR(s)")
+            first, already = {}, []
+            for ref in opts.args:
+                snap = dict(look(ref, with_codex=opts.codex or known.get(ref, {}).get("watch-codex", ref in known),
+                                 with_copilot=opts.copilot or known.get(ref, {}).get("watch-copilot", False)))
+                for key in ("codex", "copilot"):
+                    stored = known.get(ref, {})
+                    if snap[key] in OUTCOMES[key] and (snap[key], snap[f"{key}-evidence"]) != (
+                            stored.get(key), stored.get(f"{key}-evidence")):
+                        already.append(f"{ref}: {key} {snap[key]} already (wait reports it)")
+                        snap[key], snap[f"{key}-evidence"] = "-", "-"
+                first[ref] = snap
+            seen = update(opts.state, put=first, keep_flags=True)
+            print("\n".join(already + [f"watching {len(seen)} PR(s)"]))
             return 0
         if opts.command == "check":
             changes, rows, _ = sweep(opts.state, look)
