@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:copilot-quota-refusal-is-not-a-review:validation:attempt-1:revision-1",
+  "question": "Deliver #630 head 22d9cc94 (the Copilot reader reads an answer with no review heading and no line comment of its own as exit 5 \"not run\"; pr_watch reports it, including one already there at add): FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:copilot-quota-refusal-is-not-a-review:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/106f5d7e7455e812761a1fad9f636edc48c997ce/copilot-quota-refusal-is-not-a-review.md",
+      "rev": "sha256:cf9051a53025baa83c5f6702de3506a08205d0994325e6a5d8add18145bbbae4",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle 2 PASSED at 22d9cc94 (AC-1..AC-7 re-run, five mutations of the repair each fail their test); FO ran its acceptance script as written in env -i bash: every step matched, including the P1 before/after repro. CI green. External rounds: Codex 2 (round 1 review:5500046230, 1 P1 fixed and revalidated; round 2 comment:6140582505 clean). RoboRev local clean (roborev:604, 605), not counted. Second reviewer: copilot because the change touches review rules; not requested: Copilot refused for quota on #627/#628 at 2026-10-13T06:46 and the Captain has not said the quota is back (ADR 0013, D2). FO declines at candidate 22d9cc94: Deferred risk, checks green/failing or CONFLICTING already there at add do not wake wait (FO ruled it out of the P1 fix; FO sees those with pr_watch check; no observed miss); Deferred risk, a refusal carrying its own ### heading reads as answered (stated in EXTENSION.md Limits and ADR 0013; no observed instance); Deferred risk, a refused re-request after a real review of the same head keeps the earlier id (designed, AC-4a; round count unchanged); Polish, EXTENSION.md does not mention the add \"already\" line (FO sees the line and the next wait states the outcome); Polish, a quote containing double quotes reads ambiguously (the evidence= guard is unaffected, tested). Not verified: AC-6 behaviour half (only at the next real refusal), billed CI minutes."
+    }
+  ]
+}

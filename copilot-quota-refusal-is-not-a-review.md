@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:copilot-quota-refusal-is-not-a-review:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:copilot-quota-refusal-is-not-a-review-validation-1
+              briefing:
+                id: briefing:copilot-quota-refusal-is-not-a-review:validation:attempt-1:revision-1
+                digest: sha256:7fec71e8458d917d0856f0bc8a9887f08774e5aea4fba3481517f1d547d3c3e2
+                room-ref: ./copilot-quota-refusal-is-not-a-review/review/validation/briefing-1
 started: 2026-10-13T06:56:42Z
 worktree: .worktrees/spacedock-ensign-copilot-quota-refusal-is-not-a-review
 pr: iamcxa/kc-claude-plugins#630
