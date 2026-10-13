@@ -147,3 +147,40 @@ and '## Stage Report: validation'. Verified on origin/main 2026-09-17: `git grep
 returns the superseded shared-board-origin LIMIT line, so the script alone
 reproduces the wrong conclusion; `agent-browser --help` lists --args as browser
 launch args.
+
+## Never write git config from a worktree of this repository
+
+### Applicability
+
+When a worker, validator or acceptance script for this repository would exercise a
+failure path by writing git configuration (for example `git remote set-url origin
+...`, `git config`) from inside a worktree checkout, including the Captain's main
+checkout or any worktree of the repository.
+
+### Practice
+
+Do not write git config in any worktree of this repository: every worktree shares
+one config, so one write changes every checkout. Run such a step only in a throwaway
+`git clone` in a temp directory, and say so in the dispatch scope notes and in the
+acceptance script. If a shared value is changed by mistake, restore it from a
+recorded original, so record the original value before any config read-modify step.
+Bounded: one observed incident; this does not show the ban alone prevented a repeat,
+since the acceptance script was also moved into a throwaway clone.
+
+### Evidence
+
+Validation cycle 1 of workflow-checkout-must-match-trunk-readme
+(iamcxa/kc-claude-plugins#631) ran `git remote set-url` in a worktree and rewrote
+remote.origin.url for every worktree to /nonexistent/origin.git. The validator
+restored it by inference (sibling clone and PR repository; the original value was
+not recorded) and FO confirmed it against FETCH_HEAD from before the incident. The
+later cycles carried an explicit ban in the dispatch records (implementation-2,
+implementation-4, validation-2, validation-3) and ran that step in a throwaway clone
+with remote.origin.url identical before and after; no repeat was observed in those
+cycles. Recorded in
+spacedock-state/dev2:_archive/workflow-checkout-must-match-trunk-readme.md at
+closure revision 173fd173224bac844133b87d6ca1ef99d9eb25b7 (validation Summary of
+cycle 1 and the dispatch/ records). Existing rules checked: implementation
+principles ban only `git stash` for the same shared-state reason; the workflow
+README's Review-finding disposition allows throwaway-checkout probes but never says
+a worktree config write is forbidden, so no rule states this practice.
