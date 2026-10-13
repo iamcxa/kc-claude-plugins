@@ -233,3 +233,70 @@ comment_ratio.py 38c55fcf HEAD: `code lines 301, comment lines 2, 0.7%`, maximum
 ### Summary
 
 dispatch_records.py --names and the new delivery_gate.py reproduce every replay in the design, each falsifier fails under a mutation, and workflow.md names both run points. PR #640 is Draft; the first CI push failed on a test_sd_dispatch.py pin that my first Applied wording broke, and the second push reworded it additively.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on #640 head 63dfff51 against AC-1 to AC-8, re-running each evidence command and at least one falsifier per criterion yourself (replays against the archived records, the default folder mode unchanged, delivery_gate.py on the named task and head pairs, lint budget, CI step, and one live gh run on an open PR read only), and judging the implementation's two changes to the design (a fifth workflow.md sentence; prefix-of-equal-length SHA comparison kept despite roborev:625/626)
+  All eight criteria met at 63dfff51 in a throwaway worktree (removed). Each falsifier below was run on a copy of the script in /tmp, never on the candidate.
+  AC-1: replay with the 0.21.0 names (script's `package=` argument) printed the stated file:line lists on all four archived records, exit 1 each; scanner-returns-nothing mutation gave exit 0 on validation-1 (falsifier works); scripts/-only mutation missed roborev_gate.py.
+  AC-2: copilot-quota implementation-3 exit 0; observer implementation-1 with every flagged name rewritten to its absolute 0.21.0 path exit 0; flag-every-.py mutation turned that copy to exit 1. Extra probes: `scripts/x.py`, `./x.py`, `~/x.py`, a URL and a section other than Checklist/Scope notes are not judged; a quoted or backticked bare name is.
+  AC-3: folder runs on the three archived tasks print 9, 12, 6 records complete, exit 0, on both the 38c55fcf script and the candidate; mutation that also runs the name scan in folder mode turned observer-before-merge-guard to exit 1.
+  AC-4: all eight pairs reproduced (observer 7679ab7a exit 1 naming 40c714a6, 40c714a6 exit 0; 20c9ec53, 84de8242, 22d9cc94 exit 0; migration 83cad4f70a36 exit 1 naming aff49ab3; board-optout exit 2); first-report mutation made `--head 40c714a6` exit 1 on the observer task, naming 0830a3be.
+  AC-5: built texts from all six archived briefings that carry a `Second reviewer:` line: copilot-quota exit 1 naming copilot; observer 1 and 2, worker-completion 1 and 2, workflow-checkout 1 exit 0 (the design counted three; the other three read `not triggered`, no `because`, so they are not judged); review-token-anywhere mutation turned the copilot text to exit 0.
+  AC-6: lint-skills.py exit 0, `5561 of 5561 words`; copy with the budget at 5463 exits 1 (`5561 words exceeds the budget of 5463`). Base is 5463, not the 5415 the AC text says (main moved with #631 before the dispatch); +98 words against the "about 120" estimate. Wording (a) to (d) present at Stages, Delivery authority, Extensions and the number-guards FO step.
+  AC-7: CI run 38391811132 on 63dfff51 lists `test_delivery_gate.py` and `test_dispatch_records.py` as passed steps; base workflow file has 0 mentions of test_delivery_gate. test_sd_dispatch.py needs a Spacedock plugin root: read from CI (passed), not run here.
+  AC-8: live gh on #640 (head 63dfff51): no --head exit 0 `PR head 63dfff51915b4054b56c22ac028e9d2556636733 equals validated candidate 63dfff51915b`; `--head 463423e1` exit 1 naming both; #99999 exit 2 `cannot read the head ... Could not resolve to a PullRequest`. The task file for those runs is a scratch file naming 63dfff51915b.
+  Design change 1, fifth workflow.md sentence ("A task with no `Migration:` line owes none of these.", validator bullet): accepted. number_guards.py reads only `Applied at:` (grep of the script), so the sentence matches behaviour; it is the validator-side twin of AC-6d, 9 words. FO names it in the gate summary since the Captain approved four wordings.
+  Design change 2, prefix-of-equal-length compare kept despite roborev:625/626: accepted as Deferred risk (below). An exact-40 compare cannot work, because archived reports record 8 characters (AC-4 replays above would all exit 1). I read the implementation report's account of roborev:625/626, not the roborev output.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Script below (six steps, about 10 seconds, needs network, `gh auth status` passing, and the archived task under the workflow state checkout). Run as written under `env -i HOME PATH bash --noprofile --norc -c` and `zsh -f -c`: same output both, exit codes as listed.
+- DONE: adr_lint.py docs/adr --since <base> run with its exit code; verdict PASSED or REJECTED naming the head, with findings classified by the workflow's Review-finding disposition
+  `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.0/scripts/adr_lint.py docs/adr --since 38c55fcf` in the 63dfff51 worktree: `14 ADR file(s) checked, 0 legacy`, exit 0. Also run: comment_ratio.py 38c55fcf 63dfff51 `code lines 301, comment lines 2, 0.7%` exit 0; doc_impact.py lists README.md and maintain-flow/SKILL.md, both carry `unaffected:` lines in the implementation report; design_surfaces.py check exit 0; dispatch_records.py on this task's folder `3 dispatch record(s) complete` exit 0; no Number guards section.
+  Verdict PASSED on candidate 63dfff51915b4054b56c22ac028e9d2556636733 (PR #640, base 38c55fcf, CI green on this head).
+
+### Findings
+
+None is Material. Classified by the Review-finding disposition:
+- Deferred risk: prefix compare accepts a 7 to 40 character candidate that prefixes the head. Needs a different commit sharing the validated prefix; none observed. Material if validation reports start recording full SHAs or the repository gets crafted commits: then raise the minimum length.
+- Deferred risk: a sentence naming the second reviewer that also carries another reviewer's `review:`/`comment:` token passes (split on `.`, `!`, `?`, newline, not `;`). Probe: `Second reviewer: copilot because x.` then `Codex review:5500046230 done; copilot not run:` exits 0. AC-5 says "one sentence", so this is the specified limit; no instance observed. Material if FO writes such a sentence for a review that did not run.
+- Deferred risk: the candidate is the first 7 to 40 hex character token with a digit within 160 characters after `Verdict PASSED`. A number before the SHA (`CI run 38391811132`) is taken as the candidate and exits 1 against a correct head; a SHA written before the verdict exits 2. Both fail closed with a message, never silent. The validation checklist's wording "verdict PASSED or REJECTED naming the head" is what steers a worker to the readable form; nothing in the validation principles states it. Material if validators routinely write the other form and FO holds every gate.
+- Polish: `dispatch_records.py --names <missing file>` prints a Python traceback and exits 1, the same code as a finding. FO sees the traceback; no value lost.
+- Polish: AC-6 evidence text says base 5415 and about 120 words; measured base 5463 and +98 (the implementation report states the real numbers).
+- Corroboration, not a finding: `--names` on this task's own three dispatch records (0.22.0 names) lists nine bare names (`dispatch_records.py`, `lint-skills.py`, `delivery_gate.py`, `roborev_gate.py`, `adr_lint.py`), all written before the check existed; this is the rule class AC-1 targets.
+
+### Not verified
+
+- That a live FO runs `dispatch_records.py --names` and `delivery_gate.py check` at the stated points: README prose only; the next observer report after release is the evidence.
+- test_sd_dispatch.py locally (CI passed it); Codex round 1 requested at dispatch is not read by this stage; false-positive rate of the second-reviewer rule (six texts, one violating).
+
+### Minimal acceptance script
+
+Run in a fresh shell (bash or zsh), no comments in the block so it pastes anywhere.
+
+```
+echo "--- step 1"
+D=$(mktemp -d /tmp/fo-record-checks-accept.XXXXXX) && git clone --quiet --branch spacedock-ensign/fo-record-checks --single-branch --depth 20 https://github.com/iamcxa/kc-claude-plugins "$D" && git -C "$D" checkout --quiet --detach 63dfff51 && git -C "$D" rev-parse --short=8 HEAD
+G="$D/kc-dev-flow-2/scripts"
+echo "--- step 2"
+printf '## Checklist\n\nrun adr_lint.py on the branch\n' > "$D/bare.md"; printf '## Checklist\n\nrun %s/adr_lint.py on the branch\n' "$G" > "$D/full.md"
+python3 "$G/dispatch_records.py" --names "$D/bare.md"; echo "exit $?"; python3 "$G/dispatch_records.py" --names "$D/full.md"; echo "exit $?"
+echo "--- step 3"
+A=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/_archive/observer-before-merge-guard.md
+python3 "$G/delivery_gate.py" check "$A" --pr iamcxa/kc-claude-plugins#640 --text-file /dev/null --head 7679ab7a; echo "exit $?"; python3 "$G/delivery_gate.py" check "$A" --pr iamcxa/kc-claude-plugins#640 --text-file /dev/null --head 40c714a6; echo "exit $?"
+echo "--- step 4"
+printf 'Second reviewer: copilot because the change touches review rules.\n' > "$D/gate1.txt"; printf 'Second reviewer: copilot because the change touches review rules.\ncopilot not run: quota refused.\n' > "$D/gate2.txt"
+python3 "$G/delivery_gate.py" check "$A" --pr iamcxa/kc-claude-plugins#640 --text-file "$D/gate1.txt" --head 40c714a6; echo "exit $?"; python3 "$G/delivery_gate.py" check "$A" --pr iamcxa/kc-claude-plugins#640 --text-file "$D/gate2.txt" --head 40c714a6; echo "exit $?"
+echo "--- step 5"
+printf '## Stage Report: validation\n\n- DONE: x\n  Verdict PASSED on 63dfff51915b\n' > "$D/task.md"
+python3 "$G/delivery_gate.py" check "$D/task.md" --pr iamcxa/kc-claude-plugins#640 --text-file /dev/null; echo "exit $?"; python3 "$G/delivery_gate.py" check "$D/task.md" --pr iamcxa/kc-claude-plugins#640 --text-file /dev/null --head 463423e1; echo "exit $?"
+echo "--- step 6"
+python3 "$G/lint-skills.py" > "$D/lint.out" 2>&1; echo "lint exit $?"; grep "words" "$D/lint.out"; python3 "$G/test_dispatch_records.py" 2>&1 | tail -3; python3 "$G/test_delivery_gate.py" 2>&1 | tail -3
+```
+
+Expected, in order: step 1 prints `63dfff51`. Step 2 prints `<D>/bare.md:3: bare package script name adr_lint.py`, `exit 1`, then `exit 0`. Step 3 prints `PR head 7679ab7a differs from validated candidate 40c714a6 (latest passing validation report in .../_archive/observer-before-merge-guard.md)`, `exit 1`, then `PR head 40c714a6 equals validated candidate 40c714a6; no second reviewer outcome is missing`, `exit 0`. Step 4 prints `second reviewer copilot has no stated outcome: add 'copilot not run: <reason>' or a review:<id> or comment:<id> in a sentence naming copilot`, `exit 1`, then the `equals` line and `exit 0`. Step 5 prints `PR head 63dfff51915b4054b56c22ac028e9d2556636733 equals validated candidate 63dfff51915b; no second reviewer outcome is missing`, `exit 0`, then `PR head 463423e1 differs from validated candidate 63dfff51915b (latest passing validation report in <D>/task.md)`, `exit 1` (step 5 holds only while PR #640 head is 63dfff51). Step 6 prints `lint exit 0`, `references/sd/workflow.md: 5561 of 5561 words; no unlisted passage repeats it`, then `Ran 10 tests ... OK` and `Ran 12 tests ... OK`.
+
+Does not cover: that FO follows the two README sentences; a second-reviewer text in a form other than `Second reviewer: <X> because`; the CI step (read from run 38391811132, not rerun); or the replays against all archived records (the 0.21.0-name replays are in the report above, not in this script).
+
+### Summary
+
+PASSED on 63dfff51915b: AC-1 to AC-8 reproduced with a falsifying mutation each, CI green on the head, adr_lint exit 0, no Material finding. The fifth workflow.md sentence and the prefix-of-equal-length compare are accepted; FO should name the fifth sentence to the Captain, and the three Deferred risks stay recorded with their triggers.
