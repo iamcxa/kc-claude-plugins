@@ -567,3 +567,35 @@ Detailed assessment, exact acceptance helper modes and captured output are retai
 ### Summary
 
 The unchanged corrected candidate now has actual bounded hosted hibernation/recovery and post-wake authorization evidence, partial provider measurements and verified cleanup. This resolves the previously missing lifecycle execution boundary for this synthetic scope; independent validation and Captain acceptance remain required. The local handback preserves exact evidence and a five-step offline verification procedure; this report does not declare the complete pilot accepted.
+
+## Stage Report: validation
+
+- DONE: Independently assess the unchanged corrected candidate and new saved hosted evidence: actual same-socket reconstruction with continuous heartbeats, persistent resumed mutation/broadcast, and post-wake revoke/expiry protection.
+  Recommendation PASSED for this bounded continuation. Exact candidate and observer identity match preserved evidence; actual constructor changes retain the initialized sessions while application heartbeats continue. Resumed mutation, peer broadcast, persistent readback and post-wake access denial are supported.
+- DONE: Attack measurement attribution and proof limits: client versus provider counts, delayed scoped observations versus missing baseline/account-wide/billing data, preserved failed attempt and independent resource/credential/process cleanup; no new provider calls.
+  Independent offline review confirms final-run selectors/window exclude the failed attempt, some scoped datasets contain observations, and others remain missing. Client accounting is separate from provider metering; measurement is PARTIAL, not a complete bill or measured savings.
+- DONE: Produce a bounded verdict against this continuation and the remaining whole-pilot boundary, with explicit AC mapping and minimal unchanged five-step offline acceptance; keep details local and public state conclusions-only.
+  The unchanged five offline steps pass; exact commands, outputs, source identities, detailed receipts and private paths remain in the local handback. This report publishes only scope, verdict and limitations.
+- DONE: Assess observer behavior and the actual expiry wake rather than infer hibernation from eligibility alone.
+  Timers and handlers delegate to the candidate; saved chronology shows continuous pongs, no idle room polling, retained sessions and new constructor generations. On the expiry wake, constructor revalidation closes the expired session before the alarm observation is saved; it is not attributed solely to the alarm method body.
+- DONE: Test the decisive receipt boundary using the existing acceptance check.
+  Offline temporary counterexamples with an unchanged generation or closure before expiry are rejected. Original receipts and acceptance commands are unchanged; no runtime suite or provider operation was repeated.
+- DONE: Map new persistence and scope evidence explicitly.
+  `value-ac[AC-4]`: bounded hosted reconstruction, resumed persistent work and expiry/revoke protection now pass; remaining platform capabilities are separate. `value-ac[AC-5]`: unchanged scope, preserved failures/candidate and confirmed temporary-resource cleanup support the minimal, recoverable boundary.
+- DONE: Preserve earlier contract and client evidence without promoting it to a blanket pass.
+  `value-ac[AC-1]`: new hosted synthetic readback only; other client/host coverage remains historical or unrun. `value-ac[AC-2]`: source unchanged, broad compatibility suite not repeated. `value-ac[AC-3]`: new hosted post-wake denial passes; the full entry-point and cross-room matrix was not rerun.
+- DONE: Recheck required workflow and document obligations.
+  ADR lint, comment ratio, document impact, design surfaces, dispatch records and diff check pass; reserved architecture record and no-SQL-change boundary remain. Invalid records or incomplete dispatch/design surfaces would fail their checks. Private-host documentation remains updated; legacy journey documentation remains unaffected because its format and behavior did not change.
+- SKIPPED: Full task-aware number guard remains CONFIG ERROR / SKIPPED / NOT PASS.
+  The database surface still lacks a declared migration path; the existing First Officer disposition remains. The supplemental check passes available checks only and does not replace the full guard; exact diagnostics stay local.
+- DONE: Review cleanup using independent absence evidence and current local checks.
+  Deletion migrations succeeded; later deletion-CLI errors remain recorded separately. Successful independent inventories support removal, synthetic credentials are absent, and no owned probe process remains. No new cloud call, product change, product publication, PR or merge occurred during validation.
+- SKIPPED: Remaining measurement and integration obligations are deferred risks, not new demonstrated defects.
+  User/workflow: future native-client, browser, asset, remote-host or ongoing-cost use; harm: no failure demonstrated here, coverage remains absent; boundary: `value-ac[AC-1]`, `value-ac[AC-4]`, `value-ac[AC-5]`; trigger: synthetic clients and partial datasets do not establish those journeys or complete billing. A failure in an authorized promised journey would make the relevant issue Material.
+- DONE: Return the remaining delivery decision without taking gate authority.
+  Needs decision: Captain/limited-use delivery; harm: a blanket readiness claim would overstate coverage; boundary: `value-ac[AC-1]`, `value-ac[AC-4]`, `value-ac[AC-5]`; trigger: partial/historical/unrun obligations remain. Material and Polish: none newly established. The bounded pass grants no merge or complete-pilot approval.
+
+### Summary
+
+PASSED for the authorized connection-first hosted continuation: real same-socket recovery and post-wake protection are now supported, measurement is PARTIAL, and cleanup is supported. Full pilot delivery remains a separate Captain decision with the stated unrun obligations and unavailable full guard retained.
+The minimal five-step acceptance stays unchanged and verifies saved claims plus current source/process state, not a new cloud run. Detailed evidence remains local; gate, frontmatter and correction-round records were not modified.
