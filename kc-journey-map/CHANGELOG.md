@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.5.2...kc-journey-map-v1.6.0) (2026-10-13)
+
+
+### Features
+
+* **kc-journey-map:** fold a Captain ruling into the map and count what is missing ([#628](https://github.com/iamcxa/kc-claude-plugins/issues/628)) ([9e68eb8](https://github.com/iamcxa/kc-claude-plugins/commit/9e68eb87ec184ffca1b6cd210c576d83b9a01e07))
+
 ## [1.5.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.5.1...kc-journey-map-v1.5.2) (2026-10-13)
 
 
