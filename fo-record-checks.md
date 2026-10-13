@@ -53,6 +53,17 @@ gates:
                 id: briefing:fo-record-checks:validation:attempt-1:revision-1
                 digest: sha256:01bc1a70d53e79e3fbf9392cc65ab4817e6a827c42c515a4192c03c1cb6a37eb
                 room-ref: ./fo-record-checks/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-record-checks:validation:1
+                briefing: briefing:fo-record-checks:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T12:00:31.926624Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「准」 to the validation gate question "Deliver #640 head 63dfff51 ...: FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority."'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T10:58:03Z
 worktree: .worktrees/spacedock-ensign-fo-record-checks
 pr: iamcxa/kc-claude-plugins#640
