@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:workflow-checkout-must-match-trunk-readme:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:workflow-checkout-must-match-trunk-readme-validation-1
+              briefing:
+                id: briefing:workflow-checkout-must-match-trunk-readme:validation:attempt-1:revision-1
+                digest: sha256:68dffba00402f8b409a9ce17efd8132ee24f2bf65f9cbd1bc60ece4001aa38d6
+                room-ref: ./workflow-checkout-must-match-trunk-readme/review/validation/briefing-1
 started: 2026-10-13T07:17:36Z
 worktree: .worktrees/spacedock-ensign-workflow-checkout-must-match-trunk-readme
 pr: iamcxa/kc-claude-plugins#631

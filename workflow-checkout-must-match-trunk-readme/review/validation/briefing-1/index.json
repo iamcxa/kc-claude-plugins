@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:workflow-checkout-must-match-trunk-readme:validation:attempt-1:revision-1",
+  "question": "Deliver #631 head 20c9ec53 (workflow_checkout.py compares the on-disk workflow README with origin/\u003ctrunk\u003e before each dispatch; the dev skill and workflow.md tell FO to run it through python3; ADR 0014): FO marks it ready and asks you to merge it first in the stack (#632 and #633 build on it)? Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:workflow-checkout-must-match-trunk-readme:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/099df27568e906faa0ce78c1c0d55fc2e22e2034/workflow-checkout-must-match-trunk-readme.md",
+      "rev": "sha256:44b6df052a1c5621d58772a68ce1785bf987864b685b2fe3e473190c29f29c76",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle 3 PASSED at 20c9ec53 (AC-1..AC-6 re-run; the dev skill sentence followed literally exits 0 where 70da29c7 exited 126; mutations fail the new test). FO ran its acceptance script as written in env -i bash: every step matched, including the dev skill sentence; shared remote.origin.url unchanged. CI 5/5 green. External rounds: Codex 3 (round 1 review:5500393427, 2 P2 fixed and revalidated; round 2 review:5500564188, 1 P1 fixed and revalidated; round 3 review:5500808862, 2 P2, no P1). RoboRev local clean (roborev:607, 610, 613), not counted. Second reviewer: not triggered (Surfaces none, profile pilot, no authority, approval, merge or review rule changed). FO declines at candidate 20c9ec53: Codex round 3 P2 unquoted origin/\u003ctrunk\u003e in the remedy and P2 remedy does not resolve an uncommitted README edit, both filed as backlog task workflow-checkout-round3-followups with reasons (trunk comes from the adopter README, no metacharacter ref observed; the check still holds fail-safe and the Captain resolves under D3); validation Deferred risk git fetch has no timeout (no FO observed hanging); Deferred risk core.autocrlf=true holds the dispatch (fail-safe; the Captain's machines run macOS); Polish doc_impact lists two documents without a marking (both read unaffected by the validator). Outside this PR: learning.py named bare in skills/dev/SKILL.md, being fixed in #632's round-2 repair; adoption.md poc_readme.py cell filed in workflow-checkout-round3-followups. Incident during cycle-1 validation: a validator rewrote the shared remote.origin.url; restored to https://github.com/iamcxa/kc-claude-plugins.git, matching FETCH_HEAD from before the incident. Not verified: a real FO session running the check (prose-enforced), billed CI minutes."
+    }
+  ]
+}
