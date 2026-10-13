@@ -15,6 +15,17 @@ gates:
                 id: briefing:worker-completion-goes-to-main:backlog:attempt-1:revision-1
                 digest: sha256:d4372a8d995a58c48d223e54183fb9593d49e577e9cfdaa35b8813016e275674
                 room-ref: ./worker-completion-goes-to-main/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-completion-goes-to-main:backlog:1
+                briefing: briefing:worker-completion-goes-to-main:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T07:17:15.098932Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「准」 to the backlog gate question "Schedule now as Pilot and enter ideation, in the fix order 1 workflow-checkout-must-match-trunk-readme, 2 observer-before-merge-guard, 3 worker-completion-goes-to-main (all three designed now; implementation in that order)?", after 「1-3 回報，且立即排修，順序該怎麼列？」; profile pilot selected.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Spacedock's dispatch completion block tells the worker to send `SendMessage(to="team-lead")`; under Claude Code dispatch that name is not registered (spacedock-dev/spacedock #523 and #608, both open on 2026-10-13). The adopter README's Dispatch facts already say to message `main`. On 2026-10-13 the first implementation worker of `journey-map-dev2-contract` still tried `team-lead` first and fell back to its final message; workers whose scope notes carried the explicit line "Send your completion message to `main`" sent to `main`. The root is upstream Spacedock; this task owns only the kc-dev-flow-2 side.
