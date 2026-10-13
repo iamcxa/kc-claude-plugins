@@ -325,6 +325,10 @@ Verified by: `bash scripts/journey-dev2-loop-smoke.sh`, printing each exit code 
 Source: the accepted direction item 4 (the first run on qnow is expected near its 45 hand-folded answers; those 45 are release `r1`'s answered questions, read the same way); the counts are the one-off read of 2026-10-13, re-run at the pinned refs and identical to the first attempt's figures for qnow.
 Verified by: the script run and a `diff` of its output against these figures, with `git show <ref>:<path>` as the map source; changing one answer on a temp copy changes `unsourced` by 1; a fixture twin of the same shapes runs in CI. Falsifier: a duplicate story id added to a temp copy must make the run report it. Current evidence: the figures are measured by the one-off read; the script is not built, so this is not yet verified.
 
+**AC-11**: Amended by Captain, amendment 1. Each producer's `schema` command prints, under its field table, where the contract's history lives and when to read it (the command itself for the current table, the producer's release-please `CHANGELOG.md` for every version, an ADR for the first shape and each MAJOR), and the extension's `EXTENSION.md` and kc-journey-map's README and SKILL.md send FO and readers to that command and say when to read the CHANGELOG and the ADR.
+Source: Captain 2026-10-13, amendment 1: 「這裡的議題應該是要讓讀者或是說 FO 意識到 ARD, release changelog 等都存在，且必要時要去讀」.
+Verified by: `python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py` (the footer names files that exist; the schema command named in EXTENSION.md is run and prints the pointers) and `node --test kc-journey-map/lib/schemas.test.mjs` (the footer names the CHANGELOG, an existing ADR and a runnable command; README and SKILL.md carry the pointers). Falsifier: changing "Read the CHANGELOG when" in EXTENSION.md, or deleting the ADR file, fails the dev2 test; removing the README section fails the journey-map test.
+
 Limits across the criteria: release-please version bumps appear only on the Release PR after merge, so no criterion here shows a bump; a consumer can lag a MINOR; reconcile and audit cannot see a ruling the Captain made in chat and nobody recorded, and `stale-open` is the only net for it; the baselines in AC-4 and AC-6 use repositories outside this one.
 
 ## Number guards
@@ -427,3 +431,33 @@ A ruling made in chat with no task has no tool (`journey-answer.mjs` in the firs
 ### Summary
 
 Scope one is two steps and two record shapes: a footprint line written beside the task at the gate, and one fold at archive that splices the answer into the map as a docs-only pull request, with `unrecorded`, `invalid`, `stale-open` and `unfolded` counted at release review. The fold must splice text, because rewriting relay's map would leave 3803 differing lines. Scope two does not have to wait for scope-one data except for the fold-pending marks. Unresolved for the Captain: D1 (where the schema change history is written) and D2 (what "one command" means for the gate footprint).
+
+## Stage Report: implementation
+
+- DONE: PR 1 (kc-dev-flow-2): extensions/journey-map with EXTENSION.md, map_footprint.py add/check/audit/schema, contract-versions.json and test_map_footprint.py listed in the kc-dev-flow-2 tests workflow; AC-1 and AC-2 (footprint half) and AC-4 green with their falsifiers shown failing
+  Draft PR #627 (branch spacedock-ensign/journey-map-dev2-contract, head 89769eb6); CI green on it (unit tests 31s). Falsifiers, each shown failing by a mutation run: words check removed fails the paraphrase case; recorded-hash comparison removed fails the renamed-field-no-bump case (AC-1); schema pin removed fails the v2-line cases (AC-2); declared-count rule, date check and the Captain-only source filter each fail their own test. AC-4 baseline on qnow state d01c37bc: `audit --since 2026-10-14` prints `unrecorded 0`, `--since 2000-01-01` prints `unrecorded 7`.
+- DONE: PR 2 (kc-journey-map): source field through model.mjs, lib/schemas.mjs, journey-fold.mjs (splice only), journey-reconcile.mjs, tests, scripts/journey-dev2-loop-smoke.sh and its path-filtered workflow; AC-1/AC-2 (map half), AC-5 and AC-6 green, with the CI cost per PR measured or stated as not measured
+  Draft PR #628, stacked (base = PR 1's branch, head d8281e1c); CI green including the new smoke job (16s job duration, as `gh pr checks` reports it; billed minutes not measured). Falsifiers: whole-file re-serialization after the splice fails the block-shape diff assertion; dropping the `status` write fails 4 fold tests; schema pin removed fails the v2 case; duplicate-story and stale-open filters removed fail theirs. AC-5 smoke prints every exit code and count (check 1; audit `unrecorded 1`; reconcile `stale-open 1`; after add check 0, `unfolded 1`; after fold `unfolded 0`; fold twice identical bytes, source checksum unchanged, existing --out refused, v2 refused by fold and reconcile, block fold 0 removed 3 added). AC-6 on the real maps (qnow df8ee1d2, relay 0295d163, empty workflow dir): all baseline figures match the design (qnow 171/0/110, 79 answered, 31 open of which 20 deferred and 11 plain, 6 repeated ids, unsourced 79, unfolded 0, stale-open 0; relay 142/220, 198 answered, 22 open of which 1 deferred and 21 plain, unsourced 198, 0, 0), two runs byte-identical; one synthetic footprint changes 1 line in qnow's map and adds 3 lines in relay's.
+- DONE: Amendment 1 (Captain, 2026-10-13): the extension and the journey-map docs tell FO and readers where the contract's history lives (the schema command for the current table, the producer's release-please CHANGELOG for every version, ADRs for the first shape and each MAJOR) and when to read them; written as a new AC "Amended by Captain, amendment 1" with a check that can fail
+  New AC-11 (Supersedes: none, nothing moved); `design_surfaces.py check` prints "design surfaces presentable". Checks: `test_the_extension_points_at_a_schema_command_that_runs_and_names_where_history_lives` fails when "Read the CHANGELOG when" is changed in EXTENSION.md (shown), `test_the_history_footer_names_files_that_exist` and schemas.test.mjs fail when the CHANGELOG or the ADR file is absent or the README section is removed.
+
+### Exit items
+
+- ADR: 0012 only (FO merged the two drafts into one): `docs/adr/0012-a-captain-ruling-reaches-the-map-as-a-versioned-footprint.md`, in PR #627; `adr_lint.py docs/adr --require 0012` passes.
+- `number_guards.py check --repo <worktree>`: PASS no findings, base e2524e93025d head 89769eb6f51e (no migrations-path declared).
+- `comment_ratio.py`: PR 1 against origin/main: code 491, comment 5, 1.0%; PR 2 against PR 1's first commit: code 546, comment 16, 2.9%; maximum 5% met.
+- `doc_impact.py`: PR 1 lists `kc-dev-flow-2/README.md`: updated (extension table row). PR 2 lists none; kc-journey-map README and SKILL.md updated anyway for amendment 1.
+- RoboRev: PR 1 three runs. Run 1 (roborev:588) High: the extension names kc-journey-map commands absent from this PR; by design they ship in PR 2, so EXTENSION.md `Needs` now names the release. Run 2 (roborev:590) High: an agent:first-officer resolution was accepted as a Captain source; fixed, test added, table wording and hash re-recorded for the first shape (still 1.0.0). Run 3 clean (roborev:591). PR 2: clean on 88940aac (roborev:589).
+
+### Deviations and limits
+
+- `add` takes an optional `--journey`, because AC-4 says add refuses a journey that differs from the task's.
+- A footprint source is limited to `person:captain` resolutions; an FO resolution is not "the Captain's words" (RoboRev run 2).
+- `audit` counts `unrecorded` per task and `invalid` per bad line. `reconcile` decides archived by the `_archive/` path, since an archived task's listing row carries no `archived:` field unless merge guard wrote it.
+- ADR 0012 and the schema hashes name the ADR by its short title in `schema` output, so no number is copied into code.
+- Not measured: billed CI minutes for either workflow (job durations only). Not run: the Release PR smoke, anything against a real adopter's live workflow (the qnow/relay runs read git refs of their maps and state branches in throwaway checkouts).
+- PR 2 is stacked: after PR 1 squash-merges, retarget #628 to main and merge main back in; its smoke needs PR 1's `map_footprint.py`.
+
+### Summary
+
+Both PRs are open as Drafts with CI green, PR 1 for the footprint side (script, extension, ADR 0012, version-hash binding) and PR 2 for the map side (splice-only fold, reconcile counts, question-field version, real-CLI smoke and workflow). The splice design held on both real map shapes, and every count in AC-6 matched the design's figures. Decision still open for FO: none beyond the stacking order stated above.
