@@ -53,6 +53,17 @@ gates:
                 id: briefing:learn-delivery-follow-through:validation:attempt-1:revision-1
                 digest: sha256:b46faebcf5655b13c4f7805b8ab72819dff9afde7de4159ac02dca7a04cbd636
                 room-ref: ./learn-delivery-follow-through/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:learn-delivery-follow-through:validation:1
+                briefing: briefing:learn-delivery-follow-through:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T14:19:43.876943Z"
+                decision: approve
+                reason: 'Captain approved delivery of #639 at 4072363b (「准」): FO marks it ready and asks to merge; later external-review rounds covered per Delivery authority.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T10:57:59Z
 worktree: .worktrees/spacedock-ensign-learn-delivery-follow-through
 pr: iamcxa/kc-claude-plugins#639
