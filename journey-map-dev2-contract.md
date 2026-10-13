@@ -51,6 +51,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-13T04:15:24.70313Z"
                 reason: Briefing 2 was prepared while design_surfaces.py check failed (Visible change was not 'none' with Surfaces none); FO line corrected
+            - id: gate-attempt:journey-map-dev2-contract-ideation-3
+              briefing:
+                id: briefing:journey-map-dev2-contract:ideation:attempt-3:revision-1
+                digest: sha256:de6d2d198336e478c713f33d045ff89a4cbe77abca195a5f02e322f75919c5eb
+                room-ref: ./journey-map-dev2-contract/review/ideation/briefing-3
 started: 2026-10-13T03:05:11Z
 ---
 
