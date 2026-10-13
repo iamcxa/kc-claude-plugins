@@ -275,6 +275,9 @@ PASSED: AC-1 to AC-9 hold at 0830a3be, with a mutation or counterexample shown r
 
 - Cycle 1 (FO, 2026-10-13): validation recommended PASSED on #632 0830a3be (roborev:609 confirmed a false positive by the validator; FO declines it). Codex review round 1 (review:5500580111) left one P1, to fix; investigation first, then FO fix authorization, then a fresh validation recheck.
   - P1 #632 `extensions/learn/EXTENSION.md` (around line 22): the documented late-report repair commits `_archive/<slug>/observer.md` with a pathspec-only `git commit`, which cannot add an untracked file; `test_observer_recovery.py` passes only because it runs `git add` first. Put the staging step in the documented repair.
+- Cycle 2 (FO, 2026-10-13): validation cycle 2 recommended PASSED on #632 d127ec71. Codex review round 2 (review:5500805789) left one P1 and one P2, both to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck. Same defect class as #631's round-2 P1: close it within this PR.
+  - P1 #632 `extensions/learn/EXTENSION.md` (around line 13): the documented `observer_check.py` invocation is bare while the file is mode 100644, so it exits 126 "Permission denied"; the same bare form is repeated in `references/sd/workflow.md` and `skills/dev/SKILL.md`; the tests launch it through `sys.executable` and hide this. Prefix every documented invocation with `python3`, or make it executable.
+  - P2 #632 `scripts/observer_check.py` (around line 72): the exit-1 recovery command does not shell-quote the state path, so a path with whitespace or metacharacters cannot run as printed. Quote it with `shlex.quote`, tested with a whitespace-containing base.
 
 ## Stage Report: implementation (cycle 2, repair of Codex round 1 P1)
 
