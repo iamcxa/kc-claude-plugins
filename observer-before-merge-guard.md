@@ -397,3 +397,7 @@ Does not cover: an FO actually running the check before the sentinel (prose-enfo
 ### Summary
 
 PASSED at 40c714a6: both round-2 findings reproduce at d127ec71 by following the documented text literally (exit 126; a split or broken `git -C` path) and are fixed at 40c714a6; the class, run-as-text and whitespace tests each go red under the mutation that reintroduces their defect; the two test_sd_dispatch.py edits are the file's only change and both are needed. AC-1 to AC-9 hold with no verdict changed; no Material finding; adr_lint exit 0.
+
+### Dispatch Retries
+
+- Retry 1: implementation — agent-error (session rate limit, HTTP 429) after a local merge commit 7679ab7a, not pushed; nudged
