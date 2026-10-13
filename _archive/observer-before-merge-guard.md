@@ -3,7 +3,7 @@ title: The learn extension's observer runs before merge guard archives a task, o
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'Captain 2026-10-13: 「批准632」 to the validation gate question "Deliver #632 head 7679ab7a ...: FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority."'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-13T07:17:39Z
 worktree: .worktrees/spacedock-ensign-observer-before-merge-guard
 pr: pr-merge:632
+verdict: PASSED
+completed: 2026-10-13T10:40:11Z
+archived: 2026-10-13T10:40:12Z
 ---
 
 The learn extension's FO step requires dispatching `kc-dev-flow-2:observer` and committing `<task>/observer.md` before `merge guard`, because an archived task's state is publish-only. On 2026-10-13 FO ran `merge guard --verdict passed` on `journey-map-dev2-contract` without it; the observer ran afterwards and its report could not be saved into the task. The learn evaluation (job 92da235b) recorded this as a rule that exists and was not followed; nothing blocks `merge guard` when `observer.md` is absent.
