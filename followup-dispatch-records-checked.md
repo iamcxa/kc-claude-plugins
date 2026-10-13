@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:followup-dispatch-records-checked:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:followup-dispatch-records-checked-ideation-1
+              briefing:
+                id: briefing:followup-dispatch-records-checked:ideation:attempt-1:revision-1
+                digest: sha256:823e90874ba08411f5007ea16f591d85292a62e264808d5413c1dd9ae2d37e59
+                room-ref: ./followup-dispatch-records-checked/review/ideation/briefing-1
 started: 2026-10-13T15:57:28Z
 ---
 

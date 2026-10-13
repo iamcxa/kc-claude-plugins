@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:followup-dispatch-records-checked:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approving accepts the recommendations for D1 (a follow-up record carries the items its message asks, never a pointer to an earlier checklist, with one workflow README clause and a word-budget raise of about 20 words) and D2 (the check runs at validation only; no pre-send mode).",
+  "artifacts": [
+    {
+      "id": "artifact:followup-dispatch-records-checked:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ea430d29890e940a464b57c7bb3d7d5042e84f84/followup-dispatch-records-checked.md",
+      "rev": "sha256:5edbebbe6d93dff3d6a123f076430b12c0313e24074cfe0ac201ec8890700198",
+      "mediaType": "text/markdown",
+      "summary": "Ideation PASSED its checklist. dispatch_records.py gains two rules and no follow-up marker: every record carries an absolute Package root: line inside ## Scope notes, and a checklist in which not every line names a sibling record. Prototype replay: the three named records fail both rules, the nine others in that folder pass; across the state checkout 19 -\u003e 32 of 77 records fail (13 new, all archived; 0 active; nothing runs the check on archived tasks). AC-1..AC-7 with falsifiers; AC-6 (README clause, budget) and AC-7 (tests red without rules) owed by implementation. Limits: a paraphrased pointer or a pointer beside one real line still passes; the check fires one validation cycle after the follow-up is sent (D2). design_surfaces.py check: presentable, exit 0."
+    }
+  ]
+}
