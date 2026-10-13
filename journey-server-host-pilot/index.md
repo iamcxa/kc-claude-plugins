@@ -64,6 +64,15 @@ gates:
                 decision: revise
                 reason: 'Accepts direction and preserves candidate 4f678cd88eddbcc171df7e2037dd19d2fbf4065b; full delivery is not approved. Captain requests continued remote Node, hosted Cloudflare, real hibernation/recovery verification and before/after usage measurement. Cloudflare must remain Free; room UI and concurrent-write rules remain unchanged. Concrete assignment: prepare isolated synthetic hosted targets, verify provider and credential prerequisites, execute bounded supported journeys and lifecycle checks on the unchanged candidate, record actual resource usage and remaining limits. No merge, paid upgrade, retained-data migration or product repair is authorized.'
 started: 2026-10-13T08:47:34Z
+id: journey-server-host-pilot
+review-round:
+    id: round:journey-server-host-pilot:validation:1
+    stage: validation
+    cycle: 1
+    briefing:
+        id: briefing:journey-server-host-pilot:validation:round-1
+        digest: sha256:6cfa353ec5b10e875da8765216fd36597574b13e405b4d1ed3d369f71f23b7bc
+        room-ref: ./review/validation/round-1
 ---
 
 Kent approved a minimal reusable server-host refactor, with the same agent access model (base URL and a per-agent credential) for Node.js locally/remotely and Cloudflare. This is a new pilot task; it does not reopen, migrate, or replace the older hosted POC tasks.

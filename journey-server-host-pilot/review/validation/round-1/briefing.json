@@ -1,0 +1,14 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:validation:round-1",
+  "question": "Does the authorized Cloudflare-only correction answer the observed hibernation blocker while preserving the candidate and pilot boundaries?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:hibernation-fix-ruling",
+      "uri": "git-root://state/f39377cf391400b2172ea42daf66ee88e612ac54/journey-server-host-pilot/fo-rulings/cloudflare-hibernation-fix.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:8213cc615eaaea6687f34605f4943bec2f00722fead6a7e8a3850357f05a218f"
+    }
+  ]
+}
