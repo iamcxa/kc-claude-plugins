@@ -1,0 +1,130 @@
+{
+  "base": "6d0f8da951b5ea9ea50fca6bd3685fc360bf502f",
+  "candidate": "4f678cd88eddbcc171df7e2037dd19d2fbf4065b",
+  "scope": "Implementation candidate checks. Full task-aware number guard has CONFIG ERROR; supplementary checks do not replace it.",
+  "variables": {
+    "WT": "Assigned candidate worktree",
+    "PKG": "Approved replacement 0.21.0 package root; see dispatch/implementation-1-package-recovery.md",
+    "TASK": "This state task directory",
+    "BASE": "6d0f8da951b5ea9ea50fca6bd3685fc360bf502f"
+  },
+  "capturedChecks": [
+    {
+      "name": "design_surfaces",
+      "commandTemplate": "rtk proxy python3 \"$PKG/scripts/design_surfaces.py\" check \"$TASK/index.md\"",
+      "exitCode": 0,
+      "output": "index.md: design surfaces presentable\n"
+    },
+    {
+      "name": "comment_ratio",
+      "commandTemplate": "rtk proxy python3 \"$PKG/scripts/comment_ratio.py\" \"6d0f8da951b5ea9ea50fca6bd3685fc360bf502f\" HEAD --repo \"$WT\" --workflow-dir \"$WT/docs/dev2\"",
+      "exitCode": 0,
+      "output": "code lines 1148, comment lines 0, 0.0%\nmaximum 5% (package default) met\n"
+    },
+    {
+      "name": "adr_lint",
+      "commandTemplate": "rtk proxy python3 \"$PKG/scripts/adr_lint.py\" \"$WT/docs/adr\" --since \"6d0f8da951b5ea9ea50fca6bd3685fc360bf502f\" --require 0015",
+      "exitCode": 0,
+      "output": "14 ADR file(s) checked, 0 legacy\n"
+    },
+    {
+      "name": "doc_impact",
+      "commandTemplate": "rtk proxy python3 \"$PKG/scripts/doc_impact.py\" \"6d0f8da951b5ea9ea50fca6bd3685fc360bf502f\" HEAD --repo \"$WT\" --json",
+      "exitCode": 0,
+      "output": "[\n {\n  \"doc\": \"docs/journey/kc-journey-map/README.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-journey-map/lib/journey-tldr.mjs\"\n  ]\n },\n {\n  \"doc\": \"kc-journey-map/docs/private-host.md\",\n  \"state\": \"updated\",\n  \"terms\": [\n   \"JourneyRegistry\",\n   \"JourneyRoom\"\n  ]\n }\n]\n"
+    },
+    {
+      "name": "number_guards_full",
+      "commandTemplate": "rtk proxy python3 \"$PKG/scripts/number_guards.py\" check --repo \"$WT\" --workflow-dir \"$WT/docs/dev2\" --task \"$TASK/index.md\" --base \"6d0f8da951b5ea9ea50fca6bd3685fc360bf502f\"",
+      "exitCode": 2,
+      "output": "number_guards: task has Surfaces: db but no migrations-path is declared (pass --migrations-path or set migrations-path: in the workflow README)\n"
+    },
+    {
+      "name": "number_guards_supplemental_no_task",
+      "commandTemplate": "rtk proxy python3 \"$PKG/scripts/number_guards.py\" check --repo \"$WT\" --workflow-dir \"$WT/docs/dev2\" --base \"6d0f8da951b5ea9ea50fca6bd3685fc360bf502f\"",
+      "exitCode": 0,
+      "output": "migration guard skipped: no migrations-path declared\nR4 skipped: no --task given\nPASS: no findings\nbase 6d0f8da951b5 head 4f678cd88edd merge-base 6d0f8da951b5\n"
+    },
+    {
+      "name": "adr_sql_diff",
+      "commandTemplate": "rtk proxy git -C \"$WT\" diff --name-status \"6d0f8da951b5ea9ea50fca6bd3685fc360bf502f\" HEAD -- docs/adr \"*.sql\"",
+      "exitCode": 0,
+      "output": "A\tdocs/adr/0015-one-private-journey-operation-core.md\n"
+    },
+    {
+      "name": "source_status",
+      "commandTemplate": "rtk proxy git -C \"$WT\" status --porcelain",
+      "exitCode": 0,
+      "output": ""
+    },
+    {
+      "name": "diff_check",
+      "commandTemplate": "rtk proxy git -C \"$WT\" diff --check \"6d0f8da951b5ea9ea50fca6bd3685fc360bf502f\" HEAD",
+      "exitCode": 0,
+      "output": ""
+    }
+  ],
+  "earlierObservedChecks": [
+    {
+      "name": "typecheck",
+      "commandTemplate": "rtk proxy npm --prefix \"$WT/kc-journey-map\" run typecheck",
+      "exitCode": 0,
+      "observation": "TypeScript noEmit check passed."
+    },
+    {
+      "name": "library_regressions",
+      "commandTemplate": "rtk proxy node --test --test-reporter=dot \"$WT/kc-journey-map/lib/\"*.test.mjs",
+      "exitCode": 0,
+      "observation": "215 tests passed, observed as 215 dot reporter marks."
+    },
+    {
+      "name": "vite_build",
+      "commandTemplate": "rtk proxy \"$WT/kc-journey-map/node_modules/.bin/vite\" build --config \"$WT/kc-journey-map/vite.config.mts\"",
+      "exitCode": 0,
+      "observation": "Production build passed; retained warning about chunks above 500 kB."
+    },
+    {
+      "name": "release_version_parity",
+      "commandTemplate": "rtk proxy bash \"$WT/scripts/version-parity-check.sh\"",
+      "exitCode": 0,
+      "observation": "Release-please config extra-file paths/selectors and first-release contract passed. Plugin enumeration matches. Version parity: all plugins consistent."
+    },
+    {
+      "name": "skill_frontmatter",
+      "commandTemplate": "rtk proxy bash \"$WT/scripts/skill-frontmatter-lint.sh\"",
+      "exitCode": 0,
+      "observation": "Skill frontmatter lint: checked 68 SKILL.md file(s) across 68 skill directory(ies); all valid."
+    },
+    {
+      "name": "committed_roborev",
+      "commandTemplate": "rtk proxy python3 \"$PKG/extensions/roborev/roborev_gate.py\" --repo \"$WT\" --base \"$BASE\"",
+      "exitCode": 0,
+      "output": "clean on 4f678cd88; evidence=roborev:621\n",
+      "observation": "Initial sandbox-only attempt reported daemon unavailable; authorized local daemon access completed clean on the committed candidate."
+    },
+    {
+      "name": "task_process_cleanup",
+      "exitCode": 0,
+      "observation": "Post-run process inventory filtered to candidate worktree found zero remaining task processes. Runners also close browser, Vite, host and baseline subprocesses in finally."
+    }
+  ],
+  "reservationComparison": {
+    "taskReservation": "ADR: 0015",
+    "actualAdded": [
+      "docs/adr/0015-one-private-journey-operation-core.md"
+    ],
+    "sqlDiff": [],
+    "result": "MATCH; SQL diff empty; supplementary read-only observation, not full number-guard PASS"
+  },
+  "notRun": [
+    "Hosted Node",
+    "Hosted Cloudflare",
+    "Provider hibernation",
+    "Real billing",
+    "Formal licensing",
+    "Retained-data migration",
+    "Deployment",
+    "PR publication",
+    "Marketplace installation and prepublish sanitize gates for a later PR"
+  ]
+}

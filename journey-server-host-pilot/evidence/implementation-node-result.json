@@ -1,0 +1,136 @@
+{
+  "adapter": "node",
+  "baseline": "6d0f8da951b5ea9ea50fca6bd3685fc360bf502f",
+  "candidate": "4f678cd88eddbcc171df7e2037dd19d2fbf4065b",
+  "sourceDirty": false,
+  "runtime": "v24.18.0",
+  "target": "http://127.0.0.1:53892",
+  "checks": [
+    {
+      "name": "baseline legacy Node initializes disposable data before the private pilot",
+      "result": "PASS",
+      "durationMs": 705
+    },
+    {
+      "name": "baseline default records and page links are unchanged; configured base changes URL alone",
+      "result": "PASS",
+      "durationMs": 93
+    },
+    {
+      "name": "grant helper issues a digest-only policy and refuses credential-ID reuse",
+      "result": "PASS",
+      "durationMs": 645
+    },
+    {
+      "name": "HTTP and MCP deny missing invalid expired revoked and cross-room access before creation",
+      "result": "PASS",
+      "durationMs": 41
+    },
+    {
+      "name": "MCP initializes discovers tools and accepts initialized notification",
+      "result": "PASS",
+      "durationMs": 14
+    },
+    {
+      "name": "GET auto-creation is immediately visible and health filters room grants",
+      "result": "PASS",
+      "durationMs": 70
+    },
+    {
+      "name": "invalid PATCH and PUT do not create a room or mutate an existing document",
+      "result": "PASS",
+      "durationMs": 18
+    },
+    {
+      "name": "delivered CLI render/read and independent MCP read preserve journey records",
+      "result": "PASS",
+      "durationMs": 642
+    },
+    {
+      "name": "both principals share full-record last-writer PATCH and snapshot PUT",
+      "result": "PASS",
+      "durationMs": 40
+    },
+    {
+      "name": "room-scoped assets reject unauthorized overwrite aliases and unassociated legacy IDs",
+      "result": "PASS",
+      "durationMs": 69
+    },
+    {
+      "name": "socket admission checks exact origin and room rights",
+      "result": "PASS",
+      "durationMs": 27
+    },
+    {
+      "name": "capabilities and configured checkout/save behavior are explicit",
+      "result": "PASS",
+      "durationMs": 117
+    },
+    {
+      "name": "Node restart or Cloudflare-local eviction/reconnect preserves documents inventory and bytes",
+      "result": "PASS",
+      "durationMs": 729
+    },
+    {
+      "name": "HTTPS hostname browser session and actual tldraw WebSocket read back CLI records",
+      "result": "PASS",
+      "durationMs": 2678
+    },
+    {
+      "name": "HTTPS IP browser uses its genuine origin and configured session boundary",
+      "result": "PASS",
+      "durationMs": 2790
+    },
+    {
+      "name": "room snapshot plus complete asset manifest restores to empty storage and reconnects",
+      "result": "PASS",
+      "durationMs": 945
+    },
+    {
+      "name": "session exchange rejects wrong origin and expiry closes the live socket",
+      "result": "PASS",
+      "durationMs": 8697
+    },
+    {
+      "name": "revocation closes an admitted socket and survives restart",
+      "result": "PASS",
+      "durationMs": 1075
+    },
+    {
+      "name": "rollback reruns unchanged baseline Node over untouched legacy documents and assets",
+      "result": "PASS",
+      "durationMs": 785
+    }
+  ],
+  "hosted": "NOT RUN",
+  "billing": "NOT RUN",
+  "licensing": "NOT RUN",
+  "providerHibernation": "NOT RUN",
+  "versions": {
+    "@tldraw/sync-core": "5.4.0",
+    "miniflare": "4.20260730.0",
+    "playwright": "1.56.1",
+    "esbuild": "0.28.2"
+  },
+  "cliRender": "200 34 shapes -> {\"roomId\":\"shared\",\"put\":35,\"removed\":0,\"clock\":1}\n  trial: covers 1/1 activities\n",
+  "cliRead": {
+    "reordered": null,
+    "reorderConflict": null,
+    "reworded": [],
+    "rewordConflict": [],
+    "releaseMoved": [],
+    "storiesReordered": [],
+    "duplicated": [],
+    "unclaimed": [],
+    "missing": [],
+    "questionsAdded": [],
+    "questionsReworded": [],
+    "questionsDeleted": [],
+    "answersAdded": [],
+    "answersReworded": [],
+    "answersDeleted": []
+  },
+  "browserOrigin": "https://pilot.test:53893",
+  "status": "PASS",
+  "evidenceDirectory": "<candidate-worktree>/kc-journey-map/.host-check/run-V8FHzl"
+}

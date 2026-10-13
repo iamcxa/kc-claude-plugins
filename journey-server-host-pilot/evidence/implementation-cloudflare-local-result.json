@@ -1,0 +1,141 @@
+{
+  "adapter": "cloudflare-local",
+  "baseline": "6d0f8da951b5ea9ea50fca6bd3685fc360bf502f",
+  "candidate": "4f678cd88eddbcc171df7e2037dd19d2fbf4065b",
+  "sourceDirty": false,
+  "runtime": "v24.18.0",
+  "target": "http://127.0.0.1:53542",
+  "checks": [
+    {
+      "name": "baseline legacy Node initializes disposable data before the private pilot",
+      "result": "PASS",
+      "durationMs": 1311
+    },
+    {
+      "name": "baseline default records and page links are unchanged; configured base changes URL alone",
+      "result": "PASS",
+      "durationMs": 294
+    },
+    {
+      "name": "grant helper issues a digest-only policy and refuses credential-ID reuse",
+      "result": "PASS",
+      "durationMs": 1119
+    },
+    {
+      "name": "HTTP and MCP deny missing invalid expired revoked and cross-room access before creation",
+      "result": "PASS",
+      "durationMs": 59
+    },
+    {
+      "name": "registry failure returns 503 and retry registers the initialized room before acknowledgement",
+      "result": "PASS",
+      "durationMs": 1319
+    },
+    {
+      "name": "MCP initializes discovers tools and accepts initialized notification",
+      "result": "PASS",
+      "durationMs": 16
+    },
+    {
+      "name": "GET auto-creation is immediately visible and health filters room grants",
+      "result": "PASS",
+      "durationMs": 43
+    },
+    {
+      "name": "invalid PATCH and PUT do not create a room or mutate an existing document",
+      "result": "PASS",
+      "durationMs": 30
+    },
+    {
+      "name": "delivered CLI render/read and independent MCP read preserve journey records",
+      "result": "PASS",
+      "durationMs": 783
+    },
+    {
+      "name": "both principals share full-record last-writer PATCH and snapshot PUT",
+      "result": "PASS",
+      "durationMs": 56
+    },
+    {
+      "name": "room-scoped assets reject unauthorized overwrite aliases and unassociated legacy IDs",
+      "result": "PASS",
+      "durationMs": 111
+    },
+    {
+      "name": "socket admission checks exact origin and room rights",
+      "result": "PASS",
+      "durationMs": 28
+    },
+    {
+      "name": "capabilities and configured checkout/save behavior are explicit",
+      "result": "PASS",
+      "durationMs": 20
+    },
+    {
+      "name": "Node restart or Cloudflare-local eviction/reconnect preserves documents inventory and bytes",
+      "result": "PASS",
+      "durationMs": 491
+    },
+    {
+      "name": "HTTPS hostname browser session and actual tldraw WebSocket read back CLI records",
+      "result": "PASS",
+      "durationMs": 2869
+    },
+    {
+      "name": "HTTPS IP browser uses its genuine origin and configured session boundary",
+      "result": "PASS",
+      "durationMs": 2362
+    },
+    {
+      "name": "room snapshot plus complete asset manifest restores to empty storage and reconnects",
+      "result": "PASS",
+      "durationMs": 887
+    },
+    {
+      "name": "session exchange rejects wrong origin and expiry closes the live socket",
+      "result": "PASS",
+      "durationMs": 38431
+    },
+    {
+      "name": "revocation closes an admitted socket and survives restart",
+      "result": "PASS",
+      "durationMs": 30548
+    },
+    {
+      "name": "rollback reruns unchanged baseline Node over untouched legacy documents and assets",
+      "result": "PASS",
+      "durationMs": 1521
+    }
+  ],
+  "hosted": "NOT RUN",
+  "billing": "NOT RUN",
+  "licensing": "NOT RUN",
+  "providerHibernation": "NOT RUN",
+  "versions": {
+    "@tldraw/sync-core": "5.4.0",
+    "miniflare": "4.20260730.0",
+    "playwright": "1.56.1",
+    "esbuild": "0.28.2"
+  },
+  "cliRender": "200 34 shapes -> {\"roomId\":\"shared\",\"put\":35,\"removed\":0,\"clock\":1}\n  trial: covers 1/1 activities\n",
+  "cliRead": {
+    "reordered": null,
+    "reorderConflict": null,
+    "reworded": [],
+    "rewordConflict": [],
+    "releaseMoved": [],
+    "storiesReordered": [],
+    "duplicated": [],
+    "unclaimed": [],
+    "missing": [],
+    "questionsAdded": [],
+    "questionsReworded": [],
+    "questionsDeleted": [],
+    "answersAdded": [],
+    "answersReworded": [],
+    "answersDeleted": []
+  },
+  "browserOrigin": "https://pilot.test:53543",
+  "status": "PASS",
+  "evidenceDirectory": "<candidate-worktree>/kc-journey-map/.host-check/run-IT73sI"
+}
