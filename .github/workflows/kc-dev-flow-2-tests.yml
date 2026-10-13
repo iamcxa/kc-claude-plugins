@@ -61,6 +61,9 @@ jobs:
       - name: extensions/copilot/test_copilot_review.py
         run: python3 kc-dev-flow-2/extensions/copilot/test_copilot_review.py
 
+      - name: extensions/journey-map/test_map_footprint.py
+        run: python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py
+
       - name: test_dispatch_records.py
         run: python3 kc-dev-flow-2/scripts/test_dispatch_records.py
 
