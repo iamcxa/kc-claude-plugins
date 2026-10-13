@@ -15,6 +15,17 @@ gates:
                 id: briefing:fo-lifecycle-mod:backlog:attempt-1:revision-1
                 digest: sha256:af2480e55707c7b503a21ad1c18ce6c6de9b283fba6565b8ad5a783f22870546
                 room-ref: ./fo-lifecycle-mod/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-lifecycle-mod:backlog:1
+                briefing: briefing:fo-lifecycle-mod:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T23:51:07.681641Z"
+                decision: approve
+                reason: 'Captain approved (「ok」): schedule as Pilot and enter ideation, next after followup-dispatch-records-checked.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Filed on the Captain's 「開」 (2026-10-14) after an observer read of the spacedock-dev/subspace-relay FO session that delivered PR #362 (task `owner-sees-all-feedback-room`, kc-dev-flow-2 0.22.0). The FO never ran `pr_watch.py` for the PR and ran `merge guard` with no observer step and no learn. Both rules were in the adopter README, but FO read it in `sed -n` ranges up to line 480; `## Delivery authority` starts at line 492 and `## Extensions` at 538. The Captain asked whether the README is too long and whether to split or index it; the direction he approved is a mod keyed to Spacedock's lifecycle points rather than a longer README or read-sized slices.
