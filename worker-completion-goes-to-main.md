@@ -267,3 +267,37 @@ PASSED at 4202cdf9: AC-1 to AC-3 hold with each falsifier shown failing, and the
 ### Summary
 
 Reconciled #633 with #632's round 2 by a merge commit; one conflict in the word budget, resolved additively to 5463. Behaviour is unchanged. Validation acceptance script step 5 in the validation report expects 5459 at 4202cdf9; on this head it prints 5463, which is the forced difference above.
+
+## Stage Report: validation (cycle 2, recheck at a7fa7f1b)
+
+- DONE: Independent recheck of #633 at head a7fa7f1b after the merge of #632's repaired head 40c714a6 (same-stage conflict handoff, implementation-2): this PR's own hunks over its new base equal the validated `git diff 0830a3be 4202cdf9` except the forced WORKFLOW_WORD_BUDGET line (5459 to 5463), confirmed; AC-1 to AC-3 re-run at the new head with one falsifier each; AC-4's smoke result carried from validation cycle 1 unless a byte it depends on changed
+  Confirmed: the +/- lines of `git diff 40c714a6 a7fa7f1b` and `git diff 0830a3be 4202cdf9` differ only in the budget lines (`-5411/+5459` became `-5415/+5463`, comment `5459` became `5463`); 6 files, 45 insertions, 6 deletions. AC-1: `test_sd_dispatch.py` exit 0, 6 PASS; deleting the skill sentence in a copy reports a gap only for `scope-notes-main-line-skill`, deleting the workflow sentence only for `scope-notes-main-line`. AC-2: removing the `{MAIN_LINE}` line from the test's scope notes fails `assert MAIN_LINE in body and body.index(MAIN_LINE) < body.index("### Completion checklist")` at ('claude','ideation'); `/dev/null` scope notes fails the `Package root:` assertion at the same cell. AC-3: `test_dispatch_records.py` 5 tests OK; with the `PARTS` entry removed in a copy 4 subtests fail and a record without the line exits 0 (candidate exits 1 with the message; with `Completion message to \`main\`.` exits 0). AC-4 carried: the dispatch file bytes, `MAIN_LINE` and both package sentences are byte-identical to the validated diff, and the merge touched none of them; the smoke (3 of 3 `team-lead` unchanged, 3 of 3 `main` with the line) stands, smoke only.
+- DONE: The minimal acceptance script updated to the new head (its lint step now expects 5463), run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Below; run under `env -i ... bash --noprofile --norc`, all steps as listed. Step 3 changed beyond the pin: it now sets `SPACEDOCK_BIN` because in a fresh shell `spacedock` resolved to a 0.26.0 Homebrew binary and the test failed (exit 1).
+- DONE: adr_lint.py docs/adr --since <base> run at the new head with its exit code; verdict PASSED or REJECTED with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since 40c714a6` from the package root: "13 ADR file(s) checked, 0 legacy", exit 0. Also at a7fa7f1b: `comment_ratio.py 40c714a6 a7fa7f1b` 1 of 36 code lines (2.8%), exit 0; `design_surfaces.py check` exit 0; `dispatch_records.py` on this task's folder "5 dispatch record(s) complete", exit 0; all 16 `scripts/test_*.py` exit 0 (`test_sd_dispatch.py` with `--sd-plugin-root` 0.27.0 and `SPACEDOCK_BIN`); CI on a7fa7f1b: GitGuardian, multi-profile route gate, unit tests, version parity all pass. Verdict PASSED.
+
+### Findings (Review-finding disposition)
+
+- Polish: the cycle 1 acceptance script step 3 assumed `spacedock` on PATH is 0.27.x; fixed in the script below by naming `SPACEDOCK_BIN="$HOME/.local/bin/spacedock"`. The adopter needs Spacedock 0.27.x at that path (or sets `SPACEDOCK_BIN`).
+- Polish: `doc_impact.py 40c714a6 a7fa7f1b` lists the same three documents as cycle 1 (`kc-dev-flow-2/README.md`, `references/sd/adoption.md`, `skills/maintain-flow/SKILL.md`); cycle 1 read them as `unaffected: they name the scripts as commands, not their budget or entries`; the merge changed none of those bytes, so the finding is unchanged and FO can append it to the implementation report.
+- Deferred risk and accepted D2 cost: unchanged from cycle 1 (negated-wording match; `replay_dispatch.py` omits the line by design; 9 historical records in 3 tasks fail the check and are waived per task).
+- Unverified: Codex and Pi hosts; a rate for the fetch-and-still-`team-lead` case; AC-4 was not rerun (carried).
+
+### Minimal acceptance script
+
+Needs: `git`, `python3`, network to github.com, the Spacedock 0.27.x plugin install at `$HOME/.claude/plugins/cache/spacedock/spacedock/0.27.0`, and a Spacedock 0.27.x executable at `$HOME/.local/bin/spacedock`. Run from any directory in a fresh shell; it clones into `/tmp/accept-633`.
+
+1. `rm -rf /tmp/accept-633 && git clone --quiet --filter=blob:none https://github.com/iamcxa/kc-claude-plugins /tmp/accept-633 && cd /tmp/accept-633 && git fetch --quiet origin pull/633/head && git checkout --quiet a7fa7f1b0951d0a08af1bb54eb0d0510d9513c72 && git rev-parse HEAD` prints `a7fa7f1b0951d0a08af1bb54eb0d0510d9513c72`.
+2. `cd /tmp/accept-633 && python3 -B kc-dev-flow-2/scripts/test_dispatch_records.py 2>&1 | tail -3` prints `Ran 5 tests in 0.0Ns`, a blank line, `OK`.
+3. `cd /tmp/accept-633 && SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 -B kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$HOME/.claude/plugins/cache/spacedock/spacedock/0.27.0" > /tmp/accept-633-sd.log 2>&1; echo "test_sd_dispatch exit $?"; grep -c "^PASS" /tmp/accept-633-sd.log; grep -o "scope notes with the package root and the .main. completion line carried into the dispatch file ahead of the checklist" /tmp/accept-633-sd.log` prints `test_sd_dispatch exit 0`, `6`, then the quoted phrase (with backticks around `main`).
+4. `cd /tmp/accept-633 && T=$(mktemp -d) && mkdir $T/dispatch && printf "Dispatched: a7fa7f1b0951d0a08af1bb54eb0d0510d9513c72\nModel: sonnet\n\n## Checklist\n\n1. x\n\n## Scope notes\n\nPackage root: /x\n" > $T/dispatch/a-1.md && python3 -B kc-dev-flow-2/scripts/dispatch_records.py $T; echo "without the line: exit $?"; printf "Send your completion message to \`main\`.\n" >> $T/dispatch/a-1.md && python3 -B kc-dev-flow-2/scripts/dispatch_records.py $T; echo "with the line: exit $?"` prints `a-1.md: needs a scope-notes line naming main as the completion recipient`, `without the line: exit 1`, `1 dispatch record(s) complete`, `with the line: exit 0`.
+5. `cd /tmp/accept-633 && python3 -B kc-dev-flow-2/scripts/lint-skills.py; echo "lint exit $?"` prints a `PASS: basic frontmatter...` line, `references/sd/workflow.md: 5463 of 5463 words; no unlisted passage repeats it`, `Not checked: ...`, `lint exit 0`.
+
+Observed (fresh `env -i` bash): step 1 `a7fa7f1b0951d0a08af1bb54eb0d0510d9513c72`; step 2 `Ran 5 tests in 0.063s` / `OK`; step 3 `test_sd_dispatch exit 0`, `6`, the phrase; step 4 the message, `exit 1`, `1 dispatch record(s) complete`, `exit 0`; step 5 `5463 of 5463 words`, `lint exit 0`.
+
+Does not cover: that a live FO follows the new sentence, that a worker with the line never sends to `team-lead` (AC-4 is a six-run smoke from cycle 1), Codex and Pi hosts, and the 9 historical records that step 4's check would refuse.
+
+### Summary
+
+PASSED at a7fa7f1b: the merge changed only the forced budget line (5459 to 5463); AC-1 to AC-3 re-run green with one falsifier each failing, AC-4 carried because no byte it depends on changed. Two Polish items (the acceptance script's missing `SPACEDOCK_BIN`, fixed in the script above; the `doc_impact` records), nothing returns through feedback. Throwaway worktree, copies and clone removed; `/tmp/val633-ac4` from cycle 1 remains.
