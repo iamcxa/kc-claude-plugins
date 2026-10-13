@@ -3,7 +3,7 @@ title: dispatch_records.py passes a follow-up dispatch record that lacks the Pac
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
