@@ -26,6 +26,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-10-13T06:56:42Z
 ---
 
 On 2026-10-13 FO requested Copilot on iamcxa/kc-claude-plugins #627 and #628 (task `journey-map-dev2-contract`). Six seconds later Copilot left a COMMENTED review on each: "Copilot was unable to review this pull request because the user who requested the review has reached their quota limit." `python3 <package>/extensions/copilot/copilot_review.py iamcxa/kc-claude-plugins 627` printed `answered on 32db12730: "no heading", 0 line comment(s); evidence=review:5499757433` and exited 0 (the same for #628, review:5499757731). Exit 0 is the reader's "answered" result, so a quota refusal reads like a review of the head with no findings unless FO reads the body.
@@ -46,6 +47,7 @@ To be written at ideation.
 
 ## FO alignment
 
-Needed at ideation: whether other non-review Copilot answers (an error, a "cannot review" text in another language) share the fix.
+Alignment: not needed before ideation; the Captain's two rulings fix the direction (do not wait for Copilot; repair the quota handling, scheduled now as Pilot). Open for ideation, not a Captain question: whether other non-review Copilot answers (an error, a "cannot review" text in another language) share the fix.
+Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
