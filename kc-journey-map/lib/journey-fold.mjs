@@ -69,7 +69,8 @@ function editsFor(src, q, fp, have) {
 		const first = q.items[0].key.range[0]
 		const indent = ' '.repeat(first - lineStart(src, first))
 		const at = afterLine(src, Math.max(end - 1, first))
-		edits.push({ start: at, end: at, text: fresh.map(([k, v]) => `${indent}${k}: ${v}\n`).join('') })
+		const lead = at > 0 && src[at - 1] !== '\n' ? '\n' : ''
+		edits.push({ start: at, end: at, text: lead + fresh.map(([k, v]) => `${indent}${k}: ${v}\n`).join('') })
 	}
 	return edits
 }

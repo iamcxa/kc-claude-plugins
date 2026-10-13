@@ -43,6 +43,14 @@ test('block shape: whole-file re-serialization rewrites the file, the fold adds 
 	assert.equal(parse(draft).steps[0].stories[0].questions[1].status, 'answered')
 })
 
+test('block shape: a last question in a file with no trailing newline is folded onto its own lines', () => {
+	const bare = BLOCK.replace(/\n$/, '').replace(/\n  - id: no-questions[\s\S]*$/, '') + '\n    - id: tail\n      ask: Last one'
+	const { draft, results } = fold(bare, footprint({ journey: 'review', story: 'front-door', question: 'tail' }))
+	assert.deepEqual(results.map((r) => r.outcome), ['applied'])
+	assert.match(draft, /ask: Last one\n      answer: /)
+	assert.equal(parse(draft).steps[0].stories[0].questions.at(-1).status, 'answered')
+})
+
 test('folding twice gives the same bytes and reports already', () => {
 	const first = fold(FLOW, footprint())
 	const second = planFold(first.draft, [footprint()])
