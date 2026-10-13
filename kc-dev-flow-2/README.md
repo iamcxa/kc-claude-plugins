@@ -177,6 +177,7 @@ workflow's `## Extensions` section is the rule FO follows.
 | [peers](extensions/peers/EXTENSION.md) | FO, when the answer lives in a live peer session's work | asks that peer in the same harness, with addressing, message and authority rules; otherwise FO finds the answer itself |
 | [copilot](extensions/copilot/EXTENSION.md) | FO review rounds, each push and the merge ask | requests and reads GitHub Copilot review rounds on the PR head |
 | [learn](extensions/learn/EXTENSION.md) | FO, right after a task is archived | runs `learn` and the observer, and presents both results |
+| [journey-map](extensions/journey-map/EXTENSION.md) | FO, after a gate ruling on a journey task, before `merge guard`, and after the archive | writes a footprint for a ruling that answers a map question, checks it before the merge guard, and folds it into the map as a docs-only pull request |
 
 ## Learning loop
 
