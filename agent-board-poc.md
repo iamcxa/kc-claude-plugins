@@ -1,6 +1,6 @@
 ---
 title: A Codex session asks on a local board and an idle Claude session wakes and answers
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
