@@ -644,3 +644,96 @@ Both repaired heads pass. Each of the four fixes reproduces fixed against the ol
 ### Summary
 
 All four items plus both extensions fixed with commits 32db1273 (#627) and 7d89898e (#628, on merge 4085393b); CI green, roborev clean once per PR. Left for FO: the limits above, the smoke workflow `push: branches: [main]` ruling from cycle 1, a fresh validation recheck and the next Codex round (no PR comment, review, ready or merge done).
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independent recheck of the cycle-3 repair on #627 head 32db1273 and #628 head 7d89898e: each of the four repaired items (missing or README-less workflow dir in audit and reconcile, amendment match bounded to its section, `already` only on a matching answer and status, duplicate story or question id refused) plus cycle 1 and 2 fixes still holding reproduced fixed, its new test shown failing under a mutation you run yourself, and AC-1, AC-2, AC-4, AC-5, AC-6 and AC-11 re-run at the new heads with any change from the cycle-2 figures named
+  Recommend PASSED for both heads. Heads confirmed with `gh pr view` (both open; 32db1273 on base main, 7d89898e on the -map branch); throwaway checkouts of each head and of the old heads c811de1f and f320d6d3, read and run only. Per item, old head then new head: (1) `audit` on a nonexistent path, a file, an empty dir and a dir with a README but no `_archive`: old `unrecorded 0`, exit 0 for the first three; new exit 2 naming `<dir>/README.md does not exist` for the first three, and the README-bearing dir prints `archive none: <path> does not exist`, `unrecorded 0`, exit 0; `journey-reconcile.mjs --workflow-dir` on the same three: old exit 0 with full counts, new exit 1 with the same message; (2) amendment 1 with no `Captain:` line: old `add --source amendment:1` took amendment 2's words, and in a task whose last amendment lacked the line it took a `Captain:` line from after `## Stage Report`; new refuses both (exit 1) and amendment 2 keeps its own date and words; (3) fold of a draft whose answer was reworded: old `already`, exit 0; new `conflict ... its answer no longer matches`, exit 1, draft equals its input; status changed to `open`: old `already`, new `conflict ... status no longer matches`; an unchanged draft stays `already` with identical bytes; (4) a repeated question id in one story and a repeated story id: old folded into the first, exit 0; new `refused, no draft written`, exit 1, no output file; `reconcile` on both counts `unfolded 1` with an `ambiguous` line. Cycle 1 and 2 fixes still hold (acceptance script steps 3 to 5: missing state checkout exit 2, contradictory not-needed exit 1, no-newline EOF fold on its own lines, duplicate story exit 1 on qnow copy). Mutations I ran, each restored, `git status` clean after: restore the pre-repair `state_dir` (README optional) fails `test_a_path_that_is_not_a_workflow_directory_is_an_error_not_a_clean_audit`; remove the `archive none` print fails `test_a_valid_workflow_with_no_archive_directory_is_a_stated_zero`; old unbounded amendment pattern fails `test_an_amendment_with_no_captain_line_is_not_a_source_and_does_not_borrow_the_next`; `already` always true fails 2 of 215, dropping the answer term fails 2, dropping the status term fails 1; story-dup check off, question-dup check off, command refusal off, reconcile README check off each fail 1 of 215. Two mutants survive and are equivalent, not gaps: deleting only the `raise` in `state_dir` (the following `read_text` raises an OSError that `main` maps to exit 2, so only the message changes) and removing `ambiguous` from `FAILING` (the fold throws before that exit code is read, and reconcile counts every non-`already` outcome as `unfolded`). AC-1: both `schema` commands print table and 1.0.0; renamed field with no bump exits 1; dropping the hash compare in `schemas.mjs` fails 1 test. AC-2: a `v2` line exits 1 in fold naming the string; a `v1` line with an extra field applies and an unknown kind prints `skipped`; dropping the pin fails 1 node test and 2 python tests. AC-4: baselines unchanged at both heads: qnow state d01c37bc `--since 2026-10-14` `unrecorded 0`, `--since 2000-01-01` `unrecorded 7`; relay ed63e6a0 0 and 2 (the README requirement does not affect either state checkout). AC-5: smoke in fresh `env -i` bash and zsh, exit 0, `lines removed 0, added 3`, `all steps passed`; CI `ruling-to-map loop (real Spacedock CLI)` passes on 7d89898e. AC-6: qnow df8ee1d2 (171 stories, 0 duplicates, 110 questions, 79 answered, 31 open, 20 deferred, 11 plain, 6 repeated ids, unsourced 79, unfolded 0, stale-open 0, exit 0) and relay 0295d163 (142 stories, 220 questions, 198 answered, 22 open, 1 deferred, 21 plain, unsourced 198, 0, 0, exit 0), two runs byte-identical each; duplicate story id on a qnow copy prints `duplicate-story-ids 1`, exit 1. Folding a footprint for every open question with answers holding a colon, hash, quotes, leading dash, CJK, backslash and YAML-special characters: qnow 31 applied, relay 26 applied, then a second fold of the draft gave all `already` with identical bytes, so the stricter `already` test does not break a clean refold; `reconcile` on those drafts still `unfolded 0`. AC-11: changing "Read the CHANGELOG when" and deleting the ADR file each fail the dev2 test; the node ADR-file case fails as before. Changes from cycle-2 figures: none in any figure; two behaviours changed by design: `--workflow-dir` and `audit WORKFLOW_DIR` now need a `README.md` (AC-6's "temp workflow directory holding no journey tasks" must hold a README; an empty dir now exits 1), and tests are 23 Python and 215 node (were 20 and 212).
+- DONE: The minimal acceptance script updated to the new heads, run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Written below; run as `env -i HOME PATH bash` and `env -i HOME PATH zsh -f` from `/`, on a fresh `git worktree add --detach /tmp/jm-accept 7d89898e` with no `node_modules`; every step printed the expected line, `git status` of the checkout was clean afterwards, and the worktree was removed so FO can recreate it.
+- DONE: adr_lint.py docs/adr --since <base> run at the new heads with its exit code; verdict PASSED or REJECTED with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since e2524e93` and `... --require 0012` exit 0 ("12 ADR file(s) checked, 0 legacy") at 32db1273 and 7d89898e, package 0.21.0. Verdict PASSED for both heads; findings below are Deferred risk or Polish, none Material.
+
+### Minimal acceptance script
+
+Needs (named): a kc-claude-plugins clone that has fetched the PR 628 head; node 24 (22.13 or later) with npm; python3; `spacedock` 0.27.2 on PATH; network for `npm ci`. Prerequisite, once, from the clone: `git worktree add --detach /tmp/jm-accept 7d89898e`. Then run this file with bash or zsh, from any directory:
+
+```bash
+cd /tmp/jm-accept || exit 1
+FP=kc-dev-flow-2/extensions/journey-map/map_footprint.py
+T=$(mktemp -d)
+echo "== 1 install and the ruling-to-map loop on the real Spacedock CLI"
+(cd kc-journey-map && npm ci >/dev/null 2>&1; echo "npm ci exit $?")
+bash kc-journey-map/scripts/journey-dev2-loop-smoke.sh > /tmp/jm-smoke.out 2>&1; echo "smoke exit $?"; tail -2 /tmp/jm-smoke.out
+echo "== 2 schema pointers, then a renamed field with no version bump"
+python3 $FP schema journey-footprint | sed -n '1p;$p'; node kc-journey-map/lib/schemas.mjs journey-map-question | sed -n '1p;$p'
+sed -i.bak 's/("question", "a question id/("question_id", "a question id/' $FP
+python3 $FP schema journey-footprint >/dev/null; echo "renamed field, no version bump: exit $?"
+git checkout -- $FP; rm -f $FP.bak
+echo "== 3 repair: a path that is not a workflow, or a missing state checkout, is an error and never a clean audit"
+mkdir "$T/empty" "$T/ws" "$T/valid"
+printf -- '---\nstate: .spacedock-state\n---\n' > "$T/ws/README.md"; printf -- '---\ncommit: x\n---\n' > "$T/valid/README.md"
+python3 $FP audit "$T/nonexistent" --since 2026-10-13; echo "nonexistent dir: exit $?"
+python3 $FP audit "$T/empty" --since 2026-10-13; echo "dir without README: exit $?"
+python3 $FP audit "$T/ws" --since 2026-10-13; echo "declared state checkout missing: exit $?"
+python3 $FP audit "$T/valid" --since 2026-10-13; echo "valid workflow, no _archive: exit $?"
+echo "== 4 repair: an amendment without a Captain line is not a source; 'not needed' with a valid footprint is a contradiction"
+cat > "$T/t.md" <<'EOT'
+---
+title: t
+journey: shop
+journey-release: r1
+journey-story: checkout
+---
+
+## FO alignment
+
+Map footprints: not needed: only approvals
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-12, chat
+Supersedes: none
+
+### Amendment 2 — 2026-10-13, gate
+Captain: 「keep six months」 (in chat)
+Supersedes: none
+EOT
+python3 $FP check "$T/t.md"; echo "not needed, no footprint: exit $?"
+python3 $FP add "$T/t.md" --question q1 --source amendment:1 --words "keep six months" --answer "Keep."; echo "add from amendment 1 (no Captain line): exit $?"
+python3 $FP add "$T/t.md" --question q1 --source amendment:2 --words "keep six months" --answer "Keep." >/dev/null; echo "add from amendment 2: exit $?"
+python3 $FP check "$T/t.md"; echo "not needed, one valid footprint: exit $?"
+echo "== 5 repair: fold of a last block question with no trailing newline; a reworded fold or a repeated id is refused; reconcile needs a workflow"
+printf 'journey: review\nreleases:\n- id: r1\n  goal: first\nsteps:\n- id: agents\n  card: Agents\n  stories:\n  - id: front-door\n    release: r1\n    status: gap\n    card: Pointer\n    questions:\n    - id: tail\n      ask: Last one' > "$T/map.yaml"
+echo '{"schema":"journey-footprint/v1","kind":"answered","id":"fp:t:1","task":"t","journey":"review","story":"front-door","question":"tail","words":"yes keep it","date":"2026-10-13","source":"gate-attempt:x","answer":"Keep it."}' > "$T/fp.jsonl"
+node kc-journey-map/lib/journey-fold.mjs "$T/map.yaml" --footprints "$T/fp.jsonl" --out "$T/draft.yaml"; echo "fold exit $?"; tail -4 "$T/draft.yaml"
+node kc-journey-map/lib/journey-fold.mjs "$T/draft.yaml" --footprints "$T/fp.jsonl" --out "$T/same.yaml" | head -1
+cmp "$T/draft.yaml" "$T/same.yaml" && echo "folded twice: identical bytes"
+sed 's/answer: "Keep it."/answer: "Reworded."/' "$T/draft.yaml" > "$T/reworded.yaml"
+node kc-journey-map/lib/journey-fold.mjs "$T/reworded.yaml" --footprints "$T/fp.jsonl" --out "$T/again.yaml" > "$T/reworded.out"; echo "fold of a reworded answer: exit $?"; head -1 "$T/reworded.out"
+{ cat "$T/map.yaml"; printf '\n    - id: tail\n      ask: Again\n'; } > "$T/dup.yaml"
+node kc-journey-map/lib/journey-fold.mjs "$T/dup.yaml" --footprints "$T/fp.jsonl" --out "$T/dupdraft.yaml"; echo "fold with a repeated question id: exit $?"; ls "$T/dupdraft.yaml" 2>&1 | tail -1
+node kc-journey-map/lib/journey-reconcile.mjs "$T/map.yaml" --workflow-dir "$T/empty"; echo "reconcile on a dir without README: exit $?"
+echo "== 6 tests"
+python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py 2>&1 | tail -3; (cd kc-journey-map && node --test lib/*.test.mjs 2>&1 | grep -E '^ℹ (tests|pass|fail)')
+```
+
+Expected and observed (fresh `env -i` shell): `npm ci exit 0`; `smoke exit 0`, `lines removed 0, added 3`, `journey-dev2-loop-smoke: all steps passed`; `journey-footprint 1.0.0` then the "Read the CHANGELOG when ..." line, `journey-map-question 1.0.0` then its line; "the field table changed but version 1.0.0 did not ..." and `renamed field, no version bump: exit 1`; step 3: `... is not a workflow directory: <dir>/README.md does not exist` with `nonexistent dir: exit 2` and `dir without README: exit 2`, `declares state '.spacedock-state' but ... is not a directory` with `declared state checkout missing: exit 2`, then `archive none: <dir>/_archive does not exist`, `unrecorded 0`, `invalid 0`, `valid workflow, no _archive: exit 0`; step 4: `t: ok` and `not needed, no footprint: exit 0`, `refused: source 'amendment:1' does not resolve ...` with `add from amendment 1 (no Captain line): exit 1`, `add from amendment 2: exit 0`, "`Map footprints: not needed` contradicts 1 valid line(s)", `t: FAIL`, `not needed, one valid footprint: exit 1`; step 5: `applied fp:t:1 front-door/tail`, `fold exit 0`, the tail showing `ask: Last one` followed by `answer: "Keep it."`, `status: answered` and a `source:` line each on its own line, `already fp:t:1`, `folded twice: identical bytes`, `fold of a reworded answer: exit 1` then `conflict fp:t:1 front-door/tail was folded from this ruling but its answer no longer matches`, `refused, no draft written: fp:t:1 question "tail" in story "front-door" matches 2 questions`, `fold with a repeated question id: exit 1`, `ls: ... dupdraft.yaml: No such file or directory`, `... is not a workflow directory: ...` and `reconcile on a dir without README: exit 1`; step 6: `Ran 23 tests`, `OK`, `ℹ tests 215`, `ℹ pass 215`, `ℹ fail 0`.
+
+Does not cover: a real adopter's FO following EXTENSION.md at a gate, the real `merge guard` archive, an id-style (`sd-b32`) workflow, the two real maps (needs the qnow and relay repositories; I ran them in throwaway checkouts), CI cost, or any release step.
+
+### Findings (none Material)
+
+- Deferred risk (new, same class as Codex round 2 P1): the repair rejects a path with no `README.md`, not a wrong path that has one. `journey-reconcile.mjs --workflow-dir <repo root>` (a README, no tasks) printed full counts, `unfolded 0`, `stale-open 0`, exit 0, and `journey-reconcile.mjs --workflow-dir <dir whose README is plain text>` did the same; `spacedock status` returns an empty listing for both. `audit` on a README-bearing wrong dir says `archive none: <path> does not exist`, then `unrecorded 0`, exit 0 (stated, not silent); reconcile prints no such line. Would become Material if an operator or FO command passes a wrong directory that holds a README at release review and reads the clean count as proof (field 4, trigger evidence, is not observed: both real adopters pass the configured workflow dir). A repair, if FO wants one, is a check that the README declares a Spacedock workflow, or a printed "tasks read: N" line in reconcile; FO decides.
+- Deferred risk (unchanged): `words` is a substring check, so a very short quotation passes; `stale-open` can flag an open question an archived task never meant to answer; a question with a `doc` link and `status: deferred` counts as answered and folds to `answered` with its `because` kept (relay has 5).
+- Polish: `audit` labels the not-needed contradiction `unrecorded`; the `audit` usage docstring still says only "exit 2 without --since" while it now also exits 2 for a non-workflow path (named by the implementation report); `journey-progress.mjs` (not in this diff) still accepts a nonexistent `--workflow-dir`.
+- Limits recorded by implementation and confirmed: an intentionally reworded answer stays `conflict` and `unfolded` (exit 1) until a new ruling replaces it; a missing `_archive` under a valid workflow is a stated zero.
+- For the Captain, still open: keep or drop the smoke workflow's `push: branches: [main]` trigger; neither PR has its own criterion for it.
+
+### Other checks at the new heads
+
+`comment_ratio.py e2524e93 <head>`: #627 0.9% (5 of 542 code lines), #628 1.8% (21 of 1188), maximum 5%, exit 0; cycle 3 added 0 comment lines (f320d6d3..7d89898e: 0 of 122). `number_guards.py check`: PASS, exit 0 (no migrations-path). `design_surfaces.py check`: presentable, exit 0. `doc_impact.py e2524e93 <head>`: lists `kc-dev-flow-2/README.md` (carried as `updated`, row in the extension table), exit 0. `dispatch_records.py`: "12 dispatch record(s) complete", exit 0. `gh pr checks`: every check passes on both heads, including both node versions and the real-CLI loop (23s). Minimal necessity at this candidate: the cycle-3 diff adds only the four repairs, their four tests and the README guard in reconcile; each maps to a Codex round-2 finding or the cycle-1 and 2 criteria, and the surviving-mutant check above shows no added branch is dead except the `FAILING` entry for `ambiguous` (no test reaches it, and no path reads it; harmless, a removal candidate for FO). Not verified: billed CI minutes, Release PR smoke, a live adopter run, Codex round 3 (FO reads it), RoboRev beyond the implementation report.
+
+### Summary
+
+Both repaired heads pass. Each of the four fixes reproduces fixed against the old head, its new test fails when I remove the fix, the earlier cycles' fixes still hold, and every AC figure from cycle 2 holds at 32db1273 and 7d89898e. Recommended verdict PASSED for #627 and #628; no Material finding, one new Deferred risk (a wrong directory that has a README still gives a clean reconcile) for FO to rule on. Throwaway worktrees (including the qnow and relay state checkouts) were removed; nothing was pushed or commented.
