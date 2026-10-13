@@ -275,3 +275,23 @@ PASSED: AC-1 to AC-9 hold at 0830a3be, with a mutation or counterexample shown r
 
 - Cycle 1 (FO, 2026-10-13): validation recommended PASSED on #632 0830a3be (roborev:609 confirmed a false positive by the validator; FO declines it). Codex review round 1 (review:5500580111) left one P1, to fix; investigation first, then FO fix authorization, then a fresh validation recheck.
   - P1 #632 `extensions/learn/EXTENSION.md` (around line 22): the documented late-report repair commits `_archive/<slug>/observer.md` with a pathspec-only `git commit`, which cannot add an untracked file; `test_observer_recovery.py` passes only because it runs `git add` first. Put the staging step in the documented repair.
+
+## Stage Report: implementation (cycle 2, repair of Codex round 1 P1)
+
+- DONE: Investigation first, with no candidate change: reproduce the Codex round-1 P1 on #632 head 0830a3be
+  Throwaway clone /tmp/obs-scratch: test_observer_recovery.py minus its private `git add` exits 1 at the documented commit, "pathspec '_archive/recovery-fixture/observer.md' did not match any file(s) known to git"; FO authorized the fix after the phase-1 message.
+- DONE: Fix so the documented steps work as written, with a check that fails without the fix; push to #632's branch; CI green on the new head
+  New head d8f329ee. EXTENSION.md gives `git -C <state> add -- _archive/<slug>/observer.md && git -C <state> commit -m <message> -- ...`; test_observer_recovery.py drops its own add, runs the backticked `git -C <state>` span read from EXTENSION.md, and asserts observer_check.py's remedy carries `add <path> && ... commit`. `gh pr checks 632`: unit tests, version parity, route gate, static contracts, GitGuardian all pass.
+- DONE: Stage report: new head, the roborev_gate.py evidence= line, test and mutation results, and anything left for FO
+  roborev_gate.py --base 0830a3be: `clean on d8f329ee4; evidence=roborev:614`, exit 0, first run.
+
+Tests and mutations (python3 -B):
+- test_observer_recovery.py passes on the fixed text; asserts the late report commits and publishes via the documented steps. Fails if the text omits `add` (mutation 1: delete the add from EXTENSION.md; exit 1, same pathspec error).
+- Same test fails if observer_check.py's remedy drops the add (mutation 2: assertion "the check's remedy omits the staging step").
+- test_observer_check.py, test_workflow_checkout.py, lint-skills.py unchanged and passing. Both mutations were reverted; the worktree was clean after each.
+
+Left for FO: the worktree was behind origin (2ec59fc8); I ran the approved `merge --ff-only` to 0830a3be before editing. #631's skills/dev/SKILL.md repair is not in this branch; merge its new head afterwards. #633 untouched. Leftover fixture dirs under /tmp from the failed mutation runs were deleted.
+
+### Summary
+
+The late-report repair now stages the untracked file before the pathspec commit, and the recovery test runs the commands EXTENSION.md prints instead of its own. Two mutations prove it fails when either the text or the check's remedy loses the add step.
