@@ -119,8 +119,8 @@ The FO proposed this direction in chat across four turns. The Captain answered ã
 Release: none (package tooling across kc-journey-map and kc-dev-flow-2).
 Release review: not needed: no release.
 Needed at ideation: not needed: the Captain accepted the direction in chat on 2026-10-13 (recorded above under "Direction the Captain accepted"); ideation lists its unresolved decisions at its gate.
-Surfaces: ui
-Visible change: The journey map shows each answered question with the Captain's words and date, ADR rulings by reference, an evidence stage per story, and answers still awaiting fold marked as pending.
+Surfaces: none
+Visible change: none (scope one draws nothing new; after a fold, an answered question shows as answered on today's cards. Scope two, task journey-map-progress-and-provenance, owns the renderer change.)
 
 ## Design
 
