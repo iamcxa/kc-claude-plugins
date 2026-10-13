@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:observer-before-merge-guard:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:observer-before-merge-guard-validation-1
+              briefing:
+                id: briefing:observer-before-merge-guard:validation:attempt-1:revision-1
+                digest: sha256:7396816ac612b7ef418b5e080aa56f614eecaaa47ddcb103b158b750394efd69
+                room-ref: ./observer-before-merge-guard/review/validation/briefing-1
 started: 2026-10-13T07:17:39Z
 worktree: .worktrees/spacedock-ensign-observer-before-merge-guard
 pr: iamcxa/kc-claude-plugins#632

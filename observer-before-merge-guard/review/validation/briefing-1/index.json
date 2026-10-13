@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:observer-before-merge-guard:validation:attempt-1:revision-1",
+  "question": "Deliver #632 head 40c714a6 (observer_check.py confirms observer.md is committed before the merge sentinel and detects a miss after archive; the learn extension, workflow.md and the dev skill run it through python3 before the sentinel; the late-report repair stages, commits and publishes): FO marks it ready and, after #631 merges, retargets it to main and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:observer-before-merge-guard:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/61acd8ab943dd0936d4a59677e6027fa6c62ded3/observer-before-merge-guard.md",
+      "rev": "sha256:a2bd1d9b87bf52f6ed0bc0227f09baa81f74c6f5a8e853965f773967c76eb9f1",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle 3 PASSED at 40c714a6 (AC-1..AC-9; both round-2 findings replayed literally at d127ec71 and fixed; mutations fail the class, run-as-text and whitespace tests; both test_sd_dispatch.py string edits required). FO ran its acceptance steps as written, each in env -i zsh: every step matched, including the documented python3 observer_check.py command on the real 2026-10-13 miss (exit 1). CI 5/5 green. External rounds: Codex 3 (round 1 review:5500580111, 1 P1 fixed and revalidated; round 2 review:5500805789, 1 P1 and 1 P2 fixed and revalidated; round 3 review:5501097974, 1 P2, no P1). RoboRev local (roborev:609 High confirmed a false positive by validation; 614, 615, 617 clean), not counted. Second reviewer: copilot because the change touches the merge path (the observer step before the merge sentinel); copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back (ADR 0013, D2). FO declines at candidate 40c714a6: Codex round 3 P2, a report made stale by merge guard --rework still passes, filed as backlog task observer-check-round3-followups (no rework after an observer run has happened; the stale report stays visible); Deferred risk, the AC-7 text test accepts either of two workflow.md mentions (the other texts still name the check before the sentinel); Deferred risk, bare package-script mentions in files outside this PR (adoption.md, skills/learn/SKILL.md, implementation principles.md), filed in workflow-checkout-round3-followups; Polish, unquoting only the archive report path survives a mutation (slugs are kebab-case); Polish, doc_impact lists adoption.md and maintain-flow SKILL.md without a marking (validator read both unaffected). Extra file authorized by FO: scripts/test_sd_dispatch.py, two pinned strings the fix changes. Not verified: an FO running the check before the sentinel (prose-enforced, no hook), a full learn job on a repaired archive, billed CI minutes."
+    }
+  ]
+}
