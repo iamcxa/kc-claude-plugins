@@ -85,6 +85,12 @@ test('an id-style: slug workflow reads tasks by slug and still refuses what it c
 	}
 })
 
+test('declaration fields a member had cleared do not count as a second declaration', (t) => {
+	const f = fixture(t, 'slug')
+	Object.assign(f.tasks[1], { 'journey-required-tasks': '', 'journey-mapping-complete': '' }); f.save()
+	assert.deepEqual(f.read().stories.map((s) => [s.doneTasks, s.requiredTasks, s.status]), [[1, 2, 'gap'], [1, 1, 'exists']])
+})
+
 test('real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope', (t) => {
 	const f = fixture(t), original = structuredClone(f.tasks)
 	const bad = [

@@ -36,7 +36,7 @@ export function calculateProgress(model, tasks, diagnostic = null) {
 			if (!identity.every(nonempty) || stories.filter((s) => s?.id === story.id).length !== 1 ||
 				releases.filter((r) => r.id === story.release).length !== 1) fail('Missing or duplicate explicit journey/release/story identity')
 			const members = tasks.filter((t) => key(tuple(t)) === key(identity))
-			const declarations = members.filter((t) => fields.slice(3, 5).some((f) => Object.hasOwn(t, f)))
+			const declarations = members.filter((t) => fields.slice(3, 5).some((f) => nonempty(String(t[f] ?? ''))))
 			if (declarations.length !== 1 || declarations[0]['journey-mapping-complete'] !== 'true') fail('One confirmed complete mapping is required')
 			const owner = declarations[0]
 			const required = JSON.parse(owner['journey-required-tasks'])
