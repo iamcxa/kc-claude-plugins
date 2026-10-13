@@ -62,6 +62,17 @@ gates:
                 id: briefing:observer-before-merge-guard:validation:attempt-2:revision-1
                 digest: sha256:fd6b37433cfa7ae4aad6ea051a3a2a5d5581226b80f628ebe172bdfd0c605403
                 room-ref: ./observer-before-merge-guard/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:observer-before-merge-guard:validation:2
+                briefing: briefing:observer-before-merge-guard:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-13T10:03:37.177178Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「批准632」 to the validation gate question "Deliver #632 head 7679ab7a ...: FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority."'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T07:17:39Z
 worktree: .worktrees/spacedock-ensign-observer-before-merge-guard
 pr: iamcxa/kc-claude-plugins#632
