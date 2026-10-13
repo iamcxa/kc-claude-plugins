@@ -3,7 +3,7 @@ title: The learn loop carries its learning.md PR to a recorded merge or close
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved delivery of #639 at 4072363b (「准」): FO marks it ready and asks to merge; later external-review rounds covered per Delivery authority.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-13T10:57:59Z
 worktree: .worktrees/spacedock-ensign-learn-delivery-follow-through
 pr: pr-merge:639
+verdict: PASSED
+completed: 2026-10-13T14:40:00Z
+archived: 2026-10-13T14:40:00Z
 ---
 
 `kc-dev-flow-2:learn` (0.21.0 and 0.22.0, `skills/learn/SKILL.md`) creates the learning.md PR with `gh pr create --draft` and records the observation at creation, then stops. It names no step to mark the PR ready once CI is green, no `pr_watch.py add`, and no step to record the later merge or close. On 2026-10-13 FO asked the Captain to merge learning PR iamcxa/kc-claude-plugins#637 while it was still a Draft, and recorded its merge only after the Captain said it had merged. Until a delivery is recorded merged, closed or released, `learning.py claim` refuses every new learning job in the store, so the next task's learn step stalls. The workflow README's Delivery authority (ready after CI green, `pr_watch.py add`) covers task PRs, not learn's PR.
