@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:learn-delivery-follow-through:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:learn-delivery-follow-through-ideation-1
+              briefing:
+                id: briefing:learn-delivery-follow-through:ideation:attempt-1:revision-1
+                digest: sha256:f8b0db20b710ea226a6c9792b5b8ad747d1e0763e479997bd21847e799b28e71
+                room-ref: ./learn-delivery-follow-through/review/ideation/briefing-1
 started: 2026-10-13T10:57:59Z
 ---
 

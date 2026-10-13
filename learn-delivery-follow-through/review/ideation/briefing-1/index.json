@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:learn-delivery-follow-through:ideation:attempt-1:revision-1",
+  "question": "Accept the design (the learn skill gains a section that, after recording the Draft, adds the learning PR to pr_watch.py, marks it ready once CI is green, asks for the merge, and records merged or closed when the watch reports it; a notices or refused-claim read settles an open delivery from GitHub; merge stays the Captain's) and enter implementation? Approving accepts the recommendations for D1 (approval of a learning PR's push and creation also covers marking it ready once CI is green), D2 (on a claim refused by an open sibling, FO reads that PR from GitHub, records merged or closed, and retries once) and D3 (no delivery-sync command in this task).",
+  "artifacts": [
+    {
+      "id": "artifact:learn-delivery-follow-through:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/59c481153d5077ad0fb7939223bf2311da1683b3/learn-delivery-follow-through.md",
+      "rev": "sha256:bcc8ddbc6f863c7231e147be0a2c47ac632ee223ab084465d74f0e66e8bc2670",
+      "mediaType": "text/markdown",
+      "summary": "Ideation complete: design_surfaces.py check presentable. Chain: Spacedock pr-merge keys on workflow entities and never sees a learning PR; pr_watch.py and learning.py already do every step and are tested; two searches show the learn texts never route to them (zero hits). Design: text plus tests only, in skills/learn/SKILL.md, skills/dev/SKILL.md, extensions/learn/EXTENSION.md and scripts/test_learning.py; no script, workflow.md or CI change. AC-1..AC-7 with falsifiers; AC-2 replays #637 (Draft 10:42:33Z, green 10:43:23Z, presented 10:51:21Z still Draft, ready 10:52:24Z, merged 10:53:14Z, recorded 10:54:27Z after the Captain said so) with a control arm that stalls on today's text; AC-7 is live only. Limits: prose-enforced; the recorder trusts the caller's GitHub read; ready invites a Codex review and a second CI run. No ADR. Possible line overlap with fo-record-checks in the learn EXTENSION.md Cannot run bullet."
+    }
+  ]
+}
