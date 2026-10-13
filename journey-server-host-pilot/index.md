@@ -98,7 +98,8 @@ Verified by: Shared operation ownership and adapter dependency review, a bounded
 
 ## Number guards
 
-Not applied: design stage only; no migration, provider provisioning or deployment authorized at this stage. Reserve ADR/migration numbers only at implementation dispatch when the approved design determines they are required.
+ADR: 0015
+Not applied: no deployment, provider provisioning or persistent retained-data migration is authorized. Implementation uses fresh synthetic private storage only; no migrations directory is configured.
 
 
 ## Pilot PRFAQ
