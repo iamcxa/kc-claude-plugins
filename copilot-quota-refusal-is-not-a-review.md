@@ -34,6 +34,17 @@ gates:
                 id: briefing:copilot-quota-refusal-is-not-a-review:ideation:attempt-1:revision-1
                 digest: sha256:a722955d0bd9a35bb4f95ed6b0acd1e997b4416abd62e3163fb05cad3ba3be6b
                 room-ref: ./copilot-quota-refusal-is-not-a-review/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:copilot-quota-refusal-is-not-a-review:ideation:1
+                briefing: briefing:copilot-quota-refusal-is-not-a-review:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T07:05:21.473291Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「准」 to the ideation gate question, after asking how gh can read the Copilot quota and what happens if Copilot changes its reply format; the question stated that approval accepts the recommendations for D1 (fail closed on any heading-less, comment-less answer) and D2 (no re-request after a refusal until the Captain says the quota is back).'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-13T06:56:42Z
 ---
 
