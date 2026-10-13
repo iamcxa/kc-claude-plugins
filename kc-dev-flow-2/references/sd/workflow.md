@@ -89,7 +89,10 @@ assignment names returns to FO as a scope change.
 FO resolves `<package>` in this workflow from the `Package root:` line of
 `kc-dev-flow-2:dev`. Before each worker dispatch FO runs `python3 <package>/scripts/package_version.py
 <this README>`; exit 1 means the session loaded an older package than this README was synced
-from, and FO holds the dispatch until the session runs the newer one. Every worker dispatch FO builds carries that absolute path as a
+from, and FO holds the dispatch until the session runs the newer one. FO also runs
+`python3 <package>/scripts/workflow_checkout.py <this README>`, which compares this file with
+`origin/<trunk>`'s: exit 1 means they differ, exit 2 that it could not compare, and FO
+holds the dispatch and shows the Captain what the script printed. Every worker dispatch FO builds carries that absolute path as a
 `Package root: <absolute path>` line in its scope notes (`--scope-notes-file`), which
 land in the dispatch file the worker reads first. FO saves those scope notes, the
 checklist, the model it dispatches on and the SHA it dispatches from as

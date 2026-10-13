@@ -79,6 +79,9 @@ jobs:
       - name: test_package_version.py
         run: python3 kc-dev-flow-2/scripts/test_package_version.py
 
+      - name: test_workflow_checkout.py
+        run: python3 kc-dev-flow-2/scripts/test_workflow_checkout.py
+
       - name: test_learning.py
         run: python3 kc-dev-flow-2/scripts/test_learning.py
 
