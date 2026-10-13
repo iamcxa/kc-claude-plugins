@@ -512,3 +512,20 @@ Both heads pass: the contract checks, the splice-only fold and the counts behave
   - P2 #628 `journey-fold.mjs` (around line 72): a block-style question that is the last node, in a file with no trailing newline, gets `answer:` glued to the last line. Insert a newline at a non-newline EOF.
   - Validation Polish: add a test asserting `journey-reconcile` exits 1 on a duplicate story id.
   - For the Captain at the validation gate: keep or drop the smoke workflow's `push: branches: [main]` trigger (a second CI run per merge).
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Investigation first, with no candidate change: reproduce each of the four assigned items on #627 head 89769eb6 and #628 head d8281e1c, send FO the reproduction result per item, then wait for FO's fix authorization
+  All four reproduced with temp fixtures and no worktree change; item 3 refuses (parse-equality guard, exit 1, no draft) rather than writing a glued draft; item 4 behavior was already correct, only the CLI exit was untested. Sent to FO as the Phase 1 report; fix authorization received for all four.
+- DONE: Fix each item FO authorizes, each with a test that fails without the fix (shown failing by a mutation run); push #627, merge (never rebase) its branch into the -map branch, push #628; CI green on both new heads
+  #627 head c811de1f (`gh pr checks`: every check pass). #628 head f320d6d3 (merge 474ba8aa of c811de1f, then 9af7a3af, f320d6d3; every check pass, including both node versions and the real-CLI ruling-to-map loop).
+  - P1 state dir: `state_dir()` raises when README declares `state` and the directory is missing; `main` turns it into `error: ... is not a directory`, exit 2. `audit` is the only caller. Test `test_a_declared_state_checkout_that_is_missing_is_an_error_naming_the_path` asserts exit 2, no `unrecorded` output, path in stderr, then exit 0 once `_archive` exists. Mutation (restore the `is_dir()` fallback): that test fails (1 of 20); restored, 20 pass.
+  - P2 not-needed: `record_state` adds `not needed contradicts N valid line(s)` when valid lines exist. Test `test_not_needed_with_a_valid_footprint_is_a_contradiction` asserts `check` exit 1 with that text. Mutation (delete the branch): that test fails (1 of 20).
+  - P2 fold EOF: `editsFor` prefixes `\n` when the insertion point follows a non-newline byte. Test 'block shape: a last question in a file with no trailing newline is folded onto its own lines' asserts outcome `applied`, `ask: Last one\n      answer: ` and status answered. Mutation (`lead = ''`): that test fails; restored, journey-fold 10 pass. Parse-equality guard untouched.
+  - Polish: test 'the command exits 1 on a duplicate story id and 0 on distinct ids' spawns `node journey-reconcile.mjs` with a stub `spacedock` first on PATH (no new export). Mutation (`failing ? 1 : 0` in `main`): that test fails (1 of 8); restored, full kc-journey-map suite 212 pass, 0 fail.
+- DONE: Stage report: new heads of both PRs, the roborev_gate.py evidence= line per PR, test and mutation results per item, and anything left for FO
+  #627 `clean on c811de1fa; evidence=roborev:596` (base 89769eb6, exit 0). #628 `clean on f320d6d3f; evidence=roborev:597` (base d8281e1c, exit 0). Comment lines added: 0.
+
+### Summary
+
+All four items fixed with commits c811de1f (#627) and 9af7a3af, f320d6d3 (#628, on top of merge 474ba8aa); CI green on both heads, roborev clean once per PR with no repair rounds. Left for FO: the smoke workflow `push: branches: [main]` trigger ruling; dispatch records gap; a fresh validation recheck and the next Codex round (no PR comment, review request, ready or merge was done). The `not needed` contradiction is counted as `unrecorded` by `audit` (it has no bad line), which I left as is.
