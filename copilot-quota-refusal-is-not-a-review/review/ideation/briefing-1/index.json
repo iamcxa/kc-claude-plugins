@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:copilot-quota-refusal-is-not-a-review:ideation:attempt-1:revision-1",
+  "question": "Accept the design (the Copilot reader treats an answer as a review only when it has a review heading or its own line comment; anything else exits 5 as \"copilot not run\", never a round or clean; FO does not wait or re-request and names Copilot unread at the merge ask) and enter implementation? Approving accepts the recommendations for D1 (fail closed on any heading-less, comment-less answer) and D2 (no re-request after a refusal until the Captain says the quota is back).",
+  "artifacts": [
+    {
+      "id": "artifact:copilot-quota-refusal-is-not-a-review:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b66f6f02539c1a3d5822243ca016eb31f4b11b76/copilot-quota-refusal-is-not-a-review.md",
+      "rev": "sha256:485018403383102779d54db487df0aae3404e7d3e2e394c79e6d7d753fbfc7d0",
+      "mediaType": "text/markdown",
+      "summary": "Ideation complete: design_surfaces.py check presentable (exit 0); AC-1..AC-7 each with a falsifier, all not yet verified (AC-6 behaviour half only at a future refusal). Upstream: codex_review.py and kc-pr-flow recognise no non-review answer; README ## Extensions already requires \"copilot not run\", so the gap is the reader. Reproduced: 0.21.0 reader exits 0 with evidence=review:5499757433 on #627. Prototype outside the repo gave exit 5 on both recorded refusals and changed one existing test (\"Looks good\" with no heading). Delivery: copilot_review.py, its test, EXTENSION.md, pr_watch.py and its test; one fix(kc-dev-flow-2) PR."
+    }
+  ]
+}

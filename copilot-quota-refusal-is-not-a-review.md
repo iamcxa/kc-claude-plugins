@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:copilot-quota-refusal-is-not-a-review:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:copilot-quota-refusal-is-not-a-review-ideation-1
+              briefing:
+                id: briefing:copilot-quota-refusal-is-not-a-review:ideation:attempt-1:revision-1
+                digest: sha256:a722955d0bd9a35bb4f95ed6b0acd1e997b4416abd62e3163fb05cad3ba3be6b
+                room-ref: ./copilot-quota-refusal-is-not-a-review/review/ideation/briefing-1
 started: 2026-10-13T06:56:42Z
 ---
 
