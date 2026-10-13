@@ -56,3 +56,16 @@ Alignment: needed at ideation: the design changes what FO loads at three lifecyc
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+
+## Stage Report: ideation
+
+- FAILED: A design (PRFAQ and Mermaid) for a kc-dev-flow-2 Spacedock mod with `## Hook: merge`, `## Hook: idle` and `## Hook: startup` sections (per-step placement, mod filename and order against `_mods/pr-merge.md`, learn relative to archive, README authority and counted word budget, adopter sync)
+  Not started: held. `## FO alignment` records "Alignment: needed at ideation" and the task file has no `Result:` line (`grep -n "Result:"` finds none); `skills/ideation/principles.md` says to stop and report in that case, and README `### ideation` requires the `Result:` line before the worker is dispatched.
+- FAILED: Acceptance criteria with reproducible evidence clauses and falsifiers, including a replay of the relay PR #362 situation with and without the mod
+  Not started: held for the same reason; no `## Acceptance criteria` section was written.
+- FAILED: Unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  Not started: held for the same reason.
+
+### Summary
+
+Held before design: the alignment need is recorded without its result, and ideation principles make that a stop, not something the worker may fill from the dispatch notes. Nothing was designed, no repository file was touched, and no other session or PR was contacted. To release the hold, FO adds a `Result:` line under `## FO alignment` (or records that the backlog approval and dispatch scope notes are the alignment) and re-dispatches ideation.
