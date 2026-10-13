@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-13T10:58:03Z
+worktree: .worktrees/spacedock-ensign-fo-record-checks
 ---
 
 Observer reports on four tasks archived 2026-10-13 (journey-map-dev2-contract, copilot-quota-refusal-is-not-a-review, workflow-checkout-must-match-trunk-readme, observer-before-merge-guard) found FO-written records that break rules the workflow README already states, and the learn evaluations returned no-change for each because the rule exists. A rule stated and not followed is an enforcement gap; `dispatch_records.py` and `design_surfaces.py` are the existing pattern for a script that checks FO's records.
