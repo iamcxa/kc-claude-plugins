@@ -243,8 +243,8 @@ A Captain who declines the proposal closes the PR, and FO records `closed`. Do n
 
 When the watch report never arrived (a merge is reported once, and its state file
 belongs to one machine), the token is lost, or the session restarted, settle from GitHub:
-read the PR with the `gh pr view` of step 6 and pass the head check. If it is still open,
-leave it as it is. If it is `MERGED` or `CLOSED`, act by who is acting:
+read the PR with the `gh pr view` of step 6 and pass the head check. If it is `OPEN`,
+continue as the next paragraph says. If it is `MERGED` or `CLOSED`, act by who is acting:
 
 - FO holds the token: `delivery-record` as in step 6. A missed watch report alone needs
   no recovery.
@@ -256,18 +256,32 @@ leave it as it is. If it is `MERGED` or `CLOSED`, act by who is acting:
   `delivery-recover` with `--owner-state stopped`, the same plan, digest and observation.
   Never attest `stopped` for an owner that may still be running.
 
+If the PR is `OPEN`, FO resumes from the first step the PR has not passed (a PR already
+ready skips step 3; a watch not yet added runs step 1), by who is acting:
+
+- FO holds the token: carry on with the steps; there is nothing to recover.
+- A restarted session, or a different one taking over, whose previous owner is confirmed
+  stopped: after the head check, `delivery-recover` with `--owner-state stopped`, the plan
+  and delivery digest from `notices --all`, and an observation built from that read
+  (`draft` as read), then use the new `delivery_token` for step 4 onward. The recorder
+  refuses `running` and `unknown` for an open PR.
+- A live owner without the token: carry on with steps 1, 2, 3 and 5 and skip the
+  `draft` false record of step 4 (the recorder checks only that `draft` is a boolean);
+  settle at `MERGED` or `CLOSED` as above.
+
 A `claim` refused by an `open` sibling runs this read once and retries the `claim` once;
 if the PR is still open, report `learn not run: blocked by job <id>` naming that PR.
 
 ## Present the result
 
-Read `<package>/scripts/learning.py --repo CODE_ROOT notices` and, for any delivery
-shown `open`, read its PR with `gh pr view` and settle it as the section above says
-before presenting. Tell the user the relevant
+Read `<package>/scripts/learning.py --repo CODE_ROOT notices --all` and, for any delivery
+shown `open`, acknowledged or not, read its PR with `gh pr view` and settle it as the
+section above says before presenting. Present only the items with `unread` true (a
+settled delivery becomes unread again). Tell the user the relevant
 no-change, proposal/PR, merged, pending or uncertain result with its limit. A
 merged proposal does not prove it improved future work. After actual presentation,
-run `ack --job JOB --expected NOTICE_DIGEST` for each presented snapshot. Never ack
-merely because results entered agent context. A changed snapshot rejects stale
+run `ack --job JOB --expected NOTICE_DIGEST` for each presented snapshot and for none
+other. Never ack merely because results entered agent context. A changed snapshot rejects stale
 ack; a crash after presentation may cause a repeat. Invocation of `dev` performs
 this same notice step; there is no every-session startup guarantee or hook.
 

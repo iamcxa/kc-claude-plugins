@@ -1080,5 +1080,90 @@ class LearningTests(unittest.TestCase):
             self.assertTrue(self.claim_new("live-owner-after")["claimed"])
 
 
+    def still_open_paragraph(self):
+        settle = self.section(self.FOLLOW).split("When the watch report never arrived", 1)[1]
+        return settle.split("If the PR is `OPEN`", 1)[1].split("A `claim` refused", 1)[0]
+
+    def recover_open(self, holder, plan, owner_state, owner, code=0):
+        stored = self.cli("notices", "--all")["notices"][0]["delivery"]
+        self.plan.write_text(json.dumps(stored["plan"]))
+        observation = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        return self.cli("delivery-recover", "--job", holder["job"], "--expected", stored["digest"],
+                        "--owner-state", owner_state, "--reason", "Restart: PR read from GitHub", "--owner", owner,
+                        "--plan", self.plan, "--observation", observation, code=code)
+
+    def test_still_open_delivery_is_resumed_by_actor_not_left_blocking(self):
+        text = self.section(self.FOLLOW)
+        self.assertNotIn("leave it as it is", text)
+        self.assertIn("If it is `OPEN`, continue as the next paragraph says", text)
+        case = self.still_open_paragraph()
+        holder_at = case.index("FO holds the token: carry on")
+        restart_at = case.index("A restarted session, or a different one taking over")
+        live_at = case.index("A live owner without the token")
+        self.assertLess(holder_at, restart_at)
+        self.assertLess(restart_at, live_at)
+        self.assertIn("first step the PR has not passed", case[:holder_at])
+        for part in ("after the head check", "`--owner-state stopped`",
+                     "`notices --all`", "new `delivery_token` for step 4 onward", "refuses `running` and `unknown`"):
+            self.assertIn(part, case[restart_at:live_at])
+        self.assertIn("skip the `draft` false record of step 4", case[live_at:])
+        self.assertNotIn("delivery-recover", case[live_at:])
+        with self.subTest(actor="restarted session, previous owner stopped"):
+            holder, plan, old_token = self.open_draft("restart")
+            self.gh_stub()
+            self.claim_new("restart-blocked", code=1)
+            refused = self.recover_open(holder, plan, "running", "delivery-owner", code=1)
+            self.assertIn("verify delivery owner stopped", refused["error"])
+            new_token = self.recover_open(holder, plan, "stopped", "restarted-session")["delivery_token"]
+            self.assertNotEqual(new_token, old_token)
+            self.cli("delivery-record", "--job", holder["job"], "--token", old_token,
+                     "--observation", self.observed(plan, "open", draft=False), code=1)
+            self.gh("pr", "ready", "2", "--repo", "example/project")
+            self.cli("delivery-record", "--job", holder["job"], "--token", new_token,
+                     "--observation", self.observed(plan, "open", draft=False))
+            self.claim_new("restart-ready", code=1)
+            self.gh_stub(state="MERGED", mergeCommit={"oid": "d" * 40})
+            merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+            self.cli("delivery-record", "--job", holder["job"], "--token", new_token, "--observation", merged)
+            self.assertTrue(self.claim_new("restart-after")["claimed"])
+            self.no_merge_called()
+        with self.subTest(actor="live owner without the token"):
+            holder, plan, _ = self.open_draft("live-open")
+            self.gh_stub(state="OPEN", isDraft=True, mergeCommit=None)
+            self.gh("pr", "ready", "2", "--repo", "example/project")
+            self.assertTrue(self.stored_delivery()["observation"]["draft"])
+            self.gh_stub(state="CLOSED")
+            recovered = self.recover_open(holder, plan, "running", "delivery-owner")
+            self.assertNotIn("delivery_token", recovered)
+            self.assertEqual(self.stored_delivery()["state"], "closed")
+            self.assertTrue(self.claim_new("live-open-after")["claimed"])
+
+    def stored_delivery(self):
+        return self.cli("notices", "--all")["notices"][0]["delivery"]
+
+    def test_acknowledged_open_delivery_is_found_by_notices_all_and_presented_once_settled(self):
+        present = self.section("Present the result")
+        for part in ("notices --all", "acknowledged or not", "only the items with `unread` true",
+                     "ack --job JOB --expected NOTICE_DIGEST` for each presented snapshot and for none other"):
+            self.assertIn(part, present)
+        paragraph = re.sub(r"\s+", " ", next(p for p in (PACKAGE / "skills/dev/SKILL.md").read_text().split("\n\n")
+                                             if "notices" in p))
+        for part in ("notices --all`", "`unread` true", "acknowledged or not"):
+            self.assertIn(part, paragraph)
+        holder, plan, _ = self.open_draft("acknowledged")
+        self.gh_stub()
+        shown = self.cli("notices")["notices"][0]
+        self.cli("ack", "--job", holder["job"], "--expected", shown["notice_digest"])
+        self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40})
+        self.assertEqual(self.cli("notices")["notices"], [])
+        found = self.cli("notices", "--all")["notices"]
+        self.assertEqual([(i["delivery"]["state"], i["unread"]) for i in found], [("open", False)])
+        self.recover_open(holder, plan, "stopped", "restarted-session")
+        again = self.cli("notices")["notices"]
+        self.assertEqual([(i["delivery"]["state"], i["unread"]) for i in again], [("merged", True)])
+        self.cli("ack", "--job", holder["job"], "--expected", again[0]["notice_digest"])
+        self.assertEqual(self.cli("notices")["notices"], [])
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
