@@ -240,3 +240,30 @@ Does not cover: that a live FO follows the new sentence (this task's own three r
 ### Summary
 
 PASSED at 4202cdf9: AC-1 to AC-3 hold with each falsifier shown failing, and the AC-4 smoke reproduced the baseline (3 of 3 `team-lead` first) and turned it (3 of 3 `main` first) on the exact failing bytes. One Polish item (the three `doc_impact` records), two Deferred risks and the accepted D2 cost; nothing returns through feedback. Throwaway worktree, copies and clone removed; AC-4 run files remain in `/tmp/val633-ac4`. The dispatch said both to commit the report here and that the state checkout is read only; I committed only this entity file, path-scoped.
+
+## Stage Report: implementation (cycle 2, same-stage conflict handoff)
+
+- DONE: Merge (never rebase) origin/spacedock-ensign/observer-before-merge-guard at 40c714a6 into #633's branch, resolving the conflict in scripts/test_sd_dispatch.py (and any other) so both PRs' edits survive; this PR's own hunks over its new base must equal `git diff 0830a3be 4202cdf9` except where a conflict forced a change, each such change named
+  New head a7fa7f1b0 (merge, parents 9a2793d1 and 40c714a6, fast-forwarded local from 4202cdf9 first). Only conflict: kc-dev-flow-2/scripts/lint-skills.py (test_sd_dispatch.py, workflow.md, dev/SKILL.md auto-merged). Comparison of added/removed lines in `git diff 40c714a6 HEAD` against `git diff 0830a3be 4202cdf9` differs only in the budget lines named below.
+- DONE: All test suites and lint-skills.py green on the merged head (raise WORKFLOW_WORD_BUDGET only if the merge requires it, saying why); push (never force); CI green on #633's new head
+  All 16 scripts/test_*.py exit 0 (test_sd_dispatch.py run with --sd-plugin-root at local spacedock 0.27.0, 6 PASS lines incl. scope-notes-main-line; CI pins 0.27.2); lint-skills.py "5463 of 5463 words". Pushed 9a2793d1..a7fa7f1b, no force. CI on a7fa7f1b: unit tests, multi-profile route gate, version parity, GitGuardian all pass.
+- DONE: Stage report: new head, the conflict resolution line by line, `git diff <new base>...<new head>` compared with the validated diff, roborev_gate.py evidence= line
+  See below.
+
+### Conflict resolution, line by line (lint-skills.py only)
+
+- HEAD side: comment `# 5459: +48 for the scope-notes completion line...` and `WORKFLOW_WORD_BUDGET = 5459`.
+- Theirs (#632 at 40c714a6): comment `# 5415: +4 for python3 before four script names...` and `WORKFLOW_WORD_BUDGET = 5415`.
+- Resolution: keep both comment lines in order (5415 then 5463) and set `WORKFLOW_WORD_BUDGET = 5463`. Reason the budget must rise: the two sides are additive (5411 + 4 from #632 + 48 from this PR); measured workflow.md is exactly 5463 words, so no slack was added. The 48-word comment text now says 5463 instead of 5459; that is the only forced change versus the validated diff.
+
+### Diff comparison
+
+`git diff 40c714a6...HEAD --stat`: 6 files, 45 insertions, 6 deletions (workflow.md, dispatch_records.py, lint-skills.py, test_dispatch_records.py, test_sd_dispatch.py, dev/SKILL.md), the same six files and counts as `git diff 0830a3be 4202cdf9`. Changed lines identical except lint-skills.py: `-5411/+5459` became `-5415/+5463`.
+
+### roborev gate
+
+`clean on a7fa7f1b0; evidence=roborev:618` (base 40c714a6, exit not 1, no fix rounds used).
+
+### Summary
+
+Reconciled #633 with #632's round 2 by a merge commit; one conflict in the word budget, resolved additively to 5463. Behaviour is unchanged. Validation acceptance script step 5 in the validation report expects 5459 at 4202cdf9; on this head it prints 5463, which is the forced difference above.
