@@ -4,7 +4,7 @@ import { serializeTldrawJson, useEditor } from 'tldraw'
 // A viewer front-end answers with the SPA fallback HTML here, so the content type decides.
 async function call<T>(path: string, method: 'GET' | 'POST' | 'DELETE', body?: unknown): Promise<T | null> {
 	try {
-		const res = await fetch(path, {
+		const res = await fetch(path + (path.includes('?') ? '&' : '?') + 'room=' + encodeURIComponent(new URLSearchParams(window.location.search).get('room') || 'default'), {
 			method,
 			headers: body ? { 'Content-Type': 'application/json' } : undefined,
 			body: body ? JSON.stringify(body) : undefined,

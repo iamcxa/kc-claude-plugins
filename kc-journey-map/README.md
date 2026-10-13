@@ -200,8 +200,11 @@ Organize by user journey and product — one source spans frontend, API and shar
 Do not duplicate it per technical package, and reuse an existing canonical source instead of
 creating a competing copy.
 
-Room databases (`.rooms/*.db`) are local runtime data and stay out of git. `server/rooms.ts`
+Room databases (`.rooms/*.db`) are local runtime data and stay out of git. `server/host/node.ts`
 reads `JOURNEY_ROOMS_DIR`, defaulting to `./.rooms` relative to the service working directory.
+
+For the opt-in private Node/Cloudflare pilot, see [private host setup and recovery](docs/private-host.md).
+The legacy loopback defaults remain unchanged; hosted acceptance, provider costs and formal licensing are not established by the local runner.
 
 ## Skills
 

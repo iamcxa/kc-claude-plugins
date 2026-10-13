@@ -1,3 +1,4 @@
+import { apiFetch } from './api.mjs'
 
 const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
@@ -359,7 +360,7 @@ export async function renderToRoom({ path, room, selection, progress = null, api
 
 	const put = withRenderedText(buildAllPages(model, roomId, selection, progress))
 
-	const current = await fetch(`${api}/doc?room=${roomId}`).then((r) => r.json())
+	const current = await apiFetch(`${api}/doc?room=${roomId}`).then((r) => r.json())
 	const currentRecords = (current.snapshot?.documents ?? []).map((d) => d.state)
 	const currentDocument = currentRecords.find((r) => r.id === TLDOCUMENT_ID)
 	// Re-rendering projects the canonical YAML title into tldraw's native name.
@@ -373,7 +374,7 @@ export async function renderToRoom({ path, room, selection, progress = null, api
 	const byId = new Map(currentRecords.map((r) => [r.id, r]))
 	const moved = carried.map(({ id, dx, dy }) => ({ ...byId.get(id), x: byId.get(id).x + dx, y: byId.get(id).y + dy }))
 
-	const res = await fetch(`${api}/doc?room=${roomId}`, {
+	const res = await apiFetch(`${api}/doc?room=${roomId}`, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ put: [document, ...put, ...moved], remove }),

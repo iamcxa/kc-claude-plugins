@@ -69,7 +69,7 @@ export function DocPopup({ target, onClose, returnFocusTo }: { target: DocTarget
 		let cancelled = false
 		setState({ kind: 'loading' })
 		const q = new URLSearchParams({ owner: target.owner, repo: target.repo, refPath: target.refAndPath })
-		fetch(`/repo-doc?${q}`)
+		fetch(`/repo-doc?${q}&room=${encodeURIComponent(new URLSearchParams(window.location.search).get('room') || 'default')}`)
 			.then((r) => r.json())
 			.then((result: { state: 'ok'; content: string; sha: string } | { state: 'unavailable'; reason: string }) => {
 				if (cancelled) return

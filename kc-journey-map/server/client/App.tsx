@@ -62,20 +62,20 @@ function syncDocumentTitle(editor: Editor, roomId: string) {
 // `asset:` is schema-valid and carries no origin, so each viewer resolves against their own.
 const ASSET_SCHEME = 'asset:'
 
-const canvasAssets: TLAssetStore = {
+const canvasAssets = (roomId: string): TLAssetStore => ({
 	async upload(_asset, file) {
 		// crypto.randomUUID is unavailable over plain http on a private-network hostname.
 		const name = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}-${file.name}`
-		const res = await fetch(`/uploads/${encodeURIComponent(name)}`, { method: 'PUT', body: file })
+		const res = await fetch(`/uploads/${encodeURIComponent(name)}?room=${encodeURIComponent(roomId)}`, { method: 'PUT', body: file })
 		if (!res.ok) throw new Error(`upload failed: ${res.status} ${res.statusText}`)
 		return { src: `${ASSET_SCHEME}${name}` }
 	},
 	resolve(asset) {
 		const src = asset.props.src
 		if (!src?.startsWith(ASSET_SCHEME)) return src
-		return `${window.location.origin}/uploads/${encodeURIComponent(src.slice(ASSET_SCHEME.length))}`
+		return `${window.location.origin}/uploads/${encodeURIComponent(src.slice(ASSET_SCHEME.length))}?room=${encodeURIComponent(roomId)}`
 	},
-}
+})
 
 // After-change hooks see the note's measured growY, including native text edits.
 // Decorations stay standard geo records so the file exporter needs no custom schema.
@@ -110,7 +110,7 @@ function RoomCanvas({ roomId }: { roomId: string }) {
 	)
 	const store = useSync({
 		uri: `${SERVER_URL}/connect/${roomId}`,
-		assets: canvasAssets,
+		assets: useMemo(() => canvasAssets(roomId), [roomId]),
 	})
 	useEffect(() => {
 		if (store.status !== 'synced-remote') document.title = `${roomId} | ${APP_NAME}`

@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { apiFetch } from './api.mjs'
 
 import { execFileSync } from 'node:child_process'
 import { readFileSync, writeFileSync } from 'node:fs'
@@ -40,7 +41,7 @@ if (mode === 'import') {
 
 	// Import replaces the entire target document, including manually drawn content.
 	const snapshot = { store: Object.fromEntries(file.records.map((r) => [r.id, r])), schema: file.schema }
-	const res = await fetch(`${API}/doc?room=${b}`, {
+	const res = await apiFetch(`${API}/doc?room=${b}`, {
 		method: 'PUT',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ snapshot }),
