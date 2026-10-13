@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:worker-completion-goes-to-main:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:worker-completion-goes-to-main-ideation-1
+              briefing:
+                id: briefing:worker-completion-goes-to-main:ideation:attempt-1:revision-1
+                digest: sha256:fb0d8972f12d26b5bf2c92a8cdfa438dc03f2bca09194aeb1ec73adc13220c17
+                room-ref: ./worker-completion-goes-to-main/review/ideation/briefing-1
 started: 2026-10-13T07:17:42Z
 ---
 

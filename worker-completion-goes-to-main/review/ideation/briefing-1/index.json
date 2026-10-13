@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-completion-goes-to-main:ideation:attempt-1:revision-1",
+  "question": "Accept the design (FO writes a line naming main as the completion recipient into every dispatch's scope notes; one sentence each in workflow.md and the dev skill, plus a test) and enter implementation third in the fix order? Approving accepts the recommendation for D2 (dispatch_records.py fails a record without that line). D1 (a comment on spacedock-dev/spacedock #608) is outward-facing and is asked separately after implementation merges.",
+  "artifacts": [
+    {
+      "id": "artifact:worker-completion-goes-to-main:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c8299716a6ba0bae74ff35bcafd1071c811ec78e/worker-completion-goes-to-main.md",
+      "rev": "sha256:d6c1a72d689c218ebb9fa17dea5556a93794a85bfd7b6eb5be1dd4157a5327f4",
+      "mediaType": "text/markdown",
+      "summary": "Ideation complete: design_surfaces.py check presentable. Found: the README Signal bullet naming main shipped 2026-09-30 but reaches a worker only through the stage-definition fetch, which workers can skip; local transcripts: fetched workers sent main first 263 times, team-lead 8; workers that skipped it sent team-lead first 12 of 13 (an approximate classifier, local machine only). Upstream spacedock #523 and #608 open, 0 comments; Spacedock pins team-lead on purpose. Correction to the seed: the 2026-10-13 team-lead sender was the implementation-3 worker, which skipped the fetch; the stale README was not the cause. D2 cost: 9 of 23 existing records in 3 tasks would fail (2 open), waived per task at the gate. AC-1..AC-4 not yet verified. Shares workflow.md (at its 5331-word budget), the dev skill and lint-skills.py with the other two tasks; lands last."
+    }
+  ]
+}
