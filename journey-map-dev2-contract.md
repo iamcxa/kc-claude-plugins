@@ -326,6 +326,12 @@ Verified by: the script run and a `diff` of its output against these figures, wi
 
 Limits across the criteria: release-please version bumps appear only on the Release PR after merge, so no criterion here shows a bump; a consumer can lag a MINOR; reconcile and audit cannot see a ruling the Captain made in chat and nobody recorded, and `stale-open` is the only net for it; the baselines in AC-4 and AC-6 use repositories outside this one.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-13, ideation gate approval
+Captain: 「那就照建議，這裡的議題應該是要讓讀者或是說 FO 意識到 ARD, release changelog 等都存在，且必要時要去讀」 (in chat, approving the scope-one ideation gate after asking what "a small addition leaves no ADR" means)
+Supersedes: none
+
 ## Stage Report: ideation
 
 - FAILED: A design that names each schema's producer, version string and consumer pin (journey-map: story/release/question ids and drawn-commit provenance; dev2: task tuple, footprint records, ADR references), consistent with the Captain's accepted direction in the task and subspace-relay ADR 0046's one-version rule
