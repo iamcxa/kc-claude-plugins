@@ -4,6 +4,17 @@ status: backlog
 variant: kc-dev-flow-2
 merge: pr
 profile: pilot
+gates:
+    version: 1
+    records:
+        - id: gate:journey-map-dev2-contract:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:journey-map-dev2-contract-backlog-1
+              briefing:
+                id: briefing:journey-map-dev2-contract:backlog:attempt-1:revision-1
+                digest: sha256:fbb11af93e5d54ff9e1c3680e8c8dc60ac32270a3bce98c5da1286de395a998c
+                room-ref: ./journey-map-dev2-contract/review/backlog/briefing-1
 ---
 
 kc-journey-map (the release slice map) and kc-dev-flow-2 meet today through prose split between workflow.md's Release review section and kc-journey-progress's SKILL.md. Nothing tests that prose, and six defects found in an adopter on 2026-10-13 come from that missing interface.

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-map-dev2-contract:backlog:attempt-1:revision-1",
+  "question": "Enter ideation on the Pilot profile, designing the journey-map ↔ dev2 two-sided contract against the direction recorded in the task?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-map-dev2-contract:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/daf3f8911a9258a41d1b805f13a7e23e6da8757f/journey-map-dev2-contract.md",
+      "rev": "sha256:6c61f1d605b5c6fc5909434e7144baec22412259fc0c835ee5472990afd27139",
+      "mediaType": "text/markdown",
+      "summary": "Seed task: versioned input/output contracts between kc-journey-map and kc-dev-flow-2 (footprints at gates, fold at archive, evidence ladder, three-layer no-miss checks, map joins the autopilot path). Inputs: six adopter-reported defects, qnow map refresh evidence, ADR-on-map need."
+    }
+  ]
+}
