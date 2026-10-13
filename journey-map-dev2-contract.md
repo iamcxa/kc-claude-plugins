@@ -56,6 +56,17 @@ gates:
                 id: briefing:journey-map-dev2-contract:ideation:attempt-3:revision-1
                 digest: sha256:de6d2d198336e478c713f33d045ff89a4cbe77abca195a5f02e322f75919c5eb
                 room-ref: ./journey-map-dev2-contract/review/ideation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-map-dev2-contract:ideation:3
+                briefing: briefing:journey-map-dev2-contract:ideation:attempt-3:revision-1
+                by: person:captain
+                at: "2026-10-13T04:29:56.864573Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「那就照建議，這裡的議題應該是要讓讀者或是說 FO 意識到 ARD, release changelog 等都存在，且必要時要去讀」, approving scope one with D1 and D2 as recommended (the gate question stated that approval accepts them); his addition is recorded as Amendment 1.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-13T03:05:11Z
 ---
 
