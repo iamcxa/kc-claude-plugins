@@ -137,6 +137,7 @@ Verified by: Shared operation ownership and adapter dependency review, a bounded
 ## Number guards
 
 ADR: 0015
+Applied at: disposable Cloudflare validation 869b9d6ca2d4b02a9bb4f38c7613e5096373f83f
 Not applied: no deployment, provider provisioning or persistent retained-data migration is authorized. Implementation uses fresh synthetic private storage only; no migrations directory is configured.
 
 
