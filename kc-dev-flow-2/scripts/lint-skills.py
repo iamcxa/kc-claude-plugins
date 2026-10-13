@@ -22,7 +22,8 @@ UNBOUND_ROOT = re.compile(r"\{package\}|/absolute/plugin")
 WORKFLOW = "references/sd/workflow.md"
 # Raise only in a change that says why the adopted README must grow.
 # 5369: +38 for the workflow_checkout.py hold, a rule the adopted README must carry.
-WORKFLOW_WORD_BUDGET = 5369
+# 5411: +42 for the observer_check.py step ahead of the merge sentinel, which a restarted FO reads here.
+WORKFLOW_WORD_BUDGET = 5411
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
 KNOWN_DUPLICATES = {

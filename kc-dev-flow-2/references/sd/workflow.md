@@ -239,7 +239,8 @@ repair is dispatched under the lane in Stages.
 Consuming a terminal gate approval is not completion (`spacedock merge guard --help`);
 a live run requires the declared delivery evidence and successful `merge guard` with
 an explicit verdict. Apply Delivery authority below; a pending PR or missing hook is
-not completion.
+not completion. An archived task's state is publish-only, so `<package>/scripts/observer_check.py`
+runs before the sentinel.
 
 ## Dispatch facts
 
@@ -516,7 +517,9 @@ explicit choice.
 
 Use SD's pending terminal approval and existing merge hook; do not invent another
 PR stage. Observe the actual repository-qualified PR merge before recording its
-landed sentinel and running SD merge guard to finalize/archive. CI green, PR
+landed sentinel and running SD merge guard to finalize/archive. Where `learn` is listed, run
+`<package>/scripts/observer_check.py <state> <slug>` before the sentinel and follow its exit
+as the learn extension says; the pr-merge hooks run the sentinel and `merge guard` together. CI green, PR
 creation, gate approval and a locally manufactured sentinel do not prove merge.
 
 A PR delivers only the commit on its head. Before asking for merge, FO confirms the
