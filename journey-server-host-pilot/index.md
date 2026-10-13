@@ -55,6 +55,14 @@ gates:
                 id: briefing:journey-server-host-pilot:validation:attempt-1:revision-1
                 digest: sha256:b3a63628932149df8b8b774762c7b2ccb18d8cc39f7890557c39252ab5183583
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-server-host-pilot:validation:1
+                briefing: briefing:journey-server-host-pilot:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T11:21:22.243544Z"
+                decision: revise
+                reason: 'Accepts direction and preserves candidate 4f678cd88eddbcc171df7e2037dd19d2fbf4065b; full delivery is not approved. Captain requests continued remote Node, hosted Cloudflare, real hibernation/recovery verification and before/after usage measurement. Cloudflare must remain Free; room UI and concurrent-write rules remain unchanged. Concrete assignment: prepare isolated synthetic hosted targets, verify provider and credential prerequisites, execute bounded supported journeys and lifecycle checks on the unchanged candidate, record actual resource usage and remaining limits. No merge, paid upgrade, retained-data migration or product repair is authorized.'
 started: 2026-10-13T08:47:34Z
 ---
 
