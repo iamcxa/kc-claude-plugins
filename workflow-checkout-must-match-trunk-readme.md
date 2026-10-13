@@ -34,6 +34,17 @@ gates:
                 id: briefing:workflow-checkout-must-match-trunk-readme:ideation:attempt-1:revision-1
                 digest: sha256:b33ee1762d3ead044b84a2b370e60c31a118c949bf2a4851a76c4168278badc8
                 room-ref: ./workflow-checkout-must-match-trunk-readme/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:workflow-checkout-must-match-trunk-readme:ideation:1
+                briefing: briefing:workflow-checkout-must-match-trunk-readme:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T07:40:04.299966Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「准」 to the combined ideation gate question for workflow-checkout-must-match-trunk-readme, observer-before-merge-guard and worker-completion-goes-to-main ("三個都批准，接受下列建議，照 1 → 2 → 3 實作"), which stated the accepted recommendations per task (task 1: D1 fetch and hold if unreachable, D2 strict equality, D3 show the remedy only; task 2: D2 path-scoped commit for a late report, D3 one-line observer not run file, D1 user-level guard excluded and asked separately; task 3: D2 dispatch_records.py fails a record without the main line, D1 upstream comment asked separately after merge).'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-13T07:17:36Z
 ---
 
