@@ -57,6 +57,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-13T09:56:44.195012Z"
                 reason: 'PR head moved from 40c714a6 to 7679ab7a by a merge of origin/main after #631 squash-merged (same-stage conflict handoff, implementation-7/8); the briefing names the old head'
+            - id: gate-attempt:observer-before-merge-guard-validation-2
+              briefing:
+                id: briefing:observer-before-merge-guard:validation:attempt-2:revision-1
+                digest: sha256:fd6b37433cfa7ae4aad6ea051a3a2a5d5581226b80f628ebe172bdfd0c605403
+                room-ref: ./observer-before-merge-guard/review/validation/briefing-2
 started: 2026-10-13T07:17:39Z
 worktree: .worktrees/spacedock-ensign-observer-before-merge-guard
 pr: iamcxa/kc-claude-plugins#632
