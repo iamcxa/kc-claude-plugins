@@ -342,3 +342,52 @@ PASSED. Both Codex round-1 P2 reproduce as real defects at 085e28aa (a CRLF READ
 ### Summary
 
 The dev skill told FO to run a mode-100644 script directly (exit 126); it now goes through python3 like package_version.py, guarded by a test that names the failing mutation. Left for FO: adoption.md L24 bare poc_readme.py mention, and merging 20c9ec53 into stacked PRs #632 and #633.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independent recheck of the cycle-2 repair on #631 head 20c9ec53: the Codex round-2 P1 (the dev skill ran workflow_checkout.py directly while it is mode 100644) reproduced fixed against 70da29c7, the new test shown failing under a mutation you run yourself, and AC-1 to AC-6 re-run at the new head with any change from validation cycle 2 named
+  Verdict PASSED. Candidate #631 head 20c9ec53ab5bd3ec32dc5aa31ba79b667102b76d (Draft, OPEN), merge-base 9e68eb87; repair diff 70da29c7..20c9ec53 is `skills/dev/SKILL.md` (+1 -1, `python3 ` added) and `scripts/test_workflow_checkout.py` (+8 -2) only; all five CI checks SUCCESS; merge-tree with current origin/main (6d0f8da9, #630, disjoint files) is clean. Throwaway worktrees removed; candidate untouched.
+  P1 reproduced by following the dev skill's sentence literally (text extracted from SKILL.md, `<package>`/`<workflow-dir>` substituted, run in a fresh `env -i` bash): at 70da29c7 the command is `<package>/scripts/workflow_checkout.py <README>`, bash prints `Permission denied`, exit 126 (git mode `100644`); at 20c9ec53 it is `python3 <package>/scripts/workflow_checkout.py <README>`, prints `README matches origin/main (835dad49; ...)`, exit 0. `references/sd/workflow.md` already used `python3` and still does.
+  Mutations I ran in a throwaway worktree at 20c9ec53 (candidate untouched; unmutated: 13 tests OK): (M1) `python3 ` removed from SKILL.md -> only `test_every_instruction_runs_the_script_through_python3_unless_it_is_executable` fails ("1 != 0 ... skills/dev/SKILL.md runs ... without python3 and the file is not executable"); (M2) same removal in workflow.md -> the same test fails naming workflow.md; (M3) the workflow_checkout.py mention deleted from SKILL.md -> the same test fails on "does not name"; (M4) `chmod +x` the script plus the bare SKILL.md form -> 13 OK (the test's stated exemption works: a bare run is fine once the file is executable).
+  AC-1..AC-3 on real worktrees via the script below (stale 6d344bcb exit 1 + remedy; origin/main exit 0; appended line exit 1, restored exit 0). AC-4..AC-6 are `test_workflow_checkout.py`, 13 tests OK; `lint-skills.py` PASS (5369 of 5369 words). Change from cycle 2: none in any AC result; the only behavioural change is the dev skill's sentence, now runnable as written, and AC-6's presence assertion is now part of the stronger python3-launch test (the substring-only test is gone; M3 shows presence is still asserted). Also exit 0 on the live FO workflow README (checkout HEAD e2524e93, blob 835dad49).
+- DONE: The minimal acceptance script updated to the new head, run by you exactly as written in a fresh shell from a named checkout, with its observed output, including the instruction followed literally as the dev skill now writes it
+  Below under Acceptance script (cycle 3). Run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>`: exit 0, output matched every expectation; `remote.origin.url` identical before and after (`https://github.com/iamcxa/kc-claude-plugins.git`). Needs network to origin, `git`, `python3`; named checkout `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo`, which already holds 20c9ec53.
+- DONE: adr_lint.py docs/adr --since <base> run at the new head with its exit code; verdict PASSED or REJECTED with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since 9e68eb87 --require 0014` at 20c9ec53: `13 ADR file(s) checked, 0 legacy`, exit 0. Also at 20c9ec53: `comment_ratio.py 9e68eb87 20c9ec53` exit 0 (3 comment lines of 240 code lines, 1.2%; the repair adds none: 70da29c7..20c9ec53 is 8 code lines, 0 comment); `dispatch_records.py` exit 0 (9 records complete); `design_surfaces.py check` exit 0; `number_guards.py check` exit 0 (no migrations-path). Verdict PASSED, no Material finding. Findings: Needs decision (FO, not this task): `skills/dev/SKILL.md` line 23 runs `<package>/scripts/learning.py --repo ... notices` bare, and `learning.py` is mode 100644 (installed copy `-rw-r--r--`; `$PKG/scripts/learning.py` run directly prints `permission denied`) - the same defect class as the round-2 P1, in a line this PR does not touch; implementation already reported `references/sd/adoption.md` `poc_readme.py` as the same class. It needs its own task or an FO ruling on scope. Polish carried from cycle 1, unchanged: `doc_impact.py` lists kc-dev-flow-2/README.md and skills/maintain-flow/SKILL.md (`unaffected: neither names workflow_checkout.py or the 5331 budget`). Deferred risks carried, unchanged: `git fetch` without a timeout or `GIT_TERMINAL_PROMPT=0` (Material if an FO is seen hanging on it); `core.autocrlf=true` or a smudge filter holds the dispatch (fail-safe, never a false pass; Material if a supported FO checkout is held for it).
+
+### Acceptance script (cycle 3)
+
+Run from any shell (it changes git config only inside a throwaway clone, never in the shared checkout); prints, in order: (1) exit 1 stale, remedy with the spaced path quoted, (2) exit 0 current, (3) exit 1 edited then exit 0 restored, (4) exit 2 unreachable origin in a throwaway clone, (5) `OK` for 13 tests, (6) the sentence read out of `skills/dev/SKILL.md` and run as it is written there: exit 0. Not covered: that a real FO session runs it before dispatch (prose-enforced), the rest of the workflow directory, a host with `core.autocrlf=true`, other bare script mentions in the dev skill (`learning.py`), and CI.
+
+    set -eu
+    REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+    for d in "pkg" "stale checkout" "current"; do git -C "$REPO" worktree remove --force "/tmp/accept-$d" 2>/dev/null || true; done
+    git -C "$REPO" fetch -q origin main
+    git -C "$REPO" worktree add -q --detach /tmp/accept-pkg 20c9ec53
+    git -C "$REPO" worktree add -q --detach "/tmp/accept-stale checkout" 6d344bcb
+    git -C "$REPO" worktree add -q --detach /tmp/accept-current origin/main
+    S=/tmp/accept-pkg/kc-dev-flow-2/scripts/workflow_checkout.py
+    python3 "$S" "/tmp/accept-stale checkout/docs/dev2/README.md" || echo "exit $?"
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md; echo "exit $?"
+    printf '\nlocal edit\n' >> /tmp/accept-current/docs/dev2/README.md
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md || echo "exit $?"
+    git -C /tmp/accept-current checkout -q -- docs/dev2/README.md
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md; echo "exit $?"
+    rm -rf /tmp/accept-clone
+    git clone -q --no-checkout "$REPO" /tmp/accept-clone
+    git -C /tmp/accept-clone fetch -q "$REPO" refs/remotes/origin/main:refs/heads/probe
+    git -C /tmp/accept-clone checkout -q probe
+    git -C /tmp/accept-clone remote set-url origin /nonexistent/origin.git
+    python3 "$S" /tmp/accept-clone/docs/dev2/README.md || echo "exit $?"
+    rm -rf /tmp/accept-clone
+    python3 -B /tmp/accept-pkg/kc-dev-flow-2/scripts/test_workflow_checkout.py 2>&1 | tail -3
+    CMD=$(python3 -c 'import re; t = open("/tmp/accept-pkg/kc-dev-flow-2/skills/dev/SKILL.md").read(); c = " ".join(re.search(r"run `([^`]*workflow_checkout\.py[^`]*)`", t).group(1).split()); print(c.replace("<package>", "/tmp/accept-pkg/kc-dev-flow-2").replace("<workflow-dir>", "/tmp/accept-current/docs/dev2"))')
+    echo "dev skill says: $CMD"
+    bash -c "$CMD"; echo "exit $?"
+    for d in "pkg" "stale checkout" "current"; do git -C "$REPO" worktree remove --force "/tmp/accept-$d"; done
+
+Observed (2026-10-13, origin/main 6d0f8da9, README blob unchanged 835dad49): `README differs from origin/main: on disk 946f5203, origin/main 835dad49 (checkout HEAD 6d344bcb). Dispatch holds. Remedy: git -C '/tmp/accept-stale checkout' checkout --detach origin/main` / `exit 1`; `README matches origin/main (835dad49; checkout HEAD 6d0f8da9)` / `exit 0`; `README differs ... on disk 5eb1f9f3 ... Remedy: git -C /tmp/accept-current checkout --detach origin/main` / `exit 1`; `README matches origin/main (835dad49 ...)` / `exit 0`; `cannot verify the workflow README against its trunk: cannot fetch origin/main ... Dispatch holds.` / `exit 2`; `Ran 13 tests ... OK`; `dev skill says: python3 /tmp/accept-pkg/kc-dev-flow-2/scripts/workflow_checkout.py /tmp/accept-current/docs/dev2/README.md` / `README matches origin/main (835dad49 ...)` / `exit 0`. The origin/main hash will change when a later sync PR merges; the shape (1, 0, 1, 0, 2, OK, 0) will not.
+
+### Summary
+
+PASSED. The round-2 P1 is a real defect at 70da29c7 (the dev skill's sentence, followed literally, exits 126 on a mode-100644 file) and is fixed at 20c9ec53 (exit 0); the new test fails when `python3` is removed from either instruction and passes when the file is executable, as its name says. No AC result changed from cycle 2. One Needs-decision item for FO: the same bare-path defect in `learning.py` (dev skill line 23) and `poc_readme.py` (adoption.md), outside this PR. I wrote no `git config` in any shared worktree. Unverified: behaviour of a real FO session (prose-enforced), CI duration, and a host with `core.autocrlf=true`.
