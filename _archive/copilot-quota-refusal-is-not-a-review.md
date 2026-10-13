@@ -3,7 +3,7 @@ title: The copilot extension reads a quota-limit refusal as "Copilot not run", n
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 2026-10-13: 「准」 to the validation gate question "Deliver #630 head 22d9cc94 ...: FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority."'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-13T06:56:42Z
 worktree: .worktrees/spacedock-ensign-copilot-quota-refusal-is-not-a-review
 pr: pr-merge:630
+verdict: PASSED
+completed: 2026-10-13T08:24:40Z
+archived: 2026-10-13T08:24:40Z
 ---
 
 On 2026-10-13 FO requested Copilot on iamcxa/kc-claude-plugins #627 and #628 (task `journey-map-dev2-contract`). Six seconds later Copilot left a COMMENTED review on each: "Copilot was unable to review this pull request because the user who requested the review has reached their quota limit." `python3 <package>/extensions/copilot/copilot_review.py iamcxa/kc-claude-plugins 627` printed `answered on 32db12730: "no heading", 0 line comment(s); evidence=review:5499757433` and exited 0 (the same for #628, review:5499757731). Exit 0 is the reader's "answered" result, so a quota refusal reads like a review of the head with no findings unless FO reads the body.
