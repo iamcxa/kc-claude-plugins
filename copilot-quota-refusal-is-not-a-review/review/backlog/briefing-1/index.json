@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:copilot-quota-refusal-is-not-a-review:backlog:attempt-1:revision-1",
+  "question": "Schedule this task now as Pilot and enter ideation: the copilot extension reads a quota-limit refusal as \"copilot not run\", never as an answered or clean review, and FO's next step when the second reviewer cannot run is designed?",
+  "artifacts": [
+    {
+      "id": "artifact:copilot-quota-refusal-is-not-a-review:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d80a4ce3dfc1affd6b436f990afc41d6ae36bae3/copilot-quota-refusal-is-not-a-review.md",
+      "rev": "sha256:e7f8360b1f8348bf96e1dc3d1f036a819bd586332ca13b3387027e901d08c433",
+      "mediaType": "text/markdown",
+      "summary": "Seed task filed 2026-10-13 from the Captain's words 「不等 Copilot，也要修復它額度不足時的應對方式」 and 「Copilot 的 task是否可以先排？因為顯然會接下來一直遇到此問題」. Evidence: copilot_review.py exited 0 (\"answered\", 0 line comments) on Copilot's quota-limit refusal on #627 (review:5499757433) and #628 (review:5499757731). Recommended profile: pilot (this five-stage workflow accepts pilot or prod; the change is a reader script and an FO step). Ideation owes: the refusal shapes to recognise, the not-run report, FO's next step, and ACs with a falsifier against the recorded refusal."
+    }
+  ]
+}

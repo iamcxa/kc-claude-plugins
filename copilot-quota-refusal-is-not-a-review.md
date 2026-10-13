@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:copilot-quota-refusal-is-not-a-review:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:copilot-quota-refusal-is-not-a-review-backlog-1
+              briefing:
+                id: briefing:copilot-quota-refusal-is-not-a-review:backlog:attempt-1:revision-1
+                digest: sha256:9766c3e0940f18f3725c5b5e55fcf2f62d1430747aa870036f9e32ce88d8761a
+                room-ref: ./copilot-quota-refusal-is-not-a-review/review/backlog/briefing-1
 ---
 
 On 2026-10-13 FO requested Copilot on iamcxa/kc-claude-plugins #627 and #628 (task `journey-map-dev2-contract`). Six seconds later Copilot left a COMMENTED review on each: "Copilot was unable to review this pull request because the user who requested the review has reached their quota limit." `python3 <package>/extensions/copilot/copilot_review.py iamcxa/kc-claude-plugins 627` printed `answered on 32db12730: "no heading", 0 line comment(s); evidence=review:5499757433` and exited 0 (the same for #628, review:5499757731). Exit 0 is the reader's "answered" result, so a quota refusal reads like a review of the head with no findings unless FO reads the body.
