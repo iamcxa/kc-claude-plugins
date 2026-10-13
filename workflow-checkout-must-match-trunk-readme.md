@@ -327,3 +327,18 @@ Observed (2026-10-13, origin/main 9e68eb87): `README differs from origin/main: o
 ### Summary
 
 PASSED. Both Codex round-1 P2 reproduce as real defects at 085e28aa (a CRLF README under an eol=lf filter passes; the remedy for a spaced path is not runnable) and are fixed at 70da29c7; each new test fails only under the mutation that removes its fix. No AC result changed from cycle 1, and the acceptance script now runs at 70da29c7 with a spaced stale-checkout path. I wrote no `git config` in any shared worktree (the unreachable-origin step runs in a throwaway clone; origin URL identical before and after). Unverified: behaviour of a real FO session (prose-enforced), CI duration, and a host with `core.autocrlf=true`.
+
+## Stage Report: implementation (cycle 3, Codex round-2 P1 repair)
+
+- DONE: reproduce the Codex round-2 P1 on #631 head 70da29c7 and sweep every script FO is told to run
+  `git ls-tree` shows workflow_checkout.py 100644; direct run from a `git archive` copy exits 126, `python3 ...` runs. Only skills/dev/SKILL.md named it bare; references/sd/workflow.md already used python3. Out of scope, reported to FO: references/sd/adoption.md L24 names poc_readme.py bare (pre-existing, file not in the PR).
+- DONE: fix with a check that fails without the fix, shown failing by a mutation run
+  New head 20c9ec53. skills/dev/SKILL.md now runs `python3 <package>/scripts/workflow_checkout.py`. test_every_instruction_runs_the_script_through_python3_unless_it_is_executable asserts every `<package>/scripts/workflow_checkout.py` mention in skills/dev/SKILL.md and references/sd/workflow.md is preceded by `python3` (wrap tolerated) unless the file is executable; it replaces a substring-only test that passed on the broken text. Mutation: SKILL.md reverted to the bare form -> that test fails ("1 != 0 ... without python3"), 12 others pass; restored -> 13 tests OK; lint-skills.py OK.
+- DONE: roborev gate and push
+  `roborev_gate.py --base 70da29c7`: `clean on 20c9ec53a; evidence=roborev:613` (exit 0, first run). Pushed without force.
+- DONE: CI green on the new head
+  `gh pr checks 631`: 5 of 5 pass on 20c9ec53ab5b (unit tests, version parity, route gate, static contracts, GitGuardian).
+
+### Summary
+
+The dev skill told FO to run a mode-100644 script directly (exit 126); it now goes through python3 like package_version.py, guarded by a test that names the failing mutation. Left for FO: adoption.md L24 bare poc_readme.py mention, and merging 20c9ec53 into stacked PRs #632 and #633.
