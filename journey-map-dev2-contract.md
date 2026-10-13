@@ -461,3 +461,41 @@ Scope one is two steps and two record shapes: a footprint line written beside th
 ### Summary
 
 Both PRs are open as Drafts with CI green, PR 1 for the footprint side (script, extension, ADR 0012, version-hash binding) and PR 2 for the map side (splice-only fold, reconcile counts, question-field version, real-CLI smoke and workflow). The splice design held on both real map shapes, and every count in AC-6 matched the design's figures. Decision still open for FO: none beyond the stacking order stated above.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on #627 (head 89769eb6) and #628 (head d8281e1c) against AC-1, AC-2, AC-4, AC-5, AC-6 and AC-11, re-running each Verified-by command and at least one falsifier per criterion yourself rather than citing the implementation report
+  Recommend PASSED for both heads (PR heads confirmed with `gh pr view`; CI runs 38348907875 and 38348920409 are on those SHAs). Throwaway checkouts of each head; read and run only. AC-1: schema command prints table; renamed field with no bump exits 1, bump with no recorded hash exits 1, a wording-only edit with no bump exits 1 (map_footprint.py); `schemas.test.mjs` fails when the hash compare is dropped. AC-2: fold on a `v1` line with an extra field applies and an unknown `kind` prints `skipped`; reconcile on a real `spacedock status` workflow lists the skipped line and counts only `unfolded 1`; `v2` exits 1 in fold, reconcile (smoke step 4) and `check`; dropping the schema pin fails 2 footprint tests and the fold/reconcile v2 test. AC-4: paraphrase, wrong date, wrong journey, unresolved and non-Captain source each exit 1 naming the cause; two stories with `q1` take separate lines; wrong count, bare `not needed:`, `v2` line and unresolved source make `check` exit 1; non-journey task exits 0; `audit` without `--since` exits 2; on qnow state d01c37bc `audit --since 2026-10-14` prints `unrecorded 0` and `--since 2000-01-01` prints `unrecorded 7`; relay ed63e6a0 gives 0 and 2. AC-5: smoke run in a fresh `env -i` shell printed every exit code and count and ended `all steps passed`; five mutations of the fold (status write, `already`, conflict, schema pin) and of reconcile (stale-open filter) each fail a named test. AC-6: qnow df8ee1d2 and relay 0295d163 with an empty workflow print the figures in the criterion, two runs byte-identical; a duplicate story id on a qnow copy prints `duplicate-story-ids 1` and exits 1; one added answer moves `unsourced` by 1; folding one footprint into 4 qnow and 4 relay questions (including the deferred ones) changed 1 line each in qnow (2 in `diff`) and 3 added lines in relay; folding every open question at once (31 and 22) applied all. AC-11: breaking "Read the CHANGELOG when" in EXTENSION.md, deleting the ADR file and deleting the README section each fail their named test.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Script below, run as `env -i HOME PATH zsh -f /tmp/jm-accept.sh` from `/`, on a fresh worktree with no `node_modules`; every step printed the expected line.
+- DONE: adr_lint.py docs/adr --since <base> run with its exit code, and unverified obligations named (billed CI minutes, Release PR smoke, live adopter run)
+  `adr_lint.py docs/adr --since e2524e93 --require 0012` exits 0 ("12 ADR file(s) checked, 0 legacy") at both heads, under package 0.20.0 and 0.21.0. Other checks: `comment_ratio.py` 1.0% (PR 1), 2.9% (PR 2 over PR 1), 2.0% over base, exit 0; `number_guards.py check` PASS exit 0; `design_surfaces.py check` presentable exit 0; `doc_impact.py` lists `kc-dev-flow-2/README.md`, which the PR updates. Unverified obligations are listed after the script.
+
+### Minimal acceptance script
+
+Needs (named): a kc-claude-plugins clone that has fetched the PR 628 head; node 24 (needs 22.13 or later) with npm; python3; `spacedock` 0.27.2 on PATH; network for `npm ci`. Prerequisite, run once from the clone: `git worktree add --detach /tmp/jm-accept d8281e1c`. Then, in a fresh shell (bash or zsh), from `/tmp/jm-accept`:
+
+1. `(cd kc-journey-map && npm ci >/dev/null 2>&1; echo "npm ci exit $?")` -> `npm ci exit 0`.
+2. `bash kc-journey-map/scripts/journey-dev2-loop-smoke.sh > /tmp/jm-smoke.out 2>&1; echo "smoke exit $?"; tail -2 /tmp/jm-smoke.out` -> `smoke exit 0`, `lines removed 0, added 3`, `journey-dev2-loop-smoke: all steps passed`. This is a missed ruling caught by `check`, `audit` and `stale-open`, then folded to `unfolded 0`, on the real Spacedock CLI.
+3. `python3 kc-dev-flow-2/extensions/journey-map/map_footprint.py schema journey-footprint | sed -n '1p;$p'; node kc-journey-map/lib/schemas.mjs journey-map-question | sed -n '1p;$p'` -> `journey-footprint 1.0.0`, then the "Read the CHANGELOG when ... read the ADR before ..." line; `journey-map-question 1.0.0`, then its line.
+4. `sed -i.bak 's/("question", "a question id/("question_id", "a question id/' kc-dev-flow-2/extensions/journey-map/map_footprint.py; python3 kc-dev-flow-2/extensions/journey-map/map_footprint.py schema journey-footprint >/dev/null; echo "exit $?"; git checkout -- kc-dev-flow-2/extensions/journey-map/map_footprint.py; rm -f kc-dev-flow-2/extensions/journey-map/map_footprint.py.bak` -> a message `the field table changed but version 1.0.0 did not`, then `exit 1`; the checkout restores the file.
+5. `python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py 2>&1 | tail -3; (cd kc-journey-map && node --test lib/*.test.mjs 2>&1 | grep -E '^ℹ (tests|pass|fail)')` -> `Ran 18 tests ... OK`, `ℹ tests 210`, `ℹ pass 210`, `ℹ fail 0`.
+
+Does not cover: a real adopter's FO following EXTENSION.md at a gate, the real `merge guard` archive, an id-style (`sd-b32`) workflow, the two real maps (steps there need the qnow and relay repositories), CI cost, or any release step.
+
+### Findings (none Material)
+
+- Polish: `journey-reconcile` exits 1 on a duplicate story id in the CLI (shown above), but no test asserts that exit code; removing `|| duplicateStories` survives all 21 journey-map tests. AC-6 asks only that the run report it, which it does and tests.
+- Deferred risk: `words` is checked as a substring of the source, so a very short quotation passes; `stale-open` can flag an open question that an archived task never meant to answer. Would become Material if an adopter's release review is blocked by a false `stale-open`; both real adopters read 0.
+- For FO: `dispatch_records.py` on the task folder exits 1, "no dispatch records under dispatch/" (the ideation, implementation and validation dispatch files exist only in `/tmp/spacedock-dispatch/`). This is a record gap in the task, not in the candidate.
+
+### Unverified obligations
+
+- Billed CI minutes for `.github/workflows/journey-dev2-loop-smoke.yml` and the added `kc-dev-flow-2-tests.yml` step: only job durations seen (smoke 16s, python unit tests 31s).
+- Release PR smoke (the kc-dev-flow-2 and kc-journey-map Release PRs) and release-please bump and CHANGELOG entries: not run; neither CHANGELOG yet holds a `journey-footprint` or `journey-map-question` entry, so the pointers in `schema` output point at the file that will carry them.
+- Live adopter run: no adopter lists the `journey-map` extension; no FO has run `add` at a gate. Read-only evidence only: `reconcile` and `audit` ran on qnow (7 archived journey tasks read) and relay (6) with their real maps and state branches in throwaway checkouts. `spacedock state commit` was shown to commit a task-folder `footprints.jsonl` in a throwaway split-root workflow; `merge guard`'s own archive move was not run (smoke moves the files by hand).
+- #628 is stacked on #627; after #627 squash-merges, retarget #628 and merge main back in.
+
+### Summary
+
+Both heads pass: the contract checks, the splice-only fold and the counts behave as the criteria state, and each decisive check failed under a mutation that removes it. Recommended verdict PASSED for #627 and #628; no Material finding, one Polish item and one record gap for FO (missing dispatch records). Nothing in the candidates, PRs or main checkout was changed; throwaway worktrees were removed.
