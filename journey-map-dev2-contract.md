@@ -1,6 +1,6 @@
 ---
 title: kc-journey-map and kc-dev-flow-2 connect through versioned input/output contracts, each schema owned by its producer, with ADR rulings shown on the map by reference
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 merge: pr
 profile: pilot
