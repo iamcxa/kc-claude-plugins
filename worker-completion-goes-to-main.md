@@ -369,3 +369,18 @@ Does not cover: that the replay helper builds the line through a live `dispatch 
 ### Summary
 
 PASSED at 01eaf231: the P2 reproduces on a7fa7f1b (no line in the default `scope.txt`) and is fixed on 01eaf231, the new tests fail under each of the three mutations I ran, the merge of 7679ab7a leaves this PR's other hunks equal to the validated ones, and AC-1 to AC-3 re-ran green with a falsifier each (AC-4 carried; none of its bytes changed). Two Polish items (a scope file already carrying the line doubles it; the `doc_impact` records) and the carried Deferred risks, nothing returns through feedback. Throwaway worktree, copies and clone removed; `/tmp/val633-ac4` from cycle 1 remains. The dispatch said both to commit the report here and that the state checkout is read only; I committed only this entity file, path-scoped.
+
+## Stage Report: implementation (conflict handoff, merge of origin/main 37ed4fe7)
+
+- DONE: Merge (never rebase) origin/main at 37ed4fe7 into #633's branch, keeping main's #631 and #632 text and this PR's edits; this PR's hunks over origin/main equal its validated hunks over 7679ab7a
+  New head 84de8242 (merge commit, parents 01eaf231 and 37ed4fe7). `git diff 7679ab7a 01eaf231` and `git diff 37ed4fe7 84de8242` are identical once the `index <hash>` lines are removed (blob hashes differ because the base differs); no forced difference.
+- DONE: Conflict resolution, line by line
+  One conflicted file: kc-dev-flow-2/scripts/lint-skills.py. HEAD had comment `# 5463: +48 ...` and `WORKFLOW_WORD_BUDGET = 5463`; main had `WORKFLOW_WORD_BUDGET = 5415`. Kept main's comment lines through `# 5415 ...`, kept this PR's `# 5463: +48` comment and `= 5463` (main 5415 + 48). All other files merged automatically.
+- DONE: All test suites and lint-skills.py green on the merged head; push (never force); CI green on #633's new head
+  lint-skills.py PASS (workflow.md 5463 of 5463 words). Every scripts/test_*.py passed (pytest; test_observer_recovery.py and test_sd_dispatch.py run directly, the latter with --sd-plugin-root spacedock 0.27.0 and asserting the `main` completion line). Pushed 01eaf231..84de8242, no force. PR #633 MERGEABLE; four CI checks pass on 84de8242.
+- DONE: Stage report: new head, conflict resolution, hunk comparison, roborev_gate.py evidence= line
+  roborev_gate.py --base 37ed4fe7 exit 1: `findings on 84de8242d; evidence=roborev:622`. One High finding, not a conflict-resolution finding, so not fixed: dispatch_records.py (this PR's own validated hunk) now requires the main completion line in scope notes, so pre-change dispatch records for active tasks would fail the checker; suggests a version or date gate or a legacy exemption. Returned to FO as a decision (behaviour change).
+
+### Summary
+
+Merged main into #633 with a one-line budget conflict resolved to main's 5415 plus 48. The PR's own diff is unchanged. roborev raised one finding on the PR's own behaviour, left for FO.
