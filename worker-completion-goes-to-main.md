@@ -62,6 +62,17 @@ gates:
                 id: briefing:worker-completion-goes-to-main:validation:attempt-2:revision-1
                 digest: sha256:f5af0750cc0b036d07da41996b9b487174d5934344c79ac0cc652ce075af0a5b
                 room-ref: ./worker-completion-goes-to-main/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-completion-goes-to-main:validation:2
+                briefing: briefing:worker-completion-goes-to-main:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-13T11:07:26.445237Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「ok」 to the validation gate question "Deliver #633 head 84de8242 ...? Approving also accepts that the D2 waiver now covers 13 existing dispatch records in 4 tasks (3 open: journey-canvas-hosted-poc, release-acceptance, journey-server-host-pilot) ...", after FO explained in chat what the waiver means and that open tasks may add records before the rule takes effect.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T07:17:42Z
 worktree: .worktrees/spacedock-ensign-worker-completion-goes-to-main
 pr: iamcxa/kc-claude-plugins#633
