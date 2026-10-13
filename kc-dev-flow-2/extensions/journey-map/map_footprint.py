@@ -235,6 +235,8 @@ def record_state(task):
     elif declared.startswith("not needed:"):
         if not declared[len("not needed:"):].strip():
             msgs.append("`Map footprints: not needed:` has no reason")
+        if valid:
+            msgs.append(f"`Map footprints: not needed` contradicts {valid} valid line(s) in {task.footprints.name}")
     else:
         c = re.fullmatch(r"(\d+) in footprints\.jsonl", declared)
         if not c:
@@ -261,7 +263,9 @@ def state_dir(workflow):
     if readme.is_file():
         fm, _ = dl.split_task(readme.read_text())
         state = top_level(fm or []).get("state")
-        if state and (workflow / state).is_dir():
+        if state:
+            if not (workflow / state).is_dir():
+                raise ValueError(f"{readme} declares state {state!r} but {workflow / state} is not a directory")
             return workflow / state
     return workflow
 
