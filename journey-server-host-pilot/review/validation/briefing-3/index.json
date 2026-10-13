@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:validation:attempt-3:revision-1",
+  "question": "是否接受本輪驗證結果並保留修正版，整體 pilot 交付維持暫緩？",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:validation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/b9f1715c8ef93a83e3370f427a0e72d58f180eae/journey-server-host-pilot/index.md",
+      "rev": "sha256:4adc833ebe6e8246c20eba98eb7eb4cf87879e6f5df36fbbb49169e5bb216d70",
+      "mediaType": "text/markdown",
+      "summary": "Independent validation PASSED for the authorized connection-first hosted continuation on the preserved corrected candidate. All three dispatch linchpins DONE; actual same-socket reconstruction with continuous heartbeat, resumed persistent mutation/broadcast and post-wake revoke/expiry are supported. Provider measurement is PARTIAL, never complete cost or measured account-wide increase; detailed evidence remains local. Cleanup is supported and the five unchanged offline acceptance commands were run by FO with exit 0. Node, UI, concurrency and product source remain unchanged. Full pilot delivery remains deferred because native-client/full hosted browser/assets/remote-Node/licensing/large-payload and complete billing obligations are unrun; the full number guard remains unavailable under its existing disposition. Recommend accepting this bounded evidence while preserving the candidate and holding whole-pilot delivery. No product publication, PR, merge or further provider action is requested."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:validation:attempt-3:revision-1:item-2",
+      "uri": "git-root://main/6d0f8da951b5ea9ea50fca6bd3685fc360bf502f/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:42b58e54971513b3dd42350e15b4b1e7cf05fd51f9f80b84a8e4856f087dae4f"
+    }
+  ]
+}

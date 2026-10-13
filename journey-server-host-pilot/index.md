@@ -76,6 +76,11 @@ gates:
                 at: "2026-10-13T16:07:08.046347Z"
                 decision: revise
                 reason: 'Accepts the minimal correction and preserves the candidate. Captain: 可以，保留修正版，先排除連線問題，再重測休眠恢復與用量。Cloudflare 維持免費方案，用量明細只留本機，Node、房間切換 UI 跟並發規則不動。 Assignment: diagnose connectivity before any deployment; then run one new bounded Free-only lifecycle and usage verification round, preserving prior evidence and unchanged product scope. This is continuation, not full acceptance or publication authority.'
+            - id: gate-attempt:journey-server-host-pilot-validation-3
+              briefing:
+                id: briefing:journey-server-host-pilot:validation:attempt-3:revision-1
+                digest: sha256:d2b41b8461e400acf2bdd1c7dff68bac8d31dbeaf24e052ef8775bec7a2f10c2
+                room-ref: ./review/validation/briefing-3
 started: 2026-10-13T08:47:34Z
 id: journey-server-host-pilot
 review-round:
