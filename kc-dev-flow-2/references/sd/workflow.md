@@ -441,9 +441,9 @@ deploys from its `## Number guards` section; `--help` lists the flags.
 
 - **Applied.** A migration in a commit recorded `Applied at:` is frozen for the task:
   edit, delete and renumber fail `check`. `Applied: none as of <sha>` records that
-  nothing was pushed up to that commit; a validator of a task with a `Migration:` line that finds none of `Applied at:`,
+  nothing was pushed up to that commit; a validator that finds none of `Applied at:`,
   `Not applied:` or `Applied: none` reports the missing record to FO instead of
-  re-checking deploys.
+  re-checking deploys. A task with no `Migration:` line owes none of these.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
   runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR
   head before FO asks for merge. Exit 2 is a configuration error, which returns to FO
@@ -473,9 +473,9 @@ deploys from its `## Number guards` section; `--help` lists the flags.
   or the environment's own deploy record showing no deploy of it), FO replaces that
   one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
   no longer frozen. Without that confirmation the line stays and the migration counts
-  as applied. When FO dispatches validation for a task with a `Migration:` line and nothing was pushed, FO
-  records `Applied: none as of <candidate sha>`, so such a task with neither line has a
-  skipped record; a task with no `Migration:` line records no `Applied:` line.
+  as applied. When FO dispatches validation and nothing was pushed for the task, FO
+  records `Applied: none as of <candidate sha>`, so a task with neither line has a
+  skipped record. A task with no `Migration:` line records no `Applied:` line.
 - **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
   validation gate. Without `migrations-path:` the migration rules are skipped, so a POC
   is not guarded until the README declares it.
