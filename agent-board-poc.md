@@ -1,6 +1,6 @@
 ---
 title: A Codex session asks on a local board and an idle Claude session wakes and answers
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -27,7 +27,7 @@ gates:
                 reason: 'Captain approved outcome, scope, non-goals, budget and stop condition: 「准」 (2026-10-13 chat)'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Claude Code sessions can message each other and wake the receiver, but nothing crosses
