@@ -106,7 +106,8 @@ the instruction a worker followed outlives the session that wrote it. A follow-u
 message to a worker FO resumes is a dispatch too, and its record carries the same parts.
 A checklist or scope-notes line that names a package script writes
 `<package>/scripts/NAME.py` with the absolute root substituted, never the bare script
-name. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
+name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`
+on the saved record and rewrites each name it lists. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
 <dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
 DONE nor SKIPPED to the worker, and do not edit the worker's report. The refusal itself
 does not say why; other causes are a missing evidence line or Summary and an uncommitted
@@ -440,7 +441,7 @@ deploys from its `## Number guards` section; `--help` lists the flags.
 
 - **Applied.** A migration in a commit recorded `Applied at:` is frozen for the task:
   edit, delete and renumber fail `check`. `Applied: none as of <sha>` records that
-  nothing was pushed up to that commit; a validator that finds none of `Applied at:`,
+  nothing was pushed up to that commit; a validator of a task with a `Migration:` line that finds none of `Applied at:`,
   `Not applied:` or `Applied: none` reports the missing record to FO instead of
   re-checking deploys.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
@@ -472,9 +473,9 @@ deploys from its `## Number guards` section; `--help` lists the flags.
   or the environment's own deploy record showing no deploy of it), FO replaces that
   one line with `Not applied: <environment> <sha> - <evidence>` and the migration is
   no longer frozen. Without that confirmation the line stays and the migration counts
-  as applied. When FO dispatches validation and nothing was pushed for the task, FO
-  records `Applied: none as of <candidate sha>`, so a task with neither line has a
-  skipped record.
+  as applied. When FO dispatches validation for a task with a `Migration:` line and nothing was pushed, FO
+  records `Applied: none as of <candidate sha>`, so such a task with neither line has a
+  skipped record; a task with no `Migration:` line records no `Applied:` line.
 - **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
   validation gate. Without `migrations-path:` the migration rules are skipped, so a POC
   is not guarded until the README declares it.
@@ -528,7 +529,10 @@ creation, gate approval and a locally manufactured sentinel do not prove merge.
 A PR delivers only the commit on its head. Before asking for merge, FO confirms the
 PR head equals the candidate the latest passing validation report names; a repair
 validated after the PR was opened reaches the PR only when that exact commit is
-pushed to its branch.
+pushed to its branch. Before the `gate prepare` that asks for merge, FO runs
+`python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`;
+exit 1 or 2 holds the ask, FO shows the Captain what it printed, and a differing head is revalidated or its
+difference told to him first.
 
 FO adds each PR it opens or pushes to with `python3 <package>/scripts/pr_watch.py add
 <owner/repo>#<N>` and keeps `<package>/scripts/pr_watch.py wait` running in the
@@ -549,7 +553,7 @@ adds, how its result is read, and what happens when it cannot run. This README's
 frontmatter `extensions:` lists the ones this repository uses; an unlisted extension is
 not probed and adds nothing. For a listed extension FO follows its `EXTENSION.md`: at a
 worker dispatch of its stage FO adds its instruction line to the scope notes, and at its
-FO step FO reads the result as the file says. A listed extension that cannot run is
+FO step FO reads the result as the file says. A listed extension that cannot run, or that FO does not request because a ruling says not to, is
 reported as `<name> not run: <reason>` in the stage report or gate summary, and never
 counts as a clean result. A merge ask names each listed reviewer that was not read, and
 the Captain decides. Where two remote reviewers are listed, frontmatter `second-reviewer:`

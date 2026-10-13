@@ -76,6 +76,58 @@ class DispatchRecordTests(unittest.TestCase):
     def test_a_task_without_records_fails(self):
         self.assertEqual(self.check({})[0], 1)
 
+    def names(self, text, name="validation-1.md"):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d, "pkg")
+            (root / "scripts").mkdir(parents=True)
+            (root / "extensions" / "roborev").mkdir(parents=True)
+            (root / "scripts" / "adr_lint.py").write_text("")
+            (root / "scripts" / "lint-skills.py").write_text("")
+            (root / "extensions" / "roborev" / "roborev_gate.py").write_text("")
+            record = Path(d, name)
+            record.write_text(text)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = records.main(["--names", str(record)], package=root)
+            return code, out.getvalue().replace(str(record), name)
+
+    def test_bare_names_of_scripts_and_extension_scripts_are_listed_with_file_and_line(self):
+        text = COMPLETE.replace("1. Independent verdict on the exact candidate\n",
+                                "1. Run `roborev_gate.py` and lint-skills.py\n2. Then adr_lint.py, adr_lint.py again\n")
+        code, out = self.names(text)
+        self.assertEqual(code, 1)
+        self.assertEqual(out.splitlines(), [
+            "validation-1.md:8: bare package script name roborev_gate.py",
+            "validation-1.md:8: bare package script name lint-skills.py",
+            "validation-1.md:9: bare package script name adr_lint.py"])
+
+    def test_a_name_with_any_directory_part_or_not_in_the_package_is_not_judged(self):
+        text = COMPLETE.replace("1. Independent verdict on the exact candidate\n", (
+            "1. Run /abs/pkg/scripts/adr_lint.py, <package>/scripts/adr_lint.py, scripts/adr_lint.py,"
+            " ./lint-skills.py and ~/roborev_gate.py\n2. Edit other_tool.py and adr_lint.pyc\n"))
+        self.assertEqual(self.names(text), (0, ""))
+
+    def test_only_the_checklist_and_scope_notes_sections_are_scanned_unless_the_file_has_neither(self):
+        outside = COMPLETE.replace("# task — validation, cycle 1\n", "# task — validation, cycle 1\nSee adr_lint.py.\n")
+        self.assertEqual(self.names(outside), (0, ""))
+        later = COMPLETE + "\n## Notes\nadr_lint.py\n"
+        self.assertEqual(self.names(later), (0, ""))
+        self.assertEqual(self.names("Run adr_lint.py\n"), (1, "validation-1.md:1: bare package script name adr_lint.py\n"))
+
+    def test_the_default_mode_does_not_scan_names(self):
+        bare = COMPLETE.replace("1. Independent", "1. Run adr_lint.py. Independent")
+        self.assertEqual(self.check({"validation-1.md": bare})[0], 0)
+
+    def test_names_runs_against_the_real_package_and_needs_a_file(self):
+        with tempfile.TemporaryDirectory() as d:
+            record = Path(d, "r.md")
+            record.write_text("## Checklist\n\nrun roborev_gate.py\n")
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                self.assertEqual(records.main(["--names", str(record)]), 1)
+            self.assertIn("bare package script name roborev_gate.py", out.getvalue())
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(records.main(["--names"]), 2)
+
     def test_wrong_arguments_are_a_usage_error(self):
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(records.main([]), 2)
