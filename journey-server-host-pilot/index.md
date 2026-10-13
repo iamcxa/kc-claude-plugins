@@ -402,6 +402,11 @@ Supersedes: none
 Captain: 「遠端 node 可以交給 claude 部署到 exe.dev，但是現在可能暫時不適合，應該先 local 驗證過，然後你給我 prompt 我讓 claude 去部署，也要讓它知道萬一壞了怎樣錯誤還原」 (this conversation)
 Supersedes: none
 
+### Amendment 5 — 2026-10-13, chat
+Captain: 「同意最小修正並重測（建議）」 (this conversation, async reply)
+Asked: 「雲端 HTTP／MCP 讀寫已通過，但候選版有持續計時器，會妨礙房間休眠。你這輪要求保留候選版並補驗證；是否同意另做一個最小修正版本，只調整 Cloudflare 的休眠設定，再驗證休眠恢復與用量？原候選 commit 保留，Node、房間切換 UI 與並發規則不變。」
+Supersedes: none
+
 
 ## Stage Report: implementation
 
