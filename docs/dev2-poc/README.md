@@ -43,7 +43,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.21.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.22.1 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -85,9 +85,15 @@ assignment names returns to FO as a scope change.
 FO resolves `<package>` in this workflow from the `Package root:` line of
 `kc-dev-flow-2:dev`. Before each worker dispatch FO runs `python3 <package>/scripts/package_version.py
 <this README>`; exit 1 means the session loaded an older package than this README was synced
-from, and FO holds the dispatch until the session runs the newer one. Every worker dispatch FO builds carries that absolute path as a
+from, and FO holds the dispatch until the session runs the newer one. FO also runs
+`python3 <package>/scripts/workflow_checkout.py <this README>`, which compares this file with
+`origin/<trunk>`'s: exit 1 means they differ, exit 2 that it could not compare, and FO
+holds the dispatch and shows the Captain what the script printed. Every worker dispatch FO builds carries that absolute path as a
 `Package root: <absolute path>` line in its scope notes (`--scope-notes-file`), which
-land in the dispatch file the worker reads first. FO saves those scope notes, the
+land in the dispatch file the worker reads first. Those scope notes, and every follow-up
+message to a live worker, also carry ``Send your completion message to `main` (the README's Dispatch
+facts: `team-lead` is not registered here).``: the builder's completion block names `team-lead`, and a
+worker that skips the stage-definition fetch does not see the Signal fact. FO saves those scope notes, the
 checklist, the model it dispatches on and the SHA it dispatches from as
 `<task>/dispatch/<stage>-<cycle>.md` in the state checkout (a `Dispatched:` line with
 the full SHA, a `Model:` line, and `## Checklist` and `## Scope notes` sections),
@@ -96,7 +102,8 @@ the instruction a worker followed outlives the session that wrote it. A follow-u
 message to a worker FO resumes is a dispatch too, and its record carries the same parts.
 A checklist or scope-notes line that names a package script writes
 `<package>/scripts/NAME.py` with the absolute root substituted, never the bare script
-name. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
+name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`
+on the saved record and rewrites each name it lists. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
 <dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
 DONE nor SKIPPED to the worker, and do not edit the worker's report. The refusal itself
 does not say why; other causes are a missing evidence line or Summary and an uncommitted
@@ -175,7 +182,7 @@ feedback path after the distinct FO disposition described below. Its recheck of 
 repair is dispatched under the lane in Stages.
 
 - **Outputs:** Independent verdict, primary evidence, a minimal acceptance script, the
-  `<package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit
+  `python3 <package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit
   code, and unverified obligations recorded in the existing SD Stage Report.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
   and limits, and the user's pending delivery decision. Before the gate, FO runs the
@@ -196,7 +203,8 @@ repair is dispatched under the lane in Stages.
 Consuming a terminal gate approval is not completion (`spacedock merge guard --help`);
 a live run requires the declared delivery evidence and successful `merge guard` with
 an explicit verdict. Apply Delivery authority below; a pending PR or missing hook is
-not completion.
+not completion. An archived task's state is publish-only, so `python3 <package>/scripts/observer_check.py`
+runs before the sentinel.
 
 ## Dispatch facts
 
@@ -386,7 +394,7 @@ the package's `references/retained-documents.md`.
 ## Number guards
 
 Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, including one first required by a ruling in a worker report or mid-stage feedback, whose number FO reserves before the next dispatch; the POC bullet below applies to every `poc` task.
-`<package>/scripts/number_guards.py` takes `trunk:`, the optional `migrations-path:`
+`python3 <package>/scripts/number_guards.py` takes `trunk:`, the optional `migrations-path:`
 (the adopter's migration directory) and `adr-path:` (default `docs/adr`) from this workflow's README
 frontmatter (`--workflow-dir <workflow-dir>`) and a task's numbers and applied
 deploys from its `## Number guards` section; `--help` lists the flags.
@@ -395,7 +403,7 @@ deploys from its `## Number guards` section; `--help` lists the flags.
   edit, delete and renumber fail `check`. `Applied: none as of <sha>` records that
   nothing was pushed up to that commit; a validator that finds none of `Applied at:`,
   `Not applied:` or `Applied: none` reports the missing record to FO instead of
-  re-checking deploys.
+  re-checking deploys. A task with no `Migration:` line owes none of these.
 - **Check.** `python3 <package>/scripts/number_guards.py check --workflow-dir <workflow-dir> --task <task file>`
   runs at implementation exit, at validation and, after `git -C <repo> fetch`, on the PR
   head before FO asks for merge. Exit 2 is a configuration error, which returns to FO
@@ -427,7 +435,7 @@ deploys from its `## Number guards` section; `--help` lists the flags.
   no longer frozen. Without that confirmation the line stays and the migration counts
   as applied. When FO dispatches validation and nothing was pushed for the task, FO
   records `Applied: none as of <candidate sha>`, so a task with neither line has a
-  skipped record.
+  skipped record. A task with no `Migration:` line records no `Applied:` line.
 - **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
   validation gate. Without `migrations-path:` the migration rules are skipped, so a POC
   is not guarded until the README declares it.
@@ -473,13 +481,18 @@ explicit choice.
 
 Use SD's pending terminal approval and existing merge hook; do not invent another
 PR stage. Observe the actual repository-qualified PR merge before recording its
-landed sentinel and running SD merge guard to finalize/archive. CI green, PR
+landed sentinel and running SD merge guard to finalize/archive. Where `learn` is listed, run
+`python3 <package>/scripts/observer_check.py <state> <slug>` before the sentinel and follow its exit
+as the learn extension says; the pr-merge hooks run the sentinel and `merge guard` together. CI green, PR
 creation, gate approval and a locally manufactured sentinel do not prove merge.
 
 A PR delivers only the commit on its head. Before asking for merge, FO confirms the
 PR head equals the candidate the latest passing validation report names; a repair
 validated after the PR was opened reaches the PR only when that exact commit is
-pushed to its branch.
+pushed to its branch. Before the `gate prepare` that asks for merge, FO runs
+`python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`;
+exit 1 or 2 holds the ask, FO shows the Captain what it printed, and a differing head is revalidated or its
+difference told to him first.
 
 FO adds each PR it opens or pushes to with `python3 <package>/scripts/pr_watch.py add
 <owner/repo>#<N>` and keeps `<package>/scripts/pr_watch.py wait` running in the
@@ -500,7 +513,7 @@ adds, how its result is read, and what happens when it cannot run. This README's
 frontmatter `extensions:` lists the ones this repository uses; an unlisted extension is
 not probed and adds nothing. For a listed extension FO follows its `EXTENSION.md`: at a
 worker dispatch of its stage FO adds its instruction line to the scope notes, and at its
-FO step FO reads the result as the file says. A listed extension that cannot run is
+FO step FO reads the result as the file says. A listed extension that cannot run, or that FO does not request because a ruling says not to, is
 reported as `<name> not run: <reason>` in the stage report or gate summary, and never
 counts as a clean result. A merge ask names each listed reviewer that was not read, and
 the Captain decides. Where two remote reviewers are listed, frontmatter `second-reviewer:`
