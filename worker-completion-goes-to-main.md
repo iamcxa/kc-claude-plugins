@@ -188,3 +188,21 @@ Visible change: none
 ### Summary
 
 The rule already exists (the `Signal:` bullet, shipped 2026-09-30) but travels only in the fetched stage definition: workers that fetch it send `main` 263 of 271 times, workers that skip the fetch send `team-lead` 12 of 13 times. The smallest fix is one sentence in `workflow.md` and `skills/dev/SKILL.md` so FO writes a `main` completion line into every dispatch's scope notes, plus an optional `dispatch_records.py` check. Shared files with the sibling tasks: `references/sd/workflow.md` (same Stages-preamble paragraph, and the 5331-word budget it sits at), `skills/dev/SKILL.md` and `scripts/lint-skills.py`; this task lands last and rebases. The census behind the numbers is a local transcript read with an approximate classifier, and seven explicit-line trials cannot show improvement over a 3.0% base rate.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) stacked on #632 (branch off spacedock-ensign/observer-before-merge-guard at 0830a3be) with the sentences the design names in references/sd/workflow.md and skills/dev/SKILL.md, the test_sd_dispatch.py entry, and (D2 accepted) dispatch_records.py and its test failing a record whose scope notes lack the main completion line; AC-1 to AC-4 green with each falsifier shown failing by a mutation run
+  PR #633 (Draft, base `spacedock-ensign/observer-before-merge-guard`), commit 4202cdf9. AC-1: `scope-notes-main-line` and `scope-notes-main-line-skill` (two entries, one pinned file each); deleting the skill sentence, then the workflow sentence, makes only that entry report a gap. AC-2: the line sits ahead of `### Completion checklist` with `SendMessage(to="team-lead"` still present on the Claude host; `/dev/null` scope notes fails the assertion (`('claude', 'ideation')`). AC-3: `test_dispatch_records.py` accepts three wordings, rejects `team-lead`, `main-branch` and a line outside Scope notes; removing the `PARTS` entry fails 4 subtests. AC-4: SKIPPED here, it is the validation smoke (not run).
+- DONE: roborev_gate.py evidence= line, CI green on the PR head, lint-skills.py green (raise WORKFLOW_WORD_BUDGET from #632's 5411 only by the words this task adds, saying why), and the CI cost per PR measured or stated as not measured
+  `findings on 4202cdf9d; evidence=roborev:612` (exit 1, not rerun: neither finding is fixable in scope, see Findings for FO). `lint-skills.py` green, budget 5411 to 5459 (+48, the workflow sentence). `comment_ratio.py 0830a3be HEAD`: 1 comment line of 36 code lines, 2.8%, exit 0. CI cost per PR: not measured; the existing `kc-dev-flow-2 tests` workflow runs once per push, no step added. CI on the PR head: see the PR checks (pending at report time).
+- DONE: The existing dispatch records that the D2 check would fail, listed by task and file in the stage report (the design counted 9 of 23 in 3 tasks), so FO can waive them at their gates
+  Run today over this state checkout: 9 of 26 records, 3 tasks. `_archive/journey-map-dev2-contract/dispatch/`: ideation-1, ideation-2, ideation-3 (names `team-lead`), implementation-1, implementation-2, implementation-3, validation-1. `journey-canvas-hosted-poc/dispatch/`: ideation-1. `release-acceptance/dispatch/`: ideation-1.
+
+### Findings for FO (roborev:612)
+
+- Declined, out of scope by design: `replay_dispatch.py` omits the `main` line. It passes `--scope FILE` through so the AC-4 smoke can build the unchanged and the with-line arms; adding the line unconditionally would remove the control arm. The file is also outside the design's list.
+- Accepted D2 cost, not a defect: the new check rejects the 9 historical records above; FO waives them per task at the gate. A grandfathering mechanism is outside the design.
+
+### Summary
+
+FO is told, in `workflow.md` and `skills/dev/SKILL.md`, to write a `main` completion line into every dispatch's scope notes, and `dispatch_records.py` now refuses a record without it. The two test entries and the dispatch build assertion carry mutation-shown falsifiers. AC-4 is left to validation; CI was pending when this was written.
