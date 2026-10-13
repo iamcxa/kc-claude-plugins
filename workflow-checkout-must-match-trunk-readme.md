@@ -53,6 +53,17 @@ gates:
                 id: briefing:workflow-checkout-must-match-trunk-readme:validation:attempt-1:revision-1
                 digest: sha256:68dffba00402f8b409a9ce17efd8132ee24f2bf65f9cbd1bc60ece4001aa38d6
                 room-ref: ./workflow-checkout-must-match-trunk-readme/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:workflow-checkout-must-match-trunk-readme:validation:1
+                briefing: briefing:workflow-checkout-must-match-trunk-readme:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T08:43:47.7248Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「批准」 to the validation gate question "Deliver #631 head 20c9ec53 ...: FO marks it ready and asks you to merge it first in the stack? Approval also covers later external-review rounds on this PR, per Delivery authority."'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T07:17:36Z
 worktree: .worktrees/spacedock-ensign-workflow-checkout-must-match-trunk-readme
 pr: iamcxa/kc-claude-plugins#631
