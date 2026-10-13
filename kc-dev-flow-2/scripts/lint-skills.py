@@ -23,7 +23,8 @@ WORKFLOW = "references/sd/workflow.md"
 # Raise only in a change that says why the adopted README must grow.
 # 5369: +38 for the workflow_checkout.py hold, a rule the adopted README must carry.
 # 5411: +42 for the observer_check.py step ahead of the merge sentinel, which a restarted FO reads here.
-WORKFLOW_WORD_BUDGET = 5411
+# 5415: +4 for python3 before four script names, because the scripts are mode 100644 and exit 126 when run bare.
+WORKFLOW_WORD_BUDGET = 5415
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
 KNOWN_DUPLICATES = {

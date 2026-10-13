@@ -20,7 +20,7 @@ item from the request and authoritative project/task records. Reuse established
 context; do not guess between projects or tasks. Read applicable project
 conventions and the existing context needed for the requested work.
 
-After resolving the code root, run `<package>/scripts/learning.py --repo
+After resolving the code root, run `python3 <package>/scripts/learning.py --repo
 <absolute-code-root> notices`. Present relevant unread learning results to the
 user, distinguishing pending/uncertain, no-change, local proposal, PR and observed
 merge; pending proposals are not active rules. Only after actual presentation,
@@ -31,7 +31,7 @@ unrelated approved development. This entry-level check is not a host SessionStar
 hook. Use [learn](../learn/SKILL.md) for an explicitly requested named-task loop;
 notices do not authorize evaluation, delivery, retry or merge.
 
-When the README lists `learn` and a task's PR is merged, run `<package>/scripts/observer_check.py
+When the README lists `learn` and a task's PR is merged, run `python3 <package>/scripts/observer_check.py
 <state> <slug>` before writing the `pr-merge:` sentinel or running `merge guard`; the
 learn extension says what each exit means. A restarted session meets this before the pr-merge
 hook does.

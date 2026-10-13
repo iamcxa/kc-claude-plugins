@@ -218,7 +218,7 @@ feedback path after the distinct FO disposition described below. Its recheck of 
 repair is dispatched under the lane in Stages.
 
 - **Outputs:** Independent verdict, primary evidence, a minimal acceptance script, the
-  `<package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit
+  `python3 <package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit
   code, and unverified obligations recorded in the existing SD Stage Report.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
   and limits, and the user's pending delivery decision. Before the gate, FO runs the
@@ -239,7 +239,7 @@ repair is dispatched under the lane in Stages.
 Consuming a terminal gate approval is not completion (`spacedock merge guard --help`);
 a live run requires the declared delivery evidence and successful `merge guard` with
 an explicit verdict. Apply Delivery authority below; a pending PR or missing hook is
-not completion. An archived task's state is publish-only, so `<package>/scripts/observer_check.py`
+not completion. An archived task's state is publish-only, so `python3 <package>/scripts/observer_check.py`
 runs before the sentinel.
 
 ## Dispatch facts
@@ -430,7 +430,7 @@ the package's `references/retained-documents.md`.
 ## Number guards
 
 Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, including one first required by a ruling in a worker report or mid-stage feedback, whose number FO reserves before the next dispatch; the POC bullet below applies to every `poc` task.
-`<package>/scripts/number_guards.py` takes `trunk:`, the optional `migrations-path:`
+`python3 <package>/scripts/number_guards.py` takes `trunk:`, the optional `migrations-path:`
 (the adopter's migration directory) and `adr-path:` (default `docs/adr`) from this workflow's README
 frontmatter (`--workflow-dir <workflow-dir>`) and a task's numbers and applied
 deploys from its `## Number guards` section; `--help` lists the flags.
@@ -518,7 +518,7 @@ explicit choice.
 Use SD's pending terminal approval and existing merge hook; do not invent another
 PR stage. Observe the actual repository-qualified PR merge before recording its
 landed sentinel and running SD merge guard to finalize/archive. Where `learn` is listed, run
-`<package>/scripts/observer_check.py <state> <slug>` before the sentinel and follow its exit
+`python3 <package>/scripts/observer_check.py <state> <slug>` before the sentinel and follow its exit
 as the learn extension says; the pr-merge hooks run the sentinel and `merge guard` together. CI green, PR
 creation, gate approval and a locally manufactured sentinel do not prove merge.
 
