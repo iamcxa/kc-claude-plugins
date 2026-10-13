@@ -3,7 +3,7 @@ title: FO cannot dispatch from a workflow checkout whose README is behind the tr
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 2026-10-13: 「批准」 to the validation gate question "Deliver #631 head 20c9ec53 ...: FO marks it ready and asks you to merge it first in the stack? Approval also covers later external-review rounds on this PR, per Delivery authority."'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-13T07:17:36Z
 worktree: .worktrees/spacedock-ensign-workflow-checkout-must-match-trunk-readme
 pr: pr-merge:631
+verdict: PASSED
+completed: 2026-10-13T09:12:13Z
+archived: 2026-10-13T09:12:13Z
 ---
 
 On 2026-10-13 FO drove task `journey-map-dev2-contract` through backlog, ideation, implementation and validation from a workflow checkout detached at a 2026-10-08 commit whose `docs/dev2/README.md` was 397 lines behind the 0.21.0 sync on origin/main (e2524e93). Four dispatches (ideation-1, ideation-3, implementation-1, validation-1) ran on the stale rules; two rules only the newer README carries were missed (dispatch records under `<task>/dispatch/`, the `package_version.py` hold). Observer report on that task, violations 3 and 4. `package_version.py` compares the loaded package with the README it is given, so a stale README passes; nothing compares the README with the trunk's.
