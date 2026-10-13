@@ -59,6 +59,15 @@ or start development. Claude and Codex share these planning and handoff instruct
 In check mode the mismatches are the deliverable. Do not quietly redraw someone's board
 into the "right" answer: quote their card, state the code fact, name the verdict.
 
+## Answers that come from rulings
+
+A question's `answer`, `status: answered` and `source` may be written by `lib/journey-fold.mjs`
+from a kc-dev-flow-2 footprint; do not rewrite a `source` by hand. Before changing a question
+field or reading a `source` you do not recognise, read the contract history named in the
+README section "Rulings from kc-dev-flow-2": `node lib/schemas.mjs journey-map-question` for the
+current table, this plugin's `CHANGELOG.md` for every version, and the ADR for the first shape
+and each MAJOR.
+
 ## Adding one deferred story
 
 A capability named and set aside mid-conversation — "the shop should be able to create

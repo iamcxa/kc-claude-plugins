@@ -19,8 +19,8 @@ function matchSiblingStyle(node, list, steps) {
 	node.get('card', true).type = last?.get?.('card', true)?.type ?? 'QUOTE_DOUBLE'
 }
 
-const lineStart = (src, offset) => src.lastIndexOf('\n', offset - 1) + 1
-const afterLine = (src, offset) => {
+export const lineStart = (src, offset) => src.lastIndexOf('\n', offset - 1) + 1
+export const afterLine = (src, offset) => {
 	const end = src.indexOf('\n', offset)
 	return end === -1 ? src.length : end + 1
 }
