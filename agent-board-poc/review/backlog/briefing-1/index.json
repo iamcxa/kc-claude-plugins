@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:agent-board-poc:backlog:attempt-1:revision-1",
+  "question": "Approve the agent-board POC outcome, scope, non-goals, budget and stop condition for implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:agent-board-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5e2aa05db7758923e924743da3f6138f0a5a8fb9/agent-board-poc.md",
+      "rev": "sha256:00fc2f9cdd891dd30157d9a5f41a473672c7083612163b2a6d8046cb964e7684",
+      "mediaType": "text/markdown",
+      "summary": "POC: a local stdio MCP board; Codex asks, an idle Claude (Conductor's launch flags) wakes via asyncRewake hook or background wait and answers; Captain reads the whole exchange from one command. Stop if neither wake path starts a Claude turn."
+    }
+  ]
+}

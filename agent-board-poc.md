@@ -6,6 +6,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:agent-board-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:agent-board-poc-backlog-1
+              briefing:
+                id: briefing:agent-board-poc:backlog:attempt-1:revision-1
+                digest: sha256:f74b07571bde05cf0684e29537791bb1dfe82754b2c50b987aef97f929d0af8d
+                room-ref: ./agent-board-poc/review/backlog/briefing-1
 ---
 
 Claude Code sessions can message each other and wake the receiver, but nothing crosses
