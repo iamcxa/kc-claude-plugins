@@ -1,6 +1,6 @@
 ---
 title: kc-journey-map and kc-dev-flow-2 connect through versioned input/output contracts, each schema owned by its producer, with ADR rulings shown on the map by reference
-status: validation
+status: done
 variant: kc-dev-flow-2
 merge: pr
 profile: pilot
@@ -85,10 +85,13 @@ gates:
                 reason: 'Captain 2026-10-13: 「准」 to the validation gate question for #627 32db1273 and #628 7d89898e; the question stated that approval also accepts keeping the smoke push-to-main trigger, accepts that a hand-reworded answer stays a conflict until a new ruling, and covers later external-review rounds on these two PRs per Delivery authority.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-13T03:05:11Z
 worktree: .worktrees/spacedock-ensign-journey-map-dev2-contract
 pr: pr-merge:628
+verdict: PASSED
+completed: 2026-10-13T06:59:28Z
+archived: 2026-10-13T06:59:28Z
 ---
 
 kc-journey-map (the release slice map) and kc-dev-flow-2 meet today through prose split between workflow.md's Release review section and kc-journey-progress's SKILL.md. Nothing tests that prose, and six defects found in an adopter on 2026-10-13 come from that missing interface.
