@@ -258,3 +258,24 @@ PASSED. My first draft of the acceptance script ran `git remote set-url` in a wo
 - Cycle 1 (FO, 2026-10-13): validation recommended PASSED on #631 085e28aa and FO ran its acceptance script as written (`env -i` bash, every step as expected; shared `remote.origin.url` unchanged before and after). Codex review round 1 (review:5500393427) left two P2, both to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P2 #631 `scripts/workflow_checkout.py` (around line 74): `git hash-object` applies clean filters (for example `*.md text eol=lf`), so a README rewritten with CRLF hashes equal to the LF trunk blob and the check passes although the disk bytes differ. Use `--no-filters`.
   - P2 #631 `scripts/workflow_checkout.py` (around line 49): the printed remedy does not shell-quote the checkout path, so a path with whitespace or shell metacharacters is not runnable as shown. Quote it.
+
+## Stage Report: implementation (cycle 2, Codex round-1 P2 repair)
+
+- DONE: Investigation first, with no candidate change: reproduce both Codex round-1 P2 on #631 head 085e28aa, send FO the result and a proposed fix, wait for authorization
+  Both reproduced in a throwaway repo (`*.md text eol=lf`: CRLF README hashed 1075535a = trunk, exit 0; path with a space: `git -C .../my work` failed, exit 128); sent to `main`, FO authorized.
+- DONE: Fix each with a test that fails without the fix (shown failing by a mutation run)
+  Commit 70da29c7: `--no-filters` on `hash-object`, `shlex.quote` on the remedy path. Test 13 total, OK.
+  `test_a_crlf_readme_does_not_hash_equal_to_the_lf_trunk_blob_through_a_clean_filter` asserts exit 1 for a CRLF README under the eol=lf filter; fails (1 failure) with `--no-filters` removed.
+  `test_the_printed_remedy_runs_as_typed_when_the_checkout_path_has_a_space` runs the printed remedy via `sh -c` from `/` and asserts HEAD == origin/main; fails (1 failure) with `shlex.quote` removed. Each mutation failed only its own test.
+- DONE: Push to #631's branch; CI green on the new head
+  Pushed 085e28aa..70da29c7 (no force). `gh pr checks 631`: unit tests, version parity, route gate, CI routing, GitGuardian all pass.
+- DONE: roborev gate
+  `clean on 70da29c74; evidence=roborev:610` (exit 0, one run, base 085e28aa).
+
+### Limits
+
+With `core.autocrlf=true` (or any smudge filter that rewrites bytes on checkout) the README on disk differs from the trunk blob, so the check exits 1 and holds the dispatch. This follows the script's contract that the bytes on disk decide; no handling added, per FO.
+
+### Summary
+
+New head 70da29c7 fixes both P2 in `workflow_checkout.py` only (plus its test file); both files were already in the PR diff. Nothing left for FO beyond merging the head into the stacked observer-before-merge-guard branch.
