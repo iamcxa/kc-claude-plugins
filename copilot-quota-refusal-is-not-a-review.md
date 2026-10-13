@@ -3,7 +3,7 @@ title: The copilot extension reads a quota-limit refusal as "Copilot not run", n
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-10-13: 「准」 to the ideation gate question, after asking how gh can read the Copilot quota and what happens if Copilot changes its reply format; the question stated that approval accepts the recommendations for D1 (fail closed on any heading-less, comment-less answer) and D2 (no re-request after a refusal until the Captain says the quota is back).'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-13T06:56:42Z
 ---
 
