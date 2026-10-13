@@ -200,3 +200,35 @@ Visible change: none
 ### Summary
 
 Of six candidates only the bare-script-name rule is both repeated (38 of 60 archived dispatch records, 8 tasks) and decided by the record text alone, so it extends `dispatch_records.py` with a `--names` mode run before `dispatch build`. The PR-head rule bit twice (observer-before-merge-guard, migration-and-number-guards) and the second-reviewer outcome once, so both go into one new `delivery_gate.py` run before the merge ask; the `Result:` line and `Precedent:` form are dropped because a check on the record as it stands would have passed the observed miss, and `Applied:` and the `not run` wording are README sentences. Expected shared files with learn-delivery-follow-through: `references/sd/workflow.md` (Delivery authority), the `WORKFLOW_WORD_BUDGET` line in `lint-skills.py`, and the tests workflow file; prototypes lived outside the repository and were not committed.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main with dispatch_records.py --names and its tests, the new scripts/delivery_gate.py and test_delivery_gate.py, the four references/sd/workflow.md sentences, the lint-skills.py budget raise (by the words added, reason stated) and the tests-workflow step; AC-1 to AC-7 green with each falsifier shown failing by a mutation run, replays against the archived records reproducing the design's results
+  PR #640 (Draft, iamcxa/kc-claude-plugins, branch spacedock-ensign/fo-record-checks off origin/main 38c55fcf), commits 463423e1 and 63dfff51; budget 5463 to 5561 (+98) with reason in lint-skills.py.
+  AC-1/2: replay with 0.21.0 names reproduces the stated file:line lists (workflow-checkout validation-1:10 adr_lint.py, implementation-2:11 roborev_gate.py; observer implementation-1:10 roborev_gate.py and lint-skills.py, :18 lint-skills.py; validation-1:11 adr_lint.py), copilot-quota implementation-3 and a fully path-substituted copy exit 0. Mutations killed: scanner returns nothing (3 tests fail), flags directory-qualified names (1), reads only scripts/ (2).
+  AC-3: folder mode prints 9, 12, 6 records complete exit 0 after the change; mutation folding the name scan into folder mode fails test_the_default_mode_does_not_scan_names.
+  AC-4/5: replays exit as stated (observer 7679ab7a 1, 40c714a6 0; 20c9ec53, 84de8242, 22d9cc94 0; migration 83cad4f70a36 1 naming aff49ab3; board-optout 2; copilot-quota briefing-1 1, observer briefing-1 and -2 0). Mutations killed: first instead of latest report (13 failures), review token anywhere (3), `not run:` without reason (1), exact-length compare (8).
+  AC-6: lint-skills.py exits 0 at 5561; without the raise it exits 1 naming 5561 over 5463. AC-7: one step test_delivery_gate.py added, test_dispatch_records.py keeps its own; CI unit tests job passes on the PR head (below).
+  Replay count over live plus archived records: 62 dispatch records, 40 with a bare name, 78 mentions, 8 tasks (design said 60, 38, 73; the difference is records written since, including this stage's own).
+- DONE: AC-8: one live run of delivery_gate.py check with real gh on an open PR (equal head and a deliberately different --head), outputs and exit codes in the report
+  Live gh on #639 (read only), scratch task file /tmp/fo-rc-scratch-task.md naming f16898491a5d (the real learn-delivery-follow-through.md has no passing validation report, exit 2 measured):
+  no --head: `PR head f16898491a5d4fadbb189373fbbe89754013dddc equals validated candidate f16898491a5d; no second reviewer outcome is missing` exit 0.
+  --head 7679ab7a: `PR head 7679ab7a differs from validated candidate f16898491a5d (latest passing validation report in /tmp/fo-rc-scratch-task.md)` exit 1.
+  candidate aff49ab3 vs live head: `PR head f16898491a5d4fadbb189373fbbe89754013dddc differs from validated candidate aff49ab3 ...` exit 1.
+  PR #99999: `cannot read the head of iamcxa/kc-claude-plugins#99999: gh pr view exited 1: GraphQL: Could not resolve to a PullRequest with the number of 99999.` exit 2.
+- DONE: roborev_gate.py evidence= line, CI green on the PR head, lint-skills.py green, and the CI cost per PR measured or stated as not measured
+  `findings on 463423e12; evidence=roborev:625`, rerun `evidence=roborev:626`, exit 1 both (finding below). CI: all 5 checks pass on PR head 63dfff51 (unit tests job 47 s, version parity 56 s); the first push 463423e1 failed unit tests on test_sd_dispatch.py and was repaired in 63dfff51. lint-skills.py exit 0. CI cost: one added step; test_delivery_gate.py takes about 1 s locally; CI duration of the step not measured.
+
+Affected documents (doc_impact.py 38c55fcf..HEAD): kc-dev-flow-2/README.md: unaffected: it says every other test file is listed in the tests workflow, which still holds. kc-dev-flow-2/skills/maintain-flow/SKILL.md: unaffected: it describes the word-budget lint behaviour, which is unchanged.
+comment_ratio.py 38c55fcf HEAD: `code lines 301, comment lines 2, 0.7%`, maximum 5% met. design_surfaces.py check: `fo-record-checks.md: design surfaces presentable`, exit 0. No ADR added or changed. Number guards: none.
+
+### Findings for FO
+
+- Class Deferred risk (RoboRev, High as labelled): delivery_gate.py accepts a 7 to 40 character candidate that prefixes the head. Harm needs a different commit sharing the validated short prefix. Field 3 is value-ac[AC-4], which approved prefix-of-equal-length; an exact-40 rule exits 1 on every archived report (they record 8 characters). Becomes Material if reports start recording full SHAs: then raise the minimum length.
+- Change to the design: a fifth workflow.md edit, one sentence in the Number guards Applied bullet ("A task with no `Migration:` line owes none of these."), so the validator rule matches the FO step (d). Both Applied additions are appended sentences: my first wording changed text that test_sd_dispatch.py pins and CI failed on the first push (63dfff51 fixes it); test_sd_dispatch.py is unchanged.
+- Limits: a sentence naming the second reviewer that also carries another reviewer's review token passes (the split is on . ! ? and newline, not on ;). The second-reviewer rule rests on three archived summaries, one violating; no false-positive rate. delivery_gate.py exit 2 is common on older task files. That a live FO runs both commands is prose-enforced. The AC-8 task file is a scratch file.
+- AC-6 wording (d) is done as: a task with no `Migration:` line records no `Applied:` line.
+
+### Summary
+
+dispatch_records.py --names and the new delivery_gate.py reproduce every replay in the design, each falsifier fails under a mutation, and workflow.md names both run points. PR #640 is Draft; the first CI push failed on a test_sd_dispatch.py pin that my first Applied wording broke, and the second push reworded it additively.
