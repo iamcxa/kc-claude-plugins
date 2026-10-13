@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-lifecycle-mod:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation, next after followup-dispatch-records-checked?",
+  "artifacts": [
+    {
+      "id": "artifact:fo-lifecycle-mod:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7c016cbbcfcfab3717032f7c626cbf1356dfa6ca/fo-lifecycle-mod.md",
+      "rev": "sha256:b0e56f3a7bd72bc77d7f08c9f312e6e33d83704ac86d811b22e3665f42d0185e",
+      "mediaType": "text/markdown",
+      "summary": "Seed from the observer read of the relay FO session on PR #362 (2026-10-14): pr_watch never ran and merge guard ran with no observer or learn, because FO read the README only to line 480 and both rules sit after it. Direction the Captain approved for filing (「開」): a kc-dev-flow-2 Spacedock mod with Hook: merge / idle / startup sections, which Spacedock 0.27 opens only at those points, no Spacedock change. Seed check: design_surfaces.py check --seed exit 0. Recommended profile pilot. Ideation owes the step list per hook point, the filename order against pr-merge.md, what moves out of the README and the budget effect, the adopter copy and sync route, and an AC replaying the relay #362 situation with and without the mod."
+    }
+  ]
+}
