@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-completion-goes-to-main:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation, in the fix order 1 workflow-checkout-must-match-trunk-readme, 2 observer-before-merge-guard, 3 worker-completion-goes-to-main (all three designed now; implementation in that order)?",
+  "artifacts": [
+    {
+      "id": "artifact:worker-completion-goes-to-main:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/09df8ab2f06bd565fb74e2cc2dcf13682a76273d/worker-completion-goes-to-main.md",
+      "rev": "sha256:ed1493bd7e598ed2fd53e91d245e67764fb9d7ca82a629fdb55a69ef284b6e85",
+      "mediaType": "text/markdown",
+      "summary": "Seed from learn package-issue candidate 2: the Spacedock completion block names team-lead (spacedock-dev/spacedock #523, #608 open); the first implementation worker tried it; explicit scope-note lines naming main worked in later dispatches. Captain: 「1-3 回報，且立即排修」. Recommended profile pilot. Ideation owes the kc-dev-flow-2-side fix only and whether to add evidence upstream (a Captain call)."
+    }
+  ]
+}
