@@ -79,13 +79,13 @@ gates:
 started: 2026-10-13T08:47:34Z
 id: journey-server-host-pilot
 review-round:
-    id: round:journey-server-host-pilot:validation:1
+    id: round:journey-server-host-pilot:validation:2
     stage: validation
-    cycle: 1
+    cycle: 2
     briefing:
-        id: briefing:journey-server-host-pilot:validation:round-1
-        digest: sha256:6cfa353ec5b10e875da8765216fd36597574b13e405b4d1ed3d369f71f23b7bc
-        room-ref: ./review/validation/round-1
+        id: briefing:journey-server-host-pilot:validation:round-2
+        digest: sha256:4885c1d48894e7104f597d51a53a92a86cfb510716a7b0b8f841fe96ba520850
+        room-ref: ./review/validation/round-2
 ---
 
 Kent approved a minimal reusable server-host refactor, with the same agent access model (base URL and a per-agent credential) for Node.js locally/remotely and Cloudflare. This is a new pilot task; it does not reopen, migrate, or replace the older hosted POC tasks.

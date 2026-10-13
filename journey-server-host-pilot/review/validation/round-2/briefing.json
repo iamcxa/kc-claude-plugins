@@ -1,0 +1,14 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:validation:round-2",
+  "question": "Does the authorized connection-first evidence run establish actual hosted reconstruction and scoped measurements while preserving the corrected candidate?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:connection-first-assignment",
+      "uri": "git-root://state/9327f7c595ba2532cc5e437d982b3a42fdfbee56/journey-server-host-pilot/dispatch/implementation-6.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:c47c59a0dc90bc0657e06384b8667af7bbcd8584f5cfc69fc7e02b0a1b4c1f3a"
+    }
+  ]
+}
