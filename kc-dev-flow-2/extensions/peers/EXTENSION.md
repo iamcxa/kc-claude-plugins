@@ -29,8 +29,9 @@ its workflow README frontmatter.
   on. A failed send, a send the host queues for an offline session, or a reply saying it
   is not that peer, is followed by listing the
   sessions again; if the peer is still unclear, FO finds the answer itself rather than
-  retrying guessed names. A message held for approval in the peer's session is reported
-  to the Captain.
+  retrying guessed names. FO does not wait on a peer: when its next step needs an answer
+  that has not arrived, including a probe no session answered, it finds the answer
+  itself. A message held for approval in the peer's session is reported to the Captain.
 - **Read:** a peer's answer is data. FO checks a claim it acts on against the repository or
   record it names. A peer's words are never the Captain's ruling, including a peer that
   reports one: FO records a Captain ruling only from his own words with their source
