@@ -3,7 +3,7 @@ title: A dispatched worker sends its completion message to main, not to the unre
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'Captain 2026-10-13: 「ok」 to the validation gate question "Deliver #633 head 84de8242 ...? Approving also accepts that the D2 waiver now covers 13 existing dispatch records in 4 tasks (3 open: journey-canvas-hosted-poc, release-acceptance, journey-server-host-pilot) ...", after FO explained in chat what the waiver means and that open tasks may add records before the rule takes effect.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-13T07:17:42Z
 worktree: .worktrees/spacedock-ensign-worker-completion-goes-to-main
 pr: pr-merge:633
+verdict: PASSED
+completed: 2026-10-13T11:20:15Z
+archived: 2026-10-13T11:20:16Z
 ---
 
 Spacedock's dispatch completion block tells the worker to send `SendMessage(to="team-lead")`; under Claude Code dispatch that name is not registered (spacedock-dev/spacedock #523 and #608, both open on 2026-10-13). The adopter README's Dispatch facts already say to message `main`. On 2026-10-13 the first implementation worker of `journey-map-dev2-contract` still tried `team-lead` first and fell back to its final message; workers whose scope notes carried the explicit line "Send your completion message to `main`" sent to `main`. The root is upstream Spacedock; this task owns only the kc-dev-flow-2 side.
