@@ -1,0 +1,56 @@
+{
+  "adapter": "node",
+  "baseline": "6d0f8da951b5ea9ea50fca6bd3685fc360bf502f",
+  "candidate": "4f678cd88eddbcc171df7e2037dd19d2fbf4065b",
+  "sourceDirty": false,
+  "runtime": "v24.18.0",
+  "target": "http://127.0.0.1:60859",
+  "checks": [
+    {
+      "name": "room isolation: cookie MCP/assets deny B reading or replacing A; same-ID bytes remain separate",
+      "result": "PASS",
+      "durationMs": 104
+    },
+    {
+      "name": "recovery: export includes latest associated bytes; populated/invalid restore refused; fresh restore survives restart",
+      "result": "PASS",
+      "durationMs": 11436
+    },
+    {
+      "name": "revocation: a live cookie socket receives authorized edits, then loses read/write across all transports before close event",
+      "result": "PASS",
+      "durationMs": 681
+    },
+    {
+      "name": "expiry: parent deadline denies existing cookie HTTP/MCP/assets/socket admission and no live data reaches the expired socket",
+      "result": "PASS",
+      "durationMs": 4420
+    }
+  ],
+  "hosted": "NOT RUN",
+  "billing": "NOT RUN",
+  "licensing": "NOT RUN",
+  "providerHibernation": "NOT RUN",
+  "versions": {
+    "@tldraw/sync-core": "5.4.0",
+    "miniflare": "4.20260730.0",
+    "playwright": "1.56.1",
+    "esbuild": "0.28.2"
+  },
+  "telemetry": "authorized resident rooms",
+  "restoreExplicitRefusals": 2,
+  "revocation": {
+    "operator": {
+      "revoked": true,
+      "closed": 2
+    },
+    "serverAcknowledgedMs": 6,
+    "clientStateAtAck": 2,
+    "idleClientStateAtAck": 2,
+    "clientClosedMs": 7,
+    "idleClientClosedMs": 7
+  },
+  "expiryClientCloseAfterDeadlineMs": 3,
+  "status": "PASS",
+  "evidenceDirectory": "/Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot/kc-journey-map/.host-check/run-b4ezkh"
+}

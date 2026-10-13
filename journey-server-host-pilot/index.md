@@ -331,3 +331,34 @@ Reproduce with `WT` set to the assigned candidate worktree, `BASE` to the SHA ab
 ### Summary
 
 Only the unavailable-check report disposition changed; the product candidate and earlier evidence are unchanged. Independent validation must read the failed attempt, rerun/report the guard, verify the no-migration boundary and judge the remaining evidence; this is not full acceptance, hosted readiness or delivery approval. A changed candidate, real migration, conflicting reservation or new evidence returns this disposition to FO.
+
+## Stage Report: validation
+
+- DONE: Independently assess the exact candidate against the accepted pilot contract and all five acceptance criteria, separating source evidence, executed local/browser/emulator behavior and unrun hosted/provider obligations; establish both goal sufficiency and minimal necessity.
+  Verdict PASSED for dispatched local/emulated validation at clean candidate `4f678cd88eddbcc171df7e2037dd19d2fbf4065b`; [independent review](evidence/validation-review.md) maps all five criteria and retained modules, with no demonstrated Material defect or new scope decision.
+- DONE: Attack room authorization, live-socket expiry/revocation, same-ID asset isolation and recovery claims with bounded synthetic counterexamples at the real transport boundary; preserve existing GET/health/PATCH/PUT/default-output behavior and verify the approved Cloudflare health.active exception without product edits.
+  [Node](evidence/validation-node-result.json) and [Cloudflare-local](evidence/validation-cloudflare-local-result.json) each passed four focused groups: cross-room cookie denial/bytes, invalid or populated restore refusal/fresh recovery, initialized and idle socket revocation, and parent expiry. Global asset keys, stale grant reuse or post-revoke delivery would fail these checks.
+- DONE: Run the required ADR, number, comment, document-impact and dispatch-record checks, report findings under the workflow categories, and deliver an honest validation Stage Report plus an exact three-to-six-step acceptance script runnable in a fresh shell within five minutes.
+  [Exact helper receipts](evidence/validation-checks.json), [four-step acceptance](evidence/validation-acceptance.sh) and [prerequisites/observations](evidence/validation-acceptance.md) are retained; all helper checks pass except the explicitly unavailable full number guard below.
+- DONE: Verify the candidate's shared-core contract and minimal retained responsibility boundaries.
+  Core/policy/transport are shared; Node local/remote use one adapter; Cloudflare uses actual local Durable Object/R2 interfaces. Recovery, grant/session setup and the three locked development dependencies serve accepted lifecycle/seam proof; no hypothetical platform service, room UI, schema or concurrency work was retained.
+- DONE: Distinguish read implementation receipts from independent executed evidence for AC-1/AC-2/AC-4.
+  Read exact-candidate CLI/browser, baseline comparison, stale PATCH/PUT, registry-failure, capabilities, restart/reconnect and rollback receipts; visually inspected both hostname screenshots. Their broad suites/browser runs were not rerun solely for independence; hosted and real hibernation remain unproven.
+- DONE: Measure the Cloudflare-local revocation close boundary and deny access during its client delay.
+  Server acknowledgement: 31 ms with `complete:true`; initialized client close: 21 ms; idle client CLOSING at acknowledgement and actual close: 30,023 ms. HTTP/MCP/assets/new sockets returned 401 and no post-revoke update was delivered; actual close code 1008 was required within 35 seconds.
+- DONE: Verify cookie expiry, persisted revocation and recovery negative controls.
+  Expired initialized sockets closed 3 ms (Node) / 5 ms (Cloudflare-local) after deadline; cookies lost access across transports. Restore refused populated rooms and duplicate assets, then fresh snapshot plus latest bytes survived restart; Node recorded two explicit operator failures as well as unchanged/absent target state.
+- DONE: Run ADR/comment/design/dispatch checks and assess each affected retained document.
+  ADR lint: 14 records, 0 legacy, required 0015; comment ratio: 1148 code/0 added comment lines, 0.0% <=5%; six dispatch records complete; surfaces presentable; diff check clean. private-host.md is updated; journey README remains valid for its unchanged legacy-local canonical import/export route.
+- DONE: Independently compare the authoritative ADR reservation and migration boundary.
+  Current reservation is 0015; base-to-candidate diff adds only that ADR and changes no SQL. No real migration, applied deployment or conflicting reservation was found; supplementary no-task guard exits 0 while explicitly skipping migration checks and R4, not replacing the full guard.
+- DONE: Supply a minimal fresh-shell acceptance script and verify its prerequisites/cleanup.
+  Four exact steps confirm candidate/dependencies, execute Node, execute Cloudflare-local and check unchanged product/stopped processes; focused groups took about 17 + 36 seconds. Each invocation is capped at 110 seconds; all data is synthetic and isolated under ignored scratch, with no production credentials.
+- SKIPPED: Full task-aware number_guards check is unavailable/inapplicable in the accepted fresh-storage/no-migration scope, explicitly NOT PASS.
+  Required rerun exits 2: `number_guards: task has Surfaces: db but no migrations-path is declared (pass --migrations-path or set migrations-path: in the workflow README)`. [Committed FO disposition](dispatch/implementation-2.md) permits this accurate classification; no fake path, changed surface or helper edit.
+- SKIPPED: Hosted Node/Cloudflare, true provider hibernation, billing, formal licensing, retained-data migration and delivery operations.
+  Not authorized/run. Missing hosted evidence is a Deferred risk with all four workflow evidence fields in the review, not a demonstrated supported-workflow defect. No product push, PR, merge, provision, deployment or CI change; cost per PR unmeasured.
+
+### Summary
+
+Independent local/emulated validation passes at the unchanged exact candidate; retained modules serve accepted goals or safety/lifecycle boundaries, and no Material finding requires repair. The full number guard is unavailable/NOT PASS under the existing FO disposition, while hosted/provider obligations remain NOT RUN; this grants neither deployment nor full hosted acceptance. FO must execute the four-step script unchanged, present its actual outputs and route the Captain's existing validation/delivery gate.

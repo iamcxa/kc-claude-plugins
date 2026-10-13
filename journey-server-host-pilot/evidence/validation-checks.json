@@ -1,0 +1,114 @@
+{
+  "candidate": "4f678cd88eddbcc171df7e2037dd19d2fbf4065b",
+  "scope": "Independent required checks; full number guard unavailable, explicitly NOT PASS.",
+  "checks": [
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "adr_lint",
+        "command": "rtk proxy python3 /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/kc-dev-flow-2/scripts/adr_lint.py /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot/docs/adr --since 6d0f8da951b5ea9ea50fca6bd3685fc360bf502f --require 0015",
+        "chunk_id": "b13881",
+        "wall_time_seconds": 1.433244208,
+        "exit_code": 0,
+        "original_token_count": 9,
+        "output": "14 ADR file(s) checked, 0 legacy\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "number_guards_full",
+        "command": "rtk proxy python3 /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/kc-dev-flow-2/scripts/number_guards.py check --repo /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot --workflow-dir /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot/docs/dev2 --task /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/docs/dev2/.spacedock-state/journey-server-host-pilot/index.md --base 6d0f8da951b5ea9ea50fca6bd3685fc360bf502f",
+        "chunk_id": "8d2774",
+        "wall_time_seconds": 1.322662875,
+        "exit_code": 2,
+        "original_token_count": 36,
+        "output": "number_guards: task has Surfaces: db but no migrations-path is declared (pass --migrations-path or set migrations-path: in the workflow README)\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "number_guards_supplement",
+        "command": "rtk proxy python3 /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/kc-dev-flow-2/scripts/number_guards.py check --repo /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot --workflow-dir /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot/docs/dev2 --base 6d0f8da951b5ea9ea50fca6bd3685fc360bf502f",
+        "chunk_id": "cc988b",
+        "wall_time_seconds": 1.592461208,
+        "exit_code": 0,
+        "original_token_count": 40,
+        "output": "migration guard skipped: no migrations-path declared\nR4 skipped: no --task given\nPASS: no findings\nbase 6d0f8da951b5 head 4f678cd88edd merge-base 6d0f8da951b5\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "comment_ratio",
+        "command": "rtk proxy python3 /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/kc-dev-flow-2/scripts/comment_ratio.py 6d0f8da951b5ea9ea50fca6bd3685fc360bf502f 4f678cd88eddbcc171df7e2037dd19d2fbf4065b --repo /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot --workflow-dir /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot/docs/dev2",
+        "chunk_id": "9aa2cb",
+        "wall_time_seconds": 1.36186675,
+        "exit_code": 0,
+        "original_token_count": 18,
+        "output": "code lines 1148, comment lines 0, 0.0%\nmaximum 5% (package default) met\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "doc_impact",
+        "command": "rtk proxy python3 /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/kc-dev-flow-2/scripts/doc_impact.py 6d0f8da951b5ea9ea50fca6bd3685fc360bf502f 4f678cd88eddbcc171df7e2037dd19d2fbf4065b --repo /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot --json",
+        "chunk_id": "fbb357",
+        "wall_time_seconds": 1.578693084,
+        "exit_code": 0,
+        "original_token_count": 68,
+        "output": "[\n {\n  \"doc\": \"docs/journey/kc-journey-map/README.md\",\n  \"state\": \"review\",\n  \"terms\": [\n   \"kc-journey-map/lib/journey-tldr.mjs\"\n  ]\n },\n {\n  \"doc\": \"kc-journey-map/docs/private-host.md\",\n  \"state\": \"updated\",\n  \"terms\": [\n   \"JourneyRegistry\",\n   \"JourneyRoom\"\n  ]\n }\n]\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "dispatch_records",
+        "command": "rtk proxy python3 /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/kc-dev-flow-2/scripts/dispatch_records.py /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/docs/dev2/.spacedock-state/journey-server-host-pilot",
+        "chunk_id": "18f2c0",
+        "wall_time_seconds": 1.303872125,
+        "exit_code": 0,
+        "original_token_count": 8,
+        "output": "6 dispatch record(s) complete\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "design_surfaces",
+        "command": "rtk proxy python3 /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/kc-dev-flow-2/scripts/design_surfaces.py check /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/docs/dev2/.spacedock-state/journey-server-host-pilot/index.md",
+        "chunk_id": "438d76",
+        "wall_time_seconds": 1.3005062920000001,
+        "exit_code": 0,
+        "original_token_count": 10,
+        "output": "index.md: design surfaces presentable\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "adr_sql_diff",
+        "command": "rtk proxy git -C /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot diff --name-status 6d0f8da951b5ea9ea50fca6bd3685fc360bf502f 4f678cd88eddbcc171df7e2037dd19d2fbf4065b -- docs/adr '*.sql'",
+        "chunk_id": "0b95c4",
+        "wall_time_seconds": 0.032479209,
+        "exit_code": 0,
+        "original_token_count": 14,
+        "output": "A\tdocs/adr/0015-one-private-journey-operation-core.md\n"
+      }
+    },
+    {
+      "status": "fulfilled",
+      "value": {
+        "name": "diff_check",
+        "command": "rtk proxy git -C /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot diff --check 6d0f8da951b5ea9ea50fca6bd3685fc360bf502f 4f678cd88eddbcc171df7e2037dd19d2fbf4065b",
+        "chunk_id": "d23c1e",
+        "wall_time_seconds": 0.04383425,
+        "exit_code": 0,
+        "original_token_count": 0,
+        "output": ""
+      }
+    }
+  ]
+}

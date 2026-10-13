@@ -1,0 +1,55 @@
+{
+  "adapter": "cloudflare-local",
+  "baseline": "6d0f8da951b5ea9ea50fca6bd3685fc360bf502f",
+  "candidate": "4f678cd88eddbcc171df7e2037dd19d2fbf4065b",
+  "sourceDirty": false,
+  "runtime": "v24.18.0",
+  "target": "http://127.0.0.1:60666",
+  "checks": [
+    {
+      "name": "room isolation: cookie MCP/assets deny B reading or replacing A; same-ID bytes remain separate",
+      "result": "PASS",
+      "durationMs": 98
+    },
+    {
+      "name": "recovery: export includes latest associated bytes; populated/invalid restore refused; fresh restore survives restart",
+      "result": "PASS",
+      "durationMs": 1028
+    },
+    {
+      "name": "revocation: a live cookie socket receives authorized edits, then loses read/write across all transports before close event",
+      "result": "PASS",
+      "durationMs": 30354
+    },
+    {
+      "name": "expiry: parent deadline denies existing cookie HTTP/MCP/assets/socket admission and no live data reaches the expired socket",
+      "result": "PASS",
+      "durationMs": 4420
+    }
+  ],
+  "hosted": "NOT RUN",
+  "billing": "NOT RUN",
+  "licensing": "NOT RUN",
+  "providerHibernation": "NOT RUN",
+  "versions": {
+    "@tldraw/sync-core": "5.4.0",
+    "miniflare": "4.20260730.0",
+    "playwright": "1.56.1",
+    "esbuild": "0.28.2"
+  },
+  "telemetry": "authorized registered rooms sampled; may wake rooms",
+  "revocation": {
+    "operator": {
+      "revoked": true,
+      "complete": true
+    },
+    "serverAcknowledgedMs": 31,
+    "clientStateAtAck": 3,
+    "idleClientStateAtAck": 2,
+    "clientClosedMs": 21,
+    "idleClientClosedMs": 30023
+  },
+  "expiryClientCloseAfterDeadlineMs": 5,
+  "status": "PASS",
+  "evidenceDirectory": "/Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/work/kc-jmap-host-pilot/.worktrees/spacedock-ensign-journey-server-host-pilot/kc-journey-map/.host-check/run-TfAvHM"
+}
