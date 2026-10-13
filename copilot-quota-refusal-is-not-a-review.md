@@ -259,3 +259,71 @@ PASSED at 218645da. The refusal on #627 exits 5 live while the pre-repair reader
 ### Summary
 
 The P1 is closed for codex and copilot: an outcome already there when `add` first looks is now reported by the next `wait`, once. Left for FO: checks green/failing and CONFLICTING at add still become the baseline and do not wake `wait` (left as ruled); the Codex round-1 thread on #630 is not answered or resolved by me.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent recheck of the cycle-1 repair on #630 head 22d9cc94: the Codex round-1 P1 (a codex or copilot outcome already terminal at `pr_watch.py add` becomes the baseline and `wait` never wakes) reproduced fixed against 218645da, its new tests shown failing under a mutation you run yourself, and AC-1 to AC-7 re-run at the new head with any change from the cycle-1 validation named
+  Verdict PASSED at 22d9cc94 (base 9e68eb87). P1: with the real `copilot_review.py` reading the recorded refusal on #627 (the PR is merged now, so `view` was forced to OPEN), `pr_watch.py` at 218645da printed only `watching 1 PR(s)` and `wait` never woke (3 polls); at 22d9cc94 `add` printed `copilot not-run already (wait reports it)` and `wait` returned `copilot - -> not-run`. Mutations I ran on a copy of 22d9cc94 (python3 -B): M1 revert pr_watch.py to 218645da fails 3 of 28 (codex-already, copilot-already, re-add-quiet); M2 drop the blanking fails the same 3; M3 blank any non-"-" reading fails `test_a_non_outcome_or_unwatched_reading_at_add_is_stored_as_read`; M4 drop the stored-equality guard fails `test_adding_a_pr_again_after_wait_reported_its_outcome_stays_quiet`; M5 handle copilot only fails the codex-already test; AC-5 mappings (drop `5: "not-run"`, drop `not-run` from OUTCOMES) fail 1 and 3. Restored copy: 28 OK.
+- DONE: The minimal acceptance script updated to the new head, run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Script below, run as `env -i HOME PATH bash --noprofile --norc` from /tmp; all steps gave the expected output; its worktree and temp files are removed.
+- DONE: adr_lint.py docs/adr --since <base> run at the new head with its exit code; verdict PASSED or REJECTED with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since 9e68eb87 --require 0013` at 22d9cc94: "13 ADR file(s) checked, 0 legacy", exit 0. PASSED; no Material finding.
+
+### Per-criterion evidence (22d9cc94, throwaway worktrees removed)
+
+- Changed from cycle 1: only `pr_watch.py` (+16/-5) and `test_pr_watch.py` (+44/-4) differ from 218645da (`git diff --stat`); pr_watch tests 24 -> 28; code lines 57 -> 112 with 0 comment lines (comment_ratio exit 0); CI on the new head passes (unit tests 42s, version parity 39s, route gate, GitGuardian). Existing fixtures changed: `snap()` now defaults codex/copilot to "-", and two old tests seed their baseline with `watch.update` because `add` no longer stores a terminal outcome; both still assert the wake.
+- AC-1: reader live on #627 exits 5 (`answer=review:5499757433`, no `evidence=`); reader at base 9e68eb87 exits 0 on the same PR; the new test file fails 5 of 15 against the base reader. Unchanged since cycle 1 (copilot files not in the repair diff).
+- AC-2, AC-3, AC-4: `test_copilot_review` 15 OK at the new head, files byte-identical to 218645da, so cycle-1 mutation results stand; I re-ran only the base-reader mutation above.
+- AC-5: mapping and OUTCOMES mutations above fail the intended tests. Stronger than cycle 1: the add path is covered too.
+- AC-6 consistency half: all docstring exits (0,2,3,4,5) appear in the Read paragraph; with the 294-character exit 5 sentence cut, 5 is reported missing. The Watch bullet stays true. Behaviour half: NOT VERIFIED, observable at the next Copilot refusal.
+- AC-7: `git diff --name-only 9e68eb87...22d9cc94` lists the same six paths; none under `extensions/codex/` or `kc-pr-flow/`.
+- Other checks at 22d9cc94: number_guards PASS (no migrations-path), doc_impact 0 documents, design_surfaces presentable, dispatch_records "6 dispatch record(s) complete".
+- Goal sufficiency and necessity: every changed pr_watch line serves the P1 (report-and-blank a terminal outcome at add, plus the stored-equality guard that keeps a re-add quiet); each of those two has a test only it fails (M2/M3/M4).
+
+### Findings (Review-finding disposition)
+
+- Deferred risk (carried, FO ruled it left): `checks` green/failing and `mergeable` CONFLICTING already there at `add` still become the baseline and do not wake `wait`. Material only if an observed missed wake on those columns at add.
+- Deferred risk (carried): a refusal that carries its own `###` heading reads as answered; a future layout with neither heading nor line comment reads exit 5. Stated in EXTENSION.md Limits and ADR 0013.
+- Deferred risk (carried): a refused re-request after a real review of the same head reads exit 0 with the earlier id (AC-4a, as designed).
+- Polish: EXTENSION.md does not say that `add` may print `<ref>: <key> <value> already (wait reports it)`; FO sees the line and the next `wait` states the outcome, no loss. Carried Polish: the quote may contain double quotes.
+- No Material finding.
+
+### Minimal acceptance script (checkout: a detached worktree of 22d9cc94 made by step 1 from the colombo workspace; needs `gh` signed in and the kc-dev-flow-2 0.21.0 plugin install for the last step)
+
+    PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.21.0
+    git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo worktree add --detach /tmp/accept630 22d9cc94
+    (cd /tmp/accept630/kc-dev-flow-2/extensions/copilot && python3 -B -m unittest test_copilot_review 2>&1 | tail -3) && (cd /tmp/accept630/kc-dev-flow-2/scripts && python3 -B -m unittest test_pr_watch 2>&1 | tail -3)
+    cd /tmp/accept630/kc-dev-flow-2/extensions/copilot && python3 -B copilot_review.py iamcxa/kc-claude-plugins 627; echo "exit=$?"; git show 9e68eb87:kc-dev-flow-2/extensions/copilot/copilot_review.py > /tmp/accept630-base-reader.py && python3 -B /tmp/accept630-base-reader.py iamcxa/kc-claude-plugins 627; echo "exit=$?"
+    cat > /tmp/accept630-repro.py <<'EOF'
+    import sys, io, contextlib, tempfile, importlib.util
+    from pathlib import Path
+    spec = importlib.util.spec_from_file_location("pr_watch", sys.argv[1])
+    w = importlib.util.module_from_spec(spec); spec.loader.exec_module(w)
+    REF = "iamcxa/kc-claude-plugins#627"
+    def view(*a):
+        d = w.gh(*a); d["state"] = "OPEN"; return d
+    def look(ref, **kw): return w.look(ref, view=view, **kw)
+    def stop(n):
+        sys.exit("wait never woke (3 polls, nothing reported)")
+    with tempfile.TemporaryDirectory() as t:
+        st = Path(t, "s.json"); polls = []
+        def run(args, **kw):
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = w.main(["--state", str(st), *args], look=look, **kw)
+            return code, out.getvalue().strip()
+        print("add :", run(["add", "--copilot", REF]))
+        print("wait:", run(["wait", "1"], sleep=lambda s: (polls.append(s), stop(0) if len(polls) > 3 else None)))
+    EOF
+    cd /tmp/accept630/kc-dev-flow-2/scripts && python3 -B /tmp/accept630-repro.py "$PWD/pr_watch.py"; echo "exit=$?"
+    git show 218645da:kc-dev-flow-2/scripts/pr_watch.py > pr_watch_old.py && python3 -B /tmp/accept630-repro.py "$PWD/pr_watch_old.py"; echo "exit=$?"
+    cd /tmp/accept630 && python3 -B "$PKG/scripts/adr_lint.py" docs/adr --since 9e68eb87 --require 0013; echo "exit=$?"
+
+(The heredoc body above is indented four spaces for this report's code block; strip that indent when saving it to a file, or paste the script lines flush left. The script was run flush left.)
+
+Expected and observed: (2) "Ran 15 tests ... OK" then "Ran 28 tests ... OK"; (3) `not a review of 32db12730: "Copilot was unable to review this pull request because the user who requested the review has reached their quota limit."; answer=review:5499757433 at 2026-10-13T06:46:13Z` then `exit=5`, then `answered on 32db12730: "no heading", 0 line comment(s); evidence=review:5499757433 at 2026-10-13T06:46:13Z` then `exit=0`; (4) `add : (0, '...#627: copilot not-run already (wait reports it)\nwatching 1 PR(s)')`, `wait: (0, '...#627 ...: copilot - -> not-run')`, `exit=0`; (5) `add : (0, 'watching 1 PR(s)')`, `wait never woke (3 polls, nothing reported)`, `exit=1` (the pre-repair behaviour); (6) `13 ADR file(s) checked, 0 legacy` then `exit=0`. Cleanup after: `git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo worktree remove --force /tmp/accept630; rm /tmp/accept630-base-reader.py /tmp/accept630-repro.py` (I ran it; step 1 works again).
+Does not cover: FO's behaviour at a real refusal (AC-6 behaviour), a refusal with its own heading, Copilot's real review layouts beyond the tested ones, checks/CONFLICTING at add, CI minutes. Steps 3 to 5 read #627, whose head 32db12730 is fixed because the PR is merged; step 4 and 5 force its state to OPEN inside the script only.
+
+### Summary
+
+PASSED at 22d9cc94. The P1 reproduces at 218645da with the real reader on the recorded refusal and is fixed at 22d9cc94; the new tests fail under five mutations of the repair, and AC-1 to AC-7 hold as in cycle 1 with AC-5 now covering `add`. The only unverified obligation is AC-6's behaviour half.
