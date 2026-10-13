@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.22.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.22.0...kc-dev-flow-2-v0.22.1) (2026-10-13)
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** every worker dispatch carries a main completion line and the validator checks it ([#633](https://github.com/iamcxa/kc-claude-plugins/issues/633)) ([f493d9b](https://github.com/iamcxa/kc-claude-plugins/commit/f493d9b0e75327c06c3c7a062cb9cb0d5a25981d))
+* **kc-dev-flow-2:** FO runs two scripted checks on its own records before dispatch and before the merge ask ([#640](https://github.com/iamcxa/kc-claude-plugins/issues/640)) ([5e1eaec](https://github.com/iamcxa/kc-claude-plugins/commit/5e1eaec7aa552aac8545462e913a8ac9880ac08d))
+* **kc-dev-flow-2:** learn carries its learning.md PR to a recorded merge or close ([#639](https://github.com/iamcxa/kc-claude-plugins/issues/639)) ([544d174](https://github.com/iamcxa/kc-claude-plugins/commit/544d1743d6c9e33653b48e092ce2d5689c130b45))
+* **kc-dev-flow-2:** the learn observer report is checked before the merge sentinel ([#632](https://github.com/iamcxa/kc-claude-plugins/issues/632)) ([37ed4fe](https://github.com/iamcxa/kc-claude-plugins/commit/37ed4fe71ec0a14a73258b35cff06988d223788a))
+
 ## [0.22.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.21.0...kc-dev-flow-2-v0.22.0) (2026-10-13)
 
 

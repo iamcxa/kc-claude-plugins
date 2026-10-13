@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.6.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.6.0...kc-journey-map-v1.6.1) (2026-10-13)
+
+
+### Bug Fixes
+
+* **kc-journey-map:** a cleared declaration field is not a second declaration ([#638](https://github.com/iamcxa/kc-claude-plugins/issues/638)) ([38c55fc](https://github.com/iamcxa/kc-claude-plugins/commit/38c55fcfc6023b951840a5d0820a5a4a3838c629))
+
 ## [1.6.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.5.2...kc-journey-map-v1.6.0) (2026-10-13)
 
 
