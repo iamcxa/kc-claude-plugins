@@ -306,3 +306,22 @@ PASSED at a7fa7f1b: the merge changed only the forced budget line (5459 to 5463)
 
 - Cycle 1 (FO, 2026-10-13): validation cycle 2 recommended PASSED on #633 a7fa7f1b. Codex review round 2 (review:5501183844) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck. The repair also merges #632's reconciled head once #632's merge with main lands.
   - P2 #633 `references/sd/workflow.md` (around line 100): `replay_dispatch.py build` without `--scope` builds `scope.txt` with only the package root and harness text, so a candidate replay lacks the new completion-recipient line and cannot exercise the fix. Add the line to the helper's generated scope (the implementation's roborev:612 decline named the AC-4 control arm, which needs a way to build without the line).
+
+## Stage Report: implementation (cycle 3, repair for Codex round 2 P2, review:5501183844)
+
+- DONE: Investigation first, with no candidate change: reproduce the P2 on a7fa7f1b, reconcile with roborev:612 decline, send FO result and proposed fix, wait for authorization
+  Reproduced with the fixture in `test_replay_dispatch.py`: a plain `build` wrote `scope.txt` with only `Package root:` and the HARNESS paragraph, no `main` line. The decline stands only for the control arm, so the fix is default-on with `--no-completion-line`. Worktree untouched until FO's authorization.
+- DONE: Merge (never rebase) 7679ab7a, apply the authorized fix with a mutation-failing test, keep this PR's own hunks equal to the validated ones, push, CI green
+  Merge ce67ebf0 was clean (no conflicts); `git diff 7679ab7a ce67ebf0` is the same 6 files, 45 insertions, 6 deletions as before (budget stays 5463). Fix commit 01eaf231, 3 files: `replay_dispatch.py` (`MAIN_LINE`, appended after `--scope` and before HARNESS unless `--no-completion-line`), `test_replay_dispatch.py` (3 tests), `skills/maintain-flow/SKILL.md` (one sentence). No budget raised: `WORKFLOW_WORD_BUDGET` counts only `workflow.md`, unchanged at 5463. Pushed a7fa7f1b..01eaf231, no force. CI at 01eaf231: unit tests pass 46s, multi-profile route gate pass 5s, GitGuardian pass; version parity was still pending when this was written.
+  Mutations (all restored): dropping the append fails the default-build test and the beside-`--scope` test; making the flag a no-op fails only the control-arm test; changing the line to `Report to \`team-lead\`` fails the default-build test through `dispatch_records.PARTS`.
+- DONE: roborev_gate.py evidence= line
+  `clean on 01eaf2314; evidence=roborev:620` (exit 0, base 7679ab7a). `comment_ratio.py 7679ab7a HEAD` meets the 5% maximum. `test_replay_dispatch.py` 8 OK, `test_dispatch_records.py` 5 OK, `lint-skills.py` PASS at 5463 of 5463.
+
+### Left for FO
+
+- A fresh validation recheck at 01eaf231 (per Feedback Cycle 1). AC-4's smoke is unaffected: the dispatch bytes it used come from the unchanged builder, not this helper.
+- The maintain-flow sentence says the helper adds the line by default; any behaviour replay built before this commit lacks it.
+
+### Summary
+
+`replay_dispatch.py build` now writes the `main` completion-recipient line into `scope.txt` by default, so a candidate replay exercises the fix; `--no-completion-line` keeps the AC-4 control arm. #632's head is merged and this PR's own hunks are unchanged; the gate is clean.
