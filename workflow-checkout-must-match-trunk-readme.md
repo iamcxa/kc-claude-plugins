@@ -252,3 +252,9 @@ Observed (2026-10-13, origin/main 9e68eb87): `README differs from origin/main: o
 ### Summary
 
 PASSED. My first draft of the acceptance script ran `git remote set-url` in a worktree, which rewrote `remote.origin.url` for every worktree of this repository (shared config) to `/nonexistent/origin.git`; I restored it to `https://github.com/iamcxa/kc-claude-plugins.git` (inferred from the sibling clone and the PR's repository, original value not recorded), confirmed `git ls-remote origin` and the state push work, and moved that step into a throwaway clone; the script above is the corrected one and was rerun in a fresh shell with the origin URL unchanged. Every AC reproduced on throwaway checkouts of 085e28aa, and each of six mutations turned the intended test red. No Material or Needs-decision finding; two Polish items and one Deferred risk are recorded above for FO. Unverified: behaviour of a real FO session (the check is prose-enforced) and CI duration.
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-13): validation recommended PASSED on #631 085e28aa and FO ran its acceptance script as written (`env -i` bash, every step as expected; shared `remote.origin.url` unchanged before and after). Codex review round 1 (review:5500393427) left two P2, both to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 #631 `scripts/workflow_checkout.py` (around line 74): `git hash-object` applies clean filters (for example `*.md text eol=lf`), so a README rewritten with CRLF hashes equal to the LF trunk blob and the check passes although the disk bytes differ. Use `--no-filters`.
+  - P2 #631 `scripts/workflow_checkout.py` (around line 49): the printed remedy does not shell-quote the checkout path, so a path with whitespace or shell metacharacters is not runnable as shown. Quote it.
