@@ -1,0 +1,30 @@
+flowchart TD
+  K[Operator selects endpoint and grants] --> G{Design gate accepted?}
+  G -->|No| STOP[Stop before implementation]
+  G -->|Yes| SETUP[Implement and validate synthetic private pilot]
+  SETUP --> AG[Agent CLI or MCP with bearer]
+  SETUP --> BR[Browser session exchange and same-origin cookie]
+  AG --> AUTH[Shared credential and canonical room authorization]
+  BR --> AUTH
+  AUTH -->|Denied| DENY[401 or 403 before storage or socket admission]
+  AUTH -->|Allowed| OP{Operation}
+  OP -->|Document| VALID{Payload valid?}
+  VALID -->|No| BAD[Existing 400 response before room creation]
+  VALID -->|Yes| AD{Host adapter}
+  OP -->|WebSocket| AD
+  AD -->|Node local or remote| NODE[One live room with Node SQLite]
+  AD -->|Cloudflare| CF[One room Durable Object with SQLite]
+  NODE --> REG[Await room inventory registration]
+  CF --> REG
+  REG -->|Failure| ERR[503 and retry can repair registration]
+  REG -->|Success| CORE[Existing get updateStore or loadSnapshot semantics]
+  CORE --> OK[Existing response or authorized socket]
+  OP -->|Asset| AS[Require room association and scoped blob key]
+  AS --> OK
+  OP -->|Checkout capability| CAP{Configured Node capability?}
+  CAP -->|Yes| FILE[Existing save or repo-doc operation]
+  FILE --> OK
+  CAP -->|No| UNSUP[Explicit unsupported capability response]
+  SETUP --> LIMIT{Needs migration spend exposure or real credentials?}
+  LIMIT -->|Yes| DECISION[Return named decision to Kent]
+  LIMIT -->|No| VAL[Independent validation then acceptance gate]

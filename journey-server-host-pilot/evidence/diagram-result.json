@@ -1,0 +1,10 @@
+{
+  "mermaid": "11.16.1",
+  "result": "passed",
+  "svgCount": 1,
+  "image": "design-flow.png",
+  "authorSemanticComparison": "actors, validation before creation, branches, registry failure and gates checked",
+  "browserSession": "journey-host-ideation (closed)",
+  "temporaryServer": "127.0.0.1 ephemeral port (stopped)",
+  "scope": "diagram render only"
+}

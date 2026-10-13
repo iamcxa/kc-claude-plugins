@@ -1,0 +1,102 @@
+{
+  "sourceHead": "6d0f8da951b5ea9ea50fca6bd3685fc360bf502f",
+  "node": "v24.18.0",
+  "at": "2026-10-13T08:58:09.759Z",
+  "fileHashes": {
+    "server/canvas-server.ts": "93bdd73a976b16fff1b2deaf0ff58c6c05f3edade0fbc1725ec79f3e35ae81e6",
+    "server/rooms.ts": "8b0210b72dbb291575146c53b2dfd01620c2b8f13aba7fa0dbf905d4729338aa",
+    "server/assets.ts": "1fabca439d69c671dfbe385b0b69ce69b3d1a260752682be1d7b6015b18d8b73",
+    "lib/records.mjs": "1e857c1e77e713d281e194144a51545991bb4ed55346790f9fb9a7682d965451",
+    "lib/render.mjs": "961fee52a50ab44fc6619fcb190dff3094e6af688476b06678dffb624b6d89c9",
+    "lib/read.mjs": "7e0325747161339aeb9cf7c4a888b619a7f1e4b2a65cfc35d3b767a466c43671",
+    "package-lock.json": "3a6b5aaa5efcdae4023f52f08edc3e80b9a95c4c219b02fa61359473e7b179c9"
+  },
+  "results": [
+    {
+      "claim": "GET creates room before immediate health read",
+      "actual": {
+        "status": 200,
+        "roomListed": true,
+        "healthFields": [
+          "ok",
+          "tldraw",
+          "port",
+          "rooms",
+          "active"
+        ]
+      }
+    },
+    {
+      "claim": "Stale complete-record PATCHes both succeed and last record wins",
+      "actual": {
+        "statuses": [
+          200,
+          200
+        ],
+        "x": 0,
+        "y": 789
+      }
+    },
+    {
+      "claim": "Invalid PATCH rejects before remove",
+      "actual": {
+        "status": 400,
+        "originalPresent": true
+      }
+    },
+    {
+      "claim": "PUT replaces snapshot without expected version",
+      "actual": {
+        "status": 200
+      }
+    },
+    {
+      "claim": "Global asset ID overwrites across intended rooms; ownership is absent",
+      "actual": {
+        "sameIdOverwrite": true,
+        "contentType": "application/octet-stream"
+      }
+    },
+    {
+      "claim": "Default page link remains localhost 3737",
+      "actual": "http://localhost:3737/?room=synthetic-1791881888631&d=v0.0.1.1.synthetic"
+    },
+    {
+      "claim": "Existing render and read CLI operate on a fictional journey",
+      "actual": {
+        "render": "200 12 shapes -> {\"roomId\":\"synthetic-1791881888631\",\"put\":13,\"removed\":0,\"clock\":6}",
+        "readKeys": [
+          "reordered",
+          "reorderConflict",
+          "reworded",
+          "rewordConflict",
+          "releaseMoved",
+          "storiesReordered",
+          "duplicated",
+          "unclaimed",
+          "missing",
+          "questionsAdded",
+          "questionsReworded",
+          "questionsDeleted",
+          "answersAdded",
+          "answersReworded",
+          "answersDeleted"
+        ]
+      }
+    },
+    {
+      "claim": "Node restart preserves stored records and room inventory",
+      "actual": {
+        "records": 14
+      }
+    },
+    {
+      "claim": "Pinned 5.4.0 exports Durable Object SQLite and resume APIs",
+      "actual": {
+        "storageWrapper": true,
+        "sessionResume": true,
+        "cloudflareExecuted": false
+      }
+    }
+  ]
+}
