@@ -191,3 +191,18 @@ ADR: 0014
 ### Summary
 
 The check is a new script beside `package_version.py` that fetches the trunk and compares the on-disk README bytes with `origin/<trunk>`; exit 0/1/2 as for the existing hold. The key design finding is placement: the sentence must also live in `skills/dev/SKILL.md`, the one package-owned text a stale-README FO still reads, and the limit that it stays prose-enforced is stated. Shared files with the other two tasks are named in `## Design`, notably `references/sd/workflow.md` near the `package_version.py` block and the `WORKFLOW_WORD_BUDGET`.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main adding scripts/workflow_checkout.py and its test, the sentences in skills/dev/SKILL.md and references/sd/workflow.md, the tests-workflow step, and ADR 0014; AC-1 to AC-6 green with each falsifier shown failing by a mutation run
+  PR #631 (Draft), commit 085e28aa on spacedock-ensign/workflow-checkout-must-match-trunk-readme, branched at origin/main 9e68eb87.
+  AC-1/2/3 run on real throwaway worktrees (6d344bcb: exit 1, `differs from origin/main`, `git -C /tmp/dev2-stale checkout --detach origin/main`; origin/main: exit 0; appended line: exit 1, restored: exit 0). AC-4..6 are `test_workflow_checkout.py`, 11 tests on real git repos with a bare origin.
+  Mutations, each red: unconditional pass (4 tests), commit-hash compare (2), committed-blob read (1), fetch removed (3), fetch error swallowed (1: unreachable-origin test), sentence deleted from skills/dev/SKILL.md (1); bare script path in SKILL.md fails lint-skills.py.
+- DONE: ADR 0014 records the accepted D1 (fetch inside the check; unreachable remote holds), D2 (strict equality) and D3 (FO shows the remedy and waits) with the Captain's words; adr_lint.py docs/adr --require 0014 passes
+  `docs/adr/0014-the-first-officer-checks-its-readme-against-the-trunk-before-dispatch.md`; adr_lint printed `13 ADR file(s) checked, 0 legacy`, exit 0.
+- DONE: roborev_gate.py evidence= line, CI green on the PR head, lint-skills.py green (raise WORKFLOW_WORD_BUDGET only by the words this task adds, saying why), and the CI cost per PR measured or stated as not measured
+  `clean on 085e28aa3; evidence=roborev:607`. CI on 085e28aa: all five checks pass (unit tests 43s whole job, which includes the new step). WORKFLOW_WORD_BUDGET 5331 to 5369 (+38, the workflow.md sentence), reason in a lint-skills.py comment. CI cost: one added Python step in the existing unit-tests job; its own duration not measured.
+
+### Summary
+
+`workflow_checkout.py` fetches `origin/<trunk>` and compares the on-disk README bytes with the trunk's blob; exit 0/1/2 as designed, remedy printed on 1. The instruction is in `skills/dev/SKILL.md` (package-owned) and `references/sd/workflow.md`. The check stays prose-enforced; no file outside the design's list changed (plus `lint-skills.py` for the budget). Note for the next two tasks: they rebase onto the `package_version.py` sentence block in workflow.md and the raised budget of 5369.
