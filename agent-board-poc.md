@@ -117,3 +117,7 @@ as observed or not run.
 **AC-3**: Every message either side sent in AC-1 and AC-2 is readable by the Captain
 from one command, with sender, harness, time and text.
 Verified by: that command's output covering the full exchange.
+
+### Dispatch Retries
+
+- Retry 1: implementation — agent-error (API session limit, HTTP 429, after commit 44e8de6d, no stage report); nudged
