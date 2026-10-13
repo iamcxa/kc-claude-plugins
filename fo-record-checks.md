@@ -15,6 +15,17 @@ gates:
                 id: briefing:fo-record-checks:backlog:attempt-1:revision-1
                 digest: sha256:42cf17b9eb33f344a9be0ceec170e2c302e8bb213cbfc0699d721fdf3e1a6601
                 room-ref: ./fo-record-checks/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-record-checks:backlog:1
+                briefing: briefing:fo-record-checks:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T10:57:38.03132Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「開」 to the backlog gate question "Schedule now as Pilot and enter ideation, learn-delivery-follow-through first, then fo-record-checks?", after 「向 kc-dev-flow-2 回報的問題可以回報，這個是否可以排進清單處理修復跟補強？」; profile pilot selected.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Observer reports on four tasks archived 2026-10-13 (journey-map-dev2-contract, copilot-quota-refusal-is-not-a-review, workflow-checkout-must-match-trunk-readme, observer-before-merge-guard) found FO-written records that break rules the workflow README already states, and the learn evaluations returned no-change for each because the rule exists. A rule stated and not followed is an enforcement gap; `dispatch_records.py` and `design_surfaces.py` are the existing pattern for a script that checks FO's records.
