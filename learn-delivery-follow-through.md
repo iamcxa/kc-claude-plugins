@@ -3,7 +3,7 @@ title: The learn loop carries its learning.md PR to a recorded merge or close
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-10-13: 「准」 to the ideation gate question; the question stated that approval accepts the recommendations for D1 (learning PR approval covers marking it ready once CI is green), D2 (FO settles an open sibling delivery from GitHub and retries a refused claim once) and D3 (no delivery-sync command in this task).'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-13T10:57:59Z
 ---
 
