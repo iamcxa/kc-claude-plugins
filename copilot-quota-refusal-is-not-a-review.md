@@ -244,3 +244,18 @@ PASSED at 218645da. The refusal on #627 exits 5 live while the pre-repair reader
 
 - Cycle 1 (FO, 2026-10-13): validation recommended PASSED on #630 218645da and FO ran its acceptance script as written (`env -i` bash, every step as expected). Codex review round 1 (review:5500046230) left one P1, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck. Fresh implementation worker: the context-budget probe found no transcript for the first one.
   - P1 #630 `extensions/copilot/EXTENSION.md` (around line 35): when Copilot's refusal arrives before `pr_watch.py add --copilot` takes its first look (refusals came within seconds on 2026-10-13, and the extension says Request before Watch), `add` stores `copilot=not-run` as the baseline and prints only `watching ...`; `wait` then sees no change and polls until its timeout, so exit 5 is waited for after all. Register the watch before the request, or make `add` report an already-terminal `not-run`.
+
+## Stage Report: implementation (Codex round-1 P1 repair)
+
+- DONE: Investigation first, with no candidate change: reproduce the Codex round-1 P1 on #630 head 218645da
+  Confirmed in /tmp/repro-quota.FjaxRf (real readers, fake gh): reader exit 5; `add --copilot` printed only `watching 1 PR(s)` and stored copilot=not-run; `wait 1` still polling after 6s. Sent to main before any edit.
+- DONE: Fix with a test that fails without the fix (mutation run); push to #630's branch; CI green on the new head
+  New head 22d9cc94e: `add` stores a codex/copilot outcome that is terminal and differs from the stored value as "-"/"-" and prints `<ref>: <key> <value> already (wait reports it)`; checks/mergeable untouched. Same repro after the fix: add prints the already line, `wait` returns `copilot - -> not-run`, exit 0, re-add is quiet. CI on 22d9cc94e: unit tests, version parity, route gate, GitGuardian all pass.
+  Tests (test_pr_watch.py, 28 pass; reverting pr_watch.py to 218645da fails 3 of the 4 new ones, run with python3 -B): (a) refusal present at add -> add prints "already", first wait wakes with `copilot - -> not-run` [FAILS reverted]; (b) same for codex clean [FAILS reverted]; (c) re-add after wait reported it stays quiet, check shows no change [ERRORS reverted: wait never wakes]; (d) a non-outcome reading (copilot requested) is stored as read, no "already" [passes reverted by design; guards against over-blanking].
+  Fixture changes: snap() now carries copilot columns and a "-" codex background (add would blank a "clean" background); two tests that needed a stored codex/copilot baseline seed it with watch.update.
+- DONE: Stage report: new head, the roborev_gate.py evidence= line, test and mutation results, and anything left for FO
+  roborev_gate.py --base 218645da: `clean on 22d9cc94e; evidence=roborev:605` (exit 0, first run). EXTENSION.md Watch bullets still true, not edited; pr_watch.py docstring gained 2 lines.
+
+### Summary
+
+The P1 is closed for codex and copilot: an outcome already there when `add` first looks is now reported by the next `wait`, once. Left for FO: checks green/failing and CONFLICTING at add still become the baseline and do not wake `wait` (left as ruled); the Codex round-1 thread on #630 is not answered or resolved by me.
