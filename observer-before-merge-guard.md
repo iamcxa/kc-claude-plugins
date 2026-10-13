@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:observer-before-merge-guard:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:observer-before-merge-guard-ideation-1
+              briefing:
+                id: briefing:observer-before-merge-guard:ideation:attempt-1:revision-1
+                digest: sha256:d9de9f9e3c7ed6946cc84ce61c046ed1830521b6f8259421a0c921076eaef9d5
+                room-ref: ./observer-before-merge-guard/review/ideation/briefing-1
 started: 2026-10-13T07:17:39Z
 ---
 

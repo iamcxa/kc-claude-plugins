@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:observer-before-merge-guard:ideation:attempt-1:revision-1",
+  "question": "Accept the design (the observer step moves ahead of the merge sentinel; new observer_check.py reads the committed state tree and exits 0 when observer.md is there, 1 with the dispatch and save commands, 2 when it cannot tell; the learn extension, workflow.md and the dev skill each name it before the sentinel; after an archive the same check detects a miss and FO repairs it) and enter implementation second in the fix order? Approving accepts the recommendations for D2 (save a late report into _archive/\u003cslug\u003e/ with a path-scoped git commit, then spacedock state commit) and D3 (an undispatchable observer is recorded as a one-line \"observer not run: \u003creason\u003e\" observer.md and reported). D1 (a user-level guard on the Captain's machine) is a separate Captain-owned step, not part of this approval.",
+  "artifacts": [
+    {
+      "id": "artifact:observer-before-merge-guard:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/91fae73488160d67543ad5b4525075fc27fb43bc/observer-before-merge-guard.md",
+      "rev": "sha256:e9feef37faa988459901f3cae5b0f0e3735b7daf8450f6b32def9a28247fbb76",
+      "mediaType": "text/markdown",
+      "summary": "Ideation complete: design_surfaces.py check presentable (exit 0); AC-1..AC-9 each with a falsifier; AC-1 input measured (no observer.md in trees 9157341d and 6b435c6a), AC-8 steps 2-3 run by hand on spacedock 0.27.2, AC-9 window counts measured (1 vs 47 commits); the rest not yet verified. Chain: Spacedock merge guard takes no precondition; a second merge-hook mod fires at PR creation and does not hold the finalize (probes p6, p8); ADR 0003 forbids a package hook; kc-dev-flow v1 edits pr-merge.md, not reused. Limits: prose-enforced; checks a non-empty committed file, not its content; learn accepting the extra archived file unverified. No ADR. Shared files: workflow.md (different paragraphs), dev SKILL.md, lint word budget (workflow.md at its 5331 cap), tests workflow (two steps)."
+    }
+  ]
+}
