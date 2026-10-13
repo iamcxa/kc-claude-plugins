@@ -95,6 +95,7 @@ export class JourneyRoom {
  roomId?: string
  constructor(private ctx: any, private env: Env) {
   this.meta = new RegistryMetadata(env)
+  ctx.setWebSocketAutoResponse(new (globalThis as any).WebSocketRequestResponsePair('{"type":"ping"}', '{"type":"pong"}'))
   ctx.blockConcurrencyWhile(async () => {
    this.roomId = await ctx.storage.get('roomId')
    if (!this.roomId) return
@@ -109,6 +110,7 @@ export class JourneyRoom {
  open() {
   if (!this.room) this.room = new TLSocketRoom({
    storage: new SQLiteSyncStorage({ sql: new DurableObjectSqliteSyncWrapper(this.ctx.storage) }),
+   clientTimeout: Infinity,
    onSessionSnapshot: (sessionId, snapshot) => {
     for (const ws of this.ctx.getWebSockets()) {
      const a = ws.deserializeAttachment()

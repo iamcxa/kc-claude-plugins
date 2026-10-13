@@ -144,8 +144,12 @@ Node reports its resident room map. This difference is explicitly accepted.
 Cloudflare returns `save:false`, `repoDoc:false`; `/save` is a non-JSON 501 and
 `/repo-doc` retains the unavailable-result shape. Assets require R2. Hibernated
 socket attachments retain tldraw session snapshots; wake-up rechecks grants before
-resuming. Alarms enforce session deadlines. Hosted hibernation, real bills,
-large-body limits and formal licensing remain NOT RUN.
+resuming. The Cloudflare room disables tldraw's recurring idle pruning with
+`clientTimeout: Infinity` and automatically answers the exact tldraw JSON
+ping/pong pair without waking the room. Alarms still enforce session deadlines,
+and revocation closes attached sockets. Hosted lifecycle and usage require
+separate provider observations; emulator checks alone do not prove them.
+Large-body limits and formal licensing remain NOT RUN.
 
 ## Operator control, recovery and rollback
 
