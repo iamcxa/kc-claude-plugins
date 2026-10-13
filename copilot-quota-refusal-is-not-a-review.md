@@ -239,3 +239,8 @@ Does not cover: FO's behaviour at a real refusal (AC-6 behaviour), a refusal tha
 ### Summary
 
 PASSED at 218645da. The refusal on #627 exits 5 live while the pre-repair reader exits 0 on it; every falsifier I ran failed the intended test, and the ADR lint and package checks are clean. The only unverified obligation is AC-6's behaviour half, observable at the next Copilot refusal.
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-13): validation recommended PASSED on #630 218645da and FO ran its acceptance script as written (`env -i` bash, every step as expected). Codex review round 1 (review:5500046230) left one P1, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck. Fresh implementation worker: the context-budget probe found no transcript for the first one.
+  - P1 #630 `extensions/copilot/EXTENSION.md` (around line 35): when Copilot's refusal arrives before `pr_watch.py add --copilot` takes its first look (refusals came within seconds on 2026-10-13, and the extension says Request before Watch), `add` stores `copilot=not-run` as the baseline and prints only `watching ...`; `wait` then sees no change and polls until its timeout, so exit 5 is waited for after all. Register the watch before the request, or make `add` report an already-terminal `not-run`.
