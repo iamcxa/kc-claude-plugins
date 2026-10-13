@@ -28,6 +28,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:journey-server-host-pilot:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:journey-server-host-pilot-ideation-1
+              briefing:
+                id: briefing:journey-server-host-pilot:ideation:attempt-1:revision-1
+                digest: sha256:909d99e679abc60d30f47a3829c4474a3b5384dc3babafa4753d9af7ddf4c824
+                room-ref: ./review/ideation/briefing-1
 started: 2026-10-13T08:47:34Z
 ---
 

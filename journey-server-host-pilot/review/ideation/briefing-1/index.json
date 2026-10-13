@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:ideation:attempt-1:revision-1",
+  "question": "Approve the minimal private Node/Cloudflare server pilot design, including the documented Cloudflare health.active sampled-telemetry exception, to enter implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e1b8768e6f4b8b02c3a728950a90afced3dac2df/journey-server-host-pilot/index.md",
+      "rev": "sha256:b46b66acd281b248378291592cebc46aa2dbb661bdac297ac9c650d055a5edd3",
+      "mediaType": "text/markdown",
+      "summary": "One shared document-operation and authorization core, Node local/remote and Cloudflare adapters, thin MCP and credential plumbing, with unchanged canvas/schema/write rules. Unchanged Node baseline checks pass; candidate and hosted acceptance remain unrun. Cloudflare health.active sampling can wake rooms and needs explicit approval; immediate health.rooms visibility remains required."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/6d0f8da951b5ea9ea50fca6bd3685fc360bf502f/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:42b58e54971513b3dd42350e15b4b1e7cf05fd51f9f80b84a8e4856f087dae4f"
+    }
+  ]
+}
