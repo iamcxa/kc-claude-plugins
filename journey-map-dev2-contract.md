@@ -619,3 +619,28 @@ Does not cover: a real adopter's FO following EXTENSION.md at a gate, the real `
 ### Summary
 
 Both repaired heads pass. Each of the four fixes reproduces fixed against the old head, its new test fails when I remove the fix, and every AC figure from cycle 1 holds at the new heads. Recommended verdict PASSED for #627 c811de1f and #628 f320d6d3; no Material finding. Throwaway worktrees were removed; nothing was pushed or commented.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Investigation first, with no candidate change: reproduce each of the four Codex round-2 items on #627 head c811de1f and #628 head f320d6d3, send FO the reproduction result per item (confirmed or not, with the command and output), then wait for FO's fix authorization message
+  All four confirmed from temp copies, no worktree change; the missing-directory class also hit `journey-reconcile.mjs`, and duplicate story ids also folded into the first. FO authorized all four plus both extensions.
+- DONE: After FO's fix authorization only: fix each item FO authorizes, each with a test that fails without the fix (shown failing by a mutation run); push #627, merge (never rebase) its branch into the -map branch, push #628; CI green on both new heads
+  #627 head 32db1273; #628 head 7d89898e (merge 4085393b of 32db1273, then 7d89898e); `gh pr checks` all pass on both, including both node versions and the real-CLI ruling-to-map loop.
+  - P1 workflow dir: `state_dir()` raises when the dir has no README.md (audit exit 2, path named); a missing `_archive` prints `archive none: <path> does not exist`, then `unrecorded 0`/`invalid 0`, exit 0. Reconcile `readTasks` throws the same error (exit 1). Tests `test_a_path_that_is_not_a_workflow_directory_is_an_error_not_a_clean_audit` (nonexistent, a file, an empty dir), `test_a_valid_workflow_with_no_archive_directory_is_a_stated_zero`, and the reconcile test's two bad targets then a valid one. Mutations: audit `return workflow` instead of raising, print removed, reconcile check disabled: each fails exactly its test.
+  - P2 amendment: regex stops at the next `#`/`##`/`###` heading, so an amendment without `Captain:` is not a source. Test `test_an_amendment_with_no_captain_line_is_not_a_source_and_does_not_borrow_the_next` asserts amendment:1 absent, amendment:2 keeps its own date and words, `add` on 1 refused. Mutation (old unbounded pattern): fails.
+  - P1 already: `already` needs ref, answer and status `answered` to match; else `conflict` ("its answer|status no longer matches"), nothing written. Test 'an answer reworded or a status changed after folding is a conflict...' covers both edits; reconcile test asserts `unfolded 1`, exit-failing, with the reason line. Mutations (always `already`; drop the answer term; drop the status term): each fails. Reconcile counts it as `unfolded`, exit 1.
+  - P2 duplicates: `findStories`/`findQuestions` return all matches; more than one gives outcome `ambiguous` (in FAILING) naming story and question; the command throws before writing, exit 1, no draft. Test checks question dup, story dup, stderr text and that the draft file does not exist. Mutations (story check off, question check off, command refusal off): each fails.
+  - README additions: no existing test or smoke step needed one except `AuditTests.setUp` (added a README.md to the temp dir) and the reconcile CLI test's temp dir; the real-CLI smoke workflow already writes a README. AC-6's temp-workflow runs are the smoke script, which passed locally and in CI unchanged.
+- DONE: Stage report: new heads of both PRs, the roborev_gate.py evidence= line per PR, test and mutation results per item, and anything left for FO
+  #627 `clean on 32db12730; evidence=roborev:598` (base c811de1f, exit 0). #628 `clean on 7d89898e4; evidence=roborev:599` (base f320d6d3, exit 0). Comment lines added: 0.
+
+### Limits for FO
+
+- An intentionally reworded answer stays a `conflict` (and `unfolded`, exit 1) until a new ruling replaces it.
+- A missing `_archive` under a valid workflow is a stated zero; I did not verify whether Spacedock creates `_archive` at commission.
+- `journey-progress.mjs` (not in this diff) still accepts a nonexistent `--workflow-dir`; untouched.
+- The `audit` usage docstring still says only "exit 2 without --since" (a sed edit failed and I did not spend another gate run on it).
+
+### Summary
+
+All four items plus both extensions fixed with commits 32db1273 (#627) and 7d89898e (#628, on merge 4085393b); CI green, roborev clean once per PR. Left for FO: the limits above, the smoke workflow `push: branches: [main]` ruling from cycle 1, a fresh validation recheck and the next Codex round (no PR comment, review, ready or merge done).
