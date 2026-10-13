@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.22.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.21.0...kc-dev-flow-2-v0.22.0) (2026-10-13)
+
+
+### Features
+
+* **kc-dev-flow-2:** journey-map extension records a Captain ruling as a versioned footprint ([#627](https://github.com/iamcxa/kc-claude-plugins/issues/627)) ([133f131](https://github.com/iamcxa/kc-claude-plugins/commit/133f1315c4c44d902ddc3accf67cf23e99f1431e))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** FO checks the workflow README against the trunk's before each dispatch ([#631](https://github.com/iamcxa/kc-claude-plugins/issues/631)) ([a8fe8d3](https://github.com/iamcxa/kc-claude-plugins/commit/a8fe8d39899e3124769ff03c829af311af02a353))
+* **kc-dev-flow-2:** read a Copilot answer without a review as not run, not as answered ([#630](https://github.com/iamcxa/kc-claude-plugins/issues/630)) ([6d0f8da](https://github.com/iamcxa/kc-claude-plugins/commit/6d0f8da951b5ea9ea50fca6bd3685fc360bf502f))
+
 ## [0.21.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.20.0...kc-dev-flow-2-v0.21.0) (2026-10-13)
 
 
