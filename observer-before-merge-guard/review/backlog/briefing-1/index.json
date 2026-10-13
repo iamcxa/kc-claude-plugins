@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:observer-before-merge-guard:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation, in the fix order 1 workflow-checkout-must-match-trunk-readme, 2 observer-before-merge-guard, 3 worker-completion-goes-to-main (all three designed now; implementation in that order)?",
+  "artifacts": [
+    {
+      "id": "artifact:observer-before-merge-guard:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9ec4deb524856bba963adbd8a963058788a18f4d/observer-before-merge-guard.md",
+      "rev": "sha256:ce16675d579217c256a2a606cf437ea6bb3f6649f6a1990ffa29667f7531396f",
+      "mediaType": "text/markdown",
+      "summary": "Seed from learn package-issue candidate 1: FO ran merge guard on journey-map-dev2-contract without the learn extension observer step, so observer.md could not be saved into the archived task; nothing blocks merge guard when observer.md is absent. Captain: 「1-3 回報，且立即排修」. Recommended profile pilot. Ideation owes how the archive path stops without observer.md, within what the package (not Spacedock) controls."
+    }
+  ]
+}
