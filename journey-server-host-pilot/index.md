@@ -358,6 +358,8 @@ Only the unavailable-check report disposition changed; the product candidate and
   Required rerun exits 2: `number_guards: task has Surfaces: db but no migrations-path is declared (pass --migrations-path or set migrations-path: in the workflow README)`. [Committed FO disposition](dispatch/implementation-2.md) permits this accurate classification; no fake path, changed surface or helper edit.
 - SKIPPED: Hosted Node/Cloudflare, true provider hibernation, billing, formal licensing, retained-data migration and delivery operations.
   Not authorized/run. Missing hosted evidence is a Deferred risk with all four workflow evidence fields in the review, not a demonstrated supported-workflow defect. No product push, PR, merge, provision, deployment or CI change; cost per PR unmeasured.
+- SKIPPED: Remote synchronization of this task's committed validation report and evidence.
+  Local report/evidence commit `8617aaf7` is complete. Automatic approval review rejected `git push origin spacedock-state/dev2`: the destination was considered unverified and exporting internal reports/scripts/paths/evidence not specifically authorized. No alternate transfer or retry was attempted; FO must route destination/authorization confirmation.
 
 ### Summary
 
