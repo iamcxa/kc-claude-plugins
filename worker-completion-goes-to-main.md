@@ -57,6 +57,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-13T10:43:04.988035Z"
                 reason: 'PR head moved from 01eaf231 to 84de8242 by a merge of origin/main after #632 squash-merged (same-stage conflict handoff, implementation-5); the briefing names the old head'
+            - id: gate-attempt:worker-completion-goes-to-main-validation-2
+              briefing:
+                id: briefing:worker-completion-goes-to-main:validation:attempt-2:revision-1
+                digest: sha256:f5af0750cc0b036d07da41996b9b487174d5934344c79ac0cc652ce075af0a5b
+                room-ref: ./worker-completion-goes-to-main/review/validation/briefing-2
 started: 2026-10-13T07:17:42Z
 worktree: .worktrees/spacedock-ensign-worker-completion-goes-to-main
 pr: iamcxa/kc-claude-plugins#633
