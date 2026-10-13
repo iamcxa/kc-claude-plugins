@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:journey-map-dev2-contract:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:journey-map-dev2-contract-ideation-1
+              briefing:
+                id: briefing:journey-map-dev2-contract:ideation:attempt-1:revision-1
+                digest: sha256:40305c31874741abedc51c9da45a798b424b010f3bc5e38275beb82d6de12c09
+                room-ref: ./journey-map-dev2-contract/review/ideation/briefing-1
 started: 2026-10-13T03:05:11Z
 ---
 

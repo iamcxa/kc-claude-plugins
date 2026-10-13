@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-map-dev2-contract:ideation:attempt-1:revision-1",
+  "question": "Accept the journey-map ↔ dev2 contract design (five producer-owned schemas, footprints at gates folded at archive, ADR by reference, evidence ladder, three PRs) and rule on D1–D5?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-map-dev2-contract:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f66ed8376f9d0fa409abb0e627cb5c2a0ebae9f3/journey-map-dev2-contract.md",
+      "rev": "sha256:2e867e367690cb34594511d71c60fc481bea018e903ed42ba289368324cdd447",
+      "mediaType": "text/markdown",
+      "summary": "Ideation complete: design, AC-1..AC-10, UI preview; decisions D1-D5 open."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-map-dev2-contract:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/f66ed8376f9d0fa409abb0e627cb5c2a0ebae9f3/journey-map-dev2-contract/preview/preview-release-1.png",
+      "mediaType": "application/octet-stream",
+      "rev": "sha256:5d694daef9f2c3bb7868e1c5b37515989ad34459f4d318977ff99eb3b832b340"
+    }
+  ]
+}
