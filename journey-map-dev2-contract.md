@@ -124,211 +124,181 @@ Visible change: The journey map shows each answered question with the Captain's 
 
 ## Design
 
-Base read: kc-claude-plugins origin/main e2524e93025dd0d5d9217b4d722c2b169d01fda6 (`kc-journey-map` 1.5.2: `lib/progress.mjs`, `lib/model.mjs`, `lib/render.mjs`, `lib/records.mjs`, `skills/kc-journey-progress/SKILL.md`, `references/canvas.md`, `references/cell-contract.md`; `kc-dev-flow-2/references/sd/workflow.md` which says 0.21.0 while this session loaded package 0.20.0, so the design follows origin/main as instructed; `docs/adr/0006`-`0011`); subspace-relay origin/main 9589d251 ADR 0046; qnow origin/next 6d958e76375a93dfe32cb651ce6442ddb12f9808 (`docs/journey/qnow.yaml`); all read 2026-10-13. Ideation wrote no repository file. Profile pilot holds; one watch item is named under Limits.
+Base read: kc-claude-plugins origin/main e2524e93025dd0d5d9217b4d722c2b169d01fda6 (`kc-journey-map` 1.5.2: `lib/model.mjs`, `lib/read.mjs`, `lib/add-story.mjs`, `lib/progress.mjs`, `lib/lint.mjs`; `kc-dev-flow-2`: `scripts/decision_ledger.py`, `extensions/learn/EXTENSION.md`, `references/sd/workflow.md`), Spacedock 0.27.2 (`spacedock --version`, `spacedock gate record --help`), qnow map `docs/journey/qnow.yaml` at origin/next df8ee1d25d595fe34e79e5df866290f18d5deae2 and qnow state branch origin/spacedock-state/dev2 d01c37bc4371412a404f6c214515ee0200a21d2b, relay map `docs/journey/spacedock-review.yaml` at origin/main 0295d1637bca62914afdb4233e040e4383e10af2 and relay state branch origin/spacedock-state/dev2 ed63e6a055f953e49d1ac8c1ac5e56205813b5be; all read 2026-10-13. This session loaded package 0.20.0 and origin/main holds 0.21.0; the design follows origin/main. Ideation wrote no repository file. Profile pilot holds; limits are named under Slices.
+
+### Scope one in one paragraph
+
+Scope one lets a Captain ruling reach the map and nothing else. A ruling given at a gate or in an amendment on a task whose story is on the map leaves one line (a "footprint", the ruling's words, date and source, kept beside the task). When the task is archived, one command writes that answer into a draft of the map file, and the Captain approves it as a docs-only pull request. Two scripts count what did not arrive. Two record shapes are versioned: the footprint (kc-dev-flow-2 owns it) and the map's question fields (kc-journey-map owns them). No renderer changes, so no card, layout or reader output changes.
+
+Moved to task `journey-map-progress-and-provenance` (names only; its body lists them): the evidence ladder, ADR by reference with the `Map:` line, fold-pending marks and the UI preview (`journey-map-dev2-contract/preview/` stays where it is, carried by pointer), drawn-commit provenance, the tuple list form and story-id identity, the map-service seam, the schemas `journey-progress`, `journey-task-tuple` and the rest of `journey-map`, and its criteria AC-3, AC-7, AC-8, AC-9 and AC-10. Criteria ids below keep their old numbers so that task's pointers stay valid; the gaps are deliberate.
 
 ### PRFAQ
 
-**Press release (future).** The release map and the development workflow now meet at five named schemas, each owned by the side that produces it and each carrying one version that a test holds. When the Captain rules on a question at a gate, a one-line record of his verbatim words and date is written beside the task. The map shows that answer at once, marked "fold pending", and writes it into the map file once, when the task is archived, as a docs-only pull request he approves. An ADR that settles a story or question names it in the ADR itself, and the map shows that ADR's one-sentence title read from the ADR file, never a copy. Each story shows how far its evidence has climbed: gap, built, verified, shipped. A script counts every ruling, answer or ADR that has not reached the map; at each release review the count must be 0.
+**Press release (future).** When the Captain rules on a question that the release map asks, FO records one line beside the task: his verbatim words, the date and where he said it. When the task is archived, one command writes the answer, its status and its source into a draft of the map file, changing only that question's lines, and he approves the result as a docs-only pull request. At release review two scripts count every ruling on a finished task that has not reached the map; the count is 0 or FO presents the gap to him. The two record shapes carry a version that a test holds.
 
 **FAQ.**
 
-- *Why are there five schemas and who owns each?* The Captain's 2026-09-06 rule: independent plugins join only by versioned input and output contracts, and a schema lives with its producer. The map file and the progress reading are produced by kc-journey-map; the task tuple and the footprint record are produced by kc-dev-flow-2 (dev2). Today the tuple is described only in kc-journey-progress's SKILL.md, the consumer's prose, which is the gap behind defects 2 and 3.
-- *How does the version rule follow subspace-relay ADR 0046?* One version per schema, `MAJOR.MINOR.PATCH`, in one machine-readable place in the producer: the field table that the producer's own validator reads, printed by a `schema` command. Documents cite it and carry no number of their own; a test fails when a field table changes and its version does not. The wire string a consumer pins is `<name>/v<MAJOR>`, the form `journey-progress/v1` already has and the sibling task `release-acceptance` uses for `release-walk/v1` and `release-acceptance/v1`. Decision D1 asks the Captain to confirm the change record.
-- *Why not let the gate command write the footprint?* `spacedock gate record` belongs to Spacedock, a separate repository; its `--help` (0.27.2) takes no hook and this package cannot add a step inside it. So the footprint write is a package command run beside it, and two checks catch a skipped run (step table below). Decision D2 asks whether the Captain accepts that reading of 「同一個指令」.
-- *Why does the map read pending answers live, and write the file only at archive?* The Captain's timing ruling (2026-10-13): footprint at the gate, durable YAML write once per task at archive. The live reader is kc-journey-map's progress reader, which already lists tasks through `spacedock status`; it finds a task's footprints by path convention beside the task file.
-- *What if the ruling happens in chat, outside any task?* It goes straight into a map pull request, as today, through `journey-answer.mjs`, which writes the answer and its source in one command.
-- *Does the map stop being the authority?* No. The journey YAML in git stays the authority; the footprint is a proposal until the Captain approves the fold PR. A new story is never created by a fold, only proposed (Captain: a new story changes scope).
-- *Does the design contain a hosted map service?* No. It takes the seam only (Captain 「照你建議」): the CLI can send a token, and the repo-writing routes can be switched off. Hosting stays with task `journey-canvas-hosted-poc`.
+- *The gate record already holds his words. Why a second file?* The gate record has the words but no map question id. The footprint is the join between them. `add` refuses words that are not inside the cited gate record, so the footprint cannot drift from it (`workflow.md` `## Captain amendments` already requires an amendment to carry his words verbatim).
+- *Why not make the gate command write it?* `spacedock gate record` belongs to Spacedock, a separate repository; its `--help` (0.27.2) lists no hook, so this package cannot add a step inside it. The write is a package script run right after, and two checks catch a skipped run. This is decision D2.
+- *Why write the map only at archive?* The Captain's timing ruling, 2026-10-13: the durable write happens once per task, at archive. Until then the footprint sits in the state checkout and nothing reads it live; the live read is scope two.
+- *What about a ruling made in chat with no task?* Unchanged: it goes into a map pull request by hand, as today. The tool for it was not in scope one's list, so it is not here.
+- *Does the map stop being the authority?* No. The map file in git stays the authority; a footprint is a proposal until the Captain approves the pull request. A fold creates no story or question; one that is missing is listed as `no-story` or `no-question`.
 
 ### Existing-code check (recorded conclusion)
 
-Journey: map story -> task -> ruling -> map answer. Working today: `progress.mjs` reads the tuple live (`readProgress`), `journey-add-story.mjs` writes one YAML change in one command, `journey-handoff.mjs --out` refuses to overwrite, `decision_ledger.py` already parses gate resolutions, `adr_lint.py` already runs at validation, and the `learn` extension already runs after archive. Incomplete: the tuple is keyed on release and one story (`tuple` and `key` in `progress.mjs`), questions have no source, no field names an ADR, nothing derives a stage beyond status, and the drawing records no commit. Two bounded searches found nothing to reuse for the missing pieces: `git grep -n -i "footprint"` over `kc-journey-map` and `kc-dev-flow-2` at the base matched only unrelated card-geometry comments in `records.mjs` and `render.mjs`, and `git grep -n -E "journey-(answer|fold|reconcile)"` matched nothing (CHANGELOGs excluded); `git grep -n -E "import yaml"` over `kc-dev-flow-2/scripts` matched nothing, so dev2 scripts hold no YAML parser. Need: Captain's accepted direction and the seven defects below. Conclusion: reuse `progress.mjs`, the `--out` no-overwrite rule, the `learn`-style extension and `adr_lint.py`; add three small journey-map commands and one dev2 script; do not touch Spacedock or `review-release`. Unknown: adopters other than qnow were not read.
+Journey: gate ruling -> footprint -> map answer. Works today: `decision_ledger.py` (`split_task`, `gate_entries`) already parses gate resolutions, their reasons and dates from task frontmatter; the `learn` extension already joins FO before `merge guard` and right after the archive, and its `<task>/observer.md` shows that a file in the task folder is committed with `spacedock state commit <slug>`; `add-story.mjs` already edits the map by splicing text into the original file; `read.mjs` `applyDiff` already sets `answer` on a question found by story id and question id. Incomplete, measured 2026-10-13 with `parseDocument(src).toString({lineWidth: 0, flowCollectionPadding: false})`, the option set `applyDiff` writes with: qnow's map (951 lines, every question a one-line flow map) comes back with 0 differing lines; relay's map (2047 lines, block style, hand-wrapped) comes back with 3803 differing lines (`diff` counts a removed and an added line separately), and the best of ten option sets (`lineWidth` 0/80/90/100/120 with `indentSeq` true/false) still leaves 705. So whole-file rewriting cannot produce a reviewable pull request on a relay-style map, and the fold must splice text as `add-story.mjs` does. `model.mjs` `normalizeQuestions` also drops any field it does not list, so `source` needs one added line to be read back. Two bounded searches found nothing to reuse for the missing parts: `git grep -n -i "footprint" origin/main -- kc-journey-map kc-dev-flow-2` (CHANGELOGs excluded) matched only card-geometry comments in `records.mjs` and `render.mjs`, and `git grep -n -E "journey-(answer|fold|reconcile)|map_footprint"` over the same paths matched nothing. Need: the Captain's accepted direction items 1, 2 and 4. Conclusion: reuse the parser, the splice helpers (export `serializeItem`, `lineStart`, `afterLine`) and the question lookup; add one dev2 script, two kc-journey-map commands and one question field. Unknown: adopters other than qnow and relay were not read.
 
-### The loop
+### The chain
 
 ```mermaid
 flowchart TD
-    MAP["journey map file (journey-map, in git)"] -->|"release review: status --set tuple, story ids"| TASK["dev2 task"]
-    TASK -->|"Captain rules at a gate"| GATE["spacedock gate record"]
-    GATE --> FP["map_footprint.py add writes footprints.jsonl beside the task"]
-    FP --> LIVE["map shows answer as fold pending (live read)"]
-    TASK -->|"implementation lands an ADR"| ADR["ADR carries a Map: line"]
-    FP --> CHK["map_footprint.py check at the terminal gate"]
-    ADR --> LINT["adr_lint.py --map-required at validation"]
-    CHK --> ARCH["merge guard passed, archive, observer, learn"]
-    LINT --> ARCH
-    ARCH --> FOLD["journey-fold.mjs writes a draft map and a preview room"]
-    FOLD --> PR["docs-only map PR, Captain approves"]
-    PR --> MAP
-    CHAT["ruling in chat outside any task"] -->|"journey-answer.mjs"| PR
-    MAP --> REC["journey-reconcile.mjs and map_footprint.py audit: counts must be 0 at release review"]
-    REC -->|"nonzero: findings"| ISSUE["kc-claude-plugins issue intake, filed through FO's issue gate"]
+    RULE["Captain rules at a gate or in an amendment"] --> REC["spacedock gate record (Spacedock's own command)"]
+    REC --> ADD["map_footprint.py add writes one line to footprints.jsonl beside the task"]
+    ADD --> CHK["map_footprint.py check, before merge guard"]
+    CHK --> ARCH["merge guard passes, task is archived"]
+    ARCH --> FOLD["journey-fold.mjs writes a draft map, not the source file"]
+    FOLD --> PR["docs-only map pull request, Captain approves"]
+    PR --> MAP["map file: answer, status, source"]
+    MAP --> RECON["journey-reconcile.mjs: unfolded and stale-open must be 0"]
+    ARCH --> AUD["map_footprint.py audit --since: unrecorded and invalid must be 0"]
+    RECON -->|"nonzero"| ISSUE["FO presents it; on Captain yes, files a kc-claude-plugins issue"]
+    AUD -->|"nonzero"| ISSUE
 ```
 
-### Contract catalogue
+### Two schemas, each owned by its producer
 
 ```mermaid
 flowchart LR
-    subgraph JM["kc-journey-map produces"]
-        A["journey-map/v1: ids, question fields, source, adr, stage evidence"]
-        B["journey-progress/v1: per-story stage, pending answers, orphans"]
-    end
     subgraph D2["kc-dev-flow-2 produces"]
-        C["journey-task-tuple/v1: task frontmatter fields"]
-        D["journey-footprint/v1: footprints.jsonl records"]
+        FP["journey-footprint/v1: one line per answered question"]
     end
-    C -->|"pinned journey-task-tuple/v1"| R["progress reader"]
-    D -->|"pinned journey-footprint/v1"| R
-    D -->|"pinned journey-footprint/v1"| F["fold and reconcile"]
-    R --> B
-    F --> A
-    B -->|"pinned journey-progress/v1"| FO["First Officer"]
-    A -.->|"ids as strings, no pin"| D
+    subgraph JM["kc-journey-map produces"]
+        Q["journey-map-question 1.0.0: question fields, with source"]
+    end
+    FP -->|"consumer pins the string journey-footprint/v1"| F["journey-fold.mjs and journey-reconcile.mjs"]
+    F -->|"writes"| Q
 ```
 
-| Schema | Producer | One version lives in | Wire pin | Consumer and its pin |
-|---|---|---|---|---|
-| `journey-map` | kc-journey-map | field table in `kc-journey-map/lib/schemas.mjs`, printed by `node lib/schemas.mjs journey-map` | optional top-level `schema: journey-map/v1` in the map file (absent reads as v1, today's files) | kc-journey-map's own reader, fold and reconcile; dev2 holds ids as strings and pins nothing |
-| `journey-progress` | kc-journey-map | same file | `schema: journey-progress/v1` (exists today, inline string) | FO reads the JSON and refuses another major; the version FO is told is the `Describes journey-progress <version>` line in `kc-journey-progress/SKILL.md`, held by AC-1 |
-| `journey-task-tuple` | kc-dev-flow-2 | field table in `kc-dev-flow-2/scripts/map_footprint.py`, printed by `map_footprint.py schema journey-task-tuple` | none on the task file (frontmatter has no schema key) | `progress.mjs` checks field shapes against its own fixture copy of the producer's printed table, named `journey-task-tuple/v1`; the copy can go stale only on a MINOR, which by rule breaks no reader |
-| `journey-footprint` | kc-dev-flow-2 | same file | `"schema":"journey-footprint/v1"` on every line | live reader, `journey-fold.mjs`, `journey-reconcile.mjs` refuse a line whose major differs |
-| `release-walk`, `release-acceptance` | defined by task `release-acceptance` | its own design | `/v1` | follow this task's version rule when they land; ordering is not decided here |
+`journey-footprint` 1.0.0, field table printed by `map_footprint.py schema journey-footprint`; one JSON object per line in `<task folder>/footprints.jsonl`:
 
-Version rule, held by tests. Each producer keeps `contract-versions.json` (`{name: {version: sha256 of the printed field table without its version}}`). A test fails when the printed table's hash differs from the hash recorded for its current version, so a changed table with the same version is red; adding an optional field raises MINOR, removing, renaming or changing a field's meaning raises MAJOR and the wire pin, a wording-only change raises PATCH. A second test fails when a producer document's line `Describes <name> <version>` differs from the printed version. The change record is the producer plugin's release-please CHANGELOG, written from the Conventional Commit that bumps it; an ADR is written for the first shape of a schema and for every MAJOR. D1 asks the Captain to confirm this against his 「我想後者應該是 ADR」.
+| field | rule |
+|---|---|
+| `schema` | the string `journey-footprint/v1` (wire pin: major only) |
+| `id` | `fp:<task slug>:<n>` |
+| `kind` | `answered`, the only kind in 1.0.0 |
+| `task` | task slug |
+| `journey`, `story`, `question` | the map's `journey:` value, a story id, a question id inside that story |
+| `words` | the Captain's words, verbatim; a substring of the source text |
+| `date` | `YYYY-MM-DD`; equals the source's date |
+| `source` | `gate-attempt:<id>` (the resolution `reason`) or `amendment:<n>` (its `Captain:` line) |
+| `answer` | one line, FO's statement of the decision; becomes the map's `answer` |
 
-### Task tuple (dev2 owns), and the defects it fixes
+`journey-map-question` 1.0.0, printed by `node lib/schemas.mjs journey-map-question`; it covers one question entry only, and its name is narrow on purpose so scope two can decide how the rest of the map file is versioned:
 
-`journey` (the map's `journey:` value), `journey-release`, `journey-story`, `journey-required-tasks`, `journey-mapping-complete`, set by FO through `spacedock status --set` at release review, as today. Two changes, version 1.0.0 of `journey-task-tuple`:
+| field | rule |
+|---|---|
+| `id` | explicit string, unique inside its story (a question without one cannot be folded; all 110 of qnow's and all 220 of relay's questions have one) |
+| `ask`, `status`, `because`, `answer`, `doc` | as `model.mjs` reads them today; `status` is `open`, `answered` or `deferred`; `because` is owed when `deferred` |
+| `source` (new, optional) | `{kind: gate or amendment, ref: "<task slug>/<footprint source>", words, date}`; written only by the fold |
 
-- `journey-story` is a story id or a JSON array string of story ids (the scalar stays valid; `journey-required-tasks` already stores JSON in a string). When it lists several stories, `journey-required-tasks` is a JSON object keyed by story id, so each story keeps its own required list. A task counts toward every story it names. This is defect 3 and qnow's release-level orphan.
-- The story id, not the release, is the identity. Story ids are unique across a map: `calculateProgress` already marks a story unverified when its id appears twice, and qnow's map (171 stories) has 0 duplicates, read on 2026-10-13 with a one-off `python3` over `git show origin/next:docs/journey/qnow.yaml` that AC-6 turns into the reconcile script. `journey-release` becomes the release at admission and no longer decides membership, so moving a story to another release no longer strands an archived task. Measured on qnow: question ids repeat across stories (6 ids occur on more than one story, for example `q1`), so every question key is (journey, story, question). A task naming a story that is not on the map stays an orphan, now listed with `archived: true` when its task is archived; an archived orphan does not set the refresh exit code, because `spacedock status --set` refuses an archived task and Spacedock owns that limit. D3 asks for this identity change.
+Version rule, held by tests. Each producer keeps `contract-versions.json` (`{version: sha256 of the printed table without its version}`). A test fails when the printed table's hash differs from the hash recorded for its current version, or when the current version has no recorded hash. Adding an optional field or a kind is a MINOR; removing, renaming or changing a field's meaning is a MAJOR and changes the wire string; wording only is a PATCH. A consumer refuses a different major and ignores an unknown field or an unknown `kind` (listed as `skipped`, not counted). The change record is the producer's release-please CHANGELOG, written from the Conventional Commit that bumps it; an ADR is written for a schema's first shape and for every MAJOR. This follows subspace-relay ADR 0046 (one version per contract, a test that fails when the contract changes and the version does not). D1 asks the Captain to confirm the change record.
 
-### Footprint (dev2 owns)
+### Footprint: add, check, audit (dev2 owns)
 
-File `<task folder>/footprints.jsonl`, found beside the task file `resolved.path` (`<slug>/` next to `<slug>.md`, or the directory of `index.md`), live or under `_archive/`; one JSON object per line, `schema: journey-footprint/v1`, `id` = `fp:<task id or slug>:<n>`, `journey`, `story`, optional `question`, and by `kind`:
+Script `kc-dev-flow-2/extensions/journey-map/map_footprint.py`, standard library only (dev2 holds no YAML parser; it imports `split_task` and `gate_entries` from `scripts/decision_ledger.py`).
 
-| kind | owed fields | meaning |
-|---|---|---|
-| `answered` | `words` (verbatim), `date`, `source` (`gate-attempt:<id>` or `amendment:<n>`), optional `answer` (one short paraphrase) | a Captain ruling answered a question |
-| `question` | `ask`, `source` | a ruling opened a new question |
-| `evidence` | `stage` (`verified` or `shipped`), `ref` | evidence climbed; `ref` is the task and gate for verified, the adopter's deploy record verbatim for shipped |
-| ADR reference | none written | read from the ADR file's `Map:` line |
+- `add <task> --question Q --source gate-attempt:<id> --words '...' --answer '...' [--story S]`: `--story` defaults to the task's `journey-story` and `journey` comes from its frontmatter. It refuses (exit 1, naming the cause) words that are not inside the cited resolution `reason` or amendment `Captain:` line, a `date` that differs from the source's, and a `journey` that differs from the task's. Otherwise it appends one line. It does not read the map: an unknown story or question is found later by reconcile.
+- `check <task>`: a "journey task" is one whose frontmatter has both `journey` and `journey-story` non-empty; for any other task it exits 0. For a journey task it exits 1 unless `## FO alignment` holds `Map footprints: <n> in footprints.jsonl` with `n` equal to the valid lines and at least 1, or `Map footprints: not needed: <reason>` with a non-empty reason, and every line passes the `add` rules and names a source that resolves. Known limit: release-level tasks that carry `journey` but no `journey-story` (qnow has 3 archived ones with 23 gate resolutions, and 9 live) are outside `check` and `audit`; `add` still accepts them with an explicit `--story`. Scope two's list form is what brings them in.
+- `audit <workflow-dir> --since YYYY-MM-DD`: over archived journey tasks that have at least one resolution or amendment dated on or after `--since`, prints `unrecorded <n>` (neither a valid footprint nor a not-needed line) and `invalid <n>` (a bad line); exit 1 when either is above 0, exit 2 without `--since`. The cutover exists because an archived task cannot take a new line (`spacedock status --set` refuses it, and an archived task's state is publish-only). Measured 2026-10-13: without a cutover the audit would report `unrecorded 7` on qnow (its 7 archived journey tasks hold 35 resolutions) and 2 on relay (2 of its 6 journey tasks are archived, with 9 of 14 resolutions), with nothing anyone could repair. The cutover is the date the adopter lists the extension; a start date after the last existing resolution reports 0.
+- `schema journey-footprint`: prints the field table and version.
 
-The ADR kind is not a fourth written record: the ADR names its story or question in a `Map: <journey>/<story>[/<question>]` line beside `Date:` (or `Map: none - <reason>`), which is the Captain's "written with the ADR", and `adr_lint.py --map-required` is its gate. `map_footprint.py add` refuses an `answered` footprint whose `words` are not a substring of the cited gate resolution reason or amendment `Captain:` line, so verbatim is enforced at write time. It validates shape and source only; it does not read the map, because dev2 scripts hold no YAML parser and the map's schema is journey-map's: an unknown story id is found by reconcile as `unmatched`.
+Where it runs: right after each `spacedock gate record` and each amendment on a journey task, FO runs `add` for each map question the ruling answers, or notes that it answers none; before `merge guard`, FO writes the `Map footprints:` line, runs `check` and commits with `spacedock state commit <slug>`. It cannot run after the archive, because the task is then publish-only.
+
+### Fold and reconcile (kc-journey-map owns)
+
+`journey-fold.mjs <journey.yaml> --footprints <path to footprints.jsonl> --out <draft.yaml>`: refuses an `--out` that exists (as `journey-handoff.mjs --out` does) and does not write the source file (AC-5 compares its checksum). For each `answered` footprint whose `journey` equals the map's, it finds the story (ids are unique; `calculateProgress` already refuses a duplicate) and the question by its explicit id, and writes `answer`, `status: answered` and `source`. It removes no field, so a deferred question keeps its `because` (AC-5 asserts it). A question that already has the same `source.ref` is `already` (folding twice gives the same bytes); one that has a different `answer` or `source` is `conflict` and nothing is written for it. The write splices the edited question's own lines into the original text, as `add-story.mjs` does, so every other byte of the file is unchanged; after splicing it re-parses the draft and refuses to write unless the only differences are those questions' fields. One line per footprint: `applied`, `already`, `conflict`, `no-story`, `no-question` or `wrong-journey`; exit 1 on any of the last four.
+
+`journey-reconcile.mjs <journey.yaml> --workflow-dir <dir>`: lists tasks as `progress.mjs` does (`taskListing`, `spacedock status --archived`), reads each journey task's footprints, and prints:
+
+- `unfolded`: footprints on archived tasks that are not in the map file as given (not `already`); includes the `no-story`, `no-question`, `conflict` cases with the reason on its line.
+- `stale-open`: a question that is neither answered nor `deferred` with a `because`, on a story named by an archived journey task and by no live one. It catches a ruling nobody recorded, from the map's side.
+- `pending` (information; does not change the exit code): footprints on live tasks, not due until archive.
+- `unsourced` (information; does not change the exit code): answered questions with no `source`. Without a backfill these cannot reach 0, so they are a baseline, not a gate.
+
+Exit 1 when `unfolded` or `stale-open` is above 0. The map is read from the path given; at release review FO passes the map as it stands on the trunk (`git show <trunk>:<path>` to a temp file).
 
 ### Steps: one write, one gate line, one count
 
-| Step | One-command write | Gate line (done, or not needed and why) | Reconcile count (0 at release review) |
+| Step | One-command write | Gate line (done, or not needed and why) | Count (must be 0 at release review) |
 |---|---|---|---|
-| 1 release to task | existing `spacedock status --set <task> journey=... journey-release=... journey-story=...` (list form new) | existing `Release review:` line; its enforcement is task `release-acceptance`'s `release_review.py`, not repeated here | `orphans` (tasks naming a story not on the map) |
-| 2 gate footprint | `map_footprint.py add <task> --kind answered --story S --question Q --source gate-attempt:<id> --words '...'` run right after `spacedock gate record` | `Map footprints: <n> in footprints.jsonl` or `Map footprints: not needed: <reason>` under `## FO alignment`; `map_footprint.py check <task>` at the terminal gate exits 1 without one, or when a footprint's source does not resolve | `unrecorded-gate`: Captain resolutions on a journey task cited by no footprint and covered by no not-needed line (`map_footprint.py audit`); `unmatched`: footprints whose story or question is not on the map (`journey-reconcile.mjs`) |
-| 3 ADR reference | the ADR's own `Map:` line, written by the implementation worker with the ADR | `adr_lint.py --map-required` at validation: exit 1 on a new ADR with no `Map:` line | `adr-unfolded`: ADR `Map:` ids whose map question has no `adr:` for that file; `unmatched` as above |
-| 4 archive fold | `journey-fold.mjs <journey.yaml> --workflow-dir <dir> --out <draft.yaml> --room <preview-room>` (draft never overwrites the source; folding twice gives the same bytes) | FO's archive message states `journey-map fold: <PR url>`, `not needed: <reason>` or `not run: <reason>`, the form the Extensions section already requires; archived state is publish-only, so no task line can hold it | `unfolded`: footprints and ADR references not yet in the map at the base ref |
-| 5 ruling outside any task | `journey-answer.mjs <journey.yaml> --story S --question Q --words '...' --date D --where chat` writes `answer`, `status: answered` and `source` | the docs-only PR itself, plus lint `answer-without-source` in `journey-lint` | `unsourced`: answered questions with no `source` (legacy answers take `source: {kind: legacy, reason}` and are counted apart, not failed) |
-| 6 evidence ladder | `built` is derived (status exists and the `evidence` symbol greps) and owes no write; `verified` and `shipped` are `map_footprint.py add <task> --kind evidence --stage verified --ref gate-attempt:<id>`, run by FO right after the validation-gate approval, and `--stage shipped --ref <deploy record verbatim>`, run when the adopter's deploy record exists (the `release-acceptance` task's validation gate is the natural moment, but its design is not read here) | the same `Map footprints:` line and `check <task>` as step 2 | `unrecorded-gate` for a validation approval cited by no evidence footprint; `out-of-order`: `shipped` with no `verified`, or `verified` with no built evidence |
+| 1 gate footprint | `map_footprint.py add ...` right after `gate record` or the amendment | `Map footprints: <n> in footprints.jsonl` or `Map footprints: not needed: <reason>` under `## FO alignment`; `check <task>` exit 1 without one, before `merge guard` | `map_footprint.py audit --since D`: `unrecorded`, `invalid`; `journey-reconcile.mjs`: `stale-open` |
+| 2 archive fold | `journey-fold.mjs ... --out <draft>`, then FO shows the draft diff | FO's archive message states `journey-map fold: <PR url>`, `not needed: <reason>` or `not run: <reason>`, the form `## Extensions` requires | `journey-reconcile.mjs`: `unfolded` |
 
-Cut: a separate "new story" footprint (the Captain: a new story always changes scope, so a fold prints it as a proposal and applies nothing); a task-file line for the fold (archived state is publish-only; the extension's report line and the count carry it). The kc-journey-map reconcile is `journey-reconcile.mjs <journey.yaml> --workflow-dir <dir> [--release <id>]`, exit 1 when any count is above 0, printing one line per item; the dev2 half is `map_footprint.py audit <workflow-dir>`. Both are named in a new extension `kc-dev-flow-2/extensions/journey-map/EXTENSION.md` that an adopter lists under `extensions:`; the extension adds the footprint, `--map-required` and fold instructions to FO's scope notes and the reconcile run to release review. `workflow.md` gains no footprint rule, only the tuple's list form and one pointer sentence in the Release review bullet (maintain-flow's word-budget rule: net words not above 0).
+Opening the pull request follows `## Delivery authority` unchanged; the extension grants none. Self-repair, the Captain's 自駕路徑 ("autopilot path"): a nonzero count is the map's 看見 (see) step; FO presents it and, on his yes through its existing issue-filing approval gate, files a kc-claude-plugins issue, the intake `maintain-flow` already serves. No new mechanism. `workflow.md` is not edited by scope one: an adopter lists `journey-map` under `extensions:`, and a new `kc-dev-flow-2/extensions/journey-map/EXTENSION.md` carries the instruction lines, so the word budget is untouched.
 
-Self-repair (the Captain's 自駕路徑): reconcile findings are the map's 看見 (see) step. A nonzero count is presented by FO and, on the Captain's yes through FO's existing issue-filing approval gate, filed as a kc-claude-plugins issue, the intake the Captain named as the one `maintain-flow` already serves; no new mechanism. A docs-only fold PR may later move to precedent under ADR 0011's ladder; nothing here grants that.
+### Will scope two have data as soon as scope one merges and is synced?
 
-### Map side: provenance, ADR by reference, stage, seam
+No for the fold-pending part, and yes for everything else, because most of scope two's inputs exist today and scope one writes none of them. The Captain's question was whether relay and qnow, being in dense development, would fill scope two immediately. What scope one writes: one `answered` line, forward only, when a ruling at a gate or in an amendment answers a map question on a task that has `journey` and `journey-story`, and only after the adopter lists the extension on a released, synced package; and, later, `answer`, `status` and `source` in the map file, only after the task is archived and he approves the fold pull request. It writes nothing about evidence, ADRs, provenance or tasks with several stories.
 
-- **Provenance (defect 6).** Each page header card drawn gains one line: `drawn from <path> @ <short sha> on <branch>` and, when the file differs from the default branch, `ahead of <base> by <n> commits`. Computed with `git` at render time, returned by `journey-read`. This is the drawn-commit the sibling `Release review: <journey>/<release> at <commit>` line also names.
-- **ADR by reference.** A question's `adr: <repo path>[#anchor]` renders as `ADR <number>: <title>`, the title being the ADR file's first line after `# NNNN.`, read at draw time from the default branch with `git show`; a path not yet on that branch renders `ADR pending: <path>` and no text. No ADR text is stored in the map. Limit: a section citation such as `docs/adr/0001-...md#q7--...` (qnow has 4 of its 23 ADR links in that form) shows the file title and the anchor, not the section's own sentence; a file with no `# NNNN.` title shows its file name.
-- **Stage (defect 4).** `gap`, `built` (status exists with an `evidence` symbol that greps), `verified` (every required task has an approved validation gate), `shipped` (a `shipped:` record on the story). The stage is a line on the story card; the border colours keep their current meaning.
-- **Seam.** One `apiFetch` function in `kc-journey-map/lib` replaces the five bare `fetch` sites and sends `Authorization: Bearer <JOURNEY_API_TOKEN>` when that variable is set, nothing otherwise. The routes that write a repository (`/save`, `/repo-doc`) register only when `JOURNEY_LOCAL_OPS=1`, which `npm run canvas` sets, so local use is unchanged and a deployed service starts without them. Room storage already follows `JOURNEY_ROOMS_DIR`. D5 asks whether "leave the service" means this switch or a code move.
+| Scope two piece | Its data | When it exists |
+|---|---|---|
+| evidence ladder (verified, shipped) | approved validation gates in task files, and the adopter's deploy record; scope one writes neither | today for `verified` (qnow: 7 archived tasks with a story; relay: 6, of which 4 are live); `shipped` has no source in either adopter that I read |
+| ADR by reference | ADR paths already in the maps: `grep -o 'docs/adr/[^ )"#]*'` finds 23 in qnow's map and 32 in relay's | today |
+| drawn-commit, tuple list form, service seam | none needed | not applicable |
+| fold-pending marks, `source` shown | footprints, then folded `source` | after (1) both plugins are released and an adopter syncs and lists `journey-map`, (2) a ruling at a gate or amendment on a live journey task answers an open map question, (3) FO runs `add`; the `source` in the map file comes only after archive and his approval |
 
-### UI proposal and preview
+The supply of answerable questions is bounded and measured. qnow's map has 31 open questions, but 20 are `deferred` with a `because` and 11 are plain open, all on stories not built yet; none of qnow's 7 journey tasks with a story has an open question left, so qnow has no live task that could produce a footprint today. Relay's map has 22 open, 1 deferred and 21 plain open, all on unbuilt stories; the only story that has a live journey task and open questions is `get-started-page` (5 of its 10 questions), served by tasks `agent-front-door` and `agent-front-door-publish`. So the earliest footprint is relay's next ruling on that pair after relay adopts, and the ceiling from questions that exist today is 11 + 21 = 32 footprints across both. I did not classify how many of the 35 qnow and 14 relay gate resolutions answered a map question; the reasons I sampled in one task per adopter were mostly bare approvals. Recommendation to the FO: scope two's ideation does not need to wait for scope-one data except for the fold-pending marks, which it can design against fixtures and relay's live pair.
 
-UI proposal: On a release board page the answer card under a question reads `<answer>` on one line and `「<verbatim words>」 <date>` on the next, prefixed with a half-moon mark when the answer is only a footprint (fold pending); a question answered by an ADR shows `ADR <number>: <title>` and its link icon opens the ADR file; each story card carries one extra line `stage: <gap|built|verified|shipped>`; each page header card carries the drawn-commit line. The source (task, gate, footprint id) stays in the map file and `journey-read`, not on the card, because the card holds about three short lines. Open questions stay as they are.
+### Slices, budget and stop condition (proposed, not asked)
 
-Preview: journey-map-dev2-contract/preview/preview.tldr
-
-Preview run: the file is a native tldraw export of a disposable fictional room, the existing canvas mechanism, no online resource. From a kc-journey-map install with its dependencies: `JOURNEY_API_PORT=<free> JOURNEY_CANVAS_PORT=<free> JOURNEY_ROOMS_DIR=<empty temp dir> npm run canvas`, then `node lib/journey-tldr.mjs import <state checkout>/journey-map-dev2-contract/preview/preview.tldr preview-room` with the same two ports set, and open `http://127.0.0.1:<canvas port>/?room=preview-room`, page "RELEASE 1". Re-draw from `journey-map-dev2-contract/preview/preview.journey.yaml` with `node lib/journey-render.mjs <that file> preview-room --pages story-map,journey-board --force`. `preview-release-1.png` is a screenshot of that page, a record and not the preview. Limit: the marks are written into today's `card` and `answer` text fields, so the preview proves the proposed text fits the existing cards (its first version overflowed the answer card and was shortened to the lines shown) and does not prove the new renderer.
-
-### Draft ADRs (named by ruling and short title, no number; FO reserves numbers)
-
-- "The two plugins meet at five producer-owned schemas, and a version binds one field table" (the catalogue and version rule above; Captain 2026-09-06 and 2026-10-13).
-- "The map shows an ADR ruling by reference to its file and never copies its text" (Captain 2026-10-13, 「切片地圖似乎也很適合放 ADR 重點」).
-- "A Captain ruling reaches the map as a footprint at the gate and one fold at archive" (the accepted direction, timing paragraph).
-
-### Disposition of the seven reported defects and four qnow gaps
-
-| Reported | Disposition |
-|---|---|
-| defect 1 slug-id unreadable | fixed in 1.5.2 (#623); the conformance fixture keeps it (AC-3) |
-| 2 archived orphan | identity is the story id (D3); a removed story's archived task is listed, not counted |
-| 3 one story per task | list form of the tuple |
-| 4 three meanings of done | stage ladder; deploy record carried verbatim, no deploy integration |
-| 5 answers do not flow back | footprint, live pending read, fold |
-| 6 canvas has no provenance | page header line |
-| 7 Release review honour-system | owned by task `release-acceptance` (`release_review.py`); not duplicated |
-| qnow 1 rulings lag | the loop |
-| qnow 2 paraphrase-only rulings | `source: legacy` with a reason, or backfill from the task |
-| qnow 3 answer text without `status: answered` | fold and `journey-answer.mjs` always write it; baseline 21, measured. Whether the release board shows these as open was reported, not re-read: `isQuestionAnswered` in `model.mjs` already reads answer text as answered |
-| qnow 4 release-level task orphan | list form |
-
-Fact check on the relayed counts: the reported "about 58 open questions, about 45 answerable, about 13 open" matches qnow's release `r1` exactly in the base map (45 answered plus 13 open is 58), which suggests the qnow FO's fold had already merged to origin/next and the counts describe `r1`, not the whole map (110 questions: 79 answered, 31 open). That is an inference; the fold's PR was not read.
-
-### Slices, budget and stop condition (proposed)
-
-Three pull requests, each releasable alone through release-please: (1) contracts: field tables, `contract-versions.json` and its tests, tuple list form and story identity, `apiFetch` and `JOURNEY_LOCAL_OPS`, provenance line; (2) footprints: `map_footprint.py` (add, check, audit, schema), the extension, ADR `Map:` line and `adr_lint.py --map-required`, `journey-reconcile.mjs`, the live pending reader; (3) fold and map UI: `journey-fold.mjs`, `journey-answer.mjs`, lint rules, card marks, ADR-by-reference render, documents. Stop and return to FO if it needs a change in Spacedock, a fourth pull request, a YAML parser in dev2, or a model-judged check inside a script. Profile limit: `JOURNEY_API_TOKEN` is read from the environment and never stored or printed; if the hosted task turns it into a shared production credential, return to profile selection. Ordering against `release-acceptance`: both edit the workflow.md Release review bullet; whichever lands second rebases; neither blocks the other because the contracts are pinned by string.
+Two pull requests, each releasable alone through release-please. (1) kc-dev-flow-2: `extensions/journey-map/` with `EXTENSION.md`, `map_footprint.py`, `test_map_footprint.py`, `contract-versions.json`, and one new step in `.github/workflows/kc-dev-flow-2-tests.yml` (that workflow lists test files one by one, so an unlisted test would run nowhere). It is inert until the second lands. (2) kc-journey-map: `source` through `model.mjs`, `lib/schemas.mjs` with its test and `contract-versions.json`, the exported splice helpers, `journey-fold.mjs`, `journey-reconcile.mjs`, their tests (`node --test lib/*.test.mjs` already runs them), `scripts/journey-dev2-loop-smoke.sh` and a path-filtered workflow that runs it with the pinned Spacedock install. That workflow's cost per pull request is not measured; its path filter is the narrowest that covers both plugins' files. Stop and return to FO on: a change needed in Spacedock; a YAML parser in dev2; a renderer change; a model-judged check inside a script; a third pull request. Profile limit: no credential, no hosting and no new support duty; scope two's seam work is where that could change.
 
 ### Non-goals
 
-Hosting the canvas; the release walk-through; reading a deploy system automatically (a `shipped` record is written by hand from the adopter's deploy record); any change to Spacedock or `review-release`; folding the ~2026-09-29 paraphrase-only answers without a source; moving the repo-writing routes into a separate local process (D5).
+A live reader of footprints; any card, layout or `journey-read` change; evidence, ADRs, provenance, multi-story tasks; a tool for a ruling made in chat with no task; a backfill of `source` on existing answers (qnow has 79 answered questions, relay 198); creating stories or questions from a fold; any change to Spacedock or `review-release`; the release walk-through (task `release-acceptance`).
+
+### Draft ADRs (named by ruling and short title, no number; FO reserves numbers)
+
+- "A Captain ruling reaches the map as a footprint at the gate and one fold at archive" (the accepted direction's timing paragraph, Captain 2026-10-13).
+- "A version binds one field table, and a test holds the binding" (Captain 2026-09-06 and 2026-10-13, following subspace-relay ADR 0046).
+
+### Proposed `## FO alignment` lines (FO owns them; not edited here)
+
+The two recorded lines no longer fit: `Visible change:` promises words, dates, ADR cards, stage lines and pending marks on the map, which are scope two's renderer work. Proposed replacement:
+
+- `Surfaces: none`
+- `Visible change: none`
+
+Why: scope one draws nothing new. After a fold the existing answer card shows the answer the way a hand-written one does today, and the words, date and source live in the map file where no renderer reads them. A person sees an answered question where there was an open one, which is a result and not a new surface. If FO keeps `ui`, a `UI proposal:` and a `Preview:` are owed, and the only preview that exists (`journey-map-dev2-contract/preview/preview.tldr`) shows scope two's marks, so it would not be this scope's.
 
 ### Unresolved decisions for the Captain
 
-- **D1 versions and change record.** Recommend: one version per schema in the producer's field table, wire pin = major only, change record = release-please CHANGELOG, an ADR for each schema's first shape and every MAJOR. Your words 「我想後者應該是 ADR」 point to ADR for every change; the cost is an ADR per MINOR, which the CHANGELOG already records. Worse under the recommendation: a consumer cannot see a producer's MINOR on the wire.
-- **D2 "one command" for the gate footprint.** Recommend: `map_footprint.py add` run beside `spacedock gate record`, caught by the terminal-gate check and `unrecorded-gate`. A wrapper that runs both commands is possible, but FO's gate skills would still have to be told to call it, which is the same dependence.
-- **D3 story id is the identity.** Recommend yes, on the evidence of 0 duplicate story ids in qnow's 171 and `calculateProgress`'s own uniqueness check. Worse: a map that reuses a story id in two releases would merge their tasks (the reader already refuses it).
-- **D4 three pull requests as the budget.** Recommend yes; the first alone fixes defects 2, 3 and 6.
-- **D5 the seam.** Recommend the `JOURNEY_LOCAL_OPS` switch now and a separate local process only if the hosted task needs it, because moving `/save` and `/repo-doc` changes the canvas UI's save button flow.
+- **D1 how the two record shapes are versioned.** Plainly: each shape gets one version number in one place, and a test turns red if the shape changes without a new number; the question is where the change history is written. Recommend: the release notes that release-please already writes from each commit, plus an ADR for a shape's first form and for every breaking change. Your words 「我想後者應該是 ADR」 read as an ADR for every change; the cost of that reading is one ADR per small additive change that the release notes already record. Worse under the recommendation: a small addition leaves no ADR, so a reader of the ADRs alone will not see it. No past `Override:` line or ADR contradicts this (`git -C docs/dev2/.spacedock-state grep -n 'Override:'` found only a note in `journey-canvas-hosted-poc.md` saying there were none).
+- **D2 what "one command" means for the gate footprint.** Plainly: you asked that the command recording your ruling also writes the footprint. Spacedock's own command takes no hook and is another repository, so we cannot add a step inside it. Recommend: a second script run right after it, with two checks that catch a forgotten run (`check` before `merge guard`, `audit` at release review). A wrapper that runs both is possible, but FO would still have to be told to call it, which is the same dependence. Worse under the recommendation: between the gate and `check`, a ruling can exist with no footprint.
 
 ## Acceptance criteria
 
-**AC-1**: Each producer's `schema` command prints a field table; `contract-versions.json` binds each version to the table's sha256; a changed table with an unchanged version, or a producer document whose line `Describes <name> <version>` differs from the printed version, exits 1 naming the schema.
-Source: Captain's open item, versioning "following subspace-relay ADR 0046" (read 2026-10-13: "a test fails when the generated document changes while `info.version` does not").
-Verified by: `node --test kc-journey-map/lib/schemas.test.mjs` and `python3 kc-dev-flow-2/scripts/test_map_footprint.py` each print the table and pass, then rename one field in a temp copy without a bump and assert exit 1, then change the document line and assert exit 1. Falsifier: hashing the table together with its version lets the unbumped edit pass, which the test must catch. Not yet verified: no schema file exists.
+**AC-1**: Each of the two schemas has a field table printed by its producer and a version bound to that table's hash: `python3 kc-dev-flow-2/extensions/journey-map/map_footprint.py schema journey-footprint` and `node kc-journey-map/lib/schemas.mjs journey-map-question` print the table and version; an edited table with an unchanged version, or a current version with no recorded hash, exits 1 naming the schema.
+Source: the Captain's open item on versioning, following subspace-relay ADR 0046 (read 2026-10-13: "a test fails when the generated document changes while `info.version` does not").
+Verified by: `python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py` and `node --test kc-journey-map/lib/schemas.test.mjs` each print the table, pass, then rename one field in a temp copy without a bump and assert exit 1. Falsifier: hashing the table together with its version lets the unbumped edit pass, which the renamed-field case must catch. Not yet verified: neither file exists.
 
-**AC-2**: Every consumer refuses a record whose major differs and accepts one that adds a field: the progress reader, `journey-fold.mjs` and `journey-reconcile.mjs` exit 1 on a `journey-footprint/v2` line and on `journey-progress/v2`, naming the string, and accept a `v1` line with an extra field; each producer test asserts the example printed in its document equals the printed example.
-Source: the Captain's 2026-09-06 rule (schema with its producer, pinned by the consumer); the sibling task's string-pin pattern.
-Verified by: the same test files, one case per bullet. Falsifier: a reader that ignores `schema` passes the `v2` case. Not yet verified.
+**AC-2**: Consumers refuse another major and accept growth: `journey-fold.mjs` and `journey-reconcile.mjs` exit 1 on a `journey-footprint/v2` line naming that string, accept a `v1` line with an extra field, and list a line of unknown `kind` as `skipped` without counting it; `map_footprint.py check` reports a `v2` line as `invalid`.
+Source: the Captain's 2026-09-06 rule (a schema lives with its producer; the consumer pins it).
+Verified by: `node --test kc-journey-map/lib/journey-fold.test.mjs kc-journey-map/lib/journey-reconcile.test.mjs` and `test_map_footprint.py`, one case per clause. Falsifier: a reader that ignores `schema` passes the `v2` case. Not yet verified.
 
-**AC-3**: Conformance on both workflow styles: with `lib/progress.test.mjs`'s real-CLI fixture built as `id-style: slug` and as stored ids, a task naming three stories shows progress for each (required list keyed by story), a release-level task is not an orphan, a story moved to another release still counts its archived task, a task naming a story removed from the map is listed with `archived: true` and leaves the refresh exit code at 0, and the scalar form reads as before.
-Source: defects 1, 2, 3 and qnow gap 4 in this task; Captain's open item "one conformance test against both a slug-id and an id workflow".
-Verified by: `node --test kc-journey-map/lib/progress.test.mjs` (needs Node 22.13 or later and the `spacedock` CLI on PATH, as the test header states), each case run on both fixtures. Falsifier: putting the release back into `key` in `progress.mjs` fails the moved-story case. Not yet verified; the slug-id read itself is covered today by the 1.5.2 test.
+**AC-4**: `add` refuses words that are not inside the cited resolution `reason` or amendment `Captain:` line, a date that differs from the source's and a journey that differs from the task's (exit 1 naming the cause), and otherwise appends one `journey-footprint/v1` line; `check <task>` exits 1 for a journey task with neither a footprint nor a not-needed line with a reason, with a count that differs from the valid lines, or with a source that does not resolve, and exits 0 for a task without `journey-story`; `audit --since` prints `unrecorded` and `invalid` and exits 2 without `--since`; two stories that both carry a question `q1` take separate footprints. Baseline: on qnow's state branch d01c37bc, `audit --since 2026-10-14` prints `unrecorded 0` and `--since 2000-01-01` prints `unrecorded 7`.
+Source: the accepted direction items 1 and 4 (verbatim words; a gate line that says done or not needed with a reason); the cutover is this design's, from the measurement above.
+Verified by: `python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py` in a temp state checkout, one case per clause; the baseline by the audit command on a checkout of qnow's state branch at that commit (a validator run, since the repository is not in this one). Falsifier: replacing the substring test with "the source exists" lets a paraphrase through, which the paraphrase case must catch. Not yet verified: the script does not exist; the baseline counts (7 tasks, 35 resolutions) are from reading frontmatter, not from a run.
 
-**AC-4**: `map_footprint.py add` refuses an `answered` footprint whose `words` are not a substring of the cited gate resolution reason or amendment `Captain:` line (exit 1, naming the source) and otherwise appends one `journey-footprint/v1` line; `check <task>` exits 1 when a journey task has neither a footprint nor a `Map footprints: not needed: <reason>` line, or a footprint source does not resolve; `audit` prints `unrecorded-gate <n>`; two stories that both carry a question `q1` take separate footprints, keyed by journey, story and question.
-Source: the Captain's accepted direction items 1 and 4 (verbatim words; a gate check that a line says done or not needed).
-Verified by: `python3 kc-dev-flow-2/scripts/test_map_footprint.py` in a temp state checkout, one case per clause. Falsifier: replacing the substring test with "source exists" lets a paraphrase through, which the paraphrase case must catch. Not yet verified.
+**AC-5**: A skipped step is caught twice and the loop closes, against the real Spacedock CLI. In a disposable workflow with one journey task and one open map question, after `spacedock gate record` and no footprint: `check` exits 1, and once the task and its folder are moved to `_archive/` (what `merge guard` does; the move is Spacedock's and not under test) `audit --since` prints `unrecorded 1` and `journey-reconcile.mjs` prints `stale-open 1`; after `add`, `check` exits 0 and reconcile prints `unfolded 1`; `journey-fold.mjs` then writes a draft in which the question has `answer`, `status: answered` and a `source` carrying the words and date, and applying the draft makes `unfolded` 0; folding twice gives identical bytes, the source file's checksum is unchanged, an existing `--out` is refused, a `conflict` writes nothing for that question, and a deferred question keeps its `because`. The fold's diff touches only the folded question's lines on both a flow-style fixture (qnow's shape) and a block-style, irregularly wrapped fixture (relay's shape). The smoke runs in a path-filtered CI workflow.
+Source: the accepted direction items 1, 2 and 4; the splice requirement is the measurement under Existing-code check.
+Verified by: `bash scripts/journey-dev2-loop-smoke.sh`, printing each exit code and count; the CI claim by the check appearing on the pull request (`gh pr checks`). Falsifiers: dropping the `status: answered` write fails the status assertion; skipping `add` is the first case; replacing the splice with whole-file re-serialization fails the block-fixture diff assertion (the same call leaves 3803 differing lines on relay's real map). Not yet verified: no script, workflow or fold exists.
 
-**AC-5**: A skipped step is caught twice and the loop closes. In a disposable workflow with one journey task, after a Captain ruling recorded by `spacedock gate record` and no footprint, `map_footprint.py check` exits 1 and `audit` prints `unrecorded-gate 1`; after `add`, both exit 0, `journey-reconcile.mjs` prints `unfolded 1` and the live reading marks the question `fold pending`; after `journey-fold.mjs` and applying its draft, `unfolded` is 0, the question has `status: answered` and a `source` carrying the words and date; folding twice gives identical bytes, never overwrites the source file, and a `question` footprint naming a story not on the map applies nothing and prints a proposal.
-Source: the Captain's accepted direction items 1, 2 and 4.
-Verified by: a repository script `scripts/journey-dev2-loop-smoke.sh` driving the real `spacedock` CLI and both plugins' commands in a temp directory, printing each exit code and count. Falsifier: removing the `status: answered` write from the fold fails the status assertion; skipping the `add` step is the case above. Not yet verified.
+**AC-6**: Baselines on two real maps, each run against a temp workflow directory holding no journey tasks, with identical output on two runs: `journey-reconcile.mjs` on qnow's map at df8ee1d2 prints 171 stories, 0 duplicate story ids, 110 questions (79 answered, 31 open of which 20 deferred and 11 plain), 6 question ids that occur on more than one story, `unsourced 79` and `unfolded 0`, `stale-open 0`, exit 0; on relay's map at 0295d163 it prints 142 stories, 220 questions (198 answered, 22 open of which 1 deferred and 21 plain), `unsourced 198`, `unfolded 0`, `stale-open 0`, exit 0. Folding one synthetic footprint into each real map changes only that question's lines.
+Source: the accepted direction item 4 (the first run on qnow is expected near its 45 hand-folded answers; those 45 are release `r1`'s answered questions, read the same way); the counts are the one-off read of 2026-10-13, re-run at the pinned refs and identical to the first attempt's figures for qnow.
+Verified by: the script run and a `diff` of its output against these figures, with `git show <ref>:<path>` as the map source; changing one answer on a temp copy changes `unsourced` by 1; a fixture twin of the same shapes runs in CI. Falsifier: a duplicate story id added to a temp copy must make the run report it. Current evidence: the figures are measured by the one-off read; the script is not built, so this is not yet verified.
 
-**AC-6**: Baseline on qnow's map: `journey-reconcile.mjs` run on `git show 6d958e76375a93dfe32cb651ce6442ddb12f9808:docs/journey/qnow.yaml` (saved to a temp path) against a workflow directory holding no journey tasks exits 1 and prints per-release counts that include, for the whole map, 171 stories, 110 questions (79 answered, 31 open), 21 answers without `status: answered`, `unsourced` 79, 0 duplicate story ids and 6 question ids that occur on more than one story, and, for `--release r1`, 45 answered, 13 open and `unsourced` 45; two runs print identical output. On a temp copy where each of the 79 answers is given `source: {kind: legacy, reason: ...}`, `unsourced` is 0, the legacy count is 79 and the exit code is 0 when no other count is above 0.
-Source: the Captain's accepted direction item 4 ("first run on qnow is expected near the about 45 answers"); the figures are the one-off read of 2026-10-13 named above and match `r1`.
-Verified by: the script run and a `diff` of its output against the figures here; changing one answer on the temp copy changes `unsourced` by 1. Current evidence: the figures are measured by the one-off read, the script is not yet built, so this criterion is not yet verified.
-
-**AC-7**: A question's `adr:` path renders `ADR <number>: <title>` from the default branch's file; a path present only on a branch renders `ADR pending: <path>`; the map file holds no ADR title text; a section citation shows the file title and the anchor; the page header names the drawn commit and, for a file ahead of the default branch, the commit count; re-rendering twice yields identical records and `render.test.mjs`'s hand-drawn-shape carry cases (ADR 0008) stay green.
-Source: Captain 2026-10-13 (「切片地圖似乎也很適合放 ADR 重點」, "by reference"); defect 6.
-Verified by: `node --test kc-journey-map/lib/render.test.mjs` with new cases in a temp git repository holding one merged and one branch-only ADR. Falsifier: reading the working-tree file instead of the base ref renders the unmerged ADR's title, which the pending case must catch. Not yet verified.
-
-**AC-8**: The map shows what the UI proposal says: from the folded fixture of AC-5 the real renderer draws, on the release board page, an answer card with the answer, the verbatim words and the date, a fold-pending mark on an answer that is only a footprint, an ADR card with its title and link, a `stage:` line on each story card and the drawn-commit line, and `journey-read` returns the same marks.
-Source: `Visible change:` under `## FO alignment`; the Captain's 「可以進入設計」.
-Verified by: render to a room on its own port and rooms directory, screenshot with `agent-browser`, and a Captain look at the page at the validation gate. Current evidence: `preview/preview.tldr` imports into a fresh room (91 records) and the page renders as `preview-release-1.png` shows, using today's renderer with the marks typed into text fields; the new renderer is not yet verified.
-
-**AC-9**: With `JOURNEY_API_TOKEN` set, each of the five request sites (`render.mjs` twice, `read.mjs` twice, `journey-tldr.mjs`) sends `Authorization: Bearer <token>` to a loopback test server and sends no such header when it is unset; `/save` and `/repo-doc` answer 404 unless `JOURNEY_LOCAL_OPS=1`, and `npm run canvas` sets it.
-Source: the Captain's 「照你建議」 on the map-service seam, 2026-10-13.
-Verified by: a new `lib/api-fetch.test.mjs` that records headers per site and starts the canvas server with and without the variable. Falsifier: one site left on bare `fetch` fails that site's case. Not yet verified.
-
-**AC-10**: The workflow gates exist and cost nothing when unused: `adr_lint.py --map-required` exits 1 on a new ADR with no `Map:` line and 0 with `Map: none - <reason>`; a workflow that lists no `journey-map` extension is unchanged; `lint-skills.py` passes with `workflow.md`'s word count not above its current count; the extension's step table has a write, a gate line and a count in every row.
-Source: the Captain's accepted direction item 4 ("a step that exists only as workflow.md prose is cut, or gets a check"); maintain-flow's word-budget rule.
-Verified by: `python3 kc-dev-flow-2/scripts/test_adr_doc_checks.py` additions, `python3 kc-dev-flow-2/scripts/lint-skills.py`, and a test that fails when a row of the extension's step table has an empty cell. Falsifier: blank one cell. Not yet verified.
-
-Limits across the criteria: release-please version bumps appear only on the Release PR after merge, so no criterion here shows a bump; a fixture copy of a producer's table can lag a MINOR; reconcile cannot see a ruling the Captain made in chat and nobody recorded.
+Limits across the criteria: release-please version bumps appear only on the Release PR after merge, so no criterion here shows a bump; a consumer can lag a MINOR; reconcile and audit cannot see a ruling the Captain made in chat and nobody recorded, and `stale-open` is the only net for it; the baselines in AC-4 and AC-6 use repositories outside this one.
 
 ## Stage Report: ideation
 
@@ -383,3 +353,40 @@ Held before design: the entry check requires FO alignment, `Surfaces:` and `Visi
 ### Summary
 
 The design gives the map and dev2 five producer-owned schemas under one version rule, a per-task `footprints.jsonl` read live as "fold pending" and folded once at archive, ADRs shown by reference from an ADR `Map:` line, and a stage ladder, in three pull requests; reconcile counts must reach 0 at release review. Mermaid blocks parse with the repository's mermaid 11 build (flowchart-v2, both). Ideation wrote no repository file; the preview folder sits in the task's state folder, and the services I started (ports 5891 and 3791, own rooms directory) were stopped by their captured process ids. Unresolved for the Captain: D1 versions and change record, D2 "one command" reading, D3 story id as identity, D4 three-PR budget, D5 the seam.
+
+## Stage Report: ideation (scope one, after `revise`)
+
+- DONE: A scope-one design: a Captain ruling reaches the map (gate footprint -> archive fold -> docs-only map PR writing answer, status and source -> reconcile counts), with only the footprint schema and the map's question fields, and no renderer change
+  `## Design` rewritten: "The chain" (Mermaid), "Two schemas" (`journey-footprint` 1.0.0 and `journey-map-question` 1.0.0), "Footprint: add, check, audit", "Fold and reconcile"; no renderer file is in the plan. Read at origin/main e2524e93, qnow df8ee1d2 and relay 0295d163, 2026-10-13.
+- DONE: Each scope-one step keeps its one-command write, its gate line and its reconcile count; everything moved to task journey-map-progress-and-provenance is removed from this design and named there by pointer only
+  "Steps" table: two rows (gate footprint, archive fold), each with write, gate line and count. The moved items appear once, as names, under "Scope one in one paragraph"; the preview folder is untouched and named by pointer.
+- DONE: Acceptance criteria re-cut from AC-4, AC-5, AC-6 and the parts of AC-1 and AC-2 scope one needs, each with a reproducible evidence clause and falsifier, and D1 and D2 restated for the Captain within scope one
+  `## Acceptance criteria` holds AC-1, AC-2, AC-4, AC-5, AC-6 (old numbers kept so the other task's pointers hold); D1 and D2 are restated in plain words at the end of `## Design`, no past `Override:` contradicts either.
+- DONE: Answer whether scope two has data once scope one merges and is synced
+  "Will scope two have data...": no for fold-pending marks (needs a release, a sync, the extension listed, and a gate ruling on a live journey task); yes today for the evidence ladder's `verified` and ADR links. Measured: qnow has 11 plain-open questions and no live task for them; relay has 21, with the live pair `agent-front-door` and `agent-front-door-publish` on 5 of them; ceiling 32 footprints.
+- DONE: AC-1 version binding for the two schemas
+  Not yet verified: neither `schemas.test.mjs` nor `test_map_footprint.py` exists; verified at implementation.
+- DONE: AC-2 consumers refuse another major and accept growth
+  Not yet verified: future tests in `journey-fold.test.mjs`, `journey-reconcile.test.mjs`, `test_map_footprint.py`.
+- DONE: AC-4 add, check, audit and the cutover baseline
+  Current evidence is a read of frontmatter, not a run: qnow state d01c37bc has 7 archived journey tasks with a story and 35 resolutions; relay ed63e6a0 has 6 (2 archived, 9 of 14 resolutions). The script does not exist; not yet verified.
+- DONE: AC-5 skipped step caught twice and the loop closes
+  Current evidence for the splice requirement only: re-serializing qnow's 951-line map leaves 0 differing lines; relay's 2047-line map leaves 3803 (best of ten option sets 705). The smoke script, fold and workflow do not exist; not yet verified.
+- DONE: AC-6 baselines on qnow and relay
+  Figures measured 2026-10-13 with a one-off read at the pinned refs (qnow 171/110/79/31, 0 duplicate story ids, 6 repeated question ids, r1 45 answered and 13 open; relay 142/220/198/22); qnow's match the first attempt's. The reconcile script does not exist; not yet verified.
+
+### FO alignment: proposed lines (FO owns them; not edited)
+
+Surfaces and Visible change both changed. Recorded: `Surfaces: ui`, `Visible change: The journey map shows each answered question with the Captain's words and date, ADR rulings by reference, an evidence stage per story, and answers still awaiting fold marked as pending.` That sentence is scope two's renderer work. Proposed: `Surfaces: none` and `Visible change: none`, reasoning under "Proposed `## FO alignment` lines" in the design. If FO keeps `ui`, a `UI proposal:` and a `Preview:` are owed and the only existing preview shows scope two's marks.
+
+### Checker output
+
+`python3 <package>/scripts/design_surfaces.py check <task>` on the task as recorded: exit 1, "surface 'ui' needs a 'UI proposal:' line with text" and "surface 'ui' needs a 'Preview:' line". On a temp copy with the two proposed lines substituted: "design surfaces presentable", exit 0. `spacedock status --read --ac-scan` lists AC-1, AC-2, AC-4, AC-5, AC-6. The Mermaid blocks were not parsed: no DOM library is installed here to run `mermaid.parse`; both use only the flowchart constructs of the first attempt's diagrams, which did parse.
+
+### Not covered by either scope (noted, not decided)
+
+A ruling made in chat with no task has no tool (`journey-answer.mjs` in the first design was not on scope two's list), and existing answers have no `source` (qnow 79, relay 198); `unsourced` is printed as information for that reason. Neither task's body names these.
+
+### Summary
+
+Scope one is two steps and two record shapes: a footprint line written beside the task at the gate, and one fold at archive that splices the answer into the map as a docs-only pull request, with `unrecorded`, `invalid`, `stale-open` and `unfolded` counted at release review. The fold must splice text, because rewriting relay's map would leave 3803 differing lines. Scope two does not have to wait for scope-one data except for the fold-pending marks. Unresolved for the Captain: D1 (where the schema change history is written) and D2 (what "one command" means for the gate footprint).
