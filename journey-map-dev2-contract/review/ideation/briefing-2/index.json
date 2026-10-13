@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-map-dev2-contract:ideation:attempt-2:revision-1",
+  "question": "Accept scope one of the journey-map ↔ dev2 contract (a ruling reaches the map: footprint at the gate, fold at archive, reconcile counts; two schemas; two PRs) and rule D1 and D2 as recommended?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-map-dev2-contract:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/b783e38f2e0d0f244bf5c8d4fe7c264970d212d0/journey-map-dev2-contract.md",
+      "rev": "sha256:14d090d881dd85b012ecdc1802a3d022b03cd335136a6c9980d09c32a277fa9a",
+      "mediaType": "text/markdown",
+      "summary": "Scope-one redesign after revise: footprint add/check/audit (dev2), journey-fold and journey-reconcile (journey-map), two versioned schemas, AC-1/2/4/5/6; Surfaces none."
+    }
+  ]
+}

@@ -42,6 +42,11 @@ gates:
                 at: "2026-10-13T03:56:22.19363Z"
                 decision: revise
                 reason: 'Captain 2026-10-13: 「看看是否拆成兩個範圍？讓 pilot profile 更有設計餘裕？」, then 「可以」 to the FO split. Accepts direction; redo ideation narrowed to scope one only: a ruling reaches the map (gate footprint -> archive fold -> map PR writing answer, status and source -> reconcile counts), two schemas (footprint, map question fields), no renderer change; ACs drawn from AC-4, AC-5, AC-6 and the parts of AC-1/AC-2 those need; D1 and D2 re-asked within that scope. Scope two (evidence ladder, ADR by reference and Map: line, fold-pending marks, drawn-commit provenance, tuple list form and story-id identity, service seam) moves to a new backlog task, designed after scope one is accepted.'
+            - id: gate-attempt:journey-map-dev2-contract-ideation-2
+              briefing:
+                id: briefing:journey-map-dev2-contract:ideation:attempt-2:revision-1
+                digest: sha256:f8875bc580c6901d38783d1bf03bf66ba06c1c415f6ac4bcab8fbbcf82f1978a
+                room-ref: ./journey-map-dev2-contract/review/ideation/briefing-2
 started: 2026-10-13T03:05:11Z
 ---
 
