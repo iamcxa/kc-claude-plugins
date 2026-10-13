@@ -398,3 +398,30 @@ Captain: 「用量報告只留本機，GitHub 只記錄驗證結論（建議）�
 Asked: 「這次 Cloudflare 用量報告要放哪裡？目前工作流程使用的 GitHub 儲存庫 iamcxa/kc-claude-plugins 是公開的；報告會含請求數、運算／儲存用量與測試資源名稱，但不含帳號 ID、email 或密鑰。」
 Supersedes: none
 
+
+## Stage Report: implementation
+
+- DONE: Preserve the exact clean product candidate and collect only the authorized hosted evidence continuation.
+  Candidate remains `4f678cd88eddbcc171df7e2037dd19d2fbf4065b`; no product repair, commit, push, PR, merge, schema, room UI or concurrency change. Earlier local/emulated validation remains a separate result.
+- DONE: Verify a bounded hosted HTTP/MCP document subset on the unchanged candidate.
+  Private admission, explicit unavailable-asset behavior, HTTP-to-MCP and MCP-to-HTTP complete-record readback, forbidden-room denial, origin/session checks, actual WebSocket upgrade/close and readback after bounded idle PASS. This is not a browser, socket synchronization, hibernation or reconstruction pass.
+- DONE: Preserve the first failed attempt and the final allowed deployment-wiring correction.
+  The initial capabilities request returned an unexpected HTTP 404; the original response body was not retained and cause remains unresolved. The external harness added bounded readiness and sanitized diagnostics, after which the functional subset passed without product edits or authenticated retries. No further deployment is authorized by this report.
+- DONE: Verify teardown independently of the CLI's overall exit status and stop owned processes.
+  Deletion migration succeeded; Worker deletion reported a later unrelated inventory-permission error. Independent provider inventory nevertheless confirmed the new Worker and both namespaces absent. Owned test processes are stopped; temporary synthetic credential files were removed. Existing POC/Sites were not mutation targets.
+- DONE: Keep provider/account evidence local and publish conclusions only.
+  The detailed continuation report, original and corrected receipts, provider queries, configuration, resource inventory and four short acceptance commands are retained outside task state at `/Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/outputs/journey-server-host-pilot-usage/implementation-continuation.md`. No account-derived values, resource names, endpoints or raw provider receipts are included in this report change.
+- FAILED: Establish true provider hibernation/reconstruction and lifecycle recovery for the candidate.
+  Material finding: `JourneyRoom.open()` in `kc-journey-map/server/host/cloudflare.ts` leaves tldraw's finite default client timeout enabled. Source inspection and a bounded external runtime observer establish a recurring pruning timer, which violates Cloudflare's timer-free hibernation requirement. The candidate is preserved on HOLD; successful idle readback does not prove natural hibernation.
+- DONE: Return the smallest proposed lifecycle correction to FO without implementing it or opening another gate.
+  Consider Cloudflare-only `clientTimeout: Infinity` with bounded event/alarm cleanup, then verify expiry/revocation and real hibernation/reconstruction. The earlier POC is a source reference only. FO's finding disposition requires a repair decision before product edits or another independent review/acceptance gate.
+- SKIPPED: Actual provider usage increase is NOT SHOWN, not zero.
+  Baseline and bounded after queries were attempted under the authorized access path; scoped analytics yielded no usable measurements. A provider analytics throttle was respected, and the final delayed read ended further queries. Client operation counts are kept local and are not substituted for provider duration, requests, rows, storage, CPU or billing.
+- SKIPPED: Hosted assets/browser, full socket synchronization, remote Node, billing and retained-data migration.
+  Asset service would require enrollment outside the Free-only authority; no substitute was provisioned. Browser/static delivery and broader lifecycle work were outside the narrowed post-finding run. Remote Node remains deferred by Captain direction. No passing claim is inferred from local tests or another deployment.
+- SKIPPED: Full task-aware number guard remains CONFIG ERROR/unavailable and explicitly NOT PASS under the existing FO disposition.
+  Preserved failed attempt and supplemental ADR/no-SQL evidence remain unchanged. No fake migration path, surface removal or workflow/helper change was introduced. Unchanged product bytes did not justify repeating the earlier green suites.
+
+### Summary
+
+The bounded hosted document subset and teardown pass; the candidate remains on HOLD for the demonstrated lifecycle defect. Provider usage delta remains unmeasured. The local report and four-command acceptance distinguish newly executed hosted behavior, local timer evidence and receipt verification. FO must obtain the minimal repair decision before reopening the formal feedback/review path; this stage report does not grant full delivery acceptance.
