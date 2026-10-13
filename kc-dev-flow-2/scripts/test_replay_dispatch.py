@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import unittest
 
@@ -30,6 +31,10 @@ def repo(path, files, message="init"):
     subprocess.run(["git", "-C", str(path), "add", "."], check=True)
     subprocess.run(["git", "-C", str(path), "-c", "user.name=t", "-c", "user.email=t@t", "commit", "-qm", message], check=True)
     return subprocess.run(["git", "-C", str(path), "rev-parse", "HEAD"], capture_output=True, text=True, check=True).stdout.strip()
+
+
+sys.path.insert(0, str(Path(__file__).parent))
+import dispatch_records
 
 
 class ReplayDispatchTests(unittest.TestCase):
@@ -87,6 +92,30 @@ class ReplayDispatchTests(unittest.TestCase):
         self.assertIn(f"Package root: {self.run_dir / 'package' / 'kc-dev-flow-2'}", scope.replace("/private", ""))
         self.assertIn("TEST HARNESS", scope)
         self.assertIn("dispatch for implementation", (self.run_dir / "dispatch.md").read_text())
+
+    def scope_text(self):
+        return (self.run_dir / "scope.txt").read_text()
+
+    def test_a_default_build_names_main_as_the_completion_recipient_in_a_form_the_validator_accepts(self):
+        self.assertEqual(self.build()[0], 0)
+        scope = self.scope_text()
+        self.assertEqual(scope.count(replay.MAIN_LINE), 1)
+        self.assertLess(scope.index(replay.MAIN_LINE), scope.index("TEST HARNESS"))
+        pattern = dispatch_records.PARTS["a scope-notes line naming main as the completion recipient"]
+        self.assertTrue(pattern.search(f"## Scope notes\n{replay.MAIN_LINE}\n"))
+
+    def test_no_completion_line_builds_the_unchanged_control_arm(self):
+        self.assertEqual(self.build("--no-completion-line")[0], 0)
+        self.assertNotIn("completion message", self.scope_text())
+        self.assertIn("TEST HARNESS", self.scope_text())
+
+    def test_the_line_appears_once_beside_a_scope_file(self):
+        scope_file = self.t / "scope-in.txt"
+        scope_file.write_text("Extra scope note.\n")
+        self.assertEqual(self.build("--scope", str(scope_file))[0], 0)
+        scope = self.scope_text()
+        self.assertIn("Extra scope note.", scope)
+        self.assertEqual(scope.count(replay.MAIN_LINE), 1)
 
     def test_patch_edits_the_task_and_is_committed(self):
         patch = self.t / "edit.diff"

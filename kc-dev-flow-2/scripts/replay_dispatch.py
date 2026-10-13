@@ -4,13 +4,14 @@
   replay_dispatch.py build --run-dir DIR --package-repo PATH --package-ref REF
       --adopter-readme FILE --readme-base-ref REF --state-repo PATH --state-commit SHA
       --task SLUG --code-repo PATH --code-commit SHA --stage STAGE
-      --checklist FILE [--scope FILE] [--inject FILE] [--patch FILE] [--spacedock BIN]
+      --checklist FILE [--scope FILE] [--inject FILE] [--patch FILE] [--no-completion-line] [--spacedock BIN]
   replay_dispatch.py cleanup --run-dir DIR
 
 build exports the package at REF, merges the adopter README from the package version it was
 synced to (--readme-base-ref) onto REF, checks out the task's state and code at the given
 commits, appends --inject to the task file and applies --patch (a git diff of the state
-checkout) when given, and runs `spacedock dispatch build`.
+checkout) when given, and runs `spacedock dispatch build`. The scope notes carry the line naming `main`
+as the completion recipient unless --no-completion-line builds the dispatch without it.
 The dispatch file is copied to DIR/dispatch.md, since every build writes the same shared path.
 Exit 1 on a failed step, 2 on bad arguments.
 """
@@ -27,6 +28,10 @@ HARNESS = ("TEST HARNESS (isolated replay): do not invoke the kc-dev-flow-2 skil
            "or browsers; say in the report they were not run. Run the package's own scripts as your "
            "instructions require. Do not push, merge or commit to any remote. The state checkout is "
            "{state}; write your stage report there only. Never git stash.")
+
+
+MAIN_LINE = ("Send your completion message to `main` (the README's Dispatch facts: "
+             "`team-lead` is not registered here).")
 
 
 def git(repo, *args):
@@ -84,6 +89,8 @@ def build(a):
     scope = [f"Package root: {pkg}"]
     if a.scope:
         scope.append(Path(a.scope).read_text().strip())
+    if not a.no_completion_line:
+        scope.append(MAIN_LINE)
     scope.append(HARNESS.format(pkg=pkg, stage=a.stage, state=state))
     (run / "scope.txt").write_text("\n".join(scope) + "\n")
     shutil.copy(a.checklist, run / "checklist.txt")
@@ -116,6 +123,7 @@ def main(argv=None):
     b.add_argument("--scope")
     b.add_argument("--inject")
     b.add_argument("--patch")
+    b.add_argument("--no-completion-line", action="store_true")
     b.add_argument("--spacedock", default="spacedock")
     c = sub.add_parser("cleanup")
     c.add_argument("--run-dir", required=True)
