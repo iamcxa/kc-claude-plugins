@@ -153,6 +153,22 @@ One per line, with the recommendation. Decision 3 depends on decision 1 (Access 
 
 **AC-4** The existing local render and read paths still write and read the hosted room. Verified-by: with `JOURNEY_API` pointing at the loopback forwarder for the hosted URL, `node lib/journey-render.mjs skills/kc-journey-map/references/journey.example.yaml <room> --pages story-map,journey-board,function-map` lands every shape, and `node lib/journey-read.mjs skills/kc-journey-map/references/journey.example.yaml <room>` prints zero drift, the same round trip `scripts/canvas-smoke.sh` checks locally; then the largest real journey file (1262 records) renders to a hosted room without a 413, 1102 or timeout.
 
+## External experiment evidence, 2026-10-13
+
+The Captain ran a separate experiment with another agent (GPT) and passed back its report on 2026-10-13. The report was written against this file at `8f012251c3d7ea6489f68513b3b7028dc02f71b2`; the FO has not re-run anything. It used Cloudflare Workers Free with SQLite-backed Durable Objects, tldraw / `@tldraw/sync` / `@tldraw/sync-core` 5.4.0, and a custom Worker adapter over unchanged kc-journey-map 1.5.1 client sources, not `templates/sync-cloudflare`.
+
+| AC | Result | What ran instead |
+|---|---|---|
+| AC-1 | NOT RUN | Two headless browsers on one machine got HTTP 200, but the final screenshot was blank. The console printed "No tldraw license key provided!" and "A license is required for production deployments." |
+| AC-2 | NOT RUN | No redeploy comparison. Instead, Durable Object hibernation recovery passed after about 70 s idle (`"result": "PASS hosted sync and hibernation"`): document clock 9 before idle and 9 after; an edit after reconnect made it 10. |
+| AC-3 | NOT RUN | No Cloudflare Access. Short-lived signed cookies were used instead: anonymous `/` gave 401, an HTTP request to the socket route gave 401 (not a `ws` upgrade), expired and tampered tokens gave 401, a cross-origin bootstrap gave 403, `/save` gave 404. `/repo-doc` was not requested. |
+| AC-4 | NOT RUN | No hosted `/doc`, no forwarder, no render or read, no large PATCH. |
+
+- **Stop condition:** "the same step failing twice" fired (attempts 6 and 7, `page.waitForFunction` timeout). The experiment continued under its own retry limits, for eight hosted invocations over two days.
+- **New risk:** tldraw prints a production-licence requirement, and without a licence key the hosted board rendered blank. Licence terms and cost are not yet read from tldraw's own pages.
+- **Not known:** cost (no billing figure was captured), and region.
+- **Open cleanup:** the experiment's disposable cloud resources were not torn down.
+
 ## FO alignment
 
 Release: none (package tooling).
