@@ -137,6 +137,12 @@ class CheckTests(Base):
         self.assertEqual(run("check", self.task(declared="Map footprints: not needed: only approvals\n"))[0], 0)
         self.assertEqual(run("check", self.task(declared="Map footprints: not needed:\n"))[0], 1)
 
+    def test_not_needed_with_a_valid_footprint_is_a_contradiction(self):
+        path = self.task(declared="Map footprints: not needed: only approvals\n")
+        self.add(path)
+        code, _, err = run("check", path)
+        self.assertEqual((code, "contradicts 1 valid" in err), (1, True))
+
     def test_an_edited_line_is_invalid_when_words_or_source_no_longer_match(self):
         path = self.task(declared="Map footprints: 1 in footprints.jsonl\n")
         self.add(path)
@@ -181,6 +187,14 @@ class AuditTests(Base):
         (folder / "footprints.jsonl").write_text('{"schema": "journey-footprint/v2"}\n')
         code, out, _ = run("audit", self.tmp, "--since", "2026-10-13")
         self.assertEqual((code, "unrecorded 0" in out, "invalid 1" in out), (1, True, True))
+
+
+    def test_a_declared_state_checkout_that_is_missing_is_an_error_naming_the_path(self):
+        (self.tmp / "README.md").write_text("---\nstate: .spacedock-state\n---\n")
+        code, out, err = run("audit", self.tmp, "--since", "2026-10-13")
+        self.assertEqual((code, "unrecorded" in out, ".spacedock-state" in err), (2, False, True))
+        (self.tmp / ".spacedock-state" / "_archive").mkdir(parents=True)
+        self.assertEqual(run("audit", self.tmp, "--since", "2026-10-13")[0], 0)
 
 
 class SchemaTests(Base):
