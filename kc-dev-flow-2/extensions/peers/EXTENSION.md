@@ -17,7 +17,7 @@ its workflow README frontmatter.
   every restart, so it does not say which repository or task a session works on. FO
   uses a peer recorded earlier in the task or session, or one the Captain has named.
   Otherwise, at most once per session, it sends one read-only probe to every listed peer
-  session, never to its own workers or teammates the host lists alongside them, asking
+  session the host does not mark offline, never to its own workers or teammates, asking
   for the repository and task it works on and its session id. It notes
   `Peer: <repository or area> = <session id>; listed as <name> (<Captain or reply>, <date>)`
   for each reply, and after a failed send it maps the id to the current name the same
@@ -26,7 +26,8 @@ its workflow README frontmatter.
   workers, even where the host reaches both with the same tool.
 - **Message:** one question per message, opening with "if this is not you, say so", stating
   whether it is read-only or asks for an action, and naming the commit, PR or date it rests
-  on. A failed send, or a reply saying it is not that peer, is followed by listing the
+  on. A failed send, a send the host queues for an offline session, or a reply saying it
+  is not that peer, is followed by listing the
   sessions again; if the peer is still unclear, FO finds the answer itself rather than
   retrying guessed names. A message held for approval in the peer's session is reported
   to the Captain.
