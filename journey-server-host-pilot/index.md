@@ -28,6 +28,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-10-13T08:47:34Z
 ---
 
 Kent approved a minimal reusable server-host refactor, with the same agent access model (base URL and a per-agent credential) for Node.js locally/remotely and Cloudflare. This is a new pilot task; it does not reopen, migrate, or replace the older hosted POC tasks.
