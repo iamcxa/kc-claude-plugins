@@ -22,7 +22,10 @@ supplies only these inputs, never its own account of the task:
 ## Read
 
 1. `git -C STATE log --format='%h %ad %s' --date=iso FROM..TO -- <task file> <task dir>`
-   and the diff over the same range. Read the task at `TO` only around changed hunks.
+   and the diff over the same range. Read the task at `TO` only around changed hunks. For an
+   archived task give git both path pairs, `<TASK>.md <TASK>` and `_archive/<TASK>.md
+   _archive/<TASK>`, and take `FROM` from the commit that added `<TASK>.md`; the archive
+   commit alone leaves a window of one commit.
 2. `python3 <package>/scripts/decision_ledger.py STATE`, keeping the rows for `TASK`:
    each gate ruling with its question, who recorded it, its grant and any `Override:`.
 3. From RULES collect every sentence whose subject is FO ("FO records", "FO appends",

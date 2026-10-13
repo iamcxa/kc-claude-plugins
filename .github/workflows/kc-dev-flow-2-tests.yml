@@ -82,6 +82,9 @@ jobs:
       - name: test_workflow_checkout.py
         run: python3 kc-dev-flow-2/scripts/test_workflow_checkout.py
 
+      - name: test_observer_check.py
+        run: python3 kc-dev-flow-2/scripts/test_observer_check.py
+
       - name: test_learning.py
         run: python3 kc-dev-flow-2/scripts/test_learning.py
 
@@ -107,3 +110,6 @@ jobs:
 
       - name: test_sd_dispatch.py
         run: python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$GITHUB_WORKSPACE/.sd-plugin-root"
+
+      - name: test_observer_recovery.py
+        run: SPACEDOCK_BIN="$HOME/.local/bin/spacedock" python3 kc-dev-flow-2/scripts/test_observer_recovery.py
