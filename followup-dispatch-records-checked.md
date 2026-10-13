@@ -171,3 +171,28 @@ Visible change: none
 
 ### Summary
 The check gets two rules and no marker: every record needs an absolute `Package root:` line inside `## Scope notes`, and a checklist in which not every line names a sibling record. A record-naming-any-sibling rule was tried first and wrongly failed one compliant record, so the rule is "every line". Prototype scripts live in /tmp/ideation-dr (disposable; no repository file written). Notes: the ideation skill loaded from the 0.22.0 cache path while the dispatch and origin/main are 0.22.1 (the 0.22.0 `dispatch_records.py` differs; I designed against 0.22.1). A paraphrased pointer and a pointer beside one real line still pass (Limits). The "main completion line" part is already enforced since #633 and is unchanged.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main with the two new rules in kc-dev-flow-2/scripts/dispatch_records.py (an absolute Package root: line inside ## Scope notes; a checklist in which not every line names a sibling record), their tests in test_dispatch_records.py, the one references/sd/workflow.md clause from D1 and the lint-skills.py WORKFLOW_WORD_BUDGET raise by the words it adds (reason stated)
+  PR https://github.com/iamcxa/kc-claude-plugins/pull/642 (Draft), branch spacedock-ensign/followup-dispatch-records-checked, commit 56c9f6ad off origin/main 656543f4; clause adds 20 words, budget 5561 to 5581 with a reason comment line.
+- DONE: AC-1 to AC-7 green with each falsifier shown failing by a mutation run
+  test_dispatch_records.py 13 tests OK; under `python3 -B`: Package root rule removed fails 3 subtests (delete, above checklist, relative); pointer rule removed fails 2 (one line, two lines); `all` to `any` fails the beside-real-lines case; boundary `(?<![\w-])` loosened to `(?<![\w])` fails the `my-validation-1` case; absolute `/` requirement dropped fails the relative case; own name not excluded fails the own-name case. lint-skills.py exits 0 at 5581 of 5581 and the clause under the old 5561 prints FAIL "5581 words exceeds the budget of 5561". test_replay_dispatch.py and test_lint_skills.py OK.
+- DONE: the replays against the archived records reproducing the design's results (the three named records fail, the nine others in that folder pass, the counts in AC-5 re-measured at the state HEAD you read)
+  State HEAD e081c5f2: learn-delivery-follow-through prints Package root and pointer lines for implementation-3/-5/-7 only, exit 1. Counts: 80 records (design 77; +3 added since, `followup-dispatch-records-checked/implementation-1` passes, `journey-server-host-pilot/implementation-6` and `validation-3` already fail), failing 21 to 34, 13 newly fail (all archived, same per-task counts as AC-5), 5 archived tasks flip, 0 active flip. qnow-adopt-dev2 state 350d8ca0a: 66 records, 4 new Package-root lines, 0 pointer lines.
+- FAILED: roborev_gate.py evidence= line, CI green on the PR head, lint-skills.py green, and the CI cost per PR measured or stated as not measured
+  roborev `clean on 56c9f6ad6; evidence=roborev:641`; lint-skills.py green; CI cost: no step added, runtime not measured. CI NOT green: `unit tests (python3)` step `test_sd_dispatch.py` fails on PR head 56c9f6ad (run 38486533066); `test_observer_recovery.py` skipped after it. Other checks pass.
+
+### Return to FO: a file outside the design's list
+`kc-dev-flow-2/scripts/test_sd_dispatch.py` FIXES["resumed-dispatch"] pins the workflow.md sentence by regex `...carries the same parts\. ` and asserts it matches once; the D1 clause changes that sentence, so `at_0_10_1` raises `AssertionError: ('resumed-dispatch', ..., 0)`. Proposed one-line repair: end the swap regex with `parts(?:, including [^.]*)?\. ` (keeps the pin on the sentence, tolerates the clause). That file is not in the design's Files list, so I stopped and did not edit it. Alternative that stays inside the list: reword the clause as its own sentence after "same parts. " (departs from AC-6's wording). Rulings needed from FO: which one.
+
+### Affected documents
+- kc-dev-flow-2/README.md: unaffected: mentions only running lint-skills.py, not the budget value.
+- kc-dev-flow-2/skills/maintain-flow/SKILL.md: unaffected: describes the word-budget rule, not its number.
+
+### Other evidence
+- comment_ratio.py: code lines 42, comment lines 1, 2.4%, maximum 5% met, exit 0.
+- design_surfaces.py check on this task: presentable, exit 0. number_guards: not applicable (Surfaces: none, no Number guards section).
+
+### Summary
+Both rules, tests, the D1 clause and the budget raise are implemented and reproduce the design's replays; PR #642 is Draft. CI is red on one pinned-sentence test in a file outside the design's list, returned to FO with a one-line proposed repair.
