@@ -1,0 +1,38 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:validation:attempt-1:revision-1",
+  "question": "是否先保留目前候選版並暫緩交付，待同版遠端 Node、Cloudflare 與真實休眠恢復證據補齊？",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/becf6a463d499fb33da92706388d9fb32ca3fe15/journey-server-host-pilot/index.md",
+      "rev": "sha256:7995d45c7c3ae9440ce29f8443028126e903df01241e9fa994a93411414f643c",
+      "mediaType": "text/markdown",
+      "summary": "Local implementation and independent validation passed at candidate 4f678cd88; the FO reran the exact four-step script unchanged with exit 0. Scope and shared contract are preserved, including the accepted Cloudflare active telemetry exception. Full hosted acceptance is not established: remote Node/Cloudflare and real provider hibernation remain NOT RUN under AC-1/AC-4. Recommend hold full delivery, preserve this candidate, and scope hosted verification separately. Full task-aware number guard is SKIPPED/NOT PASS under the committed fresh-storage/no-migration disposition; validation state publication was recovered. No product push, PR, merge or deployment is authorized by this gate preparation."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/6d0f8da951b5ea9ea50fca6bd3685fc360bf502f/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:42b58e54971513b3dd42350e15b4b1e7cf05fd51f9f80b84a8e4856f087dae4f"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:validation:attempt-1:revision-1:item-3",
+      "uri": "git-root://state/becf6a463d499fb33da92706388d9fb32ca3fe15/journey-server-host-pilot/evidence/validation-review.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:61aca39b23572eb19abf0a246fcc0b65ac3d1ce22af843d94287be4ea589fc72"
+    },
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:validation:attempt-1:revision-1:item-4",
+      "uri": "git-root://state/becf6a463d499fb33da92706388d9fb32ca3fe15/journey-server-host-pilot/review/validation/fo-acceptance-1.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:4b0374b33996415149db5ef5a05493d2ceba0e60470eb159791b7987fb7989e5"
+    }
+  ]
+}

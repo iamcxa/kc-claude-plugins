@@ -47,6 +47,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:journey-server-host-pilot:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:journey-server-host-pilot-validation-1
+              briefing:
+                id: briefing:journey-server-host-pilot:validation:attempt-1:revision-1
+                digest: sha256:b3a63628932149df8b8b774762c7b2ccb18d8cc39f7890557c39252ab5183583
+                room-ref: ./review/validation/briefing-1
 started: 2026-10-13T08:47:34Z
 ---
 
