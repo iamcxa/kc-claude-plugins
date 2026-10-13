@@ -364,15 +364,15 @@ The design gives the map and dev2 five producer-owned schemas under one version 
   `## Acceptance criteria` holds AC-1, AC-2, AC-4, AC-5, AC-6 (old numbers kept so the other task's pointers hold); D1 and D2 are restated in plain words at the end of `## Design`, no past `Override:` contradicts either.
 - DONE: Answer whether scope two has data once scope one merges and is synced
   "Will scope two have data...": no for fold-pending marks (needs a release, a sync, the extension listed, and a gate ruling on a live journey task); yes today for the evidence ladder's `verified` and ADR links. Measured: qnow has 11 plain-open questions and no live task for them; relay has 21, with the live pair `agent-front-door` and `agent-front-door-publish` on 5 of them; ceiling 32 footprints.
-- DONE: AC-1 version binding for the two schemas
+- SKIPPED: AC-1 version binding for the two schemas
   Not yet verified: neither `schemas.test.mjs` nor `test_map_footprint.py` exists; verified at implementation.
-- DONE: AC-2 consumers refuse another major and accept growth
+- SKIPPED: AC-2 consumers refuse another major and accept growth
   Not yet verified: future tests in `journey-fold.test.mjs`, `journey-reconcile.test.mjs`, `test_map_footprint.py`.
-- DONE: AC-4 add, check, audit and the cutover baseline
+- SKIPPED: AC-4 add, check, audit and the cutover baseline
   Current evidence is a read of frontmatter, not a run: qnow state d01c37bc has 7 archived journey tasks with a story and 35 resolutions; relay ed63e6a0 has 6 (2 archived, 9 of 14 resolutions). The script does not exist; not yet verified.
-- DONE: AC-5 skipped step caught twice and the loop closes
+- SKIPPED: AC-5 skipped step caught twice and the loop closes
   Current evidence for the splice requirement only: re-serializing qnow's 951-line map leaves 0 differing lines; relay's 2047-line map leaves 3803 (best of ten option sets 705). The smoke script, fold and workflow do not exist; not yet verified.
-- DONE: AC-6 baselines on qnow and relay
+- SKIPPED: AC-6 baselines on qnow and relay
   Figures measured 2026-10-13 with a one-off read at the pinned refs (qnow 171/110/79/31, 0 duplicate story ids, 6 repeated question ids, r1 45 answered and 13 open; relay 142/220/198/22); qnow's match the first attempt's. The reconcile script does not exist; not yet verified.
 
 ### FO alignment: proposed lines (FO owns them; not edited)
