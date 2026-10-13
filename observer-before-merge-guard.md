@@ -332,3 +332,23 @@ Does not cover: an FO actually running the check before the sentinel (prose-enfo
 ### Summary
 
 PASSED at d127ec71: the P1 reproduces at 0830a3be by following the documented text literally and is fixed at d127ec71; the new test goes red when either the text or the check's remedy loses the staging step; AC-1 to AC-9 hold with no verdict changed since cycle 1. No Material finding; adr_lint exit 0.
+
+## Stage Report: implementation (cycle 3, repair of Codex round 2 P1 and P2)
+
+- DONE: Investigation first: reproduce both Codex round-2 findings at d127ec71 and sweep the changed files, then wait for FO authorization
+  Bare `observer_check.py` exits 126 (mode 100644; so do learning, decision_ledger, design_surfaces, adr_lint, doc_impact, number_guards, package_version, workflow_checkout; only pr_watch is 755). A state path "my state dir" printed unquoted into the late-report `git -C` fails `cannot change to '/tmp/obs'`. Result and proposal sent to `main`; fix authorized ("a", README untouched).
+- DONE: Fix both with tests that fail without the fix, including the documented invocation run as text
+  `python3` added at EXTENSION.md observer_check, dev SKILL learning.py and observer_check, workflow.md adr_lint, observer_check (x2) and number_guards; `shlex.quote` on state and report paths in observer_check.py. `scripts/test_observer_check.py`: (1) `test_every_instruction_runs_a_script_through_python3_unless_it_is_executable` fails if a non-executable package script is named without python3 in the learn extension, dev, observer, workflow texts; (2) `test_the_documented_observer_check_command_runs_as_written` runs each documented command via shlex without sys.executable and fails (OSError/exit 126) on the bare form; (3) `test_the_printed_late_report_commands_run_when_the_state_path_has_whitespace` runs the printed add+commit under "my state dir" and fails when the quote is gone.
+  Mutations (each restored after): python3 dropped at EXTENSION.md -> (1)+(2) fail; at workflow.md observer_check -> (1)+(2) fail; at dev SKILL learning.py -> (1) fails; shlex.quote removed (both paths, or state only) -> (3) fails. Restored: test_observer_check 16 OK, test_workflow_checkout, test_lint_skills, lint-skills, test_observer_recovery all pass.
+- DONE: Push to #632's branch; CI green on the new head
+  Head 40c714a6 (commits c959b5bd fix, 8fdb2ab8 and 40c714a6 test_sd_dispatch.py fixture). `gh pr checks 632`: all five checks pass, including kc-dev-flow-2 tests. Pushes were not forced; first two heads were red on test_sd_dispatch.py.
+- DONE: roborev gate
+  `clean on 40c714a64; evidence=roborev:617` (base d127ec71; earlier heads c959b5bd7 evidence=roborev:615, 8fdb2ab81 evidence=roborev:616).
+- DONE: Extra file outside the PR's list, authorized by FO ("a")
+  `scripts/test_sd_dispatch.py` line 176 (`need`) pinned the exact adr_lint phrase without python3; line 178 (the `swaps` regex of the same `adr-lint-output` entry) had the same phrase and CI failed on it after line 176 was fixed (`count == 1, ('adr-lint-output', ... , 0)`). FO's authorization named line 176; I edited 178 too, the same string in the same dict entry, nothing else. #633 edits that file elsewhere; a textual conflict at lines 176-178 is possible.
+- DONE: lint-skills word budget
+  `WORKFLOW_WORD_BUDGET` 5411 -> 5415 with the reason in the comment: four python3 words in workflow.md (adr_lint, observer_check x2, number_guards).
+
+### Summary
+
+All CI green at 40c714a6. Left for FO: out-of-scope bare mentions (references/sd/adoption.md, skills/learn/SKILL.md:202, skills/implementation/principles.md:41 `adr_lint.py --require`); README descriptive mentions untouched per ruling; the lint-skills budget bump and the test_sd_dispatch.py line 176-178 overlap with #633.
