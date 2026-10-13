@@ -221,7 +221,7 @@ The check is a new script beside `package_version.py` that fetches the trunk and
 
 ### Acceptance script
 
-Run from any shell; prints, in order: (1) exit 1 stale, (2) exit 0 current, (3) exit 1 edited then exit 0 restored, (4) exit 2 unreachable origin, (5) `OK` for 11 tests. Not covered: that a real FO session runs it before dispatch (prose-enforced), the rest of the workflow directory, and CI.
+Run from any shell (it changes git config only inside a throwaway clone, never in the shared checkout); prints, in order: (1) exit 1 stale, (2) exit 0 current, (3) exit 1 edited then exit 0 restored, (4) exit 2 unreachable origin in a throwaway clone, (5) `OK` for 11 tests. Not covered: that a real FO session runs it before dispatch (prose-enforced), the rest of the workflow directory, and CI.
 
     set -eu
     REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
@@ -237,9 +237,13 @@ Run from any shell; prints, in order: (1) exit 1 stale, (2) exit 0 current, (3) 
     python3 "$S" /tmp/accept-current/docs/dev2/README.md || echo "exit $?"
     git -C /tmp/accept-current checkout -q -- docs/dev2/README.md
     python3 "$S" /tmp/accept-current/docs/dev2/README.md; echo "exit $?"
-    git -C /tmp/accept-current remote set-url origin /nonexistent/origin.git
-    python3 "$S" /tmp/accept-current/docs/dev2/README.md || echo "exit $?"
-    git -C /tmp/accept-current remote set-url origin "$(git -C "$REPO" remote get-url origin)"
+    rm -rf /tmp/accept-clone
+    git clone -q --no-checkout "$REPO" /tmp/accept-clone
+    git -C /tmp/accept-clone fetch -q "$REPO" refs/remotes/origin/main:refs/heads/probe
+    git -C /tmp/accept-clone checkout -q probe
+    git -C /tmp/accept-clone remote set-url origin /nonexistent/origin.git
+    python3 "$S" /tmp/accept-clone/docs/dev2/README.md || echo "exit $?"
+    rm -rf /tmp/accept-clone
     python3 -B /tmp/accept-pkg/kc-dev-flow-2/scripts/test_workflow_checkout.py 2>&1 | tail -3
     for d in pkg stale current; do git -C "$REPO" worktree remove --force /tmp/accept-$d; done
 
@@ -247,4 +251,4 @@ Observed (2026-10-13, origin/main 9e68eb87): `README differs from origin/main: o
 
 ### Summary
 
-PASSED. Every AC reproduced on throwaway checkouts of 085e28aa, and each of six mutations turned the intended test red. No Material or Needs-decision finding; two Polish items and one Deferred risk are recorded above for FO. Unverified: behaviour of a real FO session (the check is prose-enforced) and CI duration.
+PASSED. My first draft of the acceptance script ran `git remote set-url` in a worktree, which rewrote `remote.origin.url` for every worktree of this repository (shared config) to `/nonexistent/origin.git`; I restored it to `https://github.com/iamcxa/kc-claude-plugins.git` (inferred from the sibling clone and the PR's repository, original value not recorded), confirmed `git ls-remote origin` and the state push work, and moved that step into a throwaway clone; the script above is the corrected one and was rerun in a fresh shell with the origin URL unchanged. Every AC reproduced on throwaway checkouts of 085e28aa, and each of six mutations turned the intended test red. No Material or Needs-decision finding; two Polish items and one Deferred risk are recorded above for FO. Unverified: behaviour of a real FO session (the check is prose-enforced) and CI duration.
