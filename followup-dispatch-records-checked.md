@@ -3,7 +3,7 @@ title: dispatch_records.py passes a follow-up dispatch record that lacks the Pac
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain approved the design (「准」), accepting the stated recommendations D1 (a follow-up record carries its items, never a pointer, with one README clause and a budget raise of about 20 words) and D2 (validation-time check only).
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-13T15:57:28Z
 ---
 
