@@ -10,6 +10,7 @@ unreachable, README not on origin/<trunk>): stdout names the cause and the dispa
 is compared, not the rest of the workflow directory.
 """
 import os
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -46,7 +47,7 @@ def remedy(top, trunk):
                             capture_output=True, text=True).stdout.strip()
     if branch:
         return f"bring branch {branch} level with origin/{trunk} (merge or rebase), then rerun"
-    return f"git -C {top} checkout --detach origin/{trunk}"
+    return f"git -C {shlex.quote(str(top))} checkout --detach origin/{trunk}"
 
 
 def compare(readme):
@@ -71,7 +72,7 @@ def compare(readme):
         theirs = git(top, "rev-parse", f"origin/{trunk}:{path}")
     except Unverifiable:
         raise Unverifiable(f"{path} is not tracked on origin/{trunk}")
-    ours = git(top, "hash-object", str(readme.resolve()))
+    ours = git(top, "hash-object", "--no-filters", str(readme.resolve()))
     head = git(top, "rev-parse", "--short", "HEAD")
     if ours == theirs:
         return 0, f"README matches origin/{trunk} ({ours[:8]}; checkout HEAD {head})"

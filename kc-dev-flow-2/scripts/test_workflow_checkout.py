@@ -109,6 +109,30 @@ class WorkflowCheckoutTest(unittest.TestCase):
         self.assertIn("bring branch feature level with origin/main", out)
         self.assertNotIn("checkout --detach", out)
 
+    def test_a_crlf_readme_does_not_hash_equal_to_the_lf_trunk_blob_through_a_clean_filter(self):
+        work = self.clone("work")
+        (work / ".gitattributes").write_text("*.md text eol=lf\n")
+        self.commit(work, "attributes")
+        git(work, "push", "origin", "main")
+        readme = work / "docs/dev2/README.md"
+        self.assertEqual(check(readme)[0], 0)
+        readme.write_bytes(readme.read_bytes().replace(b"\n", b"\r\n"))
+        self.assertEqual(git(work, "hash-object", "docs/dev2/README.md"), git(work, "rev-parse", "origin/main:docs/dev2/README.md"))
+        code, out = check(readme)
+        self.assertEqual(code, 1)
+        self.assertIn("differs from origin/main", out)
+
+    def test_the_printed_remedy_runs_as_typed_when_the_checkout_path_has_a_space(self):
+        stale = self.clone("stale checkout")
+        self.push_readme_change()
+        git(stale, "checkout", "--detach", self.old)
+        code, out = check(stale / "docs/dev2/README.md")
+        self.assertEqual(code, 1)
+        remedy = out.split("Remedy: ", 1)[1].strip()
+        done = subprocess.run(["sh", "-c", remedy], cwd="/", capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stderr)
+        self.assertEqual(git(stale, "rev-parse", "HEAD"), git(stale, "rev-parse", "origin/main"))
+
     def test_an_unreachable_origin_is_unverifiable_not_a_pass(self):
         current = self.clone("current")
         git(current, "remote", "set-url", "origin", "/nonexistent/origin.git")
