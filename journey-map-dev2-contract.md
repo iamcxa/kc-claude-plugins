@@ -67,6 +67,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:journey-map-dev2-contract:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:journey-map-dev2-contract-validation-1
+              briefing:
+                id: briefing:journey-map-dev2-contract:validation:attempt-1:revision-1
+                digest: sha256:79323a7b7a8ad5ed42cc299e80eb2f2e15e94366219106dbf1404761417472bd
+                room-ref: ./journey-map-dev2-contract/review/validation/briefing-1
 started: 2026-10-13T03:05:11Z
 worktree: .worktrees/spacedock-ensign-journey-map-dev2-contract
 ---

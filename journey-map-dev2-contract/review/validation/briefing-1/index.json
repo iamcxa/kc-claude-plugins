@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-map-dev2-contract:validation:attempt-1:revision-1",
+  "question": "Deliver scope one (a Captain ruling reaches the map) as #627 head 32db1273 and #628 head 7d89898e: FO marks both ready and asks you to merge #627, then #628 after retargeting it to main? Approving also accepts two recommendations: keep the smoke workflow push-to-main trigger (14 of the repository's 17 workflows run on both pull_request and push), and accept that a hand-reworded answer stays a conflict until a new ruling replaces it. It also covers later external-review rounds on these two PRs, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:journey-map-dev2-contract:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c4c5a7ea60dbcf86b11875caa2194fee0a822ee0/journey-map-dev2-contract.md",
+      "rev": "sha256:f8a810ce305b0a9307174f2533b344328017b236f702495ea250b2db14e45839",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle 3 PASSED both heads (AC-1, AC-2, AC-4, AC-5, AC-6, AC-11 re-run; every repair mutation-proven); FO ran its 6-step acceptance script as written in env -i bash: every step matched. CI green on both heads. External rounds: Codex 3 per PR (round 1: 1 P1 2 P2; round 2: 2 P1 2 P2; both fixed and revalidated; round 3: 4 P2, 0 P1); local RoboRev clean, not counted. FO declines, candidate 32db1273/7d89898e, filed as backlog task journey-map-contract-round3-followups: Codex r3 P2 add --story on a task without journey-story (EXTENSION.md defines a journey task by both fields); P2 add --question empty (next check rejects it, fails closed); P2 audit --since impossible date (date fixed at extension adoption, no observed instance); P2 fold already ignores edited source words/date/kind (needs a hand edit, no observed instance); validation Deferred risk: reconcile/audit on a wrong dir that has a README read clean; Polish: unreachable ambiguous entry in FAILING, audit usage text, unrecorded label. Not verified: billed CI minutes, Release PR smoke, a live adopter run."
+    }
+  ]
+}
