@@ -75,7 +75,7 @@ gates:
                 state: pending
 started: 2026-10-13T07:17:42Z
 worktree: .worktrees/spacedock-ensign-worker-completion-goes-to-main
-pr: iamcxa/kc-claude-plugins#633
+pr: pr-merge:633
 ---
 
 Spacedock's dispatch completion block tells the worker to send `SendMessage(to="team-lead")`; under Claude Code dispatch that name is not registered (spacedock-dev/spacedock #523 and #608, both open on 2026-10-13). The adopter README's Dispatch facts already say to message `main`. On 2026-10-13 the first implementation worker of `journey-map-dev2-contract` still tried `team-lead` first and fell back to its final message; workers whose scope notes carried the explicit line "Send your completion message to `main`" sent to `main`. The root is upstream Spacedock; this task owns only the kc-dev-flow-2 side.
