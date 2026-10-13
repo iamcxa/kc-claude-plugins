@@ -47,6 +47,10 @@ gates:
                 id: briefing:journey-map-dev2-contract:ideation:attempt-2:revision-1
                 digest: sha256:f8875bc580c6901d38783d1bf03bf66ba06c1c415f6ac4bcab8fbbcf82f1978a
                 room-ref: ./journey-map-dev2-contract/review/ideation/briefing-2
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-10-13T04:15:24.70313Z"
+                reason: Briefing 2 was prepared while design_surfaces.py check failed (Visible change was not 'none' with Surfaces none); FO line corrected
 started: 2026-10-13T03:05:11Z
 ---
 
@@ -125,7 +129,8 @@ Release: none (package tooling across kc-journey-map and kc-dev-flow-2).
 Release review: not needed: no release.
 Needed at ideation: not needed: the Captain accepted the direction in chat on 2026-10-13 (recorded above under "Direction the Captain accepted"); ideation lists its unresolved decisions at its gate.
 Surfaces: none
-Visible change: none (scope one draws nothing new; after a fold, an answered question shows as answered on today's cards. Scope two, task journey-map-progress-and-provenance, owns the renderer change.)
+Scope note: scope one draws nothing new; after a fold an answered question shows as answered on today's cards. The renderer change is scope two, task journey-map-progress-and-provenance.
+Visible change: none
 
 ## Design
 
