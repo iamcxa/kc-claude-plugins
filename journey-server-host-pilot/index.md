@@ -459,3 +459,29 @@ The bounded hosted document subset and teardown pass; the candidate remains on H
 ### Summary
 
 Local Node recovery/admission verification passes and the requested handoff is ready for Kent to give Claude later. Source and evidence are preserved; the prompt makes unknown authority, target, source, access or rollback readiness a stop before remote mutation. This report closes only the local handoff work, not the overall pilot or the Cloudflare lifecycle finding.
+
+## Stage Report: implementation
+
+- DONE: Apply Captain amendment 5 and the distinct FO fix ruling: preserve 4f678cd88eddbcc171df7e2037dd19d2fbf4065b and make only the minimal Cloudflare hibernation correction, leaving Node, room UI and concurrency unchanged.
+  New clean local candidate `869b9d6ca2d4b02a9bb4f38c7613e5096373f83f` adds `clientTimeout: Infinity` and exact application ping/pong auto-response in the Cloudflare adapter, plus adjacent operator documentation. The original candidate and Node handoff are preserved.
+- FAILED: Verify timer eligibility, actual hosted hibernation and resumed document/socket behavior with authorization lifecycle checks under the Free-only operation budget, measuring scoped usage honestly and fully cleaning disposable resources.
+  Local eligibility, protocol mutation, heartbeat auto-response and expiry/revocation PASS. Hosted lifecycle and post-wake authorization remain NOT RUN: bounded unauthenticated readiness failed at the connection layer; the permitted wiring correction also timed out. This is an unresolved external verification boundary, not evidence of a candidate application failure.
+- DONE: Produce a clean new local candidate and durable conclusions-only report with local raw evidence, required checks and an exact bounded acceptance procedure; do not publish product, broaden scope or claim full pilot acceptance.
+  Local report: `/Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/outputs/journey-server-host-pilot-usage/hibernation-fix/report.md`; adjacent receipts retain both failed attempts, exact source identity, focused local results, provider observations and bounded read-only acceptance.
+- DONE: Exercise the two directly changed lifecycle settings at a meaningful local boundary.
+  Continuous synthetic application pings receive data-free pongs without entering the room handler; a protocol mutation persists; expiry and revoke still close sockets and deny later access. Restoring finite pruning or removing automatic response fails these checks. External instrumentation forwards real timers and never forces eviction.
+- DONE: Preserve hosted evidence limits and clean every disposable resource.
+  Both attempts' deletion migrations and independent Worker/namespace absence checks PASS; synthetic secrets were removed and owned test processes stopped. The deletion CLI's later permission error remains recorded separately from the verified removal. No third deployment, product push, PR or merge occurred.
+- DONE: Run focused and required committed-candidate checks.
+  TypeScript, diff check, design surfaces, ADR lint and dispatch records PASS. Correction-only committed review: `clean on 869b9d6ca; evidence=roborev:632`. Comment ratio: code 1150, comments 0, 0.0%, maximum 5%. Earlier green Node/browser/library suites were not repeated.
+- DONE: Account for affected documents and the no-migration boundary.
+  `kc-journey-map/docs/private-host.md` updated; `docs/journey/kc-journey-map/README.md` unaffected because its legacy import/export journey and canonical format are unchanged. No ADR changed in this repair; task-wide added ADR remains reserved 0015, and the SQL diff remains empty. The two configuration lines map directly to the authorized lifecycle defect.
+- SKIPPED: Full task-aware number guard remains unavailable and explicitly NOT PASS.
+  Base `6d0f8da951b5ea9ea50fca6bd3685fc360bf502f`; exact exit 2: `number_guards: task has Surfaces: db but no migrations-path is declared (pass --migrations-path or set migrations-path: in the workflow README)`. Supplemental no-task check passes its available checks with R4 skipped; it does not replace the full guard.
+- SKIPPED: Actual provider usage, full hosted lifecycle acceptance and other unrun integration obligations.
+  Scoped before/after and delayed analytics yield no measurement rows: usage NOT SHOWN, never zero cost. Native Claude/Codex MCP clients, browser/static deployment, hosted assets/R2, remote Node, licensing and large-payload acceptance remain NOT RUN. All provider/resource/transport details stay local under amendment 3.
+
+### Summary
+
+The authorized minimal correction is committed and locally verified. The bounded hosted attempt could not pass connection readiness, so actual same-socket hibernation and post-wake protections remain unverified; independent validation must retain that distinction.
+Minimal acceptance is the read-only command `rtk proxy node /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/outputs/journey-server-host-pilot-usage/hibernation-fix/verify-evidence.mjs`: it verifies exact candidate/diff, local assertions, preserved connection failures, cleanup, required-check disposition and measurement availability without network access. Its output explicitly says hosted lifecycle NOT RUN; receipt integrity is not delivery approval.
