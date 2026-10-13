@@ -228,3 +228,41 @@ The gap is routing, not mechanism: `skills/learn/SKILL.md` stops after recording
 ### Summary
 
 The fix is routing text plus tests: learn gets a section that orders watch, ready after green, merge ask and the merged or closed record, with a read-from-GitHub settle on `notices` and on a refused claim; the recorder, the watch and CI are unchanged. Package root differed (dispatch 0.21.0, loaded skill 0.22.0), so the 0.22.0 scripts were used. Two points for FO: the `Cannot run` bullet of `extensions/learn/EXTENSION.md` is edited (four lines), so `fo-record-checks` may need a rebase there; and Decision 1's `gh pr ready` grant rests on FO's plan text naming the step, which only FO's reading enforces.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on #639 head f1689849 against AC-1 to AC-6, re-running each evidence command and at least one falsifier per criterion yourself, including AC-2's control arm stalling on origin/main text and the new arm settling; AC-7 named as an unverified live obligation
+  Candidate f16898491a5d4fadbb189373fbbe89754013dddc (one commit on base 70b88d75, PR still Draft, CI green on that head, GitHub says MERGEABLE/CLEAN against moved main f493d9b0). Package scripts from 0.22.0 (the loaded skill; dispatch said 0.21.0). Throwaway detached worktree, removed afterwards; no real learning store touched (tests use temp stores).
+  AC-1: section read; `test_follow_section_orders_ready_before_merge_ask` green. Falsifiers I ran: `pr_watch.py add` renamed -> RED; step 5 moved before step 3 and "First ask the Captain to merge" inserted before `gh pr ready` -> RED (positions out of order).
+  AC-2: on 70b88d75 text with the candidate's tests the replay test stays GREEN, so its control arm does stall there (claim exit 1, `blocking` delivery `open`); new arm green through `checks pending -> green`, `draft True -> False`, `state OPEN -> MERGED`, then claim exit 0, and a claim between ready and merge exits 1. Falsifier: merged `delivery-record` removed -> RED (claim 1 != 0, blocking job `open`).
+  AC-3: `test_open_delivery_with_lost_token_settles_from_github` green; falsifier `delivery-recover` removed -> RED ('open' != 'merged'); on base text the `gh pr view` text assertions fail.
+  AC-4: green; falsifier text telling FO to `release` an open delivery -> RED. `release` refusal ("release refused") is asserted in the test itself.
+  AC-5: green; falsifier `FO runs gh pr merge --auto` in the section -> RED; stub exits 1 on any `pr merge` or `--auto` and `no_merge_called` ran in three arms.
+  AC-6: `git diff --stat 70b88d75 f1689849` and `gh pr view 639 --json files` list exactly the four files (211 insertions, 3 deletions). Against moved origin/main the raw diff is noisy because main advanced; use the merge-base. `lint-skills.py` 0, `test_learning.py` 38 OK, `test_pr_watch.py` 28 OK, `test_lint_skills.py` 26 OK, `test_observer_check.py` 16 OK, all exit 0 at f1689849. Merge probe (origin/main f493d9b0 + candidate, throwaway commit): `lint-skills.py` 0 and `test_learning.py` 38 OK.
+  AC-7 NOT VERIFIED (live): needs the next real learning PR; `ready_for_review` before the merge ask and `notices` merged or closed in the same FO session, not from a Captain message.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Script below, five lines, run as `env -i HOME=$HOME PATH=/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin bash --noprofile --norc /tmp/val-accept.sh`; every observed line matched the expectation.
+- DONE: adr_lint.py docs/adr --since <base> run with its exit code; verdict PASSED or REJECTED naming the head, with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since 70b88d75`: "14 ADR file(s) checked, 0 legacy", exit 0 (no ADR added, none required). `comment_ratio.py 70b88d75 HEAD`: code 150, comment 0, 0.0%, exit 0. `doc_impact.py`: 0 documents, exit 0. `dispatch_records.py`: 3 records complete, exit 0. `design_surfaces.py check`: presentable, exit 0. No `## Number guards` section, so none run. Minimal necessity: every changed surface maps to an AC or Decision (SKILL.md section to AC-1/4/5, dev sentence to AC-3, EXTENSION.md bullet to Decision 2, tests to AC-1..5); nothing outside the four files.
+  VERDICT PASSED for head f16898491a5d4fadbb189373fbbe89754013dddc. No Material finding.
+  Deferred risk: the text is prose-enforced; the AC-2 replay is command-driven and stays green on the old text, so text dependence rests on AC-1 alone, and only AC-7 can show an FO following it. Becomes material if the next learning PR is merge-asked while Draft.
+  Deferred risk: `delivery-recover` fixture runs against a stub `gh`, not real GitHub; plan and observation are hand-built (Decision 3 already defers `delivery-sync`). Becomes material if a restart settle is skipped or mis-built in real use.
+  Polish: the AC-1 order check matches case-sensitively, so a capitalised "Ask the Captain to merge" placed before `gh pr ready` is not caught (I observed this with my first mutation; a lowercase insertion or a block move is caught).
+  Polish: dispatch named package 0.21.0, loaded skill is 0.22.0; 0.22.0 scripts used.
+
+### Minimal acceptance script
+
+Needs git, python3 3.x, network access to GitHub; no secret. Save as a file and run `bash <file>` (the five commands, in order):
+
+    D=$(mktemp -d) && git clone --quiet https://github.com/iamcxa/kc-claude-plugins.git "$D/repo" && cd "$D/repo" && git checkout --quiet f1689849 && git log --oneline -1
+    cd kc-dev-flow-2 && sed -n '/^## Follow the delivery to a recorded end/,/^## Present the result/p' skills/learn/SKILL.md | grep -nE '^[1-6]\. ' | cut -c1-70
+    python3 -B scripts/test_learning.py -k follow_section -k stalled_learning_pr -k lost_token_settles -k release_of_open_delivery 2>&1 | tail -3
+    git diff --stat 70b88d7511cd6cb3aca05382ba973aee752f1152 HEAD | tail -5
+    git checkout --quiet 70b88d7511cd6cb3aca05382ba973aee752f1152 -- skills extensions && python3 -B scripts/test_learning.py -k follow_section -k stalled_learning_pr -k lost_token_settles -k release_of_open_delivery 2>&1 | tail -3
+
+Expected and observed: (1) `f1689849 fix(kc-dev-flow-2): learn carries its learning.md PR to a recorded merge or close`; (2) six numbered steps, 1 `pr_watch.py add`, 3 `gh pr ready`, 5 "Only then ask the Captain to merge", 6 the merged/closed record; (3) `Ran 5 tests` and `OK`; (4) exactly four files, `4 files changed, 211 insertions(+), 3 deletions(-)`; (5) with the old learn/dev/extension text restored, `Ran 5 tests` and `FAILED (failures=1, errors=3)`.
+Does not cover: an FO actually following the text (AC-7), real GitHub calls (the tests use a stub `gh`), CI, or merge.
+
+### Summary
+
+PASSED for f16898491a5d4fadbb189373fbbe89754013dddc. I re-ran the evidence commands and a falsifier for each of AC-1 to AC-5, saw the control arm stall on the old text and the new arm settle with no Captain message, confirmed the four-file scope, and all package checks exit 0. AC-7 (an FO following the order on the next real learning PR) is unverified and live-only; the main limit is that the text is prose-enforced.
