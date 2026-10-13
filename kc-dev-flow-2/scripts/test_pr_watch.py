@@ -15,7 +15,7 @@ REF = "o/r#1"
 
 def snap(**kw):
     base = {"state": "OPEN", "draft": False, "mergeable": "MERGEABLE", "checks": "green",
-            "head": "aaaaaaaaa", "title": "feat: x", "codex": "clean", "codex-evidence": "comment:1"}
+            "head": "aaaaaaaaa", "title": "feat: x", "codex": "-", "codex-evidence": "-", "copilot": "-", "copilot-evidence": "-"}
     return {**base, **kw}
 
 
@@ -52,6 +52,7 @@ class PrWatchTests(unittest.TestCase):
             code, out = self.run_main(["wait", "1"], [snap(), snap(), snap(mergeable="CONFLICTING")], state)
             self.assertEqual(code, 0)
             self.assertIn("mergeable MERGEABLE -> CONFLICTING", out)
+            watch.update(state, put={REF: {**snap(codex="clean", **{"codex-evidence": "comment:1"}), "watch-codex": True}})
             code, out = self.run_main(["wait", "1"], [snap(mergeable="CONFLICTING", codex="findings")], state)
             self.assertIn("codex clean -> findings", out)
 
@@ -74,7 +75,7 @@ class PrWatchTests(unittest.TestCase):
     def test_a_new_codex_verdict_with_the_same_word_still_wakes_wait(self):
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
-            self.run_main(["add", REF], [snap()], state)
+            self.run_main(["add", REF], [snap(codex="clean", **{"codex-evidence": "comment:1"})], state)
             code, out = self.run_main(["wait", "1"], [snap(codex="running", **{"codex-evidence": "-"}),
                                                        snap(**{"codex-evidence": "comment:2"})], state)
             self.assertIn("codex-evidence - -> comment:2", out)
@@ -134,14 +135,17 @@ class PrWatchTests(unittest.TestCase):
         def look(ref, with_copilot=False, **kw):
             calls.append((ref, with_copilot))
             self.assertLess(len(calls), 10, "wait never woke on the new Copilot evidence")
-            return {**snap(), "copilot": "answered",
-                    "copilot-evidence": "review:1" if len(calls) < 3 else "review:9", "watch-copilot": with_copilot}
+            return {**snap(), "copilot": "answered" if with_copilot else "-",
+                    "copilot-evidence": ("review:1" if len(calls) < 3 else "review:9") if with_copilot else "-",
+                    "watch-copilot": with_copilot}
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
             out = io.StringIO()
             with contextlib.redirect_stdout(out):
                 watch.main(["--state", str(state), "add", REF], look=look)
                 watch.main(["--state", str(state), "add", "--copilot", "o/r#2"], look=look)
+                watch.update(state, put={"o/r#2": {**json.loads(state.read_text())["o/r#2"],
+                                                   "copilot": "answered", "copilot-evidence": "review:1"}})
                 code = watch.main(["--state", str(state), "wait", "1"], look=look, sleep=lambda s: None)
             self.assertEqual(calls[:2], [(REF, False), ("o/r#2", True)])
             self.assertEqual(calls[2:4], [(REF, False), ("o/r#2", True)])
@@ -229,6 +233,53 @@ class PrWatchTests(unittest.TestCase):
                 self.assertEqual(watch.copilot("o/r", "1"), ("answered", "review:5"))
             finally:
                 watch.COPILOT = old
+
+    def test_a_copilot_refusal_is_not_run_not_a_reader_error_and_wakes_wait(self):
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d, "copilot_review.py")
+            fake.write_text("print('not a review of aaa: \"quota limit\"; answer=review:5 at t')\nraise SystemExit(5)\n")
+            old, watch.COPILOT = watch.COPILOT, fake
+            try:
+                self.assertEqual(watch.copilot("o/r", "1"), ("not-run", "-"))
+            finally:
+                watch.COPILOT = old
+        self.assertTrue(watch.outcome("copilot", "requested", "not-run"))
+
+    def test_a_copilot_refusal_already_there_when_the_pr_is_added_wakes_wait_once(self):
+        refused = snap(copilot="not-run", **{"watch-copilot": True})
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            code, out = self.run_main(["add", "--copilot", REF], [refused], state)
+            self.assertIn(f"{REF}: copilot not-run already", out)
+            code, out = self.run_main(["wait", "1"], [refused], state)
+            self.assertIn("copilot - -> not-run", out)
+
+    def test_a_codex_verdict_already_there_when_the_pr_is_added_wakes_wait(self):
+        done = snap(codex="clean", **{"codex-evidence": "comment:1", "watch-codex": True})
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            code, out = self.run_main(["add", "--codex", REF], [done], state)
+            self.assertIn(f"{REF}: codex clean already", out)
+            code, out = self.run_main(["wait", "1"], [done], state)
+            self.assertIn("codex - -> clean", out)
+
+    def test_adding_a_pr_again_after_wait_reported_its_outcome_stays_quiet(self):
+        refused = snap(copilot="not-run", **{"watch-copilot": True})
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", "--copilot", REF], [refused], state)
+            self.run_main(["wait", "1"], [refused], state)
+            code, out = self.run_main(["add", REF], [refused], state)
+            self.assertNotIn("already", out)
+            code, out = self.run_main(["check"], [refused], state)
+            self.assertIn("no change since the last look", out)
+
+    def test_a_non_outcome_or_unwatched_reading_at_add_is_stored_as_read(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            code, out = self.run_main(["add", "--copilot", REF], [snap(copilot="requested", **{"watch-copilot": True})], state)
+            self.assertNotIn("already", out)
+            self.assertEqual(json.loads(state.read_text())[REF]["copilot"], "requested")
 
     def test_a_save_keeps_fields_another_writer_added_meanwhile(self):
         with tempfile.TemporaryDirectory() as d:

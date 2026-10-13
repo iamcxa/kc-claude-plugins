@@ -9,6 +9,9 @@ Exit 0 answered: Copilot reviewed the head commit after its latest request. The 
 Exit 2 configuration error: bad arguments or a gh call that failed.
 Exit 3 requested: Copilot was asked after its latest review of any commit and has not answered.
 Exit 4 not reviewed: no Copilot review of the head commit, or the head moved while reading.
+Exit 5 not a review: Copilot answered the head but no answer has a review heading or a line comment of
+  its own (a refusal, an error, an empty body). The line quotes the first 120 characters
+  (answer=review:<id>); there is no evidence= token, so it is no round and never clean.
 """
 import html
 import json
@@ -41,6 +44,10 @@ def heading(body):
     return "no heading"
 
 
+def quote(body):
+    return " ".join(html.unescape(body).split())[:120].replace("evidence=", "evidence:")
+
+
 def state(repo, pr, call=gh, pages=pages):
     head = call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"]
     reviews = [r for r in pages(f"repos/{repo}/pulls/{pr}/reviews") if r["user"]["login"] == BOT]
@@ -55,9 +62,14 @@ def state(repo, pr, call=gh, pages=pages):
         return 3, f"requested: Copilot was asked at {max(asked)} and has not reviewed {head[:9]} since"
     if not on_head:
         return 4, f"not reviewed: no Copilot review covers {head[:9]}"
-    latest = on_head[-1]
-    own = sum(c.get("pull_request_review_id") == latest["id"] for c in lines)
-    return 0, (f"answered on {head[:9]}: \"{heading(latest.get('body') or '')}\", {own} line comment(s); "
+    own = lambda r: sum(c.get("pull_request_review_id") == r["id"] for c in lines)
+    real = [r for r in on_head if heading(r.get("body") or "") != "no heading" or own(r)]
+    if not real:
+        last = on_head[-1]
+        return 5, (f"not a review of {head[:9]}: \"{quote(last.get('body') or '')}\"; "
+                   f"answer=review:{last['id']} at {last['submitted_at']}")
+    latest = real[-1]
+    return 0, (f"answered on {head[:9]}: \"{heading(latest.get('body') or '')}\", {own(latest)} line comment(s); "
                f"evidence=review:{latest['id']} at {latest['submitted_at']}")
 
 
