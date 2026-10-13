@@ -529,3 +529,88 @@ Both heads pass: the contract checks, the splice-only fold and the counts behave
 ### Summary
 
 All four items fixed with commits c811de1f (#627) and 9af7a3af, f320d6d3 (#628, on top of merge 474ba8aa); CI green on both heads, roborev clean once per PR with no repair rounds. Left for FO: the smoke workflow `push: branches: [main]` trigger ruling; dispatch records gap; a fresh validation recheck and the next Codex round (no PR comment, review request, ready or merge was done). The `not needed` contradiction is counted as `unrecorded` by `audit` (it has no bad line), which I left as is.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent recheck of the cycle-2 repair on #627 head c811de1f and #628 head f320d6d3: each of the four repaired items (missing state checkout, contradictory not-needed, no-trailing-newline fold, duplicate-story CLI exit) reproduced fixed, its new test shown failing under a mutation you run yourself, and AC-1, AC-2, AC-4, AC-5, AC-6 and AC-11 re-run at the new heads with any change from the cycle-1 figures named
+  Recommend PASSED for both heads. Heads confirmed with `gh pr view` (open, c811de1f on base main; f320d6d3 on the -map branch); throwaway checkouts of each head and of the old heads 89769eb6 and d8281e1c, read and run only. Per item, old head then new head: (1) `audit` on a README declaring a missing `.spacedock-state` printed `unrecorded 0`, exit 0, then error naming the path, exit 2; (2) `check` on a not-needed task with one valid footprint exit 0, then exit 1 "contradicts 1 valid line(s)", and not-needed with no footprint still exit 0; (3) `journey-fold.mjs` on a block map ending `ask: Last one` with no newline: refused with no draft, then applied, +3 lines on their own lines (`answer`, `status`, `source`); (4) `journey-reconcile.mjs` on a duplicate story id exited 1 at both heads (behaviour was already right; only the test is new). Mutations I ran, each restored after: restore the `is_dir()` fallback fails `test_a_declared_state_checkout_that_is_missing_is_an_error_naming_the_path` (1 of 20); delete the contradiction branch fails `test_not_needed_with_a_valid_footprint_is_a_contradiction` (1 of 20); `lead = ''` in `editsFor` fails the new no-trailing-newline fold test (1 of 10); `return failing ? 1 : 0` fails `the command exits 1 on a duplicate story id and 0 on distinct ids` (1 of 8). AC-1: schema commands print table and 1.0.0; renamed field with no bump exits 1; dropping the hash compare in `schemas.mjs` fails 1 test. AC-2: `v2` line is `invalid` in `check`, exit 1 in fold and in the smoke's reconcile step; `v1` with an extra field applies and unknown kind prints `skipped`; dropping the schema pin fails 1 test. AC-4: paraphrase, wrong date, wrong journey and unresolved source each exit 1 naming the cause; wrong declared count exits 1; non-journey task exits 0; `audit` without `--since` exits 2; qnow state d01c37bc `--since 2026-10-14` unrecorded 0 and `--since 2000-01-01` unrecorded 7; relay ed63e6a0 gives 0 and 2. AC-5: smoke in a fresh `env -i` shell, exit 0, every code and count printed, `all steps passed`; dropping the `status` write fails 8 of 10 fold tests. AC-6: qnow df8ee1d2 (171 stories, 0 duplicates, 110 questions, 79 answered, 31 open, 20 deferred, 11 plain, 6 repeated ids, unsourced 79, unfolded 0, stale-open 0, exit 0) and relay 0295d163 (142 stories, 220 questions, 198 answered, 22 open, 1 deferred, 21 plain, unsourced 198, 0, 0, exit 0) match the criterion, two runs byte-identical; folding 4 footprints into each real map changed 4 lines in qnow and added 12 in relay with 0 removed; folding every unanswered question applied all (qnow 31: 31 lines replaced; relay 26: 5 removed `status: deferred` lines, each with `because` and `doc` kept). AC-11: changing "Read the CHANGELOG when" in EXTENSION.md and deleting the ADR file each fail the dev2 test, and deleting the ADR file fails `schemas.test.mjs`. Changes from cycle-1 figures: none in any AC figure; the status-write mutation now fails 8 fold tests where cycle 1 said 4 (the suite grew; same cause); full suites 20 Python tests and 212 node tests, all pass.
+- DONE: The minimal acceptance script updated to the new heads, run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Written below, run as `env -i HOME PATH zsh -f` and again `env -i HOME PATH bash` from `/`, on a fresh `git worktree add --detach /tmp/jm-accept f320d6d3` with no `node_modules`; every step printed the expected line, and `git status` of the checkout was clean afterwards.
+- DONE: adr_lint.py docs/adr --since <base> run at the new heads with its exit code; verdict PASSED or REJECTED with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since e2524e93` and `--require 0012` exit 0 ("12 ADR file(s) checked, 0 legacy") at c811de1f and f320d6d3, package 0.21.0. Verdict PASSED for both heads; findings below are Polish or Deferred risk, none Material.
+
+### Minimal acceptance script
+
+Needs (named): a kc-claude-plugins clone that has fetched the PR 628 head; node 24 (22.13 or later) with npm; python3; `spacedock` 0.27.2 on PATH; network for `npm ci`. Prerequisite, once, from the clone: `git worktree add --detach /tmp/jm-accept f320d6d3`. Then run this file with bash or zsh, from any directory:
+
+```bash
+cd /tmp/jm-accept || exit 1
+FP=kc-dev-flow-2/extensions/journey-map/map_footprint.py
+echo "== 1 install and the ruling-to-map loop on the real Spacedock CLI"
+(cd kc-journey-map && npm ci >/dev/null 2>&1; echo "npm ci exit $?")
+bash kc-journey-map/scripts/journey-dev2-loop-smoke.sh > /tmp/jm-smoke.out 2>&1; echo "smoke exit $?"; tail -2 /tmp/jm-smoke.out
+echo "== 2 schema pointers, then a renamed field with no version bump"
+python3 $FP schema journey-footprint | sed -n '1p;$p'; node kc-journey-map/lib/schemas.mjs journey-map-question | sed -n '1p;$p'
+sed -i.bak 's/("question", "a question id/("question_id", "a question id/' $FP
+python3 $FP schema journey-footprint >/dev/null; echo "renamed field, no version bump: exit $?"
+git checkout -- $FP; rm -f $FP.bak
+echo "== 3 repair: a declared state checkout that is missing is an error"
+T=$(mktemp -d); printf -- '---\nstate: .spacedock-state\n---\n' > "$T/README.md"
+python3 $FP audit "$T" --since 2026-10-13; echo "state checkout missing: exit $?"
+mkdir -p "$T/.spacedock-state/_archive"
+python3 $FP audit "$T" --since 2026-10-13; echo "state checkout present: exit $?"
+echo "== 4 repair: 'not needed' with a valid footprint is a contradiction"
+cat > "$T/t.md" <<'EOT'
+---
+title: t
+journey: shop
+journey-release: r1
+journey-story: checkout
+gates:
+    version: 1
+    records:
+        - id: gate:t:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:t-ideation-1
+              resolution:
+                type: Resolution
+                by: person:captain
+                at: "2026-10-13T03:56:22Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「keep six months」, then yes'
+---
+
+## FO alignment
+
+Map footprints: not needed: only approvals
+EOT
+python3 $FP check "$T/t.md"; echo "not needed, no footprint: exit $?"
+python3 $FP add "$T/t.md" --question q1 --source gate-attempt:t-ideation-1 --words "keep six months" --answer "Keep six months." >/dev/null
+python3 $FP check "$T/t.md"; echo "not needed, one valid footprint: exit $?"
+echo "== 5 repair: fold a last block question in a file with no trailing newline"
+printf 'journey: review\nreleases:\n- id: r1\n  goal: first\nsteps:\n- id: agents\n  card: Agents\n  stories:\n  - id: front-door\n    release: r1\n    status: gap\n    card: Pointer\n    questions:\n    - id: tail\n      ask: Last one' > "$T/map.yaml"
+echo '{"schema":"journey-footprint/v1","kind":"answered","id":"fp:t:1","task":"t","journey":"review","story":"front-door","question":"tail","words":"yes keep it","date":"2026-10-13","source":"gate-attempt:x","answer":"Keep it."}' > "$T/fp.jsonl"
+node kc-journey-map/lib/journey-fold.mjs "$T/map.yaml" --footprints "$T/fp.jsonl" --out "$T/draft.yaml"; echo "fold exit $?"; tail -4 "$T/draft.yaml"
+echo "== 6 tests"
+python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py 2>&1 | tail -3; (cd kc-journey-map && node --test lib/*.test.mjs 2>&1 | grep -E '^ℹ (tests|pass|fail)')
+```
+
+Expected and observed (fresh `env -i` shell): `npm ci exit 0`; `smoke exit 0`, `lines removed 0, added 3`, `journey-dev2-loop-smoke: all steps passed`; `journey-footprint 1.0.0` then the "Read the CHANGELOG when ..." line, `journey-map-question 1.0.0` then its line; "the field table changed but version 1.0.0 did not ..." and `renamed field, no version bump: exit 1`; `error: ... declares state '.spacedock-state' but ... is not a directory` and `state checkout missing: exit 2`, then `unrecorded 0`, `invalid 0`, `state checkout present: exit 0`; `t: ok` and `not needed, no footprint: exit 0`, then "`Map footprints: not needed` contradicts 1 valid line(s)", `t: FAIL`, `not needed, one valid footprint: exit 1`; `applied fp:t:1 front-door/tail`, `fold exit 0`, and the tail showing `ask: Last one` followed by `answer: "Keep it."`, `status: answered` and a `source:` line each on its own line; `Ran 20 tests`, `OK`, `ℹ tests 212`, `ℹ pass 212`, `ℹ fail 0`.
+
+Does not cover: a real adopter's FO following EXTENSION.md at a gate, the real `merge guard` archive, an id-style (`sd-b32`) workflow, the two real maps (needs the qnow and relay repositories; I ran them in throwaway checkouts), CI cost, or any release step.
+
+### Findings (none Material)
+
+- Polish: `audit` labels the not-needed contradiction `unrecorded` (the task has a valid footprint, so the word is off; the message text is exact). Implementation named this; no harm to a count that gates release review.
+- Deferred risk (unchanged from cycle 1): `words` is a substring check, so a very short quotation passes; `stale-open` can flag an open question an archived task never meant to answer. Material if an adopter's release review is blocked by a false `stale-open`; both real adopters read 0. A question with a `doc` link and `status: deferred` counts as answered in `reconcile` and is folded to `answered` with its `because` kept (relay has 5 such).
+- Resolved since cycle 1: the dispatch-record gap (`dispatch_records.py` on the task folder now exits 0, "9 dispatch record(s) complete"); the duplicate-story CLI exit now has a test.
+- For the Captain, still open: keep or drop the smoke workflow's `push: branches: [main]` trigger (a second CI run per merge touching those paths); neither PR has its own criterion for it.
+
+### Other checks at the new heads
+
+`comment_ratio.py`: #627 over base 1.0% (5 of 511 code lines), #628 over #627 2.8%, over base 1.9%, all exit 0, cycle 2 added no comment lines. `number_guards.py check`: PASS, exit 0 (no migrations-path). `design_surfaces.py check`: presentable, exit 0. `doc_impact.py e2524e93 f320d6d3`: lists `kc-dev-flow-2/README.md`, marked updated. `gh pr checks`: every check pass on both heads, including the real-CLI loop job (16s). Not verified: billed CI minutes, Release PR smoke, a live adopter run, RoboRev beyond the implementation report's runs, Codex round 2 (FO reads it).
+
+### Summary
+
+Both repaired heads pass. Each of the four fixes reproduces fixed against the old head, its new test fails when I remove the fix, and every AC figure from cycle 1 holds at the new heads. Recommended verdict PASSED for #627 c811de1f and #628 f320d6d3; no Material finding. Throwaway worktrees were removed; nothing was pushed or commented.
