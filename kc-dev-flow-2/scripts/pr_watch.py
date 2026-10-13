@@ -10,6 +10,9 @@ An outcome is a merge or close, a draft flip, a new or cleared conflict, CI turn
 or failing, a Codex verdict, or Copilot answering or refusing the head; a check or review that only
 starts is recorded silently.
 
+A Codex or Copilot outcome already there when add first looks is printed as "already" and
+reported by the next wait, once.
+
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
 only for a PR added with --codex or --copilot, from that extension's reader when it is
 present. Exit 2 is a configuration error.
@@ -158,11 +161,19 @@ def main(argv=None, look=look, sleep=time.sleep):
                 print("add needs owner/repo#N")
                 return 2
             known = load(opts.state)
-            seen = update(opts.state, put={ref: look(
-                ref, with_codex=opts.codex or known.get(ref, {}).get("watch-codex", ref in known),
-                with_copilot=opts.copilot or known.get(ref, {}).get("watch-copilot", False))
-                for ref in opts.args}, keep_flags=True)
-            print(f"watching {len(seen)} PR(s)")
+            first, already = {}, []
+            for ref in opts.args:
+                snap = dict(look(ref, with_codex=opts.codex or known.get(ref, {}).get("watch-codex", ref in known),
+                                 with_copilot=opts.copilot or known.get(ref, {}).get("watch-copilot", False)))
+                for key in ("codex", "copilot"):
+                    stored = known.get(ref, {})
+                    if snap[key] in OUTCOMES[key] and (snap[key], snap[f"{key}-evidence"]) != (
+                            stored.get(key), stored.get(f"{key}-evidence")):
+                        already.append(f"{ref}: {key} {snap[key]} already (wait reports it)")
+                        snap[key], snap[f"{key}-evidence"] = "-", "-"
+                first[ref] = snap
+            seen = update(opts.state, put=first, keep_flags=True)
+            print("\n".join(already + [f"watching {len(seen)} PR(s)"]))
             return 0
         if opts.command == "check":
             changes, rows, _ = sweep(opts.state, look)
