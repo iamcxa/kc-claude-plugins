@@ -4,7 +4,9 @@
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -14,6 +16,28 @@ import unittest
 SCRIPT = Path(__file__).with_name("learning.py")
 ENTRY = {"Applicability": "Synthetic import path", "Practice": "Check encoding", "Evidence": "Synthetic case A"}
 NEW = {"Applicability": "Synthetic export path", "Practice": "Check header order", "Evidence": "Synthetic case B"}
+PACKAGE = SCRIPT.parent.parent
+PR_WATCH = SCRIPT.with_name("pr_watch.py")
+PR_REF = "example/project#2"
+GH_STUB = """#!/usr/bin/env python3
+import json, os, sys
+path = os.environ["GH_STUB_STATE"]
+args = sys.argv[1:]
+with open(path + ".log", "a") as log:
+    log.write(json.dumps(args) + "\\n")
+if args[:2] == ["pr", "merge"] or "--auto" in args:
+    sys.exit(1)
+data = json.load(open(path))
+if args[:2] == ["pr", "ready"]:
+    data["isDraft"] = False
+    json.dump(data, open(path, "w"))
+elif args[:2] == ["pr", "view"]:
+    print(json.dumps(data))
+else:
+    sys.exit(1)
+"""
+RUNNING = [{"status": "IN_PROGRESS"}]
+SUCCESS = [{"conclusion": "SUCCESS"}]
 
 
 class LearningTests(unittest.TestCase):
@@ -816,6 +840,148 @@ class LearningTests(unittest.TestCase):
                  "--observation", self.observed(plan, "merged", draft=False))
         refused = self.advance(claim, plan, "open", code=1)
         self.assertIn("stopped", refused["error"])
+
+
+    def gh_stub(self, **fields):
+        path = self.base / "gh-state.json"
+        if not hasattr(self, "gh_bin"):
+            self.gh_bin = self.base / "bin"
+            self.gh_bin.mkdir()
+            (self.gh_bin / "gh").write_text(GH_STUB)
+            (self.gh_bin / "gh").chmod(0o755)
+            self.gh_env = {**os.environ, "GH_STUB_STATE": str(path), "PATH": f"{self.gh_bin}:{os.environ['PATH']}"}
+            fields = {"state": "OPEN", "isDraft": True, "mergeable": "MERGEABLE", "headRefOid": "c" * 40,
+                      "statusCheckRollup": RUNNING, "title": "Synthetic learning proposal",
+                      "mergeCommit": None, **fields}
+            path.write_text(json.dumps(fields))
+        else:
+            path.write_text(json.dumps({**json.loads(path.read_text()), **fields}))
+
+    def gh(self, *args):
+        done = subprocess.run(["gh", *args], capture_output=True, text=True, env=self.gh_env, timeout=15)
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        return done.stdout
+
+    def watch(self, *args):
+        done = subprocess.run([sys.executable, str(PR_WATCH), "--state", str(self.base / "watch.json"), *args],
+                              capture_output=True, text=True, env=self.gh_env, timeout=30)
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        return done.stdout
+
+    def no_merge_called(self):
+        calls = [json.loads(line) for line in (self.base / "gh-state.json.log").read_text().splitlines()]
+        self.assertTrue(calls)
+        self.assertFalse([c for c in calls if c[:2] == ["pr", "merge"] or "--auto" in c], calls)
+
+    def observation_from_gh(self, plan, pr_json):
+        read = json.loads(pr_json)
+        value = {key: plan[key] for key in ("repository", "branch", "candidate_commit", "marker")}
+        value.update(state=read["state"].lower(), pr=PR_REF, draft=read["isDraft"],
+                     merge_commit=(read.get("mergeCommit") or {}).get("oid"),
+                     evidence=["Stub gh pr view read"])
+        path = self.base / "observation-gh.json"
+        path.write_text(json.dumps(value))
+        return path
+
+    def claim_new(self, suffix, code=0):
+        self.pack["task_id"] = f"next-{suffix}"
+        self.write_pack()
+        return self.cli("claim", "--input", self.input, "--owner", "session-next", code=code)
+
+    def open_draft(self, suffix):
+        self.reset_store()
+        self.pack["task_id"] = f"followed-{suffix}"
+        self.write_pack()
+        holder, plan = self.delivery_fixture()
+        claimed = self.deliver(holder)
+        self.cli("delivery-record", "--job", holder["job"], "--token", claimed["delivery_token"],
+                 "--observation", self.observed(plan, "open"))
+        return holder, plan, claimed["delivery_token"]
+
+    def section(self, name, skill="learn"):
+        text = (PACKAGE / "skills" / skill / "SKILL.md").read_text()
+        body = text.split(f"## {name}\n", 1)[1]
+        return re.sub(r"\s+", " ", body.split("\n## ", 1)[0])
+
+    FOLLOW = "Follow the delivery to a recorded end"
+
+    def test_follow_section_orders_ready_before_merge_ask(self):
+        text = self.section(self.FOLLOW)
+        markers = ["pr_watch.py add", "green on the Draft", "gh pr ready", "`draft` false",
+                   "ask the Captain to merge", "state `merged` or `closed`"]
+        places = [text.find(marker) for marker in markers]
+        self.assertNotIn(-1, places, dict(zip(markers, places)))
+        self.assertEqual(places, sorted(places), dict(zip(markers, places)))
+        self.assertIn("`checks=none`", text)
+        self.assertRegex(text, r"`checks=none`.{0,60}mark it ready first and wait for green on the ready head")
+
+    def test_replay_of_the_stalled_learning_pr_ends_recorded_without_a_captain_message(self):
+        with self.subTest(arm="control: old text stops after recording the Draft"):
+            holder, plan, token = self.open_draft("control")
+            refused = self.claim_new("control", code=1)
+            self.assertEqual([b["delivery"] for b in refused["blocking"]], ["open"])
+
+        holder, plan, token = self.open_draft("new")
+        self.gh_stub()
+        self.watch("add", PR_REF)
+        self.gh_stub(statusCheckRollup=SUCCESS)
+        self.assertIn("checks pending -> green", self.watch("check"))
+        self.gh("pr", "ready", "2", "--repo", "example/project")
+        self.assertIn("draft True -> False", self.watch("check"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token,
+                 "--observation", self.observed(plan, "open", draft=False))
+        self.claim_new("ready-not-merged", code=1)
+        self.gh_stub(state="MERGED", mergeCommit={"oid": "d" * 40})
+        self.assertIn("state OPEN -> MERGED", self.watch("check"))
+        merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", merged)
+        self.assertTrue(self.claim_new("after-merge")["claimed"])
+        self.no_merge_called()
+
+    def test_open_delivery_with_lost_token_settles_from_github(self):
+        holder, plan, _ = self.open_draft("lost-token")
+        self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40})
+        self.claim_new("lost-token", code=1)
+        notice = self.cli("notices")["notices"][0]
+        self.assertEqual(notice["delivery"]["state"], "open")
+        repo, number = notice["delivery"]["observation"]["pr"].split("#")
+        observation = self.observation_from_gh(plan, self.gh("pr", "view", number, "--repo", repo))
+        stored = self.cli("notices", "--all")["notices"][0]["delivery"]
+        self.plan.write_text(json.dumps(stored["plan"]))
+        self.cli("delivery-recover", "--job", holder["job"], "--expected", stored["digest"],
+                 "--owner-state", "stopped", "--reason", "Token lost; PR read from GitHub",
+                 "--owner", "new-owner", "--plan", self.plan, "--observation", observation)
+        self.assertEqual(self.cli("notices", "--all")["notices"][0]["delivery"]["state"], "merged")
+        self.assertTrue(self.claim_new("lost-token-after")["claimed"])
+        self.no_merge_called()
+        self.assertIn("gh pr view", self.section("Present the result"))
+        paragraph = next(p for p in (PACKAGE / "skills/dev/SKILL.md").read_text().split("\n\n") if "notices" in p)
+        self.assertIn("`gh pr view`", re.sub(r"\s+", " ", paragraph))
+
+    def test_closed_pr_settles_and_release_of_open_delivery_is_refused(self):
+        holder, plan, token = self.open_draft("closed")
+        notice = self.cli("notices", "--all")["notices"][0]
+        refused = self.cli("release", "--job", holder["job"], "--expected", notice["notice_digest"],
+                           "--owner", "captain-declined", "--reason", "Synthetic", code=1)
+        self.assertIn("release refused", refused["error"])
+        self.gh_stub(state="CLOSED", isDraft=False)
+        closed = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", closed)
+        self.assertEqual(self.cli("notices", "--all")["notices"][0]["delivery"]["state"], "closed")
+        self.assertTrue(self.claim_new("after-close")["claimed"])
+        self.no_merge_called()
+        text = self.section(self.FOLLOW)
+        self.assertIn("closes the PR, and FO records `closed`", text)
+        self.assertIn("Do not `release` an open delivery", text)
+        self.assertEqual(text.count("`release`"), 1)
+
+    def test_follow_section_leaves_merge_to_the_captain(self):
+        text = self.section(self.FOLLOW)
+        self.assertNotIn("gh pr merge", text)
+        self.assertNotIn("--auto", text)
+        ask = text.split("ask the Captain to merge", 1)[1].split("6.", 1)[0]
+        for part in ("head SHA", "`candidate_commit`", "ready", "checks state"):
+            self.assertIn(part, ask)
 
 
 if __name__ == "__main__":

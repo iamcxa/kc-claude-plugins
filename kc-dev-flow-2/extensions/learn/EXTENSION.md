@@ -29,7 +29,9 @@ frontmatter.
 - **Read:** learn's result is its notice (no-change, proposal, pending or uncertain). A
   proposal is delivered only under learn's own delivery authority, never by this step.
   The observer report is one line per finding, each with its quoted rule and evidence.
-- **Cannot run:** a learn claim refused because another job is unsettled is reported as
+- **Cannot run:** a learn claim refused because another job is unsettled: when that job's
+  delivery is `open`, FO first settles it from its PR as learn's `Follow the delivery to a
+  recorded end` says and retries once; otherwise it is reported as
   `learn not run: blocked by job <id>` and not retried; settle or release that job first.
   An observer that cannot be dispatched is reported as `observer not run: <reason>`, and FO
   commits that one line as `observer.md` so the check passes and the Captain sees it. A

@@ -26,7 +26,9 @@ user, distinguishing pending/uncertain, no-change, local proposal, PR and observ
 merge; pending proposals are not active rules. Only after actual presentation,
 run `ack --job <job> --expected <notice_digest>` for each shown snapshot. Context
 injection or reading alone is not presentation. A changed digest stays unread;
-interruption may repeat a notice. Read failure holds that learning action, not
+interruption may repeat a notice. Before presenting a delivery shown `open`, read its PR
+with `gh pr view` and settle it as learn's `Follow the delivery to a recorded end` says.
+Read failure holds that learning action, not
 unrelated approved development. This entry-level check is not a host SessionStart
 hook. Use [learn](../learn/SKILL.md) for an explicitly requested named-task loop;
 notices do not authorize evaluation, delivery, retry or merge.
