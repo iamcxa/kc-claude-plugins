@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 import os
+import re
 import subprocess
 import sys
 import tempfile
@@ -167,10 +168,15 @@ class WorkflowCheckoutTest(unittest.TestCase):
         self.assertEqual(subprocess.run([sys.executable, str(SCRIPT)], capture_output=True, text=True).returncode, 2)
         self.assertEqual(check("/no/such/README.md")[0], 2)
 
-    def test_the_instruction_is_in_the_skill_and_the_workflow_template(self):
+    def test_every_instruction_runs_the_script_through_python3_unless_it_is_executable(self):
         named = "<package>/scripts/workflow_checkout.py"
+        launched = re.compile(r"python3\s+" + re.escape(named))
         for path in ("skills/dev/SKILL.md", "references/sd/workflow.md"):
-            self.assertTrue(named in (PACKAGE / path).read_text(), f"{path} does not name {named}")
+            text = (PACKAGE / path).read_text()
+            self.assertIn(named, text, f"{path} does not name {named}")
+            if not os.access(SCRIPT, os.X_OK):
+                self.assertEqual(text.count(named), len(launched.findall(text)),
+                                 f"{path} runs {named} without python3 and the file is not executable")
 
 
 if __name__ == "__main__":

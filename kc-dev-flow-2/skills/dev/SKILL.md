@@ -61,7 +61,7 @@ so that empty view is this workflow's normal case, not the exception. Stage
 skills own profile routing and load the selected references in each worker's
 context.
 
-Before each worker dispatch and on resume, run `<package>/scripts/workflow_checkout.py
+Before each worker dispatch and on resume, run `python3 <package>/scripts/workflow_checkout.py
 <workflow-dir>/README.md`. Exit 1 means the README FO follows differs from the trunk's,
 exit 2 that it could not be compared; hold the dispatch, show the Captain the printed
 remedy or cause, and wait. Do not run the remedy or move the checkout yourself. This
