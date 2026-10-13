@@ -30,7 +30,11 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   not counted. FO does not ask for merge while a request it made is unanswered; with no
   review of the head after a push it chose not to re-request, the merge ask names Copilot
   as not read, as **When** says. Exit 2 is a configuration error, reported as `copilot not
-  run: <reason>`. On exit 0 FO reads that review with `gh api repos/<owner/repo>/pulls/<N>/reviews/<id>`
+  run: <reason>`. Exit 5 (an answer with no review heading and no line comment of its own,
+  such as a quota refusal) is reported as `copilot not run: <the printed quote>`: it is no
+  round, not clean, not waited for, and FO does not request Copilot again in this task until
+  the Captain says its quota is back. The merge ask names Copilot as not read with the
+  printed quote, and offers a retry. On exit 0 FO reads that review with `gh api repos/<owner/repo>/pulls/<N>/reviews/<id>`
   and its line comments, and records the round in the committed gate summary with the
   heading line quoted. The round is clean only when Copilot recommends approval and lists
   no open or previously missed finding and no line comment; otherwise each finding goes
@@ -43,4 +47,12 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   was answered in about two minutes, and a request made three seconds after a push was
   answered five minutes later with a review of the new head. On 2026-10-12 a `gh pr edit
   --add-reviewer @copilot` after a push left no `review_requested` event, and the API
-  request above then reached Copilot.
+  request above then reached Copilot. On 2026-10-13 two requests were refused in six seconds
+  with "Copilot was unable to review this pull request because the user who requested the
+  review has reached their quota limit.", a COMMENTED review with no heading and no line
+  comment; an earlier reader read it as answered. A review is an answer with a heading or a
+  line comment of its own, so a refusal that carried its own heading would still read as
+  answered, and a future layout with neither reads as exit 5 until the script learns it.
+  `gh api /copilot_internal/user` (an editor endpoint with no documented contract) showed
+  318 of 1500 premium interactions left at the time of both refusals, so it does not
+  predict a refusal and this extension does not probe it.

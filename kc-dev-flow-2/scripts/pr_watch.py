@@ -7,7 +7,7 @@
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
 
 An outcome is a merge or close, a draft flip, a new or cleared conflict, CI turning green
-or failing, a Codex verdict, or Copilot answering the head; a check or review that only
+or failing, a Codex verdict, or Copilot answering or refusing the head; a check or review that only
 starts is recorded silently.
 
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
@@ -33,7 +33,7 @@ TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex", "codex-evid
            "copilot", "copilot-evidence")
 OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
             "checks": {"failing", "green"}, "codex": {"clean", "findings", "error"},
-            "copilot": {"answered", "error"}}
+            "copilot": {"answered", "not-run", "error"}}
 
 
 def outcome(key, old, new):
@@ -72,7 +72,7 @@ def codex(repo, number):
 
 
 def copilot(repo, number):
-    return reader(COPILOT, repo, number, {0: "answered", 3: "requested", 4: "not-reviewed"})
+    return reader(COPILOT, repo, number, {0: "answered", 3: "requested", 4: "not-reviewed", 5: "not-run"})
 
 
 def look(ref, view=gh, review=codex, with_codex=False, with_copilot=False, review_copilot=copilot):

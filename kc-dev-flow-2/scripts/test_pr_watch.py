@@ -230,6 +230,17 @@ class PrWatchTests(unittest.TestCase):
             finally:
                 watch.COPILOT = old
 
+    def test_a_copilot_refusal_is_not_run_not_a_reader_error_and_wakes_wait(self):
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d, "copilot_review.py")
+            fake.write_text("print('not a review of aaa: \"quota limit\"; answer=review:5 at t')\nraise SystemExit(5)\n")
+            old, watch.COPILOT = watch.COPILOT, fake
+            try:
+                self.assertEqual(watch.copilot("o/r", "1"), ("not-run", "-"))
+            finally:
+                watch.COPILOT = old
+        self.assertTrue(watch.outcome("copilot", "requested", "not-run"))
+
     def test_a_save_keeps_fields_another_writer_added_meanwhile(self):
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
