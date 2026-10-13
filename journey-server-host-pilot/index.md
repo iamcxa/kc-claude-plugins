@@ -494,3 +494,35 @@ Local Node recovery/admission verification passes and the requested handoff is r
 
 The authorized minimal correction is committed and locally verified. The bounded hosted attempt could not pass connection readiness, so actual same-socket hibernation and post-wake protections remain unverified; independent validation must retain that distinction.
 Minimal acceptance is the read-only command `rtk proxy node /Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/outputs/journey-server-host-pilot-usage/hibernation-fix/verify-evidence.mjs`: it verifies exact candidate/diff, local assertions, preserved connection failures, cleanup, required-check disposition and measurement availability without network access. Its output explicitly says hosted lifecycle NOT RUN; receipt integrity is not delivery approval.
+
+## Stage Report: validation
+
+- DONE: Independently review the new Cloudflare-only correction against Captain amendment 5 and all unchanged contract boundaries; compare the preserved original candidate and assess the actual hibernation, recovery and authorization claims.
+  The exact clean correction candidate preserves the original candidate; only the Cloudflare adapter and adjacent private-host documentation differ. Node, UI, shared contract/schema, concurrency and dependencies are unchanged.
+- DONE: Attack the proof boundary using the exact source, external observer and raw local receipts: distinguish real same-socket reconstruction with continuous heartbeats from eligibility, idle readback, redeployment and emulator evidence; assess measurement attribution and cleanup.
+  Observer source/bundle identity matches; timer wrappers delegate to real timers, sockets remain initialized, heartbeat continues, and prepared wake assertions require a new constructor generation with the same sessions and document/auth readback. No hosted socket or lifecycle round executed; prepared assertions are not proof.
+- DONE: Deliver an honest bounded verdict, required checks and an exact three-to-six-step acceptance procedure, with detailed provider evidence local only and conclusions-only workflow state; no product repair or additional hosted deployment.
+  Detailed review and the four-step acceptance/output are retained locally for the First Officer; no product change, provider operation, PR or merge was performed by validation.
+- DONE: Assess the known defect and the owned local runtime evidence without duplicating already-green suites.
+  Setting `clientTimeout: Infinity` bypasses the known finite-timeout prune interval; exact application ping/pong auto-response bypasses room handling. Owned local protocol persistence, expiry and revoke checks pass; restoring the finite timeout or removing auto-response would fail them. Interval absence alone cannot establish complete eligibility or actual provider hibernation.
+- DONE: Independently run required deterministic checks on the current candidate.
+  ADR lint, comment ratio, document impact, dispatch records, design surfaces and diff check pass; exact commands/exits remain local. Invalid reservations, excessive comments, incomplete dispatch records or missing required design surfaces would fail their corresponding checks.
+- DONE: Preserve the number and document boundaries.
+  The task uses its reserved architecture-decision record and adds no SQL migration. Private-host documentation is updated; journey README remains unaffected because legacy import/export and canonical format are unchanged. The correction adds no new abstraction or dependency.
+- SKIPPED: Full task-aware number guard is unavailable and explicitly NOT PASS.
+  The full guard remains unavailable because the database surface has no declared migration path; exact diagnostics remain local. The supplementary check passes only available checks and does not replace the full guard; the prior First Officer disposition remains in force.
+- FAILED: Complete amended hosted acceptance and measurement.
+  Recommendation REJECTED for complete hosted acceptance: bounded readiness attempts ended before application sockets, so real same-socket hibernation/recovery and post-wake protections are NOT RUN; scoped usage is NOT SHOWN, never zero cost. Local correction evidence is acceptable; no new Material product defect was demonstrated.
+- DONE: Retain actionable advisory findings with the four required evidence fields.
+  Needs decision: user/workflow = private pilot operator idles and resumes existing sessions; harm = complete-delivery claims would lack required proof, not an observed data/auth failure; boundary = `value-ac[AC-4]` and `captain-ruling[2026-10-13]`; trigger = empty hosted lifecycle receipts and absent scoped measurement, with this run's allowance exhausted.
+- SKIPPED: Unexecuted integration obligations remain deferred risks rather than invented defects.
+  User/workflow = future authorized native-agent/browser/remote-host use; harm = unmeasured behavior, none demonstrated here; boundary = `value-ac[AC-1]`, `value-ac[AC-4]`, `value-ac[AC-5]`; trigger = native clients, browser/static delivery, hosted assets/R2, remote Node, licensing, large payload and billing acceptance were not run. Material and Polish: none newly established.
+- DONE: Preserve cleanup and publication boundaries.
+  Saved cleanup receipts and independent inventories support removal; the separate deletion CLI error remains retained locally. Synthetic secrets are absent and final read-only inventory found no owned validation server/emulator. Provider counters, times, identities, endpoints, inventories and raw receipts stay local under amendment 3.
+- DONE: Execute the bounded acceptance procedure and retain every exact step with output.
+  The four-step offline acceptance procedure exits 0; its exact commands and full output remain local. It verifies identity, receipt integrity, guard disposition and cleanup; changed source, altered receipts or live owned processes would fail. It performs no network/provider operation and is not hosted acceptance.
+
+### Summary
+
+The minimal correction is supported by exact-source review and owned local runtime evidence, with no new Material defect found. Full amended hosted acceptance remains REJECTED because actual provider reconstruction and post-wake protections are NOT RUN and usage is NOT SHOWN; no further cloud action is authorized here.
+Detailed assessment, exact acceptance helper modes and captured output are retained in the local handback. FO must run and show the four compact steps unchanged before routing the Captain's remaining acceptance decision; validation did not change any gate, frontmatter or correction-round event.
