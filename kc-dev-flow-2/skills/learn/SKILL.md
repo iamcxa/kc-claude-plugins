@@ -227,12 +227,16 @@ read `headRefOid` with the plan's `candidate_commit`. The recorder takes
 On a mismatch FO records nothing, leaves the delivery `open`, and reports the PR with
 both SHAs to the Captain.
 
-No applicable checks: after `draft True -> False`, if two `pr_watch.py check` reads at
-least 60 seconds apart both show `checks=none`, no check applies to this change (a
-repository without checks, or path filters that exclude a learning-only change, never
-shows one). FO does not wait for green: it records ready as in step 4, and its merge ask
-states `checks=none: no check ran on the ready head`. Pending or failing checks are not
-this case: wait for green, and failing holds.
+No applicable checks: after `draft True -> False`, if two `<package>/scripts/pr_watch.py
+check` reads at least 60 seconds apart both show `checks=none` and
+`gh pr view N --repo OWNER_REPO --json mergeStateStatus` is not `BLOCKED`, no check
+applies to this change (a repository without checks, or path filters that exclude a
+learning-only change, never shows one). FO does not wait for green: it records ready as
+in step 4, and its merge ask states `checks=none: no check ran on the ready head`.
+`BLOCKED` means GitHub still waits on a required check or review, so it is not this case:
+FO leaves the delivery `open` and reports that state to the Captain instead of asking to
+merge. Pending or failing checks are not this case either: wait for green, and failing
+holds.
 
 A Captain who declines the proposal closes the PR, and FO records `closed`. Do not
 `release` an open delivery: it is refused.

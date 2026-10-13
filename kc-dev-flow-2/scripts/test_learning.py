@@ -850,7 +850,7 @@ class LearningTests(unittest.TestCase):
             (self.gh_bin / "gh").write_text(GH_STUB)
             (self.gh_bin / "gh").chmod(0o755)
             self.gh_env = {**os.environ, "GH_STUB_STATE": str(path), "PATH": f"{self.gh_bin}:{os.environ['PATH']}"}
-            fields = {"state": "OPEN", "isDraft": True, "mergeable": "MERGEABLE",
+            fields = {"state": "OPEN", "isDraft": True, "mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN",
                       "headRefOid": getattr(self, "candidate", "c" * 40),
                       "statusCheckRollup": RUNNING, "title": "Synthetic learning proposal",
                       "mergeCommit": None, **fields}
@@ -1018,8 +1018,10 @@ class LearningTests(unittest.TestCase):
     def test_no_applicable_checks_ends_in_a_disclosed_ask_not_a_wait(self):
         text = self.section(self.FOLLOW)
         case = text.split("No applicable checks:", 1)[1].split("When the watch report never arrived", 1)[0]
-        self.assertRegex(case, r"two `pr_watch.py check` reads at least 60 seconds apart both show `checks=none`")
-        for part in ("FO does not wait for green", "records ready as in step 4",
+        self.assertRegex(case, r"two `<package>/scripts/pr_watch.py check` reads at least 60 seconds apart both show `checks=none` and")
+        for part in ("FO does not wait for green", "records ready as in step 4", "--json mergeStateStatus",
+                     "`BLOCKED` means GitHub still waits on a required check or review",
+                     "reports that state to the Captain instead of asking to merge",
                      "`checks=none: no check ran on the ready head`", "failing holds"):
             self.assertIn(part, case)
         holder, plan, token = self.open_draft("nochecks")
@@ -1030,6 +1032,7 @@ class LearningTests(unittest.TestCase):
         self.assertIn("checks=none", self.watch("check"))
         self.assertIn("checks=none", self.watch("check"))
         self.assertTrue(self.head_matches(plan, self.gh("pr", "view", "2", "--repo", "example/project")))
+        self.assertEqual(json.loads(self.gh("pr", "view", "2", "--repo", "example/project"))["mergeStateStatus"], "CLEAN")
         self.cli("delivery-record", "--job", holder["job"], "--token", token,
                  "--observation", self.observed(plan, "open", draft=False))
         self.gh_stub(state="MERGED", mergeCommit={"oid": "d" * 40})
