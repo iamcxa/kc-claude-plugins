@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.21.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.20.0...kc-dev-flow-2-v0.21.0) (2026-10-13)
+
+
+### Features
+
+* **kc-dev-flow-2:** peers extension lets FO ask a peer session of the same harness ([#620](https://github.com/iamcxa/kc-claude-plugins/issues/620)) ([f74f380](https://github.com/iamcxa/kc-claude-plugins/commit/f74f38042e8dab8683ae0b2633ca5f84bae07eee))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** FO runs the acceptance script as written before showing it at the validation gate ([#625](https://github.com/iamcxa/kc-claude-plugins/issues/625)) ([a592e8b](https://github.com/iamcxa/kc-claude-plugins/commit/a592e8b7241f4f278c23b3a013ff4e0db281570d))
+
 ## [0.20.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.19.1...kc-dev-flow-2-v0.20.0) (2026-10-12)
 
 

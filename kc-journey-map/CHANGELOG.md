@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.5.2](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.5.1...kc-journey-map-v1.5.2) (2026-10-13)
+
+
+### Bug Fixes
+
+* **kc-journey-map:** read tasks by slug in an id-style: slug workflow ([#623](https://github.com/iamcxa/kc-claude-plugins/issues/623)) ([805a7a6](https://github.com/iamcxa/kc-claude-plugins/commit/805a7a690d19bfbbacd536a940cb7cc077371ec3)), closes [#622](https://github.com/iamcxa/kc-claude-plugins/issues/622)
+
 ## [1.5.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.5.0...kc-journey-map-v1.5.1) (2026-10-07)
 
 
