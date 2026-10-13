@@ -266,3 +266,10 @@ Does not cover: an FO actually following the text (AC-7), real GitHub calls (the
 ### Summary
 
 PASSED for f16898491a5d4fadbb189373fbbe89754013dddc. I re-ran the evidence commands and a falsifier for each of AC-1 to AC-5, saw the control arm stall on the old text and the new arm settle with no Captain message, confirmed the four-file scope, and all package checks exit 0. AC-7 (an FO following the order on the next real learning PR) is unverified and live-only; the main limit is that the text is prose-enforced.
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-13): validation recommended PASSED on #639 f1689849. Codex review round 1 (review:5502750442) left two P1 and one P2, all to fix (a P1 blocks in every round; rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 #639 `skills/learn/SKILL.md` (around line 221): the merged or restart settle reads `headRefOid` but never requires it to equal the plan's `candidate_commit`, so a different commit can be recorded as the reviewed proposal's delivery. Compare and hold on a mismatch before `delivery-record` or `delivery-recover`.
+  - P1 #639 `skills/learn/SKILL.md` (around line 214): a repository with no PR checks, or path filters that exclude a learning-only change, shows `checks=none` before and after ready; requiring green on the ready head waits forever and keeps the delivery `open`. Tell draft-skipped CI from no applicable checks and say whether that case is accepted or held.
+  - P2 #639 `skills/learn/SKILL.md` (around line 230): a live owner whose watch missed the merge is sent to `delivery-recover --owner-state stopped`, a false attestation that archives its record and rotates its token. Reserve stopped recovery for a stopped owner; a live token holder records with `delivery-record`.
