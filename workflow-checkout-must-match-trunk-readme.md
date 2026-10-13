@@ -279,3 +279,49 @@ With `core.autocrlf=true` (or any smudge filter that rewrites bytes on checkout)
 ### Summary
 
 New head 70da29c7 fixes both P2 in `workflow_checkout.py` only (plus its test file); both files were already in the PR diff. Nothing left for FO beyond merging the head into the stacked observer-before-merge-guard branch.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent recheck of the cycle-1 repair on #631 head 70da29c7: both Codex round-1 P2 (clean filters hide a CRLF README; the printed remedy does not quote the checkout path) reproduced fixed against 085e28aa, their new tests shown failing under a mutation you run yourself, and AC-1 to AC-6 re-run at the new head with any change from the cycle-1 validation named
+  Verdict PASSED. Candidate #631 head 70da29c7463561b79a9c12520dc37294e02ab540 (Draft, OPEN), base origin/main 9e68eb87; repair diff 085e28aa..70da29c7 is `workflow_checkout.py` (+3 -2) and `test_workflow_checkout.py` (+24) only; all five CI checks SUCCESS. Throwaway worktrees and fixtures, removed; candidate untouched.
+  P2a reproduced on a fresh repo with `.gitattributes` `*.md text eol=lf`, README rewritten CRLF (`file`: CRLF line terminators): 085e28aa prints `README matches origin/main`, exit 0 (false pass); 70da29c7 prints `differs from origin/main: on disk bb515805, origin/main 2b7dc795`, exit 1. P2b: detached checkout in `/tmp/val2-fx/stale checkout`: 085e28aa prints `git -C /tmp/val2-fx/stale checkout checkout --detach origin/main`, run from `/` via `sh -c` it fails (exit 128, no such directory); 70da29c7 prints `git -C '/tmp/val2-fx/stale checkout' checkout --detach origin/main`, run via `sh -c` exits 0 and moves HEAD to origin/main.
+  Mutations I ran on a copy: removing `--no-filters` fails only `test_a_crlf_readme_does_not_hash_equal_to_the_lf_trunk_blob_through_a_clean_filter` (asserts exit 1 for a CRLF README under the eol=lf filter); removing `shlex.quote` fails only `test_the_printed_remedy_runs_as_typed_when_the_checkout_path_has_a_space` (runs the printed remedy via `sh -c` and asserts HEAD == origin/main). Both copies also showed an ERROR in `test_the_instruction_is_in_the_skill_and_the_workflow_template` that the unmutated copy shows too: it reads package files by relative path and my copy sat outside the package tree, so it is my copy's location, not the candidate (the candidate's own run is green).
+  AC-1 to AC-3 run on real worktrees by the acceptance script below (stale 6d344bcb exit 1 with the remedy; origin/main exit 0; appended line exit 1, restored exit 0). AC-4 to AC-6 are `test_workflow_checkout.py`: 13 tests OK (cycle 1: 11; the two new ones are the P2 tests); `lint-skills.py` PASS (5369 of 5369 words). Change from cycle 1: none in any AC result; the printed remedy now shell-quotes the path, and the README is hashed with `--no-filters`.
+- DONE: The minimal acceptance script updated to the new head, run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Below under Acceptance script. Run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>`: exit 0, output matched every expectation; `remote.origin.url` identical before and after (`https://github.com/iamcxa/kc-claude-plugins.git`). Needs network to origin, `git`, `python3`; named checkout `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo`, which already holds 70da29c7.
+- DONE: adr_lint.py docs/adr --since <base> run at the new head with its exit code; verdict PASSED or REJECTED with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since 9e68eb87 --require 0014` at 70da29c7: `13 ADR file(s) checked, 0 legacy`, exit 0. Also at 70da29c7: `comment_ratio.py 9e68eb87 70da29c7` exit 0 (3 comment lines of 234 code lines, 1.3%; the repair adds none); `dispatch_records.py` exit 0 (6 records complete); `design_surfaces.py check` exit 0; `number_guards.py check` exit 0 (head 70da29c74635). Verdict PASSED, no Material finding. Findings: none new. Carried from cycle 1, unchanged: Polish `doc_impact.py` still lists kc-dev-flow-2/README.md and skills/maintain-flow/SKILL.md (`unaffected: neither names workflow_checkout.py or the 5331 budget`); Deferred risk `git fetch` has no timeout or `GIT_TERMINAL_PROMPT=0` (Material if an FO is observed hanging on this check). The cycle-1 Polish about an unquoted remedy path is now fixed. Deferred risk, already in cycle 2's Limits: with `core.autocrlf=true` or a smudge filter the disk README differs from the trunk blob, so the check holds (exit 1, fail-safe, never a false pass); Material if a supported FO checkout is observed held for that reason.
+
+### Acceptance script (cycle 2)
+
+Run from any shell (it changes git config only inside a throwaway clone, never in the shared checkout); prints, in order: (1) exit 1 stale, remedy with the spaced path quoted, (2) exit 0 current, (3) exit 1 edited then exit 0 restored, (4) exit 2 unreachable origin in a throwaway clone, (5) `OK` for 13 tests. Not covered: that a real FO session runs it before dispatch (prose-enforced), the rest of the workflow directory, a host with `core.autocrlf=true`, and CI.
+
+    set -eu
+    REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+    for d in "pkg" "stale checkout" "current"; do git -C "$REPO" worktree remove --force "/tmp/accept-$d" 2>/dev/null || true; done
+    git -C "$REPO" fetch -q origin main
+    git -C "$REPO" worktree add -q --detach /tmp/accept-pkg 70da29c7
+    git -C "$REPO" worktree add -q --detach "/tmp/accept-stale checkout" 6d344bcb
+    git -C "$REPO" worktree add -q --detach /tmp/accept-current origin/main
+    S=/tmp/accept-pkg/kc-dev-flow-2/scripts/workflow_checkout.py
+    python3 "$S" "/tmp/accept-stale checkout/docs/dev2/README.md" || echo "exit $?"
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md; echo "exit $?"
+    printf '\nlocal edit\n' >> /tmp/accept-current/docs/dev2/README.md
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md || echo "exit $?"
+    git -C /tmp/accept-current checkout -q -- docs/dev2/README.md
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md; echo "exit $?"
+    rm -rf /tmp/accept-clone
+    git clone -q --no-checkout "$REPO" /tmp/accept-clone
+    git -C /tmp/accept-clone fetch -q "$REPO" refs/remotes/origin/main:refs/heads/probe
+    git -C /tmp/accept-clone checkout -q probe
+    git -C /tmp/accept-clone remote set-url origin /nonexistent/origin.git
+    python3 "$S" /tmp/accept-clone/docs/dev2/README.md || echo "exit $?"
+    rm -rf /tmp/accept-clone
+    python3 -B /tmp/accept-pkg/kc-dev-flow-2/scripts/test_workflow_checkout.py 2>&1 | tail -3
+    for d in "pkg" "stale checkout" "current"; do git -C "$REPO" worktree remove --force "/tmp/accept-$d"; done
+
+Observed (2026-10-13, origin/main 9e68eb87): `README differs from origin/main: on disk 946f5203, origin/main 835dad49 (checkout HEAD 6d344bcb). Dispatch holds. Remedy: git -C '/tmp/accept-stale checkout' checkout --detach origin/main` / `exit 1`; `README matches origin/main (835dad49; checkout HEAD 9e68eb87)` / `exit 0`; `README differs ... on disk 5eb1f9f3 ... Remedy: git -C /tmp/accept-current checkout --detach origin/main` / `exit 1`; `README matches origin/main (835dad49 ...)` / `exit 0`; `cannot verify the workflow README against its trunk: cannot fetch origin/main ... Dispatch holds.` / `exit 2`; `Ran 13 tests ... OK`. The origin/main hash will change once a later sync PR merges; the shape (1, 0, 1, 0, 2, OK) will not.
+
+### Summary
+
+PASSED. Both Codex round-1 P2 reproduce as real defects at 085e28aa (a CRLF README under an eol=lf filter passes; the remedy for a spaced path is not runnable) and are fixed at 70da29c7; each new test fails only under the mutation that removes its fix. No AC result changed from cycle 1, and the acceptance script now runs at 70da29c7 with a spaced stale-checkout path. I wrote no `git config` in any shared worktree (the unreachable-origin step runs in a throwaway clone; origin URL identical before and after). Unverified: behaviour of a real FO session (prose-enforced), CI duration, and a host with `core.autocrlf=true`.
