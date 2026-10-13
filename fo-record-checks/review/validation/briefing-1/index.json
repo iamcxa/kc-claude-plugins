@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-record-checks:validation:attempt-1:revision-1",
+  "question": "Deliver #640 head 63dfff51 (dispatch_records.py --names flags bare package-script names; new delivery_gate.py holds a merge ask when the PR head differs from the latest validated candidate or a triggered second reviewer has no stated outcome; five workflow.md sentences, the fifth added in implementation to match the validator rule to the FO step): FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-record-checks:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fd9d5eea032123d7721aca13689e4cc802361da4/fo-record-checks.md",
+      "rev": "sha256:b09f946d07b6e0142c22f0fba29ada6ac4dc7552e64fcf87f47460d3071dd153",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED at 63dfff51 (AC-1..AC-8; replays against archived records reproduce the design; a falsifier per criterion fails; live gh run on #640). FO ran its six acceptance steps as written in env -i bash: every step matched (bare name exit 1 and full path exit 0; head 7679ab7a vs validated 40c714a6 exit 1, equal exit 0; missing second-reviewer outcome exit 1, stated exit 0; lint 5561 of 5561; 10 and 12 tests OK). CI green. External rounds: Codex 1 (comment:6144832870, clean). RoboRev local (625, 626: prefix compare High, kept), not counted. Second reviewer: copilot because the change adds a check before the merge ask (merge rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. FO declines at candidate 63dfff51: Deferred risk, prefix-of-equal-length compare accepts a different commit sharing the validated short prefix (archived reports record 8 characters, so exact-40 would fail them all; none observed); Deferred risk, a sentence naming the second reviewer and carrying another reviewer's token passes (AC-5 specifies one sentence; none observed); Deferred risk, a number written between Verdict PASSED and the SHA is read as the candidate (fails closed with a message); Polish, --names on a missing file prints a traceback with exit 1; Polish, AC-6 text says base 5415 and about 120 words, measured 5463 and +98. Design change accepted by validation: a fifth sentence, number_guards Applied bullet, matching AC-6d. Not verified: a live FO running both commands (prose-enforced), the second-reviewer false-positive rate (six texts, one violating)."
+    }
+  ]
+}

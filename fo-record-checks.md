@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:fo-record-checks:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:fo-record-checks-validation-1
+              briefing:
+                id: briefing:fo-record-checks:validation:attempt-1:revision-1
+                digest: sha256:01bc1a70d53e79e3fbf9392cc65ab4817e6a827c42c515a4192c03c1cb6a37eb
+                room-ref: ./fo-record-checks/review/validation/briefing-1
 started: 2026-10-13T10:58:03Z
 worktree: .worktrees/spacedock-ensign-fo-record-checks
 pr: iamcxa/kc-claude-plugins#640
