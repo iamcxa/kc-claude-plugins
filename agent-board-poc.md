@@ -40,6 +40,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-13T10:52:28.642148Z"
                 reason: Captain asked for a Conductor-hosted Codex check after revision-1 was bound; its result must be in the reviewed snapshot
+            - id: gate-attempt:agent-board-poc-validation-2
+              briefing:
+                id: briefing:agent-board-poc:validation:attempt-2:revision-1
+                digest: sha256:6a1112f60809d2d162746e8c97b5b4f3fffcccb09482828e093f9c054f7cf7e4
+                room-ref: ./agent-board-poc/review/validation/briefing-2
 started: 2026-10-13T08:57:55Z
 ---
 
