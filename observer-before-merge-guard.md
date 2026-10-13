@@ -270,3 +270,8 @@ Does not cover: an FO actually running the check before the sentinel (prose-enfo
 ### Summary
 
 PASSED: AC-1 to AC-9 hold at 0830a3be, with a mutation or counterexample shown red for every criterion and the real-state, learn-closure and observer-window checks run. One Deferred risk (the workflow.md name check accepts either of two mentions), no Material finding, roborev:609 confirmed a false positive.
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-13): validation recommended PASSED on #632 0830a3be (roborev:609 confirmed a false positive by the validator; FO declines it). Codex review round 1 (review:5500580111) left one P1, to fix; investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 #632 `extensions/learn/EXTENSION.md` (around line 22): the documented late-report repair commits `_archive/<slug>/observer.md` with a pathspec-only `git commit`, which cannot add an untracked file; `test_observer_recovery.py` passes only because it runs `git add` first. Put the staging step in the documented repair.
