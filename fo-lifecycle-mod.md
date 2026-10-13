@@ -53,6 +53,7 @@ To be written at ideation. The proof owed is a replay of the relay #362 situatio
 ## FO alignment
 
 Alignment: needed at ideation: the design changes what FO loads at three lifecycle points across every adopter.
+Result: direction aligned with the Captain in chat on 2026-10-14, before filing. He asked whether the README is too long and whether to split it, index it, or chain read-sized slices with a hook index; FO answered that the reading length was not the cause (the relay FO chose `sed -n` ranges) and proposed a kc-dev-flow-2 mod on Spacedock's existing `startup`/`idle`/`merge` hook points, with the step list per point; he approved filing it (「開」) and scheduling it (「ok」). No research request; Spacedock is not changed.
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
