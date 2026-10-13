@@ -1,0 +1,68 @@
+name: journey-dev2 loop smoke
+
+# Runs the ruling-to-map loop against the pinned Spacedock CLI. Path-filtered to the files the
+# loop reads. GitHub Actions cost per PR is unmeasured.
+
+on:
+  pull_request:
+    paths:
+      - "kc-journey-map/lib/journey-fold.mjs"
+      - "kc-journey-map/lib/journey-reconcile.mjs"
+      - "kc-journey-map/lib/progress.mjs"
+      - "kc-journey-map/lib/add-story.mjs"
+      - "kc-journey-map/lib/fixtures/journey-fold-shapes.mjs"
+      - "kc-journey-map/scripts/journey-dev2-loop-smoke.sh"
+      - "kc-dev-flow-2/extensions/journey-map/**"
+      - "kc-dev-flow-2/scripts/decision_ledger.py"
+      - ".github/workflows/journey-dev2-loop-smoke.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-journey-map/lib/journey-fold.mjs"
+      - "kc-journey-map/lib/journey-reconcile.mjs"
+      - "kc-journey-map/scripts/journey-dev2-loop-smoke.sh"
+      - "kc-dev-flow-2/extensions/journey-map/**"
+      - ".github/workflows/journey-dev2-loop-smoke.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    name: ruling-to-map loop (real Spacedock CLI)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          persist-credentials: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.13.0"
+          cache: npm
+          cache-dependency-path: kc-journey-map/package-lock.json
+
+      - name: Install
+        working-directory: kc-journey-map
+        run: npm ci
+
+      - name: Install pinned Spacedock
+        env:
+          SPACEDOCK_VERSION: v0.27.2
+          SPACEDOCK_SHA256: 8a4e58ecc64bcf7d82e3558c53f2ba5049af04ac2c99b8cdd6e51b2c469a3584
+        run: |
+          set -euo pipefail
+          asset="spacedock_${SPACEDOCK_VERSION#v}_linux_amd64.tar.gz"
+          curl -fsSL -o /tmp/spacedock.tar.gz \
+            "https://github.com/spacedock-dev/spacedock/releases/download/${SPACEDOCK_VERSION}/${asset}"
+          echo "${SPACEDOCK_SHA256}  /tmp/spacedock.tar.gz" | sha256sum -c -
+          tar -xzf /tmp/spacedock.tar.gz -C /tmp
+          mkdir -p "$HOME/.local/bin"
+          install -m 0755 /tmp/spacedock "$HOME/.local/bin/spacedock"
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Loop smoke
+        run: bash kc-journey-map/scripts/journey-dev2-loop-smoke.sh

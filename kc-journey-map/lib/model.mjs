@@ -20,6 +20,7 @@ const normalizeQuestions = (story, storyId) => {
 			because: asked.because,
 			answer: asked.answer ?? (asked.status === 'deferred' && asked.because ? asked.because : undefined),
 			doc: asked.doc,
+			source: asked.source,
 		}
 	})
 }

@@ -137,10 +137,33 @@ node lib/journey-export.mjs    <roomId> <out.png> [pageId]
 node lib/journey-tldr.mjs      export <roomId> <out.tldr>
 node lib/journey-tldr.mjs      import <in.tldr> <roomId>
 node lib/journey-progress.mjs  docs/journey/<slug>.yaml --workflow-dir <dir> [--draw <room> --pages …]
+node lib/journey-fold.mjs      docs/journey/<slug>.yaml --footprints <task folder>/footprints.jsonl --out <draft.yaml>
+node lib/journey-reconcile.mjs docs/journey/<slug>.yaml --workflow-dir <dir>
+node lib/schemas.mjs           journey-map-question
 ```
 
 `journey-tldr.mjs import` replaces the entire target document, including manually drawn
 content — import into a fresh room unless you mean to overwrite.
+
+## Rulings from kc-dev-flow-2
+
+A Captain ruling that answers a map question reaches the map through kc-dev-flow-2's
+`journey-map` extension: a `journey-footprint/v1` line beside the task at the gate, then one
+`journey-fold.mjs` run after the task is archived. The fold writes a draft, never the source
+file, and changes only the folded questions' own lines (`answer`, `status: answered` and a
+`source` carrying his words and date); it creates no story or question and lists one that is
+missing as `no-story` or `no-question`. Approving the draft as a docs-only pull request is the
+Captain's. `journey-reconcile.mjs` prints `unfolded` and `stale-open`, which must be 0 at release
+review, and `unsourced` and `pending`, which are information.
+
+**Where the contract's history lives.** Two record shapes are versioned, each by its producer:
+`journey-footprint` by kc-dev-flow-2 and `journey-map-question` (the question fields, including
+`source`) by this plugin. `node lib/schemas.mjs journey-map-question` prints the current field
+table and version, and exits 1 when the table changed without a new version. Every version is
+in this plugin's release-please `CHANGELOG.md`; the first shape and each MAJOR change have an ADR
+in the marketplace repository's `docs/adr/` (the one titled "a Captain ruling reaches the map
+as a versioned footprint"). Read the CHANGELOG when a consumer refuses a version or a question
+carries a field you do not know, and read the ADR before removing or renaming a field.
 
 ## The four evidence lints
 
