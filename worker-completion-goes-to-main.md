@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:worker-completion-goes-to-main:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:worker-completion-goes-to-main-validation-1
+              briefing:
+                id: briefing:worker-completion-goes-to-main:validation:attempt-1:revision-1
+                digest: sha256:b7cbeb7256744cd4b70d664c8efaeecef9e0e7da4a47332dbc85a6fb84bbc72a
+                room-ref: ./worker-completion-goes-to-main/review/validation/briefing-1
 started: 2026-10-13T07:17:42Z
 worktree: .worktrees/spacedock-ensign-worker-completion-goes-to-main
 pr: iamcxa/kc-claude-plugins#633

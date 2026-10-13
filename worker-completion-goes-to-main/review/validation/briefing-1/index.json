@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-completion-goes-to-main:validation:attempt-1:revision-1",
+  "question": "Deliver #633 head 01eaf231 (FO writes a line naming main as the completion recipient into every dispatch's scope notes; dispatch_records.py fails a record without it; replay_dispatch.py adds it by default with --no-completion-line for a control arm): FO marks it ready and, after #632 merges, retargets it to main and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:worker-completion-goes-to-main:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/07135b9ba05c5e5d2200c1b4061ce9ff1a6fa9bd/worker-completion-goes-to-main.md",
+      "rev": "sha256:4d6ad526648bfc913580b82ef50e8d6f614d1ef803e610055beee4885a119359",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle 3 PASSED at 01eaf231 (round-2 P2 reproduced fixed; three mutations fail their tests; AC-1..AC-3 re-run with a falsifier each; AC-4 carried, its bytes unchanged: on the exact 2026-10-13 dispatch bytes the first SendMessage went to team-lead 3 of 3 without the line and to main 3 of 3 with it, a smoke not a rate). FO ran its six acceptance steps as written, each in env -i bash: every step matched. CI green. External rounds: Codex 3 (round 1 comment:6141635842 clean; round 2 review:5501183844, 1 P2 fixed and revalidated; round 3 review:5501913355, 1 P2, no P1). RoboRev local (612 two findings declined by implementation and confirmed by validation; 618, 620 clean), not counted. Second reviewer: not triggered (Surfaces none, profile pilot, no authority, approval, merge or review rule changed). FO declines at candidate 01eaf231, filed as backlog task replay-control-arm-round3-followups: Codex round 3 P2, --no-completion-line does not strip a directive carried in a supplied --scope file (the maintain-flow text names the flag for the control arm; no replay has used a copied scope file); Polish, a scope file already carrying the line doubles it; Deferred risk, every replay arm now carries the line (only routing replays need the flag). Deferred risk carried: the dispatch_records.py pattern matches a negated line (no negated line observed). D2 cost the Captain accepted at ideation: 9 existing dispatch records in 3 tasks fail the new check (7 in archived journey-map-dev2-contract; journey-canvas-hosted-poc ideation-1 and release-acceptance ideation-1, both open), waived at their gates. Polish: doc_impact lists README and adoption.md (unaffected) and maintain-flow SKILL.md (updated). Not verified: a live FO following the sentence, Codex and Pi hosts, billed CI minutes."
+    }
+  ]
+}
