@@ -1,6 +1,6 @@
 ---
 title: kc-journey-map and kc-dev-flow-2 connect through versioned input/output contracts, each schema owned by its producer, with ADR rulings shown on the map by reference
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 merge: pr
 profile: pilot
@@ -66,7 +66,7 @@ gates:
                 reason: 'Captain 2026-10-13: 「那就照建議，這裡的議題應該是要讓讀者或是說 FO 意識到 ARD, release changelog 等都存在，且必要時要去讀」, approving scope one with D1 and D2 as recommended (the gate question stated that approval accepts them); his addition is recorded as Amendment 1.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-13T03:05:11Z
 ---
 
