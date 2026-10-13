@@ -1,6 +1,6 @@
 ---
 title: Use one private kc-jmap server contract on Node and Cloudflare
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -27,7 +27,7 @@ gates:
                 reason: Captain accepted the minimal scope with 可以，就照這個最小範圍 and authorized starting dev2; after the explicit profile question, Captain selected 改用 pilot（建議）. This accepts direction and entry to ideation only; no implementation/design acceptance, deployment, PR or merge authority is inferred.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Kent approved a minimal reusable server-host refactor, with the same agent access model (base URL and a per-agent credential) for Node.js locally/remotely and Cloudflare. This is a new pilot task; it does not reopen, migrate, or replace the older hosted POC tasks.
