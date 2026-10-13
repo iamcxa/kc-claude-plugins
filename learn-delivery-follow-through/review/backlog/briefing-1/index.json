@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:learn-delivery-follow-through:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation, learn-delivery-follow-through first, then fo-record-checks?",
+  "artifacts": [
+    {
+      "id": "artifact:learn-delivery-follow-through:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c93f14ca1ad10bd50405e4a02638e471a96d3563/learn-delivery-follow-through.md",
+      "rev": "sha256:aba701231e1cd4fab2a4e69760bff27497e1de5e495b161ae6ee7478e82e3424",
+      "mediaType": "text/markdown",
+      "summary": "Seed from the Captain's question on 2026-10-13 after learning PR #637 was left a Draft and its merge went unrecorded until he said it merged. learn (0.21.0, 0.22.0) has no ready, watch or merge-record step; an unrecorded delivery blocks every later learning claim. Recommended profile pilot. Ideation owes the delivery steps and a check that fails when a learning PR is left unrecorded."
+    }
+  ]
+}
