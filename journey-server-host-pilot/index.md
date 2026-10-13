@@ -1,6 +1,6 @@
 ---
 title: Use one private kc-jmap server contract on Node and Cloudflare
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -46,7 +46,7 @@ gates:
                 reason: 'Captain explicitly accepted the presented ideation design and Cloudflare health.active sampled-telemetry exception: 可以，接受這個監控例外，照設計進入實作，房間切換 UI 跟並發規則維持不動。 Approval authorizes implementation under the recorded pilot scope; room-switching UI and concurrency remain unchanged, with no deployment, paid provisioning, migration, merge or production rollout inferred.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-13T08:47:34Z
 ---
 
