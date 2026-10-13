@@ -175,7 +175,7 @@ FIXES = {
     "adr-lint-output": dict(
         need=("the `python3 <package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit code",),
         old=(),
-        swaps=((r" the `<package>/scripts/adr_lint\.py docs/adr --since <base>` command run with its exit code,", ""),)),
+        swaps=((r" the `python3 <package>/scripts/adr_lint\.py docs/adr --since <base>` command run with its exit code,", ""),)),
     "ideation-follow-up": dict(
         file="skills/ideation/principles.md",
         need=("as a proposal, not accepted scope",
