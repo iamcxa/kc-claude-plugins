@@ -850,7 +850,8 @@ class LearningTests(unittest.TestCase):
             (self.gh_bin / "gh").write_text(GH_STUB)
             (self.gh_bin / "gh").chmod(0o755)
             self.gh_env = {**os.environ, "GH_STUB_STATE": str(path), "PATH": f"{self.gh_bin}:{os.environ['PATH']}"}
-            fields = {"state": "OPEN", "isDraft": True, "mergeable": "MERGEABLE", "headRefOid": "c" * 40,
+            fields = {"state": "OPEN", "isDraft": True, "mergeable": "MERGEABLE",
+                      "headRefOid": getattr(self, "candidate", "c" * 40),
                       "statusCheckRollup": RUNNING, "title": "Synthetic learning proposal",
                       "mergeCommit": None, **fields}
             path.write_text(json.dumps(fields))
@@ -873,7 +874,11 @@ class LearningTests(unittest.TestCase):
         self.assertTrue(calls)
         self.assertFalse([c for c in calls if c[:2] == ["pr", "merge"] or "--auto" in c], calls)
 
+    def head_matches(self, plan, pr_json):
+        return json.loads(pr_json)["headRefOid"] == plan["candidate_commit"]
+
     def observation_from_gh(self, plan, pr_json):
+        self.assertTrue(self.head_matches(plan, pr_json), "head check: headRefOid differs from candidate_commit")
         read = json.loads(pr_json)
         value = {key: plan[key] for key in ("repository", "branch", "candidate_commit", "marker")}
         value.update(state=read["state"].lower(), pr=PR_REF, draft=read["isDraft"],
@@ -893,6 +898,7 @@ class LearningTests(unittest.TestCase):
         self.pack["task_id"] = f"followed-{suffix}"
         self.write_pack()
         holder, plan = self.delivery_fixture()
+        self.candidate = plan["candidate_commit"]
         claimed = self.deliver(holder)
         self.cli("delivery-record", "--job", holder["job"], "--token", claimed["delivery_token"],
                  "--observation", self.observed(plan, "open"))
@@ -982,6 +988,93 @@ class LearningTests(unittest.TestCase):
         ask = text.split("ask the Captain to merge", 1)[1].split("6.", 1)[0]
         for part in ("head SHA", "`candidate_commit`", "ready", "checks state"):
             self.assertIn(part, ask)
+
+    def test_head_check_guards_every_record_and_recovery(self):
+        text = self.section(self.FOLLOW)
+        check = text.split("Head check:", 1)[1].split("No applicable checks:", 1)[0]
+        for part in ("before every `delivery-record` and before `delivery-recover`", "`headRefOid`",
+                     "`candidate_commit`", "records nothing", "leaves the delivery `open`", "both SHAs"):
+            self.assertIn(part, check)
+        step4 = text.split("4. Wait", 1)[1].split("5. Only", 1)[0]
+        step6 = text.split("6. When", 1)[1].split("Head check:", 1)[0]
+        settle = text.split("When the watch report never arrived", 1)[1]
+        for name, part in (("step 4", step4), ("step 6", step6), ("settle", settle)):
+            self.assertIn("head check", part, name)
+
+    def test_recorder_cannot_see_a_different_head_so_the_check_is_the_readers(self):
+        holder, plan, token = self.open_draft("head")
+        self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40}, headRefOid="e" * 40)
+        read = self.gh("pr", "view", "2", "--repo", "example/project")
+        self.assertFalse(self.head_matches(plan, read))
+        with self.assertRaises(AssertionError):
+            self.observation_from_gh(plan, read)
+        self.gh_stub(headRefOid=plan["candidate_commit"])
+        read = self.gh("pr", "view", "2", "--repo", "example/project")
+        self.assertTrue(self.head_matches(plan, read))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token,
+                 "--observation", self.observation_from_gh(plan, read))
+        self.assertEqual(self.cli("notices", "--all")["notices"][0]["delivery"]["state"], "merged")
+
+    def test_no_applicable_checks_ends_in_a_disclosed_ask_not_a_wait(self):
+        text = self.section(self.FOLLOW)
+        case = text.split("No applicable checks:", 1)[1].split("When the watch report never arrived", 1)[0]
+        self.assertRegex(case, r"two `pr_watch.py check` reads at least 60 seconds apart both show `checks=none`")
+        for part in ("FO does not wait for green", "records ready as in step 4",
+                     "`checks=none: no check ran on the ready head`", "failing holds"):
+            self.assertIn(part, case)
+        holder, plan, token = self.open_draft("nochecks")
+        self.gh_stub(statusCheckRollup=[])
+        self.watch("add", PR_REF)
+        self.gh("pr", "ready", "2", "--repo", "example/project")
+        self.assertIn("draft True -> False", self.watch("check"))
+        self.assertIn("checks=none", self.watch("check"))
+        self.assertIn("checks=none", self.watch("check"))
+        self.assertTrue(self.head_matches(plan, self.gh("pr", "view", "2", "--repo", "example/project")))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token,
+                 "--observation", self.observed(plan, "open", draft=False))
+        self.gh_stub(state="MERGED", mergeCommit={"oid": "d" * 40})
+        merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", merged)
+        self.assertTrue(self.claim_new("nochecks-after")["claimed"])
+
+    def prior_archives(self):
+        return list((self.repo / ".git/kc-dev-flow-2/learning").glob("*/prior-delivery-*"))
+
+    def test_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery(self):
+        text = self.section(self.FOLLOW)
+        settle = text.split("When the watch report never arrived", 1)[1]
+        holder_at = settle.index("FO holds the token: `delivery-record`")
+        live_at = settle.index("A live owner without the token: `delivery-recover`")
+        stopped_at = settle.index("An owner confirmed stopped")
+        self.assertLess(holder_at, live_at)
+        self.assertLess(live_at, stopped_at)
+        live = settle[live_at:stopped_at]
+        for part in ("same `--owner`", "`--owner-state running` or `unknown`", "issues no new token"):
+            self.assertIn(part, live)
+        self.assertIn("`--owner-state stopped`", settle[stopped_at:])
+        self.assertNotIn("stopped", settle[:live_at].replace("confirmed stopped", ""))
+        self.assertIn("Never attest `stopped` for an owner that may still be running", settle)
+        with self.subTest(actor="token holder"):
+            holder, plan, token = self.open_draft("holds-token")
+            self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40})
+            merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+            self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", merged)
+            delivery = self.cli("notices", "--all")["notices"][0]["delivery"]
+            self.assertEqual((delivery["state"], delivery["recovery"]), ("merged", None))
+            self.assertEqual(self.prior_archives(), [])
+        with self.subTest(actor="live owner without the token"):
+            holder, plan, token = self.open_draft("live-owner")
+            self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40})
+            merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+            stored = self.cli("notices", "--all")["notices"][0]["delivery"]
+            recovered = self.cli("delivery-recover", "--job", holder["job"], "--expected", stored["digest"],
+                                 "--owner-state", "running", "--reason", "Token lost; owner still running",
+                                 "--owner", "delivery-owner", "--plan", self.plan, "--observation", merged)
+            self.assertNotIn("delivery_token", recovered)
+            delivery = self.cli("notices", "--all")["notices"][0]["delivery"]
+            self.assertIn("same owner", delivery["recovery"]["owner_state"])
+            self.assertEqual(delivery["state"], "merged")
+            self.assertTrue(self.claim_new("live-owner-after")["claimed"])
 
 
 if __name__ == "__main__":

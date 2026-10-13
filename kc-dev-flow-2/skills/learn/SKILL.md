@@ -210,28 +210,50 @@ approved (the plan presentation names these steps, so that approval covers them;
 2. Wait for checks green on the Draft. A Draft that shows `checks=none` has CI skipped
    for drafts: mark it ready first and wait for green on the ready head instead.
 3. `gh pr ready N --repo OWNER_REPO`.
-4. Wait for the watch to report `draft True -> False` and checks green on the ready head,
-   then `delivery-record` the PR again with `draft` false and the same token.
+4. Wait for the watch to report `draft True -> False` and checks green on the ready head
+   (or the no-applicable-checks case below). Read the PR as in step 6 and pass the head
+   check below, then `delivery-record` the PR again with `draft` false and the same token.
 5. Only then ask the Captain to merge, naming the PR, its head SHA (equal to the
    plan's `candidate_commit`), that it is ready, and the checks state. Merge stays the
    Captain's (ADR 0009): FO does not merge or enable auto-merge.
 6. When the watch reports `state OPEN -> MERGED` or `-> CLOSED`, read
-   `gh pr view N --repo OWNER_REPO --json state,mergedAt,mergeCommit,isDraft,headRefOid`
-   and `delivery-record` the observation with state `merged` or `closed`
-   (`merge_commit` from `mergeCommit.oid` when merged).
+   `gh pr view N --repo OWNER_REPO --json state,mergedAt,mergeCommit,isDraft,headRefOid`,
+   pass the head check below, and `delivery-record` the observation with state `merged`
+   or `closed` (`merge_commit` from `mergeCommit.oid` when merged).
+
+Head check: before every `delivery-record` and before `delivery-recover`, compare the
+read `headRefOid` with the plan's `candidate_commit`. The recorder takes
+`candidate_commit` from the plan, not from the read, so it cannot see a different head.
+On a mismatch FO records nothing, leaves the delivery `open`, and reports the PR with
+both SHAs to the Captain.
+
+No applicable checks: after `draft True -> False`, if two `pr_watch.py check` reads at
+least 60 seconds apart both show `checks=none`, no check applies to this change (a
+repository without checks, or path filters that exclude a learning-only change, never
+shows one). FO does not wait for green: it records ready as in step 4, and its merge ask
+states `checks=none: no check ran on the ready head`. Pending or failing checks are not
+this case: wait for green, and failing holds.
 
 A Captain who declines the proposal closes the PR, and FO records `closed`. Do not
 `release` an open delivery: it is refused.
 
-When the token is lost, the session restarted, or the watch report never arrived (a merge
-is reported once, and its state file belongs to one machine), settle from GitHub: read
-the PR with the `gh pr view` of step 6; if it is `MERGED` or `CLOSED`, take the plan and
-delivery digest from `notices --all` and run `delivery-recover` with `--owner-state
-stopped`, the plan, and an observation built from that read. A running owner that
-lost only its token uses `running` or `unknown` as the recovery paragraph above says.
-A still-open PR is left as it is. A `claim` refused by an `open` sibling runs this
-read once and retries the `claim` once; if the PR is still open, report
-`learn not run: blocked by job <id>` naming that PR.
+When the watch report never arrived (a merge is reported once, and its state file
+belongs to one machine), the token is lost, or the session restarted, settle from GitHub:
+read the PR with the `gh pr view` of step 6 and pass the head check. If it is still open,
+leave it as it is. If it is `MERGED` or `CLOSED`, act by who is acting:
+
+- FO holds the token: `delivery-record` as in step 6. A missed watch report alone needs
+  no recovery.
+- A live owner without the token: `delivery-recover` with the same `--owner` as
+  `delivery-claim`, `--owner-state running` or `unknown`, the plan and delivery digest
+  from `notices --all`, and an observation built from that read. It advances the owner's
+  own `open` observation and issues no new token.
+- An owner confirmed stopped, or a different session taking the delivery over:
+  `delivery-recover` with `--owner-state stopped`, the same plan, digest and observation.
+  Never attest `stopped` for an owner that may still be running.
+
+A `claim` refused by an `open` sibling runs this read once and retries the `claim` once;
+if the PR is still open, report `learn not run: blocked by job <id>` naming that PR.
 
 ## Present the result
 
