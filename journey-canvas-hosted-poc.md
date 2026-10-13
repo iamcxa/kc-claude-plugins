@@ -127,6 +127,7 @@ Proposal, not measured: one working session to AC-1..AC-4 evidence on the Worker
 - The chapter popup (`/repo-doc`) and the Save button (`/save`) read this machine's checkouts and disk; the hosted viewer is the `vite.share.config.mts` surface, which already omits them.
 - `GET /doc` creates an empty room if it is missing today (`SKILL.md`); the hosted `/doc` must not make a room on a read.
 - Pasted images need R2 and are outside the POC.
+- Hand-drawn shapes exist only in the room store; a re-render keeps them (ADR 0008), so they are lost only when the store is. A `.tldr` backup is to be an event-driven side effect, taken only when the room's clock has moved since the last export (before a render or a read-back), kept outside git. Once hosted, it becomes a service-side snapshot to the provider's own storage. Captain 2026-10-13: 「所以 .tldr 匯出應該可以是一個定時或是按事件產生的副作用？」, then 「可以」 to the FO's proposal to record it here and decide it with the hosting choice rather than build a local version now.
 
 ### Obligations the Captain should see (pilot profile)
 
