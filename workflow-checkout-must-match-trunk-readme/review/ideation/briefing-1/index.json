@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:workflow-checkout-must-match-trunk-readme:ideation:attempt-1:revision-1",
+  "question": "Accept the design (new workflow_checkout.py fetches the trunk and compares the on-disk workflow README with origin/\u003ctrunk\u003e: exit 0 equal, 1 differs with the remedy printed, 2 cannot tell; FO holds on 1 and 2; the instruction also lives in skills/dev/SKILL.md because a stale README cannot carry its own fix) and enter implementation first in the fix order? Approving accepts the recommendations for D1 (fetch inside the check; unreachable remote holds), D2 (strict equality; a README ahead of the trunk also holds) and D3 (FO shows the remedy and waits for the Captain, never switches the shared checkout itself).",
+  "artifacts": [
+    {
+      "id": "artifact:workflow-checkout-must-match-trunk-readme:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9ffae8ad792ed3bae6392ed6ca43e095d2e66122/workflow-checkout-must-match-trunk-readme.md",
+      "rev": "sha256:860a442d87c5c26a89bc693b88483a2996a386fca1a9e4a192489dad50cd1cb6",
+      "mediaType": "text/markdown",
+      "summary": "Ideation complete: design_surfaces.py check presentable (exit 0); AC-1..AC-6 each with a falsifier, none run yet. Chain: Spacedock has no README/trunk check; package_version.py trusts the README it is handed; number_guards.py frontmatter reader reused for trunk. Fixture discriminates: README blob at 6d344bcb 946f5203 (507 lines) vs origin/main 835dad49 (594). Limits: prose-enforced (only Spacedock dispatch build could enforce it mechanically, a non-goal); compares the README only, not _mods/. Shared with the other two tasks: references/sd/workflow.md near the package_version.py block and WORKFLOW_WORD_BUDGET; this task implements first."
+    }
+  ]
+}

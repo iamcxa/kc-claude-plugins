@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:workflow-checkout-must-match-trunk-readme:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:workflow-checkout-must-match-trunk-readme-ideation-1
+              briefing:
+                id: briefing:workflow-checkout-must-match-trunk-readme:ideation:attempt-1:revision-1
+                digest: sha256:b33ee1762d3ead044b84a2b370e60c31a118c949bf2a4851a76c4168278badc8
+                room-ref: ./workflow-checkout-must-match-trunk-readme/review/ideation/briefing-1
 started: 2026-10-13T07:17:36Z
 ---
 
