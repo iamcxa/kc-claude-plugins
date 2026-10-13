@@ -5,6 +5,7 @@ extension says, on the installed Spacedock. Runs no model and no delivery hook."
 import argparse
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import tempfile
@@ -13,8 +14,21 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CHECK = ROOT / "scripts/observer_check.py"
 TEMPLATE = ROOT / "references/sd/workflow.md"
+EXTENSION = ROOT / "extensions/learn/EXTENSION.md"
 SLUG = "recovery-fixture"
 REPORT = "ok | rule: \"FO records\" (Stage Report) | evidence: \"present\" (abc1234)\n"
+
+
+def documented_commit_steps(state, slug):
+    """The git commands EXTENSION.md gives for committing the late report, in order, as argv lists."""
+    text = re.sub(r"\s+", " ", EXTENSION.read_text())
+    spans = [s for s in re.findall(r"`([^`]+)`", text) if s.startswith("git -C <state> ") and "_archive/<slug>/observer.md" in s]
+    assert len(spans) == 1, f"expected one documented late-report commit span, found {spans}"
+    steps = []
+    for part in spans[0].split(" && "):
+        words = shlex.split(part.replace("<state>", str(state)).replace("<slug>", slug).replace("<message>", shlex.quote("docs: late observer report")))
+        steps.append(words)
+    return steps
 
 
 def exercise(base, binary):
@@ -86,9 +100,10 @@ def exercise(base, binary):
     assert "archived scope is publish-only" in refused.stdout + refused.stderr, refused
     assert check().returncode == 1, "an uncommitted late report must not pass"
 
-    path = f"_archive/{SLUG}/observer.md"
-    run(["git", "-C", state, "add", path])
-    run(["git", "-C", state, "commit", "-m", "docs: late observer report", "--", path])
+    for step in documented_commit_steps(state, SLUG):
+        run(step)
+    staged = f"git -C {state} add _archive/{SLUG}/observer.md && git -C {state} commit"
+    assert staged in missed.stdout, f"the check's remedy omits the staging step: {missed.stdout}"
     published = run([binary, "state", "commit", SLUG, "--workflow-dir", workflow], workflow)
     if "Published existing archived state" not in published.stdout + published.stderr:
         raise AssertionError(f"publication not reported: {published.stdout}{published.stderr}")

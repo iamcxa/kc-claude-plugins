@@ -18,8 +18,9 @@ frontmatter.
   publish-only, so that commit would be refused after the archive. Exit 2: FO holds and
   reports the cause. After the archive FO runs the check once more. Exit 1 there means the
   step was missed: FO dispatches the observer over both path pairs of the archived task,
-  saves the report unedited as `_archive/<slug>/observer.md`, commits that path alone with
-  `git -C <state> commit -m <message> -- _archive/<slug>/observer.md`, publishes it with
+  saves the report unedited as `_archive/<slug>/observer.md`, stages and commits that path alone
+  with `git -C <state> add -- _archive/<slug>/observer.md && git -C <state> commit -m <message>
+  -- _archive/<slug>/observer.md`, publishes it with
   `spacedock state commit <slug> --workflow-dir <dir>`, and says in the Captain's message that
   the observer ran after the archive. FO then runs `kc-dev-flow-2:learn` for the archived slug
   and presents both results to the Captain in one message: learn's notice, then the observer
