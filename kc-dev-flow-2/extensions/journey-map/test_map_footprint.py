@@ -100,6 +100,12 @@ class AddTests(Base):
         self.assertEqual((code, "differs from the task's 'shop'" in err), (1, True))
         self.assertFalse((self.tmp / "sample" / "footprints.jsonl").exists())
 
+    def test_a_resolution_by_the_first_officer_is_not_a_source(self):
+        path = self.task()
+        path.write_text(path.read_text().replace("by: person:captain", "by: agent:first-officer"))
+        code, _, err = self.add(path)
+        self.assertEqual((code, "does not resolve" in err), (1, True))
+
     def test_an_amendment_is_a_source_and_an_unknown_source_is_refused(self):
         path = self.task()
         self.assertEqual(self.add(path, source="amendment:1", words="保留六個月")[0], 0)
