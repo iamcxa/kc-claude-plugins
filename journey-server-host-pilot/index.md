@@ -398,6 +398,10 @@ Captain: 「用量報告只留本機，GitHub 只記錄驗證結論（建議）�
 Asked: 「這次 Cloudflare 用量報告要放哪裡？目前工作流程使用的 GitHub 儲存庫 iamcxa/kc-claude-plugins 是公開的；報告會含請求數、運算／儲存用量與測試資源名稱，但不含帳號 ID、email 或密鑰。」
 Supersedes: none
 
+### Amendment 4 — 2026-10-13, chat
+Captain: 「遠端 node 可以交給 claude 部署到 exe.dev，但是現在可能暫時不適合，應該先 local 驗證過，然後你給我 prompt 我讓 claude 去部署，也要讓它知道萬一壞了怎樣錯誤還原」 (this conversation)
+Supersedes: none
+
 
 ## Stage Report: implementation
 
@@ -425,3 +429,28 @@ Supersedes: none
 ### Summary
 
 The bounded hosted document subset and teardown pass; the candidate remains on HOLD for the demonstrated lifecycle defect. Provider usage delta remains unmeasured. The local report and four-command acceptance distinguish newly executed hosted behavior, local timer evidence and receipt verification. FO must obtain the minimal repair decision before reopening the formal feedback/review path; this stage report does not grant full delivery acceptance.
+
+## Stage Report: implementation
+
+- DONE: Apply Captain amendment 4 as a local verification and future handoff continuation while preserving the exact clean candidate.
+  Product remains `4f678cd88eddbcc171df7e2037dd19d2fbf4065b`; no product changes, remote deployment, target login or message to Claude. [Dispatch 4](dispatch/implementation-4.md) records this bounded scope; frontmatter remains unchanged.
+- DONE: Execute the existing focused Node probe once in fresh synthetic scratch.
+  Room/cookie/MCP/asset isolation, export/refused/fresh restore with restart, live/idle socket revocation and expiry all PASS. These are synthetic clients, not native Claude/Codex integration. Installed dependencies match the lockfile; owned test processes are stopped and the product tree is clean.
+- DONE: Read and preserve prior full Node evidence without repeating its green suite.
+  Existing HTTP/MCP/CLI, hostname/IP browser, asset and legacy rollback controls remain separate historical local evidence. The code baseline is not an observed deployed version. This turn's room restore does not prove remote service/proxy/code-pointer rollback or full policy backup restoration.
+- DONE: Produce the directly pasteable English Claude deployment prompt and local verification report.
+  `/Users/kent/Documents/Codex/2026-10-11/tldraw-tldraw-gpt-plugin/outputs/journey-server-host-pilot-node-handoff/claude-exe-dev-prompt.md` requires future target/cost/source authorization, unpublished-candidate acquisition, two authentication layers, isolated code/service/data, trusted browser/socket verification, usable local stdin control and exact rollback prerequisites. `local-validation.md` in the same directory preserves the new raw receipt, prior-evidence boundary and stopped-process proof. Detailed artifacts remain local; no provider/account values are added here.
+- DONE: Make rollback and access preservation prerequisites in the future handoff.
+  Inventory the actual prior deployment; stop writers before consistent backup, test fresh restore, preserve authorization separately, prevent revoked-credential resurrection and retain new writes for reconciliation. Before-switch failure leaves old entry untouched; after-switch rollback requires exact prior code/config/proxy/data verification. No prior deployment means removal/reversion of candidate wiring, not an invented old version.
+- DONE: Apply required helper checks without expanding product verification.
+  Comment ratio PASS against baseline `6d0f8da951b5ea9ea50fca6bd3685fc360bf502f`; the existing maximum is met. No dependency, ADR, migration, standing harness or general deployment tool was added; temporary probe output remains isolated local evidence.
+- SKIPPED: Full task-aware number guard remains CONFIG ERROR/unavailable and explicitly NOT PASS.
+  The current required invocation exits 2 because `Surfaces: db` has no truthful baseline migrations path. The prior FO disposition remains unchanged; no path, surface or helper was altered to manufacture a pass.
+- DONE: Correct the misplaced FO ruling under explicit FO authority and rerun the affected dispatch-record helper.
+  The initial helper failed because a ruling was stored among dispatch records. Its content was moved unchanged to [the FO ruling location](fo-rulings/hosted-evidence-continuation.md), preserving rename history rather than inventing dispatch identity fields. The single rerun PASS confirms complete dispatch records; the initial failure and identical-content proof remain in the local receipt.
+- SKIPPED: Remote Node deployment/acceptance, actual service/entry rollback rehearsal, production licensing and native Claude/Codex client integration.
+  These require the future authorized target and real execution; synthetic local success is not remote acceptance. Cloudflare repair, hibernation and its existing Material hold are unchanged and require a separate Captain decision.
+
+### Summary
+
+Local Node recovery/admission verification passes and the requested handoff is ready for Kent to give Claude later. Source and evidence are preserved; the prompt makes unknown authority, target, source, access or rollback readiness a stop before remote mutation. This report closes only the local handoff work, not the overall pilot or the Cloudflare lifecycle finding.
