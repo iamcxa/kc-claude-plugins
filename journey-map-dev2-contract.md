@@ -1,6 +1,6 @@
 ---
 title: kc-journey-map and kc-dev-flow-2 connect through versioned input/output contracts, each schema owned by its producer, with ADR rulings shown on the map by reference
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 merge: pr
 profile: pilot
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 2026-10-13: 「可以進入設計」, after the FO presented the loop, timing, no-miss checks and self-repair placement in chat; then 「可以」 to the FO question "journey-map-dev2-contract 要選 Pilot 嗎？選定後，我記下等級和這次的關卡，然後派人做設計。"'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 kc-journey-map (the release slice map) and kc-dev-flow-2 meet today through prose split between workflow.md's Release review section and kc-journey-progress's SKILL.md. Nothing tests that prose, and six defects found in an adopter on 2026-10-13 come from that missing interface.
