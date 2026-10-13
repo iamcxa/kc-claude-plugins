@@ -301,3 +301,8 @@ Does not cover: that a live FO follows the new sentence, that a worker with the 
 ### Summary
 
 PASSED at a7fa7f1b: the merge changed only the forced budget line (5459 to 5463); AC-1 to AC-3 re-run green with one falsifier each failing, AC-4 carried because no byte it depends on changed. Two Polish items (the acceptance script's missing `SPACEDOCK_BIN`, fixed in the script above; the `doc_impact` records), nothing returns through feedback. Throwaway worktree, copies and clone removed; `/tmp/val633-ac4` from cycle 1 remains.
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-13): validation cycle 2 recommended PASSED on #633 a7fa7f1b. Codex review round 2 (review:5501183844) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck. The repair also merges #632's reconciled head once #632's merge with main lands.
+  - P2 #633 `references/sd/workflow.md` (around line 100): `replay_dispatch.py build` without `--scope` builds `scope.txt` with only the package root and harness text, so a candidate replay lacks the new completion-recipient line and cannot exercise the fix. Add the line to the helper's generated scope (the implementation's roborev:612 decline named the AC-4 control arm, which needs a way to build without the line).
