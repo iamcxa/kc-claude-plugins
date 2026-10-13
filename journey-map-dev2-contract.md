@@ -503,3 +503,12 @@ Each retained surface maps to a criterion or a named boundary: `map_footprint.py
 ### Summary
 
 Both heads pass: the contract checks, the splice-only fold and the counts behave as the criteria state, and each decisive check failed under a mutation that removes it. Recommended verdict PASSED for #627 and #628; no Material finding, one Polish item and one record gap for FO (missing dispatch records). Nothing in the candidates, PRs or main checkout was changed; throwaway worktrees were removed.
+
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-13): validation recommended PASSED on #627 89769eb6 and #628 d8281e1c, but Codex review round 1 left three findings, all to fix (rounds 1 and 2 fix every finding). They go to implementation with the validation Polish item, then a fresh validation recheck. Dispatch held: this FO session loaded package 0.20.0 and the README is 0.21.0 (`package_version.py`); resume from a session on 0.21.0.
+  - P1 #627 `map_footprint.py` (around line 265): a declared state checkout that is missing falls back to the workflow dir, and `audit` reports `unrecorded 0` / `invalid 0` without reading anything. Make it a configuration error.
+  - P2 #627 `map_footprint.py` (around line 237): `Map footprints: not needed: <reason>` passes when valid footprints exist. Require zero valid lines for that form.
+  - P2 #628 `journey-fold.mjs` (around line 72): a block-style question that is the last node, in a file with no trailing newline, gets `answer:` glued to the last line. Insert a newline at a non-newline EOF.
+  - Validation Polish: add a test asserting `journey-reconcile` exits 1 on a duplicate story id.
+  - For the Captain at the validation gate: keep or drop the smoke workflow's `push: branches: [main]` trigger (a second CI run per merge).
