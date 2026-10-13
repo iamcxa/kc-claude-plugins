@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-record-checks:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation, learn-delivery-follow-through first, then fo-record-checks?",
+  "artifacts": [
+    {
+      "id": "artifact:fo-record-checks:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/18ce8dcb2410c72c1cb7f9dd9f1de1765b405a65/fo-record-checks.md",
+      "rev": "sha256:bbe11b6569502beec47d432daa75b0d059023085db9fb05112def7bb6b61fd4f",
+      "mediaType": "text/markdown",
+      "summary": "Seed from four observer reports on 2026-10-13: FO-written records broke stated README rules (bare script names in dispatch records, no literal not-run form, no Result: line, a gate head no validation named, no Precedent: form; plus an Applied: none wording gap); learn returned no-change because each rule exists. Recommended profile pilot. Ideation owes which candidates a script can check, extending the dispatch_records.py pattern, and ACs replaying the recorded violations."
+    }
+  ]
+}

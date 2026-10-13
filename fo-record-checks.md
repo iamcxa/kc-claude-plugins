@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:fo-record-checks:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:fo-record-checks-backlog-1
+              briefing:
+                id: briefing:fo-record-checks:backlog:attempt-1:revision-1
+                digest: sha256:42cf17b9eb33f344a9be0ceec170e2c302e8bb213cbfc0699d721fdf3e1a6601
+                room-ref: ./fo-record-checks/review/backlog/briefing-1
 ---
 
 Observer reports on four tasks archived 2026-10-13 (journey-map-dev2-contract, copilot-quota-refusal-is-not-a-review, workflow-checkout-must-match-trunk-readme, observer-before-merge-guard) found FO-written records that break rules the workflow README already states, and the learn evaluations returned no-change for each because the rule exists. A rule stated and not followed is an enforcement gap; `dispatch_records.py` and `design_surfaces.py` are the existing pattern for a script that checks FO's records.
