@@ -279,6 +279,9 @@ PASSED for f16898491a5d4fadbb189373fbbe89754013dddc. I re-ran the evidence comma
 - Cycle 3 (FO, 2026-10-13): validation cycle 3 recommended PASSED on #639 24029378 with no Material finding. Codex review round 3 (review:5503254597) left one P1, to fix (a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck. The validator's three Polish items are declined under the round-3 rule, to be filed as a backlog task.
   - P1 #639 `skills/learn/SKILL.md` (around line 266): a restarted session that recreates a missing `pr_watch.py` entry for an already-ready PR snapshots `draft=False`, so the step needing the draft True -> False transition waits forever and the open delivery blocks every later learning claim.
   - Polish (declined): the head-check guard in `test_learning.py` no longer catches its removal from the settle sentence; `kc-dev-flow-2/README.md` (outside the PR) still calls `notices --all` explicit inspection; the order check is case-sensitive.
+- Cycle 4 (FO, 2026-10-13): validation cycle 4 recommended PASSED on #639 4072363b with no Material finding; FO ran its acceptance script in env -i bash, every line matched. Codex review round 4 (review:5503441596) left two P2 and no P1, both declined under the round-3 rule and filed in backlog task `learn-delivery-round3-followups` with the validator's Polish items and the task-PR wait risk.
+  - P2 (declined) `skills/learn/SKILL.md` (around line 249): the no-applicable-checks rule holds only on `mergeStateStatus` BLOCKED.
+  - P2 (declined) `skills/learn/SKILL.md` (around line 225): `pr_watch.py` reports a `STALE` check conclusion as `checks=green`.
 
 ## Stage Report: implementation (cycle 2, repair of Cycle 1 findings)
 
