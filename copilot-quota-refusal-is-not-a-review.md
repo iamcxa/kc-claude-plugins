@@ -167,3 +167,29 @@ ADR: 0013
 ### Summary
 
 Upstream check found no existing non-review recognition in `codex_review.py` or kc-pr-flow; the `## Extensions` rule already demands `copilot not run`, so the repair is one reader branch, one `pr_watch.py` mapping and an EXTENSION.md paragraph. The prototype also showed the one cost: a heading-less, comment-less answer ("Looks good" in an existing test) stops reading as answered (D1). No repository file, branch, commit or PR comment was made.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main changing only copilot_review.py, test_copilot_review.py, extensions/copilot/EXTENSION.md, scripts/pr_watch.py, test_pr_watch.py and ADR 0013; AC-1 to AC-7 green with each falsifier shown failing by a mutation run (AC-6's behaviour half named as a limit)
+  Draft PR #630 (iamcxa/kc-claude-plugins, branch spacedock-ensign/copilot-quota-refusal-is-not-a-review, commit 218645da, base 9e68eb87); `git diff --name-only origin/main...HEAD` lists exactly those six paths (AC-7).
+- DONE: ADR 0013 records D1 (fail closed on any heading-less, comment-less answer) and D2 (no re-request after a refusal until the Captain says the quota is back), with the Captain's words; adr_lint.py docs/adr --require 0013 passes
+  `docs/adr/0013-a-copilot-answer-without-a-review-is-not-run-and-not-asked-again.md`; adr_lint printed "13 ADR file(s) checked, 0 legacy", exit 0.
+- DONE: roborev_gate.py evidence= line, CI green on the PR head, and the CI cost per PR measured or stated as not measured
+  `clean on 218645da7; evidence=roborev:604`; all four PR checks pass on 218645da (unit tests 29s, version parity 47s); cost: no job or step added, last four runs of the existing workflow 35-45 s wall clock, billed minutes not measured.
+
+### Per-criterion evidence
+
+- AC-1: `test_the_recorded_quota_refusals_are_not_a_review` feeds the verbatim bodies of review:5499757433 and review:5499757731 (copied from `gh api .../pulls/627/reviews`, `.../628/reviews`) and asserts code 5, `answer=review:<id>`, no `evidence=`. Fails on the 0.21.0 reader (mutation: `git show HEAD:` original), passes now. Live: `copilot_review.py iamcxa/kc-claude-plugins 627` now exits 5.
+- AC-2: `test_any_other_answer_without_a_heading_or_line_comment_is_not_a_review` (empty, English error, Chinese sentence) asserts code 5. A quota-sentence-only denylist mutation passes AC-1 and fails this test and the quote test.
+- AC-3: the three named existing tests pass unchanged; new `test_a_heading_less_review_with_its_own_line_comment_is_an_answer` fails under a heading-only mutation. The changed existing test `test_the_answer_is_reported_the_same_whatever_copilot_found` lost its "Looks good" no-heading case (D1), now covered by the line-comment test and the exit 5 tests.
+- AC-4: `test_a_refusal_does_not_erase_an_earlier_real_review_of_the_head` fails under a latest-review-only mutation; `test_a_refusal_answers_the_request_before_it_and_a_newer_request_waits` fails when refusals are excluded from the request-time comparison.
+- AC-5: `test_a_copilot_refusal_is_not_run_not_a_reader_error_and_wakes_wait` asserts `("not-run", "-")` from a fake reader exiting 5 and `outcome("copilot", "requested", "not-run")`; fails when the mapping or the OUTCOMES word is removed (each mutated separately).
+- AC-6: consistency check (/tmp/ac6.py, not committed) finds every `Exit N` of the docstring in the Read paragraph and fails with 5 missing when the exit 5 sentence is removed. Behaviour half: not verified; observable only at the next Copilot refusal. A limit, not a pass.
+- AC-7: six paths, none under `extensions/codex/` or `kc-pr-flow/`.
+- Other checks: comment_ratio.py 0 comment lines of 57 code lines, met; doc_impact.py lists 0 documents; number_guards.py PASS (no migrations-path).
+
+### Summary
+
+The reader treats an answer as a review only with a heading or its own line comment; anything else is exit 5 and quoted, pr_watch maps it to `not-run`, and EXTENSION.md tells FO to record `copilot not run:`, not count, wait or re-request, and name Copilot unread in the merge ask. No new probe was added; the `/copilot_internal/user` measurement is in Limits as a non-predictor. The PR is Draft and has no review requested, per instructions.
+
+Notes for FO: my first `gh api` of the single-review path returned 404 because of a zsh word-splitting slip of mine, not a GitHub fact; reruns worked. The worktree started at e2524e93 behind origin/main and was fast-forwarded to 9e68eb87 before any edit.
