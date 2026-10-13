@@ -72,10 +72,12 @@ export function readProgress(model, workflowDir) {
 		const initial = selected(listed)
 		const read = (ref) => {
 			const resolved = run('--resolve', ref, '--archived')
-			if (!nonempty(resolved.path) || !nonempty(resolved.stored_id)) fail('Ambiguous task resolution')
+			if (!nonempty(resolved.path)) fail('Ambiguous task resolution')
+			const stored = nonempty(resolved.stored_id) ? resolved.stored_id : ''
+			const identity = stored || (nonempty(resolved.slug) && resolved.id === resolved.slug ? resolved.slug : fail('Ambiguous task resolution'))
 			const record = run('--read', resolved.path)
-			if (realpathSync(record.path) !== realpathSync(resolved.path) || record.frontmatter?.id !== resolved.stored_id) fail('Resolved task identity changed')
-			return { resolved, task: record.frontmatter }
+			if (realpathSync(record.path) !== realpathSync(resolved.path) || (record.frontmatter?.id ?? '') !== stored) fail('Resolved task identity changed')
+			return { resolved, task: { ...record.frontmatter, id: identity } }
 		}
 		for (const row of initial) {
 			const { resolved, task } = read(row.slug)

@@ -14,21 +14,22 @@ import { storyBorder, richText } from './records.mjs'
 import { diffAgainstModel, applyDiff, readRoom } from './read.mjs'
 
 const plugin = fileURLToPath(new URL('..', import.meta.url))
-const ids = ['a', 'b', 'c', 'd', 'e'].map((n) => n + '0'.repeat(23))
+const slugs = ['a', 'b', 'c', 'd', 'e']
+const ids = slugs.map((n) => n + '0'.repeat(23))
 const model = { journey: 'demo', releases: [{ id: 'R1', name: 'First release', goal: 'Use both stories' }],
 	steps: [{ id: 'act', card: 'Plan the work', stories: [
 		{ id: 'alpha', release: 'R1', card: 'Review required work', status: 'exists', evidence: 'Authored evidence' },
 		{ id: 'beta', release: 'R1', card: 'Inspect completed work', status: 'gap' },
 	] }] }
 const cli = (...args) => execFileSync('spacedock', ['status', ...args, '--json'], { encoding: 'utf8' })
-function fixture(t) {
+function fixture(t, idStyle = 'sd-b32') {
 	const root = mkdtempSync(join(tmpdir(), 'journey-progress-'))
 	t.after(() => rmSync(root, { recursive: true, force: true }))
 	const workflow = join(root, 'workflow'); mkdirSync(join(workflow, '_archive'), { recursive: true })
 	writeFileSync(join(workflow, 'README.md'), `---
 commissioned-by: spacedock@0.27.2
 entity-type: task
-id-style: sd-b32
+id-style: ${idStyle}
 stages:
   states:
     - name: implementation
@@ -37,14 +38,15 @@ stages:
       terminal: true
 ---
 `)
-	const tasks = ids.map((id, i) => ({ id, title: `Task ${i}`, status: i === 1 ? 'implementation' : 'done',
+	const refs = idStyle === 'slug' ? slugs : ids
+	const tasks = ids.map((id, i) => ({ ...(idStyle === 'slug' ? {} : { id }), title: `Task ${i}`, status: i === 1 ? 'implementation' : 'done',
 		journey: i === 3 ? 'other' : 'demo', 'journey-release': i === 4 ? 'R2' : 'R1', 'journey-story': i === 2 ? 'beta' : 'alpha',
-		...(i === 0 || i === 2 ? { 'journey-required-tasks': JSON.stringify(i === 0 ? ids.slice(0, 2) : [id]), 'journey-mapping-complete': true } : {}) }))
+		...(i === 0 || i === 2 ? { 'journey-required-tasks': JSON.stringify(i === 0 ? refs.slice(0, 2) : [refs[i]]), 'journey-mapping-complete': true } : {}) }))
 	const paths = tasks.map((_, i) => join(workflow, i === 2 ? '_archive/c.md' : `${String.fromCharCode(97 + i)}.md`))
 	const save = () => tasks.forEach((task, i) => writeFileSync(paths[i], `---\n${stringify(task)}---\n`))
 	save(); const path = join(root, 'journey.yaml'); writeFileSync(path, stringify(model))
 	const bytes = () => [path, ...paths].map((p) => readFileSync(p, 'utf8'))
-	return { root, workflow, tasks, paths, save, path, bytes, read: (m = model) => readProgress(m, workflow) }
+	return { root, workflow, tasks, refs, paths, save, path, bytes, read: (m = model) => readProgress(m, workflow) }
 }
 const texts = (records) => JSON.stringify(records.map((r) => r.props?.richText))
 
@@ -66,6 +68,23 @@ test('real archived reader distinguishes task/story ratios, full identities, and
 	assert.ok(pages.filter((r) => r.meta?.journey?.kind === 'story-border').every((r) => r.props.color === 'green'))
 })
 
+test('an id-style: slug workflow reads tasks by slug and still refuses what it cannot identify', (t) => {
+	const f = fixture(t, 'slug'), before = f.bytes(), result = f.read()
+	assert.equal(result.diagnostic, null)
+	assert.deepEqual(result.stories.map((s) => [s.doneTasks, s.requiredTasks, s.status]), [[1, 2, 'gap'], [1, 1, 'exists']])
+	assert.deepEqual(result.stories.flatMap((s) => s.taskIds).sort(), slugs.slice(0, 3))
+	assert.deepEqual(f.bytes(), before)
+	f.tasks[1].status = 'done'; f.save()
+	assert.equal(f.read().releases[0].doneStories, 2)
+	const original = structuredClone(f.tasks)
+	for (const mutate of [(a) => { a['journey-required-tasks'] = JSON.stringify([slugs[0], 'missing']) },
+		(a) => { a['journey-required-tasks'] = JSON.stringify([slugs[0]]) },
+		(a, b) => { b.id = ids[1] }]) {
+		f.tasks.splice(0, 5, ...structuredClone(original)); mutate(...f.tasks); f.save()
+		assert.equal(f.read().stories[0].status, 'unverified', String(mutate))
+	}
+})
+
 test('real records refuse missing, partial, conflicting, duplicate, malformed, and short-ID scope', (t) => {
 	const f = fixture(t), original = structuredClone(f.tasks)
 	const bad = [
@@ -83,6 +102,7 @@ test('real records refuse missing, partial, conflicting, duplicate, malformed, a
 		(a) => { a['journey-required-tasks'] = JSON.stringify(['a0']) },
 		(a, b) => { b['journey-required-tasks'] = a['journey-required-tasks']; b['journey-mapping-complete'] = true },
 		(a, b) => { b.id = a.id },
+		(a) => { delete a.id },
 		(a, b) => { delete b['journey-story'] },
 		(a, b) => { b.journey = 'other' },
 		(a, b) => { b['journey-release'] = 'R2' },
