@@ -98,6 +98,14 @@ The FO proposed this direction in chat across four turns. The Captain answered ã
 - The map-service seam named in the Captain's words above.
 - Overlap with task `release-acceptance` (defect 7 is its enforced pre-implementation review) and with `journey-canvas-hosted-poc` (defect 6).
 
+## FO alignment
+
+Release: none (package tooling across kc-journey-map and kc-dev-flow-2).
+Release review: not needed: no release.
+Needed at ideation: not needed: the Captain accepted the direction in chat on 2026-10-13 (recorded above under "Direction the Captain accepted"); ideation lists its unresolved decisions at its gate.
+Surfaces: ui
+Visible change: The journey map shows each answered question with the Captain's words and date, ADR rulings by reference, an evidence stage per story, and answers still awaiting fold marked as pending.
+
 ## Stage Report: ideation
 
 - FAILED: A design that names each schema's producer, version string and consumer pin (journey-map: story/release/question ids and drawn-commit provenance; dev2: task tuple, footprint records, ADR references), consistent with the Captain's accepted direction in the task and subspace-relay ADR 0046's one-version rule
