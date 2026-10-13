@@ -28,6 +28,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:agent-board-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:agent-board-poc-validation-1
+              briefing:
+                id: briefing:agent-board-poc:validation:attempt-1:revision-1
+                digest: sha256:6d8d68ab6a193d4fed3b5001f5d7d181b43e3c0d7401b1d7f5ba2e12a70190c9
+                room-ref: ./agent-board-poc/review/validation/briefing-1
 started: 2026-10-13T08:57:55Z
 ---
 
