@@ -1,0 +1,73 @@
+# Disposable UI preview for task journey-map-dev2-contract. Fictional book-pickup journey.
+# The proposed marks are encoded in today's text fields (card, answer, doc); no renderer change is claimed.
+# Legend: "stage:" = evidence ladder (gap, built, verified, shipped); "◔" = answered, fold pending (a footprint exists, the YAML is not yet written);
+#         「words」 date = the Captain's verbatim words and date from a footprint; "ADR nnnn:" = ruling shown by reference, title read from the ADR at draw time.
+journey: book-pickup-preview
+title: "Preview: map shows rulings, ADR references, evidence stage and fold-pending marks (fictional)"
+persona: "A reader collecting a reserved book from a neighborhood library."
+one_journey: "Reserve a book, learn when it is ready, and collect it at the desk."
+
+steps:
+  - id: reserve
+    card: "Chooses a book to collect"
+    activity: "Reserve a book"
+    stories:
+      - id: reserve-copy
+        release: r1
+        status: exists
+        evidence: "ReserveBook"
+        card: "Reserve a copy for pickup\nstage: shipped"
+        questions:
+          - id: q1
+            ask: "How long is a hold kept?"
+            answer: "3 days\n「三天就好」 2026-10-13"
+          - id: q2
+            ask: "May a reader hold two copies of one book?"
+            answer: "ADR 0003: One active hold per reader per book"
+            doc: "https://example.invalid/docs/adr/0003-one-active-hold-per-reader-per-book.md"
+      - id: choose-pickup-day
+        release: r1
+        status: exists
+        evidence: "PickupDayPicker"
+        card: "Choose a convenient pickup day\nstage: verified"
+        questions:
+          - id: q1
+            ask: "Which days can be chosen?"
+            answer: "◔ Mon to Sat\n「週日休館」 2026-10-13"
+    system: ["Proposed: record a reservation when a copy can be held."]
+    rules: [one-active-hold]
+
+  - id: ready
+    card: "Checks whether the book is ready"
+    activity: "Know when to visit"
+    stories:
+      - id: check-ready
+        release: r1
+        status: gap
+        card: "See that the book is ready to collect\nstage: gap"
+        questions:
+          - id: q1
+            ask: "Where is the pickup location shown?"
+          - id: q2
+            ask: "Does a reader see a late-hold notice?"
+            answer: "◔ Not in release 1\n「先不做」 2026-10-13"
+      - id: receive-reminder
+        release: r2
+        status: gap
+        card: "Receive a reminder before the hold expires\nstage: gap"
+    system: ["Proposed: show the pickup location after staff prepare the book."]
+    rules: [hold-deadline]
+
+releases:
+  - {id: r1, name: "RELEASE 1 — Reserve and collect", goal: "A reader can reserve a book, check readiness and collect it."}
+  - {id: r2, name: "RELEASE 2 — Plan the visit", goal: "A reader can receive a reminder."}
+
+rules:
+  - {id: one-active-hold, text: "A reader may hold one active reservation per book."}
+  - {id: hold-deadline, text: "Show the hold deadline before the reader travels to collect the book."}
+
+status:
+  unproven: "Fictional teaching model: no user exercise or code evidence is claimed."
+  unmerged: "Illustrative intent only."
+  undeployed: "No library service is represented."
+  irreversible: "Creates no real reservations."
