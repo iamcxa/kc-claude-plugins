@@ -2,18 +2,24 @@
 # changed SKILL.md / CLAUDE.md / AGENTS.md and publish the comparison report.
 # Adapted from spacedock-dev/behavior-diff-action examples/behavior-diff.yml (v0.1.1).
 #
-# On-demand only (trust-policy: explicit). Every target spends 2 preparation
-# calls + 6 Opus trial sessions + 1 extraction call on the subscription token,
-# and an automatic run on a PR touching more than max-files instruction files
-# fails prepare, so it never fires on its own. Start it with either:
+# Runs automatically when a same-repository PR that changes an instruction file
+# is opened (trust-policy: same-repository). Fork PRs and later pushes need an
+# explicit approval of the exact head SHA, either:
 #   - a single-line PR comment: /behavior-diff <full-head-sha> ["path"] [fast]
 #   - Actions -> Behavior Diff -> Run workflow (PR number + reviewed head SHA)
+#
+# Every target spends 2 preparation calls + 6 Opus trial sessions + 1 extraction
+# call on the subscription token. A PR changing more than max-files instruction
+# files fails prepare before any model call; select one file by comment instead.
 #
 # Requires the `behavior-diff` environment holding CLAUDE_CODE_OAUTH_TOKEN.
 # This repository is PUBLIC: publication: comment makes reports public.
 name: Behavior Diff
 
 on:
+  pull_request:
+    types: [opened]
+    paths: ['**/SKILL.md', '**/AGENTS.md', '**/CLAUDE.md']
   issue_comment:
     types: [created]
   workflow_dispatch:
@@ -39,13 +45,14 @@ permissions: {}
 # Publication has no atomic compare-and-swap API. Keep this exact per-PR group
 # shared by every workflow publishing Behavior Diff comments in this repository.
 concurrency:
-  group: behavior-diff-${{ github.repository }}-${{ github.event.issue.number || inputs.pr }}-${{ (github.event_name == 'workflow_dispatch' || (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/behavior-diff ') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))) && 'comparison' || github.run_id }}
+  group: behavior-diff-${{ github.repository }}-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr }}-${{ (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/behavior-diff ') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))) && 'comparison' || github.run_id }}
   cancel-in-progress: false
 
 jobs:
   prepare:
     if: >-
       github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
       (github.event_name == 'issue_comment' && github.event.issue.pull_request &&
        startsWith(github.event.comment.body, '/behavior-diff ') &&
        contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
@@ -62,7 +69,7 @@ jobs:
         id: prepare
         with:
           mode: prepare
-          trust-policy: explicit
+          trust-policy: same-repository
           publication: comment
           pr: ${{ inputs.pr }}
           approved-sha: ${{ inputs.approved-sha }}
@@ -105,7 +112,7 @@ jobs:
         with:
           mode: run
           selection: ${{ toJSON(matrix) }}
-          trust-policy: explicit
+          trust-policy: same-repository
           publication: comment
           plugin-root: ${{ steps.plugin.outputs.root }}
           pr: ${{ inputs.pr }}
