@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:backlog:attempt-1:revision-1",
+  "question": "Proceed with the approved minimal Node/Cloudflare host refactor under pilot, preserving room UI and concurrency rules?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ebd9f9be30f93f0b2aa3c328260a25b8748643e3/journey-server-host-pilot/index.md",
+      "rev": "sha256:c79c8296a2970905c284982d763380e2370d2716a275555b17389bd8bf4bb293",
+      "mediaType": "text/markdown",
+      "summary": "Kent approved the minimal host refactor and explicitly selected pilot. Shared doc contract, two platform adapters, configurable origin and credentials; no room-switcher or concurrency upgrade. Ideation owes a bounded design, data/schema sketch and proof plan before implementation."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/6d0f8da951b5ea9ea50fca6bd3685fc360bf502f/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:42b58e54971513b3dd42350e15b4b1e7cf05fd51f9f80b84a8e4856f087dae4f"
+    }
+  ]
+}

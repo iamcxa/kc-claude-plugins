@@ -6,6 +6,17 @@ profile: pilot
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:journey-server-host-pilot:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:journey-server-host-pilot-backlog-1
+              briefing:
+                id: briefing:journey-server-host-pilot:backlog:attempt-1:revision-1
+                digest: sha256:bd36dba2158df768c3c5ad5568ae62601e9e9ed6e69a02ba7b3a593bcfdea025
+                room-ref: ./review/backlog/briefing-1
 ---
 
 Kent approved a minimal reusable server-host refactor, with the same agent access model (base URL and a per-agent credential) for Node.js locally/remotely and Cloudflare. This is a new pilot task; it does not reopen, migrate, or replace the older hosted POC tasks.
