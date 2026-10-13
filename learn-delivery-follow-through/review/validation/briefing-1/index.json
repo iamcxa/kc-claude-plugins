@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:learn-delivery-follow-through:validation:attempt-1:revision-1",
+  "question": "Deliver #639 head 4072363b (the learn loop follows its learning.md PR to a recorded merge or close: ready before the merge ask, every wait ending on a state read, head check before each record, settle by actor, restart and acknowledged-open recovery): FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:learn-delivery-follow-through:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b4f6078832d7626b86aae56d6f630e970634861c/learn-delivery-follow-through.md",
+      "rev": "sha256:58555f9e034f2a29558f428269586505680d93ab493eddacc4fb5a90c6161f30",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED at 4072363b (cycle 4; AC-1..AC-6; AC-7 live, unverified). FO ran its six acceptance steps as written in env -i bash: every step matched (16 section lines, no \"True -\u003e False\" left, 14 tests OK, 4 files 503+/7-, the 3 new tests FAILED on the 24029378 text). CI green; mergeStateStatus CLEAN. External rounds: Codex 1 (review:5502750442) 2 P1 + 1 P2 fixed; 2 (review:5502957038) 1 P1 + 1 P2 fixed; 3 (review:5503254597) 1 P1 fixed (a restarted session waited forever for a ready flip it had missed; the class closed: every wait now ends on a state read); 4 (review:5503441596) 2 P2, no P1, declined under the round-3 rule. Each repair revalidated by a fresh validator. RoboRev local (627..631), not counted. Second reviewer: copilot because the change adds checks before the merge ask (merge rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. FO declines at candidate 4072363b, filed in backlog task learn-delivery-round3-followups: Codex P2, no-check rule holds only on BLOCKED (UNKNOWN/UNSTABLE/DIRTY still reach the merge ask, which goes to the Captain); Codex P2, pr_watch.py reports a STALE check as green (watcher defect, outside the non-goals); Deferred risk, the same wait class in the task-PR rule in workflow.md; five Polish items (unpinned wordings, a weakened head-check guard, README line 257 stale, case-sensitive order check). Not verified: a live FO following the text (AC-7), the 60 s settle bound (unmeasured), gh pr ready / delivery-record / a restart against real GitHub (stub gh)."
+    }
+  ]
+}
