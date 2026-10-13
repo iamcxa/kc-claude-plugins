@@ -53,6 +53,10 @@ gates:
                 id: briefing:observer-before-merge-guard:validation:attempt-1:revision-1
                 digest: sha256:7396816ac612b7ef418b5e080aa56f614eecaaa47ddcb103b158b750394efd69
                 room-ref: ./observer-before-merge-guard/review/validation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-10-13T09:56:44.195012Z"
+                reason: 'PR head moved from 40c714a6 to 7679ab7a by a merge of origin/main after #631 squash-merged (same-stage conflict handoff, implementation-7/8); the briefing names the old head'
 started: 2026-10-13T07:17:39Z
 worktree: .worktrees/spacedock-ensign-observer-before-merge-guard
 pr: iamcxa/kc-claude-plugins#632
