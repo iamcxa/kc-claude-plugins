@@ -1040,6 +1040,57 @@ class LearningTests(unittest.TestCase):
         self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", merged)
         self.assertTrue(self.claim_new("nochecks-after")["claimed"])
 
+    def test_every_wait_ends_on_a_state_a_restart_can_read(self):
+        text = self.section(self.FOLLOW)
+        intro = text.split(" 1. `python3", 1)[0]
+        for part in ("Every wait below ends on a state, never on a change line", "only as a wake-up",
+                     "never for a state already true", "Do not `add` a PR the `check` rows already list"):
+            self.assertIn(part, intro)
+        step2 = text.split(" 2. ", 1)[1].split(" 3. `gh", 1)[0]
+        step4 = text.split(" 4. Wait", 1)[1].split(" 5. Only", 1)[0]
+        step6 = text.split(" 6. When", 1)[1].split("Head check:", 1)[0]
+        self.assertIn("`checks=green`", step2)
+        for part in ("until the PR is ready (`draft=False`)", "at least 60 seconds since it became ready",
+                     "`ready_for_review`", "`checks=green` and nothing pending", "bound, not a proof"):
+            self.assertIn(part, step4)
+        self.assertIn("the PR is `MERGED` or `CLOSED`", step6)
+        case = text.split("No applicable checks:", 1)[1].split("When the watch report never arrived", 1)[0]
+        self.assertIn("once the PR is ready (`draft=False`)", case)
+        self.assertNotIn("True -> False", text)
+        self.assertNotIn("watch to report", text)
+
+    def test_ready_pr_with_no_watch_entry_never_shows_the_flip_but_its_row_is_the_exit(self):
+        holder, plan, token = self.open_draft("restart-ready")
+        self.gh_stub(isDraft=False, statusCheckRollup=SUCCESS)
+        self.assertEqual(self.watch("add", PR_REF).strip(), "watching 1 PR(s)")
+        checked = self.watch("check")
+        self.assertNotIn("draft True -> False", checked)
+        self.assertNotIn("checks pending -> green", checked)
+        self.assertRegex(checked, r"draft=False\s.*checks=green\s")
+        self.assertIn("row (`OPEN`, `draft=`, `checks=`)", self.section(self.FOLLOW))
+        with self.assertRaises(subprocess.TimeoutExpired):
+            subprocess.run([sys.executable, str(PR_WATCH), "--state", str(self.base / "watch.json"), "wait", "1"],
+                           capture_output=True, text=True, env=self.gh_env, timeout=4)
+        self.assertTrue(self.head_matches(plan, self.gh("pr", "view", "2", "--repo", "example/project")))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token,
+                 "--observation", self.observed(plan, "open", draft=False))
+        self.gh_stub(state="MERGED", mergeCommit={"oid": "d" * 40})
+        merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", merged)
+        self.assertTrue(self.claim_new("restart-ready-after")["claimed"])
+        self.no_merge_called()
+
+    def test_a_second_add_of_a_listed_pr_erases_the_flip_it_missed(self):
+        self.open_draft("readd")
+        self.gh_stub()
+        self.watch("add", PR_REF)
+        self.gh_stub(isDraft=False, statusCheckRollup=SUCCESS)
+        self.watch("add", PR_REF)
+        checked = self.watch("check")
+        self.assertNotIn("draft True -> False", checked)
+        self.assertIn("no change since the last look", checked)
+        self.assertIn("Do not `add` a PR the `check` rows already list", self.section(self.FOLLOW))
+
     def prior_archives(self):
         return list((self.repo / ".git/kc-dev-flow-2/learning").glob("*/prior-delivery-*"))
 

@@ -205,18 +205,33 @@ approved (the plan presentation names these steps, so that approval covers them;
 [Delivery authority](../../references/sd/workflow.md) is the task-PR rule this mirrors).
 `OWNER_REPO` and `N` come from the recorded observation's `pr`.
 
-1. `python3 <package>/scripts/pr_watch.py add OWNER_REPO#N`, then read it with
-   `python3 <package>/scripts/pr_watch.py check` or keep `python3 <package>/scripts/pr_watch.py wait` running.
-2. Wait for checks green on the Draft. A Draft that shows `checks=none` has CI skipped
-   for drafts: mark it ready first and wait for green on the ready head instead.
+Every wait below ends on a state, never on a change line. `add` records the PR as it is
+now and reports only later changes, so a restarted session, a watch state lost with the
+machine, or a second `add` of a listed PR never sees an earlier flip. Read the state
+first, from the `<package>/scripts/pr_watch.py check` row (`OPEN`, `draft=`, `checks=`)
+or `gh pr view`. Run `wait` only while the state is not yet true, and only as a wake-up:
+it returns on the next change and never for a state already true. Do not `add` a PR the
+`check` rows already list.
+
+1. `python3 <package>/scripts/pr_watch.py add OWNER_REPO#N`, then read the state with
+   `python3 <package>/scripts/pr_watch.py check`.
+2. Wait for checks green on the Draft (row `checks=green`). A Draft with `checks=none`
+   on two reads 60 seconds apart (CI skipped for drafts): mark it ready first and wait for
+   green on the ready head instead.
 3. `gh pr ready N --repo OWNER_REPO`.
-4. Wait for the watch to report `draft True -> False` and checks green on the ready head
-   (or the no-applicable-checks case below). Read the PR as in step 6 and pass the head
-   check below, then `delivery-record` the PR again with `draft` false and the same token.
+4. Wait until the PR is ready (`draft=False`) and settled: at least 60 seconds since it
+   became ready (the `gh pr ready` time, or for a flip this session did not make the last
+   `ready_for_review` in `gh api --paginate repos/OWNER_REPO/issues/N/events`) with
+   `checks=green` and nothing pending in that read, or the no-applicable-checks case
+   below. A green read sooner may be the Draft run's. Read the PR as in step 6 and pass
+   the head check below, then `delivery-record` the PR again with `draft` false and the
+   same token. The 60 seconds is a bound, not a proof: a check that starts later is
+   missed, and a workflow not run on ready shows the Draft's green, which is its answer.
 5. Only then ask the Captain to merge, naming the PR, its head SHA (equal to the
    plan's `candidate_commit`), that it is ready, and the checks state. Merge stays the
    Captain's (ADR 0009): FO does not merge or enable auto-merge.
-6. When the watch reports `state OPEN -> MERGED` or `-> CLOSED`, read
+6. When the PR is `MERGED` or `CLOSED` (the watch reports `state OPEN -> MERGED` once, then
+   drops it), read
    `gh pr view N --repo OWNER_REPO --json state,mergedAt,mergeCommit,isDraft,headRefOid`,
    pass the head check below, and `delivery-record` the observation with state `merged`
    or `closed` (`merge_commit` from `mergeCommit.oid` when merged).
@@ -227,7 +242,7 @@ read `headRefOid` with the plan's `candidate_commit`. The recorder takes
 On a mismatch FO records nothing, leaves the delivery `open`, and reports the PR with
 both SHAs to the Captain.
 
-No applicable checks: after `draft True -> False`, if two `<package>/scripts/pr_watch.py
+No applicable checks: once the PR is ready (`draft=False`), if two `<package>/scripts/pr_watch.py
 check` reads at least 60 seconds apart both show `checks=none` and
 `gh pr view N --repo OWNER_REPO --json mergeStateStatus` is not `BLOCKED`, no check
 applies to this change (a repository without checks, or path filters that exclude a
@@ -256,8 +271,9 @@ continue as the next paragraph says. If it is `MERGED` or `CLOSED`, act by who i
   `delivery-recover` with `--owner-state stopped`, the same plan, digest and observation.
   Never attest `stopped` for an owner that may still be running.
 
-If the PR is `OPEN`, FO resumes from the first step the PR has not passed (a PR already
-ready skips step 3; a watch not yet added runs step 1), by who is acting:
+If the PR is `OPEN`, FO resumes from the first step the PR has not passed, judged by those
+states (a PR already ready skips step 3; one the `check` rows do not list runs step 1), by
+who is acting:
 
 - FO holds the token: carry on with the steps; there is nothing to recover.
 - A restarted session, or a different one taking over, whose previous owner is confirmed
