@@ -75,6 +75,17 @@ gates:
                 id: briefing:journey-map-dev2-contract:validation:attempt-1:revision-1
                 digest: sha256:79323a7b7a8ad5ed42cc299e80eb2f2e15e94366219106dbf1404761417472bd
                 room-ref: ./journey-map-dev2-contract/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-map-dev2-contract:validation:1
+                briefing: briefing:journey-map-dev2-contract:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T06:44:07.372814Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「准」 to the validation gate question for #627 32db1273 and #628 7d89898e; the question stated that approval also accepts keeping the smoke push-to-main trigger, accepts that a hand-reworded answer stays a conflict until a new ruling, and covers later external-review rounds on these two PRs per Delivery authority.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T03:05:11Z
 worktree: .worktrees/spacedock-ensign-journey-map-dev2-contract
 ---
