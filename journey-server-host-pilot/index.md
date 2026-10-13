@@ -380,3 +380,21 @@ Only the unavailable-check report disposition changed; the product candidate and
 ### Summary
 
 Independent local/emulated validation passes at the unchanged exact candidate; retained modules serve accepted goals or safety/lifecycle boundaries, and no Material finding requires repair. The full number guard is unavailable/NOT PASS under the existing FO disposition, while hosted/provider obligations remain NOT RUN; this grants neither deployment nor full hosted acceptance. FO must execute the four-step script unchanged, present its actual outputs and route the Captain's existing validation/delivery gate.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-13, chat
+Captain: 「可以，保留目前候選版，繼續補遠端 Node、Cloudflare 與真實休眠恢復驗證。Cloudflare 維持免費方案，房間切換 UI 跟並發規則不動。同時注意量測一下使用率上升的程度，觀察使用量」 (this conversation)
+Asked: 「是否同意保留目前候選版、暫緩交付，待遠端與真實休眠驗證補齊？」
+Supersedes: none
+
+### Amendment 2 — 2026-10-13, chat
+Captain: 「略過遠端 node 主機，目前遠端應該只有 Cloudflare 一個 adapter 對嗎？本機則就只有 node 一種？而理論上交換也可以跑，對嗎？」 (this conversation)
+Asked: 「遠端 Node 驗證要部署在哪個既有主機？請提供可用的 SSH 主機別名／網址，或指定原先提到的 exe.dev。這次尚未指定 Node 主機；我會先繼續 Cloudflare 免費方案的準備與用量基準量測。」
+Supersedes: none
+
+### Amendment 3 — 2026-10-13, chat
+Captain: 「用量報告只留本機，GitHub 只記錄驗證結論（建議）」 (this conversation)
+Asked: 「這次 Cloudflare 用量報告要放哪裡？目前工作流程使用的 GitHub 儲存庫 iamcxa/kc-claude-plugins 是公開的；報告會含請求數、運算／儲存用量與測試資源名稱，但不含帳號 ID、email 或密鑰。」
+Supersedes: none
+
