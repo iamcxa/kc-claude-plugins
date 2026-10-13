@@ -15,6 +15,17 @@ gates:
                 id: briefing:journey-map-dev2-contract:backlog:attempt-1:revision-1
                 digest: sha256:fbb11af93e5d54ff9e1c3680e8c8dc60ac32270a3bce98c5da1286de395a998c
                 room-ref: ./journey-map-dev2-contract/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-map-dev2-contract:backlog:1
+                briefing: briefing:journey-map-dev2-contract:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T03:04:41.63751Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「可以進入設計」, after the FO presented the loop, timing, no-miss checks and self-repair placement in chat; then 「可以」 to the FO question "journey-map-dev2-contract 要選 Pilot 嗎？選定後，我記下等級和這次的關卡，然後派人做設計。"'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 kc-journey-map (the release slice map) and kc-dev-flow-2 meet today through prose split between workflow.md's Release review section and kc-journey-progress's SKILL.md. Nothing tests that prose, and six defects found in an adopter on 2026-10-13 come from that missing interface.
