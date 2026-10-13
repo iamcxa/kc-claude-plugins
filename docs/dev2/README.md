@@ -4,7 +4,7 @@ entity-type: task
 id-style: slug
 entity-label: task
 entity-label-plural: tasks
-extensions: [roborev, codex, copilot, learn]
+extensions: [roborev, codex, copilot, learn, peers]
 second-reviewer: copilot
 state: .spacedock-state
 trunk: main
@@ -47,7 +47,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.20.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.21.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -218,8 +218,11 @@ repair is dispatched under the lane in Stages.
   `<package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit
   code, and unverified obligations recorded in the existing SD Stage Report.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
-  and limits, and the user's pending delivery decision. FO presents the stage's
-  minimal acceptance script itself at the gate, not a pointer into the report.
+  and limits, and the user's pending delivery decision. Before the gate, FO runs the
+  stage's minimal acceptance script exactly as written in a fresh shell, then presents
+  every step in full beside its observed output, never a pointer or a shortened step.
+  A step FO cannot run (a secret, a sign-in, the Captain's own device) is marked not
+  run with the reason; an output that differs from the script returns through feedback.
   Before recommending delivery, FO confirms both goal sufficiency and minimal
   necessity from the same candidate's existing route evidence. Passing checks or
   approval replace neither condition; approval is not merge. When a POC report
