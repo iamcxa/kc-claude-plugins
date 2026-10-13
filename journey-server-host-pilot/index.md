@@ -68,6 +68,14 @@ gates:
                 id: briefing:journey-server-host-pilot:validation:attempt-2:revision-1
                 digest: sha256:d21c1b6d1ecf0ebe3b4f798fdf9855baddef7cbf8bccaa093aa56bcc39ed5dbe
                 room-ref: ./review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-server-host-pilot:validation:2
+                briefing: briefing:journey-server-host-pilot:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-13T16:07:08.046347Z"
+                decision: revise
+                reason: 'Accepts the minimal correction and preserves the candidate. Captain: 可以，保留修正版，先排除連線問題，再重測休眠恢復與用量。Cloudflare 維持免費方案，用量明細只留本機，Node、房間切換 UI 跟並發規則不動。 Assignment: diagnose connectivity before any deployment; then run one new bounded Free-only lifecycle and usage verification round, preserving prior evidence and unchanged product scope. This is continuation, not full acceptance or publication authority.'
 started: 2026-10-13T08:47:34Z
 id: journey-server-host-pilot
 review-round:
