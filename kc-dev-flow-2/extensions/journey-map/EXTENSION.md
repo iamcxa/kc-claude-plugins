@@ -4,8 +4,9 @@ Carries a Captain ruling that answers a journey-map question from the task to th
 repository uses it by listing `journey-map` under `extensions:` in its workflow README
 frontmatter, and only when the repository keeps a kc-journey-map file.
 
-- **Needs:** python3 for `<package>/extensions/journey-map/map_footprint.py`; node and the `journey-fold.mjs` and
-  `journey-reconcile.mjs` commands of kc-journey-map for the fold and the counts. A task is a
+- **Needs:** python3 for `<package>/extensions/journey-map/map_footprint.py`; for the fold and the counts, node and a
+  kc-journey-map release that ships `lib/journey-fold.mjs`, `lib/journey-reconcile.mjs` and `lib/schemas.mjs`
+  (without one, `add`, `check` and `audit` still run and the fold is reported as not run). A task is a
   journey task when its frontmatter has both `journey` and `journey-story`; any other task is
   outside this extension.
 - **Joins:** FO, at three points on a journey task.

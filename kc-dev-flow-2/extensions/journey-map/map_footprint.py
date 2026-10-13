@@ -34,7 +34,7 @@ FIELDS = (
     ("question", "a question id inside that story"),
     ("words", "the Captain's words, verbatim; a substring of the source text"),
     ("date", "`YYYY-MM-DD`; equals the source's date"),
-    ("source", "`gate-attempt:<id>` (the resolution `reason`) or `amendment:<n>` (its `Captain:` line)"),
+    ("source", "`gate-attempt:<id>` (a Captain resolution's `reason`) or `amendment:<n>` (its `Captain:` line)"),
     ("answer", "one line, FO's statement of the decision; becomes the map's `answer`"),
 )
 REQUIRED = tuple(name for name, _ in FIELDS)
@@ -111,7 +111,7 @@ class Task:
         self.story = self.fields.get("journey-story", "").strip()
         self.sources = {}
         for e in dl.gate_entries(fm):
-            if e["kind"] == "resolution" and e.get("attempt"):
+            if e["kind"] == "resolution" and e.get("attempt") and e.get("by") == "person:captain":
                 self.sources[e["attempt"]] = (e.get("at", "")[:10], e.get("reason") or "")
         for n, date, words in AMENDMENT.findall(self.body):
             self.sources[f"amendment:{n}"] = (date, words)
