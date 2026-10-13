@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "asyncRewake": true,
+            "command": "[ \"$AGENT_BOARD_WAKE\" = hook ] || exit 0; exec python3 \"${CLAUDE_PLUGIN_ROOT}/../board.py\" wait --reader claude --hook --timeout 900"
+          }
+        ]
+      }
+    ]
+  }
+}

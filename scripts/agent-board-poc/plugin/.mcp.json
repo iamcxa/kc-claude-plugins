@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "board": {
+      "command": "python3",
+      "args": ["${CLAUDE_PLUGIN_ROOT}/../board.py", "serve"],
+      "env": {
+        "AGENT_BOARD_DB": "${AGENT_BOARD_DB}",
+        "AGENT_BOARD_SENDER": "claude",
+        "AGENT_BOARD_HARNESS": "claude-code"
+      }
+    }
+  }
+}
