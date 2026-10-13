@@ -3,7 +3,7 @@ title: A script checks the FO-written records that the observer found wrong more
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 2026-10-13: 「准」 to the ideation gate question; the question stated that approval accepts the recommendations for D1 (three checks, two wording changes, two drops) and D2 (hold on any head difference: FO revalidates the new head or tells the Captain before asking).'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-13T10:58:03Z
 ---
 
