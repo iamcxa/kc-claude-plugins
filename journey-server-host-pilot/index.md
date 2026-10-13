@@ -36,6 +36,17 @@ gates:
                 id: briefing:journey-server-host-pilot:ideation:attempt-1:revision-1
                 digest: sha256:909d99e679abc60d30f47a3829c4474a3b5384dc3babafa4753d9af7ddf4c824
                 room-ref: ./review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-server-host-pilot:ideation:1
+                briefing: briefing:journey-server-host-pilot:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T09:56:07.763186Z"
+                decision: approve
+                reason: 'Captain explicitly accepted the presented ideation design and Cloudflare health.active sampled-telemetry exception: 可以，接受這個監控例外，照設計進入實作，房間切換 UI 跟並發規則維持不動。 Approval authorizes implementation under the recorded pilot scope; room-switching UI and concurrency remain unchanged, with no deployment, paid provisioning, migration, merge or production rollout inferred.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-13T08:47:34Z
 ---
 
