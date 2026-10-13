@@ -401,3 +401,25 @@ PASSED at 40c714a6: both round-2 findings reproduce at d127ec71 by following the
 ### Dispatch Retries
 
 - Retry 1: implementation — agent-error (session rate limit, HTTP 429) after a local merge commit 7679ab7a, not pushed; nudged
+
+## Stage Report: implementation (cycle 4, same-stage conflict handoff: merge origin/main a8fe8d39 into #632)
+
+- DONE: Merge (never rebase) origin/main at a8fe8d39 (#631 squash-merged) into #632's branch, resolving conflicts so main's #631 text and this PR's edits both survive; this PR's own hunks over origin/main equal its validated hunks over 20c9ec53
+  Merge commit 7679ab7a (parents 40c714a6 and a8fe8d39); worktree was already at origin's head 40c714a6, no rebase, no force.
+  Conflicts, two files, two hunks, both resolved by keeping this PR's side because main's side was the unchanged pre-PR line:
+  1. `.github/workflows/kc-dev-flow-2-tests.yml` after the test_workflow_checkout.py step: kept this PR's `test_observer_check.py` step; main had nothing there.
+  2. `kc-dev-flow-2/scripts/lint-skills.py` WORKFLOW_WORD_BUDGET: kept the PR's `5415` and its two rationale comments (+42 observer_check.py step, +4 python3 prefixes); main still read `5369`, identical to 20c9ec53's value.
+  `workflow.md`, `skills/dev/SKILL.md` auto-merged; main's #631 lines (workflow_checkout.py hold, python3 in dev skill) remain.
+  Hunk comparison: `git diff 20c9ec53 40c714a6` vs `git diff origin/main HEAD` (after merge), index and @@ lines excluded: `diff` reports zero differences; same 11 files, 522 insertions, 24 deletions. No forced difference.
+- DONE: All test suites and lint-skills.py green on the merged head
+  lint-skills.py PASS, `workflow.md: 5415 of 5415 words` (budget exactly met, so a stale 5369 would have failed it). All 19 test files named in kc-dev-flow-2-tests.yml exit 0 locally, run with `python3 -B`; test_observer_recovery.py ran against the installed spacedock 0.27.2 and printed its PASS line; test_sd_dispatch.py ran with the 0.27.0 cached plugin root (CI pins v0.27.2 by commit; it printed PASS for spacedock 0.27.2 binary, the plugin root differs) and passed.
+- DONE: push (never force)
+  First `git push` was rejected by the remote with a bare "failed" (no reason given); the identical command repeated succeeded, 40c714a6..7679ab7a. Remote head verified by `git ls-remote` = 7679ab7a.
+- DONE: roborev_gate.py with --base a8fe8d39
+  `clean on 7679ab7a1; evidence=roborev:619` (exit 0, no findings, no repair rounds used).
+- DONE: CI green on #632's new head
+  7679ab7a: 5 of 5 checks pass (unit tests python3 39s, version parity 58s, review CI routing 17s, multi-profile route gate 5s, GitGuardian); PR reports MERGEABLE.
+
+### Summary
+
+Merged a8fe8d39 into #632 with two trivial conflicts, both resolved to this PR's side; the PR's own diff over main is line-for-line the validated diff over #631's head. #633 was not touched. No behaviour change.
