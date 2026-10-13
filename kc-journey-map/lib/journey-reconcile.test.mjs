@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict'
 import { spawnSync } from 'node:child_process'
-import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { chmodSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
 import { tmpdir } from 'node:os'
 import { delimiter, join } from 'node:path'
 import { test } from 'node:test'
@@ -75,6 +75,7 @@ test('the command exits 1 on a duplicate story id and 0 on distinct ids', (t) =>
 	const empty = { entities: [], pagination: { has_next: 'false', total: '0', page: '1', limit: '0' } }
 	writeFileSync(stub, `#!/bin/sh\necho '${JSON.stringify(empty)}'\n`)
 	chmodSync(stub, 0o755)
+	writeFileSync(join(dir, 'README.md'), '---\ncommissioned-by: test\n---\n')
 	const run = (ids) => {
 		const map = join(dir, 'journey.yaml')
 		writeFileSync(map, `journey: shop\nsteps:\n- id: s\n  card: S\n  stories:\n${ids.map((id) => `  - id: ${id}\n    card: ${id}\n`).join('')}`)
@@ -86,4 +87,32 @@ test('the command exits 1 on a duplicate story id and 0 on distinct ids', (t) =>
 	assert.match(dup.stdout, /^duplicate-story-ids 1$/m)
 	const distinct = run(['a', 'b'])
 	assert.equal(distinct.status, 0, distinct.stderr)
+})
+
+test('a reworded answer counts as unfolded and fails; a directory with no README is a path error', (t) => {
+	const folded = planFold(FLOW, [footprint()]).draft
+	const clean = reconcile(folded, [task({ footprints: [footprint()] })])
+	assert.equal(value(clean, 'unfolded'), '0')
+	const reworded = reconcile(folded.replace('Platform issues codes.', 'Reworded by hand.'), [task({ footprints: [footprint()] })])
+	assert.equal(value(reworded, 'unfolded'), '1')
+	assert.equal(reworded.failing, true)
+	assert.match(reworded.lines.join('\n'), /unfolded: conflict fp:t:1 enter-by-qr\/q1 was folded from this ruling but its answer no longer matches/)
+	const dir = mkdtempSync(join(tmpdir(), 'reconcile-'))
+	t.after(() => rmSync(dir, { recursive: true, force: true }))
+	const map = join(dir, 'journey.yaml')
+	writeFileSync(map, 'journey: shop\nsteps: []\n')
+	const stub = join(dir, 'bin')
+	mkdirSync(stub)
+	writeFileSync(join(stub, 'spacedock'), `#!/bin/sh\necho '${JSON.stringify({ entities: [], pagination: { has_next: 'false', total: '0', page: '1', limit: '0' } })}'\n`)
+	chmodSync(join(stub, 'spacedock'), 0o755)
+	const run = (target) => spawnSync('node', [new URL('./journey-reconcile.mjs', import.meta.url).pathname, map, '--workflow-dir', target],
+		{ encoding: 'utf8', env: { ...process.env, PATH: `${stub}${delimiter}${process.env.PATH}` } })
+	for (const target of [join(dir, 'no-such-workflow'), dir]) {
+		const done = run(target)
+		assert.equal(done.status, 1, target)
+		assert.doesNotMatch(done.stdout, /unfolded/)
+		assert.ok(done.stderr.includes(`${target}`), done.stderr)
+	}
+	writeFileSync(join(dir, 'README.md'), '---\ncommissioned-by: test\n---\n')
+	assert.equal(run(dir).status, 0)
 })

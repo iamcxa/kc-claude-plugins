@@ -32,18 +32,19 @@ const keyOf = (pair) => pair.key?.value
 const pairOf = (map, key) => map.items.find((p) => keyOf(p) === key)
 const idOf = (map) => pairOf(map, 'id')?.value?.value
 
-function findStory(doc, id) {
+function findStories(doc, id) {
+	const found = []
 	for (const step of doc.get('steps')?.items ?? []) {
-		for (const story of step.get?.('stories')?.items ?? []) if (isMap(story) && idOf(story) === id) return story
+		for (const story of step.get?.('stories')?.items ?? []) if (isMap(story) && idOf(story) === id) found.push(story)
 	}
-	return null
+	return found
 }
 
-function findQuestion(story, id) {
+function findQuestions(story, id) {
 	const list = story.get('questions', true)
 	const single = story.get('question', true)
 	const items = isSeq(list) ? list.items : isMap(single) ? [single] : []
-	return items.find((q) => isMap(q) && idOf(q) === id) ?? null
+	return items.filter((q) => isMap(q) && idOf(q) === id)
 }
 
 const sourceOf = (fp) => ({ kind: fp.source.startsWith('amendment:') ? 'amendment' : 'gate', ref: `${fp.task}/${fp.source}`, words: fp.words, date: fp.date })
@@ -86,10 +87,13 @@ export function planFold(src, footprints) {
 	const result = (fp, outcome, detail = '') => results.push({ id: fp.id, outcome, detail })
 	for (const fp of footprints) {
 		if (fp.journey !== journey) { result(fp, 'wrong-journey', `${fp.journey} is not ${journey}`); continue }
-		const story = findStory(doc, fp.story)
-		if (!story) { result(fp, 'no-story', fp.story); continue }
-		const q = findQuestion(story, fp.question)
-		if (!q) { result(fp, 'no-question', `${fp.story}/${fp.question}`); continue }
+		const stories = findStories(doc, fp.story)
+		if (!stories.length) { result(fp, 'no-story', fp.story); continue }
+		if (stories.length > 1) { result(fp, 'ambiguous', `story ${quote(fp.story)} matches ${stories.length} stories`); continue }
+		const questions = findQuestions(stories[0], fp.question)
+		if (!questions.length) { result(fp, 'no-question', `${fp.story}/${fp.question}`); continue }
+		if (questions.length > 1) { result(fp, 'ambiguous', `question ${quote(fp.question)} in story ${quote(fp.story)} matches ${questions.length} questions`); continue }
+		const q = questions[0]
 		const key = `${fp.story}/${fp.question}`
 		const prior = touched.get(key)
 		const have = prior ?? {
@@ -98,7 +102,11 @@ export function planFold(src, footprints) {
 			ref: pairOf(q, 'source')?.value?.get?.('ref'),
 		}
 		const ref = sourceOf(fp).ref
-		if (have.ref === ref) { result(fp, 'already'); continue }
+		if (have.ref === ref) {
+			if (have.answer === fp.answer && have.status === 'answered') result(fp, 'already')
+			else result(fp, 'conflict', `${key} was folded from this ruling but its ${have.answer === fp.answer ? 'status' : 'answer'} no longer matches`)
+			continue
+		}
 		if (have.ref || (have.answer && have.answer !== fp.answer)) { result(fp, 'conflict', `${key} already holds a different ${have.ref ? 'source' : 'answer'}`); continue }
 		edits.push(...editsFor(src, q, fp, have))
 		touched.set(key, { answer: fp.answer, status: 'answered', ref })
@@ -117,7 +125,7 @@ export function planFold(src, footprints) {
 	return { draft, results }
 }
 
-export const FAILING = new Set(['conflict', 'no-story', 'no-question', 'wrong-journey'])
+export const FAILING = new Set(['conflict', 'ambiguous', 'no-story', 'no-question', 'wrong-journey'])
 
 function main(argv) {
 	const usage = 'usage: journey-fold.mjs <journey.yaml> --footprints <footprints.jsonl> [--footprints <more>] --out <draft.yaml>'
@@ -132,6 +140,8 @@ function main(argv) {
 	if (!path || !footprints.length || !out) throw new Error(usage)
 	const read = footprints.map(readFootprints)
 	const { draft, results } = planFold(readFileSync(path, 'utf8'), read.flatMap((r) => r.lines))
+	const ambiguous = results.filter((r) => r.outcome === 'ambiguous')
+	if (ambiguous.length) throw new Error(`refused, no draft written: ${ambiguous.map((r) => `${r.id} ${r.detail}`).join('; ')}`)
 	// 'wx': an earlier draft is not evidence for this run.
 	writeFileSync(out, draft, { flag: 'wx' })
 	for (const r of results) console.log(`${r.outcome} ${r.id}${r.detail ? ` ${r.detail}` : ''}`)

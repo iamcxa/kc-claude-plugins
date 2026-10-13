@@ -4,7 +4,7 @@
 // archived (`stale-open`). Prints no timestamp, so two runs on the same inputs print the same bytes.
 import { execFileSync } from 'node:child_process'
 import { existsSync, readFileSync, realpathSync } from 'node:fs'
-import { resolve } from 'node:path'
+import { join, resolve } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { parse } from 'yaml'
 import { FAILING, planFold, readFootprints } from './journey-fold.mjs'
@@ -60,6 +60,7 @@ export function reconcile(src, tasks) {
 // Reads journey tasks through the Spacedock CLI: the listing, then each journey task's folder.
 export function readTasks(workflowDir) {
 	const dir = resolve(workflowDir)
+	if (!existsSync(join(dir, 'README.md'))) throw new Error(`${dir} is not a workflow directory: ${join(dir, 'README.md')} does not exist`)
 	const run = (...args) => JSON.parse(execFileSync('spacedock', ['status', '--workflow-dir', dir, ...args, '--json'],
 		{ encoding: 'utf8', maxBuffer: 8 * 1024 * 1024, stdio: ['ignore', 'pipe', 'pipe'] }))
 	return taskListing(run('--archived', '--all-fields', '--limit', '0'))

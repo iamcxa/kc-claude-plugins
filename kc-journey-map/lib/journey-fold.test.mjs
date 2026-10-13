@@ -68,6 +68,38 @@ test('a different existing answer or source is a conflict and writes nothing for
 	assert.equal(other.draft, folded.draft)
 })
 
+test('an answer reworded or a status changed after folding is a conflict, not already, and writes nothing', () => {
+	const folded = fold(FLOW, footprint()).draft
+	for (const [label, edited] of [['answer', folded.replace('Platform issues codes.', 'Reworded by hand.')], ['status', folded.replace('status: answered, ask: "Who', 'status: open, ask: "Who')]]) {
+		assert.notEqual(edited, folded, label)
+		const again = planFold(edited, [footprint()])
+		assert.deepEqual(again.results.map((r) => r.outcome), ['conflict'], label)
+		assert.match(again.results[0].detail, new RegExp(`its ${label} no longer matches`))
+		assert.equal(again.draft, edited, label)
+	}
+})
+
+test('a story id or question id that matches twice is refused naming both, and the command writes no draft', (t) => {
+	const dupQuestion = FLOW.replace('          - {id: q1, status: open, ask: "Who issues codes?"}', '          - {id: q1, status: open, ask: "Who issues codes?"}\n          - {id: q1, status: open, ask: "Again"}')
+	const dupStory = FLOW.replace('      - id: pick-nearby', '      - id: enter-by-qr\n        release: r1\n        status: gap\n        card: "Twin"\n      - id: pick-nearby')
+	const asked = fold(dupQuestion, footprint())
+	assert.deepEqual(asked.results.map((r) => r.outcome), ['ambiguous'])
+	assert.match(asked.results[0].detail, /question "q1" in story "enter-by-qr" matches 2 questions/)
+	assert.equal(asked.draft, dupQuestion)
+	const storied = fold(dupStory, footprint())
+	assert.deepEqual(storied.results.map((r) => r.outcome), ['ambiguous'])
+	assert.match(storied.results[0].detail, /story "enter-by-qr" matches 2 stories/)
+	const dir = mkdtempSync(join(tmpdir(), 'fold-'))
+	t.after(() => rmSync(dir, { recursive: true, force: true }))
+	const map = join(dir, 'journey.yaml'), fps = join(dir, 'footprints.jsonl'), out = join(dir, 'draft.yaml')
+	writeFileSync(map, dupQuestion)
+	writeFileSync(fps, `${JSON.stringify(footprint())}\n`)
+	const done = spawnSync('node', [new URL('./journey-fold.mjs', import.meta.url).pathname, map, '--footprints', fps, '--out', out], { encoding: 'utf8' })
+	assert.equal(done.status, 1)
+	assert.match(done.stderr, /no draft written: fp:t:1 question "q1" in story "enter-by-qr"/)
+	assert.throws(() => readFileSync(out), /ENOENT/)
+})
+
 test('a deferred question keeps its because and becomes answered', () => {
 	const { draft } = fold(FLOW, footprint({ question: 'q3' }))
 	const q = parse(draft).steps[0].stories[0].questions[2]
