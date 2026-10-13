@@ -34,6 +34,17 @@ gates:
                 id: briefing:learn-delivery-follow-through:ideation:attempt-1:revision-1
                 digest: sha256:f8b0db20b710ea226a6c9792b5b8ad747d1e0763e479997bd21847e799b28e71
                 room-ref: ./learn-delivery-follow-through/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:learn-delivery-follow-through:ideation:1
+                briefing: briefing:learn-delivery-follow-through:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T11:09:46.05033Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「准」 to the ideation gate question; the question stated that approval accepts the recommendations for D1 (learning PR approval covers marking it ready once CI is green), D2 (FO settles an open sibling delivery from GitHub and retries a refused claim once) and D3 (no delivery-sync command in this task).'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-13T10:57:59Z
 ---
 
