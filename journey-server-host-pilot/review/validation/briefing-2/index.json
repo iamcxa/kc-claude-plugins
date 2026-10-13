@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:validation:attempt-2:revision-1",
+  "question": "是否保留這個最小修正版並暫緩交付，先確認本機到 Cloudflare 的連線恢复，再另開一輪免費方案的休眠與用量驗證？",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/3b428a68855057c9dd1ba10e5a533eb4be80d569/journey-server-host-pilot/index.md",
+      "rev": "sha256:882701f29cbd119af5666eb000338849ba74309b8044330c3c99cb91d9c0eec9",
+      "mediaType": "text/markdown",
+      "summary": "The Cloudflare-only correction preserves the original candidate and leaves Node, room UI, shared contract and concurrency unchanged. Independent review accepts the bounded local correction and finds no new Material product defect. FO ran all four offline acceptance steps unchanged with exit zero, confirming candidate identity, receipt integrity, check disposition and cleanup. Complete hosted acceptance remains rejected: capped deployment attempts failed at unauthenticated transport readiness before sockets or lifecycle rounds, and scoped provider usage is not shown. The unchanged endpoint control also fails to connect, without establishing a root cause. Recommend preserving the correction and deferring delivery; a future bounded Free-only verification run first needs a working connection path. No additional product repair, deployment, product publication or merge is granted by this gate. Detailed evidence and usage remain local; the unavailable full number guard remains skipped and not passed."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:validation:attempt-2:revision-1:item-2",
+      "uri": "git-root://main/6d0f8da951b5ea9ea50fca6bd3685fc360bf502f/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:42b58e54971513b3dd42350e15b4b1e7cf05fd51f9f80b84a8e4856f087dae4f"
+    }
+  ]
+}

@@ -63,6 +63,11 @@ gates:
                 at: "2026-10-13T11:21:22.243544Z"
                 decision: revise
                 reason: 'Accepts direction and preserves candidate 4f678cd88eddbcc171df7e2037dd19d2fbf4065b; full delivery is not approved. Captain requests continued remote Node, hosted Cloudflare, real hibernation/recovery verification and before/after usage measurement. Cloudflare must remain Free; room UI and concurrent-write rules remain unchanged. Concrete assignment: prepare isolated synthetic hosted targets, verify provider and credential prerequisites, execute bounded supported journeys and lifecycle checks on the unchanged candidate, record actual resource usage and remaining limits. No merge, paid upgrade, retained-data migration or product repair is authorized.'
+            - id: gate-attempt:journey-server-host-pilot-validation-2
+              briefing:
+                id: briefing:journey-server-host-pilot:validation:attempt-2:revision-1
+                digest: sha256:d21c1b6d1ecf0ebe3b4f798fdf9855baddef7cbf8bccaa093aa56bcc39ed5dbe
+                room-ref: ./review/validation/briefing-2
 started: 2026-10-13T08:47:34Z
 id: journey-server-host-pilot
 review-round:
