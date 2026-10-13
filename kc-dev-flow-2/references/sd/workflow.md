@@ -94,7 +94,10 @@ from, and FO holds the dispatch until the session runs the newer one. FO also ru
 `origin/<trunk>`'s: exit 1 means they differ, exit 2 that it could not compare, and FO
 holds the dispatch and shows the Captain what the script printed. Every worker dispatch FO builds carries that absolute path as a
 `Package root: <absolute path>` line in its scope notes (`--scope-notes-file`), which
-land in the dispatch file the worker reads first. FO saves those scope notes, the
+land in the dispatch file the worker reads first. Those scope notes, and every follow-up
+message to a live worker, also carry ``Send your completion message to `main` (the README's Dispatch
+facts: `team-lead` is not registered here).``: the builder's completion block names `team-lead`, and a
+worker that skips the stage-definition fetch does not see the Signal fact. FO saves those scope notes, the
 checklist, the model it dispatches on and the SHA it dispatches from as
 `<task>/dispatch/<stage>-<cycle>.md` in the state checkout (a `Dispatched:` line with
 the full SHA, a `Model:` line, and `## Checklist` and `## Scope notes` sections),

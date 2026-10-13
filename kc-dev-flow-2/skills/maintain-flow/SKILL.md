@@ -50,7 +50,8 @@ holds the old behaviour, and build its dispatch twice with
 and once at the change, from the same state and code commits, with a checklist that
 names no rule under test. Run each as a fresh worker on the same model, once on the
 release and at least twice on the change; `--inject` adds the FO record a rule
-depends on, such as a decline. Report a table of runs by outcome, then run
+depends on, such as a decline. The helper adds the line naming `main` as the completion
+recipient to the scope notes; `--no-completion-line` builds the arm without it. Report a table of runs by outcome, then run
 `python3 kc-dev-flow-2/scripts/replay_dispatch.py cleanup`. A rule only FO acts on cannot be replayed: a fresh FO
 answers scenario questions from the README alone, including one where the rule must not
 apply. A replay that contradicts the claim stops the change; after two rewordings that

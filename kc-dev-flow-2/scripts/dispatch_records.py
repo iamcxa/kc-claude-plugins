@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Check a task's dispatch records: each needs a Dispatched line with a full SHA, a Model line,
-and non-empty Checklist and Scope notes sections.
+non-empty Checklist and Scope notes sections, and a scope-notes line naming `main` as the completion recipient.
 
 Usage: dispatch_records.py <task folder or task .md file>
 Exit 1 naming each record that lacks a part, or when the task has no dispatch records.
@@ -14,6 +14,8 @@ PARTS = {
     "a 'Model:' line": re.compile(r"^Model:[ \t]*\S", re.M),
     "a non-empty '## Checklist' section": re.compile(r"^## Checklist[ \t]*\n(?:[ \t]*\n)*(?!## )\S", re.M),
     "a non-empty '## Scope notes' section": re.compile(r"^## Scope notes[ \t]*\n(?:[ \t]*\n)*(?!## )\S", re.M),
+    "a scope-notes line naming main as the completion recipient":
+        re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?\bcompletion(?: message)? to [`']?main(?![\w-])", re.M | re.I),
 }
 
 
