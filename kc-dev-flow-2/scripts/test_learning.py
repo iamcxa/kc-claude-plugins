@@ -4,7 +4,9 @@
 import copy
 import hashlib
 import json
+import os
 from pathlib import Path
+import re
 import shutil
 import subprocess
 import sys
@@ -14,6 +16,28 @@ import unittest
 SCRIPT = Path(__file__).with_name("learning.py")
 ENTRY = {"Applicability": "Synthetic import path", "Practice": "Check encoding", "Evidence": "Synthetic case A"}
 NEW = {"Applicability": "Synthetic export path", "Practice": "Check header order", "Evidence": "Synthetic case B"}
+PACKAGE = SCRIPT.parent.parent
+PR_WATCH = SCRIPT.with_name("pr_watch.py")
+PR_REF = "example/project#2"
+GH_STUB = """#!/usr/bin/env python3
+import json, os, sys
+path = os.environ["GH_STUB_STATE"]
+args = sys.argv[1:]
+with open(path + ".log", "a") as log:
+    log.write(json.dumps(args) + "\\n")
+if args[:2] == ["pr", "merge"] or "--auto" in args:
+    sys.exit(1)
+data = json.load(open(path))
+if args[:2] == ["pr", "ready"]:
+    data["isDraft"] = False
+    json.dump(data, open(path, "w"))
+elif args[:2] == ["pr", "view"]:
+    print(json.dumps(data))
+else:
+    sys.exit(1)
+"""
+RUNNING = [{"status": "IN_PROGRESS"}]
+SUCCESS = [{"conclusion": "SUCCESS"}]
 
 
 class LearningTests(unittest.TestCase):
@@ -816,6 +840,380 @@ class LearningTests(unittest.TestCase):
                  "--observation", self.observed(plan, "merged", draft=False))
         refused = self.advance(claim, plan, "open", code=1)
         self.assertIn("stopped", refused["error"])
+
+
+    def gh_stub(self, **fields):
+        path = self.base / "gh-state.json"
+        if not hasattr(self, "gh_bin"):
+            self.gh_bin = self.base / "bin"
+            self.gh_bin.mkdir()
+            (self.gh_bin / "gh").write_text(GH_STUB)
+            (self.gh_bin / "gh").chmod(0o755)
+            self.gh_env = {**os.environ, "GH_STUB_STATE": str(path), "PATH": f"{self.gh_bin}:{os.environ['PATH']}"}
+            fields = {"state": "OPEN", "isDraft": True, "mergeable": "MERGEABLE", "mergeStateStatus": "CLEAN",
+                      "headRefOid": getattr(self, "candidate", "c" * 40),
+                      "statusCheckRollup": RUNNING, "title": "Synthetic learning proposal",
+                      "mergeCommit": None, **fields}
+            path.write_text(json.dumps(fields))
+        else:
+            path.write_text(json.dumps({**json.loads(path.read_text()), **fields}))
+
+    def gh(self, *args):
+        done = subprocess.run(["gh", *args], capture_output=True, text=True, env=self.gh_env, timeout=15)
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        return done.stdout
+
+    def watch(self, *args):
+        done = subprocess.run([sys.executable, str(PR_WATCH), "--state", str(self.base / "watch.json"), *args],
+                              capture_output=True, text=True, env=self.gh_env, timeout=30)
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        return done.stdout
+
+    def no_merge_called(self):
+        calls = [json.loads(line) for line in (self.base / "gh-state.json.log").read_text().splitlines()]
+        self.assertTrue(calls)
+        self.assertFalse([c for c in calls if c[:2] == ["pr", "merge"] or "--auto" in c], calls)
+
+    def head_matches(self, plan, pr_json):
+        return json.loads(pr_json)["headRefOid"] == plan["candidate_commit"]
+
+    def observation_from_gh(self, plan, pr_json):
+        self.assertTrue(self.head_matches(plan, pr_json), "head check: headRefOid differs from candidate_commit")
+        read = json.loads(pr_json)
+        value = {key: plan[key] for key in ("repository", "branch", "candidate_commit", "marker")}
+        value.update(state=read["state"].lower(), pr=PR_REF, draft=read["isDraft"],
+                     merge_commit=(read.get("mergeCommit") or {}).get("oid"),
+                     evidence=["Stub gh pr view read"])
+        path = self.base / "observation-gh.json"
+        path.write_text(json.dumps(value))
+        return path
+
+    def claim_new(self, suffix, code=0):
+        self.pack["task_id"] = f"next-{suffix}"
+        self.write_pack()
+        return self.cli("claim", "--input", self.input, "--owner", "session-next", code=code)
+
+    def open_draft(self, suffix):
+        self.reset_store()
+        self.pack["task_id"] = f"followed-{suffix}"
+        self.write_pack()
+        holder, plan = self.delivery_fixture()
+        self.candidate = plan["candidate_commit"]
+        claimed = self.deliver(holder)
+        self.cli("delivery-record", "--job", holder["job"], "--token", claimed["delivery_token"],
+                 "--observation", self.observed(plan, "open"))
+        return holder, plan, claimed["delivery_token"]
+
+    def section(self, name, skill="learn"):
+        text = (PACKAGE / "skills" / skill / "SKILL.md").read_text()
+        body = text.split(f"## {name}\n", 1)[1]
+        return re.sub(r"\s+", " ", body.split("\n## ", 1)[0])
+
+    FOLLOW = "Follow the delivery to a recorded end"
+
+    def test_follow_section_orders_ready_before_merge_ask(self):
+        text = self.section(self.FOLLOW)
+        markers = ["pr_watch.py add", "green on the Draft", "gh pr ready", "`draft` false",
+                   "ask the Captain to merge", "state `merged` or `closed`"]
+        places = [text.find(marker) for marker in markers]
+        self.assertNotIn(-1, places, dict(zip(markers, places)))
+        self.assertEqual(places, sorted(places), dict(zip(markers, places)))
+        self.assertIn("`checks=none`", text)
+        self.assertRegex(text, r"`checks=none`.{0,60}mark it ready first and wait for green on the ready head")
+
+    def test_replay_of_the_stalled_learning_pr_ends_recorded_without_a_captain_message(self):
+        with self.subTest(arm="control: old text stops after recording the Draft"):
+            holder, plan, token = self.open_draft("control")
+            refused = self.claim_new("control", code=1)
+            self.assertEqual([b["delivery"] for b in refused["blocking"]], ["open"])
+
+        holder, plan, token = self.open_draft("new")
+        self.gh_stub()
+        self.watch("add", PR_REF)
+        self.gh_stub(statusCheckRollup=SUCCESS)
+        self.assertIn("checks pending -> green", self.watch("check"))
+        self.gh("pr", "ready", "2", "--repo", "example/project")
+        self.assertIn("draft True -> False", self.watch("check"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token,
+                 "--observation", self.observed(plan, "open", draft=False))
+        self.claim_new("ready-not-merged", code=1)
+        self.gh_stub(state="MERGED", mergeCommit={"oid": "d" * 40})
+        self.assertIn("state OPEN -> MERGED", self.watch("check"))
+        merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", merged)
+        self.assertTrue(self.claim_new("after-merge")["claimed"])
+        self.no_merge_called()
+
+    def test_open_delivery_with_lost_token_settles_from_github(self):
+        holder, plan, _ = self.open_draft("lost-token")
+        self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40})
+        self.claim_new("lost-token", code=1)
+        notice = self.cli("notices")["notices"][0]
+        self.assertEqual(notice["delivery"]["state"], "open")
+        repo, number = notice["delivery"]["observation"]["pr"].split("#")
+        observation = self.observation_from_gh(plan, self.gh("pr", "view", number, "--repo", repo))
+        stored = self.cli("notices", "--all")["notices"][0]["delivery"]
+        self.plan.write_text(json.dumps(stored["plan"]))
+        self.cli("delivery-recover", "--job", holder["job"], "--expected", stored["digest"],
+                 "--owner-state", "stopped", "--reason", "Token lost; PR read from GitHub",
+                 "--owner", "new-owner", "--plan", self.plan, "--observation", observation)
+        self.assertEqual(self.cli("notices", "--all")["notices"][0]["delivery"]["state"], "merged")
+        self.assertTrue(self.claim_new("lost-token-after")["claimed"])
+        self.no_merge_called()
+        self.assertIn("gh pr view", self.section("Present the result"))
+        paragraph = next(p for p in (PACKAGE / "skills/dev/SKILL.md").read_text().split("\n\n") if "notices" in p)
+        self.assertIn("`gh pr view`", re.sub(r"\s+", " ", paragraph))
+
+    def test_closed_pr_settles_and_release_of_open_delivery_is_refused(self):
+        holder, plan, token = self.open_draft("closed")
+        notice = self.cli("notices", "--all")["notices"][0]
+        refused = self.cli("release", "--job", holder["job"], "--expected", notice["notice_digest"],
+                           "--owner", "captain-declined", "--reason", "Synthetic", code=1)
+        self.assertIn("release refused", refused["error"])
+        self.gh_stub(state="CLOSED", isDraft=False)
+        closed = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", closed)
+        self.assertEqual(self.cli("notices", "--all")["notices"][0]["delivery"]["state"], "closed")
+        self.assertTrue(self.claim_new("after-close")["claimed"])
+        self.no_merge_called()
+        text = self.section(self.FOLLOW)
+        self.assertIn("closes the PR, and FO records `closed`", text)
+        self.assertIn("Do not `release` an open delivery", text)
+        self.assertEqual(text.count("`release`"), 1)
+
+    def test_follow_section_leaves_merge_to_the_captain(self):
+        text = self.section(self.FOLLOW)
+        self.assertNotIn("gh pr merge", text)
+        self.assertNotIn("--auto", text)
+        ask = text.split("ask the Captain to merge", 1)[1].split("6.", 1)[0]
+        for part in ("head SHA", "`candidate_commit`", "ready", "checks state"):
+            self.assertIn(part, ask)
+
+    def test_head_check_guards_every_record_and_recovery(self):
+        text = self.section(self.FOLLOW)
+        check = text.split("Head check:", 1)[1].split("No applicable checks:", 1)[0]
+        for part in ("before every `delivery-record` and before `delivery-recover`", "`headRefOid`",
+                     "`candidate_commit`", "records nothing", "leaves the delivery `open`", "both SHAs"):
+            self.assertIn(part, check)
+        step4 = text.split("4. Wait", 1)[1].split("5. Only", 1)[0]
+        step6 = text.split("6. When", 1)[1].split("Head check:", 1)[0]
+        settle = text.split("When the watch report never arrived", 1)[1]
+        for name, part in (("step 4", step4), ("step 6", step6), ("settle", settle)):
+            self.assertIn("head check", part, name)
+
+    def test_recorder_cannot_see_a_different_head_so_the_check_is_the_readers(self):
+        holder, plan, token = self.open_draft("head")
+        self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40}, headRefOid="e" * 40)
+        read = self.gh("pr", "view", "2", "--repo", "example/project")
+        self.assertFalse(self.head_matches(plan, read))
+        with self.assertRaises(AssertionError):
+            self.observation_from_gh(plan, read)
+        self.gh_stub(headRefOid=plan["candidate_commit"])
+        read = self.gh("pr", "view", "2", "--repo", "example/project")
+        self.assertTrue(self.head_matches(plan, read))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token,
+                 "--observation", self.observation_from_gh(plan, read))
+        self.assertEqual(self.cli("notices", "--all")["notices"][0]["delivery"]["state"], "merged")
+
+    def test_no_applicable_checks_ends_in_a_disclosed_ask_not_a_wait(self):
+        text = self.section(self.FOLLOW)
+        case = text.split("No applicable checks:", 1)[1].split("When the watch report never arrived", 1)[0]
+        self.assertRegex(case, r"two `<package>/scripts/pr_watch.py check` reads at least 60 seconds apart both show `checks=none` and")
+        for part in ("FO does not wait for green", "records ready as in step 4", "--json mergeStateStatus",
+                     "`BLOCKED` means GitHub still waits on a required check or review",
+                     "reports that state to the Captain instead of asking to merge",
+                     "`checks=none: no check ran on the ready head`", "failing holds"):
+            self.assertIn(part, case)
+        holder, plan, token = self.open_draft("nochecks")
+        self.gh_stub(statusCheckRollup=[])
+        self.watch("add", PR_REF)
+        self.gh("pr", "ready", "2", "--repo", "example/project")
+        self.assertIn("draft True -> False", self.watch("check"))
+        self.assertIn("checks=none", self.watch("check"))
+        self.assertIn("checks=none", self.watch("check"))
+        self.assertTrue(self.head_matches(plan, self.gh("pr", "view", "2", "--repo", "example/project")))
+        self.assertEqual(json.loads(self.gh("pr", "view", "2", "--repo", "example/project"))["mergeStateStatus"], "CLEAN")
+        self.cli("delivery-record", "--job", holder["job"], "--token", token,
+                 "--observation", self.observed(plan, "open", draft=False))
+        self.gh_stub(state="MERGED", mergeCommit={"oid": "d" * 40})
+        merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", merged)
+        self.assertTrue(self.claim_new("nochecks-after")["claimed"])
+
+    def test_every_wait_ends_on_a_state_a_restart_can_read(self):
+        text = self.section(self.FOLLOW)
+        intro = text.split(" 1. `python3", 1)[0]
+        for part in ("Every wait below ends on a state, never on a change line", "only as a wake-up",
+                     "never for a state already true", "Do not `add` a PR the `check` rows already list"):
+            self.assertIn(part, intro)
+        step2 = text.split(" 2. ", 1)[1].split(" 3. `gh", 1)[0]
+        step4 = text.split(" 4. Wait", 1)[1].split(" 5. Only", 1)[0]
+        step6 = text.split(" 6. When", 1)[1].split("Head check:", 1)[0]
+        self.assertIn("`checks=green`", step2)
+        for part in ("until the PR is ready (`draft=False`)", "at least 60 seconds since it became ready",
+                     "`ready_for_review`", "`checks=green` and nothing pending", "bound, not a proof"):
+            self.assertIn(part, step4)
+        self.assertIn("the PR is `MERGED` or `CLOSED`", step6)
+        case = text.split("No applicable checks:", 1)[1].split("When the watch report never arrived", 1)[0]
+        self.assertIn("once the PR is ready (`draft=False`)", case)
+        self.assertNotIn("True -> False", text)
+        self.assertNotIn("watch to report", text)
+
+    def test_ready_pr_with_no_watch_entry_never_shows_the_flip_but_its_row_is_the_exit(self):
+        holder, plan, token = self.open_draft("restart-ready")
+        self.gh_stub(isDraft=False, statusCheckRollup=SUCCESS)
+        self.assertEqual(self.watch("add", PR_REF).strip(), "watching 1 PR(s)")
+        checked = self.watch("check")
+        self.assertNotIn("draft True -> False", checked)
+        self.assertNotIn("checks pending -> green", checked)
+        self.assertRegex(checked, r"draft=False\s.*checks=green\s")
+        self.assertIn("row (`OPEN`, `draft=`, `checks=`)", self.section(self.FOLLOW))
+        with self.assertRaises(subprocess.TimeoutExpired):
+            subprocess.run([sys.executable, str(PR_WATCH), "--state", str(self.base / "watch.json"), "wait", "1"],
+                           capture_output=True, text=True, env=self.gh_env, timeout=4)
+        self.assertTrue(self.head_matches(plan, self.gh("pr", "view", "2", "--repo", "example/project")))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token,
+                 "--observation", self.observed(plan, "open", draft=False))
+        self.gh_stub(state="MERGED", mergeCommit={"oid": "d" * 40})
+        merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", merged)
+        self.assertTrue(self.claim_new("restart-ready-after")["claimed"])
+        self.no_merge_called()
+
+    def test_a_second_add_of_a_listed_pr_erases_the_flip_it_missed(self):
+        self.open_draft("readd")
+        self.gh_stub()
+        self.watch("add", PR_REF)
+        self.gh_stub(isDraft=False, statusCheckRollup=SUCCESS)
+        self.watch("add", PR_REF)
+        checked = self.watch("check")
+        self.assertNotIn("draft True -> False", checked)
+        self.assertIn("no change since the last look", checked)
+        self.assertIn("Do not `add` a PR the `check` rows already list", self.section(self.FOLLOW))
+
+    def prior_archives(self):
+        return list((self.repo / ".git/kc-dev-flow-2/learning").glob("*/prior-delivery-*"))
+
+    def test_settle_is_split_by_actor_and_a_token_holder_needs_no_recovery(self):
+        text = self.section(self.FOLLOW)
+        settle = text.split("When the watch report never arrived", 1)[1]
+        holder_at = settle.index("FO holds the token: `delivery-record`")
+        live_at = settle.index("A live owner without the token: `delivery-recover`")
+        stopped_at = settle.index("An owner confirmed stopped")
+        self.assertLess(holder_at, live_at)
+        self.assertLess(live_at, stopped_at)
+        live = settle[live_at:stopped_at]
+        for part in ("same `--owner`", "`--owner-state running` or `unknown`", "issues no new token"):
+            self.assertIn(part, live)
+        self.assertIn("`--owner-state stopped`", settle[stopped_at:])
+        self.assertNotIn("stopped", settle[:live_at].replace("confirmed stopped", ""))
+        self.assertIn("Never attest `stopped` for an owner that may still be running", settle)
+        with self.subTest(actor="token holder"):
+            holder, plan, token = self.open_draft("holds-token")
+            self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40})
+            merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+            self.cli("delivery-record", "--job", holder["job"], "--token", token, "--observation", merged)
+            delivery = self.cli("notices", "--all")["notices"][0]["delivery"]
+            self.assertEqual((delivery["state"], delivery["recovery"]), ("merged", None))
+            self.assertEqual(self.prior_archives(), [])
+        with self.subTest(actor="live owner without the token"):
+            holder, plan, token = self.open_draft("live-owner")
+            self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40})
+            merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+            stored = self.cli("notices", "--all")["notices"][0]["delivery"]
+            recovered = self.cli("delivery-recover", "--job", holder["job"], "--expected", stored["digest"],
+                                 "--owner-state", "running", "--reason", "Token lost; owner still running",
+                                 "--owner", "delivery-owner", "--plan", self.plan, "--observation", merged)
+            self.assertNotIn("delivery_token", recovered)
+            delivery = self.cli("notices", "--all")["notices"][0]["delivery"]
+            self.assertIn("same owner", delivery["recovery"]["owner_state"])
+            self.assertEqual(delivery["state"], "merged")
+            self.assertTrue(self.claim_new("live-owner-after")["claimed"])
+
+
+    def still_open_paragraph(self):
+        settle = self.section(self.FOLLOW).split("When the watch report never arrived", 1)[1]
+        return settle.split("If the PR is `OPEN`", 1)[1].split("A `claim` refused", 1)[0]
+
+    def recover_open(self, holder, plan, owner_state, owner, code=0):
+        stored = self.cli("notices", "--all")["notices"][0]["delivery"]
+        self.plan.write_text(json.dumps(stored["plan"]))
+        observation = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+        return self.cli("delivery-recover", "--job", holder["job"], "--expected", stored["digest"],
+                        "--owner-state", owner_state, "--reason", "Restart: PR read from GitHub", "--owner", owner,
+                        "--plan", self.plan, "--observation", observation, code=code)
+
+    def test_still_open_delivery_is_resumed_by_actor_not_left_blocking(self):
+        text = self.section(self.FOLLOW)
+        self.assertNotIn("leave it as it is", text)
+        self.assertIn("If it is `OPEN`, continue as the next paragraph says", text)
+        case = self.still_open_paragraph()
+        holder_at = case.index("FO holds the token: carry on")
+        restart_at = case.index("A restarted session, or a different one taking over")
+        live_at = case.index("A live owner without the token")
+        self.assertLess(holder_at, restart_at)
+        self.assertLess(restart_at, live_at)
+        self.assertIn("first step the PR has not passed", case[:holder_at])
+        for part in ("after the head check", "`--owner-state stopped`",
+                     "`notices --all`", "new `delivery_token` for step 4 onward", "refuses `running` and `unknown`"):
+            self.assertIn(part, case[restart_at:live_at])
+        self.assertIn("skip the `draft` false record of step 4", case[live_at:])
+        self.assertNotIn("delivery-recover", case[live_at:])
+        with self.subTest(actor="restarted session, previous owner stopped"):
+            holder, plan, old_token = self.open_draft("restart")
+            self.gh_stub()
+            self.claim_new("restart-blocked", code=1)
+            refused = self.recover_open(holder, plan, "running", "delivery-owner", code=1)
+            self.assertIn("verify delivery owner stopped", refused["error"])
+            new_token = self.recover_open(holder, plan, "stopped", "restarted-session")["delivery_token"]
+            self.assertNotEqual(new_token, old_token)
+            self.cli("delivery-record", "--job", holder["job"], "--token", old_token,
+                     "--observation", self.observed(plan, "open", draft=False), code=1)
+            self.gh("pr", "ready", "2", "--repo", "example/project")
+            self.cli("delivery-record", "--job", holder["job"], "--token", new_token,
+                     "--observation", self.observed(plan, "open", draft=False))
+            self.claim_new("restart-ready", code=1)
+            self.gh_stub(state="MERGED", mergeCommit={"oid": "d" * 40})
+            merged = self.observation_from_gh(plan, self.gh("pr", "view", "2", "--repo", "example/project"))
+            self.cli("delivery-record", "--job", holder["job"], "--token", new_token, "--observation", merged)
+            self.assertTrue(self.claim_new("restart-after")["claimed"])
+            self.no_merge_called()
+        with self.subTest(actor="live owner without the token"):
+            holder, plan, _ = self.open_draft("live-open")
+            self.gh_stub(state="OPEN", isDraft=True, mergeCommit=None)
+            self.gh("pr", "ready", "2", "--repo", "example/project")
+            self.assertTrue(self.stored_delivery()["observation"]["draft"])
+            self.gh_stub(state="CLOSED")
+            recovered = self.recover_open(holder, plan, "running", "delivery-owner")
+            self.assertNotIn("delivery_token", recovered)
+            self.assertEqual(self.stored_delivery()["state"], "closed")
+            self.assertTrue(self.claim_new("live-open-after")["claimed"])
+
+    def stored_delivery(self):
+        return self.cli("notices", "--all")["notices"][0]["delivery"]
+
+    def test_acknowledged_open_delivery_is_found_by_notices_all_and_presented_once_settled(self):
+        present = self.section("Present the result")
+        for part in ("notices --all", "acknowledged or not", "only the items with `unread` true",
+                     "ack --job JOB --expected NOTICE_DIGEST` for each presented snapshot and for none other"):
+            self.assertIn(part, present)
+        paragraph = re.sub(r"\s+", " ", next(p for p in (PACKAGE / "skills/dev/SKILL.md").read_text().split("\n\n")
+                                             if "notices" in p))
+        for part in ("notices --all`", "`unread` true", "acknowledged or not"):
+            self.assertIn(part, paragraph)
+        holder, plan, _ = self.open_draft("acknowledged")
+        self.gh_stub()
+        shown = self.cli("notices")["notices"][0]
+        self.cli("ack", "--job", holder["job"], "--expected", shown["notice_digest"])
+        self.gh_stub(state="MERGED", isDraft=False, mergeCommit={"oid": "d" * 40})
+        self.assertEqual(self.cli("notices")["notices"], [])
+        found = self.cli("notices", "--all")["notices"]
+        self.assertEqual([(i["delivery"]["state"], i["unread"]) for i in found], [("open", False)])
+        self.recover_open(holder, plan, "stopped", "restarted-session")
+        again = self.cli("notices")["notices"]
+        self.assertEqual([(i["delivery"]["state"], i["unread"]) for i in again], [("merged", True)])
+        self.cli("ack", "--job", holder["job"], "--expected", again[0]["notice_digest"])
+        self.assertEqual(self.cli("notices")["notices"], [])
 
 
 if __name__ == "__main__":

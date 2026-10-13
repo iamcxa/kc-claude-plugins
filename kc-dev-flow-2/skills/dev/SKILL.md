@@ -21,12 +21,14 @@ context; do not guess between projects or tasks. Read applicable project
 conventions and the existing context needed for the requested work.
 
 After resolving the code root, run `python3 <package>/scripts/learning.py --repo
-<absolute-code-root> notices`. Present relevant unread learning results to the
-user, distinguishing pending/uncertain, no-change, local proposal, PR and observed
+<absolute-code-root> notices --all`. Present relevant unread learning results (items
+with `unread` true) to the user, distinguishing pending/uncertain, no-change, local proposal, PR and observed
 merge; pending proposals are not active rules. Only after actual presentation,
 run `ack --job <job> --expected <notice_digest>` for each shown snapshot. Context
 injection or reading alone is not presentation. A changed digest stays unread;
-interruption may repeat a notice. Read failure holds that learning action, not
+interruption may repeat a notice. Settle every delivery shown `open`, acknowledged or not, by reading its PR
+with `gh pr view` as learn's `Follow the delivery to a recorded end` says, before presenting.
+Read failure holds that learning action, not
 unrelated approved development. This entry-level check is not a host SessionStart
 hook. Use [learn](../learn/SKILL.md) for an explicitly requested named-task loop;
 notices do not authorize evaluation, delivery, retry or merge.

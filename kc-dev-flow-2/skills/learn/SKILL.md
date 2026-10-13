@@ -197,13 +197,107 @@ repository, branch, marker, candidate_commit and PR) with no new delivery token;
 a different PR, a different candidate, or any regression from `merged` still
 requires a genuine stopped attestation.
 
+## Follow the delivery to a recorded end
+
+A recorded Draft is not the end of the job: while its delivery is `open`, every later
+`claim` is refused. FO carries the PR on in this order, under the plan the Captain
+approved (the plan presentation names these steps, so that approval covers them;
+[Delivery authority](../../references/sd/workflow.md) is the task-PR rule this mirrors).
+`OWNER_REPO` and `N` come from the recorded observation's `pr`.
+
+Every wait below ends on a state, never on a change line. `add` records the PR as it is
+now and reports only later changes, so a restarted session, a watch state lost with the
+machine, or a second `add` of a listed PR never sees an earlier flip. Read the state
+first, from the `<package>/scripts/pr_watch.py check` row (`OPEN`, `draft=`, `checks=`)
+or `gh pr view`. Run `wait` only while the state is not yet true, and only as a wake-up:
+it returns on the next change and never for a state already true. Do not `add` a PR the
+`check` rows already list.
+
+1. `python3 <package>/scripts/pr_watch.py add OWNER_REPO#N`, then read the state with
+   `python3 <package>/scripts/pr_watch.py check`.
+2. Wait for checks green on the Draft (row `checks=green`). A Draft with `checks=none`
+   on two reads 60 seconds apart (CI skipped for drafts): mark it ready first and wait for
+   green on the ready head instead.
+3. `gh pr ready N --repo OWNER_REPO`.
+4. Wait until the PR is ready (`draft=False`) and settled: at least 60 seconds since it
+   became ready (the `gh pr ready` time, or for a flip this session did not make the last
+   `ready_for_review` in `gh api --paginate repos/OWNER_REPO/issues/N/events`) with
+   `checks=green` and nothing pending in that read, or the no-applicable-checks case
+   below. A green read sooner may be the Draft run's. Read the PR as in step 6 and pass
+   the head check below, then `delivery-record` the PR again with `draft` false and the
+   same token. The 60 seconds is a bound, not a proof: a check that starts later is
+   missed, and a workflow not run on ready shows the Draft's green, which is its answer.
+5. Only then ask the Captain to merge, naming the PR, its head SHA (equal to the
+   plan's `candidate_commit`), that it is ready, and the checks state. Merge stays the
+   Captain's (ADR 0009): FO does not merge or enable auto-merge.
+6. When the PR is `MERGED` or `CLOSED` (the watch reports `state OPEN -> MERGED` once, then
+   drops it), read
+   `gh pr view N --repo OWNER_REPO --json state,mergedAt,mergeCommit,isDraft,headRefOid`,
+   pass the head check below, and `delivery-record` the observation with state `merged`
+   or `closed` (`merge_commit` from `mergeCommit.oid` when merged).
+
+Head check: before every `delivery-record` and before `delivery-recover`, compare the
+read `headRefOid` with the plan's `candidate_commit`. The recorder takes
+`candidate_commit` from the plan, not from the read, so it cannot see a different head.
+On a mismatch FO records nothing, leaves the delivery `open`, and reports the PR with
+both SHAs to the Captain.
+
+No applicable checks: once the PR is ready (`draft=False`), if two `<package>/scripts/pr_watch.py
+check` reads at least 60 seconds apart both show `checks=none` and
+`gh pr view N --repo OWNER_REPO --json mergeStateStatus` is not `BLOCKED`, no check
+applies to this change (a repository without checks, or path filters that exclude a
+learning-only change, never shows one). FO does not wait for green: it records ready as
+in step 4, and its merge ask states `checks=none: no check ran on the ready head`.
+`BLOCKED` means GitHub still waits on a required check or review, so it is not this case:
+FO leaves the delivery `open` and reports that state to the Captain instead of asking to
+merge. Pending or failing checks are not this case either: wait for green, and failing
+holds.
+
+A Captain who declines the proposal closes the PR, and FO records `closed`. Do not
+`release` an open delivery: it is refused.
+
+When the watch report never arrived (a merge is reported once, and its state file
+belongs to one machine), the token is lost, or the session restarted, settle from GitHub:
+read the PR with the `gh pr view` of step 6 and pass the head check. If it is `OPEN`,
+continue as the next paragraph says. If it is `MERGED` or `CLOSED`, act by who is acting:
+
+- FO holds the token: `delivery-record` as in step 6. A missed watch report alone needs
+  no recovery.
+- A live owner without the token: `delivery-recover` with the same `--owner` as
+  `delivery-claim`, `--owner-state running` or `unknown`, the plan and delivery digest
+  from `notices --all`, and an observation built from that read. It advances the owner's
+  own `open` observation and issues no new token.
+- An owner confirmed stopped, or a different session taking the delivery over:
+  `delivery-recover` with `--owner-state stopped`, the same plan, digest and observation.
+  Never attest `stopped` for an owner that may still be running.
+
+If the PR is `OPEN`, FO resumes from the first step the PR has not passed, judged by those
+states (a PR already ready skips step 3; one the `check` rows do not list runs step 1), by
+who is acting:
+
+- FO holds the token: carry on with the steps; there is nothing to recover.
+- A restarted session, or a different one taking over, whose previous owner is confirmed
+  stopped: after the head check, `delivery-recover` with `--owner-state stopped`, the plan
+  and delivery digest from `notices --all`, and an observation built from that read
+  (`draft` as read), then use the new `delivery_token` for step 4 onward. The recorder
+  refuses `running` and `unknown` for an open PR.
+- A live owner without the token: carry on with steps 1, 2, 3 and 5 and skip the
+  `draft` false record of step 4 (the recorder checks only that `draft` is a boolean);
+  settle at `MERGED` or `CLOSED` as above.
+
+A `claim` refused by an `open` sibling runs this read once and retries the `claim` once;
+if the PR is still open, report `learn not run: blocked by job <id>` naming that PR.
+
 ## Present the result
 
-Read `<package>/scripts/learning.py --repo CODE_ROOT notices` and tell the user the relevant
+Read `<package>/scripts/learning.py --repo CODE_ROOT notices --all` and, for any delivery
+shown `open`, acknowledged or not, read its PR with `gh pr view` and settle it as the
+section above says before presenting. Present only the items with `unread` true (a
+settled delivery becomes unread again). Tell the user the relevant
 no-change, proposal/PR, merged, pending or uncertain result with its limit. A
 merged proposal does not prove it improved future work. After actual presentation,
-run `ack --job JOB --expected NOTICE_DIGEST` for each presented snapshot. Never ack
-merely because results entered agent context. A changed snapshot rejects stale
+run `ack --job JOB --expected NOTICE_DIGEST` for each presented snapshot and for none
+other. Never ack merely because results entered agent context. A changed snapshot rejects stale
 ack; a crash after presentation may cause a repeat. Invocation of `dev` performs
 this same notice step; there is no every-session startup guarantee or hook.
 
