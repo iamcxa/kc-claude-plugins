@@ -34,6 +34,17 @@ gates:
                 id: briefing:fo-record-checks:ideation:attempt-1:revision-1
                 digest: sha256:2f42eca77abf85b4ce68a951bb4b0419ffb8e7853f0f47f2568e3dc2c537da12
                 room-ref: ./fo-record-checks/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-record-checks:ideation:1
+                briefing: briefing:fo-record-checks:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-13T11:21:32.333038Z"
+                decision: approve
+                reason: 'Captain 2026-10-13: 「准」 to the ideation gate question; the question stated that approval accepts the recommendations for D1 (three checks, two wording changes, two drops) and D2 (hold on any head difference: FO revalidates the new head or tells the Captain before asking).'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-13T10:58:03Z
 ---
 
