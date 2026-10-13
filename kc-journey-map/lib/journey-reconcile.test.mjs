@@ -1,4 +1,8 @@
 import assert from 'node:assert/strict'
+import { spawnSync } from 'node:child_process'
+import { chmodSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
+import { delimiter, join } from 'node:path'
 import { test } from 'node:test'
 import { BLOCK, FLOW, footprint } from './fixtures/journey-fold-shapes.mjs'
 import { planFold } from './journey-fold.mjs'
@@ -62,4 +66,24 @@ test('changing one answer text on a copy moves unsourced by one', () => {
 	const base = Number(value(reconcile(FLOW, []), 'unsourced'))
 	const more = FLOW.replace('{id: q1, status: open, ask: "Who issues codes?"}', '{id: q1, status: open, ask: "Who issues codes?", answer: "Platform."}')
 	assert.equal(Number(value(reconcile(more, []), 'unsourced')), base + 1)
+})
+
+test('the command exits 1 on a duplicate story id and 0 on distinct ids', (t) => {
+	const dir = mkdtempSync(join(tmpdir(), 'reconcile-'))
+	t.after(() => rmSync(dir, { recursive: true, force: true }))
+	const stub = join(dir, 'spacedock')
+	const empty = { entities: [], pagination: { has_next: 'false', total: '0', page: '1', limit: '0' } }
+	writeFileSync(stub, `#!/bin/sh\necho '${JSON.stringify(empty)}'\n`)
+	chmodSync(stub, 0o755)
+	const run = (ids) => {
+		const map = join(dir, 'journey.yaml')
+		writeFileSync(map, `journey: shop\nsteps:\n- id: s\n  card: S\n  stories:\n${ids.map((id) => `  - id: ${id}\n    card: ${id}\n`).join('')}`)
+		return spawnSync('node', [new URL('./journey-reconcile.mjs', import.meta.url).pathname, map, '--workflow-dir', dir],
+			{ encoding: 'utf8', env: { ...process.env, PATH: `${dir}${delimiter}${process.env.PATH}` } })
+	}
+	const dup = run(['a', 'a'])
+	assert.equal(dup.status, 1, dup.stderr)
+	assert.match(dup.stdout, /^duplicate-story-ids 1$/m)
+	const distinct = run(['a', 'b'])
+	assert.equal(distinct.status, 0, distinct.stderr)
 })
