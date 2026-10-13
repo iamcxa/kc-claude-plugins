@@ -194,3 +194,48 @@ Upstream check found no existing non-review recognition in `codex_review.py` or 
 The reader treats an answer as a review only with a heading or its own line comment; anything else is exit 5 and quoted, pr_watch maps it to `not-run`, and EXTENSION.md tells FO to record `copilot not run:`, not count, wait or re-request, and name Copilot unread in the merge ask. No new probe was added; the `/copilot_internal/user` measurement is in Limits as a non-predictor. The PR is Draft and has no review requested, per instructions.
 
 Notes for FO: my first `gh api` of the single-review path returned 404 because of a zsh word-splitting slip of mine, not a GitHub fact; reruns worked. The worktree started at e2524e93 behind origin/main and was fast-forwarded to 9e68eb87 before any edit.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on #630 head 218645da against AC-1 to AC-7, re-running each evidence command and at least one falsifier per criterion yourself rather than citing the implementation report; AC-6's behaviour half named as an unverified obligation
+  Verdict PASSED at 218645da (base 9e68eb87): reader tests 15 OK, pr_watch tests 24 OK; per-criterion list below; AC-6 behaviour half is unverified.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Script below, run with `env -i HOME PATH bash --noprofile --norc`; all six steps gave the expected output.
+- DONE: adr_lint.py docs/adr --since <base> run with its exit code; verdict PASSED or REJECTED with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since 9e68eb87 --require 0013`: "13 ADR file(s) checked, 0 legacy", exit 0. PASSED; no Material finding; one Deferred risk and one Polish note below.
+
+### Per-criterion evidence (all run by me at 218645da, in a throwaway worktree later removed; mutations on a copy outside the checkout)
+
+- AC-1: live `gh api` of review 5499757433 (#627) and 5499757731 (#628) returns the body the test pins, verbatim, bot author, COMMENTED. `test_the_recorded_quota_refusals_are_not_a_review` passes (code 5, `answer=review:<id>`, no `evidence=`). Live reader on #627 exits 5; the reader at base 9e68eb87 on the same PR exits 0 with `evidence=review:5499757433`. Against the base reader the new test file fails 5 of 15 tests.
+- AC-2: `test_any_other_answer_without_a_heading_or_line_comment_is_not_a_review` (empty, English error, Chinese). Falsifier run: a quota-sentence denylist passes AC-1 and fails this test and the quote test (2 FAIL), as the criterion says.
+- AC-3: the three named existing tests pass unchanged; heading-only mutation fails `test_a_heading_less_review_with_its_own_line_comment_is_an_answer` (1 FAIL). The one changed old test lost its "Looks good" no-heading case (D1, approved by the Captain).
+- AC-4: `on_head[-1]` mutation fails `test_a_refusal_does_not_erase_an_earlier_real_review_of_the_head`; excluding refusals from the request-time comparison fails `test_a_refusal_answers_the_request_before_it_and_a_newer_request_waits` (1 FAIL each).
+- AC-5: removing `5: "not-run"` from the copilot mapping, and separately removing `not-run` from OUTCOMES, each fail `test_a_copilot_refusal_is_not_run_not_a_reader_error_and_wakes_wait`.
+- AC-6 consistency half: my own check (not committed) finds every `Exit N` of the docstring in the Read paragraph; with the exit 5 sentence cut (381 characters) it reports 5 missing. Behaviour half: NOT VERIFIED, observable only at the next Copilot refusal (observer reads the gate summary for `copilot not run:`, an unchanged round count and a merge ask naming Copilot unread). A stated limit, not a pass. EXTENSION.md prose was read by me and matches the script and ADR 0013.
+- AC-7: `git diff --name-only origin/main...218645da` lists six paths: ADR 0013, EXTENSION.md, copilot_review.py, test_copilot_review.py, pr_watch.py, test_pr_watch.py; none under `extensions/codex/` or `kc-pr-flow/`. Only other reader of the script is pr_watch.py (grep).
+- Other checks: comment_ratio.py 0 comment lines of 57 code lines, exit 0; number_guards.py PASS (no migrations-path); doc_impact.py 0 documents; design_surfaces.py presentable; dispatch_records.py "3 dispatch record(s) complete".
+- Goal sufficiency and necessity: a refusal now exits 5 and cannot be read as answered; the changed lines are the reader branch, one watcher mapping/word, docs and ADR, each tied to an AC. Added comment lines in code: 0.
+
+### Findings (Review-finding disposition)
+
+- Deferred risk: a refusal that carries its own `###` heading, or a future Copilot layout with neither heading nor line comment, reads as answered or as exit 5 respectively. Trigger evidence needed to become Material: an observed Copilot refusal with a heading. Already stated in EXTENSION.md Limits and ADR 0013.
+- Deferred risk: after a real review of the head, a later re-request that is refused reads exit 0 with the earlier review id (AC-4a, as designed); the round count does not change because the id is the same. Becomes Material only if FO is seen to treat it as a fresh clean read.
+- Polish: the quote can contain double quotes, which makes the printed line's quoting ambiguous. No loss of the evidence= guard (tested).
+- No Material finding.
+
+### Minimal acceptance script (checkout: a detached worktree of 218645da made by step 1 from the colombo workspace; needs `gh` signed in and the kc-dev-flow-2 0.21.0 plugin install for step 6)
+
+    PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.21.0
+    git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo worktree add --detach /tmp/accept630 218645da
+    cd /tmp/accept630/kc-dev-flow-2/extensions/copilot && python3 -B -m unittest test_copilot_review 2>&1 | tail -3
+    (cd /tmp/accept630/kc-dev-flow-2/scripts && python3 -B -m unittest test_pr_watch 2>&1 | tail -3)
+    python3 -B copilot_review.py iamcxa/kc-claude-plugins 627; echo "exit=$?"
+    git show 9e68eb87:kc-dev-flow-2/extensions/copilot/copilot_review.py > /tmp/accept630-base-reader.py && python3 -B /tmp/accept630-base-reader.py iamcxa/kc-claude-plugins 627; echo "exit=$?"
+    cd /tmp/accept630 && python3 -B "$PKG/scripts/adr_lint.py" docs/adr --since 9e68eb87 --require 0013; echo "exit=$?"
+
+Expected and observed: (2) "Ran 15 tests ... OK"; (3) "Ran 24 tests ... OK"; (4) `not a review of 32db12730: "Copilot was unable to review this pull request because the user who requested the review has reached their quota limit."; answer=review:5499757433 at 2026-10-13T06:46:13Z` then `exit=5`; (5) `answered on 32db12730: "no heading", 0 line comment(s); evidence=review:5499757433 ...` then `exit=0`; (6) `13 ADR file(s) checked, 0 legacy` then `exit=0`. Cleanup after: `git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo worktree remove --force /tmp/accept630; rm /tmp/accept630-base-reader.py` (I ran it; /tmp/accept630 no longer exists, so step 1 works again).
+Does not cover: FO's behaviour at a real refusal (AC-6 behaviour), a refusal that carries its own heading, Copilot's real review layouts beyond the tested ones, CI minutes. Steps 4 and 5 depend on #627 keeping head 32db12730; if it moves, step 4 reads exit 4 (not a defect).
+
+### Summary
+
+PASSED at 218645da. The refusal on #627 exits 5 live while the pre-repair reader exits 0 on it; every falsifier I ran failed the intended test, and the ADR lint and package checks are clean. The only unverified obligation is AC-6's behaviour half, observable at the next Copilot refusal.
