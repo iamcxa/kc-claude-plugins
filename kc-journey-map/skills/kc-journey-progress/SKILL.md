@@ -30,7 +30,7 @@ One existing member task carries the complete declaration:
 journey: example-journey
 journey-release: first-release
 journey-story: inspect-result
-journey-required-tasks: '["full-stored-task-id", "another-full-stored-task-id"]'
+journey-required-tasks: '["task-identity", "another-task-identity"]'
 journey-mapping-complete: true
 ```
 
@@ -38,7 +38,11 @@ The task scope owner confirms that nonempty list is exhaustive and includes the
 declaring task, updating that same declaration when required scope changes. Other
 members carry the tuple, without duplicating the declaration. Full stored IDs
 come from `spacedock status --workflow-dir <dir> --resolve <slug> --archived --json`
-(`stored_id`), not display prefixes. The reader does not write this metadata.
+(`stored_id`), not display prefixes. In a workflow whose README declares
+`id-style: slug`, a task without a stored id is identified by its slug: list slugs,
+which the same command returns as `id` with an empty `stored_id`. A task that does
+carry a stored id is listed by that id in either workflow. The reader does not write
+this metadata.
 
 `lib/progress.mjs` requires one confirmed declaration, unique full IDs, exact
 matching membership, and readable required records. Missing/extra tasks, partial
