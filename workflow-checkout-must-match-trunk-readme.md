@@ -207,3 +207,44 @@ The check is a new script beside `package_version.py` that fetches the trunk and
 ### Summary
 
 `workflow_checkout.py` fetches `origin/<trunk>` and compares the on-disk README bytes with the trunk's blob; exit 0/1/2 as designed, remedy printed on 1. The instruction is in `skills/dev/SKILL.md` (package-owned) and `references/sd/workflow.md`. The check stays prose-enforced; no file outside the design's list changed (plus `lint-skills.py` for the budget). Note for the next two tasks: they rebase onto the `package_version.py` sentence block in workflow.md and the raised budget of 5369.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on #631 head 085e28aa against AC-1 to AC-6, re-running each evidence command and at least one falsifier per criterion yourself rather than citing the implementation report
+  Verdict PASSED. Candidate: PR #631 head 085e28aa30872fbdf6341640a8ae16b8504c4083 (Draft, OPEN), base origin/main 9e68eb87; all five CI checks SUCCESS. Throwaway worktrees, removed.
+  AC-1 `/tmp/dev2-stale` at 6d344bcb: exit 1, `differs from origin/main: on disk 946f5203, origin/main 835dad49`, remedy `git -C /tmp/dev2-stale checkout --detach origin/main`. AC-2 origin/main checkout: exit 0 `matches origin/main`. AC-3 appended a line: exit 1; `git checkout --` restore: exit 0. Also exit 0 from the workflow dir with a relative path, and exit 0 on the real live FO workflow README (HEAD e2524e93, same blob 835dad49).
+  AC-4/5/6 are `test_workflow_checkout.py`: 11 tests, OK. Mutations I ran on a copy (candidate untouched), each red for the stated reason: `if True` for the equality test (4 tests fail: behind-trunk, ahead, stale-ref, disk-bytes); HEAD-commit compare instead of bytes (2: equal-README-at-another-commit, disk-bytes); `HEAD:path` blob instead of `hash-object` (1: disk-bytes); fetch removed (3: stale-ref, behind-trunk, unreachable-origin); fetch error swallowed (1: unreachable-origin); `<package>/scripts/workflow_checkout.py` removed from skills/dev/SKILL.md (1: instruction-present test); bare `scripts/workflow_checkout.py` in SKILL.md makes `lint-skills.py` exit 1 (`named without <package>/scripts/`), unmutated exit 0 (5369 of 5369 words).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh shell from a named checkout, with its observed output
+  Below under Acceptance script. Run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>`: exit 0, output matched every expectation. Needs: network to origin, `git`, `python3`; named checkout `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo`, which already holds 085e28aa.
+- DONE: adr_lint.py docs/adr --since <base> run with its exit code; verdict PASSED or REJECTED with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since 9e68eb87 --require 0014` at 085e28aa: `13 ADR file(s) checked, 0 legacy`, exit 0. Also: `comment_ratio.py 9e68eb87 085e28aa` exit 0 (3 comment lines of 211 code lines, 1.4%, max 5%; each added comment read, none narrates); `dispatch_records.py` exit 0 (3 records complete); `design_surfaces.py check` exit 0; `number_guards.py check` exit 0 (no migrations-path; its reported head is the workflow checkout's, not the candidate's, so it adds nothing here). Verdict PASSED, no Material finding. Findings: Polish: `doc_impact.py` lists kc-dev-flow-2/README.md and skills/maintain-flow/SKILL.md and the implementation report records neither `updated` nor `unaffected`; I checked both only mention `lint-skills.py` and the tests workflow generically, so `unaffected: neither names workflow_checkout.py or the 5331 budget`. Polish: the printed remedy does not quote a checkout path containing a space (`git -C /tmp/sp ace/c checkout ...`); no current harm, FO shows it and the Captain runs it. Deferred risk: `git fetch` has no timeout or `GIT_TERMINAL_PROMPT=0`, so an HTTPS origin needing a prompt could stall a non-interactive FO; would become Material if an FO is observed hanging on this check. Known limit (ADR 0014, not a finding): prose-enforced, one file compared.
+
+### Acceptance script
+
+Run from any shell; prints, in order: (1) exit 1 stale, (2) exit 0 current, (3) exit 1 edited then exit 0 restored, (4) exit 2 unreachable origin, (5) `OK` for 11 tests. Not covered: that a real FO session runs it before dispatch (prose-enforced), the rest of the workflow directory, and CI.
+
+    set -eu
+    REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+    for d in pkg stale current; do git -C "$REPO" worktree remove --force /tmp/accept-$d 2>/dev/null || true; done
+    git -C "$REPO" fetch -q origin main
+    git -C "$REPO" worktree add -q --detach /tmp/accept-pkg 085e28aa
+    git -C "$REPO" worktree add -q --detach /tmp/accept-stale 6d344bcb
+    git -C "$REPO" worktree add -q --detach /tmp/accept-current origin/main
+    S=/tmp/accept-pkg/kc-dev-flow-2/scripts/workflow_checkout.py
+    python3 "$S" /tmp/accept-stale/docs/dev2/README.md || echo "exit $?"
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md; echo "exit $?"
+    printf '\nlocal edit\n' >> /tmp/accept-current/docs/dev2/README.md
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md || echo "exit $?"
+    git -C /tmp/accept-current checkout -q -- docs/dev2/README.md
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md; echo "exit $?"
+    git -C /tmp/accept-current remote set-url origin /nonexistent/origin.git
+    python3 "$S" /tmp/accept-current/docs/dev2/README.md || echo "exit $?"
+    git -C /tmp/accept-current remote set-url origin "$(git -C "$REPO" remote get-url origin)"
+    python3 -B /tmp/accept-pkg/kc-dev-flow-2/scripts/test_workflow_checkout.py 2>&1 | tail -3
+    for d in pkg stale current; do git -C "$REPO" worktree remove --force /tmp/accept-$d; done
+
+Observed (2026-10-13, origin/main 9e68eb87): `README differs from origin/main: on disk 946f5203, origin/main 835dad49 (checkout HEAD 6d344bcb). Dispatch holds. Remedy: git -C /tmp/accept-stale checkout --detach origin/main` / `exit 1`; `README matches origin/main (835dad49; checkout HEAD 9e68eb87)` / `exit 0`; `README differs ... on disk 5eb1f9f3 ... Remedy: git -C /tmp/accept-current checkout --detach origin/main` / `exit 1`; `README matches origin/main (835dad49 ...)` / `exit 0`; `cannot verify the workflow README against its trunk: cannot fetch origin/main ... Dispatch holds.` / `exit 2`; `Ran 11 tests ... OK`. The origin/main hash will change once a later sync PR merges; the shape (1, 0, 1, 0, 2, OK) will not.
+
+### Summary
+
+PASSED. Every AC reproduced on throwaway checkouts of 085e28aa, and each of six mutations turned the intended test red. No Material or Needs-decision finding; two Polish items and one Deferred risk are recorded above for FO. Unverified: behaviour of a real FO session (the check is prose-enforced) and CI duration.
