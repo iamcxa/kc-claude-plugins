@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 import os
+import re
+import shlex
 import subprocess
 import sys
 import tempfile
@@ -156,6 +158,76 @@ class NamedWhereFoReadsTest(unittest.TestCase):
         text = " ".join((PACKAGE / "skills/observer/SKILL.md").read_text().split())
         self.assertIn("_archive/<TASK>.md _archive/<TASK>", text)
         self.assertIn("both path pairs", text)
+
+
+class DocumentedInvocationTest(unittest.TestCase):
+    INSTRUCTION_FILES = ("extensions/learn/EXTENSION.md", "references/sd/workflow.md", "skills/dev/SKILL.md",
+                         "skills/observer/SKILL.md")
+    NAMED = re.compile(r"<package>/scripts/([a-z_]+\.py)")
+
+    def read(self, relative):
+        return " ".join((PACKAGE / relative).read_text().split())
+
+    def test_every_instruction_runs_a_script_through_python3_unless_it_is_executable(self):
+        for relative in self.INSTRUCTION_FILES:
+            text = self.read(relative)
+            found = [m for m in self.NAMED.finditer(text) if (PACKAGE / "scripts" / m.group(1)).exists()]
+            self.assertTrue(found, f"{relative} names no package script")
+            for match in found:
+                if os.access(PACKAGE / "scripts" / match.group(1), os.X_OK):
+                    continue
+                with self.subTest(file=relative, script=match.group(1)):
+                    self.assertTrue(text[:match.start()].endswith("python3 "),
+                                    f"{relative} names {match.group(0)} without python3 and the file is not executable")
+
+    def test_the_documented_observer_check_command_runs_as_written(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        state = Path(tmp.name) / "state"
+        state.mkdir()
+        git(state, "init", "-b", "main")
+        (state / f"{SLUG}.md").write_text("---\ntitle: t\n---\n")
+        git(state, "add", "-A")
+        git(state, "commit", "-m", "task")
+        pattern = re.compile(r"(?:python3 )?<package>/scripts/observer_check\.py <state> <slug>")
+        for relative in self.INSTRUCTION_FILES:
+            for written in pattern.findall(self.read(relative)):
+                with self.subTest(file=relative, command=written):
+                    command = (written.replace("<package>", shlex.quote(str(PACKAGE)))
+                               .replace("<state>", shlex.quote(str(state))).replace("<slug>", SLUG))
+                    done = subprocess.run(shlex.split(command), capture_output=True, text=True,
+                                          env={**os.environ, **IDENTITY})
+                    self.assertEqual(done.returncode, 1, f"{written}: {done.stdout}{done.stderr}")
+                    self.assertIn("observer report not committed", done.stdout)
+
+
+class RecoveryCommandQuotingTest(unittest.TestCase):
+    def test_the_printed_late_report_commands_run_when_the_state_path_has_whitespace(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        state = Path(tmp.name) / "my state dir"
+        (state / "_archive" / SLUG).mkdir(parents=True)
+        git(state, "init", "-b", "main")
+        (state / "_archive" / f"{SLUG}.md").write_text("---\ntitle: t\n---\n")
+        git(state, "add", "-A")
+        git(state, "commit", "-m", "archived task")
+        code, out = check(state, SLUG)
+        self.assertEqual(code, 1, out)
+        span = re.search(r"`(git -C .*?)` and", out).group(1)
+        words = shlex.split(span)
+        steps = [[]]
+        for word in words:
+            steps.append([]) if word == "&&" else steps[-1].append(word)
+        steps = [[("late report" if w == "<message>" else w) for w in step] for step in steps]
+        self.assertEqual(len(steps), 2, steps)
+        for step in steps:
+            self.assertEqual(step[:3], ["git", "-C", str(state)], step)
+        (state / "_archive" / SLUG / "observer.md").write_text("ok\n")
+        for step in steps:
+            done = subprocess.run(step, capture_output=True, text=True, env={**os.environ, **IDENTITY})
+            self.assertEqual(done.returncode, 0, f"{step}: {done.stderr}")
+        code, out = check(state, SLUG)
+        self.assertEqual(code, 0, out)
 
 
 if __name__ == "__main__":

@@ -174,9 +174,9 @@ FIXES = {
         old=(),
         swaps=((r"Sending an approved task back to an earlier stage.*?before the task moves on\. ", ""),)),
     "adr-lint-output": dict(
-        need=("the `<package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit code",),
+        need=("the `python3 <package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit code",),
         old=(),
-        swaps=((r" the `<package>/scripts/adr_lint\.py docs/adr --since <base>` command run with its exit code,", ""),)),
+        swaps=((r" the `python3 <package>/scripts/adr_lint\.py docs/adr --since <base>` command run with its exit code,", ""),)),
     "ideation-follow-up": dict(
         file="skills/ideation/principles.md",
         need=("as a proposal, not accepted scope",

@@ -10,7 +10,7 @@ frontmatter.
 - **Joins:** FO, after it observes the task's PR merged and before it writes the landed
   sentinel (`status --set <slug> pr=pr-merge:<N>`), which the `pr-merge` startup and idle hooks
   follow at once with `state commit` and `merge guard`; and again right after the archive.
-- **FO step:** before the sentinel, FO runs `<package>/scripts/observer_check.py <state>
+- **FO step:** before the sentinel, FO runs `python3 <package>/scripts/observer_check.py <state>
   <slug>`. Exit 0 lets the sentinel, `state commit` and `merge guard` run. Exit 1: FO
   dispatches `kc-dev-flow-2:observer` with only the state checkout, the slug and this README's
   path, saves the report unedited as `<task>/observer.md`, commits it with `spacedock state

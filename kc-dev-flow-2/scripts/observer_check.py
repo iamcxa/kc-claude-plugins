@@ -9,6 +9,7 @@ starts "observer not run:". Exit 1 when it is not: stdout names the observer dis
 Exit 2 when the check cannot be made (usage, not a git work tree, REV names no commit, the slug has no task at
 REV): stdout names the cause. Nothing here changes the checkout.
 """
+import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -69,8 +70,8 @@ def check(state, slug, rev):
     if archived:
         how = (f"{slug} is archived, so its state is publish-only: dispatch kc-dev-flow-2:observer over both path "
                f"pairs ({slug}.md and {slug}/, then _archive/{slug}.md and _archive/{slug}/), save the report "
-               f"unedited as {path}, then `git -C {state} add {path} && git -C {state} commit -m \"<message>\" "
-               f"-- {path}` and `spacedock state commit {slug} --workflow-dir <workflow dir>` to publish it.")
+               f"unedited as {path}, then `git -C {shlex.quote(str(state))} add {shlex.quote(path)} && "
+               f"git -C {shlex.quote(str(state))} commit -m \"<message>\" -- {shlex.quote(path)}` and `spacedock state commit {slug} --workflow-dir <workflow dir>` to publish it.")
     else:
         how = (f"dispatch kc-dev-flow-2:observer with only the state checkout, {slug} and the workflow README, "
                f"save the report unedited as {path}, run `spacedock state commit {slug} --workflow-dir "
