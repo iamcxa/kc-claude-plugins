@@ -99,6 +99,12 @@ Asked: 「我的建議：不要在 #643 上繼續修補，讓它退回設計階�
 Supersedes: none
 Design: the whole `## Design` is redone at ideation: one home per step, script output carrying the next action, and acceptance measured on the total words FO reads at each moment
 
+### Amendment 4 — 2026-10-14, chat
+Captain: 「同意兩件」 (chat, 2026-10-14)
+Asked: 「mod 重做時加入這兩個方向：STE 四條：步驟編號、一步一個動作、條件寫在句首、每句最多 20 字。審查發現三條：先問能不能用程式擋；一定要加字就刪同樣多的字；新條件寫成獨立的一步。「規則清單檢查」範圍比較大，另開一個任務來做。」
+Supersedes: none
+Design: the redone `## Design` follows those four writing rules in the mod text and applies those three rules to every review finding
+
 ## Number guards
 
 ADR: 0015
