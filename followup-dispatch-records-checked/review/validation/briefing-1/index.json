@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:followup-dispatch-records-checked:validation:attempt-1:revision-1",
+  "question": "Deliver #642 head 3a981251 (dispatch_records.py fails a record without an absolute Package root line or with a pointer-only checklist; one workflow.md clause; budget 5561 to 5581): FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:followup-dispatch-records-checked:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7ddd27057e22b9475a34d9f3739e0493b59c3683/followup-dispatch-records-checked.md",
+      "rev": "sha256:757968f40a74a519516f337f0ad4dc5d7e34ad37821f50124172444d0b6420f2",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED at 3a981251 (cycle 3; AC-1..AC-7). FO ran the six acceptance steps as written in env -i bash: every step matched (the three archived records fail both rules, the 0.22.1 script passes them; an action naming a sibling passes; plain, .md and link pointers fail; the stated limit passes; 19 tests OK; lint 5581 of 5581; all-to-any and own-name mutations each turn one test red). CI green; mergeStateStatus CLEAN. External rounds: Codex 1 (review:5511481463) 1 P2 fixed; 2 (review:5511597658) 1 P2 fixed; 3 (review:5511647035) 1 P2, no P1, declined under the round-3 rule into backlog task followup-dispatch-records-round3-followups. Each repair revalidated by a fresh validator; validation cycle 2 found an AC-7 gap (two mutations green), closed by a tests-only repair. RoboRev local (641..646), not counted. Second reviewer: copilot because the change adds a check FO runs on its own records (merge rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. Change to the design file list: test_sd_dispatch.py resumed-dispatch pin made tolerant of the D1 clause, authorized by FO after CI failed (precedent #632). FO declines at candidate 3a981251: Codex P2, non-ASCII action words read as a pointer (fails closed; records are English); Deferred risk, the workflow.md clause not pinned on its own; Deferred risk, paraphrased pointers pass and the check runs one cycle late (design Limits); Polish, the lint-skills.py budget comment kept because that block requires one reason line per raise; Polish, adoption.md unaffected (names only the test command). Not verified: a live FO writing follow-up records under the new rules."
+    }
+  ]
+}

@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:followup-dispatch-records-checked:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:followup-dispatch-records-checked-validation-1
+              briefing:
+                id: briefing:followup-dispatch-records-checked:validation:attempt-1:revision-1
+                digest: sha256:b258059f19d4ac56d159a629d30418b0d610ee3791e5f05819bb9c41da8e2745
+                room-ref: ./followup-dispatch-records-checked/review/validation/briefing-1
 started: 2026-10-13T15:57:28Z
 worktree: .worktrees/spacedock-ensign-followup-dispatch-records-checked
 ---
