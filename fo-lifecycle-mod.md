@@ -87,6 +87,12 @@ Asked: 「這對 mod 的影響，二選一：1. 把早開 PR 變成正式規則�
 Supersedes: none
 Design: the `watch-and-learn.md` `## Hook: merge` section and the flow steps that have `pr-merge`'s merge hook create the PR
 
+### Amendment 2 — 2026-10-14, chat
+Captain: 「改跑 3 次」 (chat, 2026-10-14)
+Asked: 「要你決定的：剩下 9 次重跑還要跑嗎？建議不要全跑，改跑 3 次：修補完成後，跑「請你合併」那個情境有 mod 和沒 mod 各一次，再加一次中性提示的有 mod 版。」
+Supersedes: none
+Design: D3's remaining nine replay runs after the go signal
+
 ## Number guards
 
 ADR: 0015
