@@ -78,6 +78,18 @@ Replays read the relay state at `395edbd` (task `owner-sees-all-feedback-room` w
 - **AC-6** The merge hook has bite or is deleted. Evidence: Replay S0, a fixture armed with `mod-block=merge:pr-merge`, the push granted in the prompt in the Captain's words and `gh pr create` stubbed; two mod runs record whether `pr_watch.py add` appears after `gh pr create` and before the next `merge guard`. Falsifier: if that happens in neither run (the watch starts only at idle) `## Hook: merge` is deleted from `watch-and-learn.md` and the `merge:` line in AC-1 loses it before release.
 - **AC-7** Adopters receive and keep the files. Evidence: `references/sd/adoption.md` gains one step: copy `<package>/references/sd/mods/*.md` into `{workflow-dir}/_mods/` of every adopted workflow (here `docs/dev2` and `docs/dev2-poc`) in the change that re-syncs the README, then `cmp` each against the package copy and confirm the MODS lines of AC-1; running those commands on a scratch workflow gives `cmp` exit 0 and the lines. Falsifier: one appended byte makes `cmp` exit 1; deleting a copy removes its name from the MODS lines. Limit: nothing runs `cmp` by itself (decision D2).
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-14, chat
+Captain: 「1」 (chat, 2026-10-14)
+Asked: 「這對 mod 的影響，二選一：1. 把早開 PR 變成正式規則（我建議這個）：刪掉 mod 的 merge hook，在 idle 步驟加一條「PR 開了就記下編號」。這保留合併前的審查，也補上合併後自動偵測的漏洞。代價是和套件原本的說明不一致，那句說明要跟著改，這個決定也應該寫成一份 ADR。 2. 改回套件原本的路：實作只做到 commit，PR 交給 merge hook 開。」
+Supersedes: none
+Design: the `watch-and-learn.md` `## Hook: merge` section and the flow steps that have `pr-merge`'s merge hook create the PR
+
+## Number guards
+
+ADR: 0015
+
 ## FO alignment
 
 Alignment: needed at ideation: the design changes what FO loads at three lifecycle points across every adopter.
