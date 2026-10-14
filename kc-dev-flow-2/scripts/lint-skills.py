@@ -27,8 +27,8 @@ WORKFLOW = "references/sd/workflow.md"
 # 5463: +48 for the scope-notes completion line, which FO writes into every dispatch and reads only here.
 # 5561: +98 for the two FO checks (dispatch_records.py --names, delivery_gate.py check) and the not-run and Applied wording, which FO reads only here.
 # 5581: +20 for the follow-up record clause (Package root line, own checklist), which FO reads only here.
-# 5501: -80 net: the FO delivery steps moved to references/sd/mods/ (design count -78), less the ADR 0015 Draft-PR rule FO reads only here, then 14 words trimmed from those passages.
-WORKFLOW_WORD_BUDGET = 5501
+# 5476: -105 net: the FO delivery steps moved to references/sd/mods/kc-dev-flow-2.md and the scripts' next: lines, less the Draft-PR grant sentence (ADR 0015) that FO reads only here.
+WORKFLOW_WORD_BUDGET = 5476
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
 KNOWN_DUPLICATES = {

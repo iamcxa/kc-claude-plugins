@@ -21,8 +21,6 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   repos/<owner/repo>/pulls/<N>/requested_reviewers -f 'reviewers[]=copilot-pull-request-reviewer[bot]'`.
   FO does not mention `@copilot` in a PR comment: Copilot reads a mention as a request for
   new work, and kc-pr-flow saw spurious PRs and duplicate reviews from it.
-- **Watch:** FO adds the PR with `python3 <package>/scripts/pr_watch.py add --copilot
-  <owner/repo>#<N>`, so `<package>/scripts/pr_watch.py wait` also wakes when Copilot answers.
 - **Read:** `python3 <package>/extensions/copilot/copilot_review.py <owner/repo> <pr>` says
   only whether Copilot has answered the head: exit 0 names the review (`evidence=review:<id>`,
   one round per id), its heading line and its line-comment count; exit 3 (a request newer

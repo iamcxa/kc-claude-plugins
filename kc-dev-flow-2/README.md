@@ -176,7 +176,7 @@ workflow's `## Extensions` section is the rule FO follows.
 | [roborev](extensions/roborev/EXTENSION.md) | implementation, before the report | a local roborev review of the committed changes |
 | [peers](extensions/peers/EXTENSION.md) | FO, when the answer lives in a live peer session's work | asks that peer in the same harness, with addressing, message and authority rules; otherwise FO finds the answer itself |
 | [copilot](extensions/copilot/EXTENSION.md) | FO review rounds, each push and the merge ask | requests and reads GitHub Copilot review rounds on the PR head |
-| [learn](extensions/learn/EXTENSION.md) | FO, before the merge sentinel and right after a task is archived, through the `observe-merged` and `watch-and-learn` mods in `references/sd/mods/` | checks `observer.md` is committed before the sentinel (`scripts/observer_check.py`), runs `learn` and the observer, and presents both results |
+| [learn](extensions/learn/EXTENSION.md) | FO, through the `kc-dev-flow-2` mod in `references/sd/mods/`, before the merge sentinel and right after a task is archived | checks `observer.md` is committed before the sentinel (`scripts/observer_check.py`), runs `learn` and the observer, and presents both results |
 | [journey-map](extensions/journey-map/EXTENSION.md) | FO, after a gate ruling on a journey task, before `merge guard`, and after the archive | writes a footprint for a ruling that answers a map question, checks it before the merge guard, and folds it into the map as a docs-only pull request |
 
 ## Learning loop

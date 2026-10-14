@@ -518,22 +518,16 @@ merge, or clean up an owned worktree unless the specific action is authorized. A
 upstream hook's default fallback is not that grant. A failure holds delivery pending an
 explicit choice.
 
-The implementation stage opens the Draft PR before validation and FO records it in
-`pr` (ADR 0015), so `merge guard` arms no merge hook. Observe the actual
-repository-qualified PR merge before recording its landed sentinel and running SD
-merge guard to finalize/archive. Where `learn` is listed, the sentinel waits for the
-committed observer report, per the learn extension. CI green, PR
-creation, gate approval and a locally manufactured sentinel do not prove merge.
+Under the Captain's grant quoted in its dispatch, the implementation worker opens the task's
+Draft PR before validation; that grant stands in for a presented body. Observe the actual
+repository-qualified PR merge before recording its landed sentinel and running SD merge guard
+to finalize/archive. Where `learn` is listed, the sentinel waits for a committed observer report.
+CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
+FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
 
-A PR delivers only the commit on its head. Before asking for merge, FO confirms the
-PR head equals the candidate the latest passing validation report names; a repair
-validated after the PR was opened reaches the PR only when that exact commit is
-pushed to its branch. A differing head is revalidated, or its difference told to the
-Captain, before the ask.
-
-FO's startup and idle steps are in `_mods/observe-merged.md`,
-`_mods/watch-and-learn.md`, copied unchanged from `<package>/references/sd/mods/`; a
-missing or changed copy holds delivery.
+A PR delivers only the commit on its head; a repair validated after the PR was opened reaches it
+only when that exact commit is pushed. Before the merge ask, a head other than the latest passing
+validation report's candidate is revalidated or its difference told to the Captain.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs

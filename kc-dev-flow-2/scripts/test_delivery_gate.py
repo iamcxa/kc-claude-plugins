@@ -136,6 +136,23 @@ class DeliveryGateTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertIn("no passing validation report", out)
 
+    def test_each_exit_ends_with_the_next_line_for_the_ask(self):
+        cases = (
+            (0, dict(), ["next: ask for merge with this text."]),
+            (1, dict(head="7679ab7a"), ["next: hold the ask; revalidate this head or tell the Captain the difference."]),
+            (1, dict(text=COPILOT_UNSTATED), ["next: hold the ask until each second reviewer has an outcome."]),
+            (1, dict(head="7679ab7a", text=COPILOT_UNSTATED),
+             ["next: hold the ask; revalidate this head or tell the Captain the difference.",
+              "next: hold the ask until each second reviewer has an outcome."]),
+            (2, dict(task="# task\n"), ["next: hold the ask and show the Captain these lines."]),
+        )
+        for expected, kwargs, nexts in cases:
+            with self.subTest(kwargs=kwargs):
+                code, out = self.check(**kwargs)
+                self.assertEqual(code, expected, out)
+                self.assertEqual([line for line in out.splitlines() if line.startswith("next:")], nexts, out)
+                self.assertTrue(out.splitlines()[-1].startswith("next:"), out)
+
 
 if __name__ == "__main__":
     unittest.main()

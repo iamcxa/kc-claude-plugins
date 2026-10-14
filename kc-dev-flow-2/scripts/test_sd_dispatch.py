@@ -191,28 +191,30 @@ FIXES = {
         old=(),
         swaps=((r", and run `python3 <package>/scripts/dispatch_records\.py <task folder>`; a missing or incomplete record \(its exit 1\),", "; a missing record,"),)),
     "pr-watch": dict(
-        file="references/sd/mods/watch-and-learn.md",
-        need=("run `python3 <package>/scripts/pr_watch.py add <owner/repo>#<N>`",
-              "Keep one `python3 <package>/scripts/pr_watch.py wait` running in the background"),
+        file="references/sd/mods/kc-dev-flow-2.md",
+        need=("1. Run `python3 <package>/scripts/pr_watch.py tasks <workflow dir>`.",
+              "2. Do each `next:` line it prints, in order.",
+              "3. After the `pr-merge` hook, do each `after pr-merge:` line it printed."),
         old=(),
-        swaps=((r"2\. Watch\..*?has not exited\. ", ""),)),
-    "record-pr-any-state": dict(
-        file="references/sd/mods/watch-and-learn.md",
-        need=("--state all --limit 1 --json number`",),
-        old=("--state open --limit 1",),
-        swaps=((r"--state all --limit 1", "--state open --limit 1"),)),
-    "learn-step-needs-learn": dict(
-        file="references/sd/mods/watch-and-learn.md",
-        need=("5. Learn, only where this README's `extensions:` lists `learn`; otherwise skip this step. Run",),
+        swaps=((r"1\. Run `python3 <package>/scripts/pr_watch\.py tasks <workflow dir>`\. 2\. Do each `next:` line it prints, in order\. 3\. After the `pr-merge` hook, do each `after pr-merge:` line it printed\.", ""),)),
+    "readme-keeps-delivery-rules": dict(
+        need=("the sentinel waits for a committed observer report",
+              "a head other than the latest passing validation report's candidate is revalidated or its difference told to the Captain",
+              "that grant stands in for a presented body",
+              "FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`"),
         old=(),
-        swaps=((r"Learn, only where this README's `extensions:` lists `learn`; otherwise skip this step\. Run", "Learn. Run"),)),
+        swaps=((r"Where `learn` is listed, the sentinel waits for a committed observer report\. ", ""),
+               (r"Before the merge ask, a head other than the latest passing validation report's candidate is revalidated or its difference told to the Captain\.", "Before the merge ask, FO confirms the head."),
+               (r" that grant stands in for a presented body", ""),
+               (r" FO's startup and idle steps are in `_mods/kc-dev-flow-2\.md`, copied from `<package>/references/sd/mods/`\.", ""))),
     "worker-opens-draft-pr": dict(
         file="skills/implementation/principles.md",
-        need=("Where the task's `merge:` is `pr` and the dispatch scope notes grant push and PR creation, open the Draft PR from the task branch",
-              "put `<owner/repo>#<N>` in the report",
-              "report `no PR opened: no push grant` and do not push"),
+        need=("Where the dispatch scope notes quote the Captain's grant to push the task branch and open a Draft PR, open that PR before the stage report and name it there",
+              "otherwise report `no PR opened: no push grant`",
+              "Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless that specific action is authorized"),
         old=(),
-        swaps=((r"Where the task's `merge:` is `pr` and the dispatch scope notes grant push and PR creation,.*?do not push\. ", ""),)),
+        swaps=((r"Where the dispatch scope notes quote the Captain's grant.*?unless that specific action is authorized\.",
+                "Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless the specific action is authorized."),)),
     "one-number-per-kind": dict(
         need=("a task holds one number per kind, and a task needing a second ADR or migration returns to FO",),
         old=(),
@@ -727,14 +729,14 @@ def exercise(base, binary, sd_root):
         assert result["signal"] == "finalized" and not entity.exists(), result
         assert mod_scripts_missing() == [], mod_scripts_missing()
         mods = sorted(MODS.glob("*.md"))
-        assert [mod.name for mod in mods] == ["observe-merged.md", "watch-and-learn.md"], mods
+        assert [mod.name for mod in mods] == ["kc-dev-flow-2.md"], mods
         workflow, entity = seed("mods", "validation", profile="poc")
         for mod in mods:
             shutil.copyfile(mod, workflow / "_mods" / mod.name)
         boot = run([binary, "status", "--workflow-dir", workflow, "--boot"], workflow).stdout
         lines = {line.split(": ", 1)[0]: line.split(": ", 1)[1] for line in boot.splitlines() if ": " in line}
-        assert lines["idle"] == "observe-merged, pr-merge, watch-and-learn", boot
-        assert lines["startup"] == "observe-merged, pr-merge, watch-and-learn", boot
+        assert lines["idle"] == "kc-dev-flow-2, pr-merge", boot
+        assert lines["startup"] == "kc-dev-flow-2, pr-merge", boot
         assert lines["merge"] == "pr-merge", boot
         synthetic_gate(workflow, entity, "done")
         guarded = json.loads(run([binary, "merge", "guard", entity.stem, "--workflow-dir", workflow,
@@ -753,7 +755,7 @@ def exercise(base, binary, sd_root):
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
         print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the " + str(len(FIXES)) + " wording fixes (" + ", ".join(FIXES) + ") are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
-        print("PASS: the two package mods sort around pr-merge.md in every hook line, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist")
+        print("PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
         for artifact in artifacts:

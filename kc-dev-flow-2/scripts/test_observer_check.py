@@ -13,8 +13,8 @@ PACKAGE = SCRIPT.parents[1]
 IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
             "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
 SLUG = "some-task"
-# Every text an FO reads on the way to the sentinel must name the check.
-NAMES_THE_CHECK = ("extensions/learn/EXTENSION.md", "references/sd/mods/observe-merged.md", "skills/dev/SKILL.md")
+# The learn extension is where an FO looks up what the check means; the mod reaches it through pr_watch.py tasks.
+NAMES_THE_CHECK = ("extensions/learn/EXTENSION.md",)
 
 
 def git(where, *args):
@@ -63,6 +63,37 @@ class ObserverCheckTest(unittest.TestCase):
             self.assertEqual(code, 1, out)
             self.assertIn("kc-dev-flow-2:observer", out)
             self.assertIn(f"{SLUG}/observer.md", out)
+
+    def test_a_live_miss_prints_each_next_step_and_ends_at_the_idle_hooks(self):
+        code, out = check(self.state, SLUG)
+        lines = out.splitlines()
+        self.assertEqual(code, 1, out)
+        self.assertTrue(all(line.startswith("next: ") for line in lines[1:]), out)
+        self.assertEqual([line.split()[1] for line in lines[1:]], ["dispatch", "save", "if", "run", "run"], out)
+        self.assertIn(f"`observer not run: <reason>`", lines[3])
+        self.assertIn(f"spacedock state commit {SLUG} --workflow-dir", lines[4])
+        self.assertEqual(lines[5], "next: run the idle hooks again.")
+        self.assertNotIn("learn", out)
+
+    def test_an_archived_report_prints_the_learn_steps_and_a_live_one_does_not(self):
+        self.write_report("ok | rule: x\n")
+        self.commit("report")
+        code, live = check(self.state, SLUG)
+        self.assertEqual((code, len(live.splitlines())), (0, 1), live)
+        self.archive()
+        code, out = check(self.state, SLUG)
+        lines = out.splitlines()
+        self.assertEqual(code, 0, out)
+        self.assertEqual(lines[1], f"next: run kc-dev-flow-2:learn for {SLUG}.")
+        self.assertIn("learn's notice, then the observer report unedited, in one message", lines[2])
+        self.assertIn("answer none of its findings", lines[2])
+
+    def test_an_archived_miss_tells_the_captain_before_the_learn_steps(self):
+        self.archive()
+        code, out = check(self.state, SLUG)
+        verbs = [line.split()[1] for line in out.splitlines()[1:]]
+        self.assertEqual(code, 1, out)
+        self.assertEqual(verbs, ["dispatch", "save", "run", "run", "tell", "run", "send"], out)
 
     def test_a_committed_report_passes_before_the_archive_and_the_commit_before_it_failed(self):
         self.write_report("ok | rule: x\n")
@@ -161,7 +192,7 @@ class NamedWhereFoReadsTest(unittest.TestCase):
 
 
 class DocumentedInvocationTest(unittest.TestCase):
-    INSTRUCTION_FILES = ("extensions/learn/EXTENSION.md", "references/sd/mods/observe-merged.md", "skills/dev/SKILL.md",
+    INSTRUCTION_FILES = ("extensions/learn/EXTENSION.md", "references/sd/mods/kc-dev-flow-2.md",
                          "skills/observer/SKILL.md")
     NAMED = re.compile(r"<package>/scripts/([a-z_]+\.py)")
 
@@ -213,7 +244,7 @@ class RecoveryCommandQuotingTest(unittest.TestCase):
         git(state, "commit", "-m", "archived task")
         code, out = check(state, SLUG)
         self.assertEqual(code, 1, out)
-        span = re.search(r"`(git -C .*?)` and", out).group(1)
+        span = re.search(r"next: run `(git -C .*?)`\.", out).group(1)
         words = shlex.split(span)
         steps = [[]]
         for word in words:

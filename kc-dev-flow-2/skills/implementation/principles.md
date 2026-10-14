@@ -27,12 +27,10 @@ branch must not change, comment-only edits included; the fix for an R1 or R2 fin
 reverting the edit and writing a new migration.
 Do not use `git stash`: every worktree and session of a repository shares one
 stash stack. Set work aside with a commit.
-Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless
-the specific action is authorized.
-Where the task's `merge:` is `pr` and the dispatch scope notes grant push and PR creation,
-open the Draft PR from the task branch after the roborev review and before the stage report,
-and put `<owner/repo>#<N>` in the report; FO records it in `pr` (ADR 0015). Without that
-grant, report `no PR opened: no push grant` and do not push.
+Where the dispatch scope notes quote the Captain's grant to push the task branch and open a Draft PR,
+open that PR before the stage report and name it there; otherwise report `no PR opened: no push grant`.
+Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless that
+specific action is authorized.
 
 When feedback requests repair, change the approved defect scope and identify
 what needs rechecking. Return scope/profile changes or unresolved inputs to FO.

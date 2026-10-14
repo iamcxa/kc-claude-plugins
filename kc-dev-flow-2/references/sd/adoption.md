@@ -66,13 +66,11 @@ The workflow's Delivery authority constrains the upstream mod's local fallback,
 trunk push and non-Draft defaults. Preserve project Draft/CI/manual merge rules;
 installing the mod does not grant those actions or mechanically enforce them.
 
-The package also owns two mods for FO's startup and idle steps, `<package>/references/sd/mods/observe-merged.md`
-and `watch-and-learn.md`. In the change that re-syncs the README of each adopted workflow
-(here `docs/dev2` and `docs/dev2-poc`), copy both into `{workflow-dir}/_mods/`, then run
-`cmp <package>/references/sd/mods/<file> {workflow-dir}/_mods/<file>` for each and
-`spacedock status --workflow-dir {workflow-dir} --boot`: its MODS lines list the two names
-around `pr-merge` and `merge:` lists only `pr-merge`. Nothing runs `cmp` by itself, and
-`spacedock:refit` reports the files as custom and changes nothing.
+The package also owns `<package>/references/sd/mods/kc-dev-flow-2.md`. In the change that
+re-syncs a workflow README (here `docs/dev2` and `docs/dev2-poc`), copy it into
+`{workflow-dir}/_mods/`, run `cmp` against the package copy, and check that
+`spacedock status --workflow-dir {workflow-dir} --boot` lists `kc-dev-flow-2` before `pr-merge`
+on its `idle:` and `startup:` lines and `pr-merge` alone on `merge:`.
 
 ## Comment ratio and review rounds
 
