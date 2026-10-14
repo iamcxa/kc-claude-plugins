@@ -134,6 +134,15 @@ class DispatchRecordTests(unittest.TestCase):
                 text = COMPLETE.replace("1. Independent verdict on the exact candidate\n", line + "\n")
                 self.assertEqual(self.check({"validation-1.md": COMPLETE, "validation-2.md": text})[0], 0)
 
+    def test_a_pointer_line_followed_by_a_real_line_is_a_checklist_of_its_own(self):
+        text = COMPLETE.replace("1. Independent verdict on the exact candidate\n",
+                                "Same checklist as validation-1.\n2. Independent verdict on the exact candidate\n")
+        self.assertEqual(self.check({"validation-1.md": COMPLETE, "validation-2.md": text})[0], 0)
+
+    def test_a_record_naming_itself_in_a_pointer_line_is_not_a_pointer(self):
+        text = COMPLETE.replace("1. Independent verdict on the exact candidate\n", "Same checklist as validation-2.\n")
+        self.assertEqual(self.check({"validation-1.md": COMPLETE, "validation-2.md": text})[0], 0)
+
     def test_a_record_name_inside_a_longer_name_or_the_records_own_name_is_not_a_pointer(self):
         for line in ("Same as validation-10.", "Continue validation-2 work.", "Re-run my-validation-1 items."):
             with self.subTest(line):
