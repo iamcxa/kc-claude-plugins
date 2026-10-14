@@ -338,3 +338,17 @@ Does not cover: the other 74 records' replays and the 19 -> 32 counts (re-measur
 ### Summary
 
 PASSED at 4b59d1ea. Both Codex P2s are fixed (an action naming a sibling passes; `.md`, link and path-prefixed pointers fail), the plain pointer wording still fails, the stated limit holds, and AC-1 to AC-6 reproduce the design's results unchanged. AC-7 has one gap I found by mutation: `all` to `any` and the own-name exclusion are no longer caught by the tests since the pointer-word rule landed; recorded as a Deferred risk with two inputs that would close it, for FO to take or decline. Not verified: a real FO run under the new rules, other adopters beyond qnow, and CI beyond reading `gh pr checks`.
+
+## Stage Report: implementation (cycle 6)
+
+- DONE: Add tests only for the AC-7 gap (validation cycle 2): a pointer line followed by a real line passes; validation-2 with "Same checklist as validation-2." passes
+  Commit 3a981251, test_dispatch_records.py only (+9 lines, no rule change); 19 tests OK (was 17).
+- DONE: Show each red under its mutation and the full suite green
+  Under `python3 -B`: `all(...)` to `any(...)` in `only_points_at_records` fails test_a_pointer_line_followed_by_a_real_line_is_a_checklist_of_its_own (the record is flagged); dropping `if name != path.stem` from the `others` list in `main` fails test_a_record_naming_itself_in_a_pointer_line_is_not_a_pointer. Both mutations were restored (file identical to 4b59d1ea). The earlier beside-real-lines and own-name cases stayed green under them because their lines are not pointers by the allowlist, so neither exercised the mutated line.
+- DONE: rerun the replays
+  learn-delivery-follow-through: implementation-3, -5, -7 fail on both rules, the nine others print nothing; the state checkout (92 records) flags the same 15 pointer records. test_replay_dispatch.py, test_lint_skills.py OK, lint-skills.py exit 0.
+- DONE: roborev gate, push, CI green
+  `clean on 3a9812512; evidence=roborev:646` (base 12670427). Pushed without force; unit tests (python3), version parity, multi-profile route gate and GitGuardian pass on 3a981251. PR stays Draft.
+
+### Summary
+Two tests now fail under the `any` and own-name mutations that the validator found green; the rule is unchanged and the 15 flagged records and the AC-1/AC-2 replays are the same.
