@@ -3,7 +3,7 @@ title: kc-dev-flow-2 ships a Spacedock mod that loads FO's merge, idle and start
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
