@@ -24,4 +24,4 @@ The implementation stage opens the Draft PR before validation. FO records it in 
 
 ## Consequences
 
-The package's usage differs from `pr-merge`'s own text, which still says its merge hook creates the PR; that hook never runs here while `pr` is set, and it would try to create a second PR if `pr` were empty at the guard. The recording is prose-enforced at FO's startup and idle: a PR opened and merged between two FO passes is found by the next pass. `pr_watch.py` state is a machine-local file, so each session re-adds its PRs. Reopen if Spacedock's `pr-merge` gains an existing-PR branch.
+The package's usage differs from `pr-merge`'s own text, which still says its merge hook creates the PR; that hook never runs here while `pr` is set, and it would try to create a second PR if `pr` were empty at the guard. The recording is prose-enforced at FO's startup and idle: a PR merged between two FO passes is still recorded by the next one, because the record step lists PRs in any state, and `pr-merge` then finds it MERGED. `pr_watch.py` state is a machine-local file, so each session re-adds its PRs. Reopen if Spacedock's `pr-merge` gains an existing-PR branch.

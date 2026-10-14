@@ -196,6 +196,11 @@ FIXES = {
               "Keep one `python3 <package>/scripts/pr_watch.py wait` running in the background"),
         old=(),
         swaps=((r"2\. Watch\..*?has not exited\. ", ""),)),
+    "record-pr-any-state": dict(
+        file="references/sd/mods/watch-and-learn.md",
+        need=("--state all --limit 1 --json number`",),
+        old=("--state open --limit 1",),
+        swaps=((r"--state all --limit 1", "--state open --limit 1"),)),
     "one-number-per-kind": dict(
         need=("a task holds one number per kind, and a task needing a second ADR or migration returns to FO",),
         old=(),
