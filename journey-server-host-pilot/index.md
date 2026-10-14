@@ -841,3 +841,18 @@ This report establishes preparation only. It changes no gate authority, serving 
 
 PASSED for the new documentation and local delivery-preparation delta only; prior accepted operating evidence remains intact. The full guard is still NOT PASS, and the explicit guard decision, owner license and retained-switch acceptance prevent a whole-pilot delivery claim.
 The single existing offline command and full observed output are preserved in the private independent handback. No product/source repair, provider request, serving change, credential issuance, gate/frontmatter edit, publication, PR or merge was performed by validation.
+
+
+## Stage Report: implementation
+
+- DONE: Repair only the proven local acceptance self-invalidation while preserving the original manifest and product candidate.
+  The authorized private acceptance repair removes working-directory dependence and prevents verification from rewriting accepted artifacts or receipts. Original failure evidence is preserved; the original manifested bytes are restored without changing the manifest. Candidate `2a24810e8be35cf6fb6b323d67ff089feaebb4c1`, product documents, runtime and original integration source remain unchanged.
+- DONE: Run the unchanged single acceptance command twice from each of the task root and worktree, prove manifested bytes unchanged before/after, and hand back for independent re-review.
+  All four fresh-shell runs pass. Every manifested artifact, the manifest itself and the existing validation receipt remain identical before and after each run; changed bytes or a failed mapping check would invalidate the result. Exact local script differences and repeatability evidence are retained privately for independent re-review.
+- SKIPPED: Independent re-review of this local acceptance repair remains the next stage.
+  The prior product review remains `clean on 2a24810e8; evidence=roborev:671`, bound to `2a24810e8be35cf6fb6b323d67ff089feaebb4c1`; it is not presented as review of the new private verification-script edits. The full task-aware number guard remains CONFIG ERROR / SKIPPED / NOT PASS, and license, retained serving and complete measurement prerequisites remain unchanged.
+
+### Summary
+
+The local acceptance reproducibility defect under value-ac[AC-5] is corrected within the separately authorized verification scope; repeat execution preserves its accepted evidence. This supersedes the earlier assumption that one successful invocation established repeatability, while preserving all historical receipts.
+No product, document, provider, Sites, credential, guard-policy or manifest change was made, and no cloud, browser or native-client suite was repeated. Independent re-review remains required; no serving or whole-pilot acceptance is inferred.
