@@ -145,8 +145,8 @@ Release review: not needed: this is a server-host infrastructure refactor with n
 
 ## Acceptance criteria
 
-**AC-1**: The same journey read/render operations and MCP wrapper can access an authorized room on Node local, Node remote and Cloudflare using only endpoint and credential configuration, preserving record formats and existing canvas behavior.
-Verified by: One reproducible fictional journey exercised through the existing CLI and thin MCP entry on each adapter, with browser readback and explicit separation of local/emulated versus hosted evidence. Design must name actual commands and unavailable steps; implementation must not claim all three from a local-only run.
+**AC-6**: Amended by Captain, amendment 6. Deliver the same authorized journey read/render operations through local Node, Cloudflare on the Free plan, the owner-private Sites entry and native Claude Code/Codex CLI, preserving record formats, canvas behavior, room-switching UI and concurrent-write rules. Remote Node, hosted assets/photos, the original desktop plugin binding and Netlify are deferred from this delivery.
+Verified by: Preserve accepted bounded native/browser/lifecycle evidence; establish reproducible deployment inputs, scoped credential setup/rotation/revocation, document-plus-policy backup, fresh restore without reviving revoked credentials, and failure-before/after-switch rollback. Distinguish new local readiness proof, any bounded hosted operator proof, remaining license/provider prerequisites and unexecuted retained deployment. Detailed usage evidence remains local; missing metrics and full-cost acceptance are not inferred.
 
 **AC-2**: Existing observable doc and room contracts remain unchanged apart from the explicitly approved authentication conditions and configurable origin.
 Verified by: Baseline-versus-candidate checks for GET/PATCH/PUT response and mutation semantics, immediate /health visibility after successful room creation, unchanged local output and page links by default, and unchanged concurrent-write rules.
@@ -460,6 +460,10 @@ Supersedes: none
 Captain: 「可以，照最小範圍恢復交付：本機 Node、Cloudflare、Sites 入口跟 Claude／Codex CLI 共編，先補齊持續使用條件。Cloudflare 維持免費方案，用量明細只留本機，房間切換 UI 跟並發規則不動。」 (this conversation)
 Supersedes: AC-1
 Design: Delivery scope and retained-use readiness; remote Node is deferred from this delivery.
+Superseded text:
+
+**AC-1**: The same journey read/render operations and MCP wrapper can access an authorized room on Node local, Node remote and Cloudflare using only endpoint and credential configuration, preserving record formats and existing canvas behavior.
+Verified by: One reproducible fictional journey exercised through the existing CLI and thin MCP entry on each adapter, with browser readback and explicit separation of local/emulated versus hosted evidence. Design must name actual commands and unavailable steps; implementation must not claim all three from a local-only run.
 
 
 ## Stage Report: implementation

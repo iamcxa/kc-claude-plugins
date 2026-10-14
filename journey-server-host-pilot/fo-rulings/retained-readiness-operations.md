@@ -13,3 +13,11 @@ FO authorizes the smallest isolated operator bridge under scripts/config using e
 Local service-binding tests and a concrete deployment/measurement/rollback plan are authorized. Before a cloud action, submit that plan to FO for scope confirmation. The maximum new proof topology is one disposable document-only backend plus one private operator bridge; no retained rooms, R2, paid enrollment or retained serving is authorized before the necessary prerequisites. Cleanup is part of any proof. The licensed retained browser build remains an independent prerequisite; no license-check bypass is authorized.
 
 Only conclusions belong in this public record. Provider details, measurements, exact local receipts and credentials remain local. Independent validation follows the new operational deliverable; accepted green lifecycle and native-client suites are not repeated by default.
+
+## One bounded hosted operator proof
+
+FO accepts the worker's concrete plan for a single internal synthetic development proof: one newly isolated document-only backend and one private operator bridge, both without workers.dev, preview URLs or routes. Invoke only through authenticated Wrangler service binding; seed a fictional fixture, export/read back, revoke a synthetic credential and verify persisted policy, then restore into fresh disposable namespaces and compare records. This does not authorize retained serving or Sites mutation.
+
+Capture exact newly created resource ownership and source/config hashes locally before mutation. Verify Free plan without changing billing. Limit to at most twelve operator calls, two rooms and no browser/native/socket clients; keep the planned application/internal-operation budget below the existing ceiling. Count actual observable calls and explicitly mark unobservable aggregate totals unverified. Use one before/after scoped usage observation and at most one delayed read.
+
+Deletion/recreation may use only exact resource IDs returned for this proof, never broad prefix matches. Stop on a paid/unsupported prerequisite or a second failure of the same step. Every outcome stops the local proxy, removes both proof Workers and their newly created namespaces, and independently verifies absence. Existing service, data, policy and Site stay untouched.
