@@ -11,6 +11,11 @@ An outcome is a merge or close, a draft flip, a new or cleared conflict, CI turn
 or failing, a Codex verdict, or Copilot answering or refusing the head; a check or review that only
 starts is recorded silently.
 
+A PR with no check runs (`checks=none`) has no outcome to wait for. Once it has shown `checks=none` for
+60 seconds on the same head and draft state with mergeStateStatus not BLOCKED, the `unchecked` column
+reads `settled` and counts as green (the learn extension's no-applicable-checks rule). The 60 seconds is a
+bound, not a proof: a check that starts later is missed, and its later green is still reported.
+
 A Codex or Copilot outcome already there when add first looks is printed as "already" and
 reported by the next wait, once.
 
@@ -39,11 +44,12 @@ DEFAULT_STATE = Path.home() / ".local/state/kc-dev-flow-2/pr-watch.json"
 SCRIPTS = Path(__file__).resolve().parent
 CODEX = Path(__file__).resolve().parents[1] / "extensions/codex/codex_review.py"
 COPILOT = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_review.py"
-FIELDS = "state,isDraft,mergeable,headRefOid,statusCheckRollup,title"
-TRACKED = ("state", "draft", "mergeable", "checks", "head", "codex", "codex-evidence",
+FIELDS = "state,isDraft,mergeable,mergeStateStatus,headRefOid,statusCheckRollup,title"
+SETTLE_SECONDS = 60
+TRACKED = ("state", "draft", "mergeable", "checks", "unchecked", "head", "codex", "codex-evidence",
            "copilot", "copilot-evidence")
 OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
-            "checks": {"failing", "green"}, "codex": {"clean", "findings", "error"},
+            "checks": {"failing", "green"}, "unchecked": {"settled"}, "codex": {"clean", "findings", "error"},
             "copilot": {"answered", "not-run", "error"}}
 
 
@@ -90,13 +96,23 @@ def look(ref, view=gh, review=codex, with_codex=False, with_copilot=False, revie
     repo, number = ref.split("#")
     d = view("pr", "view", number, "--repo", repo, "--json", FIELDS)
     snap = {"state": d["state"], "draft": d["isDraft"], "mergeable": d["mergeable"],
-            "checks": checks(d["statusCheckRollup"]), "head": d["headRefOid"][:9], "title": d["title"][:60]}
+            "merge-state": d.get("mergeStateStatus", ""), "checks": checks(d["statusCheckRollup"]), "head": d["headRefOid"][:9], "title": d["title"][:60]}
     read = with_codex and d["state"] == "OPEN"
     snap["codex"], snap["codex-evidence"] = review(repo, number) if read else ("-", "-")
     snap["watch-codex"] = with_codex
     read = with_copilot and d["state"] == "OPEN"
     snap["copilot"], snap["copilot-evidence"] = review_copilot(repo, number) if read else ("-", "-")
     snap["watch-copilot"] = with_copilot
+    return snap
+
+
+def settle(snap, old, clock=time.time):
+    key = [snap["draft"], snap["head"]]
+    quiet = snap["state"] == "OPEN" and snap["checks"] == "none"
+    since = old.get("none-since") if old.get("none-key") == key else None
+    since = (since if since is not None else clock()) if quiet else None
+    snap["none-key"], snap["none-since"] = (key, since) if quiet else (None, None)
+    snap["unchecked"] = "settled" if quiet and clock() - since >= SETTLE_SECONDS and snap.get("merge-state") != "BLOCKED" else "-"
     return snap
 
 
@@ -112,18 +128,20 @@ def unsettled(snap, seen):
 
 def next_for(ref, snap, task=None, seen=None):
     if snap.get("mergeable") == "CONFLICTING":
-        return f"next: tell the Captain {ref} has a conflict."
+        return [f"next: tell the Captain {ref} has a conflict."]
     if snap.get("checks") == "failing":
-        return f"next: tell the Captain {ref} has failing CI."
-    if snap.get("checks") == "green":
+        return [f"next: tell the Captain {ref} has failing CI."]
+    unchecked = snap.get("checks") == "none" and snap.get("unchecked") == "settled"
+    if snap.get("checks") == "green" or unchecked:
         if snap.get("draft"):
-            return f"next: mark {ref} ready if Delivery authority allows."
+            return [f"next: mark {ref} ready if Delivery authority allows."]
         waiting = unsettled(snap, seen or {})
         if waiting:
-            return f"next: do not ask to merge {ref}; {' and '.join(waiting)} not read on its head yet."
-        return (f"next: run `python3 {SCRIPTS / 'delivery_gate.py'} check {task or '<task file>'} "
-                f"--pr {ref} --text-file <merge ask>`.")
-    return None
+            return [f"next: do not ask to merge {ref}; {' and '.join(waiting)} not read on its head yet."]
+        return (["next: the merge ask states `checks=none: no check ran on the ready head`."] if unchecked else []) + [
+            f"next: run `python3 {SCRIPTS / 'delivery_gate.py'} check {task or '<task file>'} "
+            f"--pr {ref} --text-file <merge ask>`."]
+    return []
 
 
 def wait_next(ref, old, now, decisive):
@@ -131,8 +149,7 @@ def wait_next(ref, old, now, decisive):
         return ["next: run the idle hooks now."]
     lines = [f"next: read the {name} round as FO steps: review findings say."
              for name in ("codex", "copilot") if {name, f"{name}-evidence"} & set(decisive)]
-    snapshot = next_for(ref, now, seen=old) if {"mergeable", "draft", "checks"} & set(decisive) else None
-    return lines + ([snapshot] if snapshot else [])
+    return lines + (next_for(ref, now, seen=old) if {"mergeable", "draft", "checks", "unchecked"} & set(decisive) else [])
 
 
 def load(state):
@@ -180,13 +197,14 @@ def record(state, known, snaps):
     return already, update(state, put=snaps, keep_flags=True)
 
 
-def sweep(state, look=look, nexts=None):
+def sweep(state, look=look, nexts=None, clock=time.time):
     seen = load(state)
     start = {ref: dict(entry) for ref, entry in seen.items()}
     changes, rows = [], []
     for ref, old in seen.items():
+        old = {"unchecked": "-", **old}
         try:
-            now = look(ref, with_codex=old.get("watch-codex", True), with_copilot=old.get("watch-copilot", False))
+            now = settle(dict(look(ref, with_codex=old.get("watch-codex", True), with_copilot=old.get("watch-copilot", False))), old, clock)
         except (RuntimeError, KeyError, ValueError) as error:
             rows.append(f"{ref}: not read ({str(error)[:80]})")
             continue
@@ -243,7 +261,7 @@ def opened_pr(worktree, ask):
     return f"{repo}#{found[0]['number']}" if found else None
 
 
-def tasks(opts, look=look, ask=gh):
+def tasks(opts, look=look, ask=gh, clock=time.time):
     workflow = Path(opts.args[0]).resolve()
     readme = front(workflow / "README.md")
     state = workflow / readme["state"] if readme.get("state") else workflow
@@ -272,14 +290,13 @@ def tasks(opts, look=look, ask=gh):
             ref = pr if qualified else f"{repo_of(toplevel(workflow), ask)}#{bare.group(1)}"
             known = load(opts.state)
             codex, copilot = read_flags(known, ref, "codex" in listed, "copilot" in listed)
-            now = dict(look(ref, with_codex=codex, with_copilot=copilot))
+            now = settle(dict(look(ref, with_codex=codex, with_copilot=copilot)), known.get(ref, {}), clock)
         except (RuntimeError, KeyError, ValueError, OSError) as error:
             errors.append(f"next: report {slug} to the Captain: {str(error)[:120]}.")
             continue
         if now["state"] == "OPEN":
             snaps[ref] = now
-            line = next_for(ref, now, shlex.quote(str(task)), known.get(ref, {}))
-            out += [line] if line else []
+            out += next_for(ref, now, shlex.quote(str(task)), known.get(ref, {}))
         elif now["state"] == "MERGED" and "learn" in listed:
             done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug],
                                   capture_output=True, text=True)
@@ -298,7 +315,7 @@ def tasks(opts, look=look, ask=gh):
     return 2 if errors else 0
 
 
-def main(argv=None, look=look, sleep=time.sleep, ask=gh):
+def main(argv=None, look=look, sleep=time.sleep, ask=gh, clock=time.time):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--state", type=Path, default=DEFAULT_STATE)
     parser.add_argument("command", choices=["add", "check", "wait", "tasks"])
@@ -314,7 +331,7 @@ def main(argv=None, look=look, sleep=time.sleep, ask=gh):
             if len(opts.args) != 1:
                 print("tasks needs one workflow directory")
                 return 2
-            return tasks(opts, look, ask)
+            return tasks(opts, look, ask, clock)
         if opts.command == "add":
             if not opts.args or not all("/" in r and "#" in r for r in opts.args):
                 print("add needs owner/repo#N")
@@ -323,18 +340,18 @@ def main(argv=None, look=look, sleep=time.sleep, ask=gh):
             first = {}
             for ref in opts.args:
                 codex, copilot = read_flags(known, ref, opts.codex, opts.copilot)
-                first[ref] = dict(look(ref, with_codex=codex, with_copilot=copilot))
+                first[ref] = settle(dict(look(ref, with_codex=codex, with_copilot=copilot)), known.get(ref, {}), clock)
             already, seen = record(opts.state, known, first)
             print("\n".join(already + [f"watching {len(seen)} PR(s)"]))
             return 0
         if opts.command == "check":
-            changes, rows, _ = sweep(opts.state, look)
+            changes, rows, _ = sweep(opts.state, look, clock=clock)
             print("\n".join(rows + ([line for line, _ in changes] or ["no change since the last look"])))
             return 0
         every = int(opts.args[0]) if opts.args else 60
         while True:
             nexts = []
-            changes, _, watching = sweep(opts.state, look, nexts)
+            changes, _, watching = sweep(opts.state, look, nexts, clock)
             if any(decisive for _, decisive in changes) or not watching:
                 print("\n".join([line for line, _ in changes] + nexts or ["watch list is empty"]))
                 return 0

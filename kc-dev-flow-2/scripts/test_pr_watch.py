@@ -394,13 +394,13 @@ class TasksTests(unittest.TestCase):
         self.git(self.state, "add", "-A")
         self.git(self.state, "commit", "-qm", "report")
 
-    def tasks(self, answers, look=None):
+    def tasks(self, answers, look=None, clock=None):
         table = self.root / "gh.json"
         table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, **answers}))
         env = {"PATH": f"{self.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table)}
         out = io.StringIO()
         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
-            code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}))
+            code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
         return code, out.getvalue().splitlines()
 
     def watched(self):
@@ -464,6 +464,64 @@ class TasksTests(unittest.TestCase):
                 self.tasks({}, look=fake)
                 entry = self.watched()["o/r#7"]
                 self.assertEqual((entry["watch-codex"], entry["watch-copilot"]), expected)
+
+    def unchecked(self, now, merge_state="CLEAN", head="a", **view_kw):
+        read = {**view(**view_kw), "statusCheckRollup": [], "mergeStateStatus": merge_state, "headRefOid": head * 40}
+        return self.tasks({"pr view 7": read}, clock=lambda: now)
+
+    NO_CHECK_ASK = ["next: the merge ask states `checks=none: no check ran on the ready head`.",
+                    f"next: run `python3 {watch.SCRIPTS}/delivery_gate.py check TASK --pr o/r#7 --text-file <merge ask>`."]
+
+    def ask_lines(self, lines):
+        ask = [line for line in lines if "merge ask" in line or "do not ask" in line or "mark o/r#7" in line]
+        return [line.replace(str((self.state / "some-task.md").resolve()), "TASK") for line in ask]
+
+    def test_a_pr_with_no_check_runs_asks_for_merge_only_after_sixty_quiet_seconds(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.assertEqual(self.ask_lines(self.unchecked(1000)[1]), [])
+        self.assertEqual(self.ask_lines(self.unchecked(1059)[1]), [])
+        code, lines = self.unchecked(1060)
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(self.ask_lines(lines), self.NO_CHECK_ASK)
+        self.assertEqual(self.watched()["o/r#7"]["unchecked"], "settled")
+
+    def test_a_draft_with_no_check_runs_is_marked_ready_after_sixty_quiet_seconds(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.unchecked(1000, draft=True)
+        self.assertEqual(self.ask_lines(self.unchecked(1059, draft=True)[1]), [])
+        self.assertEqual(self.ask_lines(self.unchecked(1060, draft=True)[1]), ["next: mark o/r#7 ready if Delivery authority allows."])
+
+    def test_a_blocked_pr_with_no_check_runs_is_not_asked_for_until_it_is_not_blocked(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.unchecked(1000, merge_state="BLOCKED")
+        self.assertEqual(self.ask_lines(self.unchecked(1100, merge_state="BLOCKED")[1]), [])
+        self.assertEqual(self.ask_lines(self.unchecked(1101, merge_state="CLEAN")[1]), self.NO_CHECK_ASK)
+
+    def test_a_new_head_or_a_ready_flip_restarts_the_quiet_sixty_seconds(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.unchecked(1000, draft=True)
+        self.assertEqual(self.ask_lines(self.unchecked(1060, draft=False)[1]), [])
+        self.assertEqual(self.ask_lines(self.unchecked(1119, draft=False)[1]), [])
+        self.assertEqual(self.ask_lines(self.unchecked(1120, draft=False)[1]), self.NO_CHECK_ASK)
+        self.assertEqual(self.ask_lines(self.unchecked(1180, head="b")[1]), [])
+        self.assertEqual(self.ask_lines(self.unchecked(1239, head="b")[1]), [])
+        self.assertEqual(self.ask_lines(self.unchecked(1240, head="b")[1]), self.NO_CHECK_ASK)
+
+    def test_a_pr_with_no_check_runs_is_held_for_a_reviewer_that_has_not_settled(self):
+        self.readme("codex, copilot")
+        self.task("some-task", pr="o/r#7")
+        for columns in (dict(codex="running"), dict(copilot="requested")):
+            with self.subTest(columns=columns):
+                self.watch.unlink(missing_ok=True)
+                for now in (1000, 1060):
+                    code, lines = self.tasks({}, look=self.reviewed(checks="none", **columns), clock=lambda now=now: now)
+                self.assertFalse(any("delivery_gate.py" in line for line in lines), lines)
+                self.assertFalse(any("merge ask states" in line for line in lines), lines)
+                self.assertTrue(any(line.startswith("next: do not ask to merge o/r#7; ") for line in lines), lines)
 
     def test_an_open_pr_prints_the_step_its_snapshot_calls_for_then_keeps_one_wait_running(self):
         self.readme("roborev")
@@ -618,6 +676,22 @@ class WaitNextTests(unittest.TestCase):
     def test_a_reviewer_the_pr_was_not_added_with_does_not_hold_the_merge_ask_line(self):
         lines = self.wait(snap(codex="running"), dict(checks="pending"))
         self.assertTrue(any("delivery_gate.py" in line for line in lines), lines)
+
+    def test_wait_ends_when_a_pr_with_no_check_runs_has_been_quiet_for_sixty_seconds(self):
+        clock = iter([1000, 1000, 1030, 1030, 1060, 1060, 1060])
+        gate = f"next: run `python3 {watch.SCRIPTS / 'delivery_gate.py'} check <task file> --pr {REF} --text-file <merge ask>`."
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                watch.main(["--state", str(state), "add", REF], look=lambda ref, **kw: snap(checks="none"), clock=lambda: next(clock))
+                code = watch.main(["--state", str(state), "wait", "30"], look=lambda ref, **kw: snap(checks="none"),
+                                  sleep=lambda s: None, clock=lambda: next(clock))
+        self.assertEqual(code, 0)
+        lines = out.getvalue().splitlines()
+        self.assertIn(f"{REF} feat: x: unchecked - -> settled", lines)
+        self.assertEqual([line for line in lines if line.startswith("next:")],
+                         ["next: the merge ask states `checks=none: no check ran on the ready head`.", gate])
 
     def test_a_start_that_is_not_an_outcome_prints_no_next_line(self):
         class Stopped(Exception):
