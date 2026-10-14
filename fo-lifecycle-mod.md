@@ -135,6 +135,12 @@ Asked: 「mod 重做時加入這兩個方向：STE 四條：步驟編號、一�
 Supersedes: none
 Design: the redone `## Design` follows those four writing rules in the mod text and applies those three rules to every review finding
 
+### Amendment 5 — 2026-10-14, chat
+Captain: 「准」 (chat, 2026-10-14)
+Asked: 「我建議改 AC-13：只計算 FO 已經過「engage」、真的進入流程的那些次數。理由是停在 engage 時 mod 根本還沒被載入，對照組也一樣停在那裡，這算不上 mod 的失敗。照這個算法，AC-13 是 1 次中 1 次成功。」 and 「核准的話：我把 AC-13 的修改記成你的第 5 次修正，派修補，重驗時不再加跑重跑。」
+Supersedes: AC-13
+Design: none
+
 ## Number guards
 
 ADR: 0015
