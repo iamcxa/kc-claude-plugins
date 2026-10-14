@@ -12,6 +12,9 @@ client, browser and hibernation evidence remains bounded to its tested candidate
 Detailed measurements, resource identities and receipts belong in the operator's
 private evidence directory, never in Git or shared page links.
 
+For the candidate-specific switch sequence and pending guard decision, use
+[private-delivery.md](private-delivery.md).
+
 ## License and build
 
 The locked tldraw SDK is version 5.4.0. Its installed LICENSE links to tldraw's
