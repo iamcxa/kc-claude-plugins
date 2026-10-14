@@ -56,7 +56,7 @@ rollout, retained-data migration or formal tldraw licensing decision is authoriz
 Those needs, broader browser origins or changed write semantics reopen the
 appropriate Captain decision.
 
-## Delivery scope amendment
+### Delivery scope amendment
 
 **Words:** 「可以，照最小範圍恢復交付：本機 Node、Cloudflare、Sites 入口跟 Claude／Codex CLI 共編，先補齊持續使用條件。Cloudflare 維持免費方案，用量明細只留本機，房間切換 UI 跟並發規則不動。」 — Kent, 2026-10-14
 
