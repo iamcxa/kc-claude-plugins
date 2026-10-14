@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:validation:attempt-6:revision-1",
+  "question": "Do you accept the task-scoped number-guard exception for this unchanged-runtime candidate, using the independently checked source, SDK and namespace comparisons, while retaining NOT PASS for the generic guard and leaving licensed rendering, retained serving and whole-pilot delivery pending?",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:validation:attempt-6:revision-1:item-1",
+      "uri": "git-root://state/e538b90295533f008ca0fc228535c3afd2461bbe/journey-server-host-pilot/index.md",
+      "rev": "sha256:5b4ed8f23b72fa8656fe6b7126ddcec0d5dd5e165d1c0a1709963b3baa0d3162",
+      "mediaType": "text/markdown",
+      "summary": "Independent delivery-preparation validation and local acceptance reproducibility repair passed. The candidate changes only documentation; runtime, original Sites source, manifest and serving state remain unchanged. FO replay passed with the exact expected output. Recommend accepting only the bounded guard exception; issued licensing, retained entry acceptance, publication and complete cost remain pending. Detailed evidence remains private."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:validation:attempt-6:revision-1:item-2",
+      "uri": "git-root://main/6d0f8da951b5ea9ea50fca6bd3685fc360bf502f/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:42b58e54971513b3dd42350e15b4b1e7cf05fd51f9f80b84a8e4856f087dae4f"
+    }
+  ]
+}

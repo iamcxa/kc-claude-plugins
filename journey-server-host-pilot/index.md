@@ -115,6 +115,11 @@ gates:
                 at: "2026-10-14T06:04:27.345331Z"
                 decision: revise
                 reason: Captain said「我自己填，你繼續處理」after confirming personal noncommercial use. Continue the remaining license-independent delivery preparations within amendment 6, preserving the accepted candidate and previous passing evidence; the owner handles the hobby application. This requests further preparation, not whole-pilot delivery approval, a check waiver, provider changes, PR or merge.
+            - id: gate-attempt:journey-server-host-pilot-validation-6
+              briefing:
+                id: briefing:journey-server-host-pilot:validation:attempt-6:revision-1
+                digest: sha256:276e331b1bb8fdc7e5cd7b24f5d5fea62bccabad3502c098122ace8874657692
+                room-ref: ./review/validation/briefing-6
 started: 2026-10-13T08:47:34Z
 id: journey-server-host-pilot
 review-round:
