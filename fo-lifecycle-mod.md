@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:fo-lifecycle-mod:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:fo-lifecycle-mod-validation-1
+              briefing:
+                id: briefing:fo-lifecycle-mod:validation:attempt-1:revision-1
+                digest: sha256:7471ac27f8c5c049d0811e5d7758fa52c0a5cb18ba52e569de6aa527f391610d
+                room-ref: ./fo-lifecycle-mod/review/validation/briefing-1
 started: 2026-10-13T23:51:23Z
 worktree: .worktrees/spacedock-ensign-fo-lifecycle-mod
 pr: iamcxa/kc-claude-plugins#643
