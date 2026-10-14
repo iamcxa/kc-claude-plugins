@@ -291,3 +291,20 @@ The Scope's merge list does not fit the merge hook (it runs once, before the PR 
 - AC-5 replay S2: not yet verified; the relay run is one control (sentinel at line 896 with no observer check).
 - AC-6 merge hook bite: not yet verified (S0 replay).
 - AC-7 adopter copy and `cmp`: not yet verified; the commands are stated, nothing was run.
+
+## Stage Report: implementation
+
+Stopped before any code change: the merge-hook check does not match the design's flow. No file in the worktree is changed (branch spacedock-ensign/fo-lifecycle-mod is at origin/main 656543f4).
+
+- FAILED: One Draft PR (feat(kc-dev-flow-2): ...) with the two mod files, README edits R1 to R3, budget, adoption step, package README row and tests
+  Not started; blocked on the merge-hook question below (it changes `watch-and-learn.md`, R3, AC-1's `merge:` line and AC-6).
+- DONE: Before writing the merge-hook line: how Spacedock's pr-merge merge hook behaves when the task's pr field is already set
+  Source, 0.27.0 `internal/status/merge.go` (MergeGuard classifier): `case pr != ""` returns `signalBlocked` before `arm` is reached, so a bare `pr` at guard time means no merge hook runs at all. `mods/pr-merge.md` `## Hook: merge` has no branch for an existing PR: it pushes, runs `gh pr create`, then "Set the entity's `pr` field".
+  Probe 2026-10-14, spacedock 0.27.2, scratch copy of `merge-pr-workflow` holding only `pr-merge.md`: `merge guard 020 --verdict passed` (pr empty) prints `armed: mod-block set to merge:pr-merge`; the same entity with `pr: "#42"` prints `blocked: PR #42 is pending — mod-block left intact, never finalize on an open PR.` and arms nothing.
+  In this workflow the worker's Draft PR exists before delivery and `pr` is empty: `followup-dispatch-records-checked.md` has no `pr:` value at validation with #642 open and its delivery approved. So the guard arms, but pr-merge's unchanged merge hook then meets a PR that already exists, which its text does not cover.
+- SKIPPED: roborev evidence= line, CI green, lint-skills.py green, CI cost
+  No candidate exists.
+
+### Summary
+
+The design's flow (node "pr-merge drafts, asks, pushes, creates the PR", then `watch-and-learn` merge hook "once the pr-merge merge hook has created the PR") assumes the PR does not exist at the guard. Here it does, so there are two cases: `pr` empty at guard, the watch-and-learn merge hook fires after a pr-merge hook whose create step has nothing to do; `pr` already set, no merge hook fires and the watch starts only from startup/idle. FO needs to choose between rewording the hook line or deleting it now (AC-6's own fallback), before the mod text is written.
