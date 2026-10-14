@@ -395,6 +395,7 @@ Approving the design accepts D1 to D3 as recommended only if the gate question s
 - Cycle 6 (FO, 2026-10-14): Codex review round 6 on #643 eb643a18 (review:5516007247) left one P1: `pr_watch.py` enables a reader for every listed reviewer, so an untriggered second reviewer or a skipped Copilot PR type holds the merge ask forever. It is the fourth P1 in a row (rounds 3 to 6) about `pr_watch.py` judging merge readiness; the round-5 narrowing did not stop the stream. FO stopped the in-flight validation and the repair loop and took the approach to the Captain under the circuit-breaker rule.
   - P1 #643 `scripts/pr_watch.py` (around line 300): watch flags come from the extension list, not from the task's reviewer applicability (second-reviewer trigger, Copilot's eligible PR types).
 - Cycle 7 (FO, 2026-10-14): Codex review round 7 on #643 5e10c355 (review:5519583959) left one P1, to fix: `pr_watch.py tasks` scans only top-level `*.md`, so a task stored as `<slug>/index.md` is never seen. FO confirmed it applies here: this workflow's live tasks `journey-server-host-pilot` (validation) and `release-acceptance` (ideation) use that form. The validation of 5e10c355 dispatched before this finding continues.
+- Cycle 8 (FO, 2026-10-14): Codex review round 8 on #643 3a3cfc30 (review:5519854860) left one P2 and no P1, declined under the round-3 rule into backlog task `pr-watch-tasks-round3-followups`: a reviewer refusal or error prints a review-round line with no round behind it.
 
 ## Stage Report: ideation
 
