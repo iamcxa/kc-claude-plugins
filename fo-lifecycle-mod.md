@@ -3,7 +3,7 @@ title: kc-dev-flow-2 ships a Spacedock mod that loads FO's merge, idle and start
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: ideation
 gates:
     version: 1
     records:
@@ -92,6 +92,12 @@ Captain: 「改跑 3 次」 (chat, 2026-10-14)
 Asked: 「要你決定的：剩下 9 次重跑還要跑嗎？建議不要全跑，改跑 3 次：修補完成後，跑「請你合併」那個情境有 mod 和沒 mod 各一次，再加一次中性提示的有 mod 版。」
 Supersedes: none
 Design: D3's remaining nine replay runs after the go signal
+
+### Amendment 3 — 2026-10-14, chat
+Captain: 「好，退回重做。」 (chat, 2026-10-14)
+Asked: 「我的建議：不要在 #643 上繼續修補，讓它退回設計階段，照上面三點重做。理由是現在的設計前提「README 和 mod 各存一份」本身就是造成膨脹的原因，再怎麼修補也只會更長。已經證實有效的部分，也就是合併後先跑 observer，在重做的設計裡保留。」
+Supersedes: none
+Design: the whole `## Design` is redone at ideation: one home per step, script output carrying the next action, and acceptance measured on the total words FO reads at each moment
 
 ## Number guards
 
