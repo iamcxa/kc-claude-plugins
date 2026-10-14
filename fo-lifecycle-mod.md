@@ -3,7 +3,7 @@ title: kc-dev-flow-2 ships a Spacedock mod that loads FO's merge, idle and start
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain: 「那就先留著，盡快做 mod」 (2026-10-14), after the open ideation gate question "Approve the design and enter implementation? Approving accepts D1 (two mod files), D2 (no drift-check script) and D3 with FO''s change (the S2 chat-cue pair first as a go/no-go)"; read as approval to enter implementation with D1 to D3 as stated.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-13T23:51:23Z
 ---
 
