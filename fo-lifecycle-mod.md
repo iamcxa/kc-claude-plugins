@@ -48,7 +48,15 @@ Filed on the Captain's 「開」 (2026-10-14) after an observer read of the spac
 
 ## Acceptance criteria
 
-To be written at ideation. The proof owed is a replay of the relay #362 situation showing FO starts `pr_watch` and runs the observer and learn at the right moments with the mod, and does not without it.
+Replays read the relay state at `395edbd` (task `owner-sees-all-feedback-room` with its PR open: `git -C <relay state> log` 2026-10-13 23:11 +0800), the PR head `79ef8e756` and `<package>` the 0.22.1 package (origin/main `656543f4`). The design-time probes below were run 2026-10-14 with `spacedock` 0.27.2 on scratch copies outside the repository; the shipped files must reproduce them. Replay method, mod text and counts are in `## Design`.
+
+- **AC-1** The two mod files sort around `pr-merge.md`, and `merge guard` still arms `pr-merge`. Evidence: in a scratch copy of Spacedock's `internal/status/testdata/merge-pr-workflow` fixture holding Spacedock's `mods/pr-merge.md` plus the two package files, `spacedock status --workflow-dir <w> --boot` prints `idle: observe-merged, pr-merge, watch-and-learn`, `merge: pr-merge, watch-and-learn` and `startup: observe-merged, pr-merge, watch-and-learn`, and `spacedock merge guard 020 --verdict passed --workflow-dir <w>` prints `armed: mod-block set to merge:pr-merge` (probe on the draft files: exactly these lines). The implementation puts both assertions in `kc-dev-flow-2/scripts/test_sd_dispatch.py`, already a CI step, and `git diff origin/main --stat -- '*pr-merge.md'` is empty. Falsifier: with `## Hook: merge` inside the file that sorts first (probe file `dev2-all`) the guard prints `armed: mod-block set to merge:dev2-all` and names only that hook; renaming `watch-and-learn.md` to `learn-and-watch.md` moves it ahead of `pr-merge` in the merge line; the test fails on each.
+- **AC-2** The README keeps the rules and loses the commands. Evidence: `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 and prints `references/sd/workflow.md: N of M words` with N at most 5501 (5561 less 60; the drafts in `## Design` count 5483) and M equal to N after `WORKFLOW_WORD_BUDGET` is lowered with its reason line; `grep -c 'observer_check.py\|pr_watch.py\|delivery_gate.py' kc-dev-flow-2/references/sd/workflow.md` prints 0 and each name appears in a mod; the README still holds the five rules listed under `### README effect`. Falsifier: a passage copied instead of moved fails the lint's repeated-passage check (probe: four README lines copied into `references/sd/mods/` printed `repeats 55 words of references/sd/workflow.md`, exit 1); a README that still names a script fails the grep.
+- **AC-3** Tests that pinned the old text follow the move, and a mod cannot name a script that does not exist. Evidence: `test_observer_check.py` (`NAMES_THE_CHECK`, `INSTRUCTION_FILES`) lists `references/sd/mods/observe-merged.md` in place of `references/sd/workflow.md`; `test_sd_dispatch.py` fails when a `<package>/scripts/NAME` in either mod names no file under `scripts/`. Falsifier: `pr_watch.py` changed to `pr_watchh.py` in a mod turns the new test red, run under `python3 -B`; the lint does not catch it (probe: exit 0 for that typo), so this case is the only guard.
+- **AC-4** Replay S1, the FO at the merge ask, starts the watch and checks the head. Evidence: Replay method, one control run (README without the mod files) and two mod runs, same model, same fixture; per run the record holds M1 `pr_watch.py add` ran, M2 `pr_watch.py wait` was launched with `run_in_background`, M3 `delivery_gate.py check` ran before the first `gate prepare` or message asking the Captain to merge, and the ordered tool calls to that point. Pass: M1 to M3 yes in both mod runs and at least one no in the control. Falsifier: a control that gets M1 to M3 all yes shows no bite; run two more controls, and if most controls are all-yes stop and bring that result to the Captain instead of shipping the mod as the fix. The relay run is one more control: its first 1294 transcript lines hold no tool call naming `pr_watch`, `observer_check` or `delivery_gate`.
+- **AC-5** Replay S2, the FO at the merged PR, runs the observer before the sentinel and learn after the archive. Evidence: Replay method with `gh` reporting MERGED and `observer.md` absent from the committed state, under two cues: a neutral `resume the workflow` and the Captain's words from the relay run verbatim (`合併了，你應該主動追蹤 362 是否合併`); one control and two mod runs per cue. Record M5 `observer_check.py` ran before the first `status --set <slug> pr=pr-merge:`, M6 on exit 1 a `kc-dev-flow-2:observer` dispatch (attempted, since the harness disallows `Agent`) or an `observer not run:` line committed as `observer.md` came before that `--set`, M7 a `kc-dev-flow-2:learn` call after the `merge guard` that archives, then one message with learn's notice and the observer report, M8 no `--set pr=pr-merge:` while the committed tree lacks `<slug>/observer.md`. Pass: M5 to M8 in both mod runs for both cues. Falsifier: a mod run that writes the sentinel before `observer_check.py` fails; controls that meet M5 and M6 show no bite; if only the verbatim cue fails, FO answered a chat cue without running the loop (a Limit), and the structural question goes to the Captain after at most two rewordings, per `maintain-flow`.
+- **AC-6** The merge hook has bite or is deleted. Evidence: Replay S0, a fixture armed with `mod-block=merge:pr-merge`, the push granted in the prompt in the Captain's words and `gh pr create` stubbed; two mod runs record whether `pr_watch.py add` appears after `gh pr create` and before the next `merge guard`. Falsifier: if that happens in neither run (the watch starts only at idle) `## Hook: merge` is deleted from `watch-and-learn.md` and the `merge:` line in AC-1 loses it before release.
+- **AC-7** Adopters receive and keep the files. Evidence: `references/sd/adoption.md` gains one step: copy `<package>/references/sd/mods/*.md` into `{workflow-dir}/_mods/` of every adopted workflow (here `docs/dev2` and `docs/dev2-poc`) in the change that re-syncs the README, then `cmp` each against the package copy and confirm the MODS lines of AC-1; running those commands on a scratch workflow gives `cmp` exit 0 and the lines. Falsifier: one appended byte makes `cmp` exit 1; deleting a copy removes its name from the MODS lines. Limit: nothing runs `cmp` by itself (decision D2).
 
 ## FO alignment
 
@@ -57,6 +65,176 @@ Result: direction aligned with the Captain in chat on 2026-10-14, before filing.
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+
+## Design
+
+### Chain check
+
+- Spacedock (binary 0.27.2; plugin source read at 0.27.0, `skills/first-officer/references/first-officer-shared-core.md` "Mod Hook Convention", `fo-dispatch-core.md`, `internal/status/merge.go`, `internal/status/mutate.go` `scanMods`): mods in `{workflow_dir}/_mods/`, points `startup`, `idle`, `merge`; `hooks.run(point)` runs the registered mods "alphabetically by mod filename, exactly once at its caller boundary" and opens only registered bodies then; the boot MODS report lists names only. `idle` runs once, after the first empty `status --next`. `merge guard` arms `mergeHooks[0]`, the first merge-hook mod by name, and its output names that one hook. `spacedock:refit` compares `_mods/*.md` only with Spacedock's own `mods/`, so a package mod reads there as "custom, no action". Spacedock is not changed.
+- Probe, 2026-10-14, scratch copies of `merge-pr-workflow`, entity `020`, `merge guard 020 --verdict passed`: (A) `pr-merge.md` alone arms `merge:pr-merge`. (B) a startup+idle file sorting before it and a merge+idle+startup file sorting after it: MODS `merge: pr-merge, <after file>`, still `armed: mod-block set to merge:pr-merge`. (C) one file with a merge hook sorting before it: MODS `merge: dev2-all, pr-merge`, `armed: mod-block set to merge:dev2-all — invoke the dev2-all merge hook (…/dev2-all.md …)`; `pr-merge`'s own merge hook, which creates the PR, is no longer named. The draft files below give B with their final names. The archived task `observer-before-merge-guard` measured the same arm rule on 2026-10-13 and rejected "a second mod with a merge hook" for the observer because that hook runs at PR creation; this design puts the observer on `startup`/`idle` and uses a merge hook only for the watch.
+- kc-dev-flow-2 at origin/main `656543f4`: the FO steps sit in `references/sd/workflow.md` (`## Delivery authority` 546 words, `## Extensions` 222), in `extensions/*/EXTENSION.md` (per-extension FO text; the codex and copilot "Watch" lines already carry the `pr_watch.py add` flags) and in `skills/dev/SKILL.md`. The package ships no mod; its README says `pr-merge` is "installed into the adopting workflow, not vendored here" because that mod is Spacedock's. These two are the package's own, so the package is their upstream.
+- Siblings: `kc-dev-flow` v1 `references/pr-merge-extension.md` appends a block to `pr-merge.md` (edits Spacedock's mod; excluded by the Captain's ruling). The dev2 workflows of relay (`docs/dev2/_mods`), this repository and qnow's `docs/dev2-poc` hold `pr-merge.md` alone (listed 2026-10-14); the ship-flow mods in carlove, qnow and here are adopter-authored and never synced, so they are no pattern for a package-owned file.
+- ADRs and rulings: ADR 0003 (no harness hook shipped) does not apply, since a `_mods` file is a workflow file FO reads, not a `PreToolUse` hook. ADR 0014 accepted "a README match is a proxy, since a sync PR changes both together"; D2 reuses that proxy. `git -C <state> grep -n 'Override:'` (2026-10-14): no gate override bears on this.
+
+### Evidence of the miss (read only)
+
+Relay transcript `d2b0a847…jsonl`, 1443 lines, FO on `claude-opus-5-5`: the README was read in ranges whose highest line is 480 (line 311 of the transcript, `sed -n 460,480p`); `## Delivery authority` starts at 492. In its first 1294 lines no tool call names `pr_watch`, `observer_check` or `delivery_gate`. At 15:11 the FO started an ad hoc `gh pr checks 362 --watch` that ends when CI ends, not at merge. The Captain merged at 15:55:28 and told the FO at 15:55:49 (「合併了，你應該主動追蹤 362 是否合併」); the FO ran `gh pr view`, then `status --set … pr=pr-merge:362`, `state commit` and `merge guard` in one command (line 896) with no observer check, and ran the observer and learn at line 955 after being asked whether learn should run. Two corrections to the task's framing: the observer-before-sentinel sentence in the README arrived in 0.22.1 (#632); the 0.22.0 learn extension text already said "before `merge guard`", so the rule was in the package but not in the README it read. And the FO did follow the `dev` skill's entry rules (line 95: `workflow_checkout.py` and `learning.py notices`), so a rule read at the moment it applies was followed.
+
+### PRFAQ
+
+**Press release.** A first officer of a kc-dev-flow-2 workflow no longer has to remember its delivery steps from a 600-line README. When a PR is opened, when the loop goes idle, when a session starts, Spacedock's own hook points open a short file that names the step and its command: start the PR watch, check the head before asking to merge, run the observer before the sentinel, run learn after the archive. The README still says what is allowed; the files say when and which command.
+
+**FAQ**
+
+- *Why not split or index the README?* The relay FO chose ranges that stopped 12 lines short of the section; any index or slice still depends on FO choosing to read it. A hook is opened by the loop at the point.
+- *Does the mod add authority?* No. Rules stay in the README and the learn extension; a mod line names a trigger, a command and where the rule is. Nothing here blocks a sentinel or an archive; Spacedock offers no such hold (`observer-before-merge-guard`, probe `p6`).
+- *Why two files?* One file cannot precede `pr-merge.md` (the observer must run before its sentinel) and follow it (the PR must exist, the archive must be done). A merge hook in the first file changes what `merge guard` arms (probe C). Names are `observe-merged.md` (sorts before `pr-merge`) and `watch-and-learn.md` (after).
+- *Why is the Scope's merge list not all in the merge hook?* `hooks.run("merge")` runs once, when the guard arms, before the PR exists. Mark ready, read the post-ready Codex run, check the head and ask are reactions to CI and reviewer changes, so they sit in `idle`, which the loop runs again and again. The merge hook only adds the PR to the watch.
+- *Why do startup notices stay in `kc-dev-flow-2:dev`?* It already owns `learning.py notices --all` and the ack rule at entry, and the relay FO ran it (line 95). A second home would drift.
+- *What if FO answers a chat cue without running the loop?* Then no hook fires; see Limits. `pr_watch.py wait` in the background is the other wake-up.
+
+### Where each FO step goes
+
+| FO step (task Scope) | Point | File | Command | README rule that stays |
+| --- | --- | --- | --- | --- |
+| add the PR to the watch | merge, and idle/startup as backstop | watch-and-learn | `pr_watch.py add` | none (paragraph removed) |
+| keep a `wait` running for every open PR | idle, startup | watch-and-learn | `pr_watch.py wait` (background) | none |
+| mark ready; read the post-ready Codex and Copilot runs | idle, on a `wait` exit | watch-and-learn | none new (`gh pr ready` under Delivery authority, reviewers per `## Extensions`) | ready under the Captain's authority; merge ask names unread reviewers |
+| head equals the validated candidate | idle, before the merge ask | watch-and-learn | `delivery_gate.py check` | "a differing head is revalidated or told to the Captain" |
+| the merge ask itself | not a hook step | README | `gate prepare` (present-gate) | whole `## Delivery authority` |
+| observer check on a merged PR | idle, startup, before `pr-merge` | observe-merged | `observer_check.py` | "the sentinel waits for the committed observer report" |
+| learn, notice and observer report together | idle, startup, after the archive | watch-and-learn | `observer_check.py` again, `kc-dev-flow-2:learn` | learn extension owns the exits |
+| unread learn notices, open learning deliveries at entry | not moved | `kc-dev-flow-2:dev` | `learning.py notices --all` | as today |
+| `merge guard --rework` after a rejected delivery | not moved | README | `merge guard --rework`, `state commit` | fires on a Captain direction, no lifecycle point |
+
+Learn runs after the archive: `pr-merge`'s hooks archive through `merge guard`, and `watch-and-learn` sorts after them, so step 4 acts in the same hook pass on the tasks that hook reported archived. A session that dies between the archive and learn leaves no trace to scan, and learn stays a named-task operation, so that gap stays manual (Limits).
+
+### Flow
+
+```mermaid
+flowchart TD
+    A["Validation approved, guard arms merge:pr-merge"] --> B["merge hooks in filename order:<br/>pr-merge drafts, asks, pushes, creates the PR"]
+    B --> C["watch-and-learn merge: pr_watch add, start wait in background"]
+    C --> D["Loop idle: watch-and-learn steps 1 to 3"]
+    D --> E{"wait exit?"}
+    E -- "CI green on a draft, reviewer verdict" --> F["mark ready, read reviewers per README"]
+    F --> D
+    E -- "conflict or failing CI" --> G["report to the Captain"]
+    E -- "head checked, reviewers read" --> H["delivery_gate.py check"]
+    H -- "exit 1 or 2" --> I["hold the ask, show the Captain the output"]
+    H -- "exit 0" --> J["merge ask: gate prepare"]
+    J --> K["Captain merges"]
+    K --> L["wait exits: merged"]
+    L --> M["Loop idle or startup: observe-merged runs first"]
+    M --> N{"observer_check.py"}
+    N -- "exit 0" --> O["pr-merge: sentinel, state commit, merge guard, archive"]
+    N -- "exit 1 or 2" --> P["observer dispatched and saved, or hold; skip this task in pr-merge this pass"]
+    P --> M
+    O --> Q["watch-and-learn step 4: observer_check again, kc-dev-flow-2:learn, one message with notice then observer report"]
+```
+
+### Mod text (the files the implementation ships; counted 155 and 305 words)
+
+`kc-dev-flow-2/references/sd/mods/observe-merged.md`:
+
+````markdown
+---
+name: observe-merged
+description: kc-dev-flow-2 first-officer step: the learn observer check before pr-merge records a merged PR
+---
+
+# Observe a merged PR before its sentinel
+
+Copied unchanged from kc-dev-flow-2 `references/sd/mods/observe-merged.md`. This file has no merge hook, and its name sorts before `pr-merge.md`: Spacedock runs a point's hooks in filename order, and `merge guard` arms the first merge hook by filename. `<package>` is the `Package root:` line of `kc-dev-flow-2:dev`.
+
+## Hook: startup
+
+Run the idle hook below.
+
+## Hook: idle
+
+Do nothing unless this README's `extensions:` lists `learn`. For each task whose `pr` is a bare reference, read the PR the way the `pr-merge` startup hook below does. For each one that is MERGED, before that hook records its sentinel, run `python3 <package>/scripts/observer_check.py <state> <slug>` and follow its exit as `<package>/extensions/learn/EXTENSION.md` ("FO step") says. On exit 1 or 2 leave that task out of the `pr-merge` hook below until a later pass shows exit 0.
+````
+
+`kc-dev-flow-2/references/sd/mods/watch-and-learn.md`:
+
+````markdown
+---
+name: watch-and-learn
+description: kc-dev-flow-2 first-officer steps: watch each open task PR, check the head before the merge ask, run learn after the archive
+---
+
+# Watch the PR, then learn
+
+Copied unchanged from kc-dev-flow-2 `references/sd/mods/watch-and-learn.md`. Its name sorts after `pr-merge.md`: step 1 needs the PR that the `pr-merge` merge hook creates, and step 4 needs the archive that the `pr-merge` startup and idle hooks perform. `<package>` is the `Package root:` line of `kc-dev-flow-2:dev`.
+
+## Hook: merge
+
+Once the `pr-merge` merge hook has created the PR, do step 1 for it.
+
+## Hook: startup
+
+Do steps 1 to 3, then step 4 for each task the `pr-merge` startup hook archived.
+
+## Hook: idle
+
+Do steps 1 to 3, then step 4 for each task the `pr-merge` idle hook archived in this pass.
+
+1. Watch. For each open task PR run `python3 <package>/scripts/pr_watch.py add <owner/repo>#<N>`, with the flags the "Watch" line of each listed reviewer extension names; repeating it is safe. Keep one `python3 <package>/scripts/pr_watch.py wait` running in the background: start it unless one started in this session has not exited.
+2. Read an exit. A `wait` exit names the change. Act on it as this README's Delivery authority and Extensions sections say: mark ready where CI skips drafts, read each listed reviewer, report a conflict or failing CI to the Captain. A merge needs nothing here; the next idle pass runs `observe-merged`, then `pr-merge`.
+3. Check the head. Before the `gate prepare` that asks for merge, run `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`. Exit 1 or 2 holds the ask; show the Captain what it printed.
+4. Learn. Run `python3 <package>/scripts/observer_check.py <state> <slug>` once more and follow the learn extension's "FO step" for exit 1, then run `kc-dev-flow-2:learn` for the slug. Present learn's notice, then the observer report, in one message.
+````
+
+### README effect
+
+Rules the README keeps as the authority: the observer report is committed before the sentinel (R1); a differing head is revalidated or told to the Captain (R2); Draft, ready-after-green and the Captain's authority over push, create, merge and ready; the merge ask names each listed reviewer not read; `merge guard --rework` and its `state commit`. Passages moved or removed, counted with the lint's metric (`len(text.split())`) on origin/main `656543f4`:
+
+| Passage in `references/sd/workflow.md` | Words | Becomes | Words |
+| --- | --- | --- | --- |
+| Delivery authority, "Where `learn` is listed, run … together." | 31 | R1: "Where `learn` is listed, the sentinel waits for the committed observer report; the learn extension owns the check." | 18 |
+| Delivery authority, "Before the `gate prepare` … told to him first." | 47 | R2: "A differing head is revalidated, or its difference told to the Captain, before the ask." | 15 |
+| Delivery authority, the `pr_watch.py` paragraph | 49 | R3: "FO's steps at the startup, idle and merge points are in `_mods/observe-merged.md` and `_mods/watch-and-learn.md`, copied unchanged from `<package>/references/sd/mods/`; a missing or changed copy holds delivery, as for `pr-merge.md` above." | 29 |
+| `### done`, "An archived task's state is publish-only … before the sentinel." | 13 | deleted (R1 carries the rule; `### done` already points to Delivery authority) | 0 |
+| Total | 140 | | 62 |
+
+Net minus 78: 5561 becomes 5483. `## Extensions` (222 words) holds no per-point FO step and is unchanged. The budget constant is lowered to the new count. `skills/dev/SKILL.md` keeps its observer sentence (package-owned, read at entry, as ADR 0014 argued for the README check) and `extensions/learn/EXTENSION.md` keeps the exit semantics.
+
+### Sync
+
+Adopters receive the two files by copy, byte for byte, in the change that re-syncs their README (a three-way merge today, `references/sd/adoption.md`): `<package>/references/sd/mods/*.md` into `{workflow-dir}/_mods/`, for `docs/dev2` and, since `poc_readme.py derive` carries Delivery authority over, `docs/dev2-poc`. Source lives under `references/sd/` so the lint's repeated-passage check covers it (probe above). `spacedock:refit` will report the files as custom and take no action; Spacedock's `fo-write-core` bars FO from writing `_mods/`, so the copy is a worker's or the maintainer's. Drift detection is D2.
+
+### Replay method (S0, S1, S2)
+
+`replay_dispatch.py` builds a worker dispatch from a closed task; `maintain-flow` says a rule only FO acts on cannot be replayed that way. The stated alternative is Spacedock's own live launch, as `internal/ensigncycle/claude_live_runner_test.go` (`run`, `withStubPATH`) does it: `spacedock claude --skip-compat-check -- -p "<cue>" --permission-mode bypassPermissions --output-format stream-json --verbose --model claude-opus-5-5 --disallowedTools Agent` in a scratch copy of the relay workflow (README as the relay session's checkout held it before the 0.22.1 sync, state at `395edbd`, code at the PR head, a local bare origin for the state branch), with a stub `gh` first on `PATH` answering `pr view --json` for the fields `pr_watch.py` and `delivery_gate.py` read (state, isDraft, mergeable, headRefOid, statusCheckRollup, title) and `pr create`. Arms: control (README as above, no mod files) and mod (README with R1 to R3, the two files in `_mods/`). The record per run is the stream-json file and a table of M1 to M8 with the first twenty tool calls. The harness is disposable, kept outside the repository (a committed harness is a standing check, which Spacedock's rule reserves for the Captain). Cost is unmeasured until the first run; token usage is read from the stream, not the imputed `total_cost_usd`. Runs: S1 1+2, S2 two cues 1+2 each, S0 2, eleven in all, controls first.
+
+### Limits
+
+- Prose-enforced: a mod line is read only if FO invokes `hooks.run` at the point. In the relay run the FO answered the Captain's chat cue with `gh pr view` and the sentinel directly, never opening `pr-merge`'s idle hook (it had read that mod's merge hook, lines 631 and 724). AC-5's verbatim cue measures this; a failure there is the structural question, not a rewording.
+- Nothing holds a sentinel or an archive; a task whose observer step is skipped is caught only by the post-archive `observer_check.py` in step 4.
+- A session lost between the archive and learn leaves an archived task with no learn job; learn is not a scanner, so this stays a by-hand run.
+- `pr_watch.py` state is a machine-local file (`~/.local/state/kc-dev-flow-2/pr-watch.json`) and its `wait` dies with the session; step 1 re-adds and relaunches at startup and idle.
+- Two files to sync, and an ordering that rests on letters (`o` before `p` before `w`), pinned only by AC-1's test.
+
+### Non-goals
+
+Changing Spacedock or `pr-merge.md`; blocking the sentinel or archive mechanically; a drift-check script (D2); moving the FO steps keyed to gates or dispatch (review findings, decision records, number guards, scope-notes lines), which tasks `followup-dispatch-records-checked` and `extension-instruction-reaches-dispatch` own; making learn a scanner; changing `kc-dev-flow-2:dev`'s entry notices; a committed replay harness.
+
+### Files shared with other tasks
+
+`references/sd/workflow.md` and the `WORKFLOW_WORD_BUDGET` line of `scripts/lint-skills.py`: `followup-dispatch-records-checked` AC-6 raises the budget by about 20 words in a different paragraph; whichever merges second recomputes the number. `extension-instruction-reaches-dispatch` may edit stage text in the same file. This task also edits `references/sd/adoption.md`, `scripts/test_sd_dispatch.py`, `scripts/test_observer_check.py`, the package `README.md` row for `learn`, and adds `references/sd/mods/`.
+
+### Existing-code check (bounded)
+
+The README text, the learn extension and the `dev` skill already carry every step and the scripts exist; what fails is that FO does not open them at the moment (Evidence of the miss). The change moves the trigger and command to Spacedock's hook points and leaves the scripts, rules and extension text in place, and adds no script.
+
+## Unresolved decisions for the Captain
+
+- **D1 Two files named `observe-merged.md` and `watch-and-learn.md`, not one mod.** Recommend yes. Your direction said "a mod"; one file cannot both run the observer before `pr-merge`'s sentinel and learn after its archive, and a merge hook in the first file makes `merge guard` arm that file's name instead of `pr-merge` (probe C), which `pr-merge`'s own text and `test_sd_dispatch.py` (`hook == "pr-merge"`) read literally. Worse under yes: two files to copy to each workflow, and the order rests on filename letters. Worse under one file sorted after `pr-merge`: the observer would run after the sentinel, which is today's miss.
+- **D2 No new drift check; the sync is a copy plus `cmp` in `adoption.md`.** Recommend yes. A script that compares `_mods/` with the package is a standing check, which needs your approval, and ADR 0014 already accepted the README-sync-PR proxy. Worse under yes: a stale or edited copy is found only when the maintainer reads an adopter's first archived task after a release (`maintain-flow`, Observe adopters), not by a check. If you prefer the check, it is one more small script plus its tests, as a separate task.
+- **D3 Replay spend: eleven headless FO sessions on `claude-opus-5-5` at validation, controls first, stop if the control already does the right thing.** Recommend yes. The model must match the relay run or the control proves nothing; cost is unmeasured until the first run and will be reported then. Worse under yes: real tokens before any merge. Worse under no: the mod ships on a reading of the text alone, which is the same evidence the README had.
+
+Approving the design accepts D1 to D3 as recommended only if the gate question says so.
 
 ## Stage Report: ideation
 
@@ -70,3 +248,26 @@ Visible change: none
 ### Summary
 
 Held before design: the alignment need is recorded without its result, and ideation principles make that a stop, not something the worker may fill from the dispatch notes. Nothing was designed, no repository file was touched, and no other session or PR was contacted. To release the hold, FO adds a `Result:` line under `## FO alignment` (or records that the backlog approval and dispatch scope notes are the alignment) and re-dispatches ideation.
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: A design (PRFAQ and Mermaid) for a kc-dev-flow-2 Spacedock mod with `## Hook: merge`, `## Hook: idle` and `## Hook: startup` sections: for each FO step the task's Scope lists, keep it in the mod (naming the hook point, the README rule it carries and the command, for example /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.1/scripts/pr_watch.py, /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.1/scripts/observer_check.py and /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.1/scripts/delivery_gate.py) or leave it in the README with a reason; the mod filename and its order against _mods/pr-merge.md; where learn runs relative to the archive; what the README keeps as the authority and the word-budget effect, counted; and how adopters receive and keep the mod in sync
+  `## Design` holds the chain check, PRFAQ, a step-by-step placement table, the Mermaid flow, both mod files in full, the counted README effect (140 words become 62, net minus 78, 5561 to 5483), sync, replay method and limits. The mod is two files, `observe-merged.md` (before `pr-merge`) and `watch-and-learn.md` (after), because one file cannot hold the observer before the sentinel and learn after the archive (probe C).
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, including a replay of the relay PR #362 situation (an FO at the merge ask and at the merged PR) with and without the mod, using the package's replay helper /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.1/scripts/replay_dispatch.py or a stated alternative, with the measurement it records
+  `## Acceptance criteria` holds AC-1 to AC-7; the helper builds worker dispatches only, so the stated alternative is a headless FO launch with a stub `gh`, measures M1 to M8 per run, eleven runs, controls first.
+- DONE: Unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  D1 two files, D2 no drift-check script, D3 replay spend; all three with a recommendation and what gets worse. No past `Override:` bears on them.
+
+### Summary
+
+The Scope's merge list does not fit the merge hook (it runs once, before the PR exists), so only the watch is added there and the rest sits in `idle`; the observer moves to `startup`/`idle` ahead of `pr-merge`, which the earlier `observer-before-merge-guard` design had not considered. Two corrections to the task's framing: the observer-before-sentinel sentence reached the README only in 0.22.1 (the 0.22.0 learn extension already said "before `merge guard`"), and the relay FO did follow the `dev` skill's entry rules (transcript line 95), which supports loading a rule at the moment it applies. `design_surfaces.py check` printed `fo-lifecycle-mod.md: design surfaces presentable` (exit 0).
+
+### Acceptance criteria: current evidence
+
+- AC-1 order and arm target: probe on the draft files, 2026-10-14, spacedock 0.27.2, printed the three MODS lines and `armed: mod-block set to merge:pr-merge`; the one-file variant printed `merge:dev2-all`. The `test_sd_dispatch.py` assertions are not yet written.
+- AC-2 README keeps rules, loses commands: word counts measured on the drafts (140 to 62, net minus 78); a four-line copy into `references/sd/mods/` failed the repeated-passage lint (exit 1, 55 words). The real edit and lint run are not yet done.
+- AC-3 tests follow the move: probe showed the lint passes a mistyped script name (exit 0), so the new test is the only guard; the test and the `test_observer_check.py` change are not yet written.
+- AC-4 replay S1: not yet verified; one control datum exists (relay transcript, first 1294 lines: no `pr_watch`, `observer_check` or `delivery_gate` call).
+- AC-5 replay S2: not yet verified; the relay run is one control (sentinel at line 896 with no observer check).
+- AC-6 merge hook bite: not yet verified (S0 replay).
+- AC-7 adopter copy and `cmp`: not yet verified; the commands are stated, nothing was run.
