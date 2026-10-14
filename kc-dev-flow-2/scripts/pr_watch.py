@@ -219,13 +219,13 @@ def checkout(workflow, meta):
     return Path(git("-C", str(workflow), "rev-parse", "--show-toplevel")) / meta["worktree"]
 
 
-def code_repo(worktree, ask):
+def repo_of(worktree, ask):
     url = git("-C", str(worktree), "remote", "get-url", "origin")
     return ask("repo", "view", url, "--json", "nameWithOwner")["nameWithOwner"]
 
 
 def opened_pr(worktree, ask):
-    repo = code_repo(worktree, ask)
+    repo = repo_of(worktree, ask)
     branch = git("-C", str(worktree), "branch", "--show-current")
     listed = ask("pr", "list", "--repo", repo, "--head", branch, "--state", "all", "--json", "number,state")
     found = [p for p in listed if p["state"] in ("OPEN", "MERGED")]
@@ -255,7 +255,7 @@ def tasks(opts, look=look, ask=gh):
             bare = re.fullmatch(r"#?(\d+)", pr)
             if not (qualified or bare):
                 continue
-            ref = pr if qualified else f"{code_repo(checkout(workflow, meta), ask)}#{bare.group(1)}"
+            ref = pr if qualified else f"{repo_of(checkout(workflow, meta), ask)}#{bare.group(1)}"
             known = load(opts.state)
             codex, copilot = read_flags(known, ref, "codex" in listed, "copilot" in listed)
             now = dict(look(ref, with_codex=codex, with_copilot=copilot))
