@@ -4,6 +4,7 @@ import io
 import json
 import os
 from pathlib import Path
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -483,6 +484,64 @@ class TasksTests(unittest.TestCase):
                 self.assertEqual(lines[-2], f"next: run `python3 {watch.SCRIPTS / 'pr_watch.py'} --state {self.watch} wait` in the background, unless one is running.")
                 self.assertEqual(lines[-1], "next: when it exits, do the next: lines it prints.")
 
+    def reviewed(self, **columns):
+        def fake(ref, with_codex=False, with_copilot=False, **kw):
+            return {**snap(**columns), "watch-codex": with_codex, "watch-copilot": with_copilot}
+        return fake
+
+    def test_a_ready_green_pr_gets_no_merge_ask_line_while_a_listed_reviewer_has_not_settled(self):
+        self.readme("codex, copilot")
+        self.task("some-task", pr="o/r#7")
+        gate = "delivery_gate.py"
+        for columns in (dict(codex="running"), dict(codex="not-reviewed"), dict(copilot="requested"),
+                        dict(codex="findings", **{"codex-evidence": "review:1"}),
+                        dict(copilot="answered", **{"copilot-evidence": "review:2"})):
+            with self.subTest(columns=columns):
+                self.watch.unlink(missing_ok=True)
+                code, lines = self.tasks({}, look=self.reviewed(**columns))
+                self.assertEqual(code, 0, lines)
+                self.assertFalse(any(gate in line for line in lines), lines)
+                self.assertTrue(any(line.startswith("next: do not ask to merge o/r#7; ") for line in lines), lines)
+
+    def test_findings_a_wait_has_reported_no_longer_hold_the_merge_ask(self):
+        self.readme("codex")
+        self.task("some-task", pr="o/r#7")
+        found = self.reviewed(codex="findings", **{"codex-evidence": "review:1"})
+        self.tasks({}, look=found)
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(watch.main(["--state", str(self.watch), "wait", "1"], look=found, sleep=lambda s: None), 0)
+        self.assertIn("next: read the codex round", out.getvalue())
+        code, lines = self.tasks({}, look=found)
+        self.assertTrue(any("delivery_gate.py" in line for line in lines), lines)
+        self.assertFalse(any("do not ask to merge" in line for line in lines), lines)
+
+    def test_a_reviewer_the_readme_does_not_list_never_holds_the_merge_ask(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        code, lines = self.tasks({}, look=self.reviewed(codex="running", copilot="requested"))
+        self.assertTrue(any("delivery_gate.py" in line for line in lines), lines)
+
+    def test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone(self):
+        self.readme("roborev")
+        self.git(self.repo, "remote", "add", "origin", "https://github.com/o/r.git")
+        for slug, pr in (("hash", "#7"), ("number", "7")):
+            self.task(slug, pr=pr)
+            shutil.rmtree(self.repo / ".worktrees" / slug)
+        self.task("no-field", pr="#7", worktree=False)
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(list(self.watched()), ["o/r#7"])
+        self.assertTrue(any("delivery_gate.py" in line for line in lines), lines)
+
+    def test_an_empty_pr_whose_worktree_is_gone_says_to_record_it_and_one_with_no_worktree_field_stays_silent(self):
+        self.readme("roborev")
+        self.task("gone")
+        shutil.rmtree(self.repo / ".worktrees/gone")
+        self.task("bare", worktree=False)
+        code, lines = self.tasks({})
+        self.assertEqual((code, lines), (0, ["next: record gone's PR with status --set gone pr=<owner/repo>#<N>; its worktree is not on this machine."]))
+
     def test_a_sentinel_and_a_task_without_a_pr_or_worktree_print_nothing(self):
         self.readme("learn")
         self.task("sentinel", pr="pr-merge:7")
@@ -530,6 +589,35 @@ class WaitNextTests(unittest.TestCase):
         for label, (then, first, expected) in cases.items():
             with self.subTest(label):
                 self.assertEqual(self.wait(then, first), expected)
+
+    def test_the_merge_ask_line_waits_for_a_reviewer_that_has_not_settled(self):
+        watched = {"watch-codex": True, "watch-copilot": True}
+        cases = {
+            "codex running": dict(codex="running"),
+            "codex not reviewed": dict(codex="not-reviewed"),
+            "copilot requested": dict(copilot="requested"),
+            "codex findings in the same sweep": dict(codex="findings", **{"codex-evidence": "review:1"}),
+        }
+        for label, columns in cases.items():
+            with self.subTest(label):
+                lines = self.wait(snap(**columns, **watched), dict(checks="pending", **watched))
+                self.assertFalse(any("delivery_gate.py" in line for line in lines), lines)
+
+    def test_a_round_an_earlier_wait_reported_does_not_hold_the_merge_ask_line(self):
+        found = snap(codex="findings", checks="pending", **{"codex-evidence": "review:1", "watch-codex": True})
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                watch.main(["--state", str(state), "add", REF], look=lambda ref, **kw: found)
+                watch.main(["--state", str(state), "wait", "1"], look=lambda ref, **kw: found, sleep=lambda s: None)
+                out.truncate(0)
+                watch.main(["--state", str(state), "wait", "1"], look=lambda ref, **kw: {**found, "checks": "green"}, sleep=lambda s: None)
+        self.assertIn("delivery_gate.py", out.getvalue())
+
+    def test_a_reviewer_the_pr_was_not_added_with_does_not_hold_the_merge_ask_line(self):
+        lines = self.wait(snap(codex="running"), dict(checks="pending"))
+        self.assertTrue(any("delivery_gate.py" in line for line in lines), lines)
 
     def test_a_start_that_is_not_an_outcome_prints_no_next_line(self):
         class Stopped(Exception):

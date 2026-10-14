@@ -100,7 +100,17 @@ def look(ref, view=gh, review=codex, with_codex=False, with_copilot=False, revie
     return snap
 
 
-def next_for(ref, snap, task=None):
+HOLDS = {"codex": {"running", "not-reviewed"}, "copilot": {"requested"}}
+
+
+def unsettled(snap, seen):
+    return [name for name in ("codex", "copilot") if snap.get(f"watch-{name}") and (
+        snap.get(name) in HOLDS[name]
+        or (snap.get(name) in OUTCOMES[name]
+            and (snap[name], snap.get(f"{name}-evidence")) != (seen.get(name), seen.get(f"{name}-evidence"))))]
+
+
+def next_for(ref, snap, task=None, seen=None):
     if snap.get("mergeable") == "CONFLICTING":
         return f"next: tell the Captain {ref} has a conflict."
     if snap.get("checks") == "failing":
@@ -108,6 +118,9 @@ def next_for(ref, snap, task=None):
     if snap.get("checks") == "green":
         if snap.get("draft"):
             return f"next: mark {ref} ready if Delivery authority allows."
+        waiting = unsettled(snap, seen or {})
+        if waiting:
+            return f"next: do not ask to merge {ref}; {' and '.join(waiting)} not read on its head yet."
         return (f"next: run `python3 {SCRIPTS / 'delivery_gate.py'} check {task or '<task file>'} "
                 f"--pr {ref} --text-file <merge ask>`.")
     return None
@@ -118,7 +131,7 @@ def wait_next(ref, old, now, decisive):
         return ["next: run the idle hooks now."]
     lines = [f"next: read the {name} round as FO steps: review findings say."
              for name in ("codex", "copilot") if {name, f"{name}-evidence"} & set(decisive)]
-    snapshot = next_for(ref, now) if {"mergeable", "draft", "checks"} & set(decisive) else None
+    snapshot = next_for(ref, now, seen=old) if {"mergeable", "draft", "checks"} & set(decisive) else None
     return lines + ([snapshot] if snapshot else [])
 
 
@@ -213,10 +226,8 @@ def git(*args):
     return done.stdout.strip()
 
 
-def checkout(workflow, meta):
-    if not meta.get("worktree"):
-        raise RuntimeError("the task has no worktree to find its code repository")
-    return Path(git("-C", str(workflow), "rev-parse", "--show-toplevel")) / meta["worktree"]
+def toplevel(workflow):
+    return Path(git("-C", str(workflow), "rev-parse", "--show-toplevel"))
 
 
 def repo_of(worktree, ask):
@@ -245,8 +256,11 @@ def tasks(opts, look=look, ask=gh):
             continue
         slug, pr = task.stem, meta.get("pr", "")
         try:
-            if not pr and meta.get("worktree"):
-                ref = opened_pr(checkout(workflow, meta), ask)
+            where = toplevel(workflow) / meta["worktree"] if not pr and meta.get("worktree") else None
+            if where and not where.is_dir():
+                out.append(f"next: record {slug}'s PR with status --set {slug} pr=<owner/repo>#<N>; its worktree is not on this machine.")
+            elif where:
+                ref = opened_pr(where, ask)
                 if ref:
                     out += [f"next: run `spacedock status --workflow-dir {shlex.quote(str(workflow))} --set {slug} pr={ref}`.",
                             f"next: run `spacedock state commit {slug} --workflow-dir {shlex.quote(str(workflow))}`."]
@@ -255,7 +269,7 @@ def tasks(opts, look=look, ask=gh):
             bare = re.fullmatch(r"#?(\d+)", pr)
             if not (qualified or bare):
                 continue
-            ref = pr if qualified else f"{repo_of(checkout(workflow, meta), ask)}#{bare.group(1)}"
+            ref = pr if qualified else f"{repo_of(toplevel(workflow), ask)}#{bare.group(1)}"
             known = load(opts.state)
             codex, copilot = read_flags(known, ref, "codex" in listed, "copilot" in listed)
             now = dict(look(ref, with_codex=codex, with_copilot=copilot))
@@ -264,7 +278,7 @@ def tasks(opts, look=look, ask=gh):
             continue
         if now["state"] == "OPEN":
             snaps[ref] = now
-            line = next_for(ref, now, shlex.quote(str(task)))
+            line = next_for(ref, now, shlex.quote(str(task)), known.get(ref, {}))
             out += [line] if line else []
         elif now["state"] == "MERGED" and "learn" in listed:
             done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug],
