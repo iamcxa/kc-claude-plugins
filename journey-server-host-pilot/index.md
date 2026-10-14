@@ -807,3 +807,37 @@ The five offline steps are reproducible from the local handback without another 
 
 The requested license-independent delivery package is concrete, locally verified and recoverable; historical passing evidence remains intact. One compact offline acceptance command and the exact pending license, guard-disposition and retained-switch decisions are preserved in the private handback.
 This report establishes preparation only. It changes no gate authority, serving state, platform policy, workflow/package requirement or complete-pilot acceptance.
+
+## Stage Report: validation
+
+- DONE: Independently verify the exact committed delivery-preparation delta and private local overlays preserve the accepted runtime and original Sites source, and pin concrete Node, Cloudflare and Sites switch and rollback inputs.
+  PASSED for bounded preparation at `2a24810e8be35cf6fb6b323d67ff089feaebb4c1`: only two documents changed over accepted runtime `e583b845184a499f90094af3fc4d08b0823a650b`; prepared inputs, original clean Sites source and historical rollback receipt agree. Changed application bytes, overlay logic or rollback identity would fail the comparisons.
+- DONE: Verify the numbered-migration investigation and corrected applied-commit markers against actual source/history, preserving CONFIG ERROR / NOT PASS without a waiver and assessing the concrete task-scoped disposition.
+  Actual parsing resolves every historical applied SHA; labels alone changed, with Not applied history intact. Applied adapter/SDK-lock bytes, available namespace declarations and ADR 0015 agree at the current candidate; numbered SQL is absent. These bounded comparisons support a decision proposal only.
+- DONE: Provide the bounded verdict, retained-document accounting, required checks and a minimal offline acceptance script for only this new delta; cite AC-6 and AC-2 through AC-5 explicitly and keep license, retained deployment and publication prerequisites separate.
+  The existing compact offline command passes unchanged, with complete safe output and prerequisites in the local independent handback. It verifies current preparation without a provider request, application server or repeat of accepted native/browser/lifecycle suites.
+- DONE: Verify concrete amended-delivery preparation for value-ac[AC-6].
+  Local Node inputs are fresh and unstarted; cloud defaults remain closed; the serving toggle and namespace-preserving rollback are explicit. Exact historical Sites rollback inputs are pinned, while currently served state must be recaptured before a future switch. No licensed serving result is inferred.
+- DONE: Verify unchanged observable contracts for value-ac[AC-2].
+  Application, UI, library, operational scripts, dependencies and concurrency are unchanged. Independent builds reproduce the prepared bundles exactly; their difference from older proof bundles is confined to generated build-root labels, with the initial failed direct comparison retained locally.
+- DONE: Verify the new configuration mapping and preserved admission for value-ac[AC-3].
+  Inverse constant substitution reproduces original Sites source; focused in-memory positive and negative requests confirm the new mapping and preserved safeguards. Incorrect routing or delegation after denied admission would fail; no real credential, network request or policy change was used.
+- DONE: Verify persistent-state and recovery preparation for value-ac[AC-4].
+  Actual applied initialization source, locked SDK and available fresh-namespace class/tag/binding declarations remain unchanged; closed rollback preserves namespaces. Existing persistence, hibernation and operator evidence is reused at its original scope, without claiming a new retained restore.
+- DONE: Assess minimal necessity and recoverability for value-ac[AC-5].
+  The retained delta supplies the requested switch, rollback and pending guard decision through documents and private configuration only. A separate overlay preserves original source; failure procedures preserve acknowledged work and current revocations, with no namespace-deletion shortcut.
+- DONE: Run proportionate required checks and confirm exact-candidate review.
+  ADR lint from accepted runtime with required record 0015, document impact, design surfaces, dispatch records and diff check exit 0. Comment ratio reports no added code/comments. The authoritative local review record confirms `clean on 2a24810e8; evidence=roborev:671` for the exact accepted-base..candidate range.
+- DONE: Account for retained documents and recovered dispatch evidence.
+  Private-delivery is added and private-operations links it; private-host remains a correct entry, ADR 0015 is unchanged and legacy journey documentation is unaffected. Full exact late-persisted dispatch notes were read locally; public dispatch files are explicitly conclusions-only projections, and structural checks pass.
+- SKIPPED: The required full task-aware number guard remains CONFIG ERROR / SKIPPED / NOT PASS.
+  Its current invocation exits 2 for the missing applicable migration path. No fake SQL/path, db relabel, package/workflow change or waiver was applied. The one-time source/declaration comparison cannot replace the absent full protection.
+- SKIPPED: Effective licensing, retained serving and publication acceptance remain separate prerequisites.
+  The owner handles the hobby application; no key is assumed issued and the normal production-build rehearsal is not licensed rendering. Retained provider/data/entry-switch acceptance remains pending; no deployment, PR or merge occurred. Existing incomplete cost evidence remains unchanged and local.
+- DONE: Return the concrete guard decision without taking acceptance authority.
+  No new Material or Polish defect is established. Needs decision: Captain chooses a task-scoped exception for unchanged persistence or deferred delivery pending separate tooling; workflow: owner authorizing retained service; harm: substituting narrow evidence for required protection; boundaries: `value-ac[AC-4]` and `value-ac[AC-5]`; trigger: the full checker cannot cover this non-numbered-SQL storage. Neither option is applied here.
+
+### Summary
+
+PASSED for the new documentation and local delivery-preparation delta only; prior accepted operating evidence remains intact. The full guard is still NOT PASS, and the explicit guard decision, owner license and retained-switch acceptance prevent a whole-pilot delivery claim.
+The single existing offline command and full observed output are preserved in the private independent handback. No product/source repair, provider request, serving change, credential issuance, gate/frontmatter edit, publication, PR or merge was performed by validation.
