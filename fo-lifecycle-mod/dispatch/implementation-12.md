@@ -18,3 +18,7 @@ Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/
 Option A because the Copilot reader does not judge what Copilot found. Roborev: `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.1/extensions/roborev/roborev_gate.py --repo <worktree> --base $(git merge-base HEAD origin/main)`. No replays, adopter copies, comments, review requests, ready or merge.
 
 Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).
+
+### Dispatch Retries
+
+- 2026-10-14: the worker stalled (no progress for 600 s, stream watchdog did not recover) mid phase 2, leaving uncommitted edits to pr_watch.py and test_pr_watch.py in the task worktree; FO re-dispatches a fresh worker with the recovery clause.

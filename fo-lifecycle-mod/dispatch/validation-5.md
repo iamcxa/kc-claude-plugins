@@ -23,3 +23,7 @@ Never run `git remote set-url` or any `git config` write in a worktree of this r
 The minimal acceptance script must run unchanged in a fresh shell and name any checkout or install it needs; FO will run it exactly as written before the gate. Write any package script you name as its full path.
 
 Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).
+
+### Dispatch Retries
+
+- 2026-10-14: the validator stalled (no progress for 600 s, stream watchdog did not recover) and wrote no report; FO removed its three throwaway worktrees under /tmp/val643c4. Not retried: the round-5 repair supersedes head bbc4a20e.
