@@ -25,3 +25,9 @@ Deletion/recreation may use only exact resource IDs returned for this proof, nev
 The producer narrowed the plan before execution: create the fictional archive locally, restore once into one fresh hosted target, verify backup/revocation and repeat-restore refusal, then clean up. No intermediate namespace recreation is needed.
 
 The first hosted attempt stopped before operator calls because provider inventory returned `routes:null`; cleanup was independently verified. FO permits one evidence-backed harness correction and corrected attempt at the unchanged candidate. Keep that inventory detail NOT SHOWN; require exact-name absence before creation, explicit empty-route configuration, successful exact-Worker deployment output reporting no deploy targets, and provider public/preview flags disabled. This establishes no serving target configured by these fresh deployments, not exhaustive account zone-route inventory. Preserve the failed attempt and all measurement limitations. A second failure at the same prerequisite stops with cleanup; no further redeployment loop.
+
+## Local caller corrections
+
+The corrected hosted attempt did not establish operator-operation acceptance. Recovery cleanup confirmed the disposable resources absent. Exact failure evidence and the limits on its interpretation remain local.
+
+FO authorizes a narrow local caller compatibility correction and a locally demonstrated operator admission correction, followed by affected tests and independent validation. Application servers, canvas UI, dependencies and concurrency remain unchanged. Detailed findings and reproduction evidence remain local; public state records only dispositions and verified conclusions.
