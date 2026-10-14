@@ -69,6 +69,17 @@ gates:
                 id: briefing:fo-lifecycle-mod:validation:attempt-1:revision-1
                 digest: sha256:7471ac27f8c5c049d0811e5d7758fa52c0a5cb18ba52e569de6aa527f391610d
                 room-ref: ./fo-lifecycle-mod/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-lifecycle-mod:validation:1
+                briefing: briefing:fo-lifecycle-mod:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-14T16:06:22.228914Z"
+                decision: approve
+                reason: 'Captain approved delivery of #643 at 3a3cfc30 (「准」), accepting that delivery_gate.py keeps its own next lines as the gate question stated: FO marks it ready and asks to merge; later external-review rounds covered per Delivery authority.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T23:51:23Z
 worktree: .worktrees/spacedock-ensign-fo-lifecycle-mod
 pr: iamcxa/kc-claude-plugins#643
