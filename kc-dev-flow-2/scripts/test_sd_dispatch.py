@@ -14,6 +14,8 @@ import uuid
 
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "references/sd/workflow.md"
+MODS = ROOT / "references/sd/mods"
+MOD_SCRIPT = re.compile(r"<package>/scripts/([A-Za-z0-9_.-]+)")
 STAGES = ("ideation", "implementation", "validation")
 ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
               "or labelled P1 by the reviewer, blocks in every round",
@@ -189,10 +191,32 @@ FIXES = {
         old=(),
         swaps=((r", and run `python3 <package>/scripts/dispatch_records\.py <task folder>`; a missing or incomplete record \(its exit 1\),", "; a missing record,"),)),
     "pr-watch": dict(
-        need=("FO adds each PR it opens or pushes to with `python3 <package>/scripts/pr_watch.py add",
-              "keeps `<package>/scripts/pr_watch.py wait` running in the background"),
+        file="references/sd/mods/kc-dev-flow-2.md",
+        need=("1. Run `python3 <package>/scripts/pr_watch.py tasks <workflow dir>`.",
+              "2. Do each `next:` line it prints, in order.",
+              "3. After the `pr-merge` hook, do each `after pr-merge:` line it printed."),
         old=(),
-        swaps=((r"FO adds each PR it opens or pushes to with.*?instead of waiting to be told\. ", ""),)),
+        swaps=((r"1\. Run `python3 <package>/scripts/pr_watch\.py tasks <workflow dir>`\. 2\. Do each `next:` line it prints, in order\. 3\. After the `pr-merge` hook, do each `after pr-merge:` line it printed\.", ""),)),
+    "readme-keeps-delivery-rules": dict(
+        need=("the sentinel waits for a committed observer report",
+              "a head other than the latest passing validation report's candidate is revalidated or its difference told to the Captain",
+              "that grant stands in for a presented body",
+              "FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`",
+              "FO runs `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask and FO shows the Captain what it printed"),
+        old=(),
+        swaps=((r"Where `learn` is listed, the sentinel waits for a committed observer report\. ", ""),
+               (r"Before the merge ask, a head other than the latest passing validation report's candidate is revalidated or its difference told to the Captain\.", "Before the merge ask, FO confirms the head."),
+               (r" that grant stands in for a presented body", ""),
+               (r" FO's startup and idle steps are in `_mods/kc-dev-flow-2\.md`, copied from `<package>/references/sd/mods/`\.", ""),
+               (r" Before the `gate prepare` that asks for merge, FO runs `python3 <package>/scripts/delivery_gate\.py check.*?shows the Captain what it printed\.", ""))),
+    "worker-opens-draft-pr": dict(
+        file="skills/implementation/principles.md",
+        need=("Where the dispatch scope notes quote the Captain's grant to push the task branch and open a Draft PR, open that PR before the stage report and name it there",
+              "otherwise report `no PR opened: no push grant`",
+              "Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless that specific action is authorized"),
+        old=(),
+        swaps=((r"Where the dispatch scope notes quote the Captain's grant.*?unless that specific action is authorized\.",
+                "Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless the specific action is authorized."),)),
     "one-number-per-kind": dict(
         need=("a task holds one number per kind, and a task needing a second ADR or migration returns to FO",),
         old=(),
@@ -283,6 +307,11 @@ FIXES = {
         old=(),
         swaps=((r" and follow-up message with a line telling the worker to send its completion message to `main`, because the completion block Spacedock appends names `team-lead`\.", "."),)),
 }
+
+
+def mod_scripts_missing():
+    return sorted(f"{mod.name}: {name}" for mod in MODS.glob("*.md")
+                  for name in MOD_SCRIPT.findall(mod.read_text()) if not (ROOT / "scripts" / name).is_file())
 
 
 def pinned_texts():
@@ -700,12 +729,35 @@ def exercise(base, binary, sd_root):
         result = json.loads(run([binary, "merge", "guard", entity.stem, "--workflow-dir", workflow,
                                 "--verdict", "passed", "--json"], workflow).stdout)
         assert result["signal"] == "finalized" and not entity.exists(), result
+        assert mod_scripts_missing() == [], mod_scripts_missing()
+        mods = sorted(MODS.glob("*.md"))
+        assert [mod.name for mod in mods] == ["kc-dev-flow-2.md"], mods
+        workflow, entity = seed("mods", "validation", profile="poc")
+        for mod in mods:
+            shutil.copyfile(mod, workflow / "_mods" / mod.name)
+        boot = run([binary, "status", "--workflow-dir", workflow, "--boot"], workflow).stdout
+        lines = {line.split(": ", 1)[0]: line.split(": ", 1)[1] for line in boot.splitlines() if ": " in line}
+        assert lines["idle"] == "kc-dev-flow-2, pr-merge", boot
+        assert lines["startup"] == "kc-dev-flow-2, pr-merge", boot
+        assert lines["merge"] == "pr-merge", boot
+        synthetic_gate(workflow, entity, "done")
+        guarded = json.loads(run([binary, "merge", "guard", entity.stem, "--workflow-dir", workflow,
+                                  "--verdict", "passed", "--json"], workflow).stdout)
+        assert (guarded["signal"], guarded["hook"]) == ("armed", "pr-merge"), guarded
+        workflow, entity = seed("pr-recorded", "validation", profile="poc")
+        run([binary, "status", "--workflow-dir", workflow, "--set", entity.stem, "pr=owner/repo#42"], workflow)
+        run([binary, "state", "commit", entity.stem, "--workflow-dir", workflow], workflow)
+        synthetic_gate(workflow, entity, "done")
+        held = json.loads(run([binary, "merge", "guard", entity.stem, "--workflow-dir", workflow,
+                               "--verdict", "passed", "--json"], workflow).stdout)
+        assert (held["signal"], held["action"]) == ("blocked", "await-pr"), held
         print(f"PASS ({version}): 6 stage/host dispatch handoffs; wrong-stage and missing-stage refusals")
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
         print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the " + str(len(FIXES)) + " wording fixes (" + ", ".join(FIXES) + ") are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
+        print("PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
         for artifact in artifacts:

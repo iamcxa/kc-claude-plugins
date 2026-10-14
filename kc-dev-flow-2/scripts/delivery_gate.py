@@ -10,6 +10,7 @@ It is compared, as a prefix of equal length, with the PR head (--head, else `gh 
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
 Exit 0 when both hold; 1 when the head differs or a second reviewer has no stated outcome (both printed);
 2 when no passing report names a candidate, the head cannot be read, or an input is unusable.
+Each exit ends with one `next:` line, or one per problem for exit 1, naming what FO does with the ask.
 """
 import argparse
 import json
@@ -67,7 +68,7 @@ def check(args):
     if not pr:
         print(f"--pr must look like owner/repo#N, got {args.pr}")
         return 2
-    problems, holds = [], []
+    problems, holds, nexts = [], [], []
 
     candidate = validated_candidate(task_text)
     if not candidate:
@@ -88,18 +89,23 @@ def check(args):
         if candidate[:length] != head[:length]:
             problems.append(f"PR head {head} differs from validated candidate {candidate} "
                             f"(latest passing validation report in {task})")
+            nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
 
     for reviewer in unstated_second_reviewers(gate_text):
+        nexts.append("next: hold the ask until each second reviewer has an outcome.")
         problems.append(f"second reviewer {reviewer} has no stated outcome: "
                         f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
 
     for line in problems + holds:
         print(line)
     if problems:
+        print(*dict.fromkeys(nexts), sep="\n")
         return 1
     if holds:
+        print("next: hold the ask and show the Captain these lines.")
         return 2
     print(f"PR head {head} equals validated candidate {candidate}; no second reviewer outcome is missing")
+    print("next: ask for merge with this text.")
     return 0
 
 

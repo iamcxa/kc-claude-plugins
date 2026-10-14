@@ -19,16 +19,11 @@ SLUG = "recovery-fixture"
 REPORT = "ok | rule: \"FO records\" (Stage Report) | evidence: \"present\" (abc1234)\n"
 
 
-def documented_commit_steps(state, slug):
-    """The git commands EXTENSION.md gives for committing the late report, in order, as argv lists."""
-    text = re.sub(r"\s+", " ", EXTENSION.read_text())
-    spans = [s for s in re.findall(r"`([^`]+)`", text) if s.startswith("git -C <state> ") and "_archive/<slug>/observer.md" in s]
-    assert len(spans) == 1, f"expected one documented late-report commit span, found {spans}"
-    steps = []
-    for part in spans[0].split(" && "):
-        words = shlex.split(part.replace("<state>", str(state)).replace("<slug>", slug).replace("<message>", shlex.quote("docs: late observer report")))
-        steps.append(words)
-    return steps
+def documented_commit_steps(state, slug, printed):
+    """The git commands the check prints for committing the late report, in order, as argv lists."""
+    spans = [s for s in re.findall(r"`([^`]+)`", printed) if s.startswith("git -C ") and f"_archive/{slug}/observer.md" in s]
+    assert len(spans) == 1, f"expected one printed late-report commit span, found {spans}"
+    return [shlex.split(part.replace("<message>", "docs: late observer report")) for part in spans[0].split(" && ")]
 
 
 def exercise(base, binary):
@@ -100,7 +95,7 @@ def exercise(base, binary):
     assert "archived scope is publish-only" in refused.stdout + refused.stderr, refused
     assert check().returncode == 1, "an uncommitted late report must not pass"
 
-    for step in documented_commit_steps(state, SLUG):
+    for step in documented_commit_steps(state, SLUG, missed.stdout):
         run(step)
     staged = f"git -C {state} add _archive/{SLUG}/observer.md && git -C {state} commit"
     assert staged in missed.stdout, f"the check's remedy omits the staging step: {missed.stdout}"

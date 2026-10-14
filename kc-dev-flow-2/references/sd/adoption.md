@@ -66,6 +66,12 @@ The workflow's Delivery authority constrains the upstream mod's local fallback,
 trunk push and non-Draft defaults. Preserve project Draft/CI/manual merge rules;
 installing the mod does not grant those actions or mechanically enforce them.
 
+The package also owns `<package>/references/sd/mods/kc-dev-flow-2.md`. In the change that
+re-syncs a workflow README (here `docs/dev2` and `docs/dev2-poc`), copy it into
+`{workflow-dir}/_mods/`, run `cmp` against the package copy, and check that
+`spacedock status --workflow-dir {workflow-dir} --boot` lists `kc-dev-flow-2` before `pr-merge`
+on its `idle:` and `startup:` lines and `pr-merge` alone on `merge:`.
+
 ## Comment ratio and review rounds
 
 `<package>/scripts/comment_ratio.py` fails a candidate whose added comments exceed

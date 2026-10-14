@@ -5,7 +5,8 @@ Usage: observer_check.py <state checkout> <task slug> [--rev REV]
 Reads the committed tree at REV (default HEAD), not the disk. The report is <slug>/observer.md before the
 task is archived and _archive/<slug>/observer.md after.
 Exit 0 when that file is committed and not blank; stdout names it, and repeats the first line when it
-starts "observer not run:". Exit 1 when it is not: stdout names the observer dispatch and the save command.
+starts "observer not run:"; for an archived task it adds the learn steps. Exit 1 when it is not: stdout
+names the observer dispatch and the save command, each as a `next:` line.
 Exit 2 when the check cannot be made (usage, not a git work tree, REV names no commit, the slug has no task at
 REV): stdout names the cause. Nothing here changes the checkout.
 """
@@ -62,21 +63,30 @@ def check(state, slug, rev):
     archived = locate(state, slug, rev)
     path = f"_archive/{slug}/observer.md" if archived else f"{slug}/observer.md"
     code, out = git(state, "show", f"{rev}:./{path}")
+    learn = [f"next: run kc-dev-flow-2:learn for {slug}.",
+             "next: send learn's notice, then the observer report unedited, in one message; answer none of its findings."]
     if code == 0 and out.strip():
         first = out.strip().splitlines()[0].strip()
         note = f" {first}" if first.startswith(WAIVER) else ""
-        return 0, f"observer report committed: {path} at {rev}.{note}"
+        return 0, "\n".join([f"observer report committed: {path} at {rev}.{note}"] + (learn if archived else []))
     where = "blank" if code == 0 else "not committed"
+    quoted = shlex.quote(str(state))
+    commit = f"spacedock state commit {slug} --workflow-dir <workflow dir>"
     if archived:
-        how = (f"{slug} is archived, so its state is publish-only: dispatch kc-dev-flow-2:observer over both path "
-               f"pairs ({slug}.md and {slug}/, then _archive/{slug}.md and _archive/{slug}/), save the report "
-               f"unedited as {path}, then `git -C {shlex.quote(str(state))} add {shlex.quote(path)} && "
-               f"git -C {shlex.quote(str(state))} commit -m \"<message>\" -- {shlex.quote(path)}` and `spacedock state commit {slug} --workflow-dir <workflow dir>` to publish it.")
+        steps = [f"dispatch kc-dev-flow-2:observer over both path pairs, {slug}.md and {slug}/, then _archive/{slug}.md and _archive/{slug}/.",
+                 f"save its report unedited as {path}.",
+                 f"run `git -C {quoted} add {shlex.quote(path)} && git -C {quoted} commit -m \"<message>\" -- {shlex.quote(path)}`.",
+                 f"run `{commit}`.",
+                 "tell the Captain the observer ran after the archive."]
+        steps = [f"next: {step}" for step in steps] + learn
     else:
-        how = (f"dispatch kc-dev-flow-2:observer with only the state checkout, {slug} and the workflow README, "
-               f"save the report unedited as {path}, run `spacedock state commit {slug} --workflow-dir "
-               f"<workflow dir>`, then rerun this check before the sentinel.")
-    return 1, f"observer report {where}: {path} at {rev}. Remedy: {how}"
+        steps = [f"dispatch kc-dev-flow-2:observer with only the state checkout, {slug} and the workflow README.",
+                 f"save its report unedited as {path}.",
+                 f"if it cannot be dispatched, save the one line `{WAIVER} <reason>` there instead.",
+                 f"run `{commit}`.",
+                 "run the idle hooks again."]
+        steps = [f"next: {step}" for step in steps]
+    return 1, "\n".join([f"observer report {where}: {path} at {rev}."] + steps)
 
 
 def main(argv=None):

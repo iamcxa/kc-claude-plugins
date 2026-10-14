@@ -2,9 +2,14 @@ import contextlib
 import importlib.util
 import io
 import json
+import os
 from pathlib import Path
+import shutil
+import subprocess
+import sys
 import tempfile
 import unittest
+from unittest import mock
 
 spec = importlib.util.spec_from_file_location("pr_watch", Path(__file__).with_name("pr_watch.py"))
 watch = importlib.util.module_from_spec(spec)
@@ -325,6 +330,409 @@ class PrWatchTests(unittest.TestCase):
             self.assertEqual(watch.codex("o/r", "1"), ("-", "-"))
         finally:
             watch.CODEX = old
+
+
+GH_STUB = """#!/usr/bin/env python3
+import json, os, sys
+table = json.load(open(os.environ["GH_STUB"]))
+args = sys.argv[1:]
+answer = table.get(" ".join(args[:3] if args[:2] == ["pr", "view"] else args[:2]))
+if answer is None:
+    sys.stderr.write("stub gh: no answer for " + " ".join(args))
+    sys.exit(1)
+print(json.dumps(answer))
+"""
+IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
+            "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
+
+
+def view(state="OPEN", draft=False, checks="SUCCESS", mergeable="MERGEABLE"):
+    return {"state": state, "isDraft": draft, "mergeable": mergeable, "headRefOid": "a" * 40,
+            "statusCheckRollup": [{"conclusion": checks}], "title": "feat: x"}
+
+
+class TasksTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        (self.root / "bin").mkdir()
+        stub = self.root / "bin/gh"
+        stub.write_text(GH_STUB)
+        stub.chmod(0o755)
+        self.repo = self.root / "repo"
+        self.workflow = self.repo / "docs/dev2"
+        self.state = self.workflow / ".spacedock-state"
+        self.state.mkdir(parents=True)
+        self.git(self.repo, "init", "-q", "-b", "main")
+        self.git(self.state, "init", "-q", "-b", "main")
+        (self.state / "README.md").write_text("state\n")
+        self.watch = self.root / "watch.json"
+
+    def git(self, where, *args):
+        done = subprocess.run(["git", "-C", str(where), *args], capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stderr)
+        return done.stdout
+
+    def readme(self, extensions):
+        (self.workflow / "README.md").write_text(f"---\nentity-type: task\nextensions: [{extensions}]\nstate: .spacedock-state\n---\n")
+
+    def task(self, slug, pr="", worktree=True, branch="feat-x", status="validation", folder=False):
+        where = self.repo / ".worktrees" / slug
+        if worktree and not where.exists():
+            where.mkdir(parents=True)
+            self.git(where, "init", "-q", "-b", branch)
+            self.git(where, "remote", "add", "origin", "https://github.com/o/r.git")
+        lines = ["---", f"title: {slug}", f"status: {status}", f"pr: {pr}"] + ([f"worktree: .worktrees/{slug}"] if worktree else []) + ["---", "body"]
+        target = self.state / (f"{slug}/index.md" if folder else f"{slug}.md")
+        target.parent.mkdir(exist_ok=True)
+        target.write_text("\n".join(lines) + "\n")
+        self.git(self.state, "add", "-A")
+        self.git(self.state, "commit", "-qm", f"task {slug}")
+
+    def report(self, slug, text="ok | rule: x\n"):
+        (self.state / slug).mkdir(exist_ok=True)
+        (self.state / slug / "observer.md").write_text(text)
+        self.git(self.state, "add", "-A")
+        self.git(self.state, "commit", "-qm", "report")
+
+    def tasks(self, answers, look=None, clock=None):
+        table = self.root / "gh.json"
+        table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, **answers}))
+        env = {"PATH": f"{self.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table)}
+        out = io.StringIO()
+        with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
+            code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
+        return code, out.getvalue().splitlines()
+
+    def watched(self):
+        return json.loads(self.watch.read_text()) if self.watch.exists() else {}
+
+    def test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched(self):
+        self.readme("roborev")
+        self.task("some-task")
+        code, lines = self.tasks({"pr list": [{"number": 7, "state": "OPEN"}], "pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines[0], f"next: run `spacedock status --workflow-dir {self.workflow.resolve()} --set some-task pr=o/r#7`.")
+        self.assertEqual(lines[1], f"next: run `spacedock state commit some-task --workflow-dir {self.workflow.resolve()}`.")
+        self.assertEqual(list(self.watched()), ["o/r#7"])
+
+    def test_a_branch_whose_only_pr_is_closed_records_nothing(self):
+        self.readme("roborev")
+        self.task("some-task")
+        code, lines = self.tasks({"pr list": [{"number": 7, "state": "CLOSED"}], "pr view 7": view("CLOSED")})
+        self.assertEqual((code, lines, self.watched()), (0, [], {}))
+        code, lines = self.tasks({"pr list": [{"number": 8, "state": "OPEN"}, {"number": 7, "state": "CLOSED"}], "pr view 8": view()})
+        self.assertIn("pr=o/r#8", lines[0])
+
+    def test_a_merged_task_pr_without_a_report_is_kept_out_of_pr_merge_and_shows_the_observer_steps(self):
+        self.readme("roborev, learn")
+        self.task("some-task", pr="o/r#7")
+        code, lines = self.tasks({"pr view 7": view("MERGED")})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines[0], "next: keep some-task out of pr-merge's scan in this pass.")
+        self.assertTrue(lines[1].startswith("observer report not committed: some-task/observer.md"), lines)
+        self.assertEqual(lines[-1], "next: run the idle hooks again.")
+        self.assertFalse(any("let pr-merge" in line for line in lines))
+
+    def test_a_merged_task_pr_with_the_report_committed_lets_pr_merge_record_it_and_names_the_steps_after(self):
+        self.readme("learn")
+        self.task("some-task", pr="o/r#7")
+        self.report("some-task")
+        code, lines = self.tasks({"pr view 7": view("MERGED")})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines[0], "next: let pr-merge record some-task.")
+        self.assertEqual(len(lines), 3, lines)
+        self.assertRegex(lines[1], r"^after pr-merge: run `python3 \S+observer_check\.py \S+ some-task`\.$")
+        self.assertEqual(lines[2], "after pr-merge: do each next: line it prints.")
+        command = lines[1].split("`")[1].split()
+        done = subprocess.run(command, capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stdout)
+
+    def test_without_learn_listed_a_merged_pr_prints_no_observer_line(self):
+        self.readme("roborev, codex")
+        self.task("some-task", pr="o/r#7")
+        self.assertEqual(self.tasks({"pr view 7": view("MERGED")}), (0, []))
+
+    def test_codex_and_copilot_are_added_with_their_watch_columns_only_when_listed(self):
+        self.task("some-task", pr="o/r#7")
+        for listed, expected in (("codex, copilot", (True, True)), ("codex", (True, False)), ("roborev", (False, False))):
+            with self.subTest(listed=listed):
+                self.watch.unlink(missing_ok=True)
+                self.readme(listed)
+
+                def fake(ref, with_codex=False, with_copilot=False, **kw):
+                    return {**snap(), "watch-codex": with_codex, "watch-copilot": with_copilot}
+                self.tasks({}, look=fake)
+                entry = self.watched()["o/r#7"]
+                self.assertEqual((entry["watch-codex"], entry["watch-copilot"]), expected)
+
+    def unchecked(self, now, merge_state="CLEAN", head="a", **view_kw):
+        read = {**view(**view_kw), "statusCheckRollup": [], "mergeStateStatus": merge_state, "headRefOid": head * 40}
+        return self.tasks({"pr view 7": read}, clock=lambda: now)
+
+    GATE = ("delivery_gate.py", "do not ask", "merge ask")
+
+    def settled(self, lines):
+        return any("unchecked=settled" in line for line in lines if line.startswith("fact:"))
+
+    def ready_lines(self, lines):
+        return [line for line in lines if "mark o/r#7" in line]
+
+    def test_a_pr_with_no_check_runs_settles_only_after_sixty_quiet_seconds(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.assertFalse(self.settled(self.unchecked(1000)[1]))
+        self.assertFalse(self.settled(self.unchecked(1059)[1]))
+        code, lines = self.unchecked(1060)
+        self.assertEqual(code, 0, lines)
+        self.assertTrue(self.settled(lines), lines)
+        self.assertEqual(self.watched()["o/r#7"]["unchecked"], "settled")
+
+    def test_a_draft_with_no_check_runs_is_marked_ready_after_sixty_quiet_seconds(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.unchecked(1000, draft=True)
+        self.assertEqual(self.ready_lines(self.unchecked(1059, draft=True)[1]), [])
+        self.assertEqual(self.ready_lines(self.unchecked(1060, draft=True)[1]), ["next: mark o/r#7 ready if Delivery authority allows."])
+
+    def test_a_blocked_pr_with_no_check_runs_does_not_settle_until_it_is_not_blocked(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.unchecked(1000, merge_state="BLOCKED")
+        self.assertFalse(self.settled(self.unchecked(1100, merge_state="BLOCKED")[1]))
+        self.assertTrue(self.settled(self.unchecked(1101, merge_state="CLEAN")[1]))
+
+    def test_a_new_head_or_a_ready_flip_restarts_the_quiet_sixty_seconds(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.unchecked(1000, draft=True)
+        self.assertFalse(self.settled(self.unchecked(1060, draft=False)[1]))
+        self.assertFalse(self.settled(self.unchecked(1119, draft=False)[1]))
+        self.assertTrue(self.settled(self.unchecked(1120, draft=False)[1]))
+        self.assertFalse(self.settled(self.unchecked(1180, head="b")[1]))
+        self.assertFalse(self.settled(self.unchecked(1239, head="b")[1]))
+        self.assertTrue(self.settled(self.unchecked(1240, head="b")[1]))
+
+    def test_an_open_pr_prints_its_facts_and_the_kept_step_then_keeps_one_wait_running(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        cases = (
+            (view(draft=True), "fact: o/r#7 OPEN draft=True checks=green", ["next: mark o/r#7 ready if Delivery authority allows."]),
+            (view(), "fact: o/r#7 OPEN draft=False checks=green", []),
+            (view(checks="FAILURE"), "fact: o/r#7 OPEN draft=False checks=failing", ["next: tell the Captain o/r#7 has failing CI."]),
+            (view(mergeable="CONFLICTING"), "fact: o/r#7 OPEN draft=False checks=green", ["next: tell the Captain o/r#7 has a conflict."]),
+            (view(checks="PENDING"), "fact: o/r#7 OPEN draft=False checks=pending", []),
+        )
+        for answer, fact, steps in cases:
+            with self.subTest(fact=fact, steps=steps):
+                code, lines = self.tasks({"pr view 7": answer})
+                self.assertEqual(code, 0, lines)
+                self.assertEqual(lines[:-2], [fact] + steps, lines)
+                self.assertEqual(lines[-2], f"next: run `python3 {watch.SCRIPTS / 'pr_watch.py'} --state {self.watch} wait` in the background, unless one is running.")
+                self.assertEqual(lines[-1], "next: when it exits, do the next: lines it prints.")
+
+    def reviewed(self, **columns):
+        def fake(ref, with_codex=False, with_copilot=False, **kw):
+            return {**snap(**columns), "watch-codex": with_codex, "watch-copilot": with_copilot}
+        return fake
+
+    def test_no_snapshot_prints_a_merge_ask_or_hold_line(self):
+        self.readme("codex, copilot")
+        self.task("some-task", pr="o/r#7")
+        cases = (dict(), dict(codex="clean", copilot="not-run"), dict(codex="running"), dict(codex="not-reviewed"), dict(codex="error"),
+                 dict(copilot="requested"), dict(copilot="not-reviewed"), dict(copilot="error"),
+                 dict(codex="findings", **{"codex-evidence": "review:1"}), dict(copilot="answered", **{"copilot-evidence": "review:2"}),
+                 dict(checks="none"))
+        for columns in cases:
+            with self.subTest(columns=columns):
+                self.watch.unlink(missing_ok=True)
+                for now in (1000, 1060):
+                    code, lines = self.tasks({}, look=self.reviewed(**columns), clock=lambda now=now: now)
+                    self.assertEqual(code, 0, lines)
+                    self.assertFalse([line for line in lines if any(word in line for word in self.GATE)], lines)
+
+    def test_the_facts_line_names_each_listed_reviewer_outcome_with_its_review_id(self):
+        self.readme("codex, copilot")
+        self.task("some-task", pr="o/r#7")
+        cases = ((dict(codex="findings", **{"codex-evidence": "review:5515174091"}), "fact: o/r#7 OPEN draft=False checks=green codex=findings review:5515174091 copilot=-"),
+                 (dict(copilot="answered", **{"copilot-evidence": "review:2"}), "fact: o/r#7 OPEN draft=False checks=green codex=- copilot=answered review:2"),
+                 (dict(codex="running", copilot="requested"), "fact: o/r#7 OPEN draft=False checks=green codex=running copilot=requested"))
+        for columns, expected in cases:
+            with self.subTest(columns=columns):
+                self.watch.unlink(missing_ok=True)
+                code, lines = self.tasks({}, look=self.reviewed(**columns))
+                self.assertEqual(lines[0], expected, lines)
+
+    def test_a_reviewer_the_readme_does_not_list_is_not_in_the_facts_line(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        code, lines = self.tasks({}, look=self.reviewed(codex="running", copilot="requested"))
+        self.assertEqual(lines[0], "fact: o/r#7 OPEN draft=False checks=green", lines)
+
+    def test_a_bare_pr_is_resolved_from_the_workflow_checkout_when_its_worktree_is_gone(self):
+        self.readme("roborev")
+        self.git(self.repo, "remote", "add", "origin", "https://github.com/o/r.git")
+        for slug, pr in (("hash", "#7"), ("number", "7")):
+            self.task(slug, pr=pr)
+            shutil.rmtree(self.repo / ".worktrees" / slug)
+        self.task("no-field", pr="#7", worktree=False)
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(list(self.watched()), ["o/r#7"])
+        self.assertEqual(lines[0], "fact: o/r#7 OPEN draft=False checks=green", lines)
+
+    def test_an_empty_pr_whose_worktree_is_gone_says_to_record_it_and_one_with_no_worktree_field_stays_silent(self):
+        self.readme("roborev")
+        self.task("gone")
+        shutil.rmtree(self.repo / ".worktrees/gone")
+        self.task("bare", worktree=False)
+        code, lines = self.tasks({})
+        self.assertEqual((code, lines), (0, ["next: record gone's PR with status --set gone pr=<owner/repo>#<N>; its worktree is not on this machine."]))
+
+    def test_a_sentinel_and_a_task_without_a_pr_or_worktree_print_nothing(self):
+        self.readme("learn")
+        self.task("sentinel", pr="pr-merge:7")
+        self.task("bare", worktree=False)
+        self.task("qualified-without-worktree", pr="o/r#9", worktree=False)
+        self.assertEqual(self.tasks({"pr view 9": view("CLOSED")}), (0, []))
+
+    def test_a_pr_that_cannot_be_read_is_reported_and_exits_2(self):
+        self.readme("learn")
+        self.task("some-task", pr="o/r#7")
+        self.task("other", pr="o/r#8")
+        code, lines = self.tasks({"pr view 8": view("MERGED")})
+        self.assertEqual(code, 2, lines)
+        self.assertTrue(any(line.startswith("next: report some-task to the Captain: ") for line in lines), lines)
+        self.assertTrue(any("keep other out of pr-merge's scan" in line for line in lines), lines)
+
+    def test_a_task_filed_as_a_folder_index_is_read_like_a_flat_one(self):
+        self.readme("roborev")
+        self.task("some-task", folder=True)
+        code, lines = self.tasks({"pr list": [{"number": 7, "state": "OPEN"}], "pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines[0], f"next: run `spacedock status --workflow-dir {self.workflow.resolve()} --set some-task pr=o/r#7`.")
+        self.assertEqual(list(self.watched()), ["o/r#7"])
+
+    def test_a_sidecar_folder_without_an_index_beside_a_flat_task_adds_no_second_scan(self):
+        self.readme("roborev")
+        self.task("some-task")
+        self.report("some-task")
+        (self.state / "some-task/dispatch").mkdir()
+        (self.state / "some-task/dispatch/note.md").write_text("---\nstatus: x\npr: o/r#9\n---\n")
+        code, lines = self.tasks({"pr list": [{"number": 7, "state": "OPEN"}], "pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(sum("--set some-task " in line for line in lines), 1, lines)
+        self.assertEqual(list(self.watched()), ["o/r#7"])
+
+    def test_a_task_in_both_forms_is_read_once_from_the_folder(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#8")
+        self.task("some-task", pr="o/r#7", folder=True)
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(list(self.watched()), ["o/r#7"])
+        self.assertEqual(sum(line.startswith("fact: ") for line in lines), 1, lines)
+
+    def test_archived_hidden_and_mod_folders_are_not_tasks(self):
+        self.readme("roborev")
+        for reserved in ("_archive", "_mods", ".hidden"):
+            self.task(reserved, pr="o/r#7", folder=True)
+        self.assertEqual(self.tasks({"pr view 7": view()}), (0, []))
+        self.assertEqual(self.watched(), {})
+
+    def test_a_merged_folder_task_reaches_the_observer_check_under_its_folder_name(self):
+        self.readme("learn")
+        self.task("some-task", pr="o/r#7", folder=True)
+        code, lines = self.tasks({"pr view 7": view("MERGED")})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines[0], "next: keep some-task out of pr-merge's scan in this pass.")
+        self.assertTrue(lines[1].startswith("observer report not committed: some-task/observer.md"), lines)
+
+    def test_tasks_needs_one_workflow_directory(self):
+        with contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(watch.main(["--state", str(self.watch), "tasks"]), 2)
+
+
+class WaitNextTests(unittest.TestCase):
+    def wait(self, then, first=None, **flags):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                watch.main(["--state", str(state), "add", REF], look=lambda ref, **kw: snap(**(first or {})))
+                code = watch.main(["--state", str(state), "wait", "1"], look=lambda ref, **kw: then, sleep=lambda s: None)
+            self.assertEqual(code, 0)
+            return [line for line in out.getvalue().splitlines() if line.startswith("next:")]
+
+    def test_each_decisive_change_is_followed_by_the_step_it_calls_for(self):
+        cases = {
+            "merged": (snap(state="MERGED"), None, ["next: run the idle hooks now."]),
+            "closed": (snap(state="CLOSED"), None, ["next: run the idle hooks now."]),
+            "green draft": (snap(draft=True), dict(draft=True, checks="pending"), [f"next: mark {REF} ready if Delivery authority allows."]),
+            "green and ready": (snap(), dict(checks="pending"), []),
+            "failing": (snap(checks="failing"), None, [f"next: tell the Captain {REF} has failing CI."]),
+            "conflict": (snap(mergeable="CONFLICTING"), None, [f"next: tell the Captain {REF} has a conflict."]),
+            "codex": (snap(codex="findings", **{"codex-evidence": "review:1"}), None, ["next: read the codex round review:1 as FO steps: review findings say."]),
+            "copilot": (snap(copilot="answered", **{"copilot-evidence": "review:2"}), None, ["next: read the copilot round review:2 as FO steps: review findings say."]),
+        }
+        for label, (then, first, expected) in cases.items():
+            with self.subTest(label):
+                self.assertEqual(self.wait(then, first), expected)
+
+    def test_no_wait_exit_prints_a_merge_ask_or_hold_line(self):
+        watched = {"watch-codex": True, "watch-copilot": True}
+        cases = {
+            "all clear": dict(codex="clean", copilot="not-run"),
+            "codex running": dict(codex="running"),
+            "codex not reviewed": dict(codex="not-reviewed"),
+            "copilot requested": dict(copilot="requested"),
+            "codex findings in the same sweep": dict(codex="findings", **{"codex-evidence": "review:1"}),
+        }
+        for label, columns in cases.items():
+            with self.subTest(label):
+                lines = self.wait(snap(**columns, **watched), dict(checks="pending", **watched))
+                self.assertFalse([line for line in lines if "delivery_gate.py" in line or "do not ask" in line or "merge ask" in line], lines)
+
+    def test_findings_and_green_in_one_sweep_print_the_review_step_once(self):
+        watched = {"watch-codex": True}
+        lines = self.wait(snap(codex="findings", **{"codex-evidence": "review:1"}, **watched), dict(checks="pending", **watched))
+        self.assertEqual(lines, ["next: read the codex round review:1 as FO steps: review findings say."])
+
+    def test_an_answered_copilot_is_the_review_step_even_when_the_codex_reader_is_absent(self):
+        watched = {"watch-codex": True, "watch-copilot": True}
+        lines = self.wait(snap(copilot="answered", **{"copilot-evidence": "review:2"}, **watched), dict(checks="pending", **watched))
+        self.assertEqual(lines, ["next: read the copilot round review:2 as FO steps: review findings say."])
+
+    def test_wait_ends_when_a_pr_with_no_check_runs_has_been_quiet_for_sixty_seconds(self):
+        clock = iter([1000, 1000, 1030, 1030, 1060, 1060, 1060])
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                watch.main(["--state", str(state), "add", REF], look=lambda ref, **kw: snap(checks="none"), clock=lambda: next(clock))
+                code = watch.main(["--state", str(state), "wait", "30"], look=lambda ref, **kw: snap(checks="none"),
+                                  sleep=lambda s: None, clock=lambda: next(clock))
+        self.assertEqual(code, 0)
+        lines = out.getvalue().splitlines()
+        self.assertIn(f"{REF} feat: x: unchecked - -> settled", lines)
+        self.assertEqual([line for line in lines if line.startswith("next:")], [])
+
+    def test_a_start_that_is_not_an_outcome_prints_no_next_line(self):
+        class Stopped(Exception):
+            pass
+
+        def stop(seconds):
+            raise Stopped
+
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                watch.main(["--state", str(state), "add", REF], look=lambda ref, **kw: snap(checks="none"))
+                with self.assertRaises(Stopped):
+                    watch.main(["--state", str(state), "wait", "1"], look=lambda ref, **kw: snap(checks="pending"), sleep=stop)
+            self.assertNotIn("next:", out.getvalue())
 
 
 if __name__ == "__main__":

@@ -33,11 +33,6 @@ unrelated approved development. This entry-level check is not a host SessionStar
 hook. Use [learn](../learn/SKILL.md) for an explicitly requested named-task loop;
 notices do not authorize evaluation, delivery, retry or merge.
 
-When the README lists `learn` and a task's PR is merged, run `python3 <package>/scripts/observer_check.py
-<state> <slug>` before writing the `pr-merge:` sentinel or running `merge guard`; the
-learn extension says what each exit means. A restarted session meets this before the pr-merge
-hook does.
-
 For existing work, preserve its recorded variant/profile, approved outcome,
 scope, non-goals and stop condition. Read current state, reports and delivery
 status instead of assuming a prior conversation is current. An invalid profile,
