@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-lifecycle-mod:ideation:attempt-2:revision-1",
+  "question": "Approve the redone design and enter implementation? Approving accepts D1 (a worker opens the task Draft PR only when its dispatch quotes the Captain push grant stated in a gate question; ready and merge still need the Captain), and this approval is that grant for this task: the implementation worker may push the task branch and open a Draft PR in iamcxa/kc-claude-plugins; D2 (four headless replay runs on claude-opus-5-5 at validation, controls first, stop if the S1 control already does the right thing); and D3 (if the after-archive learn check fails, add a second mod file sorted after pr-merge).",
+  "artifacts": [
+    {
+      "id": "artifact:fo-lifecycle-mod:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/5172d5589171ae58b70c1c97fbebd79a5182913b/fo-lifecycle-mod.md",
+      "rev": "sha256:46b69db104d43306e4696ba7ec7e94a4f671f64fd98a6dcefbf3109a88a5cee5",
+      "mediaType": "text/markdown",
+      "summary": "Ideation cycle 3 (redo after Captain amendment 3, under amendment 4; worker on opus). One 48-word mod (kc-dev-flow-2.md, sorted before pr-merge; no merge hook) runs a new pr_watch.py tasks subcommand at startup and idle and does the next: lines scripts print; observer_check.py, delivery_gate.py and pr_watch.py wait print the next action; the README keeps authority rules and one pointer. Measured words FO reads per moment, today vs design: startup 513/436, idle green draft 427/404, idle merged no report 458/389, after archive 211/60, merge ask 423/396, total 2032/1685; FO-read text net -377; workflow.md 5581 -\u003e 5476 (lint probe exit 0). The observer-before-sentinel step validation showed working is kept, moved into script output. Every absorbed review finding re-dispositioned under the three amendment-4 rules (script or test where possible; the stale-closed-PR P2 and the learn-unlisted P1 become script filters with tests). AC-1..AC-7 moved under amendment 3; new AC-8..AC-17. Main risk: learn after the archive rides on lines printed before pr-merge runs and carried by mod step 3, unreplayed; D3 is the fallback. Record note: amendment 3 Supersedes line reads none while the worker moved AC-1..AC-7 under it (FO wrote that line before the redo). design_surfaces.py check presentable, exit 0."
+    }
+  ]
+}
