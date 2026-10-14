@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:validation:attempt-4:revision-1",
+  "question": "是否接受本輪原生工具與 Sites 畫布操作驗證結果，並維持整體 pilot 交付暫緩？",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:validation:attempt-4:revision-1:item-1",
+      "uri": "git-root://state/353fab98b5d70047dcd8ff11b0273bdf603e2c81/journey-server-host-pilot/index.md",
+      "rev": "sha256:43d61baf16249366bc2d188854f6222032068c8c479f5e40535ef265c8956cdf",
+      "mediaType": "text/markdown",
+      "summary": "Bounded native Claude Code and Codex CLI plus Sites browser operation coverage passed independent review. Exact corrected product candidate is preserved, original private Site and data restored, and disposable resources removed. Usage remains partial and exact aggregate wire-cap compliance unproven. Whole-pilot delivery remains held; no product publication or merge is requested."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:validation:attempt-4:revision-1:item-2",
+      "uri": "git-root://main/6d0f8da951b5ea9ea50fca6bd3685fc360bf502f/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:42b58e54971513b3dd42350e15b4b1e7cf05fd51f9f80b84a8e4856f087dae4f"
+    }
+  ]
+}
