@@ -38,7 +38,7 @@ POINTER_WORDS = {"same", "identical", "unchanged", "checklist", "items", "as", "
 
 def is_pointer(line, others):
     stems = "|".join(re.escape(name) for name in others)
-    rest, hits = re.subn(rf"(?<![\w-])(?:{stems})(?![\w-])", " ", line) if others else (line, 0)
+    rest, hits = re.subn(rf"(?<![\w-])(?:[\w./~-]*/)?(?:{stems})(?:\.md)?(?![\w-])", " ", line) if others else (line, 0)
     return bool(hits) and all(word in POINTER_WORDS for word in re.findall(r"[a-z]+", rest.lower()))
 
 

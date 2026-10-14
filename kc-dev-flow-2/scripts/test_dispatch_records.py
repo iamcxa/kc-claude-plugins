@@ -117,6 +117,23 @@ class DispatchRecordTests(unittest.TestCase):
                 text = COMPLETE.replace("1. Independent verdict on the exact candidate\n", line + "\n")
                 self.assertEqual(self.check({"validation-1.md": COMPLETE, "validation-2.md": text})[0], 0)
 
+    def test_a_pointer_may_name_the_record_with_a_path_an_md_suffix_or_a_link(self):
+        for line in ("Same checklist as validation-1.md.", "Same checklist as `validation-1.md`.",
+                     "Same checklist as [validation-1](validation-1.md).", "Same checklist as [validation-1](./validation-1.md)",
+                     "Same checklist as ./dispatch/validation-1.md", "Same checklist as [validation-1](../dispatch/validation-1.md)."):
+            with self.subTest(line):
+                text = COMPLETE.replace("1. Independent verdict on the exact candidate\n", line + "\n")
+                code, out = self.check({"validation-1.md": COMPLETE, "validation-2.md": text})
+                self.assertEqual(code, 1)
+                self.assertEqual(out.splitlines(), ["validation-2.md: needs a checklist of its own, not only a reference to another dispatch record"])
+
+    def test_a_link_beside_an_action_or_a_longer_file_name_is_not_a_pointer(self):
+        for line in ("Verify [validation-1](validation-1.md) findings are fixed.", "Same checklist as my-validation-1.md",
+                     "Same checklist as validation-1.mdx"):
+            with self.subTest(line):
+                text = COMPLETE.replace("1. Independent verdict on the exact candidate\n", line + "\n")
+                self.assertEqual(self.check({"validation-1.md": COMPLETE, "validation-2.md": text})[0], 0)
+
     def test_a_record_name_inside_a_longer_name_or_the_records_own_name_is_not_a_pointer(self):
         for line in ("Same as validation-10.", "Continue validation-2 work.", "Re-run my-validation-1 items."):
             with self.subTest(line):
