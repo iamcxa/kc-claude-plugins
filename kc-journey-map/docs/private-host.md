@@ -5,6 +5,12 @@ PATCH/PUT contract. It adds private grants, scoped assets and a shared HTTP/MCP
 entry for Node or Cloudflare. Local emulator results do not establish hosted
 readiness, billing, formal tldraw licensing or real provider hibernation.
 
+The current bounded delivery and retained-use prerequisites are in
+[Private pilot operations](private-operations.md). That runbook owns credential
+rotation, document-plus-policy backup, fresh restore, private cloud administration,
+license setup and entry-switch rollback. The protocol details below also describe
+existing remote Node and optional asset capabilities deferred from this delivery.
+
 ## Install and test
 
 Use Node >=22.13, Git, OpenSSL and the locked public packages. From this package:
@@ -120,7 +126,7 @@ configure existing `JOURNEY_DOC_REPOS=owner/repo=/absolute/checkout` plus
 configured checkout capabilities. `GET /capabilities?room=shared` reports
 `save`, `repoDoc` and `assets`.
 
-## Cloudflare-local and future hosted wiring
+## Cloudflare-local and hosted wiring
 
 ```sh
 JOURNEY_PRIVATE_DIR=/absolute/new-emulator-data JOURNEY_GRANTS_FILE=/absolute/grants.json JOURNEY_ORIGIN=https://canvas.example.invalid JOURNEY_CONTROL_STDIO=1 node scripts/cloudflare-local.mjs
@@ -131,8 +137,10 @@ bucket. It is not a hosted endpoint. The delivered Worker module is
 `server/host/cloudflare.ts`: bind `ROOMS` to `JourneyRoom`, `REGISTRY` to
 `JourneyRegistry`, `ASSETS` to a scoped R2 bucket, and optional `STATIC` to the
 built canvas. Configure `JOURNEY_ORIGIN` and the digest-only `JOURNEY_GRANTS`
-binding. No Wrangler deployment or new resource is authorized here. A later
-deployment must separately select isolated resources, a secret wrapper and limits.
+binding. The current Free-only hosted setup omits R2 and reports assets unsupported;
+see the operations runbook for deployment inputs and its private operator bridge.
+A live run requires exact isolated resources, credential handling, measurement
+bounds and cleanup established before mutation.
 
 The registry owns grants, sessions, room inventory and asset associations.
 Each room owns tldraw SQLite and its sockets. A successful creation waits for
@@ -185,7 +193,8 @@ export/revocation when rolling back. Restore the prior code and point it at its
 unchanged legacy room/asset directories. Private storage stays separate; no
 automatic reverse migration or real retained-data import is provided.
 
-Before retained hosted use, independently validate this candidate and authorize
-specific disposable hosted Node/Cloudflare targets, trusted origins, licensing,
-provider costs and hibernation/recovery checks. No CI was added; CI cost per PR
-was not measured.
+Before retained use, complete the license and operating prerequisites in the
+operations runbook and independently validate the exact delivery. Accepted bounded
+native/browser and lifecycle evidence may be reused within its stated limits;
+it is not complete cost or retained-deployment acceptance. No CI was added;
+CI cost per PR was not measured.

@@ -55,3 +55,21 @@ real hibernation evidence. No resource provisioning, paid service, production
 rollout, retained-data migration or formal tldraw licensing decision is authorized.
 Those needs, broader browser origins or changed write semantics reopen the
 appropriate Captain decision.
+
+## Delivery scope amendment
+
+**Words:** 「可以，照最小範圍恢復交付：本機 Node、Cloudflare、Sites 入口跟 Claude／Codex CLI 共編，先補齊持續使用條件。Cloudflare 維持免費方案，用量明細只留本機，房間切換 UI 跟並發規則不動。」 — Kent, 2026-10-14
+
+**Options considered:** Resume the full original host matrix, or prepare the
+smaller local Node/Cloudflare/Sites/native-CLI slice while preserving existing
+capabilities and historical evidence.
+
+**Recommended:** Prepare the smaller slice with explicit license, scoped
+credentials, policy-aware backup, fresh restore and rollback prerequisites.
+Remote Node, hosted assets/photos, the original desktop plugin binding and Netlify
+are deferred. Independent operator scripts reuse the existing host metadata and
+recovery functions; no public admin route or new identity service is added.
+Restore quarantines all archived credentials because a backup cannot establish
+which IDs were revoked later. New IDs require deliberate current allowlists.
+Detailed operational evidence stays local; readiness, deployment and acceptance
+remain separate decisions.
