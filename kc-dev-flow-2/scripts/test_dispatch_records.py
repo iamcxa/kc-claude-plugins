@@ -87,7 +87,7 @@ class DispatchRecordTests(unittest.TestCase):
 
     def test_a_checklist_that_only_names_other_records_fails_but_one_citing_a_sibling_beside_real_lines_passes(self):
         pointer = COMPLETE.replace("1. Independent verdict on the exact candidate\n", "Same checklist as validation-1.\n")
-        two_lines = COMPLETE.replace("1. Independent verdict on the exact candidate\n", "Same checklist as validation-1.\nSee the items in validation-1.\n")
+        two_lines = COMPLETE.replace("1. Independent verdict on the exact candidate\n", "Same checklist as validation-1.\nSee validation-1 for the items.\n")
         beside_real = COMPLETE.replace("1. Independent verdict on the exact candidate\n",
                                        "1. Repeat the check from validation-1\n2. Independent verdict on the exact candidate\n")
         for label, text in (("one line", pointer), ("two lines", two_lines)):

@@ -33,7 +33,7 @@ SCRIPT_TOKEN = re.compile(r"(?<![\w./~-])([\w-]+\.py)(?!\w)")
 SCANNED = re.compile(r"^## (?:Checklist|Scope notes)[ \t]*$")
 
 
-POINTER_WORDS = {"same", "identical", "unchanged", "checklist", "items", "as", "in", "to", "of", "from", "the", "see", "and"}
+POINTER_WORDS = {"same", "identical", "unchanged", "checklist", "items", "as", "in", "to", "of", "from", "the", "see", "and", "for"}
 
 
 def is_pointer(line, others):
