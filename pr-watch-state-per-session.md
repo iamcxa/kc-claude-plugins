@@ -1,0 +1,28 @@
+---
+title: pr_watch.py state is shared by every FO session on a machine, so one session consumes another's changes
+variant: kc-dev-flow-2
+profile: pilot
+merge: pr
+status: backlog
+---
+
+Filed from a package-issue candidate the Captain approved on 2026-10-14 (「1,3」). On 2026-10-14 this workflow's FO ran `pr_watch.py wait` for its own PR and was woken by spacedock-dev/subspace-relay#368 ("checks pending -> green"), a PR the relay FO session had added; the wake consumed that change, so the relay FO's own `check` or `wait` would no longer report it.
+
+## Scope
+
+- `pr_watch.py` keeps one machine-local state file (`~/.local/state/kc-dev-flow-2/pr-watch.json`) for every session; `check` and `wait` report changes "since the last look" and record the look, so concurrent FO sessions in different repositories read and mark each other's PRs.
+- Containment used here: `--state /tmp/jm-fo/pr-watch.json` for this session; the relay FO was not told.
+- Candidate fix: a per-workflow or per-session default state path (for example keyed by the workflow directory), or per-PR seen markers per caller; plus the Delivery authority and mod text that name the command.
+- Related: `fo-lifecycle-mod` (its idle and startup steps run `pr_watch.py add` and `wait`).
+- Non-goals: to be set at ideation.
+
+## Acceptance criteria
+
+To be written at ideation.
+
+## FO alignment
+
+Alignment: not needed before ideation; the Captain approved filing it.
+Release review: not needed: workflow maintenance, on no journey map.
+Surfaces: none
+Visible change: none
