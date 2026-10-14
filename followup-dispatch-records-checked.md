@@ -272,3 +272,17 @@ PASSED at 12670427. The two rules reproduce the design's replays exactly (three 
 
 ### Summary
 The pointer rule now needs a record name plus only pointer words, so an action that names a sibling is a checklist of its own; the 15 archived pointer records still fail and the AC-1/AC-2 replays are unchanged. CI is green on 04b62f7e.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: FO ruling on #642 04b62f7e: restore the existing test line to "See validation-1 for the items." and add "for" to POINTER_WORDS
+  Commit 5567b82c (2 lines: "for" added to POINTER_WORDS, the test line restored); pushed without force.
+- DONE: Show the restored test red when "for" is removed from the set (one mutation)
+  Under `python3 -B`, with "for" out of the set the restored line fails test_a_checklist_that_only_names_other_records_fails_but_one_citing_a_sibling_beside_real_lines_passes [two lines] (the record passes instead of failing as pointer-only); with "for" in, 15 tests OK.
+- DONE: rerun the suite and the replays
+  test_dispatch_records.py 15 OK, test_replay_dispatch.py and test_lint_skills.py OK, lint-skills.py exit 0. Replay on learn-delivery-follow-through: implementation-3, -5, -7 fail on both rules, the nine others print nothing; the state checkout flags the same 15 pointer records (87 records now).
+- DONE: roborev gate, then CI green
+  `clean on 5567b82c3; evidence=roborev:644` (base 12670427). CI on 5567b82c: unit tests (python3), version parity, multi-profile route gate and GitGuardian pass (run 38488888627 and siblings). PR stays Draft.
+
+### Summary
+"for" is a pointer word again and the original test wording is restored; the flagged set and the AC-1/AC-2 replays are unchanged.
