@@ -26,7 +26,8 @@ WORKFLOW = "references/sd/workflow.md"
 # 5415: +4 for python3 before four script names, because the scripts are mode 100644 and exit 126 when run bare.
 # 5463: +48 for the scope-notes completion line, which FO writes into every dispatch and reads only here.
 # 5561: +98 for the two FO checks (dispatch_records.py --names, delivery_gate.py check) and the not-run and Applied wording, which FO reads only here.
-WORKFLOW_WORD_BUDGET = 5561
+# 5581: +20 for the follow-up record clause (Package root line, own checklist), which FO reads only here.
+WORKFLOW_WORD_BUDGET = 5581
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
 KNOWN_DUPLICATES = {

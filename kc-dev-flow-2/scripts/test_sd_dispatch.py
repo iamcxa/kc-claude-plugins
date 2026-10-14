@@ -122,7 +122,7 @@ FIXES = {
     "resumed-dispatch": dict(
         need=("A follow-up message to a worker FO resumes is a dispatch",),
         old=(),
-        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, and its record carries the same parts\. ", ""),)),
+        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, and its record carries the same parts(?:, including [^.]*)?\. ", ""),)),
     "adr-since": dict(
         need=("for each `ADR:` number the task's `## Number guards` reserves",
               "which requires every record the candidate added or changed",),
