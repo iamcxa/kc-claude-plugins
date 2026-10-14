@@ -731,3 +731,35 @@ The unchanged five offline steps verify saved evidence and source identity witho
 
 Retained-use preparation and the newly required bounded hosted operating path pass on the committed candidate, with recoverable evidence and verified cleanup. Retained serving remains NOT RUN pending applicable licensing and delivery acceptance; independent validation, complete measurement and the existing unavailable full guard remain distinct boundaries.
 The five offline steps verify source, receipts, review, hosted outcomes and cleanup without another provider or runtime test. Detailed identities, usage values and admission reproduction stay local; this report grants no publication or rollout authority.
+
+## Stage Report: validation
+
+- DONE: Verify the exact retained-readiness candidate against Captain amendment 6, including operator admission, scoped credentials, backup/fresh restore and rollback without changing the application contracts.
+  PASSED for bounded preparation at `e583b845184a499f90094af3fc4d08b0823a650b`: operator sources, actual local admission receipts and document/policy recovery evidence agree; application, UI and dependencies remain unchanged from the corrected candidate. Missing records, revived archived credentials or unauthorized delegation would invalidate those checks.
+- DONE: Assess the bounded hosted-operator outcome, failed-attempt accounting, cleanup and local-only measurement boundary while preserving prior accepted native-client/browser/hibernation evidence.
+  Raw hosted records/schema and policy changes match the original archive and requested revoke; expected refusal responses and independent absence inventories support the bounded result. Original failures remain intact; prior accepted suites were not repeated.
+- DONE: Provide an independent scoped verdict, required document/ADR/number-guard results, and a reproducible minimal acceptance script with remaining license and retained-deployment prerequisites explicit.
+  The five existing offline acceptance steps pass unchanged; local `validation-handback.md` records exact safe commands/outputs and prerequisites. Cleanup required read-only process-list permission after an initial sandbox denial; both outcomes remain recorded.
+- DONE: Independently verify source-to-proof identity and scope history.
+  Rebuilding product, operator and caller bundles in memory produces exactly the saved proof bytes. The clean candidate retains historical ancestry, prior gate records and the original acceptance clauses; altered source, proof inputs or history would fail these comparisons.
+- DONE: Assess recovery and operating safety at the claimed layer.
+  Existing synthetic checks exercise stopped-Node document/asset/policy recovery, fresh-target refusal, archived-ID quarantine and preservation of divergent work before rollback. Hosted proof adds complete document and policy readback; effective credential denial remains supported by local adapter checks. Stopped writers are an explicit operator precondition, not an enforced lock.
+- DONE: Verify cleanup without treating command success or failure as provider state.
+  Saved successful exact-resource inventories independently establish removal for all attempts; later deletion-command errors remain separate. Current local credentials/processes are absent. Routing evidence supports the fresh deployments' configured boundary, not exhaustive account route inventory.
+- DONE: Run required checks at the exact candidate and account for affected documents.
+  ADR lint from baseline `6d0f8da951b5ea9ea50fca6bd3685fc360bf502f`, requiring record 0015, exits 0; comment ratio, document impact, design surfaces, dispatch records and diff check exit 0. The sole added comment explains the recovery boundary; no comment repair is needed.
+- DONE: Assess retained documentation, goal sufficiency and minimal necessity.
+  Private-host and the authoritative private-operations runbook are updated; ADR 0015 preserves its history. Legacy journey documentation is unaffected because formats, defaults and behavior remain unchanged. Each retained helper/configuration supports the authorized recovery, admission or verification obligation; preparation is sufficient only within its stated delivery limits.
+- SKIPPED: Full task-aware number guard remains CONFIG ERROR / SKIPPED / NOT PASS.
+  The required invocation exits 2 because the database surface has no truthful migrations path in fresh-storage scope. The taskless supplement exits 0 while skipping unavailable checks; it does not replace a full pass. No invented path, migration or workflow repair was introduced.
+- SKIPPED: Applicable licensed rendering and retained service delivery remain unverified prerequisites.
+  The build uses an invalid synthetic license marker only. Owner use-case/licensing resolution and accepted retained build, hosting and entry-switch/rollback verification remain necessary; no development-build workaround or retained deployment is accepted here.
+- SKIPPED: Complete measurement and current plan/billing evidence remain unavailable.
+  Immediate scoped observations are empty, not zero; internal totals and complete cost attribution remain unverified. Prior same-conversation Free evidence is reused, with current-plan reread NOT SHOWN. Detailed measurements, resource identities and security evidence remain local.
+- DONE: Return the bounded verdict and pending delivery decision without taking gate authority.
+  No new Material or Polish finding is established. Needs decision: Captain's retained delivery/license acceptance; workflow: owner enabling retained service; harm: overstating preparation as delivered service; boundaries: `value-ac[AC-6]` and `value-ac[AC-5]`; trigger: no applicable licensed retained build or accepted retained switch exists. Deferred integrations remain outside this slice.
+
+### Summary
+
+PASSED for the authorized retained-use preparation and bounded hosted operator evidence at the exact candidate. Whole-pilot retained delivery remains unaccepted pending licensing and the retained serving/entry-switch prerequisites; incomplete measurement and the unavailable full guard remain explicit.
+The five offline steps are reproducible from the local handback without another provider or runtime test. Validation made no product change, cloud request, gate/frontmatter edit, publication, PR or merge; only conclusions are recorded here.
