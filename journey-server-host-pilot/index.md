@@ -164,7 +164,8 @@ Verified by: Shared operation ownership and adapter dependency review, a bounded
 
 ADR: 0015
 Applied at: disposable Cloudflare validation 869b9d6ca2d4b02a9bb4f38c7613e5096373f83f
-Applied at: disposable private-operator validation 6d2cb601a605f846d6ebf8e619e3f662336eaeb3
+Not applied: disposable private-operator validation 6d2cb601a605f846d6ebf8e619e3f662336eaeb3 - producer confirmed no cloud mutation before the heading-only repair
+Applied at: disposable private-operator validation a361ebdf2df9a8b1321e4c655db65f856a8b3de8
 Not applied: no deployment, provider provisioning or persistent retained-data migration is authorized. Implementation uses fresh synthetic private storage only; no migrations directory is configured.
 
 
