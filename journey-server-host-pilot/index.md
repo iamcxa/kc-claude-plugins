@@ -1,6 +1,6 @@
 ---
 title: Use one private kc-jmap server contract on Node and Cloudflare
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -455,6 +455,11 @@ Supersedes: none
 Captain: 「同意最小修正並重測（建議）」 (this conversation, async reply)
 Asked: 「雲端 HTTP／MCP 讀寫已通過，但候選版有持續計時器，會妨礙房間休眠。你這輪要求保留候選版並補驗證；是否同意另做一個最小修正版本，只調整 Cloudflare 的休眠設定，再驗證休眠恢復與用量？原候選 commit 保留，Node、房間切換 UI 與並發規則不變。」
 Supersedes: none
+
+### Amendment 6 — 2026-10-14, chat
+Captain: 「可以，照最小範圍恢復交付：本機 Node、Cloudflare、Sites 入口跟 Claude／Codex CLI 共編，先補齊持續使用條件。Cloudflare 維持免費方案，用量明細只留本機，房間切換 UI 跟並發規則不動。」 (this conversation)
+Supersedes: AC-1
+Design: Delivery scope and retained-use readiness; remote Node is deferred from this delivery.
 
 
 ## Stage Report: implementation
