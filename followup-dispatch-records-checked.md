@@ -288,3 +288,17 @@ The pointer rule now needs a record name plus only pointer words, so an action t
 
 ### Summary
 "for" is a pointer word again and the original test wording is restored; the flagged set and the AC-1/AC-2 replays are unchanged.
+
+## Stage Report: implementation (cycle 5)
+
+- DONE: Phase 1 for Codex round-2 P2 (review:5511597658): reproduce the `.md` and link forms on 5567b82c, check real records, send FO the fix
+  Six forms ("... as validation-1.md.", backticked, `[validation-1](validation-1.md)`, `./`, `./dispatch/`, `../dispatch/` link) passed as actions; 0 of 89 real records use them. Sent to main before any edit.
+- DONE: After FO's authorization: widen the stem pattern in `is_pointer` (optional directory prefix, optional `.md` suffix, boundaries kept), two tests, three mutations each shown red
+  Commit 4b59d1ea. test_dispatch_records.py 17 tests OK (was 15). Under `python3 -B`: dropping the `.md` suffix fails 6 subtests (all six forms); dropping the directory prefix fails 2 (`./dispatch/...`, `../dispatch/...` link); widening the suffix to `\.md\w*` fails the `validation-1.mdx` subtest of the not-a-pointer test.
+- DONE: rerun the replays
+  learn-delivery-follow-through: implementation-3, -5, -7 fail on both rules, the nine others print nothing; the state checkout (90 records) flags the same 15 pointer records as before. test_replay_dispatch.py, test_lint_skills.py OK, lint-skills.py exit 0.
+- DONE: roborev gate, push, CI green
+  `clean on 4b59d1ea1; evidence=roborev:645` (base 12670427). Pushed without force; unit tests (python3), version parity, multi-profile route gate and GitGuardian pass on 4b59d1ea. PR stays Draft.
+
+### Summary
+A record named with a path, `.md` suffix or link now counts as a pointer name, so the six forms fail as pointer-only while a link beside a verb, `my-validation-1.md` and `validation-1.mdx` still pass. The flagged set and the AC-1/AC-2 replays are unchanged.
