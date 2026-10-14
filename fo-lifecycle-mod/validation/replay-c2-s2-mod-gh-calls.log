@@ -1,0 +1,5 @@
+2026-10-14T03:22:34.892941 gh pr view 360 --json state --jq .state
+2026-10-14T03:22:34.928180 gh pr view 362 --json state --jq .state
+2026-10-14T03:22:58.490383 gh repo view /tmp/replay-c2/s2-mod/origin.git --json nameWithOwner --jq .nameWithOwner
+2026-10-14T03:22:58.533897 gh pr view 362 --repo spacedock-dev/subspace-relay --json state --jq .state
+2026-10-14T03:22:58.575192 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,headRefName --jq .state+" "+.headRefName

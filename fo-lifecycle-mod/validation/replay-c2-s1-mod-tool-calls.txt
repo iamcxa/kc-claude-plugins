@@ -1,0 +1,10 @@
+ 1 Skill: 'skill=spacedock:first-officer args='
+ 2 Bash: 'git status -sb | head -5 && git log --oneline -3 && gh pr list --state open 2>&1 | head -10; ls docs/dev/ 2>/dev/null; grep -rn "pr:" docs/dev/*.md 2>/dev/null | grep -v "pr: *$" | head'
+ 3 Bash: 'ls docs/dev/_mods; grep -rln "^pr:" --include=*.md . 2>/dev/null | head; grep -n -i "merge\\|delivery authority" docs/dev/README.md | head -20'
+ 4 Bash: "sed -n 50,70p docs/dev/README.md; sed -n 136,160p docs/dev/README.md; find docs -path '*spacedock-state*' -o -name '*.md' -path '*tasks*' | head; gh pr list --state open --repo $(gh repo view --json nameWithOwner -q .nameWithOwner"
+ 5 Bash: 'for d in docs/dev2/.spacedock-state docs/dev/.spacedock-state; do [ -d $d ] && (cd $d && grep -l "^pr: *[#0-9]" *.md 2>/dev/null | while read f; do echo "$d/$f: $(grep -m1 \'^status:\' $f) $(grep -m1 \'^pr:\' $f)"; done); done; gh pr '
+ 6 Bash: 'git remote -v | head -2; gh pr view 362 --json state,title,mergeable,headRefName 2>&1 | head; sed -n 1,30p docs/dev2/.spacedock-state/owner-sees-all-feedback-room.md'
+ 7 Bash: 'f=docs/dev2/.spacedock-state/owner-sees-all-feedback-room.md; grep -n "stage:\\|decision:\\|reason:\\|mod-block\\|^pr:" $f; gh pr checks 362 2>&1 | head; sed -n \'/^---$/,$p\' $f | tail -40'
+ 8 Bash: 'grep -n -i "authority\\|captain\\|gh pr merge\\|approv" docs/dev/_mods/pr-merge.md | head -40; gh pr view 362 --json headRefOid,baseRefName,statusCheckRollup 2>&1'
+models {'claude-opus-5-5'} ncalls 8
+tokens (opus-5-5 stream result): input 18, cache-creation 50001, cache-read 413781, output 3257; num_turns/duration: 10 duration_ms 40324
