@@ -532,12 +532,19 @@ class WaitNextTests(unittest.TestCase):
                 self.assertEqual(self.wait(then, first), expected)
 
     def test_a_start_that_is_not_an_outcome_prints_no_next_line(self):
+        class Stopped(Exception):
+            pass
+
+        def stop(seconds):
+            raise Stopped
+
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
             out = io.StringIO()
             with contextlib.redirect_stdout(out):
                 watch.main(["--state", str(state), "add", REF], look=lambda ref, **kw: snap(checks="none"))
-                watch.main(["--state", str(state), "wait", "1"], look=lambda ref, **kw: snap(checks="pending"), sleep=lambda s: (_ for _ in ()).throw(StopIteration))
+                with self.assertRaises(Stopped):
+                    watch.main(["--state", str(state), "wait", "1"], look=lambda ref, **kw: snap(checks="pending"), sleep=stop)
             self.assertNotIn("next:", out.getvalue())
 
 
