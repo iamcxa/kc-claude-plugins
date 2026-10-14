@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-lifecycle-mod:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approving accepts D1 (two mod files, observe-merged.md before pr-merge and watch-and-learn.md after) and D2 (no drift-check script; copy plus cmp in adoption.md) as recommended, and D3 with FO's change: the replay starts with the S2 chat-cue pair (one control, one mod, claude-opus-5-5) as a go/no-go, and the remaining nine runs happen only if the mod arm changes the outcome; FO reports the measured token use of the pair before continuing.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-lifecycle-mod:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9d9e09b01f04b35c0c94659d9985448bb77a860c/fo-lifecycle-mod.md",
+      "rev": "sha256:c9996699216e9b5dee03aa4335d5a6dfb4f46b480095ca411c7f4a968a028824",
+      "mediaType": "text/markdown",
+      "summary": "Ideation PASSED its checklist (cycle 2, after cycle 1 held on FO's missing alignment Result: line). Design: two Spacedock mod files on the existing startup/idle/merge points, no Spacedock change; observer_check before pr-merge's sentinel (observe-merged.md), pr_watch add/wait, the delivery_gate head check and learn after the archive (watch-and-learn.md); merge hook only adds the watch; startup notices stay in kc-dev-flow-2:dev. README: 140 words move, 62 return, 5561 -\u003e 5483. Probe on spacedock 0.27.2: two files keep merge guard arming merge:pr-merge; one file arms merge:dev2-all. AC-1..AC-7; AC-4..AC-7 unverified until implementation. Main risk (design Limits): the relay FO answered the Captain's chat cue without opening pr-merge's idle hook, so a mod is read only when FO runs hooks.run; AC-5's verbatim-cue replay measures it, which is why FO puts that pair first. Unverified by FO: the design's flow says pr-merge's merge hook creates the PR, while in this workflow the implementation worker opens it; implementation must confirm how the merge hook behaves when the pr field is already set. design_surfaces.py check presentable, exit 0."
+    }
+  ]
+}

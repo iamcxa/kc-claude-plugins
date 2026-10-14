@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:fo-lifecycle-mod:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:fo-lifecycle-mod-ideation-1
+              briefing:
+                id: briefing:fo-lifecycle-mod:ideation:attempt-1:revision-1
+                digest: sha256:1ffe660137e16df3d6fec49c60101add0a07d39c78b06e01bf51f3f1dc49b3e8
+                room-ref: ./fo-lifecycle-mod/review/ideation/briefing-1
 started: 2026-10-13T23:51:23Z
 ---
 
