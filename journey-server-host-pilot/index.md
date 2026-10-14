@@ -639,3 +639,35 @@ The minimal five-step acceptance stays unchanged and verifies saved claims plus 
 ### Summary
 
 The frozen corrected candidate now passes actual Claude Code/Codex CLI and private Sites browser cooperation, reload persistence and bounded room isolation, with original Site/data restored and disposable resources removed. Measurement remains partial and exact browser wire counts unavailable. Detailed receipts and the five-step offline acceptance stay local; this conclusions-only report does not accept the whole pilot or change gate/frontmatter state.
+
+## Stage Report: validation
+
+- DONE: Independently verify the frozen corrected candidate against raw native Claude/Codex tool receipts and Sites browser evidence: shared-room read/write, browser create/edit/reload/readback, room isolation and scoped denial; distinguish CLI proof from the old chat plugin.
+  PASSED for bounded operation coverage: actual native tool-result payloads and inspected browser images support shared notes, browser editing/reload, exact cross-client shape identity, separate-room shape isolation and scoped denial. Old desktop-plugin results and final model prose are not used as new-candidate proof.
+- DONE: Verify private Site restoration and disposable backend/configuration cleanup, Free-only scope and local-only usage detail; assess missing measurements honestly without inventing exact wire counts or a complete bill.
+  Exact saved Site version and original records/revisions are restored; temporary configuration and served test entry are removed. Separate successful inventories support backend removal despite later deletion-CLI errors. Plan scope is preserved; provider measurement is PARTIAL and exact aggregate wire-budget compliance is unproven.
+- DONE: Preserve Node, room UI, concurrency and product-source boundaries; provide a conclusions-only validation report with a minimal reproducible acceptance script and an explicit bounded result while whole-pilot delivery stays held.
+  Candidate and dependencies remain frozen and clean. The unchanged five-mode offline acceptance passes; exact commands, outputs and detailed evidence remain local. No product change, deployment, provider call, new native/browser run or broad suite was performed by validation.
+- DONE: Review native-client provenance and preserved failure evidence.
+  Actual Claude tool-use/result pairs and Codex native tool completions prove the reads and writes. The first Codex local approval denial remains preserved; the sole wiring correction affects ephemeral per-tool configuration only. The first controller serialization defect reconstructs to the retained parsed receipt without changing product behavior.
+- DONE: Independently compare browser identity and the narrower isolation claim.
+  Both native readbacks contain identical full shared-room shape states and exact browser-created identity. All prior separate-room records remain equal; only the matching browser user record is added. Unchanged source supports user registration, but the precise creation time was not sampled; whole-array identity is not claimed.
+- DONE: Inspect visual and restoration evidence beyond checker summaries.
+  Recovered shared-room, isolated-room, rollback-not-found and original-canvas images agree with raw native and provider receipts. The exact immutable baseline is served again; original data and environment keys are preserved, and only original browser tabs remain in the saved final inventory. Test history remains recoverable and unserved.
+- DONE: Map new client and authorization coverage explicitly.
+  `value-ac[AC-1]`: adds real native command-line clients and Sites-browser cooperation on the hosted candidate, not the old chat plugin or remote Node. `value-ac[AC-3]`: shared-room success, separate-room shape/prior-record preservation and scoped denial pass; direct session-entry and exhaustive admission/race matrices are not newly verified.
+- DONE: Preserve compatibility, persistence and minimal-scope boundaries.
+  `value-ac[AC-2]`: frozen contracts and concurrency, prior broad checks not repeated. `value-ac[AC-4]`: browser reload and exact native readback pass; accepted lifecycle evidence is unchanged. `value-ac[AC-5]`: reversible private wiring and cleanup are supported; complete operational and license acceptance is not inferred.
+- DONE: Rerun only required narrow workflow checks and existing offline acceptance.
+  ADR lint, comment ratio, document impact, design surfaces, dispatch records and diff check pass; the reserved architecture record and no-SQL-change boundary remain. Private-host documentation remains updated; legacy journey documentation is unaffected. Missing browser notes, altered original records or dirty candidate would fail the existing acceptance.
+- SKIPPED: Full task-aware number guard remains CONFIG ERROR / SKIPPED / NOT PASS.
+  The declared database surface still lacks a migration path; the existing disposition remains. The supplemental available check does not replace the full guard, and no path, surface or helper was changed to turn it green.
+- SKIPPED: Complete measurement, direct entry and remaining whole-pilot obligations remain outside the proven result.
+  Deferred risk: future direct browser/plugin, remote-host, asset or production use; no harm demonstrated here; boundaries `value-ac[AC-1]`, `value-ac[AC-3]`, `value-ac[AC-4]`, `value-ac[AC-5]`; trigger evidence is scoped native/proxy development use with remaining unrun routes. A supported promised-route failure would make the relevant issue Material.
+- DONE: Return the measurement and delivery decision without broadening authority.
+  Needs decision: Captain's limited-use acceptance; harm would be overstating exact budget compliance or full readiness; boundary `value-ac[AC-5]`; trigger is missing browser frame counts plus partial billing/platform/license evidence. No overrun or new Material product defect is demonstrated. Material and Polish: none newly established.
+
+### Summary
+
+PASSED for the authorized native-client/Sites operation coverage, with supported restoration and cleanup. Usage remains PARTIAL, exact aggregate wire-cap compliance is unproven, and whole-pilot delivery remains held.
+The unchanged five offline steps verify saved evidence and source identity without a live retest. Detailed evidence stays local; validation did not alter gate, frontmatter or correction-round state, and grants no product publication or merge authority.
