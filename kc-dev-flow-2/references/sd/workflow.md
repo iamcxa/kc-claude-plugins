@@ -243,8 +243,7 @@ repair is dispatched under the lane in Stages.
 Consuming a terminal gate approval is not completion (`spacedock merge guard --help`);
 a live run requires the declared delivery evidence and successful `merge guard` with
 an explicit verdict. Apply Delivery authority below; a pending PR or missing hook is
-not completion. An archived task's state is publish-only, so `python3 <package>/scripts/observer_check.py`
-runs before the sentinel.
+not completion.
 
 ## Dispatch facts
 
@@ -519,25 +518,24 @@ merge, or clean up an owned worktree unless the specific action is authorized. A
 upstream hook's default fallback is not that grant. A failure holds delivery pending an
 explicit choice.
 
-Use SD's pending terminal approval and existing merge hook; do not invent another
-PR stage. Observe the actual repository-qualified PR merge before recording its
-landed sentinel and running SD merge guard to finalize/archive. Where `learn` is listed, run
-`python3 <package>/scripts/observer_check.py <state> <slug>` before the sentinel and follow its exit
-as the learn extension says; the pr-merge hooks run the sentinel and `merge guard` together. CI green, PR
-creation, gate approval and a locally manufactured sentinel do not prove merge.
+The implementation stage opens the Draft PR before validation, so external review
+runs before the delivery gate, and FO records it in `pr` as `<owner/repo>#<N>`
+(ADR 0015); with `pr` set `merge guard` arms no merge hook. Observe the actual
+repository-qualified PR merge before recording its landed sentinel and running SD
+merge guard to finalize/archive. Where `learn` is listed, the sentinel waits for the
+committed observer report; the learn extension owns the check. The pr-merge hooks run the sentinel and
+`merge guard` together. CI green, PR creation, gate approval and a locally
+manufactured sentinel do not prove merge.
 
 A PR delivers only the commit on its head. Before asking for merge, FO confirms the
 PR head equals the candidate the latest passing validation report names; a repair
 validated after the PR was opened reaches the PR only when that exact commit is
-pushed to its branch. Before the `gate prepare` that asks for merge, FO runs
-`python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`;
-exit 1 or 2 holds the ask, FO shows the Captain what it printed, and a differing head is revalidated or its
-difference told to him first.
+pushed to its branch. A differing head is revalidated, or its difference told to the
+Captain, before the ask.
 
-FO adds each PR it opens or pushes to with `python3 <package>/scripts/pr_watch.py add
-<owner/repo>#<N>` and keeps `<package>/scripts/pr_watch.py wait` running in the
-background while one is open; its exit names the merge, close, conflict, CI or Codex
-change, and FO acts on it then instead of waiting to be told.
+FO's steps at the startup and idle points are in `_mods/observe-merged.md` and
+`_mods/watch-and-learn.md`, copied unchanged from `<package>/references/sd/mods/`; a
+missing or changed copy holds delivery, as for `pr-merge.md` above.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs

@@ -14,7 +14,7 @@ IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NA
             "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
 SLUG = "some-task"
 # Every text an FO reads on the way to the sentinel must name the check.
-NAMES_THE_CHECK = ("extensions/learn/EXTENSION.md", "references/sd/workflow.md", "skills/dev/SKILL.md")
+NAMES_THE_CHECK = ("extensions/learn/EXTENSION.md", "references/sd/mods/observe-merged.md", "skills/dev/SKILL.md")
 
 
 def git(where, *args):
@@ -161,7 +161,7 @@ class NamedWhereFoReadsTest(unittest.TestCase):
 
 
 class DocumentedInvocationTest(unittest.TestCase):
-    INSTRUCTION_FILES = ("extensions/learn/EXTENSION.md", "references/sd/workflow.md", "skills/dev/SKILL.md",
+    INSTRUCTION_FILES = ("extensions/learn/EXTENSION.md", "references/sd/mods/observe-merged.md", "skills/dev/SKILL.md",
                          "skills/observer/SKILL.md")
     NAMED = re.compile(r"<package>/scripts/([a-z_]+\.py)")
 
