@@ -696,3 +696,38 @@ The frozen corrected candidate now passes actual Claude Code/Codex CLI and priva
 
 PASSED for the authorized native-client/Sites operation coverage, with supported restoration and cleanup. Usage remains PARTIAL, exact aggregate wire-cap compliance is unproven, and whole-pilot delivery remains held.
 The unchanged five offline steps verify saved evidence and source identity without a live retest. Detailed evidence stays local; validation did not alter gate, frontmatter or correction-round state, and grants no product publication or merge authority.
+
+
+## Stage Report: implementation
+
+- DONE: Apply Captain amendment 6 to the current delivery contract and prepare the smallest retained-use setup for local Node, Cloudflare, Sites and native Claude/Codex CLI, with exact supported boundaries and no changes to room UI, concurrency or existing Node behavior.
+  AC-6 records the narrowed delivery; the original AC-1 block remains verbatim in the amendment history. Candidate `e583b845184a499f90094af3fc4d08b0823a650b` retains both historical candidates as ancestry.
+- DONE: Complete concrete operator credential, backup/restore and rollback materials, validate new local operational paths with synthetic data, and establish licensing plus practical payload/usage evidence or precise remaining external blockers without repeating accepted green suites.
+  The authoritative operator runbook and isolated helpers cover credential rotation/revocation, complete document/policy recovery, fresh targets and rollback; fixture evidence and licensing/measurement limits remain explicit.
+- DONE: Deliver committed minimal changes, recoverable local-only evidence and a conclusions-only Stage Report with an exact offline acceptance script; keep Free-only authority and privacy intact and distinguish deploy-ready preparation from retained deployment, review, merge or whole-pilot acceptance.
+  The local handback preserves exact source/configuration identities, failed and successful receipts, required checks, cleanup and five offline acceptance commands. No product publication, PR, merge or retained deployment occurred.
+- DONE: Validate stopped-Node recovery and policy preservation using the existing host controls.
+  Actual synthetic storage roundtrip, fresh-target refusal, archived-credential quarantine and preservation of divergent work pass; loss of records/assets, reuse of old authorization or overwrite of an existing target would fail these checks.
+- DONE: Validate the new private Cloudflare operating path through the actual hosted service binding.
+  Fresh restore, complete document readback, revoke and policy readback pass; existing-target restore and unsupported operations are refused. Local binding tests alone are not used as hosted proof.
+- DONE: Correct and verify the operator admission finding within the separately authorized scope.
+  The local caller passes positive and negative admission checks on the actual development tool, with no denied-case delegation. Application-server, UI, library and dependency files remain unchanged from the corrected base.
+- DONE: Preserve failure evidence and independently verify cleanup.
+  Both earlier failed attempts remain intact. The final bounded synthetic attempt passes with verified removal of the owned provider resources, local process and temporary credential; deletion-command errors remain separate from independent absence evidence. The earlier underlying startup cause remains unproven.
+- DONE: Run the affected local checks and bind the required review to the exact committed candidate.
+  Recovery, private binding, admission, rollback, absent-asset capability and normal license-input build checks pass. The required review is clean at the candidate above; historical review findings remain preserved with their dispositions.
+- DONE: Run applicable workflow and document checks and account for retained documents.
+  ADR lint, document impact, design surfaces, dispatch records and diff check pass. Comment ratio is 305 code lines and one comment line, 0.3%, within the configured maximum. Architecture record 0015 preserves history; private-host and private-operations are updated. Legacy journey documentation is unaffected because its format and behavior did not change.
+- SKIPPED: Full task-aware number guard remains CONFIG ERROR / SKIPPED / NOT PASS under the existing disposition.
+  The required invocation still has no declared migration path for the database surface. Supplemental available checks pass but do not replace the full guard; no invented path, workflow repair or SQL migration was introduced.
+- SKIPPED: Valid licensed rendering and retained serving remain external prerequisites.
+  Existing license-input wiring is proven with an invalid synthetic marker only. The owner must obtain or confirm a license covering actual retained use and domains; no license bypass, application, terms acceptance or retained development-mode workaround occurred. Sites state is unchanged.
+- SKIPPED: Complete cost attribution, current-plan reread and exact internal operation accounting are not established.
+  Prior established Free-plan authority and current same-account verification support the bounded proof; today's plan reread is unavailable. Immediate task-scoped observations are empty, not zero usage. Detailed accounting stays local and missing provider/internal totals remain unverified.
+- SKIPPED: Deferred integrations and repeated historical suites remain outside this readiness delivery.
+  Remote Node, hosted assets/photos, original desktop plugin binding, Netlify and room-switching UI remain deferred. Accepted native-client, Sites browser and hibernation suites were preserved without repetition; no whole-pilot acceptance is inferred.
+
+### Summary
+
+Retained-use preparation and the newly required bounded hosted operating path pass on the committed candidate, with recoverable evidence and verified cleanup. Retained serving remains NOT RUN pending applicable licensing and delivery acceptance; independent validation, complete measurement and the existing unavailable full guard remain distinct boundaries.
+The five offline steps verify source, receipts, review, hosted outcomes and cleanup without another provider or runtime test. Detailed identities, usage values and admission reproduction stay local; this report grants no publication or rollout authority.
