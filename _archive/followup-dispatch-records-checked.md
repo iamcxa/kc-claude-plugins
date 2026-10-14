@@ -3,7 +3,7 @@ title: dispatch_records.py passes a follow-up dispatch record that lacks the Pac
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved delivery of #642 at 3a981251 (「准」): FO marks it ready and asks to merge; later external-review rounds covered per Delivery authority.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-13T15:57:28Z
 worktree: .worktrees/spacedock-ensign-followup-dispatch-records-checked
 pr: pr-merge:642
+verdict: PASSED
+completed: 2026-10-14T02:56:08Z
+archived: 2026-10-14T02:56:09Z
 ---
 
 Filed from a learn package-issue candidate the Captain approved on 2026-10-13 (「按建議1,3」), after the observer report on task `learn-delivery-follow-through` (PR #639) found follow-up dispatch records `implementation-3.md`, `-5.md` and `-7.md` with no `Package root:` line and a checklist that reads "Same checklist as implementation-N." The README Stages rules already require both parts on a follow-up message's record, and learn judged it no-change for that reason: the rule exists and was not followed.
