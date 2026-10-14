@@ -81,6 +81,14 @@ gates:
                 id: briefing:journey-server-host-pilot:validation:attempt-3:revision-1
                 digest: sha256:d2b41b8461e400acf2bdd1c7dff68bac8d31dbeaf24e052ef8775bec7a2f10c2
                 room-ref: ./review/validation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-server-host-pilot:validation:3
+                briefing: briefing:journey-server-host-pilot:validation:attempt-3:revision-1
+                by: person:captain
+                at: "2026-10-14T01:57:49.516863Z"
+                decision: hold
+                reason: 'Captain accepts the bounded continuation results and preserves the corrected candidate, while explicitly holding whole-pilot delivery. Exact words: 可以，接受本輪結果並保留修正版，整體 pilot 交付先暫緩。接著先補新版 Claude／Codex 與 Sites 畫布的實際操作驗證，Cloudflare 維持免費方案，用量明細只留本機，Node、房間切換 UI 跟並發規則不動。 This gate closes the accepted evidence round without terminal advancement. The second sentence independently authorizes the next bounded native-client and Sites validation; it is not rejection of the passed lifecycle evidence or product publication authority.'
 started: 2026-10-13T08:47:34Z
 id: journey-server-host-pilot
 review-round:
