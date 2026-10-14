@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-13T15:57:28Z
 worktree: .worktrees/spacedock-ensign-followup-dispatch-records-checked
-pr: iamcxa/kc-claude-plugins#642
+pr: pr-merge:642
 ---
 
 Filed from a learn package-issue candidate the Captain approved on 2026-10-13 (「按建議1,3」), after the observer report on task `learn-delivery-follow-through` (PR #639) found follow-up dispatch records `implementation-3.md`, `-5.md` and `-7.md` with no `Package root:` line and a checklist that reads "Same checklist as implementation-N." The README Stages rules already require both parts on a follow-up message's record, and learn judged it no-change for that reason: the rule exists and was not followed.
