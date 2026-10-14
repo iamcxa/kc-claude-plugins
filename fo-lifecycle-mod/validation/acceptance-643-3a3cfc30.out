@@ -1,0 +1,48 @@
+STEP 1: check out the PR head 3a3cfc30 (base origin/main 0cdb40a7) in a throwaway worktree; the README is at its word budget and names only delivery_gate.py of the three FO scripts; the one mod is 48 words
+3a3cfc30 fix(kc-dev-flow-2): pr_watch.py tasks reads a task filed as <
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+pr_watch.py named in the README: 0
+delivery_gate.py named in the README: 1
+observer_check.py named in the README: 0
+mod words:       48
+STEP 2: the mod sorts before pr-merge, adds no merge hook, merge guard still arms pr-merge, and the mod names no missing script (about 30 s)
+exit 0
+PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that
+STEP 3: the unit suites for the scripts (pr_watch, delivery_gate, observer_check) pass
+test_pr_watch: Ran 58 tests in 9.931s  OK 
+test_delivery_gate: Ran 13 tests in 0.024s  OK 
+test_observer_check: Ran 19 tests in 6.584s  OK 
+STEP 4: pr_watch.py tasks prints facts and the kept steps, never a merge-ask or hold line, and sees a task filed as <slug>/index.md; it reads the same task files as spacedock status (stub gh, scratch workflow)
+[green ready PR, codex and copilot listed]
+[green draft]
+[no CI runs, quiet 100 s]
+[merged PR, no observer report]
+[merged PR, report committed]
+[empty pr, branch has an OPEN PR]
+[folder-form task, empty pr, branch has an OPEN PR]
+[folder-form task, merged PR, no observer report]
+[flat task beside a sidecar folder and reserved folders]
+PASS: tasks prints facts and the kept steps, and no merge-ask or hold line, and reads a <slug>/index.md task, in all nine cases
+exit 0
+spacedock  : ['blank', 'bom', 'flat', 'folder', 'folderfile.md', 'linkdir', 'linkflat', 'sidecar']
+entities() : ['blank', 'bom', 'flat', 'folder', 'folderfile.md', 'linkdir', 'linkflat', 'nofence', 'nofencedir', 'sidecar']
+PASS: tasks reads the same task files as spacedock status (flat, folder form, sidecar folder, symlinks; _archive, _mods, dot entries skipped); only spacedock's BOM and leading-blank-line tolerance is not shared (ruled out of scope)
+exit 0
+STEP 5: FO reads fewer words than on origin/main at every moment (recount from the shipped scripts behind a stub gh)
+moment | today (words FO read on origin/main 0cdb40a7) | shipped | verdict
+1 startup, one open PR: today 513 | shipped 440 | OK
+2 idle, open PR, green draft (tasks pending): today 427 | shipped 408 | OK
+2b same, tasks run on the green draft: today 427 | shipped 416 | OK
+3 idle, merged PR, no report, rerun: today 462 | shipped 377 | OK
+4 after the archive: today 211 | shipped 55 | OK
+5 merge ask: today 423 | shipped 419 | OK
+total: today 2036 | shipped 1699 | OK
+exit 0
+STEP 6: a copied mod must match the package byte for byte; the ADR is well formed; no number is taken twice
+cmp exit 0
+cmp exit 1 (after one appended byte)
+15 ADR file(s) checked, 0 legacy
+adr_lint exit 0
+PASS: no findings
+number_guards exit 0
+cleanup done
