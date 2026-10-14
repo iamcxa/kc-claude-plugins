@@ -163,6 +163,21 @@ the same valid digest-only grant binding. Keep `workers_dev:false`,
 state after deployment; configuration text alone is not absence evidence.
 
 Copy `private-cloudflare-client.example.json` and bind `OPERATOR` to that bridge.
+Create a fresh local operator credential in a protected `.dev.vars` file beside
+that copied client configuration, outside Git. Wrangler loads it as a local
+secret binding; never add it to `vars`, command arguments or shared evidence:
+
+```sh
+umask 077
+node --input-type=module <<'JS'
+import { randomBytes } from 'node:crypto'
+import { writeFileSync } from 'node:fs'
+writeFileSync('/absolute/private-operator/.dev.vars',
+  'JOURNEY_OPERATOR_TOKEN=' + randomBytes(32).toString('base64url') + '\n',
+  { mode: 0o600, flag: 'wx' })
+JS
+```
+
 Run this client **locally only**, through an already authenticated Wrangler:
 
 ```sh
@@ -174,12 +189,34 @@ credentials stay in Wrangler's supported authentication storage/environment.
 Do not deploy the local client or expose its loopback port to another machine.
 Agent grants cannot call this administration surface.
 The CLI-only local handler rejects requests with a present Origin header and
-requires `Content-Type: application/json` before delegation.
+requires `Content-Type: application/json` and the fresh local bearer credential
+before delegation. Missing configuration or credentials fail closed. This local
+credential is separate from agent grants and Cloudflare authentication.
 The local caller's compatibility date also works with Wrangler 4.92.0's bundled
 runtime. Backend and operator bridge keep their own later compatibility date.
 
 Send one JSON POST to the local client; save backup responses directly to a
-mode-0600 local file without logging or displaying their document bodies:
+mode-0600 local file without logging or displaying their document bodies.
+For example, save the intended operation to `request.json`, then use a process
+that reads the local credential internally:
+
+```sh
+node --input-type=module <<'JS'
+import { readFileSync, writeFileSync } from 'node:fs'
+const dir = '/absolute/private-operator/'
+const token = readFileSync(dir + '.dev.vars', 'utf8')
+  .split('\n').find(line => line.startsWith('JOURNEY_OPERATOR_TOKEN=')).split('=')[1]
+const response = await fetch('http://127.0.0.1:8790/', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token },
+  body: readFileSync(dir + 'request.json', 'utf8'),
+})
+if (!response.ok) throw new Error('Operator request failed: ' + response.status)
+writeFileSync(dir + 'response.json', await response.text(), { mode: 0o600, flag: 'wx' })
+JS
+```
+
+Supported request bodies:
 
 ```json
 {"op":"backup","writersStopped":true}
@@ -195,8 +232,8 @@ After errors, retain the partial target until understood, then remove only the
 owned disposable target. Revocation calls the registry's existing close/readback
 path; a partial result must be retried before restoring access.
 
-At completion stop the loopback client, delete only its temporary bridge Worker,
-and verify the bridge is absent. Deleting that Worker must not delete backend
+At completion stop the loopback client, remove its local credential file, delete
+only its temporary bridge Worker, and verify the bridge is absent. Deleting that Worker must not delete backend
 namespaces. Namespace deletion is reserved for the explicitly disposable backend,
 after required backups and rollback checks; never delete retained namespaces as
 routine cleanup. Local tests prove binding delegation, not hosted Wrangler

@@ -21,6 +21,7 @@ const scratch = await mkdtemp(join(root, '.host-check/readiness-'))
 const report: any = { runtime: process.version, checks: [], payloads: [], hosted: 'NOT RUN', retainedDeployment: 'NOT RUN' }
 const check = async (name: string, fn: () => Promise<void>) => { await fn(); report.checks.push(name); console.log('PASS: ' + name) }
 const secret = randomBytes(32).toString('base64url')
+const operatorToken = randomBytes(32).toString('base64url')
 const grant = (credentialId: string, revoked = false) => ({ credentialId, principalId: 'synthetic-operator', rooms: ['shared'], expiresAt: Date.now() + 3600_000, revoked, secretDigest: createHash('sha256').update(secret).digest('hex') })
 const originalGrants = [grant('old'), grant('revoked', true)]
 const freshGrants = [grant('fresh')]
@@ -45,14 +46,18 @@ let mf: Miniflare | undefined
 try {
  await check('local operator client rejects browser headers and non-JSON requests before delegation', async () => {
   let delegated = 0
-  const stub = { OPERATOR: { fetch: () => { delegated++; return new Response('allowed') } } }
+  const stub = { JOURNEY_OPERATOR_TOKEN: operatorToken, OPERATOR: { fetch: (request: Request) => { assert.equal(request.headers.has('authorization'), false); delegated++; return new Response('allowed') } } }
   for (const value of ['https://untrusted.example.invalid', 'null', '']) {
    assert.equal((await privateClient.fetch(new Request(origin, { method: 'POST', headers: { Origin: value, 'Content-Type': 'application/json' }, body: '{}' }), stub)).status, 403)
   }
   assert.equal((await privateClient.fetch(new Request(origin, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: '{}' }), stub)).status, 415)
   assert.equal((await privateClient.fetch(new Request(origin, { method: 'OPTIONS' }), stub)).status, 404)
+  for (const token of ['', 'wrong']) {
+   assert.equal((await privateClient.fetch(new Request(origin, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + token }, body: '{}' }), stub)).status, 401)
+  }
+  assert.equal((await privateClient.fetch(new Request(origin, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }), { ...stub, JOURNEY_OPERATOR_TOKEN: undefined })).status, 401)
   assert.equal(delegated, 0)
-  assert.equal((await privateClient.fetch(new Request(origin, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8' }, body: '{}' }), stub)).status, 200)
+  assert.equal((await privateClient.fetch(new Request(origin, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8', Authorization: 'Bearer ' + operatorToken }, body: '{}' }), stub)).status, 200)
   assert.equal(delegated, 1)
  })
  await check('stopped Node backup captures document/assets and persisted policy without sessions or credentials', async () => {
@@ -109,7 +114,7 @@ try {
  }
  const startCloud = async (policy: any[], name: string) => {
   mf = new Miniflare({ port: 0, host: '127.0.0.1', durableObjectsPersist: join(scratch, name), workers: [
-   { name: 'client', script: bundles.client, modules: true, compatibilityDate: '2026-07-01', serviceBindings: { OPERATOR: 'operator' } },
+   { name: 'client', script: bundles.client, modules: true, compatibilityDate: '2026-07-01', bindings: { JOURNEY_OPERATOR_TOKEN: operatorToken }, serviceBindings: { OPERATOR: 'operator' } },
    { name: 'product', script: bundles.product, modules: true, compatibilityDate: '2026-07-01', compatibilityFlags: ['nodejs_compat'], bindings: { JOURNEY_ORIGIN: origin, JOURNEY_GRANTS: JSON.stringify(policy) }, durableObjects: { ROOMS: { className: 'JourneyRoom', useSQLite: true }, REGISTRY: { className: 'JourneyRegistry', useSQLite: true } } },
    { name: 'operator', script: bundles.operator, modules: true, compatibilityDate: '2026-07-01', compatibilityFlags: ['nodejs_compat'], bindings: { JOURNEY_ORIGIN: origin, JOURNEY_GRANTS: JSON.stringify(policy), JOURNEY_OPERATOR_ROOMS: '["shared"]' }, durableObjects: { ROOMS: { className: 'JourneyRoom', scriptName: 'product', useSQLite: true }, REGISTRY: { className: 'JourneyRegistry', scriptName: 'product', useSQLite: true } } },
   ] })
@@ -119,7 +124,7 @@ try {
   const worker = await mf!.getWorker('product')
   return worker.fetch(origin + path, { method, headers: { Authorization: 'Bearer ' + id + '.' + secret, 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) })
  }
- const operator = (body: any) => mf!.dispatchFetch(origin + '/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
+ const operator = (body: any) => mf!.dispatchFetch(origin + '/', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer ' + operatorToken }, body: JSON.stringify(body) })
  let cloudBackup: any, cloudDoc: any
  await check('private service-binding chain delegates bounded backup/revoke and exposes absent-asset capabilities', async () => {
   await startCloud(originalGrants, 'cloud-source')

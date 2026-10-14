@@ -4,6 +4,11 @@ export default {
   if (req.headers.has('origin')) return new Response('browser requests forbidden', { status: 403 })
   if (req.headers.get('content-type')?.split(';', 1)[0].trim().toLowerCase() !== 'application/json')
    return new Response('JSON required', { status: 415 })
-  return env.OPERATOR.fetch(req)
+  const token = env.JOURNEY_OPERATOR_TOKEN
+  if (typeof token !== 'string' || token.length < 32 || req.headers.get('authorization') !== 'Bearer ' + token)
+   return new Response('operator credential required', { status: 401 })
+  const forwarded = new Request(req)
+  forwarded.headers.delete('authorization')
+  return env.OPERATOR.fetch(forwarded)
  },
 }
