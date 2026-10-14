@@ -527,7 +527,10 @@ FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<packa
 
 A PR delivers only the commit on its head; a repair validated after the PR was opened reaches it
 only when that exact commit is pushed. Before the merge ask, a head other than the latest passing
-validation report's candidate is revalidated or its difference told to the Captain.
+validation report's candidate is revalidated or its difference told to the Captain. Before the
+`gate prepare` that asks for merge, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
+--pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask and FO shows the
+Captain what it printed.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs

@@ -24,9 +24,11 @@ only for a PR added with --codex or --copilot, from that extension's reader when
 present. Exit 2 is a configuration error.
 
 tasks adds each open task PR to the watch list, with the codex and copilot columns when the workflow README
-lists those extensions, and prints one `next:` line per action FO owes: recording a PR a worker opened,
-the merge-readiness step, the observer check ahead of the merge sentinel, keeping one wait running. wait
-prints a `next:` line after each decisive change. Exit 2 when a task cannot be read.
+lists those extensions, and prints one `fact:` line per open task PR (state, draft, checks, reviewer outcomes
+with their review id) and one `next:` line per action FO owes: recording a PR a worker opened, marking a green
+draft ready, the observer check ahead of the merge sentinel, keeping one wait running. It prints no merge-ask
+or hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
+change. Exit 2 when a task cannot be read.
 """
 import argparse
 import contextlib
@@ -116,41 +118,28 @@ def settle(snap, old, clock=time.time):
     return snap
 
 
-FINDINGS = {"codex": {"findings"}, "copilot": {"answered"}}
-CLEAR = {"codex": {"clean", "-"}, "copilot": {"not-run", "-"}}
-
-
 def round_line(name, snap):
     evidence = snap.get(f"{name}-evidence", "-")
     return f"next: read the {name} round{'' if evidence in ('-', None) else ' ' + evidence} as FO steps: review findings say."
 
 
-def reviews(snap):
-    found, waiting = [], []
+def facts(ref, snap):
+    parts = [ref, snap["state"], f"draft={snap['draft']}", f"checks={snap['checks']}"]
+    parts += ["unchecked=settled"] if snap.get("unchecked") == "settled" else []
     for name in ("codex", "copilot"):
-        word = snap.get(name, "-")
-        if snap.get(f"watch-{name}") and word not in CLEAR[name]:
-            (found if word in FINDINGS[name] else waiting).append(name)
-    return found, waiting
+        if snap.get(f"watch-{name}"):
+            evidence = snap.get(f"{name}-evidence", "-")
+            parts.append(f"{name}={snap.get(name, '-')}" + ("" if evidence in ("-", None) else f" {evidence}"))
+    return "fact: " + " ".join(parts)
 
 
-def next_for(ref, snap, task=None):
+def next_for(ref, snap):
     if snap.get("mergeable") == "CONFLICTING":
         return [f"next: tell the Captain {ref} has a conflict."]
     if snap.get("checks") == "failing":
         return [f"next: tell the Captain {ref} has failing CI."]
-    unchecked = snap.get("checks") == "none" and snap.get("unchecked") == "settled"
-    if snap.get("checks") == "green" or unchecked:
-        if snap.get("draft"):
-            return [f"next: mark {ref} ready if Delivery authority allows."]
-        found, waiting = reviews(snap)
-        if found or waiting:
-            return [round_line(name, snap) for name in found] + (
-                [f"next: do not ask to merge {ref}; {' and '.join(waiting)} not read on its head yet."] if waiting else [])
-        return (["next: the merge ask states `checks=none: no check ran on the ready head`."] if unchecked else []) + [
-            f"next: run `python3 {SCRIPTS / 'delivery_gate.py'} check {task or '<task file>'} "
-            f"--pr {ref} --text-file <merge ask>`."]
-    return []
+    green = snap.get("checks") == "green" or (snap.get("checks") == "none" and snap.get("unchecked") == "settled")
+    return [f"next: mark {ref} ready if Delivery authority allows."] if green and snap.get("draft") else []
 
 
 def wait_next(ref, now, decisive):
@@ -304,7 +293,7 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
             continue
         if now["state"] == "OPEN":
             snaps[ref] = now
-            out += next_for(ref, now, shlex.quote(str(task)))
+            out += [facts(ref, now)] + next_for(ref, now)
         elif now["state"] == "MERGED" and "learn" in listed:
             done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug],
                                   capture_output=True, text=True)
