@@ -3,7 +3,7 @@ title: kc-dev-flow-2 ships a Spacedock mod that loads FO's merge, idle and start
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -60,7 +60,7 @@ gates:
                 reason: 'Captain approved the redone design (「准」), accepting D1 to D3 as stated in the gate question, including the push grant for this task: the implementation worker may push the task branch and open a Draft PR in iamcxa/kc-claude-plugins.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-13T23:51:23Z
 worktree: .worktrees/spacedock-ensign-fo-lifecycle-mod
 pr: iamcxa/kc-claude-plugins#643
