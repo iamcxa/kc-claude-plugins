@@ -710,3 +710,21 @@ Verdict PASSED for PR #643 head 5e10c355 (base origin/main 0cdb40a7, merge-base 
 ### Summary
 
 At 5e10c355 `pr_watch.py` prints facts and the kept steps and no merge-ask or hold line, every kept step has a falsifier I ran that fails only its own test, the README again carries the `delivery_gate.py` rule, and FO reads fewer words at every moment (2036 to 1699, merge ask 423 to 419). The Codex round-6 P1 is moot because `pr_watch.py` no longer decides readiness. Recommend PASSED, with the one question about `delivery_gate.py`'s own lines at the gate.
+
+## Stage Report: implementation (cycle 7)
+
+- DONE: Investigation, with no candidate change: reproduce on #643 head 5e10c355 the Codex round-7 P1, check how Spacedock itself resolves an entity, and send FO the reproduction and proposed fix, then wait for FO's fix authorization message
+  Reproduced read-only: `tasks` printed the "record ... worktree is not on this machine" line for flat `pr-review-lite-value-pilot` and nothing for folder-form `journey-server-host-pilot`; rule read from spacedock 0.27.0 `internal/status/discover.go` (`discoverEntityFiles`, `resolveEntityPath`); sent to `main`.
+- DONE: After FO's fix authorization only: the fix with tests that fail without it (shown failing by a mutation run)
+  Commit 3a3cfc30: `entities(state)` in `pr_watch.py` (flat `*.md` except README, `<dir>/index.md`, folder wins, `_archive`/`_mods`/dot names skipped), `tasks()` uses its slug. Five tests in `test_pr_watch.py`; 58 pass under `python3 -B`. Mutations, each red by its own test, `pr_watch.py` restored by cmp: glob only fails the folder-form read, the both-forms test and the merged-folder test; flat wins fails `test_a_task_in_both_forms_is_read_once_from_the_folder`; dropping the `_archive`/`_mods`/dot skip fails `test_archived_hidden_and_mod_folders_are_not_tasks` (also dot alone); any dir with an md file fails `test_a_sidecar_folder_without_an_index_beside_a_flat_task_adds_no_second_scan`. A first version of the reserved-names test survived that mutation (it nested the file one level too deep); fixed before the commit.
+- DONE: AC-12's recount unchanged or lower
+  `recount.py` on HEAD 5e10c355 and on 3a3cfc30 gives identical rows: startup 440, idle on an open PR 408 (416 with `tasks` on a green draft), merged 377, after the archive 55; the diff changes no printed line. The script's merge-ask row (384) omits the restored `delivery_gate.py` paragraph; cycle 4's hand sum 419 against 423 stands. Its "OVER" verdicts compare to the superseded design column (436, 404), same at both heads; today's column (513, 427) is the amended bar.
+- DONE: roborev evidence= line
+  `findings on 3a3cfc30b; evidence=roborev:682`, exit 1, one High: "keep ... out of pr-merge's scan" is prose and `pr-merge`'s idle hook still archives a merged task without `observer.md` (`references/sd/mods/kc-dev-flow-2.md:10`, `pr_watch.py:314`). Not in this fix's scope (the keep-out step is the Captain-ruled design, unchanged by this commit); no fix loop ran; left open for FO. The roborev:679 finding is not repeated.
+- DONE: push to #643's branch without force, CI green on the new head
+  5e10c355..3a3cfc30; by run id on 3a3cfc30: kc-dev-flow-2 tests 38582541383, marketplace version parity 38582541358, kc-dev-flow release gate 38582541362, all success. Also run locally: `test_observer_check`, `test_comment_ratio`, `test_lint_skills`, `lint-skills.py` (5511 of 5511 words).
+- DONE: stage report appended
+
+### Summary
+
+`pr_watch.py tasks` now reads a task filed as `<slug>/index.md` the way Spacedock does, with tests that each go red under a mutation; no printed word changed, so AC-12 is unchanged. Out of scope and left alone as FO ruled: the BOM and leading-blank-line tolerance Spacedock has and `front()` lacks; `decision_ledger.py` (`state.glob("*.md")`) and `number_guards.py` (sibling `glob("*.md")`), both flat-only. Open for FO: roborev:682 (keep-out is prose).
