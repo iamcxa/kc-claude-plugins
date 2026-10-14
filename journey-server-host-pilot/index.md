@@ -102,6 +102,11 @@ gates:
                 at: "2026-10-14T03:09:33.450125Z"
                 decision: hold
                 reason: Captain accepts this bounded native Claude/Codex and Sites canvas validation result and retains corrected candidate 869b9d6ca2d4b02a9bb4f38c7613e5096373f83f. Overall pilot delivery remains on hold; this is not whole-pilot delivery approval. Detailed usage evidence stays local; public workflow records contain conclusions only. No implementation, deployment, merge, or further validation is authorized by this record.
+            - id: gate-attempt:journey-server-host-pilot-validation-5
+              briefing:
+                id: briefing:journey-server-host-pilot:validation:attempt-5:revision-1
+                digest: sha256:062a4d15cabdbcd0be2522cd3c1c90309cd5aa49cc944c05711b3704f3f0e986
+                room-ref: ./review/validation/briefing-5
 started: 2026-10-13T08:47:34Z
 id: journey-server-host-pilot
 review-round:

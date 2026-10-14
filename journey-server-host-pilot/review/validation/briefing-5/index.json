@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-server-host-pilot:validation:attempt-5:revision-1",
+  "question": "請確認這次畫布的使用性質與適用授權路徑；這決定後續保留部署能否繼續，條件具備前不核准整體 pilot 交付。",
+  "artifacts": [
+    {
+      "id": "artifact:journey-server-host-pilot:validation:attempt-5:revision-1:item-1",
+      "uri": "git-root://state/25503d92f23d97c469e2247dfc1de278feaa41c4/journey-server-host-pilot/index.md",
+      "rev": "sha256:d5559077b8d6cc4c5a60afd49babda27250ac9329c1419a3757a7076939695d2",
+      "mediaType": "text/markdown",
+      "summary": "建議暫不核准整體交付。修正版 e583b845 的持續使用準備與隔離雲端管理路徑通過獨立驗證，FO 五步離線驗收也通過；三項派工義務完成。實際保留服務與入口切換仍未執行，適用授權未確認，完整編號檢查仍為設定錯誤；完整用量與當前方案重讀未能確認。既有房間與 Sites 未切換，用量明細只留本機；不核准 PR、合併或付費方案。"
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:journey-server-host-pilot:validation:attempt-5:revision-1:item-2",
+      "uri": "git-root://main/6d0f8da951b5ea9ea50fca6bd3685fc360bf502f/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:42b58e54971513b3dd42350e15b4b1e7cf05fd51f9f80b84a8e4856f087dae4f"
+    }
+  ]
+}
