@@ -1,6 +1,6 @@
 ---
 title: Use one private kc-jmap server contract on Node and Cloudflare
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
