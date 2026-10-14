@@ -176,10 +176,10 @@ Verified by: Shared operation ownership and adapter dependency review, a bounded
 ## Number guards
 
 ADR: 0015
-Applied at: disposable Cloudflare validation 869b9d6ca2d4b02a9bb4f38c7613e5096373f83f
+Applied at: disposable-cloudflare-validation 869b9d6ca2d4b02a9bb4f38c7613e5096373f83f
 Not applied: disposable private-operator validation 6d2cb601a605f846d6ebf8e619e3f662336eaeb3 - producer confirmed no cloud mutation before the heading-only repair
-Applied at: disposable private-operator validation a361ebdf2df9a8b1321e4c655db65f856a8b3de8
-Applied at: final disposable private-operator validation e583b845184a499f90094af3fc4d08b0823a650b
+Applied at: disposable-private-operator-validation a361ebdf2df9a8b1321e4c655db65f856a8b3de8
+Applied at: final-disposable-private-operator-validation e583b845184a499f90094af3fc4d08b0823a650b
 Not applied: no deployment, provider provisioning or persistent retained-data migration is authorized. Implementation uses fresh synthetic private storage only; no migrations directory is configured.
 
 
@@ -776,3 +776,34 @@ The five offline steps verify source, receipts, review, hosted outcomes and clea
 
 PASSED for the authorized retained-use preparation and bounded hosted operator evidence at the exact candidate. Whole-pilot retained delivery remains unaccepted pending licensing and the retained serving/entry-switch prerequisites; incomplete measurement and the unavailable full guard remain explicit.
 The five offline steps are reproducible from the local handback without another provider or runtime test. Validation made no product change, cloud request, gate/frontmatter edit, publication, PR or merge; only conclusions are recorded here.
+
+
+## Stage Report: implementation
+
+- DONE: Prepare concrete version-pinned local Node, Cloudflare and owner-private Sites deployment/switch/rollback inputs within amendment 6, without provider mutation or licensed-rendering claims.
+  Candidate `2a24810e8be35cf6fb6b323d67ff089feaebb4c1` adds documentation only over accepted runtime `e583b845184a499f90094af3fc4d08b0823a650b`. Exact private bundles, closed configurations, proposed switch, rollback inputs and token-free native settings are prepared locally.
+- DONE: Investigate the generic number-guard mismatch and establish accurate applied-commit accounting and a concrete smallest disposition proposal without invented SQL migrations, check waivers or workflow/package changes.
+  The actual parser now reads all historical applied commits after the authorized label-only repair. Adapter initialization, locked SDK, namespace migration tags/classes/bindings and reserved ADR 0015 have one-time comparison evidence; original SHAs and Not applied history remain intact.
+- DONE: Validate the newly prepared artifacts locally, preserve accepted green evidence and privacy, and return a minimal exact acceptance handback with the remaining owner-license and delivery decisions explicit.
+  One offline command verifies the exact clean candidate, prepared hashes, proxy mapping with an in-memory stub, actual metadata parsing, checks and required review. No cloud, browser or native-client request, live credential or server was created.
+- DONE: Prepare the amended delivery inputs for value-ac[AC-6].
+  Node uses a fresh unstarted destination; Cloudflare defaults to closed entries; the proposed serving change is explicit and reversible. Sites uses a separate local overlay and a new normal production asset build without an issued key. Accepted previous operating-path evidence is preserved, not repeated or relabeled as retained serving.
+- DONE: Preserve observable contracts for value-ac[AC-2].
+  Application runtime, UI, API/schema, concurrent-write behavior and dependencies are unchanged. The authorized local integration copy changes configuration constants only; a changed admission/path/method byte would fail its mechanical comparison.
+- DONE: Prepare scoped admission inputs for value-ac[AC-3].
+  Empty grant templates fail closed, separate per-principal credential issuance remains a future operation, and native settings contain environment references only. The original Sites source and policy are unchanged; its latest saved version is not asserted to be the currently served version.
+- DONE: Preserve persistent-state and capability boundaries for value-ac[AC-4].
+  Prepared namespace tags/classes match the accepted declarations, operator bindings point only to the proposed backend, and no asset binding or schema migration is added. Rollback preserves namespaces, acknowledged work and current revocations using the existing recovery controls.
+- DONE: Keep the work minimal and recoverable for value-ac[AC-5].
+  The product delta contains only private-delivery and private-operations documentation. Detailed inputs and the constant-only integration overlay remain private; before-switch and after-switch failure procedures retain the prior entry and candidate data without a destructive cleanup shortcut.
+- DONE: Complete proportional checks and exact-candidate review.
+  ADR lint, document impact, design surfaces, dispatch records and diff checks pass; the required review is clean on this candidate. Comment ratio reports zero added code/comments and does not enforce its threshold for this documentation-only delta. Architecture record 0015 is unchanged; private-operations is updated and legacy journey documentation remains unaffected.
+- SKIPPED: The generic full task-aware number guard remains CONFIG ERROR / SKIPPED / NOT PASS.
+  No numbered SQL exists at the comparison base; actual persistence is initialized in adapter/SDK code and namespace declarations. Accurate applied accounting and supplemental comparisons do not replace the full guard. The concrete proposal is a separately approved task-scoped exception for unchanged runtime, or deferred delivery pending appropriate tooling; neither is applied here.
+- SKIPPED: Effective licensing, retained serving and complete cost proof remain pending.
+  The owner handles the hobby application. No key is treated as issued, no retained switch/data migration is performed, and no license or measurement waiver is inferred. Provider calls, publication, PR/merge and prior accepted native/browser/hibernation suites were not run.
+
+### Summary
+
+The requested license-independent delivery package is concrete, locally verified and recoverable; historical passing evidence remains intact. One compact offline acceptance command and the exact pending license, guard-disposition and retained-switch decisions are preserved in the private handback.
+This report establishes preparation only. It changes no gate authority, serving state, platform policy, workflow/package requirement or complete-pilot acceptance.
