@@ -340,3 +340,18 @@ Resumed after Captain amendment 1. PR #643 (Draft) https://github.com/iamcxa/kc-
 ### Summary
 
 The package ships `observe-merged.md` and `watch-and-learn.md`, the README keeps the rules, and ADR 0015 records the Captain's ruling. Open for FO: AC-2's 5501 bound (5513), the two roborev findings above, the adopter copies after release, the AC-4/AC-5 replays (validation's), and the budget recompute by whichever of #642 and #643 merges second.
+
+## Stage Report: implementation (cycle 3)
+
+Applied the FO ruling on #643 f0f5141a: AC-2 kept as written. PR #643 (Draft) head 33295355, branch spacedock-ensign/fo-lifecycle-mod off origin/main 656543f4.
+
+- DONE: Bring references/sd/workflow.md to at most 5501 words by trimming at least 12 words inside the passages this PR touches, dropping none of the five README-effect rules, the Draft-PR rule or the clause #642 adds
+  `lint-skills.py` prints 5495 of 5495 (6 under the 5501 bound): removed the rationale clause "so external review runs before the delivery gate" (ADR 0015 carries it) and the sentence "The pr-merge hooks run the sentinel and `merge guard` together" (the `pr-merge` mod says it). Each rule still greps once: `sentinel waits for the`, `differing head is revalidated`, `create a Draft PR where required`, `A merge ask names each listed reviewer`, `merge guard --rework`, `opens the Draft PR before validation`. #642's clause is not in this tree (it lives on #642's branch) and I did not touch the Stages follow-up sentence.
+- DONE: Lower WORKFLOW_WORD_BUDGET to the new count with its reason line, rerun the suite and the AC-2 evidence commands
+  Budget 5495, reason line "# 5495: -66 net: ..." in `lint-skills.py`. `lint-skills.py` exit 0; every CI-list script exit 0 locally including `test_sd_dispatch.py` (0.27.2 binary); `grep -c 'observer_check.py\|pr_watch.py\|delivery_gate.py' references/sd/workflow.md` prints 0; each name appears in a mod.
+- DONE: Commit (named files only), roborev, push without force, CI green
+  Commit 33295355 (workflow.md, lint-skills.py). `evidence=roborev:654` on 33295355, exit 1: one High, the mods are not copied into `docs/dev2` and `docs/dev2-poc` (the post-release sync the brief bars; no finding in scope, no re-run). The other High, `roborev:653`, is the design's recorded limit for validation to judge. CI green on 33295355 (`gh pr checks 643`: unit tests 53 s, version parity 56 s, route gate, GitGuardian).
+
+### Summary
+
+AC-2's bound is met: 5495 words against 5501. AC-6 is met by the merge-hook deletion. Remaining for FO: the two roborev findings above, the adopter copies after release, the AC-4/AC-5 replays, and the budget recompute by whichever of #642 and #643 merges second.
