@@ -258,6 +258,19 @@ def opened_pr(worktree, ask):
     return f"{repo}#{found[0]['number']}" if found else None
 
 
+def entities(state):
+    found = {}
+    for path in sorted(state.iterdir()):
+        name = path.name
+        if name.startswith(".") or name in ("_archive", "_mods"):
+            continue
+        if path.is_dir() and (path / "index.md").is_file():
+            found[name] = path / "index.md"
+        elif path.is_file() and name.endswith(".md") and name != "README.md":
+            found.setdefault(path.stem, path)
+    return sorted(found.items())
+
+
 def tasks(opts, look=look, ask=gh, clock=time.time):
     workflow = Path(opts.args[0]).resolve()
     readme = front(workflow / "README.md")
@@ -265,11 +278,11 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     listed = set(re.findall(r"[\w-]+", readme.get("extensions", "")))
     wait = f"python3 {SCRIPTS / 'pr_watch.py'}" + (f" --state {shlex.quote(str(opts.state))}" if opts.state != DEFAULT_STATE else "")
     out, snaps, errors = [], {}, []
-    for task in sorted(state.glob("*.md")):
-        meta = front(task) if task.name != "README.md" else {}
+    for slug, task in entities(state):
+        meta = front(task)
         if "status" not in meta:
             continue
-        slug, pr = task.stem, meta.get("pr", "")
+        pr = meta.get("pr", "")
         try:
             where = toplevel(workflow) / meta["worktree"] if not pr and meta.get("worktree") else None
             if where and not where.is_dir():

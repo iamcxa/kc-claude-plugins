@@ -377,14 +377,16 @@ class TasksTests(unittest.TestCase):
     def readme(self, extensions):
         (self.workflow / "README.md").write_text(f"---\nentity-type: task\nextensions: [{extensions}]\nstate: .spacedock-state\n---\n")
 
-    def task(self, slug, pr="", worktree=True, branch="feat-x", status="validation"):
+    def task(self, slug, pr="", worktree=True, branch="feat-x", status="validation", folder=False):
         where = self.repo / ".worktrees" / slug
         if worktree and not where.exists():
             where.mkdir(parents=True)
             self.git(where, "init", "-q", "-b", branch)
             self.git(where, "remote", "add", "origin", "https://github.com/o/r.git")
         lines = ["---", f"title: {slug}", f"status: {status}", f"pr: {pr}"] + ([f"worktree: .worktrees/{slug}"] if worktree else []) + ["---", "body"]
-        (self.state / f"{slug}.md").write_text("\n".join(lines) + "\n")
+        target = self.state / (f"{slug}/index.md" if folder else f"{slug}.md")
+        target.parent.mkdir(exist_ok=True)
+        target.write_text("\n".join(lines) + "\n")
         self.git(self.state, "add", "-A")
         self.git(self.state, "commit", "-qm", f"task {slug}")
 
@@ -603,6 +605,49 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(code, 2, lines)
         self.assertTrue(any(line.startswith("next: report some-task to the Captain: ") for line in lines), lines)
         self.assertTrue(any("keep other out of pr-merge's scan" in line for line in lines), lines)
+
+    def test_a_task_filed_as_a_folder_index_is_read_like_a_flat_one(self):
+        self.readme("roborev")
+        self.task("some-task", folder=True)
+        code, lines = self.tasks({"pr list": [{"number": 7, "state": "OPEN"}], "pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines[0], f"next: run `spacedock status --workflow-dir {self.workflow.resolve()} --set some-task pr=o/r#7`.")
+        self.assertEqual(list(self.watched()), ["o/r#7"])
+
+    def test_a_sidecar_folder_without_an_index_beside_a_flat_task_adds_no_second_scan(self):
+        self.readme("roborev")
+        self.task("some-task")
+        self.report("some-task")
+        (self.state / "some-task/dispatch").mkdir()
+        (self.state / "some-task/dispatch/note.md").write_text("---\nstatus: x\npr: o/r#9\n---\n")
+        code, lines = self.tasks({"pr list": [{"number": 7, "state": "OPEN"}], "pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(sum("--set some-task " in line for line in lines), 1, lines)
+        self.assertEqual(list(self.watched()), ["o/r#7"])
+
+    def test_a_task_in_both_forms_is_read_once_from_the_folder(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#8")
+        self.task("some-task", pr="o/r#7", folder=True)
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(list(self.watched()), ["o/r#7"])
+        self.assertEqual(sum(line.startswith("fact: ") for line in lines), 1, lines)
+
+    def test_archived_hidden_and_mod_folders_are_not_tasks(self):
+        self.readme("roborev")
+        for reserved in ("_archive", "_mods", ".hidden"):
+            self.task(reserved, pr="o/r#7", folder=True)
+        self.assertEqual(self.tasks({"pr view 7": view()}), (0, []))
+        self.assertEqual(self.watched(), {})
+
+    def test_a_merged_folder_task_reaches_the_observer_check_under_its_folder_name(self):
+        self.readme("learn")
+        self.task("some-task", pr="o/r#7", folder=True)
+        code, lines = self.tasks({"pr view 7": view("MERGED")})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines[0], "next: keep some-task out of pr-merge's scan in this pass.")
+        self.assertTrue(lines[1].startswith("observer report not committed: some-task/observer.md"), lines)
 
     def test_tasks_needs_one_workflow_directory(self):
         with contextlib.redirect_stdout(io.StringIO()):
