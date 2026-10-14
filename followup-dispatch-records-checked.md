@@ -252,3 +252,23 @@ Does not cover: the other 74 records' replays and the 19 -> 32 counts (re-measur
 ### Summary
 
 PASSED at 12670427. The two rules reproduce the design's replays exactly (three named records fail, nine others pass, 19 -> 32 failing records, 0 active tasks flip), each rule is shown red by a mutation, the lint budget and README clause match AC-6, and the one-line test_sd_dispatch repair is necessary and keeps the sentence pinned. No Material finding; two Polish and two Deferred-risk items are recorded above. Not verified: a real FO run under the new rules, other adopters beyond qnow, and CI beyond reading `gh pr checks`.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Investigation first, with no candidate change: reproduce the Codex round-1 P2 on #642 head 12670427, measure how the archived and active records split between pure pointers and actions that name a sibling, send FO the result and your proposed rule, then wait for FO's fix authorization message
+  Reproduced on throwaway copies: a one-line "Verify the fix requested in validation-1 satisfies AC-1." and a two-line action checklist both failed. Of 85 records, 15 are flagged, all one line "Same checklist as <sibling>." (15 of 15 pure pointers, 0 actions); 2 name a sibling beside other lines and pass. Sent to main before any edit.
+- DONE: After FO's fix authorization only: the fix with tests that fail without it (shown failing by a mutation run), the AC-1/AC-2 replays still failing implementation-3, -5 and -7 and passing the other nine
+  Commit 04b62f7e: `is_pointer(line, others)` plus POINTER_WORDS; the known limit ("Reuse the checklist of implementation-2." passes) is in the module docstring. test_dispatch_records.py 15 tests OK (was 13). Under `python3 -B`: stem-only rule fails 3 subtests (the "Reuse ..." line, one action, two actions); empty POINTER_WORDS fails 5 (both pointer shapes, "Identical to ...", "- see ...", "The same items as in ..."); adding "verify" to the set fails the "Verify validation-1." subtest (first run stayed green, so I added that case); dropping the stem-hit requirement fails "Same items as in the checklist.". Replay on learn-delivery-follow-through: Package root and pointer lines for implementation-3, -5, -7 only, exit 1; whole state: the same 15 flagged. lint-skills.py exit 0 (5581 of 5581), test_replay_dispatch.py and test_lint_skills.py OK.
+- DONE: the added comment in kc-dev-flow-2/scripts/lint-skills.py reduced to the fact the code cannot state
+  Kept as it is, by FO ruling in the fix authorization (same one-line reason as every earlier raise in that block); no edit to lint-skills.py.
+- DONE: push to #642's branch; CI green on the new head
+  Pushed 04b62f7e without force. `gh pr checks 642`: unit tests (python3), version parity, multi-profile route gate and GitGuardian all pass (runs 384885234xx-384885235xx). PR stays Draft.
+- DONE: roborev gate
+  `clean on 04b62f7ee; evidence=roborev:643` (base 12670427).
+
+### Left for FO
+- One existing test line changed: "See validation-1 for the items." became "See the items in validation-1." because "for" is not in the authorized word set; adding "for" to POINTER_WORDS is the alternative if FO prefers.
+- The validator's Polish on the lint-skills.py comment is declined by FO ruling; fresh validation recheck of 04b62f7e is next.
+
+### Summary
+The pointer rule now needs a record name plus only pointer words, so an action that names a sibling is a checklist of its own; the 15 archived pointer records still fail and the AC-1/AC-2 replays are unchanged. CI is green on 04b62f7e.
