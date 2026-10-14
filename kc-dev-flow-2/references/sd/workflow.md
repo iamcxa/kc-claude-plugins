@@ -103,7 +103,7 @@ checklist, the model it dispatches on and the SHA it dispatches from as
 the full SHA, a `Model:` line, and `## Checklist` and `## Scope notes` sections),
 committed with that dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so
 the instruction a worker followed outlives the session that wrote it. A follow-up
-message to a worker FO resumes is a dispatch too, and its record carries the same parts.
+message to a worker FO resumes is a dispatch too, and its record carries the same parts, including the `Package root:` line and a checklist of the items that message asks, never a pointer to another record.
 A checklist or scope-notes line that names a package script writes
 `<package>/scripts/NAME.py` with the absolute root substituted, never the bare script
 name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`
@@ -518,11 +518,11 @@ merge, or clean up an owned worktree unless the specific action is authorized. A
 upstream hook's default fallback is not that grant. A failure holds delivery pending an
 explicit choice.
 
-The implementation stage opens the Draft PR before validation, and FO records it in
-`pr` as `<owner/repo>#<N>` (ADR 0015); with `pr` set `merge guard` arms no merge hook. Observe the actual
+The implementation stage opens the Draft PR before validation and FO records it in
+`pr` (ADR 0015), so `merge guard` arms no merge hook. Observe the actual
 repository-qualified PR merge before recording its landed sentinel and running SD
 merge guard to finalize/archive. Where `learn` is listed, the sentinel waits for the
-committed observer report; the learn extension owns the check. CI green, PR
+committed observer report, per the learn extension. CI green, PR
 creation, gate approval and a locally manufactured sentinel do not prove merge.
 
 A PR delivers only the commit on its head. Before asking for merge, FO confirms the
@@ -531,9 +531,9 @@ validated after the PR was opened reaches the PR only when that exact commit is
 pushed to its branch. A differing head is revalidated, or its difference told to the
 Captain, before the ask.
 
-FO's steps at the startup and idle points are in `_mods/observe-merged.md` and
+FO's startup and idle steps are in `_mods/observe-merged.md`,
 `_mods/watch-and-learn.md`, copied unchanged from `<package>/references/sd/mods/`; a
-missing or changed copy holds delivery, as for `pr-merge.md` above.
+missing or changed copy holds delivery.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs

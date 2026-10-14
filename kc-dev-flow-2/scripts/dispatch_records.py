@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Check a task's dispatch records: each needs a Dispatched line with a full SHA, a Model line,
-non-empty Checklist and Scope notes sections, and a scope-notes line naming `main` as the completion recipient.
+non-empty Checklist and Scope notes sections, a `Package root:` line with an absolute path inside Scope notes, a scope-notes
+line naming `main` as the completion recipient, and a checklist that is not only pointer lines (a record name plus only
+words from POINTER_WORDS, as in "Same checklist as implementation-2."); a pointer worded outside that set, such as
+"Reuse the checklist of implementation-2.", passes.
 
 Usage: dispatch_records.py <task folder or task .md file>
        dispatch_records.py --names <record file>...
@@ -20,12 +23,29 @@ PARTS = {
     "a 'Model:' line": re.compile(r"^Model:[ \t]*\S", re.M),
     "a non-empty '## Checklist' section": re.compile(r"^## Checklist[ \t]*\n(?:[ \t]*\n)*(?!## )\S", re.M),
     "a non-empty '## Scope notes' section": re.compile(r"^## Scope notes[ \t]*\n(?:[ \t]*\n)*(?!## )\S", re.M),
+    "a 'Package root:' line with an absolute path in its scope notes":
+        re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?^Package root:[ \t]*/\S", re.M),
     "a scope-notes line naming main as the completion recipient":
         re.compile(r"^## Scope notes\b(?:(?!^## )[\s\S])*?\bcompletion(?: message)? to [`']?main(?![\w-])", re.M | re.I),
 }
 
 SCRIPT_TOKEN = re.compile(r"(?<![\w./~-])([\w-]+\.py)(?!\w)")
 SCANNED = re.compile(r"^## (?:Checklist|Scope notes)[ \t]*$")
+
+
+POINTER_WORDS = {"same", "identical", "unchanged", "checklist", "items", "as", "in", "to", "of", "from", "the", "see", "and", "for"}
+
+
+def is_pointer(line, others):
+    stems = "|".join(re.escape(name) for name in others)
+    rest, hits = re.subn(rf"(?<![\w-])(?:[\w./~-]*/)?(?:{stems})(?:\.md)?(?![\w-])", " ", line) if others else (line, 0)
+    return bool(hits) and all(word in POINTER_WORDS for word in re.findall(r"[a-z]+", rest.lower()))
+
+
+def only_points_at_records(text, others):
+    match = re.search(r"^## Checklist[ \t]*\n((?:(?!^## )[\s\S])*)", text, re.M)
+    lines = [line for line in match.group(1).splitlines() if line.strip()] if match else []
+    return bool(lines) and all(is_pointer(line, others) for line in lines)
 
 
 def package_scripts(package):
@@ -72,6 +92,10 @@ def main(argv=None, package=PACKAGE):
         return 1
     errors = [f"{path.name}: needs {part}" for path in records
               for part, pattern in PARTS.items() if not pattern.search(path.read_text())]
+    names = [path.stem for path in records]
+    for path in records:
+        if only_points_at_records(path.read_text(), [name for name in names if name != path.stem]):
+            errors.append(f"{path.name}: needs a checklist of its own, not only a reference to another dispatch record")
     for error in errors:
         print(error)
     if not errors:

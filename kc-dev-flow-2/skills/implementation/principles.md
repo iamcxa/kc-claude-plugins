@@ -29,6 +29,10 @@ Do not use `git stash`: every worktree and session of a repository shares one
 stash stack. Set work aside with a commit.
 Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless
 the specific action is authorized.
+Where the task's `merge:` is `pr` and the dispatch scope notes grant push and PR creation,
+open the Draft PR from the task branch after the roborev review and before the stage report,
+and put `<owner/repo>#<N>` in the report; FO records it in `pr` (ADR 0015). Without that
+grant, report `no PR opened: no push grant` and do not push.
 
 When feedback requests repair, change the approved defect scope and identify
 what needs rechecking. Return scope/profile changes or unresolved inputs to FO.

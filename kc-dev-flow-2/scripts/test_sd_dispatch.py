@@ -124,7 +124,7 @@ FIXES = {
     "resumed-dispatch": dict(
         need=("A follow-up message to a worker FO resumes is a dispatch",),
         old=(),
-        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, and its record carries the same parts\. ", ""),)),
+        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, and its record carries the same parts(?:, including [^.]*)?\. ", ""),)),
     "adr-since": dict(
         need=("for each `ADR:` number the task's `## Number guards` reserves",
               "which requires every record the candidate added or changed",),
@@ -201,6 +201,18 @@ FIXES = {
         need=("--state all --limit 1 --json number`",),
         old=("--state open --limit 1",),
         swaps=((r"--state all --limit 1", "--state open --limit 1"),)),
+    "learn-step-needs-learn": dict(
+        file="references/sd/mods/watch-and-learn.md",
+        need=("5. Learn, only where this README's `extensions:` lists `learn`; otherwise skip this step. Run",),
+        old=(),
+        swaps=((r"Learn, only where this README's `extensions:` lists `learn`; otherwise skip this step\. Run", "Learn. Run"),)),
+    "worker-opens-draft-pr": dict(
+        file="skills/implementation/principles.md",
+        need=("Where the task's `merge:` is `pr` and the dispatch scope notes grant push and PR creation, open the Draft PR from the task branch",
+              "put `<owner/repo>#<N>` in the report",
+              "report `no PR opened: no push grant` and do not push"),
+        old=(),
+        swaps=((r"Where the task's `merge:` is `pr` and the dispatch scope notes grant push and PR creation,.*?do not push\. ", ""),)),
     "one-number-per-kind": dict(
         need=("a task holds one number per kind, and a task needing a second ADR or migration returns to FO",),
         old=(),
