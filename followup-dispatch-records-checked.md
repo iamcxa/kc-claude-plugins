@@ -151,6 +151,11 @@ Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-14): validation recommended PASSED on #642 12670427 with no Material finding. Codex review round 1 (review:5511481463) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck. The validator's Polish on the added `lint-skills.py` comment is fixed in the same repair (a comment that narrates the change is deleted); its Polish on `references/sd/adoption.md` is recorded as `unaffected: names only the test_sd_dispatch.py command`.
+  - P2 #642 `scripts/dispatch_records.py` (around line 38): the pointer rule fails a follow-up whose only checklist line is a complete action that names a sibling record for context ("Verify the fix requested in validation-1 satisfies AC-1"), because it tests only for the sibling stem.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for making /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.1/scripts/dispatch_records.py fail a follow-up dispatch record that lacks the parts the README Stages rules require: decide whether a follow-up record may point at an earlier record's checklist or must carry it, name each part the check enforces (Package root line, checklist, scope notes, main completion line) and how a follow-up record is told apart from a first dispatch, or why no marker is needed
