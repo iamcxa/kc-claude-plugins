@@ -391,3 +391,20 @@ Verdict PASSED for PR #643 head 33295355 (base 656543f4), on AC-1, AC-2, AC-3, A
 ### Summary
 
 All five criteria in scope hold at 33295355 with a falsifier run for each, and the S2 pair shows the bite: the control archived the task with no observer report, the mod run ran `observer_check.py` first and withheld the sentinel. Not shown: the observer dispatch and learn legs, the neutral cue, S1, and any variance. Both roborev Highs are the design's recorded limits and the post-release sync; neither is Material today.
+
+## Stage Report: implementation (cycle 3, Codex round-1 repair)
+
+- DONE: Investigation first, with no candidate change: reproduced both Codex round-1 P1 findings on #643 head 33295355, reported per finding with a proposed fix, merge of origin/main and the budget recomputed
+  P1-1: the worker's stage definition (`show-stage-def --stage implementation`) and skills/implementation/* held no PR-opening instruction; the only source was FO's freehand scope-notes line (dispatch/implementation-1.md "Open as Draft"). P1-2: `observe-merged.md` gates on `extensions:` listing `learn`, `watch-and-learn.md` step 5 did not. Report sent to main; FO authorized the fixes.
+- DONE: The fixes with tests that fail without them (shown failing by a mutation run)
+  P1-1: grant-conditioned Draft-PR sentence in skills/implementation/principles.md (worker-visible layer; Delivery authority reaches no stage by design, test_sd_dispatch.py "FO-only section reached a stage"). P1-2: step 5 of watch-and-learn.md starts "Learn, only where this README's `extensions:` lists `learn`; otherwise skip this step." Mutation, `python3 -B test_sd_dispatch.py`: deleting the principles sentence fails only `worker-opens-draft-pr` (its three need strings missing); reverting the step-5 clause fails only `learn-step-needs-learn`; restored tree passes. The 20 other CI test scripts pass locally.
+- DONE: Main merged in (no rebase, no force), WORKFLOW_WORD_BUDGET recomputed with its reason line, AC-2's bound re-checked
+  Merge commit d6a427aa (parents 33295355, 0cdb40a7); the only conflict was the budget lines in lint-skills.py, both comment lines kept. workflow.md merged at 5515, trimmed 14 words in the touched Delivery-authority passages (dropped "as `<owner/repo>#<N>`" and ", as for `pr-merge.md` above", shortened two phrases; R1 to R3, the Draft-PR rule and #642's clause kept) to 5501; `WORKFLOW_WORD_BUDGET = 5501`, `lint-skills.py` prints `references/sd/workflow.md: 5501 of 5501 words`. AC-2's literal bound 5501 holds.
+- DONE: Push to #643's branch; CI green on the new head
+  Pushed 33295355..d6a427aa, no force. `gh pr checks 643`: unit tests (python3), multi-profile route gate (live Spacedock), version parity, GitGuardian all pass on d6a427aaacc21cffdcb6ee9d8652cce3eb3d5080 (run 38504617746 headSha confirmed).
+- DONE: roborev gate before the push
+  `roborev_gate.py --repo <worktree> --base 0cdb40a7` ran once: `findings on d6a427aaa; evidence=roborev:655`, one High, left unfixed (see below); no second run since nothing in scope to fix.
+
+### Summary
+
+Both P1 findings are fixed, tested with named falsifiers, and #643 is green at d6a427aa with main merged and workflow.md at 5501 words. Left for FO: the roborev High (principles.md: adopted `docs/dev2` and `docs/dev2-poc` lack the new mods, so after a plugin update an adopter whose README is not yet re-synced would have workers open the Draft PR while `pr` stays empty and `pr-merge`'s merge hook could try `gh pr create` again) is the recorded post-release sync (ADR 0015 Consequences, adoption.md), and I made no adopter copies as instructed. The trim removed the `<owner/repo>#<N>` format from workflow.md; it remains in principles.md and watch-and-learn step 1. Validation recheck not run by me.
