@@ -3,7 +3,7 @@ title: kc-dev-flow-2 ships a Spacedock mod that loads FO's merge, idle and start
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -79,10 +79,13 @@ gates:
                 reason: 'Captain approved delivery of #643 at 3a3cfc30 (「准」), accepting that delivery_gate.py keeps its own next lines as the gate question stated: FO marks it ready and asks to merge; later external-review rounds covered per Delivery authority.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-13T23:51:23Z
 worktree: .worktrees/spacedock-ensign-fo-lifecycle-mod
 pr: pr-merge:643
+verdict: PASSED
+completed: 2026-10-14T23:32:30Z
+archived: 2026-10-14T23:32:30Z
 ---
 
 Filed on the Captain's 「開」 (2026-10-14) after an observer read of the spacedock-dev/subspace-relay FO session that delivered PR #362 (task `owner-sees-all-feedback-room`, kc-dev-flow-2 0.22.0). The FO never ran `pr_watch.py` for the PR and ran `merge guard` with no observer step and no learn. Both rules were in the adopter README, but FO read it in `sed -n` ranges up to line 480; `## Delivery authority` starts at line 492 and `## Extensions` at 538. The Captain asked whether the README is too long and whether to split or index it; the direction he approved is a mod keyed to Spacedock's lifecycle points rather than a longer README or read-sized slices.
