@@ -518,14 +518,12 @@ merge, or clean up an owned worktree unless the specific action is authorized. A
 upstream hook's default fallback is not that grant. A failure holds delivery pending an
 explicit choice.
 
-The implementation stage opens the Draft PR before validation, so external review
-runs before the delivery gate, and FO records it in `pr` as `<owner/repo>#<N>`
-(ADR 0015); with `pr` set `merge guard` arms no merge hook. Observe the actual
+The implementation stage opens the Draft PR before validation, and FO records it in
+`pr` as `<owner/repo>#<N>` (ADR 0015); with `pr` set `merge guard` arms no merge hook. Observe the actual
 repository-qualified PR merge before recording its landed sentinel and running SD
 merge guard to finalize/archive. Where `learn` is listed, the sentinel waits for the
-committed observer report; the learn extension owns the check. The pr-merge hooks run the sentinel and
-`merge guard` together. CI green, PR creation, gate approval and a locally
-manufactured sentinel do not prove merge.
+committed observer report; the learn extension owns the check. CI green, PR
+creation, gate approval and a locally manufactured sentinel do not prove merge.
 
 A PR delivers only the commit on its head. Before asking for merge, FO confirms the
 PR head equals the candidate the latest passing validation report names; a repair
