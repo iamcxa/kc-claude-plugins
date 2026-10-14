@@ -155,6 +155,8 @@ Visible change: none
 
 - Cycle 1 (FO, 2026-10-14): validation recommended PASSED on #642 12670427 with no Material finding. Codex review round 1 (review:5511481463) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck. The validator's Polish on the added `lint-skills.py` comment is fixed in the same repair (a comment that narrates the change is deleted); its Polish on `references/sd/adoption.md` is recorded as `unaffected: names only the test_sd_dispatch.py command`.
   - P2 #642 `scripts/dispatch_records.py` (around line 38): the pointer rule fails a follow-up whose only checklist line is a complete action that names a sibling record for context ("Verify the fix requested in validation-1 satisfies AC-1"), because it tests only for the sibling stem.
+- Cycle 2 (FO, 2026-10-14): Codex review round 2 (review:5511597658) on #642 5567b82c left one P2, to fix (rounds 1 and 2 fix every finding); investigation reproduced it (a `.md`, backtick, Markdown-link or path-prefixed sibling name leaves a word outside POINTER_WORDS, so the pointer passes), FO authorized the widened stem match, then a fresh validation recheck. The validation recheck of 5567b82c, dispatched before this finding, is superseded by the new head.
+  - P2 #642 `scripts/dispatch_records.py` (around line 42): "Same checklist as validation-1.md." passes the pointer rule.
 
 ## Stage Report: ideation
 
