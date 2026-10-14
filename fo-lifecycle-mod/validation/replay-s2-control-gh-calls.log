@@ -1,0 +1,5 @@
+2026-10-14T02:46:18.586371 gh pr view 362 --json number,title,state,mergedAt,mergeCommit,headRefName,baseRefName,url
+2026-10-14T02:46:57.879291 gh repo view /tmp/replay-s2/control/origin.git --json nameWithOwner --jq .nameWithOwner
+2026-10-14T02:46:58.276135 gh pr view 362 --repo spacedock-dev/subspace-relay --json state --jq .state
+2026-10-14T02:47:17.861571 gh pr view 362 --json headRefOid,mergedBy,commits --jq {h:.headRefOid,by:.mergedBy.login,n:(.commits|length)}
+2026-10-14T02:47:18.313264 gh api repos/spacedock-dev/subspace-relay/commits/main --jq .sha[0:7]+" "+.commit.message
