@@ -116,17 +116,25 @@ def settle(snap, old, clock=time.time):
     return snap
 
 
-HOLDS = {"codex": {"running", "not-reviewed"}, "copilot": {"requested"}}
+FINDINGS = {"codex": {"findings"}, "copilot": {"answered"}}
+CLEAR = {"codex": {"clean", "-"}, "copilot": {"not-run", "-"}}
 
 
-def unsettled(snap, seen):
-    return [name for name in ("codex", "copilot") if snap.get(f"watch-{name}") and (
-        snap.get(name) in HOLDS[name]
-        or (snap.get(name) in OUTCOMES[name]
-            and (snap[name], snap.get(f"{name}-evidence")) != (seen.get(name), seen.get(f"{name}-evidence"))))]
+def round_line(name, snap):
+    evidence = snap.get(f"{name}-evidence", "-")
+    return f"next: read the {name} round{'' if evidence in ('-', None) else ' ' + evidence} as FO steps: review findings say."
 
 
-def next_for(ref, snap, task=None, seen=None):
+def reviews(snap):
+    found, waiting = [], []
+    for name in ("codex", "copilot"):
+        word = snap.get(name, "-")
+        if snap.get(f"watch-{name}") and word not in CLEAR[name]:
+            (found if word in FINDINGS[name] else waiting).append(name)
+    return found, waiting
+
+
+def next_for(ref, snap, task=None):
     if snap.get("mergeable") == "CONFLICTING":
         return [f"next: tell the Captain {ref} has a conflict."]
     if snap.get("checks") == "failing":
@@ -135,21 +143,21 @@ def next_for(ref, snap, task=None, seen=None):
     if snap.get("checks") == "green" or unchecked:
         if snap.get("draft"):
             return [f"next: mark {ref} ready if Delivery authority allows."]
-        waiting = unsettled(snap, seen or {})
-        if waiting:
-            return [f"next: do not ask to merge {ref}; {' and '.join(waiting)} not read on its head yet."]
+        found, waiting = reviews(snap)
+        if found or waiting:
+            return [round_line(name, snap) for name in found] + (
+                [f"next: do not ask to merge {ref}; {' and '.join(waiting)} not read on its head yet."] if waiting else [])
         return (["next: the merge ask states `checks=none: no check ran on the ready head`."] if unchecked else []) + [
             f"next: run `python3 {SCRIPTS / 'delivery_gate.py'} check {task or '<task file>'} "
             f"--pr {ref} --text-file <merge ask>`."]
     return []
 
 
-def wait_next(ref, old, now, decisive):
+def wait_next(ref, now, decisive):
     if now.get("state") != "OPEN":
         return ["next: run the idle hooks now."]
-    lines = [f"next: read the {name} round as FO steps: review findings say."
-             for name in ("codex", "copilot") if {name, f"{name}-evidence"} & set(decisive)]
-    return lines + (next_for(ref, now, seen=old) if {"mergeable", "draft", "checks", "unchecked"} & set(decisive) else [])
+    lines = [round_line(name, now) for name in ("codex", "copilot") if {name, f"{name}-evidence"} & set(decisive)]
+    return lines + (next_for(ref, now) if {"mergeable", "draft", "checks", "unchecked"} & set(decisive) else [])
 
 
 def load(state):
@@ -214,7 +222,7 @@ def sweep(state, look=look, nexts=None, clock=time.time):
             decisive = [k for k in moved if outcome(k, old.get(k), now.get(k))]
             changes.append((line, bool(decisive)))
             if decisive and nexts is not None:
-                nexts.extend(n for n in wait_next(ref, old, now, decisive) if n not in nexts)
+                nexts.extend(n for n in wait_next(ref, now, decisive) if n not in nexts)
         rows.append(f"{ref:34} {now['state']:7} draft={now['draft']!s:5} {now['mergeable']:11} "
                     f"checks={now['checks']:8} codex={now['codex']:12} "
                     f"copilot={now.get('copilot', '-'):12} {now['title']}")
@@ -296,7 +304,7 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
             continue
         if now["state"] == "OPEN":
             snaps[ref] = now
-            out += next_for(ref, now, shlex.quote(str(task)), known.get(ref, {}))
+            out += next_for(ref, now, shlex.quote(str(task)))
         elif now["state"] == "MERGED" and "learn" in listed:
             done = subprocess.run([sys.executable, str(SCRIPTS / "observer_check.py"), str(state), slug],
                                   capture_output=True, text=True)

@@ -551,9 +551,8 @@ class TasksTests(unittest.TestCase):
         self.readme("codex, copilot")
         self.task("some-task", pr="o/r#7")
         gate = "delivery_gate.py"
-        for columns in (dict(codex="running"), dict(codex="not-reviewed"), dict(copilot="requested"),
-                        dict(codex="findings", **{"codex-evidence": "review:1"}),
-                        dict(copilot="answered", **{"copilot-evidence": "review:2"})):
+        for columns in (dict(codex="running"), dict(codex="not-reviewed"), dict(codex="error"),
+                        dict(copilot="requested"), dict(copilot="not-reviewed"), dict(copilot="error")):
             with self.subTest(columns=columns):
                 self.watch.unlink(missing_ok=True)
                 code, lines = self.tasks({}, look=self.reviewed(**columns))
@@ -561,18 +560,54 @@ class TasksTests(unittest.TestCase):
                 self.assertFalse(any(gate in line for line in lines), lines)
                 self.assertTrue(any(line.startswith("next: do not ask to merge o/r#7; ") for line in lines), lines)
 
-    def test_findings_a_wait_has_reported_no_longer_hold_the_merge_ask(self):
+    def steps(self, lines):
+        return [line for line in lines if line.startswith("next:") and "pr_watch.py" not in line and "when it exits" not in line]
+
+    def test_a_ready_green_pr_with_review_findings_prints_the_review_step_not_the_merge_ask(self):
+        self.readme("codex, copilot")
+        self.task("some-task", pr="o/r#7")
+        cases = ((dict(codex="findings", **{"codex-evidence": "review:5515174091"}),
+                  ["next: read the codex round review:5515174091 as FO steps: review findings say."]),
+                 (dict(copilot="answered", **{"copilot-evidence": "review:2"}),
+                  ["next: read the copilot round review:2 as FO steps: review findings say."]),
+                 (dict(codex="findings", copilot="requested", **{"codex-evidence": "review:1"}),
+                  ["next: read the codex round review:1 as FO steps: review findings say.",
+                   "next: do not ask to merge o/r#7; copilot not read on its head yet."]))
+        for columns, expected in cases:
+            with self.subTest(columns=columns):
+                self.watch.unlink(missing_ok=True)
+                code, lines = self.tasks({}, look=self.reviewed(**columns))
+                self.assertEqual(code, 0, lines)
+                self.assertEqual(self.steps(lines), expected, lines)
+
+    def test_findings_a_wait_has_reported_still_hold_the_merge_ask_on_every_pass(self):
         self.readme("codex")
         self.task("some-task", pr="o/r#7")
         found = self.reviewed(codex="findings", **{"codex-evidence": "review:1"})
+        review = "next: read the codex round review:1 as FO steps: review findings say."
         self.tasks({}, look=found)
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(watch.main(["--state", str(self.watch), "wait", "1"], look=found, sleep=lambda s: None), 0)
-        self.assertIn("next: read the codex round", out.getvalue())
-        code, lines = self.tasks({}, look=found)
+        self.assertIn(review, out.getvalue())
+        for _ in range(3):
+            code, lines = self.tasks({}, look=found)
+            self.assertIn(review, lines)
+            self.assertFalse(any("delivery_gate.py" in line for line in lines), lines)
+        code, lines = self.tasks({}, look=self.reviewed(codex="not-reviewed"))
+        self.assertTrue(any(line.startswith("next: do not ask to merge o/r#7; ") for line in lines), lines)
+        code, lines = self.tasks({}, look=self.reviewed(codex="clean", **{"codex-evidence": "review:2"}))
         self.assertTrue(any("delivery_gate.py" in line for line in lines), lines)
-        self.assertFalse(any("do not ask to merge" in line for line in lines), lines)
+
+    def test_the_merge_ask_line_prints_when_every_listed_reviewer_is_clear(self):
+        self.readme("codex, copilot")
+        self.task("some-task", pr="o/r#7")
+        for columns in (dict(codex="clean", copilot="not-run"), dict(codex="clean", copilot="-"), dict(codex="-", copilot="not-run")):
+            with self.subTest(columns=columns):
+                self.watch.unlink(missing_ok=True)
+                code, lines = self.tasks({}, look=self.reviewed(**columns))
+                self.assertEqual(len(self.steps(lines)), 1, lines)
+                self.assertIn("delivery_gate.py", self.steps(lines)[0])
 
     def test_a_reviewer_the_readme_does_not_list_never_holds_the_merge_ask(self):
         self.readme("roborev")
@@ -641,8 +676,8 @@ class WaitNextTests(unittest.TestCase):
             "green and ready": (snap(), dict(checks="pending"), [gate]),
             "failing": (snap(checks="failing"), None, [f"next: tell the Captain {REF} has failing CI."]),
             "conflict": (snap(mergeable="CONFLICTING"), None, [f"next: tell the Captain {REF} has a conflict."]),
-            "codex": (snap(codex="findings", **{"codex-evidence": "review:1"}), None, ["next: read the codex round as FO steps: review findings say."]),
-            "copilot": (snap(copilot="answered", **{"copilot-evidence": "review:2"}), None, ["next: read the copilot round as FO steps: review findings say."]),
+            "codex": (snap(codex="findings", **{"codex-evidence": "review:1"}), None, ["next: read the codex round review:1 as FO steps: review findings say."]),
+            "copilot": (snap(copilot="answered", **{"copilot-evidence": "review:2"}), None, ["next: read the copilot round review:2 as FO steps: review findings say."]),
         }
         for label, (then, first, expected) in cases.items():
             with self.subTest(label):
@@ -661,7 +696,17 @@ class WaitNextTests(unittest.TestCase):
                 lines = self.wait(snap(**columns, **watched), dict(checks="pending", **watched))
                 self.assertFalse(any("delivery_gate.py" in line for line in lines), lines)
 
-    def test_a_round_an_earlier_wait_reported_does_not_hold_the_merge_ask_line(self):
+    def test_findings_and_green_in_one_sweep_print_the_review_step_once(self):
+        watched = {"watch-codex": True}
+        lines = self.wait(snap(codex="findings", **{"codex-evidence": "review:1"}, **watched), dict(checks="pending", **watched))
+        self.assertEqual(lines, ["next: read the codex round review:1 as FO steps: review findings say."])
+
+    def test_an_answered_copilot_is_the_review_step_even_when_the_codex_reader_is_absent(self):
+        watched = {"watch-codex": True, "watch-copilot": True}
+        lines = self.wait(snap(copilot="answered", **{"copilot-evidence": "review:2"}, **watched), dict(checks="pending", **watched))
+        self.assertEqual(lines, ["next: read the copilot round review:2 as FO steps: review findings say."])
+
+    def test_a_round_an_earlier_wait_reported_still_holds_the_merge_ask_line(self):
         found = snap(codex="findings", checks="pending", **{"codex-evidence": "review:1", "watch-codex": True})
         with tempfile.TemporaryDirectory() as d:
             state = Path(d, "w.json")
@@ -671,7 +716,8 @@ class WaitNextTests(unittest.TestCase):
                 watch.main(["--state", str(state), "wait", "1"], look=lambda ref, **kw: found, sleep=lambda s: None)
                 out.truncate(0)
                 watch.main(["--state", str(state), "wait", "1"], look=lambda ref, **kw: {**found, "checks": "green"}, sleep=lambda s: None)
-        self.assertIn("delivery_gate.py", out.getvalue())
+        self.assertIn("next: read the codex round review:1 as FO steps: review findings say.", out.getvalue())
+        self.assertNotIn("delivery_gate.py", out.getvalue())
 
     def test_a_reviewer_the_pr_was_not_added_with_does_not_hold_the_merge_ask_line(self):
         lines = self.wait(snap(codex="running"), dict(checks="pending"))
