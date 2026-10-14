@@ -1,0 +1,42 @@
+2026-10-14T06:34:48.764315 gh pr view 360 --json state --jq .state
+2026-10-14T06:34:48.806619 gh pr view 362 --json state --jq .state
+2026-10-14T06:34:53.634429 gh repo view /tmp/val643-replay/s1-mod2/origin.git --json nameWithOwner
+2026-10-14T06:34:53.673482 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:34:53.745751 gh repo view /tmp/val643-replay/s1-mod2/origin.git --json nameWithOwner
+2026-10-14T06:34:53.797287 gh pr list --repo spacedock-dev/subspace-relay --head spacedock-ensign/limit-observability --state all --json number,state
+2026-10-14T06:34:53.864664 gh repo view /tmp/val643-replay/s1-mod2/origin.git --json nameWithOwner
+2026-10-14T06:34:53.900822 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:34:53.976177 gh repo view /tmp/val643-replay/s1-mod2/origin.git --json nameWithOwner
+2026-10-14T06:34:54.036314 gh pr list --repo spacedock-dev/subspace-relay --head spacedock-ensign/signed-in-specs-run --state all --json number,state
+2026-10-14T06:35:06.197892 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:35:06.234502 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:35:08.651705 gh repo view /tmp/val643-replay/s1-mod2/origin.git --json nameWithOwner --jq .nameWithOwner
+2026-10-14T06:35:08.693008 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,headRefOid,title --jq "360 \(.state) draft=\(.isDraft) \(.headRefOid[0:8]) \(.title)"
+2026-10-14T06:35:08.734720 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,headRefOid,mergeable,title --jq "362 \(.state) draft=\(.isDraft) \(.mergeable) \(.headRefOid[0:8]) \(.title)"
+2026-10-14T06:35:36.550461 gh pr view 362 --repo spacedock-dev/subspace-relay --json headRefOid
+2026-10-14T06:36:06.340074 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:36:06.374439 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:37:06.425670 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:37:06.463262 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:38:06.514295 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:38:06.552910 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:39:06.593010 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:39:06.631571 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:40:06.682396 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:40:06.724464 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:41:06.776894 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:41:06.813102 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:42:06.858471 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:42:06.891188 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:43:06.937673 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:43:06.974513 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:44:07.069899 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:44:07.112301 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:45:07.159487 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:45:07.204151 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:45:16.218750 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:45:16.257467 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:45:16.326238 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,headRefOid --jq "360 \(.state) draft=\(.isDraft) \(.headRefOid[0:8])"
+2026-10-14T06:45:16.397196 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,headRefOid --jq "362 \(.state) draft=\(.isDraft) \(.headRefOid[0:8])"
+2026-10-14T06:45:19.571881 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:45:19.609270 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title

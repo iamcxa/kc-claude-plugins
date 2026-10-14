@@ -1,0 +1,39 @@
+STEP 1: check out PR #643 head 5b280387 (base origin/main 0cdb40a7) in a throwaway worktree of the colombo checkout
+Preparing worktree (detached HEAD 5b280387)
+HEAD is now at 5b280387 test(kc-dev-flow-2): stop the wait loop with a named exception, not a generator throw
+5b280387 test(kc-dev-flow-2): stop the wait loop with a named exception, not a generator throw
+STEP 2: the README is at its word budget (5476), names none of the three FO scripts, and the one mod is 48 words
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5476 of 5476 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+exit 0
+0
+      48
+STEP 3: the mod sorts before pr-merge and adds no merge hook, merge guard still arms pr-merge, the mod names no missing script (about 30 s)
+exit 0
+PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist
+STEP 4: the scripts print the next step (pr_watch tasks and wait, delivery_gate, observer_check)
+Ran 40 tests in 5.476s  OK 
+Ran 13 tests in 0.035s  OK 
+Ran 19 tests in 7.812s  OK 
+STEP 5: FO reads fewer words at every moment than on origin/main (recount from the shipped scripts behind a stub gh)
+moment | today measured (design today) | shipped (design column) | verdict
+1 startup, one open PR: today 513 (513) | shipped 435 (436) | OK
+2 idle, open PR, green draft (tasks pending): today 427 (427) | shipped 403 (404) | OK
+2b same, tasks run on the green draft: today None (None) | shipped 411 (412) | OK
+3 idle, merged PR, no report, rerun: today 462 (458) | shipped 377 (389) | OK
+4 after the archive: today 211 (211) | shipped 55 (60) | OK
+5 merge ask: today 423 (423) | shipped 396 (396) | OK
+total today 2036 (2032) shipped 1666 (1685) OK
+exit 0
+STEP 6: a copied mod must match the package byte for byte; the ADR is well formed; no number is taken twice
+cmp exit 0
+cmp: EOF on kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md
+cmp exit 1
+15 ADR file(s) checked, 0 legacy
+adr_lint exit 0
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base 0cdb40a74d90 head 5b280387137e merge-base 0cdb40a74d90
+number_guards exit 0
+cleanup done

@@ -1,0 +1,26 @@
+2026-10-14T06:47:02.413699 gh pr view 362 --json number,title,state,mergedAt,mergeCommit,headRefName,baseRefName
+2026-10-14T06:47:08.620147 gh pr view 360 --json state --jq .state
+2026-10-14T06:47:08.665016 gh pr view 362 --json state --jq .state
+2026-10-14T06:47:22.808620 gh repo view /tmp/val643-replay/s2-mod/origin.git --json nameWithOwner
+2026-10-14T06:47:22.846696 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:47:22.997136 gh repo view /tmp/val643-replay/s2-mod/origin.git --json nameWithOwner
+2026-10-14T06:47:23.062598 gh pr list --repo spacedock-dev/subspace-relay --head spacedock-ensign/limit-observability --state all --json number,state
+2026-10-14T06:47:23.155388 gh repo view /tmp/val643-replay/s2-mod/origin.git --json nameWithOwner
+2026-10-14T06:47:23.208479 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:47:23.451861 gh repo view /tmp/val643-replay/s2-mod/origin.git --json nameWithOwner
+2026-10-14T06:47:23.537076 gh pr list --repo spacedock-dev/subspace-relay --head spacedock-ensign/signed-in-specs-run --state all --json number,state
+2026-10-14T06:47:38.961573 gh repo view /tmp/val643-replay/s2-mod/origin.git --json nameWithOwner
+2026-10-14T06:47:39.005549 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:47:39.088867 gh repo view /tmp/val643-replay/s2-mod/origin.git --json nameWithOwner
+2026-10-14T06:47:39.154991 gh pr list --repo spacedock-dev/subspace-relay --head spacedock-ensign/limit-observability --state all --json number,state
+2026-10-14T06:47:39.241821 gh repo view /tmp/val643-replay/s2-mod/origin.git --json nameWithOwner
+2026-10-14T06:47:39.284544 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:47:39.545362 gh repo view /tmp/val643-replay/s2-mod/origin.git --json nameWithOwner
+2026-10-14T06:47:39.614913 gh pr list --repo spacedock-dev/subspace-relay --head spacedock-ensign/signed-in-specs-run --state all --json number,state
+2026-10-14T06:47:44.258913 gh repo view /tmp/val643-replay/s2-mod/origin.git --json nameWithOwner --jq .nameWithOwner
+2026-10-14T06:47:44.314822 gh pr view 362 --repo spacedock-dev/subspace-relay --json state --jq .state
+2026-10-14T06:47:55.883922 gh pr view 362 --repo spacedock-dev/subspace-relay --json headRefOid --jq .headRefOid
+2026-10-14T06:48:07.331184 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:48:07.370332 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:48:09.632894 gh pr view 360 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
+2026-10-14T06:48:09.672942 gh pr view 362 --repo spacedock-dev/subspace-relay --json state,isDraft,mergeable,headRefOid,statusCheckRollup,title
