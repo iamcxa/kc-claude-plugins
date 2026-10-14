@@ -856,3 +856,21 @@ The single existing offline command and full observed output are preserved in th
 
 The local acceptance reproducibility defect under value-ac[AC-5] is corrected within the separately authorized verification scope; repeat execution preserves its accepted evidence. This supersedes the earlier assumption that one successful invocation established repeatability, while preserving all historical receipts.
 No product, document, provider, Sites, credential, guard-policy or manifest change was made, and no cloud, browser or native-client suite was repeated. Independent re-review remains required; no serving or whole-pilot acceptance is inferred.
+
+## Stage Report: validation
+
+- DONE: Independently verify only the local acceptance repair against the preserved failure and original manifest, without a product change.
+  PASSED for the authorized private verification correction at unchanged candidate `2a24810e8be35cf6fb6b323d67ff089feaebb4c1`. Exact script differences match the authorized repair; restored proxy bytes match the original digest and the manifest itself is unchanged. Historical failure evidence remains preserved.
+- DONE: Replay the unchanged acceptance command repeatedly from different working directories, confirm accepted artifacts and receipts stay unchanged, and return a scoped verdict with full safe output.
+  Four independent fresh-shell runs across task root and worktree exit 0 with identical complete output and empty stderr. Manifest, every manifested artifact, corrected scripts and the old validation receipt remain identical before/after each run; a changed byte or failed mapping would invalidate the result. Exact safe command/output stays in the local repair handback.
+- DONE: Preserve the chronology and establish the correction's actual boundary under value-ac[AC-5].
+  The earlier single successful invocation did not prove repeatability; the later First Officer replay exposed verification rewriting its own accepted artifact. The correction uses a fixed build directory and verified in-memory output, and consumes fresh results without rewriting historical receipts. The present verdict covers this demonstrated local acceptance defect only.
+- SKIPPED: Untouched product checks, code review and native/browser/cloud suites were not repeated.
+  Product, documents, original integration source and prior accepted operating evidence remain unchanged. The existing exact-candidate product review remains valid within its prior scope; this independent re-review assesses the private acceptance correction, not a new runtime or deployment.
+- SKIPPED: Full-guard disposition, effective licensing and retained-delivery acceptance remain unresolved.
+  The full task-aware guard remains CONFIG ERROR / SKIPPED / NOT PASS. No waiver, issued license, serving switch, publication, PR, merge or complete-cost acceptance is inferred; all previous bounded-preparation limits carry forward.
+
+### Summary
+
+PASSED for the local acceptance repair: repeated execution from both working directories now preserves accepted artifacts and historical receipts. The prior success, later mismatch and current independent repair evidence remain chronological, without rewriting earlier reports or broadening the delivery verdict.
+The unchanged single offline command is ready for the First Officer's fresh replay. No product, provider, credential, license, guard-policy or gate/frontmatter change was made by validation.
