@@ -50,6 +50,17 @@ gates:
                 id: briefing:fo-lifecycle-mod:ideation:attempt-2:revision-1
                 digest: sha256:70e1de75a128c409d08af5f6974dcd0a76c8b1021765ad394d890a93f019e13f
                 room-ref: ./fo-lifecycle-mod/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-lifecycle-mod:ideation:2
+                briefing: briefing:fo-lifecycle-mod:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-14T05:39:25.450711Z"
+                decision: approve
+                reason: 'Captain approved the redone design (「准」), accepting D1 to D3 as stated in the gate question, including the push grant for this task: the implementation worker may push the task branch and open a Draft PR in iamcxa/kc-claude-plugins.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-13T23:51:23Z
 worktree: .worktrees/spacedock-ensign-fo-lifecycle-mod
 pr: iamcxa/kc-claude-plugins#643
