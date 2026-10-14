@@ -269,6 +269,12 @@ The README text, the learn extension and the `dev` skill already carry every ste
 
 Approving the design accepts D1 to D3 as recommended only if the gate question says so.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-14): validation recommended PASSED on #643 33295355 (the D3 pair shows the mod's bite: the control archived with no observer report, the mod run ran `observer_check.py` first and withheld the sentinel). Codex review round 1 (review:5512425198) left two P1, both to fix (a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck. #642 merged into main meanwhile and #643 now conflicts on `references/sd/workflow.md` and `WORKFLOW_WORD_BUDGET`; the repair merges main and recomputes the budget. The validator's Polish on `skills/maintain-flow/SKILL.md` is recorded as `unaffected: names no budget value or FO step`.
+  - P1 #643 `references/sd/workflow.md` (around line 522): the Draft-PR rule is declared but not wired: the implementation stage text and `skills/implementation/SKILL.md` never tell the worker to open a PR, and `Delivery authority` is not in the implementation stage's `context-sections`, so a conforming run reaches validation with no PR.
+  - P1 #643 `references/sd/mods/watch-and-learn.md` (around line 22): the archive step runs the observer check and learn even when `learn` is not listed in `extensions:`.
+
 ## Stage Report: ideation
 
 - FAILED: A design (PRFAQ and Mermaid) for a kc-dev-flow-2 Spacedock mod with `## Hook: merge`, `## Hook: idle` and `## Hook: startup` sections (per-step placement, mod filename and order against `_mods/pr-merge.md`, learn relative to archive, README authority and counted word budget, adopter sync)
