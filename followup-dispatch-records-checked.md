@@ -157,6 +157,8 @@ Visible change: none
   - P2 #642 `scripts/dispatch_records.py` (around line 38): the pointer rule fails a follow-up whose only checklist line is a complete action that names a sibling record for context ("Verify the fix requested in validation-1 satisfies AC-1"), because it tests only for the sibling stem.
 - Cycle 2 (FO, 2026-10-14): Codex review round 2 (review:5511597658) on #642 5567b82c left one P2, to fix (rounds 1 and 2 fix every finding); investigation reproduced it (a `.md`, backtick, Markdown-link or path-prefixed sibling name leaves a word outside POINTER_WORDS, so the pointer passes), FO authorized the widened stem match, then a fresh validation recheck. The validation recheck of 5567b82c, dispatched before this finding, is superseded by the new head.
   - P2 #642 `scripts/dispatch_records.py` (around line 42): "Same checklist as validation-1.md." passes the pointer rule.
+- Cycle 3 (FO, 2026-10-14): Codex review round 3 (review:5511647035) on #642 4b59d1ea left one P2 and no P1, declined under the round-3 rule and filed as a backlog task.
+  - P2 (declined) `scripts/dispatch_records.py` (around line 42): a checklist line whose only words besides the sibling name are non-ASCII ("驗證 validation-1 的修復。") is failed as pointer-only, because the word match is ASCII-only. Decline reason: it fails closed (the record is refused with a message, never silently passed), and dispatch records are repository-facing text written in English under the language rule; no real record has hit it.
 
 ## Stage Report: ideation
 
