@@ -6,6 +6,7 @@ import { createHash, randomBytes } from 'node:crypto'
 import { NodeHost } from '../server/host/node'
 import { prepareDoc } from '../server/host/core'
 import { authenticate } from '../server/host/policy'
+import privateClient from './private-cloudflare-client'
 import { Miniflare } from 'miniflare'
 import { build } from 'esbuild'
 import { build as viteBuild } from 'vite'
@@ -42,6 +43,18 @@ report.payloads = [
 let sourceDoc: any
 let mf: Miniflare | undefined
 try {
+ await check('local operator client rejects browser headers and non-JSON requests before delegation', async () => {
+  let delegated = 0
+  const stub = { OPERATOR: { fetch: () => { delegated++; return new Response('allowed') } } }
+  for (const value of ['https://untrusted.example.invalid', 'null', '']) {
+   assert.equal((await privateClient.fetch(new Request(origin, { method: 'POST', headers: { Origin: value, 'Content-Type': 'application/json' }, body: '{}' }), stub)).status, 403)
+  }
+  assert.equal((await privateClient.fetch(new Request(origin, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: '{}' }), stub)).status, 415)
+  assert.equal((await privateClient.fetch(new Request(origin, { method: 'OPTIONS' }), stub)).status, 404)
+  assert.equal(delegated, 0)
+  assert.equal((await privateClient.fetch(new Request(origin, { method: 'POST', headers: { 'Content-Type': 'application/json; charset=utf-8' }, body: '{}' }), stub)).status, 200)
+  assert.equal(delegated, 1)
+ })
  await check('stopped Node backup captures document/assets and persisted policy without sessions or credentials', async () => {
   const host = openNode(source)
   try {
@@ -106,10 +119,16 @@ try {
   const worker = await mf!.getWorker('product')
   return worker.fetch(origin + path, { method, headers: { Authorization: 'Bearer ' + id + '.' + secret, 'Content-Type': 'application/json' }, body: body === undefined ? undefined : JSON.stringify(body) })
  }
- const operator = (body: any) => mf!.dispatchFetch(origin + '/', { method: 'POST', body: JSON.stringify(body) })
+ const operator = (body: any) => mf!.dispatchFetch(origin + '/', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
  let cloudBackup: any, cloudDoc: any
  await check('private service-binding chain delegates bounded backup/revoke and exposes absent-asset capabilities', async () => {
   await startCloud(originalGrants, 'cloud-source')
+  for (const originHeader of ['https://untrusted.example.invalid', 'null']) {
+   const response = await mf!.dispatchFetch(origin + '/', { method: 'POST', headers: { Origin: originHeader, 'Content-Type': 'application/json' }, body: JSON.stringify({ op: 'revoke', credentialId: 'old', writersStopped: true }) })
+   assert.equal(response.status, 403)
+  }
+  assert.equal((await mf!.dispatchFetch(origin + '/', { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: '{}' })).status, 415)
+  assert.equal((await mf!.dispatchFetch(origin + '/', { method: 'OPTIONS' })).status, 404)
   assert.equal((await app('/doc?room=shared', 'old', 'PATCH', { put })).status, 200)
   cloudDoc = await (await app('/doc?room=shared')).json()
   assert.deepEqual(await (await app('/capabilities?room=shared')).json(), { save: false, repoDoc: false, assets: false })

@@ -173,6 +173,10 @@ The `remote:true` is a service binding, not a DO binding. Cloudflare operator
 credentials stay in Wrangler's supported authentication storage/environment.
 Do not deploy the local client or expose its loopback port to another machine.
 Agent grants cannot call this administration surface.
+The CLI-only local handler rejects requests with a present Origin header and
+requires `Content-Type: application/json` before delegation.
+The local caller's compatibility date also works with Wrangler 4.92.0's bundled
+runtime. Backend and operator bridge keep their own later compatibility date.
 
 Send one JSON POST to the local client; save backup responses directly to a
 mode-0600 local file without logging or displaying their document bodies:
