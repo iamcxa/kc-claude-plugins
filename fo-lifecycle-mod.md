@@ -34,6 +34,17 @@ gates:
                 id: briefing:fo-lifecycle-mod:ideation:attempt-1:revision-1
                 digest: sha256:1ffe660137e16df3d6fec49c60101add0a07d39c78b06e01bf51f3f1dc49b3e8
                 room-ref: ./fo-lifecycle-mod/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-lifecycle-mod:ideation:1
+                briefing: briefing:fo-lifecycle-mod:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-14T01:52:36.070837Z"
+                decision: approve
+                reason: 'Captain: 「那就先留著，盡快做 mod」 (2026-10-14), after the open ideation gate question "Approve the design and enter implementation? Approving accepts D1 (two mod files), D2 (no drift-check script) and D3 with FO''s change (the S2 chat-cue pair first as a go/no-go)"; read as approval to enter implementation with D1 to D3 as stated.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-13T23:51:23Z
 ---
 
