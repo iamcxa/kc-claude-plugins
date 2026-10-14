@@ -381,6 +381,9 @@ Approving the design accepts D1 to D3 as recommended only if the gate question s
   - P1 #643 `scripts/pr_watch.py` (around line 112): on a ready PR with green CI the `tasks`/`wait` output emits the `delivery_gate.py` merge-ask line while a listed Codex or Copilot review is still running, requested or carries unprocessed findings.
   - P2 (declined) `scripts/pr_watch.py` (around line 239): `extensions:` in YAML block-sequence form is read as empty.
   - P2 (declined) `scripts/pr_watch.py` (around line 261): stored reviewer flags survive the removal of that extension from the README.
+- Cycle 4 (FO, 2026-10-14): the recheck of #643 5eb6bf05 did not run (validator API usage limit). Codex review round 4 on this PR (review:5514369233) left one P1, to fix, and one P2, declined under the round-3 rule into backlog task `pr-watch-tasks-round3-followups`.
+  - P1 #643 `scripts/pr_watch.py` (around line 118): a PR with no check runs reports `checks=none`, which prints no readiness line and is never a decisive change, so `wait` never exits and a repository without CI is stuck.
+  - P2 (declined) `scripts/pr_watch.py` (around line 271): a restart after `pr-merge` writes the sentinel but before the `after pr-merge:` lines run leaves the archived task with no observer check or learn, because `tasks` scans only live task files. Decline reason: it is the design's recorded limit (a restart between the sentinel and the archive), and the archived-task observer recovery in the learn extension still applies by hand.
 
 ## Stage Report: ideation
 
