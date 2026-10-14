@@ -53,6 +53,17 @@ gates:
                 id: briefing:followup-dispatch-records-checked:validation:attempt-1:revision-1
                 digest: sha256:b258059f19d4ac56d159a629d30418b0d610ee3791e5f05819bb9c41da8e2745
                 room-ref: ./followup-dispatch-records-checked/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:followup-dispatch-records-checked:validation:1
+                briefing: briefing:followup-dispatch-records-checked:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-14T01:54:32.349679Z"
+                decision: approve
+                reason: 'Captain approved delivery of #642 at 3a981251 (「准」): FO marks it ready and asks to merge; later external-review rounds covered per Delivery authority.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T15:57:28Z
 worktree: .worktrees/spacedock-ensign-followup-dispatch-records-checked
 ---
