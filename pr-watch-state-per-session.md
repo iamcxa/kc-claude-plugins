@@ -14,6 +14,7 @@ Filed from a package-issue candidate the Captain approved on 2026-10-14 (ã€Œ1,3ã
 - Containment used here: `--state /tmp/jm-fo/pr-watch.json` for this session; the relay FO was not told.
 - Candidate fix: a per-workflow or per-session default state path (for example keyed by the workflow directory), or per-PR seen markers per caller; plus the Delivery authority and mod text that name the command.
 - Related: `fo-lifecycle-mod` (its idle and startup steps run `pr_watch.py add` and `wait`).
+- Second report, from the relay FO (task `owner-sees-all-feedback-page`, PR spacedock-dev/subspace-relay#368, 2026-10-14): its `pr_watch.py add` printed "watching 3 PR(s)" because the default state already held iamcxa/kc-claude-plugins#642 and #643 from this workflow's FO; it used a per-session `--state` file. It suggests defaulting the state per session (for example keyed by a session id environment variable) or naming `--state` in the Delivery authority step.
 - Non-goals: to be set at ideation.
 
 ## Acceptance criteria
