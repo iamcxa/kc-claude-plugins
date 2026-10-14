@@ -87,7 +87,7 @@ class DispatchRecordTests(unittest.TestCase):
 
     def test_a_checklist_that_only_names_other_records_fails_but_one_citing_a_sibling_beside_real_lines_passes(self):
         pointer = COMPLETE.replace("1. Independent verdict on the exact candidate\n", "Same checklist as validation-1.\n")
-        two_lines = COMPLETE.replace("1. Independent verdict on the exact candidate\n", "Same checklist as validation-1.\nSee validation-1 for the items.\n")
+        two_lines = COMPLETE.replace("1. Independent verdict on the exact candidate\n", "Same checklist as validation-1.\nSee the items in validation-1.\n")
         beside_real = COMPLETE.replace("1. Independent verdict on the exact candidate\n",
                                        "1. Repeat the check from validation-1\n2. Independent verdict on the exact candidate\n")
         for label, text in (("one line", pointer), ("two lines", two_lines)):
@@ -96,6 +96,26 @@ class DispatchRecordTests(unittest.TestCase):
                 self.assertEqual(code, 1)
                 self.assertEqual(out.splitlines(), ["validation-2.md: needs a checklist of its own, not only a reference to another dispatch record"])
         self.assertEqual(self.check({"validation-1.md": COMPLETE, "validation-2.md": beside_real})[0], 0)
+
+    def test_an_action_that_names_a_sibling_record_is_a_checklist_of_its_own(self):
+        one_action = "Verify the fix requested in validation-1 satisfies AC-1.\n"
+        two_actions = "Verify validation-1 findings are fixed.\nRe-run the replays named in validation-1 and report each result.\n"
+        for label, lines in (("one action", one_action), ("two actions", two_actions), ("one verb", "Verify validation-1.\n")):
+            with self.subTest(label):
+                text = COMPLETE.replace("1. Independent verdict on the exact candidate\n", lines)
+                self.assertEqual(self.check({"validation-1.md": COMPLETE, "validation-2.md": text})[0], 0)
+
+    def test_a_pointer_in_other_wording_still_fails_and_a_line_without_a_record_name_or_with_other_words_passes(self):
+        for line in ("Identical to validation-1 and validation-3.", "- see validation-1", "The same items as in validation-1"):
+            with self.subTest(line):
+                text = COMPLETE.replace("1. Independent verdict on the exact candidate\n", line + "\n")
+                code, out = self.check({"validation-1.md": COMPLETE, "validation-2.md": text, "validation-3.md": COMPLETE})
+                self.assertEqual(code, 1)
+                self.assertEqual(out.splitlines(), ["validation-2.md: needs a checklist of its own, not only a reference to another dispatch record"])
+        for line in ("Reuse the checklist of validation-1.", "Same items as in the checklist."):
+            with self.subTest(line):
+                text = COMPLETE.replace("1. Independent verdict on the exact candidate\n", line + "\n")
+                self.assertEqual(self.check({"validation-1.md": COMPLETE, "validation-2.md": text})[0], 0)
 
     def test_a_record_name_inside_a_longer_name_or_the_records_own_name_is_not_a_pointer(self):
         for line in ("Same as validation-10.", "Continue validation-2 work.", "Re-run my-validation-1 items."):
