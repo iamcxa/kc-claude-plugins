@@ -144,6 +144,12 @@ Superseded text:
 
 - **AC-13** Amended by Captain, amendment 3. Replay S1, FO at the merge ask after a session start. Evidence: Replay plan, one control (0.22.1 relay README, no package mod) and two design runs, same model and fixture, cue `用 /kc-dev-flow-2:dev 然後 resume`; per run the record holds M1 `pr_watch.py tasks` ran, M2 `pr_watch.py wait` was launched with `run_in_background`, M3 `delivery_gate.py check` ran before the first `gate prepare` or message asking the Captain to merge, the workflow directory FO booted, and the first twenty tool calls. Pass: M1 to M3 yes in both design runs and at least one no in the control. Falsifier: a control with M1 to M3 all yes shows no bite, and that result goes to the Captain instead of shipping; a design run that never boots `docs/dev2` is the hook limit (FO answered without the loop), reported, not reworded.
 
+### Amendment 6 — 2026-10-14, chat
+Captain: 「同意」 (chat, 2026-10-14)
+Asked: 「更好的做法：縮小範圍，先交付。保留：每次 idle 都跑 `tasks`；記下 PR 編號，worktree 不在本機時提醒 FO 去記；背景監看並叫醒 FO；合併前先跑 observer，封存後跑 learn；沒有 CI 時的判斷。拿掉：腳本不再印「請你合併」或「先別合併」，只回報事實，例如「CI 綠了」「Codex 回覆了」。請你合併之前，照舊由 FO 依 README 跑 `delivery_gate.py`。代價：README 要放回 `delivery_gate.py` 那段，約多 30 到 50 字。」
+Supersedes: none
+Design: the `### Script changes` items that make `pr_watch.py` print the merge-ask (`delivery_gate.py`) line or a hold line, the `### Where each FO step lives` row "head check before the merge ask" (it returns to the README), and the merge-ask row of `### Words FO reads at each moment` (recounted)
+
 ## Number guards
 
 ADR: 0015
