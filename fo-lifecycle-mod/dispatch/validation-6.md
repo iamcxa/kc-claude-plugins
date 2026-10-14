@@ -25,3 +25,7 @@ The minimal acceptance script must run unchanged in a fresh shell and name any c
 Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).
 
 Run each test suite and mutation with a time cap, and remove every throwaway worktree you add before reporting.
+
+### Dispatch Retries
+
+- 2026-10-14: FO stopped this validator before it reported, when Codex round 6 (review:5516007247) left another P1 on eb643a18; FO removed its throwaway worktrees and took the repair loop to the Captain.
