@@ -31,3 +31,5 @@ The first hosted attempt stopped before operator calls because provider inventor
 The corrected hosted attempt did not establish operator-operation acceptance. Recovery cleanup confirmed the disposable resources absent. Exact failure evidence and the limits on its interpretation remain local.
 
 FO authorizes a narrow local caller compatibility correction and a locally demonstrated operator admission correction, followed by affected tests and independent validation. Application servers, canvas UI, dependencies and concurrency remain unchanged. Detailed findings and reproduction evidence remain local; public state records only dispositions and verified conclusions.
+
+A subsequent required review identified another owned operator-admission gap. FO authorizes a bounded caller-credential correction and affected checks before independent validation. Local lifecycle checks now demonstrate readiness, early-exit, timeout and operation-failure cleanup; earlier hosted attempts remain incomplete. No further cloud action is authorized until the corrected candidate and its evidence are reviewed.
