@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pr-watch-state-per-session:validation:attempt-1:revision-1",
+  "question": "Deliver #646 head e4fca679 (pr_watch.py keeps its default state per session: ~/.local/state/kc-dev-flow-2/pr-watch/\u003cCLAUDE_CODE_SESSION_ID\u003e.json, else a working-directory key; --state overrides; the old shared file is neither read nor written): FO marks it ready and asks you to merge? Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:pr-watch-state-per-session:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/70613879ffeca13ca3c78cd696d55fc63806fa0f/pr-watch-state-per-session.md",
+      "rev": "sha256:37e7b7872dfe9cdb266a85ded5268ed0d186c9f59713f7c86d5310f5e51db38b",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at e4fca679 (AC-1..AC-6). FO ran the five-step acceptance script as written in env -i bash from a checkout of e4fca679: every step matched (two sessions each see the change; the 2026-10-14 replay shows A no longer consumes relay#368; default files keyed by session id with a cwd fallback for a missing or unsafe id; old shared file unchanged and unread; --state wins). CI green. Words FO reads at each moment unchanged: tasks output byte-identical in the default case (27/27, 20/20, 0/0); only pr_watch.py and test_pr_watch.py change. External rounds: Codex 1 (comment:6181813812, clean). RoboRev local (684), not counted. Second reviewer: copilot because the change alters how FO is woken before a merge ask (merge rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. Limits (design, accepted at ideation): Claude Code session id only, so Codex and Pi sessions fall back to a per-directory key; a resumed session may get a new id and an empty list refilled by tasks; a wait started before the upgrade keeps the old file until it exits; files of ended sessions stay. Not verified: FO own shell id (inferred from dispatch file names), Codex, Pi, a resumed session."
+    }
+  ]
+}

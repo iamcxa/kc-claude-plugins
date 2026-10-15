@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:pr-watch-state-per-session:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:pr-watch-state-per-session-validation-1
+              briefing:
+                id: briefing:pr-watch-state-per-session:validation:attempt-1:revision-1
+                digest: sha256:c6a5d00f44fc47877fe0aa824118869c6174a947024ecffca1f763781a9206ab
+                room-ref: ./pr-watch-state-per-session/review/validation/briefing-1
 started: 2026-10-15T00:25:14Z
 worktree: .worktrees/spacedock-ensign-pr-watch-state-per-session
 pr: iamcxa/kc-claude-plugins#646
