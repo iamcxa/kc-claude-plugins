@@ -69,6 +69,17 @@ gates:
                 id: briefing:delivery-gate-verdict-form:validation:attempt-1:revision-1
                 digest: sha256:08cdfb9da00082756c41fb25e6683968dc7ab614b6b0ff1aba00bbd38fe2840f
                 room-ref: ./delivery-gate-verdict-form/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-verdict-form:validation:1
+                briefing: briefing:delivery-gate-verdict-form:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-15T08:35:09.750694Z"
+                decision: approve
+                reason: 'Captain approved (「准」) delivery of #647 at aa6fcc91; as the gate question states, this accepts dropping the 26-word workflow.md sentence and declining F1 to F5 into backlog task delivery-gate-candidate-followups, and covers later external-review rounds on this PR.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-15T00:25:17Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-verdict-form
 pr: iamcxa/kc-claude-plugins#647
