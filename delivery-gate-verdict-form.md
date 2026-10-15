@@ -197,3 +197,24 @@ Visible change: none
 ### Summary
 
 The check holds deliveries because nothing tells validators one verdict line: of 267 PASSED sections written unprompted, base finds a candidate in 34. The design states the line in the validation skill (validator-read, no FO-read words) and widens the check by three spellings with a first-verdict-decides rule, which also closes a base defect that accepts a REJECTED report quoting an earlier PASSED. Files expected: delivery_gate.py, test_delivery_gate.py, skills/validation/principles.md, test_sd_dispatch.py; none shared with pr-watch-state-per-session. The corpus scripts are machine-local and the classification is approximate (stated in Design); the prototype lived in /tmp, no repository file was written.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main changing delivery_gate.py, test_delivery_gate.py, skills/validation/principles.md and test_sd_dispatch.py, AC-1 to AC-6 green with each falsifier shown failing by a mutation run
+  PR https://github.com/iamcxa/kc-claude-plugins/pull/647 (Draft), head 57d585326 on base c545b896; 4 files only. The worktree branch sat at 656543f4, so I fast-forwarded it to origin/main (0 own commits lost) before editing.
+  AC-1 `test_the_relay_report_that_held_passes_at_the_same_head` fails if the base pattern is restored; real replay of relay `387b7863`: base exit 2, candidate exit 0.
+  AC-2 `test_every_accepted_verdict_form_names_its_candidate` (8 lines incl. `**Verdict:** PASSED`) fails on the base pattern (5 lines) and with `*` not stripped (bold line).
+  AC-3 `test_forms_outside_the_family_name_no_candidate` fails if a line-start `PASSED` alternative, a 400-character window, an accepted template, or newline-spanning `Verdict\n PASSED` is added.
+  AC-4 `test_a_rejected_or_verdictless_report_holds_even_when_it_quotes_an_earlier_passed` and `test_two_rejected_sections_...` fail with a whole-section PASSED search.
+  AC-5 lint-skills.py prints `references/sd/workflow.md: 5511 of 5511 words`; a line added to workflow.md gives FAIL 5518 > 5511; `test_each_exit_ends_with_the_next_line_for_the_ask` passes unmodified; `grep -c 'Verdict PASSED' references/sd/workflow.md` prints 0.
+  AC-6 new `validation-states-the-verdict-line` entry in `test_sd_dispatch.py`; deleting the sentence fails its fixture check; test_lint_skills.py 26 OK.
+- DONE: No word added to any FO-read file (workflow.md budget unchanged), roborev evidence= line, CI green on the PR head, CI cost measured or stated as not measured
+  workflow.md untouched. roborev: `clean on 57d585326; evidence=roborev:685`. CI on the PR head: 4 checks pass (unit tests 50s, route gate 8s, version parity 40s, GitGuardian). CI cost not measured (job durations only; no new job).
+- DONE: AC-7 left to validation
+  Not run here, as assigned.
+- DONE: comment_ratio.py, doc_impact.py, design_surfaces.py check
+  `code lines 75, comment lines 0, 0.0%`, maximum met, exit 0. doc_impact listed `kc-dev-flow-2/README.md` and `references/sd/adoption.md`: both unaffected: they mention only the `test_sd_dispatch.py --sd-plugin-root` invocation, which is unchanged. design_surfaces: `presentable`. No ADR added.
+
+### Summary
+
+delivery_gate.py now reads the four Verdict spellings, ignores `*`, lets the first Verdict form decide and holds a REJECTED first form or one naming both outcomes; the validation skill states the one line. Two findings for FO: (1) the verdict regex uses `[ \t]` not `\s` between `Verdict` and the outcome, because the report format `- DONE: Verdict` then a next-line `PASSED. HEAD S` would otherwise match as a verdict; (2) AC-4 says a latest REJECTED section above an older PASSED one exits 2, but it also says the latest section with a candidate still wins as in base `test_the_latest_passing_report_names_the_candidate`, which keeps the older candidate (exit 0 or 1 by head); I kept the base behavior, tested the REJECTED-quote and two-REJECTED cases for exit 2, and listed the fall-through as a Limit in the PR. Test_sd_dispatch ran against a spacedock 0.27.0 plugin root (the 0.27.2 root CI pins is not on this machine) with the 0.27.2 binary; CI's live run passed.
