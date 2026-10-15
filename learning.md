@@ -184,3 +184,43 @@ cycle 1 and the dispatch/ records). Existing rules checked: implementation
 principles ban only `git stash` for the same shared-state reason; the workflow
 README's Review-finding disposition allows throwaway-checkout probes but never says
 a worktree config write is forbidden, so no rule states this practice.
+
+## Measure the words FO reads at each moment, not one file's size
+
+### Applicability
+
+A kc-dev-flow-2 change whose goal is to cut what First Officer (FO) reads, such as
+moving rule text out of the adopted README (references/sd/workflow.md) into a mod,
+a script's printed output or another file, where acceptance is stated as a word
+count.
+
+### Practice
+
+State the acceptance number as the words FO reads at each lifecycle moment
+(startup, idle on an open PR, idle on a merged PR, after the archive, the merge
+ask): every passage and every script output that instructs a step due at that
+moment, counted the same way for the unchanged base and for the candidate, with
+each moment required to fall below its base. Do not accept the size of the one
+file the text left (for example WORKFLOW_WORD_BUDGET in
+kc-dev-flow-2/scripts/lint-skills.py) as the measure, because that number can fall
+while FO's total reading rises. Bounded: one task; the redesign also gave each
+step one home, so the count is not shown to be the only cause of the reduction;
+the recount script lives only in the archived task's validation folder, not in the
+repository; and a validator found the first recount script under-counted one
+moment, so recount with an independent copy.
+
+### Evidence
+
+In task fo-lifecycle-mod (iamcxa/kc-claude-plugins#643, closure revision
+d2c1d80085b2699e4cad79eecd4c13fe2230647d) the first design's criterion AC-2
+bounded only references/sd/workflow.md words (5561 down to 5483); validation
+recommended PASSED at that design, yet FO then measured FO's total reading as up
+by about 507 words while the README shrank by 80, and the Captain sent the task
+back (amendment 3). The redo counted words FO reads per moment, and the landed mod
+cut that total from 2036 to 1699 with every moment lower. Recorded in
+spacedock-state/dev2:_archive/fo-lifecycle-mod.md under '### Why the cycle-2
+design grew' and '### Words FO reads at each moment', and in the Cycle 1 FO line
+of its feedback record. Checked 2026-10-15: git grep for a per-moment reading
+count over ab9334edf03d3f248bd8e28a6be979307f355f36 finds only the per-file budget
+in lint-skills.py; no project rule, selected-profile text or stage principle
+states this practice.
