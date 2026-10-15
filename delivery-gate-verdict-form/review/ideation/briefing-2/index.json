@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-verdict-form:ideation:attempt-2:revision-1",
+  "question": "Approve the redone design (amendment 2) and enter implementation on the #647 branch? Approving accepts D1 as recommended (a bare 'Candidate: \u003c40-hex head\u003e' line, one per head validated), accepts continuing on the #647 branch with a first commit that restores the four verdict-parsing files to origin/main, and is the grant for the implementation worker to push to the #647 branch.",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-verdict-form:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/7326e2a1162b68bf968e3319cd527c965255ce12/delivery-gate-verdict-form.md",
+      "rev": "sha256:91caf36466dd953cad14c2bb6432f7dadcf29ad6626d5a50283c6bf077635ccd",
+      "mediaType": "text/markdown",
+      "summary": "Redo under Captain amendment 2. delivery_gate.py stops reading validator prose: it compares the PR head with the 'Candidate:' lines in FO's highest-numbered validation dispatch record (header only); no line holds (exit 2, prints the form), a differing head exits 1, equal exits 0. Exit 0 means FO dispatched validation on that head, not that it passed; reading PASSED or REJECTED stays FO's at the gate (AC-12 limit). Count: 100 of 104 archived validation records (37 tasks, four repositories) already name one head in some shape, none in the whole-line form; the Dispatched SHA is the workflow checkout in 68 of 104, so the candidate gets its own line. Replay: observer-before-merge-guard exits 1 at 7679ab7a once its record carries the line; migration-and-number-guards has no saved records and exits 2 (not a replay). #647's parser, its tests, the principles.md verdict sentence and its pin are removed. Words FO reads: four lifecycle moments byte-identical, merge-ask passage 84 to 83, validation-dispatch passage 64 to 75; workflow.md 5521 over the 5511 budget, paid by dropping one unpinned 26-word sentence that the check now enforces, listed under without-it unanswered at delivery. ACs AC-9 to AC-14, each with a falsifier; design_surfaces.py check exit 0."
+    }
+  ]
+}
