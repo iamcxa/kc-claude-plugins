@@ -193,3 +193,63 @@ pr_watch.py's one machine-wide state file lets any session's `wait` or `check` c
 ### Summary
 
 pr_watch.py's default state is now `~/.local/state/kc-dev-flow-2/pr-watch/<CLAUDE_CODE_SESSION_ID>.json`, else a `cwd-<12 hex>` key; `--state` overrides, the old shared file is never read or written, and `tasks` prints `--state` only when given. Limits: Claude Code only (D2); an old `wait` keeps the old file until it exits; ended sessions' files are not cleaned. AC-6 (worker prints FO's session id) was not run here and stays for validation on a live session.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on #646 head e4fca679 against AC-1 to AC-6, re-running each evidence command and at least one falsifier per criterion yourself (the two-session overlap test, the replay of the 2026-10-14 loss, the default-path keying and fallback, the old shared file left unread, tasks output byte-identical in the default case, and AC-6 that a worker and a background command see FO's session id)
+  Verdict PASSED (below). `python3 -B kc-dev-flow-2/scripts/test_pr_watch.py` at e4fca679 under a temp HOME: 66 tests OK. Every mutation ran on a copy, never the candidate; candidate PR #646 is Draft, CI 4/4 green on that head.
+  AC-1/AC-2 (two callers; replay): `test_two_callers_watching_one_pr_...` asserts B's `check` prints the change A's `wait` already read, `test_one_sessions_wait_does_not_consume_...` asserts A's state holds no relay#368 and B's `wait` returns it. A constant default path fails both (plus 3 more); the same 8 new tests on base c545b896 code give 5 FAIL and 2 ERROR. Black-box on base (script below, step 1/2): B's `check` printed `no change since the last look` and B2's `wait` never returned (killed at 20s).
+  AC-3 (keying, fallback): `test_the_default_file_is_keyed_...` and `test_an_unusable_session_id_...` assert `S.json`, `cwd-<12 hex>` for no id, `../x`, `a/b`, empty, `.`, `..`, `-x`, 129 chars fall to the cwd key with no file outside `pr-watch/`. Unsanitised id (`.*`) and a removed cwd fallback each fail both tests; `--state` wins (`test_an_explicit_state_file_wins`, and script step 5).
+  AC-4 (words): `tasks` at base vs candidate, same fixture, gh stubbed, temp HOME, session id set: open task PR 27/27 words, merged PR with observer report 20/20, no task PR 0/0; stdout identical after normalising the script path. Diff is `kc-dev-flow-2/scripts/pr_watch.py` and `test_pr_watch.py` only; `delivery_gate.py`, references, skills, extensions untouched. Always printing `--state` fails `test_tasks_refills_...`.
+  AC-5 (old file): `test_the_old_shared_file_...` and `test_tasks_refills_...` assert bytes unchanged and a new caller starts empty; copying the old entries into the new file fails both. Script step 4 shows `no change since the last look` for a new session over a seeded old file, hash unchanged; base code reads it (step 4 on base printed the old entry's traceback).
+  AC-6 (worker and background see FO's id): in this dispatched worker, foreground `printenv CLAUDE_CODE_SESSION_ID` and a `run_in_background` Bash both print `5c030106-8d82-4542-855e-1498b2563c69`, the prefix of all 36 `/tmp/spacedock-dispatch/5c030106-...` files FO wrote (other FO sessions carry other prefixes). Not run: FO's own foreground `printenv` (a worker cannot see FO's environment; equality is inferred from the dispatch file names), Codex, Pi, a resumed session.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell from a named checkout, with its observed output
+  Five steps below. Run as `cd <checkout of e4fca679> && bash --noprofile --norc /tmp/val-accept.sh` (needs python3, perl, shasum, bash; a stub `gh` is made in a temp dir; `HOME` is a temp dir, so no real state file is read). Observed on e4fca679: exit 0; step 1 prints `checks pending -> green` for A's wait and again for B's check; step 2 A2's check has no relay#368 and B2's wait prints `subspace-relay#368 feat: x: checks pending -> green`; step 3 lists `A.json A2.json B.json B2.json cwd-<12hex>.json` under `pr-watch/` only; step 4 `no change since the last look` then `old file unchanged`; step 5 prints `chosen.json` then `no D.json written`. On base c545b896 the same script shows `no change since the last look` in step 1, relay#368 in A2's list in step 2, the old file read in step 4.
+- DONE: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.1/scripts/adr_lint.py docs/adr --since <base> run with its exit code; verdict PASSED or REJECTED naming the head, with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since c545b896` at the candidate: "15 ADR file(s) checked, 0 legacy", exit 0. `comment_ratio.py c545b896 e4fca679`: 128 code lines, 0 comment lines, exit 0. `doc_impact.py`: 0 documents listed, exit 0. `dispatch_records.py`: 3 records complete, exit 0. `design_surfaces.py check`: presentable, exit 0. No `## Number guards` section, so no guard check. PASSED on head e4fca679. Findings: none Material; none Deferred risk beyond the design's own Limits; Polish none; Needs decision none. I read the 17 added lines in `pr_watch.py` and the added test class: every change maps to an AC; the 4-line docstring paragraph is `--help` text.
+
+### Summary
+
+PASSED on head e4fca679 (base c545b896): the default state is per session with a working-directory fallback, `--state` still wins, the old shared file is neither read nor written, and `tasks` output is word-for-word the same in the default case. The loss reproduces on base and each falsifier fails exactly the tests meant to catch it. Limits: AC-6 for FO's own shell is inferred from dispatch-file names, and Codex, Pi and a resumed session are not verified; a `wait` started before the upgrade keeps reading the old file until it exits; ended sessions' files are not cleaned up (all stated in the design Limits).
+
+### Minimal acceptance script
+
+```bash
+#!/usr/bin/env bash
+# Run from a checkout of iamcxa/kc-claude-plugins PR #646 head e4fca679:
+#   cd <that checkout> && bash --noprofile --norc /tmp/val-accept.sh
+set -u
+PW="$PWD/kc-dev-flow-2/scripts/pr_watch.py"
+[ -f "$PW" ] || { echo "run from a checkout of PR #646 (kc-dev-flow-2/scripts/pr_watch.py not found)"; exit 2; }
+W=$(mktemp -d); mkdir -p "$W/bin" "$W/gh" "$W/home"
+cat > "$W/bin/gh" <<'GH'
+#!/usr/bin/env python3
+import json, os, sys
+a = sys.argv[1:]  # pr view N --repo R --json ...
+n, repo = a[2], a[a.index("--repo") + 1]
+print(json.dumps({"state": "OPEN", "isDraft": False, "mergeable": "MERGEABLE", "headRefOid": "a" * 40, "title": "feat: x",
+  "statusCheckRollup": [{"conclusion": open(f"{os.environ['GHDIR']}/{repo.replace('/', '_')}_{n}").read().strip()}]}))
+GH
+chmod +x "$W/bin/gh"
+setc() { printf '%s' "$2" > "$W/gh/$(echo "$1" | sed 's#/#_#; s/#/_/')"; }   # setc o/r#1 SUCCESS|IN_PROGRESS
+pw() { sess=$1; shift; perl -e 'alarm 20; exec @ARGV' env -u CLAUDE_CODE_SESSION_ID ${sess:+CLAUDE_CODE_SESSION_ID=$sess} HOME="$W/home" PATH="$W/bin:$PATH" GHDIR="$W/gh" python3 -B "$PW" "$@" || echo "(exit $? - a wait that never returns is killed after 20s)"; }
+echo "== 1. two sessions watch o/r#1; A's wait reads the change; B still sees it"
+setc o/r#1 IN_PROGRESS; pw A add o/r#1; pw B add o/r#1; setc o/r#1 SUCCESS
+echo "-- A wait:"; pw A wait 1; echo "-- B check:"; pw B check
+echo "== 2. replay of 2026-10-14: A's check must not mention relay#368; B must"
+setc spacedock-dev/subspace-relay#368 IN_PROGRESS; setc iamcxa/kc-claude-plugins#643 IN_PROGRESS
+pw B2 add spacedock-dev/subspace-relay#368; pw A2 add iamcxa/kc-claude-plugins#643; setc spacedock-dev/subspace-relay#368 SUCCESS
+echo "-- A2 check:"; pw A2 check; echo "-- B2 wait:"; pw B2 wait 1
+echo "== 3. default files (session id, no id, unsafe id)"
+pw "" add o/r#1 >/dev/null; pw ../x add o/r#1 >/dev/null
+( cd "$W/home" && find . -name '*.json' | sed 's#cwd-[0-9a-f]\{12\}#cwd-<12hex>#' | sort -u )
+echo "== 4. old shared file untouched and unread"
+mkdir -p "$W/home/.local/state/kc-dev-flow-2"; O="$W/home/.local/state/kc-dev-flow-2/pr-watch.json"
+echo '{"x/y#1": {"state":"OPEN","draft":false,"mergeable":"MERGEABLE","checks":"green","head":"aaaaaaaaa","title":"t"}}' > "$O"
+b=$(shasum "$O"); echo "-- new session C check:"; pw C check; [ "$b" = "$(shasum "$O")" ] && echo "old file unchanged"
+echo "== 5. explicit --state wins"
+pw D --state "$W/chosen.json" add o/r#1 >/dev/null; ls "$W/chosen.json"; [ -e "$W/home/.local/state/kc-dev-flow-2/pr-watch/D.json" ] && echo "FAIL: session file written" || echo "no D.json written"
+rm -rf "$W"
+```
+
+Not covered: real GitHub (a stub `gh`), a real FO or worker session (AC-6), Codex and Pi, a resumed session, the old `wait` still running.
