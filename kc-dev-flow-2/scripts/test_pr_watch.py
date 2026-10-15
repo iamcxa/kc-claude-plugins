@@ -3,6 +3,7 @@ import importlib.util
 import io
 import json
 import os
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -652,6 +653,136 @@ class TasksTests(unittest.TestCase):
     def test_tasks_needs_one_workflow_directory(self):
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(watch.main(["--state", str(self.watch), "tasks"]), 2)
+
+
+class DefaultStateTests(unittest.TestCase):
+    """No --state: each caller (FO session and its workers) keeps its own list under HOME."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.home = Path(self.tmp.name)
+        self.pending = {}
+        self.sleeps = 0
+
+    def stores(self):
+        return self.home / ".local/state/kc-dev-flow-2"
+
+    def call(self, session, *args, cwd=None, stop=False):
+        out = io.StringIO()
+
+        def look(ref, **kw):
+            return self.pending[ref]
+
+        def sleep(seconds):
+            self.sleeps += 1
+            if stop:
+                raise StopIteration
+
+        with mock.patch.dict(os.environ, {"HOME": str(self.home)}), contextlib.redirect_stdout(out), contextlib.ExitStack() as stack:
+            if session is None:
+                os.environ.pop("CLAUDE_CODE_SESSION_ID", None)
+            else:
+                os.environ["CLAUDE_CODE_SESSION_ID"] = session
+            if cwd:
+                stack.enter_context(mock.patch("os.getcwd", return_value=str(cwd)))
+            code = watch.main(list(args), look=look, sleep=sleep)
+        return code, out.getvalue()
+
+    def watch_both(self, ref=REF):
+        self.pending[ref] = snap(checks="pending")
+        for session in ("A", "B"):
+            self.assertEqual(self.call(session, "add", ref)[0], 0)
+        self.pending[ref] = snap(checks="green")
+
+    def test_two_callers_watching_one_pr_each_see_a_change_the_other_already_read(self):
+        self.watch_both()
+        self.assertIn("o/r#1 feat: x: checks pending -> green", self.call("A", "wait", "1")[1])
+        self.assertIn("o/r#1 feat: x: checks pending -> green", self.call("B", "check")[1])
+
+    def test_a_waiting_caller_still_wakes_on_a_change_the_other_already_read(self):
+        self.watch_both()
+        self.call("A", "wait", "1")
+        code, out = self.call("B", "wait", "1", stop=True)
+        self.assertEqual(code, 0)
+        self.assertIn("checks pending -> green", out)
+        self.assertEqual(self.sleeps, 0)
+
+    def test_one_sessions_wait_does_not_consume_another_sessions_pr(self):
+        relay, mine = "spacedock-dev/subspace-relay#368", "iamcxa/kc-claude-plugins#643"
+        self.pending.update({relay: snap(checks="pending"), mine: snap(checks="pending")})
+        self.call("B", "add", relay)
+        self.call("A", "add", mine)
+        self.pending[relay] = snap(checks="green")
+        self.assertNotIn("subspace-relay#368", self.call("A", "check")[1])
+        self.assertNotIn("subspace-relay#368", (self.stores() / "pr-watch/A.json").read_text())
+        self.assertIn("subspace-relay#368 feat: x: checks pending -> green", self.call("B", "wait", "1")[1])
+
+    def test_the_default_file_is_keyed_by_session_id_else_by_working_directory(self):
+        self.pending[REF] = snap()
+        self.call("S", "add", REF)
+        self.assertEqual(sorted(p.name for p in (self.stores() / "pr-watch").glob("*.json")), ["S.json"])
+        one, two = Path(self.tmp.name, "one"), Path(self.tmp.name, "two")
+        one.mkdir()
+        two.mkdir()
+        for where in (one, one, two):
+            self.call(None, "add", REF, cwd=where)
+        keyed = sorted(p.name for p in (self.stores() / "pr-watch").glob("cwd-*.json"))
+        self.assertEqual(len(keyed), 2)
+        self.assertTrue(all(re.fullmatch(r"cwd-[0-9a-f]{12}\.json", n) for n in keyed), keyed)
+
+    def test_an_unusable_session_id_falls_to_the_working_directory_and_writes_nothing_outside(self):
+        self.pending[REF] = snap()
+        for bad in ("../x", "a/b", "", ".", "..", "-x", "a" * 129):
+            with self.subTest(session=bad):
+                self.call(bad, "add", REF)
+        written = {p for p in self.home.rglob("*.json")}
+        self.assertEqual({p.parent for p in written}, {self.stores() / "pr-watch"})
+        self.assertTrue(all(p.name.startswith("cwd-") for p in written), written)
+
+    def test_an_explicit_state_file_wins(self):
+        self.pending[REF] = snap()
+        chosen = Path(self.tmp.name, "chosen.json")
+        self.call("S", "--state", str(chosen), "add", REF)
+        self.assertTrue(chosen.exists())
+        self.assertFalse((self.stores() / "pr-watch").exists())
+
+    def test_the_old_shared_file_is_neither_read_nor_changed_and_a_new_caller_starts_empty(self):
+        old = self.stores() / "pr-watch.json"
+        old.parent.mkdir(parents=True)
+        old.write_text(json.dumps({"x/y#1": snap(), "x/y#2": snap()}))
+        before = old.read_bytes()
+        self.pending.update({"x/y#1": snap(), "x/y#2": snap(), REF: snap()})
+        self.assertEqual(self.call("S", "check")[1], "no change since the last look\n")
+        self.call("S", "add", REF)
+        out = self.call("S", "check")[1]
+        self.assertIn(REF, out)
+        self.assertNotIn("x/y#", out)
+        self.assertEqual(old.read_bytes(), before)
+
+    def test_tasks_refills_the_new_callers_list_and_prints_no_state_flag(self):
+        tasks = TasksTests("test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched")
+        tasks.setUp()
+        self.addCleanup(tasks.tmp.cleanup)
+        old = self.stores() / "pr-watch.json"
+        old.parent.mkdir(parents=True)
+        old.write_text(json.dumps({"x/y#1": snap()}))
+        before = old.read_bytes()
+        tasks.readme("roborev")
+        tasks.task("some-task", pr="o/r#7")
+        table = tasks.root / "gh.json"
+        table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, "pr view 7": view()}))
+        env = {"PATH": f"{tasks.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table),
+               "HOME": str(self.home), "CLAUDE_CODE_SESSION_ID": "S"}
+        out = io.StringIO()
+        with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
+            code = watch.main(["tasks", str(tasks.workflow)])
+        lines = out.getvalue().splitlines()
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines[0], "fact: o/r#7 OPEN draft=False checks=green")
+        self.assertEqual(lines[-2], f"next: run `python3 {watch.SCRIPTS / 'pr_watch.py'} wait` in the background, unless one is running.")
+        self.assertEqual(list(json.loads((self.stores() / "pr-watch/S.json").read_text())), ["o/r#7"])
+        self.assertEqual(old.read_bytes(), before)
 
 
 class WaitNextTests(unittest.TestCase):
