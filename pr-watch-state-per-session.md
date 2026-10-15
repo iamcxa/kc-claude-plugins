@@ -38,11 +38,100 @@ Filed from a package-issue candidate the Captain approved on 2026-10-14 (ã€Œ1,3ã
 - Candidate fix: a per-workflow or per-session default state path (for example keyed by the workflow directory), or per-PR seen markers per caller; plus the Delivery authority and mod text that name the command.
 - Related: `fo-lifecycle-mod` (its idle and startup steps run `pr_watch.py add` and `wait`).
 - Second report, from the relay FO (task `owner-sees-all-feedback-page`, PR spacedock-dev/subspace-relay#368, 2026-10-14): its `pr_watch.py add` printed "watching 3 PR(s)" because the default state already held iamcxa/kc-claude-plugins#642 and #643 from this workflow's FO; it used a per-session `--state` file. It suggests defaulting the state per session (for example keyed by a session id environment variable) or naming `--state` in the Delivery authority step.
-- Non-goals: to be set at ideation.
+- Non-goals: set in `## Design` under Limits.
 
 ## Acceptance criteria
 
-To be written at ideation.
+`<package>` is the kc-dev-flow-2 package root; paths are relative to `kc-dev-flow-2/` in `iamcxa/kc-claude-plugins`. A "caller" is one FO session and the workers it dispatches (they share its `CLAUDE_CODE_SESSION_ID`, see Design). New tests go in `scripts/test_pr_watch.py`, which CI already runs (`.github/workflows/kc-dev-flow-2-tests.yml`, step `test_pr_watch.py`). Every new test sets `HOME` to a temp directory and passes no `--state`.
+
+**AC-1** Two callers watching the same PR each see a change the other already read.
+Verified by: a new test where callers `A` and `B` (`CLAUDE_CODE_SESSION_ID=A`, `=B`) both run `add o/r#1` while its checks are pending; the checks turn green; `A` runs `wait 1` and prints `checks pending -> green`; then `B` runs `check` and prints the same change line. A second case with `B`'s file fresh has `B`'s `wait 1` (sleep stubbed to stop) return that line instead of `check`. `python3 <package>/scripts/test_pr_watch.py` exits 0.
+Falsifier: make the default path one constant for every caller; `B`'s `check` prints `no change since the last look` and the test fails. Limit: a stubbed `look`; GitHub is not called.
+
+**AC-2** The 2026-10-14 loss does not recur: one session's `wait` no longer consumes relay#368's `checks pending -> green`.
+Verified by: a new test replaying it with two callers: `B` (relay FO) runs `add spacedock-dev/subspace-relay#368`, `A` (this workflow's FO) runs `add iamcxa/kc-claude-plugins#643`, relay#368's checks turn green; `A`'s `check` output and `A`'s state file hold no `subspace-relay#368`, and `B`'s `wait 1` returns `checks pending -> green` for it. Exit 0.
+Falsifier: replayed on origin/main `c545b896` (the unchanged base) on 2026-10-15 with the same steps and no `--state`: `A`'s `wait` printed `o/relay#368 ... checks pending -> green` and `B`'s later `check` printed `no change since the last look`. The loss reproduces on base; the new test must fail there. Limit: the replay script (`/tmp/prw-ideation/replay.py`) is machine-local; the committed test is the reproducible form.
+
+**AC-3** The default state path is chosen per caller without FO passing `--state`.
+Verified by: a new test asserting, under a temp `HOME`: with `CLAUDE_CODE_SESSION_ID=S` the file is `$HOME/.local/state/kc-dev-flow-2/pr-watch/S.json`; with no id the file is `.../pr-watch/cwd-<12 hex>.json` from the real path of the working directory, equal for one directory and different for two; an id holding `/`, `..` or nothing falls to the working-directory key and writes no file outside `.../pr-watch/`; an explicit `--state FILE` wins over all of them.
+Falsifier: use the id unsanitised (`CLAUDE_CODE_SESSION_ID=../x` writes outside the directory) or skip the working-directory fallback; the matching assertion fails. Limit: only the Claude Code variable is bound (decision D2); a Codex or Pi session without it is per working directory, so two such sessions in one directory still share.
+
+**AC-4** FO reads no more words at any lifecycle moment than on the base; the `tasks` output is byte-identical to the base's in the default case.
+Verified by: at validation, run `pr_watch.py tasks <fixture workflow dir>` at base `c545b896` and at the candidate on the same fixture (the `TasksTests` setup, `gh` stubbed), once each for an open task PR, a merged task PR with the observer report committed, and a workflow with no task PR, and compare `wc -w` of stdout per case (startup and idle on an open PR share the first; idle on a merged PR is the second; after the archive and the merge ask read nothing from this script: the third prints nothing, and `delivery_gate.py` is not in the diff). Equal in all three. `git diff --name-only origin/main` lists `kc-dev-flow-2/scripts/pr_watch.py` and `kc-dev-flow-2/scripts/test_pr_watch.py` and no `references/`, `skills/`, `extensions/` or `docs/dev2/` file. The existing assertion that the printed `wait` line carries `--state` only when one was given still passes.
+Falsifier: print `--state <path>` on the `wait` line in the default case; the open-PR count rises and the byte comparison fails. Limit: counts the script output and the diff, not a measured FO session; the learning rule's "below its base" is met as "not above" because no text moves.
+
+**AC-5** Entries already in `~/.local/state/kc-dev-flow-2/pr-watch.json` are neither read, changed nor deleted, and a new caller starts empty and rebuilds from `tasks`.
+Verified by: a new test seeds `$HOME/.local/state/kc-dev-flow-2/pr-watch.json` with two PR entries, runs `check`, `add` and `tasks` as a caller with an id, and asserts the old file's bytes are unchanged, the new caller's `check` before any `add` lists neither entry, and after `tasks` its file holds only the task PR and `tasks` printed that PR's `fact:` line.
+Falsifier: copy the old entries into the new file on first use; the first assertion about the new caller's list fails. Limit: a `wait` started before the upgrade keeps running the old code on the old file until it exits.
+
+**AC-6** A worker FO dispatches reaches the same state file as FO.
+Verified by: at validation, on a Claude Code session, FO runs `printenv CLAUDE_CODE_SESSION_ID` in a foreground Bash, in a background Bash and from a dispatched worker; all three print one value. Current evidence (2026-10-15, this ideation worker): the value in this worker's environment, `5c030106-8d82-4542-855e-1498b2563c69`, is the prefix of all 32 `/tmp/spacedock-dispatch/5c030106-...` files FO wrote, and a background Bash printed the same first eight characters; a second FO session's files carry a different prefix (`14efebc1`).
+Falsifier: a worker printing a different value, or none, means the learn skill's bare `add` and `check` read another list than FO's `wait`; then AC-6 fails and D1 reopens. Not yet verified: Codex, Pi, and a session resumed after a restart.
+
+## Design
+
+### Chain check (read 2026-10-15)
+
+- **Spacedock** (0.27.x installed): `spacedock --help` lists no PR watcher; `status` has no `pr` watch field beyond the recorded `pr:` value. Nothing to reuse.
+- **kc-dev-flow-2** at origin/main `c545b896` (package 0.22.1; #643 merged at `ab9334ed`): the capability is `scripts/pr_watch.py` and it is the only home. Its `--state` flag already works and `tasks` already prints `--state` on the `wait` line when one was given. `$CLAUDE_CODE_SESSION_ID` is already the package's session identity (`extensions/peers/EXTENSION.md` Host bindings). `references/sd/workflow.md` no longer names `pr_watch.py` after #643; only the mod (`references/sd/mods/kc-dev-flow-2.md`, step 1, `tasks <workflow dir>`), `skills/learn/SKILL.md` (bare `add` and `check`) and `extensions/learn/EXTENSION.md` do, and an adopter README synced at 0.22.1 still carries the older paragraph naming bare `add` and `wait`.
+- **Sibling adopters**: the relay FO's `--state` per-session file and this workflow's `--state /tmp/jm-fo/pr-watch.json` are both per-FO containments (task Scope). They are not a contract: each needs the FO to remember a flag the mod never prints. No adopter fixes the default.
+- ADRs: `docs/adr` has none on watch state (0013 concerns what a Copilot answer is, not where the state lives). `git -C <state> grep -n 'Override:'` on 2026-10-15 finds no gate override on this question.
+
+### Existing-code capability check
+
+Boundary: `pr_watch.py` `check`/`wait`/`tasks`/`add` as FO runs them from the mod. The capability exists and works (completeness: working code, wrong default); only the default path is the defect, so the change is one function and the flag's default, not a new mechanism. Observation: the base replay in AC-2 reproduces the loss with two callers and no flags, and `~/.local/state/kc-dev-flow-2/` on this machine holds `pr-watch.json` with one entry each from this workflow and relay and a separate `pr-watch-subspace-fo.json`.
+
+### PRFAQ
+
+**Press release.** Each FO session now watches its own pull requests. A session that runs `pr_watch.py wait` is woken only by what its own list contains, and a change one session reads is still there for another session that watches the same PR. FO runs the same commands as before; nothing new is printed.
+
+**FAQ.**
+- *What was wrong?* One file for the whole machine held both the PR list and "what was last seen". Any session's `wait` or `check` moved the second session's marker.
+- *What is the key?* The session. `tasks`, `add`, `check` and `wait` take the file `~/.local/state/kc-dev-flow-2/pr-watch/<session id>.json`, where the id is `$CLAUDE_CODE_SESSION_ID`, which FO's workers and its background commands also see. Without that variable the key is the working directory. `--state` still overrides both.
+- *Why not per workflow directory?* Only `tasks` is given the workflow directory; bare `add`, `check` and `wait` (the learn skill, adopter READMEs at 0.22.1) are not, so they would need a new flag or a guess. And two FO sessions on one workflow (a supported setup: concurrent sessions drive one state checkout) would still consume each other's changes. Per-caller markers inside one shared file need the same caller id plus a new file shape, so they add a schema and remove nothing.
+- *What happens to the old `pr-watch.json`?* It is left alone and unread. Copying it in would hand each new session the other sessions' PRs. The first `tasks` in a session re-adds that workflow's open task PRs from the task files and prints their `fact:` lines, so the open task PRs are refilled; a PR added by a bare `add` (the learn skill's own) is not, and a worker's bare `add` after the upgrade lands in the file its id names; an outcome already present when a PR is added prints once as `already`.
+- *What do FO and the workers read?* The same words. The mod, `workflow.md` and the learn skill keep their text; the `wait` line `tasks` prints is unchanged unless `--state` was given.
+- *What does it not do?* It does not clean up files of ended sessions (a file holds only open PRs plus a lock file; nothing breaks without cleanup), does not cover a Codex or Pi session without the Claude variable beyond a per-directory key, and does not make a restarted session keep its list.
+
+### Flow
+
+```mermaid
+flowchart TD
+  FOA[FO session A, kc workflow] -->|tasks workflow dir| PA[pr-watch/A.json: kc PRs]
+  FOB[FO session B, relay workflow] -->|tasks workflow dir| PB[pr-watch/B.json: relay PRs]
+  WA[A's background wait] -->|reads and marks| PA
+  WB[B's background wait] -->|reads and marks| PB
+  WA -->|looks up each PR in A's list| GH[(GitHub)]
+  WB -->|looks up each PR in B's list| GH
+  GH -->|relay#368 pending to green| WB
+  WB -->|prints change once, in B| FOB
+  WA -.->|no relay#368 in A's list: nothing consumed| FOA
+  OLD[(old shared pr-watch.json)] -.->|never read, never written| PA
+  FLAG[--state FILE given] -.->|overrides the session file| PA
+  NOID{no CLAUDE_CODE_SESSION_ID} -->|key = working directory hash| PC[pr-watch/cwd-hash.json]
+```
+
+Path choice in `pr_watch.py`: `--state` default becomes `None`; one function turns it into the session file (id fullmatch `[A-Za-z0-9][A-Za-z0-9._-]{0,127}`, else `cwd-<first 12 hex of sha256 of the real working directory>`), evaluated per run from `HOME` and the environment. `tasks` prints `--state` on its `wait` line only when the flag was given (today's test `test_an_open_pr_prints_its_facts_and_the_kept_step_then_keeps_one_wait_running` pins that form). The `--state` text in the module docstring gains one sentence for the default; that is `--help` text, not read at an FO moment.
+
+### Text FO reads, counted under the learning rule
+
+Rule: "Measure the words FO reads at each moment, not one file's size" (root `learning.md`, origin/main). This change adds and moves no instruction text: mod 0, `workflow.md` 0, learn skill 0, `tasks` output 0 in the default case. Moments, each counted as in AC-4: startup and idle on an open PR (mod plus `tasks` open-PR output), idle on a merged PR (`tasks` observer lines), after the archive (nothing from this script), the merge ask (`delivery_gate.py`, untouched). Per-file `WORKFLOW_WORD_BUDGET` in `scripts/lint-skills.py` is not relevant: no file it counts changes. The one wording worth a later look is `skills/learn/SKILL.md`'s "a watch state lost with the machine"; it stays true, and a session-keyed list makes a restarted session fit it better, so it is left alone.
+
+### Files, and what is shared with the other task
+
+Expected to change: `kc-dev-flow-2/scripts/pr_watch.py` and `kc-dev-flow-2/scripts/test_pr_watch.py`. `delivery-gate-verdict-form` is expected to change `scripts/delivery_gate.py` and its test (and possibly the validation stage text); I name no file both change. The only spot both could reach is `scripts/lint-skills.py` word budgets, if the other adds adopted text; mine adds none. Both are released by release-please from `fix(kc-dev-flow-2): ...` commits; neither edits a version or the changelog.
+
+### Limits
+
+- Session identity is bound for Claude Code only (verified 2026-10-15 for this worker and a background Bash; see AC-6). Codex's `CODEX_THREAD_ID` is named in the ensign contract as that host's marker but its stability across a FO and its workers is unverified; Pi has no session variable (`PI_CODING_AGENT_DIR` is a directory shared by sessions).
+- Whether a resumed Claude session keeps its id is unmeasured. If it gets a new one it starts with an empty list that its next `tasks` refills; the `fact:` lines are state, so no step is lost, but an outcome that fired while no session watched is not reported as a change.
+- Files of ended sessions stay: one small JSON and its lock file per session. No cleanup is added (without it nothing breaks); a later task may add one under its own approval, since deleting is the Captain's call.
+- Non-goals (replacing the Scope bullet): changing what counts as an outcome, the settle rule, reviewer columns, the mod or README wording, or `delivery_gate.py`.
+
+### Unresolved decisions for the Captain
+
+- **D1: key the default state by session (recommended) or by workflow directory?** Session: each FO and its workers get their own markers, so even two sessions on one workflow stop consuming each other's changes, with no new flag and no text change. What gets worse: a session restart may start with an empty list (refilled by `tasks`), ended sessions leave small files, and the key depends on a host variable. Workflow-directory keying survives a restart but leaves the two-sessions-on-one-workflow case broken and needs a flag on bare `add`, `check` and `wait`. No past `Override:` or ADR bears on it.
+- **D2: bind only `CLAUDE_CODE_SESSION_ID` now (recommended), or also `CODEX_THREAD_ID`?** Claude only: the one binding proved here; Codex and Pi fall back to a per-directory key. What gets worse: a Codex FO's session is not isolated from another Codex session in the same directory, and FO is split from its own workers (they run from the task worktree, FO from the workspace, so a worker's bare `add` or `check` reads another list than FO's `wait`), until someone shows its id reaches its workers and background commands (a one-line change plus one check then). Adding Codex now would bind an unverified assumption.
 
 ## FO alignment
 
@@ -50,3 +139,22 @@ Alignment: not needed before ideation; the Captain approved filing it.
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+
+## Stage Report: ideation
+
+- DONE: A design (PRFAQ and Mermaid) for giving each caller of kc-dev-flow-2/scripts/pr_watch.py its own view of changes on main (after #643 merged at ab9334ed): the state key (per workflow directory, per session, or per-caller seen markers), how the default path is chosen without FO passing --state, how existing entries in ~/.local/state/kc-dev-flow-2/pr-watch.json migrate, and what the merged mod and README text need, if anything, counted under the task's learning rule (words FO reads at each moment must not rise)
+  `## Design` (chain check, capability check, PRFAQ, Flow, text count, files, limits): key = session id (`$CLAUDE_CODE_SESSION_ID`, else working-directory hash, `--state` overrides); old file left unread; mod, workflow.md and learn skill need 0 words. `design_surfaces.py check` printed "design surfaces presentable", exit 0.
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, including a test where two callers watch overlapping PRs and each still sees a change the other already read, and a replay of the 2026-10-14 loss (one session's wait consuming relay#368's checks pending -> green)
+  Per criterion, current evidence:
+  AC-1 (overlap test): not yet verified; the base shows the failure (AC-2 replay).
+  AC-2 (replay): base replay at origin/main c545b896 on 2026-10-15 reproduced the loss: A's wait printed relay#368 `checks pending -> green`, B's check printed "no change since the last look". The candidate test is not yet written.
+  AC-3 (default path): not yet verified; the `--state` default is the base's single constant (`DEFAULT_STATE`).
+  AC-4 (words per moment, byte-identical `tasks` output): not yet verified; the base `tasks` test pins today's `wait` line form.
+  AC-5 (old file untouched): not yet verified; the old file holds two entries on this machine (read-only look).
+  AC-6 (workers share FO's id): partly verified 2026-10-15: this worker's `CLAUDE_CODE_SESSION_ID` equals the prefix of 32 FO dispatch files and a background Bash printed it; Codex, Pi and a resumed session are not verified.
+- DONE: Unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  D1 key by session or workflow directory (recommend session); D2 bind Claude only or also `CODEX_THREAD_ID` (recommend Claude only). No past `Override:` or ADR bears on them.
+
+### Summary
+
+pr_watch.py's one machine-wide state file lets any session's `wait` or `check` consume another's changes; the base replay reproduces the 2026-10-14 loss. The design keys the default state by session id (the Claude variable FO, its workers and its background commands share), falls back to a per-directory key, leaves the old file alone, and changes no text FO reads (only `pr_watch.py` and its test). Expected shared file with `delivery-gate-verdict-form`: none.
