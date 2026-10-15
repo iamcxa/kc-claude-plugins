@@ -608,3 +608,84 @@ The check now reads the head FO writes when it dispatches validation, not the va
 ### Summary
 
 The merge-ask check now compares the PR head with FO's own `Candidate:` line in the highest-numbered validation record and reads no report prose; #647's four verdict-parsing files were restored first, so `principles.md` is unchanged against main. Two things for FO: `docs/dev2/README.md` and `docs/dev2-poc/README.md` still carry the old "latest passing validation report" sentence until their next sync (adopter files, a stated non-goal); and the merge-ask passage falls from 84 to 57 words because the dropped sentence was part of it, below the AC-13 ceiling of 84. The PR stays Draft with no comment, review request, ready or merge.
+
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independent verdict on #647 head aa6fcc91 against AC-9 to AC-14 (Captain amendment 2; AC-1 to AC-8 are superseded), re-running each evidence command and at least one falsifier per criterion yourself, including the observer-before-merge-guard replay on a scratch copy, the highest-numbered-record choice (validation-10 over validation-2), a line under a heading, an older record rescuing a newer one, and a REJECTED report with a matching Candidate line; judge whether the 84 to 57 word drop of the merge-ask passage and the dropped 26-word sentence lose any rule the check does not now enforce
+  Verdict PASSED at aa6fcc91df7159cf8cc28ea2d15b532a064f6112 (PR #647 head per `gh pr view` and `git ls-remote refs/pull/647/head`, open Draft, equals the dispatched `Candidate:` of validation-4; base c545b896). Read from a throwaway worktree of that head, removed (`git worktree list` shows none); scratch files only in `/tmp/dgv4`. Four CI checks pass on the head (unit tests 58s, route gate 7s, version parity 56s, GitGuardian); no Codex round 4 review exists yet.
+  Suites at the candidate checkout, all exit 0: `test_delivery_gate` 13 OK, `test_lint_skills` 26 OK, `test_pr_watch`, the candidate's own `kc-dev-flow-2/scripts/lint-skills.py` (`workflow.md: 5495 of 5511 words`), and `test_sd_dispatch.py --sd-plugin-root /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0` with binary `/Users/kent/.local/bin/spacedock` 0.27.2 (CI pins 0.27.2 and passed).
+  AC-9: replay on a scratch copy of archived `observer-before-merge-guard`: records as written exit 2; `Candidate: 40c714a64e9967dc0cad04e2ffc4e8f720a12999` added to `validation-3.md`: `--head 7679ab7a` exit 1 printing both SHAs and the `next: hold the ask; revalidate...` line, `--head 40c714a6` exit 0. Mutations I ran on a scratch copy (`python3 -B`, caches cleared; failing tests named): skip the comparison fails the AC-9 test and four more; `head.startswith(c)` instead of `c.startswith(head)` fails the AC-9 test (the 7-character prefix), `test_a_stated_outcome_passes` and the exit-line test.
+  AC-10: my probe of 17 record shapes. Exit 2: 8-character SHA, text after the SHA, relay `Candidate: spacedock <sha>; ...`, line under `## Scope notes`, line only in validation-1 under a validation-2 with none (an older record does not rescue a newer one), no folder, no record, upper-case hex, ` - Candidate:` list item, lower-case label, `--head main`, a 6-character head. Exit 0: tab separator, trailing spaces, duplicate lines, CRLF (read_text normalises it). Mutations: no end anchor fails exactly the `text after the sha` subTest; `{8,40}` hex fails exactly `8-character sha`; whole record instead of header fails exactly `line under the first heading`; older-record fallback fails the AC-10 test.
+  AC-11: scratch copy of archived `journey-server-host-pilot` (7 records) with `Candidate:` added to validation-2 (S1) and validation-10 (S2): `--head S2` exit 0, `--head S1` exit 1 naming S2 and `validation-10.md`; a two-line record exits 0 for either head and 1 for a third. Mutations: choose by file name and read only the first line each fail the AC-11 test alone. All validation record names on this machine (10 distinct) are `validation-<N>.md`, so the `^validation-(\d+)\.md$` pattern misses none observed.
+  AC-12: `grep -c 'Verdict\|PASSED\|REJECTED'` on `delivery_gate.py` prints 0 (3 at base). A task file with `Verdict REJECTED at S` in a validation section and a record naming S exits 0 (probe and test); mutation "hold when the task text says `Verdict REJECTED`" fails only `test_the_check_reads_no_validation_report_and_claims_no_verdict`. This is the Captain's stated limit, not a finding.
+  AC-13: `len(text.split())`: merge-ask passage 84 base, 57 candidate (84 - 26 for the dropped sentence - 1 for `passing` dropped from `latest passing validation report's candidate` = 57, reconciled); dispatch-record passage 64 to 75; `workflow.md` 5511 to 5495. Gate output measured on one fixture per exit, base then candidate: exit 0 20 and 20 words, exit 1 27 and 25, exit 2 20 and 30 (prints the form). `git diff c545b896 -- references/sd/mods extensions scripts/pr_watch.py` is 0 lines. Falsifier: 28 words appended to the merge-ask passage in a scratch package make the candidate's lint print `FAIL: workflow.md: 5523 words exceeds the budget of 5511`, exit 1.
+  AC-14: `git diff c545b896 -- skills/validation/principles.md` is 0 lines; `validation-states-the-verdict-line` occurs 0 times in `test_sd_dispatch.py`. Removing the `Candidate:` clause from the dispatch-record passage makes `test_sd_dispatch.py` exit 1 with only `dispatch-record` non-empty; removing it from the merge-ask passage fails only `readme-keeps-delivery-rules`.
+  The dropped sentence and the 84 to 57 drop, judged: the sentence said a PR delivers its head commit only and a validated repair reaches it only when pushed. The comparison now enforces that: a validated repair named by the latest record but not pushed meets the old PR head from `gh`, so the head differs and the check exits 1 (probe: head differs from candidate, exit 1). The remaining passage keeps both remediations, revalidate or tell the Captain. `passing` is the only other word lost. The rule it carried, that the head being asked was passed by a validation, is deliberately no longer read from prose (amendment 2, AC-12 Limit); it stays with the validation gate and `merge guard` with an explicit verdict (`workflow.md`, Delivery authority). No rule is lost that the check or an existing statement does not carry. Judgment, not a finding: neither the exit 1 line nor the passage says "push the validated commit" as a third remediation; the word ceiling is why.
+- DONE: Run the candidate's own kc-dev-flow-2/scripts/delivery_gate.py check on this task file (the latest validation dispatch record of delivery-gate-verdict-form carries a Candidate line for this head) with --pr iamcxa/kc-claude-plugins#647, once with live gh and once with a deliberately different --head, recording both outputs and exit codes
+  Command: `python3 -B <candidate checkout>/kc-dev-flow-2/scripts/delivery_gate.py check <this task file> --pr iamcxa/kc-claude-plugins#647 --text-file /tmp/dgv4/gate-q.txt` (the text names no second reviewer). Live gh: `PR head aa6fcc91df7159cf8cc28ea2d15b532a064f6112 equals dispatched candidate aa6fcc91df7159cf8cc28ea2d15b532a064f6112; no second reviewer outcome is missing` then `next: ask for merge with this text.`, exit 0. With `--head 7679ab7a`: `PR head 7679ab7a differs from dispatched candidate aa6fcc91df7159cf8cc28ea2d15b532a064f6112 (latest validation record validation-4.md)` then `next: hold the ask; revalidate this head or tell the Captain the difference.`, exit 1. With `--head aa6fcc9` (7-character prefix) exit 0.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.1/scripts/adr_lint.py docs/adr --since c545b896 with its exit code; your verdict, naming the head, with findings classified by the workflow's Review-finding disposition
+  Script saved as `/tmp/dgv4-accept.sh`, run as `env -i HOME=$HOME PATH=/usr/bin:/bin:/usr/local/bin:/opt/homebrew/bin bash --noprofile --norc /tmp/dgv4-accept.sh` (exit 0). It needs only the colombo checkout (holds base c545b896 and aa6fcc91) and its state checkout for the archived task, git and python3; no spacedock binary, no gh, no secret. Six steps; the observed `exit N` lines were: step 2 `2, 1, 0`, step 3 `0, 0, 1`, step 4 `2, 2, 2, 2, 2`, step 5 `0, 1, 0`; step 6 `merge-ask passage words, base: 84 candidate: 57`, `Ran 13 tests ... OK`, `delivery_gate.py` Verdict/PASSED/REJECTED lines `3` then `0`, `principles.md identical to base`, `workflow.md: 5495 of 5511 words`.
+```bash
+R=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+A=/tmp/dgv4-accept
+S=$R/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+G=kc-dev-flow-2/scripts/delivery_gate.py
+H1=1111111111111111111111111111111111111111
+H2=2222222222222222222222222222222222222222
+x() { python3 -B $A/cand/$G check "$1" --pr o/r#1 --text-file $A/text.txt --head "$2" > $A/out.txt; printf 'exit %s <- %s\n' $? "$3"; }
+rec() { mkdir -p $A/k/$1/dispatch; echo '# task' > $A/k/$1.md; printf "$3" > $A/k/$1/dispatch/validation-$2.md; }
+
+echo "--- 1 setup: base c545b896 and candidate aa6fcc91 extracted from $R (git and python3 only; no spacedock binary)"
+rm -rf $A && mkdir -p $A/base $A/cand $A/k && echo gate > $A/text.txt
+git -C $R archive c545b896 kc-dev-flow-2 scripts | tar -x -C $A/base && git -C $R archive aa6fcc91 kc-dev-flow-2 scripts | tar -x -C $A/cand && echo extracted
+
+echo "--- 2 replay of the archived task observer-before-merge-guard (PR 632 head moved 40c714a6 to 7679ab7a); expect exit 2, then 1, then 0"
+cp -R $S/_archive/observer-before-merge-guard $S/_archive/observer-before-merge-guard.md $A/k/
+x $A/k/observer-before-merge-guard.md 7679ab7a "records as written: no Candidate line, hold"
+sed -i.bak '/^Dispatched:/a\
+Candidate: 40c714a64e9967dc0cad04e2ffc4e8f720a12999' $A/k/observer-before-merge-guard/dispatch/validation-3.md
+x $A/k/observer-before-merge-guard.md 7679ab7a "Candidate line added, head 7679ab7a: differs"
+cat $A/out.txt
+x $A/k/observer-before-merge-guard.md 40c714a6 "Candidate line added, head 40c714a6: equals"
+
+echo "--- 3 one record, one line: full SHA, its 7-character prefix, another head; expect 0, 0, 1"
+rec a 1 "# v\nCandidate: $H1\n\n## Checklist\n"
+x $A/k/a.md $H1 "full head"; x $A/k/a.md ${H1:0:7} "7-character prefix"; x $A/k/a.md $H2 "another head"
+
+echo "--- 4 a record without the one form holds; expect exit 2 each time"
+rec b 1 "# v\nCandidate: ${H1:0:8}\n";                       x $A/k/b.md $H1 "8-character SHA"
+rec c 1 "# v\nCandidate: $H1 (branch x)\n";                  x $A/k/c.md $H1 "text after the SHA"
+rec d 1 "# v\n\n## Scope notes\n\nCandidate: $H1\n";         x $A/k/d.md $H1 "line under a heading"
+rec e 1 "# v\nCandidate: $H1\n"; printf '# v\n' > $A/k/e/dispatch/validation-2.md; x $A/k/e.md $H1 "older record has the line, newest does not"
+mkdir -p $A/k/f && echo '# task' > $A/k/f.md;                x $A/k/f.md $H1 "no dispatch folder"
+
+echo "--- 5 highest number wins (validation-10 over validation-2), and a REJECTED report does not hold; expect 0, 1, 0"
+rec g 2 "# v\nCandidate: $H1\n"; printf "# v\nCandidate: $H2\n" > $A/k/g/dispatch/validation-10.md
+x $A/k/g.md $H2 "head named by validation-10"; x $A/k/g.md $H1 "head named only by validation-2"
+printf "# task\n\n## Stage Report: validation\n\n  Verdict REJECTED at $H1\n" > $A/k/a.md
+x $A/k/a.md $H1 "a REJECTED report at the dispatched head (reading it stays FO's judgement)"
+
+echo "--- 6 words, pins, budget: merge-ask passage base vs candidate; unit suite; no verdict word left in the script; lint"
+python3 - <<'EOF'
+import subprocess
+def words(rev, start, end):
+    t = subprocess.run(["git", "-C", "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo", "show", rev + ":kc-dev-flow-2/references/sd/workflow.md"], capture_output=True, text=True).stdout
+    a = t.index(start); b = t.index(end, a) + len(end)
+    return len(t[a:b].split())
+print("merge-ask passage words, base:", words("c545b896", "A PR delivers only the commit", "what it printed."),
+      "candidate:", words("aa6fcc91", "Before the merge ask, a head other", "what it printed."))
+EOF
+(cd $A/cand/kc-dev-flow-2/scripts && python3 -B -m unittest test_delivery_gate 2>&1 | tail -3)
+printf 'lines naming Verdict, PASSED or REJECTED in delivery_gate.py, base: '; grep -c 'Verdict\|PASSED\|REJECTED' $A/base/$G
+printf 'lines naming Verdict, PASSED or REJECTED in delivery_gate.py, candidate: '; grep -c 'Verdict\|PASSED\|REJECTED' $A/cand/$G
+diff $A/base/kc-dev-flow-2/skills/validation/principles.md $A/cand/kc-dev-flow-2/skills/validation/principles.md && echo "skills/validation/principles.md identical to base"
+(cd $A/cand && python3 -B kc-dev-flow-2/scripts/lint-skills.py 2>&1 | grep 'workflow.md')
+```
+  It does not cover `test_sd_dispatch.py` (run separately above), a measured FO session, a real adopter record written after release, or the live gh path (run separately above).
+  `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.22.1/scripts/adr_lint.py docs/adr --since c545b896` run in the candidate checkout: `15 ADR file(s) checked, 0 legacy`, exit 0 (the candidate adds no ADR). Also at the candidate: `comment_ratio.py c545b896 aa6fcc91` code lines 92, comment lines 0, exit 0; `design_surfaces.py check` on this task `presentable`, exit 0; `dispatch_records.py` on the task folder `13 dispatch record(s) complete`, exit 0; `doc_impact.py c545b896 aa6fcc91` exit 0 lists `kc-dev-flow-2/README.md` and `references/sd/adoption.md`; `number_guards.py` not owed (Surfaces: none, no ADR). PR body read at the head: title `fix(kc-dev-flow-2): ...`, the dropped sentence under `without-it unanswered`, Known limits name the REJECTED-at-head limit and the adopter README lag.
+  Findings by Review-finding disposition, none Material. F1 Deferred risk: a `Candidate:` line inside a code fence above the first `## ` heading is accepted (probe, exit 0); the header is FO-written, no observed trigger; becomes Material if a record header quotes a `Candidate:` example and a merge ask passes on it. F2 Polish: a record line with upper-case hex holds (exit 2) while `--head` is lowered; fail-closed, and `git rev-parse` writes lower case. F3 Polish: the cycle 5 implementation report does not restate `updated` or `unaffected` for the two documents `doc_impact.py` lists; the cycle 1 report carries both, and the reason still holds at this head (each names `test_sd_dispatch.py` only in its `--sd-plugin-root` invocation line, and the diff touches no such line). F4 Polish: the exit 0 line prints the head as given (a prefix) where the record has 40 characters, and the exit 1 line for a validated-but-unpushed repair does not name pushing as a remedy. F5 Polish: the `dispatch-record` swaps entry deletes the whole passage, so it is not specific to the `Candidate:` clause; my direct removal of that clause fails the entry. Limits, stated in the PR and not findings: a REJECTED validation at the head passes (AC-12); the line is FO's own statement; `docs/dev2/README.md` and `docs/dev2-poc/README.md` keep the old sentence until their next sync, and this workflow's own validation-4 record already carries the line. Not verified: a measured FO session, roborev re-run, the Codex round 4 review (none posted).
+
+### Summary
+
+Verdict PASSED at aa6fcc91df7159cf8cc28ea2d15b532a064f6112. AC-9 to AC-14 each hold with a falsifier shown failing by a mutation I ran, the observer-before-merge-guard replay gives exit 2, 1 and 0, and the live check on this task gives exit 0 at the PR head and exit 1 at a different head. The dropped sentence and the word `passing` carry no rule the check or an existing statement does not carry. One Deferred risk and four Polish items remain, none Material; the acceptance script ran unchanged in a fresh shell.
