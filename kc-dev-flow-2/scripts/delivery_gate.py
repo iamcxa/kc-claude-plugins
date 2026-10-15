@@ -3,8 +3,11 @@
 
 Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>]
 
-The validated candidate is the first 7-40 character hexadecimal SHA containing a digit that follows
-`Verdict PASSED` within 160 characters, in the latest `## Stage Report: validation` section that has one.
+The validated candidate is the first 7-40 character hexadecimal SHA containing a digit within 160 characters
+after the first verdict form of the latest `## Stage Report: validation` section that has one, when that form
+says PASSED. The form the validation skill states is `Verdict PASSED at <sha>`; `Verdict: PASSED`,
+`Verdict recommended: PASSED` (also `recommendation:`) and `Verdict: recommend PASSED` are read too, and `*` is ignored.
+A REJECTED first form, a form naming both outcomes, or no `Verdict` form names no candidate.
 It is compared, as a prefix of equal length, with the PR head (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
@@ -20,7 +23,8 @@ import sys
 from pathlib import Path
 
 SHA = r"(?<![0-9A-Za-z])(?=[0-9a-f]*\d)([0-9a-f]{7,40})(?![0-9A-Za-z])"
-PASSED = re.compile(r"Verdict PASSED[\s\S]{0,160}?" + SHA)
+VERDICT = re.compile(r"\bVerdict(?:[ \t]+recommend(?:ed|ation)?)?:?[ \t]+(?:recommend[ \t]+)?(PASSED|REJECTED)\b([ \t]*(?:or|/)[ \t]*(?:PASSED|REJECTED)\b)?")
+CANDIDATE = re.compile(r"[\s\S]{0,160}?" + SHA)
 REPORT = re.compile(r"^## Stage Report: validation\b", re.M)
 SECOND_REVIEWER = re.compile(r"Second reviewer:\s*([\w.-]+)\s+because", re.I)
 OUTCOME_TOKEN = re.compile(r"\b(?:review|comment):\d+")
@@ -30,10 +34,18 @@ PR = re.compile(r"^([\w.-]+/[\w.-]+)#(\d+)$")
 def validated_candidate(task_text):
     sections = re.split(r"^(?=## )", task_text, flags=re.M)
     for section in reversed([s for s in sections if REPORT.match(s)]):
-        found = PASSED.search(section)
+        found = first_passing_candidate(section.replace("*", ""))
         if found:
-            return found.group(1)
+            return found
     return None
+
+
+def first_passing_candidate(section):
+    verdict = VERDICT.search(section)
+    if not verdict or verdict.group(1) != "PASSED" or verdict.group(2):
+        return None
+    found = CANDIDATE.match(section, verdict.end(1))
+    return found.group(1) if found else None
 
 
 def run_gh(repo, number):
