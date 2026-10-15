@@ -369,3 +369,17 @@ diff -r $A/base/kc-dev-flow-2/references $A/cand/kc-dev-flow-2/references && ech
 ### Summary
 
 Verdict PASSED at 43490668592b01b7acbacf1777a1e6ffc930d4bf. The Codex P1, F1 and AC-8 each reproduce on 57d58532 and are fixed, every new test fails under its own mutation except the untested marker branch, and 3 of 3 fresh validator reports, including 2 with the echo that held in cycle 1, are accepted by the candidate's check. Two corpus tasks change from a candidate to a hold, both correct under AC-8; one Deferred risk and three Polish items remain, none Material.
+
+## Stage Report: implementation (cycle 4, repair of Cycle 2 P1)
+
+- DONE: Investigation with no candidate change: reproduce on #647 head 43490668 the Codex round-2 P1 and count in the ideation corpus how many tasks would change from a candidate to a hold; send FO the reproduction, the count and the proposed fix with tests and mutations, then wait
+  Reproduced (PASSED at 1111111a, then a cycle-2 section with only `Recommend PASSED. Head 1111111a.` or only a FAILED line, `--head 1111111a`: exit 0). Count: 143 tasks, 44 candidates at 43490668, 38 with the fix; 6 rows (5 tasks) turn to a hold, each with a newest section in a bare, Recommend or Independent-verdict form. Sent to `main` before any edit.
+- DONE: After FO's fix authorization only: the fix in kc-dev-flow-2/scripts/delivery_gate.py with tests that fail without it (shown failing by a mutation run), the corpus re-count, the roborev gate, push to #647's branch without force, CI green, stage report appended
+  0a26ca37: `validated_candidate` returns the newest validation section's `first_verdict` result alone; docstring updated. Flipped `verdictless` in `test_the_latest_passing_report_names_the_candidate` (now None) and added a REJECTED-then-PASSED case (newest wins, `d127ec71`). New `test_the_newest_validation_section_decides_even_when_it_has_no_counting_form`: a held spelling, no verdict word, a FAILED-only item and lower-case `verdict` after an older PASSED each exit 2 with `names a candidate SHA`; a PASSED then PASSED then verdictless run exits 2. Mutation (restore the skip-and-continue walk): the flipped test and all four subTests plus the parent fail (6 failures), restored: 23 OK.
+  Re-count at 0a26ca37 is identical to the proposal: 143 tasks, (found, found) 38, (held, held) 99, (found, held) 6. test_lint_skills OK; lint-skills 5511 of 5511; comment_ratio 0 of 143 code lines. Roborev `clean on 0a26ca371; evidence=roborev:689`. Pushed 43490668..0a26ca37 without force; all four CI checks pass (unit tests, version parity, route gate, GitGuardian). PR body Limits, the flipped-test note and the evidence line updated (no comment, no review request, still Draft).
+- DONE: AC-8 edit for FO to name at the gate
+  AC-8 edited in place on FO's instruction (id kept): the clause "A latest section with no counting form is skipped and the next older section with one decides" is dropped; AC-8 now says the newest validation section decides even when it carries no counting form, and the falsifier covers it. Amendment 1's text is untouched.
+
+### Summary
+
+The newest validation section alone now decides, so a later section in a form the check does not read, or with no verdict, holds the ask instead of letting an older PASSED name the candidate. Side effect to know: 6 corpus rows (5 tasks, archived or in validation) change from a stale older SHA to a hold. AC-7's fresh-validator run belongs to the fresh recheck FO dispatches.
