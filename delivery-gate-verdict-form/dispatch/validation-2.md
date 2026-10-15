@@ -19,3 +19,7 @@ Profile: pilot. Candidate: iamcxa/kc-claude-plugins PR #647, head 43490668 (repa
 Never run `git remote set-url` or any `git config` write in a worktree of this repository. Run each suite and mutation with a time cap, and remove every throwaway worktree you add before reporting. The minimal acceptance script must run unchanged in a fresh shell, name any checkout or install it needs (including which spacedock binary, if any) and write any package script as its full path; FO will run it exactly as written before the gate.
 
 Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).
+
+### Dispatch Retries
+
+- 2026-10-15: FO stopped this validator before it reported, because the Codex round-2 repair moved the head to 0a26ca37; FO removed its throwaway worktrees and re-dispatches one recheck at the new head.
