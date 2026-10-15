@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pr-watch-state-per-session:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approving accepts D1 (the default state is keyed by session id, falling back to the working directory, with --state overriding) and D2 (bind only CLAUDE_CODE_SESSION_ID now; Codex and Pi fall back to the per-directory key).",
+  "artifacts": [
+    {
+      "id": "artifact:pr-watch-state-per-session:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/96eb6571939c51025ddade91c14ddb498a177cb4/pr-watch-state-per-session.md",
+      "rev": "sha256:acad69dc3b9080c1fe5453a307c6de64a56af6890c4690eadeecd5a0275b2735",
+      "mediaType": "text/markdown",
+      "summary": "Ideation PASSED its checklist. pr_watch.py's default state becomes ~/.local/state/kc-dev-flow-2/pr-watch/\u003csession id\u003e.json, keyed by $CLAUDE_CODE_SESSION_ID (verified 2026-10-15 to be shared by FO, its workers and background commands), else a working-directory hash; --state still overrides. The old shared pr-watch.json is left unread; a session's first tasks refills its open task PRs (a bare add, such as the learn skill's, is not refilled). No text FO reads changes (mod, workflow.md, learn skill 0 words; tasks output unchanged), so the learning rule's per-moment count is unchanged. Base replay on origin/main c545b896 reproduced the 2026-10-14 loss. AC-1..AC-6; only pr_watch.py and its test change. Limits: Codex and Pi sessions are not isolated beyond the directory key; a resumed session may get a new id and an empty list; ended sessions leave small files. design_surfaces.py check presentable, exit 0."
+    }
+  ]
+}

@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:pr-watch-state-per-session:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:pr-watch-state-per-session-ideation-1
+              briefing:
+                id: briefing:pr-watch-state-per-session:ideation:attempt-1:revision-1
+                digest: sha256:072be5f8a05288731dfbb1bdb7e28b42ec156aa3da25d57169427e05e93c2850
+                room-ref: ./pr-watch-state-per-session/review/ideation/briefing-1
 started: 2026-10-15T00:25:14Z
 ---
 
