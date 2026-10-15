@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-verdict-form:validation:attempt-1:revision-1",
+  "question": "Deliver #647 head aa6fcc91 (delivery_gate.py compares the PR head with the Candidate line FO writes in its latest validation dispatch record and reads no validator prose; #647's verdict parsing restored to main first): FO marks it ready and asks you to merge? Approving accepts FO's recommendations: drop the 26-word workflow.md sentence listed under without-it unanswered, and decline findings F1 to F5 into backlog task delivery-gate-candidate-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-verdict-form:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fbb1f3d8ec5eafa88f21431fdcc37fe6886f6ff8/delivery-gate-verdict-form.md",
+      "rev": "sha256:2a4b5b433daab5fcb380f2cac30a81bd4885e71c894a0171c115fd30d23620b8",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at aa6fcc91 (AC-9..AC-14, Captain amendment 2). FO ran the six-step acceptance script as written in env -i bash: every step matched (observer-before-merge-guard replay exit 2, 1, 0; one-record cases 0, 0, 1; five malformed records exit 2; validation-10 over validation-2 and a REJECTED report at the dispatched head 0, 1, 0; merge-ask passage 84 to 57 words; 13 tests OK; no Verdict, PASSED or REJECTED line left in the script; principles.md identical to main; workflow.md 5495 of 5511 words). The live check on this task, whose validation-4 record carries the Candidate line, exits 0 at the PR head and 1 at another head. CI green. Words FO reads: four lifecycle moments byte-identical; merge ask 84 to 57; validation dispatch passage 64 to 75. External rounds: Codex 4 (rounds 1 to 3 each left one P1 of one class and led to amendment 2; round 4 comment:6187737631, clean). RoboRev local (691), not counted. Declined findings filed in backlog task delivery-gate-candidate-followups: F1 Deferred risk, a Candidate line inside a fence in the record header is accepted (FO writes the header; no record quotes one); F2 to F5 Polish, upper-case hex holds, cycle 5 report omits doc_impact dispositions, exit-line wording, a pin deletes the whole passage (each with its reason there). Second reviewer: copilot because the change alters the check FO runs before a merge ask (merge rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. Limits (amendment 2): exit 0 means FO dispatched validation on this head, not that it passed; reading PASSED or REJECTED stays FO's at the gate; the line is FO's own statement; docs/dev2 and docs/dev2-poc READMEs keep the old sentence until their next sync. Not verified: a measured FO session."
+    }
+  ]
+}

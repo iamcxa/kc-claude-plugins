@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:delivery-gate-verdict-form:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:delivery-gate-verdict-form-validation-1
+              briefing:
+                id: briefing:delivery-gate-verdict-form:validation:attempt-1:revision-1
+                digest: sha256:08cdfb9da00082756c41fb25e6683968dc7ab614b6b0ff1aba00bbd38fe2840f
+                room-ref: ./delivery-gate-verdict-form/review/validation/briefing-1
 started: 2026-10-15T00:25:17Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-verdict-form
 pr: iamcxa/kc-claude-plugins#647
