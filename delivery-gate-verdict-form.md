@@ -298,3 +298,19 @@ diff -r $A/base/kc-dev-flow-2/references $A/cand/kc-dev-flow-2/references && ech
 ### Summary
 
 Verdict REJECTED at 57d585326cdeed2ae6ecd9e85f7439be84c73ecb. AC-1 to AC-6 hold with falsifiers shown failing, the word budget and gate output are unchanged, and the `[ \t]` choice is sound; AC-4's fall-through is base behaviour and a Deferred risk. AC-7 is the finding: a worker that wrote the stated line exactly was held once in three runs because the first-form rule meets a verbatim checklist echo; a one-line repair is verified in scratch and awaits the feedback route. Counts here (320 sections, 34 to 82) are an independent re-count and differ from the design's 267 to 92.
+
+## Stage Report: implementation (cycle 3, repair under Captain amendment 1)
+
+- DONE: Recovery first: the previous worker is unreachable; its two unpushed commits 747d0fc9 and 36ffa7a1 sit on the task branch in the existing worktree of PR iamcxa/kc-claude-plugins#647; check git status and git log, and keep them
+  Worktree clean at start; 57d58532, 747d0fc9, 36ffa7a1 present and kept; pushed with the new commit, no force.
+- DONE: Move AC-4 verbatim under Captain amendment 1 (task file) as Superseded text and write its replacement as a new AC id saying "Amended by Captain, amendment 1" ... commit the state
+  AC-4 block now under `Superseded text:` in Amendment 1; replacement is AC-8; `design_surfaces.py check` exit 0 ("design surfaces presentable"); state commit d058fbfe.
+- DONE: Build that rule in delivery_gate.py (walk sections from the latest; the first section with a counting form decides), flip the base test, add the same-head case, mutation shown red; re-run the corpus count
+  43490668: `validated_candidate` returns the first section's `first_verdict` result (REJECTED holds, PASSED with no SHA holds, no counting form falls through). Flipped `test_the_latest_passing_report_names_the_candidate` and `test_two_rejected_sections_...` (older PASSED under later REJECTED now None / exit 2); added `test_a_later_rejected_section_holds_a_head_an_earlier_section_passed` (PASSED then cycle-2 REJECTED on 2222222b and prefix 2222222, exit 2) plus a verdictless-latest-falls-through and a latest-PASSED-without-SHA-holds case. Mutation (a REJECTED decision continues the walk): 4 tests fail (the three above), restored green.
+  Corpus (141 tasks, read only, /tmp/corpus4.py, machine-local): candidate found 43 tasks with and without this commit; 2 tasks change from a candidate to a hold, both a later PASSED section with no SHA over an older PASSED with one (dev2 worker-completion-goes-to-main, cycles 2 and 3 'recheck at'; ss-web holder-panel-header-and-polish, cycle 2). No REJECTED-over-PASSED task appears in the corpus changed set. Per-section results are unchanged.
+- DONE: Suite, mutations, the roborev gate, one push of all commits without force, CI green, stage report appended
+  test_delivery_gate.py 22 OK; test_lint_skills.py 26 OK; test_sd_dispatch.py OK (local spacedock 0.27.0 root, CI pins 0.27.2); lint-skills 5511 of 5511 words; comment_ratio 0 of 126 code lines; doc_impact 0 documents. Roborev `clean on 434906685; evidence=roborev:688` (no fix rounds used). Pushed 57d58532..43490668; all four CI checks pass at 43490668 (unit tests, version parity, multi-profile route gate, GitGuardian).
+
+### Summary
+
+The latest validation section with a counting Verdict form now decides, so a later REJECTED holds even on the head an earlier section passed, per AC-8. The side effect to know: a latest PASSED section with no SHA in range now holds instead of falling back to an older PASSED SHA (2 of 141 corpus tasks). Not done here: AC-7's fresh-validator run belongs to validation; the PR stays Draft with no comments, ready or merge.
