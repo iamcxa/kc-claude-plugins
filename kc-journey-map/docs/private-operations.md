@@ -3,8 +3,8 @@
 The current delivery scope is local Node, Cloudflare on the Free plan, the
 owner-private Sites entry and native Claude Code/Codex CLI cooperation. Remote
 Node, hosted photos/assets, the original desktop plugin binding, Netlify and
-room-switching UI are deferred. Their existing code capabilities are preserved.
-The API, canvas and concurrent-write rules are unchanged.
+room/project management are deferred. Their existing code capabilities are preserved.
+The room selector is authorized by amendment 7; document formats and concurrent-write rules are unchanged.
 
 This runbook prepares retained use; it does not establish a retained deployment,
 valid license, complete bill or ongoing service commitment. Historical native
@@ -37,9 +37,8 @@ npx --no-install vite build --mode production --outDir /absolute/private-build
 The license key is a public client-side license input, distinct from an agent
 credential. Never put agent credentials in any `VITE_*` variable. A build with an
 invalid synthetic marker proves wiring only; it is not a valid key or rendering
-acceptance. Do not ship a development-mode build as a retained-license workaround,
-remove the watermark, or patch license checks. Preserve the SDK's license notices
-with redistributed assets.
+acceptance. Private development-mode work is explicitly authorized; label it accurately and keep licensing as an owner task. Do not remove the watermark or patch license checks. Production rendering is unverified until a suitable key is supplied and actually checked. Preserve the SDK's license notices
+with redistributed assets. Use the repository build helper and Sites entry described in [private-delivery.md](private-delivery.md); no bearer belongs in a client build.
 
 ## Scoped credentials and native clients
 

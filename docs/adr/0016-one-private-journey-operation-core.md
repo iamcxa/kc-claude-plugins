@@ -1,4 +1,4 @@
-# 0015. Keep one private journey operation core across Node and Cloudflare
+# 0016. Keep one private journey operation core across Node and Cloudflare
 
 Date: 2026-10-13
 
@@ -31,7 +31,8 @@ or provider-specific agent workflow. The accepted design is recorded in
 use `transport.ts`; socket admission and assets use that policy. Preserve GET
 auto-create, acknowledged room inventory, complete-record last-writer PATCH,
 snapshot PUT, tldraw-owned schema and existing YAML/readback behavior. No version
-precondition, room switcher or record migration is introduced.
+precondition or record migration is introduced. The original decision excluded
+a room switcher; the private multi-room entry amendment below supersedes that exclusion.
 
 Node local and remote use the same adapter. Cloudflare uses one SQLite Durable
 Object per room plus a strongly consistent metadata registry and scoped R2 assets.
@@ -73,3 +74,29 @@ Restore quarantines all archived credentials because a backup cannot establish
 which IDs were revoked later. New IDs require deliberate current allowlists.
 Detailed operational evidence stays local; readiness, deployment and acceptance
 remain separate decisions.
+
+## Private multi-room entry amendment
+
+Captain amendment 7 permits a room selector over the existing permission-filtered
+health inventory. Selection changes the room URL and remounts the existing sync
+client, closing its old socket. Inventory failure and a denied room leave the
+selector available for recovery. No room creation endpoint, persistence migration
+or concurrency protocol is introduced.
+
+Before switching, the editor completes its gesture and one existing GET document
+read must match the unchanged local document snapshot. Failed or stale confirmation
+keeps the editor open for retry; no polling, private SDK queue field or new write
+protocol is needed. Concurrent agent writes can conservatively delay a switch.
+
+All browser requests share a configurable API base. A repository-contained Sites
+entry validates the private Site origin and visitor identity, forwards only the
+reviewed room/capability routes to a fixed backend, and keeps its scoped bearer
+server-side. Native agents continue to use the backend MCP endpoint directly with
+separate credentials. A labelled private development build uses Vite's standard
+define mechanism; production builds accept a license key without altering SDK
+license enforcement. Provider serving and actual production rendering remain
+separate acceptance steps.
+
+This record was renumbered from the task's former reservation 0015 because main
+assigned 0015 to another decision before merge. Earlier receipts retain their
+original historical number.

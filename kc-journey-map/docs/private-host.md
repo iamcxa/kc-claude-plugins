@@ -193,8 +193,9 @@ export/revocation when rolling back. Restore the prior code and point it at its
 unchanged legacy room/asset directories. Private storage stays separate; no
 automatic reverse migration or real retained-data import is provided.
 
-Before retained use, complete the license and operating prerequisites in the
-operations runbook and independently validate the exact delivery. Accepted bounded
+Before a serving switch, complete the operating prerequisites in the operations
+runbook and independently validate the exact delivery. Private development mode
+is authorized; production licensing remains a separate owner task. Accepted bounded
 native/browser and lifecycle evidence may be reused within its stated limits;
 it is not complete cost or retained-deployment acceptance. No CI was added;
 CI cost per PR was not measured.

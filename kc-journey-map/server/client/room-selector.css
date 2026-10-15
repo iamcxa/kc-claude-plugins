@@ -1,0 +1,26 @@
+.journey-rooms {
+	position: fixed;
+	top: 54px;
+	left: 12px;
+	z-index: 400;
+	max-width: calc(100vw - 24px);
+	padding: 8px 10px;
+	border: 1px solid #d9dce2;
+	border-radius: 9px;
+	background: #fff;
+	color: #242a35;
+	box-shadow: 0 2px 6px #0000000d;
+	font: 12px system-ui, sans-serif;
+}
+.journey-rooms-controls { display: flex; align-items: center; gap: 8px; }
+.journey-rooms label { font-weight: 600; }
+.journey-rooms select { max-width: min(200px, calc(100vw - 170px)); }
+.journey-rooms select, .journey-rooms button { min-height: 32px; font: inherit; border: 1px solid #c4c9d1; border-radius: 5px; background: inherit; color: inherit; }
+.journey-rooms button { padding: 0 8px; cursor: pointer; }
+.journey-rooms :disabled { opacity: .55; cursor: default; }
+.journey-rooms :focus-visible { outline: 2px solid #4263eb; outline-offset: 2px; }
+.journey-rooms-status { margin-top: 5px; color: #596171; }
+@media (prefers-color-scheme: dark) {
+	.journey-rooms { background: #24262b; color: #f0f1f3; border-color: #494e58; }
+	.journey-rooms-status { color: #bdc3cf; }
+}

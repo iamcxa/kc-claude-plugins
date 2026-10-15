@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react'
 import { serializeTldrawJson, useEditor } from 'tldraw'
+import { journeyApi } from './api'
 
 // A viewer front-end answers with the SPA fallback HTML here, so the content type decides.
-async function call<T>(path: string, method: 'GET' | 'POST' | 'DELETE', body?: unknown): Promise<T | null> {
+async function call<T>(roomId: string, path: string, method: 'GET' | 'POST' | 'DELETE', body?: unknown): Promise<T | null> {
 	try {
-		const res = await fetch(path + (path.includes('?') ? '&' : '?') + 'room=' + encodeURIComponent(new URLSearchParams(window.location.search).get('room') || 'default'), {
+		const res = await fetch(journeyApi(path + (path.includes('?') ? '&' : '?') + 'room=' + encodeURIComponent(roomId)), {
 			method,
 			headers: body ? { 'Content-Type': 'application/json' } : undefined,
 			body: body ? JSON.stringify(body) : undefined,
@@ -28,15 +29,15 @@ export function SaveButton({ roomId }: { roomId: string }) {
 	const [canSave, setCanSave] = useState(false)
 
 	useEffect(() => {
-		call<{ dir: string }>('/save', 'GET').then((r) => setCanSave(r !== null)).catch(() => setCanSave(false))
-	}, [])
+		call<{ dir: string }>(roomId, '/save', 'GET').then((r) => setCanSave(r !== null)).catch(() => setCanSave(false))
+	}, [roomId])
 
 	useEffect(() => {
 		if (name === null) return
-		call<{ exists: boolean }>(`/save?name=${encodeURIComponent(name)}`, 'GET')
+		call<{ exists: boolean }>(roomId, `/save?name=${encodeURIComponent(name)}`, 'GET')
 			.then((r) => setExists(r?.exists ?? false))
 			.catch(() => setExists(false))
-	}, [name])
+	}, [name, roomId])
 
 	if (!canSave) return null
 
@@ -67,7 +68,7 @@ export function SaveButton({ roomId }: { roomId: string }) {
 	const save = () =>
 		guard(async () => {
 			const file = await serializeTldrawJson(editor)
-			const saved = await call<{ path: string; records: number }>('/save', 'POST', { name: name ?? roomId, file })
+			const saved = await call<{ path: string; records: number }>(roomId, '/save', 'POST', { name: name ?? roomId, file })
 			if (saved) setNote(`${saved.records} records → ${saved.path.split('/').slice(-2).join('/')}`)
 			setName(null)
 		})
