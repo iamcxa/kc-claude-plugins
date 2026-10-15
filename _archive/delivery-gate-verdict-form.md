@@ -3,7 +3,7 @@ title: delivery_gate.py accepts only "Verdict PASSED", a form no instruction ask
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -79,10 +79,13 @@ gates:
                 reason: 'Captain approved (「准」) delivery of #647 at aa6fcc91; as the gate question states, this accepts dropping the 26-word workflow.md sentence and declining F1 to F5 into backlog task delivery-gate-candidate-followups, and covers later external-review rounds on this PR.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-15T00:25:17Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-verdict-form
 pr: pr-merge:647
+verdict: PASSED
+completed: 2026-10-15T08:45:19Z
+archived: 2026-10-15T08:45:19Z
 ---
 
 Filed on the Captain's 「開」 (2026-10-14), from a package issue the spacedock-dev/subspace-relay FO reported: on relay task `owner-sees-all-feedback-page` (PR spacedock-dev/subspace-relay#368) the validator wrote `Verdict: PASSED, recommended. Artifact: candidate 985200258…`, and `delivery_gate.py check` exited 2 ("no passing validation report … names a candidate SHA"); the relay FO sent the validator back for a one-line report repair (relay state commits 387b786 and 940921b). On this workflow's task `fo-lifecycle-mod` a validator also wrote a "Verdict recommended: PASSED" form.
