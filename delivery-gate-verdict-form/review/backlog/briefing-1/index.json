@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-verdict-form:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation, before the next kc-dev-flow-2 release and adopter sync (with pr-watch-state-per-session)?",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-verdict-form:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d2c1d80085b2699e4cad79eecd4c13fe2230647d/delivery-gate-verdict-form.md",
+      "rev": "sha256:2f6cc86cda192b9e276db8941c9451c049cffaf2278237af23cd29c95880a8ad",
+      "mediaType": "text/markdown",
+      "summary": "Seed: delivery_gate.py accepts only the exact text 'Verdict PASSED' near the candidate SHA; a relay validator wrote 'Verdict: PASSED' and the merge ask was held until a report repair, and a validator here wrote 'Verdict recommended: PASSED'. Under fo-lifecycle-mod (#643) the merge-ask decision rests on FO running delivery_gate.py from the README, so a false hold now stops every such ask. Seed check: design_surfaces.py check --seed exit 0. Recommended profile pilot. Ideation owes the accepted verdict forms (tolerant pattern or one exact line in the validation contract), the archived-report replay of which forms exist, and tests."
+    }
+  ]
+}
