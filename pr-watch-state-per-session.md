@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-15T00:25:14Z
 worktree: .worktrees/spacedock-ensign-pr-watch-state-per-session
-pr: iamcxa/kc-claude-plugins#646
+pr: pr-merge:646
 ---
 
 Filed from a package-issue candidate the Captain approved on 2026-10-14 (「1,3」). On 2026-10-14 this workflow's FO ran `pr_watch.py wait` for its own PR and was woken by spacedock-dev/subspace-relay#368 ("checks pending -> green"), a PR the relay FO session had added; the wake consumed that change, so the relay FO's own `check` or `wait` would no longer report it.
