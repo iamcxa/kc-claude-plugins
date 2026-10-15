@@ -3,7 +3,7 @@ title: delivery_gate.py accepts only "Verdict PASSED", a form no instruction ask
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: ideation
 gates:
     version: 1
     records:
@@ -177,6 +177,12 @@ Superseded text:
     Falsifier: search the whole section for a PASSED line instead of deciding by the first `Verdict` form; the quoting case exits 0 and the test fails.
 
 Replaced by AC-8.
+
+### Amendment 2 — 2026-10-15, chat
+Captain: 「好」 (chat, 2026-10-15)
+Asked: 「要不要把 #647 退回構想階段，改成「比對 FO 派驗收時記錄的版本」這個方向？」
+Supersedes: AC-1, AC-2, AC-3, AC-5, AC-6, AC-7, AC-8
+Design: the whole `## Design` is redone at ideation. The bite is unchanged (FO asked the Captain to merge a PR head that no validation had checked: observer-before-merge-guard and migration-and-number-guards, recorded in archived task fo-record-checks). The check stops reading the validator's prose for a verdict: `delivery_gate.py` compares the PR head with the head FO named in its latest validation dispatch record, a line whose form FO writes and `dispatch_records.py` can check. Reading PASSED or REJECTED stays FO's judgement at the gate.
 
 ## FO alignment
 
