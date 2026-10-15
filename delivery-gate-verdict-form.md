@@ -163,6 +163,14 @@ Expected to change: `kc-dev-flow-2/scripts/delivery_gate.py` (the `PASSED` patte
 - **D2: the check accepts only spellings that contain the word `Verdict` (recommended), or also a bare line-start `PASSED` and `Recommend PASSED`?** Only `Verdict`: no wrong SHA is taken from a quoted earlier verdict. What gets worse: the 132 PASSED sections that lead with a bare `PASSED` or `Recommend PASSED` (49%) stay held until the contract reaches their validators, and each hold costs one validator round trip, as at relay (`387b7863` then `940921b0`). Accepting them: fewer holds now; what gets worse: a recheck report quoting `PASSED <old sha>` could name the old SHA as the candidate and the head comparison (exit 1) becomes the only guard.
 
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-15, chat
+Captain: 「都按建議核准」 (chat, 2026-10-15)
+Asked: 「#647 的 AC-4 要照哪種讀法？我建議最新一次的驗證結論為準。也就是說，同一個版本先通過、後來重驗否決時，檢查要擋下來。代價是要刻意反轉 main 上一個鎖住舊行為的測試。」
+Supersedes: AC-4
+Design: none
+
 ## FO alignment
 
 Alignment: not needed before ideation; the Captain approved filing it.
