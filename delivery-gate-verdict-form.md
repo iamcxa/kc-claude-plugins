@@ -75,9 +75,9 @@ Falsifier: the base pattern accepts only the first line; the other five subTests
 Verified by: subTests, each exiting 2 with `names a candidate SHA`: `PASSED. HEAD S, merge-base S2`; `Recommend PASSED. Candidate S`; `Independent verdict: PASSED. Candidate S` (lower-case `verdict`); `Verdict PASSED` followed by 161 characters then `S`; `Verdict PASSED with one finding` (no SHA); `Verdict PASSED or REJECTED naming head S` (a template line that names both outcomes is no verdict; the same line is a positive case in base `test_the_candidate_is_the_sha_after_the_verdict_within_160_characters`, so this test line changes deliberately and the change is named in the commit message). Observed on the prototype 2026-10-15: bare `PASSED.`, `Recommend PASSED.` exit 2.
 Falsifier: add a line-start `PASSED` alternative to the pattern; the first two subTests fail. Limit: these are the leading forms of 132 of the 267 PASSED sections counted; they hold until the validator writes the contract line (AC-6).
 
-**AC-4** A REJECTED or not-passing report holds, including one that quotes an earlier PASSED.
-Verified by: tests exiting 2 for: `Verdict REJECTED at S1: one Material finding.`; the same line followed by `Cycle 1 read Verdict PASSED at S2.` with `--head S2`; a section with no verdict word; and, over several sections, a latest section that is REJECTED above an older PASSED one (the latest section that has a candidate still wins, as in base `test_the_latest_passing_report_names_the_candidate`). Base defect observed 2026-10-15: the second case exits 0 on base (`PR head 2222222b equals validated candidate 2222222b`), so base asks for merge on a REJECTED report. Over the 57 REJECTED sections in the count, base and candidate both accept 0.
-Falsifier: search the whole section for a PASSED line instead of deciding by the first `Verdict` form; the quoting case exits 0 and the test fails.
+**AC-8** Amended by Captain, amendment 1: the latest validation section that carries a counting Verdict form decides, and a latest REJECTED holds even when an older section PASSED.
+Verified by: tests exiting 2 for `Verdict REJECTED at S1: one Material finding.`; that line followed by `Cycle 1 read Verdict PASSED at S2.` with `--head S2`; a section with no verdict word and no older section; a section carrying `Verdict PASSED at S` then a later `## Stage Report: validation (cycle 2)` section carrying `Verdict REJECTED at S` with `--head S` (the same head), exit 2; and several sections with a latest REJECTED above an older PASSED, exit 2. A latest section with no counting form is skipped and the next older section with one decides; a latest PASSED names its own SHA. Base test `test_the_latest_passing_report_names_the_candidate` pins an older candidate under a later REJECTED section and flips deliberately; the commit message names the change.
+Falsifier: restore the fall-through (a REJECTED section returns no decision and the walk continues to older sections); the later-REJECTED cases exit 0 or 1 and the tests fail.
 
 **AC-5** FO reads no more words at any lifecycle moment than on base.
 Verified by: at validation, the word counts per moment as in the learning "Measure the words FO reads at each moment": startup, idle on an open PR, idle on a merged PR, after the archive and the merge ask each take the same passages and script output at base and candidate. Candidate changes no file FO reads: `python3 <package>/scripts/lint-skills.py` prints `references/sd/workflow.md: 5511 of 5511 words` (observed on the prototype), the mod and the adopted README are untouched, and `delivery_gate.py check` prints byte-identical output on base and candidate for the three base test reports that carry no new form (exit 0, 1 and 2 cases of `test_each_exit_ends_with_the_next_line_for_the_ask`, which passes unmodified).
@@ -170,6 +170,13 @@ Captain: 「都按建議核准」 (chat, 2026-10-15)
 Asked: 「#647 的 AC-4 要照哪種讀法？我建議最新一次的驗證結論為準。也就是說，同一個版本先通過、後來重驗否決時，檢查要擋下來。代價是要刻意反轉 main 上一個鎖住舊行為的測試。」
 Supersedes: AC-4
 Design: none
+Superseded text:
+
+    **AC-4** A REJECTED or not-passing report holds, including one that quotes an earlier PASSED.
+    Verified by: tests exiting 2 for: `Verdict REJECTED at S1: one Material finding.`; the same line followed by `Cycle 1 read Verdict PASSED at S2.` with `--head S2`; a section with no verdict word; and, over several sections, a latest section that is REJECTED above an older PASSED one (the latest section that has a candidate still wins, as in base `test_the_latest_passing_report_names_the_candidate`). Base defect observed 2026-10-15: the second case exits 0 on base (`PR head 2222222b equals validated candidate 2222222b`), so base asks for merge on a REJECTED report. Over the 57 REJECTED sections in the count, base and candidate both accept 0.
+    Falsifier: search the whole section for a PASSED line instead of deciding by the first `Verdict` form; the quoting case exits 0 and the test fails.
+
+Replaced by AC-8.
 
 ## FO alignment
 
