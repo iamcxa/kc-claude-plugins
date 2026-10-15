@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-verdict-form:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approving accepts D1 (the validation skill states one verdict line, Verdict PASSED at \u003csha\u003e or Verdict REJECTED at \u003csha\u003e, and delivery_gate.py also accepts three near spellings that contain the word Verdict) and D2 (a bare line-start PASSED or Recommend PASSED is not accepted).",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-verdict-form:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a23dd195af9c6ad7686a00a1753ce7978fe5d82c/delivery-gate-verdict-form.md",
+      "rev": "sha256:23e1d2fd33a50fd275b728b2d41f559dda5e69f9d2d9116a3a7bdac86d731cd3",
+      "mediaType": "text/markdown",
+      "summary": "Ideation PASSED its checklist. Count (read only, 2026-10-15): of 267 PASSED validation sections across this workflow and the adopters on this machine, base delivery_gate.py finds a candidate in 34; 132 lead with a bare PASSED or Recommend PASSED and 43 place the SHA beyond 160 characters or omit it. Design: one verdict line stated in skills/validation/principles.md (validator-read, about 40 words; no FO-read words, so no lifecycle moment reads more), the check accepts Verdict PASSED plus Verdict: PASSED, Verdict recommended: PASSED and Verdict: recommend PASSED, the first verdict form decides (closing a base defect that accepts a REJECTED report quoting an earlier Verdict PASSED), the 160-character window stays, and a line naming both PASSED and REJECTED (a template) holds. Files: delivery_gate.py, test_delivery_gate.py, skills/validation/principles.md, test_sd_dispatch.py; none shared with pr-watch-state-per-session. AC-1..AC-5. Limits: validators on an older package keep their own spellings until the pin moves; a future third spelling is held until the contract reaches it. design_surfaces.py check presentable, exit 0."
+    }
+  ]
+}

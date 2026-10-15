@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-gate-verdict-form:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-gate-verdict-form-ideation-1
+              briefing:
+                id: briefing:delivery-gate-verdict-form:ideation:attempt-1:revision-1
+                digest: sha256:4bd1dbb7aa22ae25d1554b7414c1930a49990aa0bbeb65cda6fe6c2134db990a
+                room-ref: ./delivery-gate-verdict-form/review/ideation/briefing-1
 started: 2026-10-15T00:25:17Z
 ---
 
