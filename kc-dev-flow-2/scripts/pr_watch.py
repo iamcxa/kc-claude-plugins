@@ -7,6 +7,10 @@
   pr_watch.py [--state FILE] wait [SECONDS]         poll until an outcome changes, print it and exit 0
   pr_watch.py [--state FILE] tasks WORKFLOW_DIR     read the workflow's tasks and print each next step
 
+Without --state the list is kept per session in ~/.local/state/kc-dev-flow-2/pr-watch/<id>.json, where id is
+$CLAUDE_CODE_SESSION_ID (shared by FO, its workers and its background commands), else a hash of the working
+directory; the older shared pr-watch.json is not read.
+
 An outcome is a merge or close, a draft flip, a new or cleared conflict, CI turning green
 or failing, a Codex verdict, or Copilot answering or refusing the head; a check or review that only
 starts is recorded silently.
@@ -33,6 +37,7 @@ change. Exit 2 when a task cannot be read.
 import argparse
 import contextlib
 import fcntl
+import hashlib
 import json
 import re
 import os
@@ -42,7 +47,7 @@ import subprocess
 import sys
 import time
 
-DEFAULT_STATE = Path.home() / ".local/state/kc-dev-flow-2/pr-watch.json"
+SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 SCRIPTS = Path(__file__).resolve().parent
 CODEX = Path(__file__).resolve().parents[1] / "extensions/codex/codex_review.py"
 COPILOT = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_review.py"
@@ -53,6 +58,13 @@ TRACKED = ("state", "draft", "mergeable", "checks", "unchecked", "head", "codex"
 OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
             "checks": {"failing", "green"}, "unchecked": {"settled"}, "codex": {"clean", "findings", "error"},
             "copilot": {"answered", "not-run", "error"}}
+
+
+def default_state():
+    session = os.environ.get("CLAUDE_CODE_SESSION_ID", "")
+    key = session if SESSION_ID.fullmatch(session) else \
+        "cwd-" + hashlib.sha256(os.path.realpath(os.getcwd()).encode()).hexdigest()[:12]
+    return Path.home() / ".local/state/kc-dev-flow-2/pr-watch" / f"{key}.json"
 
 
 def outcome(key, old, new):
@@ -276,7 +288,7 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     readme = front(workflow / "README.md")
     state = workflow / readme["state"] if readme.get("state") else workflow
     listed = set(re.findall(r"[\w-]+", readme.get("extensions", "")))
-    wait = f"python3 {SCRIPTS / 'pr_watch.py'}" + (f" --state {shlex.quote(str(opts.state))}" if opts.state != DEFAULT_STATE else "")
+    wait = f"python3 {SCRIPTS / 'pr_watch.py'}" + (f" --state {shlex.quote(str(opts.state))}" if opts.given else "")
     out, snaps, errors = [], {}, []
     for slug, task in entities(state):
         meta = front(task)
@@ -327,7 +339,7 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
 
 def main(argv=None, look=look, sleep=time.sleep, ask=gh, clock=time.time):
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument("--state", type=Path, default=DEFAULT_STATE)
+    parser.add_argument("--state", type=Path)
     parser.add_argument("command", choices=["add", "check", "wait", "tasks"])
     parser.add_argument("--codex", action="store_true")
     parser.add_argument("--copilot", action="store_true")
@@ -336,6 +348,8 @@ def main(argv=None, look=look, sleep=time.sleep, ask=gh, clock=time.time):
         opts = parser.parse_intermixed_args(argv)
     except SystemExit as stop:
         return 0 if stop.code == 0 else 2
+    opts.given = opts.state is not None
+    opts.state = opts.state or default_state()
     try:
         if opts.command == "tasks":
             if len(opts.args) != 1:
