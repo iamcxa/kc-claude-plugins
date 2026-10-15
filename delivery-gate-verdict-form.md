@@ -3,7 +3,7 @@ title: delivery_gate.py accepts only "Verdict PASSED", a form no instruction ask
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -60,7 +60,7 @@ gates:
                 reason: 'Captain approved (「准」) the redone ideation under amendment 2; as the gate question states, this accepts D1 as recommended (bare Candidate line), continuing on the #647 branch with a first commit restoring the four verdict-parsing files, and is the push grant to the #647 branch for the implementation worker.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-15T00:25:17Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-verdict-form
 pr: iamcxa/kc-claude-plugins#647
