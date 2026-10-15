@@ -170,6 +170,11 @@ Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-15): Codex review round 1 on #647 57d58532 (review:5526632675) left one P1, to fix (a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck. The validation of 57d58532 dispatched before this finding continues; its judgement of the AC-4 conflict joins the same repair.
+  - P1 #647 `scripts/delivery_gate.py` (around line 26): the unanchored `\bVerdict` match accepts a qualified label such as `Independent Verdict: PASSED` or `Prior Verdict: PASSED` as the section's verdict, so a quoted or prior verdict before the real rejection can return success; the new test passes only because it uses lowercase `verdict`.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for which verdict lines kc-dev-flow-2/scripts/delivery_gate.py accepts on main (after #643): a tolerant pattern, or one exact verdict line stated in the validation stage contract and checked, or both; with a count of the verdict forms that occur in archived validation reports across this workflow and the adopters on this machine (read only), and what the validation skill or stage text must say
