@@ -34,6 +34,17 @@ gates:
                 id: briefing:delivery-gate-verdict-form:ideation:attempt-1:revision-1
                 digest: sha256:4bd1dbb7aa22ae25d1554b7414c1930a49990aa0bbeb65cda6fe6c2134db990a
                 room-ref: ./delivery-gate-verdict-form/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-verdict-form:ideation:1
+                briefing: briefing:delivery-gate-verdict-form:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-15T00:41:44.818312Z"
+                decision: approve
+                reason: 'Captain approved (「准」) after FO presented both open ideation gates and asked him to rule on both: accepts D1 (one verdict line in the validation skill plus three Verdict spellings in the check) and D2 (no bare PASSED) as the gate question states.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-15T00:25:17Z
 ---
 
