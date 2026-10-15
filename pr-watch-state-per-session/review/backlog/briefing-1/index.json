@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:pr-watch-state-per-session:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation, before the next kc-dev-flow-2 release and adopter sync (with delivery-gate-verdict-form)?",
+  "artifacts": [
+    {
+      "id": "artifact:pr-watch-state-per-session:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d2c1d80085b2699e4cad79eecd4c13fe2230647d/pr-watch-state-per-session.md",
+      "rev": "sha256:cfceeb26461cfcf3cd91f15fa65437eba199ee68707a0886dfa6d38b82d040ce",
+      "mediaType": "text/markdown",
+      "summary": "Seed: pr_watch.py keeps one machine-local state file for every session, and check/wait mark changes as seen, so concurrent FO sessions consume each other's changes (this FO consumed relay#368's checks pending -\u003e green on 2026-10-14; the relay FO reported #642/#643 in its default state). The merged fo-lifecycle-mod (#643) makes every adopter FO run pr_watch.py tasks and wait at startup and idle with the default state, so syncing it to qnow, relay and ss-web on one machine would multiply the loss. Seed check: design_surfaces.py check --seed exit 0. Recommended profile pilot. Ideation owes the per-session or per-workflow state key, migration of existing entries, and a test with two callers that each still see a change."
+    }
+  ]
+}
