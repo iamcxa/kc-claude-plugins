@@ -3,7 +3,7 @@ title: delivery_gate.py accepts only "Verdict PASSED", a form no instruction ask
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain approved (「准」) after FO presented both open ideation gates and asked him to rule on both: accepts D1 (one verdict line in the validation skill plus three Verdict spellings in the check) and D2 (no bare PASSED) as the gate question states.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-15T00:25:17Z
 ---
 
