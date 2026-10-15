@@ -178,3 +178,17 @@ Visible change: none
 ### Summary
 
 pr_watch.py's one machine-wide state file lets any session's `wait` or `check` consume another's changes; the base replay reproduces the 2026-10-14 loss. The design keys the default state by session id (the Claude variable FO, its workers and its background commands share), falls back to a per-directory key, leaves the old file alone, and changes no text FO reads (only `pr_watch.py` and its test). Expected shared file with `delivery-gate-verdict-form`: none.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main changing only kc-dev-flow-2/scripts/pr_watch.py and kc-dev-flow-2/scripts/test_pr_watch.py as the approved design gives them (session-keyed default state, working-directory fallback, --state override, old shared file left unread); AC-1 to AC-5 green with each falsifier shown failing by a mutation run, including the two-session overlap test and the committed replay of the 2026-10-14 loss
+  PR https://github.com/iamcxa/kc-claude-plugins/pull/646 (Draft), head e4fca6796 off origin/main c545b896; diff is those two files only. `python3 kc-dev-flow-2/scripts/test_pr_watch.py` 66 tests OK (8 new, `DefaultStateTests`, temp HOME, no --state).
+  Mutations (python3 -B, each fails the named test, restored file passes): constant default path -> overlap/replay/keying/old-file tests fail (AC-1,2,3,5); unsanitised id -> `test_an_unusable_session_id_...` (AC-3); no cwd fallback -> `test_the_default_file_is_keyed_...` (AC-3); copy old entries -> `test_the_old_shared_file_...` (AC-5); always print --state -> `test_tasks_refills_...` (AC-4). New test file on base c545b896 pr_watch.py: 5 failures, 2 errors incl. `test_one_sessions_wait_does_not_consume_another_sessions_pr` (AC-2 replay).
+- DONE: The words FO reads at each moment shown unchanged (the tasks output byte-identical in the default case), roborev evidence= line, CI green on the PR head, CI cost measured or stated as not measured
+  AC-4: `tasks` at base vs candidate, same fixture, gh stubbed: open PR 27/27 words, merged PR with observer report 20/20, no task PR 0/0; identical after normalising script paths. No references/, skills/, extensions/ or docs/dev2 file in the diff.
+  roborev: `clean on e4fca6796; evidence=roborev:684`. comment_ratio: 0 comment lines of 128 code lines, max 5% met. doc_impact: 0 documents listed. lint-skills passes.
+  CI on head e4fca6796: unit tests (58s), version parity (51s), multi-profile route gate (6s), GitGuardian all pass. CI cost not measured beyond those job durations; no workflow file changed, the tests join an existing step.
+
+### Summary
+
+pr_watch.py's default state is now `~/.local/state/kc-dev-flow-2/pr-watch/<CLAUDE_CODE_SESSION_ID>.json`, else a `cwd-<12 hex>` key; `--state` overrides, the old shared file is never read or written, and `tasks` prints `--state` only when given. Limits: Claude Code only (D2); an old `wait` keeps the old file until it exits; ended sessions' files are not cleaned. AC-6 (worker prints FO's session id) was not run here and stays for validation on a live session.
