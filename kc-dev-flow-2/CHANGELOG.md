@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.23.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.22.1...kc-dev-flow-2-v0.23.0) (2026-10-15)
+
+
+### Features
+
+* **kc-dev-flow-2:** one lifecycle mod; scripts print FO's next step ([#643](https://github.com/iamcxa/kc-claude-plugins/issues/643)) ([ab9334e](https://github.com/iamcxa/kc-claude-plugins/commit/ab9334edf03d3f248bd8e28a6be979307f355f36))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** delivery_gate compares the PR head with the Candidate line FO writes at validation dispatch ([#647](https://github.com/iamcxa/kc-claude-plugins/issues/647)) ([37cecea](https://github.com/iamcxa/kc-claude-plugins/commit/37cecea9579e4511dfb4216c9c2acf9c6009a39b))
+* **kc-dev-flow-2:** dispatch_records.py fails a follow-up record without Package root or with a pointer-only checklist ([#642](https://github.com/iamcxa/kc-claude-plugins/issues/642)) ([0cdb40a](https://github.com/iamcxa/kc-claude-plugins/commit/0cdb40a74d90dc15cee86f5dc3a603599719de37))
+* **kc-dev-flow-2:** pr_watch keeps its default state per session ([#646](https://github.com/iamcxa/kc-claude-plugins/issues/646)) ([31e73c5](https://github.com/iamcxa/kc-claude-plugins/commit/31e73c5cbf76635fd59d444973e8d9fe682325f7))
+
 ## [0.22.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.22.0...kc-dev-flow-2-v0.22.1) (2026-10-13)
 
 
