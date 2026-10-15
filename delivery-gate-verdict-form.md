@@ -50,6 +50,17 @@ gates:
                 id: briefing:delivery-gate-verdict-form:ideation:attempt-2:revision-1
                 digest: sha256:ce4054b3daa3401d4b9eac7fe86f2e67482231451a723a473874355f5198336a
                 room-ref: ./delivery-gate-verdict-form/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-verdict-form:ideation:2
+                briefing: briefing:delivery-gate-verdict-form:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-15T08:07:36.336633Z"
+                decision: approve
+                reason: 'Captain approved (「准」) the redone ideation under amendment 2; as the gate question states, this accepts D1 as recommended (bare Candidate line), continuing on the #647 branch with a first commit restoring the four verdict-parsing files, and is the push grant to the #647 branch for the implementation worker.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-15T00:25:17Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-verdict-form
 pr: iamcxa/kc-claude-plugins#647
