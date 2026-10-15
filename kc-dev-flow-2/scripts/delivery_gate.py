@@ -5,7 +5,7 @@ Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <fil
 
 The validated candidate is the first 7-40 character hexadecimal SHA containing a digit within 160 characters
 after the first verdict form of the latest `## Stage Report: validation` section that has one, when that form
-says PASSED. The form the validation skill states is `Verdict PASSED at <sha>`; `Verdict: PASSED`,
+says PASSED; the latest section with a verdict form decides, so a later REJECTED holds over an older PASSED. The form the validation skill states is `Verdict PASSED at <sha>`; `Verdict: PASSED`,
 `Verdict recommended: PASSED` (also `recommendation:`) and `Verdict: recommend PASSED` are read too, and `*` is ignored.
 A form counts at the start of a line (after list, heading or DONE/SKIPPED/FAILED markers) or after `.`, `!` or `?`;
 one after a word, such as `Independent Verdict: PASSED`, and one naming both outcomes are skipped.
@@ -38,23 +38,23 @@ PR = re.compile(r"^([\w.-]+/[\w.-]+)#(\d+)$")
 def validated_candidate(task_text):
     sections = re.split(r"^(?=## )", task_text, flags=re.M)
     for section in reversed([s for s in sections if REPORT.match(s)]):
-        found = first_passing_candidate(section.replace("*", ""))
-        if found:
-            return found
+        decided = first_verdict(section.replace("*", ""))
+        if decided:
+            return decided[1]
     return None
 
 
-def first_passing_candidate(section):
+def first_verdict(section):
     forms = list(VERDICT.finditer(section))
     for index, verdict in enumerate(forms):
         before = section[section.rfind("\n", 0, verdict.start()) + 1:verdict.start()]
         if verdict.group(2) or not (LINE_START.fullmatch(before) or SENTENCE_END.search(before)):
             continue
         if verdict.group(1) != "PASSED":
-            return None
+            return "REJECTED", None
         stop = forms[index + 1].start() if index + 1 < len(forms) else len(section)
         found = CANDIDATE.match(section[:stop], verdict.end(1))
-        return found.group(1) if found else None
+        return "PASSED", found.group(1) if found else None
     return None
 
 

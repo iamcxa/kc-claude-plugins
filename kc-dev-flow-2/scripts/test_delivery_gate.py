@@ -42,7 +42,11 @@ class DeliveryGateTests(unittest.TestCase):
     def test_the_latest_passing_report_names_the_candidate(self):
         self.assertEqual(gate.validated_candidate(TASK), HEAD40)
         first = report("validation", "Verdict PASSED at 0830a3be") + report("validation (cycle 2)", "Verdict REJECTED at d127ec71")
-        self.assertEqual(gate.validated_candidate(first), "0830a3be")
+        self.assertIsNone(gate.validated_candidate(first))
+        verdictless = report("validation", "Verdict PASSED at 0830a3be") + report("validation (cycle 2)", "all checks pass at d127ec71")
+        self.assertEqual(gate.validated_candidate(verdictless), "0830a3be")
+        no_sha = report("validation", "Verdict PASSED at 0830a3be") + report("validation (cycle 2)", "Verdict PASSED with one finding")
+        self.assertIsNone(gate.validated_candidate(no_sha))
 
     def test_the_candidate_is_the_sha_after_the_verdict_within_160_characters(self):
         for line, sha in (("Verdict PASSED, candidate 0830a3be checked out", "0830a3be"),
@@ -142,8 +146,18 @@ class DeliveryGateTests(unittest.TestCase):
         self.assertEqual(self.check(task=rejected, head="2222222b")[0], 2)
         older_passed = report("validation", "Verdict PASSED at 1111111a") \
             + report("validation (cycle 2)", "Verdict REJECTED at 3333333c. Cycle 1 read Verdict PASSED at 2222222b.")
-        self.assertEqual(gate.validated_candidate(older_passed), "1111111a")
-        self.assertEqual(self.check(task=older_passed, head="2222222b")[0], 1)
+        self.assertIsNone(gate.validated_candidate(older_passed))
+        self.assertEqual(self.check(task=older_passed, head="2222222b")[0], 2)
+
+    def test_a_later_rejected_section_holds_a_head_an_earlier_section_passed(self):
+        same_head = report("validation", "Verdict PASSED at 2222222b") \
+            + report("validation (cycle 2)", "Verdict REJECTED at 2222222b: one Material finding.")
+        for head in ("2222222b", "2222222"):
+            with self.subTest(head):
+                code, out = self.check(task=same_head, head=head)
+                self.assertEqual(code, 2, out)
+                self.assertIn("names a candidate SHA", out)
+        self.assertEqual(self.check(task=report("validation", "Verdict PASSED at 2222222b"), head="2222222b")[0], 0)
 
     def test_equal_or_prefix_equal_heads_pass_and_a_different_head_fails_naming_both(self):
         for head in ("40c714a6", HEAD40, "40c714a"):
