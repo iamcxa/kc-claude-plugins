@@ -75,7 +75,7 @@ which IDs were revoked later. New IDs require deliberate current allowlists.
 Detailed operational evidence stays local; readiness, deployment and acceptance
 remain separate decisions.
 
-## Private multi-room entry amendment
+### Private multi-room entry amendment
 
 Captain amendment 7 permits a room selector over the existing permission-filtered
 health inventory. Selection changes the room URL and remounts the existing sync
