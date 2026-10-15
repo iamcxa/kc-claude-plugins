@@ -9,7 +9,7 @@ says PASSED. The form the validation skill states is `Verdict PASSED at <sha>`; 
 `Verdict recommended: PASSED` (also `recommendation:`) and `Verdict: recommend PASSED` are read too, and `*` is ignored.
 A form counts at the start of a line (after list, heading or DONE/SKIPPED/FAILED markers) or after `.`, `!` or `?`;
 one after a word, such as `Independent Verdict: PASSED`, and one naming both outcomes are skipped.
-A REJECTED first counting form, or no counting form, names no candidate.
+A REJECTED first counting form, or no counting form, names no candidate; the SHA is read before the next Verdict form.
 It is compared, as a prefix of equal length, with the PR head (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
@@ -45,13 +45,15 @@ def validated_candidate(task_text):
 
 
 def first_passing_candidate(section):
-    for verdict in VERDICT.finditer(section):
+    forms = list(VERDICT.finditer(section))
+    for index, verdict in enumerate(forms):
         before = section[section.rfind("\n", 0, verdict.start()) + 1:verdict.start()]
         if verdict.group(2) or not (LINE_START.fullmatch(before) or SENTENCE_END.search(before)):
             continue
         if verdict.group(1) != "PASSED":
             return None
-        found = CANDIDATE.match(section, verdict.end(1))
+        stop = forms[index + 1].start() if index + 1 < len(forms) else len(section)
+        found = CANDIDATE.match(section[:stop], verdict.end(1))
         return found.group(1) if found else None
     return None
 

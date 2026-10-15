@@ -123,6 +123,12 @@ class DeliveryGateTests(unittest.TestCase):
             with self.subTest(line):
                 self.assertEqual(self.check(task=report("validation", line), head="2222222b")[0], 0)
 
+    def test_a_passed_line_without_a_sha_does_not_take_the_sha_of_a_following_rejected_line(self):
+        for line in ("Verdict PASSED\n  Verdict REJECTED at 2222222b", "Verdict PASSED, no sha here. Verdict: REJECTED at 2222222b"):
+            with self.subTest(line):
+                self.assertEqual(self.check(task=report("validation", line), head="2222222b")[0], 2)
+        self.assertEqual(self.check(task=report("validation", "Verdict PASSED at 2222222b, as Verdict PASSED at 3333333c"), head="2222222b")[0], 0)
+
     def test_a_template_line_naming_both_outcomes_is_skipped_not_decisive(self):
         echo = ("## Stage Report: validation\n\n- DONE: Verdict PASSED or REJECTED naming the head\n"
                 "  Verdict PASSED at 2222222b\n\n### Summary\n\nok\n")
