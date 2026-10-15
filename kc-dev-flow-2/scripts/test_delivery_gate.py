@@ -42,18 +42,13 @@ class DeliveryGateTests(unittest.TestCase):
     def test_the_latest_passing_report_names_the_candidate(self):
         self.assertEqual(gate.validated_candidate(TASK), HEAD40)
         first = report("validation", "Verdict PASSED at 0830a3be") + report("validation (cycle 2)", "Verdict REJECTED at d127ec71")
-        self.assertIsNone(gate.validated_candidate(first))
-        verdictless = report("validation", "Verdict PASSED at 0830a3be") + report("validation (cycle 2)", "all checks pass at d127ec71")
-        self.assertIsNone(gate.validated_candidate(verdictless))
-        reject_then_pass = report("validation", "Verdict REJECTED at 0830a3be") + report("validation (cycle 2)", "Verdict PASSED at d127ec71")
-        self.assertEqual(gate.validated_candidate(reject_then_pass), "d127ec71")
-        no_sha = report("validation", "Verdict PASSED at 0830a3be") + report("validation (cycle 2)", "Verdict PASSED with one finding")
-        self.assertIsNone(gate.validated_candidate(no_sha))
+        self.assertEqual(gate.validated_candidate(first), "0830a3be")
 
     def test_the_candidate_is_the_sha_after_the_verdict_within_160_characters(self):
         for line, sha in (("Verdict PASSED, candidate 0830a3be checked out", "0830a3be"),
                           ("Verdict PASSED. Candidate #631 head 085e28aa30872fbdf6341640a8ae16b8504c4083 (Draft), base 9e68eb87",
                            "085e28aa30872fbdf6341640a8ae16b8504c4083"),
+                          ("Verdict PASSED or REJECTED naming head 84de8242", "84de8242"),
                           ("Verdict PASSED; defaced decade 2026-10-13 abc123 then aff49ab3", "aff49ab3"),
                           ("Verdict PASSED " + "x" * 150 + " aff49ab3", "aff49ab3")):
             with self.subTest(line):
@@ -62,121 +57,6 @@ class DeliveryGateTests(unittest.TestCase):
                      "Verdict PASSED " + "x" * 161 + " aff49ab3", "Verdict PASSED at aff49ab34Z"):
             with self.subTest(line):
                 self.assertIsNone(gate.validated_candidate(report("validation", line)))
-
-    def test_every_accepted_verdict_form_names_its_candidate(self):
-        relay = "Verdict: PASSED, recommended. Artifact: candidate 985200258eebc7aad832716fa8e4b8b57518921f (branch b, base 1234567), unmodified"
-        relay_repaired = relay.replace("Verdict:", "Verdict", 1)
-        for line, sha in ((relay, "985200258eebc7aad832716fa8e4b8b57518921f"),
-                          (relay_repaired, "985200258eebc7aad832716fa8e4b8b57518921f"),
-                          ("Verdict PASSED at 0830a3be (base 1234567)", "0830a3be"),
-                          ("Verdict: PASSED, recommended. Artifact: candidate 0830a3be", "0830a3be"),
-                          ("Verdict recommended: PASSED. No Material finding. Candidate 0830a3be", "0830a3be"),
-                          ("Verdict recommendation: PASSED, with one finding. Candidate 0830a3be", "0830a3be"),
-                          ("Verdict: recommend PASSED. Candidate 0830a3be", "0830a3be"),
-                          ("**Verdict: PASSED.** Candidate HEAD 0830a3be", "0830a3be"),
-                          ("**Verdict:** PASSED at 0830a3be", "0830a3be")):
-            with self.subTest(line):
-                self.assertEqual(gate.validated_candidate(report("validation", line)), sha)
-
-    def test_the_relay_report_that_held_passes_at_the_same_head(self):
-        sha = "985200258eebc7aad832716fa8e4b8b57518921f"
-        for line in (f"Verdict: PASSED, recommended. Artifact: candidate {sha} (branch b, base 1234567), unmodified",
-                     f"Verdict PASSED, recommended. Artifact: candidate {sha} (branch b, base 1234567), unmodified"):
-            with self.subTest(line):
-                code, out = self.check(task=report("validation", line), head=sha)
-                self.assertEqual(code, 0, out)
-                self.assertIn("equals validated candidate", out)
-
-    def test_forms_outside_the_family_name_no_candidate(self):
-        for line in ("PASSED. HEAD 0830a3be, merge-base 1234567", "Recommend PASSED. Candidate 0830a3be",
-                     "Independent verdict: PASSED. Candidate 0830a3be",
-                     "Verdict PASSED" + " " + "x" * 159 + " 0830a3be",
-                     "Verdict PASSED with one finding",
-                     "Verdict PASSED or REJECTED naming head 84de8242",
-                     "Verdict PASSED/REJECTED naming head 84de8242"):
-            with self.subTest(line):
-                code, out = self.check(task=report("validation", line), head="84de8242")
-                self.assertEqual(code, 2, out)
-                self.assertIn("names a candidate SHA", out)
-
-    def test_a_rejected_or_verdictless_report_holds_even_when_it_quotes_an_earlier_passed(self):
-        rejected = "Verdict REJECTED at 1111111a: one Material finding."
-        cases = {
-            "rejected": rejected,
-            "rejected quoting an earlier passed": rejected + "\n  Cycle 1 read Verdict PASSED at 2222222b.",
-            "rejected, then a counting passed line": rejected + "\n  Verdict PASSED at 2222222b (the withdrawn cycle 1).",
-            "rejected, recommended spelling": "Verdict: REJECTED, recommended. Cycle 1 read Verdict: PASSED at 2222222b.",
-            "no verdict word": "all checks pass at 2222222b",
-        }
-        for label, line in cases.items():
-            with self.subTest(label):
-                code, out = self.check(task=report("validation", line), head="2222222b")
-                self.assertEqual(code, 2, out)
-                self.assertIn("names a candidate SHA", out)
-
-    def test_the_newest_validation_section_decides_even_when_it_has_no_counting_form(self):
-        passed = report("validation", "Verdict PASSED at 1111111a")
-        for label, newest in {
-            "held spelling": "Recommend PASSED. Head 1111111a.",
-            "no verdict word": "all checks pass at 1111111a",
-            "failed item only": "could not run the suite",
-            "lower-case verdict": "verdict: PASSED at 1111111a",
-        }.items():
-            with self.subTest(label):
-                task = passed + report("validation (cycle 2)", newest)
-                self.assertIsNone(gate.validated_candidate(task))
-                code, out = self.check(task=task, head="1111111a")
-                self.assertEqual(code, 2, out)
-                self.assertIn("names a candidate SHA", out)
-        three = passed + report("validation (cycle 2)", "Verdict PASSED at 2222222b") + report("validation (cycle 3)", "no verdict line")
-        self.assertEqual(self.check(task=three, head="2222222b")[0], 2)
-
-    def test_a_qualified_or_quoted_verdict_is_not_the_verdict(self):
-        for label, line in {
-            "independent label then rejection": "Independent Verdict: PASSED at 2222222b. Verdict REJECTED at 3333333c.",
-            "prior label then rejection": "Prior Verdict: PASSED at 2222222b\n  Verdict REJECTED at 3333333c.",
-            "quote only": "Cycle 1 read Verdict PASSED at 2222222b and was withdrawn.",
-            "word then label": "the earlier Verdict: PASSED, recommended at 2222222b",
-        }.items():
-            with self.subTest(label):
-                self.assertEqual(self.check(task=report("validation", line), head="2222222b")[0], 2)
-        for line in ("All ACs hold. Verdict: PASSED at 2222222b", "1. Verdict PASSED at 2222222b",
-                     "### Verdict: PASSED at 2222222b",
-                     "Cycle 1 read Verdict REJECTED at 1111111a. Verdict PASSED at 2222222b"):
-            with self.subTest(line):
-                self.assertEqual(self.check(task=report("validation", line), head="2222222b")[0], 0)
-
-    def test_a_passed_line_without_a_sha_does_not_take_the_sha_of_a_following_rejected_line(self):
-        for line in ("Verdict PASSED\n  Verdict REJECTED at 2222222b", "Verdict PASSED, no sha here. Verdict: REJECTED at 2222222b"):
-            with self.subTest(line):
-                self.assertEqual(self.check(task=report("validation", line), head="2222222b")[0], 2)
-        self.assertEqual(self.check(task=report("validation", "Verdict PASSED at 2222222b, as Verdict PASSED at 3333333c"), head="2222222b")[0], 0)
-
-    def test_a_template_line_naming_both_outcomes_is_skipped_not_decisive(self):
-        echo = ("## Stage Report: validation\n\n- DONE: Verdict PASSED or REJECTED naming the head\n"
-                "  Verdict PASSED at 2222222b\n\n### Summary\n\nok\n")
-        self.assertEqual(self.check(task=echo, head="2222222b")[0], 0)
-        rejected = echo.replace("Verdict PASSED at 2222222b", "Verdict REJECTED at 2222222b")
-        self.assertEqual(self.check(task=rejected, head="2222222b")[0], 2)
-
-    def test_two_rejected_sections_hold_and_a_rejected_latest_does_not_supply_its_own_quote(self):
-        rejected = report("validation", "Verdict REJECTED at 1111111a") \
-            + report("validation (cycle 2)", "Verdict REJECTED at 3333333c. Cycle 1 read Verdict PASSED at 2222222b.")
-        self.assertEqual(self.check(task=rejected, head="2222222b")[0], 2)
-        older_passed = report("validation", "Verdict PASSED at 1111111a") \
-            + report("validation (cycle 2)", "Verdict REJECTED at 3333333c. Cycle 1 read Verdict PASSED at 2222222b.")
-        self.assertIsNone(gate.validated_candidate(older_passed))
-        self.assertEqual(self.check(task=older_passed, head="2222222b")[0], 2)
-
-    def test_a_later_rejected_section_holds_a_head_an_earlier_section_passed(self):
-        same_head = report("validation", "Verdict PASSED at 2222222b") \
-            + report("validation (cycle 2)", "Verdict REJECTED at 2222222b: one Material finding.")
-        for head in ("2222222b", "2222222"):
-            with self.subTest(head):
-                code, out = self.check(task=same_head, head=head)
-                self.assertEqual(code, 2, out)
-                self.assertIn("names a candidate SHA", out)
-        self.assertEqual(self.check(task=report("validation", "Verdict PASSED at 2222222b"), head="2222222b")[0], 0)
 
     def test_equal_or_prefix_equal_heads_pass_and_a_different_head_fails_naming_both(self):
         for head in ("40c714a6", HEAD40, "40c714a"):

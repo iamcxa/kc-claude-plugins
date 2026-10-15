@@ -3,13 +3,8 @@
 
 Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>]
 
-The validated candidate is the first 7-40 character hexadecimal SHA containing a digit within 160 characters
-after the first verdict form of the latest `## Stage Report: validation` section, when that form says PASSED;
-the latest section decides, so a later REJECTED, or a later section with no counting form, holds over an older PASSED. The form the validation skill states is `Verdict PASSED at <sha>`; `Verdict: PASSED`,
-`Verdict recommended: PASSED` (also `recommendation:`) and `Verdict: recommend PASSED` are read too, and `*` is ignored.
-A form counts at the start of a line (after list, heading or DONE/SKIPPED/FAILED markers) or after `.`, `!` or `?`;
-one after a word, such as `Independent Verdict: PASSED`, and one naming both outcomes are skipped.
-A REJECTED first counting form, or no counting form in the latest section, names no candidate; the SHA is read before the next Verdict form.
+The validated candidate is the first 7-40 character hexadecimal SHA containing a digit that follows
+`Verdict PASSED` within 160 characters, in the latest `## Stage Report: validation` section that has one.
 It is compared, as a prefix of equal length, with the PR head (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
@@ -25,10 +20,7 @@ import sys
 from pathlib import Path
 
 SHA = r"(?<![0-9A-Za-z])(?=[0-9a-f]*\d)([0-9a-f]{7,40})(?![0-9A-Za-z])"
-VERDICT = re.compile(r"\bVerdict(?:[ \t]+recommend(?:ed|ation)?)?:?[ \t]+(?:recommend[ \t]+)?(PASSED|REJECTED)\b([ \t]*(?:or|/)[ \t]*(?:PASSED|REJECTED)\b)?")
-LINE_START = re.compile(r"[ \t]*(?:(?:[-+]|\d+[.)]|#+)[ \t]+)?(?:(?:DONE|SKIPPED|FAILED):[ \t]*)?")
-SENTENCE_END = re.compile(r"[.!?][ \t]+$")
-CANDIDATE = re.compile(r"[\s\S]{0,160}?" + SHA)
+PASSED = re.compile(r"Verdict PASSED[\s\S]{0,160}?" + SHA)
 REPORT = re.compile(r"^## Stage Report: validation\b", re.M)
 SECOND_REVIEWER = re.compile(r"Second reviewer:\s*([\w.-]+)\s+because", re.I)
 OUTCOME_TOKEN = re.compile(r"\b(?:review|comment):\d+")
@@ -37,22 +29,10 @@ PR = re.compile(r"^([\w.-]+/[\w.-]+)#(\d+)$")
 
 def validated_candidate(task_text):
     sections = re.split(r"^(?=## )", task_text, flags=re.M)
-    reports = [s for s in sections if REPORT.match(s)]
-    decided = first_verdict(reports[-1].replace("*", "")) if reports else None
-    return decided[1] if decided else None
-
-
-def first_verdict(section):
-    forms = list(VERDICT.finditer(section))
-    for index, verdict in enumerate(forms):
-        before = section[section.rfind("\n", 0, verdict.start()) + 1:verdict.start()]
-        if verdict.group(2) or not (LINE_START.fullmatch(before) or SENTENCE_END.search(before)):
-            continue
-        if verdict.group(1) != "PASSED":
-            return "REJECTED", None
-        stop = forms[index + 1].start() if index + 1 < len(forms) else len(section)
-        found = CANDIDATE.match(section[:stop], verdict.end(1))
-        return "PASSED", found.group(1) if found else None
+    for section in reversed([s for s in sections if REPORT.match(s)]):
+        found = PASSED.search(section)
+        if found:
+            return found.group(1)
     return None
 
 

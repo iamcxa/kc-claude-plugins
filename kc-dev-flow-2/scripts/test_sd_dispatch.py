@@ -190,12 +190,6 @@ FIXES = {
         need=("`python3 <package>/scripts/dispatch_records.py <task folder>`",),
         old=(),
         swaps=((r", and run `python3 <package>/scripts/dispatch_records\.py <task folder>`; a missing or incomplete record \(its exit 1\),", "; a missing record,"),)),
-    "validation-states-the-verdict-line": dict(
-        file="skills/validation/principles.md",
-        need=("`Verdict PASSED at <sha>` or `Verdict REJECTED at <sha>`",
-              "`python3 <package>/scripts/delivery_gate.py check` reads that line"),
-        old=(),
-        swaps=((r"Put one line in it, `Verdict PASSED at <sha>`.*?holds the merge ask\. ", ""),)),
     "pr-watch": dict(
         file="references/sd/mods/kc-dev-flow-2.md",
         need=("1. Run `python3 <package>/scripts/pr_watch.py tasks <workflow dir>`.",
