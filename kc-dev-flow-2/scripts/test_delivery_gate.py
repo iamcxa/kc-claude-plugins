@@ -98,6 +98,7 @@ class DeliveryGateTests(unittest.TestCase):
         cases = {
             "rejected": rejected,
             "rejected quoting an earlier passed": rejected + "\n  Cycle 1 read Verdict PASSED at 2222222b.",
+            "rejected, then a counting passed line": rejected + "\n  Verdict PASSED at 2222222b (the withdrawn cycle 1).",
             "rejected, recommended spelling": "Verdict: REJECTED, recommended. Cycle 1 read Verdict: PASSED at 2222222b.",
             "no verdict word": "all checks pass at 2222222b",
         }
@@ -106,6 +107,28 @@ class DeliveryGateTests(unittest.TestCase):
                 code, out = self.check(task=report("validation", line), head="2222222b")
                 self.assertEqual(code, 2, out)
                 self.assertIn("names a candidate SHA", out)
+
+    def test_a_qualified_or_quoted_verdict_is_not_the_verdict(self):
+        for label, line in {
+            "independent label then rejection": "Independent Verdict: PASSED at 2222222b. Verdict REJECTED at 3333333c.",
+            "prior label then rejection": "Prior Verdict: PASSED at 2222222b\n  Verdict REJECTED at 3333333c.",
+            "quote only": "Cycle 1 read Verdict PASSED at 2222222b and was withdrawn.",
+            "word then label": "the earlier Verdict: PASSED, recommended at 2222222b",
+        }.items():
+            with self.subTest(label):
+                self.assertEqual(self.check(task=report("validation", line), head="2222222b")[0], 2)
+        for line in ("All ACs hold. Verdict: PASSED at 2222222b", "1. Verdict PASSED at 2222222b",
+                     "### Verdict: PASSED at 2222222b",
+                     "Cycle 1 read Verdict REJECTED at 1111111a. Verdict PASSED at 2222222b"):
+            with self.subTest(line):
+                self.assertEqual(self.check(task=report("validation", line), head="2222222b")[0], 0)
+
+    def test_a_template_line_naming_both_outcomes_is_skipped_not_decisive(self):
+        echo = ("## Stage Report: validation\n\n- DONE: Verdict PASSED or REJECTED naming the head\n"
+                "  Verdict PASSED at 2222222b\n\n### Summary\n\nok\n")
+        self.assertEqual(self.check(task=echo, head="2222222b")[0], 0)
+        rejected = echo.replace("Verdict PASSED at 2222222b", "Verdict REJECTED at 2222222b")
+        self.assertEqual(self.check(task=rejected, head="2222222b")[0], 2)
 
     def test_two_rejected_sections_hold_and_a_rejected_latest_does_not_supply_its_own_quote(self):
         rejected = report("validation", "Verdict REJECTED at 1111111a") \

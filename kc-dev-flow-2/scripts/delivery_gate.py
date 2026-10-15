@@ -7,7 +7,9 @@ The validated candidate is the first 7-40 character hexadecimal SHA containing a
 after the first verdict form of the latest `## Stage Report: validation` section that has one, when that form
 says PASSED. The form the validation skill states is `Verdict PASSED at <sha>`; `Verdict: PASSED`,
 `Verdict recommended: PASSED` (also `recommendation:`) and `Verdict: recommend PASSED` are read too, and `*` is ignored.
-A REJECTED first form, a form naming both outcomes, or no `Verdict` form names no candidate.
+A form counts at the start of a line (after list, heading or DONE/SKIPPED/FAILED markers) or after `.`, `!` or `?`;
+one after a word, such as `Independent Verdict: PASSED`, and one naming both outcomes are skipped.
+A REJECTED first counting form, or no counting form, names no candidate.
 It is compared, as a prefix of equal length, with the PR head (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
@@ -24,6 +26,8 @@ from pathlib import Path
 
 SHA = r"(?<![0-9A-Za-z])(?=[0-9a-f]*\d)([0-9a-f]{7,40})(?![0-9A-Za-z])"
 VERDICT = re.compile(r"\bVerdict(?:[ \t]+recommend(?:ed|ation)?)?:?[ \t]+(?:recommend[ \t]+)?(PASSED|REJECTED)\b([ \t]*(?:or|/)[ \t]*(?:PASSED|REJECTED)\b)?")
+LINE_START = re.compile(r"[ \t]*(?:(?:[-+]|\d+[.)]|#+)[ \t]+)?(?:(?:DONE|SKIPPED|FAILED):[ \t]*)?")
+SENTENCE_END = re.compile(r"[.!?][ \t]+$")
 CANDIDATE = re.compile(r"[\s\S]{0,160}?" + SHA)
 REPORT = re.compile(r"^## Stage Report: validation\b", re.M)
 SECOND_REVIEWER = re.compile(r"Second reviewer:\s*([\w.-]+)\s+because", re.I)
@@ -41,11 +45,15 @@ def validated_candidate(task_text):
 
 
 def first_passing_candidate(section):
-    verdict = VERDICT.search(section)
-    if not verdict or verdict.group(1) != "PASSED" or verdict.group(2):
-        return None
-    found = CANDIDATE.match(section, verdict.end(1))
-    return found.group(1) if found else None
+    for verdict in VERDICT.finditer(section):
+        before = section[section.rfind("\n", 0, verdict.start()) + 1:verdict.start()]
+        if verdict.group(2) or not (LINE_START.fullmatch(before) or SENTENCE_END.search(before)):
+            continue
+        if verdict.group(1) != "PASSED":
+            return None
+        found = CANDIDATE.match(section, verdict.end(1))
+        return found.group(1) if found else None
+    return None
 
 
 def run_gh(repo, number):
