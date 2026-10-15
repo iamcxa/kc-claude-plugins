@@ -3,13 +3,13 @@
 
 Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>]
 
-The validated candidate is the first 7-40 character hexadecimal SHA containing a digit that follows
-`Verdict PASSED` within 160 characters, in the latest `## Stage Report: validation` section that has one.
-It is compared, as a prefix of equal length, with the PR head (--head, else `gh pr view --json headRefOid`).
+The dispatched heads are the whole `Candidate: <40-hex head>` lines above the first `## ` heading of the
+highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check reads no validation report.
+The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
 Exit 0 when both hold; 1 when the head differs or a second reviewer has no stated outcome (both printed);
-2 when no passing report names a candidate, the head cannot be read, or an input is unusable.
+2 when that record has no such line, the head cannot be read, or an input is unusable.
 Each exit ends with one `next:` line, or one per problem for exit 1, naming what FO does with the ask.
 """
 import argparse
@@ -19,21 +19,24 @@ import subprocess
 import sys
 from pathlib import Path
 
-SHA = r"(?<![0-9A-Za-z])(?=[0-9a-f]*\d)([0-9a-f]{7,40})(?![0-9A-Za-z])"
-PASSED = re.compile(r"Verdict PASSED[\s\S]{0,160}?" + SHA)
-REPORT = re.compile(r"^## Stage Report: validation\b", re.M)
+CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
+RECORD = re.compile(r"^validation-(\d+)\.md$")
 SECOND_REVIEWER = re.compile(r"Second reviewer:\s*([\w.-]+)\s+because", re.I)
 OUTCOME_TOKEN = re.compile(r"\b(?:review|comment):\d+")
 PR = re.compile(r"^([\w.-]+/[\w.-]+)#(\d+)$")
 
 
-def validated_candidate(task_text):
-    sections = re.split(r"^(?=## )", task_text, flags=re.M)
-    for section in reversed([s for s in sections if REPORT.match(s)]):
-        found = PASSED.search(section)
-        if found:
-            return found.group(1)
-    return None
+def dispatched_candidates(task):
+    records = [(int(m.group(1)), path) for path in (task.with_suffix("") / "dispatch").glob("validation-*.md")
+               if (m := RECORD.match(path.name))]
+    if not records:
+        return [], None
+    path = max(records)[1]
+    try:
+        header = re.split(r"^## ", path.read_text(), maxsplit=1, flags=re.M)[0]
+    except (OSError, UnicodeDecodeError):
+        return [], path
+    return CANDIDATE.findall(header), path
 
 
 def run_gh(repo, number):
@@ -70,9 +73,10 @@ def check(args):
         return 2
     problems, holds, nexts = [], [], []
 
-    candidate = validated_candidate(task_text)
-    if not candidate:
-        holds.append(f"no passing validation report in {task} names a candidate SHA")
+    candidates, record = dispatched_candidates(task)
+    if not candidates:
+        holds.append(f"no latest validation dispatch record under {task.with_suffix('')}/dispatch has a 'Candidate: <40-hex head>' line")
+        nexts.append("next: hold the ask; dispatch validation of this head with a Candidate line, or tell the Captain.")
     if args.head:
         head = args.head.lower()
         if not re.fullmatch(r"[0-9a-f]{7,40}", head):
@@ -84,11 +88,9 @@ def check(args):
         except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
             holds.append(f"cannot read the head of {args.pr}: {error}")
             head = None
-    if candidate and head:
-        length = min(len(candidate), len(head))
-        if candidate[:length] != head[:length]:
-            problems.append(f"PR head {head} differs from validated candidate {candidate} "
-                            f"(latest passing validation report in {task})")
+    if candidates and head:
+        if not any(c.startswith(head) for c in candidates):
+            problems.append(f"PR head {head} differs from dispatched candidate {' '.join(candidates)} (latest validation record {record.name})")
             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
 
     for reviewer in unstated_second_reviewers(gate_text):
@@ -102,9 +104,9 @@ def check(args):
         print(*dict.fromkeys(nexts), sep="\n")
         return 1
     if holds:
-        print("next: hold the ask and show the Captain these lines.")
+        print(*(dict.fromkeys(nexts) or ["next: hold the ask and show the Captain these lines."]), sep="\n")
         return 2
-    print(f"PR head {head} equals validated candidate {candidate}; no second reviewer outcome is missing")
+    print(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing")
     print("next: ask for merge with this text.")
     return 0
 
