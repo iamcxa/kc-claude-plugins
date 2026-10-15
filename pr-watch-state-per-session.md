@@ -53,6 +53,17 @@ gates:
                 id: briefing:pr-watch-state-per-session:validation:attempt-1:revision-1
                 digest: sha256:c6a5d00f44fc47877fe0aa824118869c6174a947024ecffca1f763781a9206ab
                 room-ref: ./pr-watch-state-per-session/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:pr-watch-state-per-session:validation:1
+                briefing: briefing:pr-watch-state-per-session:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-15T04:10:53.510736Z"
+                decision: approve
+                reason: 'Captain approved delivery of #646 at e4fca679 (「都按建議核准」, answering FO''s status ask that recommended approving the open #646 delivery gate): FO marks it ready and asks to merge; later external-review rounds covered per Delivery authority.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-15T00:25:14Z
 worktree: .worktrees/spacedock-ensign-pr-watch-state-per-session
 pr: iamcxa/kc-claude-plugins#646
