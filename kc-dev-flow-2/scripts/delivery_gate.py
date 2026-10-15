@@ -4,12 +4,12 @@
 Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>]
 
 The validated candidate is the first 7-40 character hexadecimal SHA containing a digit within 160 characters
-after the first verdict form of the latest `## Stage Report: validation` section that has one, when that form
-says PASSED; the latest section with a verdict form decides, so a later REJECTED holds over an older PASSED. The form the validation skill states is `Verdict PASSED at <sha>`; `Verdict: PASSED`,
+after the first verdict form of the latest `## Stage Report: validation` section, when that form says PASSED;
+the latest section decides, so a later REJECTED, or a later section with no counting form, holds over an older PASSED. The form the validation skill states is `Verdict PASSED at <sha>`; `Verdict: PASSED`,
 `Verdict recommended: PASSED` (also `recommendation:`) and `Verdict: recommend PASSED` are read too, and `*` is ignored.
 A form counts at the start of a line (after list, heading or DONE/SKIPPED/FAILED markers) or after `.`, `!` or `?`;
 one after a word, such as `Independent Verdict: PASSED`, and one naming both outcomes are skipped.
-A REJECTED first counting form, or no counting form, names no candidate; the SHA is read before the next Verdict form.
+A REJECTED first counting form, or no counting form in the latest section, names no candidate; the SHA is read before the next Verdict form.
 It is compared, as a prefix of equal length, with the PR head (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
@@ -37,11 +37,9 @@ PR = re.compile(r"^([\w.-]+/[\w.-]+)#(\d+)$")
 
 def validated_candidate(task_text):
     sections = re.split(r"^(?=## )", task_text, flags=re.M)
-    for section in reversed([s for s in sections if REPORT.match(s)]):
-        decided = first_verdict(section.replace("*", ""))
-        if decided:
-            return decided[1]
-    return None
+    reports = [s for s in sections if REPORT.match(s)]
+    decided = first_verdict(reports[-1].replace("*", "")) if reports else None
+    return decided[1] if decided else None
 
 
 def first_verdict(section):

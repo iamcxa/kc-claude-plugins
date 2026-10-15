@@ -44,7 +44,9 @@ class DeliveryGateTests(unittest.TestCase):
         first = report("validation", "Verdict PASSED at 0830a3be") + report("validation (cycle 2)", "Verdict REJECTED at d127ec71")
         self.assertIsNone(gate.validated_candidate(first))
         verdictless = report("validation", "Verdict PASSED at 0830a3be") + report("validation (cycle 2)", "all checks pass at d127ec71")
-        self.assertEqual(gate.validated_candidate(verdictless), "0830a3be")
+        self.assertIsNone(gate.validated_candidate(verdictless))
+        reject_then_pass = report("validation", "Verdict REJECTED at 0830a3be") + report("validation (cycle 2)", "Verdict PASSED at d127ec71")
+        self.assertEqual(gate.validated_candidate(reject_then_pass), "d127ec71")
         no_sha = report("validation", "Verdict PASSED at 0830a3be") + report("validation (cycle 2)", "Verdict PASSED with one finding")
         self.assertIsNone(gate.validated_candidate(no_sha))
 
@@ -111,6 +113,23 @@ class DeliveryGateTests(unittest.TestCase):
                 code, out = self.check(task=report("validation", line), head="2222222b")
                 self.assertEqual(code, 2, out)
                 self.assertIn("names a candidate SHA", out)
+
+    def test_the_newest_validation_section_decides_even_when_it_has_no_counting_form(self):
+        passed = report("validation", "Verdict PASSED at 1111111a")
+        for label, newest in {
+            "held spelling": "Recommend PASSED. Head 1111111a.",
+            "no verdict word": "all checks pass at 1111111a",
+            "failed item only": "could not run the suite",
+            "lower-case verdict": "verdict: PASSED at 1111111a",
+        }.items():
+            with self.subTest(label):
+                task = passed + report("validation (cycle 2)", newest)
+                self.assertIsNone(gate.validated_candidate(task))
+                code, out = self.check(task=task, head="1111111a")
+                self.assertEqual(code, 2, out)
+                self.assertIn("names a candidate SHA", out)
+        three = passed + report("validation (cycle 2)", "Verdict PASSED at 2222222b") + report("validation (cycle 3)", "no verdict line")
+        self.assertEqual(self.check(task=three, head="2222222b")[0], 2)
 
     def test_a_qualified_or_quoted_verdict_is_not_the_verdict(self):
         for label, line in {
