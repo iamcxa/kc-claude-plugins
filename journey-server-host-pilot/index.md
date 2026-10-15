@@ -120,6 +120,14 @@ gates:
                 id: briefing:journey-server-host-pilot:validation:attempt-6:revision-1
                 digest: sha256:276e331b1bb8fdc7e5cd7b24f5d5fea62bccabad3502c098122ace8874657692
                 room-ref: ./review/validation/briefing-6
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-server-host-pilot:validation:6
+                briefing: briefing:journey-server-host-pilot:validation:attempt-6:revision-1
+                by: person:captain
+                at: "2026-10-15T08:51:42.693356Z"
+                decision: hold
+                reason: 'Captain replied「接受」on 2026-10-15 to the presented question for validation attempt 6. This explicitly accepts the task-scoped number-guard exception for candidate 2a24810e8be35cf6fb6b323d67ff089feaebb4c1, supported by independent comparisons of unchanged initialization source, locked SDK and namespace declarations. The generic full guard remains CONFIG ERROR / NOT PASS; no successful full-guard result is asserted. Reevaluate this exception if persistent-state source, SDK lock, migration declaration or retained-data scope changes. The hold decision preserves the remainder of the same question: licensed rendering, retained serving and whole-pilot delivery remain pending. It does not reject the accepted preparation or exception, and grants no publication, PR, merge or deployment. Detailed usage and operational evidence remain local.'
 started: 2026-10-13T08:47:34Z
 id: journey-server-host-pilot
 review-round:
