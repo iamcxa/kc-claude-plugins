@@ -100,7 +100,8 @@ facts: `team-lead` is not registered here).``: the builder's completion block na
 worker that skips the stage-definition fetch does not see the Signal fact. FO saves those scope notes, the
 checklist, the model it dispatches on and the SHA it dispatches from as
 `<task>/dispatch/<stage>-<cycle>.md` in the state checkout (a `Dispatched:` line with
-the full SHA, a `Model:` line, and `## Checklist` and `## Scope notes` sections),
+the full SHA, a `Model:` line, `## Checklist` and `## Scope notes` sections, and for validation a
+`Candidate: <full head SHA>` line per head validated),
 committed with that dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so
 the instruction a worker followed outlives the session that wrote it. A follow-up
 message to a worker FO resumes is a dispatch too, and its record carries the same parts, including the `Package root:` line and a checklist of the items that message asks, never a pointer to another record.
@@ -525,9 +526,8 @@ to finalize/archive. Where `learn` is listed, the sentinel waits for a committed
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
 
-A PR delivers only the commit on its head; a repair validated after the PR was opened reaches it
-only when that exact commit is pushed. Before the merge ask, a head other than the latest passing
-validation report's candidate is revalidated or its difference told to the Captain. Before the
+Before the merge ask, a head other than the latest
+validation record's `Candidate:` is revalidated or its difference told to the Captain. Before the
 `gate prepare` that asks for merge, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
 --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask and FO shows the
 Captain what it printed.
