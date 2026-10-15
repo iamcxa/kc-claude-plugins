@@ -3,7 +3,7 @@ title: pr_watch.py state is shared by every FO session on a machine, so one sess
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain approved (「准」) after FO presented both open ideation gates and asked him to rule on both: accepts D1 (session-keyed default state) and D2 (Claude session id only) as the gate question states.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-15T00:25:14Z
 ---
 
