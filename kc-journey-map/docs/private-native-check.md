@@ -34,6 +34,19 @@ To avoid asking a model to guess tldraw's complete-record schema, append JSON fr
 the fresh room GET. Give each note a distinct x coordinate. This uses the existing
 record helper and full-record PATCH contract, not a new operation.
 
+Have each client inspect the advertised `patch_doc` schema before its first write.
+Its arguments use `{"room":"A","body":{"put":[completeRecord],"remove":[]}}`
+(`completeRecord` here stands for the supplied complete JSON record). Use singular
+`put`; deletion uses `remove` with record IDs. Omitted arrays default to empty.
+For each write, require returned `put` and `removed` counts to match the intended
+operations, then `get_doc` to confirm the exact IDs/text or deletion. Counts are
+submitted operations, not changed-record counts. A successful call or advancing
+clock alone does not establish the requested result. A misspelled `puts` field
+retains the historical no-op behavior; `put:0` must fail a requested note-add
+phase. Stop and preserve that receipt rather than proceeding to the next phase.
+The server advertises four tools; this helper authorizes invocation of only
+`get_doc`, `patch_doc` and `health`. Discovery does not authorize `put_doc` calls.
+
 Run sequentially, stopping on the first failure; replace only the local paths and
 port. Endpoint and token-file path are ordinary arguments, never token values:
 
@@ -48,6 +61,12 @@ A/B through the existing HTTP API. Verify exact note text and no cross-room shap
 an agent summary or process exit is insufficient. These are actual native clients
 only if the commands run and their MCP calls appear. Generic scripted HTTP/MCP
 requests are synthetic clients and must be labelled separately.
+
+The narrow synthetic discovery/contract check is
+`node --import tsx scripts/mcp-discovery-check.mjs`. It exercises the actual MCP
+handler with fresh Node SQLite storage, without a listener or native client.
+It proves advertised fields and existing write/no-op/remove behavior; native
+client interpretation still requires the independent sequence above.
 
 Stop the owned server, revoke both disposable IDs through the stopped Node operator
 control, verify policy/readback as appropriate, and remove the raw token files.

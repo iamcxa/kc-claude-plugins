@@ -78,6 +78,10 @@ Use the approved client's normal tool approval policy. The accepted native test
 proved specific CLI builds and per-tool permissions; it did not prove the old
 desktop plugin or arbitrary client versions. Start with tool discovery and a
 read-only `get_doc` for the intended room. Another room must remain forbidden.
+For writes, follow the discovered `patch_doc` envelope and acknowledgement/readback
+rules in [the bounded native-client recipe](private-native-check.md). Complete
+records belong in `body.put` (singular); removals belong in `body.remove`. Process
+exit or tool success alone is not evidence that an intended note was saved.
 
 Rotate by issuing a new ID, installing its digest-only grant, and confirming its
 scoped read before revoking the old ID through operator control. Existing IDs are

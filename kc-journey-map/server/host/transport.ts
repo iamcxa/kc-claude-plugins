@@ -25,8 +25,15 @@ async function health(host: Host, admission: Admission | null) {
   active: h.active.filter(r => !admission || admission.rooms.includes(r.roomId)) }
 }
 const tools = ['get_doc', 'patch_doc', 'put_doc', 'health'].map(name => ({
- name, description: name === 'health' ? 'Authorized room inventory' : 'Existing complete-record journey document operation',
- inputSchema: { type: 'object', properties: name === 'health' ? {} : { room: { type: 'string' }, ...(name === 'get_doc' ? {} : { body: { type: 'object' } }) },
+ name, description: name === 'health' ? 'Authorized room inventory' : name === 'patch_doc'
+  ? 'Update a room with body.put (singular): an array of complete tldraw records, and body.remove: an array of record IDs. Omitted arrays default to empty. Returns roomId, put and removed (submitted operation counts), and clock. Check counts against the intended operations, then use get_doc to verify exact records/text or absence; success or clock alone does not prove the intended edit. Unknown body keys such as puts do not write records.'
+  : 'Existing complete-record journey document operation',
+ inputSchema: { type: 'object', properties: name === 'health' ? {} : { room: { type: 'string' }, ...(name === 'get_doc' ? {} : { body: {
+  type: 'object', ...(name === 'patch_doc' ? { properties: {
+   put: { type: 'array', description: 'Complete tldraw records to insert or replace, including id, typeName and all fields required by that record type; not partial field edits. Defaults to [].', items: { type: 'object' } },
+   remove: { type: 'array', description: 'Record IDs to remove. Defaults to [].', items: { type: 'string' } },
+  } } : {}),
+ } }) },
   ...(name === 'health' ? {} : { required: ['room'] }), additionalProperties: false },
 }))
 async function mcp(host: Host, req: Request, admission: Admission | null) {
