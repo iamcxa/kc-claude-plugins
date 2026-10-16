@@ -1,6 +1,6 @@
 ---
 title: A prod-profile task passes a security review at two different gates instead of waiting for someone to judge that one is needed
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain approved batch 1 (「批准」): schedule as Pilot and enter ideation; as the gate question states, this accepts profile pilot and five parallel ideations with dev2-laws-check''s design read by the other four for overlap.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Relayed by subspace-relay's FO session on 2026-10-13, not heard directly. Captain's words as relayed: 「此外 dev2 prod profile 應該強化安全掃描這一塊，必須有至少一到兩位安全審核員，守不同關卡。你可以先給 plugin FO 發訊息讓他知道」.
