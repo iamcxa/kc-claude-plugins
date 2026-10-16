@@ -1,6 +1,6 @@
 ---
 title: A prod-profile task passes a security review at two different gates instead of waiting for someone to judge that one is needed
-status: implementation
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
