@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:amendment-form-check:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:amendment-form-check-ideation-1
+              briefing:
+                id: briefing:amendment-form-check:ideation:attempt-1:revision-1
+                digest: sha256:2e8d81538c69eb6deb407ae7bf99dc5cb51c93b679b558b87b12e34433de6bd5
+                room-ref: ./amendment-form-check/review/ideation/briefing-1
 started: 2026-10-16T03:14:35Z
 ---
 

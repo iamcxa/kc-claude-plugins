@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:amendment-form-check:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approving accepts D1 as recommended: design_surfaces.py check refuses a moved criterion its Supersedes: line does not name, and a replacement criterion with no 'Amended by Captain, amendment N', with a 'no replacement' waiver on the Supersedes: line; FO's own words in Design: stay with the observer. It also accepts the batch-1 implementation order (names-check-before-dispatch lands before extension-instruction-reaches-dispatch, which edits the same dispatch_records.py function; the other three run in parallel), and is the grant for the implementation worker to push a branch and open a Draft PR.",
+  "artifacts": [
+    {
+      "id": "artifact:amendment-form-check:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7e4bb6e7dff8936e7c44a3e3a9bea832da82ad65/amendment-form-check.md",
+      "rev": "sha256:f2679afe65e76bb9b5dfbb238727f6c16e7283f8bc6f37dba97c4c0b8e931a91",
+      "mediaType": "text/markdown",
+      "summary": "Design: two of three breaks are scriptable; the third (FO prose in Design:) stays with the observer because 34 of 35 non-none Design: values in a 40-file, 67-amendment corpus are FO prose. Prototype: delivery-gate-verdict-form and fo-lifecycle-mod (amendment 3) each exit 1 with one line; today's checker passes both. 4 of 31 superseding entries broke the replacement rule in two weeks; 2 of 6 hits were legitimate moves to another task, which the waiver covers. README template line changes by 6 words, net minus 1 word. Closed tasks would gain 8 errors on 6 files, so dev2-laws-check must not run check over closed tasks (it does not). design_surfaces.py check exit 0."
+    }
+  ]
+}
