@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-16T03:14:35Z
 worktree: .worktrees/spacedock-ensign-amendment-form-check
-pr: iamcxa/kc-claude-plugins#650
+pr: pr-merge:650
 ---
 
 Filed from a learn package-issue candidate the Captain approved (「好」, chat, 2026-10-15). The observer reports on `delivery-gate-verdict-form` and `fo-lifecycle-mod` found FO-written amendments that break the README `## Captain amendments` rules, and `scripts/design_surfaces.py check` passed both tasks.
