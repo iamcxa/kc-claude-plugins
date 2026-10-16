@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dev2-laws-check:ideation:attempt-2:revision-1",
+  "question": "Approve the redone design (amendment 1) and enter implementation on the #651 branch? Approving accepts D1 (a red run reaches you only by GitHub's failed-run notice to the pushing account, no FO words) and D2 (a push the runner cannot read is a red 'cannot judge' run), each as recommended, and is the grant for the implementation worker to push to the #651 branch.",
+  "artifacts": [
+    {
+      "id": "artifact:dev2-laws-check:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/7820b17a646ab013d2d01c905aa2ca587d992bfc/dev2-laws-check.md",
+      "rev": "sha256:401f1b2c413ec647f0032644e1cf047702567bc149b989f8ac5d5fe26557f5d8",
+      "mediaType": "text/markdown",
+      "summary": "Redo under Captain amendment 1: each push is judged on its own before..after commits; anchors and the stays-red guarantee are dropped, so adoption starts green and a violation is reported once. Kept from #651: the check-running and fail-closed core, L2 reading a record at its adding commit, the laws file, the workflow skeleton, 18 of 30 tests. Replaced: the enumeration, the CLI and the shallow guard, by one diff-tree -M walk over the push range. Replay over 198 real pushes (2026-10-13 to 15): 24 would have been red, 2 of the 69 after 2026-10-14T09:00Z. Risk under D1: the next push is green, so a missed notice is a missed violation; AC-8 (whether the notice reaches you) still needs your answer. ADR 0017 reserved. design_surfaces.py check exit 0."
+    }
+  ]
+}
