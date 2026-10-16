@@ -61,6 +61,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:dev2-laws-check:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:dev2-laws-check-validation-1
+              briefing:
+                id: briefing:dev2-laws-check:validation:attempt-1:revision-1
+                digest: sha256:5cfe57d85720b72423df052bb95f77139aa19c35be3c8171fbe1b3606ef0cdca
+                room-ref: ./dev2-laws-check/review/validation/briefing-1
 started: 2026-10-16T03:14:29Z
 worktree: .worktrees/spacedock-ensign-dev2-laws-check
 pr: iamcxa/kc-claude-plugins#651

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dev2-laws-check:validation:attempt-1:revision-1",
+  "question": "Deliver #651 head 833b5c16 (laws_check.py judges each push to the state branch on its own before..after range for two laws, observer report before the merge sentinel and complete dispatch records, from a GitHub Actions template; adoption on a state branch is a later Captain decision per adopter): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to defer the items below into backlog task laws-check-followups, including the --readme pass-through once #652 lands. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:dev2-laws-check:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6c5fed94847fdef237c447e3eb21a47ddb3f6453/dev2-laws-check.md",
+      "rev": "sha256:e36d9d804f73c42dd01703116122d4366a9bc5697da83089139ef1e2d22157af",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at 833b5c16 (redone design under Captain amendment 1, AC-13 to AC-20). FO ran the six-step acceptance script as written in env -i bash: every step matched (34 tests OK; a push range adding a record with a bare script name exits 1 naming it, here FO's own implementation-6 record of this task; a clean range exits 0; the 100-commit range judges 33 records, 4 violated; adr_lint 16 files exit 0). GitHub probe: each push got its own run, two pushes 7 s apart both completed; the template has no concurrency block and a test fails if one returns (the security review's cancel-in-progress finding). AC-8: both earlier probe failures reached your GitHub notifications inbox as ci_activity threads, unread when FO checked. CI green; state-branch run 8 to 11 s on this public repository, private adopters' minutes not measured. Words FO reads: none added. External rounds: Codex 4 (round 1 one P1 and one P2 fixed; round 2 one P1 fixed by closing the class; round 3 one P1 resolved by the amendment 1 redesign; round 4 on 833b5c16 clean). RoboRev local (727) reported two Highs, deferred as they match approved design rows: a later edit of a record is not judged (1 case in 11 edits); a merge-only violation is not judged (0 merges in 1131 commits). After #652 lands without the --readme pass-through, a folder-level violation becomes exit 2 cannot judge (still red, none turns green). Second reviewer: copilot because the change adds a CI check on every state push (merge rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. ADR 0017 lands with this PR."
+    }
+  ]
+}
