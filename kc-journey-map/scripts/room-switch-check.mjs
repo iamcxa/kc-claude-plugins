@@ -117,7 +117,23 @@ try {
   await openRooms(); await page.getByRole('textbox', { name: 'Search rooms' }).fill('')
   await click(page.locator('.journey-room-options button').filter({ hasText: new RegExp('^' + room + '$') }))
  }
+ const ordered = value => Array.isArray(value) ? value.map(ordered) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => [key, ordered(item)])) : value
  const ready = async room => {
+  await page.waitForFunction(room => window.editor?.getShape('shape:' + room) || document.querySelector('[data-testid="room-trigger"]')?.title.includes('Edits not confirmed'), room)
+  if (!await page.evaluate(room => !!window.editor?.getShape('shape:' + room), room)) {
+   const current = new URL(page.url()).searchParams.get('room')
+   const snapshot = () => page.evaluate(() => window.editor.store.getStoreSnapshot('document').store)
+   const held = JSON.stringify(ordered(await snapshot()))
+   await waitFor(async () => {
+    assert.equal(JSON.stringify(ordered(await snapshot())), held, 'held local document unexpectedly changed')
+    const remote = Object.fromEntries(records(await data('/doc?room=' + encodeURIComponent(current))).map(state => [state.id, state]))
+    return JSON.stringify(ordered(remote)) === held
+   })
+   assert.equal(JSON.stringify(ordered(await snapshot())), held, 'held local document unexpectedly changed')
+   report.visibleRetries ??= []
+   report.visibleRetries.push({ from: current, to: room, heldDocumentUnchanged: true, acknowledgedBeforeRetry: true })
+   await chooseRoom(room)
+  }
   await page.waitForFunction(room => window.editor?.getShape('shape:' + room), room)
   await page.waitForFunction(() => document.querySelector('[data-testid="room-trigger"]')?.title.endsWith('Connected'))
   assert.equal(await page.locator('.journey-room-recovery').count(), 0)

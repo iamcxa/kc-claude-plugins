@@ -92,7 +92,7 @@ export async function checkNativeUi({ page, context, adapter, origin, scratch, s
     const editor = window.editor
     editor.setCurrentTool('select')
     editor.updateShape({ id: 'shape:A', type: 'note', props: { url: 'https://github.com/synthetic/chapter/blob/main/docs/chapter.md#sequence' } })
-    editor.select('shape:A'); editor.zoomToSelection({ inset: 80 })
+    editor.select('shape:A'); editor.zoomToSelection({ inset: Math.min(window.innerWidth, window.innerHeight) / 3 })
    })
    const link = page.locator('a.tl-hyperlink-button')
    const pagesBefore = context.pages().length
