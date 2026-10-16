@@ -30,7 +30,8 @@ present. Exit 2 is a configuration error.
 tasks adds each open task PR to the watch list, with the codex and copilot columns when the workflow README
 lists those extensions, and prints one `fact:` line per open task PR (state, draft, checks, reviewer outcomes
 with their review id) and one `next:` line per action FO owes: recording a PR a worker opened, marking a green
-draft ready, the observer check ahead of the merge sentinel, keeping one wait running. It prints no merge-ask
+draft ready, the observer check ahead of the merge sentinel, keeping one wait running, and a task's newest
+dispatch record that names a package script without a directory (dispatch_records.py --newest). It prints no merge-ask
 or hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
 change. Exit 2 when a task cannot be read.
 """
@@ -294,6 +295,17 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
         meta = front(task)
         if "status" not in meta:
             continue
+        if (state / slug / "dispatch").is_dir():
+            done = subprocess.run([sys.executable, str(SCRIPTS / "dispatch_records.py"), "--newest", str(state), slug],
+                                  capture_output=True, text=True)
+            hits = re.findall(r"^(.+?):\d+: bare package script name (\S+)$", done.stdout, re.M)
+            if done.returncode == 1 and hits:
+                names = ", ".join(dict.fromkeys(name for _, name in hits))
+                out.append(f"next: {slug}'s newest dispatch record {hits[0][0]} names {names} without a directory; "
+                           "if its worker is live, send a follow-up writing each with its absolute package path "
+                           "and save it as the next record, else do nothing.")
+            elif done.returncode:
+                errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
         pr = meta.get("pr", "")
         try:
             where = toplevel(workflow) / meta["worktree"] if not pr and meta.get("worktree") else None

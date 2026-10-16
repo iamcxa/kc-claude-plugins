@@ -1,7 +1,9 @@
 import contextlib
 import importlib.util
 import io
+import os
 from pathlib import Path
+import subprocess
 import tempfile
 import unittest
 
@@ -26,6 +28,10 @@ Send your completion message to `main` (the README's Dispatch facts: `team-lead`
 
 
 MAIN_LINE = "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).\n"
+
+
+IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}
+BARE = COMPLETE.replace("1. Independent verdict", "1. Run adr_lint.py. Independent")
 
 
 class DispatchRecordTests(unittest.TestCase):
@@ -207,6 +213,64 @@ class DispatchRecordTests(unittest.TestCase):
     def test_wrong_arguments_are_a_usage_error(self):
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(records.main([]), 2)
+            for args in (["--newest"], ["--newest", "state"], ["--newest", "a", "b", "c"]):
+                self.assertEqual(records.main(args), 2, args)
+
+
+class NewestTests(unittest.TestCase):
+    def setUp(self):
+        tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(tmp.cleanup)
+        self.state = Path(tmp.name, "state")
+        self.state.mkdir()
+        self.git("init", "-q", "-b", "main")
+
+    def git(self, *args):
+        done = subprocess.run(["git", "-C", str(self.state), *args], capture_output=True, text=True, env={**os.environ, **IDENTITY})
+        self.assertEqual(done.returncode, 0, done.stderr)
+
+    def commit(self, slug, name, text):
+        path = self.state / slug / "dispatch" / f"{name}.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text)
+        self.git("add", "-A")
+        self.git("commit", "-qm", f"{slug} {name}")
+
+    def newest(self, slug="task", state=None):
+        with contextlib.redirect_stdout(io.StringIO()) as out:
+            code = records.main(["--newest", str(state or self.state), slug])
+        return code, out.getvalue().replace(str(self.state), "STATE")
+
+    def test_the_newest_record_is_scanned_and_its_lines_are_printed(self):
+        self.commit("task", "implementation-2", BARE)
+        self.assertEqual(self.newest(), (1, "STATE/task/dispatch/implementation-2.md:8: bare package script name adr_lint.py\n"))
+
+    def test_an_older_bare_record_is_not_reported_once_a_newer_one_is_clean(self):
+        self.commit("task", "implementation-1", BARE)
+        self.commit("task", "implementation-2", COMPLETE)
+        self.assertEqual(self.newest(), (0, ""))
+
+    def test_a_newer_bare_record_is_reported_over_an_older_clean_one_and_other_tasks_are_ignored(self):
+        self.commit("task", "implementation-1", COMPLETE)
+        self.commit("other", "implementation-1", BARE)
+        self.commit("task", "validation-1", BARE)
+        self.commit("other", "validation-1", COMPLETE)
+        code, out = self.newest()
+        self.assertEqual((code, out.count("\n")), (1, 1))
+        self.assertIn("task/dispatch/validation-1.md:8:", out)
+
+    def test_the_file_is_read_as_it_is_on_disk_not_as_committed(self):
+        self.commit("task", "implementation-1", BARE)
+        (self.state / "task/dispatch/implementation-1.md").write_text(COMPLETE)
+        self.assertEqual(self.newest(), (0, ""))
+
+    def test_a_task_without_records_exits_clean_and_an_unreadable_state_exits_2(self):
+        self.commit("other", "implementation-1", BARE)
+        self.assertEqual(self.newest("task"), (0, ""))
+        with tempfile.TemporaryDirectory() as plain:
+            code, out = self.newest(state=plain)
+        self.assertEqual(code, 2)
+        self.assertIn("git cannot read the dispatch records", out)
 
 
 if __name__ == "__main__":
