@@ -20,3 +20,13 @@ Brief revisions (differences only, EXTENSION.md "Ideation review" bullet):
 | r2-ac4-control-1 | 51,304 | 78 | | | MEDIUM, LOW |
 
 Tokens are the harness `subagent_tokens` usage line; seconds are its `duration_ms`.
+
+## Validation-gate replay on relay PR #347, 2026-10-16 (Captain amendment 1)
+
+Agent `kc-pr-flow:tob-security-reviewer` (Sonnet), unmodified, the agent's own contract with `security_tier: standard`, `pr_number: 347`, `owner_repo: spacedock-dev/subspace-relay`. The PR is merged and later commits exist, so the diff was `git diff a5af7e3c...1c5b1870` (14 files, 267 additions, 13 deletions, saved outside the repository) and the tree at 1c5b1870 was a `git archive` export; relay was read only through `git archive`, `git diff` and `gh`, nothing in it edited. 1c5b1870 is the head at which relay's validation cycle 1 recommended PASSED. One run. Report: `validation-replay-pr347-1c5b1870.yaml`, the agent's final message saved unedited.
+
+| Report | Tokens | Seconds | Unbounded comment or session write | Injection finding |
+| --- | --- | --- | --- | --- |
+| validation-replay-pr347-1c5b1870 | not seen: the harness `subagent_tokens` line did not reach this worker; the transcript's last request held 48,496 input-side tokens and its turns output 2,368 | about 63 (first to last transcript timestamp; not the harness `duration_ms`) | no: `findings: []` | no finding; `limitations` call agent-side prompt injection through any host's /llms.txt "a general property of the design" and out of scope |
+
+Verdict: the validation-gate replay does not name unbounded comment or session writes. Its `limitations` line: "This is the standard tier, so no full data-flow trace of the Room POST handlers was done. They are outside the diff, and the diff adds no new action." The `comment-admission` task's own account of the original finding rests on code outside this diff (a cookieless `enter` mints a new Room session, each session holds up to `MAX_SESSION_RESULTS` = 100, nothing caps a Briefing or a Room) and on ADR 43, with `/llms.txt` only documenting the comment loop; so the finding came from the running handlers, not from a line the diff adds.

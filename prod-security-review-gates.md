@@ -84,6 +84,10 @@ Captain: 「就按照新的建議」 (chat, 2026-10-16)
 Asked: 「這三個新建議可以嗎？」（第 2 項：「prod-security：用第 2 版指示上線，但 AC-3 改成「依關卡分工」，不是降低標準。」 設計關要抓到「提示注入」；驗收關要抓到「留言無上限」，上線前用 relay 那個 PR 的程式差異實際跑一次驗收關審核來證明。）
 Supersedes: AC-3
 Design: the r2 brief ships; AC-3 is replaced by a criterion split by gate as the asked item states
+Superseded text:
+
+**AC-3**: With the extension's ideation brief verbatim, two fresh runs of the unmodified agent on relay's agent-front-door design at the ideation gate (state commit d3fe0ced, Scope through Design, relay at 485a5042 read-only) each name a document-author prompt-injection finding and an unbounded session or comment-creation finding.
+Verified by: the two saved YAML reports under `<task folder>/security/`, each read for those two findings. Falsifier: a run that names either not at all. Current evidence: P0 named both once; P1 (the draft brief) named the injection and not the creation finding once, so AC-3 is not yet met. Stop rule: the implementation worker may revise the brief at most twice, re-running AC-3 and AC-4 each time; if both still do not hold on fresh runs, it returns to FO and the extension is not shipped. A revision replaces words within AC-2's 430-word cap; a revision that needs more words returns to FO as a Needs decision.
 
 ## FO alignment
 
@@ -260,9 +264,6 @@ Verified by: at the candidate, `git diff origin/main --stat -- kc-dev-flow-2 doc
 **AC-2**: The words FO reads at startup, idle on an open PR, idle on a merged PR, after the archive and at the merge ask are the base bytes; at ideation gate prep and validation gate prep a listing adopter reads at most 430 more words, a non-listing adopter none.
 Verified by: the empty diff of AC-1 (the mod, `pr_watch.py` and `delivery_gate.py` are inside it) and `python3 -I -c 'print(len(open("kc-dev-flow-2/extensions/security/EXTENSION.md").read().split()))'` printing at most 430 (draft 423). Falsifier: a 431-word file fails; a changed byte under `references/sd/mods` fails the diff. Not verified: when FO opens a listed extension file.
 
-**AC-3**: With the extension's ideation brief verbatim, two fresh runs of the unmodified agent on relay's agent-front-door design at the ideation gate (state commit d3fe0ced, Scope through Design, relay at 485a5042 read-only) each name a document-author prompt-injection finding and an unbounded session or comment-creation finding.
-Verified by: the two saved YAML reports under `<task folder>/security/`, each read for those two findings. Falsifier: a run that names either not at all. Current evidence: P0 named both once; P1 (the draft brief) named the injection and not the creation finding once, so AC-3 is not yet met. Stop rule: the implementation worker may revise the brief at most twice, re-running AC-3 and AC-4 each time; if both still do not hold on fresh runs, it returns to FO and the extension is not shipped. A revision replaces words within AC-2's 430-word cap; a revision that needs more words returns to FO as a Needs decision.
-
 **AC-4**: With the same brief, one fresh run on the package's archived `delivery-gate-verdict-form` design (Scope through Design, this repository at 0cdb40a7, read-only) returns no finding whose `severity:` field is HIGH or CRITICAL.
 Verified by: the saved YAML report, read on the `severity:` field only (P1's one MEDIUM carried `blast_radius: HIGH`). Falsifier: a finding with `severity: HIGH` or `CRITICAL`. Current evidence: P0 returned one HIGH (fails); P1 returned none (passes, one run).
 
@@ -271,6 +272,9 @@ Verified by: the observer skill run read-only on three fixture task states, two 
 
 **AC-6**: The ruling on D1 lands as an ADR whose Words line quotes the Captain's answer.
 Verified by: `python3 <package>/scripts/adr_lint.py docs/adr --since <base> --require <reserved number>` exits 0 at the candidate. Falsifier: exit 1 for a missing record or Words line. Not yet verified: the ADR is written at implementation.
+
+**AC-7**: Amended by Captain, amendment 1. Each gate's security review names what that gate is for. Ideation gate: with the extension's ideation brief verbatim, two fresh runs of the unmodified agent on relay's agent-front-door design at the ideation gate (state commit d3fe0ced, Scope through Design, relay at 485a5042 read-only) each name a document-author prompt-injection finding. Validation gate: one run of the agent's own contract on relay PR spacedock-dev/subspace-relay#347's diff at head 1c5b1870 names an unbounded comment or session write finding.
+Verified by: the saved YAML reports under `<task folder>/security/` (`r2-ac3-relay-1.yaml`, `r2-ac3-relay-2.yaml` and the validation replay), each read for that gate's finding. Falsifier: an ideation run that does not name the injection, or a validation run that names no unbounded write. Stop rule: if the validation replay does not name the unbounded write, nothing is pushed and the task returns to FO. Not claimed: a rate; the validation gate has one run on one head.
 
 ## Stage Report: ideation
 
@@ -314,3 +318,22 @@ ADR: 0018
 ### Summary
 
 The extension, README row, observer sentence and ADR 0018 are built and committed locally, but the brief cannot make the unmodified reviewer name the unbounded session or comment creation finding on relay's design in two runs; I used both allowed revisions and stopped. Decision for FO and the Captain: ship r2 with AC-3 amended or its Falsifier read as one run of two, take a third brief revision, or drop the extension. Run-to-run variance is unmeasured: each round is two runs, and the r2 `limitations` line shows the reviewer saw the gap and chose not to report it. Number guards: ADR 0018 (FO's reservation) used; `comment_ratio.py origin/main HEAD`: 0 code lines, 0 comment lines, 0.0%, limit not enforced under 20 lines; `doc_impact.py origin/main HEAD`: 0 documents; `design_surfaces.py check`: presentable. ADR 0018's Words line cites the gate resolution's reason (「准」) not a gate-question quote; FO should confirm the wording.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Captain amendment 1 applied: AC-3 moved under it as `Superseded text:`, its replacement written as a new criterion that says 'Amended by Captain, amendment 1' (the ideation-gate review names prompt injection; the validation-gate review names unbounded comment or session writes), and kc-dev-flow-2/scripts/design_surfaces.py check exits 0
+  AC-3 block moved verbatim into `### Amendment 1`; new `**AC-7**` says "Amended by Captain, amendment 1", split by gate. The candidate's `design_surfaces.py check` on the edited task prints `presentable`, exit 0; on the pre-edit copy it exits 1 (`supersedes AC-3 but it is still declared`).
+- DONE: Before any push: one replay of the validation-gate review with the r2 brief on relay PR spacedock-dev/subspace-relay#347's diff (read only), recording whether it names unbounded writes, its tokens and duration; if it does not, stop and report without pushing
+  Replay at relay head 1c5b1870 (the head validation cycle 1 recommended PASSED), standard tier, one run: `findings: []`, no unbounded write named, so I stopped and pushed nothing. Duration about 63 s from transcript timestamps; tokens not seen (harness line did not reach me; last request 48,496 input-side tokens, 2,368 output). Report `security/validation-replay-pr347-1c5b1870.yaml`, round in `security/runs.md`. The validation brief is the agent's own contract: the extension supplies no r2 text for validation, only the ideation brief has r2 wording.
+- SKIPPED: Then one Draft PR (feat(kc-dev-flow-2): ...) from the local branch spacedock-ensign/prod-security-review-gates (r2 brief, db8e04bc) rebased or merged onto origin/main as needed without force on any shared branch, every other acceptance criterion still green, the candidate's own kc-dev-flow-2/scripts/lint-skills.py exit 0, roborev evidence= line, CI green, CI cost measured or stated as not measured
+  Skipped by the checklist's stop rule: no push, no PR, no CI. Done anyway: origin/main (1383c911) is an ancestor of db8e04bc so no rebase was needed; `lint-skills.py` exit 0 (`5495 of 5511 words`); `roborev_gate.py --repo <worktree> --base 1383c911` printed `clean on db8e04bcb; evidence=roborev:725`; CI cost not measured, no workflow or job added. The worktree is unchanged since cycle 1 (clean, db8e04bc).
+  - AC-7 NOT met. Ideation half: r2 runs 1 and 2 both named the prompt-injection finding (MEDIUM, MEDIUM; `runs.md`). Validation half: no unbounded write named, and the replay also named no injection finding, calling it "a general property of the design" and out of scope.
+  - AC-1, AC-2, AC-4, AC-5, AC-6: unchanged from cycle 1 (met as stated there); no mutation rerun because no candidate byte changed.
+
+### Surface of the original relay finding
+
+Relay's own `comment-admission` task (`spacedock-state/dev2:_archive/comment-admission.md`, read only) records it as running code outside the PR's diff: a cookieless `enter` always mints a new Room session, each session may hold `MAX_SESSION_RESULTS` = 100 results of up to `MAX_RESULT_BYTES` = 128,000 bytes, nothing caps a Briefing or a Room, and ADR 43 already said "Comments are limited by none of this". The diff only added `/llms.txt` text documenting the comment loop with a copyable body. It was not found on the served `/openapi.json` (that was the Captain's question and the separate link removal). I did not re-read the original review's six findings; this rests on that task's account.
+
+### Summary
+
+The amendment is applied and the ideation half of AC-7 holds on two runs, but the validation half fails: the agent's own contract on #347's diff returns no findings, because the finding lives in handlers the diff does not touch and standard tier does not trace them. Per the stop rule nothing was pushed. Decision for FO and the Captain: the diff-only validation review cannot catch this class as the extension is written (a full-tier run or a brief that names the handlers a new public route reaches would be a new design, unmeasured), or drop the validation half.

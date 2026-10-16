@@ -1,0 +1,21 @@
+tob_security_review:
+  pr: 347
+  strategy: DEEP
+  security_tier: standard
+  files_analyzed: 14
+  findings: []
+  clean_patterns:
+    - "public/ is the Netlify publish root, and netlify.toml warns that anything placed there is world-readable. The only new files are public/index.html (a static placeholder) and public/llms.txt (agent docs). Neither holds secrets, device credentials or owner-side routes. front-door.test.ts asserts that llms.txt matches no /api/ route, dev_, sec_ or X-Subspace-Device."
+    - "The only edge-function route is /r/:b (GET). The static / and /llms.txt files shadow no function route. public/_redirects only proxies /web/*."
+    - "netlify/lib/room-page.ts adds a relative <link rel=alternate href=/llms.txt> and a static sr-only <p>. Neither interpolates request data, so there is no new injection or XSS sink. The owner-link fragment handling and the CSRF/claim script are unchanged. I found no CSP or nonce mechanism in this file that the new markup could break."
+    - "scripts/smoke-deployment reads / and /llms.txt with curl --max-time 20. The origin is operator-supplied and quoted everywhere. A temp dir is used and removed by trap. A missing /openapi.json is reported as skip rather than silently passed, and a missing llms.txt version fails."
+    - "In the smoke script, an empty llms.txt version already fails its own check, so the empty-equals-empty comparison against openapi.json cannot produce a false pass."
+    - "The OpenAPI info.version bump and description change touch text only. No schema, security scheme or route changed. The fingerprint test only guards against unversioned document drift and is not a security control."
+    - "llms.txt tells agents to file an issue only after the human agrees and never to include document text or share links. It also tells them not to print the cookie jar or use curl -v or set -x. This is a sound guard against credential leakage by agents."
+    - "The README, architecture, protocol and releasing docs changes are documentation only. No auth, validation, rate-limit or CORS code is removed or weakened."
+  limitations:
+    - "This is the standard tier, so no full data-flow trace of the Room POST handlers was done. They are outside the diff, and the diff adds no new action."
+    - "I did not check the Netlify dashboard or production headers. Response headers for the static files (nosniff, framing) come from platform defaults, because netlify.toml has no [[headers]] block. The new files hold no sensitive content, so I judged this low impact."
+    - "llms.txt tells agents to follow a server-supplied {redirect} by resetting H and entering again. That redirect comes from the same host that served the link and the instructions, so it adds no trust boundary. Agent-side prompt injection through any host's /llms.txt is a general property of the design and I treated it as out of scope."
+    - "llms.txt links /openapi.json, but production only serves it when RELAY_OPENAPI_PUBLIC=true. The link can 404, and the smoke script handles that with a skip. This is a documentation-accuracy issue, not a security one."
+    - "I did not run the tests or the smoke script. The review is static, against the exported tree at head 1c5b1870."
