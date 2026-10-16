@@ -11,6 +11,7 @@ from pathlib import Path
 SCRIPTS = Path(__file__).resolve().parent
 RUNNER = SCRIPTS / "laws_check.py"
 LAWS_FILE = SCRIPTS.parent / "references/sd/laws.md"
+TEMPLATE = SCRIPTS.parent / "references/sd/state-laws.workflow.yml"
 IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
             "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
 SHA = "a" * 40
@@ -93,6 +94,12 @@ class RegistryTest(unittest.TestCase):
         registered = {f"{law_id} {name}" for law_id, (name, _) in laws_check.LAWS.items()}
         headings = set(re.findall(r"^## (L\d+ [\w-]+)$", LAWS_FILE.read_text(), re.M))
         self.assertEqual(registered, headings)
+
+
+class WorkflowTemplateTest(unittest.TestCase):
+    def test_template_has_no_concurrency_block_that_could_cancel_a_push_run(self):
+        lines = [line for line in TEMPLATE.read_text().splitlines() if not line.lstrip().startswith("#")]
+        self.assertEqual([line for line in lines if re.match(r"\s*(concurrency|cancel-in-progress)\s*:", line)], [])
 
 
 class ExitContractTest(Base):
