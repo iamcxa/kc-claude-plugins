@@ -3,7 +3,7 @@ title: The dispatch_records.py --names check runs only if FO remembers to run it
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain approved batch-1 ideation (「准」) after FO presented all five gates together; as the gate question states, this accepts each decision as recommended (and FO's stated change where named), the batch-1 implementation order, and is the push and Draft PR grant for the implementation worker.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-16T03:14:56Z
 ---
 
