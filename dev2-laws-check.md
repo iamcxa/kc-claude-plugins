@@ -244,8 +244,8 @@ Visible change: none
   - P1 `scripts/laws_check.py`: L2 reads each record's bytes and folder listing at the run revision, not at the commit that added it, so a record corrected or deleted later turns a committed violation green without moving the anchor.
   - P2 `scripts/laws_check.py`: a checker that exits 1 with no parseable output (a crash writing only to stderr) leaves the law at exit 0 instead of exit 2.
 - Cycle 1, roborev (FO, 2026-10-16): roborev (evidence=roborev:711) on 096ce885 reported one High: a record deleted and re-added at the same path is judged only at its newest add, so its first, bad add escapes. Same class as the Cycle 1 P1 (later history erases a committed violation); FO fixes it in this cycle rather than defer it, although 0 of 149 records on the real history have more than one add.
-- Cycle 2 (FO, 2026-10-16): Codex review on #651 9fbe0440 (review:5544579970) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
-  - P2 (P1, recorded under the P2 label by FO's script) `scripts/laws_check.py`: L1 enumerates task files only from the run revision, so a task that violated L1 and was later deleted drops out and the check goes from exit 1 to 0 events judged.
+- Cycle 2 (FO, 2026-10-16): Codex review on #651 9fbe0440 (review:5544579970) left one P1, to fix (a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 `scripts/laws_check.py`: L1 enumerates task files only from the run revision, so a task that violated L1 and was later deleted drops out and the check goes from exit 1 to 0 events judged.
 
 ## Stage Report: ideation
 
