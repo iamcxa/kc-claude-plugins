@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:amendment-form-check:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 1 (prod-security-review-gates, dev2-laws-check, extension-instruction-reaches-dispatch, names-check-before-dispatch, amendment-form-check)? Approving accepts profile pilot as recommended, and that the five ideations run in parallel with dev2-laws-check's design read by the other four for overlap.",
+  "artifacts": [
+    {
+      "id": "artifact:amendment-form-check:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/bbf6977d6e35ea375be730093bef559a6f6bac08/amendment-form-check.md",
+      "rev": "sha256:227f938bef98547c3a2a67bcb6624aabb48109cb1b32ebc3b7447a322237f152",
+      "mediaType": "text/markdown",
+      "summary": "Seed: observer reports on delivery-gate-verdict-form and fo-lifecycle-mod found amendments that break the README Captain amendments rules (FO's own words in Design:, replacement criteria without 'Amended by Captain, amendment N', a Supersedes: none while criteria moved), and design_surfaces.py check passed both. Candidates for ideation to keep or drop; the first is a judgement of meaning and may stay with the observer. Recommended profile pilot. Seed check exit 0."
+    }
+  ]
+}

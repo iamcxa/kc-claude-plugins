@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:amendment-form-check:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:amendment-form-check-backlog-1
+              briefing:
+                id: briefing:amendment-form-check:backlog:attempt-1:revision-1
+                digest: sha256:14cbf6e42f10d8251d22634c12e4fe1cfec16a908b4d0566a24a3587f0de3797
+                room-ref: ./amendment-form-check/review/backlog/briefing-1
 ---
 
 Filed from a learn package-issue candidate the Captain approved (「好」, chat, 2026-10-15). The observer reports on `delivery-gate-verdict-form` and `fo-lifecycle-mod` found FO-written amendments that break the README `## Captain amendments` rules, and `scripts/design_surfaces.py check` passed both tasks.
