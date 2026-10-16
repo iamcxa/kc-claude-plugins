@@ -175,7 +175,7 @@
       "name": "kc-dev-flow-2",
       "source": "./kc-dev-flow-2",
       "description": "Development workflow run by Spacedock, with profile principles, stage skills, advisory roles, an observer and optional extensions.",
-      "version": "0.22.1",
+      "version": "0.23.0",
       "keywords": [
         "development-workflow",
         "profiles",
