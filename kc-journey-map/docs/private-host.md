@@ -84,6 +84,13 @@ and no later than its parent grant. The response contains no credential. Cookie
 writes and WebSocket admission require the exact configured Origin; agents can
 use bearer HTTP without a browser origin. Every request checks the current grant.
 
+Each new session insertion checks at most 64 stored session rows and removes
+expired entries. A persistent primary-key cursor resumes across host restarts and
+wraps to revisit earlier keys, including old sessions and later expirations.
+Cleanup runs on session creation only: idle hosts and bearer-only traffic do not
+trigger it, so there is no idle deletion deadline or total-row cap. It adds no
+timer, alarm or room wakeup; valid/malformed sessions and other metadata remain.
+
 For a same-origin HTTPS canvas, the browser setup command consumes the credential
 from `JOURNEY_API_TOKEN`, exchanges it in its own browser context and opens the
 existing canvas. Close that window when done:

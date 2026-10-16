@@ -2,6 +2,7 @@ import { DurableObjectSqliteSyncWrapper, SQLiteSyncStorage, TLSocketRoom } from 
 import { HostError, operate, prepareDoc } from './core'
 import { admit, handle, type Host } from './transport'
 import { currentGrant, validateGrants, type Admission, type Grant, type Metadata } from './policy'
+import { pruneExpiredSessions } from './session-retention'
 
 type Env = { ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string }
 const stub = (namespace: any, id: string) => namespace.get(namespace.idFromName(id))
@@ -25,7 +26,10 @@ export class JourneyRegistry {
   })
  }
  get(key: string) { const row = this.ctx.storage.sql.exec('SELECT value FROM metadata WHERE key = ?', key).toArray()[0]; return row ? JSON.parse(row.value) : null }
- put(key: string, value: unknown) { this.ctx.storage.sql.exec('INSERT OR REPLACE INTO metadata VALUES (?, ?)', key, JSON.stringify(value)) }
+ put(key: string, value: unknown) {
+  if (key.startsWith('session:')) pruneExpiredSessions((sql, ...bindings) => this.ctx.storage.sql.exec(sql, ...bindings).toArray())
+  this.ctx.storage.sql.exec('INSERT OR REPLACE INTO metadata VALUES (?, ?)', key, JSON.stringify(value))
+ }
  async fetch(req: Request) {
   const body = await req.json() as any
   const op = new URL(req.url).pathname

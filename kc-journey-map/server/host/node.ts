@@ -7,6 +7,7 @@ import { NodeSqliteWrapper, SQLiteSyncStorage, TLSocketRoom } from '@tldraw/sync
 import { HostError, operate } from './core'
 import { currentGrant, validateGrants, type Grant, type Admission, type Metadata } from './policy'
 import type { Host } from './transport'
+import { pruneExpiredSessions } from './session-retention'
 import { loadAsset, storeAsset } from '../assets'
 import { saveBoard, saveDir, saveTarget } from '../save'
 import { readRepoDoc } from '../repo-doc'
@@ -47,7 +48,10 @@ export class NodeHost implements Host {
     const row = this.db.prepare('SELECT value FROM metadata WHERE key = ?').get(key) as { value: string } | undefined
     return row ? JSON.parse(row.value) as T : null
    },
-   put: async (key, value) => { this.db.prepare('INSERT OR REPLACE INTO metadata VALUES (?, ?)').run(key, JSON.stringify(value)) },
+   put: async (key, value) => {
+    if (key.startsWith('session:')) pruneExpiredSessions((sql, ...bindings) => this.db.prepare(sql).all(...bindings))
+    this.db.prepare('INSERT OR REPLACE INTO metadata VALUES (?, ?)').run(key, JSON.stringify(value))
+   },
    list: async <T>(prefix: string) => (this.db.prepare('SELECT key, value FROM metadata WHERE substr(key,1,?) = ? ORDER BY key').all(prefix.length, prefix) as any[])
     .map(row => ({ key: row.key, value: JSON.parse(row.value) as T })),
   }
