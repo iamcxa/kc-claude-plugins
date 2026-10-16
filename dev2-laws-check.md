@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:dev2-laws-check:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:dev2-laws-check-ideation-1
+              briefing:
+                id: briefing:dev2-laws-check:ideation:attempt-1:revision-1
+                digest: sha256:ae775e4d0321a351f19f9454c22b2193d7897319cb4d3c1d4b46809ae82de19a
+                room-ref: ./dev2-laws-check/review/ideation/briefing-1
 started: 2026-10-16T03:14:29Z
 ---
 

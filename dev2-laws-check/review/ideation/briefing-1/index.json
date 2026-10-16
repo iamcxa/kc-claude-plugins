@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dev2-laws-check:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approving accepts D1 (anchors: observer law at 91fae734, dispatch-record law at the state tip on the day the workflow turns on), D2 (push trigger on the named state branch only, no schedule), D3 (option A: GitHub's failed-run notice, zero FO words; flips to the 19-word pr_watch line before merge if your notice does not arrive) and D4 (two laws in v1), each as recommended, with FO's change: v1 runs the CI workflow only on this repository's state branch, and adopters opt in after its minutes are measured. It also accepts the batch-1 implementation order (names-check-before-dispatch lands before extension-instruction-reaches-dispatch, which edits the same dispatch_records.py function; the other three run in parallel), and is the grant for the implementation worker to push a branch and open a Draft PR.",
+  "artifacts": [
+    {
+      "id": "artifact:dev2-laws-check:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/92eea2e1f59f0ed3dc01792057a6904232616443/dev2-laws-check.md",
+      "rev": "sha256:899faffb1dc7e9bcd9b1513fd8f9f0cd84a282c14c08060e776253b6a14ffe0b",
+      "mediaType": "text/markdown",
+      "summary": "Design: package laws file plus scripts/laws_check.py running observer_check.py and dispatch_records.py over committed state history after a per-law anchor; a GitHub Actions workflow on pushes to the state branch; detects, cannot prevent. Absorbs none of the other four. Measured at e73634e6: observer law 0 of 9 events violate after its anchor; dispatch-record law 12 of 68 records violate after 49da5ddb (7 in the open journey-server-host-pilot), hence the anchor at turn-on. Unverified until implementation (AC-8, AC-9): whether GitHub runs a workflow committed on the state branch, whether state init, gate prepare and merge guard --rework leave .github/ alone, and whether the failed-run notice reaches you. FO's change: this branch saw up to 1024 pushes in 30 days and private adopters pay CI minutes (unmeasured), so v1 stays on this public repository. FO reads no new words at any moment under D3 A. design_surfaces.py check exit 0."
+    }
+  ]
+}
