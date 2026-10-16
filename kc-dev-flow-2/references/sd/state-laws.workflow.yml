@@ -5,10 +5,6 @@ on:
   push:
     branches: ["<state branch, for example spacedock-state/dev2>"]
 
-concurrency:
-  group: dev2-laws-${{ github.ref }}
-  cancel-in-progress: true
-
 permissions:
   contents: read
 
@@ -43,8 +39,11 @@ jobs:
           path: trunk
 
       - name: laws_check.py
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
         run: |
           python3 package/kc-dev-flow-2/scripts/laws_check.py state \
-            --readme "trunk/<workflow dir>/README.md" \
-            --anchor L1=<commit> \
-            --anchor L2=<commit>
+            --before "$BEFORE" \
+            --after "$AFTER" \
+            --readme "trunk/<workflow dir>/README.md"
