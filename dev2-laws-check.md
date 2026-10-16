@@ -389,3 +389,16 @@ P1 and P2 are fixed in `096ce885` with five new tests; the written AC-4 and AC-6
 ### Summary
 
 L2 now judges every add of a record at its adding commit, closing the delete-and-re-add path; roborev is clean on `9fbe0440`. Measured on the real history: AC-4 10/0 and 25/15, AC-6 48 judged, 10 violated, 15 lines (unchanged from cycle 1); runner time about 4 s to about 21 s. CI on the new head is recorded in the completion message.
+
+## Stage Report: implementation (cycle 3, phase 1)
+
+- DONE: Phase 1 only: reproduce the Codex P2 on #651 head 9fbe0440 (review:5544579970) as a failing test, and propose the smallest fix; report and stop, with no commit or push, until FO authorizes the fix
+  The finding is labelled P1 on GitHub (Cycle 2 above agrees; the dispatch said P2). Reproduced at 9fbe0440 by `/tmp/laws-repro/repro_l1_deleted.py` (outside the worktree; worktree status clean, HEAD unchanged, nothing committed or pushed): `test_a_task_deleted_after_its_violating_sentinel_is_still_judged` builds `Base.violating()` (exit 1, task=t), commits `git rm t.md`, and gets `0 events judged after 215d601f3826, 0 violated`, exit 0, so it fails `assertEqual(code, 1)`; it would pass only if a deleted task stays judged.
+- DONE: Propose the smallest fix (class audit included)
+  Cause: `task_files(state, rev)` lists `git ls-tree` of REV, so a task whose file is gone at REV never reaches `first_sentinel`, which already reads history. Fix: replace `task_files` with `sentinel_slugs`, one `git log --format= --name-only -G"^pr: [\"']?pr-merge:" REV -- ':(glob)*.md' ':(glob)_archive/*.md'` and the set of basenames minus `README.md`; `first_sentinel` and `observer_check.py --rev <commit>` are unchanged (both read the sentinel commit). Net -4 lines in `laws_check.py`, plus the test above in `L1Test` (a deleted task, and an archived task already passes). Tried on a throwaway copy `/tmp/laws-repro/pkg/scripts`: the repro passes and all 28 existing tests in `test_laws_check.py` pass.
+  Class audit of every place `laws_check.py` reads the run revision: `task_files` (the bug); `l2` loop `ls-tree -r REV` over dispatch records (only a fail-closed check that each current record has an add commit, cannot erase an event); `additions` (already `git log`); `ls-tree commit` and `git show commit:path` for L2 folders and records (at the adding commit); `after()` (ancestry); `readme_extensions(--readme FILE)` (a file the caller names, not history; it gates whether L1 applies, so a README that lists `learn` at the run point decides it, which the property test can fix as a constant). So `task_files` is the only enumeration left; the Cycle 1 P1 and the roborev High were the two L2 ones.
+  Not in this phase: the property test (edit, delete and archive every file after its event, assert each law's result unchanged). It is a separate piece the dispatch asks for after authorization.
+
+### Summary
+
+Reproduced the Codex finding (L1 goes from exit 1 to exit 0 when a violating task is deleted) with a failing test, and verified a 4-line-shorter fix on a scratch copy that keeps all 28 existing tests green. Worktree untouched at 9fbe0440 and this report is uncommitted in the state checkout, per the "no commit or push" instruction. Awaiting FO authorization to apply the fix, add the test and the property test, and commit.
