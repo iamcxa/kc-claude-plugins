@@ -17,6 +17,7 @@ MERMAID = re.compile(r"```mermaid\n(.*?)```", re.S)
 FENCE = re.compile(r"^[ \t]*```")
 GO_SPACE = "[\t\n\v\f\r \x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]*"
 AC_HEADING = re.compile(rf"^{GO_SPACE}## Acceptance criteria{GO_SPACE}$", re.I)
+SECTION_END = re.compile(rf"^{GO_SPACE}## ")
 AC_DECLARATION = re.compile(r"\*\*(AC-[A-Za-z0-9]+)[^*\n]*\*\*")
 AMENDMENTS_HEADING = re.compile(rf"^{GO_SPACE}## Captain amendments{GO_SPACE}$", re.I)
 CAPTAIN_WORDS = re.compile(r"^Captain:[ \t]*\S", re.M)
@@ -74,7 +75,7 @@ def check_db(name, body, errors):
 def section(lines, heading):
     for start, line in enumerate(lines):
         if heading.match(line):
-            end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
+            end = next((i for i in range(start + 1, len(lines)) if SECTION_END.match(lines[i])), len(lines))
             return lines[start + 1:end]
     return None
 

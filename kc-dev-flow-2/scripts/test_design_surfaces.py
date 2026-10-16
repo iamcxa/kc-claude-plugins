@@ -343,6 +343,13 @@ class AmendmentTests(unittest.TestCase):
         stays = AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-2 (no replacement: AC-1 stays declared)")
         self.assertEqual(self.errors(stays, "**AC-1**: a driver sees seats.\n"), [])
 
+    def test_an_indented_sibling_heading_ends_the_criteria_section(self):
+        for heading in (" ## Notes", "\t## Notes", "\xa0## Notes"):
+            with self.subTest(repr(heading)):
+                criteria = "**AC-1**: a driver sees seats.\n**AC-3**: the new outcome.\n\n" + heading + "\n**AC-9**: Amended by Captain, amendment 1: evidence prose.\n"
+                errors = self.errors(AMENDMENT, criteria)
+                self.assertTrue(any("supersedes AC-2 but no criterion says" in e for e in errors), errors)
+
     def test_the_marker_counts_only_on_a_declaration_line(self):
         prose = "**AC-1**: a driver sees seats.\n**AC-3**: the new outcome.\nVerified by: a test quoting Amended by Captain, amendment 1.\n"
         errors = self.errors(AMENDMENT, prose)
@@ -409,6 +416,13 @@ class AmendmentTests(unittest.TestCase):
         intro = "Amended by Captain, amendment 1, is written on the criteria below.\n**AC-1**: a driver sees seats.\n"
         prose = "**AC-1**: a driver sees seats.\n**AC-3**: the new outcome.\nVerified by: a test quoting Amended by Captain, amendment 1.\n"
         for criteria in (intro, prose):
+            self.assertTrue(self.errors(AMENDMENT, criteria))
+            self.assertEqual(self.errors(AMENDMENT, criteria, mutant), [])
+
+    def test_mutation_restoring_the_plain_section_end_fails_its_cases(self):
+        mutant = mutated("if SECTION_END.match(lines[i])", 'if lines[i].startswith("## ")')
+        for heading in (" ## Notes", "\t## Notes", "\xa0## Notes"):
+            criteria = "**AC-1**: a driver sees seats.\n**AC-3**: the new outcome.\n\n" + heading + "\n**AC-9**: Amended by Captain, amendment 1: evidence prose.\n"
             self.assertTrue(self.errors(AMENDMENT, criteria))
             self.assertEqual(self.errors(AMENDMENT, criteria, mutant), [])
 
