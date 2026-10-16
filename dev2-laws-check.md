@@ -3,7 +3,7 @@ title: A dev2 laws file whose invariants a script checks over the committed stat
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-16T03:14:29Z
 worktree: .worktrees/spacedock-ensign-dev2-laws-check
+pr: iamcxa/kc-claude-plugins#651
 ---
 
 Filed on the Captain's 「同意兩件」 (2026-10-14), after FO compared Bend 2's `LAWS.bend` idea (invariants a checker proves the program keeps) with dev2's failures that day. Those failures were at the layer where FO follows text: a relay FO archived a task without an observer report, FO built dispatches before running `dispatch_records.py --names`, and FO answered a chat cue without running Spacedock's hooks. The scripts themselves were not wrong.
