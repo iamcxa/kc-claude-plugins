@@ -12,7 +12,7 @@ import { SaveButton } from './SaveButton'
 import { StickyBackbone } from './StickyBackbone'
 import { addSequencePage } from './sequence'
 import { journeyApi } from './api'
-import { RoomSelector, type ConnectionState } from './RoomSelector'
+import { RoomPageMenu, RoomSelector, type ConnectionState } from './RoomSelector'
 import { confirmRoomSwitch } from './confirm-room-switch'
 
 const APP_NAME = 'kc-journey-map'
@@ -127,19 +127,18 @@ export default function App() {
 		if ((url.searchParams.get('room') || 'default') !== roomId) void navigate(url, false)
 		else acceptedUrl.current = url.href
 	}, [search, roomId, navigate])
-	return <>
-		<RoomCanvas key={roomId} roomId={roomId} onConnection={setConnection} onEditor={onEditor} />
-		<RoomSelector roomId={roomId} connection={connection} switching={switching} switchError={switchError} onNavigate={next => {
+	return <RoomSelector roomId={roomId} connection={connection} switching={switching} switchError={switchError} onNavigate={next => {
 			const url = new URL(window.location.href)
 			url.searchParams.set('room', next); url.searchParams.delete('d'); url.hash = ''
 			void navigate(url, true)
-		}} />
-	</>
+		}}>
+		<RoomCanvas key={roomId} roomId={roomId} onConnection={setConnection} onEditor={onEditor} />
+	</RoomSelector>
 }
 
 function RoomCanvas({ roomId, onConnection, onEditor }: { roomId: string; onConnection: (state: ConnectionState) => void; onEditor: (editor: Editor | null) => void }) {
 	const components = useMemo(
-		() => ({ SharePanel: () => <SaveButton roomId={roomId} />, InFrontOfTheCanvas: StickyBackbone }),
+		() => ({ PageMenu: RoomPageMenu, SharePanel: () => <SaveButton roomId={roomId} />, InFrontOfTheCanvas: StickyBackbone }),
 		[roomId]
 	)
 	const store = useSync({

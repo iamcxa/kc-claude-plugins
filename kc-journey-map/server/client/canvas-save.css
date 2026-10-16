@@ -1,0 +1,11 @@
+.journey-save { position: relative; z-index: calc(var(--tl-layer-panels) + 1); display: flex; align-items: center; gap: 4px; padding: 4px; pointer-events: all; }
+.journey-save-panel { position: absolute; top: 100%; right: 4px; width: 300px; max-width: calc(100vw - 16px); box-sizing: border-box; padding: 10px; border: 1px solid var(--tl-color-divider); border-radius: 8px; background: var(--tl-color-panel); color: var(--tl-color-text-1); box-shadow: var(--tl-shadow-2); font: 12px system-ui; }
+.journey-save-form { display: flex; flex-direction: column; gap: 6px; }
+.journey-save-form input { min-width: 0; width: 100%; box-sizing: border-box; min-height: 36px; font: inherit; color: inherit; background: var(--tl-color-low); border: 1px solid var(--tl-color-divider); border-radius: 4px; padding: 6px; }
+.journey-save-actions { display: flex; justify-content: flex-end; gap: 6px; }
+.journey-save-note { font-size: 11px; overflow-wrap: anywhere; padding-bottom: 6px; }
+@media (max-width: 600px) {
+	.journey-save { gap: 0; }
+	.journey-save > .tlui-button { padding-inline: 6px; font-size: 12px; min-height: 40px; }
+	.journey-save-actions .tlui-button { min-height: 44px; }
+}

@@ -18,8 +18,11 @@ allowlist to the browser's reviewed rooms, not an unrestricted operator grant.
 Create the intended rooms through the existing authorized GET `/doc?room=A`
 and `/doc?room=B`. The selector lists only existing rooms from `/health`, further
 filtered by the principal. It does not create or manage rooms. Existing
-`?room=...` links still work. A failed room can recover through the independent
-selector. Refresh is manual; no inventory polling keeps objects awake.
+`?room=...` links still work. Open the compact room menu beside tldraw's native
+page menu to search authorized room IDs; the popup shows the full current ID.
+Pages remain separate navigation within a room. If the editor cannot mount,
+a compact recovery selector keeps the authorized inventory reachable. Refresh
+is manual; no inventory polling keeps objects awake.
 
 Switching completes the editor gesture, then makes one authorized GET `/doc`
 request to compare document records with the still-unchanged local snapshot.
@@ -29,6 +32,14 @@ SDK queue fields. Concurrent agent writes may cause a safe retry until the
 existing sync client catches up; write/concurrency semantics are unchanged.
 Browser back/forward uses the same check. Full page reload/closing still follows
 the existing browser/sync behavior; save or confirm edits before leaving the page.
+
+On a Node host with save capability, Save opens a bounded filename panel.
+The existing filename probe changes Write to Overwrite for an existing file;
+that button confirms the write. Cancel or Escape returns focus to Save, and
+Dismiss clears a result message. Dismiss the panel before using another popup.
+The chapter document popup still reads the room's allowlisted local checkout.
+Cloudflare hides Save/download and reports the existing unavailable-checkout
+message; it does not gain filesystem routes.
 
 ## Repository-contained Sites entry
 
@@ -95,14 +106,28 @@ A latest saved version does not establish which version is served.
 
 ```sh
 npm run typecheck
+export JOURNEY_TLDRAW_ASSETS=/absolute/local-assets-5.4.0/package
+export JOURNEY_CHECK_OUTPUT_DIR=/absolute/private-evidence
 node scripts/room-switch-check.mjs --adapter node --synthetic
 node scripts/room-switch-check.mjs --adapter cloudflare-local --synthetic
 node scripts/sites-entry-check.mjs
 ```
 
-The browser checks use synthetic local data, Vite development mode and a temporary
-local certificate. They cover actual input, switching, acknowledged and immediate
-edits, failure/retry, inventory privacy, narrow layout and forbidden room recovery.
+The browser checks use synthetic local data, Vite development mode, a temporary
+local certificate and ephemeral credentials. Supply an unpacked official
+`@tldraw/assets@5.4.0` package at the asset path; the browser harness serves those
+bytes locally and blocks other external HTTP requests. No test downloads assets.
+The output directory is optional and defaults to the ignored `.host-check`.
+They cover actual input, switching, acknowledged and immediate edits,
+failure/retry, inventory privacy and forbidden-room recovery. Native menu,
+toolbar, drawing, sequence-page and popup checks use desktop, tablet, narrow
+phone and landscape viewports. Node checks exercise real disposable save files,
+overwrite, errors and allowlisted chapter content; Cloudflare checks its existing
+capability limits. Pointer checks wait for stable controls, then assert their
+centre hit target before clicking. These are Chromium viewport checks, not
+physical iOS or Safari acceptance. To continue a partial run, `--native-only`
+skips the switch scenarios and `JOURNEY_CHECK_VIEWPORTS=phone390,phone320` narrows
+the native surface checks; each receipt records that subset.
 Sites checks exercise the fixed proxy and local Worker upgrade. These do not claim
 hosted Sites, provider hibernation, actual native agents or production rendering.
 Historical native/lifecycle receipts remain evidence for their original candidate.
