@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dev2-laws-check:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 1 (prod-security-review-gates, dev2-laws-check, extension-instruction-reaches-dispatch, names-check-before-dispatch, amendment-form-check)? Approving accepts profile pilot as recommended, and that the five ideations run in parallel with dev2-laws-check's design read by the other four for overlap.",
+  "artifacts": [
+    {
+      "id": "artifact:dev2-laws-check:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c58ea0a2a38eaff30a3c59ee1df83459c841529a/dev2-laws-check.md",
+      "rev": "sha256:3d991c04555880bafb2dfad860e56bc653f1e83fcc7317bc77542b3da13bae49",
+      "mediaType": "text/markdown",
+      "summary": "Seed: dev2 failures on 2026-10-14 were at the layer where FO follows text (archive without observer report, names check after dispatch build). One file of dev2 invariants, each checked by a script over the committed spacedock-state history, run where it does not depend on FO remembering (candidate: CI on each state-branch push). Existing checks that would join: observer_check.py, dispatch_records.py, delivery_gate.py, design_surfaces.py. May absorb names-check-before-dispatch, amendment-form-check and observer can't-tell rules; ideation decides. Recommended profile pilot. Seed check exit 0."
+    }
+  ]
+}
