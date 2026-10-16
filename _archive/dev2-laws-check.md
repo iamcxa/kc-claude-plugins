@@ -3,7 +3,7 @@ title: A dev2 laws file whose invariants a script checks over the committed stat
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -79,10 +79,13 @@ gates:
                 reason: 'Captain approved delivery of #651 at 833b5c16 (「准」); as the gate question states, this accepts deferring the items into backlog task laws-check-followups, including the --readme pass-through once #652 lands, and covers later external-review rounds on this PR.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-16T03:14:29Z
 worktree: .worktrees/spacedock-ensign-dev2-laws-check
 pr: pr-merge:651
+verdict: PASSED
+completed: 2026-10-16T15:37:32Z
+archived: 2026-10-16T15:37:32Z
 ---
 
 Filed on the Captain's 「同意兩件」 (2026-10-14), after FO compared Bend 2's `LAWS.bend` idea (invariants a checker proves the program keeps) with dev2's failures that day. Those failures were at the layer where FO follows text: a relay FO archived a task without an observer report, FO built dispatches before running `dispatch_records.py --names`, and FO answered a chat cue without running Spacedock's hooks. The scripts themselves were not wrong.
