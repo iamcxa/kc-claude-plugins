@@ -375,3 +375,17 @@ PASSED at 58eb738e: every AC re-run and each falsifier fails its rule when mutat
 ### Summary
 
 The P2 reproduces and the two-line fix passes the new test and the existing 40; awaiting FO authorization to apply both in the worktree, add a mutation test for the fix, and commit. This report is written to the task file but not committed or pushed, per the Phase 1 instruction.
+
+## Stage Report: implementation (cycle 2, phase 2: fix applied)
+
+- DONE: Apply fix and test patches, add one mutation test, rerun suite and corpus, run test_sd_dispatch.py, commit named files, roborev gate, push without force, report CI
+  Commit 458324f8 (files: `scripts/design_surfaces.py`, `scripts/test_design_surfaces.py`), pushed 3bc8f647..458324f8 without force; no PR comment, review request or ready mark.
+  Test `test_an_indented_sibling_heading_ends_the_criteria_section` asserts the "supersedes AC-2 but no criterion says" error with an indented `## Notes` (space, tab, no-break space) before a marked `**AC-9**`; fails if `section()` ends only at column-zero `## `. Mutation `test_mutation_restoring_the_plain_section_end_fails_its_cases` swaps back `startswith("## ")` and asserts the mutant returns `[]` for all three headings.
+  `test_design_surfaces.py`: Ran 42 / OK. `test_sd_dispatch.py --sd-plugin-root .../spacedock/0.27.0`: exit 0 (spacedock 0.27.2 binary). `lint-skills.py`: `5495 of 5511` unchanged.
+  Corpus rerun (29 unique task files with `### Amendment` entries under ~/conductor, not the 40 of design time): base 8 error lines, 3bc8f647 15, candidate 15, diff of the last two identical, so the fix changes no corpus result.
+  roborev gate `--base 1383c911`: `clean on 458324f8b; evidence=roborev:715`, exit 0.
+  CI on 458324f8: unit tests (python3) pass, version parity pass, multi-profile route gate pass, GitGuardian pass.
+
+### Summary
+
+The indented-sibling-heading P2 is fixed and covered by a test and a mutation; every check above passes on head 458324f8. A side effect accepted by FO: an indented `## ` line now also ends the amendments section.
