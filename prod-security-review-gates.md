@@ -1,6 +1,6 @@
 ---
 title: A prod-profile task passes a security review at two different gates instead of waiting for someone to judge that one is needed
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -44,7 +44,7 @@ gates:
                 reason: Captain approved batch-1 ideation (「准」) after FO presented all five gates together; as the gate question states, this accepts each decision as recommended (and FO's stated change where named), the batch-1 implementation order, and is the push and Draft PR grant for the implementation worker.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-16T03:14:23Z
 ---
 
