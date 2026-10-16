@@ -53,6 +53,17 @@ gates:
                 id: briefing:amendment-form-check:validation:attempt-1:revision-1
                 digest: sha256:cb2fefffb75c4d927257d1d4e451e0ebbf302ffb7a8603b88957563257788436
                 room-ref: ./amendment-form-check/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:amendment-form-check:validation:1
+                briefing: briefing:amendment-form-check:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-16T08:55:38.141136Z"
+                decision: approve
+                reason: Captain approved delivery (「Ａ准」) after FO presented the three batch-1 delivery gates together; as each gate question states, this accepts FO's stated recommendations and covers later external-review rounds on the PR.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-16T03:14:35Z
 worktree: .worktrees/spacedock-ensign-amendment-form-check
 pr: iamcxa/kc-claude-plugins#650
