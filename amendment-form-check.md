@@ -210,11 +210,6 @@ Limit: one marked criterion satisfies it; a second unmarked replacement passes.
 Verified by: a test with amendment 1's replacement carrying the phrase inside amendment 2's moved text, entry 1 passing and entry 2 judged on its own (exit 0 when entry 2 has its marked replacement); a test with `Supersedes: AC-1, AC-2 (no replacement: moved to a new task)` and no replacement (exit 0); the replay of `delivery-gate-verdict-form` prints one line, not two.
 Falsifier: remove the other-entry lookup; the replay prints a second line for amendment 1 (observed: 2 lines). Remove the waiver; the waiver test exits 1 (observed on a scratch copy: exit 1).
 
-**AC-4** The rules refuse no entry that was fine at the corpus's own reading, and the legitimate moves are covered by the waiver.
-Verified by: at the candidate, the check over the 40-file corpus (reproduced by listing task files with a `## Captain amendments` heading and `### Amendment` entries under `~/conductor/repos` and `~/conductor/workspaces`, one copy per file name, running base and candidate `check` and diffing the error lists) prints 8 new errors on 6 tasks, each in the table under `### The corpus, read only`; the 2 legitimate moves (`owner-sees-all-feedback-room` amendment 3, `staff-multi-branch` amendment 1) are the only entries the waiver is for. Not yet verified at validation: that the 2 legitimate moves clear with the waiver text in place (observed for `owner-sees-all-feedback-room` only).
-Falsifier: any corpus entry the rules refuse that a reader of it judges fine and the waiver cannot cover fails this criterion.
-Limit: the corpus script is machine-local and not committed; the tests carry one fixture per case.
-
 **AC-5** `check` does not read `Design:`.
 Verified by: a test whose entry carries a `Design:` line of FO sentences beyond the Captain's words and passes every other rule exits 0; `git diff origin/main -- skills/observer/SKILL.md` is empty at the candidate.
 Falsifier: add a rule that scans `Design:`; the test exits 1 and fails.
@@ -228,9 +223,29 @@ Falsifier: add one sentence to that section; its count passes 414 and the compar
 Verified by: `python3 scripts/test_design_surfaces.py` exits 0 at the candidate (at design time the prototype failed exactly 2 of 22, the cases built on the `AMENDMENT` fixture); `python3 scripts/test_sd_dispatch.py --sd-plugin-root <root>` exits 0 where CI's pinned root is available, with the amendment parity block's relocated-criterion fixture carrying a replacement or the waiver; `python3 scripts/lint-skills.py` and `scripts/test_lint_skills.py` exit 0. The commit message names the fixtures that changed deliberately. Not yet verified: `test_sd_dispatch.py` was not run at design time.
 Falsifier: restore the old `AMENDMENT` fixture; the two cases fail.
 
+**AC-8** Amended by Captain, amendment 1: the rules refuse no entry that was fine at the corpus's own reading, and the waiver covers the legitimate move in owner-sees-all-feedback-room amendment 3; staff-multi-branch amendment 1 (a partial move of criterion clauses) is a form break the refusal is right about.
+Verified by: validation cycle 3 at 458324f8 (the corpus run and the waiver step of its acceptance script).
+
+
 ## Unresolved decisions for the Captain
 
 - **D1: refuse a replacement with no marking phrase, with a waiver written on the `Supersedes:` line (recommended), or refuse only a moved criterion the line does not name?** The two parts are coupled because the waiver exists only to make the replacement rule safe. Recommended: both, because 4 of 31 superseding entries in the corpus broke the written replacement rule in two weeks and the observer saw it only after the PR. What gets worse: every FO must know one more token on the `Supersedes:` template, a worker can type `no replacement` to skip the rule falsely, and the README form (which ADR 0005 fixed) changes by 6 words. Without the replacement rule: no waiver, one fewer ADR sentence and no README form change; what gets worse: the `delivery-gate-verdict-form` break stays visible only to the observer, after the PR.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-16, chat
+Captain: 「Ａ准」 (chat, 2026-10-16)
+Asked: 「Approving accepts FO's recommendations: (1) staff-multi-branch amendment 1 (a partial move of criterion clauses) is a form break the refusal is right about, and AC-4 is amended to name only owner-sees-all-feedback-room as the legitimate move the waiver clears」 (the #650 delivery gate question, presented with the batch-1 delivery gates)
+Supersedes: AC-4
+Design: none
+Superseded text:
+
+    **AC-4** The rules refuse no entry that was fine at the corpus's own reading, and the legitimate moves are covered by the waiver.
+    Verified by: at the candidate, the check over the 40-file corpus (reproduced by listing task files with a `## Captain amendments` heading and `### Amendment` entries under `~/conductor/repos` and `~/conductor/workspaces`, one copy per file name, running base and candidate `check` and diffing the error lists) prints 8 new errors on 6 tasks, each in the table under `### The corpus, read only`; the 2 legitimate moves (`owner-sees-all-feedback-room` amendment 3, `staff-multi-branch` amendment 1) are the only entries the waiver is for. Not yet verified at validation: that the 2 legitimate moves clear with the waiver text in place (observed for `owner-sees-all-feedback-room` only).
+    Falsifier: any corpus entry the rules refuse that a reader of it judges fine and the waiver cannot cover fails this criterion.
+    Limit: the corpus script is machine-local and not committed; the tests carry one fixture per case.
+
+Replaced by AC-8.
 
 ## FO alignment
 
