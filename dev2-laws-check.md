@@ -3,7 +3,7 @@ title: A dev2 laws file whose invariants a script checks over the committed stat
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -60,7 +60,7 @@ gates:
                 reason: 'Captain approved (「其他也照建議」) the redone ideation under amendment 1; as the gate question states, this accepts D1 (GitHub''s failed-run notice) and D2 (an unreadable push is a red cannot-judge run) and is the push grant to the #651 branch. AC-8 checked by FO the same day: both probe failures reached his GitHub notifications inbox as ci_activity CheckSuite threads, unread.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-16T03:14:29Z
 worktree: .worktrees/spacedock-ensign-dev2-laws-check
 pr: iamcxa/kc-claude-plugins#651
