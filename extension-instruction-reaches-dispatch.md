@@ -307,3 +307,20 @@ Observed: the SHA `56f83bf518413984362e8a28a875d10dff1e6a10`; `Ran 34 tests` the
 ### Summary
 
 PASSED at 56f83bf5: every criterion holds, each falsifier fails the test written for it, and the real script reproduces the replay on real records with no false positive. The stacked diff leaves #649's `--names`/`--newest` behaviour alone. Two Polish items and two Deferred risks are recorded; none blocks delivery.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Reproduce Codex P2 (review:5543222158, #652 56f83bf5) as a failing test
+  `test_a_path_that_continues_past_the_script_name_is_absent_and_one_that_ends_there_passes`: tails `.bak`, `x`, `-old`, `~`, `.orig` after the root-substituted path exit 0 where 1 is expected (5 failures at 56f83bf5); tails `.` `,` backtick `)` `"` and none must still pass.
+- DONE: Apply the trailing lookahead `(?![\w~-]|\.\w)` and show the falsifier failing
+  Commit fee6662c, two files only (`dispatch_records.py`, `test_dispatch_records.py`). 35 tests pass; on a package copy with the lookahead removed the same test fails 5 times (`python3 -B`, caches cleared).
+- DONE: Rerun AC-7 corpus read-only
+  `/tmp/replay_ext.py` on the same refs, base 56f83bf5 vs candidate fee6662c, identical: relay 3 pass / 8 absent / 1 unsubstituted; web 1 absent; this repo 15 pass / 1 absent. No pass record changed, no false positive.
+- DONE: roborev evidence= line
+  `clean on fee6662cf; evidence=roborev:714` (`--base a4217cd3`).
+- DONE: push without force, stacked on #649; CI on new head
+  Plain push 56f83bf5..fee6662c, base a4217cd3 unchanged. lint-skills exit 0. Checks on fee6662c: all four pass: unit tests 1m0s, route gate 5s, version parity 49s, GitGuardian. No PR comment, review request or ready mark.
+
+### Summary
+
+The path match now has a trailing boundary, so `roborev_gate.py.bak` and similar no longer count as the instruction; a sentence-final period or comma still does. Corpus counts are unchanged by the fix.
