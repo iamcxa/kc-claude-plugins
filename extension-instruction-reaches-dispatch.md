@@ -213,6 +213,8 @@ Visible change: none
 
 - Cycle 1 (FO, 2026-10-16): Codex review on #652 56f83bf5 (review:5543222158) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P2 `scripts/dispatch_records.py`: the worker-script path match has no trailing token boundary, so `roborev_gate.py.bak` or `.pyx` passes as the instruction.
+- Cycle 2 (FO, 2026-10-16): Codex review on #652 fee6662c (review:5544560816) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 `scripts/dispatch_records.py`: the trailing boundary still lets a `/` follow the script name, so `roborev_gate.py/extra` passes as the instruction (also the recheck's Polish).
 
 ## Stage Report: ideation
 
