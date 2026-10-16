@@ -238,6 +238,12 @@ Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-16): Codex review round 1 on #651 de7c416c (review:5543173293) left one P1 and one P2, both to fix; investigation first, then FO fix authorization, then a fresh validation recheck. The validation of de7c416c dispatched before this finding continues.
+  - P1 `scripts/laws_check.py`: L2 reads each record's bytes and folder listing at the run revision, not at the commit that added it, so a record corrected or deleted later turns a committed violation green without moving the anchor.
+  - P2 `scripts/laws_check.py`: a checker that exits 1 with no parseable output (a crash writing only to stderr) leaves the law at exit 0 instead of exit 2.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for one file of dev2 invariants, each checked by a script over the committed spacedock-state history, and a run point that does not depend on FO remembering; which existing checks join it, and which of the batch-1 tasks it absorbs or leaves
