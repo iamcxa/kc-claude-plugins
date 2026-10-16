@@ -402,3 +402,20 @@ L2 now judges every add of a record at its adding commit, closing the delete-and
 ### Summary
 
 Reproduced the Codex finding (L1 goes from exit 1 to exit 0 when a violating task is deleted) with a failing test, and verified a 4-line-shorter fix on a scratch copy that keeps all 28 existing tests green. Worktree untouched at 9fbe0440 and this report is uncommitted in the state checkout, per the "no commit or push" instruction. Awaiting FO authorization to apply the fix, add the test and the property test, and commit.
+
+## Stage Report: implementation (cycle 3, phase 2)
+
+- DONE: Apply `sentinel_slugs()` and the deleted-task test
+  `d64cf199` (pushed, no force): `task_files` (ls-tree at the run revision) replaced by `sentinel_slugs`, one `git log -G` over root and `_archive/` `.md` paths; `laws.md` L1 Event line now says tasks are paths whose history writes a sentinel, not files at the judged revision. `test_a_task_deleted_after_its_violating_sentinel_is_still_judged` asserts exit 1, "1 events judged", `task=t` after `git rm t.md`; fails if a deleted task drops out.
+- DONE: Property test, class guard
+  `LaterHistoryTest.test_no_later_edit_delete_or_archive_of_a_file_changes_a_verdict`: fixture with a violating and a held L1 task and four L2 records (one bad, one correct, one pointer, one in another folder); for each of the 8 files and for all at once, an edit (corrects or clears the file), a delete and an archive is committed after the event and asserts exit code and full output of both laws equal the baseline (exit 1, 2 and 4 events judged). It found no further run-revision dependence; the audit of every `ctx.rev` read says the same (L2 `ls-tree -r` only fails closed).
+- DONE: Mutation restoring `ls-tree` at the run revision fails both tests
+  Mutation A (sentinel_slugs listing `ls-tree` at REV, root and `_archive/`): fails the deleted-task test and the property test, 2 of 2. Mutation B (L2 writes the record from `ctx.rev` instead of the adding commit, the Cycle 1 P1): fails the property test only, so the property test covers both laws; each mutation restored before commit.
+- DONE: Suite and real-history runs
+  `test_laws_check.py` 30 tests OK (about 48 s local, 10 s as the CI step); `lint-skills.py` exit 0. State `e73634e6`: L1 anchor `91fae734` 10 events 0 violated exit 0; root anchor 25 events 15 violated exit 1; L2 anchor `49da5ddb` 48 events 10 violated, 15 violation lines, exit 1; identical to the 9fbe0440 runner, so no deleted task holds a sentinel there.
+- DONE: roborev, push, CI, PR body
+  `roborev_gate.py --base 1383c911`: `clean on d64cf1995; evidence=roborev:718` on the first run. Pushed `9fbe0440..d64cf199`. CI on `d64cf199`: five checks pass, `unit tests (python3)` run 38870901178 1m3s. PR body updated (30 tests, two new mutations, review round 2, cost 10 s of 63 s); no AC text edited, no comment, review request or ready mark.
+
+### Summary
+
+L1 now finds tasks from history, so a deleted task stays judged, and a property test over every file's later edit, delete and archive guards both laws. The remaining limit is cost: the suite grew from 17 s to about 48 s locally, 10 s in CI. Needs recheck by a fresh validation at `d64cf199`.
