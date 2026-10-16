@@ -69,6 +69,17 @@ gates:
                 id: briefing:dev2-laws-check:validation:attempt-1:revision-1
                 digest: sha256:5cfe57d85720b72423df052bb95f77139aa19c35be3c8171fbe1b3606ef0cdca
                 room-ref: ./dev2-laws-check/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dev2-laws-check:validation:1
+                briefing: briefing:dev2-laws-check:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-16T14:27:44.889049Z"
+                decision: approve
+                reason: 'Captain approved delivery of #651 at 833b5c16 (「准」); as the gate question states, this accepts deferring the items into backlog task laws-check-followups, including the --readme pass-through once #652 lands, and covers later external-review rounds on this PR.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-16T03:14:29Z
 worktree: .worktrees/spacedock-ensign-dev2-laws-check
 pr: iamcxa/kc-claude-plugins#651
