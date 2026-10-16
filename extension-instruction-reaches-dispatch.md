@@ -324,3 +324,41 @@ PASSED at 56f83bf5: every criterion holds, each falsifier fails the test written
 ### Summary
 
 The path match now has a trailing boundary, so `roborev_gate.py.bak` and similar no longer count as the instruction; a sentence-final period or comma still does. Corpus counts are unchanged by the fix.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #652 head fee6662c against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at fee6662cf255335e353882c5f59e1a11334ff497 (PR open, Draft, base main; detached checkout, removed). The only change since the PASSED at 56f83bf5 is one regex lookahead plus one test, so AC-1 to AC-7 evidence is carried from cycle 1 except where rerun below: `test_dispatch_records.py` 35 OK; `test_pr_watch.py` 69 OK; `lint-skills.py` exit 0 (`workflow.md` 5495 of 5511); `comment_ratio.py a4217cd3 HEAD` 171 code lines, 0 comment; `doc_impact.py` 0 documents. Limits as judged in cycle 1 stand; AC-7 corpus rerun by the implementer was not repeated by me (the changed regex only narrows what follows the path; none of the 18 passing records has a tail past `.py`, per the implementer's identical counts).
+- DONE: Recheck after the Cycle 1 repair: confirm the Codex P2 (review:5543222158, under ### Feedback Cycles) is fixed at this head with its test failing under a mutation you run, and judge only the commits after #649's head a4217cd3
+  Fixed. Commits after a4217cd3: 56f83bf5 (judged in cycle 1) and fee6662c, 3 lines in 2 files (`dispatch_records.py` lookahead `(?![\w~-]|\.\w)`, one test). Script run on a record whose only path is `roborev_gate.py.bak`: exit 1, "worker instruction is absent". Mutations (`python3 -B`, package copy, no caches): lookahead removed -> the test fails 5 times (`.bak`, `x`, `-old`, `~`, `.orig`); `(?!\w)` -> 4 (`.bak`, `-old`, `~`, `.orig`); `(?![\w~-])` -> 2 (`.bak`, `.orig`); over-strict `(?!\S)` -> 6 (the pass tails `.` `,` backtick `)` `"` and the backticked existing test). Each fails the half it should, so the test pins both sides of the boundary. #649 files (`pr_watch.py`, `test_pr_watch.py`) untouched by these two commits.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME PATH bash --noprofile --norc script`; every expected line observed. `adr_lint.py docs/adr --since a4217cd3` and `--since 1383c911`: "15 ADR file(s) checked, 0 legacy", exit 0. PR checks on fee6662c: unit tests 1m0s, route gate 5s, version parity 49s, GitGuardian, all pass.
+
+### Findings (Review-finding disposition), cycle 2
+
+- Codex P2 (review:5543222158): resolved at fee6662c, no residue.
+- Polish: the boundary lets `roborev_gate.py/x` pass (`/` is not excluded); no observed record has it.
+- Deferred risk: cycle-1 items unchanged (`Misconfigured` unused import; block-list `extensions:` read as empty; `not run:` matched in prose). Not re-rated by the new commit.
+
+### Minimal acceptance script
+
+Needs: network, git, python3 (no secrets); scratch dir `/tmp/ext-accept`; bash. It checks out PR #652's head, so a pass proves that revision only. Not covered: a real FO dispatch, whether a worker ran roborev, any adopter's state branch.
+
+    rm -rf /tmp/ext-accept && mkdir -p /tmp/ext-accept/task/dispatch
+    git init -q /tmp/ext-accept/repo && git -C /tmp/ext-accept/repo fetch -q --depth 1 https://github.com/iamcxa/kc-claude-plugins.git fee6662cf255335e353882c5f59e1a11334ff497 && git -C /tmp/ext-accept/repo checkout -q FETCH_HEAD && git -C /tmp/ext-accept/repo rev-parse HEAD
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/test_dispatch_records.py 2>&1 | tail -3
+    printf -- '---\nentity-type: task\nextensions: [roborev]\n---\n' > /tmp/ext-accept/README.md
+    printf 'Dispatched: fee6662cf255335e353882c5f59e1a11334ff497\nModel: sonnet\n\n## Checklist\n\n1. Do the work\n\n## Scope notes\n\nPackage root: /tmp/ext-accept/repo/kc-dev-flow-2\nSend your completion message to `main`.\n' > /tmp/ext-accept/task/dispatch/implementation-1.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+    printf 'Before reporting, run python3 /tmp/ext-accept/repo/kc-dev-flow-2/extensions/roborev/roborev_gate.py.bak --repo w --base b\n' >> /tmp/ext-accept/task/dispatch/implementation-1.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+    printf 'Before reporting, run python3 /tmp/ext-accept/repo/kc-dev-flow-2/extensions/roborev/roborev_gate.py --repo w --base b\n' >> /tmp/ext-accept/task/dispatch/implementation-1.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+    rm /tmp/ext-accept/README.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+
+Observed: SHA `fee6662cf255335e353882c5f59e1a11334ff497`; `Ran 35 tests` then `OK`; step 2 prints `implementation-1.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of .../roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'` with `exit=1`; the `.bak` line leaves it `exit=1` with the same message; the real `roborev_gate.py` line gives `1 dispatch record(s) complete`, `exit=0`; with the README removed, `extensions not checked: no workflow README above /tmp/ext-accept/task`, `1 dispatch record(s) complete`, `exit=0`.
+
+### Summary
+
+PASSED at fee6662c: the Codex P2 is fixed, its test fails under four lookahead mutations (each on the side it guards), and the stacked diff after #649 is two commits touching only `dispatch_records.py` and `test_dispatch_records.py`. One new Polish item (`/` after the name passes); no Material finding.
