@@ -166,6 +166,8 @@ def l2_dispatch_record_complete(ctx):
             judged += len(mine)
             code, lines = run_check("dispatch_records.py", str(Path(tmp) / folder))
             for line in lines if code == 1 else []:
+                if line.startswith("extensions not checked: "):
+                    continue
                 match = re.fullmatch(r"([^/]+\.md): (needs .+)", line)
                 if not match:
                     raise Cannot(f"dispatch_records.py exited 1 with output this runner does not parse: {line}")
