@@ -285,3 +285,7 @@ Verified by: `python3 <package>/scripts/adr_lint.py docs/adr --since <base> --re
 ### Summary
 
 The design is a small opt-in extension that has FO dispatch kc-pr-flow's existing security reviewer at the two gates of a prod task, with zero edits to workflow text or scripts and no new reviewer. The replay shows the review can catch what relay's flow found only after validation, but the brief is unsettled: one prototype finds both known issues and over-reports on a design with no exposure, the other stops that and misses one. Three decisions for the Captain: how the review is made to happen (recommend the opt-in extension first), relay's v1 sentence (recommend narrowing it for security), and the two conditional specialists (recommend out of the first cut).
+
+## Number guards
+
+ADR: 0018
