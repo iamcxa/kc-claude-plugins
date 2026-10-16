@@ -258,3 +258,7 @@ Visible change: none
 ### Summary
 
 The design is one package-owned laws file and a runner that reuses `observer_check.py --rev` and `dispatch_records.py`, run by a push workflow on the state branch; two laws, each judging only events after an anchor. Measured on the real history: without an anchor L1 fails 16 of 25 tasks and L2 fails 12 of 68 records, so anchors are the load-bearing choice, and a red run is sticky because history cannot be repaired. Needs your decision: D1 anchors (L1 at `91fae734`, L2 at adoption tip), D2 push-only trigger (cron would be a Pilot profile trigger), D3 how red reaches anyone (GitHub notice, or one 19-word `pr_watch.py` line), D4 two laws in v1 (the head-equals-candidate example judges about 0 events today).
+
+## Number guards
+
+ADR: 0017
