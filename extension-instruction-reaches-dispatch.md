@@ -383,3 +383,42 @@ PASSED at fee6662c: the Codex P2 is fixed, its test fails under four lookahead m
 ### Summary
 
 A path in a dispatch record now counts as the worker instruction only when whitespace, end of text, or up to three of `. , ` ) " '` follow it, so `roborev_gate.py/extra` and every other unlisted follower is refused. The first attempt failed 29 tests because `{0,3}` inside the rf-string was read as an f-string field; doubling the braces fixed it.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independent verdict on PR #652 head 8d051de7 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at 8d051de720579b6cc7f9c28dba869d7cb2606eaf (PR open, Draft, base main; detached checkout, removed). At this head I ran: `test_dispatch_records.py` 36 OK; `test_pr_watch.py` 69 OK; `lint-skills.py` exit 0 (`workflow.md` 5495 of 5511); `comment_ratio.py a4217cd3 HEAD` 184 code lines, 0 comment, exit 0; `doc_impact.py` 0 documents; `number_guards.py check` and `design_surfaces.py check` exit 0; candidate `dispatch_records.py` on this task's folder: 9 records complete. One falsifier per criterion on a package copy (`python3 -B`, no caches): AC-1 drop the part -> 30 fail; AC-2 accept the bare script name -> 3; AC-3 ignore `extensions:` -> 1; AC-4 rename the bullet label -> `test_every_shipped_instruction_is_read_from_its_extension_file` errors (31 in all); AC-5 ignore `--readme` -> 1 error; AC-6 diff `a4217cd3..HEAD` is only `dispatch_records.py` and `test_dispatch_records.py`. AC-7 own replay (record from the state branch, README from the `Dispatched:` SHA, candidate script, read-only `git show`): relay `owner-sees-all-feedback-room` exit 1; relay 12 roborev-listed: 3 pass / 8 absent / 1 unsubstituted; web 1 absent; this repo 16: 15 pass / 1 absent. Same as cycle 2; none of the 18 passing records flipped, and every absent record holds no `roborev_gate.py` token. Limits stand as judged in cycles 1 and 2 (record not worker; qnow records unread; stale-checkout hazard and Spacedock 0.27.2 source unverified).
+- DONE: Recheck after the Cycle 2 repair: confirm the round-2 P2 (review:5544560816, under ### Feedback Cycles) is fixed at this head with its test failing under a mutation you run; judge only the commits after #649's head a4217cd3
+  Fixed. Commits after a4217cd3: 56f83bf5, fee6662c (judged earlier) and 8d051de7 (one regex line, 25 test lines). The script on a record whose only path is `.../roborev_gate.py/extra` exits 1 "worker instruction is absent". Mutations on a package copy: old lookahead `(?![\w~-]|\.\w)` -> `test_only_listed_followers_end_the_script_path` fails 18 subtests (`/extra`, `}`, `|`, `]`, `\`, `?` ...); lookahead removed -> 23; `{0,3}` to `{0,2}` -> 2 (`` `). `` and `"` + backtick + `)`); `{0,4}` -> 1 (`....`); drop `(?:\s|$)` -> 23; drop `$` (end of text refused) -> 2 (`.` and none at end of text); drop `"` `'` from the class -> 4, including one in the earlier test. Each fails the half it guards. #649 files untouched by these three commits; `test_pr_watch.py` passes.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME PATH bash --noprofile --norc script`; every expected line observed. `adr_lint.py docs/adr --since a4217cd3` and `--since 1383c911` (merge-base with origin/main): "15 ADR file(s) checked, 0 legacy", exit 0. PR checks on 8d051de7 all SUCCESS: unit tests, multi-profile route gate, version parity, GitGuardian.
+
+### Findings (Review-finding disposition), cycle 3
+
+- Round-2 Codex P2 (review:5544560816): resolved at 8d051de7, no residue. The cycle-2 Polish (`/` after the name passes) is closed by the same change.
+- Deferred risk (new, fail-closed): the allowlist is narrow, so a record that writes the real path followed by `:` or `**` (probe: `.../roborev_gate.py:` and `...py**`) reports "worker instruction is absent" although the path is there. Trigger today: none; the 18 passing real records and the roborev bullet itself (`... roborev_gate.py --repo ...`) end in whitespace. Becomes Material if a real first record is observed refused for such a follower; the cost then is one FO edit, not a missed gate.
+- Deferred risk (unchanged): `extensions:` as a YAML block list reads as empty, so the check skips; `not run:` matches in prose on a line.
+- Polish (unchanged, not fixed): `Misconfigured` imported and unused (`pyflakes` F401); `for record in [Path(...)]` loops over one element.
+
+### Minimal acceptance script
+
+Needs: network, git, python3 (no secrets); scratch dir `/tmp/ext-accept`; bash. It checks out PR #652's head, so a pass proves that revision only. Not covered: a real FO dispatch, whether a worker ran roborev, any adopter's state branch.
+
+    rm -rf /tmp/ext-accept && mkdir -p /tmp/ext-accept/task/dispatch
+    git init -q /tmp/ext-accept/repo && git -C /tmp/ext-accept/repo fetch -q --depth 1 https://github.com/iamcxa/kc-claude-plugins.git 8d051de720579b6cc7f9c28dba869d7cb2606eaf && git -C /tmp/ext-accept/repo checkout -q FETCH_HEAD && git -C /tmp/ext-accept/repo rev-parse HEAD
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/test_dispatch_records.py 2>&1 | tail -3
+    printf -- '---\nentity-type: task\nextensions: [roborev]\n---\n' > /tmp/ext-accept/README.md
+    printf 'Dispatched: 8d051de720579b6cc7f9c28dba869d7cb2606eaf\nModel: sonnet\n\n## Checklist\n\n1. Do the work\n\n## Scope notes\n\nPackage root: /tmp/ext-accept/repo/kc-dev-flow-2\nSend your completion message to `main`.\n' > /tmp/ext-accept/task/dispatch/implementation-1.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+    printf 'Before reporting, run python3 /tmp/ext-accept/repo/kc-dev-flow-2/extensions/roborev/roborev_gate.py/extra --repo w --base b\n' >> /tmp/ext-accept/task/dispatch/implementation-1.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+    printf 'Before reporting, run python3 /tmp/ext-accept/repo/kc-dev-flow-2/extensions/roborev/roborev_gate.py --repo w --base b\n' >> /tmp/ext-accept/task/dispatch/implementation-1.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+    rm /tmp/ext-accept/README.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+
+Observed: SHA `8d051de720579b6cc7f9c28dba869d7cb2606eaf`; `Ran 36 tests` then `OK`; the bare record prints `implementation-1.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /tmp/ext-accept/repo/kc-dev-flow-2/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'` with `exit=1`; the `roborev_gate.py/extra` line leaves the same message and `exit=1`; the real `roborev_gate.py` line gives `1 dispatch record(s) complete`, `exit=0`; with the README removed, `extensions not checked: no workflow README above /tmp/ext-accept/task`, `1 dispatch record(s) complete`, `exit=0`.
+
+### Summary
+
+PASSED at 8d051de7: the round-2 P2 is fixed, its test fails under seven mutations each on the side it guards, and AC-1 to AC-7 hold with the real corpus counts unchanged. One new Deferred risk (the narrow allowlist refuses a path followed by `:` or `**`, failing closed); no Material finding.
