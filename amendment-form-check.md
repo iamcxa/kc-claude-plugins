@@ -390,3 +390,94 @@ The P2 reproduces and the two-line fix passes the new test and the existing 40; 
 ### Summary
 
 The indented-sibling-heading P2 is fixed and covered by a test and a mutation; every check above passes on head 458324f8. A side effect accepted by FO: an indented `## ` line now also ends the amendments section.
+
+## Stage Report: validation (cycle 3 recheck)
+
+- DONE: Independent verdict on PR #650 head 458324f8 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at head `458324f8ba28f4e03c0fb13fea0385099953f124` (detached throwaway worktree, removed; PR Draft, 4 checks SUCCESS on that head via `gh pr view 650`). Run with `python3 -B`: `test_design_surfaces.py` Ran 42 OK; `lint-skills.py` 5495 of 5511 exit 0; `test_sd_dispatch.py --sd-plugin-root ~/.claude/plugins/cache/spacedock/spacedock/0.27.0` with binary `~/.local/bin/spacedock` 0.27.2 exit 0; the other 18 CI unit suites exit 0.
+  Falsifiers (mutation of a scratch copy of `design_surfaces.py`, suite plus the two archived replays): drop `held - named` -> 6 tests fail, `fo-lifecycle-mod` replay exit 0 (AC-1); drop replacement rule -> 11 fail, `delivery-gate-verdict-form` replay exit 0 (AC-2); drop `others` lookup -> 2 fail, that replay prints 2 lines not 1; drop waiver -> 4 fail (AC-3); add a `Design:` scan -> `test_the_design_line_is_not_read` fails, `git diff 1383c911 458324f8 -- kc-dev-flow-2/skills/observer` empty (AC-5); old parity fixture `Supersedes: AC-2` restored in a scratch copy -> `test_sd_dispatch.py` exit 1 at the `checked.returncode == 0` assert (AC-7). AC-6: Captain-amendments section 414 words (base 414), `check` on this task 4 words, workflow.md hunks only at lines 401 and 420-424, both inside `## Captain amendments`.
+  Limits judged: one marked criterion satisfies a whole entry, `no replacement` can be typed falsely, evidence on a declaration line can carry the marker, a marker only on a `Replaced by:` line is refused, `check_criteria` still reads a bold id anywhere in a criteria line (all bounded, stated in ADR 0016 or the PR). Findings by disposition: Material none. Needs decision: AC-4 `staff-multi-branch` (below). Deferred risk: (a) the cycle-2 fix makes an indented `## ` line inside an amendment entry end the amendments section: probe, an entry 1 whose moved text holds `  ## Notes quoted from the report` followed by an entry 2 with `Supersedes: none` and a moved AC-3: 3bc8f647 exit 1 naming entry 2, 458324f8 prints `design surfaces presentable` (a missed refusal; trigger unobserved: the 44-file corpus output is identical at both heads; becomes Material when a real moved block carries an indented heading line outside a fence); (b) a future partial supersession has no route (ADR 0016 says reopen). Polish: an amendment title with no number takes its first digit run; the phrase match is case-sensitive.
+- DONE: Recheck after the Cycle 1 and Cycle 2 repairs: confirm the three round-1 P2 and the round-2 P2 (under ### Feedback Cycles) are fixed at this head, each test failing under a mutation you run; re-run the corpus over the same file set the first validation used (41 task files) and explain any difference from the implementation's '29 files, 15 lines'; state the AC-4 staff-multi-branch question again for the Captain without ruling on it
+  Each P2 fixed, each pinned by a test that fails under my mutation: id inside the `no replacement` reason counted as named -> mutant `named = set(AC_ID.findall(value))` fails `test_an_id_inside_the_waiver_reason_is_not_named` and its mutation test (2); marker matched on any line -> mutant `any(marker.search(l) for l in lines)` fails 8 incl. `test_the_marker_counts_only_on_a_declaration_line`; bold id anywhere in a moved block -> mutant reading all bold ids fails 4 incl. `test_a_bold_id_in_evidence_prose_is_not_a_moved_criterion`; indented sibling heading -> mutant `startswith("## ")` fails 4 incl. the three subtests of `test_an_indented_sibling_heading_ends_the_criteria_section` (space, tab, no-break space).
+  Corpus: I could not reproduce the first validation's exact 41-file list (it was a selection I do not have); I rebuilt it: every `.md` under `~/conductor/repos` and `~/conductor/workspaces` holding a `## Captain amendments` heading and a `### Amendment` entry, one copy per file name, largest kept = 44 files, 38 of them task files (6 are workflow.md, README.md, qnow-dev2-README.md, index.md, patch-0103.md and this task). Base vs candidate error lines naming an amendment: 6 vs 16; 10 new errors on 8 tasks (accept-branch-invitation 2, booking-outcomes 1, office-header-shows-phone 1, staff-multi-branch 2, delivery-gate-verdict-form 1, fo-lifecycle-mod 1, owner-sees-all-feedback-room 1, remote-review-waits-and-acts 1), the same 10 on 8 as the first validation; 3bc8f647 vs 458324f8 print identical output on all 44 files, so the round-2 fix moves no corpus result. The implementation's `29 files, 15 lines` is a smaller file selection (the corpus checkouts differ, I cannot name its list) and counts total error lines at the candidate (base 8 there, 6 in my set), not new ones; its 15 minus 8 is 7 new, mine 10, and I cannot say which 3 entries its set lacked. The state-branch tips (`origin/spacedock-state/dev2`, `dev2-poc`, `dev`, two repos) hold 14 of the 44 files and give 8 of the 10.
+  AC-4 question for the Captain, unruled: `staff-multi-branch` amendment 1 moved criteria to a new task (the waiver covers that) and also moved clauses of AC-6 and AC-7, which stay declared. Observed: with `(no replacement: ...)` added it still draws "holds AC-6, AC-7 but its 'Supersedes:' line does not name them"; naming AC-6 and AC-7 draws "supersedes AC-6 but it is still declared" (and AC-7), with or without the waiver. Is that entry a legitimate move the check must clear (then the form needs a partial-move route), or a break of the README form (a criterion moves whole) the refusal is right to make?
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, saved to `/tmp/afc-accept2.sh` and run as `env -i HOME="$HOME" PATH=/usr/bin:/bin:/opt/homebrew/bin:/usr/local/bin bash --noprofile --norc /tmp/afc-accept2.sh`; every step printed its expected output (old script exit 0 / new exit 1 on both replays; waiver demo 1, 0, 1; Ran 42 OK; 5495 of 5511; worktree count 0). `adr_lint.py docs/adr --since 1383c911 --require 0016`: `16 ADR file(s) checked, 0 legacy`, exit 0. Also at the candidate: `comment_ratio.py` 2.0% (3 comment lines, all markdown headings in test fixtures) met; `doc_impact.py` lists 2 READMEs, implementation recorded `unaffected` with reasons; `number_guards.py check` PASS; `dispatch_records.py` 10 records complete. Verdict: PASSED recommended for head 458324f8, one open Needs decision (AC-4).
+  Process note: I ran `git fetch origin` in the candidate repo (moves remote-tracking refs only); I read adopter state only with `git show`, `git ls-tree` and file reads; throwaway worktree and every `/tmp/afc2-*` file removed.
+
+### Minimal acceptance script
+
+Needs: the checkout `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo` (holds the PR head object), the dev2 state checkout under it, and the installed package at `~/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0`. Run in a fresh shell as `env -i HOME="$HOME" PATH=/usr/bin:/bin:/opt/homebrew/bin:/usr/local/bin bash --noprofile --norc <file>`. Not covered: a task that skips a move, FO's own words in `Design:`, FO behaviour at a live gate, CI.
+
+```bash
+export PYTHONDONTWRITEBYTECODE=1
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+STATE=$REPO/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0
+SHA=458324f8ba28f4e03c0fb13fea0385099953f124
+WT=/tmp/afc-accept-wt
+
+echo "### Step 1: check out the candidate head in a throwaway worktree"
+git -C "$REPO" worktree add --detach "$WT" "$SHA" 2>&1 | tail -1
+echo "# expect: HEAD is now at 458324f8 fix(kc-dev-flow-2): an indented sibling heading ends the acceptance-criteria section"
+
+echo "### Step 2: replay the two archived tasks the observer faulted, with the old and the new script"
+git -C "$STATE" show spacedock-state/dev2:_archive/fo-lifecycle-mod.md > /tmp/afc-accept-flm.md
+git -C "$STATE" show spacedock-state/dev2:_archive/delivery-gate-verdict-form.md > /tmp/afc-accept-dgvf.md
+git -C "$WT" show 1383c911:kc-dev-flow-2/scripts/design_surfaces.py > /tmp/afc-accept-base.py
+for f in flm dgvf; do
+  python3 -B /tmp/afc-accept-base.py check /tmp/afc-accept-$f.md; echo "old script, $f: exit $?"
+  python3 -B "$WT/kc-dev-flow-2/scripts/design_surfaces.py" check /tmp/afc-accept-$f.md; echo "new script, $f: exit ${PIPESTATUS[0]}"
+done
+echo "# expect: old script exit 0 for both; new script exit 1 for both: flm names 'Amendment 3' and AC-1..AC-7 (Supersedes line does not name them); dgvf names 'Amendment 2' and AC-1, AC-2, AC-3, AC-5, AC-6, AC-7, AC-8 (no criterion says 'Amended by Captain, amendment 2')"
+
+echo "### Step 3: the 'no replacement' waiver passes, and a marker after an indented sibling heading does not count"
+cat > /tmp/afc-accept-task.md <<'TASK'
+---
+title: waiver demo
+variant: kc-dev-flow-2
+profile: pilot
+---
+
+## Acceptance criteria
+
+**AC-1**: kept.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-16, chat
+Captain: 「drop AC-2」 (chat)
+Supersedes: AC-2
+Superseded text:
+**AC-2**: the old outcome.
+
+## FO alignment
+
+Surfaces: none
+Visible change: none
+TASK
+python3 -B "$WT/kc-dev-flow-2/scripts/design_surfaces.py" check /tmp/afc-accept-task.md; echo "without waiver: exit ${PIPESTATUS[0]}"
+sed 's/^Supersedes: AC-2$/Supersedes: AC-2 (no replacement: dropped)/' /tmp/afc-accept-task.md > /tmp/afc-accept-task2.md
+python3 -B "$WT/kc-dev-flow-2/scripts/design_surfaces.py" check /tmp/afc-accept-task2.md; echo "with waiver: exit $?"
+sed 's/^\*\*AC-1\*\*: kept\.$/**AC-1**: kept.\n\n ## Notes\n\n**AC-9**: Amended by Captain, amendment 1: this sits under another heading./' /tmp/afc-accept-task.md > /tmp/afc-accept-task3.md
+python3 -B "$WT/kc-dev-flow-2/scripts/design_surfaces.py" check /tmp/afc-accept-task3.md; echo "marker under an indented sibling heading: exit ${PIPESTATUS[0]}"
+echo "# expect: without waiver exit 1 naming Amendment 1, AC-2 and 'no replacement'; with waiver 'design surfaces presentable', exit 0; marker under an indented sibling heading exit 1 with the same message as without the waiver"
+
+echo "### Step 4: the candidate's own suites"
+python3 -B "$WT/kc-dev-flow-2/scripts/test_design_surfaces.py" 2>&1 | grep -E '^(Ran|OK|FAILED)'; echo "test_design_surfaces: exit ${PIPESTATUS[0]}"
+python3 -B "$WT/kc-dev-flow-2/scripts/lint-skills.py" | grep -E 'words'; echo "lint-skills: exit ${PIPESTATUS[0]}"
+echo "# expect: Ran 42 tests / OK / exit 0; 'references/sd/workflow.md: 5495 of 5511 words; no unlisted passage repeats it' / exit 0"
+
+echo "### Step 5: decision-record lint over the candidate's ADRs"
+cd "$WT" && python3 -B "$PKG/scripts/adr_lint.py" docs/adr --since 1383c911 --require 0016; echo "adr_lint: exit $?"
+echo "# expect: '16 ADR file(s) checked, 0 legacy' / exit 0"
+
+echo "### Step 6: remove the throwaway worktree and temp files"
+cd /tmp && git -C "$REPO" worktree remove --force "$WT" && rm -f /tmp/afc-accept-*.md /tmp/afc-accept-base.py; git -C "$REPO" worktree list | grep -c afc-accept-wt
+echo "# expect: 0 (the worktree is gone)"
+echo "# NOT covered: a task that skips a move, FO's own words in Design:, FO behaviour at a live gate, CI on the PR."
+```
+
+### Summary
+
+PASSED at 458324f8: every AC re-run with a falsifier, the four P2 repairs each fail under a mutation I ran, and the corpus gives the same 10 new errors on 8 tasks as the first validation (the implementation's 29-file figure is a smaller selection). No Material finding; one Needs decision for the Captain (`staff-multi-branch` amendment 1 under AC-4), and one new Deferred risk: an indented `## ` line in a moved block now hides later entries from `check`.
