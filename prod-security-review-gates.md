@@ -89,6 +89,12 @@ Superseded text:
 **AC-3**: With the extension's ideation brief verbatim, two fresh runs of the unmodified agent on relay's agent-front-door design at the ideation gate (state commit d3fe0ced, Scope through Design, relay at 485a5042 read-only) each name a document-author prompt-injection finding and an unbounded session or comment-creation finding.
 Verified by: the two saved YAML reports under `<task folder>/security/`, each read for those two findings. Falsifier: a run that names either not at all. Current evidence: P0 named both once; P1 (the draft brief) named the injection and not the creation finding once, so AC-3 is not yet met. Stop rule: the implementation worker may revise the brief at most twice, re-running AC-3 and AC-4 each time; if both still do not hold on fresh runs, it returns to FO and the extension is not shipped. A revision replaces words within AC-2's 430-word cap; a revision that needs more words returns to FO as a Needs decision.
 
+### Amendment 2 — 2026-10-16, chat
+Captain: 「照這樣做」 (chat, 2026-10-16)
+Asked: 「照這個做嗎？」（「整理成第 2 號修正指示：1. prod 任務在設計階段一定跑安全審核，發現的問題寫進設計和驗收條件。有專案自己的安全清單就一起交給審核員。2. 驗收關的審核另開任務，同時做三種模型的比較，用量測結果決定預設模型和推理等級。」）
+Supersedes: AC-1, AC-2, AC-4, AC-5, AC-6, AC-7
+Design: the whole `## Design` is redone at ideation as the asked items state; the validation-gate review moves to backlog task prod-security-validation-gate
+
 ## FO alignment
 
 Captain confirmed in this session: 「可以」 (chat, 2026-10-16), answering FO's 「要不要用上面這 5 個當第一批？」, a list that named this task; the relayed words above are context, not his ruling.
