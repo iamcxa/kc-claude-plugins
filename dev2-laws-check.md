@@ -3,7 +3,7 @@ title: A dev2 laws file whose invariants a script checks over the committed stat
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: ideation
 gates:
     version: 1
     records:
@@ -230,6 +230,14 @@ Past rulings read: ADR 0009 and ADR 0014 (see `### Chain check`); no gate `Overr
 - **D2: what triggers the run?** Recommend `push` on the one named state branch with `cancel-in-progress`, and no `schedule:`. A cron would be unattended recurring operation, which `references/profiles/pilot.md` lists as a trigger to return to profile selection, so it would need your ruling. What gets worse: no push means no run, so a miss shows up at the next push; private adopters (relay, subspace-web) pay minutes per run, up to 1024 pushes in the last 30 days on this branch alone, minutes unmeasured.
 - **D3: how does a red run reach anyone?** Recommend option A: GitHub's failed-run notice to the pushing account, zero FO words. Option B adds one `next:` line (19 words, only when red) to `pr_watch.py tasks`. What gets worse under A: if your notifications for that account are off, a red run sits unseen (AC-8 asks you, and flips this to B before merge if the notice did not arrive); under B, `pr_watch.py tasks` is also edited by `names-check-before-dispatch`, so the two need a merge order.
 - **D4: which laws are wired in v1?** Recommend two: L1 and L2, the only two with recorded failures and a script that works over committed history. The head-equals-candidate law you named as an example is left out because it would judge about 0 events today (13 of 39 briefings carry a head token, 1 task has a `Candidate:` line), and `design_surfaces.py check` is left out because it has no recorded skipped run and fails closed tasks that cannot be repaired. What gets worse: the delivery-head mismatch stays an FO-run check until a later row; adding either now costs one section and one function each and would print `0 events judged` for the head law.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-16, chat
+Captain: 「就按照新的建議」 (chat, 2026-10-16)
+Asked: 「這三個新建議可以嗎？」（第 1 項：「dev2-laws-check（#651）：改成「只檢查這次推送新增的事件」，不再保證「歷史上的違規永遠是紅燈」。」）
+Supersedes: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12
+Design: the whole `## Design` is redone at ideation as the asked item states: each run judges only the events the pushed commits add, and the guarantee that a committed violation stays red is dropped
 
 ## FO alignment
 
