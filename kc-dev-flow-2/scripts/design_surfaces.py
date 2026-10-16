@@ -17,11 +17,14 @@ MERMAID = re.compile(r"```mermaid\n(.*?)```", re.S)
 FENCE = re.compile(r"^[ \t]*```")
 GO_SPACE = "[\t\n\v\f\r \x85\xa0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000]*"
 AC_HEADING = re.compile(rf"^{GO_SPACE}## Acceptance criteria{GO_SPACE}$", re.I)
+SECTION_END = re.compile(rf"^{GO_SPACE}## ")
 AC_DECLARATION = re.compile(r"\*\*(AC-[A-Za-z0-9]+)[^*\n]*\*\*")
 AMENDMENTS_HEADING = re.compile(rf"^{GO_SPACE}## Captain amendments{GO_SPACE}$", re.I)
 CAPTAIN_WORDS = re.compile(r"^Captain:[ \t]*\S", re.M)
 SUPERSEDES = re.compile(r"^Supersedes:(.*)$", re.M)
 AC_ID = re.compile(r"AC-[A-Za-z0-9]+")
+DECLARATION_LINE = re.compile(r"^[ \t]*(?:>[ \t]*)*(?:(?:[-*+]|\d+[.)])[ \t]+)?\*\*(AC-[A-Za-z0-9]+)[^*\n]*\*\*")
+NO_REPLACEMENT = re.compile(r"no replacement", re.I)
 TABLE = re.compile(r"^[ \t]*\|.*\|[ \t]*\n[ \t]*\|[ \t:|-]*-[ \t:|-]*\|?[ \t]*$", re.M)
 
 
@@ -72,7 +75,7 @@ def check_db(name, body, errors):
 def section(lines, heading):
     for start, line in enumerate(lines):
         if heading.match(line):
-            end = next((i for i in range(start + 1, len(lines)) if lines[i].startswith("## ")), len(lines))
+            end = next((i for i in range(start + 1, len(lines)) if SECTION_END.match(lines[i])), len(lines))
             return lines[start + 1:end]
     return None
 
@@ -98,17 +101,36 @@ def check_criteria(name, lines, errors):
     return declared
 
 
+def declarations(lines):
+    return [(found.group(1), line) for line in lines for found in [DECLARATION_LINE.match(line)] if found]
+
+
 def check_amendments(name, lines, declared, errors):
     body = section(unfenced(lines), AMENDMENTS_HEADING)
     if body is None:
         return
-    for entry in re.split(r"(?m)^(?=### )", "\n".join(body))[1:]:
+    entries = re.split(r"(?m)^(?=### )", "\n".join(body))[1:]
+    moved = [declarations(e.split("\n")[1:]) for e in entries]
+    live = declarations(section(lines, AC_HEADING) or [])
+    for index, entry in enumerate(entries):
         title = entry.split("\n", 1)[0].strip()
         if not CAPTAIN_WORDS.search(entry):
             errors.append(f"{name}: '{title}' has no 'Captain:' line with his words")
         line = SUPERSEDES.search(entry)
-        for superseded in sorted(set(AC_ID.findall(line.group(1) if line else "")) & declared):
+        value = line.group(1) if line else ""
+        waiver = NO_REPLACEMENT.search(value)
+        named = set(AC_ID.findall(value[:waiver.start()] if waiver else value))
+        for superseded in sorted(named & declared):
             errors.append(f"{name}: '{title}' supersedes {superseded} but it is still declared in '## Acceptance criteria'")
+        held = {found for found, _ in moved[index]}
+        if held - named:
+            errors.append(f"{name}: '{title}' holds {', '.join(sorted(held - named))} but its 'Supersedes:' line does not name them")
+        digits = re.search(r"\d+", title)
+        number = digits.group() if digits else str(index + 1)
+        marker = re.compile(rf"Amended by Captain, amendment {number}(?!\d)")
+        others = [pair for i, pairs in enumerate(moved) if i != index for pair in pairs]
+        if named and not waiver and not any(marker.search(text) for _, text in live + others):
+            errors.append(f"{name}: '{title}' supersedes {', '.join(sorted(named))} but no criterion says 'Amended by Captain, amendment {number}' and its 'Supersedes:' line does not say 'no replacement'")
 
 
 def check_task(path, seed=False):

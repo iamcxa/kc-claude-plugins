@@ -398,7 +398,7 @@ changes nothing else in it. FO adds no words of its own and does not move or rew
 ### Amendment 1 — <date>, <gate or chat>
 Captain: 「<his words, verbatim>」 (where he said them)
 Asked: <the question or proposal he answered, verbatim, or the commit holding it>
-Supersedes: <acceptance-criterion ids, or none>
+Supersedes: <acceptance-criterion ids, or none> <optional: "(no replacement: <why>)">
 Design: <optional: the design paragraph it overrides>
 ```
 
@@ -417,11 +417,11 @@ review asks for, is the Captain's decision and is recorded as an amendment whose
 --set <slug> status=<stage>`, and that stage's gate is approved again before the task
 moves on.
 
-`python3 <package>/scripts/design_surfaces.py check <task>` exits 1 when an entry has no
-`Captain:` line or a superseded id is still declared in `## Acceptance criteria`;
-implementation and validation run it, and exit 1 is a repair finding returned through feedback.
-It cannot see a skipped record, only the state after a skipped move; relocation, not
-annotation in place, is the route.
+`python3 <package>/scripts/design_surfaces.py check <task>`, run by implementation and
+validation, exits 1 for an entry with no `Captain:` line, an unnamed moved criterion,
+superseded ids no criterion marks "Amended by Captain, amendment N", or a superseded
+id still declared; repair findings return through feedback. It cannot see a skipped record or
+move, or FO's words in `Design:`.
 
 ## Affected documents
 
