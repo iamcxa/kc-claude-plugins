@@ -91,7 +91,7 @@ def instruction_error(record, name, paths):
     if not root or re.search(rf"^.*\b{re.escape(name)} not run:[ \t]*\S", text, re.M):
         return None
     base = root.group(1).rstrip("/")
-    missing = [p for p in paths if not re.search(rf"(?<![\w.~-]){re.escape(base + '/' + p)}", text)]
+    missing = [p for p in paths if not re.search(rf"(?<![\w.~-]){re.escape(base + '/' + p)}(?![\w~-]|\.\w)", text)]
     if not missing:
         return None
     if any(f"<package>/{p}" in text for p in missing):

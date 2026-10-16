@@ -271,6 +271,17 @@ class ExtensionInstructionTests(unittest.TestCase):
                 self.assertIn(message, out)
                 self.assertNotIn(placeholder if message == absent else absent, out)
 
+    def test_a_path_that_continues_past_the_script_name_is_absent_and_one_that_ends_there_passes(self):
+        for tail in (".bak", "x", "-old", "~", ".orig"):
+            with self.subTest(tail):
+                code, out = self.check({"implementation-1.md": COMPLETE + f"python3 {ROBOREV_PATH}{tail} --repo w\n"})
+                self.assertEqual(code, 1)
+                self.assertIn("worker instruction is absent", out)
+        for tail in (".", ",", "`", ")", "\"", ""):
+            with self.subTest(repr(tail)):
+                text = COMPLETE + f"Run ({ROBOREV_PATH}{tail} then report\n"
+                self.assertEqual(self.check({"implementation-1.md": text})[0], 0)
+
     def test_an_unlisted_extension_is_not_checked(self):
         self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme=NO_EXTENSIONS)[0], 0)
         self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme="---\nentity-type: task\nextensions: [codex]\n---\n")[0], 0)
