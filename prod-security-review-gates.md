@@ -34,6 +34,17 @@ gates:
                 id: briefing:prod-security-review-gates:ideation:attempt-1:revision-1
                 digest: sha256:ade941a8833e926167af6bb2b17f3e3386607d12ab77b866429d446ab2abb150
                 room-ref: ./prod-security-review-gates/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:prod-security-review-gates:ideation:1
+                briefing: briefing:prod-security-review-gates:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-16T04:16:51.43481Z"
+                decision: approve
+                reason: Captain approved batch-1 ideation (「准」) after FO presented all five gates together; as the gate question states, this accepts each decision as recommended (and FO's stated change where named), the batch-1 implementation order, and is the push and Draft PR grant for the implementation worker.
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-16T03:14:23Z
 ---
 
