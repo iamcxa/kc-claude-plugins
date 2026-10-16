@@ -15,6 +15,17 @@ gates:
                 id: briefing:amendment-form-check:backlog:attempt-1:revision-1
                 digest: sha256:14cbf6e42f10d8251d22634c12e4fe1cfec16a908b4d0566a24a3587f0de3797
                 room-ref: ./amendment-form-check/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:amendment-form-check:backlog:1
+                briefing: briefing:amendment-form-check:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-16T03:13:50.642844Z"
+                decision: approve
+                reason: 'Captain approved batch 1 (「批准」): schedule as Pilot and enter ideation; as the gate question states, this accepts profile pilot and five parallel ideations with dev2-laws-check''s design read by the other four for overlap.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Filed from a learn package-issue candidate the Captain approved (「好」, chat, 2026-10-15). The observer reports on `delivery-gate-verdict-form` and `fo-lifecycle-mod` found FO-written amendments that break the README `## Captain amendments` rules, and `scripts/design_surfaces.py check` passed both tasks.
