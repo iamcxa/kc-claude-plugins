@@ -53,6 +53,17 @@ gates:
                 id: briefing:extension-instruction-reaches-dispatch:validation:attempt-1:revision-1
                 digest: sha256:e3f1042466148a1399c392e61de42a072148c06f531fc2a9a460207f020512d4
                 room-ref: ./extension-instruction-reaches-dispatch/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extension-instruction-reaches-dispatch:validation:1
+                briefing: briefing:extension-instruction-reaches-dispatch:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-16T08:55:42.282831Z"
+                decision: approve
+                reason: Captain approved delivery (「Ａ准」) after FO presented the three batch-1 delivery gates together; as each gate question states, this accepts FO's stated recommendations and covers later external-review rounds on the PR.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-16T03:14:50Z
 worktree: .worktrees/spacedock-ensign-extension-instruction-reaches-dispatch
 pr: iamcxa/kc-claude-plugins#652
