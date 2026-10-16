@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:prod-security-review-gates:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 1 (prod-security-review-gates, dev2-laws-check, extension-instruction-reaches-dispatch, names-check-before-dispatch, amendment-form-check)? Approving accepts profile pilot as recommended, and that the five ideations run in parallel with dev2-laws-check's design read by the other four for overlap.",
+  "artifacts": [
+    {
+      "id": "artifact:prod-security-review-gates:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/146371b948653f01f834cad0a08079abd96c3107/prod-security-review-gates.md",
+      "rev": "sha256:3ec82a38e436efdc4bcd8ad675ca981c4661f021d725140a3f2548d64444224f",
+      "mediaType": "text/markdown",
+      "summary": "Seed: a relay prod-profile task (agent-front-door) passed ideation, implementation and validation with no security question; a read-only security review at the Captain's ask then found two Medium findings (unbounded comment writes; prompt injection via /llms.txt) and four Low. The prod profile selects specialist assurance by judgment, and no stage puts a security reviewer at a gate. Captain confirmed planning in this session (「可以」, 2026-10-16). Recommended profile pilot. Ideation owes: which gates carry a security reviewer (suggested: threat model at ideation, diff and served artifact at validation), the upstream check of kc-pr-flow's tob-security-reviewer, tob-actions-auditor and tob-supply-chain-checker, cost per task, and relay's local 'specialists are risk-selected' policy. Seed check: design_surfaces.py check --seed exit 0."
+    }
+  ]
+}

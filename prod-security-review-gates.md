@@ -4,6 +4,17 @@ status: backlog
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
+gates:
+    version: 1
+    records:
+        - id: gate:prod-security-review-gates:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:prod-security-review-gates-backlog-1
+              briefing:
+                id: briefing:prod-security-review-gates:backlog:attempt-1:revision-1
+                digest: sha256:d8578f224bb46378c57a5f1fdba219ef293fa8fedf2a03d7e14dc67dcc6afbf8
+                room-ref: ./prod-security-review-gates/review/backlog/briefing-1
 ---
 
 Relayed by subspace-relay's FO session on 2026-10-13, not heard directly. Captain's words as relayed: 「此外 dev2 prod profile 應該強化安全掃描這一塊，必須有至少一到兩位安全審核員，守不同關卡。你可以先給 plugin FO 發訊息讓他知道」.
