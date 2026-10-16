@@ -22,7 +22,7 @@ AMENDMENTS_HEADING = re.compile(rf"^{GO_SPACE}## Captain amendments{GO_SPACE}$",
 CAPTAIN_WORDS = re.compile(r"^Captain:[ \t]*\S", re.M)
 SUPERSEDES = re.compile(r"^Supersedes:(.*)$", re.M)
 AC_ID = re.compile(r"AC-[A-Za-z0-9]+")
-ENTRY_LABELS = ("Captain:", "Asked:", "Supersedes:", "Design:")
+DECLARATION_LINE = re.compile(r"^[ \t]*(?:>[ \t]*)*(?:(?:[-*+]|\d+[.)])[ \t]+)?\*\*(AC-[A-Za-z0-9]+)[^*\n]*\*\*")
 NO_REPLACEMENT = re.compile(r"no replacement", re.I)
 TABLE = re.compile(r"^[ \t]*\|.*\|[ \t]*\n[ \t]*\|[ \t:|-]*-[ \t:|-]*\|?[ \t]*$", re.M)
 
@@ -100,8 +100,8 @@ def check_criteria(name, lines, errors):
     return declared
 
 
-def from_first_criterion(lines):
-    return next((lines[i:] for i, line in enumerate(lines) if AC_DECLARATION.search(line)), [])
+def declarations(lines):
+    return [(found.group(1), line) for line in lines for found in [DECLARATION_LINE.match(line)] if found]
 
 
 def check_amendments(name, lines, declared, errors):
@@ -109,24 +109,26 @@ def check_amendments(name, lines, declared, errors):
     if body is None:
         return
     entries = re.split(r"(?m)^(?=### )", "\n".join(body))[1:]
-    moved = [from_first_criterion([l for l in e.split("\n")[1:] if not l.startswith(ENTRY_LABELS)]) for e in entries]
-    live = from_first_criterion(section(lines, AC_HEADING) or [])
+    moved = [declarations(e.split("\n")[1:]) for e in entries]
+    live = declarations(section(lines, AC_HEADING) or [])
     for index, entry in enumerate(entries):
         title = entry.split("\n", 1)[0].strip()
         if not CAPTAIN_WORDS.search(entry):
             errors.append(f"{name}: '{title}' has no 'Captain:' line with his words")
         line = SUPERSEDES.search(entry)
-        named = set(AC_ID.findall(line.group(1) if line else ""))
+        value = line.group(1) if line else ""
+        waiver = NO_REPLACEMENT.search(value)
+        named = set(AC_ID.findall(value[:waiver.start()] if waiver else value))
         for superseded in sorted(named & declared):
             errors.append(f"{name}: '{title}' supersedes {superseded} but it is still declared in '## Acceptance criteria'")
-        held = {found for text in moved[index] for found in AC_DECLARATION.findall(text)}
+        held = {found for found, _ in moved[index]}
         if held - named:
             errors.append(f"{name}: '{title}' holds {', '.join(sorted(held - named))} but its 'Supersedes:' line does not name them")
         digits = re.search(r"\d+", title)
         number = digits.group() if digits else str(index + 1)
         marker = re.compile(rf"Amended by Captain, amendment {number}(?!\d)")
-        others = [text for i, texts in enumerate(moved) if i != index for text in texts]
-        if named and not NO_REPLACEMENT.search(line.group(1)) and not any(marker.search(t) for t in live + others):
+        others = [pair for i, pairs in enumerate(moved) if i != index for pair in pairs]
+        if named and not waiver and not any(marker.search(text) for _, text in live + others):
             errors.append(f"{name}: '{title}' supersedes {', '.join(sorted(named))} but no criterion says 'Amended by Captain, amendment {number}' and its 'Supersedes:' line does not say 'no replacement'")
 
 

@@ -336,6 +336,33 @@ class AmendmentTests(unittest.TestCase):
         waived = AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-2 (no replacement: moved to a new task)")
         self.assertEqual(self.errors(waived, "**AC-1**: a driver sees seats.\n"), [])
 
+    def test_an_id_inside_the_waiver_reason_is_not_named(self):
+        held = AMENDMENT.replace("**AC-2**: the old outcome.\n", "**AC-1**: kept.\n**AC-2**: the old outcome.\n")
+        errors = self.errors(held.replace("Supersedes: AC-2", "Supersedes: AC-1 (no replacement: AC-2 moved to a new task)"), REPLACEMENT)
+        self.assertTrue(any("holds AC-2 but" in e for e in errors), errors)
+        stays = AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-2 (no replacement: AC-1 stays declared)")
+        self.assertEqual(self.errors(stays, "**AC-1**: a driver sees seats.\n"), [])
+
+    def test_the_marker_counts_only_on_a_declaration_line(self):
+        prose = "**AC-1**: a driver sees seats.\n**AC-3**: the new outcome.\nVerified by: a test quoting Amended by Captain, amendment 1.\n"
+        errors = self.errors(AMENDMENT, prose)
+        self.assertTrue(any("supersedes AC-2 but no criterion says" in e for e in errors), errors)
+
+    def test_the_marker_shapes_the_corpus_writes_pass(self):
+        for label, line in {
+            "colon": "**AC-3**: Amended by Captain, amendment 1: the new outcome.\n",
+            "space": "**AC-3** Amended by Captain, amendment 1. The new outcome.\n",
+            "list item": "- **AC-3** Amended by Captain, amendment 1. The new outcome.\n",
+            "parenthesis": "**AC-3** (Amended by Captain, amendment 1; replaces AC-2): the new outcome.\n",
+            "inside the bold": "**AC-3 — the new outcome. Amended by Captain, amendment 1 (replaces AC-2).** Its text.\n",
+        }.items():
+            with self.subTest(label):
+                self.assertEqual(self.errors(AMENDMENT, "**AC-1**: a driver sees seats.\n" + line), [])
+
+    def test_a_bold_id_in_evidence_prose_is_not_a_moved_criterion(self):
+        cited = AMENDMENT.replace("**AC-2**: the old outcome.\n", "**AC-2**: the old outcome.\nVerified by: a test; see **AC-5** for the shared fixture.\n")
+        self.assertEqual(self.errors(cited), [])
+
     def test_the_design_line_is_not_read(self):
         text = AMENDMENT.replace("Supersedes: AC-2\n", "Supersedes: AC-2\nDesign: the whole paragraph, reworded by FO beyond his words.\n")
         self.assertEqual(self.errors(text), [])
@@ -367,7 +394,7 @@ class AmendmentTests(unittest.TestCase):
         self.assertEqual(self.errors(text, module=mutant), [])
 
     def test_mutation_dropping_the_replacement_rule_fails_its_case(self):
-        mutant = mutated("        if named and not NO_REPLACEMENT", "        if False and not NO_REPLACEMENT")
+        mutant = mutated("        if named and not waiver and not any", "        if False and not any")
         self.assertTrue(self.errors(AMENDMENT, "**AC-1**: a driver sees seats.\n"))
         self.assertEqual(self.errors(AMENDMENT, "**AC-1**: a driver sees seats.\n", mutant), [])
 
@@ -377,23 +404,38 @@ class AmendmentTests(unittest.TestCase):
         self.assertEqual(self.errors(TWICE, criteria), [])
         self.assertEqual(len(self.errors(TWICE, criteria, mutant)), 1)
 
-    def test_mutation_counting_the_criteria_intro_line_fails_its_case(self):
-        mutant = mutated("live = from_first_criterion(section(lines, AC_HEADING) or [])", "live = section(lines, AC_HEADING) or []")
+    def test_mutation_counting_a_non_declaration_line_as_the_marker_fails_its_cases(self):
+        mutant = mutated("live = declarations(section(lines, AC_HEADING) or [])", 'live = [("", l) for l in section(lines, AC_HEADING) or []]')
         intro = "Amended by Captain, amendment 1, is written on the criteria below.\n**AC-1**: a driver sees seats.\n"
-        self.assertTrue(self.errors(AMENDMENT, intro))
-        self.assertEqual(self.errors(AMENDMENT, intro, mutant), [])
+        prose = "**AC-1**: a driver sees seats.\n**AC-3**: the new outcome.\nVerified by: a test quoting Amended by Captain, amendment 1.\n"
+        for criteria in (intro, prose):
+            self.assertTrue(self.errors(AMENDMENT, criteria))
+            self.assertEqual(self.errors(AMENDMENT, criteria, mutant), [])
 
     def test_mutation_dropping_the_waiver_fails_its_case(self):
-        mutant = mutated("and not NO_REPLACEMENT.search(line.group(1))", "")
+        mutant = mutated("not waiver and not any", "not any")
         waived = AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-2 (no replacement: moved to a new task)")
         self.assertEqual(self.errors(waived, "**AC-1**: a driver sees seats.\n"), [])
         self.assertTrue(self.errors(waived, "**AC-1**: a driver sees seats.\n", mutant))
 
     def test_mutation_reading_the_design_line_fails_its_case(self):
-        mutant = mutated('ENTRY_LABELS = ("Captain:", "Asked:", "Supersedes:", "Design:")', 'ENTRY_LABELS = ("Captain:", "Asked:", "Supersedes:")')
+        mutant = mutated("DECLARATION_LINE.match(line)", "AC_DECLARATION.search(line)")
         text = AMENDMENT.replace("Supersedes: AC-2\n", "Supersedes: AC-2\nDesign: **AC-9** names a paragraph.\n")
         self.assertEqual(self.errors(text), [])
         self.assertTrue(self.errors(text, module=mutant))
+
+    def test_mutation_reading_a_bold_id_anywhere_on_a_line_fails_its_case(self):
+        mutant = mutated("DECLARATION_LINE.match(line)", "AC_DECLARATION.search(line)")
+        cited = AMENDMENT.replace("**AC-2**: the old outcome.\n", "**AC-2**: the old outcome.\nVerified by: a test; see **AC-5** for the shared fixture.\n")
+        self.assertEqual(self.errors(cited), [])
+        self.assertTrue(self.errors(cited, module=mutant))
+
+    def test_mutation_reading_the_id_list_past_the_waiver_text_fails_its_case(self):
+        mutant = mutated("value[:waiver.start()] if waiver else value", "value")
+        held = AMENDMENT.replace("**AC-2**: the old outcome.\n", "**AC-1**: kept.\n**AC-2**: the old outcome.\n")
+        text = held.replace("Supersedes: AC-2", "Supersedes: AC-1 (no replacement: AC-2 moved to a new task)")
+        self.assertTrue(self.errors(text, REPLACEMENT))
+        self.assertEqual(self.errors(text, REPLACEMENT, mutant), [])
 
     def test_mutation_dropping_the_captain_rule_fails_its_case(self):
         mutant = mutated("        if not CAPTAIN_WORDS.search(entry):\n", "        if False:\n")
