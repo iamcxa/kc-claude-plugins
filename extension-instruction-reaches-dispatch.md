@@ -255,3 +255,55 @@ The gap is closed by one new part in `dispatch_records.py`'s validation-time fol
 ### Summary
 
 The check is two functions in `dispatch_records.py` (`declared_instructions`, `instruction_error`) plus `--readme FILE` and README discovery; the frontmatter reader is `number_guards.frontmatter` (the import `comment_ratio.py` already uses), not `pr_watch.front` as the design named, because importing `pr_watch` for ten lines couples two scripts. Existing tests needed a README fixture in `check()` because the not-checked note changes exact output. Limit: proves the record, not that the worker ran the gate.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #652 head 56f83bf5 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at 56f83bf518413984362e8a28a875d10dff1e6a10 (detached checkout, removed afterwards). Criteria AC-1 to AC-7 met; findings below are Polish and Deferred risk only. PR checks on that head: all four pass (unit tests 1m0s, route gate 7s, version parity 55s, GitGuardian).
+- DONE: The PR is stacked on #649 (it contains #649's commits until #649 squash-merges): judge only the commits after #649's head a4217cd3, and say whether the stacked diff changes any #649 behaviour
+  One commit after a4217cd3 (56f83bf5), two files. #649 behaviour unchanged: `--names` and `--newest` return before the new `--readme` parsing, and `pr_watch.py` calls only `--newest`; a4217cd3's own `test_dispatch_records.py` run against the candidate script passes every `--names`/`--newest` test, and `test_pr_watch.py` (69) passes. The only changed output is the folder run, which now prints `extensions not checked: ...` when no workflow README is found (11 of 24 old exact-output tests fail on that line, as AC-5 intends; the candidate's tests add a README fixture); grep finds no consumer that parses folder-run output.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and observed output are under `### Minimal acceptance script`; run with `env -i HOME PATH bash --noprofile --norc`, all expected lines observed. `adr_lint.py docs/adr --since a4217cd3` and `--since 1383c911` (merge-base with origin/main): "15 ADR file(s) checked, 0 legacy", exit 0.
+
+### Evidence by criterion (all at 56f83bf5, run by me)
+
+- AC-1/AC-2: `python3 -B test_dispatch_records.py` 34 tests OK. Mutations on a package copy (`python3 -B`, no caches): drop part -> 7 fail; accept bare `roborev_gate.py` substring -> 3; one message for both failures -> 1 (the `unsubstituted <package>` assertion); empty reason accepted -> 1. My extra mutation, drop the lookbehind so `x/abs/.../roborev_gate.py` passes -> 1 fails. Mutation using the running package root instead of the record's `Package root:` -> 12 errors/fails.
+- AC-3: ignore `extensions:` -> 1 fails; read every `implementation-*` -> 1; ignore stage (read every `*-1.md`) -> 1.
+- AC-4: rename the bullet label in a package copy's `roborev/EXTENSION.md` -> 8 fail, including `test_every_shipped_instruction_is_read_from_its_extension_file`.
+- AC-5: drop the note -> 1 fails; ignore `--readme` -> 1; remove the missing-file exit 2 -> 1; accept any README without `entity-type:` -> 1. CLI: `--readme /nonexistent/x.md` prints `no such file`, exit 2.
+- AC-6: `git diff --name-only a4217cd3..HEAD` lists only `dispatch_records.py` and `test_dispatch_records.py`; `git diff --stat 1383c911 HEAD` on `references`, `skills`, `extensions`, `lint-skills.py` is empty; `lint-skills.py` exit 0, `workflow.md` 5495 of 5511; my `len(text.split())` of `workflow.md` is 5495. `comment_ratio.py a4217cd3 HEAD`: 161 code lines, 0 comment, exit 0. `doc_impact.py`: 0 documents. `design_surfaces.py check` and `number_guards.py check` exit 0. Candidate `dispatch_records.py` on this task's own folder: 3 records complete, exit 0.
+- AC-7 (own replay script: record from state branch, README from the `Dispatched:` SHA, candidate script, temp folders, read-only `git show`): relay `owner-sees-all-feedback-room` exit 1 naming roborev. Relay 12 roborev-listed: 3 pass / 8 absent / 1 unsubstituted (`signed-in-specs-run`); web 1: 0 / 1 / 0; this repo 16: 15 pass / 1 absent (`journey-server-host-pilot`). The task's 11/1/11 grew by `front-door-hardening` and 5 newer records here; all 8+1 relay and 1 web absents contain no `roborev_gate.py` token (grep), and none of the 18 passing records fails: no false positive.
+
+### Limits judged
+
+- "Proves the record, not that the worker ran the gate": accepted. It is a stated Non-goal and no criterion claims otherwise.
+- `number_guards.frontmatter` instead of `pr_watch.front`: accepted; same reader `comment_ratio.py` imports, and avoids coupling two scripts.
+- CI minutes beyond job durations not measured: accepted; no job or trigger added.
+- Not verified: qnow records (state branch holds none); the stale-checkout hazard (README read on disk now); Spacedock 0.27.2 source. Decisions 1 and 2 were accepted as recommended at the ideation gate.
+
+### Findings (Review-finding disposition)
+
+- Polish: `Misconfigured` is imported and unused in `dispatch_records.py` (`pyflakes`: F401; `# noqa: E402` does not cover it); `for record in [Path(...)]` loops over one element. No user-visible loss.
+- Deferred risk: `extensions:` written as a YAML block list reads as empty, so the check is silently skipped. Trigger today: none, since the four READMEs I read and the workflow template use the inline form. Becomes Material if an adopter README lists `roborev` as a block list.
+- Deferred risk: the exempt form matches `<name> not run: <text>` anywhere on a line, including prose. Material only if a record is observed passing on such prose.
+
+### Minimal acceptance script
+
+Needs: network, git, python3 (no secrets); scratch dir `/tmp/ext-accept`; run in bash. It checks out PR #652's head, so a pass proves that revision only. Not covered: a real FO dispatch, whether a worker ran roborev, or any adopter's state branch.
+
+    rm -rf /tmp/ext-accept && mkdir -p /tmp/ext-accept/task/dispatch
+    git init -q /tmp/ext-accept/repo && git -C /tmp/ext-accept/repo fetch -q --depth 1 https://github.com/iamcxa/kc-claude-plugins.git 56f83bf518413984362e8a28a875d10dff1e6a10 && git -C /tmp/ext-accept/repo checkout -q FETCH_HEAD && git -C /tmp/ext-accept/repo rev-parse HEAD
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/test_dispatch_records.py 2>&1 | tail -3
+    printf -- '---\nentity-type: task\nextensions: [roborev]\n---\n' > /tmp/ext-accept/README.md
+    printf 'Dispatched: 56f83bf518413984362e8a28a875d10dff1e6a10\nModel: sonnet\n\n## Checklist\n\n1. Do the work\n\n## Scope notes\n\nPackage root: /tmp/ext-accept/repo/kc-dev-flow-2\nSend your completion message to `main`.\n' > /tmp/ext-accept/task/dispatch/implementation-1.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+    printf 'Before reporting, run python3 /tmp/ext-accept/repo/kc-dev-flow-2/extensions/roborev/roborev_gate.py --repo w --base b\n' >> /tmp/ext-accept/task/dispatch/implementation-1.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+    rm /tmp/ext-accept/README.md
+    python3 -B /tmp/ext-accept/repo/kc-dev-flow-2/scripts/dispatch_records.py /tmp/ext-accept/task; echo "exit=$?"
+
+Observed: the SHA `56f83bf518413984362e8a28a875d10dff1e6a10`; `Ran 34 tests` then `OK`; `implementation-1.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet of /tmp/ext-accept/repo/kc-dev-flow-2/extensions/roborev/EXTENSION.md into the scope notes, or add a line 'roborev not run: <reason>'` with `exit=1`; `1 dispatch record(s) complete` with `exit=0`; `extensions not checked: no workflow README above /tmp/ext-accept/task`, `1 dispatch record(s) complete`, `exit=0`.
+
+### Summary
+
+PASSED at 56f83bf5: every criterion holds, each falsifier fails the test written for it, and the real script reproduces the replay on real records with no false positive. The stacked diff leaves #649's `--names`/`--newest` behaviour alone. Two Polish items and two Deferred risks are recorded; none blocks delivery.
