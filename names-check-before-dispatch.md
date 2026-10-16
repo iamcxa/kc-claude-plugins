@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:names-check-before-dispatch:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:names-check-before-dispatch-validation-1
+              briefing:
+                id: briefing:names-check-before-dispatch:validation:attempt-1:revision-1
+                digest: sha256:eb3e8678867f7fc8690266b7016a20da1b797eb5c8e4e45a06ffeeafc6f43c09
+                room-ref: ./names-check-before-dispatch/review/validation/briefing-1
 started: 2026-10-16T03:14:56Z
 worktree: .worktrees/spacedock-ensign-names-check-before-dispatch
 pr: iamcxa/kc-claude-plugins#649

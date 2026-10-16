@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:names-check-before-dispatch:validation:attempt-1:revision-1",
+  "question": "Deliver #649 head a4217cd3 (dispatch_records.py --newest scans the newest committed dispatch record and pr_watch.py tasks prints one next: line while it names a package script bare): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the Deferred risk and the Polish below into backlog task names-check-newest-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:names-check-before-dispatch:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/bb72efeb813065e1301104b22fb8c228383d71bc/names-check-before-dispatch.md",
+      "rev": "sha256:316fe00cced84193ad2acd25fcab3f65a640417b9d66a7ee395e0d5fa299609e",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at a4217cd3 (AC-1..AC-7). FO ran the six-step acceptance script as written in env -i bash: every step matched (head fetched; 24 and 69 tests OK; a bare name in the newest record exits 1 naming it; a newer clean record clears it; the idle hook prints one next: line; cleanup). Replay: the three records FO missed (e081c5f2, c3935e01, d6182ead) are flagged; 8 of 79 records since 2026-10-14. CI green. Words FO reads: no README, mod or budget change; one next: line only when a record is flagged. External rounds: Codex 1 (clean, issue comment 2026-10-16T04:31Z). RoboRev local (705), not counted. Declined, round 1, with reasons: Deferred risk, one commit adding several records of one task makes --newest pick the lexicographically last (implementation-9 over -10), seen in 3 of 150 commits, all bulk journey commits; FO saves one record per commit, so not triggered now; Polish, the next: line does not warn that a flagged name may be a repository file, wording only, the line names the file so FO can tell. Second reviewer: copilot because the change alters what FO runs at the idle hook before a dispatch (dispatch rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. Limits (design, accepted at ideation): detects after the record is committed, not before the send; whether the line reaches FO before the worker reads the record is unmeasured; D2 (Spacedock pre-dispatch hook issue) not drafted yet."
+    }
+  ]
+}
