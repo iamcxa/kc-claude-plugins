@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extension-instruction-reaches-dispatch:validation:attempt-1:revision-1",
+  "question": "Deliver #652 head 8d051de7 (the validation-time dispatch_records.py folder run fails a first implementation record that omits an activated extension's worker instruction; today only roborev declares one): after #649 merges, FO merges origin/main into the branch, marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the Deferred risks and Polish below into backlog task extension-instruction-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:extension-instruction-reaches-dispatch:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/46eb954062b4a42c6772530c2f74b52bbb550dca/extension-instruction-reaches-dispatch.md",
+      "rev": "sha256:199529961177ee92f36dab043634251e8aa0da93fb82f1c09943f976e1547199",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at 8d051de7 (recheck after two repair cycles; stacked on #649 a4217cd3, judged on the commits after it). FO ran the acceptance script as written in env -i bash: every step matched (36 tests OK; a record missing the instruction and one with a .bak path exit 1 naming roborev; a complete record exits 0; no README prints 'extensions not checked' and exits 0). Real records: relay 3 pass, 8 absent, 1 unsubstituted; web 1 absent; here 15 pass, 1 absent; no passing record flipped across the repairs. CI green. Words FO reads: no README, mod or budget change. External rounds: Codex 3 (round 1 one P2 fixed, round 2 one P2 fixed with an allowlist of followers instead of another exclusion, round 3 clean, comment 6210898081). RoboRev local (717), not counted. Declined, with reasons: Deferred risk, the allowlist refuses a path followed by ':' or '**' (fails closed; no real record ends that way); Deferred risk, a block-list 'extensions:' is read as empty and 'not run:' matches inside prose (no current trigger); Polish, an unused import and a one-element loop. Second reviewer: copilot because the change alters the check run on every dispatch record at validation (dispatch rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. Limit (design): it proves the instruction is in the record, not that the worker ran the gate; it finds a miss at validation, after the worker ran."
+    }
+  ]
+}

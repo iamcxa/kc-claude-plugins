@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:extension-instruction-reaches-dispatch:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:extension-instruction-reaches-dispatch-validation-1
+              briefing:
+                id: briefing:extension-instruction-reaches-dispatch:validation:attempt-1:revision-1
+                digest: sha256:e3f1042466148a1399c392e61de42a072148c06f531fc2a9a460207f020512d4
+                room-ref: ./extension-instruction-reaches-dispatch/review/validation/briefing-1
 started: 2026-10-16T03:14:50Z
 worktree: .worktrees/spacedock-ensign-extension-instruction-reaches-dispatch
 pr: iamcxa/kc-claude-plugins#652
