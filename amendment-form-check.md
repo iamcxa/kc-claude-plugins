@@ -240,3 +240,7 @@ Visible change: none
 ### Summary
 
 Two of the three breaks are scriptable and the replay shows both archived tasks, which pass today, would exit 1; FO's words in `Design:` stay with the observer because a text rule would refuse 34 of 35 non-`none` values. One decision for the Captain: add the replacement rule with a `no replacement` waiver (recommended; 2 of 6 corpus hits are legitimate moves out of the task). Implementation order matters for `dev2-laws-check` (it must not run `check` over closed tasks) and for the shared 16-word `workflow.md` margin.
+
+## Number guards
+
+ADR: 0016
