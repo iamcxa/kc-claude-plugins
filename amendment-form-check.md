@@ -226,6 +226,8 @@ Visible change: none
   - P2 `scripts/design_surfaces.py`: the superseded-id set is read from the whole `Supersedes:` value, so an id inside the `no replacement` reason counts as named.
   - P2 `scripts/design_surfaces.py`: the 'Amended by Captain, amendment N' marker is matched on any later line, so evidence prose can satisfy it.
   - P2 `scripts/design_surfaces.py`: a bold AC id anywhere in a moved block counts as a moved criterion, so evidence citing another criterion fails a valid move.
+- Cycle 2 (FO, 2026-10-16): Codex review on #650 3bc8f647 (review:5543218466) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 `scripts/design_surfaces.py`: `section()` ends the acceptance-criteria section only at a line starting `## `, so an indented sibling heading such as ` ## Notes` lets bold AC-shaped lines from that later section satisfy the replacement-marker check.
 
 ## Stage Report: ideation
 
