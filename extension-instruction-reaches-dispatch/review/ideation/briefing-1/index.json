@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extension-instruction-reaches-dispatch:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approving accepts Decision 1 (the check runs in the validation-time dispatch_records.py folder run only) and Decision 2 (only the first implementation record of the stage is checked), each as recommended. It also accepts the batch-1 implementation order (names-check-before-dispatch lands before extension-instruction-reaches-dispatch, which edits the same dispatch_records.py function; the other three run in parallel), and is the grant for the implementation worker to push a branch and open a Draft PR.",
+  "artifacts": [
+    {
+      "id": "artifact:extension-instruction-reaches-dispatch:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c3e5ec1d20cc3c8bc843a62751ff2adced7d1114/extension-instruction-reaches-dispatch.md",
+      "rev": "sha256:98d27739104099bd3bf0103d89cc00505d673e5df56663f10842748f9d037c28",
+      "mediaType": "text/markdown",
+      "summary": "Design: one new part in the dispatch_records.py folder run: a first implementation record that omits a listed extension's worker instruction fails, naming the record and extension; exempt with 'roborev not run: \u003creason\u003e'. Only roborev declares a worker instruction. Spacedock has no dispatch-time hook. Prototype replay on records whose README lists roborev: relay 3 pass, 7 absent, 1 unsubstituted; ss-web 1 absent; here 10 pass, 1 absent. Finds a miss at validation, after the worker ran. No README word added; FO reading unchanged at every moment. names-check-before-dispatch did not adopt a pre-send mode, so this design's 'join the pre-send mode later' note is moot; it stands on the folder run. design_surfaces.py check exit 0."
+    }
+  ]
+}

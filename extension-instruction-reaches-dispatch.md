@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:extension-instruction-reaches-dispatch:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:extension-instruction-reaches-dispatch-ideation-1
+              briefing:
+                id: briefing:extension-instruction-reaches-dispatch:ideation:attempt-1:revision-1
+                digest: sha256:82394dd5a5685c2cc24fcea22d69400cc2767df6fea6456645a13a3a89f4a734
+                room-ref: ./extension-instruction-reaches-dispatch/review/ideation/briefing-1
 started: 2026-10-16T03:14:50Z
 ---
 
