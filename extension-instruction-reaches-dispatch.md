@@ -441,3 +441,22 @@ Observed: SHA `8d051de720579b6cc7f9c28dba869d7cb2606eaf`; `Ran 36 tests` then `O
 ### Summary
 
 PASSED at 8d051de7: the round-2 P2 is fixed, its test fails under seven mutations each on the side it guards, and AC-1 to AC-7 hold with the real corpus counts unchanged. One new Deferred risk (the narrow allowlist refuses a path followed by `:` or `**`, failing closed); no Material finding.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: #649 squash-merged as 4ea2832a: `git fetch origin`, merge origin/main into branch (a merge commit, no rebase, no force push)
+  Merge commit 45a9ed5b on spacedock-ensign/extension-instruction-reaches-dispatch; fast-forward push 8d051de7..45a9ed5b.
+- DONE: resolve any conflict in dispatch_records.py or its test keeping both #649's and this branch's behaviour
+  Conflicts in the docstring, `main()` and the test file: kept `--newest`/`check_newest` and this task's `--readme`/extension check, plus both test classes and constants.
+- DONE: confirm `git diff origin/main` holds only this task's change
+  Not only: it also holds a 2-line change in `laws_check.py` (65761bf0), needed because #651's L2 runner read the new `extensions not checked:` line as unparseable output; 8 `test_laws_check.py` failures before, 34 OK after.
+- DONE: run test_dispatch_records.py and test_pr_watch.py
+  36 tests OK and 69 tests OK on the merged tree; `test_laws_check.py` 34 OK after the fix. Falsifier for the fix: remove the `startswith("extensions not checked: ")` skip and 8 tests in `RangeTest`/`LaterHistoryTest` fail with `cannot judge`.
+- DONE: push, CI green on the new head
+  Head 65761bf0; `gh pr checks 652`: unit tests, route gate, version parity, GitGuardian all pass (first CI run on 45a9ed5b failed on the L2 line above).
+- DONE: update the PR body to drop the 'contains #649' note
+  Note removed; body now names the head, 36 tests and the `laws_check.py` change.
+
+### Summary
+
+Merged origin/main (#649 to #651) into the branch; the textual conflicts were resolved keeping both behaviours. The merge exposed one semantic interaction, #651's law runner rejecting the new not-checked line, fixed with a 2-line skip in `laws_check.py`, which goes beyond "change no behaviour beyond the merge" and needs the FO's eye. CI is green at 65761bf0.
