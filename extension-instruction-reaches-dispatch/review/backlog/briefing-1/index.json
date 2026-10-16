@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extension-instruction-reaches-dispatch:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 1 (prod-security-review-gates, dev2-laws-check, extension-instruction-reaches-dispatch, names-check-before-dispatch, amendment-form-check)? Approving accepts profile pilot as recommended, and that the five ideations run in parallel with dev2-laws-check's design read by the other four for overlap.",
+  "artifacts": [
+    {
+      "id": "artifact:extension-instruction-reaches-dispatch:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/be70e76da9ecf162c9b7e49c098ef7955d1b2d92/extension-instruction-reaches-dispatch.md",
+      "rev": "sha256:24c2d61fb8192f8920e336fd8fc022608330a75623bd311b82d460d47b974c36",
+      "mediaType": "text/markdown",
+      "summary": "Seed: a relay task dispatched implementation without the roborev extension's worker instruction because dispatch build does not read the README extensions list and the README never names roborev. Candidate: dispatch_records.py fails a record of a stage whose activated extension declares a worker instruction absent from its scope notes, or the README stage text names it. Recommended profile pilot. Seed check exit 0."
+    }
+  ]
+}

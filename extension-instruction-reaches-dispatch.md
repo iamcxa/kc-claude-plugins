@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:extension-instruction-reaches-dispatch:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:extension-instruction-reaches-dispatch-backlog-1
+              briefing:
+                id: briefing:extension-instruction-reaches-dispatch:backlog:attempt-1:revision-1
+                digest: sha256:cef06b799a2387bc3f780618d3fab4f0d79a60ff765e7814c0486dcd90b9e1e2
+                room-ref: ./extension-instruction-reaches-dispatch/review/backlog/briefing-1
 ---
 
 Filed from a package issue reported by the spacedock-dev/subspace-relay First Officer; the Captain confirmed filing on 2026-10-14 (「確認」 to "should FO file relay #1 and #4?"). Relay task `owner-sees-all-feedback-room` (PR spacedock-dev/subspace-relay#362, kc-dev-flow-2 0.22.0) dispatched implementation without the roborev extension's worker instruction, so the worker never ran `roborev_gate.py` and its report has no `evidence=` line; FO ran the gate afterwards (roborev:633).
