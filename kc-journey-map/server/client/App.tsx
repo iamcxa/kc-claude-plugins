@@ -14,6 +14,7 @@ import { addSequencePage } from './sequence'
 import { journeyApi } from './api'
 import { RoomPageMenu, RoomSelector, type ConnectionState } from './RoomSelector'
 import { confirmRoomSwitch } from './confirm-room-switch'
+import { assetUploadId } from './asset-upload-id'
 
 const APP_NAME = 'kc-journey-map'
 
@@ -63,7 +64,7 @@ const ASSET_SCHEME = 'asset:'
 const canvasAssets = (roomId: string): TLAssetStore => ({
 	async upload(_asset, file) {
 		// crypto.randomUUID is unavailable over plain http on a private-network hostname.
-		const name = `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}-${file.name}`
+		const name = assetUploadId(file.name)
 		const res = await fetch(journeyApi(`/uploads/${encodeURIComponent(name)}?room=${encodeURIComponent(roomId)}`), { method: 'PUT', body: file })
 		if (!res.ok) throw new Error(`upload failed: ${res.status} ${res.statusText}`)
 		return { src: `${ASSET_SCHEME}${name}` }
