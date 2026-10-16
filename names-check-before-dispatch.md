@@ -224,3 +224,22 @@ Visible change: none
 ### Summary
 
 The check cannot be forced before `dispatch build` from this package (Spacedock has no pre-dispatch hook, ADR 0014 hit the same wall), so the design adds an automatic run at FO's idle hook: `pr_watch.py tasks` prints a `next:` line when the newest committed record still holds a bare package script name, adding no README or mod words. Two decisions go to the Captain: the run point (recommended: the idle-hook line over a validation-time fold or waiting for Spacedock) and whether to ask Spacedock for a pre-dispatch hook. A prototype replay found all three named records; timing against the worker's read is unmeasured.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main implementing the idle-hook design (D1): kc-dev-flow-2/scripts/dispatch_records.py --newest and one next: line from kc-dev-flow-2/scripts/pr_watch.py tasks while a bare script name remains; every acceptance criterion in the task file green, each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/649, branch `spacedock-ensign/names-check-before-dispatch` at a4217cd3 on origin/main 1383c911; no force push.
+  AC-1: real script in a clone of `spacedock-state/dev2` at `e081c5f2`, `c3935e01`, `d6182ead` prints exactly the replay-table lines (impl-2 without impl-1). Mutations "scan every record" and "lowest-numbered record" fail `NewestTests` older-bare/newer-bare tests.
+  AC-2: `test_an_older_bare_record_is_not_reported_once_a_newer_one_is_clean`; the scan-every-record mutation exits 1 and fails it.
+  AC-3: `test_a_newest_record_naming_a_bare_script_prints_one_next_line_even_without_a_pr` runs the real subprocess; deleting the call, and moving it after the no-PR `continue`, each fail it (and the exit-2 test).
+  AC-4: both versions on one fixture (open PR, clean record), stdout and exit code equal (one-off /tmp script, not committed); `test_clean_or_absent_records_leave_the_output_as_it_was` fails under a mutation printing a "checked" line.
+  AC-5: `git diff origin/main` of workflow.md, mod and lint-skills.py is empty (0 bytes); lint-skills.py exits 0 (5495 of 5511). Flagged line for a three-name record: 38 words with the path counted as one.
+  AC-6: `test_a_task_without_records_exits_clean_and_an_unreadable_state_exits_2` and `test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2`; mutations "git error returns 0", "no-folder task errors", "exit 2 not propagated" each fail them.
+  AC-7: loop over every commit that added a non-archived record, state HEAD e5f820a3: 156 additions in 149 commits, 61 flagged, 8 of 78 on or after 2026-10-14. Includes the design's five (e081c5f2, c3935e01, 075f1731, d6182ead, f277c688) plus three new implementation-2 records of other batch-1 tasks. Differs from the design's 149/55/5-of-71 because the state branch moved and additions are counted per file; proves detection, not that a line would reach FO before the worker reads the record.
+- DONE: No FO-read word added beyond the design; the candidate's own kc-dev-flow-2/scripts/lint-skills.py exits 0; roborev evidence= line; push without force; CI green on the PR head; CI cost measured or stated as not measured
+  `comment_ratio.py origin/main HEAD`: 0 comment lines of 114 code lines; `doc_impact.py`: 0 documents listed. roborev: `clean on a4217cd3e; evidence=roborev:705` (exit 0, no repair needed).
+  CI on PR head a4217cd3: GitGuardian, multi-profile route gate, unit tests (python3), version parity all pass. Cost: no new job; the `unit tests (python3)` job took 59s wall in total; the added seconds are not isolated, not measured.
+
+### Summary
+
+`dispatch_records.py --newest` and one `next:` line in `pr_watch.py tasks` ship as designed, 132 added lines across four files under `kc-dev-flow-2/scripts/`, no README, mod or budget edit. Detection comes after the record is committed and cannot show the line reaches FO before the worker reads it. The `--names` shape filter still flags a repository file sharing a package script's name. D2 (ask Spacedock for a pre-dispatch hook) is untouched: no issue drafted, filed or posted. extension-instruction-reaches-dispatch can now rebase on this PR's `dispatch_records.py` `main()`; its "join the pre-send mode" wording is the one the design flagged.
