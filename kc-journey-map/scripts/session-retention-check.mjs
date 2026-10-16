@@ -113,12 +113,12 @@ for (const adapter of ['node', 'cloudflare-local']) {
   assert.equal(JSON.parse(await get(cursorKey)), key(64))
   assert.equal((await sql("SELECT COUNT(*) AS n FROM metadata WHERE key >= ? AND key <= ?", [key(1), key(150)])).rows[0].n, 86)
   const trace = await host.trace()
-  const pages = trace.filter(r => r.query.startsWith('SELECT key, value FROM metadata WHERE key >='))
+  const pages = trace.filter(r => r.query.startsWith('SELECT key, value FROM metadata WHERE'))
   if (adapter === 'cloudflare-local') {
    assert.equal(pages.length, 1); assert.equal(pages[0].returned, 64); assert.equal(pages[0].rowsRead, 64)
   }
-  const pageSql = pages[0]?.query ?? "SELECT key, value FROM metadata WHERE key >= ? AND key < ? AND key > ? ORDER BY key LIMIT 64"
-  const plan = (await sql('EXPLAIN QUERY PLAN ' + pageSql, ['session:', 'session;', 'session:'])).rows
+  const pageSql = pages[0]?.query ?? "SELECT key, value FROM metadata WHERE key > ? AND key < ? ORDER BY key LIMIT 64"
+  const plan = (await sql('EXPLAIN QUERY PLAN ' + pageSql, ['session:', 'session;'])).rows
   assert(plan.some(row => /SEARCH metadata USING INDEX.*key>.*key</.test(row.detail)), JSON.stringify(plan))
   const savedCursor = await get(cursorKey)
   await host.close(); host = await open(adapter, dir)
@@ -129,6 +129,29 @@ for (const adapter of ['node', 'cloudflare-local']) {
   for (const [k, v] of preserved) assert.equal(await get(k), v)
   assert.deepEqual((await all()).filter(r => !r.key.startsWith('session:') && r.key !== cursorKey), nonSession)
   checkpoints.push('64-row indexed page; restart progress; legacy debt drained; malformed/live/non-session preservation')
+  await reset()
+  const laterFixtures = [...Array.from({length:4096}, (_, i) => [key(i + 1), session(future)]),
+   ...Array.from({length:65}, (_, i) => [key(i + 4097), session(1)])]
+  for (let i = 0; i < laterFixtures.length; i += 40) {
+   const batch = laterFixtures.slice(i, i + 40)
+   await sql('INSERT OR REPLACE INTO metadata VALUES ' + batch.map(() => '(?, ?)').join(','), batch.flat())
+  }
+  await put(cursorKey, JSON.stringify(key(4096)))
+  await host.trace()
+  assert.equal((await login()).status, 200)
+  const laterPages = (await host.trace()).filter(r => r.query.startsWith('SELECT key, value FROM metadata WHERE'))
+  const laterPage = laterPages[0] ?? { returned: 64, rowsRead: 'not instrumented on Node' }
+  assert.equal(JSON.parse(await get(cursorKey)), key(4160))
+  const laterRemaining = new Map((await all()).map(r => [r.key, r.value]))
+  for (let i = 1; i <= 4096; i++) assert.equal(laterRemaining.get(key(i)), session(future))
+  for (let i = 4097; i <= 4160; i++) assert.equal(laterRemaining.get(key(i)), undefined)
+  assert.equal(laterRemaining.get(key(4161)), session(1))
+  assert.deepEqual((await all()).filter(r => !r.key.startsWith('session:') && r.key !== cursorKey), nonSession)
+  if (adapter === 'cloudflare-local') {
+   assert.equal(laterPages.length, 1); assert.equal(laterPage.returned, 64)
+   assert(laterPage.rowsRead <= 64, `later page returned ${laterPage.returned} but read ${laterPage.rowsRead} records`)
+  }
+  checkpoints.push('later page behind 4096 live rows; only 64 intended expired rows deleted; live/unrelated rows preserved')
   await reset()
   for (let i = 1; i <= 64; i++) await put(key(i), session(future))
   assert.equal((await login()).status, 200); assert.equal(JSON.parse(await get(cursorKey)), key(64))
@@ -163,7 +186,7 @@ for (const adapter of ['node', 'cloudflare-local']) {
   assert.equal(await host.alarm(), null)
   assert.deepEqual((await sql("SELECT key FROM metadata WHERE key >= 'room:' AND key < 'room;'")).rows.map(r => r.key), ['room:untouched'])
   checkpoints.push('invalid cursor bounded; failure leaves cursor/debt; auth/origin/revoke/room denial preserved; no room/alarm creation')
-  reports.push({ adapter, result: 'PASS', checkpoints, page: pages[0] ?? { returned: 64, rowsRead: 'not instrumented on Node' }, queryPlan: plan })
+  reports.push({ adapter, result: 'PASS', checkpoints, page: pages[0] ?? { returned: 64, rowsRead: 'not instrumented on Node' }, laterPage, queryPlan: plan })
  } catch (error) {
   reports.push({ adapter, result: 'FAIL', error: error.message }); process.exitCode = 1
  } finally { await host?.close() }

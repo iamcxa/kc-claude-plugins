@@ -11,7 +11,7 @@ export function pruneExpiredSessions(query: Query, now = Date.now()) {
   const cursor = typeof stored === 'string' ? JSON.parse(stored) : null
   if (typeof cursor === 'string' && cursor.startsWith(prefix) && cursor < end) after = cursor
  } catch {}
- const rows = query('SELECT key, value FROM metadata WHERE key >= ? AND key < ? AND key > ? ORDER BY key LIMIT 64', prefix, end, after)
+ const rows = query('SELECT key, value FROM metadata WHERE key > ? AND key < ? ORDER BY key LIMIT 64', after, end)
  const expired: string[] = []
  for (const row of rows) {
   if (typeof row.key !== 'string' || typeof row.value !== 'string') continue
