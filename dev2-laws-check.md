@@ -368,3 +368,22 @@ Recommended verdict: REJECTED at de7c416c7c4d4615f8f889af279f84e63d486e1b. Every
 ### Summary
 
 P1 and P2 are fixed in `096ce885` with five new tests; the written AC-4 and AC-6 counts are not met as written and are not edited (measured: AC-4 10/0 and 25/15, AC-6 48 judged, 10 violated, 15 lines; runner about 4 s to about 16 s). roborev found one more High, delete-and-re-add at the same path, which is the design's documented bound and unobserved on the real history; it is left for FO to rule.
+
+## Stage Report: implementation (cycle 1, roborev High)
+
+- DONE: L2 judges every add event of a record after the anchor, not only the newest
+  `9fbe0440`: `additions()` returns every `--diff-filter=A` commit and path; `known` keeps the exit-2 guard for a tree record with no add. `laws.md` Event line updated. Suite 28/28.
+- DONE: Add a delete-and-re-add test, and a mutation (newest add only) that fails it
+  `test_a_record_deleted_and_added_again_is_judged_at_every_add` asserts 2 events judged and a violation at the first add's commit after a corrected re-add at the same path. Mutation (skip a record key already seen, newest first) run in the worktree: only that test fails (1 failure of 28); file restored from a saved copy, `git status` clean of it afterward.
+- DONE: Rerun the suite and the real-history AC-4 and AC-6 runs
+  State `e73634e6`. AC-4: `91fae734` gives 10 events, 0 violated, exit 0; root anchor gives 25 events, 15 violated. AC-6: `49da5ddb` gives 48 judged, 10 violated, 15 lines, exit 1, violation lines identical to the cycle 1 run (0 of 149 records have more than one add). Runner wall time: about 4 s at `de7c416c`, 15.9 s after cycle 1, 21.1 s after this change (`time`, shared machine, one run each).
+- DONE: Commit with named files only
+  `9fbe0440` stages `laws_check.py`, `test_laws_check.py`, `references/sd/laws.md`; `lint-skills.py` exit 0.
+- DONE: roborev until clean, at most twice
+  Run 1 on `9fbe0440`: `clean on 9fbe04406; evidence=roborev:716`, exit 0.
+- DONE: Push without force; update the PR body
+  `096ce885..9fbe0440` pushed, no force. PR body now has 28 tests, the new mutation, 48/10/15 parts, a review-round section with the cycle 1 values and the runner time change. No AC text edited; no PR comment, review request or ready mark.
+
+### Summary
+
+L2 now judges every add of a record at its adding commit, closing the delete-and-re-add path; roborev is clean on `9fbe0440`. Measured on the real history: AC-4 10/0 and 25/15, AC-6 48 judged, 10 violated, 15 lines (unchanged from cycle 1); runner time about 4 s to about 21 s. CI on the new head is recorded in the completion message.
