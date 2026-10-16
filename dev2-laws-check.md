@@ -421,3 +421,60 @@ Reproduced the Codex finding (L1 goes from exit 1 to exit 0 when a violating tas
 ### Summary
 
 L1 now finds tasks from history, so a deleted task stays judged, and a property test over every file's later edit, delete and archive guards both laws. The remaining limit is cost: the suite grew from 17 s to about 48 s locally, 10 s in CI. Needs recheck by a fresh validation at `d64cf199`.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #651 head d64cf199 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict recommended: PASSED at head d64cf1995ba24a2fd2efcc2fa9a4dee7031f4d5a (`gh pr view 651` headRefOid, Draft, five checks green; `kc-dev-flow-2 tests` run 38870901178 step `test_laws_check.py` success, 10 s). Recheck run in a throwaway worktree and a fresh state clone at `e73634e6`: `test_laws_check.py` 30 tests OK (46 s), `lint-skills.py` exit 0 (5495 of 5511), `test_lint_skills.py` OK, AC-10 diff of the FO-read paths empty, `adr_lint.py` exit 0, `comment_ratio.py` 579 code and 2 comment lines (both shebangs), `doc_impact.py` lists only `kc-dev-flow-2/README.md` (implementation recorded `unaffected: <reason>`), `number_guards.py check` PASS, `design_surfaces.py check` exit 0, `dispatch_records.py` on this task folder 11 records complete. AC-1: a `laws.md` heading with no function, and a registered function with no heading, each fail `test_laws_file_matches_registry`. AC-3, AC-5 and AC-2 still carry their cycle 1 mutations (suite unchanged apart from the new tests below); AC-8, AC-9 and AC-12 evidence is unchanged at this head and read, not re-pushed (no push by me).
+  Limits judged: the AC-4 and AC-6 count differences and kept rename detection stand (see F4); runner time rose from about 4 s to 25 s wall on the 1115-commit tip (one `time` run), accepted as a CI cost of about 10 s; the PR body says L2 read-at-run-revision "fails the property test only", my variant of that mutation also failed two L2 tests, so the body understates it (Polish, no harm).
+- DONE: Recheck after the Cycle 1, roborev and Cycle 2 repairs: confirm validation F1 and F2, the delete-and-re-add High and the deleted-task P1 (under ### Feedback Cycles) are fixed at this head, each test failing under a mutation you run, and try one more way later history could change a law's result that the property test does not cover; re-run AC-4 and AC-6 on real history and state the counts the Captain is asked to amend to; AC-8's failed-run notice reaching the Captain is his to state
+  Mutations run by me on a second throwaway worktree, file restored after each. F2 (no-stdout guard removed): `test_check_exiting_1_with_no_stdout_exits_2` and `test_l2_check_exiting_1_with_no_stdout_exits_2_in_either_mode` fail, 2 of 30. F1 (L2 reads the record at the run revision): `test_a_record_corrected_after_it_was_added_is_still_judged_as_added`, `test_a_record_deleted_and_added_again_is_judged_at_every_add` and the property test fail, 3 of 30; (L2 lists the folder at the run revision): `test_a_pointer_is_judged_against_the_folder_at_the_commit_that_added_it`, `test_a_record_deleted_after_it_was_added_is_still_judged_as_added`, `test_records_after_the_anchor_are_judged_by_part_and_older_ones_are_not` and the property test fail, 4 of 30. Delete-and-re-add (newest add only): `test_a_record_deleted_and_added_again_is_judged_at_every_add` only, 1 of 30. Deleted task (`ls-tree` at the run revision): `test_a_task_deleted_after_its_violating_sentinel_is_still_judged` and the property test, 2 of 30. All four repairs are present and held.
+  One more way, probed on scratch repositories with the runner at d64cf199: renaming a task folder or a record (not an archive move) after its event. L1 is unchanged (a held task stays held, a violating one stays violated after a slug rename). L2 goes from exit 1 (1 judged, 1 violated) to exit 2 `cannot judge: no commit found that added t2/dispatch/implementation_1.md`, and stays exit 2 after the anchor moves past it, because the fail-closed `known` check scans every current record, not only those after the anchor. Red, not green; see F6. The property test covers edit, delete and archive and not a rename.
+  Real history at `e73634e6`, anchors as the acceptance script: AC-4 L1 at `91fae734` 10 events, 0 violated, exit 0; at the root commit 25 events, 15 violated, exit 1, the 15 violating tasks are board-optout, canvas-document-popup, dispatch-and-report-hygiene, ideation-gaps, journey-map-dev2-contract, journey-render-keeps-annotations, learning-serialize-evaluation, migration-and-number-guards, patch-0102, patch-0103, poc-no-migrations, reflow-order, release-please-exclude-paths, release-review, review-cadence. AC-6 L2 at `49da5ddb` 48 events, 10 violated, 15 `violation:` lines, exit 1. Counts the Captain is asked to amend to: AC-4 10/0 and 25/15 (written 9/0 and 25/16), AC-6 48 judged, 10 violated, 15 lines (written 68 and 12). AC-8's failed-run notice: not mine to state.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>` in 102 s; every line matched its expectation (head `d64cf199...`, `commit`, 30 tests OK, 10/0 exit 0, 25/15 exit 1, 48/10 exit 1). `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since 1383c9119eb5328543e2c4df5e562be22b74e355 --require 0017` in the candidate worktree: `16 ADR file(s) checked, 0 legacy`, exit 0. Verdict PASSED at d64cf1995ba24a2fd2efcc2fa9a4dee7031f4d5a; findings F1 and F2 (previous report) are fixed and no longer open; open ones below.
+
+### Findings
+
+- F6, Deferred risk. Renaming a task folder or a dispatch record (not an archive move) after its event turns L2 from exit 1 to a permanent exit 2 for that adopter, even after the anchor moves, because the fail-closed `known` check in `l2_dispatch_record_complete` scans all current records. Trigger evidence: 120 renames touching dispatch records in 1115 commits at the state branch tip, 0 of them other than a move to or from `_archive/`; no promise names a slug rename. It becomes Material when an adopter renames a task slug that has dispatch records; the repair would limit `known` to records whose adding commit is after the anchor.
+- F4, Needs decision (Captain), carried from the previous report. Amend AC-4 to 10/0 and 25/15 and AC-6 to 48 judged, 10 violated, 15 lines; drop or replace the AC-4 real-history falsifier (the tip call also gives 25/15 and 10/0 on this history, so only the AC-3c fixture separates it) and the AC-2 shallow-history falsifier (removing the guard changes the cause text, not the exit code).
+- F5, Deferred risk, carried. `merge guard --rework` write path not re-run by me; the implementation report says a scratch run left `.github/` byte-identical; the previous validation saw only its refusal. Material only if that path writes outside the task's own paths.
+- F2 and F3 of the previous report: F2 fixed (above); F3 gone (the only comment lines the candidate adds are two shebangs).
+
+### Unverified obligations
+
+- That GitHub's failed-run notice reaches the Captain (AC-8, his statement).
+- Private adopters' minutes per run; no run of the workflow at d64cf199 itself (I push nothing).
+- `merge guard --rework` write path (F5).
+- A merge commit on the state branch: the state branch has 0 merges today, and events on a side branch forked before the anchor would never count as after it; not probed.
+
+### Minimal acceptance script
+
+Needs `git`, `python3` and network access to the public repository; writes only under `/tmp/laws-acc`. Run in a fresh bash shell:
+
+```bash
+# 1. Fetch the candidate head and the workflow README that lists `learn`
+rm -rf /tmp/laws-acc && mkdir /tmp/laws-acc && cd /tmp/laws-acc && git clone -q --no-checkout https://github.com/iamcxa/kc-claude-plugins.git cand && git -C /tmp/laws-acc/cand checkout -q --detach d64cf1995ba24a2fd2efcc2fa9a4dee7031f4d5a && git -C /tmp/laws-acc/cand show 1383c9119eb5328543e2c4df5e562be22b74e355:docs/dev2/README.md > /tmp/laws-acc/README.md && git -C /tmp/laws-acc/cand rev-parse HEAD
+# expect: d64cf1995ba24a2fd2efcc2fa9a4dee7031f4d5a
+# 2. Fetch the state branch history (full clone)
+git clone -q --branch spacedock-state/dev2 https://github.com/iamcxa/kc-claude-plugins.git /tmp/laws-acc/state && git -C /tmp/laws-acc/state cat-file -t e73634e6dab6e96eef9b327f489c05ffd3527247
+# expect: commit
+# 3. The runner's own tests
+python3 -B /tmp/laws-acc/cand/kc-dev-flow-2/scripts/test_laws_check.py 2>&1 | tail -3
+# expect: Ran 30 tests in about 45s, then OK
+# 4. L1 from the commit that introduced the observer rule
+python3 -B /tmp/laws-acc/cand/kc-dev-flow-2/scripts/laws_check.py /tmp/laws-acc/state --rev e73634e6dab6e96eef9b327f489c05ffd3527247 --readme /tmp/laws-acc/README.md --anchor L1=91fae734 | head -1; echo "exit ${PIPESTATUS[0]}"
+# expect: L1 observer-before-sentinel: 10 events judged after 91fae734, 0 violated / exit 0
+# 5. L1 from the root commit (every task, including those before the rule)
+python3 -B /tmp/laws-acc/cand/kc-dev-flow-2/scripts/laws_check.py /tmp/laws-acc/state --rev e73634e6dab6e96eef9b327f489c05ffd3527247 --readme /tmp/laws-acc/README.md --anchor L1=166c16d968305ad711481276809433a15fcf8a5e | head -1; echo "exit ${PIPESTATUS[0]}"
+# expect: L1 observer-before-sentinel: 25 events judged after 166c16d96830, 15 violated / exit 1
+# 6. L2 from the anchor the design measured
+python3 -B /tmp/laws-acc/cand/kc-dev-flow-2/scripts/laws_check.py /tmp/laws-acc/state --rev e73634e6dab6e96eef9b327f489c05ffd3527247 --anchor L2=49da5ddb574f9aba739e33b97632338bc69ef7c2 | head -2 | tail -1; echo "exit ${PIPESTATUS[0]}"
+# expect: L2 dispatch-record-complete: 48 events judged after 49da5ddb574f, 10 violated / exit 1
+```
+
+Observed output of the run matched every expect line (steps 3 to 6 above, 102 s total). Does not cover: the GitHub workflow run and its failed-run notice, a rename of a task folder or record (F6), a merge commit on the state branch, or any state branch other than this repository's. Step 3 shows the repairs only as passing tests; the mutations that make them fail were run by me and are listed above.
+
+### Summary
+
+Recommended verdict: PASSED at d64cf1995ba24a2fd2efcc2fa9a4dee7031f4d5a. F1, F2, the delete-and-re-add High and the deleted-task P1 are fixed, and each fails 1 to 4 tests under the mutation I ran. One new Deferred risk (F6, a non-archive rename turns L2 into a permanent exit 2, no real trigger in 1115 commits). The Captain is asked to amend AC-4 to 10/0 and 25/15 and AC-6 to 48 judged, 10 violated, 15 lines (F4), and to state whether the failed-run notice reached him (AC-8). Throwaway worktrees, clones and scratch files removed.
