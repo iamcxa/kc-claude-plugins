@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:names-check-before-dispatch:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 1 (prod-security-review-gates, dev2-laws-check, extension-instruction-reaches-dispatch, names-check-before-dispatch, amendment-form-check)? Approving accepts profile pilot as recommended, and that the five ideations run in parallel with dev2-laws-check's design read by the other four for overlap.",
+  "artifacts": [
+    {
+      "id": "artifact:names-check-before-dispatch:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6fc87af59eee38fa111f1a5770553916a1c79930/names-check-before-dispatch.md",
+      "rev": "sha256:be10354f318be55562062fc12e53c78f003ffe68deaee5fa16dc33ee78200e3d",
+      "mediaType": "text/markdown",
+      "summary": "Seed: the README says FO runs dispatch_records.py --names on the saved record before dispatch build, but nothing runs it; FO ran it late twice (observer on followup-dispatch-records-checked, and implementation-3 of delivery-gate-verdict-form). Candidate routes: a pre-send single-record mode, or folding --names into the validation-time folder run. Recommended profile pilot. Seed check exit 0."
+    }
+  ]
+}
