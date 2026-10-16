@@ -317,6 +317,18 @@ class L2Test(Base):
         self.assertIn("2 events judged", out)
         self.assertIn("record=t/dispatch/a.md", out)
 
+    def test_a_record_deleted_and_added_again_is_judged_at_every_add(self):
+        repo = Repo(self.tmp / "l2-readd")
+        anchor = repo.commit("base", keep="x")
+        first = repo.commit("bad record", t__dispatch__a=record(completion=False))
+        git(repo.path, "rm", "-q", "t/dispatch/a.md")
+        git(repo.path, "commit", "-q", "-m", "delete")
+        repo.commit("corrected record at the same path", t__dispatch__a=record())
+        code, out = laws(repo.path, "--anchor", f"L2={anchor}")
+        self.assertEqual(code, 1, out)
+        self.assertIn("2 events judged", out)
+        self.assertRegex(out, rf"record=t/dispatch/a\.md commit={first[:12]} .*completion recipient")
+
     def test_a_pointer_is_judged_against_the_folder_at_the_commit_that_added_it(self):
         repo = Repo(self.tmp / "l2-sibling")
         anchor = repo.commit("base", keep="x")

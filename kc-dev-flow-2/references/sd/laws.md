@@ -23,8 +23,8 @@ registry differ.
 - **Rule.** Each dispatch record has every part `<package>/scripts/dispatch_records.py` requires and names no package script
   without its directory.
 - **Event.** A `dispatch/<name>.md` record, live, under `_archive/` or since deleted, whose adding commit is after the anchor.
-  The adding commit is the newest `--diff-filter=A` commit with rename detection on, so archiving a task
-  does not make its old records new.
+  Each `--diff-filter=A` commit with rename detection on is one event, so a record deleted and added
+  again is judged at both adds, and archiving a task does not make its old records new.
 - **Judged by.** `<package>/scripts/dispatch_records.py <task folder>` and
   `<package>/scripts/dispatch_records.py --names <records>`, both over the record and its folder as committed at the adding commit, so a later correction or deletion does not clear it.
 - **Bit.** Measured 2026-10-16 on this repository's state branch at its commit `e73634e6`: 15 missing parts

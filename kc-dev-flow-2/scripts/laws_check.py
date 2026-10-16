@@ -147,28 +147,29 @@ def l1_observer_before_sentinel(ctx, anchor):
     return judged, violations, None
 
 
-def newest_additions(state, rev):
-    added = {}
+def additions(state, rev):
+    added = []
     out = git(state, "log", "-M", "--diff-filter=A", "--format=%x00%H", "--name-only", rev, "--", "*/dispatch/*.md")
     for block in out.split("\x00")[1:]:
         commit, *names = block.split("\n")
         for name in names:
             match = DISPATCH.match(name)
             if match:
-                added.setdefault((match[2], match[3]), (commit, name))
+                added.append((commit, name))
     return added
 
 
 def l2_dispatch_record_complete(ctx, anchor):
     script("dispatch_records.py")
     later = after(ctx.state, ctx.rev, anchor)
-    added = newest_additions(ctx.state, ctx.rev)
+    added = additions(ctx.state, ctx.rev)
+    known = {DISPATCH.match(path).group(2, 3) for _, path in added}
     for path in git(ctx.state, "ls-tree", "-r", "--name-only", ctx.rev).split("\n"):
         match = DISPATCH.match(path)
-        if match and (match[2], match[3]) not in added:
+        if match and match.group(2, 3) not in known:
             raise Cannot(f"no commit found that added {path}")
     groups = {}
-    for commit, path in added.values():
+    for commit, path in added:
         if commit in later:
             groups.setdefault((commit, path.rsplit("/dispatch/", 1)[0]), []).append(path)
     judged, hit = 0, {}
