@@ -57,7 +57,11 @@ def run_check(name, *args):
     if code not in (0, 1):
         first = (out or err).strip().splitlines()
         raise Cannot(f"{name} exited {code}: {first[0] if first else 'no output'}")
-    return code, [line for line in out.splitlines() if line.strip()]
+    lines = [line for line in out.splitlines() if line.strip()]
+    if code == 1 and not lines:
+        note = (err.strip().splitlines() or ["stderr empty"])[-1]
+        raise Cannot(f"{name} exited 1 with no output: {note}")
+    return code, lines
 
 
 def after(state, rev, anchor):
@@ -151,7 +155,7 @@ def newest_additions(state, rev):
         for name in names:
             match = DISPATCH.match(name)
             if match:
-                added.setdefault((match[2], match[3]), commit)
+                added.setdefault((match[2], match[3]), (commit, name))
     return added
 
 
@@ -159,24 +163,22 @@ def l2_dispatch_record_complete(ctx, anchor):
     script("dispatch_records.py")
     later = after(ctx.state, ctx.rev, anchor)
     added = newest_additions(ctx.state, ctx.rev)
-    folders = {}
     for path in git(ctx.state, "ls-tree", "-r", "--name-only", ctx.rev).split("\n"):
         match = DISPATCH.match(path)
-        if match:
-            folders.setdefault(path.rsplit("/dispatch/", 1)[0], []).append((path, match[2], match[3]))
+        if match and (match[2], match[3]) not in added:
+            raise Cannot(f"no commit found that added {path}")
+    groups = {}
+    for commit, path in added.values():
+        if commit in later:
+            groups.setdefault((commit, path.rsplit("/dispatch/", 1)[0]), []).append(path)
     judged, hit = 0, {}
-    with tempfile.TemporaryDirectory() as tmp:
-        for folder, records in sorted(folders.items()):
-            mine = {}
-            for path, slug, name in records:
-                if (slug, name) not in added:
-                    raise Cannot(f"no commit found that added {path}")
-                (Path(tmp) / path).parent.mkdir(parents=True, exist_ok=True)
-                (Path(tmp) / path).write_text(git(ctx.state, "show", f"{ctx.rev}:{path}"))
-                if added[(slug, name)] in later:
-                    mine[name] = (path, added[(slug, name)])
-            if not mine:
-                continue
+    for (commit, folder), paths in sorted(groups.items()):
+        with tempfile.TemporaryDirectory() as tmp:
+            for path in git(ctx.state, "ls-tree", "--name-only", commit, f"{folder}/dispatch/").split("\n"):
+                if DISPATCH.match(path):
+                    (Path(tmp) / path).parent.mkdir(parents=True, exist_ok=True)
+                    (Path(tmp) / path).write_text(git(ctx.state, "show", f"{commit}:{path}"))
+            mine = {path.rsplit("/", 1)[1]: (path, commit) for path in paths}
             judged += len(mine)
             code, lines = run_check("dispatch_records.py", str(Path(tmp) / folder))
             for line in lines if code == 1 else []:
@@ -185,7 +187,7 @@ def l2_dispatch_record_complete(ctx, anchor):
                     raise Cannot(f"dispatch_records.py exited 1 with output this runner does not parse: {line}")
                 if match[1] in mine:
                     hit.setdefault(mine[match[1]], []).append(match[2])
-            files = [str(Path(tmp) / path) for path, _ in mine.values()]
+            files = [str(Path(tmp) / path) for path in paths]
             code, lines = run_check("dispatch_records.py", "--names", *files)
             for line in lines if code == 1 else []:
                 match = re.fullmatch(r"(.+\.md):(\d+): (bare package script name \S+)", line)

@@ -178,6 +178,25 @@ class ExitContractTest(Base):
         self.assertEqual(code, 2)
         self.assertIn("output this runner does not parse", out)
 
+    def test_check_exiting_1_with_no_stdout_exits_2(self):
+        repo, anchor = self.violating()
+        stub = "import sys\nprint('crash note', file=sys.stderr)\nsys.exit(1)\n"
+        code, out = self.l1(repo, anchor, runner=sandbox(self.tmp / "q1", override={"observer_check.py": stub}))
+        self.assertEqual(code, 2, out)
+        self.assertIn("observer_check.py exited 1 with no output: crash note", out)
+
+    def test_l2_check_exiting_1_with_no_stdout_exits_2_in_either_mode(self):
+        repo = Repo(self.tmp / "q2")
+        anchor = repo.commit("base", keep="x")
+        repo.commit("record", t__dispatch__a=record())
+        for mode, argv_test in (("folder", "'--names' not in sys.argv"), ("names", "'--names' in sys.argv")):
+            stub = ("import sys\nif " + argv_test + ":\n    print('crash note', file=sys.stderr)\n    sys.exit(1)\n"
+                    "sys.exit(0)\n")
+            runner = sandbox(self.tmp / f"q2-{mode}", override={"dispatch_records.py": stub})
+            code, out = laws(repo.path, "--anchor", f"L2={anchor}", runner=runner)
+            self.assertEqual(code, 2, f"{mode}: {out}")
+            self.assertIn("dispatch_records.py exited 1 with no output: crash note", out)
+
     def test_l1_without_readme_exits_2(self):
         repo, anchor = self.violating()
         code, out = laws(repo.path, "--anchor", f"L1={anchor}")
@@ -273,10 +292,40 @@ class L2Test(Base):
         for name, part in (("no_main", "completion recipient"), ("no_root", "'Package root:'"),
                            ("bare", "bare package script name observer_check.py"),
                            ("pointer", "needs a checklist of its own")):
-            self.assertRegex(out, rf"record=_archive/t/dispatch/{name}\.md .*{re.escape(part)}")
+            self.assertRegex(out, rf"record=t/dispatch/{name}\.md .*{re.escape(part)}")
         self.assertNotIn("old_bad", out)
         self.assertNotIn("moved_bad", out)
         self.assertNotIn("dispatch/complete.md", out)
+
+    def test_a_record_corrected_after_it_was_added_is_still_judged_as_added(self):
+        repo = Repo(self.tmp / "l2-fixed")
+        anchor = repo.commit("base", keep="x")
+        added = repo.commit("bad record", t__dispatch__a=record(completion=False))
+        repo.commit("corrected", t__dispatch__a=record())
+        code, out = laws(repo.path, "--anchor", f"L2={anchor}")
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, rf"record=t/dispatch/a\.md commit={added[:12]} .*completion recipient")
+
+    def test_a_record_deleted_after_it_was_added_is_still_judged_as_added(self):
+        repo = Repo(self.tmp / "l2-gone")
+        anchor = repo.commit("base", keep="x")
+        repo.commit("bad record", t__dispatch__a=record(completion=False), t__dispatch__b=record())
+        git(repo.path, "rm", "-q", "t/dispatch/a.md")
+        git(repo.path, "commit", "-q", "-m", "delete")
+        code, out = laws(repo.path, "--anchor", f"L2={anchor}")
+        self.assertEqual(code, 1, out)
+        self.assertIn("2 events judged", out)
+        self.assertIn("record=t/dispatch/a.md", out)
+
+    def test_a_pointer_is_judged_against_the_folder_at_the_commit_that_added_it(self):
+        repo = Repo(self.tmp / "l2-sibling")
+        anchor = repo.commit("base", keep="x")
+        repo.commit("records", t__dispatch__a=record(), t__dispatch__b=record(checklist="Same checklist as a."))
+        git(repo.path, "rm", "-q", "t/dispatch/a.md")
+        git(repo.path, "commit", "-q", "-m", "delete the sibling")
+        code, out = laws(repo.path, "--anchor", f"L2={anchor}")
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, r"record=t/dispatch/b\.md .*needs a checklist of its own")
 
     def test_a_record_without_a_commit_that_added_it_cannot_be_judged(self):
         repo = Repo(self.tmp / "l2-none")
