@@ -53,6 +53,17 @@ gates:
                 id: briefing:names-check-before-dispatch:validation:attempt-1:revision-1
                 digest: sha256:eb3e8678867f7fc8690266b7016a20da1b797eb5c8e4e45a06ffeeafc6f43c09
                 room-ref: ./names-check-before-dispatch/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:names-check-before-dispatch:validation:1
+                briefing: briefing:names-check-before-dispatch:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-16T08:55:34.370756Z"
+                decision: approve
+                reason: Captain approved delivery (「Ａ准」) after FO presented the three batch-1 delivery gates together; as each gate question states, this accepts FO's stated recommendations and covers later external-review rounds on the PR.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-16T03:14:56Z
 worktree: .worktrees/spacedock-ensign-names-check-before-dispatch
 pr: iamcxa/kc-claude-plugins#649
