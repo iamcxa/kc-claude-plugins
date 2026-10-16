@@ -364,3 +364,22 @@ Observed: SHA `fee6662cf255335e353882c5f59e1a11334ff497`; `Ran 35 tests` then `O
 ### Summary
 
 PASSED at fee6662c: the Codex P2 is fixed, its test fails under four lookahead mutations (each on the side it guards), and the stacked diff after #649 is two commits touching only `dispatch_records.py` and `test_dispatch_records.py`. One new Polish item (`/` after the name passes); no Material finding.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Reproduce the Codex P2 (review:5544560816, #652 fee6662c) as a failing test
+  `test_only_listed_followers_end_the_script_path`: after the root-substituted path, 18 followers (`/extra`, `/`, `:`, `;`, `=`, `]`, `}`, `>`, `|`, `&`, `\`, `#`, `?`, `!`, `....`, `'x`, `` `)x ``, `.)x`) must exit 1 "worker instruction is absent"; under the old lookahead `(?![\w~-]|\.\w)` all 18 fail (exit 0).
+- DONE: Replace the exclusion lookahead with an allowlist, with a test for each allowed and each refused follower
+  Commit 8d051de7, two files: lookahead is now `(?=[.,`)"']{0,3}(?:\s|$))` (written with `\x22 \x27` and doubled braces in the rf-string). Allowed subtests: space, tab, `.` `,` backtick `)` `"` `'`, stacked `..` `` `) `` `.)` `.,` `` `). `` `"` + backtick + `)`, plus path at end of text, end of line, and `.` at end of line.
+- DONE: Show the test pinning the run length
+  Suite 36 OK at 8d051de7. Mutating `{0,3}` to `{0,2}` fails 2 subtests (the two three-character stacks); `{0,4}` fails 1 (`....`).
+- DONE: Rerun the AC-7 corpus read-only
+  `/tmp/replay_ext.py`, base fee6662c vs candidate 8d051de7: tallies and per-record detail identical (relay 3 pass / 8 absent / 1 unsubstituted; web 1 absent; this repo 15 pass / 1 absent). No passing record flipped.
+- DONE: roborev evidence= line
+  `clean on 8d051de72; evidence=roborev:717` (`--base a4217cd3`).
+- DONE: push without force, stacked on #649; CI on new head
+  Plain push fee6662c..8d051de7, base a4217cd3 unchanged. lint-skills exit 0; `comment_ratio.py` 171 code / 0 comment. Checks on 8d051de7: unit tests 1m2s, route gate 8s, version parity 55s, GitGuardian, all pass. No PR comment, review request or ready mark.
+
+### Summary
+
+A path in a dispatch record now counts as the worker instruction only when whitespace, end of text, or up to three of `. , ` ) " '` follow it, so `roborev_gate.py/extra` and every other unlisted follower is refused. The first attempt failed 29 tests because `{0,3}` inside the rf-string was read as an f-string field; doubling the braces fixed it.
