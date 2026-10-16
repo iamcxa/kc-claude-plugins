@@ -63,152 +63,217 @@ Filed on the Captain's 「同意兩件」 (2026-10-14), after FO compared Bend 2
 
 ## Design
 
-The ruling: ship one package-owned laws file and one runner, `scripts/laws_check.py`, that calls the checks dev2 already has on events in the committed `spacedock-state/dev2` history, run by a GitHub Actions workflow on each push to that branch. v1 carries two laws, and each law judges only events after an anchor commit the adopter names for it.
+The ruling: `scripts/laws_check.py` judges only the events that the commits of one push add, the `before..after` range GitHub reports for a push to the state branch, and reports each violation once, in that push's run; the next push is judged on its own commits, so its run is green again whether or not the violation was repaired. Captain amendment 1 (「就按照新的建議」) withdraws the guarantee that a committed violation stays red, and the per-law anchors that served it go with it.
 
 ### Chain check (2026-10-16)
 
-- **Spacedock 0.27.2** (`spacedock --help`, `spacedock gate validate`, `spacedock state --help`): no command checks workflow-state invariants over history. `gate` lists a `validate` in the top-level help and answers "unknown subcommand (want: prepare|withdraw|record|consume)"; `doctor` checks plugin and binary compatibility only. `spacedock status` exiting 0 on a state checkout is Spacedock's own schema check and stays Spacedock's. Nothing to reuse; no Spacedock change is needed.
-- **kc-dev-flow-2 0.23.0** (`origin/main` 1383c911): no laws file and no workflow touching the state branch (`.github/workflows/kc-dev-flow-2-tests.yml` runs on PRs and `push: main`). The checks exist and work, but each runs only when FO or a worker runs it: `observer_check.py <state> <slug> [--rev REV]` already reads a past commit, `dispatch_records.py <task folder>` and `--names <record>...`, `design_surfaces.py check <task>`, `delivery_gate.py check`. `pr_watch.py tasks` is FO's idle-hook runner for the PR-bound ones. `decision_ledger.py` (`split_task`, `ledger`) is the one script that already walks active and archived task files read-only; the runner imports `split_task` for frontmatter instead of writing a fourth parser.
-- **Siblings** (read-only, `gh api`, 2026-10-16): `spacedock-dev/subspace-relay` and `spacedock-dev/subspace-web` (private) each have a `spacedock-state/dev2` branch (relay also `dev`, `dev2-poc`, `plan`); `contents/.github?ref=spacedock-state/dev2` answers 404 on both, so neither runs a workflow on its state branch. Trunk workflow files were listed by name only (`ci.yml`, `release.yml`, relay also deploy and release-gate files), not read. qnow has no local clone on this machine and was not probed.
-- **Bounded existing-code check:** the checks above are complete and unit-tested; what is missing is a run that does not depend on FO. Use them unchanged, through subprocess, and add only the runner, the laws file and a workflow template. No script is replaced.
-- **ADRs and rulings read:** ADR 0014 records that `workflow_checkout.py` is prose-enforced and says to reopen "if Spacedock gains a pre-dispatch hook"; ADR 0009 cites SWE-CC (agents violate 43.1% of applicable repository policies, nearly half of them in the process) and makes finding problems automatically the direction. `git -C <state> grep -n 'Override:'` (2026-10-16): every hit is prose in a task body, none is a gate record; no past ruling goes against CI on the state branch or against a check that adds no FO words.
+- **Spacedock 0.27.2** (`spacedock --help`, `spacedock state --help`, `spacedock gate validate`): no command checks workflow-state invariants over history. `gate` lists `validate` in the top-level help and answers "unknown subcommand"; `doctor` checks plugin and binary compatibility only. Nothing to reuse; no Spacedock change.
+- **kc-dev-flow-2 0.23.0** (`origin/main` 1383c911, still the head of `main` by `gh api repos/iamcxa/kc-claude-plugins/commits/main`): no laws file and no workflow on the state branch; the checks exist and run only when FO or a worker runs them: `observer_check.py <state> <slug> [--rev REV]`, `dispatch_records.py <task folder>` and `--names <record>...`, `design_surfaces.py check`, `delivery_gate.py check`. `decision_ledger.py` (`split_task`, `unquote`) is the one frontmatter parser the runner reuses.
+- **Siblings** (read-only `gh api`): `spacedock-dev/subspace-relay` and `spacedock-dev/subspace-web` each have a `spacedock-state/dev2` branch with no `.github/` on it (404). qnow has no local clone here and was not probed.
+- **Existing code:** PR #651 (head d64cf199, Draft, five checks green) is the existing implementation of the anchor design; this redo reuses it. Disposition by symbol is under `### What PR #651 becomes`.
+- **Rulings read:** ADR 0009 (SWE-CC: agents violate 43.1% of applicable repository policies; finding problems automatically is the direction); ADR 0014 (a prose-enforced check reopens if a hook arrives). `git -C <state> grep -n 'Override:'`: no gate record bears on this. The first ideation gate (batch 1) accepted a push-only trigger and two laws as recommended, and amendment 1 does not touch either.
 
 ### PRFAQ
 
-**Press release (future).** From the next kc-dev-flow-2 release, an adopter whose state branch carries the one-file workflow gets a red GitHub run within a minute of a push that breaks a dev2 law: a task reached `pr: pr-merge:N` with no observer report committed beforehand, or a worker dispatch record lacks a part the README requires. The run names the law, the task, the commit and the check's own words. FO's reading does not grow: nothing in the README, the idle mod or any script output changes. Each law judges only events after an anchor commit written in the workflow file, so adopting it never starts red over history that predates the rule.
+**Press release (future).** From the next kc-dev-flow-2 release, an adopter whose state branch carries the one-file workflow gets a red GitHub run within seconds of a push that adds a dev2 violation: a task first written as `pr: pr-merge:N` with no observer report committed beforehand, or a dispatch record added with a missing required part. The run names the law, the task or record, the commit and the check's own words. The next push is judged only on what it adds, so the run after a violation is green again, and turning the workflow on starts green: its first range holds the one commit that adds the workflow file. FO reads no more than today.
 
 **FAQ**
 
-- *Why did FO's own checks not catch these?* They run when FO remembers. On 2026-10-14 a relay FO archived a task with no observer report, FO built dispatches before running `dispatch_records.py --names`, and FO answered a chat cue without running Spacedock's hooks. Two of the three leave a committed trace; the third (hooks skipped) leaves none, so no history law can see it.
-- *Does CI stop the mistake?* No. It runs after the push, so it detects a violation; it cannot stop `merge guard` or a dispatch already built. Prevention stays with `names-check-before-dispatch`, `extension-instruction-reaches-dispatch` and the merge-time observer check.
-- *Why is a red run sticky?* An event is a committed fact: a record or a sentinel cannot be un-written. A violation stays red until the anchor moves past it. Moving the anchor is the Captain's acceptance, recorded as a commit to the workflow file on the state branch. A waiver list is the next step only if moving the anchor hides things that bite.
-- *Who sees a red run?* v1: GitHub's failed-run notification to the account that pushed (D3). Not verified that it reaches the Captain; AC-8 asks him.
-- *What does a law cost to add?* One section in `laws.md`, one function in the runner, one anchor flag in each adopter's workflow file. A law with no anchor flag is printed as `not judged`, so a release that adds a law does not turn an adopter red.
-- *Is this a new platform?* No: the runner has no scheduling, state or network use; the workflow reads only the repository and calls `laws_check.py`.
+- *Why not keep the run red until it is fixed?* The Captain ruled it out (amendment 1). What gets worse: a red run nobody sees disappears from view at the next push. A violation is a committed fact and no later commit un-writes it; a repair is a new commit that the next run simply does not judge.
+- *What counts as "the events a push adds"?* The commits in `before..after`, each read at its own commit: a task file whose parsed `pr:` becomes a `pr-merge:N` sentinel in that commit (L1), a dispatch record added in that commit (L2). A bad event added and corrected inside the same push is still red, because the adding commit is what was committed.
+- *Does CI stop the mistake?* No. It runs after the push; it cannot stop `merge guard` or a dispatch already built. Prevention stays with the merge-time observer check, `names-check-before-dispatch` and `extension-instruction-reaches-dispatch`.
+- *Why no `concurrency` block?* Each run owns one range. A cancelled run is a range nobody judges, and a concurrency group keeps at most one pending run, so a middle push could be dropped (GitHub documentation, not probed here; AC-18 probes two back-to-back pushes).
+- *Can I still audit the old history?* Yes, once, by hand: the same command with `--before <root commit>` replays every event ever added. That is an audit, not a CI check, and it is expected to report old violations.
+- *Who sees a red run?* GitHub's failed-run notice to the pushing account (D1). Not verified to reach the Captain.
+- *What does a new law cost?* One section in `laws.md` and one function in the runner. Because a law judges only pushes made after the adopter pins the release that carries it, a release that adds a law turns no adopter red on history.
 
 ```mermaid
 flowchart TD
-  P[FO or worker pushes a state commit<br/>to spacedock-state/dev2] --> W[GitHub Actions: dev2-laws<br/>push on the named state branch]
+  P[FO or a worker pushes state commits<br/>to the one named state branch] --> W[GitHub Actions dev2-laws<br/>one run per push, no concurrency group]
   W --> C1[checkout state branch, full history]
   W --> C2[checkout package at a pinned commit]
   W --> C3[checkout trunk README only]
-  C1 --> R[laws_check.py with one anchor per law]
+  C1 --> R[laws_check.py --before event.before --after event.after --readme README]
   C2 --> R
   C3 --> R
-  R --> G{each law: anchor present,<br/>reachable, history complete?}
-  G -->|no| X[cannot tell: exit 2, red]
-  G -->|yes| L1[L1: for each task, first commit<br/>after anchor with pr: pr-merge:N<br/>run observer_check.py --rev that commit]
-  G -->|yes| L2[L2: each dispatch record added<br/>after anchor, run dispatch_records.py<br/>folder and --names]
+  R --> G{before and after are commits,<br/>every range commit has a parent here?}
+  G -->|no: new branch, old head gone, shallow clone| X[cannot judge: exit 2, red]
+  G -->|yes| E[walk before..after, no merge commits:<br/>diff-tree -M per commit]
+  E --> L1[L1: task file whose pr: becomes pr-merge:N<br/>run observer_check.py --rev that commit]
+  E --> L2[L2: dispatch record added in that commit<br/>run dispatch_records.py folder and --names<br/>on the tree at that commit]
   L1 --> O{any violation?}
   L2 --> O
   O -->|yes| V[exit 1, red: law, task, commit,<br/>the script's own line]
   O -->|no| OK[exit 0, green: events judged per law]
   V --> N[GitHub failed-run notice<br/>to the pushing account]
   X --> N
-  N --> CAP[Captain decides: repair, move anchor, or ignore]
-  LOC[Anyone locally or validation:<br/>same command on a clone] --> R
+  N --> CAP[Captain: repair by a new commit, or ignore]
+  CAP --> NEXT[next push: new range, judged on its own commits,<br/>earlier violation not re-judged]
+  LOC[anyone on a clone: same command with an explicit range,<br/>or --before root for a one-off audit] --> R
 ```
 
 ### The laws in v1
 
-| Id | Rule | Event, judged by | Bite | Anchor to use |
-| --- | --- | --- | --- | --- |
-| L1 `observer-before-sentinel` | When the workflow README lists `learn`, an observer report (or its `observer not run: <reason>` line) is committed no later than the commit that first writes `pr: pr-merge:<N>` in the task's frontmatter. | The first such commit per task, found by reading each candidate commit's parsed frontmatter, not by substring; judged by `observer_check.py <state> <slug> --rev <commit>`. | A relay FO archived a task with no observer report (2026-10-14); roborev:653 on `fo-lifecycle-mod` names this law as `dev2-laws-check`'s first. In this state branch `observer-before-merge-guard` committed its report after its sentinel: `observer_check.py` at tip passes it, `--rev` at the sentinel fails it. | `91fae734` (that task's own sentinel commit) |
-| L2 `dispatch-record-complete` | Each dispatch record has every part `dispatch_records.py` requires and no bare package script name. | Each `<task>/dispatch/*.md` whose adding commit is after the anchor; judged by `dispatch_records.py <task folder>` and `dispatch_records.py --names <records>`. | 5 bare-name, 7 missing completion-to-`main`, 4 missing `Package root:` hits in 12 of 68 records added since `49da5ddb` (Measurements). `names-check-before-dispatch` records the late `--names` catch on at least three dispatches. | D1 recommends the tip at adoption, not `49da5ddb` |
+| Id | Rule | Event, judged by | Bite |
+| --- | --- | --- | --- |
+| L1 `observer-before-sentinel` | When the workflow README lists `learn`, an observer report (or its `observer not run: <reason>` line) is committed no later than the commit that writes `pr: pr-merge:<N>` in a task's frontmatter. | A commit in the range where a top-level or `_archive/` `<slug>.md` has a parsed `pr:` sentinel and its first parent's file (followed through a rename) did not. Judged by `observer_check.py <state> <slug> --rev <commit>`. | A relay FO archived a task with no observer report (2026-10-14); roborev:653 on `fo-lifecycle-mod` names this law as this task's first. |
+| L2 `dispatch-record-complete` | Each dispatch record has every part `dispatch_records.py` requires and names no package script without its directory. | A commit in the range that adds a `<task>/dispatch/<name>.md` (status A, or a rename from a path that is not a dispatch record). Judged by `dispatch_records.py <task folder>` and `--names <records>` over the record and its folder as committed at that commit. | 15 missing parts in 10 of 48 records added after `49da5ddb` at `e73634e6` (4 bare script names, 7 without the completion recipient `main`, 4 without an absolute `Package root:`). |
 
-**Eligible, not wired in v1** (each a one-section addition later; D4 asks whether to wire them now):
+Bound changes from #651: L1 judges every transition into a sentinel, so a `merge guard --rework` that clears `pr:` and a later sentinel are judged again (the observer report from the first pass satisfies it); the first-per-task bound is gone. An archive move or a task-folder rename is no event for either law, by rename detection (`-M`).
 
-- *Delivery head equals dispatched candidate.* Grammar it would assert: the committed validation briefing's `question` carries `head <7-40 hex>` and that value prefix-matches a `Candidate: <40-hex>` line of the latest `validation-N.md` at that commit, via `delivery_gate.py check ... --head`. Measured 2026-10-16 at `e73634e6`: of 39 committed validation briefings, 13 carry a `head <hex>` token and 1 task (`delivery-gate-verdict-form`) has a `Candidate:` line in a validation record header, so after any sensible anchor the in-scope set is about 0. It would be green because it judged nothing, with no consumer to bite yet.
-- *`design_surfaces.py check` on tasks.* At `e73634e6`, 3 of 25 archived tasks fail (all lack `## FO alignment`, a rule they predate) `journey-server-host-pilot.md` ends in a Python traceback (`design-surfaces-task-dir-crash` is filed), and live `pr-review-lite-value-pilot.md` lacks a `Surfaces:` line. `amendment-form-check` states its new rules add 8 corpus errors on closed tasks, which cannot be repaired. No recorded case of FO skipping the run.
-- *`delivery_gate.py` at the ask* needs the live PR head from GitHub; stays FO-run.
-- *`can't tell` observer rules* (`chat-only-evidence-observer-blind`): the rules leave no committed record, so a history law cannot judge them either. That task decides whether each names a record; each one that does becomes a law row.
+Eligible, not wired (unchanged from the first gate, D4 there): delivery head equals the dispatched candidate (13 of 39 committed validation briefings carry a `head <hex>` token, 1 task has a `Candidate:` header line, so it would judge about 0 events); `design_surfaces.py check` on tasks (3 of 25 archived tasks fail on a rule they predate; `design-surfaces-task-dir-crash` filed); `delivery_gate.py` at the ask needs the live PR head and stays FO-run. Each is one section and one function when wanted, and with no anchors a new law needs no per-adopter setting.
 
 ### What the runner does
 
-`python3 <package>/scripts/laws_check.py <state checkout> [--rev REV] [--readme FILE] --anchor L1=<sha> [--anchor L2=<sha>]`
+`python3 <package>/scripts/laws_check.py <state checkout> --before <commit> [--after <commit>] [--readme FILE]` (`--after` defaults to `HEAD`).
 
-- Reads committed bytes only (`git show`, `git ls-tree`, a `git archive` of REV into a temp directory for the folder-mode script), never the working tree; changes nothing.
-- Prints one line per law, `L1 observer-before-sentinel: <N> events judged after <anchor>, <M> violated`, then one `violation:` line per violation naming the law, the task or record, the commit and the first line of the check's own output. A law with no `--anchor` prints `not judged, no anchor`.
-- Exit 0 every anchored law held; 1 some law violated; 2 something could not be judged (fail closed, red), even when another law also failed; both kinds print.
-- Exit 2 causes (each its own test): history shallow (`git rev-parse --is-shallow-repository`), REV or an anchor not a commit, an anchor not an ancestor of REV (otherwise every event would count as after it), no anchor given, a script missing, a check exiting 2 or printing a Python traceback, a check exiting 1 with output that matches neither line shape the runner parses, L1 anchored with no `--readme` or a README whose `extensions:` cannot be read.
-- L1 is judged only when the README lists `learn`; otherwise it prints `0 events judged (README lists no learn)`.
-- "After the anchor" means a strict descendant of it, by `git merge-base --is-ancestor`. `origin/spacedock-state/dev2` has 1024 commits, 0 merges.
-- Bounds: first sentinel per task only (a `merge guard --rework` that later rewrites `pr:` is not judged again); a record's adding commit is its newest `--diff-filter=A` commit.
+- Reads committed bytes only (`git rev-list`, `git diff-tree -r -M`, `git show`, `git ls-tree`), never the working tree; changes nothing.
+- Prints one line per law, `L1 observer-before-sentinel: <N> events judged in <before12>..<after12>, <M> violated`, then one `violation:` line per violation naming the law, the task or record, the commit and the first line of the check's own output.
+- Exit 0 every law held; 1 some law violated; 2 something could not be judged (fail closed, red), even when another law also failed; both kinds print.
+- L1 is judged only when the README lists `learn` (`readme_extensions`, kept); otherwise it prints `0 events judged (README lists no learn)`. The README is the one supplied at run time, which is the rule in force when the push was judged. This answers the held Cycle 3 P1 by construction: a README change affects pushes after it and cannot turn a past push green, because no past push is judged again. The limit: a re-run or a local run supplied with a different README can give a different verdict for the same range.
+
+Edge cases, each its own test, each a decision rather than a silent default:
+
+| Case | Behaviour | Why |
+| --- | --- | --- |
+| `--before` all zeros (branch creation) or not a commit in this clone | exit 2, `cannot judge: --before <x> names no commit` | fail closed; a state branch is created once and its first push carries no range |
+| Force push, `before` present but not an ancestor of `after` | judge `before..after`, the commits new to the branch | the range is still what the push added; dropped commits are not judged |
+| Force push, `before` no longer fetchable | exit 2, same cause as above | cannot tell what the push added |
+| A range commit with no parent in this clone (shallow boundary) | exit 2, `cannot judge: <sha> has no parent here` | otherwise `diff-tree --root` would read the boundary commit's whole tree as added and flood the run with old events |
+| `git rev-parse --is-shallow-repository` is true | not by itself an error | measured: this state checkout reports true because the repository's `.git/shallow` lists one commit, yet the state branch reaches its root commit; #651's guard would exit 2 here, falsely |
+| Merge commits in the range | the merge itself holds no event; every side-branch commit in `before..after` is judged at its own tree | the state branch has 0 merges today; this answers the old unverified item about a side branch forked before an anchor |
+| No `--readme` while judging L1 | exit 2 | as in #651 |
+| A check crashes, exits 2, exits 1 with no stdout, or exits 1 with a line the runner does not parse | exit 2 naming the check | kept from #651 (`run_check`); also covers the line `extensions not checked: ...` that `dispatch_records.py` prints in #652 |
 
 ### Workflow template and run point
 
-`references/sd/state-laws.workflow.yml`, copied by FO onto the state branch at `.github/workflows/dev2-laws.yml` with the adopter's anchors and a pinned package commit. Trigger `push` on the one named state branch (not `spacedock-state/**`; relay has four state branches), `concurrency` with `cancel-in-progress`, `permissions: contents: read`, no secrets. Steps: checkout state (full history), checkout `iamcxa/kc-claude-plugins` at a pinned commit of a published `kc-dev-flow-2-vX.Y.Z` tag for the scripts (public, so private adopters need no token; the state branch carries no scripts), sparse checkout of trunk's `docs/dev2/README.md` for `extensions:`, run the command above. Rolling this out is a separate state-branch commit after release, on the Captain's word, once per adopter; it is not part of this task's PR.
+`references/sd/state-laws.workflow.yml`, copied by FO onto the state branch at `.github/workflows/dev2-laws.yml` with the adopter's branch name, trunk workflow directory and a pinned package commit. Trigger `push` on the one named state branch (relay has four state branches), `permissions: contents: read`, no secrets, no `concurrency` block. Steps: checkout state with `fetch-depth: 0`; checkout `iamcxa/kc-claude-plugins` at a pinned commit of a published `kc-dev-flow-2-vX.Y.Z` tag; sparse checkout of trunk's `<workflow dir>/README.md`; run `laws_check.py state --before ${{ github.event.before }} --after ${{ github.event.after }} --readme trunk/<workflow dir>/README.md`. Rolling it out is a separate state-branch commit on the Captain's word, once per adopter, not part of this PR. GitHub's "Re-run" reuses the same event, so the same range. A workflow whose state is inline in trunk has no state branch to trigger on.
 
-The run point for ideation and validation is the same command run on a clone: validation runs it for AC-4 and AC-6, and anyone can run it before a gate.
+The run point for ideation and validation is the same command on a clone with an explicit range, so FO's reading does not grow.
 
-**Cost.** Pushes to the state branch are bounded by its commit count, 1024 in the 30 days to 2026-10-16 (`git rev-list --count origin/spacedock-state/dev2`); runs per month are not measured. Measured wall time per check on this machine, largest task: `dispatch_records.py` 1.17 s, `observer_check.py` 0.70 s; end-to-end job time is not measured and AC-12 requires it from the probe runs. `kc-claude-plugins` is public; relay and subspace-web are private, so their minutes are billed and not measured here.
+Profile check (`references/profiles/pilot.md` return triggers): a `push` trigger answers a push; a `schedule:` cron would be unattended recurring operation and is not used. No production data or credentials, no consumer-required migration, no release or rollback duty: a red run puts no one on call.
 
-**Profile check** (`references/profiles/pilot.md` return triggers). A `push` trigger answers a push; a `schedule:` cron would be unattended recurring operation and needs a profile ruling, so v1 has none. No production data or credentials, no consumer-required migration (adopters opt in by adding one file), no release or rollback duty: a red run puts no one on call.
+### What PR #651 becomes (head d64cf199, read only)
+
+| Piece | Disposition |
+| --- | --- |
+| `run`, `git`, `Cannot`, `script`, `run_check` (traceback, exit 2, exit 1 with no stdout) and the exit 0/1/2 contract in `main` | kept |
+| L2's judging body: write the record and its folder from the adding commit, run `dispatch_records.py` folder and `--names`, parse `<record>.md: needs ...` and `<file>:<line>: bare ...` | kept; its input changes from `additions()` over all history to the range's added records |
+| `frontmatter_pr`, `SENTINEL`, `readme_extensions`, `ledger` | kept |
+| `after()` (ancestry set), `sentinel_slugs`, `first_sentinel`, `additions`, the `known` all-records scan in `l2_dispatch_record_complete`, `commit_of` for anchors | rewritten as one walk over `rev-list --no-merges before..after` with `diff-tree -r -M --name-status` per commit |
+| `--anchor`, `judge()`'s anchor checks, the shallow-history guard, "not judged, no anchor" | deleted; replaced by `--before/--after` and the parentless-commit guard |
+| F6 (a slug rename turns L2 into a permanent exit 2) | gone with the `known` scan; a rename is no event |
+| `laws.md` | skeleton and the registry-parity test kept; the opening paragraph, each Event line and L1 Bounds rewritten; the anchor and "stays red" sentences deleted |
+| `state-laws.workflow.yml` | pinned actions, package checkout, trunk README checkout kept; `concurrency`, the anchor flags deleted; `--before/--after` added |
+| `adoption.md` section "State laws check" | rewritten: range rule, no anchors, green on adoption, red once per violation, detects only, rollout on the Captain's word, unverified items |
+| `.github/workflows/kc-dev-flow-2-tests.yml` step for `test_laws_check.py` | kept |
+| ADR 0017 (reserved for this task) | its #651 decision, "judge only events after an anchor", is replaced by the draft below; no new number |
+| `test_laws_check.py` (30 tests) | 18 kept, retargeted to a range: registry parity; held 0 and violated 1; missing script; check exit 2; traceback; unparseable line; no stdout in L1 and in L2 either mode; L1 without README; exit 2 wins; L1 held and violated, report-after-sentinel against the tip, quoted sentinel, README without `learn`; L2 corrected-after, deleted-after, delete and re-add, pointer folder at the adding commit. 7 rewritten: no anchor becomes a missing `--before`; rev not a commit becomes before or after not a commit; a sentinel at or before the anchor becomes a sentinel in an earlier push; archive keeps its sentinel commit becomes an archive move is no event; deleted task becomes a task deleted later in the same push; records after the anchor becomes records added by this push; the property test becomes AC-17. 5 deleted: unknown law (no `--anchor` to misname one), shallow history, anchor not a commit, anchor not an ancestor, a record with no adding commit (the `known` scan). New: a parentless range commit, a violation in one push absent from the next, adoption starting green, a force push, a merge commit, a `--rework` re-sentinel judged again |
+
+### What the anchors, the full-history counts and the property test become
+
+- **Anchors:** deleted. The range is the anchor, so adoption starts green by construction and the first-anchor choice (D1 at the first gate) disappears.
+- **Full-history counts:** the figures that were acceptance criteria (9/16, 25/16, 68/12, later 10/0, 25/15, 48/10) were measures of a rule that no longer exists in CI. They become two things. First, fixed-range reproductions on pinned SHAs (AC-15), which pin the event rules (their falsifiers separate on this history, unlike the old AC-4 falsifier). Second, a one-off audit replay with `--before <root>` that is expected to report old violations and gates nothing.
+- **Property test:** "no later edit, delete or archive of a file changes a verdict" guarded the sticky guarantee and took about 48 s locally. It becomes AC-17: appending commits after `after` that edit, delete and archive every file in the range leaves the output and exit code of the same `--before/--after` identical. The reads are all at commits inside the range, so it is a small fixture test, not an 8-file by 3-mutation matrix.
 
 ### Measurements (read-only, 2026-10-16)
 
-State: `git clone --branch spacedock-state/dev2 https://github.com/iamcxa/kc-claude-plugins.git`, revision `e73634e6dab6e96eef9b327f489c05ffd3527247` (an ancestor of origin's tip `da2418b9`), package 0.23.0 scripts.
+State checkout `.../docs/dev2/.spacedock-state` at `470199a8f8561c95233d6ded98086add7ebc3d44`, equal to `git ls-remote origin spacedock-state/dev2` that day; `e73634e6dab6e96eef9b327f489c05ffd3527247` and the root `166c16d968305ad711481276809433a15fcf8a5e` are ancestors. Package scripts: `origin/main` 1383c911 exported to a scratch directory. All figures below come from a throwaway prototype of the event walk (about 80 lines, not the runner, not retained), run with `python3 -I -B`; the runner must reproduce them or name the difference.
 
-- L1, `observer_check.py <state> <slug> --rev <first sentinel commit>` for all 25 archived tasks: 9 held, 16 violated. Held: `copilot-quota-refusal-is-not-a-review`, `delivery-gate-verdict-form`, `fo-lifecycle-mod`, `fo-record-checks`, `followup-dispatch-records-checked`, `learn-delivery-follow-through`, `pr-watch-state-per-session`, `worker-completion-goes-to-main`, `workflow-checkout-must-match-trunk-readme`. The 9 are exactly the tasks whose sentinel is a strict descendant of `91fae734`; the 16 violated are the other 15 (before the rule existed) plus `observer-before-merge-guard`, which committed its report 11,382 s after its sentinel (`git log --diff-filter=A` times 1791876623 and 1791888005).
-- L2 with anchor `49da5ddb`: 68 records added after it, 12 violate (16 part hits: 5 bare-name over `delivery-gate-verdict-form`, `fo-lifecycle-mod`, `followup-dispatch-records-checked`; 7 missing completion-to-`main` and 4 missing `Package root:` in `journey-server-host-pilot` implementation-8 to -11 and validation-8 to -10). Run over all history with today's scripts, 10 of the 11 archived tasks that have dispatch records fail at least one part or the bare-name check, because the rules came later; this is why every law needs an anchor.
-- State branch tolerance: on a scratch clone with a committed `.github/workflows/dev2-laws.yml`, `spacedock status --workflow-dir <scratch>` printed byte-identical output to the clone without it (28 lines, exit 0).
-
-### Unverified at ideation
-
-- That GitHub runs a push workflow committed on the orphan state branch and that the job passes: ideation pushes nothing. AC-8 runs it on a probe branch.
-- That `spacedock state init`, `gate prepare` or `merge guard --rework` leave a `.github/` directory on the state branch alone: only `status` was probed. AC-9 probes the rest on a scratch clone.
-- Who commits `.github/workflows/dev2-laws.yml`: `spacedock state commit <slug>` is path-scoped to one task, so it is a plain path-scoped `git add`/`commit -- <path>` by FO, once.
-- That GitHub's failed-run notice reaches the Captain.
-
-### Batch overlap
-
-Read 2026-10-16 from the four other tasks' current text (names-check, extension-instruction and amendment-form now hold designs; prod-security-review-gates holds only its seed). Files this task would change:
-
-| File | This task | Other batch-1 task on the same file or check |
-| --- | --- | --- |
-| `kc-dev-flow-2/scripts/laws_check.py`, `test_laws_check.py`, `references/sd/laws.md`, `references/sd/state-laws.workflow.yml` | new | none |
-| `.github/workflows/kc-dev-flow-2-tests.yml` | one step for `test_laws_check.py` | none names it; all four add tests to existing files that already have a step |
-| `kc-dev-flow-2/references/sd/adoption.md` | one section (anchor rule, rollout, limits) | none names it |
-| `kc-dev-flow-2/scripts/dispatch_records.py` | untouched; L2 calls its folder run and `--names` | `names-check-before-dispatch` (`--newest` branch in `main`) and `extension-instruction-reaches-dispatch` (a folder-run part and `--readme FILE`) edit it. The runner parses `<record>.md: needs ...` and `<file>:<line>: bare ...`; if the extension task makes the README required, L2 must pass `--readme` or exit 2. Neither orders against this task; implement this one after both, or re-run `test_laws_check.py` after each |
-| `kc-dev-flow-2/scripts/design_surfaces.py` | untouched; not wired in v1 | `amendment-form-check` edits it; a later `design_surfaces` law would be anchored after that lands |
-| `kc-dev-flow-2/scripts/pr_watch.py` | untouched under D3 option A; option B edits `tasks` | `names-check-before-dispatch` edits `tasks` too: B would need a merge order with it |
-| `kc-dev-flow-2/references/sd/workflow.md`, `lint-skills.py` `WORKFLOW_WORD_BUDGET` | untouched (`5495 of 5511` stays) | names-check, extension-instruction, amendment-form and prod-security-review-gates may add README words against the same 16-word headroom; this task adds none |
-| `docs/adr/` | one ADR draft: "history laws judge only events after an anchor" | `amendment-form-check` also adds one; FO reserves numbers in dispatch order |
-
-Absorbs none of the four, leaves all: a history check detects after the push, while names-check and extension-instruction need the catch before the worker runs. Each, once landed, becomes a check L2 already runs or a row added to `laws.md`. `chat-only-evidence-observer-blind` (not in batch 1) is the route by which `can't tell` rules become future rows.
+- **Range A** `e73634e6..470199a8`: 100 commits; L1 0 events; L2 33 events, 3 violated (3 parts), exit 1; 10 s wall for the whole run on this machine, one run, 3.7 s of it the event walk.
+- **Range B** `166c16d9..e73634e6` (the whole history; an audit): 1018 commits; L1 25 events, 15 violated; L2 149 events, 90 violated, 200 parts; 77 s wall, one run. L1 reproduces #651's root-anchor count of 25/15 from the transition rule, so the event definition agrees with the first-sentinel one on this history. The 15 L1 violators are the tasks before the observer rule existed.
+- **Mutations of the event rule, counted on range B** (enumeration only): L1 "any commit that touches a task file already holding a sentinel" gives 50 events instead of 25; L2 "a rename counts as an add" gives 269 instead of 149. Both separate, so AC-15 can carry them as falsifiers.
+- **Real pushes** (GitHub events API for the repository, filtered to `refs/heads/spacedock-state/dev2`, which keeps only recent events): 198 pushes from 2026-10-13T06:44:10Z to 2026-10-15T09:20:57Z, 195 of one commit and 3 of two (201 commits); every `before` resolved in the state checkout. Replaying today's rules push by push: 4 L1 events, 0 violated; 58 L2 events; 24 of 198 pushes (12%) would have been red, all L2. Of the 69 pushes after 2026-10-14T09:00Z, 2 would have been red (2026-10-15T01:02:54Z and 04:11:27Z, records of `delivery-gate-verdict-form`). Most red pushes predate the rules they break; the figure shows how often a red run would reach the Captain, not how often agents currently err.
+- **Runner time on one push range** (prototype, whole process including Python start, one run per push): median 1.01 s, p90 1.62 s, max 4.93 s over the 198 real pushes. The #651 runner measured 4 s on `e73634e6` and 25 s on the 1115-commit tip (validation cycle 2, one run each), because it walks all history on every push. GitHub job time for the new design is not measured (AC-18 measures it); #651's three probe runs took 9 to 11 s of job time with the full-history runner. `kc-claude-plugins` is public; private adopters' minutes are not measured.
+- **Shallow flag:** `git rev-parse --is-shallow-repository` prints `true` in the state checkout, whose shared `.git/shallow` holds one line, while `git rev-list --max-parents=0 HEAD` finds the root commit. Under #651 the runner exits 2 there ("history is shallow"); under this design it does not.
 
 ### Words FO reads at each moment
 
-Rule as `learning.md`, "Measure the words FO reads at each moment, not one file's size": every passage and script output that instructs a step due at the moment, counted with `len(text.split())`, same way for base and candidate. This design edits no passage and no script output FO reads, so each moment reads the same text in both columns; a full per-passage recount at 0.23.0 was not redone, and validation recounts with the fo-lifecycle-mod rule. Measured today on `origin/main`: the idle mod `references/sd/mods/kc-dev-flow-2.md` is 48 words; `references/sd/workflow.md` is 5495.
+Rule as `learning.md`, "Measure the words FO reads at each moment, not one file's size": every passage and script output that instructs a step due at the moment, counted with `len(text.split())`, the same way for base and candidate. Base is `origin/main` 1383c911 (kc-dev-flow-2 0.23.0), measured today by running the archived `fo-lifecycle-mod/implementation/recount.py` trimmed to its shipped half: passage anchors moved to the 0.23.0 text, the merge-ask head passage renamed, and the `delivery_gate.py` fixture given a `Candidate:` line so the exit 0 output is the one counted. The adapted script is not retained. This design edits no passage and no script output FO reads, so the candidate column is the base column.
 
-| Moment | Base | Candidate, D3 option A (recommended) | Candidate, D3 option B |
-| --- | --- | --- | --- |
-| Startup | mod + `pr-merge` startup hook + `tasks` output | same text, 0 added | same, plus 19 words only when the latest laws run is red |
-| Idle on an open PR | mod + `pr-merge` idle hook + `wait`/`tasks` output | same | same plus 19 only when red |
-| Idle on a merged PR (observer check) | same + `observer_check.py` output | same | same plus 19 only when red |
-| After the archive | `after pr-merge:` lines + `observer_check.py` exit 0 | same | same plus 19 only when red |
-| The merge ask | authority paragraph + `delivery_gate.py` output | same | same plus 19 only when red |
-| Adoption (once, not an FO moment) | adoption.md | plus one section | plus one section |
+| Moment | Base words (passages and outputs) | Candidate |
+| --- | --- | --- |
+| Startup, one open task PR | 440: `pr-merge` startup 365, mod 48, `tasks` output 27 | 440, 0 added |
+| Idle on an open PR, `wait` exit on a green draft | 408: `pr-merge` idle 100, mod 48, `tasks` 27, authority paragraph 215, `wait` 18 (416 when `tasks` runs on the green draft) | 408, 0 added |
+| Idle on a merged PR, no observer report, then the rerun | 377: idle 100, mod 48, merge paragraph 82, learn step 35, `wait` 24, `tasks` with report missing 68, rerun 20 | 377, 0 added |
+| After the archive | 55: `after pr-merge:` lines and mod step 3, `observer_check` exit 0 28 | 55, 0 added |
+| The merge ask, ready PR, CI green | 392: authority 215, head paragraph 57, Extensions merge-ask sentences 90, `wait` 10, `delivery_gate` exit 0 20 | 392, 0 added |
+| Total | 1672 | 1672 |
 
-The B line, drafted not shipped: "next: the laws check is red on spacedock-state/dev2: read it with `gh run view --log-failed` and tell the Captain." (19 words, counted). The README total is unchanged under both.
+`fo-lifecycle-mod` recorded 1666 at its own head; the 6-word difference is later changes to `main` and is not chased. No option that adds FO words is drafted: a way for FO to read missed red runs needs a record of which it has already seen, which is new state and an edit to `pr_watch.py` (see D1).
+
+### Batch overlap (PR heads read 2026-10-16)
+
+| File | This task | Other batch-1 task on the same file |
+| --- | --- | --- |
+| `kc-dev-flow-2/scripts/laws_check.py`, `test_laws_check.py`, `references/sd/laws.md`, `references/sd/state-laws.workflow.yml` | edited (already on #651) | none |
+| `.github/workflows/kc-dev-flow-2-tests.yml`, `references/sd/adoption.md` | kept step, rewritten section | none |
+| `kc-dev-flow-2/scripts/dispatch_records.py` | untouched; L2 calls its folder run and `--names` | #649 (a4217cd3, `--newest`) and #652 (8d051de7, `[--readme FILE]`) edit it. Neither orders against this task. After #652 the folder run prints `extensions not checked: no workflow README above <folder>` when it finds no README, which the runner would read as an unparseable line and exit 2; the implementation passes the runner's own `--readme FILE` to the folder-mode call once #652 has landed, and re-runs `test_laws_check.py` after each of the two |
+| `kc-dev-flow-2/scripts/pr_watch.py` | untouched | #649 and #652 edit it |
+| `kc-dev-flow-2/scripts/design_surfaces.py`, `references/sd/workflow.md` | untouched | #650 (458324f8) edits both; this task's amendment entry is written in the form #650 enforces |
+| `docs/adr/` | one ADR (0017, reserved) | #650 adds 0016 |
+
+### ADR draft: history laws judge only the events a push adds
+
+**Words:** 「就按照新的建議」 — Captain, 2026-10-16, chat, answering 「這三個新建議可以嗎？」 (item 1: 「dev2-laws-check（#651）：改成「只檢查這次推送新增的事件」，不再保證「歷史上的違規永遠是紅燈」。」).
+
+**Options considered:**
+- each run judges only the events the commits of the push add (`before..after`), reported once (chosen)
+- per-law anchors with a run red until the anchor moves (the #651 build; withdrawn by amendment 1)
+- a waiver list per violation — not chosen: with nothing staying red there is nothing to waive
+
+**Recommended:** the first option, as the Captain accepted.
+
+Consequences: adoption starts green; a violation is reported once; a red run that is not seen leaves no trace after the next push, so the failed-run notice is the whole signal; the run detects after the push and cannot stop `merge guard`. Reopen if a violation reported once is recorded as missed.
 
 ### Non-goals
 
 - No Spacedock change, no new language: Python standard library and `git`, as the scripts it calls.
 - The run reports; it does not block `merge guard`, a dispatch or a push.
-- No repair of history before an anchor, and no waiver list in v1: moving the anchor is the acceptance.
-- Laws check form; whether a record means the right thing stays with the observer (the first bullet of `amendment-form-check`).
-- No `schedule:` trigger (D2) and no adopter-specific laws: the laws file is package-owned and not copied into `docs/dev2`.
-- Rolling the workflow onto this repository's state branch or an adopter's is a later state-branch commit on the Captain's word, not this PR. A workflow whose state is inline in the trunk has no state branch to trigger on and is not covered.
+- No guarantee about history, no repair of old violations, no waiver list.
+- Laws check form; whether a record means the right thing stays with the observer.
+- No `schedule:` trigger and no adopter-specific laws: the laws file is package-owned.
+- Rolling the workflow onto a state branch is a later state-branch commit on the Captain's word, not this PR.
 
-### Existing-code and retention check
+### Unverified at ideation
 
-Without the laws runner, nothing runs `observer_check.py` or `dispatch_records.py` unless FO does, which is the failure class the Captain filed. Without `laws.md`, the runner's function list has no reader-facing statement of what each law is for and which failure it bit; the parity test (AC-1) is what keeps the two from drifting. Without an anchor, the measurements above show red on 16 of 25 and on pre-rule records forever.
+- That GitHub supplies `github.event.before` and `github.event.after` as this design reads them on a push to the orphan state branch, and that two quick pushes each get a completed run (AC-18).
+- GitHub job time for the new runner, and private adopters' minutes.
+- That `spacedock state init`, `gate prepare`, `gate record` and `merge guard --rework` leave a committed `.github/` file alone: #651's implementation and validation ran the first five on a scratch clone and saw only the refusal of `--rework` (validation finding F5); not re-run here.
+- That GitHub's failed-run notice reaches the Captain (D1).
+
+### Retention check
+
+Without the runner, nothing runs `observer_check.py` or `dispatch_records.py` unless FO does, which is the failure class the Captain filed. Without `laws.md`, no reader-facing statement of what each law is for exists, and the parity test keeps list and runner from drifting. What is removed (anchors, the shallow guard, the `known` scan, the matrix property test) had a bite only under the withdrawn guarantee.
 
 ## Acceptance criteria
 
-`PKG` is `<package>/..` of the candidate checkout (`kc-dev-flow-2/`); `STATE` is a full clone of `spacedock-state/dev2` (`git clone --branch spacedock-state/dev2 https://github.com/iamcxa/kc-claude-plugins.git`); `E73` is `e73634e6dab6e96eef9b327f489c05ffd3527247`. Every "not yet verified" below is the honest current state: ideation runs nothing on the candidate. Design-time evidence is under `### Measurements`.
+`PKG` is the `kc-dev-flow-2/` directory of the candidate checkout; `STATE` is a full clone of the state branch (`git clone --branch spacedock-state/dev2 https://github.com/iamcxa/kc-claude-plugins.git`); `README` is `git show 1383c9119eb5328543e2c4df5e562be22b74e355:docs/dev2/README.md` saved to a file (its `extensions:` lists `learn`); `ROOT` is `166c16d968305ad711481276809433a15fcf8a5e`, `E73` is `e73634e6dab6e96eef9b327f489c05ffd3527247`, `TIP` is `470199a8f8561c95233d6ded98086add7ebc3d44`. The command is `python3 -B PKG/scripts/laws_check.py STATE --before B --after A --readme README`. The figures marked "prototype" come from the throwaway event walk in `### Measurements`, not from the runner, which does not exist yet; nothing below is verified against the runner.
 
+- **AC-13** Amended by Captain, amendment 1. A run judges only the events its own range adds, and a violation is reported once. Evidence: `test_laws_check.py` builds a scratch state repository with four pushes: P0 adds only the workflow file to a history that already holds an old violation; P1 adds a dispatch record lacking its completion line to `main`; P2 adds a complete record; P3 adds nothing a law judges. The runner on each push's own `--before/--after` gives P0 exit 0 with 0 events for both laws, P1 exit 1 with one `violation:` line naming the record and its commit, P2 exit 0 with `1 events judged` although P1's commit is an ancestor, P3 exit 0. Falsifier: walking from the root instead of `--before` turns P0, P2 and P3 to exit 1. Current evidence: prototype over 198 real pushes gives 24 red runs, each followed by pushes that are green by their own range; runner not yet verified.
+- **AC-14** Amended by Captain, amendment 1. Events are what each commit adds, read at that commit. Evidence, fixtures in `test_laws_check.py`. L1: (a) a report committed before the sentinel is held; (b) none is violated; (c) a report committed after the sentinel is violated although `observer_check.py <state> <slug>` at the tip exits 0; (d) a task body quoting `pr: pr-merge:7` in prose is no event; (e) an archive move that leaves `pr:` unchanged is no event; (f) a `merge guard --rework` that clears `pr:` followed by a second sentinel is a second event and is judged; (g) a README without `learn` gives 0 events. L2: (a) a record lacking the completion line to `main`, (b) lacking an absolute `Package root:`, (c) naming a package script bare, (d) a pointer to another record are each reported with the part; (e) a complete record is held; (f) a record added in an earlier push is not judged; (g) a record corrected in a later commit of the same push is still judged as added; (h) a record deleted later in the same push is still judged; (i) a record deleted and added again is judged at each add; (j) an archive move and a task-folder rename are no events. Falsifiers, each a mutation run with `python3 -B` and caches cleared: `--rev` replaced by the tip turns L1 (c) to held; sentinel matched by substring turns L1 (d) to an event; dropping the parent comparison turns L1 (e) to an event; reading record bytes or the folder at `--after` fails L2 (g) and (h); dropping `-M` fails L2 (j); dropping the `--names` call turns L2 (c) to held. Current evidence: not yet verified.
+- **AC-15** Amended by Captain, amendment 1. The event rules reproduce the design-time counts on pinned real history. Evidence on `STATE`: range A, `--before E73 --after TIP` prints `L1 observer-before-sentinel: 0 events judged in e73634e6dab6..470199a8f856, 0 violated` and `L2 dispatch-record-complete: 33 events judged in e73634e6dab6..470199a8f856, 3 violated`, exit 1, three `violation:` lines. Range B, `--before ROOT --after E73`, prints 25 events judged and 15 violated for L1 (the same 15 tasks as the root-anchor run of the withdrawn design: board-optout, canvas-document-popup, dispatch-and-report-hygiene, ideation-gaps, journey-map-dev2-contract, journey-render-keeps-annotations, learning-serialize-evaluation, migration-and-number-guards, patch-0102, patch-0103, poc-no-migrations, reflow-order, release-please-exclude-paths, release-review, review-cadence) and 149 events judged and 90 violated for L2 (200 parts), exit 1; wall time is recorded, not asserted. Any difference is explained in the validation report by a task or record the prototype and the runner place on opposite sides. Falsifier: the L1 any-touch mutation prints 50 events instead of 25 and the L2 rename-as-add mutation prints 269 instead of 149 on range B. Current evidence: all figures prototype; runner not yet verified.
+- **AC-16** Amended by Captain, amendment 1. What cannot be judged exits 2 and says why. Evidence: one test per cause asserting exit 2 and the cause text, not only the exit code: `--before` all zeros; `--before` or `--after` not a commit; a range commit with no parent in the clone (a depth-limited clone of the fixture whose boundary lies inside the range); L1 with no `--readme`; a script missing; a check that crashes, exits 2, exits 1 with no stdout, or exits 1 with a line the runner does not parse; exit 2 wins over a violation and both print. A force push (`--before` a commit that is not an ancestor of `--after`) judges the commits new to the branch. On the real state checkout, where `git rev-parse --is-shallow-repository` prints `true`, range A runs to completion instead of exiting 2. Falsifier: removing the parentless-commit guard makes the depth-limited fixture print a judged-event count above its range's own; restoring #651's shallow guard makes range A exit 2 on that checkout. Current evidence: shallow flag measured as described (`### Measurements`); runner not yet verified.
+- **AC-17** Amended by Captain, amendment 1. Commits appended after `--after` do not change the verdict for the same range. Evidence: a fixture runs a range, appends commits that edit, delete and archive every file the range touched, and runs the same `--before/--after` again; output and exit code are identical. Falsifier: reading a record's bytes, a record's folder listing or a task's frontmatter at `HEAD` instead of at the range's own commits fails it (the two defects #651 shipped and its review found). Current evidence: not yet verified.
+- **AC-18** Amended by Captain, amendment 1. The workflow runs on GitHub from the state branch, one run per push. Evidence, on a throwaway branch `spacedock-state/laws-probe` made from the state branch tip with the template workflow whose trigger names that branch: (a) the commit that adds the workflow file, on a history holding violations, runs green with 0 events; (b) a push adding a record without its completion line to `main` runs red, exit 1, the log carrying the `violation:` line; (c) the next push, adding a complete record, runs green; (d) two pushes within a few seconds each get a completed run whose log names its own range, none cancelled (`gh run list --branch spacedock-state/laws-probe --json databaseId,conclusion,headSha`); (e) one further push with a `concurrency` block set to cancel in progress added to the template shows what a cancelled run looks like, then the branch is deleted and `git ls-remote` confirms. Run ids, conclusions and job durations from `gh run view <id> --json jobs`. The Captain states in the validation report whether the failed-run notice of (b) reached him. Falsifier: (e) shows a cancelled run for the first of two quick pushes; a branch with no workflow file shows no run for the same push. Current evidence: not yet verified; ideation pushes nothing.
+- **AC-19** Amended by Captain, amendment 1. FO reads no more words at any moment under D1 option A. Evidence: `git diff --stat <base> <head> -- kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/references/sd/mods kc-dev-flow-2/extensions kc-dev-flow-2/scripts/pr_watch.py kc-dev-flow-2/scripts/observer_check.py kc-dev-flow-2/scripts/dispatch_records.py kc-dev-flow-2/scripts/delivery_gate.py kc-dev-flow-2/scripts/design_surfaces.py` is empty (against the merged base if #649, #650 or #652 land first), and the recount by the rule in `### Words FO reads at each moment` prints 440, 408, 377, 55 and 392 for base and candidate, the implementation keeping its recount script under the task's `implementation/` folder. Falsifier: any diff in those paths, or any moment whose candidate count exceeds its base count. Current evidence: base counts measured; candidate is the base by design, not yet verified on a diff.
+- **AC-20** Amended by Captain, amendment 1. The documents and CI say what the design says. Evidence: `references/sd/laws.md` has one section per registered law and `test_laws_file_matches_registry` fails on a heading with no function and on a function with no heading (two mutation runs); the `adoption.md` section states the range rule and that there are no anchors, that adopting starts green, that a violation is reported once and later pushes do not re-judge it, that the run detects and cannot block `merge guard`, the rollout once per adopter on the Captain's word, and the unverified items; `python3 PKG/scripts/adr_lint.py docs/adr --since <base> --require <reserved number>` exits 0 with the ADR draft above; the PR's CI run lists a passing `test_laws_check.py` step (`gh run view <id> --json jobs`), and `lint-skills.py` and `test_lint_skills.py` pass; the PR body quotes job durations from AC-18 with their run ids, says private adopters' minutes are not measured, and states the suite's local time (48 s under #651). Falsifier: any of the six statements missing; deleting the CI step leaves the job's step list without it. Current evidence: not yet verified.
+
+## Unresolved decisions for the Captain
+
+Past rulings read: ADR 0009 and ADR 0014 (see `### Chain check`); no gate `Override:` line bears on these. The first ideation gate (batch 1) accepted D2 (push trigger only, no `schedule:`) and D4 (two laws in v1) as recommended; this redo keeps both. Its D1 (anchors) is deleted with the anchors, and its D3 is re-asked below because amendment 1 makes it the only signal.
+
+- **D1: how does a red run reach anyone?** Recommend A: GitHub's failed-run notice to the account that pushes, no FO words. Measured: replayed over 198 real pushes (2026-10-13 to 2026-10-15), 24 would have been red and 2 of the 69 after 2026-10-14T09:00Z, so the Captain would see a few notices a day at first and fewer once agents follow the rules. What gets worse under A: the next push is green, so a violation whose notice was missed (notifications off, or sent to an account nobody reads) leaves no trace on the branch, where the withdrawn design's red state was a second signal. AC-18 asks you whether the notice reached you; if it did not, the fallback is B: FO lists failed runs of `dev2-laws.yml` at startup, which needs a stored mark of the last run it saw (new state), edits `pr_watch.py` (also edited by #649 and #652) and adds FO words not drafted here.
+- **D2: what does a push the runner cannot read do?** Recommend exit 2, a red run with `cannot judge`, for a branch-creation push, a force push whose old head is no longer in the clone, and a range commit with no parent in the clone; a force push whose old head is present judges the commits new to the branch. What gets worse: a force push you make on purpose to repair state shows one red run you must ignore. The alternative, skipping such a push as green, would hide a push nobody judged.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-16, chat
+Captain: 「就按照新的建議」 (chat, 2026-10-16)
+Asked: 「這三個新建議可以嗎？」（第 1 項：「dev2-laws-check（#651）：改成「只檢查這次推送新增的事件」，不再保證「歷史上的違規永遠是紅燈」。」）
+Supersedes: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12
+Design: the whole `## Design` is redone at ideation as the asked item states: each run judges only the events the pushed commits add, and the guarantee that a committed violation stays red is dropped
+Superseded text:
 - **AC-1** `references/sd/laws.md` has one section per law the runner registers, each stating the rule, the event, the script it calls and the failure that bit; a test fails when the two lists differ. Evidence: `python3 PKG/scripts/test_laws_check.py` includes `test_laws_file_matches_registry`. Falsifier: a heading added to `laws.md` with no registered function, and a function registered with no heading, each fail that test (two mutation runs, run with `python3 -B`). Current evidence: not yet verified.
 - **AC-2** The runner's exit contract holds: 0 all anchored laws held, 1 a law violated, 2 something could not be judged; exit 2 wins when both occur and both are printed. Evidence: one test per cause in `### What the runner does` (shallow history, REV not a commit, anchor not a commit, anchor not an ancestor, no anchor, script missing, check exits 2, check prints a traceback, check exits 1 with unparseable output, L1 with no `--readme`), each asserting exit 2 and the cause in the output, not only the exit code. Falsifier: removing the shallow-history guard turns the shallow test from exit 2 to exit 0; making the runner treat a traceback as a violation turns that test from 2 to 1. Current evidence: not yet verified.
 - **AC-3** L1 judges history, not the tip: on a scratch state repository built by the test, (a) observer committed before the sentinel is held; (b) no observer is violated; (c) observer committed after the sentinel is violated although `observer_check.py <state> <slug>` at the tip exits 0; (d) a task body that quotes `pr: pr-merge:7` in prose is not an event; (e) a sentinel at or before the anchor is not judged; (f) a README with no `learn` gives 0 events. Evidence: `test_laws_check.py` cases (a) to (f). Falsifier: replacing the `--rev <commit>` call with a tip call turns (c) from violated to held; matching the sentinel by substring instead of parsed frontmatter turns (d) from 0 events to 1. Current evidence: not yet verified.
@@ -221,23 +286,6 @@ Without the laws runner, nothing runs `observer_check.py` or `dispatch_records.p
 - **AC-10** FO reads no more words at any moment under D3 option A. Evidence: the candidate diff touches none of `references/sd/workflow.md`, `references/sd/mods/*.md`, `extensions/*/EXTENSION.md`, `scripts/pr_watch.py`, `scripts/observer_check.py`, `scripts/dispatch_records.py`, `scripts/delivery_gate.py` (`git diff --stat <base> <head> -- <those paths>` is empty), and `lint-skills.py` still prints `5495 of 5511` (or the merged value if another batch task has landed words first, with the delta unchanged). Under option B the table in `### Words FO reads at each moment` is recounted with its rule and the added words are 19 only on a red run and 0 on a green one. Falsifier: any diff in those paths fails option A and triggers the per-moment recount. Current evidence: by design no such edit; not yet verified on a diff.
 - **AC-11** `references/sd/adoption.md` gains one section stating the anchor rule, that a red run is sticky until the anchor moves, that the run detects and cannot block `merge guard`, the rollout once per adopter on the Captain's word, and the unverified items. Evidence: the section, and `python3 PKG/scripts/adr_lint.py docs/adr --since <base>` passing with the ADR "history laws judge only events after an anchor" (no number in this design; FO reserves it). Falsifier: the section lacking any of those five statements. Current evidence: not yet verified.
 - **AC-12** The PR body states the trigger and a measured per-run time. Evidence: durations from the AC-8 runs (`gh run view <id> --json jobs`) quoted with their run ids, and the sentence that private adopters' minutes are not measured. Falsifier: a number in the PR body with no run id beside it. Current evidence: not yet verified; measured today only the per-script wall times in `### Workflow template and run point`.
-
-## Unresolved decisions for the Captain
-
-Past rulings read: ADR 0009 and ADR 0014 (see `### Chain check`); no gate `Override:` line bears on these.
-
-- **D1: where do the anchors go?** Recommend L1 at `91fae734` (the sentinel commit of the task that introduced the observer rule: 9 events judged, 0 violated) and L2 at the state branch's tip on the day an adopter turns the workflow on, not at `49da5ddb`. A history violation cannot be repaired, so an anchor that starts red stays red until it is moved. What gets worse: L2 never judges the 68 records added since `49da5ddb`, so the 12 violations (7 of them in the still-open `journey-server-host-pilot`) stay unflagged by CI; they are reported once in `### Measurements` for you to repair or accept. Choosing `49da5ddb` instead gives a real but permanent red from the first run.
-- **D2: what triggers the run?** Recommend `push` on the one named state branch with `cancel-in-progress`, and no `schedule:`. A cron would be unattended recurring operation, which `references/profiles/pilot.md` lists as a trigger to return to profile selection, so it would need your ruling. What gets worse: no push means no run, so a miss shows up at the next push; private adopters (relay, subspace-web) pay minutes per run, up to 1024 pushes in the last 30 days on this branch alone, minutes unmeasured.
-- **D3: how does a red run reach anyone?** Recommend option A: GitHub's failed-run notice to the pushing account, zero FO words. Option B adds one `next:` line (19 words, only when red) to `pr_watch.py tasks`. What gets worse under A: if your notifications for that account are off, a red run sits unseen (AC-8 asks you, and flips this to B before merge if the notice did not arrive); under B, `pr_watch.py tasks` is also edited by `names-check-before-dispatch`, so the two need a merge order.
-- **D4: which laws are wired in v1?** Recommend two: L1 and L2, the only two with recorded failures and a script that works over committed history. The head-equals-candidate law you named as an example is left out because it would judge about 0 events today (13 of 39 briefings carry a head token, 1 task has a `Candidate:` line), and `design_surfaces.py check` is left out because it has no recorded skipped run and fails closed tasks that cannot be repaired. What gets worse: the delivery-head mismatch stays an FO-run check until a later row; adding either now costs one section and one function each and would print `0 events judged` for the head law.
-
-## Captain amendments
-
-### Amendment 1 — 2026-10-16, chat
-Captain: 「就按照新的建議」 (chat, 2026-10-16)
-Asked: 「這三個新建議可以嗎？」（第 1 項：「dev2-laws-check（#651）：改成「只檢查這次推送新增的事件」，不再保證「歷史上的違規永遠是紅燈」。」）
-Supersedes: AC-1, AC-2, AC-3, AC-4, AC-5, AC-6, AC-7, AC-8, AC-9, AC-10, AC-11, AC-12
-Design: the whole `## Design` is redone at ideation as the asked item states: each run judges only the events the pushed commits add, and the guarantee that a committed violation stays red is dropped
 
 ## FO alignment
 
@@ -486,3 +534,19 @@ Observed output of the run matched every expect line (steps 3 to 6 above, 102 s 
 ### Summary
 
 Recommended verdict: PASSED at d64cf1995ba24a2fd2efcc2fa9a4dee7031f4d5a. F1, F2, the delete-and-re-add High and the deleted-task P1 are fixed, and each fails 1 to 4 tests under the mutation I ran. One new Deferred risk (F6, a non-archive rename turns L2 into a permanent exit 2, no real trigger in 1115 commits). The Captain is asked to amend AC-4 to 10/0 and 25/15 and AC-6 to 48 judged, 10 violated, 15 lines (F4), and to state whether the failed-run notice reached him (AC-8). Throwaway worktrees, clones and scratch files removed.
+
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Captain amendment 1 applied: AC-1 to AC-12 moved under it as `Superseded text:` and kc-dev-flow-2/scripts/design_surfaces.py check exits 0
+  The 12 criteria sit verbatim under `### Amendment 1`; the new `## Acceptance criteria` declares AC-13 to AC-20, each "Amended by Captain, amendment 1", no old id in bold. `design_surfaces.py check` exit 0 with the 0.23.0 package script ("design surfaces presentable") and exit 0 with #650's stricter copy (head 458324f8); `spacedock status --read --ac-scan` lists AC-13 to AC-20.
+- DONE: A redone `## Design` (PRFAQ and Mermaid) where each run judges only the events the pushed commits add (the push's before..after range on the state branch), with the guarantee that a committed violation stays red dropped; say what of PR #651 (head d64cf199) is kept, rewritten or deleted, and what the anchors, the full-history counts and the property test become
+  `## Design`: PRFAQ, Mermaid, laws table with the new event rules (L1 transition into a sentinel, L2 record added, archive move and rename excluded), runner edge cases (zero before, force push, shallow boundary, merge commit), `### What PR #651 becomes` by symbol and by test (18 kept, 7 rewritten, 5 deleted of 30), anchors deleted, full-history counts become pinned-range reproductions plus a one-off `--before <root>` audit, the property test becomes AC-17, ADR draft with no number. Resolves the held Cycle 3 P1 by construction (README read at run time is the rule in force).
+- DONE: The words FO reads at each lifecycle moment, before and after, and the measured runner time on one push range
+  `### Words FO reads at each moment`: base measured at `origin/main` 1383c911 with the archived `recount.py` trimmed and adapted (440, 408, 377, 55, 392; total 1672), candidate the same, 0 added, no FO-read file edited. Runner time (prototype, one run per push, whole process): median 1.01 s, p90 1.62 s, max 4.93 s over 198 real pushes; range A (100 commits) 10 s; #651's runner 4 s to 25 s. GitHub job time for the new design is not measured (AC-18).
+- DONE: Acceptance criteria written as 'Amended by Captain, amendment 1', with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  AC-13 to AC-20 and D1 (how a red run reaches anyone), D2 (a push the runner cannot read). Current evidence per criterion: AC-13 not yet verified (prototype: 24 of 198 real pushes red, neighbours green). AC-14 not yet verified. AC-15 prototype only: range A 0/0 and 33/3, range B 25/15 and 149/90, falsifier mutations 50 and 269. AC-16 not yet verified (shallow flag true on the real checkout measured). AC-17 not yet verified. AC-18 not yet verified (ideation pushes nothing). AC-19 base counts measured, candidate not yet verified on a diff. AC-20 not yet verified.
+
+### Summary
+
+The redo drops anchors and the sticky-red guarantee: each push is judged on its own `before..after` commits, so adoption starts green and a violation is reported once. Most of #651 survives (the check-running and fail-closed core, L2's read at the adding commit, the laws file, the workflow skeleton, 18 of 30 tests); the enumeration, the CLI and the shallow guard are replaced by one `diff-tree -M` walk over the range. Needs your decision: D1, because the next push is green, so the failed-run notice is now the only signal; D2, exit 2 for a push the runner cannot read. Design-time figures come from a throwaway prototype and a trimmed recount script in `/tmp`, not retained; PR #651 and its worktree were read only.
