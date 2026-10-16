@@ -205,6 +205,14 @@ Source for every criterion: the Captain's approval of this task's filing (「1,3
 
 **AC-7** Replay over the branch history with the real mode: in a throwaway clone, running `--newest` at each commit that adds a non-archived dispatch record flags the five records from 2026-10-14 on named in the replay section, including the three missed ones; the counts (149 additions, 55 flagged, 5 of 71) are re-measured at the state HEAD the implementer reads and reported with any difference. Evidence: the loop command and its output in the report. Falsifier: a mode that scans nothing reports 0 flagged; the five named records are the fixed expectation. Limit stated in the report, not asserted: this proves detection, not that a line would have reached FO before the worker read the record.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-16, chat
+Captain: 「就按照新的建議」 (chat, 2026-10-16)
+Asked: 「這三個新建議可以嗎？」（第 3 項：「spacedock「派工前掛點」issue：先不發。」 什麼時候重提：一旦發生「工人因為沒帶路徑跑錯版本」，再帶著那筆證據提。）
+Supersedes: none
+Design: D2 is not filed; it is raised again only with a recorded case of a worker running the wrong copy because a name had no path
+
 ## FO alignment
 
 Alignment: not needed before ideation; the Captain approved filing it.
