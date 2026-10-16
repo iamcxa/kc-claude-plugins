@@ -126,6 +126,17 @@ Private Node stores metadata in `metadata.sqlite`, per-room databases in
 an implicit import from a nonempty directory. Do not copy retained databases
 into it or edit tldraw's tables.
 
+Private attachment replacement uploads a fresh blob, atomically exchanges its
+mapping, then deletes the acknowledged predecessor. Concurrent replacements keep
+the last committed mapping; document and canvas concurrency rules are unchanged.
+A read that loses its old blob retries once if the mapping changed, then returns
+503 on another replacement race. Failed uploads leave the mapping unchanged.
+Confirmed Node rollback permits removal of the new blob; an unknown commit result
+retains both blobs. A deletion failure returns 503 even though the new mapping is
+already committed, and never rolls it back. Missing predecessor blobs are already
+clean. Crashes, ambiguous commits and failed deletions can still leave orphans;
+this is not a background collector or cleanup of historical unreferenced blobs.
+
 Node `/save` is enabled in private mode only with `JOURNEY_SAVE_DIR`. This grants
 the configured save-directory capability to authorized rooms. For `/repo-doc`,
 configure existing `JOURNEY_DOC_REPOS=owner/repo=/absolute/checkout` plus

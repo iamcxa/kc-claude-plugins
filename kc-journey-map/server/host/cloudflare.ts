@@ -6,6 +6,8 @@ import { pruneExpiredSessions } from './session-retention'
 
 type Env = { ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string }
 const stub = (namespace: any, id: string) => namespace.get(namespace.idFromName(id))
+const assetBlobKey = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
+const ownsAsset = (room: string, key: unknown) => typeof key === 'string' && key.startsWith(room + '/') && assetBlobKey.test(key.slice(room.length + 1))
 class RegistryMetadata implements Metadata {
  constructor(private env: Env) {}
  async call(path: string, body: any) {
@@ -15,6 +17,7 @@ class RegistryMetadata implements Metadata {
  }
  async get<T>(key: string): Promise<T | null> { return await this.call('get', { key }) as T | null }
  async put(key: string, value: unknown) { await this.call('put', { key, value }) }
+ async replaceAsset(room: string, id: string, value: unknown) { return await this.call('replace-asset', { room, id, value }) as { previous: { blobKey: string } | null } }
  async list<T>(prefix: string): Promise<Array<{ key: string; value: T }>> { return await this.call('list', { prefix }) as any }
 }
 export class JourneyRegistry {
@@ -34,6 +37,15 @@ export class JourneyRegistry {
   const body = await req.json() as any
   const op = new URL(req.url).pathname
   if (op === '/get') return Response.json(this.get(body.key))
+  if (op === '/replace-asset') {
+   const previous = this.ctx.storage.transactionSync(() => {
+    const key = 'asset:' + body.room + ':' + body.id, old = this.get(key)
+    if (!ownsAsset(body.room, body.value?.blobKey) || (old && !ownsAsset(body.room, old.blobKey))) throw new HostError(503, 'invalid asset ownership')
+    this.put(key, body.value)
+    return old
+   })
+   return Response.json({ previous })
+  }
   if (op === '/put') { if (!body.key.startsWith('room:') || !this.get(body.key)) this.put(body.key, body.value); return Response.json({ ok: true }) }
   if (op === '/list') return Response.json(this.ctx.storage.sql.exec('SELECT key, value FROM metadata WHERE substr(key,1,?) = ? ORDER BY key', body.prefix.length, body.prefix).toArray().map((r: any) => ({ key: r.key, value: JSON.parse(r.value) })))
   if (op === '/revoke') {
@@ -82,15 +94,24 @@ export class CloudflareHost implements Host {
   if (!this.env.ASSETS) throw new HostError(501, 'assets unsupported')
   if (!await this.meta.get('room:' + room)) throw new HostError(404, 'room not found')
   const blobKey = room + '/' + crypto.randomUUID()
-  await this.env.ASSETS.put(blobKey, bytes, { httpMetadata: { contentType: type } })
-  await this.meta.put('asset:' + room + ':' + id, { blobKey, contentType: type, size: bytes.length })
+  try {
+   if (!await this.env.ASSETS.put(blobKey, bytes, { httpMetadata: { contentType: type } })) throw new HostError(503, 'asset upload failed')
+  } catch (error) { await this.env.ASSETS.delete(blobKey).catch(() => {}); throw error }
+  const { previous } = await this.meta.replaceAsset(room, id, { blobKey, contentType: type, size: bytes.length })
+  if (previous && previous.blobKey !== blobKey) await this.env.ASSETS.delete(previous.blobKey)
  }
  async getAsset(room: string, id: string) {
-  const asset = await this.meta.get<{ blobKey: string; contentType: string }>('asset:' + room + ':' + id)
+  const key = 'asset:' + room + ':' + id
+  let asset = await this.meta.get<{ blobKey: string; contentType: string }>(key)
   if (!asset || !this.env.ASSETS) throw new HostError(404, 'asset not found')
-  const blob = await this.env.ASSETS.get(asset.blobKey)
-  if (!blob) throw new HostError(404, 'asset not found')
-  return { data: new Uint8Array(await blob.arrayBuffer()), contentType: asset.contentType }
+  for (let attempt = 0; ; attempt++) {
+   const blob = await this.env.ASSETS.get(asset.blobKey)
+   if (blob) return { data: new Uint8Array(await blob.arrayBuffer()), contentType: asset.contentType }
+   const latest = await this.meta.get<{ blobKey: string; contentType: string }>(key)
+   if (!latest || latest.blobKey === asset.blobKey) throw new HostError(404, 'asset not found')
+   if (attempt) throw new HostError(503, 'asset changed during read')
+   asset = latest
+  }
  }
 }
 export class JourneyRoom {

@@ -1,6 +1,6 @@
 import { DatabaseSync } from 'node:sqlite'
 import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs'
-import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { Readable } from 'node:stream'
 import { NodeSqliteWrapper, SQLiteSyncStorage, TLSocketRoom } from '@tldraw/sync-core'
@@ -11,6 +11,8 @@ import { pruneExpiredSessions } from './session-retention'
 import { loadAsset, storeAsset } from '../assets'
 import { saveBoard, saveDir, saveTarget } from '../save'
 import { readRepoDoc } from '../repo-doc'
+
+const assetBlobKey = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 
 export class NodeHost implements Host {
  private = !!process.env.JOURNEY_PRIVATE_DIR
@@ -87,14 +89,41 @@ export class NodeHost implements Host {
   if (!await this.meta.get('room:' + room)) throw new HostError(404, 'room not found')
   const blobKey = crypto.randomUUID()
   await mkdir(join(this.root, 'assets'), { recursive: true })
-  await writeFile(join(this.root, 'assets', blobKey), bytes)
-  await this.meta.put('asset:' + room + ':' + id, { blobKey, contentType: type, size: bytes.length })
+  const removeNew = () => unlink(join(this.root, 'assets', blobKey)).catch(() => {})
+  try { await writeFile(join(this.root, 'assets', blobKey), bytes) } catch (error) { await removeNew(); throw error }
+  let previous: { blobKey: string } | null = null, started = false
+  try {
+   this.db.exec('BEGIN IMMEDIATE'); started = true
+   const key = 'asset:' + room + ':' + id
+   const row = this.db.prepare('SELECT value FROM metadata WHERE key = ?').get(key) as { value: string } | undefined
+   previous = row ? JSON.parse(row.value) : null
+   if (previous && (typeof previous.blobKey !== 'string' || !assetBlobKey.test(previous.blobKey))) throw new HostError(503, 'invalid asset ownership')
+   this.db.prepare('INSERT OR REPLACE INTO metadata VALUES (?, ?)').run(key, JSON.stringify({ blobKey, contentType: type, size: bytes.length }))
+   this.db.exec('COMMIT')
+  } catch (error) {
+   let rolledBack = !started
+   if (started) { try { this.db.exec('ROLLBACK'); rolledBack = true } catch {} }
+   if (rolledBack) await removeNew()
+   throw error
+  }
+  if (previous && previous.blobKey !== blobKey) {
+   try { await unlink(join(this.root, 'assets', previous.blobKey)) } catch (error) { if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error }
+  }
  }
  async getAsset(room: string, id: string) {
   if (!this.private) return loadAsset(id)
-  const asset = await this.meta.get<{ blobKey: string; contentType: string }>('asset:' + room + ':' + id)
+  const key = 'asset:' + room + ':' + id
+  let asset = await this.meta.get<{ blobKey: string; contentType: string }>(key)
   if (!asset) throw new HostError(404, 'asset not found')
-  return { data: await readFile(join(this.root, 'assets', asset.blobKey)), contentType: asset.contentType }
+  for (let attempt = 0; ; attempt++) {
+   try { return { data: await readFile(join(this.root, 'assets', asset.blobKey)), contentType: asset.contentType } } catch (error) {
+    if ((error as NodeJS.ErrnoException).code !== 'ENOENT') throw error
+    const latest = await this.meta.get<{ blobKey: string; contentType: string }>(key)
+    if (!latest || latest.blobKey === asset.blobKey) throw error
+    if (attempt) throw new HostError(503, 'asset changed during read')
+    asset = latest
+   }
+  }
  }
  async save(_room: string, url: URL, method: string, body: any) {
   if (method === 'GET') { const name = url.searchParams.get('name'); return { dir: saveDir(), ...(name ? saveTarget(name) : {}) } }
