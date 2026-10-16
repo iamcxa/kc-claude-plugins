@@ -1,4 +1,4 @@
-# 0016. Keep one private journey operation core across Node and Cloudflare
+# 0018. Keep one private journey operation core across Node and Cloudflare
 
 Date: 2026-10-13
 
@@ -97,6 +97,6 @@ define mechanism; production builds accept a license key without altering SDK
 license enforcement. Provider serving and actual production rendering remain
 separate acceptance steps.
 
-This record was renumbered from the task's former reservation 0015 because main
-assigned 0015 to another decision before merge. Earlier receipts retain their
-original historical number.
+This record was renumbered from the task's former reservations 0015 and then
+0016 because main assigned each number to another decision before merge. Earlier
+receipts retain their original historical number.

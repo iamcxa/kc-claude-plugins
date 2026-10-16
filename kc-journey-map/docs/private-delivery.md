@@ -158,5 +158,5 @@ The generic task-aware number guard still reports CONFIG ERROR / NOT PASS becaus
 this fresh-storage implementation has no numbered SQL migration base. The accepted
 task exception depends on unchanged persistence source, SDK lock and namespace
 declarations. Compare these again for the new candidate; do not invent an SQL
-path. ADR 0016 replaces the task's former 0015 reservation after a main-branch
-number collision. Historical receipts retain the earlier number.
+path. ADR 0018 replaces the task's former 0015 and 0016 reservations after
+main-branch number collisions. Historical receipts retain their original numbers.
