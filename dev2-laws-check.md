@@ -3,7 +3,7 @@ title: A dev2 laws file whose invariants a script checks over the committed stat
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
