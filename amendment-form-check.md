@@ -14,3 +14,10 @@ Filed from a learn package-issue candidate the Captain approved (「好」, chat
 - Replacement criteria AC-9 to AC-14 under amendment 2 lack "Amended by Captain, amendment N" (delivery-gate-verdict-form). Rule: "writes any replacement as a new `**AC-N**` ... that says 'Amended by Captain, amendment N'".
 - A `Supersedes:` line reads `none` while criteria were moved under that amendment (fo-lifecycle-mod amendments 3 and 6). `design_surfaces.py` checks only that a superseded id is no longer declared, not that a moved criterion is named in `Supersedes:`.
 - Candidates for ideation to keep or drop; the first is a judgement of meaning and may stay with the observer.
+
+## FO alignment
+
+Alignment: not needed before ideation; the Captain approved filing it.
+Release review: not needed: workflow maintenance, on no journey map.
+Surfaces: none
+Visible change: none
