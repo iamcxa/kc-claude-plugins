@@ -265,6 +265,15 @@ class L1Test(Base):
         self.assertEqual(code, 1, out)
         self.assertIn("task=t", out)
 
+    def test_a_task_deleted_after_its_violating_sentinel_is_still_judged(self):
+        repo, anchor = self.violating("gone")
+        git(repo.path, "rm", "-q", "t.md")
+        git(repo.path, "commit", "-q", "-m", "delete the task")
+        code, out = self.l1(repo, anchor)
+        self.assertEqual(code, 1, out)
+        self.assertIn("1 events judged", out)
+        self.assertIn("task=t", out)
+
 
 class L2Test(Base):
     def test_records_after_the_anchor_are_judged_by_part_and_older_ones_are_not(self):
@@ -347,6 +356,51 @@ class L2Test(Base):
         code, out = laws(repo.path, "--anchor", f"L2={anchor}", runner=sandbox(self.tmp / "nr", override={"laws_check.py": stub}))
         self.assertEqual(code, 2)
         self.assertIn("no commit found that added", out)
+
+
+class LaterHistoryTest(Base):
+    def history(self):
+        repo = Repo(self.tmp / "h")
+        anchor = repo.commit("base", keep="x")
+        repo.commit("bad task", t=task())
+        repo.commit("sentinel without a report", t=task("pr-merge:7"))
+        repo.commit("good task", u=task())
+        repo.commit("report", u__observer="report")
+        repo.commit("sentinel after a report", u=task("pr-merge:8"))
+        repo.commit("records", x__dispatch__a=record(completion=False), x__dispatch__b=record(),
+                    x__dispatch__c=record(checklist="Same checklist as b."))
+        repo.commit("a record in another folder", y__dispatch__d=record(root="pkg"))
+        return repo, anchor
+
+    def verdict(self, where, anchor):
+        return laws(where, "--readme", self.learn, "--anchor", f"L1={anchor}", "--anchor", f"L2={anchor}")
+
+    def test_no_later_edit_delete_or_archive_of_a_file_changes_a_verdict(self):
+        repo, anchor = self.history()
+        baseline = self.verdict(repo.path, anchor)
+        self.assertEqual(baseline[0], 1, baseline[1])
+        self.assertIn("L1 observer-before-sentinel: 2 events judged", baseline[1])
+        self.assertIn("task=t", baseline[1])
+        self.assertIn("L2 dispatch-record-complete: 4 events judged", baseline[1])
+        files = git(repo.path, "ls-files").split("\n")
+        self.assertEqual(len(files), 8, files)
+        def edit(where, path):
+            text = task(body="edited") if path in ("t.md", "u.md") else record(checklist=f"- edited {path}") if "/dispatch/" in path else "edited\n"
+            (where / path).write_text(text)
+        def delete(where, path):
+            (where / path).unlink()
+        def archive(where, path):
+            (where / "_archive" / path).parent.mkdir(parents=True, exist_ok=True)
+            (where / path).rename(where / "_archive" / path)
+        for name, action in (("edit", edit), ("delete", delete), ("archive", archive)):
+            for target in files + ["*"]:
+                copy = self.tmp / f"h-{name}-{target.replace('/', '_')}"
+                shutil.copytree(repo.path, copy)
+                for path in files if target == "*" else [target]:
+                    action(copy, path)
+                git(copy, "add", "-A")
+                git(copy, "commit", "-q", "-m", f"{name} {target}")
+                self.assertEqual(self.verdict(copy, anchor), baseline, f"{name} {target}")
 
 
 if __name__ == "__main__":

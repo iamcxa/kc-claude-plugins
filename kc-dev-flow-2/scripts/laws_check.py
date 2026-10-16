@@ -106,14 +106,9 @@ def readme_extensions(path):
     return set()
 
 
-def task_files(state, rev):  # live and archived task files, one entry per slug
-    found = {}
-    for prefix in ("", "_archive/"):
-        for name in git(state, "ls-tree", "--name-only", rev, prefix or "./").split("\n"):
-            base = name.rsplit("/", 1)[-1]
-            if name.endswith(".md") and base != "README.md" and (prefix or "/" not in name):
-                found.setdefault(base[:-3], []).append(name)
-    return sorted(found.items())
+def sentinel_slugs(state, rev):
+    out = git(state, "log", "--format=", "--name-only", "-G^pr: [\"']?pr-merge:", rev, "--", ":(glob)*.md", ":(glob)_archive/*.md")
+    return sorted({name.rsplit("/", 1)[-1][:-3] for name in out.split("\n") if name and name.rsplit("/", 1)[-1] != "README.md"})
 
 
 def first_sentinel(state, rev, paths):
@@ -134,7 +129,7 @@ def l1_observer_before_sentinel(ctx, anchor):
         return 0, [], "0 events judged (README lists no learn)"
     later = after(ctx.state, ctx.rev, anchor)
     judged, violations = 0, []
-    for slug, paths in task_files(ctx.state, ctx.rev):
+    for slug in sentinel_slugs(ctx.state, ctx.rev):
         commit = first_sentinel(ctx.state, ctx.rev, [f"{slug}.md", f"_archive/{slug}.md"])
         if commit not in later:
             continue

@@ -12,7 +12,7 @@ registry differ.
 - **Rule.** When the workflow README lists `learn`, an observer report, or its `observer not run: <reason>`
   line, is committed no later than the commit that first writes `pr: pr-merge:<N>` in a task's frontmatter.
 - **Event.** The first such commit per task, found by reading each candidate commit's parsed frontmatter, not
-  by substring. Tasks are the top-level and `_archive/` `<slug>.md` files at the judged revision.
+  by substring. Tasks are the top-level and `_archive/` `<slug>.md` paths whose history writes a `pr:` sentinel, live, archived or since deleted.
 - **Judged by.** `<package>/scripts/observer_check.py <state> <slug> --rev <that commit>`.
 - **Bit.** An adopter's first officer archived a task with no observer report (2026-10-14).
   `observer-before-merge-guard` introduced the rule; its report is committed one commit before its sentinel.
