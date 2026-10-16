@@ -282,6 +282,20 @@ class ExtensionInstructionTests(unittest.TestCase):
                 text = COMPLETE + f"Run ({ROBOREV_PATH}{tail} then report\n"
                 self.assertEqual(self.check({"implementation-1.md": text})[0], 0)
 
+    def test_only_listed_followers_end_the_script_path(self):
+        for tail in ("/extra", "/", ":", ";", "=", "]", "}", ">", "|", "&", "\\", "#", "?", "!", "....", "'x", "`)x", ".)x"):
+            with self.subTest(tail):
+                code, out = self.check({"implementation-1.md": COMPLETE + f"python3 {ROBOREV_PATH}{tail} --repo w\n"})
+                self.assertEqual(code, 1)
+                self.assertIn("worker instruction is absent", out)
+        for tail in (" ", "\t", ".", ",", "`", ")", "\"", "'", "..", "`)", ".)", ".,", "`).", "\"`)"):
+            with self.subTest(repr(tail)):
+                text = COMPLETE + f"Run ({ROBOREV_PATH}{tail} then report\n"
+                self.assertEqual(self.check({"implementation-1.md": text})[0], 0)
+        for ending in ("", "\n", ".", ".\n"):
+            with self.subTest(repr(ending)):
+                self.assertEqual(self.check({"implementation-1.md": COMPLETE + f"Run {ROBOREV_PATH}{ending}"})[0], 0)
+
     def test_an_unlisted_extension_is_not_checked(self):
         self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme=NO_EXTENSIONS)[0], 0)
         self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme="---\nentity-type: task\nextensions: [codex]\n---\n")[0], 0)
