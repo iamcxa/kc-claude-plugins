@@ -271,3 +271,93 @@ ADR: 0016
 ### Summary
 
 `check` now refuses an entry holding a criterion its `Supersedes:` line does not name and an entry superseding ids with no "Amended by Captain, amendment N" criterion, unless the line says "no replacement"; `Design:` is not read. Both archived replays flip from exit 0 to exit 1 with one line each and each mutation changes the result. Open for FO: corpus count is 10 errors on 8 tasks (design: 8 on 6), and `staff-multi-branch` amendment 1 is only partly clearable by the waiver (partial clause moves), so AC-4's "legitimate moves covered by the waiver" holds for one of two legitimate entries.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #650 head 58eb738e against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at head `58eb738eabd9e676191ec4eb6fb31099776adfff` (detached throwaway worktree, removed). Draft PR, 4 checks green on that head (`gh pr view 650`). Suites run by me with `python3 -B`: `test_design_surfaces.py` 34 tests OK; `test_lint_skills.py` OK; `lint-skills.py` 5495 of 5511; `test_sd_dispatch.py --sd-plugin-root ~/.claude/plugins/cache/spacedock/spacedock/0.27.0` with binary `~/.local/bin/spacedock` 0.27.2 exit 0; 11 other CI unit suites exit 0.
+  AC-1 replay `fo-lifecycle-mod`: old script exit 0, new exit 1 naming amendment 3 and AC-1..AC-7. Mutant "drop `held - named`" -> replay exit 0 and 3 suite tests fail. AC-2 replay `delivery-gate-verdict-form`: old 0, new 1 naming amendment 2 and AC-1,2,3,5,6,7,8; mutant "drop replacement rule" -> replay exit 0, 6 tests fail.
+  AC-3: mutant "drop `others` lookup" prints 2 replay lines instead of 1 and fails 2 tests; mutant "drop waiver" fails 3 tests; scratch copy of `owner-sees-all-feedback-room` with the waiver clears amendment 3. AC-5: mutant adding a `Design:` scan fails `test_the_design_line_is_not_read`; `git diff 1383c911 HEAD -- kc-dev-flow-2/skills/observer` is empty. AC-6: section 414 words (base 414), `check` on a presentable task 4 words both, hunks only in `## Captain amendments`; failing output 23 and 33 words (design said 24 and 26: Polish, the design called them approximate). AC-7: restoring the old parity fixture line in a scratch copy fails `test_sd_dispatch.py` at `exercise` (assert on returncode 0).
+  AC-4: my own corpus run (read-only, 41 task files with entries, one copy per file name) gives the same 10 new errors on 8 tasks as the implementation; the design's 8 on 6 is stale (corpus grew). The 2 intended waiver cases: `owner-sees-all-feedback-room` clears with the waiver; `staff-multi-branch` amendment 1 does not, and no wording clears it (waiver alone leaves "holds AC-6, AC-7 not named"; naming them leaves "still declared"). I rule AC-4 met: the README form moves a criterion whole and has no partial move, so that refusal is a real form break and the waiver covers the other legitimate part. Limits judged: one marked criterion satisfies a whole entry (bounded, stated in ADR 0016); `no replacement` can be typed falsely (bounded, observer still reads); corpus script machine-local (I reproduced it independently, so the claim does not rest on it).
+  Findings by disposition: none Material. Deferred risk: a future Captain partial supersession has no route (trigger unobserved in a released flow; becomes Material if one occurs: ADR 0016 Consequences says reopen). Polish: an amendment title with no number takes its first digit run (`### Amendment — 2026-10-16` reads as "amendment 2026"); the README template always carries the number; the phrase match is case-sensitive.
+- DONE: Which of the 10 corpus entries the candidate now refuses sit in active (not archived) tasks of this workflow, relay, qnow or ss-web, so would hold at their next gate after release; and whether the clause the implementation dropped from references/sd/workflow.md ('relocation, not annotation in place, is the route') carries a rule nothing else states
+  Of the 10 new errors, 9 are on 7 tasks under `_archive/` at the state branch tip (qnow `accept-branch-invitation`, `booking-outcomes`, `office-header-shows-phone`, `staff-multi-branch`; relay `owner-sees-all-feedback-room`; this workflow `delivery-gate-verdict-form`, `fo-lifecycle-mod`): they hold at no gate. One is on an active task: relay `remote-review-waits-and-acts` (status validation, state tip `origin/spacedock-state/dev2`, amendment 1), and it already exits 1 at base (`supersedes AC-2 but it is still declared`), so release adds a second line, not a new hold. I also ran base and candidate over every non-archived task with amendments on the dev2, dev2-poc and ss-web state tips (about 11 tasks): no other task gains an error (`spacedock-install-beta`, `subspace-tab-icon`, `holder-panel-header-and-polish` fail at base on Preview lines only). qnow has no active task with an amendment.
+  Dropped clause: not a rule nothing else states. workflow.md still says the worker "moves each superseded criterion's block verbatim ... into its entry", `check` still refuses a superseded id left declared (that is annotation in place), the new text keeps "cannot see a skipped record or move", and ADR 0005 holds the rejected option (Context line 23, Options line 41, Decision line 58). Cost of the drop: a reader of workflow.md alone no longer sees the word "annotation"; Polish.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME="$HOME" PATH=/usr/bin:/bin:/opt/homebrew/bin:/usr/local/bin bash --noprofile --norc /tmp/afc-accept.sh`: every step printed its expected output. `adr_lint.py docs/adr --since 1383c911` (also with `--require 0016`): `16 ADR file(s) checked, 0 legacy`, exit 0. Also at the candidate: `comment_ratio.py` 3.0% (3 fixture headings, none narration) met; `doc_impact.py` lists 2 READMEs, implementation recorded `unaffected` with reasons; `number_guards.py check` PASS; `dispatch_records.py` 5 records complete; `design_surfaces.py check` on this task passes. Verdict: PASSED for head 58eb738e.
+  Process note: I ran `git fetch origin spacedock-state/dev2` in two relay state checkouts (`dhaka/.context/v0-dev2-fo`, `beirut-dev2`) to read the live tip; that moved only a remote-tracking ref, not a file, but it was not a read-only command as dispatched.
+
+### Minimal acceptance script
+
+Needs: the checkout `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo` (holds the PR head object), the dev2 state checkout under it, and the installed package at `~/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0`. Run in a fresh shell as `env -i HOME="$HOME" PATH=/usr/bin:/bin:/opt/homebrew/bin:/usr/local/bin bash --noprofile --norc <file>`. Not covered: a task that skips a move, FO's own words in `Design:`, FO behaviour at a live gate, CI.
+
+```bash
+export PYTHONDONTWRITEBYTECODE=1
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+STATE=$REPO/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0
+SHA=58eb738eabd9e676191ec4eb6fb31099776adfff
+WT=/tmp/afc-accept-wt
+
+echo "### Step 1: check out the candidate head in a throwaway worktree"
+git -C "$REPO" worktree add --detach "$WT" "$SHA" 2>&1 | tail -1
+echo "# expect: HEAD is now at 58eb738e fix(kc-dev-flow-2): design_surfaces check refuses an unnamed move and an unmarked replacement"
+
+echo "### Step 2: replay the two archived tasks the observer faulted, with the old and the new script"
+git -C "$STATE" show spacedock-state/dev2:_archive/fo-lifecycle-mod.md > /tmp/afc-accept-flm.md
+git -C "$STATE" show spacedock-state/dev2:_archive/delivery-gate-verdict-form.md > /tmp/afc-accept-dgvf.md
+git -C "$WT" show 1383c911:kc-dev-flow-2/scripts/design_surfaces.py > /tmp/afc-accept-base.py
+for f in flm dgvf; do
+  python3 -B /tmp/afc-accept-base.py check /tmp/afc-accept-$f.md; echo "old script, $f: exit $?"
+  python3 -B "$WT/kc-dev-flow-2/scripts/design_surfaces.py" check /tmp/afc-accept-$f.md; echo "new script, $f: exit ${PIPESTATUS[0]}"
+done
+echo "# expect: old script exit 0 for both; new script exit 1 for both: flm names 'Amendment 3' and AC-1..AC-7 (Supersedes line does not name them); dgvf names 'Amendment 2' and AC-1, AC-2, AC-3, AC-5, AC-6, AC-7, AC-8 (no criterion says 'Amended by Captain, amendment 2')"
+
+echo "### Step 3: the 'no replacement' waiver turns a refusal into a pass"
+cat > /tmp/afc-accept-task.md <<'TASK'
+---
+title: waiver demo
+variant: kc-dev-flow-2
+profile: pilot
+---
+
+## Acceptance criteria
+
+**AC-1**: kept.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-16, chat
+Captain: 「drop AC-2」 (chat)
+Supersedes: AC-2
+Superseded text:
+**AC-2**: the old outcome.
+
+## FO alignment
+
+Surfaces: none
+Visible change: none
+TASK
+python3 -B "$WT/kc-dev-flow-2/scripts/design_surfaces.py" check /tmp/afc-accept-task.md; echo "without waiver: exit ${PIPESTATUS[0]}"
+sed 's/^Supersedes: AC-2$/Supersedes: AC-2 (no replacement: dropped)/' /tmp/afc-accept-task.md > /tmp/afc-accept-task2.md
+python3 -B "$WT/kc-dev-flow-2/scripts/design_surfaces.py" check /tmp/afc-accept-task2.md; echo "with waiver: exit $?"
+echo "# expect: without waiver exit 1 naming Amendment 1, AC-2 and 'no replacement'; with waiver 'design surfaces presentable', exit 0"
+
+echo "### Step 4: the candidate's own suites"
+python3 -B "$WT/kc-dev-flow-2/scripts/test_design_surfaces.py" 2>&1 | grep -E '^(Ran|OK|FAILED)'; echo "test_design_surfaces: exit ${PIPESTATUS[0]}"
+python3 -B "$WT/kc-dev-flow-2/scripts/lint-skills.py" | grep -E 'words'; echo "lint-skills: exit ${PIPESTATUS[0]}"
+echo "# expect: Ran 34 tests / OK / exit 0; 'references/sd/workflow.md: 5495 of 5511 words' / exit 0"
+
+echo "### Step 5: decision-record lint over the candidate's ADRs"
+cd "$WT" && python3 -B "$PKG/scripts/adr_lint.py" docs/adr --since 1383c911 --require 0016; echo "adr_lint: exit $?"
+echo "# expect: '16 ADR file(s) checked, 0 legacy' / exit 0"
+
+echo "### Step 6: remove the throwaway worktree and temp files"
+cd /tmp && git -C "$REPO" worktree remove --force "$WT" && rm -f /tmp/afc-accept-*.md /tmp/afc-accept-base.py; git -C "$REPO" worktree list | grep -c afc-accept-wt
+echo "# expect: 0 (the worktree is gone)"
+echo "# NOT covered: a task that skips a move, FO's own words in Design:, FO behaviour at a live gate, CI on the PR."
+```
+
+### Summary
+
+PASSED at 58eb738e: every AC re-run and each falsifier fails its rule when mutated; the corpus count (10 errors, 8 tasks) reproduces independently. Only one refused entry sits in an active task and it already fails at base. No Material finding; one Deferred risk (partial supersession has no route) and three Polish items.
