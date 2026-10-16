@@ -2,6 +2,7 @@
 title: A prod-profile task passes a security review at two different gates instead of waiting for someone to judge that one is needed
 status: backlog
 variant: kc-dev-flow-2
+profile: pilot
 merge: pr
 ---
 
@@ -32,3 +33,11 @@ Read by relay's FO from kc-dev-flow-2 0.20.0; to be re-read at ideation.
 - One at validation: the diff and the served artifact. `kc-pr-flow:tob-security-reviewer` already exists and fits this one.
 
 Upstream check owed at ideation: kc-pr-flow's security agents (`tob-security-reviewer`, `tob-actions-auditor`, `tob-supply-chain-checker`) and how `kc-pr-review` dispatches them.
+
+## FO alignment
+
+Captain confirmed in this session: 「可以」 (chat, 2026-10-16), answering FO's 「要不要用上面這 5 個當第一批？」, a list that named this task; the relayed words above are context, not his ruling.
+Alignment: not needed before ideation; the Captain approved planning it.
+Release review: not needed: workflow maintenance, on no journey map.
+Surfaces: none
+Visible change: none
