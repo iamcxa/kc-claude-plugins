@@ -34,6 +34,17 @@ gates:
                 id: briefing:extension-instruction-reaches-dispatch:ideation:attempt-1:revision-1
                 digest: sha256:82394dd5a5685c2cc24fcea22d69400cc2767df6fea6456645a13a3a89f4a734
                 room-ref: ./extension-instruction-reaches-dispatch/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extension-instruction-reaches-dispatch:ideation:1
+                briefing: briefing:extension-instruction-reaches-dispatch:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-16T04:17:03.8034Z"
+                decision: approve
+                reason: Captain approved batch-1 ideation (「准」) after FO presented all five gates together; as the gate question states, this accepts each decision as recommended (and FO's stated change where named), the batch-1 implementation order, and is the push and Draft PR grant for the implementation worker.
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-16T03:14:50Z
 ---
 
