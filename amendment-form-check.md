@@ -228,6 +228,7 @@ Visible change: none
   - P2 `scripts/design_surfaces.py`: a bold AC id anywhere in a moved block counts as a moved criterion, so evidence citing another criterion fails a valid move.
 - Cycle 2 (FO, 2026-10-16): Codex review on #650 3bc8f647 (review:5543218466) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P2 `scripts/design_surfaces.py`: `section()` ends the acceptance-criteria section only at a line starting `## `, so an indented sibling heading such as ` ## Notes` lets bold AC-shaped lines from that later section satisfy the replacement-marker check.
+- Cycle 3, review (FO, 2026-10-16): Codex review round 3 on #650 458324f8 (review:5544568264) left two P2 and no P1; declined under the round-3 rule into backlog task amendment-form-check-round3-followups, each with its reason there. No repair cycle; the recheck of 458324f8 continues.
 
 ## Stage Report: ideation
 
