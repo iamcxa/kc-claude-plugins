@@ -77,6 +77,14 @@ Read by relay's FO from kc-dev-flow-2 0.20.0; to be re-read at ideation.
 
 Upstream check owed at ideation: kc-pr-flow's security agents (`tob-security-reviewer`, `tob-actions-auditor`, `tob-supply-chain-checker`) and how `kc-pr-review` dispatches them.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-16, chat
+Captain: 「就按照新的建議」 (chat, 2026-10-16)
+Asked: 「這三個新建議可以嗎？」（第 2 項：「prod-security：用第 2 版指示上線，但 AC-3 改成「依關卡分工」，不是降低標準。」 設計關要抓到「提示注入」；驗收關要抓到「留言無上限」，上線前用 relay 那個 PR 的程式差異實際跑一次驗收關審核來證明。）
+Supersedes: AC-3
+Design: the r2 brief ships; AC-3 is replaced by a criterion split by gate as the asked item states
+
 ## FO alignment
 
 Captain confirmed in this session: 「可以」 (chat, 2026-10-16), answering FO's 「要不要用上面這 5 個當第一批？」, a list that named this task; the relayed words above are context, not his ruling.
