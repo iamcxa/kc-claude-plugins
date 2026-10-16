@@ -243,6 +243,7 @@ Visible change: none
 - Cycle 1 (FO, 2026-10-16): Codex review round 1 on #651 de7c416c (review:5543173293) left one P1 and one P2, both to fix; investigation first, then FO fix authorization, then a fresh validation recheck. The validation of de7c416c dispatched before this finding continues.
   - P1 `scripts/laws_check.py`: L2 reads each record's bytes and folder listing at the run revision, not at the commit that added it, so a record corrected or deleted later turns a committed violation green without moving the anchor.
   - P2 `scripts/laws_check.py`: a checker that exits 1 with no parseable output (a crash writing only to stderr) leaves the law at exit 0 instead of exit 2.
+- Cycle 1, roborev (FO, 2026-10-16): roborev (evidence=roborev:711) on 096ce885 reported one High: a record deleted and re-added at the same path is judged only at its newest add, so its first, bad add escapes. Same class as the Cycle 1 P1 (later history erases a committed violation); FO fixes it in this cycle rather than defer it, although 0 of 149 records on the real history have more than one add.
 
 ## Stage Report: ideation
 
