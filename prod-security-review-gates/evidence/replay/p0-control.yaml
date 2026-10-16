@@ -1,0 +1,179 @@
+```yaml
+tob_security_review:
+  pr: none
+  strategy: DEEP
+  security_tier: standard
+  files_analyzed: 5   # design doc; at 0cdb40a7: delivery_gate.py, dispatch_records.py, workflow.md (dispatch-record passage and merge-ask passage), pr_watch.py (grep only)
+  findings:
+    - file: "design: ## Design > Limits; AC-12; PRFAQ 'What does exit 0 prove now?' (code: kc-dev-flow-2/scripts/delivery_gate.py, validated_candidate/PASSED)"
+      line: 0
+      severity: HIGH
+      category: auth-bypass
+      title: "Exit 0 no longer requires that any validation finished or passed; the merge-ask gate becomes a check on a line FO writes before validation starts"
+      description: |
+        At 0cdb40a7 the gate needs a `## Stage Report: validation` section holding `Verdict PASSED` and a
+        SHA that equals the PR head. The design removes that requirement. The `Candidate:` line is written at
+        dispatch time, before the validator has run. The design accepts this as a limit: a REJECTED validation,
+        a crashed validator, and a validation still in progress all exit 0. The only remaining control is FO
+        reading the report "at the gate", which is prose the script does not check. FO's exit 0 is shown to the
+        Captain with the merge ask. The Captain reads it as "the delivery check passed", and the script's own
+        output no longer says otherwise.
+        The base check was imperfect, but it was the one place that tied a merge ask to a passing validation
+        outcome. The design trades prose-parsing fragility for a gate that proves nothing about the outcome.
+        No residual check on the report is proposed, not even checking that a report section exists.
+      attack_scenario: |
+        1. A PR author, or a bug or lapse in FO's session, leads to the record `validation-3.md` being saved with
+           `Candidate: <head>`. The validator is dispatched but fails, times out, or returns REJECTED.
+        2. FO (or an autonomous FO loop) runs `delivery_gate.py check`. The head equals the Candidate, so it prints exit 0.
+        3. The merge ask reaches the Captain with the gate result attached.
+        4. Result: an unvalidated or rejected head is offered for merge. The only barrier left is a human or
+           LLM judgement the design cannot test.
+      blast_radius: "HIGH"
+      recommendation: |
+        Keep the "no prose parsing" goal but add a cheap structural bind. For example, require that the task file
+        holds a `## Stage Report: validation` heading after the record (existence only, no verdict parsing), or
+        that the record's stage status is accepted. If that is declined, make the script's exit 0 line say
+        "dispatched on this head, validation outcome NOT checked", so the Captain is not given false assurance.
+        Put the residual under `without-it unanswered`.
+
+    - file: "design: Edge cases > 'A validator that checked a head other than the one dispatched'; AC-12 (code: delivery_gate.py validated_candidate)"
+      line: 0
+      severity: MEDIUM
+      category: missing-validation
+      title: "Dropping the validator's own head statement removes an independent identity check; the head now comes from a single self-attested source"
+      description: |
+        At base the candidate is read from the validator's report. A validator that reviewed a different
+        commit than the one FO dispatched produced a mismatch, and the gate held. In the design the head comes
+        only from FO's own record. A validator that checked a stale or wrong tree is no longer detectable by the
+        script. The design replaces the check with "FO compares artifact identity when reading the report".
+        The cited principle in skills/validation/principles.md line 53 says only "Report verdict, artifact
+        identity...". No script or test pins it. The design's evidence (70 of 71 reports mention the head) is a
+        "mentioned anywhere" test, not proof that no wrong-head validation occurs. The same section calls that test crude.
+        Both the dispatcher and the checker are now the same party, so the gate is self-attestation.
+      attack_scenario: |
+        1. The PR author pushes commit B after FO dispatched validation on A. The validator's worktree or branch checkout is stale and it validates A.
+        2. FO re-dispatches (or edits the record) with `Candidate: B`, assuming the validation covers B.
+        3. The report says it validated A. Nothing in the script reads it, and the gate exits 0 on B.
+        4. Result: code in B that was never reviewed (for example a malicious post-validation push) is offered for merge.
+      blast_radius: "HIGH"
+      recommendation: |
+        Keep a non-verdict cross-check. Require that the latest validation report in the task file mentions the
+        Candidate SHA as a 7-40 hex token, with no verdict parsing and no prose interpretation. This would catch
+        wrong-head validation structurally. Alternatively have the validator stage record the SHA it checked out
+        in a machine-written field (not free prose).
+
+    - file: "design: AC-9 ('first 7 characters of S1 exit 0'); code: delivery_gate.py check() (--head 7-40 hex, prefix compare of min length)"
+      line: 0
+      severity: MEDIUM
+      category: insecure-default
+      title: "Short --head is enshrined as accepted, so a 7-character prefix collision passes the gate"
+      description: |
+        The Candidate must be 40-hex, but AC-9 keeps `--head` accepting a 7-character prefix and requires a test
+        that a 7-character head exits 0. The base compares "as a prefix of equal length", so the effective
+        comparison is 7 hex characters (28 bits). Someone who can push to the PR branch can grind a commit whose
+        SHA starts with the same 7 characters as the validated one. This takes a few hundred million hash
+        attempts, which is feasible on commodity hardware. The gate would then pass a different commit.
+        When `--head` is omitted, gh returns the full 40-character OID and the comparison is safe. The weakness
+        applies only when FO passes a short `--head`, but the design adds a test requiring it to work.
+      attack_scenario: |
+        1. A contributor on a PR learns the validated head (public in the PR) is `7679ab7a...`.
+        2. They grind a malicious commit whose SHA begins `7679ab7`, and force-push it.
+        3. FO, passing `--head 7679ab7` (copied from an abbreviated log or a PR watch line, which truncates heads), gets exit 0.
+        4. Result: the unvalidated malicious commit is the one offered for merge.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Require a full 40-hex `--head`, or compare full candidate against full head only. Delete the 7-character
+        subTest and the prefix semantics. Better still, drop `--head` for the production path (it also skips
+        the gh read, so the head is whatever FO types) and keep it only behind a test-only environment flag.
+
+    - file: "design: Change in files (dispatched_candidates, RECORD pattern); AC-11 ('highest-numbered record decides, numerically')"
+      line: 0
+      severity: MEDIUM
+      category: other
+      title: "Record selection rule is under-specified; ties, odd names and unsorted globs can pick a stale or planted record"
+      description: |
+        The check trusts a single file picked by name from a folder that other parties can write to. The
+        design fixes only numeric-over-lexical ordering. It does not say how these are treated: `validation-2.md`
+        vs `validation-02.md` (equal number); `validation-3-followup.md` or `validation-final.md`; the record
+        names that follow-up messages to a resumed worker use (workflow.md says these are dispatches too, with
+        their own records); a non-regular file or symlink as `validation-N.md`; and a huge digit string (Python
+        3.11+ `int()` raises ValueError above 4300 digits). An uncaught exception exits 1, which FO reads as
+        "head differs, revalidate", not as an error. `glob()` order is filesystem-dependent, so a tie breaks
+        arbitrarily. Anyone who can create a file in `<task>/dispatch/` (a worker with write access to the
+        state checkout, or a PR-supplied file if state and code ever share a tree) can add
+        `validation-99.md` with a Candidate of their choosing and it wins.
+      attack_scenario: |
+        1. A worker or compromised process with write access to the state checkout adds `dispatch/validation-999.md` with `Candidate: <malicious head>` in the header.
+        2. The latest-record rule selects it. The head the PR author pushed equals it, and the gate exits 0.
+        3. Alternatively, `validation-2.md` and `validation-02.md` both exist, and glob order selects the old one, so a stale head passes or a current head is wrongly held.
+        4. Result: the gate is controlled by whoever can name a file.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Specify an anchored filename pattern (`^validation-([1-9][0-9]{0,3})\.md$`, regular file, not a symlink).
+        Hold with exit 2 on any other `validation-*` name, on duplicate numbers, and on a ValueError. Wrap
+        main() so an uncaught exception exits 2, not 1. Add subTests for each. Tie each record to a state commit
+        (check `git log` shows it was committed by the dispatch commit) if the state checkout is writable by workers.
+
+    - file: "design: Limits ('a line written after the fact is not detected'); PRFAQ; code: workflow.md merge-ask passage (no --match-head-commit anywhere in kc-dev-flow-2)"
+      line: 0
+      severity: MEDIUM
+      category: race-condition
+      title: "Check-to-merge window is unguarded; the merged commit is never pinned to the checked head"
+      description: |
+        The gate reads the PR head once, at the moment FO runs the check. The Captain approves later, and the
+        merge happens after that. Nothing in kc-dev-flow-2 at 0cdb40a7 pins the merge to the checked SHA (no
+        `--match-head-commit` or equivalent). The design strengthens the idea that "head equals Candidate"
+        is the delivery guarantee but leaves this window unexamined. Because the Candidate line is also
+        unauthenticated (FO's statement, no commit binding), there is no later point at which a swap is caught.
+      attack_scenario: |
+        1. FO runs the check on head A and exits 0, then asks the Captain to merge.
+        2. While the ask is pending, the PR author force-pushes malicious commit B.
+        3. The Captain approves and the merge lands B.
+        4. Result: unvalidated code merges even though the gate passed at ask time.
+      blast_radius: "HIGH"
+      recommendation: |
+        State in the design that merge must be pinned to the checked SHA (`gh pr merge --match-head-commit <S>`
+        or the branch-protection equivalent). Otherwise state that the gate is advisory at ask time only. At
+        minimum, have FO re-run the check immediately before the pending terminal approval is acted on.
+
+    - file: "design: D1 and Limits ('a head equal to any listed line passes for any --pr'); AC-10 (Candidate line grammar)"
+      line: 0
+      severity: LOW
+      category: missing-validation
+      title: "Line grammar leaves regex and header edge cases open that decide fail-open versus fail-closed"
+      description: |
+        The design names the grammar `Candidate: <40-hex>` and shows subTests for exact misformats. Not specified:
+        `\s*` after the colon (it matches a newline, so `Candidate:` followed on the next line by a SHA could
+        read a line that is not a Candidate line); `\r\n` line endings; uppercase hex; a Candidate inside a
+        blockquote, an indented block or a fenced block inside the header; a header that contains FO-pasted
+        task text (the part above the first `## `). All the likely outcomes fail closed (exit 2), but one
+        accidental match (`\s*` crossing lines) fails open. The D1 "same SHA in two repos" argument is sound:
+        a SHA is content-addressed, so equal SHAs mean equal commits. It does not cover a multi-repo task where
+        a Candidate listed for repo B is accepted as validation of repo A's PR carrying the same commit through a
+        fork or mirror, which is harmless but unrecorded.
+      attack_scenario: |
+        1. FO writes the record with a header line `Candidate:` and a following line `<sha of another head>` (for example a pasted PR description), and the regex's `\s*` matches across the newline.
+        2. The gate reads a SHA that FO did not intend as the Candidate and exits 0 for it.
+        3. Result: a head FO did not mean to attest passes.
+      blast_radius: "LOW"
+      recommendation: |
+        Use `^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$` with re.M and no `\s`. Strip `\r` first. Add a subTest
+        for the newline-crossing form and CRLF. Treat uppercase as a hold.
+
+  clean_patterns:
+    - "No new network surface, route, listener or file-write path. The change reads local files and an existing `gh pr view` call; delivery_gate.py takes no secrets."
+    - "The new reader is simpler than the base regexes (bounded `[\\s\\S]{0,160}?` lazy window). No new ReDoS risk is introduced; anchored line patterns are linear."
+    - "Fail-closed default is stated and tested (no folder, no record, no line, malformed line all exit 2). This matches the current script's hold-on-unknown convention."
+    - "D1 (bare 40-hex line passes for any --pr): sound for content-addressed SHAs. Equal SHAs are equal commits, so cross-repo acceptance of the same SHA does not admit different code."
+    - "Header-only reading (text above the first `## `) keeps worker-authored body sections (Scope notes, Checklist) out of the parse, which limits injection from content in those sections."
+    - "subprocess usage is list-form with no shell, so `--pr` is not an injection vector (also validated by the PR regex). The `gh` call is unchanged."
+    - "The change touches no pr_watch.py, mod or extension code, so the Codex and Copilot head checks (which re-read headRefOid) are untouched."
+
+  limitations:
+    - "No code or diff exists; findings are on the design's stated plan. Quoted behavior of the 'prototype' in /tmp/gate-redo/proto, the archived tasks (observer-before-merge-guard, journey-server-host-pilot, migration-and-number-guards) and the 104-record count live on the author's machine or other repositories. I could not read them, so I could not verify any observed exit code or count."
+    - "The design names base c545b896 (package 0.22.1) and PR #647. The commit under review is 0cdb40a7, whose delivery_gate.py already matches the quoted `PASSED` regex but has none of #647's parser additions. I did not diff the two bases, so I cannot say what differs between them."
+    - "I did not determine who can write to the state checkout (`<task>/dispatch/`) or whether workers have shell access there. Findings 4 and 2 depend on that. Spacedock's own checks (`spacedock gate prepare`, merge guard) are outside this repository and I did not read them, so another control may already pin the merge or the validation outcome."
+    - "I could not verify what the pending terminal approval or pr-merge hook does at merge time (whether it passes `--match-head-commit`). A repo grep at 0cdb40a7 found no such flag in kc-dev-flow-2, but the hook may live in Spacedock or an adopter."
+    - "Word-count and lint-budget claims (AC-13, 5511 / 5521 / 5495) were not checked; they are not security-relevant."
+    - "Adopter-side behaviour (relay, qnow, ss-web) after the package sync was not examined."
+```
