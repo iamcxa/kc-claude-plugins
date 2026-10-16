@@ -56,6 +56,23 @@ Superseded text:
 **AC-2**: the old outcome.
 """
 
+REPLACEMENT = "**AC-3**: Amended by Captain, amendment 1: the new outcome.\n"
+TWICE = """
+## Captain amendments
+
+### Amendment 1 — 2026-09-30, chat
+Captain: 「one」 (chat)
+Supersedes: AC-2
+Superseded text:
+**AC-2**: the old outcome.
+
+### Amendment 2 — 2026-10-01, chat
+Captain: 「two」 (chat)
+Supersedes: AC-3
+Superseded text:
+**AC-3**: Amended by Captain, amendment 1: the first replacement.
+"""
+
 FENCED_EXAMPLE = """
 ## Design
 
@@ -259,14 +276,13 @@ class CriteriaTests(unittest.TestCase):
 
 
 class AmendmentTests(unittest.TestCase):
-    def errors(self, extra, criteria="**AC-1**: a driver sees seats.\n", module=ds):
+    def errors(self, extra, criteria="**AC-1**: a driver sees seats.\n" + REPLACEMENT, module=ds):
         text = BASE.split("## Acceptance criteria")[0] + "## Acceptance criteria\n\n" + criteria + extra
         with tempfile.TemporaryDirectory() as d:
             return module.check_task(write_task(d, text))
 
     def test_a_relocated_criterion_none_no_amendments_and_a_fenced_example_pass(self):
         self.assertEqual(self.errors(AMENDMENT), [])
-        self.assertEqual(self.errors(AMENDMENT.replace("Supersedes: AC-2", "Supersedes: none")), [])
         self.assertEqual(self.errors(""), [])
         self.assertEqual(self.errors(FENCED_EXAMPLE), [])
 
@@ -285,6 +301,45 @@ class AmendmentTests(unittest.TestCase):
         redeclared = self.errors(AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-1"), "**AC-1**: new text.\n")
         self.assertTrue(any("supersedes AC-1" in e for e in redeclared), redeclared)
 
+    def test_an_entry_holding_a_criterion_its_supersedes_line_does_not_name_is_refused(self):
+        errors = self.errors(AMENDMENT.replace("Supersedes: AC-2", "Supersedes: none"))
+        self.assertTrue(any("'### Amendment 1" in e and "holds AC-2 but its 'Supersedes:' line does not name them" in e for e in errors), errors)
+        two = AMENDMENT.replace("**AC-2**: the old outcome.\n", "**AC-1**: kept.\n**AC-2**: the old outcome.\n")
+        errors = self.errors(two.replace("Supersedes: AC-2", "Supersedes: AC-1"), REPLACEMENT)
+        self.assertTrue(any("holds AC-2 but" in e for e in errors), errors)
+        self.assertFalse(any("holds AC-1" in e for e in errors), errors)
+
+    def test_naming_every_moved_id_and_a_bold_on_the_captain_line_alone_pass(self):
+        self.assertEqual(self.errors(AMENDMENT.replace("Captain: 「keep", "Captain: **AC-9** 「keep")), [])
+        two = AMENDMENT.replace("**AC-2**: the old outcome.\n", "**AC-1**: kept.\n**AC-2**: the old outcome.\n")
+        self.assertEqual(self.errors(two.replace("Supersedes: AC-2", "Supersedes: AC-1, AC-2"), REPLACEMENT), [])
+
+    def test_superseding_entries_need_a_criterion_with_the_amendment_phrase(self):
+        no_phrase = "**AC-1**: a driver sees seats.\n**AC-3**: the new outcome.\n"
+        errors = self.errors(AMENDMENT, no_phrase)
+        self.assertTrue(any("supersedes AC-2 but no criterion says 'Amended by Captain, amendment 1'" in e for e in errors), errors)
+        self.assertEqual(self.errors(AMENDMENT), [])
+        other = "**AC-1**: a driver sees seats.\n**AC-3**: Amended by Captain, amendment 2: the new outcome.\n"
+        self.assertTrue(self.errors(AMENDMENT, other))
+        intro = "Amended by Captain, amendment 1, is written on the criteria below.\n**AC-1**: a driver sees seats.\n"
+        self.assertTrue(self.errors(AMENDMENT, intro))
+        tenth = AMENDMENT.replace("Amendment 1", "Amendment 10")
+        self.assertTrue(self.errors(tenth), "amendment 1's phrase must not satisfy amendment 10")
+
+    def test_a_replacement_later_moved_by_another_entry_still_satisfies_the_entry_that_wrote_it(self):
+        self.assertEqual(self.errors(TWICE, "**AC-1**: a driver sees seats.\n**AC-4**: Amended by Captain, amendment 2: newest.\n"), [])
+        errors = self.errors(TWICE, "**AC-1**: a driver sees seats.\n**AC-4**: the newest.\n")
+        self.assertEqual(len(errors), 1, errors)
+        self.assertIn("Amendment 2", errors[0])
+
+    def test_no_replacement_on_the_supersedes_line_waives_the_replacement_rule(self):
+        waived = AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-2 (no replacement: moved to a new task)")
+        self.assertEqual(self.errors(waived, "**AC-1**: a driver sees seats.\n"), [])
+
+    def test_the_design_line_is_not_read(self):
+        text = AMENDMENT.replace("Supersedes: AC-2\n", "Supersedes: AC-2\nDesign: the whole paragraph, reworded by FO beyond his words.\n")
+        self.assertEqual(self.errors(text), [])
+
     def test_the_amendments_heading_matches_in_any_case_and_with_surrounding_space(self):
         for heading in ("## Captain Amendments", "## CAPTAIN AMENDMENTS", " ## Captain amendments", "## Captain amendments\xa0"):
             with self.subTest(heading):
@@ -302,8 +357,43 @@ class AmendmentTests(unittest.TestCase):
 
     def test_mutation_dropping_the_disjointness_rule_fails_its_case(self):
         mutant = mutated("& declared", "& set()")
-        self.assertTrue(self.errors(AMENDMENT, BOTH))
-        self.assertEqual(self.errors(AMENDMENT, BOTH, mutant), [])
+        self.assertTrue(self.errors(AMENDMENT, BOTH + REPLACEMENT))
+        self.assertEqual(self.errors(AMENDMENT, BOTH + REPLACEMENT, mutant), [])
+
+    def test_mutation_dropping_the_moved_criterion_rule_fails_its_case(self):
+        mutant = mutated("        if held - named:\n", "        if False:\n")
+        text = AMENDMENT.replace("Supersedes: AC-2", "Supersedes: none")
+        self.assertTrue(self.errors(text))
+        self.assertEqual(self.errors(text, module=mutant), [])
+
+    def test_mutation_dropping_the_replacement_rule_fails_its_case(self):
+        mutant = mutated("        if named and not NO_REPLACEMENT", "        if False and not NO_REPLACEMENT")
+        self.assertTrue(self.errors(AMENDMENT, "**AC-1**: a driver sees seats.\n"))
+        self.assertEqual(self.errors(AMENDMENT, "**AC-1**: a driver sees seats.\n", mutant), [])
+
+    def test_mutation_dropping_the_other_entry_lookup_fails_its_case(self):
+        mutant = mutated("live + others", "live")
+        criteria = "**AC-1**: a driver sees seats.\n**AC-4**: Amended by Captain, amendment 2: newest.\n"
+        self.assertEqual(self.errors(TWICE, criteria), [])
+        self.assertEqual(len(self.errors(TWICE, criteria, mutant)), 1)
+
+    def test_mutation_counting_the_criteria_intro_line_fails_its_case(self):
+        mutant = mutated("live = from_first_criterion(section(lines, AC_HEADING) or [])", "live = section(lines, AC_HEADING) or []")
+        intro = "Amended by Captain, amendment 1, is written on the criteria below.\n**AC-1**: a driver sees seats.\n"
+        self.assertTrue(self.errors(AMENDMENT, intro))
+        self.assertEqual(self.errors(AMENDMENT, intro, mutant), [])
+
+    def test_mutation_dropping_the_waiver_fails_its_case(self):
+        mutant = mutated("and not NO_REPLACEMENT.search(line.group(1))", "")
+        waived = AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-2 (no replacement: moved to a new task)")
+        self.assertEqual(self.errors(waived, "**AC-1**: a driver sees seats.\n"), [])
+        self.assertTrue(self.errors(waived, "**AC-1**: a driver sees seats.\n", mutant))
+
+    def test_mutation_reading_the_design_line_fails_its_case(self):
+        mutant = mutated('ENTRY_LABELS = ("Captain:", "Asked:", "Supersedes:", "Design:")', 'ENTRY_LABELS = ("Captain:", "Asked:", "Supersedes:")')
+        text = AMENDMENT.replace("Supersedes: AC-2\n", "Supersedes: AC-2\nDesign: **AC-9** names a paragraph.\n")
+        self.assertEqual(self.errors(text), [])
+        self.assertTrue(self.errors(text, module=mutant))
 
     def test_mutation_dropping_the_captain_rule_fails_its_case(self):
         mutant = mutated("        if not CAPTAIN_WORDS.search(entry):\n", "        if False:\n")

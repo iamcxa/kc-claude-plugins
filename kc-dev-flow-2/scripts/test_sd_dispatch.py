@@ -532,7 +532,7 @@ def exercise(base, binary, sd_root):
 
         criteria = "\n## Acceptance criteria\n\n**AC-1**: kept.\n{old}"
         amendment = ("\n## Captain amendments\n\n### Amendment 1 — 2026-09-30, chat\n"
-                     "Captain: 「drop AC-2」 (chat)\nSupersedes: AC-2\n{moved}")
+                     "Captain: 「drop AC-2」 (chat)\nSupersedes: AC-2 (no replacement: dropped)\n{moved}")
         old = "**AC-2**: replaced outcome.\nVerified by: y\n"
         ids, checked = parity(criteria.format(old="") + amendment.format(moved="Superseded text:\n" + old))
         assert ids == ["AC-1"] and checked.returncode == 0, (ids, checked.stdout)
