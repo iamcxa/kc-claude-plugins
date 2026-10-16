@@ -1,0 +1,50 @@
+# Copy to <state branch>:.github/workflows/dev2-laws.yml and replace each <...> value.
+name: dev2-laws
+
+on:
+  push:
+    branches: ["<state branch, for example spacedock-state/dev2>"]
+
+concurrency:
+  group: dev2-laws-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  laws:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout state branch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          path: state
+
+      - name: Checkout the package scripts
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: iamcxa/kc-claude-plugins
+          ref: "<commit of a published kc-dev-flow-2-vX.Y.Z tag>"
+          sparse-checkout: kc-dev-flow-2
+          persist-credentials: false
+          path: package
+
+      - name: Checkout the trunk workflow README
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: "<trunk branch>"
+          sparse-checkout: "<workflow dir>/README.md"
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+          path: trunk
+
+      - name: laws_check.py
+        run: |
+          python3 package/kc-dev-flow-2/scripts/laws_check.py state \
+            --readme "trunk/<workflow dir>/README.md" \
+            --anchor L1=<commit> \
+            --anchor L2=<commit>
