@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:prod-security-review-gates:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approving accepts D1 (an opt-in security extension: for a prod task FO dispatches kc-pr-flow's tob-security-reviewer unchanged at the ideation gate and at the validation gate), D2 (narrow relay's 'specialists are risk-selected' sentence for security only, recorded as your ruling for relay's FO to apply in relay's own README, not in this PR) and D3 (tob-actions-auditor and tob-supply-chain-checker not in the first cut), each as recommended, and the stop rule: the worker revises the review brief at most twice and the extension does not ship if AC-3 and AC-4 still fail. It also accepts the batch-1 implementation order (names-check-before-dispatch lands before extension-instruction-reaches-dispatch, which edits the same dispatch_records.py function; the other three run in parallel), and is the grant for the implementation worker to push a branch and open a Draft PR.",
+  "artifacts": [
+    {
+      "id": "artifact:prod-security-review-gates:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0d1d60078d1e9c6adc7f80924960a0455b06e5f8/prod-security-review-gates.md",
+      "rev": "sha256:ed2eb6c34977550a97580c67187585ca2a3e5d363668fa689e2fa518990855a9",
+      "mediaType": "text/markdown",
+      "summary": "Design: opt-in `security` extension; no workflow text or script changes; no new reviewer built. Replay on relay agent-front-door, one run per cell: the threat-model brief found both Medium findings on the relay design but raised a HIGH on a control design with nothing exposed; adding an attacker boundary removed the false HIGH but missed unbounded writes, so the brief is not settled (AC-3 and AC-4) and the stop rule bounds it. Cost: 57k to 98k tokens per ideation-gate run; validation-gate run unmeasured (relay reported about 7 minutes). FO reads about 423 more words at each gate prep only for a listing prod task; base bytes at every other moment. Not verified: run-to-run variance. design_surfaces.py check exit 0."
+    }
+  ]
+}

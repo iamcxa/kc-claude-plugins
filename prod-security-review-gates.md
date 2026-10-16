@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:prod-security-review-gates:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:prod-security-review-gates-ideation-1
+              briefing:
+                id: briefing:prod-security-review-gates:ideation:attempt-1:revision-1
+                digest: sha256:ade941a8833e926167af6bb2b17f3e3386607d12ab77b866429d446ab2abb150
+                room-ref: ./prod-security-review-gates/review/ideation/briefing-1
 started: 2026-10-16T03:14:23Z
 ---
 
