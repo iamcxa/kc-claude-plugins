@@ -37,7 +37,8 @@ On a Node host with save capability, Save opens a bounded filename panel.
 The existing filename probe changes Write to Overwrite for an existing file;
 that button confirms the write. Cancel or Escape returns focus to Save, and
 Dismiss clears a result message. Dismiss the panel before using another popup.
-The chapter document popup still reads the room's allowlisted local checkout.
+The chapter document popup still reads the room's allowlisted local checkout;
+its header stays visible while the document body scrolls.
 Cloudflare hides Save/download and reports the existing unavailable-checkout
 message; it does not gain filesystem routes.
 

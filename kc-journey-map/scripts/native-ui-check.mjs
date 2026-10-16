@@ -87,7 +87,7 @@ export async function checkNativeUi({ page, context, adapter, origin, scratch, s
    await click(page.getByTestId('page-menu.button')); await bounds(page.getByRole('dialog').first()); await escape()
    const downloaded = page.waitForEvent('download'); await click(download); assert.equal((await downloaded).suggestedFilename(), 'A.tldr'); await click(page.getByRole('button', { name: 'Dismiss', exact: true }))
   })
-  if (name === 'desktop' || name === 'phone390' || name === 'phone320') await check(name + ': actual chapter popup content, scroll, dismissal and canvas return', async () => {
+  await check(name + ': actual chapter popup ' + (adapter === 'node' ? 'content and scrolling' : 'unsupported state') + ', visible dismissal and canvas return', async () => {
    await page.evaluate(() => {
     const editor = window.editor
     editor.setCurrentTool('select')
@@ -105,7 +105,10 @@ export async function checkNativeUi({ page, context, adapter, origin, scratch, s
     await page.waitForFunction(() => document.querySelector('.doc-popup-body').scrollTop > 100)
    } else await page.getByText(/Document unavailable/).waitFor()
    await shot(name + '-document')
-   await click(page.getByRole('button', { name: 'Close', exact: true }))
+   const close = page.getByRole('button', { name: 'Close', exact: true })
+   await bounds(page.locator('.doc-popup-chrome')); await bounds(close)
+   assert.ok(await close.evaluate(el => { const r = el.getBoundingClientRect(); const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return hit === el || el.contains(hit) }), 'document Close is clipped or obstructed before scrolling it into view')
+   await click(close)
    await page.locator('dialog.doc-popup').waitFor({ state: 'detached' })
    assert.ok(await link.evaluate(el => el === document.activeElement))
    await click(link); await page.locator('dialog.doc-popup[open]').waitFor(); await escape()
