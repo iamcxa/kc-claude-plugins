@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:names-check-before-dispatch:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:names-check-before-dispatch-ideation-1
+              briefing:
+                id: briefing:names-check-before-dispatch:ideation:attempt-1:revision-1
+                digest: sha256:3264c41be765a0f6ec250a28b9183c864e9ade63ccc06b394b6ed2e9160ba37a
+                room-ref: ./names-check-before-dispatch/review/ideation/briefing-1
 started: 2026-10-16T03:14:56Z
 ---
 

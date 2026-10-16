@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:names-check-before-dispatch:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approving accepts D1 (an idle-hook line: dispatch_records.py --newest scans the newest committed record and pr_watch.py tasks prints one next: line while a bare script name remains) and D2 (FO drafts an issue asking Spacedock for a pre-dispatch hook point and shows it to you before posting; nothing is posted on this approval), each as recommended. It also accepts the batch-1 implementation order (names-check-before-dispatch lands before extension-instruction-reaches-dispatch, which edits the same dispatch_records.py function; the other three run in parallel), and is the grant for the implementation worker to push a branch and open a Draft PR.",
+  "artifacts": [
+    {
+      "id": "artifact:names-check-before-dispatch:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/8d7f084306a261c19323a02c2a17771ca3ce00f9/names-check-before-dispatch.md",
+      "rev": "sha256:b2b22c27880354f1c5acf3ca74d861dac94dd915ae54179d12f56b2d8c7e3948",
+      "mediaType": "text/markdown",
+      "summary": "Design: the --names check cannot be forced before dispatch build (no Spacedock pre-dispatch hook; ADR 0014 met the same wall), so it runs automatically at FO's idle hook and detects after the commit, not before the send; no README or mod words added. Replay: flags exactly the three missed records (e081c5f2, c3935e01, d6182ead) and no other active task; 55 of 149 record additions over history, 5 of 71 since 2026-10-14. Not measured: whether the line reaches FO before the worker reads the record. Changes dispatch_records.py, pr_watch.py and tests. design_surfaces.py check exit 0."
+    }
+  ]
+}
