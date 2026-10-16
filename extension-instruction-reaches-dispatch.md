@@ -232,3 +232,20 @@ Visible change: none
 ### Summary
 
 The gap is closed by one new part in `dispatch_records.py`'s validation-time folder run, which needs no FO memory and no README word; a pre-send command is left to `names-check-before-dispatch`'s pre-send mode (Decision 1). Only roborev declares a worker instruction. Two Captain decisions: the run point, and first record only versus every record.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main implementing Decision 1 and 2 as recommended: one new part in the validation-time kc-dev-flow-2/scripts/dispatch_records.py folder run that fails a first implementation record omitting a listed extension's worker instruction, with the 'roborev not run: <reason>' exemption; every acceptance criterion in the task file green, each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Draft PR iamcxa/kc-claude-plugins#652, one commit 56f83bf5 on top of #649's head a4217cd3 (stacked, stated in the body; merge origin/main after #649 merges). 34 tests pass. Mutations on a package copy (`python3 -B`): drop part -> 7 fail; accept `roborev_gate.py` substring -> 3; one message for both failures -> 1; empty reason accepted -> 1; ignore `extensions:` -> 1; read every `implementation-*` -> 1; ignore stage -> 2; drop note -> 1; ignore `--readme` -> 1; rename EXTENSION.md label -> 8 (AC-4 test first). Each fails the test written for it.
+- DONE: AC-7 on real records, read-only (README at each record's `Dispatched:` SHA)
+  relay `owner-sees-all-feedback-room` exit 1 naming roborev. relay 12 roborev-listed: 3 pass / 8 absent / 1 unsubstituted; web 1 absent; this repo 16: 15 pass / 1 absent. Design counted 11/1/11: relay `front-door-hardening` (record added 2026-10-16 11:21 +08) is the extra absent, 5 newer records here pass; no false positive on a passing record.
+- DONE: No FO-read word added beyond the design; the candidate's own kc-dev-flow-2/scripts/lint-skills.py exits 0
+  lint-skills exit 0, `workflow.md` 5495 of 5511 unchanged; `git diff --name-only a4217cd3..HEAD` lists only `dispatch_records.py` and `test_dispatch_records.py` (AC-6). `comment_ratio.py`: 0 comment lines of 161 code lines. `doc_impact.py`: no document listed.
+- DONE: roborev evidence= line
+  `clean on 56f83bf51; evidence=roborev:708` (exit 0, first run).
+- DONE: push without force; CI green on the PR head; CI cost measured or stated as not measured
+  Pushed plain `git push -u`; all four checks pass on 56f83bf5 (unit tests 1m0s, route gate 7s, version parity 55s, GitGuardian). No new job or trigger; added test time about 1 s locally; CI minutes beyond those job durations not measured.
+
+### Summary
+
+The check is two functions in `dispatch_records.py` (`declared_instructions`, `instruction_error`) plus `--readme FILE` and README discovery; the frontmatter reader is `number_guards.frontmatter` (the import `comment_ratio.py` already uses), not `pr_watch.front` as the design named, because importing `pr_watch` for ten lines couples two scripts. Existing tests needed a README fixture in `check()` because the not-checked note changes exact output. Limit: proves the record, not that the worker ran the gate.
