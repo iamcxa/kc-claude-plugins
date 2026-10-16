@@ -3,7 +3,7 @@ title: The dispatch_records.py --names check runs only if FO remembers to run it
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: Captain approved delivery (「Ａ准」) after FO presented the three batch-1 delivery gates together; as each gate question states, this accepts FO's stated recommendations and covers later external-review rounds on the PR.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-16T03:14:56Z
 worktree: .worktrees/spacedock-ensign-names-check-before-dispatch
 pr: pr-merge:649
+verdict: PASSED
+completed: 2026-10-16T15:35:09Z
+archived: 2026-10-16T15:35:10Z
 ---
 
 Filed from a learn package-issue candidate the Captain approved on 2026-10-14 (「1,3」), after the observer report on task `followup-dispatch-records-checked` (PR #642) found bare package-script names in FO's own dispatch records `implementation-1.md` and `-2.md`, because FO ran `dispatch_records.py --names` after `dispatch build` instead of before. The same happened on that task's first implementation dispatch and on the fo-lifecycle-mod implementation dispatch the same day (caught before launch the second time).
