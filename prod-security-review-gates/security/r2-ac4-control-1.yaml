@@ -1,0 +1,73 @@
+tob_security_review:
+  pr: none
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 3   # control-design.md; delivery_gate.py and workflow.md at 0cdb40a7 (read-only); dispatch_records.py was only grepped
+  findings:
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py (design AC-9, Design 'Change, in files')"
+      line: 0
+      severity: MEDIUM
+      category: race-condition
+      title: "Removing the validator's reported SHA drops the only tie between what the validator examined and the PR head"
+      description: |
+        The base check compares the SHA the validator reported with the PR head (`validated_candidate`).
+        The design replaces that with the SHA FO wrote at dispatch (`Candidate:`). The design weighs the
+        case of a validator that checked another head only as an accident that was not observed. Its
+        stated cover is that FO reads "artifact identity" in the report at the validation gate, which
+        is prose and not checked. It does not weigh a PR author who controls the branch and moves it
+        on purpose.
+        Nothing in the design says the validator is told to check out `Candidate` by SHA. If the
+        validator resolves the branch name instead, the head it sees can differ from the head FO
+        recorded.
+      attack_scenario: |
+        1. An outside PR author, whose PR the task adopts, has branch head S1, which holds the malicious change.
+        2. FO writes `Candidate: S1` and dispatches validation.
+        3. Before the validator fetches, the author force-pushes a clean-looking S2, so the validator validates S2 and the report says PASSED on S2.
+        4. The author force-pushes S1 back before the merge ask.
+        5. `delivery_gate.py check` reads head S1 and `Candidate: S1` and exits 0. At base it would have exited 1, because the report named S2.
+        6. The only remaining guard is FO noticing that the report's artifact identity (S2) differs from the record (S1). The design adds no rule for this.
+      blast_radius: "HIGH"
+      recommendation: |
+        Cheapest fix: the dispatch scope notes tell the validator to check out the exact `Candidate` SHA
+        and to state it in its report. Do this without reading verdict prose.
+        Or re-check that a full-length `Candidate` SHA is mentioned anywhere in the latest validation
+        report. That is an identity mention only and reads no verdict, so it stays within amendment 2.
+        If the design keeps the prose-only reading, add the race to its "Edge cases" section as a
+        limit and say who accepted it.
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py (design AC-9: `--head` with the first 7 characters of S1 exits 0)"
+      line: 0
+      severity: LOW
+      category: missing-validation
+      title: "Short `--head` is accepted as a prefix of the 40-character candidate"
+      description: |
+        AC-9 requires a 7-character `--head` to match the full `Candidate`. The base compare
+        (`length = min(len(candidate), len(head))`) already does this. The workflow's merge-ask call
+        passes no `--head` (the `delivery_gate.py check &lt;task&gt; --pr ...` line in workflow.md), so
+        `gh` supplies a 40-character `headRefOid`. That path is not exposed.
+        The exposure appears only if FO or an operator passes a short head copied from a PR page or a
+        report. A 7-character match is 28 bits. An outsider who controls the PR head can search for a
+        commit whose first 7 hex characters equal the validated commit's. Prefix-collision tools do
+        this in minutes to hours.
+      attack_scenario: |
+        1. The validated head is S1.
+        2. The PR author pushes a malicious commit X whose first 7 characters equal S1's.
+        3. FO takes the short head from the PR UI and runs `check ... --head &lt;7 chars&gt;`.
+        4. The check exits 0. The merge then takes X.
+      blast_radius: "LOW"
+      recommendation: |
+        Require 40 characters when the record carries a 40-character SHA. When `--head` is short,
+        resolve it through `gh` and then compare full-length equality. Keep short `--head` only for
+        the replay test, behind an explicit flag if it must stay.
+  clean_patterns:
+    - "Header-only read: the `Candidate:` line counts only above the first `## ` heading, and AC-10 holds on a valid line placed below it. Outsider-influenced text in `## Scope notes` or `## Checklist` therefore cannot forge a candidate."
+    - "Strict form: exactly `Candidate: &lt;40-hex&gt;` per line. An 8-character SHA, trailing text and the relay `a; b` form all hold with exit 2. An accept-any-hex-token parser would let hosted text widen what passes, and the design rejects that."
+    - "Removing the validator-prose parser removes a channel where hosted content (a PR body or code quoted in a validator report) could inject `Verdict PASSED &lt;sha&gt;`. This is a net gain."
+    - "Numeric record selection (`validation-10` beats `validation-2`) means an older record cannot rescue a stale head. A head that moves after validation still exits 1, which keeps the ADR 0014 D2 check against post-validation pushes."
+    - "Merge-ask call without `--head`: the head comes from `gh pr view --json headRefOid`, so a PR author cannot choose it. The design adds no new public route, file or network call."
+    - "D1 (bare line, any listed head passes for any `--pr`): an outsider cannot make FO write the line. A same-SHA commit in another repo holds only validated content, and FO fixes the `--pr`. Not exploitable by the stated attacker."
+    - "Exit 0 no longer proves PASSED. The design states and accepts this (AC-12), and the exit text never says `passed`. I found no extra outsider capability beyond the identity-binding finding above."
+  limitations:
+    - "I did not read the prototype in /tmp/gate-redo/proto or the archived tasks. I assessed the design text and the base code at 0cdb40a7 only."
+    - "I could not verify whether the validation dispatch pins the candidate by SHA or by branch name. The first finding depends on that."
+    - "I assumed the state checkout and dispatch records are written only by FO and are out of the attacker boundary, as instructed. Prompt injection of FO through PR content is outside this review."
+    - "The design has no code yet, so I could not review the new regexes for ReDoS or CRLF and uppercase handling. These are fail-closed by the stated 40-character lowercase form."

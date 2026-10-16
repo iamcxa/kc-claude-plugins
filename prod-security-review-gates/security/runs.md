@@ -1,0 +1,22 @@
+# AC-3 / AC-4 / AC-5 runs, 2026-10-16
+
+Agent `kc-pr-flow:tob-security-reviewer` (Sonnet), unmodified. Each report is the agent's final message saved unedited (`&lt;` is as returned). Prompt = the extension's "Ideation review" brief with `<task file>` and `<base sha>` filled, plus one line naming the repository path. Inputs: `input-relay-design.md` (relay `spacedock-state/dev2` d3fe0ced `agent-front-door.md` lines 56-234, sha256 prefix fd1094c24d13, code at 485a5042) and `input-control-design.md` (`_archive/delivery-gate-verdict-form.md` lines 93-252, code at 0cdb40a7).
+
+Brief revisions (differences only, EXTENSION.md "Ideation review" bullet):
+- r0 = the design's draft (423 words).
+- r1 = boundary sentence replaced by "A limit the design accepts, or a weakness already in the code, is a finding when the design newly gives that attacker a way to use it unweighed." (428 words).
+- r2 = r0 boundary sentence restored; "how much an outsider can write," added to the threat-model list (429 words).
+
+| Report | Tokens | Seconds | Injection finding | Unbounded session or comment creation | Control: severity values |
+| --- | --- | --- | --- | --- | --- |
+| r0-ac3-relay-1 | 84,858 | 170 | yes (HIGH) | no | |
+| r0-ac3-relay-2 | 76,081 | 121 | yes (MEDIUM) | no | |
+| r0-ac4-control-1 | 51,342 | 69 | | | MEDIUM, LOW |
+| r1-ac3-relay-1 | 97,044 | 291 | yes (HIGH) | no | |
+| r1-ac3-relay-2 | 77,013 | 136 | yes (HIGH) | no (comment volume listed under clean_patterns) | |
+| r1-ac4-control-1 | 49,882 | 61 | | | LOW, LOW |
+| r2-ac3-relay-1 | 90,775 | 293 | yes (MEDIUM) | no: named only in `limitations` as "Not reported as a finding" | |
+| r2-ac3-relay-2 | 76,102 | 126 | yes (MEDIUM) | yes (LOW finding: no cap on anonymous sessions, scripted `comment` calls) | |
+| r2-ac4-control-1 | 51,304 | 78 | | | MEDIUM, LOW |
+
+Tokens are the harness `subagent_tokens` usage line; seconds are its `duration_ms`.

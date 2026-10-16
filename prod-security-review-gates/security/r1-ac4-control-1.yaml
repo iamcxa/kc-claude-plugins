@@ -1,0 +1,68 @@
+tob_security_review:
+  pr: none
+  strategy: DEEP
+  security_tier: standard
+  files_analyzed: 3   # control-design.md; delivery_gate.py and the merge-ask and dispatch-record passages of workflow.md at 0cdb40a7; dispatch_records.py at 0cdb40a7
+  findings:
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py (design AC-9, Design 'Change, in files')"
+      line: 0
+      severity: LOW
+      category: missing-validation
+      title: "Abbreviated --head is still accepted as a prefix match against the full Candidate SHA"
+      description: |
+        AC-9 requires `--head` equal to the first 7 characters of S1 to exit 0.
+        The base `check` already compares the two values as an equal-length prefix (`candidate[:length] != head[:length]`).
+        The design keeps that rule even though every Candidate line is now a full 40-character SHA.
+        Seven hex characters is 28 bits, so a PR author can grind a second commit whose abbreviation matches the validated one.
+        The default path is safe: with no `--head`, the head comes from `gh pr view --json headRefOid`, which is the full 40 characters.
+        The exposure exists only when FO passes an abbreviated `--head`, for example one copied from a short-SHA display.
+        The design does not weigh this.
+      attack_scenario: |
+        1. A contributor opens a PR on a repo that FO validates and merges.
+        2. FO validates head S1 and writes `Candidate: &lt;S1 full&gt;`.
+        3. The contributor force-pushes a malicious commit M whose first 7 hex characters equal S1's.
+           This takes roughly 2^28 hash attempts of commit-message grinding, which is cheap.
+        4. FO passes an abbreviated head, for example the 7 characters shown in a push or CI log, as `--head`.
+        5. The check exits 0 on an unvalidated commit.
+        6. The Captain approves, believing the validated commit is the one that merges.
+      blast_radius: "LOW"
+      recommendation: |
+        With a 40-character Candidate, require the head to be a full 40-character SHA and compare by equality.
+        If the head arrives short, resolve it through `gh pr view` rather than accepting the prefix.
+        Rewrite AC-9 so the 7-character case exits 2 instead of 0.
+        If the short form must stay, document in Limits that it is a convenience and not an integrity check.
+    - file: "kc-dev-flow-2/references/sd/workflow.md (merge-ask passage); design Limits"
+      line: 0
+      severity: LOW
+      category: race-condition
+      title: "Head equality is checked only at the ask, and the design drops the sentence that pinned it"
+      description: |
+        Exit 0 from `check` is a point-in-time comparison.
+        Nothing in the package pins the head at merge time: `git grep match-head-commit` over kc-dev-flow-2 at 0cdb40a7 finds nothing.
+        This weakness is already in the code and is not newly introduced.
+        The design still leaves it unweighed.
+        Its Limits section covers only a line written after the fact.
+        It does not cover a push to the PR branch between the ask and the Captain's merge.
+        It also proposes deleting the sentence "A PR delivers only the commit on its head ...", the only prose that states the head is the delivery.
+        Against a PR author who can still push, an exit 0 therefore authorizes nothing about the head that eventually merges.
+      attack_scenario: |
+        1. A fork-PR author sees FO's merge ask on validated head S1.
+        2. After the check exits 0 and before the Captain clicks merge, the author pushes commit M to the PR branch.
+        3. The merge takes M, which was never validated.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Add one line to Limits that the check does not cover a push after the ask.
+        Pin the head at the merge itself with `gh pr merge --match-head-commit &lt;S&gt;`, if the merge path allows it.
+        If it does not, state the post-ask window as an accepted limit and keep the head-pinning sentence in `workflow.md`.
+  clean_patterns:
+    - "The Candidate line is read only above the first `## ` heading. Scope notes, which can carry text copied from hosted task or PR content, sit below it, so that text cannot inject a Candidate line (AC-10 covers a valid line under the heading, which holds)."
+    - "Whole-line form `Candidate: &lt;40-hex&gt;` with no trailing text. The design echoes only values that matched that pattern, so no attacker-controlled prose is printed into FO's context on any exit."
+    - "Dropping the validator-prose parser removes a spoofing path: base accepted a `Verdict PASSED &lt;sha&gt;` string quoted inside a REJECTED report (design FAQ). Hosted content that reaches the validator can no longer manufacture a pass this way."
+    - "The check adds no public route, file, hosted document or network surface. Its inputs are the state-checkout record FO writes and the headRefOid from `gh`."
+    - "Numeric ordering of validation-N, strict hold (exit 2) on a missing, malformed or multi-head-valued line, and a hold on a newer record that names a different head (AC-11) all fail closed."
+    - "A bare head compared across `--pr` (D1) is safe for a full SHA: a git commit SHA addresses content, so the same SHA is the same tree."
+  limitations:
+    - "Design-stage review only. The prototype in /tmp/gate-redo was not available, so the pieces are read from the design text and 0cdb40a7, not from running code."
+    - "Whether FO ever passes an abbreviated --head in practice was not observed. I read only the workflow text, which shows no --head in the default invocation."
+    - "I did not check who can push to PR branches in adopter repositories, which decides how reachable the post-ask push finding is."
+    - "An author of hosted content who influences what FO writes into the record header could inject a Candidate line. I found no passage that has FO copy outside text above the first `##`, but I did not audit every FO write path."

@@ -1,0 +1,106 @@
+tob_security_review:
+  pr: none
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 3   # control-design.md; delivery_gate.py, dispatch_records.py and references/sd/workflow.md at 0cdb40a7
+  findings:
+    - file: "/tmp/psrg-ac/control-design.md"
+      line: 108
+      severity: MEDIUM
+      category: "other"
+      title: "The link between the validated artifact and the merged head moves from script-enforced to FO-asserted, and the design weighs only accidental mismatch"
+      description: |
+        At base, `delivery_gate.py` takes the head from what the validator attested
+        in its own report (`Verdict PASSED ... &lt;sha&gt;`) and compares it with the PR
+        head. The validator therefore binds "I checked this commit" to the merge ask.
+
+        The design replaces that with a `Candidate:` line that FO writes at dispatch
+        time. The gate then compares that line with the PR head. Nothing in the
+        gate ties the validator's checkout to that line.
+
+        The design handles "a validator that checked a head other than the one
+        dispatched" under Edge cases. It treats the case as accidental and unobserved
+        ("Not observed in the count ... No rule added"), and leaves it to FO's prose
+        reading of the validator's "artifact identity".
+
+        An outside PR author controls the branch tip and controls what the validator
+        reads. That author can cause the mismatch on purpose. At base the script
+        caught this, and after the change it does not. The limit the design states
+        (Limits, "FO's own statement") covers a late-written line. It does not cover
+        a validator that checked a different commit than the line says.
+
+        No change in the design pins the validator to the recorded SHA. The
+        dispatch-record passage in workflow.md says nothing about pinning the checkout.
+      attack_scenario: |
+        Precondition: the attacker is a fork or branch PR author in a repo that
+        accepts outside PRs. FO validates the branch tip, not a pinned SHA.
+        1. The PR head is S_evil. FO writes `Candidate: S_evil` and dispatches validation.
+        2. Before the validator fetches, the attacker force-pushes a benign S_ok to the
+           branch. The validator checks out the tip, reviews S_ok, and reports PASSED
+           with S_ok named in the report.
+        3. The attacker force-pushes S_evil back to the branch.
+        4. At the merge ask, `--head` (from `gh pr view`) equals S_evil. S_evil also
+           equals the record, so `delivery_gate.py` exits 0.
+        5. At base, step 4 exits 1, because the report names S_ok and the head is S_evil.
+        6. Result: the Captain is asked to merge a commit that no validator saw.
+           Only FO's prose comparison of the report's artifact identity stands in the way.
+        Limiting factors: this needs a timing race, an outside author, and FO missing
+        the identity mismatch in the report. The Captain still approves the merge.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Pick one of these.
+        (a) Make the dispatch record and the validation stage contract require the
+            validator to check out the recorded SHA detached (`git checkout --detach &lt;S&gt;`
+            or a worktree at `&lt;S&gt;`), never the branch tip. Then step 2 cannot happen.
+        (b) Keep the check from reading prose, but add one mechanical, verdict-free
+            test: the latest validation report must contain the recorded 40-hex SHA
+            verbatim somewhere. The count in the design shows 70 of 71 reports
+            already mention the head. This does not reintroduce verdict parsing, so
+            AC-12 holds.
+        Whichever is chosen, state in the Limits that the check no longer proves the
+        validator saw the recorded head, and say who enforces that instead.
+    - file: "/tmp/psrg-ac/control-design.md"
+      line: 13
+      severity: LOW
+      category: "missing-validation"
+      title: "AC-9 makes a 7-character --head pass, so a prefix collision on an outside author's branch is accepted"
+      description: |
+        AC-9 requires that `--head` equal to the first 7 characters of S1 exits 0.
+        The base code compares the shorter of the two as a prefix.
+        The candidate is held to a 40-character form (AC-10 rejects an 8-character
+        SHA), but the head is not.
+
+        With the default source (`gh pr view --json headRefOid`) the head is 40
+        characters, so the comparison is full equality. The weak path opens only when
+        FO passes a short `--head`, for example one copied from a log or the GitHub UI.
+
+        A 7-hex match is 28 bits. An outside author who controls the branch can grind
+        a commit whose SHA starts with the validated prefix. That is minutes of work
+        with public vanity-hash tooling.
+      attack_scenario: |
+        1. FO validates S1, and the branch tip is later swapped for a grinded S_evil
+           whose first 7 characters equal S1's.
+        2. FO supplies `--head` as a 7 to 8 character abbreviation.
+        3. The prefix comparison passes and the gate exits 0 for S_evil.
+      blast_radius: "LOW"
+      recommendation: |
+        Require `--head` to be exactly 40 hex characters when it is compared with a
+        recorded candidate. Short forms may stay as test input only, or may be
+        expanded with `git rev-parse` before the comparison. Do not match by prefix
+        in the gate.
+  clean_patterns:
+    - "No new public route, file or network listener. The change is a local CLI check plus one line in an FO-written record."
+    - "The design removes the reader of validator prose. Report text, which can be shaped by outsider-authored PR content through the validator, no longer influences gate exit 0. This also removes the old path where a quoted `Verdict PASSED` inside a REJECTED report passed."
+    - "Header-only parsing: the `Candidate:` lines are read only above the first `## ` heading. In the dispatch format at 0cdb40a7, scope notes, checklist and any pasted outsider text sit under `## Scope notes` and `## Checklist`, so injected `Candidate:` lines there are ignored."
+    - "The strict whole-line form `Candidate: &lt;40-hex&gt;` (AC-10: no trailing text, no 8-character SHA, no relay multi-SHA form) is a fail-closed allowlist, not a shape filter."
+    - "Highest-numbered record chosen numerically (AC-11). An older record that names the head cannot rescue a newer record that names another."
+    - "`--pr` is validated against `owner/repo#N` and passed to `gh` as an argv list, not through a shell. There is no command injection in `run_gh`."
+    - "The bare-line limit D1 (a head equal to any listed line passes for any `--pr`) needs a 40-hex SHA collision across repositories. It was weighed, and it gives an outsider nothing realistic."
+    - "A head moved by a trunk merge or a push after validation still exits 1 (AC-9), so an outsider cannot add commits after validation without a hold."
+    - "No secrets, credentials or hosted content handled. No change to `skills/validation`, the mod, `pr_watch.py` or any adopter file."
+  limitations:
+    - "Design-stage review only. The implementation and prototype in /tmp/gate-redo/proto were not read, so claims about exit codes and word counts are taken from the design text."
+    - "I did not verify whether FO or the validation stage contract pins the validator's checkout to a SHA. workflow.md at 0cdb40a7 describes only the dispatch record, not the validator's checkout. The first finding assumes the validator reads the branch tip, which is not shown either way."
+    - "Whether the adopter repositories (relay, qnow, ss-web) accept outside-contributor PRs is unknown. The first finding is conditional on that."
+    - "The second-reviewer token check (`review:&lt;id&gt;` or `comment:&lt;id&gt;`) is unchanged by the design, and I did not assess its forgeability."
+    - "The count of 104 records and the replay results are the author's machine-local observations and were not re-run."
