@@ -104,6 +104,27 @@ the same way, through that re-sync, not with the package; the ideation worker ru
 re-synced, the adopter's FO does not run the seed check and its workers do not see the
 amendment rule.
 
+## State laws check
+
+`<package>/references/sd/laws.md` lists the laws and `<package>/scripts/laws_check.py` checks them over the
+committed state-branch history. `<package>/references/sd/state-laws.workflow.yml` runs it on each push to one
+named state branch. Each law judges only events in commits that are strict descendants of the anchor commit
+the adopter names for it with `--anchor L1=<commit>`; a law with no anchor prints `not judged`. A violation is
+a committed fact, so a red run stays red until the anchor moves past it, and moving the anchor is the Captain's
+acceptance of what it hides. Recommended anchors: L1 at the commit that first required an observer report,
+L2 at the state branch tip on the day the workflow is turned on. The run detects after the push; it does not
+stop `merge guard`, a dispatch or a push, and it adds no word to what FO reads.
+
+Roll it out once per adopter, on the Captain's word: FO copies the template to `.github/workflows/dev2-laws.yml`
+on the state branch with the branch name, anchors, trunk workflow directory and a package commit that a
+published `kc-dev-flow-2-vX.Y.Z` tag points at, and commits that one path with a path-scoped `git add` and
+`git commit -- <path>`, then pushes. A workflow whose state is inline in trunk has no state branch to trigger on.
+
+Verified on a throwaway branch of this repository's state branch: GitHub runs a push workflow committed on that
+branch (green, red with exit 1, red with exit 2), and `spacedock status`, `status --next`, `state init`,
+`gate prepare`, `gate record` and `merge guard --rework` leave a committed `.github/` file unchanged. Not
+verified: that GitHub's failed-run notice reaches the Captain, and the minutes a private adopter pays per run.
+
 ## Secret reads
 
 The package ships no secret guard. The `Secrets:` line of the workflow's
