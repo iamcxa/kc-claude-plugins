@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:amendment-form-check:validation:attempt-1:revision-1",
+  "question": "Deliver #650 head 458324f8 (design_surfaces.py check refuses a moved criterion its Supersedes: line does not name and a replacement with no 'Amended by Captain, amendment N', unless the line says 'no replacement'): FO marks it ready and asks you to merge? Approving accepts FO's recommendations: (1) staff-multi-branch amendment 1 (a partial move of criterion clauses) is a form break the refusal is right about, and AC-4 is amended to name only owner-sees-all-feedback-room as the legitimate move the waiver clears; (2) the clause dropped from workflow.md ('relocation, not annotation in place, is the route') stays dropped, because the move instruction, the still-declared refusal and ADR 0005 still carry it; (3) the Deferred risks and Polish below are declined into backlog task amendment-form-check-round3-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:amendment-form-check:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/391f4c4166dfc266432f110df374238d7452aedf/amendment-form-check.md",
+      "rev": "sha256:23ba0cdabc708e1f57505a6d2997c65b2cf44533f293a2527d23d2a0b62debf6",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at 458324f8 (recheck after two repair cycles). FO ran the six-step acceptance script as written in env -i bash: every step matched (both archived replays exit 0 on main and 1 on the candidate; the waiver passes; a marker under an indented sibling heading does not count; 42 tests OK; workflow.md 5495 of 5511; adr_lint 16 files exit 0). Corpus: 10 new errors on 8 tasks; 9 on archived tasks, 1 on an active relay task (remote-review-waits-and-acts) that already fails at base, so no in-flight task newly holds. CI green. Words FO reads: the Captain amendments section unchanged at 414 words; workflow.md unchanged in total. External rounds: Codex 3 (round 1 three P2 fixed, round 2 one P2 fixed, round 3 two P2 declined under the round-3 rule into backlog task amendment-form-check-round3-followups). RoboRev local (715), not counted. Declined, with reasons in that backlog task: Deferred risk, an indented '## ' line in a moved block hides later entries (unobserved); Deferred risk, a partial supersession has no route; Polish, year read as amendment number, case-sensitive phrase, failing-path word counts. Process notes: one validator ran git fetch in two relay state checkouts and one in the candidate repo (remote-tracking refs only, no file changed). Second reviewer: copilot because the change alters the check FO runs at every gate (gate rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. without-it unanswered: the dropped workflow.md clause (recommendation (2) above). ADR 0016 lands with this PR."
+    }
+  ]
+}

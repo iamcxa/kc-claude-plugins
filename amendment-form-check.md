@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:amendment-form-check:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:amendment-form-check-validation-1
+              briefing:
+                id: briefing:amendment-form-check:validation:attempt-1:revision-1
+                digest: sha256:cb2fefffb75c4d927257d1d4e451e0ebbf302ffb7a8603b88957563257788436
+                room-ref: ./amendment-form-check/review/validation/briefing-1
 started: 2026-10-16T03:14:35Z
 worktree: .worktrees/spacedock-ensign-amendment-form-check
 pr: iamcxa/kc-claude-plugins#650
