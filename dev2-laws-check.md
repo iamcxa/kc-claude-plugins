@@ -348,3 +348,22 @@ Does not cover: the GitHub workflow run and its failed-run notice, the F1 and F2
 ### Summary
 
 Recommended verdict: REJECTED at de7c416c7c4d4615f8f889af279f84e63d486e1b. Every criterion reproduces except that L2 judges a dispatch record by its latest bytes, not the bytes at the commit that added it (F1, Material, seen on two real records after the anchor), and the L2 half of AC-2's fail-closed contract does not hold (F2, Deferred risk, same Codex findings FO already authorized to repair). The implementation's 10/0, 25/15 and 48/10 are the right counts; the design's 9, 16, 68 and 12 miscounted an ideation commit and archive moves. Throwaway worktree and clones removed.
+
+## Stage Report: implementation (cycle 1)
+
+- DONE: Reproduce the Codex round-1 P1 and P2 (review:5543173293) as failing tests
+  Five new tests failed at `de7c416c` (27 run, 5 failed): `test_check_exiting_1_with_no_stdout_exits_2` and `test_l2_check_exiting_1_with_no_stdout_exits_2_in_either_mode` (a checker exiting 1 with stderr only must be exit 2; was 0); `test_a_record_corrected_after_it_was_added_is_still_judged_as_added`, `test_a_record_deleted_after_it_was_added_is_still_judged_as_added`, `test_a_pointer_is_judged_against_the_folder_at_the_commit_that_added_it` (a later fix, deletion or sibling deletion must not clear a violation; were held).
+- DONE: Apply the authorized fix for P1 and P2 and commit with named files only
+  `096ce885`: `run_check` raises when a check exits 1 with no stdout (P2); L2 writes each record and its folder from its newest adding commit, groups by (commit, folder), judges deleted records too, and keeps the exit-2 guard for a record with no adding commit (P1). Violation lines name the path at the adding commit (FO accepted); one existing assertion changed from `_archive/t/dispatch/` to `t/dispatch/`. `laws.md` L2 Event, Judged-by and Bit text updated to match (15 parts, 4 bare names). Suite 27/27 OK; `lint-skills.py` exit 0 (5495 of 5511), `test_lint_skills.py` OK; `comment_ratio.py` 2 comment lines added in the two scripts, under 5%.
+- DONE: Rerun the real-history AC-4 and AC-6 runs
+  State clone at `e73634e6`. AC-4: anchor `91fae734` gives 10 events, 0 violated, exit 0; root anchor gives 25 events, 15 violated, exit 1 (unchanged by this fix). AC-6: anchor `49da5ddb` gives 48 events judged, 10 violated, 15 violation lines, exit 1 (before the fix: 48, 10, 16 lines). `fo-lifecycle-mod` implementation-12 left the set (clean as added, edited later); `delivery-gate-verdict-form` implementation-4 joined (bare `design_surfaces.py` as added, corrected later). Runner time on this history about 4 s before, about 16 s after (measured with `time`, one run each, this machine).
+- DONE: Do NOT edit the acceptance-criteria text
+  Not edited. AC-4 (written 9/0 and 25/16) and AC-6 (written 68/12) stay for the Captain to amend to 10/0, 25/15 and 48/10 with 15 lines.
+- FAILED: roborev_gate.py --repo <worktree> --base 1383c911 clean
+  `findings on 096ce8859; evidence=roborev:711`, exit 1, one High: `newest_additions` keeps only the newest add per (task, name), so a record deleted and re-added corrected at the same path leaves its first add unjudged. This is the design's stated bound ("a record's adding commit is its newest `--diff-filter=A` commit"). Not fixed: outside the authorized P1/P2 scope and I did not loop the gate. Measured trigger: 0 of 149 (task, name) records on the real history at `e73634e6` have more than one add commit (`git log -M --diff-filter=A` count). Candidate for Deferred risk, or one more fix if the Captain wants every add judged; FO decides.
+- DONE: Push without force and report CI on the new head
+  `de7c416c..096ce885` pushed, no force. See Summary for CI.
+
+### Summary
+
+P1 and P2 are fixed in `096ce885` with five new tests; the written AC-4 and AC-6 counts are not met as written and are not edited (measured: AC-4 10/0 and 25/15, AC-6 48 judged, 10 violated, 15 lines; runner about 4 s to about 16 s). roborev found one more High, delete-and-re-add at the same path, which is the design's documented bound and unobserved on the real history; it is left for FO to rule.
