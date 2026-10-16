@@ -220,6 +220,13 @@ Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-16): Codex review round 1 on #650 58eb738e (review:5543112471) left three P2, all to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck. The validation of 58eb738e dispatched before this finding continues.
+  - P2 `scripts/design_surfaces.py`: the superseded-id set is read from the whole `Supersedes:` value, so an id inside the `no replacement` reason counts as named.
+  - P2 `scripts/design_surfaces.py`: the 'Amended by Captain, amendment N' marker is matched on any later line, so evidence prose can satisfy it.
+  - P2 `scripts/design_surfaces.py`: a bold AC id anywhere in a moved block counts as a moved criterion, so evidence citing another criterion fails a valid move.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for which of the three amendment-form breaks a script can check (FO's own words in Design:, replacement criteria without 'Amended by Captain, amendment N', a Supersedes: line that does not name criteria moved under it) and which stays with the observer, with a replay on delivery-gate-verdict-form and fo-lifecycle-mod (archived)
