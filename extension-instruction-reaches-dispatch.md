@@ -209,6 +209,11 @@ Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-16): Codex review on #652 56f83bf5 (review:5543222158) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 `scripts/dispatch_records.py`: the worker-script path match has no trailing token boundary, so `roborev_gate.py.bak` or `.pyx` passes as the instruction.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for how an activated extension's worker instruction is made to reach the dispatch (a kc-dev-flow-2/scripts/dispatch_records.py check, README stage text, or another route), which extensions declare one (roborev; codex and copilot to be checked), with a replay on the relay record that missed it (read only)
