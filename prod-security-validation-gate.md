@@ -1,0 +1,17 @@
+---
+title: A prod task's validation gate carries a security review that reaches code the change exposes, on a measured model and effort
+variant: kc-dev-flow-2
+profile: pilot
+merge: pr
+status: backlog
+---
+
+Filed on the Captain's 「照這樣做」 (chat, 2026-10-16), split out of `prod-security-review-gates` (its amendment 2 keeps the design-stage review there).
+
+## Scope
+
+- The bite: relay PR #347 (agent-front-door) exposed existing comment and session write paths with no cap; that code was outside the PR's diff. Replays on head 1c5b1870 with kc-pr-flow's `tob-security-reviewer` (declared model sonnet): standard tier found nothing; `security_tier: full` found the prompt injection (MEDIUM) and two LOW items but did not trace the session and room handlers, so it missed the unbounded writes. Evidence under `prod-security-review-gates/security/`.
+- The bar stays the Captain's amendment-1 criterion of `prod-security-review-gates`: the validation-gate review names the unbounded comment or session write class (code reachable through the change but outside its diff).
+- Evidence plan (engineering-reviewer disproof condition, 2026-10-16): at `security_tier: full`, two runs each on Sonnet 5.5, Opus 5.5 and Fable 5.1 on #347 at 1c5b1870, plus one control run per model on a PR with no public exposure; record findings, refusals (the `cyber` safety category), tokens, duration and cost per run.
+- Then choose the default model and reasoning level from the measurement; a reasoning level is fixed per agent definition, so effort by complexity means two definitions FO chooses between by a written rule (for example public surface, auth or data access gets the higher one).
+- Price per million tokens (input/output), Anthropic API table cached 2026-10-06: Fable 5.1 $10/$50, Opus 5.5 $4/$20, Sonnet 5.5 $2/$10.
