@@ -292,3 +292,59 @@ ADR: 0017
 ### Summary
 
 The runner, laws file, workflow template, adoption section and ADR 0017 are in Draft PR #651 with CI green. Two criteria did not reproduce as written: the design's L1 count treated an ideation commit as a sentinel (15 violated, not 16) and its L2 count read archive moves as adds (48 records, not 68); the runner keeps the rename-aware reading, and the written counts are reproducible with rename detection off. Needs the Captain: whether the failed-run notice reached him (AC-8), and whether the AC-4 and AC-6 counts are amended to 10/0, 25/15 and 48/10.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #651 head de7c416c against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict recommended: REJECTED at head de7c416c7c4d4615f8f889af279f84e63d486e1b (`gh pr view 651` headRefOid, base 1383c9119eb5, Draft, five checks green). Material finding F1 (the Cycle 1 P1) reproduced; F2 (P2) reproduced; the repair FO authorized in implementation-4 covers both. Per criterion, all re-run at the candidate in a throwaway worktree and a fresh state clone at `e73634e6`: AC-1 met (mutations: a `laws.md` heading with no function, a function with no heading, each fail only `test_laws_file_matches_registry`). AC-2 met for L1, not met for the L2 half (F2); shallow-guard mutation fails `test_shallow_history_exits_2` on the cause text only, the exit stays 2 on another cause. AC-3 met (tip call fails (c); substring match fails (d)). AC-4 met at the runner's counts (below); the written falsifier does not separate (tip call also gives 25/15 and 10/0), "event is any `pr:` write" does (25/25, 9/9). AC-5 met (no ancestry filter fails; `--names` dropped fails). AC-6 met at 48/10 (rename detection off prints 68/12). AC-7 met (run 38851506538 at de7c416c, step `test_laws_check.py` success; `lint-skills.py` exit 0, `test_lint_skills.py` 26 OK). AC-8 met (logs of runs 38850935736, 38851003491, 38851131592: green, `violation:` line with exit 1, `cannot judge` with exit 2; `gh run list` shows those three only, branch gone); notification is the Captain's. AC-9 met for 6 of 7 commands (below). AC-10 met (diff of the FO-read paths is empty; adoption.md as a control is not; `5495 of 5511`). AC-11 met (the five statements are in the section; `adr_lint.py` exit 0). AC-12 met (PR body quotes run ids and 11, 9 and 10 s, and says private minutes are unmeasured). Implementation-report limits: the AC-4/AC-6 differences, kept rename detection and the AC-4 falsifier gap are accepted as stated; "nine mutations each failing only its named test" holds per test but the no-ancestry and rename-off mutations fail the same test with the same output (7 events, 6 violated), so they are told apart only by the real-history run.
+- DONE: Judge the implementation's AC-4 and AC-6 count differences from the design (L1 10/0 at 91fae734 and 25/15 at the root, L2 48/10 with rename detection, versus the design's 9/0, 16 and 68/12): reproduce both readings and say which counts the criteria should carry and why; AC-8's failed-run notice reaching the Captain is his to state, not yours
+  Both readings reproduced. L1: the design's 9 omitted `observer-before-merge-guard`; its first `pr: pr-merge:632` is `4c22c6d9`, its report `52565de7` is the commit before, and `91fae734` is its ideation commit (`pr:` absent there), so it holds: the runner's 10/0 and 25/15 are right, and the design's 16th violator was the ideation timestamp read as a sentinel. L2: the design counted an archive move as an add; the record `followup-dispatch-records-checked/dispatch/implementation-1.md` was added in `e081c5f2` (07:44), before anchor `49da5ddb` (10:56:06), and renamed at R100 in `3e9dd277` (10:56:09). A copy of the runner with `--no-renames` prints 68/12, so both are reproducible. The criteria should carry 10/0, 25/15 and 48/10: an archive is routine and would turn L2 red on every archive. Carry the judged and violated counts, not the part-line count (it moves under F1: 16 now, 15 after the repair). The amendment itself is the Captain's. I state nothing for AC-8's notice.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>` in 58 s, output matched. `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since 1383c9119eb5328543e2c4df5e562be22b74e355 --require 0017` run in the candidate worktree: `16 ADR file(s) checked, 0 legacy`, exit 0. Also at the candidate: `comment_ratio.py` 477 code, 2 comment lines, 0.4%, exit 0; `doc_impact.py` lists `kc-dev-flow-2/README.md` and the implementation report records `unaffected: <reason>`; `number_guards.py check` PASS; `design_surfaces.py check` exit 0; `dispatch_records.py` on this task folder: 6 records complete, exit 0.
+
+### Findings
+
+- F1, Material. Released user and workflow: an adopter running `dev2-laws` on its state branch, L2 judging dispatch records. Harm: L2 judges each record's bytes at the run revision, not at the commit that added it, so a later edit changes the verdict. Affected: `contract[kc-dev-flow-2/references/sd/laws.md#l2-dispatch-record-complete]` and the file's opening claim that a violation is a committed fact that stays red until the anchor moves, plus `value-ac[AC-6]`. Trigger: on real history at `e73634e6`, after anchor `49da5ddb`, `delivery-gate-verdict-form/dispatch/implementation-4.md` has a bare script name at its adding commit `f277c688` and none at the run revision (missed), and `fo-lifecycle-mod/dispatch/implementation-12.md` is clean at `0b9f9a79` and has two bare names at the run revision (reported against `0b9f9a793e5a` that did not contain them). Fixture reproduction: a record corrected in the next commit, or deleted, turns the run from exit 1 to exit 0. Same as the Codex P1; repair authorized in Cycle 1.
+- F2, Deferred risk. A checker that exits 1 with no stdout makes L2 print `0 violated` and exit 0 (stub on `dispatch_records.py`: exit 0; the same stub on `observer_check.py` gives exit 2 for L1). AC-2 lists this cause, so the L2 half of AC-2 is unmet as written. No real trigger: every exit-1 path in `dispatch_records.py` prints a line. It becomes Material when that script gains a silent exit-1 path; `names-check-before-dispatch` and `extension-instruction-reaches-dispatch` both edit it. Same as the Codex P2; fix it in the authorized repair with an L2 test for the same cause.
+- F3, Polish. `laws_check.py` `task_files` carries an inline comment that restates its name.
+- F4, Needs decision (Captain). Amend the AC-4 and AC-6 counts to 10/0, 25/15 and 48/10, and drop or replace the AC-4 real-history falsifier, which does not separate on this history; AC-2's shallow falsifier names an exit change that does not happen.
+- F5, Deferred risk. `merge guard --rework` was exercised only through its refusal (no pending terminal approval), so its write path is not shown to leave `.github/` alone; it would become Material if that path wrote outside the task's own paths.
+- Recheck on the repaired head must also carry: `laws.md` and the PR body quote 16 parts and `ADR 0017` quotes 10 of 48, so the first two change to 15 parts (FO's figure) and 48/10 stands.
+
+### Unverified obligations
+
+- That GitHub's failed-run notice reaches the Captain (AC-8, his statement).
+- Private adopters' minutes per run; any run of the workflow at the repaired head.
+- AC-7's falsifier (deleting the CI step) and AC-8's no-workflow-no-run control were read from run lists, not re-pushed: I push nothing.
+- `merge guard --rework` write path (F5).
+
+### Minimal acceptance script
+
+Needs `git`, `python3` and network access to the public repository; writes only under `/tmp/laws-acc`. Run in a fresh bash shell:
+
+```bash
+# 1. Fetch the candidate head and the workflow README that lists `learn`
+rm -rf /tmp/laws-acc && mkdir /tmp/laws-acc && cd /tmp/laws-acc && git clone -q --no-checkout https://github.com/iamcxa/kc-claude-plugins.git cand && git -C /tmp/laws-acc/cand checkout -q --detach de7c416c7c4d4615f8f889af279f84e63d486e1b && git -C /tmp/laws-acc/cand show 1383c9119eb5328543e2c4df5e562be22b74e355:docs/dev2/README.md > /tmp/laws-acc/README.md && git -C /tmp/laws-acc/cand rev-parse HEAD
+# expect: de7c416c7c4d4615f8f889af279f84e63d486e1b
+# 2. Fetch the state branch history (full clone)
+git clone -q --branch spacedock-state/dev2 https://github.com/iamcxa/kc-claude-plugins.git /tmp/laws-acc/state && git -C /tmp/laws-acc/state cat-file -t e73634e6dab6e96eef9b327f489c05ffd3527247
+# expect: commit
+# 3. The runner's own tests
+python3 -B /tmp/laws-acc/cand/kc-dev-flow-2/scripts/test_laws_check.py 2>&1 | tail -3
+# expect: Ran 22 tests in about 18s, then OK
+# 4. L1 from the commit that introduced the observer rule
+python3 -B /tmp/laws-acc/cand/kc-dev-flow-2/scripts/laws_check.py /tmp/laws-acc/state --rev e73634e6dab6e96eef9b327f489c05ffd3527247 --readme /tmp/laws-acc/README.md --anchor L1=91fae734 | head -1; echo "exit ${PIPESTATUS[0]}"
+# expect: L1 observer-before-sentinel: 10 events judged after 91fae734, 0 violated / exit 0
+# 5. L1 from the root commit (every task, including those before the rule)
+python3 -B /tmp/laws-acc/cand/kc-dev-flow-2/scripts/laws_check.py /tmp/laws-acc/state --rev e73634e6dab6e96eef9b327f489c05ffd3527247 --readme /tmp/laws-acc/README.md --anchor L1=166c16d968305ad711481276809433a15fcf8a5e | head -1; echo "exit ${PIPESTATUS[0]}"
+# expect: L1 observer-before-sentinel: 25 events judged after 166c16d96830, 15 violated / exit 1
+# 6. L2 from the anchor the design measured
+python3 -B /tmp/laws-acc/cand/kc-dev-flow-2/scripts/laws_check.py /tmp/laws-acc/state --rev e73634e6dab6e96eef9b327f489c05ffd3527247 --anchor L2=49da5ddb574f9aba739e33b97632338bc69ef7c2 | head -2 | tail -1; echo "exit ${PIPESTATUS[0]}"
+# expect: L2 dispatch-record-complete: 48 events judged after 49da5ddb574f, 10 violated / exit 1
+```
+
+Does not cover: the GitHub workflow run and its failed-run notice, the F1 and F2 defects (both pass this script at de7c416c; they show only on a record edited after it was added, or a checker with no stdout), or any state branch other than this repository's.
+
+### Summary
+
+Recommended verdict: REJECTED at de7c416c7c4d4615f8f889af279f84e63d486e1b. Every criterion reproduces except that L2 judges a dispatch record by its latest bytes, not the bytes at the commit that added it (F1, Material, seen on two real records after the anchor), and the L2 half of AC-2's fail-closed contract does not hold (F2, Deferred risk, same Codex findings FO already authorized to repair). The implementation's 10/0, 25/15 and 48/10 are the right counts; the design's 9, 16, 68 and 12 miscounted an ideation commit and archive moves. Throwaway worktree and clones removed.
