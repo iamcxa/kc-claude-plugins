@@ -7,12 +7,16 @@ words from POINTER_WORDS, as in "Same checklist as implementation-2."); a pointe
 
 Usage: dispatch_records.py <task folder or task .md file>
        dispatch_records.py --names <record file>...
+       dispatch_records.py --newest <state checkout> <task slug>
 Exit 1 naming each record that lacks a part, or when the task has no dispatch records.
 --names prints `<file>:<line>: bare package script name <NAME>` for each package script (a .py file
 directly under <package>/scripts/ or <package>/extensions/<name>/) written with no directory part in the
 Checklist or Scope notes section (the whole file when it has neither heading), and exits 1 when any is found.
+--newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
+is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
 """
 import re
+import subprocess
 import sys
 from pathlib import Path
 
@@ -77,11 +81,25 @@ def check_names(files, package):
     return 1 if found else 0
 
 
+def check_newest(state, slug, package):
+    done = subprocess.run(["git", "-C", str(state), "log", "--diff-filter=A", "--no-renames", "--relative",
+                           "--name-only", "--format=", "-n", "1", "--", f"{slug}/dispatch/"],
+                          capture_output=True, text=True)
+    if done.returncode:
+        print(f"git cannot read the dispatch records: {' '.join(done.stderr.split())}")
+        return 2
+    added = sorted(line for line in done.stdout.splitlines() if line.endswith(".md"))
+    record = Path(state, added[-1]) if added else None
+    return check_names([record], package) if record and record.is_file() else 0
+
+
 def main(argv=None, package=PACKAGE):
     args = sys.argv[1:] if argv is None else argv
     if args[:1] == ["--names"] and len(args) > 1:
         return check_names(args[1:], package)
-    if len(args) != 1 or args[0] == "--names":
+    if args[:1] == ["--newest"] and len(args) == 3:
+        return check_newest(args[1], args[2], package)
+    if len(args) != 1 or args[0] in ("--names", "--newest"):
         print(__doc__.strip())
         return 2
     task = Path(args[0])

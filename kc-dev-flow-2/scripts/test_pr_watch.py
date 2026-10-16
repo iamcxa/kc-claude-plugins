@@ -650,6 +650,42 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(lines[0], "next: keep some-task out of pr-merge's scan in this pass.")
         self.assertTrue(lines[1].startswith("observer report not committed: some-task/observer.md"), lines)
 
+    def record(self, slug, text, commit=True):
+        path = self.state / slug / "dispatch" / "implementation-1.md"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(text)
+        if commit:
+            self.git(self.state, "add", "-A")
+            self.git(self.state, "commit", "-qm", "record")
+        return path
+
+    def test_a_newest_record_naming_a_bare_script_prints_one_next_line_even_without_a_pr(self):
+        self.readme("roborev")
+        self.task("some-task", worktree=False)
+        path = self.record("some-task", "## Checklist\n\nRun adr_lint.py and lint-skills.py, then adr_lint.py\n")
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(lines), 1, lines)
+        self.assertRegex(lines[0], rf"^next: some-task's newest dispatch record {re.escape(str(path.resolve()))} names adr_lint\.py, lint-skills\.py without a directory; ")
+        self.assertLess(len(lines[0].split()), 50)
+
+    def test_clean_or_absent_records_leave_the_output_as_it_was(self):
+        self.readme("roborev")
+        self.task("some-task", worktree=False)
+        before = self.tasks({})
+        self.record("some-task", "## Checklist\n\nRun /abs/pkg/scripts/adr_lint.py\n")
+        self.assertEqual((before, self.tasks({})), ((0, []), (0, [])))
+
+    def test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2(self):
+        self.readme("roborev")
+        self.task("some-task", worktree=False)
+        self.record("some-task", "## Checklist\n\nRun adr_lint.py\n", commit=False)
+        shutil.rmtree(self.state / ".git")
+        shutil.rmtree(self.repo / ".git")
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2)
+        self.assertRegex(lines[0], r"^next: report some-task to the Captain: .*git cannot read the dispatch records")
+
     def test_tasks_needs_one_workflow_directory(self):
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(watch.main(["--state", str(self.watch), "tasks"]), 2)
