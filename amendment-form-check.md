@@ -363,3 +363,15 @@ echo "# NOT covered: a task that skips a move, FO's own words in Design:, FO beh
 ### Summary
 
 PASSED at 58eb738e: every AC re-run and each falsifier fails its rule when mutated; the corpus count (10 errors, 8 tasks) reproduces independently. Only one refused entry sits in an active task and it already fails at base. No Material finding; one Needs decision for FO or the Captain (does `staff-multi-branch` amendment 1 count as a legitimate move under AC-4), one Deferred risk (a future partial supersession has no route) and three Polish items.
+
+## Stage Report: implementation (cycle 2, phase 1: reproduce and propose, no fix)
+
+- DONE: Phase 1 only: reproduce the Codex P2 on #650 head 3bc8f647 (review:5543218466) as a failing test, and propose the smallest fix; report and stop, with no commit or push, until FO authorizes the fix
+  Reproduced in a throwaway copy `/tmp/afc-p2/scripts` (worktree clean at 3bc8f647, nothing committed or pushed). The P2 is real: `section()` ends only at a line starting `## `, but `AC_HEADING` accepts a heading with leading `GO_SPACE`, so ` ## Notes`, `\t## Notes` and `\xa0## Notes` do not end the criteria section.
+  Failing test `test_an_indented_sibling_heading_ends_the_criteria_section` (AmendmentTests, 3 subtests): criteria then an indented `## Notes` then `**AC-9**: Amended by Captain, amendment 1: ...` with Amendment 1 superseding AC-2; asserts the "supersedes AC-2 but no criterion says" error. At 3bc8f647 all 3 subtests fail (errors `[]`, the marker is wrongly satisfied); full suite 41 tests, failures=3.
+  Smallest fix (2 lines in `design_surfaces.py`): add `SECTION_END = re.compile(rf"^{GO_SPACE}## ")` and end `section()` at `SECTION_END.match(lines[i])` instead of `lines[i].startswith("## ")`. With it the suite is `Ran 41 tests / OK`. Patches: `/tmp/afc-p2/test.patch`, `/tmp/afc-p2/fix.patch`.
+  Side effect to know: `section()` also bounds the amendments section and `check_criteria`, so an indented `## ` line there now also ends the section (same recognition the headings already use); a 4-space-indented `## x` would too. No existing test changed. Not run: `test_sd_dispatch.py` (no pinned root here), `lint-skills.py` (script-only change, no reference words touched).
+
+### Summary
+
+The P2 reproduces and the two-line fix passes the new test and the existing 40; awaiting FO authorization to apply both in the worktree, add a mutation test for the fix, and commit. This report is written to the task file but not committed or pushed, per the Phase 1 instruction.
