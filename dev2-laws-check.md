@@ -50,6 +50,17 @@ gates:
                 id: briefing:dev2-laws-check:ideation:attempt-2:revision-1
                 digest: sha256:7a9c53446aba99ea473d627612356a55ae7cbdf44385993d0e35737354575968
                 room-ref: ./dev2-laws-check/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dev2-laws-check:ideation:2
+                briefing: briefing:dev2-laws-check:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-16T08:56:06.973078Z"
+                decision: approve
+                reason: 'Captain approved (「其他也照建議」) the redone ideation under amendment 1; as the gate question states, this accepts D1 (GitHub''s failed-run notice) and D2 (an unreadable push is a red cannot-judge run) and is the push grant to the #651 branch. AC-8 checked by FO the same day: both probe failures reached his GitHub notifications inbox as ci_activity CheckSuite threads, unread.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-16T03:14:29Z
 worktree: .worktrees/spacedock-ensign-dev2-laws-check
 pr: iamcxa/kc-claude-plugins#651
