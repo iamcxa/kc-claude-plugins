@@ -3,7 +3,7 @@ title: design_surfaces.py does not check a Captain amendment's own form
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: Captain approved delivery (「Ａ准」) after FO presented the three batch-1 delivery gates together; as each gate question states, this accepts FO's stated recommendations and covers later external-review rounds on the PR.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-16T03:14:35Z
 worktree: .worktrees/spacedock-ensign-amendment-form-check
 pr: pr-merge:650
+verdict: PASSED
+completed: 2026-10-16T15:37:19Z
+archived: 2026-10-16T15:37:19Z
 ---
 
 Filed from a learn package-issue candidate the Captain approved (「好」, chat, 2026-10-15). The observer reports on `delivery-gate-verdict-form` and `fo-lifecycle-mod` found FO-written amendments that break the README `## Captain amendments` rules, and `scripts/design_surfaces.py check` passed both tasks.
