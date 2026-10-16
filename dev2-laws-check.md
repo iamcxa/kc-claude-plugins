@@ -15,6 +15,17 @@ gates:
                 id: briefing:dev2-laws-check:backlog:attempt-1:revision-1
                 digest: sha256:128e6b9bbe1ce5ef45e08615dbc9f571a061845d1056e74b50353b38f787cecc
                 room-ref: ./dev2-laws-check/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:dev2-laws-check:backlog:1
+                briefing: briefing:dev2-laws-check:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-16T03:13:32.941298Z"
+                decision: approve
+                reason: 'Captain approved batch 1 (「批准」): schedule as Pilot and enter ideation; as the gate question states, this accepts profile pilot and five parallel ideations with dev2-laws-check''s design read by the other four for overlap.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Filed on the Captain's 「同意兩件」 (2026-10-14), after FO compared Bend 2's `LAWS.bend` idea (invariants a checker proves the program keeps) with dev2's failures that day. Those failures were at the layer where FO follows text: a relay FO archived a task without an observer report, FO built dispatches before running `dispatch_records.py --names`, and FO answered a chat cue without running Spacedock's hooks. The scripts themselves were not wrong.
