@@ -104,6 +104,30 @@ the same way, through that re-sync, not with the package; the ideation worker ru
 re-synced, the adopter's FO does not run the seed check and its workers do not see the
 amendment rule.
 
+## State laws check
+
+`<package>/references/sd/laws.md` lists the laws and `<package>/scripts/laws_check.py` checks them over the
+committed state-branch history. `<package>/references/sd/state-laws.workflow.yml` runs it on each push to one
+named state branch. Each run judges only the events the commits of that push add, the `before..after` range
+GitHub reports, so there are no anchors to set: adopting starts green, because the first range holds the
+one commit that adds the workflow file. A violation is reported once, in the run of the push that added it;
+the next push is judged on its own commits, so its run is green again whether or not the violation was
+repaired. A failed run reaches the pushing account as GitHub's failed-run notice, which is the whole signal.
+A push the runner cannot read (a new branch, a force push whose old head is gone, a shallow clone) is a red
+run that says `cannot judge`. To audit old history once, run the same command by hand with `--before` set to
+the root commit; it reports old violations and gates nothing. The run detects after the push; it does not stop
+`merge guard`, a dispatch or a push, and it adds no word to what FO reads.
+
+Roll it out once per adopter, on the Captain's word: FO copies the template to `.github/workflows/dev2-laws.yml`
+on the state branch with the branch name, trunk workflow directory and a package commit that a
+published `kc-dev-flow-2-vX.Y.Z` tag points at, and commits that one path with a path-scoped `git add` and
+`git commit -- <path>`, then pushes. A workflow whose state is inline in trunk has no state branch to trigger on.
+
+Verified on a throwaway branch of this repository's state branch: GitHub runs a push workflow committed on that
+branch, hands it `github.event.before` and `github.event.after`, and runs one workflow per push. Not
+verified: the minutes a private adopter pays per run, and `spacedock state init`, `gate prepare`, `gate record`
+and `merge guard --rework` leaving a committed `.github/` file unchanged on this release.
+
 ## Secret reads
 
 The package ships no secret guard. The `Secrets:` line of the workflow's
