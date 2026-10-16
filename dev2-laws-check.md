@@ -262,3 +262,26 @@ The design is one package-owned laws file and a runner that reuses `observer_che
 ## Number guards
 
 ADR: 0017
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main implementing D1 to D4 as recommended with FO's change: the package laws file, kc-dev-flow-2/scripts/laws_check.py and its template workflow; v1 is wired on no state branch by this PR
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/651, branch `spacedock-ensign/dev2-laws-check` off `1383c911` (origin/main), head `de7c416c`: `laws_check.py`, `test_laws_check.py`, `references/sd/laws.md`, `references/sd/state-laws.workflow.yml`, one `adoption.md` section, one CI step, ADR 0017. Two laws (L1, L2), push-only trigger, no FO-read change.
+- DONE: every acceptance criterion in the task file green, each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1/2/3/5/7/8/9/10/11/12 green; AC-4 and AC-6 give different counts than written (below). Nine mutations, each failing only its named test: laws.md heading without function and function without heading (AC-1, `test_laws_file_matches_registry`); shallow guard removed (AC-2, `test_shallow_history_exits_2`); traceback unrecognised (AC-2, fails on the cause text); `--rev <commit>` replaced by the tip (AC-3c); substring instead of parsed frontmatter (AC-3d); no ancestry filter (AC-5f); `--names` call dropped (AC-5c); rename detection off (AC-6).
+- DONE: AC-4 and AC-6 on the real history
+  State `e73634e6`. L1 root anchor: 25 events, 15 violated (AC says 16); anchor `91fae734`: 10 events, 0 violated (AC says 9). `observer-before-merge-guard` has its report in `52565de7` and its first `pr: pr-merge:632` line in `4c22c6d9`, the next commit, so it holds; `91fae734` is its ideation commit, where `pr:` was an open-PR number. The AC-4 falsifier does not separate on this history (tip call also gives 15); AC-3c does, on a fixture. L2 anchor `49da5ddb`: 48 records, 10 violated, same 16 failed parts (AC says 68 and 12): the design counted an archive move as an add. With rename detection off the runner prints exactly 68 and 12; the 20 extra records were added before the anchor and archived after it, the two extra violators are `followup-dispatch-records-checked` implementation-1 and -2. Kept rename detection: otherwise archiving an old task turns L2 red. No-ancestry-filter run prints 148 events, 89 violated.
+- DONE: AC-8 probe and AC-9 scratch checks
+  Throwaway `spacedock-state/laws-probe` (deleted, `git ls-remote` confirms): push with no workflow file made no run; held push run 38850935736 success 11 s; sentinel without report run 38851003491 failure, exit 1, `violation:` line, 9 s; unknown anchor run 38851131592 failure, exit 2, `cannot judge`, 10 s. Scratch clone with a local bare origin: `status`, `status --next`, `state init` (and on a fresh clone), `gate prepare`, `gate record --consume`, `merge guard --rework` all ran; `cmp` against the template and `git diff --exit-code -- .github` clean after each. Captain notification for (b)/(c) not asked: AC-8 needs his statement in the validation report.
+- DONE: No FO-read word added beyond the design; the candidate's own kc-dev-flow-2/scripts/lint-skills.py exits 0
+  `git diff --stat` shows none of `workflow.md`, `mods/`, `extensions/*/EXTENSION.md`, `pr_watch.py`, `observer_check.py`, `dispatch_records.py`, `delivery_gate.py`; `lint-skills.py` exit 0, `5495 of 5511`; `test_lint_skills.py` 26 tests OK.
+- DONE: roborev evidence= line
+  `clean on de7c416c7; evidence=roborev:707`, exit 0, base `1383c9119eb5`.
+- DONE: push without force; CI green on the PR head; CI cost measured or stated as not measured
+  Pushes `6b1baaec` then `de7c416c`, no force. All four runs at `de7c416c` success, `kc-dev-flow-2 tests` run 38851506538: job 50 s, step `test_laws_check.py` 2 s. A state-branch run took 9 to 11 s of job time on the public repository; private adopters' minutes not measured.
+- DONE: Affected documents, ADR, comment ratio, number guards
+  `doc_impact.py 1383c911 de7c416c` lists `kc-dev-flow-2/README.md`: unaffected: it points at `kc-dev-flow-2-tests.yml` for every other test file and that file gained the step. `adr_lint.py docs/adr --since origin/main --require 0017` exit 0 (ADR 0017 added; 0016 and 0018 untouched). `comment_ratio.py`: code lines 477, comment lines 2, 0.4%, exit 0. `number_guards.py check` PASS, base `1383c9119eb5`. `design_surfaces.py check` exit 0.
+
+### Summary
+
+The runner, laws file, workflow template, adoption section and ADR 0017 are in Draft PR #651 with CI green. Two criteria did not reproduce as written: the design's L1 count treated an ideation commit as a sentinel (15 violated, not 16) and its L2 count read archive moves as adds (48 records, not 68); the runner keeps the rename-aware reading, and the written counts are reproducible with rename detection off. Needs the Captain: whether the failed-run notice reached him (AC-8), and whether the AC-4 and AC-6 counts are amended to 10/0, 25/15 and 48/10.
