@@ -244,3 +244,53 @@ The check cannot be forced before `dispatch build` from this package (Spacedock 
 ### Summary
 
 `dispatch_records.py --newest` and one `next:` line in `pr_watch.py tasks` ship as designed, 132 added lines across four files under `kc-dev-flow-2/scripts/`, no README, mod or budget edit. Detection comes after the record is committed and cannot show the line reaches FO before the worker reads it. The `--names` shape filter still flags a repository file sharing a package script's name. D2 (ask Spacedock for a pre-dispatch hook) is untouched: no issue drafted, filed or posted. extension-instruction-reaches-dispatch can now rebase on this PR's `dispatch_records.py` `main()`; its "join the pre-send mode" wording is the one the design flagged.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #649 head a4217cd3 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED for head a4217cd3e8514e0be736e0489cfd0f72da375036 (base 1383c911, four files under `kc-dev-flow-2/scripts/`, +132/-2). Checks run from a throwaway detached checkout of that head, removed after; sandbox mutations ran on a copy, never the candidate.
+  AC-1: real `--newest` in a clone of `spacedock-state/dev2` at `e081c5f2`, `c3935e01`, `d6182ead` printed exactly the replay-table lines, exit 1 (impl-2 without impl-1). Falsifiers: scan-every-record fails `test_an_older_bare_record_is_not_reported_once_a_newer_one_is_clean`; lowest-numbered record fails that and `test_a_newer_bare_record_is_reported_over_an_older_clean_one_and_other_tasks_are_ignored`; reading committed text instead of disk fails `test_the_file_is_read_as_it_is_on_disk_not_as_committed`.
+  AC-2: that same older-bare test; the scan-every-record mutation exits 1 and fails it.
+  AC-3: real-subprocess `test_a_newest_record_naming_a_bare_script_prints_one_next_line_even_without_a_pr`; deleting the call, and moving the call after the no-PR `continue`, each fail it. Also ran `pr_watch.py tasks` by hand on an inline-layout and a split-state fixture: one `next:` line, exit 0.
+  AC-4: base and candidate `pr_watch.py tasks` on one clean fixture: both stdout empty, diff empty, exit 0 each; on the real dev2 workflow the only diff line is the script path inside the "wait" next: line. Falsifier: a mutation printing "dispatch records checked" fails `test_clean_or_absent_records_leave_the_output_as_it_was`.
+  AC-5: `git diff 1383c911 HEAD` over `workflow.md`, the idle mod and `lint-skills.py` is 0 bytes; `lint-skills.py` exit 0 (5495 of 5511); flagged line for a three-name record measured at 38 words (`len(split())`, path as one word), 36 for one name.
+  AC-6: git error returning 0 fails `test_a_task_without_records_exits_clean_and_an_unreadable_state_exits_2` and `test_an_unreadable_state_with_a_dispatch_folder_is_reported_with_exit_2`; dropping the exit-2 propagation fails the second.
+  AC-7: replay loop at state HEAD 90b393a7 over every commit adding a non-archived record: 157 additions in 150 commits, 67 flagged, 8 of 79 on or after 2026-10-14; the eight are the design's five plus the three batch-1 `implementation-2` records the implementer found. Differs from 149/55/5-of-71 and from the implementation's 156/149/61/8-of-78 only because the branch moved. Proves detection, not that a line reaches FO before the worker reads the record.
+  Limits judged: (1) detection after commit, not prevention: accepted, it is the recommended D1(a) the Captain approved and the report states it; (2) repository-file false positive (a `test_*.py` the task edits) repeats each idle pass: accepted as a stated design limit, see Polish below; (3) uncommitted record invisible: accepted, stated in the design; (4) timing before the worker reads: unmeasured, stated, not asserted. D2 untouched: no issue drafted or filed.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run with `env -i HOME=$HOME PATH=$PATH /bin/bash --noprofile --norc`: output matched every expectation. `adr_lint.py docs/adr --since 1383c911` from the candidate checkout: "15 ADR file(s) checked, 0 legacy", exit 0. `comment_ratio.py 1383c911 HEAD --workflow-dir <dev2>`: 0 comment lines of 114 code lines, exit 0. `doc_impact.py 1383c911 HEAD`: 0 documents listed, exit 0. `dispatch_records.py <task folder>`: 3 records complete, exit 0; `--names` over them exit 0; `design_surfaces.py check` exit 0. Task has no `## Number guards` or `## Captain amendments` section, so neither check applies. Unit tests `test_dispatch_records` + `test_pr_watch`: 93 pass at the head; CI on the head all green (unit tests, multi-profile route gate, version parity, GitGuardian). Necessity: each of the 4 changed files maps to an AC; no surface without a consumer or falsifier.
+  Findings: Deferred risk: `--newest` picks the lexicographically last file when ONE commit adds several records of one task, so `implementation-9` beats `implementation-10` (probe: both added in one commit, -10 clean and -9 bare, exit 1 naming -9). History shows 3 of 150 record-adding commits added several records for one task, all bulk-looking journey-task commits. Would become Material if FO saves two records of one task in one state commit with the older sorting last. Polish: the `next:` line does not say a named file may be a repository file rather than a package script; it repeats each idle pass until the task's next record. Cost: `pr_watch.py tasks` on the real workflow took 18.2s base and 19.2s candidate in single runs dominated by `gh` calls; added seconds not isolated, not measured. No Material finding, no Needs decision.
+
+### Minimal acceptance script
+
+Needs: network to github.com, `git`, `python3`; no secret. Run in any fresh bash; it writes only `/tmp/accept-649*` and removes it. Does not cover: the idle hook firing inside a live FO session, timing relative to a worker reading the record, the Spacedock pre-dispatch hook (D2).
+
+    A=/tmp/accept-649; S=/tmp/accept-649-state; W=/tmp/accept-649-wf; R=a4217cd3e8514e0be736e0489cfd0f72da375036
+    rm -rf $A $S $W /tmp/accept-649.json
+    # 1. fetch PR 649 head. Expect: prints a4217cd3e8514e0be736e0489cfd0f72da375036
+    git init -q $A && git -C $A fetch -q --depth 1 https://github.com/iamcxa/kc-claude-plugins.git $R && git -C $A checkout -q FETCH_HEAD && git -C $A rev-parse HEAD
+    # 2. unit tests. Expect: "Ran 24 tests ... OK" then "Ran 69 tests ... OK"
+    python3 -B $A/kc-dev-flow-2/scripts/test_dispatch_records.py 2>&1 | tail -3
+    python3 -B $A/kc-dev-flow-2/scripts/test_pr_watch.py 2>&1 | tail -3
+    # 3. newest record names a bare script. Expect: one line ".../t1/dispatch/implementation-1.md:3: bare package script name adr_lint.py" then "exit 1"
+    mkdir -p $S/t1/dispatch && git init -q $S
+    printf '## Checklist\n\nRun adr_lint.py now.\n' > $S/t1/dispatch/implementation-1.md
+    git -C $S add -A && git -C $S -c user.name=a -c user.email=a@a commit -qm one
+    python3 -B $A/kc-dev-flow-2/scripts/dispatch_records.py --newest $S t1; echo "exit $?"
+    # 4. a newer clean record clears it. Expect: no output line, then "exit 0"
+    printf '## Checklist\n\nRun /abs/pkg/scripts/adr_lint.py now.\n' > $S/t1/dispatch/implementation-2.md
+    git -C $S add -A && git -C $S -c user.name=a -c user.email=a@a commit -qm two
+    python3 -B $A/kc-dev-flow-2/scripts/dispatch_records.py --newest $S t1; echo "exit $?"
+    # 5. idle hook on a flagged task. Expect: one line "next: t1's newest dispatch record .../t1/dispatch/implementation-1.md names adr_lint.py without a directory; ..." then "exit 0"
+    mkdir -p $W/t1/dispatch && git init -q $W
+    printf -- '---\n---\n# wf\n' > $W/README.md
+    printf -- '---\ntitle: t1\nstatus: implementation\n---\nbody\n' > $W/t1.md
+    printf '## Checklist\n\nRun adr_lint.py now.\n' > $W/t1/dispatch/implementation-1.md
+    git -C $W add -A && git -C $W -c user.name=a -c user.email=a@a commit -qm one
+    python3 -B $A/kc-dev-flow-2/scripts/pr_watch.py --state /tmp/accept-649.json tasks $W; echo "exit $?"
+    # 6. clean up. Expect: nothing left under /tmp/accept-649*
+    rm -rf $A $S $W /tmp/accept-649.json
+
+### Summary
+
+PASSED for PR #649 head a4217cd3: every AC re-run, each falsifier shown failing by a mutation on a sandbox copy, 93 unit tests and CI green, replay reproduces the three missed records and the same eight records since 10-14 at a moved state HEAD. One Deferred risk (multi-record single commit picks the lexicographic last, `-9` over `-10`) and one Polish (the line does not warn a flagged name may be a repository file); no Material finding. Detection after commit, the unmeasured timing, and D2 stay stated limits, not defects.
