@@ -3,7 +3,7 @@ title: A prod task's validation gate carries a security review that reaches code
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved delivery of #659 head fce79ed7 in chat ("approve delivering #659"), accepting FO''s recommendation to decline the Deferred risks and Polish into prod-security-validation-gate-followups'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-17T06:11:21Z
 worktree: .worktrees/spacedock-ensign-prod-security-validation-gate
 pr: pr-merge:659
+verdict: PASSED
+completed: 2026-10-17T14:16:09Z
+archived: 2026-10-17T14:16:09Z
 ---
 
 Filed on the Captain's 「照這樣做」 (chat, 2026-10-16), split out of `prod-security-review-gates` (its amendment 2 keeps the design-stage review there).
