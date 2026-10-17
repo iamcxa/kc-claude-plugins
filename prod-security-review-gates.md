@@ -429,3 +429,17 @@ The design replaces the opt-in extension with a rule in the prod ideation profil
 ### Summary
 
 The prod ideation step and its check are built from the approved design on a fresh branch, with ADR 0019, 18 new unit cases and a mutation proof per refusal; CI is green on the Draft PR and roborev is clean after two rounds of fixes. D2 (relay's v1 sentence) is not touched here: relay's FO applies it in relay. Limits stand as designed: the report is model output on a design, the check proves a disposition exists and not that it answers the finding, and AC-11 is two relay runs and one control, not a rate.
+
+## Stage Report: implementation (cycle 4, phase 1)
+
+- DONE: Phase 1 only: reproduce the Codex P2 on #656 head cd3a5747 (review:5555775033) as a failing test, and propose the smallest fix; report and stop, with no commit or push, until FO authorizes the fix
+  Two new cases in `SecurityReviewTests` (`kc-dev-flow-2/scripts/test_design_surfaces.py`, worktree, UNCOMMITTED, only modified path); `python3 -B test_design_surfaces.py` prints 62 run, 2 failures, 60 pass. No commit, no push, no PR comment, no git config write.
+  - `test_a_findings_item_with_no_severity_is_not_counted_as_zero_findings` asserts a report whose only findings item has no `severity:` is refused; it fails because `check_security` prints `0 findings` and returns no error.
+  - `test_a_findings_item_with_no_severity_among_others_is_not_dropped` asserts a 4-item report with 3 severities is refused; it fails because the note prints `3 findings` and the 4th item needs no disposition.
+  - Cause: `REPORT_FINDING` counts `severity:` lines, not list items under `findings:`; `REPORT_FINDINGS_KEY` only proves the key exists.
+  - Proposed smallest fix (stdlib only; no module in `kc-dev-flow-2/scripts` imports yaml): in `check_security`, read the `findings:` block line by line. `findings: []` means zero. Otherwise the block runs to the next line indented no deeper than the key; each item starts at a `- ` line at the first item's indent (deeper `- ` lines inside `description: |` are not items). Count items, not severity lines; an item with no `severity:` line, or a value outside CRITICAL, HIGH, MEDIUM, LOW (quotes allowed), appends one named error (`'<report>': findings item N has no severity from CRITICAL, HIGH, MEDIUM or LOW`) and returns; a `findings:` value that is neither `[]` nor a list gets its own named error. This is also the Phase 2 shape (items, severity from the reviewer's scale, fail closed), so one parser covers both.
+  - Not yet decided: whether an item's severity may sit on a later line than `- file:` (reviewer's schema lists `file` first); the parser must accept any line of the item.
+
+### Summary
+
+The P2 reproduces: an item with no severity is counted as zero or dropped, so the prod ideation gate passes with no disposition. The fix is one item-based parser replacing the `severity:` line count; Phase 2 (one test per malformed shape, one mutation per rule) is not started, awaiting FO authorization. State report is not committed, per the no-commit instruction.
