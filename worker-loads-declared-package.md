@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:worker-loads-declared-package:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:worker-loads-declared-package-backlog-1
+              briefing:
+                id: briefing:worker-loads-declared-package:backlog:attempt-1:revision-1
+                digest: sha256:846e2a9935ad5f8124c30d59e6aa5d33843c40eb0830901c017df4823325f90b
+                room-ref: ./worker-loads-declared-package/review/backlog/briefing-1
 ---
 
 Filed on the Captain's 「兩問題照這樣做」 (chat, 2026-10-17), to FO's question whether to file the subspace-relay FO's report as a kc-dev-flow-2 task.

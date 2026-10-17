@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-loads-declared-package:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 2 (workflow-budget-ratchet, special-role-triggers, worker-loads-declared-package, prod-security-validation-gate, ui-design-review-in-ideation, merge-gatekeeper)? Approving accepts profile pilot as recommended, and that the six ideations run in parallel, each with a Batch overlap item; special-role-triggers stacks on workflow-budget-ratchet because both edit the workflow rules and the new rule must fit the lowered budget.",
+  "artifacts": [
+    {
+      "id": "artifact:worker-loads-declared-package:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/952118f47f2f54607d03b104756e5d8e18d98884/worker-loads-declared-package.md",
+      "rev": "sha256:8480830700415034a0fed2fd0421e4bffabae33b32fb92ebd09c439f8d4de05b",
+      "mediaType": "text/markdown",
+      "summary": "Seed: the relay FO reported (2026-10-17) workers loading 0.23.0 while relay's README declares 0.22.1, because the plugin install is per user; 0.23.0's delivery_gate.py then holds 0.22.1 tasks at the merge ask. Ideation owes: the route (workers load the dispatched Package root, a version check, or upgrade notes plus a record check) and whether 'sync later' for an adopter means anything."
+    }
+  ]
+}
