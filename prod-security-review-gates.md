@@ -314,6 +314,8 @@ Verified by: `python3 <package>/scripts/adr_lint.py docs/adr --since <base> --re
 
 - Cycle 1 (FO, 2026-10-16): Codex review on #656 cd3a5747 (review:5555775033) left one P1, to fix (a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P1 `scripts/design_surfaces.py`: the finding count is the number of `severity:` lines, so a findings list item with no severity (a truncated or malformed report) is counted as zero findings and the prod ideation gate passes with no disposition.
+- Cycle 2 (FO, 2026-10-17): Codex review round 2 on #656 1e4cd1e8 (review:5555839646) left one P2, the third report-parsing hole of one class after roborev's and round 1's P1: a `findings:` key nested under another key of the review root is read as the findings list, so `tob_security_review:` / `metadata:` / `findings: []` passes as zero findings. Circuit breaker: FO stopped the recheck of 1e4cd1e8 and asked kc-dev-flow-2:chief-engineer for the next step before any repair.
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-17 — patch the hand YAML parser again, or change the contract so the check reads a fixed form instead of the reviewer's free YAML?
 
 ## Stage Report: ideation
 
