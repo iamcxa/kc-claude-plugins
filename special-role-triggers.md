@@ -75,6 +75,9 @@ Captain: 「第四題同意」 (chat, 2026-10-17)
 Asked: 「第 4 題：#664「特殊角色觸發點」的 AC-2，要照你批准的設計改嗎？」（「我建議把 AC-2 改成：找審核員的日期「不早於」修正指示的日期。這樣就和 D3 一致。」）
 Supersedes: AC-2
 Design: AC-2's date rule is changed so that an engineering-reviewer call dated no earlier than the amendment entry's date clears it, consistent with D3
+Superseded text: **AC-2** A matching line clears an event; each near-miss does not.
+Verified by: one subTest per case on a task with one owed event: a call line naming `Cycle 3` or `Amendment N` exits 0; `not run: <reason>` exits 0; wrong agent, blank reason, no event token, `Cycle 30` for `Cycle 3`, a line inside a fenced block, and (B) a call dated after the entry each exit 1 with the `next:` line.
+Falsifier: match the token as a substring and the `Cycle 30` case exits 0; accept an empty reason and the blank-reason case exits 0.
 
 ## Design
 
@@ -170,10 +173,6 @@ This change cannot lower a moment; it adds text only while a call is owed and re
 Verified by: `python3 <pkg>/scripts/role_triggers.py <state> <slug> --rev f3474f68` on archived tasks exits 1 and prints, per task: delivery-gate-verdict-form A and B 1, B 2; dev2-laws-check A, B 1; amendment-form-check A and exactly one B (its two fenced `### Amendment 1` fixtures, near its lines 370 and 485, are not events); extension-instruction-reaches-dispatch A, B 1; names-check-before-dispatch B 1; prod-security-review-gates A, B 1, B 2 (its existing Cycle-2 call names no event, so A is still owed). Run in the test with synthetic copies of those shapes, and once by hand on the real branch.
 Falsifier: scan fenced text and amendment-form-check prints three B lines; fire A at the second Cycle and a task with exactly two Cycles prints an A line the test says it must not.
 
-**AC-2** A matching line clears an event; each near-miss does not.
-Verified by: one subTest per case on a task with one owed event: a call line naming `Cycle 3` or `Amendment N` exits 0; `not run: <reason>` exits 0; wrong agent, blank reason, no event token, `Cycle 30` for `Cycle 3`, a line inside a fenced block, and (B) a call dated after the entry each exit 1 with the `next:` line.
-Falsifier: match the token as a substring and the `Cycle 30` case exits 0; accept an empty reason and the blank-reason case exits 0.
-
 **AC-3** It judges committed bytes and reports what it cannot tell.
 Verified by: with the task edited on disk but not committed, `--rev HEAD` prints the committed answer; a bad `--rev`, a non-work-tree and a slug with no task exit 2 with `cannot tell`; `git status --porcelain` is empty after every run.
 Falsifier: read the working file and the uncommitted-edit case flips its exit code.
@@ -201,6 +200,10 @@ Falsifier: the suite exists and no step runs it (the case that left about 1050 a
 **AC-9** The observer reports an owed event.
 Verified by: not yet verified. At validation, one `kc-dev-flow-2:observer` replay on archived delivery-gate-verdict-form must print a `violation` finding quoting a `role_triggers.py` line; the report is saved with the validation record.
 Falsifier: the report has no such line, or reports `observed` for it.
+
+**AC-10** Amended by Captain, amendment 1, replacing AC-2: a matching line clears an event; each near-miss does not; an engineering-reviewer call dated no earlier than the amendment entry's date clears it.
+Verified by: one subTest per case on a task with one owed event: a call line naming `Cycle 3` or `Amendment N` exits 0 (for B, dated on or after the entry); `not run: <reason>` exits 0; wrong agent, blank reason, no event token, `Cycle 30` for `Cycle 3`, a line inside a fenced block, and (B) a call dated before the entry each exit 1 with the `next:` line.
+Falsifier: match the token as a substring and the `Cycle 30` case exits 0; accept an empty reason and the blank-reason case exits 0.
 
 ### Batch overlap
 
@@ -289,3 +292,18 @@ Needs this repository's checkout at `/Users/kent/conductor/workspaces/kc-claude-
 ### Summary
 
 PASSED at 5afe7fd7: AC-1 to AC-9 hold, each falsifier fails under a mutation I ran, CI is green and the new step ran. One Needs decision for FO or the Captain (F1, the same-day date rule in AC-2 against design D3), two Polish findings. My throwaway worktree and probes are removed.
+
+## Stage Report: implementation (cycle 2, phase 1)
+
+- DONE: Phase 1 only: reproduce the Codex P2 on #664 head 5afe7fd7 (review:5558171225) as a failing test, and propose the smallest fix; report and stop, with no commit or push, until FO authorizes the fix
+  Both P2 reproduce at 5afe7fd7: two new tests in `kc-dev-flow-2/scripts/test_role_triggers.py` (worktree, uncommitted) fail with 4 of 13 subtests: `..._dated_no_earlier_than_the_entry_clears_it` (call 10-17 for entry 10-15 exits 1, expected 0; call 10-14 exits 0, expected 1) and `test_only_the_fo_alignment_section_can_clear_an_event` (call and waiver under `## Stage Report` exit 0, expected 1). Controls that pass today: same-day call, call and waiver under `## FO alignment`, and under a `###` subheading of it. Nothing committed or pushed; no remote or config write.
+- DONE: Captain amendment 1 applied to the task file
+  AC-2 moved verbatim under the entry's `Superseded text:`; replacement is AC-10 "Amended by Captain, amendment 1, replacing AC-2", AC-2's wording with only the date clause changed (on or after the entry clears; before the entry is owed). `design_surfaces.py check` exit 0. Task-file edit is uncommitted in the state checkout (phase 1 said no commit).
+
+### Proposed fix (verified on a scratch copy, not applied)
+
+In `role_triggers.py`: (1) `made.group(1) <= latest` becomes `>= latest` in `cleared()`; (2) a 9-line `alignment(lines)` generator yields only lines under the `## FO alignment` heading (ends at the next heading of level 1 or 2, so `###` subheadings stay in), and `check()` passes that to both `cleared()` calls. On the scratch copy the two new tests pass; the only failing case is the old `test_an_amendment_call_dated_after_the_entry_or_naming_another_number_is_owed` case dated 2026-10-17, which asserts the superseded AC-2 and must be dropped from it in the fix. Output over all 323 task files of state f3474f68 is identical before and after (md5 per task, 0 differ), so AC-1 and AC-7 evidence is unchanged.
+
+### Summary
+
+Both Codex P2 are real and reproduce as failing tests; the fix is about 11 lines in `role_triggers.py` plus removing one superseded test case. Decision for FO: the only recorded call in state (prod-security-review-gates) sits under `## Acceptance criteria`, not `## FO alignment`, so finding 2's rule would not count it (it names Cycle 2, so it clears nothing either way); also, finding 2 is not covered by Captain amendment 1, so its rule (restrict to `## FO alignment`) needs FO's ruling before it enters an AC.
