@@ -27,9 +27,9 @@ def task(pr="", body=""):
     return f"---\ntitle: t\nstatus: implementation\npr: {pr}\n---\n{body}\n"
 
 
-def record(*, checklist="- do the work", root="/pkg", completion=True):
+def record(*, checklist="- do the work", root="/pkg", completion=True, candidate=False):
     scope = f"Package root: {root}\n" + ("Send the completion message to `main`.\n" if completion else "")
-    return f"Dispatched: 2026-10-16 {SHA}\nModel: sonnet\n\n## Checklist\n\n{checklist}\n\n## Scope notes\n\n{scope}"
+    return f"Dispatched: 2026-10-16 {SHA}\nModel: sonnet\n{f'Candidate: {SHA}' + chr(10) if candidate else ''}\n## Checklist\n\n{checklist}\n\n## Scope notes\n\n{scope}"
 
 
 class Repo:
@@ -325,6 +325,16 @@ class L2Test(Base):
         self.assertNotIn("old_bad", out)
         self.assertNotIn("moved_bad", out)
         self.assertNotIn("dispatch/complete.md", out)
+
+    def test_a_validation_record_without_a_candidate_line_is_an_l2_violation_not_an_unjudgeable_run(self):
+        repo = Repo(self.tmp / "l2-candidate")
+        before = repo.commit("base", keep="x")
+        repo.commit("records", **{"t__dispatch__validation-1": record(), "t__dispatch__validation-2": record(candidate=True)})
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, r"violation: L2 dispatch-record-complete record=t/dispatch/validation-1\.md .*Candidate")
+        self.assertNotIn("validation-2.md", out)
+        self.assertNotIn("does not parse", out)
 
     def test_a_record_corrected_in_a_later_commit_of_the_same_push_is_still_judged_as_added(self):
         repo = Repo(self.tmp / "l2-fixed")
