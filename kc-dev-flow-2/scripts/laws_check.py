@@ -177,7 +177,7 @@ def l2_dispatch_record_complete(ctx):
             files = [str(Path(tmp) / path) for path in paths]
             code, lines = run_check("dispatch_records.py", "--names", *files)
             for line in lines if code == 1 else []:
-                match = re.fullmatch(r"(.+\.md):(\d+): (bare package script name \S+)", line)
+                match = re.fullmatch(r"(.+\.md):(\d+): (bare package script name \S+|no 'Candidate: <40-hex head>' line)(?:;.*)?", line)
                 if not match:
                     raise Cannot(f"dispatch_records.py --names exited 1 with output this runner does not parse: {line}")
                 key = next((v for v in mine.values() if str(Path(tmp) / v[0]) == match[1]), None)
