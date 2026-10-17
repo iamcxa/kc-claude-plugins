@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:prod-security-validation-gate:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 2 (workflow-budget-ratchet, special-role-triggers, worker-loads-declared-package, prod-security-validation-gate, ui-design-review-in-ideation, merge-gatekeeper)? Approving accepts profile pilot as recommended, and that the six ideations run in parallel, each with a Batch overlap item; special-role-triggers stacks on workflow-budget-ratchet because both edit the workflow rules and the new rule must fit the lowered budget.",
+  "artifacts": [
+    {
+      "id": "artifact:prod-security-validation-gate:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9191975e20044bce10d6c59c07fdf5ed92f5fc84/prod-security-validation-gate.md",
+      "rev": "sha256:d1bebb4d4657b930de38356a65922d1ecf946bf83c409a1bc46c232f4b7e2780",
+      "mediaType": "text/markdown",
+      "summary": "Seed: split from prod-security-review-gates by amendment 2. Bar: the validation-gate review names relay #347's unbounded comment or session write class (outside the diff). Ideation owes: the three-model measurement first (two runs each on Sonnet 5.5, Opus 5.5, Fable 5.1 plus a control, at security_tier full), refusals in the cyber category, cost per run, then default model and effort, and what prod.md says when the reviewer refuses."
+    }
+  ]
+}

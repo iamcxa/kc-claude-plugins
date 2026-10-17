@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:prod-security-validation-gate:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:prod-security-validation-gate-backlog-1
+              briefing:
+                id: briefing:prod-security-validation-gate:backlog:attempt-1:revision-1
+                digest: sha256:b85c50faff1c18fb4b9b45385e14d0407d4bea0c47c1febf81b8372242159e26
+                room-ref: ./prod-security-validation-gate/review/backlog/briefing-1
 ---
 
 Filed on the Captain's 「照這樣做」 (chat, 2026-10-16), split out of `prod-security-review-gates` (its amendment 2 keeps the design-stage review there).
