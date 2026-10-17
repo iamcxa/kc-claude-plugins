@@ -224,3 +224,45 @@ of its feedback record. Checked 2026-10-15: git grep for a per-moment reading
 count over ab9334edf03d3f248bd8e28a6be979307f355f36 finds only the per-file budget
 in lint-skills.py; no project rule, selected-profile text or stage principle
 states this practice.
+
+## List every input before promising a verdict survives later history
+
+### Applicability
+
+A kc-dev-flow-2 task in this repository that designs or reviews a check run over
+committed history (such as the state-branch laws runner) and promises that a
+violation, once committed, keeps its verdict after later commits (for example "stays
+red until an anchor moves"), or that answers a review finding of the form "a later
+change erases a committed violation".
+
+### Practice
+
+Before the design gate, list every input the verdict reads (files read at the run
+revision, task files enumerated at the tip, the README or config passed in at run
+time) and write the persistence promise as one property test: after the event,
+commit every later change the history allows (edit, delete, archive, rename, and a
+change to each run-time input) and require the same exit code and output. When a
+review finding of this class arrives, treat it as a finding about that list: add the
+input it names and every sibling input to the list and to the test in the same
+cycle, instead of repairing the one reported read. If an input cannot be pinned to
+the event, narrow or drop the promise in the design and ask the Captain, rather than
+shipping an absolute that later history can undo. Uncertain: whether this ordering
+would have avoided the rework, since the Captain's actual ruling was to drop the
+promise.
+
+### Evidence
+
+Task dev2-laws-check (iamcxa/kc-claude-plugins#651, closure revision
+f3e31ba99a5c5832c9c0fab276fef9af645bf5f5). The first design promised that a
+committed violation stays red. Review then found four ways later history erased one:
+reading record bytes at the run revision, re-adding a record, deleting a task, and
+removing learn from the README. FO fixed the class with a property test after the
+third, and the fourth made FO stop under the circuit breaker; the Captain amended
+the design to judge only each push's own range, and round 4 was clean. In the
+archived task, the implementation cycle 3 phase 1 report's class audit listed
+readme_extensions (the README passed at run time) as an input and noted the property
+test could fix it as a constant; the property test's fixture varied edit, delete and
+archive of task and record files and not the README, and the next review round
+(Feedback Cycles, Cycle 3) reported exactly that input. Bounded: one task; the fix
+chosen was to drop the promise, so the record does not show that a property test
+varying the README would have been cheaper than that ruling.
