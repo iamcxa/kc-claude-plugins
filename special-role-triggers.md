@@ -16,3 +16,10 @@ Filed on the Captain's 「可以，建成待辦」 (chat, 2026-10-16), after FO 
 - Candidate triggers: chief-engineer when FO's circuit breaker fires (the same class of finding a second time) or the Captain asks FO to step back, before FO proposes a new route; engineering-reviewer when FO proposes an amendment that replaces approved design, narrows a guarantee, or accepts a risk, with its verdict in the gate question.
 - Candidate enforcement: a `Reviewer:` line the check scripts or the observer can require when the event is in state (an amendment entry, a Feedback Cycles line naming a repeated class).
 - Cost: each call is an Opus run; count the triggers per batch before choosing.
+
+## FO alignment
+
+Alignment: not needed before ideation; the Captain approved filing it (his words are at the top of this file).
+Release review: not needed: workflow maintenance, on no journey map.
+Surfaces: none
+Visible change: none
