@@ -248,6 +248,11 @@ class CriteriaTests(unittest.TestCase):
                 found = [e for e in self.errors(criteria) if "cceptance criteria" in e]
                 self.assertEqual(not found, accepted, found)
 
+    def test_the_two_messages_the_readme_does_not_restate_are_worded_as_pointed_at(self):
+        self.assertTrue(any("missing '## Acceptance criteria' section" in e for e in self.errors("")))
+        empty = self.errors("## Acceptance criteria\n\n## Next\n")
+        self.assertTrue(any("'## Acceptance criteria' declares no criterion (a '**AC-<id>**' bold line)" in e for e in empty), empty)
+
     def test_mutation_accepting_a_plain_list_as_a_declaration_fails_its_case(self):
         mutant = mutated(r'r"\*\*(AC-[A-Za-z0-9]+)[^*\n]*\*\*"', r'r"(?:\*\*|- )(AC-[A-Za-z0-9]+)[^*\n]*"')
         plain = "## Acceptance criteria\n- AC-1: x\n"
