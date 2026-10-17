@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.25.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.24.0...kc-dev-flow-2-v0.25.0) (2026-10-17)
+
+
+### Features
+
+* **kc-dev-flow-2:** a prod task's validation carries a security review that reaches code the change exposes ([#659](https://github.com/iamcxa/kc-claude-plugins/issues/659)) ([9b58cd6](https://github.com/iamcxa/kc-claude-plugins/commit/9b58cd68be01ed360d664642bb3605838cd82c25))
+* **kc-dev-flow-2:** the workflow word budget ratchets and three script-checked rules shrink to pointers ([#658](https://github.com/iamcxa/kc-claude-plugins/issues/658)) ([6ea3a47](https://github.com/iamcxa/kc-claude-plugins/commit/6ea3a4724515b974c34beb16bc3382683b6d45b9))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** dispatch_records --names asks for a missing Candidate line ([#661](https://github.com/iamcxa/kc-claude-plugins/issues/661)) ([a915aca](https://github.com/iamcxa/kc-claude-plugins/commit/a915acaa39cea0cbc84dda176a8e1241057b2eed))
+
 ## [0.24.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.23.0...kc-dev-flow-2-v0.24.0) (2026-10-17)
 
 
