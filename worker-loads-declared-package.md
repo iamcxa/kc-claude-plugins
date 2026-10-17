@@ -34,6 +34,17 @@ gates:
                 id: briefing:worker-loads-declared-package:ideation:attempt-1:revision-1
                 digest: sha256:ef081acfaa5d46988c9c19587d13b27e8496984e9436507b5a7eaeb7a36a6df0
                 room-ref: ./worker-loads-declared-package/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-loads-declared-package:ideation:1
+                briefing: briefing:worker-loads-declared-package:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T07:30:27.7185Z"
+                decision: approve
+                reason: Captain approved in chat (「那就照建議」, after asking FO to restate the merge-gatekeeper D1 reasoning) the six batch-2 ideation gates presented together in one message, accepting each task's stated recommendations and FO's implementation order
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-17T06:11:43Z
 ---
 
