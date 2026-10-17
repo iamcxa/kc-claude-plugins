@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:prod-security-review-gates:validation:attempt-1:revision-1",
+  "question": "Deliver #656 head 44f77c1b (a prod-profile task's ideation runs the security reviewer, and the design check refuses a prod ideation without its report and a disposition per finding): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the Deferred risks and Polish below into backlog task prod-security-check-round3-followups, including keeping AC-8's no-README-diff rule for F2. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:prod-security-review-gates:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/85a2008ca85116f37c4560296921c3284e6cb5df/prod-security-review-gates.md",
+      "rev": "sha256:86cfc5f2a07b4887a393b409ce59d864911612daeeaf2939d9c53a8dbe3a315c",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at 44f77c1b (validation-4, recheck after three repair cycles; base 363558f6 is current main). FO ran the acceptance script as written in env -i bash: every step matched (90 tests OK; lint exit 0 at 5495 of 5511 words; a reviewed flat task and the same bytes as a folder-form task exit 0; a finding with no severity, findings nested under another key, and a folder task with no report each exit 1 naming the reason; a pilot task with no review exits 0; adr_lint exit 0 over 19 ADRs). Fresh reviewer runs on the shipped brief: the relay fixture named both known issues, the control returned no HIGH. 21 real reports, 0 false holds. CI green. Words FO reads: prod.md 606 words; workflow.md unchanged. ADR 0019. External rounds: Codex 4 (round 1 one P1 fixed; round 2 one P2 fixed by locking the report shape, after the chief-engineer ruling, instead of a fourth parser patch; round 3 one P1, folder-form report path, fixed; round 4 two P2 declined, review:5556120681). RoboRev local (772), not counted. Declined, with reasons: Polish F2, the README sentence on what check verifies omits the security review (AC-8 forbids a README diff); Deferred risk F3, check cannot tell whether the focus file is the true focus; Deferred risk F4, the hand parser could read a deeper-indented severity differently from YAML (21 real reports read correctly); Deferred risk, security lines outside Design can satisfy the check (the report file must still exist and pass the shape lock); Deferred risk, a repeated finding line collapses to the last. Second reviewer: copilot because the change alters review rules (a security review required at the prod ideation gate). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Limit: not verified end to end with a real ideation worker writing the Security lines, nor how the section renders at the gate, nor on Codex-hosted workers."
+    }
+  ]
+}
