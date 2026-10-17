@@ -26,8 +26,8 @@ AC_ID = re.compile(r"AC-[A-Za-z0-9]+")
 DECLARATION_LINE = re.compile(r"^[ \t]*(?:>[ \t]*)*(?:(?:[-*+]|\d+[.)])[ \t]+)?\*\*(AC-[A-Za-z0-9]+)[^*\n]*\*\*")
 NO_REPLACEMENT = re.compile(r"no replacement", re.I)
 FRONTMATTER = re.compile(r"\A---\n(.*?\n)---\n", re.S)
-FM_PROFILE = re.compile(r"^profile:[ \t]*(\S+)[ \t]*$", re.M)
-FM_STATUS = re.compile(r"^status:[ \t]*(\S+)[ \t]*$", re.M)
+FM_PROFILE = re.compile(r"""^profile:[ \t]*["']?([^\s"']+)["']?[ \t]*$""", re.M)
+FM_STATUS = re.compile(r"""^status:[ \t]*["']?([^\s"']+)["']?[ \t]*$""", re.M)
 REVIEW_LINE = re.compile(r"^Security review:[ \t]*(\S.*)$", re.M)
 FOCUS_LINE = re.compile(r"^Security focus file:[ \t]*(\S.*)$", re.M)
 FINDING_LINE = re.compile(r"^Security finding (\d+):[ \t]*(\S.*)$", re.M)
@@ -221,7 +221,7 @@ def check_task(path, seed=False, notes=None):
     profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
     if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):
         plain = "\n".join(unfenced(lines))
-        summary = check_security(path, plain, set(AC_DECLARATION.findall(plain)), errors)
+        summary = check_security(path, plain, declared, errors)
         if summary and notes is not None:
             notes.append(summary)
     return errors

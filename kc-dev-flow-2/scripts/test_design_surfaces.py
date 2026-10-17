@@ -567,8 +567,18 @@ class SecurityReviewTests(unittest.TestCase):
         errors, _ = self.run_check(review=REVIEW_LINES.replace("finding 1: AC-2", "finding 1: AC-1"))
         self.assertEqual(errors, [])
 
+    def test_quoted_frontmatter_values_are_still_a_prod_ideation_task(self):
+        for quote in ('"', "'"):
+            with self.subTest(quote=quote):
+                errors, _ = self.run_check(review="", report=None, profile=f"{quote}prod{quote}", status=f"{quote}ideation{quote}")
+                self.assertTrue(any("needs a 'Security review:' line" in e for e in errors), errors)
+
+    def test_a_bold_acceptance_id_in_design_prose_is_not_a_declared_criterion(self):
+        review = REVIEW_LINES.replace("finding 1: AC-2", "finding 1: AC-77") + "\n**AC-77**: a claim made in the design, not a criterion.\n"
+        self.refused("report finding 1 has no", review=review)
+
     def test_mutation_dropping_the_security_call_lets_a_missing_review_pass(self):
-        mutant = mutated("summary = check_security(path, plain, set(AC_DECLARATION.findall(plain)), errors)", "summary = None")
+        mutant = mutated("summary = check_security(path, plain, declared, errors)", "summary = None")
         review = REVIEW_LINES.replace("Security review: security/ideation-1.yaml\n", "")
         self.assertTrue(self.run_check(review=review)[0])
         self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
@@ -590,6 +600,18 @@ class SecurityReviewTests(unittest.TestCase):
         review = REVIEW_LINES.replace("security/ideation-1.yaml", "../x.yaml", 1)
         self.assertTrue(self.run_check(review=review, outside=True)[0])
         self.assertEqual(self.run_check(review=review, outside=True, module=mutant)[0], [])
+
+    def test_mutation_reading_ids_from_the_whole_task_accepts_a_prose_id(self):
+        mutant = mutated("summary = check_security(path, plain, declared, errors)", "summary = check_security(path, plain, set(AC_DECLARATION.findall(plain)), errors)")
+        review = REVIEW_LINES.replace("finding 1: AC-2", "finding 1: AC-77") + "\n**AC-77**: a claim made in the design, not a criterion.\n"
+        self.assertTrue(self.run_check(review=review)[0])
+        self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+
+    def test_mutation_matching_unquoted_frontmatter_only_skips_a_quoted_prod_task(self):
+        mutant = mutated(r'''r"""^profile:[ \t]*["']?([^\s"']+)["']?[ \t]*$"""''', r'r"^profile:[ \t]*(\S+)[ \t]*$"')
+        kwargs = dict(review="", report=None, profile='"prod"', status="ideation")
+        self.assertTrue(self.run_check(**kwargs)[0])
+        self.assertEqual(self.run_check(module=mutant, **kwargs)[0], [])
 
     def test_mutation_checking_every_profile_and_stage_fails_the_unchanged_cases(self):
         mutant = mutated('if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):', "if profile and status:")
