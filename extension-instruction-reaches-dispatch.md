@@ -244,6 +244,7 @@ Visible change: none
 - Cycle 2 (FO, 2026-10-16): Codex review on #652 fee6662c (review:5544560816) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P2 `scripts/dispatch_records.py`: the trailing boundary still lets a `/` follow the script name, so `roborev_gate.py/extra` passes as the instruction (also the recheck's Polish).
 - Cycle 3 (FO, 2026-10-17): after merging origin/main (head 65761bf0) the recheck PASSED with one Needs decision: the merge added a 2-line skip in `scripts/laws_check.py`, a third file against AC-6. roborev (evidence=roborev:749) on 65761bf0 then reported one High, which counts as P1: L2 runs `dispatch_records.py` on its temporary folder without `--readme`, so the extension check never runs in the state-branch laws and the new note line is skipped. This is the `--readme` follow-up the #651 delivery deferred into backlog task laws-check-followups. FO holds the PR and asks the Captain whether AC-6 is amended to include `laws_check.py` so the pass-through lands here.
+- Cycle 4, review (FO, 2026-10-17): Codex review round 4 on #652 ef7a360e (review:5555483675) left two P2 and no P1; declined under the round-3 rule into backlog task extension-instruction-followups with their reasons: a YAML block-list `extensions:` reads as none (no README uses one), and the package root is taken from the first `Package root:` in the record rather than Scope notes (every FO record carries one, in Scope notes).
 
 ## Stage Report: ideation
 
