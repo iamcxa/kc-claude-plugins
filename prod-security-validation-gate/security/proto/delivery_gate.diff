@@ -1,0 +1,27 @@
+--- delivery_gate.orig.py	2026-10-17 14:40:47
++++ proto2/kc-dev-flow-2/scripts/delivery_gate.py	2026-10-17 14:40:47
+@@ -93,6 +93,15 @@
+             problems.append(f"PR head {head} differs from dispatched candidate {' '.join(candidates)} (latest validation record {record.name})")
+             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
+ 
++    try:
++        from validation_security import check_task as security_check
++        security_errors, security_note = security_check(task, candidates)
++    except (OSError, UnicodeDecodeError) as error:
++        security_errors, security_note = [f"cannot read the validation security review: {error}"], None
++    for error in security_errors:
++        problems.append(error)
++        nexts.append("next: hold the ask; run the validation security review at this head, or tell the Captain.")
++
+     for reviewer in unstated_second_reviewers(gate_text):
+         nexts.append("next: hold the ask until each second reviewer has an outcome.")
+         problems.append(f"second reviewer {reviewer} has no stated outcome: "
+@@ -107,6 +116,8 @@
+         print(*(dict.fromkeys(nexts) or ["next: hold the ask and show the Captain these lines."]), sep="\n")
+         return 2
+     print(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing")
++    if security_note:
++        print(security_note)
+     print("next: ask for merge with this text.")
+     return 0
+ 

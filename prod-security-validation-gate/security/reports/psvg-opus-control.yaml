@@ -1,0 +1,95 @@
+```yaml
+tob_security_review:
+  pr: 555
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 5
+  findings:
+    - file: "kc-dev-flow-2/scripts/number_guards.py"
+      line: 72
+      severity: LOW
+      category: missing-validation
+      title: "R6 fails open: a task profile the parser misreads makes check print PASS without any skip line"
+      description: |
+        R6 turns on only when `frontmatter(task).get("profile") == "poc"` is an exact match. `frontmatter()` is a hand-rolled parser.
+        It needs `lines[0] == "---"` exactly, keeps any trailing text after the value, and lets the last duplicate key win.
+        I replayed the parser logic inline (I did not run the project script). These task files are not read as POC:
+          - a file that starts with a UTF-8 BOM (`read_text()` uses utf-8, not utf-8-sig, so the BOM stays)
+          - `profile: poc # user choice` (a valid YAML comment)
+          - `profile: POC`
+          - a later duplicate `profile:` line
+        CRLF does not trigger this, because `Path.read_text()` converts line endings.
+        On a miss, `poc` is False and R6 is skipped without any message. `check` then prints `PASS: no findings` and exits 0.
+        The same thing happens when `check` runs without `--task`: the output says `R4 skipped: no --task given` but says nothing about R6.
+        Other cases already fail closed: `Surfaces: db` without `migrations-path` exits 2. This new guard has no such path.
+        The PR also extends an existing pattern: the policy input comes from the task file, as R4's `Migration:` lines already do.
+      attack_scenario: |
+        1. The task file has `profile: poc # chosen at backlog`, or an editor saved it with a BOM. YAML readers and the FO still see it as poc.
+        2. The POC implementation worker adds `db/migrations/0006_x.sql` and updates `meta/_journal.json`.
+        3. `number_guards.py check` runs at implementation exit, at validation and before merge. `poc` is False each time and R6 is skipped. R3 and R4 also pass if the worker uses the reserved number. If no number was reserved, R4 still fires, but as a normal number finding, not as a POC boundary crossing.
+        4. Result: the POC is presented without the `boundary-crossed: persistent-state` marker. A schema change can be applied to a shared environment under POC rules, which is the outcome the amendment to ADR 0002 forbids.
+        Exploitability: MEDIUM. It needs a non-canonical frontmatter line, which can happen by accident. I did not confirm a deliberate path where the worker edits the task (see limitations).
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Fail closed. When the task has a frontmatter block, require `profile` to be one of {poc, pilot, prod}; `learning.py` already lists this set. Otherwise raise `Misconfigured`, which exits 2 and returns to the FO as a hold.
+        Strip a leading BOM, and remove a trailing ` #...` comment before comparing.
+        When R6 is not evaluated, say so, for example `out.append("R6 skipped: no --task given")`, as R4 already does.
+        Add negative tests for BOM, comment, case and duplicate-key variants, and for a POC check run without `--task`.
+
+    - file: "kc-dev-flow-2/scripts/number_guards.py"
+      line: 72
+      severity: LOW
+      category: other
+      title: "New strict-decode read of every task file: one non-UTF-8 byte crashes check, and crashes reserve for every task"
+      description: |
+        `task_facts()` reads the task with `read_text(errors="replace")`. The added `frontmatter(task)` call reads the same file again with strict decoding.
+        A non-UTF-8 byte now raises `UnicodeDecodeError`. That error is not `Misconfigured`, so it is not caught.
+        Python then exits 1 with a traceback. The `check` contract says exit 1 means findings, but there is no `FAIL` line.
+        In `reserve`, `task_facts(sibling)` runs on every `*.md` file in the state directory. One bad sibling file now blocks number reservation for all tasks. Before this PR, those reads used errors="replace" and could not crash.
+        The failure blocks rather than lets work through, so this is a denial of service, not a bypass.
+      attack_scenario: |
+        1. A task file in `.spacedock-state` gets one stray Latin-1 byte, for example from pasted output in a stage report.
+        2. The FO runs `number_guards.py reserve --kind migration ...` for a different task.
+        3. Reading the sibling file raises `UnicodeDecodeError`. The FO sees exit 1 and a traceback, not a `Migration: NNNN` line and not exit 2 (hold).
+        4. Result: no task in the workflow can reserve a number until someone finds and fixes the bad file.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Read the file once and parse the frontmatter from that text, for example by splitting the frontmatter parser into `parse_frontmatter(text)` and reusing `text` in `task_facts`. Or pass `errors="replace"`.
+        Also map `UnicodeDecodeError` to `Misconfigured` so the exit code contract (2 means misconfiguration) holds.
+
+    - file: "docs/adr/0002-applied-migrations-are-frozen-and-numbers-are-reserved.md"
+      line: 34
+      severity: LOW
+      category: other
+      title: "The R6 'boundary-crossed, not repaired in place' rule has no enforcement point in check"
+      description: |
+        The ADR amendment and the workflow.md POC bullet say a `FAIL R6` is a `boundary-crossed: persistent-state` crossing and is "not repaired in place".
+        `check` reports R6 with the same exit 1 it uses for R1 to R5. The R1 rule in the same section tells the worker to revert and continue.
+        Nothing records the marker, or tells R6 apart from the other rules, except the text of the line.
+        The rule depends entirely on the worker and the FO reading the rule id. This repo's CLAUDE.md asks that an absolute claim name its enforcement point.
+      attack_scenario: |
+        1. A POC worker adds a migration, sees `FAIL R6` with exit 1, and follows the general "revert and continue" path, as for R1.
+        2. It deletes the migration file and re-runs check, which now exits 0. The stage report has no `boundary-crossed:` marker.
+        3. If that migration had already been pushed to a shared environment, the schema change stays there, and the validation gate never hears about it.
+      blast_radius: "LOW"
+      recommendation: |
+        Either use a distinct exit status or summary line for R6, for example `BOUNDARY persistent-state: <path>`, which validation can require to appear in the stage report.
+        Or reword the ADR and workflow sentences as instructions the FO enforces at the validation gate, and name that gate as the enforcement point.
+
+  clean_patterns:
+    - "R6 diffs from the merge-base to head, not from the base tip. The test confirms that a migration landing on the base branch later does not trip R6 for a POC task."
+    - "R6 uses `--no-renames`, so a rename shows up as delete plus add and both paths fail. The add, edit, delete, journal and snapshot cases are each tested."
+    - "R6 covers the whole migrations directory, including `meta/` and files not named NNNN_name.sql. It uses git's raw output path, so quoted non-ASCII paths are flagged too."
+    - "The R6 git call passes arguments as a list with no shell. The path comes from the README config or a CLI flag, not from the candidate's content. No new network, environment-variable or secret inputs."
+    - "A POC without `migrations-path:` skips R6 and exits 0. This is documented on purpose in workflow.md. Unlike `Surfaces: db`, which exits 2, it is not a hidden default."
+    - "`comment_ratio.py` imports `frontmatter`, which this PR did not change, so that caller is unaffected."
+    - "The new `test_poc_readme` test checks that the derived POC README keeps the POC bullet and the Number guards step in both the implementation and validation stages."
+
+  limitations:
+    - "I did not confirm whether the implementation worker can write the task file it later passes to `--task`. The skill says the worker returns its stage report to the FO and has no state authority. So a deliberate profile demotion by the worker is unconfirmed, and the first finding stays LOW."
+    - "R6 sees only files committed under `migrations-path:` at head. It cannot see uncommitted working-tree edits, direct database pushes (for example drizzle-kit push), edits to schema source files, migration config that points output elsewhere, or a second migrations directory."
+    - "Pre-existing and outside this diff: `added_changed` filters on the parent directory and basename of git's quoted path output (core.quotePath). A newly added migration or ADR with a non-ASCII name therefore skips R3, R4 and R5. R1 is not affected, because files already at the merge-base have fixed names."
+    - "The adopter copy `docs/dev2/README.md` at this commit still has the old Number guards text without the POC bullet. A later sync commit updates it, so I reviewed only the package reference."
+    - "As instructed, I did not run the project scripts or tests. I checked parser behaviour by replaying the `frontmatter()` logic inline on sample strings. I checked that CRLF is safe from Python's documented `read_text` line-ending behaviour, not with an on-disk file."
+    - "Test gaps: no negative tests for frontmatter variants (BOM, comment, case, duplicate key), for a POC task checked without `--task`, or for non-UTF-8 task or sibling files."
+```

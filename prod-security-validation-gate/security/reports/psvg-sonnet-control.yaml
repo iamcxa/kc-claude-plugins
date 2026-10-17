@@ -1,0 +1,67 @@
+tob_security_review:
+  pr: 555
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 5
+  findings:
+    - file: "kc-dev-flow-2/scripts/number_guards.py"
+      line: 72
+      severity: MEDIUM
+      category: other
+      title: "R6 POC-freeze guard fails open when the task frontmatter is not parsed as `profile: poc`"
+      description: |
+        `task_facts` sets `"poc": frontmatter(task).get("profile") == "poc"`. `frontmatter()` is the README parser, reused unchanged. It requires `lines[0] == "---"` after `read_text().split("\n")`. It captures the value with `(.*?)[ \t]*$` and strips only quotes.
+        By static reading (not executed), each of these makes `poc` evaluate False:
+        - CRLF line endings. `lines[0]` becomes `"---\r"`, so no frontmatter is read at all.
+        - A leading BOM.
+        - A trailing comment such as `profile: poc # x`.
+        - Different case, such as `POC`.
+        - A frontmatter block that starts after a blank line.
+        R6 then silently does not run, and `check` prints PASS even though the task is a POC that changed migrations. The guard has no "this task has no parseable profile" signal. It does not distinguish "not a POC" from "could not tell".
+        Separately, `frontmatter()` uses a strict `read_text()`, while the existing `task_facts` read used `errors="replace"`. A task file that is not valid UTF-8 now raises an uncaught UnicodeDecodeError. This affects every task, not only POC tasks. The `check` command then exits 1 with a traceback instead of listing FAIL lines or returning the documented exit 2 `Misconfigured`. It fails closed, but it is a regression and breaks the documented contract.
+      attack_scenario: |
+        The actor is a worker or agent on the candidate branch, or an editor that saves the task file with CRLF or a BOM. This is an internal workflow actor, not an external attacker.
+        1. The task is recorded as `profile: poc`, but the file has CRLF endings (a Windows editor, or tooling that rewrites the file).
+        2. The candidate adds or edits `migrations/0006_x.sql`.
+        3. `number_guards.py check` skips R6 and exits 0 with "PASS: no findings".
+        4. The POC schema change reaches validation and merge without the `boundary-crossed: persistent-state` marker that the FO is meant to present at the gate.
+        Impact: a process-integrity bypass of the POC boundary, not data exfiltration. The effect is limited to the persistent-state side-effect the PR set out to prevent.
+      blast_radius: "LOW"
+      recommendation: |
+        Make the poc parse fail-closed and tolerant.
+        - Normalize `\r\n` and strip a BOM before parsing.
+        - Compare `value.split("#")[0].strip().lower() == "poc"`.
+        - If the task has no parseable `profile:` key and a `--task` was given, emit a visible note such as "R6 skipped: no profile in task frontmatter". Alternatively, treat it as exit 2.
+        - Read the task once with `errors="replace"` and parse frontmatter from that text. This avoids the new UnicodeDecodeError path.
+        - Add a negative test with a CRLF task file and a task file with a BOM.
+    - file: "kc-dev-flow-2/scripts/number_guards.py"
+      line: 157
+      severity: LOW
+      category: missing-validation
+      title: "R6 is silently inactive without `--task` and without `migrations-path`; only the second case is documented"
+      description: |
+        R6 runs only when `directory` is set and `facts` is truthy. Without `--task`, `check` prints "R4 skipped: no --task given" but says nothing about R6. A POC freeze can therefore be skipped silently, for example by a call site that omits `--task`.
+        The no-`migrations-path` skip is documented in `workflow.md` and the ADR, and it is tested.
+        The guard also covers only paths under `migrations-path`. Schema changes elsewhere are out of scope, such as an ORM schema file, seed or SQL scripts, or a direct DB operation.
+      attack_scenario: |
+        1. A caller runs `check` at a call site that does not pass `--task`, or the README has no `migrations-path:`.
+        2. A POC task changes the migration directory.
+        3. The output is a PASS, or R4 is skipped, and no R6 signal appears.
+        4. Reviewers read the PASS as meaning the POC freeze was checked.
+      blast_radius: "LOW"
+      recommendation: |
+        Append "R6 skipped: no --task given" next to the R4 message. Emit "R6 skipped" for a missing `migrations-path` as well. Then PASS cannot be misread as covering R6.
+  clean_patterns:
+    - "Subprocess use: `git()` and `resolve()` pass argv as a list with no shell. The new `git diff --name-status --no-renames merge_base head -- <dir>/` places the pathspec after `--`, so a `migrations-path` that starts with `-` cannot become an option. The directory comes from the workflow README or a CLI flag, which are trusted operator inputs."
+    - "R6 diffs the merge-base against the head with `--no-renames`. A rename is therefore seen as a delete plus an add, and each side is reported."
+    - "Path parsing: `line.split(\"\\t\", 1)` matches the existing parse in `added_changed`. Git quotes tab and newline paths by default, so there is no injection into the FAIL output beyond cosmetic text."
+    - "The test fixtures in `test_number_guards.py` use `tempfile.TemporaryDirectory` and local git repos. They contain no network access, no secrets and no writes outside the temp directories. `test_poc_readme.py` only reads the derived README text."
+    - "The docs and ADR changes (`workflow.md`, ADR 0002) are text only. They state the limits themselves: no `migrations-path` means no guard, and the unchecked surfaces are named. No credentials or hardcoded secrets were added."
+    - "Dynamic execution: the PR adds no `eval`, `exec` or `shell=True`, and no auth, crypto or permission change."
+    - "The `check` function's exit semantics are unchanged for non-POC tasks. R6 only adds FAIL lines when `poc` is true."
+  limitations:
+    - "Static review only. The task rules forbade running project scripts or tests, so the CRLF, BOM and non-UTF-8 behaviours in finding 1 come from reading the code, not from running it."
+    - "Blast radius: `number_guards.py` is referenced in `kc-dev-flow-2/README.md`, `skills/implementation/principles.md`, `references/sd/workflow.md`, `scripts/comment_ratio.py`, `docs/dev2/README.md` and `.github/workflows/kc-dev-flow-2-tests.yml`. It runs at implementation exit, at validation and before the merge ask. That is a workflow-gate tool with a few call sites, so I rated it LOW to MEDIUM. A scan found no callers outside these."
+    - "I did not check how the FO or worker actually acts on `boundary-crossed: persistent-state`. That marker is an LLM-process control described in prose, not an enforced mechanism in this PR."
+    - "The PR is a guard-rail feature for a development workflow. It has no external-user attack surface, so the attacker model is an internal workflow actor or an accidental malformed file."
+    - "The pre-existing `rev-parse --verify <ref>^{commit}` call with a CLI-supplied `--head` or `--base` is not part of this diff. I did not assess it."

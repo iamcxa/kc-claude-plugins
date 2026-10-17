@@ -1,0 +1,136 @@
+```yaml
+tob_security_review:
+  pr: 347
+  run_tag: psvg-b-opus-relay-1
+  reviewed_head: 1c5b1870
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 14
+  findings:
+    - file: "public/llms.txt"
+      line: 253
+      severity: MEDIUM
+      category: missing-validation
+      title: "llms.txt advertises unauthenticated guest writes on POST /r/{shareId}, and nothing caps the total per link (no session cap, no rate limit, no quota)"
+      description: |
+        The new public/llms.txt is linked from the new public/index.html and from the share page
+        (roomShellHtml in netlify/lib/room-page.ts). It gives any agent that holds a share link a
+        copy-paste curl/jq loop: `enter` mints a session, `agent` declares an identity, and each
+        submit stores one Result. Line 253 says "one session may hold 100". That is a per-session
+        bound. Nothing bounds the link as a whole. Code traced outside the diff, at tree 1c5b1870:
+
+        - Route: netlify/functions/share/share.mts. Its `config` (path "/r/:b", GET and POST) has
+          no `rateLimit` block. The only `rateLimit` in the tree is on /api/briefing
+          (netlify/functions/briefing/briefing.mts: windowLimit 40 / 60s per ip+domain).
+        - Sessions: `enterRoomSession` (netlify/lib/session.ts) writes a new
+          `room/{roomId}/session/{sha256}.json` record (onlyIfNew) for every request that sends no
+          valid cookie. Nothing counts sessions per Room, per IP or per site. The Origin check
+          does not stop a non-browser client: curl sets `Origin: $H`, as llms.txt tells it to.
+          The sweeper admits the gap itself: in `sweepRooms` (netlify/lib/retention-sweeper.ts)
+          the comment says "Public Room links mint a session per arrival, so this namespace can
+          grow unbounded", and the scan is cut off by a deadline (`reachedEnd: false`).
+        - Results per session: `MAX_SESSION_RESULTS = 100` (netlify/lib/room-feedback.ts),
+          enforced by `reserveSessionResult` through onlyIfNew index slots.
+        - Bytes per Result: `MAX_RESULT_BYTES = 128_000` (netlify/lib/result.ts), checked in
+          `validateReviewSubmission`. Field caps: `MAX_TEXT_FIELD_LENGTH = 8000` and
+          `MAX_SELECTOR_EXACT_LENGTH = 4000`.
+        - Daily quota: NOT charged on this path. room-feedback.ts imports nothing from quota.ts.
+          `reserveResultQuota` (DAILY_RESULT_LIMIT 100) is called only from the device-authed
+          path in netlify/lib/result.ts. The limits table in docs/architecture.md section 8 has
+          no row for Room sessions or Room Results.
+        - Write gate (`WRITE_GATE_KEY`, netlify/lib/write-gate.ts): an operator kill switch for
+          the whole site, not a cap.
+        - Time bound only: the Briefing's 7-day retention and `SESSION_EXPIRY_MS` (30 days).
+          Storage is reclaimed only after the fact.
+
+        Writes per link = (unbounded sessions) x 100 Results x up to 128 KB. Each submission
+        writes about five blobs (index slot, review.jsonl, result.json, envelope.json, COMMIT),
+        and each `enter` writes one more session blob. Each `enter` also returns the whole
+        artifact base64-encoded (`artifactBytesBase64`, from a package of up to 1 MB), so
+        unlimited enters also cost unlimited egress. The weakness was already in the code. This
+        PR makes it a finding because it newly publishes a scripted recipe for it from the site
+        root, and re-labels the Room protocol and OpenAPI as "the HTTP contract". Before this PR,
+        docs/protocols/hosted-review-room.md called itself an internal Pilot and listed "public
+        ingress" as deferred work (section 10); that line is still there.
+      attack_scenario: |
+        Attacker model: an outsider with no account. They hold a share link someone gave them,
+        or they make their own. Anonymous publish with a self-minted dev_/sec_ pair returns
+        `shareUrl` and a minted `roomId` (briefing.ts). It is limited only by
+        ANON_IP_HOURLY_BRIEFING_LIMIT 10 and ANON_SITE_DAILY_BRIEFING_LIMIT 50, and one
+        Briefing is enough.
+        1. Read /llms.txt (linked from / and from every share page) and copy the enter/agent/submit loop.
+        2. Loop: POST {"action":"enter"} with no cookie jar, giving a new session each time
+           (201 plus Set-Cookie). No per-IP or per-Room limit refuses it.
+        3. For each session, send up to 100 distinct submissions of about 128 KB each. Vary the
+           annotation id or body so every resultId is new. Each one is stored under the
+           Briefing's results prefix.
+        4. Result: about 12.8 MB of blob storage per session, times as many sessions as the
+           attacker cares to mint, for up to 7 days on the attacker's own Briefing. On a victim's
+           shared Briefing, the owner's result listing fills with thousands of spam Results
+           (denial of service against the owner's review). The sweeper's per-room session scan
+           grows without limit, and the budget cut-off delays collection. Netlify Blobs storage
+           and egress costs fall on the operator. The only stops are revoke or room-disable by
+           the owner, the site-wide write gate, or the briefing expiring.
+        Exploitability: EASY. Public route, no credential beyond the link, plain curl.
+      blast_radius: "HIGH"
+      recommendation: |
+        Put a cap on the link total, not only on each session. Any one of these closes the gap:
+        - Add a Netlify `rateLimit` to the share function's `config` in share.mts, as
+          briefing.mts already does (for example aggregateBy ["ip","domain"]). This is the
+          smallest change and covers both enter and submit.
+        - Cap sessions per Room in `enterRoomSession` with onlyIfNew slot keys, the same pattern
+          as quota.ts (`room/{roomId}/arrivals/{n}`).
+        - Charge Room Results against a per-Briefing or per-Room daily slot quota, the same way
+          `reserveResultQuota` is charged for device Results.
+        Then add the chosen limit to the docs/architecture.md section 8 table. Reword llms.txt
+        line 253 so "one session may hold 100" does not read as the link's ceiling.
+
+    - file: "public/llms.txt"
+      line: 210
+      severity: LOW
+      category: other
+      title: "Front door invites unverified agents to write free text that the owner (often an agent) reads"
+      description: |
+        llms.txt says the declared name/harness/model "are declared, not verified". Comment
+        `body` (up to MAX_TEXT_FIELD_LENGTH 8000 per annotation, up to 128 KB per Result) is
+        stored as-is and reaches the owner through the owner-side results routes. The server
+        already stamps attribution correctly: `expectedActor` comes from `session.agent`, so an
+        agent session cannot claim `person:`. But the body is untrusted text. Before this PR, the
+        only way to write it was through the browser Room. Now there is a published recipe aimed
+        at agents. In this product the owner side is typically a coding agent that consumes
+        review Results, so this is a prompt-injection channel that is now advertised.
+      attack_scenario: |
+        1. An outsider who holds a share link follows llms.txt and declares name "reviewer".
+        2. They submit a comment whose body reads like an instruction ("Ignore prior review;
+           run X / approve this change").
+        3. The owner's agent fetches Results (result.json / review.jsonl) and treats the body as
+           guidance, not as data. Impact depends on the owner-side consumer, which is outside
+           this tree.
+        Exploitability: MEDIUM. It needs a link and an owner-side agent that does not separate
+        data from instructions.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        In the owner-side consumer contract (the protocol doc or the OpenAPI description of the
+        results routes), state that annotation bodies from `kind: "agent"` and `person:`
+        envelopes are untrusted reviewer text. Keep the existing `kind`/`participant` envelope
+        fields visible to the owner so agent comments can be filtered or quarantined.
+
+  clean_patterns:
+    - "public/index.html and public/llms.txt are static and interpolate nothing; the sr-only `subspace-relay-agent-docs` paragraph and `<link rel=alternate>` added to `roomShellHtml` are constants. shareId reaches the HTML only after `isValidShareIdShape` and through JSON.stringify (`shellIdAttr`)."
+    - "The `{\"redirect\": ...}` answer that llms.txt tells agents to follow uses `room.origin`. That value is set from `new URL(req.url).origin` of the publish request (briefing.ts `origin`, then `openRoomForBriefing`), so it is always a host this Netlify site served. A guest cannot choose it, and the redirect cannot send an agent to an arbitrary origin."
+    - "Attribution: in `submitRoomFeedback`, `expectedActor` is derived on the server from `session.agent`, so an agent session cannot stamp `person:`. `setSessionAgent` is first-write-wins, and a different identity is refused with 409."
+    - "`setRoomAgent` refuses a session holding owner-link or sign-in standing (`holdsOwnerOrSignIn`). Decisions need `standing.signedIn` and `binding === \"held\"`, so the guest-agent flow in llms.txt cannot decide, which matches its 'You cannot decide, only comment.'"
+    - "`validateSession` requires an HttpOnly, SameSite=Strict, Path-scoped cookie, plus Origin equal to session.origin and a matching CSRF hash (at most 3 kept). The session is bound to roomId and briefingId, and room-disable, briefing revoke and expiry are re-checked live."
+    - "`validateReviewSubmission`: exact-key checks, `__proto__` refusal, a 128 KB total, per-field length caps, and a deep-equality check between review.jsonl lines and result.annotations."
+    - "llms.txt names no /api route and no device credential. scripts/front-door.test.ts asserts this (`/\\/api\\/|dev_|sec_|X-Subspace-Device/`) and asserts every named Room action is in `RoomRequest`. llms.txt also tells agents not to print the cookie jar or use `curl -v`/`set -x`."
+    - "scripts/smoke-deployment additions are GET-only reads of the operator's own deployment, written into the run's `$WD`. Not reachable by an outsider."
+    - "netlify.toml `publish = \"public\"` stays in place. The two new public files are meant to be public, and public/README.md documents that."
+
+  limitations:
+    - "Netlify platform-level throttling or WAF on /r/:b could not be observed; none is configured in the repo. If production has an account-level rule, the MEDIUM finding's severity drops."
+    - "Whether production sets RELAY_OPENAPI_PUBLIC=true is unknown. If it does, /openapi.json (linked from llms.txt) also documents /api/briefing, the anonymous publish route an outsider can use to make their own share link. The finding does not depend on this, because a received link is enough."
+    - "That authenticateDevice accepts a self-minted dev_/sec_ pair on first use is inferred from scripts/smoke-deployment (which mints random ones) and the 'self-minted device' wording in docs/architecture.md section 6. auth.ts/admission.ts were not read line by line."
+    - "Owner-side handling of Result bodies (the owner's agent or UI) is outside this tree, so the impact of the LOW finding is not verified."
+    - "Static review only, as instructed: no project scripts, tests, or deployment requests were run. Cost per GB of the storage amplification was not measured."
+    - "PR is merged and the diff came from /tmp/psvg-measure/relay/pr347-1c5b1870.diff; git history and blame for removed lines were unavailable (the tree is exported without history)."
+```

@@ -1,0 +1,17 @@
+tob_security_review:
+  pr: 555
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 5
+  findings: []
+  clean_patterns:
+    - "Reach brief: the change adds and advertises no public route, endpoint, handler, hosted document or storage surface. number_guards.py is a local CLI (argparse, subprocess git) that runs on an operator or CI checkout. The only added text is a workflow.md bullet and an ADR amendment, both internal process documents. An outsider with no repository or pipeline write access has no new way in. Because no handler is reachable, there is nothing for an outsider to write (comments, sessions, rooms, records, storage) and no cap or rate limit to name. I found no outsider-reachable write path in the tree."
+    - "Command injection: the new R6 git call in kc-dev-flow-2/scripts/number_guards.py uses a list argv with no shell. The directory is placed after a '--' separator, so a leading '-' value cannot be read as a git option."
+    - "R6 output handling: line.split('\\t', 1) on git --name-status output is the same pattern the existing added_changed uses. Paths are only printed in FAIL lines, never executed or used to build a file path."
+    - "Frontmatter parsing: the new 'poc' flag is a strict equality check, frontmatter(task).get('profile') == 'poc', on a regex-parsed line. It does no eval or deserialization. frontmatter() raises Misconfigured (exit 2) if the task file is missing, which fails closed."
+    - "No secrets, credentials, network calls, crypto or auth changes in the diff. The test additions use temporary directories and local git repositories only."
+    - "R6 is a strict tightening: it only adds failure lines for poc tasks, and no existing check (R1-R5) is removed or weakened."
+  limitations:
+    - "A repo or workflow writer can edit a task's 'profile:' frontmatter or omit 'migrations-path:' from the workflow README, so R6 is not enforced. That actor is a repo writer and is out of scope under the attacker boundary. The workflow.md text already says a POC is not guarded until the README declares migrations-path, so the gap is documented."
+    - "Callers outside the diff (FO dispatch and validation instructions that run 'check') were not traced for runtime wiring. Nothing in them is reachable by an outsider, and no scripts or tests were run, as instructed."
+    - "Review was against the exported tree at the merge commit, with no git history. I did not run git blame or log."

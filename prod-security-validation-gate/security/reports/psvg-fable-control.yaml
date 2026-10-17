@@ -1,0 +1,86 @@
+```yaml
+tob_security_review:
+  pr: 555
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 5
+  findings:
+    - file: "kc-dev-flow-2/scripts/number_guards.py"
+      line: 157
+      severity: LOW
+      category: "missing-validation"
+      title: "R6 is silently not evaluated when the task frontmatter does not parse, and check output cannot show whether it ran"
+      description: |
+        `task_facts` sets `poc` only when `frontmatter(task).get("profile") == "poc"`. `frontmatter()` returns `{}` unless the very first line is exactly `---` (a UTF-8 BOM or a leading blank line defeats it; CRLF is fine because `read_text()` translates newlines), and the value must be the bare or quoted string `poc` (any trailing comment or different case fails the equality). In every one of those cases `check` prints `PASS: no findings` and exits 0 for a head that changed files under `migrations-path:`. The two existing skip paths each print a line (`R4 skipped: no --task given`, `migration guard skipped: no migrations-path declared`); R6 prints nothing when it is not evaluated, so FO reading PASS at the validation gate cannot tell "R6 ran clean" from "R6 never ran". The task file lives on the shared state branch that implementation workers already write into (`boundary-crossed:` lines, workflow.md Number guards POC bullet), so the value R6 keys on is worker-writable; this is the same trust assumption R2 (`Applied at:`) and R4 (`Migration:`) already carry, extended to R6 rather than created here.
+      attack_scenario: |
+        1. A POC worker commits `apps/api/migrations/0007_x.sql` on its branch.
+        2. While recording its stage report into the task file it leaves a BOM / blank first line, or rewrites `profile: poc` as `profile: poc  # fresh` (worker agents write into this file by design).
+        3. FO runs `number_guards.py check --workflow-dir ... --task <task>` at validation and before merge; both print `PASS: no findings`, exit 0.
+        4. Result: a schema file merges from a POC task with no `FAIL R6`, no `boundary-crossed: persistent-state` marker, and nothing in the output indicating R6 was skipped.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Make R6's applicability visible in the output the way R4's is, and fail closed on an unreadable profile:
+        ```python
+        profile = frontmatter(task).get("profile")
+        ...
+        if facts and facts["poc"]:
+            ...  # R6 loop
+        elif facts is not None:
+            out.append(f"R6 skipped: task profile is {facts['profile']!r}")
+        ```
+        and in `task_facts` carry `"profile": frontmatter(task).get("profile")` so a missing value is reported as `None` rather than hidden. Optionally have FO pass the profile it holds in `spacedock status` (`--profile poc`) so the guard does not depend solely on the worker-writable file. A test that a task file with a BOM / blank first line is reported, not silently passed, closes the class.
+
+    - file: "kc-dev-flow-2/scripts/number_guards.py"
+      line: 72
+      severity: LOW
+      category: "other"
+      title: "New frontmatter(task) call decodes strictly, so one non-UTF-8 byte in any task file crashes check and reserve for every task"
+      description: |
+        `task_facts` deliberately reads the task with `errors="replace"` (line 64), but the added `frontmatter(task)` call (line 72) goes through `readme.read_text()` with strict decoding (line 49). A task file containing a byte that is not valid UTF-8 now raises an uncaught `UnicodeDecodeError`: `check` exits 1 with a Python traceback and no `FAIL` line (workflow.md tells FO exit 1 "lists FAIL R1..R6 lines"), and `reserve` globs every sibling `*.md` in the state dir and calls `task_facts` on each (lines 198-200), so one bad byte in any task breaks number reservation for all tasks. Fail-closed, availability only.
+      attack_scenario: |
+        1. A worker pastes a log excerpt or a Latin-1 string into its stage report inside any task file on the state branch.
+        2. FO runs `number_guards.py reserve --kind migration --task <other task>`.
+        3. `task_facts(sibling)` -> `frontmatter(sibling)` -> strict `read_text()` raises; the script dies with a traceback, exit 1, no `Migration:` line printed.
+        4. Result: no task in the workflow can reserve a number, and `check --task <bad task>` reports exit 1 with no FAIL line, until someone finds and scrubs the byte.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Parse the frontmatter from the text `task_facts` already read, instead of re-reading strictly:
+        ```python
+        text = task.read_text(errors="replace")
+        meta = parse_frontmatter(text)   # split frontmatter() into read + parse
+        ```
+        or give `frontmatter()` an `errors="replace"` read. Add a test with a `b"\xff"` byte in a sibling task to lock it.
+
+    - file: "kc-dev-flow-2/skills/implementation/principles.md"
+      line: 21
+      severity: LOW
+      category: "missing-validation"
+      title: "The implementation-exit run of check is still conditioned on a `## Number guards` section a POC task is not given"
+      description: |
+        workflow.md now states `check` runs for a `poc` task "at the same three points" (implementation exit, validation, pre-merge), but the worker-side trigger in `implementation/principles.md` is unchanged: "When the task has a `## Number guards` section, ... run `number_guards.py check`". The POC bullet says a POC task "reserves no number", and nothing in this PR adds the section to a POC task, so the first of the three run points does not fire for a POC task unless FO adds an empty section by hand. The test fixture (`PocFreezeTests.poc_task`) writes `## Number guards` explicitly, so the tests do not exercise the task shape FO actually produces. Procedural, no code gate; the FO-run points (validation, pre-merge) are unaffected.
+      attack_scenario: |
+        1. FO dispatches a POC task from the template (no `## Number guards` section, no reserve run).
+        2. The worker adds a migration, reaches implementation exit, reads principles.md, finds no section, does not run `check`, and reports no `boundary-crossed:` marker.
+        3. The first detection is at the validation gate instead of implementation exit; the worker's report is silent on a crossing the workflow says it should record itself.
+        4. Result: one of the three documented enforcement points is a no-op for the profile this PR targets.
+      blast_radius: "LOW"
+      recommendation: |
+        Either make the principles.md trigger "when the task has a `## Number guards` section or `profile: poc`", or have the POC task template / FO dispatch carry an empty `## Number guards` section. Add a `test_poc_readme.py` assertion that the derived POC README's implementation stage references the check without the section precondition.
+
+  clean_patterns:
+    - "R6 uses `git diff --name-status --no-renames <merge-base> <head> -- <dir>/`: a rename surfaces as D+A and both are flagged; M, D, T (type/mode) statuses all fail; the trailing slash keeps `migrations/` from matching `migrations-old/`."
+    - "Comparing against the merge-base (not the base tip) means a migration that landed on trunk after the branch point is not blamed on the POC task (covered by `test_no_r6_for_a_non_poc_task_for_no_change_or_for_a_migration_that_landed_on_the_base_later`)."
+    - "R6 deliberately ignores the `NNNN_name.sql` filter so `meta/_journal.json` and snapshot files are caught (tested); docstring and workflow.md updated to say so."
+    - "subprocess is invoked with list args and no shell; the path taken from git output is only interpolated into a message, never executed or passed to a shell."
+    - "A non-`poc` profile (`pilot`) with the same journal change exits 0 (tested), so R6 does not over-fire on other profiles."
+    - "Without `migrations-path:` the guard prints `migration guard skipped` and the PR's workflow.md states the POC is unguarded until declared; the skip is visible, not silent."
+    - "`.github/workflows/kc-dev-flow-2-tests.yml` runs `test_number_guards.py` and `test_poc_readme.py` on every PR touching `kc-dev-flow-2/**`, so the new tests are in CI."
+    - "ADR 0002 amendment cites the Captain's rulings and the enforcement point (`check` R6) rather than an unbacked absolute."
+
+  limitations:
+    - "Read-only run: tests were not executed; behaviour claims are from tracing the source at merge commit a822c3e3."
+    - "How spacedock's `status --set` / `spacedock new` serializes `profile:` (bare, quoted, trailing content) is outside the exported tree, so the real-world frequency of the fail-open parse in finding 1 is not measured."
+    - "Schema changes applied directly to a shared database (raw SQL via a client, MCP, or a CLI) leave no file under `migrations-path:` and are invisible to this guard; workflow.md already states git cannot see what a database applied."
+    - "A second migrations directory, or a changed migration-tool config pointing elsewhere, is outside the single declared `migrations-path:`; not new to this PR."
+    - "Which `--workflow-dir` README the implementation worker reads (its own worktree vs FO's absolute checkout) is procedural; FO's pre-merge run reads FO's copy, so a candidate removing `migrations-path:` is caught there, but this was not verified at runtime."
+```
