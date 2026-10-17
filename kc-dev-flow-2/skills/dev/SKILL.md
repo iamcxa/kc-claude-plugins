@@ -11,6 +11,16 @@ Package root: ${CLAUDE_PLUGIN_ROOT}
 `<package>` in this skill and its linked files is this root. If the value above
 is not an absolute path, the root is two directories above this `SKILL.md`.
 
+On Codex, when the caller explicitly selects this package's Codex model policy,
+load [Codex dispatch binding](../../references/codex-dispatch.md) and pass that
+absolute policy path and the live host capability snapshot to Spacedock FO.
+Use the dev2 Python wrapper around stock Spacedock, replacing the stock Codex
+adapter's immediate null-model spawn step on this selected lane. This is an
+explicit dev2 host binding, not an upstream Spacedock plugin hook.
+Require its emitted `spawn_args` for ordinary stages and special agents; a
+selected-policy error holds dispatch. Other hosts and unselected runs keep the
+existing route.
+
 Read the [framework](../../README.md). This is a start/resume entry, not a worker
 stage or a second workflow controller. Claude's packaged command is
 `/kc-dev-flow-2:dev`; bare `/dev` is not a promised cross-host alias.

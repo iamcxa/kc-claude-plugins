@@ -56,6 +56,12 @@ SD commission/refit; invoking the entry does not rewrite a project workflow.
 
 ## Entry
 
+An explicitly selected Codex mapping policy can bind existing declarations to
+native model and reasoning arguments through the source candidate described in
+[Codex dispatch binding](references/codex-dispatch.md). It requires a matching
+stock Spacedock CLI and a current host capability snapshot; installation and
+runtime acceptance are separate from this local proof.
+
 Use [`kc-dev-flow-2:dev`](skills/dev/SKILL.md) to start or resume work. It resolves
 the explicit project/workflow/task and approved selection, then hands orchestration
 to `spacedock:first-officer`. Stage skills keep their own profile routes; the entry
