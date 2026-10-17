@@ -285,6 +285,11 @@ Verified by: `python3 <package>/scripts/adr_lint.py docs/adr --since <base> --re
 
 ADR: 0022
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-17): Codex review on #663 a2093bc1 (review:5558121274) left three P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 `kc-dev-flow-2/scripts/design_surfaces.py` (1) a report with `findings: []` and a limitations entry naming an unshown state or size passes, though design-review.md makes such a limitation a finding; (2) two `Design finding N:` lines for one N collapse to the last, so contradictory dispositions pass; (3) the preview identity is read from any nested `preview:` line, not exactly one direct child of the `design_review` root.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for a design review in a ui task's ideation over its previews, reusing the prod security seam (a specialist review whose findings become requirements and criteria, with kc-dev-flow-2/scripts/design_surfaces.py check refusing an unreviewed ui ideation); the reviewer choice (design:design-critique, e2e-pipeline ui-verify, or a packaged brief) with its licence and availability on adopters; and the replay proof on archived subspace-web holder-panel cycle-1 and cycle-3 previews and the chevron cycle-1 preview (read only)
