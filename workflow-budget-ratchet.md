@@ -26,6 +26,7 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+started: 2026-10-17T06:11:09Z
 ---
 
 Filed on the Captain's words (chat, 2026-10-17): 「棘輪上限＋規則縮短建檔，文件不應該一直變長，除非可以證明文件內容不是一次性載入，這裡的意義是文件如果一次載入太長，那 llm 的注意力八成會失焦」.
