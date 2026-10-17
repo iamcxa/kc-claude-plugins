@@ -583,3 +583,75 @@ I recommend REJECTED at a741e357: the round-2 P2 and Cycle 1 P1 are fixed, each 
 ### Summary
 
 The security check now finds the report in the task's own folder for both task forms, and the Codex round 3 P1 (review:5555969981) no longer reproduces. Nothing was changed in the report parser or its shape rules. No PR comment, review request or ready mark was made.
+
+## Stage Report: validation (cycle 4)
+
+Candidate: iamcxa/kc-claude-plugins#656 head 44f77c1b357f01deb965f983329e0f894be887ba (Draft, base 363558f6, `gh pr checks`: unit tests, version parity, multi-profile route gate, GitGuardian all pass). Checked out detached in throwaway worktrees under `/tmp/psrg-val4`, removed after (`git worktree list` shows none). Package scripts from `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/`; `test_sd_dispatch.py` not run (needs a plugin root; not under test). Delta from the head validation-3 saw (a741e357): 3 lines in `check_security`, 20 in `test_design_surfaces.py`, nothing else.
+
+- DONE: Independent verdict on PR #656 head 44f77c1b against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  **Recommend PASSED at 44f77c1b: no Material finding.** AC-8: 4-file stat (ADR 0019, `design_surfaces.py`, `test_design_surfaces.py`, `prod.md`), 0-byte diff over references, extensions, observer, README; `lint-skills.py` from the candidate exit 0 `5495 of 5511`. AC-9/10: suite 90 OK (87 at a741e357); mutating the shape and severity rules in scratch copies flips exactly their own two tests each (root count, findings count, plain severity count). AC-11/12: shipped `prod.md` bytes unchanged from validation-3 (`git diff a741e357 44f77c1b` touches two scripts only), so its two fresh reviewer runs stand; not re-run. AC-13: `prod.md` 606 words (cap 620). AC-14: `adr_lint.py docs/adr --since 363558f6 --require 0019` exit 0. Also exit 0: `design_surfaces.py check` on this task, `comment_ratio.py` (4 of 487 lines, 0.8%, the four are test-file comments I read: no narration, no line citation), `doc_impact.py` (0 documents), `dispatch_records.py` (15 records complete).
+  Limits judged: report-shape limit (key-like `findings:` or `severity:` line in a description is a false hold) stands as bounded by the round-3 rule; model-output, check-proves-disposition-not-fit and Codex-host limits stand as stated; none re-tested.
+- DONE: recheck after Cycle 3: Codex round-3 P1 (review:5555969981, validation-3 F1) fixed in check_security by resolving the task folder as path.parent for index.md and path.parent/path.stem for a flat task; rerun validation-3 acceptance step 4 for the folder form; confirm the new folder-form test fails under its mutation; shape-lock rules and Cycle 1 P1 still fixed; AC-8 to AC-14 under amendment 2; F2 to F4 are declined to backlog task prod-security-check-round3-followups and need no recheck
+  Step 4 folder form: the same report bytes that exit 1 at a741e357 as `d/index.md` now exit 0 with the flat task's note line (`1 findings, 1 acceptance criteria, 0 declined, 0 decisions`); a folder task with no report in its own folder still exits 1 with `not a report file inside the task folder`; probes `../x.yaml`, `security/../../x.yaml` and an absolute path on a folder task are each refused with that message. Mutation (scratch copy, `python3 -B`, caches absent): the shipped branch replaced by `path.parent / path.stem` fails exactly `test_the_same_report_passes_for_a_flat_task_and_for_a_folder_task` and `test_mutation_reading_a_folder_task_as_a_flat_task_refuses_its_own_report`, nothing else (2 of 90). Dropping `report.is_file()` errors `test_a_folder_task_with_no_report_in_its_own_folder_is_still_refused` and 3 others, so the "still refused" test is not lenient-blind. Always-`path.parent` fails 63 tests (flat tasks), so the flat form is covered too. Cycle 1 P1 and the round-2 shape rules: acceptance steps b and c exit 1 with their own messages; mutants above flip. F2 to F4 not rechecked, as instructed.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>`; `adr_lint.py docs/adr --since 363558f6071379a8e34856241872f2eacd3198ab`: exit 0 (`19 ADR file(s) checked, 0 legacy`; with `--require 0019` also exit 0). Verdict: **PASSED at 44f77c1b357f01deb965f983329e0f894be887ba**. Findings at this head: none new. F1 (Material at a741e357) is fixed. F2 (Polish), F3 and F4 (Deferred risk) are declined to backlog task `prod-security-check-round3-followups` and settled; not reported again.
+  Not verified: a real ideation worker writing the Security lines end to end; `### Security review` rendering at the gate; AC-11 and AC-12 prompts live in `/tmp/psrg-impl` (machine-local; the reports are in the task folder); Codex-hosted workers; `decision_ledger.py` naming a folder task `index` (outside this task, noted by implementation).
+
+### Minimal acceptance script
+
+```bash
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo   # needs this checkout (it holds PR #656's head) and python3
+HEAD_SHA=44f77c1b357f01deb965f983329e0f894be887ba; BASE_SHA=363558f6071379a8e34856241872f2eacd3198ab
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0
+T=$(mktemp -d); W=$T/head; git -C "$REPO" worktree add --detach "$W" $HEAD_SHA >/dev/null 2>&1 && git -C "$W" rev-parse HEAD
+echo "--- 1. four files change; no workflow, extension, observer or README byte"
+git -C "$W" diff --stat $BASE_SHA HEAD | sed 's/|.*//'
+git -C "$W" diff $BASE_SHA HEAD -- kc-dev-flow-2/references kc-dev-flow-2/extensions kc-dev-flow-2/skills/observer kc-dev-flow-2/README.md | wc -c
+echo "--- 2. package lint from the candidate; prod.md word count"
+(cd "$W" && python3 -B "$W/kc-dev-flow-2/scripts/lint-skills.py"; echo "lint exit $?")
+python3 -I -c 'import sys; print(len(open(sys.argv[1]).read().split()))' "$W/kc-dev-flow-2/skills/ideation/profiles/prod.md"
+echo "--- 3. the check's own tests"
+(cd "$W/kc-dev-flow-2/scripts" && python3 -B test_design_surfaces.py 2>&1 | grep -E '^(Ran|OK|FAILED)')
+echo "--- 4. the check on a prod task at ideation"
+CHK="$W/kc-dev-flow-2/scripts/design_surfaces.py"
+FM='---\ntitle: t\nprofile: prod\nstatus: ideation\n---\n\n## FO alignment\n\nSurfaces: none\nVisible change: none\n\n## Design\n\nSecurity review: security/ideation-1.yaml\nSecurity focus file: none\nSecurity finding 1: AC-1\n\n## Acceptance criteria\n\n**AC-1**: a.\nVerified by: a test.\n'
+OK='tob_security_review:\n  pr: none\n  findings:\n    - file: "design"\n      severity: HIGH\n      title: "first"\n'
+probe() { # label, task path under $T, report text
+  mkdir -p "$T/$2/security"; printf -- "$FM" > "$T/$2/../$3"; printf -- "$4" > "$T/$2/security/ideation-1.yaml"
+  python3 -I -B "$CHK" check "$T/$2/../$3"; echo "$1: exit $?"; }
+probe "reviewed, flat task file" a a.md "$OK"
+probe "finding item with no severity" b b.md 'tob_security_review:\n  pr: none\n  findings:\n    - file: "design"\n      title: "cut off"\n'
+probe "findings nested under another key" c c.md 'tob_security_review:\n  metadata:\n    findings: []\n'
+mkdir -p "$T/d"; printf -- "$FM" > "$T/d/index.md"; mkdir -p "$T/d/security"; printf -- "$OK" > "$T/d/security/ideation-1.yaml"
+python3 -I -B "$CHK" check "$T/d/index.md"; echo "same bytes, folder-form task d/index.md: exit $?"
+mkdir -p "$T/f"; printf -- "$FM" > "$T/f/index.md"
+python3 -I -B "$CHK" check "$T/f/index.md"; echo "folder-form task, no report in its folder: exit $?"
+mkdir -p "$T/e"; printf -- "$FM" | sed 's/^profile: prod/profile: pilot/;/^Security/d' > "$T/e.md"
+python3 -I -B "$CHK" check "$T/e.md"; echo "pilot task, no review: exit $?"
+echo "--- 5. decision record, run from the candidate"
+(cd "$W" && python3 -B $PKG/scripts/adr_lint.py docs/adr --since $BASE_SHA --require 0019; echo "adr_lint exit $?")
+git -C "$REPO" worktree remove --force "$W"; rm -rf "$T"; echo "cleaned up"
+```
+
+Observed output, fresh shell (step 1 and 2 lines trimmed to their results):
+
+```text
+44f77c1b357f01deb965f983329e0f894be887ba
+--- 1: stat lists adr 0019, design_surfaces.py, test_design_surfaces.py, profiles/prod.md (4 files, 640 insertions, 2 deletions); byte count 0
+--- 2: references/sd/workflow.md: 5495 of 5511 words; lint exit 0; prod.md word count 606
+--- 3: Ran 90 tests ... OK
+--- 4: reviewed, flat task file: exit 0 (security review security/ideation-1.yaml: 1 findings, 1 acceptance criteria, 0 declined, 0 decisions)
+finding item with no severity: exit 1 (has findings item 1 with no 'severity:' line)
+findings nested under another key: exit 1 (not a direct child of 'tob_security_review:')
+same bytes, folder-form task d/index.md: exit 0 (same note line as the flat task)
+folder-form task, no report in its folder: exit 1 (not a report file inside the task folder)
+pilot task, no review: exit 0
+--- 5: 19 ADR file(s) checked, 0 legacy; adr_lint exit 0
+cleaned up
+```
+
+Does not cover: a real ideation worker or reviewer run, the gate rendering, Codex hosts, or the shipped brief's finding quality (AC-11, carried from validation-3).
+
+### Summary
+
+I recommend PASSED at 44f77c1b: Codex round 3's P1 no longer reproduces (the same report bytes pass as a flat task and as `<slug>/index.md`), the new folder-form test fails under its own mutation and only that mutation's two tests, and the round-2 shape rules, the cycle 1 P1 and AC-8 to AC-14 hold on the unchanged shipped text. No new finding; F2 to F4 stay declined to backlog.
