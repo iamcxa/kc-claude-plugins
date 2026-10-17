@@ -14,3 +14,10 @@ Filed on the Captain's 「兩問題照這樣做」 (chat, 2026-10-17), to FO's q
 - Cause (FO, 2026-10-17): the Claude plugin install is per user, not per workflow. The Captain's machine moved to 0.23.0 on 2026-10-16 (`claude plugin update kc-dev-flow-2@kc-claude-plugins`), so every repository's workers load 0.23.0 whatever its README declares. `package_version.py` checks FO's own load only.
 - Effect: 0.23.0's `delivery_gate.py` requires a `Candidate: <40-hex head>` line in the latest validation dispatch record; 0.22.1 records have none, so in-flight tasks in a 0.22.1 workflow hold at the merge ask. Relay's FO now adds the line by hand.
 - Candidate routes for ideation: workers load the Package root the dispatch names (the skill already states one), a check that a worker's loaded version equals the README's, or upgrade notes plus a `dispatch_records.py` part that require the Candidate line before release; and whether FO's "sync later" for an adopter is meaningful at all while installs are per user.
+
+## FO alignment
+
+Alignment: not needed before ideation; the Captain approved filing it (his words are at the top of this file).
+Release review: not needed: workflow maintenance, on no journey map.
+Surfaces: none
+Visible change: none
