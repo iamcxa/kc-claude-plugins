@@ -69,6 +69,17 @@ gates:
                 id: briefing:prod-security-review-gates:validation:attempt-1:revision-1
                 digest: sha256:68eb53e79c99e5a9fccba87371cb58a9ba7074ef097079a29ab9779deb315441
                 room-ref: ./prod-security-review-gates/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:prod-security-review-gates:validation:1
+                briefing: briefing:prod-security-review-gates:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T04:32:01.961419Z"
+                decision: approve
+                reason: 'Captain approved delivery of #656 head 44f77c1b in chat (「准」), accepting FO''s recommendation to decline F2 to F4 and the round-4 P2s into backlog task prod-security-check-round3-followups and keep AC-8'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-16T03:14:23Z
 worktree: .worktrees/spacedock-ensign-prod-security-review-gates
 pr: iamcxa/kc-claude-plugins#656
