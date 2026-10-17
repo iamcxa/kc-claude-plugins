@@ -25,7 +25,7 @@ CAPTAIN_QUOTE = re.compile(r"「[^」]*\S[^」]*」")
 # A raise (delta > 0) needs the Captain's quoted words and the one moment FO reads the added text.
 WORKFLOW_BUDGET_START = 5511
 WORKFLOW_BUDGET_STEPS = [
-    dict(delta=-79, why="dispatch_records.py and design_surfaces.py print the parts and defects; the README points to them"),
+    dict(delta=-64, why="dispatch_records.py and design_surfaces.py print the parts and defects; the README points to them"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.

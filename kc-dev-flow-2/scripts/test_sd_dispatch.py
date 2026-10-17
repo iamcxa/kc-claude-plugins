@@ -122,9 +122,9 @@ FIXES = {
         old=(),
         swaps=((r"FO saves those scope notes, the checklist, the model it dispatches on.*?fixes each part it lists\. ", ""),)),
     "resumed-dispatch": dict(
-        need=("A follow-up message to a worker FO resumes is a dispatch",),
+        need=("A follow-up message to a worker FO resumes is a dispatch", "never a pointer to another record"),
         old=(),
-        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, with the same check\. ", ""),)),
+        swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record\. ", ""),)),
     "adr-since": dict(
         need=("for each `ADR:` number the task's `## Number guards` reserves",
               "which requires every record the candidate added or changed",),
