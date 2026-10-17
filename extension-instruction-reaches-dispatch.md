@@ -82,7 +82,7 @@ gates:
                 state: pending
 started: 2026-10-16T03:14:50Z
 worktree: .worktrees/spacedock-ensign-extension-instruction-reaches-dispatch
-pr: iamcxa/kc-claude-plugins#652
+pr: pr-merge:652
 ---
 
 Filed from a package issue reported by the spacedock-dev/subspace-relay First Officer; the Captain confirmed filing on 2026-10-14 (「確認」 to "should FO file relay #1 and #4?"). Relay task `owner-sees-all-feedback-room` (PR spacedock-dev/subspace-relay#362, kc-dev-flow-2 0.22.0) dispatched implementation without the roborev extension's worker instruction, so the worker never ran `roborev_gate.py` and its report has no `evidence=` line; FO ran the gate afterwards (roborev:633).
