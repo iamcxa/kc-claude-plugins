@@ -68,6 +68,7 @@ Alignment: not needed before ideation; the Captain approved filing it (his words
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-17 — third repair cycle on #663 (fence-blind reads: Codex round 3 review:5558271854 and validation-3's Surfaces regression): repair the fence class once, decline to backlog, or narrow the PR?
 
 ## Replay pre-registration (written before any replay run, 2026-10-17)
 
