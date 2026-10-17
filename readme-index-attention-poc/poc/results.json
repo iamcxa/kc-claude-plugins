@@ -1,0 +1,642 @@
+[
+ {
+  "run": "A-P1-1",
+  "arm": "A",
+  "probe": "P1",
+  "rep": 1,
+  "followed": true,
+  "decider": "2 script names, all under /opt/kdf2/kc-dev-flow-2/scripts/",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [
+   "EXTENSION.md",
+   "EXTENSION.md",
+   "EXTENSION.md",
+   "EXTENSION.md",
+   "EXTENSION.md"
+  ],
+  "other_tools": [],
+  "tokens": 47821,
+  "seconds": 12.5,
+  "cost_usd_imputed": 0.027965600000000004,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P1-2",
+  "arm": "A",
+  "probe": "P1",
+  "rep": 2,
+  "followed": true,
+  "decider": "2 script names, all under /opt/kdf2/kc-dev-flow-2/scripts/",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [
+   "EXTENSION.md",
+   "EXTENSION.md",
+   "EXTENSION.md",
+   "EXTENSION.md",
+   "EXTENSION.md"
+  ],
+  "other_tools": [],
+  "tokens": 47823,
+  "seconds": 15.5,
+  "cost_usd_imputed": 0.0281596,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P1-3",
+  "arm": "A",
+  "probe": "P1",
+  "rep": 3,
+  "followed": true,
+  "decider": "2 script names, all under /opt/kdf2/kc-dev-flow-2/scripts/",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 23802,
+  "seconds": 11.1,
+  "cost_usd_imputed": 0.0499922,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P1-1",
+  "arm": "B",
+  "probe": "P1",
+  "rep": 1,
+  "followed": false,
+  "decider": "1 script names, all under /opt/kdf2/kc-dev-flow-2/scripts/",
+  "startup_words": 628,
+  "moment_words": 1713,
+  "files_read": [
+   "stages.md",
+   "stage-implementation.md",
+   "dispatch-facts.md",
+   "number-guards.md",
+   "affected-documents.md"
+  ],
+  "other_tools": [],
+  "tokens": 40682,
+  "seconds": 10.4,
+  "cost_usd_imputed": 0.030074000000000004,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P1-2",
+  "arm": "B",
+  "probe": "P1",
+  "rep": 2,
+  "followed": false,
+  "decider": "1 script names, all under /opt/kdf2/kc-dev-flow-2/scripts/",
+  "startup_words": 628,
+  "moment_words": 1713,
+  "files_read": [
+   "stages.md",
+   "stage-implementation.md",
+   "dispatch-facts.md",
+   "number-guards.md",
+   "affected-documents.md"
+  ],
+  "other_tools": [],
+  "tokens": 42604,
+  "seconds": 15.5,
+  "cost_usd_imputed": 0.0413965,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P1-3",
+  "arm": "B",
+  "probe": "P1",
+  "rep": 3,
+  "followed": true,
+  "decider": "2 script names, all under /opt/kdf2/kc-dev-flow-2/scripts/",
+  "startup_words": 628,
+  "moment_words": 1388,
+  "files_read": [
+   "stages.md",
+   "stage-implementation.md",
+   "dispatch-facts.md"
+  ],
+  "other_tools": [],
+  "tokens": 25886,
+  "seconds": 9.4,
+  "cost_usd_imputed": 0.056278800000000004,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P2-1",
+  "arm": "A",
+  "probe": "P2",
+  "rep": 1,
+  "followed": true,
+  "decider": "F1 segment ok=True; F2 segment ok=True",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 22489,
+  "seconds": 2.9,
+  "cost_usd_imputed": 0.0049455,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P2-2",
+  "arm": "A",
+  "probe": "P2",
+  "rep": 2,
+  "followed": false,
+  "decider": "F1 segment ok=False; F2 segment ok=False",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 22530,
+  "seconds": 3.5,
+  "cost_usd_imputed": 0.0380102,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P2-3",
+  "arm": "A",
+  "probe": "P2",
+  "rep": 3,
+  "followed": false,
+  "decider": "F1 segment ok=False; F2 segment ok=False",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 22499,
+  "seconds": 3.0,
+  "cost_usd_imputed": 0.0050455000000000005,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P2-1",
+  "arm": "B",
+  "probe": "P2",
+  "rep": 1,
+  "followed": true,
+  "decider": "F1 segment ok=True; F2 segment ok=True",
+  "startup_words": 628,
+  "moment_words": 1818,
+  "files_read": [
+   "review-finding-disposition.md",
+   "fo-steps-review-findings.md",
+   "stage-validation.md"
+  ],
+  "other_tools": [],
+  "tokens": 26063,
+  "seconds": 4.8,
+  "cost_usd_imputed": 0.0210474,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P2-2",
+  "arm": "B",
+  "probe": "P2",
+  "rep": 2,
+  "followed": true,
+  "decider": "F1 segment ok=True; F2 segment ok=True",
+  "startup_words": 628,
+  "moment_words": 1577,
+  "files_read": [
+   "review-finding-disposition.md",
+   "fo-steps-review-findings.md"
+  ],
+  "other_tools": [],
+  "tokens": 25371,
+  "seconds": 5.6,
+  "cost_usd_imputed": 0.0181474,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P2-3",
+  "arm": "B",
+  "probe": "P2",
+  "rep": 3,
+  "followed": true,
+  "decider": "F1 segment ok=True; F2 segment ok=True",
+  "startup_words": 628,
+  "moment_words": 1818,
+  "files_read": [
+   "fo-steps-review-findings.md",
+   "review-finding-disposition.md",
+   "stage-validation.md"
+  ],
+  "other_tools": [],
+  "tokens": 26069,
+  "seconds": 5.0,
+  "cost_usd_imputed": 0.053680500000000006,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P3-1",
+  "arm": "A",
+  "probe": "P3",
+  "rep": 1,
+  "followed": true,
+  "decider": "4. `python3 /opt/kdf2/kc-dev-flow-2/scripts/number_guards.py reserve --kind adr --workflow-dir /work/app/docs/dev --repo /work/app --task /work/app/docs/dev/.spacedock-state/retry-queue.md`",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 23455,
+  "seconds": 8.5,
+  "cost_usd_imputed": 0.013962000000000002,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P3-2",
+  "arm": "A",
+  "probe": "P3",
+  "rep": 2,
+  "followed": true,
+  "decider": "python3 /opt/kdf2/kc-dev-flow-2/scripts/number_guards.py reserve --kind adr --workflow-dir /work/app/docs/dev --repo /work/app --task /work/app/docs/dev/.spacedock-state/retry-queue.md",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 23570,
+  "seconds": 9.4,
+  "cost_usd_imputed": 0.0480202,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P3-3",
+  "arm": "A",
+  "probe": "P3",
+  "rep": 3,
+  "followed": true,
+  "decider": "2. `python3 /opt/kdf2/kc-dev-flow-2/scripts/number_guards.py reserve --kind adr --workflow-dir /work/app/docs/dev --repo /work/app --task /work/app/docs/dev/.spacedock-state/retry-queue.md`",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 23682,
+  "seconds": 9.6,
+  "cost_usd_imputed": 0.016232,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P3-1",
+  "arm": "B",
+  "probe": "P3",
+  "rep": 1,
+  "followed": true,
+  "decider": "python3 /opt/kdf2/kc-dev-flow-2/scripts/number_guards.py reserve --kind adr --workflow-dir /work/app/docs/dev --repo /work/app --task /work/app/docs/dev/.spacedock-state/retry-queue.md",
+  "startup_words": 628,
+  "moment_words": 2133,
+  "files_read": [
+   "stage-implementation.md",
+   "number-guards.md",
+   "fo-steps-number-guards.md",
+   "stages.md",
+   "dispatch-facts.md"
+  ],
+  "other_tools": [],
+  "tokens": 27890,
+  "seconds": 10.5,
+  "cost_usd_imputed": 0.0322944,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P3-2",
+  "arm": "B",
+  "probe": "P3",
+  "rep": 2,
+  "followed": true,
+  "decider": "python3 /opt/kdf2/kc-dev-flow-2/scripts/number_guards.py reserve --kind adr --workflow-dir /work/app/docs/dev --repo /work/app --task /work/app/docs/dev/.spacedock-state/retry-queue.md",
+  "startup_words": 628,
+  "moment_words": 1977,
+  "files_read": [
+   "stage-implementation.md",
+   "number-guards.md",
+   "fo-steps-number-guards.md",
+   "stages.md"
+  ],
+  "other_tools": [],
+  "tokens": 27349,
+  "seconds": 13.5,
+  "cost_usd_imputed": 0.0297884,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P3-3",
+  "arm": "B",
+  "probe": "P3",
+  "rep": 3,
+  "followed": true,
+  "decider": "python3 /opt/kdf2/kc-dev-flow-2/scripts/number_guards.py reserve --kind adr --workflow-dir /work/app/docs/dev --repo /work/app --task /work/app/docs/dev/.spacedock-state/retry-queue.md",
+  "startup_words": 628,
+  "moment_words": 1977,
+  "files_read": [
+   "stage-implementation.md",
+   "number-guards.md",
+   "fo-steps-number-guards.md",
+   "stages.md"
+  ],
+  "other_tools": [],
+  "tokens": 27407,
+  "seconds": 9.4,
+  "cost_usd_imputed": 0.0303024,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P4-1",
+  "arm": "A",
+  "probe": "P4",
+  "rep": 1,
+  "followed": true,
+  "decider": "Supersedes: AC-2",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 22576,
+  "seconds": 4.5,
+  "cost_usd_imputed": 0.0064887,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P4-2",
+  "arm": "A",
+  "probe": "P4",
+  "rep": 2,
+  "followed": true,
+  "decider": "Supersedes: AC-2",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 22439,
+  "seconds": 3.4,
+  "cost_usd_imputed": 0.0051187,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P4-3",
+  "arm": "A",
+  "probe": "P4",
+  "rep": 3,
+  "followed": true,
+  "decider": "Supersedes: AC-2",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 22254,
+  "seconds": 2.2,
+  "cost_usd_imputed": 0.0356582,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P4-1",
+  "arm": "B",
+  "probe": "P4",
+  "rep": 1,
+  "followed": true,
+  "decider": "Supersedes: AC-2",
+  "startup_words": 628,
+  "moment_words": 1042,
+  "files_read": [
+   "captain-amendments.md"
+  ],
+  "other_tools": [],
+  "tokens": 23375,
+  "seconds": 3.5,
+  "cost_usd_imputed": 0.0409617,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P4-2",
+  "arm": "B",
+  "probe": "P4",
+  "rep": 2,
+  "followed": true,
+  "decider": "Supersedes: AC-2",
+  "startup_words": 628,
+  "moment_words": 1042,
+  "files_read": [
+   "captain-amendments.md"
+  ],
+  "other_tools": [],
+  "tokens": 23455,
+  "seconds": 4.0,
+  "cost_usd_imputed": 0.0094358,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P4-3",
+  "arm": "B",
+  "probe": "P4",
+  "rep": 3,
+  "followed": true,
+  "decider": "Supersedes: AC-2",
+  "startup_words": 628,
+  "moment_words": 1042,
+  "files_read": [
+   "captain-amendments.md"
+  ],
+  "other_tools": [],
+  "tokens": 23378,
+  "seconds": 3.4,
+  "cost_usd_imputed": 0.0086178,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P5-1",
+  "arm": "A",
+  "probe": "P5",
+  "rep": 1,
+  "followed": true,
+  "decider": "completion-to-main=True; package-root-line=True; Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 22709,
+  "seconds": 4.7,
+  "cost_usd_imputed": 0.0894331,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P5-2",
+  "arm": "A",
+  "probe": "P5",
+  "rep": 2,
+  "followed": true,
+  "decider": "completion-to-main=True; package-root-line=True; Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 22677,
+  "seconds": 3.9,
+  "cost_usd_imputed": 0.006409700000000001,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "A-P5-3",
+  "arm": "A",
+  "probe": "P5",
+  "rep": 3,
+  "followed": true,
+  "decider": "completion-to-main=True; package-root-line=True; Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).",
+  "startup_words": 5499,
+  "moment_words": 5499,
+  "files_read": [],
+  "other_tools": [],
+  "tokens": 22613,
+  "seconds": 3.6,
+  "cost_usd_imputed": 0.0057697,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P5-1",
+  "arm": "B",
+  "probe": "P5",
+  "rep": 1,
+  "followed": true,
+  "decider": "completion-to-main=True; package-root-line=True; Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).",
+  "startup_words": 628,
+  "moment_words": 1318,
+  "files_read": [
+   "stages.md",
+   "dispatch-facts.md"
+  ],
+  "other_tools": [],
+  "tokens": 24855,
+  "seconds": 5.8,
+  "cost_usd_imputed": 0.016097800000000002,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P5-2",
+  "arm": "B",
+  "probe": "P5",
+  "rep": 2,
+  "followed": true,
+  "decider": "completion-to-main=True; package-root-line=True; Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here). Do not use the `team-lead` name in the completion block below. Use `main` as the recipient.",
+  "startup_words": 628,
+  "moment_words": 1318,
+  "files_read": [
+   "stages.md",
+   "dispatch-facts.md"
+  ],
+  "other_tools": [],
+  "tokens": 25011,
+  "seconds": 6.9,
+  "cost_usd_imputed": 0.0502327,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ },
+ {
+  "run": "B-P5-3",
+  "arm": "B",
+  "probe": "P5",
+  "rep": 3,
+  "followed": true,
+  "decider": "completion-to-main=True; package-root-line=True; Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).",
+  "startup_words": 628,
+  "moment_words": 1318,
+  "files_read": [
+   "stages.md",
+   "dispatch-facts.md"
+  ],
+  "other_tools": [],
+  "tokens": 24815,
+  "seconds": 4.9,
+  "cost_usd_imputed": 0.0157038,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ }
+]

@@ -77,3 +77,52 @@ Committed before any scored run. Files under `readme-index-attention-poc/poc/` i
 Deciders were exercised on hand-written right and wrong answers before commit; each flips on the named change.
 
 **Scoring and report.** Per probe, followed count per arm (of 3); total per arm (of 15). Pass = B total >= A total, and for every probe B's count >= A's count - 1, and B startup words <= 0.25 x A's. The bar is not moved after a run; a failed or unparseable run (CLI error, empty result) is rerun once from the same cell and the first failure is reported. Limits fixed in advance: five situations, one wording each, short contexts (no long session behind them), no must-not-apply probe, one model, a scenario answer instead of a live FO with tools.
+
+## Result
+
+Thirty runs, 2026-10-17, `claude-sonnet-5-5` on every run, no CLI error, no rerun, no tool other than Read. Per-run rows (arm, probe, followed, the deciding line, startup and moment words, files read, tokens, seconds, imputed cost) are in `poc/results.md` and `poc/results.json`; raw stream-json is in `poc/runs/`.
+
+**Against the Captain's bar as registered: FAIL.** Total passes (B 13 of 15, A 13 of 15) and startup words passes (628 of 5499 = 0.114, bar 0.25), but the per-probe condition fails on P1: B followed 1 of 3 where A followed 3 of 3, worse by two runs, and the bar allows one.
+
+| Probe | A followed | B followed | B moment words (min-max) |
+| --- | --- | --- | --- |
+| P1 bare script name | 3 | 1 | 1388-1713 |
+| P2 FO declines | 1 | 3 | 1577-1818 |
+| P3 reserve ADR number | 3 | 3 | 1977-2133 |
+| P4 amendment entry | 3 | 3 | 1042 |
+| P5 follow-up to live worker | 3 | 3 | 1318 |
+| Total | 13 | 13 | mean 1546 (A: 5499 at every moment) |
+
+Decisive lines. B-P1-1 and B-P1-2 write every script name as `/opt/kdf2/kc-dev-flow-2/scripts/NAME.py`, but their record holds one script name: both dropped checklist item 3 (`number_guards.py check`), and B-P1-2 says why ("the Number guards rule does not apply and there is no number_guards check item"), so the P1 decider's two-names clause fails them. A-P2-2 and A-P2-3 name `aa6fcc91` once in a header over both findings, so the P2 decider, which wants the revision inside each finding's own text, fails them; their per-finding lines cite the evidence file and line.
+
+**Sensitivity, post-hoc, not the result.** `poc/sensitivity.py`, written after the runs, scores P1 on bare script names only and P2 with the revision allowed in a shared header: A 15 of 15, B 15 of 15, every probe 3 and 3. It would pass the bar. The registered deciders stand as the result; the pass/fail difference rests on two decider choices (a two-names clause in P1, a per-finding revision in P2), not on a rule either arm broke.
+
+**Cost.** Mean tokens per run (input, cache and output): A 26.2k, B 27.6k; total seconds A 98, B 113; imputed `total_cost_usd` A 0.38, B 0.45 for 15 runs each. The imputed figure is the CLI's list price, not a charge. B was not cheaper per run: its prompt is shorter but the runs paid for Read turns, and a system prompt of 5.5k words is cached cheaply.
+
+**Layout of arm B.** `poc/arm-b/README.md` (frontmatter and intro verbatim, then a 21-row table of file and trigger) plus `poc/arm-b/rules/`, 21 files, a lossless verbatim split of the README by heading: `file-naming`, `schema`, `stages` (534 words, the part before the stage subsections), `stage-backlog/-ideation/-implementation/-validation/-done`, `dispatch-facts`, `review-finding-disposition`, `fo-steps-review-findings` (690, the largest), `decision-records`, `fo-steps-decision-records`, `captain-amendments`, `affected-documents`, `number-guards`, `fo-steps-number-guards`, `delivery-authority`, `extensions`, `workflow-state`, `task-template`. `build_arm_b.py` fails when the split is not lossless.
+
+**What the POC does not show.**
+- Three of five probes were followed in all six runs, so the matrix could not separate the arms there. Short scenario contexts leave the whole-README arm at ceiling; the observer's violations come from long sessions with the README far back in context, which this did not reproduce.
+- B opened 2 to 5 files per probe (mean moment load 1546 words, 28 percent of A) and did open the right file each time; whether an FO with many concurrent duties does so is untested.
+- The index was written knowing the probe classes, so B is an upper bound for an index. No must-not-apply probe ran, so over-application after opening a file is untested, apart from B-P1-2 dropping a checklist item after reading number-guards.md.
+- One wording per situation, one model, answers instead of a live FO with tools and state, so nothing here shows a drop in the observer's violation counts.
+- A-P1-1 and A-P1-2 each tried to Read `EXTENSION.md` five times and found nothing; A without an index also wanders.
+
+**Package checks at exit** (base 6ea3a472 = code HEAD; the code branch has no commit beyond base, correct for this task). `comment_ratio.py`: exit 0, "code lines 0, comment lines 0, 0.0%", not enforced under 20 code lines. `doc_impact.py`: exit 0, 0 documents listed. `number_guards.py check`: exit 0, PASS, migration guard skipped (no `migrations-path:`). `design_surfaces.py check`: exit 1 on this POC task, which has no `## FO alignment` or `## Acceptance criteria` section because the POC route skips ideation; not a finding against this stage. No package file or adopter README changed; no PR opened (no push grant for code; none was needed); no PR or issue comment.
+
+**Cleanup.** The throwaway smoke dirs under /tmp are removed; `poc/arm-a-cwd` is created empty by the runner and is untracked. Nothing else to remove.
+
+## Stage Report: implementation
+
+- DONE: Upstream check first, written into the task file before any run: what Spacedock's first-officer contract loads at boot, what `show-stage-def` and `context-sections:` deliver per stage, what kc-dev-flow-2's `_mods` startup and idle hooks load, and what the 0.14.0 split already moved; say what each gives and whether the index arm needs anything new
+  `## Upstream check`: FO boot opens no README body; show-stage-def and context-sections serve workers only; mods are 48 words; #587 moved FO-only text but the FO still loads the whole file; index arm is new for FO-only text only. Committed in state b16f9201, before run 1.
+- DONE: Pre-registration committed to the state branch before any run: the five probes, the two arms, the scoring rule per probe and the Captain's bar verbatim
+  `## Pre-registration` plus `poc/` (probes.py, arm-a, arm-b, run_probes.py) in state commit b16f9201; probes drawn from 16 observer reports (state 7a696b0a); bar quoted from the backlog briefing.
+- DONE: Thirty runs on Sonnet (five probes, three per arm), each recorded with arm, probe, followed or not with the deciding line, words at startup and at the probe's moment, tokens, seconds and cost
+  `poc/results.md` and `poc/results.json` hold all 30 rows; raw stream-json under `poc/runs/`; cost is the CLI's imputed figure.
+- DONE: Result against the bar, pass or fail, without moving the bar; what the index arm's file layout was; what the POC does not show
+  `## Result`: FAIL as registered (P1 B 1 of 3 vs A 3 of 3; totals 13 and 13; startup 0.114 of A); layout and limits written. Post-hoc sensitivity (15 and 15) is labelled as not the result.
+
+### Summary
+
+The index arm loads 11 percent of the README at startup and 28 percent on average at the probe's moment, and follows the probed rules as often in total (13 of 15 each). Under the registered bar it fails on one probe: in two P1 runs B dropped a checklist item after reading number-guards.md, which the P1 decider counts as not followed, while A's two P2 misses came from naming the revision once in a header. Three of five probes sat at ceiling in both arms, so this POC cannot say the index is better, only that it did not clearly do worse once two decider choices are relaxed.
