@@ -405,3 +405,46 @@ PASSED recommended for a2093bc1: all eight criteria hold on re-run, twelve mutat
 ### Summary
 
 Repaired the three Codex P2 and the first-Preview-line risk in one commit (92b28aa6): duplicate finding lines, the direct `preview:` child bound to the `design_review:` block, and any of the task's Preview lines accepted. P2 1 stays as option A with the limit stated in ADR 0022; the remaining bypass is a Deferred risk for FO's gate summary. Not changed: the check still takes only the first Preview line for the existence test in `check_ui`, as on main.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #663 head 92b28aa6 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Recommend PASSED for head 92b28aa607df06c3826f2ed52f7d8af47d797426 (base 6ea3a472; PR Draft, mergeable CLEAN; CI at this head: unit tests, version parity, route gate, GitGuardian all pass). AC-1: `git diff 6ea3a472 --stat` and `git diff origin/main...92b28aa6 --stat` list only the 4 named files plus ADR 0022; the references/extensions/observer/profiles diff is 0 bytes; `lint-skills.py` 5447 of 5447. AC-2/3/4: `python3 -B -m unittest test_design_surfaces` 113 OK. I ran 21 mutations on copies with caches absent, each killed by its own case: the 12 of cycle 1 (design call 30 fail, MINOR test 2, scale default 25, root default 61, preview rule 5, `ui` gate 26, `ideation` gate 39, fixed branch 11, not-run 2, path escape 3, extra line 1, severity count 2) plus the cycle-2 rules (duplicate line 3; `len(named) != 1` 7; `preview:` at any indent 3; whole-report search instead of the root block 2; first Preview line only 2); no mutation survived. AC-5: design-review.md 848 words, principles.md 582 to 596, CLI line 14 words on a ui fixture. AC-6: `design-review.md` and ADR 0022's decision text are byte-identical between a2093bc1 and 92b28aa6, so the validation-1 replay evidence (H5 named in 2 of 3 runs, no model re-run this cycle) is carried, not refreshed. AC-7: "sees pictures" and the Known-limit sentence present. AC-8: `adr_lint.py --require 0022` exit 0.
+  Cycle-2 rules probed on the candidate script: a duplicate `Design finding 1:` (and `01`) is refused, a fenced duplicate is ignored; a `preview:` under another top-level mapping or only nested is refused; two direct previews refused; a report naming the second of two Preview lines passes, a third name is refused. Merge check: `git merge-tree` of origin/main 9b58cd68 (includes #659) with the head is conflict-free; on that merged tree `test_design_surfaces` is 113 OK, `lint-skills.py` exit 0 (5447 of 5447) and every other package test file except `test_sd_dispatch.py` (not run) is OK.
+  Limits judged: P2 1 (`limitations` unread, a `findings: []` report beside an unshown-state limitation passes) is pinned by `test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes` and stated in ADR 0022 Consequences; accepted as FO's option A, FO's to decline. The check cannot see a redrawn `fixed:` picture or the second run (stated in the ADR). Codex-hosted worker holds: not verified.
+  Findings. Material: none. Deferred risk: (1) P2 1 above, material if a ui design reaches a gate with an unshown state the reviewer named only under `limitations` and no finding; (2) AC-6 H5 named in 2 of 3 runs, one run per cell. Polish: a `preview:` value with a trailing YAML comment (`preview: a.html # x`) is refused as naming another preview (probe); the brief tells the reviewer to copy the value exactly. Needs decision: none. Prior Deferred risk 2 (first Preview line only) is fixed and probed.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME PATH bash --noprofile --norc` from /tmp on the real checkout: every step matched. `adr_lint.py docs/adr --since 6ea3a472` (also with `--require 0022`): `21 ADR file(s) checked, 0 legacy`, exit 0. Also: `comment_ratio.py 6ea3a472 92b28aa6` 265 code lines, 4 comment lines, 1.5% (the 4 are markdown headings in test strings), `number_guards.py check` PASS, `doc_impact.py` 0 documents, `dispatch_records.py` 7 complete, `design_surfaces.py check` on this task exit 0. No user-visible surface, so no screenshot is owed. Verdict PASSED on head 92b28aa6. Throwaway worktrees and scratch removed.
+
+### Minimal acceptance script
+
+Run in a fresh bash shell; the path `/tmp/ui-review-accept` must not exist. Clean up with `git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo worktree remove --force /tmp/ui-review-accept; rm -rf /tmp/ui-review-fixture`.
+
+    # Step 1: check out the PR head. Expect: "92b28aa6 fix(kc-dev-flow-2): the design check refuses duplicate finding lines and a report not bound to one direct preview line"
+    git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo worktree add --detach /tmp/ui-review-accept 92b28aa607df06c3826f2ed52f7d8af47d797426 && git -C /tmp/ui-review-accept log --oneline -1
+    # Step 2: tests. Expect "Ran 113 tests" and "OK"
+    cd /tmp/ui-review-accept/kc-dev-flow-2/scripts && python3 -B -m unittest test_design_surfaces 2>&1 | grep -E '^(Ran|OK|FAILED)'
+    # Step 3: a ui task at ideation with no review is refused. Expect "a ui task needs a 'Design review:' line naming the saved report", exit=1
+    rm -rf /tmp/ui-review-fixture && mkdir -p /tmp/ui-review-fixture/task/design && cd /tmp/ui-review-fixture
+    printf '<html></html>' > preview.html && cp preview.html task/preview.html
+    printf -- '---\ntitle: a ui task\nprofile: pilot\nstatus: ideation\n---\n\n## FO alignment\n\nSurfaces: ui\nVisible change: a person sees a panel.\n\n## Design\n\nUI proposal: a panel.\nPreview: preview.html\n\n## Acceptance criteria\n\n**AC-1**: a.\nVerified by: a test.\n' > task.md
+    python3 -B /tmp/ui-review-accept/kc-dev-flow-2/scripts/design_surfaces.py check /tmp/ui-review-fixture/task.md; echo "exit=$?"
+    # Step 4: add a report with a MAJOR and a MINOR finding and decline both. Expect "report finding 1 has no 'Design finding 1:' line ...", exit=1; then fix finding 1. Expect "design surfaces presentable", "design review design/ideation-1.yaml: 2 findings, 1 fixed, 0 criteria, 1 declined, 0 decisions", exit=0; then add a second line for finding 2. Expect "'Design finding 2:' appears more than once; write one disposition per finding", exit=1
+    printf 'design_review:\n  preview: preview.html\n  findings:\n    - severity: MAJOR\n      dimension: hierarchy\n      where: after.png\n      seen: the count is stated twice\n      fix: keep one\n    - severity: MINOR\n      dimension: spacing\n      where: after.png\n      seen: tight inset\n      fix: widen it\n  limitations:\n    - the operable preview was not opened\n' > task/design/ideation-1.yaml
+    printf '\n### Design review\n\nDesign review: design/ideation-1.yaml\nDesign finding 1: declined: looks fine\nDesign finding 2: declined: matches the shell\n' >> task.md
+    python3 -B /tmp/ui-review-accept/kc-dev-flow-2/scripts/design_surfaces.py check /tmp/ui-review-fixture/task.md; echo "exit=$?"
+    sed -i.bak 's/Design finding 1: declined: looks fine/Design finding 1: fixed: one count in the header of after.png/' task.md
+    python3 -B /tmp/ui-review-accept/kc-dev-flow-2/scripts/design_surfaces.py check /tmp/ui-review-fixture/task.md; echo "exit=$?"
+    printf 'Design finding 2: Needs decision: keep the inset?\n' >> task.md
+    python3 -B /tmp/ui-review-accept/kc-dev-flow-2/scripts/design_surfaces.py check /tmp/ui-review-fixture/task.md; echo "exit=$?"
+    # Step 5: brief size and workflow text. Expect "848", then "PASS: ..." and "references/sd/workflow.md: 5447 of 5447 words; ..."
+    python3 -I -c 'print(len(open("/tmp/ui-review-accept/kc-dev-flow-2/skills/ideation/design-review.md").read().split()))'
+    cd /tmp/ui-review-accept && python3 -B kc-dev-flow-2/scripts/lint-skills.py | grep -E 'PASS|workflow.md'
+    # Step 6: ADR lint. Expect "21 ADR file(s) checked, 0 legacy", exit=0
+    cd /tmp/ui-review-accept && python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since 6ea3a472 --require 0022; echo "exit=$?"
+
+Not covered: that a reviewer finds a defect (AC-6 is replay evidence, not this script); hover, focus or operable previews; a second repository; a Codex-hosted worker; `limitations` read by the check (it is not); `test_sd_dispatch.py`.
+
+### Summary
+
+PASSED recommended for 92b28aa6: AC-1 to AC-8 hold, the three Codex P2 repairs and the several-Preview-lines fix each fail under their own mutation (21 mutations, none survived), the head merges cleanly with origin/main including #659 with 113 tests OK, and the acceptance script ran clean in a fresh shell. No Material finding; Deferred risks are the unread `limitations` (FO's option A) and the 2-of-3 H5 rate; one Polish item.
