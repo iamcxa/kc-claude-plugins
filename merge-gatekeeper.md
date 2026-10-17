@@ -1,7 +1,7 @@
 ---
 title: A merge gatekeeper reviews each PR, lets FO merge one it judges safe, and tells the Captain what to look at
 variant: kc-dev-flow-2
-profile: pilot
+profile: prod
 merge: pr
 status: ideation
 gates:
