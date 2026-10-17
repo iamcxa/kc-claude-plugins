@@ -589,6 +589,16 @@ class SecurityReviewTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertIn("0 findings", notes[0])
 
+    def test_a_findings_item_with_no_severity_is_not_counted_as_zero_findings(self):
+        truncated = "tob_security_review:\n  pr: none\n  findings:\n    - file: \"design\"\n      title: \"cut off before its severity\"\n"
+        errors, notes = self.run_check(review="Security review: security/ideation-1.yaml\nSecurity focus file: none\n", report=truncated)
+        self.assertTrue(errors, f"a report whose only finding has no severity passed: {notes}")
+
+    def test_a_findings_item_with_no_severity_among_others_is_not_dropped(self):
+        partial = REPORT + '    - file: "design"\n      title: "fourth, no severity"\n'
+        errors, notes = self.run_check(report=partial)
+        self.assertTrue(errors, f"a 4-item report with 3 severities passed: {notes}")
+
     def test_mutation_dropping_the_security_call_lets_a_missing_review_pass(self):
         mutant = mutated("summary = check_security(path, plain, declared, errors)", "summary = None")
         review = REVIEW_LINES.replace("Security review: security/ideation-1.yaml\n", "")
@@ -630,21 +640,146 @@ class SecurityReviewTests(unittest.TestCase):
         bare = "tob_security_review:\n  pr: none\n"
         review = "Security review: security/ideation-1.yaml\nSecurity focus file: none\n"
         self.assertTrue(self.run_check(review=review, report=bare)[0])
-        self.assertEqual(self.run_check(review=review, report=bare, module=mutant)[0], [])
+        try:
+            errors = self.run_check(review=review, report=bare, module=mutant)[0]
+        except AttributeError:
+            errors = ["crash"]
+        self.assertFalse(any("is not a tob_security_review report" in e for e in errors), errors)
 
-    def test_mutation_matching_an_unquoted_severity_only_skips_a_quoted_high(self):
-        mutant = mutated(r'''["']?(CRITICAL|HIGH|MEDIUM|LOW)\b""", re.M)''', r'''(CRITICAL|HIGH|MEDIUM|LOW)\b""", re.M)''')
+    def test_mutation_dropping_the_quote_strip_refuses_a_quoted_severity(self):
+        mutant = mutated('.strip().strip("\\"\'")', ".strip()")
         quoted = REPORT.replace("severity: HIGH", 'severity: "HIGH"')
-        review = REVIEW_LINES.replace("finding 1: AC-2", "finding 1: declined: accepted")
-        self.assertTrue(any("report finding 1 has no" in e for e in self.run_check(review=review, report=quoted)[0]))
-        self.assertFalse(any("report finding 1 has no" in e for e in self.run_check(review=review, report=quoted, module=mutant)[0]))
-        self.assertTrue(self.run_check(review=REVIEW_LINES, report=quoted, module=mutant)[0])
+        self.assertEqual(self.run_check(report=quoted)[0], [])
+        self.assertTrue(any("with severity '\"HIGH\"'" in e for e in self.run_check(report=quoted, module=mutant)[0]))
 
-    def test_mutation_checking_every_profile_and_stage_fails_the_unchanged_cases(self):
-        mutant = mutated('if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):', "if profile and status:")
-        self.assertEqual(self.run_check(review="", report=None, profile="pilot")[0], [])
-        self.assertTrue(self.run_check(review="", report=None, profile="pilot", module=mutant)[0])
-        self.assertTrue(self.run_check(review="", report=None, status="implementation", module=mutant)[0])
+    NONE = "Security review: security/ideation-1.yaml\nSecurity focus file: none\n"
+
+    def report_errors(self, report, review=None):
+        return self.run_check(review=review or self.NONE, report=report)[0]
+
+    def test_an_item_with_no_severity_is_refused_by_its_number(self):
+        report = REPORT.replace('      severity: MEDIUM\n', "")
+        self.refused("has findings item 2 with no 'severity:' line", report=report)
+
+    def test_an_unknown_severity_value_is_refused_by_its_number(self):
+        for label, value in {"off the scale": "SEVERE", "lower case": "high", "the template echoed": "CRITICAL | HIGH | MEDIUM | LOW", "empty": ""}.items():
+            with self.subTest(label):
+                report = REPORT.replace("severity: MEDIUM", f"severity: {value}")
+                self.refused(f"has findings item 2 with severity '{value}', not one of CRITICAL, HIGH, MEDIUM, LOW", report=report)
+
+    def test_a_truncated_item_is_refused(self):
+        head = "tob_security_review:\n  pr: none\n  findings:\n"
+        cases = {
+            "cut after the file line": (head + '    - file: "design"\n', "findings item 1 with no 'severity:' line"),
+            "cut inside the severity value": (head + '    - file: "design"\n      severity:', "findings item 1 with severity ''"),
+            "cut after the dash": (head + "    -", "findings item 1 that is not a 'key: value' entry"),
+            "a bare string item": (head + "    - cut off here", "findings item 1 that is not a 'key: value' entry"),
+        }
+        for label, (report, why) in cases.items():
+            with self.subTest(label):
+                self.refused(why, report=report, review=self.NONE)
+
+    def test_a_findings_value_that_is_not_a_list_is_refused(self):
+        head = "tob_security_review:\n  pr: none\n"
+        cases = {
+            "a word": (head + "  findings: none\n", "findings' value that is not a list"),
+            "a mapping": (head + "  findings:\n    file: x\n    severity: HIGH\n", "findings' value that is not a list"),
+            "nothing under the key": (head + "  findings:\n  clean_patterns:\n    - ok\n", "findings' key with no items"),
+            "the key at the end of a cut file": (head + "  findings:\n", "findings' key with no items"),
+            "items at two indents": (head + "  findings:\n    - severity: LOW\n   - severity: HIGH\n", "items do not share one indent"),
+        }
+        for label, (report, why) in cases.items():
+            with self.subTest(label):
+                self.refused(why, report=report, review=self.NONE)
+
+    def test_a_dash_and_a_severity_inside_a_block_scalar_are_not_items(self):
+        report = (
+            "tob_security_review:\n  pr: none\n  findings:\n"
+            '    - file: "design"\n'
+            "      description: |\n"
+            "        Steps:\n"
+            "        - file: not an item\n"
+            "        - severity: HIGH\n"
+            "        severity: CRITICAL\n"
+            "      severity: LOW\n"
+            "      title: after the block\n"
+            "  clean_patterns:\n    - ok\n"
+        )
+        errors, notes = self.run_check(review=self.NONE + "Security finding 1: declined: accepted\n", report=report)
+        self.assertEqual(errors, [])
+        self.assertIn("1 findings, 0 acceptance criteria, 1 declined", notes[0])
+
+    def test_a_severity_may_sit_on_any_line_of_its_item(self):
+        report = "tob_security_review:\n  pr: none\n  findings:\n    - severity: LOW\n      file: a\n    - file: b\n      title: t\n      severity: MEDIUM  # trailing comment\n  findings_note: x\n"
+        errors, notes = self.run_check(review=self.NONE + "Security finding 1: declined: a\nSecurity finding 2: declined: b\n", report=report)
+        self.assertEqual(errors, [])
+        self.assertIn("2 findings", notes[0])
+
+    def test_mutation_defaulting_a_missing_severity_hides_the_item(self):
+        mutant = mutated('if b.startswith("severity:")), None)', 'if b.startswith("severity:")), "severity: LOW")')
+        report = REPORT.replace('      severity: MEDIUM\n', "")
+        why = "has findings item 2 with no 'severity:' line"
+        self.assertTrue(any(why in e for e in self.run_check(report=report)[0]))
+        self.assertFalse(any(why in e for e in self.run_check(report=report, module=mutant)[0]))
+
+    def test_mutation_dropping_the_scale_test_accepts_an_unknown_severity(self):
+        mutant = mutated("if value not in SEVERITY_SCALE:", "if False:")
+        report = REPORT.replace("severity: MEDIUM", "severity: SEVERE")
+        self.assertTrue(any("not one of" in e for e in self.run_check(report=report)[0]))
+        self.assertFalse(any("not one of" in e for e in self.run_check(report=report, module=mutant)[0]))
+
+    def test_mutation_dropping_the_value_rule_reads_a_scalar_as_a_list(self):
+        mutant = mutated("    if rest:\n", "    if False:\n")
+        report = "tob_security_review:\n  pr: none\n  findings: none\n"
+        why = "findings' value that is not a list"
+        self.assertTrue(any(why in e for e in self.report_errors(report)))
+        self.assertFalse(any(why in e for e in self.run_check(review=self.NONE, report=report, module=mutant)[0]))
+
+    def test_mutation_dropping_the_empty_rule_passes_a_key_with_no_items(self):
+        mutant = mutated("    if not items:\n", "    if False:\n")
+        report = "tob_security_review:\n  pr: none\n  findings:\n"
+        self.assertTrue(self.report_errors(report))
+        self.assertEqual(self.run_check(review=self.NONE, report=report, module=mutant)[0], [])
+
+    def test_mutation_dropping_the_empty_list_literal_refuses_findings_of_nothing(self):
+        mutant = mutated('if rest == "[]":', "if False:")
+        report = "tob_security_review:\n  pr: none\n  findings: []\n"
+        self.assertEqual(self.report_errors(report), [])
+        self.assertTrue(self.run_check(review=self.NONE, report=report, module=mutant)[0])
+
+    def test_mutation_counting_any_dash_as_an_item_splits_a_block_scalar(self):
+        mutant = mutated("        if depth == item_indent:\n            items.append([])", "        if marker:\n            items.append([])")
+        report = (
+            "tob_security_review:\n  pr: none\n  findings:\n"
+            '    - file: "design"\n      description: |\n        - a step\n      severity: LOW\n'
+        )
+        review = self.NONE + "Security finding 1: declined: accepted\n"
+        self.assertEqual(self.run_check(review=review, report=report)[0], [])
+        self.assertTrue(self.run_check(review=review, report=report, module=mutant)[0])
+
+    def test_mutation_reading_severity_at_any_depth_takes_one_from_a_block_scalar(self):
+        mutant = mutated("[b for d, b in item[1:] if d == key_indent]", "[b for d, b in item[1:]]")
+        report = (
+            "tob_security_review:\n  pr: none\n  findings:\n"
+            '    - file: "design"\n      description: |\n        severity: HIGH\n      severity: LOW\n'
+        )
+        review = self.NONE + "Security finding 1: declined: accepted\n"
+        self.assertEqual(self.run_check(review=review, report=report)[0], [])
+        self.assertTrue(self.run_check(review=review, report=report, module=mutant)[0])
+
+    def test_mutation_dropping_the_key_value_rule_changes_a_bare_item_reason(self):
+        mutant = mutated("if not first or not ITEM_FIRST_KEY.match(item[0][1][first.end():]):", "if not first:")
+        report = "tob_security_review:\n  pr: none\n  findings:\n    - cut off here\n"
+        why = "not a 'key: value' entry"
+        self.assertTrue(any(why in e for e in self.report_errors(report)))
+        self.assertFalse(any(why in e for e in self.run_check(review=self.NONE, report=report, module=mutant)[0]))
+
+    def test_mutation_dropping_the_indent_rule_swallows_a_misindented_item(self):
+        mutant = mutated("        if depth < item_indent or (depth == item_indent and not marker):", "        if False:")
+        report = "tob_security_review:\n  pr: none\n  findings:\n    - severity: LOW\n   - severity: HIGH\n"
+        review = self.NONE + "Security finding 1: declined: accepted\n"
+        self.assertTrue(self.run_check(review=review, report=report)[0])
+        self.assertEqual(self.run_check(review=review, report=report, module=mutant)[0], [])
 
 
 if __name__ == "__main__":

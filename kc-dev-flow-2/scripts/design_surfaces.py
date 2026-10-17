@@ -31,8 +31,9 @@ FM_STATUS = re.compile(r"""^status:[ \t]*["']?([^\s"']+)["']?[ \t]*$""", re.M)
 REVIEW_LINE = re.compile(r"^Security review:[ \t]*(\S.*)$", re.M)
 FOCUS_LINE = re.compile(r"^Security focus file:[ \t]*(\S.*)$", re.M)
 FINDING_LINE = re.compile(r"^Security finding (\d+):[ \t]*(\S.*)$", re.M)
-REPORT_FINDING = re.compile(r"""^\s+severity:[ \t]*["']?(CRITICAL|HIGH|MEDIUM|LOW)\b""", re.M)
-REPORT_FINDINGS_KEY = re.compile(r"^\s+findings:", re.M)
+SEVERITY_SCALE = ("CRITICAL", "HIGH", "MEDIUM", "LOW")
+REPORT_FINDINGS_KEY = re.compile(r"^([ \t]+)findings:(.*)$", re.M)
+ITEM_FIRST_KEY = re.compile(r"[A-Za-z_][\w-]*:")
 TABLE = re.compile(r"^[ \t]*\|.*\|[ \t]*\n[ \t]*\|[ \t:|-]*-[ \t:|-]*\|?[ \t]*$", re.M)
 
 
@@ -141,6 +142,55 @@ def check_amendments(name, lines, declared, errors):
             errors.append(f"{name}: '{title}' supersedes {', '.join(sorted(named))} but no criterion says 'Amended by Captain, amendment {number}' and its 'Supersedes:' line does not say 'no replacement'")
 
 
+def report_severities(text):
+    key = REPORT_FINDINGS_KEY.search(text)
+    indent = len(key.group(1))
+    rest = re.sub(r"(?:^|[ \t]+)#.*$", "", key.group(2)).strip()
+    if rest == "[]":
+        return [], []
+    if rest:
+        return None, ["has a 'findings' value that is not a list"]
+    items = []
+    item_indent = None
+    for line in text[key.end():].split("\n"):
+        body = line.lstrip(" ")
+        if not body or body.startswith("#"):
+            continue
+        depth = len(line) - len(body)
+        marker = body == "-" or body.startswith("- ")
+        if depth < indent or (depth == indent and not marker):
+            break
+        if item_indent is None:
+            if not marker:
+                return None, ["has a 'findings' value that is not a list"]
+            item_indent = depth
+        if depth < item_indent or (depth == item_indent and not marker):
+            return None, ["has a 'findings' list whose items do not share one indent"]
+        if depth == item_indent:
+            items.append([])
+        items[-1].append((depth, body))
+    if not items:
+        return None, ["has a 'findings' key with no items (an empty list is written 'findings: []')"]
+    severities, problems = [], []
+    for number, item in enumerate(items, 1):
+        first = re.match(r"- +", item[0][1])
+        if not first or not ITEM_FIRST_KEY.match(item[0][1][first.end():]):
+            problems.append(f"has findings item {number} that is not a 'key: value' entry")
+            continue
+        key_indent = item[0][0] + first.end()
+        lines = [item[0][1][first.end():]] + [b for d, b in item[1:] if d == key_indent]
+        found = next((b for b in lines if b.startswith("severity:")), None)
+        if found is None:
+            problems.append(f"has findings item {number} with no 'severity:' line")
+            continue
+        value = re.sub(r"[ \t]+#.*$", "", found[len("severity:"):]).strip().strip("\"'")
+        if value not in SEVERITY_SCALE:
+            problems.append(f"has findings item {number} with severity '{value}', not one of {', '.join(SEVERITY_SCALE)}")
+            continue
+        severities.append(value)
+    return severities, problems
+
+
 def check_security(path, body, declared, errors):
     name = path.name
     review = REVIEW_LINE.search(body)
@@ -161,7 +211,10 @@ def check_security(path, body, declared, errors):
         return None
     if not FOCUS_LINE.search(body):
         errors.append(f"{name}: a prod task needs a 'Security focus file:' line (a path, or none)")
-    severities = REPORT_FINDING.findall(text)
+    severities, problems = report_severities(text)
+    if problems:
+        errors.extend(f"{name}: '{value}' {problem}" for problem in problems)
+        return None
     found = len(severities)
     lines = {int(n): v.strip() for n, v in FINDING_LINE.findall(body)}
     tally = {"ac": 0, "declined": 0, "decision": 0}
