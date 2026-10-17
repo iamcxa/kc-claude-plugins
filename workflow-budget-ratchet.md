@@ -216,6 +216,10 @@ Today's figures are origin/main `ca368cee`. Commands run from the repository roo
 **AC-8**: The Captain's ruling lands as a record. Evidence: `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --since origin/main --require <reserved number>` exits 0 for an ADR titled for the ruling in Mechanism with the Captain's quoted words in its Words line; the design names it without a number. Falsifier: `--require` exits 1 without the file.
 **AC-9**: After release, whether the pointers and the ratchet change what FO does is measured, not assumed. Evidence at ideation (baselines, 2026-10-17): `git -C <state checkout> grep -c '^violation' -- '*observer.md'` totals 32 violation lines over the 15 observer reports archived since 2026-10-13; the rule "a checklist or scope-notes line that names a package script writes ..." is the most repeated, in 5 of the 10 reports dated 2026-10-13 to 2026-10-15 and in 0 of the 5 dated 2026-10-16 to 2026-10-17 (the `--names` step shipped 2026-10-16, not a controlled comparison); `laws.md` L2 Bit records 15 missing parts in 10 of 48 dispatch records. After the release is synced, `python3 <package>/scripts/laws_check.py` L2 over the next 20 records added, and the observer's `violation` lines on the next 5 archived tasks, are compared with those baselines at the `learn` step and reported to the Captain. Limit: this is a measurement, not a ship gate; no run here shows FO runs the new step, and the claim shipped is only what AC-1 to AC-8 prove.
 
+## Number guards
+
+ADR: 0020
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for a word budget for kc-dev-flow-2/references/sd/workflow.md that only goes down (enforced in kc-dev-flow-2/scripts/lint-skills.py), with a raise allowed only on a recorded Captain ruling and evidence that the added text is not loaded at once; and which rules a script already checks shrink to one pointer sentence, each script's failure message read first, with the words saved measured; plus the laws.md Rule lines that restate README rules
