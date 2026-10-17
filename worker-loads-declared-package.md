@@ -217,3 +217,30 @@ Past rulings read: ADR 0014 (kept `package_version.py` a pure file read) and arc
 ### Summary
 
 Workers load the installed package whatever the README or the dispatch line says, and the worker side already follows its rule; the relay hold came from a package script ahead of README prose. Recommended: make the pre-send `--names` check print the missing Candidate line, with no README words and no new hold; the alternative is a hold whenever the README is behind, which stops three of four adopters now. D1 asks the Captain to choose.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main implementing D1 as recommended (route 3 narrowed)
+  PR https://github.com/iamcxa/kc-claude-plugins/pull/661, Draft, head 4989c97b, based on origin/main 6ea3a472; touches `dispatch_records.py`, `test_dispatch_records.py`, `skills/maintain-flow/SKILL.md` only; no README word, no force push.
+- DONE: AC-1 (--names names a missing Candidate line)
+  Scratch run 2026-10-17: no line, exit 1 and one line naming the file; with `Candidate: d2c96f51...` exit 0, no output. Mutation removing the part from `--names` fails the new test.
+- DONE: AC-2 (only validation-N records)
+  New test runs implementation-1, ideation-1, validation-x and validation-1 outside `dispatch/`, all exit 0. Mutations dropping the name test or the folder test, or applying to every record, each fail.
+- DONE: AC-3 (one Candidate definition for both scripts)
+  `dispatch_records.py` imports `delivery_gate.CANDIDATE`; the test feeds 40-hex, 39-hex, uppercase, trailing text, trailing space and below-heading lines to both and compares verdicts. A second regex failed the trailing-text case; whole-file scope failed the below-heading case.
+- DONE: AC-4 (--newest and pr_watch tasks unchanged)
+  `NewestTests` record without the line gives (0, ""); `pr_watch.py tasks` on a scratch state with such a record printed nothing, exit 0. Moving the part into `check_names` fails that test and an existing `--newest` test.
+- DONE: AC-5 (no README, lint, package_version or delivery_gate change)
+  `git diff origin/main` of those four files is 0 lines; `lint-skills.py` exit 0 (workflow.md 5447 of 5447 words).
+- DONE: AC-6 (two scripts agree across the real sequence)
+  Scratch run: `--names` exit 1 and gate exit 2 without the line; with it `--names` 0, gate 0 "next: ask for merge with this text."; other head gate exit 1 "differs from dispatched candidate".
+- DONE: AC-7 (package_version.py untouched)
+  File unchanged vs origin/main; `test_package_version.py` 6 tests OK.
+- DONE: AC-8 (one bounded maintain-flow sentence)
+  Diff is one sentence ending "no check enforces this"; no always/never/every; `lint-skills.py` exit 0.
+- DONE: No FO-read word added beyond the design; lint-skills.py exits 0; roborev evidence= line; push without force; CI green on the PR head; CI cost measured or stated as not measured
+  FO-read words: 23-word line only when a record lacks the line. roborev: `clean on 4989c97b6; evidence=roborev:798`. comment_ratio.py: 0 comment lines of 50 code lines, exit 0. CI: all 4 checks pass on 4989c97b; no workflow added; job durations 67s, 53s, 5s (billed minutes not measured).
+
+### Summary
+
+Implemented D1(a): `--names` now prints one sentence for a validation-N record under `dispatch/` without a Candidate line, using `delivery_gate.CANDIDATE`; `--newest` and every other file are untouched. The checklist said "one test"; I wrote one parity/behaviour test plus one `--newest` test because AC-4 needs a git state the first fixture lacks. Not verified: whether an FO on the previous README acts on a printed non-name line.
