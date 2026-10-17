@@ -228,11 +228,20 @@ def report_shape(text, root="tob_security_review"):
     return problems
 
 
+def repeated(found, label, name, errors):
+    for n, count in sorted(Counter(int(n) for n, _ in found).items()):
+        if count > 1:
+            errors.append(f"{name}: '{label} finding {n}:' appears more than once; write one disposition per finding")
+
+
 def check_security(path, body, declared, errors):
     name = path.name
     review = REVIEW_LINE.search(body)
     if not review:
         errors.append(f"{name}: a prod task needs a 'Security review:' line naming the saved report")
+        return None
+    if len(REVIEW_LINE.findall(body)) > 1:
+        errors.append(f"{name}: {len(REVIEW_LINE.findall(body))} 'Security review:' lines, expected exactly 1; a rerun replaces the old line with the last report")
         return None
     value = review.group(1).strip()
     if value.lower().startswith("not run"):
@@ -260,6 +269,7 @@ def check_security(path, body, declared, errors):
         return None
     found = len(severities)
     lines = {int(n): v.strip() for n, v in FINDING_LINE.findall(body)}
+    repeated(FINDING_LINE.findall(body), "Security", name, errors)
     tally = {"ac": 0, "declined": 0, "decision": 0}
     for number in range(1, found + 1):
         entry = lines.get(number, "")
@@ -281,6 +291,9 @@ def check_design_review(path, body, declared, previews, errors):
     review = DESIGN_REVIEW_LINE.search(body)
     if not review:
         errors.append(f"{name}: a ui task needs a 'Design review:' line naming the saved report")
+        return None
+    if len(DESIGN_REVIEW_LINE.findall(body)) > 1:
+        errors.append(f"{name}: {len(DESIGN_REVIEW_LINE.findall(body))} 'Design review:' lines, expected exactly 1; a rerun replaces the old line with the last report")
         return None
     value = review.group(1).strip()
     if value.lower().startswith("not run"):
@@ -313,9 +326,7 @@ def check_design_review(path, body, declared, previews, errors):
         return None
     found = len(severities)
     lines = {int(n): v.strip() for n, v in DESIGN_FINDING_LINE.findall(body)}
-    for n, count in sorted(Counter(int(n) for n, _ in DESIGN_FINDING_LINE.findall(body)).items()):
-        if count > 1:
-            errors.append(f"{name}: 'Design finding {n}:' appears more than once; write one disposition per finding")
+    repeated(DESIGN_FINDING_LINE.findall(body), "Design", name, errors)
     tally = {"ac": 0, "fixed": 0, "declined": 0, "decision": 0}
     for number in range(1, found + 1):
         entry = lines.get(number, "")
@@ -342,6 +353,8 @@ def check_task(path, seed=False, notes=None):
     fo, body = split_fo(text)
     match = SURFACES.search(fo)
     surfaces = set()
+    if len(SURFACES.findall(fo)) > 1:
+        errors.append(f"{path.name}: '## FO alignment' has {len(SURFACES.findall(fo))} 'Surfaces:' lines, expected exactly 1")
     if not match or not match.group(1).strip():
         errors.append(f"{path.name}: '## FO alignment' needs a non-empty 'Surfaces:' line")
     else:

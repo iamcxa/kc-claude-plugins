@@ -515,7 +515,7 @@ Verified by: a test.
 
 
 class SecurityReviewTests(unittest.TestCase):
-    def run_check(self, review=REVIEW_LINES, report=REPORT, module=ds, profile="prod", status="ideation", outside=False, folder_form=False):
+    def run_check(self, review=REVIEW_LINES, report=REPORT, module=ds, profile="prod", status="ideation", outside=False, folder_form=False, extra=None):
         text = PROD.format(review=review).replace("profile: prod", f"profile: {profile}").replace("status: ideation", f"status: {status}")
         with tempfile.TemporaryDirectory() as d:
             folder = Path(d, "task", "security")
@@ -525,6 +525,8 @@ class SecurityReviewTests(unittest.TestCase):
                 folder.joinpath("ideation-1.yaml").write_text(report)
                 if outside:
                     Path(d, "x.yaml").write_text(report)
+            for later, body in (extra or {}).items():
+                folder.joinpath(later).write_text(body)
             path = task_file
             path.write_text(text)
             notes = []
@@ -613,6 +615,32 @@ class SecurityReviewTests(unittest.TestCase):
         partial = REPORT + '    - file: "design"\n      title: "fourth, no severity"\n'
         errors, notes = self.run_check(report=partial)
         self.assertTrue(errors, f"a 4-item report with 3 severities passed: {notes}")
+
+    def test_two_review_lines_are_refused_so_a_rerun_cannot_leave_an_older_report_binding(self):
+        later = {"ideation-2.yaml": NEWER_SECURITY_REPORT}
+        self.refused("2 'Security review:' lines", review=REVIEW_LINES + "Security review: security/ideation-2.yaml\n", extra=later)
+        self.refused("2 'Security review:' lines", review=REVIEW_LINES + "Security review: security/ideation-1.yaml\n")
+        self.refused("2 'Security review:' lines", review="Security review: security/ideation-2.yaml\n" + REVIEW_LINES, extra=later)
+
+    def test_two_dispositions_for_one_security_finding_number_are_refused(self):
+        for extra in ("Security finding 2: Needs decision: x\n", "Security finding 1: AC-2\n", "Security finding 02: AC-2\n"):
+            with self.subTest(extra=extra):
+                self.refused("'Security finding", review=REVIEW_LINES + extra)
+                errors, _ = self.run_check(review=REVIEW_LINES + extra)
+                self.assertTrue(any("appears more than once" in e for e in errors), errors)
+
+    def test_mutation_dropping_the_security_review_count_lets_two_lines_pass(self):
+        mutant = mutated("""if len(REVIEW_LINE.findall(body)) > 1:""", "if False:")
+        review = REVIEW_LINES + "Security review: security/ideation-2.yaml\n"
+        later = {"ideation-2.yaml": NEWER_SECURITY_REPORT}
+        self.assertTrue(self.run_check(review=review, extra=later)[0])
+        self.assertEqual(self.run_check(review=review, extra=later, module=mutant)[0], [])
+
+    def test_mutation_dropping_the_security_duplicate_check_lets_two_dispositions_pass(self):
+        mutant = mutated("repeated(FINDING_LINE.findall(body), \"Security\", name, errors)", "None")
+        review = REVIEW_LINES + "Security finding 2: Needs decision: x\n"
+        self.assertTrue(self.run_check(review=review)[0])
+        self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
 
     def test_mutation_dropping_the_security_call_lets_a_missing_review_pass(self):
         mutant = mutated("summary = check_security(path, plain, declared, errors)", "summary = None")
@@ -905,6 +933,25 @@ Design finding 2: declined: the inset matches the shell
 Design finding 3: AC-2
 """
 
+NEWER_DESIGN_REPORT = """design_review:
+  preview: preview.html
+  findings:
+    - severity: MAJOR
+      dimension: hierarchy
+      where: after-desktop.png
+      seen: the redrawn count is still stated twice
+      fix: keep one
+"""
+
+NEWER_SECURITY_REPORT = """tob_security_review:
+  pr: none
+  findings:
+    - file: "design"
+      severity: HIGH
+      title: "new"
+"""
+
+
 UI = """---
 title: a ui task
 profile: pilot
@@ -934,7 +981,7 @@ Verified by: a test.
 
 
 class DesignReviewTests(unittest.TestCase):
-    def run_check(self, review=DESIGN_LINES, report=DESIGN_REPORT, module=ds, profile="pilot", status="ideation", surfaces="ui", outside=False, folder_form=False, previews="Preview: preview.html\n"):
+    def run_check(self, review=DESIGN_LINES, report=DESIGN_REPORT, module=ds, profile="pilot", status="ideation", surfaces="ui", outside=False, folder_form=False, previews="Preview: preview.html\n", extra=None):
         text = UI.format(review=review).replace("Preview: preview.html\n", previews).replace("profile: pilot", f"profile: {profile}").replace("status: ideation", f"status: {status}")
         visible = "a person sees a panel." if "ui" in surfaces else "none"
         text = text.replace("Surfaces: ui\nVisible change: a person sees a panel.", f"Surfaces: {surfaces}\nVisible change: {visible}")
@@ -948,6 +995,8 @@ class DesignReviewTests(unittest.TestCase):
                 folder.joinpath("ideation-1.yaml").write_text(report)
                 if outside:
                     Path(d, "x.yaml").write_text(report)
+            for later, body in (extra or {}).items():
+                folder.joinpath(later).write_text(body)
             task_file.write_text(text)
             notes = []
             return module.check_task(task_file, notes=notes), notes
@@ -1037,6 +1086,36 @@ class DesignReviewTests(unittest.TestCase):
         errors, _ = self.run_check(review="Design review: design/ideation-1.yaml\n", report=report)
         self.assertEqual(errors, [])
 
+    def test_two_review_lines_are_refused_even_when_the_first_names_a_valid_report(self):
+        later = {"ideation-2.yaml": NEWER_DESIGN_REPORT}
+        self.refused("2 'Design review:' lines", review=DESIGN_LINES + "Design review: design/ideation-2.yaml\n", extra=later)
+        self.refused("2 'Design review:' lines", review=DESIGN_LINES + "Design review: design/ideation-1.yaml\n")
+        self.refused("2 'Design review:' lines", review="Design review: design/ideation-2.yaml\n" + DESIGN_LINES, extra=later)
+
+    def test_a_second_surfaces_line_cannot_switch_the_design_review_off(self):
+        two = "Surfaces: none\nVisible change: none\nSurfaces: ui\n"
+        text = UI.format(review="").replace("Surfaces: ui\nVisible change: a person sees a panel.\n", two)
+        with tempfile.TemporaryDirectory() as d:
+            path = write_task(d, text)
+            errors = ds.check_task(path)
+            self.assertEqual(len([e for e in errors if "2 'Surfaces:' lines" in e]), 1, errors)
+            self.assertEqual(ds.main(["check", "--seed", str(path)]), 1)
+
+    def test_mutation_dropping_the_design_review_count_lets_two_lines_pass(self):
+        mutant = mutated("""if len(DESIGN_REVIEW_LINE.findall(body)) > 1:""", "if False:")
+        review = DESIGN_LINES + "Design review: design/ideation-2.yaml\n"
+        later = {"ideation-2.yaml": NEWER_DESIGN_REPORT}
+        self.assertTrue(self.run_check(review=review, extra=later)[0])
+        self.assertEqual(self.run_check(review=review, extra=later, module=mutant)[0], [])
+
+    def test_mutation_dropping_the_surfaces_count_lets_a_second_line_hide_ui(self):
+        mutant = mutated("""if len(SURFACES.findall(fo)) > 1:""", "if False:")
+        text = UI.format(review="").replace("Surfaces: ui\nVisible change: a person sees a panel.\n", "Surfaces: none\nVisible change: none\nSurfaces: ui\n")
+        with tempfile.TemporaryDirectory() as d:
+            path = write_task(d, text)
+            self.assertTrue(ds.check_task(path))
+            self.assertEqual(mutant.check_task(path), [])
+
     def test_mutation_dropping_the_design_call_lets_a_missing_review_pass(self):
         mutant = mutated("summary = check_design_review(path, plain, declared, shown, errors)", "summary = None")
         review = DESIGN_LINES.replace("Design review: design/ideation-1.yaml\n", "")
@@ -1072,7 +1151,7 @@ class DesignReviewTests(unittest.TestCase):
         self.assertTrue(any("report finding 1 has no" in e for e in self.run_check(module=mutant)[0]))
 
     def test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass(self):
-        mutant = mutated("        if count > 1:", "        if False:")
+        mutant = mutated("repeated(DESIGN_FINDING_LINE.findall(body), \"Design\", name, errors)", "None")
         review = DESIGN_LINES + "Design finding 2: Needs decision: x\n"
         self.assertTrue(self.run_check(review=review)[0])
         self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
