@@ -280,6 +280,10 @@ Verified by: `git grep -n -i 'sees pictures' kc-dev-flow-2/skills/ideation/desig
 **AC-8** The ruling lands as an ADR whose Words line quotes the Captain's answer at the ideation gate and the question he answered.
 Verified by: `python3 <package>/scripts/adr_lint.py docs/adr --since <base> --require <reserved number>` exits 0 at the candidate. Falsifier: exit 1 for a missing record or Words line. Not yet verified: the ADR is written at implementation, under the short title `ui-ideation-design-review-binds-design`, with no number here.
 
+## Number guards
+
+ADR: 0022
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for a design review in a ui task's ideation over its previews, reusing the prod security seam (a specialist review whose findings become requirements and criteria, with kc-dev-flow-2/scripts/design_surfaces.py check refusing an unreviewed ui ideation); the reviewer choice (design:design-critique, e2e-pipeline ui-verify, or a packaged brief) with its licence and availability on adopters; and the replay proof on archived subspace-web holder-panel cycle-1 and cycle-3 previews and the chevron cycle-1 preview (read only)
