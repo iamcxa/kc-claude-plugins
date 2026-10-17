@@ -35,3 +35,5 @@ the runner's registry differ.
 - **Bit.** Measured 2026-10-16 on this repository's state branch: 15 missing parts in 10 of 48 records
   added after commit `49da5ddb` at its commit `e73634e6` (4 bare script names, 7 without the completion recipient
   `main`, 4 without an absolute `Package root:`).
+- **Bounds.** The folder run is given the README supplied at run time, so a first implementation record is also
+  judged against that README's `extensions:` list; a different README can judge the same range differently.
