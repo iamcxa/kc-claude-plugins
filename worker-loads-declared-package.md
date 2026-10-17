@@ -53,6 +53,17 @@ gates:
                 id: briefing:worker-loads-declared-package:validation:attempt-1:revision-1
                 digest: sha256:caadb8a2e143e914fd41506823c250eec52c4eb736b5bb1cca1dadb1955538fc
                 room-ref: ./worker-loads-declared-package/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-loads-declared-package:validation:1
+                briefing: briefing:worker-loads-declared-package:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T14:31:54.437761Z"
+                decision: approve
+                reason: 'Captain approved delivery of #661 head 7d169549 in chat (「批准，也預先授權你合併」), accepting FO''s recommendation to decline the Deferred risks and Polish into worker-loads-declared-package-followups; he also authorized FO to merge #661'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-17T06:11:43Z
 worktree: .worktrees/spacedock-ensign-worker-loads-declared-package
 pr: iamcxa/kc-claude-plugins#661
