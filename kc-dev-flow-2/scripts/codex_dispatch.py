@@ -158,7 +158,7 @@ def main(argv=None):
             if "--advance" in forwarded and (not args.target or not reusable(binding, previous, args.fresh)):
                 raise ValueError("advance requires matching model/effort and target before build; build fresh instead")
             done = subprocess.run([args.spacedock, "dispatch", "build", *forwarded],
-                                  input=sys.stdin.read(), text=True, capture_output=True)
+                                  text=True, capture_output=True)
             sys.stderr.write(done.stderr)
             if done.returncode:
                 return done.returncode

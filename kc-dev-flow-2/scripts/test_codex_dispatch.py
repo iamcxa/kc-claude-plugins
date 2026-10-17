@@ -100,6 +100,7 @@ class CodexDispatchTest(unittest.TestCase):
             self.assertEqual(json.loads(out)["stock_helper"], self.helper)
             self.assertEqual(json.loads(out)["spawn_args"]["message"], self.helper["prompt"])
             self.assertIn("codex", stock.call_args.args[0])
+            self.assertNotIn("input", stock.call_args.kwargs)
         for host in ("claude", "pi", "codex"):
             with patch("codex_dispatch.subprocess.run", return_value=cd.subprocess.CompletedProcess([], 9)) as stock:
                 self.assertEqual(self.invoke(["build", "--", "--host", host])[0], 9)
