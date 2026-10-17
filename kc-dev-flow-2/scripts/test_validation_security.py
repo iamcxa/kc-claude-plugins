@@ -82,10 +82,12 @@ CASES = {
     "declined HIGH": dict(lines=LINES.replace("1: Needs decision: cap sessions per room now, or file a task", "1: declined: accepted")),
     "open Material": dict(lines=LINES.replace("1: Needs decision: cap sessions per room now, or file a task", "1: Material: cap sessions per room")),
     "extra finding line": dict(lines=LINES + "Security finding (validation 1) 4: declined: x\n"),
+    "second severity line inside one finding": dict(report=REPORT.replace('      severity: HIGH\n', '      severity: LOW\n      severity: HIGH\n'), lines=LINES.replace("1: Needs decision: cap sessions per room now, or file a task", "1: declined: accepted")),
     "duplicate finding line": dict(lines="Security finding (validation 1) 1: Material: cap sessions\n" + LINES),
 }
 
 REASONS = {
+    "second severity line inside one finding": "'severity:' lines but",
     "no frontmatter": "cannot read a 'profile:'",
     "profile line with a trailing comment": "cannot read a 'profile:'",
     "frontmatter after a byte-order mark": "cannot read a 'profile:'",
@@ -109,6 +111,7 @@ REASONS = {
 MUTATIONS = {
     "the prod-only rule": ('if value in ("poc", "pilot"):', "if False:", "pilot task skipped"),
     "the unreadable-profile rule": ('if value != "prod":', "if False:", ["no frontmatter", "profile line with a trailing comment", "frontmatter after a byte-order mark", "unknown profile"]),
+    "the severity-count rule": ("if plain != len(severities):", "if False:", "second severity line inside one finding"),
     "the duplicate-line rule": ("if count > 1:", "if False:", "duplicate finding line"),
     "the missing-review rule": ("if not reviews:", "if False:", "no review line"),
     "the not-run rule": ('if last.lower().startswith("not run"):', "if False:", "not run"),

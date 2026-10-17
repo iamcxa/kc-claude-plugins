@@ -14,7 +14,7 @@ from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from design_surfaces import FM_PROFILE, report_severities, report_shape
+from design_surfaces import FM_PROFILE, SEVERITY_LINE, report_severities, report_shape
 
 REVIEW = re.compile(r"^Security review \(validation\):[ \t]*(\S.*)$", re.M)
 REVIEW_AT = re.compile(r"^(security/validation-(\d+)\.yaml) at (\S+)$")
@@ -57,6 +57,9 @@ def check_task(task, candidates):
     severities, bad = report_severities(body)
     if bad:
         return [f"{name}: '{path}' {p}" for p in bad], None
+    plain = len(SEVERITY_LINE.findall(body))
+    if plain != len(severities):
+        return [f"{name}: '{path}' has {plain} 'severity:' lines but {len(severities)} in its findings items; every severity line must be a key of one findings item"], None
     numbered = [int(n) for r, n, _ in FINDING.findall(text) if r == number]
     lines = {int(n): v.strip() for r, n, v in FINDING.findall(text) if r == number}
     errors, tally = [], {"declined": 0, "decision": 0}
