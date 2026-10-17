@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite'
-import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs'
+import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync, lstatSync } from 'node:fs'
 import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { Readable } from 'node:stream'
@@ -33,10 +33,21 @@ export class NodeHost implements Host {
     throw new Error('private browser origin requires HTTPS (loopback development excepted)')
   }
   if (this.private) {
+   if (typeof process.geteuid !== 'function') throw new Error('private storage requires POSIX effective-user ownership support')
+   let root = lstatSync(this.root, { throwIfNoEntry: false })
+   if (!root) {
+    mkdirSync(this.root, { recursive: true, mode: 0o700 })
+    root = lstatSync(this.root)
+   }
+   if (!root.isDirectory() || root.isSymbolicLink())
+    throw new Error('private storage root must be a real directory, not a symlink; choose an owned application directory')
+   if (root.uid !== process.geteuid())
+    throw new Error('private storage root must be owned by the service user; stop writers and choose a directory owned by that user')
+   if (root.mode & 0o077)
+    throw new Error('private storage root must have no group/other access; stop writers, verify the intended directory and restrict it to 0700 before retrying')
    const marker = join(this.root, '.journey-private-v1')
    if (!existsSync(marker)) {
-    if (existsSync(this.root) && readdirSync(this.root).length) throw new Error('private storage must start empty; retained-data import is not supported')
-    mkdirSync(this.root, { recursive: true })
+    if (readdirSync(this.root).length) throw new Error('private storage must start empty; retained-data import is not supported')
     writeFileSync(marker, 'journey-private-v1\n', { flag: 'wx', mode: 0o600 })
    }
   }

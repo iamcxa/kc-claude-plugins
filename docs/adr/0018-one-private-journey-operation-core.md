@@ -100,3 +100,16 @@ separate acceptance steps.
 This record was renumbered from the task's former reservations 0015 and then
 0016 because main assigned each number to another decision before merge. Earlier
 receipts retain their original historical number.
+
+### Private Node root policy amendment
+
+**Words:** 「納入最小權限修正（建議）」 — Kent, 2026-10-17
+
+**Options considered:** Enforce owner-only private roots with refusal and manual
+remediation, or leave filesystem protection entirely to operator setup.
+
+**Recommended:** Create private Node roots as 0700 and refuse insecure,
+foreign-owned or leaf-symlink roots before data writes, without automatic changes
+to existing data. This adds a POSIX startup requirement; the trusted-parent,
+ownership and protection limits are in [Private host](../../kc-journey-map/docs/private-host.md#node-local-and-remote).
+Cloudflare and canvas concurrency remain unchanged.

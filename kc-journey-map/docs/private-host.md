@@ -126,6 +126,27 @@ Private Node stores metadata in `metadata.sqlite`, per-room databases in
 an implicit import from a nonempty directory. Do not copy retained databases
 into it or edit tldraw's tables.
 
+Private Node requires POSIX effective-user ownership support. A missing data root
+is created with mode 0700. Before writing its marker or opening databases, startup
+requires a real directory owned by the service's effective user, with no group or
+other permission bits. Existing insecure roots, files and leaf symlinks are refused;
+the server never changes their permissions or ownership. An owned 0700 root can
+reopen normally, including through the offline operations helper.
+
+For an existing insecure root, stop all writers, verify the intended application
+directory and its owner, then deliberately restrict that root to 0700 before
+retrying. For a foreign-owned path or symlink, choose a real directory owned by the
+service user instead. Do not recursively chmod/chown data or change a shared parent.
+This is a new startup requirement for private Node; legacy mode is unchanged.
+
+Use an operator-controlled trusted parent and application-owned contents. This
+leaf mode/owner check does not inspect extended ACLs or ancestor symlinks, prevent
+concurrent path replacement, or isolate same-user/privileged processes. Child files
+retain their existing format and mode behavior behind the private root; copied-out
+files and external credentials/backups still need operator protection. Non-POSIX
+private mode is unsupported. The focused disposable check is
+`node --import tsx scripts/private-storage-permission-check.mjs`.
+
 Private attachment replacement uploads a fresh blob, atomically exchanges its
 mapping, then deletes the acknowledged predecessor. Concurrent replacements keep
 the last committed mapping; document and canvas concurrency rules are unchanged.
