@@ -234,7 +234,8 @@ def check_security(path, body, declared, errors):
     if value.lower().startswith("not run"):
         errors.append(f"{name}: security review not run ({value}); a missing reviewer holds the stage")
         return None
-    report = path.parent / path.stem / value
+    folder = path.parent if path.name == "index.md" else path.parent / path.stem
+    report = folder / value
     if Path(value).is_absolute() or ".." in Path(value).parts or not report.is_file():
         errors.append(f"{name}: 'Security review:' names '{value}', not a report file inside the task folder")
         return None

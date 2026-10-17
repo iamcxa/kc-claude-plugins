@@ -510,16 +510,17 @@ Verified by: a test.
 
 
 class SecurityReviewTests(unittest.TestCase):
-    def run_check(self, review=REVIEW_LINES, report=REPORT, module=ds, profile="prod", status="ideation", outside=False):
+    def run_check(self, review=REVIEW_LINES, report=REPORT, module=ds, profile="prod", status="ideation", outside=False, folder_form=False):
         text = PROD.format(review=review).replace("profile: prod", f"profile: {profile}").replace("status: ideation", f"status: {status}")
         with tempfile.TemporaryDirectory() as d:
             folder = Path(d, "task", "security")
             folder.mkdir(parents=True)
+            task_file = Path(d, "task", "index.md") if folder_form else Path(d, "task.md")
             if report is not None:
                 folder.joinpath("ideation-1.yaml").write_text(report)
                 if outside:
                     Path(d, "x.yaml").write_text(report)
-            path = Path(d, "task.md")
+            path = task_file
             path.write_text(text)
             notes = []
             return module.check_task(path, notes=notes), notes
@@ -534,6 +535,15 @@ class SecurityReviewTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(notes, ["security review security/ideation-1.yaml: 3 findings, 1 acceptance criteria, 1 declined, 1 decisions"])
         self.assertLessEqual(len(notes[0].split()), 12)
+
+    def test_the_same_report_passes_for_a_flat_task_and_for_a_folder_task(self):
+        flat, flat_notes = self.run_check()
+        folder, folder_notes = self.run_check(folder_form=True)
+        self.assertEqual((flat, folder), ([], []))
+        self.assertEqual(folder_notes, flat_notes)
+
+    def test_a_folder_task_with_no_report_in_its_own_folder_is_still_refused(self):
+        self.refused("not a report file inside the task folder", report=None, folder_form=True)
 
     def test_each_refusal_names_its_own_reason(self):
         lines = REVIEW_LINES
@@ -610,6 +620,12 @@ class SecurityReviewTests(unittest.TestCase):
         review = REVIEW_LINES.replace("finding 1: AC-2", "finding 1: declined: accepted")
         self.assertTrue(self.run_check(review=review)[0])
         self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+
+    def test_mutation_reading_a_folder_task_as_a_flat_task_refuses_its_own_report(self):
+        mutant = mutated('path.parent if path.name == "index.md" else path.parent / path.stem', "path.parent / path.stem")
+        self.assertEqual(self.run_check(folder_form=True)[0], [])
+        errors = self.run_check(folder_form=True, module=mutant)[0]
+        self.assertEqual(len([e for e in errors if "not a report file inside the task folder" in e]), 1, errors)
 
     def test_mutation_dropping_the_not_run_rule_changes_its_reason(self):
         mutant = mutated('if value.lower().startswith("not run"):', "if False:")
