@@ -189,20 +189,19 @@ Approving the ideation gate also approves the ADR draft's never-eligible list (p
 
 ### Batch overlap
 
-Read 2026-10-17 from origin/main 19fe3b5b and the other five task files as they stand in the state checkout (only `worker-loads-declared-package` had a draft `## Design`, uncommitted). Files this design would change, and the other batch-2 tasks on the same file or check:
+Read 2026-10-17 from origin/main 19fe3b5b and the other five task files as they stand in the state checkout: `workflow-budget-ratchet` (e23f9c5e) and `special-role-triggers` (0e004307) have committed designs, `worker-loads-declared-package` a draft design (uncommitted), the other two their backlog text only. Files this design would change, and the other batch-2 tasks on the same file or check:
 
 | File or check | This design | Other batch-2 task on it |
 | --- | --- | --- |
-| `kc-dev-flow-2/scripts/delivery_gate.py`, `test_delivery_gate.py` | new holds, points, class, record, grant line, `calibrate` | `worker-loads-declared-package`: its draft imports `delivery_gate.CANDIDATE` and the above-first-heading scope (its AC-3 parity test); this design keeps `CANDIDATE` and `dispatched_candidates` unchanged by name and behaviour. `workflow-budget-ratchet`: names `delivery_gate.py` among the scripts whose rule shrinks to a pointer, reading its failure messages, which this design rewrites. `special-role-triggers`: a `Reviewer:` line "the check scripts ... can require"; if that lands in `--text-file` checks it edits `unstated_second_reviewers`'s neighbourhood |
-| `references/sd/workflow.md` § Delivery authority (authority paragraph, head paragraph) | three edits, net at least 11 words fewer | `workflow-budget-ratchet` (shrinks script-checked prose, the same head paragraph); `worker-loads-declared-package` (no README word, per its AC-5) |
-| `references/sd/workflow.md` § FO steps: review findings, the "Authority, a gate approval, a merge …" sentence | "a merge outside a granted class" | `special-role-triggers` (engineering-reviewer on amendments that accept a risk; likely the same section) |
-| `references/sd/workflow.md` frontmatter (documents `merge-grants:`) and adopter README frontmatter | new optional key, absent by default | none known |
-| `kc-dev-flow-2/scripts/lint-skills.py` `WORKFLOW_WORD_BUDGET` | falls to the new count | `workflow-budget-ratchet` owns the ratchet rule on the same constant; any task that edits `workflow.md` conflicts on this one line |
-| `kc-dev-flow-2/extensions/merge-judge/` (new: `EXTENSION.md`, `merge_judge.py`, test) and the README extensions table row | new, only if D1 is (a) | none |
-| `docs/adr/` (one new file) and ADR 0011's Status line | new ADR, one status line | none; `number_guards.py reserve` orders numbers |
+| `kc-dev-flow-2/scripts/delivery_gate.py`, `test_delivery_gate.py` | new holds, points, class, record, grant line, `calibrate` | `worker-loads-declared-package` imports `delivery_gate.CANDIDATE` and the above-first-heading scope (its AC-3 parity test) and edits neither; this design keeps `CANDIDATE` and `dispatched_candidates` unchanged by name and behaviour. `workflow-budget-ratchet` and `special-role-triggers` both state they leave `delivery_gate.py` alone |
+| `references/sd/workflow.md` § Delivery authority (authority and head paragraphs) and § FO steps: review findings ("Authority, a gate approval, a merge …") | three edits, net at least 11 words fewer | `workflow-budget-ratchet` edits other hunks (Stages dispatch-record sentences, the ideation gate bullet, Captain amendments) and leaves Delivery authority alone; `special-role-triggers` adds one sentence in § Stages. Textual merges only |
+| `kc-dev-flow-2/scripts/lint-skills.py` `WORKFLOW_WORD_BUDGET` | falls to the new count | `workflow-budget-ratchet` turns the constant into budget steps (a raise carries the Captain's words); whichever lands later appends its own step. This design lowers, so it needs no ruling |
+| `.github/workflows/kc-dev-flow-2-tests.yml` | one step for the new `extensions/merge-judge` test, only if D1 is (a) | `special-role-triggers` adds one step to the same list; a one-line conflict |
+| `kc-dev-flow-2/extensions/merge-judge/` (new) and the README extensions table row | new, only if D1 is (a) | none |
+| `docs/adr/` (one new file) and ADR 0011's Status line | new ADR, one status line | `workflow-budget-ratchet` and others add ADRs; `number_guards.py reserve` orders numbers; none edits ADR 0011 |
 | reads, not edits: validation reports and gate summaries for points | | `prod-security-validation-gate` (its validation-gate findings become point lines when Deferred or declined); `ui-design-review-in-ideation` (`Surfaces: ui` is a point); no shared file |
 
-Not changed: `_mods/*`, `pr_watch.py`, `dispatch_records.py`, `design_surfaces.py`, `skills/*` (including `skills/learn/SKILL.md`'s "FO does not merge or enable auto-merge", which governs learn's own PRs and stays true), any adopter file. Suggested order: `worker-loads-declared-package` first (it pins `CANDIDATE`), then `workflow-budget-ratchet` (it sets the budget rule this design follows), then this task; `special-role-triggers` rebases on whichever lands second in `workflow.md`.
+Not changed: `_mods/*`, `pr_watch.py` (which `special-role-triggers` edits), `dispatch_records.py` (which `worker-loads-declared-package` edits), `design_surfaces.py`, `skills/*` (including `skills/learn/SKILL.md`'s "FO does not merge or enable auto-merge", which governs learn's own PRs and stays true), any adopter file. Order: last, as `workflow-budget-ratchet`'s D2 also proposes; it needs only `CANDIDATE` to stay as `worker-loads-declared-package` pins it.
 
 ## Acceptance criteria
 
