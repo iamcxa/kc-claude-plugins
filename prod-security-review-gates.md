@@ -312,8 +312,8 @@ Verified by: `python3 <package>/scripts/adr_lint.py docs/adr --since <base> --re
 
 ### Feedback Cycles
 
-- Cycle 1 (FO, 2026-10-16): Codex review on #656 cd3a5747 (review:5555775033) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
-  - P2 (P1) `scripts/design_surfaces.py`: the finding count is the number of `severity:` lines, so a findings list item with no severity (a truncated or malformed report) is counted as zero findings and the prod ideation gate passes with no disposition.
+- Cycle 1 (FO, 2026-10-16): Codex review on #656 cd3a5747 (review:5555775033) left one P1, to fix (a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 `scripts/design_surfaces.py`: the finding count is the number of `severity:` lines, so a findings list item with no severity (a truncated or malformed report) is counted as zero findings and the prod ideation gate passes with no disposition.
 
 ## Stage Report: ideation
 
