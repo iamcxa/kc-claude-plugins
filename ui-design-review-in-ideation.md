@@ -381,3 +381,26 @@ Not covered: that a reviewer finds a defect (the model run, AC-6, is evidence by
 ### Summary
 
 PASSED recommended for a2093bc1: all eight criteria hold on re-run, twelve mutations each fail their own case, and the acceptance script ran clean in a fresh shell. AC-6 held in my re-run (H5 named); across all c3 runs H5 was named 2 of 3, recorded with the first-`Preview:`-line binding as Deferred risks, no Material finding.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Apply the proposed fix: duplicate 'Design finding N:' lines refused (Codex P2 2), exactly one 'preview:' directly under 'design_review:' (P2 3), a report naming any of the task's Preview: lines accepted (validation-1 Deferred risk 2)
+  Commit 92b28aa6 on a2093bc1: a `Counter` over `Design finding` lines (the #659 shape), one `preview:` at the `findings:` indent inside the `design_review:` block only, and `PREVIEW.findall` for the task's lines. roborev flagged the first version (a `preview:` under another top-level mapping passed); the search is now bounded to the root block and has its own case.
+- DONE: Codex P2 1 by option A: check kept, today's-pass test kept, one sentence added to ADR 0022 Consequences; design-review.md within 850 words
+  `test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes` pins the pass; the ADR says the check does not read `limitations` and step 3 turns such a limitation into a finding; `design-review.md` untouched, 848 words.
+- DONE: Each new rule's test fails under its mutation (python3 -B, caches cleared)
+  `python3 -B -m unittest test_design_surfaces`: 113 of 113. Mutations in the suite: drop the duplicate rule (`test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass`), drop the one-preview count, read `preview:` at any indent, search the whole report instead of the root block, keep only the first Preview line; each makes its own case red.
+- DONE: the validation acceptance script still matches
+  Steps 2 to 6 re-run in a fresh `env -i` bash on a detached worktree of 92b28aa6: 113 tests OK, the two refusals and the passing line match, `848`, lint PASS and `5447 of 5447`, adr_lint exit 0.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py exits 0
+  `references/sd/workflow.md: 5447 of 5447 words`; also `comment_ratio.py` 1.6% (4 comment lines, all markdown headings in test strings), `number_guards.py check` PASS, `doc_impact.py` 0 documents.
+- DONE: roborev evidence= line
+  `clean on 92b28aa6; evidence=roborev:806` (verdict_bool 1; jobs 804 and 806 clean, 805 found the root-block gap above, fixed).
+- DONE: push without force; CI green on the new head
+  `a2093bc1..92b28aa6`, no force; `gh pr checks 663` at 92b28aa6: unit tests (python3) pass 1m11s, version parity pass 36s, multi-profile route gate pass 6s, GitGuardian pass.
+- DONE: commit the stage report
+  Committed with `spacedock state commit` (below).
+
+### Summary
+
+Repaired the three Codex P2 and the first-Preview-line risk in one commit (92b28aa6): duplicate finding lines, the direct `preview:` child bound to the `design_review:` block, and any of the task's Preview lines accepted. P2 1 stays as option A with the limit stated in ADR 0022; the remaining bypass is a Deferred risk for FO's gate summary. Not changed: the check still takes only the first Preview line for the existence test in `check_ui`, as on main.
