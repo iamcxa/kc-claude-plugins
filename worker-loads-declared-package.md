@@ -188,6 +188,11 @@ Not verified now, and not claimed: that an FO following the 0.22.1 README acts o
 - (c) Do nothing. Worse under it: each future FO-line requirement costs a late merge-ask hold; the next known consumer is special-role-triggers.
 Past rulings read: ADR 0014 (kept `package_version.py` a pure file read) and archived extension-instruction-reaches-dispatch D1 (checks join the pre-send mode); the first 20 lines of `git -C <state> grep -n 'Override:'` (2026-10-17, cut at 260 characters) show no override on version, dispatch records or merge-ask checks; later hits were not read. Pilot note: option (a) adds no profile obligation; option (b) would add a hold after every release, which the Captain must accept or decline as a new obligation.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-17): Codex review on #661 4989c97b (review:5558106991) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 `kc-dev-flow-2/scripts/laws_check.py` calls `dispatch_records.py --names` and its parser accepts only 'bare package script name' diagnostics, so a pushed validation record without a Candidate: line now makes the L2 law exit 2 ('output this runner does not parse') instead of reporting an L2 violation.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for which kc-dev-flow-2 version a dispatched worker loads when the per-user plugin install is newer than the workflow README declares (relay task owner-link-sign-in-to-claim, read only), and the route: workers read the dispatched Package root, a version check at dispatch or validation, or upgrade notes plus a kc-dev-flow-2/scripts/dispatch_records.py part; and whether 'sync the adopter later' still means anything
