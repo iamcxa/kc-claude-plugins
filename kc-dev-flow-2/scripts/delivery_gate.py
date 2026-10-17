@@ -5,7 +5,7 @@ Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <fil
 
 The dispatched heads are the whole `Candidate: <40-hex head>` lines above the first `## ` heading of the
 highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check reads no validation verdict.
-A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at a dispatched head, every finding disposed).
+A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at the dispatched head the PR head equals, every finding disposed); a task whose profile cannot be read as poc, pilot or prod holds.
 The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
@@ -97,10 +97,11 @@ def check(args):
             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
 
     security_errors, security_note = [], None
-    if candidates:
+    at_head = [c for c in candidates if head and c.startswith(head)]
+    if at_head:
         try:
             from validation_security import check_task as security_check
-            security_errors, security_note = security_check(task, candidates)
+            security_errors, security_note = security_check(task, at_head)
         except (OSError, UnicodeDecodeError) as error:
             security_errors = [f"cannot read the validation security review: {error}"]
     for error in security_errors:

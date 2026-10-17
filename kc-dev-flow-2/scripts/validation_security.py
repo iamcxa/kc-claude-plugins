@@ -10,6 +10,7 @@ Exit 0 when the task is not prod or the review holds; 1 with one line per proble
 """
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -25,9 +26,12 @@ def check_task(task, candidates):
     text = task.read_text()
     front = re.match(r"---\n(.*?)\n---", text, re.S)
     profile = FM_PROFILE.search(front.group(1)) if front else None
-    if not profile or profile.group(1) != "prod":
-        return [], None
+    value = profile.group(1) if profile else None
     name = task.name
+    if value in ("poc", "pilot"):
+        return [], None
+    if value != "prod":
+        return [f"{name}: cannot read a 'profile:' of poc, pilot or prod from the frontmatter (found: {value or 'none'}); a task whose profile is unreadable holds the ask"], None
     reviews = REVIEW.findall(text)
     if not reviews:
         return [f"{name}: a prod task needs a 'Security review (validation):' line naming the saved report and the head it ran on"], None
@@ -53,8 +57,12 @@ def check_task(task, candidates):
     severities, bad = report_severities(body)
     if bad:
         return [f"{name}: '{path}' {p}" for p in bad], None
+    numbered = [int(n) for r, n, _ in FINDING.findall(text) if r == number]
     lines = {int(n): v.strip() for r, n, v in FINDING.findall(text) if r == number}
     errors, tally = [], {"declined": 0, "decision": 0}
+    for n, count in sorted(Counter(numbered).items()):
+        if count > 1:
+            errors.append(f"{name}: 'Security finding (validation {number}) {n}:' appears more than once; write one disposition per finding")
     for n, severity in enumerate(severities, 1):
         entry = lines.get(n, "")
         if re.match(r"Material:\s*\S", entry):

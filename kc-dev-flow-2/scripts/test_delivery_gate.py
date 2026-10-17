@@ -21,7 +21,7 @@ def record(*heads, body="## Checklist\n\n- one\n"):
     return f"# validation dispatch\n\nDispatched: {'a' * 40}\nModel: sonnet\n{lines}\n{body}"
 
 
-TASK = "# task\n"
+TASK = "---\nprofile: pilot\n---\n\n# task\n"
 RECORDS = {"validation-1.md": record(HEAD40)}
 
 COPILOT_UNSTATED = ("Deliver #627 head 22d9cc94? Codex round 1 review:5500046230 found one P1. "
@@ -85,7 +85,7 @@ class DeliveryGateTests(unittest.TestCase):
                 self.assertEqual(self.check(head=head, records=both)[0], expected)
 
     def test_the_check_reads_no_validation_report_and_claims_no_verdict(self):
-        rejected = f"# task\n\n## Stage Report: validation\n\nVerdict REJECTED at {S1}\n"
+        rejected = f"{TASK}\n## Stage Report: validation\n\nVerdict REJECTED at {S1}\n"
         for label, task in (("a REJECTED report", rejected), ("no report", TASK)):
             with self.subTest(label):
                 self.assertEqual(self.check(task=task, head=S1)[0], 0)
@@ -252,16 +252,44 @@ class ProdSecurityReviewTests(unittest.TestCase):
         self.assertEqual(code, 2, out)
         self.assertNotIn("Security review", out)
 
+    def test_the_review_must_be_at_the_candidate_the_pr_head_equals(self):
+        both = {"validation-1.md": record(HEAD40, S2)}
+        for label, head, review, expected in (
+                ("review at the other candidate", S2[:8], SECURITY, 1),
+                ("review at the pr head", S2[:8], SECURITY.replace(HEAD40, S2), 0),
+                ("review at the first candidate", HEAD40[:8], SECURITY, 0),
+                ("pr head equals no candidate", "3" * 8, SECURITY, 1)):
+            with self.subTest(label):
+                code, out = self.run_gate(records=both, head=head, review=review)
+                self.assertEqual(code, expected, out)
+        code, out = self.run_gate(records=both, head=S2[:8])
+        self.assertIn("no 'Security review (validation):' line has the form", out)
+
+    def test_a_task_whose_profile_cannot_be_read_holds_the_ask(self):
+        for label, task in (("no frontmatter", "# task\n"), ("a commented profile", "---\nprofile: prod # x\n---\n")):
+            with self.subTest(label), tempfile.TemporaryDirectory() as d:
+                Path(d, "task", "dispatch").mkdir(parents=True)
+                Path(d, "task", "dispatch", "validation-1.md").write_text(record(HEAD40))
+                Path(d, "task.md").write_text(task)
+                Path(d, "gate.txt").write_text("Merge ask.")
+                out = io.StringIO()
+                with contextlib.redirect_stdout(out):
+                    code = gate.main(["check", str(Path(d, "task.md")), "--pr", "o/r#9", "--text-file", str(Path(d, "gate.txt")), "--head", HEAD40[:8]])
+                self.assertEqual(code, 1, out.getvalue())
+                self.assertIn("cannot read a 'profile:'", out.getvalue())
+
     def test_mutations_of_the_security_wiring_each_change_their_own_case(self):
         source = Path(gate.__file__).read_text()
         cases = {
             "pass": dict(),
             "no review": dict(review=""),
             "no candidate": dict(records={"validation-1.md": record()}),
+            "review at the other candidate": dict(records={"validation-1.md": record(HEAD40, S2)}, head=S2[:8]),
         }
         mutations = {
-            "dropping the call": ("security_errors, security_note = security_check(task, candidates)", "pass", ["pass", "no review"]),
-            "dropping the candidate guard": ("    if candidates:\n        try:\n            from validation_security", "    if True:\n        try:\n            from validation_security", ["no candidate"]),
+            "dropping the call": ("security_errors, security_note = security_check(task, at_head)", "pass", ["pass", "no review", "review at the other candidate"]),
+            "dropping the candidate guard": ("    if at_head:\n        try:\n            from validation_security", "    if True:\n        try:\n            from validation_security", ["no candidate"]),
+            "dropping the head binding": ("at_head = [c for c in candidates if head and c.startswith(head)]", "at_head = list(candidates)", ["review at the other candidate"]),
             "dropping the note": ("    if security_note:\n        print(security_note)\n", "", ["pass"]),
         }
         before = {label: self.run_gate(**kwargs) for label, kwargs in cases.items()}

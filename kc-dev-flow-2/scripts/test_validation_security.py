@@ -42,7 +42,7 @@ def load(old=None, new=None):
     return module
 
 
-def run(module, profile="prod", review=REVIEW, lines=LINES, report=REPORT, candidates=(HEAD,), folder_form=False, outside=False):
+def run(module, profile="prod", review=REVIEW, lines=LINES, report=REPORT, candidates=(HEAD,), folder_form=False, outside=False, bom=False):
     with tempfile.TemporaryDirectory() as d:
         root = Path(d)
         if outside:
@@ -52,7 +52,8 @@ def run(module, profile="prod", review=REVIEW, lines=LINES, report=REPORT, candi
         if report is not None:
             (folder / "security" / "validation-1.yaml").write_text(report)
         task = folder / "index.md" if folder_form else root / "task.md"
-        task.write_text(f"---\ntitle: x\nprofile: {profile}\nstatus: validation\n---\n\n## Stage Report: validation\n\n{review}{lines}")
+        front = f"---\ntitle: x\nprofile: {profile}\nstatus: validation\n---\n\n" if profile is not None else ""
+        task.write_text(("\ufeff" if bom else "") + f"{front}## Stage Report: validation\n\n{review}{lines}")
         try:
             return module.check_task(task, list(candidates))
         except Exception as error:
@@ -65,6 +66,10 @@ CASES = {
     "pass on a zero-finding report": dict(report=ZERO, lines=""),
     "pass for a folder task": dict(folder_form=True),
     "pilot task skipped": dict(profile="pilot", review="", lines="", report=None),
+    "no frontmatter": dict(profile=None),
+    "profile line with a trailing comment": dict(profile="prod # production"),
+    "frontmatter after a byte-order mark": dict(bom=True),
+    "unknown profile": dict(profile="staging"),
     "no review line": dict(review=""),
     "not run": dict(review="Security review (validation): not run: reviewer returned no report (sonnet)\n", report=None),
     "review at another head": dict(review=REVIEW.replace(HEAD, OTHER)),
@@ -77,9 +82,15 @@ CASES = {
     "declined HIGH": dict(lines=LINES.replace("1: Needs decision: cap sessions per room now, or file a task", "1: declined: accepted")),
     "open Material": dict(lines=LINES.replace("1: Needs decision: cap sessions per room now, or file a task", "1: Material: cap sessions per room")),
     "extra finding line": dict(lines=LINES + "Security finding (validation 1) 4: declined: x\n"),
+    "duplicate finding line": dict(lines="Security finding (validation 1) 1: Material: cap sessions\n" + LINES),
 }
 
 REASONS = {
+    "no frontmatter": "cannot read a 'profile:'",
+    "profile line with a trailing comment": "cannot read a 'profile:'",
+    "frontmatter after a byte-order mark": "cannot read a 'profile:'",
+    "unknown profile": "cannot read a 'profile:'",
+    "duplicate finding line": "appears more than once",
     "no review line": "needs a 'Security review (validation):' line",
     "not run": "validation security review not run",
     "review at another head": "no 'Security review (validation):' line has the form",
@@ -96,7 +107,9 @@ REASONS = {
 
 # each rule's source text, the replacement that removes it, and the one case that must change
 MUTATIONS = {
-    "the prod-only rule": ('if not profile or profile.group(1) != "prod":', "if False:", "pilot task skipped"),
+    "the prod-only rule": ('if value in ("poc", "pilot"):', "if False:", "pilot task skipped"),
+    "the unreadable-profile rule": ('if value != "prod":', "if False:", ["no frontmatter", "profile line with a trailing comment", "frontmatter after a byte-order mark", "unknown profile"]),
+    "the duplicate-line rule": ("if count > 1:", "if False:", "duplicate finding line"),
     "the missing-review rule": ("if not reviews:", "if False:", "no review line"),
     "the not-run rule": ('if last.lower().startswith("not run"):', "if False:", "not run"),
     "the head-binding rule": ("m.group(3) in candidates", "m", ["review at another head", "short head"]),
