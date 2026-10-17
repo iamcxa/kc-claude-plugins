@@ -17,3 +17,10 @@ Filed on the Captain's 「同意設計待辦」 (chat, 2026-10-17), to FO's prop
 - Reviewer: open. Installed `design:design-critique` (Anthropic's design plugin 1.2.0, a 595-word interactive skill, synced from the claude.ai organisation, no licence file in its folder) and e2e-pipeline's `ui-verify` (this repository; checks computed CSS against expected tokens, needs a declarative YAML and agent-browser) are candidates; whether dev2 owns the brief, depends on either, or needs neither is for ideation.
 - Order: after prod-security-review-gates lands, reusing its seam.
 - Proof before shipping (proposal): replay the brief fresh on the archived holder-panel cycle-1 and cycle-3 previews and the chevron cycle-1 preview; it names at least the duplicated count, the crowded chrome, the off-system refresh button and the opposite chevrons, or it does not ship.
+
+## FO alignment
+
+Alignment: not needed before ideation; the Captain approved filing it (his words are at the top of this file).
+Release review: not needed: workflow maintenance, on no journey map.
+Surfaces: none
+Visible change: none
