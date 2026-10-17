@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:special-role-triggers:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:special-role-triggers-backlog-1
+              briefing:
+                id: briefing:special-role-triggers:backlog:attempt-1:revision-1
+                digest: sha256:74c822b9bd672956a82c4848d8e7232193807f3120443cf9287065eab87beb1d
+                room-ref: ./special-role-triggers/review/backlog/briefing-1
 ---
 
 Filed on the Captain's 「可以，建成待辦」 (chat, 2026-10-16), after FO listed six moments in one session where a special role applied and was not used. The README says FO calls them when it judges they are needed; FO rarely judges its own work to need a second opinion, the same failure as the relay prod task where risk-selected security review never fired.

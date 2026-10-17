@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:special-role-triggers:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 2 (workflow-budget-ratchet, special-role-triggers, worker-loads-declared-package, prod-security-validation-gate, ui-design-review-in-ideation, merge-gatekeeper)? Approving accepts profile pilot as recommended, and that the six ideations run in parallel, each with a Batch overlap item; special-role-triggers stacks on workflow-budget-ratchet because both edit the workflow rules and the new rule must fit the lowered budget.",
+  "artifacts": [
+    {
+      "id": "artifact:special-role-triggers:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d1018d2c86adfc5eefc4515b500f0de4bf2f0c9b/special-role-triggers.md",
+      "rev": "sha256:8f51212158a2a90225fa848c3f1ecbc1f397ecfcffc287232f89ce01e34dce9f",
+      "mediaType": "text/markdown",
+      "summary": "Seed: six moments on 2026-10-15/16 where chief-engineer or engineering-reviewer applied and FO did not call them. Candidate triggers: chief-engineer when the circuit breaker fires or the Captain asks FO to step back; engineering-reviewer when FO amends approved design, narrows a guarantee or accepts a risk. Ideation owes: an enforceable Reviewer line the checks or observer can require, the Opus cost per batch, and a words-negative fit under the ratchet."
+    }
+  ]
+}
