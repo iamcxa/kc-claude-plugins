@@ -1,6 +1,6 @@
 ---
 title: A prod-profile task passes a security review at two different gates instead of waiting for someone to judge that one is needed
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -63,6 +63,7 @@ gates:
                 state: consumed
 started: 2026-10-16T03:14:23Z
 worktree: .worktrees/spacedock-ensign-prod-security-review-gates
+pr: iamcxa/kc-claude-plugins#656
 ---
 
 Relayed by subspace-relay's FO session on 2026-10-13, not heard directly. Captain's words as relayed: 「此外 dev2 prod profile 應該強化安全掃描這一塊，必須有至少一到兩位安全審核員，守不同關卡。你可以先給 plugin FO 發訊息讓他知道」.
