@@ -6,6 +6,8 @@ Date: 2026-10-12
 
 Accepted
 
+Merge partly superseded by ADR 0023.
+
 ## Context
 
 The Captain wants dev2 to learn his decision trajectory and, at high confidence, decide
