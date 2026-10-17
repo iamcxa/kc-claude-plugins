@@ -303,3 +303,34 @@ ADR: 0022
 ### Summary
 
 Designed a design review for `Surfaces: ui` ideation that reuses the prod security seam: one fresh Sonnet reviewer over the previews, a shape-locked `design_review` report, one disposition line per finding, and the existing pre-gate check refusing an unreviewed ui design, at 68 added script lines and no FO-read workflow word. The replay (nine reviewer runs on three archived previews) shows the packaged brief v2 reaching 3 of the 4 defects the proposal named plus the one a fix introduced, one run per cell and fitted to this bite; the missing one is the cycle-1 text Refresh button, so the proposal's "or it does not ship" bar is unmet and goes to the Captain as D1 with a recommendation to ship and record the miss.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main implementing D1 to D3 as recommended (design-review.md v2 with the inventory pass, the 14-word pointer in principles.md, the design_review checks in design_surfaces.py with tests); the cycle-1 Refresh button miss recorded in the brief's closing sentence; the ADR under ## Number guards with its Words line quoting the Captain
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/663, one commit a2093bc1 on 6ea3a472 (origin/main, includes #658). `design-review.md` 848 words ends with "Known limit: ... text Refresh button among icon buttons went unnamed (holder panel, cycle 1)"; `docs/adr/0022-ui-ideation-design-review-binds-design.md` Words line quotes 「那就照建議」 and the gate question; `adr_lint.py --require 0022` exit 0.
+- DONE: AC-1 (files and untouched paths)
+  `git diff origin/main --stat` lists the 4 named files plus the ADR; `git diff origin/main -- references extensions skills/observer skills/ideation/profiles` is empty; `lint-skills.py` exit 0, `workflow.md: 5447 of 5447 words` (main's count).
+- DONE: AC-2, AC-3, AC-4 falsifiers shown failing by a mutation I ran
+  `python3 -B -m unittest test_design_surfaces` 104 of 104 (91 existing, 13 new). Six mutations in copies of the script, caches absent: drop the design call, 19 fail (AC-2); drop the MINOR test, 2 fail, `test_each_refusal_names_its_own_reason` (AC-3); default scale to DESIGN_SCALE, 25 fail; default root to design_review, 61 fail (AC-4); drop the preview rule, 2 fail; drop the `ui` gate, 26 fail.
+- DONE: AC-5 words
+  `design-review.md` 848 (limit 850); `principles.md` 582 to 596 (+14); CLI `check` on a passing ui fixture prints one added line `design review design/ideation-1.yaml: 3 findings, 1 fixed, 1 criteria, 1 declined, 0 decisions` (14 words), none for `Surfaces: none`.
+- FAILED: AC-6 fresh replay names every listed defect with the shipped brief
+  One Sonnet run per preview, reports in `design/replay-shipped/`: holder c1 names H1 (MINOR hierarchy) and H2 (MINOR spacing, 270 of 800 px); chevron c1 names C1 (MAJOR consistency); holder c3 run 1 does not describe H5 (it states "a 44px bordered refresh button" on the phone with no comparison to the toolbar icons); a second c3 run, added for variance and not a replacement, names H5 (MINOR platform, 44px bordered phone square against a 24px desktop icon). Neither c3 run reports H1 to H4 as present. Stop rule applied: brief not revised; Needs decision for FO.
+- DONE: AC-7 limits stated
+  `git grep -n -i 'sees pictures' kc-dev-flow-2/skills/ideation/design-review.md` matches; closing sentence names the text Refresh button miss.
+- DONE: AC-8 ADR
+  see the first item.
+- DONE: No FO-read word added beyond the design; lint-skills.py exit 0
+  `references/` diff empty; `lint-skills.py` exit 0 on the candidate.
+- DONE: roborev evidence line
+  `clean on a2093bc14; evidence=roborev:799` (exit 0, first run).
+- DONE: comment_ratio, number_guards, doc_impact
+  `comment_ratio.py`: code lines 207, comment lines 4, 1.9%, maximum 5% met; `number_guards.py check` PASS (base 6ea3a4724515, head a2093bc14c84); `doc_impact.py 6ea3a472 HEAD`: 0 documents mention what changed.
+- DONE: push without force; CI green on the PR head
+  `gh pr checks 663` at a2093bc1: unit tests (python3) pass 56s, version parity pass 53s, multi-profile route gate pass 6s, GitGuardian pass.
+- DONE: CI cost measured or stated as not measured
+  No CI job or trigger added; the 13 new cases run inside the existing `unit tests (python3)` job (56s wall on this head, per-run job wall time only; billed minutes not measured).
+
+### Summary
+
+Implemented D1 to D3 as one commit and a Draft PR (#663) on origin/main 6ea3a472, adding the packaged brief, a 14-word pointer, `check_design_review` with 13 cases, and ADR 0022; all gates, six mutations, roborev and CI are green. AC-6 is not met on a strict reading: holder cycle 3 run 1 did not describe the phone refresh icon defect, run 2 did; the brief stays unrevised per the stop rule and the call is FO's. Note: the replay inputs live under /tmp/rv (extracts of the preview commits), reports and prompts are saved in `design/replay-shipped/`.

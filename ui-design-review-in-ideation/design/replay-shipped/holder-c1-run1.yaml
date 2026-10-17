@@ -1,0 +1,94 @@
+design_review:
+  preview: /tmp/rv/holder-c1/preview.html
+  findings:
+    - severity: MAJOR
+      dimension: consistency
+      where: h3b-just-sent-list-lags-after-desktop and h3b-just-sent-list-lags-after-phone
+      seen: The desktop header reads "1 comment sent" while the list directly below it reads "Nothing sent yet." (the phone frame shows the same "Nothing sent yet." with no count badge).
+      fix: While the list lags, replace "Nothing sent yet." with a line that agrees with the header (for example "Your comment was sent; it can take about a minute to show here.") or hide the empty-list line.
+    - severity: MAJOR
+      dimension: consistency
+      where: h1-no-drafts-list-of-3-after-phone-tray vs h2-unsent-draft-after-phone-tray vs h1-no-drafts-list-of-3-after-phone (All feedback card)
+      seen: The phone tray draws a down chevron when it is closed (h1, h4, h5, h6) and an up chevron when it is open (h2), but the open All feedback card and the profile card also draw a down chevron, so the same glyph means "closed" on one control and "open" on another. In h3 and h3b the tray shows an up chevron with the same layout as h1, which has a down chevron.
+      fix: Pick one convention for every disclosure control (for example down means closed, up means open) and draw the open All feedback card and the profile card to match it.
+    - severity: MAJOR
+      dimension: states
+      where: h4-closed-after-desktop and h4-closed-after-phone-tray
+      seen: When the review is closed, the desktop header drops the count ("Review closed") while the list still shows 3 comments. The refresh row still sits under the toggle, saying new comments can take a minute to appear, and the picture does not show whether the "Include in my decision" ticks are still active or locked.
+      fix: Keep the count in the closed header (for example "Review closed · 3 comments"), show the list's closed or read-only look with the ticks locked, and decide whether the refresh row stays.
+    - severity: MINOR
+      dimension: hierarchy
+      where: h1-no-drafts-list-of-3-after-desktop, h2-unsent-draft-after-desktop, h3-just-sent-after-desktop
+      seen: The count is said twice, in the header ("3 comments", "1 not submitted · 3 comments", "4 comments") and in the badge on the All feedback card directly below it.
+      fix: Keep the count in one place; the header can carry only the drafts part when there are drafts.
+    - severity: MINOR
+      dimension: hierarchy
+      where: h1-no-drafts-list-of-3-after-desktop and core-list-desktop-light
+      seen: The header is regular weight at body size, while the "All feedback" card title and the profile name below it are bold, so the header, which should say what the list shows, reads weaker than the cards under it.
+      fix: Give the header a weight or size at least equal to the card titles.
+    - severity: MINOR
+      dimension: spacing
+      where: core-list-desktop-light (desktop); core-list-phone-light (phone)
+      seen: Four blocks sit above the first comment on desktop (header, profile card, All feedback title row, two-line refresh row), so the first comment starts at about 270 of 800 px (about a third of the rail). On phone, three blocks (profile card, title row, refresh row) take about 220 of 844 px. The refresh hint "New comments can take about a minute to appear." only explains the Refresh button and wraps to two lines at 11px on desktop.
+      fix: Fold the hint into one line beside "Updated 10:40" or show it only after a Refresh, and put the refresh controls on the title row.
+    - severity: MINOR
+      dimension: spacing
+      where: h3b-just-sent-list-lags-after-desktop, h5-truly-empty-after-desktop, h6-first-read-failed-after-desktop and the phone frames of the same states
+      seen: "Nothing sent yet." and "Error: Relay did not answer (503)." are drawn in a larger default-looking font, flush against the card border with no inset, unlike the 11px help text and the padded rows above them. The error looks the same as the empty message, and "Relay" and "(503)" are internal terms.
+      fix: Give both lines the row's inset and type size, give the error line a visible error cue, and use plain wording such as "Could not load feedback. Try Refresh."
+    - severity: MINOR
+      dimension: states
+      where: h5-truly-empty-after-desktop vs h3b-just-sent-list-lags-after-desktop
+      seen: The same empty list says "Nothing sent yet." in the list body while the header says "No comments yet" in one state and "1 comment sent" in another, so the empty state uses two vocabularies ("sent" and "comments").
+      fix: Use one phrase for the empty room in both the header and the list body.
+    - severity: MINOR
+      dimension: states
+      where: core-refresh-failed-desktop-light
+      seen: The failed refresh shows "Updated 10:40" and "Could not refresh; showing the list from 10:40." on adjacent lines, so the time is said twice, and the failure message looks the same as the grey help text with no error cue. Nothing shows a refresh in progress (disabled or busy Refresh), and the failed read is shown only on desktop light.
+      fix: Turn the failure into a single line that replaces the help text and carries an error cue, and add a refreshing state and the failed state on phone and dark.
+    - severity: MINOR
+      dimension: system-fit
+      where: core-list-desktop-light vs core-list-phone-light
+      seen: Refresh is a small outlined text button (about 72x28) on desktop and a tall one (about 80x44) on phone. The phone checkbox "Include in my decision" stays about 16 px, which is much smaller than the 44 px Refresh button next to it in the same card.
+      fix: Make the checkbox row a 44 px tap target on phone and keep one Refresh button style across sizes.
+    - severity: MINOR
+      dimension: consistency
+      where: polish-list-all-desktop-light and h2-unsent-draft-after-desktop
+      seen: P4's amber tint and bar mark ticked cards ("included"), and the amber dot in the header marks "1 not submitted", so one colour carries two different meanings in the same rail.
+      fix: Use a different accent for ticked cards or drop the amber from one of the two.
+    - severity: MINOR
+      dimension: spacing
+      where: polish-list-all-desktop-light
+      seen: Each card has three left edges: the quote's rule at about x=975, the author name at about x=998, and the body text and checkbox at about x=964. The list also ends mid-row ("Ada Lovelace You" cut off) with no scrollbar or fade cue.
+      fix: Align the quote, name and body to one inset and add a scroll cue at the clipped bottom edge.
+    - severity: MINOR
+      dimension: states
+      where: polish-list-all-phone-light and polish-list-all-phone-dark
+      seen: With two cards ticked, the phone list is clipped after the second card (the Claude Code card's checkbox is cut off and the third card is not visible) and has no scroll cue. The phone tray still reads "Not submitted · 0", so the "2 included" count that P1 shows in the desktop header has no phone equivalent.
+      fix: Show a scroll cue and the included count on phone (in the tray or the card title).
+    - severity: MINOR
+      dimension: flow
+      where: polish-finish-all-desktop-light and polish-finish-all-phone-light
+      seen: The top line "2 included from All feedback. Nothing new to send." and the bottom line "Add a comment first. Nothing to send yet." both say there is nothing to send, and "Add a comment first" sits beside "2 included" comments. Both action buttons are dashed and disabled, so the primary and the secondary look alike.
+      fix: Say it once, below the secondary button, and make the primary button look like the primary even when disabled.
+    - severity: MINOR
+      dimension: platform
+      where: polish-finish-all-phone-light and h2-unsent-draft-after-phone-tray
+      seen: The close X in the Finish sheet corner is a bare glyph of about 16 px with no visible target, and the draft card's pencil and X buttons are icon-only with no label. Nothing shows whether X discards the draft in one click without a confirm.
+      fix: Give the close X a 44 px target, label or tooltip the pencil and X, and confirm or offer undo for discarding a draft.
+    - severity: MINOR
+      dimension: hierarchy
+      where: reviewer-after-send-R
+      seen: The reviewer header says "2 comments sent" and the "My feedback" badge directly below says 2, so the count is stated twice.
+      fix: Keep the count in one of the two places.
+    - severity: MINOR
+      dimension: theme-size
+      where: all h1 to h6 pictures, core-refresh-failed-desktop-light, reviewer-after-send-R
+      seen: The six header states and the R item are shown only in light, and the failed refresh only on desktop light. There is no dark, tablet or long-list (many comments) picture.
+      fix: Add dark and phone pictures for the error and closed states, a long list, and a mid-width size.
+  limitations:
+    - Previews are static pictures, so I could not open a chevron, press Refresh, tick a box, or see scrolling, hover, focus or loading behaviour.
+    - The tray pictures are crops, so I could not see the whole phone screen for most header states, and could not tell whether the tray chevron means open or closed.
+    - The reviewer-after-send-R picture is cropped to the top of the rail, so I could not see the rest of the reviewer list or any refresh row for the reviewer.
+    - Touch target sizes are estimated from pictures at 1x or 2x and could not be measured.
+    - I read only the pictures in the scope named in the assignment (the -after-, core-, polish-list-all-, polish-finish-all- and reviewer-after-send-R files) plus preview.html for captions; the before and P1 to P5 single pictures were not reviewed.

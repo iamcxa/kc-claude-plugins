@@ -1,0 +1,102 @@
+design_review:
+  preview: /tmp/rv/holder-c3/preview.html
+  findings:
+    - severity: MAJOR
+      dimension: states
+      where: c3-reviewer-phone-light.png and c3-reviewer-sent-dark.png (reviewer, phone and desktop)
+      seen: The tray or panel header reads "My feedback · 2" while the disabled button right below reads "No feedback yet", and the phone toast says "1 comment sent" against the count of 2, so the screen says there is feedback and none at once.
+      fix: Word the disabled button for what it blocks (for example "Nothing new to send") and make the count and the toast use the same noun and number.
+    - severity: MAJOR
+      dimension: hierarchy
+      where: c3-desktop-refresh-failed-light.png
+      seen: The "Updated 13:39" line is directly followed by "Could not refresh; showing the list from 13:39.", which says the same time twice, and the failure line is plain grey text with no icon or colour.
+      fix: Keep one line (for example "Could not refresh. Last updated 13:39.") with a failure cue, and drop the separate "Updated" label in that state.
+    - severity: MAJOR
+      dimension: consistency
+      where: c3-h3b-just-sent-list-lags-desktop.png vs c3-h3b-just-sent-list-lags-phone-tray.png; c3-h6-first-read-failed-desktop.png vs c3-h5-truly-empty-desktop.png
+      seen: The header says "1 sent" with no count, right-aligned on desktop and after a dot on the phone, so one fact is drawn two ways. The first-read-failed header is just "All feedback", identical to the truly-empty header, so the header does not tell a failed read from an empty room.
+      fix: Use one header grammar on both sizes (name · count · status) and show the failure or unknown-count state in the header.
+    - severity: MINOR
+      dimension: hierarchy
+      where: c3-desktop-closed-light.png and c3-h4-closed-desktop.png
+      seen: Closure is stated three times: "Review closed" in the header, "Decision: Request changes" with "Closed to comments and decisions." at the bottom, and an "Included in the decision" chip on each card; the Updated row and refresh icon also stay.
+      fix: Keep the header status and the decision card, and drop the sentence that repeats "closed".
+    - severity: MINOR
+      dimension: spacing
+      where: Desktop default (c3-desktop-light.png) and phone tray open (c3-phone-open-light.png)
+      seen: Before the first comment a person passes 3 blocks, the header (~58px), the profile row (~75px) and the Updated row (~45px), about 19 percent of the 800px panel. On the phone the profile row sits above the document, then the tray header and a ~60px Updated row with a 44px bordered refresh button, so the first comment starts near y=400 of 844.
+      fix: Fold the Updated text and refresh icon into the header line, or shrink the phone refresh button to a borderless icon in a smaller row.
+    - severity: MINOR
+      dimension: spacing
+      where: c3-desktop-draft-light.png, c3-crop-cards-light.png, c3-phone-draft-dark.png
+      seen: The draft card is a bordered, rounded box inset about 13px with a line number "1" (desktop) or a "1 / 1 Comment" label (phone), while list cards are flat, separator-divided and inset 17px, so the draft does not share the list's quote and card treatment. On the phone the draft card also leaves an empty band left of the pencil and X buttons.
+      fix: Give the draft the same inset and quote style as list cards, drop the numeric label, and use one label on both sizes.
+    - severity: MINOR
+      dimension: spacing
+      where: c3-desktop-failed-first-light.png
+      seen: The error line "Error: Relay did not answer (503)." starts at x=13, left of the 17px content inset used by every other row, sits flush against the divider, and carries a raw "Error:" prefix.
+      fix: Put the error in the same inset as the other rows, with padding and a short human sentence.
+    - severity: MINOR
+      dimension: system-fit
+      where: c3-desktop-draft-light.png vs c3-desktop-light.png
+      seen: The draft's pencil and X are bordered ~28px square icon buttons, the refresh icon is a ~24px bordered button, and Include is a bare checkbox with a label, so three control styles do similar small jobs in one panel.
+      fix: Use one icon-button size and border style for pencil, X and refresh.
+    - severity: MINOR
+      dimension: consistency
+      where: c3-desktop-ticked-light.png and c3-desktop-ticked-dark.png
+      seen: On the ticked Claude Code card the Include control sits in a grey pill (light) or black pill (dark) that the other ticked card lacks, so the same ticked state looks different or a hover or focus state was left in the picture.
+      fix: Draw ticked identically on every card and show hover or focus only as a distinct, labelled state.
+    - severity: MINOR
+      dimension: consistency
+      where: c3-desktop-menu-light.png, c3-phone-menu-dark.png, c3-phone-closed-light.png, c3-phone-open-light.png
+      seen: The tray chevron points down when closed and up when open, but the profile menu chevron stays down while the menu is open. A down chevron on a bottom tray that opens upward also reads as "collapse".
+      fix: Flip the profile chevron when open, and point the tray chevron up when it is closed.
+    - severity: MINOR
+      dimension: flow
+      where: c3-desktop-draft-light.png and c3-desktop-menu-light.png
+      seen: The X on the unsent draft deletes typed text, and "Unbind this device" sits next to "Sign out" in the menu, with no confirm or undo shown for either.
+      fix: Add undo or a confirm for draft delete, and separate or confirm the unbind action.
+    - severity: MINOR
+      dimension: flow
+      where: c3-desktop-ticked-light.png, c3-desktop-light.png
+      seen: "Include" does not say what it includes in. The scope ("Your decision will include 2 reviewer comments") appears only in the Finish sheet, and the list shows only a bare "2 included". The author's own "You" card also offers Include.
+      fix: Label the tick row or the count with its scope, for example "2 included in your decision", and hide Include on the person's own comment if it does not apply.
+    - severity: MINOR
+      dimension: flow
+      where: c3-desktop-failed-first-light.png
+      seen: With the first read failed, the "Finish review…" primary button stays enabled, so a person can open a decision without seeing the feedback it would cover.
+      fix: Disable Finish review, or warn that the list could not be read, until the first read succeeds.
+    - severity: MINOR
+      dimension: consistency
+      where: c3-reviewer-phone-light.png vs c3-reviewer-sent-dark.png
+      seen: The phone reviewer says "Add overall feedback" while desktop says "Add overall note", and the closing line "Feedback-only; no workflow action." appears only on desktop.
+      fix: Use one label and one explainer on both sizes.
+    - severity: MINOR
+      dimension: consistency
+      where: c3-desktop-draft-light.png vs c3-phone-draft-dark.png
+      seen: The unsent cue is an amber dot plus grey "1 not submitted" on desktop and plain bold text after a dot on the phone tray.
+      fix: Use the same marker on both sizes.
+    - severity: MINOR
+      dimension: platform
+      where: c3-phone-open-light.png and c3-crop-phone-tray-dark.png
+      seen: The phone Include checkbox is about 16px with a small label, and the toast close "x" in c3-reviewer-phone-light.png is a ~12px glyph, both well under a 44px touch target. The open tray also covers about 65 percent of the document the person is meant to select text from.
+      fix: Make the whole Include row and the toast close at least 44px tall, and cap the tray height or let the document stay scrollable and selectable above it.
+    - severity: MINOR
+      dimension: states
+      where: Phone previews generally
+      seen: The previews show no phone version of the ticked, long-list, refresh-failed, first-read-failed body, or closed-with-draft states. The phone tray also never shows the "Select text to comment on it" hint that desktop shows.
+      fix: Add the missing phone states, and say whether the hint is intentionally absent on the phone.
+    - severity: MINOR
+      dimension: states
+      where: All desktop and phone pictures
+      seen: There is no loading state (first load or a refresh in progress), no refresh-in-progress cue on the icon, and no long author name, long quote or very long comment. The long list has 14 short cards, and its "Updated" row clips the card scrolling under it (c3-desktop-long-dark.png).
+      fix: Add a loading and refreshing picture and a long-text picture, and give the sticky row a background or divider.
+    - severity: MINOR
+      dimension: theme-size
+      where: c3-desktop-dark.png, c3-phone-draft-dark.png, c3-crop-phone-tray-dark.png
+      seen: In dark, the quote text in cards and the draft is dim grey on near-black, and the unticked checkbox border is low-contrast against the card.
+      fix: Raise the dark quote and checkbox-border contrast to the body-text standard.
+  limitations:
+    - I could not open interactive states, so hover, focus, a loading spinner, the sticky behaviour on scroll and the tray open and close motion are judged only from still pictures.
+    - I saw the header crops for the "just sent, list lags" state, but not the full panel body in that state, so I could not check whether the body contradicts the "1 sent" header.
+    - I did not open the "today" and "cycle 2" comparison pictures, because the review covers only files starting with c3-. The directory listing was truncated, so some c3- pictures (for example c3-desktop-dark.png, c3-phone-open-dark.png, c3-reviewer-sent-light.png and c3-h1 and c3-h5 on the phone) were not individually viewed.

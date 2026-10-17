@@ -1,0 +1,68 @@
+design_review:
+  preview: /tmp/rv/chev-c1/preview.html
+  findings:
+    - severity: MAJOR
+      dimension: consistency
+      where: after-light-desktop-identity-closed.png vs after-light-desktop-drawer-closed.png; after-light-phone-identity-closed.png vs after-light-phone-tray-closed.png (same in dark)
+      seen: The identity menu draws closed as a down chevron and open as an up chevron. The Briefing section and the phone feedback tray draw closed as an up chevron and open as a down chevron. On the phone, one screen shows a down chevron and an up chevron for the same closed state.
+      fix: Pick one rule, either the chevron shows the state (down = closed, up = open) or it shows the direction the content moves, and apply it to all three controls in both themes and both sizes.
+    - severity: MINOR
+      dimension: consistency
+      where: after-light-desktop-identity-closed.png (and the other desktop shots)
+      seen: A third chevron system appears at the right edge, mid-height. It is a lone right-pointing chevron outside the panel, apparently collapsing the whole panel. It matches neither the down/up pair nor the up/down pair.
+      fix: Bring the panel collapse control into the same chevron rule, or draw it as a different kind of control, such as a panel-edge handle.
+    - severity: MINOR
+      dimension: consistency
+      where: after-light-desktop-drawer-closed.png; after-light-phone-tray-closed.png; after-light-phone-tray-open.png (versus the identity-closed shots)
+      seen: The Ada Lovelace trigger has a grey fill in these shots even though its menu is closed. In the identity-closed shots it has no fill, and in the identity-open shots it has the fill. A grey fill therefore reads as "open" but also appears when closed.
+      fix: Show the fill only when the menu is open, or use a distinct hover or focus style that cannot be mistaken for the open state.
+    - severity: MINOR
+      dimension: consistency
+      where: after-light-desktop-cards.png, after-dark-desktop-cards.png, second card (Claude Code)
+      seen: Only the second card's "Include" checkbox and label sit in a grey (light) or black (dark) rounded chip. The same control on the first and third cards has no chip, so one control is drawn two ways.
+      fix: Remove the chip, or label it as hover or focus. Show that state in a separate picture, not on one card of the main set.
+    - severity: MINOR
+      dimension: spacing
+      where: after-light-desktop-identity-closed.png
+      seen: Before the first card, the panel passes three blocks: the "My feedback · 3" header, the identity row, and a "Select text to comment on it" area. That is about 190px of the 800px height, roughly a quarter of the panel. The hint block is about 110px tall, mostly empty, and only explains how to comment. In after-light-desktop-drawer-open.png an empty band of about 50px remains where the hint was.
+      fix: Shrink the hint to one line, or move it out of the way once the list has cards. Remove the leftover blank band when the drawer is open.
+    - severity: MINOR
+      dimension: spacing
+      where: after-light-desktop-identity-closed.png and after-light-phone-cards.png
+      seen: Left edges do not share one inset. On desktop, "My feedback" starts at about 955px, the identity name at 957, card content at 962, and "Briefing" and the hint at 967. On phone, the identity row starts at 14px, the page header at 8px, and tray cards at 28px.
+      fix: Set one inset for the panel's headers and rows. Keep the card-specific 8px/11px only where the proposal says.
+    - severity: MINOR
+      dimension: spacing
+      where: after-light-phone-cards.png and after-dark-phone-cards.png, desktop cards pictures
+      seen: The ticked-card bar is clear on the second card, but I cannot see it on the first ticked card at desktop size (cards-picture width). Both cards are ticked and tinted, so the bar's presence is unclear.
+      fix: Render the cards picture at 2x or larger so the 3px bar and the 8px padding can be checked on every ticked card.
+    - severity: MINOR
+      dimension: platform
+      where: after-light-phone-identity-closed.png, after-light-phone-cards.png
+      seen: On the phone, the "Aa" and bulb icon buttons are about 26px and the Include checkbox is about 16px. Both are well under the 44px touch target.
+      fix: Give the phone controls at least a 44px hit area, for example by padding the Include label and the toolbar icons.
+    - severity: MINOR
+      dimension: platform
+      where: after-light-phone-tray-open.png
+      seen: The "Finish review…" button floats over the bottom of the tray's card list and hides the third card's quote and body with no fade or end spacing.
+      fix: Add bottom padding equal to the button height to the tray list, so the last card can scroll fully clear of the button.
+    - severity: MINOR
+      dimension: flow
+      where: after-light-desktop-identity-open.png
+      seen: "Unbind this device" and "Sign out" are two plain, same-weight, one-click menu items. Nothing says what unbinding affects or whether a confirm follows, and no confirm state is shown.
+      fix: Add a short scope hint or a confirm step for "Unbind this device", and show it in the previews.
+    - severity: MINOR
+      dimension: states
+      where: whole set
+      seen: The set shows only three cards in a populated list. It does not show an empty list, loading, error, a long author name or email, many cards, an overflowing tray, the collapsed desktop panel, the phone Briefing tab, or a read-only reviewer.
+      fix: Add pictures for the empty list, many cards, a long identity, and the collapsed panel, at least in light desktop and light phone.
+    - severity: MINOR
+      dimension: states
+      where: after-light-desktop-cards.png (all cards)
+      seen: Every card is shown ticked-with-bar or unticked, with no picture of a card's keyboard focus ring, pressed state, or the "Included in the decision" tag the proposal mentions. So I cannot check the claim that the tag shares the text inset.
+      fix: Add a picture with the "Included in the decision" tag and a focused Include control.
+  limitations:
+    - I read only the light and dark `after-` pictures, not the `before-` pictures, so I cannot compare against the old layout. I did not open every dark phone and dark desktop closed picture. I judged dark from the open-state and card pictures.
+    - The cards pictures are only 300 to 354px wide, so the 3px bar, the 8px and 11px padding, and the 1px divider cannot be measured precisely. I could only judge them by eye.
+    - The "Included in the decision" tag and the "Include" label alignment to the text inset are not visible in any picture that I could find, so I could not check that part of the proposal.
+    - The pictures are static, so I could not tell whether the grey chips and fills are hover, focus, or stuck styles. I also could not see the chevron's animation, touch behaviour, or the menu's keyboard handling.
