@@ -32,6 +32,10 @@ REVIEW_LINE = re.compile(r"^Security review:[ \t]*(\S.*)$", re.M)
 FOCUS_LINE = re.compile(r"^Security focus file:[ \t]*(\S.*)$", re.M)
 FINDING_LINE = re.compile(r"^Security finding (\d+):[ \t]*(\S.*)$", re.M)
 SEVERITY_SCALE = ("CRITICAL", "HIGH", "MEDIUM", "LOW")
+DESIGN_SCALE = ("MAJOR", "MINOR")
+DESIGN_REVIEW_LINE = re.compile(r"^Design review:[ \t]*(\S.*)$", re.M)
+DESIGN_FINDING_LINE = re.compile(r"^Design finding (\d+):[ \t]*(\S.*)$", re.M)
+REPORT_PREVIEW = re.compile(r"^[ \t]+preview:[ \t]*(\S.*)$", re.M)
 REPORT_FINDINGS_KEY = re.compile(r"^([ \t]+)findings:(.*)$", re.M)
 REPORT_ROOT_LINE = re.compile(r"^tob_security_review:", re.M)
 FINDINGS_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?findings:", re.M)
@@ -145,7 +149,7 @@ def check_amendments(name, lines, declared, errors):
             errors.append(f"{name}: '{title}' supersedes {', '.join(sorted(named))} but no criterion says 'Amended by Captain, amendment {number}' and its 'Supersedes:' line does not say 'no replacement'")
 
 
-def report_severities(text):
+def report_severities(text, scale=SEVERITY_SCALE):
     key = REPORT_FINDINGS_KEY.search(text)
     indent = len(key.group(1))
     rest = re.sub(r"(?:^|[ \t]+)#.*$", "", key.group(2)).strip()
@@ -187,8 +191,8 @@ def report_severities(text):
             problems.append(f"has findings item {number} with no 'severity:' line")
             continue
         value = re.sub(r"[ \t]+#.*$", "", found[len("severity:"):]).strip().strip("\"'")
-        if value not in SEVERITY_SCALE:
-            problems.append(f"has findings item {number} with severity '{value}', not one of {', '.join(SEVERITY_SCALE)}")
+        if value not in scale:
+            problems.append(f"has findings item {number} with severity '{value}', not one of {', '.join(scale)}")
             continue
         severities.append(value)
     return severities, problems
@@ -209,18 +213,18 @@ def root_value(text, root):
     return re.sub(r"(?:^|[ \t]+)#.*$", "", rest).strip()
 
 
-def report_shape(text):
-    roots = list(REPORT_ROOT_LINE.finditer(text))
+def report_shape(text, root="tob_security_review"):
+    roots = list(re.compile(rf"^{root}:", re.M).finditer(text))
     keys = list(FINDINGS_LINE.finditer(text))
     problems = []
     if len(roots) != 1:
-        problems.append(f"is not a tob_security_review report: {len(roots)} 'tob_security_review:' lines at column 0, expected exactly 1")
+        problems.append(f"is not a {root} report: {len(roots)} '{root}:' lines at column 0, expected exactly 1")
     if len(keys) != 1:
         problems.append(f"has {len(keys)} 'findings:' lines, expected exactly 1")
     if len(roots) == 1 and root_value(text, roots[0]):
-        problems.append("has a 'tob_security_review:' line with a value after its colon, so its children are not a mapping")
+        problems.append(f"has a '{root}:' line with a value after its colon, so its children are not a mapping")
     if not problems and not findings_is_direct_child(text, roots[0], keys[0]):
-        problems.append("has a 'findings:' line that is not a direct child of 'tob_security_review:'")
+        problems.append(f"has a 'findings:' line that is not a direct child of '{root}:'")
     return problems
 
 
@@ -272,6 +276,58 @@ def check_security(path, body, declared, errors):
     return f"security review {value}: {found} findings, {tally['ac']} acceptance criteria, {tally['declined']} declined, {tally['decision']} decisions"
 
 
+def check_design_review(path, body, declared, preview, errors):
+    name = path.name
+    review = DESIGN_REVIEW_LINE.search(body)
+    if not review:
+        errors.append(f"{name}: a ui task needs a 'Design review:' line naming the saved report")
+        return None
+    value = review.group(1).strip()
+    if value.lower().startswith("not run"):
+        errors.append(f"{name}: design review not run ({value}); a missing reviewer holds the stage")
+        return None
+    folder = path.parent if path.name == "index.md" else path.parent / path.stem
+    report = folder / value
+    if Path(value).is_absolute() or ".." in Path(value).parts or not report.is_file():
+        errors.append(f"{name}: 'Design review:' names '{value}', not a report file inside the task folder")
+        return None
+    text = report.read_text()
+    shape = report_shape(text, "design_review")
+    if shape:
+        errors.extend(f"{name}: '{value}' {problem}" for problem in shape)
+        return None
+    reviewed = REPORT_PREVIEW.search(text)
+    reviewed = reviewed.group(1).strip().strip("\"'") if reviewed else None
+    if reviewed != preview:
+        errors.append(f"{name}: '{value}' reviewed preview '{reviewed}' but the task's 'Preview:' line names '{preview}'")
+    severities, problems = report_severities(text, DESIGN_SCALE)
+    if problems:
+        errors.extend(f"{name}: '{value}' {problem}" for problem in problems)
+        return None
+    plain = len(SEVERITY_LINE.findall(text))
+    if plain != len(severities):
+        errors.append(f"{name}: '{value}' has {plain} 'severity:' lines but {len(severities)} in its findings items; every severity line must be a key of one findings item")
+        return None
+    found = len(severities)
+    lines = {int(n): v.strip() for n, v in DESIGN_FINDING_LINE.findall(body)}
+    tally = {"ac": 0, "fixed": 0, "declined": 0, "decision": 0}
+    for number in range(1, found + 1):
+        entry = lines.get(number, "")
+        if re.fullmatch(r"AC-[A-Za-z0-9]+", entry.split()[0] if entry else "") and entry.split()[0] in declared:
+            tally["ac"] += 1
+        elif re.match(r"fixed:\s*\S", entry):
+            tally["fixed"] += 1
+        elif re.match(r"declined:\s*\S", entry) and severities[number - 1] == "MINOR":
+            tally["declined"] += 1
+        elif re.match(r"Needs decision:\s*\S", entry):
+            tally["decision"] += 1
+        else:
+            errors.append(f"{name}: report finding {number} has no 'Design finding {number}:' line naming a declared AC-<id>, 'fixed: <what changed>', 'declined: <reason>' (MINOR only) or 'Needs decision: <text>'")
+    for number in sorted(set(lines) - set(range(1, found + 1))):
+        errors.append(f"{name}: 'Design finding {number}:' has no finding in '{value}' ({found} listed)")
+    return f"design review {value}: {found} findings, {tally['fixed']} fixed, {tally['ac']} criteria, {tally['declined']} declined, {tally['decision']} decisions"
+
+
 def check_task(path, seed=False, notes=None):
     errors = []
     text = path.read_text()
@@ -312,9 +368,14 @@ def check_task(path, seed=False, notes=None):
     check_amendments(path.name, lines, declared, errors)
     front = FRONTMATTER.match(text)
     profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
+    plain = "\n".join(unfenced(lines))
     if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):
-        plain = "\n".join(unfenced(lines))
         summary = check_security(path, plain, declared, errors)
+        if summary and notes is not None:
+            notes.append(summary)
+    if "ui" in surfaces and status and status.group(1) == "ideation":
+        shown = PREVIEW.search(body)
+        summary = check_design_review(path, plain, declared, shown.group(1).strip() if shown else "", errors)
         if summary and notes is not None:
             notes.append(summary)
     return errors

@@ -732,7 +732,7 @@ class SecurityReviewTests(unittest.TestCase):
         self.assertFalse(any(why in e for e in self.run_check(report=report, module=mutant)[0]))
 
     def test_mutation_dropping_the_scale_test_accepts_an_unknown_severity(self):
-        mutant = mutated("if value not in SEVERITY_SCALE:", "if False:")
+        mutant = mutated("if value not in scale:", "if False:")
         report = REPORT.replace("severity: MEDIUM", "severity: SEVERE")
         self.assertTrue(any("not one of" in e for e in self.run_check(report=report)[0]))
         self.assertFalse(any("not one of" in e for e in self.run_check(report=report, module=mutant)[0]))
@@ -875,6 +875,171 @@ class SecurityReviewTests(unittest.TestCase):
         why = "'severity:' lines but"
         self.assertTrue(any(why in e for e in self.report_errors(report)))
         self.assertFalse(any(why in e for e in self.run_check(review=self.NONE, report=report, module=mutant)[0]))
+
+
+DESIGN_REPORT = """design_review:
+  preview: preview.html
+  findings:
+    - severity: MAJOR
+      dimension: hierarchy
+      where: after-desktop.png
+      seen: the count is stated twice
+      fix: keep one
+    - severity: MINOR
+      dimension: spacing
+      where: after-desktop.png
+      seen: tight inset
+      fix: widen it
+    - severity: MAJOR
+      dimension: consistency
+      where: after-phone.png
+      seen: opposite chevrons
+      fix: one convention
+  limitations:
+    - the operable preview was not opened
+"""
+
+DESIGN_LINES = """Design review: design/ideation-1.yaml
+Design finding 1: fixed: the header is one line in preview.html
+Design finding 2: declined: the inset matches the shell
+Design finding 3: AC-2
+"""
+
+UI = """---
+title: a ui task
+profile: pilot
+status: ideation
+---
+
+## FO alignment
+
+Surfaces: ui
+Visible change: a person sees a panel.
+
+## Design
+
+UI proposal: a panel.
+Preview: preview.html
+
+### Design review
+
+{review}
+## Acceptance criteria
+
+**AC-1**: a.
+Verified by: a test.
+**AC-2**: b.
+Verified by: a test.
+"""
+
+
+class DesignReviewTests(unittest.TestCase):
+    def run_check(self, review=DESIGN_LINES, report=DESIGN_REPORT, module=ds, profile="pilot", status="ideation", surfaces="ui", outside=False, folder_form=False):
+        text = UI.format(review=review).replace("profile: pilot", f"profile: {profile}").replace("status: ideation", f"status: {status}")
+        visible = "a person sees a panel." if "ui" in surfaces else "none"
+        text = text.replace("Surfaces: ui\nVisible change: a person sees a panel.", f"Surfaces: {surfaces}\nVisible change: {visible}")
+        with tempfile.TemporaryDirectory() as d:
+            folder = Path(d, "task", "design")
+            folder.mkdir(parents=True)
+            Path(d, "task", "preview.html").write_text("<html></html>")
+            Path(d, "preview.html").write_text("<html></html>")
+            task_file = Path(d, "task", "index.md") if folder_form else Path(d, "task.md")
+            if report is not None:
+                folder.joinpath("ideation-1.yaml").write_text(report)
+                if outside:
+                    Path(d, "x.yaml").write_text(report)
+            task_file.write_text(text)
+            notes = []
+            return module.check_task(task_file, notes=notes), notes
+
+    def refused(self, why, **kwargs):
+        errors, _ = self.run_check(**kwargs)
+        self.assertEqual(len([e for e in errors if why in e]), 1, errors)
+        return errors
+
+    def test_a_reviewed_ui_design_passes_and_prints_one_short_line(self):
+        errors, notes = self.run_check()
+        self.assertEqual(errors, [])
+        self.assertEqual(notes, ["design review design/ideation-1.yaml: 3 findings, 1 fixed, 1 criteria, 1 declined, 0 decisions"])
+        self.assertLessEqual(len(notes[0].split()), 14)
+
+    def test_a_folder_task_passes_with_its_own_report(self):
+        self.assertEqual(self.run_check(folder_form=True)[0], [])
+
+    def test_each_refusal_names_its_own_reason(self):
+        lines = DESIGN_LINES
+        cases = {
+            "no review line": (lines.replace("Design review: design/ideation-1.yaml\n", ""), "needs a 'Design review:' line"),
+            "not run": (lines.replace("design/ideation-1.yaml", "not run: no agent could be dispatched", 1), "design review not run"),
+            "missing report": (lines.replace("ideation-1.yaml", "ideation-9.yaml", 1), "not a report file inside the task folder"),
+            "absolute path": (lines.replace("design/ideation-1.yaml", "/etc/hosts", 1), "not a report file inside the task folder"),
+            "finding without a line": (lines.replace("Design finding 2: declined: the inset matches the shell\n", ""), "report finding 2 has no"),
+            "undeclared criterion": (lines.replace("finding 3: AC-2", "finding 3: AC-99"), "report finding 3 has no"),
+            "empty decline": (lines.replace("declined: the inset matches the shell", "declined:"), "report finding 2 has no"),
+            "empty fixed": (lines.replace("fixed: the header is one line in preview.html", "fixed:"), "report finding 1 has no"),
+            "declined major": (lines.replace("finding 3: AC-2", "finding 3: declined: accepted"), "report finding 3 has no"),
+            "extra line": (lines + "Design finding 4: Needs decision: x\n", "'Design finding 4:' has no finding"),
+        }
+        for label, (review, why) in cases.items():
+            with self.subTest(label):
+                self.refused(why, review=review)
+
+    def test_a_report_of_the_wrong_shape_or_for_another_preview_is_refused(self):
+        self.refused("is not a design_review report", report=DESIGN_REPORT.replace("design_review:", "tob_security_review:"))
+        self.refused("severity 'HIGH', not one of MAJOR, MINOR", report=DESIGN_REPORT.replace("severity: MAJOR", "severity: HIGH", 1))
+        self.refused("reviewed preview 'other.html' but the task's 'Preview:' line names 'preview.html'", report=DESIGN_REPORT.replace("preview: preview.html", "preview: other.html"))
+        self.refused("reviewed preview 'None'", report=DESIGN_REPORT.replace("  preview: preview.html\n", ""))
+        self.refused("not a report file inside the task folder", review=DESIGN_LINES.replace("design/ideation-1.yaml", "../x.yaml", 1), outside=True)
+
+    def test_a_ui_task_past_ideation_or_without_ui_is_unchanged(self):
+        for kwargs in ({"status": "implementation"}, {"status": "validation"}, {"surfaces": "none"}):
+            with self.subTest(**kwargs):
+                errors, notes = self.run_check(review="", report=None, **kwargs)
+                self.assertEqual((errors, notes), ([], []))
+
+    def test_a_prod_ui_task_owes_both_reviews(self):
+        errors, _ = self.run_check(profile="prod")
+        self.assertTrue(any("needs a 'Security review:' line" in e for e in errors), errors)
+        self.assertFalse(any("Design review" in e for e in errors), errors)
+
+    def test_an_empty_findings_list_passes_with_no_finding_lines(self):
+        errors, notes = self.run_check(review="Design review: design/ideation-1.yaml\n", report="design_review:\n  preview: preview.html\n  findings: []\n")
+        self.assertEqual(errors, [])
+        self.assertIn("0 findings", notes[0])
+
+    def test_mutation_dropping_the_design_call_lets_a_missing_review_pass(self):
+        mutant = mutated('summary = check_design_review(path, plain, declared, shown.group(1).strip() if shown else "", errors)', "summary = None")
+        review = DESIGN_LINES.replace("Design review: design/ideation-1.yaml\n", "")
+        self.assertTrue(self.run_check(review=review)[0])
+        self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+
+    def test_mutation_dropping_the_minor_test_lets_a_declined_major_pass(self):
+        mutant = mutated(' and severities[number - 1] == "MINOR"', "")
+        review = DESIGN_LINES.replace("finding 3: AC-2", "finding 3: declined: accepted")
+        self.assertTrue(self.run_check(review=review)[0])
+        self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+
+    def test_mutation_dropping_the_preview_rule_lets_another_preview_pass(self):
+        mutant = mutated("if reviewed != preview:", "if False:")
+        report = DESIGN_REPORT.replace("preview: preview.html", "preview: other.html")
+        self.assertTrue(self.run_check(report=report)[0])
+        self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+
+    def test_mutation_using_the_security_scale_accepts_a_high_design_finding(self):
+        mutant = mutated("report_severities(text, DESIGN_SCALE)", "report_severities(text)")
+        report = DESIGN_REPORT.replace("severity: MAJOR", "severity: HIGH", 1)
+        self.assertTrue(self.run_check(report=report)[0])
+        self.assertTrue(any("MAJOR" in e for e in self.run_check(report=DESIGN_REPORT, module=mutant)[0]))
+
+    def test_mutation_gating_on_ideation_alone_refuses_a_task_without_ui(self):
+        mutant = mutated('if "ui" in surfaces and status and status.group(1) == "ideation":', 'if status and status.group(1) == "ideation":')
+        self.assertEqual(self.run_check(review="", report=None, surfaces="none")[0], [])
+        self.assertTrue(self.run_check(review="", report=None, surfaces="none", module=mutant)[0])
+
+    def test_mutation_dropping_the_fixed_rule_refuses_a_fixed_finding(self):
+        mutant = mutated('elif re.match(r"fixed:\\s*\\S", entry):', "elif False:")
+        self.assertEqual(self.run_check()[0], [])
+        self.assertTrue(any("report finding 1 has no" in e for e in self.run_check(module=mutant)[0]))
 
 
 if __name__ == "__main__":
