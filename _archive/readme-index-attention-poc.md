@@ -3,7 +3,7 @@ title: POC — FO follows the workflow rules at least as well when it starts fro
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -44,11 +44,14 @@ gates:
                 reason: Captain approved in chat (「好，就這樣」) closing the POC as failing his bar with no README restructure, after asking whether the model already holds about 5000 words without losing focus; the follow-up is reframed to test, in long sessions, whether rules that reappear at the moment of use reduce violations, and only after a long-session test exists
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-17T13:58:28Z
 worktree: .worktrees/spacedock-ensign-readme-index-attention-poc
-mod-block: merge:pr-merge
+mod-block:
 pr: local-merge:6ea3a4724515b974c34beb16bc3382683b6d45b9
+verdict: PASSED
+completed: 2026-10-17T14:37:56Z
+archived: 2026-10-17T14:37:56Z
 ---
 
 Filed on the Captain's words (chat, 2026-10-17), after FO said #658 (workflow-budget-ratchet) only cuts words and does not change how the README is read: 「長度的問題是，不應該讓 llm一次讀麽多字，應該只讀必要的，就算是第一次讀入的東西應該是一個索引，讓新的 llm 一直知道去哪裡找什麼，不是一次餵給他一大堆現在還用不到的東西……如果能先解決前面的問題，那文件長度可能就不是核心問題」, then 「合併且開任務，先走poc證明真的比較好再繼續」.
