@@ -15,6 +15,17 @@ gates:
                 id: briefing:workflow-budget-ratchet:backlog:attempt-1:revision-1
                 digest: sha256:4c554136b2814cfa35beb4612e3de90c6b22b181c396a14ff409e322520d3bef
                 room-ref: ./workflow-budget-ratchet/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:workflow-budget-ratchet:backlog:1
+                briefing: briefing:workflow-budget-ratchet:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T06:10:07.275849Z"
+                decision: approve
+                reason: Captain approved in chat (「准」) the six batch-2 backlog gates presented together in one message, accepting the recommended profiles (pilot; merge-gatekeeper prod) and the stated order
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Filed on the Captain's words (chat, 2026-10-17): 「棘輪上限＋規則縮短建檔，文件不應該一直變長，除非可以證明文件內容不是一次性載入，這裡的意義是文件如果一次載入太長，那 llm 的注意力八成會失焦」.
