@@ -3,7 +3,7 @@ title: Workers load the newest installed kc-dev-flow-2, not the version the work
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved delivery of #661 head 7d169549 in chat (「批准，也預先授權你合併」), accepting FO''s recommendation to decline the Deferred risks and Polish into worker-loads-declared-package-followups; he also authorized FO to merge #661'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-17T06:11:43Z
 worktree: .worktrees/spacedock-ensign-worker-loads-declared-package
 pr: pr-merge:661
+verdict: PASSED
+completed: 2026-10-17T14:36:37Z
+archived: 2026-10-17T14:36:38Z
 ---
 
 Filed on the Captain's 「兩問題照這樣做」 (chat, 2026-10-17), to FO's question whether to file the subspace-relay FO's report as a kc-dev-flow-2 task.
