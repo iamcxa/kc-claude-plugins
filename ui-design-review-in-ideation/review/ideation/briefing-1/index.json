@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ui-design-review-in-ideation:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts the recommendations D1 (ship although the reviewer found 3 of the 4 named defects, and record the miss: the cycle-1 text Refresh button), D2 (run the reviewer again after a MAJOR is fixed, at most twice), D3 (Sonnet as the reviewer), and FO's implementation order below.",
+  "artifacts": [
+    {
+      "id": "artifact:ui-design-review-in-ideation:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ba5add216f12f66999cede99de8834a9c87dbc9b/ui-design-review-in-ideation.md",
+      "rev": "sha256:b258d4738e97a3141ddc31c6f9e93fe18016d90e07a1cc6d66b0a26171baf373",
+      "mediaType": "text/markdown",
+      "summary": "Design: a Surfaces: ui ideation dispatches one Sonnet reviewer with a packaged brief over its previews; a shape-locked design_review report; one disposition line per finding; design_surfaces.py check refuses an unreviewed ui ideation. Reviewer choice: packaged brief (design:design-critique is not on every adopter; ui-verify checks only expected values). Replay, nine runs, pre-registered: brief v2 names the duplicated count, crowded chrome, opposite chevrons and the cycle-3 phone refresh defect, not the cycle-1 Refresh button; v2 was written after v1 missed, so it is fitted; one run per cell. Cost 84k to 101k tokens per run. Words: ui ideation gate 346 to 359; workflow.md untouched. Prototype 103 of 103 tests. Implementation order (FO, from the six Batch overlap sections): workflow-budget-ratchet and prod-security-validation-gate first in parallel; after the ratchet merges, worker-loads-declared-package, ui-design-review-in-ideation and special-role-triggers; merge-gatekeeper after prod-security-validation-gate (both edit delivery_gate.py). At most three workers at once."
+    }
+  ]
+}
