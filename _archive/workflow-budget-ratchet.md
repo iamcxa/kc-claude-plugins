@@ -3,7 +3,7 @@ title: The workflow word budget only goes down, and rules a script enforces shri
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved delivery of #658 head e65a91ba in chat (「合併且開任務，先走poc證明真的比較好再繼續」), after asking how the change protects attention rather than only cutting words; accepts FO''s recommendation to decline the Deferred risk and Polish into workflow-budget-ratchet-followups and to replace the PR body; he also asked FO to merge and to open a POC task for an index-first README'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-17T06:11:09Z
 worktree: .worktrees/spacedock-ensign-workflow-budget-ratchet
 pr: pr-merge:658
+verdict: PASSED
+completed: 2026-10-17T13:52:19Z
+archived: 2026-10-17T13:52:19Z
 ---
 
 Filed on the Captain's words (chat, 2026-10-17): 「棘輪上限＋規則縮短建檔，文件不應該一直變長，除非可以證明文件內容不是一次性載入，這裡的意義是文件如果一次載入太長，那 llm 的注意力八成會失焦」.
