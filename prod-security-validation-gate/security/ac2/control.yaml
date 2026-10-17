@@ -1,0 +1,20 @@
+tob_security_review:
+  pr: 555
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 5
+  findings: []
+  clean_patterns:
+    - "Outsider reach: the PR adds no public route, handler, endpoint, session, room, comment or storage path. It adds one rule (R6) to a local CLI, kc-dev-flow-2/scripts/number_guards.py, plus docs and tests. I found no code reachable by an outsider. So there is no outsider write surface to measure and no cap or rate limit to name. I searched for none, because there is nothing to cap."
+    - "The ADR and workflow.md changes are published prose in a public marketplace repo. They advertise a guard and its behaviour, not an endpoint. I found no credential, internal path, customer identifier or hostname in the added lines."
+    - "Command injection: the new git call in check() passes an argument list to subprocess.run without a shell. Its arguments are the merge-base SHA, the resolved head SHA, `--`, and the README-declared directory with `/` appended. The `--` separator stops the directory being read as an option. The head ref goes through resolve(), which uses `rev-parse --verify --quiet <ref>^{commit}`, so the diff receives resolved SHAs and not raw user-supplied refs. No eval, exec or dynamic code was added."
+    - "Parsing: `line.split(\"\\t\", 1)` on `git diff --name-status --no-renames` output is the same pattern already used in added_changed. With --no-renames each line has exactly one tab. A path containing a tab or newline is quoted by git, so it cannot add a forged FAIL line. The path is only echoed into the FAIL message."
+    - "task_facts() reads the task file's frontmatter through the existing frontmatter() helper. It uses regex matching and does no YAML deserialization, so there is no unsafe-load risk. It raises Misconfigured, exit 2, when the file is missing. check() then returns exit 1 on any R6 line, so a detected POC migration change fails closed."
+    - "R6 reuses the merge-base computed earlier in check(), so a migration that landed on the base after the branch point is not blamed on the POC task. The tests cover this case."
+    - "Test additions (test_number_guards.py, test_poc_readme.py) use tempfile directories and a local fixture repo. They make no network calls and read no secrets."
+  limitations:
+    - "I did not run any test or script, per the read-only constraint. I read the code at a822c3e3 and the diff at /tmp/psvg-measure/control/pr555.diff only."
+    - "Fail-open parsing, not reported as a finding: R6 only fires when the task frontmatter parses to exactly `profile: poc`. A trailing `# comment`, CRLF line endings (split on \\n leaves \\r, which the regex keeps in the value), or a leading BOM or blank line before `---` would make the task read as non-POC and skip R6. Only whoever writes the task file can trigger this. That is the first-officer/worker pipeline, which is a repository writer and outside the stated attacker boundary. It is an enforcement gap for the guard, not an outsider-reachable weakness."
+    - "R6 is skipped when the README declares no migrations-path. workflow.md says so explicitly. This is documented, not a hidden weakness."
+    - "R6 runs only where the FO or worker invokes number_guards.py check. I did not trace whether the dispatch layer actually calls it at the three points the doc names (implementation exit, validation, PR head). That wiring is outside this diff and outside outsider reach."
+    - "Blast radius: check() is called from the CLI entry point only, plus workflow use by the FO. Within the repo it is a leaf script with a small caller set, so LOW. I did not enumerate adopter repos that vendor the script."
