@@ -314,3 +314,16 @@ OK
 ### Summary
 
 Recommend PASSED for head 4989c97b657612ea75cd2df21ebfb1d00fed8762: all eight criteria hold under my own runs and at least one falsifier each, the second test is in scope, and delivery_gate.py and the README are untouched. One Deferred risk (old-README FO behaviour on a non-name line, unmeasured, no worse than baseline) and one Polish note; no repair requested. Throwaway worktrees I added are removed.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Apply the phase-1 fix for the Codex P2 on #661 (review:5558106991): the diagnostic regex in the --names branch of kc-dev-flow-2/scripts/laws_check.py accepts the Candidate diagnostic and its trailing advice, so a pushed validation record without a Candidate: line is an L2 violation, not a cannot-judge run; keep the new test in kc-dev-flow-2/scripts/test_laws_check.py
+  Commit 7d169549 on the PR branch: one regex in `l2_dispatch_record_complete` now accepts `no 'Candidate: <40-hex head>' line` with the optional `;` advice tail; `laws.md` unchanged.
+- DONE: The new test fails at 4989c97b and passes after the fix; a mutation that drops the Candidate alternative fails it again (python3 -B, caches cleared); kc-dev-flow-2/scripts/lint-skills.py from the real worktree exits 0
+  `L2Test.test_a_validation_record_without_a_candidate_line_is_an_l2_violation_not_an_unjudgeable_run` asserts exit 1, an L2 violation naming validation-1.md with "Candidate", no validation-2.md, no "does not parse": exit 2 "cannot judge" at 4989c97b (phase 1), pass after the fix; with the alternative removed L2Test fails 1 of 10 (caches cleared); lint-skills.py exit 0.
+- DONE: All suites green; roborev evidence= line; push without force; CI green on the new head; commit the stage report naming the two added files as a scope addition FO authorized
+  Every `test_*.py` under kc-dev-flow-2/scripts passes (test_laws_check 38 OK; test_sd_dispatch with `--sd-plugin-root` spacedock 0.27.0 OK). `clean on 7d169549e; evidence=roborev:803` (base 4989c97b). Pushed 4989c97b..7d169549, no force. CI 4 of 4 pass on 7d169549 (unit tests 1m11s, parity 58s, route gate 7s). comment_ratio: 12 code lines, 0 comment lines. Scope addition FO authorized: `kc-dev-flow-2/scripts/laws_check.py` and `kc-dev-flow-2/scripts/test_laws_check.py`, not in the design's file list.
+
+### Summary
+
+The runner now reports a Candidate-less validation record in a pushed range as an L2 violation (exit 1) instead of exit 2. Cosmetic residual: the existing formatting appends "(line 1)" to that part. Not checked: whether any adopter runs `laws_check.py` against a README older than 0.24.0.
