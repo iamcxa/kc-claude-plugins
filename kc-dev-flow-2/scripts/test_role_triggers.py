@@ -26,7 +26,7 @@ def run(*args):
     return done.returncode, done.stdout
 
 
-def task(cycles=(), amendments=(), extra=""):
+def task(cycles=(), amendments=(), extra="", after=""):
     body = ["---", "title: t", "status: validation", "---", "", "## FO alignment", "", "Surfaces: none", extra, ""]
     if amendments:
         body += ["## Captain amendments", ""]
@@ -35,6 +35,8 @@ def task(cycles=(), amendments=(), extra=""):
                      f"Design: {design}", ""]
     if cycles:
         body += ["### Feedback Cycles", ""] + [f"- Cycle {n} (FO, 2026-10-15): round {n}." for n in cycles] + [""]
+    if after:
+        body += ["## Stage Report: validation", "", after, ""]
     return "\n".join(body) + "\n"
 
 
@@ -115,12 +117,31 @@ class RoleTriggersTest(unittest.TestCase):
                 self.put(task(cycles=(3,), extra=line))
                 self.assertEqual(self.owed()[0], 1)
 
-    def test_an_amendment_call_dated_after_the_entry_or_naming_another_number_is_owed(self):
-        for line in (f"Reviewer: {ER} opus 2026-10-17 — Amendment 1: q", f"Reviewer: {ER} opus 2026-10-15 — Amendment 10: q",
-                     f"Reviewer: {ER} opus 2026-10-15 — Amendment 2: q"):
+    def test_an_amendment_call_naming_another_number_is_owed(self):
+        for line in (f"Reviewer: {ER} opus 2026-10-15 — Amendment 10: q", f"Reviewer: {ER} opus 2026-10-15 — Amendment 2: q"):
             with self.subTest(line=line):
                 self.put(task(amendments=[(1, "2026-10-15", "AC-4", "none")], extra=line))
                 self.assertEqual(self.owed()[0], 1)
+
+    def test_an_amendment_call_dated_no_earlier_than_the_entry_clears_it(self):
+        amendment = [(1, "2026-10-15", "AC-4", "none")]
+        for date, owed in (("2026-10-15", 0), ("2026-10-17", 0), ("2026-10-14", 1)):
+            with self.subTest(date=date):
+                self.put(task(amendments=amendment, extra=f"Reviewer: {ER} opus {date} — Amendment 1: q"))
+                self.assertEqual(self.owed()[0], owed)
+
+    def test_only_the_fo_alignment_section_can_clear_an_event(self):
+        call, waiver = f"Reviewer: {CE} opus 2026-10-16 — Cycle 3: q", f"Reviewer: {CE} not run: Captain ordered Cycle 3"
+        for name, line in (("call", call), ("waiver", waiver)):
+            with self.subTest(name + " in another section"):
+                self.put(task(cycles=(3,), after=line))
+                self.assertEqual(self.owed()[0], 1)
+            with self.subTest(name + " in FO alignment"):
+                self.put(task(cycles=(3,), extra=line))
+                self.assertEqual(self.owed()[0], 0)
+            with self.subTest(name + " under a subheading of FO alignment"):
+                self.put(task(cycles=(3,), extra=f"### Roles\n\n{line}"))
+                self.assertEqual(self.owed()[0], 0)
 
     def test_it_judges_committed_bytes_and_leaves_the_checkout_unchanged(self):
         self.put(task(cycles=(3,)))

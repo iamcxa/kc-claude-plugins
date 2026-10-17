@@ -7,7 +7,8 @@ Event A: a `- Cycle N` line with N >= 3 under `### Feedback Cycles`; owes a `Rev
 Event B: a `### Amendment N` under `## Captain amendments` whose `Supersedes:` or `Design:` value does not start
 with `none`; owes one for engineering-reviewer. Fenced blocks are skipped everywhere.
 A call is `Reviewer: <agent> <model> <date> — <question>` whose question names `Cycle 3` or `Amendment N` (for B the
-date is not after the entry's). A waiver is `Reviewer: <agent> not run: <reason>` that also names the token.
+date is not before the entry's). A waiver is `Reviewer: <agent> not run: <reason>` that also names the token.
+Records count only under `## FO alignment` and its subheadings.
 Exit 0 nothing owed; stdout counts the events read. Exit 1 one `next:` line per owed event. Exit 2 cannot tell
 (usage, not a git work tree, REV names no commit, no task for the slug); stdout names the cause.
 """
@@ -109,12 +110,22 @@ def cleared(lines, agent, token, latest=None):
     for line in lines:
         line = line.strip()
         made, waived = call.match(line), waiver.match(line)
-        if made and re.search(token, made.group(2)) and (latest is None or made.group(1) <= latest):
+        if made and re.search(token, made.group(2)) and (latest is None or made.group(1) >= latest):
             return True
         if waived and re.search(token, waived.group(1)):
             if re.sub(r"[\s()\[\]:;,.\-—–]+", "", re.sub(token, "", waived.group(1))):
                 return True
     return False
+
+
+def alignment(lines):
+    keep = False
+    for line in lines:
+        heading = HEADING.match(line)
+        if heading and len(heading.group(1)) <= 2:
+            keep = line.strip() == "## FO alignment"
+        if keep:
+            yield line
 
 
 def owed_line(slug, agent, happened, token):
@@ -126,15 +137,16 @@ def owed_line(slug, agent, happened, token):
 def check(state, slug, rev):
     lines = list(outside_fences(read_task(state, slug, rev)))
     cycles, amendments = events(lines)
+    records = list(alignment(lines))
     owed, seen = [], 0
     if any(number >= 3 for number in cycles):
         seen += 1
-        if not cleared(lines, "chief-engineer", r"\bCycle 3\b"):
+        if not cleared(records, "chief-engineer", r"\bCycle 3\b"):
             owed.append(owed_line(slug, "chief-engineer", "has a third Feedback Cycle", "Cycle 3"))
     for number, date in amendments:
         seen += 1
         token = f"Amendment {number}"
-        if not cleared(lines, "engineering-reviewer", rf"\b{token}\b", date):
+        if not cleared(records, "engineering-reviewer", rf"\b{token}\b", date):
             owed.append(owed_line(slug, "engineering-reviewer", f"has a Captain amendment {number} that replaces approved text", token))
     if owed:
         return 1, "\n".join(owed)
