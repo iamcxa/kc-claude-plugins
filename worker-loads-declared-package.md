@@ -327,3 +327,73 @@ Recommend PASSED for head 4989c97b657612ea75cd2df21ebfb1d00fed8762: all eight cr
 ### Summary
 
 The runner now reports a Candidate-less validation record in a pushed range as an L2 violation (exit 1) instead of exit 2. Cosmetic residual: the existing formatting appends "(line 1)" to that part. Not checked: whether any adopter runs `laws_check.py` against a README older than 0.24.0.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #661 head 7d169549 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for head 7d169549ea3d8919416bb7f80be48fcced98dd48 (merge-base 6ea3a472), throwaway checkout, `python3 -B`, package scripts from the candidate, mutations on a second copy; every worktree and scratch folder removed (2026-10-17). Falsifier results, each failing as the AC predicts. AC-1 `--names` part dropped: 1 test fails; fixture exits 1 with the line, 0 with `Candidate: d2c96f51...`. AC-2 applied to every record name: 1 fails; dispatch-folder test dropped: 4 fail; implementation-1, ideation-1 and validation-1 outside `dispatch/` exit 0. AC-3 own looser regex: 3 sub-cases fail (39-hex, uppercase, trailing text); whole-file scope: 1 fails; a line below the first `## ` exits 1 here and is not accepted by the gate. AC-4 part moved into `--newest` or `check_names`: 2 and 1 fail; a scratch state with a Candidate-less newest record gives `--newest` 0 and `pr_watch.py tasks` no output, exit 0, while the `--newest` mutation prints `next: report task to the Captain` exit 2. AC-5 diff of workflow.md, lint-skills.py, package_version.py, delivery_gate.py is empty; lint-skills.py exit 0 (workflow.md 5447 of 5447). AC-6 sequence in the script below. AC-7 package_version.py byte-identical; test_package_version 6 OK. AC-8 diff is one sentence ending "no check enforces this"; the v0.22.1 and v0.23.0 tags' workflow.md both tell FO to run `dispatch_records.py --names <record>` before `dispatch build`. All 18 test_*.py under the candidate pass (test_sd_dispatch with `--sd-plugin-root` /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0, binary /Users/kent/.local/bin/spacedock 0.27.2). Merged with origin/main 9b58cd68 in a throwaway worktree: no conflict; test_dispatch_records, test_delivery_gate, test_laws_check and lint-skills.py pass (main's delivery_gate.py still exports CANDIDATE and RECORD). The candidate's `--names` also passes all six records of this task's own dispatch folder.
+- DONE: recheck after Cycle 1: Codex P2 (review:5558106991) fixed by the regex in the --names branch of kc-dev-flow-2/scripts/laws_check.py so a Candidate-less validation record is an L2 violation (exit 1), not cannot-judge (exit 2); FO authorized adding kc-dev-flow-2/scripts/laws_check.py and kc-dev-flow-2/scripts/test_laws_check.py to the PR; confirm the new test fails under its mutation; AC-1 to AC-8 still hold; validation-1's Deferred risk and Polish are FO's to decline and need no recheck
+  `L2Test.test_a_validation_record_without_a_candidate_line_is_an_l2_violation_not_an_unjudgeable_run` fails 1 of 38 under each of three mutations (laws_check.py from 4989c97b; the Candidate alternative removed; the `(?:;.*)?` advice tail removed) and passes unmutated (caches cleared). A scratch git state run of `laws_check.py` prints `violation: L2 dispatch-record-complete ... no 'Candidate: <40-hex head>' line (line 1)` and no "does not parse"; with the line present that violation is gone. Scope addition is exactly laws_check.py (+1/-1) and test_laws_check.py (+12/-2); laws.md untouched; doc_impact lists 0 documents. AC-1 to AC-8 hold at 7d169549 (above); comment_ratio 62 code lines, 0 comment lines, exit 0.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and observed output below; run as `env -i PATH HOME bash --noprofile --norc`, all steps matched. `adr_lint.py docs/adr --since 6ea3a472` from the candidate checkout: "20 ADR file(s) checked, 0 legacy", exit 0. Also at the candidate: dispatch_records on this task folder "6 dispatch record(s) complete" exit 0; design_surfaces check exit 0; number_guards check PASS exit 0. Findings: no Material, no Needs decision; Deferred risk 1 (new), Polish 1 (new); validation-1's two findings are carried to FO, not rechecked.
+
+### Findings
+
+- Deferred risk: a state branch whose laws workflow pins a package tag containing this change, with a README still at 0.22.1, reports an L2 violation once for each pushed validation record that FO saved without a Candidate line (the record is already committed when `--names` would have asked). Not observed on any adopter; would become Material if such a red laws run is seen blocking a merge or hiding a different violation.
+- Polish: `references/sd/laws.md` L2 Rule says "every part `dispatch_records.py` requires" and so now covers the Candidate line without naming it; the task kept laws.md unchanged by FO's instruction and doc_impact lists no document. Residual already stated: the violation text ends "(line 1)".
+- Limits, not findings: Codex hosts not exercised; whether an FO on the previous README acts on a non-name line is unmeasured (validation-1's Deferred risk); a task already past dispatch with no line still meets the 30-word hold once; `--names` flags every Candidate-less `validation-N` it is given, while the gate reads only the highest-numbered record; billed CI minutes not measured.
+
+### Minimal acceptance script
+
+Run in a fresh bash shell. Needs git, python3, a checkout of iamcxa/kc-claude-plugins at the REPO path (it adds and removes its own worktree under /tmp/pr661-accept) and network access for `git fetch origin pull/661/head`. Does not cover: a real first officer acting on the printed line, tasks already past dispatch, Codex hosts, or the rest of the package. Takes about 40 seconds.
+
+```
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+HEAD=7d169549ea3d8919416bb7f80be48fcced98dd48
+rm -rf /tmp/pr661-accept && mkdir -p /tmp/pr661-accept/state/demo/dispatch /tmp/pr661-accept/gitstate/t/dispatch && cd /tmp/pr661-accept && touch state/demo.md empty.txt
+# 1. Check out the PR #661 head in a throwaway worktree.
+git -C "$REPO" fetch -q origin pull/661/head && git -C "$REPO" worktree add -q --detach /tmp/pr661-accept/co $HEAD && git -C /tmp/pr661-accept/co log --oneline -1
+# 2. Make a validation dispatch record in the 0.22.1 shape (no Candidate line); the pre-send check names the missing line.
+printf '# demo\n\nDispatched: 2026-10-17; state before dispatch commit 22d372bffe5d6352d65ef7c7520a311596caec3d\nModel: sonnet\n\n## Checklist\n\n1. Independent verdict\n\n## Scope notes\n\nPackage root: /abs/kc-dev-flow-2\nSend the completion message to `main`.\n' > state/demo/dispatch/validation-1.md
+python3 -B /tmp/pr661-accept/co/kc-dev-flow-2/scripts/dispatch_records.py --names /tmp/pr661-accept/state/demo/dispatch/validation-1.md; echo "exit $?"
+# 3. Add the Candidate line; the same check is silent, and the merge-ask check agrees for that head and refuses another.
+awk -v h=$HEAD '{print} /^Model:/{print "Candidate: " h}' state/demo/dispatch/validation-1.md > v.new && mv v.new state/demo/dispatch/validation-1.md
+python3 -B /tmp/pr661-accept/co/kc-dev-flow-2/scripts/dispatch_records.py --names /tmp/pr661-accept/state/demo/dispatch/validation-1.md; echo "exit $?"
+python3 -B /tmp/pr661-accept/co/kc-dev-flow-2/scripts/delivery_gate.py check /tmp/pr661-accept/state/demo.md --pr o/r#1 --head $HEAD --text-file /tmp/pr661-accept/empty.txt; echo "exit $?"
+python3 -B /tmp/pr661-accept/co/kc-dev-flow-2/scripts/delivery_gate.py check /tmp/pr661-accept/state/demo.md --pr o/r#1 --head aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --text-file /tmp/pr661-accept/empty.txt; echo "exit $?"
+# 4. The state-branch laws runner reports a pushed Candidate-less record as an L2 violation, not as an unreadable run.
+cd /tmp/pr661-accept/gitstate && git init -q -b main . && git -c user.email=a@b -c user.name=v commit -q --allow-empty -m base
+cp /tmp/pr661-accept/state/demo/dispatch/validation-1.md /tmp/pr661-accept/gitstate/t/dispatch/validation-1.md && sed -i.bak '/^Candidate:/d' t/dispatch/validation-1.md && rm t/dispatch/validation-1.md.bak && git add t && git -c user.email=a@b -c user.name=v commit -q -m rec
+python3 -B /tmp/pr661-accept/co/kc-dev-flow-2/scripts/laws_check.py /tmp/pr661-accept/gitstate --before HEAD~1 --after HEAD 2>&1 | grep -E "L2|does not parse"
+# 5. Run the two changed test files, then clean up.
+python3 -B /tmp/pr661-accept/co/kc-dev-flow-2/scripts/test_dispatch_records.py 2>&1 | tail -3
+python3 -B /tmp/pr661-accept/co/kc-dev-flow-2/scripts/test_laws_check.py 2>&1 | tail -3
+git -C "$REPO" worktree remove --force /tmp/pr661-accept/co; cd /tmp && rm -rf /tmp/pr661-accept
+```
+
+Expected and observed (2026-10-17; the temp path in the first line is fixed, the timing lines vary):
+
+```
+7d169549 fix(kc-dev-flow-2): laws_check reports a missing Candidate line as an L2 violation, not an unjudgeable run
+/tmp/pr661-accept/state/demo/dispatch/validation-1.md:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, then run this check again
+exit 1
+exit 0
+PR head 7d169549ea3d8919416bb7f80be48fcced98dd48 equals dispatched candidate 7d169549ea3d8919416bb7f80be48fcced98dd48; no second reviewer outcome is missing
+next: ask for merge with this text.
+exit 0
+PR head aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa differs from dispatched candidate 7d169549ea3d8919416bb7f80be48fcced98dd48 (latest validation record validation-1.md)
+next: hold the ask; revalidate this head or tell the Captain the difference.
+exit 1
+L2 dispatch-record-complete: 1 events judged in <sha>..<sha>, 1 violated
+violation: L2 dispatch-record-complete record=t/dispatch/validation-1.md commit=<sha> no 'Candidate: <40-hex head>' line (line 1)
+Ran 38 tests in <n>s
+
+OK
+Ran 38 tests in <n>s
+
+OK
+```
+
+### Summary
+
+Recommend PASSED for head 7d169549ea3d8919416bb7f80be48fcced98dd48: AC-1 to AC-8 hold under my own runs with a failing mutation each, the cycle-1 Codex P2 is fixed and its new test fails under three mutations, and the two added files are exactly the authorized scope. No Material finding; one new Deferred risk and one Polish note, no repair requested. Every throwaway worktree I added is removed.
