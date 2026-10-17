@@ -463,3 +463,24 @@ The P2 reproduces: an item with no severity is counted as zero or dropped, so th
 ### Summary
 
 The security check now counts `findings:` list items, requires each to carry a severity from CRITICAL, HIGH, MEDIUM, LOW, and fails closed with a named error on a non-list value, an empty key, a misindented list or an unreadable item. Limits: a hand-written line parser for the reviewer's own schema, not a YAML parser, so exotic YAML (flow-style items, anchors, tabs) is refused or misread rather than interpreted; duplicate `severity:` keys in one item take the first.
+
+## Stage Report: implementation (cycle 5)
+
+- DONE: Lock `report_severities` and the existence test in `check_security` to the reviewer's documented report shape with three refuse-on-mismatch rules, each a named error, one failing-first test per rule including Codex round 2's nested case (review:5555839646), one mutation per rule
+  Commit 298d6bc7 (`design_surfaces.py`, `test_design_surfaces.py`): `report_shape` refuses a root count other than 1 at column 0, a `findings:` line count other than 1, and a `findings:` that is not a direct child of the root (`findings_is_direct_child`); `check_security` refuses when the plain `severity:` key-line count differs from the parsed items. No parser shape was added. New tests were run failing first (14 failed on the old code).
+  - Falsifiers: second root at column 0 and an indented root line that stays allowed; `findings:` in a scalar, as a nested key and as a list-item key; nested one level (review:5555839646), nested with items, under a second top-level key, before the root, as a list item, at column 0; a `severity:` line in a block scalar or under `limitations:`. Mutations flip each rule on its own message (`len(roots) != 1`, `len(keys) != 1`, the direct-child call, `plain != len(severities)`).
+  - Three old tests pinned shapes that are now refused and were rewritten: a `severity:` line inside a block scalar (now refused by the count rule), the depth mutation (now shown on an item whose only `severity:` sits in a scalar), and the indent mutation (now asserts its reason, not the outcome).
+- DONE: Rerun all saved reports under prod-security-review-gates/security/ (0 false holds expected)
+  All 19 reports (relay, relay-focus, control, validation replays) pass shape, parse and severity-count with 0 false holds; `mutations.sh` on `fixture-relay-prod-task.md` with c2-relay-1 as ideation-1.yaml prints baseline 0, no-line/not-run/no-finding2/undeclared/extra/traversal/no-focus/empty-why/decline-high 1, pilot/past-ideation 0.
+- DONE: Commit with named files only
+  298d6bc7 and a741e357, `git add` of the two script paths; hooks ran.
+- DONE: Run roborev_gate.py until clean or twice
+  Run 1 on 298d6bc7 (base 1e4cd1e8): High, a scalar root `tob_security_review: |` made a fake `findings:` list plain text that passed the shape rules (roborev:765). Valid, fixed in a741e357 as a fourth named rule (`root_value`: a root line with a value after its colon is refused) with a test per shape (block scalar, flow mapping, word; a trailing comment stays allowed) and a mutation. Run 2: `clean on a741e357c; evidence=roborev:766`.
+- DONE: Push without force, CI green
+  Pushed 1e4cd1e8..a741e357, no force. CI on a741e357: unit tests (python3) pass 1m6s, version parity pass 43s, route gate pass, GitGuardian pass. PR still Draft; no PR comment, review request or ready.
+- DONE: Affected documents and AC-8 boundary
+  `doc_impact.py origin/main HEAD` lists 0 documents; `git diff origin/main --stat` still lists prod.md, design_surfaces.py, test_design_surfaces.py and the ADR only; `lint-skills.py` prints `5495 of 5511 words`; 87 tests in `test_design_surfaces.py` pass, 125 with `test_comment_ratio` and `test_lint_skills`.
+
+### Summary
+
+The check now accepts only the reviewer's documented report shape and refuses everything else with its own error, rather than parsing more shapes. Limit (known, per the round-3 rule): a report that mentions `findings:` or `severity:` as a key-like line inside a description, or a second root-like line, is held as a false hold; none of the 19 saved reports does. One roborev finding beyond the three rules (scalar root) was fixed as a fourth refusal.
