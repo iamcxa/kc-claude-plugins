@@ -17,6 +17,8 @@ nearest README.md above the task folder with an `entity-type:` line; with neithe
 --names prints `<file>:<line>: bare package script name <NAME>` for each package script (a .py file
 directly under <package>/scripts/ or <package>/extensions/<name>/) written with no directory part in the
 Checklist or Scope notes section (the whole file when it has neither heading), and exits 1 when any is found.
+--names also prints `<file>:1: no 'Candidate: <40-hex head>' line; ...` for a `validation-<N>.md` directly in a `dispatch/` folder
+whose text above its first `## ` heading has no line delivery_gate.py accepts; --newest does not.
 --newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
 is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
 """
@@ -26,6 +28,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from delivery_gate import CANDIDATE, RECORD  # noqa: E402
 from number_guards import Misconfigured, frontmatter  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent.parent
@@ -140,6 +143,20 @@ def check_names(files, package):
     return 1 if found else 0
 
 
+def check_candidates(files):
+    found = False
+    for file in files:
+        path = Path(file).resolve()
+        if path.parent.name != "dispatch" or not RECORD.match(path.name):
+            continue
+        header = re.split(r"^## ", path.read_text(), maxsplit=1, flags=re.M)[0]
+        if not CANDIDATE.search(header):
+            print(f"{file}:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, "
+                  "then run this check again")
+            found = True
+    return 1 if found else 0
+
+
 def check_newest(state, slug, package):
     done = subprocess.run(["git", "-C", str(state), "log", "--diff-filter=A", "--no-renames", "--relative",
                            "--name-only", "--format=", "-n", "1", "--", f"{slug}/dispatch/"],
@@ -155,7 +172,7 @@ def check_newest(state, slug, package):
 def main(argv=None, package=PACKAGE):
     args = sys.argv[1:] if argv is None else argv
     if args[:1] == ["--names"] and len(args) > 1:
-        return check_names(args[1:], package)
+        return max(check_names(args[1:], package), check_candidates(args[1:]))
     if args[:1] == ["--newest"] and len(args) == 3:
         return check_newest(args[1], args[2], package)
     readme = None

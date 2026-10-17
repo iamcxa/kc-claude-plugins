@@ -41,6 +41,10 @@ its scripts, their tests and an `EXTENSION.md` in the shape of the existing ones
 mentions extensions only in its `## Extensions` section and the README's `extensions:` list,
 so a repository that lists none is unchanged.
 
+A script that newly needs a line or step only FO writes must also print it from a script the
+previous release's README already has FO run at that moment, shown by running the new scripts over
+the previous release's record shape; no check enforces this.
+
 ## Behaviour replay
 
 A change that claims a worker will act differently is shown before release, because

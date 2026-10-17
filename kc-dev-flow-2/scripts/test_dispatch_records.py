@@ -11,6 +11,12 @@ spec = importlib.util.spec_from_file_location("dispatch_records", Path(__file__)
 records = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(records)
 
+gate_spec = importlib.util.spec_from_file_location("delivery_gate", Path(__file__).with_name("delivery_gate.py"))
+gate = importlib.util.module_from_spec(gate_spec)
+gate_spec.loader.exec_module(gate)
+
+HEAD = "d2c96f5152e51de4efdd0ff78f420b9a0238d874"
+
 COMPLETE = """# task — validation, cycle 1
 
 Dispatched: 2026-10-10; state before dispatch commit 22d372bffe5d6352d65ef7c7520a311596caec3d
@@ -200,6 +206,35 @@ class DispatchRecordTests(unittest.TestCase):
         later = COMPLETE + "\n## Notes\nadr_lint.py\n"
         self.assertEqual(self.names(later), (0, ""))
         self.assertEqual(self.names("Run adr_lint.py\n"), (1, "validation-1.md:1: bare package script name adr_lint.py\n"))
+
+    def test_names_asks_for_a_candidate_line_in_a_validation_record_exactly_as_the_merge_gate_reads_it(self):
+        def run(name, text, folder="dispatch"):
+            with tempfile.TemporaryDirectory() as d:
+                task = Path(d, "task.md")
+                path = Path(d, "task", folder, name)
+                path.parent.mkdir(parents=True)
+                path.write_text(text)
+                with contextlib.redirect_stdout(io.StringIO()) as out:
+                    code = records.main(["--names", str(path)])
+                found = gate.dispatched_candidates(task)[0] if folder == "dispatch" and name == "validation-1.md" else None
+                return code, out.getvalue().replace(str(path), name), found
+
+        want = "validation-1.md:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, then run this check again\n"
+        self.assertEqual(run("validation-1.md", COMPLETE)[:2], (1, want))
+        with_line = COMPLETE.replace("Model: sonnet\n", f"Model: sonnet\nCandidate: {HEAD}\n")
+        self.assertEqual(run("validation-1.md", with_line)[:2], (0, ""))
+        for name, folder in (("implementation-1.md", "dispatch"), ("ideation-1.md", "dispatch"), ("validation-1.md", "elsewhere"),
+                             ("validation-x.md", "dispatch")):
+            self.assertEqual(run(name, COMPLETE, folder)[:2], (0, ""), (name, folder))
+        for label, line in (("40-hex", f"Candidate: {HEAD}"), ("39-hex", f"Candidate: {HEAD[:39]}"),
+                            ("uppercase", f"Candidate: {HEAD.upper()}"), ("trailing text", f"Candidate: {HEAD} head"),
+                            ("trailing space", f"Candidate: {HEAD}  ")):
+            with self.subTest(label):
+                code, _, found = run("validation-1.md", COMPLETE.replace("Model: sonnet\n", f"Model: sonnet\n{line}\n"))
+                self.assertEqual(code == 0, bool(found))
+        below = COMPLETE + f"\nCandidate: {HEAD}\n"
+        code, _, found = run("validation-1.md", below)
+        self.assertEqual((code, bool(found)), (1, False))
 
     def test_the_default_mode_does_not_scan_names(self):
         bare = COMPLETE.replace("1. Independent", "1. Run adr_lint.py. Independent")
@@ -397,6 +432,10 @@ class NewestTests(unittest.TestCase):
     def test_the_file_is_read_as_it_is_on_disk_not_as_committed(self):
         self.commit("task", "implementation-1", BARE)
         (self.state / "task/dispatch/implementation-1.md").write_text(COMPLETE)
+        self.assertEqual(self.newest(), (0, ""))
+
+    def test_a_validation_record_without_a_candidate_line_is_not_reported_as_newest(self):
+        self.commit("task", "validation-1", COMPLETE)
         self.assertEqual(self.newest(), (0, ""))
 
     def test_a_task_without_records_exits_clean_and_an_unreadable_state_exits_2(self):
