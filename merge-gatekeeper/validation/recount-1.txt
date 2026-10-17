@@ -1,0 +1,12 @@
+moment: the merge ask, no points (W, the pr_watch wait output, is the same in both and left out)
+  passage authority: base 215, candidate 212
+  passage head: base 57, candidate 33
+  passage extensions: base 90, candidate 90
+  passage review-findings: base 33, candidate 37
+  check output on the clean fixture (40-hex head): base 20, candidate 24 (limit 37)
+  total: base 415, candidate 396 (limit 404)
+workflow.md words: base 5447, candidate 5424
+other moments (startup, idle open PR, idle merged PR, archive, validation gate prep): unchanged files:
+ kc-dev-flow-2/skills/maintain-flow/SKILL.md | 4 ----
+ 1 file changed, 4 deletions(-)
+

@@ -1,0 +1,42 @@
+replay of 32 archived tasks with a merged PR in iamcxa/kc-claude-plugins, PRs read from GitHub now (read-only gh); gate text empty (no chat summary kept)
+  #650 amendment-form-check                             class=never            rule=ask   holds=- points=7
+  #543 board-optout                                     class=never            rule=ask   holds=no-candidate-line points=4
+  #468 canvas-document-popup                            class=never            rule=ask   holds=no-candidate-line points=1
+  #630 copilot-quota-refusal-is-not-a-review            class=never            rule=ask   holds=no-candidate-line points=13
+  #647 delivery-gate-verdict-form                       class=never            rule=ask   holds=- points=13
+  #651 dev2-laws-check                                  class=never            rule=ask   holds=- points=13
+  #535 dispatch-and-report-hygiene                      class=never            rule=ask   holds=no-candidate-line points=12
+  #652 extension-instruction-reaches-dispatch           class=never            rule=ask   holds=- points=13
+  #643 fo-lifecycle-mod                                 class=never            rule=ask   holds=no-candidate-line points=13
+  #640 fo-record-checks                                 class=never            rule=ask   holds=no-candidate-line points=13
+  #642 followup-dispatch-records-checked                class=never            rule=ask   holds=no-candidate-line points=13
+  #537 ideation-gaps                                    class=never            rule=ask   holds=no-candidate-line points=8
+  #628 journey-map-dev2-contract                        class=never            rule=ask   holds=no-candidate-line points=7
+  #558 journey-render-keeps-annotations                 class=never            rule=ask   holds=no-candidate-line,ci points=3
+  #639 learn-delivery-follow-through                    class=never            rule=ask   holds=no-candidate-line points=13
+  #473 learning-serialize-evaluation                    class=never            rule=ask   holds=no-candidate-line points=4
+  #533 migration-and-number-guards                      class=never            rule=ask   holds=no-candidate-line points=5
+  #649 names-check-before-dispatch                      class=never            rule=ask   holds=- points=5
+  #632 observer-before-merge-guard                      class=never            rule=ask   holds=no-candidate-line points=12
+  #549 patch-0102                                       class=never            rule=ask   holds=no-candidate-line points=2
+  #553 patch-0103                                       class=never            rule=ask   holds=no-candidate-line points=1
+  #555 poc-no-migrations                                class=never            rule=ask   holds=no-candidate-line points=2
+  #646 pr-watch-state-per-session                       class=never            rule=ask   holds=no-candidate-line points=4
+  #656 prod-security-review-gates                       class=never            rule=ask   holds=- points=9
+  #659 prod-security-validation-gate                    class=never            rule=ask   holds=- points=12
+  #544 reflow-order                                     class=never            rule=ask   holds=no-candidate-line points=2
+  #467 release-please-exclude-paths                     class=never            rule=ask   holds=no-candidate-line points=2
+  #540 release-review                                   class=never            rule=ask   holds=no-candidate-line points=4
+  #536 review-cadence                                   class=never            rule=ask   holds=no-candidate-line points=5
+  #633 worker-completion-goes-to-main                   class=never            rule=ask   holds=no-candidate-line points=12
+  #658 workflow-budget-ratchet                          class=never            rule=ask   holds=- points=13
+  #631 workflow-checkout-must-match-trunk-readme        class=never            rule=ask   holds=no-candidate-line points=8
+per class: how many asks the rule arm would say merge / ask
+  never            merge=0 ask=32
+  docs-only        merge=0 ask=0
+  script-with-test merge=0 ask=0
+  other            merge=0 ask=0
+bite instances (2026-10-17 count), validated head taken from the record's prose because those records predate the Candidate line form:
+  #632 (merged at 7679ab7a, validated 40c714a6; record: observer-before-merge-guard validation-3): final head 7679ab7a; head hold FIRES: head-differs; today's check on that record: no-candidate-line (no Candidate line existed)
+  #628 (merge of main at 0286f8e7 after the approval of 7d89898e; record: journey-map-dev2-contract validation-3): final head 0286f8e7; head hold FIRES: head-differs; today's check on that record: no-candidate-line (no Candidate line existed)
+  #549 (disclosed, both heads named in the gate): not counted as an accident; not replayed
