@@ -70,6 +70,9 @@ jobs:
       - name: test_delivery_gate.py
         run: python3 kc-dev-flow-2/scripts/test_delivery_gate.py
 
+      - name: test_validation_security.py
+        run: python3 kc-dev-flow-2/scripts/test_validation_security.py
+
       - name: test_pr_watch.py
         run: python3 kc-dev-flow-2/scripts/test_pr_watch.py
 

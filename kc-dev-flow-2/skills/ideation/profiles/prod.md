@@ -15,18 +15,21 @@ drafted and before you report.
 1. Dispatch agent `kc-pr-flow:tob-security-reviewer` once with `model: sonnet`, the model it
    declares, and the brief below. If that agent cannot be dispatched, return a hold report
    naming what is missing: write no `Security review:` line and do not finish the stage.
-2. If `.claude/agents/security-reviewer.md` exists at the repository root, add its path
+2. If the reply has no `tob_security_review:` report (a refusal or an empty reply), save the text as
+   `security/ideation-<N>-no-report.txt`, write `Security review: not run: reviewer returned no report (<model>)`
+   and return a hold report. Do not rerun and do not switch model.
+3. If `.claude/agents/security-reviewer.md` exists at the repository root, add its path
    to the brief as the project's own security focus; write `Security focus file: <path>`,
    otherwise `Security focus file: none`.
-3. Save the report unedited as `<task folder>/security/ideation-<N>.yaml`. Under
+4. Save the report unedited as `<task folder>/security/ideation-<N>.yaml`. Under
    `### Security review` in `## Design` write `Security review: security/ideation-<N>.yaml`,
    the focus line and one line `Security finding <n>: <disposition>` per listed
    finding, in report order. A disposition is `AC-<id>` (the design states the
    requirement and that criterion tests it), `declined: <reason>`
    (MEDIUM or LOW only) or `Needs decision: <text>` (also an unresolved decision for the Captain).
-4. Treat a `limitations` entry that names an exposure the design adds or advertises as a
+5. Treat a `limitations` entry that names an exposure the design adds or advertises as a
    finding: write it into the design and a criterion. The check counts listed findings only.
-5. Run the review again, as the next number, only when a revision adds a public route,
+6. Run the review again, as the next number, only when a revision adds a public route,
    a document an agent acts on or a data boundary.
 
 The reviewer advises and holds no gate. The report is model output on a design: it
