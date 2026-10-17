@@ -53,6 +53,17 @@ gates:
                 id: briefing:prod-security-validation-gate:validation:attempt-1:revision-1
                 digest: sha256:11ee6b332f65426b213e3cb6c1fa809b0b05e2de5674cb5d3e31c65ee12c975d
                 room-ref: ./prod-security-validation-gate/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:prod-security-validation-gate:validation:1
+                briefing: briefing:prod-security-validation-gate:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T14:06:40.908057Z"
+                decision: approve
+                reason: 'Captain approved delivery of #659 head fce79ed7 in chat ("approve delivering #659"), accepting FO''s recommendation to decline the Deferred risks and Polish into prod-security-validation-gate-followups'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-17T06:11:21Z
 worktree: .worktrees/spacedock-ensign-prod-security-validation-gate
 pr: iamcxa/kc-claude-plugins#659
