@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:prod-security-validation-gate:validation:attempt-1:revision-1",
+  "question": "Deliver #659 head fce79ed7 (a prod task's validation carries a security review that reaches code the change exposes, enforced at the merge ask): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the Deferred risks and Polish below into backlog task prod-security-validation-gate-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:prod-security-validation-gate:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c4e914f21571fce4d8cfe3566956a197da289ff4/prod-security-validation-gate.md",
+      "rev": "sha256:a6cf94d39f6fdf7baae8a0dab5b07a1ac8090fc9020a5fe8c2ac3e497edb250a",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at fce79ed7 (validation-1; base 19fe3b5b is current main). FO ran the acceptance script as written in env -i bash: every step matched (8 files, no references/ file; 5 and 20 tests OK; a prod task with no validation review holds with a next: line; a reviewed task with every finding disposed passes; refusal text saved as the report holds; adr_lint exit 0). AC-2 with the shipped brief, Sonnet, no revision: both relay #347 runs name the uncapped session or result writes, the control returns no finding. Three automated security-review items on an earlier commit (an unreadable profile skipped as non-prod, a duplicate finding line overriding, the review not bound to the PR head) and one roborev High (a second severity line hiding a HIGH) are fixed, each with a failing-first test and a mutation. Words FO reads: merge ask on a prod task 77 to 87; pilot output unchanged (20 words); workflow.md unchanged. CI: one test step added to the existing job, about one second. ADR 0021. External rounds: Codex 1 (clean, 👍 on comment 6233312951). RoboRev local (796), not counted. Declined, with reasons: Deferred risk, a fabricated findings: [] report cannot be told from a real one (none seen; Material if found); Deferred risk, a worker that skips the review meets the hold at the merge ask, not the validation gate (D3, ruled); Deferred risk, Opus and Fable one run each and no real refusal yet; Polish, the standalone check accepts a review at any dispatched head (delivery_gate.py binds it); Polish, a task with no readable profile now holds instead of skipping (safer deviation). Second reviewer: copilot because the change alters review rules (a security review required at the prod merge ask). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Limit: no real refusal, no end-to-end validation worker, gate rendering and Codex-hosted workers not verified."
+    }
+  ]
+}

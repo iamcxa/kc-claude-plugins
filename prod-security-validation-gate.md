@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:prod-security-validation-gate:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:prod-security-validation-gate-validation-1
+              briefing:
+                id: briefing:prod-security-validation-gate:validation:attempt-1:revision-1
+                digest: sha256:11ee6b332f65426b213e3cb6c1fa809b0b05e2de5674cb5d3e31c65ee12c975d
+                room-ref: ./prod-security-validation-gate/review/validation/briefing-1
 started: 2026-10-17T06:11:21Z
 worktree: .worktrees/spacedock-ensign-prod-security-validation-gate
 pr: iamcxa/kc-claude-plugins#659
