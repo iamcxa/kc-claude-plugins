@@ -3,7 +3,7 @@ title: Workers load the newest installed kc-dev-flow-2, not the version the work
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-17T06:11:43Z
 worktree: .worktrees/spacedock-ensign-worker-loads-declared-package
+pr: iamcxa/kc-claude-plugins#661
 ---
 
 Filed on the Captain's 「兩問題照這樣做」 (chat, 2026-10-17), to FO's question whether to file the subspace-relay FO's report as a kc-dev-flow-2 task.
