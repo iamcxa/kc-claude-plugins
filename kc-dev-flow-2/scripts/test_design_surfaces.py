@@ -555,6 +555,7 @@ class SecurityReviewTests(unittest.TestCase):
 
     def test_a_file_that_is_not_a_review_report_and_a_path_leaving_the_task_folder_are_refused(self):
         self.refused("is not a tob_security_review report", report="findings:\n  - severity: LOW\n")
+        self.refused("is not a tob_security_review report", report="tob_security_review:\n  pr: none\n")
         self.refused("not a report file inside the task folder", review=REVIEW_LINES.replace("security/ideation-1.yaml", "../x.yaml", 1), outside=True)
 
     def test_a_task_of_another_profile_or_past_ideation_is_unchanged(self):
@@ -576,6 +577,17 @@ class SecurityReviewTests(unittest.TestCase):
     def test_a_bold_acceptance_id_in_design_prose_is_not_a_declared_criterion(self):
         review = REVIEW_LINES.replace("finding 1: AC-2", "finding 1: AC-77") + "\n**AC-77**: a claim made in the design, not a criterion.\n"
         self.refused("report finding 1 has no", review=review)
+
+    def test_a_quoted_severity_still_counts_as_a_finding(self):
+        quoted = REPORT.replace("severity: HIGH", 'severity: "HIGH"')
+        self.refused("report finding 1 has no", review=REVIEW_LINES.replace("finding 1: AC-2", "finding 1: declined: accepted"), report=quoted)
+        errors, notes = self.run_check(report=quoted)
+        self.assertEqual((errors, len(notes)), ([], 1))
+
+    def test_a_report_with_an_empty_findings_list_passes_with_no_finding_lines(self):
+        errors, notes = self.run_check(review="Security review: security/ideation-1.yaml\nSecurity focus file: none\n", report="tob_security_review:\n  pr: none\n  findings: []\n")
+        self.assertEqual(errors, [])
+        self.assertIn("0 findings", notes[0])
 
     def test_mutation_dropping_the_security_call_lets_a_missing_review_pass(self):
         mutant = mutated("summary = check_security(path, plain, declared, errors)", "summary = None")
@@ -612,6 +624,21 @@ class SecurityReviewTests(unittest.TestCase):
         kwargs = dict(review="", report=None, profile='"prod"', status="ideation")
         self.assertTrue(self.run_check(**kwargs)[0])
         self.assertEqual(self.run_check(module=mutant, **kwargs)[0], [])
+
+    def test_mutation_dropping_the_findings_key_rule_accepts_a_report_without_findings(self):
+        mutant = mutated(" and REPORT_FINDINGS_KEY.search(text)", "")
+        bare = "tob_security_review:\n  pr: none\n"
+        review = "Security review: security/ideation-1.yaml\nSecurity focus file: none\n"
+        self.assertTrue(self.run_check(review=review, report=bare)[0])
+        self.assertEqual(self.run_check(review=review, report=bare, module=mutant)[0], [])
+
+    def test_mutation_matching_an_unquoted_severity_only_skips_a_quoted_high(self):
+        mutant = mutated(r'''["']?(CRITICAL|HIGH|MEDIUM|LOW)\b""", re.M)''', r'''(CRITICAL|HIGH|MEDIUM|LOW)\b""", re.M)''')
+        quoted = REPORT.replace("severity: HIGH", 'severity: "HIGH"')
+        review = REVIEW_LINES.replace("finding 1: AC-2", "finding 1: declined: accepted")
+        self.assertTrue(any("report finding 1 has no" in e for e in self.run_check(review=review, report=quoted)[0]))
+        self.assertFalse(any("report finding 1 has no" in e for e in self.run_check(review=review, report=quoted, module=mutant)[0]))
+        self.assertTrue(self.run_check(review=REVIEW_LINES, report=quoted, module=mutant)[0])
 
     def test_mutation_checking_every_profile_and_stage_fails_the_unchanged_cases(self):
         mutant = mutated('if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):', "if profile and status:")

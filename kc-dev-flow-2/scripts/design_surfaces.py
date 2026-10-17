@@ -31,7 +31,8 @@ FM_STATUS = re.compile(r"""^status:[ \t]*["']?([^\s"']+)["']?[ \t]*$""", re.M)
 REVIEW_LINE = re.compile(r"^Security review:[ \t]*(\S.*)$", re.M)
 FOCUS_LINE = re.compile(r"^Security focus file:[ \t]*(\S.*)$", re.M)
 FINDING_LINE = re.compile(r"^Security finding (\d+):[ \t]*(\S.*)$", re.M)
-REPORT_FINDING = re.compile(r"^\s+severity:[ \t]*(CRITICAL|HIGH|MEDIUM|LOW)\b", re.M)
+REPORT_FINDING = re.compile(r"""^\s+severity:[ \t]*["']?(CRITICAL|HIGH|MEDIUM|LOW)\b""", re.M)
+REPORT_FINDINGS_KEY = re.compile(r"^\s+findings:", re.M)
 TABLE = re.compile(r"^[ \t]*\|.*\|[ \t]*\n[ \t]*\|[ \t:|-]*-[ \t:|-]*\|?[ \t]*$", re.M)
 
 
@@ -155,8 +156,8 @@ def check_security(path, body, declared, errors):
         errors.append(f"{name}: 'Security review:' names '{value}', not a report file inside the task folder")
         return None
     text = report.read_text()
-    if not re.search(r"^tob_security_review:", text, re.M):
-        errors.append(f"{name}: '{value}' is not a tob_security_review report")
+    if not (re.search(r"^tob_security_review:", text, re.M) and REPORT_FINDINGS_KEY.search(text)):
+        errors.append(f"{name}: '{value}' is not a tob_security_review report with a 'findings' entry")
         return None
     if not FOCUS_LINE.search(body):
         errors.append(f"{name}: a prod task needs a 'Security focus file:' line (a path, or none)")
