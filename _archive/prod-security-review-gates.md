@@ -1,6 +1,6 @@
 ---
 title: A prod-profile task passes a security review at two different gates instead of waiting for someone to judge that one is needed
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -79,10 +79,13 @@ gates:
                 reason: 'Captain approved delivery of #656 head 44f77c1b in chat (「准」), accepting FO''s recommendation to decline F2 to F4 and the round-4 P2s into backlog task prod-security-check-round3-followups and keep AC-8'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-16T03:14:23Z
 worktree: .worktrees/spacedock-ensign-prod-security-review-gates
 pr: pr-merge:656
+verdict: PASSED
+completed: 2026-10-17T04:48:30Z
+archived: 2026-10-17T04:48:30Z
 ---
 
 Relayed by subspace-relay's FO session on 2026-10-13, not heard directly. Captain's words as relayed: 「此外 dev2 prod profile 應該強化安全掃描這一塊，必須有至少一到兩位安全審核員，守不同關卡。你可以先給 plugin FO 發訊息讓他知道」.
