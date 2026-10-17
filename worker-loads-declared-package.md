@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:worker-loads-declared-package:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:worker-loads-declared-package-validation-1
+              briefing:
+                id: briefing:worker-loads-declared-package:validation:attempt-1:revision-1
+                digest: sha256:caadb8a2e143e914fd41506823c250eec52c4eb736b5bb1cca1dadb1955538fc
+                room-ref: ./worker-loads-declared-package/review/validation/briefing-1
 started: 2026-10-17T06:11:43Z
 worktree: .worktrees/spacedock-ensign-worker-loads-declared-package
 pr: iamcxa/kc-claude-plugins#661

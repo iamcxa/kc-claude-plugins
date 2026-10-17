@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-loads-declared-package:validation:attempt-1:revision-1",
+  "question": "Deliver #661 head 7d169549 (the dispatch-record name check also reports a validation record with no Candidate: line, so an adopter whose README is behind the installed package learns the step before the merge ask holds; the state-branch laws runner reports that miss as an L2 violation): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the Deferred risks and Polish below into backlog task worker-loads-declared-package-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:worker-loads-declared-package:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/88137bf28dff05fa0acd784dd0f7926ebec943cf/worker-loads-declared-package.md",
+      "rev": "sha256:a885f457864338bfee2d1cc733f6ab71a1c3e5eea7af854d8f09c992bbe76a7d",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at 7d169549 (validation-2, recheck after one repair cycle; merges cleanly with current main 9b58cd68). FO ran the acceptance script as written in env -i bash: every step matched (a Candidate-less validation record exits 1 with the add-a-Candidate line, with the line exits 0; delivery_gate passes at the dispatched head and holds at another; laws_check reports one L2 violation for the Candidate-less record; 38 and 38 tests OK). Finding behind it: a worker always loads the installed plugin, so relay's hold came from FO's README not naming the 0.23.0 Candidate step. Words FO reads: no README word; workflow.md unchanged. External rounds: Codex 2 (round 1 one P2: laws_check.py could not parse the new diagnostic and exited cannot-judge; fixed by one regex, adding laws_check.py and its test to the PR under FO authorization; round 2 clean). RoboRev local (798, 803), not counted. Declined, with reasons: Deferred risk, an FO on a README older than 0.23.0 may not act on a printed line that is not a script name (unmeasured; FO-only step; no worse than today's hold); Deferred risk, a laws workflow over a 0.22.1 README reports one L2 violation per pushed Candidate-less record (no adopter runs it yet); Polish, laws.md L2 wording does not name the Candidate line, the violation text ends '(line 1)', and two bounded absolutes in a test name and a sentence. Second reviewer: copilot because the change alters the checks FO runs before every dispatch and the state-branch law (review rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Limit: Codex-hosted workers not exercised."
+    }
+  ]
+}
