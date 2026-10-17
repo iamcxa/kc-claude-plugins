@@ -3,7 +3,7 @@ title: POC — FO follows the workflow rules at least as well when it starts fro
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
