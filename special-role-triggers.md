@@ -307,3 +307,22 @@ In `role_triggers.py`: (1) `made.group(1) <= latest` becomes `>= latest` in `cle
 ### Summary
 
 Both Codex P2 are real and reproduce as failing tests; the fix is about 11 lines in `role_triggers.py` plus removing one superseded test case. Decision for FO: the only recorded call in state (prod-security-review-gates) sits under `## Acceptance criteria`, not `## FO alignment`, so finding 2's rule would not count it (it names Cycle 2, so it clears nothing either way); also, finding 2 is not covered by Captain amendment 1, so its rule (restrict to `## FO alignment`) needs FO's ruling before it enters an AC.
+
+## Stage Report: implementation (cycle 2, phase 2)
+
+- DONE: Apply the phase-1 fix in role_triggers.py (call dated no earlier than the entry clears it, AC-10; only lines under ## FO alignment with its ### subheadings clear an event or carry a waiver); drop the superseded 10-17 case from the old test and keep the two new tests
+  Commit 7701703b on spacedock-ensign/special-role-triggers (off 5afe7fd7): `>= latest` in `cleared()`, new `alignment()` generator feeding both `cleared()` calls, docstring updated; old test renamed `..._naming_another_number_is_owed` without the 10-17 case.
+- DONE: Each rule's test fails under its own mutation (python3 -B, no bytecode)
+  Date: `<= latest` back fails the 10-17 and 10-14 subtests. Section: `cleared(lines, ...)` back fails "call/waiver in another section". Subheading: ending the section at level 3 fails "call/waiver under a subheading of FO alignment". Unmutated copy: 11 tests OK.
+- DONE: Output over the state task files unchanged except where the new rules apply, with the count
+  Base script (5afe7fd7) vs new, md5 of stdout per task over all 323 .md files at state f3474f68: 0 differ, because no recorded call there sits under a changed rule's edge (the one real call, prod-security-review-gates, names Cycle 2).
+- DONE: lint-skills.py exits 0 at 5447 of 5447; all package test files pass
+  `lint-skills.py` exit 0, "5447 of 5447 words"; every `test_*.py` in kc-dev-flow-2/scripts exits 0 (test_sd_dispatch.py with `--sd-plugin-root` spacedock 0.27.0).
+- DONE: roborev evidence= line; push without force; CI green on the new head
+  `roborev clean on 7701703; evidence=roborev:814` (codex, SEVERITY_THRESHOLD_MET, verdict_bool 1); plain push 5afe7fd7..7701703b; `gh pr checks 664`: 5 passed, 0 failed, headRefOid 7701703beff2d9c48ee3577db395449df6f3747e.
+- DONE: commit the stage report
+  State commit via `spacedock state commit` (see the FO message).
+
+### Summary
+
+Both Codex P2 on #664 are fixed at 7701703b with a failing-first test and a mutation each; the state output is unchanged over 323 task files. Remaining for FO: a fresh validation recheck; no PR comment, review request or ready-mark was made.
