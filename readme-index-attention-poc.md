@@ -34,6 +34,17 @@ gates:
                 id: briefing:readme-index-attention-poc:validation:attempt-1:revision-1
                 digest: sha256:27189f231ede3d85122e4803cf88e5050ffc1178fd2fc108f5b1e922224d18e9
                 room-ref: ./readme-index-attention-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:readme-index-attention-poc:validation:1
+                briefing: briefing:readme-index-attention-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T14:34:58.681358Z"
+                decision: approve
+                reason: Captain approved in chat (「好，就這樣」) closing the POC as failing his bar with no README restructure, after asking whether the model already holds about 5000 words without losing focus; the follow-up is reframed to test, in long sessions, whether rules that reappear at the moment of use reduce violations, and only after a long-session test exists
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-17T13:58:28Z
 worktree: .worktrees/spacedock-ensign-readme-index-attention-poc
 ---
