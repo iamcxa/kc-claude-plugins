@@ -249,6 +249,10 @@ Verified by: `python3 <package>/scripts/adr_lint.py docs/adr --since <base> --re
 
 Not verified by this design: a real validation worker writing the lines end to end, how the gate presentation renders them, a real refusal, a Codex-hosted worker, Opus and Fable beyond one Reach-brief run each, any effort level other than the agent's own.
 
+## Number guards
+
+ADR: 0021
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for the prod validation-gate security review that reaches code the change exposes outside its diff (bar: relay #347's unbounded comment or session write class), starting with the measurement: two runs each of kc-pr-flow:tob-security-reviewer on Sonnet 5.5, Opus 5.5 and Fable 5.1 on relay #347 at 1c5b1870 at security_tier full, plus one control run per model, recording findings, refusals (cyber category), tokens, duration and cost; then the default model and effort, and what prod.md tells a worker when the reviewer refuses. Report the measured cost before choosing
