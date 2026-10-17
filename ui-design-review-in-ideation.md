@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:ui-design-review-in-ideation:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:ui-design-review-in-ideation-backlog-1
+              briefing:
+                id: briefing:ui-design-review-in-ideation:backlog:attempt-1:revision-1
+                digest: sha256:5e30aa55686d7f9ab6b30c2e80b95cb57f39a344218afa5ddffb69ed38c3925f
+                room-ref: ./ui-design-review-in-ideation/review/backlog/briefing-1
 ---
 
 Filed on the Captain's 「同意設計待辦」 (chat, 2026-10-17), to FO's proposal to file the subspace-web FO's design-director proposal as one task that reuses the mechanism of prod-security-review-gates (a specialist review inside ideation; its findings become design requirements and acceptance criteria; `design_surfaces.py check` refuses a design whose review is missing or whose findings have no disposition).

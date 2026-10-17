@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ui-design-review-in-ideation:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 2 (workflow-budget-ratchet, special-role-triggers, worker-loads-declared-package, prod-security-validation-gate, ui-design-review-in-ideation, merge-gatekeeper)? Approving accepts profile pilot as recommended, and that the six ideations run in parallel, each with a Batch overlap item; special-role-triggers stacks on workflow-budget-ratchet because both edit the workflow rules and the new rule must fit the lowered budget.",
+  "artifacts": [
+    {
+      "id": "artifact:ui-design-review-in-ideation:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9ccd0fa979da91ba818ab8b4d1609016b2e63463/ui-design-review-in-ideation.md",
+      "rev": "sha256:21018236d69ca771842a9181f6c4041aa63cffb16a1b6a368aa42110b173aa35",
+      "mediaType": "text/markdown",
+      "summary": "Seed: the subspace-web FO's design-director proposal: a ui task's ideation runs a design review over its previews and turns findings into requirements and criteria, reusing the #656 seam. Ideation owes: the reviewer (design:design-critique, ui-verify, or a packaged brief) and the replay proof on archived holder-panel and chevron previews before shipping."
+    }
+  ]
+}
