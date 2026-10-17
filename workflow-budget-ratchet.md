@@ -53,6 +53,17 @@ gates:
                 id: briefing:workflow-budget-ratchet:validation:attempt-1:revision-1
                 digest: sha256:e5429d408327c312fa489faefe9d35bd2b2c4262785e7b053aedb648ab5e2342
                 room-ref: ./workflow-budget-ratchet/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:workflow-budget-ratchet:validation:1
+                briefing: briefing:workflow-budget-ratchet:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T13:48:23.723547Z"
+                decision: approve
+                reason: 'Captain approved delivery of #658 head e65a91ba in chat (「合併且開任務，先走poc證明真的比較好再繼續」), after asking how the change protects attention rather than only cutting words; accepts FO''s recommendation to decline the Deferred risk and Polish into workflow-budget-ratchet-followups and to replace the PR body; he also asked FO to merge and to open a POC task for an index-first README'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-17T06:11:09Z
 worktree: .worktrees/spacedock-ensign-workflow-budget-ratchet
 pr: iamcxa/kc-claude-plugins#658
