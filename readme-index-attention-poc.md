@@ -3,7 +3,7 @@ title: POC — FO follows the workflow rules at least as well when it starts fro
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: backlog
+status: implementation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain approved in chat (「按你建議的 poc 標準可以」) the POC with the recommended bar stated in the gate question: five probes, three runs per arm on Sonnet; pass when the index arm follows the probed rules at least as often in total, is worse on no probe by more than one run, and loads at most a quarter of the whole-README startup words'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Filed on the Captain's words (chat, 2026-10-17), after FO said #658 (workflow-budget-ratchet) only cuts words and does not change how the README is read: 「長度的問題是，不應該讓 llm一次讀麽多字，應該只讀必要的，就算是第一次讀入的東西應該是一個索引，讓新的 llm 一直知道去哪裡找什麼，不是一次餵給他一大堆現在還用不到的東西……如果能先解決前面的問題，那文件長度可能就不是核心問題」, then 「合併且開任務，先走poc證明真的比較好再繼續」.
