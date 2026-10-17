@@ -317,8 +317,8 @@ The design is a small opt-in extension that has FO dispatch kc-pr-flow's existin
 
 ## Number guards
 
-ADR: 0018
-
+ADR: 0019
+ADR 0018 was reserved here on 2026-10-16 and taken on main by another task's commit c89c3090 (docs: renumber private host decision to ADR 0018); re-reserved 2026-10-17.
 ## Stage Report: implementation
 
 - FAILED: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main implementing D1 to D3 as recommended: the opt-in security extension dispatching kc-pr-flow's tob-security-reviewer unchanged at the ideation and validation gates of a prod task, under the stop rule (at most two revisions of the review brief; the extension does not ship if AC-3 and AC-4 still fail); every acceptance criterion in the task file green, each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
