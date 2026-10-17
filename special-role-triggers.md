@@ -161,6 +161,8 @@ Counted `len(text.split())` on origin/main 0.24.0; `workflow.md` is 5495 words, 
 | the README's `reviewer-record` sentence | 20 words | 20 | at most 20 | at most 20 |
 
 This change cannot lower a moment; it adds text only while a call is owed and removes it when the line is recorded. No README word is added. If workflow-budget-ratchet sets the budget equal to the count, the sentence must be net zero or negative, which AC-5 requires.
+- Cycle 1 (FO, 2026-10-17): Codex review on #664 5afe7fd7 (review:5558171225) left two P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 `kc-dev-flow-2/scripts/role_triggers.py`: (1) an engineering-reviewer call dated after the amendment entry is rejected (the comparison requires call date <= entry date), so pr_watch.py tasks keeps reporting it owed; Captain amendment 1 now supersedes AC-2 with 'no earlier than the entry date'; (2) cleared() scans every unfenced line, so a Reviewer: line copied into a validation report or other section clears the debt, though the rule and the remediation require it under ## FO alignment.
 
 ## Acceptance criteria
 
