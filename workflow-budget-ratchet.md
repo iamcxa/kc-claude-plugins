@@ -221,6 +221,11 @@ Today's figures are origin/main `ca368cee`. Commands run from the repository roo
 
 ADR: 0020
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-17): Codex review on #658 57673bfd (review:5557548181) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 `kc-dev-flow-2/references/sd/workflow.md`: the shrunk Stages sentence for resumed dispatches dropped 'never a pointer' and says only 'the same check', but `kc-dev-flow-2/scripts/dispatch_records.py` is_pointer rejects only its POINTER_WORDS list and documents 'Reuse the checklist of validation-1.' as passing, so the README no longer forbids a pointer the script lets through.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for a word budget for kc-dev-flow-2/references/sd/workflow.md that only goes down (enforced in kc-dev-flow-2/scripts/lint-skills.py), with a raise allowed only on a recorded Captain ruling and evidence that the added text is not loaded at once; and which rules a script already checks shrink to one pointer sentence, each script's failure message read first, with the words saved measured; plus the laws.md Rule lines that restate README rules
