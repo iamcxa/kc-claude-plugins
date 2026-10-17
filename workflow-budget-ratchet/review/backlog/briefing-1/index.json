@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:workflow-budget-ratchet:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 2 (workflow-budget-ratchet, special-role-triggers, worker-loads-declared-package, prod-security-validation-gate, ui-design-review-in-ideation, merge-gatekeeper)? Approving accepts profile pilot as recommended, and that the six ideations run in parallel, each with a Batch overlap item; special-role-triggers stacks on workflow-budget-ratchet because both edit the workflow rules and the new rule must fit the lowered budget.",
+  "artifacts": [
+    {
+      "id": "artifact:workflow-budget-ratchet:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4567cb8d39db49813545e0790d23e2de1d95c69d/workflow-budget-ratchet.md",
+      "rev": "sha256:8c6f79b267b5f3b0d3c6de6f76e1cd7d8779d98eacf3a9a09875dab168a9ab07",
+      "mediaType": "text/markdown",
+      "summary": "Seed: the Captain's ratchet (chat 2026-10-17): the workflow word budget only goes down unless a raise is shown not to load at once, and rules a script enforces shrink to a pointer. Measured 2026-10-17: workflow.md 5495 words, budget 5511, raised in about 22 commits since 4414/4420 on 2026-10-09. Ideation owes: the words each pointer saves, each script failure message checked first, and the laws.md vs README duplication."
+    }
+  ]
+}
