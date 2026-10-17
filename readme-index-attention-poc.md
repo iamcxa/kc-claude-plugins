@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:readme-index-attention-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:readme-index-attention-poc-validation-1
+              briefing:
+                id: briefing:readme-index-attention-poc:validation:attempt-1:revision-1
+                digest: sha256:27189f231ede3d85122e4803cf88e5050ffc1178fd2fc108f5b1e922224d18e9
+                room-ref: ./readme-index-attention-poc/review/validation/briefing-1
 started: 2026-10-17T13:58:28Z
 worktree: .worktrees/spacedock-ensign-readme-index-attention-poc
 ---

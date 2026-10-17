@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:readme-index-attention-poc:validation:attempt-1:revision-1",
+  "question": "Accept the POC result as failing your bar, close the task with no README restructure, and file a backlog item that a README index is retried only with a long-session test? Approving accepts that recommendation; say 'second POC' if you want another round now with harder probes.",
+  "artifacts": [
+    {
+      "id": "artifact:readme-index-attention-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1c5cef4eab758a320cd9e957126764bd8e350148/readme-index-attention-poc.md",
+      "rev": "sha256:5cf9f338072ae732bc3b0b33a077b93bde1a910d58ca6a0d06dbefb7804100f3",
+      "mediaType": "text/markdown",
+      "summary": "Validation REJECTED as registered (re-scored independently, all 30 runs, matches). Startup words: index 628 of 5499 (11%), bar 25%, pass. Rules followed in total: 13 of 15 each arm, pass. Per probe: P1 index 1 of 3 vs whole 3 of 3, worse by two, bar allows one, fail. The index arm's two P1 misses were not the bare-name rule (both followed it) but dropping a checklist item the situation gave verbatim after opening the number-guards file, a behaviour the whole-README arm never showed. Three of five probes were followed in every run by both arms, so the POC cannot show the index is better. Tokens: the index arm used slightly more (27.6k vs 26.2k mean). Upstream finding: Spacedock's FO boot opens no README body; reading the whole README is kc-dev-flow-2's own convention, so an index would change only the package. Not shown: long sessions, where the observer's violations come from; a live FO."
+    }
+  ]
+}
