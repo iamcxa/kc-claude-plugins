@@ -3,7 +3,7 @@ title: Workers load the newest installed kc-dev-flow-2, not the version the work
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain approved in chat (「准」) the six batch-2 backlog gates presented together in one message, accepting the recommended profiles (pilot; merge-gatekeeper prod) and the stated order
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Filed on the Captain's 「兩問題照這樣做」 (chat, 2026-10-17), to FO's question whether to file the subspace-relay FO's report as a kc-dev-flow-2 task.
