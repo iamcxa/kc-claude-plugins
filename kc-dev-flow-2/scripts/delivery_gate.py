@@ -4,11 +4,12 @@
 Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>]
 
 The dispatched heads are the whole `Candidate: <40-hex head>` lines above the first `## ` heading of the
-highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check reads no validation report.
+highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check reads no validation verdict.
+A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at the dispatched head the PR head equals, every finding disposed); a task whose profile cannot be read as poc, pilot or prod holds.
 The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
-Exit 0 when both hold; 1 when the head differs or a second reviewer has no stated outcome (both printed);
+Exit 0 when both hold; 1 when the head differs, a second reviewer has no stated outcome or a prod task's security review fails (all printed);
 2 when that record has no such line, the head cannot be read, or an input is unusable.
 Each exit ends with one `next:` line, or one per problem for exit 1, naming what FO does with the ask.
 """
@@ -18,6 +19,8 @@ import re
 import subprocess
 import sys
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
 RECORD = re.compile(r"^validation-(\d+)\.md$")
@@ -93,6 +96,18 @@ def check(args):
             problems.append(f"PR head {head} differs from dispatched candidate {' '.join(candidates)} (latest validation record {record.name})")
             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
 
+    security_errors, security_note = [], None
+    at_head = [c for c in candidates if head and c.startswith(head)]
+    if at_head:
+        try:
+            from validation_security import check_task as security_check
+            security_errors, security_note = security_check(task, at_head)
+        except (OSError, UnicodeDecodeError) as error:
+            security_errors = [f"cannot read the validation security review: {error}"]
+    for error in security_errors:
+        problems.append(error)
+        nexts.append("next: hold the ask; run the validation security review at this head, or tell the Captain.")
+
     for reviewer in unstated_second_reviewers(gate_text):
         nexts.append("next: hold the ask until each second reviewer has an outcome.")
         problems.append(f"second reviewer {reviewer} has no stated outcome: "
@@ -107,6 +122,8 @@ def check(args):
         print(*(dict.fromkeys(nexts) or ["next: hold the ask and show the Captain these lines."]), sep="\n")
         return 2
     print(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing")
+    if security_note:
+        print(security_note)
     print("next: ask for merge with this text.")
     return 0
 
