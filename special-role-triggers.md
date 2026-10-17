@@ -15,6 +15,17 @@ gates:
                 id: briefing:special-role-triggers:backlog:attempt-1:revision-1
                 digest: sha256:74c822b9bd672956a82c4848d8e7232193807f3120443cf9287065eab87beb1d
                 room-ref: ./special-role-triggers/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:special-role-triggers:backlog:1
+                briefing: briefing:special-role-triggers:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T06:10:14.079276Z"
+                decision: approve
+                reason: Captain approved in chat (「准」) the six batch-2 backlog gates presented together in one message, accepting the recommended profiles (pilot; merge-gatekeeper prod) and the stated order
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Filed on the Captain's 「可以，建成待辦」 (chat, 2026-10-16), after FO listed six moments in one session where a special role applied and was not used. The README says FO calls them when it judges they are needed; FO rarely judges its own work to need a second opinion, the same failure as the relay prod task where risk-selected security review never fired.
