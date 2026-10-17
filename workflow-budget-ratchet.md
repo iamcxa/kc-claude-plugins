@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:workflow-budget-ratchet:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:workflow-budget-ratchet-ideation-1
+              briefing:
+                id: briefing:workflow-budget-ratchet:ideation:attempt-1:revision-1
+                digest: sha256:a61a2af02a82e3a15c26ca5173a165b5c56f4af2fb4e63f0ce829d0d00a350c2
+                room-ref: ./workflow-budget-ratchet/review/ideation/briefing-1
 started: 2026-10-17T06:11:09Z
 ---
 

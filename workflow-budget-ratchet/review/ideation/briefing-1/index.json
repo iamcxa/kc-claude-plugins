@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:workflow-budget-ratchet:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts the recommendations D1 (a README raise needs a budget step carrying the Captain's quoted words and a loaded: moment, checked for presence only), D2 (this task lands first), D3 (leave laws.md L1 and L2 Rule lines), D4 (Number guards becomes a follow-up task), and FO's implementation order below.",
+  "artifacts": [
+    {
+      "id": "artifact:workflow-budget-ratchet:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e649daf20670c7da8b3ef1010c13396032f4ece7/workflow-budget-ratchet.md",
+      "rev": "sha256:60173d3996db6e83daa44edd27ca2738e1f8b1ef418ee6840488321af38835b6",
+      "mediaType": "text/markdown",
+      "summary": "Design: lint-skills.py budget becomes a start value plus recorded steps that must sum to the README word count; a cut lowers it in the same change, a raise needs a ruling. Shrink is 63 words (5495 to 5432): three passages become pointers after each failure message was read; four rule sentences kept with reasons. Words FO reads: startup 5543 to 5480, dispatch build 380 to 356, ideation gate 342 to 329, amendment entry 414 to 392, merge ask unchanged. AC-1 to AC-9 with falsifiers; AC-9 is a post-release measure. Correction by FO: the report labels its source origin/main ca368cee; that is an old commit (4373 words); its figures match the current main 19fe3b5b (5495 words). Not tested: whether FO runs the new dispatch-record step. Implementation order (FO, from the six Batch overlap sections): workflow-budget-ratchet and prod-security-validation-gate first in parallel; after the ratchet merges, worker-loads-declared-package, ui-design-review-in-ideation and special-role-triggers; merge-gatekeeper after prod-security-validation-gate (both edit delivery_gate.py). At most three workers at once."
+    }
+  ]
+}
