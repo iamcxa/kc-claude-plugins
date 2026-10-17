@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:special-role-triggers:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts the recommendations D1 (chief-engineer is owed at the third Feedback Cycle, Spacedock's own stop, not the second), D2 (a waiver line 'Reviewer: \u003cagent\u003e not run: \u003creason\u003e' is allowed), D3 (engineering-reviewer is owed after his answer on an amendment and before the applying worker is dispatched), and FO's implementation order below.",
+  "artifacts": [
+    {
+      "id": "artifact:special-role-triggers:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c4a3a92b04f46f8e9878fdb6616175cecf52118a/special-role-triggers.md",
+      "rev": "sha256:a49e57a18f8d5d0bde92eb98885f6f60f5be1d44e3ab259cbff59f4478b14a39",
+      "mediaType": "text/markdown",
+      "summary": "Design: a 'same class twice' detector was probed and rejected (fires on 9 of 13 archived tasks, 0 paths in relay, misses one cited case). Events instead: the third Cycle entry owes chief-engineer; an amendment whose Supersedes or Design is not none owes engineering-reviewer. New role_triggers.py read by pr_watch.py tasks gives FO an idle next: line; the observer reports an owed call as a violation. Cost: 10 Opus calls would have been owed on 2026-10-15/16 (13 through 10-17); tokens unmeasured. README words: net zero under the ratchet. AC-1 to AC-9; only the corpus probes behind AC-1 and AC-7 have run. Implementation order (FO, from the six Batch overlap sections): workflow-budget-ratchet and prod-security-validation-gate first in parallel; after the ratchet merges, worker-loads-declared-package, ui-design-review-in-ideation and special-role-triggers; merge-gatekeeper after prod-security-validation-gate (both edit delivery_gate.py). At most three workers at once."
+    }
+  ]
+}

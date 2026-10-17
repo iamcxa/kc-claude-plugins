@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:special-role-triggers:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:special-role-triggers-ideation-1
+              briefing:
+                id: briefing:special-role-triggers:ideation:attempt-1:revision-1
+                digest: sha256:cf4b31e5351d13c5c099e49b601a1b40bfcfee8450ec41fd11418ce07f4f9b1d
+                room-ref: ./special-role-triggers/review/ideation/briefing-1
 started: 2026-10-17T06:11:15Z
 ---
 
