@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extension-instruction-reaches-dispatch:validation:attempt-2:revision-1",
+  "question": "Deliver #652 head ef7a360e (the validation-time dispatch_records.py folder run fails a first implementation record that omits an activated extension's worker instruction, and under Captain amendment 1 laws_check.py passes the README to it so the state-branch L2 law runs the same check): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the two round-4 Codex P2, the Deferred risk and the Polish below into backlog task extension-instruction-followups, and closes the --readme item of backlog task laws-check-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:extension-instruction-reaches-dispatch:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/f702f6aee98a4af14602162aa0e4069dd39ec6eb/extension-instruction-reaches-dispatch.md",
+      "rev": "sha256:1f709dafbf4e759dbcc71b5e260ce48279182c107117a895591d678803e2330b",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at ef7a360e (recheck under amendment 1, AC-8 replaces AC-6). FO ran the five-step acceptance script as written in env -i bash: every step matched (36 and 37 tests OK; under a README listing roborev a record missing the instruction is an L2 violation naming the record and roborev, exit 1; under one that does not, held, exit 0). roborev:749's High (the L2 law skipped the extension check) is fixed; roborev on ef7a360e clean (evidence=roborev:756). Replay of 260 state commits against the current README: 63 L2 events, 6 violated, none an extension violation. Five files change: dispatch_records.py, laws_check.py, both tests, one Bounds line in laws.md; FO-read words unchanged. CI green. External rounds: Codex 4 (round 1 one P2 fixed; round 2 one P2 fixed with a follower allowlist; round 3 clean; round 4 on ef7a360e two P2, declined under the round-3 rule). Declined, with reasons: P2, a YAML block-list extensions: reads as none in dispatch_records.py (no README uses a block list); P2, the package root is read from the first Package root: line rather than Scope notes (every FO record carries one, in Scope notes); Deferred risk, L2 reads the README supplied at run time, so a record written before an extension was listed, or a re-run of an old push, is judged against the newer list (none in 260 commits); Polish, PR body counts and laws.md 'Judged by' line. Second reviewer: copilot because the change alters the check run on every dispatch record and every state push (dispatch and merge rules). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」."
+    }
+  ]
+}
