@@ -3,7 +3,7 @@ title: An activated extension's worker instruction reaches the dispatch only if 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -79,10 +79,13 @@ gates:
                 reason: 'Captain approved delivery of #652 at ef7a360e (「准」); as the gate question states, this accepts declining the two round-4 Codex P2, the Deferred risk and the Polish into backlog task extension-instruction-followups, closes the --readme item of laws-check-followups, and covers later external-review rounds on this PR.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-16T03:14:50Z
 worktree: .worktrees/spacedock-ensign-extension-instruction-reaches-dispatch
 pr: pr-merge:652
+verdict: PASSED
+completed: 2026-10-17T02:32:15Z
+archived: 2026-10-17T02:32:15Z
 ---
 
 Filed from a package issue reported by the spacedock-dev/subspace-relay First Officer; the Captain confirmed filing on 2026-10-14 (「確認」 to "should FO file relay #1 and #4?"). Relay task `owner-sees-all-feedback-room` (PR spacedock-dev/subspace-relay#362, kc-dev-flow-2 0.22.0) dispatched implementation without the roborev extension's worker instruction, so the worker never ran `roborev_gate.py` and its report has no `evidence=` line; FO ran the gate afterwards (roborev:633).
