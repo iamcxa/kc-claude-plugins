@@ -450,3 +450,22 @@ Not covered: that a reviewer finds a defect (AC-6 is replay evidence, not this s
 ### Summary
 
 PASSED recommended for 92b28aa6: AC-1 to AC-8 hold, the three Codex P2 repairs and the several-Preview-lines fix each fail under their own mutation (21 mutations, none survived), the head merges cleanly with origin/main including #659 with 113 tests OK, and the acceptance script ran clean in a fresh shell. No Material finding; Deferred risks are the unread `limitations` (FO's option A) and the 2-of-3 H5 rate; one Polish item.
+
+## Stage Report: implementation (cycle 2, round 2)
+
+- DONE: Apply /tmp/uidr-p1-0AR9S8/phase1.patch to kc-dev-flow-2/scripts/design_surfaces.py and kc-dev-flow-2/scripts/test_design_surfaces.py: exactly one Design review: line (Codex P2, review:5558204896), exactly one Security review: line, no repeated Security finding N: number, and exactly one Surfaces: line in FO alignment, each with its refusal test and per-call-site mutation
+  Commit 3656cd74 on 92b28aa6, patch applied unchanged. Refusal tests assert the reason text; the P2 repro (`test_two_review_lines_are_refused_even_when_the_first_names_a_valid_report`) failed `0 != 1 : []` on 92b28aa6. One mutation per call site (design count, security count, security finding duplicates via `repeated(...)`, design finding duplicates, surfaces count), each lets its bad input pass. The `Surfaces:` rule also runs in `--seed` mode, so it applies to every task in every adopter; 69 existing task files (45 here, 22 beirut-dev2, 2 montpellier-v2) had 0 duplicates of any of the four rules.
+- DONE: Run kc-dev-flow-2/scripts/lint-skills.py, every package test file, kc-dev-flow-2/scripts/comment_ratio.py and kc-dev-flow-2/scripts/number_guards.py check
+  `lint-skills.py` exit 0, `workflow.md` 5447 of 5447; all 18 `test_*.py` OK (`test_design_surfaces` 121, was 113); `comment_ratio.py 6ea3a472 3656cd74` 345 code, 4 comment lines, 1.2% (the 4 are markdown headings in test strings); `number_guards.py check --workflow-dir` PASS no findings.
+- DONE: the validation acceptance script still matches
+  Re-run in a fresh `env -i` bash on a detached worktree of 3656cd74 (script in /tmp/uidr-p1-0AR9S8/accept.sh): 121 tests OK, refusal then "design surfaces presentable" then "'Design finding 2:' appears more than once", `848`, lint PASS and `5447 of 5447`, adr_lint `21 ADR file(s) checked, 0 legacy` exit 0; plus a new step: a second `Design review:` line gives "2 'Design review:' lines, expected exactly 1", exit 1.
+- DONE: roborev evidence= line
+  `clean on 3656cd74; evidence=roborev:808` (verdict_bool 1, SEVERITY_THRESHOLD_MET).
+- DONE: push without force; CI green on the new head
+  `92b28aa6..3656cd74`, no force; `gh pr checks 663`: unit tests (python3) pass 1m9s, version parity pass 59s, multi-profile route gate pass 7s, GitGuardian pass.
+- DONE: commit the stage report
+  Committed with `spacedock state commit` (below).
+
+### Summary
+
+Closed the single-valued-line class in the design and security checks: exactly one `Design review:` line (the P2), one `Security review:` line, no repeated `Security finding N:` number, and one `Surfaces:` line in FO alignment, each with a refusal test and a per-call-site mutation. Left alone, with reasons given in the phase-1 report: `Security focus file:` (presence only), `Preview:` (multi-valued by design), `UI proposal:`, `Migration source:`, `Visible change:`, frontmatter `profile:`/`status:` (engine-owned). Known limit: counts are file-wide over unfenced text, so a column-0 `Design review:` or `Security review:` line quoted in prose at ideation would be refused. No ADR or brief text change.
