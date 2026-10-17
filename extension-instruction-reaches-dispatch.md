@@ -69,6 +69,17 @@ gates:
                 id: briefing:extension-instruction-reaches-dispatch:validation:attempt-2:revision-1
                 digest: sha256:becca259dd1d48e7b06c14f6ae0c2227f9163f5998c54c7355893d59f3eb9a30
                 room-ref: ./extension-instruction-reaches-dispatch/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extension-instruction-reaches-dispatch:validation:2
+                briefing: briefing:extension-instruction-reaches-dispatch:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-17T02:15:54.155871Z"
+                decision: approve
+                reason: 'Captain approved delivery of #652 at ef7a360e (「准」); as the gate question states, this accepts declining the two round-4 Codex P2, the Deferred risk and the Polish into backlog task extension-instruction-followups, closes the --readme item of laws-check-followups, and covers later external-review rounds on this PR.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-16T03:14:50Z
 worktree: .worktrees/spacedock-ensign-extension-instruction-reaches-dispatch
 pr: iamcxa/kc-claude-plugins#652
