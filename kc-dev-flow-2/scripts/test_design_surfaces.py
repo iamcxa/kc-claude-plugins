@@ -555,7 +555,7 @@ class SecurityReviewTests(unittest.TestCase):
 
     def test_a_file_that_is_not_a_review_report_and_a_path_leaving_the_task_folder_are_refused(self):
         self.refused("is not a tob_security_review report", report="findings:\n  - severity: LOW\n")
-        self.refused("is not a tob_security_review report", report="tob_security_review:\n  pr: none\n")
+        self.refused("has 0 'findings:' lines", report="tob_security_review:\n  pr: none\n")
         self.refused("not a report file inside the task folder", review=REVIEW_LINES.replace("security/ideation-1.yaml", "../x.yaml", 1), outside=True)
 
     def test_a_task_of_another_profile_or_past_ideation_is_unchanged(self):
@@ -635,17 +635,6 @@ class SecurityReviewTests(unittest.TestCase):
         self.assertTrue(self.run_check(**kwargs)[0])
         self.assertEqual(self.run_check(module=mutant, **kwargs)[0], [])
 
-    def test_mutation_dropping_the_findings_key_rule_accepts_a_report_without_findings(self):
-        mutant = mutated(" and REPORT_FINDINGS_KEY.search(text)", "")
-        bare = "tob_security_review:\n  pr: none\n"
-        review = "Security review: security/ideation-1.yaml\nSecurity focus file: none\n"
-        self.assertTrue(self.run_check(review=review, report=bare)[0])
-        try:
-            errors = self.run_check(review=review, report=bare, module=mutant)[0]
-        except AttributeError:
-            errors = ["crash"]
-        self.assertFalse(any("is not a tob_security_review report" in e for e in errors), errors)
-
     def test_mutation_dropping_the_quote_strip_refuses_a_quoted_severity(self):
         mutant = mutated('.strip().strip("\\"\'")', ".strip()")
         quoted = REPORT.replace("severity: HIGH", 'severity: "HIGH"')
@@ -692,15 +681,14 @@ class SecurityReviewTests(unittest.TestCase):
             with self.subTest(label):
                 self.refused(why, report=report, review=self.NONE)
 
-    def test_a_dash_and_a_severity_inside_a_block_scalar_are_not_items(self):
+    def test_a_dash_inside_a_block_scalar_is_not_an_item(self):
         report = (
             "tob_security_review:\n  pr: none\n  findings:\n"
             '    - file: "design"\n'
             "      description: |\n"
             "        Steps:\n"
             "        - file: not an item\n"
-            "        - severity: HIGH\n"
-            "        severity: CRITICAL\n"
+            "        - a step\n"
             "      severity: LOW\n"
             "      title: after the block\n"
             "  clean_patterns:\n    - ok\n"
@@ -761,11 +749,11 @@ class SecurityReviewTests(unittest.TestCase):
         mutant = mutated("[b for d, b in item[1:] if d == key_indent]", "[b for d, b in item[1:]]")
         report = (
             "tob_security_review:\n  pr: none\n  findings:\n"
-            '    - file: "design"\n      description: |\n        severity: HIGH\n      severity: LOW\n'
+            '    - file: "design"\n      description: |\n        severity: HIGH\n'
         )
-        review = self.NONE + "Security finding 1: declined: accepted\n"
-        self.assertEqual(self.run_check(review=review, report=report)[0], [])
-        self.assertTrue(self.run_check(review=review, report=report, module=mutant)[0])
+        why = "has findings item 1 with no 'severity:' line"
+        self.assertTrue(any(why in e for e in self.run_check(review=self.NONE, report=report)[0]))
+        self.assertFalse(any(why in e for e in self.run_check(review=self.NONE, report=report, module=mutant)[0]))
 
     def test_mutation_dropping_the_key_value_rule_changes_a_bare_item_reason(self):
         mutant = mutated("if not first or not ITEM_FIRST_KEY.match(item[0][1][first.end():]):", "if not first:")
@@ -778,8 +766,75 @@ class SecurityReviewTests(unittest.TestCase):
         mutant = mutated("        if depth < item_indent or (depth == item_indent and not marker):", "        if False:")
         report = "tob_security_review:\n  pr: none\n  findings:\n    - severity: LOW\n   - severity: HIGH\n"
         review = self.NONE + "Security finding 1: declined: accepted\n"
-        self.assertTrue(self.run_check(review=review, report=report)[0])
-        self.assertEqual(self.run_check(review=review, report=report, module=mutant)[0], [])
+        why = "items do not share one indent"
+        self.assertTrue(any(why in e for e in self.run_check(review=review, report=report)[0]))
+        self.assertFalse(any(why in e for e in self.run_check(review=review, report=report, module=mutant)[0]))
+
+    def test_a_second_root_line_at_column_zero_is_refused(self):
+        why = "2 'tob_security_review:' lines at column 0, expected exactly 1"
+        self.refused(why, report=REPORT + "tob_security_review:\n  pr: none\n")
+
+    def test_an_indented_root_line_is_not_a_second_root(self):
+        errors, _ = self.run_check(report=REPORT + "  note: |\n    tob_security_review:\n")
+        self.assertEqual(errors, [])
+
+    def test_a_second_findings_line_is_refused_in_a_scalar_and_as_a_key(self):
+        why = "has 2 'findings:' lines, expected exactly 1"
+        self.refused(why, report=REPORT + "  note: |\n    findings:\n")
+        self.refused(why, report=REPORT + "  more:\n    findings: []\n")
+        self.refused(why, report=REPORT + "  more:\n    - findings: []\n")
+
+    def test_a_findings_key_that_is_not_a_direct_child_of_the_root_is_refused(self):
+        why = "'findings:' line that is not a direct child of 'tob_security_review:'"
+        cases = {
+            "nested one level down (review:5555839646)": "tob_security_review:\n  metadata:\n    findings: []\n",
+            "nested with items": "tob_security_review:\n  metadata:\n    findings:\n      - severity: HIGH\n",
+            "under a second top-level key": "tob_security_review:\n  pr: none\nother:\n  findings: []\n",
+            "before the root line": "  findings: []\ntob_security_review:\n  pr: none\n",
+            "as a list item key": "tob_security_review:\n  - findings: []\n",
+            "at column zero": "tob_security_review:\nfindings: []\n",
+        }
+        for label, report in cases.items():
+            with self.subTest(label):
+                self.refused(why, report=report, review=self.NONE)
+
+    def test_a_comment_or_blank_line_before_findings_does_not_move_its_depth(self):
+        report = "tob_security_review:\n\n  # the reviewer's note\n  pr: none\n  findings: []\n"
+        self.assertEqual(self.report_errors(report), [])
+
+    def test_a_severity_line_outside_the_parsed_items_is_refused(self):
+        why = "has 2 'severity:' lines but 1 in its findings items"
+        one = "tob_security_review:\n  pr: none\n  findings:\n    - file: a\n      severity: LOW\n"
+        self.refused(why, report=one + "      description: |\n        severity: HIGH\n", review=self.NONE + "Security finding 1: declined: a\n")
+        self.refused("has 1 'severity:' lines but 0 in its findings items", report="tob_security_review:\n  pr: none\n  findings: []\n  limitations:\n    - severity: HIGH\n", review=self.NONE)
+        self.refused("has 4 'severity:' lines but 3 in its findings items", report=REPORT + "  limitations:\n    - severity: HIGH\n")
+
+    def test_mutation_dropping_the_root_count_accepts_a_second_root(self):
+        mutant = mutated("if len(roots) != 1:", "if not roots:")
+        report = REPORT + "tob_security_review:\n  pr: none\n"
+        why = "2 'tob_security_review:' lines"
+        self.assertTrue(any(why in e for e in self.run_check(report=report)[0]))
+        self.assertFalse(any(why in e for e in self.run_check(report=report, module=mutant)[0]))
+
+    def test_mutation_dropping_the_findings_count_accepts_a_second_findings_line(self):
+        mutant = mutated("if len(keys) != 1:", "if not keys:")
+        report = REPORT + "  note: |\n    findings:\n"
+        why = "has 2 'findings:' lines"
+        self.assertTrue(any(why in e for e in self.run_check(report=report)[0]))
+        self.assertFalse(any(why in e for e in self.run_check(report=report, module=mutant)[0]))
+
+    def test_mutation_dropping_the_direct_child_rule_reads_a_nested_findings_as_the_list(self):
+        mutant = mutated("if not problems and not findings_is_direct_child(text, roots[0], keys[0]):", "if False:")
+        report = "tob_security_review:\n  metadata:\n    findings: []\n"
+        self.assertTrue(self.report_errors(report))
+        self.assertEqual(self.run_check(review=self.NONE, report=report, module=mutant)[0], [])
+
+    def test_mutation_dropping_the_severity_count_accepts_a_severity_line_the_parser_skipped(self):
+        mutant = mutated("if plain != len(severities):", "if False:")
+        report = "tob_security_review:\n  pr: none\n  findings: []\n  limitations:\n    - severity: HIGH\n"
+        why = "'severity:' lines but"
+        self.assertTrue(any(why in e for e in self.report_errors(report)))
+        self.assertFalse(any(why in e for e in self.run_check(review=self.NONE, report=report, module=mutant)[0]))
 
 
 if __name__ == "__main__":

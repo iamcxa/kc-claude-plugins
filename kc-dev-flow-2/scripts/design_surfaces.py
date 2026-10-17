@@ -33,6 +33,9 @@ FOCUS_LINE = re.compile(r"^Security focus file:[ \t]*(\S.*)$", re.M)
 FINDING_LINE = re.compile(r"^Security finding (\d+):[ \t]*(\S.*)$", re.M)
 SEVERITY_SCALE = ("CRITICAL", "HIGH", "MEDIUM", "LOW")
 REPORT_FINDINGS_KEY = re.compile(r"^([ \t]+)findings:(.*)$", re.M)
+REPORT_ROOT_LINE = re.compile(r"^tob_security_review:", re.M)
+FINDINGS_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?findings:", re.M)
+SEVERITY_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?severity:", re.M)
 ITEM_FIRST_KEY = re.compile(r"[A-Za-z_][\w-]*:")
 TABLE = re.compile(r"^[ \t]*\|.*\|[ \t]*\n[ \t]*\|[ \t:|-]*-[ \t:|-]*\|?[ \t]*$", re.M)
 
@@ -191,6 +194,29 @@ def report_severities(text):
     return severities, problems
 
 
+def findings_is_direct_child(text, root, key):
+    line = text[key.start():].split("\n", 1)[0]
+    indent = len(line) - len(line.lstrip(" \t"))
+    between = [b for b in text[root.end():key.start()].split("\n")[1:-1] if b.strip() and not b.lstrip().startswith("#")]
+    if key.start() < root.end() or not line.lstrip(" \t").startswith("findings:") or any(not b[0].isspace() for b in between):
+        return False
+    first = (between or [line])[0]
+    return indent > 0 and indent == len(first) - len(first.lstrip(" \t"))
+
+
+def report_shape(text):
+    roots = list(REPORT_ROOT_LINE.finditer(text))
+    keys = list(FINDINGS_LINE.finditer(text))
+    problems = []
+    if len(roots) != 1:
+        problems.append(f"is not a tob_security_review report: {len(roots)} 'tob_security_review:' lines at column 0, expected exactly 1")
+    if len(keys) != 1:
+        problems.append(f"has {len(keys)} 'findings:' lines, expected exactly 1")
+    if not problems and not findings_is_direct_child(text, roots[0], keys[0]):
+        problems.append("has a 'findings:' line that is not a direct child of 'tob_security_review:'")
+    return problems
+
+
 def check_security(path, body, declared, errors):
     name = path.name
     review = REVIEW_LINE.search(body)
@@ -206,14 +232,19 @@ def check_security(path, body, declared, errors):
         errors.append(f"{name}: 'Security review:' names '{value}', not a report file inside the task folder")
         return None
     text = report.read_text()
-    if not (re.search(r"^tob_security_review:", text, re.M) and REPORT_FINDINGS_KEY.search(text)):
-        errors.append(f"{name}: '{value}' is not a tob_security_review report with a 'findings' entry")
+    shape = report_shape(text)
+    if shape:
+        errors.extend(f"{name}: '{value}' {problem}" for problem in shape)
         return None
     if not FOCUS_LINE.search(body):
         errors.append(f"{name}: a prod task needs a 'Security focus file:' line (a path, or none)")
     severities, problems = report_severities(text)
     if problems:
         errors.extend(f"{name}: '{value}' {problem}" for problem in problems)
+        return None
+    plain = len(SEVERITY_LINE.findall(text))
+    if plain != len(severities):
+        errors.append(f"{name}: '{value}' has {plain} 'severity:' lines but {len(severities)} in its findings items; every severity line must be a key of one findings item")
         return None
     found = len(severities)
     lines = {int(n): v.strip() for n, v in FINDING_LINE.findall(body)}
