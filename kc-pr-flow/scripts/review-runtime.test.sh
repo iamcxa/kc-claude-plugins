@@ -9,6 +9,8 @@ RUNTIME="$HERE/review-runtime.sh"
 BENCHMARK="$HERE/review-runtime-benchmark.sh"
 SAFE_IO="$HERE/review-runtime-safe-io.py"
 FIXTURE="$HERE/../test/fixtures/review-runtime/valid-events.jsonl"
+REFERENCE="$HERE/../reference/review-runtime.md"
+WORKFLOW="$HERE/../../.github/workflows/review-runtime-tests.yml"
 TEST_STATE_ROOT="$(mktemp -d)"
 TEST_INPUT_ROOT="$(mktemp -d)"
 cleanup() {
@@ -25,7 +27,7 @@ FAIL=0
 CASE_FILTER='all'
 if [ "$#" -gt 0 ]; then
   if [ "$#" -ne 2 ] || [ "$1" != '--case' ]; then
-    printf 'usage: %s [--case privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
+    printf 'usage: %s [--case delta-receipt-contract|delta-receipt-files|delta-receipt-happy-path|delta-receipt-identity|s01-inertness|privacy-envelope|safe-io|evidence-binding|interactive-decision|merge-readiness]\n' "$0" >&2
     exit 2
   fi
   CASE_FILTER="$2"
@@ -56,12 +58,48 @@ assert_match() { # $1=description $2=extended-regex $3=actual
   fi
 }
 
+assert_not_zero() { # $1=description $2=actual status
+  if [ "$2" -ne 0 ]; then
+    pass
+  else
+    fail "$1 (expected nonzero status)"
+  fi
+}
+
 sha256_text() {
   if command -v shasum >/dev/null 2>&1; then
     printf '%s' "$1" | shasum -a 256 | awk '{print $1}'
   else
     printf '%s' "$1" | sha256sum | awk '{print $1}'
   fi
+}
+
+run_s01_inertness_tests() {
+  local definitions baseline candidate value phrase
+
+  assert_eq 'runtime workflow owns the runtime reference in pull and push' 2 \
+    "$(grep -cF -- '- "kc-pr-flow/reference/review-runtime.md"' "$WORKFLOW" || true)"
+  assert_eq 'existing runtime job runs the core contract once' 1 \
+    "$(grep -cF 'bash kc-pr-flow/scripts/review-runtime.test.sh' "$WORKFLOW" || true)"
+  for phrase in 'receipt --event-file FILE --config-file FILE --repo-worktree DIR' \
+    'read-only receipt authority' 'internally replays' 'raw Git' \
+    'no routing, timing, network, or posting authority' 'receipt-ready v2 events without routing'; do
+    assert_eq "reference documents $phrase" 1 "$(grep -cF "$phrase" "$REFERENCE" || true)"
+  done
+  definitions='. "$1"; declare -f review_runtime_receipt review_runtime_validate_delta_receipt_files review_runtime_build_delta_receipt review_runtime_collect_shadow_observation review_runtime_shadow'
+  baseline="$(env -u KC_PR_FLOW_DELTA_FAST_PATH bash -c "$definitions" _ "$RUNTIME")"
+  if [ -n "$baseline" ]; then pass; else fail 'S01 receipt and shadow authority is sourceable'; fi
+  if printf '%s' "$baseline" | grep -Eq 'KC_PR_FLOW_DELTA_FAST_PATH|review[_-]?route|review[_-]?post|(^|[;&|[:space:]])(gh|curl|wget|claude|codex)([[:space:]]|$)'; then
+    fail 'S01 authority contains routing, posting, network, model, or fast-path control'
+  else
+    pass
+  fi
+  baseline="$(sha256_text "$baseline")"
+  for value in '' off unknown on; do
+    candidate="$(KC_PR_FLOW_DELTA_FAST_PATH="$value" bash -c "$definitions" _ "$RUNTIME")"
+    assert_eq "fast-path value [${value:-empty}] cannot change S01 authority" "$baseline" \
+      "$(sha256_text "$candidate")"
+  done
 }
 
 file_mode() {
@@ -112,6 +150,794 @@ HEAD_SHA="bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
 CONFIG_HASH="cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
 OCCURRED_AT="2026-07-22T00:00:00Z"
 EXPECTED_REVIEW_KEY="$(sha256_text "$REPOSITORY|$PR_NUMBER|$BASE_SHA|$HEAD_SHA|$CONFIG_HASH")"
+
+run_delta_receipt_happy_path_tests() {
+  local root repo config events first_receipt second_receipt stub_dir call_ledger
+  local repository pr_number base_sha head_sha config_hash review_key run_id occurred_at
+  local content_sha256 anchor_sha256 claim_key finding_id candidate_id pointer candidate task usage result finding behavior
+  local start lane_started observed lane_finished synthesized finished receipt_rc
+  root="$TEST_INPUT_ROOT/delta-receipt-happy-path"
+  repo="$root/repo"
+  config="$root/review-config.json"
+  events="$root/events.jsonl"
+  first_receipt="$root/receipt-one.json"
+  second_receipt="$root/receipt-two.json"
+  stub_dir="$root/stubs"
+  call_ledger="$root/calls"
+  repository='acme/widgets'
+  pr_number=42
+  run_id='run-delta-receipt-happy'
+  occurred_at='2026-08-30T00:00:00Z'
+
+  mkdir -p "$repo/src" "$stub_dir"
+  git -C "$repo" init -q
+  printf 'evidence bound review\n' >"$repo/src/review.sh"
+  printf 'first CRLF\r\nsecond CRLF\r\n' >"$repo/src/crlf.txt"
+  printf 'WORKTREE filter bytes\n' >"$repo/src/filtered.txt"
+  printf 'src/filtered.txt filter=receipt-test\n' >"$repo/.gitattributes"
+  git -C "$repo" config filter.receipt-test.clean 'sed s/WORKTREE/RAW/'
+  git -C "$repo" config filter.receipt-test.smudge 'sed s/RAW/WORKTREE/'
+  git -C "$repo" add .gitattributes src/review.sh src/crlf.txt src/filtered.txt
+  git -C "$repo" -c user.name='Receipt Test' -c user.email='receipt@example.invalid' commit -qm seed
+  git -C "$repo" remote add origin 'https://github.com/acme/widgets.git'
+  head_sha="$(git -C "$repo" rev-parse HEAD)"
+  base_sha="$head_sha"
+  printf '%s' "$(review_runtime_config_canonical lite mixed false false false false security)" >"$config"
+  config_hash="$(review_runtime_sha256 <"$config")"
+  review_key="$(review_runtime_review_key "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash")"
+  content_sha256="$(review_runtime_sha256 <"$repo/src/review.sh")"
+  anchor_sha256="$(python3 - "$repo/src/review.sh" <<'PY'
+import hashlib
+import pathlib
+import sys
+line = pathlib.Path(sys.argv[1]).read_bytes().splitlines()[0]
+print(hashlib.sha256(line).hexdigest())
+PY
+)"
+  pointer="$(jq -S -c -n --arg key "$review_key" --arg repo "$repository" \
+    --arg base "$base_sha" --arg head "$head_sha" --arg hash "$content_sha256" \
+    '{schema:"kc-pr-flow.evidence-pointer/v1",kind:"git_blob",review_key:$key,repository:$repo,
+      base_sha:$base,head_sha:$head,object_sha:$head,path:"src/review.sh",side:"RIGHT",line:1,
+      locator:"review-anchor",content_sha256:$hash}')"
+  claim_key="$(python3 - "$pointer" <<'PY'
+import hashlib
+import json
+import sys
+pointer = json.loads(sys.argv[1])
+identity = {"content_sha256": pointer["content_sha256"], "line": pointer["line"],
+            "object_sha": pointer["object_sha"], "path": pointer["path"], "side": pointer["side"]}
+encoded = json.dumps(identity, ensure_ascii=False, separators=(",", ":"), sort_keys=True).encode()
+print("security-" + hashlib.sha256(encoded).hexdigest()[:16])
+PY
+)"
+  finding_id="$(python3 - "$anchor_sha256" "$claim_key" "$pointer" "$repository" "$review_key" <<'PY'
+import hashlib
+import json
+import sys
+anchor, claim, raw_pointer, repository, review_key = sys.argv[1:]
+pointer = json.loads(raw_pointer)
+identity = {"content_sha256": pointer["content_sha256"], "line": pointer["line"],
+            "object_sha": pointer["object_sha"], "path": pointer["path"], "side": pointer["side"]}
+value = {"anchor_sha256": anchor, "category": "security", "claim_key": claim,
+         "evidence": identity, "path": pointer["path"], "repository": repository,
+         "review_key": review_key, "side": pointer["side"]}
+encoded = json.dumps(value, ensure_ascii=False, separators=(",", ":"), sort_keys=True).encode()
+print(hashlib.sha256(encoded).hexdigest())
+PY
+)"
+  candidate_id="$(review_runtime_candidate_id "$run_id" security-1 1 "$content_sha256")"
+  candidate="$(jq -S -c -n --arg id "$candidate_id" --arg run "$run_id" --arg key "$review_key" \
+    --arg anchor "$anchor_sha256" --arg claim "$claim_key" --argjson evidence "$pointer" '
+      {schema:"kc-pr-flow.review-candidate/v2",candidate_id:$id,run_id:$run,review_key:$key,
+       lane_id:"security-1",ordinal:1,path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,
+       category:"security",claim_key:$claim,evidence:$evidence}')"
+  task="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg repo "$repository" \
+    --arg base "$base_sha" --arg head "$head_sha" --arg config "$config_hash" \
+    '{schema:"kc-pr-flow.review-task/v1",run_id:$run,review_key:$key,lane_id:"security-1",
+      capability:"security",repository:$repo,pr_number:42,base_sha:$base,head_sha:$head,config_hash:$config}')"
+  usage='{"input_tokens":100,"output_tokens":25,"provenance":"reported","provider_family":"claude","scope":"lane","total_tokens":125}'
+  result="$(jq -S -c -n --arg run "$run_id" --arg key "$review_key" --arg id "$candidate_id" \
+    --argjson usage "$usage" \
+    '{schema:"kc-pr-flow.lane-result/v1",run_id:$run,review_key:$key,lane_id:"security-1",
+      capability:"security",terminal_status:"succeeded",candidates:[$id],usage:$usage,provider_family:"claude"}')"
+  finding="$(jq -S -c -n --arg id "$finding_id" --arg key "$review_key" --arg candidate "$candidate_id" \
+    --arg anchor "$anchor_sha256" --arg claim "$claim_key" --argjson evidence "$pointer" '
+      {schema:"kc-pr-flow.review-finding/v2",finding_id:$id,review_key:$key,candidate_ids:[$candidate],
+       path:"src/review.sh",side:"RIGHT",anchor_sha256:$anchor,category:"security",claim_key:$claim,
+       evidence:$evidence}')"
+  behavior="$(jq -S -c -n --arg hash "$content_sha256" \
+    '{body_sha256:$hash,confirmation_input_sha256:$hash,event_sha256:$hash,
+      github_call_log_sha256:$hash,inline_comments_sha256:$hash,options_sha256:$hash}')"
+  start="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 1 "$occurred_at" run.started '{}')"
+  lane_started="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 2 "$occurred_at" lane.started "$(jq -S -c -n --argjson value "$task" '{review_task:$value}')")"
+  observed="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 3 "$occurred_at" finding.observed "$(jq -S -c -n --argjson value "$candidate" '{candidate:$value}')")"
+  lane_finished="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 4 "$occurred_at" lane.finished "$(jq -S -c -n --argjson value "$result" '{lane_result:$value}')")"
+  synthesized="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 5 "$occurred_at" synthesis.finished "$(jq -S -c -n --argjson value "$finding" '{findings:[$value],uncertain_candidate_ids:[]}')")"
+  finished="$(review_runtime_build_event "$run_id" "$review_key" "$repository" "$pr_number" "$base_sha" "$head_sha" "$config_hash" 6 "$occurred_at" run.finished "$(jq -S -c -n --argjson value "$behavior" '{behavior_hashes:$value}')")"
+  printf '%s\n' "$start" "$lane_started" "$observed" "$lane_finished" "$synthesized" "$finished" >"$events"
+
+  : >"$call_ledger"
+  for command in gh curl wget claude codex agy review-runtime-append review-runtime-start review-post.sh; do
+    printf '#!/bin/sh\nprintf "%%s\\n" "$(basename "$0") $*" >>"$CALL_LEDGER"\nexit 97\n' >"$stub_dir/$command"
+    chmod +x "$stub_dir/$command"
+  done
+  PATH="$stub_dir:$PATH" CALL_LEDGER="$call_ledger" bash "$RUNTIME" receipt \
+    --event-file "$events" --config-file "$config" --repo-worktree "$repo" >"$first_receipt" 2>"$root/receipt.stderr"
+  receipt_rc=$?
+  assert_eq 'receipt command succeeds for one complete v2 finding' '0|' \
+    "$receipt_rc|$(cat "$root/receipt.stderr")"
+  assert_eq 'receipt schema is v2' 'kc-pr-flow.review-delta-receipt/v2' "$(jq -r '.schema' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt top-level keys are closed' \
+    'content_sha256,coverage_gap_refs,known_findings,predecessor,required_capabilities,schema' \
+    "$(jq -r 'keys | sort | join(",")' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt predecessor identity comes from replay' \
+    "$repository|$pr_number|$base_sha|$head_sha|$config_hash|$review_key|$run_id" \
+    "$(jq -r '.predecessor | [.repository,.pr_number,.base_sha,.head_sha,.config_hash,.review_key,.run_id] | join("|")' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt capability comes from replay and config' 'security' "$(jq -r '.required_capabilities | join(",")' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt has no coverage gaps' '0' "$(jq -r '.coverage_gap_refs | length' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt finding identity comes from replay' "$finding_id|$claim_key|$anchor_sha256|unresolved" \
+    "$(jq -r '.known_findings[0] | [.finding_id,.claim_key,.anchor_sha256,.resolution_state] | join("|")' "$first_receipt" 2>/dev/null)"
+  assert_eq 'receipt evidence comes from replay' "$pointer" "$(jq -S -c '.known_findings[0].evidence' "$first_receipt" 2>/dev/null)"
+  PATH="$stub_dir:$PATH" CALL_LEDGER="$call_ledger" bash "$RUNTIME" receipt \
+    --event-file "$events" --config-file "$config" --repo-worktree "$repo" >"$second_receipt" 2>>"$root/receipt.stderr"
+  receipt_rc=$?
+  assert_eq 'second receipt command succeeds' '0|' \
+    "$receipt_rc|$(cat "$root/receipt.stderr")"
+  assert_eq 'receipt bytes are deterministic' '0' "$(cmp -s "$first_receipt" "$second_receipt"; printf '%s' "$?")"
+  assert_eq 'receipt path makes no network, model, append, start, or post calls' '0' "$(wc -l <"$call_ledger" | tr -d ' ')"
+}
+
+run_delta_receipt_contract_tests() {
+  local root receipt events config repo output rc validator_ledger
+  local barrier_events barrier_config barrier_ledger snapshot_ledger event_hash config_hash
+  local mutation_name mutation_filter candidate mutation_file
+  run_delta_receipt_happy_path_tests
+  root="$TEST_INPUT_ROOT/delta-receipt-happy-path"
+  receipt="$root/receipt-one.json"
+  events="$root/events.jsonl"
+  config="$root/review-config.json"
+  repo="$root/repo"
+  validator_ledger="$root/validator-calls"
+  : >"$validator_ledger"
+
+  if declare -F review_runtime_validate_delta_receipt_snapshots >/dev/null 2>&1; then
+    review_runtime_validate_delta_receipt_snapshots "$receipt" "$events" "$config" "$repo" >/dev/null 2>&1
+    assert_eq 'sourceable receipt validator accepts the producer output' '0' "$?"
+    eval "$(declare -f review_runtime_validate_delta_receipt_snapshots | sed '1s/review_runtime_validate_delta_receipt_snapshots/review_runtime_validate_delta_receipt_snapshots_original/')"
+    review_runtime_validate_delta_receipt_snapshots() {
+      printf 'called\n' >>"$validator_ledger"
+      return 97
+    }
+    output="$(review_runtime_receipt "$events" "$config" "$repo" 2>/dev/null)"
+    rc=$?
+    assert_eq 'producer returns the shared validator failure' '97' "$rc"
+    assert_eq 'producer emits no receipt when shared validation fails' '' "$output"
+    assert_eq 'producer invokes the shared validator exactly once' '1' "$(wc -l <"$validator_ledger" | tr -d ' ')"
+    eval "$(declare -f review_runtime_validate_delta_receipt_snapshots_original | sed '1s/review_runtime_validate_delta_receipt_snapshots_original/review_runtime_validate_delta_receipt_snapshots/')"
+    unset -f review_runtime_validate_delta_receipt_snapshots_original
+  else
+    fail 'sourceable snapshot-only receipt validator exists for producer'
+  fi
+
+  barrier_events="$root/barrier-events.jsonl"
+  barrier_config="$root/barrier-config.json"
+  barrier_ledger="$root/barrier-validator"
+  snapshot_ledger="$root/barrier-snapshots"
+  cp "$events" "$barrier_events"
+  cp "$config" "$barrier_config"
+  : >"$barrier_ledger"
+  : >"$snapshot_ledger"
+  event_hash="$(review_runtime_sha256 <"$barrier_events")"
+  config_hash="$(review_runtime_sha256 <"$barrier_config")"
+  eval "$(declare -f review_runtime_snapshot_regular_file | sed '1s/review_runtime_snapshot_regular_file/review_runtime_snapshot_regular_file_original/')"
+  eval "$(declare -f review_runtime_validate_delta_receipt_snapshots | sed '1s/review_runtime_validate_delta_receipt_snapshots/review_runtime_validate_delta_receipt_snapshots_original/')"
+  review_runtime_snapshot_regular_file() {
+    review_runtime_snapshot_regular_file_original "$@"
+    rc=$?
+    [ "$rc" -eq 0 ] || return "$rc"
+    case "$3" in
+      'event file') printf '{"replaced":true}\n' >"$1" ;;
+      'review config') printf '{"replaced":true}\n' >"$1" ;;
+    esac
+    printf '%s\n' "$3" >>"$snapshot_ledger"
+  }
+  review_runtime_validate_delta_receipt_snapshots() {
+    printf '%s|%s|%s|%s\n' \
+      "$([ "$2" = "$barrier_events" ] && printf caller || printf snapshot)" \
+      "$([ "$3" = "$barrier_config" ] && printf caller || printf snapshot)" \
+      "$(review_runtime_sha256 <"$2")" "$(review_runtime_sha256 <"$3")" >>"$barrier_ledger"
+    review_runtime_validate_delta_receipt_snapshots_original "$@"
+  }
+  output="$(review_runtime_receipt "$barrier_events" "$barrier_config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'receipt survives caller event/config replacement after snapshots' '0' "$rc"
+  assert_eq 'barrier receipt keeps original bytes' "$(cat "$receipt")" "$output"
+  assert_eq 'top-level receipt snapshots each caller input once' 'event file,review config' \
+    "$(sort "$snapshot_ledger" | paste -sd, -)"
+  assert_eq 'shared validator receives original immutable event/config snapshots' \
+    "snapshot|snapshot|$event_hash|$config_hash" "$(cat "$barrier_ledger")"
+  eval "$(declare -f review_runtime_snapshot_regular_file_original | sed '1s/review_runtime_snapshot_regular_file_original/review_runtime_snapshot_regular_file/')"
+  eval "$(declare -f review_runtime_validate_delta_receipt_snapshots_original | sed '1s/review_runtime_validate_delta_receipt_snapshots_original/review_runtime_validate_delta_receipt_snapshots/')"
+  unset -f review_runtime_snapshot_regular_file_original review_runtime_validate_delta_receipt_snapshots_original
+
+  reseal_delta_receipt() {
+    local value="$1" unsigned hash
+    unsigned="$(printf '%s' "$value" | jq -S -c 'del(.content_sha256)')" || return
+    hash="$(printf '%s' "$unsigned" | review_runtime_sha256)" || return
+    printf '%s' "$unsigned" | jq -S -c --arg hash "$hash" '. + {content_sha256:$hash}'
+  }
+  while IFS='|' read -r mutation_name mutation_filter; do
+    candidate="$(jq -S -c "$mutation_filter" "$receipt")" || return
+    candidate="$(reseal_delta_receipt "$candidate")" || return
+    mutation_file="$root/receipt-$mutation_name.json"
+    printf '%s\n' "$candidate" >"$mutation_file"
+    review_runtime_validate_delta_receipt_snapshots "$mutation_file" "$events" "$config" "$repo" >/dev/null 2>&1
+    assert_not_zero "validator rejects $mutation_name mutation after self-reseal" "$?"
+  done <<'EOF'
+top-extra|.extra=true
+top-missing|del(.coverage_gap_refs)
+predecessor-extra|.predecessor.extra=true
+predecessor-missing|del(.predecessor.repository)
+finding-extra|.known_findings[0].extra=true
+finding-missing|del(.known_findings[0].claim_key)
+repository|.predecessor.repository="other/widgets"
+pr-number|.predecessor.pr_number=43
+base-sha|.predecessor.base_sha=("1"*40)
+head-sha|.predecessor.head_sha=("2"*40)
+config-hash|.predecessor.config_hash=("3"*64)
+review-key|.predecessor.review_key=("4"*64)
+run-id|.predecessor.run_id="run-mutated"
+receipt-id|.predecessor.receipt_id=("5"*64)
+finding-id|.known_findings[0].finding_id=("6"*64)
+EOF
+  mutation_file="$root/receipt-content-hash.json"
+  jq -S -c '.content_sha256=("7"*64)' "$receipt" >"$mutation_file"
+  review_runtime_validate_delta_receipt_snapshots "$mutation_file" "$events" "$config" "$repo" >/dev/null 2>&1
+  assert_not_zero 'validator rejects changed content hash' "$?"
+  mutation_file="$root/receipt-raw-duplicate.json"
+  printf '%s\n' '{"schema":"kc-pr-flow.review-delta-receipt/v2","schema":"kc-pr-flow.review-delta-receipt/v2"}' >"$mutation_file"
+  review_runtime_validate_delta_receipt_snapshots "$mutation_file" "$events" "$config" "$repo" >/dev/null 2>&1
+  assert_not_zero 'validator rejects raw duplicate receipt members' "$?"
+  unset -f reseal_delta_receipt
+}
+
+run_delta_receipt_file_validator_tests() {
+  local root receipt events config repo output rc snapshot_ledger validator_ledger
+  local barrier_receipt barrier_events barrier_config
+  local missing receipt_link event_link config_link receipt_fifo event_fifo config_fifo
+  local config_duplicate config_noncanonical config_extra config_empty
+  local zero_events failed_events unavailable_events uncertain_events no_behavior_events mismatch_events mismatch_config
+  local start_event synthesis_event finish_event mutated candidate_id status line rewritten
+  local new_config_hash new_review_key repository pr_number base_sha head_sha
+  run_delta_receipt_happy_path_tests
+  root="$TEST_INPUT_ROOT/delta-receipt-happy-path"
+  receipt="$root/receipt-one.json"
+  events="$root/events.jsonl"
+  config="$root/review-config.json"
+  repo="$root/repo"
+
+  if declare -F review_runtime_validate_delta_receipt_files >/dev/null 2>&1; then
+    output="$(review_runtime_validate_delta_receipt_files \
+      "$receipt" "$events" "$config" "$repo" 2>/dev/null)"
+    rc=$?
+    assert_eq 'file validator accepts one complete producer receipt without stdout' '0|' "$rc|$output"
+  else
+    fail 'sourceable high-level receipt file validator exists'
+    return
+  fi
+
+  snapshot_ledger="$root/file-validator-snapshots"
+  validator_ledger="$root/file-validator-low-level"
+  barrier_receipt="$root/barrier-receipt.json"
+  barrier_events="$root/barrier-events-for-file-validator.jsonl"
+  barrier_config="$root/barrier-config-for-file-validator.json"
+  cp "$receipt" "$barrier_receipt"
+  cp "$events" "$barrier_events"
+  cp "$config" "$barrier_config"
+  : >"$snapshot_ledger"
+  : >"$validator_ledger"
+  eval "$(declare -f review_runtime_snapshot_regular_file | sed '1s/review_runtime_snapshot_regular_file/review_runtime_snapshot_regular_file_original/')"
+  eval "$(declare -f review_runtime_validate_delta_receipt_snapshots | sed '1s/review_runtime_validate_delta_receipt_snapshots/review_runtime_validate_delta_receipt_snapshots_original/')"
+  review_runtime_snapshot_regular_file() {
+    local snapshot_rc
+    printf '%s|%s\n' "$3" "$1" >>"$snapshot_ledger"
+    review_runtime_snapshot_regular_file_original "$@"
+    snapshot_rc=$?
+    [ "$snapshot_rc" -eq 0 ] || return "$snapshot_rc"
+    printf '{"replaced":true}\n' >"$1"
+  }
+  review_runtime_validate_delta_receipt_snapshots() {
+    printf '%s|%s|%s\n' \
+      "$([ "$1" = "$barrier_receipt" ] && printf caller || printf snapshot)" \
+      "$([ "$2" = "$barrier_events" ] && printf caller || printf snapshot)" \
+      "$([ "$3" = "$barrier_config" ] && printf caller || printf snapshot)" >>"$validator_ledger"
+    review_runtime_validate_delta_receipt_snapshots_original "$@"
+  }
+  output="$(review_runtime_validate_delta_receipt_files \
+    "$barrier_receipt" "$barrier_events" "$barrier_config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'file validator survives replacement of all caller paths after snapshots' '0|' "$rc|$output"
+  assert_eq 'file validator snapshots each caller file exactly once' \
+    'delta receipt,event file,review config' "$(cut -d '|' -f 1 "$snapshot_ledger" | paste -sd, -)"
+  assert_eq 'file validator passes only private snapshots to low-level validation' \
+    'snapshot|snapshot|snapshot' "$(cat "$validator_ledger")"
+  eval "$(declare -f review_runtime_snapshot_regular_file_original | sed '1s/review_runtime_snapshot_regular_file_original/review_runtime_snapshot_regular_file/')"
+  eval "$(declare -f review_runtime_validate_delta_receipt_snapshots_original | sed '1s/review_runtime_validate_delta_receipt_snapshots_original/review_runtime_validate_delta_receipt_snapshots/')"
+  unset -f review_runtime_snapshot_regular_file_original review_runtime_validate_delta_receipt_snapshots_original
+
+  assert_file_validator_rejected() {
+    local description="$1" receipt_file="$2" event_file="$3" config_file="$4" value status_code
+    value="$(review_runtime_validate_delta_receipt_files \
+      "$receipt_file" "$event_file" "$config_file" "$repo" 2>/dev/null)"
+    status_code=$?
+    assert_not_zero "$description returns nonzero" "$status_code"
+    assert_eq "$description emits no stdout" '' "$value"
+  }
+  assert_fifo_file_validator_rejected() {
+    local description="$1" receipt_file="$2" event_file="$3" config_file="$4" result
+    result="$(python3 - "$RUNTIME" "$receipt_file" "$event_file" "$config_file" "$repo" <<'PY'
+import os
+import signal
+import subprocess
+import sys
+
+runtime, receipt, events, config, repo = sys.argv[1:]
+command = '. "$1"; review_runtime_validate_delta_receipt_files "$2" "$3" "$4" "$5"'
+process = subprocess.Popen(
+    ["bash", "-c", command, "bash", runtime, receipt, events, config, repo],
+    stdout=subprocess.PIPE,
+    stderr=subprocess.DEVNULL,
+    start_new_session=True,
+)
+try:
+    stdout, _ = process.communicate(timeout=5)
+except subprocess.TimeoutExpired:
+    os.killpg(process.pid, signal.SIGKILL)
+    process.wait()
+    print("TIMEOUT")
+else:
+    print(f"{process.returncode}|{stdout.decode()}", end="")
+PY
+)"
+    assert_match "$description is bounded, nonzero, and stdout-empty" '^[1-9][0-9]*\|$' "$result"
+  }
+
+  missing="$root/missing-input"
+  assert_file_validator_rejected 'missing receipt' "$missing" "$events" "$config"
+  assert_file_validator_rejected 'missing event file' "$receipt" "$missing" "$config"
+  assert_file_validator_rejected 'missing config' "$receipt" "$events" "$missing"
+  receipt_link="$root/receipt-link"
+  event_link="$root/event-link"
+  config_link="$root/config-link"
+  ln -s "$receipt" "$receipt_link"
+  ln -s "$events" "$event_link"
+  ln -s "$config" "$config_link"
+  assert_file_validator_rejected 'symlink receipt' "$receipt_link" "$events" "$config"
+  assert_file_validator_rejected 'symlink event file' "$receipt" "$event_link" "$config"
+  assert_file_validator_rejected 'symlink config' "$receipt" "$events" "$config_link"
+  receipt_fifo="$root/receipt-fifo"
+  event_fifo="$root/event-fifo"
+  config_fifo="$root/config-fifo"
+  mkfifo "$receipt_fifo" "$event_fifo" "$config_fifo"
+  assert_fifo_file_validator_rejected 'FIFO receipt' "$receipt_fifo" "$events" "$config"
+  assert_fifo_file_validator_rejected 'FIFO event file' "$receipt" "$event_fifo" "$config"
+  assert_fifo_file_validator_rejected 'FIFO config' "$receipt" "$events" "$config_fifo"
+
+  output="$(KC_PR_FLOW_MAX_RECEIPT_BYTES=1 review_runtime_validate_delta_receipt_files \
+    "$receipt" "$events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_not_zero 'oversize receipt returns nonzero' "$rc"
+  assert_eq 'oversize receipt emits no stdout' '' "$output"
+  output="$(KC_PR_FLOW_MAX_EVENTS_BYTES=1 review_runtime_validate_delta_receipt_files \
+    "$receipt" "$events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_not_zero 'oversize event file returns nonzero' "$rc"
+  assert_eq 'oversize event file emits no stdout' '' "$output"
+  output="$(KC_PR_FLOW_MAX_CONFIG_BYTES=1 review_runtime_validate_delta_receipt_files \
+    "$receipt" "$events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_not_zero 'oversize config returns nonzero' "$rc"
+  assert_eq 'oversize config emits no stdout' '' "$output"
+
+  config_duplicate="$root/config-duplicate.json"
+  config_noncanonical="$root/config-noncanonical.json"
+  config_extra="$root/config-extra.json"
+  config_empty="$root/config-empty.json"
+  printf '%s' '{"schema":"kc-pr-flow.review-config/v1","schema":"kc-pr-flow.review-config/v1"}' >"$config_duplicate"
+  jq . "$config" >"$config_noncanonical"
+  printf '%s' "$(jq -S -c '.extra=true' "$config")" >"$config_extra"
+  printf '%s' "$(jq -S -c '.capabilities=[]' "$config")" >"$config_empty"
+  assert_file_validator_rejected 'duplicate-key config' "$receipt" "$events" "$config_duplicate"
+  assert_file_validator_rejected 'noncanonical config' "$receipt" "$events" "$config_noncanonical"
+  assert_file_validator_rejected 'extra-key config' "$receipt" "$events" "$config_extra"
+  assert_file_validator_rejected 'empty-capability config' "$receipt" "$events" "$config_empty"
+
+  assert_lifecycle_rejected() {
+    local description="$1" event_file="$2" config_file="$3" value status_code
+    value="$(review_runtime_receipt "$event_file" "$config_file" "$repo" 2>/dev/null)"
+    status_code=$?
+    assert_not_zero "producer rejects $description" "$status_code"
+    assert_eq "producer emits no stdout for $description" '' "$value"
+    value="$(review_runtime_validate_delta_receipt_files \
+      "$receipt" "$event_file" "$config_file" "$repo" 2>/dev/null)"
+    status_code=$?
+    assert_not_zero "file validator rejects $description" "$status_code"
+    assert_eq "file validator emits no stdout for $description" '' "$value"
+  }
+
+  zero_events="$root/events-zero-lane.jsonl"
+  start_event="$(sed -n '1p' "$events")"
+  synthesis_event="$(rehash_event "$(sed -n '5p' "$events" | jq -c \
+    '.sequence=2 | .payload={findings:[],uncertain_candidate_ids:[]}')")"
+  finish_event="$(rehash_event "$(sed -n '6p' "$events" | jq -c '.sequence=3')")"
+  printf '%s\n' "$start_event" "$synthesis_event" "$finish_event" >"$zero_events"
+  assert_lifecycle_rejected 'zero-lane run' "$zero_events" "$config"
+
+  for status in failed unavailable; do
+    mutated="$(rehash_event "$(sed -n '4p' "$events" | jq -c --arg status "$status" \
+      '.payload.lane_result.terminal_status=$status')")"
+    if [ "$status" = 'failed' ]; then
+      failed_events="$root/events-failed.jsonl"
+      { sed -n '1,3p' "$events"; printf '%s\n' "$mutated"; sed -n '5,6p' "$events"; } >"$failed_events"
+      assert_lifecycle_rejected 'failed lane' "$failed_events" "$config"
+    else
+      unavailable_events="$root/events-unavailable.jsonl"
+      { sed -n '1,3p' "$events"; printf '%s\n' "$mutated"; sed -n '5,6p' "$events"; } >"$unavailable_events"
+      assert_lifecycle_rejected 'unavailable lane' "$unavailable_events" "$config"
+    fi
+  done
+
+  uncertain_events="$root/events-uncertain.jsonl"
+  candidate_id="$(sed -n '3p' "$events" | jq -r '.payload.candidate.candidate_id')"
+  mutated="$(rehash_event "$(sed -n '5p' "$events" | jq -c --arg id "$candidate_id" \
+    '.payload={findings:[],uncertain_candidate_ids:[$id]}')")"
+  { sed -n '1,4p' "$events"; printf '%s\n' "$mutated"; sed -n '6p' "$events"; } >"$uncertain_events"
+  assert_lifecycle_rejected 'nonempty uncertain set' "$uncertain_events" "$config"
+
+  no_behavior_events="$root/events-no-behavior.jsonl"
+  mutated="$(rehash_event "$(sed -n '6p' "$events" | jq -c '.payload={}')")"
+  { sed -n '1,5p' "$events"; printf '%s\n' "$mutated"; } >"$no_behavior_events"
+  assert_lifecycle_rejected 'missing behavior hashes' "$no_behavior_events" "$config"
+
+  mismatch_config="$root/config-capability-mismatch.json"
+  printf '%s' "$(jq -S -c '.capabilities=["types"]' "$config")" >"$mismatch_config"
+  new_config_hash="$(review_runtime_sha256 <"$mismatch_config")"
+  repository="$(jq -r '.repository' <<<"$start_event")"
+  pr_number="$(jq -r '.pr_number' <<<"$start_event")"
+  base_sha="$(jq -r '.base_sha' <<<"$start_event")"
+  head_sha="$(jq -r '.head_sha' <<<"$start_event")"
+  new_review_key="$(review_runtime_review_key \
+    "$repository" "$pr_number" "$base_sha" "$head_sha" "$new_config_hash")"
+  mismatch_events="$root/events-capability-mismatch.jsonl"
+  : >"$mismatch_events"
+  while IFS= read -r line; do
+    rewritten="$(jq -c --arg config_hash "$new_config_hash" --arg review_key "$new_review_key" '
+      .config_hash=$config_hash | .review_key=$review_key |
+      if .event_type == "lane.started" then
+        .payload.review_task.config_hash=$config_hash | .payload.review_task.review_key=$review_key
+      elif .event_type == "finding.observed" then
+        .payload.candidate.review_key=$review_key | .payload.candidate.evidence.review_key=$review_key
+      elif .event_type == "lane.finished" then
+        .payload.lane_result.review_key=$review_key
+      elif .event_type == "synthesis.finished" then
+        .payload.findings |= map(.review_key=$review_key | .evidence.review_key=$review_key)
+      else . end' <<<"$line")"
+    if [ "$(jq -r '.event_type' <<<"$rewritten")" = 'synthesis.finished' ]; then
+      mutated="$(jq -c '.payload.findings[0]' <<<"$rewritten")"
+      candidate_id="$(review_runtime_v2_finding_id "$mutated" "$repository" "$new_review_key")"
+      rewritten="$(jq -c --arg finding_id "$candidate_id" '.payload.findings[0].finding_id=$finding_id' <<<"$rewritten")"
+    fi
+    rehash_event "$rewritten" >>"$mismatch_events"
+  done <"$events"
+  assert_lifecycle_rejected 'config capability mismatch' "$mismatch_events" "$mismatch_config"
+  assert_lifecycle_rejected 'empty config capability set' "$events" "$config_empty"
+
+  unset -f assert_file_validator_rejected assert_fifo_file_validator_rejected assert_lifecycle_rejected
+}
+
+run_delta_receipt_identity_tests() {
+  local root receipt events config repo output rc forged_events candidate_event finding_event
+  local candidate finding claim_key finding_id pointer anchor identity null_events null_receipt
+  local target_events target_receipt target_path target_line blob_file content_sha256 candidate_id
+  local result_event working_hash raw_hash subject_path evidence_path mutation_name mutation_line mutation_filter
+  run_delta_receipt_happy_path_tests
+  root="$TEST_INPUT_ROOT/delta-receipt-happy-path"
+  receipt="$root/receipt-one.json"
+  events="$root/events.jsonl"
+  config="$root/review-config.json"
+  repo="$root/repo"
+
+  git -C "$repo" remote remove origin
+  output="$(review_runtime_receipt "$events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'producer trusts closed event/pointer repository without repo-local remote config' \
+    "0|$(cat "$receipt")" "$rc|$output"
+  output="$(review_runtime_validate_delta_receipt_files \
+    "$receipt" "$events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'file validator trusts closed event/pointer repository without repo-local remote config' \
+    '0|' "$rc|$output"
+
+  assert_identity_rejected() {
+    local description="$1" event_file="$2" value status_code
+    value="$(review_runtime_receipt "$event_file" "$config" "$repo" 2>/dev/null)"
+    status_code=$?
+    assert_not_zero "producer rejects $description" "$status_code"
+    assert_eq "producer emits no stdout for $description" '' "$value"
+    value="$(review_runtime_validate_delta_receipt_files \
+      "$receipt" "$event_file" "$config" "$repo" 2>/dev/null)"
+    status_code=$?
+    assert_not_zero "file validator rejects $description" "$status_code"
+    assert_eq "file validator emits no stdout for $description" '' "$value"
+  }
+
+  forged_events="$root/events-subject-path-forged.jsonl"
+  candidate_event="$(sed -n '3p' "$events")"
+  candidate="$(jq -c '.payload.candidate | .path="src/forged.sh"' <<<"$candidate_event")"
+  claim_key="$(review_runtime_v2_claim_key "$candidate")"
+  candidate="$(jq -c --arg claim "$claim_key" '.claim_key=$claim' <<<"$candidate")"
+  candidate_event="$(rehash_event "$(jq -c --argjson candidate "$candidate" \
+    '.payload={candidate:$candidate}' <<<"$candidate_event")")"
+  finding_event="$(sed -n '5p' "$events")"
+  finding="$(jq -c --arg claim "$claim_key" \
+    '.payload.findings[0] | .path="src/forged.sh" | .claim_key=$claim' <<<"$finding_event")"
+  finding_id="$(review_runtime_v2_finding_id "$finding" 'acme/widgets' \
+    "$(jq -r '.review_key' <<<"$finding_event")")"
+  finding_event="$(rehash_event "$(jq -c --argjson finding "$finding" \
+    --arg id "$finding_id" '.payload.findings[0]=($finding | .finding_id=$id)' <<<"$finding_event")")"
+  { sed -n '1,2p' "$events"; printf '%s\n' "$candidate_event"; sed -n '4p' "$events"; \
+    printf '%s\n' "$finding_event"; sed -n '6p' "$events"; } >"$forged_events"
+  assert_identity_rejected 'subject path differing from evidence path after event rehash' "$forged_events"
+
+  write_subject_evidence_pair_events() {
+    local pair_path="$1" pair_side="$2" pointer_path="$3" pointer_side="$4" destination="$5"
+    local pair_candidate pair_finding pair_claim pair_id
+    candidate_event="$(sed -n '3p' "$events")"
+    pair_candidate="$(jq -c --arg path "$pair_path" --arg side "$pair_side" \
+      --arg pointer_path "$pointer_path" --arg pointer_side "$pointer_side" \
+      '.payload.candidate | .path=$path | .side=$side |
+       .evidence.path=$pointer_path | .evidence.side=$pointer_side' <<<"$candidate_event")" || return
+    pair_claim="$(review_runtime_v2_claim_key "$pair_candidate")" || return
+    pair_candidate="$(jq -c --arg claim "$pair_claim" '.claim_key=$claim' <<<"$pair_candidate")" || return
+    candidate_event="$(rehash_event "$(jq -c --argjson candidate "$pair_candidate" \
+      '.payload={candidate:$candidate}' <<<"$candidate_event")")" || return
+    finding_event="$(sed -n '5p' "$events")"
+    pair_finding="$(jq -c --arg path "$pair_path" --arg side "$pair_side" \
+      --arg pointer_path "$pointer_path" --arg pointer_side "$pointer_side" --arg claim "$pair_claim" \
+      '.payload.findings[0] | .path=$path | .side=$side | .claim_key=$claim |
+       .evidence.path=$pointer_path | .evidence.side=$pointer_side' <<<"$finding_event")" || return
+    pair_id="$(review_runtime_v2_finding_id "$pair_finding" 'acme/widgets' \
+      "$(jq -r '.review_key' <<<"$finding_event")")" || return
+    finding_event="$(rehash_event "$(jq -c --argjson finding "$pair_finding" --arg id "$pair_id" \
+      '.payload.findings[0]=($finding | .finding_id=$id)' <<<"$finding_event")")" || return
+    { sed -n '1,2p' "$events"; printf '%s\n' "$candidate_event"; sed -n '4p' "$events"; \
+      printf '%s\n' "$finding_event"; sed -n '6p' "$events"; } >"$destination"
+  }
+
+  forged_events="$root/events-subject-side-forged.jsonl"
+  write_subject_evidence_pair_events 'src/review.sh' LEFT 'src/review.sh' RIGHT "$forged_events"
+  assert_identity_rejected 'subject side differing from evidence side after identity rehash' "$forged_events"
+
+  subject_path="$(printf 'src/cafe\314\201.sh')"
+  evidence_path="$(printf 'src/caf\303\251.sh')"
+  forged_events="$root/events-nfc-equivalent-paths.jsonl"
+  write_subject_evidence_pair_events "$subject_path" RIGHT "$evidence_path" RIGHT "$forged_events"
+  assert_identity_rejected 'NFC-equivalent but byte-distinct subject/evidence paths fail closed' "$forged_events"
+
+  forged_events="$root/events-candidate-anchor-forged.jsonl"
+  candidate_event="$(rehash_event "$(sed -n '3p' "$events" | jq -c \
+    '.payload.candidate.anchor_sha256=("f"*64)')")"
+  { sed -n '1,2p' "$events"; printf '%s\n' "$candidate_event"; sed -n '4,6p' "$events"; } >"$forged_events"
+  assert_identity_rejected 'candidate anchor differing from finding after event rehash' "$forged_events"
+
+  while IFS='|' read -r mutation_name mutation_line mutation_filter; do
+    forged_events="$root/events-$mutation_name.jsonl"
+    if [ "$mutation_line" = 'candidate' ]; then
+      candidate_event="$(rehash_event "$(sed -n '3p' "$events" | jq -c "$mutation_filter")")"
+      { sed -n '1,2p' "$events"; printf '%s\n' "$candidate_event"; sed -n '4,6p' "$events"; } >"$forged_events"
+    else
+      finding_event="$(sed -n '5p' "$events")"
+      finding="$(jq -c ".payload.findings[0] | $mutation_filter" <<<"$finding_event")"
+      if [ "$mutation_name" != 'finding-id-forged' ]; then
+        finding_id="$(review_runtime_v2_finding_id "$finding" 'acme/widgets' \
+          "$(jq -r '.review_key' <<<"$finding_event")")"
+        finding="$(jq -c --arg id "$finding_id" '.finding_id=$id' <<<"$finding")"
+      fi
+      finding_event="$(rehash_event "$(jq -c --argjson finding "$finding" \
+        '.payload.findings[0]=$finding' <<<"$finding_event")")"
+      { sed -n '1,4p' "$events"; printf '%s\n' "$finding_event"; sed -n '6p' "$events"; } >"$forged_events"
+    fi
+    assert_identity_rejected "$mutation_name after event and dependent identity rehash" "$forged_events"
+  done <<'EOF'
+candidate-claim-forged|candidate|.payload.candidate.claim_key="security-forgedclaim"
+finding-claim-forged|finding|.claim_key="security-forgedclaim"
+finding-id-forged|finding|.finding_id=("f"*64)
+EOF
+
+  null_events="$root/events-file-level-null-line.jsonl"
+  null_receipt="$root/receipt-file-level-null-line.json"
+  pointer="$(sed -n '3p' "$events" | jq -S -c '.payload.candidate.evidence | .line=null')"
+  identity="$(printf '%s' "$pointer" | jq -S -c \
+    '{content_sha256,line,object_sha,path,side}')"
+  anchor="$(printf '%s' "$identity" | review_runtime_sha256)"
+  candidate_event="$(sed -n '3p' "$events")"
+  candidate="$(jq -c --argjson evidence "$pointer" --arg anchor "$anchor" \
+    '.payload.candidate | .evidence=$evidence | .anchor_sha256=$anchor' <<<"$candidate_event")"
+  claim_key="$(review_runtime_v2_claim_key "$candidate")"
+  candidate="$(jq -c --arg claim "$claim_key" '.claim_key=$claim' <<<"$candidate")"
+  candidate_event="$(rehash_event "$(jq -c --argjson candidate "$candidate" \
+    '.payload={candidate:$candidate}' <<<"$candidate_event")")"
+  finding_event="$(sed -n '5p' "$events")"
+  finding="$(jq -c --argjson evidence "$pointer" --arg anchor "$anchor" --arg claim "$claim_key" \
+    '.payload.findings[0] | .evidence=$evidence | .anchor_sha256=$anchor | .claim_key=$claim' <<<"$finding_event")"
+  finding_id="$(review_runtime_v2_finding_id "$finding" 'acme/widgets' \
+    "$(jq -r '.review_key' <<<"$finding_event")")"
+  finding_event="$(rehash_event "$(jq -c --argjson finding "$finding" --arg id "$finding_id" \
+    '.payload.findings[0]=($finding | .finding_id=$id)' <<<"$finding_event")")"
+  { sed -n '1,2p' "$events"; printf '%s\n' "$candidate_event"; sed -n '4p' "$events"; \
+    printf '%s\n' "$finding_event"; sed -n '6p' "$events"; } >"$null_events"
+  output="$(review_runtime_receipt "$null_events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'producer accepts deterministic file-level null-line anchor' '0' "$rc"
+  printf '%s\n' "$output" >"$null_receipt"
+  output="$(review_runtime_validate_delta_receipt_files \
+    "$null_receipt" "$null_events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'file validator accepts deterministic file-level null-line anchor without stdout' '0|' "$rc|$output"
+
+  forged_events="$root/events-file-level-null-anchor-forged.jsonl"
+  candidate_event="$(rehash_event "$(sed -n '3p' "$null_events" | jq -c \
+    '.payload.candidate.anchor_sha256=("f"*64)')")"
+  finding_event="$(sed -n '5p' "$null_events")"
+  finding="$(jq -c '.payload.findings[0] | .anchor_sha256=("f"*64)' <<<"$finding_event")"
+  finding_id="$(review_runtime_v2_finding_id "$finding" 'acme/widgets' \
+    "$(jq -r '.review_key' <<<"$finding_event")")"
+  finding_event="$(rehash_event "$(jq -c --argjson finding "$finding" --arg id "$finding_id" \
+    '.payload.findings[0]=($finding | .finding_id=$id)' <<<"$finding_event")")"
+  { sed -n '1,2p' "$null_events"; printf '%s\n' "$candidate_event"; sed -n '4p' "$null_events"; \
+    printf '%s\n' "$finding_event"; sed -n '6p' "$null_events"; } >"$forged_events"
+  assert_identity_rejected 'forged deterministic null-line anchor after event rehash' "$forged_events"
+
+  write_target_evidence_events() {
+    local path="$1" line_value="$2" destination="$3" target_pointer target_anchor target_identity
+    local target_candidate target_finding review_key run_id lane_id ordinal
+    blob_file="$root/target-evidence-blob"
+    git -C "$repo" --no-replace-objects cat-file blob "$(git -C "$repo" rev-parse HEAD):$path" >"$blob_file" || return
+    content_sha256="$(review_runtime_sha256 <"$blob_file")" || return
+    target_pointer="$(sed -n '3p' "$events" | jq -S -c --arg path "$path" \
+      --arg hash "$content_sha256" --argjson line "$line_value" \
+      '.payload.candidate.evidence | .path=$path | .content_sha256=$hash | .line=$line')" || return
+    if [ "$line_value" = 'null' ]; then
+      target_identity="$(printf '%s' "$target_pointer" | jq -S -c \
+        '{content_sha256,line,object_sha,path,side}')" || return
+      target_anchor="$(printf '%s' "$target_identity" | review_runtime_sha256)" || return
+    else
+      target_anchor="$(python3 - "$blob_file" "$line_value" <<'PY'
+import hashlib
+import pathlib
+import sys
+lines = pathlib.Path(sys.argv[1]).read_bytes().splitlines(keepends=True)
+value = lines[int(sys.argv[2]) - 1]
+for ending in (b"\r\n", b"\n", b"\r"):
+    if value.endswith(ending):
+        value = value[:-len(ending)]
+        break
+print(hashlib.sha256(value).hexdigest())
+PY
+)" || return
+    fi
+    candidate_event="$(sed -n '3p' "$events")"
+    target_candidate="$(jq -c --argjson evidence "$target_pointer" --arg path "$path" \
+      --arg anchor "$target_anchor" '.payload.candidate | .evidence=$evidence | .path=$path |
+      .anchor_sha256=$anchor' <<<"$candidate_event")" || return
+    claim_key="$(review_runtime_v2_claim_key "$target_candidate")" || return
+    run_id="$(jq -r '.run_id' <<<"$target_candidate")"
+    lane_id="$(jq -r '.lane_id' <<<"$target_candidate")"
+    ordinal="$(jq -r '.ordinal' <<<"$target_candidate")"
+    candidate_id="$(review_runtime_candidate_id "$run_id" "$lane_id" "$ordinal" "$content_sha256")" || return
+    target_candidate="$(jq -c --arg claim "$claim_key" --arg id "$candidate_id" \
+      '.claim_key=$claim | .candidate_id=$id' <<<"$target_candidate")" || return
+    candidate_event="$(rehash_event "$(jq -c --argjson candidate "$target_candidate" \
+      '.payload={candidate:$candidate}' <<<"$candidate_event")")" || return
+    result_event="$(rehash_event "$(sed -n '4p' "$events" | jq -c --arg id "$candidate_id" \
+      '.payload.lane_result.candidates=[$id]')")" || return
+    finding_event="$(sed -n '5p' "$events")"
+    target_finding="$(jq -c --argjson evidence "$target_pointer" --arg path "$path" \
+      --arg anchor "$target_anchor" --arg claim "$claim_key" --arg id "$candidate_id" \
+      '.payload.findings[0] | .evidence=$evidence | .path=$path | .anchor_sha256=$anchor |
+      .claim_key=$claim | .candidate_ids=[$id]' <<<"$finding_event")" || return
+    review_key="$(jq -r '.review_key' <<<"$finding_event")"
+    finding_id="$(review_runtime_v2_finding_id "$target_finding" 'acme/widgets' "$review_key")" || return
+    finding_event="$(rehash_event "$(jq -c --argjson finding "$target_finding" --arg id "$finding_id" \
+      '.payload.findings[0]=($finding | .finding_id=$id)' <<<"$finding_event")")" || return
+    { sed -n '1,2p' "$events"; printf '%s\n' "$candidate_event" "$result_event" "$finding_event"; \
+      sed -n '6p' "$events"; } >"$destination"
+  }
+
+  target_path='src/crlf.txt'
+  target_line=1
+  target_events="$root/events-crlf-anchor.jsonl"
+  write_target_evidence_events "$target_path" "$target_line" "$target_events"
+  output="$(review_runtime_receipt "$target_events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'producer anchors CRLF line bytes from raw Git blob' '0' "$rc"
+
+  target_path='src/filtered.txt'
+  target_events="$root/events-filtered-raw-blob.jsonl"
+  target_receipt="$root/receipt-filtered-raw-blob.json"
+  write_target_evidence_events "$target_path" 1 "$target_events"
+  working_hash="$(review_runtime_sha256 <"$repo/$target_path")"
+  raw_hash="$content_sha256"
+  assert_eq 'filter fixture working-tree bytes differ from raw Git blob' 'different' \
+    "$([ "$working_hash" = "$raw_hash" ] && printf same || printf different)"
+  output="$(review_runtime_receipt "$target_events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'producer ignores clean/smudge and attributes when anchoring raw Git blob' '0' "$rc"
+  printf '%s\n' "$output" >"$target_receipt"
+  output="$(review_runtime_validate_delta_receipt_files \
+    "$target_receipt" "$target_events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_eq 'file validator accepts raw Git blob receipt without stdout' '0|' "$rc|$output"
+
+  output="$(KC_PR_FLOW_MAX_EVIDENCE_BYTES=1 \
+    review_runtime_receipt "$target_events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_not_zero 'producer rejects raw Git blobs over the evidence limit' "$rc"
+  assert_eq 'oversize producer emits no receipt' '' "$output"
+  output="$(KC_PR_FLOW_MAX_EVIDENCE_BYTES=1 review_runtime_validate_delta_receipt_files \
+    "$target_receipt" "$target_events" "$config" "$repo" 2>/dev/null)"
+  rc=$?
+  assert_not_zero 'file validator rejects raw Git blobs over the evidence limit' "$rc"
+  assert_eq 'oversize file validator emits no stdout' '' "$output"
+
+  unset -f assert_identity_rejected write_subject_evidence_pair_events write_target_evidence_events
+}
+
+if [ "$CASE_FILTER" = 's01-inertness' ]; then
+  if declare -F run_s01_inertness_tests >/dev/null; then
+    run_s01_inertness_tests
+  else
+    fail 'runtime suite owns the S01 inertness contract'
+  fi
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
+if [ "$CASE_FILTER" = 'delta-receipt-identity' ]; then
+  run_delta_receipt_identity_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
+if [ "$CASE_FILTER" = 'delta-receipt-files' ]; then
+  run_delta_receipt_file_validator_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
+if [ "$CASE_FILTER" = 'delta-receipt-contract' ]; then
+  run_delta_receipt_contract_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
+if [ "$CASE_FILTER" = 'delta-receipt-happy-path' ]; then
+  run_delta_receipt_happy_path_tests
+  printf '\n%s passed, %s failed\n' "$PASS" "$FAIL"
+  [ "$FAIL" -eq 0 ]
+  exit $?
+fi
+
+if [ "$CASE_FILTER" = 'all' ]; then
+  run_s01_inertness_tests
+  run_delta_receipt_contract_tests
+  run_delta_receipt_file_validator_tests
+  run_delta_receipt_identity_tests
+fi
 
 run_merge_readiness_tests() {
   local receipt="$1" ready_policy="$2" blocked_policy="$3" repo="$4"
@@ -2150,6 +2976,34 @@ assert_eq "idempotent quarantine preserves metadata bytes" "$idempotent_metadata
 assert_eq "idempotent quarantine remains metadata-only" "1" "$(find "$idempotent_quarantine_dir" -mindepth 1 -maxdepth 1 -type f | wc -l | tr -d ' ')"
 assert_eq "idempotent quarantine metadata stays read-only" "400" "$(file_mode "$idempotent_quarantine_dir/metadata.json")"
 assert_eq "idempotent quarantine directory stays read-only" "500" "$(file_mode "$idempotent_quarantine_dir")"
+
+# GNU stat accepts -f as filesystem status and emits no mode authority. A
+# complete private quarantine must still be recognized through the public API.
+gnu_stat_state="$(mktemp -d)"
+gnu_stat_line='{"case":"gnu stat filesystem output"}'
+gnu_stat_hash="$(sha256_text "$gnu_stat_line")"
+gnu_stat_dir="$gnu_stat_state/quarantine/$gnu_stat_hash-invalid_json"
+(
+  export KC_PR_FLOW_STATE_DIR="$gnu_stat_state"
+  uname() { printf '%s\n' Linux; }
+  stat() {
+    case "$1" in
+      -f) printf '%s\n' 'Filesystem 512-blocks Used Available Capacity iused ifree %iused Mounted on'; return 0 ;;
+      -c)
+        case "$3" in
+          "$gnu_stat_dir") printf '%s\n' 500 ;;
+          "$gnu_stat_dir/metadata.json") printf '%s\n' 400 ;;
+          *) return 1 ;;
+        esac
+        ;;
+      *) command stat "$@" ;;
+    esac
+  }
+  review_runtime_quarantine "$gnu_stat_line" invalid_json >/dev/null 2>&1
+)
+gnu_stat_quarantine_rc=$?
+assert_eq "GNU stat filesystem output recognizes complete quarantine" "0" "$gnu_stat_quarantine_rc"
+assert_eq "GNU stat quarantine keeps metadata artifact" "true" "$([ -f "$gnu_stat_dir/metadata.json" ] && printf true || printf false)"
 
 # Quarantine uses the same owned-lock lifecycle as event append. A forced
 # publication failure cleans both private temp and owned lock, then retries.
