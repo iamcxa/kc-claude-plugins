@@ -34,6 +34,17 @@ gates:
                 id: briefing:workflow-budget-ratchet:ideation:attempt-1:revision-1
                 digest: sha256:a61a2af02a82e3a15c26ca5173a165b5c56f4af2fb4e63f0ce829d0d00a350c2
                 room-ref: ./workflow-budget-ratchet/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:workflow-budget-ratchet:ideation:1
+                briefing: briefing:workflow-budget-ratchet:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T07:30:16.397943Z"
+                decision: approve
+                reason: Captain approved in chat (「那就照建議」, after asking FO to restate the merge-gatekeeper D1 reasoning) the six batch-2 ideation gates presented together in one message, accepting each task's stated recommendations and FO's implementation order
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-17T06:11:09Z
 ---
 
