@@ -3,7 +3,7 @@ title: An activated extension's worker instruction reaches the dispatch only if 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: implementation
 gates:
     version: 1
     records:
@@ -63,7 +63,7 @@ gates:
                 reason: Captain approved delivery (「Ａ准」) after FO presented the three batch-1 delivery gates together; as each gate question states, this accepts FO's stated recommendations and covers later external-review rounds on the PR.
               application:
                 target-stage: done
-                state: pending
+                state: superseded
 started: 2026-10-16T03:14:50Z
 worktree: .worktrees/spacedock-ensign-extension-instruction-reaches-dispatch
 pr: iamcxa/kc-claude-plugins#652
