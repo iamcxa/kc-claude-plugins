@@ -290,6 +290,10 @@ ADR: 0022
 
 - Cycle 1 (FO, 2026-10-17): Codex review on #663 a2093bc1 (review:5558121274) left three P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P2 `kc-dev-flow-2/scripts/design_surfaces.py` (1) a report with `findings: []` and a limitations entry naming an unshown state or size passes, though design-review.md makes such a limitation a finding; (2) two `Design finding N:` lines for one N collapse to the last, so contradictory dispositions pass; (3) the preview identity is read from any nested `preview:` line, not exactly one direct child of the `design_review` root.
+- Cycle 2 (FO, 2026-10-17): Codex review on #663 92b28aa6 (review:5558204896) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 `kc-dev-flow-2/scripts/design_surfaces.py`: two `Design review:` lines in a task (a rerun leaves the old one) and `.search()` takes the first, so a valid older report can pass while the newer one, which step 4 makes the binding report, has unresolved findings.
+- Cycle 2 (FO, 2026-10-17): Codex review on #663 92b28aa6 (review:5558204896) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 x
 
 ## Stage Report: ideation
 
