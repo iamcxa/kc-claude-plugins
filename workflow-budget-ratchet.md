@@ -79,11 +79,11 @@ Every figure was measured on origin/main of iamcxa/kc-claude-plugins fetched 202
 
 ### Why the budget has not held
 
-`lint-skills.py` fails only when the count is above the budget. A cut leaves the budget where it was, so the slack is spent by the next addition: today the README has 5495 words against 5511, and the candidate below (5432) would leave 79 words of room if nothing else changed. A raise is one number edited with a comment line, and 21 of them have gone in unchallenged in six days.
+`lint-skills.py` fails only when the count is above the budget. A cut leaves the budget where it was, so the slack is spent by the next addition: today the README has 5495 words against 5511, and the candidate below (5447) would leave 64 words of room if nothing else changed. A raise is one number edited with a comment line, and 21 of them have gone in unchallenged in six days.
 
 ### Where the words are
 
-The README is read whole at start and resume (`skills/dev/SKILL.md`: "Read the framework"). Words per section on origin/main: Stages 534, `backlog` 620, `ideation` 342, `validation` 241, Review-finding disposition 259, FO steps: review findings 690, Captain amendments 414 with its template, Number guards 277 + FO steps: number guards 468, Delivery authority 465, Extensions 224. The three passages this task can shorten save 63 words (1.1%); the sections that carry the mass state FO procedures a script cannot perform. The ratchet, not the shrink, is what changes the trend.
+The README is read whole at start and resume (`skills/dev/SKILL.md`: "Read the framework"). Words per section on origin/main: Stages 534, `backlog` 620, `ideation` 342, `validation` 241, Review-finding disposition 259, FO steps: review findings 690, Captain amendments 414 with its template, Number guards 277 + FO steps: number guards 468, Delivery authority 465, Extensions 224. The three passages this task can shorten save 48 words (0.9%); the sections that carry the mass state FO procedures a script cannot perform. The ratchet, not the shrink, is what changes the trend.
 
 ### PRFAQ
 
@@ -120,7 +120,7 @@ flowchart TD
 
 - `lint-skills.py`: replace `WORKFLOW_WORD_BUDGET = 5511` and its 10 comment lines of raise history by `WORKFLOW_BUDGET_START = 5511` and `WORKFLOW_BUDGET_STEPS`, a list of `dict(delta, why, captain, loaded)`; `WORKFLOW_WORD_BUDGET` is computed as START plus the deltas, so no second number can disagree. `captain` and `loaded` are required, non-blank, with `captain` containing a 「…」 quote, only when `delta > 0`.
 - Messages, each with its remedy: over ("N words exceeds the budget of B; move the added text out of the README, or add a raise step with `captain` and `loaded`"), under ("N words is k under the budget of B; add a cut step of -k with a reason"), raise step without ruling (names the step index and the missing key).
-- The candidate carries one step: `delta=-79`, reason "dispatch_records.py and design_surfaces.py print the parts and defects; the README points to them", so the budget is 5432 and the pass line reads `5432 of 5432 words`.
+- The candidate carries one step: `delta=-64`, reason "dispatch_records.py and design_surfaces.py print the parts and defects; the README points to them", so the budget is 5447 and the pass line reads `5447 of 5447 words`.
 - Bound: the script checks form and arithmetic. It cannot tell that a quote is the Captain's or that `loaded` is true, and an author who edits START itself evades the ratchet; the diff shows a changed constant named START, and validation compares each quote with the gate record.
 - ADR (draft, no number): "A rise in the workflow word budget needs a Captain ruling recorded with it." Words line: 「文件不應該一直變長，除非可以證明文件內容不是一次性載入，這裡的意義是文件如果一次載入太長，那 llm 的注意力八成會失焦」 (chat, 2026-10-17). FO reserves the number when it dispatches implementation.
 
@@ -130,7 +130,7 @@ Each script's failure output was read first (run on fixtures in a scratch copy, 
 
 | Rule restated in the README | Script and what it prints | Decision | Words |
 |---|---|---|---|
-| Dispatch-record parts (Dispatched line, Model line, Checklist and Scope notes sections, follow-up record parts) | `dispatch_records.py <task>` prints one line per missing part, for example `implementation-1.md: needs a 'Model:' line`, and `needs a checklist of its own, not only a reference to another dispatch record` | shrink to a pointer sentence plus the run step | 114 to 86 (-28) |
+| Dispatch-record parts (Dispatched line, Model line, Checklist and Scope notes sections, follow-up record parts) | `dispatch_records.py <task>` prints one line per missing part, for example `implementation-1.md: needs a 'Model:' line`, and `needs a checklist of its own, not only a reference to another dispatch record` | shrink to a pointer sentence plus the run step; a resumed worker's record keeps "a checklist of the items that message asks, never a pointer to another record", because `is_pointer` rejects only a limited word list and lets "Reuse the checklist of validation-1." pass (Codex P2, #658) | 114 to 101 (-13) |
 | Bare script names | `--names` prints `<file>:<line>: bare package script name X` with no remedy; `laws_check.py` parses it with `re.fullmatch(r"(.+\.md):(\d+): (bare package script name \S+)", line)` and fails closed on any other line, and `pr_watch.py` with an anchored `findall` | keep the README sentence; changing the line means changing both parsers and their tests | 0 |
 | Completion line to `main` | `needs a scope-notes line naming main as the completion recipient` names the part, not the sentence; it was the most frequent miss (7 of 15 parts, laws.md L2 Bit) | keep the exact line in the README | 0 |
 | Acceptance criteria present (ideation Gate content: "including a missing `## Acceptance criteria` section or one that declares no criterion") | `missing '## Acceptance criteria' section` and `'## Acceptance criteria' declares no criterion (a '**AC-<id>**' bold line)` | shrink | 32 to 19 (-13) |
@@ -143,7 +143,7 @@ Each script's failure output was read first (run on fixtures in a scratch copy, 
 | `package_version.py`, `workflow_checkout.py` exit sentences (Stages) | messages are complete | not in this change: `worker-loads-declared-package` edits that paragraph | 88 (the whole paragraph) |
 | Number guards (277 + 468 words) | `number_guards.py check` prints `FAIL R<n>: <path>: <reason>` | not measured here; its FO steps (Reserve, Applied, Collision) are procedures a script cannot do | unknown |
 
-Total removed: 63 words; README 5495 to 5432. `lint-skills.py` on the candidate README prints `5432 of 5511 words; no unlisted passage repeats it`, and `test_sd_dispatch.py` reports exactly one pin failing, `dispatch-record`, whose three `need` strings name the removed parts.
+Total removed: 48 words; README 5495 to 5447. `lint-skills.py` on the candidate README prints `5447 of 5511 words; no unlisted passage repeats it`, and `test_sd_dispatch.py` reports exactly one pin failing, `dispatch-record`, whose three `need` strings name the removed parts.
 
 ### Words FO reads at each moment
 
@@ -166,14 +166,14 @@ for name, a, b in SPANS:
     print(f"{name}\t{words(BASE, a, b)}\t{words(CAND, a, b)}")
 ```
 
-Run as `python3 recount.py <README at base> <README at candidate>`; design-time output on origin/main and the draft: 5495/5432, 380/352, 342/329, 414/392, 465/465.
+Run as `python3 recount.py <README at base> <README at candidate>`; design-time output on origin/main and the draft: 5495/5447, 380/368, 342/329, 414/391, 465/465.
 
 | Moment | Base | Candidate | Output of the moment's script (clean run) |
 |---|---|---|---|
-| Startup and resume (README read whole, plus the 48-word mod) | 5543 | 5480 | mod and `pr_watch.py tasks` unchanged |
-| Dispatch build (Stages paragraph) | 380 | 352 | base 0 words (`--names` is silent when clean); candidate 4 (`1 dispatch record(s) complete`), so 380 to 356 |
+| Startup and resume (README read whole, plus the 48-word mod) | 5543 | 5495 | mod and `pr_watch.py tasks` unchanged |
+| Dispatch build (Stages paragraph) | 380 | 368 | base 0 words (`--names` is silent when clean); candidate 4 (`1 dispatch record(s) complete`), so 380 to 372 |
 | Ideation gate prepare (`ideation` section) | 342 | 329 | `design_surfaces.py check` unchanged |
-| Recording an amendment (Captain amendments section) | 414 | 392 | prints defects only when there are some |
+| Recording an amendment (Captain amendments section) | 414 | 391 | prints defects only when there are some |
 | Merge ask (Delivery authority) | 465 | 465 | `delivery_gate.py` unchanged |
 | Idle on an open PR, idle on a merged PR, after the archive | unchanged | unchanged | `pr_watch.py`, `observer_check.py` unchanged |
 
@@ -201,15 +201,15 @@ Order for FO (recommendation, D2): this task first, then worker-loads-declared-p
 - **D1 — the raise rule.** Recommendation: a raise step carries his quoted words and one `loaded:` moment, checked for presence only, as in Mechanism. Gets worse: the README is read whole, so `loaded:` can only be a claim he rules on, and the five other batch-2 tasks each need either an offset or a ruling; in the 6 days measured, 21 raises would have meant 21 rulings.
 - **D2 — landing order.** Recommendation: first (list above). Gets worse: the other five rebase onto budget steps and must offset or ask; the first of them waits for this task's merge.
 - **D3 — `laws.md` L1 Rule line.** Recommendation: leave it. It states the commit-order the runner judges ("no later than the commit that writes `pr: pr-merge:<N>`"), which the README sentence ("waits for") does not; a pointer would save 5 words in a file no agent loads (`laws.md` is named only by `adoption.md`, `laws_check.py` and its test), and nothing has drifted. Gets worse: two homes stay, and if the README sentence changes only the existing `readme-keeps-delivery-rules` pin warns, not `laws.md`.
-- **D4 — Number guards.** Recommendation: file a follow-up task and keep it out of this one. It is 745 words (13.6% of the README), the biggest candidate, and its messages were not read here. Gets worse: this change removes 63 words, about 1%, and the attention argument is mostly unanswered until the follow-up lands.
+- **D4 — Number guards.** Recommendation: file a follow-up task and keep it out of this one. It is 745 words (13.6% of the README), the biggest candidate, and its messages were not read here. Gets worse: this change removes 48 words, about 1%, and the attention argument is mostly unanswered until the follow-up lands.
 
 ## Acceptance criteria
 
 Today's figures are origin/main `ca368cee`. Commands run from the repository root at the candidate, under `python3 -B`.
 
-**AC-1**: The budget ratchets in both directions and says what to do. Evidence: `python3 kc-dev-flow-2/scripts/test_lint_skills.py` has three cases on a fixture README: one word over exits 1 with a line containing `exceeds the budget` and `raise step`; one word under exits 1 with a line containing `under the budget` and `cut step`; equal exits 0 and prints `N of N words`. At the candidate `python3 kc-dev-flow-2/scripts/lint-skills.py` prints `references/sd/workflow.md: 5432 of 5432 words` (design-time: 5432 of 5511 on the draft before the budget steps), and `grep -c '^# 5[0-9][0-9][0-9]:' kc-dev-flow-2/scripts/lint-skills.py` prints 0. Falsifier: restoring `count > budget` as the only comparison makes the under case exit 0 and the test fail.
+**AC-1**: The budget ratchets in both directions and says what to do. Evidence: `python3 kc-dev-flow-2/scripts/test_lint_skills.py` has three cases on a fixture README: one word over exits 1 with a line containing `exceeds the budget` and `raise step`; one word under exits 1 with a line containing `under the budget` and `cut step`; equal exits 0 and prints `N of N words`. At the candidate `python3 kc-dev-flow-2/scripts/lint-skills.py` prints `references/sd/workflow.md: 5447 of 5447 words` (design-time: 5447 of 5511 on the draft before the budget steps), and `grep -c '^# 5[0-9][0-9][0-9]:' kc-dev-flow-2/scripts/lint-skills.py` prints 0. Falsifier: restoring `count > budget` as the only comparison makes the under case exit 0 and the test fail.
 **AC-2**: A raise needs the Captain's words and a loaded moment. Evidence: `test_lint_skills.py` cases: a step with `delta > 0` and no `captain` exits 1 naming the step index; one with `captain` lacking a 「…」 quote exits 1; one with `captain` and `loaded` and a README of exactly the new count exits 0; a step with `delta < 0` and neither key exits 0; a ledger whose sum differs from the README count exits 1. Falsifier: deleting the `delta > 0` branch makes the first case exit 0. Limit: form and arithmetic only; the quote's truth and the `loaded` claim are read by validation against the gate record, and editing START evades the check (the diff shows it).
-**AC-3**: The three passages shrink and no touched moment rises. Evidence: `python3 recount.py <base README> <candidate README>` (the script in Words FO reads, kept in this task's validation folder at implementation) prints, per moment, candidate below base for startup, dispatch build, ideation gate and amendment, and equal for merge ask; the dispatch-build total with the 4-word clean output is below 380. Design-time: 5495 to 5432; 380 to 352 (356); 342 to 329; 414 to 392; 465 to 465. Falsifier: any touched moment at or above its base fails the criterion; an independent recount by validation, not the implementer's script, is required (learning.md: the first recount script once under-counted).
+**AC-3**: The three passages shrink and no touched moment rises. Evidence: `python3 recount.py <base README> <candidate README>` (the script in Words FO reads, kept in this task's validation folder at implementation) prints, per moment, candidate below base for startup, dispatch build, ideation gate and amendment, and equal for merge ask; the dispatch-build total with the 4-word clean output is below 380. Design-time: 5495 to 5447; 380 to 368 (372); 342 to 329; 414 to 391; 465 to 465. Falsifier: any touched moment at or above its base fails the criterion; an independent recount by validation, not the implementer's script, is required (learning.md: the first recount script once under-counted).
 **AC-4**: The dispatch-record pin follows the move and the full check is a README step. Evidence: the README holds `runs `python3 <package>/scripts/dispatch_records.py <task folder>`` and `A follow-up message to a worker FO resumes is a dispatch too`; `test_sd_dispatch.py --sd-plugin-root <active Spacedock plugin root>` passes with the `dispatch-record` entry's `need` strings re-pointed to that text and its `swaps` regenerated; `git diff origin/main -- kc-dev-flow-2/scripts/dispatch_records.py kc-dev-flow-2/scripts/laws_check.py kc-dev-flow-2/scripts/pr_watch.py` is empty. Falsifier: reverting the README sentence to its base text makes the re-pointed `need` fail under `fix_gaps`; a change to the `--names` line breaks `laws_check.py`, which fails closed (`does not parse`), so the diff command is the guard.
 **AC-5**: The two messages the README stops restating are pinned. Evidence: `test_design_surfaces.py` gains assertions that a task with no `## Acceptance criteria` prints `missing '## Acceptance criteria' section` and one with the heading and no `**AC-` line prints `declares no criterion`, and that the amendment-entry messages quoted in the table appear for their fixtures. Falsifier: rewording either message fails the assertion (run the mutation under `python3 -B`).
 **AC-6**: Rules a script and the Captain keep are untouched. Evidence: `git diff origin/main -- kc-dev-flow-2/scripts/delivery_gate.py kc-dev-flow-2/scripts/observer_check.py kc-dev-flow-2/references/sd/laws.md` is empty, and the README still holds `the sentinel waits for a committed observer report` and `a head other than the latest validation record's `Candidate:` is revalidated or its difference told to the Captain` (the `readme-keeps-delivery-rules` pin passes). If the Captain rules D3 otherwise this criterion is replaced by amendment.
@@ -297,3 +297,16 @@ No Material finding. Not verified: AC-9 (post-release); behaviour of FO under th
 ### Summary
 
 PASSED for head 57673bfd: every AC-1 to AC-8 command re-run at the head, at least one mutation per criterion fails as the falsifier expects, the words per moment fall by my own recount, and CI is green on the head. One Deferred risk (ledger edits evade the ratchet), two Polish items, and learning.md and the PR-body line for FO. Nothing was pushed, commented or changed in the candidate; throwaway worktrees and scratch copies are removed.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Apply the three edits proposed in phase 1 for the Codex P2 on #658 (review:5557548181): restore 'a checklist of the items that message asks, never a pointer to another record' in the Stages sentence of workflow.md; change the budget step in lint-skills.py from -79 to -64 (5447 words); add the need string and extend the resumed-dispatch swaps regex in test_sd_dispatch.py
+  Commit e65a91ba on spacedock-ensign/workflow-budget-ratchet (3 files, 4 lines each way); README 5447 words, `lint-skills.py` prints `5447 of 5447 words`; `dispatch_records.py` diff against origin/main still empty.
+- DONE: The failing test at 57673bfd passes after the fix, and fails again when the README phrase is removed (python3 -B, caches cleared)
+  Pin `resumed-dispatch` need "never a pointer to another record": at 57673bfd `test_sd_dispatch.py` asserts `'resumed-dispatch': (['never a pointer to another record'], [])`; at e65a91ba rc 0; with the phrase removed from the README the same single gap returns, then restored.
+- DONE: Update the task file's figures (5432 and -79) where the design and criteria quote them; all suites green; roborev evidence= line; push without force; CI green on the new head; commit the stage report
+  Task file Design/AC figures now 5447, -64, 63 to 48 words, 380 to 368 (372), amendment 391 (earlier stage reports keep their history). Suites rc 0: lint_skills (31), dispatch_records, design_surfaces (91), laws_check, observer_check, pr_watch, delivery_gate, comment_ratio, number_guards, adr_doc_checks, sd_dispatch with Spacedock 0.27.0; `adr_lint --require 20` pass. `clean on e65a91baa; evidence=roborev:797`. Pushed 57673bfd..e65a91ba, no force. `gh pr view 658`: 4 of 4 checks SUCCESS on e65a91ba. Corrected PR body: /tmp/pr658-body-new.md (FO to apply with `gh pr edit`; also adds the attribution line phase 1 lacked and fixes startup to 5543 to 5495). Not run: independent revalidation (next stage).
+
+### Summary
+
+The Stages sentence for resumed dispatches again says each record carries a checklist of the items the message asks, never a pointer, because `is_pointer` rejects only a limited word list. The budget step is -64 (budget 5447, still 64 under main's 5511), so no Captain ruling is needed. The Deferred risk and learning.md line are untouched.
