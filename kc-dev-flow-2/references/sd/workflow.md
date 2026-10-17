@@ -74,8 +74,8 @@ body. Use bold **AC-N** declarations with individual evidence clauses.
 Stage workers run on the workflow's default model.
 `kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and
 `kc-dev-flow-2:observer` run on the model and reasoning their agent files declare, never
-a cheaper one. FO records each chief-engineer or engineering-reviewer call under the
-task's `## FO alignment` as `Reviewer: <agent> <model> <date> — <question>`.
+a cheaper one. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
+`Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.
 
 `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
 FO fix authorized under Review-finding disposition step 3 are dispatched at once in the

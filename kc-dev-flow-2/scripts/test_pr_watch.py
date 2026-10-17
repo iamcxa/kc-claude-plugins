@@ -686,6 +686,38 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertRegex(lines[0], r"^next: report some-task to the Captain: .*git cannot read the dispatch records")
 
+    def third_cycle(self, slug, extra="", archived=False, commit=True):
+        text = f"---\ntitle: {slug}\nstatus: validation\npr:\n---\n## FO alignment\n{extra}\n### Feedback Cycles\n- Cycle 3 (FO): x\n"
+        target = self.state / ("_archive" if archived else "") / f"{slug}.md"
+        target.parent.mkdir(exist_ok=True)
+        target.write_text(text)
+        if commit:
+            self.git(self.state, "add", "-A")
+            self.git(self.state, "commit", "-qm", "task")
+
+    def test_a_live_task_owing_a_role_call_prints_the_line_until_it_is_recorded(self):
+        self.readme("roborev")
+        self.third_cycle("some-task")
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(lines), 1, lines)
+        self.assertRegex(lines[0], r"^next: some-task has a third Feedback Cycle; dispatch kc-dev-flow-2:chief-engineer ")
+        self.assertLessEqual(len(lines[0].split()), 52)
+        self.third_cycle("some-task", extra="Reviewer: kc-dev-flow-2:chief-engineer not run: Captain ordered it. Cycle 3")
+        self.assertEqual(self.tasks({}), (0, []))
+
+    def test_an_archived_task_owing_a_role_call_prints_nothing(self):
+        self.readme("roborev")
+        self.third_cycle("some-task", archived=True)
+        self.assertEqual(self.tasks({}), (0, []))
+
+    def test_a_task_the_role_check_cannot_read_is_reported_with_exit_2(self):
+        self.readme("roborev")
+        self.third_cycle("some-task", commit=False)
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2)
+        self.assertRegex(lines[0], r"^next: report some-task to the Captain: cannot tell whether a chief-engineer")
+
     def test_tasks_needs_one_workflow_directory(self):
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(watch.main(["--state", str(self.watch), "tasks"]), 2)

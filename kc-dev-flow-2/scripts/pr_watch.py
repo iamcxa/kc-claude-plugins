@@ -30,8 +30,9 @@ present. Exit 2 is a configuration error.
 tasks adds each open task PR to the watch list, with the codex and copilot columns when the workflow README
 lists those extensions, and prints one `fact:` line per open task PR (state, draft, checks, reviewer outcomes
 with their review id) and one `next:` line per action FO owes: recording a PR a worker opened, marking a green
-draft ready, the observer check ahead of the merge sentinel, keeping one wait running, and a task's newest
-dispatch record that names a package script without a directory (dispatch_records.py --newest). It prints no merge-ask
+draft ready, the observer check ahead of the merge sentinel, keeping one wait running, a task's newest
+dispatch record that names a package script without a directory (dispatch_records.py --newest), and a
+chief-engineer or engineering-reviewer call a live task owes (role_triggers.py). It prints no merge-ask
 or hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
 change. Exit 2 when a task cannot be read.
 """
@@ -306,6 +307,11 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
                            "and save it as the next record, else do nothing.")
             elif done.returncode:
                 errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
+        done = subprocess.run([sys.executable, str(SCRIPTS / "role_triggers.py"), str(state), slug], capture_output=True, text=True)
+        if done.returncode == 1:
+            out += done.stdout.splitlines()
+        elif done.returncode:
+            errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
         pr = meta.get("pr", "")
         try:
             where = toplevel(workflow) / meta["worktree"] if not pr and meta.get("worktree") else None

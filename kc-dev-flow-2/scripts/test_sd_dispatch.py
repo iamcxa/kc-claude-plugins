@@ -274,10 +274,10 @@ FIXES = {
         old=(),
         swaps=((r"A decision an accepted ADR already settles is not asked again:.*?never a `Precedent:` line\. ", ""),)),
     "reviewer-record": dict(
-        need=("`Reviewer: <agent> <model> <date> — <question>`",
+        need=("`Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.",
               "`kc-dev-flow-2:observer` run on the model and reasoning their agent files declare"),
         old=("FO never dispatches them on a cheaper model",),
-        swaps=((r"`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and `kc-dev-flow-2:observer` run on.*?<date> — <question>`\.",
+        swaps=((r"`kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and `kc-dev-flow-2:observer` run on.*?<date> — <question>`; `<package>/scripts/role_triggers\.py` lists calls owed\.",
                 "`kc-dev-flow-2:chief-engineer` and `kc-dev-flow-2:engineering-reviewer` run on the "
                 "model and reasoning their agent files declare; FO never dispatches them on a "
                 "cheaper model, because their value is a stronger second judgment."),)),
