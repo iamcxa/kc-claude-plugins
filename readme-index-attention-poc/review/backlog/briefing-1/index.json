@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:readme-index-attention-poc:backlog:attempt-1:revision-1",
+  "question": "Schedule now as a POC and enter implementation with this bar, committed before any run? Recommended bar: five probes, three runs per arm on Sonnet (30 runs); pass when the index arm follows the probed rules at least as often as the whole-README arm in total, is worse on no probe by more than one run, and loads at most a quarter of the whole-README words at startup. Approving accepts that bar; say a different one if you want it.",
+  "artifacts": [
+    {
+      "id": "artifact:readme-index-attention-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ad07297588657def81f14fb4ea63c10a4b5deaa3/readme-index-attention-poc.md",
+      "rev": "sha256:8d737e12b5313aa4b58a65a73ab08b28beab18d5c59fdc6ab7cc52f072f4f0a3",
+      "mediaType": "text/markdown",
+      "summary": "Seed: the Captain asked whether the README can be read as an index plus per-moment rules instead of all at once, and to prove it is better before continuing. The POC first checks what Spacedock and kc-dev-flow-2 already load per moment (FO boot, show-stage-def, context-sections, mods), then compares the whole README with an index arm built in a scratch copy, on probes drawn from the rule classes the observer reports most (32 violation lines in 15 reports since 2026-10-13). It changes no package or adopter file. Cost not measured; it is reported per run. A restructure task is filed only if the POC passes."
+    }
+  ]
+}

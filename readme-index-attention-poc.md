@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:readme-index-attention-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:readme-index-attention-poc-backlog-1
+              briefing:
+                id: briefing:readme-index-attention-poc:backlog:attempt-1:revision-1
+                digest: sha256:6ee60a805ace07c0d5f6fadb33187cd393901d1c1da8938e477c801b6c744af4
+                room-ref: ./readme-index-attention-poc/review/backlog/briefing-1
 ---
 
 Filed on the Captain's words (chat, 2026-10-17), after FO said #658 (workflow-budget-ratchet) only cuts words and does not change how the README is read: 「長度的問題是，不應該讓 llm一次讀麽多字，應該只讀必要的，就算是第一次讀入的東西應該是一個索引，讓新的 llm 一直知道去哪裡找什麼，不是一次餵給他一大堆現在還用不到的東西……如果能先解決前面的問題，那文件長度可能就不是核心問題」, then 「合併且開任務，先走poc證明真的比較好再繼續」.
