@@ -381,6 +381,49 @@ class L2Test(Base):
         self.assertEqual(code, 0, out)
         self.assertIn("0 events judged", out)
 
+    def extension_records(self):
+        repo = Repo(self.tmp / "l2-ext")
+        before = repo.commit("base", keep="x")
+        added = repo.commit(
+            "first implementation records",
+            **{"t__dispatch__implementation-1": record(),
+               "u__dispatch__implementation-1": record(checklist="- run <package>/extensions/roborev/roborev_gate.py")})
+        return repo, before, added
+
+    def test_a_first_record_missing_a_listed_extensions_instruction_is_a_violation_naming_both(self):
+        repo, before, added = self.extension_records()
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 1, out)
+        self.assertIn("2 events judged", out)
+        self.assertIn("2 violated", out)
+        self.assertRegex(out, rf"record=t/dispatch/implementation-1\.md commit={added[:12]} roborev worker instruction is absent")
+        self.assertRegex(out, r"record=u/dispatch/implementation-1\.md .*roborev worker instruction has an unsubstituted <package>")
+
+    def test_the_readme_supplied_decides_whether_the_instruction_is_required(self):
+        trunk = Repo(self.tmp / "trunk")
+        trunk.commit("before roborev", readme="---\nextensions: [learn]\n---\nbody\n")
+        without = git(trunk.path, "rev-parse", "HEAD")
+        trunk.commit("lists roborev", readme="---\nextensions: [learn, roborev]\n---\nbody\n")
+        repo, before, _ = self.extension_records()
+        verdicts = {}
+        for name in ("without", "with"):
+            sha = without if name == "without" else "HEAD"
+            readme = self.tmp / f"readme-at-{name}.md"
+            readme.write_text(git(trunk.path, "show", f"{sha}:readme.md"))
+            verdicts[name] = self.judge(repo, before, readme=readme)
+        self.assertEqual(verdicts["without"][0], 0, verdicts["without"][1])
+        self.assertIn("2 events judged", verdicts["without"][1])
+        self.assertEqual(verdicts["with"][0], 1, verdicts["with"][1])
+
+    def test_with_no_readme_the_not_checked_note_is_skipped_and_other_parts_are_still_judged(self):
+        repo = Repo(self.tmp / "l2-noreadme")
+        before = repo.commit("base", keep="x")
+        repo.commit("record", **{"t__dispatch__implementation-1": record(completion=False)})
+        code, out = laws(repo.path, "--before", before)
+        self.assertEqual(code, 2, out)
+        self.assertRegex(out, r"record=t/dispatch/implementation-1\.md .*completion recipient")
+        self.assertNotIn("L2 dispatch-record-complete: cannot judge", out)
+
 
 class RangeTest(Base):
     def test_each_push_is_judged_on_its_own_range_and_adoption_starts_green(self):

@@ -30,13 +30,18 @@ Send your completion message to `main` (the README's Dispatch facts: `team-lead`
 MAIN_LINE = "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).\n"
 
 
+NO_EXTENSIONS = "---\nentity-type: task\n---\n"
+LISTS_ROBOREV = "---\nentity-type: task\nextensions: [roborev, codex]\n---\n"
+
 IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}
 BARE = COMPLETE.replace("1. Independent verdict", "1. Run adr_lint.py. Independent")
 
 
 class DispatchRecordTests(unittest.TestCase):
-    def check(self, files, target=None):
+    def check(self, files, target=None, readme=NO_EXTENSIONS):
         with tempfile.TemporaryDirectory() as d:
+            if readme is not None:
+                Path(d, "README.md").write_text(readme)
             folder = Path(d, "task")
             (folder / "dispatch").mkdir(parents=True)
             for name, text in files.items():
@@ -215,6 +220,136 @@ class DispatchRecordTests(unittest.TestCase):
             self.assertEqual(records.main([]), 2)
             for args in (["--newest"], ["--newest", "state"], ["--newest", "a", "b", "c"]):
                 self.assertEqual(records.main(args), 2, args)
+
+
+ROBOREV_PATH = "/abs/kc-dev-flow-2/extensions/roborev/roborev_gate.py"
+
+
+class ExtensionInstructionTests(unittest.TestCase):
+    def run_main(self, folder, *flags):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = records.main([*flags, str(folder)])
+        return code, out.getvalue()
+
+    def check(self, files, readme=LISTS_ROBOREV, flags=()):
+        with tempfile.TemporaryDirectory() as d:
+            if readme is not None:
+                Path(d, "README.md").write_text(readme)
+            folder = Path(d, "task")
+            (folder / "dispatch").mkdir(parents=True)
+            for name, text in files.items():
+                (folder / "dispatch" / name).write_text(text)
+            return self.run_main(folder, *flags)
+
+    def test_a_first_implementation_record_without_the_instruction_fails_and_names_the_extension(self):
+        code, out = self.check({"implementation-1.md": COMPLETE})
+        self.assertEqual(code, 1)
+        self.assertIn("implementation-1.md: roborev worker instruction is absent", out)
+        self.assertIn("EXTENSION.md", out)
+
+    def test_the_root_substituted_path_or_a_not_run_reason_passes(self):
+        for line in (f"Before reporting, run python3 {ROBOREV_PATH} --repo w --base b",
+                     f"`python3 {ROBOREV_PATH}`", "roborev not run: the daemon is down on this machine"):
+            with self.subTest(line):
+                self.assertEqual(self.check({"implementation-1.md": COMPLETE + line + "\n"})[0], 0)
+        under_checklist = COMPLETE.replace("1. Independent", f"python3 {ROBOREV_PATH}\n1. Independent")
+        self.assertEqual(self.check({"implementation-1.md": under_checklist})[0], 0)
+
+    def test_the_placeholder_the_bare_name_and_an_empty_reason_each_fail(self):
+        absent, placeholder = "worker instruction is absent", "worker instruction has an unsubstituted <package>"
+        cases = [
+            ("python3 <package>/extensions/roborev/roborev_gate.py --repo w", placeholder),
+            ("python3 roborev_gate.py --repo w", absent),
+            ("roborev not run:", absent),
+            (f"python3 x{ROBOREV_PATH}", absent),
+        ]
+        for line, message in cases:
+            with self.subTest(line):
+                code, out = self.check({"implementation-1.md": COMPLETE + line + "\n"})
+                self.assertEqual(code, 1)
+                self.assertIn(message, out)
+                self.assertNotIn(placeholder if message == absent else absent, out)
+
+    def test_a_path_that_continues_past_the_script_name_is_absent_and_one_that_ends_there_passes(self):
+        for tail in (".bak", "x", "-old", "~", ".orig"):
+            with self.subTest(tail):
+                code, out = self.check({"implementation-1.md": COMPLETE + f"python3 {ROBOREV_PATH}{tail} --repo w\n"})
+                self.assertEqual(code, 1)
+                self.assertIn("worker instruction is absent", out)
+        for tail in (".", ",", "`", ")", "\"", ""):
+            with self.subTest(repr(tail)):
+                text = COMPLETE + f"Run ({ROBOREV_PATH}{tail} then report\n"
+                self.assertEqual(self.check({"implementation-1.md": text})[0], 0)
+
+    def test_only_listed_followers_end_the_script_path(self):
+        for tail in ("/extra", "/", ":", ";", "=", "]", "}", ">", "|", "&", "\\", "#", "?", "!", "....", "'x", "`)x", ".)x"):
+            with self.subTest(tail):
+                code, out = self.check({"implementation-1.md": COMPLETE + f"python3 {ROBOREV_PATH}{tail} --repo w\n"})
+                self.assertEqual(code, 1)
+                self.assertIn("worker instruction is absent", out)
+        for tail in (" ", "\t", ".", ",", "`", ")", "\"", "'", "..", "`)", ".)", ".,", "`).", "\"`)"):
+            with self.subTest(repr(tail)):
+                text = COMPLETE + f"Run ({ROBOREV_PATH}{tail} then report\n"
+                self.assertEqual(self.check({"implementation-1.md": text})[0], 0)
+        for ending in ("", "\n", ".", ".\n"):
+            with self.subTest(repr(ending)):
+                self.assertEqual(self.check({"implementation-1.md": COMPLETE + f"Run {ROBOREV_PATH}{ending}"})[0], 0)
+
+    def test_an_unlisted_extension_is_not_checked(self):
+        self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme=NO_EXTENSIONS)[0], 0)
+        self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme="---\nentity-type: task\nextensions: [codex]\n---\n")[0], 0)
+
+    def test_a_validation_record_without_the_instruction_is_not_checked(self):
+        complete = COMPLETE + f"python3 {ROBOREV_PATH}\n"
+        self.assertEqual(self.check({"implementation-1.md": complete, "validation-1.md": COMPLETE})[0], 0)
+        self.assertEqual(self.check({"validation-1.md": COMPLETE})[0], 0)
+
+    def test_a_later_implementation_record_without_the_instruction_is_not_checked(self):
+        complete = COMPLETE + f"python3 {ROBOREV_PATH}\n"
+        self.assertEqual(self.check({"implementation-1.md": complete, "implementation-2.md": COMPLETE})[0], 0)
+
+    def test_every_shipped_instruction_is_read_from_its_extension_file(self):
+        shipped = [p.name for p in Path(records.PACKAGE, "extensions").iterdir() if p.is_dir()]
+        found = {name: (stage, paths) for name, stage, paths in records.declared_instructions(records.PACKAGE, shipped)}
+        self.assertEqual(found["roborev"], ("implementation", ["extensions/roborev/roborev_gate.py"]))
+        for name in shipped:
+            text = Path(records.PACKAGE, "extensions", name, "EXTENSION.md").read_text()
+            self.assertEqual("Instruction FO adds" in text, name in found, name)
+
+    def test_no_readme_is_said_not_skipped_and_leaves_the_exit_code_alone(self):
+        code, out = self.check({"implementation-1.md": COMPLETE}, readme=None)
+        self.assertEqual(code, 0)
+        self.assertRegex(out, r"extensions not checked: no workflow README above \S+task")
+        self.assertIn("1 dispatch record(s) complete", out)
+        self.assertEqual(self.check({"implementation-1.md": COMPLETE.replace("Model: sonnet\n", "")}, readme=None)[0], 1)
+
+    def test_the_nearest_readme_with_an_entity_type_is_used_and_a_plain_one_is_skipped(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "README.md").write_text(LISTS_ROBOREV)
+            folder = Path(d, "state", "_archive", "task")
+            (folder / "dispatch").mkdir(parents=True)
+            (folder / "dispatch" / "implementation-1.md").write_text(COMPLETE)
+            Path(d, "state", "README.md").write_text("# not a workflow README\n")
+            code, out = self.run_main(folder)
+        self.assertEqual(code, 1)
+        self.assertIn("roborev worker instruction is absent", out)
+
+    def test_readme_flag_supplies_the_file_and_a_missing_path_exits_2(self):
+        with tempfile.TemporaryDirectory() as d:
+            readme = Path(d, "elsewhere.md")
+            readme.write_text(LISTS_ROBOREV)
+            folder = Path(d, "a", "task")
+            (folder / "dispatch").mkdir(parents=True)
+            (folder / "dispatch" / "implementation-1.md").write_text(COMPLETE)
+            code, out = self.run_main(folder, "--readme", str(readme))
+            self.assertEqual(code, 1)
+            self.assertIn("roborev worker instruction is absent", out)
+            self.assertNotIn("not checked", out)
+            code, out = self.run_main(folder, "--readme", str(Path(d, "missing.md")))
+            self.assertEqual(code, 2)
+            self.assertIn("no such file", out)
+            self.assertEqual(self.run_main(folder, "--readme")[0], 2)
 
 
 class NewestTests(unittest.TestCase):

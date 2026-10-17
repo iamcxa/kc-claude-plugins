@@ -164,9 +164,12 @@ def l2_dispatch_record_complete(ctx):
                     (Path(tmp) / path).write_text(git(ctx.state, "show", f"{commit}:{path}"))
             mine = {path.rsplit("/", 1)[1]: (path, commit) for path in paths}
             judged += len(mine)
-            code, lines = run_check("dispatch_records.py", str(Path(tmp) / folder))
+            readme = ["--readme", str(ctx.readme)] if ctx.readme else []
+            code, lines = run_check("dispatch_records.py", *readme, str(Path(tmp) / folder))
             for line in lines if code == 1 else []:
-                match = re.fullmatch(r"([^/]+\.md): (needs .+)", line)
+                if not ctx.readme and line.startswith("extensions not checked: "):
+                    continue
+                match = re.fullmatch(r"([^/]+\.md): (needs .+|[\w-]+ worker instruction .+)", line)
                 if not match:
                     raise Cannot(f"dispatch_records.py exited 1 with output this runner does not parse: {line}")
                 if match[1] in mine:
