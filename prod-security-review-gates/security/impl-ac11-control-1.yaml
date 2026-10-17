@@ -1,0 +1,75 @@
+tob_security_review:
+  pr: none
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 3   # input-control-design.md (Scope, ACs, Design); kc-dev-flow-2/scripts/delivery_gate.py and kc-dev-flow-2/scripts/dispatch_records.py read with git show at 0cdb40a7
+  findings:
+    - file: "input-control-design.md, Acceptance criteria AC-9 (7-character --head subcase), read with kc-dev-flow-2/scripts/delivery_gate.py check()"
+      line: 0
+      severity: LOW
+      category: missing-validation
+      title: "A short abbreviated head still passes by prefix match, and the design now blesses it"
+      description: |
+        The design swaps the source of the candidate but keeps the existing comparison. AC-9
+        requires that "the first 7 characters of S1" passed as --head exits 0. At 0cdb40a7 the code
+        compares `candidate[:min(len)] == head[:min(len)]` and accepts --head of 7 to 40 hex
+        characters. The Candidate line will be a full 40 characters, so the weak side is whatever
+        --head carries. A 7-character prefix is 28 bits. A party who controls the pushed commit
+        content can grind a commit whose SHA starts with the validated 7 characters in minutes.
+        That is not a new capability in the code, but AC-9 states it as intended behaviour and
+        the design never names it as a limit. The default path is safe: the workflow runs check
+        without --head, so gh supplies a full 40-character head.
+      attack_scenario: |
+        1. An outsider who can push commits to a PR branch FO is shepherding (an exposed fork
+           PR, or a branch with edits enabled) reads the public validated head S1.
+        2. They grind commit content until sha1 starts with S1[:7].
+        3. FO, or a script, passes an abbreviated head (for example from `git rev-parse --short`
+           or a UI) to --head.
+        4. check exits 0 for a head that was never validated. The Captain is asked to merge
+           unreviewed code.
+        Precondition: FO supplies a short --head. The design's own flow does not, so exploitability is HARD.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Make the weak form a stated limit, or remove it. Require a full 40-character --head when the
+        gate runs against a real PR (keep the 7-character form only for test fixtures), or compare
+        with equal-length full SHAs only. Move the AC-9 "first 7 characters" subTest to "7-character
+        --head exits 2". Add a Limits bullet either way.
+    - file: "input-control-design.md, Design / Limits and Edge cases (check-to-merge window); kc-dev-flow-2/references/sd/workflow.md merge-ask passage"
+      line: 0
+      severity: LOW
+      category: race-condition
+      title: "Exit 0 is valid at check time only. Nothing in the design pins the merge to the checked head"
+      description: |
+        The design makes the head comparison the sole delivery gate (AC-12 removes the verdict reading).
+        The gate reads the head from gh at one instant. The Captain merges later. I found no
+        `match-head-commit` or equivalent in kc-dev-flow-2 at 0cdb40a7 (git grep returned nothing).
+        The Limits section covers a REJECTED report passing and a back-dated Candidate line. It does
+        not cover a head that moves between the check and the merge. Before this change the same window
+        existed, so this is an inherited weakness. The change newly states the check as proof that
+        "FO dispatched validation on this head", which a later push to the PR head invalidates.
+      attack_scenario: |
+        1. FO runs check, which exits 0 for head S1, and asks the Captain to merge.
+        2. Anyone who can still push to that PR branch adds commit S2. For FO-owned PRs that is not an
+           outsider. It matters only if a fork or an enable-edits contributor can push.
+        3. The Captain approves from the ask text and merges the PR, which now carries S2.
+        Exploitability is HARD because it needs push access to the branch.
+      blast_radius: "LOW"
+      recommendation: |
+        Add one Limits line naming the window. Have the merge step use the head the ask named, for
+        example `gh pr merge --match-head-commit <S1>`. This is not a script change to
+        delivery_gate.py, so it fits the stated non-goals.
+  clean_patterns:
+    - "No new public route, file, hosted document, or network surface. The change edits one local CLI checker, its tests, and workflow prose. The only network call is the existing `gh pr view --json headRefOid`, run with an argument list (no shell) and a `--pr` value constrained by the regex `^([\\w.-]+/[\\w.-]+)#(\\d+)$`."
+    - "Removing validator-prose parsing is a security improvement. The old `Verdict PASSED ... <sha>` regex read a report that can quote outsider-controlled PR, issue or diff text. The new source is a line FO writes itself, so an outsider cannot inject a head by putting text in a PR description or a file."
+    - "Injection route into the record is bounded. The Candidate line is read only from the header above the first `## ` heading (AC-10 rejects a valid line under a heading). The scope notes that carry task and PR-derived text sit below that heading. dispatch_records.py confirms the header holds only the `Dispatched:` and `Model:` lines plus the sections."
+    - "Fail-closed behaviour: a missing, short, relay-form or trailing-text line exits 2. The latest record is chosen numerically, so `validation-10` beats `validation-2`. A stale older record cannot rescue a newer one (AC-11)."
+    - "A moved head fails with exit 1 against the full 40-character Candidate. An outsider push after validation is caught if the check runs after the push."
+    - "The D1 bare form, where a head equal to any listed line passes for any --pr, gives an outsider no capability. They cannot choose --pr or write the record, and the design states the limit."
+    - "The design itself names the other limits: the check proves dispatch, not a PASSED verdict (AC-12), and a back-dated line is not detected."
+  limitations:
+    - "The design is not built. I reviewed its stated behaviour against delivery_gate.py and dispatch_records.py at 0cdb40a7, not an implementation. The new regexes (`CANDIDATE`, `RECORD`, `dispatched_candidates`) do not exist, so I could not check for ReDoS, a multi-line header edge case, or whether one malformed Candidate line among several valid lines holds or is ignored. The design does not say which. Because an extra valid line widens the accepted set, ignoring a malformed line would be the safer choice to specify."
+    - "I did not read test_delivery_gate.py or test_sd_dispatch.py, so I did not check whether tests encode the 7-character --head behaviour beyond what AC-9 states."
+    - "I could not verify who can push to the PR branches FO manages, or whether the merge step uses a head pin. I searched only kc-dev-flow-2 at 0cdb40a7, and the actual `gh pr merge` call is run by the Captain or an adopter outside this tree."
+    - "Under your attacker boundary I did not report FO, the state checkout, the deploy pipeline or the repository writers. The design's whole trust model rests on FO writing the Candidate line honestly, which falls under those exclusions."
+    - "The prototype under /tmp, the counts (104 records, 37 tasks) and the replays of archived tasks are machine-local. I did not verify them."
+    - "No pull request exists, so I ran no `gh pr diff`. I used only read-only git commands on the named commit and checked out nothing."
