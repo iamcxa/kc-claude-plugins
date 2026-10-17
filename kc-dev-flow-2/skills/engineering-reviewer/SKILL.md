@@ -17,6 +17,7 @@ Use this skill when at least one applies:
 
 - credible evidence conflicts on a material technical claim;
 - a production action is hard to reverse;
+- a recorded Captain amendment replaces an accepted criterion or the design;
 - a schema, integrity, security, privacy, or reliability decision has material
   residual uncertainty;
 - the Captain explicitly requests independent technical assurance.

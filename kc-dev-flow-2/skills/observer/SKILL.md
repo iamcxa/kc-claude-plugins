@@ -47,6 +47,8 @@ is outside what state shows.
 For a task whose `Surfaces:` include `db`, whose ideation ran on a stronger model, or
 whose validation was sent back twice, report whether a `Reviewer:` line exists. That
 line is a record, not a requirement: report it as `observed`, never as a violation.
+Run `python3 <package>/scripts/role_triggers.py STATE TASK --rev TO` and report each `next:` line
+it prints as `violation`, quoting that line.
 
 ## Prove each finding
 
