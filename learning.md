@@ -307,3 +307,52 @@ landed revision 6ea3a472 the phrase is in references/sd/workflow.md and in the p
 (git show, checked in this evaluation). The pre-existing pins had not caught the
 drop. Recorded in spacedock-state/dev2:_archive/workflow-budget-ratchet.md under
 '### Feedback Cycles' and '## Stage Report: implementation (cycle 2)'.
+
+## Update every parser of a script mode in the change that adds a new output line
+
+### Applicability
+
+A kc-dev-flow-2 change in this repository that makes a script mode print a new kind
+of line, such as a new diagnostic from `dispatch_records.py --names`, when another
+script in the package runs that mode and parses its output.
+
+### Practice
+
+Before the change lands, search the package for every caller of that mode (for
+example `git grep -n 'dispatch_records.py' -- kc-dev-flow-2/scripts`) and read what
+each caller does with a line it does not recognize; update each parser in the same
+change and add a test that feeds the new line to it. Do this per mode, not per
+script: the design checked the consumer of `--newest` (`pr_watch.py tasks`) and kept
+`--newest` unchanged for it, but did not check the consumer of `--names`. Bounded:
+one task; Codex round 1 found the gap, so the record does not show the author would
+have found laws_check.py without that review, though the call
+`run_check("dispatch_records.py", "--names", ...)` in laws_check.py names the script
+and a search by script name lists it; the cost was one repair cycle (phase-1
+investigation, FO fix authorization, a fresh validation recheck), and the fix was
+one regex.
+
+### Evidence
+
+Task worker-loads-declared-package (iamcxa/kc-claude-plugins#661, closure revision
+0b9cf6d72d02ac5241ca4dbb805152c5eb89f0e7, landed
+a915acaa39cea0cbc84dda176a8e1241057b2eed). The first head 4989c97b made
+`dispatch_records.py --names` print `no 'Candidate: <40-hex head>' line` for a
+validation record without one. Validation passed that head with falsifiers on the
+new part and on `--newest`. Codex round 1 P2 (review:5558106991):
+kc-dev-flow-2/scripts/laws_check.py, function l2_dispatch_record_complete, runs
+`dispatch_records.py --names` and its regex matched only 'bare package script name'
+lines, so the new line made the L2 law raise Cannot ('output this runner does not
+parse', exit 2) instead of reporting an L2 violation. Repair 7d169549 widened that
+one regex and added
+L2Test.test_a_validation_record_without_a_candidate_line_is_an_l2_violation_not_an_unjudgeable_run,
+which fails 1 of 38 under each of three mutations; Codex round 2 was clean. At
+landed revision a915acaa, git show of the commit shows the one-line change to
+laws_check.py (checked in this evaluation). Recorded in
+spacedock-state/dev2:_archive/worker-loads-declared-package.md under '### Feedback
+Cycles', '### Bounded existing-code check' and '## Stage Report: implementation
+(cycle 2)'. Existing rules checked: implementation principles' Existing-code
+capability check covers adding or removing a capability and searching for consumers
+before a no-consumer claim, not a printed line that another script parses; the
+workflow README's dispatch and delivery rules and the project CLAUDE.md do not state
+it; the eight root learning.md entries (blob d4bd974e) cover neither it nor script
+output parsing.
