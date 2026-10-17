@@ -1,0 +1,9 @@
+(Sonnet run, brief v2, holder cycle 3 previews; 87,844 tokens, 91 s. 24 findings, 4 MAJOR. Shortened to severity, dimension and subject, with the scoring-relevant findings quoted verbatim; the full YAML was returned in the session and is not otherwise saved.)
+MAJOR hierarchy: "Review closed" in the header and "Closed to comments and decisions." in the footer card.
+MAJOR hierarchy: refresh-failed gives the time twice; "Updated" still reads as success.
+MAJOR hierarchy: reviewer tray "My feedback · 2" over a button reading "No feedback yet".
+MAJOR flow: "Unbind this device" and "Sign out" identical rows, no scope, no confirm shown.
+MINOR spacing: "Inventory above the first comment is 3 blocks, about 150 of 800 px (roughly 19%) ... Move the Updated text and refresh icon onto the header line" (cycle 3 reduced this from 266 px; reported as a residual, scored below as unscored).
+MINOR system-fit (the scored finding for H5): "The Updated row uses a 44 px bordered square refresh button next to 11 px text, while the desktop uses a 22 px icon and the page toolbar buttons (Aa, bulb) are about 24 px." fix: "Size the refresh icon to match the toolbar icon buttons and enlarge only its hit area." where: c3-phone-open-light.png, c3-phone-draft-light.png
+The other 17 are MINOR: header weight differs on desktop and phone; empty state says the same twice and shows no count; first-read error line off the inset; no loading, long-text or several phone states; draft marker differs on desktop and phone; draft card styled unlike listed cards; X with no confirm; "Include" with no scope; closed-state chip vs ticked box; grey box behind one Include label; Include checkbox 14 px on phone; tray chevron down closed, up open; hint line not pinned; Finish sheet "include 2" vs "Nothing to send yet"; list covered by the Finish button; dark and mid-width gaps.
+It did not report H1 to H4 as present.

@@ -1,0 +1,53 @@
+design_review:
+  preview: /tmp/rv/chev-c1/preview.html
+  findings:
+    - severity: MAJOR
+      dimension: consistency
+      where: after-light-desktop-identity-closed.png, after-light-desktop-identity-open.png, after-light-desktop-drawer-closed.png, after-light-desktop-drawer-open.png, after-light-phone-identity-closed.png, after-light-phone-identity-open.png, after-light-phone-tray-closed.png, after-light-phone-tray-open.png (dark equivalents are the same)
+      seen: The identity menu draws closed as a down chevron and open as an up chevron, but the Briefing drawer (desktop) and the feedback tray (phone) draw closed as an up chevron and open as a down chevron, so the same state points opposite ways on the three controls.
+      fix: Pick one open/closed direction and apply it to all three controls, or state the direction-of-travel rule and make the Briefing drawer, which opens downward, follow it.
+    - severity: MAJOR
+      dimension: consistency
+      where: after-light-desktop-drawer-closed.png and after-light-desktop-drawer-open.png
+      seen: The closed Briefing row shows an up chevron, yet its content (the Details, Review materials and Current tabs) appears below it when opened, and the open state shows a down chevron, so the arrow points away from the direction the content moves.
+      fix: Make the desktop Briefing chevron match the direction its content opens, or document why the bottom-anchored phone tray and this drawer share one direction.
+    - severity: MINOR
+      dimension: consistency
+      where: after-desktop-cards.png (light, dark), after-light-phone-cards.png
+      seen: Two cards are ticked and tinted, but only the second draws the 3px left bar, and only the second has a grey pill behind "Include", with nothing on screen saying why the two ticked cards differ.
+      fix: Show a ticked card the same way every time, or add a picture that names the hover, focus or active state that causes the bar and pill.
+    - severity: MINOR
+      dimension: states
+      where: all after-*-cards.png
+      seen: The "Included in the decision" tag, which the proposal says shares the text inset, appears in no picture, so its alignment with the new 8px and 11px padding cannot be checked.
+      fix: Add a card picture with the tag visible, light and dark, desktop and phone.
+    - severity: MINOR
+      dimension: states
+      where: whole set
+      seen: The set shows only 3 cards with short text. Empty, loading, error, long-quote, many-item and read-only states are not drawn, and in the cards pictures the identity menu and Briefing drawer are never open together.
+      fix: Add one long-content card and one many-items list picture, plus a read-only picture if that state exists.
+    - severity: MINOR
+      dimension: hierarchy
+      where: after-light-phone-tray-open.png, after-dark-phone-tray-open.png
+      seen: The tray header reads "My feedback · 3" and the tab directly under it reads "Feedback", so the same label is stated twice, and the "Briefing" tab sits next to the Briefing heading on the page.
+      fix: Drop the count or the repeated word from one of the two places.
+    - severity: MINOR
+      dimension: platform
+      where: after-light-phone-cards.png, after-dark-phone-cards.png
+      seen: The "Include" checkbox is about 16px, and the picture does not show whether the label is part of the hit area, so a thumb target of 44px cannot be confirmed.
+      fix: Make the whole "Include" label (or the whole top row of the card) the tap target and state its size.
+    - severity: MINOR
+      dimension: flow
+      where: after-light-desktop-identity-open.png, after-light-phone-identity-open.png
+      seen: "Unbind this device" and "Sign out" sit in one menu with identical styling and no confirmation or scope text, so a one-click device unbind looks as safe as a sign-out.
+      fix: Style the unbind item as destructive and give it a confirm or a one-line scope note.
+    - severity: MINOR
+      dimension: spacing
+      where: after-light-desktop-drawer-closed.png, after-light-desktop-drawer-open.png
+      seen: Below the identity row there is about 40px of empty space before the first card or the "Select text to comment on it" line.
+      fix: Close the gap or show what is meant to occupy it.
+  limitations:
+    - The cards pictures are 300px wide, so a 3px bar and an 8px versus 11px inset can be seen only roughly. I could not measure the insets, and I could not tell whether the first ticked card has a bar in the desktop dark picture.
+    - The proposal's Captain's rule is not in the inputs, so I judged chevron direction only by consistency between the controls, not against that rule.
+    - Pictures are static, so I could not see hover, focus, pressed or animation states, or whether the tabs and menu can be operated by keyboard.
+    - I could see no tablet width, long names, right-to-left text, or a scrolled list.

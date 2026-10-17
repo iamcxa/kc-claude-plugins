@@ -1,0 +1,73 @@
+design_review:
+  preview: /tmp/rv/holder-c1/preview.html
+  findings:
+    - severity: MAJOR
+      dimension: states
+      where: h3b-just-sent-list-lags-after-desktop.png
+      seen: The header says "1 comment sent" while the list directly below says "Nothing sent yet.", and the row above that still reads "Updated 10:39" as if the list were current.
+      fix: When the list lags a send, make the list say so ("Your comment was sent; the list will catch up"), or show the sent comment, so the header and list do not contradict.
+    - severity: MAJOR
+      dimension: hierarchy
+      where: core-list-desktop-light.png, h1-no-drafts-list-of-3-after-desktop.png
+      seen: The desktop panel header reads "3 comments" and the All feedback frame right under it carries a "3" badge, so the count is shown twice.
+      fix: Drop the badge on the frame, or drop the count from the header and keep the header for the draft state only.
+    - severity: MAJOR
+      dimension: hierarchy
+      where: core-refresh-failed-desktop-light.png
+      seen: The failed-read state still shows "Updated 10:40" and then "Could not refresh; showing the list from 10:40.", so the time appears twice, and the error is in the same muted small type as the normal hint.
+      fix: In the failed state replace "Updated 10:40" with the error line, or drop the time from the error sentence, and give the error its own colour or icon.
+    - severity: MAJOR
+      dimension: hierarchy
+      where: polish-finish-all-desktop-light.png, polish-finish-all-phone-light.png
+      seen: The Finish review dialog says "2 included from All feedback. Nothing new to send." at the top and "Add a comment first. Nothing to send yet." at the bottom, which states the same fact twice in different words.
+      fix: Keep one statement of "nothing new to send" and attach it to the Send comments, leave open button only.
+    - severity: MINOR
+      dimension: system-fit
+      where: h3b-just-sent-list-lags-after-phone.png, h5-truly-empty-after-desktop.png, h6-first-read-failed-after-desktop.png
+      seen: "Nothing sent yet." and "Error: Relay did not answer (503)." render in an unstyled default font with no padding, flush against the frame border, unlike every other row in the panel.
+      fix: Give these status lines the panel's row padding, type and muted or error colour.
+    - severity: MINOR
+      dimension: flow
+      where: h6-first-read-failed-after-desktop.png
+      seen: A first-read failure shows the header "Feedback", the label "Not updated", the hint "New comments can take about a minute to appear." and a raw "Error: ... (503)" line, with no plain cue that the list could not be loaded or that Refresh will retry.
+      fix: Replace the hint with a plain sentence such as "Could not load the list. Try Refresh." and drop the raw status code from the main line.
+    - severity: MINOR
+      dimension: consistency
+      where: h2-unsent-draft-after-phone-tray.png, h3-just-sent-after-phone-tray.png, core-list-phone-light.png, h4-closed-after-phone-tray.png
+      seen: The tray chevron points up in two shots and down in the others, even though the tray looks the same in each, and the open All feedback frame and the closed Ada frame both use a down chevron.
+      fix: Use one chevron direction for open and one for closed, applied the same way on the tray and on both frames.
+    - severity: MINOR
+      dimension: states
+      where: polish-list-all-desktop-light.png, core-list-desktop-light.png, polish-list-all-phone-light.png
+      seen: The list sits in a fixed-height box that cuts off the next comment ("Ada Lovelace You" is half visible on desktop, the third comment is missing on phone), with no scrollbar or fade to say there is more.
+      fix: Add a visible scroll cue or a "show all" control, or let the list grow to its full height.
+    - severity: MINOR
+      dimension: platform
+      where: core-list-desktop-light.png vs core-list-phone-light.png
+      seen: The Refresh button is a small desktop button about 28px tall, while the phone version is a large button about 54px tall, so the two sizes do not match and the phone one takes more room than the text it sits beside.
+      fix: Use one size system, a touch-sized button on phone and a compact one on desktop, with the same padding and radius scale.
+    - severity: MINOR
+      dimension: flow
+      where: polish-list-all-phone-light.png
+      seen: On phone the rail header is hidden, so "3 comments" and "2 included" are not visible anywhere; the tray reads "Not submitted · 0" while two comments are ticked, and the panel fills the first screen so the document title starts below it.
+      fix: Show the included count in the tray or the All feedback frame on phone, and keep the panel short enough that the title stays on the first screen.
+    - severity: MINOR
+      dimension: flow
+      where: reviewer-after-send-R.png
+      seen: The reviewer view has no "Updated" time or Refresh row, so a reviewer who sent comments has no way to tell the list is old or to refresh it, and "2 comments sent" repeats the "My feedback 2" badge.
+      fix: Give the reviewer list the same refresh row and drop one of the two counts.
+    - severity: MINOR
+      dimension: states
+      where: set of previews
+      seen: There is no picture of the loading state before the first read, of Refresh while a read is in flight, or of a long comment list that scrolls.
+      fix: Add previews for before-first-read, Refresh in progress and an overflowing list.
+    - severity: MINOR
+      dimension: theme-size
+      where: h1 to h6 shots, core-refresh-failed-desktop-light.png
+      seen: Every holder-state shot (h1 to h6) and the failed-refresh shot exist only in light theme and are cropped to the top of the panel, so dark and full-height phone versions of those states are not shown.
+      fix: Add dark and full-panel phone pictures for the h-states and the failed refresh.
+  limitations:
+    - Previews were read as pictures only; I did not open preview.html or operate any control, so hover, focus, scroll and tap behaviour are unseen.
+    - The h1 to h6 pictures are cropped to the panel top or the tray, so the rest of the rail in those states cannot be judged.
+    - Only reviewer-after-send-R.png matched the reviewer file name filter, so the reviewer view was seen in one theme and one size.
+    - The panel header text on phone is not visible in any picture because the rail is hidden there.

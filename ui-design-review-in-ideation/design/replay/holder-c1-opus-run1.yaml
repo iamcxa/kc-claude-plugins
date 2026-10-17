@@ -1,0 +1,97 @@
+design_review:
+  preview: /tmp/rv/holder-c1/preview.html
+  findings:
+    - severity: MAJOR
+      dimension: states
+      where: h3b-just-sent-list-lags-after-desktop.png
+      seen: The header says "1 comment sent" while the open All feedback list directly below says "Nothing sent yet.", so the same panel states the same fact two opposite ways.
+      fix: While the list lags behind a send, replace "Nothing sent yet." with something like "Your comment is sent; it can take about a minute to appear here."
+    - severity: MAJOR
+      dimension: states
+      where: h3b-just-sent-list-lags-after-phone.png and h3b-just-sent-list-lags-after-phone-tray.png
+      seen: On a phone, a person who has just sent sees the tray say "Not submitted · 0" and the list say "Nothing sent yet."; nothing on the screen confirms the send, and the list says it did not happen.
+      fix: Give the phone a sent-but-not-yet-listed cue, in the tray label or in the list's empty row, that matches the desktop "1 comment sent" header.
+    - severity: MINOR
+      dimension: hierarchy
+      where: h1-no-drafts-list-of-3-after-desktop.png, h3-just-sent-after-desktop.png, core-list-desktop-light.png, reviewer-after-send-R.png
+      seen: The count appears twice, a few lines apart, in the header ("3 comments", "2 comments sent") and in the badge beside All feedback or My feedback ("3", "2").
+      fix: Keep the count in one of the two places, or make the header say something the badge does not.
+    - severity: MINOR
+      dimension: hierarchy
+      where: core-refresh-failed-desktop-light.png
+      seen: The time appears twice ("Updated 10:40" and "showing the list from 10:40"), and the failure line uses the same small grey type as the normal hint, with no error colour or icon.
+      fix: Replace "Updated 10:40" with the failure line, and style that line as a warning so it does not read as routine help text.
+    - severity: MINOR
+      dimension: spacing
+      where: h3b-just-sent-list-lags-after-desktop.png, h5-truly-empty-after-desktop.png, h6-first-read-failed-after-desktop.png and their -phone versions
+      seen: The empty and error rows ("Nothing sent yet.", "Error: Relay did not answer (503).") sit flush against the frame's left border and bottom divider, in larger black type with none of the inset the other rows have.
+      fix: Give the empty and error rows the same inset and muted type as the refresh row above them.
+    - severity: MINOR
+      dimension: states
+      where: h6-first-read-failed-after-desktop.png and h6-first-read-failed-after-phone.png
+      seen: A first read that failed shows "Not updated", the raw text "Error: Relay did not answer (503).", and still shows "New comments can take about a minute to appear.", which does not apply to a failure.
+      fix: Show plain words such as "Could not load feedback. Try Refresh." and hide the delay hint while there is no list.
+    - severity: MINOR
+      dimension: flow
+      where: h4-closed-after-desktop.png and h4-closed-after-phone.png
+      seen: On a closed review the frame still offers Refresh and says "New comments can take about a minute to appear.", which suggests that new comments can still arrive.
+      fix: When the review is closed, drop the delay hint, or replace it with "Closed; no new comments."
+    - severity: MINOR
+      dimension: consistency
+      where: h4-closed-after-desktop.png vs h4-closed-after-phone-tray.png
+      seen: The same closed state reads "Review closed" in the desktop header but "Feedback" in the phone tray, and the phone label is in regular weight where the other tray labels are bold.
+      fix: Use one label for the closed state on both sizes, in the same weight as the other tray labels.
+    - severity: MINOR
+      dimension: consistency
+      where: core-list-desktop-light.png (Ada card, All feedback frame), h1-no-drafts-list-of-3-after-phone-tray.png vs h3-just-sent-after-phone-tray.png and h2-unsent-draft-after-phone-tray.png
+      seen: A down chevron marks both the closed Ada card and the open All feedback frame, while the phone tray marks open with an up chevron; the zero-draft tray shows down in h1 and up in h3 with the same content.
+      fix: Use one chevron direction for open and the other for closed, on every disclosure.
+    - severity: MINOR
+      dimension: consistency
+      where: h2-unsent-draft-after-desktop.png vs polish-list-all-desktop-light.png
+      seen: The same amber marks an unsent draft (the dot in the header) and a ticked "included" card (left bar and tint), so one colour carries two meanings.
+      fix: Give ticked cards a hue different from the unsent-draft warning colour.
+    - severity: MINOR
+      dimension: states
+      where: polish-list-all-phone-light.png and polish-list-all-phone-dark.png
+      seen: On a phone the "2 included" count from P1 appears nowhere, because the tray reads "Not submitted · 0", and the second ticked card's checkbox is cut off by the frame's fixed height.
+      fix: Show the included count in the tray label or the frame header on the phone, and do not clip the list in the middle of a card.
+    - severity: MINOR
+      dimension: states
+      where: polish-list-all-desktop-light.png
+      seen: The list cuts off the third row ("Ada Lovelace You") halfway through its name line, with no scrollbar or fade to show that there is more below.
+      fix: Add a visible scroll cue, such as a fade or a "1 more" line, at the bottom edge of the list.
+    - severity: MINOR
+      dimension: system-fit
+      where: polish-finish-all-desktop-light.png, polish-finish-all-phone-light.png
+      seen: The finish sheet is set in a proportional sans-serif, while the rail, tray and document chrome behind it are all monospace.
+      fix: Set the sheet in the same typeface as the rest of the shell.
+    - severity: MINOR
+      dimension: consistency
+      where: polish-finish-all-desktop-light.png
+      seen: The two disabled buttons are drawn differently: "Send decision" has a grey fill and a dashed border, and "Send comments, leave open" has no fill and a dashed border.
+      fix: Draw every disabled button the same way.
+    - severity: MINOR
+      dimension: flow
+      where: polish-finish-all-desktop-light.png and polish-finish-all-phone-light.png
+      seen: The sheet says "2 included from All feedback. Nothing new to send." and then "Add a comment first. Nothing to send yet." under "Send comments, leave open", so it says nothing to send twice and does not say whether the 2 included comments go with that action.
+      fix: Say once what each send path carries, for example whether the included comments travel with "leave open".
+    - severity: MINOR
+      dimension: platform
+      where: core-list-phone-light.png and polish-list-all-phone-light.png
+      seen: The "Include in my decision" checkbox is about 14px on the phone, and nothing shows that the label is part of the tap area.
+      fix: Make the whole row the tap target, at least 44px tall.
+    - severity: MINOR
+      dimension: theme-size
+      where: header states h1 to h6 and reviewer-after-send-R
+      seen: The header states and item R are shown only in light mode, R only on desktop, and the refresh-failed state only on desktop in light mode.
+      fix: Add dark versions of h1 to h6 and R, a phone version of R, and refresh-failed on phone and in dark mode.
+    - severity: MINOR
+      dimension: states
+      where: whole set
+      seen: The set has no picture of the panel before the first read finishes ("Feedback" while loading), Refresh while a read is in progress, a header with many drafts or a long count, or the finish sheet with a decision picked and Send enabled.
+      fix: Add pictures of these states.
+  limitations:
+    - I read only the static pictures; I did not run or operate the preview, so I could not check hover, focus, scrolling or tap areas.
+    - The h1 to h6 pictures are 2x crops of the rail head and the tray, so the rest of the page in those states was not visible.
+    - I opened before and base pictures only to compare; I did not review them.
