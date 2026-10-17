@@ -68,6 +68,14 @@ Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-17, chat
+Captain: 「第四題同意」 (chat, 2026-10-17)
+Asked: 「第 4 題：#664「特殊角色觸發點」的 AC-2，要照你批准的設計改嗎？」（「我建議把 AC-2 改成：找審核員的日期「不早於」修正指示的日期。這樣就和 D3 一致。」）
+Supersedes: AC-2
+Design: AC-2's date rule is changed so that an engineering-reviewer call dated no earlier than the amendment entry's date clears it, consistent with D3
+
 ## Design
 
 Base: origin/main package 0.24.0; paths below are under `kc-dev-flow-2/`. Counts were taken on state branch `spacedock-state/dev2` at `f3474f68` (2026-10-17); the probes are throwaway scripts in `/tmp`, not committed.
