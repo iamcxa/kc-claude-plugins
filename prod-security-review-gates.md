@@ -310,6 +310,11 @@ Verified by: the empty `references` diff of AC-8, `python3 -I -c 'print(len(open
 **AC-14**: Amended by Captain, amendment 2. The ruling lands as an ADR whose Words line quotes the Captain's answer 「照這樣做」 and the question he answered.
 Verified by: `python3 <package>/scripts/adr_lint.py docs/adr --since <base> --require <reserved number>` exits 0 at the candidate. Falsifier: exit 1 for a missing record or Words line. Not yet verified: the ADR is written at implementation, under the short title `prod-ideation-security-review-binds-design`.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-16): Codex review on #656 cd3a5747 (review:5555775033) left one P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 (P1) `scripts/design_surfaces.py`: the finding count is the number of `severity:` lines, so a findings list item with no severity (a truncated or malformed report) is counted as zero findings and the prod ideation gate passes with no disposition.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for which gates of a prod-profile task carry a security reviewer and what each reviews (the seed suggests a threat model at ideation and the diff plus the served artifact at validation), after the upstream check of kc-pr-flow's tob-security-reviewer, tob-actions-auditor and tob-supply-chain-checker and how kc-pr-review dispatches them; the cost per task; what happens to relay's local 'specialists are risk-selected' policy; a replay on relay task agent-front-door (read only)
