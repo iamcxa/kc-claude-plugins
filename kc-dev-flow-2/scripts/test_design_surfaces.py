@@ -809,6 +809,25 @@ class SecurityReviewTests(unittest.TestCase):
         self.refused("has 1 'severity:' lines but 0 in its findings items", report="tob_security_review:\n  pr: none\n  findings: []\n  limitations:\n    - severity: HIGH\n", review=self.NONE)
         self.refused("has 4 'severity:' lines but 3 in its findings items", report=REPORT + "  limitations:\n    - severity: HIGH\n")
 
+    def test_a_root_key_that_carries_a_value_is_refused_so_its_children_are_not_scalar_text(self):
+        why = "'tob_security_review:' line with a value after its colon"
+        cases = {
+            "a block scalar (roborev:765)": "tob_security_review: |\n  pr: none\n  findings:\n    - severity: LOW\n",
+            "a flow mapping": "tob_security_review: {pr: none}\n  findings: []\n",
+            "a word": "tob_security_review: none\n  findings: []\n",
+        }
+        for label, report in cases.items():
+            with self.subTest(label):
+                self.refused(why, report=report, review=self.NONE)
+        self.assertEqual(self.report_errors("tob_security_review:  # the reviewer's note\n  pr: none\n  findings: []\n"), [])
+
+    def test_mutation_dropping_the_root_value_rule_reads_a_scalar_root_as_a_mapping(self):
+        mutant = mutated("    if len(roots) == 1 and root_value(text, roots[0]):", "    if False:")
+        report = "tob_security_review: |\n  pr: none\n  findings: []\n"
+        why = "line with a value after its colon"
+        self.assertTrue(any(why in e for e in self.report_errors(report)))
+        self.assertEqual(self.run_check(review=self.NONE, report=report, module=mutant)[0], [])
+
     def test_mutation_dropping_the_root_count_accepts_a_second_root(self):
         mutant = mutated("if len(roots) != 1:", "if not roots:")
         report = REPORT + "tob_security_review:\n  pr: none\n"

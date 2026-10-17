@@ -204,6 +204,11 @@ def findings_is_direct_child(text, root, key):
     return indent > 0 and indent == len(first) - len(first.lstrip(" \t"))
 
 
+def root_value(text, root):
+    rest = text[root.end():].split("\n", 1)[0]
+    return re.sub(r"(?:^|[ \t]+)#.*$", "", rest).strip()
+
+
 def report_shape(text):
     roots = list(REPORT_ROOT_LINE.finditer(text))
     keys = list(FINDINGS_LINE.finditer(text))
@@ -212,6 +217,8 @@ def report_shape(text):
         problems.append(f"is not a tob_security_review report: {len(roots)} 'tob_security_review:' lines at column 0, expected exactly 1")
     if len(keys) != 1:
         problems.append(f"has {len(keys)} 'findings:' lines, expected exactly 1")
+    if len(roots) == 1 and root_value(text, roots[0]):
+        problems.append("has a 'tob_security_review:' line with a value after its colon, so its children are not a mapping")
     if not problems and not findings_is_direct_child(text, roots[0], keys[0]):
         problems.append("has a 'findings:' line that is not a direct child of 'tob_security_review:'")
     return problems
