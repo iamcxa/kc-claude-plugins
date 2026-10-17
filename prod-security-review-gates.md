@@ -558,3 +558,28 @@ Expected after a repair of F1: the folder-form line exits 0 with the same note l
 ### Summary
 
 I recommend REJECTED at a741e357: the round-2 P2 and Cycle 1 P1 are fixed, each shape rule fails under its own mutation, and AC-8 to AC-14 hold, but Codex round 3's P1 reproduces: a folder-form prod task is refused for a report saved where `prod.md` tells the worker to save it. It does not reopen the parser; it is path resolution upstream of it. Two fresh reviewer runs on the shipped brief named both known relay issues and no HIGH on the control; the F1 repair needs a folder-form test and a fresh recheck.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: Fix the folder-form report path in `check_security`
+  Commit 44f77c1b (`design_surfaces.py`): the task folder is `path.parent` when the task file is `index.md`, else `path.parent / path.stem`; pushed without force to `spacedock-ensign/prod-security-review-gates-v2`.
+- DONE: Failing-first folder-form test (same report bytes pass as `<slug>.md` and as `<slug>/index.md`)
+  `test_the_same_report_passes_for_a_flat_task_and_for_a_folder_task` asserts both forms return no error and an identical note; it failed before the fix with `index.md: 'Security review:' names 'security/ideation-1.yaml', not a report file inside the task folder`. `test_a_folder_task_with_no_report_in_its_own_folder_is_still_refused` asserts a folder task with no report still gets exactly that refusal, so the fix does not make the check lenient.
+- DONE: Mutation that reverts the branch and fails that test with its reason
+  `test_mutation_reading_a_folder_task_as_a_flat_task_refuses_its_own_report` replaces the branch with `path.parent / path.stem`; it asserts the folder task passes on the script and the mutant yields exactly one `not a report file inside the task folder` error. Suite: 90 tests OK.
+- DONE: Check whether any other path in `check_security` or its callers repeats the `path.stem` form for a task folder
+  `check_security` has one caller (`check_task`), and `design_surfaces.py` had one `path.stem` use, now fixed. `check_ui` resolves a relative Preview against `path.resolve().parent`, not a stem: a folder task reads it in its folder, a flat task in the state directory (not changed, not a stem defect). Outside this script, `decision_ledger.py` names a task `path.stem`, which yields `index` for a folder task; that is a task-name question outside this task, noted not changed. `pr_watch.py` already handles `index.md`.
+- DONE: Rerun all saved reports under prod-security-review-gates/security/ (0 false holds expected)
+  All 21 yaml reports under `security/` (including `replay-c2/`) pass shape, parse and the plain severity count: 0 false holds. The `replay-c2` relay fixture with c2-relay-1 gives the same note (6 findings, 4 AC, 1 declined, 1 decision) as a flat task and as `task/index.md`.
+- DONE: Commit with named files only
+  44f77c1b adds `design_surfaces.py` and `test_design_surfaces.py` only.
+- DONE: Run roborev_gate.py until clean or twice
+  Run 1 with base a741e357: `clean on 44f77c1b3; evidence=roborev:772`.
+- DONE: Push without force; CI green
+  All four checks pass on head 44f77c1b (unit tests run 39001869588, version parity, multi-profile route gate, GitGuardian).
+- DONE: Commit the stage report
+  This section, committed with `spacedock state commit`.
+
+### Summary
+
+The security check now finds the report in the task's own folder for both task forms, and the Codex round 3 P1 (review:5555969981) no longer reproduces. Nothing was changed in the report parser or its shape rules. No PR comment, review request or ready mark was made.
