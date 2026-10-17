@@ -20,16 +20,13 @@ NAMESPACE = re.compile(r"\bkc-dev-flow(?:-[a-z0-9]+)*:[a-z0-9-]+\b")
 PACKAGE_ROOT = re.compile(r"^Package root: \S", re.MULTILINE)
 UNBOUND_ROOT = re.compile(r"\{package\}|/absolute/plugin")
 WORKFLOW = "references/sd/workflow.md"
-# Raise only in a change that says why the adopted README must grow.
-# 5369: +38 for the workflow_checkout.py hold, a rule the adopted README must carry.
-# 5411: +42 for the observer_check.py step ahead of the merge sentinel, which a restarted FO reads here.
-# 5415: +4 for python3 before four script names, because the scripts are mode 100644 and exit 126 when run bare.
-# 5463: +48 for the scope-notes completion line, which FO writes into every dispatch and reads only here.
-# 5561: +98 for the two FO checks (dispatch_records.py --names, delivery_gate.py check) and the not-run and Applied wording, which FO reads only here.
-# 5581: +20 for the follow-up record clause (Package root line, own checklist), which FO reads only here.
-# 5476: -105 net: the FO delivery steps moved to references/sd/mods/kc-dev-flow-2.md and the scripts' next: lines, less the Draft-PR grant sentence (ADR 0015) that FO reads only here.
-# 5511: +35 for the delivery_gate.py check rule and its exit handling, which returned to the README when pr_watch.py stopped printing the merge ask (Captain amendment 6); FO reads it only here.
-WORKFLOW_WORD_BUDGET = 5511
+CAPTAIN_QUOTE = re.compile(r"「[^」]*\S[^」]*」")
+# The budget is START plus the deltas, so the README count must equal it and a cut lowers it in the same change.
+# A raise (delta > 0) needs the Captain's quoted words and the one moment FO reads the added text.
+WORKFLOW_BUDGET_START = 5511
+WORKFLOW_BUDGET_STEPS = [
+    dict(delta=-64, why="dispatch_records.py and design_surfaces.py print the parts and defects; the README points to them"),
+]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
 KNOWN_DUPLICATES = {
@@ -175,16 +172,39 @@ def normalized_words(text):
     return re.findall(r"[a-z0-9<>/_.\-]+", text.lower().replace("`", ""))
 
 
+def workflow_budget(steps=None):
+    steps = WORKFLOW_BUDGET_STEPS if steps is None else steps
+    return WORKFLOW_BUDGET_START + sum(step["delta"] for step in steps)
+
+
+def budget_errors(count, steps=None):
+    steps = WORKFLOW_BUDGET_STEPS if steps is None else steps
+    errors = []
+    for index, step in enumerate(steps):
+        where = f"{WORKFLOW}: WORKFLOW_BUDGET_STEPS[{index}]"
+        if not str(step.get("why", "")).strip():
+            errors.append(f"{where} has no 'why'")
+        if step["delta"] > 0:
+            if not CAPTAIN_QUOTE.search(str(step.get("captain", ""))):
+                errors.append(f"{where} raises the budget by {step['delta']} and its 'captain' has no quoted words")
+            if not str(step.get("loaded", "")).strip():
+                errors.append(f"{where} raises the budget by {step['delta']} and has no 'loaded' moment")
+    budget = workflow_budget(steps)
+    if count > budget:
+        errors.append(f"{WORKFLOW}: {count} words exceeds the budget of {budget}; move the added text out of the README, "
+                      f"or add a raise step of {count - budget} with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS")
+    elif count < budget:
+        errors.append(f"{WORKFLOW}: {count} words is {budget - count} under the budget of {budget}; "
+                      f"add a cut step of {count - budget} with a 'why' to WORKFLOW_BUDGET_STEPS")
+    return errors
+
+
 def workflow_size_and_duplicates(root):
     path = root / WORKFLOW
     if not path.is_file():
         return [f"{WORKFLOW}: missing"]
     text = path.read_text()
-    errors = []
-    count = len(text.split())
-    if count > WORKFLOW_WORD_BUDGET:
-        errors.append(f"{WORKFLOW}: {count} words exceeds the budget of {WORKFLOW_WORD_BUDGET}; "
-                      "shorten it, or raise WORKFLOW_WORD_BUDGET in lint-skills.py with the reason in the same change")
+    errors = budget_errors(len(text.split()))
     words = normalized_words(text)
     runs = {" ".join(words[i:i + DUPLICATE_RUN]) for i in range(len(words) - DUPLICATE_RUN + 1)}
     others = set(root.glob("skills/**/*.md")) | set(root.glob("references/**/*.md")) | set(root.glob("agents/*.md"))
@@ -220,7 +240,7 @@ def main():
         return 1
     count = len((args.root / WORKFLOW).read_text().split())
     print("PASS: basic frontmatter, declared profile routes, role bindings and package script paths")
-    print(f"{WORKFLOW}: {count} of {WORKFLOW_WORD_BUDGET} words; no unlisted passage repeats it")
+    print(f"{WORKFLOW}: {count} of {workflow_budget()} words; no unlisted passage repeats it")
     print("Not checked: full Agent Skills conformance or host/workflow behavior")
     return 0
 

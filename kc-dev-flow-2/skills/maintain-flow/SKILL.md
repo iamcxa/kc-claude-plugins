@@ -21,9 +21,9 @@ SD command already enforces it, in which case write one sentence naming that
 enforcer instead of restating it; and which existing sentence it replaces, or
 that it replaces none. Before adding, look for a sentence to shorten or remove.
 Report the file's word count before and after, and the words each worker stage
-inlines. `kc-dev-flow-2/scripts/lint-skills.py` refuses a file over its word budget and a passage of
-12 or more words that another package file repeats; raising the budget or listing
-an overlap is a change that says why.
+inlines. `kc-dev-flow-2/scripts/lint-skills.py` refuses a file whose count differs from its word budget and a passage of
+12 or more words that another package file repeats; a raise of the budget needs a Captain ruling
+in the budget steps, a cut lowers it in the same change, and listing an overlap says why.
 
 Run `python3 kc-dev-flow-2/scripts/lint-skills.py` from the repository root. Before each push
 of a package change, run `python3 kc-dev-flow-2/extensions/roborev/roborev_gate.py --repo

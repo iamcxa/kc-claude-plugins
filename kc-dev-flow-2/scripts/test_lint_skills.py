@@ -8,12 +8,14 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest import mock
 
 sys.dont_write_bytecode = True
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("flow_lint", ROOT / "scripts/lint-skills.py")
 lint = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(lint)
+SHIPPED = list(lint.WORKFLOW_BUDGET_STEPS)
 
 
 class RouteMutationTests(unittest.TestCase):
@@ -126,11 +128,70 @@ class RouteMutationTests(unittest.TestCase):
         self.change("skills/implementation/SKILL.md", "Package root: ${CLAUDE_PLUGIN_ROOT}\n", "")
         self.refuses("skills/implementation/SKILL.md: uses <package> but has no 'Package root:' line")
 
-    def test_workflow_over_its_word_budget(self):
+    def workflow_text(self):
+        return (self.root / "references/sd/workflow.md").read_text()
+
+    def with_words(self, delta):
         path = self.root / "references/sd/workflow.md"
-        words = len(path.read_text().split())
-        path.write_text(path.read_text() + "\nfiller" * (lint.WORKFLOW_WORD_BUDGET - words + 1))
-        self.refuses(f"exceeds the budget of {lint.WORKFLOW_WORD_BUDGET}")
+        text = path.read_text()
+        path.write_text(text + "\nfiller" * delta if delta > 0 else text.rsplit(None, -delta)[0] + "\n")
+        return len(path.read_text().split())
+
+    def budget_with(self, steps):
+        patch = mock.patch.object(lint, "WORKFLOW_BUDGET_STEPS", steps)
+        patch.start()
+        self.addCleanup(patch.stop)
+
+    def test_workflow_over_its_word_budget(self):
+        self.with_words(lint.workflow_budget(SHIPPED) - len(self.workflow_text().split()) + 1)
+        self.refuses(f"exceeds the budget of {lint.workflow_budget()}")
+        self.refuses("raise step")
+
+    def test_workflow_under_its_word_budget_names_the_cut_step(self):
+        self.with_words(-1)
+        self.refuses(f"is 1 under the budget of {lint.workflow_budget()}")
+        self.refuses("cut step of -1")
+
+    def test_workflow_equal_to_its_word_budget_passes_and_prints_the_count(self):
+        self.assertEqual(len(self.workflow_text().split()), lint.workflow_budget())
+        result = subprocess.run([sys.executable, "-B", str(ROOT / "scripts/lint-skills.py"), "--root", str(self.root)],
+                                capture_output=True, text=True)
+        self.assertEqual(result.returncode, 0, result.stdout)
+        n = lint.workflow_budget()
+        self.assertIn(f"{n} of {n} words", result.stdout)
+
+    def test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment(self):
+        count = self.with_words(7)
+        base = SHIPPED
+        raised = dict(delta=count - lint.workflow_budget(SHIPPED), why="a rule FO reads only at startup")
+        full = dict(raised, captain="\u300cthe added text is read once\u300d (chat)", loaded="startup")
+        cases = {
+            "no captain": (dict(raised, loaded="startup"), "'captain' has no quoted words"),
+            "captain without a quote": (dict(raised, captain="approved", loaded="startup"), "'captain' has no quoted words"),
+            "empty quote": (dict(raised, captain="\u300c \u300d", loaded="startup"), "'captain' has no quoted words"),
+            "no loaded": (dict(raised, captain="\u300cyes\u300d"), "has no 'loaded' moment"),
+        }
+        for label, (step, expected) in cases.items():
+            with self.subTest(label):
+                self.budget_with([*base, step])
+                errors = lint.lint_tree(self.root)
+                self.assertTrue(any(expected in e and f"WORKFLOW_BUDGET_STEPS[{len(base)}]" in e for e in errors), errors)
+        self.budget_with([*base, full])
+        self.assertEqual(lint.lint_tree(self.root), [])
+
+    def test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused(self):
+        count = self.with_words(-3)
+        cut = dict(delta=count - lint.workflow_budget(SHIPPED), why="moved to a script message")
+        self.budget_with([*SHIPPED, cut])
+        self.assertEqual(lint.lint_tree(self.root), [])
+        self.budget_with([*SHIPPED, dict(delta=cut["delta"])])
+        self.refuses("has no 'why'")
+
+    def test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way(self):
+        for drift in (1, -1):
+            with self.subTest(drift):
+                self.budget_with([*SHIPPED, dict(delta=drift, why="x", captain="\u300cx\u300d", loaded="x")])
+                self.refuses("under the budget" if drift > 0 else "exceeds the budget")
 
     def test_a_passage_copied_from_the_workflow_into_another_file(self):
         source = (self.root / "references/sd/workflow.md").read_text()
