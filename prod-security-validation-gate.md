@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-17T06:11:21Z
+worktree: .worktrees/spacedock-ensign-prod-security-validation-gate
 ---
 
 Filed on the Captain's 「照這樣做」 (chat, 2026-10-16), split out of `prod-security-review-gates` (its amendment 2 keeps the design-stage review there).
