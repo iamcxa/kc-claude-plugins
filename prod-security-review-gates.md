@@ -50,6 +50,17 @@ gates:
                 id: briefing:prod-security-review-gates:ideation:attempt-2:revision-1
                 digest: sha256:ba3ba1e3d48fafd4fe798ef5ee8d02c85a6cda98a6ef262f8377520a644318cc
                 room-ref: ./prod-security-review-gates/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:prod-security-review-gates:ideation:2
+                briefing: briefing:prod-security-review-gates:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-17T03:03:36.122971Z"
+                decision: approve
+                reason: Captain approved the redone ideation under amendment 2 (「准」), presented with the learning proposal; as the gate question states, this accepts D1, D2 and D3 as recommended, ADR 0019, and is the push and Draft PR grant for the implementation worker.
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-16T03:14:23Z
 worktree: .worktrees/spacedock-ensign-prod-security-review-gates
 ---
