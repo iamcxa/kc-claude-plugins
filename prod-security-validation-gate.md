@@ -16,3 +16,10 @@ Filed on the Captain's 「照這樣做」 (chat, 2026-10-16), split out of `prod
 - Then choose the default model and reasoning level from the measurement; a reasoning level is fixed per agent definition, so effort by complexity means two definitions FO chooses between by a written rule (for example public surface, auth or data access gets the higher one).
 - Price per million tokens (input/output), Anthropic API table cached 2026-10-06: Fable 5.1 $10/$50, Opus 5.5 $4/$20, Sonnet 5.5 $2/$10.
 - Gap (FO, 2026-10-17, from the Captain's question on #656): `kc-dev-flow-2/skills/ideation/profiles/prod.md` § Security review says nothing about a reviewer that refuses (the `cyber` safety category). A refusal has no `tob_security_review:` root line, so by the shape lock the check would refuse it and hold the ideation gate (inferred from the rule, not tested); the worker has no instruction and may stall or rerun. Decide the refusal handling with the model comparison.
+
+## FO alignment
+
+Alignment: not needed before ideation; the Captain approved filing it (his words are at the top of this file).
+Release review: not needed: workflow maintenance, on no journey map.
+Surfaces: none
+Visible change: none
