@@ -54,3 +54,180 @@ Alignment: not needed before ideation; the Captain approved filing it (his words
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+
+## Design
+
+Not repository files: this section is the design; implementation lands it. Sources read 2026-10-17: kc-dev-flow-2 at origin/main 19fe3b5b (released 0.24.0) with `git show` (`scripts/delivery_gate.py`, `scripts/pr_watch.py`, `scripts/decision_ledger.py`, `scripts/lint-skills.py`, `references/sd/workflow.md`, `references/sd/mods/kc-dev-flow-2.md`, `extensions/*/EXTENSION.md`, `skills/learn/SKILL.md`, `docs/adr/0009`, `0011`, `0019`); kc-pr-flow at the same commit (`skills/kc-pr-review/SKILL.md`, `scripts/github-repo-write.sh`); Spacedock 0.27.2 (`spacedock --version`, `gate --help`, `gate record --help`) and its 0.27.0 plugin cache (`mods/pr-merge.md`, `skills/fo-gate-lifecycle`); adopters subspace-relay, subspace-web and qnow by read-only `git show`/`gh api`; the OpenAI Decisions API page (fetched 2026-10-17); `gh pr merge --help` (gh 2.92.0).
+
+### The bite, counted
+
+Being counted from state and PR history; filled before the stage report.
+
+### PRFAQ
+
+**Press release.** Before FO asks the Captain to merge a task's PR, one command now does three things. It checks the facts a machine can decide: the PR head is the commit validation passed, the required CI finished green on that head, the PR is ready and has no conflict, and each second reviewer has an outcome. It prints a short list of points for the Captain, each a pointer into the records: a finding left open or declined, a reviewer that did not run, an acceptance step nobody ran, a file in a rule, release or migration path, a prod or database task. And it records its own judgment of the PR, so the workflow builds a track record of how often that judgment agreed with the Captain's merge. When a class of change shows, over at least 59 judged PRs with no failure, that its "safe" judgment is right at least 95% of the time (a one-sided 95% lower bound, not a stated confidence), FO proposes a grant. Once the Captain grants a class in an ADR, FO merges PRs of that class itself, pinned to the validated commit, and tells him it merged and what to look at. One failure in a granted class takes the grant away.
+
+**FAQ.**
+- *Does FO merge anything on the day this lands?* No. Every repository starts with no grant; FO asks as today, with the points list and the deterministic holds added. Merging by FO starts only after the Captain grants a class on the recorded evidence.
+- *Who judges "safe"?* Two arms, both recorded for every ask. The rule arm is deterministic: every check passes and the points list is empty. The model arm (decision D1) is the OpenAI Decisions API, opt-in per repository, judging the recorded state and returning a typed choice with probabilities. The grant names which arm, and the bar applies to that arm's own record.
+- *Where does 95% come from?* From the record, never from a model's stated confidence. A judged PR is clean when the Captain merged it at the judged head with no change asked after the judgment, and no revert of its merge landed within 14 days. With zero failures, 59 clean judgments give a 95% lower bound of 95%; with one failure it takes 93, with two 124 (exact binomial, computed 2026-10-17).
+- *Why not Codex, Jev or kc-pr-review as the judge?* kc-pr-review and the Codex GitHub review are reviewers: they read the diff and report findings with per-finding scores (kc-pr-review 1 to 10) and no merge probability; they stay inputs. `codex exec` returns free text with a stated confidence, minutes per run. TypeSafe Jev is early access with vendor-only evals. The Decisions API is the one product verified to return a choice plus a probability array, at $0.10 per million input tokens, public beta.
+- *What never becomes FO's to merge?* A prod-profile task, a `db` surface, a change to authority, approval, merge or review rules (workflow README and `_mods`, `references/sd`, `docs/adr`, `delivery_gate.py` itself), `.github/`, a migrations folder, release configuration and manifests, a release PR, and any PR whose title is not a Conventional Commit in a repository that has `release-please-config.json`. These are fixed in the script, not grantable (ADR 0009: "Changes to authority, approval or merge rules ... never unlock").
+- *How does FO merge?* With `gh pr merge <N> --repo <owner/repo> --squash --match-head-commit <validated candidate>`, never `--auto` or `--admin`; GitHub refuses the merge if the head moved. kc-pr-flow's `github-repo-write.sh merge` wraps the same flags; the script prints the `gh` line rather than depend on another plugin's path.
+- *What leaves the machine?* Rule arm: nothing new. Model arm: the snapshot below goes to OpenAI, only in a repository whose README lists the `merge-judge` extension, which the Captain decides per repository (D2).
+
+### Upstream and sibling check, in the chain's order
+
+- **Spacedock 0.27.2**: no merge command and no merge grant. `merge guard` finalizes after a merge and never merges; `gate record --actor agent:first-officer --conn-quote --conn-source` records an FO decision under a quoted grant, for gates only; `mods/pr-merge.md` never runs `gh pr merge` (it creates the PR and waits for MERGED). Its docs show a conn "authorized to approve and merge PR on CI green" as an example, not an enforced feature.
+- **kc-dev-flow-2 0.24.0**: `delivery_gate.py check` already holds the merge ask on a head that differs from the validated candidate and on a second reviewer with no outcome: the deterministic half exists and is extended, not replaced. `pr_watch.py` already reads CI, draft, mergeable and the Codex and Copilot outcomes but by its docstring "prints no merge-ask or hold line". `decision_ledger.py` derives rulings from gate records; ADR 0011's L3 "decide by record" is the route this design builds for one class of decision; ADR 0009 already set the shape for automatic merge (per class, unlocked from the Captain's record, deterministic gate first, never for rule changes). No confidence, no points list and no merge path exist. `skills/learn/SKILL.md` says "FO does not merge or enable auto-merge".
+- **kc-pr-flow**: `kc-pr-review` has per-finding confidence gates (1 to 10, shown at 5 and above) and a GitHub review event, no merge verdict, no probability; its optional `codex exec` step sends the full diff to OpenAI. `scripts/github-repo-write.sh merge --head <40-hex>` is a head-pinned merge primitive (`gh pr merge --match-head-commit`), reused as a pattern.
+- **Adopters**: no auto-merge or gatekeeper job in relay, web, qnow or this repository (`git grep` over `.github`). qnow has `allow_auto_merge: true`, a required `ci-gate` ruleset and a `release-gate.yaml` that says "regular releases are merged by the captain"; this repository has `allow_auto_merge: false` and two required checks. Relay and web are private and show no Codex, Copilot or Claude bot on their last 30 PRs; qnow (private) and this repository (public) already send every PR to OpenAI through the Codex GitHub review.
+- **Conclusion**: extend `delivery_gate.py` (checks, points, record, calibrate, grant line), add one opt-in extension for the model arm, edit three passages of `references/sd/workflow.md`, and land one ADR. No new agent, stage, CI job or Spacedock change.
+
+### Flow
+
+```mermaid
+flowchart TD
+    A[Validation gate approved, PR ready] --> B[FO runs delivery_gate.py check]
+    B --> C{Head equals Candidate, required CI finished green on head, not draft, no conflict, each second reviewer has an outcome}
+    C -- no --> H[Hold: next lines, FO tells the Captain]
+    C -- yes --> D[Points list from records, class, rule verdict]
+    D --> M{merge-judge listed in this repository?}
+    M -- yes --> J[Decisions API judges the snapshot; choice and probabilities recorded]
+    M -- no --> R
+    J --> R[Ask record written to the task folder]
+    R --> G{Class granted in merge-grants, class grantable, granted arm says merge at its threshold}
+    G -- no --> Q[FO asks the Captain with the points]
+    Q --> K{Captain}
+    K -- merges --> S[pr-merge idle: sentinel, merge guard, archive]
+    K -- asks a change or sends back --> F[Feedback route; the record is labelled not clean]
+    G -- yes --> X[FO runs gh pr merge --squash --match-head-commit Candidate]
+    X -- GitHub refuses --> Q
+    X -- merged --> T[FO tells the Captain: merged, and the points]
+    T --> S
+    S --> L[delivery_gate.py calibrate labels each record]
+    F --> L
+    L --> V{A failure in a granted class?}
+    V -- yes --> W[FO removes the class from merge-grants and tells the Captain]
+    V -- no --> U{Lower bound at least 0.95 over at least 59 in a class not granted?}
+    U -- yes --> P[FO proposes a class grant ADR; the Captain decides]
+    U -- no --> N[Stay in shadow]
+```
+
+### What the script does, as the implementation lands it
+
+- `check` (existing subcommand, same arguments): one `gh pr view --json headRefOid,isDraft,mergeable,statusCheckRollup,title,files,headRefName` call replaces today's head-only call. New holds (exit 1): a check run on the head not finished or not successful, a draft PR, `mergeable` CONFLICTING. Then it prints `point:` lines, one `class:` line, the record path and one `next:` line.
+- Points, each `point: <kind>: <where>`: a validation-report or gate-summary line marked Deferred risk, declined, or round-3 backlog; `### FO declines` entries; a listed reviewer `not run:`; an acceptance step marked not run; a `## Captain amendments` entry dated after the latest validation dispatch; each never-eligible path changed; `profile: prod`, `Surfaces:` `db` or `ui`; a non-Conventional title where `release-please-config.json` exists. Pointers only, no model text.
+- Class: `never` when any never-eligible condition holds, else `docs-only` (only `.md` files changed), `script-with-test` (a code file and a test file changed, ADR 0009's example), or `other`. Rule verdict: `merge` when no point is printed and the class is not `never`.
+- Record: `<task folder>/merge/ask-<N>.json` with the head, class, rule verdict, model arm answer when run, points, PR, and the UTC time; FO commits it with `spacedock state commit <slug>`.
+- Grant: README frontmatter `merge-grants:` lists `<class>:<arm>:<threshold>:ADR <number>`. When the class is listed, not `never`, and the listed arm says merge (rule: verdict `merge`; model: `choice` merge with probability at or above the threshold), `next:` prints the `gh pr merge` line instead of the ask. An unlisted extension, a missing key or a malformed entry means no grant.
+- `calibrate <workflow dir>`: labels every record in active and archived tasks (clean; not clean: Captain change after the record, PR closed, merged at another head, or a revert of the merge commit within 14 days on the trunk) and prints per class and arm: n, clean, failures, the exact one-sided 95% lower bound, and one `next:` line: propose a grant, remove a grant on any failure, or nothing. Records younger than 14 days are counted as pending, not clean.
+- Model arm, extension `merge-judge` (EXTENSION.md plus `merge_judge.py`): `POST /v1/decisions`, model `gpt-6-luna`, one `choice` question (merge / needs-human) plus `predicate` questions whose positive answers add `point: model:` lines. Input: the snapshot below. The key is read only through `<wrapper>`; the script never prints it. A call that fails, refuses or times out records `merge-judge not run: <reason>` and never counts as merge.
+
+Snapshot sent to OpenAI by the model arm (and nothing else): task profile and `Surfaces:`, class, changed file paths with added/removed line counts, PR title, CI conclusions by check name, the Codex/Copilot/roborev outcome lines FO already records, the point lines, and the validation report's `### Summary` text. No diff, no code, no secret, no Captain chat.
+
+### Words FO reads at each lifecycle moment
+
+Counted as `len(text.split())` over origin/main 19fe3b5b; `W` is the `pr_watch.py wait` output, unchanged by this design and the same in both columns. Passages: the authority paragraph ("Project and Captain authority … explicit choice.") 215; the head paragraph ("Before the merge ask … what it printed.") 57; the Extensions merge-ask sentences ("A merge ask names … not named as unread.") 90; the review-findings sentence ("Authority, a gate approval, a merge … `Precedent:` line.") 33; `delivery_gate.py` exit 0 output 20 (with a 40-hex head).
+
+| Moment | Before | After (design target) |
+| --- | --- | --- |
+| startup, idle on an open PR, idle on a merged PR, after the archive | unchanged | unchanged: no edit to `_mods`, `pr_watch.py`, the learn step or `pr-merge` |
+| validation gate prep | `### validation` 241 | 241 |
+| the merge ask, no points | 415 + W | at most 404 + W: authority 213 (adds "unless `delivery_gate.py` prints a merge line under a class grant (ADR <n>)", drops "and waits for those jobs to finish before asking for merge", which the check now enforces); head paragraph 27 (one sentence: run the check, do its `next:` lines; the hold wording is already in its output); Extensions 90; review-findings sentence 37 ("a merge outside a granted class"); `check` output at most 37 |
+| the merge ask, k points | 415 + W | at most 404 + W + 9k (each point line at most 9 words); the points are what the Captain reads, so they are the intended growth |
+| FO merges under a grant (new; replaces the ask for that PR) | none | at most 404 + W: same passages, `next:` merge line instead of the ask line |
+| calibrate (new; FO runs it after a merge or at startup) | none | output only: one line per class and arm (at most 14 words) plus at most one `next:` line |
+| merge-judge listed: its FO step | none | the EXTENSION.md FO step, at most 60 words, only in a repository that lists it |
+
+`references/sd/workflow.md` falls from 5495 by at least 11 words, so `WORKFLOW_WORD_BUDGET` falls with it in the same change (the ratchet task's rule; no raise needed).
+
+### Non-goals
+
+Any edit to Spacedock, `pr-merge`, kc-pr-flow or an adopter file; a reviewer of code (the Codex review, Copilot and roborev stay the reviewers); a grant of any class in this task; auto-merge (`--auto`) or merge queues; Jev or Codex as the judge; a stored ledger (records are files in the task folder, derived like `decision_ledger.py`).
+
+### Limits
+
+The label is a proxy. A clean merge means the Captain merged without asking a change and no revert landed in 14 days; it does not see a fix-forward that does not revert, nor a Captain who merged without reading. If he merges every ask unread, agreement measures nothing; the revert window is the only independent signal. The 59-record bar is per class; at the rate measured in the bite section, a class takes weeks to qualify, and `other` may never. The Decisions API is a public beta with one model; a change in its answers between calibration and use is caught only by the revocation rule after a failure. `mergedBy` cannot tell FO from the Captain (FO uses his token), so FO's merges are identified by the ask record's merge line and FO's report, not by GitHub.
+
+### Security review
+
+Running.
+
+### ADR draft (no number; FO reserves it at implementation)
+
+Short title: `fo-merges-a-granted-class-pinned-to-the-validated-head`.
+
+> **FO merges a PR only in a change class the Captain granted on its recorded judgment**
+>
+> Context: The Captain asked (chat, 2026-10-16): 「我想新增一張票，設計一個 codex 的 PR 守門員，它的任務是確保 P R 可以合併……只要例如 PR 超過 95% 沒問題，那就讓它帶我授權 FO 合併 PR，相應的但是也要讓它負責提出我需要注意的點……這件事的目的是，減低 FO 自己合併 PR 的意外，以及減低我每次都要肉眼 review PR 的負擔」. ADR 0011 says merge is "never delegated at any level"; ADR 0009 already allows automatic merge per unlocked class, never for rule changes. The bite measured at ideation: <filled from The bite, counted>.
+>
+> Decision: **Words:** 「<the Captain's words at the ideation gate>」 — Captain, <date>. **Options considered:** merge granted per class on the recorded judgment, pinned to the validated head (chosen); one grant for all PRs at a stated model confidence; no delegation, the points list only. **Recommended:** per class on the record. This supersedes ADR 0011's sentence "Authority, gate approval, merge, … are never delegated at any level" for merge only, and only as follows. FO merges a task's PR itself only when `delivery_gate.py check` prints the merge line: the deterministic checks pass, the class is granted in the README's `merge-grants:` by its own Captain ADR on `delivery_gate.py calibrate` evidence (a one-sided 95% lower bound of at least 0.95 over at least 59 records), the granted arm says merge, and the merge is `gh pr merge --match-head-commit <validated candidate>`. The classes fixed as never-eligible are never granted. Any failure in a granted class removes the grant; FO may remove a grant without asking and tells the Captain. Every other part of ADR 0011's sentence stands.
+>
+> Consequences: Nothing merges by FO until a class qualifies and he grants it. The README sentence on what is always asked changes to "a merge outside a granted class". Reopen if a granted class ships a defect the label missed (a fix-forward without a revert), or if the Decisions API changes its model.
+
+ADR 0011 gets one line under its Status: `Merge partly superseded by ADR <n>`; ADR 0009 is unchanged (this is its "full-auto" mechanism for task PRs, and its never-unlock list is kept).
+
+### Unresolved decisions (for the Captain)
+
+Past rulings read: ADR 0009 (automatic merge per unlocked class, never for rule changes: followed), ADR 0011 (merge never delegated: the ADR draft supersedes that clause for merge only, by its own L3 route), ADR 0019 (kc-pr-flow agent reused as is: same pattern for its merge primitive). `git -C <state checkout> grep -n 'Override:'` (2026-10-17) hits prose only; no gate record overrides a recommendation in this area.
+
+1. **D1. Which judge, and when.** (a) the OpenAI Decisions API as an opt-in model arm, recording beside the rule arm from day one (recommended); (b) the rule arm only now, the model arm as a later task once `calibrate` shows the rule arm too narrow; (c) `codex exec` as judge; (d) TypeSafe Jev. Recommendation (a): the rule arm says merge only when no point exists, so it may rarely say merge and save little review; the model arm is the one that could, and its 59 records take weeks, so they should start now; a call costs about $0.0003 (a 3,000-token snapshot at $0.10 per million; estimate, not measured). What gets worse: a public-beta dependency with one model; an OpenAI API key under the wrapper, which is not verified to exist (a Codex login is not API billing); one more extension, with up to 60 FO words where it is listed.
+2. **D2. Where the model arm may send its snapshot.** Recommendation: this repository only (public; its PRs and state are already public and already reviewed by Codex on GitHub). Not relay or subspace-web (private; no outside model reads their PRs today, so it would be a new share), not qnow for now (private, already sends full diffs to Codex and Copilot, but it is the product being readied for live customers). What gets worse: the three adopters build no model record, so a grant there can only use the rule arm until you list the extension.
+3. **D3. The bar and the label.** Recommendation: a class qualifies at a one-sided 95% lower bound of at least 0.95 on its granted arm's record (59 records with no failure); clean means merged at the judged head with no change you asked after the judgment and no revert in 14 days; each grant is its own ADR in that repository, and one failure removes it. The alternative is your literal reading: merge when the judge states at least 95%. What gets worse under the recommendation: no FO merge for weeks, possibly never for the `other` class; a fix-forward without a revert is not seen by the label.
+
+Approving the ideation gate also approves the ADR draft's never-eligible list (prod profile, `db`, rule, release, `.github` and migration paths, release PRs, non-Conventional titles where release-please runs); say if any should be grantable.
+
+### Batch overlap
+
+Read 2026-10-17 from origin/main 19fe3b5b and the other five task files as they stand in the state checkout (only `worker-loads-declared-package` had a draft `## Design`, uncommitted). Files this design would change, and the other batch-2 tasks on the same file or check:
+
+| File or check | This design | Other batch-2 task on it |
+| --- | --- | --- |
+| `kc-dev-flow-2/scripts/delivery_gate.py`, `test_delivery_gate.py` | new holds, points, class, record, grant line, `calibrate` | `worker-loads-declared-package`: its draft imports `delivery_gate.CANDIDATE` and the above-first-heading scope (its AC-3 parity test); this design keeps `CANDIDATE` and `dispatched_candidates` unchanged by name and behaviour. `workflow-budget-ratchet`: names `delivery_gate.py` among the scripts whose rule shrinks to a pointer, reading its failure messages, which this design rewrites. `special-role-triggers`: a `Reviewer:` line "the check scripts ... can require"; if that lands in `--text-file` checks it edits `unstated_second_reviewers`'s neighbourhood |
+| `references/sd/workflow.md` § Delivery authority (authority paragraph, head paragraph) | three edits, net at least 11 words fewer | `workflow-budget-ratchet` (shrinks script-checked prose, the same head paragraph); `worker-loads-declared-package` (no README word, per its AC-5) |
+| `references/sd/workflow.md` § FO steps: review findings, the "Authority, a gate approval, a merge …" sentence | "a merge outside a granted class" | `special-role-triggers` (engineering-reviewer on amendments that accept a risk; likely the same section) |
+| `references/sd/workflow.md` frontmatter (documents `merge-grants:`) and adopter README frontmatter | new optional key, absent by default | none known |
+| `kc-dev-flow-2/scripts/lint-skills.py` `WORKFLOW_WORD_BUDGET` | falls to the new count | `workflow-budget-ratchet` owns the ratchet rule on the same constant; any task that edits `workflow.md` conflicts on this one line |
+| `kc-dev-flow-2/extensions/merge-judge/` (new: `EXTENSION.md`, `merge_judge.py`, test) and the README extensions table row | new, only if D1 is (a) | none |
+| `docs/adr/` (one new file) and ADR 0011's Status line | new ADR, one status line | none; `number_guards.py reserve` orders numbers |
+| reads, not edits: validation reports and gate summaries for points | | `prod-security-validation-gate` (its validation-gate findings become point lines when Deferred or declined); `ui-design-review-in-ideation` (`Surfaces: ui` is a point); no shared file |
+
+Not changed: `_mods/*`, `pr_watch.py`, `dispatch_records.py`, `design_surfaces.py`, `skills/*` (including `skills/learn/SKILL.md`'s "FO does not merge or enable auto-merge", which governs learn's own PRs and stays true), any adopter file. Suggested order: `worker-loads-declared-package` first (it pins `CANDIDATE`), then `workflow-budget-ratchet` (it sets the budget rule this design follows), then this task; `special-role-triggers` rebases on whichever lands second in `workflow.md`.
+
+## Acceptance criteria
+
+Evidence commands run from a checkout of the implementation PR head with `python3 -B` and caches cleared; `STUB` is a scratch `gh` on `PATH` that answers `pr view --json …` from a fixture JSON and exits 1 on `pr merge`; fixtures live in a scratch folder outside the checkout.
+
+**AC-1** `delivery_gate.py check` holds the merge ask (exit 1, one `next: hold the ask …` line) when a check run on the PR head is not finished or not successful, when the PR is a draft, or when `mergeable` is CONFLICTING, and exits 0 when the head equals the candidate, every check run succeeded, the PR is ready and mergeable. Today's head and second-reviewer holds keep their exit codes and wording.
+Verified by: new cases in `test_delivery_gate.py`, one per hold and one passing, all under `STUB`; the existing cases pass unchanged. Falsifier: removing the check-run clause makes the pending-CI case exit 0 and its test fail. Current evidence: not yet verified (design only).
+
+**AC-2** Each point source prints exactly one `point:` line naming its kind and where it is, and a fixture with none prints no `point:` line.
+Verified by: one fixture task per source (a Deferred risk line in the validation report, a `### FO declines` entry, `codex not run: quota`, an acceptance step marked not run, an amendment dated after the latest validation dispatch, a changed `docs/adr/x.md`, `profile: prod`, `Surfaces: db`, a non-Conventional title beside `release-please-config.json`) and one clean fixture. Falsifier: deleting any one source's matcher turns its case red. Current evidence: not yet verified.
+
+**AC-3** The class is `never` for each never-eligible condition (prod, `db`, a changed path under the workflow README or `_mods`, `references/sd`, `docs/adr`, `.github/`, a migrations folder, `release-please-config.json`, `.release-please-manifest.json`, a `plugin.json` or `marketplace.json`, `delivery_gate.py` itself, a head branch starting `release-please--`), and otherwise `docs-only`, `script-with-test` or `other` by the changed paths.
+Verified by: a table-driven test with one row per condition and one per class. Falsifier: removing `docs/adr` from the never list makes its row `docs-only`. Current evidence: not yet verified.
+
+**AC-4** Without a grant FO is never told to merge: with `merge-grants:` absent, empty, malformed, naming another class, naming a `never` class, or with any point printed, the `next:` line is the ask line; and no output of `delivery_gate.py`, in any case, contains `--auto` or `--admin`.
+Verified by: test cases for each of the six, plus a test that greps every printed line of the whole test run for `--auto` and `--admin`. Falsifier: making the grant test return true when the key is absent turns the absent-key case red. Current evidence: not yet verified.
+
+**AC-5** Under a valid grant, a granted class with no point and the granted arm saying merge prints exactly `next: run gh pr merge <N> --repo <owner/repo> --squash --match-head-commit <40-hex candidate>, then tell the Captain it merged with the points above.`, with the candidate from the validation record, never the PR's head field.
+Verified by: a `STUB` case whose PR head and candidate are equal and a case where they differ (holds by AC-1's head rule before any grant is read); and one scratch-repository run: a local bare origin is not enough for `--match-head-commit`, so the run uses a throwaway GitHub repository the implementation worker creates and deletes only with the Captain's yes, or is marked not run with that reason. Falsifier: printing the PR's `headRefOid` instead of the candidate fails the equality assertion on a short-SHA fixture. Current evidence: `gh pr merge --help` (gh 2.92.0) lists `--match-head-commit SHA`, "Commit SHA that the pull request head must match to allow merge"; the GitHub refusal itself not yet observed.
+
+**AC-6** Every passing `check` writes one `merge/ask-<N>.json` in the task folder with head, class, rule verdict, model answer or `not run`, points, PR and UTC time; a hold writes none.
+Verified by: test cases reading the written file and a second run producing `ask-2.json`. Falsifier: writing on exit 1 turns the hold case red. Current evidence: not yet verified.
+
+**AC-7** `calibrate` labels and bounds correctly: 59 clean records in one class print a lower bound of at least 0.9505 and a `next: propose a grant` line; 58 print no such line; one failure in a class listed in `merge-grants:` prints `next: remove <class> from merge-grants and tell the Captain`; a record younger than 14 days counts as pending; a revert is found by `This reverts commit <merge sha>` on the trunk.
+Verified by: test cases on generated records and a scratch git repository holding one revert commit; the zero-failure bound is checked against `0.05 ** (1 / n)`. Falsifier: counting pending records as clean makes 58 clean plus one pending print the propose line. Current evidence: exact binomial thresholds computed 2026-10-17 (0 failures 59, 1 failure 93, 2 failures 124, 3 failures 153).
+
+**AC-8** Replay on this workflow's history: run the candidate's classifier, points and holds over every archived task of `spacedock-state/dev2` that has a merged PR, against its PR as GitHub reports it now (read-only `gh`), and over each instance in `### The bite, counted`; print, per class, how many asks the rule arm would have said merge, and for each bite instance which hold or point names it, or `not caught`.
+Verified by: the saved replay output under `<task folder>/validation/`; the implementation report quotes the per-class counts and each bite row. Falsifier: a bite instance of the head, CI or merge-state class reported `not caught` returns through feedback. Current evidence: not yet run; the bite list is in the design.
+
+**AC-9** Model arm (only if D1 is (a)): `merge_judge.py` sends only the snapshot fields; a failure, refusal or timeout records `merge-judge not run: <reason>` and never counts as merge; the key is read only through the wrapper and never printed.
+Verified by: a test with a fake transport asserting the request body's keys equal the snapshot list and that no value contains a diff hunk header (`@@ `); cases for HTTP error, refusal answer and timeout; one live call through `<wrapper>` on an archived task of this repository, its response saved with the key absent from every saved byte (`grep -c` of the key prefix is 0). Falsifier: adding the diff to the snapshot fails the keys assertion. Current evidence: the API page (fetched 2026-10-17) states `POST /v1/decisions`, `gpt-6-luna` only, a choice answer with `probabilities` and `confidence`, $0.10 per million input tokens; no key verified, no call made.
+
+**AC-10** FO reads no more at the merge ask: recounted with an independent script by the moment rules in `### Words FO reads at each lifecycle moment`, the merge ask with no points is at most 404 + W against 415 + W at origin/main, every other moment is unchanged, and `lint-skills.py` prints the new `workflow.md` count equal to the lowered `WORKFLOW_WORD_BUDGET`.
+Verified by: the recount output for base and candidate saved under `<task folder>/validation/`. Falsifier: a candidate `check` output over 37 words on the clean fixture, or a `workflow.md` count above 5484. Current evidence: base passages counted 2026-10-17 (215, 57, 90, 33, 20); candidate not yet written.
+
+**AC-11** The ruling lands as an ADR whose Words line quotes the Captain's answer at this gate and the question, and ADR 0011's Status gains the partial-supersession line; no repository's README gets a `merge-grants:` entry in this task.
+Verified by: `python3 <package>/scripts/adr_lint.py docs/adr --since <base> --require <reserved number>` exits 0; `git diff <base> -- docs/dev2/README.md kc-dev-flow-2/references/sd/workflow.md | grep -c merge-grants` prints 0 (the key is documented in the script's usage text and the ADR, not in README words).
