@@ -30,3 +30,5 @@ Harness tokens and seconds are the `subagent_tokens` and `duration_ms` of each r
 Whole measurement, 14 runs: assumed about $36, ceiling about $150, of which Fable 5.1 is about three quarters of the assumed total (4 runs).
 
 `tools/refusal_fixture.py` runs the 0.24.0 `design_surfaces.py check` on refusal-shaped saved reports; `proto/validation_fixture.out` runs the prototype on 14 validation-gate cases.
+
+Tokens and seconds per run are reproducible only from this session's subagent transcripts (`tools/extract.py` and `tools/cost.py` read them under `~/.claude/projects/`); the table above is the record. The reports, prompts and fixtures are in this folder.
