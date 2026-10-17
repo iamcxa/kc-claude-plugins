@@ -3,7 +3,7 @@ title: The workflow word budget only goes down, and rules a script enforces shri
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-17T06:11:09Z
 worktree: .worktrees/spacedock-ensign-workflow-budget-ratchet
+pr: iamcxa/kc-claude-plugins#658
 ---
 
 Filed on the Captain's words (chat, 2026-10-17): 「棘輪上限＋規則縮短建檔，文件不應該一直變長，除非可以證明文件內容不是一次性載入，這裡的意義是文件如果一次載入太長，那 llm 的注意力八成會失焦」.
