@@ -266,3 +266,44 @@ archive of task and record files and not the README, and the next review round
 (Feedback Cycles, Cycle 3) reported exactly that input. Bounded: one task; the fix
 chosen was to drop the promise, so the record does not show that a property test
 varying the README would have been cheaper than that ruling.
+
+## Compare a shrunk rule with what its script rejects before cutting it
+
+### Applicability
+
+A kc-dev-flow-2 change in this repository that shortens a README
+(references/sd/workflow.md) rule into a pointer to a script that checks it, such as
+dispatch_records.py, design_surfaces.py or observer_check.py, to meet the workflow
+word budget.
+
+### Practice
+
+Before cutting a clause, compare each clause of the sentence with what the script
+rejects, not only with what its failure messages say: run the script on one input
+that the dropped clause forbids, and keep the clause in the README whenever the
+script lets that input through. For each kept clause, pin the README phrase with a
+need string in test_sd_dispatch.py, because pins written for the removed parts do
+not cover it. Bounded: one task; the sentence was restored after an external review
+round, so the record does not show that this comparison would have found the gap
+before review, and validation had passed the first candidate with the clause
+missing.
+
+### Evidence
+
+Task workflow-budget-ratchet (iamcxa/kc-claude-plugins#658, closure revision
+098dcbd39972ead7323235a72ffb60761926da65, landed
+6ea3a4724515b974c34beb16bc3382683b6d45b9). The first candidate (57673bfd) cut 63
+words and shrank the resumed-dispatch sentence of references/sd/workflow.md to 'with
+the same check', dropping 'never a pointer to another record'. The author had read
+each script's failure output first (design table 'Measured pointer candidates'), and
+validation passed that head with 4 of 4 CI checks green. Codex round 1 raised one
+P2: kc-dev-flow-2/scripts/dispatch_records.py is_pointer rejects only words in
+POINTER_WORDS and its own docstring says 'Reuse the checklist of implementation-2.'
+passes, so nothing else forbids that pointer. Repair e65a91ba restored 15 words
+(budget step -79 to -64) and added the need string 'never a pointer to another
+record' to the resumed-dispatch pin in kc-dev-flow-2/scripts/test_sd_dispatch.py;
+with the README phrase removed that pin fails, and Codex round 2 was clean. At
+landed revision 6ea3a472 the phrase is in references/sd/workflow.md and in the pin
+(git show, checked in this evaluation). The pre-existing pins had not caught the
+drop. Recorded in spacedock-state/dev2:_archive/workflow-budget-ratchet.md under
+'### Feedback Cycles' and '## Stage Report: implementation (cycle 2)'.
