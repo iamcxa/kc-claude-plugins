@@ -25,6 +25,13 @@ SUPERSEDES = re.compile(r"^Supersedes:(.*)$", re.M)
 AC_ID = re.compile(r"AC-[A-Za-z0-9]+")
 DECLARATION_LINE = re.compile(r"^[ \t]*(?:>[ \t]*)*(?:(?:[-*+]|\d+[.)])[ \t]+)?\*\*(AC-[A-Za-z0-9]+)[^*\n]*\*\*")
 NO_REPLACEMENT = re.compile(r"no replacement", re.I)
+FRONTMATTER = re.compile(r"\A---\n(.*?\n)---\n", re.S)
+FM_PROFILE = re.compile(r"^profile:[ \t]*(\S+)[ \t]*$", re.M)
+FM_STATUS = re.compile(r"^status:[ \t]*(\S+)[ \t]*$", re.M)
+REVIEW_LINE = re.compile(r"^Security review:[ \t]*(\S.*)$", re.M)
+FOCUS_LINE = re.compile(r"^Security focus file:[ \t]*(\S.*)$", re.M)
+FINDING_LINE = re.compile(r"^Security finding (\d+):[ \t]*(\S.*)$", re.M)
+REPORT_FINDING = re.compile(r"^\s+severity:[ \t]*(CRITICAL|HIGH|MEDIUM|LOW)\b", re.M)
 TABLE = re.compile(r"^[ \t]*\|.*\|[ \t]*\n[ \t]*\|[ \t:|-]*-[ \t:|-]*\|?[ \t]*$", re.M)
 
 
@@ -133,7 +140,46 @@ def check_amendments(name, lines, declared, errors):
             errors.append(f"{name}: '{title}' supersedes {', '.join(sorted(named))} but no criterion says 'Amended by Captain, amendment {number}' and its 'Supersedes:' line does not say 'no replacement'")
 
 
-def check_task(path, seed=False):
+def check_security(path, body, declared, errors):
+    name = path.name
+    review = REVIEW_LINE.search(body)
+    if not review:
+        errors.append(f"{name}: a prod task needs a 'Security review:' line naming the saved report")
+        return None
+    value = review.group(1).strip()
+    if value.lower().startswith("not run"):
+        errors.append(f"{name}: security review not run ({value}); a missing reviewer holds the stage")
+        return None
+    report = path.parent / path.stem / value
+    if Path(value).is_absolute() or ".." in Path(value).parts or not report.is_file():
+        errors.append(f"{name}: 'Security review:' names '{value}', not a report file inside the task folder")
+        return None
+    text = report.read_text()
+    if not re.search(r"^tob_security_review:", text, re.M):
+        errors.append(f"{name}: '{value}' is not a tob_security_review report")
+        return None
+    if not FOCUS_LINE.search(body):
+        errors.append(f"{name}: a prod task needs a 'Security focus file:' line (a path, or none)")
+    severities = REPORT_FINDING.findall(text)
+    found = len(severities)
+    lines = {int(n): v.strip() for n, v in FINDING_LINE.findall(body)}
+    tally = {"ac": 0, "declined": 0, "decision": 0}
+    for number in range(1, found + 1):
+        entry = lines.get(number, "")
+        if re.fullmatch(r"AC-[A-Za-z0-9]+", entry.split()[0] if entry else "") and entry.split()[0] in declared:
+            tally["ac"] += 1
+        elif re.match(r"declined:\s*\S", entry) and severities[number - 1] in ("MEDIUM", "LOW"):
+            tally["declined"] += 1
+        elif re.match(r"Needs decision:\s*\S", entry):
+            tally["decision"] += 1
+        else:
+            errors.append(f"{name}: report finding {number} has no 'Security finding {number}:' line naming a declared AC-<id>, 'declined: <reason>' (MEDIUM or LOW only) or 'Needs decision: <text>'")
+    for number in sorted(set(lines) - set(range(1, found + 1))):
+        errors.append(f"{name}: 'Security finding {number}:' has no finding in '{value}' ({found} listed)")
+    return f"security review {value}: {found} findings, {tally['ac']} acceptance criteria, {tally['declined']} declined, {tally['decision']} decisions"
+
+
+def check_task(path, seed=False, notes=None):
     errors = []
     text = path.read_text()
     if not FO_HEADING.search(text):
@@ -171,6 +217,13 @@ def check_task(path, seed=False):
     lines = text.split("\n")
     declared = check_criteria(path.name, lines, errors)
     check_amendments(path.name, lines, declared, errors)
+    front = FRONTMATTER.match(text)
+    profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
+    if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):
+        plain = "\n".join(unfenced(lines))
+        summary = check_security(path, plain, set(AC_DECLARATION.findall(plain)), errors)
+        if summary and notes is not None:
+            notes.append(summary)
     return errors
 
 
@@ -182,11 +235,14 @@ def main(argv=None):
     check.add_argument("task")
     args = parser.parse_args(argv)
     path = Path(args.task)
-    errors = check_task(path, seed=args.seed)
+    notes = []
+    errors = check_task(path, seed=args.seed, notes=notes)
     for error in errors:
         print(error)
     if not errors:
         print(f"{path.name}: {'FO alignment recorded' if args.seed else 'design surfaces presentable'}")
+        for note in notes:
+            print(note)
     return 1 if errors else 0
 
 

@@ -463,5 +463,140 @@ class AmendmentTests(unittest.TestCase):
         self.assertTrue(self.errors(FENCED_EXAMPLE, module=mutant))
 
 
+REPORT = """tob_security_review:
+  pr: none
+  findings:
+    - file: "design"
+      severity: HIGH
+      title: "first"
+    - file: "design"
+      severity: MEDIUM
+      title: "second"
+    - file: "design"
+      severity: LOW
+      title: "third"
+"""
+
+REVIEW_LINES = """Security review: security/ideation-1.yaml
+Security focus file: none
+Security finding 1: AC-2
+Security finding 2: declined: the design accepts and bounds it
+Security finding 3: Needs decision: publish the file or not
+"""
+
+PROD = """---
+title: a prod task
+profile: prod
+status: ideation
+---
+
+## FO alignment
+
+Surfaces: none
+Visible change: none
+
+## Design
+
+### Security review
+
+{review}
+## Acceptance criteria
+
+**AC-1**: a.
+Verified by: a test.
+**AC-2**: b.
+Verified by: a test.
+"""
+
+
+class SecurityReviewTests(unittest.TestCase):
+    def run_check(self, review=REVIEW_LINES, report=REPORT, module=ds, profile="prod", status="ideation", outside=False):
+        text = PROD.format(review=review).replace("profile: prod", f"profile: {profile}").replace("status: ideation", f"status: {status}")
+        with tempfile.TemporaryDirectory() as d:
+            folder = Path(d, "task", "security")
+            folder.mkdir(parents=True)
+            if report is not None:
+                folder.joinpath("ideation-1.yaml").write_text(report)
+                if outside:
+                    Path(d, "x.yaml").write_text(report)
+            path = Path(d, "task.md")
+            path.write_text(text)
+            notes = []
+            return module.check_task(path, notes=notes), notes
+
+    def refused(self, why, **kwargs):
+        errors, _ = self.run_check(**kwargs)
+        self.assertEqual(len([e for e in errors if why in e]), 1, errors)
+        return errors
+
+    def test_a_reviewed_prod_design_passes_and_prints_one_short_line(self):
+        errors, notes = self.run_check()
+        self.assertEqual(errors, [])
+        self.assertEqual(notes, ["security review security/ideation-1.yaml: 3 findings, 1 acceptance criteria, 1 declined, 1 decisions"])
+        self.assertLessEqual(len(notes[0].split()), 12)
+
+    def test_each_refusal_names_its_own_reason(self):
+        lines = REVIEW_LINES
+        cases = {
+            "no review line": (lines.replace("Security review: security/ideation-1.yaml\n", ""), "needs a 'Security review:' line"),
+            "not run": (lines.replace("security/ideation-1.yaml", "not run: kc-pr-flow not installed", 1), "security review not run"),
+            "missing report": (lines.replace("ideation-1.yaml", "ideation-9.yaml", 1), "not a report file inside the task folder"),
+            "absolute path": (lines.replace("security/ideation-1.yaml", "/etc/hosts", 1), "not a report file inside the task folder"),
+            "no focus line": (lines.replace("Security focus file: none\n", ""), "needs a 'Security focus file:' line"),
+            "finding without a line": (lines.replace("Security finding 2: declined: the design accepts and bounds it\n", ""), "report finding 2 has no"),
+            "undeclared criterion": (lines.replace("finding 1: AC-2", "finding 1: AC-99"), "report finding 1 has no"),
+            "empty decline": (lines.replace("declined: the design accepts and bounds it", "declined:"), "report finding 2 has no"),
+            "declined high": (lines.replace("finding 1: AC-2", "finding 1: declined: accepted"), "report finding 1 has no"),
+            "extra line": (lines + "Security finding 4: Needs decision: x\n", "'Security finding 4:' has no finding"),
+        }
+        for label, (review, why) in cases.items():
+            with self.subTest(label):
+                self.refused(why, review=review)
+
+    def test_a_file_that_is_not_a_review_report_and_a_path_leaving_the_task_folder_are_refused(self):
+        self.refused("is not a tob_security_review report", report="findings:\n  - severity: LOW\n")
+        self.refused("not a report file inside the task folder", review=REVIEW_LINES.replace("security/ideation-1.yaml", "../x.yaml", 1), outside=True)
+
+    def test_a_task_of_another_profile_or_past_ideation_is_unchanged(self):
+        for profile, status in (("pilot", "ideation"), ("poc", "ideation"), ("prod", "implementation")):
+            with self.subTest(profile=profile, status=status):
+                errors, notes = self.run_check(review="", report=None, profile=profile, status=status)
+                self.assertEqual((errors, notes), ([], []))
+
+    def test_a_declined_medium_and_an_acceptance_criterion_on_any_severity_pass(self):
+        errors, _ = self.run_check(review=REVIEW_LINES.replace("finding 1: AC-2", "finding 1: AC-1"))
+        self.assertEqual(errors, [])
+
+    def test_mutation_dropping_the_security_call_lets_a_missing_review_pass(self):
+        mutant = mutated("summary = check_security(path, plain, set(AC_DECLARATION.findall(plain)), errors)", "summary = None")
+        review = REVIEW_LINES.replace("Security review: security/ideation-1.yaml\n", "")
+        self.assertTrue(self.run_check(review=review)[0])
+        self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+
+    def test_mutation_dropping_the_severity_test_lets_a_declined_high_pass(self):
+        mutant = mutated(' and severities[number - 1] in ("MEDIUM", "LOW")', "")
+        review = REVIEW_LINES.replace("finding 1: AC-2", "finding 1: declined: accepted")
+        self.assertTrue(self.run_check(review=review)[0])
+        self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+
+    def test_mutation_dropping_the_not_run_rule_changes_its_reason(self):
+        mutant = mutated('if value.lower().startswith("not run"):', "if False:")
+        review = REVIEW_LINES.replace("security/ideation-1.yaml", "not run: kc-pr-flow not installed", 1)
+        self.assertTrue(any("security review not run" in e for e in self.run_check(review=review)[0]))
+        self.assertFalse(any("security review not run" in e for e in self.run_check(review=review, module=mutant)[0]))
+
+    def test_mutation_dropping_the_folder_rule_lets_a_path_outside_pass(self):
+        mutant = mutated(' or ".." in Path(value).parts', "")
+        review = REVIEW_LINES.replace("security/ideation-1.yaml", "../x.yaml", 1)
+        self.assertTrue(self.run_check(review=review, outside=True)[0])
+        self.assertEqual(self.run_check(review=review, outside=True, module=mutant)[0], [])
+
+    def test_mutation_checking_every_profile_and_stage_fails_the_unchanged_cases(self):
+        mutant = mutated('if profile and status and (profile.group(1), status.group(1)) == ("prod", "ideation"):', "if profile and status:")
+        self.assertEqual(self.run_check(review="", report=None, profile="pilot")[0], [])
+        self.assertTrue(self.run_check(review="", report=None, profile="pilot", module=mutant)[0])
+        self.assertTrue(self.run_check(review="", report=None, status="implementation", module=mutant)[0])
+
+
 if __name__ == "__main__":
     unittest.main()
