@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:workflow-budget-ratchet:validation:attempt-1:revision-1",
+  "question": "Deliver #658 head e65a91ba (the workflow word budget only goes down: a README raise needs a budget step carrying the Captain's quoted words and the moment the text is read; three script-checked rules shrink to pointers): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the Deferred risk and Polish below into backlog task workflow-budget-ratchet-followups, and lets FO replace the PR body with the corrected one (/tmp/pr658-body-new.md: 5447 words, step -64, and the attribution line), since the worker's own body edit was refused by the permission check. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:workflow-budget-ratchet:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/090c87add514eb65c027987d020cec8239457053/workflow-budget-ratchet.md",
+      "rev": "sha256:8c5891a2d04ecd579e7fb0d2cff911a96f44fe9e0df15896e627afd18c4354a3",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at e65a91ba (validation-2, recheck after one repair cycle; base 19fe3b5b is current main). FO ran the acceptance script as written in env -i bash: every line matched (lint 5447 of 5447 exit 0; one word added fails with the raise-step instruction; one word removed fails with the cut-step instruction; 31 tests OK; adr_lint --require 20 exit 0; README 5495 to 5447; the restored resumed-dispatch phrase present once). Words FO reads: README 5495 to 5447; dispatch build 380 to 368; ideation gate 342 to 329; amendment entry 414 to 391; merge ask 465 unchanged. ADR 0020. External rounds: Codex 2 (round 1 one P2: the shrink dropped 'never a pointer to another record', which the script does not fully enforce; fixed by restoring 15 words; round 2 clean, comment receipt 2026-10-17T11:38Z). RoboRev local (797), not counted. Declined, with reasons: Deferred risk, editing an existing budget step's delta raises the budget with no ruling (visible in the diff like a START edit; closing it needs the lint to read base); Polish, two unpinned message tails, two comment lines that restate code, two literal greps blind to line wrapping; root learning.md still names WORKFLOW_WORD_BUDGET (a learning.md edit goes through its own PR). Second reviewer: copilot because the change alters approval rules (a README raise now needs a Captain ruling). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Limit: AC-9 (whether FO follows the new text) is a post-release measurement."
+    }
+  ]
+}

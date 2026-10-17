@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:workflow-budget-ratchet:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:workflow-budget-ratchet-validation-1
+              briefing:
+                id: briefing:workflow-budget-ratchet:validation:attempt-1:revision-1
+                digest: sha256:e5429d408327c312fa489faefe9d35bd2b2c4262785e7b053aedb648ab5e2342
+                room-ref: ./workflow-budget-ratchet/review/validation/briefing-1
 started: 2026-10-17T06:11:09Z
 worktree: .worktrees/spacedock-ensign-workflow-budget-ratchet
 pr: iamcxa/kc-claude-plugins#658
