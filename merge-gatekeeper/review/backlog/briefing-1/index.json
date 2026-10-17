@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-gatekeeper:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Production and enter ideation as part of batch 2 (workflow-budget-ratchet, special-role-triggers, worker-loads-declared-package, prod-security-validation-gate, ui-design-review-in-ideation, merge-gatekeeper)? Approving accepts profile prod as recommended, and that the six ideations run in parallel, each with a Batch overlap item; special-role-triggers stacks on workflow-budget-ratchet because both edit the workflow rules and the new rule must fit the lowered budget.",
+  "artifacts": [
+    {
+      "id": "artifact:merge-gatekeeper:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/463f4aa0e2cdd732a0b2eaf82b826d1a7667282e/merge-gatekeeper.md",
+      "rev": "sha256:8b2e0c825b633653fe6f031ac167d615bb03ec0c3369d44c53d6989120925d09",
+      "mediaType": "text/markdown",
+      "summary": "Seed: the Captain's request (chat 2026-10-16): a gatekeeper judges whether a PR can merge, lets FO merge one above a bar (his example 95%), and lists what he should look at; goals: fewer FO merge accidents and less eye review. Recommended profile prod: it changes merge authority and may send PR text to an outside service. Ideation owes: the bite counted (FO merge accidents, review time per PR), a calibrated bar, the model or product (OpenAI Decisions API beta, Codex, TypeSafe Jev), an ADR draft superseding ADR 0011's never-delegated merge clause, and data sharing per repository; expect Needs decisions at its gate."
+    }
+  ]
+}

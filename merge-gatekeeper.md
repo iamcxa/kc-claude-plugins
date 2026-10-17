@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:merge-gatekeeper:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:merge-gatekeeper-backlog-1
+              briefing:
+                id: briefing:merge-gatekeeper:backlog:attempt-1:revision-1
+                digest: sha256:52c1227978e4bda4653bb324f98a2a0ff7ab4e7bb34ecc048a756e417d5e7d5d
+                room-ref: ./merge-gatekeeper/review/backlog/briefing-1
 ---
 
 Filed on the Captain's request (chat, 2026-10-16): 「我想新增一張票，設計一個 codex 的 PR 守門員，它的任務是確保 P R 可以合併，類似 JEV 那樣的工作，只要例如 PR 超過 95% 沒問題，那就讓它帶我授權 FO 合併 PR，相應的但是也要讓它負責提出我需要注意的點……這件事的目的是，減低 FO 自己合併 PR 的意外，以及減低我每次都要肉眼 review PR 的負擔」
