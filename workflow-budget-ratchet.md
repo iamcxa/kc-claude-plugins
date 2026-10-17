@@ -235,3 +235,23 @@ ADR: 0020
 ### Summary
 
 The ratchet is one change in `lint-skills.py`: the budget becomes a start value plus recorded steps, the README count must equal it, and a raise step must quote the Captain and name the moment FO reads the added text. The shrink is small (63 words, 1.1%) because most README mass is FO procedure; the pointers are limited to the dispatch-record parts, the acceptance-criteria and amendment defects. Not measured: whether FO runs the new dispatch-record step (AC-9 measures it after release); Number guards (745 words) was not read and is proposed as a follow-up (D4).
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main implementing D1 to D4 as recommended: the recorded budget steps in kc-dev-flow-2/scripts/lint-skills.py (a raise carries the Captain's quoted words and a loaded: moment; a cut lowers the budget in the same change) and the three pointer shrinks in kc-dev-flow-2/references/sd/workflow.md (63 words); the ADR is the one under ## Number guards; every acceptance criterion in the task file green, each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  PR https://github.com/iamcxa/kc-claude-plugins/pull/658 (Draft), head 57673bfd0a51 on base 19fe3b5b3d34 (origin/main); README 5495 to 5432 = 63 words; ADR 0020 (`adr_lint.py --since origin/main --require 20` exit 0). AC-1 `lint-skills.py` prints `5432 of 5432 words`, no `# 5xxx:` comment lines. AC-1/2 mutations (python3 -B, caches cleared): dropping the under branch fails 2 cases; dropping `delta > 0` fails the 4 raise-step cases. AC-4 reverting the README sentence fails the `dispatch-record` pin; `test_sd_dispatch.py --sd-plugin-root <spacedock 0.27.0>` exit 0 at head. AC-5 rewording either message fails `test_design_surfaces.py` (new test `test_the_two_messages_the_readme_does_not_restate_are_worded_as_pointed_at`; the four amendment messages were already pinned by existing AmendmentTests substrings). AC-6 `git diff origin/main` on dispatch_records.py, laws_check.py, pr_watch.py, delivery_gate.py, observer_check.py, laws.md is empty. AC-7 old maintain-flow sentence gone. AC-8 see ADR. AC-3 per-moment recount (my script, saved at `workflow-budget-ratchet/validation/recount.py`; validation must recount independently): 5495/5432, 380/353 (357 with the 4-word clean output), 342/329, 414/391, 465/465. AC-9 is post-release, not run.
+- DONE: No FO-read word added beyond the design; the candidate's own kc-dev-flow-2/scripts/lint-skills.py exits 0; roborev evidence= line; push without force; CI green on the PR head; CI cost measured or stated as not measured
+  `lint-skills.py` exit 0 at head; roborev: `clean on 57673bfd0; evidence=roborev:794`; pushed once, no force. Words per moment fall or are equal (above); the one added README phrase is the `dispatch_records.py <task folder>` run step the design names. comment_ratio.py: 2 comment lines of 96 code lines, 2.1%, max 5% met. number_guards.py check: PASS no findings. design_surfaces.py check on this file: presentable. CI cost: no new job or step, not measured.
+- FAILED: CI green on the PR head
+  Not verified: `gh pr checks` and `gh pr edit` were refused by the auto-mode permission classifier after the PR was created, so CI state is unknown and the PR body lacks the closing attribution line; FO or the Captain must read the checks and add the line.
+
+### Affected documents (doc_impact.py origin/main HEAD)
+- docs/adr/0020-...md: updated
+- kc-dev-flow-2/skills/maintain-flow/SKILL.md: updated (raise needs a Captain ruling in the budget steps; cut lowers it)
+- kc-dev-flow-2/README.md: unaffected: names lint-skills.py and the word budget, not the comparison or the constant
+- kc-dev-flow-2/references/sd/adoption.md: unaffected: names test_sd_dispatch.py as the run command only
+- learning.md: review needed, not changed (outside the design's file list): line 205 cites `WORKFLOW_WORD_BUDGET in kc-dev-flow-2/scripts/lint-skills.py` as an example, and that symbol no longer exists (now `WORKFLOW_BUDGET_START` and `WORKFLOW_BUDGET_STEPS`); FO to decide the one-word edit.
+
+### Summary
+
+The budget is now START plus recorded steps in `lint-skills.py`; the README count must equal it, a raise step needs a quoted Captain ruling and a `loaded` moment, and the candidate carries one cut step of -79 (5511 to 5432). The dispatch-record, acceptance-criteria and amendment-defect prose now points at the scripts that print those defects. Limits: the check covers form and arithmetic only; the CI result and PR-body attribution line are unverified (permission denial above); learning.md has one stale symbol outside this task's file list.
