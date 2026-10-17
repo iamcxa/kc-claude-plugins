@@ -245,3 +245,67 @@ Workers load the installed package whatever the README or the dispatch line says
 ### Summary
 
 Implemented D1(a): `--names` now prints one sentence for a validation-N record under `dispatch/` without a Candidate line, using `delivery_gate.CANDIDATE`; `--newest` and every other file are untouched. The checklist said "one test"; I wrote one parity/behaviour test plus one `--newest` test because AC-4 needs a git state the first fixture lacks. Not verified: whether an FO on the previous README acts on a printed non-name line.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #661 head 4989c97b against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for head 4989c97b657612ea75cd2df21ebfb1d00fed8762 (base 6ea3a472), run from a throwaway checkout of that head, `python3 -B`, package scripts from the candidate; mutations on a second throwaway copy, all removed (2026-10-17). Falsifiers per AC, each failed as the AC predicts. AC-1 part removed from `--names`: 1 test fails, fixture exits 0. AC-2 applied to every record name: 1 fails; dispatch-folder test dropped: 4 fail. AC-3 looser regex (39+ hex, any case): 3 fail; whole-file scope: 1 fails. AC-4 part moved into `check_names`: 2 fail; unmutated, `--newest` exits 0 with no output and `pr_watch.py tasks` prints nothing, exit 0, on a scratch git state with a Candidate-less newest record. AC-5 diff of workflow.md, lint-skills.py, package_version.py, delivery_gate.py is empty; lint-skills.py exit 0 (workflow.md 5447 of 5447). AC-6 and the baseline run: no line gives `--names` 1 and gate 2 ("no latest validation dispatch record ... has a 'Candidate:' line"); with the head `--names` 0 and gate 0 "next: ask for merge with this text."; other head gate 1 "differs from dispatched candidate"; the same record on 6ea3a472 gives `--names` 0. AC-7 file byte-identical, `test_package_version.py` 6 OK; changing the README-behind return to 1 fails 2 tests. AC-8 diff is one sentence ending "no check enforces this", no always/never/every; lint exit 0. Also run: test_dispatch_records 38 OK, test_delivery_gate 13 OK, test_pr_watch 69 OK. CI on the PR head: 4 of 4 checks SUCCESS (`gh pr view 661`, Draft, OPEN).
+- DONE: first validation; the checklist's 'one test' became two (a parity/behaviour test and a --newest test for AC-4), judge whether that is in scope; AC-6 scratch run with and without a Candidate line; confirm no README word and no edit to kc-dev-flow-2/scripts/delivery_gate.py
+  Two tests are in scope: the design's file list names `test_dispatch_records.py`, AC-3 and AC-4 each name a test, and deleting the `--newest` test lets the AC-4 mutation through (mutation above fails 2, one of them the new test). AC-6 run both ways (above). `git diff 6ea3a472 4989c97b -- references/sd/workflow.md scripts/delivery_gate.py` is empty; the diff touches three files only (dispatch_records.py +18/-1, test_dispatch_records.py +39, maintain-flow/SKILL.md +4); the sentence in maintain-flow names a README but adds no README text. Also confirmed in git: the v0.22.1 and v0.23.0 tags' workflow.md both tell FO to run `dispatch_records.py --names <record>` before `dispatch build`, so the claim the sentence and design rest on holds.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script in `### Minimal acceptance script` below; run with `env -i PATH HOME bash --noprofile --norc` exactly as written, all six steps matched the expected output (observed output below). `adr_lint.py docs/adr --since 6ea3a472` from the candidate checkout: "20 ADR file(s) checked, 0 legacy", exit 0. Other package checks at the candidate: comment_ratio 0 of 50 code lines, exit 0 (read the added lines: no comment beyond the import's `# noqa`); doc_impact 0 documents listed, exit 0; design_surfaces check exit 0; dispatch_records on this task folder "3 dispatch record(s) complete"; number_guards check PASS (no migrations-path, no `## Number guards`). Findings by disposition: no Material; Deferred risk 1, Polish 1, none Needs decision.
+
+### Findings
+
+- Deferred risk: whether an FO on the previous README acts on a printed line that is not a script name (the 0.22.1 README says it "rewrites each name it lists"). Not measured, as the implementation report states; an FO-only step cannot be replayed. Would become Material if an old-README FO is seen ignoring the line and then holding at the merge ask while the task is still before dispatch; that outcome equals today's baseline (the unchanged merge-ask hold), so the candidate adds no harm.
+- Polish: the new test's name says "exactly as the merge gate reads it" and the maintain-flow sentence says "only FO writes". The test enforces the claim for six line shapes by comparing both scripts' verdicts (mutation 3a/3b fail it), so the word is bounded by the test; "only" is a restrictive clause, not an absolute claim. No repair asked.
+- Limit, not a finding: a task already past dispatch with no line still meets the 30-word hold once (design-stated). `--names` on a missing file raises FileNotFoundError, identical on 6ea3a472. Codex hosts not exercised. Billed CI minutes not measured.
+
+### Minimal acceptance script
+
+Run in a fresh bash shell. Needs git, python3, and a checkout of iamcxa/kc-claude-plugins at the REPO path (it adds and removes its own temporary worktree). Does not cover: a real first officer acting on the printed line, tasks already past dispatch, Codex hosts, or the rest of the package.
+
+```
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+HEAD=4989c97b657612ea75cd2df21ebfb1d00fed8762
+W=$(mktemp -d)
+# 1. Check out the PR #661 head in a throwaway worktree.
+git -C "$REPO" fetch -q origin pull/661/head && git -C "$REPO" worktree add -q --detach "$W/co" $HEAD && git -C "$W/co" log --oneline -1
+S="$W/co/kc-dev-flow-2/scripts"
+# 2. Make a validation dispatch record in the 0.22.1 shape (no Candidate line).
+mkdir -p "$W/state/demo/dispatch" && touch "$W/state/demo.md" "$W/empty.txt"
+printf '# demo\n\nDispatched: 2026-10-17; state before dispatch commit 22d372bffe5d6352d65ef7c7520a311596caec3d\nModel: sonnet\n\n## Checklist\n\n1. Independent verdict\n\n## Scope notes\n\nPackage root: /abs/kc-dev-flow-2\n' > "$W/state/demo/dispatch/validation-1.md"
+# 3. The pre-send check names the missing line.
+python3 -B "$S/dispatch_records.py" --names "$W/state/demo/dispatch/validation-1.md"; echo "exit $?"
+# 4. Add the Candidate line; the same check is silent, and the merge-ask check agrees.
+awk -v h=$HEAD '{print} /^Model:/{print "Candidate: " h}' "$W/state/demo/dispatch/validation-1.md" > "$W/v.new" && mv "$W/v.new" "$W/state/demo/dispatch/validation-1.md"
+python3 -B "$S/dispatch_records.py" --names "$W/state/demo/dispatch/validation-1.md"; echo "exit $?"
+python3 -B "$S/delivery_gate.py" check "$W/state/demo.md" --pr o/r#1 --head $HEAD --text-file "$W/empty.txt"; echo "exit $?"
+# 5. A different head is refused by the merge-ask check.
+python3 -B "$S/delivery_gate.py" check "$W/state/demo.md" --pr o/r#1 --head aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --text-file "$W/empty.txt"; echo "exit $?"
+# 6. Run the script's own test file, then clean up.
+python3 -B "$S/test_dispatch_records.py" 2>&1 | tail -3
+git -C "$REPO" worktree remove --force "$W/co"; rm -rf "$W"
+```
+
+Expected and observed (2026-10-17):
+
+```
+4989c97b fix(kc-dev-flow-2): dispatch_records --names asks for a missing Candidate line in a validation record
+<tmp>/state/demo/dispatch/validation-1.md:1: no 'Candidate: <40-hex head>' line; add one per head to validate above the first '## ' heading, then run this check again
+exit 1
+exit 0
+PR head 4989c97b... equals dispatched candidate 4989c97b...; no second reviewer outcome is missing
+next: ask for merge with this text.
+exit 0
+PR head aaaaaaaa... differs from dispatched candidate 4989c97b... (latest validation record validation-1.md)
+next: hold the ask; revalidate this head or tell the Captain the difference.
+exit 1
+Ran 38 tests in 1.030s
+
+OK
+```
+
+### Summary
+
+Recommend PASSED for head 4989c97b657612ea75cd2df21ebfb1d00fed8762: all eight criteria hold under my own runs and at least one falsifier each, the second test is in scope, and delivery_gate.py and the README are untouched. One Deferred risk (old-README FO behaviour on a non-name line, unmeasured, no worse than baseline) and one Polish note; no repair requested. Throwaway worktrees I added are removed.
