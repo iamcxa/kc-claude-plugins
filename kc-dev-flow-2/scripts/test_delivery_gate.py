@@ -423,7 +423,7 @@ GRANTS = "merge-grants: [docs-only:rule:0.95:squash:ADR 0024]\n"
 MERGE_LINE = (f"next: run gh pr merge 9 --repo o/r --squash --match-head-commit {HEAD40} --subject 'feat(x): y' --body '' now; "
               "when gh pr view says MERGED, tell the Captain with the points above; otherwise ask him.")
 EXT = "extensions: [roborev, codex]\n"
-EVIDENCE_TASK = TASK + f"roborev: clean on {HEAD40[:9]}; evidence=roborev:42\n"
+EVIDENCE_TASK = TASK + f"roborev: clean on {HEAD40}; evidence=roborev:42\n"
 
 
 class HoldTests(unittest.TestCase):
@@ -548,7 +548,9 @@ class ClassTests(unittest.TestCase):
              "kc-dev-flow-2/extensions/codex/codex_review.py", "kc-dev-flow-2/scripts/pr_watch.py",
              "kc-dev-flow-2/scripts/test_delivery_gate.py", "kc-dev-flow-2/scripts/delivery_gate.py", "kc-dev-flow-2/scripts/lint-skills.py",
              "kc-dev-flow-2/scripts/test_decision_ledger.py", "kc-dev-flow-2/scripts/validation_security.py",
-             "kc-dev-flow-2/scripts/test_validation_security.py", "kc-dev-flow-2/scripts/number_guards.py", "CLAUDE.md", "kc-dev-flow-2/CLAUDE.md", "AGENTS.md", "learning.md",
+             "kc-dev-flow-2/scripts/test_validation_security.py", "kc-dev-flow-2/scripts/number_guards.py",
+             "kc-dev-flow-2/scripts/workflow_checkout.py", "kc-dev-flow-2/scripts/sd_dispatch.py", "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+             "kc-dev-flow-2/scripts/anything-new.sh", "CLAUDE.md", "kc-dev-flow-2/CLAUDE.md", "AGENTS.md", "learning.md",
              ".github/workflows/ci.yml", ".claude/settings.json", "docs/adr/0001-x.md", "docs/dev2/notes.md", "docs/dev2/_mods/x.md",
              "docs/dev/README.md", "app/migrations/001.sql", "kc-dev-flow-2/agents/engineering.md", "kc-dev-flow-2/references/x.md",
              ".release-please-manifest.json", "release-please-config.json", "kc-dev-flow-2/.claude-plugin/plugin.json",
@@ -634,7 +636,9 @@ class GrantTests(unittest.TestCase):
         "codex running": dict(codex_exit=3),
         "codex not reviewed": dict(codex_exit=4),
         "roborev left no evidence": dict(task=TASK),
-        "roborev evidence for another head": dict(task=TASK + f"roborev: clean on {S2[:9]}; evidence=roborev:42\n"),
+        "roborev evidence for another head": dict(task=TASK + f"roborev: clean on {S2}; evidence=roborev:42\n"),
+        "roborev evidence by prefix only": dict(task=TASK + f"roborev: clean on {HEAD40[:9]}; evidence=roborev:42\n"),
+        "roborev evidence not a whole line": dict(task=TASK + f"x roborev: clean on {HEAD40}; evidence=roborev:42 (stale)\n"),
         "a failed record in the class": dict(setup="failure", per_pr={5: dict(state="CLOSED", headRefOid="5" * 40)}),
     }
 
@@ -662,8 +666,11 @@ class GrantTests(unittest.TestCase):
             "key absent": ('lists.get("merge-grants", [])', 'lists.get("merge-grants", ["docs-only:rule:0.95:squash:ADR 0001"])'),
             "a failed record in the class": ('and not any(state == "failure"', "and not any(False"),
             "codex findings": ('.returncode:\n        return False', '.returncode:\n        return True'),
-            "roborev left no evidence": ('return "roborev" not in extensions or any(', 'return True or any('),
-            "roborev evidence for another head": ('any(head.startswith(h) for h in bound)', 'bool(bound)'),
+            "roborev left no evidence": ('return "roborev" not in extensions or head in bound', 'return True or head in bound'),
+            "roborev evidence for another head": ('head in bound', 'bool(bound)'),
+            "roborev evidence by prefix only": ('r"^roborev: clean on ([0-9a-f]{40}); evidence=roborev:\\d+$", task_text, re.M)\n    return "roborev" not in extensions or head in bound',
+                                                'r"^roborev: clean on ([0-9a-f]{7,40}); evidence=roborev:\\d+$", task_text, re.M)\n    return "roborev" not in extensions or any(head.startswith(h) for h in bound)'),
+            "roborev evidence not a whole line": ('r"^roborev: clean on ([0-9a-f]{40}); evidence=roborev:\\d+$"', 'r"roborev: clean on ([0-9a-f]{40}); evidence=roborev:\\d+"'),
             "a point": ('verdict = "merge" if not points', 'verdict = "merge" if True'),
         }
         for label, (old, new) in mutations.items():

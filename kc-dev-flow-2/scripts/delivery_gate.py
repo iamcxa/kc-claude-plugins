@@ -21,8 +21,8 @@ one `class:` line (never, docs-only, script-with-test or other, by allowlist), t
 and one last `next:` line. The README frontmatter key `merge-grants:` lists `<class>:rule:<threshold>:<method>:ADR <NNNN>`
 entries (method squash, merge or rebase; the rule arm ignores the threshold). The `next:` line is the merge line
 (`gh pr merge ... --match-head-commit <candidate>`) only when the class has a valid grant entry (the entry pattern admits no `never` class), no point was printed, the title is
-a Conventional Commit, the candidate is the PR head, a listed codex reader exits 0 on the head, a listed roborev left a
-`clean on <head>; evidence=roborev:<job>` line in the task for that head, and no record of the class is labelled a failure. Otherwise it is the ask line.
+a Conventional Commit, the candidate is the PR head, a listed codex reader exits 0 on the head, a listed roborev left the whole line
+`roborev: clean on <40-hex candidate>; evidence=roborev:<job>` in the task, and no record of the class is labelled a failure. Otherwise it is the ask line.
 
 calibrate. Labels each `merge/ask-<N>.json` of the workflow's active and archived tasks, keeping the newest per PR and head:
 failure when the PR closed unmerged, merged at another head, a revert of its merge commit (`This reverts commit <sha>`) reached the
@@ -59,8 +59,7 @@ NEVER_PATH = [
     re.compile(r"(?:^|/)(?:CLAUDE|AGENTS)\.md$|(?:^|/)learning\.md$"),
     re.compile(r"(?:^|/)(?:release-please-config|\.release-please-manifest|plugin|marketplace)\.json$"),
     re.compile(r"(?:^|/)[^/]*(?:gate|budget)[^/]*$"),
-    re.compile(r"(?:^|/)(?:test_)?(?:pr_watch|decision_ledger|lint[-_]skills|validation_security|design_surfaces|number_guards|adr_lint|laws_check"
-               r"|observer_check|dispatch_records|doc_impact|comment_ratio|learning|poc_readme|package_version|replay_dispatch)\.py$"),
+    re.compile(r"(?:^|/)kc-dev-flow-2/scripts/"),
 ]
 VALIDATION_SECTION = re.compile(r"^## Stage Report: validation[^\n]*\n(.*?)(?=^## |\Z)", re.M | re.S)
 FO_DECLINES = re.compile(r"^### FO declines[ \t]*\n(.*?)(?=^#{1,3} |\Z)", re.M | re.S)
@@ -370,8 +369,8 @@ def reviewers_clean(lists, repo, number, task_text, head):
     extensions = lists.get("extensions", [])
     if "codex" in extensions and subprocess.run([sys.executable, str(CODEX_READER), repo, number], capture_output=True, timeout=120).returncode:
         return False
-    bound = re.findall(r"clean on ([0-9a-f]{7,40}); evidence=roborev:\d+", task_text)
-    return "roborev" not in extensions or any(head.startswith(h) for h in bound)
+    bound = re.findall(r"^roborev: clean on ([0-9a-f]{40}); evidence=roborev:\d+$", task_text, re.M)
+    return "roborev" not in extensions or head in bound
 
 
 def write_record(task, rec):
