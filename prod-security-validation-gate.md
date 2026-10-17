@@ -3,7 +3,7 @@ title: A prod task's validation gate carries a security review that reaches code
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-17T06:11:21Z
 worktree: .worktrees/spacedock-ensign-prod-security-validation-gate
+pr: iamcxa/kc-claude-plugins#659
 ---
 
 Filed on the Captain's 「照這樣做」 (chat, 2026-10-16), split out of `prod-security-review-gates` (its amendment 2 keeps the design-stage review there).
