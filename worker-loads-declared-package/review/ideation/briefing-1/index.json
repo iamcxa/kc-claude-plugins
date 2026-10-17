@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-loads-declared-package:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts the recommendation D1: dispatch_records.py --names also reports a validation record with no Candidate: line (route 3 narrowed), not workers reading the dispatched Package root and not a dispatch hold when the README is behind; and FO's implementation order below.",
+  "artifacts": [
+    {
+      "id": "artifact:worker-loads-declared-package:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/772b70850527423fddda1bcf71b02b4fb099faef/worker-loads-declared-package.md",
+      "rev": "sha256:c7e99559b7c7e93a9807e8b05bb1e047db3328c31108fa279c8239b28871e457",
+      "mediaType": "text/markdown",
+      "summary": "Finding: a worker loads the installed plugin, and nothing in the package can change that (installed_plugins.json has one active entry, 0.24.0). The relay hold was on FO's side: 0.23.0's delivery_gate.py needs a Candidate: line that only the 0.23.0 README told FO to write; reproduced: --names exits 0 silently, delivery_gate.py exits 2 on the same record. Change: one script part, one test, one maintain-flow sentence, no README words. 'Sync later' still means README prose, frontmatter and _mods copies; scripts and skills reach every repository at plugin update. AC-1 to AC-8; baselines for AC-1, AC-6, AC-7 reproduced. Not measured: Codex hosts. Implementation order (FO, from the six Batch overlap sections): workflow-budget-ratchet and prod-security-validation-gate first in parallel; after the ratchet merges, worker-loads-declared-package, ui-design-review-in-ideation and special-role-triggers; merge-gatekeeper after prod-security-validation-gate (both edit delivery_gate.py). At most three workers at once."
+    }
+  ]
+}

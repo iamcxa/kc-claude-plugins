@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:worker-loads-declared-package:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:worker-loads-declared-package-ideation-1
+              briefing:
+                id: briefing:worker-loads-declared-package:ideation:attempt-1:revision-1
+                digest: sha256:ef081acfaa5d46988c9c19587d13b27e8496984e9436507b5a7eaeb7a36a6df0
+                room-ref: ./worker-loads-declared-package/review/ideation/briefing-1
 started: 2026-10-17T06:11:43Z
 ---
 
