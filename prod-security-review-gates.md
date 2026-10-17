@@ -443,3 +443,20 @@ The prod ideation step and its check are built from the approved design on a fre
 ### Summary
 
 The P2 reproduces: an item with no severity is counted as zero or dropped, so the prod ideation gate passes with no disposition. The fix is one item-based parser replacing the `severity:` line count; Phase 2 (one test per malformed shape, one mutation per rule) is not started, awaiting FO authorization. State report is not committed, per the no-commit instruction.
+
+## Stage Report: implementation (cycle 4, phase 2)
+
+- DONE: Apply the stdlib item parser to #656's security check, with a test per malformed shape and one mutation per rule
+  Commit 1e4cd1e8 on `spacedock-ensign/prod-security-review-gates-v2`, two files: `design_surfaces.py` (`report_severities` replaces the `REPORT_FINDING` severity-line count; a severity is read only at its item's key indent, on any line of the item) and `test_design_surfaces.py`. `python3 -B test_design_surfaces.py`: 76 run, OK (62 before; the two phase-1 tests now pass).
+  - Shape tests: no severity (item 2 named); unknown value (SEVERE, `high`, the template `CRITICAL | HIGH | MEDIUM | LOW`, empty); truncated item (cut after file, empty severity, bare dash, bare string); findings value not a list (word, mapping, key with no items, key at end of file, items at two indents); a `- ` and a `severity: CRITICAL` line inside `description: |` are not items and the real LOW is read; severity first, last and with a trailing comment.
+  - Mutations, each passes on the script and flips on its mutant: missing severity defaults to LOW (named error vanishes); scale test dropped (`SEVERE` accepted); scalar-value rule dropped (reason vanishes); empty-items rule dropped (`findings:` alone passes); `[]` literal dropped (a clean report is refused); any dash starts an item (block scalar splits); severity read at any depth (block-scalar text read as HIGH); key:value rule dropped (reason vanishes); indent rule dropped (a misindented item is swallowed); quote strip dropped (quoted HIGH refused). Two older mutation tests were rewritten for the new parser: the findings-key one (the mutant now crashes, accepted as no named refusal) and the quoted-severity one (now the quote strip).
+- DONE: Rerun the suite and the saved relay and control reports
+  All 19 saved reports under `security/` and `security/replay-c2/` (relay, relay-focus, control, validation replays) parse with finding counts identical to the old regex count and no problem; `lint-skills.py` prints `5495 of 5511 words`.
+- DONE: roborev until clean, at most twice
+  Run 1: `clean on 1e4cd1e80; evidence=roborev:764` (base 363558f6).
+- DONE: Push without force and report CI on the new head
+  Pushed cd3a5747..1e4cd1e8, no force. CI on 1e4cd1e8: unit tests (python3) pass 1m0s, version parity pass 55s, route gate pass 8s, GitGuardian pass. PR still Draft; no PR comment, review request or ready.
+
+### Summary
+
+The security check now counts `findings:` list items, requires each to carry a severity from CRITICAL, HIGH, MEDIUM, LOW, and fails closed with a named error on a non-list value, an empty key, a misindented list or an unreadable item. Limits: a hand-written line parser for the reviewer's own schema, not a YAML parser, so exotic YAML (flow-style items, anchors, tabs) is refused or misread rather than interpreted; duplicate `severity:` keys in one item take the first.
