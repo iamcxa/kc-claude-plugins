@@ -1,0 +1,27 @@
+[
+ {
+  "run": "B-P3-1",
+  "arm": "B",
+  "probe": "P3",
+  "rep": 1,
+  "followed": true,
+  "decider": "python3 /opt/kdf2/kc-dev-flow-2/scripts/number_guards.py reserve --kind adr --workflow-dir /work/app/docs/dev --repo /work/app --task /work/app/docs/dev/.spacedock-state/retry-queue.md",
+  "startup_words": 628,
+  "moment_words": 2074,
+  "files_read": [
+   "stage-implementation.md",
+   "number-guards.md",
+   "fo-steps-number-guards.md",
+   "stages.md",
+   "workflow-state.md"
+  ],
+  "other_tools": [],
+  "tokens": 42850,
+  "seconds": 9.7,
+  "cost_usd_imputed": 0.0726166,
+  "is_error": false,
+  "model": [
+   "claude-sonnet-5-5"
+  ]
+ }
+]
