@@ -3,7 +3,7 @@ title: chief-engineer and engineering-reviewer start on recorded events, not on 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain approved in chat (「那就照建議」, after asking FO to restate the merge-gatekeeper D1 reasoning) the six batch-2 ideation gates presented together in one message, accepting each task's stated recommendations and FO's implementation order
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-17T06:11:15Z
 ---
 
