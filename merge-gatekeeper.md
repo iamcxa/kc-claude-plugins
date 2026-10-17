@@ -24,3 +24,10 @@ Filed on the Captain's request (chat, 2026-10-16): 「我想新增一張票，�
 - OpenAI Decisions API, verified on https://developers.openai.com/api/docs/guides/decisions (read 2026-10-17): `POST /v1/decisions`, public beta ("we expect to GA in the coming weeks"), `gpt-6-luna` the only model. A `choice` question takes `name`, `instructions` and `choices` (`value`, `description`); the answer returns `choice`, a `probabilities` array over the options and a separate `confidence` field. No calibration claim: the page advises setting thresholds from labelled examples. Input $0.10 per million tokens, output free. Zero Data Retention supported for eligible customers; US and EU data residency.
 - Codex (`codex exec`, 2026-10-17) suggested the Decisions API plus: enforce the deterministic checks first (head equals the validated candidate, required CI green); calibrate on labelled historical PR snapshots split by time (logistic or isotonic on a held-out set, tested on untouched history); allow a merge only where calibrated P(merge) >= 0.95 and the lower confidence bound of precision on the accepted subset meets the target; otherwise "needs human". Codex's other claims (logprobs on `gpt-6-sol` / `gpt-6-luna` only at reasoning effort none; Evals graders) are unverified.
 - TypeSafe Jev: see Scope.
+
+## FO alignment
+
+Alignment: not needed before ideation; the Captain approved filing it (his words are at the top of this file).
+Release review: not needed: workflow maintenance, on no journey map.
+Surfaces: none
+Visible change: none
