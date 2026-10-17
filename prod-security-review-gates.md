@@ -484,3 +484,76 @@ The security check now counts `findings:` list items, requires each to carry a s
 ### Summary
 
 The check now accepts only the reviewer's documented report shape and refuses everything else with its own error, rather than parsing more shapes. Limit (known, per the round-3 rule): a report that mentions `findings:` or `severity:` as a key-like line inside a description, or a second root-like line, is held as a false hold; none of the 19 saved reports does. One roborev finding beyond the three rules (scalar root) was fixed as a fourth refusal.
+
+## Stage Report: validation (cycle 3)
+
+Candidate: iamcxa/kc-claude-plugins#656 head a741e357ce35251d68f45a0064dcce8cc3178676 (Draft, base 363558f6, CI green: unit tests, version parity, route gate, GitGuardian), checked out detached in a throwaway worktree, removed after. Package scripts: `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/`; `test_sd_dispatch.py` not run (needs a plugin root; not under test).
+
+- DONE: Independent verdict on PR #656 head a741e357 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  **Recommend REJECTED at a741e357: one Material finding (F1).** AC-8..AC-14 otherwise hold. AC-8: 4-file stat, 0-byte diff over references, extensions, observer, README; `lint-skills.py` exit 0 `5495 of 5511`; sensitivity: the same diff over `skills/ideation` is 3,974 bytes. AC-9/10: `mutations.sh` on `c2-relay-1.yaml` as `ideation-1.yaml`: baseline 0, no-line, not-run, no-finding2, undeclared, extra, traversal, no-focus, empty-why, decline-high each exit 1 with its own message, pilot and past-ideation exit 0; 87 unit tests OK. AC-11: fresh validator runs of the unmodified agent with the shipped brief (wording diffed against the implementation's saved prompt `relay.txt`): relay 3 MEDIUM and 3 LOW naming document-author injection (MEDIUM) and unbounded session minting plus comment writes (MEDIUM), 142,839 tokens, 494 s; control 1 MEDIUM and 1 LOW, none HIGH or CRITICAL, 55,650 tokens, 81 s (`security/val-c3-relay-1.yaml`, `val-c3-control-1.yaml`). Counted as one more run each, not a rate. AC-12: `qnow` appears 4 times in `impl-ac12-relay-focus.yaml`, 0 in both plain relay reports; not re-run (a fresh run costs about 125k tokens for a citation already shown). AC-13: `prod.md` 606 words, a 15-word-longer copy counts 621; the check's added line is 12 words. AC-14: `adr_lint.py docs/adr --since 363558f6` exit 0, with `--require 0019` exit 0; the Words line quotes 「照這樣做」 and the question text of amendment 2. Also exit 0: `design_surfaces.py check` on this task, `number_guards.py check` (PASS), `doc_impact.py` (0 documents), `comment_ratio.py` (0.8%).
+  Limits judged: report-shape limit (a key-like `findings:` or `severity:` line inside a description is a false hold) is bounded: 0 false holds on 19 saved and 2 fresh real reports, plain and fence-wrapped; 21 of 21 match a PyYAML read on count and severity. Model-output limit, check-proves-disposition-not-fit and Codex-host limits stand as stated; not tested here.
+- DONE: recheck after Cycle 2: Codex round-2 P2 (review:5555839646) fixed by the shape-lock rules in check_security (one root line at column 0, one findings: line as a direct child of the root, severity-line count equals parsed items, root line carries no value); confirm each rule's test fails under its mutation; Cycle 1 P1 still fixed; AC-8 to AC-14 under amendment 2; confirm the ADR 0019 Words line; known limit: a key-like findings:/severity: line inside a description is a false hold (round-3 rule: reopen the parser only for a report that wrongly passes)
+  Round-2 P2 and Cycle 1 P1 fixed. I mutated a scratch copy of `design_surfaces.py` (`python3 -B`) per rule: `len(roots) != 1` to `not roots`, `len(keys) != 1` to `not keys`, direct-child call to `False`, `plain != len(severities)` to `False`, root-value call to `False`: each fails exactly its own two tests (shape test plus mutation test); missing-severity default to LOW fails 4; scale test off fails 4; the other 6 mutants (call dropped 41, decline-high 3, status gate 1, profile gate 2, not-run 2, traversal 2, focus line 1) all caught. Nothing wrongly passes: 6,262 hand-accepted random line mutants of the real reports, none with a different finding count than a valid YAML read. Round-3 rule held: no parser reopen.
+  **F1 is not a parser finding.** Codex round 3 (review:5555969981, P1, on a741e357) says `check_security` reads the report at `path.parent / path.stem / value`, so a folder-form task `<slug>/index.md` looks in `<slug>/index/security/`. Reproduced: the same bytes exit 0 as `a.md` and exit 1 as `d/index.md` with `'Security review:' names 'security/ideation-1.yaml', not a report file inside the task folder` (acceptance step 4).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>`; observed output below it. `adr_lint.py docs/adr --since 363558f6071379a8e34856241872f2eacd3198ab`: exit 0 (`19 ADR file(s) checked, 0 legacy`).
+  **F1, Material** (recommend REJECTED at a741e357; repair is FO's call): (1) released workflow: a prod-profile task created with `spacedock new --folder` (`<slug>/index.md`), a layout `pr_watch.py` `entities()` and `replay_dispatch.py` `entity()` read; two such tasks sit in this state checkout (`journey-server-host-pilot`, `release-acceptance`, both not prod, so no prod folder-form task has hit it yet); (2) harm: the ideation gate is unpresentable and following `prod.md` cannot clear it, `<task folder>` being `<slug>/`; (3) `contract[kc-dev-flow-2/skills/ideation/profiles/prod.md#Security review]`: a report saved as `<task folder>/security/ideation-<N>.yaml` is refused for a folder-form task; (4) trigger: step 4 of the script and the Codex P1. Codex's repair shape: use `path.parent` when `path.name == "index.md"`, the sibling `<stem>` directory otherwise, with a folder-form test.
+  **F2, Polish:** `kc-dev-flow-2/README.md` (the sentence that lists what the default `check` verifies) omits the prod ideation security review; `doc_impact.py` lists 0 documents and AC-8 forbids a README diff, so the sentence needs a ruling before anyone edits it.
+  **F3, Deferred risk:** `check` requires the `Security focus file:` line, not that it is true (a worker could write `none` beside an existing `.claude/agents/security-reviewer.md`); material if one is observed. **F4, Deferred risk:** the hand parser reads the severity from its own line, YAML folds a deeper-indented continuation into it (seeds 7 to 9: 71 value-only disagreements, 0 count disagreements at seed 11); material if a real report carries one, none of 21 does.
+  Not verified: a real ideation worker writing the lines end to end; `### Security review` rendering at the gate; the implementation's AC-11 prompt files live only in `/tmp/psrg-impl` (machine-local, not in the task folder); Codex-hosted workers.
+
+### Minimal acceptance script
+
+```bash
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo   # needs this checkout (it holds PR #656's head) and python3
+HEAD_SHA=a741e357ce35251d68f45a0064dcce8cc3178676; BASE_SHA=363558f6071379a8e34856241872f2eacd3198ab
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.23.0
+T=$(mktemp -d); W=$T/head; git -C "$REPO" worktree add --detach "$W" $HEAD_SHA >/dev/null 2>&1 && git -C "$W" rev-parse HEAD
+echo "--- 1. four files change; no workflow, extension, observer or README byte"
+git -C "$W" diff --stat $BASE_SHA HEAD | sed 's/|.*//'
+git -C "$W" diff $BASE_SHA HEAD -- kc-dev-flow-2/references kc-dev-flow-2/extensions kc-dev-flow-2/skills/observer kc-dev-flow-2/README.md | wc -c
+echo "--- 2. package lint from the candidate; prod.md word count"
+(cd "$W" && python3 -B "$W/kc-dev-flow-2/scripts/lint-skills.py"; echo "lint exit $?")
+python3 -I -c 'import sys; print(len(open(sys.argv[1]).read().split()))' "$W/kc-dev-flow-2/skills/ideation/profiles/prod.md"
+echo "--- 3. the check's own tests"
+(cd "$W/kc-dev-flow-2/scripts" && python3 -B test_design_surfaces.py 2>&1 | grep -E '^(Ran|OK|FAILED)')
+echo "--- 4. the check on a prod task at ideation"
+CHK="$W/kc-dev-flow-2/scripts/design_surfaces.py"
+FM='---\ntitle: t\nprofile: prod\nstatus: ideation\n---\n\n## FO alignment\n\nSurfaces: none\nVisible change: none\n\n## Design\n\nSecurity review: security/ideation-1.yaml\nSecurity focus file: none\nSecurity finding 1: AC-1\n\n## Acceptance criteria\n\n**AC-1**: a.\nVerified by: a test.\n'
+OK='tob_security_review:\n  pr: none\n  findings:\n    - file: "design"\n      severity: HIGH\n      title: "first"\n'
+probe() { # label, task path under $T, report text
+  mkdir -p "$T/$2/security"; printf -- "$FM" > "$T/$2/../$3"; printf -- "$4" > "$T/$2/security/ideation-1.yaml"
+  python3 -I -B "$CHK" check "$T/$2/../$3"; echo "$1: exit $?"; }
+probe "reviewed, flat task file" a a.md "$OK"
+probe "finding item with no severity" b b.md 'tob_security_review:\n  pr: none\n  findings:\n    - file: "design"\n      title: "cut off"\n'
+probe "findings nested under another key" c c.md 'tob_security_review:\n  metadata:\n    findings: []\n'
+mkdir -p "$T/d"; printf -- "$FM" > "$T/d/index.md"; mkdir -p "$T/d/security"; printf -- "$OK" > "$T/d/security/ideation-1.yaml"
+python3 -I -B "$CHK" check "$T/d/index.md"; echo "same bytes, folder-form task d/index.md: exit $?"
+mkdir -p "$T/e"; printf -- "$FM" | sed 's/^profile: prod/profile: pilot/;/^Security/d' > "$T/e.md"
+python3 -I -B "$CHK" check "$T/e.md"; echo "pilot task, no review: exit $?"
+echo "--- 5. decision record, run from the candidate"
+(cd "$W" && python3 -B $PKG/scripts/adr_lint.py docs/adr --since $BASE_SHA --require 0019; echo "adr_lint exit $?")
+git -C "$REPO" worktree remove --force "$W"; rm -rf "$T"; echo "cleaned up"
+```
+
+Observed output, fresh shell (lint and diff-stat lines trimmed to their results):
+
+```text
+a741e357ce35251d68f45a0064dcce8cc3178676
+--- 1: stat lists adr 0019, design_surfaces.py, test_design_surfaces.py, profiles/prod.md (4 files, 623 insertions, 2 deletions); byte count 0
+--- 2: references/sd/workflow.md: 5495 of 5511 words; lint exit 0; prod.md word count 606
+--- 3: Ran 87 tests ... OK
+--- 4: reviewed, flat task file: exit 0 (security review security/ideation-1.yaml: 1 findings, 1 acceptance criteria, 0 declined, 0 decisions)
+finding item with no severity: exit 1 (has findings item 1 with no 'severity:' line)
+findings nested under another key: exit 1 (not a direct child of 'tob_security_review:')
+same bytes, folder-form task d/index.md: exit 1 (names 'security/ideation-1.yaml', not a report file inside the task folder)   <- F1
+pilot task, no review: exit 0
+--- 5: 19 ADR file(s) checked, 0 legacy; adr_lint exit 0
+cleaned up
+```
+
+Expected after a repair of F1: the folder-form line exits 0 with the same note line as the flat task; every other line unchanged.
+
+### Summary
+
+I recommend REJECTED at a741e357: the round-2 P2 and Cycle 1 P1 are fixed, each shape rule fails under its own mutation, and AC-8 to AC-14 hold, but Codex round 3's P1 reproduces: a folder-form prod task is refused for a report saved where `prod.md` tells the worker to save it. It does not reopen the parser; it is path resolution upstream of it. Two fresh reviewer runs on the shipped brief named both known relay issues and no HIGH on the control; the F1 repair needs a folder-form test and a fresh recheck.

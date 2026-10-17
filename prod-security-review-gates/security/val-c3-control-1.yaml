@@ -1,0 +1,93 @@
+tob_security_review:
+  pr: none
+  strategy: DEEP
+  security_tier: full
+  design_reviewed: "docs/dev2/.spacedock-state/prod-security-review-gates/security/input-control-design.md (Scope, Acceptance criteria AC-9..AC-14, Design)"
+  files_analyzed: 4   # design doc; kc-dev-flow-2/scripts/delivery_gate.py and kc-dev-flow-2/references/sd/workflow.md at 0cdb40a7; .gitignore (state paths)
+  findings:
+    - file: "design: Design > Edge cases > 'A validator that checked a head other than the one dispatched'; Limits bullet 1; AC-12"
+      line: null
+      severity: MEDIUM
+      category: other
+      title: "Candidate binding moves from validator-attested to FO-asserted, so a branch-tip flip by the PR author is no longer caught mechanically"
+      description: |
+        At 0cdb40a7, delivery_gate.py (validated_candidate, PASSED, and the prefix comparison in check)
+        holds the merge ask unless the SHA in the validator's own report equals the PR head. That
+        is the only mechanical link between what the validator inspected and what merges.
+        The design deletes that link. The `Candidate:` line is written by FO at dispatch time and
+        the check never reads the report. The design accepts "a validator that checked another
+        head" as prose-enforced (FO reads "artifact identity" at the gate). It weighs validator
+        error and FO error. It does not weigh a PR author who controls the branch tip between
+        FO reading the head and the validator checking out.
+        Exit 0 now means only "FO wrote this head down and the head at the ask equals it".
+        It does not mean "the validator looked at this head".
+      attack_scenario: |
+        Attacker: a fork or contributor PR author with push access to the PR branch only, not to
+        the repository. This applies only where a task's PR can come from such an author.
+        1. The branch tip is malicious commit S1. FO reads it, writes `Candidate: S1` in the
+           validation record, and dispatches the validator.
+        2. Before the validator fetches the branch, the attacker force-pushes a benign S2.
+           A validator that checks out the branch name, not `S1`, validates S2 and reports PASSED
+           at S2.
+        3. Before the merge ask, the attacker force-pushes S1 back.
+        4. `delivery_gate.py check` compares head S1 with `Candidate: S1` and exits 0.
+           At base, the report SHA S2 would not equal head S1 and the check would exit 1.
+        5. Only FO's discretionary reading of the report catches S2 != S1. The gate no longer
+           does.
+        Result: S1, which no validator inspected, reaches the Captain's merge ask with a green
+        gate.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Keep the move away from prose parsing, but restore one mechanical identity binding that
+        is not prose parsing. Two options:
+        (a) Pin the dispatch: the validator must check out the detached SHA from the record
+            (`git fetch <remote> <S>; git checkout --detach <S>`, never the branch name).
+            State this as an exact line in the validation dispatch prompt.
+        (b) Have FO write a second structured line, for example `Validated: <40-hex>`, copied
+            from the validator's `git rev-parse HEAD` output, and require it to equal
+            `Candidate:`.
+        Add an AC with a falsifier: a record where Candidate is S1 and Validated is S2 exits 1.
+        If neither is adopted, move this risk from "Edge cases, no rule added" into Limits.
+        State that FO's prose reading is the only control against a branch-tip flip by a
+        non-writer.
+    - file: "design: AC-9 ('the first 7 characters of S1 exit 0'); existing delivery_gate.py check"
+      line: null
+      severity: LOW
+      category: missing-validation
+      title: "Short --head is accepted as a prefix match, leaving a 28-bit comparison against an attacker-chosen commit"
+      description: |
+        The design requires `Candidate:` to be a full 40-hex SHA. AC-9 also specifies that a
+        7-character `--head` passes. delivery_gate.py at 0cdb40a7 compares the two as prefixes of
+        equal length, and accepts a --head of 7 to 40 hex characters. So when --head is short,
+        the comparison is only 28 bits. By default, head comes from `gh pr view --json
+        headRefOid` and is 40 characters, so the default path is strict equality. The weakness
+        only matters when FO passes a shortened SHA.
+        The design newly pins this behaviour in a test.
+      attack_scenario: |
+        1. A PR author who is not a repository writer grinds commit variants. For example, they
+           vary a commit message or timestamp until the new head shares its first 7 hex
+           characters with the validated S1. That is about 2^28 hashes, so minutes to hours of
+           compute.
+        2. They push that commit to the PR branch after validation.
+        3. FO invokes the gate with a short `--head` copied from `git log --oneline` or a UI.
+        4. The prefix comparison exits 0 on a head that was never validated.
+      blast_radius: "LOW"
+      recommendation: |
+        Require `--head` to be exactly 40 lowercase hex, or require equal length with the
+        candidate. Change the AC-9 subTest so a 7-character head exits 2 or 1, not 0.
+        FO should never type a short SHA by hand; the gate reads the full head from `gh`.
+  clean_patterns:
+    - "No new public route, file, hosted content or network call is introduced. The change touches a local script, a workflow reference, and tests. The design's own state files sit under .gitignore'd docs/dev2/.spacedock-state/ and are not in the tree at 0cdb40a7."
+    - "Removing the report-prose parser removes an injection path. At base, a validator report that quotes attacker-authored PR content containing `Verdict PASSED <sha>` could satisfy the gate. The design's FAQ itself notes a quoted PASSED passed base. The new check reads only an FO-written header line."
+    - "Output echo is bounded. Exit 1 and 2 lines print only regex-validated hex SHAs and a fixed form string, so no attacker-authored free text such as a branch name or PR title reaches FO's context. AC-10 explicitly rejects `Candidate: S (branch x)`."
+    - "Fail-closed defaults hold: a missing folder, missing record, malformed line or relay-style multi-head line exits 2 (hold)."
+    - "Record selection is numeric (`validation-10` over `validation-2`) and header-only. Older records cannot rescue a newer record that names another head (AC-11 falsifier)."
+    - "A trunk-merge head move gives exit 1, consistent with ADR 0014 D2. The design adds no ancestry shortcut."
+    - "The stated limit that a bare `Candidate:` names no PR (D1) is a cross-PR collision only for identical 40-hex SHAs. The design weighs it and asks the Captain. I found no outsider who can plant a matching line, because the records are written by FO in the state checkout."
+    - "delivery_gate.py runs `gh` with an argument list, not a shell, and validates --pr with a strict owner/repo#N regex. The design does not alter that."
+  limitations:
+    - "The prototype at /tmp/gate-redo/proto and the count scripts are machine-local. I did not read them and did not verify the 104-record count, the archived-task replays (observer-before-merge-guard, journey-server-host-pilot) or the word counts. The state checkout is gitignored, so none of it is reachable via git at 0cdb40a7."
+    - "I read only delivery_gate.py and the merge-ask passage of workflow.md at 0cdb40a7. I did not read the validation skill, dispatch_records.py, the validator dispatch text, or how the validator chooses what to check out. Finding 1 depends on whether the validator checks out the record SHA or the branch tip; I could not confirm which."
+    - "I did not establish whether any adopter's task PRs come from fork authors. Findings 1 and 2 assume an outsider can push to a PR branch that FO validates. If every PR head is pushed only by repository writers, both findings drop out under the stated attacker boundary."
+    - "Base in the design is c545b896 (package 0.22.1). I read 0cdb40a7. delivery_gate.py at 0cdb40a7 matches the design's description, but other drift between the two was not diffed."
+    - "No code or tests were run. This is a design-stage review of an unbuilt change."

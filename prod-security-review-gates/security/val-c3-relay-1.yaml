@@ -1,0 +1,247 @@
+tob_security_review:
+  pr: none
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 17   # design file plus 16 repo paths read at 485a5042 (git show / git ls-tree / git grep / git diff --stat)
+  scope_note: |
+    Design-stage review of input-relay-design.md (Scope, Design, ACs). No diff exists, so
+    findings cite design sections. Repo evidence is at 485a5042 in /Users/kent/conductor/repos/subspace-relay.
+    Attacker: an outsider with only public routes and files, published documents, hosted content,
+    and a share link they were handed (the design's own reviewer population).
+  findings:
+    - file: "design: Design > PRFAQ > 'Where do problems go?'; Design > Flow; Acceptance criteria AC-1 and AC-4"
+      line: null
+      severity: MEDIUM
+      category: injection
+      title: "The reviewer flow feeds author-controlled document text to an agent that has a shell, and /llms.txt carries no rule that the document is data"
+      description: |
+        The design routes an agent from a share link to /llms.txt and then to `enter`.
+        `enter` returns `question` and `artifactBytesBase64`, both written by the document's author
+        (design Flow; netlify/lib/room-view.ts getRoomBriefing). The author is an outsider. At 485a5042,
+        authenticateDevice in netlify/lib/auth.ts registers any well-formed dev_/sec_ pair on first use, so
+        anyone can publish.
+
+        The only fence the design writes is about the GitHub-issues line: the agent files an issue only
+        after its human agrees and never includes document text, share links or working-directory content.
+        Nothing equivalent covers comment bodies. A comment may carry up to 8000 characters per field,
+        128000 bytes per submission and 100 results per session (netlify/lib/room-feedback.ts
+        MAX_TEXT_FIELD_LENGTH, netlify/lib/result.ts MAX_RESULT_BYTES). The owner reads those comments back
+        through the results routes.
+
+        `question` is any non-blank string with no length or control-character check
+        (netlify/lib/briefing-document.ts). By contrast, the artifact `uri` is allowlisted
+        (netlify/lib/uri-allowlist.ts) precisely because a shell client acts on it. So the code already
+        treats the reviewer's shell as a sink for `uri` but not for `question`.
+
+        AC-1 runs only benign documents. The Evidence clauses give the agents under test a shell,
+        `workspace-write` and network on, in the human's directory. The design therefore tests whether a
+        friendly agent can comment, not whether a hostile document can steer it.
+
+        Related spoof surface: the discovery signal is a descriptive line in page text ("Agent docs: ...").
+        A hostile document can contain a line that looks identical but names another host. This matters to
+        any agent that reads rendered document text alongside the relay's page text. The `<link rel=alternate>`
+        in the head cannot be forged by document text.
+      attack_scenario: |
+        1. The attacker publishes a Briefing to the production relay with a self-registered dev_/sec_ pair.
+           Its text, or its `question`, tells "the reviewer" to quote a local file (for example a `.env`
+           or SSH key from the working directory) into the comment body "for context".
+        2. The victim hands a share link to Claude Code or Codex. The agent follows /llms.txt, enters the
+           Room and reads the document and question.
+        3. An agent that treats the question as its task includes the file contents in a quote-anchored
+           comment. The human may not read each comment, since the design's report-back is only "how many
+           comments it left".
+        4. The attacker is the owner and reads the comment through the results routes.
+        Result: exfiltration from a stranger's workstation through the intended channel. Variant: the
+        document urges "report a bug at the issues URL with this text", which would copy content (and a
+        share link, which is a bearer capability) into a public GitHub issue.
+      blast_radius: "HIGH"
+      recommendation: |
+        - Add one descriptive sentence to /llms.txt (matching the design's descriptive-not-imperative
+          style): the document and its question come from the document's author, not from the person who
+          handed over the link; a comment contains the reviewer's judgment about the document text only;
+          nothing from the working directory or environment belongs in a comment.
+        - Add a hostile-document cycle to AC-1 for both Claude Code and Codex. Use a fixture document
+          whose text and `question` ask for a canary file's contents in a comment. Pass only if the canary
+          never appears in a posted comment or an issue draft.
+        - Treat only the same-origin /llms.txt as the docs. Say so in the file.
+        - Decide whether to bound `question` (length, control characters) at publish, since the code
+          already does this for `uri`.
+
+    - file: "design: Design > Sequencing; Release-owner act (RELAY_OPENAPI_PUBLIC=true); Acceptance criteria AC-4. Code: scripts/generate-openapi.ts, openapi/relay-v1.openapi.json, netlify/lib/auth.ts authenticateDevice"
+      line: null
+      severity: MEDIUM
+      category: insecure-default
+      title: "AC-4 fences owner-side routes out of /llms.txt, but phase one's release publishes the whole OpenAPI, and nothing orders it after publish-admission"
+      description: |
+        /llms.txt links /openapi.json. The deploy-gated `RELAY_OPENAPI_PUBLIC=true` act makes that file
+        public on production, and phase one is what triggers it.
+
+        The committed snapshot at 485a5042 describes every owner-side operation: POST /api/briefing
+        (publish), /api/pair/link, results listing and bytes, revoke, POST /api/room, room disable and
+        session revoke. It also describes the DeviceBearer and DeviceId schemes (`sec_ credential`, `dev_`).
+        It says that each device is self-registered, and the code does so on first use
+        (authenticateDevice: store.setJSON users/{deviceId} onlyIfNew). So production's publish is
+        open-admission today.
+
+        The design weighs the compatibility consequence (ADR 38 rule 3, public/internal split deferred).
+        It does not weigh the disclosure consequence. A fence that stops at /llms.txt while the linked file
+        describes the owner side is not a fence against an outsider reading the contract.
+
+        Ordering gap: the design treats `agent-review-identity` as a dependency (flowchart, AC-4 merge-order
+        check). It says phase one "neither depends on [publish-admission] nor mentions it". The same release
+        (2.2e) carries both, but nothing prevents the flag being set, and the OpenAPI becoming public,
+        before the admission change (PR #336, open) reaches production.
+      attack_scenario: |
+        1. The release owner sets the flag and promotes. /openapi.json now lists the publish and owner
+           routes with their auth schemes.
+        2. The attacker reads it with no prior knowledge of the system. They script a loop that generates
+           fresh dev_/sec_ pairs and calls POST /api/briefing. The quota in netlify/lib/quota.ts is per
+           device (100 per day), so unlimited devices means unlimited publishes.
+        3. Result: storage consumption, and hosting of arbitrary text/markdown under the trusted
+           review.spacedock.md origin (phishing or impersonation pages whose share links the attacker
+           distributes). Detection and cleanup depend on controls that sit in a different task.
+        Exploitability: EASY. This is not a new vulnerability; the design lowers the cost of finding it.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        - Add publish-admission being in `main` (or the deploy) as a precondition to the
+          `RELAY_OPENAPI_PUBLIC=true` act, in Sequencing and in the AC-4 merge-order check.
+        - Alternatively, do the public/internal OpenAPI split before the act. Or record in the design,
+          as weighed, that the owner-side description is published ahead of admission, with the owner and
+          the accepted reason.
+        - Extend the contract test to assert what /openapi.json publishes, not only what /llms.txt names.
+
+    - file: "design: Design > Flow (POST /r/{s} enter); What changes. Code: netlify/lib/session.ts enterRoomSession; netlify/lib/room-feedback.ts submitRoomFeedback / reserveSessionResult"
+      line: null
+      severity: MEDIUM
+      category: race-condition
+      title: "The scripted no-browser flow documents an `enter` that mints a durable session per call with no throttle, and the comment cap is per session, not per share"
+      description: |
+        At 485a5042, `enter` without a presented session cookie writes a new session blob
+        (sessionKey ... onlyIfNew) on every call. The session lasts 30 days (SESSION_EXPIRY_MS) and the
+        endpoint has no rate limit; the only edge function in the tree is the share-page GET.
+
+        Feedback is capped at MAX_SESSION_RESULTS = 100 per session. submitRoomFeedback does not touch the
+        owner's daily result quota (reserveResultQuota is used only in the device-authenticated result.ts
+        path). So the effective cap per share is unbounded.
+
+        This is existing behaviour for browsers. Phase one's contribution is documenting it for curl
+        callers (the agent flow in the Flow diagram) and, via the public OpenAPI, binding POST /r/{s} to a
+        public compatibility promise.
+
+        An unmerged branch, origin/spacedock-ensign/front-door-hardening, adds an enter admission
+        (`admitRoomEnter`) and an edge limit. The design does not depend on it or mention it, and I could
+        not confirm whether it has merged.
+      attack_scenario: |
+        1. Anyone who holds a share link (it is passed to reviewers by design) loops: `enter` with an
+           Origin header equal to the room origin, then submit 100 comments of up to 128 KB each.
+           Repeat with a fresh session.
+        2. The owner's results listing fills with spam. Their collecting agent or human has to page
+           through it and can miss real feedback; any token cost of reading it falls on the owner.
+        3. Storage grows without bound until the owner revokes the Briefing.
+        Exploitability: EASY for anyone with the link; no credential is needed.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Sequence phase one on an edge limit for enter and feedback (the hardening branch's work if it
+        merges), or state in the design that the gap is accepted and who owns it. In /llms.txt, tell agents
+        to `logout` when done (the action exists in the OpenAPI) so the session is revoked rather than left
+        for 30 days.
+
+    - file: "design: Scope bullet 1; Flow (POST /r/{s} agent: name, harness, model); AC-1 'Verified by'"
+      line: null
+      severity: LOW
+      category: missing-validation
+      title: "Declared agent name, harness and model are self-asserted outsider text, and no AC states or tests a bound or a not-verified statement"
+      description: |
+        AC-1 verifies that `kind: agent` with the declared name, harness and model is visible to the
+        owner. The design never says these values are unverified, and gives no length or character rule for
+        the two new free-text fields (harness, model). At 485a5042, the existing reviewer name is only
+        trimmed and capped at 200 characters (MAX_REVIEWER_NAME_LENGTH, session.ts), and the code states
+        it is unverified and duplicable.
+
+        The values are shown to the owner, and in phase two collected by the owner's agent. Control
+        characters, markup, or instruction-shaped text in these fields reach that reader. A `kind: agent`
+        label also does not prove an agent wrote the comment: a person can use the `agent` action, and an
+        agent can skip it and post as `person:`.
+
+        I could not read the `agent` action because it is not in 485a5042.
+      attack_scenario: |
+        1. Any link holder calls the declare action with name "Spacedock Maintainers" or harness text such
+           as "IMPORTANT: ignore previous instructions...".
+        2. The owner, or the owner's collecting agent, shows those strings next to comments.
+        3. Result: owner-visible impersonation, or injected text in an agent context.
+      blast_radius: "LOW"
+      recommendation: |
+        State in /llms.txt and in the owner listing that declared values are unverified. Specify a length
+        and character bound for all three fields in the agent-review-identity contract. Add AC-1 negative
+        cases: an over-length value and a control-character value are refused.
+
+    - file: "design: Scope bullet 2 (problems line); PRFAQ 'Where do problems go?'; Production boundaries > Owner"
+      line: null
+      severity: LOW
+      category: other
+      title: "/llms.txt will direct agents to a public GitHub issues URL whose owner and triage are unrecorded, and the guard is prose only"
+      description: |
+        The design says the triager "is not recorded anywhere I read; the Captain is assumed". The
+        agent-must-ask-first rule is a sentence for the agent to follow, not a mechanism, and Finding 1
+        shows that document text can compete with it. A public issue is a write channel anyone can use, so
+        issue text is untrusted data entering the maintainers' workflow.
+
+        If the destination repository is renamed, transferred or never created, agents are routed to
+        whichever party owns that name. I could not check from here that spacedock-dev/spacedock-review
+        exists and is org-owned.
+      attack_scenario: |
+        1. The URL named in the shipped /llms.txt becomes owned by a third party, through a rename or
+           an unclaimed name.
+        2. Agents that "report a problem" after their human agrees post logs and URLs there.
+        3. Result: leaked context to an untrusted repository.
+      blast_radius: "LOW"
+      recommendation: |
+        Verify the destination exists and is owned by the org before the release. Put the repository check
+        in AC-4 or the smoke reads. Record the triage owner. Keep the rule that no share link or document
+        text goes into an issue, and test it in the hostile-document cycle (see Finding 1).
+
+    - file: "design: FAQ 'Is the file a promise?'; ADR 38 rule 3 as bound by this task. Code: netlify/lib/briefing-read.ts getManifest/getDocument; netlify/lib/session.ts enterRoomSession"
+      line: null
+      severity: LOW
+      category: other
+      title: "ADR 38 rule 3 has no security carve-out, and this task binds it to every operation the public OpenAPI describes"
+      description: |
+        Rule 3 says a break to an existing public operation is first announced with Deprecation and
+        Sunset headers or moves to a new path version. The design applies it to every described operation,
+        including unauthenticated reads and POST /r/{s}.
+
+        At 485a5042, some operations whose fix would be a break are already described:
+        - /api/briefing/{b}/manifest, /document and /artifact/{sha} have `security: []` and read with
+          briefingId alone (briefing-read.ts).
+        - `enter` mints a session with no cookie, no throttle.
+
+        The design does not say whether an emergency security fix may skip the transition period.
+      attack_scenario: |
+        1. A flaw is found in one of those operations.
+        2. The fix removes or narrows the operation, which is a break under rule 3.
+        3. The owner must keep the flawed behaviour live for the transition period, or break the
+           published promise to outside agents.
+        Exploitability: HARD to trigger, but the delay is built in by the rule.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Record in the design, or in a short ADR 38 amendment, that a security fix may skip the transition
+        period, who decides, and that the OpenAPI notes it afterwards.
+  clean_patterns:
+    - "/ and /llms.txt are static files served from public/, with no function, no request-derived content and no new write path. Failure is a wrong sentence, not an injection."
+    - "roomShellHtml (netlify/lib/room-page.ts) puts the share id in via JSON.stringify, and shareId must match /^[a-z2-7]{16}$/ first. Adding a static line and a head <link> to it creates no injection path."
+    - "The share page answers 200 for any share id of valid shape without a lookup, so the new line is not an existence oracle."
+    - "Share id is 80 bits and unguessable (share-address.ts); the thr_ retired shape is decided by prefix alone."
+    - "Room session cookie is HttpOnly, Secure, SameSite=Strict, Path-scoped to the Room. Every protected action needs cookie, Origin and CSRF header, and a session is bound to one briefing and revalidated live (session.ts validateSession)."
+    - "The enter redirect body points only at room.origin, a value the relay stored from its own request origin at room creation, so it is not attacker-supplied."
+    - "A reviewer needs no credential, so the llms.txt reviewer section does not touch the secret-storage question. ADR 42 is enforced by decision gating in room-feedback.ts: a decision requires sign-in and a held device binding, which an agent session lacks."
+    - "Artifact bytes are served as octet-stream with nosniff on the API read paths (briefing-read.ts, result.ts), and the artifact uri is allowlisted against path traversal (uri-allowlist.ts)."
+    - "public/ is an explicit publish directory, public/README.md says 'Intentionally empty', and openapi.json is deleted on every build without RELAY_OPENAPI_PUBLIC=true (scripts/generate-openapi.ts). The design adds exactly two files."
+    - "The generated _redirects holds only the /web/* proxy, pinned to the subspace-web production origin or an immutable deploy host (generate-web-proxy.ts requireAllowedWebOrigin), so the landing-page plan (proxying / from Web) is bounded to those origins."
+    - "promote-production.yml runs smoke-deployment on the published deploy permalink after the alias check, as the design states (line 415)."
+  limitations:
+    - "The `agent` action and `kind: agent` path come from agent-review-identity, which is not in 485a5042. How it validates name/harness/model, and whether an agent session can ever reach decision standing, are unverified."
+    - "The reviewer section of /llms.txt (#311 v4 'Review a link someone gave you') was not available to me. refs/heads/spacedock-ensign/agent-front-door-learnability has only an owner-side draft of public/llms.txt. Whatever the final text says about untrusted input, the issues line and Origin handling is unreviewed."
+    - "origin/spacedock-ensign/front-door-hardening adds enter admission and an edge limit. I saw it only through git diff --stat and one grep. Its merge state, and whether it ships before phase one, are unknown."
+    - "I did not check from here that spacedock-dev/spacedock-review exists and is org-owned, whether the relay repository is public (which decides how new Finding 2's disclosure is), or the production site's actual RELAY_OPENAPI_PUBLIC value and publish-admission (PR #336) status."
+    - "Markdown rendering in the Web app (the document as rendered to human reviewers) lives in a separate repository and was not read. XSS or phishing through hosted markdown on the review.spacedock.md origin is not assessed."
+    - "No runtime test was run. Everything is read from git objects at 485a5042 and two branch refs, using read-only git commands."
