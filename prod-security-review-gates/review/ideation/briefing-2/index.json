@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:prod-security-review-gates:ideation:attempt-2:revision-1",
+  "question": "Approve the redone design (amendment 2) and enter implementation? Approving accepts D1 (the package reads one focus-file path, .claude/agents/security-reviewer.md), D2 (relay's 'specialists are risk-selected' sentence narrowed for security only, applied by relay's FO in relay's own README, not in this PR) and D3 (ideation reviews run on the reviewer's declared Sonnet until prod-security-validation-gate reports its three-model measurement), each as recommended; the ADR number is 0019 (0018 was taken on main by another task); and it is the grant for the implementation worker to push a new branch off current origin/main and open a Draft PR.",
+  "artifacts": [
+    {
+      "id": "artifact:prod-security-review-gates:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/53b877b9c8ec28ff4b37351be6fed10d116aa6fd/prod-security-review-gates.md",
+      "rev": "sha256:7e8f664dd7c2962e314a902ae7aa9bfe4749e19c6cf71be84c1f85f59b165756",
+      "mediaType": "text/markdown",
+      "summary": "Redo under Captain amendment 2: every prod task's ideation worker runs kc-pr-flow's tob-security-reviewer while writing the design and records one disposition line per finding (fixed in the design, an acceptance criterion, declined with a reason, or a Needs decision); a HIGH or CRITICAL finding cannot be declined. The existing pre-gate design_surfaces.py check (about 56 added lines) refuses a prod design whose review is missing, marked not run, or has an undispositioned finding. An adopter's .claude/agents/security-reviewer.md is passed in when present. No FO workflow word, extension or observer text changes. Replay on relay's agent-front-door design, 3 runs: all 3 named both the prompt injection and the unbounded session or comment write (LOW, MEDIUM, LOW for the write); the no-exposure control returned 0 findings. Limits: the added brief sentence was fitted after the miss was known; one run per cell, not a rate. Cost per run 121k to 142k tokens and 368 to 408 s on relay's design, 56k tokens on the control. The validation-gate review is backlog task prod-security-validation-gate. design_surfaces.py check exit 0."
+    }
+  ]
+}
