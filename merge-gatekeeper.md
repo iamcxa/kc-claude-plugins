@@ -34,6 +34,17 @@ gates:
                 id: briefing:merge-gatekeeper:ideation:attempt-1:revision-1
                 digest: sha256:564054ca455cfbe4328f5ed326b2a655c86927f70c918e7eaddcc4bb6aaab7f6
                 room-ref: ./merge-gatekeeper/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-gatekeeper:ideation:1
+                briefing: briefing:merge-gatekeeper:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-17T07:30:44.720716Z"
+                decision: approve
+                reason: Captain approved in chat (「那就照建議」, after asking FO to restate the merge-gatekeeper D1 reasoning) the six batch-2 ideation gates presented together in one message, accepting each task's stated recommendations and FO's implementation order
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-17T06:11:32Z
 ---
 
