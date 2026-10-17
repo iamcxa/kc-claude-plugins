@@ -3,6 +3,7 @@
 import argparse
 import re
 import sys
+from collections import Counter
 from pathlib import Path
 
 KNOWN = {"ui", "db", "none"}
@@ -35,7 +36,6 @@ SEVERITY_SCALE = ("CRITICAL", "HIGH", "MEDIUM", "LOW")
 DESIGN_SCALE = ("MAJOR", "MINOR")
 DESIGN_REVIEW_LINE = re.compile(r"^Design review:[ \t]*(\S.*)$", re.M)
 DESIGN_FINDING_LINE = re.compile(r"^Design finding (\d+):[ \t]*(\S.*)$", re.M)
-REPORT_PREVIEW = re.compile(r"^[ \t]+preview:[ \t]*(\S.*)$", re.M)
 REPORT_FINDINGS_KEY = re.compile(r"^([ \t]+)findings:(.*)$", re.M)
 REPORT_ROOT_LINE = re.compile(r"^tob_security_review:", re.M)
 FINDINGS_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?findings:", re.M)
@@ -276,7 +276,7 @@ def check_security(path, body, declared, errors):
     return f"security review {value}: {found} findings, {tally['ac']} acceptance criteria, {tally['declined']} declined, {tally['decision']} decisions"
 
 
-def check_design_review(path, body, declared, preview, errors):
+def check_design_review(path, body, declared, previews, errors):
     name = path.name
     review = DESIGN_REVIEW_LINE.search(body)
     if not review:
@@ -296,10 +296,13 @@ def check_design_review(path, body, declared, preview, errors):
     if shape:
         errors.extend(f"{name}: '{value}' {problem}" for problem in shape)
         return None
-    reviewed = REPORT_PREVIEW.search(text)
-    reviewed = reviewed.group(1).strip().strip("\"'") if reviewed else None
-    if reviewed != preview:
-        errors.append(f"{name}: '{value}' reviewed preview '{reviewed}' but the task's 'Preview:' line names '{preview}'")
+    child = re.match(r"[ \t]*", FINDINGS_LINE.search(text).group(0)).group(0)
+    block = re.search(r"^design_review:.*\n((?:[ \t].*\n|[ \t]*\n|#.*\n)*)", text + "\n", re.M).group(1)
+    named = re.findall(rf"^{child}preview:[ \t]*(.*)$", block, re.M)
+    if len(named) != 1:
+        errors.append(f"{name}: '{value}' has {len(named)} 'preview:' lines directly under 'design_review:', expected exactly 1")
+    elif named[0].strip().strip("\"'") not in previews:
+        errors.append(f"{name}: '{value}' reviewed preview '{named[0].strip().strip(chr(34)+chr(39))}' but the task's 'Preview:' line names {', '.join(repr(p) for p in previews)}")
     severities, problems = report_severities(text, DESIGN_SCALE)
     if problems:
         errors.extend(f"{name}: '{value}' {problem}" for problem in problems)
@@ -310,6 +313,9 @@ def check_design_review(path, body, declared, preview, errors):
         return None
     found = len(severities)
     lines = {int(n): v.strip() for n, v in DESIGN_FINDING_LINE.findall(body)}
+    for n, count in sorted(Counter(int(n) for n, _ in DESIGN_FINDING_LINE.findall(body)).items()):
+        if count > 1:
+            errors.append(f"{name}: 'Design finding {n}:' appears more than once; write one disposition per finding")
     tally = {"ac": 0, "fixed": 0, "declined": 0, "decision": 0}
     for number in range(1, found + 1):
         entry = lines.get(number, "")
@@ -374,8 +380,8 @@ def check_task(path, seed=False, notes=None):
         if summary and notes is not None:
             notes.append(summary)
     if "ui" in surfaces and status and status.group(1) == "ideation":
-        shown = PREVIEW.search(body)
-        summary = check_design_review(path, plain, declared, shown.group(1).strip() if shown else "", errors)
+        shown = [v.strip() for v in PREVIEW.findall(body)]
+        summary = check_design_review(path, plain, declared, shown, errors)
         if summary and notes is not None:
             notes.append(summary)
     return errors

@@ -934,8 +934,8 @@ Verified by: a test.
 
 
 class DesignReviewTests(unittest.TestCase):
-    def run_check(self, review=DESIGN_LINES, report=DESIGN_REPORT, module=ds, profile="pilot", status="ideation", surfaces="ui", outside=False, folder_form=False):
-        text = UI.format(review=review).replace("profile: pilot", f"profile: {profile}").replace("status: ideation", f"status: {status}")
+    def run_check(self, review=DESIGN_LINES, report=DESIGN_REPORT, module=ds, profile="pilot", status="ideation", surfaces="ui", outside=False, folder_form=False, previews="Preview: preview.html\n"):
+        text = UI.format(review=review).replace("Preview: preview.html\n", previews).replace("profile: pilot", f"profile: {profile}").replace("status: ideation", f"status: {status}")
         visible = "a person sees a panel." if "ui" in surfaces else "none"
         text = text.replace("Surfaces: ui\nVisible change: a person sees a panel.", f"Surfaces: {surfaces}\nVisible change: {visible}")
         with tempfile.TemporaryDirectory() as d:
@@ -988,7 +988,7 @@ class DesignReviewTests(unittest.TestCase):
         self.refused("is not a design_review report", report=DESIGN_REPORT.replace("design_review:", "tob_security_review:"))
         self.refused("severity 'HIGH', not one of MAJOR, MINOR", report=DESIGN_REPORT.replace("severity: MAJOR", "severity: HIGH", 1))
         self.refused("reviewed preview 'other.html' but the task's 'Preview:' line names 'preview.html'", report=DESIGN_REPORT.replace("preview: preview.html", "preview: other.html"))
-        self.refused("reviewed preview 'None'", report=DESIGN_REPORT.replace("  preview: preview.html\n", ""))
+        self.refused("has 0 'preview:' lines directly under", report=DESIGN_REPORT.replace("  preview: preview.html\n", ""))
         self.refused("not a report file inside the task folder", review=DESIGN_LINES.replace("design/ideation-1.yaml", "../x.yaml", 1), outside=True)
 
     def test_a_ui_task_past_ideation_or_without_ui_is_unchanged(self):
@@ -1007,8 +1007,38 @@ class DesignReviewTests(unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertIn("0 findings", notes[0])
 
+    def test_two_dispositions_for_one_finding_number_are_refused(self):
+        for extra in ("Design finding 2: Needs decision: x\n", "Design finding 1: declined: y\n"):
+            with self.subTest(extra=extra):
+                errors, _ = self.run_check(review=DESIGN_LINES + extra)
+                self.assertTrue(any("appears more than once" in e for e in errors), errors)
+
+    def test_the_preview_is_exactly_one_direct_child_of_the_root(self):
+        nested = DESIGN_REPORT.replace("      seen: tight inset\n", "      seen: tight inset\n      preview: preview.html\n")
+        cases = {
+            "only a nested preview": nested.replace("  preview: preview.html\n", "", 1),
+            "nested first, direct names another": nested.replace("  preview: preview.html\n", "", 1).replace("  limitations:", "  preview: other.html\n  limitations:"),
+            "a preview under another top-level mapping": DESIGN_REPORT.replace("  preview: preview.html\n", "", 1) + "other:\n  preview: preview.html\n",
+            "two direct previews": DESIGN_REPORT.replace("  preview: preview.html\n", "  preview: preview.html\n  preview: other.html\n", 1),
+        }
+        for label, report in cases.items():
+            with self.subTest(label):
+                errors, _ = self.run_check(report=report)
+                self.assertTrue(errors, "passed: " + label)
+
+    def test_a_report_naming_any_of_several_preview_lines_passes(self):
+        previews = "Preview: preview.html\nPreview: second.html\n"
+        self.assertEqual(self.run_check(previews=previews, report=DESIGN_REPORT.replace("preview: preview.html", "preview: second.html"))[0], [])
+        self.assertEqual(self.run_check(previews=previews)[0], [])
+        self.refused("reviewed preview 'other.html'", previews=previews, report=DESIGN_REPORT.replace("preview: preview.html", "preview: other.html"))
+
+    def test_limitations_are_not_read_so_an_unshown_state_beside_no_findings_passes(self):
+        report = "design_review:\n  preview: preview.html\n  findings: []\n  limitations:\n    - the dark theme is not shown\n"
+        errors, _ = self.run_check(review="Design review: design/ideation-1.yaml\n", report=report)
+        self.assertEqual(errors, [])
+
     def test_mutation_dropping_the_design_call_lets_a_missing_review_pass(self):
-        mutant = mutated('summary = check_design_review(path, plain, declared, shown.group(1).strip() if shown else "", errors)', "summary = None")
+        mutant = mutated("summary = check_design_review(path, plain, declared, shown, errors)", "summary = None")
         review = DESIGN_LINES.replace("Design review: design/ideation-1.yaml\n", "")
         self.assertTrue(self.run_check(review=review)[0])
         self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
@@ -1020,7 +1050,7 @@ class DesignReviewTests(unittest.TestCase):
         self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
 
     def test_mutation_dropping_the_preview_rule_lets_another_preview_pass(self):
-        mutant = mutated("if reviewed != preview:", "if False:")
+        mutant = mutated('elif named[0].strip().strip("\\"\'") not in previews:', "elif False:")
         report = DESIGN_REPORT.replace("preview: preview.html", "preview: other.html")
         self.assertTrue(self.run_check(report=report)[0])
         self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
@@ -1040,6 +1070,37 @@ class DesignReviewTests(unittest.TestCase):
         mutant = mutated('elif re.match(r"fixed:\\s*\\S", entry):', "elif False:")
         self.assertEqual(self.run_check()[0], [])
         self.assertTrue(any("report finding 1 has no" in e for e in self.run_check(module=mutant)[0]))
+
+    def test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass(self):
+        mutant = mutated("        if count > 1:", "        if False:")
+        review = DESIGN_LINES + "Design finding 2: Needs decision: x\n"
+        self.assertTrue(self.run_check(review=review)[0])
+        self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+
+    def test_mutation_dropping_the_one_preview_rule_lets_two_direct_previews_pass(self):
+        mutant = mutated("if len(named) != 1:", "if False:")
+        report = DESIGN_REPORT.replace("  preview: preview.html\n", "  preview: preview.html\n  preview: preview.html\n", 1)
+        self.assertTrue(self.run_check(report=report)[0])
+        self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+
+    def test_mutation_reading_the_preview_at_any_indent_takes_a_nested_one(self):
+        mutant = mutated('rf"^{child}preview:', 'rf"^[ \\t]+preview:')
+        report = DESIGN_REPORT.replace("  preview: preview.html\n", "", 1).replace("      seen: tight inset\n", "      seen: tight inset\n      preview: preview.html\n")
+        self.assertTrue(self.run_check(report=report)[0])
+        self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+
+    def test_mutation_searching_the_whole_report_takes_a_preview_of_another_mapping(self):
+        mutant = mutated('re.findall(rf"^{child}preview:[ \\t]*(.*)$", block, re.M)', 're.findall(rf"^{child}preview:[ \\t]*(.*)$", text, re.M)')
+        report = DESIGN_REPORT.replace("  preview: preview.html\n", "", 1) + "other:\n  preview: preview.html\n"
+        self.assertTrue(self.run_check(report=report)[0])
+        self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
+
+    def test_mutation_matching_only_the_first_preview_line_refuses_the_second(self):
+        mutant = mutated("shown = [v.strip() for v in PREVIEW.findall(body)]", "shown = [v.strip() for v in PREVIEW.findall(body)][:1]")
+        previews = "Preview: preview.html\nPreview: second.html\n"
+        report = DESIGN_REPORT.replace("preview: preview.html", "preview: second.html")
+        self.assertEqual(self.run_check(previews=previews, report=report)[0], [])
+        self.assertTrue(self.run_check(previews=previews, report=report, module=mutant)[0])
 
 
 if __name__ == "__main__":
