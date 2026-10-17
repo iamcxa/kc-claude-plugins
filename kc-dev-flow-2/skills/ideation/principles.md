@@ -21,7 +21,8 @@ Each recorded `Surfaces:` value owes its own artifact, fidelity before prettines
   a `UI proposal:` line with the short text proposal first, then a `Preview:`
   line naming the preview, run and operable for an interactive surface rather
   than a static screenshot; use a mechanism the repository already has, mark
-  it disposable, and add no online resource without Captain approval.
+  it disposable, and add no online resource without Captain approval. Before reporting, run the design review in
+  [design-review.md](design-review.md) and give each finding a disposition.
 - `db` (schema, migration or row-level security change) — the schema change
   shown explicitly (a column table, or a Mermaid `erDiagram` when relations
   change) and a `Migration source:` line naming the migration source of truth.
