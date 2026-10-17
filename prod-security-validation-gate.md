@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-17T06:11:21Z
 worktree: .worktrees/spacedock-ensign-prod-security-validation-gate
-pr: iamcxa/kc-claude-plugins#659
+pr: pr-merge:659
 ---
 
 Filed on the Captain's 「照這樣做」 (chat, 2026-10-16), split out of `prod-security-review-gates` (its amendment 2 keeps the design-stage review there).
