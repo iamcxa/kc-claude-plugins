@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-gatekeeper:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Production? Approving accepts the recommendations D1 (b): no model judge in this task; build the rule checks and the record now, the model arm later once the record shows what it would add; D3: a change class qualifies for FO merge only by your ADR grant on a record of at least 59 clean asks (one-sided 95% lower bound at least 0.95), and one failure in a granted class stops FO's merges there; D2 (data sharing) does not arise under D1 (b); and FO's implementation order below.",
+  "artifacts": [
+    {
+      "id": "artifact:merge-gatekeeper:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d546f9f90686a346ebc0568ff44a2bf35355dbb7/merge-gatekeeper.md",
+      "rev": "sha256:babbaa964898e996e79026013aba8337a4658b313210c7c5a0721c68bb994633",
+      "mediaType": "text/markdown",
+      "summary": "Bite counted: no unauthorised FO merge; two PRs (#632, #628, 2026-10-13) merged at a head other than the validated one, before the head check landed; five merge-handling mistakes 2026-09-05 to 09-11; all script-decidable, none needed judgment of the change. Median validation-to-merge 36 minutes over 20 PRs; 5 of 20 merge asks drew a change from you. Design: extend delivery_gate.py check with more holds (CI, draft, conflict, base, file list), a points list for you, a fixed never-merge class list, a shadow record of every ask, a calibrate subcommand, and a merge line pinned to the head. ADR draft replaces ADR 0011's never-delegated merge sentence for granted classes only. Prod design security review: 8 findings, 7 into criteria, 1 declined; it moved classes to allowlists and lets a model only withhold a merge. Outside the brief: its helper ran git fetch origin in relay, web and qnow (remote refs only); a fetched OpenAI page carried an embedded instruction block, ignored. Implementation order (FO, from the six Batch overlap sections): workflow-budget-ratchet and prod-security-validation-gate first in parallel; after the ratchet merges, worker-loads-declared-package, ui-design-review-in-ideation and special-role-triggers; merge-gatekeeper after prod-security-validation-gate (both edit delivery_gate.py). At most three workers at once."
+    }
+  ]
+}

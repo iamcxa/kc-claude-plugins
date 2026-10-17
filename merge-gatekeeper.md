@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:merge-gatekeeper:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:merge-gatekeeper-ideation-1
+              briefing:
+                id: briefing:merge-gatekeeper:ideation:attempt-1:revision-1
+                digest: sha256:564054ca455cfbe4328f5ed326b2a655c86927f70c918e7eaddcc4bb6aaab7f6
+                room-ref: ./merge-gatekeeper/review/ideation/briefing-1
 started: 2026-10-17T06:11:32Z
 ---
 
