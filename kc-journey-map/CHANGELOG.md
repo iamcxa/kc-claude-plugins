@@ -1,5 +1,27 @@
 # Changelog
 
+## [1.7.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.6.1...kc-journey-map-v1.7.0) (2026-10-17)
+
+
+### Features
+
+* **journey:** add safe private room switching and reusable Sites entry ([6075588](https://github.com/iamcxa/kc-claude-plugins/commit/6075588d66b1d04c6c8258b0d97e601990f4272a))
+* **kc-journey-map:** add private multiroom hosting and native room navigation ([22e406b](https://github.com/iamcxa/kc-claude-plugins/commit/22e406b5e9c05265ac14facabe9ec476f116bc38))
+* **kc-journey-map:** integrate room switching with native canvas menus ([40b8eed](https://github.com/iamcxa/kc-claude-plugins/commit/40b8eedf4bdd4269bd5a8a25ecb8c5baa5eaaf3b))
+* **kc-journey-map:** prepare bounded private pilot operations ([6d2cb60](https://github.com/iamcxa/kc-claude-plugins/commit/6d2cb601a605f846d6ebf8e619e3f662336eaeb3))
+
+
+### Bug Fixes
+
+* constrain the local private operator caller ([aa54f26](https://github.com/iamcxa/kc-claude-plugins/commit/aa54f26dcd1062aac41664a138eb12d6d0ebc06c))
+* enforce owner-only private Node storage roots ([f4afb23](https://github.com/iamcxa/kc-claude-plugins/commit/f4afb237749b83adcf3dc87fc068084326fddaca))
+* **kc-journey-map:** canonicalize new client upload IDs ([3815a0b](https://github.com/iamcxa/kc-claude-plugins/commit/3815a0be9e9399bef39fbe15a308ba932411447e))
+* **kc-journey-map:** keep document dismissal visible while scrolling ([4c3da95](https://github.com/iamcxa/kc-claude-plugins/commit/4c3da95d25a03bbcb71e37e251e8e1f344db546a))
+* **kc-journey-map:** reclaim expired sessions in bounded batches ([44d2075](https://github.com/iamcxa/kc-claude-plugins/commit/44d20756715a1486c942b4770e8eed7c2db77a66))
+* **kc-journey-map:** reclaim replaced private asset blobs safely ([570dcec](https://github.com/iamcxa/kc-claude-plugins/commit/570dcecb19a7cdc9586aef5a5f3090d740c1bd8f))
+* **kc-journey-map:** seek session cleanup directly from cursor ([231ccbe](https://github.com/iamcxa/kc-claude-plugins/commit/231ccbe87a1f66d55637e767e7a19954ae648e83))
+* require a local credential for operator delegation ([e583b84](https://github.com/iamcxa/kc-claude-plugins/commit/e583b845184a499f90094af3fc4d08b0823a650b))
+
 ## [1.6.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.6.0...kc-journey-map-v1.6.1) (2026-10-13)
 
 

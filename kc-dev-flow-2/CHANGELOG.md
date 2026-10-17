@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.24.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.23.0...kc-dev-flow-2-v0.24.0) (2026-10-17)
+
+
+### Features
+
+* **kc-dev-flow-2:** a prod task's ideation runs a security review that the design check enforces ([#656](https://github.com/iamcxa/kc-claude-plugins/issues/656)) ([1e03c40](https://github.com/iamcxa/kc-claude-plugins/commit/1e03c406a3cc94bed85c73e40fe22b58f1f5ef84))
+* **kc-dev-flow-2:** check dev2 laws over the committed state history ([#651](https://github.com/iamcxa/kc-claude-plugins/issues/651)) ([7e5439b](https://github.com/iamcxa/kc-claude-plugins/commit/7e5439bebd6333047b2922f3edfdeb312aa0917c))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** a first implementation record that omits a listed extension's worker instruction fails the dispatch-records check ([#652](https://github.com/iamcxa/kc-claude-plugins/issues/652)) ([a59761e](https://github.com/iamcxa/kc-claude-plugins/commit/a59761e66679921b4b65a85f54d6826ec7389b4e))
+* **kc-dev-flow-2:** design_surfaces check refuses an unnamed move and an unmarked replacement ([#650](https://github.com/iamcxa/kc-claude-plugins/issues/650)) ([94a6483](https://github.com/iamcxa/kc-claude-plugins/commit/94a6483d19ec33561ad0adfd48875984c6db402b))
+* **kc-dev-flow-2:** the idle hook tells FO when the newest dispatch record names a bare package script ([#649](https://github.com/iamcxa/kc-claude-plugins/issues/649)) ([4ea2832](https://github.com/iamcxa/kc-claude-plugins/commit/4ea2832a24ba06fce76733999370885b4ffd60a6))
+
 ## [0.23.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.22.1...kc-dev-flow-2-v0.23.0) (2026-10-15)
 
 
