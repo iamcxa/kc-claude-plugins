@@ -221,6 +221,14 @@ Run commands from the repository root of the implementation candidate; `<pkg>` i
 
 **Decision 2: which records.** Does the check read only the first record of the stage (recommended), or every `implementation-*` record with a `roborev not run: <reason>` line in each follow-up? Plainly: a follow-up to a live worker already holds the instruction, and the record cannot tell it from a fresh worker. Counted with the substring test: 20 of 68 implementation records here and 19 of 26 in relay lack the path, and of those 19 here and 12 in relay are later-cycle records, so "every record" would add a `not run:` line to about a third of later records here. Recommendation: first record only. What gets worse: a fresh worker dispatched at cycle 2 or later without the line passes unnoticed.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-17, chat
+Captain: 「修改 AC-6，讓 #652 一併把 README 傳給 laws_check」 (chat, 2026-10-17)
+Asked: 「要修改 AC-6，在 #652 一起做嗎？」
+Supersedes: AC-6
+Design: none
+
 ## FO alignment
 
 Alignment: not needed before ideation; the Captain confirmed filing it.
