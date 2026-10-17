@@ -9,3 +9,6 @@ node_modules/
 
 # Uploaded images; a .tldr export carries the image bytes.
 .assets/
+
+.host-check/
+server/client/dist/

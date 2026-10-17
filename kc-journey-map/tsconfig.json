@@ -12,5 +12,5 @@
     "allowImportingTsExtensions": true,
     "types": ["node"]
   },
-  "include": ["server", "lib"]
+  "include": ["server", "lib", "scripts/journey-grant.ts"]
 }

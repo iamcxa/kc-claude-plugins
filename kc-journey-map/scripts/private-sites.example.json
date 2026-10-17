@@ -1,0 +1,6 @@
+{
+  "siteOrigin": "https://private-entry.example.invalid",
+  "backendOrigin": "https://private-backend.example.invalid",
+  "pathPrefix": "/journey",
+  "rooms": ["A", "B"]
+}

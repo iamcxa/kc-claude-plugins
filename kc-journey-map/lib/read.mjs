@@ -1,3 +1,4 @@
+import { apiFetch } from './api.mjs'
 // Constraint text has no safe inverse to rule IDs; readback never guesses.
 
 const API = process.env.JOURNEY_API ?? `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
@@ -23,7 +24,7 @@ const plain = (rich) =>
 const stripNumber = (text) => text.replace(/^\d+\.\s*/, '')
 
 export async function readRoom({ room, api = API }) {
-	const doc = await fetch(`${api}/doc?room=${room}`).then((r) => r.json())
+	const doc = await apiFetch(`${api}/doc?room=${room}`).then((r) => r.json())
 	return (doc.snapshot?.documents ?? []).map((d) => d.state).filter((r) => r.typeName === 'shape')
 }
 
@@ -499,7 +500,7 @@ export const loadModel = (path) => parse(readFileSync(path, 'utf8'))
 // hand-added notes readback has already absorbed into the file, never redraws anything.
 export async function removeAbsorbedNotes({ room, ids, api = API }) {
 	if (!ids.length) return { status: 200, removed: 0 }
-	const res = await fetch(`${api}/doc?room=${room}`, {
+	const res = await apiFetch(`${api}/doc?room=${room}`, {
 		method: 'PATCH',
 		headers: { 'Content-Type': 'application/json' },
 		body: JSON.stringify({ remove: ids }),

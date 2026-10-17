@@ -1,0 +1,20 @@
+{
+  "name": "replace-with-isolated-private-journey",
+  "main": "../server/host/cloudflare.ts",
+  "compatibility_date": "2026-07-01",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [],
+  "observability": { "enabled": false },
+  "vars": { "JOURNEY_ORIGIN": "https://canvas.example.invalid" },
+  "durable_objects": {
+    "bindings": [
+      { "name": "ROOMS", "class_name": "JourneyRoom" },
+      { "name": "REGISTRY", "class_name": "JourneyRegistry" }
+    ]
+  },
+  "migrations": [
+    { "tag": "v1", "new_sqlite_classes": ["JourneyRoom", "JourneyRegistry"] }
+  ]
+}

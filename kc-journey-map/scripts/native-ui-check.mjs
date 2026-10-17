@@ -1,0 +1,150 @@
+import assert from 'node:assert/strict'
+import { readFile } from 'node:fs/promises'
+import { join } from 'node:path'
+
+export async function checkNativeUi({ page, context, adapter, origin, scratch, saveDir, longRoom, data, request, check, click, ready, chooseRoom, openRooms }) {
+ const escape = async () => { await page.keyboard.press('Escape'); await page.waitForTimeout(100) }
+ const shot = name => page.screenshot({ path: join(scratch, name + '.png') })
+ const bounds = async locator => {
+  const b = await locator.boundingBox(), v = page.viewportSize()
+  assert.ok(b && b.x >= -1 && b.y >= -1 && b.x + b.width <= v.width + 1 && b.y + b.height <= v.height + 1, 'control or popup outside viewport: ' + await locator.evaluate(el => el.outerHTML.slice(0, 200)))
+ }
+ const originalPage = await page.evaluate(() => window.editor.getCurrentPage().name)
+ await check('existing sequence command adds native shapes on a separate page', async () => {
+  const sequence = await page.evaluate(() => window.addSequencePage({ source: 'sequenceDiagram\n A->>B: Synthetic request\n B-->>A: Synthetic reply', sourcePath: 'docs/synthetic.mmd', name: 'Sequence check' }))
+  assert.ok(sequence.shapes > 0)
+  assert.equal(await page.evaluate(() => window.editor.getCurrentPage().name), 'Sequence check')
+  assert.equal(await page.evaluate(() => window.editor.getCurrentPageShapes().some(s => s.type === 'image')), false)
+  await page.evaluate(name => { window.editor.setCurrentPage(window.editor.getPages().find(p => p.name === name).id) }, originalPage)
+ })
+ for (const [name, width, height] of [['desktop', 1440, 900], ['tablet', 768, 1024], ['phone390', 390, 844], ['phone320', 320, 844], ['landscape', 844, 390]]) {
+  const filter = process.env.JOURNEY_CHECK_VIEWPORTS?.split(',')
+  if (filter && !filter.includes(name)) continue
+  await page.setViewportSize({ width, height })
+  await ready('A'); await escape(); await page.evaluate(() => { window.editor.selectNone() })
+  await shot(name + '-clean')
+  await check(name + ': native main, page, style, toolbar and room menus have reachable centres and bounded popups', async () => {
+   await click(page.getByTestId('main-menu.button')); await bounds(page.getByRole('menu').first()); await escape()
+   await click(page.getByTestId('page-menu.button')); await bounds(page.getByRole('dialog').first())
+   await click(page.locator('.tlui-page-menu__item__button').filter({ hasText: 'Sequence check' }))
+   assert.equal(await page.evaluate(() => window.editor.getCurrentPage().name), 'Sequence check')
+   if (await page.getByTestId('page-menu.button').getAttribute('aria-expanded') !== 'true') await click(page.getByTestId('page-menu.button'))
+   await click(page.locator('.tlui-page-menu__item__button').filter({ hasText: originalPage })); await escape()
+   const mobile = await page.getByTestId('mobile-styles.button').isVisible()
+   if (mobile) { await click(page.getByTestId('mobile-styles.button')); await bounds(page.getByRole('dialog').first()) }
+   await click(page.getByTestId('style.color.red').filter({ visible: true })); if (mobile) await escape()
+   await click(page.getByTestId('tools.more-button')); await bounds(page.getByRole('dialog').first())
+   await shot(name + '-toolbar'); await click(page.getByTestId('tools.more.rectangle'))
+   assert.equal(await page.evaluate(() => window.editor.getCurrentToolId()), 'geo')
+   await openRooms(); await bounds(page.locator('.journey-room-menu'))
+   await page.getByRole('textbox', { name: 'Search rooms' }).fill('very-long')
+   await page.getByRole('textbox', { name: 'Search rooms' }).press('Enter'); await ready(longRoom)
+   await openRooms(); await bounds(page.locator('.journey-room-menu'))
+   assert.ok((await page.locator('.journey-room-heading').innerText()).includes(longRoom))
+   await shot(name + '-long-room'); await escape()
+   assert.ok(await page.getByTestId('room-trigger').evaluate(el => el === document.activeElement))
+   await chooseRoom('A'); await ready('A')
+  })
+  await check(name + ': native drawing persists through real A-to-B-to-A and is absent from B', async () => {
+   await click(page.getByTestId('tools.draw'))
+   const before = await page.evaluate(() => window.editor.getCurrentPageShapes().map(s => s.id))
+   await page.mouse.move(width * .3, height * .55); await page.mouse.down()
+   await page.mouse.move(width * .6, height * .6, { steps: 10 }); await page.mouse.up()
+   const drawing = await page.evaluate(before => window.editor.getCurrentPageShapes().find(s => !before.includes(s.id)), before)
+   assert.equal(drawing?.type, 'draw')
+   for (let i = 0; i < 100; i++) {
+    if (JSON.stringify(await data('/doc?room=A')).includes(drawing.id)) break
+    await page.waitForTimeout(50)
+   }
+   await chooseRoom('B'); await ready('B'); assert.equal(await page.evaluate(id => !!window.editor.getShape(id), drawing.id), false)
+   await chooseRoom('A'); await ready('A'); assert.deepEqual(await page.evaluate(id => window.editor.getShape(id), drawing.id), drawing)
+  })
+  if (adapter === 'node') await check(name + ': real save filename, overwrite, success, error and download remain usable', async () => {
+   const save = page.getByRole('button', { name: 'save', exact: true }), download = page.getByRole('button', { name: 'download', exact: true })
+   await bounds(save); await bounds(download)
+   await click(save)
+   const input = page.getByRole('textbox', { name: 'Filename' })
+   await bounds(input); await click(input); await input.fill(name + '.tldr')
+   await bounds(page.getByRole('button', { name: 'write', exact: true }))
+   await shot(name + '-save-form'); await click(page.getByRole('button', { name: 'write', exact: true }))
+   await page.getByText(/records →/).waitFor()
+   const file = JSON.parse(await readFile(join(saveDir, name + '.tldr'), 'utf8'))
+   assert.ok(file.records.some(record => record.id === 'shape:A'))
+   await bounds(save); await click(save); await input.fill(name + '.tldr')
+   await page.getByRole('button', { name: 'overwrite', exact: true }).waitFor()
+   await shot(name + '-overwrite'); await click(page.getByRole('button', { name: 'overwrite', exact: true }))
+   await page.getByText(/records →/).waitFor()
+   await click(save); await input.fill('...')
+   await click(page.getByRole('button', { name: 'write', exact: true }))
+   await page.getByText('that name has nothing usable in it').waitFor()
+   await shot(name + '-save-error'); await input.press('Escape')
+   await page.waitForFunction(() => document.activeElement === document.querySelector('.journey-save > button'))
+   await click(page.getByRole('button', { name: 'Dismiss', exact: true }))
+   await click(save); await click(page.getByRole('button', { name: 'Cancel', exact: true }))
+   await page.waitForFunction(() => document.activeElement === document.querySelector('.journey-save > button'))
+   await bounds(save)
+   await openRooms(); await bounds(page.locator('.journey-room-menu')); await escape()
+   await click(page.getByTestId('page-menu.button')); await bounds(page.getByRole('dialog').first()); await escape()
+   const downloaded = page.waitForEvent('download'); await click(download); assert.equal((await downloaded).suggestedFilename(), 'A.tldr'); await click(page.getByRole('button', { name: 'Dismiss', exact: true }))
+  })
+  await check(name + ': actual chapter popup ' + (adapter === 'node' ? 'content and scrolling' : 'unsupported state') + ', visible dismissal and canvas return', async () => {
+   await page.evaluate(() => {
+    const editor = window.editor
+    editor.setCurrentTool('select')
+    editor.updateShape({ id: 'shape:A', type: 'note', props: { url: 'https://github.com/synthetic/chapter/blob/main/docs/chapter.md#sequence' } })
+    editor.select('shape:A'); editor.zoomToSelection({ inset: Math.min(window.innerWidth, window.innerHeight) / 3 })
+   })
+   const link = page.locator('a.tl-hyperlink-button')
+   const pagesBefore = context.pages().length
+   await click(link); await page.locator('dialog.doc-popup[open]').waitFor()
+   await bounds(page.locator('dialog.doc-popup'))
+   if (adapter === 'node') {
+    await page.getByRole('heading', { name: 'Synthetic chapter' }).waitFor()
+    const body = page.locator('.doc-popup-body')
+    await body.hover(); await page.mouse.wheel(0, 900)
+    await page.waitForFunction(() => document.querySelector('.doc-popup-body').scrollTop > 100)
+   } else await page.getByText(/Document unavailable/).waitFor()
+   await shot(name + '-document')
+   const close = page.getByRole('button', { name: 'Close', exact: true })
+   await bounds(page.locator('.doc-popup-chrome')); await bounds(close)
+   assert.ok(await close.evaluate(el => { const r = el.getBoundingClientRect(); const hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2); return hit === el || el.contains(hit) }), 'document Close is clipped or obstructed before scrolling it into view')
+   await click(close)
+   await page.locator('dialog.doc-popup').waitFor({ state: 'detached' })
+   assert.ok(await link.evaluate(el => el === document.activeElement))
+   await click(link); await page.locator('dialog.doc-popup[open]').waitFor(); await escape()
+   await page.locator('dialog.doc-popup').waitFor({ state: 'detached' })
+   assert.equal(context.pages().length, pagesBefore)
+   await click(page.getByTestId('tools.draw')); assert.equal(await page.evaluate(() => window.editor.getCurrentToolId()), 'draw')
+   await page.mouse.click(width * .3, height * .6)
+   await page.evaluate(() => { window.editor.selectNone() })
+  })
+  await check(name + ': editor theme and StickyBackbone coexist with room and page controls', async () => {
+   await page.evaluate(() => {
+    window.editor.user.updateUserPreferences({ colorScheme: 'dark' })
+    window.editor.updateShape({ id: 'shape:A', type: 'note', meta: { journey: { kind: 'activity' } } })
+    window.editor.setCamera({ x: 0, y: -700, z: 1 })
+   })
+   await page.getByTestId('sticky-backbone').waitFor()
+   await openRooms(); await bounds(page.locator('.journey-room-menu')); await shot(name + '-dark-sticky'); await escape()
+   await click(page.getByTestId('page-menu.button')); await escape()
+   assert.equal(await page.evaluate(() => window.editor.getColorMode()), 'dark')
+   await page.evaluate(() => window.editor.user.updateUserPreferences({ colorScheme: 'light' }))
+   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), width)
+  })
+ }
+ await page.setViewportSize({ width: 1440, height: 900 })
+ await check('native zoom menu changes camera zoom through a real pointer', async () => {
+  await click(page.getByTestId('minimap.zoom-menu-button'))
+  const zoom = await page.evaluate(() => window.editor.getZoomLevel())
+  await click(page.getByTestId('zoom-menu.zoom-in'))
+  await page.waitForFunction(zoom => window.editor.getZoomLevel() > zoom, zoom)
+  await escape()
+ })
+ if (adapter === 'cloudflare-local') await check('Cloudflare filesystem capabilities remain unavailable and SaveButton is hidden', async () => {
+  assert.equal((await data('/capabilities?room=A')).save, false)
+  assert.equal((await request('/save?room=A')).status, 501)
+  assert.deepEqual(await data('/repo-doc?room=A&owner=synthetic&repo=chapter&refPath=main/docs/chapter.md'), { state: 'unavailable', reason: 'checkout capability is unavailable' })
+  assert.equal(await page.getByRole('button', { name: 'save', exact: true }).count(), 0)
+  assert.equal(await page.getByRole('button', { name: 'download', exact: true }).count(), 0)
+ })
+}

@@ -3,6 +3,7 @@ import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import mermaid from 'mermaid'
 import GithubSlugger from 'github-slugger'
+import { journeyApi } from './api'
 
 mermaid.initialize({ startOnLoad: false, securityLevel: 'strict' })
 
@@ -37,7 +38,7 @@ async function renderMermaidBlocks(container: HTMLElement) {
 	}
 }
 
-export function DocPopup({ target, onClose, returnFocusTo }: { target: DocTarget; onClose: () => void; returnFocusTo: HTMLElement | null }) {
+export function DocPopup({ target, onClose, returnFocusTo, roomId = new URLSearchParams(window.location.search).get('room') || 'default' }: { target: DocTarget; onClose: () => void; returnFocusTo: HTMLElement | null; roomId?: string }) {
 	const [state, setState] = useState<DocState>({ kind: 'loading' })
 	const dialogRef = useRef<HTMLDialogElement>(null)
 	const bodyRef = useRef<HTMLDivElement>(null)
@@ -69,7 +70,7 @@ export function DocPopup({ target, onClose, returnFocusTo }: { target: DocTarget
 		let cancelled = false
 		setState({ kind: 'loading' })
 		const q = new URLSearchParams({ owner: target.owner, repo: target.repo, refPath: target.refAndPath })
-		fetch(`/repo-doc?${q}`)
+		fetch(journeyApi(`/repo-doc?${q}&room=${encodeURIComponent(roomId)}`))
 			.then((r) => r.json())
 			.then((result: { state: 'ok'; content: string; sha: string } | { state: 'unavailable'; reason: string }) => {
 				if (cancelled) return
@@ -100,7 +101,7 @@ export function DocPopup({ target, onClose, returnFocusTo }: { target: DocTarget
 		return () => {
 			cancelled = true
 		}
-	}, [target])
+	}, [target, roomId])
 
 	useEffect(() => {
 		if ((state.kind === 'ready' || state.kind === 'missing-heading') && bodyRef.current) {

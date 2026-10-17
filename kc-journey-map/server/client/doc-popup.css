@@ -1,4 +1,5 @@
 .doc-popup {
+	box-sizing: border-box;
 	width: min(760px, 90vw);
 	max-height: 85vh;
 	padding: 0;
@@ -6,11 +7,16 @@
 	border-radius: 8px;
 	overflow: hidden;
 }
+.doc-popup[open] {
+	display: flex;
+	flex-direction: column;
+}
 .doc-popup::backdrop {
 	background: rgba(0, 0, 0, 0.4);
 }
 .doc-popup-chrome {
 	display: flex;
+	flex-shrink: 0;
 	justify-content: space-between;
 	align-items: center;
 	padding: 8px 12px;
@@ -18,9 +24,9 @@
 	border-bottom: 1px solid #ddd;
 }
 .doc-popup-body {
+	min-height: 0;
 	padding: 16px 20px;
 	overflow: auto;
-	max-height: calc(85vh - 44px);
 }
 .doc-popup-unavailable {
 	color: #a33;

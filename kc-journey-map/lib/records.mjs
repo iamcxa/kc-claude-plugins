@@ -100,7 +100,7 @@ export function label({
 }
 
 // tldraw normalizes deep-link camera bounds; the page ID is sufficient.
-export const pageLink = (room, pageId) => `http://localhost:3737/?room=${room}&d=v0.0.1.1.${pageId.replace('page:', '')}`
+export const pageLink = (room, pageId) => `${(typeof process !== 'undefined' && process.env?.JOURNEY_CANVAS_BASE || 'http://localhost:3737').replace(/\/$/, '')}/?room=${room}&d=v0.0.1.1.${pageId.replace('page:', '')}`
 
 // Geo labels do not auto-grow; these text metrics were measured at 300px, size s.
 const LINE_H = { s: 24, m: 32 }

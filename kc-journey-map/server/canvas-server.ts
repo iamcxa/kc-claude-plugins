@@ -1,158 +1,62 @@
-// Adapted from tldraw's `templates/simple-server-example` (MIT).
 import { hostname } from 'node:os'
+import { createInterface } from 'node:readline'
 import websocketPlugin from '@fastify/websocket'
 import fastify from 'fastify'
-import type { RawData } from 'ws'
-import { createTLSchema } from '@tldraw/tlschema'
-import { loadAsset, storeAsset } from './assets'
-import { readRepoDoc } from './repo-doc'
-import { activeRooms, listRooms, makeOrLoadRoom, sanitizeRoomId } from './rooms'
-import { saveBoard, saveDir, saveTarget } from './save'
+import { NodeHost } from './host/node'
+import { admit, handle } from './host/transport'
+import { HostError } from './host/core'
+import { exportRoom, restoreRoom } from './host/recovery'
 
-// Separate ports keep checks from mutating another running canvas.
-const PORT = Number(process.env.JOURNEY_API_PORT ?? 5858)
-const DEFAULT_ROOM = 'default'
-
-// Same allowlist source as vite.config.mts: the first operator-configured name, so the
-// printed URL resolves from the viewer's machine even when os.hostname() does not.
-const PRINT_HOST = (process.env.JOURNEY_ALLOWED_HOSTS ?? '').split(',').map((h) => h.trim()).find(Boolean) ?? hostname()
-
-const schema = createTLSchema()
-
-function validateRecord(record: any): string | null {
-	if (!record || typeof record !== 'object') return 'record is not an object'
-	const { id, typeName } = record
-	if (typeof id !== 'string') return 'record.id must be a string'
-	if (typeof typeName !== 'string') return `record ${id} has no typeName`
-	const type = (schema.types as Record<string, any>)[typeName]
-	if (!type) return `record ${id} has unknown typeName "${typeName}"`
-	try {
-		type.validate(record)
-		return null
-	} catch (e) {
-		return `record ${id} failed validation: ${(e as Error).message}`
-	}
-}
-
-// A .tldr carrying inlined image bytes exceeds fastify's 1 MiB default on PUT /doc.
-const BODY_LIMIT = Number(process.env.JOURNEY_BODY_LIMIT ?? 64 * 1024 * 1024)
-
-const app = fastify({ bodyLimit: BODY_LIMIT })
-app.register(websocketPlugin)
-
-function roomIdOf(req: any): string {
-	return sanitizeRoomId((req.query as any)?.room || DEFAULT_ROOM)
-}
-
-app.register(async (app) => {
-	app.get('/connect/:roomId', { websocket: true }, async (socket, req) => {
-		const roomId = (req.params as any).roomId as string
-		const sessionId = (req.query as any)?.['sessionId'] as string
-
-		const caughtMessages: RawData[] = []
-		const collect = (message: RawData) => caughtMessages.push(message)
-		socket.on('message', collect)
-
-		const room = makeOrLoadRoom(roomId)
-		room.handleSocketConnect({ sessionId, socket })
-
-		socket.off('message', collect)
-		for (const message of caughtMessages) socket.emit('message', message)
-	})
-
-	app.addContentTypeParser('*', (_req, _payload, done) => done(null))
-
-	app.put('/uploads/:id', async (req, res) => {
-		await storeAsset((req.params as any).id as string, req.raw, req.headers['content-type'])
-		return res.send({ ok: true })
-	})
-
-	app.get('/uploads/:id', async (req, res) => {
-		const { data, contentType } = await loadAsset((req.params as any).id as string)
-		res.header('Content-Security-Policy', "default-src 'none'")
-		res.header('X-Content-Type-Options', 'nosniff')
-		res.header('Content-Type', contentType)
-		return res.send(data)
-	})
-
-	app.get('/save', async (req) => {
-		const name = (req.query as any)?.name as string | undefined
-		return { dir: saveDir(), ...(name ? saveTarget(name) : {}) }
-	})
-
-	app.post('/save', async (req, res) => {
-		const body = (req.body ?? {}) as { name?: string; file?: string }
-		if (typeof body.name !== 'string' || typeof body.file !== 'string') {
-			return res.status(400).send({ error: 'name and file are required' })
-		}
-		try {
-			return await saveBoard(body.name, body.file)
-		} catch (e) {
-			return res.status(400).send({ error: (e as Error).message })
-		}
-	})
-
-	app.get('/repo-doc', async (req, res) => {
-		const query = req.query as Record<string, string | undefined>
-		const { owner, repo, refPath } = query
-		if (!owner || !repo || !refPath) {
-			return res.status(400).send({ error: 'owner, repo and refPath are required' })
-		}
-		return await readRepoDoc(owner, repo, refPath)
-	})
-
-	app.get('/health', async () => ({
-		ok: true,
-		tldraw: '5.4.0',
-		port: PORT,
-		rooms: listRooms(),
-		active: activeRooms(),
-	}))
-
-	app.get('/doc', async (req) => {
-		const roomId = roomIdOf(req)
-		return { roomId, snapshot: makeOrLoadRoom(roomId).getCurrentSnapshot() }
-	})
-
-	// Incremental write. `put` entries are COMPLETE records, not property fragments.
-	app.patch('/doc', async (req, res) => {
-		const roomId = roomIdOf(req)
-		const body = (req.body ?? {}) as { put?: any[]; remove?: string[] }
-		const put = body.put ?? []
-		const remove = body.remove ?? []
-		if (!Array.isArray(put) || !Array.isArray(remove)) {
-			return res.status(400).send({ error: 'put and remove must be arrays' })
-		}
-
-		const errors = put.map(validateRecord).filter((e): e is string => e !== null)
-		if (errors.length) return res.status(400).send({ error: 'validation failed', errors })
-
-		const room = makeOrLoadRoom(roomId)
-		await room.updateStore((store) => {
-			for (const record of put) store.put(record)
-			for (const id of remove) store.delete(id)
-		})
-		return { roomId, put: put.length, removed: remove.length, clock: room.getCurrentDocumentClock() }
-	})
-
-	app.put('/doc', async (req, res) => {
-		const roomId = roomIdOf(req)
-		const body = req.body as any
-		const snapshot = body?.snapshot ?? body
-		if (!snapshot?.documents && !snapshot?.store) {
-			return res.status(400).send({ error: 'body must be a RoomSnapshot or TLStoreSnapshot' })
-		}
-		const room = makeOrLoadRoom(roomId)
-		room.loadSnapshot(snapshot)
-		return { roomId, clock: room.getCurrentDocumentClock() }
-	})
+const host = new NodeHost()
+const app = fastify({ bodyLimit: Number(process.env.JOURNEY_BODY_LIMIT ?? 64 * 1024 * 1024) })
+await app.register(websocketPlugin)
+app.removeAllContentTypeParsers()
+app.addContentTypeParser('*', { parseAs: 'buffer' }, (_req, body, done) => done(null, body))
+const headersOf = (req: any) => new Headers(Object.fromEntries(Object.entries(req.headers).filter(([, v]) => v !== undefined).map(([k, v]) => [k, String(v)])))
+app.get('/connect/:roomId', {
+ websocket: true,
+ preValidation: async (req, res) => {
+  try {
+   const admission = await admit(host, headersOf(req), (req.params as any).roomId, false, true)
+   ;(req as any).journeyAdmission = admission
+   await host.openRoom(admission.room)
+  } catch (e) { return res.status(e instanceof HostError ? e.status : 503).send({ error: e instanceof HostError ? e.message : 'room unavailable' }) }
+ },
+}, (socket, req) => {
+ const { room: id, admission } = (req as any).journeyAdmission
+ const room = host.rooms.get(id)!.room
+ const sessionId = String((req.query as any).sessionId || '')
+ host.track(socket, admission, id)
+ room.handleSocketConnect({ sessionId, socket: { send: (data: string) => socket.send(data), close: (code?: number, reason?: string) => socket.close(code, reason), get readyState() { return socket.readyState } } as any })
+ socket.on('message', async data => {
+  if (!await host.socketAllowed(admission, id)) { socket.close(1008, 'credential invalid'); return }
+  room.handleSocketMessage(sessionId, data.toString())
+ })
+ socket.on('close', () => room.handleSocketClose(sessionId))
+ socket.on('error', () => room.handleSocketError(sessionId))
 })
-
-app.listen({ port: PORT, host: '127.0.0.1' }, (err, address) => {
-	if (err) {
-		console.error(err)
-		process.exit(1)
-	}
-	// The doc API itself stays loopback-only; this is the frontend port the operator opens.
-	console.log(`doc API on ${address}  (canvas: http://${PRINT_HOST}:3737/?room=${DEFAULT_ROOM})`)
+app.all('/*', async (req, res) => {
+ const response = await handle(host, new Request('http://localhost' + req.raw.url, {
+  method: req.method, headers: headersOf(req), ...(['GET', 'HEAD'].includes(req.method) ? {} : { body: req.body as BodyInit }),
+ }))
+ res.status(response.status)
+ for (const [key, value] of response.headers) res.header(key, value)
+ return res.send(Buffer.from(await response.arrayBuffer()))
 })
+if (process.env.JOURNEY_CONTROL_STDIO === '1') {
+ const control = createInterface({ input: process.stdin })
+ control.on('line', async line => {
+  try {
+   const command = JSON.parse(line)
+   const result = command.op === 'revoke' ? await host.revoke(command.credentialId)
+    : command.op === 'export' ? await exportRoom(host, command.room)
+    : command.op === 'restore' ? await restoreRoom(host, command.archive)
+    : (() => { throw new Error('unknown operator command') })()
+   console.log(JSON.stringify({ control: command.id, result }))
+  } catch { console.log(JSON.stringify({ controlError: 'operator command failed' })) }
+ })
+}
+const address = await app.listen({ port: host.port, host: '127.0.0.1' })
+const printHost = (process.env.JOURNEY_ALLOWED_HOSTS || '').split(',').find(Boolean) || hostname()
+console.log(`doc API on ${address}  (canvas: http://${printHost}:3737/?room=default)`)
+for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => { host.close(); app.close().finally(() => process.exit()) })

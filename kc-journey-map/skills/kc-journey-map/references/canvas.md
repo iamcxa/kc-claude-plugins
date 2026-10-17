@@ -23,8 +23,16 @@ it. Follow [Source placement](../SKILL.md#source-placement) for the canonical pa
 A `.tldr` snapshot beside the source is an optional, deliberate backup or sharing
 artifact, not an export required after every update; YAML remains the authority.
 Keep room databases (`.rooms/*.db`) out of git: they are local runtime data.
-`server/rooms.ts` uses `JOURNEY_ROOMS_DIR`, or `./.rooms` relative to the service working
+`server/host/node.ts` uses `JOURNEY_ROOMS_DIR`, or `./.rooms` relative to the service working
 directory by default; it does not automatically place rooms in the consuming repository.
+
+## Private host pilot
+
+[Private host setup and recovery](../../../docs/private-host.md) owns the Node/Cloudflare
+configuration, grant/session/asset boundaries and acceptance commands. Use that mode for
+a separately configured private host. Its agent interface is `JOURNEY_API` plus optional
+`JOURNEY_API_TOKEN`; `JOURNEY_CANVAS_BASE` changes newly rendered links. Do not put credentials
+in room URLs, records or YAML. The procedures below describe legacy local behavior.
 
 ## Run it
 
