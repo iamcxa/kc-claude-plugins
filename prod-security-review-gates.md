@@ -1,6 +1,6 @@
 ---
 title: A prod-profile task passes a security review at two different gates instead of waiting for someone to judge that one is needed
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -60,7 +60,7 @@ gates:
                 reason: Captain approved the redone ideation under amendment 2 (「准」), presented with the learning proposal; as the gate question states, this accepts D1, D2 and D3 as recommended, ADR 0019, and is the push and Draft PR grant for the implementation worker.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-16T03:14:23Z
 worktree: .worktrees/spacedock-ensign-prod-security-review-gates
 ---
