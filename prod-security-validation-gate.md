@@ -285,3 +285,105 @@ The model is not the lever: Sonnet 5.5, Opus 5.5 and Fable 5.1 all miss the unbo
 ### Summary
 
 The validation half of the prod security review is landed as Draft PR 659: Reach brief in the validation prod.md, `validation_security.py` called from `delivery_gate.py check` for prod tasks only, a refusal step at ideation, ADR 0021, one CI step. Shipped wording found the unbounded write on both relay runs (n of 2, one fitted PR) with no finding on the control; two automated reviews raised four fail-open holes, all fixed. Not verified: a real refusal, a real validation worker end to end, gate-presentation rendering, a Codex-hosted worker; relay AC-2 cost figures are not comparable with runs.md.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #659 head fce79ed7 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Recommend PASSED at fce79ed7bd8a1ed8b8684ba2a1be25e0aefc671c (PR head confirmed by `gh pr view`, Draft, base 19fe3b5b); no Material finding. AC-1: stat lists exactly the 8 named files; `git diff 19fe3b5b -- references extensions skills/observer README design_surfaces.py` is 0 bytes; candidate `lint-skills.py` exit 0 (workflow.md 5495 of 5511). AC-2: see next item. AC-3: `test_validation_security.py` (5 tests) and `test_delivery_gate.py` (20) exit 0, `test_design_surfaces.py` 90 OK; pilot output through `delivery_gate.py` is `cmp`-identical to origin/main's script (20 words); my falsifiers are the mutations in the next item. AC-4: `grep -c 'Do not rerun and do not switch model'` is 1 in each prod.md; at validation, refusal prose, an empty report and `not run` each exit 1 (acceptance steps 5, plus an empty report and a `not run` line run by me); at ideation, the 0.24.0 `design_surfaces.py check` exits 1 on refusal prose, empty report, no line and `not run`, and exits 0 on a fabricated `findings: []` (re-ran `tools/refusal_fixture.py` against the candidate, same five outcomes). AC-5: `references/` untouched, pilot 20 words both ways, prod 30 words asserted by `test_a_prod_task_with_a_disposed_review_gets_one_more_line_of_ten_words`. AC-6: both scripts exit 0 under `python3 -B` and `-I` (pilot fixture by me; prod by the new test's subprocess case); the prod.md line is present (grep count 1). AC-7: PR body carries the labelled table ("assumed", "ceiling", output tokens estimated) and claims no rate from n of 2. AC-8: `adr_lint.py docs/adr --since 19fe3b5b --require 0021` exit 0; Words line quotes 「那就照建議」 as recorded in the ideation gate record. Also: `comment_ratio.py` 381 code lines, 2 comment lines, 0.5%, exit 0; `number_guards.py check` PASS; `dispatch_records.py` 3 records complete; `design_surfaces.py check` presentable; `doc_impact.py` lists only `kc-dev-flow-2/README.md`, recorded unaffected in the implementation report and still true (the test file is listed in the workflow). Implementation-report limits judged: fitted brief on one PR, no real refusal, no end-to-end worker, no Codex-hosted worker, gate rendering unverified, relay AC-2 costs not comparable with runs.md: each is stated in the PR body and ADR 0021 and none is claimed as tested, so none blocks. The deviation "an unreadable `profile:` holds the ask" is safer than the design sentence and changes a no-frontmatter task from exit 0 to exit 1; real tasks carry `profile:`, so I class it Polish.
+- DONE: first validation; confirm the three automated security-review items (frontmatter fail-closed, duplicate Security finding lines refused, review bound to the candidate equal to the PR head) each have a failing-first test and a mutation; AC-2 re-run of the shipped wording on relay #347 within the stop rule; the added CI step and its per-PR cost; do not run Opus or Fable
+  Failing-first: candidate tests against f0bee5de sources of both scripts fail 7 checks in `test_validation_security` (unreadable profile x4, duplicate line, second severity line, the mutation test) and 8 in `test_delivery_gate` (profile x2, head binding x2, wiring mutations x4). Mutations I wrote on a copy (`python3 -B`, caches cleared): `if value != "prod":` to `if False:` fails the 4 unreadable-profile cases and the 2 delivery-gate profile cases; `if count > 1:` to `if False:` fails only `duplicate finding line` (+ the built-in mutation test); `m.group(3) in candidates` to `m` and `at_head = [c ...startswith(head)]` to all candidates or the first candidate each fail the other-head cases, `test_the_review_must_be_at_the_candidate_the_pr_head_equals` and the wiring mutations. AC-2 (Sonnet only, 0 brief revisions by me; shipped brief verbatim, inputs rebuilt from a fresh clone at 1c5b1870 and `git diff a5af7e3c...1c5b1870`, 440 lines, 14 files; control from `git diff a822c3e3^ a822c3e3`, 83 additions): relay run 1 returned MEDIUM, MEDIUM, LOW and names unlimited sessions per Room (`enter` with no cookie mints a session; no `rateLimit` on share.mts) and no Room-wide result total; relay run 2 returned MEDIUM, LOW and names no cap on sessions with only the per-session 100 results bound; control #555 returned `findings: []`. Both relay runs meet the criterion and the control has no HIGH or CRITICAL; n of 2 on one fitted PR, not a rate. Harness tokens/seconds: 113,455/212, 93,380/129, 42,912/21 (dollars not computed). CI step: `test_validation_security.py` added to `unit tests (python3)`, triggers unchanged (kc-dev-flow-2 paths only); on run 39028384206 the step started and ended in the same second and the job ran 68 s (11:21:29 to 11:22:37); marginal billed minutes not measured; no new job, no model call in CI.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <script>`: exit 0, all six steps matched their expected lines (observed output below the script). `adr_lint.py docs/adr --since 19fe3b5b` exit 0 ("20 ADR file(s) checked, 0 legacy"), also with `--require 0021` exit 0. Verdict: PASSED recommended at fce79ed7bd8a1ed8b8684ba2a1be25e0aefc671c. Findings: Material none; Needs decision none. Deferred risk: (1) the check cannot tell a fabricated `findings: []` report from a real one or say which brief ran (known limit; would become Material if a prod task is found merged with a fabricated report); (2) a worker that skips the review meets the hold at the merge ask, not at the validation gate (D3, ruled by the Captain); (3) Opus and Fable under the Reach brief are n=1 each and no real refusal has occurred. Polish: the no-frontmatter behaviour change above; the standalone `validation_security.py check` accepts a review at any dispatched head while `delivery_gate.py` binds it to the PR head. Throwaway worktree and clones removed; reviewer subagents ran read-only against my own checkouts.
+
+### Minimal acceptance script
+
+Needs git with network access to github.com, python3 and the installed kc-dev-flow-2 0.24.0 package (step 6 only). Save as a file and run `bash <file>` in a fresh shell. About one minute. Does not cover: a real model review, a real validation worker end to end, how the gate shows the lines, a real refusal, a Codex-hosted worker.
+
+```bash
+#!/usr/bin/env bash
+HEAD=fce79ed7bd8a1ed8b8684ba2a1be25e0aefc671c
+BASE=19fe3b5b3d34d54908d288860909d10db1ae9226
+CO=/tmp/psvg-accept-checkout
+FX=/tmp/psvg-accept-fixture
+S=$CO/kc-dev-flow-2/scripts
+set -u
+
+echo "== Step 1: check out the PR head and list what it changes (expect 8 files, no references/ file)"
+rm -rf "$CO" && mkdir "$CO" && git -C "$CO" init -q && git -C "$CO" fetch -q --depth 6 https://github.com/iamcxa/kc-claude-plugins.git "$HEAD" && git -C "$CO" checkout -q --detach FETCH_HEAD || { echo "step 1 FAILED"; exit 1; }
+git -C "$CO" rev-parse HEAD
+git -C "$CO" diff --name-only "$BASE" | sort
+
+echo "== Step 2: run the new and changed tests (expect Ran 5 tests ... OK, then Ran 20 tests ... OK)"
+python3 -B "$S/test_validation_security.py" 2>&1 | tail -3
+python3 -B "$S/test_delivery_gate.py" 2>&1 | tail -3
+
+echo "== Step 3: a prod task whose validation has no security review (expect exit 1, a 'needs a Security review' line, a 'next: hold the ask' line)"
+rm -rf "$FX" && mkdir -p "$FX/task/dispatch" "$FX/task/security"
+printf '# validation dispatch\n\nCandidate: %s\n\n## Checklist\n' "$HEAD" > "$FX/task/dispatch/validation-1.md"
+printf -- '---\ntitle: x\nprofile: prod\n---\n\n## Stage Report: validation\n\nVerdict: pending\n' > "$FX/task.md"
+printf 'Merge ask.' > "$FX/gate.txt"
+python3 -B "$S/delivery_gate.py" check "$FX/task.md" --pr o/r#1 --text-file "$FX/gate.txt" --head "$HEAD"; echo "exit=$?"
+
+echo "== Step 4: the same task with a saved review at that head and every finding disposed (expect exit 0 and 'validation security review security/validation-1.yaml: 3 findings, 1 declined, 2 decisions')"
+cat > "$FX/task/security/validation-1.yaml" <<'YAML'
+tob_security_review:
+  pr: 1
+  findings:
+    - file: "public/llms.txt"
+      severity: HIGH
+      title: "no total cap on sessions"
+    - file: "public/llms.txt"
+      severity: MEDIUM
+      title: "untrusted document"
+    - file: "public/llms.txt"
+      severity: LOW
+      title: "identity unverified"
+YAML
+printf 'Security review (validation): security/validation-1.yaml at %s\nSecurity finding (validation 1) 1: Needs decision: cap sessions now, or file a task\nSecurity finding (validation 1) 2: Needs decision: add the untrusted-document sentence\nSecurity finding (validation 1) 3: declined: identity is stated unverified\n' "$HEAD" >> "$FX/task.md"
+python3 -B "$S/delivery_gate.py" check "$FX/task.md" --pr o/r#1 --text-file "$FX/gate.txt" --head "$HEAD"; echo "exit=$?"
+
+echo "== Step 5: refusal text saved as the report (expect exit 1 and 'is not a tob_security_review report')"
+printf "I can't help with this request.\n" > "$FX/task/security/validation-1.yaml"
+python3 -B "$S/validation_security.py" check "$FX/task.md"; echo "exit=$?"
+
+echo "== Step 6: decision record lint (expect exit 0)"
+cd "$CO" && python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since "$BASE" --require 0021; echo "exit=$?"
+```
+
+Observed output (fresh `bash --noprofile --norc`, script exit 0, 2026-10-17):
+
+```
+== Step 1: ... (expect 8 files, no references/ file)
+fce79ed7bd8a1ed8b8684ba2a1be25e0aefc671c
+.github/workflows/kc-dev-flow-2-tests.yml
+docs/adr/0021-prod-validation-security-review-reaches-past-the-diff.md
+kc-dev-flow-2/scripts/delivery_gate.py
+kc-dev-flow-2/scripts/test_delivery_gate.py
+kc-dev-flow-2/scripts/test_validation_security.py
+kc-dev-flow-2/scripts/validation_security.py
+kc-dev-flow-2/skills/ideation/profiles/prod.md
+kc-dev-flow-2/skills/validation/profiles/prod.md
+== Step 2: ...
+Ran 5 tests in 0.437s / OK
+Ran 20 tests in 0.129s / OK
+== Step 3: ...
+task.md: a prod task needs a 'Security review (validation):' line naming the saved report and the head it ran on
+next: hold the ask; run the validation security review at this head, or tell the Captain.
+exit=1
+== Step 4: ...
+PR head fce79ed7... equals dispatched candidate fce79ed7...; no second reviewer outcome is missing
+validation security review security/validation-1.yaml: 3 findings, 1 declined, 2 decisions
+next: ask for merge with this text.
+exit=0
+== Step 5: ...
+task.md: 'security/validation-1.yaml' is not a tob_security_review report: 0 'tob_security_review:' lines at column 0, expected exactly 1
+task.md: 'security/validation-1.yaml' has 0 'findings:' lines, expected exactly 1
+exit=1
+== Step 6: ...
+20 ADR file(s) checked, 0 legacy
+exit=0
+```
+
+### Summary
+
+Recommend PASSED at fce79ed7: all eight criteria re-run with my own falsifiers, the three fail-closed items each have a failing-first test and a mutation that fails only their cases, and the shipped wording found the unbounded session and comment write on both fresh relay runs with `findings: []` on the control. No Material finding; limits are the ones the PR and ADR 0021 already state (one fitted PR, n of 2, no real refusal, fabricated empty report undetectable). The acceptance script ran unchanged in a fresh shell with every step matching.
