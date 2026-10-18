@@ -53,6 +53,17 @@ gates:
                 id: briefing:merge-gatekeeper:validation:attempt-1:revision-1
                 digest: sha256:89fb778621791a83d6cee9c0f87ec36c57870428b6549ebca3ae84867a36420d
                 room-ref: ./merge-gatekeeper/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-gatekeeper:validation:1
+                briefing: briefing:merge-gatekeeper:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-18T16:06:36.47306Z"
+                decision: approve
+                reason: 'Captain approved delivery of #666 head a05b18a0 in chat (「批准，授權你合併」), accepting FO''s recommendation to decline the listed Deferred risks and Polish into merge-gatekeeper-followups; he also authorized FO to merge'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-17T06:11:32Z
 worktree: .worktrees/spacedock-ensign-merge-gatekeeper
 pr: iamcxa/kc-claude-plugins#666
