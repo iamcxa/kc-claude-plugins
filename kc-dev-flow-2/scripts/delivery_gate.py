@@ -246,8 +246,9 @@ def grants_of(lists):
 
 
 def merge_line(number, repo, grant, candidate, title, recheck):
-    return (f"next: run {recheck} | tail -n 1 | grep -q '^next: run ' && gh pr merge {number} --repo {repo} --{grant[2]} --match-head-commit {candidate} "
-            f"--subject {shlex.quote(title)} --body '' now; when gh pr view says MERGED, tell the Captain with the points above; otherwise ask him.")
+    return (f"next: merge as follows, then tell the Captain the points above once gh pr view says MERGED, otherwise ask him: "
+            f"{recheck} | tail -n 1 | grep -q '^next: merge ' && gh pr merge {number} --repo {repo} --{grant[2]} "
+            f"--match-head-commit {candidate} --subject {shlex.quote(title)} --body ''")
 
 
 def lower_bound(k, n, alpha=0.05):
