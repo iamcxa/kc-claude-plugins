@@ -14,3 +14,4 @@ Filed on the Captain's 「同意」 (chat, 2026-10-18) to FO's proposal to narro
 - Measure 2: how often the Captain already uses a pre-authorized merge at a delivery gate (「預先授權」, 「批准並合併」 and similar) and how many of his turns per delivered PR remain, from the dev2 ledgers and state of this repository and the adopters.
 - Parked code: the grant, merge-line and calibrate code, its tests, ADR 0023 and the AC-5 real-repository run are on branch spacedock-ensign/merge-gatekeeper at 3fd841789db9c76d863ae4f723184c790471a7da; two Codex P1 on that code are open (review:5562139252: grants read from the working tree, not the fetched trunk; an unreadable PR state counted as pending).
 - Bar: set by the Captain at the backlog gate; the code returns only if the POC passes it.
+- Retrieval (FO, 2026-10-19): the PR branch was deleted on merge; 3fd841789db9c76d863ae4f723184c790471a7da stays reachable from GitHub's refs/pull/666/head (head a05b18a0): `git fetch origin refs/pull/666/head`.
