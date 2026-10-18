@@ -655,6 +655,8 @@ class GrantTests(unittest.TestCase):
         "malformed": dict(readme_body="merge-grants: [docs-only:rule:0.95:squash]\n" + EXT),
         "another class": dict(readme_body="merge-grants: [script-with-test:rule:0.95:squash:ADR 0024]\n" + EXT),
         "a never class": dict(readme_body="merge-grants: [never:rule:0.95:squash:ADR 0024]\n" + EXT, files=("docs/adr/x.md",)),
+        "a threshold under 0.95": dict(readme_body="merge-grants: [docs-only:rule:0.0001:squash:ADR 0024]\n" + EXT),
+        "a threshold of 0.949": dict(readme_body="merge-grants: [docs-only:rule:0.949:squash:ADR 0024]\n" + EXT),
         "a model arm": dict(readme_body="merge-grants: [docs-only:model:0.95:squash:ADR 0024]\n" + EXT),
         "a point": dict(task=EVIDENCE_TASK + "Surfaces: ui\n"),
         "codex findings": dict(codex_exit=1),
@@ -697,6 +699,7 @@ class GrantTests(unittest.TestCase):
                                                 'r"^roborev: clean on ([0-9a-f]{7,40}); evidence=roborev:\\d+$", task_text, re.M)\n    return "roborev" not in extensions or any(head.startswith(h) for h in bound)'),
             "roborev evidence not a whole line": ('r"^roborev: clean on ([0-9a-f]{40}); evidence=roborev:\\d+$"', 'r"roborev: clean on ([0-9a-f]{40}); evidence=roborev:\\d+"'),
             "a point": ('verdict = "merge" if not points', 'verdict = "merge" if True'),
+            "a threshold under 0.95": ('(0\\.9[5-9]\\d{0,3}|1(?:\\.0+)?)', '(0\\.\\d{1,4}|1(?:\\.0+)?)'),
         }
         for label, (old, new) in mutations.items():
             with self.subTest(label):

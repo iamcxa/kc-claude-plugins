@@ -19,7 +19,7 @@ README cannot be read, or an input is unusable. Every problem is printed.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
 and one last `next:` line. The README frontmatter key `merge-grants:` lists `<class>:rule:<threshold>:<method>:ADR <NNNN>`
-entries (method squash, merge or rebase; the rule arm ignores the threshold). The `next:` line is the merge line
+entries (threshold 0.95 to 1, method squash, merge or rebase; the rule arm reads the threshold only for that form, the bar itself is proven by the grant's ADR on `calibrate` evidence). The `next:` line is the merge line
 (a shell line that runs this check again and, only if its last line is again a merge line, `gh pr merge ... --match-head-commit <candidate>`) only when the class has a valid grant entry (the entry pattern admits no `never` class), no point was printed, the title is
 a Conventional Commit, the candidate is the PR head, a listed codex reader exits 0 on the head, a listed roborev left the whole line
 `roborev: clean on <40-hex candidate>; evidence=roborev:<job>` in the task, and no record of the class is labelled a failure. Otherwise it is the ask line.
@@ -49,7 +49,7 @@ SECOND_REVIEWER = re.compile(r"Second reviewer:\s*([\w.-]+)\s+because", re.I)
 OUTCOME_TOKEN = re.compile(r"\b(?:review|comment):\d+")
 PR = re.compile(r"^([\w.-]+/[\w.-]+)#(\d+)$")
 CONVENTIONAL = re.compile(r"^(?:feat|fix|docs|chore|refactor|test|style|perf|ci|build|revert)(?:\([\w./-]+\))?!?: \S[\x20-\x7e]{0,99}$")
-GRANT = re.compile(r"^(docs-only|script-with-test|other):rule:(0\.\d{1,4}|1(?:\.0+)?):(squash|merge|rebase):ADR (\d{4})$")
+GRANT = re.compile(r"^(docs-only|script-with-test|other):rule:(0\.9[5-9]\d{0,3}|1(?:\.0+)?):(squash|merge|rebase):ADR (\d{4})$")
 CODE = {".py", ".sh", ".js", ".mjs", ".ts", ".tsx", ".jsx", ".go", ".rb"}
 NEVER_PATH = [
     re.compile(r"^(?:\.github|\.claude)/"),
