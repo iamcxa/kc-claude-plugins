@@ -523,8 +523,8 @@ to finalize/archive. Where `learn` is listed, the sentinel waits for a committed
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
 
-Before the `gate prepare` that asks for merge, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
---pr <owner/repo>#<N> --text-file <question and summary>` and does what its `next:` line says, showing the Captain what it printed.
+Before the merge ask, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
+--pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask, as does a head other than the latest `Candidate:`; FO shows the Captain what it printed.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs
