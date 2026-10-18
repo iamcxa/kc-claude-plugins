@@ -891,6 +891,21 @@ class CalibrateTests(unittest.TestCase):
         out = self.run_calibrate(clean=2, grants="", setup=late, extra={3: dict(verdict="ask")})[1]
         self.assertIn("n=2 clean=2 failures=0", out)
 
+    def test_a_pr_and_head_recorded_in_two_task_folders_counts_once(self):
+        with tempfile.TemporaryDirectory() as d:
+            per_pr = self.world(d, clean=3, grants="")
+            Path(d, "task-1b", "merge").mkdir(parents=True)
+            Path(d, "task-1b", "merge", "ask-1.json").write_text(Path(d, "task-1", "merge", "ask-1.json").read_text())
+            out = io.StringIO()
+            with stubbed(d, per_pr=per_pr), mock.patch.object(gate, "utcnow", return_value=NOW), contextlib.redirect_stdout(out):
+                gate.main(["calibrate", d, "--repo", d])
+            self.assertIn("n=3 clean=3", out.getvalue())
+            module = variant_of('newest[(rec["pr"], rec["head"])] =', 'newest[(rec["pr"], rec["head"], str(folder))] =')
+            out = io.StringIO()
+            with stubbed(d, per_pr=per_pr), mock.patch.object(module, "utcnow", return_value=NOW), contextlib.redirect_stdout(out):
+                module.main(["calibrate", d, "--repo", d])
+            self.assertIn("n=4 clean=4", out.getvalue())
+
     def test_the_newest_record_of_a_pr_and_head_counts_once_and_never_is_never_proposed(self):
         def twice(d):
             Path(d, "task-1", "merge", "ask-2.json").write_text(Path(d, "task-1", "merge", "ask-1.json").read_text())

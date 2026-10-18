@@ -24,7 +24,7 @@ entries (method squash, merge or rebase; the rule arm ignores the threshold). Th
 a Conventional Commit, the candidate is the PR head, a listed codex reader exits 0 on the head, a listed roborev left the whole line
 `roborev: clean on <40-hex candidate>; evidence=roborev:<job>` in the task, and no record of the class is labelled a failure. Otherwise it is the ask line.
 
-calibrate. Labels each `merge/ask-<N>.json` of the workflow's active and archived tasks, keeping the newest per PR and head:
+calibrate. Labels each `merge/ask-<N>.json` of the workflow's active and archived tasks, keeping the newest per PR and head across all tasks:
 failure when the PR closed unmerged, merged at another head, a revert of its merge commit (`This reverts commit <sha>`) reached the
 trunk within 14 days, or its task has a later `### Amendment` date or an Override, reopen or `merge guard --rework` line naming the PR
 (amendments carry a date only, so a same-day amendment is not seen); pending when open or younger than 14 days; otherwise clean. Only
@@ -328,7 +328,8 @@ def labelled(workflow_dir, scalars, git_dir, only=None, now=None):
                 rec["class"], rec["verdict"], rec["pr"], rec["head"]
             except (OSError, ValueError, KeyError, TypeError, AttributeError):
                 rec = dict(pr=str(path), head="", **{"class": "other"}, verdict="merge", time="1970-01-01T00:00:00Z")
-            newest[(rec["pr"], rec["head"], str(folder))] = (rec, folder)
+            if (rec["pr"], rec["head"]) not in newest or rec["time"] >= newest[(rec["pr"], rec["head"])][0]["time"]:
+                newest[(rec["pr"], rec["head"])] = (rec, folder)
     out = []
     for rec, folder in newest.values():
         if rec["verdict"] != "merge" or (only and rec["class"] != only):
