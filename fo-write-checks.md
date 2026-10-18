@@ -3,7 +3,7 @@ title: The FO-write rules the observer keeps finding broken are checked by a scr
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain approved in chat (「批准這些作為第三批」) the five batch-3 backlog gates presented together, accepting the recommended profiles and the stated grouping and order
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 Filed for batch 3 on the Captain's 「先走批次三規劃」 (chat, 2026-10-19), after FO reported at the batch-2 close that its own process mistakes repeat across tasks and should move from reminders into a script; the Captain enabled the state laws check on this repository the same day (「可以那就只開啟這個repo」).
