@@ -381,7 +381,7 @@ def variant_of(old, new):
 
 
 def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=None, readme_body="extensions: [roborev, codex]\n",
-              records=RECORDS, codex_exit=None, setup=None, per_pr=None, argv_head="same", stub_fail=None, then=None):
+              records=RECORDS, codex_exit=None, setup=None, per_pr=None, argv_head="same", stub_fail=None, then=None, workflow_dir_arg=None):
     with tempfile.TemporaryDirectory() as d:
         readme(d, readme_body)
         Path(d, "task.md").write_text(task)
@@ -395,6 +395,8 @@ def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=N
         reader.write_text(f"import sys\nsys.exit({codex_exit or 0})\n")
         shown = head if argv_head == "same" else argv_head
         argv = ["check", str(Path(d, "task.md")), "--pr", "o/r#9", "--text-file", str(Path(d, "gate.txt"))] + (["--head", shown] if shown else [])
+        if workflow_dir_arg:
+            argv += ["--workflow-dir", str(Path(d, workflow_dir_arg))]
         out = io.StringIO()
         with stubbed(d, head=head, files=files, pr=pr_json(head=head, files=len(files), **(facts or {})), per_pr=per_pr), \
                 mock.patch.dict(os.environ, {"STUB_GH_FAIL": stub_fail or ""}), \
@@ -577,6 +579,24 @@ class ClassTests(unittest.TestCase):
             with self.subTest(str(paths[0])[:60]):
                 result, found = self.class_of(paths)
                 self.assertEqual((result.code, found), (0, expected), result.out)
+
+    @staticmethod
+    def readme_at(where):
+        def setup(d):
+            Path(d, ".git").mkdir()
+            if where:
+                Path(d, where).mkdir()
+                readme(Path(d, where))
+                Path(d, "README.md").unlink()
+        return setup
+
+    def test_the_workflow_readme_is_never_at_the_repository_root_and_below_it(self):
+        for label, path, where in (("root", "README.md", None), ("in a folder", "flow/README.md", "flow")):
+            with self.subTest(label):
+                result = run_check(files=(path,), setup=self.readme_at(where), workflow_dir_arg=where)
+                self.assertIn("class: never", result.lines, result.out)
+        module = variant_of('r"^README\\.md$" if rel == "." else', 'r"^README\\.md$" if False else')
+        self.assertNotIn("class: never", run_variant(module, files=("README.md",), setup=self.readme_at(None)).lines)
 
     def test_a_release_pr_prod_task_and_db_task_are_never(self):
         for label, kwargs in (("release pr", dict(facts=dict(headRefName="release-please--branches--main"))),

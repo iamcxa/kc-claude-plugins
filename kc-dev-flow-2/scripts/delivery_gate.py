@@ -178,7 +178,7 @@ def never_paths(paths, workflow_dir, scalars):
     root = repo_root(workflow_dir) if workflow_dir else None
     if root:
         rel = workflow_dir.resolve().relative_to(root).as_posix()
-        extra.append(re.compile(rf"^{re.escape(rel)}/README\.md$"))
+        extra.append(re.compile(r"^README\.md$" if rel == "." else rf"^{re.escape(rel)}/README\.md$"))
     return [p for p in paths if any(r.search(p) for r in NEVER_PATH + extra)]
 
 
