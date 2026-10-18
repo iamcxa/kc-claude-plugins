@@ -1,4 +1,5 @@
 import contextlib
+import hashlib
 import io
 import json
 from pathlib import Path
@@ -214,19 +215,133 @@ class CodexDispatchTest(unittest.TestCase):
 
     def test_evidence_rejects_altered_native_record_or_arguments(self):
         raw = self.root / "host.jsonl"
-        call = {"type": "response_item", "payload": {"name": "followup_task", "call_id": "call-1", "arguments": json.dumps({"target": "producer"})}}
-        raw.write_text(json.dumps(call) + "\n")
+        call = {"type": "response_item", "payload": {"type": "function_call", "namespace": "collaboration", "name": "followup_task", "call_id": "call-1", "arguments": json.dumps({"target": "producer", "message": "fixture pointer"})}}
+        result = {"type": "response_item", "payload": {"type": "function_call_output", "call_id": "call-1", "output": ""}}
+        raw.write_text(json.dumps(call) + "\n" + json.dumps(result) + "\n")
         ledger = self.root / "calls.json"
         ledger.write_text(json.dumps({"source_session": str(raw), "calls": [call]}))
         with self.assertRaisesRegex(ValueError, "arguments mismatch"):
-            evidence.native_call(ledger, "followup_task", {"target": "wrong-owner"})
-        call["payload"]["arguments"] = json.dumps({"target": "wrong-owner"})
+            evidence.native_call(ledger, "followup_task", {"target": "wrong-owner", "message": "fixture pointer"})
+        call["payload"]["arguments"] = json.dumps({"target": "wrong-owner", "message": "fixture pointer"})
         ledger.write_text(json.dumps({"source_session": str(raw), "calls": [call]}))
         with self.assertRaisesRegex(ValueError, "absent/altered"):
             evidence.native_call(ledger, "followup_task", {"target": "wrong-owner"})
         raw.unlink()
         with self.assertRaises(OSError):
             evidence.native_call(ledger, "followup_task", {"target": "producer"})
+
+
+class EvidenceRouteTest(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.repo = self.root / ".worktrees/pilot"
+        self.repo.mkdir(parents=True)
+        self.git("init", "-b", "pilot")
+        self.git("config", "user.email", "fixture@example.invalid")
+        self.git("config", "user.name", "Disposable fixture")
+        wrapper = self.repo / "kc-dev-flow-2/scripts/codex_dispatch.py"
+        wrapper.parent.mkdir(parents=True)
+        wrapper.write_text("disposable wrapper bytes\n")
+        self.git("add", "kc-dev-flow-2/scripts/codex_dispatch.py")
+        self.git("commit", "-m", "fixture base")
+        base = self.git("rev-parse", "HEAD")
+        (self.repo / "kc-dev-flow-2/fixture.txt").write_text("disposable candidate\n")
+        self.git("add", "kc-dev-flow-2/fixture.txt")
+        self.git("commit", "-m", "fixture candidate")
+        candidate = self.git("rev-parse", "HEAD")
+        self.producer, marker = "/root/disposable_producer", "DISPOSABLE-ACK"
+        binding = {"policy_id": "fixture-policy", "policy_sha256": "", "requested_model": "sonnet",
+                   "requested_reasoning": None, "model": "gpt-6.1-sol", "reasoning_effort": "high"}
+        policy = {"version": 1, "id": "fixture-policy", "models": {"sonnet": "gpt-6.1-sol"}, "reasoning_defaults": {"implementation": "high"}}
+        self.write("policy", policy)
+        binding["policy_sha256"] = hashlib.sha256((self.root / "policy.json").read_bytes()).hexdigest()
+        self.write("capabilities", {"arguments": ["task_name", "message", "fork_turns", "model", "reasoning_effort"], "supported_models": {"gpt-6.1-sol": ["high"]}})
+        self.requests = {"spawn_agent": {"task_name": "disposable_producer", "message": "original spawn pointer", "fork_turns": "none", "model": "gpt-6.1-sol", "reasoning_effort": "high"},
+                         "followup_task": {"target": self.producer, "message": "original followup pointer"}}
+        self.write("initial-wrapper", {"spawn_args": self.requests["spawn_agent"], "helper_name": "fixture-helper", "stock_helper": {"name": "fixture-helper", "prompt": "original spawn pointer"}, "binding": binding})
+        self.write("host-receipt", {"returned_handle": self.producer, "binding": binding, "requested_spawn_args": self.requests["spawn_agent"]})
+        self.write("followup-wrapper", {"followup_args": self.requests["followup_task"], "stock_helper": {"prompt": "original followup pointer"}, "binding": binding, "reuse": True})
+        entity = self.root / "entity.md"
+        entity.write_text("---\nstatus: implementation\nworktree: .worktrees/pilot\n---\n")
+        owner = {"entity_file": str(entity), "stage": "implementation", "code_worktree": str(self.repo), "branch": "pilot", "handle": self.producer,
+                 "frontmatter_sha256": hashlib.sha256(entity.read_text().split("---", 2)[1].encode()).hexdigest()}
+        self.write("followup-receipt", dict(owner, candidate=candidate, wrapper_sha256=hashlib.sha256(wrapper.read_bytes()).hexdigest(), binding=binding,
+                                           marker=marker, completion_turn_id="followup-turn", before=owner, after=owner,
+                                           before_entity_snapshot=str(entity), after_entity_snapshot=str(entity)))
+        self.write("baseline", {"base": base, "protected_base_git_objects": {}, "stock_files": []})
+        child = self.root / "child.jsonl"
+        self.jsonl(child, [{"type": "session_meta", "payload": {"id": "fixture-session", "source": {"subagent": {"thread_spawn": {"agent_path": self.producer, "parent_thread_id": "fixture-parent"}}}}},
+                           *[{"type": "turn_context", "payload": {"turn_id": t, "model": "gpt-6.1-sol", "effort": "high"}} for t in ("initial-turn", "followup-turn")],
+                           {"type": "response_item", "payload": {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": marker}]}}])
+        self.write("observed", [{"handle": self.producer, "session_id": "fixture-session", "session_path": str(child), "turns": [{"turn_id": "initial-turn", "model": "gpt-6.1-sol", "reasoning_effort": "high"}]}])
+        self.native("spawn_agent", outputs=[json.dumps({"task_name": self.producer})])
+        self.native("followup_task", outputs=[""])
+        self.args = ["--repo", str(self.repo), "--base", base, "--candidate", candidate, "--entity", str(entity), "--marker", marker]
+        for name in ("baseline", "initial-wrapper", "host-receipt", "observed", "native-calls", "followup-wrapper", "followup-receipt", "followup-native-calls", "policy", "capabilities"):
+            self.args += ["--" + name, str(self.root / (name + ".json"))]
+
+    def git(self, *args):
+        return cd.subprocess.run(["git", "-C", str(self.repo), "-c", "core.hooksPath=/dev/null", *args], capture_output=True, text=True, check=True).stdout.strip()
+
+    def write(self, name, data):
+        (self.root / (name + ".json")).write_text(json.dumps(data))
+
+    def jsonl(self, path, rows):
+        path.write_text("".join(json.dumps(row) + "\n" for row in rows))
+
+    def native(self, name, arguments=None, outputs=()):
+        call = {"type": "response_item", "payload": {"type": "function_call", "namespace": "collaboration", "name": name, "call_id": name + "-call",
+                                                     "arguments": json.dumps(self.requests[name] if arguments is None else arguments)}}
+        raw = self.root / (name + ".jsonl")
+        self.jsonl(raw, [{"type": "session_meta", "payload": {"id": "fixture-parent"}}, call,
+                         *[{"type": "response_item", "payload": {"type": "function_call_output", "call_id": name + "-call", "output": output}} for output in outputs]])
+        self.write("native-calls" if name == "spawn_agent" else "followup-native-calls", {"source_session": str(raw), "calls": [call]})
+
+    def invoke(self):
+        out, err = io.StringIO(), io.StringIO()
+        with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
+            code = evidence.main(self.args)
+        return code, out.getvalue(), err.getvalue()
+
+    def test_plaintext_matching_requests_and_successful_results_pass_fixture_control(self):
+        self.assertEqual(self.invoke()[0], 0)
+
+    def test_changed_spawn_assignment_is_not_certified(self):
+        self.native("spawn_agent", dict(self.requests["spawn_agent"], message="different assignment"), [json.dumps({"task_name": self.producer})])
+        self.assertEqual(self.invoke()[0], 1)
+
+    def test_changed_followup_assignment_is_not_certified(self):
+        self.native("followup_task", dict(self.requests["followup_task"], message="different assignment"), [""])
+        self.assertEqual(self.invoke()[0], 1)
+
+    def test_returned_handle_cannot_select_a_child_from_another_parent(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        rows[0]["payload"]["source"]["subagent"]["thread_spawn"]["parent_thread_id"] = "unrelated-parent"
+        self.jsonl(child, rows)
+        self.assertEqual(self.invoke()[0], 1)
+
+    def test_encrypted_spawn_assignment_holds_with_explanation(self):
+        self.native("spawn_agent", dict(self.requests["spawn_agent"], message="gAAAA_DISPOSABLE_OPAQUE_CONTENT"), [json.dumps({"task_name": self.producer})])
+        code, out, err = self.invoke()
+        self.assertEqual((code, out), (1, ""))
+        self.assertIn("encrypted", err)
+        self.assertIn("call_id", err)
+
+    def test_missing_error_duplicate_and_wrong_spawn_results_are_not_certified(self):
+        for outputs in ([], ['{"error":"fixture failure"}'], ['{"task_name":"/root/other_fixture_worker"}'],
+                        [json.dumps({"task_name": self.producer})] * 2):
+            with self.subTest(outputs=outputs):
+                self.native("spawn_agent", outputs=outputs)
+                self.assertEqual(self.invoke()[0], 1)
+
+    def test_missing_error_and_duplicate_followup_results_are_not_certified(self):
+        for outputs in ([], ["Error: fixture failure"], ['{"error":"fixture failure"}'], ["", ""]):
+            with self.subTest(outputs=outputs):
+                self.native("followup_task", outputs=outputs)
+                self.assertEqual(self.invoke()[0], 1)
 
 
 if __name__ == "__main__":

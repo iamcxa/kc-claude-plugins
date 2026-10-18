@@ -2,8 +2,8 @@
 """Reconcile a local candidate, protected baseline and FO's real pilot host evidence.
 
 This reads machine-local raw host logs; it neither dispatches nor authenticates a
-provider. Missing evidence fails closed. Native message ciphertext is not decoded:
-compare wrapper prompt bytes locally and check the child's unique acknowledgement.
+provider. Missing results or opaque native messages hold; requested payloads and
+child acknowledgements cannot substitute for exact host request/result evidence.
 """
 import argparse
 import hashlib
@@ -34,17 +34,38 @@ def records(path):
             yield json.loads(line)
 
 
-def native_call(ledger_path, name, expected):
+def native_call(ledger_path, name, expected, expected_handle=None):
     ledger = read(ledger_path)
     calls = [r["payload"] for r in ledger["calls"] if r["payload"].get("name") == name]
     require(len(calls) == 1, f"expected one {name} in {ledger_path}")
     call = calls[0]
     raw = [r["payload"] for r in records(ledger["source_session"])
            if r.get("type") == "response_item" and r["payload"].get("call_id") == call["call_id"]]
-    require(call in raw, f"native call absent/altered in raw host log: {name}")
+    requests = [r for r in raw if r.get("type") == "function_call"]
+    require(requests == [call], f"native call absent/altered or ambiguous in raw host log: {name}")
+    require(call.get("namespace") == "collaboration", f"unsupported native namespace: {name}")
+    results = [r for r in raw if r.get("type") == "function_call_output"]
+    require(len(results) == 1 and raw.index(call) < raw.index(results[0]), f"native {name} requires one raw result after its call_id")
+    result = results[0]
+    require(set(result).issubset({"type", "call_id", "id", "output", "internal_chat_message_metadata_passthrough"}), f"native {name} error or unsupported result fields")
+    returned = None
+    if name == "spawn_agent":
+        try:
+            output = json.loads(result["output"])
+        except (KeyError, TypeError, ValueError) as error:
+            raise ValueError("native spawn_agent result is missing or unreadable") from error
+        require(isinstance(output, dict) and set(output) == {"task_name"}, "native spawn_agent result is not a successful handle")
+        returned = output["task_name"]
+        require(isinstance(returned, str) and returned and returned == expected_handle, "native spawn_agent returned handle mismatch")
+    else:
+        require(name == "followup_task" and result.get("output") == "", "native followup_task result is not the successful empty host output")
     arguments = json.loads(call["arguments"])
-    require(all(arguments.get(k) == v for k, v in expected.items()), f"native {name} arguments mismatch")
-    return call
+    require(isinstance(arguments, dict), f"native {name} arguments must be an object")
+    message = arguments.get("message")
+    if not isinstance(message, str) or message.startswith("gAAAA"):
+        raise ValueError(f"native {name} message encrypted or unavailable; raw result checked, exact payload equality unverified. Obtain host plaintext bound to call_id {call['call_id']}; requested receipts are not execution proof")
+    require(arguments == expected, f"native {name} complete arguments mismatch")
+    return returned
 
 
 def main(argv=None):
@@ -71,8 +92,7 @@ def main(argv=None):
         require((binding["model"], binding["reasoning_effort"]) == ("gpt-6.1-sol", "high"), "pilot requires Sol/high")
         require(host["binding"] == binding and host["requested_spawn_args"] == initial["spawn_args"], "initial requested receipt mismatch")
         require(initial["spawn_args"]["message"] == initial["stock_helper"]["prompt"] and initial["helper_name"] == initial["stock_helper"]["name"], "stock prompt/name changed")
-        producer = host["returned_handle"]
-        native_call(args.native_calls, "spawn_agent", {k: initial["spawn_args"][k] for k in ("task_name", "fork_turns", "model", "reasoning_effort")})
+        producer = native_call(args.native_calls, "spawn_agent", initial["spawn_args"], host["returned_handle"])
         observed = [r for r in read(args.observed) if r["handle"] == producer]
         require(len(observed) == 1, "missing/ambiguous producer metadata")
         observed = observed[0]
@@ -81,6 +101,8 @@ def main(argv=None):
         require(len(metas) == 1 and metas[0]["id"] == observed["session_id"], "raw session identity mismatch")
         source = metas[0]["source"]["subagent"]["thread_spawn"]
         require(source["agent_path"] == producer, "raw session producer mismatch")
+        parent = [r["payload"] for r in records(read(args.native_calls)["source_session"]) if r["type"] == "session_meta"]
+        require(len(parent) == 1 and source.get("parent_thread_id") == parent[0]["id"], "raw child belongs to a different parent session")
         turns = {r["payload"]["turn_id"]: r["payload"] for r in raw if r["type"] == "turn_context"}
         require(observed["turns"], "no observed turns")
         for turn in observed["turns"]:
@@ -110,9 +132,9 @@ def main(argv=None):
         require((actual["model"], actual["effort"]) == (binding["model"], binding["reasoning_effort"]), "followup host settings changed")
         messages = [r["payload"] for r in raw if r["type"] == "response_item" and r["payload"].get("type") == "message" and r["payload"].get("role") == "assistant"]
         require(any(args.marker in part.get("text", "") for m in messages for part in m.get("content", [])), "unique reply absent from raw child output")
-        native_call(args.followup_native_calls, "followup_task", {"target": producer})
-        print(f"PASS candidate={candidate}; protected bytes, requested/observed Sol/high, real producer followup marker and raw host records match")
-        print("Limit: local evidence consistency only; encrypted native message bodies are not decoded; independent validation/approval remain separate.")
+        native_call(args.followup_native_calls, "followup_task", followup["followup_args"])
+        print(f"PASS candidate={candidate}; protected bytes, requested/observed Sol/high, complete native arguments/results and real producer followup marker match")
+        print("Limit: local evidence consistency only; independent validation/approval remain separate.")
         return 0
     except (OSError, ValueError, KeyError, TypeError, IndexError, subprocess.CalledProcessError) as error:
         print(f"HOLD: {error}", file=sys.stderr)

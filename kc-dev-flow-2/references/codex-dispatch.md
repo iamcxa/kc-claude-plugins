@@ -98,12 +98,30 @@ stock null-model envelope when selected conversion fails.
 
 Keep a small evidence index linking the source/candidate, exact command/input
 paths, policy id/digest, capability provenance, stock envelope, wrapper output,
-native call/returned handle and raw host session path/turn id. Stamp `binding`
+native call/returned handle and raw host session path/turn id. Retain the raw
+request and its tool result under the same `call_id`. Stamp `binding`
 into the existing FO roster with canonical entity path, stage, code worktree,
 branch and completion epoch. Preserve requested declaration, resolved arguments
 and observed model/effort separately. A pending transport receipt is unverified;
 FO must compare actual host metadata before accepting execution. Retain raw
 metadata for independent checking, without copying credentials or tokens.
+
+The evidence helper requires complete native request arguments to equal the
+wrapper's `spawn_args`/`followup_args`, including `message`. It also requires one
+raw result after that request with the same `call_id`. For this native
+collaboration host, spawn returns a JSON object containing `task_name`; it must
+match the recorded handle and raw child identity/parent session. Successful
+followup has empty result output, corroborated by the child's new turn and unique
+acknowledgement. Missing, duplicate, error, wrong-handle or unknown result shapes
+hold. A matching request alone is not proof that the host accepted it.
+
+If the host stores `message` encrypted or omits it, the helper exits nonzero with
+`HOLD`: exact payload equality is unverified even when the returned handle and
+model/effort match. Obtain a supported host view of actual plaintext tied to the
+same `call_id`; a requested payload receipt or child marker cannot replace that
+proof. Do not manufacture plaintext, decode using private keys or silently mark
+the limited evidence complete. Preserve the verified parts and the remaining gap
+for independent validation; no new dispatch or retry is implied.
 
 ## Compatible continuation
 
@@ -165,7 +183,10 @@ python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /absolute/act
 
 The focused tests exercise mapping, advance refusal before stock, malformed
 inputs, failure output retention and real-process stdin/argument/exit passthrough
-for Claude, pi and Codex. They do not call a model. Run the small
+for Claude, pi and Codex. Disposable evidence fixtures also reject changed native
+messages and missing/error/duplicate/wrong-handle results, and hold opaque content;
+their plaintext success control proves only the verifier, not actual host use.
+They do not call a model. Run the small
 `<package>/scripts/check_codex_dispatch_evidence.py --help` route with explicit candidate, baseline
 and FO receipts to reconcile protected bytes and actual pilot continuation;
 its raw host log access is a declared machine-local prerequisite. A fresh
