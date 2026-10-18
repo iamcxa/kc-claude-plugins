@@ -368,3 +368,110 @@ AC-5 ran on a real private repository: the printed line refuses after a head cha
 ### Summary
 
 Roborev is clean on the PR head 1beabd97, so the declined check-time calibration point of roborev:837 did not recur and no waiver is needed.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #666 head 1beabd97 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states first validation of a Production task. Run the prod validation security review as origin/main now defines it (#659 merged after the installed 0.24.0): dispatch kc-pr-flow:tob-security-reviewer once with model sonnet and the Reach brief from origin/main's kc-dev-flow-2/skills/validation/profiles/prod.md, save the report under the task folder as security/validation-1.yaml, and write the Security review (validation) and Security finding lines that profile requires; judge each finding. Also: AC-5 transcripts are under merge-gatekeeper/validation/ (ac5-run-2 is the final line form; the throwaway repository is left for the Captain to delete; do not touch it); AC-9 does not apply (no model arm, D1 b); the PR base is 2dad59ca and main is now 18e161d9, so also run kc-dev-flow-2/scripts/lint-skills.py and the package tests on a merge of the head into current origin/main; judge the implementer's listed deviations from the design; the ADR is ADR: 0023 and ADR 0011 gains one Status line
+  Verdict PASSED at head 1beabd975bac782a14e8c9e98fa42bd80b333eaf: every AC met by my own runs; no finding meets the four Material fields; open items below. Suites (python3 -B, caches cleared, 600 s cap each) on the head and on a clean merge of it into origin/main 18e161d9: lint-skills.py 5430 of 5430 words, every CI-listed test file rc 0 (61 tests in test_delivery_gate.py; test_role_triggers.py exists only on main and passes there). test_sd_dispatch.py: `--sd-plugin-root /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0`, binary /Users/kent/.local/bin/spacedock 0.27.2 (CI pins plugin root 0.27.2). comment_ratio.py 0 of 929 code lines, exit 0; number_guards.py check PASS (base 18e161d9); design_surfaces.py check exit 0; dispatch_records.py 9 records complete.
+  Falsifiers I ran (29 mutations of delivery_gate.py in a scratch copy, each against all 61 tests): AC-1 six hold clauses, AC-2 four matchers, AC-3 five rows (docs/adr, rename previous_filename, learning.md, agents/, own-test rule), AC-4 four conditions (verdict, reviewers_clean, failure record, Conventional title), AC-5 title quoting and recheck pipe test, AC-6 write on hold, AC-7 pending-as-clean, bound formula, revert detection, failure-in-granted-class, AC-12 clean() and tok(): 28 RED. 1 survived: dropping `full in candidates` (AC-5), an equivalent mutant because the earlier head holds already force `full` to equal a candidate; the printed `--match-head-commit` is the PR head, equal to the candidate whenever a line prints. Own probes: hostile titles (`'; touch PWN`, `$(..)`, backticks, `|`) run through the printed line with a stub gh create nothing; exact lower bounds 59/59 0.950492, 58/58 0.949661, 92/93 0.950006, 122/124 0.950100, 150/153 0.950105 match an independent Clopper-Pearson bisection.
+  AC-5: read ac5-run-2.txt (head f3f0fa3e; the only later change, 1beabd97, tightens the GRANT threshold regex): printed line exits 1 after a pushed head change with the PR still OPEN, GitHub refuses a stale `--match-head-commit` ("Head branch was modified"), the re-run on the new head merged (e727d992); read-only `gh` shows PR 2 MERGED, repository private, untouched by me. I did not re-run it against GitHub. The AC text says the line is "exactly" `next: run gh pr merge ...`; the printed form is the prose-first re-run form FO ordered in implementation-3/4 (test MERGE_LINE pins it): AC wording is stale, intent kept.
+  AC-8: replay-1.txt read; my read-only `gh` pass over the 35 archived tasks with a PR now: 35 of 35 class never, so the grant path would fire on none of this repository's history. #632 and #628 head holds fire on the prose heads. The 2026-09 rows (#375 #376 #378 #379 #420 #423) are absent from replay-1.txt instead of reported `not caught`.
+  AC-10 (own script, `len(text.split())`): base passages 215+57+90+33 plus check output 20 = 415; head 212+39+90+37 plus 24 = 402, limit 404; workflow.md 5447 to 5430 against lowered budget 5430; `_mods`, pr_watch.py and learn untouched. AC-11: `adr_lint.py docs/adr --since 2dad59ca --require 0023` exit 0; `grep -c merge-grants` over the README and workflow.md diff 0; ADR 0011 gains the one line `Merge partly superseded by ADR 0023.` AC-9: not applicable (no merge-judge or Decisions API in the tree, `git grep`).
+  Implementer's deviations, judged: roborev as a worker-written evidence line (Deferred risk, F6); `point: second-reviewer` and `point: more` (accepted, design findings 6 and the 12-point cap); amendment point `>=` against calibrate `>` (accepted limit, disclosed in ADR 0023, F7); design's 93/124/153 are totals not clean counts (accepted, my bounds agree); lower=0.9505 printed for exact 0.950492 (accepted). Events outside the brief: none by me; the security reviewer reports it wrote nothing and ran no script.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and observed output are under `### Minimal acceptance script`; adr_lint.py `docs/adr --since 2dad59ca` (and with `--require 0023`) printed "22 ADR file(s) checked, 0 legacy", exit 0. Findings are under `### Findings`; verdict PASSED at 1beabd975bac782a14e8c9e98fa42bd80b333eaf.
+
+### Security review (validation)
+
+Security review (validation): security/validation-1.yaml at 1beabd975bac782a14e8c9e98fa42bd80b333eaf
+Security finding (validation 1) 1: Needs decision: widen never-eligibility now (add .githooks, .roborev.toml, repo-root scripts/, plugin hooks/ and bin/, narrow docs-only to .md) or leave it to the first grant's ADR; no merge line can print before a grant, and no merge-grants entry exists in the tree
+Security finding (validation 1) 2: declined: LOW, dormant until a merge-grants entry exists; the unreadable-fact paths only fail to add a failure, and the ADR's "at once" holds when reads succeed; revisit in the first grant's ADR (see F3)
+Security finding (validation 1) 3: declined: LOW, a codex_review.py timeout raises and the printed line's last line is then no `next: merge `, so it fails closed; the trigger-comment race is in code outside the diff
+Security finding (validation 1) 4: declined: LOW, GitHub's own squash default already uses the PR title as subject; quoting is correct (my hostile-title probe), and it needs a grant plus an outsider PR
+
+### Findings
+
+Dispositions by the Review-finding disposition; none is Material because field 4 (trigger evidence) fails for each: no `merge-grants:` entry exists in any README, so no merge line can print yet. What would make each Material is the first grant entry.
+- F1 Deferred risk (Codex P1 on `profile_prod`, reproduced): `profile: "prod"` or `'prod'` is read as prod by design_surfaces.FM_PROFILE but not by delivery_gate's `profile_prod` regex; with a docs-only grant and a zero-finding review my probe printed `class: docs-only` and a merge line for it. 0 of 70 state tasks quote the value.
+- F2 Deferred risk (Codex P1 on depth, reproduced): `packages/foo/agents/x.md` and `a/b/c/references/r.md` class `other`; no tracked path of this repository sits deeper than the pattern (`git ls-files` check).
+- F3 Deferred risk (Codex P1 on trunk freshness, reproduced in a scratch bare origin): `revert_time` reads `origin/<trunk>` without a fetch, so a revert pushed after the last fetch is missed until fetched.
+- F4 Needs decision: security finding 1 (above); it also covers `docs/journey`, `docs/ship-flow`, `docs/plan-flow` under docs-only, which I could not show agents do or do not load.
+- F5 Deferred risk: security findings 2 to 4 (declined LOW).
+- F6 Deferred risk: roborev is a task-file line written by the worker, not a run of roborev_gate.py (design finding 6 named the reader).
+- F7 Deferred risk: a same-day amendment after an ask is not seen by `calibrate`.
+- F8 Polish: AC-5 "exactly" text, AC-10's 5484 constant and AC-7's 0.9505 are stale against the shipped form; FO may note them.
+- F9 Polish: doc_impact.py lists 9 documents; the report records 8; `kc-dev-flow-2/references/sd/adoption.md` (names test_sd_dispatch.py only to say how to run it) has no `unaffected` line.
+- F10 Polish: replay-1.txt lacks the not-replayable bite rows (#375 #376 #378 #379 #420 #423: FO behaviours no hold sees; only the prose and AC-5 address them); the save of the replay script itself is absent, only its output.
+- F11 Polish: mutation `full in candidates` survives (equivalent, redundant guard).
+- F12 Polish: `points_for` lists deferred, decline and not-run lines before the `profile` and `path` points, so with 12 or more of them the cap drops those two (my stub run of this very task shows `point: more: 9 not shown` and no `profile` point); the `class: never` line still prints.
+- Open on the PR head for FO: three Codex P1 comments (4305855772, 4305855775, 4305855777 on 1beabd97) are F1 to F3; no FO decline is recorded for them.
+- Minimal necessity (same candidate): holds, points and the per-ask record are used at every merge ask now and each maps to AC-1, 2, 6 and a counted accident class. Class, grant line and `calibrate` have no consumer until a grant exists, and 35 of 35 of this repository's archived PRs class `never`; the Captain's own words in ADR 0023 ask for the delegation, so retain, but the delegation cannot fire on dev2 history. Relay, subspace-web and qnow were not measured.
+- Inconsistency for FO: the dispatch scope notes say `Profile: pilot`; the task frontmatter and checklist say prod. I ran the prod procedure.
+
+### Minimal acceptance script
+
+Needs: this repository checkout at the path below, python3, git, `gh` signed in (read-only calls). Run in a fresh bash. Not covered: a real GitHub merge (only the saved AC-5 transcript), any grant (none exists), relay, subspace-web or qnow, and Spacedock's pr-merge and merge guard after an FO-run merge.
+
+```bash
+set -u
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0
+WF=$REPO/.context/dev2-adoption/worktree/docs/dev2
+ST=$WF/.spacedock-state
+H=1beabd975bac782a14e8c9e98fa42bd80b333eaf
+W=/tmp/merge-gatekeeper-accept
+export PYTHONDONTWRITEBYTECODE=1
+echo "== 1. check out the PR head"
+rm -rf $W /tmp/merge-gatekeeper-accept-task
+git -C $REPO worktree add --detach $W $H >/dev/null 2>&1; git -C $W rev-parse HEAD
+echo "== 2. word budget and decision record"
+python3 -B $W/kc-dev-flow-2/scripts/lint-skills.py | grep -E "words"
+(cd $W && python3 -B $PKG/scripts/adr_lint.py docs/adr --since 2dad59ca --require 0023; echo "adr_lint exit=$?")
+echo "== 3. the merge check's own tests (about 1-2 minutes)"
+python3 -B $W/kc-dev-flow-2/scripts/test_delivery_gate.py 2>&1 | tail -n 3
+echo "== 4. the printed merge line refuses after a later change (stub gh, no network)"
+python3 -B $W/kc-dev-flow-2/scripts/test_delivery_gate.py -v RecheckTests 2>&1 | grep -E "ok$|^Ran|^OK|FAIL"
+echo "== 5. run the check on PR 666 itself, on a scratch copy of the task folder"
+mkdir /tmp/merge-gatekeeper-accept-task && cp $ST/merge-gatekeeper.md /tmp/merge-gatekeeper-accept-task/ && cp -R $ST/merge-gatekeeper /tmp/merge-gatekeeper-accept-task/ && echo "Merge ask." > /tmp/merge-gatekeeper-accept-task/gate.txt
+python3 -B $W/kc-dev-flow-2/scripts/delivery_gate.py check /tmp/merge-gatekeeper-accept-task/merge-gatekeeper.md --pr iamcxa/kc-claude-plugins#666 --text-file /tmp/merge-gatekeeper-accept-task/gate.txt --workflow-dir $WF | cut -c1-200; echo "check exit=${PIPESTATUS[0]}"
+echo "== 6. clean up"
+git -C $REPO worktree remove --force $W && rm -rf /tmp/merge-gatekeeper-accept-task && echo removed
+```
+
+Expected: step 1 prints the 40-hex head above. Step 2 prints `references/sd/workflow.md: 5430 of 5430 words; ...` and `22 ADR file(s) checked, 0 legacy` then `adr_lint exit=0`. Step 3 ends `Ran 61 tests in <n>s` and `OK`. Step 4 lists 6 tests ending `ok`, then `Ran 6 tests` and `OK`. Step 5: while PR 666 is a Draft, exit 1 and a line `the PR is a draft`; once it is Ready with CI green, exit 0 with a `validation security review security/validation-1.yaml: 4 findings, 3 declined, 1 decisions` line, up to 12 `point:` lines (this report's own words "declined" and "Deferred risk" make them), `class: never`, a `record:` line, and last line `next: ask for merge with this text.` Step 6 prints `removed`.
+
+Observed, run exactly as written above in a fresh `env -i ... bash --noprofile --norc` shell, exit 0 (PR 666 was still Draft, so step 5 holds):
+
+```
+== 1. check out the PR head
+1beabd975bac782a14e8c9e98fa42bd80b333eaf
+== 2. word budget and decision record
+references/sd/workflow.md: 5430 of 5430 words; no unlisted passage repeats it
+22 ADR file(s) checked, 0 legacy
+adr_lint exit=0
+== 3. the merge check's own tests (about 1-2 minutes)
+Ran 61 tests in 79.442s
+
+OK
+== 4. the printed merge line refuses after a later change (stub gh, no network)
+test_a_failure_record_added_after_the_check_refuses_the_merge (__main__.RecheckTests.test_a_failure_record_added_after_the_check_refuses_the_merge) ... ok
+test_a_grant_removed_after_the_check_refuses_the_merge (__main__.RecheckTests.test_a_grant_removed_after_the_check_refuses_the_merge) ... ok
+test_a_head_that_moved_after_the_check_refuses_the_merge (__main__.RecheckTests.test_a_head_that_moved_after_the_check_refuses_the_merge) ... ok
+test_dropping_the_recheck_from_the_line_lets_a_removed_grant_merge (__main__.RecheckTests.test_dropping_the_recheck_from_the_line_lets_a_removed_grant_merge) ... ok
+test_everything_after_the_prose_is_one_command_ending_at_the_empty_body (__main__.RecheckTests.test_everything_after_the_prose_is_one_command_ending_at_the_empty_body) ... ok
+test_the_printed_line_merges_when_the_recheck_still_passes (__main__.RecheckTests.test_the_printed_line_merges_when_the_recheck_still_passes) ... ok
+Ran 6 tests in 1.796s
+OK
+== 5. run the check on PR 666 itself, on a scratch copy of the task folder
+the PR is a draft
+next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.
+check exit=1
+== 6. clean up
+removed
+```
+
+Step 5 on the Ready path could not run live (PR is Draft; I do not mark it ready). I ran the same `check` on a scratch copy of this task with the real PR facts, `isDraft` set false, behind a stub `gh`: exit 0, `class: never`, `next: ask for merge with this text.`, 12 `point:` lines and `point: more: 9 not shown`.
+
+### Summary
+
+PASSED at 1beabd97: every criterion holds under my own runs, 28 of 29 mutations fail the suite (the survivor is equivalent), and the head also passes lint and every test on a clean merge into origin/main 18e161d9. Three Codex P1 comments and a MEDIUM security finding, all reproduced or read, describe paths that stay dormant until the first `merge-grants:` entry; I classed them Deferred risk or Needs decision, not Material, and FO and the Captain choose between repairing them now (F1 is a one-regex fix) and recording a waiver. Nothing in this repository would be grant-eligible today (35 of 35 archived PRs class `never`).

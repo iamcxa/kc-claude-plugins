@@ -1,0 +1,115 @@
+tob_security_review:
+  pr: 666
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 7
+  findings:
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      severity: MEDIUM
+      category: insecure-default
+      title: "NEVER_PATH and the docs-only prefix leave out paths that ADR 0023 says can never be granted"
+      description: |
+        ADR 0023 fixes as never eligible "any path an agent loads as instructions or that decides a review, gate or grant".
+        The code enforces that with the NEVER_PATH list plus the `docs/` prefix rule in classify(). That list is narrower
+        than the stated rule. Checked at 1beabd97 with git ls-tree:
+        - `.roborev.toml` configures the implementation-exit reviewer (agent, model, minimum severity). It matches no NEVER_PATH entry, so it classes as `other`.
+        - `.githooks/pre-commit` does not match `^(?:\.github|\.claude)/`, because `.githooks` is not `.github` followed by a slash. It classes as `other`.
+        - The repo-root `scripts/` files that CI runs as required checks (`version-parity-check.sh`, `skill-frontmatter-lint.sh`, `marketplace-verify.sh`, `release-please-config-check.sh`) match neither the `gate|budget` name rule nor the `kc-dev-flow-2/scripts/` rule. Only `kc-dev-flow-2/scripts/` is never-listed. A PR that edits one of these and its matching `*.test.sh` classes as `script-with-test`, and a lone edit classes as `other`.
+        - The plugin `hooks/` trees (`e2e-pipeline/hooks`, `kc-hyperfocus/hooks/scripts`, `kc-plugin-forge/hooks`, `kc-pr-flow/hooks`) and `e2e-pipeline/bin` run on installers' machines. They are not never-listed either. A `.sh` there is `script-with-test` when a matching test sits in the same diff, and `hooks.json` is `other`.
+        - `docs-only` admits every `docs/**` path except `docs/adr` and `docs/dev*`. `docs/plan-flow`, `docs/ship-flow`, `docs/journey` and `docs/superpowers` are admitted. I could not verify whether any agent loads them as instructions.
+        This is dormant. No `merge-grants:` entry exists in the tree (git grep finds the key only in delivery_gate.py, its tests and the ADR), so no merge line can print until the Captain grants a class. The weakness bites at the first grant of `other`, `script-with-test` or `docs-only`.
+      attack_scenario: |
+        1. The Captain grants `script-with-test` or `other` after calibrate shows a good record.
+        2. An outsider opens a PR with a small edit to `scripts/version-parity-check.sh` (or `hooks/scripts/*.sh`, `.githooks/pre-commit`, `.roborev.toml`) plus a matching test file. The edit weakens a required check or adds an installer-side hook command.
+        3. Validation is dispatched at that head and CI is green. The weakened check passes its own test, and the title is a Conventional Commit.
+        4. check emits `class: script-with-test` or `other`, prints no point, and prints the merge line. FO squash-merges it with no Captain review.
+        5. The weakened gate or hook ships in a marketplace plugin that installers run.
+        Preconditions: the Captain grants the class, and FO dispatches validation on the outsider's PR. Both stand between the outsider and the merge.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Turn the never rule into an allowlist, as the "Close the class" rule requires. Admit only paths positively known to be inert, such as `*.md` under named doc directories, and class everything else `never`.
+        At a minimum, add `^\.githooks/`, `^\.roborev\.toml$`, `^scripts/`, `(^|/)hooks/`, `(^|/)bin/` and `^\.codex/` to NEVER_PATH.
+        Narrow docs-only to `docs/**/*.md`.
+        Add a test that every tracked path of this repo classes as expected.
+
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      severity: LOW
+      category: race-condition
+      title: "The failure kill-switch fails open when GitHub or git cannot be read"
+      description: |
+        The merge line requires `not any(state == "failure" ...)` over labelled(). Three paths turn an unreadable fact into a non-failure:
+        - label() returns `pending` when `pr_facts` raises (gh outage, rate limit, auth). A closed, reverted or amended PR whose lookup fails is therefore not counted as a failure.
+        - revert_time() returns None when `git log` fails (not a repo, `--repo` or `.` wrong). A bare `trunk` ref with no `origin/` fetch reads stale history. Both mean "no revert found".
+        - labelled() maps a corrupt `ask-N.json` to class `other`, verdict `merge`, state `failure`. The failure then counts against `other`, not against the class the record belonged to, so a granted class's own kill-switch is not tripped.
+        The ADR says a failure "stops FO's merges in it at once", which holds only when the reads succeed.
+      attack_scenario: |
+        1. A granted-class PR merged earlier is reverted, but the gh token is rate-limited or the checkout has no fetched trunk when FO runs the next check.
+        2. label() returns pending (or revert_time() returns None), so no failure is seen.
+        3. The next PR in the class prints a merge line and is merged without the Captain.
+        An outsider cannot trigger this directly. They could only try to exhaust the shared token's rate limit.
+      blast_radius: "LOW"
+      recommendation: |
+        Make `check` fail closed: when labelled() hits a gh or git read error for a record in the grant's class, hold the ask, not `pending`.
+        Count an unreadable record against its own class (the directory or the PR string identifies it).
+        Require `git rev-parse --verify origin/<trunk>` to succeed, or hold.
+
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      severity: LOW
+      category: missing-validation
+      title: "Outsider-writable PR comments feed the codex reader with no cap, and its timeout is uncaught"
+      description: |
+        With `codex` listed in `extensions`, reviewers_clean() runs `codex_review.py`. That script is outside the diff, but this change routes the merge decision through it. It paginates all issue comments, review comments, reviews and reactions on the PR with no size cap that I found.
+        Evidence is author-filtered to `chatgpt-codex-connector[bot]`, so an outsider cannot forge a clean result.
+        Any commenter can post comments without limit, including `@codex review` triggers. codex_review.py takes `triggers[-1]` and looks only at that comment's reactions. An outsider's later trigger comment removes an earlier trigger's `eyes` "running" reaction from view until the bot reacts to the new one. That leaves a short window where "running" is hidden and a stale clean on the same head decides.
+        reviewers_clean() calls `subprocess.run(..., timeout=120)` and does not catch TimeoutExpired. A comment-flooded PR therefore crashes `check` with a traceback before any record or merge line is written. This fails closed, so it is a DoS on FO's merge path only.
+      attack_scenario: |
+        1. An outsider posts thousands of comments on a PR that FO wants to merge (public repo, no comment cap found).
+        2. `codex_review.py` takes over 120 seconds and `check` raises TimeoutExpired. FO's merge path for that PR stalls until someone cleans up the comments. Alternatively, the outsider posts `@codex review` just before FO runs the check, to hide the earlier running state.
+        3. Result: a stalled merge, or a very narrow race that does not forge a clean verdict.
+      blast_radius: "LOW"
+      recommendation: |
+        Catch `subprocess.TimeoutExpired` and `OSError` in reviewers_clean() and return False.
+        In codex_review.py, take `eyes` reactions from every trigger comment, or from any trigger newer than the head commit time, not only `triggers[-1]`.
+
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      severity: LOW
+      category: other
+      title: "The squash subject is the outsider-chosen PR title, and the merge pins only the head"
+      description: |
+        merge_line() passes the PR title to `gh pr merge --subject` shell-quoted. Quoting is correct, so there is no shell injection. CONVENTIONAL admits any printable ASCII up to 100 characters.
+        A title like `fix(x): ... fixes #143` or one containing `@user` becomes the trunk commit subject. GitHub treats closing keywords there as real, and `@` mentions notify the user.
+        `--match-head-commit` pins the head, not the base ref or the title. The title is captured at check time. Base, mergeable and CI are checked only by the re-run seconds earlier.
+      attack_scenario: |
+        1. An outsider's PR has title `docs: tidy notes closes #1`.
+        2. The merge line squashes with that subject.
+        3. Issue #1 is closed by the merge.
+        Impact is minor.
+      blast_radius: "LOW"
+      recommendation: |
+        Reject titles matching GitHub closing keywords followed by `#N` or `owner/repo#N`, and `@`, in the merge-line condition, or print a point for them.
+
+  clean_patterns:
+    - "merge_line shell construction: the pr number is digits from the PR regex, the repo is `[\\w.-]+/[\\w.-]+`, the method is one of three enumerated words, the candidate is a 40-hex string from the CANDIDATE regex, the title goes through shlex.quote, and the recheck goes through shlex.join. No injection found."
+    - "gh pr merge pins `--match-head-commit <40-hex candidate>`, and the candidate must equal the full PR head read in this run. The recheck pipeline requires its last line to be `next: merge `."
+    - "Outsider-controlled strings (PR title, branch names, file names, check names, mergeable value, --head, --pr) reach output only through clean() (non-printable escape) and tok() (repr, bounded). I found no way to forge a `next:` or `point:` line, or to inject terminal escapes."
+    - "The ask record is written under the task's own `merge/` folder, with an integer-sequenced name and no outsider-controlled path component. Record JSON is read with json.loads. No code execution from records."
+    - "pr_files uses raw_decode over the paginated `gh api` output, and a short or truncated list (GitHub caps at 3000) holds the ask via the `changedFiles` mismatch. previous_filename is included, so renames out of a never path are classified."
+    - "CI check is strict: an empty rollup, SKIPPED, NEUTRAL, pending and a non-SUCCESS StatusContext all hold. Draft, non-MERGEABLE and base != README trunk hold. A release-please head branch, prod profile and `db` surface force `never`."
+    - "The codex reader filters evidence by the bot login and head commit. An outsider cannot forge a clean verdict by comment. A null or odd user fails to a configuration error (exit 2), which is not clean."
+    - "The new regexes (FO_DECLINES, AC_NOT_RUN, DEFERRED) run on task and gate text, not outsider content, and show no catastrophic backtracking by inspection."
+    - "The change is dormant by design: no `merge-grants:` entry exists in the tree, so no merge line can print yet. The GRANT pattern admits no `never` class and requires a threshold of 0.95 or more and an ADR number."
+    - "No new public route, hosted file or published document is added. The only change to an advertised surface is the one sentence in workflow.md about the merge line (ADR 0023). I traced no outsider-reachable handler beyond the gh-fed inputs and the codex reader above."
+
+  limitations:
+    - "I changed nothing and ran no project script. All findings come from reading code at 1beabd97 with git show, git ls-tree and git grep. I ran no dynamic test of check or calibrate."
+    - "I did not read test_delivery_gate.py, test_sd_dispatch.py, lint-skills.py or the ADR 0011 two-line change in full. Test coverage of the negative paths is not assessed."
+    - "The diff view was truncated in the middle. I read the full delivery_gate.py at the head, including calibrate, labelled, label, reviewers_clean, write_record and merge_line."
+    - "I could not verify whether any agent loads docs/plan-flow, docs/ship-flow, docs/journey or docs/superpowers as instructions, which decides whether the docs-only class is safe to grant."
+    - "I could not verify GitHub behaviour (comment limits, file-list cap of 3000, title newline handling, base-branch edits by the PR author). These rest on general knowledge."
+    - "The codex_review.py and roborev_gate.py logic is outside the diff. I read codex_review.py but not roborev_gate.py. The roborev bound is a task-file line, and the task file is writer-controlled, out of the outsider boundary."
+    - "The grant ladder's real exposure depends on which classes the Captain grants later. No grant is present in this tree."
+    - "Blast radius by caller count: delivery_gate.py is a CLI with one FO caller (workflow.md line 514) plus tests, so LOW. The merge path is high-impact when granted."
