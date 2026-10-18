@@ -15,6 +15,17 @@ gates:
                 id: briefing:captain-question-load:backlog:attempt-1:revision-1
                 digest: sha256:f5df5bbb224d836196b8fe7f7d580cb661bba02b1564603d5073b4fef3eb9bdc
                 room-ref: ./captain-question-load/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:captain-question-load:backlog:1
+                briefing: briefing:captain-question-load:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-18T16:56:58.283398Z"
+                decision: approve
+                reason: Captain approved in chat (「批准這些作為第三批」) the five batch-3 backlog gates presented together, accepting the recommended profiles and the stated grouping and order
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Filed for batch 3 on the Captain's 「先走批次三規劃」 (chat, 2026-10-19), after FO reported that most of his turns in batch 2 were answering FO's questions rather than reviewing PRs. His goal for batching (chat, 2026-10-16): 「這樣我才可以從一直在追每個 FO 過程中解放出來」.
