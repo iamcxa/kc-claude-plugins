@@ -1175,11 +1175,25 @@ class DesignReviewTests(unittest.TestCase):
         self.assertEqual(self.run_check(report=report, module=mutant)[0], [])
 
     def test_mutation_matching_only_the_first_preview_line_refuses_the_second(self):
-        mutant = mutated("shown = [v.strip() for v in PREVIEW.findall(body)]", "shown = [v.strip() for v in PREVIEW.findall(body)][:1]")
+        mutant = mutated('shown = [v.strip() for v in PREVIEW.findall("\\n".join(unfenced(body.split("\\n"))))]', 'shown = [v.strip() for v in PREVIEW.findall("\\n".join(unfenced(body.split("\\n"))))][:1]')
         previews = "Preview: preview.html\nPreview: second.html\n"
         report = DESIGN_REPORT.replace("preview: preview.html", "preview: second.html")
         self.assertEqual(self.run_check(previews=previews, report=report)[0], [])
         self.assertTrue(self.run_check(previews=previews, report=report, module=mutant)[0])
+
+    def test_a_fenced_preview_line_cannot_bind_a_report(self):
+        previews = "Preview: preview.html\n\n```\nPreview: fake.html\n```\n"
+        report = DESIGN_REPORT.replace("preview: preview.html", "preview: fake.html")
+        errors, _ = self.run_check(previews=previews, report=report)
+        self.assertEqual(len([e for e in errors if "reviewed preview 'fake.html'" in e]), 1, errors)
+        self.assertEqual(self.run_check(previews=previews)[0], [])
+
+    def test_mutation_reading_preview_candidates_from_the_raw_body_lets_a_fenced_one_bind(self):
+        mutant = mutated('shown = [v.strip() for v in PREVIEW.findall("\\n".join(unfenced(body.split("\\n"))))]', "shown = [v.strip() for v in PREVIEW.findall(body)]")
+        previews = "Preview: preview.html\n\n```\nPreview: fake.html\n```\n"
+        report = DESIGN_REPORT.replace("preview: preview.html", "preview: fake.html")
+        self.assertTrue(self.run_check(previews=previews, report=report)[0])
+        self.assertEqual(self.run_check(previews=previews, report=report, module=mutant)[0], [])
 
 
 class FencedFoAlignmentTests(unittest.TestCase):

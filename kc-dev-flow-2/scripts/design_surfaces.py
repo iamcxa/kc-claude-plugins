@@ -394,7 +394,7 @@ def check_task(path, seed=False, notes=None):
         if summary and notes is not None:
             notes.append(summary)
     if "ui" in surfaces and status and status.group(1) == "ideation":
-        shown = [v.strip() for v in PREVIEW.findall(body)]
+        shown = [v.strip() for v in PREVIEW.findall("\n".join(unfenced(body.split("\n"))))]
         summary = check_design_review(path, plain, declared, shown, errors)
         if summary and notes is not None:
             notes.append(summary)
