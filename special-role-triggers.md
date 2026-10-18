@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-17T06:11:15Z
 worktree: .worktrees/spacedock-ensign-special-role-triggers
-pr: iamcxa/kc-claude-plugins#664
+pr: pr-merge:664
 ---
 
 Filed on the Captain's 「可以，建成待辦」 (chat, 2026-10-16), after FO listed six moments in one session where a special role applied and was not used. The README says FO calls them when it judges they are needed; FO rarely judges its own work to need a second opinion, the same failure as the relay prod task where risk-selected security review never fired.
