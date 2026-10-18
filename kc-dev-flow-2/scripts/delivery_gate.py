@@ -22,14 +22,14 @@ and one last `next:` line. The README frontmatter key `merge-grants:` lists `<cl
 entries (threshold 0.95 to 1, method squash, merge or rebase; the rule arm reads the threshold only for that form, the bar itself is proven by the grant's ADR on `calibrate` evidence). The `next:` line is the merge line
 (a shell line that runs this check again and, only if its last line is again a merge line, `gh pr merge ... --match-head-commit <candidate>`) only when the class has a valid grant entry (the entry pattern admits no `never` class), no point was printed, the title is
 a Conventional Commit, the candidate is the PR head, a listed codex reader exits 0 on the head, a listed roborev left the whole line
-`roborev: clean on <40-hex candidate>; evidence=roborev:<job>` in the task, and no record of the class is labelled a failure. Otherwise it is the ask line.
+`roborev: clean on <40-hex candidate>; evidence=roborev:<job>` in the task, and no record of the class is labelled a failure, read after `git fetch origin <trunk>` (60 s cap; a repository with no origin is not fetched; a fetch that fails prints `cannot fetch origin/<trunk>, so no merge line` and the ask line). Otherwise it is the ask line.
 
 calibrate. Labels each `merge/ask-<N>.json` of the workflow's active and archived tasks, keeping the newest per PR and head across all tasks:
 failure when the PR closed unmerged, merged at another head, a revert of its merge commit (`This reverts commit <sha>`) reached the
 trunk within 14 days, or its task has a later `### Amendment` date or an Override, reopen or `merge guard --rework` line naming the PR
 (amendments carry a date only, so a same-day amendment is not seen); pending when open or younger than 14 days; otherwise clean. Only
 records whose rule verdict was merge count. Prints per class n, clean, failures, pending and the exact one-sided 95% lower bound of
-clean over n, then one `next:` line. Exit 0; 2 on a configuration error.
+clean over n, then one `next:` line. It fetches `origin/<trunk>` first when the repository has an origin, so a revert pushed since the last fetch counts. Exit 0; 2 on a configuration error or a failed fetch.
 """
 import argparse
 import datetime
@@ -42,6 +42,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from design_surfaces import FM_PROFILE
 
 CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
 RECORD = re.compile(r"^validation-(\d+)\.md$")
@@ -55,7 +56,7 @@ NEVER_PATH = [
     re.compile(r"^(?:\.github|\.claude)/"),
     re.compile(r"(?:^|/)(?:_mods|migrations)/"),
     re.compile(r"^docs/(?:adr|dev[^/]*)(?:/|$)"),
-    re.compile(r"^(?:[^/]+/)?(?:skills|agents|extensions|references)/"),
+    re.compile(r"(?:^|/)(?:skills|agents|extensions|references)/"),
     re.compile(r"(?:^|/)(?:CLAUDE|AGENTS)\.md$|(?:^|/)learning\.md$"),
     re.compile(r"(?:^|/)(?:release-please-config|\.release-please-manifest|plugin|marketplace)\.json$"),
     re.compile(r"(?:^|/)[^/]*(?:gate|budget)[^/]*$"),
@@ -279,6 +280,17 @@ def parse_time(value):
     return datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
 
 
+def fetch_trunk(git_dir, trunk):
+    """None when origin/<trunk> was just fetched or the repository has no origin; else why it could not be."""
+    if subprocess.run(["git", "-C", git_dir, "remote", "get-url", "origin"], capture_output=True).returncode:
+        return None
+    try:
+        done = subprocess.run(["git", "-C", git_dir, "fetch", "--quiet", "origin", trunk], capture_output=True, text=True, timeout=60)
+    except subprocess.TimeoutExpired:
+        return "git fetch timed out"
+    return None if not done.returncode else tok(done.stderr or "git fetch failed", words=12, chars=120)
+
+
 def revert_time(git_dir, trunk, sha):
     ref = trunk if subprocess.run(["git", "-C", git_dir, "rev-parse", "--verify", "-q", f"origin/{trunk}"], capture_output=True).returncode else f"origin/{trunk}"
     done = subprocess.run(["git", "-C", git_dir, "log", ref, "--fixed-strings", f"--grep=This reverts commit {sha}", "--format=%cI"],
@@ -345,6 +357,9 @@ def calibrate(args):
     scalars, lists = readme_front(folder / "README.md")
     if "trunk" not in scalars:
         emit(f"no workflow README with a trunk: in {folder}")
+        return 2
+    if why := fetch_trunk(args.repo, scalars["trunk"]):
+        emit(f"cannot fetch origin/{scalars['trunk']}: {why}")
         return 2
     rows = labelled(folder, scalars, args.repo)
     grants, summary, remove, propose = grants_of(lists), {}, [], []
@@ -478,7 +493,8 @@ def check(args):
     never = never_paths(paths, workflow_dir, scalars)
     root = repo_root(workflow_dir)
     release_pr = str(facts.get("headRefName", "")).startswith("release-please--")
-    profile_prod = bool(re.search(r"^profile:[ \t]*prod[ \t]*$", task_text.split("\n---\n", 1)[0], re.M))
+    front = re.match(r"---\n(.*?)\n---", task_text, re.S)
+    profile_prod = bool(front and (m := FM_PROFILE.search(front.group(1))) and m.group(1) == "prod")
     cls = classify(paths, never or release_pr or profile_prod or bool(re.search(r"^Surfaces:.*\bdb\b", task_text, re.M)))
     points = points_for(task_text, gate_text, record, never, facts, profile_prod, root)
     verdict = "merge" if not points and cls != "never" else "ask"
@@ -487,12 +503,14 @@ def check(args):
     line, grant = ASK, grants_of(lists).get(cls)
     full = str(facts["headRefOid"]).lower()
     title = str(facts.get("title", ""))
-    if (grant and verdict == "merge" and CONVENTIONAL.match(title) and full in candidates
-            and reviewers_clean(lists, repo, number, task_text, full)
-            and not any(state == "failure" for _, state, _, _ in labelled(workflow_dir, scalars, root or ".", only=cls))):
-        recheck = shlex.join(["python3", str(Path(__file__).resolve()), "check", str(task.resolve()), "--pr", args.pr, "--text-file", str(text_file.resolve()),
-                              *(["--head", args.head] if args.head else []), *(["--workflow-dir", str(Path(args.workflow_dir).resolve())] if args.workflow_dir else [])])
-        line = merge_line(number, repo, grant, full, title, recheck)
+    if grant and verdict == "merge" and CONVENTIONAL.match(title) and full in candidates and reviewers_clean(lists, repo, number, task_text, full):
+        trunk = scalars.get("trunk", "main")
+        if unfetched := fetch_trunk(root, trunk) if root else None:
+            emit(f"cannot fetch origin/{trunk}, so no merge line: {unfetched}")
+        elif not any(state == "failure" for _, state, _, _ in labelled(workflow_dir, scalars, root or ".", only=cls)):
+            recheck = shlex.join(["python3", str(Path(__file__).resolve()), "check", str(task.resolve()), "--pr", args.pr, "--text-file", str(text_file.resolve()),
+                                  *(["--head", args.head] if args.head else []), *(["--workflow-dir", str(Path(args.workflow_dir).resolve())] if args.workflow_dir else [])])
+            line = merge_line(number, repo, grant, full, title, recheck)
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
                                 "points": points, "next": line, "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
     emit(f"record: {task.stem}/merge/{saved.name}", line)

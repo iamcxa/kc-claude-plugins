@@ -691,7 +691,7 @@ class GrantTests(unittest.TestCase):
     def test_falsifiers_each_turn_their_own_case_red(self):
         mutations = {
             "key absent": ('lists.get("merge-grants", [])', 'lists.get("merge-grants", ["docs-only:rule:0.95:squash:ADR 0001"])'),
-            "a failed record in the class": ('and not any(state == "failure"', "and not any(False"),
+            "a failed record in the class": ('elif not any(state == "failure"', "elif not any(False"),
             "codex findings": ('.returncode:\n        return False', '.returncode:\n        return True'),
             "roborev left no evidence": ('return "roborev" not in extensions or head in bound', 'return True or head in bound'),
             "roborev evidence for another head": ('head in bound', 'bool(bound)'),
@@ -963,6 +963,85 @@ class CalibrateTests(unittest.TestCase):
             with stubbed(d, per_pr=per_pr), mock.patch.object(gate, "utcnow", return_value=NOW), contextlib.redirect_stdout(out):
                 gate.main(["calibrate", d, "--repo", d])
         self.assertIn("class other arm rule: n=1 clean=0 failures=1", out.getvalue())
+
+
+class CodexP1Tests(unittest.TestCase):
+    EMPTY_REPORT = "tob_security_review:\n  pr: 9\n  findings: []\n"
+    ENV = {**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t"}
+
+    def prod_task(self, value):
+        return (f"---\nprofile: {value}\n---\n\n# task\n\n## Stage Report: validation\n\n"
+                f"Security review (validation): security/validation-1.yaml at {HEAD40}\n"
+                f"roborev: clean on {HEAD40}; evidence=roborev:42\n")
+
+    def test_a_quoted_prod_profile_is_prod_for_the_class_and_the_merge_line(self):
+        def report(d):
+            Path(d, "task", "security").mkdir(parents=True)
+            Path(d, "task", "security", "validation-1.yaml").write_text(self.EMPTY_REPORT)
+        for value in ("prod", '"prod"', "'prod'"):
+            with self.subTest(value):
+                result = run_check(readme_body=GRANTS + EXT, task=self.prod_task(value), setup=report, argv_head="40c714a6")
+                self.assertEqual(result.code, 0, result.out)
+                self.assertIn("point: profile: 'prod'", result.lines, result.out)
+                self.assertIn("class: never", result.lines, result.out)
+                self.assertEqual(nexts(result), ["next: ask for merge with this text."], result.out)
+
+    def test_an_instruction_directory_at_any_depth_is_never(self):
+        for path in ("packages/foo/agents/x.md", "a/b/c/references/r.md", "x/y/skills/z/SKILL.md", "p/q/extensions/e.py"):
+            with self.subTest(path):
+                found = [l for l in run_check(files=(path,)).lines if l.startswith("class: ")]
+                self.assertEqual(found, ["class: never"])
+        self.assertIn("class: docs-only", run_check(files=("docs/my-agents/x.md", "docs/skillset/y.md")).lines)
+
+    def git(self, cwd, *args, date=None):
+        env = {**self.ENV, **({"GIT_COMMITTER_DATE": date, "GIT_AUTHOR_DATE": date} if date else {})}
+        subprocess.run(["git", "-C", str(cwd), *args], check=True, capture_output=True, env=env)
+
+    def repo_behind_origin(self, repo):
+        """repo has fetched origin/main; a revert of merge commit 1001 was pushed to origin afterwards, 20 days ago."""
+        scratch = tempfile.TemporaryDirectory()
+        self.addCleanup(scratch.cleanup)
+        origin, other = Path(scratch.name, "origin.git"), Path(scratch.name, "other")
+        if not Path(repo, ".git").exists():
+            subprocess.run(["git", "init", "-q", "-b", "main", str(repo)], check=True)
+            self.git(repo, "commit", "-q", "--allow-empty", "-m", "start")
+        subprocess.run(["git", "init", "-q", "--bare", "-b", "main", str(origin)], check=True)
+        self.git(repo, "remote", "add", "origin", str(origin))
+        self.git(repo, "push", "-q", "origin", "main")
+        self.git(repo, "fetch", "-q", "origin")
+        subprocess.run(["git", "clone", "-q", str(origin), str(other)], check=True)
+        self.git(other, "commit", "-q", "--allow-empty", "-m", f"Revert x\n\nThis reverts commit {1001:040x}.", date=ago(NOW, 20))
+        self.git(other, "push", "-q", "origin", "main")
+
+    def test_calibrate_sees_a_revert_pushed_after_the_last_fetch(self):
+        out = CalibrateTests().run_calibrate(clean=3, grants="", setup=lambda repo, env: self.repo_behind_origin(repo))[1]
+        self.assertIn("n=3 clean=2 failures=1", out)
+
+    def test_check_prints_no_merge_line_when_a_merge_in_the_class_was_reverted_after_the_last_fetch(self):
+        def world(d):
+            CalibrateTests().world(d, clean=3, grants=GRANTS + EXT)
+            self.repo_behind_origin(d)
+        per_pr = {n: dict(state="MERGED", headRefOid=f"{n:040x}", mergeCommit=dict(oid=f"{n + 1000:040x}"), mergedAt=ago(NOW, 30)) for n in (1, 2, 3)}
+        result = run_check(readme_body=GRANTS + EXT, task=EVIDENCE_TASK, setup=world, per_pr=per_pr, argv_head="40c714a6")
+        self.assertEqual(result.code, 0, result.out)
+        self.assertEqual(nexts(result), ["next: ask for merge with this text."], result.out)
+
+    def test_an_origin_that_cannot_be_fetched_stops_calibrate_and_the_merge_line(self):
+        def broken(repo, env):
+            self.repo_behind_origin(repo)
+            self.git(repo, "remote", "set-url", "origin", str(repo.parent / "gone.git"))
+        code, out = CalibrateTests().run_calibrate(clean=3, grants="", setup=broken)
+        self.assertEqual(code, 2, out)
+        self.assertRegex(out, r"^cannot fetch origin/main: ")
+
+        def world(d):
+            CalibrateTests().world(d, clean=3, grants=GRANTS + EXT)
+            broken(Path(d), None)
+        per_pr = {n: dict(state="MERGED", headRefOid=f"{n:040x}", mergeCommit=dict(oid=f"{n + 1000:040x}"), mergedAt=ago(NOW, 30)) for n in (1, 2, 3)}
+        result = run_check(readme_body=GRANTS + EXT, task=EVIDENCE_TASK, setup=world, per_pr=per_pr, argv_head="40c714a6")
+        self.assertEqual(result.code, 0, result.out)
+        self.assertRegex(result.out, r"cannot fetch origin/main, so no merge line: ")
+        self.assertEqual(nexts(result), ["next: ask for merge with this text."], result.out)
 
 
 def tearDownModule():
