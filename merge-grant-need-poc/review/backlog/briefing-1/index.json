@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-grant-need-poc:backlog:attempt-1:revision-1",
+  "question": "Schedule now as POC and enter implementation as part of batch 3 (fo-write-checks, chat-only-evidence-observer-blind, captain-question-load, number-guards-readme-shrink, and the POC merge-grant-need-poc)? Approving accepts a bar FO proposes at implementation for you to rule before any run, and profile poc as recommended, and that ideations run in parallel, each with a Batch overlap item; fo-write-checks and chat-only-evidence-observer-blind share the observer and check scripts and are designed together; captain-question-load and number-guards-readme-shrink both edit workflow.md and land in that order.",
+  "artifacts": [
+    {
+      "id": "artifact:merge-grant-need-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e12e7c9d6894d30bb547e4369f0b5288baec2094/merge-grant-need-poc.md",
+      "rev": "sha256:d5cdc3585df0d09ba7222a246f8d577e2b9e1cde21d25b10e9da8d50d972e5a3",
+      "mediaType": "text/markdown",
+      "summary": "Seed (Captain amendment 1 of merge-gatekeeper, 「同意」 2026-10-18): measure whether a per-class merge grant is needed at all: grant-eligible merged PRs in relay, subspace-web and qnow under #666's never list, and how often the Captain already pre-authorizes a merge at a delivery gate. Parked code at 3fd84178, reachable from refs/pull/666/head. The bar is yours to set at this gate; the code returns only if the POC passes it."
+    }
+  ]
+}

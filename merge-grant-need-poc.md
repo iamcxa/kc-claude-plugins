@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:merge-grant-need-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:merge-grant-need-poc-backlog-1
+              briefing:
+                id: briefing:merge-grant-need-poc:backlog:attempt-1:revision-1
+                digest: sha256:9a1b96a876658a8f30b711a7c16f30d7f42081b6f5a0605e7f40695f64d3fb44
+                room-ref: ./merge-grant-need-poc/review/backlog/briefing-1
 ---
 
 Filed on the Captain's 「同意」 (chat, 2026-10-18) to FO's proposal to narrow merge-gatekeeper (PR #666) and turn the grant half into a measure-first POC: 「授權那半不要開成「之後重做」，改開一個 POC 待辦，先量兩件事：adopter 裡有多少 PR 可以被授權；「預先授權合併」是不是已經涵蓋了你要的效果。量完確定有需要，才把程式碼從分支拿回來。」
