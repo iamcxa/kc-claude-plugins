@@ -204,6 +204,20 @@ class CodexDispatchTest(unittest.TestCase):
             self.assertEqual(json.loads(line), ["dispatch", "build", "--host", host, "--scope-notes", "a b"])
             self.assertEqual((result.returncode, payload, result.stderr), (9, b"\x00stdin\n", b"stock-stderr"))
 
+    def test_explicit_empty_policy_refuses_before_real_stock(self):
+        stock, called = self.root / "stock", self.root / "stock-called"
+        stock.write_text("#!/usr/bin/env python3\nfrom pathlib import Path\nPath(" + repr(str(called)) + ").write_text('called')\nprint('unconverted stock output')\n")
+        stock.chmod(0o755)
+        for option in (["--policy", ""], ["--policy="]):
+            with self.subTest(option=option):
+                called.unlink(missing_ok=True)
+                result = cd.subprocess.run([sys.executable, str(Path(cd.__file__)), "build", "--spacedock", str(stock),
+                                            *option, "--capabilities", str(self.caps), "--", "--workflow-dir", str(self.root),
+                                            "--stage", "implementation", "--stamp"], capture_output=True)
+                self.assertEqual((result.returncode, result.stdout), (1, b""))
+                self.assertIn(b"preflight", result.stderr)
+                self.assertFalse(called.exists())
+
     def test_operator_high_override_does_not_change_packaged_defaults(self):
         policy = json.loads(self.policy.read_text())
         policy["id"] = "operator-local-sol-high"
@@ -310,6 +324,56 @@ class EvidenceRouteTest(unittest.TestCase):
         with contextlib.redirect_stdout(out), contextlib.redirect_stderr(err):
             code = evidence.main(self.args)
         return code, out.getvalue(), err.getvalue()
+
+    def snapshot(self, text):
+        snapshot = self.root / "snapshot.md"
+        snapshot.write_text(text)
+        receipt = evidence.read(self.root / "followup-receipt.json")
+        digest = hashlib.sha256(text.split("---", 2)[1].encode()).hexdigest()
+        for phase in ("before", "after"):
+            receipt[phase + "_entity_snapshot"] = str(snapshot)
+            receipt[phase]["frontmatter_sha256"] = digest
+        self.write("followup-receipt", receipt)
+        return snapshot
+
+    def test_snapshot_exact_unambiguous_top_level_fields_required(self):
+        for fields in ("not-status: implementation\nnot-worktree: .worktrees/pilot\n",
+                       "note: |\n  status: implementation\n  worktree: .worktrees/pilot\n",
+                       "# status: implementation\n# worktree: .worktrees/pilot\n",
+                       "status: implementation\nstatus: validation\nworktree: .worktrees/pilot\n",
+                       "status: implementation\nstatus: implementation\nworktree: .worktrees/pilot\n",
+                       "status: implementation\nworktree: .worktrees/pilot\nworktree: .worktrees/other\n",
+                       "status: implementation\nworktree: .worktrees/pilot\nworktree: .worktrees/pilot\n",
+                       'status: implementation\n"status": validation\nworktree: .worktrees/pilot\n',
+                       "status: 'implementation\nworktree: .worktrees/pilot\n"):
+            with self.subTest(fields=fields):
+                self.snapshot("---\n" + fields + "---\n")
+                code, out, err = self.invoke()
+                self.assertEqual((code, out), (1, ""))
+                self.assertIn("HOLD:", err)
+
+    def test_snapshot_supported_scalar_quotes_and_unrelated_fields_pass(self):
+        for fields in ("status: implementation\nworktree: .worktrees/pilot\n",
+                       "status: 'implementation'\nworktree: '.worktrees/pilot'\n",
+                       'status: "implementation"\nworktree: ".worktrees/pilot"\n',
+                       "'status': implementation\n\"worktree\": '.worktrees/pilot'\n",
+                       'status: implementation # current stage\nworktree: ".worktrees/pilot" # owner\nnote: |\n  unrelated: detail\n'):
+            with self.subTest(fields=fields):
+                self.snapshot("---\n" + fields + "---")
+                self.assertEqual(self.invoke()[0], 0)
+
+    def test_snapshot_frontmatter_fences_and_body_boundary_required(self):
+        fields = "status: implementation\nworktree: .worktrees/pilot\n"
+        for text in ("Heading\n---\n" + fields + "---\n", "---\n" + fields,
+                     "---\ntitle: fixture\n---\n" + fields):
+            with self.subTest(text=text):
+                self.snapshot(text)
+                self.assertEqual(self.invoke()[0], 1)
+
+    def test_snapshot_raw_hash_still_binds_unrelated_bytes(self):
+        snapshot = self.snapshot("---\nstatus: implementation\nworktree: .worktrees/pilot\n---\n")
+        snapshot.write_text("---\nstatus: implementation\nworktree: .worktrees/pilot\nextra: changed\n---\n")
+        self.assertEqual(self.invoke()[0], 1)
 
     def test_plaintext_matching_requests_and_successful_results_pass_fixture_control(self):
         self.assertEqual(self.invoke()[0], 0)

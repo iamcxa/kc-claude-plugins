@@ -154,7 +154,7 @@ def main(argv=None):
     phase = "preflight"
     recovery = "Correct the named input and rerun preflight; do not substitute or dispatch an older payload."
     try:
-        if args.command == "build" and not args.policy:
+        if args.command == "build" and args.policy is None:
             return subprocess.run([args.spacedock, "dispatch", "build", *forwarded]).returncode
         if not args.policy or not args.capabilities:
             raise ValueError("selected conversion requires --policy and --capabilities")

@@ -10,6 +10,7 @@ from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
+import re
 import subprocess
 import sys
 
@@ -141,9 +142,16 @@ def main(argv=None):
         require(f"worktree {repo}\n" in git(repo, "worktree", "list", "--porcelain") + "\n", "code worktree not registered")
         require(entity.is_file(), "canonical task is missing")
         for phase in ("before", "after"):
-            state = Path(receipt[phase + "_entity_snapshot"]).read_text().split("---", 2)[1]
+            snapshot = Path(receipt[phase + "_entity_snapshot"]).read_text()
+            fences = list(re.finditer(r"^---[ \t]*$", snapshot, re.M))
+            require(len(fences) >= 2 and fences[0].start() == 0, f"{phase} snapshot requires fenced frontmatter")
+            state = snapshot[3:fences[1].start()]
             require(receipt[phase]["frontmatter_sha256"] == hashlib.sha256(state.encode()).hexdigest(), f"{phase} raw entity frontmatter differs from receipt")
-            require("status: implementation\n" in state and f"worktree: {repo.parent.name}/{repo.name}\n" in state, f"{phase} entity was not registered in implementation")
+            for key, expected in (("status", "implementation"), ("worktree", f"{repo.parent.name}/{repo.name}")):
+                values = re.findall(rf"^(?:{key}|'{key}'|\"{key}\")[ \t]*:[ \t]*(.*)$", state, re.M)
+                forms = (expected, f"'{expected}'", f'"{expected}"')
+                require(len(values) == 1 and any(re.fullmatch(re.escape(form) + r"(?:[ \t]+#.*)?[ \t]*", values[0]) for form in forms),
+                        f"{phase} snapshot requires one exact top-level {key} scalar")
         require(receipt["marker"] == args.marker and receipt["completion_turn_id"] in turns, "missing followup marker/turn")
         _, requested_at = native_call(args.followup_native_calls, "followup_task", followup["followup_args"])
         request_time = event_time(requested_at, "native followup request")
