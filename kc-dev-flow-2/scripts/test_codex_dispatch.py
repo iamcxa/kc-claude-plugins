@@ -493,6 +493,70 @@ class EvidenceRouteTest(unittest.TestCase):
         self.native("followup_task", dict(self.requests["followup_task"], message="different assignment"), [""])
         self.assertEqual(self.invoke()[0], 1)
 
+    def test_duplicate_acknowledgement_occurrences_hold(self):
+        child = self.root / "child.jsonl"
+        base = list(evidence.records(child))
+        for mode in ("initial", "same-turn-message", "same-part", "different-parts", "common-substring", "overlap"):
+            with self.subTest(mode=mode):
+                rows, marker = copy.deepcopy(base), "DISPOSABLE-ACK"
+                if mode in ("initial", "same-turn-message", "common-substring"):
+                    other = copy.deepcopy(rows[3])
+                    if mode != "same-turn-message":
+                        other["payload"]["internal_chat_message_metadata_passthrough"]["turn_id"] = "initial-turn"
+                    if mode == "common-substring":
+                        marker = "a"
+                        other["payload"]["content"][0]["text"], rows[3]["payload"]["content"][0]["text"] = "baseline", "later"
+                    rows.insert(3, other)
+                elif mode == "same-part":
+                    rows[3]["payload"]["content"][0]["text"] = marker + " " + marker
+                elif mode == "different-parts":
+                    rows[3]["payload"]["content"].append({"type": "output_text", "text": marker})
+                else:
+                    marker, rows[3]["payload"]["content"][0]["text"] = "AA", "AAA"
+                receipt = evidence.read(self.root / "followup-receipt.json")
+                receipt["marker"] = marker
+                self.write("followup-receipt", receipt)
+                self.args[self.args.index("--marker") + 1] = marker
+                self.jsonl(child, rows)
+                code, out, err = self.invoke()
+                self.assertEqual((code, out), (1, ""))
+                self.assertIn("HOLD:", err)
+
+    def test_unique_multiline_and_split_content_marker_passes(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        for marker, parts in (("DISPOSABLE-ACK", ["Before\n", "DISPOSABLE-ACK", "\nAfter"]),
+                              ("DISPOSABLE-ACK", ["Before\n", "DISPOSABLE-", "ACK", "\nAfter"]),
+                              (".*", ["Before\n", ".*", "\nAfter"])):
+            with self.subTest(parts=parts):
+                rows[3]["payload"]["content"] = [{"type": "output_text", "text": part} for part in parts]
+                self.jsonl(child, rows)
+                receipt = evidence.read(self.root / "followup-receipt.json")
+                receipt["marker"] = marker
+                self.write("followup-receipt", receipt)
+                self.args[self.args.index("--marker") + 1] = marker
+                self.assertEqual(self.invoke()[0], 0)
+
+    def test_non_reply_transport_marker_copies_do_not_count(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        marker = "DISPOSABLE-ACK"
+        rows += [{"type": "event_msg", "payload": {"type": "agent_message", "message": marker}},
+                 {"type": "response_item", "payload": {"type": "message", "role": "user", "content": [{"type": "input_text", "text": marker}]}},
+                 {"type": "response_item", "payload": {"type": "function_call", "arguments": marker}},
+                 {"type": "response_item", "payload": {"type": "function_call_output", "output": marker}}]
+        self.jsonl(child, rows)
+        self.assertEqual(self.invoke()[0], 0)
+
+    def test_marker_fragments_in_different_messages_do_not_count(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        earlier = copy.deepcopy(rows[3])
+        earlier["payload"]["internal_chat_message_metadata_passthrough"]["turn_id"] = "initial-turn"
+        earlier["payload"]["content"][0]["text"], rows[3]["payload"]["content"][0]["text"] = "DISPOSABLE-", "ACK"
+        self.jsonl(child, [*rows[:3], earlier, rows[3]])
+        self.assertEqual(self.invoke()[0], 1)
+
     def test_initial_turn_marker_cannot_certify_followup(self):
         child = self.root / "child.jsonl"
         rows = list(evidence.records(child))

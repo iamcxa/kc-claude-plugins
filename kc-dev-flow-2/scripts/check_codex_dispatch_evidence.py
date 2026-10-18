@@ -154,9 +154,16 @@ def main(argv=None):
         for actual in turns[receipt["completion_turn_id"]]:
             require((actual["model"], actual["effort"]) == (binding["model"], binding["reasoning_effort"]), "followup host settings changed")
         messages = [r["payload"] for r in raw if r["type"] == "response_item" and r["payload"].get("type") == "message" and r["payload"].get("role") == "assistant"]
-        require(any(isinstance(m.get("internal_chat_message_metadata_passthrough"), dict)
-                    and m["internal_chat_message_metadata_passthrough"].get("turn_id") == receipt["completion_turn_id"]
-                    and any(args.marker in part.get("text", "") for part in m.get("content", [])) for m in messages),
+        occurrences, acknowledgement = 0, None
+        for message in messages:
+            text = "".join(part.get("text", "") for part in message.get("content", []))
+            offset = text.find(args.marker)
+            while offset != -1:
+                occurrences, acknowledgement = occurrences + 1, message
+                offset = text.find(args.marker, offset + 1)
+        require(occurrences == 1, "acknowledgement marker must occur exactly once in assistant reply text")
+        metadata = acknowledgement.get("internal_chat_message_metadata_passthrough")
+        require(isinstance(metadata, dict) and metadata.get("turn_id") == receipt["completion_turn_id"],
                 "unique reply absent from the claimed completion turn")
         print(f"PASS candidate={candidate}; protected bytes, requested/observed Sol/high, complete native arguments/results and real producer followup marker match")
         print("Limit: local evidence consistency only; independent validation/approval remain separate.")
