@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:chat-only-evidence-observer-blind:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 3 (fo-write-checks, chat-only-evidence-observer-blind, captain-question-load, number-guards-readme-shrink, and the POC merge-grant-need-poc)? Approving accepts profile pilot as recommended, and that ideations run in parallel, each with a Batch overlap item; fo-write-checks and chat-only-evidence-observer-blind share the observer and check scripts and are designed together; captain-question-load and number-guards-readme-shrink both edit workflow.md and land in that order.",
+  "artifacts": [
+    {
+      "id": "artifact:chat-only-evidence-observer-blind:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c3ef6a1ebd6c21f5ab093b760c08a25dcb563d2c/chat-only-evidence-observer-blind.md",
+      "rev": "sha256:d06080961417c4df3a8b1f26b71acdf6987a8fc8ffa11e2cdde0d80b0b10a455",
+      "mediaType": "text/markdown",
+      "summary": "Seed (filed 2026-10-13 on 「按建議1,3」): rules whose evidence lives only in chat leave the observer at can't tell; batch 2 left 18 can't-tell rows across six reports (acceptance script presented in full, goal sufficiency and minimal necessity, delivery_gate and package_version runs). Ideation owes, per rule: a record FO leaves (for example a line in the committed gate summary) or the rule accepted as chat-only and dropped from the observer."
+    }
+  ]
+}

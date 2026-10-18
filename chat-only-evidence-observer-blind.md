@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:chat-only-evidence-observer-blind:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:chat-only-evidence-observer-blind-backlog-1
+              briefing:
+                id: briefing:chat-only-evidence-observer-blind:backlog:attempt-1:revision-1
+                digest: sha256:5e943ce8c82586e021f5a6dc3f1add5c160ba7668a9d0abf5a88fe0082718473
+                room-ref: ./chat-only-evidence-observer-blind/review/backlog/briefing-1
 ---
 
 Filed from a learn package-issue candidate the Captain approved on 2026-10-13 (「按建議1,3」). The observer reports on tasks `fo-record-checks` (PR #640) and `learn-delivery-follow-through` (PR #639) both marked the same FO rules `can't tell`, because the rules require FO to do something in front of the Captain but not to leave a record in state.
