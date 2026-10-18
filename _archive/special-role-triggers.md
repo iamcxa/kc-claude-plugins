@@ -3,7 +3,7 @@ title: chief-engineer and engineering-reviewer start on recorded events, not on 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved delivery of #664 in chat (「批准並合併」), the #664 and #663 delivery gates presented together, accepting FO''s recommendation to decline the listed Deferred risks and Polish into the named backlog tasks; he also authorized FO to merge'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-17T06:11:15Z
 worktree: .worktrees/spacedock-ensign-special-role-triggers
 pr: pr-merge:664
+verdict: PASSED
+completed: 2026-10-18T03:09:21Z
+archived: 2026-10-18T03:09:21Z
 ---
 
 Filed on the Captain's 「可以，建成待辦」 (chat, 2026-10-16), after FO listed six moments in one session where a special role applied and was not used. The README says FO calls them when it judges they are needed; FO rarely judges its own work to need a second opinion, the same failure as the relay prod task where risk-selected security review never fired.
