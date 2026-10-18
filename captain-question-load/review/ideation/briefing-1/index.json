@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:captain-question-load:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts D1 (land a Delivery authority sentence that lets a delivery gate question carry the merge of the validated head and the cleanup of its worktree, with 'unless he says he merges' as the opt-out, plus delivery_gate.py's last line saying 'merge this head if the approved question named the merge, else ask', and an ADR that his approval of such a question is his answer), D2 (learning PRs and the Release PR are still asked one at a time), and FO's implementation order below.",
+  "artifacts": [
+    {
+      "id": "artifact:captain-question-load:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d07eb343a0e036615bf5669c39cc757205be707c/captain-question-load.md",
+      "rev": "sha256:e19909bc4f1d70b2231fe604a7e9c909956e387a120d0f148aead8d6a056bde5",
+      "mediaType": "text/markdown",
+      "summary": "Measured, batch 2: 33 Captain messages, 22 answered FO asks (7 stage gates, 6 Needs decisions or amendments, 5 standalone merge asks, 4 procedural); 20 of 22 accepted FO's recommendation, but 4 of those came with his own question that changed the outcome, so acceptance is not evidence for delegating. A written rule can settle at most 2 of the 22: the standalone merge ask and a worktree cleanup. Expected 3.5 answers per task from 3.7. README words unchanged (one sentence cut that pr_watch.py and delivery_gate.py already enforce). FO's earlier claim that 'many' asks were procedural does not hold (4 of 22). Implementation order (FO, from the four Batch overlap sections): fo-write-checks and number-guards-readme-shrink first in parallel (scripts vs README hunks); then captain-question-load (delivery_gate.py ask line and a Delivery authority sentence); then chat-only-evidence-observer-blind (delivery_gate.py and the same paragraph)."
+    }
+  ]
+}
