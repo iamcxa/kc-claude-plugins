@@ -352,3 +352,16 @@ Needs this repository's checkout at `/Users/kent/conductor/workspaces/kc-claude-
 ### Summary
 
 PASSED at 7701703b: both Codex P2 are fixed, each rule's test fails under its own mutation, AC-1 and AC-3 to AC-10 hold, script output over the real state is identical to 5afe7fd7, CI is green. No Material finding and no Needs decision; AC-9 is carried from validation 1 on unchanged observer text and identical script output. My throwaway worktrees and probe copies are removed.
+
+## Stage Report: implementation (cycle 3, phase 1)
+
+- DONE: Phase 1 only: reproduce the Codex P2 on #664 head 7701703b (review:5558381167) as a failing test, and propose the smallest fix; report and stop, with no commit or push, until FO authorizes the fix
+  New `HeadingFormsTest` in `kc-dev-flow-2/scripts/test_role_triggers.py` (worktree, uncommitted): at 7701703b 29 of 40 subtests fail, the 11 old tests and every trailing-no-break-space control pass. Per heading, forms uppercase, lowercase, leading space, tab, no-break space (forms from `test_design_surfaces.py`): `## Captain amendments`, `### Amendment N`, `### Feedback Cycles`, `## FO alignment` each ignored; plus an indented sibling heading does not end FO alignment, Captain amendments or Feedback Cycles (9 subtests).
+- DONE: Close the class: every heading role_triggers.py matches normalized as design_surfaces.py does
+  Proposed fix verified on a scratch copy `/tmp/rt-fix-scratch` (patch `fix.patch`, not applied): a `SPACE` class copied from `design_surfaces.GO_SPACE`, `HEADING` and `AMENDMENT` take leading `SPACE`, and `titled(hashes, text)` (case-insensitive, `SPACE` both sides) builds the three section matchers. design_surfaces.py has no heading helper, only the `GO_SPACE` constant and per-heading regexes, so there is nothing to import as a function.
+- DONE: a test and mutation per heading; output over state task files
+  Scratch with fix: 16 tests OK. Reverting one matcher to its literal fails only that heading's test (Captain amendments 6, Feedback Cycles 6, FO alignment 6, Amendment entry 5 subtests); column-0 `HEADING` fails 21 subtests across the five tests. Output over state task slugs (live and archived, base vs fixed `check()`): 0 differ of 67 at state HEAD 30c10e74, 0 of 63 at f3474f68; `git grep -i` finds no non-literal form of these headings in state HEAD.
+
+### Summary
+
+Same cause as the earlier two P2: the matchers compare literals, while design_surfaces accepts case, indent and no-break space. FO rulings needed: (1) design_surfaces itself reads `## FO alignment` and `### ` entries strictly, so normalizing those two goes beyond it (harmless: a task with `## FO Alignment` already fails design_surfaces); (2) copy `SPACE` plus a parity test against `design_surfaces.GO_SPACE`, or import it (an import breaks under `python3 -I`, and an import traceback exits 1, which this contract reads as owed lines).
