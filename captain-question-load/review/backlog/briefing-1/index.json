@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:captain-question-load:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 3 (fo-write-checks, chat-only-evidence-observer-blind, captain-question-load, number-guards-readme-shrink, and the POC merge-grant-need-poc)? Approving accepts profile pilot as recommended, and that ideations run in parallel, each with a Batch overlap item; fo-write-checks and chat-only-evidence-observer-blind share the observer and check scripts and are designed together; captain-question-load and number-guards-readme-shrink both edit workflow.md and land in that order.",
+  "artifacts": [
+    {
+      "id": "artifact:captain-question-load:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4e038ecb1600f7f90e18cb207ea47861301b1036/captain-question-load.md",
+      "rev": "sha256:7e63fbfc630a77706f320c89ac0c4b4296f3bff224dfd3daa703ec90d3d6c7a6",
+      "mediaType": "text/markdown",
+      "summary": "Seed: the Captain asked to be freed from following each FO step (2026-10-16); in batch 2 most of his turns answered FO questions. Ideation owes: a count of every Captain decision per batch-2 task by kind (gates, Needs decisions, amendments, merge asks, procedural asks), which kinds a written standing rule could settle without him, and which stay his under ADR 0011."
+    }
+  ]
+}

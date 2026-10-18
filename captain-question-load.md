@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:captain-question-load:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:captain-question-load-backlog-1
+              briefing:
+                id: briefing:captain-question-load:backlog:attempt-1:revision-1
+                digest: sha256:f5df5bbb224d836196b8fe7f7d580cb661bba02b1564603d5073b4fef3eb9bdc
+                room-ref: ./captain-question-load/review/backlog/briefing-1
 ---
 
 Filed for batch 3 on the Captain's 「先走批次三規劃」 (chat, 2026-10-19), after FO reported that most of his turns in batch 2 were answering FO's questions rather than reviewing PRs. His goal for batching (chat, 2026-10-16): 「這樣我才可以從一直在追每個 FO 過程中解放出來」.
