@@ -1,75 +1,179 @@
 # Explicit Codex model binding
 
-This opt-in source candidate wraps the installed, unchanged Spacedock CLI.
-Select the packaged [version 1 policy](codex-model-policy-v1.json) by its absolute
-path. Do not write model policy into global Codex configuration. With no selected
-policy, Spacedock's existing host behavior remains in effect.
+This opt-in dev2 source candidate wraps unchanged stock Spacedock. Select the
+reviewed package by its absolute path; a fresh conversation must read this file
+from that source, not an older installed cache. No installation is needed for
+this source trial. Without `--policy`, `build` passes stock stdin, arguments,
+stdout, stderr and exit code through, including Claude/pi/unconfigured Codex.
 
-Read the current host's live `spawn_agent` schema and save a capability JSON with
-`arguments` (the argument names) and `supported_models` (model names mapped to
-supported reasoning levels). This is a local snapshot of that host, not a
-portable model registry. The converter checks both against the requested binding.
+## First use
 
-For an ordinary stage, run the package wrapper with the existing Spacedock build
-arguments after `--`. It resolves policy/capabilities before calling stock build,
-including builds that stamp state:
+Prerequisites: Python 3, an adopted block-form Spacedock workflow, the reviewed
+package checkout, an unchanged stock Spacedock executable, a writable evidence
+directory outside the workflow's scanned dispatch records, and native host tools
+that accept explicit model/effort arguments. The First Officer (FO) owns native
+calls, task state, worker registration, lifecycle and reuse eligibility.
+
+Define these operator inputs once, replacing every placeholder with a real
+absolute path. The task and workflow may use a separate state checkout.
 
 ```sh
-python3 <package>/scripts/codex_dispatch.py build \
-  --spacedock /absolute/stock/spacedock \
-  --policy /absolute/package/references/codex-model-policy-v1.json \
-  --capabilities /absolute/local/host-capabilities.json \
-  -- --workflow-dir /absolute/project/workflow --stage implementation \
-  --entity-path /absolute/project/task.md --checklist-file /absolute/checklist.txt
+DEV2_PACKAGE=/absolute/reviewed/repo/kc-dev-flow-2
+DEV2_STOCK=/absolute/stock/spacedock
+DEV2_WORKFLOW=/absolute/project/workflow
+DEV2_ENTITY=/absolute/state/task/index.md
+DEV2_EVIDENCE=/absolute/local/evidence
+DEV2_POLICY="$DEV2_EVIDENCE/policy.json"
+DEV2_CAPS="$DEV2_EVIDENCE/host-capabilities.json"
+DEV2_CHECKLIST="$DEV2_EVIDENCE/checklist.txt"
+DEV2_SCOPE="$DEV2_EVIDENCE/scope.txt"
+cd "$DEV2_PACKAGE/.."
 ```
 
-For a special role, use `<package>/scripts/codex_dispatch.py convert --policy FILE --capabilities
-FILE --agent-file FILE --stage ROLE < helper.json`, naming its unchanged agent
-declaration and the already assembled stock helper envelope.
-Both inputs use the same resolver. Explicit `reasoning` wins over policy defaults;
-the Engineering Reviewer and Chief Engineer keep their declared `xhigh`.
-Agent text naming Claude Opus describes the original host; on this selected
-Codex lane the policy resolves that declaration to the emitted Codex binding.
-Do not edit the agent text or ask the child to change its own model.
+Record the package source/commit and stock executable hash/version. Read the
+current host's live `spawn_agent` schema, recording where/when it was read, and
+save a capability JSON with `arguments` (argument names) and `supported_models`
+(model names mapped to supported reasoning levels). For example, only if the
+current schema actually supports these values:
 
-Pass the resulting `spawn_args` object verbatim to native `spawn_agent`, including
-`fork_turns="none"`, `model`, and `reasoning_effort`. The converter preserves
-the helper's prompt string, including whitespace. A conversion failure is a hold:
-do not spawn from the older null-model envelope or inherit the parent's settings.
+```json
+{"arguments":["task_name","message","fork_turns","model","reasoning_effort"],
+ "supported_models":{"gpt-6.1-sol":["high"]}}
+```
 
-Stamp the returned `binding` object into the FO's worker roster. Pass a prior
-binding file with `--previous-binding` when checking reuse. `reuse=false` means
-spawn fresh; `followup_task` cannot switch the live handle's settings.
-`reuse=true` satisfies only model/policy compatibility, not lifecycle, stage,
-ownership or completion freshness. Pass `--fresh` for independent validation;
-an implementation worker must not become its own independent validator.
+This snapshot is caller-supplied input, not proof of execution. Missing host
+tools, unsupported values or unavailable raw metadata hold dispatch.
 
-For an eligible existing worker, pass `--previous-binding FILE --target HANDLE`
-to `build` before `--`, and stock `--advance` after it. The wrapper compares
-policy/model/effort before invoking stock advance. A mismatch, missing target,
-or `--fresh` refuses that advance before build; issue a fresh build without
-`--advance` and without `--target` instead. A matching stock advance envelope
-omits `name`; the converter emits `followup_args` with the intact stock pointer
-and target, for native `followup_task`. It emits no spawn arguments in this case.
-Do not use another handle to sidestep the comparison. FO must still check worker
-ownership and its current completion epoch before reuse.
+The packaged [version 1 policy](codex-model-policy-v1.json) maps haiku/luna,
+sonnet/sol and opus/astra; implementation defaults to medium and the other
+listed stages to high. Explicit declaration reasoning wins. To exercise an
+approved ordinary-stage Sol/high pilot, copy the policy to `DEV2_POLICY`, give
+it a distinct local `id`, and set the used stages' `reasoning_defaults` to
+`high`. Keep the packaged file, agent/stage declarations and global config
+unchanged. An explicit xhigh role still requests xhigh; do not launch such a role
+in a high-only cohort or silently replace it with another worker/model.
 
-This candidate performs conversion only. FO owns dispatch, host metadata
-verification, roster lifecycle and state. A generated payload is not runtime
-proof. No installation, provider change, fallback or background service is added.
+Write the real task's checklist and bounded scope to the named files. For an
+ordinary stage, wrapper options precede `--`; stock build options follow it:
 
-The stock Codex adapter still emits a null model and instructs immediate spawn.
-There is no upstream plugin hook here: for this explicitly selected dev2 lane,
-FO replaces that immediate spawn step with this wrapper and consumes its
-`spawn_args` instead of the stock null-model transport. The wrapper retains the
-original stock envelope as `stock_helper` for provenance; it does not alter its
-prompt/name. The source agent's Claude wording is interpreted by this host
-binding before native spawn. Stock Spacedock retains assignment assembly and
-all state, gates and lifecycle rules.
+```sh
+python3 kc-dev-flow-2/scripts/codex_dispatch.py build \
+  --spacedock "$DEV2_STOCK" --policy "$DEV2_POLICY" --capabilities "$DEV2_CAPS" \
+  --stock-output "$DEV2_EVIDENCE/initial-stock.json" -- \
+  --workflow-dir "$DEV2_WORKFLOW" --stage implementation \
+  --entity-path "$DEV2_ENTITY" --checklist-file "$DEV2_CHECKLIST" \
+  --scope-notes-file "$DEV2_SCOPE" > "$DEV2_EVIDENCE/initial-wrapper.json" \
+  2> "$DEV2_EVIDENCE/initial-stderr.txt"
+```
 
-Declaration reading is bounded to the adopted block-form workflow's `defaults`,
-`states`, `name`, `model` and `reasoning` scalars. The wrapper reuses the package's
-frontmatter reader for agents. Unrecognized model/reasoning scalars, anchors and
-unsupported stage layouts refuse conversion; this is not a general YAML parser.
-Without `--policy`, `build` delegates the supplied stock arguments and exit code
-directly, leaving Claude/pi and unconfigured Codex behavior intact.
+Check exit 0 before consuming output. Add ordinary stock stamping/worktree flags
+only as the adopted workflow and task authorize; they can mutate task state.
+Preflight resolves policy/capabilities before stock is called. `--stock-output`
+retains raw stock stdout, including malformed/nonzero output, at the supplied
+path. Use distinct evidence paths per attempt; retain stderr and the command's
+exit separately. A write failure after stock ran can also leave partial state.
+
+For special roles, use the same resolver and the unchanged agent declaration:
+
+```sh
+python3 kc-dev-flow-2/scripts/codex_dispatch.py convert \
+  --policy "$DEV2_POLICY" --capabilities "$DEV2_CAPS" \
+  --agent-file "$DEV2_PACKAGE/agents/engineering-reviewer.md" \
+  --stage engineering-reviewer < /absolute/local/stock-helper.json
+```
+
+Chief Engineer and Engineering Reviewer retain their declared xhigh. Their
+original Claude wording is interpreted by this explicitly selected Codex binding;
+FO never asks a child to change its own model.
+
+## Native dispatch and evidence
+
+On this selected lane FO replaces the stock Codex adapter's immediate null-model
+spawn step with the wrapper's emitted `spawn_args`, passed verbatim to native
+`spawn_agent`, including `fork_turns="none"`, `model` and `reasoning_effort`.
+The wrapper keeps the stock prompt string (including whitespace) and helper name
+in `stock_helper`/`helper_name`; it normalizes only native `task_name` as before.
+No upstream hook or second scheduler is introduced. Do not dispatch the older
+stock null-model envelope when selected conversion fails.
+
+Keep a small evidence index linking the source/candidate, exact command/input
+paths, policy id/digest, capability provenance, stock envelope, wrapper output,
+native call/returned handle and raw host session path/turn id. Stamp `binding`
+into the existing FO roster with canonical entity path, stage, code worktree,
+branch and completion epoch. Preserve requested declaration, resolved arguments
+and observed model/effort separately. A pending transport receipt is unverified;
+FO must compare actual host metadata before accepting execution. Retain raw
+metadata for independent checking, without copying credentials or tokens.
+
+## Compatible continuation
+
+A prior binding satisfies only model/policy compatibility. Before building or
+sending, FO must verify the same canonical entity, stage, registered worktree,
+branch and live addressable producer handle, completion epoch and authorized
+remaining work. Reject any tuple mismatch before the wrapper/native call.
+`followup_task` cannot change the live handle's settings. Independent validation
+always builds fresh with `--fresh`, a separate handle and its own observed metadata.
+
+For an eligible producer's bounded completion check, retain its original binding
+as a JSON object in `prior-binding.json`. The real entity must still owe this
+check at the same stage; do not clear completion or advance state first. Put the
+exact ownership tuple, candidate, unique reply marker and no-product-edit scope
+in the completion checklist/scope files, then build:
+
+```sh
+python3 kc-dev-flow-2/scripts/codex_dispatch.py build \
+  --spacedock "$DEV2_STOCK" --policy "$DEV2_POLICY" --capabilities "$DEV2_CAPS" \
+  --previous-binding "$DEV2_EVIDENCE/prior-binding.json" --target "$DEV2_PRODUCER" \
+  --stock-output "$DEV2_EVIDENCE/followup-stock.json" -- \
+  --workflow-dir "$DEV2_WORKFLOW" --stage implementation --entity-path "$DEV2_ENTITY" \
+  --checklist-file "$DEV2_CHECKLIST" --scope-notes-file "$DEV2_SCOPE" --advance \
+  > "$DEV2_EVIDENCE/followup-wrapper.json" 2> "$DEV2_EVIDENCE/followup-stderr.txt"
+```
+
+Define `DEV2_PRODUCER` as that exact registered handle, not a display name. Never
+combine `--advance` and `--stamp`. Pass emitted `followup_args` unchanged to
+native `followup_task`. It contains the intact stock pointer and target, with no
+spawn arguments. Retain the call, returned acknowledgement/marker, new host turn,
+completion epoch, unchanged candidate and before/after state/worktree ownership.
+Save raw entity snapshots before/after the check so later validation can compare
+the implementation state after the normal task transition.
+A disposable positive fixture cannot prove continuation of the real producer.
+
+## Holds and recovery
+
+| Failure | Next operator action |
+| --- | --- |
+| Missing/malformed policy, capabilities or prior binding | Correct the named local input and rerun preflight. |
+| Unsupported model/effort or missing native argument | Confirm the live schema/support; hold at the fixed model. |
+| Advance binding/policy mismatch, absent target or `--fresh` | After FO confirms fresh-worker eligibility, build fresh without `--advance` and without `--target`. |
+| Wrong/stale ownership tuple or uncertain native completion | Reconcile task/roster/host status before any send. Never silently replace a handle or resend. |
+| Stock nonzero or successful output that cannot convert | Consume no dispatch arguments. Preserve exit/stderr/raw stdout; inspect stock state and dispatch artifacts before rebuilding. Stock may already have written partial state. |
+| Capacity or observed model/effort mismatch | Hold and report; no model fallback, inherited null-model dispatch or automatic retry. |
+
+Diagnostics advise and grant no recovery authority. Evidence paths are local and
+must be supplied to a validator; missing raw evidence remains unverified.
+
+## Local verification
+
+Run the focused tests from a complete reviewed checkout:
+
+```sh
+python3 kc-dev-flow-2/scripts/test_codex_dispatch.py
+python3 kc-dev-flow-2/scripts/test_codex_model_policy.py
+python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /absolute/active/spacedock
+```
+
+The focused tests exercise mapping, advance refusal before stock, malformed
+inputs, failure output retention and real-process stdin/argument/exit passthrough
+for Claude, pi and Codex. They do not call a model. Run the small
+`<package>/scripts/check_codex_dispatch_evidence.py --help` route with explicit candidate, baseline
+and FO receipts to reconcile protected bytes and actual pilot continuation;
+its raw host log access is a declared machine-local prerequisite. A fresh
+independent validator repeats these checks and challenges the supplied evidence.
+Green deterministic tests alone do not prove native spawn or continuation.
+
+Declaration reading remains bounded to adopted block-form `defaults`, `states`,
+`name`, `model` and `reasoning` scalars and the existing agent frontmatter reader.
+Unrecognized scalars, anchors and unsupported layouts refuse; this is not a
+general YAML parser. The wrapper performs conversion only, preserving stock
+assignment assembly, all gates, lifecycle and delivery authority.

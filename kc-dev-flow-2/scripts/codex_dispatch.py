@@ -11,6 +11,16 @@ import sys
 from number_guards import Misconfigured, frontmatter
 
 
+def read_json(path, category, raw=None):
+    try:
+        value = json.loads(Path(path).read_bytes() if raw is None else raw)
+        if not isinstance(value, dict):
+            raise ValueError("expected a JSON object")
+        return value
+    except (OSError, ValueError) as error:
+        raise ValueError(f"{category} {str(path)!r}: {error}") from error
+
+
 def scalar(value):
     value = re.split(r"\s+#", value, maxsplit=1)[0].strip()
     if not re.fullmatch(r"[\w.-]+|'[\w.-]+'|\"[\w.-]+\"", value):
@@ -61,15 +71,18 @@ def declaration(workflow, agent, stage):
 
 
 def resolve(policy_path, capabilities_path, stage, model, reasoning):
-    raw = Path(policy_path).read_bytes()
-    policy = json.loads(raw)
+    try:
+        raw = Path(policy_path).read_bytes()
+    except OSError as error:
+        raise ValueError(f"policy {str(policy_path)!r}: {error}") from error
+    policy = read_json(policy_path, "policy", raw)
     if not isinstance(policy, dict) or type(policy.get("version")) is not int or policy["version"] != 1 or not isinstance(policy.get("id"), str) or not policy["id"]:
         raise ValueError("unsupported or unnamed Codex policy")
     if not isinstance(policy.get("models"), dict) or not isinstance(policy.get("reasoning_defaults"), dict):
         raise ValueError("invalid Codex policy mappings")
     mapped = policy["models"].get(model)
     effort = reasoning if reasoning is not None else policy["reasoning_defaults"].get(stage)
-    capabilities = json.loads(Path(capabilities_path).read_text())
+    capabilities = read_json(capabilities_path, "capabilities")
     if not isinstance(capabilities, dict) or not isinstance(capabilities.get("arguments"), list) or not isinstance(capabilities.get("supported_models"), dict):
         raise ValueError("invalid host capability snapshot")
     required = {"task_name", "message", "fork_turns", "model", "reasoning_effort"}
@@ -131,12 +144,15 @@ def main(argv=None):
     parser.add_argument("--workflow-dir")
     parser.add_argument("--agent-file")
     parser.add_argument("--previous-binding")
+    parser.add_argument("--stock-output", help="retain raw stock stdout at this explicit evidence path")
     parser.add_argument("--target")
     parser.add_argument("--fresh", action="store_true")
     supplied = list(sys.argv[1:] if argv is None else argv)
     split = supplied.index("--") if "--" in supplied else len(supplied)
     args = parser.parse_args(supplied[:split])
     forwarded = supplied[split + 1:]
+    phase = "preflight"
+    recovery = "Correct the named input and rerun preflight; do not substitute or dispatch an older payload."
     try:
         if args.command == "build" and not args.policy:
             return subprocess.run([args.spacedock, "dispatch", "build", *forwarded]).returncode
@@ -153,26 +169,35 @@ def main(argv=None):
         if not stage or bool(workflow) == bool(args.agent_file):
             raise ValueError("require --stage and exactly one workflow or agent declaration")
         binding = resolve(args.policy, args.capabilities, stage, *declaration(workflow, args.agent_file, stage))
-        previous = json.loads(Path(args.previous_binding).read_text()) if args.previous_binding else None
+        previous = read_json(args.previous_binding, "previous binding") if args.previous_binding else None
         if args.command == "build":
             if "--advance" in forwarded and (not args.target or not reusable(binding, previous, args.fresh)):
-                raise ValueError("advance requires matching model/effort and target before build; build fresh instead")
+                recovery = "After FO confirms fresh-worker eligibility, build fresh without --advance and without --target."
+                raise ValueError("advance requires matching policy/model/effort, a target and no --fresh; stock was not called")
+            phase = "stock build"
+            recovery = "Inspect stock state and dispatch artifacts before retry; stock may have written partial state. Do not resend automatically."
             done = subprocess.run([args.spacedock, "dispatch", "build", *forwarded],
                                   text=True, capture_output=True)
             sys.stderr.write(done.stderr)
+            if args.stock_output:
+                Path(args.stock_output).write_text(done.stdout)
             if done.returncode:
+                print(f"codex_dispatch: stock build exited {done.returncode}. {recovery}", file=sys.stderr)
                 return done.returncode
+            phase = "stock conversion"
             helper = json.loads(done.stdout)
         else:
             if forwarded:
                 raise ValueError("convert does not accept stock build arguments")
             helper = json.load(sys.stdin)
+        if not isinstance(helper, dict):
+            raise ValueError("stock helper must be a JSON object")
         result = convert(helper, binding, previous, args.fresh, args.target)
         result["stock_helper"] = helper
         print(json.dumps(result, ensure_ascii=False, indent=2))
         return 0
     except (OSError, ValueError, KeyError, TypeError, Misconfigured) as error:
-        print(f"codex_dispatch: {error}", file=sys.stderr)
+        print(f"codex_dispatch: {phase}: {error}. {recovery}", file=sys.stderr)
         return 1
 
 

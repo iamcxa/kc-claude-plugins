@@ -3,10 +3,12 @@ import io
 import json
 from pathlib import Path
 import tempfile
+import sys
 import unittest
 from unittest.mock import patch
 
 import codex_dispatch as cd
+import check_codex_dispatch_evidence as evidence
 
 
 class CodexDispatchTest(unittest.TestCase):
@@ -64,7 +66,7 @@ class CodexDispatchTest(unittest.TestCase):
         self.caps.write_text("{}")
         with self.assertRaises(ValueError):
             self.binding()
-        with self.assertRaises(OSError):
+        with self.assertRaises(ValueError):
             cd.resolve(self.root / "missing", self.caps, "implementation", "sonnet", None)
 
     def invoke(self, args, text=""):
@@ -88,7 +90,10 @@ class CodexDispatchTest(unittest.TestCase):
                 "--workflow-dir", str(self.root), "--stage", "implementation"]
         with patch("codex_dispatch.subprocess.run", return_value=cd.subprocess.CompletedProcess([], 7, "bad", "stock failed")):
             code, out, err = self.invoke(args)
-        self.assertEqual((code, out, err), (7, "", "stock failed"))
+        self.assertEqual((code, out), (7, ""))
+        self.assertTrue(err.startswith("stock failed"))
+        self.assertIn("partial state", err)
+        self.assertIn("Do not resend automatically", err)
 
     def test_selected_success_and_no_policy_passthrough(self):
         args = ["build", "--policy", str(self.policy), "--capabilities", str(self.caps), "--",
@@ -132,3 +137,97 @@ class CodexDispatchTest(unittest.TestCase):
             code, out, _ = self.invoke(args)
             self.assertEqual((code, out), (1, ""))
             stock.assert_not_called()
+
+    def test_advance_refusal_categories_and_recovery_before_stock(self):
+        binding = self.binding()
+        prior = self.root / "prior.json"
+        base = ["build", "--policy", str(self.policy), "--capabilities", str(self.caps)]
+        stock_args = ["--", "--workflow-dir", str(self.root), "--stage", "implementation", "--advance", "--stamp"]
+        variants = [(["--previous-binding", str(prior)], binding),
+                    (["--previous-binding", str(prior), "--target", "worker", "--fresh"], binding)]
+        for field in ("model", "reasoning_effort", "policy_id", "policy_sha256"):
+            variants.append((["--previous-binding", str(prior), "--target", "worker"], dict(binding, **{field: "changed"})))
+        for options, previous in variants:
+            prior.write_text(json.dumps(previous))
+            with self.subTest(options=options, previous=previous), patch("codex_dispatch.subprocess.run") as stock:
+                code, out, err = self.invoke(base + options + stock_args)
+                self.assertEqual((code, out), (1, ""))
+                self.assertIn("without --advance and without --target", err)
+                stock.assert_not_called()
+
+    def test_input_diagnostics_name_file_and_refuse_before_stock(self):
+        prior = self.root / "prior.json"
+        prior.write_text("[]")
+        for category, path in (("policy", self.policy), ("capabilities", self.caps), ("previous binding", prior)):
+            options = ["build", "--policy", str(self.policy), "--capabilities", str(self.caps)]
+            if category == "policy":
+                bad = self.root / "bad-policy.json"
+                bad.write_text("{")
+                options[2] = str(bad)
+                path = bad
+            elif category == "capabilities":
+                self.caps.write_text("[]")
+            else:
+                self.caps.write_text(json.dumps({"arguments": ["task_name", "message", "fork_turns", "model", "reasoning_effort"],
+                                                 "supported_models": {"gpt-6.1-sol": ["medium"]}}))
+                options += ["--previous-binding", str(prior)]
+            with patch("codex_dispatch.subprocess.run") as stock:
+                code, out, err = self.invoke(options + ["--", "--workflow-dir", str(self.root), "--stage", "implementation"])
+                self.assertEqual((code, out), (1, ""))
+                self.assertIn(category, err)
+                self.assertIn(str(path), err)
+                stock.assert_not_called()
+
+    def test_invalid_stock_output_is_retained_without_dispatch_args(self):
+        evidence = self.root / "stock-output.json"
+        args = ["build", "--policy", str(self.policy), "--capabilities", str(self.caps),
+                "--stock-output", str(evidence), "--", "--workflow-dir", str(self.root), "--stage", "implementation"]
+        for raw in ("not-json", "[]", json.dumps({"name": "worker", "prompt": ""})):
+            with patch("codex_dispatch.subprocess.run", return_value=cd.subprocess.CompletedProcess([], 0, raw, "")):
+                code, out, err = self.invoke(args)
+            self.assertEqual((code, out), (1, ""))
+            self.assertEqual(evidence.read_text(), raw)
+            self.assertIn("stock conversion", err)
+            self.assertIn("partial state", err)
+
+    def test_no_policy_real_process_preserves_stdin_args_output_and_exit(self):
+        stock = self.root / "stock"
+        stock.write_text("#!/usr/bin/env python3\nimport json, sys\nprint(json.dumps(sys.argv[1:]))\nsys.stdout.flush()\nsys.stdout.buffer.write(sys.stdin.buffer.read())\nsys.stderr.write('stock-stderr')\nsys.exit(9)\n")
+        stock.chmod(0o755)
+        wrapper = Path(cd.__file__)
+        for host in ("claude", "pi", "codex"):
+            result = cd.subprocess.run([sys.executable, str(wrapper), "build", "--spacedock", str(stock), "--", "--host", host, "--scope-notes", "a b"],
+                                       input=b"\x00stdin\n", capture_output=True)
+            line, payload = result.stdout.split(b"\n", 1)
+            self.assertEqual(json.loads(line), ["dispatch", "build", "--host", host, "--scope-notes", "a b"])
+            self.assertEqual((result.returncode, payload, result.stderr), (9, b"\x00stdin\n", b"stock-stderr"))
+
+    def test_operator_high_override_does_not_change_packaged_defaults(self):
+        policy = json.loads(self.policy.read_text())
+        policy["id"] = "operator-local-sol-high"
+        policy["reasoning_defaults"]["implementation"] = "high"
+        local = self.root / "policy-high.json"
+        local.write_text(json.dumps(policy))
+        result = cd.resolve(local, self.caps, "implementation", "sonnet", None)
+        self.assertEqual((result["model"], result["reasoning_effort"]), ("gpt-6.1-sol", "high"))
+        self.assertEqual(self.binding()["reasoning_effort"], "medium")
+
+    def test_evidence_rejects_altered_native_record_or_arguments(self):
+        raw = self.root / "host.jsonl"
+        call = {"type": "response_item", "payload": {"name": "followup_task", "call_id": "call-1", "arguments": json.dumps({"target": "producer"})}}
+        raw.write_text(json.dumps(call) + "\n")
+        ledger = self.root / "calls.json"
+        ledger.write_text(json.dumps({"source_session": str(raw), "calls": [call]}))
+        with self.assertRaisesRegex(ValueError, "arguments mismatch"):
+            evidence.native_call(ledger, "followup_task", {"target": "wrong-owner"})
+        call["payload"]["arguments"] = json.dumps({"target": "wrong-owner"})
+        ledger.write_text(json.dumps({"source_session": str(raw), "calls": [call]}))
+        with self.assertRaisesRegex(ValueError, "absent/altered"):
+            evidence.native_call(ledger, "followup_task", {"target": "wrong-owner"})
+        raw.unlink()
+        with self.assertRaises(OSError):
+            evidence.native_call(ledger, "followup_task", {"target": "producer"})
+
+
+if __name__ == "__main__":
+    unittest.main()

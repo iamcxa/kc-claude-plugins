@@ -14,11 +14,14 @@ is not an absolute path, the root is two directories above this `SKILL.md`.
 On Codex, when the caller explicitly selects this package's Codex model policy,
 load [Codex dispatch binding](../../references/codex-dispatch.md) and pass that
 absolute policy path and the live host capability snapshot to Spacedock FO.
+For a source trial, use the reviewed source's linked recipe and record its commit;
+do not assume an older installed cache contains the selected candidate.
 Use the dev2 Python wrapper around stock Spacedock, replacing the stock Codex
 adapter's immediate null-model spawn step on this selected lane. This is an
 explicit dev2 host binding, not an upstream Spacedock plugin hook.
 Require its emitted `spawn_args` for ordinary stages and special agents; a
-selected-policy error holds dispatch. Other hosts and unselected runs keep the
+compatible authorized continuation uses its `followup_args`. Check observed host
+metadata separately; a selected-policy error holds dispatch. Other hosts and unselected runs keep the
 existing route.
 
 Read the [framework](../../README.md). This is a start/resume entry, not a worker
