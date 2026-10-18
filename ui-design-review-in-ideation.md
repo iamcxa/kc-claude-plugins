@@ -537,3 +537,21 @@ PASSED recommended for 3656cd74: AC-1 to AC-8 hold, the cycle-2 single-valued-li
 ### Summary
 
 The Cycle 3 repair is landed as e6eb277f: the Surfaces count now reads the FO alignment from unfenced text, so a task quoting a fenced FO-alignment fixture is no longer refused, and a mutation that reverts the lines fails the new test. The recheck over four corpora shows no verdict change except two relay cases that the ruling already accounts for. roborev reports only the declined Preview P2.
+
+## Stage Report: implementation (cycle 3, roborev 830 repair)
+
+- DONE: Fix the roborev High: build the design-review Preview: candidates in check_task of kc-dev-flow-2/scripts/design_surfaces.py from unfenced text, as the FO alignment read now is; leave check_ui's existing Preview read unchanged; a failing-first test (a fenced 'Preview: fake.html' beside the real Preview line cannot bind a report) and a mutation that reverts it
+  Commit ab8b6751 on #663 (previous head e6eb277f): `shown` is built from `unfenced(body.split("\n"))`; check_ui and its PREVIEW.search untouched.
+  `test_a_fenced_preview_line_cannot_bind_a_report`: fails before the fix (0 refusals instead of 1 "reviewed preview 'fake.html'"), passes after; also asserts the real-preview report still passes. `test_mutation_reading_preview_candidates_from_the_raw_body_lets_a_fenced_one_bind`: reverts to `PREVIEW.findall(body)` and asserts the mutant lets the fenced one bind. The existing first-preview-only mutation was re-pointed at the new expression (its old text no longer exists).
+- DONE: Run the roborev gate again until clean or twice
+  Run 1 on ab8b67516: `clean on ab8b67516; evidence=roborev:831` (exit 0). Before the fix: roborev:830 findings on e6eb277fa.
+- DONE: rerun /tmp/ce663/cmpf.sh-style comparison over the four corpora and state the counts
+  Same script with the worktree's design_surfaces.py as the candidate (/tmp/ce663/cmp9.sh, main vs fix, check and --seed): this state 68 task files 0 verdict changes; subspace-web 24 files 0; qnow 107 files 0; subspace-relay 60 files 3 changes in 2 tasks, unchanged from cycle 3 (archived multi-document-room-picker.md two real Surfaces lines; review-ui-room-asks-through-shell.md no Design review line).
+- DONE: all package test files pass
+  18 scripts/test_*.py files and 4 extensions test files OK (test_design_surfaces 125, was 123); lint-skills.py exit 0.
+- DONE: push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  `git push origin spacedock-ensign/ui-design-review-in-ideation` e6eb277f..ab8b6751; checks on ab8b6751: unit tests, version parity, route gate, GitGuardian pass; PR still Draft.
+
+### Summary
+
+A fenced `Preview:` line no longer counts as a design-review preview candidate, so it cannot bind a report; roborev is clean on the new head and the corpus verdicts are unchanged from the fence fix.
