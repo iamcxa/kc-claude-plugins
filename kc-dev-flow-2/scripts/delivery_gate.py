@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
-"""Check what FO is about to ask the Captain to merge, and judge how often that judgment held.
+"""Check what FO is about to ask the Captain to merge.
 
 Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>] [--workflow-dir <dir>]
-       delivery_gate.py calibrate <workflow dir> [--repo <git dir>]
 
-check. The dispatched heads are the whole `Candidate: <40-hex head>` lines above the first `## ` heading of the
+The dispatched heads are the whole `Candidate: <40-hex head>` lines above the first `## ` heading of the
 highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check reads no validation verdict.
-A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at the
-dispatched head the PR head equals, every finding disposed); a profile that cannot be read as poc, pilot or prod holds.
+A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at
+the dispatched head the PR head equals, every finding disposed); a profile that cannot be read as poc, pilot or prod holds.
 The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
@@ -18,25 +17,12 @@ successful (an empty rollup, SKIPPED and NEUTRAL included), the PR is a draft or
 README cannot be read, or an input is unusable. Every problem is printed.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
-and one last `next:` line. The README frontmatter key `merge-grants:` lists `<class>:rule:<threshold>:<method>:ADR <NNNN>`
-entries (threshold 0.95 to 1, method squash, merge or rebase; the rule arm reads the threshold only for that form, the bar itself is proven by the grant's ADR on `calibrate` evidence). The `next:` line is the merge line
-(a shell line that runs this check again and, only if its last line is again a merge line, `gh pr merge ... --match-head-commit <candidate>`) only when the class has a valid grant entry (the entry pattern admits no `never` class), no point was printed, the title is
-a Conventional Commit, the candidate is the PR head, the entry's ADR `<adr-path>/<NNNN>-*.md` (default `docs/adr`) reads `## Status` Accepted and holds the whole entry, a listed codex reader exits 0 on the head, a listed roborev left the whole line
-`roborev: clean on <40-hex candidate>; evidence=roborev:<job>` in the task, and no record of the class is labelled a failure, read after `git fetch origin <trunk>` (60 s cap; a repository with no origin is not fetched; a fetch that fails prints `cannot fetch origin/<trunk>, so no merge line` and the ask line). Otherwise it is the ask line.
-
-calibrate. Labels each `merge/ask-<N>.json` of the workflow's active and archived tasks, keeping the newest per PR and head across all tasks:
-failure when the PR closed unmerged, merged at another head, a revert of its merge commit (`This reverts commit <sha>`) reached the
-trunk within 14 days, or its task has a later `### Amendment` date or an Override, reopen or `merge guard --rework` line naming the PR
-(amendments carry a date only, so a same-day amendment is not seen); pending when open or younger than 14 days; otherwise clean. Only
-records whose rule verdict was merge count. Prints per class n, clean, failures, pending and the exact one-sided 95% lower bound of
-clean over n, then one `next:` line. It fetches `origin/<trunk>` first when the repository has an origin, so a revert pushed since the last fetch counts. Exit 0; 2 on a configuration error or a failed fetch.
+and one last `next:` line, which is always the ask line.
 """
 import argparse
 import datetime
 import json
-import math
 import re
-import shlex
 import subprocess
 import sys
 from pathlib import Path
@@ -50,7 +36,6 @@ SECOND_REVIEWER = re.compile(r"Second reviewer:\s*([\w.-]+)\s+because", re.I)
 OUTCOME_TOKEN = re.compile(r"\b(?:review|comment):\d+")
 PR = re.compile(r"^([\w.-]+/[\w.-]+)#(\d+)$")
 CONVENTIONAL = re.compile(r"^(?:feat|fix|docs|chore|refactor|test|style|perf|ci|build|revert)(?:\([\w./-]+\))?!?: \S[\x20-\x7e]{0,99}$")
-GRANT = re.compile(r"^(docs-only|script-with-test|other):rule:(0\.9[5-9]\d{0,3}|1(?:\.0+)?):(squash|merge|rebase):ADR (\d{4})$")
 CODE = {".py", ".sh", ".js", ".mjs", ".ts", ".tsx", ".jsx", ".go", ".rb"}
 NEVER_PATH = [
     re.compile(r"^(?:\.github|\.claude|\.githooks)/|^\.roborev\.toml$|^scripts/"),
@@ -70,9 +55,7 @@ NOT_RUN = re.compile(r"\b[\w.-]+ not run:\s*\S", re.I)
 AC_NOT_RUN = re.compile(r"(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b", re.I)
 AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 MAX_POINTS = 12
-WINDOW = datetime.timedelta(days=14)
 ASK = "next: ask for merge with this text."
-CODEX_READER = Path(__file__).resolve().parent.parent / "extensions/codex/codex_review.py"
 
 
 def clean(line):
@@ -119,7 +102,8 @@ def run_gh(repo, number):
     return json.loads(gh("pr", "view", number, "--repo", repo, "--json", "headRefOid"))["headRefOid"]
 
 
-def pr_facts(repo, number, fields="headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles"):
+def pr_facts(repo, number):
+    fields = "headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles"
     return json.loads(gh("pr", "view", number, "--repo", repo, "--json", fields))
 
 
@@ -243,167 +227,6 @@ def ci_problem(rollup):
     return f"{len(bad)} of {len(rollup)} checks on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
 
 
-def grants_of(lists):
-    return {m.group(1): m.groups() for m in map(GRANT.match, lists.get("merge-grants", [])) if m}
-
-
-def adr_grants(root, scalars, grant):
-    """True when <adr-path>/<NNNN>-*.md exists, reads `## Status` Accepted and holds the whole grant entry as one delimited token."""
-    entry = re.compile(rf"(?<![\w.:-]){re.escape(f'{grant[0]}:rule:{grant[1]}:{grant[2]}:ADR {grant[3]}')}(?!\w)")
-    for adr in sorted((root / (scalars.get("adr-path") or "docs/adr")).glob(f"{grant[3]}-*.md")) if root else []:
-        try:
-            text = adr.read_text(errors="replace")
-        except OSError:
-            continue
-        if re.search(r"^## Status[ \t]*\n+Accepted\b", text, re.M) and entry.search(text):
-            return True
-    return False
-
-
-def merge_line(number, repo, grant, candidate, title, recheck):
-    return (f"next: merge as follows, then tell the Captain the points above once gh pr view says MERGED, otherwise ask him: "
-            f"{recheck} | tail -n 1 | grep -q '^next: merge ' && gh pr merge {number} --repo {repo} --{grant[2]} "
-            f"--match-head-commit {candidate} --subject {shlex.quote(title)} --body ''")
-
-
-def lower_bound(k, n, alpha=0.05):
-    if k <= 0 or n <= 0:
-        return 0.0
-    if k == n:
-        return alpha ** (1 / n)
-
-    def tail(p):
-        total = 0.0
-        for i in range(k, n + 1):
-            log = math.lgamma(n + 1) - math.lgamma(i + 1) - math.lgamma(n - i + 1) + i * math.log(p) + (n - i) * math.log1p(-p)
-            total += math.exp(log)
-        return total
-    low, high = 0.0, 1.0
-    for _ in range(80):
-        mid = (low + high) / 2
-        low, high = (low, mid) if tail(mid) > alpha else (mid, high)
-    return low
-
-
-def state_folders(workflow_dir, scalars):
-    state = Path(workflow_dir) / scalars["state"] if scalars.get("state") else Path(workflow_dir)
-    return sorted(p for p in [*state.glob("*/"), *(state / "_archive").glob("*/")] if (p / "merge").is_dir())
-
-
-def parse_time(value):
-    return datetime.datetime.fromisoformat(value.replace("Z", "+00:00"))
-
-
-def fetch_trunk(git_dir, trunk):
-    """None when origin/<trunk> was just fetched or the repository has no origin; else why it could not be."""
-    if subprocess.run(["git", "-C", git_dir, "remote", "get-url", "origin"], capture_output=True).returncode:
-        return None
-    try:
-        done = subprocess.run(["git", "-C", git_dir, "fetch", "--quiet", "origin", trunk], capture_output=True, text=True, timeout=60)
-    except subprocess.TimeoutExpired:
-        return "git fetch timed out"
-    return None if not done.returncode else tok(done.stderr or "git fetch failed", words=12, chars=120)
-
-
-def revert_time(git_dir, trunk, sha):
-    ref = trunk if subprocess.run(["git", "-C", git_dir, "rev-parse", "--verify", "-q", f"origin/{trunk}"], capture_output=True).returncode else f"origin/{trunk}"
-    done = subprocess.run(["git", "-C", git_dir, "log", ref, "--fixed-strings", f"--grep=This reverts commit {sha}", "--format=%cI"],
-                          capture_output=True, text=True)
-    stamps = [parse_time(s) for s in done.stdout.split() if s]
-    return min(stamps) if stamps else None
-
-
-def label(rec, folder, git_dir, trunk, now):
-    ref = PR.match(str(rec.get("pr", "")))
-    if not ref or not re.fullmatch(r"[0-9a-f]{40}", str(rec.get("head", ""))):
-        return "failure", "unreadable record"
-    try:
-        info = pr_facts(*ref.groups(), fields="state,headRefOid,mergeCommit,mergedAt")
-    except (RuntimeError, ValueError) as error:
-        return "pending", f"cannot read the PR: {error}"
-    if info.get("state") == "OPEN":
-        return "pending", "open"
-    if info.get("state") != "MERGED":
-        return "failure", "closed without merging"
-    if str(info.get("headRefOid", "")).lower() != rec["head"]:
-        return "failure", "merged at another head"
-    merged = parse_time(info["mergedAt"]) if info.get("mergedAt") else None
-    sha = (info.get("mergeCommit") or {}).get("oid")
-    if sha and merged and (found := revert_time(git_dir, trunk, sha)) and found <= merged + WINDOW:
-        return "failure", "its merge commit was reverted"
-    task = folder.with_suffix(".md")
-    text = task.read_text(errors="replace") if task.is_file() else ""
-    at = parse_time(rec["time"])
-    if any(d > at.strftime("%Y-%m-%d") for _, d in AMENDMENT.findall(text)):
-        return "failure", "an amendment is dated after the ask"
-    named = re.compile(rf"(?:merge guard --rework|Override:|\breopen(?:ed)?\b).*(?:#{ref.group(2)}\b|pull/{ref.group(2)}\b)", re.I)
-    if named.search(text):
-        return "failure", "a rework, reopen or override names the PR"
-    if not merged or not sha or now - max(at, merged) < WINDOW:
-        return "pending", "inside the 14-day window"
-    return "clean", ""
-
-
-def labelled(workflow_dir, scalars, git_dir, only=None, now=None):
-    now = now or utcnow()
-    newest = {}
-    for folder in state_folders(workflow_dir, scalars):
-        for path in sorted((folder / "merge").glob("ask-*.json"), key=lambda p: int(re.sub(r"\D", "", p.stem) or 0)):
-            try:
-                rec = json.loads(path.read_text())
-                parse_time(rec["time"])
-                rec["class"], rec["verdict"], rec["pr"], rec["head"]
-            except (OSError, ValueError, KeyError, TypeError, AttributeError):
-                rec = dict(pr=str(path), head="", **{"class": "other"}, verdict="merge", time="1970-01-01T00:00:00Z")
-            if (rec["pr"], rec["head"]) not in newest or rec["time"] >= newest[(rec["pr"], rec["head"])][0]["time"]:
-                newest[(rec["pr"], rec["head"])] = (rec, folder)
-    out = []
-    for rec, folder in newest.values():
-        if rec["verdict"] != "merge" or (only and rec["class"] != only):
-            continue
-        state, reason = label(rec, folder, git_dir, scalars.get("trunk", "main"), now)
-        out.append((rec["class"], state, reason, rec["pr"]))
-    return out
-
-
-def calibrate(args):
-    folder = Path(args.workflow_dir)
-    scalars, lists = readme_front(folder / "README.md")
-    if "trunk" not in scalars:
-        emit(f"no workflow README with a trunk: in {folder}")
-        return 2
-    if why := fetch_trunk(args.repo, scalars["trunk"]):
-        emit(f"cannot fetch origin/{scalars['trunk']}: {why}")
-        return 2
-    rows = labelled(folder, scalars, args.repo)
-    grants, summary, remove, propose = grants_of(lists), {}, [], []
-    for cls, state, _, _ in rows:
-        summary.setdefault(cls, dict(clean=0, failure=0, pending=0))[state] += 1
-    for cls, c in sorted(summary.items()):
-        n = c["clean"] + c["failure"]
-        bound = lower_bound(c["clean"], n)
-        emit(f"class {cls} arm rule: n={n} clean={c['clean']} failures={c['failure']} pending={c['pending']} lower={bound:.4f}")
-        if c["failure"] and cls in grants:
-            remove.append(cls)
-        elif cls not in grants and cls != "never" and bound >= 0.95:
-            propose.append(cls)
-    if remove:
-        emit(f"next: remove {', '.join(remove)} from merge-grants and tell the Captain")
-    elif propose:
-        emit(f"next: propose a grant for {', '.join(propose)} to the Captain, with this record.")
-    else:
-        emit("next: no grant to propose or remove.")
-    return 0
-
-
-def reviewers_clean(lists, repo, number, task_text, head):
-    extensions = lists.get("extensions", [])
-    if "codex" in extensions and subprocess.run([sys.executable, str(CODEX_READER), repo, number], capture_output=True, timeout=120).returncode:
-        return False
-    bound = re.findall(r"^roborev: clean on ([0-9a-f]{40}); evidence=roborev:\d+$", task_text, re.M)
-    return "roborev" not in extensions or head in bound
-
-
 def write_record(task, rec):
     folder = task.with_suffix("") / "merge"
     folder.mkdir(parents=True, exist_ok=True)
@@ -514,20 +337,9 @@ def check(args):
     verdict = "merge" if not points and cls != "never" else "ask"
     emit(*points, f"class: {cls}")
 
-    line, grant = ASK, grants_of(lists).get(cls)
-    full = str(facts["headRefOid"]).lower()
-    title = str(facts.get("title", ""))
-    if grant and verdict == "merge" and CONVENTIONAL.match(title) and full in candidates and adr_grants(root, scalars, grant) and reviewers_clean(lists, repo, number, task_text, full):
-        trunk = scalars.get("trunk", "main")
-        if unfetched := fetch_trunk(root, trunk) if root else None:
-            emit(f"cannot fetch origin/{trunk}, so no merge line: {unfetched}")
-        elif not any(state == "failure" for _, state, _, _ in labelled(workflow_dir, scalars, root or ".", only=cls)):
-            recheck = shlex.join(["python3", str(Path(__file__).resolve()), "check", str(task.resolve()), "--pr", args.pr, "--text-file", str(text_file.resolve()),
-                                  *(["--head", args.head] if args.head else []), *(["--workflow-dir", str(Path(args.workflow_dir).resolve())] if args.workflow_dir else [])])
-            line = merge_line(number, repo, grant, full, title, recheck)
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
-                                "points": points, "next": line, "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
-    emit(f"record: {task.stem}/merge/{saved.name}", line)
+                                "points": points, "next": ASK, "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
+    emit(f"record: {task.stem}/merge/{saved.name}", ASK)
     return 0
 
 
@@ -541,11 +353,8 @@ def main(argv=None):
     sub.add_argument("--text-file", required=True)
     sub.add_argument("--head")
     sub.add_argument("--workflow-dir")
-    cal = commands.add_parser("calibrate")
-    cal.add_argument("workflow_dir")
-    cal.add_argument("--repo", default=".")
     args = parser.parse_args(argv)
-    return check(args) if args.command == "check" else calibrate(args)
+    return check(args)
 
 
 if __name__ == "__main__":

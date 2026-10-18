@@ -342,7 +342,7 @@ handling as FO's reading, never as his ruling, and asks him.
 A decision an accepted ADR already settles is not asked again: FO applies it and states it
 in the gate summary as `Precedent: ADR <number> — 「<that ADR's Words line>」`, and the
 Captain may reopen it. An ADR with no Words line is quoted by the decision sentence it
-applies, as `Precedent: ADR <number> (no Words line) — 「<that sentence>」`. Authority, a gate approval, a merge outside a granted class, an outward-facing action, an
+applies, as `Precedent: ADR <number> (no Words line) — 「<that sentence>」`. Authority, a gate approval, a merge, an outward-facing action, an
 irreversible change and money are always asked, whatever an ADR says, and an ADR on one
 of them is never a `Precedent:` line.
 
@@ -511,7 +511,7 @@ or Needs decision finding is recorded by FO under that grant (`gate record --act
 agent:first-officer` with `--conn-quote` and `--conn-source` naming his approval) and
 pushed to that PR's branch, after FO confirms the pushed commit is the candidate the
 report names. A rejected repair, a Needs decision, a scope change and the merge still go
-to him. Preserve manual merge authority unless `<package>/scripts/delivery_gate.py` prints a merge line (ADR 0023). Do not invoke local fallback, push the trunk,
+to him. Preserve manual merge authority. Do not invoke local fallback, push the trunk,
 merge, or clean up an owned worktree unless the specific action is authorized. An
 upstream hook's default fallback is not that grant. A failure holds delivery pending an
 explicit choice.
