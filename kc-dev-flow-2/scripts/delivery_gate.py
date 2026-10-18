@@ -107,6 +107,14 @@ def pr_facts(repo, number):
     return json.loads(gh("pr", "view", number, "--repo", repo, "--json", fields))
 
 
+def pr_runs(repo, head):
+    page = json.loads(gh("api", f"repos/{repo}/actions/runs?head_sha={head}&per_page=100"))
+    runs = page["workflow_runs"]
+    if page["total_count"] != len(runs):
+        raise ValueError(f"the head has {page['total_count']} workflow runs and one page lists {len(runs)}")
+    return runs
+
+
 def pr_files(repo, number):
     text, files, decoder, at = gh("api", "--paginate", f"repos/{repo}/pulls/{number}/files"), [], json.JSONDecoder(), 0
     while at < len(text):
@@ -227,6 +235,17 @@ def ci_problem(rollup):
     return f"{len(bad)} of {len(rollup)} checks on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
 
 
+def runs_problem(runs):
+    latest = {}
+    for run in runs:
+        key = run.get("workflow_id")
+        if key not in latest or run.get("run_number", 0) > latest[key].get("run_number", 0):
+            latest[key] = run
+    bad = [tok(run.get("name") or "?", words=4, chars=40) for run in latest.values()
+           if not (run.get("status") == "completed" and run.get("conclusion") == "success")]
+    return f"{len(bad)} of {len(latest)} workflows run on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
+
+
 def write_record(task, rec):
     folder = task.with_suffix("") / "merge"
     folder.mkdir(parents=True, exist_ok=True)
@@ -273,9 +292,10 @@ def check(args):
             problems.append(f"PR head {head} differs from dispatched candidate {' '.join(candidates)} (latest validation record {record.name})")
             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
 
-    facts = files = None
+    facts = files = runs = None
     try:
         facts, files = pr_facts(repo, number), pr_files(repo, number)
+        runs = pr_runs(repo, str(facts["headRefOid"]).lower())
     except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
         holds.append(f"cannot read the pull request {args.pr}: {error}")
     if facts is not None:
@@ -286,6 +306,9 @@ def check(args):
         if (why := ci_problem(facts.get("statusCheckRollup"))):
             problems.append(why)
             nexts.append("next: hold the ask until the required CI has finished green on this head.")
+        if runs is not None and (why := runs_problem(runs)):
+            problems.append(why)
+            nexts.append("next: hold the ask until every workflow run on this head has finished green.")
         if facts.get("isDraft"):
             problems.append("the PR is a draft")
             nexts.append("next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.")

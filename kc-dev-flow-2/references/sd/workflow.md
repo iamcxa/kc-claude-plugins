@@ -503,7 +503,7 @@ Project and Captain authority constrain hook instructions: present the exact can
 and PR body before authorized push/create; create a Draft PR where required, and request
 ready only after the required CI is green. Required CI is green only when its test jobs
 have finished on the PR head. Where CI skips drafts, FO marks the PR ready under the
-Captain's authority. Approval
+Captain's authority and waits for those jobs to finish before asking for merge. Approval
 of a validation gate is not permission to push, create or merge a PR, except as follows.
 FO's delivery gate question says that approval also covers later external-review rounds
 on the same PR. Under that approval, a repair whose validation passes with no Material

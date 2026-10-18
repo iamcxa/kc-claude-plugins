@@ -36,6 +36,9 @@ if a[:2] == ["pr", "merge"] or os.environ.get("STUB_GH_FAIL"):
 if a[:2] == ["pr", "view"]:
     data = json.load(open(os.path.join(d, "pr.json")))
     print(json.dumps({{k: data[k] for k in a[a.index("--json") + 1].split(",") if k in data}}))
+elif a[0] == "api" and "actions/runs" in " ".join(a):
+    runs = os.path.join(d, "runs.json")
+    print(open(runs).read() if os.path.exists(runs) else '{{"total_count": 0, "workflow_runs": []}}')
 elif a[0] == "api":
     pages = sorted(glob.glob(os.path.join(d, "files-*.json")))
     print("".join(open(p).read() for p in (pages if "--paginate" in a else pages[:1])))
@@ -57,7 +60,7 @@ def file_pages(paths, size=100):
 
 
 @contextlib.contextmanager
-def stubbed(d, head=HEAD40, files=("docs/notes.md",), pr=None):
+def stubbed(d, head=HEAD40, files=("docs/notes.md",), pr=None, runs=None):
     fixtures, bin_dir = Path(d, "stub"), Path(d, "stubbin")
     fixtures.mkdir(exist_ok=True)
     bin_dir.mkdir(exist_ok=True)
@@ -66,6 +69,8 @@ def stubbed(d, head=HEAD40, files=("docs/notes.md",), pr=None):
     (fixtures / "pr.json").write_text(json.dumps(pr or pr_json(head=head, files=len(files))))
     for n, page in enumerate(file_pages(files)):
         (fixtures / f"files-{n}.json").write_text(json.dumps(page))
+    if runs is not None:
+        (fixtures / "runs.json").write_text(json.dumps(runs if isinstance(runs, dict) else dict(total_count=len(runs), workflow_runs=runs)))
     with mock.patch.dict(os.environ, {"PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}", "STUB_GH_DIR": str(fixtures)}):
         yield fixtures
 
@@ -376,7 +381,7 @@ def variant_of(old, new):
 
 
 def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=None, readme_body="extensions: [roborev, codex]\n",
-              records=RECORDS, setup=None, argv_head="same", stub_fail=None, workflow_dir_arg=None):
+              records=RECORDS, setup=None, argv_head="same", stub_fail=None, workflow_dir_arg=None, runs=None):
     with tempfile.TemporaryDirectory() as d:
         readme(d, readme_body)
         Path(d, "task.md").write_text(task)
@@ -391,7 +396,7 @@ def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=N
         if workflow_dir_arg:
             argv += ["--workflow-dir", str(Path(d, workflow_dir_arg))]
         out = io.StringIO()
-        with stubbed(d, head=head, files=files, pr=pr_json(head=head, files=len(files), **(facts or {}))), \
+        with stubbed(d, head=head, files=files, pr=pr_json(head=head, files=len(files), **(facts or {})), runs=runs), \
                 mock.patch.dict(os.environ, {"STUB_GH_FAIL": stub_fail or ""}), \
                 contextlib.redirect_stdout(out):
             code = gate.main(argv)
@@ -462,6 +467,33 @@ class HoldTests(unittest.TestCase):
             code = gate.main(["check", str(Path(d, "task.md")), "--pr", "o/r#9", "--text-file", str(Path(d, "gate.txt")), "--head", "40c714a6"])
         self.assertEqual(code, 2)
         self.assertIn("cannot find the workflow README", out.getvalue())
+
+
+def workflow_run(name, status="completed", conclusion="success", number=1):
+    return dict(name=name, workflow_id=name, run_number=number, status=status, conclusion=conclusion)
+
+
+class PartialRollupTests(unittest.TestCase):
+    FAST = [check_run() | dict(name="version parity")]
+
+    def test_a_workflow_run_still_in_progress_holds_though_the_rollup_shows_only_a_green_check(self):
+        runs = [workflow_run("version parity"), workflow_run("kc-dev-flow-2 tests", status="in_progress", conclusion=None)]
+        result = run_check(facts=dict(statusCheckRollup=self.FAST), runs=runs)
+        self.assertEqual(result.code, 1, result.out)
+        self.assertIn("kc-dev-flow-2 tests", result.out)
+        self.assertEqual(result.written, {})
+
+    def test_only_the_latest_run_of_each_workflow_counts_and_no_runs_is_not_a_hold(self):
+        reran = [workflow_run("tests", conclusion="cancelled", number=1), workflow_run("tests", number=2)]
+        self.assertEqual(run_check(facts=dict(statusCheckRollup=self.FAST), runs=reran).code, 0)
+        self.assertEqual(run_check(facts=dict(statusCheckRollup=self.FAST), runs=[]).code, 0)
+        failed_last = [workflow_run("tests", number=1), workflow_run("tests", conclusion="failure", number=2)]
+        self.assertEqual(run_check(facts=dict(statusCheckRollup=self.FAST), runs=failed_last).code, 1)
+
+    def test_a_run_list_longer_than_one_page_holds_with_exit_2(self):
+        result = run_check(runs=dict(total_count=101, workflow_runs=[workflow_run("tests")]))
+        self.assertEqual(result.code, 2, result.out)
+        self.assertIn("workflow runs", result.out)
 
 
 class PointTests(unittest.TestCase):
