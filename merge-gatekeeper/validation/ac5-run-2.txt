@@ -1,0 +1,100 @@
+# AC-5 second run with the prose-first merge line, 2026-10-18T05:06:50Z; gate script head f3f0fa3e76ec24ffaa2d83fb9226cdda3a1126a6; repository iamcxa/kc-merge-gate-ac5-throwaway-20261018 (left in place)
+
+$ git push -u origin feat2
+remote: 
+remote: Create a pull request for 'feat2' on GitHub by visiting:        
+remote:      https://github.com/iamcxa/kc-merge-gate-ac5-throwaway-20261018/pull/new/feat2        
+remote: 
+To github.com:iamcxa/kc-merge-gate-ac5-throwaway-20261018.git
+ * [new branch]      feat2 -> feat2
+branch 'feat2' set up to track 'origin/feat2'.
+[exit=0]
+
+$ gh pr create --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --base main --head feat2 --title docs(notes): second change --body AC-5 second throwaway PR
+https://github.com/iamcxa/kc-merge-gate-ac5-throwaway-20261018/pull/2
+[exit=0]
+head1=c6cb98e74b6b141988b66ccdec9ba0e153e20ecb
+
+$ wait for CI on head1
+GitGuardian Security Checks	pass	0	https://dashboard.gitguardian.com	
+pass	pass	4s	https://github.com/iamcxa/kc-merge-gate-ac5-throwaway-20261018/actions/runs/39099436166/job/117592489842	
+[exit=0]
+
+$ python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-gatekeeper/kc-dev-flow-2/scripts/delivery_gate.py check /tmp/mg-ac5/wf2/task.md --pr iamcxa/kc-merge-gate-ac5-throwaway-20261018#2 --text-file /tmp/mg-ac5/wf2/gate.txt --head c6cb98e7 --workflow-dir /tmp/mg-ac5/wf2
+PR head c6cb98e7 equals dispatched candidate c6cb98e7; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge as follows, then tell the Captain the points above once gh pr view says MERGED, otherwise ask him: python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-gatekeeper/kc-dev-flow-2/scripts/delivery_gate.py check /private/tmp/mg-ac5/wf2/task.md --pr 'iamcxa/kc-merge-gate-ac5-throwaway-20261018#2' --text-file /private/tmp/mg-ac5/wf2/gate.txt --head c6cb98e7 --workflow-dir /private/tmp/mg-ac5/wf2 | tail -n 1 | grep -q '^next: merge ' && gh pr merge 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --squash --match-head-commit c6cb98e74b6b141988b66ccdec9ba0e153e20ecb --subject 'docs(notes): second change' --body ''
+[exit=0]
+
+command after the prose (the whole text after 'ask him: ', run unmodified):
+python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-gatekeeper/kc-dev-flow-2/scripts/delivery_gate.py check /private/tmp/mg-ac5/wf2/task.md --pr 'iamcxa/kc-merge-gate-ac5-throwaway-20261018#2' --text-file /private/tmp/mg-ac5/wf2/gate.txt --head c6cb98e7 --workflow-dir /private/tmp/mg-ac5/wf2 | tail -n 1 | grep -q '^next: merge ' && gh pr merge 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --squash --match-head-commit c6cb98e74b6b141988b66ccdec9ba0e153e20ecb --subject 'docs(notes): second change' --body ''
+
+== Step A: push a new commit so the PR head differs from the checked head ==
+
+$ git push origin feat2
+To github.com:iamcxa/kc-merge-gate-ac5-throwaway-20261018.git
+   c6cb98e..0ea6112  feat2 -> feat2
+[exit=0]
+head2=0ea61129f97bfe087d3c77d81e0fcde1be907200
+
+$ gh pr view 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --json state,headRefOid
+{"headRefOid":"c6cb98e74b6b141988b66ccdec9ba0e153e20ecb","state":"OPEN"}
+[exit=0]
+
+$ python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-gatekeeper/kc-dev-flow-2/scripts/delivery_gate.py check /private/tmp/mg-ac5/wf2/task.md --pr 'iamcxa/kc-merge-gate-ac5-throwaway-20261018#2' --text-file /private/tmp/mg-ac5/wf2/gate.txt --head c6cb98e7 --workflow-dir /private/tmp/mg-ac5/wf2 | tail -n 1 | grep -q '^next: merge ' && gh pr merge 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --squash --match-head-commit c6cb98e74b6b141988b66ccdec9ba0e153e20ecb --subject 'docs(notes): second change' --body ''
+[exit=1]
+
+the re-run inside that command, shown unswallowed:
+
+$ python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-gatekeeper/kc-dev-flow-2/scripts/delivery_gate.py check /tmp/mg-ac5/wf2/task.md --pr iamcxa/kc-merge-gate-ac5-throwaway-20261018#2 --text-file /tmp/mg-ac5/wf2/gate.txt --head c6cb98e7 --workflow-dir /tmp/mg-ac5/wf2
+PR head is now 0ea61129f97bfe087d3c77d81e0fcde1be907200, not c6cb98e7: the checks below belong to another commit
+1 of 1 checks on this head are not finished and successful: 'pass'
+next: hold the ask; read the PR head again and revalidate it, or tell the Captain.
+next: hold the ask until the required CI has finished green on this head.
+[exit=1]
+
+$ gh pr view 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --json state,headRefOid,mergedAt
+{"headRefOid":"0ea61129f97bfe087d3c77d81e0fcde1be907200","mergedAt":null,"state":"OPEN"}
+[exit=0]
+
+== Step B: GitHub's own --match-head-commit refusal (bare gh pr merge pinned to head1) ==
+
+$ gh pr merge 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --squash --match-head-commit c6cb98e74b6b141988b66ccdec9ba0e153e20ecb --subject docs(notes): second change --body 
+GraphQL: Head branch was modified. Review and try the merge again. (mergePullRequest)
+[exit=1]
+
+$ gh pr view 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --json state,headRefOid,mergedAt
+{"headRefOid":"0ea61129f97bfe087d3c77d81e0fcde1be907200","mergedAt":null,"state":"OPEN"}
+[exit=0]
+
+== Step C: re-validate head2, CI green, check without --head, run the printed command unmodified ==
+$ wait for CI on head2
+GitGuardian Security Checks	pass	1s	https://dashboard.gitguardian.com	
+pass	pass	3s	https://github.com/iamcxa/kc-merge-gate-ac5-throwaway-20261018/actions/runs/39099456737/job/117592548335	
+[exit=0]
+
+$ python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-gatekeeper/kc-dev-flow-2/scripts/delivery_gate.py check /tmp/mg-ac5/wf2/task.md --pr iamcxa/kc-merge-gate-ac5-throwaway-20261018#2 --text-file /tmp/mg-ac5/wf2/gate.txt --workflow-dir /tmp/mg-ac5/wf2
+PR head 0ea61129f97bfe087d3c77d81e0fcde1be907200 equals dispatched candidate 0ea61129f97bfe087d3c77d81e0fcde1be907200; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-2.json
+next: merge as follows, then tell the Captain the points above once gh pr view says MERGED, otherwise ask him: python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-gatekeeper/kc-dev-flow-2/scripts/delivery_gate.py check /private/tmp/mg-ac5/wf2/task.md --pr 'iamcxa/kc-merge-gate-ac5-throwaway-20261018#2' --text-file /private/tmp/mg-ac5/wf2/gate.txt --workflow-dir /private/tmp/mg-ac5/wf2 | tail -n 1 | grep -q '^next: merge ' && gh pr merge 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --squash --match-head-commit 0ea61129f97bfe087d3c77d81e0fcde1be907200 --subject 'docs(notes): second change' --body ''
+[exit=0]
+
+$ python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-merge-gatekeeper/kc-dev-flow-2/scripts/delivery_gate.py check /private/tmp/mg-ac5/wf2/task.md --pr 'iamcxa/kc-merge-gate-ac5-throwaway-20261018#2' --text-file /private/tmp/mg-ac5/wf2/gate.txt --workflow-dir /private/tmp/mg-ac5/wf2 | tail -n 1 | grep -q '^next: merge ' && gh pr merge 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --squash --match-head-commit 0ea61129f97bfe087d3c77d81e0fcde1be907200 --subject 'docs(notes): second change' --body ''
+[exit=0]
+
+$ gh pr view 2 --repo iamcxa/kc-merge-gate-ac5-throwaway-20261018 --json state,headRefOid,mergedAt,mergeCommit
+{"headRefOid":"0ea61129f97bfe087d3c77d81e0fcde1be907200","mergeCommit":{"oid":"e727d992121667fd232001c065f7132cb693810b"},"mergedAt":"2026-10-18T05:07:43Z","state":"MERGED"}
+[exit=0]
+
+ask records in the task folder:
+ask-1.json
+ask-2.json
+ask-3.json
+
+repository left in place for the Captain to delete: iamcxa/kc-merge-gate-ac5-throwaway-20261018
+
+$ gh repo view iamcxa/kc-merge-gate-ac5-throwaway-20261018 --json nameWithOwner,isPrivate,visibility
+{"isPrivate":true,"nameWithOwner":"iamcxa/kc-merge-gate-ac5-throwaway-20261018","visibility":"PRIVATE"}
+[exit=0]
