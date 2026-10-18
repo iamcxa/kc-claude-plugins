@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:number-guards-readme-shrink:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:number-guards-readme-shrink-backlog-1
+              briefing:
+                id: briefing:number-guards-readme-shrink:backlog:attempt-1:revision-1
+                digest: sha256:12b30dc0c3e9ea1e4d878894053b72844eea50863fc36c9673d6876daef9ffcd
+                room-ref: ./number-guards-readme-shrink/review/backlog/briefing-1
 ---
 
 Filed under D4 of workflow-budget-ratchet, approved by the Captain on 2026-10-17 (「那就照建議」 to the batch-2 ideation gates, whose question said approving accepts D4: "Number guards becomes a follow-up task").

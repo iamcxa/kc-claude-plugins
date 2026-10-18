@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:number-guards-readme-shrink:backlog:attempt-1:revision-1",
+  "question": "Schedule now as Pilot and enter ideation as part of batch 3 (fo-write-checks, chat-only-evidence-observer-blind, captain-question-load, number-guards-readme-shrink, and the POC merge-grant-need-poc)? Approving accepts profile pilot as recommended, and that ideations run in parallel, each with a Batch overlap item; fo-write-checks and chat-only-evidence-observer-blind share the observer and check scripts and are designed together; captain-question-load and number-guards-readme-shrink both edit workflow.md and land in that order.",
+  "artifacts": [
+    {
+      "id": "artifact:number-guards-readme-shrink:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/18005d766337215334aa322050e9f5f594ccf251/number-guards-readme-shrink.md",
+      "rev": "sha256:15fd905929d5ef2989c4cffe872ebe314d2360c77346f83222c03423eabc64f9",
+      "mediaType": "text/markdown",
+      "summary": "Seed (workflow-budget-ratchet D4): the Number guards passage is 745 words, 13.6% of the README, the largest shrink candidate; apply the ratchet's rule (read number_guards.py's failure messages first, shrink only what the script enforces and whose message tells the reader what to do, lower the budget). The ADR-line-in-scope-notes miss (3 of 6 batch-2 tasks) sits in this passage."
+    }
+  ]
+}
