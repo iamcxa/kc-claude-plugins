@@ -43,7 +43,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.23.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.25.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -70,8 +70,8 @@ body. Use bold **AC-N** declarations with individual evidence clauses.
 Stage workers run on the workflow's default model.
 `kc-dev-flow-2:chief-engineer`, `kc-dev-flow-2:engineering-reviewer` and
 `kc-dev-flow-2:observer` run on the model and reasoning their agent files declare, never
-a cheaper one. FO records each chief-engineer or engineering-reviewer call under the
-task's `## FO alignment` as `Reviewer: <agent> <model> <date> — <question>`.
+a cheaper one. Record chief-engineer and engineering-reviewer calls under `## FO alignment` as
+`Reviewer: <agent> <model> <date> — <question>`; `<package>/scripts/role_triggers.py` lists calls owed.
 
 `concurrency` limits only what `status --next` proposes. A feedback-reflow repair and an
 FO fix authorized under Review-finding disposition step 3 are dispatched at once in the
@@ -95,12 +95,12 @@ message to a live worker, also carry ``Send your completion message to `main` (t
 facts: `team-lead` is not registered here).``: the builder's completion block names `team-lead`, and a
 worker that skips the stage-definition fetch does not see the Signal fact. FO saves those scope notes, the
 checklist, the model it dispatches on and the SHA it dispatches from as
-`<task>/dispatch/<stage>-<cycle>.md` in the state checkout (a `Dispatched:` line with
-the full SHA, a `Model:` line, `## Checklist` and `## Scope notes` sections, and for validation a
+`<task>/dispatch/<stage>-<cycle>.md` in the state checkout (for validation a
 `Candidate: <full head SHA>` line per head validated),
 committed with that dispatch's `spacedock state commit <slug> --workflow-dir <dir>`, so
-the instruction a worker followed outlives the session that wrote it. A follow-up
-message to a worker FO resumes is a dispatch too, and its record carries the same parts, including the `Package root:` line and a checklist of the items that message asks, never a pointer to another record.
+the instruction a worker followed outlives the session that wrote it; FO runs
+`python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists. A follow-up
+message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record.
 A checklist or scope-notes line that names a package script writes
 `<package>/scripts/NAME.py` with the absolute root substituted, never the bare script
 name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`
@@ -358,7 +358,7 @@ changes nothing else in it. FO adds no words of its own and does not move or rew
 ### Amendment 1 — <date>, <gate or chat>
 Captain: 「<his words, verbatim>」 (where he said them)
 Asked: <the question or proposal he answered, verbatim, or the commit holding it>
-Supersedes: <acceptance-criterion ids, or none>
+Supersedes: <acceptance-criterion ids, or none> <optional: "(no replacement: <why>)">
 Design: <optional: the design paragraph it overrides>
 ```
 
@@ -377,11 +377,9 @@ review asks for, is the Captain's decision and is recorded as an amendment whose
 --set <slug> status=<stage>`, and that stage's gate is approved again before the task
 moves on.
 
-`python3 <package>/scripts/design_surfaces.py check <task>` exits 1 when an entry has no
-`Captain:` line or a superseded id is still declared in `## Acceptance criteria`;
-implementation and validation run it, and exit 1 is a repair finding returned through feedback.
-It cannot see a skipped record, only the state after a skipped move; relocation, not
-annotation in place, is the route.
+`python3 <package>/scripts/design_surfaces.py check <task>`, run by implementation and
+validation, prints each defect and exits 1; repair findings return through feedback. It cannot see a skipped record or
+move, or FO's words in `Design:`.
 
 ## Affected documents
 
@@ -486,11 +484,8 @@ to finalize/archive. Where `learn` is listed, the sentinel waits for a committed
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
 
-Before the merge ask, a head other than the latest
-validation record's `Candidate:` is revalidated or its difference told to the Captain. Before the
-`gate prepare` that asks for merge, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
---pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask and FO shows the
-Captain what it printed.
+Before the merge ask, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
+--pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask, as does a head other than the latest `Candidate:`; FO shows the Captain what it printed.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its
 help names no commit or publish step, unlike the archive path. After it, FO runs
