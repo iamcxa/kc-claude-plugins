@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:number-guards-readme-shrink:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:number-guards-readme-shrink-ideation-1
+              briefing:
+                id: briefing:number-guards-readme-shrink:ideation:attempt-1:revision-1
+                digest: sha256:c75f5b551e751353fa195a470d3e206272d960afb292c5033db6822034378105
+                room-ref: ./number-guards-readme-shrink/review/ideation/briefing-1
 started: 2026-10-18T16:57:47Z
 ---
 

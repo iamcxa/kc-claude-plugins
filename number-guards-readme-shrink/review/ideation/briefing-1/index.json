@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:number-guards-readme-shrink:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts D1 (build the 55-word cut as its own task), D2 (the ADR-line-in-scope-notes check is owned by fo-write-checks, not this task), and FO's implementation order below.",
+  "artifacts": [
+    {
+      "id": "artifact:number-guards-readme-shrink:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/8cedb58622b1b0c871863202f5d06a94e023bebc/number-guards-readme-shrink.md",
+      "rev": "sha256:aaf6cdbd94ead77124f497b9eea529640829103368d580d78fb68f84c257c49e",
+      "mediaType": "text/markdown",
+      "summary": "Design: only 55 of the passage's 745 words can go (README 5429 to 5374, budget step -55): the script prints the next step for three clauses only; every other message was run on a fixture and cannot tell the reader what to do. Words FO reads fall at four moments, rise at none. The ADR-line miss is an enforcement gap (8 of 11 archived tasks with implementation records lack the line), handed to fo-write-checks. Implementation order (FO, from the four Batch overlap sections): fo-write-checks and number-guards-readme-shrink first in parallel (scripts vs README hunks); then captain-question-load (delivery_gate.py ask line and a Delivery authority sentence); then chat-only-evidence-observer-blind (delivery_gate.py and the same paragraph)."
+    }
+  ]
+}
