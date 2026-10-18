@@ -281,6 +281,11 @@ Verified by: that fixture case in `test_delivery_gate.py`, plus a case under a v
 
 ADR: 0023
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-17): Codex review on #666 1beabd97 (review:5561577977) left three P1, to fix (a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 `kc-dev-flow-2/scripts/delivery_gate.py`: (1) profile_prod misses a quoted 'prod' ("prod" or 'prod') that validation_security.FM_PROFILE reads as prod; (2) the instruction-directory pattern matches skills, agents, extensions or references only at root or one level down, so packages/foo/agents/x.md classes other; (3) revert_time reads origin/<trunk> without a fetch, so a revert pushed after the last fetch is missed by calibrate and the recheck.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for a gatekeeper that judges whether a PR can merge, lets FO merge one above a calibrated bar on the Captain's behalf, and lists what he should look at: first the bite counted from state and PR history (FO merge accidents, Captain review per PR); deterministic checks first (head equals the validated candidate, required CI); the model or product (OpenAI Decisions API beta, Codex, TypeSafe Jev, kc-pr-flow kc-pr-review) and how its bar is calibrated; an ADR draft with no number superseding ADR 0011's never-delegated merge clause; and data sent outside per repository. This is a Production task: run the prod profile's design security review
