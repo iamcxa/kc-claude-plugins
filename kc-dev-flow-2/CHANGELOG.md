@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.25.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.24.0...kc-dev-flow-2-v0.25.0) (2026-10-18)
+
+
+### Features
+
+* **kc-dev-flow-2:** a prod task's validation carries a security review that reaches code the change exposes ([#659](https://github.com/iamcxa/kc-claude-plugins/issues/659)) ([9b58cd6](https://github.com/iamcxa/kc-claude-plugins/commit/9b58cd68be01ed360d664642bb3605838cd82c25))
+* **kc-dev-flow-2:** a ui task's ideation runs a design review over its previews ([#663](https://github.com/iamcxa/kc-claude-plugins/issues/663)) ([18e161d](https://github.com/iamcxa/kc-claude-plugins/commit/18e161d99b3cd4bbf4a2f755249687418fcf48d7))
+* **kc-dev-flow-2:** chief-engineer and engineering-reviewer calls are owed on recorded events ([#664](https://github.com/iamcxa/kc-claude-plugins/issues/664)) ([f192901](https://github.com/iamcxa/kc-claude-plugins/commit/f1929017319928a50a0508de36c15d036c298b94))
+* **kc-dev-flow-2:** the workflow word budget ratchets and three script-checked rules shrink to pointers ([#658](https://github.com/iamcxa/kc-claude-plugins/issues/658)) ([6ea3a47](https://github.com/iamcxa/kc-claude-plugins/commit/6ea3a4724515b974c34beb16bc3382683b6d45b9))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** dispatch_records --names asks for a missing Candidate line ([#661](https://github.com/iamcxa/kc-claude-plugins/issues/661)) ([a915aca](https://github.com/iamcxa/kc-claude-plugins/commit/a915acaa39cea0cbc84dda176a8e1241057b2eed))
+* **kc-dev-flow-2:** the merge check holds on CI and base, lists points for the Captain and records each ask ([#666](https://github.com/iamcxa/kc-claude-plugins/issues/666)) ([2253444](https://github.com/iamcxa/kc-claude-plugins/commit/22534441e1c7a5750453101fd49aaaacab4b10ca))
+
 ## [0.24.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.23.0...kc-dev-flow-2-v0.24.0) (2026-10-17)
 
 
