@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:fo-write-checks:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:fo-write-checks-backlog-1
+              briefing:
+                id: briefing:fo-write-checks:backlog:attempt-1:revision-1
+                digest: sha256:1b87bc5fc0d24af8855070cd7ff9414049a99dbde3f9de9ba738aa1e36d544eb
+                room-ref: ./fo-write-checks/review/backlog/briefing-1
 ---
 
 Filed for batch 3 on the Captain's 「先走批次三規劃」 (chat, 2026-10-19), after FO reported at the batch-2 close that its own process mistakes repeat across tasks and should move from reminders into a script; the Captain enabled the state laws check on this repository the same day (「可以那就只開啟這個repo」).
