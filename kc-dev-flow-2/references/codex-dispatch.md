@@ -132,6 +132,15 @@ remaining work. Reject any tuple mismatch before the wrapper/native call.
 `followup_task` cannot change the live handle's settings. Independent validation
 always builds fresh with `--fresh`, a separate handle and its own observed metadata.
 
+Use a nonblank unique acknowledgement marker; the helper preserves its exact
+nonblank bytes. Retain timezone-aware timestamps on the raw followup request and
+claimed turn contexts. The claimed turn's first occurrence must be strictly after
+that validated request, including when it starts before the asynchronous tool
+result. Observed metadata may already include that valid completion; its presence
+in a later observation is not a reason to reject it. Repeated contexts cannot make
+an old turn new. Missing, invalid, unzoned, tied or contradictory timing holds;
+the marker must still belong to the exact claimed turn.
+
 For an eligible producer's bounded completion check, retain its original binding
 as a JSON object in `prior-binding.json`. The real entity must still owe this
 check at the same stage; do not clear completion or advance state first. Put the

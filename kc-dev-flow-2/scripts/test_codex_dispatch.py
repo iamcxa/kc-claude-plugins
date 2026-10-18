@@ -1,4 +1,5 @@
 import contextlib
+import copy
 import hashlib
 import io
 import json
@@ -273,7 +274,7 @@ class EvidenceRouteTest(unittest.TestCase):
         self.write("baseline", {"base": base, "protected_base_git_objects": {}, "stock_files": []})
         child = self.root / "child.jsonl"
         self.jsonl(child, [{"type": "session_meta", "payload": {"id": "fixture-session", "source": {"subagent": {"thread_spawn": {"agent_path": self.producer, "parent_thread_id": "fixture-parent"}}}}},
-                           *[{"type": "turn_context", "payload": {"turn_id": t, "model": "gpt-6.1-sol", "effort": "high"}} for t in ("initial-turn", "followup-turn")],
+                           *[{"type": "turn_context", "timestamp": at, "payload": {"turn_id": t, "model": "gpt-6.1-sol", "effort": "high"}} for t, at in (("initial-turn", "2000-01-01T00:00:00.050Z"), ("followup-turn", "2000-01-01T00:00:02.050Z"))],
                            {"type": "response_item", "payload": {"type": "message", "role": "assistant", "internal_chat_message_metadata_passthrough": {"turn_id": "followup-turn"}, "content": [{"type": "output_text", "text": marker}]}}])
         self.write("observed", [{"handle": self.producer, "session_id": "fixture-session", "session_path": str(child), "turns": [{"turn_id": "initial-turn", "model": "gpt-6.1-sol", "reasoning_effort": "high"}]}])
         self.native("spawn_agent", outputs=[json.dumps({"task_name": self.producer})])
@@ -292,11 +293,13 @@ class EvidenceRouteTest(unittest.TestCase):
         path.write_text("".join(json.dumps(row) + "\n" for row in rows))
 
     def native(self, name, arguments=None, outputs=()):
-        call = {"type": "response_item", "payload": {"type": "function_call", "namespace": "collaboration", "name": name, "call_id": name + "-call",
+        at = "2000-01-01T00:00:00.000Z" if name == "spawn_agent" else "2000-01-01T00:00:02.000Z"
+        done_at = "2000-01-01T00:00:00.200Z" if name == "spawn_agent" else "2000-01-01T00:00:02.200Z"
+        call = {"type": "response_item", "timestamp": at, "payload": {"type": "function_call", "namespace": "collaboration", "name": name, "call_id": name + "-call",
                                                      "arguments": json.dumps(self.requests[name] if arguments is None else arguments)}}
         raw = self.root / (name + ".jsonl")
         self.jsonl(raw, [{"type": "session_meta", "payload": {"id": "fixture-parent"}}, call,
-                         *[{"type": "response_item", "payload": {"type": "function_call_output", "call_id": name + "-call", "output": output}} for output in outputs]])
+                         *[{"type": "response_item", "timestamp": done_at, "payload": {"type": "function_call_output", "call_id": name + "-call", "output": output}} for output in outputs]])
         self.write("native-calls" if name == "spawn_agent" else "followup-native-calls", {"source_session": str(raw), "calls": [call]})
 
     def invoke(self):
@@ -307,6 +310,100 @@ class EvidenceRouteTest(unittest.TestCase):
 
     def test_plaintext_matching_requests_and_successful_results_pass_fixture_control(self):
         self.assertEqual(self.invoke()[0], 0)
+
+    def test_async_completion_in_post_followup_observation_still_passes(self):
+        observed = evidence.read(self.root / "observed.json")
+        observed[0]["turns"].append({"turn_id": "followup-turn", "model": "gpt-6.1-sol", "reasoning_effort": "high"})
+        self.write("observed", observed)
+        self.assertEqual(self.invoke()[0], 0)
+
+    def test_completion_starting_after_tool_result_also_passes(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        rows[2]["timestamp"] = "2000-01-01T00:00:02.300Z"
+        self.jsonl(child, rows)
+        self.assertEqual(self.invoke()[0], 0)
+
+    def test_noninitial_pre_request_turn_cannot_certify_followup(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        earlier, ack = copy.deepcopy(rows[2]), copy.deepcopy(rows[3])
+        earlier["payload"]["turn_id"], earlier["timestamp"] = "earlier-turn", "2000-01-01T00:00:01.000Z"
+        ack["payload"]["internal_chat_message_metadata_passthrough"]["turn_id"] = "earlier-turn"
+        rows[3]["payload"]["content"][0]["text"] = "Current followup contains no acknowledgement."
+        self.jsonl(child, [rows[0], rows[1], earlier, ack, rows[2], rows[3]])
+        receipt = evidence.read(self.root / "followup-receipt.json")
+        receipt["completion_turn_id"] = "earlier-turn"
+        self.write("followup-receipt", receipt)
+        observed = evidence.read(self.root / "observed.json")
+        observed[0]["turns"].append({"turn_id": "earlier-turn", "model": "gpt-6.1-sol", "reasoning_effort": "high"})
+        self.write("observed", observed)
+        self.assertEqual(self.invoke()[0], 1)
+
+    def test_repeated_old_context_cannot_make_an_existing_turn_new(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        old = copy.deepcopy(rows[2])
+        old["timestamp"] = "2000-01-01T00:00:01.000Z"
+        self.jsonl(child, [rows[0], rows[1], old, rows[2], rows[3]])
+        self.assertEqual(self.invoke()[0], 1)
+
+    def test_blank_markers_hold(self):
+        for marker in ("", " ", "\t"):
+            with self.subTest(marker=repr(marker)):
+                self.args[self.args.index("--marker") + 1] = marker
+                receipt = evidence.read(self.root / "followup-receipt.json")
+                receipt["marker"] = marker
+                self.write("followup-receipt", receipt)
+                child = self.root / "child.jsonl"
+                rows = list(evidence.records(child))
+                rows[3]["payload"]["content"][0]["text"] = "Ordinary prose with spaces\tand a tab."
+                self.jsonl(child, rows)
+                self.assertEqual(self.invoke()[0], 1)
+
+    def test_nonblank_marker_bytes_are_not_trimmed(self):
+        marker = " DISPOSABLE-ACK "
+        self.args[self.args.index("--marker") + 1] = marker
+        receipt = evidence.read(self.root / "followup-receipt.json")
+        receipt["marker"] = marker
+        self.write("followup-receipt", receipt)
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        rows[3]["payload"]["content"][0]["text"] = marker
+        self.jsonl(child, rows)
+        self.assertEqual(self.invoke()[0], 0)
+        rows[3]["payload"]["content"][0]["text"] = marker.strip()
+        self.jsonl(child, rows)
+        self.assertEqual(self.invoke()[0], 1)
+
+    def test_missing_invalid_or_naive_request_time_holds(self):
+        for at in (None, "not-a-time", "2000-01-01T00:00:02"):
+            with self.subTest(at=at):
+                self.native("followup_task", outputs=[""])
+                ledger = evidence.read(self.root / "followup-native-calls.json")
+                raw = Path(ledger["source_session"])
+                rows = list(evidence.records(raw))
+                rows[1]["timestamp"] = at
+                self.jsonl(raw, rows)
+                self.assertEqual(self.invoke()[0], 1)
+
+    def test_missing_invalid_naive_or_tied_completion_time_holds(self):
+        child = self.root / "child.jsonl"
+        base = list(evidence.records(child))
+        for at in (None, "not-a-time", "2000-01-01T00:00:02.050", "2000-01-01T00:00:02.000Z"):
+            with self.subTest(at=at):
+                rows = copy.deepcopy(base)
+                rows[2]["timestamp"] = at
+                self.jsonl(child, rows)
+                self.assertEqual(self.invoke()[0], 1)
+
+    def test_reversed_repeated_context_times_hold(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        reverse = copy.deepcopy(rows[2])
+        reverse["timestamp"] = "2000-01-01T00:00:02.010Z"
+        self.jsonl(child, [*rows[:3], reverse, rows[3]])
+        self.assertEqual(self.invoke()[0], 1)
 
     def test_changed_spawn_assignment_is_not_certified(self):
         self.native("spawn_agent", dict(self.requests["spawn_agent"], message="different assignment"), [json.dumps({"task_name": self.producer})])

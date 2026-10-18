@@ -6,6 +6,7 @@ provider. Missing results or opaque native messages hold; requested payloads and
 child acknowledgements cannot substitute for exact host request/result evidence.
 """
 import argparse
+from datetime import datetime
 import hashlib
 import json
 from pathlib import Path
@@ -34,13 +35,24 @@ def records(path):
             yield json.loads(line)
 
 
+def event_time(value, label):
+    try:
+        require(isinstance(value, str), "missing time")
+        moment = datetime.fromisoformat(value.replace("Z", "+00:00"))
+        require(moment.utcoffset() is not None, "missing timezone")
+        return moment
+    except ValueError as error:
+        raise ValueError(f"{label} needs an unambiguous timestamp with timezone") from error
+
+
 def native_call(ledger_path, name, expected, expected_handle=None):
     ledger = read(ledger_path)
     calls = [r["payload"] for r in ledger["calls"] if r["payload"].get("name") == name]
     require(len(calls) == 1, f"expected one {name} in {ledger_path}")
     call = calls[0]
-    raw = [r["payload"] for r in records(ledger["source_session"])
-           if r.get("type") == "response_item" and r["payload"].get("call_id") == call["call_id"]]
+    raw_records = [r for r in records(ledger["source_session"])
+                   if r.get("type") == "response_item" and r["payload"].get("call_id") == call["call_id"]]
+    raw = [r["payload"] for r in raw_records]
     requests = [r for r in raw if r.get("type") == "function_call"]
     require(requests == [call], f"native call absent/altered or ambiguous in raw host log: {name}")
     require(call.get("namespace") == "collaboration", f"unsupported native namespace: {name}")
@@ -65,7 +77,7 @@ def native_call(ledger_path, name, expected, expected_handle=None):
     if not isinstance(message, str) or message.startswith("gAAAA"):
         raise ValueError(f"native {name} message encrypted or unavailable; raw result checked, exact payload equality unverified. Obtain host plaintext bound to call_id {call['call_id']}; requested receipts are not execution proof")
     require(arguments == expected, f"native {name} complete arguments mismatch")
-    return returned
+    return returned, raw_records[raw.index(call)].get("timestamp")
 
 
 def main(argv=None):
@@ -75,6 +87,7 @@ def main(argv=None):
         parser.add_argument("--" + flag, required=True)
     args = parser.parse_args(argv)
     try:
+        require(bool(args.marker.strip()), "acknowledgement marker must be nonblank")
         repo = Path(args.repo).resolve()
         candidate = git(repo, "rev-parse", args.candidate)
         require(git(repo, "rev-parse", "HEAD") == candidate and not git(repo, "status", "--porcelain"), "candidate must be checked out and clean")
@@ -92,7 +105,7 @@ def main(argv=None):
         require((binding["model"], binding["reasoning_effort"]) == ("gpt-6.1-sol", "high"), "pilot requires Sol/high")
         require(host["binding"] == binding and host["requested_spawn_args"] == initial["spawn_args"], "initial requested receipt mismatch")
         require(initial["spawn_args"]["message"] == initial["stock_helper"]["prompt"] and initial["helper_name"] == initial["stock_helper"]["name"], "stock prompt/name changed")
-        producer = native_call(args.native_calls, "spawn_agent", initial["spawn_args"], host["returned_handle"])
+        producer, _ = native_call(args.native_calls, "spawn_agent", initial["spawn_args"], host["returned_handle"])
         observed = [r for r in read(args.observed) if r["handle"] == producer]
         require(len(observed) == 1, "missing/ambiguous producer metadata")
         observed = observed[0]
@@ -127,7 +140,12 @@ def main(argv=None):
             require(receipt[phase]["frontmatter_sha256"] == hashlib.sha256(state.encode()).hexdigest(), f"{phase} raw entity frontmatter differs from receipt")
             require("status: implementation\n" in state and f"worktree: {repo.parent.name}/{repo.name}\n" in state, f"{phase} entity was not registered in implementation")
         require(receipt["marker"] == args.marker and receipt["completion_turn_id"] in turns, "missing followup marker/turn")
-        require(receipt["completion_turn_id"] != observed["turns"][0]["turn_id"], "followup has no new host turn")
+        _, requested_at = native_call(args.followup_native_calls, "followup_task", followup["followup_args"])
+        request_time = event_time(requested_at, "native followup request")
+        context_times = [event_time(r.get("timestamp"), "claimed completion context") for r in raw
+                         if r["type"] == "turn_context" and r["payload"]["turn_id"] == receipt["completion_turn_id"]]
+        require(context_times and context_times == sorted(context_times), "claimed completion context timing is ambiguous")
+        require(context_times[0] > request_time, "claimed completion turn must begin after the native followup request")
         actual = turns[receipt["completion_turn_id"]]
         require((actual["model"], actual["effort"]) == (binding["model"], binding["reasoning_effort"]), "followup host settings changed")
         messages = [r["payload"] for r in raw if r["type"] == "response_item" and r["payload"].get("type") == "message" and r["payload"].get("role") == "assistant"]
@@ -135,7 +153,6 @@ def main(argv=None):
                     and m["internal_chat_message_metadata_passthrough"].get("turn_id") == receipt["completion_turn_id"]
                     and any(args.marker in part.get("text", "") for part in m.get("content", [])) for m in messages),
                 "unique reply absent from the claimed completion turn")
-        native_call(args.followup_native_calls, "followup_task", followup["followup_args"])
         print(f"PASS candidate={candidate}; protected bytes, requested/observed Sol/high, complete native arguments/results and real producer followup marker match")
         print("Limit: local evidence consistency only; independent validation/approval remain separate.")
         return 0
