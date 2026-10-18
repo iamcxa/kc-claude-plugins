@@ -519,3 +519,21 @@ Not covered: that a reviewer finds a defect (AC-6 is replay evidence, not this s
 ### Summary
 
 PASSED recommended for 3656cd74: AC-1 to AC-8 hold, the cycle-2 single-valued-line rules each fail under their own call-site mutation (none of 14 survived), all package tests pass, and the acceptance script ran clean in a fresh shell. One item for FO: the recheck's "no existing task file newly fails" is not met for one archived task, because the new Surfaces count reads fenced lines; classified Deferred risk (no value criterion behind it), with a small repair available.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Apply the chief-engineer's two-line change in check_task of kc-dev-flow-2/scripts/design_surfaces.py (FO alignment split from unfenced text, body kept raw) and keep FencedFoAlignmentTests in kc-dev-flow-2/scripts/test_design_surfaces.py; the Surfaces exactly-one rule stays as ruled
+  Commit e6eb277f on #663 (head was 3656cd74); `git diff` is +2/-1 in check_task plus the 33-line test class; the exactly-one rule untouched.
+  Test 1 (quoted fenced `## FO alignment`/`Surfaces: none` task, check and --seed, exit 0): fails at 3656cd74 with "has 2 'Surfaces:' lines", passes with the fix. Test 2 rebuilds the script with the two lines reverted and asserts both modes refuse the task; it fails to even build the mutant without the fix, passes with it.
+- DONE: All package test files pass; kc-dev-flow-2/scripts/lint-skills.py exits 0
+  18 scripts/test_*.py files OK (test_design_surfaces 123, was 121 plus 2 new; test_learning 47; others unchanged) and the 4 extensions test files OK (journey-map 23, copilot 15, roborev 5, codex 12); lint-skills.py exit 0 (5447 of 5447 words). Commit hooks ran normally.
+- FAILED: roborev evidence= line
+  `findings on e6eb277fa; evidence=roborev:830` (exit 1). Its one High finding is `Preview:` read from the raw body including fences, which is the Codex round-3 P2 the Cycle 3 ruling declined to backlog task ui-design-review-round3-followups; not in scope, so not fixed and not rerun.
+- DONE: push with an explicit remote and branch, no force, no -u; CI green on the new head
+  `git push origin spacedock-ensign/ui-design-review-in-ideation` 3656cd74..e6eb277f; checks on e6eb277f: unit tests, version parity, route gate, GitGuardian all pass; PR still Draft.
+- DONE: commit the stage report with the four-corpus comparison you ran
+  `/tmp/ce663/cmpf.sh` (main vs fix, check and --seed): this state 68 task files 0 verdict changes; subspace-web 24 files 0; qnow 107 files 0; subspace-relay 60 files 3 changes in 2 tasks (extracts in /tmp/ce663/adopt, not re-extracted). Relay `_archive/multi-document-room-picker.md`: two real unfenced `Surfaces: ui` lines under one `## FO alignment` (a correct refusal by the kept rule, archived task); relay `review-ui-room-asks-through-shell.md`: live pilot ui ideation task with no `Design review:` line (the new rule working). Neither was caused by the fix.
+
+### Summary
+
+The Cycle 3 repair is landed as e6eb277f: the Surfaces count now reads the FO alignment from unfenced text, so a task quoting a fenced FO-alignment fixture is no longer refused, and a mutation that reverts the lines fails the new test. The recheck over four corpora shows no verdict change except two relay cases that the ruling already accounts for. roborev reports only the declined Preview P2.
