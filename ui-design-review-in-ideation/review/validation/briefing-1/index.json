@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ui-design-review-in-ideation:validation:attempt-1:revision-1",
+  "question": "Deliver #663 head ab8b6751 (a Surfaces: ui task's ideation runs one Sonnet design reviewer over its previews; design_surfaces.py check refuses a ui ideation without the saved report and one disposition line per finding; ADR 0022): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the Deferred risks and Polish below into backlog task ui-design-review-round3-followups, including the limitations limit (option A) already stated in ADR 0022. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:ui-design-review-in-ideation:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/53d96862e0b339bbee96aa853aab4de8aaa592ae/ui-design-review-in-ideation.md",
+      "rev": "sha256:59290f9c4cb71620558d3d39da41da031ccb0462e18f2c4df602a888d0007a7b",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at ab8b6751 (validation-4, recheck after three repair cycles; the third on the chief-engineer's measured advice). FO ran the acceptance script as written in env -i bash: every step matched (125 tests OK; a ui task with no review exits 1; an undisposed finding exits 1; a reviewed task passes; a report naming a fenced or other preview exits 1; brief 848 words; README 5447 of 5447; adr_lint exit 0). Verdicts compared with main over four corpora (this state 69, subspace-web 24, qnow 109, subspace-relay 60 task files): no change except two relay files, an archived task with two real Surfaces: ui lines (a correct hit) and a live ui task in ideation with no design review (the rule working; relay's FO is told at sync). Words FO reads: the ui ideation gate gains one 14-word line; workflow.md unchanged. Replay (Captain ruling D1): the brief names 3 of the 4 known defects; the cycle-1 Refresh button miss is recorded. External rounds: Codex 4 (round 1 three P2, two fixed and one by option A; round 2 one P2, duplicate review lines, fixed by closing the single-valued-line class; round 3 one P2, fenced Preview candidates, first declined then fixed when roborev rated it High; round 4 clean). RoboRev local (799, 806, 808, 830, 831), its High counted as P1 and fixed. Declined, with reasons: Deferred risk, the check does not read limitations (option A, ADR 0022); Deferred risk, one defect named in 2 of 3 runs; Deferred risk, a column-0 review line quoted in prose is refused; Polish, a brief wording and a preview value with a trailing comment. Second reviewer: copilot because the change alters review rules (a design review required at a ui ideation gate). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Limit: a reviewer's rate of finding defects, operable previews and Codex-hosted workers not verified."
+    }
+  ]
+}
