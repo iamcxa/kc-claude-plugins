@@ -1,0 +1,9 @@
+recount at b97068de against base 2dad59ca (len(text.split()) over each passage; check output counted on the clean fixture with a 40-hex head)
+  passage authority: base 215, candidate 204
+  passage head: base 57, candidate 39
+  passage extensions: base 90, candidate 90
+  passage review-findings: base 33, candidate 33
+  workflow.md words: base 5447, candidate 5418
+  check output on the clean fixture: base 20, candidate 24 (PR head <40-hex> equals dispatched candidate <40-hex>; no second reviewer outcome is missing = 13, class: docs-only = 2, record: task/merge/ask-1.json = 2, next: ask for merge with this text. = 7)
+  merge ask, no points: base 415, candidate 390 (limit 404)
+  workflow.md words: base 5447, candidate 5418; lint-skills.py budget 5418 (step -29)
