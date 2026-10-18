@@ -3,7 +3,7 @@ title: A ui task's ideation runs a design review over its previews and turns the
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved delivery of #663 in chat (「批准並合併」), the #664 and #663 delivery gates presented together, accepting FO''s recommendation to decline the listed Deferred risks and Polish into the named backlog tasks; he also authorized FO to merge'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-17T06:11:26Z
 worktree: .worktrees/spacedock-ensign-ui-design-review-in-ideation
 pr: pr-merge:663
+verdict: PASSED
+completed: 2026-10-18T03:10:08Z
+archived: 2026-10-18T03:10:08Z
 ---
 
 Filed on the Captain's 「同意設計待辦」 (chat, 2026-10-17), to FO's proposal to file the subspace-web FO's design-director proposal as one task that reuses the mechanism of prod-security-review-gates (a specialist review inside ideation; its findings become design requirements and acceptance criteria; `design_surfaces.py check` refuses a design whose review is missing or whose findings have no disposition).
