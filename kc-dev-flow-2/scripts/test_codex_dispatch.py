@@ -274,7 +274,7 @@ class EvidenceRouteTest(unittest.TestCase):
         child = self.root / "child.jsonl"
         self.jsonl(child, [{"type": "session_meta", "payload": {"id": "fixture-session", "source": {"subagent": {"thread_spawn": {"agent_path": self.producer, "parent_thread_id": "fixture-parent"}}}}},
                            *[{"type": "turn_context", "payload": {"turn_id": t, "model": "gpt-6.1-sol", "effort": "high"}} for t in ("initial-turn", "followup-turn")],
-                           {"type": "response_item", "payload": {"type": "message", "role": "assistant", "content": [{"type": "output_text", "text": marker}]}}])
+                           {"type": "response_item", "payload": {"type": "message", "role": "assistant", "internal_chat_message_metadata_passthrough": {"turn_id": "followup-turn"}, "content": [{"type": "output_text", "text": marker}]}}])
         self.write("observed", [{"handle": self.producer, "session_id": "fixture-session", "session_path": str(child), "turns": [{"turn_id": "initial-turn", "model": "gpt-6.1-sol", "reasoning_effort": "high"}]}])
         self.native("spawn_agent", outputs=[json.dumps({"task_name": self.producer})])
         self.native("followup_task", outputs=[""])
@@ -314,6 +314,28 @@ class EvidenceRouteTest(unittest.TestCase):
 
     def test_changed_followup_assignment_is_not_certified(self):
         self.native("followup_task", dict(self.requests["followup_task"], message="different assignment"), [""])
+        self.assertEqual(self.invoke()[0], 1)
+
+    def test_initial_turn_marker_cannot_certify_followup(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        rows[3]["payload"]["internal_chat_message_metadata_passthrough"]["turn_id"] = "initial-turn"
+        self.jsonl(child, [rows[0], rows[1], rows[3], rows[2]])
+        self.assertEqual(self.invoke()[0], 1)
+
+    def test_later_turn_marker_cannot_certify_followup(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        rows[3]["payload"]["internal_chat_message_metadata_passthrough"]["turn_id"] = "later-turn"
+        later = {"type": "turn_context", "payload": {"turn_id": "later-turn", "model": "gpt-6.1-sol", "effort": "high"}}
+        self.jsonl(child, [*rows[:3], later, rows[3]])
+        self.assertEqual(self.invoke()[0], 1)
+
+    def test_marker_without_turn_metadata_holds(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        rows[3]["payload"].pop("internal_chat_message_metadata_passthrough")
+        self.jsonl(child, rows)
         self.assertEqual(self.invoke()[0], 1)
 
     def test_returned_handle_cannot_select_a_child_from_another_parent(self):

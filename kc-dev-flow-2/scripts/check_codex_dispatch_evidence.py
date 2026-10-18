@@ -131,7 +131,10 @@ def main(argv=None):
         actual = turns[receipt["completion_turn_id"]]
         require((actual["model"], actual["effort"]) == (binding["model"], binding["reasoning_effort"]), "followup host settings changed")
         messages = [r["payload"] for r in raw if r["type"] == "response_item" and r["payload"].get("type") == "message" and r["payload"].get("role") == "assistant"]
-        require(any(args.marker in part.get("text", "") for m in messages for part in m.get("content", [])), "unique reply absent from raw child output")
+        require(any(isinstance(m.get("internal_chat_message_metadata_passthrough"), dict)
+                    and m["internal_chat_message_metadata_passthrough"].get("turn_id") == receipt["completion_turn_id"]
+                    and any(args.marker in part.get("text", "") for part in m.get("content", [])) for m in messages),
+                "unique reply absent from the claimed completion turn")
         native_call(args.followup_native_calls, "followup_task", followup["followup_args"])
         print(f"PASS candidate={candidate}; protected bytes, requested/observed Sol/high, complete native arguments/results and real producer followup marker match")
         print("Limit: local evidence consistency only; independent validation/approval remain separate.")
