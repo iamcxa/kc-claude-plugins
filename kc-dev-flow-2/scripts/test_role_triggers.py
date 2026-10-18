@@ -40,7 +40,7 @@ def task(cycles=(), amendments=(), extra="", after=""):
     return "\n".join(body) + "\n"
 
 
-class RoleTriggersTest(unittest.TestCase):
+class Fixture(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
         self.addCleanup(self.tmp.cleanup)
@@ -60,6 +60,8 @@ class RoleTriggersTest(unittest.TestCase):
         self.assertEqual(code, 1 if out.startswith("next:") else 0, out)
         return code, [line for line in out.splitlines() if line.startswith("next:")]
 
+
+class RoleTriggersTest(Fixture):
     def test_the_third_cycle_owes_chief_engineer_and_the_second_does_not(self):
         self.put(task(cycles=(1, 1, 2)))
         self.assertEqual(self.owed()[0], 0)
@@ -171,6 +173,65 @@ class RoleTriggersTest(unittest.TestCase):
         git(self.state, "rm", "-q", f"_archive/{SLUG}.md")
         self.put(task(cycles=(3,)), f"{SLUG}/index.md")
         self.assertEqual(self.owed()[0], 1)
+
+
+def forms(heading, trailing=True):
+    spelled = {"uppercase": heading.upper(), "lowercase": heading.lower(), "leading space": " " + heading,
+               "leading tab": "\t" + heading, "leading no-break space": "\xa0" + heading}
+    if trailing:
+        spelled["trailing no-break space"] = heading + "\xa0"
+    return spelled
+
+
+class SpaceClassTest(unittest.TestCase):
+    def test_the_space_class_is_the_one_design_surfaces_uses(self):
+        def constant(path, name):
+            return re.search(rf'^{name} = "(.*)"$', path.read_text(), re.M).group(1)
+        self.assertEqual(constant(SCRIPT, "SPACE"), constant(SCRIPT.with_name("design_surfaces.py"), "GO_SPACE"))
+
+
+class HeadingFormsTest(Fixture):
+    def read_as(self, text, heading, spelled, expected):
+        self.put(text.replace(heading, spelled, 1))
+        self.assertEqual(self.owed()[0], expected)
+
+    def test_a_captain_amendments_heading_in_any_form_design_surfaces_accepts_is_read(self):
+        text = task(amendments=[(1, "2026-10-15", "AC-4", "none")])
+        for name, spelled in forms("## Captain amendments").items():
+            with self.subTest(name):
+                self.read_as(text, "## Captain amendments", spelled, 1)
+
+    def test_an_amendment_entry_heading_in_any_form_design_surfaces_accepts_is_read(self):
+        text = task(amendments=[(1, "2026-10-15", "AC-4", "none")])
+        for name, spelled in forms("### Amendment 1", trailing=False).items():
+            with self.subTest(name):
+                self.read_as(text, "### Amendment 1", spelled, 1)
+
+    def test_a_feedback_cycles_heading_in_any_form_design_surfaces_accepts_is_read(self):
+        text = task(cycles=(3,))
+        for name, spelled in forms("### Feedback Cycles").items():
+            with self.subTest(name):
+                self.read_as(text, "### Feedback Cycles", spelled, 1)
+
+    def test_an_fo_alignment_heading_in_any_form_design_surfaces_accepts_holds_the_call(self):
+        text = task(cycles=(3,), extra=f"Reviewer: {CE} opus 2026-10-16 — Cycle 3: q")
+        for name, spelled in forms("## FO alignment").items():
+            with self.subTest(name):
+                self.read_as(text, "## FO alignment", spelled, 0)
+
+    def test_an_indented_sibling_heading_ends_each_section(self):
+        call = f"Reviewer: {CE} opus 2026-10-16 — Cycle 3: q"
+        cases = {
+            "FO alignment": (task(cycles=(3,), after=call), 1),
+            "Captain amendments": (task(amendments=[(1, "2026-10-15", "none", "none")], after="Supersedes: AC-4"), 0),
+            "Feedback Cycles": (task(cycles=(1,), after="- Cycle 3 (FO): x"), 0),
+        }
+        for name, (text, expected) in cases.items():
+            for how, spelled in forms("## Stage Report: validation", trailing=False).items():
+                if how in ("uppercase", "lowercase"):
+                    continue
+                with self.subTest(f"{name}, {how}"):
+                    self.read_as(text, "## Stage Report: validation", spelled, expected)
 
 
 if __name__ == "__main__":
