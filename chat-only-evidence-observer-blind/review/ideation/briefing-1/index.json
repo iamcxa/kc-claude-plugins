@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:chat-only-evidence-observer-blind:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts D1 (the observer stops judging the rules only chat can show: the acceptance steps in full, the package and checkout runs, answering a Captain question, the --names run, the four-field assessment, while the rest are read from state or recorded), D2 (Sufficiency: and Necessity: clauses in the delivery gate text, held by delivery_gate.py), D3 (the acceptance steps shown in full stay chat-only), and FO's implementation order below.",
+  "artifacts": [
+    {
+      "id": "artifact:chat-only-evidence-observer-blind:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1d901b5957745aace50b3412204e8ecf28f8b5c6/chat-only-evidence-observer-blind.md",
+      "rev": "sha256:f560f061e9e803499876a8a258f87b41fc76acd8ea20327e12f540e3c2568558",
+      "mediaType": "text/markdown",
+      "summary": "Design: of 40 rule-report pairs that read can't tell in batch 2, 30 close with no new FO word: 10 by reading what state already holds, 4 by one labelled clause in the gate text, 16 by naming the rules the observer cannot see; 10 are not chat-only and stay or move to the sibling tasks. D2 is the only change that adds a hold FO and adopters meet once. Implementation order (FO, from the four Batch overlap sections): fo-write-checks and number-guards-readme-shrink first in parallel (scripts vs README hunks); then captain-question-load (delivery_gate.py ask line and a Delivery authority sentence); then chat-only-evidence-observer-blind (delivery_gate.py and the same paragraph)."
+    }
+  ]
+}

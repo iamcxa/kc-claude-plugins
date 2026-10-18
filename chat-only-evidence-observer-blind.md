@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:chat-only-evidence-observer-blind:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:chat-only-evidence-observer-blind-ideation-1
+              briefing:
+                id: briefing:chat-only-evidence-observer-blind:ideation:attempt-1:revision-1
+                digest: sha256:e8ba8cbc01111bd1733c87fc6177e776e11f787294b48a522b10b1127c008771
+                room-ref: ./chat-only-evidence-observer-blind/review/ideation/briefing-1
 started: 2026-10-18T16:57:36Z
 ---
 
