@@ -15,6 +15,17 @@ gates:
                 id: briefing:number-guards-readme-shrink:backlog:attempt-1:revision-1
                 digest: sha256:12b30dc0c3e9ea1e4d878894053b72844eea50863fc36c9673d6876daef9ffcd
                 room-ref: ./number-guards-readme-shrink/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:number-guards-readme-shrink:backlog:1
+                briefing: briefing:number-guards-readme-shrink:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-18T16:57:03.744159Z"
+                decision: approve
+                reason: Captain approved in chat (「批准這些作為第三批」) the five batch-3 backlog gates presented together, accepting the recommended profiles and the stated grouping and order
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Filed under D4 of workflow-budget-ratchet, approved by the Captain on 2026-10-17 (「那就照建議」 to the batch-2 ideation gates, whose question said approving accepts D4: "Number guards becomes a follow-up task").
