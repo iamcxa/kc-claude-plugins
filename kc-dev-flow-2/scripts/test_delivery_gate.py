@@ -483,12 +483,22 @@ class PartialRollupTests(unittest.TestCase):
         self.assertIn("kc-dev-flow-2 tests", result.out)
         self.assertEqual(result.written, {})
 
-    def test_only_the_latest_run_of_each_workflow_counts_and_no_runs_is_not_a_hold(self):
-        reran = [workflow_run("tests", conclusion="cancelled", number=1), workflow_run("tests", number=2)]
-        self.assertEqual(run_check(facts=dict(statusCheckRollup=self.FAST), runs=reran).code, 0)
-        self.assertEqual(run_check(facts=dict(statusCheckRollup=self.FAST), runs=[]).code, 0)
-        failed_last = [workflow_run("tests", number=1), workflow_run("tests", conclusion="failure", number=2)]
-        self.assertEqual(run_check(facts=dict(statusCheckRollup=self.FAST), runs=failed_last).code, 1)
+    def test_only_a_cancelled_or_skipped_run_replaced_by_a_later_run_is_ignored_and_no_runs_is_not_a_hold(self):
+        facts = dict(statusCheckRollup=self.FAST)
+        for older in ("cancelled", "skipped"):
+            with self.subTest(older):
+                runs = [workflow_run("tests", conclusion=older, number=1), workflow_run("tests", number=2)]
+                self.assertEqual(run_check(facts=facts, runs=runs).code, 0)
+        self.assertEqual(run_check(facts=facts, runs=[]).code, 0)
+        holds = {
+            "later run failed": [workflow_run("tests", number=1), workflow_run("tests", conclusion="failure", number=2)],
+            "older run failed": [workflow_run("tests", conclusion="failure", number=1), workflow_run("tests", number=2)],
+            "older run pending": [workflow_run("tests", status="in_progress", conclusion=None, number=1), workflow_run("tests", number=2)],
+            "only run cancelled": [workflow_run("tests", conclusion="cancelled", number=1)],
+        }
+        for label, runs in holds.items():
+            with self.subTest(label):
+                self.assertEqual(run_check(facts=facts, runs=runs).code, 1)
 
     def test_a_run_list_longer_than_one_page_holds_with_exit_2(self):
         result = run_check(runs=dict(total_count=101, workflow_runs=[workflow_run("tests")]))

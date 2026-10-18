@@ -236,14 +236,16 @@ def ci_problem(rollup):
 
 
 def runs_problem(runs):
-    latest = {}
+    newest = {}
     for run in runs:
         key = run.get("workflow_id")
-        if key not in latest or run.get("run_number", 0) > latest[key].get("run_number", 0):
-            latest[key] = run
-    bad = [tok(run.get("name") or "?", words=4, chars=40) for run in latest.values()
-           if not (run.get("status") == "completed" and run.get("conclusion") == "success")]
-    return f"{len(bad)} of {len(latest)} workflows run on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
+        newest[key] = max(newest.get(key, 0), run.get("run_number", 0))
+    bad = []
+    for run in runs:
+        superseded = run.get("run_number", 0) < newest[run.get("workflow_id")] and run.get("conclusion") in ("cancelled", "skipped")
+        if not superseded and not (run.get("status") == "completed" and run.get("conclusion") == "success"):
+            bad.append(tok(run.get("name") or "?", words=4, chars=40))
+    return f"{len(bad)} of {len(runs)} workflow runs on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
 
 
 def write_record(task, rec):
