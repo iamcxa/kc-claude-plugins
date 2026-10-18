@@ -1,0 +1,14 @@
+recount-3 at the Cycle 4 repair (uncommitted candidate tree) against base 2dad59ca: python3 -B validation/recount-3.py <worktree> 2dad59ca (len(text.split()) over each passage)
+base passage authority: 215
+base passage head: 57
+base passage extensions: 90
+base passage review-findings: 33
+base passages: 395; workflow.md words: 5447
+candidate passage authority: 215
+candidate passage head: 39
+candidate passage extensions: 90
+candidate passage review-findings: 33
+candidate passages: 377; workflow.md words: 5429
+check output on the clean fixture (40-hex head, one passing workflow run): base 20, candidate 24 (unchanged by the runs hold; the hold lines print only on exit 1 or 2)
+merge ask, no points: base 395 + 20 = 415, candidate 377 + 24 = 401 (limit 404); the authority passage is back to the base 215 words
+workflow.md words: base 5447, candidate 5429; lint-skills.py budget 5429 (step -18)
