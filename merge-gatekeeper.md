@@ -299,6 +299,7 @@ Verified by: that fixture case in `test_delivery_gate.py`. Falsifier: printing t
 ## Number guards
 
 ADR: 0023
+ADR 0023 stays reserved and is not landed by #666 after Captain amendment 1 (2026-10-18); the grant ADR draft is parked with the code at 3fd84178 for POC task merge-grant-need-poc.
 
 ### Feedback Cycles
 
