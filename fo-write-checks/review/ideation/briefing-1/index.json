@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-write-checks:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts D1 (every declined item in a delivery gate summary carries a bracketed reason, held by delivery_gate.py), D2 (a reserved ADR must exist at the PR head before the merge ask; FO lands the file or deletes the reserved line), and FO's implementation order below.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-write-checks:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/60fe6cb22b8fd2e7a4b34b0263799ac1de5dcde5/fo-write-checks.md",
+      "rev": "sha256:07dbe3fea43994595dbf8f07a1e247437bc65b503bb8ad80f6cc66268e3d5131",
+      "mediaType": "text/markdown",
+      "summary": "Design: three FO-write rules get checks with no new FO words: the reserved ADR or Migration line in implementation-1's scope notes and a Captain amendment named in a dispatch checklist (both in dispatch_records.py --names, run before dispatch build), and the reserved ADR present at the PR head (delivery_gate.py check); the decline-reason form (D1) also goes in delivery_gate.py; laws_check.py L2 extended as a backstop. Replay on state: the ADR-line check flags 4 of 7 reserving tasks (the 3 observed plus one more), the amendment check 1 of 237 records (the observed one), the ADR-at-head check 1 of 18 (#666). Three classes stay with the observer, each with its replay count. README unchanged at 5429. Implementation order (FO, from the four Batch overlap sections): fo-write-checks and number-guards-readme-shrink first in parallel (scripts vs README hunks); then captain-question-load (delivery_gate.py ask line and a Delivery authority sentence); then chat-only-evidence-observer-blind (delivery_gate.py and the same paragraph)."
+    }
+  ]
+}
