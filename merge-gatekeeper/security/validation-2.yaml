@@ -1,0 +1,127 @@
+tob_security_review:
+  pr: 666
+  strategy: FOCUSED
+  security_tier: full
+  files_analyzed: 7
+  reach_summary: |
+    The change adds no public route, handler, hosted page or served file. It adds a local CLI mode (`delivery_gate.py check` and `calibrate`), an ADR and README prose. The only public text it adds is ADR 0023, which holds a Captain chat quote and no customer or PII identifier.
+    Outsider-writable inputs that the script reads, all via `gh` and so only on PRs and comments:
+    (1) PR title. It is shell-quoted with `shlex.quote` and also gated by the CONVENTIONAL regex, which allows printable ASCII only.
+    (2) PR head branch name. It can only push a PR into the never class (`release-please--` prefix), so it fails safe.
+    (3) Changed-file names. They are escaped through `tok()` (repr) and `clean()`. Non-printable and bidi characters are escaped.
+    (4) Check names. They go through `tok()`.
+    (5) Issue and PR comments, read by the existing `extensions/codex/codex_review.py`. Evidence is accepted only from the `chatgpt-codex-connector[bot]` login, so an outsider cannot forge a clean verdict.
+    The remaining inputs, which are the task file, README, ADRs, validation records and gate text, are local FO-owned files. An outsider cannot write them without a merge.
+    An outsider can post unlimited comments on a public PR, bounded only by GitHub's own rate limits. I found no cap in the code (see the TimeoutExpired finding).
+    I found no injection path from outsider-controlled values into the printed merge line. The title, repo, number, candidate and recheck arguments are quoted, regex-bounded or hex.
+  findings:
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      symbol: "NEVER_PATH"
+      severity: MEDIUM
+      category: insecure-default
+      title: "Never-eligible path allowlist omits decision and publishing code outside kc-dev-flow-2 and root scripts/, contradicting ADR 0023's stated class"
+      description: |
+        ADR 0023 fixes as never eligible "any path an agent loads as instructions or that decides a review, gate or grant". NEVER_PATH implements this with directory and name patterns:
+        - root `scripts/` and `kc-dev-flow-2/scripts/`
+        - `hooks|bin`, `_mods|migrations`, `docs/adr`, `docs/dev*`
+        - `skills|agents|extensions|references`
+        - file names containing `gate` or `budget`
+        - CLAUDE.md, AGENTS.md and plugin/marketplace JSON
+        At the head sha, these tracked files match none of it and so classify by `classify()` as `script-with-test`:
+        - `kc-pr-flow/scripts/review-post.sh`, `review-runtime.sh`, `github-repo-write.sh`, `cross-model.sh`
+        - `kc-journey-map/scripts/journey-grant.ts`
+        - `kc-ship-flow/scripts/close.py`, `pin.py`, `dispatch.sh`
+        - `kc-dev-flow/scripts/check-pr-title.py`, `poc-close-guard.py`
+        - `kc-plugin-forge/scripts/post-release-sync.sh`, `plugin-release-contract-check.sh`
+        Each has a sibling `*.test.*` file whose basename satisfies `own_tests`, so `script-with-test` is a name-only match. `names & own_tests(p)` takes the basename from any directory and never reads the test.
+        `docs/ship/README.md` is the ship workflow contract, and `kc-ship-flow/scripts/local-profile-check.py` reads it. It matches `docs-only` because only the README of the workflow dir passed to the check is added to the never list.
+        `other` is also grantable by the GRANT regex, and it covers any non-never path.
+        This is latent. No `merge-grants:` entry exists at the head (the only matches are documentation and code), so FO prints only the ask line today. The ADR and the code disagree about what the never class is, and the code is the one that is enforced.
+      attack_scenario: |
+        1. An outsider plants instructions in content an FO worker reads, such as a public issue or an external review comment. The worker, acting as a prompt-injected agent, produces a PR that changes `kc-pr-flow/scripts/github-repo-write.sh` (a GitHub write helper) or `review-post.sh` (a review poster) plus its `.test.sh`.
+        2. After the Captain grants `script-with-test` on calibration evidence, `check` classifies the PR `script-with-test`. If no point is printed, it prints a head-pinned `gh pr merge` line, and FO merges without the Captain's eye.
+        3. The merged script ships to every installer of the published plugin, and the post-release sync copies it to the author's local installs, so modified code runs on third-party machines and on the Captain's.
+        Required conditions: a grant exists, the worker is steered, and the test is weak enough to pass CI. This is not exploitable today.
+      blast_radius: "HIGH"
+      recommendation: |
+        Anchor the script patterns to any plugin: `(?:^|/)scripts/`, `(?:^|/)hooks/`, `docs/ship/README.md` and `docs/plan-flow/`. Better, invert to an allowlist for `script-with-test` (named plugin script paths) rather than a denylist. Require the sibling test to be in the same directory and to appear in the PR. Add a test that classifies each tracked `*/scripts/*` path as `never`.
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      symbol: "NEVER_PATH / never_paths"
+      severity: LOW
+      category: other
+      title: "Never-path and docs-only matching is case-sensitive, while the author's macOS checkout is case-insensitive"
+      description: |
+        None of the NEVER_PATH regexes uses re.I, and `classify` tests `p.startswith("docs/")`. On a case-insensitive filesystem, git checks out `docs/Dev/x.md` into the existing `docs/dev/` directory. `docs/Adr/...`, `skills/` and `Skills/`, and `Agents/` behave the same way. A path such as `docs/Dev/<task>.md` matches no never pattern and is `docs-only`. On macOS it lands in the workflow state directory (task files and records the gate reads), or in an ADR directory that `adr_grants` globs.
+        An exact-case `docs/dev/_mods/x.md` is correctly never, because `_mods/` matches literally.
+        Also latent, as no grant exists.
+      attack_scenario: |
+        1. A steered worker (same injection chain as above) adds `docs/Dev/<task>.md` containing an `Override:` or `merge guard --rework` line, or a fake `### Amendment`, so the labelling of later records changes.
+        2. `check` sees a `docs-only` PR and prints the merge line once `docs-only` is granted.
+        3. After merge and pull on macOS the file sits inside `docs/dev/`.
+      blast_radius: "MEDIUM"
+      recommendation: "Match with `re.I` and compare `p.lower()` in `classify`. Optionally, treat any path whose lowercase form differs from an existing tracked directory spelling as never."
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      symbol: "reviewers_clean"
+      severity: LOW
+      category: other
+      title: "Codex reader runs with a timeout whose expiry is not caught, so an outsider comment flood becomes a crash, not a hold"
+      description: |
+        `reviewers_clean` calls `subprocess.run([...codex_review.py, repo, number], timeout=120)`. A `TimeoutExpired` is not caught inside `reviewers_clean`, and the call in `check()` is outside any try block. The reader paginates all reactions, comments and reviews of the PR with no cap.
+        On a public PR any outsider can post unlimited comments. They can also post `@codex review` triggers, which add reaction fetches for the last trigger, and `check` itself calls `gh` three times and the files API with paginate.
+        Impact is fail-closed. The traceback leaves no `next: merge` last line, so the recheck pipeline's `grep -q '^next: merge '` fails and no record is written. The cost is denial of the merge line, and the hold is not printed in the structured form that FO's `next:` handling expects.
+      attack_scenario: |
+        1. An outsider posts thousands of comments on a PR they know FO will take to a merge ask.
+        2. The codex reader exceeds 120 s, or `gh` is rate limited, and `check` raises.
+        3. The PR never gets a merge line, and FO sees a raw traceback rather than a `next:` hold line.
+      blast_radius: "LOW"
+      recommendation: "Catch `subprocess.TimeoutExpired` and `OSError` in `reviewers_clean` and return False. Add the reason to the printed hold. Optionally cap pages read."
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      symbol: "label / labelled / check (failure stop)"
+      severity: LOW
+      category: other
+      title: "A record whose PR cannot be read labels as pending, so the failure stop that revokes a grant fails open on a gh error"
+      description: |
+        `label()` returns `pending` when `pr_facts` raises. `check` stops the merge line only on `state == "failure"`. If `gh` is down, rate limited or unauthenticated when `check` runs, an earlier failed record (closed unmerged, merged at another head) reads as pending. The merge line is still printed, although ADR 0023 says a failure stops the class "at once".
+        Not outsider-triggered directly. A rate-limit flood against the shared token could cause it only indirectly, and the pinned `--match-head-commit` and the CI, draft, mergeable and base checks are separate guards.
+      attack_scenario: |
+        1. A granted class has one failed record.
+        2. At the next ask `gh pr view` for that old record errors, so it reads as pending.
+        3. `check` prints a merge line for a class that should be stopped.
+      blast_radius: "LOW"
+      recommendation: "In `check`, treat `pending` with reason `cannot read the PR` as a hold (no merge line). Calibrate can keep it pending."
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      symbol: "merge_line"
+      severity: LOW
+      category: race-condition
+      title: "The printed merge line pins the head but not the base branch"
+      description: |
+        `gh pr merge --match-head-commit` pins the head. The base was only compared with `trunk:` during `check`. A PR author can retarget their own PR between the recheck and the merge, and the merge then lands in another branch. The window is the length of one shell pipeline. No pin exists for title either, but the subject is quoted at print time and is not a security input.
+      attack_scenario: |
+        1. FO runs the printed line. The recheck passes with base = trunk.
+        2. In the seconds before `gh pr merge`, the PR author edits the base branch.
+        3. `gh pr merge` merges the validated head into the new base, not the trunk.
+      blast_radius: "LOW"
+      recommendation: "Re-read `baseRefName` immediately before `gh pr merge` in the line, or use `gh api` merge with `expected_head_sha` and compare the base in the same pipeline. Document it as a bounded residual otherwise."
+  clean_patterns:
+    - "Merge line quoting: title through shlex.quote and a CONVENTIONAL regex (printable ASCII, at most 100 characters). Recheck arguments through shlex.join, method from a closed regex, candidate 40-hex, repo and number from a strict regex. No injection found."
+    - "Terminal and log injection: every printed line goes through clean(), which escapes non-printable and bidi characters. PR-derived values (file names, check names, titles, mergeable, base) are bounded by tok() with repr."
+    - "Head pinning: `full in candidates` requires the 40-hex candidate, and the PR head is re-read inside the recheck before `--match-head-commit`. A pushed commit after validation cannot be merged by the printed line."
+    - "CI hold: an empty rollup, SKIPPED, NEUTRAL, ACTION_REQUIRED and non-SUCCESS statuses all hold. A fork PR waiting for workflow approval does not produce a merge line."
+    - "File-list completeness: len(files) must equal changedFiles. This covers the 3000-file API cap, and previous_filename is included, so a rename out of a never path is seen."
+    - "Fail-closed defaults: an unreadable PR, README, head, record or grant ADR yields hold or ask. Not-Accepted ADRs, an invalid grant entry, a fetch failure and a codex or roborev non-clean all revoke the merge line. A branch named `release-please--*` only forces the never class, so a fork cannot use a branch name to gain eligibility."
+    - "Codex evidence is accepted only from the bot login, so an outsider comment cannot forge a clean verdict, and an outsider `@codex review` trigger can only cause 'running' (exit 3), which holds."
+    - "Revert detection uses `--fixed-strings`, so an outsider-influenced commit message cannot inject a pattern. A commit message that quotes a merge sha can only add a failure label (fail safe)."
+    - "No hardcoded credentials, no eval or exec, no new network exposure. `gh` and `git` are invoked as argv lists with no shell."
+    - "ADR 0023 and workflow.md prose: no customer or PII identifiers. The workflow.md change narrows rather than widens FO authority and keeps manual merge as the default. lint-skills.py budget step is a one-line constant."
+  limitations:
+    - "Static read at the head sha only. I did not run any script or the tests. The 172 added lines in the middle of the `git diff` output were truncated by the tool, so I read them from the file at the head (`git show HEAD:...`). That file is the authority, not the diff view."
+    - "I did not read test_delivery_gate.py or test_sd_dispatch.py line by line, so I do not know which classifications or holds they pin."
+    - "I could not verify how the gate text, task file and the README `merge-grants` entry are produced in the FO session. Whether a fork or outsider PR can reach `check` at all depends on FO taking only Captain-initiated tasks. Every finding therefore needs a steered worker (prompt-injection chain), not a pure outsider, and the Captain has granted no class yet."
+    - "I did not enumerate which tracked `docs/**/*.md` files other agents or hosts load as instructions beyond the `references/` pattern. `docs/ship/README.md` is the one confirmed example."
+    - "I did not verify GitHub's behaviour for `gh pr merge` against the base when the PR author retargets, nor the exact `statusCheckRollup` shape for check-run versus status-context items beyond the code's two branches."
+    - "Calibration soundness (59 clean records, 14-day window, one-sided bound) is a statistics and policy question I only partly checked. `lower_bound` uses the exact binomial tail by bisection, with n=59, k=59 giving 0.05^(1/59) of about 0.9505."

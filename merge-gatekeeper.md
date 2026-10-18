@@ -540,3 +540,103 @@ For FO to rule: (a) the Captain's ruling says docs-only admits only .md, so a no
 ### Summary
 
 Both rulings are built in 3fd84178 with the Status rule added as FO ruled, every guard shown load-bearing by a mutation. Two limits: `(?:^|/)(?:hooks|bin)/` also makes `docs/hooks/x.md` never (fail-safe over-block, tested as such by omission); the ADR's evidence quality is not read (ruling d). The branch is not pushed, so no CI result exists for the new head.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #666 head 3fd84178 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED against AC-1 to AC-12 and both rulings at 3fd841789db9c76d863ae4f723184c790471a7da, with one blocker for FO: two Codex P1 comments (review:5562139252, ids 4306363860 and 4306363862) are open on this head, I reproduced both, and README step 5 says a reviewer P1 is fixed and revalidated or waived by the Captain. I class both Deferred risk (no `merge-grants:` entry exists, so field 4 of the four-field test fails), not Material; I cannot waive them. Details under `### Findings`.
+  Suites (python3 -B, 600 s cap): lint-skills.py 5430 of 5430 words on the head and on a clean merge of it into origin/main ffd620b4 (no conflict); every CI-listed test file rc 0, 24 of 24 on the head and 25 of 25 on the merge (test_role_triggers.py exists only on main); test_delivery_gate.py 73 tests OK; test_sd_dispatch.py `--sd-plugin-root /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0`, binary /Users/kent/.local/bin/spacedock 0.27.2; CI at this head all four checks pass (unit tests run 39111745943).
+  Falsifiers I ran: 76 mutations of delivery_gate.py in scratch copies, each against all 73 tests (python3 -B, no caches; the last 70 with `-f`, stop at first failure): 72 RED, 4 survived. AC-1 nine (ci clause, empty rollup, SKIPPED/NEUTRAL, draft, mergeable, base, file count, head differs, PR head moved); AC-2 nine matchers; AC-3 twelve (docs/adr, rename previous_filename, learning.md, CLAUDE.md, own-test rule, release PR, db surface, kc-dev-flow-2/scripts, release json, _mods, .github, README rule) and no pagination; AC-4 seven (verdict, title, reviewers_clean, failure record, threshold form, codex rc, roborev head); AC-5 five (match-head, title quote, re-run pipe, body, method); AC-6 two; AC-7 eight (pending as clean, bound formula, revert, failure in granted class, propose threshold, rework regex, merged other head, closed); AC-12 three. Cycle 1, six: quoted-prod regex, directory depth, never fetching, fetch failure ignored in check and in calibrate, stale ref. Cycle 2, ten: drop adr_grants, drop Status, class-word-only match, number glob, .githooks, .roborev.toml, repo scripts/, hooks, bin, docs .md-only. All of these RED.
+  Survivors: (a) `(?:gate|budget)` name pattern removed: nothing fails (no row decides on it alone; it is the only rule that makes `kc-ship-flow/scripts/e2e-gate.py` never); (b) `never` admitted by GRANT: nothing fails, the `cls != "never"` verdict stops it (redundant guard); (c) the absent-key default grant: nothing fails alone, red when the Accepted-ADR rule is also removed (the two guards mask each other; the case is equivalent in practice); (d) `newest wins` in the calibrate dedupe replaced by last-folder-wins: nothing fails (the tests drop the dedupe, not its order). (a) and (d) are Polish; (b) and (c) are redundant guards.
+  Own probes through the real CLI with a stub gh (scratch repository, no network): ADR absent, Proposed, other threshold, or only naming the class prints the ask line; an Accepted ADR holding the whole entry prints the merge line, and running that line once calls `gh pr merge 9 --repo o/r --squash --match-head-commit <candidate> --subject 'feat(x): y' --body ''`; `.githooks/`, `.roborev.toml`, root `scripts/`, `kc-x/hooks/`, `kc-x/bin/`, and a rename from a hooks path all class never; `docs/a.png` class other; `tools/a.py` with its test stays script-with-test; `packages/foo/agents/x.md` never; `profile: "prod"` holds on the security review.
+- DONE: recheck after Cycles 1 and 2: the three Codex P1 (review:5561577977) fixed (quoted prod read by the shared reader, instruction directories at any depth, trunk fetched inside check with fail-closed); the Captain's Cycle 2 ruling applied (a grant needs its Accepted ADR to contain the whole merge-grants entry; never list gains .githooks, .roborev.toml, repo-root scripts/, hooks/ and bin/ at any depth; docs-only only .md); confirm each new rule's test fails under its mutation; re-run the prod validation security review with the Reach brief from origin/main's kc-dev-flow-2/skills/validation/profiles/prod.md as security/validation-2.yaml and write its lines; AC-1 to AC-12 hold; run lint and package tests on a merge into current origin/main
+  The three P1 of review 5561577977 hold fixed (probes and mutations above; CodexP1Tests uses a real scratch bare origin). The Captain's Cycle 2 ruling is applied as written: his list, no more (plugin `scripts/` is outside it, see G1). The security review ran once on origin/main's Reach brief at this head (model sonnet) and is saved unedited as security/validation-2.yaml. AC-1 to 4, 6, 7, 12 hold by the suite and my mutations. AC-5: ac5-run-2.txt (head f3f0fa3e) read, not re-run live; `merge_line` is unchanged since f3f0fa3e (`git diff f3f0fa3e HEAD`), and my stub run executed the printed line once. AC-8: replay-1.txt read (32 tasks, class never on all, rule arm says merge on 0); I did not re-run it. AC-9 not applicable (no model arm). AC-10: base passages 215+57+90+33 plus check output 20 = 415; head 212+39+90+37 plus 24 = 402 against limit 404, workflow.md 5447 to 5430 against the lowered budget, workflow.md unchanged since 1beabd97 (`git diff --stat 1beabd97 HEAD` lists two files). AC-11: `adr_lint.py docs/adr --since 2dad59ca --require 0023` exit 0; `grep -c merge-grants` over the README and workflow.md diff prints 0; ADR 0011 carries `Merge partly superseded by ADR 0023.` comment_ratio.py 0 of 1135 code lines, exit 0; number_guards.py check PASS; design_surfaces.py check exit 0; dispatch_records.py 14 records complete.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and observed output under `### Minimal acceptance script`; adr_lint.py `docs/adr --since 2dad59ca` printed "22 ADR file(s) checked, 0 legacy", exit 0, with and without `--require 0023`. Findings under `### Findings`; verdict PASSED at 3fd841789db9c76d863ae4f723184c790471a7da with the open-P1 blocker above.
+
+### Security review (validation)
+
+Security review (validation): security/validation-2.yaml at 3fd841789db9c76d863ae4f723184c790471a7da
+Security finding (validation 2) 1: declined: MEDIUM, dormant until a merge-grants entry exists; the Captain's 2026-10-18 ruling named the never list and plugin `scripts/` (kc-pr-flow, kc-ship-flow, kc-journey-map and others) is outside it; I reproduced `kc-pr-flow/scripts/github-repo-write.sh` plus its test as class script-with-test; revisit in the ADR of the first grant of script-with-test, other or docs-only (see G1)
+Security finding (validation 2) 2: declined: LOW, dormant until a merge-grants entry exists; I reproduced `docs/Dev/x.md` as docs-only with a merge line under a docs-only grant; a macOS checkout is case-insensitive; one-line fix `re.I` (see G2)
+Security finding (validation 2) 3: declined: LOW, fails closed (a traceback leaves no `next: merge ` last line, so the printed line does not merge); same as validation 1 finding 3
+Security finding (validation 2) 4: declined: LOW as the reviewer rated it, but the same defect is Codex P1 4306363862, which README step 5 blocks; I reproduced it (see G3)
+Security finding (validation 2) 5: declined: LOW, the window is one shell pipeline, the head is pinned by GitHub and `check` compares the base first; a bounded residual
+
+### Findings
+
+Dispositions by the Review-finding disposition. None is Material: field 4 (trigger evidence) fails for each, because no `merge-grants:` entry exists in any README, so no merge line can print outside a scratch repository. What would make each Material is the first grant entry.
+- G1 Deferred risk (security finding 1): the never list is the Captain's named list; `kc-*/scripts/*` and `docs/ship`, `docs/plan-flow` are outside it. `script-with-test` matches the test by name only. Reproduced. FO may raise it when the first grant ADR is drafted.
+- G2 Deferred risk (security finding 2): `docs/Dev/...` is docs-only, reproduced; the fix is case-insensitive matching.
+- G3 Deferred risk, open Codex P1 comments on this head (review:5562139252): (a) 4306363860 `Resolve grants from the fetched trunk`: `check` reads `merge-grants:` and the ADR from the working tree, so a grant the Captain removed on trunk still prints a merge line in a stale checkout; reproduced with a scratch bare origin whose `origin/main` README has no grant while the local README does. (b) 4306363862 `Fail closed when historical PR state is unreadable`: `label()` returns `pending` when `gh pr view` fails, and `check` stops only on `failure`; reproduced with a stub gh that closes a record's PR when readable (ask line) and errors on it (merge line). Both are small: (a) read README and ADR with `git show origin/<trunk>:<path>` after the fetch, or hold when they differ; (b) a distinct `unknown` state that suppresses the merge line and stays out of the statistics. No FO decline is recorded for either. README step 5 requires a repair and revalidation, or the Captain's waiver with the reason.
+- G4 Deferred risk (security findings 3 to 5): fail closed, or a one-pipeline window.
+- G5 Polish: survivors (a) and (d) above have no test row (the `gate|budget` name rule; newest-wins in the dedupe).
+- G6 Polish: doc_impact.py lists 9 documents; the implementation reports record 8; `kc-dev-flow-2/references/sd/adoption.md` has no `unaffected:` line (reported as F9 in validation 1, unchanged).
+- G7 Polish: ADR 0023 does not say that `check` reads the grant's ADR (Status Accepted, whole entry) or the Captain's 2026-10-18 list; the ruling lives in the task file only.
+- Minimal necessity (same candidate): holds, points and the per-ask record serve every merge ask now (AC-1, 2, 6). Class, grant line and `calibrate` still have no consumer until a grant exists; 35 of 35 archived PRs of this repository class never. The two cycle-1/2 rules (grant needs its ADR; wider never list) each map to a Captain ruling or a Codex P1 and a mutation that only they fail.
+
+### Minimal acceptance script
+
+Needs: this repository checkout at the path below, python3, git, `gh` signed in (read-only calls). Run in a fresh bash. Not covered: a real GitHub merge (only the saved AC-5 transcript at f3f0fa3e), any grant (none exists), the two open Codex P1 (G3), relay, subspace-web or qnow, and Spacedock's pr-merge and merge guard after an FO-run merge.
+
+```bash
+set -u
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0
+WF=$REPO/.context/dev2-adoption/worktree/docs/dev2
+ST=$WF/.spacedock-state
+H=3fd841789db9c76d863ae4f723184c790471a7da
+W=/tmp/merge-gatekeeper-accept
+export PYTHONDONTWRITEBYTECODE=1
+echo "== 1. check out the PR head"
+rm -rf $W /tmp/merge-gatekeeper-accept-task
+git -C $REPO worktree add --detach $W $H >/dev/null 2>&1; git -C $W rev-parse HEAD
+echo "== 2. word budget and decision record"
+python3 -B $W/kc-dev-flow-2/scripts/lint-skills.py | grep -E "words"
+(cd $W && python3 -B $PKG/scripts/adr_lint.py docs/adr --since 2dad59ca --require 0023; echo "adr_lint exit=$?")
+echo "== 3. the merge check's own tests (about 2-3 minutes)"
+python3 -B $W/kc-dev-flow-2/scripts/test_delivery_gate.py 2>&1 | tail -n 3
+echo "== 4. grant ADR, never list, quoted prod, deep directories, trunk fetch, re-run line"
+python3 -B $W/kc-dev-flow-2/scripts/test_delivery_gate.py GrantAdrTests NeverAddedTests CodexP1Tests RecheckTests 2>&1 | tail -n 3
+echo "== 5. the check on PR 666 itself (scratch copy of the task), then the security-review check"
+mkdir /tmp/merge-gatekeeper-accept-task && cp $ST/merge-gatekeeper.md /tmp/merge-gatekeeper-accept-task/ && cp -R $ST/merge-gatekeeper /tmp/merge-gatekeeper-accept-task/ && echo "Merge ask." > /tmp/merge-gatekeeper-accept-task/gate.txt
+python3 -B $W/kc-dev-flow-2/scripts/delivery_gate.py check /tmp/merge-gatekeeper-accept-task/merge-gatekeeper.md --pr iamcxa/kc-claude-plugins#666 --text-file /tmp/merge-gatekeeper-accept-task/gate.txt --workflow-dir $WF | cut -c1-200; echo "check exit=${PIPESTATUS[0]}"
+python3 -B $W/kc-dev-flow-2/scripts/validation_security.py check $ST/merge-gatekeeper.md; echo "validation_security exit=$?"
+echo "== 6. clean up"
+git -C $REPO worktree remove --force $W && rm -rf /tmp/merge-gatekeeper-accept-task && echo removed
+```
+
+Expected: step 1 prints the 40-hex head above. Step 2 prints `references/sd/workflow.md: 5430 of 5430 words; ...`, `22 ADR file(s) checked, 0 legacy` and `adr_lint exit=0`. Step 3 ends `Ran 73 tests in <n>s` and `OK`. Step 4 ends `Ran 18 tests in <n>s` and `OK`. Step 5: while PR 666 is a Draft, `the PR is a draft`, a `next: hold the ask` line and `check exit=1`; once it is Ready with CI green, exit 0 with `validation security review security/validation-2.yaml: 5 findings, 5 declined, 0 decisions`, up to 12 `point:` lines and a `point: more:` line, `class: never`, a `record:` line and last line `next: ask for merge with this text.`; then `validation_security exit=0` (the script is run from the PR checkout: the installed 0.24.0 package has no validation_security.py) with the same `validation security review security/validation-2.yaml: 5 findings, 5 declined, 0 decisions` line. Step 6 prints `removed`.
+
+Observed, run exactly as written above in a fresh `env -i ... bash --noprofile --norc` shell:
+
+```
+== 1. check out the PR head
+3fd841789db9c76d863ae4f723184c790471a7da
+== 2. word budget and decision record
+references/sd/workflow.md: 5430 of 5430 words; no unlisted passage repeats it
+22 ADR file(s) checked, 0 legacy
+adr_lint exit=0
+== 3. the merge check's own tests (about 2-3 minutes)
+Ran 73 tests in 107.225s
+
+OK
+== 4. grant ADR, never list, quoted prod, deep directories, trunk fetch, re-run line
+Ran 18 tests in 26.154s
+
+OK
+== 5. the check on PR 666 itself (scratch copy of the task), then the security-review check
+the PR is a draft
+next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.
+check exit=1
+validation security review security/validation-2.yaml: 5 findings, 5 declined, 0 decisions
+validation_security exit=0
+== 6. clean up
+removed
+```
+
+Step 5 on the Ready path could not run live (PR 666 is a Draft; I do not mark it ready). I ran the same `check` on a scratch copy of this task with the real PR facts, `isDraft` set false, behind a stub gh: it printed `validation security review security/validation-2.yaml: 5 findings, 5 declined, 0 decisions`, 12 `point:` lines and `point: more: 21 not shown`, `class: never`, a `record:` line and `next: ask for merge with this text.`
+
+### Summary
+
+PASSED at 3fd84178 against AC-1 to AC-12 and both Captain rulings: 72 of 76 of my mutations fail the suite (the four survivors are two Polish gaps and two redundant guards), and the head passes lint and every package test on a clean merge into origin/main ffd620b4. The three earlier Codex P1 hold fixed. A new Codex review of this head left two P1 (grants read from the working tree, unreadable historical state treated as pending); I reproduced both, class them Deferred risk because no grant exists, and README step 5 still requires FO to repair and revalidate them or take the Captain's waiver. The security review (validation 2) has five findings, all declined with reasons.
