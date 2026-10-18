@@ -358,3 +358,12 @@ The printed merge line now re-runs the check before it merges, proven by executi
 ### Summary
 
 AC-5 ran on a real private repository: the printed line refuses after a head change, GitHub refuses a stale `--match-head-commit`, and the re-run on the new head merges. The run exposed and fixed a prose-after-command defect in the printed line; two more roborev Highs were met (threshold format fixed, calibration at check time declined). The throwaway repository `iamcxa/kc-merge-gate-ac5-throwaway-20261018` is left for the Captain to delete.
+
+## Stage Report: implementation (cycle 5)
+
+- DONE: Run kc-dev-flow-2/extensions/roborev/roborev_gate.py once on head 1beabd97 and record its evidence= line; if it reports no High, commit the stage report and stop; if it again reports the check-time calibration point (or any High), do not change code: report the finding text and your reasons, and FO takes it to the Captain as a waive-or-fix decision
+  `clean on 1beabd975; evidence=roborev:838` (exit 0, base 2dad59ca): no High and no finding, the check-time calibration point was not raised again. No code changed in this cycle. Head 1beabd97 is the PR head; CI green there (run 39099866464).
+
+### Summary
+
+Roborev is clean on the PR head 1beabd97, so the declined check-time calibration point of roborev:837 did not recur and no waiver is needed.
