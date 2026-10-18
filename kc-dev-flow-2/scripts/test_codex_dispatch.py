@@ -259,9 +259,12 @@ class EvidenceRouteTest(unittest.TestCase):
         self.write("policy", policy)
         binding["policy_sha256"] = hashlib.sha256((self.root / "policy.json").read_bytes()).hexdigest()
         self.write("capabilities", {"arguments": ["task_name", "message", "fork_turns", "model", "reasoning_effort"], "supported_models": {"gpt-6.1-sol": ["high"]}})
-        self.requests = {"spawn_agent": {"task_name": "disposable_producer", "message": "original spawn pointer", "fork_turns": "none", "model": "gpt-6.1-sol", "reasoning_effort": "high"},
+        helper = {"name": "Disposable Producer", "prompt": "original spawn pointer"}
+        initial = dict(cd.convert(helper, binding), stock_helper=helper)
+        self.assertEqual(initial["spawn_args"], {"task_name": "disposable_producer", "message": "original spawn pointer", "fork_turns": "none", "model": "gpt-6.1-sol", "reasoning_effort": "high"})
+        self.requests = {"spawn_agent": initial["spawn_args"],
                          "followup_task": {"target": self.producer, "message": "original followup pointer"}}
-        self.write("initial-wrapper", {"spawn_args": self.requests["spawn_agent"], "helper_name": "fixture-helper", "stock_helper": {"name": "fixture-helper", "prompt": "original spawn pointer"}, "binding": binding})
+        self.write("initial-wrapper", initial)
         self.write("host-receipt", {"returned_handle": self.producer, "binding": binding, "requested_spawn_args": self.requests["spawn_agent"]})
         self.write("followup-wrapper", {"followup_args": self.requests["followup_task"], "stock_helper": {"prompt": "original followup pointer"}, "binding": binding, "reuse": True})
         entity = self.root / "entity.md"
@@ -310,6 +313,38 @@ class EvidenceRouteTest(unittest.TestCase):
 
     def test_plaintext_matching_requests_and_successful_results_pass_fixture_control(self):
         self.assertEqual(self.invoke()[0], 0)
+
+    def test_generated_normalized_name_and_exact_prompt_pass(self):
+        binding = evidence.read(self.root / "initial-wrapper.json")["binding"]
+        helper = {"name": ":: Disposable Producer ::", "prompt": " original spawn pointer\n"}
+        initial = dict(cd.convert(helper, binding), stock_helper=helper)
+        self.assertEqual(initial["spawn_args"], {"task_name": "disposable_producer", "message": " original spawn pointer\n", "fork_turns": "none", "model": "gpt-6.1-sol", "reasoning_effort": "high"})
+        self.write("initial-wrapper", initial)
+        host = evidence.read(self.root / "host-receipt.json")
+        host["requested_spawn_args"] = initial["spawn_args"]
+        self.write("host-receipt", host)
+        self.native("spawn_agent", initial["spawn_args"], [json.dumps({"task_name": self.producer})])
+        self.assertEqual(self.invoke()[0], 0)
+
+    def test_agreed_native_spawn_must_match_converter_binding(self):
+        base = evidence.read(self.root / "initial-wrapper.json")
+        host = evidence.read(self.root / "host-receipt.json")
+        for change in ({"model": None}, {"model": "different-model"}, {"reasoning_effort": None}, {"reasoning_effort": "medium"},
+                       {"fork_turns": "all", "model": None, "reasoning_effort": None}, {"task_name": "wrong_task"}, {"extra_field": True}):
+            with self.subTest(change=change):
+                initial = copy.deepcopy(base)
+                for key, value in change.items():
+                    if value is None:
+                        initial["spawn_args"].pop(key)
+                    else:
+                        initial["spawn_args"][key] = value
+                self.write("initial-wrapper", initial)
+                host["requested_spawn_args"] = initial["spawn_args"]
+                self.write("host-receipt", host)
+                self.native("spawn_agent", initial["spawn_args"], [json.dumps({"task_name": self.producer})])
+                code, out, err = self.invoke()
+                self.assertEqual((code, out), (1, ""))
+                self.assertIn("HOLD:", err)
 
     def test_async_completion_in_post_followup_observation_still_passes(self):
         observed = evidence.read(self.root / "observed.json")

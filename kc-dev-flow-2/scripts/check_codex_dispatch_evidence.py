@@ -13,7 +13,7 @@ from pathlib import Path
 import subprocess
 import sys
 
-from codex_dispatch import resolve
+from codex_dispatch import convert, resolve
 
 
 def require(condition, message):
@@ -104,7 +104,8 @@ def main(argv=None):
         require(resolve(args.policy, args.capabilities, "implementation", binding["requested_model"], binding["requested_reasoning"]) == binding, "current policy/capabilities differ from bound input")
         require((binding["model"], binding["reasoning_effort"]) == ("gpt-6.1-sol", "high"), "pilot requires Sol/high")
         require(host["binding"] == binding and host["requested_spawn_args"] == initial["spawn_args"], "initial requested receipt mismatch")
-        require(initial["spawn_args"]["message"] == initial["stock_helper"]["prompt"] and initial["helper_name"] == initial["stock_helper"]["name"], "stock prompt/name changed")
+        require(initial["helper_name"] == initial["stock_helper"]["name"], "stock helper name changed")
+        require(initial["spawn_args"] == convert(initial["stock_helper"], binding)["spawn_args"], "initial spawn arguments differ from verified binding/stock helper")
         producer, _ = native_call(args.native_calls, "spawn_agent", initial["spawn_args"], host["returned_handle"])
         observed = [r for r in read(args.observed) if r["handle"] == producer]
         require(len(observed) == 1, "missing/ambiguous producer metadata")
