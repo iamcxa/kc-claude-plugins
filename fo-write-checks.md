@@ -15,6 +15,17 @@ gates:
                 id: briefing:fo-write-checks:backlog:attempt-1:revision-1
                 digest: sha256:1b87bc5fc0d24af8855070cd7ff9414049a99dbde3f9de9ba738aa1e36d544eb
                 room-ref: ./fo-write-checks/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-write-checks:backlog:1
+                briefing: briefing:fo-write-checks:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-18T16:56:47.13191Z"
+                decision: approve
+                reason: Captain approved in chat (「批准這些作為第三批」) the five batch-3 backlog gates presented together, accepting the recommended profiles and the stated grouping and order
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 Filed for batch 3 on the Captain's 「先走批次三規劃」 (chat, 2026-10-19), after FO reported at the batch-2 close that its own process mistakes repeat across tasks and should move from reminders into a script; the Captain enabled the state laws check on this repository the same day (「可以那就只開啟這個repo」).
