@@ -1,0 +1,31 @@
+Observer report: ui-design-review-in-ideation. Window: dfd1e289 (task added, 2026-10-17 10:10) to HEAD 97ddcb90 (2026-10-18 11:03). Task is not archived.
+
+ok | rule: "A Captain ruling is his reply to the question it settles, given after that question was put" (Review-finding disposition, FO steps) | evidence: ledger has 3 rows for the task, all by person:captain: backlog 「准」, ideation 「那就照建議」 (after he asked FO to restate a decision), validation 「批准並合併」; each question is in the briefing | (f2b242b0, 1c9b4e54, 97ddcb90)
+
+ok | rule: "His plain approval accepts that recommendation only when the gate question says so" (FO steps: review findings) | evidence: ideation question "Approving accepts the recommendations D1 ..., D2 ..., D3 ..., and FO's implementation order"; validation question "Approving accepts FO's recommendation to decline the Deferred risks and Polish below" | (1c9b4e54, 97ddcb90)
+
+ok | rule: "FO writes `Override: ...` when the Captain chooses differently from the recommendation" | evidence: all three rulings accept the recommendation; ledger `override: null`; no `Override:` line in the task | (ledger)
+
+ok | rule: a decision by agent:first-officer carries its grant; `Precedent:` quotes an ADR Words line | evidence: no agent:first-officer row in the ledger; 0 `Precedent:` lines in the task | (HEAD)
+
+ok | rule: peers listed in `extensions:`, so no Captain ruling may quote a peer's words in place of his | evidence: the rulings quote only his words. The pass rule is called "the Captain's relayed proposal" in the replay pre-registration, but he then ruled D1 himself at the ideation gate | (74413c4f, 1c9b4e54)
+
+violation | rule: "when the implementation dispatch is built and not earlier; ... FO records each ... `ADR: NNNN` line under `## Number guards` in the task and repeats the lines as dispatch scope notes" (FO steps: number guards) | evidence: "ADR: 0022" was written at 2026-10-17 15:31:17, and implementation-1 was built at 21:50:35. implementation-1 holds no `ADR: 0022` scope-notes line; implementation-2 is a follow-up "adding the reserved number line" | (cdf3f576, 46c7fe82, e4383ecf)
+
+violation | rule: "Repairs require worker investigation without candidate mutation, distinct FO `fix` authorization ..., then independent validation" (FO steps: review findings, step 3) | evidence: cycles 1 to 3 each have a phase-1 investigation dispatch (implementation-3, -5, -7) then a fix authorization (-4, -6, -8). The roborev:830 High repair has none: implementation-9 is a single fix dispatch, "FO now takes it into this cycle because the fix is one read". `### Feedback Cycles` still ends at Cycle 3, which says the same finding was "declined ... into backlog task ui-design-review-round3-followups" | (e234bce9, e7e80f36)
+
+violation | rule: "Field 3 uses `value-ac[AC-N]`, `captain-ruling[YYYY-MM-DD]`, or `contract[...]` plus a nonblank claim" (Review-finding disposition) | evidence: Cycle 3 says "a regression against AC-2, assessed Material by FO on the chief-engineer's evidence". It uses no `value-ac[...]` form, and validation-3 had written "field 3 is not established" | (e7e80f36, e931e295)
+
+violation | rule: FO may decline Deferred risk or Polish "in the existing committed gate summary, naming the finding, reason, candidate revision and the lines or evidence it rests on" (FO steps: review findings, step 2) | evidence: the gate summary says "Declined, with reasons:" but gives no reason text for 3 of 4 items. For example: "Polish, a brief wording and a preview value with a trailing comment". The head ab8b6751 is in the question, and fuller reasons are in the backlog task | (e0f2bd2b, 8c0993cd)
+
+ok | rule: "From round 3 ... FO declines it in the committed gate summary ... files it as a new backlog task ...; FO counts rounds and records the count in the committed gate summary" (step 5) | evidence: backlog task ui-design-review-round3-followups holds the finding and reason; the gate summary says "External rounds: Codex 4 (... round 3 ... first declined then fixed when roborev rated it High ...)" and "RoboRev ... its High counted as P1 and fixed" | (beb8a792, 8c0993cd, e0f2bd2b)
+
+ok | rule: "FO records each chief-engineer ... call under the task's `## FO alignment` as `Reviewer: <agent> <model> <date> — <question>`" (Stages) | evidence: "Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-17 — third repair cycle on #663 ..." (the date differs from Cycle 3's "2026-10-18" ruling date) | (183a6338)
+
+ok | rule: dispatch records carry `Dispatched:` full SHA, `Model:`, Checklist, Scope notes, `Package root:`, the completion-message line and a validation `Candidate:` | evidence: all 14 records checked by grep; `dispatch_records.py --names` prints nothing on each | (dispatch/*)
+
+observed | rule: Reviewer line (Surfaces `db`, stronger-model ideation, or validation sent back twice) | evidence: none of the three applied. Ideation ran on sonnet, `Surfaces: none`, and no validation was sent back. A `Reviewer:` line exists anyway (183a6338)
+
+can't tell | rule: "FO runs `design_surfaces.py check --seed`", `package_version.py` and `workflow_checkout.py` before dispatch, "runs the stage's minimal acceptance script ... then presents every step in full beside its observed output", `delivery_gate.py check` before the merge ask, and "marks the PR ready" | evidence: absent from state. The only script-run record is the validator's "Observed (run as written in `env -i`)", whose outputs are abbreviated ("PASS: ..."); the briefing summary says "FO ran the acceptance script". Chat, the PR and the FO's shell sit outside state.
+
+Coverage: read fully: README sections Stages, backlog/ideation/validation/done, Review-finding disposition, FO steps (review findings, decision records, number guards), Captain amendments, Delivery authority, Extensions; the task front matter, FO alignment, Scope, Feedback Cycles, Number guards; the 3 briefings; the ledger rows; all 14 dispatch records (by grep plus head). Sampled: the task body (Design, Stage Reports) was read only around FO-written hunks and validation reports. Not evaluated: ADR 0022 content, the PR, the Captain's chat. Every `state:` commit was diffed over the window. No `## Captain amendments` entry exists, and none was owed on the record.
