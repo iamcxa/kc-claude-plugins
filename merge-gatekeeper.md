@@ -680,3 +680,104 @@ PASSED at 3fd84178 against AC-1 to AC-12 and both Captain rulings: 72 of 76 of m
 ### Summary
 
 #666 now holds, points, classifies and records, and always asks: the grant half is deleted and reachable at 3fd84178. Delivery_gate.py and its tests lost 658 lines net (687 deleted, 29 added over 3fd84178), the workflow.md budget step is -29 and the merge-ask moment is 390 words. One roborev High is disputed with a run; everything else is green on b97068de.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independent verdict on PR #666 head b97068de against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at b97068de1d2f91bc8c9c3a9cbc67b59f75b2a048 with one blocker for FO: Codex P1 4307169171 (review:5563145962, `ci_problem` accepts a partial rollup) is open on this head, and README step 5 needs a repair and revalidation or the Captain's waiver; I class it Deferred risk, not Material (F1), and cannot waive it. AC-1, 2, 6, 10, 13, 14, 15 hold by my runs; AC-3, 4, 5, 7, 8, 11, 12 are superseded by amendment 1 (no replacement for 4, 5, 7, 11); AC-9 does not apply (no model arm: `git grep` finds no merge-judge in the tree).
+  Suites (python3 -B, 600 s cap each) on the head and on a clean merge of it into current origin/main ffd620b4 (no conflict): lint-skills.py 5418 of 5418 words on both; every CI-listed test file rc 0, 23 of 23 on the head and 24 of 24 on the merge (test_role_triggers.py exists only on main); test_delivery_gate.py 44 tests OK both; test_sd_dispatch.py `--sd-plugin-root /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0`, binary /Users/kent/.local/bin/spacedock 0.27.2; test_observer_recovery.py with SPACEDOCK_BIN the same binary. CI on the head: all four checks pass (unit tests run 39128843648). comment_ratio.py 0 comment lines of 592 code lines, exit 0; number_guards.py check PASS (base ffd620b4); design_surfaces.py check exit 0; dispatch_records.py 16 records complete.
+  Falsifiers I ran: 57 mutations of delivery_gate.py in scratch copies (each syntax-checked, each against all 44 tests, `-f`, python3 -B): 54 RED, 3 survived. AC-1 twelve (empty rollup, SKIPPED/NEUTRAL, StatusContext, ci hold, draft, mergeable, base, file count, head vs candidate, PR head moved, no-README hold; one survivor); AC-2 eleven (each matcher, the cap); AC-6 six (no write, numbering, class, points, head not stored, verdict); AC-13 twenty-three (each never pattern, docs `.md` rule, rename `previous_filename`, own-test rule, release/prod/db never, pagination; two survivors); AC-15 three (`clean`, `tok` raw, `tok` uncapped); never-merges two (a `gh pr merge` call added, a merge line printed as the last line): RED. Survivors: (a) dropping `status == "COMPLETED"` (equivalent, GitHub gives a null conclusion until a run completes); (b) the `(?:gate|budget)` name pattern, no row decides on it; (c) `adr-path` in the extra never patterns, no row. (b) and (c) are Polish (F4).
+  Check never prints a merge line and never calls `gh pr merge`: no `gh pr merge` argv in `delivery_gate.py` or any run (stub `MERGE_CALLED` marker absent in all my probes); the last line is `ASK` on every exit 0 path; the two mutations above fail the suite. Retained code is unchanged from the validated 3fd84178: an AST comparison shows every hold, point, class, never-list, record and escape function byte-identical; only `pr_facts`, `check` and `main` differ, by the grant removal.
+  roborev 855 (High: the documented command omits `--workflow-dir`): not reproduced for the documented use. On a scratch split-root task (README at the grandparent, a README without frontmatter and a `.git` file in the state folder) and a flat task, `check` with an absolute task path and no `--workflow-dir` exits 0, finds the README and classes `docs/dev2/README.md` never in both. The one failing form is a bare task filename run from inside the state folder: exit 2, "cannot find the workflow README with a trunk: ... or in --workflow-dir", no record, fail closed (F2).
+  AC-10 recount with my own script (`len(text.split())` on `git show` of each passage): base 215+57+90+33 plus check output 20 = 415; head 204+39+90+33 plus 24 = 390 against limit 404; workflow.md 5447 to 5418 against the lowered budget step -29; other moments untouched (`_mods`, pr_watch.py, learn not in the diff). AC-14: replay-1.txt read (32 tasks, class never on all, rule arm says merge on 0); the replay script is not saved; I ran the candidate on 6 archived tasks with live read-only `gh` files and mergeability forced MERGEABLE: #650 and #659 class never, #632, #628, #555, #549 exit 2 on no Candidate line (they predate it), matching replay-1 (F6). adr_lint: see the next item.
+  Implementer's stated limits, judged: roborev 855 disputed (above, accepted as Polish); the equivalent `COMPLETED` survivor (accepted); `--workflow-dir` and the `verdict` and `model` record fields are listed under without-it unanswered in the PR body and have no consumer until the POC task (F3, Captain named the per-ask record in amendment 1: retained). Events outside the brief: none by me; the reviewer wrote nothing and ran no script.
+- DONE: Re-run the prod validation security review with the Reach brief from origin/main's kc-dev-flow-2/skills/validation/profiles/prod.md as security/validation-3.yaml and write its lines
+  Dispatched kc-pr-flow:tob-security-reviewer once, model sonnet, with the Reach brief verbatim from origin/main ffd620b4; the report is saved as security/validation-3.yaml with only the harness indentation removed (3 findings: 1 MEDIUM, 2 LOW). Lines are under `### Security review (validation)`.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and observed output are under `### Minimal acceptance script`. adr_lint.py `docs/adr --since 2dad59ca` (the PR's merge-base) printed "21 ADR file(s) checked, 0 legacy", exit 0; `--since origin/main` the same, exit 0; `--require 0023` prints "required ADR 0023 does not exist", exit 1, as the dispatch expects (ADR 0023 is not landed; `## Number guards` still reserves it). Findings are under `### Findings`.
+
+### Security review (validation)
+
+Security review (validation): security/validation-3.yaml at b97068de1d2f91bc8c9c3a9cbc67b59f75b2a048
+Security finding (validation 3) 1: Needs decision: a rollup with only a fast green check passes `ci_problem` before the test jobs are created (reproduced); repair now (hold on `mergeStateStatus` not CLEAN, or compare the rollup with the required checks) or the Captain waives it, same defect as Codex P1 4307169171 (see F1)
+Security finding (validation 3) 2: declined: LOW, nothing reads `verdict` (git grep); it is the per-ask record field AC-6 names, and the Captain kept the per-ask record in amendment 1; revisit when a consumer exists (see F3)
+Security finding (validation 3) 3: declined: LOW, reproduced as a stall only (`"a." * 20000` takes 1.0 s, 40000 takes 4.0 s in `NOT_RUN`), needs a pathological worker-written line, and the gate fails closed; revisit if any report quotes outside text unbounded (see F3)
+
+### Findings
+
+Dispositions by the Review-finding disposition. None is Material: field 4 (trigger evidence) fails for each, as stated per finding.
+- F1 Deferred risk (security finding 1; open Codex P1 4307169171 on `delivery_gate.py` line 218, review:5563145962; no FO decline is recorded for it): reproduced with a stub `gh` whose rollup holds one green `lint` run: exit 0, ask line. The base had no machine CI check and the README told FO to wait for the jobs; this head removes that README clause (workflow.md, "and waits for those jobs to finish before asking for merge") and leaves the script as the only enforcement. Measured on 6 recent PRs of this repository (read-only `gh api`): the last check run started 2 to 5 s after the `ready_for_review` event (PR 657: ready 05:51:52, last start 05:51:56; PR 659: 14:06:52, 14:06:57), so the window is seconds; CI here also runs on drafts, so the rollup already holds same-head test results. Branch protection on main requires only two contexts (`version parity ...`, `multi-profile route gate ...`), so GitHub would not stop a merge missing `unit tests (python3)`. Not Material: no trigger observed and no accepted criterion (AC-1 names a check run on the head, not an unregistered one). It becomes Material when `check` is seen passing before an adopter's test jobs register (CI that skips drafts). Small repair: hold on `mergeStateStatus` other than CLEAN, or keep one README sentence telling FO to wait for the jobs; FO or the Captain chooses repair or waiver.
+- F2 Polish (roborev 855): documented use works on split-root and flat; the bare-filename form fails closed with a message naming `--workflow-dir`. FO may decline it in the gate summary.
+- F3 Deferred risk (security findings 2 and 3): `verdict` has no consumer and reads "merge" for class `other` and `script-with-test` when no point prints; it becomes Material if a later change lets FO skip the Captain on it (the POC task `merge-grant-need-poc` is where that would land). The quadratic `NOT_RUN` and `AC_NOT_RUN` patterns stall on 40 KB lines; no report line this long exists in state.
+- F4 Polish: mutation survivors (b) the `gate|budget` name rule and (c) `adr-path` have no test row.
+- F5 Polish: doc_impact.py lists 8 documents; the cycle 1 report recorded `unaffected` for 7 of them (ADR 0020, README.md, maintain-flow, learning.md and three nightwatch and pr-flow docs); `kc-dev-flow-2/references/sd/adoption.md` (names test_sd_dispatch.py only to say how to run it) has no line.
+- F6 Polish: the replay script is not saved, only its output; the bite rows #375 #376 #378 #379 #420 #423 (FO behaviours no hold sees) are absent from replay-1.txt rather than reported not caught; against live `gh` a merged PR reports mergeability UNKNOWN, so the saved replay needs mergeability forced.
+- F7 Polish: `points_for` lists deferred, decline and not-run lines before the `profile` and `path` points, so past 12 of them the cap drops those two; the `class:` line still prints. Measured on this task at the head, stub `gh` with the PR ready: 12 `point: deferred` lines taken from earlier cycles' reports, `point: more: 28 not shown`, no `profile` or `path` point. Polish because the Captain still reads the gate summary and `class: never`; it weakens the "what to look at" goal for any task with a long report history.
+- Minimal necessity (same candidate): the CI, draft, conflict, base and file-count holds, the points and the per-ask record serve every merge ask now and map to the counted accidents (#381 draft, #1175 base, the refused merges) and AC-1, 2, 6. Class, the never list and the record's `verdict` and `model` have no consumer until a grant exists, and 35 of 35 archived PRs class never; the Captain named them in amendment 1, so they stay. Goal sufficiency: the two goals are met only in part by design (fewer accidents: holds; less eye review: points, not yet measured), which the POC task measures.
+- Inconsistency for FO: none this round (profile prod in the dispatch and the task).
+
+### Minimal acceptance script
+
+Needs: this repository checkout at the path below, python3, git, `gh` signed in (read-only calls). Run in a fresh bash. Not covered: a real GitHub merge (the check never merges), any grant (the code is parked at 3fd84178), the Ready path of step 5 live while PR 666 is a Draft, relay, subspace-web or qnow, and Spacedock's pr-merge after an FO-run merge.
+
+```bash
+set -u
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0
+WF=$REPO/.context/dev2-adoption/worktree/docs/dev2
+ST=$WF/.spacedock-state
+H=b97068de1d2f91bc8c9c3a9cbc67b59f75b2a048
+W=/tmp/merge-gatekeeper-accept
+T=/tmp/merge-gatekeeper-accept-task
+export PYTHONDONTWRITEBYTECODE=1
+echo "== 1. check out the PR head"
+rm -rf $W $T
+git -C $REPO worktree add --detach $W $H >/dev/null 2>&1; git -C $W rev-parse HEAD
+echo "== 2. word budget and decision records"
+python3 -B $W/kc-dev-flow-2/scripts/lint-skills.py | grep -E "words"
+(cd $W && python3 -B $PKG/scripts/adr_lint.py docs/adr --since 2dad59ca; echo "adr_lint exit=$?")
+echo "== 3. the merge check's own tests (about 1-2 minutes)"
+python3 -B $W/kc-dev-flow-2/scripts/test_delivery_gate.py 2>&1 | tail -n 3
+echo "== 4. the check never merges: no gh pr merge call, last line is always the ask"
+python3 -B $W/kc-dev-flow-2/scripts/test_delivery_gate.py -v HoldTests.test_a_ready_green_mergeable_pr_on_the_trunk_passes InjectionTests.test_no_value_from_a_path_title_or_report_line_adds_a_next_line_or_a_control_byte 2>&1 | grep -E "ok$|^Ran|^OK|FAIL"
+echo "== 5. the check on PR 666 itself (scratch copy of the task), then the security-review check"
+mkdir $T && cp $ST/merge-gatekeeper.md $T/ && cp -R $ST/merge-gatekeeper $T/ && echo "Merge ask." > $T/gate.txt
+python3 -B $W/kc-dev-flow-2/scripts/delivery_gate.py check $T/merge-gatekeeper.md --pr iamcxa/kc-claude-plugins#666 --text-file $T/gate.txt --workflow-dir $WF | cut -c1-200; echo "check exit=${PIPESTATUS[0]}"
+python3 -B $W/kc-dev-flow-2/scripts/validation_security.py check $ST/merge-gatekeeper.md; echo "validation_security exit=$?"
+echo "== 6. clean up"
+git -C $REPO worktree remove --force $W && rm -rf $T && echo removed
+```
+
+Expected: step 1 prints the 40-hex head above. Step 2 prints `references/sd/workflow.md: 5418 of 5418 words; ...`, `21 ADR file(s) checked, 0 legacy` and `adr_lint exit=0`. Step 3 ends `Ran 44 tests in <n>s` and `OK`. Step 4 lists 2 tests ending `ok`, then `Ran 2 tests` and `OK`. Step 5: while PR 666 is a Draft, `the PR is a draft`, a `next: hold the ask` line and `check exit=1`; once it is Ready with CI green, exit 0 with up to 12 `point:` lines, `class: never`, a `record:` line and last line `next: ask for merge with this text.`; then `validation security review security/validation-3.yaml: 3 findings, 2 declined, 1 decisions` and `validation_security exit=0` (the script is run from the PR checkout: the installed 0.24.0 package has no validation_security.py). Step 6 prints `removed`.
+
+Observed, run exactly as written above in a fresh `env -i ... bash --noprofile --norc` shell:
+
+```
+== 1. check out the PR head
+b97068de1d2f91bc8c9c3a9cbc67b59f75b2a048
+== 2. word budget and decision records
+references/sd/workflow.md: 5418 of 5418 words; no unlisted passage repeats it
+21 ADR file(s) checked, 0 legacy
+adr_lint exit=0
+== 3. the merge check's own tests (about 1-2 minutes)
+Ran 44 tests in 49.657s
+
+OK
+== 4. the check never merges: no gh pr merge call, last line is always the ask
+test_a_ready_green_mergeable_pr_on_the_trunk_passes (__main__.HoldTests.test_a_ready_green_mergeable_pr_on_the_trunk_passes) ... ok
+test_no_value_from_a_path_title_or_report_line_adds_a_next_line_or_a_control_byte (__main__.InjectionTests.test_no_value_from_a_path_title_or_report_line_adds_a_next_line_or_a_control_byte) ... ok
+Ran 2 tests in 0.402s
+OK
+== 5. the check on PR 666 itself (scratch copy of the task), then the security-review check
+the PR is a draft
+next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.
+check exit=1
+validation security review security/validation-3.yaml: 3 findings, 2 declined, 1 decisions
+validation_security exit=0
+== 6. clean up
+removed
+```
+
+### Summary
+
+PASSED at b97068de: every live criterion holds under my own runs, 54 of 57 mutations fail the suite (one equivalent survivor, two Polish gaps), and the head passes lint and every package test on a clean merge into origin/main ffd620b4. The narrowed PR keeps the validated hold, point, class and record code byte-for-byte; the grant half is gone. Codex P1 4307169171 and security finding 1 describe one defect: a partial check rollup passes the CI hold, and the README clause that told FO to wait is removed. I class it Deferred risk, so FO and the Captain choose a small repair with a new candidate or a recorded waiver before the merge ask.

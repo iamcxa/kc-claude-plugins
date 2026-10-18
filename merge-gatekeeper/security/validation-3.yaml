@@ -1,0 +1,88 @@
+tob_security_review:
+  pr: 666
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 5
+  findings:
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 215
+      severity: MEDIUM
+      category: race-condition
+      title: "CI check can pass on a partial rollup right after the PR is marked ready (the workflow.md sentence that waited for the jobs is removed)"
+      description: |
+        `ci_problem()` only inspects the items already present in `statusCheckRollup`. It does not read the required-check list (the branch protection or ruleset). A grep for "required" in delivery_gate.py finds only the hold text. `check` therefore exits 0 whenever every check run that exists at that instant is COMPLETED and SUCCESS.
+        This PR also deletes the workflow.md clause "waits for those jobs to finish before asking for merge" and leaves the script as the only enforcement. When CI skips drafts, the test jobs are created only after `gh pr ready`. If `check` runs in the gap, the rollup can hold only a fast job such as lint, or checks left over from earlier events on the same SHA. All of those can be green while the test jobs are not yet registered.
+        The result is a record with `verdict` "merge" (if there are no points), a printed ask line, and a message that the required CI is green.
+        pr_watch.py's own docstring already admits this gap: "a check that starts later is missed".
+        The gap is bounded. `mergeable` and the merge ask itself still pass through the Captain, and the script never merges.
+      attack_scenario: |
+        1. A contributor, or a flaky or racy workflow trigger, leaves a PR whose head SHA has one quick green check, for example a lint workflow with no path filter.
+        2. FO marks the draft ready and runs `delivery_gate.py check` before the test workflows are queued.
+        3. The rollup is non-empty and all green, so the script exits 0 and prints "next: ask for merge with this text."
+        4. The Captain is asked to merge on a head whose test jobs have not run.
+        5. Result: untested or failing code can be merged. Only the Captain's own check, or a server-side required-check rule, stops it.
+      blast_radius: "MEDIUM"
+      recommendation: |
+        Compare the rollup with the repository's required checks, for example `gh api repos/<repo>/branches/<base>/protection/required_status_checks` or the rules API, and hold when a required context is missing from the rollup.
+        As a cheaper fallback, hold when `mergeStateStatus` is not CLEAN. Use `gh pr view --json mergeStateStatus`, which already reflects branch protection.
+        Also keep a sentence in workflow.md that FO waits for the jobs it expects before running `check`.
+
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 340
+      severity: LOW
+      category: other
+      title: "Saved record sets verdict 'merge' for any class except 'never', including class 'other'"
+      description: |
+        `verdict = "merge" if not points and cls != "never" else "ask"`. A change to auth, payment or runtime application code that has no point-triggering text, is not a prod or db task, and does not touch a NEVER_PATH entry classifies as "other" or "script-with-test" and gets `verdict: merge`.
+        NEVER_PATH is a denylist of config, hook and doc paths. It does not cover package manifests, lockfiles, Dockerfile or deploy config, Netlify config, `.env*`, or auth and payment source.
+        "script-with-test" is satisfied by a same-basename `test_<name>` file anywhere in the PR, whatever its contents.
+        The docstring says "by allowlist", but only the docs-only and script-with-test branches are allowlisted. "other" falls through to "merge".
+        At b97068de nothing reads `verdict` (git grep finds no consumer outside the tests). The record is written with `model: "not run"`. This is therefore a latent forward-looking weakness, not an exploit today.
+        It becomes a real bypass if a later change makes FO skip the Captain on `verdict: merge`.
+      attack_scenario: |
+        1. An outsider submits a PR that changes a dependency pin in package.json, or `src/auth/session.py` plus a trivial `tests/test_session.py`.
+        2. The PR has no declines or "not run" text, is not a prod task, and matches no NEVER_PATH.
+        3. The record is saved as class "other" or "script-with-test" with `verdict: merge`.
+        4. If a downstream consumer auto-approves on `verdict: merge`, the change merges without Captain scrutiny.
+      blast_radius: "LOW"
+      recommendation: |
+        Set `verdict` to "merge" only for the allowlisted classes (docs-only, and script-with-test limited to non-denylisted paths), and make "other" return "ask".
+        Add package manifests, lockfiles, deploy config and secrets-bearing files to the denylist, or invert it so "never" is the default.
+        Do not let any consumer treat `verdict` as authority until then.
+
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 160
+      severity: LOW
+      category: other
+      title: "Quadratic regexes run over task and gate text; one of them can hang the gate on a long token"
+      description: |
+        `NOT_RUN` (`\b[\w.-]+ not run:\s*\S`) scans from every word-character start to the end of a long unbroken token, which is O(n^2) on that token.
+        `AC_NOT_RUN` (`(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b`) is O(k·n) on a long line with many "acceptance" occurrences.
+        Both run over `prose`, which is the task's validation stage reports plus the gate text FO writes. Those can quote PR bodies, review comments or tool output.
+        A very long token or line makes `check` run for minutes. The gate fails closed because the ask never prints, but the Captain's merge ask is blocked until someone kills the process.
+        The attacker must get long content into a worker-written report or FO's text. I did not find a direct outsider path, so the impact is a stall, not a bypass.
+      attack_scenario: |
+        1. Attacker-controlled text of about 100 KB with no whitespace, or with many "acceptance" tokens and no "not run", gets quoted into a validation report or the gate text.
+        2. `delivery_gate.py check` runs `NOT_RUN.search` or `AC_NOT_RUN.search` over each such line.
+        3. Python's regex engine backtracks quadratically (not run by me, from reading the patterns), and the gate stalls.
+      blast_radius: "LOW"
+      recommendation: |
+        Cap each line scanned (for example `l[:2000]`), or rewrite the patterns with a bounded repeat such as `[\w.-]{1,64}` and `.{0,500}`. Alternatively use `str.find` for the "not run" part.
+
+  clean_patterns:
+    - "Routes and public surface: the change adds no listener, HTTP route, hosted file or published document. It extends a local CLI that FO runs and that reads PR metadata through `gh`, so there are no handlers outside the diff for an outsider to reach. It therefore has no write path for outsiders (comments, sessions, rooms, records, storage) and no cap to name. The only write is one `merge/ask-<N>.json` file under the task folder."
+    - "Command execution: `gh` and `git` are invoked as argv lists with no shell. `--pr` is validated by the `PR` regex (`[\\w.-]+/[\\w.-]+#\\d+`) before it reaches `gh pr view` or `gh api`. `--head` is validated as 7-40 hex characters. There is no eval, exec or shell=True."
+    - "Output injection: PR-controlled strings (title, branch, check names, filenames, `mergeable`, `baseRefName`) go through `tok()` (at most 6 words, 80 characters, `repr`) and `clean()`, which escapes every non-printable character including newline. A crafted title or filename therefore cannot add a forged `next:` or `class:` line. The error text from gh stderr is also passed through `clean()`."
+    - "Fail-closed behaviour: an empty rollup, SKIPPED, NEUTRAL, PENDING, a non-SUCCESS StatusContext, `mergeable` other than MERGEABLE (including UNKNOWN), a draft, a base other than the README `trunk:`, a file list shorter than `changedFiles` (this also covers the 3000-file API cap), a head that changed between the two reads (`full.startswith(head)`), and a README without a `trunk:` all hold the ask or force exit 2."
+    - "Pagination: `pr_files` decodes the concatenated JSON pages with `raw_decode`, handles both list and flat output, and the count check against `changedFiles` catches truncation."
+    - "File write: `write_record` writes only under the task's own `merge/` folder, with a numbered name derived by `fullmatch` on digits. The JSON is dumped with `json.dumps`, so no injection into the record. The script never runs `gh pr merge`."
+    - "Classification: `never` is checked before docs-only. Release-please PRs, prod profile and the db surface force class `never`. docs-only requires every path to start with `docs/` and end in `.md` after the NEVER_PATH denylist, and `previous_filename` is included so renames out of a protected path are still seen."
+    - "workflow.md and lint-skills.py: the wording edits keep the hold-on-exit-1-or-2 rule and the head-versus-Candidate hold. The lint change is a budget step only. No secrets, credentials or new network calls are added."
+
+  limitations:
+    - "Read-only review of the diff and the files at b97068de via `git show` and `git grep`. I ran no tests and no script, so the regex-stall and CI-race claims come from reading the code, not from reproduction."
+    - "I did not see the 'truncated 2 deletions, 11 additions' region of the diff as a diff hunk. I read the current `write_record` and `check` bodies from the file at the head SHA, and they appear complete."
+    - "I could not check what the repo's branch protection or required checks actually are, or how fast the CI workflows register after `gh pr ready`. The size of the CI race finding depends on that."
+    - "I did not review test_delivery_gate.py or test_sd_dispatch.py line by line. I only grepped them for consumers of the record and verdict fields."
+    - "`--head` with a short prefix (7 hex characters) is still matched by prefix against the Candidate lines. That behaviour predates this PR. When `--head` is omitted, the 40-character head from gh is used. A short-prefix collision is about 2^28 work, so a hostile head could match a short `--head`. FO should pass the full head."
+    - "I did not trace the FO skill or mod text outside the changed files for any consumer that parses the `point:` or `record:` lines."
