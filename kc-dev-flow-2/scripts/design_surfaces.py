@@ -350,7 +350,8 @@ def check_task(path, seed=False, notes=None):
     text = path.read_text()
     if not FO_HEADING.search(text):
         errors.append(f"{path.name}: missing '## FO alignment' section")
-    fo, body = split_fo(text)
+    _, body = split_fo(text)
+    fo, _ = split_fo("\n".join(unfenced(text.split("\n"))))
     match = SURFACES.search(fo)
     surfaces = set()
     if len(SURFACES.findall(fo)) > 1:

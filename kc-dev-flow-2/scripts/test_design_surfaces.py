@@ -1182,5 +1182,38 @@ class DesignReviewTests(unittest.TestCase):
         self.assertTrue(self.run_check(previews=previews, report=report, module=mutant)[0])
 
 
+class FencedFoAlignmentTests(unittest.TestCase):
+    QUOTED = BASE + """
+## Notes
+
+The seed form looks like this:
+
+```
+## FO alignment
+
+Surfaces: none
+Visible change: none
+```
+"""
+
+    def test_a_task_quoting_a_fenced_fo_alignment_passes_check_and_seed(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = write_task(d, self.QUOTED)
+            self.assertEqual(ds.check_task(path), [])
+            self.assertEqual(ds.check_task(path, seed=True), [])
+            self.assertEqual(ds.main(["check", str(path)]), 0)
+            self.assertEqual(ds.main(["check", "--seed", str(path)]), 0)
+
+    def test_mutation_reading_the_fo_alignment_from_raw_text_refuses_the_quoting_task(self):
+        mutant = mutated(
+            '    _, body = split_fo(text)\n    fo, _ = split_fo("\\n".join(unfenced(text.split("\\n"))))\n',
+            "    fo, body = split_fo(text)\n")
+        with tempfile.TemporaryDirectory() as d:
+            path = write_task(d, self.QUOTED)
+            self.assertEqual(ds.check_task(path), [])
+            self.assertTrue(any("'Surfaces:' lines, expected exactly 1" in e for e in mutant.check_task(path)))
+            self.assertTrue(any("'Surfaces:' lines, expected exactly 1" in e for e in mutant.check_task(path, seed=True)))
+
+
 if __name__ == "__main__":
     unittest.main()
