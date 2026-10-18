@@ -3,7 +3,7 @@ title: POC — is a per-class merge grant needed, or does the Captain's pre-auth
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: backlog
+status: implementation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain approved in chat (「批准這些作為第三批」) the five batch-3 backlog gates presented together, accepting profile poc and that FO proposes a bar at implementation for him to rule before any run
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Filed on the Captain's 「同意」 (chat, 2026-10-18) to FO's proposal to narrow merge-gatekeeper (PR #666) and turn the grant half into a measure-first POC: 「授權那半不要開成「之後重做」，改開一個 POC 待辦，先量兩件事：adopter 裡有多少 PR 可以被授權；「預先授權合併」是不是已經涵蓋了你要的效果。量完確定有需要，才把程式碼從分支拿回來。」
