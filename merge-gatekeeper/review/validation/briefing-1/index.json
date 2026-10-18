@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-gatekeeper:validation:attempt-1:revision-1",
+  "question": "Deliver #666 head a05b18a0 (narrowed by Captain amendment 1: the merge-ask check now also holds on unfinished or failed CI including any workflow run on the head, on a draft, a conflict, a wrong base and an incomplete file list, prints pointers for the Captain, and records every ask; it never merges and FO still asks the Captain): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the Deferred risks and Polish below into backlog task merge-gatekeeper-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:merge-gatekeeper:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/beecc9908c4d8e3f968701c3d24c2550be5e855a/merge-gatekeeper.md",
+      "rev": "sha256:55e113afe1af5c8913fb83cc61e209512d4feb543c890da95cd32e3937f6322e",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at a05b18a0 (validation-4, after four repair cycles and amendment 1; merges cleanly with current main). FO ran the acceptance script as written in env -i bash: every step matched (README 5429 of 5429; adr_lint exit 0; 47 tests OK; a workflow run still running holds though the rollup shows one green check, a run list past one page exits 2, a ready green mergeable PR passes; the check on #666 itself holds because it is a draft; the validation security review reads 3 findings, 3 declined). On the heads of the 30 latest merged PRs the new hold gave 0 false holds. Words FO reads: README 5447 to 5429; merge ask 415 to 401 (limit 404). No ADR lands (ADR 0023 stays reserved for POC task merge-grant-need-poc, where the grant code is parked at 3fd84178). Prod security review: ideation 8 findings (7 into criteria); validation 4 runs, the last 3 LOW declined. External rounds: Codex 4 (round 1 three P1 fixed; round 2 two P1 in the grant path, removed by amendment 1 on the chief-engineer's measured split; round 3 one P1, partial rollup, fixed with a workflow-run hold and the restored wait clause; round 4 one P2 declined). RoboRev local, every High fixed, clean on this head (859). AC-5's real-repository run passed on the earlier head (throwaway repository iamcxa/kc-merge-gate-ac5-throwaway-20261018, left for the Captain to delete). Declined, with reasons: P2, a force push between two reads can mix revisions in the record (round-3 rule; nothing reads the record yet); Deferred risk, a run started by the ready event can be missed for about 2 seconds (README wait clause is the backstop); Deferred risk, the record's verdict field has no consumer until the POC; Polish, four mutation gaps, two doc_impact lines, a docstring, and the point cap. Second reviewer: copilot because the task is prod and changes merge rules. copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Limit: an adopter whose CI uses only external status contexts keeps the partial-rollup gap."
+    }
+  ]
+}

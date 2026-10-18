@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:merge-gatekeeper:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:merge-gatekeeper-validation-1
+              briefing:
+                id: briefing:merge-gatekeeper:validation:attempt-1:revision-1
+                digest: sha256:89fb778621791a83d6cee9c0f87ec36c57870428b6549ebca3ae84867a36420d
+                room-ref: ./merge-gatekeeper/review/validation/briefing-1
 started: 2026-10-17T06:11:32Z
 worktree: .worktrees/spacedock-ensign-merge-gatekeeper
 pr: iamcxa/kc-claude-plugins#666
