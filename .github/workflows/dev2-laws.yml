@@ -1,0 +1,48 @@
+name: dev2-laws
+
+on:
+  push:
+    branches: ["spacedock-state/dev2"]
+
+permissions:
+  contents: read
+
+jobs:
+  laws:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout state branch
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+          path: state
+
+      - name: Checkout the package scripts
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          repository: iamcxa/kc-claude-plugins
+          ref: "2775096a9b2ed240fe96f1777496af4b05afbfd5"
+          sparse-checkout: kc-dev-flow-2
+          persist-credentials: false
+          path: package
+
+      - name: Checkout the trunk workflow README
+        uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: "main"
+          sparse-checkout: "docs/dev2/README.md"
+          sparse-checkout-cone-mode: false
+          persist-credentials: false
+          path: trunk
+
+      - name: laws_check.py
+        env:
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.event.after }}
+        run: |
+          python3 package/kc-dev-flow-2/scripts/laws_check.py state \
+            --before "$BEFORE" \
+            --after "$AFTER" \
+            --readme "trunk/docs/dev2/README.md"
