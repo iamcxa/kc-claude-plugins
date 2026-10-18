@@ -356,3 +356,54 @@ before a no-consumer claim, not a printed line that another script parses; the
 workflow README's dispatch and delivery rules and the project CLAUDE.md do not state
 it; the eight root learning.md entries (blob d4bd974e) cover neither it nor script
 output parsing.
+
+## Compare a newly refusing checker's verdicts on every committed task file
+
+### Applicability
+
+A kc-dev-flow-2 change in this repository that makes a checker script newly refuse
+something in committed task files, such as an exactly-one or no-duplicate rule added
+to design_surfaces.py, when the script also runs in `check --seed` mode or at a gate
+over tasks the author did not write.
+
+### Practice
+
+Before the implementation report, run the script from main and from the candidate
+over every committed task file (the state checkout and its _archive/) in each mode
+the script has (`check` and `check --seed`), compare exit code and message per file,
+and explain each changed verdict as intended or repair it. Do not offer the count of
+files with zero instances of the new pattern (for example '0 duplicates in 69
+files') as the evidence that no existing task newly fails: that count does not
+exercise how the script reads lines, such as lines inside fenced blocks. Bounded:
+one task; validation's dispatch asked for the check, so this record does not show
+the implementer would have run the verdict comparison unprompted; the adopter
+corpora were extracted by session scripts under /tmp that are not in the repository,
+and the three relay verdict changes in two tasks were judged expected by the
+chief-engineer, not independently re-derived.
+
+### Evidence
+
+Task ui-design-review-in-ideation (iamcxa/kc-claude-plugins#663, closure revision
+aa74f1046540d98ddd047a92eb252db1e6f115d2, landed
+18e161d99b3cd4bbf4a2f755249687418fcf48d7). The round-2 repair added an exactly-one
+`Surfaces:` count to design_surfaces.py; its implementation report measured '69
+existing task files (45 here, 22 beirut-dev2, 2 montpellier-v2) had 0 duplicates'
+and the one-line counts were fence-blind. Validation of cycle 3 then ran base and
+candidate `design_surfaces.py check` and `check --seed` over 64 task files here: 63
+identical, 1 differed, `_archive/amendment-form-check.md` going from exit 0 to exit
+1 with "has 3 'Surfaces:' lines, expected exactly 1" because fenced fixture lines
+were counted. The chief-engineer then required a main-versus-candidate verdict
+comparison over four corpora (258 task files); after the narrowed repair the
+comparison showed 0 verdict changes in this state, subspace-web and qnow and 3
+expected changes in two subspace-relay tasks, and the same comparison was repeated
+after the roborev High repair. Cost of the miss: one repair cycle plus a fresh
+validation recheck. Recorded in
+spacedock-state/dev2:_archive/ui-design-review-in-ideation.md under '### Feedback
+Cycles' (Cycle 3), '## Stage Report: implementation (cycle 2, round 2)', '## Stage
+Report: validation (cycle 3)' and '## Stage Report: implementation (cycle 3)'.
+Existing rules checked 2026-10-18: implementation, validation and ideation
+principles, the workflow README and the project CLAUDE.md state no per-file
+main-versus-candidate verdict comparison for a newly refusing checker (grep of the
+package README, references and skills for corpus, newly refus and existing task file
+finds nothing); the nine root learning.md entries cover consumers of printed output,
+persistence inputs and README pointers, not this.
