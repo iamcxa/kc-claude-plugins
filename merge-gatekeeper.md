@@ -75,6 +75,7 @@ Alignment: not needed before ideation; the Captain approved filing it (his words
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-18 — third repair cycle on #666 (Codex round 2 review:5562139252, two more P1 in the grant path, which has no consumer until a grant exists): repair again, or narrow the PR to the parts used at every merge ask now?
 
 ## Design
 
