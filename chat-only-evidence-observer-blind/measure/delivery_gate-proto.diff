@@ -1,0 +1,44 @@
+--- /tmp/cobo-base/kc-dev-flow-2/scripts/delivery_gate.py	2026-10-19 00:16:00
++++ /tmp/cobo-proto/kc-dev-flow-2/scripts/delivery_gate.py	2026-10-19 01:22:06
+@@ -139,6 +139,19 @@
+     return missing
+ 
+ 
++CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
++                 "Necessity": "who uses this change and what breaks without it"}
++
++
++def clause(text, label):
++    found = re.search(rf"\b{label}:[ \t]*(\S[^\n]*)", text)
++    return found.group(1) if found else None
++
++
++def unstated_confirmations(text):
++    return [label for label in CONFIRMATIONS if clause(text, label) is None]
++
++
+ def readme_front(path):
+     scalars, lists, key = {}, {}, None
+     lines = path.read_text(errors="replace").split("\n") if path.is_file() else []
+@@ -341,6 +354,10 @@
+         problems.append(f"second reviewer {reviewer} has no stated outcome: "
+                         f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
+ 
++    for label in unstated_confirmations(gate_text):
++        nexts.append("next: hold the ask; add the missing clause to the question or summary.")
++        problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
++
+     emit(*problems, *holds)
+     if problems:
+         emit(*dict.fromkeys(nexts))
+@@ -363,7 +380,9 @@
+     emit(*points, f"class: {cls}")
+ 
+     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
+-                                "points": points, "next": ASK, "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
++                                "points": points, "next": ASK,
++                              "sufficiency": clean(clause(gate_text, "Sufficiency"))[:200],
++                              "necessity": clean(clause(gate_text, "Necessity"))[:200], "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
+     emit(f"record: {task.stem}/merge/{saved.name}", ASK)
+     return 0
+ 
