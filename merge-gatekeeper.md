@@ -77,6 +77,14 @@ Surfaces: none
 Visible change: none
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-18 — third repair cycle on #666 (Codex round 2 review:5562139252, two more P1 in the grant path, which has no consumer until a grant exists): repair again, or narrow the PR to the parts used at every merge ask now?
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-18, chat
+Captain: 「同意」 (chat, 2026-10-18)
+Asked: 「同意「#666 縮小，授權那半改成先量再做的 POC 待辦」嗎？同意的話，我會把你的原話記成修正指示，然後派人去刪掉授權那半。」（「#666 縮小，只交出合併前檢查、要看的重點清單和合併請求的紀錄……授權那半不要開成「之後重做」，改開一個 POC 待辦，先量兩件事：adopter 裡有多少 PR 可以被授權；「預先授權合併」是不是已經涵蓋了你要的效果。」）
+Supersedes: AC-4, AC-5, AC-7, AC-11, AC-12, AC-3, AC-8
+Design: the grant, merge-line and calibrate parts of ## Design
+
 ## Design
 
 Not repository files: this section is the design; implementation lands it. Sources read 2026-10-17: kc-dev-flow-2 at origin/main 19fe3b5b (released 0.24.0) with `git show` (`scripts/delivery_gate.py`, `scripts/pr_watch.py`, `scripts/decision_ledger.py`, `scripts/lint-skills.py`, `references/sd/workflow.md`, `references/sd/mods/kc-dev-flow-2.md`, `extensions/*/EXTENSION.md`, `skills/learn/SKILL.md`, `docs/adr/0009`, `0011`, `0019`); kc-pr-flow at the same commit (`skills/kc-pr-review/SKILL.md`, `scripts/github-repo-write.sh`); Spacedock 0.27.2 (`spacedock --version`, `gate --help`, `gate record --help`) and its 0.27.0 plugin cache (`mods/pr-merge.md`, `skills/fo-gate-lifecycle`); adopters subspace-relay, subspace-web and qnow by read-only `git show`/`gh api`; the OpenAI Decisions API page (fetched 2026-10-17); `gh pr merge --help` (gh 2.92.0).
