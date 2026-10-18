@@ -796,3 +796,100 @@ PASSED at b97068de: every live criterion holds under my own runs, 54 of 57 mutat
 ### Summary
 
 The merge check now holds on any workflow run on the PR head that is not finished green, which closes the partial-rollup P1 that b97068de left (the check names on the base head were measured unusable here), and workflow.md again tells FO to wait for the test jobs. One roborev High on my first form was fixed in a second commit. Residual: a workflow run not yet created in the seconds after a push is missed, and the restored README clause is the backstop; no code change touches the point-in-time window between this check and the merge.
+
+## Stage Report: validation (cycle 4)
+
+- DONE: Independent verdict on PR #666 head a05b18a0 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  recheck after Cycle 4: Codex round-3 P1 (review:5563145962, partial rollup) fixed by holding on any workflow run on the PR head that is not finished green (an older run is ignored only when cancelled or skipped and a later run of the same workflow exists; page overflow exits 2), and the workflow.md wait-for-jobs clause restored exactly as on main (recount-3 under the task's validation folder: 401 against the 404 limit); confirm each new rule's mutation fails its test; roborev is clean on this head (859), so roborev 855 needs no waiver; AC-4, AC-5, AC-7, AC-11 superseded; re-run the prod validation security review with the Reach brief from origin/main as security/validation-4.yaml and write its lines; run lint and package tests on a merge into current origin/main
+  Verdict PASSED at a05b18a0f3fee770cf9127d569d9899def26cdc5, no Material finding and no open blocker: the Codex round-3 P1 (partial rollup) is repaired for every workflow run the API lists on the head; one narrower residual stays Deferred risk (F1). AC-1, 2, 6, 10, 13, 14, 15 hold by my runs; AC-3, 4, 5, 7, 8, 11, 12 are superseded by amendment 1; AC-9 does not apply (no model arm).
+  Suites (python3 -B, 600 s cap each, checkout /tmp/mg-val4 at the head and /tmp/mg-val4-merge, a clean merge of the head into origin/main ffd620b4, no conflict): lint-skills.py 5429 of 5429 words on both; all 24 CI-listed test commands rc 0 on both (test_delivery_gate.py 47 tests OK; test_sd_dispatch.py `--sd-plugin-root /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0`, binary /Users/kent/.local/bin/spacedock 0.27.2; test_observer_recovery.py with SPACEDOCK_BIN the same binary). CI on the head: all four checks SUCCESS (`gh pr view 666`, 2026-10-18). comment_ratio.py base 2dad59ca to head: 648 code lines, 0 comment lines, exit 0 (b97068de to head: 61 and 0); number_guards.py check PASS; design_surfaces.py check exit 0; dispatch_records.py 19 records complete.
+  New rules (966b27ea, a05b18a0), 15 mutations of delivery_gate.py in scratch copies, each against all 47 tests: 11 RED, 4 survived. Red: dropping the runs hold (5 tests), ignoring page overflow (1), treating every older run as superseded (2), superseding nothing (2), accepting a failed run (2), taking the oldest run as newest (2), not superseding skipped (1), not superseding cancelled (1), superseding a run by itself (1), swallowing the overflow error (1), not comparing `total_count` (1). Survivors: (a) dropping `status == "completed"`: equivalent, GitHub gives a null conclusion until a run completes; (b) `head_sha=0` in the query: the stub ignores the query, so no test pins the head in the request (live evidence below); (c) the runs hold printing no `next:` line (the problem line and exit 1 remain); (d) accepting a newest `neutral` or `skipped` run: no test row for a sole skipped run. (b) to (d) are Polish (F3).
+  Retained code: `git diff b97068de HEAD` touches only `pr_runs`, `runs_problem` and the `check` lines that call them, plus workflow.md, lint-skills.py and tests; every hold, point, class, never-list and record function is the one validated at b97068de. I reran one falsifier per live criterion on the head: AC-1 dropping the CI rollup, draft, base and file-count holds (RED each); AC-2 a dead `DEFERRED` matcher (5 tests RED); AC-6 writing a record on a hold (RED); AC-13 `docs/adr` out of the never list and the rename's `previous_filename` unread (RED); AC-15 `tok` returning the raw value (17 RED); never-merges, a `gh pr merge` call added to `check` (RED). Live read-only run of `pr_runs` and `runs_problem` on the heads of the 30 latest merged PRs of this repository: 0 holds (3 to 5 runs each), so the new hold does not stall the PRs that merged.
+  AC-10 recount with my own script (/tmp/mg-val4-recount.py, regex passages over `git show` and the checkout): base 215+57+90+33 = 395 plus check output 20 = 415; head 215+39+90+33 = 377 plus 24 = 401 against the limit 404; workflow.md 5447 to 5429 against the budget step -18. The "waits for those jobs" clause: `git diff 2dad59ca HEAD` of workflow.md changes only the head paragraph; the clause is untouched and identical to the base (one occurrence in each). AC-14: replay-1.txt unchanged since the validated code (hold, point, class code byte-identical, see above), not rerun. roborev 855: the head's roborev 859 is clean, no waiver needed.
+  Implementer's stated limits, judged: a workflow run not yet created in the seconds after a push is missed, with the README clause as backstop (F1, Deferred risk, measured below); zero workflow runs with a non-empty rollup is not a hold (F1); no change covers the window between this check and the merge (security finding 1, declined, no consumer merges).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  adr_lint.py `docs/adr --since 2dad59ca` (the PR's merge-base) printed "21 ADR file(s) checked, 0 legacy", exit 0; `--since origin/main` the same, exit 0; `--require 0023` prints "required ADR 0023 does not exist", exit 1, as expected (ADR 0023 is not landed; `## Number guards` still reserves it, AC-11 superseded). Script and observed output are under `### Minimal acceptance script`; findings under `### Findings`.
+
+### Security review (validation)
+
+Security review (validation): security/validation-4.yaml at a05b18a0f3fee770cf9127d569d9899def26cdc5
+Security finding (validation 4) 1: declined: LOW, the check never merges and no FO path merges (the grant half is parked at 3fd84178); the Captain merges and GitHub merges the head it then sees, a gap that predates this PR; it becomes Material if FO ever runs `gh pr merge`, where the POC task merge-grant-need-poc must pin `--match-head-commit` (see F2)
+Security finding (validation 4) 2: declined: LOW, cosmetic: the class and verdict are computed before the 12-point cap; same as F7 of validation 3 (see F3)
+Security finding (validation 4) 3: declined: LOW, (a) the documented command passes no `--head`, so the match uses the full 40-hex PR head; (b) the class and `verdict` have no consumer and `check` never merges; revisit when a consumer exists (see F2)
+
+### Findings
+
+Dispositions by the Review-finding disposition. None is Material: field 4 (trigger evidence) fails for each, as stated per finding.
+- F1 Deferred risk (Codex P1 4307169171, review:5563145962, residual after the repair): the repair holds on every workflow run the API lists on the head, which closes the case that gave the P1 (a green fast check beside test jobs not yet in the rollup; reproduced by validation 3 and covered by `PartialRollupTests`). Residual: a workflow run not yet created is not seen, and zero runs beside a non-empty rollup (an adopter whose CI is external statuses only) is not a hold. Measured on 3 PRs (read-only `gh api`): workflow runs are created at the push (PR 659: runs at 11:21:26, commit 11:20:19, ready 14:06:52) and only the run the ready event itself starts appears 2 s after it (PR 657: ready 05:51:52, `release gate` run 05:51:54; PR 664 the same, 2 s), so the window is the two seconds after `ready_for_review`, in which the README clause (restored, identical to base) tells FO to wait. Not Material: no trigger observed (0 holds on 30 merged heads, no wrong pass seen) and no accepted criterion names it. It becomes Material when `check` is seen passing before a workflow started by the ready event finishes, or on an adopter whose required tests are external statuses.
+- F2 Deferred risk (security findings 1 and 3): the per-ask record is not read at merge time and `verdict` reads "merge" for class `other` or `script-with-test` when no point prints, from filenames alone (an empty `test_x.py` beside `x.py`); nothing consumes either. Material only if a later change lets FO skip the Captain on them; the POC task merge-grant-need-poc carries that.
+- F3 Polish: (a) mutation survivors (b) the request is not asserted to carry the head (live runs on 30 heads prove the query works), (c) no `next:` line asserted for the runs hold, (d) no row for a sole skipped or neutral newest run; (b) `gate|budget` and `adr-path` rows noted in validation 3 remain; (e) doc_impact.py now lists `docs/dev/artifacts/skill-ablation-harness/sizing-simulation.py` (a local variable also named `pr_runs`, unaffected) with no `unaffected:` line, and `kc-dev-flow-2/references/sd/adoption.md` still has none; (f) the `delivery_gate.py` docstring does not mention the workflow-run hold; (g) `points_for` still emits path points before profile and title (security finding 2).
+- Minimal necessity (same candidate): the CI, workflow-run, draft, conflict, base and file-count holds, the points and the per-ask record serve every merge ask now and map to the counted accidents (#381 draft, #1175 base, the refused merges) and AC-1, 2, 6; the workflow-run hold is the repair of the one P1 that blocked and adds one `gh` call (about 0.6 s per the implementation report, not remeasured). Class, the never list and the record's `verdict` and `model` have no consumer until a grant exists and 35 of 35 archived PRs class never; the Captain named them in amendment 1, so they stay. Goal sufficiency: fewer accidents is met by the holds; less eye review is met only in part by the points, which the POC task measures.
+- Inconsistency for FO: none (profile prod in the dispatch and the task).
+
+### Minimal acceptance script
+
+Needs: this repository checkout at the path below, python3, git, `gh` signed in (read-only calls). Run in a fresh bash. Not covered: a real GitHub merge (the check never merges), any grant (the code is parked at 3fd84178), the Ready path of step 5 live while PR 666 is a Draft (the passing path is covered by the step 4 test under a stub `gh`), relay, subspace-web or qnow, a workflow run that starts in the two seconds after a PR is marked ready, and Spacedock's pr-merge after an FO-run merge.
+
+```bash
+set -u
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.24.0
+WF=$REPO/.context/dev2-adoption/worktree/docs/dev2
+ST=$WF/.spacedock-state
+H=a05b18a0f3fee770cf9127d569d9899def26cdc5
+W=/tmp/merge-gatekeeper-accept
+T=/tmp/merge-gatekeeper-accept-task
+export PYTHONDONTWRITEBYTECODE=1
+echo "== 1. check out the PR head"
+rm -rf $W $T
+git -C $REPO worktree add --detach $W $H >/dev/null 2>&1; git -C $W rev-parse HEAD
+echo "== 2. word budget and decision records"
+python3 -B $W/kc-dev-flow-2/scripts/lint-skills.py | grep -E "words"
+(cd $W && python3 -B $PKG/scripts/adr_lint.py docs/adr --since 2dad59ca; echo "adr_lint exit=$?")
+echo "== 3. the merge check's own tests (about 1-2 minutes)"
+python3 -B $W/kc-dev-flow-2/scripts/test_delivery_gate.py 2>&1 | tail -n 3
+echo "== 4. a workflow run still running holds the ask; a clean PR never merges"
+python3 -B $W/kc-dev-flow-2/scripts/test_delivery_gate.py -v PartialRollupTests HoldTests.test_a_ready_green_mergeable_pr_on_the_trunk_passes 2>&1 | grep -E "ok$|^Ran|^OK|FAIL"
+echo "== 5. the check on PR 666 itself (scratch copy of the task), then the security-review check"
+mkdir $T && cp $ST/merge-gatekeeper.md $T/ && cp -R $ST/merge-gatekeeper $T/ && echo "Merge ask." > $T/gate.txt
+python3 -B $W/kc-dev-flow-2/scripts/delivery_gate.py check $T/merge-gatekeeper.md --pr iamcxa/kc-claude-plugins#666 --text-file $T/gate.txt --workflow-dir $WF | cut -c1-200; echo "check exit=${PIPESTATUS[0]}"
+python3 -B $W/kc-dev-flow-2/scripts/validation_security.py check $ST/merge-gatekeeper.md; echo "validation_security exit=$?"
+echo "== 6. clean up"
+git -C $REPO worktree remove --force $W && rm -rf $T && echo removed
+```
+
+Expected: step 1 prints the 40-hex head above. Step 2 prints `references/sd/workflow.md: 5429 of 5429 words; ...`, `21 ADR file(s) checked, 0 legacy` and `adr_lint exit=0`. Step 3 ends `Ran 47 tests in <n>s` and `OK`. Step 4 lists 4 tests ending `ok`, then `Ran 4 tests` and `OK`. Step 5: while PR 666 is a Draft, `the PR is a draft`, a `next: hold the ask` line and `check exit=1`; once it is Ready with CI green, exit 0 with up to 12 `point:` lines, `class: never`, a `record:` line and last line `next: ask for merge with this text.`; then `validation security review security/validation-4.yaml: 3 findings, 3 declined, 0 decisions` and `validation_security exit=0` (run from the PR checkout: the installed 0.24.0 package has no validation_security.py). Step 6 prints `removed`.
+
+Observed, run exactly as written above in a fresh `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc` shell:
+
+```
+== 1. check out the PR head
+a05b18a0f3fee770cf9127d569d9899def26cdc5
+== 2. word budget and decision records
+references/sd/workflow.md: 5429 of 5429 words; no unlisted passage repeats it
+21 ADR file(s) checked, 0 legacy
+adr_lint exit=0
+== 3. the merge check's own tests (about 1-2 minutes)
+Ran 47 tests in <n>s
+
+OK
+== 4. a workflow run still running holds the ask; a clean PR never merges
+test_a_run_list_longer_than_one_page_holds_with_exit_2 (__main__.PartialRollupTests.test_a_run_list_longer_than_one_page_holds_with_exit_2) ... ok
+test_a_workflow_run_still_in_progress_holds_though_the_rollup_shows_only_a_green_check (__main__.PartialRollupTests.test_a_workflow_run_still_in_progress_holds_though_the_rollup_shows_only_a_green_check) ... ok
+test_only_a_cancelled_or_skipped_run_replaced_by_a_later_run_is_ignored_and_no_runs_is_not_a_hold (__main__.PartialRollupTests.test_only_a_cancelled_or_skipped_run_replaced_by_a_later_run_is_ignored_and_no_runs_is_not_a_hold) ... ok
+test_a_ready_green_mergeable_pr_on_the_trunk_passes (__main__.HoldTests.test_a_ready_green_mergeable_pr_on_the_trunk_passes) ... ok
+Ran 4 tests in <n>s
+OK
+== 5. the check on PR 666 itself (scratch copy of the task), then the security-review check
+the PR is a draft
+next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.
+check exit=1
+validation security review security/validation-4.yaml: 3 findings, 3 declined, 0 decisions
+validation_security exit=0
+== 6. clean up
+removed
+```
+
+### Summary
+
+PASSED at a05b18a0: every live criterion holds under my own runs, the new workflow-run hold fails its tests under 11 of 15 mutations (one equivalent survivor, three Polish gaps), and the head passes lint and all 24 package test commands on a clean merge into origin/main ffd620b4. The repair closes the partial-rollup P1 for every workflow run the API lists on the head and the README wait clause is back identical to the base; the residual is the two seconds after `ready_for_review`, which I class Deferred risk (F1). The security review (validation 4) has three LOW findings, all declined with reasons; nothing here is Material and no waiver is needed.

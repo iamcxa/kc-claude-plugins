@@ -1,0 +1,73 @@
+tob_security_review:
+  pr: 666
+  strategy: DEEP
+  security_tier: full
+  files_analyzed: 5
+  findings:
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      severity: LOW
+      category: race-condition
+      title: "The check binds the PR head only when it runs. The saved ask record is not enforced at merge time."
+      description: |
+        The head is read in three places: `run_gh`, `pr_facts` (compared by prefix with `full.startswith(head)`) and `pr_runs`. The ask record stores the full head and the PR title/branch facts. I found no consumer of `merge/ask-<N>.json` that compares it with the head at merge time. I also found no `--match-head-commit` on any merge path in the delivery flow. `kc-pr-flow/scripts/github-repo-write.sh` has one, but nothing here shows `delivery_gate.py` feeding it.
+        The new CI, draft, mergeable and base checks all describe the head at check time. Whether the Captain's later approval and merge cover that same head cannot be seen in this diff.
+        This weakness predates the PR. The PR now advertises a stronger "merge ask holds" guarantee and writes a record that looks like binding evidence.
+      attack_scenario: |
+        1. A fork author has an open PR on the public repo, and the check passes at head X.
+        2. The record is written and FO asks the Captain to merge.
+        3. The fork author force-pushes head Y before the Captain merges. Fork authors have no write access to the repo, but they do control their own PR branch.
+        4. If the merge step does not pin X, the Captain merges Y, which was never checked or validated.
+        Condition: this needs a merge path that does not pin the head, which I could not confirm or rule out.
+      blast_radius: "LOW"
+      recommendation: |
+        Have the merge step pass `--match-head-commit <record.head>`, or re-run `check` immediately before merge. Alternatively, state in the workflow.md paragraph that the record is not a merge-time binding.
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      severity: LOW
+      category: missing-validation
+      title: "One `path:` point per never-path file can push later points out of the 12-point cap"
+      description: |
+        `points_for` emits one `point: path:` line per file that matches NEVER_PATH. It emits these before the `profile`, `surface`, `title` and `second-reviewer` points. `MAX_POINTS=12` truncates by position, so later kinds collapse into `point: more: N not shown`.
+        The `class:` line and the `verdict` field stay correct because they are computed before truncation. The Captain-facing list can lose its title and second-reviewer points.
+        The `path` values are outsider-controlled filenames. `tok` bounds each to 6 words and 80 chars, and `clean` escapes non-printable and format characters. `repr` quotes the value. Prompt-injection text in a filename is therefore capped at about 80 chars per line.
+      attack_scenario: |
+        1. An outsider PR adds 12 or more files under a never-path such as `.github/x1` through `.github/x12`.
+        2. The first 12 points are all `path:` lines.
+        3. The `title` and `second-reviewer` points move into "more: N not shown".
+        4. The class is still `never` and the verdict is still `ask`, so the impact is cosmetic.
+      blast_radius: "LOW"
+      recommendation: |
+        Aggregate path points into one line (for example "path: N files, first <tok>"), or order the kinds so path points come last.
+    - file: "kc-dev-flow-2/scripts/delivery_gate.py"
+      line: 0
+      severity: LOW
+      category: other
+      title: "A short `--head` (7 hex) is a 28-bit prefix match, and `class: script-with-test` is satisfied by filename alone"
+      description: |
+        (a) With `--head` given as a 7-hex prefix, both the candidate comparison (`c.startswith(head)`) and the PR-head comparison (`full.startswith(head)`) are prefix tests. Without `--head`, the full 40-hex head from gh is used, which makes the match exact. The workflow.md text does not pass `--head`, so the default flow is exact.
+        (b) `classify` treats a PR as `script-with-test` when every file is a code file and each code file's basename has a sibling named `test_<name>`, `<stem>.test<ext>` and so on, in any directory. It never checks that the test exercises the change. An outsider can add an empty `test_x.py` next to `x.py`. If that yields no other points, the record reads `verdict: merge`. The text says `class` is "by allowlist", which does not claim semantic coverage, and the class is advisory only.
+      attack_scenario: |
+        (a) A fork author grinds a commit whose SHA shares the first 7 hex chars with the dispatched candidate (about 2^28 hashes) and swaps it in. This works only if FO passes a short `--head`, which the documented flow does not do.
+        (b) A fork PR changes a script outside the never-paths and adds a trivially named test file. The record is labelled `script-with-test`, `verdict: merge`.
+      blast_radius: "LOW"
+      recommendation: |
+        Require a full 40-hex `--head`, or reject a prefix shorter than 40 for the equality check. For `classify`, either document that `script-with-test` is name-based only, or require the test file to be in the PR's changed list and in the same directory tree.
+  clean_patterns:
+    - "No public route, handler, session, room, storage or comment surface is added or newly advertised. The change is a local CLI script (`delivery_gate.py`) plus one workflow.md paragraph, so the 'how much can an outsider write, and what caps it' question has no handler to trace. Outsider data enters only through `gh` JSON (title, branch name, file names, check names, workflow names). The script's only write is `<task>/merge/ask-<N>.json`, in the local task folder."
+    - "The PR head is never checked out. Nothing from the PR is executed or written to a path derived from PR data. The record path comes from the task path and a computed counter."
+    - "Outsider-controlled strings are bounded and sanitized. `tok` caps them at N words and M chars and applies `repr`. `emit`/`clean` escape non-printable and Unicode format characters (including newlines and bidi overrides), so a title, branch or file name cannot forge a separate `next:` or `point:` line."
+    - "The `next: ask for merge with this text.` line is emitted only on the exit-0 path, after every problem and hold is empty. Outsider text is always quoted by `repr`, so it cannot contain a bare `next:` line."
+    - "Fail-closed design. Failures of `gh pr view`, the files list or the actions/runs call become holds (exit 2) or problems (exit 1). A page overflow on runs (`total_count != len(runs)`) raises and holds. A file-list shorter than `changedFiles` (the files API caps at 3000) holds. The rollup treats an empty rollup, SKIPPED, NEUTRAL, PENDING and unknown `__typename` as not green. `mergeable` other than MERGEABLE holds, including UNKNOWN, and a draft holds."
+    - "`runs_problem` supersession is narrow. An older run is ignored only when it is cancelled or skipped and a later run of the same `workflow_id` exists. That later run is itself evaluated and must be green. `action_required`, `failure`, `timed_out` and `neutral` all hold. The runs query is scoped to the base repo by `head_sha`."
+    - "`headRefName` starting with `release-please--` and `profile: prod` are applied as stricter classes (`never`). An outsider cannot downgrade the class this way."
+    - "NEVER_PATH covers `.github`, hooks, `_mods`, migrations, skills/agents/references, `scripts/` and `kc-dev-flow-2/scripts/`. It also covers gate and budget files, plugin and marketplace manifests and release-please config. Renames are covered because `previous_filename` is included."
+    - "`validation_security` (prod profile) is unchanged. The new code runs after it and only adds holds."
+    - "The workflow.md and lint-skills.py changes are documentation and budget bookkeeping only."
+  limitations:
+    - "Per the brief I ran no project script and no test. I read the code statically at a05b18a0. I did not execute `gh` against a live PR, so I did not confirm the shape of the `statusCheckRollup`, actions/runs or pulls/files payloads. An error object where a list is expected would raise AttributeError. AttributeError is not in the caught tuple. The result would be a traceback with exit 1, which still holds the ask but without a `next:` line."
+    - "I could not see the downstream merge path (the spacedock `merge guard`, `pr-merge` mod and the Captain's `gh pr merge` invocation). Finding 1 therefore depends on an unverified assumption about head pinning."
+    - "`find_readme` and `never_paths` read repo-owned README frontmatter (`trunk`, `migrations-path`, `adr-path`). An empty `trunk:` value would silently skip the base check. That is repo-writer-controlled, so I did not report it as an outsider finding."
+    - "I did not review `test_delivery_gate.py` and `test_sd_dispatch.py` line by line. I treated them as LOW risk and did not check whether the tests cover the negative paths above (the `action_required` run, the short `--head`, the more-than-12 path points)."
+    - "The workflow.md hunk also removes the sentence 'a head other than the latest validation record's `Candidate:` is revalidated or its difference told to the Captain' and replaces it with a shorter form. I read that as behaviour-preserving, because the script enforces the head comparison, but I did not trace FO's consumption of the text."
+    - "GitHub-side behaviour (fork-PR runs listed under the base repo's `head_sha`, the 3000-file cap on the pulls/files API) comes from my knowledge of the API and was not tested here."
