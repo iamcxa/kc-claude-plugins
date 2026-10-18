@@ -53,6 +53,17 @@ gates:
                 id: briefing:ui-design-review-in-ideation:validation:attempt-1:revision-1
                 digest: sha256:97cf5a1616f57c02f0af96069c4561c95ebf81b4c2c99bc48ad1416e559fcd61
                 room-ref: ./ui-design-review-in-ideation/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ui-design-review-in-ideation:validation:1
+                briefing: briefing:ui-design-review-in-ideation:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-18T03:03:18.527023Z"
+                decision: approve
+                reason: 'Captain approved delivery of #663 in chat (「批准並合併」), the #664 and #663 delivery gates presented together, accepting FO''s recommendation to decline the listed Deferred risks and Polish into the named backlog tasks; he also authorized FO to merge'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-17T06:11:26Z
 worktree: .worktrees/spacedock-ensign-ui-design-review-in-ideation
 pr: iamcxa/kc-claude-plugins#663
