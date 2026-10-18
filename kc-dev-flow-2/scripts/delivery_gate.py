@@ -21,7 +21,7 @@ one `class:` line (never, docs-only, script-with-test or other, by allowlist), t
 and one last `next:` line. The README frontmatter key `merge-grants:` lists `<class>:rule:<threshold>:<method>:ADR <NNNN>`
 entries (threshold 0.95 to 1, method squash, merge or rebase; the rule arm reads the threshold only for that form, the bar itself is proven by the grant's ADR on `calibrate` evidence). The `next:` line is the merge line
 (a shell line that runs this check again and, only if its last line is again a merge line, `gh pr merge ... --match-head-commit <candidate>`) only when the class has a valid grant entry (the entry pattern admits no `never` class), no point was printed, the title is
-a Conventional Commit, the candidate is the PR head, a listed codex reader exits 0 on the head, a listed roborev left the whole line
+a Conventional Commit, the candidate is the PR head, the entry's ADR `<adr-path>/<NNNN>-*.md` (default `docs/adr`) reads `## Status` Accepted and holds the whole entry, a listed codex reader exits 0 on the head, a listed roborev left the whole line
 `roborev: clean on <40-hex candidate>; evidence=roborev:<job>` in the task, and no record of the class is labelled a failure, read after `git fetch origin <trunk>` (60 s cap; a repository with no origin is not fetched; a fetch that fails prints `cannot fetch origin/<trunk>, so no merge line` and the ask line). Otherwise it is the ask line.
 
 calibrate. Labels each `merge/ask-<N>.json` of the workflow's active and archived tasks, keeping the newest per PR and head across all tasks:
@@ -53,7 +53,8 @@ CONVENTIONAL = re.compile(r"^(?:feat|fix|docs|chore|refactor|test|style|perf|ci|
 GRANT = re.compile(r"^(docs-only|script-with-test|other):rule:(0\.9[5-9]\d{0,3}|1(?:\.0+)?):(squash|merge|rebase):ADR (\d{4})$")
 CODE = {".py", ".sh", ".js", ".mjs", ".ts", ".tsx", ".jsx", ".go", ".rb"}
 NEVER_PATH = [
-    re.compile(r"^(?:\.github|\.claude)/"),
+    re.compile(r"^(?:\.github|\.claude|\.githooks)/|^\.roborev\.toml$|^scripts/"),
+    re.compile(r"(?:^|/)(?:hooks|bin)/"),
     re.compile(r"(?:^|/)(?:_mods|migrations)/"),
     re.compile(r"^docs/(?:adr|dev[^/]*)(?:/|$)"),
     re.compile(r"(?:^|/)(?:skills|agents|extensions|references)/"),
@@ -186,7 +187,7 @@ def never_paths(paths, workflow_dir, scalars):
 def classify(paths, never):
     if never:
         return "never"
-    if paths and all(p.startswith("docs/") for p in paths):
+    if paths and all(p.startswith("docs/") and p.endswith(".md") for p in paths):
         return "docs-only"
     names = {Path(p).name for p in paths}
     is_test = lambda p: Path(p).name.startswith("test_") or re.search(r"(?:\.test|\.spec|_test)\.\w+$", p)
@@ -244,6 +245,19 @@ def ci_problem(rollup):
 
 def grants_of(lists):
     return {m.group(1): m.groups() for m in map(GRANT.match, lists.get("merge-grants", [])) if m}
+
+
+def adr_grants(root, scalars, grant):
+    """True when <adr-path>/<NNNN>-*.md exists, reads `## Status` Accepted and holds the whole grant entry as one delimited token."""
+    entry = re.compile(rf"(?<![\w.:-]){re.escape(f'{grant[0]}:rule:{grant[1]}:{grant[2]}:ADR {grant[3]}')}(?!\w)")
+    for adr in sorted((root / (scalars.get("adr-path") or "docs/adr")).glob(f"{grant[3]}-*.md")) if root else []:
+        try:
+            text = adr.read_text(errors="replace")
+        except OSError:
+            continue
+        if re.search(r"^## Status[ \t]*\n+Accepted\b", text, re.M) and entry.search(text):
+            return True
+    return False
 
 
 def merge_line(number, repo, grant, candidate, title, recheck):
@@ -503,7 +517,7 @@ def check(args):
     line, grant = ASK, grants_of(lists).get(cls)
     full = str(facts["headRefOid"]).lower()
     title = str(facts.get("title", ""))
-    if grant and verdict == "merge" and CONVENTIONAL.match(title) and full in candidates and reviewers_clean(lists, repo, number, task_text, full):
+    if grant and verdict == "merge" and CONVENTIONAL.match(title) and full in candidates and adr_grants(root, scalars, grant) and reviewers_clean(lists, repo, number, task_text, full):
         trunk = scalars.get("trunk", "main")
         if unfetched := fetch_trunk(root, trunk) if root else None:
             emit(f"cannot fetch origin/{trunk}, so no merge line: {unfetched}")

@@ -382,7 +382,7 @@ def variant_of(old, new):
 
 
 def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=None, readme_body="extensions: [roborev, codex]\n",
-              records=RECORDS, codex_exit=None, setup=None, per_pr=None, argv_head="same", stub_fail=None, then=None, workflow_dir_arg=None):
+              records=RECORDS, codex_exit=None, setup=None, per_pr=None, argv_head="same", stub_fail=None, then=None, workflow_dir_arg=None, adr=True):
     with tempfile.TemporaryDirectory() as d:
         readme(d, readme_body)
         Path(d, "task.md").write_text(task)
@@ -392,6 +392,8 @@ def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=N
             Path(d, "task", "dispatch", name).write_text(content)
         if setup:
             setup(d)
+        if adr and (grants := re.findall(r"([\w-]+:\w+:[\d.]+:\w+:ADR (\d{4}))", readme_body)):
+            with_adr({f"{n}-auto.md": f"## Status\n\nAccepted\n\n`{e}`\n" for e, n in grants})(d)
         reader = Path(d, "codex.py")
         reader.write_text(f"import sys\nsys.exit({codex_exit or 0})\n")
         shown = head if argv_head == "same" else argv_head
@@ -562,9 +564,9 @@ class ClassTests(unittest.TestCase):
              ".release-please-manifest.json", "release-please-config.json", "kc-dev-flow-2/.claude-plugin/plugin.json",
              ".claude-plugin/marketplace.json", "x/_mods/y.md"]
     ROWS = [(["docs/guide.md"], "docs-only"), (["docs/a.md", "docs/b/c.md"], "docs-only"),
-            (["scripts/foo.py", "scripts/test_foo.py"], "script-with-test"), (["src/a.ts", "src/a.test.ts"], "script-with-test"),
-            (["README.md"], "other"), (["scripts/foo.py"], "other"), (["scripts/foo.py", "scripts/test_bar.py"], "other"),
-            (["scripts/test_foo.py"], "other"), (["scripts/foo.py", "scripts/test_foo.py", "notes.md"], "other"),
+            (["tools/foo.py", "tools/test_foo.py"], "script-with-test"), (["src/a.ts", "src/a.test.ts"], "script-with-test"),
+            (["README.md"], "other"), (["tools/foo.py"], "other"), (["tools/foo.py", "tools/test_bar.py"], "other"),
+            (["tools/test_foo.py"], "other"), (["tools/foo.py", "tools/test_foo.py", "notes.md"], "other"),
             ([dict(filename="docs/notes.md", previous_filename=".github/workflows/ci.yml")], "never"),
             ([dict(filename="notes.md", previous_filename=".github/workflows/ci.yml")], "never"),
             ([dict(filename=".github/workflows/ci.yml", previous_filename="docs/notes.md")], "never"),
@@ -703,7 +705,8 @@ class GrantTests(unittest.TestCase):
         }
         for label, (old, new) in mutations.items():
             with self.subTest(label):
-                self.assertEqual(nexts(self.run_ask(variant_of(old, new), **self.ASKS[label]))[0].startswith("next: merge as follows"), True)
+                extra = dict(setup=with_adr({"0001-x.md": "## Status\n\nAccepted\n\n`docs-only:rule:0.95:squash:ADR 0001`\n"})) if label == "key absent" else {}
+                self.assertEqual(nexts(self.run_ask(variant_of(old, new), **self.ASKS[label], **extra))[0].startswith("next: merge as follows"), True)
 
     def test_printing_the_pr_head_instead_of_the_candidate_fails_on_a_short_head(self):
         module = variant_of("merge_line(number, repo, grant, full, title, recheck)", "merge_line(number, repo, grant, head, title, recheck)")
@@ -1042,6 +1045,131 @@ class CodexP1Tests(unittest.TestCase):
         self.assertEqual(result.code, 0, result.out)
         self.assertRegex(result.out, r"cannot fetch origin/main, so no merge line: ")
         self.assertEqual(nexts(result), ["next: ask for merge with this text."], result.out)
+
+
+ENTRY = "docs-only:rule:0.95:squash:ADR 0024"
+ADR_NAMING = f"# 0024. Merge docs-only\n\n## Status\n\nAccepted\n\n## Decision\n\nThe Captain grants `{ENTRY}`.\n"
+
+
+def with_adr(files, where="docs/adr"):
+    def setup(d):
+        Path(d, ".git").mkdir(exist_ok=True)
+        for name, text in files.items():
+            Path(d, where, name).parent.mkdir(parents=True, exist_ok=True)
+            Path(d, where, name).write_text(text)
+    return setup
+
+
+class GrantAdrTests(unittest.TestCase):
+    ADRS = {
+        "no adr folder": dict(setup=with_adr({})),
+        "no file for the number": dict(setup=with_adr({"0025-x.md": ADR_NAMING})),
+        "a file that is a prefix of the number": dict(setup=with_adr({"002-x.md": ADR_NAMING, "00245-x.md": ADR_NAMING})),
+        "adr names no grant": dict(setup=with_adr({"0024-x.md": "# 0024. Something else\n\n## Decision\n\nNo grants here.\n"})),
+        "adr names only the class": dict(setup=with_adr({"0024-x.md": "# 0024\n\nWe may merge docs-only changes one day.\n"})),
+        "adr names another method": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace(":squash:", ":merge:")})),
+        "adr names another threshold": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("0.95", "0.99")})),
+        "adr names another class": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("docs-only", "other")})),
+        "adr names another number": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("ADR 0024", "ADR 0023")})),
+        "adr entry is a longer entry": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("ADR 0024", "ADR 00245")})),
+        "adr entry glued to a longer class": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("`docs-only", "`not-docs-only")})),
+        "adr-path points elsewhere": dict(setup=with_adr({"0024-x.md": ADR_NAMING}), readme_body=GRANTS + EXT + "adr-path: decisions\n"),
+        "no repository root": dict(setup=None),
+        "status Proposed": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("\nAccepted\n", "\nProposed\n")})),
+        "status Rejected": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("\nAccepted\n", "\nRejected\n")})),
+        "status Superseded": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("\nAccepted\n", "\nSuperseded by 0030\n")})),
+        "no status section": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("## Status\n\nAccepted\n\n", "")})),
+        "Accepted only in prose": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("\nAccepted\n", "\nProposed\n") + "Accepted by nobody yet.\n"})),
+        "a longer word after Accepted": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("\nAccepted\n", "\nAcceptedly\n")})),
+    }
+
+    def run_ask(self, module=None, **kwargs):
+        kwargs = {"readme_body": GRANTS + EXT, "task": EVIDENCE_TASK, "argv_head": "40c714a6", "adr": False, **kwargs}
+        return run_variant(module, **kwargs) if module else run_check(**kwargs)
+
+    def test_a_grant_whose_adr_is_absent_or_does_not_name_it_prints_the_ask_line(self):
+        for label, kwargs in self.ADRS.items():
+            with self.subTest(label):
+                result = self.run_ask(**kwargs)
+                self.assertEqual((result.code, nexts(result)), (0, [gate.ASK]), result.out)
+                self.assertEqual(result.written["ask-1.json"]["next"], gate.ASK)
+
+    def test_an_adr_that_names_the_grant_still_prints_the_merge_line(self):
+        for label, kwargs in {
+            "default folder": dict(setup=with_adr({"0024-docs-only-merge.md": ADR_NAMING})),
+            "adr-path from the README": dict(setup=with_adr({"0024-x.md": ADR_NAMING}, "decisions"), readme_body=GRANTS + EXT + "adr-path: decisions\n"),
+            "one of two files with the number": dict(setup=with_adr({"0024-a.md": "# other\n", "0024-b.md": ADR_NAMING})),
+            "entry inside a longer sentence": dict(setup=with_adr({"0024-x.md": f"## Status\n\nAccepted\n\nGrant ({ENTRY}), per the Captain.\n"})),
+            "status with a date after Accepted": dict(setup=with_adr({"0024-x.md": ADR_NAMING.replace("\nAccepted\n", "\nAccepted 2026-10-18\n")})),
+        }.items():
+            with self.subTest(label):
+                result = self.run_ask(**kwargs)
+                self.assertRegex(nexts(result)[0], MERGE_LINE, result.out)
+
+    def test_each_adr_rule_removed_turns_its_own_case_red(self):
+        mutations = {
+            "no adr folder": ("and adr_grants(root, scalars, grant) and", "and"),
+            "adr names another method": ("re.escape(f'{grant[0]}:rule:{grant[1]}:{grant[2]}:ADR {grant[3]}')", "re.escape(grant[0])"),
+            "adr entry is a longer entry": ("(?!\\w)\")", "\")"),
+            "adr entry glued to a longer class": ('(?<![\\w.:-])', ""),
+            "a file that is a prefix of the number": ('glob(f"{grant[3]}-*.md")', 'glob(f"{grant[3][:3]}*.md")'),
+            "adr-path points elsewhere": ('scalars.get("adr-path") or "docs/adr"', '"docs/adr"'),
+            "status Proposed": ('re.search(r"^## Status[ \\t]*\\n+Accepted\\b", text, re.M) and entry.search(text)', "entry.search(text)"),
+            "status Rejected": ('re.search(r"^## Status[ \\t]*\\n+Accepted\\b", text, re.M) and entry.search(text)', "entry.search(text)"),
+            "no status section": ('re.search(r"^## Status[ \\t]*\\n+Accepted\\b", text, re.M) and entry.search(text)', "entry.search(text)"),
+            "Accepted only in prose": ('r"^## Status[ \\t]*\\n+Accepted\\b"', 'r"Accepted\\b"'),
+            "a longer word after Accepted": ('+Accepted\\b"', '+Accepted"'),
+        }
+        for label, (old, new) in mutations.items():
+            with self.subTest(label):
+                result = self.run_ask(variant_of(old, new), **self.ADRS[label])
+                self.assertRegex(nexts(result)[0], MERGE_LINE, result.out)
+
+
+NEVER_ADDED = ["scripts/foo.py", "scripts/test_foo.py", "scripts/run.sh", "scripts/sub/x.py", ".githooks/pre-commit", ".githooks/sub/x.sh", ".roborev.toml",
+               "kc-dev-flow-2/hooks/hooks.json", "kc-nightwatch/hooks/run.sh", "x/y/hooks/z.py", "kc-pr-flow/bin/tool", "kc-pr-flow/bin/tool.py"]
+DOCS_NOT_MD = ["docs/diagram.png", "docs/guide.json", "docs/run.sh", "docs/sub/page.html", "docs/notes.md.bak", "docs/Makefile"]
+
+
+class NeverAddedTests(unittest.TestCase):
+    def cls(self, paths, module=None):
+        result = run_variant(module, files=tuple(paths)) if module else run_check(files=tuple(paths))
+        return next((l[7:] for l in result.lines if l.startswith("class: ")), result.out)
+
+    def test_each_added_never_path_is_never_alone_or_beside_a_docs_file_and_on_either_rename_name(self):
+        for path in NEVER_ADDED:
+            with self.subTest(path):
+                self.assertEqual(self.cls([path]), "never")
+                self.assertEqual(self.cls(["docs/a.md", path]), "never")
+                self.assertEqual(self.cls([dict(filename="docs/a.md", previous_filename=path)]), "never")
+                self.assertEqual(self.cls([dict(filename=path, previous_filename="docs/a.md")]), "never")
+
+    def test_a_non_markdown_file_under_docs_is_not_docs_only(self):
+        for path in DOCS_NOT_MD:
+            with self.subTest(path):
+                self.assertEqual(self.cls([path]), "other")
+                self.assertEqual(self.cls(["docs/a.md", path]), "other")
+        self.assertEqual(self.cls(["docs/a.md", "docs/b/c.md"]), "docs-only")
+
+    def test_scripts_and_hooks_directories_that_are_not_the_named_places_keep_their_class(self):
+        self.assertEqual(self.cls(["docs/scripts/x.md", "docs/hooks-guide.md"]), "docs-only")
+        self.assertEqual(self.cls(["tools/foo.py", "tools/test_foo.py"]), "script-with-test")
+        self.assertEqual(self.cls(["my-scripts/foo.py", "my-scripts/test_foo.py"]), "script-with-test")
+        self.assertEqual(self.cls(["src/githooks.py", "src/test_githooks.py"]), "script-with-test")
+
+    def test_each_added_pattern_removed_turns_its_own_row_red(self):
+        mutations = {
+            ".githooks/pre-commit": ("|\\.githooks)/", ")/"),
+            ".roborev.toml": ("|^\\.roborev\\.toml$", ""),
+            "scripts/foo.py": ("|^scripts/", ""),
+            "kc-nightwatch/hooks/run.sh": ("(?:hooks|bin)/", "(?:bin)/"),
+            "kc-pr-flow/bin/tool": ("(?:hooks|bin)/", "(?:hooks)/"),
+        }
+        for path, (old, new) in mutations.items():
+            with self.subTest(path):
+                self.assertNotEqual(self.cls([path], variant_of(old, new)), "never")
+        with self.subTest("docs md only"):
+            self.assertEqual(self.cls(["docs/diagram.png"], variant_of(' and p.endswith(".md")', "")), "docs-only")
 
 
 def tearDownModule():
