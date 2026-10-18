@@ -53,6 +53,17 @@ gates:
                 id: briefing:special-role-triggers:validation:attempt-1:revision-1
                 digest: sha256:842b55a4cbdba5463348b7a8a6401a4be82647f9330d137aa0d9ba44c23850db
                 room-ref: ./special-role-triggers/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:special-role-triggers:validation:1
+                briefing: briefing:special-role-triggers:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-18T03:03:15.518229Z"
+                decision: approve
+                reason: 'Captain approved delivery of #664 in chat (「批准並合併」), the #664 and #663 delivery gates presented together, accepting FO''s recommendation to decline the listed Deferred risks and Polish into the named backlog tasks; he also authorized FO to merge'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-17T06:11:15Z
 worktree: .worktrees/spacedock-ensign-special-role-triggers
 pr: iamcxa/kc-claude-plugins#664
