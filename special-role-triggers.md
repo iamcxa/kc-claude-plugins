@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:special-role-triggers:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:special-role-triggers-validation-1
+              briefing:
+                id: briefing:special-role-triggers:validation:attempt-1:revision-1
+                digest: sha256:842b55a4cbdba5463348b7a8a6401a4be82647f9330d137aa0d9ba44c23850db
+                room-ref: ./special-role-triggers/review/validation/briefing-1
 started: 2026-10-17T06:11:15Z
 worktree: .worktrees/spacedock-ensign-special-role-triggers
 pr: iamcxa/kc-claude-plugins#664

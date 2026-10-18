@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:special-role-triggers:validation:attempt-1:revision-1",
+  "question": "Deliver #664 head b300d9ba (chief-engineer is owed at a task's third Feedback Cycle and engineering-reviewer after a Captain amendment that replaces approved text; role_triggers.py reports an owed call at FO's idle step and the observer counts a missing call as a violation): FO marks it ready and asks you to merge? Approving accepts FO's recommendation to decline the Deferred risks and Polish below into backlog task special-role-triggers-followups, and that D1 to D3 and amendment 1 govern only role_triggers.py and its observer sentence, recorded in this task, so no ADR is written. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:special-role-triggers:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/80cf31d9903626b0d05288227f5967645913eaff/special-role-triggers.md",
+      "rev": "sha256:cbcbe4ed7c76506a9b312dbd13b0b577b08a97644c0c0de9eb3516d79d61b2ea",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at b300d9ba (validation-3, recheck after two repair cycles). FO ran the acceptance script as written in env -i bash: every step matched (17 tests OK; README 5447 of 5447; a task with a third Cycle and an amendment prints two next: lines and exits 1, with headings in other case, indent or no-break space; records under the wrong section still owe; records under FO alignment clear both, exit 0; the archived delivery-gate-verdict-form prints its three owed calls). Output over every task in this state is identical to the first candidate; over relay's state, event A fires for exactly the three tasks the design named. Words FO reads: README unchanged at 5447; an idle next: line only while a call is owed. Captain amendment 1 (「第四題同意」) replaced AC-2 with AC-10: a call dated no earlier than the amendment clears it. External rounds: Codex 3 (round 1 two P2: the date rule, fixed by amendment 1, and records outside FO alignment clearing an event, fixed; round 2 one P2: case-sensitive headings, fixed for all four headings; round 3 clean). RoboRev local (802, 814, 827), not counted. Declined, with reasons: Deferred risk, a fence opened with an unusual indent could hide an event-shaped heading (no task writes one); Deferred risk, an uncommitted live task makes the idle check print cannot-tell (as AC-4 specifies); Polish, a count of 16 vs 17 in the implementation report, design wording 'third line' vs N\u003e=3, and one relay task where a call rather than a waiver is expected. Second reviewer: copilot because the change alters review rules (when the special reviewers are owed). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. Limit: Opus cost per owed call is not measured."
+    }
+  ]
+}
