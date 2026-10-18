@@ -1,19 +1,26 @@
 #!/usr/bin/env python3
 """Check what FO is about to ask the Captain to merge.
 
-Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>]
+Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>] [--workflow-dir <dir>]
 
 The dispatched heads are the whole `Candidate: <40-hex head>` lines above the first `## ` heading of the
 highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check reads no validation verdict.
-A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at the dispatched head the PR head equals, every finding disposed); a task whose profile cannot be read as poc, pilot or prod holds.
+A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at
+the dispatched head the PR head equals, every finding disposed); a profile that cannot be read as poc, pilot or prod holds.
 The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
-Exit 0 when both hold; 1 when the head differs, a second reviewer has no stated outcome or a prod task's security review fails (all printed);
-2 when that record has no such line, the head cannot be read, or an input is unusable.
-Each exit ends with one `next:` line, or one per problem for exit 1, naming what FO does with the ask.
+The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
+a second reviewer has no stated outcome, a prod task's security review fails, a check run on the head is not finished and
+successful (an empty rollup, SKIPPED and NEUTRAL included), the PR is a draft or not mergeable, its base is not the README's
+`trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
+README cannot be read, or an input is unusable. Every problem is printed.
+Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
+one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
+and one last `next:` line, which is always the ask line.
 """
 import argparse
+import datetime
 import json
 import re
 import subprocess
@@ -21,12 +28,51 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+from design_surfaces import FM_PROFILE
 
 CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
 RECORD = re.compile(r"^validation-(\d+)\.md$")
 SECOND_REVIEWER = re.compile(r"Second reviewer:\s*([\w.-]+)\s+because", re.I)
 OUTCOME_TOKEN = re.compile(r"\b(?:review|comment):\d+")
 PR = re.compile(r"^([\w.-]+/[\w.-]+)#(\d+)$")
+CONVENTIONAL = re.compile(r"^(?:feat|fix|docs|chore|refactor|test|style|perf|ci|build|revert)(?:\([\w./-]+\))?!?: \S[\x20-\x7e]{0,99}$")
+CODE = {".py", ".sh", ".js", ".mjs", ".ts", ".tsx", ".jsx", ".go", ".rb"}
+NEVER_PATH = [
+    re.compile(r"^(?:\.github|\.claude|\.githooks)/|^\.roborev\.toml$|^scripts/"),
+    re.compile(r"(?:^|/)(?:hooks|bin)/"),
+    re.compile(r"(?:^|/)(?:_mods|migrations)/"),
+    re.compile(r"^docs/(?:adr|dev[^/]*)(?:/|$)"),
+    re.compile(r"(?:^|/)(?:skills|agents|extensions|references)/"),
+    re.compile(r"(?:^|/)(?:CLAUDE|AGENTS)\.md$|(?:^|/)learning\.md$"),
+    re.compile(r"(?:^|/)(?:release-please-config|\.release-please-manifest|plugin|marketplace)\.json$"),
+    re.compile(r"(?:^|/)[^/]*(?:gate|budget)[^/]*$"),
+    re.compile(r"(?:^|/)kc-dev-flow-2/scripts/"),
+]
+VALIDATION_SECTION = re.compile(r"^## Stage Report: validation[^\n]*\n(.*?)(?=^## |\Z)", re.M | re.S)
+FO_DECLINES = re.compile(r"^### FO declines[ \t]*\n(.*?)(?=^#{1,3} |\Z)", re.M | re.S)
+DEFERRED = re.compile(r"\bDeferred risk\b|\bdeclined\b|round-3 backlog", re.I)
+NOT_RUN = re.compile(r"\b[\w.-]+ not run:\s*\S", re.I)
+AC_NOT_RUN = re.compile(r"(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b", re.I)
+AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
+MAX_POINTS = 12
+ASK = "next: ask for merge with this text."
+
+
+def clean(line):
+    return "".join(ch if ch.isprintable() else ch.encode("unicode_escape").decode() for ch in line)
+
+
+def emit(*lines):
+    for line in lines:
+        print(clean(line))
+
+
+def tok(value, words=6, chars=80):
+    return repr(" ".join(str(value).split()[:words])[:chars])
+
+
+def utcnow():
+    return datetime.datetime.now(datetime.timezone.utc)
 
 
 def dispatched_candidates(task):
@@ -42,12 +88,42 @@ def dispatched_candidates(task):
     return CANDIDATE.findall(header), path
 
 
-def run_gh(repo, number):
-    done = subprocess.run(["gh", "pr", "view", number, "--repo", repo, "--json", "headRefOid"],
-                          capture_output=True, text=True, timeout=60)
+def gh(*args):
+    try:
+        done = subprocess.run(["gh", *args], capture_output=True, text=True, timeout=60)
+    except (OSError, subprocess.SubprocessError) as error:
+        raise RuntimeError(f"gh not runnable: {error}") from error
     if done.returncode:
-        raise RuntimeError(f"gh pr view exited {done.returncode}: {done.stderr.strip()}")
-    return json.loads(done.stdout)["headRefOid"]
+        raise RuntimeError(f"gh {args[0]} {args[1]} exited {done.returncode}: {done.stderr.strip()}")
+    return done.stdout
+
+
+def run_gh(repo, number):
+    return json.loads(gh("pr", "view", number, "--repo", repo, "--json", "headRefOid"))["headRefOid"]
+
+
+def pr_facts(repo, number):
+    fields = "headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles"
+    return json.loads(gh("pr", "view", number, "--repo", repo, "--json", fields))
+
+
+def pr_runs(repo, head):
+    page = json.loads(gh("api", f"repos/{repo}/actions/runs?head_sha={head}&per_page=100"))
+    runs = page["workflow_runs"]
+    if page["total_count"] != len(runs):
+        raise ValueError(f"the head has {page['total_count']} workflow runs and one page lists {len(runs)}")
+    return runs
+
+
+def pr_files(repo, number):
+    text, files, decoder, at = gh("api", "--paginate", f"repos/{repo}/pulls/{number}/files"), [], json.JSONDecoder(), 0
+    while at < len(text):
+        if text[at].isspace():
+            at += 1
+            continue
+        page, at = decoder.raw_decode(text, at)
+        files += [f for part in page for f in (part if isinstance(part, list) else [part])]
+    return files
 
 
 def unstated_second_reviewers(text):
@@ -63,18 +139,140 @@ def unstated_second_reviewers(text):
     return missing
 
 
+def readme_front(path):
+    scalars, lists, key = {}, {}, None
+    lines = path.read_text(errors="replace").split("\n") if path.is_file() else []
+    for line in lines[1:] if lines and lines[0] == "---" else []:
+        if line == "---":
+            break
+        if m := re.match(r"^([\w-]+):[ \t]*(.*?)[ \t]*$", line):
+            key, value = m.groups()
+            scalars[key] = value.strip("'\"")
+            if value.startswith("["):
+                lists[key] = [v.strip().strip("'\"") for v in value.strip("[]").split(",") if v.strip()]
+        elif key and (m := re.match(r"^[ \t]+-[ \t]+(.*?)[ \t]*$", line)):
+            lists.setdefault(key, []).append(m.group(1).strip("'\""))
+    return scalars, lists
+
+
+def find_readme(task, workflow_dir):
+    for folder in ([Path(workflow_dir)] if workflow_dir else [task.parent, task.parent.parent]):
+        scalars, lists = readme_front(folder / "README.md")
+        if "trunk" in scalars:
+            return folder, scalars, lists
+    return None, {}, {}
+
+
+def repo_root(folder):
+    return next((p for p in [folder.resolve(), *folder.resolve().parents] if (p / ".git").exists()), None)
+
+
+def never_paths(paths, workflow_dir, scalars):
+    extra = [re.compile(rf"^{re.escape(scalars[k].strip('/'))}(?:/|$)") for k in ("migrations-path", "adr-path") if scalars.get(k)]
+    root = repo_root(workflow_dir) if workflow_dir else None
+    if root:
+        rel = workflow_dir.resolve().relative_to(root).as_posix()
+        extra.append(re.compile(r"^README\.md$" if rel == "." else rf"^{re.escape(rel)}/README\.md$"))
+    return [p for p in paths if any(r.search(p) for r in NEVER_PATH + extra)]
+
+
+def classify(paths, never):
+    if never:
+        return "never"
+    if paths and all(p.startswith("docs/") and p.endswith(".md") for p in paths):
+        return "docs-only"
+    names = {Path(p).name for p in paths}
+    is_test = lambda p: Path(p).name.startswith("test_") or re.search(r"(?:\.test|\.spec|_test)\.\w+$", p)
+    own_tests = lambda p: {f"test_{Path(p).name}", *(f"{Path(p).stem}{mid}{Path(p).suffix}" for mid in (".test", "_test", ".spec"))}
+    code = [p for p in paths if Path(p).suffix in CODE and not is_test(p)]
+    if code and all(Path(p).suffix in CODE for p in paths) and all(names & own_tests(p) for p in code):
+        return "script-with-test"
+    return "other"
+
+
+def commit_date(path):
+    done = subprocess.run(["git", "-C", str(path.parent), "log", "-1", "--format=%cs", "--", path.name], capture_output=True, text=True)
+    if not done.returncode and done.stdout.strip():
+        return done.stdout.strip()
+    return datetime.datetime.fromtimestamp(path.stat().st_mtime, datetime.timezone.utc).strftime("%Y-%m-%d")
+
+
+def points_for(task_text, gate_text, record, paths_never, facts, profile_prod, root):
+    found = []
+    reports = "\n".join(VALIDATION_SECTION.findall(task_text))
+    prose = reports + "\n" + gate_text
+    found += [("deferred", l) for l in prose.split("\n") if DEFERRED.search(l)]
+    for block in FO_DECLINES.findall(task_text) + FO_DECLINES.findall(gate_text):
+        found += [("fo-decline", l.strip()) for l in block.split("\n") if re.match(r"^\s*[-*] \S", l)]
+    found += [("not-run", l) for l in prose.split("\n") if NOT_RUN.search(l)]
+    found += [("acceptance-not-run", l) for l in reports.split("\n") if AC_NOT_RUN.search(l)]
+    if record:
+        since = commit_date(record)
+        found += [("amendment", f"Amendment {n} dated {d}") for n, d in AMENDMENT.findall(task_text) if d >= since]
+    found += [("path", p) for p in paths_never]
+    if profile_prod:
+        found.append(("profile", "prod"))
+    surfaces = re.search(r"^Surfaces:(.*)$", task_text, re.M)
+    found += [("surface", s) for s in (re.findall(r"[\w-]+", surfaces.group(1)) if surfaces else []) if s in ("db", "ui")]
+    if root and (root / "release-please-config.json").exists() and not CONVENTIONAL.match(facts["title"]):
+        found.append(("title", facts["title"]))
+    found += [("second-reviewer", r) for r in dict.fromkeys(m.lower() for m in SECOND_REVIEWER.findall(gate_text))]
+    lines = [f"point: {kind}: {tok(value)}" for kind, value in found]
+    return lines[:MAX_POINTS] + ([f"point: more: {len(lines) - MAX_POINTS} not shown"] if len(lines) > MAX_POINTS else [])
+
+
+def ci_problem(rollup):
+    if not rollup:
+        return "the check rollup is empty: no check has run on this head"
+    bad = []
+    for item in rollup:
+        if item.get("__typename") == "StatusContext":
+            ok = item.get("state") == "SUCCESS"
+        else:
+            ok = item.get("status") == "COMPLETED" and item.get("conclusion") == "SUCCESS"
+        if not ok:
+            bad.append(tok(item.get("name") or item.get("context") or "?", words=3, chars=40))
+    return f"{len(bad)} of {len(rollup)} checks on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
+
+
+def runs_problem(runs):
+    newest = {}
+    for run in runs:
+        key = run.get("workflow_id")
+        newest[key] = max(newest.get(key, 0), run.get("run_number", 0))
+    bad = []
+    for run in runs:
+        superseded = run.get("run_number", 0) < newest[run.get("workflow_id")] and run.get("conclusion") in ("cancelled", "skipped")
+        if not superseded and not (run.get("status") == "completed" and run.get("conclusion") == "success"):
+            bad.append(tok(run.get("name") or "?", words=4, chars=40))
+    return f"{len(bad)} of {len(runs)} workflow runs on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
+
+
+def write_record(task, rec):
+    folder = task.with_suffix("") / "merge"
+    folder.mkdir(parents=True, exist_ok=True)
+    taken = [int(m.group(1)) for p in folder.glob("ask-*.json") if (m := re.fullmatch(r"ask-(\d+)\.json", p.name))]
+    path = folder / f"ask-{max(taken, default=0) + 1}.json"
+    path.write_text(json.dumps(rec, indent=2, sort_keys=True) + "\n")
+    return path
+
+
 def check(args):
     task, text_file = Path(args.task), Path(args.text_file)
     pr = PR.match(args.pr)
     try:
         task_text, gate_text = task.read_text(), text_file.read_text()
     except OSError as error:
-        print(f"cannot read input: {error}")
+        emit(f"cannot read input: {error}")
         return 2
     if not pr:
-        print(f"--pr must look like owner/repo#N, got {args.pr}")
+        emit(f"--pr must look like owner/repo#N, got {tok(args.pr)}")
         return 2
+    repo, number = pr.groups()
     problems, holds, nexts = [], [], []
+    workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
+    if not workflow_dir:
+        holds.append("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
 
     candidates, record = dispatched_candidates(task)
     if not candidates:
@@ -83,11 +281,11 @@ def check(args):
     if args.head:
         head = args.head.lower()
         if not re.fullmatch(r"[0-9a-f]{7,40}", head):
-            holds.append(f"--head must be 7-40 hexadecimal characters, got {args.head}")
+            holds.append(f"--head must be 7-40 hexadecimal characters, got {tok(args.head)}")
             head = None
     else:
         try:
-            head = run_gh(*pr.groups()).lower()
+            head = run_gh(repo, number).lower()
         except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
             holds.append(f"cannot read the head of {args.pr}: {error}")
             head = None
@@ -95,6 +293,36 @@ def check(args):
         if not any(c.startswith(head) for c in candidates):
             problems.append(f"PR head {head} differs from dispatched candidate {' '.join(candidates)} (latest validation record {record.name})")
             nexts.append("next: hold the ask; revalidate this head or tell the Captain the difference.")
+
+    facts = files = runs = None
+    try:
+        facts, files = pr_facts(repo, number), pr_files(repo, number)
+        runs = pr_runs(repo, str(facts["headRefOid"]).lower())
+    except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
+        holds.append(f"cannot read the pull request {args.pr}: {error}")
+    if facts is not None:
+        full = str(facts.get("headRefOid", "")).lower()
+        if head and not full.startswith(head):
+            problems.append(f"PR head is now {full}, not {head}: the checks below belong to another commit")
+            nexts.append("next: hold the ask; read the PR head again and revalidate it, or tell the Captain.")
+        if (why := ci_problem(facts.get("statusCheckRollup"))):
+            problems.append(why)
+            nexts.append("next: hold the ask until the required CI has finished green on this head.")
+        if runs is not None and (why := runs_problem(runs)):
+            problems.append(why)
+            nexts.append("next: hold the ask until every workflow run on this head has finished green.")
+        if facts.get("isDraft"):
+            problems.append("the PR is a draft")
+            nexts.append("next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.")
+        if facts.get("mergeable") != "MERGEABLE":
+            problems.append(f"the PR is not mergeable: {tok(facts.get('mergeable'), words=1, chars=20)}")
+            nexts.append("next: hold the ask until the PR merges cleanly into the trunk.")
+        if scalars.get("trunk") and facts.get("baseRefName") != scalars["trunk"]:
+            problems.append(f"the PR base {tok(facts.get('baseRefName'), words=1, chars=60)} is not the trunk {tok(scalars['trunk'], words=1, chars=60)}")
+            nexts.append("next: hold the ask; the PR does not target the trunk, tell the Captain.")
+        if len(files) != facts.get("changedFiles"):
+            problems.append(f"the changed-file list has {len(files)} files but the PR reports {tok(facts.get('changedFiles'), words=1, chars=12)}")
+            nexts.append("next: hold the ask; the changed-file list is incomplete, tell the Captain.")
 
     security_errors, security_note = [], None
     at_head = [c for c in candidates if head and c.startswith(head)]
@@ -113,18 +341,30 @@ def check(args):
         problems.append(f"second reviewer {reviewer} has no stated outcome: "
                         f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
 
-    for line in problems + holds:
-        print(line)
+    emit(*problems, *holds)
     if problems:
-        print(*dict.fromkeys(nexts), sep="\n")
+        emit(*dict.fromkeys(nexts))
         return 1
     if holds:
-        print(*(dict.fromkeys(nexts) or ["next: hold the ask and show the Captain these lines."]), sep="\n")
+        emit(*(dict.fromkeys(nexts) or ["next: hold the ask and show the Captain these lines."]))
         return 2
-    print(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing")
+    emit(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing")
     if security_note:
-        print(security_note)
-    print("next: ask for merge with this text.")
+        emit(security_note)
+    paths = list(dict.fromkeys(p for f in files for p in (f.get("filename"), f.get("previous_filename")) if p))
+    never = never_paths(paths, workflow_dir, scalars)
+    root = repo_root(workflow_dir)
+    release_pr = str(facts.get("headRefName", "")).startswith("release-please--")
+    front = re.match(r"---\n(.*?)\n---", task_text, re.S)
+    profile_prod = bool(front and (m := FM_PROFILE.search(front.group(1))) and m.group(1) == "prod")
+    cls = classify(paths, never or release_pr or profile_prod or bool(re.search(r"^Surfaces:.*\bdb\b", task_text, re.M)))
+    points = points_for(task_text, gate_text, record, never, facts, profile_prod, root)
+    verdict = "merge" if not points and cls != "never" else "ask"
+    emit(*points, f"class: {cls}")
+
+    saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
+                                "points": points, "next": ASK, "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
+    emit(f"record: {task.stem}/merge/{saved.name}", ASK)
     return 0
 
 
@@ -137,7 +377,9 @@ def main(argv=None):
     sub.add_argument("--pr", required=True)
     sub.add_argument("--text-file", required=True)
     sub.add_argument("--head")
-    return check(parser.parse_args(argv))
+    sub.add_argument("--workflow-dir")
+    args = parser.parse_args(argv)
+    return check(args)
 
 
 if __name__ == "__main__":
