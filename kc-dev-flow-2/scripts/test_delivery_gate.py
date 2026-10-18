@@ -48,7 +48,7 @@ else:
 
 
 def pr_json(head=HEAD40, files=1, **over):
-    data = dict(headRefOid=head, isDraft=False, mergeable="MERGEABLE", title="feat(x): y", headRefName="feat", baseRefName="main",
+    data = dict(state="OPEN", headRefOid=head, isDraft=False, mergeable="MERGEABLE", title="feat(x): y", headRefName="feat", baseRefName="main",
                 changedFiles=files, statusCheckRollup=[dict(__typename="CheckRun", name="unit", status="COMPLETED", conclusion="SUCCESS")])
     data.update(over)
     return data
@@ -381,7 +381,7 @@ def variant_of(old, new):
 
 
 def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=None, readme_body="extensions: [roborev, codex]\n",
-              records=RECORDS, codex_exit=None, setup=None, per_pr=None, argv_head="same", stub_fail=None):
+              records=RECORDS, codex_exit=None, setup=None, per_pr=None, argv_head="same", stub_fail=None, then=None):
     with tempfile.TemporaryDirectory() as d:
         readme(d, readme_body)
         Path(d, "task.md").write_text(task)
@@ -400,10 +400,11 @@ def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=N
                 mock.patch.dict(os.environ, {"STUB_GH_FAIL": stub_fail or ""}), \
                 mock.patch.object(gate, "CODEX_READER", reader), contextlib.redirect_stdout(out):
             code = gate.main(argv)
+            after = then(d, out.getvalue()) if then else None
         written = {p.name: json.loads(p.read_text()) for p in sorted(Path(d, "task", "merge").glob("ask-*.json"))}
         calls = Path(d, "stub", "calls.log").read_text() if Path(d, "stub", "calls.log").exists() else ""
         OUTPUTS.append(out.getvalue())
-        return types.SimpleNamespace(code=code, out=out.getvalue(), lines=out.getvalue().split("\n"), written=written, calls=calls)
+        return types.SimpleNamespace(code=code, out=out.getvalue(), lines=out.getvalue().split("\n"), written=written, calls=calls, then=after)
 
 
 def nexts(result):
@@ -420,8 +421,10 @@ def check_run(**over):
 
 
 GRANTS = "merge-grants: [docs-only:rule:0.95:squash:ADR 0024]\n"
-MERGE_LINE = (f"next: run gh pr merge 9 --repo o/r --squash --match-head-commit {HEAD40} --subject 'feat(x): y' --body '' now; "
+MERGE_TAIL = (f"gh pr merge 9 --repo o/r --squash --match-head-commit {HEAD40} --subject 'feat(x): y' --body '' now; "
               "when gh pr view says MERGED, tell the Captain with the points above; otherwise ask him.")
+MERGE_LINE = re.compile(r"^next: run python3 \S+delivery_gate\.py check \S+ --pr 'o/r#9' --text-file \S+ --head 40c714a6 "
+                        r"\| tail -n 1 \| grep -q '\^next: run ' && " + re.escape(MERGE_TAIL) + "$")
 EXT = "extensions: [roborev, codex]\n"
 EVIDENCE_TASK = TASK + f"roborev: clean on {HEAD40}; evidence=roborev:42\n"
 
@@ -607,11 +610,12 @@ class GrantTests(unittest.TestCase):
 
     def test_a_valid_grant_with_nothing_against_it_prints_the_merge_line_pinned_to_the_candidate(self):
         result = self.ask(argv_head="40c714a6")
-        self.assertEqual((result.code, nexts(result)), (0, [MERGE_LINE]), result.out)
-        self.assertEqual(result.written["ask-1.json"]["next"], MERGE_LINE)
+        self.assertEqual((result.code, len(nexts(result))), (0, 1), result.out)
+        self.assertRegex(nexts(result)[0], MERGE_LINE)
+        self.assertEqual(result.written["ask-1.json"]["next"], nexts(result)[0])
         self.assertNotIn("pr merge", result.calls)
         block = self.ask(readme_body="merge-grants:\n  - docs-only:rule:0.95:squash:ADR 0024\n" + EXT, argv_head="40c714a6")
-        self.assertEqual(block.out, result.out)
+        self.assertEqual(re.sub(r"tmp\w+", "TMP", block.out), re.sub(r"tmp\w+", "TMP", result.out))
 
     def test_the_merge_method_comes_from_the_grant_and_a_title_is_quoted(self):
         result = self.ask(readme_body="merge-grants: [docs-only:rule:0.99:rebase:ADR 0024]\n" + EXT, facts=dict(title="fix: it's $(x)"))
@@ -675,17 +679,70 @@ class GrantTests(unittest.TestCase):
         }
         for label, (old, new) in mutations.items():
             with self.subTest(label):
-                self.assertEqual(nexts(self.run_ask(variant_of(old, new), **self.ASKS[label]))[0].startswith("next: run gh pr merge"), True)
+                self.assertEqual(nexts(self.run_ask(variant_of(old, new), **self.ASKS[label]))[0].startswith("next: run python3"), True)
 
     def test_printing_the_pr_head_instead_of_the_candidate_fails_on_a_short_head(self):
-        module = variant_of("merge_line(number, repo, grant, full, title)", "merge_line(number, repo, grant, head, title)")
-        self.assertNotEqual(nexts(run_variant(module, readme_body=GRANTS + EXT, task=EVIDENCE_TASK, argv_head="40c714a6")), [MERGE_LINE])
+        module = variant_of("merge_line(number, repo, grant, full, title, recheck)", "merge_line(number, repo, grant, head, title, recheck)")
+        self.assertNotRegex(nexts(run_variant(module, readme_body=GRANTS + EXT, task=EVIDENCE_TASK, argv_head="40c714a6"))[0], MERGE_LINE)
 
     def test_the_whole_test_run_never_printed_auto_or_admin(self):
         self.ask()
         for out in OUTPUTS:
             self.assertNotIn("--auto", out)
             self.assertNotIn("--admin", out)
+
+
+def printed_command(line):
+    found = re.fullmatch(r"next: run (.*) now; when gh pr view says MERGED, tell the Captain with the points above; otherwise ask him\.", line)
+    assert found, line
+    return found.group(1)
+
+
+class RecheckTests(unittest.TestCase):
+    LOCAL = "extensions: [roborev]\n"
+    MERGED = f"pr merge 9 --repo o/r --squash --match-head-commit {HEAD40} --subject feat(x): y --body "
+
+    def run_line(self, change=None, **kwargs):
+        def then(d, out):
+            if change:
+                change(d)
+            command = printed_command(next(l for l in out.split("\n") if l.startswith("next:")))
+            log = Path(d, "stub", "calls.log")
+            before = log.read_text()
+            done = subprocess.run(["sh", "-c", command], cwd=d, capture_output=True, text=True)
+            return done.returncode, log.read_text()[len(before):]
+        result = run_check(readme_body=GRANTS + self.LOCAL, task=EVIDENCE_TASK, argv_head="40c714a6", then=then, **kwargs)
+        self.assertTrue(result.then, result.out)
+        return result.then[1]
+
+    def test_the_printed_line_merges_when_the_recheck_still_passes(self):
+        self.assertEqual(self.run_line().count(self.MERGED), 1)
+
+    def test_a_failure_record_added_after_the_check_refuses_the_merge(self):
+        def add(d):
+            Path(d, "other", "merge").mkdir(parents=True)
+            Path(d, "other", "merge", "ask-1.json").write_text(json.dumps(
+                dict(pr="o/r#5", head="5" * 40, time="2026-01-01T00:00:00Z", verdict="merge", **{"class": "docs-only"})))
+        calls = self.run_line(add, per_pr={5: dict(state="CLOSED", headRefOid="5" * 40)})
+        self.assertNotIn("pr merge", calls)
+        self.assertIn("pr view", calls)
+
+    def test_a_grant_removed_after_the_check_refuses_the_merge(self):
+        self.assertNotIn("pr merge", self.run_line(lambda d: readme(d, self.LOCAL)))
+
+    def test_a_head_that_moved_after_the_check_refuses_the_merge(self):
+        def move(d):
+            Path(d, "stub", "pr.json").write_text(json.dumps(pr_json(head="1" * 40)))
+        self.assertNotIn("pr merge", self.run_line(move))
+
+    def test_dropping_the_recheck_from_the_line_lets_a_removed_grant_merge(self):
+        module = variant_of("""f"next: run {recheck} | tail -n 1 | grep -q '^next: run ' && gh pr merge""", """f"next: run gh pr merge""")
+        def then(d, out):
+            readme(d, self.LOCAL)
+            command = printed_command(next(l for l in out.split("\n") if l.startswith("next:")))
+            return subprocess.run(["sh", "-c", command], cwd=d, capture_output=True, text=True).returncode, Path(d, "stub", "calls.log").read_text()
+        result = run_variant(module, readme_body=GRANTS + self.LOCAL, task=EVIDENCE_TASK, argv_head="40c714a6", then=then)
+        self.assertIn("pr merge", result.then[1])
 
 
 class RecordTests(unittest.TestCase):

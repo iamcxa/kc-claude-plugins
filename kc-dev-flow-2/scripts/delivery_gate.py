@@ -20,7 +20,7 @@ Exit 0 prints `point:` lines (pointers into the records and the changed paths, a
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
 and one last `next:` line. The README frontmatter key `merge-grants:` lists `<class>:rule:<threshold>:<method>:ADR <NNNN>`
 entries (method squash, merge or rebase; the rule arm ignores the threshold). The `next:` line is the merge line
-(`gh pr merge ... --match-head-commit <candidate>`) only when the class has a valid grant entry (the entry pattern admits no `never` class), no point was printed, the title is
+(a shell line that runs this check again and, only if its last line is again a merge line, `gh pr merge ... --match-head-commit <candidate>`) only when the class has a valid grant entry (the entry pattern admits no `never` class), no point was printed, the title is
 a Conventional Commit, the candidate is the PR head, a listed codex reader exits 0 on the head, a listed roborev left the whole line
 `roborev: clean on <40-hex candidate>; evidence=roborev:<job>` in the task, and no record of the class is labelled a failure. Otherwise it is the ask line.
 
@@ -245,8 +245,8 @@ def grants_of(lists):
     return {m.group(1): m.groups() for m in map(GRANT.match, lists.get("merge-grants", [])) if m}
 
 
-def merge_line(number, repo, grant, candidate, title):
-    return (f"next: run gh pr merge {number} --repo {repo} --{grant[2]} --match-head-commit {candidate} "
+def merge_line(number, repo, grant, candidate, title, recheck):
+    return (f"next: run {recheck} | tail -n 1 | grep -q '^next: run ' && gh pr merge {number} --repo {repo} --{grant[2]} --match-head-commit {candidate} "
             f"--subject {shlex.quote(title)} --body '' now; when gh pr view says MERGED, tell the Captain with the points above; otherwise ask him.")
 
 
@@ -488,7 +488,9 @@ def check(args):
     if (grant and verdict == "merge" and CONVENTIONAL.match(title) and full in candidates
             and reviewers_clean(lists, repo, number, task_text, full)
             and not any(state == "failure" for _, state, _, _ in labelled(workflow_dir, scalars, root or ".", only=cls))):
-        line = merge_line(number, repo, grant, full, title)
+        recheck = shlex.join(["python3", str(Path(__file__).resolve()), "check", str(task.resolve()), "--pr", args.pr, "--text-file", str(text_file.resolve()),
+                              *(["--head", args.head] if args.head else []), *(["--workflow-dir", str(Path(args.workflow_dir).resolve())] if args.workflow_dir else [])])
+        line = merge_line(number, repo, grant, full, title, recheck)
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
                                 "points": points, "next": line, "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
     emit(f"record: {task.stem}/merge/{saved.name}", line)
