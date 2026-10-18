@@ -116,11 +116,15 @@ def main(argv=None):
         require(source["agent_path"] == producer, "raw session producer mismatch")
         parent = [r["payload"] for r in records(read(args.native_calls)["source_session"]) if r["type"] == "session_meta"]
         require(len(parent) == 1 and source.get("parent_thread_id") == parent[0]["id"], "raw child belongs to a different parent session")
-        turns = {r["payload"]["turn_id"]: r["payload"] for r in raw if r["type"] == "turn_context"}
+        turns = {}
+        for record in raw:
+            if record["type"] == "turn_context":
+                context = record["payload"]
+                turns.setdefault(context["turn_id"], []).append(context)
         require(observed["turns"], "no observed turns")
         for turn in observed["turns"]:
-            actual = turns[turn["turn_id"]]
-            require(actual["model"] == turn["model"] == binding["model"] and actual["effort"] == turn["reasoning_effort"] == binding["reasoning_effort"], "raw observed settings mismatch")
+            for actual in turns[turn["turn_id"]]:
+                require(actual["model"] == turn["model"] == binding["model"] and actual["effort"] == turn["reasoning_effort"] == binding["reasoning_effort"], "raw observed settings mismatch")
         followup, receipt = read(args.followup_wrapper), read(args.followup_receipt)
         require("spawn_args" not in followup and followup["binding"] == binding and followup["reuse"] is True, "followup binding/transport mismatch")
         require(followup["followup_args"] == {"target": producer, "message": followup["stock_helper"]["prompt"]}, "followup pointer/target changed")
@@ -146,8 +150,8 @@ def main(argv=None):
                          if r["type"] == "turn_context" and r["payload"]["turn_id"] == receipt["completion_turn_id"]]
         require(context_times and context_times == sorted(context_times), "claimed completion context timing is ambiguous")
         require(context_times[0] > request_time, "claimed completion turn must begin after the native followup request")
-        actual = turns[receipt["completion_turn_id"]]
-        require((actual["model"], actual["effort"]) == (binding["model"], binding["reasoning_effort"]), "followup host settings changed")
+        for actual in turns[receipt["completion_turn_id"]]:
+            require((actual["model"], actual["effort"]) == (binding["model"], binding["reasoning_effort"]), "followup host settings changed")
         messages = [r["payload"] for r in raw if r["type"] == "response_item" and r["payload"].get("type") == "message" and r["payload"].get("role") == "assistant"]
         require(any(isinstance(m.get("internal_chat_message_metadata_passthrough"), dict)
                     and m["internal_chat_message_metadata_passthrough"].get("turn_id") == receipt["completion_turn_id"]

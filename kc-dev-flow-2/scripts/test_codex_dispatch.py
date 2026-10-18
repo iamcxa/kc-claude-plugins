@@ -317,6 +317,51 @@ class EvidenceRouteTest(unittest.TestCase):
         self.write("observed", observed)
         self.assertEqual(self.invoke()[0], 0)
 
+    def test_consistent_repeated_selected_contexts_pass(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        initial, completion = copy.deepcopy(rows[1]), copy.deepcopy(rows[2])
+        initial["timestamp"], completion["timestamp"] = "2000-01-01T00:00:00.040Z", "2000-01-01T00:00:02.040Z"
+        initial["payload"]["cwd"] = "/different-metadata"
+        self.jsonl(child, [rows[0], initial, rows[1], completion, rows[2], rows[3]])
+        self.assertEqual(self.invoke()[0], 0)
+
+    def test_earlier_conflicting_or_missing_selected_settings_hold(self):
+        child = self.root / "child.jsonl"
+        base = list(evidence.records(child))
+        for index in (1, 2):
+            for key, value in (("model", "different-model"), ("effort", "medium"), ("model", None), ("effort", None)):
+                with self.subTest(turn=base[index]["payload"]["turn_id"], key=key, value=value):
+                    earlier = copy.deepcopy(base[index])
+                    earlier["timestamp"] = "2000-01-01T00:00:00.040Z" if index == 1 else "2000-01-01T00:00:02.040Z"
+                    if value is None:
+                        earlier["payload"].pop(key)
+                    else:
+                        earlier["payload"][key] = value
+                    self.jsonl(child, [*base[:index], earlier, *base[index:]])
+                    code, out, err = self.invoke()
+                    self.assertEqual((code, out), (1, ""))
+                    self.assertIn("HOLD:", err)
+
+    def test_missing_selected_context_groups_hold(self):
+        child = self.root / "child.jsonl"
+        base = list(evidence.records(child))
+        for index in (1, 2):
+            with self.subTest(turn=base[index]["payload"]["turn_id"]):
+                self.jsonl(child, [*base[:index], *base[index + 1:]])
+                self.assertEqual(self.invoke()[0], 1)
+
+    def test_unrelated_conflicting_contexts_do_not_change_selected_proof(self):
+        child = self.root / "child.jsonl"
+        rows = list(evidence.records(child))
+        first, second = copy.deepcopy(rows[1]), copy.deepcopy(rows[1])
+        for context in (first, second):
+            context["payload"]["turn_id"] = "unrelated-turn"
+        first["payload"].update(model="different-model", effort="medium")
+        first["timestamp"], second["timestamp"] = "2000-01-01T00:00:01.000Z", "2000-01-01T00:00:01.100Z"
+        self.jsonl(child, [*rows[:2], first, second, *rows[2:]])
+        self.assertEqual(self.invoke()[0], 0)
+
     def test_completion_starting_after_tool_result_also_passes(self):
         child = self.root / "child.jsonl"
         rows = list(evidence.records(child))
