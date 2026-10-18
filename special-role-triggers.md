@@ -365,3 +365,18 @@ PASSED at 7701703b: both Codex P2 are fixed, each rule's test fails under its ow
 ### Summary
 
 Same cause as the earlier two P2: the matchers compare literals, while design_surfaces accepts case, indent and no-break space. FO rulings needed: (1) design_surfaces itself reads `## FO alignment` and `### ` entries strictly, so normalizing those two goes beyond it (harmless: a task with `## FO Alignment` already fails design_surfaces); (2) copy `SPACE` plus a parity test against `design_surfaces.GO_SPACE`, or import it (an import breaks under `python3 -I`, and an import traceback exits 1, which this contract reads as owed lines).
+
+## Stage Report: implementation (cycle 3, phase 2)
+
+- DONE: Apply /tmp/rt-fix-scratch/fix.patch to kc-dev-flow-2/scripts/role_triggers.py and keep HeadingFormsTest in kc-dev-flow-2/scripts/test_role_triggers.py: all four headings (Captain amendments, Amendment N, Feedback Cycles, FO alignment) and section ends accept case, leading indent and no-break space
+  Commit b300d9ba on spacedock-ensign/special-role-triggers (off 7701703b): `patch` applied unchanged; `test_role_triggers.py` 17 tests OK (29 subtests failed on 7701703b, trailing-no-break-space controls passed before and after).
+- DONE: Copy the SPACE class and add a test that pins it equal to the GO_SPACE constant in kc-dev-flow-2/scripts/design_surfaces.py (no import at run time); each matcher's mutation fails only its own test (python3 -B, caches cleared); output over the state task files unchanged, with the count stated
+  `SpaceClassTest` reads both constants as text; changing `\x85` to `\x86` in SPACE fails only it. Matcher reverted to its literal fails only its heading's test: Captain amendments 6, Feedback Cycles 6, FO alignment 6, Amendment entry 5 subtests; column-0 `HEADING` fails 21 subtests in the five heading tests (9 of them the section-end test). State output, base vs fixed `check()`: 0 of 68 task slugs differ at state HEAD, 0 of 63 at f3474f68.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py exits 0 at 5447 of 5447; all package test files pass; roborev evidence= line; push without force; CI green on the new head
+  lint-skills.py exit 0, "5447 of 5447 words"; every `test_*.py` exits 0 (test_sd_dispatch.py with `--sd-plugin-root` spacedock 0.27.0; one first run, inside a loop with a 100 s timeout while other jobs ran, reported exit 2, a rerun alone exits 0). `roborev clean on b300d9ba; evidence=roborev:827` (codex, SEVERITY_THRESHOLD_MET, verdict_bool 1). Plain push 7701703b..b300d9ba; `gh pr checks 664`: 5 passed, 0 failed, headRefOid b300d9ba.
+- DONE: commit the stage report
+  State commit via `spacedock state commit` (see the FO message).
+
+### Summary
+
+All four headings and the section ends in `role_triggers.py` now read the forms `design_surfaces.py` accepts, with SPACE copied and pinned by test so the script runs under `python3 -I`. State output is unchanged over 68 task slugs; no PR comment, review request or ready-mark.
