@@ -21,7 +21,7 @@ successful (an empty rollup, SKIPPED and NEUTRAL included), the PR is a draft or
 README cannot be read, or an input is unusable. Every problem is printed.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
-and one last `next:` line, which is always the ask line.
+and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask.
 """
 import argparse
 import datetime
@@ -62,7 +62,7 @@ AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
 DECLINE_END = re.compile(r"(?<=[.)])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
 MAX_POINTS = 12
-ASK = "next: ask for merge with this text."
+ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."
 
 
 def clean(line):

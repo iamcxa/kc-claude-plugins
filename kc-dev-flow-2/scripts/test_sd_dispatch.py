@@ -160,9 +160,10 @@ FIXES = {
         swaps=((r"When that summary is already consumed, FO writes the decline.*?lists each entry there\. ", ""),)),
     "repair-push-grant": dict(
         need=("approval also covers later external-review rounds on the same PR",
-              "a scope change and the merge still go to him"),
+              "a Needs decision and a scope change go to him"),
         old=(),
-        swaps=((r", except as follows\. FO's delivery gate question.*?the merge still go to him\.", "."),)),
+        swaps=((r", except as follows\. FO's delivery gate question.*?scope change go to him\.",
+                ", except as follows. FO's delivery gate question says approval also covers merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it, unless he says he merges or holds, and removing its clean, pushed worktree."),)),
     "asked-line": dict(
         need=("Asked: <the question or proposal he answered",
               "`Asked:` is required when his words do not name"),
@@ -201,13 +202,18 @@ FIXES = {
         need=("the sentinel waits for a committed observer report",
               "that grant stands in for a presented body",
               "FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`",
-              "FO runs `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask",
+              "Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task> --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask",
               "as does a head other than the latest `Candidate:`"),
         old=(),
         swaps=((r"Where `learn` is listed, the sentinel waits for a committed observer report\. ", ""),
                (r" that grant stands in for a presented body", ""),
                (r" FO's startup and idle steps are in `_mods/kc-dev-flow-2\.md`, copied from `<package>/references/sd/mods/`\.", ""),
-               (r"Before the merge ask, FO runs `python3 <package>/scripts/delivery_gate\.py check.*?shows the Captain what it printed\.", "Before the merge ask, FO confirms the head."))),
+               (r"Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate\.py check.*?shows the Captain what it printed\.", "Before the merge ask, FO confirms the head."))),
+    "delivery-question-carries-merge": dict(
+        need=("merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it, unless he says he merges or holds",
+              "removing its clean, pushed worktree."),
+        old=(),
+        swaps=((r", merging the full head `<package>/scripts/delivery_gate\.py check` passes, with `--match-head-commit` set to it, unless he says he merges or holds, and removing its clean, pushed worktree", ""),)),
     "worker-opens-draft-pr": dict(
         file="skills/implementation/principles.md",
         need=("Where the dispatch scope notes quote the Captain's grant to push the task branch and open a Draft PR, open that PR before the stage report and name it there",

@@ -234,7 +234,7 @@ class DeliveryGateTests(unittest.TestCase):
 
     def test_each_exit_ends_with_the_next_line_for_the_ask(self):
         cases = (
-            (0, dict(), ["next: ask for merge with this text."]),
+            (0, dict(), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."]),
             (1, dict(head="7679ab7a"), ["next: hold the ask; revalidate this head or tell the Captain the difference."]),
             (1, dict(text=COPILOT_UNSTATED), ["next: hold the ask until each second reviewer has an outcome."]),
             (1, dict(head="7679ab7a", text=COPILOT_UNSTATED),
@@ -269,7 +269,7 @@ SECURITY = (f"Security review (validation): security/validation-1.yaml at {HEAD4
             "Security finding (validation 1) 2: Needs decision: add the sentence\n"
             "Security finding (validation 1) 3: declined: stated unverified\n")
 EQUALS = f"PR head {HEAD40[:8]} equals dispatched candidate {HEAD40[:8]}; no second reviewer outcome is missing\n"
-PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: ask for merge with this text.\n"
+PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text.\n"
 
 
 class ProdSecurityReviewTests(unittest.TestCase):
@@ -293,13 +293,13 @@ class ProdSecurityReviewTests(unittest.TestCase):
 
     def test_a_pilot_task_prints_the_two_old_lines_with_a_class_and_a_record_line_between(self):
         self.assertEqual(self.run_gate(profile="pilot", review="", report=None), (0, PILOT_OUT))
-        self.assertLessEqual(len(PILOT_OUT.split()), 37)
+        self.assertLessEqual(len(PILOT_OUT.split()), 55)
 
     def test_a_prod_task_with_a_disposed_review_gets_one_more_line_of_ten_words(self):
         code, out = self.run_gate()
         self.assertEqual(code, 0, out)
         note = "validation security review security/validation-1.yaml: 3 findings, 1 declined, 2 decisions\n"
-        self.assertEqual(out, EQUALS + note + "point: deferred: 'Security finding (validation 1) 3: declined:'\npoint: profile: 'prod'\nclass: never\nrecord: task/merge/ask-1.json\nnext: ask for merge with this text.\n")
+        self.assertEqual(out, EQUALS + note + "point: deferred: 'Security finding (validation 1) 3: declined:'\npoint: profile: 'prod'\nclass: never\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text.\n")
         self.assertEqual(len(note.split()), 10)
 
     def test_a_prod_task_with_a_hole_in_its_review_exits_1_and_holds_the_ask(self):
@@ -733,7 +733,7 @@ class CodexP1Tests(unittest.TestCase):
                 self.assertEqual(result.code, 0, result.out)
                 self.assertIn("point: profile: 'prod'", result.lines, result.out)
                 self.assertIn("class: never", result.lines, result.out)
-                self.assertEqual(nexts(result), ["next: ask for merge with this text."], result.out)
+                self.assertEqual(nexts(result), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."], result.out)
 
     def test_an_instruction_directory_at_any_depth_is_never(self):
         for path in ("packages/foo/agents/x.md", "a/b/c/references/r.md", "x/y/skills/z/SKILL.md", "p/q/extensions/e.py"):
