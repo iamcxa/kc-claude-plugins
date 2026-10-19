@@ -53,6 +53,17 @@ gates:
                 id: briefing:fo-write-checks:validation:attempt-1:revision-1
                 digest: sha256:4c2c8d67afe19ffcaf88ec00bc73a71118774d9d2371d1e6d22c81d083b610a4
                 room-ref: ./fo-write-checks/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-write-checks:validation:1
+                briefing: briefing:fo-write-checks:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T08:09:20.407733Z"
+                decision: approve
+                reason: 'Captain approved delivery in chat (「准」) after the Chinese gate briefing: FO merges #671 head 13ceb00d; declines into fo-write-checks-followups accepted as recommended in the gate question'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-18T16:57:29Z
 worktree: .worktrees/spacedock-ensign-fo-write-checks
 pr: iamcxa/kc-claude-plugins#671
