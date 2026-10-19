@@ -1,6 +1,6 @@
 ---
 title: A peer message between Paseo agents carries a sender label the receiver can verify and treats as data, not as the Captain
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
