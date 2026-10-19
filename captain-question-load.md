@@ -3,7 +3,7 @@ title: The Captain answers fewer FO questions per delivered task, without losing
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-18T16:57:42Z
 worktree: .worktrees/spacedock-ensign-captain-question-load
+pr: iamcxa/kc-claude-plugins#675
 ---
 
 Filed for batch 3 on the Captain's 「先走批次三規劃」 (chat, 2026-10-19), after FO reported that most of his turns in batch 2 were answering FO's questions rather than reviewing PRs. His goal for batching (chat, 2026-10-16): 「這樣我才可以從一直在追每個 FO 過程中解放出來」.
