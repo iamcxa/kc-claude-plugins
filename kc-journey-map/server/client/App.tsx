@@ -161,7 +161,7 @@ function RoomCanvas({ roomId, onConnection, onEditor }: { roomId: string; onConn
 	useChapterPopupIntercept(editor, (target, trigger) => setPopup({ target, trigger }))
 
 	return (
-		<div style={{ position: 'fixed', inset: 0 }}>
+		<div className="journey-canvas-root" style={{ position: 'fixed', inset: 0 }}>
 			<Tldraw
 				licenseKey={import.meta.env.VITE_TLDRAW_LICENSE_KEY}
 				store={store}

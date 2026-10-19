@@ -37,6 +37,7 @@ export default defineConfig(() => ({
 			'/repo-doc': { target: API },
 			'/save': { target: API },
    '/auth/': { target: API },
+   '/agents/': { target: API },
    '/session': { target: API },
    '^/doc($|[?])': { target: API },
    '/health': { target: API },

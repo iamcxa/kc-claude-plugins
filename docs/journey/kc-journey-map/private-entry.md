@@ -41,8 +41,11 @@ provider UI. Cookies are host-only, HttpOnly and SameSite Strict, with Secure on
 HTTPS. The narrowly scoped provider-start verifier uses a 60-second Lax cookie
 for the provider's top-level return; it grants no app access by itself.
 
-The other stories retain agent pairing and rotation, installation credential
-storage, full room switching/catalog behavior, interrupted-context restoration,
+The disabled second-story candidate adds exact agent consent, installation
+families, protected storage and conservative rotation repair; its current
+[implementation boundary](../../../kc-journey-map/docs/agent-pairing.md) does not
+establish activation or delivery. The other stories retain independent native
+client collaboration, full room switching/catalog behavior, interrupted-context restoration,
 stream-stop guarantees and durable human drafts. Approved defaults are five
 minutes for pairing, 60 seconds for local handoff, 30 seconds for stream leases,
 an observed stop target of at most 60 seconds, and 30 days for lifecycle receipts.
