@@ -423,3 +423,51 @@ Both Codex P2 reproduce as failing tests and each has a one-function fix that ke
 ### Summary
 
 Both Codex P2 from review:5567189577 are fixed at 13ceb00d with a failing-first test and a mutation each, and ADR 0025 now quotes the gate question as it stands; CI is green and the verdict of every committed dispatch record is unchanged (198 `--names` lines before and after). Ready for the fresh validation recheck.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independent verdict on PR #671 head 13ceb00d against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Head 13ceb00d9348ba860b01bbea6fd31e4c5b93e7c9 (merge-base c60e89e1), `gh pr view 671`: Draft, OPEN, 4 checks SUCCESS; throwaway detached worktree, `git diff --stat c60e89e1 HEAD` = the 7 listed files plus ADR 0025. Cycle 3 changed 16 + 1 code lines, 2 test files and the ADR, so AC-1 to AC-8 were re-run at this head. AC-1 (real `laws_check.py --before <c>^ --after <c>` on a clone of state `8b2af222`): `220255c5` ADR 0020, `d96a508b` ADR 0021, `46c7fe82` ADR 0022, `c24697d1` ADR 0012 print `reserved line ... missing`; `3b2c06be` 0 violated; `e3736568` and `869e93c4` print no reserved-line line. AC-2: `f4bb51b3` prints 'Captain amendment 1 named in no dispatch checklist'; script step 1 shows the Oxford form names 1, 2 and 3. AC-3: real `adr_names` over GitHub, #666 head a05b18a0 has 0 files `0023-`. AC-4: `unreasoned_items` before (08f06ac3) and after over all 120 committed md/json files with decline text: 98 vs 96 flagged only in `fo-write-checks.md` itself, which quotes the new example; no other verdict moves. AC-5: `test_laws_check` 40 OK. AC-6: `workflow.md` 5429 of 5429, `lint-skills.py` exit 0. AC-7: diff list above, no `design_surfaces.py`, `skills/observer/SKILL.md`, `workflow.md`. AC-8: not measured, as the AC allows. `--names` over all 269 committed dispatch records: 198 lines at 13ceb00d identical to 08f06ac3 (diff empty), 176 at base with 22 added and 0 removed. Suites (python3 -B, candidate checkout) all exit 0: dispatch_records 47, delivery_gate 56, laws_check 40, number_guards 23, comment_ratio 14, plus every other `test_*.py` in the package and `test_sd_dispatch.py --sd-plugin-root` spacedock 0.27.0.
+- DONE: Recheck cycle 2: both Codex round-2 P2 (nested parentheses in a declined reason; Oxford-comma amendment list) fixed at 13ceb00d with failing-first tests and mutations; ADR 0025 Words line quotes the gate question as it stands. Rerun the acceptance script and both mutations independently.
+  Mutations on a copy, python3 -B, caches cleared, control 9 OK each class: (1) `brackets(item)` replaced by the old innermost regex fails only `test_a_declined_reason_with_parentheses_inside_the_bracket_is_a_reason`; (2) `AMENDMENT_NAMED` separator back to `(?:,|and|&|to|-)` fails only `test_an_amendment_list_with_an_oxford_comma_names_every_number` (subTest `Captain amendments 1, 2, and 3`); (3) my own extra, an unclosed `(` counted as a bracket, fails the first test on `Declined: Polish (the call is redundant` (the fail-closed control). Copy restored, diff empty. Read-only probes: `((the call is redundant)` stays held; `(see (a) and (b))`, `(ok) (two words here)` pass; `1, 2, & 3`, `1, and 2`, `1,2,and 3` name every number; `3 to 5` still names 3 and 5 only (carried F5). ADR 0025 Words quote equals the question in `review/ideation/briefing-1/index.json` verbatim ("Approve the design and enter implementation as Pilot? Approving accepts D1 (...), D2 (...), and FO's implementation order below."), and `Recommended` now reads as the design stated and the gate question carried: validation-2 Polish 1 is resolved.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run with `cd / && env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>`; observed output as listed. `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0/scripts/adr_lint.py docs/adr --since c60e89e1` in the candidate: "23 ADR file(s) checked, 0 legacy", exit 0, also with `--require 25` exit 0. `comment_ratio.py c60e89e1 HEAD`: 359 code lines, 2 comment lines (both read: they state the 9-briefing result the test data comes from, a fact the code does not; none added in cycles 2 or 3), 0.6%, exit 0. `number_guards.py check` PASS, `design_surfaces.py check` presentable, `dispatch_records.py <task folder>` 9 records complete, exit 0. Verdict PASSED for 13ceb00d; no Material finding and nothing for FO to route.
+
+### Findings (Review-finding disposition), cycle 3
+
+1. Polish, none new. Resolved since cycle 2: ADR 0025 `Words` quotes the gate question as it stands.
+2. Deferred risk, carried from validation-2 F2, not re-run: a prose line that begins with the reserved text (`ADR: 0042 is not used here ...`) satisfies the anchored match. Material if FO leaves a reserved number unrecorded behind such a line.
+3. Carried, unchanged: Polish (AC-4 text says 12, true count 13); Deferred risk (`dev2-laws.yml` pin `2775096a`, so L2 reaches this repository only after a re-pin); Deferred risk (a two-word bracket proves a bracket, not a reason; ADR 0025 records it); Deferred risk (any `amendment N` phrase in any checklist of the folder satisfies the amendment check; a range `3 to 5` names 3 and 5 only).
+
+### Minimal acceptance script
+
+Needs `git`, `python3`, `gh` signed in, and commit 13ceb00d in `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo` (it is the PR head). Covers the Oxford-comma amendment list, a missing amendment, the nested-parentheses decline reason with a reasonless item beside it, the ADR-at-head read and the ADR record; does not cover L2 in CI (needs the pin raised) or a full `delivery_gate.py check` on a live PR. Paste the two `python3 -c` bodies with no leading spaces.
+
+    D=$(mktemp -d)
+    git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo archive 13ceb00d9348ba860b01bbea6fd31e4c5b93e7c9 | tar -x -C "$D"
+    S=$D/kc-dev-flow-2/scripts
+    mkdir -p "$D/t/dispatch"
+    printf -- '---\ntitle: x\n---\n\n## Number guards\n\nADR: 0042\n\n## Captain amendments\n\n### Amendment 1 — 2026-10-19, chat\nCaptain: x\n\n### Amendment 2 — 2026-10-19, chat\nCaptain: y\n\n### Amendment 3 — 2026-10-19, chat\nCaptain: z\n' > "$D/t.md"
+    printf '## Checklist\n\nDo the work under Captain amendments 1, 2, and 3.\n\n## Scope notes\n\nADR: 0042\n' > "$D/t/dispatch/implementation-1.md"
+    cd "$D" && python3 -B "$S/dispatch_records.py" --names t/dispatch/implementation-1.md; echo "exit $?"
+    printf '## Checklist\n\nDo the work under Captain amendments 1 and 2.\n\n## Scope notes\n\nADR: 0042\n' > "$D/t/dispatch/implementation-1.md"
+    cd "$D" && python3 -B "$S/dispatch_records.py" --names t/dispatch/implementation-1.md; echo "exit $?"
+    S=$S python3 -B -c '
+    import os, sys
+    sys.path.insert(0, os.environ["S"])
+    import delivery_gate as g
+    print(g.unreasoned_items("Declined: Polish, remove wrapper (the foo() call is redundant); Polish, typo; Polish, a stale count (the count is read by no gate). Second reviewer: none."))'
+    S=$S python3 -B -c '
+    import os, sys
+    sys.path.insert(0, os.environ["S"])
+    import delivery_gate as g
+    h = g.gh("api", "repos/iamcxa/kc-claude-plugins/pulls/666", "--jq", ".head.sha").strip()
+    print("head", h[:8], "files named 0023-:", sum(n.startswith("0023-") for n in g.adr_names("iamcxa/kc-claude-plugins", h, "docs/adr")))'
+    cd "$D" && python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0/scripts/adr_lint.py docs/adr --require 25; echo "exit $?"
+    rm -rf "$D"
+
+Expected, observed in a fresh shell: (1) `exit 0` and no other line (amendments 1, 2 and 3 all named, `ADR: 0042` on its own line); (2) one line `t/dispatch/implementation-1.md:1: Captain amendment 3 named in no dispatch checklist; write 'Captain amendment 3' in a checklist line of this record, then run this check again`, then `exit 1`; (3) `['Polish, typo']` (the nested-parentheses reason and the bracketed one pass, the unbracketed item is held); (4) `head a05b18a0 files named 0023-: 0`; (5) `23 ADR file(s) checked, 0 legacy`, `exit 0`. Six commands, five observations; steps 1 and 2 are the same check on two records.
+
+### Summary
+
+PR #671 head 13ceb00d meets AC-1 to AC-8 on the real scripts; both round-2 Codex P2 fixes fail under their mutations and a fail-closed mutation of my own, `--names` over 269 committed records and the decline check over 120 committed files change no verdict against 08f06ac3, and ADR 0025 now quotes the gate question verbatim. Verdict PASSED, no Material finding and nothing for FO to route; the pin, two-word-bracket, amendment-phrase and prose-line limits from earlier cycles stand. Throwaway worktree, clone and mutation copies are removed; nothing in the candidate or any PR was touched.
