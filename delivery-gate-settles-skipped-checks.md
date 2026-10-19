@@ -332,3 +332,18 @@ Observed output, fresh shell: `e80e50cb`; `Ran 68 tests in 93.695s` `OK`; `18 ch
 ### Summary
 
 PASSED recommended at e80e50cb: every acceptance criterion re-run and each falsifier shown failing by a mutation, the replay confirms every verdict, and the stored rollups equal GitHub's live ones. One Polish finding (AC-4's test compares against the candidate, not the base); no Material or Needs-decision finding. Throwaway checkouts removed; nothing pushed, commented or marked ready.
+
+## Stage Report: implementation (cycle 2, phase 1: investigate, no fix applied)
+
+- DONE: Phase 1 only: reproduce the Codex findings on #680 head e80e50cb (engineering-reviewer report (reviews/engineering-reviewer-1.md) and validation Polish) as failing tests, and propose the smallest fix; report and stop, with no commit or push, until FO authorizes the fix
+  Worktree head still e80e50cb, nothing committed or pushed. One uncommitted edit in `kc-dev-flow-2/scripts/test_delivery_gate.py` (+8 -4): `test_settling_a_check_adds_no_gh_call` now compares the gh calls of a plain and of a skipped+neutral rollup with the literal three-call list the base 891a9a24 records (the literal equals base: the base module run through `run_variant` on the skipped rollup logs the same three lines, exit 1). 68 tests pass on the edit (82 s).
+- DONE: Polish (validation): the test compared the candidate with itself. Mutation, run with `python3 -B` on a scratch copy: an unconditional `gh("api", "repos/o/r/commits")` as the first line of `ci_problem` leaves the committed (old) test green and turns the new test red (2 subtests, `plain` and `skipped and neutral`, extra line `api repos/o/r/commits`). Scratch copy and base extract removed.
+- DONE: Adjust (engineering-reviewer): the docstring absolute. The sentence in `delivery_gate.py` reads "other than SUCCESS, SKIPPED or NEUTRAL (a check run its repository skips by design settles)"; `ci_problem` settles every SKIPPED or NEUTRAL CheckRun with no way to know the cause. No behavioral test can pin prose; the proof is the existing rows `success skipped and neutral` and `lone skipped`.
+
+### Proposed fix (not applied)
+
+Docstring, smallest: delete the parenthetical `(a check run its repository skips by design settles)`. The clause before it already states the rule ("finished other than SUCCESS, SKIPPED or NEUTRAL"), and the next clause states the floor; nothing is lost. If FO wants a stated reason instead, the bounded form is `(a check run that finished SKIPPED or NEUTRAL settles)`; adding "as GitHub's merge model counts it" is an external claim I did not verify, so I did not propose it. Test: keep the edit above. Neither change touches `ci_problem`, README, references or skills, so AC-4 and AC-7 evidence is unchanged; AC-6's grep (`SKIPPED and NEUTRAL included`) stays empty.
+
+### Summary
+
+Both findings are real. The docstring one is prose only; the test one is reproduced by a mutation that the old test misses and the new test catches. Waiting for FO authorization to apply the docstring edit, commit the test and docstring, push, and take a fresh validation recheck.
