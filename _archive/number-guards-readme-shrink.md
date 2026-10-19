@@ -3,7 +3,7 @@ title: The Number guards passage of the workflow README shrinks to what number_g
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved in chat (「准」) the #670 delivery gate and the merge-grant-need-poc closing gate presented together; the #670 question said FO marks it ready and merges it unless he says he merges, so this approval carries the merge; accepts the declined Polish into number-guards-readme-shrink-followups'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-18T16:57:47Z
 worktree: .worktrees/spacedock-ensign-number-guards-readme-shrink
 pr: pr-merge:670
+verdict: PASSED
+completed: 2026-10-19T04:41:13Z
+archived: 2026-10-19T04:41:14Z
 ---
 
 Filed under D4 of workflow-budget-ratchet, approved by the Captain on 2026-10-17 (「那就照建議」 to the batch-2 ideation gates, whose question said approving accepts D4: "Number guards becomes a follow-up task").
