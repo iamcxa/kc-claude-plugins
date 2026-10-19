@@ -3,7 +3,7 @@ title: The FO-write rules the observer keeps finding broken are checked by a scr
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-18T16:57:29Z
 worktree: .worktrees/spacedock-ensign-fo-write-checks
+pr: iamcxa/kc-claude-plugins#671
 ---
 
 Filed for batch 3 on the Captain's 「先走批次三規劃」 (chat, 2026-10-19), after FO reported at the batch-2 close that its own process mistakes repeat across tasks and should move from reminders into a script; the Captain enabled the state laws check on this repository the same day (「可以那就只開啟這個repo」).
