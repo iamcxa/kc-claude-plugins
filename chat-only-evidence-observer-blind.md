@@ -244,6 +244,11 @@ Visible change: none
 
 ADR: 0024
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-19): Codex review on #679 389cb89f (review:5573330509) left one P1, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 (kc-dev-flow-2/scripts/delivery_gate.py clause()): the Sufficiency/Necessity search is not line-anchored, so prose that only mentions a label, such as the check's own diagnostic pasted back, passes the hold and the saved record then reads ok to the observer.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for per FO rule whose evidence lives only in chat (count the can't-tell rows of the batch-2 observer reports by rule): either a record FO leaves in state (and where), or the rule accepted as chat-only and the observer told not to judge it; designed together with fo-write-checks, which may check the records this task adds
