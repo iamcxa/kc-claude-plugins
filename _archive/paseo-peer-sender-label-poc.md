@@ -1,6 +1,6 @@
 ---
 title: A peer message between Paseo agents carries a sender label the receiver can verify and treats as data, not as the Captain
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -46,8 +46,11 @@ gates:
                 reason: 'Captain: 「准」 (2026-10-19 chat) — accept the POC result, no PR, archive with the code kept on its remote branch'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-19T08:10:26Z
+verdict: REJECTED
+completed: 2026-10-19T08:49:58Z
+archived: 2026-10-19T08:49:58Z
 ---
 
 Inside Paseo, Claude and Codex agents already message each other in both directions and
