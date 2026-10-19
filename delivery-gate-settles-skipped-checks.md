@@ -15,6 +15,17 @@ gates:
                 id: briefing:delivery-gate-settles-skipped-checks:backlog:attempt-1:revision-1
                 digest: sha256:e42929dd41c211a4ebc1fd270c28793c4ec2f7660758a0a10d834a9de87cf70a
                 room-ref: ./delivery-gate-settles-skipped-checks/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-settles-skipped-checks:backlog:1
+                briefing: briefing:delivery-gate-settles-skipped-checks:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T15:33:21.801782Z"
+                decision: approve
+                reason: 'Captain answered in chat 「把 #677 排在這次發版之前修好」 to FO''s question 「你回「排」，我就開一張任務，選 Pilot 這個 profile，排在 #679 之後」, put before his answer; this briefing binds that question and answer after the fact'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
