@@ -1,6 +1,6 @@
 ---
 title: From one Paseo screen the Captain sees what each FO is busy with, starts FOs, and opens a coordinator that only starts and talks to them
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
