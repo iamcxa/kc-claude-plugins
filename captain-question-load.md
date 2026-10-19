@@ -263,6 +263,11 @@ Captain: 「授權修改 Delivery authority 合併措辭，照 D1 設計。但�
 Asked: FO's chat question after the implementation worker's edit of the Delivery authority merge wording was refused by the permission check: 「你明確再授權一次（建議）：給我一句可以引用的話，例如「授權修改 Delivery authority 合併措辭，照 D1 設計」……放棄 D1：合併照舊每次單獨問你。」
 Supersedes: none
 
+### Amendment 2 — 2026-10-19, chat
+Captain: 「同意，但我想知道為何你沒有自動找 CE 來問？此外改下你自己的 paseo 內的名字」 (chat, this FO session)
+Asked: FO's chat question after the chief-engineer's advice: 「同意把 P2 和 roborev 的 High 豁免、延後到 `fo-write-checks-followups` 嗎？」, covering Codex round-2 P2 (review:5569986438, the merge-time recheck writes a second merge/ask-N.json) and roborev:875/878 (and later roborev runs with the same finding at the ASK line), with ADR 0023's reopen condition.
+Supersedes: none
+
 ## Number guards
 
 ADR: 0023
