@@ -253,6 +253,10 @@ Verified by: `git diff --name-only <base>..<head>` and `git diff -U0 <base>..<he
 **AC-5** Batch 3 reports its Captain answers per task with the same script and the same classification as AC-1, and the rule is judged by the two removable kinds: no standalone merge ask for a delivery PR whose approved question carried the sentence, and no worktree-cleanup ask.
 Verified by: FO runs the transcript script over the batch window at batch close and records answers and asks per task by kind in the batch note, beside the batch-2 figures (22 answers, 3.7 per task, 63 asks); each delivery gate question is read from `<task>/review/validation/briefing-N/index.json`. The per-task number is reported without a threshold (one task drove 7 of 22 in batch 2; batch 3 differs in size and profile). Falsifier: one answer of either removable kind, or a batch note without the per-task figures. Current evidence: not yet verified; batch 2 had 1 certain and 1 conditional.
 
+## Number guards
+
+ADR: 0023
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for the measured count of every Captain decision per batch-2 task by kind (stage gates, Needs decisions, amendments, merge asks, procedural asks such as a refused push, a throwaway repository, a PR-body edit), from the decision ledger, gate briefings and task files of this workflow (2026-10-17 to 10-19); which kinds a written standing rule could settle without him and the rule text; which stay his under ADR 0011; the expected asks per task after the change
