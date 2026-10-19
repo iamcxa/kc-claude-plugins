@@ -889,6 +889,13 @@ class DeclineAndAdrTests(unittest.TestCase):
         for text in ("Declined: none.", "FO declines: n/a.", "Declined: nothing"):
             self.assertEqual(self.check(text=text)[0], 0, text)
 
+    def test_a_declined_reason_with_parentheses_inside_the_bracket_is_a_reason(self):
+        for text in ("Declined: Polish, remove wrapper (the foo() call is redundant).",
+                     "Declined: Polish (wording (see the note) only, no change)."):
+            self.assertEqual(self.check(text=text)[0], 0, text)
+        for text in ("Declined: Polish, remove wrapper (foo()).", "Declined: Polish (the call is redundant", "Declined: Polish ()."):
+            self.assertEqual(self.check(text=text)[0], 1, text)
+
     def adr(self, listing, **kw):
         return self.check(task=ADR_TASK, adr=listing, **kw)
 

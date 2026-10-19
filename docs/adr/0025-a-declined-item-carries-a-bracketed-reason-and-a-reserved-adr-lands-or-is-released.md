@@ -12,13 +12,13 @@ Across six batch-2 observer reports, a decline in a gate summary had no reason i
 
 ## Decision
 
-**Words:** 「照建議」 — Captain, 2026-10-19, chat, approving the four batch-3 ideation gates presented together, accepting each task's stated decisions. The fo-write-checks gate question named D1 (declined item form: Recommend A, `<class>, <finding> (<reason>)`, enforced as a hold at `delivery_gate.py check`) and D2 (a reserved ADR may not stay unlanded at merge: Recommend no, with K6 holding).
+**Words:** 「照建議」 — Captain, 2026-10-19, chat, approving the four batch-3 ideation gates presented together. The fo-write-checks gate question read: "Approve the design and enter implementation as Pilot? Approving accepts D1 (every declined item in a delivery gate summary carries a bracketed reason, held by delivery_gate.py), D2 (a reserved ADR must exist at the PR head before the merge ask; FO lands the file or deletes the reserved line), and FO's implementation order below." The task design recommended A for D1 (`<class>, <finding> (<reason>)`, enforced as a hold at `delivery_gate.py check`) and no parked form for D2.
 
 **Options considered:**
 - D1 A: each declined item in the merge-ask text carries a bracket of two or more words, and `delivery_gate.py check` holds the ask without one (chosen); B bracket or `because`, C a dash form, D leave it to the observer — not chosen (C fails every legacy summary; D leaves reasons unseen until archive)
 - D2 no parked form: a reserved `ADR: NNNN` with no `<adr-path>/NNNN-*.md` at the PR head holds the merge ask, and FO lands the file or deletes the `ADR:` line and notes the successor in the task (chosen); a written `parked` form K6 accepts — not chosen, it adds README words and a form K6 must read
 
-**Recommended:** A and no parked form, as the Captain accepted.
+**Recommended:** A and no parked form, as the task design stated and the gate question carried.
 
 ## Consequences
 

@@ -323,6 +323,15 @@ class TaskFactTests(unittest.TestCase):
         earlier = {"implementation-1.md": names_one, "implementation-2.md": COMPLETE.replace("1. Independent", "1. Amendment 2. Independent")}
         self.assertEqual(self.run_names(AMENDMENTS, earlier, "implementation-2.md"), (0, []))
 
+    def test_an_amendment_list_with_an_oxford_comma_names_every_number(self):
+        for phrase in ("Captain amendments 1, 2, and 3", "Captain amendments 1, 2 and 3", "Captain amendments 1 and 2", "Captain amendments 1, 2"):
+            with self.subTest(phrase):
+                three = AMENDMENTS + "\n### Amendment 3 \u2014 2026-10-19\n"
+                rec = COMPLETE.replace("1. Independent", f"1. {phrase}. Independent")
+                code, out = self.run_names(three, {"implementation-1.md": rec})
+                expected = 0 if phrase.endswith("3") else 1
+                self.assertEqual(code, expected, out)
+
     def test_an_amendment_named_outside_a_checklist_or_by_a_bare_number_is_unnamed(self):
         in_notes = COMPLETE.replace("Package root:", "Captain amendment 1 and 2.\nPackage root:")
         self.assertEqual(len(self.run_names(AMENDMENTS, {"implementation-1.md": in_notes})[1]), 2)

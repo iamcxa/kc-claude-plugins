@@ -61,7 +61,6 @@ AC_NOT_RUN = re.compile(r"(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b", re.I)
 AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
 DECLINE_END = re.compile(r"(?<=[.)])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
-BRACKET = re.compile(r"\(([^()]*)\)")
 MAX_POINTS = 12
 ASK = "next: ask for merge with this text."
 
@@ -164,8 +163,21 @@ def declined_items(text):
     return [item for item in items if item and item.lower() not in ("none", "nothing", "n/a")]
 
 
+def brackets(item):
+    found, depth, start = [], 0, 0
+    for i, ch in enumerate(item):
+        if ch == "(":
+            start = i + 1 if depth == 0 else start
+            depth += 1
+        elif ch == ")" and depth:
+            depth -= 1
+            if depth == 0:
+                found.append(item[start:i])
+    return found
+
+
 def unreasoned_items(text):
-    return [item for item in declined_items(text) if not any(len(b.split()) >= 2 for b in BRACKET.findall(item))]
+    return [item for item in declined_items(text) if not any(len(b.split()) >= 2 for b in brackets(item))]
 
 
 def adr_names(repo, head, adr_dir):

@@ -165,7 +165,7 @@ def check_candidates(files):
 
 
 AMENDMENT_ENTRY = re.compile(r"(?m)^(?=### )")
-AMENDMENT_NAMED = re.compile(r"amendments?[ \t]+((?:\d+(?:[ \t]*(?:,|and|&|to|-)[ \t]*)?)+)", re.I)
+AMENDMENT_NAMED = re.compile(r"amendments?[ \t]+((?:\d+(?:[ \t]*(?:,[ \t]*(?:and|&)?|and|&|to|-)[ \t]*)?)+)", re.I)
 
 
 def named_section(text, heading):
