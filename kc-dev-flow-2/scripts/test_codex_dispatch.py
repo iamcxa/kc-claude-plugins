@@ -284,6 +284,7 @@ class EvidenceRouteTest(unittest.TestCase):
         entity = self.root / "entity.md"
         entity.write_text("---\nstatus: implementation\nworktree: .worktrees/pilot\n---\n")
         owner = {"entity_file": str(entity), "stage": "implementation", "code_worktree": str(self.repo), "branch": "pilot", "handle": self.producer,
+                 "completion_epoch": "fixture-completion-1",
                  "frontmatter_sha256": hashlib.sha256(entity.read_text().split("---", 2)[1].encode()).hexdigest()}
         self.write("followup-receipt", dict(owner, candidate=candidate, wrapper_sha256=hashlib.sha256(wrapper.read_bytes()).hexdigest(), binding=binding,
                                            marker=marker, completion_turn_id="followup-turn", before=owner, after=owner,
@@ -335,6 +336,58 @@ class EvidenceRouteTest(unittest.TestCase):
             receipt[phase]["frontmatter_sha256"] = digest
         self.write("followup-receipt", receipt)
         return snapshot
+
+    def test_completion_epoch_required_at_receipt_and_both_snapshots(self):
+        original = evidence.read(self.root / "followup-receipt.json")
+        for phase in ("receipt", "before", "after"):
+            with self.subTest(phase=phase):
+                receipt = json.loads(json.dumps(original))
+                target = receipt if phase == "receipt" else receipt[phase]
+                del target["completion_epoch"]
+                self.write("followup-receipt", receipt)
+                code, out, err = self.invoke()
+                self.assertEqual((code, out), (1, ""))
+                self.assertIn("completion_epoch", err)
+
+    def test_completion_epoch_rejects_blank_wrong_type_and_unsupported_tokens(self):
+        original = evidence.read(self.root / "followup-receipt.json")
+        for value in (None, "", " ", "\t", 1, True, 1.5, [], {}, "a" * 129,
+                      "epoch with space", "epoch\n", "批次1"):
+            for phase in ("receipt", "before", "after"):
+                with self.subTest(value=value, phase=phase):
+                    receipt = json.loads(json.dumps(original))
+                    target = receipt if phase == "receipt" else receipt[phase]
+                    target["completion_epoch"] = value
+                    self.write("followup-receipt", receipt)
+                    code, out, err = self.invoke()
+                    self.assertEqual((code, out), (1, ""))
+                    self.assertIn("completion_epoch", err)
+
+    def test_completion_epoch_requires_exact_three_way_agreement(self):
+        original = evidence.read(self.root / "followup-receipt.json")
+        for phases in (("receipt",), ("before",), ("after",), ("before", "after")):
+            with self.subTest(phases=phases):
+                receipt = json.loads(json.dumps(original))
+                for phase in phases:
+                    target = receipt if phase == "receipt" else receipt[phase]
+                    target["completion_epoch"] = "fixture-completion-2"
+                self.write("followup-receipt", receipt)
+                code, out, err = self.invoke()
+                self.assertEqual((code, out), (1, ""))
+                self.assertIn("completion_epoch", err)
+
+    def test_matching_epoch_preserves_historical_audit_after_live_stage_advance(self):
+        self.snapshot("---\nstatus: implementation\nworktree: .worktrees/pilot\n---\n")
+        (self.root / "entity.md").write_text("---\nstatus: validation\nworktree: .worktrees/pilot\n---\nLater report.\n")
+        original = evidence.read(self.root / "followup-receipt.json")
+        for epoch in ("1", "completed:2000-01-01T00:00:01Z", "a" * 128):
+            with self.subTest(epoch=epoch):
+                receipt = json.loads(json.dumps(original))
+                receipt["completion_epoch"] = epoch
+                for phase in ("before", "after"):
+                    receipt[phase]["completion_epoch"] = epoch
+                self.write("followup-receipt", receipt)
+                self.assertEqual(self.invoke()[0], 0)
 
     def test_snapshot_exact_unambiguous_top_level_fields_required(self):
         for fields in ("not-status: implementation\nnot-worktree: .worktrees/pilot\n",

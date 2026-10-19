@@ -136,6 +136,12 @@ def main(argv=None):
         entity = Path(args.entity).resolve()
         require(Path(receipt["entity_file"]).resolve() == entity and receipt["stage"] == "implementation", "followup entity/stage mismatch")
         require(Path(receipt["code_worktree"]).resolve() == repo and receipt["branch"] == git(repo, "branch", "--show-current"), "followup worktree/branch mismatch")
+        for label, owner in (("receipt", receipt), ("before", receipt["before"]), ("after", receipt["after"])):
+            epoch = owner.get("completion_epoch")
+            require(isinstance(epoch, str) and re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._:-]{0,127}", epoch),
+                    f"{label} completion_epoch requires a 1-128 character ASCII token starting with a letter/digit; remaining characters: letters/digits/._:-")
+        require(receipt["completion_epoch"] == receipt["before"]["completion_epoch"] == receipt["after"]["completion_epoch"],
+                "followup completion_epoch mismatch between receipt/before/after")
         require(receipt["before"] == receipt["after"], "followup ownership/state changed")
         for key in ("entity_file", "stage", "code_worktree", "branch", "handle"):
             require(receipt["after"][key] == receipt[key], f"followup ownership snapshot mismatch: {key}")

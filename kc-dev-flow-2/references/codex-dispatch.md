@@ -166,6 +166,20 @@ Save raw entity snapshots before/after the check so later validation can compare
 the implementation state after the normal task transition.
 A disposable positive fixture cannot prove continuation of the real producer.
 
+For the local evidence receipt, `completion_epoch` is a JSON string of 1-128 ASCII
+characters: `[A-Za-z0-9][A-Za-z0-9._:-]{0,127}`. FO records this token in the
+existing worker roster when it observes that producer's completed run, then copies
+that same pre-send token into the receipt root and its `before`/`after` ownership
+objects. It identifies the prior completion being continued; do not replace it
+with the new acknowledgement's turn id or infer it later from a timestamp.
+The helper requires all three declarations and exact agreement. Matching tokens
+prove declared consistency only, not host or roster authentication. Missing or
+unsupported original epoch evidence remains HOLD; preserve the original receipt
+and snapshots rather than adding a guessed field to make a historical audit pass.
+The helper audits retained snapshots after normal task transition; its PASS does
+not establish live eligibility or authorize another send. FO retains that pre-send
+duty above.
+
 ## Holds and recovery
 
 | Failure | Next operator action |
