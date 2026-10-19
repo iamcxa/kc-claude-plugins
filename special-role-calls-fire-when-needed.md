@@ -74,7 +74,10 @@ flowchart TD
     R --> E{"a replacing amendment is dated after the last engineering-reviewer call or dated waiver"}
     W["pr_watch.py tasks, slice 2: one gh call per open task PR, review ids that left inline comments"] -- "--review-rounds N" --> R
     C -- "yes, no chief-engineer line under FO alignment" --> L1["one next: line, chief-engineer"]
-    E -- "yes" --> L2["one next: line, engineering-reviewer, amendment numbers listed"]
+    E -- "yes" --> M{"profile prod or Surfaces db"}
+    M -- "yes" --> L2F["one next: line, engineering-reviewer on fable, amendment numbers listed"]
+    M -- "no" --> L2["one next: line, engineering-reviewer on opus, amendment numbers listed"]
+    L2F --> FO
     C -- "no" --> S["silent"]
     E -- "no" --> S
     L1 --> FO["FO dispatches the role on Opus, or records a dated waiver with a reason"]
@@ -182,7 +185,7 @@ Engineering-reviewer:
 
 #### Calls and cost
 
-Expected calls = fires (one chief-engineer call per task, one engineering-reviewer call per task and later amendment).
+Expected calls = fires (one chief-engineer call per task, one engineering-reviewer call per task and later amendment). The Opus counts in the earlier rows include the Fable calls; read the two model rows for the split. No Fable price for an engineering-reviewer call was measured: the only figures are ADR 0021's security-review runs (Opus about 2.2, Fable about 12.3 USD, assumed prices), about 5.6 times, which is not an engineering-reviewer cost.
 
 | Scope | Today (Event A + Event B) | This design, slice 1 | Slice 1 + slice 2 |
 |---|---|---|---|
@@ -190,7 +193,10 @@ Expected calls = fires (one chief-engineer call per task, one engineering-review
 | Window, per repo (CE/ER) | kcp 4/4, relay 1/3, web 0/2, qnow 0/0 | kcp 6/4, relay 1/3, web 0/2, qnow 3/0 | kcp 7/4, same elsewhere |
 | Population, 287 tasks | CE 14 + ER 39 = 53 (0.18) | CE 32 + ER 39 = 71 (0.25) | CE 47 + ER 39 = 86 (0.30) |
 | Population, per repo (CE/ER) | kcp 10/12, relay 4/17, web 0/4, qnow 0/6 | kcp 11/12, relay 5/17, web 1/4, qnow 15/6 | kcp 19/12, relay 6/17, web 1/4, qnow 21/6 |
-| Owed lines after recorded calls count, window | 19 lines, 1104 words | 17 lines (CE 8, ER 9), 833 words | 17 lines |
+| Engineering-reviewer calls by model, window | all Opus | Opus 7, Fable 2 (merge-gatekeeper, account-publish-ceiling) | same |
+| Engineering-reviewer calls by model, population | all Opus | Opus 27, Fable 12 (kc-claude-plugins 2, relay 6, qnow 4) | same |
+| Chief-engineer calls | all Opus | all Opus | all Opus |
+| Owed lines after recorded calls count, window | 19 lines, 1104 words | 17 lines (CE 8, ER 9), about 855 words with the model named | 17 lines |
 
 Calls actually made in the window: 4 chief-engineer (three recorded in wording or under a heading the script does not count, one made after the Captain asked), 1 chief-engineer waiver, 0 engineering-reviewer on an amendment. The per-task fire rate is unjudged outside the window: 52 of the 71 population fires (slice 1) are on tasks no observer read. A chief-engineer or engineering-reviewer call runs on Opus at `xhigh` (agent files); no dollar figure was measured. A task that keeps circling after its one call does not fire again (merge-gatekeeper reached 10 repairs and production-operations 11).
 
@@ -207,6 +213,8 @@ Calls actually made in the window: 4 chief-engineer (three recorded in wording o
 | README Stages sentence: `Reviewer: <agent> <model> <date> — <question>`; `role_triggers.py` lists calls owed | **Keep unchanged** | still true; `test_sd_dispatch.py` `need=` pin and the adopters' synced copies do not change |
 | `pr_watch.py tasks` prints the script's output | **Keep**; slice 2 adds the `--review-rounds N` argument | the channel already runs at startup and every idle pass |
 | Observer rule (report a `Reviewer:` line for a task "whose validation was sent back twice"; run the script, quote each `next:` as a violation) | **Keep unchanged** | the observer replay (`--rev TO`) cannot pass N, so it judges slice 1 only; its output changes though its rule does not, because it quotes the new heading-hint `next:` line as a violation (a misplaced call is a form break) |
+| Engineering-reviewer model | **Change**: Fable when `profile: prod` or `Surfaces:` lists `db`, else Opus, never below Opus; a call below the required model does not clear | prod or db: 2 of 9 window fires and 12 of 39 population fires; path and secret signals do not discriminate (see the model section) |
+| `agents/engineering-reviewer.md` body | **Change** one clause: "Run as Claude Opus" becomes "or the model the dispatch names"; `model: opus` and the `lint-skills.py` pin stay | the declared floor is kept; Fable is not cheaper, so the README sentence stays true |
 | Agent and skill triggers by judgment (contested, hard to reverse, low confidence; unclear, blocked, drifting) | **Keep unchanged** | the counts are a floor FO cannot forget; the four misses stay with judgment and the Captain's question |
 | Sent-back count (REJECTED report, Captain `revise`) | **Drop** from the trigger | adds one unique catch (web others-highlights) and costs a free-text verdict match that leaves 105 of 410 validation reports unreadable; at threshold 1 it has 3 false fires. Revisit with a second case |
 | Same-path review rounds, P1 counts, hold or override, withdrawn criteria, ADR draft, cross-references | **Drop** | each scored above: no unique true catch, or false fires |
@@ -215,19 +223,44 @@ Calls actually made in the window: 4 chief-engineer (three recorded in wording o
 
 **ADR draft (no number).** Short title: *Role calls are owed on counts read from task records, and a dated call clears them whatever it says.* Ruling: chief-engineer is owed at four repair passes; engineering-reviewer at a replacing amendment; a `Reviewer:` line under `## FO alignment` with a date clears by date, not by wording. It supersedes the wording-match clause of the special-role-triggers design (task `special-role-triggers`, PR #664), which has no ADR of its own to amend.
 
+### Engineering-reviewer model (Captain's scope addition 2026-10-20, item 1)
+
+The engineering-reviewer is dispatched on Fable when structured risk signals in state say so, else on its declared Opus, and never below Opus. Signals are fields already in state, measured at the pins (window of 38, population of 287):
+
+| Signal | Field read | Tasks with it, window / population | ER fires with it, window / population | Verdict |
+|---|---|---|---|---|
+| Prod profile | frontmatter `profile: prod` (`design_surfaces.FM_PROFILE`, as `delivery_gate.py` reads it) | 10 / 33 | 2 (merge-gatekeeper, account-publish-ceiling) / 12 with the next row | **use** |
+| Database surface | a `db` value on the `Surfaces:` line under `## FO alignment` (`delivery_gate.py` already tests `^Surfaces:.*\bdb\b`) | 7 / 23 (prod and db: 4 / 6) | 0 beyond prod / included above | **use** |
+| Merge or authority rules | the PR's changed paths in `delivery_gate.py` `never_paths` (instructions, gate scripts, `_mods`, migrations, `.github`, ADRs) | 31 of 38; all 13 kc-claude-plugins tasks | 7 of 9 | **not used**: it would make Fable the default in this repository, and it needs a PR, so it cannot speak at ideation |
+| Secrets | none in state; a secret-looking changed path (`.env*`, `*secret*`, `*credential*`, `*.pem`, `*.key`) | 1 of 38 (owner-sms-notices, not owed) | 0 | **not used**: no field to read, and the path guess hit one unrelated task |
+
+Prod or db carries 13 of 38 window tasks and 50 of 287; it picks Fable for 2 of 9 window engineering-reviewer fires (7 on Opus) and for 12 of 39 population fires (27 on Opus). It covers 3 of the 11 owed cases (merge-gatekeeper, account-publish-ceiling, production-go-live); the other 8, including captain-question-load (a merge and approval rule change on a pilot task), get Opus. Chief-engineer stays on Opus: item 1 names the reviewer only.
+
+**How the dispatch records it.** The owed line names the model and the field that chose it: `dispatch kc-dev-flow-2:engineering-reviewer on fable (profile prod)`, `on fable (profile prod, Surfaces db)` or `on opus`; FO passes that as the Agent `model`; the `Reviewer: <agent> <model> <date> — <question>` line's `<model>` token is the record. The reason is not copied into a field: it is re-derivable from the frontmatter and the `Surfaces:` line at the same revision, so a copied reason could only disagree with them. **Never below Opus:** the script ranks haiku, sonnet, opus, fable by the leading word of the token (`opus-5.5` ranks as opus); a call whose model ranks below the required one, or is unrecognised, does not clear, and the owed line says which model it needs. Both engineering-reviewer calls on record at the pins (web, 2026-10-15 and 10-16) say `opus` on a pilot task, which the rule leaves at Opus; no call on record is on a prod or db task. `agents/engineering-reviewer.md` keeps `model: opus` (the floor `lint-skills.py` pins); its body says "Run as Claude Opus" and gains "or the model the dispatch names"; the README sentence "run on the model and reasoning their agent files declare, never a cheaper one" stays true, since Fable is not cheaper. A call FO makes by judgment, with no owed line, has no printed model: that is a known limit, and D4 offers a README sentence for it.
+
+### Evaluation only: what would justify reversing ADR 0021 D1 (item 2)
+
+Nothing was run on a model. Question: should `kc-pr-flow:tob-security-reviewer` at prod validation step up by risk (sonnet, then opus), against ADR 0021 D1 (sonnet fixed)? ADR 0021's own reopen condition is "if a stronger model finds a class Sonnet misses under the same brief" (or a refusal, or a write class missed on another repository). Its evidence: 14 runs on one relay PR and one Python script, 0 refusals, Opus and Fable n=1 each, and the same class named by every model that got the Reach brief; none of that was a repeat on a second repository. The ranking in model documentation that the Captain cites is not in state or in the ADR and I did not verify it; it is not a measurement on this brief.
+
+Evidence in state today: 28 saved security reports (22 in kc-claude-plugins, 2 relay, 4 qnow; 8 HIGH, 0 CRITICAL, 35 MEDIUM, 56 LOW), none records its model in the file, so "Sonnet" rests on ADR 0021 D1. Ten are prod validation reports on 7 prod tasks (merge-gatekeeper 4, revoke-ends-access, account-publish-ceiling, production-operations validation-10, check-database-version, move-to-singapore-region, product-analytics-posthog).
+
+- **Stage 1, reading only, no model, no cost.** For those 10 reports, take every inline finding and roborev High raised on the same PR at a later head. Only merge-gatekeeper (#666: 7 comments, 6 P1) and production-operations (#1287: 19 comments, 10 P1, 9 P2) have both a saved report and later inline findings, 26 comments in all. A reader labels each security-class or not and whether the report at the preceding head names it (same file, same class). Output: the number of escapes. Stop rule: no security-class escape keeps D1 and closes the question.
+- **Stage 2, a model run, only after the Captain approves it and stage 1 finds at least one escape.** Same agent, same Reach brief, same saved heads: Opus once on each escaped head and on 3 control heads with no escape; Sonnet once more on the same heads (its own variance); Fable once on any head where Opus returns something Sonnet did not. Count: HIGH or CRITICAL findings returned by Opus or Fable and by no Sonnet run on that head, confirmed real by a reader; findings Sonnet had that the stronger run lacks; refusals or no-report replies; findings needing a disposition (false-positive load). Proposed reversal rule: at least one confirmed real HIGH or CRITICAL finding that every Sonnet run on that head missed; none keeps D1. The 3 controls guard against a stronger model that only adds noise.
+- **Cost, ADR 0021's per-review figures at relay size (assumed prices, not billed; other sizes not measured):** Sonnet 0.86 to 0.91, Opus about 2.2, Fable about 12.3 USD. Per head: Sonnet rerun plus Opus about 3.1, plus Fable about 12.3 where used. With 2 escaped heads and 3 controls (5 heads): about 4.5 (Sonnet) + 11 (Opus) + up to 25 (Fable on 2) = about 40 USD assumed; stage 1 costs reading time only. If stage 1 finds nothing, stage 2 costs 0.
+
 ### Words FO reads at each lifecycle moment
 
 Rule: for each moment in root `learning.md` ("Measure the words FO reads at each moment"), the words of every role-call line printed by `pr_watch.py tasks` over the live tasks of the state at the pin, `len(line.split())`, and the README sentence. `tasks` runs at startup and at each idle pass, so the three moments that run it read the same lines; the after-archive step and the merge ask do not print them. The README sentence (`Record chief-engineer and engineering-reviewer calls under …`) is 20 words before and after.
 
 | Moment | relay, today / design | kc-claude-plugins | web | qnow |
 |---|---|---|---|---|
-| Startup (restart, one open PR) | 540 (9 lines) / 205 (4) | 120 (2) / 194 (4) | 0 / 0 | 0 / 0 |
+| Startup (restart, one open PR) | 540 (9 lines) / 219 (4) | 120 (2) / 204 (4) | 0 / 0 | 0 / 0 |
 | Idle on an open PR | same lines as startup | same | same | same |
 | Idle on a merged PR | same lines as startup | same | same | same |
 | After the archive | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
 | The merge ask | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
 
-The learn practice that every moment must fall below its base does not hold, and this task's goal is not to cut reading: kc-claude-plugins rises 120 to 194 because two live tasks that today's script does not flag now owe a call, and relay falls only because five lines for one task become one. The numbers FO can rely on are the length of one owed line (46 to 55 words in the prototype; today 51 and 60) and that a line is printed only until the call is recorded.
+The learn practice that every moment must fall below its base does not hold, and this task's goal is not to cut reading: kc-claude-plugins rises 120 to 204 (the engineering-reviewer lines now name the model, 2 to 6 words each) because two live tasks that today's script does not flag now owe a call, and relay falls only because five lines for one task become one. The numbers FO can rely on are the length of one owed line (46 to 58 words in the prototype with the model named; today 51 and 60) and that a line is printed only until the call is recorded.
 
 ### Batch overlap
 
@@ -241,6 +274,8 @@ Against delivery-gate-settles-skipped-checks (PR #680, design written): it edits
 - `roborev` findings are a local reviewer's and are not in `pulls/N/comments`; slice 2 undercounts where roborev carries the rounds.
 - The kc-claude-plugins state branch moved during measurement; the pins above are the oracle, not today's tip.
 - New obligation that would force a profile change: none; slice 2 adds one `gh` read inside a step FO already runs.
+- The model rule reaches FO only through an owed line; a call FO makes by judgment prints no model. Fable is chosen on 2 of 9 window fires, so the measured effect of the rule is small here; it matters more in relay (6 of 17) and qnow (4 of 6).
+- Item 2 is evaluation only: no model was run, no ADR 0021 text changes, the security reviewer stays on Sonnet until the Captain rules on D5.
 - Non-goals: no automatic dispatch; no change to the two agent files or skills; no new gate or state authority; no tiered second call; no text-matched verdict; the observer is unchanged.
 
 ## Acceptance criteria
@@ -251,13 +286,17 @@ Against delivery-gate-settles-skipped-checks (PR #680, design written): it edits
 
 **AC-3** Engineering-reviewer: one line per task lists every uncleared replacing amendment; a call dated on or after an amendment, or a dated waiver `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>`, clears the amendments dated on or before it. Evidence: rows: a task with five replacing amendments prints one `next:` line listing 1 to 5 (today five lines, 300 words in relay spacedock-install-beta); a call dated between amendments 3 and 4 leaves 4 and 5 owed; an undated waiver clears no amendment; a task whose only calls (2026-10-15, 2026-10-16) precede its Amendment 1 (2026-10-17) stays owed (web others-highlights). Falsifier: clearing on any engineering-reviewer line makes the last row exit 0.
 
-**AC-4** Reading cost: the README is untouched and every owed line is short. Evidence: `git diff origin/main --stat -- docs/dev2/README.md kc-dev-flow-2/references/sd/workflow.md` prints nothing; each `next:` line printed by the rows of AC-1 to AC-3 has at most 60 words (`len(line.split())`; the prototype printed 46 to 55 with a real slug); the test asserts that bound. Falsifier: a 61-word line fails the row; an edit to the Stages paragraph fails the stat and the `test_sd_dispatch.py` `need=` pin. Limit: words per idle pass are not bounded, because they follow the number of owed tasks (relay 540 to 205, kc-claude-plugins 120 to 194 at the pins).
+**AC-4** Reading cost: the README is untouched and every owed line is short. Evidence: `git diff origin/main --stat -- docs/dev2/README.md kc-dev-flow-2/references/sd/workflow.md` prints nothing; each `next:` line printed by the rows of AC-1 to AC-3 and AC-8 has at most 60 words (`len(line.split())`; the prototype printed 46 to 58 with the model named); the test asserts that bound. Falsifier: a 61-word line fails the row; an edit to the Stages paragraph fails the stat and the `test_sd_dispatch.py` `need=` pin. Limit: words per idle pass are not bounded, because they follow the number of owed tasks (relay 540 to 219, kc-claude-plugins 120 to 204 at the pins).
 
-**AC-5** The script's contract and the suite hold. Evidence: `python3 -B -m unittest discover -s kc-dev-flow-2/scripts` exits 0 (the job in `.github/workflows/kc-dev-flow-2-tests.yml` already runs it); `test_it_judges_committed_bytes_and_leaves_the_checkout_unchanged` and `test_it_reports_what_it_cannot_tell_with_exit_2` pass unchanged (committed bytes, `--rev`, exits 0, 1 and 2); the five `test_role_triggers.py` tests and the `test_pr_watch.py` rows named in Keep, change, drop are rewritten, not deleted; the ADR passes `python3 <package>/scripts/adr_lint.py --require <reserved number>`. Falsifier: reading the checkout instead of `git show REV` fails the first; leaving `test_the_third_cycle_owes_chief_engineer_and_the_second_does_not` as written fails against the new script.
+**AC-5** The script's contract and the suite hold. Evidence: `python3 -B -m unittest discover -s kc-dev-flow-2/scripts` exits 0 (the job in `.github/workflows/kc-dev-flow-2-tests.yml` already runs it); `test_it_judges_committed_bytes_and_leaves_the_checkout_unchanged` and `test_it_reports_what_it_cannot_tell_with_exit_2` pass unchanged (committed bytes, `--rev`, exits 0, 1 and 2); the five `test_role_triggers.py` tests and the `test_pr_watch.py` rows named in Keep, change, drop are rewritten, not deleted; `lint-skills.py` still passes with `model: opus` in `agents/engineering-reviewer.md` and `test_lint_skills.py` rows for a changed model still fail; the ADR passes `python3 <package>/scripts/adr_lint.py --require <reserved number>`. Falsifier: reading the checkout instead of `git show REV` fails the first; leaving `test_the_third_cycle_owes_chief_engineer_and_the_second_does_not` as written fails against the new script.
 
 **AC-6** (slice 2, only if the Captain accepts D1) Two review ids with inline findings on an open task PR owe the chief-engineer call. Evidence: `pr_watch.py tasks` reads `gh api repos/<repo>/pulls/<N>/comments` once per open task PR in the list, counts distinct `pull_request_review_id`, and passes `--review-rounds N` to `role_triggers.py`; rows in `test_pr_watch.py` with a stub `gh`: two review ids: one chief-engineer `next:` line; one review id with nine comments (qnow booking-submit-staff-confirm shape): silent; no comments (relay and web shape): silent; a `gh` failure: `next: report <slug> to the Captain` (the existing exit-2 path). `role_triggers.py` without the argument behaves as in AC-1. Replay: on the window it adds captain-question-load only (its second review round was submitted 2026-10-19T10:08:56Z; its call is recorded 2026-10-19T18:26 +08:00, 17 minutes later, after the Captain asked). Falsifier: counting comments instead of review ids makes the nine-comment row fire.
 
-**AC-7** The corpus replay reproduces this design's table. Evidence: at validation, a replay script kept in the task's `validation/` folder runs the candidate `role_triggers.py` over the four state checkouts at the pins named in Design (`git show <pin>:…`, `--rev <pin>`) and prints per window task the repair passes and owed lines; expected: window chief-engineer fires 10 (9 observer-labelled owed, 1 unclear, 0 false), engineering-reviewer fires 9 (7, 2, 0); population 32 and 39 over 287 tasks; owed lines after recorded calls 17 (chief-engineer 8, engineering-reviewer 9) plus one heading hint; prod-security-review-gates stays owed with that hint; merge-gatekeeper, ui-design-review-in-ideation and captain-question-load clear. Falsifier: any task whose fire differs from the per-task table fails. Limit: the checkouts are private to this machine and their task bodies cannot be fixtures in this public repository (sanitize-check), so CI runs the synthetic rows of AC-1 to AC-3 and this replay is a one-time validation step; measured thresholds are in-sample.
+**AC-7** The corpus replay reproduces this design's table. Evidence: at validation, a replay script kept in the task's `validation/` folder runs the candidate `role_triggers.py` over the four state checkouts at the pins named in Design (`git show <pin>:…`, `--rev <pin>`) and prints per window task the repair passes and owed lines; expected: window chief-engineer fires 10 (9 observer-labelled owed, 1 unclear, 0 false), engineering-reviewer fires 9 (7, 2, 0); population 32 and 39 over 287 tasks; owed lines after recorded calls 17 (chief-engineer 8, engineering-reviewer 9: Fable 2, Opus 7) plus one heading hint; population engineering-reviewer fires Fable 12, Opus 27; prod-security-review-gates stays owed with that hint; merge-gatekeeper, ui-design-review-in-ideation and captain-question-load clear. Falsifier: any task whose fire differs from the per-task table fails. Limit: the checkouts are private to this machine and their task bodies cannot be fixtures in this public repository (sanitize-check), so CI runs the synthetic rows of AC-1 to AC-3 and this replay is a one-time validation step; measured thresholds are in-sample.
+
+**AC-8** The engineering-reviewer's model follows `profile: prod` or a `db` value on the `Surfaces:` line, else Opus. Evidence: rows in `test_role_triggers.py`: a task with `profile: prod` and an owed amendment prints `dispatch kc-dev-flow-2:engineering-reviewer on fable (profile prod)`; `Surfaces: db` on a pilot task prints `on fable (Surfaces db)`; both prints `on fable (profile prod, Surfaces db)`; neither prints `on opus`; a `Surfaces:` line inside a fenced block counts for nothing; the chief-engineer line names no model. Replay: window lines name Fable for merge-gatekeeper and account-publish-ceiling and Opus for the other 7. Falsifier: reading the PR's changed paths for authority files (`class: never`) makes 7 of the 9 window lines Fable and fails the replay row.
+
+**AC-9** A call below the required model does not clear, and no model below Opus is ever asked for. Evidence: rows: a call `Reviewer: kc-dev-flow-2:engineering-reviewer sonnet 2026-10-18 — q` leaves a signal-free task owed, and the owed line says it needs opus; the same call with `opus` on a prod task leaves it owed and the line says it needs fable; `fable` clears a signal-free task; `opus-5.5` ranks as opus; an unrecognised word leaves the task owed; the existing web calls (`opus`, pilot) are unchanged in verdict. Falsifier: ranking by string order (`fable` < `opus`) clears the prod row with an Opus call.
 
 ## Needs decision
 
@@ -267,6 +306,9 @@ Against delivery-gate-settles-skipped-checks (PR #680, design written): it edits
 
 **D3. The four engineering-reviewer misses (an authority or merge-rule change, a ruling reversed in another task, a new authority surface): accept them as judgment, or add an author-declared line (for example `Reverses: <gate id | task | none>` in `## FO alignment`)?** Recommendation: accept, add nothing, and read the next batch's records for a repeat. No count and no structured field sees them today (0 of 38 tasks cite another task's gate id); ADR 0016's evidence is that FO wrote `Supersedes: none` over seven criteria, which predicts a declared `Reverses:` under-declares in the same way. What gets worse: the Captain keeps being the backstop for these (he asked FO about captain-question-load himself), 4 of 11 engineering-reviewer cases.
 
+**D4. Which signals pick Fable for the engineering-reviewer?** Recommendation: `profile: prod` or a `db` value on `Surfaces:` only, delivered by the owed line alone. They are the two fields `delivery_gate.py` already trusts; they pick Fable for 2 of 9 window fires and 12 of 39 population fires (Opus 7 and 27). Secrets have no field and the path guess hit 1 of 38 tasks; the merge-or-authority path signal marks 31 of 38 tasks (all 13 in this repository), so it would make Fable the default here. What gets worse: 8 of the 11 owed cases, including captain-question-load (a merge and approval rule change on a pilot task), run on Opus, and a call FO makes by judgment prints no model; a README sentence would fix the second at about 25 more words FO reads at startup and a new `test_sd_dispatch.py` pin. Fable per call costs about 5.6 times Opus on ADR 0021's security-review runs (assumed prices); no engineering-reviewer cost was measured.
+
+**D5. Evaluation of ADR 0021 D1 (security reviewer on Sonnet): approve stage 1 now, and stage 2 only after its result?** Recommendation: approve stage 1 (reading 10 saved reports against 26 later inline findings, no model, no cost) and decide stage 2 when it reports. What gets worse: the prod security review stays on Sonnet meanwhile, and if stage 2 runs, about 40 USD assumed for 5 heads (4.5 Sonnet, 11 Opus, up to 25 Fable). The sample is small: 2 PRs hold both a saved report and later findings, so stage 1 may find no escape and still not prove Sonnet adequate.
 
 ## Stage Report: ideation
 
@@ -291,3 +333,25 @@ Against delivery-gate-settles-skipped-checks (PR #680, design written): it edits
 Counting `## Stage Report: implementation` headings (four repair passes) replaces Event A and fires on 9 of the 11 chief-engineer cases the observers labelled owed with no false fire in the window; Event B's detection is kept, its clearing is by date instead of by wording, and its output is one line per task. The review-round count the Captain named adds exactly one case (captain-question-load) and is offered as a droppable second slice (D1); the other candidate counts either add no unique true catch or false-fire, and four engineering-reviewer cases remain beyond any count (D3). Thresholds are scored on the same 38 tasks against four observers' labels, and the Non-goals line left open in Scope is set under `### Limits`.
 
 `python3 <package>/scripts/design_surfaces.py check` on this file (package 0.25.0, 2026-10-20) printed "design surfaces presentable", exit 0.
+
+## Stage Report: ideation (cycle 2)
+
+- DONE: Item 1, the engineering-reviewer's model is chosen by structured risk signals (prod profile, a db surface, secrets, merge or authority rules: Fable; otherwise its declared Opus), never below Opus; name the signals as fields already in state, and how the dispatch records the model chosen and why
+  `### Engineering-reviewer model`: signals scored in a table (prod and db used; secrets and merge-authority paths measured and not used, with numbers); the owed line names the model and its basis, the `Reviewer:` model token is the record, a call below the required model does not clear; AC-8 and AC-9 hold the rows.
+- DONE: Item 2, evaluation only: state what measurement would justify reversing ADR 0021 D1 (the prod security reviewer kc-pr-flow:tob-security-reviewer fixed at sonnet; 14 runs found the model was not the lever), for example rerunning ADR 0021's runs on opus and counting findings sonnet missed and refusals; propose the run and its cost, run nothing on a model
+  `### Evaluation only`: stage 1 reads 10 saved reports against 26 later inline findings at no cost; stage 2 reruns Opus (Fable on need) on escaped heads plus 3 controls, about 40 USD assumed for 5 heads; reversal rule stated; no model was run.
+- DONE: Update the acceptance criteria, the words FO reads, the Opus-call cost per task (Fable counted separately) and Needs decision for both items; keep D1 to D3 as written unless the additions change them
+  AC-8 and AC-9 added, AC-4, AC-5 and AC-7 updated (line bound 60 kept, relay 540 to 219 and kc-claude-plugins 120 to 204 words, Fable 2 of 9 window and 12 of 39 population engineering-reviewer fires); D4 (signals) and D5 (evaluation) added; D1 to D3 unchanged.
+  AC-1: unchanged by the additions; design-time measurement only (10 of 38 window tasks fire, 0 false), synthetic rows not written.
+  AC-2: unchanged; not yet verified (the three uncounted calls were found by running the 0.25.0 script at the pins).
+  AC-3: unchanged; not yet verified (relay spacedock-install-beta prints 5 lines today).
+  AC-4: updated, not yet verified; prototype lines 46 to 58 words with the model named, README untouched.
+  AC-5: updated, not yet verified; adds the `lint-skills.py` and `test_lint_skills.py` rows for the agent file.
+  AC-6: unchanged; not yet verified (offline replay only).
+  AC-7: updated, not yet verified; expected model split Fable 2 and Opus 7 in the window, Fable 12 and Opus 27 over the population.
+  AC-8: not yet verified; replay at the pins names Fable for merge-gatekeeper and account-publish-ceiling only.
+  AC-9: not yet verified; all 2 engineering-reviewer calls on record say opus on pilot tasks.
+
+### Summary
+
+The model rule is two fields (`profile: prod`, a `db` surface), carried in the owed line and recorded in the call's model token; the secrets and authority-path signals were measured and do not discriminate. The ADR 0021 question is evaluation only, in two stages, with the first free and reading-only. No model was run, and D1 to D3 stand.
