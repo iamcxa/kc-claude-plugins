@@ -65,6 +65,7 @@ Alignment: not needed before ideation; the Captain approved planning batch 3.
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+Reviewer: chief-engineer opus 2026-10-19 — what is the smallest next step, given the findings so far? Asked by the Captain (「對」, chat) after Cycle 2: three review rounds on the merge wording each found a new gap (Codex round 1 P1 hold, round 2 P1 head binding and P2 second record, roborev:875/878 High), and AC-4 leaves delivery_gate.py only the ASK line.
 
 ## Design
 
