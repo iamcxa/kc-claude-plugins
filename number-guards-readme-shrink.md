@@ -53,6 +53,17 @@ gates:
                 id: briefing:number-guards-readme-shrink:validation:attempt-1:revision-1
                 digest: sha256:c17c0a461fb2f080dfb73cc22642cd30d272f87f97ecc5d6aabb1b6cea400cd3
                 room-ref: ./number-guards-readme-shrink/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:number-guards-readme-shrink:validation:1
+                briefing: briefing:number-guards-readme-shrink:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T04:37:32.591948Z"
+                decision: approve
+                reason: 'Captain approved in chat (「准」) the #670 delivery gate and the merge-grant-need-poc closing gate presented together; the #670 question said FO marks it ready and merges it unless he says he merges, so this approval carries the merge; accepts the declined Polish into number-guards-readme-shrink-followups'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-18T16:57:47Z
 worktree: .worktrees/spacedock-ensign-number-guards-readme-shrink
 pr: iamcxa/kc-claude-plugins#670
