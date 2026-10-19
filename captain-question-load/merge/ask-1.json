@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "ccc84a7879f14547fd9210c804344443be2bd0ef",
+  "model": "not run",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text.",
+  "points": [
+    "point: deferred: \"roborev:875 is Deferred risk: the design's\"",
+    "point: deferred: '- F1 roborev:875 High, the merge'",
+    "point: deferred: '- F2 No README step re-runs'",
+    "point: deferred: '- F3 Amendment 1 mapping: his'",
+    "point: deferred: '- F1 roborev:875 = roborev:878 High'",
+    "point: deferred: \"- F3 the hold is FO's\"",
+    "point: deferred: 'Cycle 2 repairs the Codex P1'",
+    "point: deferred: '- F7 (new, Deferred risk) the'",
+    "point: deferred: '- F3 (carried) the hold is'",
+    "point: deferred: '- Limit: the binding is prose;'",
+    "point: deferred: 'Cycle 3 is README-only at net'",
+    "point: amendment: 'Amendment 1 dated 2026-10-19'",
+    "point: more: 6 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#675",
+  "time": "2026-10-19T14:12:01Z",
+  "verdict": "ask"
+}
