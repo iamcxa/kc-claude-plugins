@@ -39,6 +39,13 @@ if a[:2] == ["pr", "view"]:
 elif a[0] == "api" and "actions/runs" in " ".join(a):
     runs = os.path.join(d, "runs.json")
     print(open(runs).read() if os.path.exists(runs) else '{{"total_count": 0, "workflow_runs": []}}')
+elif a[0] == "api" and "/contents/" in " ".join(a):
+    adr = os.path.join(d, "adr.txt")
+    want = "/contents/" + os.environ.get("STUB_ADR_DIR", "docs/adr") + "?ref="
+    if os.environ.get("STUB_GH_CONTENTS_FAIL") or not os.path.exists(adr) or want not in " ".join(a):
+        sys.stderr.write(os.environ.get("STUB_GH_CONTENTS_FAIL") or "gh: Not Found (HTTP 404)")
+        sys.exit(1)
+    print(open(adr).read())
 elif a[0] == "api":
     pages = sorted(glob.glob(os.path.join(d, "files-*.json")))
     print("".join(open(p).read() for p in (pages if "--paginate" in a else pages[:1])))
@@ -60,7 +67,7 @@ def file_pages(paths, size=100):
 
 
 @contextlib.contextmanager
-def stubbed(d, head=HEAD40, files=("docs/notes.md",), pr=None, runs=None):
+def stubbed(d, head=HEAD40, files=("docs/notes.md",), pr=None, runs=None, adr=None):
     fixtures, bin_dir = Path(d, "stub"), Path(d, "stubbin")
     fixtures.mkdir(exist_ok=True)
     bin_dir.mkdir(exist_ok=True)
@@ -69,6 +76,8 @@ def stubbed(d, head=HEAD40, files=("docs/notes.md",), pr=None, runs=None):
     (fixtures / "pr.json").write_text(json.dumps(pr or pr_json(head=head, files=len(files))))
     for n, page in enumerate(file_pages(files)):
         (fixtures / f"files-{n}.json").write_text(json.dumps(page))
+    if adr is not None:
+        (fixtures / "adr.txt").write_text("\n".join(adr))
     if runs is not None:
         (fixtures / "runs.json").write_text(json.dumps(runs if isinstance(runs, dict) else dict(total_count=len(runs), workflow_runs=runs)))
     with mock.patch.dict(os.environ, {"PATH": f"{bin_dir}{os.pathsep}{os.environ['PATH']}", "STUB_GH_DIR": str(fixtures)}):
@@ -88,12 +97,12 @@ COPILOT_NOT_RUN = COPILOT_UNSTATED.replace("not requested:", "copilot not run:")
 
 
 class DeliveryGateTests(unittest.TestCase):
-    def check(self, task=TASK, text="", head="40c714a6", gh=None, pr="o/r#9", records=RECORDS, **world):
+    def check(self, task=TASK, text="", head="40c714a6", gh=None, pr="o/r#9", records=RECORDS, front=None, **world):
         with tempfile.TemporaryDirectory() as d:
             task_file, text_file = Path(d, "task.md"), Path(d, "gate.txt")
             task_file.write_text(task)
             text_file.write_text(text)
-            readme(d)
+            readme(d, front) if front else readme(d)
             if records is not None:
                 Path(d, "task", "dispatch").mkdir(parents=True)
                 for name, content in records.items():
@@ -777,6 +786,151 @@ class NeverAddedTests(unittest.TestCase):
                 self.assertNotEqual(self.cls([path], variant_of(old, new)), "never")
         with self.subTest("docs md only"):
             self.assertEqual(self.cls(["docs/diagram.png"], variant_of(' and p.endswith(".md")', "")), "docs-only")
+
+
+DECLINES = {
+    'amendment-form-check': (
+        "Declined, with reasons in that backlog task: Deferred risk, an indented '## ' line in a moved block hides later entries (unobserved); Deferred risk, a partial supersession has no route; Polish, year read as amendment number, case-sensitive phrase, failing-path word counts. "
+        'Process notes: one validator ran git fetch in two relay state checkouts and one in the candidate repo (remote-tracking refs only, no file changed). '
+        'Second reviewer: copilot because the change alters the check FO runs at every gate (gate rules). '
+        'copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. '
+        'Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. '
+        'without-it unanswered: the dropped workflow.md clause (recommendation (2) above). '
+        'ADR 0016 lands with this PR.'
+    ),
+    'fo-lifecycle-mod': (
+        'FO declines at candidate 3a3cfc30: Deferred risk, roborev:653/682, the keep-out-of-pr-merge step is prose and nothing holds a sentinel mechanically (design Limit; first law of dev2-laws-check); Deferred risk, roborev:679, the mod is not yet in docs/dev2/_mods and docs/dev2-poc/_mods (copied in the README re-sync after release, AC-15); Deferred risk, AC-18 M3 (delivery_gate before the ask) rests on the README sentence with no run; Deferred risk, front() skips a BOM or leading blank line Spacedock accepts, and decision_ledger.py and number_guards.py scan flat files only (out of scope, to be filed); Polish, a fence-less folder index beside a flat task hides the flat one (already a spacedock status error); Polish, a missing state directory now exits 2; Polish, merge-ask margin 4 words; Polish, two budget reason lines cite the amendment and ADR. '
+        'Not verified: a live adopter FO under the mod.'
+    ),
+    'merge-gatekeeper': (
+        "Declined, with reasons: P2, a force push between two reads can mix revisions in the record (round-3 rule; nothing reads the record yet); Deferred risk, a run started by the ready event can be missed for about 2 seconds (README wait clause is the backstop); Deferred risk, the record's verdict field has no consumer until the POC; Polish, four mutation gaps, two doc_impact lines, a docstring, and the point cap. "
+        'Second reviewer: copilot because the task is prod and changes merge rules. '
+        'copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. '
+        'Limit: an adopter whose CI uses only external status contexts keeps the partial-rollup gap.'
+    ),
+    'special-role-triggers': (
+        "Declined, with reasons: Deferred risk, a fence opened with an unusual indent could hide an event-shaped heading (no task writes one); Deferred risk, an uncommitted live task makes the idle check print cannot-tell (as AC-4 specifies); Polish, a count of 16 vs 17 in the implementation report, design wording 'third line' vs N>=3, and one relay task where a call rather than a waiver is expected. "
+        'Second reviewer: copilot because the change alters review rules (when the special reviewers are owed). '
+        'copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. '
+        'Limit: Opus cost per owed call is not measured.'
+    ),
+    'ui-design-review-in-ideation': (
+        'Declined, with reasons: Deferred risk, the check does not read limitations (option A, ADR 0022); Deferred risk, one defect named in 2 of 3 runs; Deferred risk, a column-0 review line quoted in prose is refused; Polish, a brief wording and a preview value with a trailing comment. '
+        'Second reviewer: copilot because the change alters review rules (a design review required at a ui ideation gate). '
+        'copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. '
+        "Limit: a reviewer's rate of finding defects, operable previews and Codex-hosted workers not verified."
+    ),
+    'workflow-budget-ratchet': (
+        "Declined, with reasons: Deferred risk, editing an existing budget step's delta raises the budget with no ruling (visible in the diff like a START edit; closing it needs the lint to read base); Polish, two unpinned message tails, two comment lines that restate code, two literal greps blind to line wrapping; root learning.md still names WORKFLOW_WORD_BUDGET (a learning.md edit goes through its own PR). "
+        'Second reviewer: copilot because the change alters approval rules (a README raise now needs a Captain ruling). '
+        'copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. '
+        'Limit: AC-9 (whether FO follows the new text) is a post-release measurement.'
+    ),
+    'names-check-before-dispatch': (
+        'Declined, round 1, with reasons: Deferred risk, one commit adding several records of one task makes --newest pick the lexicographically last (implementation-9 over -10), seen in 3 of 150 commits, all bulk journey commits; FO saves one record per commit, so not triggered now; Polish, the next: line does not warn that a flagged name may be a repository file, wording only, the line names the file so FO can tell. '
+        'Second reviewer: copilot because the change alters what FO runs at the idle hook before a dispatch (dispatch rules). '
+        'copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. '
+        'Precedent: ADR 0013 — 「不等 Copilot，也要修復它額度不足時的應對方式」. '
+        'Limits (design, accepted at ideation): detects after the record is committed, not before the send; whether the line reaches FO before the worker reads the record is unmeasured; D2 (Spacedock pre-dispatch hook issue) not drafted yet.'
+    ),
+    'prod-security-validation-gate': (
+        'Declined, with reasons: Deferred risk, a fabricated findings: [] report cannot be told from a real one (none seen; Material if found); Deferred risk, a worker that skips the review meets the hold at the merge ask, not the validation gate (D3, ruled); Deferred risk, Opus and Fable one run each and no real refusal yet; Polish, the standalone check accepts a review at any dispatched head (delivery_gate.py binds it); Polish, a task with no readable profile now holds instead of skipping (safer deviation). '
+        'Second reviewer: copilot because the change alters review rules (a security review required at the prod merge ask). '
+        'copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. '
+        'Limit: no real refusal, no end-to-end validation worker, gate rendering and Codex-hosted workers not verified.'
+    ),
+    'worker-loads-declared-package': (
+        "Declined, with reasons: Deferred risk, an FO on a README older than 0.23.0 may not act on a printed line that is not a script name (unmeasured; FO-only step; no worse than today's hold); Deferred risk, a laws workflow over a 0.22.1 README reports one L2 violation per pushed Candidate-less record (no adopter runs it yet); Polish, laws.md L2 wording does not name the Candidate line, the violation text ends '(line 1)', and two bounded absolutes in a test name and a sentence. "
+        'Second reviewer: copilot because the change alters the checks FO runs before every dispatch and the state-branch law (review rules). '
+        'copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back. '
+        'Limit: Codex-hosted workers not exercised.'
+    ),
+}
+
+# Task-level verdicts and item counts of the checker below on those excerpts: the first six tasks drew the observer's
+# decline finding; the last three did not, and a decline with no bracket is flagged there too.
+FLAGGED_ITEMS = {"amendment-form-check": 3, "fo-lifecycle-mod": 3, "merge-gatekeeper": 2, "special-role-triggers": 1,
+                 "ui-design-review-in-ideation": 3, "workflow-budget-ratchet": 1, "names-check-before-dispatch": 2,
+                 "prod-security-validation-gate": 1, "worker-loads-declared-package": 0}
+REASONED = ("Declined, with reasons: Deferred risk, a stale cache (one reader, no write path); "
+            "Polish, a docstring (wording only, no behavior change). Second reviewer: x not run: no quota.")
+ADR_TASK = "---\nprofile: pilot\n---\n\n# task\n\n## Number guards\n\nADR: 0023\n"
+
+
+class DeclineAndAdrTests(unittest.TestCase):
+    check = DeliveryGateTests.check
+
+    def test_a_declined_item_without_a_bracket_of_two_words_holds_each_item_and_prints_the_form_once(self):
+        for slug, count in FLAGGED_ITEMS.items():
+            with self.subTest(slug):
+                code, out = self.check(text=DECLINES[slug])
+                self.assertEqual(code, 1 if count else 0, out)
+                lines = out.splitlines()
+                self.assertEqual(sum(line.startswith("declined item has no reason: ") for line in lines), count)
+                self.assertEqual(sum(line.startswith("next: hold the ask; write each declined item as ") for line in lines), 1 if count else 0)
+
+    def test_every_item_with_a_bracketed_reason_passes_and_a_one_word_bracket_is_no_reason(self):
+        self.assertEqual(self.check(text=REASONED)[0], 0)
+        code, out = self.check(text=REASONED.replace("(wording only, no behavior change)", "(none)"))
+        self.assertEqual(code, 1)
+        self.assertIn("declined item has no reason: 'Polish, a docstring (none)'", out)
+        self.assertEqual(self.check(text="Declined: nothing. FO declines: none")[0], 0)
+
+    def test_a_decline_item_names_its_first_words_and_the_hold_is_the_ask_not_a_record(self):
+        code, out = self.check(text="Declined, with reasons: Polish, a docstring wording; Deferred risk, one more (a real reason here).")
+        self.assertEqual(code, 1)
+        self.assertEqual(out.splitlines()[0], "declined item has no reason: 'Polish, a docstring wording'")
+
+    def test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item(self):
+        code, out = self.check(text="Declined: Polish, typo.")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(out.splitlines()[0], "declined item has no reason: 'Polish, typo'")
+        self.assertEqual(self.check(text="Declined: Polish (wording only, no behavior change).")[0], 0)
+        for text in ("Declined: none.", "FO declines: n/a.", "Declined: nothing"):
+            self.assertEqual(self.check(text=text)[0], 0, text)
+
+    def test_a_declined_reason_with_parentheses_inside_the_bracket_is_a_reason(self):
+        for text in ("Declined: Polish, remove wrapper (the foo() call is redundant).",
+                     "Declined: Polish (wording (see the note) only, no change)."):
+            self.assertEqual(self.check(text=text)[0], 0, text)
+        for text in ("Declined: Polish, remove wrapper (foo()).", "Declined: Polish (the call is redundant", "Declined: Polish ()."):
+            self.assertEqual(self.check(text=text)[0], 1, text)
+
+    def adr(self, listing, **kw):
+        return self.check(task=ADR_TASK, adr=listing, **kw)
+
+    def test_a_reserved_adr_with_no_file_in_the_head_directory_holds_and_one_with_a_file_passes(self):
+        code, out = self.adr(["0022-other.md", "0024-later.md"])
+        self.assertEqual(code, 1, out)
+        self.assertIn("reserved ADR 0023 has no docs/adr/0023-*.md at PR head 40c714a60000", out)
+        self.assertIn("next: hold the ask; land the ADR file on this PR or delete the 'ADR: 0023' line from the task, then run this check again.", out)
+        self.assertEqual(self.adr(["0022-other.md", "0023-the-decision.md"])[0], 0)
+        self.assertEqual(self.adr(["0023-"])[0], 1)
+        self.assertEqual(self.adr(["00230-x.md"])[0], 1)
+
+    def test_the_directory_at_the_head_is_read_not_the_pr_file_list(self):
+        code, out = self.adr(["0023-landed-earlier.md"], files=("docs/notes.md",))
+        self.assertEqual(code, 0, out)
+        code, out = self.adr(["0023-in-this-pr.md"], files=("docs/adr/0023-in-this-pr.md",))
+        self.assertEqual(code, 0, out)
+        self.assertEqual(self.check(task=ADR_TASK, files=("docs/adr/0023-in-this-pr.md",))[0], 1)
+
+    def test_a_missing_adr_directory_holds_and_an_unreadable_one_exits_2(self):
+        code, out = self.check(task=ADR_TASK)
+        self.assertEqual(code, 1)
+        self.assertIn("reserved ADR 0023 has no docs/adr/0023-*.md", out)
+        with mock.patch.dict(os.environ, {"STUB_GH_CONTENTS_FAIL": "gh: HTTP 502 bad gateway"}):
+            code, out = self.adr(["0023-x.md"])
+        self.assertEqual(code, 2, out)
+        self.assertIn("cannot read docs/adr at the head of o/r#9", out)
+
+    def test_the_readme_adr_path_names_the_directory_that_is_read(self):
+        front = "adr-path: docs/decisions/\n"
+        with mock.patch.dict(os.environ, {"STUB_ADR_DIR": "docs/decisions"}):
+            self.assertEqual(self.adr(["0023-x.md"], front=front)[0], 0)
+            code, out = self.adr(["0023-x.md"])
+            self.assertEqual(code, 1, out)
+            self.assertIn("docs/adr/0023-*.md", out)
 
 
 def tearDownModule():

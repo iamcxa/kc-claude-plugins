@@ -9,9 +9,13 @@ A task whose frontmatter says `profile: prod` must also pass `validation_securit
 the dispatched head the PR head equals, every finding disposed); a profile that cannot be read as poc, pilot or prod holds.
 The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
-or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token.
+or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token. Each `;`-separated item after `Declined...:` or
+`FO declines...:` (up to the next sentence that opens with a label and a colon, or a blank line) needs a bracket of two or
+more words holding its reason; this proves a bracket exists, not that it is a reason.
 The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
-a second reviewer has no stated outcome, a prod task's security review fails, a check run on the head is not finished and
+a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
+`## Number guards` has no `<adr-path>/NNNN-*.md` in the directory at the PR head (README `adr-path:`, default `docs/adr`;
+the directory is read, not the PR's file list), a prod task's security review fails, a check run on the head is not finished and
 successful (an empty rollup, SKIPPED and NEUTRAL included), the PR is a draft or not mergeable, its base is not the README's
 `trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
 README cannot be read, or an input is unusable. Every problem is printed.
@@ -29,6 +33,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from design_surfaces import FM_PROFILE
+from number_guards import task_facts
 
 CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
 RECORD = re.compile(r"^validation-(\d+)\.md$")
@@ -54,6 +59,8 @@ DEFERRED = re.compile(r"\bDeferred risk\b|\bdeclined\b|round-3 backlog", re.I)
 NOT_RUN = re.compile(r"\b[\w.-]+ not run:\s*\S", re.I)
 AC_NOT_RUN = re.compile(r"(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b", re.I)
 AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
+DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
+DECLINE_END = re.compile(r"(?<=[.)])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
 MAX_POINTS = 12
 ASK = "next: ask for merge with this text."
 
@@ -137,6 +144,49 @@ def unstated_second_reviewers(text):
         if not (not_run or cited):
             missing.append(reviewer)
     return missing
+
+
+def declined_items(text):
+    items = []
+    for start in DECLINE_START.finditer(text):
+        rest = text[start.end():]
+        end = DECLINE_END.search(rest)
+        depth, item = 0, ""
+        for ch in (rest[:end.start()] if end else rest).strip().rstrip("."):
+            depth = max(depth + (ch in "([") - (ch in ")]"), 0)
+            if ch == ";" and depth == 0:
+                items.append(item.strip())
+                item = ""
+            else:
+                item += ch
+        items.append(item.strip())
+    return [item for item in items if item and item.lower() not in ("none", "nothing", "n/a")]
+
+
+def brackets(item):
+    found, depth, start = [], 0, 0
+    for i, ch in enumerate(item):
+        if ch == "(":
+            start = i + 1 if depth == 0 else start
+            depth += 1
+        elif ch == ")" and depth:
+            depth -= 1
+            if depth == 0:
+                found.append(item[start:i])
+    return found
+
+
+def unreasoned_items(text):
+    return [item for item in declined_items(text) if not any(len(b.split()) >= 2 for b in brackets(item))]
+
+
+def adr_names(repo, head, adr_dir):
+    try:
+        return gh("api", f"repos/{repo}/contents/{adr_dir}?ref={head}", "--jq", ".[].name").split()
+    except RuntimeError as error:
+        if "HTTP 404" in str(error):
+            return []
+        raise
 
 
 def readme_front(path):
@@ -324,6 +374,19 @@ def check(args):
             problems.append(f"the changed-file list has {len(files)} files but the PR reports {tok(facts.get('changedFiles'), words=1, chars=12)}")
             nexts.append("next: hold the ask; the changed-file list is incomplete, tell the Captain.")
 
+    reserved = sorted(task_facts(task)["adr"])
+    if facts is not None and reserved:
+        adr_dir = (scalars.get("adr-path") or "docs/adr").strip("/")
+        try:
+            names = adr_names(repo, str(facts["headRefOid"]).lower(), adr_dir)
+        except (OSError, RuntimeError, subprocess.SubprocessError) as error:
+            holds.append(f"cannot read {adr_dir} at the head of {args.pr}: {error}")
+        else:
+            for number in reserved:
+                if not any(re.fullmatch(rf"{number:04d}-.+\.md", name) for name in names):
+                    problems.append(f"reserved ADR {number:04d} has no {adr_dir}/{number:04d}-*.md at PR head {str(facts['headRefOid'])[:12]}")
+                    nexts.append(f"next: hold the ask; land the ADR file on this PR or delete the 'ADR: {number:04d}' line from the task, then run this check again.")
+
     security_errors, security_note = [], None
     at_head = [c for c in candidates if head and c.startswith(head)]
     if at_head:
@@ -340,6 +403,10 @@ def check(args):
         nexts.append("next: hold the ask until each second reviewer has an outcome.")
         problems.append(f"second reviewer {reviewer} has no stated outcome: "
                         f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
+
+    for item in unreasoned_items(gate_text):
+        problems.append(f"declined item has no reason: {tok(item)}")
+        nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
 
     emit(*problems, *holds)
     if problems:
