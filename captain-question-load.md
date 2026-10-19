@@ -350,3 +350,20 @@ Needs: this machine, network for `gh`, PR #675 still a Draft. Covers the wording
 ### Summary
 
 Unverified: AC-5 (FO's batch-close recount); the 22-way classification is a reading of FO's earlier messages, of which I reproduced the 33 messages, the table sums and the kinds from each message's text, not FO's prior asks per task (63); no real merge was run. PASSED at 16d8d456 with no Material finding; F2 is the one clause FO or the Captain may want before batch 3 relies on the rule.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Under Captain amendment 1, apply the phase-1 fix for the Codex round-1 P1 (review:5569526052): the Delivery authority sentence, the ASK line and ADR 0023 carry the hold, README stays 5374 and Delivery authority 447
+  Commit 1704ec80 (one commit off 16d8d456): workflow.md reads "says approval also covers ... passes unless he says he merges or holds, and removing its clean, pushed worktree."; ASK ends "he did not say he merges or holds, else ask for merge with this text." (27 words, pilot output 42 to 44, bound 55 kept); ADR 0023 D1 option and one Consequences sentence quoting 「除非我有顧慮暫時不合併」. lint-skills: workflow.md 5374 of 5374, Delivery authority 447 (len(text.split())); the cut words are "that" and "afterwards".
+- DONE: Close validation F2 in the same commit: "Before the merge ask, FO runs" becomes "Before merging or asking, FO runs", four words for four
+  Pinned by `readme-keeps-delivery-rules` (need string now starts "Before merging or asking, FO runs `python3 ...delivery_gate.py check"); the existing hold on a head other than the latest `Candidate:` now sits before the merge, so a head repaired under the grant cannot merge unrevalidated.
+- DONE: Update test_sd_dispatch.py (need strings and swaps of delivery-question-carries-merge and readme-keeps-delivery-rules, and the repair-push-grant replacement text) and the four literals in test_delivery_gate.py; each change shown red before and green after; lint-skills exits 0; adr_lint exits 0
+  Red before (scratch copy at 16d8d456 with tests only): the two pins named above fail and test_delivery_gate fails `test_each_exit_ends_with_the_next_line_for_the_ask` and both ProdSecurityReviewTests pilot/prod output tests (assert the ASK line reads "...merges or holds, else..."); a repair-push-grant swap that left the old text failed the full run with an assertion naming that pin. Green after: all 20 package test files exit 0 in the task worktree (test_sd_dispatch.py run with --sd-plugin-root spacedock 0.27.0, test_delivery_gate.py 56 tests); `adr_lint.py docs/adr --since 18dbf490 --require 23` exit 0.
+- DONE: All package test files pass; push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  Pushed `origin spacedock-ensign/captain-question-load` at 1704ec80, no -u and no config write; CI on that head: unit tests 1m40s, version parity 58s, route gate 6s, GitGuardian 13s, all pass; PR #675 still a Draft, no comment, review request or ready mark.
+- DONE: roborev_gate.py evidence= line
+  `findings on 1704ec800; evidence=roborev:878`, one High: delivery_gate.py:65 prints the merge line without reading the question or a hold. Same finding as roborev:875, the design's stated limit (text only, AC-4); not fixed, for FO to carry to the Captain.
+
+### Summary
+
+The hold is now an opt-out in the README sentence, the `next:` line and ADR 0023, and the check runs before the merge as well as before the ask, at net zero README words. Open for FO: roborev:878 High (the same text-only limit), and the hold is judged by FO, not enforced by the script. Scratch worktree /tmp/cql-p1 removed.
