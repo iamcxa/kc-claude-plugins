@@ -500,9 +500,9 @@ PR body before authorized push/create; create a Draft PR where required, and req
 only after the required CI is green. Where CI skips drafts, FO marks the PR ready under
 the Captain's authority and waits for those jobs to finish before asking for merge.
 Approval of a validation gate is not permission to push, create or merge a PR, except as
-follows. FO's delivery gate question says that approval also covers later external-review
+follows. FO's delivery gate question says approval also covers later external-review
 rounds on the same PR, merging the head `<package>/scripts/delivery_gate.py check` passes
-unless he says he merges, and removing its clean, pushed worktree afterwards. Under that
+unless he says he merges or holds, and removing its clean, pushed worktree. Under that
 approval, a repair whose validation passes with no Material or Needs decision finding is
 recorded by FO under that grant (`gate record --actor agent:first-officer` with
 `--conn-quote` and `--conn-source` naming his approval) and pushed to that PR's branch,
@@ -519,7 +519,7 @@ to finalize/archive. Where `learn` is listed, the sentinel waits for a committed
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
 
-Before the merge ask, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
+Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
 --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask, as does a head other than the latest `Candidate:`; FO shows the Captain what it printed.
 
 `merge guard --rework` supersedes the approval and routes the task back, but its

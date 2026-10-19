@@ -62,7 +62,7 @@ AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
 DECLINE_END = re.compile(r"(?<=[.)])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
 MAX_POINTS = 12
-ASK = "next: merge this head if the approved question named the merge and he did not say he merges, else ask for merge with this text."
+ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."
 
 
 def clean(line):
