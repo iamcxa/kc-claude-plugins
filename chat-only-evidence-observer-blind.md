@@ -343,3 +343,20 @@ Does not cover: the observer on a task whose `ask-<N>.json` carries `sufficiency
 ### Summary
 
 PR #679 at 389cb89f meets AC-1 to AC-7 by my own runs and mutations; both reported deviations and the 451/501 re-baseline are forced by existing lints or by #675 and are accepted. One Deferred risk (the ask-time-versus-briefing rule fails on real archived asks and says nothing for that case) and three Polish; no Material finding. AC-3's own-task read is the merge ask's, where FO should run the check before the gate briefing is prepared so the `time` condition holds.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Apply the phase-1 fix for the Codex round-1 P1 (review:5573330509): clause() anchor, docstring line, MentionedLabelTests and the mutation case
+  Commit 59fc3d12 on 389cb89f: `clause()` uses `(?:^[ \t]*|[.!?][ \t]+){label}:...` with re.M; docstring adds "at a line start or after a sentence end". MentionedLabelTests (3 tests): mentioned-label texts hold with no record (fail on 389cb89f, 4 subtests); stated clauses at a line start, indented, after `.`, after `?`/`!` pass and save both values; the mutation case swaps in the old `\b{label}:` search and only the four mentioned-label cases change exit code.
+- DONE: Replace the observer ask-N.json paragraph with the phase-1 wording
+  Same commit: highest-numbered ask whose head matches and whose time is not after the briefing commit reads `ok` quoting time and head; `can't tell` quoting earliest time and commit time when every file is later or none exists; never `violation`; sufficiency/necessity read from the same file. Checked by hand against captain-question-load (ask-2), fo-write-checks (ask-1), number-guards-readme-shrink (can't tell, 01:02:29Z vs 01:01:53Z).
+- DONE: lint-skills.py exits 0 at 5374 words; adr_lint.py docs/adr --since 5a951034 --require 24 exits 0; full kc-dev-flow-2/scripts suite passes
+  lint `PASS`, 5374 of 5374; adr_lint "25 ADR file(s) checked", exit 0; `unittest discover -p 'test_*.py'`: Ran 557 tests, OK (554 + 3 new).
+- DONE: roborev evidence= line
+  `clean on 59fc3d120; evidence=roborev:903` (roborev_gate.py exit 0).
+- FAILED: push with an explicit remote and branch, no -u; CI green on the new head
+  `git push origin spacedock-ensign/chat-only-evidence-observer-blind` was refused by the permission check (auto mode classifier, "Out-of-Place Publication"); not retried or worked around. Head 59fc3d12 exists only in the worktree; CI has not run on it.
+
+### Summary
+
+The clause anchor, docstring, tests, mutation case and observer paragraph are committed locally as 59fc3d12 and every local gate passes. The push was denied, so CI on the new head is unmeasured; FO or the Captain must push 59fc3d12 (or grant the push) before the validation recheck.
