@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-peer-sender-label-poc:backlog:attempt-1:revision-1",
+  "question": "Approve the Paseo peer sender-label POC outcome, scope, non-goals, budget and stop condition for implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-peer-sender-label-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/846ce968f28100a315c7abdb69c7092088c3e338/paseo-peer-sender-label-poc.md",
+      "rev": "sha256:52f68c5d472cfee6b09078275610091b61bdb420980b4af9b6c2c2268125d8e9",
+      "mediaType": "text/markdown",
+      "summary": "POC: a Paseo plugin gives agent-to-agent messages a sender label the receiver can verify; a forged label via plain send_agent_prompt fails the check; a Captain message is not reported as a peer. Stop if Paseo offers no checkable label (negative result is valid)."
+    }
+  ]
+}

@@ -6,6 +6,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:paseo-peer-sender-label-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:paseo-peer-sender-label-poc-backlog-1
+              briefing:
+                id: briefing:paseo-peer-sender-label-poc:backlog:attempt-1:revision-1
+                digest: sha256:97d36a907991b95c1cfa34109fc6d9a796dea3c5cbc46535d9412552565819b8
+                room-ref: ./paseo-peer-sender-label-poc/review/backlog/briefing-1
 ---
 
 Inside Paseo, Claude and Codex agents already message each other in both directions and
