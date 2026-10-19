@@ -17,6 +17,17 @@ gates:
                 id: briefing:paseo-peer-sender-label-poc:backlog:attempt-1:revision-1
                 digest: sha256:97d36a907991b95c1cfa34109fc6d9a796dea3c5cbc46535d9412552565819b8
                 room-ref: ./paseo-peer-sender-label-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-peer-sender-label-poc:backlog:1
+                briefing: briefing:paseo-peer-sender-label-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T08:09:16.505234Z"
+                decision: approve
+                reason: 'Captain approved the Paseo peer sender-label POC: 「也可以開啟第二個 poc」 (2026-10-19 chat)'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Inside Paseo, Claude and Codex agents already message each other in both directions and
