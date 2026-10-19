@@ -1,0 +1,27 @@
+Observer report: task merge-grant-need-poc. Window: 12191e6a (task file added) to f1caca59 (state HEAD). Ledger rows: 2 gate resolutions, both `person:captain`. No `agent:first-officer` decision exists.
+
+violation | rule: "FO also records, under a `## FO alignment` heading in the task file, whether FO direction alignment with the Captain is needed before the next declared stage and why" (README, Stages > `backlog`) | evidence: absent. `git log -S'## FO alignment' -- merge-grant-need-poc.md` returns 0 commits, and `git grep` at HEAD finds the heading nowhere in the task. The only mention is the validation report's "no FO alignment or acceptance criteria sections" (f1caca59)
+
+violation | rule: "FO runs `python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists" (README, Stages) | evidence: running it at HEAD prints "implementation-1.md: roborev worker instruction is absent; copy the 'Instruction FO adds to the scope notes' bullet ... or add a line 'roborev not run: <reason>'" and exits 1. implementation-1.md was committed in 93d5a652. The validation report records the same exit 1 (f1caca59). The roborev extension is listed in README `extensions:`, and EXTENSION.md says it joins implementation.
+
+ok | rule: "His plain approval accepts that recommendation only when the gate question says so" (README, FO steps: review findings) | evidence: validation question ends "Approving accepts that recommendation." Backlog question says "Approving accepts a bar FO proposes at implementation for you to rule before any run, and profile poc as recommended". Both resolutions are by `person:captain` and quote his words, 「批准這些作為第三批」 and 「准」 (fae3feb8, f1caca59).
+
+ok | rule: "When the Captain chooses differently from the recommendation, FO writes `Override:` ..." (README, FO steps: review findings) | evidence: both approvals match the stated recommendation. The ledger shows `"override": null`, and no `Override:` line is owed.
+
+ok | rule: "A `Precedent:` names an ADR and quotes its Words line" (README, FO steps: review findings) | evidence: no `Precedent:` line anywhere in the task or the gate summaries (git grep).
+
+ok | rule: "FO appends one entry per amendment to the task's `## Captain amendments` section" (README, Captain amendments) | evidence: absent, and none owed. The bar ruling 「照建議」 under `## Captain bar ruling` (cf25e19e) answers the bar the backlog gate left to him and says "The bar is that text, unchanged". The Pre-registration section is byte-identical at ba904924, cf25e19e and a8229b8c (validation report).
+
+ok | rule: "A peer's words are never the Captain's ruling" (peers EXTENSION.md, Read; `peers` is listed in README `extensions:`) | evidence: every ruling in the task quotes the Captain's own words: 「同意」, 「照建議」, 「准」, 「批准這些作為第三批」. None quotes a peer or a peer's report of him.
+
+can't tell | rule: "A Captain ruling is his reply to the question it settles, given after that question was put" (README, FO steps: review findings) | evidence: "Captain: 「照建議」 (chat, 2026-10-19), to FO's question 「這 4 件照建議批准，POC 照建議的標準開跑嗎？」" (cf25e19e). The question and the reply are in chat, outside state. The same applies to the seed's 「同意」 (12191e6a) and the 「准」 given with the #670 delivery gate.
+
+can't tell | rule: "Before the gate, FO runs the stage's minimal acceptance script exactly as written in a fresh shell, then presents every step in full beside its observed output" and "FO confirms both goal sufficiency and minimal necessity" (README, `validation`) | evidence: the validation briefing (`review/validation/briefing-1/index.json`) holds the question plus a one-paragraph artifact summary. No FO run of the script and no sufficiency or necessity confirmation appears in state. The presentation happened in chat, which state does not show.
+
+can't tell | rule: "A ruling ... a direction later work must respect ... is landed as an ADR before the next gate is presented, at latest by the terminal approval" (README, FO steps: decision records) | evidence: the validation gate resolution reason "retire the per-class merge grant, keep the parked code parked, leave its two Codex P1 unworked" (f1caca59). The validation report says "`adr_lint.py ... --since c60e89e1` exit 0 (22 files, none added)". Whether this ruling governs only this task is a judgement I did not make. The gate application is still `state: pending`.
+
+observed | `Reviewer:` line: none. The task has no `Surfaces:` line, no ideation (POC route), and validation was not sent back. `role_triggers.py ... --rev HEAD` printed "0 event(s) read at HEAD, each with a call or a waiver", with no `next:` lines.
+
+Not applicable in the window: `delivery_gate.py check` and the merge ask (no `pr:` field, no merge ask yet), the seed check (five-stage route only), `Applied:` records (no migration), and learn's observer sentinel (task not archived).
+
+Coverage: I read the task file in full at HEAD. I read the diffs of 12191e6a, e12e7c9d and 76e8771d, the three dispatch records (first 400 characters per line), both briefing JSONs, and the ledger rows for this task. I read README sections Schema, Stages, `backlog`, `implementation`, `validation`, `done`, Review-finding disposition, FO steps, Decision records, Captain amendments, Number guards, Delivery authority and Extensions, plus peers and roborev EXTENSION.md. I did not read the diffs of the other 13 commits individually. I could not locate a merge-gatekeeper task file to check "Captain amendment 1".
