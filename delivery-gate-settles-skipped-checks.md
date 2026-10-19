@@ -365,3 +365,71 @@ Both findings are real. The docstring one is prose only; the test one is reprodu
 ### Summary
 
 Both cycle-1 findings are fixed in 559f5da6 and CI is green on it. The one roborev finding is a false positive against rows that stay valid.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #680 head 559f5da6 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED recommended at 559f5da60d0cc06821dc59381127eb913dd18aab (PR head unchanged at the end; Draft, CLEAN, 4 checks SUCCESS; merge-base with origin/main is 891a9a24, main has not moved). Full `test_delivery_gate`: 68 tests OK (87 s). Mutations on scratch copies, `python3 -B`, each run on `SettledChecksTests`+`HoldTests`: `== "SUCCESS"` only reddens 6 subtests (AC-1/AC-2); no floor reddens 5 (3 floor rows plus HoldTests `check skipped`/`check neutral`) (AC-2); FAILURE settled reddens only `FAILURE` in `test_every_other_check_hold_stays_beside_a_success` (AC-3); unfinished settled reddens 5 (AC-3); a gh call added only when a check is SKIPPED reddens `test_settling_a_check_adds_no_gh_call` [skipped and neutral] (AC-4). AC-6: `git grep "SKIPPED and NEUTRAL included" -- kc-dev-flow-2` and `git grep "by design" -- kc-dev-flow-2/scripts/delivery_gate.py` both find nothing; docstring names the floor. AC-4/AC-7: `git diff 891a9a24 --stat -- docs/dev2 kc-dev-flow-2/references kc-dev-flow-2/skills kc-dev-flow-2/extensions` empty; diff is 2 files (`delivery_gate.py`, `test_delivery_gate.py`). Words unchanged from cycle 1 (the cycle-2 diff touches one docstring parenthetical and one test). Limits judged: all five hold as written.
+- DONE: Recheck Cycle 1: the docstring parenthetical removed and test_settling_a_check_adds_no_gh_call pinned to the base's three gh calls at 559f5da6; confirm the unconditional-call mutation turns the new test red. Judge roborev:914's High finding (HoldTests 'check skipped' and 'check neutral' rows in kc-dev-flow-2/scripts/test_delivery_gate.py now fail) by running those rows at 559f5da6 and stating whether the claim is true; rerun the acceptance script.
+  Parenthetical gone (`git diff e80e50cb 559f5da6` shows the one-line docstring edit). Test pins the literal three calls (`pr view 9 ... changedFiles`, `api --paginate .../pulls/9/files`, `api .../actions/runs?head_sha=...`), the same three the base logs. Mutation: an unconditional `gh("api", "repos/o/r/commits")` as the first line of `ci_problem` turns the new test red (2 FAIL subtests, `plain` and `skipped and neutral`, assertion failures, not errors); the same mutation leaves the e80e50cb version of the test green (6 tests OK), so the repair closes the cycle-1 Polish. roborev:914 claim is false: `HoldTests` is 4 tests OK at 559f5da6, and running the two rows directly gives `check skipped` exit 1 and `check neutral` exit 1, each with the line "no check on this head finished successfully: only skipped or neutral" (a lone check has no SUCCESS, so the floor holds it); deleting the floor does redden those two rows, so they are live guards, and deleting them as roborev suggests would remove the AC-2 coverage. Acceptance script rerun below at the new head: output matched.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below (cycle-1 script with the head changed to 559f5da6), run with `env -i HOME PATH bash --noprofile --norc` (1m32s): output matched. `adr_lint.py docs/adr --since 891a9a24` printed "25 ADR file(s) checked, 0 legacy", exit 0. Also: comment_ratio "code lines 74, comment lines 0, 0.0%" exit 0; doc_impact lists no document, exit 0; design_surfaces presentable, exit 0; dispatch_records "6 dispatch record(s) complete", exit 0; no Number guards section and Surfaces none, so number_guards not run. Replay of `replay/*.json` through the stub harness, base then candidate: relay 398, 401, 399 and web 150 exit 1 then 0 (base "6 of 18", "6 of 18", "8 of 15", "4 of 7"); #670, #671, #675 0 then 0; relay 402 as stored 1 then 0; relay 402 with 6 SUCCESS set QUEUED and 1 IN_PROGRESS 1 then 1. Goal sufficiency: the three observed adopter holds pass; floor, failure, unfinished and skipped-run holds stay. Minimal necessity: unchanged from cycle 1 (13 changed lines in `ci_problem`, one docstring paragraph, six tests, each with a mutation only it catches); the cycle-2 edit removes an unenforceable absolute and adds no surface. Throwaway worktrees and temp files removed; nothing pushed, commented or marked ready.
+
+### Findings
+
+- None Material, Deferred risk, Polish or Needs decision at 559f5da6. The cycle-1 Polish (AC-4 test compared the candidate with itself) is closed; the cycle-1 engineering-reviewer docstring adjust is closed.
+- roborev:914 High finding: false positive, not a finding (see item 2). Disposition for FO: decline with the reason that both rows are a lone check and the floor still holds it; running them gives exit 1.
+- Limit (no finding, carried): AC-5's "relay#402 exit 1 while queued" rests on a derived rollup, as the implementation said.
+
+### Minimal acceptance script (Captain)
+
+Needs `git`, `python3`, and a `gh` sign-in that can read spacedock-dev/subspace-relay. Not covered: a live merge ask, `runs_problem`, the second-reviewer and ADR holds, an adopter with no fan-in job whose test job is skipped by a mistaken `if:` (a known limit).
+
+```bash
+# 1. Fetch the PR head and its base into throwaway checkouts. Expect the last line: 559f5da6
+rm -rf /tmp/accept-680 /tmp/accept-base
+git clone --quiet --filter=blob:none --no-checkout https://github.com/iamcxa/kc-claude-plugins.git /tmp/accept-680
+cd /tmp/accept-680
+git fetch --quiet origin pull/680/head
+git worktree add --quiet --detach /tmp/accept-base 891a9a24b51e5e9fda02a992c6a27910a216787d
+git checkout --quiet 559f5da60d0cc06821dc59381127eb913dd18aab
+git rev-parse --short HEAD
+
+# 2. Run the delivery-gate tests at the PR head. Expect: "Ran 68 tests" and "OK" (about 90 s)
+(cd kc-dev-flow-2/scripts && python3 -B -m unittest test_delivery_gate 2>&1 | tail -3)
+
+# 3. Read the real checks of a merged relay PR the old check held. Expect: 18 checks {'SUCCESS': 12, 'SKIPPED': 4, 'NEUTRAL': 2}
+gh pr view 398 --repo spacedock-dev/subspace-relay --json headRefOid,statusCheckRollup > /tmp/accept-398.json
+H=$(python3 -I -c 'import json;print(json.load(open("/tmp/accept-398.json"))["headRefOid"])')
+gh api "repos/spacedock-dev/subspace-relay/actions/runs?head_sha=$H&per_page=100" > /tmp/accept-398-runs.json
+python3 -I -c 'import json,collections;d=json.load(open("/tmp/accept-398.json"));print(len(d["statusCheckRollup"]),"checks",dict(collections.Counter(i.get("conclusion") or i.get("state") for i in d["statusCheckRollup"])))'
+
+# 4. Ask the delivery check about that head, before and after. Expect: before "relay 398: exit 1 ['6 of 18 checks ..." and "lone skipped check: exit 1 []";
+#    after "relay 398: exit 0 []" and "lone skipped check: exit 1 ['no check on this head finished successfully: only skipped or neutral']"
+cat > /tmp/accept-replay.py <<'PY'
+import importlib.util, json, sys
+scripts = sys.argv[1]
+spec = importlib.util.spec_from_file_location("t", scripts + "/test_delivery_gate.py")
+t = importlib.util.module_from_spec(spec); spec.loader.exec_module(t)
+d = json.load(open("/tmp/accept-398.json")); runs = json.load(open("/tmp/accept-398-runs.json"))
+r = t.run_check(head=d["headRefOid"], records={"validation-1.md": t.record(d["headRefOid"])}, facts=dict(statusCheckRollup=d["statusCheckRollup"]), runs=runs)
+print("relay 398: exit", r.code, [l[:70] for l in r.lines if "checks on this head" in l])
+lone = [dict(__typename="CheckRun", name="a", status="COMPLETED", conclusion="SKIPPED")]
+r = t.run_check(facts=dict(statusCheckRollup=lone))
+print("lone skipped check: exit", r.code, [l for l in r.lines if "no check on this head" in l])
+PY
+echo "--- before (base)"; python3 -B -I /tmp/accept-replay.py /tmp/accept-base/kc-dev-flow-2/scripts
+echo "--- after (PR head)"; python3 -B -I /tmp/accept-replay.py /tmp/accept-680/kc-dev-flow-2/scripts
+
+# 5. Decision-record lint. Expect: "25 ADR file(s) checked, 0 legacy" and "adr_lint exit 0"
+python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --since 891a9a24b51e5e9fda02a992c6a27910a216787d; echo "adr_lint exit $?"
+
+# 6. Clean up
+cd /tmp && rm -rf /tmp/accept-680 /tmp/accept-base /tmp/accept-398.json /tmp/accept-398-runs.json /tmp/accept-replay.py
+```
+
+Observed output, fresh shell: `559f5da6`; `Ran 68 tests in 76.285s` `OK`; `18 checks {'SUCCESS': 12, 'SKIPPED': 4, 'NEUTRAL': 2}`; before: `relay 398: exit 1 ["6 of 18 checks on this head are not finished and successful: 'workflow"]` and `lone skipped check: exit 1 []`; after: `relay 398: exit 0 []` and `lone skipped check: exit 1 ['no check on this head finished successfully: only skipped or neutral']`; `25 ADR file(s) checked, 0 legacy` `adr_lint exit 0`.
+
+### Summary
+
+PASSED recommended at 559f5da6: both cycle-1 findings are closed (the unconditional-call mutation is red under the pinned test and green under the old one), the roborev:914 High claim is false (the two HoldTests rows exit 1 through the floor), every criterion's falsifier fails as designed, and the acceptance script reproduces at the new head. No Material, Deferred-risk, Polish or Needs-decision finding remains.
