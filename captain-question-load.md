@@ -53,6 +53,17 @@ gates:
                 id: briefing:captain-question-load:validation:attempt-1:revision-1
                 digest: sha256:8372bdec97574ef39fdbb39d860bb8c06cd0024317b9269396dfdf9ac170825f
                 room-ref: ./captain-question-load/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:captain-question-load:validation:1
+                briefing: briefing:captain-question-load:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T14:21:21.539081Z"
+                decision: approve
+                reason: 'Captain approved delivery in chat (「准」) after the gate briefing: FO merges #675 head ccc84a78 with --match-head-commit and removes its clean, pushed worktree; F7 and the Polish declined into fo-write-checks-followups as the gate question recommends'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-18T16:57:42Z
 worktree: .worktrees/spacedock-ensign-captain-question-load
 pr: iamcxa/kc-claude-plugins#675
