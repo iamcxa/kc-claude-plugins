@@ -270,6 +270,8 @@ ADR: 0023
 
 - Cycle 1 (FO, 2026-10-19): Codex review on #675 16d8d456 (review:5569526052) left one P1, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P1 (kc-dev-flow-2/scripts/delivery_gate.py ASK and the Delivery authority sentence): 'unless he says he merges' does not cover an approval that says wait or do not merge yet, while Captain amendment 1 reserves exactly that (「除非我有顧慮暫時不合併」); an explicit hold or merge objection must be an opt-out too.
+- Cycle 2 (FO, 2026-10-19): Codex review on #675 1704ec80 (review:5569986438) left one P1 and one P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 (Delivery authority sentence): a carried merge is not bound to the checked head; a push after the last check could land an unvalidated head; gh pr merge --match-head-commit <full checked SHA> binds it. P2 (kc-dev-flow-2/scripts/delivery_gate.py write_record): the merge-time recheck 'Before merging or asking' writes a second merge/ask-N.json for an ask that never happened.
 
 ## Stage Report: ideation
 
