@@ -49,6 +49,17 @@ gates:
                 id: briefing:paseo-fo-console-poc:validation:attempt-1:revision-1
                 digest: sha256:9fd42e4f399303797d150ab223b654638599f644a2f4e66fd6f26d9770231a9d
                 room-ref: ./paseo-fo-console-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-fo-console-poc:validation:1
+                briefing: briefing:paseo-fo-console-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T14:09:20.545051Z"
+                decision: approve
+                reason: 'Captain: 「准」 (2026-10-19 chat) — accept the POC result with boundary-crossed: external-seam, no delivery as POC, archive with code kept on its branch; the real build goes to a separately filed task whose profile the Captain selects'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-19T11:13:59Z
 ---
 
