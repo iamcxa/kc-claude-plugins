@@ -1,0 +1,7 @@
+{
+  "id": "peer-label-poc",
+  "description": "Gives a peer message between agents a sender label the receiver can verify",
+  "requirements": {
+    "paseo": ">=0.11.4"
+  }
+}

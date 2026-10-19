@@ -1,0 +1,17 @@
+{
+  "name": "peer-label-poc",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "node --test server/label.test.ts"
+  },
+  "devDependencies": {
+    "@getpaseo/client": "0.11.4",
+    "@getpaseo/plugin": "0.11.4",
+    "@getpaseo/protocol": "0.11.4",
+    "@types/node": "^20.9.0",
+    "typescript": "^5.9.3",
+    "zod": "^4.4.3"
+  }
+}
