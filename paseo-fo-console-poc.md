@@ -25,6 +25,11 @@ gates:
                 at: "2026-10-19T09:53:39.261655Z"
                 decision: hold
                 reason: 'Captain 2026-10-19: 「改做小實測」 — run small Paseo peer probes first; the plugin POC is to be reshaped into an ''FO''s FO'' (a coordinator FO that aligns priorities, dispatches project FOs, tracks and aligns progress) instead of a roster/conversation view'
+            - id: gate-attempt:paseo-fo-console-poc-backlog-2
+              briefing:
+                id: briefing:paseo-fo-console-poc:backlog:attempt-2:revision-1
+                digest: sha256:f665d9a1abfafb773b87bc0b6556efb916b7be916192c82288fde72330a5d03b
+                room-ref: ./paseo-fo-console-poc/review/backlog/briefing-2
 ---
 
 Kent wants one entry point in Paseo for his FOs. From a plugin screen he sees which FOs

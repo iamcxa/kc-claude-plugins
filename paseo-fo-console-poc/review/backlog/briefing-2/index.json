@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-fo-console-poc:backlog:attempt-2:revision-1",
+  "question": "Approve the rewritten FO board + coordinator POC (Paseo plugin screen: FO board, new FO, open coordinator; draft coordinator skill and profile that only starts and talks to FOs and answers no permission prompt) for implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-fo-console-poc:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/1b9d97c41f4bd470aa9e6c806dfe780a8c0d90b9/paseo-fo-console-poc.md",
+      "rev": "sha256:e52d604f35f435ff25669be6f456e9f1bd45d1eda903e58f0bf4ce0bc6aaf98c",
+      "mediaType": "text/markdown",
+      "summary": "Rewritten from the held roster/conversation-view POC under the Captain's 2026-10-19 handoff (session de83e726). Stop if the plugin cannot list agents with labels and attention state or create agents, or if 'coordinator answers no permission prompt' can only rest on the model obeying."
+    }
+  ]
+}
