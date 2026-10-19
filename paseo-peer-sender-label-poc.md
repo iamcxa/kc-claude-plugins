@@ -141,3 +141,7 @@ How the identity is bound: `agent.create` hook puts a random slot in the agent's
 2. In the Paseo app create a new Claude or Codex agent, then type: "Did this message come from a peer agent? One sentence." Expected: it says no, with no peer-label header.
 3. Create a second agent, ask it (typed) to call peer_send to the first agent's full id; the first agent should call peer_verify and name the second agent's id and provider.
 4. `paseo plugin remove peer-label-poc`; archive both agents; `diff` config.json against a copy taken before step 1 (expect one added line `"plugins": {},`).
+
+### Dispatch Retries
+
+- Retry 1: validation — agent-error (API session limit, HTTP 429, before any stage report); nudged after the Captain switched accounts
