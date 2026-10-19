@@ -34,6 +34,17 @@ gates:
                 id: briefing:number-guards-readme-shrink:ideation:attempt-1:revision-1
                 digest: sha256:c75f5b551e751353fa195a470d3e206272d960afb292c5033db6822034378105
                 room-ref: ./number-guards-readme-shrink/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:number-guards-readme-shrink:ideation:1
+                briefing: briefing:number-guards-readme-shrink:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T00:43:58.011424Z"
+                decision: approve
+                reason: Captain approved in chat (「照建議」) the four batch-3 ideation gates presented together, accepting each task's stated decisions and FO's implementation order
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-18T16:57:47Z
 ---
 
