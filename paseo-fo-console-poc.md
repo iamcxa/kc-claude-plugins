@@ -1,6 +1,6 @@
 ---
 title: From one Paseo screen the Captain sees what each FO is busy with, starts FOs, and opens a coordinator that only starts and talks to them
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -40,7 +40,7 @@ gates:
                 reason: 'Captain: 「准」 (2026-10-19 chat) to the rewritten FO board + coordinator POC'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Kent wants one entry point in Paseo for his FOs. From a plugin screen he sees which FOs
