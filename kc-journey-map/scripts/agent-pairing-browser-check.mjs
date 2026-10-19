@@ -65,6 +65,10 @@ try {
  pass('real Keychain-backed installation finishes original redemption and stdio MCP permits one room while denying another')
  for(const theme of ['light','dark']){
   await page.emulateMedia({colorScheme:theme})
+  await page.evaluate(theme=>window.editor.user.updateUserPreferences({colorScheme:theme}),theme)
+  await page.waitForFunction(theme=>document.querySelector('.agent-sheet')?.getAttribute('data-theme')===theme,theme)
+  assert.equal(await page.evaluate(()=>!!document.querySelector('.tl-theme__dark')),theme==='dark')
+  assert.equal(await page.locator('.agent-sheet').evaluate(el=>getComputedStyle(el).backgroundColor),theme==='dark'?'rgb(34, 39, 53)':'rgb(255, 255, 255)')
   for(const viewport of [{width:1280,height:800},{width:390,height:844}]){
    await page.setViewportSize(viewport)
    for(const button of await page.locator('dialog button:visible').all()){const box=await button.boundingBox();assert.ok(box.height>=44)}
