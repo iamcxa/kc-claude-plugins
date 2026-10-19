@@ -18,7 +18,7 @@ const assertion = data + '.' + Buffer.from(await crypto.subtle.sign('RSASSA-PKCS
 const bundle = await build({ entryPoints: [join(root, 'server/host/cloudflare.ts')], bundle: true, write: false, format: 'esm', platform: 'browser', conditions: ['workerd', 'worker', 'browser'], external: ['cloudflare:workers'], logLevel: 'silent' })
 let providerDown = false
 const mf = new Miniflare({ script: bundle.outputFiles[0].text, modules: true, compatibilityDate: '2026-07-01', compatibilityFlags: ['nodejs_compat'], host: '127.0.0.1', port: 0,
- bindings: { JOURNEY_ORIGIN: origin, JOURNEY_GRANTS: JSON.stringify(grants), JOURNEY_HUMAN_CONFIG: JSON.stringify(config) },
+ bindings: { JOURNEY_ORIGIN: origin, JOURNEY_GRANTS: JSON.stringify(grants), JOURNEY_HUMAN_CONFIG: JSON.stringify(config), JOURNEY_AGENT_PAIRING: process.env.JOURNEY_TEST_PAIRING==='true'?'true':'false' },
  durableObjects: { ROOMS: { className: 'JourneyRoom', useSQLite: true }, REGISTRY: { className: 'JourneyRegistry', useSQLite: true } }, durableObjectsPersist: join(scratch, 'objects'),
  outboundService: async req => {
   if (providerDown) return new WorkerResponse('synthetic outage', { status: 503 })
@@ -76,6 +76,33 @@ try {
  assert.equal(storedSession.expiresAt, session.expiresAt); assert.equal(storedSession.verifiedHumanSignInAt, session.verifiedHumanSignInAt)
  assert.equal('csrfDigest' in session, false)
  pass('renewal preserves original seven-day deadline; legacy cleanup preserves live typed human sessions')
+ if(process.env.JOURNEY_TEST_PAIRING==='true') {
+  const verifier='a'.repeat(64),requestId=crypto.randomUUID()
+  const agent=(op,body,approve=false)=>request('/agents/'+op,{method:'POST',headers:approve?{...postHeaders,Cookie:cookie,'X-Journey-Csrf':csrf}:{'Content-Type':'application/json'},body:{backendId:'cf-synthetic',...body}})
+  const start=await agent('start',{requestId,installationId:crypto.randomUUID(),memberId:'person',rooms:['one'],label:'self-reported synthetic',verifier})
+  assert.equal(start.status,200,await start.clone().text());const pending=await start.json()
+  assert.deepEqual(pending.scopes,[{roomId:'one',records:'full-replacement',assets:false,saveDirectory:null,repositories:[]}])
+  const inspection=await(await agent('inspect',{code:pending.code},true)).json()
+  assert.equal((await agent('approve',{code:pending.code,consentId:inspection.consentId},true)).status,200)
+  const redeem=await Promise.all([1,2].map(()=>agent('redeem',{requestId,verifier})))
+  assert.deepEqual(redeem.map(r=>r.status).sort(),[200,410])
+  const issued=await redeem.find(r=>r.status===200).json(),auth={Authorization:'Bearer '+issued.accessToken}
+  assert.equal((await request('/doc?room=one',{headers:auth})).status,200)
+  assert.equal((await request('/doc?room=two',{headers:auth})).status,403)
+  assert.equal((await request('/auth/entry',{headers:auth})).status,403)
+  const turn={familyId:issued.family.id,generation:1,secret:issued.refreshSecret}
+  assert.equal((await agent('repair',{...turn,secret:'b'.repeat(64)})).status,403)
+  assert.equal((await request('/doc?room=one',{headers:auth})).status,200)
+  const races=await Promise.all([1,2].map(()=>agent('rotate',turn)))
+  assert.deepEqual(races.map(r=>r.status).sort(),[200,403])
+  assert.equal((await request('/doc?room=one',{headers:auth})).status,403)
+  assert.equal((await agent('repair',turn)).status,200)
+  assert.equal((await agent('cancel',{requestId,verifier})).status,200)
+  const family=await metadata('get',{key:'agent-family:'+issued.family.id});assert.equal(family.revoked,true)
+  const persisted=JSON.stringify(await metadata('list',{prefix:'agent-'}))
+  for(const secret of [verifier,issued.refreshSecret,issued.accessToken.split('.')[1]])assert.ok(!persisted.includes(secret))
+  pass('local workerd registry atomically consumes once, intersects room/capability scope, denies human escalation, commits replay tombstones and permits authenticated revoke-only repair; server stores digests only')
+ }
  assert.equal((await request('/auth/renew', { method: 'POST', body: {}, headers: { ...postHeaders, Cookie: cookie } })).status, 403)
  const providerStart = await request('/auth/provider/start', { method: 'POST', headers: postHeaders, body: {} })
  const freshState = await providerStart.json()

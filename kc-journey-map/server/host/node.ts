@@ -9,6 +9,7 @@ import { currentGrant, validateGrants, type Grant, type Admission, type Metadata
 import type { Host } from './transport'
 import { pruneExpiredSessions } from './session-retention'
 import { bootstrapHuman, humanOperation, validateHumanConfig, type HumanConfig, type SyncMetadata } from './human-store'
+import { bootstrapAgent, agentOperation, captureAgent, agentResult, type AgentScope } from './agent-store'
 import { loadAsset, storeAsset } from '../assets'
 import { saveBoard, saveDir, saveTarget } from '../save'
 import { readRepoDoc } from '../repo-doc'
@@ -24,6 +25,7 @@ export class NodeHost implements Host {
  rooms = new Map<string, { room: TLSocketRoom<any, any>; db: DatabaseSync }>()
  nativeAccount = process.env.JOURNEY_NATIVE_ACCOUNT === 'true'
  humanConfig?: HumanConfig
+ agentPairing = process.env.JOURNEY_AGENT_PAIRING === 'true'
  localHumanReady = false
  sockets = new Map<any, { admission: Admission | null; room: string; timer?: ReturnType<typeof setTimeout> }>()
  db: DatabaseSync
@@ -89,6 +91,9 @@ export class NodeHost implements Host {
    if (this.humanConfig.mode === 'local' && this.humanConfig.localOwnerUid !== process.geteuid?.()) throw new Error('local owner must be the service OS account')
    atomic(() => bootstrapHuman(sync, this.humanConfig!))
   }
+  if (this.agentPairing && (!this.private || !this.humanConfig)) throw new Error('agent pairing requires private verified human entry')
+  atomic(() => bootstrapAgent(sync, this.agentPairing, { assets: true, saveDirectory: process.env.JOURNEY_SAVE_DIR ? resolve(process.env.JOURNEY_SAVE_DIR) : null, repositories: this.roomRepos }))
+  this.meta.agent = async (operation, input) => agentResult(atomic(() => captureAgent(() => agentOperation(sync, operation, input, room => this.agentScope(room)))))
   if (this.private) {
    const grants = validateGrants(JSON.parse(readFileSync(process.env.JOURNEY_GRANTS_FILE!, 'utf8')))
    for (const grant of grants) {
@@ -115,6 +120,9 @@ export class NodeHost implements Host {
  capabilities(room: string) {
   return { assets: true, save: !this.private || !!process.env.JOURNEY_SAVE_DIR,
    repoDoc: !this.private || !!this.roomRepos[room]?.length }
+ }
+ agentScope(roomId: string): AgentScope {
+  return { roomId, records: 'full-replacement', assets: true, saveDirectory: process.env.JOURNEY_SAVE_DIR ? resolve(process.env.JOURNEY_SAVE_DIR) : null, repositories: [...(this.roomRepos[roomId] || [])].sort() }
  }
  async putAsset(room: string, id: string, bytes: Uint8Array, type: string) {
   if (!this.private) return storeAsset(id, Readable.from([bytes]), type)

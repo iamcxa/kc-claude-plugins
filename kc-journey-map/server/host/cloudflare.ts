@@ -4,8 +4,10 @@ import { admit, handle, type Host } from './transport'
 import { currentGrant, validateGrants, type Admission, type Grant, type Metadata } from './policy'
 import { pruneExpiredSessions } from './session-retention'
 import { bootstrapHuman, humanOperation, validateHumanConfig, type HumanConfig, type SyncMetadata } from './human-store'
+import { bootstrapAgent, agentOperation, captureAgent, agentResult, type AgentScope } from './agent-store'
 
-type Env = { JOURNEY_NATIVE_ACCOUNT?: string; ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string; JOURNEY_HUMAN_CONFIG?: string }
+type Env = { JOURNEY_NATIVE_ACCOUNT?: string; ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string; JOURNEY_HUMAN_CONFIG?: string; JOURNEY_AGENT_PAIRING?: string }
+const agentScope = (env: Env, roomId: string): AgentScope => ({ roomId, records: 'full-replacement', assets: !!env.ASSETS, saveDirectory: null, repositories: [] })
 const stub = (namespace: any, id: string) => namespace.get(namespace.idFromName(id))
 const assetBlobKey = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 const ownsAsset = (room: string, key: unknown) => typeof key === 'string' && key.startsWith(room + '/') && assetBlobKey.test(key.slice(room.length + 1))
@@ -19,6 +21,7 @@ class RegistryMetadata implements Metadata {
  async get<T>(key: string): Promise<T | null> { return await this.call('get', { key }) as T | null }
  async put(key: string, value: unknown) { await this.call('put', { key, value }) }
  async human(operation: string, input: any) { return this.call('human', { operation, input }) }
+ async agent(operation: string, input: any) { return this.call('agent', { operation, input }) }
  async replaceAsset(room: string, id: string, value: unknown) { return await this.call('replace-asset', { room, id, value }) as { previous: { blobKey: string } | null } }
  async list<T>(prefix: string): Promise<Array<{ key: string; value: T }>> { return await this.call('list', { prefix }) as any }
 }
@@ -32,6 +35,8 @@ export class JourneyRegistry {
     ctx.storage.transactionSync(() => bootstrapHuman(this.sync(), config))
    }
    const grants = validateGrants(JSON.parse(env.JOURNEY_GRANTS || 'null'))
+   if (env.JOURNEY_AGENT_PAIRING === 'true' && !env.JOURNEY_HUMAN_CONFIG) throw new Error('agent pairing requires verified human entry')
+   ctx.storage.transactionSync(() => bootstrapAgent(this.sync(), env.JOURNEY_AGENT_PAIRING === 'true', { assets: !!env.ASSETS, saveDirectory: null, repositories: {} }))
    for (const grant of grants) if (!this.get('grant:' + grant.credentialId)) this.put('grant:' + grant.credentialId, grant)
   })
  }
@@ -47,6 +52,10 @@ export class JourneyRegistry {
  async fetch(req: Request) {
   const body = await req.json() as any
   const op = new URL(req.url).pathname
+  if (op === '/agent') {
+   try { return Response.json(agentResult(this.ctx.storage.transactionSync(() => captureAgent(() => agentOperation(this.sync(), body.operation, body.input, room => agentScope(this.env, room)))))) }
+   catch (error) { return Response.json({ error: error instanceof HostError ? error.message : 'metadata unavailable', ...(error instanceof HostError ? error.details : {}) }, { status: error instanceof HostError ? error.status : 503 }) }
+  }
   if (op === '/human') {
    try { return Response.json(this.ctx.storage.transactionSync(() => humanOperation(this.sync(), body.operation, body.input))) }
    catch (error) { return Response.json({ error: error instanceof HostError ? error.message : 'metadata unavailable', ...(error instanceof HostError ? error.details : {}) }, { status: error instanceof HostError ? error.status : 503 }) }
@@ -82,11 +91,13 @@ export class CloudflareHost implements Host {
  publicRequestUrl = true
  nativeAccount: boolean
  humanConfig?: HumanConfig
+ agentPairing: boolean
  meta: RegistryMetadata
  port: number
  origin: string
  constructor(private env: Env) {
   this.nativeAccount = env.JOURNEY_NATIVE_ACCOUNT === 'true'
+  this.agentPairing = env.JOURNEY_AGENT_PAIRING === 'true'
   this.origin = env.JOURNEY_ORIGIN
   const origin = new URL(this.origin)
   if (origin.origin !== this.origin || (origin.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(origin.hostname))) throw new Error('private origin requires HTTPS')

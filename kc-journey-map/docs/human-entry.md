@@ -1,5 +1,10 @@
 # Optional verified-human entry
 
+The subsequent disabled [agent-pairing foundation](agent-pairing.md) reuses this
+verified-human entry. Agents and legacy credentials cannot approve requests or
+exchange themselves into human/browser authority. Human expiry remains separate
+from agent-family lifetime.
+
 This first-story Pilot candidate is off by default. It does not configure an
 identity provider, deploy a host, change existing credentials or authorize a
 cutover. [Accepted design](../../docs/journey/kc-journey-map/private-entry.md)

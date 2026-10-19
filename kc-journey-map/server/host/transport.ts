@@ -1,10 +1,12 @@
 import { canonicalAsset, HostError, prepareDoc } from './core'
+import { agentRoute } from './agent'
 import { humanRoute, registeredHumanRoom, requireHumanContext } from './human'
 import type { HumanConfig } from './human-store'
 import { authenticate, authorize, exchange, requireOrigin, type Admission, type Metadata } from './policy'
 export interface Host {
  nativeAccount?: boolean
  humanConfig?: HumanConfig
+ agentPairing?: boolean
  localHumanReady?: boolean
  publicRequestUrl?: boolean
  private: boolean
@@ -78,6 +80,8 @@ export async function handle(host: Host, req: Request): Promise<Response> {
 async function route(host: Host, req: Request): Promise<Response> {
  try {
   const url = new URL(req.url), method = req.method
+  const agent = await agentRoute(host, req)
+  if (agent) return agent
   const entry = await humanRoute(host, req)
   if (entry) return entry
   if (url.pathname === '/session' && method === 'POST') {

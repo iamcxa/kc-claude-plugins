@@ -272,7 +272,7 @@ function RoomCanvas({ session, frozen, onConnection, onEditor }: { session: Room
 
  useEffect(() => { if (frozen) setPopup(null) }, [frozen])
 	return (
-		<div style={{ position: 'fixed', inset: 0 }}>
+		<div className="journey-canvas-root" style={{ position: 'fixed', inset: 0 }}>
 			<Tldraw
 				licenseKey={import.meta.env.VITE_TLDRAW_LICENSE_KEY}
 				store={store}
