@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-18T16:57:29Z
+worktree: .worktrees/spacedock-ensign-fo-write-checks
 ---
 
 Filed for batch 3 on the Captain's 「先走批次三規劃」 (chat, 2026-10-19), after FO reported at the batch-2 close that its own process mistakes repeat across tasks and should move from reminders into a script; the Captain enabled the state laws check on this repository the same day (「可以那就只開啟這個repo」).
