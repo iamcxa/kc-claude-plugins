@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:captain-question-load:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:captain-question-load-validation-1
+              briefing:
+                id: briefing:captain-question-load:validation:attempt-1:revision-1
+                digest: sha256:8372bdec97574ef39fdbb39d860bb8c06cd0024317b9269396dfdf9ac170825f
+                room-ref: ./captain-question-load/review/validation/briefing-1
 started: 2026-10-18T16:57:42Z
 worktree: .worktrees/spacedock-ensign-captain-question-load
 pr: iamcxa/kc-claude-plugins#675
