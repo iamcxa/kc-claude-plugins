@@ -163,7 +163,7 @@ FIXES = {
               "a Needs decision and a scope change go to him"),
         old=(),
         swaps=((r", except as follows\. FO's delivery gate question.*?scope change go to him\.",
-                ", except as follows. FO's delivery gate question says approval also covers merging the head `<package>/scripts/delivery_gate.py check` passes unless he says he merges or holds, and removing its clean, pushed worktree."),)),
+                ", except as follows. FO's delivery gate question says approval also covers merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it, unless he says he merges or holds, and removing its clean, pushed worktree."),)),
     "asked-line": dict(
         need=("Asked: <the question or proposal he answered",
               "`Asked:` is required when his words do not name"),
@@ -210,10 +210,10 @@ FIXES = {
                (r" FO's startup and idle steps are in `_mods/kc-dev-flow-2\.md`, copied from `<package>/references/sd/mods/`\.", ""),
                (r"Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate\.py check.*?shows the Captain what it printed\.", "Before the merge ask, FO confirms the head."))),
     "delivery-question-carries-merge": dict(
-        need=("merging the head `<package>/scripts/delivery_gate.py check` passes unless he says he merges or holds",
+        need=("merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it, unless he says he merges or holds",
               "removing its clean, pushed worktree."),
         old=(),
-        swaps=((r", merging the head `<package>/scripts/delivery_gate\.py check` passes unless he says he merges or holds, and removing its clean, pushed worktree", ""),)),
+        swaps=((r", merging the full head `<package>/scripts/delivery_gate\.py check` passes, with `--match-head-commit` set to it, unless he says he merges or holds, and removing its clean, pushed worktree", ""),)),
     "worker-opens-draft-pr": dict(
         file="skills/implementation/principles.md",
         need=("Where the dispatch scope notes quote the Captain's grant to push the task branch and open a Draft PR, open that PR before the stage report and name it there",

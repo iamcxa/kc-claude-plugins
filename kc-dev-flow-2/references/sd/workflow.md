@@ -498,19 +498,19 @@ alone does not block SD's no-hook local-finalize route.
 Project and Captain authority constrain hook instructions: present the exact candidate and
 PR body before authorized push/create; create a Draft PR where required, and request ready
 only after the required CI is green. Where CI skips drafts, FO marks the PR ready under
-the Captain's authority and waits for those jobs to finish before asking for merge.
-Approval of a validation gate is not permission to push, create or merge a PR, except as
-follows. FO's delivery gate question says approval also covers later external-review
-rounds on the same PR, merging the head `<package>/scripts/delivery_gate.py check` passes
-unless he says he merges or holds, and removing its clean, pushed worktree. Under that
-approval, a repair whose validation passes with no Material or Needs decision finding is
-recorded by FO under that grant (`gate record --actor agent:first-officer` with
-`--conn-quote` and `--conn-source` naming his approval) and pushed to that PR's branch,
-after FO confirms the pushed commit is the candidate the report names. A rejected repair,
-a Needs decision and a scope change go to him. Preserve manual merge authority. Do not
-invoke local fallback, push the trunk, merge, or clean up an owned worktree unless the
-specific action is authorized. An upstream hook's default fallback is not that grant. A
-failure holds delivery pending an explicit choice.
+the Captain's authority and waits for those jobs before asking for merge. Approval of a
+validation gate is not permission to push, create or merge a PR, except as follows. FO's
+delivery gate question says approval also covers later external-review rounds on the same
+PR, merging the full head `<package>/scripts/delivery_gate.py check` passes, with
+`--match-head-commit` set to it, unless he says he merges or holds, and removing its
+clean, pushed worktree. Under that approval, a repair whose validation passes with no
+Material or Needs decision finding is recorded by FO
+(`gate record --actor agent:first-officer` with `--conn-quote` and `--conn-source` naming
+his approval) and pushed to that PR's branch, after confirming the pushed commit is the
+candidate the report names. A rejected repair, a Needs decision and a scope change go to
+him. Preserve manual merge authority. Do not invoke local fallback, push the trunk, merge,
+or clean up an owned worktree unless the specific action is authorized. An upstream hook's
+default fallback is not that grant. A failure holds delivery pending an explicit choice.
 
 Under the Captain's grant quoted in its dispatch, the implementation worker opens the task's
 Draft PR before validation; that grant stands in for a presented body. Observe the actual
