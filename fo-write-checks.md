@@ -330,3 +330,18 @@ PR #671 head 03a05f8f meets AC-1 to AC-8 on the real scripts and ten-plus mutati
 ### Summary
 
 Both Codex P2 are real and reproduce; the two-line fix keeps every existing test and every committed record's verdict. Nothing was committed or pushed; this report is the only change, in the state checkout, uncommitted.
+
+## Stage Report: implementation (cycle 2, repair)
+
+- DONE: both Codex P2 on #671 03a05f8f fixed with FO's authorization (the newest record `implementation-2.md` was the only one in the dispatch folder; the message named `implementation-3.md`, which does not exist, so I worked from the message)
+  Commit 08f06ac3 pushed without force to spacedock-ensign/fo-write-checks. `delivery_gate.declined_items` judges every item except `none`/`nothing`/`n/a`; `dispatch_records` matches the reserved line only at line start, optionally bulleted or after `Number guards:` (kept, as FO ruled). `--names` over all committed dispatch records printed the same 22 lines before and after the fix.
+- DONE: reproductions moved into the permanent tests, with mutations
+  `test_delivery_gate` 55, `test_dispatch_records` 46, `test_laws_check` 40, all OK. New: `test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item` asserts `Declined: Polish, typo.` is held and none forms pass; `test_a_reserved_number_named_inside_a_prose_line_is_missing_and_the_line_forms_FO_writes_pass` asserts a prose mention is missing and four line forms pass. Mutations (python3 -B, caches cleared), each failing only the named tests: old `>= 3` filter (the short-item test); no none-form exclusion (that test and the bracket-reason test); unanchored search (the prose test); no `Number guards:` prefix (prose test, that subTest); no bullet form (prose test, that subTest).
+- DONE: ADR 0025
+  `docs/adr/0025-a-declined-item-carries-a-bracketed-reason-and-a-reserved-adr-lands-or-is-released.md`, text as proposed in phase 1; `adr_lint.py docs/adr --since c60e89e1` 23 files, exit 0. It adds an eighth file to the diff that AC-7 listed as seven (FO's call, validation-1 F1).
+- DONE: gates
+  `workflow.md` 5429 of 5429, `lint-skills.py` exit 0; `comment_ratio.py origin/main HEAD` under 5%; `evidence=roborev:868` (`clean on 08f06ac35`); CI green on 08f06ac3 (`gh pr checks 671`: unit tests 1m17s, version parity 47s, route gate 6s, GitGuardian pass); PR still Draft, no PR comment. CI cost not measured beyond those run times.
+
+### Summary
+
+Both P2 fixed in one commit with tests and mutations, plus ADR 0025; ready for the fresh validation recheck. The two-word bracket limit from validation finding 4 is unchanged.
