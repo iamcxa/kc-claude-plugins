@@ -1,6 +1,6 @@
 ---
 title: A Codex session asks on a local board and an idle Claude session wakes and answers
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -55,9 +55,12 @@ gates:
                 reason: 'Captain said 「繼續」 (2026-10-19 chat) after the validation gate recommended approve: POC accepted as passed; deliver 44e8de6d as a Draft PR, approval also covering later external-review rounds on that PR; merge stays with the Captain'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-13T08:57:55Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: REJECTED
+completed: 2026-10-19T08:08:50Z
+archived: 2026-10-19T08:08:50Z
 ---
 
 Claude Code sessions can message each other and wake the receiver, but nothing crosses
