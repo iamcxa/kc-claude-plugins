@@ -3,7 +3,7 @@ title: The delivery check settles a check run its repository skips by design, so
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain approved in chat (「批准」) after the re-briefing: accepts D1 as recommended (settle SKIPPED and NEUTRAL with a floor), which reverses the SKIPPED or NEUTRAL clause of merge-gatekeeper AC-1, and implementation after #679 merges, as the gate question states'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-19T15:34:07Z
 ---
 
