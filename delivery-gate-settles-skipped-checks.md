@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-19T15:34:07Z
+worktree: .worktrees/spacedock-ensign-delivery-gate-settles-skipped-checks
 ---
 
 ## Scope
