@@ -410,3 +410,16 @@ PR #671 head 08f06ac3 meets AC-1 to AC-8 on the real scripts, both Codex P2 fixe
 ### Summary
 
 Both Codex P2 reproduce as failing tests and each has a one-function fix that keeps every existing test and every committed record's verdict; both stay fail-closed for text the parser cannot read. Awaiting FO authorization to commit the fix, add the tests, write the ADR wording and push; this report is uncommitted in the state checkout.
+
+## Stage Report: implementation (cycle 3, repair)
+
+- DONE: Apply /tmp/fwc3-cycle3.patch to delivery_gate.py, dispatch_records.py and their two test files; run a mutation per fix that fails its new test (python3 -B, caches cleared)
+  Commit 13ceb00d (4 files plus the ADR; 33 insertions, 5 deletions; 0 comment lines added). Mutation 1, `brackets` replaced by the old innermost regex `\(([^()]*)\)`: fails only `test_a_declined_reason_with_parentheses_inside_the_bracket_is_a_reason` (`Declined: Polish, remove wrapper (the foo() call is redundant).` held). Mutation 2, `AMENDMENT_NAMED` separator back to `(?:,|and|&|to|-)`: fails only `test_an_amendment_list_with_an_oxford_comma_names_every_number` (subTest `Captain amendments 1, 2, and 3`). Both mutations reverted; worktree clean after.
+- DONE: Edit ADR 0025's Words and Recommended lines as proposed in phase 1, quoting the gate question as it stands; adr_lint.py docs/adr --require 0025 passes
+  Words now quotes the briefing-1 question verbatim from `review/ideation/briefing-1/index.json` and says the task design recommended A and no parked form; Recommended reads "as the task design stated and the gate question carried". `adr_lint.py docs/adr --since c60e89e1 --require 25`: 23 ADR files, exit 0.
+- DONE: All package test files pass; roborev evidence= line; push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  Every `test_*.py` in kc-dev-flow-2/scripts exits 0 (python3 -B; delivery_gate 56, dispatch_records 47, laws_check 40; test_sd_dispatch PASS with spacedock 0.27 root); `lint-skills.py` exit 0; `comment_ratio.py origin/main HEAD` under 5%; README not touched (5429). `evidence=roborev:870` (`SEVERITY_THRESHOLD_MET`, verdict pass, at 13ceb00d). `git push origin spacedock-ensign/fo-write-checks` 08f06ac3..13ceb00d. `gh pr checks 671` on 13ceb00d: unit tests 1m31s, version parity 58s, route gate 5s, GitGuardian pass; PR still Draft, no PR comment, no review request.
+
+### Summary
+
+Both Codex P2 from review:5567189577 are fixed at 13ceb00d with a failing-first test and a mutation each, and ADR 0025 now quotes the gate question as it stands; CI is green and the verdict of every committed dispatch record is unchanged (198 `--names` lines before and after). Ready for the fresh validation recheck.
