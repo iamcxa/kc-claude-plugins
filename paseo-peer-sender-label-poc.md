@@ -36,6 +36,17 @@ gates:
                 id: briefing:paseo-peer-sender-label-poc:validation:attempt-1:revision-1
                 digest: sha256:2eb05f7a54bb71d5eff790cec32fe27db6ce33a6a6a6d6d4d7f24c68ff72c86d
                 room-ref: ./paseo-peer-sender-label-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-peer-sender-label-poc:validation:1
+                briefing: briefing:paseo-peer-sender-label-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T08:49:54.774199Z"
+                decision: approve
+                reason: 'Captain: 「准」 (2026-10-19 chat) — accept the POC result, no PR, archive with the code kept on its remote branch'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-19T08:10:26Z
 ---
 
