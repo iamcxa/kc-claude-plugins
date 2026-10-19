@@ -1,6 +1,6 @@
 ---
 title: From one Paseo screen the Captain sees what each FO is busy with, starts FOs, and opens a coordinator that only starts and talks to them
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -59,8 +59,11 @@ gates:
                 reason: 'Captain: 「准」 (2026-10-19 chat) — accept the POC result with boundary-crossed: external-seam, no delivery as POC, archive with code kept on its branch; the real build goes to a separately filed task whose profile the Captain selects'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-19T11:13:59Z
+verdict: REJECTED
+completed: 2026-10-19T14:09:24Z
+archived: 2026-10-19T14:09:24Z
 ---
 
 Kent wants one entry point in Paseo for his FOs. From a plugin screen he sees which FOs
