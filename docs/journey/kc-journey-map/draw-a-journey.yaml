@@ -222,7 +222,8 @@ steps:
       - id: switch-my-permitted-rooms
         card: Switch my permitted rooms without leaving the canvas
         release: r4
-        status: gap
+        status: unverified
+        evidence: permittedRoomCatalog
         questions:
           - id: q-r4-fourth-room-registration
             ask: Which existing registration procedure can add a permitted fourth room without a new frontend
@@ -730,7 +731,7 @@ status:
   unproven: "2026-10-19: complete technical design confirmed for Pilot implementation in four slices,
     eight stories (3/2/2/1), and 31 design question dispositions. Historical QA references to
     pending overall design approval are superseded by this confirmation and private-entry.md. This
-    first-story source candidate has local synthetic security/browser evidence only; independent
+    first-entry and room-catalog source candidates have local synthetic evidence only; independent
     validation and actual provider, stream stop, installation storage, draft durability and Free
     workload proofs remain separate. No whole-journey runtime acceptance or activation is claimed."
   unmerged: This planning source records scoped observations and accepted direction; it does not
