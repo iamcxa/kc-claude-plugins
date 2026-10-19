@@ -3,7 +3,7 @@ title: The delivery check settles a check run its repository skips by design, so
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain answered in chat 「把 #677 排在這次發版之前修好」 to FO''s question 「你回「排」，我就開一張任務，選 Pilot 這個 profile，排在 #679 之後」, put before his answer; this briefing binds that question and answer after the fact'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
