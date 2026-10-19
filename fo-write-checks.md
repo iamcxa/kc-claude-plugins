@@ -260,3 +260,51 @@ Four of the six classes get a check in a script FO already runs at the moment it
 ### Summary
 
 The four checks (K2, K3 in `--names`; K6, K1 in `delivery_gate.py check`) and the L2 backstop are in PR #671, verified with the real scripts on the state history at `4e635405` and by ten mutations. One deviation for FO: K1 counts 13 flagged items in the six observer-violation tasks, AC-4 says 12, because the generic segment-end rule (a sentence opening with a label and a colon) splits off `Process notes:` where the prototype's fixed list did not; task-level results are identical. Limits: a bracket of two words proves a bracket, not a reason; `dev2-laws.yml` pins an older tag so L2 judges these checks only after a re-pin.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #671 head 03a05f8f against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Head 03a05f8f387a0f202f3741dd35c65a464da356ff (base c60e89e1 = origin/main), `gh pr view 671`: Draft, 4 checks SUCCESS. Suites in a throwaway checkout: test_dispatch_records 45, test_delivery_gate 54, test_laws_check 40, all OK. AC-1: candidate `laws_check.py` on state clone: `220255c5` `d96a508b` `46c7fe82` `c24697d1` print `reserved line 'ADR: NNNN' missing`; `3b2c06be` 0 violated; `e3736568` and `869e93c4` print only old bare-script-name lines, no reserved-line line. AC-2: `f4bb51b3` exit 1, with 'Captain amendment 1' added exit 0, ideation-3 'amendments 3 and 4' exit 0, `## CAPTAIN AMENDMENTS` flagged, indented heading judged, fenced entry not judged. AC-3: real `adr_names` over GitHub, 18 reservations, 1 missing (#666 ADR 0023 at a05b18a0), #628/#540 pass; real `delivery_gate.py check` on #666 prints the reserved-ADR problem and its `next:` line. AC-4: real `declined_items` over the 9 committed validation briefings: 6 of 6 violation tasks flagged (13 items), 2 of 3 ok tasks (3 items), worker-loads-declared-package 0. AC-5: fake `dispatch_records.py` printing an unknown shape gives `laws_check.py` exit 2; L2 flags `f4bb51b3` and `220255c5`. AC-6: workflow.md 5429 and 5429 at base, `lint-skills.py` exit 0; `--names` over all 263 committed records prints every base line unchanged and adds only the new lines. AC-7: `git diff --stat origin/main...HEAD` lists the 7 allowed files only; `k4_scan.py` 14 of 18, K5 probe 58 and 0. AC-8: stage report says not measured, which the AC allows. Falsifiers I ran, each failing only its own tests (python3 -B, caches cleared, copies not the candidate): K2 every record (1 test), K2 number anywhere in record (1), K3 plain 'amendment N' (1), K3 case-sensitive heading (2), K3 no fence skip (1), K6 never holds (4), K6 ignores README adr-path (1), K1 no bracket test (10), K1 one-word bracket (2), L2 not copying the task file (1), L2 pattern without new shapes (1). Limits judged below (findings 1 to 5).
+- DONE: first validation; AC-4 counts 13 flagged items where the AC says 12 (the prototype's label list missed 'Process notes:'; the real check uses a generic label rule): judge whether that is a deviation or the AC's own miscount; no ADR was written though D1 (decline form) and D2 (a reserved ADR lands or is released) are Captain rulings later work must respect: judge whether an ADR is owed under the Decision records rule; dev2-laws.yml pins an older tag, so the L2 change reaches this repository only after a re-pin
+  13 vs 12 is the AC's miscount, not a deviation: amendment-form-check's briefing has `Declined, with reasons in that backlog task: ...; Polish, year read as amendment number, case-sensitive phrase, failing-path word counts. Process notes: ... (remote-tracking refs only, no file changed).` The prototype read the later sentence's bracket into the third item and hid it; that item has no reason, so the real check is right (finding 2). An ADR is owed (finding 1). The pin is confirmed: state `dev2-laws.yml` `ref: 2775096a...` (finding 3).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run with `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc`, output as listed. `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0/scripts/adr_lint.py docs/adr --since c60e89e1` in the candidate: "22 ADR file(s) checked, 0 legacy", exit 0 (nothing was required: the task reserves no number). `comment_ratio.py origin/main HEAD`: 319 code lines, 2 comment lines (both read: they state the 9-briefing result the test data comes from, a fact the code does not), 0.6%, exit 0. `dispatch_records.py <task folder>`: 3 records complete, exit 0. `design_surfaces.py check`: presentable, exit 0. Verdict PASSED for 03a05f8f; finding 1 is a Needs decision FO routes before delivery.
+
+### Findings (Review-finding disposition)
+
+1. Needs decision, no ADR for D1 and D2. My judgment: owed. The Decision records rule and implementation principles write one ADR per decision with the decider's words; D1 (bracketed reason, form A) and D2 (no parked ADR) were accepted at the 2026-10-19 ideation gate (「照建議」) and bind chat-only-evidence-observer-blind and the merge hold. `adr_lint.py` exit 0 cannot show this: it requires only reserved numbers and the task reserved none. The task cannot own it: FO reserves the number (`number_guards.py reserve`) before the next dispatch, and 0023 is held by merge-gatekeeper in the other workflow. Routes: FO reserves a number and a repair worker writes the record(s) through feedback, or the Captain waives with the reason recorded.
+2. Polish, AC-4 text says 12 and the true count is 13. No code change; the AC text is the miscount. Task-level result (6 of 6, 2 of 3) is identical.
+3. Deferred risk, L2 reaches this repository only after `dev2-laws.yml` is re-pinned to a release holding this change; until then the FO-run scripts are the only moment. Material if FO skips the `--names` or `check` run and the laws run is the only reader.
+4. Deferred risk, form A proves a bracket of two words, not a reason (`(none yet)` passes); Captain chose D1 = A knowing the observer keeps reason quality. Material if the observer's next batch still finds reasonless declines behind brackets.
+5. Deferred risk, read from the regex and not run: the amendment check is satisfied by any `amendment N` phrase in any checklist of the folder, and `amendments 3 to 5` names 3 and 5 only. Material if a later amendment is left unnamed because an unrelated checklist phrase matched. Also informational: the new checks flag 13 `Captain amendment 1` and 8 reserved-line records when run over all committed state, legacy records written before the form; L2 judges only added records, so no new red run follows.
+
+### Minimal acceptance script
+
+Needs: `git`, `python3`, `gh` signed in, and the commit in `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo` (it is the PR head). Covers the two record checks, the decline form and the ADR-at-head read; does not cover L2 in CI (needs the re-pin) or a full `delivery_gate.py check` on a live PR.
+
+    D=$(mktemp -d)
+    git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo archive 03a05f8f387a0f202f3741dd35c65a464da356ff | tar -x -C "$D"
+    S=$D/kc-dev-flow-2/scripts
+    mkdir -p "$D/t/dispatch"
+    printf -- '---\ntitle: x\n---\n\n## Number guards\n\nADR: 0042\n\n## Captain amendments\n\n### Amendment 1 — 2026-10-19, chat\nCaptain: x\n' > "$D/t.md"
+    printf '## Checklist\n\nDo the work.\n\n## Scope notes\n\nnone\n' > "$D/t/dispatch/implementation-1.md"
+    (cd "$D" && python3 -B "$S/dispatch_records.py" --names t/dispatch/implementation-1.md; echo "exit $?")
+    printf '## Checklist\n\nDo the work under Captain amendment 1.\n\n## Scope notes\n\nADR: 0042\n' > "$D/t/dispatch/implementation-1.md"
+    (cd "$D" && python3 -B "$S/dispatch_records.py" --names t/dispatch/implementation-1.md; echo "exit $?")
+    python3 -B -c "
+    import sys; sys.path.insert(0, '$S')
+    import delivery_gate as g
+    print(g.unreasoned_items('Declined: Polish, wording only for line one; Polish, a stale count (the count is not read by any gate). Second reviewer: none.'))"
+    python3 -B -c "
+    import sys; sys.path.insert(0, '$S')
+    import delivery_gate as g
+    h = g.gh('api', 'repos/iamcxa/kc-claude-plugins/pulls/666', '--jq', '.head.sha').strip()
+    print('head', h[:8], 'files named 0023-:', sum(n.startswith('0023-') for n in g.adr_names('iamcxa/kc-claude-plugins', h, 'docs/adr')))"
+    (cd "$D" && python3 -B "$S/lint-skills.py"; echo "exit $?")
+    rm -rf "$D"
+
+Expected, observed in a fresh shell: (1) two lines, `reserved line 'ADR: 0042' missing from scope notes; ...` and `Captain amendment 1 named in no dispatch checklist; ...`, then `exit 1`; (2) no line, `exit 0`; (3) `['Polish, wording only for line one']`; (4) `head a05b18a0 files named 0023-: 0`; (5) `PASS: ...`, `references/sd/workflow.md: 5429 of 5429 words; ...`, `exit 0`. The python `-c` bodies are indented here for the report; paste them with no leading spaces.
+
+### Summary
+
+PR #671 head 03a05f8f meets AC-1 to AC-8 on the real scripts and ten-plus mutations I ran; verdict PASSED. The 13-vs-12 count is the AC's own miscount (the check is right), the pin limit is real and deferred, and one item needs FO: an ADR for D1 and D2 is owed and not written. Throwaway worktree, clone and mutation copies are removed; nothing in the candidate, its worktree or any PR was touched.
