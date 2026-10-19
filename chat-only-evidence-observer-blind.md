@@ -53,6 +53,17 @@ gates:
                 id: briefing:chat-only-evidence-observer-blind:validation:attempt-1:revision-1
                 digest: sha256:96298d79d5451e0ced4512ba3827f30198d550b145bef10586b6ca36c61e0131
                 room-ref: ./chat-only-evidence-observer-blind/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:chat-only-evidence-observer-blind:validation:1
+                briefing: briefing:chat-only-evidence-observer-blind:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T16:58:45.041486Z"
+                decision: approve
+                reason: 'Captain approved delivery in chat (「批准」) after the gate briefing: FO merges #679 head 59fc3d12 with --match-head-commit and removes its clean, pushed worktree; the Deferred risk and three Polish declined into chat-only-evidence-observer-blind-followups as the gate question recommends'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-18T16:57:36Z
 worktree: .worktrees/spacedock-ensign-chat-only-evidence-observer-blind
 pr: iamcxa/kc-claude-plugins#679
