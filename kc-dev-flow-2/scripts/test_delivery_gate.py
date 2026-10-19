@@ -577,10 +577,14 @@ class SettledChecksTests(unittest.TestCase):
                 self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci", conclusion=conclusion)]).code, 1)
 
     def test_settling_a_check_adds_no_gh_call(self):
-        plain = run_check(runs=[workflow_run("ci")]).calls
-        skipped = run_check(facts=self.rollup(check_run(), self.SKIPPED, self.NEUTRAL), runs=[workflow_run("ci")]).calls
-        self.assertEqual(skipped, plain)
-        self.assertIn("pr view", plain)
+        base_calls = [
+            "pr view 9 --repo o/r --json headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles",
+            "api --paginate repos/o/r/pulls/9/files",
+            f"api repos/o/r/actions/runs?head_sha={HEAD40}&per_page=100",
+        ]
+        for label, facts in {"plain": None, "skipped and neutral": self.rollup(check_run(), self.SKIPPED, self.NEUTRAL)}.items():
+            with self.subTest(label):
+                self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
 
 
 class PointTests(unittest.TestCase):

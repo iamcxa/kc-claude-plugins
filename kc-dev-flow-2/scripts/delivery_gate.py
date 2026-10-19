@@ -17,7 +17,7 @@ The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files
 a confirmation clause is missing, a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
 `## Number guards` has no `<adr-path>/NNNN-*.md` in the directory at the PR head (README `adr-path:`, default `docs/adr`;
 the directory is read, not the PR's file list), a prod task's security review fails, a check on the head is not finished or finished
-other than SUCCESS, SKIPPED or NEUTRAL (a check run its repository skips by design settles), no check on the head finished SUCCESS
+other than SUCCESS, SKIPPED or NEUTRAL, no check on the head finished SUCCESS
 (an empty rollup, or only skipped and neutral checks), a workflow run on the head is not completed and successful (a skipped run
 included), the PR is a draft or not mergeable, its base is not the README's
 `trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
