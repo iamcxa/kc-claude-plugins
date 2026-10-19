@@ -3,7 +3,7 @@ title: FO rules whose evidence lives only in chat leave the observer at can't te
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved delivery in chat (「批准」) after the gate briefing: FO merges #679 head 59fc3d12 with --match-head-commit and removes its clean, pushed worktree; the Deferred risk and three Polish declined into chat-only-evidence-observer-blind-followups as the gate question recommends'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-18T16:57:36Z
 worktree: .worktrees/spacedock-ensign-chat-only-evidence-observer-blind
 pr: pr-merge:679
+verdict: PASSED
+completed: 2026-10-19T17:10:37Z
+archived: 2026-10-19T17:10:37Z
 ---
 
 Filed from a learn package-issue candidate the Captain approved on 2026-10-13 (「按建議1,3」). The observer reports on tasks `fo-record-checks` (PR #640) and `learn-delivery-follow-through` (PR #639) both marked the same FO rules `can't tell`, because the rules require FO to do something in front of the Captain but not to leave a record in state.
