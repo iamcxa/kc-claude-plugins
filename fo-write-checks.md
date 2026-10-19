@@ -317,3 +317,16 @@ Expected, observed in a fresh shell: (1) two lines, `reserved line 'ADR: 0042' m
 ### Summary
 
 PR #671 head 03a05f8f meets AC-1 to AC-8 on the real scripts and ten-plus mutations I ran; verdict PASSED. The 13-vs-12 count is the AC's own miscount (the check is right), the pin limit is real and deferred, and one item needs FO: an ADR for D1 and D2 is owed and not written. Throwaway worktree, clone and mutation copies are removed; nothing in the candidate, its worktree or any PR was touched.
+
+## Stage Report: implementation (cycle 2, phase 1)
+
+- DONE: Phase 1 only: reproduce the two Codex P2 on #671 head 03a05f8f (review:5565983098) as a failing test, and propose the smallest fix; report and stop, with no commit or push, until FO authorizes the fix
+  Both reproduced in a throwaway `git archive` of 03a05f8f (worktree `git status` clean, HEAD unchanged, nothing committed or pushed): a new `test_codex_p2.py` fails 2 of 4 on the candidate, `unreasoned_items("Declined: Polish, typo.")` is `[]` (expected `['Polish, typo']`) and a scope-notes prose line "This does not use ADR: 0020 or Migration: 0007 because it is unrelated." exits 0 (expected 1). The other 2 tests (a `none`/`nothing` decline passes; own-line, bulleted, `ADR: 0020 (reserved; ...)` and `Number guards: ADR: 0020` forms pass) are controls and pass on the candidate.
+- DONE: proposed fix, probed in the same throwaway copy
+  (1) `delivery_gate.py declined_items`: replace `len(item.split()) >= 3` with `item and item.lower() not in ("none", "nothing", "n/a")`. (2) `dispatch_records.py check_task_facts`: match `(?m)^[ \t]*(?:[-*][ \t]+)?(?:Number guards:[ \t]*)?{kind}:[ \t]*0*{n}\b` instead of the unanchored `\b{kind}:...`; the `Number guards:` prefix is kept because the committed merge-gatekeeper record (AC-1's must-pass `3b2c06be`) writes "Number guards: ADR: 0023" on one line. With both, `test_codex_p2` 4/4, `test_delivery_gate` 54, `test_dispatch_records` 45, `test_laws_check` 40 all OK. `--names` over every committed record under the state checkout prints the same 22 reserved-line/amendment lines before and after (diff empty), so no record changes verdict.
+- DONE: ADR for D1 and D2 proposed in the handback to FO (number 0025), not written
+  Text is in the completion report; writing `docs/adr/0025-*.md` waits for FO authorization.
+
+### Summary
+
+Both Codex P2 are real and reproduce; the two-line fix keeps every existing test and every committed record's verdict. Nothing was committed or pushed; this report is the only change, in the state checkout, uncommitted.
