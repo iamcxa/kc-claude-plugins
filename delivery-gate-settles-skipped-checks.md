@@ -3,7 +3,7 @@ title: The delivery check settles a check run its repository skips by design, so
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-19T15:34:07Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-settles-skipped-checks
+pr: iamcxa/kc-claude-plugins#680
 ---
 
 ## Scope
