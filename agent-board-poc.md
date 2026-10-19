@@ -45,6 +45,17 @@ gates:
                 id: briefing:agent-board-poc:validation:attempt-2:revision-1
                 digest: sha256:6a1112f60809d2d162746e8c97b5b4f3fffcccb09482828e093f9c054f7cf7e4
                 room-ref: ./agent-board-poc/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:agent-board-poc:validation:2
+                briefing: briefing:agent-board-poc:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-19T04:44:27.022656Z"
+                decision: approve
+                reason: 'Captain said 「繼續」 (2026-10-19 chat) after the validation gate recommended approve: POC accepted as passed; deliver 44e8de6d as a Draft PR, approval also covering later external-review rounds on that PR; merge stays with the Captain'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-13T08:57:55Z
 ---
 
