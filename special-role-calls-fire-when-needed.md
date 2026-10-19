@@ -3,7 +3,7 @@ title: A chief-engineer or engineering-reviewer call fires when the work needs o
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain answered in chat 「准，但設計時不應該過度依賴關鍵字，而是可能要依靠犯錯字數觸發，合理嗎？」 to FO's question put before it (quoted in the gate question); his design direction is recorded in Scope; this briefing binds that question and answer after the fact
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
