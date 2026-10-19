@@ -23,7 +23,7 @@ test('real macOS app-owned Keychain item roundtrip and interprocess lock; no sec
   assert.equal((await store.get()).refreshSecret,secret)
   await store.set({state:'active',refreshSecret:'unconfirmed synthetic replacement'})
   await store.close();store=await openProtectedStore(config,root)
-  assert.deepEqual(await store.get(),{state:'rotation-pending',refreshSecret:secret})
+  assert.deepEqual(await store.get(),{state:'repair-pending',refreshSecret:secret})
   await store.set({state:'active',refreshSecret:'synthetic replacement'}); await store.confirm()
   await store.set({state:'revoked'}); await store.confirm(); await store.removeRevoked()
   assert.equal(await store.get(),null)

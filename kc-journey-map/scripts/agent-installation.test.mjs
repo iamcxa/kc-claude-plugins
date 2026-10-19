@@ -3,11 +3,11 @@ import { test } from 'node:test'
 import { PairedInstallation } from './agent-installation.mjs'
 
 const config={ endpoint:'http://127.0.0.1:3737',backendId:'synthetic',installationId:'synthetic-installation',memberId:'owner',rooms:['one'],label:'test' }
-function fixture({lose=false,saveFail=false,offline=false,revokeUnknown=false}={}) {
+function fixture({lose=false,saveFail=false,confirmFail=false,offline=false,revokeUnknown=false}={}) {
  let data={ state:'active',backendId:'synthetic',endpoint:config.endpoint,familyId:'family',generation:1,refreshSecret:'a'.repeat(64),accessToken:'agt_old.'+'b'.repeat(64),expiresAt:1 },rotations=0,calls=0
  const saves=[]
  let staged
- const store={ get:async()=>structuredClone(staged||data),set:async value=>{ saves.push(value.state); if(saveFail && value.state==='active') throw new Error('save_unknown'); staged=structuredClone(value) },confirm:async()=>{data=staged;staged=undefined} }
+ const store={ get:async()=>structuredClone(staged||data),set:async value=>{ saves.push(value.state); if(saveFail && value.state==='active') throw new Error('save_unknown'); staged=structuredClone(value) },confirm:async()=>{if(confirmFail&&staged.state==='active')throw new Error('confirm_unknown');data=staged;staged=undefined} }
  const fetcher=async(url,init={})=>{
   if(offline) throw new Error('offline')
   if(url.endsWith('/agents/config')) return Response.json({enabled:true})
@@ -37,6 +37,16 @@ test('unknown secure-save and unknown revoke keep calls stopped without retrying
 test('ordinary offline preflight retains the family without starting rotation or repair',async()=>{
  const f=fixture({offline:true}); await assert.rejects(()=>f.client.call({}),/offline/)
  assert.equal(f.data().state,'active'); assert.deepEqual(f.counts(),{rotations:0,calls:0})
+})
+test('failed confirmation cannot release queued calls even when an adapter still exposes active staging',async()=>{
+ const f=fixture({confirmFail:true})
+ const calls=await Promise.allSettled([1,2,3].map(()=>f.client.call({})))
+ assert.ok(calls.every(c=>c.status==='rejected'&&/repair_required/.test(c.reason.message)))
+ assert.equal((await f.store.get()).state,'active')
+ assert.deepEqual(f.counts(),{rotations:1,calls:0})
+ await assert.rejects(()=>f.client.call({}),/repair_required/)
+ assert.equal((await f.client.status()).state,'repair-pending')
+ assert.equal((await f.client.reconcile()).state,'revoked');assert.equal(f.data().state,'revoked')
 })
 test('endpoint/backend mismatch and redirects never release an operation or leak its bearer',async()=>{
  const f=fixture(); const wrong=new PairedInstallation({...config,endpoint:'http://127.0.0.1:8888'},f.store,async()=>{throw new Error('must not call')})

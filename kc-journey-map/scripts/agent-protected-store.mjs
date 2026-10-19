@@ -1,10 +1,11 @@
 import { spawn } from 'node:child_process'
 import { createInterface } from 'node:readline'
-import { mkdir,lstat,readFile,open,rename,unlink } from 'node:fs/promises'
+import { mkdir,lstat,open,rename,unlink } from 'node:fs/promises'
 import { constants } from 'node:fs'
 import { createHash,randomUUID } from 'node:crypto'
 import { join,resolve } from 'node:path'
 const uuid=value=>typeof value==='string' && /^[a-f0-9-]{36}$/i.test(value)
+const pointer=value=>value&&typeof value==='object'&&(value.slot===null||uuid(value.slot))
 async function privateDirectory(path) {
  await mkdir(path,{recursive:true,mode:0o700})
  const stat=await lstat(path)
@@ -47,22 +48,28 @@ export async function openProtectedStore(config,root) {
  }
  try { await send({backendId:config.backendId,installationId:config.installationId,lockPath:join(directory,'process.lock')}) }
  catch(error) { child.kill(); throw error }
- let manifest,journal
- try { manifest=await ownedJSON(join(directory,'manifest.json'),{slot:null});journal=await ownedJSON(join(directory,'slots.json'),[]) }
+ let manifest,journal,checkpoint
+ try { manifest=await ownedJSON(join(directory,'manifest.json'),{slot:null});journal=await ownedJSON(join(directory,'slots.json'),[]);checkpoint=await ownedJSON(join(directory,'checkpoint.json'),null) }
  catch(error) { child.kill();throw error }
- if((manifest.slot!==null && !uuid(manifest.slot)) || !Array.isArray(journal) || journal.some(s=>!uuid(s))) { child.kill(); throw new Error('protected_manifest_denied') }
+ if(!pointer(manifest) || (checkpoint!==null&&!pointer(checkpoint)) || !Array.isArray(journal) || journal.some(s=>!uuid(s))) { child.kill(); throw new Error('protected_manifest_denied') }
  let staged
  async function clean() {
-  const obsolete=journal.filter(s=>s!==manifest.slot && s!==staged?.slot)
+  const obsolete=journal.filter(s=>s!==manifest.slot && s!==staged?.slot && s!==checkpoint?.slot)
   for(const slot of obsolete) { await send({action:'delete',slot}); journal=journal.filter(s=>s!==slot) }
   await atomicFile(directory,'slots.json',journal)
  }
  try { await clean() } catch(error) { child.kill(); throw error }
  return {
   directory,
-  async get() { const slot=staged?.slot||manifest.slot; return slot ? JSON.parse((await send({action:'get',slot})).value) : null },
+  async get() {
+   const slot=staged?.slot||(checkpoint?checkpoint.slot:manifest.slot)
+   if(!slot)return null
+   const value=JSON.parse((await send({action:'get',slot})).value)
+   return checkpoint&&!staged&&value.state!=='revoked'?{...value,state:'repair-pending'}:value
+  },
   async set(value) {
    if(staged) throw new Error('secure_save_unconfirmed')
+   if(!checkpoint){await atomicFile(directory,'checkpoint.json',manifest);checkpoint={...manifest}}
    const slot=randomUUID(); journal.push(slot); await atomicFile(directory,'slots.json',journal)
    await send({action:'put',slot,value:JSON.stringify(value)})
    const saved=JSON.parse((await send({action:'get',slot})).value)
@@ -71,11 +78,16 @@ export async function openProtectedStore(config,root) {
   },
   async confirm() {
    if(!staged) throw new Error('secure_save_unconfirmed')
-   // Publish the nonsecret pointer only after protected save and readback returned.
-   await atomicFile(directory,'manifest.json',staged); manifest=staged; staged=undefined
+   try {
+    await atomicFile(directory,'manifest.json',staged);manifest=staged
+    await unlink(join(directory,'checkpoint.json'));checkpoint=null;staged=undefined
+   } catch { staged=undefined;throw new Error('secure_save_unknown') }
+   // Confirmation is known; cleanup failure can only retain a conservative checkpoint or obsolete slot.
+   try { const dir=await open(directory,constants.O_RDONLY);try{await dir.sync()}finally{await dir.close()} } catch { return }
    try { await clean() } catch { /* Committed pointer remains valid; the owned slot journal retains cleanup work. */ }
   },
   async removeRevoked() {
+   if(checkpoint||staged)throw new Error('confirmed_revoke_required')
    const value=manifest.slot ? JSON.parse((await send({action:'get',slot:manifest.slot})).value) : null
    if(value && value.state!=='revoked') throw new Error('confirmed_revoke_required')
    await atomicFile(directory,'manifest.json',{slot:null}); manifest={slot:null}; staged=undefined; await clean()
