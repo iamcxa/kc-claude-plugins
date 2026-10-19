@@ -34,6 +34,17 @@ gates:
                 id: briefing:merge-grant-need-poc:validation:attempt-1:revision-1
                 digest: sha256:48f39df1ca10e5f45634972d9b54afe77ad9ac9f1c9fb242423a3fc9b2642b23
                 room-ref: ./merge-grant-need-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-grant-need-poc:validation:1
+                briefing: briefing:merge-grant-need-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T04:37:35.961272Z"
+                decision: approve
+                reason: 'Captain approved in chat (「准」) the merge-grant-need-poc closing gate, presented together with the #670 delivery gate: retire the per-class merge grant, keep the parked code parked, leave its two Codex P1 unworked'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-18T16:58:24Z
 worktree: .worktrees/spacedock-ensign-merge-grant-need-poc
 ---
