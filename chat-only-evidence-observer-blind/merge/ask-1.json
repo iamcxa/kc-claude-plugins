@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "59fc3d12057d7d745ec0fabeb99df97a10c86bd2",
+  "model": "not run",
+  "next": "next: ask for merge with this text.",
+  "points": [
+    "point: deferred: 'Verdict PASSED at 389cb89ff54b457e4a88cfb219a4a29955a55b93. Material: none.'",
+    "point: deferred: 'PR #679 at 389cb89f meets AC-1'",
+    "point: deferred: '- DONE: Recheck Cycle 1: the'",
+    "point: deferred: 'Observer paragraph: deterministic replay on the'",
+    "point: deferred: 'Deferred risk (1, new): `clause()` anchors'",
+    "point: deferred: 'Deferred risk (carried from cycle 1,'",
+    "point: deferred: 'The P1 is fixed and pinned'",
+    "point: deferred: 'Deliver #679 head 59fc3d12 (the observer'",
+    "point: deferred: 'Validation Verdict PASSED at 59fc3d12 (validation'",
+    "point: not-run: 'Validation Verdict PASSED at 59fc3d12 (validation'",
+    "point: path: 'docs/adr/0024-chat-only-fo-rules-are-listed-not-judged.md'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: more: 5 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#679",
+  "time": "2026-10-19T16:35:29Z",
+  "verdict": "ask"
+}
