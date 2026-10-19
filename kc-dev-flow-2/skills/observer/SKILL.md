@@ -44,6 +44,35 @@ quotes a peer's words, or a peer's report of the Captain, in place of his own; a
 made in his own words after reading peer data is his. An exchange the file does not record
 is outside what state shows.
 
+Replay the design check. For each backlog and ideation briefing, take the sha in its artifact `uri`
+(`git-root://state/<sha>/<TASK>.md`), extract `<TASK>.md` and, when it exists at that sha, `<TASK>/` with
+`git archive` into a new empty temporary directory, and run
+`python3 <package>/scripts/design_surfaces.py check [--seed, for backlog] <that copy of <TASK>.md>`.
+Report "FO runs `python3 <package>/scripts/design_surfaces.py check`" as `ok` on exit 0, and as `violation` quoting its first line on exit 1.
+
+Where `<TASK>/merge/ask-<N>.json` files exist, each is a passing run of `python3 <package>/scripts/delivery_gate.py check`.
+FO runs it again after the Captain approves, just before merging, so the highest N usually postdates the briefing.
+Read the highest-numbered file whose `head` starts with the head the question names and whose `time` is not after the commit
+that added that ask's briefing. Report "FO runs `python3 <package>/scripts/delivery_gate.py check` before the merge ask" as `ok`,
+quoting that file's `time` and `head`. When files for that head exist but every one is later than that commit, report `can't tell`
+quoting the earliest `time` and the commit time: the file cannot show whether FO ran the check before presenting. When no file
+exists the task may predate the record, so report `can't tell`. Report "FO confirms both goal sufficiency and minimal necessity"
+from the same file: `ok` quoting `sufficiency` and `necessity`; `can't tell` when it holds neither key, which predates that check.
+
+Do not report these rules. Their only witness is the Captain's chat or a shell run that leaves no record, so
+the report would only say `can't tell`:
+
+<!-- chat-only-rules -->
+- presents every step in full beside its observed output
+- FO answers a question the Captain asks at a gate
+- python3 <package>/scripts/package_version.py
+- python3 <package>/scripts/workflow_checkout.py
+- python3 <package>/scripts/dispatch_records.py --names
+- assess the four evidence fields above
+<!-- /chat-only-rules -->
+
+A rule outside this list that you cannot judge stays `can't tell`.
+
 For a task whose `Surfaces:` include `db`, whose ideation ran on a stronger model, or
 whose validation was sent back twice, report whether a `Reviewer:` line exists. That
 line is a record, not a requirement: report it as `observed`, never as a violation.

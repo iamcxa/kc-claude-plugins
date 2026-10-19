@@ -39,6 +39,8 @@ KNOWN_DUPLICATES = {
     ("skills/implementation/principles.md", "do not invoke local fallback push the trunk"),
     ("skills/validation/principles.md", "do not invoke local fallback push the trunk"),
 }
+OBSERVER = "skills/observer/SKILL.md"
+CHAT_ONLY = re.compile(r"<!-- chat-only-rules -->\n(.*?)<!-- /chat-only-rules -->", re.S)
 BOUND_SCRIPT_DIR = re.compile(r"(?:<package>/|(?:\.\./)+|kc-dev-flow-2/)scripts/")
 
 
@@ -167,6 +169,7 @@ def lint_tree(root, basic_lint=BASIC_LINT):
         if (fields.get("model"), fields.get("reasoning")) != policy:
             errors.append(f"{role} agent: existing {policy[0]}/{policy[1]} policy changed")
     errors += workflow_size_and_duplicates(root)
+    errors += chat_only_errors(root)
     return errors
 
 
@@ -199,6 +202,21 @@ def budget_errors(count, steps=None):
         errors.append(f"{WORKFLOW}: {count} words is {budget - count} under the budget of {budget}; "
                       f"add a cut step of {count - budget} with a 'why' to WORKFLOW_BUDGET_STEPS")
     return errors
+
+
+def chat_only_errors(root):
+    observer, workflow = root / OBSERVER, root / WORKFLOW
+    if not observer.is_file() or not workflow.is_file():
+        return []
+    blocks = CHAT_ONLY.findall(observer.read_text())
+    if len(blocks) != 1:
+        return [f"{OBSERVER}: expected one chat-only-rules list, found {len(blocks)}"]
+    phrases = [line[2:].strip() for line in blocks[0].splitlines() if line.startswith("- ")]
+    if not phrases:
+        return [f"{OBSERVER}: the chat-only-rules list is empty"]
+    text = " ".join(normalized_words(workflow.read_text()))
+    return [f"{OBSERVER}: chat-only rule '{phrase}' is not in {WORKFLOW}; reword the list or restore the rule"
+            for phrase in phrases if " ".join(normalized_words(phrase)) not in text]
 
 
 def workflow_size_and_duplicates(root):

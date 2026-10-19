@@ -91,17 +91,19 @@ def readme(d, body="extensions: [roborev, codex]\n"):
 TASK = "---\nprofile: pilot\n---\n\n# task\n"
 RECORDS = {"validation-1.md": record(HEAD40)}
 
+CLAUSES = "Sufficiency: every acceptance criterion in the validation report was met.\nNecessity: the relay adopter reads it at each merge ask.\n"
+
 COPILOT_UNSTATED = ("Deliver #627 head 22d9cc94? Codex round 1 review:5500046230 found one P1. "
                     "Second reviewer: copilot because the change touches review rules; not requested: Copilot refused for quota.")
 COPILOT_NOT_RUN = COPILOT_UNSTATED.replace("not requested:", "copilot not run:")
 
 
 class DeliveryGateTests(unittest.TestCase):
-    def check(self, task=TASK, text="", head="40c714a6", gh=None, pr="o/r#9", records=RECORDS, front=None, **world):
+    def check(self, task=TASK, text="", head="40c714a6", gh=None, pr="o/r#9", records=RECORDS, front=None, clauses=True, **world):
         with tempfile.TemporaryDirectory() as d:
             task_file, text_file = Path(d, "task.md"), Path(d, "gate.txt")
             task_file.write_text(task)
-            text_file.write_text(text)
+            text_file.write_text((CLAUSES if clauses else "") + text)
             readme(d, front) if front else readme(d)
             if records is not None:
                 Path(d, "task", "dispatch").mkdir(parents=True)
@@ -277,7 +279,7 @@ class ProdSecurityReviewTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as d:
             task_file, text_file = Path(d, "task.md"), Path(d, "gate.txt")
             task_file.write_text(f"---\ntitle: x\nprofile: {profile}\n---\n\n## Stage Report: validation\n\n{review}")
-            text_file.write_text("Merge ask.")
+            text_file.write_text(CLAUSES + "Merge ask.")
             Path(d, "task", "security").mkdir(parents=True)
             Path(d, "task", "dispatch").mkdir()
             for name, content in records.items():
@@ -344,7 +346,7 @@ class ProdSecurityReviewTests(unittest.TestCase):
                 Path(d, "task", "dispatch").mkdir(parents=True)
                 Path(d, "task", "dispatch", "validation-1.md").write_text(record(HEAD40))
                 Path(d, "task.md").write_text(task)
-                Path(d, "gate.txt").write_text("Merge ask.")
+                Path(d, "gate.txt").write_text(CLAUSES + "Merge ask.")
                 readme(d)
                 out = io.StringIO()
                 with stubbed(d), contextlib.redirect_stdout(out):
@@ -390,11 +392,11 @@ def variant_of(old, new):
 
 
 def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=None, readme_body="extensions: [roborev, codex]\n",
-              records=RECORDS, setup=None, argv_head="same", stub_fail=None, workflow_dir_arg=None, runs=None):
+              records=RECORDS, setup=None, argv_head="same", stub_fail=None, workflow_dir_arg=None, runs=None, clauses=True):
     with tempfile.TemporaryDirectory() as d:
         readme(d, readme_body)
         Path(d, "task.md").write_text(task)
-        Path(d, "gate.txt").write_text(text)
+        Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + text)
         for name, content in (records or {}).items():
             Path(d, "task", "dispatch").mkdir(parents=True, exist_ok=True)
             Path(d, "task", "dispatch", name).write_text(content)
@@ -469,7 +471,7 @@ class HoldTests(unittest.TestCase):
     def test_a_readme_without_a_trunk_holds_with_exit_2(self):
         with tempfile.TemporaryDirectory() as d, stubbed(d), contextlib.redirect_stdout(io.StringIO()) as out:
             Path(d, "task.md").write_text(TASK)
-            Path(d, "gate.txt").write_text("")
+            Path(d, "gate.txt").write_text(CLAUSES)
             Path(d, "README.md").write_text("---\nextensions: []\n---\n")
             Path(d, "task", "dispatch").mkdir(parents=True)
             Path(d, "task", "dispatch", "validation-1.md").write_text(record(HEAD40))
@@ -931,6 +933,99 @@ class DeclineAndAdrTests(unittest.TestCase):
             code, out = self.adr(["0023-x.md"])
             self.assertEqual(code, 1, out)
             self.assertIn("docs/adr/0023-*.md", out)
+
+
+class ConfirmationTests(unittest.TestCase):
+    SUFFICIENCY = "Sufficiency: AC-1 to AC-4 met."
+    NECESSITY = "Necessity: relay reads it at each ask."
+    HOLD = "next: hold the ask; add the missing clause to the question or summary."
+
+    def cases(self):
+        return {
+            "both missing": "Deliver it.",
+            "sufficiency missing": self.NECESSITY,
+            "necessity missing": self.SUFFICIENCY,
+            "empty label": f"{self.SUFFICIENCY}\nNecessity:   \nDeliver it.",
+            "label cut off from its text": f"{self.SUFFICIENCY}\nNecessity:\nrelay reads it.",
+            "both present": f"{self.SUFFICIENCY}\n{self.NECESSITY}",
+        }
+
+    def test_a_missing_or_empty_clause_holds_the_ask_with_one_next_line_and_saves_no_record(self):
+        lines = {
+            "both missing": 2, "sufficiency missing": 1, "necessity missing": 1,
+            "empty label": 1, "label cut off from its text": 1, "both present": 0,
+        }
+        for label, text in self.cases().items():
+            with self.subTest(label):
+                result = run_check(text=text, clauses=False)
+                problems = [l for l in result.lines if l.startswith("the gate text has no ")]
+                self.assertEqual(len(problems), lines[label], result.out)
+                self.assertEqual(result.code, 1 if lines[label] else 0, result.out)
+                self.assertEqual(nexts(result).count(self.HOLD), 1 if lines[label] else 0, result.out)
+                self.assertEqual(len(result.written), 0 if lines[label] else 1)
+        both = run_check(text="Deliver it.", clauses=False).out
+        self.assertIn("the gate text has no 'Sufficiency:' clause: add 'Sufficiency: <the acceptance criteria this candidate met, from its validation report>'", both)
+        self.assertIn("the gate text has no 'Necessity:' clause: add 'Necessity: <who uses this change and what breaks without it>'", both)
+
+    def test_the_saved_record_keeps_both_clauses_cut_at_200_characters(self):
+        result = run_check(text=f"{self.SUFFICIENCY}\nNecessity: {'x' * 300}\n", clauses=False)
+        self.assertEqual(result.code, 0, result.out)
+        saved = result.written["ask-1.json"]
+        self.assertEqual(saved["sufficiency"], "AC-1 to AC-4 met.")
+        self.assertEqual(saved["necessity"], "x" * 200)
+
+    def test_dropping_the_check_changes_exactly_the_missing_clause_cases(self):
+        module = variant_of("    for label in unstated_confirmations(gate_text):", "    for label in []:")
+
+        def outcome(run, text):
+            try:
+                return run(text=text, clauses=False).code
+            except TypeError:
+                return "crash writing the record without the clause"
+
+        changed = [label for label, text in self.cases().items()
+                   if outcome(lambda **kw: run_variant(module, **kw), text) != outcome(run_check, text)]
+        self.assertEqual(changed, ["both missing", "sufficiency missing", "necessity missing", "empty label", "label cut off from its text"])
+
+
+class MentionedLabelTests(unittest.TestCase):
+    MENTIONS = {
+        "the check's own diagnostic pasted back": "the gate text has no 'Sufficiency:' clause: add 'Sufficiency: <the acceptance criteria this candidate met, from its validation report>'\n"
+                                                  "the gate text has no 'Necessity:' clause: add 'Necessity: <who uses this change and what breaks without it>'",
+        "labels named inside a parenthesis": "Approving accepts D2 (Sufficiency: and Necessity: clauses in the delivery gate text, held by delivery_gate.py).",
+        "labels named in a request": "Please add a Sufficiency: line and a Necessity: line before the ask.",
+        "one clause stated, the other only named": "Sufficiency: AC-1 to AC-4 met. The check also wants a Necessity: clause.",
+    }
+    STATED = {
+        "each on its own line": "Sufficiency: AC-1 met.\nNecessity: relay reads it.",
+        "each indented on its own line": "  Sufficiency: AC-1 met.\n\tNecessity: relay reads it.",
+        "mid-paragraph after a sentence end": "Validation Verdict PASSED at 13ceb00d. Sufficiency: each class is now held by a script. "
+                                              "Necessity: those are the approved scope. External rounds: Codex 1 (clean).",
+        "after a question mark or exclamation": "Is it enough? Sufficiency: AC-1 met! Necessity: relay reads it.",
+    }
+
+    def test_a_label_that_is_only_mentioned_holds_the_ask_and_saves_no_record(self):
+        for label, text in self.MENTIONS.items():
+            with self.subTest(label):
+                result = run_check(text=text, clauses=False)
+                self.assertEqual(result.code, 1, result.out)
+                self.assertTrue(any(l.startswith("the gate text has no ") for l in result.lines), result.out)
+                self.assertEqual(len(result.written), 0)
+
+    def test_a_clause_at_a_line_start_or_after_a_sentence_end_still_passes_and_is_saved(self):
+        for label, text in self.STATED.items():
+            with self.subTest(label):
+                result = run_check(text=text, clauses=False)
+                self.assertEqual(result.code, 0, result.out)
+                saved = result.written["ask-1.json"]
+                self.assertTrue(saved["sufficiency"] and saved["necessity"], saved)
+
+    def test_the_unanchored_search_changes_exactly_the_mentioned_label_cases(self):
+        module = variant_of('rf"(?:^[ \\t]*|[.!?][ \\t]+){label}:[ \\t]*(\\S[^\\n]*)", text, re.M)', 'rf"\\b{label}:[ \\t]*(\\S[^\\n]*)", text)')
+        cases = {**self.MENTIONS, **self.STATED}
+        changed = [label for label, text in cases.items()
+                   if run_variant(module, text=text, clauses=False).code != run_check(text=text, clauses=False).code]
+        self.assertEqual(changed, list(self.MENTIONS))
 
 
 def tearDownModule():

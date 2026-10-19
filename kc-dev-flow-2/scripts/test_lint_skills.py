@@ -2,6 +2,7 @@
 """Mutation checks on disposable copies of the static comparison scaffold."""
 
 import importlib.util
+import re
 from pathlib import Path
 import shutil
 import subprocess
@@ -127,6 +128,23 @@ class RouteMutationTests(unittest.TestCase):
     def test_package_placeholder_without_root_line(self):
         self.change("skills/implementation/SKILL.md", "Package root: ${CLAUDE_PLUGIN_ROOT}\n", "")
         self.refuses("skills/implementation/SKILL.md: uses <package> but has no 'Package root:' line")
+
+    def test_a_chat_only_rule_the_workflow_no_longer_says_is_named(self):
+        self.change("references/sd/workflow.md", "presents\n  every step in full beside its observed output", "shows\n  each step with its output")
+        self.refuses("chat-only rule 'presents every step in full beside its observed output' is not in references/sd/workflow.md")
+
+    def test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines(self):
+        self.change("references/sd/workflow.md", "presents\n  every step", "presents every\n  step")
+        self.assertEqual(lint.lint_tree(self.root), [])
+
+    def test_the_chat_only_list_must_exist(self):
+        self.change("skills/observer/SKILL.md", "<!-- /chat-only-rules -->", "")
+        self.refuses("expected one chat-only-rules list, found 0")
+
+    def test_the_chat_only_list_must_hold_a_rule(self):
+        path = self.root / "skills/observer/SKILL.md"
+        path.write_text(re.sub(r"(<!-- chat-only-rules -->\n).*?(<!-- /chat-only-rules -->)", r"\1\2", path.read_text(), flags=re.S))
+        self.refuses("the chat-only-rules list is empty")
 
     def workflow_text(self):
         return (self.root / "references/sd/workflow.md").read_text()

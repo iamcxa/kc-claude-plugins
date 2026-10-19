@@ -8,12 +8,13 @@ highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check re
 A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at
 the dispatched head the PR head equals, every finding disposed); a profile that cannot be read as poc, pilot or prod holds.
 The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
---text-file holds the gate question and summary: each `Second reviewer: <X> because` needs `<X> not run: <reason>`
+--text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
+at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token. Each `;`-separated item after `Declined...:` or
 `FO declines...:` (up to the next sentence that opens with a label and a colon, or a blank line) needs a bracket of two or
 more words holding its reason; this proves a bracket exists, not that it is a reason.
 The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
-a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
+a confirmation clause is missing, a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
 `## Number guards` has no `<adr-path>/NNNN-*.md` in the directory at the PR head (README `adr-path:`, default `docs/adr`;
 the directory is read, not the PR's file list), a prod task's security review fails, a check run on the head is not finished and
 successful (an empty rollup, SKIPPED and NEUTRAL included), the PR is a draft or not mergeable, its base is not the README's
@@ -62,6 +63,8 @@ AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
 DECLINE_END = re.compile(r"(?<=[.)])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
 MAX_POINTS = 12
+CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
+                 "Necessity": "who uses this change and what breaks without it"}
 ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."
 
 
@@ -174,6 +177,15 @@ def brackets(item):
             if depth == 0:
                 found.append(item[start:i])
     return found
+
+
+def clause(text, label):
+    found = re.search(rf"(?:^[ \t]*|[.!?][ \t]+){label}:[ \t]*(\S[^\n]*)", text, re.M)
+    return found.group(1) if found else None
+
+
+def unstated_confirmations(text):
+    return [label for label in CONFIRMATIONS if clause(text, label) is None]
 
 
 def unreasoned_items(text):
@@ -408,6 +420,10 @@ def check(args):
         problems.append(f"declined item has no reason: {tok(item)}")
         nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
 
+    for label in unstated_confirmations(gate_text):
+        problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
+        nexts.append("next: hold the ask; add the missing clause to the question or summary.")
+
     emit(*problems, *holds)
     if problems:
         emit(*dict.fromkeys(nexts))
@@ -430,7 +446,9 @@ def check(args):
     emit(*points, f"class: {cls}")
 
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
-                                "points": points, "next": ASK, "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
+                                "points": points, "next": ASK,
+                                "sufficiency": clean(clause(gate_text, "Sufficiency"))[:200],
+                                "necessity": clean(clause(gate_text, "Necessity"))[:200], "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
     emit(f"record: {task.stem}/merge/{saved.name}", ASK)
     return 0
 
