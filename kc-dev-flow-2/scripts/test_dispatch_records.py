@@ -10,6 +10,7 @@ import unittest
 spec = importlib.util.spec_from_file_location("dispatch_records", Path(__file__).with_name("dispatch_records.py"))
 records = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(records)
+records_module = records
 
 gate_spec = importlib.util.spec_from_file_location("delivery_gate", Path(__file__).with_name("delivery_gate.py"))
 gate = importlib.util.module_from_spec(gate_spec)
@@ -255,6 +256,82 @@ class DispatchRecordTests(unittest.TestCase):
             self.assertEqual(records.main([]), 2)
             for args in (["--newest"], ["--newest", "state"], ["--newest", "a", "b", "c"]):
                 self.assertEqual(records.main(args), 2, args)
+
+
+GUARDS = "\n## Number guards\n\nADR: 0020\nMigration: 0007\n"
+AMENDMENTS = ("\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\n\n"
+              "### Amendment 2 \u2014 2026-10-18, chat\nCaptain: y\n")
+NOTES_WITH_BOTH = COMPLETE.replace("Package root:", "ADR: 0020\nMigration: 0007\nPackage root:")
+
+
+class TaskFactTests(unittest.TestCase):
+    def run_names(self, task, records, target="implementation-1.md", folder="task"):
+        with tempfile.TemporaryDirectory() as d:
+            if task is not None:
+                Path(d, folder).parent.mkdir(parents=True, exist_ok=True)
+                Path(d, f"{folder}.md").write_text(f"---\nprofile: pilot\n---\n\n# task\n{task}")
+            for name, text in records.items():
+                Path(d, folder, "dispatch", name).parent.mkdir(parents=True, exist_ok=True)
+                Path(d, folder, "dispatch", name).write_text(text)
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                code = records_module.main(["--names", str(Path(d, folder, "dispatch", target))])
+            return code, out.getvalue().replace(d + "/", "").splitlines()
+
+    def test_a_first_implementation_record_must_carry_each_reserved_line_in_its_scope_notes(self):
+        code, out = self.run_names(GUARDS, {"implementation-1.md": COMPLETE})
+        self.assertEqual(code, 1)
+        self.assertEqual([line.split(";")[0] for line in out], [
+            "task/dispatch/implementation-1.md:1: reserved line 'ADR: 0020' missing from scope notes",
+            "task/dispatch/implementation-1.md:1: reserved line 'Migration: 0007' missing from scope notes"])
+        self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": NOTES_WITH_BOTH}), (0, []))
+        short = COMPLETE.replace("Package root:", "ADR: 20\nMigration: 7\nPackage root:")
+        self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": short}), (0, []))
+
+    def test_a_reserved_number_named_only_outside_the_scope_notes_or_inside_a_longer_number_is_missing(self):
+        in_checklist = COMPLETE.replace("1. Independent", "1. ADR: 0020 and Migration: 0007. Independent")
+        self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": in_checklist})[0], 1)
+        longer = COMPLETE.replace("Package root:", "ADR: 0200\nMigration: 0070\nPackage root:")
+        self.assertEqual(len(self.run_names(GUARDS, {"implementation-1.md": longer})[1]), 2)
+
+    def test_only_the_first_implementation_record_of_a_task_with_a_task_file_is_judged_for_reserved_lines(self):
+        self.assertEqual(self.run_names(GUARDS, {"implementation-2.md": COMPLETE}, "implementation-2.md"), (0, []))
+        self.assertEqual(self.run_names(GUARDS, {"ideation-1.md": COMPLETE}, "ideation-1.md"), (0, []))
+        self.assertEqual(self.run_names(None, {"implementation-1.md": COMPLETE}), (0, []))
+        self.assertEqual(self.run_names("", {"implementation-1.md": COMPLETE}), (0, []))
+
+    def test_a_captain_amendment_must_be_named_in_a_checklist_of_the_task_this_record_included(self):
+        code, out = self.run_names(AMENDMENTS, {"implementation-1.md": COMPLETE})
+        self.assertEqual(code, 1)
+        self.assertEqual([line.split(";")[0] for line in out], [
+            "task/dispatch/implementation-1.md:1: Captain amendment 1 named in no dispatch checklist",
+            "task/dispatch/implementation-1.md:1: Captain amendment 2 named in no dispatch checklist"])
+        names_one = COMPLETE.replace("1. Independent", "1. Captain amendment 1. Independent")
+        code, out = self.run_names(AMENDMENTS, {"implementation-1.md": names_one})
+        self.assertEqual((code, len(out)), (1, 1))
+        both = COMPLETE.replace("1. Independent", "1. Captain amendments 1 and 2. Independent")
+        self.assertEqual(self.run_names(AMENDMENTS, {"implementation-1.md": both}), (0, []))
+        earlier = {"implementation-1.md": names_one, "implementation-2.md": COMPLETE.replace("1. Independent", "1. Amendment 2. Independent")}
+        self.assertEqual(self.run_names(AMENDMENTS, earlier, "implementation-2.md"), (0, []))
+
+    def test_an_amendment_named_outside_a_checklist_or_by_a_bare_number_is_unnamed(self):
+        in_notes = COMPLETE.replace("Package root:", "Captain amendment 1 and 2.\nPackage root:")
+        self.assertEqual(len(self.run_names(AMENDMENTS, {"implementation-1.md": in_notes})[1]), 2)
+        plain = COMPLETE.replace("1. Independent", "1. Items 1 and 2 of the list. Independent")
+        self.assertEqual(len(self.run_names(AMENDMENTS, {"implementation-1.md": plain})[1]), 2)
+
+    def test_the_amendments_heading_is_read_like_design_surfaces_does_and_fenced_entries_are_skipped(self):
+        for heading in ("## CAPTAIN AMENDMENTS", " ## Captain amendments"):
+            with self.subTest(heading):
+                code, _ = self.run_names(AMENDMENTS.replace("## Captain amendments", heading), {"implementation-1.md": COMPLETE})
+                self.assertEqual(code, 1)
+        fenced = "\n## Captain amendments\n\n```\n### Amendment 1 \u2014 2026-10-17\n```\n"
+        self.assertEqual(self.run_names(fenced, {"implementation-1.md": COMPLETE}), (0, []))
+        self.assertEqual(self.run_names("\n## Notes\n\n### Amendment 1 \u2014 2026-10-17\n", {"implementation-1.md": COMPLETE}), (0, []))
+
+    def test_an_archived_task_folder_is_judged_beside_its_own_task_file(self):
+        code, out = self.run_names(AMENDMENTS, {"implementation-1.md": COMPLETE}, folder="_archive/task")
+        self.assertEqual(code, 1)
+        self.assertEqual(len(out), 2)
 
 
 ROBOREV_PATH = "/abs/kc-dev-flow-2/extensions/roborev/roborev_gate.py"

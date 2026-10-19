@@ -326,6 +326,33 @@ class L2Test(Base):
         self.assertNotIn("moved_bad", out)
         self.assertNotIn("dispatch/complete.md", out)
 
+    def test_a_reserved_line_and_an_amendment_the_record_leaves_out_are_l2_violations_with_the_task_file_beside_them(self):
+        guards = "\n## Number guards\n\nADR: 0020\n"
+        amended = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\n"
+        repo = Repo(self.tmp / "l2-facts")
+        before = repo.commit("base", keep="x")
+        reserved = repo.commit("first record", t=task(body=guards), **{"t__dispatch__implementation-1": record()})
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, rf"record=t/dispatch/implementation-1\.md commit={reserved[:12]} .*reserved line 'ADR: 0020' missing from scope notes")
+        repo.commit("amend", t=task(body=amended))
+        second = repo.commit("next record", **{"t__dispatch__implementation-2": record()})
+        code, out = self.judge(repo, reserved)
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, rf"record=t/dispatch/implementation-2\.md commit={second[:12]} .*Captain amendment 1 named in no dispatch checklist")
+        repo.commit("named", **{"t__dispatch__implementation-3": record(checklist="- Captain amendment 1: do it")})
+        self.assertEqual(self.judge(repo, second)[0], 0)
+
+    def test_dispatch_records_printing_a_new_names_shape_exits_2_not_1(self):
+        repo = Repo(self.tmp / "l2-shape")
+        before = repo.commit("base", keep="x")
+        repo.commit("record", t__dispatch__a=record())
+        stub = ("import sys\nif '--names' in sys.argv:\n    print(sys.argv[-1] + ':1: some future check; fix it')\n    sys.exit(1)\n"
+                "sys.exit(0)\n")
+        code, out = self.judge(repo, before, runner=sandbox(self.tmp / "l2-shape-run", override={"dispatch_records.py": stub}))
+        self.assertEqual(code, 2, out)
+        self.assertIn("dispatch_records.py --names exited 1 with output this runner does not parse", out)
+
     def test_a_validation_record_without_a_candidate_line_is_an_l2_violation_not_an_unjudgeable_run(self):
         repo = Repo(self.tmp / "l2-candidate")
         before = repo.commit("base", keep="x")

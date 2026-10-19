@@ -19,6 +19,12 @@ directly under <package>/scripts/ or <package>/extensions/<name>/) written with 
 Checklist or Scope notes section (the whole file when it has neither heading), and exits 1 when any is found.
 --names also prints `<file>:1: no 'Candidate: <40-hex head>' line; ...` for a `validation-<N>.md` directly in a `dispatch/` folder
 whose text above its first `## ` heading has no line delivery_gate.py accepts; --newest does not.
+For a record in `<task folder>/dispatch/` with the task `<task folder>.md` beside the folder, --names also prints
+`<file>:1: reserved line 'ADR: NNNN' missing from scope notes; ...` when `implementation-1.md` has no scope-notes line
+for each `ADR: NNNN` or `Migration: NNNN` the task's `## Number guards` reserves, and
+`<file>:1: Captain amendment N named in no dispatch checklist; ...` when an `### Amendment N` entry of the task's
+`## Captain amendments` (fenced lines skipped) is named by no `amendment N` phrase in any `## Checklist` of that folder's records.
+A record whose task file is absent is not judged.
 --newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
 is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
 """
@@ -29,7 +35,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
-from number_guards import Misconfigured, frontmatter  # noqa: E402
+from design_surfaces import AMENDMENTS_HEADING, section, unfenced  # noqa: E402
+from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent.parent
 
@@ -157,6 +164,49 @@ def check_candidates(files):
     return 1 if found else 0
 
 
+AMENDMENT_ENTRY = re.compile(r"(?m)^(?=### )")
+AMENDMENT_NAMED = re.compile(r"amendments?[ \t]+((?:\d+(?:[ \t]*(?:,|and|&|to|-)[ \t]*)?)+)", re.I)
+
+
+def named_section(text, heading):
+    match = re.search(rf"^## {heading}[ \t]*\n(.*?)(?=^## |\Z)", text, re.M | re.S)
+    return match.group(1) if match else ""
+
+
+def amendment_numbers(task_text):
+    body = section(unfenced(task_text.split("\n")), AMENDMENTS_HEADING)
+    entries = AMENDMENT_ENTRY.split("\n".join(body))[1:] if body else []
+    digits = [re.search(r"\d+", e.split("\n", 1)[0]) for e in entries]
+    return [d.group() if d else str(i + 1) for i, d in enumerate(digits)]
+
+
+def check_task_facts(files):
+    found = False
+    for file in files:
+        path = Path(file).resolve()
+        folder = path.parent.parent
+        task = folder.parent / f"{folder.name}.md"
+        if path.parent.name != "dispatch" or not task.is_file():
+            continue
+        facts, lines = task_facts(task), []
+        if path.name == "implementation-1.md":
+            notes = named_section(path.read_text(), "Scope notes")
+            reserved = [("ADR", n) for n in sorted(facts["adr"])] + [("Migration", n) for n in sorted(facts["migration"])]
+            lines += [f"{file}:1: reserved line '{kind}: {n:04d}' missing from scope notes; copy it from the task's "
+                      "'## Number guards' into this record's '## Scope notes', then run this check again"
+                      for kind, n in reserved if not re.search(rf"\b{kind}:[ \t]*0*{n}\b", notes)]
+        named = {int(n) for record in path.parent.glob("*.md")
+                 for m in AMENDMENT_NAMED.finditer(named_section(record.read_text(), "Checklist"))
+                 for n in re.findall(r"\d+", m.group(1))}
+        lines += [f"{file}:1: Captain amendment {n} named in no dispatch checklist; write 'Captain amendment {n}' "
+                  "in a checklist line of this record, then run this check again"
+                  for n in amendment_numbers(task.read_text()) if int(n) not in named]
+        for line in lines:
+            print(line)
+        found = found or bool(lines)
+    return 1 if found else 0
+
+
 def check_newest(state, slug, package):
     done = subprocess.run(["git", "-C", str(state), "log", "--diff-filter=A", "--no-renames", "--relative",
                            "--name-only", "--format=", "-n", "1", "--", f"{slug}/dispatch/"],
@@ -172,7 +222,7 @@ def check_newest(state, slug, package):
 def main(argv=None, package=PACKAGE):
     args = sys.argv[1:] if argv is None else argv
     if args[:1] == ["--names"] and len(args) > 1:
-        return max(check_names(args[1:], package), check_candidates(args[1:]))
+        return max(check_names(args[1:], package), check_candidates(args[1:]), check_task_facts(args[1:]))
     if args[:1] == ["--newest"] and len(args) == 3:
         return check_newest(args[1], args[2], package)
     readme = None
