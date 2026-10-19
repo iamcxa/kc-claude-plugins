@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:delivery-gate-settles-skipped-checks:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:delivery-gate-settles-skipped-checks-validation-1
+              briefing:
+                id: briefing:delivery-gate-settles-skipped-checks:validation:attempt-1:revision-1
+                digest: sha256:a933d2f21d4909d52400174a5647c9bb523655639ad45cdbe8be2f11535bfa9d
+                room-ref: ./delivery-gate-settles-skipped-checks/review/validation/briefing-1
 started: 2026-10-19T15:34:07Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-settles-skipped-checks
 pr: iamcxa/kc-claude-plugins#680

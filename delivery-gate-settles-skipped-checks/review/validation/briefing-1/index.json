@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-settles-skipped-checks:validation:attempt-1:revision-1",
+  "question": "Deliver #680 head 559f5da6 (the delivery check settles a check run that finished SKIPPED or NEUTRAL, as GitHub counts it, and still holds a head on which no check succeeded, so all-green relay and web PRs are no longer held): FO merges it with --match-head-commit and removes its clean, pushed worktree, unless you say you merge or hold? Approving accepts the engineering-reviewer's two residuals below into backlog task delivery-gate-settles-skipped-checks-followups (shape A, a fan-in job without always() skipped with the job it needs; and a web release PR whose release-pair is skipped by mistake), and waives roborev:914's High finding, which validation showed false. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-settles-skipped-checks:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/55a7308c8afdb58bf8fd48eea2f50a364bc09dc1/delivery-gate-settles-skipped-checks.md",
+      "rev": "sha256:e6b3ad76a3f17b69ef8889ffe7c9eca90906d181638f2e3aeaef545eb67f2f43",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at 559f5da6 (validation cycle 2; base 891a9a24 is current main). FO ran the acceptance script as written in env -i bash: every step matched (head 559f5da6; 68 tests OK; relay #398 has 18 checks, 12 SUCCESS, 4 SKIPPED, 2 NEUTRAL; the base check exits 1 on it and the candidate exits 0; a lone skipped check exits 1 under both, and the candidate names the floor; adr_lint 25 files, exit 0). Sufficiency: AC-1 to AC-7 met by the validator's own runs, each falsifier failing under its mutation, and the replay turns relay #398, #399, #401 and web #150 from held to passing while #670, #671 and #675 stay passing and a queued head stays held. Necessity: the Captain asked for this fix before the release (#677) after three holds that each ended in his override. Engineering-reviewer (opus, reviews/engineering-reviewer-1.md): safe with conditions; its docstring adjust is fixed at 559f5da6, and its two residuals are the ones the question asks you to accept. External rounds: Codex 1 (clean at e80e50cb), 2 (clean at 559f5da6). RoboRev local (913 clean; 914 one High, false: HoldTests passes and its two rows exit 1 through the floor, per validation cycle 2), not counted. Second reviewer: Copilot because the PR changes the merge-ask rules; copilot not run: \"Copilot was unable to review this pull request because the user who requested the review has reached their quota limit.\" (review:5575460621); FO can request it again when you say the quota is back. Limit: relay #402's queued row rests on a rollup derived from stored data."
+    }
+  ]
+}
