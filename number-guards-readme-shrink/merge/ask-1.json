@@ -1,0 +1,17 @@
+{
+  "class": "never",
+  "head": "7e47e8704573e163353a6a5ff80b0e79ea78eebc",
+  "model": "not run",
+  "next": "next: ask for merge with this text.",
+  "points": [
+    "point: deferred: 'PASSED at 7e47e870. Material: none. Deferred'",
+    "point: deferred: 'Validation Verdict PASSED at 7e47e870 (validation-1;'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_number_guards.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_poc_readme.py'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#670",
+  "time": "2026-10-19T01:02:29Z",
+  "verdict": "ask"
+}
