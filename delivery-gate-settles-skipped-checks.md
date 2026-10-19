@@ -34,6 +34,17 @@ gates:
                 id: briefing:delivery-gate-settles-skipped-checks:ideation:attempt-1:revision-1
                 digest: sha256:d3d0a11d9e3ca71f9be21ded7dc80ef41912214e3b148899eacaf234436b9171
                 room-ref: ./delivery-gate-settles-skipped-checks/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-settles-skipped-checks:ideation:1
+                briefing: briefing:delivery-gate-settles-skipped-checks:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T16:03:40.557178Z"
+                decision: approve
+                reason: 'Captain approved in chat (「批准」) after the re-briefing: accepts D1 as recommended (settle SKIPPED and NEUTRAL with a floor), which reverses the SKIPPED or NEUTRAL clause of merge-gatekeeper AC-1, and implementation after #679 merges, as the gate question states'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-19T15:34:07Z
 ---
 
