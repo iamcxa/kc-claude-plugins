@@ -303,3 +303,45 @@ Measured 22 answers, 63 asks and 33 Captain messages in the window; 20 of the 22
 ### Summary
 
 D1 and D2 landed in PR #675 at net zero README words, with the merge-or-ask `next:` line, the new pin and ADR 0023 whose Words line quotes 「照建議」 and amendment 1 as recorded. Two things for FO: the pilot-output word bound in test_delivery_gate.py moved 37 to 55 (a literal the design did not list, flagged under without-it unanswered in the PR body), and the roborev High finding stands for FO to disposition. docs/dev2/README.md and docs/dev2-poc/README.md still carry the old sentences until refit.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #675 head 16d8d456 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 16d8d456 (base 18dbf490, detached throwaway checkout, removed). AC-1: ledger gives 18 batch-2 rows, all approve, 0 override (140 rows total now); transcript script gives 33 messages in the window; the 22-answer replay table sums 7/6/5/4 and 63 asks. AC-2: README 5374 to 5374, Delivery authority 447 to 447, lint-skills exit 0; falsifier (re-add the CI sentence) gives 5389 of 5374 and exit 1. AC-3: pin `delivery-question-carries-merge` green; deleting the first phrase turns only that pin red; reverting `ASK` fails 3 tests (the ask-line test and both ProdSecurityReviewTests pilot/prod outputs); ADR 0011 diff is 0 lines. AC-4: `git diff --name-only` lists the five designed paths; `-U0` on delivery_gate.py changes only the `ASK` line and one docstring clause; 56 delivery_gate tests OK. AC-5: not verified, it is FO's at batch close.
+- DONE: Judge the roborev:875 High finding (kc-dev-flow-2/scripts/delivery_gate.py prints the merge line without reading the question) against the design's stated limit and AC-4, and say whether the check can know of an approval that is recorded only after it runs; judge the unlisted pilot-output word bound change (37 to 55) in kc-dev-flow-2/scripts/test_delivery_gate.py against AC-4; Captain amendment 1 is in the task file
+  roborev:875 is Deferred risk: the design's Limits and Mechanism state the line is text only and AC-4 forbids a hunk that reads the question. The check cannot know of a later approval: README runs it "Before the merge ask" with the question text as input, and the script reads no gate record, so the one-bit grant stays with FO. The line itself is conditional ("if the approved question named the merge ... else ask"). Word bound: the pilot output grew 24 to 42 words (the stated +18), the bound moved by the same 18 and keeps its 13-word headroom; the file is listed in AC-4 and no AC-4 falsifier fires, so Polish. Amendment 1: "ready" is held by the check (see step 4 below, a draft PR exits 1); the README does not name it.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and observed output below; adr_lint exit 0 (24 ADR files, 0 legacy; also exit 0 with `--require 23`); verdict PASSED at 16d8d456, findings F1-F5 below, none Material.
+
+### Verdict and checks run
+
+Verdict: PASSED for head 16d8d456fd968e8d17e4b08dc1858f74c771aed7 (PR #675, Draft). Also run at the candidate: `comment_ratio.py` exit 0 (15 code lines, 0 comment lines, 5% maximum not enforced under 20 lines); `number_guards.py check` exit 0 (PASS, no migrations-path); `design_surfaces.py check` exit 0; `dispatch_records.py` exit 0 (5 records complete); `doc_impact.py` exit 0 listing README.md, references/sd/adoption.md and learning.md; `test_sd_dispatch.py --sd-plugin-root <spacedock 0.27.0>` exit 0 clean (7 PASS lines, run twice, 39 s); `test_delivery_gate.py` 56 OK (116 s).
+
+### Minimal acceptance script (each step run in a fresh `env -i bash --noprofile --norc -c`)
+
+Needs: this machine, network for `gh`, PR #675 still a Draft. Covers the wording, the budget and the draft hold; it does not cover a real merge, AC-5, or the adopters' README copies (unchanged until refit).
+
+1. `cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo && git fetch -q origin pull/675/head && git worktree add --detach /tmp/cql-675-accept 16d8d456fd968e8d17e4b08dc1858f74c771aed7 >/dev/null 2>&1 && git -C /tmp/cql-675-accept rev-parse --short=8 HEAD`
+   Expect `16d8d456`. Observed: `16d8d456`, exit 0.
+2. `cd /tmp/cql-675-accept && python3 -B kc-dev-flow-2/scripts/lint-skills.py`
+   Expect `PASS` and `workflow.md: 5374 of 5374 words`. Observed: both, exit 0.
+3. `cd /tmp/cql-675-accept && grep -n -A3 "rounds on the same PR, merging" kc-dev-flow-2/references/sd/workflow.md && grep -n "^ASK = " kc-dev-flow-2/scripts/delivery_gate.py`
+   Expect the sentence "merging the head `<package>/scripts/delivery_gate.py check` passes unless he says he merges, and removing its clean, pushed worktree afterwards" and the `ASK` line "next: merge this head if the approved question named the merge and he did not say he merges, else ask for merge with this text." Observed: both at workflow.md:504-505 and delivery_gate.py:65.
+4. `cd /tmp/cql-675-accept && printf 'Approve delivering this change; approval also covers merging the validated head.\n' > /tmp/cql-675-question.txt && python3 -B -I kc-dev-flow-2/scripts/delivery_gate.py check /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-load.md --pr iamcxa/kc-claude-plugins#675 --text-file /tmp/cql-675-question.txt --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2; echo "exit $?"`
+   Expect, while the PR is a Draft: `the PR is a draft`, a `next: hold the ask; mark the PR ready ...` line and no merge line, exit 1. Observed exactly that, exit 1 (the Captain's hard precondition: a draft PR never reaches the merge line).
+5. `cd /tmp/cql-675-accept/kc-dev-flow-2/scripts && python3 -B -m unittest test_delivery_gate.DeliveryGateTests.test_each_exit_ends_with_the_next_line_for_the_ask test_delivery_gate.ProdSecurityReviewTests 2>&1 | tail -3; python3 -B test_sd_dispatch.py --sd-plugin-root /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0 2>&1 | tail -1`
+   Expect `Ran 8 tests` and `OK`, then `Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge`. Observed both (run as two commands in separate fresh shells, 8 tests OK in 10 s; sd-dispatch exit 0).
+6. `git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo worktree remove --force /tmp/cql-675-accept && rm -f /tmp/cql-675-question.txt && ls /tmp/cql-675-accept 2>&1 | head -1`
+   Expect `No such file or directory`. Observed that, exit 0.
+
+### Findings (Review-finding disposition)
+
+- F1 roborev:875 High, the merge line is printed without reading the question: Deferred risk. Not Material because no trigger is observed and the line is conditional text; becomes Material if a task PR merges on an approval whose question did not name the merge (ADR 0023's reopen condition). A fix that reads the question changes more than the `ASK` hunk and fails AC-4; it belongs to `fo-write-checks`.
+- F2 No README step re-runs `check` after the approval or after a repair pushed under the same grant: the only trigger is "Before the merge ask", and the merge ask may now be skipped. Deferred risk (no observed case); becomes Material if FO merges a head the check did not pass. Not designed in this task's text; Captain or FO may want one clause.
+- F3 Amendment 1 mapping: his "unless I have concerns, hold the merge" is carried as "unless he says he merges"; "ready" is enforced by the check's draft hold (step 4) and GitHub's own refusal to merge a draft (not exercised, no merge allowed), not named in the README. Deferred risk; FO must say the approval-is-merge-authorization sentence explicitly in each delivery question (his 「明確跟我說」), which only AC-5's recount can show.
+- F4 The pilot-output bound 37 to 55 and four updated literals in `test_delivery_gate.py` (the design said three): Polish; the file is allowed by AC-4 and the headroom is unchanged.
+- F5 AC-3's need string omits `<package>/scripts/`, and the implementation report records no `updated`/`unaffected` line for the three `doc_impact.py` documents: Polish. I checked all three: each mentions only the `test_sd_dispatch.py` invocation, so `unaffected: names only the test command`.
+
+### Summary
+
+Unverified: AC-5 (FO's batch-close recount); the 22-way classification is a reading of FO's earlier messages, of which I reproduced the 33 messages, the table sums and the kinds from each message's text, not FO's prior asks per task (63); no real merge was run. PASSED at 16d8d456 with no Material finding; F2 is the one clause FO or the Captain may want before batch 3 relies on the rule.
