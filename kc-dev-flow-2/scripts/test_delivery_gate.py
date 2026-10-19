@@ -988,6 +988,46 @@ class ConfirmationTests(unittest.TestCase):
         self.assertEqual(changed, ["both missing", "sufficiency missing", "necessity missing", "empty label", "label cut off from its text"])
 
 
+class MentionedLabelTests(unittest.TestCase):
+    MENTIONS = {
+        "the check's own diagnostic pasted back": "the gate text has no 'Sufficiency:' clause: add 'Sufficiency: <the acceptance criteria this candidate met, from its validation report>'\n"
+                                                  "the gate text has no 'Necessity:' clause: add 'Necessity: <who uses this change and what breaks without it>'",
+        "labels named inside a parenthesis": "Approving accepts D2 (Sufficiency: and Necessity: clauses in the delivery gate text, held by delivery_gate.py).",
+        "labels named in a request": "Please add a Sufficiency: line and a Necessity: line before the ask.",
+        "one clause stated, the other only named": "Sufficiency: AC-1 to AC-4 met. The check also wants a Necessity: clause.",
+    }
+    STATED = {
+        "each on its own line": "Sufficiency: AC-1 met.\nNecessity: relay reads it.",
+        "each indented on its own line": "  Sufficiency: AC-1 met.\n\tNecessity: relay reads it.",
+        "mid-paragraph after a sentence end": "Validation Verdict PASSED at 13ceb00d. Sufficiency: each class is now held by a script. "
+                                              "Necessity: those are the approved scope. External rounds: Codex 1 (clean).",
+        "after a question mark or exclamation": "Is it enough? Sufficiency: AC-1 met! Necessity: relay reads it.",
+    }
+
+    def test_a_label_that_is_only_mentioned_holds_the_ask_and_saves_no_record(self):
+        for label, text in self.MENTIONS.items():
+            with self.subTest(label):
+                result = run_check(text=text, clauses=False)
+                self.assertEqual(result.code, 1, result.out)
+                self.assertTrue(any(l.startswith("the gate text has no ") for l in result.lines), result.out)
+                self.assertEqual(len(result.written), 0)
+
+    def test_a_clause_at_a_line_start_or_after_a_sentence_end_still_passes_and_is_saved(self):
+        for label, text in self.STATED.items():
+            with self.subTest(label):
+                result = run_check(text=text, clauses=False)
+                self.assertEqual(result.code, 0, result.out)
+                saved = result.written["ask-1.json"]
+                self.assertTrue(saved["sufficiency"] and saved["necessity"], saved)
+
+    def test_the_unanchored_search_changes_exactly_the_mentioned_label_cases(self):
+        module = variant_of('rf"(?:^[ \\t]*|[.!?][ \\t]+){label}:[ \\t]*(\\S[^\\n]*)", text, re.M)', 'rf"\\b{label}:[ \\t]*(\\S[^\\n]*)", text)')
+        cases = {**self.MENTIONS, **self.STATED}
+        changed = [label for label, text in cases.items()
+                   if run_variant(module, text=text, clauses=False).code != run_check(text=text, clauses=False).code]
+        self.assertEqual(changed, list(self.MENTIONS))
+
+
 def tearDownModule():
     for out in OUTPUTS:
         assert "--auto" not in out and "--admin" not in out, out

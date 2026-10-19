@@ -8,8 +8,8 @@ highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check re
 A task whose frontmatter says `profile: prod` must also pass `validation_security.py` (saved security review at
 the dispatched head the PR head equals, every finding disposed); a profile that cannot be read as poc, pilot or prod holds.
 The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
---text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each
-(presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
+--text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
+at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token. Each `;`-separated item after `Declined...:` or
 `FO declines...:` (up to the next sentence that opens with a label and a colon, or a blank line) needs a bracket of two or
 more words holding its reason; this proves a bracket exists, not that it is a reason.
@@ -180,7 +180,7 @@ def brackets(item):
 
 
 def clause(text, label):
-    found = re.search(rf"\b{label}:[ \t]*(\S[^\n]*)", text)
+    found = re.search(rf"(?:^[ \t]*|[.!?][ \t]+){label}:[ \t]*(\S[^\n]*)", text, re.M)
     return found.group(1) if found else None
 
 
