@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:fo-write-checks:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:fo-write-checks-validation-1
+              briefing:
+                id: briefing:fo-write-checks:validation:attempt-1:revision-1
+                digest: sha256:4c2c8d67afe19ffcaf88ec00bc73a71118774d9d2371d1e6d22c81d083b610a4
+                room-ref: ./fo-write-checks/review/validation/briefing-1
 started: 2026-10-18T16:57:29Z
 worktree: .worktrees/spacedock-ensign-fo-write-checks
 pr: iamcxa/kc-claude-plugins#671

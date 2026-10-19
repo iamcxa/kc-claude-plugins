@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-write-checks:validation:attempt-1:revision-1",
+  "question": "Deliver #671 head 13ceb00d (three rules the observer kept finding broken are now checked when FO writes, not days later at archive: the reserved ADR line in dispatch scope notes, every Captain amendment named in a dispatch checklist, and a reason in brackets for every declined item, plus the ADR at the PR head before a merge ask): FO merges it, unless you say you merge? Approving accepts FO's recommendation to decline the Codex round-3 P2 and the carried items below into backlog task fo-write-checks-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-write-checks:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e4a1c84a3c64cd48de23d2fb50054758a0f3856e/fo-write-checks.md",
+      "rev": "sha256:a6149e39e2334d71ddd2f270cb30407caa123a2dd33a65038f2578ec00fc37b6",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at 13ceb00d (validation-3; base c60e89e1 is current main). FO ran the acceptance script as written in env -i bash: every step matched (an Oxford-comma amendment list names 1, 2 and 3, exit 0; a missing amendment 3 is held, exit 1; the nested-parentheses reason passes and the bare item is held, ['Polish, typo']; #666 head a05b18a0 has 0 files named 0023-; adr_lint --require 25 checks 23 files, exit 0). --names over all 269 committed dispatch records prints the same 198 lines as the previous head. Sufficiency: each of the three classes the six batch-2 observer reports counted most (decline without reason 4 of 6, reserved ADR line missing 3 of 6, amendment not named 3 of 6) is now held by a script at dispatch, gate or push, each shown by a test that fails under its mutation. Necessity: those are the Captain-approved batch-3 scope, and the README gains no word (5429 of 5429). External rounds: Codex 1 (2 P2, fixed), 2 (2 P2, fixed), 3 (1 P2, declined below). RoboRev local (870), not counted. Second reviewer: Copilot because the repository asks for one; Copilot not run: quota exhausted. Declined, with reasons: P2, an amendment range such as 1 to 3 names only its ends [a false hold, never a missed one; on 2026-10-19 --names over the 8 committed records that write a range printed no amendment line]; Deferred risk, a prose line beginning with the reserved text passes [no record does this; material only if one hides an unrecorded number]; Deferred risk, a two-word bracket proves a bracket, not a reason [recorded as a known limit in ADR 0025]; Deferred risk, any amendment phrase in any checklist of the folder passes [the observer still reads the checklist]; Polish, AC-4 says 12 declined items where the count is 13 [a count in the task text, read by no gate]. Limit: L2 reaches this repository's CI only after dev2-laws.yml is re-pinned at the next release; CI cost not measured, as AC-8 allows."
+    }
+  ]
+}

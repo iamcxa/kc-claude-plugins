@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "13ceb00d9348ba860b01bbea6fd31e4c5b93e7c9",
+  "model": "not run",
+  "next": "next: ask for merge with this text.",
+  "points": [
+    "point: deferred: \"13 vs 12 is the AC's\"",
+    "point: deferred: '3. Deferred risk, L2 reaches this'",
+    "point: deferred: '4. Deferred risk, form A proves'",
+    "point: deferred: '5. Deferred risk, read from the'",
+    "point: deferred: \"print(g.unreasoned_items('Declined: Polish, wording only for line\"",
+    "point: deferred: '1. Polish, ADR 0025 `Words` line'",
+    "point: deferred: '2. Deferred risk, new, run: the'",
+    "point: deferred: '3. Carried and unchanged from validation-1:'",
+    "point: deferred: 'Needs `git`, `python3`, `gh` signed in,'",
+    "point: deferred: 'print(g.unreasoned_items(\"Declined: Polish, typo; Polish, a stale'",
+    "point: deferred: 'PR #671 head 08f06ac3 meets AC-1'",
+    "point: deferred: '- DONE: Recheck cycle 2: both'",
+    "point: more: 18 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#671",
+  "time": "2026-10-19T07:22:25Z",
+  "verdict": "ask"
+}
