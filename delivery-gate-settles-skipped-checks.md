@@ -347,3 +347,21 @@ Docstring, smallest: delete the parenthetical `(a check run its repository skips
 ### Summary
 
 Both findings are real. The docstring one is prose only; the test one is reproduced by a mutation that the old test misses and the new test catches. Waiting for FO authorization to apply the docstring edit, commit the test and docstring, push, and take a fresh validation recheck.
+
+## Stage Report: implementation (cycle 2, phase 2: fix applied)
+
+- DONE: Apply the phase-1 fix: delete the docstring parenthetical "(a check run its repository skips by design settles)", commit it with the test edit that pins the literal three-call gh list (unconditional-call mutation shown red)
+  Commit 559f5da6 on PR #680 (was e80e50cb): docstring parenthetical removed, `test_settling_a_check_adds_no_gh_call` pins the base's three recorded calls for a plain and a skipped+neutral rollup. Phase 1 mutation: an extra `gh("api", ...)` in `ci_problem` left the old test green and reddened the new one (2 subtests).
+- DONE: lint-skills.py exits 0; adr_lint.py docs/adr --since 891a9a24 exits 0; `git grep -n "by design" -- kc-dev-flow-2/scripts/delivery_gate.py` finds nothing
+  lint-skills exit 0; adr_lint "25 ADR file(s) checked, 0 legacy" exit 0; grep exit 1 (no match).
+- DONE: All package test files pass; push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  Every `kc-dev-flow-2/**/test_*.py` exit 0 (`test_sd_dispatch.py` run with `--sd-plugin-root` set to the spacedock 0.27.0 cache, as CI does with its checkout); `git push origin spacedock-ensign/delivery-gate-settles-skipped-checks` fast-forward e80e50cb..559f5da6; all 4 checks pass on 559f5da6 (GitGuardian, route gate, unit tests 1m53s, version parity 50s).
+
+### Findings for FO
+
+- roborev gate exit 1 on 559f5da6, `evidence=roborev:914`: one High finding at `test_delivery_gate.py:437` saying the `HoldTests` rows `check skipped` and `check neutral` "will fail" now. It is wrong: both rows are a lone check, which the floor still holds, and `HoldTests` passes (full file 68 tests OK; CI unit tests pass). Not fixed, because the suggested edit would delete the AC-2 rows. Round 1 of at most 2; not re-run.
+- No PR comment, review request or ready marking.
+
+### Summary
+
+Both cycle-1 findings are fixed in 559f5da6 and CI is green on it. The one roborev finding is a false positive against rows that stay valid.
