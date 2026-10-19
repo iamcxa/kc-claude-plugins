@@ -195,6 +195,8 @@ Against chat-only-evidence-observer-blind (PR #679, open, head 59fc3d12, also ed
 
 **D1. Settle SKIPPED and NEUTRAL (with a floor), or make adopters declare which checks may skip?** Recommend settling with the floor now and adding the adopter list only when an adopter with no fan-in job shows the gap. Choosing settle reverses the SKIPPED or NEUTRAL clause of merge-gatekeeper AC-1, which the Captain approved at that task's ideation gate on 2026-10-17; I read the `Override:` lines in the state checkout (`git grep -n 'Override:'`, 2026-10-19) and found only prose in archived designs, none on a delivery or merge question, so no past ruling went against a similar recommendation. What gets worse: on an adopter without a fan-in job, a test job skipped by mistake passes while any sibling job succeeded, and nothing in the ask shows it. Choosing the list instead costs a README key per adopter and a new hold each time a job is added.
 
+What approval does: with this change an approved delivery question that names the merge (ADR 0023) can reach a printed merge line on a relay or web head with skipped or NEUTRAL checks, which the old hold made impossible; ADR 0023 lists "the head, CI and base checks still run" among its safeguards, and CI now means the rule above. No ADR text names SKIPPED, NEUTRAL or the rollup (`git grep -n -i 'neutral\|rollup' origin/main -- docs/adr`, 2026-10-19: no hit), so no ADR clause is reversed and no ADR draft lands with this task; the rule lives in the module docstring and the tests.
+
 Profile boundary: Pilot holds. No new data, credential, migration or release duty; the change is one function, its tests and one docstring clause in a script every adopter already runs.
 
 ## Stage Report: ideation
@@ -212,7 +214,8 @@ Profile boundary: Pilot holds. No new data, credential, migration or release dut
 - DONE: AC-3 (every other hold unchanged): 56 existing tests pass on the prototype; the replay holds every failure, pending, cancelled, timed-out, stale and action-required shape; the new `SUCCESS beside FAILURE` row is not yet in the test file.
 - DONE: AC-4 (no new `gh` call, no README key): the prototype touches `ci_problem` only; the `calls.log` assertion is not yet written.
 - DONE: AC-5 (committed records and live PRs): six records over #670, #671, #675 stay 0, relay#399 gives 0, relay#402 stays 1 while queued (live read 2026-10-19, may change).
-- DONE: AC-6 (docstring) and AC-7 (words): not yet verified against an implementation; the pre-change counts are in the words table.
+- DONE: AC-6 (docstring): not yet verified against an implementation; the old clause is at origin/main `delivery_gate.py` docstring line 19 and the grep in the criterion finds it today.
+- DONE: AC-7 (words): not yet verified against an implementation; the base counts (44 pass, 33 or 34 hold) are in the words table.
 
 ### Summary
 
