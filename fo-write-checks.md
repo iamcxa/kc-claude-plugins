@@ -34,6 +34,17 @@ gates:
                 id: briefing:fo-write-checks:ideation:attempt-1:revision-1
                 digest: sha256:99db8a427a9bb2137bebfb4a4eb3f09cc716c8aa2fbdeb5ae916593b6e10d25d
                 room-ref: ./fo-write-checks/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-write-checks:ideation:1
+                briefing: briefing:fo-write-checks:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T00:43:52.316607Z"
+                decision: approve
+                reason: Captain approved in chat (「照建議」) the four batch-3 ideation gates presented together, accepting each task's stated decisions and FO's implementation order
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-18T16:57:29Z
 ---
 
