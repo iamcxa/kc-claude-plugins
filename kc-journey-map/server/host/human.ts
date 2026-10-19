@@ -43,6 +43,11 @@ export async function registeredHumanRoom(meta: Metadata, raw: string, rooms: st
  if (!await meta.get('room:' + raw)) deny(404, 'room_missing')
  return raw
 }
+export async function permittedRoomCatalog(meta: Metadata, allowed: string[]) {
+ return (await meta.list<{ displayName?: string }>('room:'))
+  .filter(row => allowed.includes(row.key.slice(5)) && canonicalRoom(row.key.slice(5)) === row.key.slice(5))
+  .map(row => ({ roomId: row.key.slice(5), displayName: typeof row.value?.displayName === 'string' && row.value.displayName.trim() ? row.value.displayName.trim() : row.key.slice(5) }))
+}
 function sameOrigin(host: HumanHost, req: Request) {
  const hostHeader = host.publicRequestUrl ? new URL(req.url).host : req.headers.get('host') || new URL(req.url).host
  if (host.publicRequestUrl && new URL(req.url).origin !== host.origin) deny(403, 'origin_or_csrf_denied')
@@ -66,6 +71,11 @@ export async function humanRoute(host: HumanHost, req: Request): Promise<Respons
  if (path === '/auth/config' && req.method === 'GET') return Response.json(host.humanConfig ? { enabled: true, mode: host.humanConfig.mode, localReady: !!host.localHumanReady } : { enabled: false })
  if (!host.humanConfig || !host.meta.human) deny(503, 'human_entry_unconfigured')
  if (req.method === 'POST') sameOrigin(host, req)
+ if (path === '/auth/rooms' && req.method === 'GET') {
+  const human = await humanFromHeaders(host, req.headers)
+  await requireHumanContext(host.meta, { actorType: 'human', credentialId: human.member.id, principalId: human.member.id, humanSessionDigest: human.sessionDigest, rooms: human.rooms, cookie: true, expiresAt: human.session.expiresAt }, url)
+  return Response.json({ backendId: host.humanConfig.backendId, memberId: human.member.id, rooms: await permittedRoomCatalog(host.meta, human.rooms) })
+ }
  if (path === '/auth/entry' && req.method === 'GET') {
   const human = await humanFromHeaders(host, req.headers)
   const rooms: string[] = []
