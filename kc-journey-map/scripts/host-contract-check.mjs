@@ -282,7 +282,7 @@ releases:
  execFileSync('openssl', ['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-keyout', key, '-out', cert, '-days', '1', '-subj', '/CN=pilot.test'], { stdio: 'pipe' })
  vite = await viteServer({ configFile: join(root, 'vite.config.mts'), server: { host: '127.0.0.1', port: browserPort, strictPort: true,
   https: { key: await readFile(key), cert: await readFile(cert) }, allowedHosts: ['pilot.test'],
-  proxy: Object.fromEntries(['/connect', '/uploads/', '/repo-doc', '/save', '/session', '^/doc($|[?])', '/health', '/capabilities', '/mcp'].map(route => [route, { target: api, ws: route === '/connect' }])) } })
+  proxy: Object.fromEntries(['/auth/', '/connect', '/uploads/', '/repo-doc', '/save', '/session', '^/doc($|[?])', '/health', '/capabilities', '/mcp'].map(route => [route, { target: api, ws: route === '/connect' }])) } })
  await vite.listen()
  browser = await chromium.launch({ headless: true, args: ['--host-resolver-rules=MAP pilot.test 127.0.0.1', '--no-proxy-server'] })
  await check('HTTPS hostname browser session and actual tldraw WebSocket read back CLI records', async () => {

@@ -1,11 +1,14 @@
 import { canonicalRoom, HostError } from './core'
+import { cookieValue, currentHuman } from './human'
+import type { HumanSession } from './human-store'
 export type Grant = { credentialId: string; secretDigest: string; principalId: string; rooms: string[]; expiresAt: number; revoked: boolean }
-export type Session = { credentialId: string; expiresAt: number }
+export type Session = { credentialId: string; expiresAt: number; actorType?: 'legacy' | 'agent' | 'human'; humanSessionDigest?: string }
 export type Admission = Session & { rooms: string[]; principalId: string; cookie: boolean }
 export interface Metadata {
  get<T>(key: string): Promise<T | null>
  put(key: string, value: unknown): Promise<void>
  list<T>(prefix: string): Promise<Array<{ key: string; value: T }>>
+ human?(operation: string, input: any): Promise<any>
 }
 export async function digest(secret: string) {
  return [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(secret)))].map(b => b.toString(16).padStart(2, '0')).join('')
@@ -23,6 +26,12 @@ export function validateGrants(grants: Grant[]) {
  return grants
 }
 export async function currentGrant(meta: Metadata, session: Session): Promise<Grant> {
+ if (session.actorType === 'human') {
+  const saved = session.humanSessionDigest ? await meta.get<HumanSession>('browser-session:' + session.humanSessionDigest) : null
+  if (!saved || saved.memberId !== session.credentialId || session.expiresAt <= Date.now()) throw new HostError(401, 'authority_denied')
+  const current = await currentHuman(meta, saved)
+  return { credentialId: saved.memberId, principalId: current.member.id, rooms: current.rooms, expiresAt: Math.min(saved.expiresAt, session.expiresAt), revoked: false, secretDigest: '' }
+ }
  const grant = await meta.get<Grant>('grant:' + session.credentialId)
  if (!grant || grant.revoked || grant.expiresAt <= Date.now() || session.expiresAt <= Date.now())
   throw new HostError(401, 'credential expired, revoked or invalid')
@@ -38,13 +47,21 @@ export async function authenticate(meta: Metadata, headers: Headers): Promise<Ad
   if (!grant || await digest(match[2]) !== grant.secretDigest) throw new HostError(401, 'invalid credential')
   session = { credentialId: grant.credentialId, expiresAt: grant.expiresAt }
  } else {
+  const humanToken = cookieValue(headers, 'journey_human')
+  if (humanToken) {
+   const humanSessionDigest = await digest(humanToken)
+   const saved = await meta.get<HumanSession>('browser-session:' + humanSessionDigest)
+   if (!saved) throw new HostError(401, 'human_sign_in_required')
+   const current = await currentHuman(meta, saved)
+   return { credentialId: saved.memberId, actorType: 'human', humanSessionDigest, expiresAt: saved.expiresAt, rooms: current.rooms, principalId: current.member.id, cookie: true }
+  }
   const token = /(?:^|;\s*)journey_session=([^;]+)/.exec(headers.get('cookie') ?? '')?.[1]
   const found = token ? await meta.get<Session>('session:' + await digest(token)) : null
   if (!found) throw new HostError(401, 'credential required')
   session = found; cookie = true
  }
  const grant = await currentGrant(meta, session)
- return { ...session, expiresAt: Math.min(session.expiresAt, grant.expiresAt), rooms: grant.rooms, principalId: grant.principalId, cookie }
+ return { ...session, actorType: session.actorType || 'legacy', expiresAt: Math.min(session.expiresAt, grant.expiresAt), rooms: grant.rooms, principalId: grant.principalId, cookie }
 }
 export function authorize(admission: Admission | null, raw: string) {
  const room = canonicalRoom(raw)

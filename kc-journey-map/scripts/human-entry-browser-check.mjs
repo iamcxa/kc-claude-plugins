@@ -1,0 +1,131 @@
+import assert from 'node:assert/strict'
+import { spawn, execFileSync } from 'node:child_process'
+import { mkdtemp, writeFile, readFile, mkdir } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { join } from 'node:path'
+import { createHash } from 'node:crypto'
+import { createServer } from 'node:net'
+import { createServer as viteServer } from 'vite'
+import { chromium } from 'playwright'
+import { createInterface } from 'node:readline'
+const root = new URL('..', import.meta.url).pathname.replace(/\/$/, '')
+const scratch = await mkdtemp(join(tmpdir(), 'human-entry-'))
+const hash = value => createHash('sha256').update(value).digest('hex')
+const port = () => new Promise(resolve => { const socket = createServer(); socket.listen(0, '127.0.0.1', () => { const n = socket.address().port; socket.close(() => resolve(n)) }) })
+const apiPort = await port(), uiPort = await port(), origin = 'http://127.0.0.1:' + uiPort
+const extraRooms = Array.from({ length: 20 }, (_, index) => 'synthetic-long-room-' + String(index).padStart(2, '0'))
+const secret = 's'.repeat(43), bearer = 'synthetic.' + secret
+const grantsFile = join(scratch, 'grants.json'), configFile = join(scratch, 'human.json'), dataDir = join(scratch, 'data')
+await writeFile(grantsFile, JSON.stringify([{ credentialId: 'synthetic', secretDigest: hash(secret), principalId: 'legacy-owner-label', rooms: ['one', 'two', 'denied', 'missing', ...extraRooms], expiresAt: Date.now() + 3600_000, revoked: false }]), { mode: 0o600 })
+await writeFile(configFile, JSON.stringify({ version: 1, backendId: 'browser-synthetic', origin, mode: 'local', issuer: 'local:browser-synthetic', localOwnerUid: process.geteuid(), localMemberId: 'owner', members: [{ id: 'owner', issuer: 'local:browser-synthetic', subject: 'uid:' + process.geteuid(), label: 'Synthetic owner', role: 'operator', rooms: ['one', 'two', 'missing', ...extraRooms].map(id => ({ id, expiresAt: Date.now() + 3600_000 })) }] }), { mode: 0o600 })
+const logs = [], pending = new Map()
+const child = spawn(process.execPath, ['--import', 'tsx', 'server/canvas-server.ts'], { cwd: root, stdio: ['pipe', 'pipe', 'pipe'], env: { ...process.env, JOURNEY_PRIVATE_DIR: dataDir, JOURNEY_GRANTS_FILE: grantsFile, JOURNEY_HUMAN_CONFIG: configFile, JOURNEY_ORIGIN: origin, JOURNEY_API_PORT: String(apiPort), JOURNEY_CONTROL_STDIO: '1' } })
+createInterface({ input: child.stdout }).on('line', line => { logs.push(line); try { const data = JSON.parse(line); if (data.control) { pending.get(data.control)?.(data.result); pending.delete(data.control) } } catch {} })
+child.stderr.on('data', data => logs.push(String(data)))
+const control = command => new Promise((resolve, reject) => { const id = crypto.randomUUID(); pending.set(id, resolve); child.stdin.write(JSON.stringify({ id, ...command }) + '\n'); setTimeout(() => { if (pending.delete(id)) reject(new Error('control timeout')) }, 5000).unref() })
+let vite, browser
+const report = { runtime: process.version, provider: 'NOT RUN', hosted: 'NOT RUN', checks: [] }
+const pass = name => { report.checks.push(name); console.log('PASS ' + name) }
+const request = (path, options = {}) => fetch('http://127.0.0.1:' + apiPort + path, { ...options, headers: { Authorization: 'Bearer ' + bearer, ...options.headers } })
+try {
+ for (let n = 0; n < 200; n++) { try { const r = await request('/health'); if (r.ok) break } catch {} if (child.exitCode !== null) throw new Error(logs.join('\n')); await new Promise(resolve => setTimeout(resolve, 50)); if (n === 199) throw new Error('startup timeout ' + logs.join('\n')) }
+ for (const room of ['one', 'two', 'denied', ...extraRooms]) assert.equal((await request('/doc?room=' + room)).status, 200)
+ const before = await (await request('/doc?room=one')).json()
+ process.env.JOURNEY_API_PORT = String(apiPort)
+ process.env.JOURNEY_HUMAN_CONFIG = configFile
+ vite = await viteServer({ configFile: join(root, 'vite.config.mts'), server: { host: '127.0.0.1', port: uiPort, strictPort: true } })
+ await vite.listen()
+ browser = await chromium.launch({ headless: true })
+ const context = await browser.newContext({ viewport: { width: 1280, height: 800 } })
+ const page = await context.newPage()
+ let startMaterial
+ page.on('request', request => { if (request.url().endsWith('/auth/local/start')) startMaterial = request.postDataJSON() })
+ const uiErrors = []; page.on('pageerror', e => uiErrors.push(e.message))
+ await page.goto(origin + '/?room=denied')
+ await page.getByRole('button', { name: '開始本機帳號驗證' }).click()
+ const requestId = await page.locator('.human-entry code').innerText()
+ const approval = execFileSync('python3', [join(root, 'scripts/owner-login.py'), join(dataDir, 'owner-login.sock'), requestId], { input: 'approve\n', encoding: 'utf8' })
+ assert.match(approval, /"approved": true/)
+ const wrongTab = await context.request.post(origin + '/auth/local/consume', { data: { ...startMaterial, requestId, verifier: hash('wrong-tab') }, headers: { Origin: origin, 'X-Journey-Entry': '1' } })
+ assert.equal(wrongTab.status(), 403)
+ await page.getByRole('button', { name: '我已在本機核准' }).click()
+ await page.getByRole('status').filter({ hasText: '你無法進入指定畫布' }).waitFor()
+ assert.equal(await page.evaluate(() => !!window.editor), false)
+ const replay = await context.request.post(origin + '/auth/local/consume', { data: { ...startMaterial, requestId }, headers: { Origin: origin, 'X-Journey-Entry': '1' } })
+ assert.equal(replay.status(), 410)
+ assert.doesNotMatch(await page.locator('main').innerText(), /已連線/)
+ assert.deepEqual((await request('/doc?room=one').then(r => r.json())).snapshot.documents, before.snapshot.documents)
+ pass('real owner peer approval signs in original tab; explicit denied URL mounts no substitute')
+ const cookie = (await context.cookies()).find(c => c.name === 'journey_human')
+ assert.ok(cookie.httpOnly); assert.equal(cookie.sameSite, 'Strict'); assert.equal(cookie.secure, false); assert.equal(cookie.domain, '127.0.0.1')
+ for (const [path, method] of [['/doc?room=denied', 'GET'], ['/uploads/anything?room=denied', 'GET'], ['/mcp', 'POST']]) {
+  const response = await context.request.fetch(origin + path, { method, ...(method === 'POST' ? { data: { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'get_doc', arguments: { room: 'denied' } } }, headers: { Origin: origin } } : {}) })
+  assert.equal(response.status(), 403)
+ }
+ pass('human policy denies HTTP, MCP and asset access to unauthorized room; real HTTP loopback cookie attributes')
+ const firstUse = await context.newPage()
+ await firstUse.goto(origin + '/')
+ await firstUse.getByRole('status').filter({ hasText: '請選擇你有權限' }).waitFor()
+ assert.equal(await firstUse.evaluate(() => !!window.editor), false)
+ await firstUse.close()
+ pass('first use with no eligible history stays in explicit chooser')
+ await page.screenshot({ path: join(scratch, 'denied-desktop-light.png'), fullPage: true })
+ await page.getByRole('button', { name: 'one', exact: true }).click()
+ await page.waitForFunction(() => !!window.editor)
+ assert.equal(new URL(page.url()).searchParams.get('room'), 'one')
+ pass('explicit alternative click admits existing requested room and mounts native canvas')
+ await page.goto(origin + '/?room=missing')
+ await page.getByRole('status').filter({ hasText: '指定畫布不存在' }).waitFor()
+ assert.equal(await page.evaluate(() => !!window.editor), false)
+ assert.equal((await request('/health').then(r => r.json())).rooms.includes('missing'), false)
+ pass('authorized but unregistered room creates no document')
+ await page.evaluate(() => { localStorage.setItem('journey-human-history:' + window.location.origin + ':browser-synthetic:owner', 'stale-unregistered') })
+ await page.goto(origin + '/')
+ await page.getByRole('status').filter({ hasText: '請選擇你有權限' }).waitFor()
+ assert.equal(await page.evaluate(() => !!window.editor), false)
+ await page.getByRole('button', { name: 'one', exact: true }).click()
+ await page.waitForFunction(() => !!window.editor)
+ await page.goto(origin + '/')
+ await page.waitForFunction(() => !!window.editor)
+ assert.equal(new URL(page.url()).searchParams.get('room'), 'one')
+ pass('same-member history resumes permitted room when URL has no target')
+ await page.goto(origin + '/?room=two')
+ await page.waitForFunction(() => !!window.editor)
+ assert.equal(new URL(page.url()).searchParams.get('room'), 'two')
+ pass('explicit URL outranks remembered room')
+ await page.goto(origin + '/?room=denied')
+ await page.getByRole('status').filter({ hasText: '你無法進入指定畫布' }).waitFor()
+ await page.setViewportSize({ width: 390, height: 720 }); await page.emulateMedia({ colorScheme: 'dark' })
+ for (const button of await page.getByRole('button').all()) assert.ok((await button.boundingBox()).height >= 44)
+ await page.getByRole('button', { name: 'one', exact: true }).focus()
+ assert.equal(await page.getByRole('button', { name: 'one', exact: true }).evaluate(el => document.activeElement === el), true)
+ await page.screenshot({ path: join(scratch, 'denied-mobile-dark.png'), fullPage: true })
+ const last = page.getByRole('button', { name: extraRooms.at(-1), exact: true })
+ await last.scrollIntoViewIfNeeded()
+ const bounds = await last.boundingBox()
+ assert.ok(bounds.y >= 0 && bounds.y + bounds.height <= 720)
+ assert.equal(await page.locator('main').evaluate(el => el.scrollWidth > el.clientWidth), false)
+ pass('390px dark many-room entry has 44px controls, keyboard focus and scroll reachability without overflow')
+ const csrf = (await context.cookies()).find(c => c.name === 'journey_human_csrf').value
+ const response = await context.request.post(origin + '/auth/renew', { data: {}, headers: { Origin: origin, 'X-Journey-Entry': '1' } })
+ assert.equal(response.status(), 403)
+ const renewed = await context.request.post(origin + '/auth/renew', { data: {}, headers: { Origin: origin, 'X-Journey-Entry': '1', 'X-Journey-Csrf': csrf } })
+ assert.equal(renewed.status(), 200)
+ const wrongOrigin = await context.request.post(origin + '/auth/local/start', { data: { verifier: hash('x'), csrf: hash('y') }, headers: { Origin: 'http://localhost:' + uiPort, 'X-Journey-Entry': '1' } })
+ assert.equal(wrongOrigin.status(), 403)
+ pass('real origin and CSRF checks reject absent proof; valid renewal preserves session')
+ await control({ op: 'set-room', memberId: 'owner', roomId: 'one', revoked: true, expiresAt: Date.now() + 3600_000 })
+ assert.equal((await context.request.get(origin + '/auth/entry?room=one')).status(), 403)
+ await control({ op: 'set-room', memberId: 'owner', roomId: 'one', revoked: false, expiresAt: Date.now() + 3600_000 })
+ assert.equal((await context.request.get(origin + '/auth/entry?room=one')).status(), 403)
+ const after = await request('/doc?room=one').then(r => r.json())
+ assert.deepEqual(after.snapshot.documents.filter(d => d.state.typeName !== 'user'), before.snapshot.documents)
+ pass('remove/regrant does not resurrect saved session; original record IDs and content unchanged')
+ assert.deepEqual(uiErrors, [])
+ report.candidate = execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim()
+ await writeFile(join(scratch, 'report.json'), JSON.stringify(report, null, 2))
+ console.log('evidence=' + join(scratch, 'report.json'))
+} finally {
+ await browser?.close(); await vite?.close()
+ if (child.exitCode === null) { const exit = new Promise(resolve => child.once('exit', resolve)); child.kill('SIGTERM'); await exit }
+}
