@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-peer-sender-label-poc:validation:attempt-1:revision-1",
+  "question": "Accept the Paseo sender-label POC result (a plugin label is verifiable and text-only forgeries fail; unlabelled peer messages still read as the Captain) and close it without a PR, archiving the task with the code kept on its branch?",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-peer-sender-label-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/407990258a9e998a6009380842e6debb1b494dbf/paseo-peer-sender-label-poc.md",
+      "rev": "sha256:1734b0d4dd1ad3e72b0cef7c8596dae747d7860d018289041e918efa0062086d",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED for AC-1 and AC-2 at dfc66beb2; AC-3 in-app step needs the Captain (CLI stand-in by FO: agent answered 'not through the peer-label channel'). FO ran the acceptance script: step 1 installed running; step 3 forged label refused ('nonce was never issued', no MERGED); step 5 cleanup, config cmp identical. Findings: a real label replayed to its original receiver (even with extra header text) still verifies; unlabelled plain send_agent_prompt is still indistinguishable from the Captain, which a plugin cannot close."
+    }
+  ]
+}

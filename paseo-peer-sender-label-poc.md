@@ -28,6 +28,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:paseo-peer-sender-label-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:paseo-peer-sender-label-poc-validation-1
+              briefing:
+                id: briefing:paseo-peer-sender-label-poc:validation:attempt-1:revision-1
+                digest: sha256:2eb05f7a54bb71d5eff790cec32fe27db6ce33a6a6a6d6d4d7f24c68ff72c86d
+                room-ref: ./paseo-peer-sender-label-poc/review/validation/briefing-1
 started: 2026-10-19T08:10:26Z
 ---
 
