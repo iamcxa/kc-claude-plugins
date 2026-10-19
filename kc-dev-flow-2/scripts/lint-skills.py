@@ -27,6 +27,7 @@ WORKFLOW_BUDGET_START = 5511
 WORKFLOW_BUDGET_STEPS = [
     dict(delta=-64, why="dispatch_records.py and design_surfaces.py print the parts and defects; the README points to them"),
     dict(delta=-18, why="delivery_gate.py prints the hold and ask lines; the README points to it"),
+    dict(delta=-55, why="number_guards.py prints the R2 and R6 next steps and --help lists the flags and rules; the README points to them"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.

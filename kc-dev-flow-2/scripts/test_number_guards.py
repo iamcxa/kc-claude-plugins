@@ -106,6 +106,7 @@ class AppliedFreezeTests(unittest.TestCase):
         self.assertEqual(code, 1, out)
         self.assertIn("FAIL R2", out)
         self.assertIn(self.applied[:12], out)
+        self.assertIn("revert it and add a new migration", out)
         unrecorded = task_file(self.task_dir.name, "Migration: 0006")
         self.assertEqual(self.fx.check(task=unrecorded)[0], 0)
 
@@ -269,6 +270,7 @@ class PocFreezeTests(unittest.TestCase):
                 self.assertEqual(code, 1, out)
                 for path in files:
                     self.assertIn(f"FAIL R6: {path.replace('__', '/')}", out)
+                self.assertIn("a POC task changes none of it", out)
 
     def test_no_r6_for_a_non_poc_task_for_no_change_or_for_a_migration_that_landed_on_the_base_later(self):
         with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
@@ -296,6 +298,15 @@ class PocFreezeTests(unittest.TestCase):
                                "--task", str(self.poc_task(td)))
             self.assertEqual(code, 0, out)
             self.assertIn("migration guard skipped", out)
+
+
+class HelpTests(unittest.TestCase):
+    def test_help_names_every_rule_from_r1_to_r6(self):
+        done = subprocess.run(["python3", "-B", SCRIPT, "--help"], capture_output=True, text=True)
+        self.assertEqual(done.returncode, 0, done.stderr)
+        rules = done.stdout.split("Limits:")[0]
+        for n in range(1, 7):
+            self.assertRegex(rules, rf"\bR{n} ")
 
 
 class MisconfigurationTests(unittest.TestCase):
