@@ -217,6 +217,11 @@ Falsifier: a number given with no `gh run list` output beside it.
 
 ADR: 0025
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-19): Codex review on #671 03a05f8f (review:5565983098) left two P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 (1) `kc-dev-flow-2/scripts/delivery_gate.py` unreasoned_items() drops a declined item with fewer than three tokens, so 'Declined: Polish, typo.' passes without a bracketed reason; (2) `kc-dev-flow-2/scripts/dispatch_records.py` K2 searches the scope notes unanchored, so a prose mention such as 'This does not use ADR: 0020 because ...' counts as the reserved line.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for mechanical checks for the FO-write rules the six batch-2 observer reports found broken (the classes and counts are in Scope), each placed in an existing script that runs when FO writes (kc-dev-flow-2/scripts/laws_check.py as a new law, kc-dev-flow-2/scripts/dispatch_records.py, kc-dev-flow-2/scripts/delivery_gate.py on the gate text, kc-dev-flow-2/scripts/design_surfaces.py), with a replay on the batch-2 archived tasks showing each check would have caught its observed case; which rules stay with the observer and why
