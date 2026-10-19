@@ -190,3 +190,28 @@ Not read yet: the three siblings' designs (not yet written when this was read, 2
 ### Summary
 
 The Number guards passage can lose only 55 of 745 words, because the script prints the next step for three clauses only; the rest it cannot say, and three of those were shown by running the script (reserve on a POC task, a wrong `adr-path`, the `PASS` after `guard skipped`). The bigger finding is that the ADR-line miss is unenforced (8 of 11 implementation-1 records lack the line), so it goes to `fo-write-checks` as a check, not to a README edit. Decisions for the Captain: whether a 55-word task is worth building (D1) and who owns the check (D2).
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main implementing D1 as recommended: the 55-word cut, budget step -55, pins replaced and added as the design lists, Reserve bullet byte-identical, every AC green, each falsifier shown failing by a mutation (python3 -B, caches cleared)
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/670, head 7e47e8704 (722a921b cut + budget + pins, 7e47e870 tightened the --help pin), base c60e89e1 = origin/main. Mutations in `number-guards-readme-shrink/mutations.py`: step left out gives `55 under the budget of 5429` (AC-1); each of R2 tail, R6 tail, --help R1 item, --help R6 item fails exactly one test (AC-3); each of `FAIL R6`, `boundary-crossed: persistent-state`, `not repaired in place`, `reserves no number`, `(default docs/adr)` removed alone fails exactly one test in test_poc_readme.py (AC-4); the old `migrations-path:` pin fails at the candidate README and the new tests pass on the base tree.
+- DONE: AC-2 commands and exit codes
+  `number-guards-readme-shrink/ac2_fixture.sh` on an outside-repo fixture with the unchanged script: R2 edit, rename, delete exit 1 each with `revert it and add a new migration`; R6 on a poc task exit 1 with `a POC task changes none of it`; no base exit 2; db surface without migrations-path exit 2; poc without migrations-path exit 0 `migration guard skipped` + `PASS`; `--help` prints R1 to R6.
+- DONE: AC-5 recount with an independent script
+  `number-guards-readme-shrink/recount_fo_words.py . origin/main HEAD`: 745 to 690, 172 to 155, 277 to 222 (both worker moments), 94 to 64, 84 to 76, Check 44 and Collision 200 equal, README 5429 to 5374; no moment above base. Mutation: one word added to the Check bullet prints `candidate=45 ABOVE BASE`, exit 1.
+- DONE: AC-6 Reserve bullet byte-identical and number_guards.py unchanged
+  `git diff origin/main HEAD -- kc-dev-flow-2/scripts/number_guards.py` empty; workflow.md has 3 hunks (config paragraph, Applied first sentence, POC bullet); Reserve text equal at both revisions. Mutation touching the Reserve bullet makes a 4th hunk.
+- SKIPPED: AC-7 ADR-line check handoff to fo-write-checks
+  Not mine to verify: FO carries the spec (8 of 11 implementation-1 records lack the line) to the `fo-write-checks` task; stated not verified.
+- DONE: AC-8 doc_impact.py origin/main HEAD
+  Four documents listed, all by `lint-skills.py`. `docs/adr/0020-...`: unaffected: the rule it records (count equals START plus steps) is unchanged, one step added. `kc-dev-flow-2/README.md`: unaffected: it names the lint command only. `kc-dev-flow-2/skills/maintain-flow/SKILL.md`: unaffected: it states the cut-lowers-budget rule, which this change follows. `learning.md`: unaffected: it is a closed record of earlier steps. Adopted POC README (`docs/dev2-poc/README.md`) and `docs/dev2/README.md` stay at 0.25.0: the post-release `chore(dev2): sync workflow` PR refreshes them; `poc_readme.py check docs/dev2-poc/README.md docs/dev2/README.md` passes now.
+- DONE: No FO-read word added beyond the design; candidate's own lint-skills.py exits 0
+  `5374 of 5374 words`, exit 0; test_number_guards.py 24 OK, test_poc_readme.py 6 OK, test_lint_skills.py 31 OK, test_sd_dispatch.py (with --sd-plugin-root, spacedock 0.27.0) PASS.
+- DONE: roborev evidence= line
+  `clean on 7e47e8704; evidence=roborev:865`, exit 0, first run.
+- DONE: push without force; CI green on the PR head; CI cost
+  Pushed new branch, no force. On head 7e47e8704: unit tests (python3) pass 1m41s, multi-profile route gate pass 5s, version parity pass 40s, GitGuardian pass 1s (job durations from `gh pr checks`; the unit tests job ran on the Draft, not skipped). CI cost in billed minutes not measured; the added test code is one 0.1 s test plus two assertions in existing tests.
+
+### Summary
+
+The three clauses are cut (-55 words, 745 to 690) with the budget step lowered by the same count; every kept clause the script lets through and every message tail the README relies on is now pinned, and each pin was shown failing alone by a mutation. Design deviation: the --help pin reads only the rules list (before `Limits:`), because `R6` also appears in the Limits text and a plain pin would have passed with the R6 rule item deleted. The README says `--help` lists the flags; the top-level `--help` lists the rules and `check --help` lists the flags, wording kept from the approved candidate text.
