@@ -213,6 +213,10 @@ Falsifier: a `Design:` verbatim rule in `design_surfaces.py` fails `test_design_
 Verified by: after the `dev2-laws.yml` pin is raised to the release holding this change, `gh run list --workflow dev2-laws --limit 10` run durations are listed beside the 9 to 14 s of 2026-10-19; or the stage report says not measured.
 Falsifier: a number given with no `gh run list` output beside it.
 
+## Number guards
+
+ADR: 0025
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for mechanical checks for the FO-write rules the six batch-2 observer reports found broken (the classes and counts are in Scope), each placed in an existing script that runs when FO writes (kc-dev-flow-2/scripts/laws_check.py as a new law, kc-dev-flow-2/scripts/dispatch_records.py, kc-dev-flow-2/scripts/delivery_gate.py on the gate text, kc-dev-flow-2/scripts/design_surfaces.py), with a replay on the batch-2 archived tasks showing each check would have caught its observed case; which rules stay with the observer and why
