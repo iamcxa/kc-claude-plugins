@@ -417,3 +417,24 @@ Verdict: PASSED for head 1704ec800ac2f852b24b0c79f1483f8e65588825 (PR #675, Draf
 ### Summary
 
 Cycle 2 repairs the Codex P1 and the F2 gap with no word-count change; every changed line fails its own pin or test when reverted, and the acceptance script reproduces. Unverified: AC-5 (FO's batch recount) and a real merge. roborev:878 is the roborev:875 finding again, already a Deferred risk.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Apply the README-only fix for the Codex round-2 P1 (review:5569986438) under Captain amendments 1 and 2; README stays 5374 and Delivery authority 447; no line past 90 columns
+  ccc84a78: the Delivery authority sentence now reads "merging the full head `<package>/scripts/delivery_gate.py check` passes, with `--match-head-commit` set to it, unless he says he merges or holds"; cuts "under that grant", "to finish", "FO confirms" to "confirming"; `len(text.split())` 5374, section 447, longest rewrapped line 90.
+- DONE: Update the delivery-question-carries-merge pin (need string and swap) and the repair-push-grant replacement text in test_sd_dispatch.py; show the need string red without the phrase and green with it
+  Green: fix_gaps empty and each at_0_10_1 swap reds only its own pin. Red: with " with `--match-head-commit` set to it," removed from the README, the pin reports exactly that need string missing and nothing else.
+- DONE: No MergeBindingTests and no change to delivery_gate.py; lint-skills.py and adr_lint.py exit 0
+  Diff is workflow.md and test_sd_dispatch.py only (16 lines each way); lint-skills "5374 of 5374 words"; adr_lint --since 18dbf490 --require 23: 24 files, exit 0.
+- DONE: All package test files pass
+  All 20 test_*.py exit 0 under python3 -B, including test_sd_dispatch.py --sd-plugin-root spacedock 0.27.0 (ends "PASS ... Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge").
+- DONE: roborev_gate.py evidence= line
+  `findings on ccc84a787; evidence=roborev:881`, one High: delivery_gate.py:65 emits the merge line without verifying the question or a hold. It is the waived roborev:875/878 finding (Captain amendment 2); not fixed, reported.
+- DONE: Push with explicit remote and branch, no -u; CI green on the new head
+  `git push origin spacedock-ensign/captain-question-load` 1704ec80..ccc84a78; PR #675 head ccc84a78 (still Draft); unit tests, route gate, version parity, GitGuardian pass, runs for the head all completed success. No PR comment, review request or ready marking.
+- DONE: Remove /tmp/cql-p2
+  Removed with `git worktree remove --force`.
+
+### Summary
+
+The merge the delivery question carries is now bound to the full head the check passed, as a README-only change at net zero words, with the pin and the repair-push-grant replacement updated. The round-2 P2 and the roborev High are waived by amendment 2; roborev:881 is the same High again. The binding is prose: FO must take the full head from the check's output (full when `--head` is omitted) and whether gh accepts a short SHA for `--match-head-commit` is unverified.
