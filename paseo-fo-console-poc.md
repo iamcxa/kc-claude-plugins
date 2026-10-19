@@ -41,6 +41,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:paseo-fo-console-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:paseo-fo-console-poc-validation-1
+              briefing:
+                id: briefing:paseo-fo-console-poc:validation:attempt-1:revision-1
+                digest: sha256:9fd42e4f399303797d150ab223b654638599f644a2f4e66fd6f26d9770231a9d
+                room-ref: ./paseo-fo-console-poc/review/validation/briefing-1
 started: 2026-10-19T11:13:59Z
 ---
 

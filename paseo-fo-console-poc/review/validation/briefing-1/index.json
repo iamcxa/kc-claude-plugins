@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-fo-console-poc:validation:attempt-1:revision-1",
+  "question": "POC recorded boundary-crossed: external-seam. Accept the FO board + coordinator POC result without delivering it as POC, archive it with the code kept on its branch, and route the real build to a separately filed task whose profile you select?",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-fo-console-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/661e102e341454b56e7459b8d2ce38f116bb0196/paseo-fo-console-poc.md",
+      "rev": "sha256:2c1b98c0a5f765ab54b62e7f7400f6333776810cc339a4c965d1500b8ae431ed",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED AC-1..AC-3 at 79a712d7 (AC-4 in-app not run). Coordinator's own respond_to_permission and Bash removed by settings.permissions.deny; FOs it starts keep tools. Open: the coordinator can create an unrestricted child (not run, classifier refused); 'open coordinator' resolves to a88dedae; the daemon-wide before-hook has no try/catch. FO ran acceptance steps 1, 2, 6: plugin running, labelled agent created, plugin removed, CONFIG_IDENTICAL."
+    }
+  ]
+}
