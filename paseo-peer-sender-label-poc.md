@@ -1,6 +1,6 @@
 ---
 title: A peer message between Paseo agents carries a sender label the receiver can verify and treats as data, not as the Captain
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -27,7 +27,7 @@ gates:
                 reason: 'Captain approved the Paseo peer sender-label POC: 「也可以開啟第二個 poc」 (2026-10-19 chat)'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Inside Paseo, Claude and Codex agents already message each other in both directions and
