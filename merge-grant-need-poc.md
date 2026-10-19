@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:merge-grant-need-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:merge-grant-need-poc-validation-1
+              briefing:
+                id: briefing:merge-grant-need-poc:validation:attempt-1:revision-1
+                digest: sha256:48f39df1ca10e5f45634972d9b54afe77ad9ac9f1c9fb242423a3fc9b2642b23
+                room-ref: ./merge-grant-need-poc/review/validation/briefing-1
 started: 2026-10-18T16:58:24Z
 worktree: .worktrees/spacedock-ensign-merge-grant-need-poc
 ---

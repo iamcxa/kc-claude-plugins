@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-grant-need-poc:validation:attempt-1:revision-1",
+  "question": "Accept the POC result as failing your bar and retire the per-class merge grant: the parked code at 3fd84178 stays parked and its two open Codex P1 are not worked; the pre-authorized merge you already give at delivery gates remains the way FO merges for you? Approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:merge-grant-need-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c1c42d63f4fa63ad6edc51437a037680d8eaa7dd/merge-grant-need-poc.md",
+      "rev": "sha256:54625f2457aa315c97cdfdd76d8395e56faa6ea2f5b29e03b25db1eb55e7d022",
+      "mediaType": "text/markdown",
+      "summary": "Validation REJECTED (retire), re-derived independently on all 309 PRs merged 2026-09-19 to 10-18 in subspace-relay (143), subspace-web (70) and qnow (96), with 0 per-PR disagreements: the largest docs-only or script-with-test count in any repository is 2 (relay) against the bar's 20; most PRs class never (relay 95, web 63, qnow 71). M2 (whether pre-authorized merges already cover the effect) is inconclusive: 77 of 79 non-never PRs are unrecognizable and the hand-check disagreed on 2 of 10, because the Captain's merge turn is in chat, not in gate records. A real delegated merge exists outside the window (qnow #1184, 「都處理完就幫我合併」). Not shown: the 'other' PRs under a different class design, and anything outside the window. Pre-registration and bar unchanged from the ruling (hashes identical). Cost: about 330 read-only gh calls, no model calls."
+    }
+  ]
+}
