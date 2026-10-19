@@ -83,3 +83,7 @@ The pre-registration fixes the window (30 days to 2026-10-18), the pinned classi
 
 comment_ratio and number_guards: not run, no code or migration added (this task adds no code bytes; the only change is this task file).
 - ADR number (FO, 2026-10-19): ADR 0023 is no longer held for this POC. merge-gatekeeper never landed it and number_guards.py reserve does not read archived tasks, so it was reserved again for captain-question-load (batch 3), matching fo-write-checks D2 (a reserved number is landed or released). If this POC's result brings the grant ADR back, reserve a fresh number at that dispatch; the parked draft at 3fd84178 is titled 0023 and must be renumbered.
+
+## Captain bar ruling
+
+Captain: 「照建議」 (chat, 2026-10-19), to FO's question 「這 4 件照建議批准，POC 照建議的標準開跑嗎？」 whose POC part stated the pre-registration's window (30 days of merged PRs in relay, web and qnow) and its three pass conditions as written under `## Pre-registration (phase 1 ...)`. The bar is that text, unchanged.
