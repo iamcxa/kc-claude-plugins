@@ -1,0 +1,444 @@
+{
+  "proposal_state": "已選 P1「讀對同一份裁示」為第一個 release，採用 kc-dev-flow-2 的 Pilot profile；其餘切片仍為候選。正式 Development Brief、appetite／估算及開發移交檢查待既有流程完成。",
+  "journey_source": "journey.yaml",
+  "preferred_order": [
+    "P1",
+    "P2",
+    "P3",
+    "P4a",
+    "P4b",
+    "P5"
+  ],
+  "budget": {
+    "appetite": null,
+    "estimate": null,
+    "note": "P1 與 Pilot profile 已選定；appetite 尚未指定，也沒有足夠證據估算整合與驗證工期。正式 brief、估算及移交檢查由既有流程處理，不以故事數宣稱 fit。"
+  },
+  "slices": [
+    {
+      "id": "P1",
+      "name": "讀對同一份裁示",
+      "outcome": "使用者指定自己的決策 repo 後，Claude、Codex、dot 均以已驗證身分，讀到相同精確版本與正確層級的裁示，或一致保留疑義。",
+      "story_ids": [
+        "S01",
+        "S02",
+        "S04",
+        "S10",
+        "S11"
+      ],
+      "reused": "討論、確認及原文提交可先走現有 Git 工作方式；原文由使用者管理，MCP 維持唯讀。",
+      "scope": [
+        "明確來源配置及使用者隔離",
+        "總指揮／工程層級與適用範圍的讀取邊界",
+        "真實跨客戶端身分驗證與原文／有效判定",
+        "含 commit 的可重現引用",
+        "上層獨立庫與工程 repo 分開配置、各自授權讀取及回報 commit；來源不可讀保留未知",
+        "沿用 dev2 原始格式／狀態；區分原狀態與服務保守有效查詢，不強制新欄位或改寫 Legacy"
+      ],
+      "not_doing": [
+        "寫入 MCP、PR 建立或合併",
+        "自動 Git 更新與背景監控",
+        "搬移產品 code 或私人 ADR",
+        "把單一使用者登入成功視為跨客戶端已相容"
+      ],
+      "depends_on": [
+        {
+          "target": "採用的 hosted 身分 transport 與完整 adapter source",
+          "kind": "外部驗證前提",
+          "available": "完整部署 source 與跨客戶端登入尚待驗證；既有單一使用者路徑不證明三端相容。"
+        },
+        {
+          "target": "已獲准的測試身分與獨立合成來源",
+          "kind": "驗收前提",
+          "available": "須核對既有能力；不足時另定範圍與授權，不由本圖建立憑證或新增存取。"
+        },
+        {
+          "target": "獨立的合成上層 repo 與工程 repo 的已授權讀取來源",
+          "kind": "跨層驗收前提",
+          "available": "須各自配置與驗證；未配置／無權時保持未知，不藉複製原文補齊。"
+        }
+      ],
+      "acceptance": [
+        "P1-AC1：用兩個合成使用者各自的獨立決策庫，證明不可讀到另一人的索引、原文或 source metadata。",
+        "P1-AC2：在 Claude、Codex、dot 實際登入查詢同一合成 ADR；回傳 repo、層級／範圍、ID、commit、digest 一致；無法登入的客戶端明列失敗。",
+        "P1-AC3：在分開的合成上層 repo 與工程 repo 放置同號或同 key ADR，分別經已配置且授權的來源讀取、回報各自 commit；工程記錄不能 supersede 上層，Proposed／衝突／壞鏈不被 resolved。工程或上層來源不可讀時保持未知，不把原文搬到另一庫當替代。",
+        "P1-AC4：snapshot 固定在 D0 時，來源已到 D1 也只宣稱 D0；引用可重現 D0，不宣稱最新。",
+        "P1-AC5：每個客戶端都能查核目前經驗證的使用者／授權空間與選定來源；切換空間或來源不匹配時清楚拒絕，客戶端自稱的名稱不能成為權限依據。",
+        "P1-AC6：合成 dev2 原生 docs/adr、Accepted 無 Decision key 及 Legacy 舊原文，來源／原狀態照實呈現；保守 effective 無法判定時另標 unresolved／能力限制，不改 Accepted 或要求新增服務欄位。Legacy 不冒充新裁示；adapter 路徑／舊格式不足需明列失敗，不以改寫原文掩蓋。"
+      ],
+      "removal_test": "移除來源與身分隔離就可能讀錯人的裁示；移除層級判別就可能混合裁決權；移除原文／有效判定及版本引用就無法證明三端讀的是同一依據。",
+      "selection": "selected"
+    },
+    {
+      "id": "P2",
+      "name": "查明各方版本差異",
+      "outcome": "接手者在採用裁示前，分別知道 host 決策 snapshot 與自己指定 checkout 相對追蹤 ref 的五種狀態、觀測時間及更新阻礙。",
+      "story_ids": [
+        "S13",
+        "S14",
+        "S27"
+      ],
+      "reused": "保留 P1 的唯讀查詢與版本引用；沒有本機決策庫 checkout 的客戶端仍可讀 MCP。",
+      "scope": [
+        "按 repo／ref／用途比對 commit 與祖先關係",
+        "host snapshot 和 client checkout 分開顯示",
+        "遠端查詢失敗、來源不符與缺 commit 的未知回應",
+        "本機 dirty／分支／來源阻礙的只讀回報；ADR 影響分析留 P3"
+      ],
+      "not_doing": [
+        "任何 checkout、reset、stash 或 snapshot 切換",
+        "把 commit 新鮮度解釋成工具 schema／安裝／部署更新",
+        "讓 MCP 信任 client 自報 commit 後直接改本機檔案",
+        "未註冊 repo 的任意掃描"
+      ],
+      "depends_on": [
+        {
+          "target": "P1",
+          "kind": "硬依賴",
+          "available": "已選為第一片 Pilot；讀取能力與驗收尚待實作及驗證。"
+        },
+        {
+          "target": "配置來源的遠端 commit 與 ancestry 讀取途徑",
+          "kind": "查核前提",
+          "available": "設計未選定；讀取失敗須能回遠端未知"
+        }
+      ],
+      "acceptance": [
+        "P2-AC1：合成 Git 圖逐一顯示一致、落後、領先、分岔；遠端查詢失敗時，即使舊 cache SHA 相等也顯示遠端未知。",
+        "P2-AC2：host 決策 snapshot 落後而工具 code checkout 一致時，同時呈現兩個結論；不產生單一『全部最新』旗標。",
+        "P2-AC3：repo／ref 不符、commit 不存在、未配置來源均不猜；缺本機 checkout 顯示不適用，而非捏造五種狀態中的一致。",
+        "P2-AC4：分別準備 staged、unstaged、未追蹤檔與來源／分支不符案例，呈現可理解的阻礙及下一步；前後 Git commit／檔案保持一致，不進行更新或 ADR 影響分析。"
+      ],
+      "removal_test": "S13 不在就不知道比較哪個 repo／ref；S14 不在就不知道五態；S27 不在就無法回答本片承諾的本機更新阻礙。三者均直接支撐本片終點。",
+      "selection": "candidate"
+    },
+    {
+      "id": "P3",
+      "name": "安全對齊並重新讀取",
+      "outcome": "各持有者完成自己負責的安全更新，或保留原狀並說明原因；host 與 client 各自回報新版本，接手者重讀受影響裁示再繼續。",
+      "story_ids": [
+        "S15",
+        "S16",
+        "S17",
+        "S18"
+      ],
+      "reused": "agent 使用現有本機 Git 能力；host 依自己的維護途徑更新 snapshot。MCP 可先提供查核及更新證據，不要求第一版提供遠端寫入命令。",
+      "scope": [
+        "更新前進行 ADR 影響分析；參照既有上層引用，無法完整判斷則擴大重讀或停止",
+        "已配置來源、乾淨且落後可 fast-forward 時由持有者自行更新，不逐次等待確認",
+        "host 候選 snapshot 驗證與 last-good 行為",
+        "更新前重新查核、更新後版本回執及受影響 ADR 重讀",
+        "阻擋變動中的 ref 或更新失敗後繼續使用舊判斷"
+      ],
+      "not_doing": [
+        "髒工作目錄強制 reset、自動 stash 或覆蓋分岔",
+        "MCP 直接控制客戶端檔案系統",
+        "工具 code checkout 更新後順便部署 Sites",
+        "自動通知、持續輪詢或背景更新授權"
+      ],
+      "depends_on": [
+        {
+          "target": "P2",
+          "kind": "硬依賴",
+          "available": "提案中"
+        },
+        {
+          "target": "各持有者現有 Git／host 維護權限",
+          "kind": "執行前提",
+          "available": "須按持有者核對；本圖不新增權限。"
+        }
+      ],
+      "acceptance": [
+        "P3-AC1：agent 查到已配置 repo／ref 的合成 checkout 乾淨、落後且可 fast-forward，重新查核後不逐次等待使用者確認即完成更新；回報來源、操作身分及實際 commit，重讀受影響 ADR 原文與有效判定。",
+        "P3-AC2：dirty、領先、分岔、遠端未知、來源不符及更新期間 ref 變動時，不覆蓋修改、不自動改支線；以可驗證原因停止依賴該更新的動作。",
+        "P3-AC3：host 成功載入 D1 後明示新 revision；候選驗證或讀取失敗時保留 D0、顯示落後／未知，不能冒稱 D1。",
+        "P3-AC4：host 已到 D1 而 client 仍在 C0，或相反，均保留各自狀態；兩次呼叫間版本改變要重新取得並核對引用。",
+        "P3-AC5：合成更名、刪除、替代鏈及上層引用變動能進入重讀範圍；既有引用不可讀或不能證明完整時保守擴大為該作用域全部裁示，或停止並回報，不能漏讀後繼續。",
+        "P3-AC6：本機與 host 的更新回執分別呈現操作者／授權空間、選定來源、前後版本及成功／停止原因；本機自動更新不自動獲得 host 維護、安裝 plugin、部署或背景執行權限。"
+      ],
+      "removal_test": "S15 不在就無法界定更新後需重讀什麼；S16／S17 分別完成 checkout 與 host 的獨立安全更新；S18 不在則新版本仍可能沿用舊結論。每項都支撐本片更新後可重新採用裁示的成果。",
+      "selection": "candidate"
+    },
+    {
+      "id": "P4a",
+      "name": "完成一次單任務交接閉環",
+      "outcome": "使用者讓一個 agent 把精確版本裁示交給另一個 agent，後者透過既有 dev2／Spacedock 完成一個合成任務及驗收，再帶原始證據與差距回來。",
+      "story_ids": [
+        "S19",
+        "S20",
+        "S21",
+        "S22",
+        "S23"
+      ],
+      "reused": "使用者手動轉交引用為本版完整可用路徑；已有通路須另外提出實際可用證據才能取代手動步驟。沿用 dev2／Spacedock 的原任務、brief、gate 及回執，沒有第二份任務系統。",
+      "scope": [
+        "版本固定的跨 agent 交接引用",
+        "接手者重讀及本次行動範圍檢查",
+        "一次既有 dev2／Spacedock 任務與驗收證據讀回",
+        "區分已驗收、失敗、未知與需重新決策",
+        "每次交接顯示傳出者、預期接手者、原任務及來源；接手者自行驗證原文和證據權限",
+        "原流程回執必須可核對本次任務內容、執行／驗收回合及採用裁示版本"
+      ],
+      "not_doing": [
+        "自動執行外部動作或由 ADR 補授權",
+        "重造任務狀態、gate 或驗收標準",
+        "把敏感執行日誌複製進共用 code repo",
+        "把每次工程回報自動變成 Accepted 裁示",
+        "自動尋找或路由至另一個 agent、跨 agent 橋接、替其他 agent 批准權限提示",
+        "以一次遵守政策的觀測，宣稱各 runtime 已有強制保證"
+      ],
+      "depends_on": [
+        {
+          "target": "P1、P2",
+          "kind": "硬依賴",
+          "available": "P1 已選 Pilot，P2 仍為候選；固定版本引用及版本狀態必須可讀，尚未驗證可用。"
+        },
+        {
+          "target": "P3",
+          "kind": "建議順序，非硬依賴",
+          "available": "若無自動更新，可用現有人工核對／更新完成前置，再交接；不得跳過新鮮度未知"
+        },
+        {
+          "target": "採用的讀取服務與 dev2／Spacedock ADR 機制的相容性",
+          "kind": "驗收前提",
+          "available": "須以實際採用版本及合成 fixtures 比較；跨流程整合尚未驗證，不能單憑版本號宣判相容或不相容。"
+        },
+        {
+          "target": "使用者手動轉交與接收者各自可讀的原始來源",
+          "kind": "本版通路契約",
+          "available": "使用者已選擇此路徑；引用由人轉交，來源存取仍由每位接收者自行驗證。替代通路尚未提出證據時不列可用。"
+        },
+        {
+          "target": "原流程的任務內容／執行及驗收回合／ADR 版本與證據關聯",
+          "kind": "證據驗收前提",
+          "available": "需以原 task／gate／回執引用實測關聯；原流程無法提供時保持未知，不另造 task 台帳補猜。"
+        }
+      ],
+      "acceptance": [
+        "P4a-AC1：使用者逐段轉交 Claude→Codex→dot 的合成引用；每段標明傳出者、預期接手者、原任務與 repo／ADR／commit／digest。接手者用自己的已驗證身分重讀，回覆精確引用與適用層級；貼文中的自稱不成為權限依據。",
+        "P4a-AC2：接手版本已落後或裁示前提改變時，回原任務流程重審；不默默改執行目標。",
+        "P4a-AC3：合成 ADR 即使寫「部署／發訊」也不能取代本次行動授權；peer 權限提示交回原持有者／使用者，FO 不代答。驗收只宣稱本次觀測與政策符合；未實測的 runtime 強制能力不得標為通過。",
+        "P4a-AC4：完成一個合成任務並讀回既有流程證據，使用者能看出已驗收、失敗與未知；採用的讀取服務與 dev2 版本以 fixtures 比較讀取、有效判定及交接語義。",
+        "P4a-AC5：使用者轉交原 task／gate／回執引用後，接收者獨立核對執行者、驗收者、提交與結果；無權、失效引用或只有轉述摘要均顯示未知並回報使用者，不擴大權限、不複製受保護日誌。",
+        "P4a-AC6：同一 task 的舊成功回執、錯驗收回合及引用舊 ADR 的結果，均不能驗收修改後任務；用原流程精確引用核對本次內容、回合、採用裁示與 commit，無法證明關聯就顯示未知。"
+      ],
+      "removal_test": "移除精確引用、接手重查、既有任務入口或證據讀回，就不能完成一次可重現的單任務閉環；跨層變動的完整重審另在 P4b。",
+      "selection": "candidate"
+    },
+    {
+      "id": "P4b",
+      "name": "處理跨層衝突並重新裁示",
+      "outcome": "工程方案引用的上層版本改變或出現衝突時，工程 agent 能呈現影響、交回適用決策者，並把確認後的新版本重新交接。",
+      "story_ids": [
+        "S05",
+        "S06",
+        "S24",
+        "S26"
+      ],
+      "reused": "沿用 P4a 的使用者手動轉交（或已有驗證通路）與原執行流程；重新裁示先走既有 Git 編修／審查與明確人類確認，不依賴寫入 MCP。",
+      "scope": [
+        "工程 ADR 固定引用上層版本",
+        "跨層矛盾及上層變動的回報",
+        "原適用決策者重審",
+        "重新交接並由既有任務流程處理範圍變動",
+        "沿用 dev2 一決策一檔、原配號與取代狀態；實質變更新 ADR，小修保存原檔"
+      ],
+      "not_doing": [
+        "由工程 ADR 自動覆蓋總指揮裁示",
+        "自然語言矛盾的完備自動判定",
+        "工具自動確認新裁示",
+        "自動推送或批量重排進行中任務",
+        "自動跨 agent 橋接或替其他 agent 回答權限提示"
+      ],
+      "depends_on": [
+        {
+          "target": "P4a",
+          "kind": "硬依賴",
+          "available": "提案中"
+        },
+        {
+          "target": "上層引用及跨層衝突的表達方式",
+          "kind": "設計前提",
+          "available": "欄位機制仍為草案；先以引用與人工指明衝突，不宣稱模型能完備辨識矛盾"
+        },
+        {
+          "target": "適用決策者的精確確認及確認後 Git 版本的可讀路徑",
+          "kind": "人工重審與再交接前提",
+          "available": "沿用原可信對話／審查來源及既有 Git 提交。接手者可直接授權讀 Git，或等待既有獲准 host 更新；二者皆不可用就待交接。歷史政策已確認：實質變更新 ADR，小修留原檔；沿用 dev2 既有機制，實際途徑仍須驗證。"
+        }
+      ],
+      "acceptance": [
+        "P4b-AC1：合成工程 ADR 引用總指揮 D0，當 D1 改變適用前提時，呈現原引用與影響；工程 repo 的較新 commit 不自動勝出。",
+        "P4b-AC2：明示跨層衝突時停止依賴衝突裁示的動作，將問題交回適用決策者；同層替代與跨層引用不混成一條鏈。",
+        "P4b-AC3：由適用決策者確認維持／改變後，接手者重讀明確版本，原 dev2／Spacedock 流程處理範圍變更；原決策及證據可追溯。",
+        "P4b-AC4：由使用者將問題與重新確認後的精確版本逐段交回；每位接手者自行核對身分、空間及讀取權限。尚未驗證的自動通路不可作為本片成功前提。",
+        "P4b-AC5：人類確認綁定 repo、層級／scope、可讀原文／diff、精確內容及 base，可信出處可核對；內容／base 改變重新檢視確認。git author、agent 整理或無權出處不視為裁決；裁示確認不補授權 Git 動作。",
+        "P4b-AC6：D1 已確認而 host 仍 D0，若接手者可直接授權讀 Git D1，核對原文、dev2 明示狀態／有效關係與精確來源後可重讀，不能證明就維持待交接；只有 MCP 且尚讀不到 D1，就列待交接，等原維護途徑載入。使用者確認本次受影響者範圍，每人重讀版本或受阻原因可核對，未讀者不能算完成；不因此新增自動橋接。",
+        "P4b-AC7：合成實質改變經原權威確認後，沿用目標來源 dev2 配號與四章模板形成新 ADR，取代時舊 Status 指向新號且原話／歷史可追。新稿 Proposed 或未確認時不提前切換；只在同層同來源維護取代鏈，工程對上層只固定版本引用。"
+      ],
+      "removal_test": "只有單任務交接，無法處理上層方向變更；引用版本、拒絕反向覆蓋、回到原裁決者與重新交接缺一，就不能完成一次跨層重新決策。",
+      "selection": "candidate"
+    },
+    {
+      "id": "P5",
+      "name": "把確認草案送成受控 PR",
+      "outcome": "在已配置來源內，使用者確認精確內容、範圍與 base 後，獲准提交者建立一個可審查 PR，回讀 PR 身分與提交內容，證明沒有重複或越權。此片的完成不等待 merge、ADR Accepted 或 host 載入。",
+      "story_ids": [
+        "S07",
+        "S08",
+        "S09",
+        "S25"
+      ],
+      "reused": "agent 沿用既有且本次獲准的 Git／PR 工具；MCP 維持唯讀。沒有 Git 權限的客戶端由使用者轉交；PR 審查與 merge 沿用原流程。讀取及協作不依賴本片。",
+      "scope": [
+        "本次明確範圍及內容確認",
+        "受控草案／PR 與 base commit 衝突檢查",
+        "重試可辨識既有結果而非重複 PR",
+        "回讀 PR URL／提交版本與 diff，保留確認出處及原文歷史；merge／Accepted／host 載入分開追蹤",
+        "每次一個新裁示沿用 dev2 原 FO 配號、模板與 lint；必要時同一變更包含舊裁示狀態更新，小修不取新號"
+      ],
+      "not_doing": [
+        "建立 PR 就自動 Accepted 或 merge",
+        "默示廣泛 repo 寫入、配發憑證或授予外部動作許可",
+        "直接改工程 repo 來更新總指揮裁示",
+        "覆蓋新的遠端變更或刪除原文歷史",
+        "來源設定的變更管理與方案比較介面",
+        "將 PR 建立當成 host 已載入；host 同步另由 P3 或既有獲准維護途徑處理",
+        "寫入 MCP、host 代寫與新憑證／權限配發；本片只沿用既有 Git／PR 工具"
+      ],
+      "depends_on": [
+        {
+          "target": "P1、P2",
+          "kind": "硬依賴",
+          "available": "來源與 base 必須可辨識且可重新查核"
+        },
+        {
+          "target": "P4a、P4b",
+          "kind": "建議先完成",
+          "available": "先驗證跨 agent 如何讀及交接，避免先擴寫入權限"
+        },
+        {
+          "target": "目標 repo 既有 dev2 配號、Git 動作許可與 PR 審查途徑",
+          "kind": "執行及驗收前提",
+          "available": "D3／D4 已決：Git／PR 工具、MCP 唯讀；原 FO／number guard 及既有審查權限仍需按來源核對。沒有可用原途徑就保留草案回原權威，不另造配號／任務系統。"
+        }
+      ],
+      "acceptance": [
+        "P5-AC1：只對明確確認過的合成 diff、repo、層級、範圍與 base 產生一次可審查 PR；未確認及越權內容拒絕。",
+        "P5-AC2：送出前 base 已改變則不覆蓋；檢查不確定的前次結果後才重試，不製造重複變更。",
+        "P5-AC3：建立 PR、merge、ADR Accepted 與有效判定分別呈現；內容變更重新確認；未批准的替代目標仍 unresolved。",
+        "P5-AC4：實質變更新 ADR、小修留原檔；保留原話、確認出處及 Git 歷史，PR 後回讀精確提交／diff。取代使用 dev2 舊 Status 的 Superseded by NNNN；新稿 Proposed 不提前替代。未 merge、未 Accepted 或未被 host 載入各自呈現，不影響「可審查 PR 已建立」的完成終點。",
+        "P5-AC5：由持有既有適用權限的 agent 使用 Git／PR 工具完成本次獲准提交；無 Git 能力的客戶端透過使用者轉交。MCP 不接受寫入呼叫，沒有 host 代寫、額外憑證或背景動作。",
+        "P5-AC6：合成確認出處不可讀、錯決策層級／scope、內容或 base 改變時，保留待確認並回到適用決策者；分清內容確認與本次 Git 動作許可。agent 自述或 author 欄位不能代替原可信出處。",
+        "P5-AC7：新裁示草案無預配編號；由目標 repo 原 FO 在原實作 dispatch 使用 number_guards reserve，按原 task 保留 ADR 號且不撞號／補洞；需第二個新裁示回 FO。驗收沿用 adr_lint --since <base> 加原預約／報告的 --require，保存實際結果；本工具不另配號或自動判斷語義小修。",
+        "P5-AC8：合成不改意思的小修留原 ADR，Git 可重現前後版本且原話不被改造；觸及缺 Recommended 的舊檔只按 dev2 記 not recorded。實質語義變更不得包裝小修，分類含糊回原裁決者；不新增 ADR 第五章、YAML 狀態或跨層 supersedes。"
+      ],
+      "removal_test": "S07 保存確認依據；S08 綁定本次內容及範圍；S09 建立及回讀唯一 PR；S25 保留原文與新舊關係。移除任一項就無法證明本片提交的是正確、獲准且可追溯的變更。S03 設定管理與 S28 方案比較不影響固定來源內建立 PR，保留在全圖而延後。",
+      "selection": "candidate"
+    }
+  ],
+  "deferred": [
+    {
+      "story_id": "S12",
+      "reason": "P1 必須保有不洩漏的錯誤及安全下一步；更細的使用者診斷體驗暫不承諾獨立交付片。"
+    },
+    {
+      "story_id": "S03",
+      "reason": "第一版使用明確且固定的來源配置；變更來源的管理體驗不是固定來源內建立 PR 的必要條件，隔離仍由 P1 保證。"
+    },
+    {
+      "story_id": "S28",
+      "reason": "方案比較可先沿用既有討論方式；在已確認內容後建立 PR 的片段不另建比較介面。"
+    }
+  ],
+  "open_questions": [],
+  "discussion_decisions": [
+    {
+      "id": "D1",
+      "topic": "P4 協作交接通路",
+      "decision": "使用者先轉交，或沿用已有驗證的通路；自動橋接延後。",
+      "basis": "已確認的設計選擇：手動轉交或沿用已有驗證通路；這項選擇本身不新增外部動作授權。",
+      "affects": [
+        "S19",
+        "S20",
+        "S22",
+        "S26",
+        "P4a",
+        "P4b"
+      ]
+    },
+    {
+      "id": "D2",
+      "topic": "checkout 安全更新觸發",
+      "decision": "agent 查到已配置 repo／ref 落後、工作目錄乾淨且可 fast-forward 時，依既定規則自行更新、重讀受影響 ADR 並回報；其他狀態保留原狀並說明原因。",
+      "basis": "已確認的設計選擇：符合既定條件即可自行更新、重讀並回報；仍由各 checkout 持有者在既有權限內操作。",
+      "affects": [
+        "S16",
+        "S18",
+        "P3"
+      ]
+    },
+    {
+      "id": "D3",
+      "topic": "ADR 提交入口",
+      "decision": "Agent 用既有 Git／PR 工具；kc-decision-log MCP 先維持唯讀，寫入 MCP 及 host 代寫延後。",
+      "basis": "已確認的設計範圍：沿用既有 Git／PR 能力；實際提交仍核對本次適用授權。",
+      "affects": [
+        "S09",
+        "P5"
+      ]
+    },
+    {
+      "id": "D4",
+      "topic": "ADR 修訂與 dev2 對齊",
+      "decision": "實質變更新建 ADR，小修留原 ADR；格式、狀態、取代關係、配號及原審查沿用 dev2 既有機制，不另創一套。",
+      "basis": "已確認的 ADR 修訂政策，與 repo 內 dev2 0.25.0 模板、配號及審查機制對齊；不擴大其他權限。",
+      "affects": [
+        "S11",
+        "S24",
+        "S25",
+        "S26",
+        "P4b",
+        "P5"
+      ]
+    }
+  ],
+  "validation_levels": {
+    "design": "六片的故事必要性、角色路徑、依賴、來源／權限邊界與可觀察驗收已完成獨立設計審查；不是產品 UAT 或工期 fit 證據。",
+    "technical": "真實登入、完整 adapter、跨 repo 讀取、Git 同步、host 維護及 dev2 整體相容性的實測尚未完成。",
+    "admission": "P1 membership 與 Pilot 已選；appetite／可信估算、既有 Development Brief 與 journey-handoff 檢查尚待完成。"
+  },
+  "admission_questions": [
+    {
+      "id": "Q1",
+      "ask": "第一個想驗收的成果是三端讀同一固定版本，還是至少做到查出各自落後？",
+      "recommendation": "先完成 P1 的正式規劃與驗證；後續候選按實際結果重新確認，不一次啟動全部切片。",
+      "affects": [
+        "P1",
+        "P2"
+      ],
+      "state": "answered",
+      "stage": "development-admission",
+      "answer": "已選 P1「讀對同一份裁示」為第一片，profile 為 pilot；之後逐片以小批次推進。跨客戶端登入若不成立，依 P1 既有停止條件提出範圍受限的相容性驗證。"
+    }
+  ],
+  "dev2_alignment": {
+    "package": "kc-dev-flow-2",
+    "version": "0.25.0",
+    "references": [
+      "../../../kc-dev-flow-2/references/adr-template.md",
+      "../../../kc-dev-flow-2/references/sd/workflow.md",
+      "../../../kc-dev-flow-2/skills/implementation/principles.md",
+      "../../../kc-dev-flow-2/scripts/adr_lint.py",
+      "../../../kc-dev-flow-2/scripts/number_guards.py",
+      "../../../kc-dev-flow-2/references/profiles/pilot.md"
+    ],
+    "note": "原始格式、狀態、配號及審查沿用 dev2。get_effective 與 Decision key 是保守查詢的設計補充，不是 dev2 原生要求，也不證明讀取服務整體相容。"
+  },
+  "selected_release": {
+    "id": "P1",
+    "profile": "pilot",
+    "decision": "使用者已明確選擇從第一片 P1 開始，先發布並合併地圖，再沿既有 dev2 流程推進。",
+    "sequencing": "P1 之後逐片以小批次規劃、驗證與決定；沒有一次啟動全部候選切片。"
+  }
+}
