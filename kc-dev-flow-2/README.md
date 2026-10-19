@@ -62,7 +62,8 @@ to `spacedock:first-officer`. Stage skills keep their own profile routes; the en
 does not migrate existing work or duplicate SD's control loop. Claude plugin skills
 use `/kc-dev-flow-2:dev`, not a bare `/dev`; Codex shorthand resolution remains
 unverified. Earlier six-skill model reads and later seven-skill discovery do not
-prove the new entry executes correctly.
+prove the new entry executes correctly. On Codex, opt-in model and effort per
+stage: [Codex dispatch model policy](references/codex-dispatch.md).
 
 If this package is not yet installed, follow [Controlled trial](#controlled-trial)
 for the exact Claude and Codex install commands. If the project has no adopted

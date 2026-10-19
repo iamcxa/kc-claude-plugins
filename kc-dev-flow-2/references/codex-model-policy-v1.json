@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "id": "kc-dev-flow-2-codex-v1",
+  "models": {
+    "haiku": "gpt-6-luna",
+    "sonnet": "gpt-6.1-sol",
+    "opus": "gpt-6-astra"
+  },
+  "reasoning_defaults": {
+    "implementation": "medium",
+    "ideation": "high",
+    "validation": "high",
+    "observer": "high",
+    "evaluate-learning": "high"
+  }
+}
