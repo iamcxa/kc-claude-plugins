@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:number-guards-readme-shrink:validation:attempt-1:revision-1",
+  "question": "Deliver #670 head 7e47e870 (the Number guards passage of the workflow README keeps only what number_guards.py cannot tell its reader: 55 words cut, the budget lowered by the same count): FO marks it ready and merges it, unless you say you merge? Approving accepts FO's recommendation to decline the Polish below [already the base's wording, or an evidence aid that is not shipped] into backlog task number-guards-readme-shrink-followups. Approval also covers later external-review rounds on this PR, per Delivery authority.",
+  "artifacts": [
+    {
+      "id": "artifact:number-guards-readme-shrink:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4d51a472394fab37a78464355df963be3dfb65ba/number-guards-readme-shrink.md",
+      "rev": "sha256:8f39f7e3b8cc351257277fe810432278e356272f0f1e236c32ede41ce1e325b6",
+      "mediaType": "text/markdown",
+      "summary": "Validation Verdict PASSED at 7e47e870 (validation-1; base c60e89e1 is current main). FO ran the acceptance script as written in env -i bash: every step matched (lint 5374 of 5374; the pinned tests pass; the words FO reads fall at four moments and rise at none: startup 745 to 690, worker sections 277 to 222, the R6 moment 94 to 64, the R2 moment 84 to 76; Check 44 and Collision 200 unchanged; number_guards.py --help lists R1 to R6). The Reserve bullet is byte-identical; number_guards.py is unchanged. Sufficiency: the cut removes only clauses whose script message tells the reader the next step, each shown by a pin that fails when its phrase is removed. Necessity: it is the Captain's ratchet follow-up (D4 of workflow-budget-ratchet) and lowers what every FO and worker reads. External rounds: Codex 1 (clean, comment 2026-10-19T00:57Z). RoboRev local (865), not counted. Declined, with reasons: Polish, the README says --help lists the flags while the flags sit under check --help and reserve --help [the base's wording, unchanged by this PR]; Polish, one step of the evidence script ac2_fixture.sh prints a fixture error under bash [an evidence aid, not shipped; the real message is pinned by MisconfigurationTests]. Second reviewer: not triggered. Limit: AC-7 is FO's hand-off of the ADR-line check spec to fo-write-checks, done in that task's dispatch."
+    }
+  ]
+}

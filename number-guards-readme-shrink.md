@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:number-guards-readme-shrink:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:number-guards-readme-shrink-validation-1
+              briefing:
+                id: briefing:number-guards-readme-shrink:validation:attempt-1:revision-1
+                digest: sha256:c17c0a461fb2f080dfb73cc22642cd30d272f87f97ecc5d6aabb1b6cea400cd3
+                room-ref: ./number-guards-readme-shrink/review/validation/briefing-1
 started: 2026-10-18T16:57:47Z
 worktree: .worktrees/spacedock-ensign-number-guards-readme-shrink
 pr: iamcxa/kc-claude-plugins#670
