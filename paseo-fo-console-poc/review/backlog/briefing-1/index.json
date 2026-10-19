@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-fo-console-poc:backlog:attempt-1:revision-1",
+  "question": "Approve the Paseo FO roster + conversation view POC outcome, scope, non-goals, budget and stop condition for implementation?",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-fo-console-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/2a41ea44c89136b199d36dc04d1b8df9d1d7d10b/paseo-fo-console-poc.md",
+      "rev": "sha256:7603c0274a6e18e5552d1c0040fcf00e118628d6ef6618954ce7a43ffb10ac5c",
+      "mediaType": "text/markdown",
+      "summary": "POC: one Paseo plugin with a roster screen (agents by role/repo/task labels, peer lookup) and a conversation view (agent-to-agent messages from the 0.12 envelope, both directions, Captain messages excluded). Stop if the plugin API cannot read cross-agent messages without polling every timeline."
+    }
+  ]
+}

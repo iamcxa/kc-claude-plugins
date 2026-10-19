@@ -6,6 +6,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:paseo-fo-console-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:paseo-fo-console-poc-backlog-1
+              briefing:
+                id: briefing:paseo-fo-console-poc:backlog:attempt-1:revision-1
+                digest: sha256:b7a8936da6833fab48d71b2a7d5b17202e851bd47ad22798a6466f66f789e8b3
+                room-ref: ./paseo-fo-console-poc/review/backlog/briefing-1
 ---
 
 Paseo 0.12.0 gives agent-to-agent messages a sender identity the sender cannot forge:
