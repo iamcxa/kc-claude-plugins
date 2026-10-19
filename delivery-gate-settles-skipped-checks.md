@@ -240,3 +240,21 @@ Profile boundary: Pilot holds. No new data, credential, migration or release dut
 ### Summary
 
 Recommend settling SKIPPED and NEUTRAL with a floor (a head with no SUCCESS holds); `runs_problem` stays, so a skipped whole workflow run still holds. Neither adopter has a required check (free private plan, protection 403), which rules out direction 2, and direction 3 only adds a drifting list for a gap neither adopter shows. `python3 design_surfaces.py check` printed "design surfaces presentable" (exit 0). One decision for the Captain (D1), which reverses the SKIPPED or NEUTRAL clause of merge-gatekeeper AC-1. No repository file, branch or commit was written.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main (891a9a24b51e5e9fda02a992c6a27910a216787d, which carries #679's kc-dev-flow-2/scripts/delivery_gate.py) implementing D1 as the Captain approved at the ideation gate (「批准」): ci_problem settles a CheckRun that finished SKIPPED or NEUTRAL; a head on which no check finished SUCCESS is still held; runs_problem unchanged; the module docstring states the rule (AC-6); tests in kc-dev-flow-2/scripts/test_delivery_gate.py for AC-1 to AC-5 placed as the design's Batch overlap says, rebased on #679's test helpers
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/680, one commit e80e50cb on origin/main 891a9a24; `SettledChecksTests` sits after `PartialRollupTests` and uses #679's `run_check`; the old docstring clause is gone (`git grep "SKIPPED and NEUTRAL included" -- kc-dev-flow-2` empty).
+- DONE: Every acceptance criterion green, each falsifier shown failing by a mutation you run (python3 -B, caches cleared), including AC-3's SUCCESS-beside-FAILURE row and AC-5's replay of the stored gh output for subspace-relay #398, #399, #401, #402 and subspace-web #150 through the stub harness; AC-7's words table recomputed on the candidate
+  68 tests pass (62 existing, 6 new). Mutations (scratch /tmp/skipgate, restored after): `== "SUCCESS"` only reddens the 2 settle rows and 3 floor rows; no floor reddens HoldTests check skipped/neutral and the 3 floor rows; FAILURE settled reddens only `SUCCESS beside FAILURE` (HoldTests green, as designed); unfinished settled, SKIPPED status context and an extra gh call each redden their own new test. Replay (base then candidate): relay 398, 401, 399, web 150 1 then 0 with "6 of 18", "6 of 18", "8 of 15", "4 of 7" on base; PRs #670, #671, #675 0 then 0; queued relay head 1 then 1. Words: this repo 44/44; 398 and 401 33 then 44, web 34 then 44; lone skipped hold line 11 words.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py exits 0; kc-dev-flow-2/scripts/adr_lint.py docs/adr --since <base> exits 0; no change under docs/dev2, kc-dev-flow-2/references, kc-dev-flow-2/skills or kc-dev-flow-2/extensions; roborev evidence= line; push without force and without -u; CI green on the PR head; CI cost measured or stated as not measured
+  lint-skills exit 0; adr_lint "25 ADR file(s) checked" exit 0; `git diff origin/main --stat -- docs/dev2 ...` empty; `evidence=roborev:913` ("clean on e80e50cb8"); plain `git push origin <branch>`; all 4 checks pass on e80e50cb. CI cost: job run time 1m41s unit tests + 59s version parity + 7s release gate = 2m47s; billed minutes not measured; the PR adds 6 tests (about 10 s locally).
+
+### Findings for FO
+
+- relay#402 is MERGED with all checks finished now, so "1 while queued" cannot be replayed live. The replay row is derived from its stored rollup (6 SUCCESS items set QUEUED, 1 IN_PROGRESS). The three PRs behind the six `merge/ask-N.json` records store no rollup, so their rollups were re-read from GitHub now (5 SUCCESS each, heads equal the records'). The replay needs the stored files, which live in the state checkout, not the repository.
+- comment_ratio: 70 code lines, 0 comment lines; doc_impact: no document listed; design_surfaces check: presentable.
+
+### Summary
+
+`ci_problem` now settles SKIPPED and NEUTRAL check runs and holds a head with no SUCCESS (11-word line); `runs_problem` and every other hold are unchanged, and the docstring states the rule. Draft PR #680 is green; replay of the stored adopter output turns the three observed holds into passes. Stored replay inputs are under `delivery-gate-settles-skipped-checks/replay/` in the state checkout.
