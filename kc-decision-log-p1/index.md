@@ -55,10 +55,10 @@ Verified by: Use synthetic native dev2, missing-key Accepted and Legacy fixtures
 ## FO alignment
 
 Direction alignment is needed before ideation only if the evidence-based estimate, required source/access or full P1 outcome does not fit the accepted three-day upper limit. Preserve the existing D1–D4 decisions; do not restart settled design questions. Formal Development Brief / journey-handoff preparation is in progress, not passed.
-Surfaces: none
+Surfaces: ui
 Visible change: Each authenticated MCP client can identify its caller and source, read precise decision text and state, and see unresolved or denied outcomes honestly.
 
-This is an API/configuration/read-contract outcome; no new UI or database schema is currently approved. A necessary UI or persistent schema change returns for surface/profile review before dispatch.
+The MCP client response presentation is a ui surface in this workflow. Ideation must provide its corresponding proposal and a readable preview. This classification does not approve a new custom webpage UI, frontend product or database schema; a necessary scope or persistent schema change returns for surface/profile review before dispatch.
 Release review: P1 changed, signal 1 (new task preparation for the selected release); before first implementation dispatch, perform the existing fresh release review and derive the smallest batch from its output. This task has not yet been formally admitted or mapped into story-progress frontmatter.
 
 ## Route-back conditions
