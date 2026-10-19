@@ -15,6 +15,17 @@ gates:
                 id: briefing:special-role-calls-fire-when-needed:backlog:attempt-1:revision-1
                 digest: sha256:8993c097b68613341d902f5bd9f6fc4dce42dd6e196f87632888c76dab579e8a
                 room-ref: ./special-role-calls-fire-when-needed/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:special-role-calls-fire-when-needed:backlog:1
+                briefing: briefing:special-role-calls-fire-when-needed:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T17:04:48.353431Z"
+                decision: approve
+                reason: Captain answered in chat 「准，但設計時不應該過度依賴關鍵字，而是可能要依靠犯錯字數觸發，合理嗎？」 to FO's question put before it (quoted in the gate question); his design direction is recorded in Scope; this briefing binds that question and answer after the fact
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
