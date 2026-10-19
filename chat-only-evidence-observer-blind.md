@@ -238,6 +238,10 @@ Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
 
+## Number guards
+
+ADR: 0024
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for per FO rule whose evidence lives only in chat (count the can't-tell rows of the batch-2 observer reports by rule): either a record FO leaves in state (and where), or the rule accepted as chat-only and the observer told not to judge it; designed together with fo-write-checks, which may check the records this task adds
