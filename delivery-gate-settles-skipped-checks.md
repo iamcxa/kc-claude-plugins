@@ -221,6 +221,11 @@ What approval does: with this change an approved delivery question that names th
 
 Profile boundary: Pilot holds. No new data, credential, migration or release duty; the change is one function, its tests and one docstring clause in a script every adopter already runs.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-19): Codex review on #680 e80e50cb (engineering-reviewer report (reviews/engineering-reviewer-1.md) and validation Polish) left one engineering-reviewer adjust item and one validation Polish, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - Engineering-reviewer adjust: the kc-dev-flow-2/scripts/delivery_gate.py docstring says a check run its repository skips 'by design' settles, an absolute the code cannot enforce (it settles every SKIPPED and NEUTRAL check); repo rule: an absolute names its enforcement point or becomes a bounded claim. Validation Polish: test_settling_a_check_adds_no_gh_call compares the candidate with itself, not with the base, so an unconditional gh call inside ci_problem passes.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for how kc-dev-flow-2/scripts/delivery_gate.py check treats a check run that concludes SKIPPED or NEUTRAL, measured on the three observed holds in the task Scope (subspace-relay #398 and #401, subspace-web #150) with `gh pr view --json statusCheckRollup,mergeStateStatus` and each repository's branch protection or rulesets (`gh api`), read-only; compare the three candidate directions in the Scope and recommend one, naming what each would let through that the current hold catches
