@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-18T16:57:36Z
 worktree: .worktrees/spacedock-ensign-chat-only-evidence-observer-blind
-pr: iamcxa/kc-claude-plugins#679
+pr: pr-merge:679
 ---
 
 Filed from a learn package-issue candidate the Captain approved on 2026-10-13 (「按建議1,3」). The observer reports on tasks `fo-record-checks` (PR #640) and `learn-delivery-follow-through` (PR #639) both marked the same FO rules `can't tell`, because the rules require FO to do something in front of the Captain but not to leave a record in state.
