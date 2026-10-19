@@ -1,8 +1,9 @@
 # validation-1
 
 Dispatched: c60e89e11ab37441a0dca1c2a0672da4ad223c3c (POC workflow checkout, kc-dev-flow-2 0.25.0 README)
-Candidate: none (POC result on the state branch; no code candidate)
+Candidate: a8229b8c1ff6c51b8fe2b2a6f6d86e48a0bd822a
 Model: sonnet
+
 
 ## Checklist
 
@@ -11,6 +12,8 @@ Re-derive M1 independently on a sample: for each repository, list the merged PRs
 Re-check M2's recognizer on the 10 hand-checked PRs and on 5 more of your choosing; state whether the 'unrecognizable' rate and the hand-check disagreement hold
 Verdict against the Captain's bar as registered (PASSED meaning the code returns, or REJECTED meaning retire, or inconclusive), and what the POC does not show
 ## Scope notes
+
+The Candidate line names the spacedock-state/dev2-poc commit that added the phase-2 results; this POC has no code candidate.
 
 Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0
 
