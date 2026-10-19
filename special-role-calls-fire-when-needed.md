@@ -50,3 +50,244 @@ Alignment: not needed before ideation; the Captain raised the problem.
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+
+## Design
+
+Profile pilot. Measured 2026-10-20, read-only, over the four repositories' state branches pinned at kc-claude-plugins `dc6530d404cbd5560d197b62e6e15228b7634f39`, subspace-relay `9579d59afde3be7ffa05d8c8bc2f981d5b5e1663`, subspace-web `96a54eef3ee97641f5b0caf49975e83179e4fd26`, qnow `8ce9bd7674ba459fdc8ce54375ed241a91de62b8` (the kc-claude-plugins and relay branches moved after this; delivery-gate-settles-skipped-checks has an engineering-reviewer line at today's tip that the pin does not), and `gh api repos/<repo>/pulls/<N>/comments` and `.../reviews` for the 157 task PRs. Package source: kc-dev-flow-2 0.25.0 at origin/main `891a9a24`. The measuring scripts ran from a scratch directory and are not committed (ideation commits nothing); AC-7 has the validator re-derive the table.
+
+### PRFAQ
+
+**Press release.** When a task has been repaired four times, FO is told once, in the line `pr_watch.py tasks` already prints at every startup and idle pass, that a chief-engineer call is owed. A replacing amendment owes one engineering-reviewer line per task, not one per amendment. A call counts when it is a dated `Reviewer:` line under `## FO alignment`, whatever its question says; "third repair cycle" and "Cycle 3" are the same call. Nothing in FO's reading grows: the README sentence stays as it is, and the owed line goes away when the call is recorded. Slice 2, if the Captain agrees, adds the count he named: a second review round that left findings on the open PR.
+
+**FAQ**
+
+- *Why a count and not a phrase?* The Captain's direction on 2026-10-20 was counts from records, not keywords. Today's script reads one line shape (`- Cycle N` under one heading) and one wording of the call, and so read 0 events in web and qnow and refused 3 real calls in this repository. A count of stage-report headings reads all four repositories.
+- *Which count?* Repair passes: `## Stage Report: implementation` headings minus one, fire at 4. In the 38-task window it fires on 10 tasks, 9 of them observer-labelled owed, 1 unclear, 0 labelled not owed; today's Event A fires on 5.
+- *Does the count call itself?* No. FO still dispatches, or records `Reviewer: <agent> not run <date>: <reason>`. Neither role gets gate or state authority.
+- *What does it not see?* Four engineering-reviewer cases, named below. Counts cannot see an authority change, a ruling reversed in another task, or a new authority surface.
+- *What does it cost?* About 0.25 Opus calls per task over 287 tasks (today 0.18), 0.50 per task in the busy 38-task window (today 0.37). Table below.
+
+```mermaid
+flowchart TD
+    T["Committed task file at REV (flat or folder, live or archive)"] --> R["role_triggers.py reads counts, fenced text skipped"]
+    R --> C{"implementation reports minus one is 4 or more"}
+    R --> E{"a replacing amendment is dated after the last engineering-reviewer call or dated waiver"}
+    W["pr_watch.py tasks, slice 2: one gh call per open task PR, review ids that left inline comments"] -- "--review-rounds N" --> R
+    W2{"N is 2 or more"} --> C
+    C -- "yes, no chief-engineer line under FO alignment" --> L1["one next: line, chief-engineer"]
+    E -- "yes" --> L2["one next: line, engineering-reviewer, amendment numbers listed"]
+    C -- "no" --> S["silent"]
+    E -- "no" --> S
+    L1 --> FO["FO dispatches the role on Opus, or records a dated waiver with a reason"]
+    L2 --> FO
+    FO --> REC["Reviewer line under FO alignment, committed"]
+    REC --> R
+    REC --> GONE["line stops printing; stop: advice is advisory, no gate or state authority"]
+    NC["Not counted: authority or merge-rule change, ruling reversed in another task, new authority surface"] -.-> J["Captain or FO asks by judgment, as today"]
+```
+
+### Chain check (in the chain's order, 2026-10-20)
+
+- **Spacedock 0.27.0** (`/Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0`): no consult or review seat. `skills/feedback-rejection-flow/SKILL.md` step 4 records an escalation to the human on cycle 3 and stops; step 2 of the same skill has a neutral recorder count every entry of a correction round, and gate attempts sit in `gates.records[].attempts[]`. So the chief-engineer and engineering-reviewer calls are a package concept, and Spacedock's own cycle-3 escalation is the Captain's, not a role's.
+- **kc-dev-flow-2** at origin/main: `scripts/role_triggers.py` (Event A, Event B), `references/sd/workflow.md` Stages paragraph (the `Reviewer:` sentence), `pr_watch.py tasks` (prints the script's output), `skills/observer/SKILL.md` (reports a `Reviewer:` line for a task "whose validation was sent back twice", runs the script and quotes each `next:` line as a violation), the two agent files and skills (triggers by judgment). ADR 0016 (`docs/adr/0016-the-amendment-check-refuses-an-unnamed-move-and-an-unmarked-replacement.md`) is the evidence on author-declared fields: FO wrote `Supersedes: none` over seven criteria, and 34 of 35 non-`none` `Design:` values were prose no text rule could separate.
+- **Adopters** (relay, web, qnow): the README sentence is byte-identical to the package's at 0.25.0 (lines 75-78 in relay and web, 77-80 in qnow). Calls on record in the window: kc-claude-plugins 4 chief-engineer (one misfiled under `### Feedback Cycles`, two worded "third repair cycle", one made after the Captain asked); relay 1 chief-engineer waiver; web 2 engineering-reviewer on 2026-10-15 and 10-16 about a bridge design, none on its 10-17 amendment; qnow none. No adopter has a local copy of `role_triggers.py` to reconcile.
+- **Bounded existing-code check.** Use what exists: the script, its output channel and its test file are repaired in place; only Event A and the wording match are replaced. What breaks without the change: today's Event A misses 7 of the 11 chief-engineer cases labelled owed in the window (every web and qnow case reads 0 events), and three of the four calls FO did make are refused by the script (two by wording, one by heading); on 2026-10-19 the Captain asked FO 「為何你沒有自動找 CE 來問？」.
+
+### What was measured
+
+Window: the 37 tasks with a gate resolution on or after 2026-10-17 UTC (the observers' window; this task excluded) plus qnow `owner-sms-notices`, a boundary task the qnow observer judged owed. Population: all 287 tasks at the pins. **Ground truth** is the four observers' (sonnet) judgment-owed tables in `fo-batch-sittings/dogfood/`, plus the Captain's own question on captain-question-load; it is not a Captain ruling for the other tasks. The observers' definition of "owed" is the Scope's list of triggers, so a count that matches it gets a true positive almost by construction: read the **false fires** and **misses**, which that circularity does not inflate. "Unclear" means the observer called the case weak or FO waived it with a reason; it counts as neither. The thresholds were chosen on the same 38 tasks they are scored on (no held-out labels exist: no task outside the window has a role call on record), so every threshold is in-sample.
+
+Counts were read from committed bytes: stage-report headings, `### Amendment N` entries and their `Supersedes:`/`Design:` lines, gate records in frontmatter (`stage`, `decision`, `at`, `reason`), the first verdict phrase of each validation report, `Reviewer:` lines, and the inline comments of each PR (`pull_request_review_id`, `path`, `line`, the P1/P2 badge).
+
+#### Per-task counts, window of 38
+
+Columns: the observer label (C = chief-engineer owed, E = engineering-reviewer owed, ? = weak, W = waived with a reason, - = not owed), the call on record at the pin, then the candidate counts. "Sent back" is a REJECTED validation report plus a Captain `revise` at a validation gate. "Same-path rounds" and "Review rounds" come from PR inline comments and are 0 for every relay and web task because no inline reviewer commented on those PRs (3 of 46 relay PRs and 0 of 23 web PRs have any inline comment; 21 of 41 kc-claude-plugins and 36 of 47 qnow PRs do). "ACs withdrawn" is the number of `**AC-N**` declarations present at the first ideation (or backlog) approval and removed or changed at the pin, read from the commit that recorded that approval.
+
+| Task (repo/slug) | Observer label CE/ER | Call on record | Repair passes | Sent back | Same-path rounds | Review rounds | Amendments (replacing) | ACs withdrawn | Holds, overrides |
+|---|---|---|---|---|---|---|---|---|---|
+| kcp/captain-question-load | C/E | CE | 2 | 0 | 1 | 2 | 2 (0) | 0 | 0 |
+| kcp/chat-only-evidence-observer-blind | ?/- | - | 1 | 0 | 1 | 1 | 0 (0) | 0 | 0 |
+| kcp/delivery-gate-settles-skipped-checks | -/E | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| kcp/extension-instruction-reaches-dispatch | C/E | - | 4 | 0 | 3 | 3 | 1 (1) | 1 | 0 |
+| kcp/fo-write-checks | C/- | - | 4 | 0 | 3 | 3 | 0 (0) | 0 | 0 |
+| kcp/merge-gatekeeper | C/E | CE | 10 | 0 | 4 | 4 | 1 (1) | 7 | 0 |
+| kcp/number-guards-readme-shrink | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| kcp/prod-security-review-gates | C/E | CE misfiled | 7 | 1 | 4 | 4 | 2 (2) | 6 | 0 |
+| kcp/prod-security-validation-gate | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| kcp/special-role-triggers | C/? | - | 4 | 0 | 2 | 2 | 1 (1) | 1 | 0 |
+| kcp/ui-design-review-in-ideation | C/- | CE | 4 | 0 | 3 | 3 | 0 (0) | 0 | 0 |
+| kcp/worker-loads-declared-package | -/- | - | 1 | 0 | 1 | 1 | 0 (0) | 0 | 0 |
+| kcp/workflow-budget-ratchet | -/- | - | 1 | 0 | 1 | 1 | 0 (0) | 0 | 0 |
+| relay/account-publish-ceiling | ?/E | - | 3 | 0 | 0 | 0 | 2 (2) | 8 | 1 |
+| relay/entry-without-name-field | -/- | - | 1 | 1 | 0 | 0 | 0 (0) | 0 | 1 |
+| relay/frame-and-content-headers | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| relay/identity-cannot-be-borrowed | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| relay/junk-share-edge-cost | -/? | - | 0 | 0 | 0 | 0 | 1 (1) | 0 | 0 |
+| relay/others-highlights-in-author-colour | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| relay/own-comments-follow-account | W/- | CE | 3 | 3 | 0 | 0 | 0 (0) | 0 | 0 |
+| relay/owner-feedback-pages | -/- | - | 2 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| relay/revoke-ends-access | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| relay/spacedock-install-beta | ?/E | - | 5 | 1 | 0 | 0 | 5 (5) | 3 | 4 |
+| relay/storage-stops-growing | -/? | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| web/ac9-feedback-phone-revision-drawer-note-time | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| web/comment-links-open-with-confirm | -/E | - | 1 | 1 | 0 | 0 | 1 (1) | 1 | 0 |
+| web/disclosure-chevrons-follow-state | -/- | - | 0 | 0 | 0 | 0 | 1 (0) | 0 | 0 |
+| web/others-highlights-in-author-colour | C/E | ER | 2 | 2 | 0 | 0 | 1 (1) | 2 | 0 |
+| web/web-render-rules | -/? | - | 1 | 1 | 0 | 0 | 0 (0) | 0 | 0 |
+| qnow/cash-at-pickup | C/- | - | 6 | 1 | 4 | 4 | 0 (0) | 0 | 0 |
+| qnow/check-database-version | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| qnow/go-live-consent | -/- | - | 3 | 0 | 1 | 1 | 0 (0) | 0 | 0 |
+| qnow/move-to-singapore-region | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| qnow/product-analytics-posthog | -/- | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| qnow/production-go-live | -/E | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 0 |
+| qnow/production-incident-agent | -/E | - | 0 | 0 | 0 | 0 | 0 (0) | 0 | 1 |
+| qnow/production-operations | C/? | - | 11 | 0 | 5 | 6 | 0 (0) | 0 | 0 |
+| qnow/owner-sms-notices | C/- | - | 5 | 2 | 2 | 2 | 0 (0) | 0 | 0 |
+
+#### Each candidate count, scored on the window
+
+Fires / true positives / false fires / unclear / misses (11 chief-engineer and 11 engineering-reviewer cases labelled owed). Rows are from one run; `repairs` is the number of `## Stage Report: implementation` headings minus one.
+
+Chief-engineer:
+
+| Candidate count and threshold | Fires | TP | False | Unclear | Miss | Reading |
+|---|---|---|---|---|---|---|
+| Today's Event A: `- Cycle N`, N >= 3, under `### Feedback Cycles` | 5 | 4 | 0 | 1 | 7 | web and qnow record cycles in stage-report headings and read 0 events; qnow `owner-sms-notices` has the heading at level 2 with `- PR #…` lines |
+| Stage-report `(cycle N)` heading, highest N >= 3 / >= 4 | 17 / 10 | 11 / 7 | 3 / 0 | 3 / 3 | 0 / 4 | counts ideation cycles too; false: owner-feedback-pages, ac9-feedback, go-live-consent |
+| **Repairs >= 2 / 3 / 4 / 5** | 16 / 13 / **10** / 6 | 11 / 9 / **9** / 5 | 2 / 1 / **0** / 0 | 3 / 3 / **1** / 1 | 0 / 2 / **2** / 6 | false at 3: go-live-consent (4 reports, 3 validations all PASSED, wording changed once); at 2 also owner-feedback-pages. Misses at 4: captain-question-load, web others-highlights |
+| Implementation reports after the first validation report >= 3 / 2 | 10 / 14 | 8 / 10 | 0 / 2 | 2 / 2 | 3 / 1 | file order, not time order: prod-security-review-gates writes its repairs before its first validation report and is missed at 3 |
+| Highest implementation `(cycle N)` >= 3 / 4 | 15 / 9 | 10 / 6 | 2 / 0 | 3 / 3 | 1 / 5 | phase and probe headings add noise |
+| Validation sent back (REJECTED report + Captain `revise`) >= 1 / 2 | 9 / 3 | 4 / 2 | 3 / 0 | 2 / 1 | 7 / 9 | false at 1: entry-without-name-field, comment-links-open-with-confirm, web-render-rules. 105 of 410 validation reports have no parseable verdict phrase |
+| REJECTED validation report >= 1 | 4 | 4 | 0 | 0 | 7 | the only unique catch over repairs >= 4 is web others-highlights |
+| Captain hold or override >= 1 | 4 | 0 | 2 | 2 | 11 | false: entry-without-name-field (override of a delivery-check hold), production-incident-agent (a priority pause) |
+| PR inline findings on one path in >= 2 / 3 distinct review ids | 9 / 7 | 9 / 7 | 0 / 0 | 0 / 0 | 2 / 4 | the same 9 tasks as repairs >= 4; adds none in the window |
+| P1 findings in >= 2 distinct review ids | 5 | 5 | 0 | 0 | 6 | misses the P2-only repair loops (fo-write-checks, extension-instruction) |
+| **PR review ids with inline findings >= 2 / 3** | **10 / 7** | **10 / 7** | 0 / 0 | 0 / 0 | **1 / 4** | the single unique catch over repairs >= 4 is captain-question-load; web and relay are dark (no inline reviewer) |
+| repairs >= 4 OR review ids >= 2 (slice 1 + slice 2) | 11 | 10 | 0 | 1 | 1 | miss: web others-highlights |
+
+Engineering-reviewer:
+
+| Candidate count | Fires | TP | False | Unclear | Miss | Reading |
+|---|---|---|---|---|---|---|
+| **Today's Event B: replacing amendment (`Supersedes:` or `Design:` not `none`)** | **9** | **7** | **0** | **2** | **4** | 15 events on 9 tasks |
+| Criteria withdrawn since the first approval >= 1 (git read) | 8 | 7 | 0 | 1 | 4 | adds nothing over Event B in the window; would catch an amendment that withdraws criteria under `Supersedes: none`, which ADR 0016's check already refuses |
+| Any amendment recorded >= 1 / >= 2 | 11 / 4 | 8 / 4 | 1 / 0 | 2 / 0 | 3 / 7 | false at 1: disclosure-chevrons-follow-state (`Supersedes: none`, correct) |
+| Captain hold or override >= 1 | 4 | 3 | 1 | 0 | 8 | two of the three true cases are already Event B; the unique one is production-incident-agent |
+| Captain `revise` or hold after an approval >= 1 | 11 | 5 | 5 | 1 | 6 | routine sends-back |
+| A `### ADR draft` heading in the task | 6 | 3 | 3 | 0 | 8 | false: cash-at-pickup, owner-sms-notices, own-comments-follow-account |
+| ADR numbers cited in the design | - | - | - | - | - | no separation: engineering-reviewer cases cite 1 to 13, others up to 10 (web ac9-feedback cites 10 and is not owed) |
+| Another task's slug cited in scope, design or criteria | - | - | - | - | - | no separation: every task cites 0 to 18 others |
+| Another task's gate id cited | 0 | 0 | 0 | 0 | 11 | 0 of 38 tasks cite a gate id of another task: "a design that names an earlier Captain gate it reverses" has no structured form today |
+
+**Misses by name, engineering-reviewer (4 of 11, no count sees them):** captain-question-load (a merge and approval rule change; its two amendments honestly say `Supersedes: none`, so this is not a form gap), delivery-gate-settles-skipped-checks (its design reverses a clause of merge-gatekeeper's accepted criterion; it cites that task by slug, as every task cites peers), production-go-live (hard to reverse: amends several accepted decisions and puts an operator secret on production), production-incident-agent (a new authority surface, a machine account opening draft PRs). **Chief-engineer misses at repairs >= 4:** captain-question-load (caught by review rounds >= 2) and web others-highlights (2 repairs, REJECTED once and sent back once; caught only by a text-parsed verdict).
+
+#### Calls and cost
+
+Expected calls = fires (one chief-engineer call per task, one engineering-reviewer call per task and later amendment).
+
+| Scope | Today (Event A + Event B) | This design, slice 1 | Slice 1 + slice 2 |
+|---|---|---|---|
+| Window, 38 tasks | CE 5 + ER 9 = 14 (0.37 per task) | CE 10 + ER 9 = 19 (0.50) | CE 11 + ER 9 = 20 (0.53) |
+| Window, per repo (CE/ER) | kcp 4/4, relay 1/3, web 0/2, qnow 0/0 | kcp 6/4, relay 1/3, web 0/2, qnow 3/0 | kcp 7/4, same elsewhere |
+| Population, 287 tasks | CE 14 + ER 39 = 53 (0.18) | CE 32 + ER 39 = 71 (0.25) | CE 47 + ER 39 = 86 (0.30) |
+| Population, per repo (CE/ER) | kcp 10/12, relay 4/17, web 0/4, qnow 0/6 | kcp 11/12, relay 5/17, web 1/4, qnow 15/6 | kcp 19/12, relay 6/17, web 1/4, qnow 21/6 |
+| Owed lines after recorded calls count, window | 19 lines, 1104 words | 17 lines (CE 8, ER 9), 833 words | 17 lines |
+
+Calls actually made in the window: 4 chief-engineer (three recorded in wording or under a heading the script does not count, one made after the Captain asked), 1 chief-engineer waiver, 0 engineering-reviewer on an amendment. The per-task fire rate is unjudged outside the window: 52 of the 71 population fires (slice 1) are on tasks no observer read. A chief-engineer or engineering-reviewer call runs on Opus at `xhigh` (agent files); no dollar figure was measured. A task that keeps circling after its one call does not fire again (merge-gatekeeper reached 10 repairs and production-operations 11).
+
+### Keep, change, drop
+
+| Existing element | Decision | Why, from the table |
+|---|---|---|
+| Event A: `- Cycle N` with N >= 3 under `### Feedback Cycles` | **Drop**; replaced by repair passes >= 4 | fires 5 (TP 4) against 10 (TP 9); reads nothing in web or qnow; the level-2 heading blind spot disappears because the heading is no longer read |
+| Event B: `### Amendment N` under `## Captain amendments` with `Supersedes:` or `Design:` not `none` | **Keep** detection | 9 tasks, TP 7, 0 false, 15 events (the same 15 as today) |
+| One `next:` line per event | **Change** to one per task and role, amendment numbers listed | relay spacedock-install-beta: 5 lines, 300 words, to 1 line |
+| A call or waiver must name `Cycle 3` or `Amendment N` | **Drop** the naming; any call-shaped line clears the chief-engineer event; the engineering-reviewer event is cleared by a call dated on or after the amendment or a dated waiver | merge-gatekeeper and ui-design-review-in-ideation are "third repair cycle"; the wording match is the keyword dependence the Captain named |
+| Call shape `Reviewer: <agent> <model> <date> — <question>` | **Keep**; waiver becomes `Reviewer: <agent> not run <date>: <reason>` (the printed line shows it) | a date is needed to know which later amendments a waiver covers; the one waiver in the corpus (relay own-comments-follow-account, chief-engineer) was undated and keeps clearing because the chief-engineer event takes any waiver |
+| Records count only under `## FO alignment` | **Keep**, and the owed output adds a `next:` line naming a call-shaped line found under another heading | 2 of the 5 call or waiver lines in the window were first written elsewhere (prod-security-review-gates under `### Feedback Cycles`; the relay waiver under `## Acceptance criteria`, moved in a later commit); `test_only_the_fo_alignment_section_can_clear_an_event` stays |
+| README Stages sentence: `Reviewer: <agent> <model> <date> — <question>`; `role_triggers.py` lists calls owed | **Keep unchanged** | still true; `test_sd_dispatch.py` `need=` pin and the adopters' synced copies do not change |
+| `pr_watch.py tasks` prints the script's output | **Keep**; slice 2 adds the `--review-rounds N` argument | the channel already runs at startup and every idle pass |
+| Observer rule (report a `Reviewer:` line for a task "whose validation was sent back twice"; run the script, quote each `next:` as a violation) | **Keep unchanged** | the observer replay (`--rev TO`) cannot pass N, so it judges slice 1 only |
+| Agent and skill triggers by judgment (contested, hard to reverse, low confidence; unclear, blocked, drifting) | **Keep unchanged** | the counts are a floor FO cannot forget; the four misses stay with judgment and the Captain's question |
+| Sent-back count (REJECTED report, Captain `revise`) | **Drop** from the trigger | adds one unique catch (web others-highlights) and costs a free-text verdict match that leaves 105 of 410 validation reports unreadable; at threshold 1 it has 3 false fires. Revisit with a second case |
+| Same-path review rounds, P1 counts, hold or override, withdrawn criteria, ADR draft, cross-references | **Drop** | each scored above: no unique true catch, or false fires |
+
+**Blind spots fixed:** stage-report cycle headings (counted); level-2 `## Feedback Cycles` (not read); a call worded "third repair cycle" (clears). **Not fixed, by design:** a call under the wrong heading still does not clear; the output names the heading to move it from. **Tests that move:** in `kc-dev-flow-2/scripts/test_role_triggers.py`, `test_the_third_cycle_owes_chief_engineer_and_the_second_does_not`, `test_a_call_or_a_waiver_naming_the_event_clears_it`, `test_each_near_miss_leaves_the_event_owed`, `test_an_amendment_call_naming_another_number_is_owed` and `test_a_feedback_cycles_heading_in_any_form_design_surfaces_accepts_is_read`; in `test_pr_watch.py` the rows near `has a third Feedback Cycle` and `Cycle 3`. Module docstrings of `role_triggers.py` and `pr_watch.py` change.
+
+**ADR draft (no number).** Short title: *Role calls are owed on counts read from task records, and a dated call clears them whatever it says.* Ruling: chief-engineer is owed at four repair passes; engineering-reviewer at a replacing amendment; a `Reviewer:` line under `## FO alignment` with a date clears by date, not by wording. It supersedes the wording-match clause of the special-role-triggers design (task `special-role-triggers`, PR #664), which has no ADR of its own to amend.
+
+### Words FO reads at each lifecycle moment
+
+Rule: for each moment in root `learning.md` ("Measure the words FO reads at each moment"), the words of every role-call line printed by `pr_watch.py tasks` over the live tasks of the state at the pin, `len(line.split())`, and the README sentence. `tasks` runs at startup and at each idle pass, so the three moments that run it read the same lines; the after-archive step and the merge ask do not print them. The README sentence (`Record chief-engineer and engineering-reviewer calls under …`) is 20 words before and after.
+
+| Moment | relay, today / design | kc-claude-plugins | web | qnow |
+|---|---|---|---|---|
+| Startup (restart, one open PR) | 540 (9 lines) / 205 (4) | 120 (2) / 194 (4) | 0 / 0 | 0 / 0 |
+| Idle on an open PR | same lines as startup | same | same | same |
+| Idle on a merged PR | same lines as startup | same | same | same |
+| After the archive | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
+| The merge ask | 0 / 0 | 0 / 0 | 0 / 0 | 0 / 0 |
+
+The learn practice that every moment must fall below its base does not hold, and this task's goal is not to cut reading: kc-claude-plugins rises 120 to 194 because two live tasks that today's script does not flag now owe a call, and relay falls only because five lines for one task become one. The numbers FO can rely on are the length of one owed line (46 to 55 words in the prototype; today 51 and 60) and that a line is printed only until the call is recorded.
+
+### Batch overlap
+
+Against delivery-gate-settles-skipped-checks (PR #680, design written): it edits `delivery_gate.py`, `test_delivery_gate.py` and one ADR; this task edits `role_triggers.py`, `test_role_triggers.py`, `pr_watch.py` and `test_pr_watch.py` and leaves `docs/dev2/README.md` and `references/sd/workflow.md` unchanged. No shared file, no shared hunk, either order works. Its design is itself one of the four engineering-reviewer misses here (it reverses a clause of merge-gatekeeper's accepted criterion, no count sees it), and its tip now carries an engineering-reviewer line FO made by judgment after the dogfood report. Against the other open batch-3 work: chat-only-evidence-observer-blind (PR #679) edits `delivery_gate.py` and the Delivery authority sentence of `workflow.md`, not the Stages paragraph; fo-batch-sittings (backlog) lists "a repeated finding class calls the chief-engineer" as an interim rule, and this task supplies the count for that rule, so that task should cite it, not restate it. Recommended order: no constraint.
+
+### Limits (not criteria)
+
+- Labels are four sonnet observers' tables and one Captain question; the scored thresholds are in-sample on 38 tasks. 52 of the 71 population fires are on tasks nobody judged.
+- Repair passes also count merges of main: relay own-comments-follow-account has 3 repairs, two of them stale-base merges, and FO waived the call for that reason. The threshold of 4 stays above it; a waiver with a reason is the answer when it happens.
+- The count is blind to a rule change that no record counts (the four misses), to a task that keeps circling after its one call, and to relay and web review rounds (no inline reviewer).
+- `roborev` findings are a local reviewer's and are not in `pulls/N/comments`; slice 2 undercounts where roborev carries the rounds.
+- The kc-claude-plugins state branch moved during measurement; the pins above are the oracle, not today's tip.
+- Non-goals: no automatic dispatch; no change to the two agent files or skills; no new gate or state authority; no tiered second call; no text-matched verdict; the observer is unchanged.
+
+## Acceptance criteria
+
+**AC-1** Four repair passes owe one chief-engineer call, in every record shape of the four repositories. Evidence: `python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_role_triggers.py` has rows on synthetic task files, each asserting exit code and the number of `next:` lines: (a) five `## Stage Report: implementation` headings (one plain, four `(cycle N)`) and no `### Feedback Cycles` section: exit 1, one line naming chief-engineer and 4 repair passes; (b) four headings: exit 0; (c) five headings with a level-2 `## Feedback Cycles` whose lines read `- PR #1 …`: exit 1; (d) the five headings inside a fenced block: exit 0; (e) `--rev` naming a commit that held four headings: exit 0 while HEAD exits 1. Falsifier: counting `- Cycle N` lines under `### Feedback Cycles` (today's Event A) makes (a) and (c) exit 0.
+
+**AC-2** Wording and number of a call do not decide whether it counts; its heading still does. Evidence: rows: a line `Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-18 — repair again, or narrow the PR?` under `## FO alignment` clears the repair event (it names no cycle; today exit 1, as for merge-gatekeeper and ui-design-review-in-ideation); the same line under `### Feedback Cycles` leaves it owed and the output adds a `next:` line naming that heading; a bullet `Reviewer: one run per design …` (the two non-call lines found in prod-security-review-gates and ui-design-review-in-ideation) clears nothing; a chief-engineer waiver `Reviewer: kc-dev-flow-2:chief-engineer not run: <reason>` clears it. Falsifier: requiring the question to contain `Cycle 3` re-opens the first row; accepting any heading clears the second row's task.
+
+**AC-3** Engineering-reviewer: one line per task lists every uncleared replacing amendment; a call dated on or after an amendment, or a dated waiver `Reviewer: kc-dev-flow-2:engineering-reviewer not run <date>: <reason>`, clears the amendments dated on or before it. Evidence: rows: a task with five replacing amendments prints one `next:` line listing 1 to 5 (today five lines, 300 words in relay spacedock-install-beta); a call dated between amendments 3 and 4 leaves 4 and 5 owed; an undated waiver clears no amendment; a task whose only calls (2026-10-15, 2026-10-16) precede its Amendment 1 (2026-10-17) stays owed (web others-highlights). Falsifier: clearing on any engineering-reviewer line makes the last row exit 0.
+
+**AC-4** Reading cost: the README is untouched and every owed line is short. Evidence: `git diff origin/main --stat -- docs/dev2/README.md kc-dev-flow-2/references/sd/workflow.md` prints nothing; each `next:` line printed by the rows of AC-1 to AC-3 has at most 60 words (`len(line.split())`; the prototype printed 46 to 55 with a real slug); the test asserts that bound. Falsifier: a 61-word line fails the row; an edit to the Stages paragraph fails the stat and the `test_sd_dispatch.py` `need=` pin. Limit: words per idle pass are not bounded, because they follow the number of owed tasks (relay 540 to 205, kc-claude-plugins 120 to 194 at the pins).
+
+**AC-5** The script's contract and the suite hold. Evidence: `python3 -B -m unittest discover -s kc-dev-flow-2/scripts` exits 0 (the job in `.github/workflows/kc-dev-flow-2-tests.yml` already runs it); `test_it_judges_committed_bytes_and_leaves_the_checkout_unchanged` and `test_it_reports_what_it_cannot_tell_with_exit_2` pass unchanged (committed bytes, `--rev`, exits 0, 1 and 2); the five `test_role_triggers.py` tests and the `test_pr_watch.py` rows named in Keep, change, drop are rewritten, not deleted; the ADR passes `python3 <package>/scripts/adr_lint.py --require <reserved number>`. Falsifier: reading the checkout instead of `git show REV` fails the first; leaving `test_the_third_cycle_owes_chief_engineer_and_the_second_does_not` as written fails against the new script.
+
+**AC-6** (slice 2, only if the Captain accepts D1) Two review ids with inline findings on an open task PR owe the chief-engineer call. Evidence: `pr_watch.py tasks` reads `gh api repos/<repo>/pulls/<N>/comments` once per open task PR in the list, counts distinct `pull_request_review_id`, and passes `--review-rounds N` to `role_triggers.py`; rows in `test_pr_watch.py` with a stub `gh`: two review ids: one chief-engineer `next:` line; one review id with nine comments (qnow booking-submit-staff-confirm shape): silent; no comments (relay and web shape): silent; a `gh` failure: `next: report <slug> to the Captain` (the existing exit-2 path). `role_triggers.py` without the argument behaves as in AC-1. Replay: on the window it adds captain-question-load only (its second review round was submitted 2026-10-19T10:08:56Z; its call is recorded 2026-10-19T18:26 +08:00, 17 minutes later, after the Captain asked). Falsifier: counting comments instead of review ids makes the nine-comment row fire.
+
+**AC-7** The corpus replay reproduces this design's table. Evidence: at validation, a replay script kept in the task's `validation/` folder runs the candidate `role_triggers.py` over the four state checkouts at the pins named in Design (`git show <pin>:…`, `--rev <pin>`) and prints per window task the repair passes and owed lines; expected: window chief-engineer fires 10 (9 observer-labelled owed, 1 unclear, 0 false), engineering-reviewer fires 9 (7, 2, 0); population 32 and 39 over 287 tasks; owed lines after recorded calls 17 (chief-engineer 8, engineering-reviewer 9) plus one heading hint; prod-security-review-gates stays owed with that hint; merge-gatekeeper, ui-design-review-in-ideation and captain-question-load clear. Falsifier: any task whose fire differs from the per-task table fails. Limit: the checkouts are private to this machine and their task bodies cannot be fixtures in this public repository (sanitize-check), so CI runs the synthetic rows of AC-1 to AC-3 and this replay is a one-time validation step; measured thresholds are in-sample.
+
+## Needs decision
+
+**D1. Ship the review-round count (slice 2, AC-6) in this task?** Recommendation: yes, as the last slice, droppable without touching AC-1 to AC-5. It is the only count that catches captain-question-load, the case the Captain asked about, and it is the signal he named (findings across rounds). What gets worse: one more `gh` read per open task PR in `tasks` and a new failure path in a script every FO runs at every idle pass; it is dark in relay (3 of 46 PRs) and web (0 of 23); it adds 15 population fires (47 against 32 chief-engineer) on tasks nobody judged, about 0.05 more Opus calls per task. If declined: captain-question-load-shaped cases (P1 findings in two rounds, only two repairs) stay with judgment.
+
+**D2. Threshold: four repair passes, or three?** Recommendation: four. At four: 9 true, 0 false, 1 unclear; at three: the same 9 true plus 1 false fire (go-live-consent, whose extra reports were phases, not repairs) and 3 unclear, with calls one pass earlier. What gets worse at four: FO's own calls were made at the "third repair cycle", so the script now speaks one pass later than FO practice; a 4-repair loop costs one more cycle before the line prints. Spend at four: 0.25 Opus calls per task over 287 tasks (today 0.18), 0.50 in the busy window (today 0.37).
+
+**D3. The four engineering-reviewer misses (an authority or merge-rule change, a ruling reversed in another task, a new authority surface): accept them as judgment, or add an author-declared line (for example `Reverses: <gate id | task | none>` in `## FO alignment`)?** Recommendation: accept, add nothing, and read the next batch's records for a repeat. No count and no structured field sees them today (0 of 38 tasks cite another task's gate id); ADR 0016's evidence is that FO wrote `Supersedes: none` over seven criteria, which predicts a declared `Reverses:` under-declares in the same way. What gets worse: the Captain keeps being the backstop for these (he asked FO about captain-question-load himself), 4 of 11 engineering-reviewer cases.
+
+
+## Stage Report: ideation
+
+- DONE: A design (PRFAQ and Mermaid) for when FO owes a chief-engineer or engineering-reviewer call, built on counts read from structured records, per the Captain's direction in Scope: candidate counts such as review findings per file or sentence across rounds (from PR review comments and their paths), validation REJECTED verdicts, Feedback Cycles or stage-report cycle headings, Captain overrides and holds, amendments that supersede accepted criteria, and a design or amendment that names an earlier Captain gate it reverses; for each, which role it calls and why
+  `## Design` holds the PRFAQ and the Mermaid flow; every named count has a row in the two scored tables; chief-engineer is called on repair passes (and, in slice 2, review rounds), engineering-reviewer on replacing amendments; gate-reversal has no structured form (0 of 38 tasks cite another task's gate id).
+- DONE: Measure every candidate count over the four repositories' committed records (kc-claude-plugins, subspace-relay, subspace-web and qnow; paths and the per-repository findings in fo-batch-sittings/dogfood/), read-only: per task, the count, the threshold that would have fired, and whether a call was then made or judged owed; report false fires and misses for each threshold, and the expected calls per task (cost in Opus calls)
+  `### What was measured`: 38 window tasks and 287 population tasks at four pinned SHAs plus 157 PRs read with `gh api`; per-task table, two tables scoring each candidate count and threshold with fires/TP/false/unclear/miss, and a calls-and-cost table (0.18 to 0.25 per task over 287, 0.37 to 0.50 in the window); labels are observers' judgment and thresholds are in-sample (stated).
+- DONE: Name which existing kc-dev-flow-2/scripts/role_triggers.py events and README `Reviewer:` rules the design keeps, changes or drops, and fix its observed blind spots (stage-report cycle headings, a level-2 Feedback Cycles heading, a call worded "third repair cycle"); a `### Batch overlap` section against delivery-gate-settles-skipped-checks; the words FO reads at each lifecycle moment, before and after, per root learning.md
+  `### Keep, change, drop` (11 rows, tests that move, ADR draft title), `### Words FO reads at each lifecycle moment` (five moments, four repositories; the "every moment lower" practice does not hold and the section says why), `### Batch overlap` (no shared file with delivery-gate-settles-skipped-checks).
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  `## Acceptance criteria` AC-1 to AC-7, each with an Evidence clause and a Falsifier; `## Needs decision` D1 (slice 2), D2 (threshold), D3 (the four misses). Current evidence per criterion:
+  AC-1: design-time measurement only (10 of 38 window tasks fire, 9 labelled owed, 0 false); the synthetic test rows are not written yet.
+  AC-2: not yet verified; the three misworded or misfiled calls were found by running the 0.25.0 script at the pins, which owes all three.
+  AC-3: not yet verified; today's script prints 5 lines (300 words) for relay spacedock-install-beta, run at the pin.
+  AC-4: not yet verified; prototype line lengths 46 to 55 words, README untouched by design.
+  AC-5: not yet verified; the named tests exist at origin/main 891a9a24.
+  AC-6: not yet verified; only the offline replay exists (it adds captain-question-load, from `gh api` on PR #675).
+  AC-7: not yet verified; the expected numbers are this design's measurement at the pins.
+
+### Summary
+
+Counting `## Stage Report: implementation` headings (four repair passes) replaces Event A and fires on 9 of the 11 chief-engineer cases the observers labelled owed with no false fire in the window; Event B's detection is kept, its clearing is by date instead of by wording, and its output is one line per task. The review-round count the Captain named adds exactly one case (captain-question-load) and is offered as a droppable second slice (D1); the other candidate counts either add no unique true catch or false-fire, and four engineering-reviewer cases remain beyond any count (D3). Thresholds are scored on the same 38 tasks against four observers' labels, and the Non-goals line left open in Scope is set under `### Limits`.
+
+`python3 <package>/scripts/design_surfaces.py check` on this file (package 0.25.0, 2026-10-20) printed "design surfaces presentable", exit 0.
