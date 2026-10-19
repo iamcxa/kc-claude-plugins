@@ -2,7 +2,7 @@
 
 [draw-a-journey.yaml](draw-a-journey.yaml) is the canonical ongoing product plan.
 [draw-a-journey.tldr](draw-a-journey.tldr) is its native editable snapshot: Story map,
-three release boards and Function map. Keep planning decisions in the YAML; the
+the earlier release boards and Function map. Keep planning decisions in the YAML; the
 snapshot is a deliberate backup/share artifact, not a required export after every update.
 The packaged fictional teaching fixture is separate from this plan.
 
@@ -82,3 +82,10 @@ A separate supported story-card edit survived readback, `applyDiff`, another sou
 change and redraw. The negative control skipped readback/application and lost an unread
 edit on redraw: protection is procedural. Existing services were left running; this
 observes preservation, not an automatic compatibility guarantee or full R3 acceptance.
+
+## Accepted private-entry design
+
+[Private-entry design](private-entry.md) records the complete design confirmed on
+2026-10-19, the four implementation slices, current first-story boundary and
+unrun provider evidence. The YAML now contains its recoverable eight-story plan
+and 31 design question dispositions; the older native snapshot is preserved.

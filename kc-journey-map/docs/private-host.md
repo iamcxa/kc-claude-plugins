@@ -11,6 +11,10 @@ rotation, document-plus-policy backup, fresh restore, private cloud administrati
 license setup and entry-switch rollback. The protocol details below also describe
 existing remote Node and optional asset capabilities deferred from this delivery.
 
+The optional verified-human entry is documented in [human-entry.md](human-entry.md).
+It is disabled unless explicitly configured; existing bearer sessions remain
+legacy authority and cannot establish a verified human.
+
 ## Install and test
 
 Use Node >=22.13, Git, OpenSSL and the locked public packages. From this package:

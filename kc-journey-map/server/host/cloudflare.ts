@@ -3,8 +3,9 @@ import { HostError, operate, prepareDoc } from './core'
 import { admit, handle, type Host } from './transport'
 import { currentGrant, validateGrants, type Admission, type Grant, type Metadata } from './policy'
 import { pruneExpiredSessions } from './session-retention'
+import { bootstrapHuman, humanOperation, validateHumanConfig, type HumanConfig, type SyncMetadata } from './human-store'
 
-type Env = { ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string }
+type Env = { ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string; JOURNEY_HUMAN_CONFIG?: string }
 const stub = (namespace: any, id: string) => namespace.get(namespace.idFromName(id))
 const assetBlobKey = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
 const ownsAsset = (room: string, key: unknown) => typeof key === 'string' && key.startsWith(room + '/') && assetBlobKey.test(key.slice(room.length + 1))
@@ -12,11 +13,12 @@ class RegistryMetadata implements Metadata {
  constructor(private env: Env) {}
  async call(path: string, body: any) {
   const response = await stub(this.env.REGISTRY, 'private-pilot').fetch(new Request('https://registry/' + path, { method: 'POST', body: JSON.stringify(body) }))
-  if (!response.ok) throw new HostError(503, 'registry unavailable')
+  if (!response.ok) { const body = await response.json().catch(() => ({})) as any; throw new HostError(response.status, body.error || 'registry unavailable', body.category ? { category: body.category } : {}) }
   return response.json()
  }
  async get<T>(key: string): Promise<T | null> { return await this.call('get', { key }) as T | null }
  async put(key: string, value: unknown) { await this.call('put', { key, value }) }
+ async human(operation: string, input: any) { return this.call('human', { operation, input }) }
  async replaceAsset(room: string, id: string, value: unknown) { return await this.call('replace-asset', { room, id, value }) as { previous: { blobKey: string } | null } }
  async list<T>(prefix: string): Promise<Array<{ key: string; value: T }>> { return await this.call('list', { prefix }) as any }
 }
@@ -24,6 +26,11 @@ export class JourneyRegistry {
  constructor(private ctx: any, private env: Env) {
   ctx.blockConcurrencyWhile(async () => {
    ctx.storage.sql.exec('CREATE TABLE IF NOT EXISTS metadata (key TEXT PRIMARY KEY, value TEXT NOT NULL)')
+   if (env.JOURNEY_HUMAN_CONFIG) {
+    const config = validateHumanConfig(JSON.parse(env.JOURNEY_HUMAN_CONFIG), env.JOURNEY_ORIGIN)
+    if (config.mode !== 'cloudflare') throw new Error('Cloudflare does not accept local owner handoff')
+    ctx.storage.transactionSync(() => bootstrapHuman(this.sync(), config))
+   }
    const grants = validateGrants(JSON.parse(env.JOURNEY_GRANTS || 'null'))
    for (const grant of grants) if (!this.get('grant:' + grant.credentialId)) this.put('grant:' + grant.credentialId, grant)
   })
@@ -33,9 +40,17 @@ export class JourneyRegistry {
   if (key.startsWith('session:')) pruneExpiredSessions((sql, ...bindings) => this.ctx.storage.sql.exec(sql, ...bindings).toArray())
   this.ctx.storage.sql.exec('INSERT OR REPLACE INTO metadata VALUES (?, ?)', key, JSON.stringify(value))
  }
+ sync(): SyncMetadata {
+  return { get: key => this.get(key), put: (key, value) => this.put(key, value), delete: key => { this.ctx.storage.sql.exec('DELETE FROM metadata WHERE key = ?', key) },
+   list: (prefix, limit) => this.ctx.storage.sql.exec('SELECT key,value FROM metadata WHERE key >= ? AND key < ? ORDER BY key LIMIT ?', prefix, prefix + '\uffff', limit).toArray().map((row: any) => ({ key: row.key, value: JSON.parse(row.value) })) }
+ }
  async fetch(req: Request) {
   const body = await req.json() as any
   const op = new URL(req.url).pathname
+  if (op === '/human') {
+   try { return Response.json(this.ctx.storage.transactionSync(() => humanOperation(this.sync(), body.operation, body.input))) }
+   catch (error) { return Response.json({ error: error instanceof HostError ? error.message : 'metadata unavailable', ...(error instanceof HostError ? error.details : {}) }, { status: error instanceof HostError ? error.status : 503 }) }
+  }
   if (op === '/get') return Response.json(this.get(body.key))
   if (op === '/replace-asset') {
    const previous = this.ctx.storage.transactionSync(() => {
@@ -64,6 +79,8 @@ export class JourneyRegistry {
 }
 export class CloudflareHost implements Host {
  private = true
+ publicRequestUrl = true
+ humanConfig?: HumanConfig
  meta: RegistryMetadata
  port: number
  origin: string
@@ -73,6 +90,10 @@ export class CloudflareHost implements Host {
   if (origin.origin !== this.origin || (origin.protocol !== 'https:' && !['localhost', '127.0.0.1'].includes(origin.hostname))) throw new Error('private origin requires HTTPS')
   validateGrants(JSON.parse(env.JOURNEY_GRANTS || 'null'))
   this.port = Number(origin.port || (origin.protocol === 'https:' ? 443 : 80))
+  if (env.JOURNEY_HUMAN_CONFIG) {
+   this.humanConfig = validateHumanConfig(JSON.parse(env.JOURNEY_HUMAN_CONFIG), this.origin)
+   if (this.humanConfig.mode !== 'cloudflare') throw new Error('Cloudflare requires provider entry')
+  }
   this.meta = new RegistryMetadata(env)
  }
  async document(room: string, method: string, prepared: any) {
@@ -184,7 +205,7 @@ export class JourneyRoom {
    }
    if (url.pathname.startsWith('/connect/')) {
     const host = new CloudflareHost(this.env)
-    const { room, admission } = await admit(host, req.headers, decodeURIComponent(url.pathname.slice(9)), false, true)
+    const { room, admission } = await admit(host, req.headers, decodeURIComponent(url.pathname.slice(9)), false, true, url)
     if (req.headers.get('upgrade')?.toLowerCase() !== 'websocket') return new Response(null, { status: 426 })
     await this.register(room)
     const pair = new (globalThis as any).WebSocketPair(), client = pair[0], server = pair[1]
@@ -225,7 +246,7 @@ export default {
   const url = new URL(req.url)
   if (url.pathname.startsWith('/connect/')) {
    try {
-    const { room } = await admit(host, req.headers, decodeURIComponent(url.pathname.slice(9)), false, true)
+    const { room } = await admit(host, req.headers, decodeURIComponent(url.pathname.slice(9)), false, true, url)
     return await stub(env.ROOMS, room).fetch(req)
    } catch (e) { return Response.json({ error: e instanceof HostError ? e.message : 'room unavailable' }, { status: e instanceof HostError ? e.status : 503 }) }
   }

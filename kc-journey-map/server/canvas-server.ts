@@ -3,11 +3,13 @@ import { createInterface } from 'node:readline'
 import websocketPlugin from '@fastify/websocket'
 import fastify from 'fastify'
 import { NodeHost } from './host/node'
+import { startLocalOwner } from './host/local-owner'
 import { admit, handle } from './host/transport'
 import { HostError } from './host/core'
 import { exportRoom, restoreRoom } from './host/recovery'
 
 const host = new NodeHost()
+const stopOwner = await startLocalOwner(host)
 const app = fastify({ bodyLimit: Number(process.env.JOURNEY_BODY_LIMIT ?? 64 * 1024 * 1024) })
 await app.register(websocketPlugin)
 app.removeAllContentTypeParsers()
@@ -17,7 +19,7 @@ app.get('/connect/:roomId', {
  websocket: true,
  preValidation: async (req, res) => {
   try {
-   const admission = await admit(host, headersOf(req), (req.params as any).roomId, false, true)
+   const admission = await admit(host, headersOf(req), (req.params as any).roomId, false, true, new URL(req.raw.url!, host.origin))
    ;(req as any).journeyAdmission = admission
    await host.openRoom(admission.room)
   } catch (e) { return res.status(e instanceof HostError ? e.status : 503).send({ error: e instanceof HostError ? e.message : 'room unavailable' }) }
@@ -40,7 +42,8 @@ app.all('/*', async (req, res) => {
   method: req.method, headers: headersOf(req), ...(['GET', 'HEAD'].includes(req.method) ? {} : { body: req.body as BodyInit }),
  }))
  res.status(response.status)
- for (const [key, value] of response.headers) res.header(key, value)
+ for (const [key, value] of response.headers) if (key !== 'set-cookie') res.header(key, value)
+ if (response.headers.getSetCookie().length) res.header('set-cookie', response.headers.getSetCookie())
  return res.send(Buffer.from(await response.arrayBuffer()))
 })
 if (process.env.JOURNEY_CONTROL_STDIO === '1') {
@@ -49,6 +52,7 @@ if (process.env.JOURNEY_CONTROL_STDIO === '1') {
   try {
    const command = JSON.parse(line)
    const result = command.op === 'revoke' ? await host.revoke(command.credentialId)
+    : ['disable-member', 'set-room'].includes(command.op) && host.humanConfig ? await host.meta.human!(command.op, command)
     : command.op === 'export' ? await exportRoom(host, command.room)
     : command.op === 'restore' ? await restoreRoom(host, command.archive)
     : (() => { throw new Error('unknown operator command') })()
@@ -59,4 +63,4 @@ if (process.env.JOURNEY_CONTROL_STDIO === '1') {
 const address = await app.listen({ port: host.port, host: '127.0.0.1' })
 const printHost = (process.env.JOURNEY_ALLOWED_HOSTS || '').split(',').find(Boolean) || hostname()
 console.log(`doc API on ${address}  (canvas: http://${printHost}:3737/?room=default)`)
-for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => { host.close(); app.close().finally(() => process.exit()) })
+for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => { stopOwner(); host.close(); app.close().finally(() => process.exit()) })

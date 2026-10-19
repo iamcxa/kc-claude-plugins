@@ -8,6 +8,7 @@ import { HostError, operate } from './core'
 import { currentGrant, validateGrants, type Grant, type Admission, type Metadata } from './policy'
 import type { Host } from './transport'
 import { pruneExpiredSessions } from './session-retention'
+import { bootstrapHuman, humanOperation, validateHumanConfig, type HumanConfig, type SyncMetadata } from './human-store'
 import { loadAsset, storeAsset } from '../assets'
 import { saveBoard, saveDir, saveTarget } from '../save'
 import { readRepoDoc } from '../repo-doc'
@@ -21,6 +22,8 @@ export class NodeHost implements Host {
  root = resolve(process.env.JOURNEY_PRIVATE_DIR || '.')
  roomsDir = this.private ? join(this.root, 'rooms') : (process.env.JOURNEY_ROOMS_DIR || './.rooms')
  rooms = new Map<string, { room: TLSocketRoom<any, any>; db: DatabaseSync }>()
+ humanConfig?: HumanConfig
+ localHumanReady = false
  sockets = new Map<any, { admission: Admission | null; room: string; timer?: ReturnType<typeof setTimeout> }>()
  db: DatabaseSync
  meta: Metadata
@@ -67,6 +70,23 @@ export class NodeHost implements Host {
    },
    list: async <T>(prefix: string) => (this.db.prepare('SELECT key, value FROM metadata WHERE substr(key,1,?) = ? ORDER BY key').all(prefix.length, prefix) as any[])
     .map(row => ({ key: row.key, value: JSON.parse(row.value) as T })),
+  }
+  const sync: SyncMetadata = {
+   get: <T>(key: string) => { const row = this.db.prepare('SELECT value FROM metadata WHERE key = ?').get(key) as any; return row ? JSON.parse(row.value) as T : null },
+   put: (key, value) => { this.db.prepare('INSERT OR REPLACE INTO metadata VALUES (?, ?)').run(key, JSON.stringify(value)) },
+   delete: key => { this.db.prepare('DELETE FROM metadata WHERE key = ?').run(key) },
+   list: (prefix, limit) => (this.db.prepare('SELECT key, value FROM metadata WHERE key >= ? AND key < ? ORDER BY key LIMIT ?').all(prefix, prefix + '\uffff', limit) as any[]).map(row => ({ key: row.key, value: JSON.parse(row.value) })),
+  }
+  const atomic = (action: () => any) => {
+   this.db.exec('BEGIN IMMEDIATE')
+   try { const result = action(); this.db.exec('COMMIT'); return result } catch (error) { this.db.exec('ROLLBACK'); throw error }
+  }
+  this.meta.human = async (operation, input) => atomic(() => humanOperation(sync, operation, input))
+  if (process.env.JOURNEY_HUMAN_CONFIG) {
+   if (!this.private) throw new Error('human entry requires private storage')
+   this.humanConfig = validateHumanConfig(JSON.parse(readFileSync(process.env.JOURNEY_HUMAN_CONFIG, 'utf8')), this.origin)
+   if (this.humanConfig.mode === 'local' && this.humanConfig.localOwnerUid !== process.geteuid?.()) throw new Error('local owner must be the service OS account')
+   atomic(() => bootstrapHuman(sync, this.humanConfig!))
   }
   if (this.private) {
    const grants = validateGrants(JSON.parse(readFileSync(process.env.JOURNEY_GRANTS_FILE!, 'utf8')))
