@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:chat-only-evidence-observer-blind:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:chat-only-evidence-observer-blind-validation-1
+              briefing:
+                id: briefing:chat-only-evidence-observer-blind:validation:attempt-1:revision-1
+                digest: sha256:96298d79d5451e0ced4512ba3827f30198d550b145bef10586b6ca36c61e0131
+                room-ref: ./chat-only-evidence-observer-blind/review/validation/briefing-1
 started: 2026-10-18T16:57:36Z
 worktree: .worktrees/spacedock-ensign-chat-only-evidence-observer-blind
 pr: iamcxa/kc-claude-plugins#679
