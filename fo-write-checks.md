@@ -345,3 +345,53 @@ Both Codex P2 are real and reproduce; the two-line fix keeps every existing test
 ### Summary
 
 Both P2 fixed in one commit with tests and mutations, plus ADR 0025; ready for the fresh validation recheck. The two-word bracket limit from validation finding 4 is unchanged.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #671 head 08f06ac3 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Head 08f06ac35efaeed5140d57592f2fb3ed48f8601b (merge-base c60e89e1), `gh pr view 671`: Draft, 4 checks SUCCESS. Cycle 2 changed 2 code lines, 2 test files and the ADR, so AC-1 to AC-8 were re-run at this head: AC-1 `--names` on state records at `220255c5` `d96a508b` `46c7fe82` `c24697d1` prints the reserved-line line, `e3736568` `869e93c4` `3b2c06be` print none (`3b2c06be` writes "Number guards: ADR: 0023" and passes); AC-2 `f4bb51b3` prints 'Captain amendment 1'; AC-3 real `adr_names`: #666 0023 MISSING, #628 0012 and #540 0006 present; AC-4 real `unreasoned_items` over the 9 briefings: 6 of 6 violation tasks (13 items), 2 of 3 ok tasks (3 items), worker-loads-declared-package 0, identical to cycle 1, so dropping the 3-token filter adds no flag in this corpus; AC-5 `test_laws_check` 40 OK; AC-6 `workflow.md` 5429 of 5429, `lint-skills.py` exit 0; AC-7 diff is the seven listed files plus the ADR (eight, FO's call in validation-1 F1); AC-8 not measured, as the AC allows. Suites OK (python3 -B, candidate checkout): dispatch_records 46, delivery_gate 55, laws_check 40, number_guards 23, comment_ratio 14, lint_skills 31, design_surfaces, adr_doc_checks, pr_watch, replay_dispatch, validation_security, observer_check, role_triggers; `test_sd_dispatch.py --sd-plugin-root /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0` with spacedock 0.27.2 at `/Users/kent/.local/bin/spacedock` PASS.
+- DONE: recheck after Cycle 1: Codex round-1 P2s (review:5565983098) fixed and ADR 0025 added for the Captain's D1 and D2 (validation-1 F1); confirm each fix's test fails under its mutation and that --names over the committed dispatch records prints the same lines as before; adr_lint --require 0025 passes; compare the implementation-3 record with what the worker did
+  Mutations on copies, python3 -B, caches cleared, each run against the new test alone, control OK: old `>= 3` filter fails `test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item`; no none-form exclusion fails the same test; unanchored search, no `Number guards:` prefix and no bullet form each fail `test_a_reserved_number_named_inside_a_prose_line_...` (the last two on their own subTest). `--names` over all 266 committed dispatch records in state `23334e07`: 198 lines at 08f06ac3, identical (diff empty) to 03a05f8f; against base c60e89e1 176 lines, 22 added, 0 removed. `adr_lint.py docs/adr --since c60e89e1 --require 25` 23 files exit 0, and `--require 26` exit 1 (the require flag bites). `number_guards.py check` PASS, `design_surfaces.py check` presentable, `dispatch_records.py <task folder>` 6 records complete, `comment_ratio.py c60e89e1 HEAD` 335 code lines, 2 comment lines, 0.6%, exit 0 (no cycle-2 comment). implementation-3 record vs the worker: both fixes match the record's wording (non-empty item except none, nothing, n/a; anchor with optional bullet and `Number guards:` prefix), tests, ADR file name, `--names` same-lines check and the push all match; the record added the `Number guards: ADR: 0025` scope line and FO's keep-the-prefix ruling, which the code follows. I cannot see the worker's push flags or whether it used `spacedock state commit`; the record's checklist is met in outcome (head on origin, CI green, report committed at `44feb603`). The record says "all package test files pass" and the worker reported three; I ran the importers and 13 files (above), CI's unit-test job is green on the head.
+- DONE: A minimal acceptance script the Captain can run, run by you exactly as written in a fresh bash shell, with its observed output; adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below run with `cd / && env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>`; output as listed. `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0/scripts/adr_lint.py docs/adr --since c60e89e1` in the candidate: "23 ADR file(s) checked, 0 legacy", exit 0. Verdict PASSED for 08f06ac3; no Material finding; findings below. Throwaway worktrees and temp files are removed.
+
+### Findings (Review-finding disposition), cycle 2
+
+1. Polish, ADR 0025 `Words` line says the gate question "named D1 (... Recommend A ...)"; the actual briefing-1 question reads "Approving accepts D1 (every declined item ... carries a bracketed reason, held by delivery_gate.py), D2 (...)" with no "Recommend A" wording. Substance and the Captain's quote 「照建議」 match the frontmatter record; no behaviour is affected.
+2. Deferred risk, new, run: the line-start anchor accepts a prose line that begins with the reserved text (`ADR: 0042 is not used here because it is unrelated.` exits 0). Material if FO leaves a reserved number unrecorded behind such a line; Codex P2 2 (a mention inside a sentence) is fixed.
+3. Carried and unchanged from validation-1: F2 Polish (AC-4 says 12, true count 13); F3 Deferred risk (`dev2-laws.yml` pin `2775096a`, L2 reaches this repository only after a re-pin); F4 Deferred risk (a two-word bracket proves a bracket, not a reason; ADR 0025 records the limit); F5 Deferred risk (any `amendment N` phrase in any checklist of the folder satisfies the amendment check). Validation-1 F1 (no ADR) is resolved by ADR 0025 at this head.
+
+### Minimal acceptance script
+
+Needs `git`, `python3`, `gh` signed in, and commit 08f06ac3 in `/Users/kent/conductor/workspaces/kc-claude-plugins/colombo` (it is the PR head). Covers the two record checks including the anchored line, the declined-item rule including a short item, the ADR-at-head read and the ADR record; does not cover L2 in CI (needs the pin raised) or a full `delivery_gate.py check` on a live PR. Paste the two `python3 -c` bodies with no leading spaces.
+
+    D=$(mktemp -d)
+    git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo archive 08f06ac35efaeed5140d57592f2fb3ed48f8601b | tar -x -C "$D"
+    S=$D/kc-dev-flow-2/scripts
+    mkdir -p "$D/t/dispatch"
+    printf -- '---\ntitle: x\n---\n\n## Number guards\n\nADR: 0042\n\n## Captain amendments\n\n### Amendment 1 — 2026-10-19, chat\nCaptain: x\n' > "$D/t.md"
+    printf '## Checklist\n\nDo the work.\n\n## Scope notes\n\nnone\n' > "$D/t/dispatch/implementation-1.md"
+    cd "$D" && python3 -B "$S/dispatch_records.py" --names t/dispatch/implementation-1.md; echo "exit $?"
+    printf '## Checklist\n\nDo the work under Captain amendment 1.\n\n## Scope notes\n\nThis does not use ADR: 0042 because it is unrelated.\n' > "$D/t/dispatch/implementation-1.md"
+    cd "$D" && python3 -B "$S/dispatch_records.py" --names t/dispatch/implementation-1.md; echo "exit $?"
+    printf '## Checklist\n\nDo the work under Captain amendment 1.\n\n## Scope notes\n\nADR: 0042\n' > "$D/t/dispatch/implementation-1.md"
+    cd "$D" && python3 -B "$S/dispatch_records.py" --names t/dispatch/implementation-1.md; echo "exit $?"
+    S=$S python3 -B -c '
+    import os, sys
+    sys.path.insert(0, os.environ["S"])
+    import delivery_gate as g
+    print(g.unreasoned_items("Declined: Polish, typo; Polish, a stale count (the count is not read by any gate). Second reviewer: none."))'
+    S=$S python3 -B -c '
+    import os, sys
+    sys.path.insert(0, os.environ["S"])
+    import delivery_gate as g
+    h = g.gh("api", "repos/iamcxa/kc-claude-plugins/pulls/666", "--jq", ".head.sha").strip()
+    print("head", h[:8], "files named 0023-:", sum(n.startswith("0023-") for n in g.adr_names("iamcxa/kc-claude-plugins", h, "docs/adr")))'
+    cd "$D" && python3 -B /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0/scripts/adr_lint.py docs/adr --require 25; echo "exit $?"
+    rm -rf "$D"
+
+Expected, observed in a fresh shell: (1) two lines, `t/dispatch/implementation-1.md:1: reserved line 'ADR: 0042' missing from scope notes; ...` and `...: Captain amendment 1 named in no dispatch checklist; ...`, then `exit 1`; (2) the reserved-line line only, `exit 1` (a prose mention does not count); (3) no line, `exit 0`; (4) `['Polish, typo']` (the short item is judged, the bracketed one passes); (5) `head a05b18a0 files named 0023-: 0`; (6) `23 ADR file(s) checked, 0 legacy`, `exit 0`. The script has seven commands; steps 2 and 3 are the same check on two records.
+
+### Summary
+
+PR #671 head 08f06ac3 meets AC-1 to AC-8 on the real scripts, both Codex P2 fixes fail under their mutations, `--names` over 266 committed records is byte-identical to the previous head, and ADR 0025 resolves validation-1 F1; verdict PASSED, no Material finding and nothing for FO to route. One Polish (ADR wording) and one new Deferred risk (a prose line that starts with the reserved text); the pin, two-word-bracket and amendment-phrase limits from validation-1 stand.
