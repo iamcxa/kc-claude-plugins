@@ -292,6 +292,7 @@ releases:
   page.on('console', m => { if (m.type() === 'error') logs.push('browser error: ' + m.text()) })
   page.on('requestfailed', r => logs.push('browser request failed: ' + r.url() + ' ' + r.failure()?.errorText))
   page.on('websocket', ws => { logs.push('browser websocket: ' + ws.url()); ws.on('socketerror', e => logs.push('browser websocket error: ' + e)); ws.on('framereceived', frame => { if (String(frame.payload).includes('error')) logs.push('browser socket frame: ' + String(frame.payload)) }) })
+  await page.route('**/auth/config', route => route.abort())
   await page.goto(origin)
   const exchanged = await page.evaluate(async ({ credential, origin }) => {
    const response = await fetch('/session', { method: 'POST', headers: { Authorization: 'Bearer ' + credential, Origin: origin } })

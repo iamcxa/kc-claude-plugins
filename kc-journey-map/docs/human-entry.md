@@ -8,10 +8,15 @@ owns the admission decision. Use synthetic rooms while validating.
 
 ## Operator configuration
 
-`JOURNEY_HUMAN_CONFIG` enables entry: an absolute JSON file path on Node, or JSON
+`JOURNEY_HUMAN_CONFIG` configures server entry: an absolute JSON file path on Node, or JSON
 binding on Cloudflare. Keep the trusted operator file outside Git. Configuration
 version 1 pins an immutable backend ID, exact origin, mode, issuer and member
 bindings. Node additionally requires the existing private storage/grants settings.
+The browser build separately enables the gate with
+`VITE_JOURNEY_HUMAN_ENTRY=true`; the Node development config enables it when
+`JOURNEY_HUMAN_CONFIG` is present. Legacy/share/Sites builds default to their
+existing entry without an `/auth/config` dependency. An enabled gate fails closed
+if its configured server cannot be reached.
 For example, a synthetic owner-local configuration has this shape:
 
 ```json
@@ -93,6 +98,9 @@ Human app cookies use separate names from legacy sessions. The secret is stored
 only as a server digest; CSRF uses a separate same-origin cookie/header proof.
 Healthy renewal preserves original identity/event and the absolute deadline.
 Member generation changes deny existing sessions even after remove/regrant.
+Human data/socket requests require all three original-context query fields
+(`_backend`, `_human`, `_humanAt`); missing or mismatching fields deny. Explicit
+authentication routes remain context-free where needed for first entry.
 Browser requests carry their immutable original backend/member/event context;
 a replacement shared cookie cannot reconnect a different human context.
 

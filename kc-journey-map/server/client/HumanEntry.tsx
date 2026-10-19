@@ -14,11 +14,12 @@ const messages: Record<string, string> = {
  identity_changed: '登入身分已改變，請重新確認原本的畫布入口。', authority_denied: '目前的登入或成員權限已停用。', member_denied: '目前的成員權限已停用。', room_denied: '你無法進入指定畫布。請明確選擇另一張畫布。', room_missing: '指定畫布不存在；未建立空白畫布。',
  provider_unavailable: '身分服務暫時無法使用。請稍後重試。', owner_peer_unavailable: '此主機無法確認本機帳號，登入已停止。', challenge_expired_or_consumed: '這次驗證已到期或已使用，請重新開始。',
 }
+const humanEntryEnabled = import.meta.env.VITE_JOURNEY_HUMAN_ENTRY === 'true'
 export function HumanEntry({ children }: { children: () => ReactNode }) {
- const [config, setConfig] = useState<{ enabled: boolean; mode?: string; localReady?: boolean } | null>(null)
+ const [config, setConfig] = useState<{ enabled: boolean; mode?: string; localReady?: boolean } | null>(humanEntryEnabled ? null : { enabled: false })
  const [entry, setEntry] = useState<Entry | null>(null)
  const [problem, setProblem] = useState('')
- const [busy, setBusy] = useState(true)
+ const [busy, setBusy] = useState(humanEntryEnabled)
  const [requestId, setRequestId] = useState('')
  const verifier = useRef<{ verifier: string; csrf: string; requestId: string } | null>(null)
  const requestVersion = useRef(0)
@@ -66,6 +67,7 @@ export function HumanEntry({ children }: { children: () => ReactNode }) {
   finally { if (version === requestVersion.current) setBusy(false) }
  }
  useEffect(() => {
+  if (!humanEntryEnabled) return
   let active = true
   fetch(journeyApi('/auth/config')).then(async response => {
    if (!response.ok) throw new Error()

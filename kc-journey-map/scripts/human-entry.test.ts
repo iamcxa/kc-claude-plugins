@@ -110,6 +110,7 @@ test('a context from another human or original sign-in cannot be used with a rep
   url.searchParams.set(context[0], context[1])
   assert.equal((await handle(host, new Request(url, { headers: { Cookie: 'journey_human=' + token } }))).status, 403)
  }
+ assert.equal((await handle(host, new Request(origin + '/doc?room=one', { headers: { Cookie: 'journey_human=' + token } }))).status, 403)
  const valid = await handle(host, new Request(origin + '/doc?room=one&_human=owner&_backend=synthetic&_humanAt=' + now, { headers: { Cookie: 'journey_human=' + token } }))
  assert.equal(valid.status, 200)
 })

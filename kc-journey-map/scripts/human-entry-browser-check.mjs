@@ -58,8 +58,12 @@ try {
  pass('real owner peer approval signs in original tab; explicit denied URL mounts no substitute')
  const cookie = (await context.cookies()).find(c => c.name === 'journey_human')
  assert.ok(cookie.httpOnly); assert.equal(cookie.sameSite, 'Strict'); assert.equal(cookie.secure, false); assert.equal(cookie.domain, '127.0.0.1')
+ const entryState = await context.request.get(origin + '/auth/entry').then(response => response.json())
+ const humanPath = path => { const url = new URL(origin + path); url.searchParams.set('_human', entryState.memberId); url.searchParams.set('_backend', entryState.backendId); url.searchParams.set('_humanAt', String(entryState.verifiedHumanSignInAt)); return url.href }
+ assert.equal((await context.request.get(humanPath('/doc?room=one'))).status(), 200)
+ assert.equal((await context.request.get(origin + '/doc?room=one')).status(), 403)
  for (const [path, method] of [['/doc?room=denied', 'GET'], ['/uploads/anything?room=denied', 'GET'], ['/mcp', 'POST']]) {
-  const response = await context.request.fetch(origin + path, { method, ...(method === 'POST' ? { data: { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'get_doc', arguments: { room: 'denied' } } }, headers: { Origin: origin } } : {}) })
+  const response = await context.request.fetch(humanPath(path), { method, ...(method === 'POST' ? { data: { jsonrpc: '2.0', id: 1, method: 'tools/call', params: { name: 'get_doc', arguments: { room: 'denied' } } }, headers: { Origin: origin } } : {}) })
   assert.equal(response.status(), 403)
  }
  pass('human policy denies HTTP, MCP and asset access to unauthorized room; real HTTP loopback cookie attributes')

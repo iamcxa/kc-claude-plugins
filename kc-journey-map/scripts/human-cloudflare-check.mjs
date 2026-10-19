@@ -29,7 +29,13 @@ const mf = new Miniflare({ script: bundle.outputFiles[0].text, modules: true, co
  } })
 const report = { provider: 'SIMULATED signed assertion and trusted endpoint in local workerd; real account NOT RUN', checks: [] }
 const pass = name => { console.log('PASS ' + name); report.checks.push(name) }
-const request = (path, { method = 'GET', headers = {}, body } = {}) => mf.dispatchFetch(origin + path, { method, headers: { Host: new URL(origin).host, ...headers }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) })
+const request = (path, { method = 'GET', headers = {}, body, unbound = false } = {}) => {
+ const url = new URL(origin + path)
+ if (!unbound && headers.Cookie?.includes('journey_human=') && !path.startsWith('/auth/')) {
+  url.searchParams.set('_human', 'person'); url.searchParams.set('_backend', 'cf-synthetic'); url.searchParams.set('_humanAt', String((now - 600) * 1000))
+ }
+ return mf.dispatchFetch(url.href, { method, headers: { Host: new URL(origin).host, ...headers }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) })
+}
 const postHeaders = { Origin: origin, 'Content-Type': 'application/json', 'X-Journey-Entry': '1' }
 try {
  await mf.ready
@@ -54,6 +60,8 @@ try {
  for (const path of ['/doc?room=two', '/uploads/a?room=two', '/connect/two?sessionId=synthetic']) assert.equal((await request(path, { headers: { Cookie: cookie, Origin: origin } })).status, 403)
  assert.equal((await request('/auth/entry?room=missing', { headers: { Cookie: cookie } })).status, 404)
  assert.equal(await metadata('get', { key: 'room:missing' }), null)
+ assert.equal((await request('/doc?room=one', { headers: { Cookie: cookie }, unbound: true })).status, 403)
+ assert.equal((await request('/doc?room=one', { headers: { Cookie: cookie } })).status, 200)
  pass('HTTP/assets/socket admission denies forbidden room and missing entry never creates a document')
  const csrf = /journey_human_csrf=([^;]+)/.exec(cookie)[1]
  const renewed = await request('/auth/renew', { method: 'POST', body: {}, headers: { ...postHeaders, Cookie: cookie, 'X-Journey-Csrf': csrf } })

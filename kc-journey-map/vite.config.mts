@@ -13,6 +13,7 @@ const extraHosts = (process.env.JOURNEY_ALLOWED_HOSTS ?? '')
 const API = `http://127.0.0.1:${process.env.JOURNEY_API_PORT ?? 5858}`
 
 export default defineConfig(() => ({
+ define: { 'import.meta.env.VITE_JOURNEY_HUMAN_ENTRY': JSON.stringify(process.env.JOURNEY_HUMAN_CONFIG ? 'true' : process.env.VITE_JOURNEY_HUMAN_ENTRY || 'false') },
 	plugins: [react(), {
    name: 'private-local-entry-loopback',
    configureServer(server) {
