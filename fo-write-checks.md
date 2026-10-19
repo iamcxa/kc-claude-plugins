@@ -3,7 +3,7 @@ title: The FO-write rules the observer keeps finding broken are checked by a scr
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain approved in chat (「照建議」) the four batch-3 ideation gates presented together, accepting each task's stated decisions and FO's implementation order
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-18T16:57:29Z
 ---
 
