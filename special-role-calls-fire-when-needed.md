@@ -70,10 +70,9 @@ Profile pilot. Measured 2026-10-20, read-only, over the four repositories' state
 ```mermaid
 flowchart TD
     T["Committed task file at REV (flat or folder, live or archive)"] --> R["role_triggers.py reads counts, fenced text skipped"]
-    R --> C{"implementation reports minus one is 4 or more"}
+    R --> C{"implementation reports minus one is 4 or more, or (slice 2) review ids N is 2 or more"}
     R --> E{"a replacing amendment is dated after the last engineering-reviewer call or dated waiver"}
     W["pr_watch.py tasks, slice 2: one gh call per open task PR, review ids that left inline comments"] -- "--review-rounds N" --> R
-    W2{"N is 2 or more"} --> C
     C -- "yes, no chief-engineer line under FO alignment" --> L1["one next: line, chief-engineer"]
     E -- "yes" --> L2["one next: line, engineering-reviewer, amendment numbers listed"]
     C -- "no" --> S["silent"]
@@ -202,12 +201,12 @@ Calls actually made in the window: 4 chief-engineer (three recorded in wording o
 | Event A: `- Cycle N` with N >= 3 under `### Feedback Cycles` | **Drop**; replaced by repair passes >= 4 | fires 5 (TP 4) against 10 (TP 9); reads nothing in web or qnow; the level-2 heading blind spot disappears because the heading is no longer read |
 | Event B: `### Amendment N` under `## Captain amendments` with `Supersedes:` or `Design:` not `none` | **Keep** detection | 9 tasks, TP 7, 0 false, 15 events (the same 15 as today) |
 | One `next:` line per event | **Change** to one per task and role, amendment numbers listed | relay spacedock-install-beta: 5 lines, 300 words, to 1 line |
-| A call or waiver must name `Cycle 3` or `Amendment N` | **Drop** the naming; any call-shaped line clears the chief-engineer event; the engineering-reviewer event is cleared by a call dated on or after the amendment or a dated waiver | merge-gatekeeper and ui-design-review-in-ideation are "third repair cycle"; the wording match is the keyword dependence the Captain named |
+| A call or waiver must name `Cycle 3` or `Amendment N` | **Drop** the naming; any call-shaped line clears the chief-engineer event; the engineering-reviewer event is cleared by a call dated on or after the amendment or a dated waiver | merge-gatekeeper and ui-design-review-in-ideation are "third repair cycle"; the wording match is the keyword dependence the Captain named; what gets worse: an engineering-reviewer call on some other question, dated after the amendment, now clears it (web's two bridge reviews are that shape and stay owed only because they predate Amendment 1) |
 | Call shape `Reviewer: <agent> <model> <date> — <question>` | **Keep**; waiver becomes `Reviewer: <agent> not run <date>: <reason>` (the printed line shows it) | a date is needed to know which later amendments a waiver covers; the one waiver in the corpus (relay own-comments-follow-account, chief-engineer) was undated and keeps clearing because the chief-engineer event takes any waiver |
 | Records count only under `## FO alignment` | **Keep**, and the owed output adds a `next:` line naming a call-shaped line found under another heading | 2 of the 5 call or waiver lines in the window were first written elsewhere (prod-security-review-gates under `### Feedback Cycles`; the relay waiver under `## Acceptance criteria`, moved in a later commit); `test_only_the_fo_alignment_section_can_clear_an_event` stays |
 | README Stages sentence: `Reviewer: <agent> <model> <date> — <question>`; `role_triggers.py` lists calls owed | **Keep unchanged** | still true; `test_sd_dispatch.py` `need=` pin and the adopters' synced copies do not change |
 | `pr_watch.py tasks` prints the script's output | **Keep**; slice 2 adds the `--review-rounds N` argument | the channel already runs at startup and every idle pass |
-| Observer rule (report a `Reviewer:` line for a task "whose validation was sent back twice"; run the script, quote each `next:` as a violation) | **Keep unchanged** | the observer replay (`--rev TO`) cannot pass N, so it judges slice 1 only |
+| Observer rule (report a `Reviewer:` line for a task "whose validation was sent back twice"; run the script, quote each `next:` as a violation) | **Keep unchanged** | the observer replay (`--rev TO`) cannot pass N, so it judges slice 1 only; its output changes though its rule does not, because it quotes the new heading-hint `next:` line as a violation (a misplaced call is a form break) |
 | Agent and skill triggers by judgment (contested, hard to reverse, low confidence; unclear, blocked, drifting) | **Keep unchanged** | the counts are a floor FO cannot forget; the four misses stay with judgment and the Captain's question |
 | Sent-back count (REJECTED report, Captain `revise`) | **Drop** from the trigger | adds one unique catch (web others-highlights) and costs a free-text verdict match that leaves 105 of 410 validation reports unreadable; at threshold 1 it has 3 false fires. Revisit with a second case |
 | Same-path review rounds, P1 counts, hold or override, withdrawn criteria, ADR draft, cross-references | **Drop** | each scored above: no unique true catch, or false fires |
@@ -241,6 +240,7 @@ Against delivery-gate-settles-skipped-checks (PR #680, design written): it edits
 - The count is blind to a rule change that no record counts (the four misses), to a task that keeps circling after its one call, and to relay and web review rounds (no inline reviewer).
 - `roborev` findings are a local reviewer's and are not in `pulls/N/comments`; slice 2 undercounts where roborev carries the rounds.
 - The kc-claude-plugins state branch moved during measurement; the pins above are the oracle, not today's tip.
+- New obligation that would force a profile change: none; slice 2 adds one `gh` read inside a step FO already runs.
 - Non-goals: no automatic dispatch; no change to the two agent files or skills; no new gate or state authority; no tiered second call; no text-matched verdict; the observer is unchanged.
 
 ## Acceptance criteria
