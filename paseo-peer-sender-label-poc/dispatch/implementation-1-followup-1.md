@@ -1,6 +1,6 @@
 # Dispatch: paseo-peer-sender-label-poc implementation cycle 1, follow-up 1
 
-Dispatched: dfc66beb2 (candidate unchanged)
+Dispatched: dfc66beb268189bd0141dade9b8ecd644fac3651
 Model: sonnet
 Worker: spacedock-ensign-paseo-peer-sender-label-poc-implementation (same worker, SendMessage)
 
