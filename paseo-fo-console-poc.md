@@ -30,6 +30,17 @@ gates:
                 id: briefing:paseo-fo-console-poc:backlog:attempt-2:revision-1
                 digest: sha256:f665d9a1abfafb773b87bc0b6556efb916b7be916192c82288fde72330a5d03b
                 room-ref: ./paseo-fo-console-poc/review/backlog/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-fo-console-poc:backlog:2
+                briefing: briefing:paseo-fo-console-poc:backlog:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-19T11:13:35.654644Z"
+                decision: approve
+                reason: 'Captain: 「准」 (2026-10-19 chat) to the rewritten FO board + coordinator POC'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Kent wants one entry point in Paseo for his FOs. From a plugin screen he sees which FOs
