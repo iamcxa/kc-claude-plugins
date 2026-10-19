@@ -266,3 +266,34 @@ ADR: 0024
 ### Summary
 
 Of the 40 rule-report pairs that read can't tell in batch 2, 30 are closed for new tasks without a new FO word: 10 by reading what state already holds, 4 by one labelled clause in the gate text, 16 by naming the rules the observer cannot see. The Captain decides D1 to D3; D2 is the only one that adds a hold FO and adopters will meet once. Ten pairs are not chat-only and stay as they are or move to fo-write-checks and captain-question-load.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main (5a951034) implementing the five items of "What changes" as D1, D2 and D3 were accepted
+  PR https://github.com/iamcxa/kc-claude-plugins/pull/679 (Draft), head 389cb89f on 8c4bb68b; observer SKILL.md, delivery_gate.py + test, lint-skills.py + test, ADR 0024; pushed without force and without -u.
+- DONE: Re-baseline on origin/main 5a951034 (phrases, AC-5 counts, #675's ASK line and test literals)
+  All six chat-only phrases still match workflow.md (lint passes); README is 5374 of 5374; #675's ASK line and literals kept. words.py needed two marker edits (copy in /tmp): merge-ask pass path is 451 before and after (ASK line +20 since the design's 431), first hold 501 (+50); observer 658 to 898.
+- DONE: Every acceptance criterion green, each falsifier shown failing by a mutation run (python3 -B)
+  AC-1 rewording the phrase in a copy: lint exit 1 naming it; AC-4 loop replaced by `for label in []:` in a copy: only ConfirmationTests red, 56 other test_delivery_gate tests green; AC-2 replay.sh over six slugs: 12 of 12 exit=0; AC-5 workflow.md not in diff, 451/501. AC-3 and AC-7 are the validator's runs (no ask-N.json exists yet; observer run not mine). AC-6 below.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py exits 0
+  `PASS`, 5374 of 5374 words; full kc-dev-flow-2/scripts suite 554 tests found one real failure (test_observer_check wants `python3 ` before every package script named in the observer skill), fixed in 389cb89f; rerun of test_observer_check and test_lint_skills green.
+- DONE: adr_lint.py docs/adr --since <base> --require 24 exits 0
+  "25 ADR file(s) checked"; ADR 0024 Words line quotes 「照建議」 and this task's gate question.
+- DONE: no word added to kc-dev-flow-2/references/sd/workflow.md
+  `git diff origin/main --name-only` lists six files, none under references/.
+- DONE: roborev evidence= line
+  `clean on 389cb89ff; evidence=roborev:897` (first run on 8c4bb68b: `evidence=roborev:895`).
+- DONE: comment_ratio and number_guards
+  `code lines 99, comment lines 0, 0.0%`, maximum 5% met; number_guards check: "PASS: no findings", base 5a951034f270, migration guard skipped (no migrations-path).
+- DONE: doc_impact.py affected documents
+  Four listed, all `unaffected: they describe lint-skills.py's word-budget check, which is unchanged`: docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md, kc-dev-flow-2/README.md, kc-dev-flow-2/skills/maintain-flow/SKILL.md, learning.md.
+- DONE: design_surfaces.py check
+  Not rerun (the task file is unchanged by this stage except this report); design check exited 0 at ideation.
+- SKIPPED: CI green on the PR head
+  Pending when this report was written (unit tests, version parity, multi-profile route gate); FO reads the head before the merge ask.
+- SKIPPED: CI cost measured
+  Not measured: no workflow file changed; locally test_delivery_gate takes about 80 s and the full scripts suite about 270 s.
+
+### Summary
+
+Delivered the observer list, replay and ask-record reads, the Sufficiency and Necessity hold, the list lint and ADR 0024 as one Draft PR (#679). Two deviations from the design text, both forced by existing lints: list phrases and quoted rule names carry `python3 <package>/scripts/NAME.py`, and the test helpers prepend the two clauses by default (`clauses=True`) rather than editing the 12 tests that pass their own text. Open for validation: AC-3 (this task's own ask-1.json) and AC-7 (observer run on archived worker-loads-declared-package).
