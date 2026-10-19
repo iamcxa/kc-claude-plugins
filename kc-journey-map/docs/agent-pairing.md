@@ -89,8 +89,12 @@ serialized. Normal short-access renewal is automatic.
 
 Every rotating operation first publishes a paused checkpoint with the old
 authenticated repair material. New Keychain slots are saved and read back before
-a durable nonsecret slot pointer is published. Unconfirmed slots cannot release
-calls and are cleaned from the application-owned slot journal on reopening.
+a durable nonsecret slot pointer is published. A separate nonsecret checkpoint
+retains the preceding protected repair proof until manifest confirmation succeeds;
+failed confirmation quarantines staging for later/queued calls and reopening,
+even if the manifest already points at the new slot. Authenticated reconciliation
+can still use the preceding verifier or spent refresh proof. Unconfirmed slots
+cannot release calls and are cleaned from the application-owned slot journal.
 Only IDs are on disk. There is no plaintext secret fallback.
 
 ## Conservative repair
@@ -135,14 +139,16 @@ tombstones/spent proof are excluded from ordinary receipt cleanup.
 Before activation, preserve the complete current security metadata database and
 generations. Rollback means stopping owned processes and removing the optional
 setting while preserving tombstones and existing legacy expiry. Never restore
-an older security backup or use a binary that bypasses typed admission. Restarting
+an older security backup or use a binary that bypasses typed admission or the local
+confirmation checkpoint. Preserve that checkpoint until the patched helper confirms
+revoke; an older helper that ignores it is not a safe rollback. Restarting
 with the setting disabled advances policy generation; enabling it again cannot
 revive the prior families. New HTTP denial does not prove bounded stream stop.
 
 Three-step fresh-shell local acceptance, normally below five minutes after
 locked dependencies and browser are installed:
 
-1. `node --import tsx --test scripts/agent-pairing.test.ts scripts/agent-consent-context.test.ts && node --test scripts/agent-installation.test.mjs scripts/agent-protected-store.test.mjs`
+1. `node --import tsx --test scripts/agent-pairing.test.ts scripts/agent-consent-context.test.ts scripts/agent-confirmation.test.mjs && node --test scripts/agent-installation.test.mjs scripts/agent-protected-store.test.mjs`
 2. `JOURNEY_TEST_PAIRING=true node scripts/human-cloudflare-check.mjs`
 3. `node scripts/agent-pairing-browser-check.mjs`
 
@@ -150,7 +156,10 @@ Use normal host execution with loopback/browser and Keychain access. Sandboxed
 Keychain access can return OSStatus -50 and fails closed; do not weaken storage.
 All stores/rooms/items are generated synthetic fixtures. The OS check exercises
 real protected roundtrip, restart, unconfirmed-save recovery, process lock and
-exact cleanup. Unit fault injection exercises lost reply/save failure; it is
+exact cleanup. Real confirmation regressions make only their owned directory
+read-only, cover rotation/redemption and queued/repeated calls, retain a possible
+unconfirmed manifest pointer across restart, and prove actual Node revoke/fresh
+pairing. Unit fault injection exercises lost reply/save failure; it is
 not an induced real-Keychain corruption. The browser check exercises the actual
 tldraw app, real helper, pointer/keyboard/focus and light/dark desktop/390px plus
 touch-device emulation. Physical phone, live provider, deployment, Free budget

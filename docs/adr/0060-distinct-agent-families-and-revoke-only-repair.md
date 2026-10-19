@@ -43,8 +43,11 @@ The minimal stdio MCP helper pins its endpoint/backend, refuses redirects,
 serializes operations and holds an operating-system process lock. On macOS,
 versioned application-owned Keychain items protect secrets. A nonsecret durable
 pointer publishes a new slot only after protected-save confirmation and
-readback. A crash before publication retains the preceding paused state and
-original authenticated repair material. No plaintext secret fallback exists.
+readback. A separate nonsecret checkpoint protects the preceding repair slot until
+manifest confirmation completes. Failed or uncertain confirmation quarantines
+staging for queued/later calls and restart, including a manifest already pointing
+at the new slot. Reconciliation retains original or spent authenticated repair
+material. No plaintext secret fallback exists.
 
 Unknown redemption, refresh or protected-save outcomes permit only authenticated
 cancel/revoke confirmation and then fresh human-approved pairing. Current or

@@ -11,7 +11,7 @@ export class PairedInstallation {
  constructor(config, store, fetcher=fetch) { this.config=validateInstallation(config); this.store=store; this.fetcher=fetcher; this.queue=Promise.resolve() }
  exclusive(action) { const result=this.queue.then(action); this.queue=result.catch(()=>{}); return result }
  async saved() {
-  const value=await this.store.get()
+  const value=this.recovery||await this.store.get()
   if(value && (value.backendId!==this.config.backendId || value.endpoint!==this.config.endpoint)) throw new Error('installation_binding_denied')
   return value
  }
@@ -23,7 +23,17 @@ export class PairedInstallation {
   if(!response.ok) throw new Error(typeof result.category==='string'?result.category:'agent_request_denied')
   return result
  }
- async save(value) { await this.store.set(value); const readback=await this.store.get(); if(JSON.stringify(readback)!==JSON.stringify(value)) throw new Error('secure_save_unknown'); await this.store.confirm() }
+ async save(value) {
+  const previous=this.recovery||await this.store.get()
+  try {
+   await this.store.set(value);const readback=await this.store.get()
+   if(JSON.stringify(readback)!==JSON.stringify(value))throw new Error('secure_save_unknown')
+   await this.store.confirm();this.recovery=null
+  } catch {
+   this.recovery={...(previous?.familyId||previous?.verifier?previous:value),state:'repair-pending'}
+   throw new Error('repair_required')
+  }
+ }
  base() { return {backendId:this.config.backendId,endpoint:this.config.endpoint} }
  async begin() { return this.exclusive(async()=>{
   const old=await this.saved()
