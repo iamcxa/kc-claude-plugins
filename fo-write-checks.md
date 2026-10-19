@@ -221,6 +221,8 @@ ADR: 0025
 
 - Cycle 1 (FO, 2026-10-19): Codex review on #671 03a05f8f (review:5565983098) left two P2, to fix (rounds 1 and 2 fix every finding); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P2 (1) `kc-dev-flow-2/scripts/delivery_gate.py` unreasoned_items() drops a declined item with fewer than three tokens, so 'Declined: Polish, typo.' passes without a bracketed reason; (2) `kc-dev-flow-2/scripts/dispatch_records.py` K2 searches the scope notes unanchored, so a prose mention such as 'This does not use ADR: 0020 because ...' counts as the reserved line.
+- Cycle 2 (FO, 2026-10-19): Codex review on #671 08f06ac3 (review:5567189577) left two P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 (1) `kc-dev-flow-2/scripts/delivery_gate.py`: the bracket regex takes the innermost parentheses, so 'Declined: Polish, remove wrapper (the foo() call is redundant).' is held as reasonless; parse the balanced outer parentheses. P2 (2) `kc-dev-flow-2/scripts/dispatch_records.py`: the amendment-list grammar stops before ', and 3', so 'Captain amendments 1, 2, and 3' names only 1 and 2 and the dispatch is held for amendment 3.
 
 ## Stage Report: ideation
 
