@@ -260,3 +260,70 @@ Recommend settling SKIPPED and NEUTRAL with a floor (a head with no SUCCESS hold
 ### Summary
 
 `ci_problem` now settles SKIPPED and NEUTRAL check runs and holds a head with no SUCCESS (11-word line); `runs_problem` and every other hold are unchanged, and the docstring states the rule. Draft PR #680 is green; replay of the stored adopter output turns the three observed holds into passes. Stored replay inputs are under `delivery-gate-settles-skipped-checks/replay/` in the state checkout.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #680 head e80e50cb against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED recommended at e80e50cb851ae1f5a5d4353ee34d07cb1733c89a (PR head unchanged at validation end; Draft, CLEAN, 4 checks pass). Full `test_delivery_gate.py`: 68 tests OK. Seven mutations on a scratch copy, each run with `python3 -B`: `== "SUCCESS"` only reddens 6 subtests (AC-1/AC-2); no floor reddens 5 (AC-2); FAILURE settled reddens only `FAILURE` in `test_every_other_check_hold_stays_beside_a_success` (AC-3); unfinished settled reddens 4 (AC-3/AC-5); SKIPPED/NEUTRAL counted as success reddens 5 (AC-2); StatusContext SKIPPED settled reddens 1; a gh call added only on a non-green rollup reddens `test_settling_a_check_adds_no_gh_call` (AC-4). AC-6: `git grep "SKIPPED and NEUTRAL included" -- kc-dev-flow-2` empty, docstring names the floor. AC-4/AC-7: `git diff origin/main --stat -- docs/dev2 kc-dev-flow-2/references kc-dev-flow-2/skills kc-dev-flow-2/extensions` empty. Words recomputed: this repo 44 to 44; relay 398 and 401 33 to 44; web 150 34 to 44; lone-skipped floor line 11 words. Limits judged: all five hold as written; "no required check on either adopter" and the 403 on protection were stated by ideation and not re-read.
+- DONE: Judge the implementation's findings: relay #402's queued row was derived from its stored rollup (now merged), and the six merge/ask-N.json records store no rollup so #670, #671 and #675 were re-read live; rerun the replay from the inputs under the task folder's replay/ and confirm each verdict and mutation yourself.
+  Replay of replay/*.json through the test module's stub harness, base 891a9a24 then candidate: relay 398, 401, 399 and web 150 exit 1 then 0 (base prints "6 of 18", "6 of 18", "8 of 15", "4 of 7"); #670, #671, #675 exit 0 then 0; relay 402 as stored exit 1 then 0 (3 SKIPPED/NEUTRAL only); relay 402 with 6 SUCCESS set QUEUED and 1 IN_PROGRESS exit 1 then 1. I re-read all eight PRs live with `gh pr view`: every head and rollup equals the stored file, and the six ask records' heads (7e47e870, 13ceb00d, ccc84a78) equal the stored heads. Accepted: the relay 402 queued row is a derivation, not a stored queued rollup (no real queued rollup exists); the unfinished-hold itself is also guarded by HoldTests rows and the unfinished-settled mutation.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; adr_lint with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run in `env -i bash --noprofile --norc` (1m49s): output matched. `python3 <package>/scripts/adr_lint.py docs/adr --since 891a9a24` printed "25 ADR file(s) checked, 0 legacy", exit 0. Other checks: comment_ratio 70 code lines, 0 comment lines, exit 0; doc_impact lists no document, exit 0; design_surfaces presentable, exit 0; dispatch_records "3 dispatch record(s) complete", exit 0; no Number guards section and Surfaces none, so number_guards not run. Goal sufficiency: the three observed adopter holds pass and the floor, failure, unfinished and skipped-run holds stay. Minimal necessity: 13 changed code lines in `ci_problem` plus one docstring paragraph and six tests, each retained test row has a mutation above that only it catches; nothing retained lacks a consumer (relay and web asks).
+
+### Findings
+
+- Polish: `test_settling_a_check_adds_no_gh_call` compares the candidate's calls for a skipped rollup with the candidate's calls for a plain rollup, not with the base (AC-4 words "same calls as the base"); a gh call added unconditionally inside `ci_problem` passes the 68 tests (measured, mutation 7 variant). The diff shows no call and no user harm; what would make it Material: a later change that adds a call there and relies on this test.
+- Limit (no finding): AC-5's "relay#402 exit 1 while queued" rests on a derived rollup, as the implementation said.
+
+### Minimal acceptance script (Captain)
+
+Needs `git`, `python3`, and a `gh` sign-in that can read spacedock-dev/subspace-relay. Not covered: a live merge ask, `runs_problem`, the second-reviewer and ADR holds, an adopter with no fan-in job whose test job is skipped by a mistaken `if:` (a known limit).
+
+```bash
+# 1. Fetch the PR head and its base into throwaway checkouts. Expect the last line: e80e50cb
+rm -rf /tmp/accept-680 /tmp/accept-base
+git clone --quiet --filter=blob:none --no-checkout https://github.com/iamcxa/kc-claude-plugins.git /tmp/accept-680
+cd /tmp/accept-680
+git fetch --quiet origin pull/680/head
+git worktree add --quiet --detach /tmp/accept-base 891a9a24b51e5e9fda02a992c6a27910a216787d
+git checkout --quiet e80e50cb851ae1f5a5d4353ee34d07cb1733c89a
+git rev-parse --short HEAD
+
+# 2. Run the delivery-gate tests at the PR head. Expect: "Ran 68 tests" and "OK" (about 90 s)
+(cd kc-dev-flow-2/scripts && python3 -B -m unittest test_delivery_gate 2>&1 | tail -3)
+
+# 3. Read the real checks of a merged relay PR the old check held. Expect: 18 checks {'SUCCESS': 12, 'SKIPPED': 4, 'NEUTRAL': 2}
+gh pr view 398 --repo spacedock-dev/subspace-relay --json headRefOid,statusCheckRollup > /tmp/accept-398.json
+H=$(python3 -I -c 'import json;print(json.load(open("/tmp/accept-398.json"))["headRefOid"])')
+gh api "repos/spacedock-dev/subspace-relay/actions/runs?head_sha=$H&per_page=100" > /tmp/accept-398-runs.json
+python3 -I -c 'import json,collections;d=json.load(open("/tmp/accept-398.json"));print(len(d["statusCheckRollup"]),"checks",dict(collections.Counter(i.get("conclusion") or i.get("state") for i in d["statusCheckRollup"])))'
+
+# 4. Ask the delivery check about that head, before and after. Expect: before "relay 398: exit 1 ['6 of 18 checks ...'" and "lone skipped check: exit 1 []";
+#    after "relay 398: exit 0 []" and "lone skipped check: exit 1 ['no check on this head finished successfully: only skipped or neutral']"
+cat > /tmp/accept-replay.py <<'PY'
+import importlib.util, json, sys
+scripts = sys.argv[1]
+spec = importlib.util.spec_from_file_location("t", scripts + "/test_delivery_gate.py")
+t = importlib.util.module_from_spec(spec); spec.loader.exec_module(t)
+d = json.load(open("/tmp/accept-398.json")); runs = json.load(open("/tmp/accept-398-runs.json"))
+r = t.run_check(head=d["headRefOid"], records={"validation-1.md": t.record(d["headRefOid"])}, facts=dict(statusCheckRollup=d["statusCheckRollup"]), runs=runs)
+print("relay 398: exit", r.code, [l[:70] for l in r.lines if "checks on this head" in l])
+lone = [dict(__typename="CheckRun", name="a", status="COMPLETED", conclusion="SKIPPED")]
+r = t.run_check(facts=dict(statusCheckRollup=lone))
+print("lone skipped check: exit", r.code, [l for l in r.lines if "no check on this head" in l])
+PY
+echo "--- before (base)"; python3 -B -I /tmp/accept-replay.py /tmp/accept-base/kc-dev-flow-2/scripts
+echo "--- after (PR head)"; python3 -B -I /tmp/accept-replay.py /tmp/accept-680/kc-dev-flow-2/scripts
+
+# 5. Decision-record lint. Expect: "25 ADR file(s) checked, 0 legacy" and "adr_lint exit 0"
+python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --since 891a9a24b51e5e9fda02a992c6a27910a216787d; echo "adr_lint exit $?"
+
+# 6. Clean up
+cd /tmp && rm -rf /tmp/accept-680 /tmp/accept-base /tmp/accept-398.json /tmp/accept-398-runs.json /tmp/accept-replay.py
+```
+
+Observed output, fresh shell: `e80e50cb`; `Ran 68 tests in 93.695s` `OK`; `18 checks {'SUCCESS': 12, 'SKIPPED': 4, 'NEUTRAL': 2}`; before: `relay 398: exit 1 ["6 of 18 checks on this head are not finished and successful: 'workflow"]` and `lone skipped check: exit 1 []`; after: `relay 398: exit 0 []` and `lone skipped check: exit 1 ['no check on this head finished successfully: only skipped or neutral']`; `25 ADR file(s) checked, 0 legacy` `adr_lint exit 0`.
+
+### Summary
+
+PASSED recommended at e80e50cb: every acceptance criterion re-run and each falsifier shown failing by a mutation, the replay confirms every verdict, and the stored rollups equal GitHub's live ones. One Polish finding (AC-4's test compares against the candidate, not the base); no Material or Needs-decision finding. Throwaway checkouts removed; nothing pushed, commented or marked ready.
