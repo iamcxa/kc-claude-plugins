@@ -87,3 +87,150 @@ comment_ratio and number_guards: not run, no code or migration added (this task 
 ## Captain bar ruling
 
 Captain: 「照建議」 (chat, 2026-10-19), to FO's question 「這 4 件照建議批准，POC 照建議的標準開跑嗎？」 whose POC part stated the pre-registration's window (30 days of merged PRs in relay, web and qnow) and its three pass conditions as written under `## Pre-registration (phase 1 ...)`. The bar is that text, unchanged.
+
+## Results (phase 2)
+
+Run 2026-10-19 exactly as pre-registered; scratch scripts and per-PR JSON are in /tmp/mgn (not committed, throwaway as registered). Classifier: `delivery_gate.py` blob 6cba92cc7a6e (verified by `git hash-object` of the scratch copy), `never_paths` + `classify` called directly. Window 2026-09-19..2026-10-18: no listing reached the 1000 limit; every file list matched `changedFiles` (0 unclassifiable). gh calls: 309 file lists + 3 PR listings + about 20 discovery and probe calls not individually counted, well under the 1000 cap. State read by `git clone --bare --filter=blob:none` of spacedock-state/dev and /dev2 for each adopter (no gh call). Classifier README inputs: `docs/dev2/README.md` scalars per adopter at its trunk (qnow trunk `next`, `migrations-path: apps/qnow-api/netlify/database/migrations`; relay and web declare none), placed in a scratch repo root so the README-path rule resolves.
+
+### Measure 1: counts per repository (30-day window)
+
+| repo | merged PRs | never | docs-only | script-with-test | other | mapped to a task | task-level never added (prod/db) |
+|---|---|---|---|---|---|---|---|
+| subspace-relay | 143 | 95 | 2 | 2 | 44 | 38 | 1 |
+| subspace-web | 70 | 63 | 0 | 0 | 7 | 21 | 0 |
+| qnow | 96 | 71 | 1 | 0 | 24 | 45 | 0 |
+
+Path-level counts above are the upper bound; the one task-level change is a relay PR whose task is `prod` or `db`. Why never: release-please branches (relay 37, web 22), `docs/adr|dev*` paths (relay 41, web 36, qnow 57), `scripts/`/`.github` (relay 30), migrations (qnow 21 under `migrations-path`), and the other NEVER_PATH rules; every never PR names at least one rule. Largest non-`other` class in any repository: 2 PRs (bar needs 20).
+
+### Measure 2: recognition over non-never PRs (79: relay 47, web 7, qnow 25)
+
+| repo | covered | separate-turn | unrecognizable | of which unmapped |
+|---|---|---|---|---|
+| subspace-relay | 0 | 0 | 47 | 38 |
+| subspace-web | 0 | 0 | 7 | 6 |
+| qnow | 0 | 2 | 23 | 16 |
+
+Unrecognizable is 77 of 79 (97%). Across all 166 Captain validation approvals in every task that maps to a PR in these three state branches (213 PRs, not limited to the window), none contains 「預先授權」, 「批准並合併」, "approve and merge" or "approval also covers the merge"; 25 mention merge or 合併 and 6 of those say merging stays with the Captain. The Captain's merge is not in the gate records, so the ledgers cannot show a pre-authorized merge or the turn after approval.
+
+### Hand-check of 10 PRs (the recognizer against my reading of the full approval reasons, briefing questions and the later resolutions)
+
+Chosen before reading the labels: both `separate-turn` PRs plus eight mapped non-never PRs spread over the three repositories.
+
+| PR | path class | recognizer | my reading | agree |
+|---|---|---|---|---|
+| qnow#1269 | other | separate-turn (2 later) | the 2 later resolutions are repair pushes to the same PR, not a merge ask | no |
+| qnow#1231 | other | separate-turn (2 later) | the 2 later resolutions are redeliveries to the same PR | no |
+| relay#368 | other | unrecognizable | no merge wording in reason or question | yes |
+| relay#346 | other | unrecognizable | none | yes |
+| relay#322 | other | unrecognizable | none | yes |
+| relay#314 | other | unrecognizable | none | yes |
+| relay#276 | script-with-test | unrecognizable | none | yes |
+| web#96 | other | unrecognizable | says "merge stays with the Captain", not a pre-authorization | yes |
+| qnow#1278 | other | unrecognizable | approval covers later Codex repair rounds only | yes |
+| qnow#1238 | other | unrecognizable | none | yes |
+
+Classification spot-check on the same PRs: relay#276 (`*.ts` files each with a `.test.ts` sibling) is `script-with-test`; relay#346 and web#96 change one spec file only, so `other`; relay#368 and relay#322 mix docs and code, so `other`; qnow#1278 and #1269 change journey YAML only, so `other`. Disagreements: 2 of 10.
+
+### Against the bar (as ruled, unchanged)
+
+1. M1: FAILS. The largest docs-only or script-with-test count in any repository is 2 (relay), against 20.
+2. M2: not evaluable. Recognized non-never PRs are 2 (both `separate-turn` by the literal rule, 0 `covered`, so the stated thresholds read as met on n=2), and the hand-check shows both are false `separate-turn`.
+3. Reliability: FAILS. Unrecognizable is 97% (limit 25%) and the hand-check disagrees on 2 of 10 (limit 1).
+
+**Result: retire** (M1 fails; the pre-registration names that as sufficient). The parked branch spacedock-ensign/merge-gatekeeper at 3fd841789db9 stays as is and the two Codex P1 on it are not worked. Condition 3 also makes M2 `inconclusive`: the ledgers do not record the Captain's merge turn, so whether his pre-authorized merge covers the effect is not answered by this measurement.
+
+Not proved: that `other` PRs could not be granted under a different class design (44 relay and 24 qnow `other` PRs exist, which the registered bar excludes by ADR 0023's rule); that the merge turn count is low (chat turns are not ledgered); anything beyond 2026-09-19..2026-10-18.
+
+Cleanup: scratch directory /tmp/mgn only; no package, adopter or parked-branch file changed, no PR opened, no comment made.
+
+### Non-never PRs (path class, task class where mapped, recognizer label)
+
+- qnow#1198: other, task other, unrecognizable
+- qnow#1199: other, task other, unrecognizable
+- qnow#1201: other, task unmapped, unrecognizable
+- qnow#1202: other, task unmapped, unrecognizable
+- qnow#1206: other, task unmapped, unrecognizable
+- qnow#1210: other, task unmapped, unrecognizable
+- qnow#1211: other, task unmapped, unrecognizable
+- qnow#1212: other, task unmapped, unrecognizable
+- qnow#1213: other, task unmapped, unrecognizable
+- qnow#1216: other, task other, unrecognizable
+- qnow#1222: other, task unmapped, unrecognizable
+- qnow#1224: other, task unmapped, unrecognizable
+- qnow#1228: other, task unmapped, unrecognizable
+- qnow#1230: other, task unmapped, unrecognizable
+- qnow#1231: other, task other, separate-turn
+- qnow#1232: other, task unmapped, unrecognizable
+- qnow#1234: other, task other, unrecognizable
+- qnow#1238: other, task other, unrecognizable
+- qnow#1242: other, task other, unrecognizable
+- qnow#1247: other, task unmapped, unrecognizable
+- qnow#1257: other, task unmapped, unrecognizable
+- qnow#1263: other, task unmapped, unrecognizable
+- qnow#1269: other, task other, separate-turn
+- qnow#1271: docs-only, task unmapped, unrecognizable
+- qnow#1278: other, task other, unrecognizable
+- subspace-relay#236: other, task unmapped, unrecognizable
+- subspace-relay#240: script-with-test, task unmapped, unrecognizable
+- subspace-relay#243: other, task unmapped, unrecognizable
+- subspace-relay#244: other, task unmapped, unrecognizable
+- subspace-relay#246: other, task unmapped, unrecognizable
+- subspace-relay#253: other, task unmapped, unrecognizable
+- subspace-relay#257: other, task unmapped, unrecognizable
+- subspace-relay#263: other, task other, unrecognizable
+- subspace-relay#264: other, task unmapped, unrecognizable
+- subspace-relay#265: docs-only, task unmapped, unrecognizable
+- subspace-relay#268: other, task unmapped, unrecognizable
+- subspace-relay#273: other, task unmapped, unrecognizable
+- subspace-relay#274: other, task unmapped, unrecognizable
+- subspace-relay#276: script-with-test, task script-with-test, unrecognizable
+- subspace-relay#278: other, task other, unrecognizable
+- subspace-relay#292: other, task unmapped, unrecognizable
+- subspace-relay#300: other, task unmapped, unrecognizable
+- subspace-relay#301: other, task unmapped, unrecognizable
+- subspace-relay#304: other, task unmapped, unrecognizable
+- subspace-relay#305: docs-only, task unmapped, unrecognizable
+- subspace-relay#307: other, task unmapped, unrecognizable
+- subspace-relay#310: other, task unmapped, unrecognizable
+- subspace-relay#314: other, task other, unrecognizable
+- subspace-relay#315: other, task unmapped, unrecognizable
+- subspace-relay#316: other, task unmapped, unrecognizable
+- subspace-relay#318: other, task unmapped, unrecognizable
+- subspace-relay#321: other, task other, unrecognizable
+- subspace-relay#322: other, task other, unrecognizable
+- subspace-relay#324: other, task unmapped, unrecognizable
+- subspace-relay#329: other, task unmapped, unrecognizable
+- subspace-relay#330: other, task unmapped, unrecognizable
+- subspace-relay#333: other, task unmapped, unrecognizable
+- subspace-relay#339: other, task other, unrecognizable
+- subspace-relay#346: other, task other, unrecognizable
+- subspace-relay#352: other, task unmapped, unrecognizable
+- subspace-relay#357: other, task unmapped, unrecognizable
+- subspace-relay#358: other, task unmapped, unrecognizable
+- subspace-relay#368: other, task other, unrecognizable
+- subspace-relay#369: other, task unmapped, unrecognizable
+- subspace-relay#371: other, task unmapped, unrecognizable
+- subspace-relay#372: other, task unmapped, unrecognizable
+- subspace-relay#373: other, task unmapped, unrecognizable
+- subspace-relay#374: other, task unmapped, unrecognizable
+- subspace-relay#375: other, task unmapped, unrecognizable
+- subspace-relay#376: other, task unmapped, unrecognizable
+- subspace-relay#379: other, task unmapped, unrecognizable
+- subspace-relay#386: other, task unmapped, unrecognizable
+- subspace-web#78: other, task unmapped, unrecognizable
+- subspace-web#80: other, task unmapped, unrecognizable
+- subspace-web#86: other, task unmapped, unrecognizable
+- subspace-web#90: other, task unmapped, unrecognizable
+- subspace-web#91: other, task unmapped, unrecognizable
+- subspace-web#96: other, task other, unrecognizable
+- subspace-web#101: other, task unmapped, unrecognizable
+
+## Stage Report: implementation (phase 2)
+
+- DONE: Run the measurement exactly as pre-registered, with the bar as the Captain ruled it (## Captain bar ruling); commit the result table, the hand-check of 10 PRs and the counts per repository to the task file; report pass, fail or inconclusive against the bar without moving it; stop at the 1000-call cap if reached and report that
+  `## Results (phase 2)` above; the cap was not reached (309 file lists + 3 listings + about 20 probes); the bar fails on M1 and on the reliability condition, result `retire`.
+
+### Summary
+
+Of 309 merged PRs in the window, the largest non-`other` class in any repository has 2 PRs, so the registered 20-PR bar fails and the result is retire. The ledgers hold no pre-authorized-merge phrase and do not record the Captain's merge turn, so M2 cannot be read from them (97% unrecognizable, hand-check 2 of 10 wrong). No code or migration was added, so `comment_ratio` and `number_guards` were not run.
+
