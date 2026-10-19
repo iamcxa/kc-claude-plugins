@@ -495,22 +495,22 @@ package. Before delivery, confirm the file still matches the reviewed source
 registered. Missing/changed delivery configuration requires a hold: `merge: pr`
 alone does not block SD's no-hook local-finalize route.
 
-Project and Captain authority constrain hook instructions: present the exact candidate
-and PR body before authorized push/create; create a Draft PR where required, and request
-ready only after the required CI is green. Required CI is green only when its test jobs
-have finished on the PR head. Where CI skips drafts, FO marks the PR ready under the
-Captain's authority and waits for those jobs to finish before asking for merge. Approval
-of a validation gate is not permission to push, create or merge a PR, except as follows.
-FO's delivery gate question says that approval also covers later external-review rounds
-on the same PR. Under that approval, a repair whose validation passes with no Material
-or Needs decision finding is recorded by FO under that grant (`gate record --actor
-agent:first-officer` with `--conn-quote` and `--conn-source` naming his approval) and
-pushed to that PR's branch, after FO confirms the pushed commit is the candidate the
-report names. A rejected repair, a Needs decision, a scope change and the merge still go
-to him. Preserve manual merge authority. Do not invoke local fallback, push the trunk,
-merge, or clean up an owned worktree unless the specific action is authorized. An
-upstream hook's default fallback is not that grant. A failure holds delivery pending an
-explicit choice.
+Project and Captain authority constrain hook instructions: present the exact candidate and
+PR body before authorized push/create; create a Draft PR where required, and request ready
+only after the required CI is green. Where CI skips drafts, FO marks the PR ready under
+the Captain's authority and waits for those jobs to finish before asking for merge.
+Approval of a validation gate is not permission to push, create or merge a PR, except as
+follows. FO's delivery gate question says that approval also covers later external-review
+rounds on the same PR, merging the head `<package>/scripts/delivery_gate.py check` passes
+unless he says he merges, and removing its clean, pushed worktree afterwards. Under that
+approval, a repair whose validation passes with no Material or Needs decision finding is
+recorded by FO under that grant (`gate record --actor agent:first-officer` with
+`--conn-quote` and `--conn-source` naming his approval) and pushed to that PR's branch,
+after FO confirms the pushed commit is the candidate the report names. A rejected repair,
+a Needs decision and a scope change go to him. Preserve manual merge authority. Do not
+invoke local fallback, push the trunk, merge, or clean up an owned worktree unless the
+specific action is authorized. An upstream hook's default fallback is not that grant. A
+failure holds delivery pending an explicit choice.
 
 Under the Captain's grant quoted in its dispatch, the implementation worker opens the task's
 Draft PR before validation; that grant stands in for a presented body. Observe the actual

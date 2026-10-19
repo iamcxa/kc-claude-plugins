@@ -160,9 +160,10 @@ FIXES = {
         swaps=((r"When that summary is already consumed, FO writes the decline.*?lists each entry there\. ", ""),)),
     "repair-push-grant": dict(
         need=("approval also covers later external-review rounds on the same PR",
-              "a scope change and the merge still go to him"),
+              "a Needs decision and a scope change go to him"),
         old=(),
-        swaps=((r", except as follows\. FO's delivery gate question.*?the merge still go to him\.", "."),)),
+        swaps=((r", except as follows\. FO's delivery gate question.*?scope change go to him\.",
+                ", except as follows. FO's delivery gate question says that approval also covers merging the head `<package>/scripts/delivery_gate.py check` passes unless he says he merges, and removing its clean, pushed worktree afterwards."),)),
     "asked-line": dict(
         need=("Asked: <the question or proposal he answered",
               "`Asked:` is required when his words do not name"),
@@ -208,6 +209,11 @@ FIXES = {
                (r" that grant stands in for a presented body", ""),
                (r" FO's startup and idle steps are in `_mods/kc-dev-flow-2\.md`, copied from `<package>/references/sd/mods/`\.", ""),
                (r"Before the merge ask, FO runs `python3 <package>/scripts/delivery_gate\.py check.*?shows the Captain what it printed\.", "Before the merge ask, FO confirms the head."))),
+    "delivery-question-carries-merge": dict(
+        need=("merging the head `<package>/scripts/delivery_gate.py check` passes unless he says he merges",
+              "removing its clean, pushed worktree afterwards"),
+        old=(),
+        swaps=((r", merging the head `<package>/scripts/delivery_gate\.py check` passes unless he says he merges, and removing its clean, pushed worktree afterwards", ""),)),
     "worker-opens-draft-pr": dict(
         file="skills/implementation/principles.md",
         need=("Where the dispatch scope notes quote the Captain's grant to push the task branch and open a Draft PR, open that PR before the stage report and name it there",
