@@ -16,8 +16,10 @@ more words holding its reason; this proves a bracket exists, not that it is a re
 The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
 a confirmation clause is missing, a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
 `## Number guards` has no `<adr-path>/NNNN-*.md` in the directory at the PR head (README `adr-path:`, default `docs/adr`;
-the directory is read, not the PR's file list), a prod task's security review fails, a check run on the head is not finished and
-successful (an empty rollup, SKIPPED and NEUTRAL included), the PR is a draft or not mergeable, its base is not the README's
+the directory is read, not the PR's file list), a prod task's security review fails, a check on the head is not finished or finished
+other than SUCCESS, SKIPPED or NEUTRAL (a check run its repository skips by design settles), no check on the head finished SUCCESS
+(an empty rollup, or only skipped and neutral checks), a workflow run on the head is not completed and successful (a skipped run
+included), the PR is a draft or not mergeable, its base is not the README's
 `trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
 README cannot be read, or an input is unusable. Every problem is printed.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
@@ -286,15 +288,20 @@ def points_for(task_text, gate_text, record, paths_never, facts, profile_prod, r
 def ci_problem(rollup):
     if not rollup:
         return "the check rollup is empty: no check has run on this head"
-    bad = []
+    bad, succeeded = [], 0
     for item in rollup:
         if item.get("__typename") == "StatusContext":
-            ok = item.get("state") == "SUCCESS"
+            result = item.get("state")
+            ok = result == "SUCCESS"
         else:
-            ok = item.get("status") == "COMPLETED" and item.get("conclusion") == "SUCCESS"
+            result = item.get("conclusion") if item.get("status") == "COMPLETED" else None
+            ok = result in ("SUCCESS", "SKIPPED", "NEUTRAL")
+        succeeded += result == "SUCCESS"
         if not ok:
             bad.append(tok(item.get("name") or item.get("context") or "?", words=3, chars=40))
-    return f"{len(bad)} of {len(rollup)} checks on this head are not finished and successful: {' '.join(bad[:5])}" if bad else None
+    if bad:
+        return f"{len(bad)} of {len(rollup)} checks on this head are not finished and successful: {' '.join(bad[:5])}"
+    return None if succeeded else "no check on this head finished successfully: only skipped or neutral"
 
 
 def runs_problem(runs):
