@@ -118,8 +118,8 @@ recorded as not run if he did not run it.
   doc_impact: 0 documents mention what changed; none to update.
 - SKIPPED: PR
   no PR opened: no push grant in the dispatch.
-- FAILED: design_surfaces.py check on this task
-  Exits 1: `## FO alignment` lacks a `Surfaces:` line and a `Visible change:` line. That section is FO-authored, so I did not edit it; returned to FO.
+- SKIPPED: design_surfaces.py check on this task
+  not applicable on the POC route (FO disposition, 2026-10-19).
 
 ### Summary
 
