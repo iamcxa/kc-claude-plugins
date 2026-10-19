@@ -67,6 +67,7 @@ Alignment: not needed before ideation; the Captain asked for this fix before the
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+Reviewer: engineering-reviewer opus 2026-10-20 — does settling SKIPPED and NEUTRAL check runs, with the floor, let an unsafe head reach a carried merge, given that it reverses the SKIPPED or NEUTRAL clause of merge-gatekeeper AC-1 the Captain approved on 2026-10-17? Called by the special-role combination the Captain agreed (「同意這個組合」, 2026-10-20): a design that reverses an earlier Captain ruling calls the engineering-reviewer.
 
 ## Peers
 
