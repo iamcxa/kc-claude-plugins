@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-settles-skipped-checks:backlog:attempt-1:revision-1",
+  "question": "Fix #677 before this release as a Pilot task after #679 (the delivery check settles a check run its repository skips by design, so an all-green relay or web PR is not held)? FO put this in chat before this briefing: 「你回「排」，我就開一張任務，選 Pilot 這個 profile，排在 #679 之後」. Approving accepts profile pilot, the scope above and that order.",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-settles-skipped-checks:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fbcb7a9ec6dffea9a3aaf9be219a537f58f8214c/delivery-gate-settles-skipped-checks.md",
+      "rev": "sha256:419e39f96fa32be166837fd7718615a919432ddab023d4f2aeee561f698d064a",
+      "mediaType": "text/markdown",
+      "summary": "Seed filed from #677 with three observed holds (relay #398, #401; web #150), each ended by a Captain override; consumer: every adopter FO's merge ask and the Captain; directions to measure at ideation: settle SKIPPED and non-required NEUTRAL, consult only required checks, or an adopter-declared skip list. Profile pilot as FO recommended in chat."
+    }
+  ]
+}
