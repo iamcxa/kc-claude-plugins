@@ -5,7 +5,7 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 worktree: .worktrees/spacedock-ensign-agent-board-poc
-pr:
+pr: 673
 gates:
     version: 1
     records:
@@ -57,6 +57,7 @@ gates:
                 target-stage: done
                 state: pending
 started: 2026-10-13T08:57:55Z
+mod-block: merge:pr-merge
 ---
 
 Claude Code sessions can message each other and wake the receiver, but nothing crosses
