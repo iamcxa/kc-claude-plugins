@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-settles-skipped-checks:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts D1 as recommended (settle SKIPPED and NEUTRAL check runs, with a floor that still holds a head on which no check succeeded; an adopter skip list only when an adopter without a fan-in job shows the gap), which reverses the SKIPPED or NEUTRAL clause of merge-gatekeeper AC-1 that you approved at its ideation gate on 2026-10-17, and implementation after #679 merges, rebased on its delivery_gate.py.",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-settles-skipped-checks:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e76b2b95c5c22e8df0f3033551991798974e257a/delivery-gate-settles-skipped-checks.md",
+      "rev": "sha256:9aa460629687a5e20d40cb0f3ebed44025426e44a3ba311e019f1991795e1750",
+      "mediaType": "text/markdown",
+      "summary": "Design: delivery_gate.py ci_problem treats a CheckRun finished SKIPPED or NEUTRAL as settled, as GitHub does; a head with no SUCCESS is still held; runs_problem unchanged. Measured: neither adopter has a required check (private free-plan repos, protection endpoints 403), ruling out 'required checks only'; replay of relay #398, #401, #399 and web #150 flips exit 1 to 0; the six committed merge/ask records and relay #402 (queued) keep their verdicts; the 56 existing tests pass on the prototype. Worse under D1: on an adopter with no fan-in job, a test job skipped by mistake passes beside a succeeded sibling. AC-1 to AC-7; no README or ADR change; Pilot boundary holds."
+    }
+  ]
+}

@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-gate-settles-skipped-checks:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-gate-settles-skipped-checks-ideation-1
+              briefing:
+                id: briefing:delivery-gate-settles-skipped-checks:ideation:attempt-1:revision-1
+                digest: sha256:d3d0a11d9e3ca71f9be21ded7dc80ef41912214e3b148899eacaf234436b9171
+                room-ref: ./delivery-gate-settles-skipped-checks/review/ideation/briefing-1
 started: 2026-10-19T15:34:07Z
 ---
 
