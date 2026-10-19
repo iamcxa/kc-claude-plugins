@@ -1,0 +1,16 @@
+{
+  "class": "never",
+  "head": "559f5da60d0cc06821dc59381127eb913dd18aab",
+  "model": "not run",
+  "next": "next: ask for merge with this text.",
+  "points": [
+    "point: deferred: '- None Material, Deferred risk, Polish'",
+    "point: not-run: 'Validation Verdict PASSED at 559f5da6 (validation'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#680",
+  "time": "2026-10-19T17:45:59Z",
+  "verdict": "ask"
+}
