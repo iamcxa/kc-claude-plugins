@@ -1,0 +1,5 @@
+{
+  "id": "paseo-fo-console-poc",
+  "name": "FO console POC",
+  "requirements": { "paseo": ">=0.12.0" }
+}
