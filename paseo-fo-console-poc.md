@@ -4,7 +4,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-paseo-fo-console-poc
 pr:
 gates:
     version: 1
@@ -41,6 +41,7 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-19T11:13:59Z
 ---
 
 Kent wants one entry point in Paseo for his FOs. From a plugin screen he sees which FOs
