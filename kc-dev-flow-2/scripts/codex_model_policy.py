@@ -31,9 +31,13 @@ def stage_declaration(workflow_dir, stage):
         elif line == "  states:":
             section, current = "states", None
         elif section == "states" and (name := re.match(r"^    - name:\s*(.*)", line)):
-            current = states.setdefault(scalar(name[1]), {})
+            if scalar(name[1]) in states:
+                raise ValueError(f"duplicate stage {scalar(name[1])!r} in {workflow_dir}/README.md")
+            current = states[scalar(name[1])] = {}
         elif current is not None and (field := re.fullmatch(
                 ("    " if section == "defaults" else "      ") + r"(model|reasoning):\s*(.*)", line)):
+            if field[1] in current:
+                raise ValueError(f"duplicate {field[1]} declaration in {section} block of {workflow_dir}/README.md")
             current[field[1]] = scalar(field[2])
     if stage not in states:
         raise ValueError(f"stage {stage!r} not found in {workflow_dir}/README.md")

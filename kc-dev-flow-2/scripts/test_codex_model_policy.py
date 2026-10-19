@@ -71,6 +71,22 @@ class CodexModelPolicyTest(unittest.TestCase):
         self.assertEqual((code, out), (1, ""))
         self.assertIn("implementation", err)
 
+    def refused(self, readme, stage, needle):
+        (self.wf / "README.md").write_text(readme)
+        code, out, err = self.stage(stage)
+        self.assertEqual((code, out), (1, ""))
+        self.assertIn(needle, err)
+
+    def test_duplicate_stage_is_refused(self):
+        self.refused(README.replace("    - name: odd", "    - name: validation\n    - name: odd"),
+                     "validation", "duplicate stage 'validation'")
+
+    def test_duplicate_field_is_refused(self):
+        self.refused(README.replace("      reasoning: xhigh", "      reasoning: xhigh\n      reasoning: low"),
+                     "validation", "duplicate reasoning")
+        self.refused(README.replace("    model: sonnet", "    model: sonnet\n    model: opus"),
+                     "implementation", "duplicate model")
+
 
 if __name__ == "__main__":
     unittest.main()
