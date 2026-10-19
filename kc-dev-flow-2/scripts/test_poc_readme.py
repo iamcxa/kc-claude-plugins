@@ -32,12 +32,16 @@ class DeriveTests(unittest.TestCase):
     def test_the_derived_poc_readme_carries_the_migration_rule_to_both_worker_stages(self):
         derived = poc.derive(SOURCE)
         bullet = next(b for b in derived.split("\n- **") if b.startswith("POC.**"))
-        for phrase in ("migrations-path:", "FAIL R6", "boundary-crossed: persistent-state", "not repaired in\n  place"):
+        for phrase in ("FAIL R6", "boundary-crossed: persistent-state", "not repaired in\n  place", "reserves no number"):
             self.assertIn(phrase, bullet)
         for stage in ("implementation", "validation"):
             start = derived.index(f"    - name: {stage}\n")
             end = derived.index("\n    - name:", start)
             self.assertIn("        - Number guards", derived[start:end])
+
+    def test_the_number_guards_section_names_the_adr_path_default_the_script_cannot_tell_its_reader(self):
+        section = SOURCE.split("\n## Number guards\n")[1].split("\n## ")[0]
+        self.assertIn("`adr-path:` (default `docs/adr`)", section)
 
     def test_the_source_has_no_link_that_breaks_once_copied_into_an_adopter(self):
         import re
