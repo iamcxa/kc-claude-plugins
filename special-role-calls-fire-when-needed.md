@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:special-role-calls-fire-when-needed:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:special-role-calls-fire-when-needed-ideation-1
+              briefing:
+                id: briefing:special-role-calls-fire-when-needed:ideation:attempt-1:revision-1
+                digest: sha256:b3d2938c84e45ae3b2f894e681b329e066feb05899e44973b0afb86216881c74
+                room-ref: ./special-role-calls-fire-when-needed/review/ideation/briefing-1
 started: 2026-10-19T17:05:25Z
 ---
 

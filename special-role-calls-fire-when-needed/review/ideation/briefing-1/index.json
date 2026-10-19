@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:special-role-calls-fire-when-needed:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation as Pilot? Approving accepts D1 to D5 as recommended: D1 ship the review-round count as a last, droppable slice; D2 chief-engineer owed at four repair passes; D3 accept the four engineering-reviewer cases no count sees, with no Reverses: line, and read the next batch for a repeat; D4 the engineering-reviewer goes to Fable on profile: prod or a db surface only, not on merge or authority changes (narrower than the Captain's item 1, which named secrets and merge or authority rules); D5 run stage 1 of the ADR 0021 D1 evaluation (reading only, no model) and decide stage 2 on its result.",
+  "artifacts": [
+    {
+      "id": "artifact:special-role-calls-fire-when-needed:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/cd063238894f3d18af6f9983b210f04b97ac5838/special-role-calls-fire-when-needed.md",
+      "rev": "sha256:be8a9cfc87e8aded1d5fe40807d880b5d6a53cbf6d710f86b47f3a274750ce8d",
+      "mediaType": "text/markdown",
+      "summary": "Design measured on 38 window tasks and 287 overall across four repositories: chief-engineer owed at four repair passes (stage-report headings), 10 fires, 9 of 9 owed caught, 0 false (today 5); engineering-reviewer keeps amendment detection, clears by date; cost 0.25 Opus calls per task (today 0.18). Four engineering-reviewer cases (including captain-question-load and the #677 fix) no count sees. Model: Fable on prod or db (2 of 9 window fires), Opus otherwise; secrets have no field and the merge or authority path signal marks 31 of 38 tasks, so neither picks Fable. Security reviewer: stage 1 reading of 10 saved reports against 26 later findings, stage 2 reruns only on an escape (about 40 USD assumed). README unchanged; AC-1 to AC-9."
+    }
+  ]
+}
