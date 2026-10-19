@@ -254,6 +254,13 @@ Verified by: `git diff --name-only <base>..<head>` and `git diff -U0 <base>..<he
 **AC-5** Batch 3 reports its Captain answers per task with the same script and the same classification as AC-1, and the rule is judged by the two removable kinds: no standalone merge ask for a delivery PR whose approved question carried the sentence, and no worktree-cleanup ask.
 Verified by: FO runs the transcript script over the batch window at batch close and records answers and asks per task by kind in the batch note, beside the batch-2 figures (22 answers, 3.7 per task, 63 asks); each delivery gate question is read from `<task>/review/validation/briefing-N/index.json`. The per-task number is reported without a threshold (one task drove 7 of 22 in batch 2; batch 3 differs in size and profile). Falsifier: one answer of either removable kind, or a batch note without the per-task figures. Current evidence: not yet verified; batch 2 had 1 certain and 1 conditional.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-19, chat
+Captain: 「授權修改 Delivery authority 合併措辭，照 D1 設計。但我要你明確跟我說，當我同意/核准驗證關卡時，等於授權你也合併 PR，除非我有顧慮暫時不合併。但這裡必須要硬前提，ＰＲ 必須是 ready 狀態，合理嗎？」 (chat, this FO session)
+Asked: FO's chat question after the implementation worker's edit of the Delivery authority merge wording was refused by the permission check: 「你明確再授權一次（建議）：給我一句可以引用的話，例如「授權修改 Delivery authority 合併措辭，照 D1 設計」……放棄 D1：合併照舊每次單獨問你。」
+Supersedes: none
+
 ## Number guards
 
 ADR: 0023
