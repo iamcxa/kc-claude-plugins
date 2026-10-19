@@ -266,6 +266,11 @@ Supersedes: none
 
 ADR: 0023
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-19): Codex review on #675 16d8d456 (review:5569526052) left one P1, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 (kc-dev-flow-2/scripts/delivery_gate.py ASK and the Delivery authority sentence): 'unless he says he merges' does not cover an approval that says wait or do not merge yet, while Captain amendment 1 reserves exactly that (「除非我有顧慮暫時不合併」); an explicit hold or merge objection must be an opt-out too.
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for the measured count of every Captain decision per batch-2 task by kind (stage gates, Needs decisions, amendments, merge asks, procedural asks such as a refused push, a throwaway repository, a PR-body edit), from the decision ledger, gate briefings and task files of this workflow (2026-10-17 to 10-19); which kinds a written standing rule could settle without him and the rule text; which stay his under ADR 0011; the expected asks per task after the change
