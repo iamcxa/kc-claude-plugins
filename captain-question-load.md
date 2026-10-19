@@ -367,3 +367,45 @@ Unverified: AC-5 (FO's batch-close recount); the 22-way classification is a read
 ### Summary
 
 The hold is now an opt-out in the README sentence, the `next:` line and ADR 0023, and the check runs before the merge as well as before the ask, at net zero README words. Open for FO: roborev:878 High (the same text-only limit), and the hold is judged by FO, not enforced by the script. Scratch worktree /tmp/cql-p1 removed.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #675 head 1704ec80 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 1704ec800ac2f852b24b0c79f1483f8e65588825 (base 18dbf490; detached throwaway checkout, removed). AC-1 unchanged by cycle 2 (cycle 1 reproduced 18 rows, 33 messages, 22/63). AC-2: README 5374 to 5374, Delivery authority 447 to 447 (`len(text.split())`, heading included), lint-skills exit 0 with no raise step. AC-3: ADR 0011 diff unchanged since cycle 1; hold wording below. AC-4: `git diff --stat 18dbf490..HEAD` lists the same five paths, `delivery_gate.py` changes 1 line (`ASK`, 27 words). AC-5 not verified, it is FO's at batch close. Limits judged: draft hold and text-only line hold as in cycle 1; "holds" is FO's reading, not script-enforced (F3).
+- DONE: Recheck Cycle 1: the Codex round-1 P1 (review:5569526052, an approval that says wait or do not merge yet must hold the merge) fixed at 1704ec80 with 'merges or holds' in the README sentence, the ASK line and ADR 0023, plus the F2 clause 'Before merging or asking, FO runs'; confirm each change's pin or test fails when reverted, the word counts (README 5374, Delivery authority 447), and that the roborev:878 High is the same finding as roborev:875; rerun the acceptance script
+  P1 fixed in all three places (diff 16d8d456..1704ec80 read). Reverted alone, python3 -B, caches cleared: README "or holds" removed turns only pin `delivery-question-carries-merge` red (gap = the need string); "Before merging or asking" reverted turns only `readme-keeps-delivery-rules` red; `ASK` reverted fails 6 tests (`test_each_exit_ends_with_the_next_line_for_the_ask`, both ProdSecurityReviewTests pilot/prod output tests, 3 CodexP1Tests prod subcases). Unmutated: test_sd_dispatch.py exit 0, test_delivery_gate.py 56 OK (140 s). ADR 0023 hold paragraph is not pinned by any test (read only, Polish F6). roborev:878 and :875 are the same finding: both codex, High, `delivery_gate.py:65`, "prints the merge line without verifying the question named the merge or the Captain did not hold".
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.25.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, each step in a fresh `env -i bash --noprofile --norc -c`; `adr_lint.py docs/adr --since 18dbf490b399ecaa8ec288188bd1cf25e5c9d3ab` exit 0 (24 ADR files, 0 legacy), also exit 0 with `--require 23`. Also exit 0 at the candidate: `comment_ratio.py` (17 code lines, 0 comment lines), `number_guards.py check`, `design_surfaces.py check`, `dispatch_records.py` (8 records complete). `doc_impact.py` lists kc-dev-flow-2/README.md, references/sd/adoption.md, learning.md; none carries an `updated`/`unaffected` line in the implementation reports (F5, Polish; each mentions only the test command, so `unaffected`).
+
+### Minimal acceptance script
+
+Needs this machine, network for `gh`, PR #675 still a Draft. Covers the wording, the budget, the draft hold and the pinned tests; not a real merge, AC-5, or the adopters' README copies (until refit).
+
+1. `cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo && git fetch -q origin pull/675/head && git worktree add --detach /tmp/cql-675-accept 1704ec800ac2f852b24b0c79f1483f8e65588825 >/dev/null 2>&1 && git -C /tmp/cql-675-accept rev-parse --short=8 HEAD`
+   Expect `1704ec80`. Observed `1704ec80`.
+2. `cd /tmp/cql-675-accept && python3 -B kc-dev-flow-2/scripts/lint-skills.py`
+   Expect `PASS` and `workflow.md: 5374 of 5374 words`. Observed both, exit 0.
+3. `cd /tmp/cql-675-accept && grep -n -A3 "rounds on the same PR, merging" kc-dev-flow-2/references/sd/workflow.md && grep -n "^ASK = " kc-dev-flow-2/scripts/delivery_gate.py`
+   Expect "... passes unless he says he merges or holds, and removing its clean, pushed worktree." and the `ASK` line ending "he did not say he merges or holds, else ask for merge with this text." Observed both (workflow.md:504-505, delivery_gate.py:65).
+4. `cd /tmp/cql-675-accept && printf "Approve delivering this change; approval also covers merging the validated head.\n" > /tmp/cql-675-question.txt && python3 -B -I kc-dev-flow-2/scripts/delivery_gate.py check /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/captain-question-load.md --pr iamcxa/kc-claude-plugins#675 --text-file /tmp/cql-675-question.txt --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2; echo "exit $?"`
+   Expect while the PR is a Draft: `the PR is a draft`, `next: hold the ask; mark the PR ready under the Captain's authority and let its CI finish.`, `exit 1`, no merge line. Observed exactly that.
+5. `cd /tmp/cql-675-accept/kc-dev-flow-2/scripts && python3 -B -m unittest test_delivery_gate.DeliveryGateTests.test_each_exit_ends_with_the_next_line_for_the_ask test_delivery_gate.ProdSecurityReviewTests 2>&1 | tail -3` then, as a second command, `cd /tmp/cql-675-accept/kc-dev-flow-2/scripts && python3 -B test_sd_dispatch.py --sd-plugin-root /Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.0 2>&1 | tail -1`
+   Expect `Ran 8 tests` and `OK`, then `Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge`. Observed both.
+6. `git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo worktree remove --force /tmp/cql-675-accept && rm -f /tmp/cql-675-question.txt && ls /tmp/cql-675-accept 2>&1 | head -1`
+   Expect `No such file or directory`. Observed that.
+
+### Verdict and findings (Review-finding disposition)
+
+Verdict: PASSED for head 1704ec800ac2f852b24b0c79f1483f8e65588825 (PR #675, Draft). No Material finding.
+
+- Codex P1 review:5569526052: closed at this head (README, ASK, ADR carry "holds"; pins red when reverted).
+- F1 roborev:875 = roborev:878 High (merge line printed without reading the question or a hold): Deferred risk, unchanged from cycle 1; becomes Material if a PR merges on an approval whose question did not name the merge or after he said to hold. A fix that reads the question breaks AC-4; it belongs to `fo-write-checks`.
+- F2 (cycle 1, no re-check before an unasked merge): closed by "Before merging or asking, FO runs", pinned; the hold on a head other than the latest `Candidate:` now sits before the merge.
+- F3 the hold is FO's reading of the approval text, not script-enforced; Deferred risk, only AC-5's recount can show it.
+- F4 pilot-output bound 37 to 55 stays (output now 44 words): Polish.
+- F5 no `updated`/`unaffected` records for the three `doc_impact.py` documents: Polish.
+- F6 ADR 0023's hold paragraph has no test pin: Polish.
+
+### Summary
+
+Cycle 2 repairs the Codex P1 and the F2 gap with no word-count change; every changed line fails its own pin or test when reverted, and the acceptance script reproduces. Unverified: AC-5 (FO's batch recount) and a real merge. roborev:878 is the roborev:875 finding again, already a Deferred risk.
