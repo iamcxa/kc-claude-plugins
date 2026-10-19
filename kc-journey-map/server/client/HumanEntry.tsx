@@ -89,7 +89,7 @@ export function HumanEntry({ children }: { children: () => ReactNode }) {
   const timer = setTimeout(async () => {
    const csrf = /(?:^|;\s*)journey_human_csrf=([^;]+)/.exec(document.cookie)?.[1] || ''
    try {
-    const response = await fetch(journeyApi('/auth/renew?' + new URLSearchParams({ _human: entry.memberId, _backend: entry.backendId, _humanAt: String(entry.verifiedHumanSignInAt) })), { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Journey-Entry': '1', 'X-Journey-Csrf': csrf }, body: '{}' })
+    const response = await fetch(journeyApi('/auth/renew?' + new URLSearchParams({ _human: entry.memberId, _backend: entry.backendId, _humanAt: String(entry.verifiedHumanSignInAt), _humanRoom: entry.room! })), { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Journey-Entry': '1', 'X-Journey-Csrf': csrf }, body: '{}' })
     const result = await response.json()
     if (!response.ok) { setProblem(result.category || 'host_unavailable'); return }
     setEntry(current => current ? { ...current, expiresAt: result.expiresAt } : null)
@@ -127,7 +127,7 @@ export function HumanEntry({ children }: { children: () => ReactNode }) {
   window.history.pushState(null, '', url); window.dispatchEvent(new PopStateEvent('popstate'))
  }
  if (config && !config.enabled) { setHumanContext(null); return children() }
- if (entry?.room && !problem && !busy) { setHumanContext({ member: entry.memberId, backend: entry.backendId, signInAt: entry.verifiedHumanSignInAt }); return <><div className="human-entry-identity">{entry.label} · 身分已驗證</div>{children()}</> }
+ if (entry?.room && !problem && !busy) { setHumanContext({ member: entry.memberId, backend: entry.backendId, signInAt: entry.verifiedHumanSignInAt, room: entry.room }); return <><div className="human-entry-identity">{entry.label} · 身分已驗證</div>{children()}</> }
  return <main className="human-entry"><section aria-labelledby="human-entry-title" aria-busy={busy}>
   <p className="human-entry-eyebrow">私人畫布</p><h1 id="human-entry-title">{busy ? '正在確認入口' : entry ? '選擇畫布' : '驗證後進入畫布'}</h1>
   {requested !== null && <p>指定畫布：<strong>{requested || '（空白）'}</strong></p>}

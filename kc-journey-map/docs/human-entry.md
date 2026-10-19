@@ -98,8 +98,8 @@ Human app cookies use separate names from legacy sessions. The secret is stored
 only as a server digest; CSRF uses a separate same-origin cookie/header proof.
 Healthy renewal preserves original identity/event and the absolute deadline.
 Member generation changes deny existing sessions even after remove/regrant.
-Human data/socket requests require all three original-context query fields
-(`_backend`, `_human`, `_humanAt`); missing or mismatching fields deny. Explicit
+Human data/socket requests require the original-context query fields
+(`_backend`, `_human`, `_humanAt`, `_humanRoom`); missing or mismatching fields deny. Explicit
 authentication routes remain context-free where needed for first entry.
 Browser requests carry their immutable original backend/member/event context;
 a replacement shared cookie cannot reconnect a different human context.

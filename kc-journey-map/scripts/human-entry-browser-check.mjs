@@ -59,7 +59,7 @@ try {
  const cookie = (await context.cookies()).find(c => c.name === 'journey_human')
  assert.ok(cookie.httpOnly); assert.equal(cookie.sameSite, 'Strict'); assert.equal(cookie.secure, false); assert.equal(cookie.domain, '127.0.0.1')
  const entryState = await context.request.get(origin + '/auth/entry').then(response => response.json())
- const humanPath = path => { const url = new URL(origin + path); url.searchParams.set('_human', entryState.memberId); url.searchParams.set('_backend', entryState.backendId); url.searchParams.set('_humanAt', String(entryState.verifiedHumanSignInAt)); return url.href }
+ const humanPath = path => { const url = new URL(origin + path); url.searchParams.set('_human', entryState.memberId); url.searchParams.set('_backend', entryState.backendId); url.searchParams.set('_humanAt', String(entryState.verifiedHumanSignInAt)); url.searchParams.set('_humanRoom', 'one'); return url.href }
  assert.equal((await context.request.get(humanPath('/doc?room=one'))).status(), 200)
  assert.equal((await context.request.get(origin + '/doc?room=one')).status(), 403)
  for (const [path, method] of [['/doc?room=denied', 'GET'], ['/uploads/anything?room=denied', 'GET'], ['/mcp', 'POST']]) {

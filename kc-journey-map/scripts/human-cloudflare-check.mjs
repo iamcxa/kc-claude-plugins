@@ -32,7 +32,7 @@ const pass = name => { console.log('PASS ' + name); report.checks.push(name) }
 const request = (path, { method = 'GET', headers = {}, body, unbound = false } = {}) => {
  const url = new URL(origin + path)
  if (!unbound && headers.Cookie?.includes('journey_human=') && !path.startsWith('/auth/')) {
-  url.searchParams.set('_human', 'person'); url.searchParams.set('_backend', 'cf-synthetic'); url.searchParams.set('_humanAt', String((now - 600) * 1000))
+  url.searchParams.set('_human', 'person'); url.searchParams.set('_backend', 'cf-synthetic'); url.searchParams.set('_humanAt', String((now - 600) * 1000)); url.searchParams.set('_humanRoom', 'one')
  }
  return mf.dispatchFetch(url.href, { method, headers: { Host: new URL(origin).host, ...headers }, ...(body === undefined ? {} : { body: JSON.stringify(body) }) })
 }
