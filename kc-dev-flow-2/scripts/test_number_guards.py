@@ -304,8 +304,9 @@ class HelpTests(unittest.TestCase):
     def test_help_names_every_rule_from_r1_to_r6(self):
         done = subprocess.run(["python3", "-B", SCRIPT, "--help"], capture_output=True, text=True)
         self.assertEqual(done.returncode, 0, done.stderr)
+        rules = done.stdout.split("Limits:")[0]
         for n in range(1, 7):
-            self.assertRegex(done.stdout, rf"\bR{n}\b")
+            self.assertRegex(rules, rf"\bR{n} ")
 
 
 class MisconfigurationTests(unittest.TestCase):
