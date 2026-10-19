@@ -17,6 +17,14 @@ gates:
                 id: briefing:paseo-fo-console-poc:backlog:attempt-1:revision-1
                 digest: sha256:b7a8936da6833fab48d71b2a7d5b17202e851bd47ad22798a6466f66f789e8b3
                 room-ref: ./paseo-fo-console-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-fo-console-poc:backlog:1
+                briefing: briefing:paseo-fo-console-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-19T09:53:39.261655Z"
+                decision: hold
+                reason: 'Captain 2026-10-19: 「改做小實測」 — run small Paseo peer probes first; the plugin POC is to be reshaped into an ''FO''s FO'' (a coordinator FO that aligns priorities, dispatches project FOs, tracks and aligns progress) instead of a roster/conversation view'
 ---
 
 Paseo 0.12.0 gives agent-to-agent messages a sender identity the sender cannot forge:
