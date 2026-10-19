@@ -194,7 +194,7 @@ def check_task_facts(files):
             reserved = [("ADR", n) for n in sorted(facts["adr"])] + [("Migration", n) for n in sorted(facts["migration"])]
             lines += [f"{file}:1: reserved line '{kind}: {n:04d}' missing from scope notes; copy it from the task's "
                       "'## Number guards' into this record's '## Scope notes', then run this check again"
-                      for kind, n in reserved if not re.search(rf"\b{kind}:[ \t]*0*{n}\b", notes)]
+                      for kind, n in reserved if not re.search(rf"(?m)^[ \t]*(?:[-*][ \t]+)?(?:Number guards:[ \t]*)?{kind}:[ \t]*0*{n}\b", notes)]
         named = {int(n) for record in path.parent.glob("*.md")
                  for m in AMENDMENT_NAMED.finditer(named_section(record.read_text(), "Checklist"))
                  for n in re.findall(r"\d+", m.group(1))}

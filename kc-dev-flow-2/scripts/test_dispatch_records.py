@@ -293,6 +293,16 @@ class TaskFactTests(unittest.TestCase):
         longer = COMPLETE.replace("Package root:", "ADR: 0200\nMigration: 0070\nPackage root:")
         self.assertEqual(len(self.run_names(GUARDS, {"implementation-1.md": longer})[1]), 2)
 
+    def test_a_reserved_number_named_inside_a_prose_line_is_missing_and_the_line_forms_FO_writes_pass(self):
+        prose = COMPLETE.replace("Package root:", "This does not use ADR: 0020 or Migration: 0007 because it is unrelated.\nPackage root:")
+        code, out = self.run_names(GUARDS, {"implementation-1.md": prose})
+        self.assertEqual((code, len(out)), (1, 2))
+        for notes in ("- ADR: 0020\n- Migration: 0007", "ADR: 0020 (reserved; write docs/adr/0020-x.md)\nMigration: 0007",
+                      "Number guards: ADR: 0020\nMigration: 0007", "  ADR: 0020\n\tMigration: 0007"):
+            with self.subTest(notes):
+                record = COMPLETE.replace("Package root:", notes + "\nPackage root:")
+                self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": record}), (0, []))
+
     def test_only_the_first_implementation_record_of_a_task_with_a_task_file_is_judged_for_reserved_lines(self):
         self.assertEqual(self.run_names(GUARDS, {"implementation-2.md": COMPLETE}, "implementation-2.md"), (0, []))
         self.assertEqual(self.run_names(GUARDS, {"ideation-1.md": COMPLETE}, "ideation-1.md"), (0, []))

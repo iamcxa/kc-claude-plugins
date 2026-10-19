@@ -881,6 +881,14 @@ class DeclineAndAdrTests(unittest.TestCase):
         self.assertEqual(code, 1)
         self.assertEqual(out.splitlines()[0], "declined item has no reason: 'Polish, a docstring wording'")
 
+    def test_a_short_declined_item_is_judged_and_a_none_form_is_not_an_item(self):
+        code, out = self.check(text="Declined: Polish, typo.")
+        self.assertEqual(code, 1, out)
+        self.assertEqual(out.splitlines()[0], "declined item has no reason: 'Polish, typo'")
+        self.assertEqual(self.check(text="Declined: Polish (wording only, no behavior change).")[0], 0)
+        for text in ("Declined: none.", "FO declines: n/a.", "Declined: nothing"):
+            self.assertEqual(self.check(text=text)[0], 0, text)
+
     def adr(self, listing, **kw):
         return self.check(task=ADR_TASK, adr=listing, **kw)
 

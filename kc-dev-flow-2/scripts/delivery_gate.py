@@ -161,7 +161,7 @@ def declined_items(text):
             else:
                 item += ch
         items.append(item.strip())
-    return [item for item in items if len(item.split()) >= 3]
+    return [item for item in items if item and item.lower() not in ("none", "nothing", "n/a")]
 
 
 def unreasoned_items(text):
