@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:special-role-calls-fire-when-needed:backlog:attempt-1:revision-1",
+  "question": "Add this task to batch 3 as Pilot, designed in parallel with delivery-gate-settles-skipped-checks, without holding the release for it? FO put this in chat before this briefing: 「同意把這張排進這批，選 Pilot profile，跟 #677 平行做，並且不等它、照常發版嗎？你回「准」，我就照這樣記錄待辦關卡，並派出設計 worker。」 Approving accepts profile pilot, the scope above and that order.",
+  "artifacts": [
+    {
+      "id": "artifact:special-role-calls-fire-when-needed:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/291825e950f4c2e5c2456ce685326653f15f9f1f/special-role-calls-fire-when-needed.md",
+      "rev": "sha256:122cc8e74173de3b7ee5d1bd45a9d5369468aa8c1434479f307d40d9bb04cd02",
+      "mediaType": "text/markdown",
+      "summary": "Seed from the Captain's 10-20 question and four observer reports (fo-batch-sittings/dogfood/): engineering-reviewer owed 14 times by the script in three repositories, 0 made in the window; chief-engineer calls made but unrecognized; script blind to stage-report cycle headings; judgment-owed cases in all four. His direction: count-based triggers from structured records, not keywords."
+    }
+  ]
+}

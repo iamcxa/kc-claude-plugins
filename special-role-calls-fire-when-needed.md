@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:special-role-calls-fire-when-needed:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:special-role-calls-fire-when-needed-backlog-1
+              briefing:
+                id: briefing:special-role-calls-fire-when-needed:backlog:attempt-1:revision-1
+                digest: sha256:8993c097b68613341d902f5bd9f6fc4dce42dd6e196f87632888c76dab579e8a
+                room-ref: ./special-role-calls-fire-when-needed/review/backlog/briefing-1
 ---
 
 ## Scope
