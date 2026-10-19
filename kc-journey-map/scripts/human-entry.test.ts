@@ -103,15 +103,25 @@ test('a context from another human or original sign-in cannot be used with a rep
  const token = 'human-cookie', sessionDigest = await digest(token)
  humanOperation(store, 'challenge-consume', { ...challenge, sessionDigest }, now)
  store.put('room:one', { createdAt: now })
+ store.put('room:two', { createdAt: now })
+ store.put('member-room:owner:two', { memberId: 'owner', roomId: 'two', expiresAt: 9e15, revoked: false, generation: 1 })
  const meta = { get: async <T>(key: string) => store.get<T>(key), put: async (key: string, value: unknown) => store.put(key, value), list: async (prefix: string) => store.list(prefix, 100), human: async (operation: string, input: any) => humanOperation(store, operation, input) }
  const host = { private: true, origin, humanConfig: config, meta, document: async () => ({ room: 'one' }) } as unknown as Host
- for (const context of [['_human', 'different'], ['_backend', 'other'], ['_humanAt', String(now - 1)]]) {
-  const url = new URL(origin + '/doc?room=one&_human=owner&_backend=synthetic&_humanAt=' + now)
+ for (const context of [['_human', 'different'], ['_backend', 'other'], ['_humanAt', String(now - 1)], ['_humanRoom', 'different']]) {
+  const url = new URL(origin + '/doc?room=one&_human=owner&_backend=synthetic&_humanRoom=one&_humanAt=' + now)
   url.searchParams.set(context[0], context[1])
   assert.equal((await handle(host, new Request(url, { headers: { Cookie: 'journey_human=' + token } }))).status, 403)
  }
  assert.equal((await handle(host, new Request(origin + '/doc?room=one', { headers: { Cookie: 'journey_human=' + token } }))).status, 403)
- const valid = await handle(host, new Request(origin + '/doc?room=one&_human=owner&_backend=synthetic&_humanAt=' + now, { headers: { Cookie: 'journey_human=' + token } }))
+ for (const missing of ['_human', '_backend', '_humanAt', '_humanRoom']) {
+  const partial = new URL(origin + '/doc?room=one&_human=owner&_backend=synthetic&_humanRoom=one&_humanAt=' + now)
+  partial.searchParams.delete(missing)
+  assert.equal((await handle(host, new Request(partial, { headers: { Cookie: 'journey_human=' + token } }))).status, 403)
+ }
+ const changedRoom = await handle(host, new Request(origin + '/doc?room=two&_human=owner&_backend=synthetic&_humanRoom=one&_humanAt=' + now, { headers: { Cookie: 'journey_human=' + token } }))
+ assert.equal(changedRoom.status, 403)
+ assert.equal((await changedRoom.json()).category, 'room_context_changed')
+ const valid = await handle(host, new Request(origin + '/doc?room=one&_human=owner&_backend=synthetic&_humanRoom=one&_humanAt=' + now, { headers: { Cookie: 'journey_human=' + token } }))
  assert.equal(valid.status, 200)
 })
 

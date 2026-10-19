@@ -25,13 +25,18 @@ export async function humanFromHeaders(host: HumanHost, headers: Headers) {
  return { session: session!, sessionDigest: await digest(token!), ...await currentHuman(host.meta, session!) }
 }
 export async function requireHumanContext(meta: Metadata, admission: Admission | null, url: URL) {
- if (!['_human', '_backend', '_humanAt'].some(key => url.searchParams.has(key))) {
+ if (!['_human', '_backend', '_humanAt', '_humanRoom'].some(key => url.searchParams.has(key))) {
   if (admission?.actorType === 'human' && !url.pathname.startsWith('/auth/')) deny(403, 'human_context_required')
   return
  }
  if (admission?.actorType !== 'human' || url.searchParams.get('_human') !== admission.principalId) deny(403, 'identity_changed')
  const session = await meta.get<HumanSession>('browser-session:' + admission.humanSessionDigest)
  if (!session || session.backendId !== url.searchParams.get('_backend') || String(session.verifiedHumanSignInAt) !== url.searchParams.get('_humanAt')) deny(403, 'identity_changed')
+ const originalRoom = url.searchParams.get('_humanRoom')
+ if (!originalRoom) deny(403, 'human_context_required')
+ await registeredHumanRoom(meta, originalRoom!, admission.rooms)
+ const targetRoom = url.pathname.startsWith('/connect/') ? decodeURIComponent(url.pathname.slice(9)) : url.searchParams.get('room')
+ if (targetRoom !== null && targetRoom !== originalRoom) deny(403, 'room_context_changed')
 }
 export async function registeredHumanRoom(meta: Metadata, raw: string, rooms: string[]) {
  if (!raw || canonicalRoom(raw) !== raw || !rooms.includes(raw)) deny(403, 'room_denied')

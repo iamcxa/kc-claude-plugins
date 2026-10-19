@@ -60,6 +60,7 @@ async function mcp(host: Host, req: Request, admission: Admission | null) {
   if (name === 'health') value = await health(host, admission)
   else if (['get_doc', 'patch_doc', 'put_doc'].includes(name)) {
    const room = authorize(admission, args.room ?? 'default')
+   if (admission?.actorType === 'human' && new URL(req.url).searchParams.get('_humanRoom') !== room) throw new HostError(403, 'room_context_changed', { category: 'room_context_changed' })
    if (admission?.actorType === 'human') await registeredHumanRoom(host.meta, room, admission.rooms)
    const method = { get_doc: 'GET', patch_doc: 'PATCH', put_doc: 'PUT' }[name as string]!
    value = await host.document(room, method, prepareDoc(method, args.body))
