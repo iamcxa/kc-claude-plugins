@@ -234,3 +234,34 @@ Cleanup: scratch directory /tmp/mgn only; no package, adopter or parked-branch f
 
 Of 309 merged PRs in the window, the largest non-`other` class in any repository has 2 PRs, so the registered 20-PR bar fails and the result is retire. The ledgers hold no pre-authorized-merge phrase and do not record the Captain's merge turn, so M2 cannot be read from them (97% unrecognizable, hand-check 2 of 10 wrong). No code or migration was added, so `comment_ratio` and `number_guards` were not run.
 
+
+## Stage Report: validation
+
+- DONE: Confirm from state history that the pre-registration and the Captain's bar ruling were committed before the measurement ran, and that the bar text is unchanged
+  Pre-registration ba904924 (2026-10-19 01:00:45 +0800), bar ruling cf25e19e (08:45:05), results a8229b8c (08:53:07); scratch files in /tmp/mgn start 08:45:24, after the ruling. The `## Pre-registration` section hashes identically at all three commits, and `git diff ba904924 a8229b8c` deletes 0 lines.
+- DONE: Re-derive M1 independently on a sample: for each repository, list the merged PRs in the window with read-only gh, re-class at least 15 PRs per repository with kc-dev-flow-2/scripts/delivery_gate.py classify at origin/main, and compare with the committed table; confirm the largest docs-only or script-with-test count
+  Beyond the sample I re-listed and re-classed all 309 PRs with my own script in /tmp/mgv, classifier blob 6cba92cc7a6e taken from `git show c60e89e1`: listings 143/70/96, and relay 95/2/2/44, web 63/0/0/7, qnow 71/1/0/24 (never/docs-only/script-with-test/other) match the committed table; 0 per-PR class disagreements out of 309; largest docs-only or script-with-test count is 2 (relay), bar needs 20. Adopter README scalars re-read at trunk (qnow `migrations-path` only).
+- DONE: Re-check M2's recognizer on the 10 hand-checked PRs and on 5 more of your choosing; state whether the 'unrecognizable' rate and the hand-check disagreement hold
+  I read the full gate resolutions of all 10 from the state branches (bare clones, `git show`): qnow#1269 and #1231 are false `separate-turn` (the later resolutions are push/redeliver approvals to the same PR), the other 8 agree, so disagreement 2 of 10 holds. 5 more (relay#263, relay#339, qnow#1199, #1234, #1242) all have no merge wording and are `unrecognizable`, agreeing. The 97% unrecognizable rate holds as computed (77 of 79; 60 of them unmapped to any task).
+- DONE: Verdict against the Captain's bar as registered (PASSED meaning the code returns, or REJECTED meaning retire, or inconclusive), and what the POC does not show
+  REJECTED (retire): M1 fails, 2 against 20, and the pre-registration names that as sufficient; reliability also fails (97% unrecognizable over 25%, hand-check 2 of 10 over 1), so M2 is inconclusive and not what decides this. Not shown: see Summary.
+
+### Summary
+
+Verdict REJECTED: the parked grant code does not return, because no repository has more than 2 PRs in a non-`other` class over the 30-day window against the registered 20. I reproduced the M1 table PR by PR and the hand-check count; the implementation worker's numbers stand.
+
+Not shown: whether a pre-authorized merge covers the effect (M2 is unreadable from ledgers). One counter-example the recognizer could not have caught: qnow PR #1184 (merged 2026-09-13, before the window, old `dev` workflow) carries the Captain's 「都處理完就幫我合併」 as a conn-quote and "approve and merge delegated to the FO" in a validation review file, neither in an approval reason and neither a registered phrase, so pre-authorized merges exist but are phrased outside the registered list. Also not shown: `other` PRs under a different class design (44 relay, 24 qnow), and anything outside 2026-09-19..2026-10-18. The two qnow product strings containing 「預先授權」 (staff phone pre-authorization) are not merge grants.
+
+Boundary: no `boundary-crossed:` found; read-only gh and git, no model run, no package, adopter or parked-branch change, no PR or comment. The candidate is this task file at a8229b8c.
+
+Checks run, with exit codes: `adr_lint.py docs/adr --since c60e89e1` exit 0 (22 files, none added); `doc_impact.py c60e89e1 c60e89e1` exit 0 (no documents). comment_ratio and number_guards not run (no code or migration added). Returned to FO, not verdict-bearing: `dispatch_records.py` exit 1 (implementation-1.md lacks the roborev line or a `roborev not run:` line; no code was written), and `design_surfaces.py check` exit 1 (no FO alignment or acceptance criteria sections; the POC route skips ideation).
+
+### Minimal acceptance script
+
+1. Run `for r in spacedock-dev/subspace-relay spacedock-dev/subspace-web iamcxa/qnow; do gh pr list -R $r --state merged --search "merged:2026-09-19..2026-10-18" --limit 1000 --json number --jq length; done`. Expect 143, 70, 96 (309 PRs, none at the 1000 limit).
+2. Run `git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo show c60e89e1:kc-dev-flow-2/scripts/delivery_gate.py | git hash-object --stdin`. Expect 6cba92cc7a6edcf6aeb119ad4e99439fcffcca67, the classifier the table used.
+3. Run `gh api --paginate repos/spacedock-dev/subspace-relay/pulls/276/files --jq '.[].filename'`. Expect 5 files: room-feedback.ts, room-view.ts, each with a `.test.ts` beside it, and one browser spec; all code with own tests, so `script-with-test`. This is one of the only 2 such PRs in relay.
+4. Run `git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-poc-route/docs/dev2-poc/.spacedock-state diff ba904924 a8229b8c -- merge-grant-need-poc.md | grep -c '^-[^-]'`. Expect 0 (no registered line was removed or edited between pre-registration and results; grep exits 1 on a zero count).
+5. Run `grep -cE '^- (subspace-relay|subspace-web|qnow)#[0-9]+: (docs-only|script-with-test)' merge-grant-need-poc.md` in the state checkout above. Expect 5 (relay#240, #265, #276, #305 and qnow#1271); relay has 4 of them, so the largest class count is 2 per class.
+
+Does not cover: the 30 days outside the window, the Captain's chat turns (not in any ledger), `other` PRs, or whether a grant would be safe.
