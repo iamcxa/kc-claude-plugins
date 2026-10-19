@@ -51,6 +51,7 @@ try {
  await page.getByText('完整紀錄新增、修改、刪除與整份文件取代',{exact:true}).waitFor()
  assert.ok((await page.locator('dialog').innerText()).includes('one'))
  const approve=page.getByRole('button',{name:'核准這些畫布與能力'})
+ await approve.scrollIntoViewIfNeeded()
  assert.equal(await approve.evaluate(el=>{const r=el.getBoundingClientRect();return document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===el}),true)
  await approve.click()
  await page.getByText('已核准，等待原安裝兌換；尚未簽發安裝憑證。',{exact:true}).waitFor()
