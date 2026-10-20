@@ -30,7 +30,7 @@ const instrumentation={name:'synthetic-revocation-faults',setup(builder){builder
  if(args.path.endsWith('/node.ts'))contents=contents.replace('socket.send(data)',"console.log(JSON.stringify({enqueue:entry.lease?.admission.credentialId,at:Date.now()}));socket.send(data)")
  else {
   contents=contents.replace('ws.send(data)',"console.log(JSON.stringify({enqueue:ws.deserializeAttachment().admission.credentialId,at:Date.now()}));ws.send(data)")
-  contents=contents.replace("  const body = await req.json() as any","  const body = await req.json() as any\n  if(new URL(req.url).pathname==='/synthetic-fault'){this.put('synthetic:fault',body);return Response.json({ok:true})}\n  const fault=this.get('synthetic:fault')\n  if(fault?.outage && ((new URL(req.url).pathname==='/agent' && body.operation==='current') || (new URL(req.url).pathname==='/get' && /^(browser-session:|human-config:|member:|member-room:)/.test(body.key))))return Response.json({error:'synthetic policy outage'},{status:503})")
+  contents=contents.replace("  const body = await req.json() as any","  const body = await req.json() as any\n  if(new URL(req.url).pathname==='/synthetic-fault'){this.put('synthetic:fault',body);return Response.json({ok:true})}\n  if(new URL(req.url).pathname==='/synthetic-release'){(this as any).syntheticRelease?.();return Response.json({ok:true})}\n  const fault=this.get('synthetic:fault')\n  if(new URL(req.url).pathname==='/synthetic-barrier'){if(fault?.barrier && fault.credentialId===body.admission?.credentialId){this.put('synthetic:barrier-hit',{streamId:body.streamId});await new Promise(resolve=>{(this as any).syntheticRelease=resolve})}return Response.json({ok:true})}\n  if(fault?.outage && ((new URL(req.url).pathname==='/agent' && body.operation==='current') || (new URL(req.url).pathname==='/get' && /^(browser-session:|human-config:|member:|member-room:)/.test(body.key))))return Response.json({error:'synthetic policy outage'},{status:503})")
   contents=contents.replace('   const url=new URL(req.url)',`   const url=new URL(req.url)
    if(url.pathname==='/internal/synthetic-case'){
     const body=await req.json() as any
@@ -43,16 +43,18 @@ const instrumentation={name:'synthetic-revocation-faults',setup(builder){builder
     if(body.action==='duplicate-alarm'){await this.alarm();await this.alarm()}
     return Response.json({alarm:await this.ctx.storage.getAlarm(),attachments:this.ctx.getWebSockets().map((ws:any)=>{const a=ws.deserializeAttachment();return {streamId:a.streamId,credentialId:a.admission.credentialId,leaseUntil:a.leaseUntil,invalidated:a.invalidated}})})
    }`)
+  contents=contents.replace("async security(operation: string, input: any) { return this.call('security', { operation, input }) }","async security(operation: string, input: any) { const result=await this.call('security', { operation, input });if(operation==='stream-register')await this.call('synthetic-barrier',input);return result }")
   contents=contents.replace(' async notifyResult(result: any) {'," async notifyResult(result: any) {\n  if(this.get('synthetic:fault')?.missed)return result")
  }
  return {contents,loader:'ts'}
 })
 if(adapter==='node')builder.onLoad({filter:/canvas-server\.ts$/},async args=>({loader:'ts',contents:(await readFile(args.path,'utf8')).replace('const host = new NodeHost()',`const host = new NodeHost()
-let fault={missed:false,outage:false};const notify=host.notifyResult.bind(host),get=host.meta.get.bind(host.meta),agent=host.meta.agent.bind(host.meta)
+let fault={missed:false,outage:false};let barrierHit=null,releaseBarrier=null;const notify=host.notifyResult.bind(host),get=host.meta.get.bind(host.meta),agent=host.meta.agent.bind(host.meta)
 host.notifyResult=async result=>fault.missed?result:notify(result)
 host.meta.get=async key=>{if(fault.outage&&/^(browser-session:|human-config:|member:|member-room:)/.test(key))throw new Error('synthetic policy outage');return get(key)}
-host.meta.agent=async(op,input)=>{if(fault.outage&&op==='current')throw new Error('synthetic policy outage');return agent(op,input)}`)
-.replace("const result = command.op === 'revoke' ?", "const result = command.op === 'synthetic-fault' ? (fault=command.fault,{ok:true}) : command.op==='synthetic-metadata' ? (command.operation==='get'?await host.meta.get(command.input.key):await host.meta.security(command.operation,command.input)) : command.op==='synthetic-alarm' ? {ok:true} : command.op === 'revoke' ?")}))}}
+host.meta.agent=async(op,input)=>{if(fault.outage&&op==='current')throw new Error('synthetic policy outage');return agent(op,input)}
+const originalSecurity=host.meta.security.bind(host.meta);host.meta.security=async(op,input)=>{const result=await originalSecurity(op,input);if(op==='stream-register'&&fault.barrier&&fault.credentialId===input.admission?.credentialId){barrierHit={streamId:input.streamId};await new Promise(resolve=>releaseBarrier=resolve)}return result}`)
+.replace("const result = command.op === 'revoke' ?", "const result = command.op === 'synthetic-fault' ? (fault=command.fault,{ok:true}) : command.op==='synthetic-barrier-hit' ? barrierHit : command.op==='synthetic-release' ? (releaseBarrier?.(),{ok:true}) : command.op==='synthetic-room-expiry' ? (await host.meta.put('member-room:owner:one',{...await host.meta.get('member-room:owner:one'),expiresAt:command.expiresAt}),{ok:true}) : command.op==='synthetic-metadata' ? (command.operation==='get'?await host.meta.get(command.input.key):await host.meta.security(command.operation,command.input)) : command.op==='synthetic-alarm' ? {ok:true} : command.op === 'revoke' ?")}))}}
 const logLine=line=>{logs.push(line);try{const value=JSON.parse(line);if(value.enqueue)report.enqueues.push(value);if(value.control){pending.get(value.control)?.(value.result);pending.delete(value.control)}}catch{}}
 async function start(){
  if(adapter==='node'){
@@ -125,6 +127,44 @@ async function socket(issued){
  assert.ok(observed.messages.some(m=>m.includes('connect')),'stream handshake not received')
  return observed
 }
+function pendingSocket(issued){
+ const ws=new WebSocket(api.replace('http','ws')+'/connect/one?sessionId='+crypto.randomUUID(),{headers:{Host:new URL(origin).host,Origin:origin,Authorization:'Bearer '+issued.accessToken}}),observed={messages:[],closedAt:null}
+ clients.push(ws)
+ observed.open=new Promise(resolve=>{ws.once('open',()=>{ws.send(JSON.stringify({type:'connect',connectRequestId:crypto.randomUUID(),lastServerClock:-1,protocolVersion:getTlsyncProtocolVersion(),schema:createTLSchema().serialize()}));resolve(true)});ws.once('unexpected-response',(_req,response)=>{observed.upgradeRejected=response.statusCode;response.resume();ws.terminate();resolve(false)});ws.once('error',error=>{observed.error=error.message;resolve(false)})})
+ observed.close=new Promise(resolve=>ws.once('close',()=>{observed.closedAt=Date.now();resolve()}));ws.on('message',data=>observed.messages.push(String(data)))
+ return observed
+}
+async function repairedCases(){
+ const raced=await pair('Synthetic registration race')
+ await fault({barrier:true,credentialId:raced.credentialId})
+ const pending=pendingSocket(raced)
+ let hit;for(let i=0;i<100;i++){hit=adapter==='node'?await control({op:'synthetic-barrier-hit'}):await metadata('get',{key:'synthetic:barrier-hit'});if(hit)break;await sleep(20)}
+ assert.ok(hit,'registration barrier was not reached')
+ const denied=await post('revoke',{familyId:raced.family.id},true);assert.equal(denied.status,200);const result=await denied.json()
+ if(adapter==='node')await control({op:'synthetic-release'});else await registry.fetch('https://registry/synthetic-release',{method:'POST',body:'{}'})
+ const opened=await pending.open;assert.ok(opened || pending.upgradeRejected===403);await Promise.race([pending.close,sleep(3000).then(()=>{throw new Error('racing bootstrap not closed')})])
+ assert.equal(pending.messages.length,0)
+ let progress;for(let i=0;i<50;i++){progress=await metadata('progress',{operationId:result.operationId});if(progress.streamsStopped==='stopped')break;await sleep(20)}
+ assert.equal(progress.streamsStopped,'stopped');await fault({})
+ report.registrationBarrier={denialCommittedAt:result.denialCommitObservedAt,closedAt:pending.closedAt,privateMessages:pending.messages.length,upgradeRejected:pending.upgradeRejected||null,closeConfirmed:progress.closeConfirmed,barrier:'injected scheduling only; actual adapter/registry/network sockets'}
+ pass('actual registration barrier commits denial before bootstrap completes: zero initial/private messages and eventual close acknowledgment')
+ const expiring=await pair('Synthetic early room expiry')
+ const expiresAt=Date.now()+1800
+ if(adapter==='node')await control({op:'synthetic-room-expiry',expiresAt})
+ else {const old=await metadata('get',{key:'member-room:owner:one'});const r=await registry.fetch('https://registry/put',{method:'POST',body:JSON.stringify({key:'member-room:owner:one',value:{...old,expiresAt}})});assert.equal(r.status,200)}
+ const agentStream=await socket(expiring),humanStream=await socket()
+ const page={id:'page:early_expiry',typeName:'page',name:'Before room expiry',index:'a2',meta:{}}
+ while(Date.now()<expiresAt+600){page.name='Expiry boundary '+Date.now();await data('/doc?room=one',{method:'PATCH',headers:{...seed,'Content-Type':'application/json'},body:{put:[page]}});await sleep(75)}
+ await Promise.race([Promise.all([agentStream.close,humanStream.close]),sleep(3000).then(()=>{throw new Error('early room expiry did not close')})])
+ assert.ok(agentStream.lastReceive<=expiresAt && humanStream.lastReceive<=expiresAt)
+ assert.ok(agentStream.closedAt<expiresAt+1000 && humanStream.closedAt<expiresAt+1000)
+ report.earlyRoomExpiry={expiresAt,agentLastReceipt:agentStream.lastReceive,humanLastReceipt:humanStream.lastReceive,agentClosedAt:agentStream.closedAt,humanClosedAt:humanStream.closedAt,policy:'only original fixture expiry shortened; actual elapsed time and sockets'}
+ await assertDenied(expiring)
+ if(adapter==='node')await control({op:'set-room',memberId:'owner',roomId:'one',revoked:false,expiresAt:Date.now()+600000})
+ else {const r=await registry.fetch('https://registry/human',{method:'POST',body:JSON.stringify({operation:'set-room',input:{memberId:'owner',roomId:'one',revoked:false,expiresAt:Date.now()+600000}})});assert.equal(r.status,200)}
+ await assertDenied(expiring)
+ pass('human and paired-agent actual outgoing streams stop at earlier room expiry; queued updates, new requests and old authority after regrant remain denied')
+}
 const pass=name=>{report.checks.push(name);console.log('PASS '+name)}
 async function assertDenied(issued){
  const headers={Authorization:'Bearer '+issued.accessToken},before=await data('/doc?room=one',{headers:seed}),fingerprint=hash(JSON.stringify(before.snapshot.documents))
@@ -142,7 +182,8 @@ try{
  await data('/doc?room=one',{method:'PATCH',headers:{...seed,'Content-Type':'application/json'},body:{put:[update]}});await sleep(150)
  assert.ok(second.messages.some(m=>m.includes('After first revoke')));assert.ok(!first.messages.some(m=>m.includes('After first revoke')))
  pass('own family denial closes actual client while independent installation and browser continue; HTTP/MCP/assets/reconnect denied hashes unchanged')
- if(process.env.JOURNEY_REVOKE_SEAMS_ONLY!=='true'){
+ if(process.env.JOURNEY_REVOKE_REPAIR_ONLY==='true')await repairedCases()
+ if(process.env.JOURNEY_REVOKE_SEAMS_ONLY!=='true' && process.env.JOURNEY_REVOKE_REPAIR_ONLY!=='true'){
  await fault({missed:true})
  const revokeStarted=Date.now(),result=await post('revoke',{familyId:two.family.id},true);assert.equal(result.status,200);const denied=await result.json();report.missedFanout={deniedAt:denied.deniedAt,commitObservedAt:denied.denialCommitObservedAt,replyAt:Date.now()}
  await assertDenied(two)

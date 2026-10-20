@@ -299,3 +299,17 @@ test('two real Node consumers verify sentinel read/write in the original room be
   await (await import('node:fs/promises')).access(join(dataDir,'.journey-private-v2'))
  }finally{await new Promise(resolve=>setTimeout(resolve,1100));host.close();for(const key of Object.keys(process.env))if(!(key in previous))delete process.env[key];Object.assign(process.env,previous)}
 })
+
+test('human and paired-agent leases cannot exceed the current exact room authority expiry',async()=>{
+ const {renewLease}=await import('../server/host/stream-lease'),time=Date.now(),expiry=time+1000
+ const records:Record<string,any>={'human-config:v1':{backendId:'synthetic'},'member:owner':{id:'owner',enabled:true,generation:1},'browser-session:synthetic':{actorType:'human',backendId:'synthetic',memberId:'owner',generation:1,expiresAt:time+900000,verifiedHumanSignInAt:time,humanRevalidateBy:time+604800000,revoked:false},'member-room:owner:one':{memberId:'owner',roomId:'one',expiresAt:expiry,revoked:false,generation:1}}
+ const meta={get:async <T>(key:string)=>records[key] as T||null,list:async(prefix:string)=>Object.entries(records).filter(([key])=>key.startsWith(prefix)).map(([key,value])=>({key,value})),agent:async()=>({credentialId:'synthetic',principalId:'owner',rooms:['one'],expiresAt:time+900000})} as any
+ for(const actorType of ['human','agent'] as const){
+  const admission={actorType,credentialId:actorType==='human'?'owner':'synthetic',principalId:'owner',humanSessionDigest:'synthetic',familyId:'synthetic-family',expiresAt:time+900000,rooms:['one'],cookie:actorType==='human'}
+  const lease=await renewLease(meta,{streamId:'synthetic',room:'one',admission,leaseUntil:0})
+  assert.equal(lease.leaseUntil,expiry)
+  records['member-room:owner:one'].expiresAt=time-1
+  await assert.rejects(renewLease(meta,{...lease,leaseUntil:0}),/stream_denied|stream_room_expired/)
+  records['member-room:owner:one'].expiresAt=expiry
+ }
+})

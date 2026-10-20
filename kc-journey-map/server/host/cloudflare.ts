@@ -216,7 +216,12 @@ export class JourneyRoom {
  }
  async refresh(ws:any,a:any) {
   if(!a || a.room!==this.roomId || a.invalidated)return false
-  try {await renewLease(this.meta,a);await this.meta.security('stream-register',a);ws.serializeAttachment(a);return true}catch{return false}
+  try {
+   await renewLease(this.meta,a);await this.meta.security('stream-register',a)
+   const latest=ws.deserializeAttachment()
+   if(!latest || latest.streamId!==a.streamId || latest.invalidated || ws.readyState!==1){if(ws.readyState===3)await this.meta.security('stream-close',{streamId:a.streamId});return false}
+   ws.serializeAttachment({...latest,leaseUntil:a.leaseUntil});return true
+  }catch{return false}
  }
  async scheduleAlarm() {
   const deadlines=this.ctx.getWebSockets().map((ws:any)=>ws.deserializeAttachment()).filter((a:any)=>a&&!a.invalidated).map((a:any)=>Math.min(a.leaseUntil,a.admission.expiresAt))
@@ -246,9 +251,9 @@ export class JourneyRoom {
     if(req.headers.get('upgrade')?.toLowerCase()!=='websocket')return new Response(null,{status:426})
     await this.register(room)
     const lease=await renewLease(this.meta,{streamId:crypto.randomUUID(),room,admission:admission!,leaseUntil:0})
-    await this.meta.security('stream-register',lease)
     const pair=new (globalThis as any).WebSocketPair(),client=pair[0],server=pair[1],sessionId=url.searchParams.get('sessionId')||''
-    this.ctx.acceptWebSocket(server);server.serializeAttachment({...lease,sessionId})
+    this.ctx.acceptWebSocket(server);server.serializeAttachment({...lease,leaseUntil:0,sessionId})
+    if(!await this.refresh(server,server.deserializeAttachment())){this.closeSocket(server,'authority denied');await this.meta.security('stream-close',{streamId:lease.streamId,abortedBeforeUpgrade:true});await this.scheduleAlarm();return Response.json({error:'authority_denied'},{status:403})}
     this.open().handleSocketConnect({sessionId,socket:this.socket(server)})
     await this.scheduleAlarm()
     return new Response(null,{status:101,webSocket:client} as any)

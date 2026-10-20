@@ -26,7 +26,12 @@ notification failure, and `stopped` only after corresponding close acknowledgmen
 remove the indexed streams. Updating the native account sheet resumes bounded
 notification progress. A failed or lost result must not be called stopped.
 
-Every actual outgoing send checks known invalidation, original credential expiry
+Socket visibility precedes final authoritative stream registration. A denial
+during registration invalidates the visible socket before initial sync data.
+Cloudflare checks the latest attachment after asynchronous policy work so a
+concurrent invalidation cannot be overwritten.
+
+Every actual outgoing send checks known invalidation, original credential and exact room-grant expiry
 and an absolute lease of at most 30 seconds. Receiving activity alone does not
 authorize a write or extend authority. Node renews through one-shot socket timers.
 Cloudflare persists attachments and one earliest alarm per connected room; wake
@@ -91,14 +96,16 @@ fresh IDs; disabled pairing remains disabled until separately authorized.
 After locked dependencies and the browser are installed, run from this package:
 
 1. `node --import tsx --test scripts/agent-pairing.test.ts scripts/human-entry.test.ts scripts/agent-consent-context.test.ts`
-2. `node scripts/revocation-check.mjs node && node scripts/revocation-check.mjs cloudflare-local`
-3. `JOURNEY_REVOKE_SEAMS_ONLY=true node scripts/revocation-check.mjs node && JOURNEY_REVOKE_SEAMS_ONLY=true node scripts/revocation-check.mjs cloudflare-local && node scripts/agent-pairing-browser-check.mjs`
+2. `JOURNEY_REVOKE_REPAIR_ONLY=true node scripts/revocation-check.mjs node && JOURNEY_REVOKE_REPAIR_ONLY=true node scripts/revocation-check.mjs cloudflare-local`
+3. `node scripts/revocation-check.mjs node && node scripts/revocation-check.mjs cloudflare-local && JOURNEY_REVOKE_SEAMS_ONLY=true node scripts/revocation-check.mjs cloudflare-local`
 
 These targeted steps take under five minutes on the measured local fixture.
 Loopback listening and the existing macOS helper's application-only Keychain
 roundtrip require normal host access. All identities, stores and rooms are fresh
 synthetic fixtures. The tests keep denial/last enqueue/client receipt/close
-separate. Policy/fanout faults, expired queued lease and presentation states are
+separate. Registration barriers stall actual adapter bootstrap while denial commits;
+early room expiry uses actual elapsed time. The native sheet can be checked
+separately with `node scripts/agent-pairing-browser-check.mjs`. Policy/fanout faults, expired queued lease and presentation states are
 explicitly injected; lease timing and network clients use real time. Detailed
 usage/timings remain in ignored local `.host-check` and task evidence.
 
@@ -114,8 +121,8 @@ sequenceDiagram
  participant Policy as Transactional policy
  participant Stream as Indexed room stream
  Human->>Policy: Verified own-family revoke
- Policy->>Policy: Reserve audit; commit denial and tombstone
- Policy-->>Human: Denial committed; stopping or unknown
+ Policy->>Policy: Reserve audit, commit denial and tombstone
+ Policy-->>Human: Denial committed, stopping or unknown
  Policy->>Stream: Bounded indexed notification
  alt Notification lost or policy unavailable
   Stream->>Stream: Refuse sends after absolute lease deadline
