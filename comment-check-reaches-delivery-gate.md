@@ -34,6 +34,14 @@ gates:
                 id: briefing:comment-check-reaches-delivery-gate:ideation:attempt-1:revision-1
                 digest: sha256:3d68baba47fc5a5dfa727d8ca725dae81b99971e7db9b6e6ab3f765a5ec495f1
                 room-ref: ./comment-check-reaches-delivery-gate/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:comment-check-reaches-delivery-gate:ideation:1
+                briefing: briefing:comment-check-reaches-delivery-gate:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T12:59:27.757204Z"
+                decision: hold
+                reason: 'Captain 「那就按建議不做」 (chat, 2026-10-20, batch-4 sitting, question 4): D1 not built, as FO recommended; D2 and D3 lapse. The task is closed with the measurement as the reason.'
 started: 2026-10-20T04:58:11Z
 ---
 
