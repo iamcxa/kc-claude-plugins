@@ -1,6 +1,7 @@
 ---
 title: A task cannot reach its delivery gate while the comment check its implementation and validation owe is missing from their reports
 variant: kc-dev-flow-2
+profile: pilot
 merge: pr
 status: backlog
 ---
