@@ -5,7 +5,10 @@ check   exit 0 clean, 1 findings, 2 misconfiguration. Rules: R1 a migration pres
         modified or deleted; R2 the same against every 'Applied at: <env> <sha>' commit; R3 an added migration
         number is not above the base tip's highest; R4 an added migration or ADR number is not in the task's
         'Migration:' / 'ADR:' lines; R5 an added ADR number exists on the base tip; R6 a task whose frontmatter says
-        'profile: poc' differs from the merge-base anywhere under the migrations directory.
+        'profile: poc' differs from the merge-base anywhere under the migrations directory; R7 (only under
+        'migrations-path: none') the candidate adds a file named NNNN_name.sql anywhere.
+        'migrations-path: none' declares that the repository has no migration files: R1 to R3 and R6 are skipped,
+        the ADR rules R4 and R5 still run, and a db task is no longer exit 2.
 reserve prints 'Migration: NNNN' or 'ADR: NNNN' (one above the base tip and every other task file, never
         filling a gap); a task that already holds a line gets it back. One number per kind per task.
 Limits: only files named NNNN_name.sql count as migrations, so meta/_journal.json and snapshots are not checked (R6 does check them);
@@ -21,6 +24,7 @@ from pathlib import Path
 
 MIGRATION = re.compile(r"^(\d+)_.+\.sql$")
 ADR = re.compile(r"^(\d{4})-.+\.md$")
+NO_MIGRATIONS = "none"
 KINDS = {"migration": ("Migration", MIGRATION), "adr": ("ADR", ADR)}
 
 
@@ -124,9 +128,13 @@ def check(args):
     repo, cfg = args.repo, settings(args)
     facts = task_facts(args.task) if args.task else None
     directory = cfg["migrations"]
-    if not directory and facts and "db" in facts["surfaces"]:
+    declared_none = directory == NO_MIGRATIONS
+    if declared_none:
+        directory = None
+    if not directory and not declared_none and facts and "db" in facts["surfaces"]:
         raise Misconfigured("task has Surfaces: db but no migrations-path is declared "
-                            "(pass --migrations-path or set migrations-path: in the workflow README)")
+                            "(set migrations-path: <directory> in the workflow README, or migrations-path: none "
+                            "when the repository has no migration files)")
     base, head = resolve(repo, cfg["base"], "base"), resolve(repo, args.head, "head")
     merge_base = git(repo, "merge-base", base, head).strip()
     applied = [("cli", ref) for ref in args.applied_ref] + (facts["applied"] if facts else [])
@@ -160,7 +168,13 @@ def check(args):
                 status, path = line.split("\t", 1)
                 fail("R6", path, f"{status} under the migrations directory; a POC task changes none of it")
     else:
-        out.append("migration guard skipped: no migrations-path declared")
+        out.append("migration guard skipped: README declares migrations-path: none" if declared_none
+                   else "migration guard skipped: no migrations-path declared")
+        if declared_none:
+            for line in git(repo, "diff", "--name-status", "--no-renames", merge_base, head).splitlines():
+                status, path = line.split("\t", 1)
+                if status == "A" and MIGRATION.match(posixpath.basename(path)):
+                    fail("R7", path, "added, but the README declares migrations-path: none")
     adr_base = numbered(repo, base, cfg["adr"], ADR)
     for _, path in added_changed(repo, merge_base, head, cfg["adr"], ADR)[0]:
         number = int(ADR.match(posixpath.basename(path)).group(1))
@@ -187,8 +201,9 @@ def reserve(args):
     if not cfg["state"]:
         raise Misconfigured("no state directory: pass --state-dir, or --workflow-dir whose README declares state:")
     if args.kind == "migration":
-        if not cfg["migrations"]:
-            raise Misconfigured("no migrations-path declared (pass --migrations-path or set it in the workflow README)")
+        if not cfg["migrations"] or cfg["migrations"] == NO_MIGRATIONS:
+            raise Misconfigured("no migrations-path directory declared, so there is no migration number to reserve "
+                                "(pass --migrations-path or set it in the workflow README)")
         files = require_migrations(repo, resolve(repo, cfg["base"], "base"), cfg["migrations"])
         width = max(4, *(len(name.split("_")[0]) for names in files.values() for name in names))
     else:
