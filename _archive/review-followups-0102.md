@@ -3,7 +3,10 @@ title: Review follow-ups from the 0.10.2 adopter sync
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:09:42Z
+archived: 2026-10-20T05:09:42Z
 ---
 
 Follow-ups declined from a repair cycle under the review-round rule (round 3 of the external review of qnow PR #1248, commit 39bf550, 2026-10-01); each waits for the Captain to schedule it.
