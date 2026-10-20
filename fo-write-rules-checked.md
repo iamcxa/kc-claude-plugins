@@ -34,6 +34,17 @@ gates:
                 id: briefing:fo-write-rules-checked:ideation:attempt-1:revision-1
                 digest: sha256:a855b119b8b772d21284fbf6b2dc1e75673e6c185ebfbb7971c8326423d7d5ca
                 room-ref: ./fo-write-rules-checked/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-write-rules-checked:ideation:1
+                briefing: briefing:fo-write-rules-checked:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T13:23:56.47564Z"
+                decision: approve
+                reason: 'Captain, batch-4 sitting 2026-10-20: D1 「要」; D2 「Ａ」 (narrow rule 4, Amendment 1); D3 「第九題要」; D4 「那就不做」 (no rule-1 check, Amendment 2, Override recorded); D5 「好」 (parse fix, F-id join, validator form); D6 「可以」; D7 「好」 (file the gh pr merge guard task for Claude and Codex, POC first, Amendment 3).'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-20T04:58:17Z
 ---
 
