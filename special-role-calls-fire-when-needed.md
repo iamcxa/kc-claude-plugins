@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-19T17:05:25Z
+worktree: .worktrees/spacedock-ensign-special-role-calls-fire-when-needed
 ---
 
 ## Scope
