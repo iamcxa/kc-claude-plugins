@@ -3,7 +3,7 @@ title: The kc-dev-flow-2 workflow template says commissioned-by spacedock@, so S
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain answered in chat 「要，改」 to FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
