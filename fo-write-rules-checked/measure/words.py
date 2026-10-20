@@ -6,7 +6,7 @@ The two inputs are the base sources, written by
   git -C <kc-claude-plugins> show ad44f0cb:kc-dev-flow-2/references/sd/workflow.md > workflow-0.26.0.md
   git -C <kc-claude-plugins> show ad44f0cb:kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md > mod-0.26.0.md
 The candidate README is the base with one sentence edit (E1 below) applied in memory; script output lines are the
-strings the design prints, typed here so the count is reproducible. A moment's number is every passage and every script output
+strings proto_gate.py and proto_scope.py print (cycle 2), typed here so the count is reproducible. A moment's number is every passage and every script output
 that instructs a step due then.
 """
 import re, sys
@@ -41,21 +41,23 @@ base_p, new_p = passages(text), passages(new)
 BASE_PASS = ["PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing", "class: never",
              "record: task/merge/ask-1.json",
              "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."]
+PASS3 = ["PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing", "class: never (verdict ask)"]
 NEW_PASS = {
-    "ask run, text lacks a Merges line": ["PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing", "class: never",
-        "record: task/merge/ask-1.json", "next: ask the Captain with this text; to carry the merge, first add a 'Merges: <owner/repo>#<N>' line naming this PR to the question."],
-    "ask run, text has a Merges line": ["PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing", "class: never",
-        "record: task/merge/ask-1.json", "next: ask the Captain with this text; nothing is carried until he approves it."],
-    "merge run, Merges line names the PR": ["PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing", "class: never (verdict ask)",
-        "record: task/merge/ask-2.json",
-        "next: merge this head; the question he approved on 2026-10-20 names iamcxa/kc-claude-plugins#682 in its Merges: line. Ask instead if his reason (Captain approved in chat after the gate briefing, FO merges the head with --match-head-commit) says he merges or holds."],
-    "merge run, no Merges line for the PR": ["PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing", "class: never (verdict ask)",
-        "record: task/merge/ask-2.json", "next: ask the Captain to merge; the question he approved names no merge of iamcxa/kc-claude-plugins#682."],
+    "ask run, text lacks a Merges line": PASS3[:1] + ["class: never", "record: task/merge/ask-1.json",
+        "next: ask the Captain with this text; to carry the merge, end the question with 'Merges: <owner/repo>#<N> at <head>' naming this PR and head."],
+    "ask run, text has a Merges line": PASS3[:1] + ["class: never", "record: task/merge/ask-1.json",
+        "next: ask the Captain with this text; nothing is carried until he approves it."],
+    "merge run, carried (Merges names PR and head)": PASS3 + ["record: task/merge/ask-2.json",
+        "next: merge iamcxa/kc-claude-plugins#682 at f4447396265e with --match-head-commit f4447396265e18e7b2cbb681b4dbfe16d396530e and no other PR; the question he approved on 2026-10-20 ends with that in its Merges: line, and his words were 「合併」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time."],
+    "merge run, not carried (any why token)": PASS3 + ["record: task/merge/ask-2.json",
+        "next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (head-differs)."],
+    "merge run, not carried, no Merges line": PASS3 + ["record: task/merge/ask-2.json",
+        "next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (no-line). To carry it, end the question with 'Merges: iamcxa/kc-claude-plugins#682 at <head>'."],
 }
 HOLDS = {
     "R2 findings join": "declined items (3) are fewer than the validation report's Deferred risk and Polish findings (5): add a declined item for each, naming the fix as its reason when FO fixed it, then run this check again.",
     "R1 follow-ups claim": "chat-only-followups.md claims the Captain's acceptance in its title or first paragraph (\"accepted\") before the gate that records it: say what FO declined and cite no ruling.",
-    "R3 scope": "Scope changed after the backlog gate (fbcb7a9e): \"Captain's scope addition, 2026-10-20: ...\": if the Captain asked for it, add an '### Amendment N' with 'Supersedes: none'; otherwise restore the line.",
+    "R3 scope": "Scope changed after the newest amendment (cfa03ada): \"- Captain asked for one more thing, added after amendment 1.\". FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if the Captain asked for it, with his words verbatim and where he said them. A worker that sees this line reports it to FO and edits neither Scope nor amendments.",
 }
 out = lambda lines: sum(w(l) for l in lines)
 merge_base = sum(w(v) for k, v in base_p.items() if k in ("validation Gate content", "Delivery authority", "delivery_gate sentence")) + out(BASE_PASS)

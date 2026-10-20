@@ -48,8 +48,9 @@ follow-ups tasks seen: 26; flagged: 2
 == R3 Scope edits after the backlog gate closed (Non-goals lines excepted), by era
   events after the gate, all dates: 5 in 5 tasks; on or after 2026-09-30 (the amendment rule's day): 2 in 2 tasks, of which an amendment dated on or after the gate exists in 0
   of the 2: first changed line names the Captain or quotes 「」: 2; other: 0
-   HOLD captain-line ('release-review', 'ecfee0d9', '2026-09-30T18:02:03+08:00', False, 1, 1, 'Five-things rule, handed over 2026-09-30 by the peer session that drafted it (Captain not yet ruled ')
-   HOLD captain-line ('special-role-calls-fire-when-needed', '8b5d694b', '2026-10-20T01:13:58+08:00', False, 1, 0, "- Captain's scope addition, 2026-10-20: 「先加第一個，第二個列入評估」, answering FO's 「1. ER：例如碰到 prod、資料庫、密鑰、合併權限")
+  window of each held or amended event (the gate that was still open when it landed): {'ideation-gate-open': 2}
+   HOLD captain-line ideation-gate-open ('release-review', 'ecfee0d9', '2026-09-30T18:02:03+08:00', False, 1, 1, 'Five-things rule, handed over 2026-09-30 by the peer session that drafted it (Captain not yet ruled ')
+   HOLD captain-line ideation-gate-open ('special-role-calls-fire-when-needed', '8b5d694b', '2026-10-20T01:13:58+08:00', False, 1, 0, "- Captain's scope addition, 2026-10-20: 「先加第一個，第二個列入評估」, answering FO's 「1. ER：例如碰到 prod、資料庫、密鑰、合併權限")
 
 == R4 validation approvals: does the approved question carry the merge?
   approvals: 43

@@ -1,0 +1,16 @@
+-- AC-6 cases on real tasks (run at the ideation stage by --stage-gate off; the stage gate is its own case below)
+  real: special-role-calls (Captain scope addition after the backlog gate, no amendment) -> HOLD: Scope changed after the backlog gate (291825e9): "- Captain's scope addition, 2026-10-20: 「先加第一個，第二個列入評估」, answering FO's 「1. ER：例". FO: restore the l
+  real: ideation-gaps (Scope changed, newest amendment 1 committed with it)      -> clean: amendment 1 cfa03ada
+  edit AFTER the newest amendment: ideation-gaps + a new Scope line, uncommitted -> HOLD: Scope changed after the newest amendment (cfa03ada): "- Captain asked for one more thing, added after amendment 1.". FO: restore the line; add an '###
+  edit AFTER the amendment, a Scope line removed instead                         -> HOLD: Scope changed after the newest amendment (cfa03ada): "Captain 2026-09-30, on the FO's split of batch C: 「可以」 — this task (issues #517,". FO: restore t
+  exempt fill only: ideation-gaps + a Non-goals line after the amendment         -> clean: amendment 1 cfa03ada
+  an edit outside Scope only (a line appended to the last section of ideation-gaps) -> clean: amendment 1 cfa03ada
+  uncommitted newest amendment covers the uncommitted Scope line                 -> clean: amendment 2 (uncommitted)
+-- observer replay shape (ADR 0024): the task and its folder extracted with git archive into a temp directory, no .git
+   ('not run', 'not in a git checkout')
+-- mutations: each changes the baseline rule and must turn exactly the case named
+  MUTATION any-amendment (first-cycle rule): edit AFTER amendment 1 passes       -> amended: amendment(s) [1] exist (the first-cycle rule: any amendment exempts every later edit)
+  MUTATION bound-sha only: ideation-gaps, whose Scope change amendment 1 records, is held -> HOLD: Scope changed after the backlog gate (d5e0fd30): "Evidence (qnow and this repo): `dispatch build --stamp` succeeded for an entity ". FO: restore the l
+-- stage gate: the same real file, status done / ideation
+   ('not run', 'stage is done, not ideation')
+   ('clean', 'amendment 1 cfa03ada')

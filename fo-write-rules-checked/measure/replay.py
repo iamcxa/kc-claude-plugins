@@ -193,8 +193,22 @@ if "r3" in which:
           f"of which an amendment dated on or after the gate exists in {sum(e[3] for e in late)}")
     named = lambda e: bool(re.search(r"Captain|「", e[6]))
     print(f"  of the {len(late)}: first changed line names the Captain or quotes 「」: {sum(named(e) for e in late)}; other: {sum(not named(e) for e in late)}")
+    approved = collections.defaultdict(dict)
+    for r in rows:
+        if r["kind"] == "resolution" and r["decision"] == "approve":
+            approved[r["task"]].setdefault(r["stage"], ts(r["at"]))
+
+    def window(e):
+        """the stage whose gate was still open when the commit landed: the first stage with no approval before it, else 'after the last gate'"""
+        order = sorted(approved[e[0]].items(), key=lambda kv: kv[1])
+        for stage, at in order:
+            if ts(e[2]) <= at:
+                return stage + "-gate-open"
+        return "after-" + (order[-1][0] if order else "none")
+    print("  window of each held or amended event (the gate that was still open when it landed):",
+          dict(collections.Counter(window(e) for e in late)))
     for e in late:
-        print("  ", "ok-amended" if e[3] else "HOLD", "captain-line" if named(e) else "other", e)
+        print("  ", "ok-amended" if e[3] else "HOLD", "captain-line" if named(e) else "other", window(e), e)
 
 if "r4" in which:
     print("\n== R4 validation approvals: does the approved question carry the merge?")

@@ -1,0 +1,4 @@
+34 Captain validation approvals
+amendment rule by commit time (the design): {'carried': 27, 'question names no head or PR': 5, 'amended-after': 1, 'no-quote': 1}
+amendment rule by date (0.26.0 amended_after): {'amended-after': 10, 'question names no head or PR': 5, 'carried': 18, 'no-quote': 1}
+head named in the question against the last dispatched Candidate: {'approved head = last dispatched head': 18, 'approved head differs from the last dispatched head': 1}

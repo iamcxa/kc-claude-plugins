@@ -1,10 +1,10 @@
-HOLD     canvas-document-popup                          +14 -5: In scope: an optional popup inside the existing journey canvas that opens a supported
-amended  ideation-gaps                                  +1 -1
-HOLD     learning-serialize-evaluation                  +11 -0: In scope: `kc-dev-flow-2/scripts/learning.py`, `kc-dev-flow-2/scripts/test_learning.py`,
-HOLD     migration-and-number-guards                    +1 -0: Captain 2026-09-30, approving the design: 「准」 — the exit for a migration already applied a
-HOLD     release-please-exclude-paths                   +6 -1: In scope: `release-please-config.json` only — give `kc-dev-flow` the `exclude-paths`
-HOLD     release-review                                 +1 -1: Five-things rule, handed over 2026-09-30 by the peer session that drafted it (Captain not 
-HOLD     review-cadence                                 +1 -0: Captain amendments at the ideation gate, 2026-09-30 (「核准」): the package defaults the comme
-HOLD     special-role-calls-fire-when-needed            +1 -0: - Captain's scope addition, 2026-10-20: 「先加第一個，第二個列入評估」, answering FO's 「1. ER：例如碰到 prod、資
-{'clean': 43, 'HOLD': 7, 'not judged': 32, 'amended': 1}
-not judged: ['no closed backlog approval']
+HOLD     canvas-document-popup                          Scope changed after the backlog gate (c9491bb8): "In scope: an optional popup inside the existing journey canvas that opens a supp". FO: res
+HOLD     learning-serialize-evaluation                  Scope changed after the backlog gate (8a6f4bd7): "In scope: `kc-dev-flow-2/scripts/learning.py`, `kc-dev-flow-2/scripts/test_learn". FO: res
+HOLD     migration-and-number-guards                    Scope changed after the backlog gate (c148d7f9): "Captain 2026-09-30, approving the design: 「准」 — the exit for a migration already". FO: res
+HOLD     release-please-exclude-paths                   Scope changed after the backlog gate (8eacf7cc): "In scope: `release-please-config.json` only — give `kc-dev-flow` the `exclude-pa". FO: res
+HOLD     release-review                                 Scope changed after the backlog gate (671221e5): "Five-things rule, handed over 2026-09-30 by the peer session that drafted it (Ca". FO: res
+HOLD     review-cadence                                 Scope changed after the backlog gate (b6f0111b): "Captain amendments at the ideation gate, 2026-09-30 (「核准」): the package defaults". FO: res
+HOLD     special-role-calls-fire-when-needed            Scope changed after the backlog gate (291825e9): "- Captain's scope addition, 2026-10-20: 「先加第一個，第二個列入評估」, answering FO's 「1. ER：例". FO: res
+{'clean': 44, 'HOLD': 7, 'not run': 32}
+not run: ['no closed backlog approval']
+clean via: {'backlog': 30, 'amendment': 14}
