@@ -72,7 +72,7 @@ for(const adapter of adapters)test(adapter+' multiroom rollback, competing scope
  }finally{await h.close()}
 })
 test('Node postcommit exception remains unknown with exact readback and unchanged bootstrap after restart',async()=>{
- const h=await fixture('node');try{const i=await input(),config=await h.get('human-config:v1');await h.fault({commit:true,after:true});assert.equal((await h.member('enroll',i)).result,'unknown');await h.fault(null);assert.equal((await h.member('inspect',i)).result,'matching-current-state');assert.deepEqual(await h.get('human-config:v1'),config)}finally{await h.close()}
+ const h=await fixture('node');try{const i=await input(),config=await h.get('human-config:v1');await h.fault({commit:true,after:true});assert.equal((await h.member('enroll',i)).result,'unknown');await h.fault(null);assert.equal((await h.member('inspect',i)).result,'matching-current-state');await h.restart();assert.equal((await h.member('inspect',i)).result,'matching-current-state');assert.deepEqual(await h.get('human-config:v1'),config)}finally{await h.close()}
 })
 for(const adapter of adapters)test(adapter+' history scan limit, unknown schema and orphan history fail closed',async()=>{
  const h=await fixture(adapter);try{
