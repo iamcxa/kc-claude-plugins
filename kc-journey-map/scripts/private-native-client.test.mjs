@@ -15,6 +15,7 @@ test('paired launch configs contain only helper paths and preserve native login 
  assert.ok(args.includes('model_reasoning_effort="high"')); assert.ok(args.some(a => a.includes('agent-helper.mjs') && a.includes('"mcp"')))
  assert.ok(!args.some(a => /bearer_token|JOURNEY_NATIVE_TOKEN/.test(a)))
  assert.ok(!args.some(a => a.startsWith('model_providers.')))
+ assert.ok(args.includes('features.code_mode.direct_only_tool_namespaces=["mcp__journey"]')); assert.ok(!args.some(a => a.startsWith('features.code_mode.enabled=')))
 })
 test('native event observation retains real failure calls and refuses extra/wrapper or unobservable items', () => {
  const seen = new Map()

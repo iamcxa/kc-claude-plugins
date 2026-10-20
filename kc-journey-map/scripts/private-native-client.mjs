@@ -17,6 +17,7 @@ export function nativeArguments(client, config, store, mcpConfig, cwd) {
  const settings = {
   'model_reasoning_effort': 'high', 'project_doc_max_bytes': 0, 'skills.include_instructions': false,
   'agents.enabled': false, 'web_search': 'disabled', 'suppress_unstable_features_warning': true,
+  'features.code_mode.direct_only_tool_namespaces': ['mcp__journey'],
   'mcp_servers.journey.command': process.execPath,
   'mcp_servers.journey.args': [helper, 'mcp', config, store],
   'mcp_servers.journey.enabled_tools': tools, 'mcp_servers.journey.tool_timeout_sec': 20,

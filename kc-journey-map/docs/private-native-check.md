@@ -59,6 +59,10 @@ but undocumented native internal transport retries are not controlled or proven.
 The per-run suppress_unstable_features_warning flag hides development-feature
 startup warnings while retaining skip_host_skill_discovery. Native error/unknown
 events still stop the observer; no global warning or permission setting changes.
+The per-run features.code_mode.direct_only_tool_namespaces=["mcp__journey"]
+keeps the three allowlisted Journey tools direct and outside the nested invocation
+surface. Its enabled field stays omitted; model mode and other features stay intact.
+This routing does not remove other advertised tools or prove they cannot execute.
 
 Prepare an exact prompt file and a **new nonexistent** receipt directory per phase.
 Use absolute installed executable paths; run from this package:
