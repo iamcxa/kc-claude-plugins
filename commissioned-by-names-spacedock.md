@@ -3,7 +3,7 @@ title: The kc-dev-flow-2 workflow template says commissioned-by spacedock@, so S
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain 「寫」 (chat, 2026-10-20, batch-4 sitting, question 1): D1 as recommended — the template names spacedock@0.27.0.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-20T04:57:42Z
 ---
 
