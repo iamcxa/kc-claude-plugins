@@ -3,7 +3,10 @@ title: ui design review round-3 follow-ups declined at #663 (fenced Preview cand
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:09:55Z
+archived: 2026-10-20T05:09:55Z
 ---
 
 Declined by FO under the round-3 rule (README review-finding disposition, step 5) on PR #663 (ui-design-review-in-ideation), 2026-10-18, on the chief-engineer's measured advice.
