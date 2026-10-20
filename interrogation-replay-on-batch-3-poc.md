@@ -60,6 +60,7 @@ gates:
                 state: pending
 started: 2026-10-20T08:18:17Z
 worktree: .worktrees/spacedock-ensign-interrogation-replay-on-batch-3-poc
+pr: local-merge:742a3caa4f6d3af46cc38ee5af19c9686d0fad72
 ---
 
 ## Scope
