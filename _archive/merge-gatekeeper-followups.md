@@ -3,7 +3,10 @@ title: merge-gatekeeper follow-ups declined at the #666 delivery gate (file list
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:10:26Z
+archived: 2026-10-20T05:10:26Z
 ---
 
 Declined by FO at the #666 delivery gate (head a05b18a0, 2026-10-18); reasons also in that task's gate summary.
