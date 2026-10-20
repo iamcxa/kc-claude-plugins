@@ -46,7 +46,9 @@ families, protected storage and conservative rotation repair; its current
 [implementation boundary](../../../kc-journey-map/docs/agent-pairing.md) does not
 establish activation or delivery. The other stories retain independent native
 client collaboration, full room switching/catalog behavior, interrupted-context restoration,
-stream-stop guarantees and durable human drafts. Approved defaults are five
+provider stream-stop guarantees and durable human drafts. The disabled
+[revocation candidate](../../../kc-journey-map/docs/delegation-revocation.md) supplies
+local lease/close/audit/recovery evidence; it does not establish retained activation. Approved defaults are five
 minutes for pairing, 60 seconds for local handoff, 30 seconds for stream leases,
 an observed stop target of at most 60 seconds, and 30 days for lifecycle receipts.
 Security tombstones have no receipt-retention deletion. Human drafts have no

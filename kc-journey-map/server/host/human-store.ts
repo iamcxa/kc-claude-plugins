@@ -1,4 +1,5 @@
 import { canonicalRoom, HostError } from './core'
+import { denial } from './security-store'
 
 export const HUMAN_BOUND = 7 * 24 * 60 * 60_000
 export const HUMAN_ACCESS = 15 * 60_000
@@ -12,7 +13,7 @@ export type HumanSession = { actorType: 'human'; backendId: string; memberId: st
 export type MemberRoom = { memberId: string; roomId: string; expiresAt: number; revoked: boolean; generation: number }
 export type SyncMetadata = {
  get<T = any>(key: string): T | null; put(key: string, value: unknown): void; delete(key: string): void
- list(prefix: string, limit: number): Array<{ key: string; value: any }>
+ list(prefix: string, limit: number, after?: string): Array<{ key: string; value: any }>
 }
 const fail = (status: number, category: string): never => { throw new HostError(status, category, { category }) }
 const id = (value: unknown) => typeof value === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(value)
@@ -38,13 +39,16 @@ export function validateHumanConfig(value: HumanConfig, origin: string) {
  return value
 }
 export function bootstrapHuman(store: SyncMetadata, config: HumanConfig) {
- const previous = store.get<HumanConfig>('human-config:v1')
+ const previous = store.get<HumanConfig & {minimumSecurityVersion?:number}>('human-config:v1')
  if (previous) {
-  if (JSON.stringify(previous) !== JSON.stringify(config)) throw new Error('human configuration is immutable; use explicit operator policy changes')
+  const {minimumSecurityVersion,...original}=previous
+  if(minimumSecurityVersion && minimumSecurityVersion!==2)throw new Error('unsupported security version')
+  if (JSON.stringify(original) !== JSON.stringify(config)) throw new Error('human configuration is immutable; use explicit operator policy changes')
+  if(!minimumSecurityVersion)store.put('human-config:v1',{...config,minimumSecurityVersion:2})
   return
  }
  store.put('human-schema:v1', { version: 1 })
- store.put('human-config:v1', config)
+ store.put('human-config:v1', {...config,minimumSecurityVersion:2})
  for (const m of config.members) {
   if (store.get('member:' + m.id) || store.get(identityKey(m.issuer, m.subject))) throw new Error('member binding exists')
   store.put('member:' + m.id, { id: m.id, issuer: m.issuer, subject: m.subject, label: m.label, role: m.role, enabled: true, generation: 1 })
@@ -135,18 +139,20 @@ export function humanOperation(store: SyncMetadata, operation: string, input: an
  }
  if (operation === 'disable-member') {
   const m = member(store, input.memberId)
+  const result = denial(store, { memberId: m.id }, operation, {}, now)
   store.put('member:' + m.id, { ...m, enabled: false, generation: m.generation + 1 })
   receipt(store, 'disable-member', m.id, null, 'denied', now)
-  return { denied: true, streamsStopped: 'unverified' }
+  return result
  }
  if (operation === 'set-room') {
   const m = member(store, input.memberId)
   if (!input.roomId || canonicalRoom(input.roomId) !== input.roomId || typeof input.revoked !== 'boolean' || !Number.isFinite(input.expiresAt)) fail(400, 'invalid_room_policy')
+  const result = denial(store, { memberId: m.id, roomId: input.roomId }, operation, {}, now)
   const previous = store.get<MemberRoom>('member-room:' + m.id + ':' + input.roomId)
   store.put('member-room:' + m.id + ':' + input.roomId, { memberId: m.id, roomId: input.roomId, expiresAt: input.expiresAt, revoked: input.revoked, generation: (previous?.generation || 0) + 1 })
   store.put('member:' + m.id, { ...m, generation: m.generation + 1 })
   receipt(store, 'set-room', m.id, null, input.revoked ? 'denied' : 'allowed', now)
-  return { changed: true, streamsStopped: 'unverified' }
+  return { changed: true, ...result }
  }
  const { session, member: m } = activeSession(store, config!, input.sessionDigest, now)
  if (input.csrfDigest !== session.csrfDigest) fail(403, 'csrf_denied')
@@ -156,9 +162,10 @@ export function humanOperation(store: SyncMetadata, operation: string, input: an
   return session
  }
  if (operation === 'logout') {
-  store.put('browser-session:' + input.sessionDigest, { ...session, revoked: true })
+  const result = denial(store, { humanSessionDigest: input.sessionDigest }, operation, { actorType: 'human', principalId: m.id }, now)
+  store.put('browser-session:' + input.sessionDigest, { ...session, revoked: true, revokeOperation: result.operationId })
   receipt(store, 'logout', m.id, null, 'denied', now)
-  return { loggedOut: true }
+  return { loggedOut: true, ...result }
  }
  return fail(400, 'unknown_human_operation')
 }

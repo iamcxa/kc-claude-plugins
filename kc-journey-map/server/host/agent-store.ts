@@ -1,8 +1,9 @@
 import { canonicalRoom, HostError } from './core'
+import { denial } from './security-store'
 import { HUMAN_BOUND, type HumanConfig, type HumanSession, type Member, type MemberRoom, type SyncMetadata } from './human-store'
 export type AgentScope = { roomId: string; records: 'full-replacement'; assets: boolean; saveDirectory: string | null; repositories: string[] }
 type Binding = { memberId: string; memberGeneration: number; roomGenerations: Record<string, number>; policyGeneration: number; backendId: string; scopes: AgentScope[] }
-export type AgentFamily = Binding & { id: string; installationId: string; label: string; createdAt: number; revoked: boolean; reason?: string; refresh: { generation: number; digest: string } }
+export type AgentFamily = Binding & { id: string; installationId: string; label: string; createdAt: number; revoked: boolean; revokeOperation?: string; reason?: string; refresh: { generation: number; digest: string } }
 type PairRequest = Binding & { id: string; installationId: string; label: string; verifierDigest: string; codeDigest: string; expiresAt: number; status: string; familyId?: string }
 const deny = (status: number, category: string): never => { throw new HostError(status, category, { category }) }
 const id = (v: unknown) => typeof v === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(v)
@@ -50,8 +51,12 @@ function human(store: SyncMetadata, input: any, now: number) {
  return m!
 }
 function revoke(store: SyncMetadata, f: AgentFamily, reason: string, now: number, requestId: string | null = null) {
- if (!f.revoked) { store.put('agent-family:'+f.id,{ ...f,revoked:true,reason }); receipt(store,reason,f.memberId,f.id,requestId,now) }
- return { revoked:true, familyId:f.id, streamsStopped:'unverified' }
+ if (!f.revoked) {
+  const result=denial(store,{familyId:f.id},reason,{actorType:reason==='revoke'?'human':'agent',principalId:f.memberId,familyId:f.id},now)
+  store.put('agent-family:'+f.id,{...f,revoked:true,reason,revokeOperation:result.operationId});receipt(store,reason,f.memberId,f.id,requestId,now)
+  return {revoked:true,familyId:f.id,...result}
+ }
+ return {revoked:true,familyId:f.id,operationId:f.revokeOperation,streamsStopped:'unknown'}
 }
 function publicFamily(f: AgentFamily) { const { refresh, ...rest }=f; return rest }
 function publicRequest(r: PairRequest) { const { verifierDigest,codeDigest,...rest }=r; return rest }

@@ -19,7 +19,7 @@ export async function privateNodeOperation(op: string, fileOrId: string, stopped
   const oldIds = new Set(archive.grants.map(g => g.credentialId))
   const fresh = validateGrants(JSON.parse(await readFile(process.env.JOURNEY_GRANTS_FILE, 'utf8')))
   if (fresh.some(g => oldIds.has(g.credentialId))) throw new Error('restore requires new credential IDs; archived IDs stay revoked')
- } else if (!await exists(resolve(root, '.journey-private-v1'))) {
+ } else if (!await exists(resolve(root, '.journey-private-v1')) && !await exists(resolve(root, '.journey-private-v2'))) {
   throw new Error('backup/revoke requires existing private storage')
  }
  if (op === 'backup') {

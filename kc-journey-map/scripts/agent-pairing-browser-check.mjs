@@ -81,8 +81,28 @@ try {
  assert.equal(await page.getByRole('button',{name:'帳號與代理'}).evaluate(el=>document.activeElement===el),true)
  await page.keyboard.press('Enter');await page.getByRole('heading',{name:'帳號與代理'}).waitFor()
  await page.getByRole('button',{name:'撤銷此安裝'}).click()
+ await page.getByRole('button',{name:'取消撤銷'}).click()
+ assert.equal(await page.getByRole('button',{name:'確認撤銷此安裝'}).count(),0)
+ await page.getByRole('button',{name:'撤銷此安裝'}).click()
  await page.getByRole('button',{name:'確認撤銷此安裝'}).click()
- await page.getByText('已撤銷；舊安裝不會復活。',{exact:true}).waitFor()
+ await page.getByText('新請求已拒絕；舊安裝不會復活。',{exact:true}).waitFor()
+ for(const theme of ['light','dark']){
+  await page.evaluate(theme=>window.editor.user.updateUserPreferences({colorScheme:theme}),theme)
+  await page.waitForFunction(theme=>document.querySelector('.agent-sheet')?.getAttribute('data-theme')===theme,theme)
+  for(const state of ['stopping','unknown','stopped','error']){
+   await page.route('**/agents/list?**',async route=>{
+    if(state==='error'){await route.fulfill({status:503,contentType:'application/json',body:JSON.stringify({category:'host_unavailable'})});return}
+    const response=await route.fetch(),body=await response.json();for(const f of body.families)if(f.revoked)f.streamsStopped=state
+    await route.fulfill({response,json:body})
+   })
+   await page.getByRole('button',{name:'更新代理清單'}).click()
+   const text=state==='stopped'?'所有已登記連線已確認關閉。':state==='stopping'?'正在停止既有連線；尚未確認全部關閉。':state==='unknown'?'既有連線停止結果未確認；請更新清單。':'主機回覆未確認。請保留此頁，重新確認；不要推測操作已完成。'
+   await page.getByText(text,{exact:true}).waitFor()
+   for(const width of [1280,390]){await page.setViewportSize({width,height:844});assert.equal(await page.locator('dialog').evaluate(el=>el.scrollWidth<=el.clientWidth),true);await page.screenshot({path:join(scratch,'revoke-'+state+'-'+theme+'-'+width+'.png')})}
+   await page.unroute('**/agents/list?**')
+  }
+ }
+ pass('actual native sheet presents stopping, unknown, close-confirmed and error in light/dark desktop/390px; response states injected for presentation only')
  const reconcile=JSON.parse(helper('reconcile'));assert.equal(reconcile.state,'revoked')
  helper('forget');paired=false
  pass('light/dark desktop and actual 390px viewport controls hit targets; Escape restores focus; human revoke plus authenticated helper reconcile confirms old family')

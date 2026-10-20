@@ -1,4 +1,5 @@
 import { canonicalAsset, HostError, prepareDoc } from './core'
+import { audited } from './audit'
 import { agentRoute } from './agent'
 import { humanRoute, registeredHumanRoom, requireHumanContext } from './human'
 import type { HumanConfig } from './human-store'
@@ -65,7 +66,7 @@ async function mcp(host: Host, req: Request, admission: Admission | null) {
    if (admission?.actorType === 'human' && new URL(req.url).searchParams.get('_humanRoom') !== room) throw new HostError(403, 'room_context_changed', { category: 'room_context_changed' })
    if (admission?.actorType === 'human') await registeredHumanRoom(host.meta, room, admission.rooms)
    const method = { get_doc: 'GET', patch_doc: 'PATCH', put_doc: 'PUT' }[name as string]!
-   value = await host.document(room, method, prepareDoc(method, args.body))
+   value = method==='GET' ? await host.document(room,method,prepareDoc(method,args.body)) : await audited(host,admission,room,'mcp:'+name,()=>host.document(room,method,prepareDoc(method,args.body)),req.headers.get('x-journey-operation')||undefined)
   } else return json({ jsonrpc: '2.0', id: rpc.id, error: { code: -32601, message: 'unknown tool' } })
   result = { content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value }
  } else return json({ jsonrpc: '2.0', id: rpc.id, error: { code: -32601, message: 'method not found' } })
@@ -98,12 +99,16 @@ async function route(host: Host, req: Request): Promise<Response> {
   if (url.pathname === '/health' && method === 'GET') return json(await health(host, admission))
   if (url.pathname === '/capabilities' && method === 'GET') return json(host.capabilities(room))
   if (url.pathname === '/doc' && ['GET', 'PATCH', 'PUT'].includes(method))
-   return json(await host.document(room, method, prepareDoc(method, method === 'GET' ? null : await req.json())))
+   {
+    const prepared=prepareDoc(method,method==='GET'?null:await req.json())
+    return json(method==='GET'?await host.document(room,method,prepared):await audited(host,admission,room,'document:'+method,()=>host.document(room,method,prepared),req.headers.get('x-journey-operation')||undefined))
+   }
   if (url.pathname.startsWith('/uploads/')) {
    const raw = decodeURIComponent(url.pathname.slice('/uploads/'.length)), id = canonicalAsset(raw)
    if (host.private && (raw !== id || !id || id === '.' || id === '..')) throw new HostError(403, 'asset forbidden')
    if (method === 'PUT') {
-    await host.putAsset(room, id, new Uint8Array(await req.arrayBuffer()), req.headers.get('content-type') || 'application/octet-stream')
+    const bytes=new Uint8Array(await req.arrayBuffer())
+    await audited(host,admission,room,'asset:PUT',()=>host.putAsset(room,id,bytes,req.headers.get('content-type')||'application/octet-stream'),req.headers.get('x-journey-operation')||undefined)
     return json({ ok: true })
    }
    if (method === 'GET') {
@@ -113,7 +118,8 @@ async function route(host: Host, req: Request): Promise<Response> {
   }
   if (url.pathname === '/save' && ['GET', 'POST'].includes(method)) {
    if (!host.capabilities(room).save || !host.save) return new Response('save unsupported', { status: 501 })
-   return json(await host.save(room, url, method, method === 'POST' ? await req.json() : null))
+   const body=method==='POST'?await req.json():null
+   return json(method==='POST'?await audited(host,admission,room,'save:POST',()=>host.save!(room,url,method,body),req.headers.get('x-journey-operation')||undefined):await host.save(room,url,method,body))
   }
   if (url.pathname === '/repo-doc' && method === 'GET') return json(host.capabilities(room).repoDoc && host.repoDoc
    ? await host.repoDoc(room, url) : { state: 'unavailable', reason: 'checkout capability is unavailable' })

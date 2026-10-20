@@ -1,7 +1,7 @@
 import { canonicalRoom, HostError } from './core'
 import { cookieValue, currentHuman } from './human'
 import type { HumanSession } from './human-store'
-export type Grant = { credentialId: string; secretDigest: string; principalId: string; rooms: string[]; expiresAt: number; revoked: boolean }
+export type Grant = { credentialId: string; secretDigest: string; principalId: string; rooms: string[]; expiresAt: number; revoked: boolean; revokeOperation?: string }
 export type Session = { credentialId: string; expiresAt: number; actorType?: 'legacy' | 'agent' | 'human'; humanSessionDigest?: string; familyId?: string }
 export type Admission = Session & { rooms: string[]; principalId: string; cookie: boolean }
 export interface Metadata {
@@ -10,6 +10,7 @@ export interface Metadata {
  list<T>(prefix: string): Promise<Array<{ key: string; value: T }>>
  human?(operation: string, input: any): Promise<any>
  agent?(operation: string, input: any): Promise<any>
+ security?(operation: string, input: any): Promise<any>
 }
 export async function digest(secret: string) {
  return [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(secret)))].map(b => b.toString(16).padStart(2, '0')).join('')
