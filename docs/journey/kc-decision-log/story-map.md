@@ -228,7 +228,7 @@ Claude本人正常工作階段的唯讀Git原回執仍pending（非denied）；d
 | O1 | 使用者／該層級獲授權決策者 | A1 → A4 | 裁決權依適用層級人類授權；OS／process context、gh帳號或Sites owner不自動賦予它。 |
 | O2 | 各runtime／checkout持有者；選配host另由原維護者負責 | A5 → A5 | agent透過既有Git操作code／data checkout，CLI只重讀與回報loaded view；S17遠端host維護延後。 |
 | O3 | 接手 agent 與既有 dev2／Spacedock 流程 | A6 → A7 | 每位接手者須有已授權CLI執行／來源存取路徑；CLI提供依據，既有dev2／Spacedock保有任務與驗收權威。 |
-| O4 | 使用者／原適用層級決策者 | A8 → A3 | 新證據回到討論與確認，不能由工具自動批准。 |
+| O4 | 使用者／原適用層級決策者 | A8 → A8 | 負責 A8 重審；新證據回到 A3 討論與確認，不能由工具自動批准。 |
 
 P1 六條 AC、各片範圍／依賴及 D1–D5 見 [切片地圖](slice-map.md)；它們的編輯來源是 [slices-proposal.yaml](slices-proposal.yaml)。新需求接受後須先重整 full-map baseline，再依既有 admission 做 cut／brief／handoff；原 profile／投入／P1 選擇不用重選。
 
