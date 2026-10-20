@@ -1,6 +1,6 @@
 # kc-decision-log 切片地圖
 
-**D5：CLI 優先、MCP 視需要選配；本PR為規劃設計；CLI未實作／部署，非ready handoff。** P1 已於 2026-10-20 重切為「帶著精確裁示走完一次交接」並選定，profile 為 Pilot，投入三個完整工作日；fit 尚未證明。其他切片仍候選，不一次啟動六片。
+**D5：CLI 優先、MCP 視需要選配；本PR為規劃設計；CLI未實作／部署，非ready handoff。** P1 已於 2026-10-20 重切為「帶著精確裁示走完一次交接」並選定，profile 為 Pilot，投入四個完整工作日。其他切片仍候選，不一次啟動六片。
 
 六片名稱、成果及故事歸屬以原生 [journey.yaml](journey.yaml) 的 releases／stories[].release 為準；本頁保存範圍、依賴與驗收說明。原生 Story map 顯示六條 release band，六個 journey-board 頁顯示各片故事與問答；各片的 slice-Px 問答連至本頁。P1 已選，其餘仍為候選。工作模型見 [CLI 設計](cli-first-design.md)，完整活動見 [故事地圖](story-map.md)。
 
@@ -17,8 +17,8 @@
 
 ## 投入與入場
 
-- appetite：3 days，使用者原話「1-3天」，其後澄清為「三個完整工作日」。
-- estimate：P1 粗估 16–30 active 工程小時，未經同類交付校準；上限超過三個 8 小時工作日，依據與假設見 [P1 估工](p1-estimate.md)。fit 未證明，由 handoff 檢查與使用者決定。
+- appetite：4 days。使用者原話「1-3天」，其後澄清為「三個完整工作日」；2026-10-20 回覆「1 照建議」改為四個完整工作日，範圍不動。
+- estimate：P1 粗估 16–30 active 工程小時，未經同類交付校準；上限 30 小時以 8 小時一天換算為 3.75 天，在四天投入內；依據與假設見 [P1 估工](p1-estimate.md)。估算未校準，不保證做完。
 - 重切前 P1（S01, S02, S04, S10, S11）的 32–48 小時粗估不再適用；它計入了已移出本片的雙使用者隔離測試與三端驗收。
 - P1 之後逐片以小批次規劃、驗證與決定；沒有一次啟動全部候選切片。
 
@@ -34,7 +34,7 @@
 
 **重切來源：** 2026-10-20 使用者回覆「重切」，並以「可以」接受上述七張故事為新 P1。重切前 P1 是 S01, S02, S04, S10, S11；S02 移至 P4a，S04 移至 P4b，S19–S22 自原 P4a 移入。卡片文字與 ID 不變。
 
-**沿用與新工作：** S21、S22 沿用既有 dev2／Spacedock 任務、gate 與 Git／gh 證據入口，沒有第二份任務系統。新工作是最小 CLI（S01、S10、S11）與 Claude→Codex 手動交接、接手者重讀（S19、S20）。既有查詢原型在使用者的私人決策 repo：`parse`／`makeSnapshot`／`effective` 與 `createService` 已存在，build 已從固定 Git commit 讀 ADR；沒有 CLI 入口（2026-10-20 讀取該 repo 確認）。
+**沿用與新工作：** S21、S22 沿用既有 dev2／Spacedock 任務、gate 與 Git／gh 證據入口，沒有第二份任務系統。新工作是最小 CLI（S01、S10、S11）與 Claude→Codex 經任務紀錄交接、接手者重讀（S19、S20）。既有查詢原型在使用者的私人決策 repo：`parse`／`makeSnapshot`／`effective` 與 `createService` 已存在，build 已從固定 Git commit 讀 ADR；沒有 CLI 入口（2026-10-20 讀取該 repo 確認）。
 
 **範圍**
 
@@ -42,7 +42,7 @@
 - 依 binding 的 ADR root 讀原生 dev2 路徑，回傳 repo、path、ADR ID、完整 commit、原文 digest 與原 Status，JSON 與人讀兩種輸出
 - 保守 effective 沿用原型規則（D9）：有 Decision key 且同 key 只有一筆的明示 Accepted，或同 binding 明示 `Superseded by` 鏈末端的這種 Accepted 才算生效，其餘 unresolved；合成資料帶 Decision key
 - 一個簡短的唯讀 skill（D10）：拿到裁示引用時先以 CLI 重讀、比對指紋，不一致就停；Claude 與 Codex 都能載入
-- 使用者把 Claude 讀出的引用手動轉交 Codex；Codex 在自己的已授權環境以同一 CLI 重讀並核對
+- Claude 協調者把讀出的引用寫進任務二的任務說明，Codex 從任務紀錄讀取，並在自己的已授權環境以同一 CLI 重讀核對；使用者不轉述（D1）
 - 兩個 dev2 任務（D7）：任務一由 Claude 協調者做 CLI；任務二由 Paseo 啟動的 Codex 協調者執行合成任務，其 worker 先以 CLI 重讀再動手
 - 合成任務是一個由合成裁示決定的 CLI 小功能，做到 PR 合併；使用者取回對應該引用的 task／gate／PR 證據
 
@@ -70,7 +70,7 @@
 - P1-AC1：合成決策 repo 是唯一已配置 binding；CLI 對未配置 binding、錯 repo／path、缺 commit 或非完整 commit 拒絕並以非零 exit 結束，不同原因可有不同訊息（P1 不宣稱隔離）；不把 caller 自稱或任意路徑當授權，不新增存取。
 - P1-AC2：CLI 固定讀 D0 時，即使 ref 後來前進到 D1 仍只宣稱 D0；回傳 repo、path、ADR ID、完整 commit、原文 digest 與原 Status，JSON 與人讀模式對照同一結果。
 - P1-AC3：用合成 Accepted（帶 Decision key）、Proposed、同 binding 明示取代、缺 Decision key、同 key 兩筆 Accepted 與壞鏈資料，CLI 照原文報 Status；effective 依 D9，缺 key 與同 key 多筆 Accepted 皆 unresolved；不改原文；unresolved 與工具失敗分開。
-- P1-AC4：使用者把 Claude 讀出的引用手動轉交 Codex，標明傳出者、接手者、原任務與 repo／ADR／commit／digest；Codex worker 在自己的已授權環境實際執行同一 CLI 重讀，由 CLI 以預期內容指紋比對，不符即非零 exit；只有 effective 指向被轉交的那一筆才開工，未定或被取代就停下回報，不默默改執行目標。貼文自稱或另一端登入不算本端通過。
+- P1-AC4：Claude 協調者把讀出的引用寫進任務二的任務說明，標明傳出者、接手者、原任務與 repo／ADR／commit／digest，使用者不轉述；Codex worker 在自己的已授權環境實際執行同一 CLI 重讀，由 CLI 以預期內容指紋比對，不符即非零 exit；只有 effective 指向被轉交的那一筆才開工，未定或被取代就停下回報，不默默改執行目標。貼文自稱或另一端登入不算本端通過。
 - P1-AC5：合成 ADR 寫「部署／發訊」時，任務紀錄中沒有任何部署或發訊動作；peer 權限提示交回原持有者或使用者，FO 不代答。
 - P1-AC6：經既有 dev2／Spacedock 完成一個合成任務，PR 由使用者合併或逐 PR 授權 Claude 協調者合併；使用者取回原 task／gate／PR 引用，核對它對應本次任務內容、回合與採用的 ADR commit。無法證明關聯就顯示未知；不複製受保護日誌、不另造台帳。
 
@@ -178,7 +178,7 @@ dot經已授權且可執行CLI的路徑讀取同一裁示並參與交接；接�
 
 **重切說明：** 2026-10-20 P1 重切後，原 P4a 的 S19–S22 移入 P1；S02 自原 P1 移入本片，S23 留在本片。
 
-**沿用與新工作：** 沿用 P1 的 CLI、手動交接與 dev2／Spacedock 證據入口；新工作是 dot 端的已授權執行路徑，以及以原任務證據整理差距。
+**沿用與新工作：** 沿用 P1 的 CLI、經任務紀錄的交接與 dev2／Spacedock 證據入口；新工作是 dot 端的已授權執行路徑，以及以原任務證據整理差距。
 
 **範圍**
 
@@ -318,13 +318,13 @@ dot經已授權且可執行CLI的路徑讀取同一裁示並參與交接；接�
 
 ## 已確認選擇
 
-D1–D4 標為已確認，但 2026-10-20 搜尋已索引的 Claude／Codex 紀錄未找到使用者原話，出處待使用者確認。D7–D13 部分內容來自 2026-10-20 一次提出的 11 題，使用者回覆「同意」全部接受。
+D1–D4 原由先前規劃標為已確認，但已索引紀錄找不到使用者原話；2026-10-20 使用者逐條裁決如下各條。D7–D13 部分內容來自 2026-10-20 一次提出的 11 題，使用者回覆「同意」全部接受。
 
 ### D1 P4 協作交接通路
 
-使用者先轉交，或沿用已有驗證的通路；自動橋接延後。
+交接由 agent 經既有任務紀錄完成，使用者不轉述：傳出的 agent 把精確引用寫進接手任務的任務說明，接手的 agent 從任務紀錄讀取並自行重讀。原先「使用者先轉交」被否決；agent 之間的自動推送延後。這項選擇本身不新增外部動作授權。
 
-已確認的設計選擇：手動轉交或沿用已有驗證通路；這項選擇本身不新增外部動作授權。
+使用者 2026-10-20：「D1手動轉交不是很好，不就等於我再講一次？」P4b-AC4 等後片仍寫手動轉交的條文，待該片規劃時改寫。
 
 影響：S19, S20, S22, S26, P1, P4b。
 
@@ -332,7 +332,7 @@ D1–D4 標為已確認，但 2026-10-20 搜尋已索引的 Claude／Codex 紀�
 
 agent 查到已配置 repo／ref 落後、工作目錄乾淨且可 fast-forward 時，依既定規則自行更新、重讀受影響 ADR 並回報；其他狀態保留原狀並說明原因。
 
-已確認的設計選擇：符合既定條件即可自行更新、重讀並回報；仍由各 checkout 持有者在既有權限內操作。
+已確認：符合既定條件即可自行更新、重讀並回報；仍由各 checkout 持有者在既有權限內操作。使用者 2026-10-20：「D2 我同意」。
 
 影響：S16, S18, P3。
 
@@ -340,7 +340,7 @@ agent 查到已配置 repo／ref 落後、工作目錄乾淨且可 fast-forward 
 
 Agent 用既有 Git／PR 工具；kc-decision-log MCP 先維持唯讀，寫入 MCP 及 host 代寫延後。
 
-已確認的設計範圍：沿用既有 Git／PR 能力；實際提交仍核對本次適用授權。
+P1 照此確認：CLI 唯讀，寫入走既有 Git／PR，實際提交仍核對本次適用授權。後續方向（P5）：同一個 CLI 包住 gh 與 Git 提供寫入命令，agent 只需 repo 權限與這一個工具；合併仍由使用者決定（D12）。使用者 2026-10-20：「D3 現在可以，但是應該要有更聰明的辦法，例如只要給 repo 權限，把 gh 抽象化，只保留一個 cli 工具？」
 
 影響：S09, P5。
 
@@ -348,7 +348,7 @@ Agent 用既有 Git／PR 工具；kc-decision-log MCP 先維持唯讀，寫入 M
 
 實質變更新建 ADR，小修留原 ADR；格式、狀態、取代關係、配號及原審查沿用 dev2 既有機制，不另創一套。
 
-已確認的 ADR 修訂政策，與 repo 內 dev2 0.25.0 模板、配號及審查機制對齊；不擴大其他權限。
+已確認的 ADR 修訂政策，與 repo 內 dev2 模板、配號及審查機制對齊；不擴大其他權限。使用者 2026-10-20：「D4 同意」。
 
 影響：S11, S24, S25, S26, P4b, P5。
 
@@ -416,7 +416,7 @@ kc-decision-log 是一個人指揮多個 AI agent 時的裁示庫：大方向用
 | --- | --- |
 | design | 2026-10-20 使用者接受重切後七張故事、P1-AC1–AC6 與其修改，以及 D6–D13；兩位陌生讀者的 43 題已逐題答覆或延後。 |
 | technical | CLI 尚未實作；Claude 本機以 Git 讀固定 commit 已觀測，Codex 接手重讀與合成 dev2 任務未驗。 |
-| admission | 投入三個完整工作日；P1 粗估 16–30 active 工程小時，未校準，上限超過投入；fit 與 handoff 待原生 `journey-handoff.mjs` 檢查。 |
+| admission | 投入四個完整工作日；P1 粗估 16–30 active 工程小時，未校準，上限換算 3.75 天；handoff 待原生 `journey-handoff.mjs` 檢查與使用者接受。 |
 
 dev2 基準：0.25.0。原始格式、狀態、配號及審查沿用 dev2。get_effective 與 Decision key 是保守查詢的設計補充，不是 dev2 原生要求。
 

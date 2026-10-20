@@ -24,6 +24,7 @@ P1「帶著精確裁示走完一次交接」已選，採 dev2 Pilot，故事為 
 - [CLI 優先設計](cli-first-design.md)：跨端工作模型及權限邊界。
 - [P1 技術契約](p1-technical-contract.md)：35 個技術問答的完整提案與待驗項目。
 - [P1 估工](p1-estimate.md)：重切後 P1 的粗估、依據與假設。
+- [P1 開發說明（草稿）](p1-development-brief.md)：交給 dev2 的五段式 Development Brief，待使用者接受交接。
 
 卡片、順序、規則短句及 membership 編輯 YAML；長篇故事說明、切片驗收與技術章節編輯對應 Markdown。原生 `doc` 使用 GitHub blob 章節網址；同 repo branch 的文件與地圖一起送審。畫布手改須先用原生 readback 檢查，再處理來源；不以另一份自訂 YAML 重複管理 membership。
 
@@ -45,4 +46,4 @@ node kc-journey-map/lib/journey-tldr.mjs export kc-decision-log-design docs/jour
 
 這是 map-mode 規劃意圖，故事不填沒有證據的 status／evidence。原生 evidence lint 的 30 筆 `no-status` 不能解讀成格式全綠；render、原生 schema 接收、readback、快照內容及實際畫面分開核對。P1 的故事數 7（`slice_because` 記錄理由），其餘切片 3、3、2、5、4。
 
-新 CLI 尚未實作／部署，Claude→Codex 交接驗收、正式 fit 與 ready handoff 均未成立。投入已確認為三個完整工作日；P1 粗估 16–30 active 工程小時，未經校準，上限超過投入。ADR 格式、Status、配號及審查沿用 dev2 原機制；任務與驗收沿用 dev2／Spacedock。
+新 CLI 尚未實作／部署，Claude→Codex 交接驗收、正式 fit 與 ready handoff 均未成立。投入為四個完整工作日；P1 粗估 16–30 active 工程小時，未經校準。ADR 格式、Status、配號及審查沿用 dev2 原機制；任務與驗收沿用 dev2／Spacedock。

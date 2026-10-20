@@ -33,7 +33,7 @@ P1 已選／Pilot，2026-10-20 重切為「帶著精確裁示走完一次交接�
 | P5（候選）— 把確認草案送成受控 PR | S07, S08, S09, S25 |
 | 延後／UNASSIGNED | S03, S12, S17, S28, S29, S30 |
 
-六片的範圍、依賴、驗收與移除測試見 [切片說明](slice-map.md)。P1 投入為三個完整工作日；重切後的[估工](p1-estimate.md)未校準，fit 尚未證明。
+六片的範圍、依賴、驗收與移除測試見 [切片說明](slice-map.md)。P1 投入為四個完整工作日；[估工](p1-estimate.md)未校準。
 
 ## 故事說明
 
@@ -283,7 +283,7 @@ checkout持有者在該runtime既有權限內重新核對已配置repo/ref、乾
 
 歸屬：P1（2026-10-20 自 P4a 移入）。
 
-使用者手動轉交或沿用已驗通路，附傳出者／接手者、原task內容／回合／gate與repo／ADR／commit／digest／core contract版本、freshness及疑義。各接手者須用自己的已授權執行路徑重讀；共用合法owner身分不等於新的裁決權，cloud dot不自動橋接localhost，自動bridge延後。
+傳出的 agent 把引用寫進接手任務的任務紀錄（D1，使用者不轉述），附傳出者／接手者、原task內容／回合／gate與repo／ADR／commit／digest／core contract版本、freshness及疑義。各接手者須用自己的已授權執行路徑重讀；共用合法owner身分不等於新的裁決權，cloud dot不自動橋接localhost，自動bridge延後。
 
 #### S20
 
