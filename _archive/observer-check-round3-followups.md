@@ -3,7 +3,10 @@ title: observer_check.py refuses an observer report that predates later task cha
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:10:38Z
+archived: 2026-10-20T05:10:38Z
 ---
 
 Declined under the round-3 rule from the third external review round (Codex) of iamcxa/kc-claude-plugins PR #632 (head 40c714a6, review:5501097974), 2026-10-13, task `observer-before-merge-guard`. The finding is not P1 or Material, so it did not start a repair cycle there; it is filed here with its decline reason, per `## FO steps: review findings` step 5.
