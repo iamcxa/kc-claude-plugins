@@ -27,6 +27,8 @@ P1「讀對同一份裁示」已選，採 dev2 Pilot，故事為 S01、S02、S04
 
 卡片、順序、規則短句及 membership 編輯 YAML；長篇故事說明、切片驗收與技術章節編輯對應 Markdown。原生 `doc` 使用 GitHub blob 章節網址；同 repo branch 的文件與地圖一起送審。畫布手改須先用原生 readback 檢查，再處理來源；不以另一份自訂 YAML 重複管理 membership。
 
+69 個文件連結的章節標題已按原生 popup 的 heading slug 核對。本次沿用的本機 host 尚未配置此 repo 的 `JOURNEY_DOC_REPOS`，實際 `/repo-doc` 回傳 `unavailable`；目前可用視窗內的 **Open on GitHub** 開啟文件。畫布內閱讀仍待 host 維護者依原生 canvas 合約設定，不能把章節檢查通過當成該功能已驗收。
+
 ## 原生重現
 
 下列命令從 repository root 執行，使用已備妥依賴的 `kc-journey-map`；亦可使用已安裝 plugin 的同名 CLI 並傳入本目錄的絕對來源路徑。server 的啟動、房間保存與文件連結設定依 [原生 canvas 合約](../../../kc-journey-map/skills/kc-journey-map/references/canvas.md)。
