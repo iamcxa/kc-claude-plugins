@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-20T04:58:17Z
+worktree: .worktrees/spacedock-ensign-fo-write-rules-checked
 ---
 
 ## Scope
