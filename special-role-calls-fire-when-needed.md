@@ -406,3 +406,82 @@ The model rule is two fields (`profile: prod`, a `db` surface), carried in the o
 ### Summary
 
 Slice 1 replaces Event A with the repair-pass count, clears calls by date and model rather than wording, prints one line per task and role naming Fable for prod or db tasks, and adds a heading hint; slice 2 adds the review-round count from `pr_watch.py tasks`. The corpus replay reproduces every number in the design, roborev is clean (917, 918), CI is green on #682, and the D5 stage 1 reading found two escapes that need the Captain's call on stage 2.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #682 head f4447396 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Head f4447396265e18e7b2cbb681b4dbfe16d396530e (Draft, 2 commits on 891a9a24; origin/main is a7222292, no shared file), checked out detached in a throwaway worktree, removed after. AC-1,2,3,8,9: `test_role_triggers.py` 22 OK; AC-4: README and workflow.md diff empty, longest owed line 54 words; AC-5: full `unittest discover` 568 OK (exit 0), lint-skills 0, test_lint_skills 35 OK; AC-6: `test_pr_watch.py` 78 OK, real `gh api --paginate --slurp` on PR 666 returns 7 comments from 4 review ids; AC-7 below.
+  Falsifiers I ran with python3 -B and caches cleared, each red on a named test: threshold 5; reports not counted; any heading clears; amendment date ignored; profile ignored; string-order rank; only first amendment listed; undated waiver clears; fences not skipped; review rounds ignored; call must name Cycle 3; checkout read instead of `git show`; comments counted not review ids; merged PR read; rounds not passed; `gh` failure swallowed. One survived: dropping `--paginate --slurp` from the `gh api` argv (the stub gh does not assert flags) is Polish F1.
+  Limits judged. Agent body "a stronger model the dispatch names": accepted; it is stricter than the design's "the model the dispatch names", keeps never-below-Opus and `model: opus` (lint-skills passes). AC-2 literal `### Feedback Cycles`: I ran it synthetically, the call under it stays owed, one hint line names that heading, a non-call `Reviewer: one run per design` line clears nothing and adds no hint; the missing row is Polish F3. Review replies counted as ids: measured 0 replies in 82 inline comments over the 38 window PRs, so excluding replies changes no count; Deferred risk F2. Slice 2 dark in relay and web: accepted, the Captain took D1 knowing it (0 of 23 web PRs, 3 of 46 relay PRs have inline comments).
+- DONE: Run the replay yourself from the task folder's replay/ (replay.py --slice2) and reproduce the design's fire counts; judge the implementation's one deviation (the engineering-reviewer agent body says 'a stronger model the dispatch names' to keep never below Opus) and its stated limits (AC-2's literal Feedback Cycles heading exercised only by the replay hint; review replies counted as review ids; slice 2 dark in relay and web); confirm slice 2 reverts alone by reverting its commit in a throwaway checkout.
+  `python3 -B -I replay.py <candidate scripts> --slice2` exit 0, PASS: 38 window and 287 population tasks; window CE 10 (9,1,0), ER 9 (7,2,0); population CE 32, ER 39, Fable 12, Opus 27; owed lines CE 8, ER 9 (Fable 2, Opus 7) plus one hint (prod-security-review-gates); slice 2 window fires 11 and live review ids equal the table for all 38. Re-derived without the candidate code: a 40-line scratch script counting `## Stage Report: implementation` headings at the pins matches the table's repair column for 38 of 38 tasks and gives population CE 32, ER 39, Fable 12, Opus 27. Caveat: the TP/unclear/false split reads the design's own observer labels, so it restates the design; the misses and false fires are the informative columns. Slice 2 reverts alone: `git revert f4447396` is clean, then `test_role_triggers.py` 21 OK, `test_pr_watch.py` 72 OK, lint-skills 0, and the slice-1 replay (no `--slice2`) PASS with the same numbers.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc accept.sh`, all six steps matched. `adr_lint.py docs/adr --since 891a9a24 --require 26`: "26 ADR file(s) checked, 0 legacy", exit 0 (same with `--since origin/main`). Also at the head: comment_ratio 0 comment lines, exit 0; doc_impact 0 documents, exit 0; number_guards PASS, exit 0; design_surfaces presentable, exit 0; dispatch_records "4 dispatch record(s) complete", exit 0; CI at f4447396 all 4 checks SUCCESS.
+
+### Verdict
+
+PASSED for head f4447396265e18e7b2cbb681b4dbfe16d396530e. Every AC-1 to AC-9 holds at that head on the evidence above, goal sufficiency (the counts and clearing rules do what the design measured) and minimal necessity (six files, every one named by the design; no README change; the one agent-body clause is the model rule the Captain asked for) both hold. No Material finding.
+
+### Findings (Review-finding disposition)
+
+- F1 Polish: no test asserts the `--paginate --slurp` flags of `review_rounds`. Real `gh` refuses `--slurp` without `--paginate` (loud, exit 2 line), so only dropping both flags would silently undercount past 30 comments, and no window PR has 30.
+- F2 Deferred risk: reply comments carry their own review ids and would count as rounds. Becomes Material when a task PR with author replies fires the chief-engineer line with one real reviewer round; 0 of 82 window comments are replies.
+- F3 Polish: the synthetic suite has no row with the literal `### Feedback Cycles` heading (AC-2 text); I ran it and it behaves as specified.
+- F4 Polish: the PR title names only the repair-pass slice, and release-please reads the title; slice 2 is also in the PR. Retitle before merge if the changelog should name it.
+- F5 Polish: an owed engineering-reviewer line lists every amendment number, so a task with about a dozen replacing amendments exceeds the 60-word bound that the tests check only up to six; the replay's "captain-question-load clears" row is vacuous in slice 1 (two repairs, never fires) and only slice 2 can fire it.
+
+### Unverified obligations
+
+- No model was run: that an Agent dispatch with `model` fable is honoured by the host, and the model-documentation ranking the Captain cites, are not checked.
+- `gh api --slurp` needs a minimum `gh` version that I did not look up (I ran 2.92.0); CI uses a stub gh, so no real `gh` runs in CI.
+- The replay needs this machine's four private state checkouts and live `gh`; it is a one-time check, as AC-7 says. Thresholds remain in-sample.
+- D5 stage 2 (about 40 USD assumed prices) is the Captain's pending decision from implementation, not a candidate defect.
+
+### Minimal acceptance script (run as written in a fresh bash, needs git, python3 and network)
+
+```bash
+# Step 1: check out PR #682 at its head in a throwaway directory.
+D=$(mktemp -d) && git clone --quiet --no-checkout --depth 1 https://github.com/iamcxa/kc-claude-plugins "$D/c" && git -C "$D/c" fetch --quiet --depth 1 origin pull/682/head && git -C "$D/c" checkout --quiet --detach FETCH_HEAD && git -C "$D/c" rev-parse --short=8 HEAD
+# Expected: f4447396
+# Observed: f4447396
+
+# Step 2: a task with five implementation reports (four repair passes) and no recorded call owes a chief-engineer call.
+S="$D/state" && mkdir "$S" && git -C "$S" init -q -b main
+printf -- '---\ntitle: t\nprofile: pilot\nstatus: validation\n---\n\n## FO alignment\n\nSurfaces: none\n\n## Stage Report: implementation\n\n## Stage Report: implementation (cycle 2)\n\n## Stage Report: implementation (cycle 3)\n\n## Stage Report: implementation (cycle 4)\n\n## Stage Report: implementation (cycle 5)\n' > "$S/t.md"
+git -C "$S" add t.md && git -C "$S" -c user.name=t -c user.email=t@t commit -qm one
+python3 -B "$D/c/kc-dev-flow-2/scripts/role_triggers.py" "$S" t; echo "exit $?"
+# Expected: one line starting "next: t has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer", then "exit 1"
+# Observed: "next: t has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer with the question ..." then "exit 1"
+
+# Step 3: a dated call worded "third repair cycle" under FO alignment clears it by date, not by wording.
+python3 - "$S/t.md" <<'PY'
+import sys
+p = sys.argv[1]; s = open(p).read()
+open(p, "w").write(s.replace("Surfaces: none\n", "Surfaces: none\nReviewer: kc-dev-flow-2:chief-engineer opus 2026-10-20 — third repair cycle, keep going?\n", 1))
+PY
+git -C "$S" -c user.name=t -c user.email=t@t commit -qam two
+python3 -B "$D/c/kc-dev-flow-2/scripts/role_triggers.py" "$S" t; echo "exit $?"
+# Expected: "role triggers: 1 event(s) read at HEAD, each with a call or a waiver." then "exit 0"
+# Observed: as expected
+
+# Step 4: a replacing amendment on a prod task needs Fable; an Opus call does not clear it, a Fable call does.
+printf -- '---\ntitle: u\nprofile: prod\nstatus: validation\n---\n\n## FO alignment\n\nSurfaces: none\nReviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-21 — q\n\n## Captain amendments\n\n### Amendment 1 — 2026-10-20, chat\nCaptain: ok\nSupersedes: AC-1\nDesign: none\n' > "$S/u.md"
+git -C "$S" add u.md && git -C "$S" -c user.name=t -c user.email=t@t commit -qm three
+python3 -B "$D/c/kc-dev-flow-2/scripts/role_triggers.py" "$S" u | cut -c1-120; echo "exit ${PIPESTATUS[0]}"
+sed -i.bak 's/engineering-reviewer opus 2026-10-21/engineering-reviewer fable 2026-10-21/' "$S/u.md" && git -C "$S" -c user.name=t -c user.email=t@t commit -qam four
+python3 -B "$D/c/kc-dev-flow-2/scripts/role_triggers.py" "$S" u; echo "exit $?"
+# Expected: first run "next: u has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on fable (profile prod) ..." and "exit 1"; second run "role triggers: 1 event(s) read at HEAD, each with a call or a waiver." and "exit 0"
+# Observed: as expected
+
+# Step 5: the unit tests of the changed scripts pass.
+cd "$D/c" && python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_role_triggers.py' 2>&1 | tail -3 && python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_pr_watch.py' 2>&1 | tail -3
+# Expected: "Ran 22 tests" then "OK", and "Ran 78 tests" then "OK"
+# Observed: Ran 22 tests in 11.9s OK; Ran 78 tests in 19.5s OK
+
+# Step 6: the README sentence FO reads is untouched (the PR is two commits on 891a9a24 and changes six files, none of them these two).
+git -C "$D/c" fetch --quiet --depth 3 origin pull/682/head && git -C "$D/c" diff --stat HEAD~2 HEAD -- docs/dev2/README.md kc-dev-flow-2/references/sd/workflow.md | wc -l | tr -d ' ' && git -C "$D/c" rev-parse --short=8 HEAD~2 && git -C "$D/c" diff --stat HEAD~2 HEAD | tail -1
+# Expected: 0, then 891a9a24, then " 6 files changed, 376 insertions(+), 150 deletions(-)"
+# Observed: 0, 891a9a24, " 6 files changed, 376 insertions(+), 150 deletions(-)"
+```
+
+Does not cover: the live four-repository replay (private checkouts), slice 2's real `gh` read on an open PR, or a Fable dispatch. A pass shows the counting and clearing rules, not that FO will act on the lines.
