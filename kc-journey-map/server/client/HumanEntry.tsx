@@ -2,7 +2,10 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { journeyApi, setHumanContext, type HumanContext } from './api'
 import './human-entry.css'
 import { AgentSheet } from './AgentSheet'
-type Entry = { backendId: string; memberId: string; label: string; rooms: string[]; room: string | null; expiresAt: number; verifiedHumanSignInAt: number; status: string }
+import { humanDrafts } from './human-drafts'
+import { sameMount, type DraftContext } from '../draft-data'
+import { verifiedDraftContext } from './draft-recovery'
+type Entry = { backendId: string; memberId: string; label: string; rooms: string[]; room: string | null; expiresAt: number; verifiedHumanSignInAt: number; issuer:string; subject:string; generation:number; humanRevalidateBy:number; status: string }
 const secret = () => [...crypto.getRandomValues(new Uint8Array(32))].map(b => b.toString(16).padStart(2, '0')).join('')
 async function post(path: string, body: object) {
  const response = await fetch(journeyApi(path), { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-Journey-Entry': '1' }, body: JSON.stringify(body) })
@@ -16,7 +19,8 @@ const messages: Record<string, string> = {
  provider_unavailable: '身分服務暫時無法使用。請稍後重試。', owner_peer_unavailable: '此主機無法確認本機帳號，登入已停止。', challenge_expired_or_consumed: '這次驗證已到期或已使用，請重新開始。',
 }
 const humanEntryEnabled = import.meta.env.VITE_JOURNEY_HUMAN_ENTRY === 'true'
-export type HumanCanvasEntry = { context: HumanContext | null; problem: string; activate: (room: string) => void }
+const contextOf=(entry:Entry,room=entry.room!):DraftContext=>({origin:window.location.origin,backend:entry.backendId,member:entry.memberId,issuer:entry.issuer,subject:entry.subject,generation:entry.generation,signInAt:entry.verifiedHumanSignInAt,revalidateBy:entry.humanRevalidateBy,room})
+export type HumanCanvasEntry = { label:string; context: DraftContext | null; problem: string; activate: (room: string,current:()=>boolean) => Promise<void> }
 export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) => ReactNode }) {
  const [config, setConfig] = useState<{ enabled: boolean; mode?: string; localReady?: boolean } | null>(humanEntryEnabled ? null : { enabled: false })
  const [entry, setEntry] = useState<Entry | null>(null)
@@ -45,10 +49,10 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
     }
     return
    }
-   const historyKey = 'journey-human-history:' + window.location.origin + ':' + result.backendId + ':' + result.memberId
    if (requested === null) {
     let remembered: string | null = null
-    try { remembered = localStorage.getItem(historyKey) } catch {}
+    try { remembered = await (await humanDrafts()).history(contextOf(result)) } catch {}
+    if (version !== requestVersion.current) return
     if (remembered && result.rooms.includes(remembered)) {
      const resumed = await fetch(journeyApi('/auth/entry?' + new URLSearchParams({ remembered, member: result.memberId })))
      if (!resumed.ok) throw new Error('entry changed')
@@ -58,7 +62,6 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
    }
    setEntry(result)
    if (result.room) {
-    try { localStorage.setItem(historyKey, result.room) } catch {}
     if (requested === null) {
      const url = new URL(window.location.href); url.searchParams.set('room', result.room)
      window.history.replaceState(null, '', url)
@@ -121,22 +124,27 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
  async function finishLocal() {
   if (!verifier.current) return
   setBusy(true); setProblem('')
-  try { await post('/auth/local/consume', verifier.current); verifier.current = null; setRequestId(''); await refresh() }
+  try { await post('/auth/local/consume', verifier.current); const channel=new BroadcastChannel('journey-human-authority');channel.postMessage('changed');channel.close(); verifier.current = null; setRequestId(''); await refresh() }
   catch (error) { setProblem(error instanceof Error ? error.message : 'host_unavailable'); setBusy(false) }
  }
  function select(room: string) {
   const url = new URL(window.location.href); url.searchParams.set('room', room); url.searchParams.delete('d'); url.hash = ''
   window.history.pushState(null, '', url); window.dispatchEvent(new PopStateEvent('popstate'))
  }
- if (config && !config.enabled) { setHumanContext(null); return children({ context: null, problem: '', activate: () => {} }) }
+ if (config && !config.enabled) { setHumanContext(null); return children({ label:'',context: null, problem: '', activate: async () => {} }) }
  if (entry?.room && !busy) {
-  const context = { member: entry.memberId, backend: entry.backendId, signInAt: entry.verifiedHumanSignInAt, room: entry.room }
+  const context = contextOf(entry)
   setHumanContext(context)
-  const activate = (room: string) => {
-   setEntry(current => current ? { ...current, room } : null)
-   try { localStorage.setItem('journey-human-history:' + window.location.origin + ':' + entry.backendId + ':' + entry.memberId, room) } catch {}
+  const activate = async (room:string,current:()=>boolean) => {
+   if(!current())return
+   setEntry(value => value ? {...value,room} : null)
+   try {
+    const target={...context,room},verified=await verifiedDraftContext(target)
+    if(!sameMount(target,verified)||!current())return
+    await (await humanDrafts()).activate(target,crypto.randomUUID(),current)
+   }catch(error){console.warn('Room history unavailable',error instanceof Error?error.message:'unknown')}
   }
-  return <>{problem ? <div className="human-entry-identity">{entry.label} · 先前驗證身分，存取已暫停</div> : <AgentSheet entry={entry}/>}{children({ context, problem, activate })}</>
+  return <>{problem ? <div className="human-entry-identity">{entry.label} · 先前驗證身分，存取已暫停</div> : <AgentSheet entry={entry}/>}{children({ label:entry.label,context, problem, activate })}</>
  }
  return <main className="human-entry"><section aria-labelledby="human-entry-title" aria-busy={busy}>
   <p className="human-entry-eyebrow">私人畫布</p><h1 id="human-entry-title">{busy ? '正在確認入口' : entry ? '選擇畫布' : '驗證後進入畫布'}</h1>

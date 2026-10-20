@@ -5,11 +5,11 @@ import { mkdir, readFile } from 'node:fs/promises'
 import { createInterface } from 'node:readline'
 import { pathToFileURL } from 'node:url'
 let operatorModule
-export async function startCloudflare({ dir, port, origin, grants, humanConfig, failRegistration = false }) {
+export async function startCloudflare({ dir, port, origin, grants, humanConfig, failRegistration = false, plugins = [] }) {
  await mkdir(dir, { recursive: true })
  const bundle = join(dir, 'worker.mjs')
  const entry = new URL('../server/host/cloudflare.ts', import.meta.url).pathname
- await build({ entryPoints: [entry], outfile: bundle, bundle: true, format: 'esm', platform: 'browser', conditions: ['workerd', 'worker', 'browser'], external: ['cloudflare:workers'], logLevel: 'silent' })
+ await build({ entryPoints: [entry], outfile: bundle, bundle: true, format: 'esm', platform: 'browser', conditions: ['workerd', 'worker', 'browser'], external: ['cloudflare:workers'], plugins, logLevel: 'silent' })
  let script = await readFile(bundle, 'utf8')
  if (failRegistration) script = script.replace('export {', `const OriginalRegistry = JourneyRegistry;
 class FaultRegistry extends OriginalRegistry {

@@ -104,3 +104,12 @@ prerequisite. This is a local, default-off candidate, not whole-journey runtime
 acceptance. Original IDs and complete-record concurrency remain unchanged.
 Physical-device, hosted-provider, outgoing-stream safety and durable-draft work
 remain separate; no sibling story is marked complete.
+
+## Local draft candidate
+
+[Human drafts](../../../kc-journey-map/docs/human-drafts.md) adds origin-local
+immutable versions, successful-activation-only history, detached review and
+explicit audited restoration with exact cleanup. Its source and local evidence
+remain default-off; browser quota enforcement, supported physical devices and
+configured provider behavior require explicit evidence rather than inference.
+No cloud concurrency, existing room data or accepted release membership changes.

@@ -76,6 +76,20 @@ export async function humanRoute(host: HumanHost, req: Request): Promise<Respons
   await requireHumanContext(host.meta, { actorType: 'human', credentialId: human.member.id, principalId: human.member.id, humanSessionDigest: human.sessionDigest, rooms: human.rooms, cookie: true, expiresAt: human.session.expiresAt }, url)
   return Response.json({ backendId: host.humanConfig.backendId, memberId: human.member.id, rooms: await permittedRoomCatalog(host.meta, human.rooms) })
  }
+ if (path === '/auth/identity' && req.method === 'GET') {
+  const human=await humanFromHeaders(host,req.headers)
+  return Response.json({backendId:human.session.backendId,memberId:human.member.id,issuer:human.member.issuer,subject:human.member.subject,generation:human.member.generation,verifiedHumanSignInAt:human.session.verifiedHumanSignInAt,humanRevalidateBy:human.session.humanRevalidateBy,expiresAt:human.session.expiresAt})
+ }
+ if(path==='/auth/draft-receipt' && req.method==='GET'){
+  const human=await humanFromHeaders(host,req.headers),room=url.searchParams.get('room')||''
+  await requireHumanContext(host.meta,{actorType:'human',credentialId:human.member.id,principalId:human.member.id,humanSessionDigest:human.sessionDigest,rooms:human.rooms,cookie:true,expiresAt:human.session.expiresAt},url)
+  await registeredHumanRoom(host.meta,room,human.rooms)
+  const id=url.searchParams.get('operationId')||''
+  if(!/^[a-zA-Z0-9_-]{1,128}$/.test(id))deny(400,'invalid_operation_id')
+  const receipt=await host.meta.get<any>('security-receipt:'+id),c=receipt?.correlation?.context
+  if(!receipt || receipt.actorType!=='human' || receipt.memberId!==human.member.id || receipt.room!==room || !c || c.backend!==human.session.backendId || c.issuer!==human.member.issuer || c.subject!==human.member.subject)deny(404,'draft_receipt_unknown')
+  return Response.json({operationId:id,action:receipt.action,outcome:receipt.outcome,final:receipt.final,correlation:receipt.correlation})
+ }
  if (path === '/auth/entry' && req.method === 'GET') {
   const human = await humanFromHeaders(host, req.headers)
   const rooms: string[] = []
@@ -84,7 +98,7 @@ export async function humanRoute(host: HumanHost, req: Request): Promise<Respons
   let room: string | null = null
   if (explicit !== null) room = await registeredHumanRoom(host.meta, explicit, human.rooms)
   else if (url.searchParams.get('member') === human.member.id && remembered && rooms.includes(remembered)) room = remembered
-  return Response.json({ backendId: host.humanConfig.backendId, memberId: human.member.id, label: human.member.label, rooms, room, expiresAt: human.session.expiresAt, humanRevalidateBy: human.session.humanRevalidateBy, verifiedHumanSignInAt: human.session.verifiedHumanSignInAt, status: room ? 'admitted' : rooms.length ? 'choose_room' : 'no_rooms' })
+  return Response.json({ backendId: host.humanConfig.backendId, memberId: human.member.id, label: human.member.label, issuer:human.member.issuer,subject:human.member.subject,generation:human.member.generation, rooms, room, expiresAt: human.session.expiresAt, humanRevalidateBy: human.session.humanRevalidateBy, verifiedHumanSignInAt: human.session.verifiedHumanSignInAt, status: room ? 'admitted' : rooms.length ? 'choose_room' : 'no_rooms' })
  }
  if (path === '/auth/local/start' && req.method === 'POST') {
   if (host.humanConfig.mode !== 'local' || !host.localHumanReady) deny(503, 'owner_peer_unavailable')

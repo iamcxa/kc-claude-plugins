@@ -101,7 +101,7 @@ async function route(host: Host, req: Request): Promise<Response> {
   if (url.pathname === '/doc' && ['GET', 'PATCH', 'PUT'].includes(method))
    {
     const prepared=prepareDoc(method,method==='GET'?null:await req.json())
-    return json(method==='GET'?await host.document(room,method,prepared):await audited(host,admission,room,'document:'+method,()=>host.document(room,method,prepared),req.headers.get('x-journey-operation')||undefined))
+    return json(method==='GET'?await host.document(room,method,prepared):await audited(host,admission,room,'document:'+method,()=>host.document(room,method,prepared),req.headers.get('x-journey-operation')||undefined,'committed',prepared))
    }
   if (url.pathname.startsWith('/uploads/')) {
    const raw = decodeURIComponent(url.pathname.slice('/uploads/'.length)), id = canonicalAsset(raw)

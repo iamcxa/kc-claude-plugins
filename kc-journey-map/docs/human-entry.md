@@ -157,3 +157,7 @@ This candidate is not authorization for production activation or formal merge.
 The native permitted-room menu and retained-source switching are described in
 [room-catalog.md](room-catalog.md). Generalized stream safety and durable drafts
 still require their separate stories; the entry remains disabled by default.
+
+The default-off [human draft candidate](human-drafts.md) adds successful-sync-only
+origin-local room history and explicit selected-version recovery. Its local
+storage and original-attempt proof do not establish hosted provider acceptance.

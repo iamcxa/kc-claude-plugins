@@ -16,9 +16,9 @@ function indexes(lease: StreamLease) {
  if(a.humanSessionDigest)targets.push({humanSessionDigest:a.humanSessionDigest})
  return targets.flatMap(t=>[indexPrefix(t)+lease.streamId,indexPrefix({...t,roomId:lease.room})+lease.streamId])
 }
-export function reserveAudit(store: SyncMetadata, action: string, actor: Partial<Admission>, room: string | null, now=Date.now(), operationId=crypto.randomUUID()) {
+export function reserveAudit(store: SyncMetadata, action: string, actor: Partial<Admission>, room: string | null, now=Date.now(), operationId=crypto.randomUUID(), correlation?: unknown) {
  if(store.get('security-receipt:'+operationId))fail('operation_already_reserved')
- store.put('security-receipt:'+operationId,{operationId,action,actorType:actor.actorType||'operator',memberId:actor.principalId||null,familyId:actor.familyId||null,credentialId:actor.credentialId||null,room,serverTime:now,outcome:'admitted',final:false})
+ store.put('security-receipt:'+operationId,{operationId,action,actorType:actor.actorType||'operator',memberId:actor.principalId||null,familyId:actor.familyId||null,credentialId:actor.credentialId||null,room,serverTime:now,outcome:'admitted',final:false,...(correlation?{correlation}:{})})
  return operationId
 }
 export function denial(store: SyncMetadata, target: RevokeTarget, action: string, actor: Partial<Admission>={}, now=Date.now()) {
@@ -75,7 +75,7 @@ export function securityOperation(store: SyncMetadata, operation: string, input:
   if((input.ok&&!input.more)||attempts>=3)store.delete('security-notify-pending:'+input.operationId)
   return operationStatus(store,input.operationId,now)
  }
- if(operation==='reserve')return {operationId:reserveAudit(store,input.action,input.actor||{},input.room||null,now,input.operationId)}
+ if(operation==='reserve')return {operationId:reserveAudit(store,input.action,input.actor||{},input.room||null,now,input.operationId,input.correlation)}
  if(operation==='finalize') {
   const r=store.get<any>('security-receipt:'+input.operationId)
   if(!r || r.final)fail('operation_already_finalized')
