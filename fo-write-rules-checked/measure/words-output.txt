@@ -10,12 +10,9 @@ idle open PR / idle merged PR / after archive (mod + pr_watch tasks output, no f
 dispatch (Stages passage + dispatch_records output)       unchanged  unchanged
 ideation gate, pass path (Gate content + 'design surfaces presentable')     170    170
 ideation gate, first run after a Scope edit (+R3 hold)            170    232
-merge ask/merge, ask run, text lacks a Merges line          451    448
-merge ask/merge, ask run, text has a Merges line            451    438
-merge ask/merge, merge run, carried (Merges names PR and head)   451    478
-merge ask/merge, merge run, not carried (any why token)     451    447
-merge ask/merge, merge run, not carried, no Merges line     451    458
+merge ask and merge run (same ASK line), pass output, class never (saved verdict ask)   451    466
+merge ask and merge run (same ASK line), pass output, saved verdict merge               451    464
   one-time hold line, R2 findings join: +36
   one-time hold line, R1 follow-ups claim: +26
   one-time hold line, R3 scope: +62
-per-call script lines: base last line 27 words; candidate: {'ask run, text lacks a Merges line': 24, 'ask run, text has a Merges line': 14, 'merge run, carried (Merges names PR and head)': 52, 'merge run, not carried (any why token)': 21, 'merge run, not carried, no Merges line': 32}
+per-call script lines: base last line 27 words; candidate: {'pass output, class never (saved verdict ask)': 40, 'pass output, saved verdict merge': 40}

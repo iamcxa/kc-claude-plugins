@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""What the cycle-2 carried-merge rule would have said for each Captain validation approval, had its question ended with a Merges: line.
+"""DEFERRED (cycle 3, see proto_merges.py): what the cycle-2 carried-merge rule would have said for each Captain validation approval, had its question ended with a Merges: line.
 
 Usage: python3 -I -B carry_sim.py <package scripts dir> <state checkout>   (the checkout is only read; it must be a git worktree)
 For each of the Captain's validation approvals whose question names a head and a PR number, append `Merges: <owner/repo>#<N> at <head>` to that
-approval's question in memory, treat the approval as the newest one (nothing after its time exists) and run proto_gate.next_line twice: with the
+approval's question in memory, treat the approval as the newest one (nothing after its time exists) and run proto_merges.next_line twice: with the
 amendment rule by commit time (the design) and with the 0.26.0 date rule (an amendment dated on or after the approval's day). Prints the outcome counts.
 Also counts, over the same approvals, the head the question names against the last Candidate in the task's dispatch records.
 """
@@ -12,8 +12,8 @@ from pathlib import Path
 pkg, state = sys.argv[1], Path(sys.argv[2])
 sys.path.insert(0, pkg)
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-sys.argv = ["proto_gate", pkg, str(state)]
-import proto_gate as pg
+sys.argv = ["proto_merges", pkg, str(state)]
+import proto_merges as pg
 import decision_ledger as dl, delivery_gate as dg
 
 rows = [r for r in dl.ledger(state) if r["stage"] == "validation" and r["kind"] == "resolution" and r["by"] == "person:captain" and r["decision"] == "approve"]

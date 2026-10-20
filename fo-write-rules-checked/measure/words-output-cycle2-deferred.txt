@@ -1,0 +1,21 @@
+README words: base 5374, candidate 5374
+  ideation Gate content: base 167, candidate 167
+  validation Gate content: base 153, candidate 153
+  Delivery authority: base 215, candidate 215
+  delivery_gate sentence: base 39, candidate 39
+  Captain amendments, first sentence: base 25, candidate 25
+moment                                              base  candidate
+startup and resume (README whole + 48-word mod)      5422   5422
+idle open PR / idle merged PR / after archive (mod + pr_watch tasks output, no file in the diff)  48 + unchanged  = unchanged
+dispatch (Stages passage + dispatch_records output)       unchanged  unchanged
+ideation gate, pass path (Gate content + 'design surfaces presentable')     170    170
+ideation gate, first run after a Scope edit (+R3 hold)            170    232
+merge ask/merge, ask run, text lacks a Merges line          451    448
+merge ask/merge, ask run, text has a Merges line            451    438
+merge ask/merge, merge run, carried (Merges names PR and head)   451    478
+merge ask/merge, merge run, not carried (any why token)     451    447
+merge ask/merge, merge run, not carried, no Merges line     451    458
+  one-time hold line, R2 findings join: +36
+  one-time hold line, R1 follow-ups claim: +26
+  one-time hold line, R3 scope: +62
+per-call script lines: base last line 27 words; candidate: {'ask run, text lacks a Merges line': 24, 'ask run, text has a Merges line': 14, 'merge run, carried (Merges names PR and head)': 52, 'merge run, not carried (any why token)': 21, 'merge run, not carried, no Merges line': 32}

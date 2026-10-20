@@ -1,0 +1,75 @@
+-- R2: the presented declined texts of the three gates written after #671 merged (2026-10-19T08:10Z), and fo-write-checks (its own gate, minutes before): 0.26.0 check vs fixed parse
+   captain-question-load                  items 3->3  unreasoned 2->0
+   chat-only-evidence-observer-blind      items 1->4  unreasoned 1->0
+   special-role-calls-fire-when-needed    items 4->4  unreasoned 3->0
+   fo-write-checks                        items 5->5  unreasoned 5->0
+-- R2: findings join on special-role (F-id bullets in the report vs the declined items of the presented text)
+   declined items (4) are fewer than the validation report's Deferred risk and Polish findings (5)
+-- R1: follow-ups tasks beside their task, as they stand at the pin
+   delivery-gate-settles-skipped-checks-followups.md claims the Captain's acceptance ("accepted") before the gate that records it
+-- ask run: a task with no validation approval (this task), by what the --text-file holds
+  text has a Merges: clause                                              -> no-captain-approval
+      next: ask the Captain with this text; nothing is carried until he approves it.
+  text has no Merges: clause                                             -> no-captain-approval
+      next: ask the Captain with this text; to carry the merge, end the question with 'Merges: <owner/repo>#<N> at <head>' naming this PR and head.
+-- R4 on the real special-role-calls approval (Captain, 2026-10-20T03:03Z, reason holds 「合併」); PR head f4447396
+  as approved, no Merges: line (the #682 question)                       -> no-line
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (no-line). To carry it, end the question with 'Merges: iamcxa/kc-claude-plugins#682 at <head>'.
+  + Merges: <#682> at f4447396                                           -> CARRIED
+      next: merge iamcxa/kc-claude-plugins#682 at f4447396265e with --match-head-commit f4447396265e18e7b2cbb681b4dbfe16d396530e and no other PR; the question he approved on 2026-10-20 ends with that in its Merges: line, and his words were 「合併」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time.
+  + Merges: none                                                         -> none
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (none).
+  + Merges: <#672 Release PR> at f4447396 (the #672 slip)                -> other-pr
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (other-pr).
+  + Merges: <#682> at 0123abc (another head)                             -> head-differs
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (head-differs).
+-- shape D: loose grammar
+  + 'Merges: <#682> at f4447396; hold <#672> until this merges'          -> loose-line
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (loose-line).
+  + two Merges: lines                                                    -> loose-line
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (loose-line).
+  + a sentence after the line                                            -> loose-line
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (loose-line).
+  + 'Merges:' not at a sentence start                                    -> loose-line
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (loose-line).
+  + refs without a head                                                  -> loose-line
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (loose-line).
+-- shape A: an FO-recorded approval supplies the line (real FO approvals; Captain only revised)
+  review-cadence validation-2 (agent:first-officer) + Merges: line       -> no-captain-approval
+      next: ask the Captain with this text; nothing is carried until he approves it.
+  dispatch-and-report-hygiene validation-3 (agent:first-officer) + Merges: line -> no-captain-approval
+      next: ask the Captain with this text; nothing is carried until he approves it.
+-- shape A, synthetic: his second approval re-recorded as agent:first-officer, line on it, his first approval has none
+  validation-2 by agent:first-officer + line at ef7a360e                 -> no-line
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#652 at this head (no-line). To carry it, end the question with 'Merges: iamcxa/kc-claude-plugins#652 at <head>'.
+-- shape B: an approval of an earlier head (extension-instruction-reaches-dispatch, #652)
+  window: only his 10-16 approval of 8d051de7 exists; PR head is ef7a360e -> head-differs
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#652 at this head (head-differs).
+  after his 10-17 approval of ef7a360e + line at ef7a360e (amendment 1 committed before it) -> CARRIED
+      next: merge iamcxa/kc-claude-plugins#652 at ef7a360e08e9 with --match-head-commit ef7a360e08e95fce126d0471940bd3fd2e32c4d4 and no other PR; the question he approved on 2026-10-17 ends with that in its Merges: line, and his words were 「准」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time.
+  the same, with the 0.26.0 date rule for amendments (mutation)          -> amended-after
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#652 at this head (amended-after).
+-- shape C: an amendment committed after the approval
+  his 10-16 approval + line at 8d051de7, PR head 8d051de7; amendment 1 committed 10-17T01:50Z -> amended-after
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#652 at this head (amended-after).
+-- condition 5: no word of his in the approval
+  prod-security-validation-gate (reason quotes him in ASCII quotes, no 「」) + line -> no-quote
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#659 at this head (no-quote).
+-- mutations: each switches off ONE guard and must turn the case that only that guard stops
+   (shape A real FO approvals also stop at no-quote: the FO's reason carries no 「」 span, so the synthetic case below is the one only the by: guard stops)
+  MUTATION by: shape A synthetic, line on his re-recorded approval       -> CARRIED
+      next: merge iamcxa/kc-claude-plugins#652 at ef7a360e08e9 with --match-head-commit ef7a360e08e95fce126d0471940bd3fd2e32c4d4 and no other PR; the question he approved on 2026-10-17 ends with that in its Merges: line, and his words were 「准」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time.
+  MUTATION by alone: shape A real review-cadence validation-2 (stopped by no-quote instead) -> no-quote
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#1 at this head (no-quote).
+  MUTATION grammar: shape D, findall over the rest of the question       -> CARRIED
+      next: merge iamcxa/kc-claude-plugins#682 at f4447396265e with --match-head-commit f4447396265e18e7b2cbb681b4dbfe16d396530e and no other PR; the question he approved on 2026-10-20 ends with that in its Merges: line, and his words were 「合併」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time.
+  MUTATION head: line at 0123abc, PR head f4447396, no head compare      -> CARRIED
+      next: merge iamcxa/kc-claude-plugins#682 at f4447396265e with --match-head-commit f4447396265e18e7b2cbb681b4dbfe16d396530e and no other PR; the question he approved on 2026-10-20 ends with that in its Merges: line, and his words were 「合併」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time.
+  MUTATION head alone: shape B window (the amendment guard still stops it) -> amended-after
+      next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#652 at this head (amended-after).
+  MUTATION head and amended: shape B window (nothing left to stop it)    -> CARRIED
+      next: merge iamcxa/kc-claude-plugins#652 at ef7a360e08e9 with --match-head-commit ef7a360e08e95fce126d0471940bd3fd2e32c4d4 and no other PR; the question he approved on 2026-10-16 ends with that in its Merges: line, and his words were 「Ａ准」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time.
+  MUTATION amended: shape C, no amendment check                          -> CARRIED
+      next: merge iamcxa/kc-claude-plugins#652 at 8d051de70000 with --match-head-commit 8d051de700000000000000000000000000000000 and no other PR; the question he approved on 2026-10-16 ends with that in its Merges: line, and his words were 「Ａ准」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time.
+  MUTATION quote: no-quote case, no span required                        -> CARRIED
+      next: merge iamcxa/kc-claude-plugins#659 at fce79ed7bd8a with --match-head-commit fce79ed7bd8a1ed8b8684ba2a1be25e0aefc671c and no other PR; the question he approved on 2026-10-17 ends with that in its Merges: line, and his words were 「」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time.

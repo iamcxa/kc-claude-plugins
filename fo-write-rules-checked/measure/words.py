@@ -6,7 +6,7 @@ The two inputs are the base sources, written by
   git -C <kc-claude-plugins> show ad44f0cb:kc-dev-flow-2/references/sd/workflow.md > workflow-0.26.0.md
   git -C <kc-claude-plugins> show ad44f0cb:kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md > mod-0.26.0.md
 The candidate README is the base with one sentence edit (E1 below) applied in memory; script output lines are the
-strings proto_gate.py and proto_scope.py print (cycle 2), typed here so the count is reproducible. A moment's number is every passage and every script output
+strings proto_gate.py and proto_scope.py print (cycle 3: the rule-4 half is two lines only), typed here so the count is reproducible. A moment's number is every passage and every script output
 that instructs a step due then.
 """
 import re, sys
@@ -41,18 +41,11 @@ base_p, new_p = passages(text), passages(new)
 BASE_PASS = ["PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing", "class: never",
              "record: task/merge/ask-1.json",
              "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."]
-PASS3 = ["PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing", "class: never (verdict ask)"]
+ASK_SENTENCE = "Every other PR, the Release PR included, is asked one at a time."
+ASK_NEW = BASE_PASS[-1] + " " + ASK_SENTENCE
 NEW_PASS = {
-    "ask run, text lacks a Merges line": PASS3[:1] + ["class: never", "record: task/merge/ask-1.json",
-        "next: ask the Captain with this text; to carry the merge, end the question with 'Merges: <owner/repo>#<N> at <head>' naming this PR and head."],
-    "ask run, text has a Merges line": PASS3[:1] + ["class: never", "record: task/merge/ask-1.json",
-        "next: ask the Captain with this text; nothing is carried until he approves it."],
-    "merge run, carried (Merges names PR and head)": PASS3 + ["record: task/merge/ask-2.json",
-        "next: merge iamcxa/kc-claude-plugins#682 at f4447396265e with --match-head-commit f4447396265e18e7b2cbb681b4dbfe16d396530e and no other PR; the question he approved on 2026-10-20 ends with that in its Merges: line, and his words were 「合併」. Ask instead if they say he merges or holds. Every other PR, the Release PR included, is asked one at a time."],
-    "merge run, not carried (any why token)": PASS3 + ["record: task/merge/ask-2.json",
-        "next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (head-differs)."],
-    "merge run, not carried, no Merges line": PASS3 + ["record: task/merge/ask-2.json",
-        "next: ask the Captain to merge; the question he approved does not carry the merge of iamcxa/kc-claude-plugins#682 at this head (no-line). To carry it, end the question with 'Merges: iamcxa/kc-claude-plugins#682 at <head>'."],
+    "pass output, class never (saved verdict ask)": BASE_PASS[:1] + ["class: never (verdict ask)", BASE_PASS[2], ASK_NEW],
+    "pass output, saved verdict merge": BASE_PASS[:1] + ["class: docs-only", BASE_PASS[2], ASK_NEW],
 }
 HOLDS = {
     "R2 findings join": "declined items (3) are fewer than the validation report's Deferred risk and Polish findings (5): add a declined item for each, naming the fix as its reason when FO fixed it, then run this check again.",
@@ -73,7 +66,8 @@ print(f"ideation gate, pass path (Gate content + 'design surfaces presentable') 
 print(f"ideation gate, first run after a Scope edit (+R3 hold)          {ide_base:5d}  {w(new_p['ideation Gate content'])+3+w(HOLDS['R3 scope']):5d}")
 for k, v in NEW_PASS.items():
     cand = sum(w(new_p[p]) for p in ("validation Gate content", "Delivery authority", "delivery_gate sentence")) + out(v)
-    print(f"merge ask/merge, {k:40s} {merge_base:5d}  {cand:5d}")
+    base = merge_base
+    print(f"merge ask and merge run (same ASK line), {k:44s} {base:5d}  {cand:5d}")
 for k, v in HOLDS.items():
     print(f"  one-time hold line, {k}: +{w(v)}")
 print("per-call script lines: base last line", w(BASE_PASS[-1]), "words; candidate:", {k: w(v[-1]) for k, v in NEW_PASS.items()})

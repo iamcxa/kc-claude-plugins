@@ -1,0 +1,24 @@
+base: ran 68, failures 0 in 0 test methods
+ask sentence only: ran 68, failures 6 in 4 test methods
+     1  test_a_pilot_task_prints_the_two_old_lines_with_a_class_and_a_record_line_between
+     1  test_a_prod_task_with_a_disposed_review_gets_one_more_line_of_ten_words
+     3  test_a_quoted_prod_profile_is_prod_for_the_class
+     1  test_each_exit_ends_with_the_next_line_for_the_ask
+class tag only: ran 68, failures 60 in 7 test methods
+     1  test_a_prod_task_with_a_disposed_review_gets_one_more_line_of_ten_words
+     3  test_a_quoted_prod_profile_is_prod_for_the_class
+     2  test_a_release_pr_prod_task_and_db_task_are_never
+     4  test_an_instruction_directory_at_any_depth_is_never
+    12  test_each_added_never_path_is_never_alone_or_beside_a_docs_file_and_on_either_rename_name
+    36  test_every_row_gets_its_class
+     2  test_the_workflow_readme_is_never_at_the_repository_root_and_below_it
+both: ran 68, failures 62 in 9 test methods
+     1  test_a_pilot_task_prints_the_two_old_lines_with_a_class_and_a_record_line_between
+     1  test_a_prod_task_with_a_disposed_review_gets_one_more_line_of_ten_words
+     3  test_a_quoted_prod_profile_is_prod_for_the_class
+     2  test_a_release_pr_prod_task_and_db_task_are_never
+     4  test_an_instruction_directory_at_any_depth_is_never
+    12  test_each_added_never_path_is_never_alone_or_beside_a_docs_file_and_on_either_rename_name
+     1  test_each_exit_ends_with_the_next_line_for_the_ask
+    36  test_every_row_gets_its_class
+     2  test_the_workflow_readme_is_never_at_the_repository_root_and_below_it
