@@ -1,3 +1,4 @@
+import { fstatSync } from 'node:fs'
 import { hostname } from 'node:os'
 import { createInterface } from 'node:readline'
 import websocketPlugin from '@fastify/websocket'
@@ -51,12 +52,14 @@ app.all('/*', async (req, res) => {
  if (response.headers.getSetCookie().length) res.header('set-cookie', response.headers.getSetCookie())
  return res.send(Buffer.from(await response.arrayBuffer()))
 })
+const ownerControl = () => [0,1].every(fd=>{const s=fstatSync(fd);return (s.isFIFO()||s.isSocket())&&s.uid===process.geteuid?.()&&!(s.mode&0o077)})
 if (process.env.JOURNEY_CONTROL_STDIO === '1') {
  const control = createInterface({ input: process.stdin })
  control.on('line', async line => {
   try {
    const command = JSON.parse(line)
    const result = command.op === 'revoke' ? await host.revoke(command.credentialId)
+    : ['member-enroll','member-inspect'].includes(command.op) && command.writersStopped===true && ownerControl() ? await host.memberOperation(command.op.slice(7),command.input)
     : ['disable-member', 'set-room'].includes(command.op) && host.humanConfig ? await host.meta.human!(command.op, command)
     : command.op === 'export' ? await exportRoom(host, command.room)
     : command.op === 'restore' ? await restoreRoom(host, command.archive)

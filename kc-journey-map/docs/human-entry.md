@@ -187,3 +187,12 @@ still require their separate stories; the entry remains disabled by default.
 The default-off [human draft candidate](human-drafts.md) adds successful-sync-only
 origin-local room history and explicit selected-version recovery. Its local
 storage and original-attempt proof do not establish hosted provider acceptance.
+
+## Adding a private member
+
+The default-off [private member command](member-enrollment.md) resolves the exact
+provider identity and atomically grants explicit existing rooms. A first-time
+recipient uses ordinary email-code login before the explicit grant (possibly
+receiving `member_unbound`), then retries normal login. No automatic first-login
+grant, invitation service, provider policy change or local-owner remote login is
+added. Real provider behavior and activation remain separately unverified.

@@ -162,7 +162,7 @@ download returns 404. Photos and file attachments are outside this hosted slice.
 Cloudflare does not support direct remote Durable Object bindings in local
 development. Its [documented route](https://developers.cloudflare.com/workers/local-development/#using-remote-resources-with-durable-objects-and-workflows)
 is a remote service binding to a Worker that accesses the objects. The isolated
-`private-cloudflare-ops.ts` bridge follows that route and exposes only backup,
+`private-cloudflare-ops.ts` bridge follows that route and exposes backup,
 fresh restore and revoke, delegating existing host functions. It has no public
 admin endpoint, arbitrary forwarding or SQL operation.
 
@@ -280,3 +280,12 @@ This exercises real local storage and Miniflare service bindings, fresh restore,
 revocation quarantine, rollback preservation, absent assets and normal production
 license-input wiring. It creates only ignored synthetic scratch data and closes
 its emulators. No CI or monitor was added; CI cost per PR was not measured.
+
+## Private member command
+
+The separate [member-enrollment runbook](member-enrollment.md) documents the
+default-off `member-enroll` and read-only `member-inspect` allowlist additions.
+Keep the existing stopped-writers discipline and separate operator credential;
+ordinary browser cookies and paired agents cannot administer. A confirmed create
+is atomic; an uncertain response requires exact readback and never automatic retry.
+No provider change, real grant, deployment or activation is authorized by this code.

@@ -1,3 +1,4 @@
+import { enrollmentOperation } from './member-enrollment'
 import { DurableObjectSqliteSyncWrapper, SQLiteSyncStorage, TLSocketRoom } from '@tldraw/sync-core'
 import { HostError, operate, prepareDoc } from './core'
 import { admit, handle, type Host } from './transport'
@@ -9,7 +10,7 @@ import { securityOperation, matchesTarget } from './security-store'
 import { canSend, renewLease, type StreamLease } from './stream-lease'
 import { bootstrapAgent, agentOperation, captureAgent, agentResult, type AgentScope } from './agent-store'
 
-type Env = { ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string; JOURNEY_HUMAN_CONFIG?: string; JOURNEY_AGENT_PAIRING?: string }
+type Env = { ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string; JOURNEY_HUMAN_CONFIG?: string; JOURNEY_AGENT_PAIRING?: string; JOURNEY_MEMBER_ENROLLMENT?:string; JOURNEY_MEMBER_BINDING?:string }
 const agentScope = (env: Env, roomId: string): AgentScope => ({ roomId, records: 'full-replacement', assets: !!env.ASSETS, saveDirectory: null, repositories: [] })
 const stub = (namespace: any, id: string) => namespace.get(namespace.idFromName(id))
 const assetBlobKey = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
@@ -56,6 +57,10 @@ export class JourneyRegistry {
  async fetch(req: Request) {
   const body = await req.json() as any
   const op = new URL(req.url).pathname
+  if (op === '/member') {
+   try {return Response.json(this.ctx.storage.transactionSync(() => enrollmentOperation(this.sync(),body.operation,body.input,this.env.JOURNEY_MEMBER_BINDING?JSON.parse(this.env.JOURNEY_MEMBER_BINDING):undefined,this.env.JOURNEY_MEMBER_ENROLLMENT==='true')))}
+   catch(error){return Response.json({result:error instanceof HostError&&error.status===409?'conflict':'refused',category:error instanceof HostError?error.message:'transaction_rolled_back'})}
+  }
   if (op === '/agent') {
    try {
     const result=this.ctx.storage.transactionSync(() => captureAgent(() => agentOperation(this.sync(), body.operation, body.input, room => agentScope(this.env, room), Date.now(), this.env.JOURNEY_ORIGIN)))
@@ -131,6 +136,7 @@ export class CloudflareHost implements Host {
   }
   this.meta = new RegistryMetadata(env)
  }
+ async memberOperation(operation:string,input:any) { return this.meta.call('member',{operation,input}) }
  async document(room: string, method: string, prepared: any) {
   const response = await stub(this.env.ROOMS, room).fetch(new Request('https://room/internal/doc', { method: 'POST', body: JSON.stringify({ room, method, prepared }) }))
   if (!response.ok) throw new HostError(response.status, 'room operation failed')

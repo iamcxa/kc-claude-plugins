@@ -1,3 +1,4 @@
+import { enrollmentOperation } from './member-enrollment'
 import { DatabaseSync } from 'node:sqlite'
 import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync, lstatSync, renameSync } from 'node:fs'
 import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises'
@@ -30,6 +31,7 @@ export class NodeHost implements Host {
  localHumanReady = false
  sockets = new Map<any, { admission: Admission | null; room: string; lease?: StreamLease; timer?: ReturnType<typeof setTimeout> }>()
  db: DatabaseSync
+ memberOperation!: (operation:string,input:any)=>Promise<any>
  meta: Metadata
  roomRepos: Record<string, string[]> = JSON.parse(process.env.JOURNEY_ROOM_REPOS || '{}')
  constructor() {
@@ -85,6 +87,12 @@ export class NodeHost implements Host {
   const atomic = (action: () => any) => {
    this.db.exec('BEGIN IMMEDIATE')
    try { const result = action(); this.db.exec('COMMIT'); return result } catch (error) { this.db.exec('ROLLBACK'); throw error }
+  }
+  const memberBinding=process.env.JOURNEY_MEMBER_BINDING ? JSON.parse(process.env.JOURNEY_MEMBER_BINDING) : undefined, memberEnabled=process.env.JOURNEY_MEMBER_ENROLLMENT==='true'
+  this.memberOperation = async (operation,input) => {
+   this.db.exec('BEGIN IMMEDIATE')
+   try {const result=enrollmentOperation(sync,operation,input,memberBinding,memberEnabled);this.db.exec('COMMIT');return result}
+   catch(error){try{this.db.exec('ROLLBACK')}catch{return {result:'unknown',category:'transaction_response_unknown',retry:false}};return {result:error instanceof HostError&&error.status===409?'conflict':'refused',category:error instanceof HostError?error.message:'transaction_rolled_back'}}
   }
   this.meta.security = async (operation, input) => operation==='progress'?this.notifyResult({operationId:input.operationId}):atomic(() => securityOperation(sync, operation, input))
   this.meta.human = async (operation, input) => { const result=atomic(() => humanOperation(sync, operation, input));if(result?.operationId)result.denialCommitObservedAt=Date.now();return this.notifyResult(result) }

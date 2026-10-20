@@ -8,7 +8,7 @@ export default {
   if (req.method !== 'POST' || new URL(req.url).pathname !== '/') return new Response(null, { status: 404 })
   try {
    const command = await req.json() as any
-   if (!['backup', 'restore', 'revoke'].includes(command.op)) throw new Error('unsupported operation')
+   if (!['backup', 'restore', 'revoke','member-enroll','member-inspect'].includes(command.op)) throw new Error('unsupported operation')
    if (command.writersStopped !== true) throw new Error('stop writers before operator work')
    const rooms = JSON.parse(env.JOURNEY_OPERATOR_ROOMS)
    if (!Array.isArray(rooms) || !rooms.length || rooms.some(r => !r || canonicalRoom(r) !== r)) throw new Error('explicit operator rooms required')
@@ -16,6 +16,12 @@ export default {
    const existing = (await host.meta.list('room:')).map(e => e.key.slice(5))
    if (existing.some(r => !rooms.includes(r))) throw new Error('namespace contains rooms outside operator scope')
    let result
+   if(command.op.startsWith('member-')) {
+    if(req.headers.has('origin') || req.headers.get('content-type')?.split(';')[0] !== 'application/json')throw new Error('private JSON required')
+    const target=command.input?.target
+    if(!target || target.rooms?.some((r:any)=>!rooms.includes(r.roomId)))throw new Error('member target outside operator scope')
+    result=await host.memberOperation(command.op.slice(7),command.input)
+   }
    if (command.op === 'backup') result = await backupPrivateHost(host)
    if (command.op === 'restore') {
     const archive = validateBackup(command.archive)
