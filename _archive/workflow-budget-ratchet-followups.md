@@ -3,7 +3,10 @@ title: workflow budget ratchet follow-ups declined at validation of #658 (ledger
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:10:01Z
+archived: 2026-10-20T05:10:01Z
 ---
 
 Declined by FO at validation-1 of workflow-budget-ratchet (PR #658, head 57673bfd, 2026-10-17); reasons below, also in that task's gate summary.
