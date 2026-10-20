@@ -3,7 +3,7 @@
 You score two anonymous question lists (X and Y) per task against a written answer key. You do not know which list came from which interrogator, and you must not find out.
 
 Open only: this file, `answer-keys.md`, and `<task>-X.md` / `<task>-Y.md` in this folder.
-Do not open: `../sealed/` (the label map), `../raw/` (the labelled originals), `../report.md` and the task file (the first run's labelled results and the implementer's reasoning). Score before anything else is read.
+Do not open: `../sealed/` (the label map), `../raw/` (the labelled originals), `../extension.md` (per-arm question counts, which match list lengths), `../report.md` and the task file (the first run's labelled results and the implementer's reasoning). Score before anything else is read.
 
 Tasks (five): number-guards-readme-shrink, fo-write-checks, chat-only-evidence-observer-blind, delivery-gate-settles-skipped-checks, special-role-calls-fire-when-needed.
 
