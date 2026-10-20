@@ -247,20 +247,17 @@ Past rulings read for this area: ADR 0010, 0011, 0020, 0023, 0024, 0026; gate-re
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
   `### Words FO reads at each moment`: base and design per moment, counted with `len(text.split())` on origin/main `ad44f0cb`; only the new sitting moment rises (0 to 26, or 71 with Cut 2), the README stays at 5374.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
-  `## Acceptance criteria` AC-1 to AC-8, each with evidence and falsifier; `## Needs decision` D1 to D4 with recommendation and what gets worse.
+  `## Acceptance criteria` AC-1 to AC-8, each with an evidence clause and a falsifier; `## Needs decision` D1 to D4 with recommendation and what gets worse. Current evidence per criterion:
+  AC-1: not yet verified. Nothing is built. Observed today: `spacedock status --next --json` on this workflow returns 17 `ready_gates` (2 `awaiting-captain` at different stages, 15 `needs-preparation`), the shape the rows stub.
+  AC-2: not yet verified (nothing is changed). Counts taken: workflow.md 5374 words equals the budget (5511 - 64 - 18 - 55); the mod is 48.
+  AC-3: not yet verified in the candidate. The rule was exercised in a scratch script on the real ledgers: gap 20 s gives relay 27 rows to 19 answers, web 12 to 8, kc 45 to 25; gap 10 s gives relay 25; quote matching split relay's seventh row and the cross-stage pairs.
+  AC-4: not yet verified in the candidate. The expected figures were produced with the same rule on `git archive` exports of `c770d45f`, `1e22e52d` and `96a54eef` (`decision_ledger.py` 0.26.0 for the rows, the 20 s grouping in a scratch script).
+  AC-5: not yet verified, by design. Baseline counts are the observers' (kc 13 of 13, relay 7 of 11, web 0 of 5, qnow 2 of 3); the first measurement is the next batch.
+  AC-6: partly verified. `python3 -B -m unittest test_number_guards` in the 0.26.0 package ran 24 tests, OK, including `test_reserve_never_collides_and_never_fills_a_gap`; the ADR and its lint run are not yet done.
+  AC-7: not yet verified; belongs to the Cut 2 task if D2 is accepted.
+  AC-8: not yet verified; `new-work-starts-from-a-story-map` is at Scope only (3.7 KB), so its design cannot be compared yet.
 
 ### Summary
 
 The design puts the sitting rule in a `pr_watch.py tasks` line (26 words, printed only when two or more gates await at one stage), adds `decision_ledger.py --sittings` so the answer count is read from state (it reproduced two observers' hand counts, relay 19 and web 8), adds one worker-read sentence for `### Batch overlap`, and changes neither the README, the mod nor the word budget. The reservation conflict is settled by keeping the README rule: `reserve` already makes per-task reservations unique and the one collision came from a number held 11.5 hours. The list-then-ask pattern is Cut 2, a later task; durable per-row answers need Spacedock review continuity.
 One defect is FO's to correct before the gate is presentable: `python3 <package>/scripts/design_surfaces.py check fo-batch-sittings.md` exits 1 with `'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'`. The `## FO alignment` lines are FO's record, so I left them; either `Visible change: none` or a `ui` surface resolves it. The checker raised nothing else on the design, criteria or diagrams.
-
-### Acceptance criteria: current evidence
-
-- AC-1: not yet verified. Nothing is built. Observed today: `spacedock status --next --json` on this workflow returns 17 `ready_gates` (2 `awaiting-captain` at different stages, 15 `needs-preparation`), the shape the rows stub.
-- AC-2: not yet verified (nothing is changed). Counts taken: workflow.md 5374 words equals the budget (5511 - 64 - 18 - 55); the mod is 48.
-- AC-3: not yet verified in the candidate. The rule was exercised in a scratch script on the real ledgers: gap 20 s gives relay 27 rows to 19 answers, web 12 to 8, kc 45 to 25; gap 10 s gives relay 25; quote matching split relay's seventh row and the cross-stage pairs.
-- AC-4: not yet verified in the candidate. The expected figures were produced with the same rule on `git archive` exports of `c770d45f`, `1e22e52d` and `96a54eef` (`decision_ledger.py` 0.26.0 for the rows, the 20 s grouping in a scratch script).
-- AC-5: not yet verified, by design. Baseline counts are the observers' (kc 13 of 13, relay 7 of 11, web 0 of 5, qnow 2 of 3); the first measurement is the next batch.
-- AC-6: partly verified. `python3 -B -m unittest test_number_guards` in the 0.26.0 package ran 24 tests, OK, including `test_reserve_never_collides_and_never_fills_a_gap`; the ADR and its lint run are not yet done.
-- AC-7: not yet verified; belongs to the Cut 2 task if D2 is accepted.
-- AC-8: not yet verified; `new-work-starts-from-a-story-map` is at Scope only (3.7 KB), so its design cannot be compared yet.
