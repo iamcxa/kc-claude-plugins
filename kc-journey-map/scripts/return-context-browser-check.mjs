@@ -11,6 +11,7 @@ import {createServer as viteServer} from 'vite'
 import {chromium} from 'playwright'
 import {startCloudflare} from './cloudflare-local.mjs'
 import {note} from '../lib/records.mjs'
+import {checkConcurrentHumanSessions} from './human-session-check.mjs'
 const root=new URL('..',import.meta.url).pathname.replace(/\/$/,''),adapter=process.argv[2]||'node'
 if(!['node','cloudflare-local'].includes(adapter))throw Error('synthetic adapter required')
 await mkdir(join(root,'.host-check'),{recursive:true})
@@ -18,8 +19,8 @@ const scratch=await mkdtemp(join(root,'.host-check/return-'+adapter+'-'))
 const port=()=>new Promise(resolve=>{const s=createServer();s.listen(0,'127.0.0.1',()=>{const p=s.address().port;s.close(()=>resolve(p))})})
 const apiPort=await port(),uiPort=await port(),origin='http://127.0.0.1:'+uiPort,api='http://127.0.0.1:'+apiPort,time=Date.now(),hash=s=>createHash('sha256').update(s).digest('hex')
 const issuer=adapter==='node'?'local:draft':'https://draft.synthetic.invalid'
-const config={version:1,backendId:'return-'+adapter,origin,mode:adapter==='node'?'local':'cloudflare',issuer,audience:'synthetic',localOwnerUid:process.geteuid(),localMemberId:'owner',members:[{id:'owner',issuer,subject:adapter==='node'?'uid:'+process.geteuid():'owner',label:'Synthetic owner',role:'operator',rooms:[{id:'one',expiresAt:time+3600000},{id:'two',expiresAt:time+3600000}]},{id:'other',issuer,subject:'other-subject',label:'Synthetic other',role:'member',rooms:[{id:'one',expiresAt:time+3600000}]}]}
-const grants=[{credentialId:'seed',secretDigest:hash('s'.repeat(43)),principalId:'seed',rooms:['one','two'],expiresAt:time+3600000,revoked:false}]
+const config={version:1,backendId:'return-'+adapter,origin,mode:adapter==='node'?'local':'cloudflare',issuer,audience:'synthetic',localOwnerUid:process.geteuid(),localMemberId:'owner',members:[{id:'owner',issuer,subject:adapter==='node'?'uid:'+process.geteuid():'owner',label:'Synthetic owner',role:'operator',rooms:[{id:'one',expiresAt:time+3600000},{id:'two',expiresAt:time+3600000},{id:'live',expiresAt:time+3600000}]},{id:'other',issuer,subject:'other-subject',label:'Synthetic other',role:'member',rooms:[{id:'one',expiresAt:time+3600000},{id:'live',expiresAt:time+3600000}]}]}
+const grants=[{credentialId:'seed',secretDigest:hash('s'.repeat(43)),principalId:'seed',rooms:['one','two','live'],expiresAt:time+3600000,revoked:false}]
 const dataDir=await mkdtemp(join(tmpdir(),'return-data-')),configFile=join(scratch,'human.json'),grantsFile=join(scratch,'grants.json')
 await writeFile(configFile,JSON.stringify(config));await writeFile(grantsFile,JSON.stringify(grants))
 const report={adapter,candidate:execFileSync('git',['-C',root,'rev-parse','HEAD'],{encoding:'utf8'}).trim(),dirty:!!execFileSync('git',['-C',root,'status','--porcelain'],{encoding:'utf8'}).trim(),checks:[],provider:'NOT RUN; synthetic typed sessions',physicalDevice:'NOT RUN',browser:chromium.executablePath()}
@@ -46,25 +47,27 @@ try{
   const bundle=join(scratch,'server.mjs');await build({entryPoints:[join(root,'server/canvas-server.ts')],outfile:bundle,bundle:true,format:'esm',platform:'node',packages:'external',plugins:[faults],logLevel:'silent'})
   child=spawn(process.execPath,[bundle],{cwd:root,env:{...process.env,JOURNEY_PRIVATE_DIR:dataDir,JOURNEY_GRANTS_FILE:grantsFile,JOURNEY_HUMAN_CONFIG:configFile,JOURNEY_ORIGIN:origin,JOURNEY_API_PORT:String(apiPort)},stdio:['ignore','pipe','pipe']});child.stdout.on('data',d=>{logs+=d});child.stderr.on('data',d=>{logs+=d})
   await wait(async()=>{try{return(await seed('/health')).ok}catch{if(child.exitCode!==null)throw Error(logs);return false}})
-  db=new DatabaseSync(join(dataDir,'metadata.sqlite'))
+  db=new DatabaseSync(join(dataDir,'metadata.sqlite'));db.exec('PRAGMA busy_timeout=5000')
   metadata=async(operation,body)=>{if(operation==='put'){db.prepare('INSERT OR REPLACE INTO metadata VALUES (?,?)').run(body.key,JSON.stringify(body.value));return{ok:true}}const r=db.prepare('SELECT value FROM metadata WHERE key=?').get(body.key);return r?JSON.parse(r.value):null}
  }
- for(const room of ['one','two']){await metadata('put',{key:'room:'+room,value:{createdAt:time}});await seed('/doc?room='+room)}
+ for(const room of ['one','two','live']){await metadata('put',{key:'room:'+room,value:{createdAt:time}});await seed('/doc?room='+room)}
  const before=await doc(),pageId=before.snapshot.documents.find(d=>d.state.typeName==='page').state.id
  const sentinel=note({id:'shape:seed',text:'untouched synthetic base',x:300,y:200,parentId:pageId})
  assert.equal((await seed('/doc?room=one','PATCH',{put:[sentinel]})).status,200)
  const baseline=await doc()
  for(const member of ['owner','other'])await metadata('put',{key:'browser-session:'+hash('return-'+member),value:{actorType:'human',backendId:config.backendId,memberId:member,generation:1,expiresAt:time+900000,verifiedHumanSignInAt:time,humanRevalidateBy:time+604800000,csrfDigest:hash('csrf-'+member),revoked:false}})
  process.env.JOURNEY_API_PORT=String(apiPort);process.env.VITE_JOURNEY_HUMAN_ENTRY='true';if(adapter==='node')process.env.JOURNEY_HUMAN_CONFIG=configFile
- vite=await viteServer({configFile:join(root,'vite.config.mts'),cacheDir:join(scratch,'vite-cache'),server:{host:'127.0.0.1',port:uiPort,strictPort:true}});await vite.listen()
+ vite=await viteServer({plugins:[{name:'observe-native-human-params',enforce:'pre',transform(source,id){if(!id.endsWith('/human-socket.ts'))return;const needle=' const socketUri=humanSocketUrl(uri,params)';assert.ok(source.includes(needle));return source.replace(needle,' ;((window as any).__nativeHumanSocketParams??=[]).push({uri,...params})\n'+needle)}}],configFile:join(root,'vite.config.mts'),cacheDir:join(scratch,'vite-cache'),server:{host:'127.0.0.1',port:uiPort,strictPort:true}});await vite.listen()
  browser=await chromium.launch({headless:true});report.browserVersion=browser.version()
  const context=await browser.newContext({viewport:{width:1280,height:900}})
  const cookies=member=>context.addCookies([{name:'journey_human',value:'return-'+member,url:origin,httpOnly:true,sameSite:'Strict'},{name:'journey_human_csrf',value:'csrf-'+member,url:origin,sameSite:'Strict'}])
  await cookies('owner')
- await context.route('**/*',route=>{const u=new URL(route.request().url());if(u.origin===origin)return route.continue();if(u.hostname==='cdn.tldraw.com')return route.fulfill({path:join(root,'.host-check/assets/package',u.pathname.replace(/^\/[^/]+\//,''))});return route.abort()})
+ const routeAssets=route=>{const u=new URL(route.request().url());if(u.origin===origin)return route.continue();if(u.hostname==='cdn.tldraw.com')return route.fulfill({path:join(root,'.host-check/assets/package',u.pathname.replace(/^\/[^/]+\//,''))});return route.abort()}
+ await context.route('**/*',routeAssets)
  page=await context.newPage();page.on('console',m=>{if(m.type()==='warning')console.log('browser warning: '+m.text())});const errors=[];page.on('pageerror',e=>errors.push(e.message))
- let drop=false,blockSockets=false,blockedSockets=0,clientFrames=[],latestSocket
- await context.routeWebSocket(url=>url.pathname.startsWith('/connect/'),socket=>{latestSocket=socket;if(blockSockets){blockedSockets++;socket.close();return}const server=socket.connectToServer();socket.onMessage(message=>{clientFrames.push(String(message));if(!drop || !String(message).includes('"type":"push"'))server.send(message)})})
+ let drop=false,blockSockets=false,blockedSockets=0,clientFrames=[],latestSocket;report.socketUrls=[]
+ await context.routeWebSocket(url=>url.pathname.startsWith('/connect/'),socket=>{report.socketUrls.push(socket.url());latestSocket=socket;if(blockSockets){blockedSockets++;socket.close();return}const server=socket.connectToServer();socket.onMessage(message=>{clientFrames.push(String(message));if(!drop || !String(message).includes('"type":"push"'))server.send(message)})})
+ await checkConcurrentHumanSessions({browser,origin,routeAssets,metadata,seed,report});pass('two simultaneous native human pages retain exact SDK identities, exchange six edits, preserve baseline and isolate close/revoke without automatic flush')
  const ready=async()=>page.waitForFunction(()=>window.editor&&document.querySelector('[data-testid="room-trigger"]')?.title.endsWith('Connected'))
  const editorRecord=text=>page.evaluate(record=>window.editor.store.put([record]),note({id:'shape:retained',text,x:440,y:400,parentId:pageId}))
  const inventory=()=>page.evaluate(async owner=>{const {humanDrafts}=await import('/human-drafts.ts');return(await humanDrafts()).inventory({...owner,origin:location.origin})},{backend:config.backendId,member:'owner',issuer,subject:config.members[0].subject,generation:1,room:'one',signInAt:time,revalidateBy:time+604800000})
@@ -92,7 +95,9 @@ try{
  await click(versionRow(1).getByRole('button',{name:'檢視此版本'}));await page.getByTestId('detached-draft').waitFor()
  const frameCount=clientFrames.length;await new Promise(r=>setTimeout(r,300));assert.equal(clientFrames.length,frameCount)
  assert.ok(!(await doc()).snapshot.documents.some(d=>d.state.id==='shape:retained'))
+ const beforeProbe=report.socketUrls.length,originalStoreId=await page.evaluate(()=>window.editor.store.id)
  await click(page.getByRole('button',{name:'確認套用這些變更'}));await page.getByText(/恢復與雲端同步已核對/).waitFor()
+ const probeUrl=new URL(report.socketUrls.slice(beforeProbe).find(value=>new URL(value).pathname==='/connect/one'));const supplied=await page.evaluate(()=>({params:window.__nativeHumanSocketParams,tabId:window.TLDRAW_TAB_ID_v2}));const expectedProbe=supplied.params.find(p=>p.storeId===probeUrl.searchParams.get('storeId'));assert.ok(expectedProbe?.storeId);assert.equal(probeUrl.searchParams.get('sessionId'),supplied.tabId);assert.equal(probeUrl.searchParams.get('sessionId'),expectedProbe.sessionId);assert.notEqual(expectedProbe.storeId,originalStoreId);report.restoreProbeIdentity={actualUrl:probeUrl.href,supplied:expectedProbe,originalStoreId};pass('explicit restore sync probe preserves supplied native session/store IDs, stays distinct from paused original store and cleans only after verified sync')
  assert.equal((await inventory()).length,2);assert.ok((await doc()).snapshot.documents.some(d=>d.state.id==='shape:retained'&&JSON.stringify(d.state).includes('draft first')))
  pass('real newer and other-tab versions survive disconnect/reload; selected draft opens detached with zero outgoing frames; explicit original receipt/readback/sync clears only v1')
  await click(versionRow(2).getByRole('button',{name:'檢視此版本'}))

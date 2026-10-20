@@ -4,6 +4,18 @@ import {audited} from '../server/host/audit'
 import {securityOperation} from '../server/host/security-store'
 import {humanRoute} from '../server/host/human'
 import {digest} from '../server/host/policy'
+import {humanSocketUrl} from '../server/client/human-socket-url'
+
+test('guarded socket preserves supplied native identities and original context; reserved URI identities cannot replace them',()=>{
+ const original='wss://synthetic.invalid/connect/room%2FA?_human=owner&_backend=backend&_humanAt=123&_humanRoom=room%2FA'
+ const first=new URL(humanSocketUrl(original,{sessionId:'native-tab A/?',storeId:'native-store A/?'}))
+ assert.equal(first.pathname,'/connect/room%2FA')
+ for(const [key,value]of new URL(original).searchParams)assert.equal(first.searchParams.get(key),value)
+ assert.equal(first.searchParams.get('sessionId'),'native-tab A/?');assert.equal(first.searchParams.get('storeId'),'native-store A/?')
+ const second=new URL(humanSocketUrl(original,{sessionId:'native-tab B',storeId:'native-store B'}))
+ assert.notEqual(first.searchParams.get('sessionId'),second.searchParams.get('sessionId'));assert.notEqual(first.searchParams.get('storeId'),second.searchParams.get('storeId'))
+ for(const key of ['sessionId','storeId'])for(const value of ['', 'attacker'])assert.throws(()=>humanSocketUrl(original+'&'+key+'='+value,{sessionId:'native',storeId:'native-store'}),new RegExp('"'+key+'" is a reserved query param name'))
+})
 
 test('shared audit correlates exact human request; final receipt fault leaves mutation unknown and duplicate operation cannot execute again',async()=>{
  const rows=new Map<string,any>(),store={get:(key:string)=>rows.get(key)||null,put:(key:string,v:any)=>{rows.set(key,v)},delete:(key:string)=>{rows.delete(key)},list:()=>[]}

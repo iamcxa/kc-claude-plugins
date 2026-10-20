@@ -6,13 +6,13 @@ import { journeyApi } from './api'
 import { canonical, matchesChanges, sameMount, type DraftContext, type Documents } from '../draft-data'
 import { humanDrafts, type ApplyAttempt, type VersionItem } from './human-drafts'
 import { applyDraft, currentDocuments, humanCookieMarker, reconcileDraft, reviewDraft, verifiedDraftContext, type DraftReview, type SyncConfirmation } from './draft-recovery'
-import { humanSocket } from './human-socket'
+import { humanSocket, type HumanSocketParams } from './human-socket'
 import './human-drafts.css'
 type Probe = { id:string; context:DraftContext; patch:DraftReview['patch']; signal:AbortSignal; resolve:()=>void; reject:(error:Error)=>void }
 const text:Record<string,string>={draft_identity_changed:'身分已改變。草稿保持鎖定；請以原本身分重新登入。',draft_cloud_changed_review_again:'雲端已改變。請重新檢視後再確認。',draft_base_unknown:'原始雲端版本不明；保留草稿，無法安全計算變更。',draft_attempt_requires_reconciliation:'已有未確認的操作；請核對原操作，不能再次送出。',draft_original_outcome_unknown:'原操作結果仍未確認；草稿保留，不會自動重送。',draft_readback_unconfirmed:'雲端紀錄尚未核對成功；草稿保留。',draft_upgrade_blocked:'本機資料庫升級被其他分頁阻擋；關閉舊分頁後重試。',strict_durability_unsupported:'此瀏覽器不支援嚴格本機儲存；目前未儲存。',draft_apply_in_progress:'此版本有進行中的操作；請等候或核對原操作。'}
 const errorText=(error:unknown)=>{const name=error instanceof Error?error.message:'';return text[name]||'結果未確認或儲存失敗。保留目前工作與草稿，請重新確認；不要推測已完成。'}
 function SyncProbe({probe}:{probe:Probe}) {
- const connect=useMemo(()=>()=>humanSocket(journeyApi('/connect/'+encodeURIComponent(probe.context.room),probe.context),probe.context,()=>probe.reject(new Error('draft_sync_paused'))),[probe])
+ const connect=useMemo(()=>(params:HumanSocketParams)=>humanSocket(journeyApi('/connect/'+encodeURIComponent(probe.context.room),probe.context),probe.context,()=>probe.reject(new Error('draft_sync_paused')),params),[probe])
  const assets=useMemo(()=>({upload:async()=>{throw new Error('probe_has_no_upload')},resolve:()=>null}),[])
  const value=useSync({connect,assets})
  useEffect(()=>{

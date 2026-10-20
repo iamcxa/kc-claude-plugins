@@ -16,6 +16,11 @@ one version and confirm its exact full-record puts/removes. A native detached
 preview sends no retained document buffer. Reviewing pauses the original editor;
 use the separate verified room link for fresh cloud editing afterward.
 
+The guarded native connector preserves the SDK-supplied `sessionId` and
+`storeId` for both editing and fresh restore probes. Preexisting values in the
+URI are rejected using the native reserved-parameter rule. Authority and pause
+checks do not replace the native per-tab sync identity or concurrency behavior.
+
 The operation is sent once after durable local preparation. Lost replies,
 unfinalized audit receipts, mismatched readback or unconfirmed sync retain the
 selected version. **核對原操作，不重送** checks the original correlated receipt,

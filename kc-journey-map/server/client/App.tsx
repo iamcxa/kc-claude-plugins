@@ -18,7 +18,7 @@ import { verifyRoomAdmission, RoomAdmissionError, sourceAdmissionLost } from './
 import { assetUploadId } from './asset-upload-id'
 import { HumanEntry, type HumanCanvasEntry } from './HumanEntry'
 import { HumanDraftPanel } from './HumanDraftPanel'
-import { humanSocket } from './human-socket'
+import { humanSocket, type HumanSocketParams } from './human-socket'
 import type { DraftContext } from '../draft-data'
 
 const APP_NAME = 'kc-journey-map'
@@ -261,7 +261,7 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
 function RoomSync({ session, onStore, onPause }: { session: RoomSession; onStore: (id: number, store: TLStoreWithStatus) => void; onPause:()=>void }) {
  const assets = useMemo(() => canvasAssets(session.roomId), [session.roomId])
  const pause=useRef(onPause);pause.current=onPause
- const connect=useMemo(()=>session.context?()=>humanSocket(session.uri,session.context!,()=>pause.current()):undefined,[session.uri])
+ const connect=useMemo(()=>session.context?(params:HumanSocketParams)=>humanSocket(session.uri,session.context!,()=>pause.current(),params):undefined,[session.uri])
  const store = useSync({ ...(connect?{connect}:{uri:session.uri}), assets })
  useEffect(() => { onStore(session.id, store) }, [session.id, store, onStore])
  return null
