@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:interrogation-replay-on-batch-3-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:interrogation-replay-on-batch-3-poc-validation-1
+              briefing:
+                id: briefing:interrogation-replay-on-batch-3-poc:validation:attempt-1:revision-1
+                digest: sha256:1c056731f58d6e30c123f578441d5586d855117ef4de649247c9802b02102899
+                room-ref: ./interrogation-replay-on-batch-3-poc/review/validation/briefing-1
 started: 2026-10-20T08:18:17Z
 worktree: .worktrees/spacedock-ensign-interrogation-replay-on-batch-3-poc
 ---

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:interrogation-replay-on-batch-3-poc:validation:attempt-1:revision-1",
+  "question": "Accept the one-task result and extend this POC to the other five batch-3 tasks with the two Codex arms only (plain and engineering-reviewer lens, one run each) and a blind second reader scoring before seeing the first scores? FO recommends extending. Approving accepts that budget; the POC then stops at that report.",
+  "artifacts": [
+    {
+      "id": "artifact:interrogation-replay-on-batch-3-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b15ef73a35122a776e36568bb2c439c199f1ecae/interrogation-replay-on-batch-3-poc.md",
+      "rev": "sha256:6ecd78a70af11c262ca6864bb7e43d26a55e51a374776298c3512be4b7387dd6",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED at state 69261bcf. Falsifier held under both readers: implementer union 4 of 7 (57%), validator's independent scoring union 3 of 7 (43%), best arm 43 to 57%, 0 ungrounded questions per hit. Hits by arm, implementer then validator: Claude sonnet 1 then 2, Claude opus with the reviewer lens 1 then 1, Codex 2 then 2, Codex with the lens 4 then 3; the two readers disagree on two items (one counted twice by the implementer, one missed). Codex model gpt-6.1-sol at effort high is confirmed from its session rollouts. No arm asked the hold-the-merge gap (#675's first P1). Isolation hole found in kc-journey-map's interrogation command (about 200 MCP tools reachable without --strict-mcp-config). Limits: one task, one run per arm. Cost: Claude sonnet about 0.29 USD, opus about 1.92 USD (1.05 of it billed to an advisor sidecar), Codex about 0.55M to 0.67M input tokens per run, dollars not measured."
+    }
+  ]
+}
