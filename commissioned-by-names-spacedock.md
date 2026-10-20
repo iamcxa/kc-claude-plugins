@@ -3,7 +3,7 @@ title: The kc-dev-flow-2 workflow template says commissioned-by spacedock@, so S
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-20T04:57:42Z
 worktree: .worktrees/spacedock-ensign-commissioned-by-names-spacedock
+pr: iamcxa/kc-claude-plugins#685
 ---
 
 ## Scope
