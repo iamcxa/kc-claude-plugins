@@ -63,8 +63,8 @@ try{
  await cookies('owner')
  await context.route('**/*',route=>{const u=new URL(route.request().url());if(u.origin===origin)return route.continue();if(u.hostname==='cdn.tldraw.com')return route.fulfill({path:join(root,'.host-check/assets/package',u.pathname.replace(/^\/[^/]+\//,''))});return route.abort()})
  page=await context.newPage();page.on('console',m=>{if(m.type()==='warning')console.log('browser warning: '+m.text())});const errors=[];page.on('pageerror',e=>errors.push(e.message))
- let drop=false,blockSockets=false,clientFrames=[],latestSocket
- await context.routeWebSocket(url=>url.pathname.startsWith('/connect/'),socket=>{latestSocket=socket;if(blockSockets){socket.close();return}const server=socket.connectToServer();socket.onMessage(message=>{clientFrames.push(String(message));if(!drop || !String(message).includes('"type":"push"'))server.send(message)})})
+ let drop=false,blockSockets=false,blockedSockets=0,clientFrames=[],latestSocket
+ await context.routeWebSocket(url=>url.pathname.startsWith('/connect/'),socket=>{latestSocket=socket;if(blockSockets){blockedSockets++;socket.close();return}const server=socket.connectToServer();socket.onMessage(message=>{clientFrames.push(String(message));if(!drop || !String(message).includes('"type":"push"'))server.send(message)})})
  const ready=async()=>page.waitForFunction(()=>window.editor&&document.querySelector('[data-testid="room-trigger"]')?.title.endsWith('Connected'))
  const editorRecord=text=>page.evaluate(record=>window.editor.store.put([record]),note({id:'shape:retained',text,x:440,y:400,parentId:pageId}))
  const inventory=()=>page.evaluate(async owner=>{const {humanDrafts}=await import('/human-drafts.ts');return(await humanDrafts()).inventory({...owner,origin:location.origin})},{backend:config.backendId,member:'owner',issuer,subject:config.members[0].subject,generation:1,room:'one',signInAt:time,revalidateBy:time+604800000})
@@ -74,7 +74,7 @@ try{
  await page.goto(origin+'/');await ready();assert.equal(new URL(page.url()).searchParams.get('room'),'one')
  pass('initial successful sync commits scoped IndexedDB history; no-URL reload resumes exact permitted room')
  await page.goto(origin+'/?room=denied');await page.getByText(/你無法進入指定畫布/).waitFor();assert.equal(await page.evaluate(()=>!!window.editor),false)
- blockSockets=true;await page.goto(origin+'/?room=two');await page.getByText(/Source access paused/).first().waitFor();blockSockets=false
+ blockSockets=true;const blockedBefore=blockedSockets;await page.goto(origin+'/?room=two');await wait(async()=>blockedSockets>blockedBefore);await page.getByText(/雲端未連線或已暫停/).waitFor();assert.equal(await page.evaluate(()=>!!window.editor),false);blockSockets=false
  assert.equal(await page.evaluate(async()=>{const {humanDrafts}=await import('/human-drafts.ts');const r=await fetch('/auth/identity').then(r=>r.json());return(await humanDrafts()).history({origin:location.origin,backend:r.backendId,member:r.memberId,issuer:r.issuer,subject:r.subject})}),'one')
  await page.goto(origin+'/');await ready();assert.equal(new URL(page.url()).searchParams.get('room'),'one')
  pass('denied explicit URL mounts no substitute and admitted-but-failed initial sync never replaces last successful room history')
@@ -114,7 +114,7 @@ try{
  await click(page.getByRole('button',{name:'本機草稿',exact:true}));await page.getByText(/身分已改變/).waitFor();assert.equal(await page.locator('.human-draft-body section').count(),0)
  await accountTab.close();await cookies('owner');await click(page.getByRole('button',{name:'重新確認草稿'}));await wait(async()=>await page.locator('.human-draft-body section').count()>0)
  assert.ok(!(await doc()).snapshot.documents.some(d=>JSON.stringify(d.state).includes('account swapped')))
- pass('actual shared HttpOnly/CSRF cookie replacement with queued edits pauses original transport; wrong member gets no inventory/content, reversion does not auto-flush')
+ pass('actual other-tab HttpOnly cookie replacement with unchanged CSRF marker with queued edits pauses original transport; wrong member gets no inventory/content, reversion does not auto-flush')
  for(const theme of ['light','dark'])for(const width of [1280,390]){
   await page.setViewportSize({width,height:900});await page.emulateMedia({colorScheme:theme});await page.evaluate(theme=>window.editor.user.updateUserPreferences({colorScheme:theme}),theme)
   await page.waitForFunction(theme=>document.querySelector('.human-draft-dialog')?.dataset.theme===theme,theme)
