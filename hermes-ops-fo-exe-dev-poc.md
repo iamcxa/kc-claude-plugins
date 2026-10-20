@@ -166,3 +166,25 @@ HOLD at the outward-action decision request. Candidate b4da27a8 on `spacedock-en
 ### Summary
 
 Amendment 1 applied to the entity; the credential probe is built and its logic proven locally, with real-GitHub behaviour still unmeasured. The hermes residue is gone. Next step is the Captain's yes to the named outward actions.
+
+## Stage Report: implementation (cycle 2, probe results)
+
+Candidate 232aad69 on `spacedock-ensign/hermes-ops-fo-exe-dev-poc`. Real GitHub run, 2026-10-20 14:54Z, scratch repository `iamcxa/ops-inbox-probe-scratch` (private, default branch `master`), App `ops-inbox-probe-iamcxa` (id 5397558, installation 173426167). Neither the key nor the token was opened or printed.
+
+- DONE: AC-6 push to the default branch is refused and the branch is unchanged.
+  `git push origin HEAD:master` exit 1, "push declined due to repository rule violations"; `master` still `d2994f976f` "Initial commit" per `gh api`.
+- DONE: AC-7 API merge is refused and the PR stays open.
+  On a ready PR (#2, marked ready through GraphQL `markPullRequestReadyForReview`, HTTP 200): `PUT .../merge` HTTP 405 "Repository rule violations found. New changes require approval from someone other than the last pusher."; PR #2 `state: open, merged: false, mergeable_state: blocked`. A merge attempt on the still-Draft PR also gave 405 "Pull Request is still a draft"; that one is not rule evidence and is labelled NOTE in the probe.
+- DONE: AC-8 the App cannot satisfy the required review with its own approval.
+  REFUSED, not "not counted": `POST .../reviews {"event":"APPROVE"}` HTTP 422 "Unprocessable Entity", errors `['Review Can not approve your own pull request']`; `gh api .../pulls/2/reviews` returns 0 reviews. The "accepted but not counted" case did not occur, so it is unmeasured; whether an App approving someone else's PR counts toward the rule is not tested here.
+- DONE: AC-9 push to `ops/*` and opening a Draft PR succeed.
+  `ops/probe-1792508099` push accepted; Draft PR #2 created (HTTP 201, `draft: true`, author `ops-inbox-probe-iamcxa[bot]`). An earlier run left `ops/probe-1792508024` and Draft PR #1.
+- DONE: AC-10 no other credential, no Administration.
+  Probe ran under `env -i` with an empty HOME: "no other GitHub credential source found". The mint response reports permissions `{contents: write, metadata: read, pull_requests: write}`, `repository_selection: selected`. `POST .../rulesets` as the App: HTTP 403 "Resource not accessible by integration". Rulesets read back with empty `bypass_actors` (main-protect 25482703, ops-branches 25482704).
+- DONE: Re-run the three mutation proofs against the current `probe.sh`.
+  Against a fake API plus a local bare remote with a refusing hook (default branch `master`): API accepts merge -> `AC-7` FAIL; remote accepts a default-branch push -> `AC-6` FAIL; stray `GH_TOKEN` -> `AC-10a` FAIL, other lines PASS. One harness slip: a combined run showed `AC-6` also failing under the `GH_TOKEN` mutation because the previous mutation had left the remote changed; a fresh-remote rerun flipped `AC-10a` alone.
+
+### Findings for FO
+
+- roborev on 232aad69 (evidence=roborev:942, exit 1): the single High finding is again the shelved hermes guard regex; nothing in `github-probe/`. comment_ratio: 1.0%, max 5% met, exit 0.
+- Limits of this probe: it shows the ruleset and token behave as designed for one repository and one App; it does not show how a First Officer process on a real host keeps the Captain's own `gh` login out of reach (AC-11). The ops ruleset blocks deletion, so two probe branches and PRs #1 and #2 remain until the scratch repository is deleted by the Captain.
