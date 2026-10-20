@@ -14,3 +14,7 @@ Declined or deferred at the validation gate of task `dev2-laws-check` (iamcxa/kc
 - Deferred risk (roborev High): a later edit of a dispatch record is not judged; 1 observed case in 11 record edits on the state branch.
 - Deferred risk (roborev High): a violation that exists only in a merge commit is not judged; 0 merge commits in 1131 on the state branch.
 - Polish: the PR body overstates when exit 2 happens once #652 lands; the concurrency test misses a quoted `"concurrency":` key.
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: --readme pass-through and the L2 parser landed in #652; the rest is by design (ADR 0017) or never fired.
