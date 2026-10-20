@@ -15,7 +15,7 @@ async function post(path: string, body: object) {
  return result
 }
 const messages: Record<string, string> = {
- human_sign_in_required: '請先驗證你的身分。', session_expired: '登入已到期，請重新驗證。', human_revalidation_due: '已到十四天驗證期限，請重新登入。',
+ human_sign_in_required: '請先驗證你的身分。', session_expired: '登入已到期，請重新驗證。', human_revalidation_due: '身分驗證已到期，請重新登入。',
  identity_changed: '登入身分已改變，請重新確認原本的畫布入口。', authority_denied: '目前的登入或成員權限已停用。', member_denied: '目前的成員權限已停用。', room_denied: '你無法進入指定畫布。請明確選擇另一張畫布。', room_missing: '指定畫布不存在；未建立空白畫布。',
  protocol_unknown: '回應格式無法確認，請保留工作並重新確認原入口。', outcome_unknown: '結果未確認，請保留工作。',
  provider_unavailable: '身分服務暫時無法使用。請稍後重試。', owner_peer_unavailable: '此主機無法確認本機帳號，登入已停止。', challenge_expired_or_consumed: '這次驗證已到期或已使用，請重新開始。',
