@@ -3,7 +3,10 @@ title: Close six 0.15.1 workflow wording gaps found by Codex on qnow #1270
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:10:08Z
+archived: 2026-10-20T05:10:08Z
 ---
 
 Declined from round 2 of Codex's review of iamcxa/qnow#1270 (the 0.15.1 adopter sync, head c2bb84fd4, 2026-10-11), plus one gap the Captain discussed in this session. The Captain ruled 「可以」 (2026-10-11) on filing them here together, with an order, so that the 0.15.1 syncs merge without another release round. None is P1 or Material, and none lets a wrong change merge.
