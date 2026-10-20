@@ -45,7 +45,8 @@ with `durability: strict`. Strict support is checked on the actual transaction.
 Unsupported durability, abort, quota or other storage errors keep the save
 unacknowledged. The native schema validates document-scope records, including
 shared user/agent-authored canvas records; instance/presence/process/credential
-payloads are excluded. A version is bounded to 5 MB and 20,000 records.
+payloads are excluded. Each document snapshot is bounded to 5 MB and 20,000 records; a version retains
+its base and draft snapshots separately.
 
 Persistent-storage permission is requested and its result is disclosed. Browser
 clearing/eviction, private-mode behavior, extensions and the profile/OS owner
