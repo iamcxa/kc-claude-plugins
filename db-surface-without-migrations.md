@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:db-surface-without-migrations:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:db-surface-without-migrations-backlog-1
+              briefing:
+                id: briefing:db-surface-without-migrations:backlog:attempt-1:revision-1
+                digest: sha256:fda81c6b7519c20de7d3f14d7920bdbe76020cf4f046d1f059cc203b30a50520
+                room-ref: ./db-surface-without-migrations/review/backlog/briefing-1
 ---
 
 ## Scope
