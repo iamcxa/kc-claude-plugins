@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:commissioned-by-names-spacedock:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:commissioned-by-names-spacedock-backlog-1
+              briefing:
+                id: briefing:commissioned-by-names-spacedock:backlog:attempt-1:revision-1
+                digest: sha256:0b6e4f741ab8074c0515b6e1e71bf2110a08ee04e0753839968d3d418c79ff48
+                room-ref: ./commissioned-by-names-spacedock/review/backlog/briefing-1
 ---
 
 ## Scope
