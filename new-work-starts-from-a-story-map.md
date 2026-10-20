@@ -38,6 +38,14 @@ gates:
 - Ideation runs on Opus: a cross-plugin interface design.
 - Non-goals: to be set at ideation.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-20, chat
+Captain: 「好，那就下一版，跟故事地圖一起，我越來越覺得兩者結合很重要」 (chat, 2026-10-20, batch-4 sitting, question 15)
+Asked: 「第 15 題：「先列清單、再一題一題問」這個做法，要不要另外開一張任務，安排在兩個版本之後再上？」
+Supersedes: none
+Design: this task's scope gains fo-batch-sittings' Cut 2 (before asking, list every open decision of the tasks at a stage once, each with its home, one plain sentence, FO's recommendation and what gets worse, then ask them one at a time), designed together with the story map, targeted at the next release. fo-batch-sittings Amendment 2 and its `## Design` Cut 2 and AC-8 seam are the source.
+
 ## FO alignment
 
 Alignment: needed before ideation: the design and fo-batch-sittings are read together so the batch list exists once.
