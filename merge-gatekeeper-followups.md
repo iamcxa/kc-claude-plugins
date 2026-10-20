@@ -12,3 +12,7 @@ Declined by FO at the #666 delivery gate (head a05b18a0, 2026-10-18); reasons al
 - Deferred risk (validation-4 F1): a workflow run started by the ready event itself appears about 2 seconds after `ready_for_review` and can be missed; zero runs beside a non-empty rollup does not hold. The restored README wait-for-jobs clause is the backstop.
 - Deferred risk (validation-4 F2, security findings 1 and 3): the per-ask record is not read at merge time and `verdict` reads "merge" for class `other` or `script-with-test` from filenames alone; nothing consumes either until POC task merge-grant-need-poc.
 - Polish: mutation gaps (request head not asserted, no `next:` assertion for the runs hold, no row for a sole skipped or neutral newest run, `gate|budget` and `adr-path` rows), doc_impact lines owed for sizing-simulation.py and adoption.md, a docstring that omits the runs hold, and the 12-point cap dropping the profile and path points on a PR with many never paths.
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: merges are bound with --match-head-commit; docstring now names the runs hold; the record's consumer task never existed.
