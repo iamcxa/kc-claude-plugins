@@ -3,7 +3,10 @@ title: fo-write-checks follow-ups declined at the #671 delivery gate
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T09:20:32Z
+archived: 2026-10-20T09:20:32Z
 ---
 
 Declined by FO at the #671 delivery gate (head 13ceb00d, 2026-10-19); reasons also in that gate summary.
