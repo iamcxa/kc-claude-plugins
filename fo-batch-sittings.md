@@ -56,6 +56,31 @@ Surfaces: none
 Visible change: none
 Outside this repository's surfaces: the Captain answers one message per stage per batch instead of one per gate.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-20, chat
+Captain: 「好」 (chat, 2026-10-20, batch-4 sitting, question 14)
+Asked: 「我的建議：這張任務先不做會議計數工具。ADR 也不要寫進「會議靠記錄時間間隔來認」這種規則，免得把一個量測上的權宜做法定成正式規則。」
+Supersedes: AC-3, AC-4, no replacement
+Design: Cut 1 item 2 (`decision_ledger.py --sittings`) is not built, and the ADR ruling drops "and its answers are counted from the recording burst". FO counts the Captain's answers per batch from the ledger at batch close, as for batch 3, until Spacedock review continuity (Cut 3) records each answer.
+Superseded text: **AC-3** `decision_ledger.py --sittings` groups consecutive `person:captain` resolutions at most `--gap` seconds apart (default 20), across stages, into one answer; it excludes `agent:first-officer` rows and withdrawals; prints one line per answer and `rows N, sittings M`; `--since DATE` drops older rows; it writes nothing. Evidence: rows in `test_decision_ledger.py` on synthetic ledger lines: (a) seven rows 12 to 13 s apart in one stage, the seventh quoting a longer sentence that begins with the shared words: one answer of seven; (b) two rows 6 s apart at different stages: one answer; (c) two rows 36 s apart: two; (d) an FO-decided row and a withdrawal between two Captain rows 30 s apart bridge nothing: two; (e) `--gap 10` splits (a), `--gap 40` merges (c); (f) `--since` drops a row; (g) the directory listing is equal before and after the run. Falsifier: grouping on exact shared quote text splits (a); a fixed same-stage rule splits (b).
+Superseded text: **AC-4** The counts in "What was measured" reproduce. Evidence: at validation, on `git archive` exports of the pinned state commits, `python3 <candidate>/scripts/decision_ledger.py --sittings --since 2026-10-17 <export>` prints `rows 45, sittings 25` (kc `c770d45f`), `rows 27, sittings 19` (relay `1e22e52d`) and `rows 12, sittings 8` (web `96a54eef`); relay and web equal the observers' hand counts of 19 and 8. Limit: the checkouts are private to this machine and their task bodies cannot be fixtures in this public repository, so this is a one-time validation step and CI runs AC-3's synthetic rows; thresholds are in-sample on three states. Falsifier: any count that differs prints the difference and fails the step.
+Override: recommended the derived recording burst (design D1); Captain chose no sitting counter, on FO's revised recommendation in chat; area: sitting measurement
+
+### Amendment 2 — 2026-10-20, chat
+Captain: 「好，那就下一版，跟故事地圖一起，我越來越覺得兩者結合很重要」 (chat, 2026-10-20, batch-4 sitting, question 15)
+Asked: 「第 15 題：「先列清單、再一題一題問」這個做法，要不要另外開一張任務，安排在兩個版本之後再上？」
+Supersedes: AC-7, no replacement
+Design: Cut 2 (list every open decision once, then ask one at a time) is not in this task and gets no task of its own; it moves into new-work-starts-from-a-story-map, targeted at the next release.
+Superseded text: **AC-7** (Cut 2, a later task if D2 is accepted; not verified now) `tasks` prints the list-then-ask lines under the sitting line, 45 words, and writes no list. Evidence then: rows in `test_pr_watch.py` asserting the two lines follow a sitting line and are absent without one; the directory listing of the workflow and package is equal before and after a run (the list is written nowhere); the batch-6 transcript recount shows asks outside any sitting. Falsifier: a test that finds a file holding a decision row.
+Override: recommended its own task two releases out (design D2); Captain chose the story-map task, next release; area: Cut 2 placement
+
+### Amendment 3 — 2026-10-20, chat
+Captain: 「第三條應該改成，如果發現 concurrency 不足，應該主動要求提高並說明原因，然後要定義concurrency不足是怎樣的狀況。」, 「按建議」 and 「先不放，直到有方式可以找到“重複出現的同類發現”」 (chat, 2026-10-20, batch-4 sitting, question 17)
+Asked: 「第 17 題，改成問你第 1 條：我建議不放進套件，我這邊也停止執行這條臨時規則。」 and 「第 2 條：同一類審查發現重複出現時就去找 chief-engineer，這條也不放進套件，可以嗎？」
+Supersedes: none
+Design: D4's three interim rules stay out of the package. Rule 1 (one follow-up task per delivered task): FO stops running it. Rule 2 (a repeated finding class calls the chief-engineer): out until a way exists to find a repeated finding class. Rule 3 (at most three concurrent workers) is replaced by his direction, filed as its own task: FO asks him to raise concurrency, with the reason, when concurrency is insufficient, and that task defines insufficiency.
+
 ## Design
 
 Pilot. Read against kc-dev-flow-2 0.26.0 (origin/main `ad44f0cb`), Spacedock binary 0.27.2 with the 0.27.0 skills cache, on 2026-10-20. Evidence files: `fo-batch-sittings/batch-3-count.md` and `fo-batch-sittings/dogfood/{kc-claude-plugins,subspace-relay,subspace-web,qnow}.md` (four observer reports, kc-dev-flow-2:observer sonnet). "Rows" below are gate resolutions the Captain decided; "answers" are the bursts they were recorded in.
@@ -223,15 +248,9 @@ Journey traced inside `pr_watch.py tasks` and `decision_ledger.py`. Completeness
 
 **AC-2** The README, the mod and the word budget do not change. Evidence: `git diff $(git merge-base origin/main HEAD)..HEAD --stat -- kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md docs/dev2/README.md kc-dev-flow-2/scripts/lint-skills.py` prints nothing, and `python3 kc-dev-flow-2/scripts/lint-skills.py` exits 0 printing equal count and budget. Measured against this task's own merge base, so another task's budget step does not mask it. Falsifier: one added README word makes the budget lint exit 1.
 
-**AC-3** `decision_ledger.py --sittings` groups consecutive `person:captain` resolutions at most `--gap` seconds apart (default 20), across stages, into one answer; it excludes `agent:first-officer` rows and withdrawals; prints one line per answer and `rows N, sittings M`; `--since DATE` drops older rows; it writes nothing. Evidence: rows in `test_decision_ledger.py` on synthetic ledger lines: (a) seven rows 12 to 13 s apart in one stage, the seventh quoting a longer sentence that begins with the shared words: one answer of seven; (b) two rows 6 s apart at different stages: one answer; (c) two rows 36 s apart: two; (d) an FO-decided row and a withdrawal between two Captain rows 30 s apart bridge nothing: two; (e) `--gap 10` splits (a), `--gap 40` merges (c); (f) `--since` drops a row; (g) the directory listing is equal before and after the run. Falsifier: grouping on exact shared quote text splits (a); a fixed same-stage rule splits (b).
-
-**AC-4** The counts in "What was measured" reproduce. Evidence: at validation, on `git archive` exports of the pinned state commits, `python3 <candidate>/scripts/decision_ledger.py --sittings --since 2026-10-17 <export>` prints `rows 45, sittings 25` (kc `c770d45f`), `rows 27, sittings 19` (relay `1e22e52d`) and `rows 12, sittings 8` (web `96a54eef`); relay and web equal the observers' hand counts of 19 and 8. Limit: the checkouts are private to this machine and their task bodies cannot be fixtures in this public repository, so this is a one-time validation step and CI runs AC-3's synthetic rows; thresholds are in-sample on three states. Falsifier: any count that differs prints the difference and fails the step.
-
 **AC-5** An ideation design written while another task is live ends with `### Batch overlap`. Evidence now: the sentence is in `skills/ideation/principles.md`, `lint-skills.py` and the duplicate-run lint pass, and the 55 words are counted worker-read. Evidence not yet available: behaviour. Baseline to beat at the next batch: kc 13 of 13, relay 7 of 11, web 0 of 5, qnow 2 of 3 designs carry the heading; the batch-5 observer counts the designs written while another live task existed and reports each without the heading. Falsifier: one such design without the heading. A phrase search is not proof of behaviour, so this criterion stays open until that count exists.
 
 **AC-6** The reservation ruling lands without a README change and with its reason. Evidence: AC-2's empty diff covers the `Reserve.` bullet and the `Number guards` passage; `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --since <base> --require <reserved number>` exits 0 for the ADR, whose Consequences name the 0018 collision (reserved at a dispatch, taken on main 11.5 hours later) as what a held number risks; `python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_number_guards.py` exits 0 (24 tests, including `test_reserve_never_collides_and_never_fills_a_gap`). Falsifier: a package file that tells FO to reserve before a task's own implementation dispatch build.
-
-**AC-7** (Cut 2, a later task if D2 is accepted; not verified now) `tasks` prints the list-then-ask lines under the sitting line, 45 words, and writes no list. Evidence then: rows in `test_pr_watch.py` asserting the two lines follow a sitting line and are absent without one; the directory listing of the workflow and package is equal before and after a run (the list is written nowhere); the batch-6 transcript recount shows asks outside any sitting. Falsifier: a test that finds a file holding a decision row.
 
 **AC-8** (seam, verified at FO's gate of both designs, not by this task's code) `new-work-starts-from-a-story-map` keeps a slice's open questions in the map's `questions:` and takes each answer back through the existing footprint and `journey-fold.mjs`, with no second stored list. Evidence: its accepted design names the home and answer path of a journey row as this section does. Falsifier: its design stores slice questions in a task file or a new list.
 
