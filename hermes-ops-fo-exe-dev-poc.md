@@ -76,3 +76,37 @@ Verified by: the refused push output and the refused merge attempt, plus the rul
 ## FO alignment
 
 Direction alignment before implementation: not needed; host, FO runtime and model were set by the Captain in chat on 2026-10-20 and the entry was admitted as presented. Each outward action in Scope still asks first.
+
+## Stage Report: implementation
+
+HOLD: the local hermes rehearsal is blocked on one permission. Candidate commit 638ef2117 on `spacedock-ensign/hermes-ops-fo-exe-dev-poc` (artifacts under `kc-ops-inbox/`).
+
+- FAILED: Exercise the riskiest claim first: a hermes instance (pinned Hermes Agent commit) boots by default as the Spacedock First Officer of the minimal ops workflow and stops at the ops decision gate without self-approving (AC-2, AC-3), rehearsed locally before any outward action.
+  Not run. Captain approved the install (isolated venv and HERMES_HOME under /tmp, pin 31df1227, 127.0.0.1) and `hermes auth add openai-codex` by himself, but `uv pip install -p /tmp/hermes-venv/bin/python -e '/tmp/hermes-src/repo[messaging]'` was denied by the permission layer ("Code from External"); the preceding non-editable install was allowed and failed at build (setup.py refuses wheels; editable is the documented route). No workaround attempted; FO told. Pending: that one command allowed, then running `/tmp/hermes-venv/bin/hermes` with HERMES_HOME=/tmp/ops-rehearsal/hermes-home.
+- DONE: Every outward action (exe.dev VM, any spend, Codex token placement, test GitHub repository and ruleset, machine account, Slack app, any message to a human) is raised to the First Officer as a decision request and waited on before it is taken; none is taken on your own judgment.
+  None taken. Requests sent to `main`: local install and rehearsal model (answered), install retry (open). Still to raise before use: exe.dev VM (Personal plan $15/month per exe.dev/pricing read 2026-10-20; standalone VM $0.105 per 2 vCPU/4 GiB hour), Slack app, test repository and ruleset, machine account.
+- FAILED: AC-1 to AC-5 each carry primary evidence in the stage report, or are named not run with the exact pending approval or blocker; a stop condition that fires ends the stage with a hold report.
+  Not all met; each AC below is named. No stop condition has fired (hermes boot not yet attempted twice).
+
+### Evidence so far (primary, read or run today)
+
+- AC-1 not run: pending exe.dev VM approval; local `systemd`-style persistence cannot be shown on macOS. Docs read: exe.dev VMs are persistent Linux VMs, HTTPS proxy (exe.dev/docs/proxy.md): default private behind exe.dev login, one port may be set public (3000-9999 range), hermes must listen beyond loopback for the proxy to reach it.
+- AC-2 not run (needs hermes). Verified by source at pin 31df1227: `gateway/platforms/webhook.py` `_validate_svix_signature` accepts Standard Webhooks headers `webhook-id`, `webhook-timestamp`, `webhook-signature` (`v1,<base64 hmac-sha256 of id.timestamp.body>`), rejects stale timestamps, and a bad signature gets HTTP 401 before any agent run (docs: messaging/webhooks.md). Spacedock side ran: `rehearsal/spacedock_mechanics.sh` files one task (`spacedock new` + `state commit`) on the `spacedock-state/ops` branch, 2 state commits, gate `awaiting-captain`.
+- AC-3 not run with a model. Mechanics ran: after `gate prepare` + `state commit` the gate row reads `readiness: awaiting-captain` and stays so with no reply (nothing in spacedock times a gate out).
+- AC-4 not run in Slack. Finding: `spacedock gate record ... --actor person:captain` accepts the actor as a plain caller string (ran it; resolution `by: person:captain`), so "attributed to the Captain" is enforced only by what Hermes lets reach `gate record`. Hermes side, by source: `gateway/authz_mixin.py` `_principal_authorized` is default-deny with `SLACK_ALLOWED_USERS`; `unauthorized_dm_behavior: ignore` set because the default is a pairing prompt; webhook sessions are always authorized (HMAC only).
+- AC-5 not run: pending test repository, ruleset and machine account approvals.
+- Codex login: ChatGPT-subscription OAuth, device code, stored in `$HERMES_HOME/auth.json` (hermes_cli/auth_codex.py docstring; docs integrations/providers.md); not an API key. Logout command, documented at website/docs/reference/cli-commands.md (`hermes auth logout <provider>`) and implemented in `hermes_cli/auth.py` `logout_command`: `hermes auth logout openai-codex`. It clears local state only; I read no server-side revoke, so revoking in ChatGPT settings is the Captain's.
+
+### Design facts the FO should know
+
+- Spacedock `dispatch build --host` accepts claude|codex|pi; there is no hermes host and no hermes First Officer runtime adapter. The ops workflow makes the `inbox` stage initial and gated, so the First Officer files the task and stops at its gate with no worker dispatch; skill `ops-first-officer` maps the shared-core steps onto the `spacedock` CLI. It does not load Spacedock's own first-officer skill. What this does not prove: that Spacedock's full FO core runs on hermes.
+- Guard plugin `ops-gate-guard` (platform enforcement of AC-3/AC-4 only) has `OPS_GUARD_MODE=log|block`, so the real model's own behaviour and the guard's refusals can be reported separately. `rehearsal/test_ops_gate_guard.py`: 6 tests; each fails if `decide` allows a webhook or non-Captain session (webhook, other Slack user, unset captain id), or misses a chained/env-prefixed command.
+
+### Findings for FO
+
+- roborev (evidence=roborev:935, 1 round, exit 1): High, `ops-gate-guard/__init__.py`: the regex sees only the top-level terminal command, so a session can bypass it via a script or built-up arguments. Agreed, it is a known limit of a command-text guard, not fixed: the real boundary is OS-level (a wrapper or separate unprivileged account for the webhook session). Left for the Captain's call; the POC reports guard refusals and model behaviour separately instead.
+- comment_ratio: `code lines 101, comment lines 1, 1.0%`, maximum 5% met, exit 0. doc_impact: 0 documents mention what changed.
+
+### Summary
+
+Authored the minimal ops workflow, hermes profile (config, SOUL, skill, guard plugin), signed-event sender and a hermes-free mechanics script; the Spacedock half of AC-2/3/4 runs. The hermes half is unrun because the editable install is denied; the Captain's two approvals (local install, own Codex login) stand and removal after rehearsal is recorded as a condition. No outward action was taken.
