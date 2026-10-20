@@ -223,3 +223,23 @@ Run https://github.com/iamcxa/ops-inbox-probe-scratch/actions/runs/39448281871, 
 - Fix committed locally at the candidate (not on the scratch repository): the environment array is built after the install and a `command -v spacedock` check fails the run early. The local stub rehearsal could not have caught this bug (spacedock was already on the local PATH); it is checked only by syntax and by reading.
 - Landing the fix needs the ruleset off/on again (same steps as before). `OPS_APP_TOKEN` expires at 16:24:45Z; a second run after that needs a re-mint and re-set.
 - Left on GitHub: workflows and scripts on master; probe branches `ops/probe-1792508024`, `ops/probe-1792508099`, `ops/probe-1792509891` and Draft PRs #1 to #3; the two secrets. The Captain's local Claude plugin cache still holds spacedock 0.27.3 beside 0.27.0 from the earlier smoke launch (doctor: OK).
+
+## Stage Report: implementation (cycle 2, slice run 2 FAILED, stopped)
+
+Run https://github.com/iamcxa/ops-inbox-probe-scratch/actions/runs/39449196966, 2026-10-20 15:31:26Z to 15:31:55Z (about 29 s), master at `ea02925` (candidate a320f34c). Second and last attempt.
+
+- DONE: Land the fix. Ruleset 25482703 disabled, master pushed (`b3ff9ce..ea02925`), re-enabled and read back (`active`, `bypass_actors: []`); probe re-run: AC-6 PASS, AC-7..AC-10 PASS; `OPS_APP_TOKEN` re-minted and re-set via stdin (token expiry 16:31:00Z).
+- FAILED: AC-11 First Officer run. The PATH fix worked (spacedock found, "launching claude as your first officer", workflow `docs/ops` detected, in-job audit "no other GitHub credential source found", job env credential names only `CLAUDE_CODE_OAUTH_TOKEN` and `OPS_APP_TOKEN`). `claude` then exited 1: `Error: Input must be provided either through stdin or as a prompt argument when using --print`; no model call, no branch, no PR.
+- Cause (mine): `claude` options `--allowedTools` and `--add-dir` take a variable number of values. `spacedock claude "<task>" -- ...` appends the task after the forwarded options, so the last variadic option swallowed it. The previous attempt's form (`--allowedTools` last) had the same latent defect; my added `--add-dir` last made it fire. Reproduced locally with the identical flags: order A (variadic last) fails with the same message; order B (scalar option last) and order C (`--allowedTools="..." --add-dir=...`) both returned READY. The local smoke earlier passed only because its last option was scalar.
+- AC-12 not run (no Draft PR to review).
+
+### Proposed materially different approach (not run)
+
+The two failures were both launch-line defects that only a real launch exposes, and each remote attempt cost the Captain a ruleset off/on and a master push. Before a third remote attempt: run the whole First Officer once locally on a disposable clone first, with the exact `run_fo.sh` launch line (candidate e86aca75, variadic options now as `name=value`), a local bare remote instead of GitHub, and a recording `gh` shim on PATH for `gh pr create`; cost cap `--max-budget-usd 5` on the Captain's local Claude login, no credential handled by me. That measures what is still unmeasured (does a headless `-p` First Officer dispatch the triage worker and reach the gate) at zero GitHub side effects. Only after it passes: one more remote dispatch (re-mint token, one ruleset off/on, master push).
+
+### State left behind
+
+- Master of the scratch repository holds the run-2 files (the `-p` argument-order defect included). Local fix e86aca75 is not on GitHub.
+- Probe branches `ops/probe-1792508024`, `-1792508099`, `-1792509891`, `-1792510266` and Draft PRs #1 to #4; two secrets; `OPS_APP_TOKEN` expires 16:31:00Z.
+- Captain's local Claude plugin cache still holds spacedock 0.27.3 beside 0.27.0; doctor: OK.
+- roborev not re-run on the last three small commits; comment_ratio and doc_impact unchanged in kind.
