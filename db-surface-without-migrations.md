@@ -34,6 +34,17 @@ gates:
                 id: briefing:db-surface-without-migrations:ideation:attempt-1:revision-1
                 digest: sha256:76dbc7aa5eae422dff2a4b1076a712c81897f45ddbb48701be2336433ec35c88
                 room-ref: ./db-surface-without-migrations/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:db-surface-without-migrations:ideation:1
+                briefing: briefing:db-surface-without-migrations:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T12:48:19.822905Z"
+                decision: approve
+                reason: 'Captain, batch-4 sitting 2026-10-20: D1 「可以」 (declare with the value none of migrations-path:), D2 「要」 (include R7: an added NNNN_name.sql fails under none), both as recommended.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-20T04:57:48Z
 ---
 
