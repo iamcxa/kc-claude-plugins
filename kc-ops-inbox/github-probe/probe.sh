@@ -22,20 +22,21 @@ if "$HERE/credential_audit.sh"; then say PASS AC-10a "no GitHub credential besid
 W=$(mktemp -d); cd "$W"
 git clone -q "$REMOTE" work 2>&1 | redact; cd work || exit 2
 git config user.email probe@example.invalid; git config user.name probe
-BASE=$(git ls-remote origin refs/heads/main | cut -f1)
+DEF=$(git symbolic-ref --short refs/remotes/origin/HEAD); DEF=${DEF#origin/}
+BASE=$(git ls-remote origin "refs/heads/$DEF" | cut -f1)
 
 echo probe > probe.txt; git add probe.txt; git commit -qm "probe: direct commit"
-out=$(git push origin HEAD:main 2>&1 | redact); rc=${PIPESTATUS[0]}
-after=$(git ls-remote origin refs/heads/main | cut -f1)
-if [ "$rc" != 0 ] && [ "$after" = "$BASE" ]; then say PASS AC-6 "push to main refused (exit $rc), main unchanged :: $(echo "$out" | tail -2 | tr '\n' ' ')"
-else say FAIL AC-6 "push to main exit $rc, main before=$BASE after=$after"; fi
+out=$(git push origin "HEAD:$DEF" 2>&1 | redact); rc=${PIPESTATUS[0]}
+after=$(git ls-remote origin "refs/heads/$DEF" | cut -f1)
+if [ "$rc" != 0 ] && [ "$after" = "$BASE" ]; then say PASS AC-6 "push to $DEF refused (exit $rc), $DEF unchanged :: $(echo "$out" | tail -2 | tr '\n' ' ')"
+else say FAIL AC-6 "push to $DEF exit $rc, before=$BASE after=$after"; fi
 
 BR="ops/probe-$(date +%s)"
 git checkout -q -b "$BR"
 out=$(git push origin "$BR" 2>&1 | redact); rc=${PIPESTATUS[0]}
 if [ "$rc" = 0 ]; then say PASS AC-9a "push to $BR accepted"; else say FAIL AC-9a "push to $BR refused (exit $rc) :: $(echo "$out" | tail -1)"; fi
 
-code=$(api POST /pulls "{\"title\":\"probe\",\"head\":\"$BR\",\"base\":\"main\",\"draft\":true}")
+code=$(api POST /pulls "{\"title\":\"probe\",\"head\":\"$BR\",\"base\":\"$DEF\",\"draft\":true}")
 N=$(field number); DRAFT=$(field draft)
 if [ "$code" = 201 ] && [ "$DRAFT" = True ]; then say PASS AC-9b "Draft PR #$N opened"; else say FAIL AC-9b "open Draft PR HTTP $code :: $(msg)"; fi
 
