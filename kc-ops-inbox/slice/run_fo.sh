@@ -42,8 +42,7 @@ echo "== launch First Officer"
 if [ -n "${FO_LAUNCH:-}" ]; then
   "${cleanenv[@]}" env SLUG="$SLUG" "$FO_LAUNCH"
 else
-  "${cleanenv[@]}" spacedock claude "$PROMPT" -- -p --model sonnet --max-budget-usd "${FO_MAX_BUDGET_USD:-5}" --permission-mode acceptEdits --permission-prompts none \
-    --allowedTools "Bash(spacedock:*) Bash(git:*) Bash(gh pr create:*) Bash(ls:*) Bash(cat:*) Read Write Edit Grep Glob Agent Skill SendMessage" --add-dir /tmp/spacedock-dispatch
+  "${cleanenv[@]}" spacedock claude "$PROMPT" -- -p     --allowedTools="Bash(spacedock:*) Bash(git:*) Bash(gh pr create:*) Bash(ls:*) Bash(cat:*) Read Write Edit Grep Glob Agent Skill SendMessage"     --add-dir=/tmp/spacedock-dispatch --model sonnet --max-budget-usd "${FO_MAX_BUDGET_USD:-5}"     --permission-mode acceptEdits --permission-prompts none
 fi
 
 echo "== verify"
