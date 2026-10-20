@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:commissioned-by-names-spacedock:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:commissioned-by-names-spacedock-ideation-1
+              briefing:
+                id: briefing:commissioned-by-names-spacedock:ideation:attempt-1:revision-1
+                digest: sha256:cf9f4947f9205ab5368796e8f8e2625746e8fcd1ae79bafde219b95105bf5719
+                room-ref: ./commissioned-by-names-spacedock/review/ideation/briefing-1
 started: 2026-10-20T04:57:42Z
 ---
 

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:commissioned-by-names-spacedock:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of commissioned-by-names-spacedock to enter implementation, with decisions D1 as the Captain rules each one in the batch-4 sitting (listed first, asked one at a time)? An approval accepts a decision's recommendation only where his ruling says so; a decision he changes is recorded in the reason, and a scope change goes in as an amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:commissioned-by-names-spacedock:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/350deea5cd1d767933a557a1594042bc98dc16c6/commissioned-by-names-spacedock.md",
+      "rev": "sha256:147d1fbc25e11280e71db4a7dcfae87645d2bf033bc668a386f3075051983dc6",
+      "mediaType": "text/markdown",
+      "summary": "Ideation design: the template and this repository's READMEs name commissioned-by spacedock@ so Spacedock discovers the workflow."
+    }
+  ]
+}
