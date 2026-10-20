@@ -69,7 +69,7 @@ The bite is therefore a missing binding (64 of 77 reports unparseable; 11 relay 
 **What changes.**
 - `skills/validation/principles.md`: each validation stage report, a recheck cycle included, carries `Comment check (validation): <first output line of comment_ratio.py> at <40-hex candidate head>`. This is the pattern of `Security review (validation): ... at <40-hex head>`, which `validation_security.py` already checks from `delivery_gate.py`.
 - `delivery_gate.py check`: from the `files` pages it already fetches (each entry's `patch`), it counts added code and comment lines with `comment_ratio.count`. When the PR adds at least one line in a comment-bearing file (`.ts .tsx .js .mjs .sql .py`, the script's `LINE` table) it requires, in the latest `## Stage Report: validation` section, one such line whose head equals the PR head and whose two counts equal its own. Otherwise exit 1 with one of three lines; a code file with added lines and no `patch` is exit 2.
-- A pass prints nothing new. The saved `merge/ask-N.json` gains `comment_check` (code, comment, head) so a later reader can see which head the counts were taken at.
+- A pass prints nothing new. The gate reads the two counts and the head from the line; `P%` is the script's third field and is not compared. The saved `merge/ask-N.json` gains `comment_check` (code, comment, head) so a later reader can see which head the counts were taken at.
 
 **FAQ.**
 - *Why measure instead of trusting the line?* A line the validator types is a claim. The gate holds the same patches the script would diff (this repository, 42 of 42 merged PR heads: code lines, comment lines and citation count identical, see Measurements), so a stale or invented line fails on the head, the numbers, or both.
@@ -173,7 +173,7 @@ Verified by: both outputs recorded in the validation report. Limit: it shows the
 
 - No hold on ratio or citations at the delivered head: 0 of 77 check-era heads would hold, and validation already returns exit 1 as a repair finding.
 - No claim that the comments were read: the gate sees a measurement and a head, not reading. The false-ownership class of relay's PR 196 stays with the validation principle.
-- No gate on the implementation report's line (D2), no law L3 (laws judge state commits after the push and see no PR head), no dispatch-record checklist requirement (relay: 0 of 32 reports lacked output at 2026-10-19; this repository: 2 of 39 latest validation reports never name the script).
+- No gate on the implementation report's line unless D2 rules otherwise, no law L3 (laws judge state commits after the push and see no PR head), no dispatch-record checklist requirement (relay: 0 of 32 reports lacked output at 2026-10-19; this repository: 2 of 39 latest validation reports never name the script).
 - No change to `comment_ratio.py` output or exit codes, no ADR amendment (ADR 0004 records the script's exit rules, which do not change; the gate's docstring is where each delivery check is documented).
 - Closing #409 is not this task's: it was closed NOT_PLANNED on 2026-10-20T04:03Z with a comment pointing at this task, so nothing remains to propose.
 
