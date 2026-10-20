@@ -3,7 +3,7 @@ title: The kc-dev-flow-2 workflow template says commissioned-by spacedock@, so S
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「同意合併」 (chat, 2026-10-20, batch-4 sitting, question 18), after asking what the two declined points were and being shown both: approve validation and merge iamcxa/kc-claude-plugins#685 at head 187f93a534f4792f6d747288947e2e43af589ce8, as recommended.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-20T04:57:42Z
 worktree: .worktrees/spacedock-ensign-commissioned-by-names-spacedock
 pr: pr-merge:685
+verdict: PASSED
+completed: 2026-10-20T14:38:39Z
+archived: 2026-10-20T14:38:39Z
 ---
 
 ## Scope
