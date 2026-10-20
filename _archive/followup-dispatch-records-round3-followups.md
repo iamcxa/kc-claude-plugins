@@ -3,7 +3,10 @@ title: dispatch_records.py pointer rule round-3 follow-ups
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:11:10Z
+archived: 2026-10-20T05:11:10Z
 ---
 
 Declined under the round-3 rule from the third Codex review round of iamcxa/kc-claude-plugins PR #642 (head 4b59d1ea, review:5511647035), 2026-10-14, task `followup-dispatch-records-checked`, plus the Deferred risks its validation recorded. None is P1 or Material, so none started a repair cycle there.
