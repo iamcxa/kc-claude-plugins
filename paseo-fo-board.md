@@ -18,6 +18,8 @@ status: backlog
 
 ## FO alignment
 
+Owner: the Captain ruled 2026-10-20 (「我覺得不太適合，這個 poc 應該要另外找人做，因為它還沒進 dev2 life cycle」) that this work is not this FO's: it is a POC run outside the dev2 lifecycle by another agent. This FO does not dispatch it.
+
 Alignment: needed before ideation: whether parts 1 and 2 go ahead before kc-decision-log P1, and whether part 2's Paseo config change is approved, are the Captain's.
 Release review: not needed: FO tooling, on no product journey map.
 Surfaces: ui
