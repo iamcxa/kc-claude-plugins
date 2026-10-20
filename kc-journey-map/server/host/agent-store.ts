@@ -172,4 +172,3 @@ export function agentResult(result: any) {
  if (!result.ok) deny(result.status,result.category)
  return result.value
 }
-

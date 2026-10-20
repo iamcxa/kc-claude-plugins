@@ -57,7 +57,7 @@ provider login/session precedence, account eligibility and hosted route checks.
 Disabling the new entry preserves metadata and revocations; rolling security
 metadata backward is never a rollback mechanism. Formal merge remains reserved.
 
-## Provenance
+**Provenance:**
 
 Renumbered from human-entry ADR 0026 to ADR 0031 only in this aggregate.
 The accepted decision text is unchanged from `afcf5bc2dad60c485efd07e8fda01a48245229ae`

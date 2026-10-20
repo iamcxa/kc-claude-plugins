@@ -94,4 +94,3 @@ export class PairedInstallation {
  }) }
  async status() { return this.exclusive(async()=>{ const value=await this.saved(); return {state:value?.state||'unpaired',familyId:value?.familyId||null,automaticRenewal:value?.state==='active'} }) }
 }
-

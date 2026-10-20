@@ -126,4 +126,3 @@ try {
  const out=process.env.JOURNEY_EVIDENCE_DIR||scratch;await mkdir(out,{recursive:true});await writeFile(join(out,'agent-browser-report.json'),JSON.stringify({...report,scratch},null,2))
  console.log('Report '+join(out,'agent-browser-report.json'))
 }
-

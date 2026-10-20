@@ -50,4 +50,3 @@ export async function agentRoute(host: Host, req: Request): Promise<Response | n
  }
  return deny(404,'agent_route_missing')
 }
-

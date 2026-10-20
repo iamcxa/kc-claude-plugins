@@ -224,7 +224,7 @@ try {
    await page.locator('.journey-room-options').hover(); await page.mouse.wheel(0, 20000)
    await page.waitForFunction(() => document.querySelector('.journey-room-options').scrollTop > 100)
    const last = page.locator('[data-room-id="registered-199"]'); await last.scrollIntoViewIfNeeded(); await click(last)
-   
+
    await ready('registered-199')
    await openRooms(); await page.getByRole('textbox', { name: 'Search rooms' }).fill('qnow-day2')
    await page.getByRole('textbox', { name: 'Search rooms' }).press('Enter'); await ready('qnow-day2')

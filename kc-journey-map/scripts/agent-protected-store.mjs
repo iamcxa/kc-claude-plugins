@@ -95,4 +95,3 @@ export async function openProtectedStore(config,root) {
   async close() { child.stdin.end(); await new Promise(resolve=>{ if(dead) resolve();else child.once('exit',resolve) }) },
  }
 }
-
