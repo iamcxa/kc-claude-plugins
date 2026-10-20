@@ -1,0 +1,22 @@
+{
+  "class": "never",
+  "head": "8c3a60e1312b289a768a7156af771bd3df49bb7e",
+  "model": "not run",
+  "necessity": "number_guards.py, its tests, one workflow.md bullet and one ADR 0002 Amended paragraph, each named in the approved design; the ADR's `Recommended: not recorded` line is what adr_lint --since requires ",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text.",
+  "points": [
+    "point: deferred: '- DONE: Judge the open roborev'",
+    "point: deferred: 'The finding is true (reproduced: base'",
+    "point: deferred: 'Script below ran as `env -i'",
+    "point: deferred: 'PASSED for head 8c3a60e1. All nine'",
+    "point: deferred: 'FO declines: Deferred risk, roborev:932 High,'",
+    "point: path: 'docs/adr/0002-applied-migrations-are-frozen-and-numbers-are-reserved.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/number_guards.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_number_guards.py'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#686",
+  "sufficiency": "a db task in a repository that declares `migrations-path: none` passes the number guard with a visible skip line and still runs the ADR rules, and an added NNNN_name.sql fails R7 (AC-1 to AC-9 reprodu",
+  "time": "2026-10-20T13:27:34Z",
+  "verdict": "ask"
+}

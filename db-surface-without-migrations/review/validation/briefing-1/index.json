@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:db-surface-without-migrations:validation:attempt-1:revision-1",
+  "question": "Approve validation of db-surface-without-migrations and merge iamcxa/kc-claude-plugins#686 at head 8c3a60e1312b289a768a7156af771bd3df49bb7e with `gh pr merge 686 --squash --match-head-commit 8c3a60e1312b289a768a7156af771bd3df49bb7e`? FO recommends approve; approving accepts that recommendation, and FO merges this one PR only, after rerunning delivery_gate.py check; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:db-surface-without-migrations:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/46cfdabee4f10febe3b0f4c9a16efb0427284dbc/db-surface-without-migrations.md",
+      "rev": "sha256:6af198797ac497afd884a5452acd4f65009ab35a6ef0a2778917592583750e14",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: a db task in a repository that declares `migrations-path: none` passes the number guard with a visible skip line and still runs the ADR rules, and an added NNNN_name.sql fails R7 (AC-1 to AC-9 reproduced by validation at this head; the relay record replay moved from exit 2 to exit 0).\nNecessity: number_guards.py, its tests, one workflow.md bullet and one ADR 0002 Amended paragraph, each named in the approved design; the ADR's `Recommended: not recorded` line is what adr_lint --since requires on an older record a change touches.\nValidation PASSED at 8c3a60e1. Codex clean on the head (evidence=summary:6291610625). CI green on the head. Second reviewer: not triggered (Surfaces none, pilot profile, no merge, approval, authority or review rule changed). Adopter order: an adopter declares none only after its pin includes this change, stated in the PR body and ADR 0002.\nFO declines: Deferred risk, roborev:932 High, under none an edit to an existing NNNN_name.sql passes unseen (outside the Captain's D2, which covers added files; measured 0 such files in relay, web and this repository, and qnow declares a real directory); Polish, the help test is renamed and extended beyond AC-5's one named exception (harmless, and the 24 old tests pass unmodified)."
+    }
+  ]
+}

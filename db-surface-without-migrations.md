@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:db-surface-without-migrations:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:db-surface-without-migrations-validation-1
+              briefing:
+                id: briefing:db-surface-without-migrations:validation:attempt-1:revision-1
+                digest: sha256:eb57ed101179eaabc485edf3bd588a948a836054f6e3d0a906c1392e0fe313f4
+                room-ref: ./db-surface-without-migrations/review/validation/briefing-1
 started: 2026-10-20T04:57:48Z
 worktree: .worktrees/spacedock-ensign-db-surface-without-migrations
 pr: iamcxa/kc-claude-plugins#686
