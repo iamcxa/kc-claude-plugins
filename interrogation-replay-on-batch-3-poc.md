@@ -42,6 +42,11 @@ gates:
                 at: "2026-10-20T08:45:09.701342Z"
                 decision: revise
                 reason: 'Captain chose 「擴大」, accepting FO''s recommendation in the gate question: extend to the other five batch-3 tasks with the two Codex arms only (plain and engineering-reviewer lens, one run each) and a blind second reader; the POC then stops at that report'
+            - id: gate-attempt:interrogation-replay-on-batch-3-poc-validation-2
+              briefing:
+                id: briefing:interrogation-replay-on-batch-3-poc:validation:attempt-2:revision-1
+                digest: sha256:29d501132fe916227615b24f524c19e8876661558170f9c199164b12b797f48c
+                room-ref: ./interrogation-replay-on-batch-3-poc/review/validation/briefing-2
 started: 2026-10-20T08:18:17Z
 worktree: .worktrees/spacedock-ensign-interrogation-replay-on-batch-3-poc
 ---

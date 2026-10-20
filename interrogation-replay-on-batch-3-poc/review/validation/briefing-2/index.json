@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:interrogation-replay-on-batch-3-poc:validation:attempt-2:revision-1",
+  "question": "Close this POC as proven (the falsifier never fired over six batch-3 tasks) and hand its result to new-work-starts-from-a-story-map as the interrogation evidence: a pinned Codex interrogator (gpt-6.1-sol, effort high) with the engineering-reviewer lens by default, plain Codex added where a decision is hard to reverse, a rank-and-cap step, and validation and review kept? FO recommends closing, with no further runs. Approving archives the POC with verdict passed.",
+  "artifacts": [
+    {
+      "id": "artifact:interrogation-replay-on-batch-3-poc:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/1f5edca59be25b1ae2603d7c4c14789960d532e3/interrogation-replay-on-batch-3-poc.md",
+      "rev": "sha256:52037171c658b52d892af5f46f50c1f288e39f757041d40cdb5d45c60a407ad1",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle 2 (blind second reader, scores committed at 6c55365c before unblinding) PASSED. Five new tasks: the two Codex arms asked 7 of 13 askable Captain-decision or P1 items between them (54%), the best arm 6 (46%); tier 2 (P2 and similar) 1 of 7 per arm; 0 ungrounded questions; none of 9 items that could not be asked before the build. Over six tasks the lens arm led by about one hit (9 or 10 of 24 against 7), within the unmeasured run-to-run spread, so lens over plain is not shown; the two arms hit different items on 3 of 5 tasks. Four of the union's hits answer a choice the seed already spelled. Cost: lens arm +14% input tokens (3.65M against 3.20M over five runs), +20% run time; USD not measured. Also found: kc-journey-map's interrogation command leaves about 200 MCP tools reachable without --strict-mcp-config."
+    }
+  ]
+}
