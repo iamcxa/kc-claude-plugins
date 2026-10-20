@@ -3,7 +3,7 @@ title: A db task in a repository with no migration files passes the number guard
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-20T04:57:48Z
 worktree: .worktrees/spacedock-ensign-db-surface-without-migrations
+pr: iamcxa/kc-claude-plugins#686
 ---
 
 ## Scope
