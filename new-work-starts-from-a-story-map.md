@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:new-work-starts-from-a-story-map:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:new-work-starts-from-a-story-map-backlog-1
+              briefing:
+                id: briefing:new-work-starts-from-a-story-map:backlog:attempt-1:revision-1
+                digest: sha256:172f38f458c4a4441c6f52af602c87a82de07dcafa690adfb01feb8840890348
+                room-ref: ./new-work-starts-from-a-story-map/review/backlog/briefing-1
 ---
 
 ## Scope

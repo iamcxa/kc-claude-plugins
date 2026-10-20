@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:new-work-starts-from-a-story-map:backlog:attempt-1:revision-1",
+  "question": "File this as a Pilot task for batch 5, ideation on Opus, with the slice map's question-and-answer as the batch decision list? FO put this in chat before this briefing (Pilot, batch 5, ideation on Opus, scope as above). Approving accepts profile pilot and the scope above.",
+  "artifacts": [
+    {
+      "id": "artifact:new-work-starts-from-a-story-map:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/047eb7094181e8c8445e43be6c1ffd49341d567f/new-work-starts-from-a-story-map.md",
+      "rev": "sha256:92ab46cfc01b24982f5aee32e1d38b821e58aa037ccf64c723b0eaee6d0d9626",
+      "mediaType": "text/markdown",
+      "summary": "Seed from the Captain's words in Scope; five candidate touchpoints between kc-journey-map and dev2, to be designed together with fo-batch-sittings."
+    }
+  ]
+}
