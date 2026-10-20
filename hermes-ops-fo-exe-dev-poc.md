@@ -6,6 +6,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:hermes-ops-fo-exe-dev-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:hermes-ops-fo-exe-dev-poc-backlog-1
+              briefing:
+                id: briefing:hermes-ops-fo-exe-dev-poc:backlog:attempt-1:revision-1
+                digest: sha256:7873820c9a15ab58c15bdecf5642a0da830af438a0b42b98c111ef11b927ac54
+                room-ref: ./hermes-ops-fo-exe-dev-poc/review/backlog/briefing-1
 ---
 
 First proof for the new `kc-ops-inbox` package: one always-on hermes instance acts as the First Officer of an `ops` Spacedock workflow, so an event reaches a person and an agent at once and every step lands in a repository task. The riskiest claim is unexercised: no recorded run has a Hermes Agent instance act as a Spacedock First Officer (`kc-hermes-spacedock` main at 556217b, 2026-08-25, still launches the FO as a separate Claude process; Spacedock 0.27 lists Claude Code, Codex and Pi as tier-1 and Hermes-class agents as "through skill systems").

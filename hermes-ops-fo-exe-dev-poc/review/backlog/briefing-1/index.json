@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:hermes-ops-fo-exe-dev-poc:backlog:attempt-1:revision-1",
+  "question": "Admit this POC into the dev2-poc route with profile poc: outcome, five ACs, non-goals, 2-day budget and stop conditions as presented in chat on 2026-10-20?",
+  "artifacts": [
+    {
+      "id": "artifact:hermes-ops-fo-exe-dev-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c5d80250254e28fdab04932181f509bf86cde214/hermes-ops-fo-exe-dev-poc.md",
+      "rev": "sha256:5e0c8ffcf5a3f09ad592bb1580c980e064cc502a5278155eed4e338104d8e638",
+      "mediaType": "text/markdown",
+      "summary": "First kc-ops-inbox proof: hermes on an exe.dev VM with a Codex token boots as the ops First Officer by default, files one ops task from a signed synthetic relay ceiling event, stops at the Captain's Slack gate, records only the Captain's reply, and cannot push the test repo's default branch or merge (ruleset). Each outward action asks first."
+    }
+  ]
+}
