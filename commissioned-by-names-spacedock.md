@@ -42,7 +42,8 @@ started: 2026-10-20T04:57:42Z
 Alignment: not needed before ideation; the Captain asked for the change.
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
-Visible change: the dev2 workflows of this repository appear in Compass and in Spacedock workflow discovery.
+Visible change: none
+Outside this repository's surfaces: the dev2 workflows of this repository appear in Compass and in Spacedock workflow discovery.
 
 ## Design
 
