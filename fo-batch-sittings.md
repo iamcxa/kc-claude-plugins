@@ -1,6 +1,7 @@
 ---
 title: FO runs a batch of tasks in sittings, so the Captain answers each stage's gates for the whole batch at once
 variant: kc-dev-flow-2
+profile: pilot
 merge: pr
 status: backlog
 ---
