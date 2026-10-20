@@ -237,3 +237,24 @@ No past ruling bears on D1: `git -C <state> grep -n 'Override:'` hits only prose
 Name `spacedock@0.27.0` in `commissioned-by:` of the template and both of this repository's READMEs; every Spacedock reader and Compass test only the prefix, and the value is the only one measured to merge clean for relay, web and qnow. A real-binary `status --discover` assertion guards it; refit restamps later and the sync keeps the adopter's value. One Captain decision (D1).
 
 FO note, not a design item: `python3 <package>/scripts/design_surfaces.py check` exits 1 on this file with "'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'", from the `## FO alignment` record (`Surfaces: none` with a non-`none` `Visible change:`), which is FO's section and was left unedited. On a copy with `Visible change: none` the checker prints "design surfaces presentable". FO decides whether the record becomes `Visible change: none` (the visible effect is in Spacedock's and Compass's own surfaces) or the surface becomes `ui`; the design needs no change either way.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main (ad44f0cbf42274ff65802cabc52ebe919f159fd5) implementing the design as the Captain accepted D1 at the ideation gate (the template names spacedock@0.27.0): line 2 of kc-dev-flow-2/references/sd/workflow.md, line 2 of docs/dev2/README.md and docs/dev2-poc/README.md, the one assertion in kc-dev-flow-2/scripts/test_observer_recovery.py, and the one sentence in kc-dev-flow-2/skills/maintain-flow/SKILL.md, per the design's Batch overlap list
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/685, one commit 187f93a5 on spacedock-ensign/commissioned-by-names-spacedock; diff is those five files only (8 insertions, 3 deletions); pushed without -u or force.
+- DONE: Every acceptance criterion AC-1 to AC-8 green with the evidence each names, each falsifier shown failing by a mutation you run (python3 -B, caches cleared), including AC-2 with the real Spacedock reader and AC-5's three-way sync simulation for relay, web and qnow
+  AC-1: git diff is one line; extra word in workflow.md -> lint "5375 words exceeds the budget of 5374", exit 1.
+  AC-2: new assertion passes with real 0.27.2 binary; old value or `spacedock` without `@` -> AssertionError "discovery does not list the template workflow: []".
+  AC-3: 10 template-reading tests + poc_readme.py check exit 0; editing only one README (either) -> check exit 1 with line 2 diff.
+  AC-4: discover at HEAD lists docs/dev2 and docs/dev2-poc (base: neither); Compass read_workflow 5 and 4 stages (base: None, None); POC README left unedited -> Compass None for it. Stage strip in a live Compass session NOT verified (design limit, left to validation).
+  AC-5: merge-file exit 0 and line 2 kept for relay, web (origin/main) and qnow (origin/next), both READMEs each (6/6; adopters now base v0.26.0); candidate `spacedock@` or `spacedock@0.27.2` -> exit 1 for 6/6. This repo's two READMEs with a trunk change in theirs: exit 0.
+  AC-6: sentence is 33 words, lint exit 0; no mechanical falsifier (stated in AC-6), listed under without-it unanswered in the PR.
+  AC-7: independent wc -w recount base vs HEAD: workflow.md 5374/5374; stage defs 620/485/1221/1392/43 equal; status --boot 55/55.
+  AC-8: restamp 0.27.2 with base=candidate: exit 0 both kept; with old template as base: exit 1 (the one-time conflict). spacedock:refit not run (interactive).
+- DONE: kc-dev-flow-2/scripts/lint-skills.py exits 0; roborev evidence= line; push without force and without -u; CI green on the PR head; CI cost measured or stated as not measured
+  lint-skills.py exit 0 (5374 of 5374); `clean on 187f93a53; evidence=roborev:931` (exit 0, first run); CI: green on 187f93a5: kc-dev-flow-2 tests 39425670924 (about 2m, wall clock), marketplace version parity 39425670894, kc-dev-flow release gate 39425670958; CI minutes billed not measured (one extra `status --discover` call inside an existing step; wall clock above).
+
+### Summary
+
+Template and both of this repository's READMEs now name `spacedock@0.27.0`; a real-binary `status --discover` assertion guards the template, and one maintain-flow sentence records why the value is not bumped casually. Limit beyond the design: if a later release also edits line 3 (adjacent to the stamp) before an adopter syncs this change, `git merge-file` conflicts once; after that sync it merges clean. One slip fixed before the push: my first edit of the test wrote `state =workflow`; amended into the single commit.
+For FO: the maintain-flow sentence opens with "Its `commissioned-by:` value" right after a lint-skills.py sentence, so its antecedent (workflow.md) is easy to mis-bind; fold a rewording into any later touch of that file.
