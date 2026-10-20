@@ -173,14 +173,14 @@ def declined_items(text):
 
 
 def brackets(item):
-    found, depth, start = [], 0, 0
+    found, expect, start = [], [], 0
     for i, ch in enumerate(item):
         if ch in "([":
-            start = i + 1 if depth == 0 else start
-            depth += 1
-        elif ch in ")]" and depth:
-            depth -= 1
-            if depth == 0:
+            start = i + 1 if not expect else start
+            expect.append(")" if ch == "(" else "]")
+        elif expect and ch == expect[-1]:
+            expect.pop()
+            if not expect:
                 found.append(item[start:i])
     return found
 

@@ -1380,6 +1380,22 @@ class ScopeCheckTests(unittest.TestCase):
         self.edit("- Bite: the first thing.\n", "")
         self.assertEqual(ds.scope_hold(self.task)[0], "hold")
 
+    def test_an_amendment_heading_outside_the_amendments_section_or_inside_a_fence_is_no_baseline(self):
+        heading = "### Amendment 1 — 2026-10-20, chat\nCaptain: 「x」 (chat)\nSupersedes: none\n"
+        cases = {"under another section": "\n## Design\n\n" + heading,
+                 "fenced under another section": "\n## Design\n\n```\n" + heading + "```\n",
+                 "fenced inside the amendments section": "\n## Captain amendments\n\n```\n" + heading + "```\n"}
+        for label, extra in cases.items():
+            with self.subTest(label):
+                self.task.write_text(GATED)
+                self.add_line()
+                self.task.write_text(self.task.read_text().rstrip("\n") + "\n" + extra)
+                self.commit("t.md", "scope line with a look-alike heading")
+                verdict, line = ds.scope_hold(self.task)
+                self.assertEqual(verdict, "hold", line)
+                self.assertIn(f"Scope changed after the backlog gate ({self.sha[:8]})", line)
+                self.assertEqual(self.run_main()[0], 1)
+
     def test_an_uncommitted_amendment_covers_an_uncommitted_scope_line(self):
         self.add_line()
         self.amend()
@@ -1437,6 +1453,13 @@ class ScopeCheckTests(unittest.TestCase):
         self.add_line("- A second ask, after the amendment.")
         mutant = mutated("    if newer:\n        commit = introducing_commit(task, max(newer))",
                          '    if newer:\n        return "clean", "any amendment"\n        commit = introducing_commit(task, max(newer))')
+        self.assertEqual((ds.scope_hold(self.task)[0], mutant.scope_hold(self.task)[0]), ("hold", "clean"))
+
+    def test_mutation_reading_amendment_headings_from_the_whole_body_clears_a_look_alike_heading(self):
+        self.add_line()
+        self.task.write_text(self.task.read_text().rstrip("\n") + "\n\n## Design\n\n### Amendment 1 — 2026-10-20, chat\n")
+        self.commit("t.md", "scope line with a look-alike heading")
+        mutant = mutated('amendment_entries(body.split("\\n")) or []', 're.split(r"(?m)^(?=### )", body)[1:]')
         self.assertEqual((ds.scope_hold(self.task)[0], mutant.scope_hold(self.task)[0]), ("hold", "clean"))
 
     def test_mutation_reading_only_the_backlog_sha_holds_a_scope_change_an_amendment_records(self):

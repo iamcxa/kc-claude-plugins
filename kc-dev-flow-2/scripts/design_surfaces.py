@@ -140,11 +140,15 @@ def declarations(lines):
     return [(found.group(1), line) for line in lines for found in [DECLARATION_LINE.match(line)] if found]
 
 
-def check_amendments(name, lines, declared, errors):
+def amendment_entries(lines):
     body = section(unfenced(lines), AMENDMENTS_HEADING)
-    if body is None:
+    return None if body is None else re.split(r"(?m)^(?=### )", "\n".join(body))[1:]
+
+
+def check_amendments(name, lines, declared, errors):
+    entries = amendment_entries(lines)
+    if entries is None:
         return
-    entries = re.split(r"(?m)^(?=### )", "\n".join(body))[1:]
     moved = [declarations(e.split("\n")[1:]) for e in entries]
     live = declarations(section(lines, AC_HEADING) or [])
     for index, entry in enumerate(entries):
@@ -414,7 +418,8 @@ def scope_hold(task):
         return "not run", "backlog sha not readable by git"
     what, sha = "the backlog gate", bound.group(1)
     day = (gate.get("at") or "")[:10]
-    newer = [int(n) for n, d in AMENDMENT_DATED.findall(body) if d >= day]
+    dated = [AMENDMENT_DATED.match(e) for e in amendment_entries(body.split("\n")) or []]
+    newer = [int(m.group(1)) for m in dated if m and m.group(2) >= day]
     if newer:
         commit = introducing_commit(task, max(newer))
         if commit is None:

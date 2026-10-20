@@ -1189,6 +1189,24 @@ class FoWriteRuleTests(unittest.TestCase):
             self.assertEqual(code, 1, out)
             self.assertIn("declined item has no reason", out)
 
+    def test_a_reason_bracket_completes_only_on_its_matching_closer(self):
+        for text in ("Declined: Polish, a thing [two words).", "Declined: Polish, a thing (two words]."):
+            with self.subTest(text):
+                self.assertEqual(len(gate.unreasoned_items(text)), 1)
+                code, out = self.check(text=text)
+                self.assertEqual(code, 1, out)
+                self.assertIn("declined item has no reason", out)
+        for text in ("Declined: Polish, a thing (two words).", "Declined: Polish, a thing [two words].",
+                     "Declined: Polish, a thing [part (a) is not reachable].", "Declined: Polish, a thing (see [1] for why)."):
+            with self.subTest(text):
+                self.assertEqual(gate.unreasoned_items(text), [])
+                self.assertEqual(self.check(text=text)[0], 0)
+
+    def test_mutation_closing_a_bracket_on_any_closer_accepts_a_mismatched_pair(self):
+        loose = variant_of("elif expect and ch == expect[-1]:", 'elif expect and ch in ")]":')
+        self.assertEqual((len(gate.unreasoned_items("Declined: Polish, a thing [two words).")),
+                          len(loose.unreasoned_items("Declined: Polish, a thing [two words)."))), (1, 0))
+
     def test_each_parse_fix_turns_its_own_texts_red(self):
         end = variant_of('(?<![eE]\\.[gG]\\.)(?<![iI]\\.[eE]\\.)(?<=[.)\\]])', '(?<=[.)])')
         self.assertEqual(len(end.declined_items(LATE_DECLINES["chat-only-evidence-observer-blind"])), 1)
