@@ -2,10 +2,11 @@ import { createContext, useContext, useEffect, useState, type ReactNode } from '
 import { DefaultPageMenu, TldrawUiButton, TldrawUiButtonIcon, TldrawUiButtonLabel, TldrawUiDropdownMenuContent, TldrawUiDropdownMenuGroup, TldrawUiDropdownMenuItem, TldrawUiDropdownMenuRoot, TldrawUiDropdownMenuTrigger, TldrawUiInput, useMenuIsOpen } from 'tldraw'
 import { journeyApi, type HumanContext } from './api'
 import './room-selector.css'
+import { recoveryCause, recoveryResponse, type RecoveryCause } from './access-recovery'
 
 export type ConnectionState = 'loading' | 'connected' | 'offline' | 'error'
 type CatalogRoom = { roomId: string; displayName: string }
-type RoomNavigation = { roomId: string; human: HumanContext | null; connection: ConnectionState; switching: boolean; switchError: string; frozen: boolean; onDenied: () => void; onNavigate: (room: string) => void }
+type RoomNavigation = { roomId: string; human: HumanContext | null; connection: ConnectionState; switching: boolean; switchError: string; frozen: boolean; onDenied: (cause?: RecoveryCause) => void; onNavigate: (room: string) => void }
 type RoomInventory = RoomNavigation & { rooms: CatalogRoom[]; loading: boolean; unavailable: boolean; disabled: boolean; status: string; refresh: () => void }
 const RoomContext = createContext<RoomInventory | null>(null)
 
@@ -22,11 +23,10 @@ export function RoomSelector({ children, ...navigation }: RoomNavigation & { chi
 		setError(false)
 		fetch(journeyApi(human ? '/auth/rooms' : '/health'), { signal: controller.signal })
 			.then(async response => {
-				if (!response.ok) { if (human && [401, 403].includes(response.status)) onDenied(); throw new Error('Room inventory unavailable') }
-				const result = await response.json()
+				const result = await recoveryResponse(response).catch(error=>{if(human && [401,403].includes(response.status))onDenied(recoveryCause(error));throw error})
 				const rows = human ? result.rooms : result.rooms?.map((roomId: string) => ({ roomId, displayName: roomId }))
     if (human && (typeof result.memberId !== 'string' || typeof result.backendId !== 'string')) throw new Error('Invalid inventory context')
-    if (human && (result.memberId !== human.member || result.backendId !== human.backend)) { onDenied(); throw new Error('Identity changed') }
+    if (human && (result.memberId !== human.member || result.backendId !== human.backend)) { onDenied({kind:'denied',category:'identity_changed'}); throw new Error('Identity changed') }
     if (!Array.isArray(rows) || rows.some((room: CatalogRoom) => !room || typeof room.roomId !== 'string' || !room.roomId || typeof room.displayName !== 'string')) throw new Error('Invalid inventory')
     if (!controller.signal.aborted) setRooms([...new Map<string, CatalogRoom>(rows.map((room: CatalogRoom) => [room.roomId, room])).values()].sort((a, b) => a.roomId.localeCompare(b.roomId)))
 			})

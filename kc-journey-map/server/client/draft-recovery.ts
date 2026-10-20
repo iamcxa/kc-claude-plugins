@@ -1,15 +1,18 @@
 import { journeyApi } from './api'
-import { canonical, changes, fingerprint, matchesChanges, sameMount, samePerson, type Documents, type DraftContext } from '../draft-data'
+import { RecoveryError, recoveryResponse } from './access-recovery'
+import { canonical, changes, fingerprint, matchesChanges, sameMount, samePerson, validateDraftContext, type Documents, type DraftContext } from '../draft-data'
 import { type ApplyAttempt, type HumanDrafts, type Version } from './human-drafts'
 export const humanCookieMarker=()=>document.cookie.split(';').map(v=>v.trim()).find(v=>v.startsWith('journey_human_csrf='))||''
-const checked = async (response: Response) => {const value=await response.json();if(!response.ok)throw new Error(value.category||value.error||'draft_request_failed');return value}
+const checked = recoveryResponse
 export async function verifiedDraftContext(original: DraftContext, room=true, signal?: AbortSignal):Promise<DraftContext> {
  const marker=humanCookieMarker()
  const identity=await checked(await fetch(journeyApi('/auth/identity',null),{cache:'no-store',signal:AbortSignal.any([AbortSignal.timeout(8000),...(signal?[signal]:[])])}))
  const current:DraftContext={origin:window.location.origin,backend:identity.backendId,member:identity.memberId,issuer:identity.issuer,subject:identity.subject,generation:identity.generation,signInAt:identity.verifiedHumanSignInAt,revalidateBy:identity.humanRevalidateBy,room:original.room}
+ try{validateDraftContext(current)}catch{throw new RecoveryError({kind:'unknown',category:'protocol_unknown'})}
  if(!samePerson(current,original))throw new Error('draft_identity_changed')
  if(room){
   const entry=await checked(await fetch(journeyApi('/auth/entry?'+new URLSearchParams({room:original.room}),null),{cache:'no-store',signal}))
+  if(typeof entry.memberId!=='string'||typeof entry.backendId!=='string'||typeof entry.room!=='string'||!Number.isSafeInteger(entry.verifiedHumanSignInAt)||!Number.isSafeInteger(entry.generation))throw new RecoveryError({kind:'unknown',category:'protocol_unknown'})
   if(entry.memberId!==current.member || entry.backendId!==current.backend || entry.room!==current.room || entry.verifiedHumanSignInAt!==current.signInAt || entry.generation!==current.generation)throw new Error('draft_identity_changed')
  }
  signal?.throwIfAborted();if(marker!==humanCookieMarker())throw new Error('draft_identity_changed');return current
@@ -44,7 +47,7 @@ export async function reconcileDraft(db:HumanDrafts,original:DraftContext,attemp
   const marker=humanCookieMarker(),finalContext=await verifiedDraftContext(original,true,signal)
   if(!sameMount(context,finalContext))throw new Error('draft_identity_changed')
   await db.remove(context,attempt.key,attempt,()=>!signal.aborted&&humanCookieMarker()===marker)
- }catch(error){await db.outcome(attempt,'unknown').catch(()=>{});throw error}
+ }catch(error){await db.outcome(attempt,'unknown').catch(()=>{});throw new RecoveryError({kind:'unknown',category:'draft_original_outcome_unknown'},error instanceof Error?error.message:'draft_original_outcome_unknown')}
 }
 export async function applyDraft(db:HumanDrafts,review:DraftReview,tabId:string,sync:SyncConfirmation,signal:AbortSignal) {
  const context=await verifiedDraftContext(review.context,true,signal)
@@ -60,5 +63,5 @@ export async function applyDraft(db:HumanDrafts,review:DraftReview,tabId:string,
   const response=await fetch(journeyApi('/doc?room='+encodeURIComponent(context.room),context),{method:'PATCH',headers:{'Content-Type':'application/json','x-journey-operation':attempt.id},body:JSON.stringify(attempt.patch),signal})
   await checked(response)
   await reconcileDraft(db,context,attempt,sync,signal)
- }catch(error){await db.outcome(attempt,'unknown').catch(()=>{});throw error}
+ }catch(error){await db.outcome(attempt,'unknown').catch(()=>{});throw new RecoveryError({kind:'unknown',category:'draft_original_outcome_unknown'},error instanceof Error?error.message:'draft_original_outcome_unknown')}
 }

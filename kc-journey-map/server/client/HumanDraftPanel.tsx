@@ -8,6 +8,7 @@ import { humanDrafts, type ApplyAttempt, type VersionItem } from './human-drafts
 import { applyDraft, currentDocuments, humanCookieMarker, reconcileDraft, reviewDraft, verifiedDraftContext, type DraftReview, type SyncConfirmation } from './draft-recovery'
 import { humanSocket, type HumanSocketParams } from './human-socket'
 import './human-drafts.css'
+import { RecoveryError, recoveryCause, type RecoveryCause } from './access-recovery'
 type Probe = { id:string; context:DraftContext; patch:DraftReview['patch']; signal:AbortSignal; resolve:()=>void; reject:(error:Error)=>void }
 const text:Record<string,string>={draft_identity_changed:'身分已改變。草稿保持鎖定；請以原本身分重新登入。',draft_cloud_changed_review_again:'雲端已改變。請重新檢視後再確認。',draft_base_unknown:'原始雲端版本不明；保留草稿，無法安全計算變更。',draft_attempt_requires_reconciliation:'已有未確認的操作；請核對原操作，不能再次送出。',draft_original_outcome_unknown:'原操作結果仍未確認；草稿保留，不會自動重送。',draft_readback_unconfirmed:'雲端紀錄尚未核對成功；草稿保留。',draft_upgrade_blocked:'本機資料庫升級被其他分頁阻擋；關閉舊分頁後重試。',strict_durability_unsupported:'此瀏覽器不支援嚴格本機儲存；目前未儲存。',draft_apply_in_progress:'此版本有進行中的操作；請等候或核對原操作。'}
 const errorText=(error:unknown)=>{const name=error instanceof Error?error.message:'';return text[name]||'結果未確認或儲存失敗。保留目前工作與草稿，請重新確認；不要推測已完成。'}
@@ -32,7 +33,7 @@ function DraftPreview({review}:{review:DraftReview}) {
  const store=useMemo(()=>{const value=createTLStore();value.put(Object.values(review.version.records));return value},[review.version])
  return <div className="human-draft-preview" data-testid="detached-draft"><Tldraw store={{status:'not-synced',store}} hideUi onMount={editor=>{editor.updateInstanceState({isReadonly:true})}}/></div>
 }
-export function HumanDraftPanel({context,label,editor,connection,onPause}:{context:DraftContext;label:string;editor:Editor|null;connection:string;onPause:()=>void}) {
+export function HumanDraftPanel({context,label,editor,connection,onPause,onVerified}:{context:DraftContext;label:string;editor:Editor|null;connection:string;onPause:(cause?:RecoveryCause)=>void;onVerified:()=>void}) {
  const [open,setOpen]=useState(false),[status,setStatus]=useState('尚無本機儲存'),[persistent,setPersistent]=useState(''),[problem,setProblem]=useState(''),[busy,setBusy]=useState(false),[items,setItems]=useState<VersionItem[]>([]),[allowed,setAllowed]=useState(false),[review,setReview]=useState<DraftReview|null>(null),[attempt,setAttempt]=useState<ApplyAttempt|null>(null),[deleting,setDeleting]=useState<VersionItem|null>(null),[probe,setProbe]=useState<Probe|null>(null),[theme,setTheme]=useState('light')
  const lineage=useRef({tabId:crypto.randomUUID(),draftId:crypto.randomUUID()}),dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement>(null),operation=useRef(new AbortController()),epoch=useRef(0),alive=useRef(true)
  useEffect(()=>{
@@ -68,10 +69,10 @@ export function HumanDraftPanel({context,label,editor,connection,onPause}:{conte
   signal.throwIfAborted();setAllowed(permitted);setItems(versions)
   if(!permitted)setProblem('目前畫布權限未確認。內容保持鎖定；原身分可明確刪除指定本機版本。')
  }
- async function run(action:(signal:AbortSignal)=>Promise<void>) {
+ async function run(action:(signal:AbortSignal)=>Promise<void>,mutation=false) {
   operation.current.abort();operation.current=new AbortController();const id=++epoch.current,signal=AbortSignal.any([operation.current.signal,AbortSignal.timeout(30_000)])
   setBusy(true);setProblem('')
-  try{await action(signal)}catch(error){if(id===epoch.current){setReview(null);setAttempt(null);setItems([]);setAllowed(false);setProblem(errorText(error))}}
+  try{await action(signal)}catch(error){if(id===epoch.current){if(mutation && (error instanceof RecoveryError || recoveryCause(error).kind!=='unknown'))onPause(recoveryCause(error));setReview(null);setAttempt(null);setItems([]);setAllowed(false);setProblem(errorText(error))}}
   finally{if(id===epoch.current)setBusy(false)}
  }
  useEffect(()=>{
@@ -100,7 +101,7 @@ export function HumanDraftPanel({context,label,editor,connection,onPause}:{conte
     {review&&<section aria-label="檢視選定草稿"><h3>選定版本 {review.version.key[5]} · 畫布 {context.room}</h3><p>未連線的草稿預覽。下列完整紀錄會新增或取代；其他紀錄保留。確認後的並發修改仍遵循原本完整紀錄覆寫規則。</p><DraftPreview review={review}/>
      <details><summary>檢視原始、草稿、目前雲端與精確變更</summary><pre>{canonical({base:review.version.base,draft:review.version.records,current:review.current,put:review.patch.put,remove:review.patch.remove})}</pre></details>
      <p>將送出 {review.patch.put.length} 筆完整紀錄，刪除 {review.patch.remove.length} 筆。</p>
-     {attempt?<><p>原操作 {attempt.id} 的結果需要核對。草稿保留，不會自動重送。</p><button disabled={busy} onClick={()=>void run(async signal=>{await reconcileDraft(await humanDrafts(),context,attempt,confirmSync,signal);setReview(null);setAttempt(null);setStatus('原操作、雲端紀錄及同步已核對；僅清除選定版本');await inventory(signal)})}>核對原操作，不重送</button></>:<button disabled={busy} onClick={()=>void run(async signal=>{await applyDraft(await humanDrafts(),review,lineage.current.tabId,confirmSync,signal);setReview(null);setStatus('恢復與雲端同步已核對；僅清除選定版本');await inventory(signal)})}>確認套用這些變更</button>}
+     {attempt?<><p>原操作 {attempt.id} 的結果需要核對。草稿保留，不會自動重送。</p><button disabled={busy} onClick={()=>void run(async signal=>{await reconcileDraft(await humanDrafts(),context,attempt,confirmSync,signal);onVerified();setReview(null);setAttempt(null);setStatus('原操作、雲端紀錄及同步已核對；僅清除選定版本');await inventory(signal)},true)}>核對原操作，不重送</button></>:<button disabled={busy} onClick={()=>void run(async signal=>{await applyDraft(await humanDrafts(),review,lineage.current.tabId,confirmSync,signal);onVerified();setReview(null);setStatus('恢復與雲端同步已核對；僅清除選定版本');await inventory(signal)},true)}>確認套用這些變更</button>}
      <button className="secondary" disabled={busy} onClick={()=>{setReview(null);setAttempt(null)}}>暫不恢復，保留草稿</button>
     </section>}
     <a href={window.location.href} target="_blank" rel="noopener noreferrer">另開畫布並重新驗證</a>

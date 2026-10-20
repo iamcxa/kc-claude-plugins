@@ -112,8 +112,30 @@ a replacement shared cookie cannot reconnect a different human context.
 `session_expired` is normal short expiry; `human_revalidation_due` requires a
 fresh human event; `authority_denied`/`member_denied` mean current authority is
 refused. `provider_unavailable` is an outage, not a claim of revoked membership.
-A generic host failure is an unknown operation outcome; no automatic mutation
-retry is introduced. The UI never says connected before target sync succeeds.
+A failed read before a mutation is unavailable; an unparseable or unrecognized
+response stays unknown. An uncertain apply uses original-operation reconciliation,
+never automatic retry. The UI never says connected before target sync succeeds.
+
+The mounted native canvas retains a typed recovery notice for expiry, denial,
+unavailability and unknown outcomes. It identifies the original room and offers
+a separate original-room verification tab using the configured sign-in route.
+A permission recheck reports current access while leaving the original editor
+read-only and its transport closed. Cancel keeps it paused. Successful sign-in,
+regrant and account notifications never flush the old store; explicitly review
+[local drafts](human-drafts.md) before restoring work. Ordinary offline is not
+agent revocation or uncertain credential rotation. No storage format changes.
+
+The focused synthetic recovery checks exercise both local adapters:
+
+```sh
+node --import tsx --test scripts/access-recovery.test.ts
+node scripts/access-recovery-browser-check.mjs node
+node scripts/access-recovery-browser-check.mjs cloudflare-local
+```
+
+They use the catalog suite's pinned assets and Playwright Chromium, not a live
+provider or real credential. Actual desktop/390px interactions do not establish
+physical-phone or hosted-provider acceptance.
 
 The protected Node stdio operator channel accepts `disable-member` and
 `set-room` for current member policy; Cloudflare operator access uses its private

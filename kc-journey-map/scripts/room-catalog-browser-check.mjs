@@ -194,7 +194,7 @@ try {
   const replacement = 'synthetic-replacement'
   await metadata('put', { key: 'browser-session:' + hash(replacement), value: { ...session, verifiedHumanSignInAt: now + 1 } })
   await context.addCookies([{ name: 'journey_human', value: replacement, url: origin, httpOnly: true, sameSite: 'Strict' }])
-  release(); await page.getByText(/Source access paused/).first().waitFor()
+  release(); await page.locator('.human-recovery[data-kind=denied]').waitFor()
   assert.equal(new URL(page.url()).searchParams.get('room'), 'A')
   assert.equal(await page.evaluate(() => window.editor === window.sourceEditor && window.editor.getInstanceState().isReadonly), true)
   socketAction = null
@@ -272,7 +272,7 @@ try {
  await check('catalog policy denial freezes the same source editor and keeps the original URL', async () => {
   await page.evaluate(() => { window.sourceEditor = window.editor })
   await page.route('**/auth/rooms*', route => route.fulfill({ status: 403, contentType: 'application/json', body: JSON.stringify({ category: 'authority_denied' }) }))
-  await openRooms(); await click(page.getByRole('button', { name: 'Refresh rooms' })); await page.getByText(/Source access paused/).first().waitFor()
+  await openRooms(); await click(page.getByRole('button', { name: 'Refresh rooms' })); await page.locator('.human-recovery[data-kind=denied]').waitFor()
   assert.equal(new URL(page.url()).searchParams.get('room'), 'A'); assert.equal(await page.evaluate(() => window.editor === window.sourceEditor && window.editor.getInstanceState().isReadonly), true)
   await page.keyboard.press('Escape'); await page.unroute('**/auth/rooms*'); await page.reload(); await ready('A')
  })
@@ -297,7 +297,7 @@ try {
   await metadata('put', { key, value: { ...grant, expiresAt: 1 } })
   let reads = 0
   const listener = request => { if (new URL(request.url()).pathname === '/doc') reads++ }; page.on('request', listener)
-  await chooseRoom('B'); await page.getByText(/Source access paused/).first().waitFor()
+  await chooseRoom('B'); await page.locator('.human-recovery[data-kind=denied]').waitFor()
   assert.equal(await page.evaluate(() => window.editor === window.sourceEditor && window.editor.getInstanceState().isReadonly), true)
   assert.equal(new URL(page.url()).searchParams.get('room'), 'A'); assert.equal(reads, 0)
   await page.evaluate(() => { const url = new URL(location.href); url.searchParams.set('room', 'B'); history.pushState(null, '', url); window.dispatchEvent(new PopStateEvent('popstate')) })

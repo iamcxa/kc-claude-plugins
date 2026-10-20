@@ -25,7 +25,10 @@ The operation is sent once after durable local preparation. Lost replies,
 unfinalized audit receipts, mismatched readback or unconfirmed sync retain the
 selected version. **核對原操作，不重送** checks the original correlated receipt,
 exact cloud records/absence and a fresh sync before deleting that version.
-Matching state produced by another writer is insufficient. No automatic retry,
+The retained canvas also shows an unknown-result notice after uncertain apply.
+Only successful original-operation verification clears that notice; the old
+editor stays paused. Cancel and permission recheck never clear the draft or
+resolve an uncertain cloud operation. Matching state produced by another writer is insufficient. No automatic retry,
 whole-room rollback or stronger concurrency guarantee is introduced.
 
 The original verified person can explicitly delete one local version even when

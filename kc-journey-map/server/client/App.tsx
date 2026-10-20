@@ -17,6 +17,8 @@ import { confirmRoomSwitch, documentFingerprint } from './confirm-room-switch'
 import { verifyRoomAdmission, RoomAdmissionError, sourceAdmissionLost } from './room-admission'
 import { assetUploadId } from './asset-upload-id'
 import { HumanEntry, type HumanCanvasEntry } from './HumanEntry'
+import { recoveryCause, type RecoveryCause } from './access-recovery'
+import { RecoveryNotice } from './RecoveryNotice'
 import { HumanDraftPanel } from './HumanDraftPanel'
 import { humanSocket, type HumanSocketParams } from './human-socket'
 import type { DraftContext } from '../draft-data'
@@ -111,6 +113,7 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
  const [switching, setSwitching] = useState(false)
  const [switchError, setSwitchError] = useState('')
  const [frozen, setFrozen] = useState(false)
+ const [recovery,setRecovery]=useState<RecoveryCause|null>(null)
  const editor = useRef<Editor | null>(null)
  const [currentEditor,setCurrentEditor]=useState<Editor|null>(null)
  const lifetime=useRef(0),frozenRef=useRef(false),historyRecorded=useRef(new Set<number>())
@@ -119,14 +122,15 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
  const navigation = useRef(0)
  const latestEntry = useRef(entry); latestEntry.current = entry
  const pending = useRef<{ id: number; url: URL; push: boolean; fingerprint: string; controller: AbortController } | null>(null)
- const freeze = useCallback(() => {
+ const freeze = useCallback((cause?:RecoveryCause) => {
+  if(cause)setRecovery(current=>current?.category==='draft_original_outcome_unknown'?current:cause)
   frozenRef.current=true
   navigation.current++; pending.current?.controller.abort(); pending.current = null
   setTarget(null); setSwitching(false); setFrozen(true)
   editor.current?.updateInstanceState({ isReadonly: true })
-  setSwitchError('Source access paused. Work retained here. Open another room in a separate tab and verify access.')
+  setSwitchError('Source access paused. Work retained here. Reopen this original room in a separate tab and verify access.')
  }, [])
- useEffect(() => { if (entry.problem) freeze() }, [entry.problem, freeze])
+ useEffect(() => { if (entry.problem) freeze(recoveryCause(new Error(entry.problem))) }, [entry.problem, freeze])
  useEffect(() => {lifetime.current++;return()=>{lifetime.current++;navigation.current++; pending.current?.controller.abort()}}, [])
  const restoreUrl = () => {
   if (window.location.href !== acceptedUrl.current) {
@@ -158,7 +162,7 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
    setTarget({ id, roomId: next, context:context?{...context,room:next}:undefined, uri: journeyApi('/connect/' + encodeURIComponent(next), context ? { ...context, room: next } : null) })
   } catch (error) {
    if (id !== navigation.current) return
-   if (sourceAdmissionLost(error, active.roomId)) { freeze(); return }
+   if (sourceAdmissionLost(error, active.roomId)) { freeze(recoveryCause(error)); return }
    setTarget(null); setSwitching(false); pending.current = null
    setSwitchError(error instanceof RoomAdmissionError ? `Target ${next} unavailable (${error.category}). Original room retained.` : error instanceof Error ? error.message : 'Room switch failed. Original room retained.')
   }
@@ -171,7 +175,7 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
    if (context) await verifyRoomAdmission(active.roomId, context, attempt.controller.signal)
   } catch (error) {
    if (pending.current?.id !== id) return
-   if (sourceAdmissionLost(error, active.roomId)) { freeze(); return }
+   if (sourceAdmissionLost(error, active.roomId)) { freeze(recoveryCause(error)); return }
   }
   if (pending.current?.id !== id) return
   attempt.controller.abort(); pending.current = null; navigation.current++
@@ -207,7 +211,7 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
     window.dispatchEvent(new PopStateEvent('popstate'))
    } catch (error) {
     if (canceled || attempt.id !== navigation.current) return
-    if (sourceAdmissionLost(error, active.roomId)) { freeze(); return }
+    if (sourceAdmissionLost(error, active.roomId)) { freeze(recoveryCause(error)); return }
     pending.current = null; setTarget(null); setSwitching(false)
     setSwitchError(error instanceof Error ? error.message : 'Target unavailable. Original room retained.')
    }
@@ -243,7 +247,7 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
   if (frozen || !entry.context || (connection !== 'offline' && connection !== 'error') || pausedCheck.current) return
   pausedCheck.current = true
   const controller = new AbortController()
-  verifyRoomAdmission(active.roomId, entry.context, controller.signal).catch(error => { if (error instanceof RoomAdmissionError && error.denied) freeze() }).finally(() => { pausedCheck.current = false })
+  verifyRoomAdmission(active.roomId, entry.context, controller.signal).catch(error => { if (error instanceof RoomAdmissionError && error.denied) freeze(recoveryCause(error)) }).finally(() => { pausedCheck.current = false })
   return () => controller.abort()
  }, [connection, active.roomId, entry.context?.member, frozen, freeze])
  return <RoomSelector roomId={active.roomId} human={entry.context} connection={connection} switching={switching} switchError={switchError} frozen={frozen} onDenied={freeze} onNavigate={next => {
@@ -253,15 +257,16 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
   void navigate(url, true)
  }}>
   {[...(!frozen ? [active] : []), ...(target ? [target] : [])].map(session => <RoomSync key={session.id} session={session} onStore={onStore} onPause={session.id===active.id?freeze:()=>void failTarget(session.id,'Target access paused. Original room retained.')} />)}
+  {recovery && active.context && <RecoveryNotice context={active.context} cause={recovery} onCause={cause=>setRecovery(current=>current?.category==='draft_original_outcome_unknown'?current:cause)}/> }
   <RoomCanvas key={active.id} session={active} frozen={frozen} onConnection={setConnection} onEditor={onEditor} />
-  {active.context && <HumanDraftPanel key={'draft:'+active.id} context={active.context} label={entry.label} editor={currentEditor} connection={connection} onPause={freeze}/> }
+  {active.context && <HumanDraftPanel key={'draft:'+active.id} context={active.context} label={entry.label} editor={currentEditor} connection={connection} onPause={freeze} onVerified={()=>setRecovery(null)}/> }
  </RoomSelector>
 }
 
-function RoomSync({ session, onStore, onPause }: { session: RoomSession; onStore: (id: number, store: TLStoreWithStatus) => void; onPause:()=>void }) {
+function RoomSync({ session, onStore, onPause }: { session: RoomSession; onStore: (id: number, store: TLStoreWithStatus) => void; onPause:(cause?:RecoveryCause)=>void }) {
  const assets = useMemo(() => canvasAssets(session.roomId), [session.roomId])
  const pause=useRef(onPause);pause.current=onPause
- const connect=useMemo(()=>session.context?(params:HumanSocketParams)=>humanSocket(session.uri,session.context!,()=>pause.current(),params):undefined,[session.uri])
+ const connect=useMemo(()=>session.context?(params:HumanSocketParams)=>humanSocket(session.uri,session.context!,cause=>pause.current(cause),params):undefined,[session.uri])
  const store = useSync({ ...(connect?{connect}:{uri:session.uri}), assets })
  useEffect(() => { onStore(session.id, store) }, [session.id, store, onStore])
  return null

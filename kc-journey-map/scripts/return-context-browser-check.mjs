@@ -87,7 +87,7 @@ try{
  assert.ok(!(await doc()).snapshot.documents.some(d=>d.state.id==='shape:retained'))
  const ownVersions=await inventory();assert.equal(ownVersions.length,2);const sourceSocket=latestSocket
  const another=await context.newPage();await another.goto(origin+'/?room=one');await another.waitForFunction(()=>window.editor&&document.querySelector('[data-testid="room-trigger"]')?.title.endsWith('Connected'));await another.evaluate(record=>window.editor.store.put([record]),note({id:'shape:other-tab',text:'independent tab draft',x:100,y:300,parentId:pageId}));await another.getByText('已儲存本機 v1',{exact:false}).waitFor();await another.close();assert.equal((await inventory()).length,3);const otherKey=(await inventory()).find(v=>v.key[4]!==ownVersions[0].key[4]).key
- sourceSocket.close();await page.getByText(/Source access paused/).first().waitFor();drop=false
+ sourceSocket.close();await page.locator('.human-recovery[data-kind=unavailable]').waitFor();drop=false
  await page.reload();await ready();await click(page.getByRole('button',{name:'本機草稿',exact:true}))
  await wait(async()=>await page.locator('.human-draft-body section').count()===3)
  const versionRow=n=>rowForKey(ownVersions.find(v=>v.key[5]===n).key)
@@ -114,7 +114,7 @@ try{
  await click(page.getByRole('button',{name:'核對原操作，不重送'}));await page.getByText(/原操作、雲端紀錄及同步已核對/).waitFor();assert.equal((await inventory()).length,1);assert.equal(patches,1)
  pass('lost actual mutation reply retains unknown version and sends once; explicit original-attempt reconciliation plus fresh sync removes only its exact version')
  await click(page.getByRole('button',{name:'關閉本機草稿'}));await page.reload();await ready();drop=true;await editorRecord('account pending');await page.getByText('已儲存本機 v1',{exact:false}).waitFor();const accountTabId=(await inventory()).find(v=>v.key[4]!==otherKey[4]).key[4]
- const outgoing=clientFrames.length;const accountTab=await context.newPage();await accountTab.route('**/synthetic-account-switch',route=>route.fulfill({headers:{'Content-Type':'text/html','Set-Cookie':'journey_human=return-other; Path=/; HttpOnly; SameSite=Strict'},body:'<!doctype html><title>Synthetic account switched</title>'}));await accountTab.goto(origin+'/synthetic-account-switch');await editorRecord('account swapped');await page.getByText(/Source access paused/).first().waitFor();drop=false
+ const outgoing=clientFrames.length;const accountTab=await context.newPage();await accountTab.route('**/synthetic-account-switch',route=>route.fulfill({headers:{'Content-Type':'text/html','Set-Cookie':'journey_human=return-other; Path=/; HttpOnly; SameSite=Strict'},body:'<!doctype html><title>Synthetic account switched</title>'}));await accountTab.goto(origin+'/synthetic-account-switch');await editorRecord('account swapped');await page.locator('.human-recovery[data-kind=denied]').waitFor();drop=false
  assert.ok(!clientFrames.slice(outgoing).some(s=>s.includes('account swapped')))
  await click(page.getByRole('button',{name:'本機草稿',exact:true}));await page.getByText(/身分已改變/).waitFor();assert.equal(await page.locator('.human-draft-body section').count(),0)
  await accountTab.close();await cookies('owner');await click(page.getByRole('button',{name:'重新確認草稿'}));await wait(async()=>await page.locator('.human-draft-body section').count()>0)

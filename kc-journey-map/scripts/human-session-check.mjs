@@ -38,7 +38,7 @@ export async function checkConcurrentHumanSessions({browser,origin,routeAssets,m
   const key='member-room:owner:live',policy=await metadata('get',{key})
   await metadata('put',{key,value:{...policy,revoked:true}})
   const before=frames[2].length
-  await put(replacement.page,'shape:live-forbidden',600);await replacement.page.getByText(/Source access paused/).first().waitFor()
+  await put(replacement.page,'shape:live-forbidden',600);await replacement.page.locator('.human-recovery[data-kind=denied]').waitFor()
   assert.equal(await replacement.page.evaluate(()=>window.editor.getInstanceState().isReadonly),true)
   assert.equal(new URL(replacement.page.url()).searchParams.get('room'),'live')
   assert.ok(!frames[2].slice(before).some(value=>value.includes('shape:live-forbidden')))
