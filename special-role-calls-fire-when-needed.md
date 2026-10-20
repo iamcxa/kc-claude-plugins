@@ -3,7 +3,7 @@ title: A chief-engineer or engineering-reviewer call fires when the work needs o
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-19T17:05:25Z
 worktree: .worktrees/spacedock-ensign-special-role-calls-fire-when-needed
+pr: iamcxa/kc-claude-plugins#682
 ---
 
 ## Scope
