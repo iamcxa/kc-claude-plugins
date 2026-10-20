@@ -329,6 +329,10 @@ Against delivery-gate-settles-skipped-checks (PR #680, design written): it edits
 
 **D5. Evaluation of ADR 0021 D1 (security reviewer on Sonnet): approve stage 1 now, and stage 2 only after its result?** Recommendation: approve stage 1 (reading 10 saved reports against 26 later inline findings, no model, no cost) and decide stage 2 when it reports. What gets worse: the prod security review stays on Sonnet meanwhile, and if stage 2 runs, about 40 USD assumed for 5 heads (4.5 Sonnet, 11 Opus, up to 25 Fable). The sample is small: 2 PRs hold both a saved report and later findings, so stage 1 may find no escape and still not prove Sonnet adequate.
 
+## Number guards
+
+ADR: 0026
+
 ## Stage Report: ideation
 
 - DONE: A design (PRFAQ and Mermaid) for when FO owes a chief-engineer or engineering-reviewer call, built on counts read from structured records, per the Captain's direction in Scope: candidate counts such as review findings per file or sentence across rounds (from PR review comments and their paths), validation REJECTED verdicts, Feedback Cycles or stage-report cycle headings, Captain overrides and holds, amendments that supersede accepted criteria, and a design or amendment that names an earlier Captain gate it reverses; for each, which role it calls and why
