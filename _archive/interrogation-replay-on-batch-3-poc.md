@@ -3,7 +3,7 @@ title: A pre-build story interrogation, replayed on batch 3, asks ahead of time 
 variant: kc-dev-flow-2
 profile: poc
 merge: local
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -57,10 +57,13 @@ gates:
                 reason: 'Captain 「好，照結果結案」 (chat, 2026-10-20): close the POC on the recorded result, no further arm run; the lens-versus-plain difference stays unresolved as stated in the briefing.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-20T08:18:17Z
 worktree: .worktrees/spacedock-ensign-interrogation-replay-on-batch-3-poc
 pr: local-merge:742a3caa4f6d3af46cc38ee5af19c9686d0fad72
+verdict: PASSED
+completed: 2026-10-20T12:48:02Z
+archived: 2026-10-20T12:48:02Z
 ---
 
 ## Scope
