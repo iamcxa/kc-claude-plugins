@@ -51,6 +51,7 @@ try {
   child.stdout.on('data', data => { logs += data }); child.stderr.on('data', data => { logs += data })
   await waitFor(async () => { try { return (await request('/health')).ok } catch { if (child.exitCode !== null) throw new Error(logs); return false } })
   db = new DatabaseSync(join(dataDir, 'metadata.sqlite'))
+  db.exec('PRAGMA busy_timeout=5000')
   metadata = async (operation, body) => {
    if (operation === 'put') { db.prepare('INSERT OR REPLACE INTO metadata VALUES (?, ?)').run(body.key, JSON.stringify(body.value)); return { ok: true } }
    if (operation === 'get') { const row = db.prepare('SELECT value FROM metadata WHERE key = ?').get(body.key); return row ? JSON.parse(row.value) : null }
