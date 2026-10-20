@@ -20,7 +20,7 @@ trap 'rm -f /tmp/probe.$$' EXIT
 
 if "$HERE/credential_audit.sh"; then say PASS AC-10a "no GitHub credential besides the installation token"; else say FAIL AC-10a "another credential source exists (listed above)"; fi
 
-W=$(mktemp -d); cd "$W"
+W=$(mktemp -d); cd "$W" || exit 2
 git clone -q "$REMOTE" work 2>&1 | redact; cd work || exit 2
 git config user.email probe@example.invalid; git config user.name probe
 DEF=$(git symbolic-ref --short refs/remotes/origin/HEAD); DEF=${DEF#origin/}

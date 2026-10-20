@@ -1,0 +1,28 @@
+name: ops-fo
+on:
+  workflow_dispatch:
+    inputs:
+      event_file:
+        description: Fixture event path in this repository
+        default: slice/fixture-event.json
+permissions: {}
+jobs:
+  fo:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Run the First Officer
+        env:
+          OPS_APP_TOKEN: ${{ secrets.OPS_APP_TOKEN }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          REPO: ${{ github.repository }}
+          EVENT_FILE: ${{ inputs.event_file }}
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/askpass" <<'SH'
+          #!/bin/sh
+          case "$1" in Username*) echo x-access-token ;; *) echo "$OPS_APP_TOKEN" ;; esac
+          SH
+          chmod +x "$RUNNER_TEMP/askpass"
+          GIT_ASKPASS="$RUNNER_TEMP/askpass" GIT_TERMINAL_PROMPT=0 git clone -q --depth 1 "https://github.com/$REPO.git" "$RUNNER_TEMP/src"
+          bash "$RUNNER_TEMP/src/slice/run_fo.sh"

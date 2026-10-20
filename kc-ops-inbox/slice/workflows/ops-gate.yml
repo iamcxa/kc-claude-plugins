@@ -1,0 +1,39 @@
+name: ops-gate
+on:
+  pull_request_review:
+    types: [submitted]
+permissions: {}
+jobs:
+  record:
+    if: >-
+      github.event.review.user.login == 'iamcxa'
+      && startsWith(github.event.pull_request.head.ref, 'ops/')
+      && github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - name: Record the gate from the Captain's review
+        env:
+          GH_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          HEAD_REF: ${{ github.event.pull_request.head.ref }}
+        run: |
+          set -euo pipefail
+          cat > "$RUNNER_TEMP/askpass" <<'SH'
+          #!/bin/sh
+          case "$1" in Username*) echo x-access-token ;; *) echo "$GH_API_TOKEN" ;; esac
+          SH
+          chmod +x "$RUNNER_TEMP/askpass"
+          export GIT_ASKPASS="$RUNNER_TEMP/askpass" GIT_TERMINAL_PROMPT=0
+          git clone -q --depth 1 "https://github.com/$REPO.git" "$RUNNER_TEMP/trusted"
+          git clone -q --branch "$HEAD_REF" "https://github.com/$REPO.git" "$RUNNER_TEMP/work"
+          curl -fsSL https://raw.githubusercontent.com/spacedock-dev/spacedock/main/install.sh | SPACEDOCK_INSTALL_DIR="$RUNNER_TEMP/bin" sh
+          export PATH="$RUNNER_TEMP/bin:$PATH"
+          cd "$RUNNER_TEMP/work"
+          git config user.email "ops-gate@example.invalid"; git config user.name "ops-gate"
+          before=$(git rev-parse HEAD)
+          OWNER_REPO="$REPO" CAPTAIN=iamcxa WORKFLOW_DIR=docs/ops bash "$RUNNER_TEMP/trusted/slice/record_gate_from_review.sh"
+          [ "$(git rev-parse HEAD)" = "$before" ] || git push origin "HEAD:$HEAD_REF"

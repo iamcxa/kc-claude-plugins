@@ -3,7 +3,10 @@
 Disposable proof for an `ops` Spacedock workflow. Not a plugin: no `plugin.json`, no marketplace entry.
 
 Current (Captain amendment 1): the authority boundary is GitHub, not the agent host. `github-probe/` tests
-a GitHub App token against rulesets; `slice/` holds the fixture event for the vertical slice.
+a GitHub App token against rulesets; `slice/` is the vertical slice: a manually dispatched GitHub Actions job runs the
+First Officer (`workflows/ops-fo.yml`, `run_fo.sh`); a second job records the gate only from the Captain's own
+review (`workflows/ops-gate.yml`, `record_gate_from_review.sh`). `make_scratch_tree.sh OUT` assembles the
+files committed to the scratch repository. `ops-workflow/` is its workflow (triage, decision gate, resolution, done).
 
 Shelved, committed as written and not extended: `hermes-profile/`, `rehearsal/` (hermes as the First Officer).
 
