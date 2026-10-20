@@ -262,3 +262,40 @@ Local rehearsal at candidate 4a42f9ec (launch line moved unchanged into `slice/l
 
 - Run 1 and run 2 failures were launch-line defects; this rehearsal used the same launch line the runner uses and passed, so the remaining unmeasured risks are the runner image only (Claude Code and plugin install already succeeded there twice) and whether GitHub triggers `ops-gate.yml` for the Captain's review of an App-authored Draft PR.
 - A third remote dispatch is a separate request: it needs the ruleset off/on and a master push (to land 4a42f9ec), a token re-mint and re-set, and one `gh workflow run`.
+
+## Stage Report: implementation (cycle 3, final)
+
+Candidate aae7041b on `spacedock-ensign/hermes-ops-fo-exe-dev-poc`. The scratch repository's master (`fbccbc3`) holds candidate 4a42f9ec, which lacks the last fix. Task elapsed: 2026-10-20 13:51Z to 2026-10-21 (well inside the 2-day budget).
+
+- SKIPPED: Exercise the riskiest claim first: a hermes instance (pinned Hermes Agent commit) boots by default as the Spacedock First Officer of the minimal ops workflow and stops at the ops decision gate without self-approving (AC-2, AC-3), rehearsed locally before any outward action.
+  Retired by Captain amendment 1 (2026-10-20); never run (the editable install was denied by the permission layer, no hermes login was made). The hermes skill and guard plugin are shelved as committed; the rehearsal residue was deleted.
+- DONE: Every outward action (exe.dev VM, any spend, Codex token placement, test GitHub repository and ruleset, machine account, Slack app, any message to a human) is raised to the First Officer as a decision request and waited on before it is taken; none is taken on your own judgment.
+  Taken only after a relayed Captain yes each: scratch repository and both rulesets, the five-step probe, three ruleset off/on cycles with master pushes, `OPS_APP_TOKEN` re-set before each run, one extra App push, three manual dispatches. No exe.dev VM, Slack app, Codex token, message to a human or spend beyond model use occurred.
+- FAILED: AC-1 to AC-5 each carry primary evidence in the stage report, or are named not run with the exact pending approval or blocker; a stop condition that fires ends the stage with a hold report.
+  AC-1..AC-5 are superseded; AC-6 to AC-11 below carry evidence; AC-12 FAILED (cause named below).
+
+### Evidence for AC-6 to AC-12 (primary, real GitHub unless stated)
+
+- AC-6 PASS: push to `master` declined, "push declined due to repository rule violations", master sha unchanged; re-proved after each ruleset re-enable (last 2026-10-20 16:02Z). Rulesets 25482703 and 25482704 read back with `bypass_actors: []`.
+- AC-7 PASS: API merge of a ready (non-draft) App PR: HTTP 405 "Repository rule violations found. New changes require approval from someone other than the last pusher."; PR stays open. (A merge on a Draft is refused as a draft and is not counted.)
+- AC-8 PASS: App self-approval REFUSED, HTTP 422 `Review Can not approve your own pull request`; zero reviews recorded. It was refused, not accepted-and-not-counted; the latter case is unmeasured.
+- AC-9 PASS: push to `ops/probe-*` accepted, Draft PR opened (HTTP 201, `draft: true`, author `ops-inbox-probe-iamcxa[bot]`).
+- AC-10 PASS: probe under empty `env -i` HOME: no other GitHub credential; token permissions `{contents: write, metadata: read, pull_requests: write}`, repository-selected; ruleset creation as the App: HTTP 403; an App push editing `.github/workflows/ops-gate.yml`: refused "without `workflows` permission".
+- AC-11 PASS (run 3, https://github.com/iamcxa/ops-inbox-probe-scratch/actions/runs/39453880412, 16:02:22Z to 16:03:48Z, 86 s, success): fixture event in; Claude Code 2.1.303 `--model sonnet` launched as First Officer by `spacedock claude -p`; triage worker dispatched through `spacedock dispatch build`; one task file `docs/ops/relay-bound-ceiling-near-2026-10-20.md` plus its gate room on `ops/relay-bound-ceiling-near-2026-10-20`; Draft PR #6 by the App; `verify_slice.sh` PASS twice; master unchanged. In-job credential names: only `CLAUDE_CODE_OAUTH_TOKEN` and `OPS_APP_TOKEN`; audit inside the First Officer's `env -i` environment: "no other GitHub credential source found". Runs 1 and 2 (39448281871, 39449196966) failed at launch on my PATH ordering and `claude` argument-order defects; the local rehearsal passed first (133 s, 21 turns, imputed 0.74 USD, 0 permission denials).
+- AC-12 FAILED: the Captain submitted CHANGES_REQUESTED on PR #6 at head 51260a9848, body "test request changes" (review 5587945359, user `iamcxa`). `ops-gate.yml` DID trigger (run 39454533717, event `pull_request_review`, 16:06:43Z to 16:06:53Z, success) and recorded NOTHING: its log shows `curl: (22) ... 403` fetching the reviews, then "no-op: no review by iamcxa on 51260a98...". Cause (mine): the job's `permissions` omitted `pull-requests: read`, so the GITHUB_TOKEN could not list reviews; the recorder also reported a fetch failure as a harmless no-op. Result: gate still `awaiting-captain` (no `gate record`), nothing approved, nothing merged (PR #6 open, Draft, `mergeable_state: blocked`; master `fbccbc3`). Failing safe, not failing right.
+
+### Fix prepared, not landed
+
+aae7041b adds `pull-requests: read` to the gate job and makes a failed review fetch exit 1 (only "no review by the Captain on this head" stays a no-op). Local proof on a real inline workflow with a fake API: reviews 403 -> exit 1, gate stays open; empty list -> no-op; Captain CHANGES_REQUESTED "test request changes" -> `gate record --decision revise --actor person:captain`, reason `GitHub review 5 by iamcxa on <head>: test request changes`. To close AC-12 on GitHub: ruleset off/on, master push, then the Captain submits a new review (a rerun of run 39454533717 would reuse the old workflow definition). That is a separate request.
+
+### Material limits and findings
+
+- roborev on aae7041b (evidence=roborev:948, exit 1), two Critical: (1) shelved hermes guard regex bypassable, moot while shelved; (2) real: `run_fo.sh` and `ops-gate.yml` execute `install.sh` fetched from the mutable `main` branch of spacedock-dev/spacedock while the App token, GITHUB_TOKEN and model token are present (the script checksum-verifies the tarball, not itself). Accepted for a scratch POC; production needs the script pinned to a tag or commit and verified. comment_ratio: 1.0%, max 5% met. doc_impact: `kc-ops-inbox/ops-workflow/README.md` unaffected: it states the recorder's role, which the fix does not change.
+- Not shown: an App approving someone else's PR counted or not; that a First Officer on a self-hosted or longer-lived runner stays credential-clean; that `OPS_APP_TOKEN` can be minted inside the workflow (the App key stayed local; the pre-minted token lasts 1 h); GitHub Actions minutes (about 2 min per attempt, plan Pro, included allowance not re-read); real subscription cost (imputed only).
+- `design_surfaces.py check` still fails on `## FO alignment` (FO-owned `Surfaces:` and `Visible change:`).
+- Disclosed side effect: a local smoke launch of `spacedock claude -p` auto-refreshed the Captain's local Claude plugin, adding `~/.claude/plugins/cache/spacedock/spacedock/0.27.3` beside 0.27.0 (`spacedock doctor --host claude`: OK).
+- Left on GitHub for the Captain to delete: the scratch repository (workflows, probe branches `ops/probe-*` and Draft PRs #1 to #6 with their `ops/` branches, both secrets, the App `ops-inbox-probe-iamcxa` and its key at `~/.config/ops-inbox-probe/app.pem`).
+
+### Summary
+
+The authority boundary at GitHub held in every probe: the App token could not reach main, merge, self-approve or edit workflows, and the First Officer ran headless on a hosted runner and filed one task and one Draft PR under a clean credential audit. The gate recording from the Captain's review did not work in the one run it got, because of a missing job permission; the fix is written and locally proven but not on GitHub.
