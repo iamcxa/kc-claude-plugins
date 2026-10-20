@@ -28,6 +28,7 @@ cleanenv=(env -i PATH="$PATH" HOME="$FO_HOME" GIT_CONFIG_GLOBAL=/dev/null GIT_CO
   "$MODEL_VAR=${!MODEL_VAR:-}" AUDIT_ALLOW="PROBE_TOKEN GH_TOKEN $MODEL_VAR")
 
 "${cleanenv[@]}" sh -c "command -v spacedock" >/dev/null || { echo "spacedock is not on the First Officer PATH" >&2; exit 1; }
+mkdir -p /tmp/spacedock-dispatch
 WORK=$(mktemp -d)
 "${cleanenv[@]}" git clone -q "$REMOTE" "$WORK/repo"
 cd "$WORK/repo"
@@ -42,7 +43,7 @@ if [ -n "${FO_LAUNCH:-}" ]; then
   "${cleanenv[@]}" env SLUG="$SLUG" "$FO_LAUNCH"
 else
   "${cleanenv[@]}" spacedock claude "$PROMPT" -- -p --model sonnet --max-budget-usd "${FO_MAX_BUDGET_USD:-5}" --permission-mode acceptEdits --permission-prompts none \
-    --allowedTools "Bash(spacedock:*) Bash(git:*) Bash(gh pr create:*) Bash(ls:*) Bash(cat:*) Read Write Edit Agent Skill"
+    --allowedTools "Bash(spacedock:*) Bash(git:*) Bash(gh pr create:*) Bash(ls:*) Bash(cat:*) Read Write Edit Grep Glob Agent Skill SendMessage" --add-dir /tmp/spacedock-dispatch
 fi
 
 echo "== verify"
