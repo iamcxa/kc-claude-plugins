@@ -300,12 +300,73 @@ class PocFreezeTests(unittest.TestCase):
             self.assertIn("migration guard skipped", out)
 
 
+class NoMigrationsDeclaredTests(unittest.TestCase):
+    def run_none(self, fx, task, *args):
+        return fx.run("check", "--repo", fx.repo, "--migrations-path", "none", "--base", "main", "--head", "feature",
+                      "--task", str(task), *args)
+
+    def test_a_db_task_on_a_clean_candidate_passes_with_the_skip_line_and_the_readme_value_is_read(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td, tempfile.TemporaryDirectory() as wf:
+            fx = Fixture(tmp)
+            fx.commit("base", app="x")
+            fx.git("checkout", "-qb", "feature")
+            fx.commit("work", app="y")
+            task = task_file(td, surfaces="db")
+            code, out = self.run_none(fx, task)
+            self.assertEqual(code, 0, out)
+            self.assertIn("migration guard skipped: README declares migrations-path: none", out)
+            self.assertIn("PASS: no findings", out)
+            Path(wf, "README.md").write_text("---\ntrunk: main\n# no migration files\nmigrations-path: none\n---\n")
+            code, out = fx.run("check", "--repo", tmp, "--workflow-dir", wf, "--head", "feature", "--task", str(task))
+            self.assertEqual((code, "README declares migrations-path: none" in out), (0, True), out)
+
+    def test_the_adr_rules_still_run_for_a_db_task(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
+            fx = Fixture(tmp)
+            fx.commit("base", **{"docs__adr__0001-first.md": "x"})
+            fx.git("checkout", "-qb", "feature")
+            fx.commit("clash", **{"docs__adr__0001-second.md": "x"})
+            code, out = self.run_none(fx, task_file(td, "ADR: 0001", surfaces="db"))
+            self.assertEqual((code, "FAIL R5" in out), (1, True), out)
+
+    def test_an_added_numbered_sql_file_fails_r7_for_a_poc_and_a_non_poc_task_and_other_changes_do_not(self):
+        for profile in ("pilot", "poc"):
+            with self.subTest(profile=profile), tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as td:
+                fx = Fixture(tmp)
+                fx.commit("base", **{"db__old__0001_old.sql": "x"})
+                fx.git("checkout", "-qb", "feature")
+                fx.commit("edit and unrelated sql", **{"db__old__0001_old.sql": "y", "db__seed.sql": "z"})
+                task = Path(td, "task.md")
+                task.write_text(f"---\nprofile: {profile}\n---\n\nSurfaces: db\n")
+                code, out = self.run_none(fx, task)
+                self.assertEqual((code, "FAIL R7" in out), (0, False), out)
+                fx.commit("added", **{"db__migs__0002_x.sql": "x"})
+                code, out = self.run_none(fx, task)
+                self.assertEqual((code, "FAIL R7: db/migs/0002_x.sql" in out), (1, True), out)
+
+    def test_reserve_refuses_a_migration_number_under_none_and_still_prints_the_next_adr_number(self):
+        with tempfile.TemporaryDirectory() as tmp, tempfile.TemporaryDirectory() as state:
+            fx = Fixture(tmp)
+            fx.commit("base", **{"docs__adr__0001-a.md": "x"})
+            task = Path(state, "t.md")
+            task.write_text("")
+
+            def reserve(kind):
+                return fx.run("reserve", "--kind", kind, "--repo", tmp, "--migrations-path", "none", "--base", "main",
+                              "--state-dir", state, "--task", str(task))
+
+            code, out = reserve("migration")
+            self.assertEqual((code, "no migration number to reserve" in out, "no migration file matching" in out),
+                             (2, True, False), out)
+            self.assertEqual(reserve("adr"), (0, "ADR: 0002\n"))
+
+
 class HelpTests(unittest.TestCase):
-    def test_help_names_every_rule_from_r1_to_r6(self):
+    def test_help_names_every_rule_from_r1_to_r7(self):
         done = subprocess.run(["python3", "-B", SCRIPT, "--help"], capture_output=True, text=True)
         self.assertEqual(done.returncode, 0, done.stderr)
         rules = done.stdout.split("Limits:")[0]
-        for n in range(1, 7):
+        for n in range(1, 8):
             self.assertRegex(rules, rf"\bR{n} ")
 
 
@@ -317,6 +378,8 @@ class MisconfigurationTests(unittest.TestCase):
                                "--task", str(task_file(td, surfaces="db")))
             self.assertEqual(code, 2)
             self.assertIn("Surfaces: db but no migrations-path", out)
+            self.assertIn("migrations-path: <directory>", out)
+            self.assertIn("migrations-path: none", out)
 
     def test_no_db_surface_and_no_key_skips_loudly(self):
         with tempfile.TemporaryDirectory() as tmp:

@@ -470,8 +470,8 @@ Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, inc
   records `Applied: none as of <candidate sha>`, so a task with neither line has a
   skipped record. A task with no `Migration:` line records no `Applied:` line.
 - **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
-  validation gate. Without `migrations-path:` the migration rules are skipped, so a POC
-  is not guarded until the README declares it.
+  validation gate. Without `migrations-path:` a db task exits 2 and a POC is not guarded;
+  `none` declares no migration files.
 - **Collision.** When two tasks hold one migration number (`check` reports R3 or R5 on
   the later candidate; nothing compares task files), the task whose migration is applied
   keeps it and the other, unapplied task renumbers, so no reset is needed. A migration

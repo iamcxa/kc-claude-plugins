@@ -22,6 +22,8 @@ On `main` at `b753d344` (read 2026-09-30), nothing in the package compared a can
 - a check on the meaning of the SQL change — rejected; the checksum covers every byte, so a comment trim breaks a deploy
 - a compensating migration for the renumber of an applied file — rejected by the Captain; reset the non-production branch database instead, documented, no wrapper built
 
+**Recommended:** not recorded
+
 A candidate that modifies or deletes a migration file present at its merge-base with the base branch, or present in a commit recorded as `Applied at: <environment> <sha>`, fails `check`; the fix is a new migration. The First Officer reserves a migration and an ADR number per task before implementation with `reserve`, and `check` reruns at implementation exit, at validation and against the fetched base tip before merge.
 
 ## Consequences
@@ -31,3 +33,5 @@ An edit to an applied migration now fails at three call sites instead of at a pr
 Amended 2026-10-01 (Captain: 「准」 at the backlog gate, 「可以」 at the ideation gate): a shared non-production environment is a database branch or a separate hosting project whose database is that project's own production database, and its applied migrations freeze (「准」); on a number collision the task whose migration is applied (an `Applied at:` line, or on the base branch) keeps its number and the other renumbers without a reset, and only a renumbering task that is itself applied needs the Captain to reset the branch or to delete and recreate a shared non-production database that cannot be reset (「准」); a migration on the base branch counts as applied, and of two applied unmerged tasks the first to merge keeps its number (「可以」) (`workflow.md` Number guards).
 
 Amended 2026-10-01 (Captain: 「ok」 at the backlog gate, 「可以」 at the ideation gate): a `poc` task adds, edits and deletes no migration file (「ok」); `check` fails (R6) any file under `migrations-path:` that differs from the merge-base for a task whose frontmatter says `profile: poc`, and the failure is a `boundary-crossed: persistent-state` crossing, not repaired in place (「可以」) (`workflow.md` Number guards).
+
+Amended 2026-10-20 (Captain: 「可以」 and 「要」 at the ideation gate of the task `db-surface-without-migrations`, answering D1 and D2 as recommended): a repository whose database holds no migration files declares `migrations-path: none` in its workflow README (「可以」); `check` then skips R1 to R3 and R6, still runs the ADR rules R4 and R5 for a db task, prints `migration guard skipped: README declares migrations-path: none`, and fails R7 for a candidate that adds a file named `NNNN_name.sql` (「要」). With no `migrations-path:` a db task still exits 2, and the message names both declarations. Order for an adopter: update the package pin first, then declare `none`; the 0.26.0 script reads `none` as a directory and exits 2 for every task (`workflow.md` Number guards).
