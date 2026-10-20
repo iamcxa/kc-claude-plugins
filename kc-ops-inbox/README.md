@@ -1,9 +1,13 @@
 # kc-ops-inbox POC artifacts
 
-Disposable proof that one hermes instance can act as the First Officer of an `ops`
-Spacedock workflow. Not a plugin: no `plugin.json`, no marketplace entry.
+Disposable proof for an `ops` Spacedock workflow. Not a plugin: no `plugin.json`, no marketplace entry.
 
-Pinned third-party: Hermes Agent `31df1227890643eb9f5f08db6b2a5c37d4a6f5cc`.
+Current (Captain amendment 1): the authority boundary is GitHub, not the agent host. `github-probe/` tests
+a GitHub App token against rulesets; `slice/` holds the fixture event for the vertical slice.
+
+Shelved, committed as written and not extended: `hermes-profile/`, `rehearsal/` (hermes as the First Officer).
+
+Shelved pin: Hermes Agent `31df1227890643eb9f5f08db6b2a5c37d4a6f5cc`.
 
 - `ops-workflow/README.md` - minimal workflow: `inbox` (initial, gate) -> `resolution` -> `done`.
 - `hermes-profile/` - `config.yaml`, `SOUL.md`, `env.example` (names only), skill `ops-first-officer`, plugin `ops-gate-guard`.

@@ -1,0 +1,8 @@
+{
+  "repository_permissions": { "contents": "write", "pull_requests": "write", "metadata": "read" },
+  "organization_permissions": {},
+  "account_permissions": {},
+  "webhook": "inactive",
+  "install_scope": "only the scratch repository",
+  "installable_by": "only this account"
+}
