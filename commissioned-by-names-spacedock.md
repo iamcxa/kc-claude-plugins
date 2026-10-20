@@ -46,6 +46,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-20T04:57:42Z
+worktree: .worktrees/spacedock-ensign-commissioned-by-names-spacedock
 ---
 
 ## Scope
