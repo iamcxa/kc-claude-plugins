@@ -3,7 +3,7 @@ title: The four FO-write rules observers keep finding broken are checked when FO
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-20T04:58:17Z
 worktree: .worktrees/spacedock-ensign-fo-write-rules-checked
+pr: iamcxa/kc-claude-plugins#687
 ---
 
 ## Scope
