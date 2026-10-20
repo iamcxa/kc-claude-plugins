@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: poc
 merge: local
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:interrogation-replay-on-batch-3-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:interrogation-replay-on-batch-3-poc-backlog-1
+              briefing:
+                id: briefing:interrogation-replay-on-batch-3-poc:backlog:attempt-1:revision-1
+                digest: sha256:a5555d361feb6b200d07e23e6376f9a6c371f11ad3e624453d9cd0f43abaa7f6
+                room-ref: ./interrogation-replay-on-batch-3-poc/review/backlog/briefing-1
 ---
 
 ## Scope

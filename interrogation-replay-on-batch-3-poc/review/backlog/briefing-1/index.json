@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:interrogation-replay-on-batch-3-poc:backlog:attempt-1:revision-1",
+  "question": "Approve this POC with profile poc, the one-task budget (captain-question-load first; the other batch-3 tasks only on your word) and the falsifier as written? Approving starts implementation.",
+  "artifacts": [
+    {
+      "id": "artifact:interrogation-replay-on-batch-3-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/03a56dd5d0b34d2357170c0dc9cfad323ffd881c/interrogation-replay-on-batch-3-poc.md",
+      "rev": "sha256:5a4f886210e28268afa08cc53ed7d0a6e37b9c67c1b62fa4aee30e7e07ceb947",
+      "mediaType": "text/markdown",
+      "summary": "Four interrogator arms (Claude sonnet default; Claude Opus with the engineering-reviewer skill; Codex pinned model at high; the same Codex with the engineering-reviewer skill) replay kc-journey-map's interrogation on the code snapshot captain-question-load started from; the answer key (its Captain decisions and design-gap P1s) is read only after the arms run. Falsifier: under 25% of key items asked by any arm, or more than three ungrounded questions per hit."
+    }
+  ]
+}
