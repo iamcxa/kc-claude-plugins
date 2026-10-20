@@ -225,3 +225,13 @@ D1 and D3 are coupled: D3 only has meaning if D1 builds the measurement.
 ### Summary
 
 The gap in kc-dev-flow-2 is an unbound report, not a missing check: nearly every latest validation report mentions the script, only 13 of 77 can be compared, and 2 of those 13 were measured at an earlier head. The design reuses the gate's already-fetched PR patches and the `Security review (validation)` pattern, adds no new script, FO word or GitHub call, and leaves the semantic read and the ratio hold out. The one risk for the Captain is that measured harm is zero, so D1 is a question of whether a bound record is worth a recheck for tasks validated under the old wording.
+
+## Closed
+
+Closed 2026-10-20 at the ideation gate. Captain 「那就按建議不做」 (batch-4 sitting, question 4): D1 not built, as FO recommended; D2 and D3 lapse.
+
+Reason, measured:
+- 0 of 77 delivered heads hid a changed comment count (this task's ideation, `## Design`).
+- PRs merged to iamcxa/kc-claude-plugins main 2026-10-13..2026-10-20, release and workflow-sync PRs excluded: 29 PRs, 9226 code lines and 33 comment lines added, 0.36%; the highest single PR 2.1%; 0 added comments citing task numbering, review provenance, a PR or issue number, or a file:line. Measured by FO with `kc-dev-flow-2/scripts/comment_ratio.py --max 3.0 <merge>^ <merge>` (0.26.0), the merge-commit PR #653 with its first parent. Limit: the script counts .py, .ts, .tsx, .js, .mjs and .sql only; the window added no shell lines.
+
+Reopen when a delivered head is found to carry a comment ratio above the maximum or a citing comment that the reports did not show. Issue #409 stays open; closing it is not this task's.
