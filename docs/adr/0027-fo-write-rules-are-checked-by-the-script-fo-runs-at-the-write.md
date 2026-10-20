@@ -32,7 +32,7 @@ The rule later work must follow: a first officer's write that an observer would 
 ## Consequences
 
 Bounded claims, each with what it rests on:
-- Rule 4 here is a sentence FO reads. No script reads the approved question, so a merge FO makes without running `delivery_gate.py check`, and any merge of a PR with no task (the Release PR, a learning PR), has no check. The premise is the settings read above; it holds for that machine on that date.
+- Rule 4 here is a sentence FO reads. No script checks that an approved question named the merge, so a merge FO makes without running `delivery_gate.py check`, and any merge of a PR with no task (the Release PR, a learning PR), has no check. The premise is the settings read above; it holds for that machine on that date.
 - Rule 1 is unchecked. Order cannot discriminate (24 of 24 follow-ups tasks that cite a task PR were filed before the approval they cite) and one case was observed. Reopen it as a read of a structured Captain-rulings field if one lands.
 - The Scope check reads git history and the working copy, not what the Captain said in chat. An amendment covers every earlier unrecorded Scope edit, and the check cannot tell whether the amendment is about that edit or whether the words in it are his. It does not run outside `status: ideation`, so a Scope edit after the ideation gate is unchecked (none observed).
 - The decline join sees only reports that state findings as F-numbered bullets; a half-reason inside one finding passes, and a stated reason is checked for presence, not truth (ADR 0025).
