@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-20T04:57:48Z
 worktree: .worktrees/spacedock-ensign-db-surface-without-migrations
-pr: iamcxa/kc-claude-plugins#686
+pr: pr-merge:686
 ---
 
 ## Scope
