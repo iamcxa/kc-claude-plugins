@@ -238,3 +238,68 @@ Declare "no migration files" once as `migrations-path: none`; `check` then passe
 ### Summary
 
 Implemented `migrations-path: none` plus R7 as accepted; undeclared db task stays exit 2 with a message naming both declarations. The relay record replay moved from exit 2 to exit 0 with a 16-word output. One roborev High finding is an accepted non-goal, left to FO and the Captain.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #686 head 8c3a60e1 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for head 8c3a60e1312b289a768a7156af771bd3df49bb7e (base ad44f0cb). AC-1..5: 28 tests OK (old 24 also pass unmodified against the new script); mutations on a copy, python3 -B, caches cleared: drop db raise or drop `none` from message fails the AC-1 test; db test above `none` fails 4; delete R7 loop fails 2; `none` as directory fails 4; drop reserve refusal fails 1. AC-6: lint 5374 of 5374 rc 0, one extra word gives rc 1 "exceeds the budget", test_poc_readme rc 0. AC-7: `adr_lint docs/adr` and `--since origin/main` rc 0; the paragraph quotes D1 「可以」 D2 「要」 from the ideation gate record; removing the added `**Recommended:** not recorded` line makes `--since` rc 1, so that line is required, not extra. AC-8: relay origin/main 25f1c5e9 plus README copy with `none`: 0.26.0 script rc 2; candidate rc 0, 16 words (skip line, PASS, base/head line) against 263; candidate without the key rc 2 naming both declarations. AC-9: PR body carries the order sentence; 0.26.0 with `none` on a `Surfaces: ui` task rc 2 (reproduced). Limits judged: R7 sees only NNNN_name.sql (accepted, stated in AC-3); order of declaring is unenforced (accepted, AC-9; early declaration is loud, rc 2); `delivery_gate.py` `none/` prefix is a stated non-goal, not re-measured. Also: comment_ratio 0 of 78 code lines rc 0; doc_impact lists two journey docs, both `unaffected` and I confirmed they name the script by path only; dispatch_records 4 complete; design_surfaces presentable; number_guards check on this task at the head rc 0 (Surfaces none). CI on the head: unit tests, version parity, route gate, GitGuardian all SUCCESS; PR is Draft.
+- DONE: Judge the open roborev High finding (evidence=roborev:932: under none, R1 and R2 are skipped without checking that the base holds no NNNN_name.sql, so a misdeclared repository can modify an existing migration unseen), which implementation left unfixed as deferred risk under AC-3: classify it by the Review-finding disposition, say whether a base check under none is inside the accepted design, and measure whether any of relay, web, qnow or this repository holds such a file today
+  The finding is true (reproduced: base holds db/migs/0001_x.sql, candidate edits it, `--migrations-path none` rc 0 "PASS", the real directory rc 1 `FAIL R1`). Classification: Deferred risk. Field 1 (released user and workflow): the supported workflow is an adopter declaring `none` because it has no migration files, a misdeclaration is not that workflow; field 4 (trigger): none observed. Field 3 would have to be value-ac[AC-3], which says the opposite: a modified or deleted existing `.sql` is not R7's business. Would become Material if an adopter declares `none` while its base holds NNNN_name.sql. A base check under `none` is outside the accepted design: the Captain's D2 「要」 covers R7 on an added file only; a base check is a new rule, so it is a Needs decision only if the Captain wants it, and I do not recommend it now. Measured 2026-10-20 with `git ls-tree -r --name-only origin/main` after `git fetch origin main`: subspace-relay (25f1c5e9) 0 files named NNNN_name.sql and 0 `.sql`; subspace-web (0d77374) 0 and 0; this repository (ad44f0cb) 0 NNNN_name.sql; qnow (7b0cac585) holds 174 but declares `migrations-path: apps/qnow-api/netlify/database/migrations` on `origin/next` (its trunk), so it is not a `none` candidate and keeps R1 to R3.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below ran as `env -i HOME=$HOME PATH=$PATH /bin/bash accept.sh` (needs network to github.com and python3, about 25 s); observed output below. `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0/scripts/adr_lint.py docs/adr --since ad44f0cbf42274ff65802cabc52ebe919f159fd5` at the head: "26 ADR file(s) checked, 0 legacy", exit 0. Findings: roborev:932 Deferred risk (above); Polish: `test_help_names_every_rule_from_r1_to_r7` edits an existing test beyond AC-5's one named exception (AC-1), harmless, the old test still passes; no Material finding, no Needs decision from the candidate itself. Verdict PASSED for 8c3a60e1312b289a768a7156af771bd3df49bb7e. Throwaway worktree removed; no push, PR comment or ready mark.
+
+### Acceptance script
+
+Steps 1 to 6 below are one bash script (steps 3a and 3b are one step with two commands). It fetches the PR head into a scratch directory, builds a scratch repository with no migration files, and runs the guard. It does not touch any real repository and does not cover `delivery_gate.py`, README parsing from a real adopter README (covered by AC-8 and the unit test) or any CI.
+
+```bash
+set -u
+SHA=8c3a60e1312b289a768a7156af771bd3df49bb7e
+D=$(mktemp -d)
+G="git -c user.name=t -c user.email=t@example.com"
+echo "STEP 1: fetch the candidate (PR 686 head) into $D/pkg"
+git init -q "$D/pkg" && git -C "$D/pkg" fetch -q --depth 1 https://github.com/iamcxa/kc-claude-plugins.git "$SHA" && git -C "$D/pkg" checkout -q --detach FETCH_HEAD && git -C "$D/pkg" rev-parse HEAD
+NG="python3 -B $D/pkg/kc-dev-flow-2/scripts/number_guards.py"
+echo "STEP 2: the guard's own tests"
+python3 -B -m unittest discover -s "$D/pkg/kc-dev-flow-2/scripts" -p test_number_guards.py 2>&1 | tail -3
+echo "STEP 3: scratch repo with no migration files, one ADR on main, a db task"
+R="$D/repo"; git init -q -b main "$R"; mkdir -p "$R/docs/adr"; echo a > "$R/docs/adr/0001-first.md"; echo x > "$R/app.txt"
+$G -C "$R" add -A && $G -C "$R" commit -q -m base && $G -C "$R" checkout -q -b feature && echo y > "$R/app.txt" && $G -C "$R" commit -qam work
+printf '## Number guards\nADR: 0001\n\nSurfaces: db\n' > "$D/task.md"
+echo "STEP 3a: db task, nothing declared -> expect exit 2 naming both declarations"
+$NG check --repo "$R" --base main --head feature --task "$D/task.md"; echo "exit=$?"
+echo "STEP 3b: same, declared none -> expect skip line, PASS, exit 0"
+$NG check --repo "$R" --base main --head feature --task "$D/task.md" --migrations-path none; echo "exit=$?"
+echo "STEP 4: feature adds an ADR number main already has -> expect FAIL R5, exit 1 (ADR rules still run under none)"
+echo b > "$R/docs/adr/0001-second.md"; $G -C "$R" add -A && $G -C "$R" commit -qm clash
+$NG check --repo "$R" --base main --head feature --task "$D/task.md" --migrations-path none; echo "exit=$?"
+echo "STEP 5: feature adds db/migs/0001_x.sql -> expect FAIL R7 beside FAIL R5, exit 1"
+mkdir -p "$R/db/migs"; echo z > "$R/db/migs/0001_x.sql"; $G -C "$R" add -A && $G -C "$R" commit -qm sql
+$NG check --repo "$R" --base main --head feature --task "$D/task.md" --migrations-path none; echo "exit=$?"
+echo "STEP 6: reserve a migration number under none -> expect exit 2, no number"
+mkdir -p "$D/state"; : > "$D/state/t.md"
+$NG reserve --kind migration --repo "$R" --base main --migrations-path none --state-dir "$D/state" --task "$D/state/t.md"; echo "exit=$?"
+```
+
+Observed output (temp path shortened):
+
+```
+STEP 1: ... 8c3a60e1312b289a768a7156af771bd3df49bb7e
+STEP 2: Ran 28 tests in 17.329s / OK
+STEP 3a: number_guards: task has Surfaces: db but no migrations-path is declared (set migrations-path: <directory> in the workflow README, or migrations-path: none when the repository has no migration files)
+exit=2
+STEP 3b: migration guard skipped: README declares migrations-path: none
+PASS: no findings
+exit=0
+STEP 4: FAIL R5: docs/adr/0001-second.md: base already has 0001 (0001-first.md)
+exit=1
+STEP 5: FAIL R7: db/migs/0001_x.sql: added, but the README declares migrations-path: none
+FAIL R5: docs/adr/0001-second.md: base already has 0001 (0001-first.md)
+exit=1
+STEP 6: number_guards: no migrations-path directory declared, so there is no migration number to reserve (pass --migrations-path or set it in the workflow README)
+exit=2
+```
+
+### Summary
+
+PASSED for head 8c3a60e1. All nine criteria hold and each falsifier failed under mutation; the relay replay moved from exit 2 to exit 0 with 16 words. The roborev High finding is true but a Deferred risk: no repository measured declares `none` while holding a numbered migration, and a base check is a new rule outside the Captain's D2, so it is the Captain's call only if he wants it.
