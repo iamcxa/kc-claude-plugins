@@ -4,9 +4,11 @@ Date: 2026-10-20
 
 ## Status
 
-Accepted; implementation candidate remains disabled pending independent validation and provider evidence.
+Accepted
 
 ## Context
+
+The implementation candidate remains disabled pending independent validation and provider evidence.
 
 The prior human-entry fixture denied a new HTTP request while an existing viewer
 received a later update. Pairing preserved family denial but outgoing delivery
