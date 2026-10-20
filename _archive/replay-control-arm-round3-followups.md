@@ -3,7 +3,10 @@ title: replay_dispatch.py builds a control arm free of the completion line even 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:09:36Z
+archived: 2026-10-20T05:09:36Z
 ---
 
 Declined under the round-3 rule from the third external review round (Codex) of iamcxa/kc-claude-plugins PR #633 (head 01eaf231, review:5501913355), 2026-10-13, task `worker-completion-goes-to-main`, plus one Polish and one Deferred risk its validation cycle 3 recorded. None is P1 or Material, so none started a repair cycle there; each is filed here with its decline reason, per `## FO steps: review findings` step 5.
