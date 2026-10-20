@@ -3,7 +3,7 @@ title: The delivery check settles a check run its repository skips by design, so
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved delivery in chat (「准」) after the gate briefing: FO merges #680 head 559f5da6 with --match-head-commit and removes its clean, pushed worktree; the engineering-reviewer''s two residuals accepted into delivery-gate-settles-skipped-checks-followups and roborev:914''s High waived as false, as the gate question states'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-19T15:34:07Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-settles-skipped-checks
 pr: pr-merge:680
+verdict: PASSED
+completed: 2026-10-20T02:17:34Z
+archived: 2026-10-20T02:17:35Z
 ---
 
 ## Scope
