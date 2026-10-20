@@ -218,3 +218,22 @@ D1 and D2 are coupled: R7 is meaningful only because `none` is a declaration; if
 ### Summary
 
 Declare "no migration files" once as `migrations-path: none`; `check` then passes a db task with a visible skip line, keeps the ADR rules (which exit 2 skips today), and a new R7 fails if an `NNNN_name.sql` appears under `none`. Undeclared stays exit 2. The README sentence is replaced at equal word count, so no budget step. Two Captain decisions (D1 value versus new key, D2 R7); the adopter order (declare only after the pin) is the one residual no check enforces.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main (ad44f0cbf42274ff65802cabc52ebe919f159fd5) implementing the design as the Captain accepted D1 and D2 at the ideation gate (migrations-path: none, and R7 fails an added NNNN_name.sql under it): every file the design's Batch overlap list names
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/686, commit 8c3a60e1 on spacedock-ensign/db-surface-without-migrations; files: number_guards.py, test_number_guards.py, workflow.md (one bullet), ADR 0002 (one Amended paragraph; also `**Recommended:** not recorded`, which `adr_lint --since` requires of a touched older record).
+- DONE: Every acceptance criterion AC-1 to AC-9 green with the evidence each names, each falsifier shown failing by a mutation (python3 -B, caches cleared), including AC-8's replay on the real relay record; AC-7's paragraph quotes the Captain's gate words verbatim; AC-9's order sentence in the PR body
+  AC-1..5: 28 tests pass (24 old + 4 new). Mutations: remove db test or drop `none` from message -> AC-1 test fails; db test above `none` branch -> 4 fail; delete R7 loop -> 2 R7 subtests fail; `none` read as directory -> 4 fail; drop reserve refusal -> 1 fails. AC-6: lint 5374/5374, extra word -> exit 1 "exceeds the budget"; test_poc_readme exit 0. AC-7: paragraph quotes D1 「可以」 D2 「要」 from the gate record reason; adr_lint exit 0. AC-8: relay 25f1c5e9, 0.26.0 script exit 2; candidate with README copy + `none` exit 0, 16 words, skip line + PASS; no key exit 2 naming both. AC-9: in PR body and ADR paragraph.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py exits 0; kc-dev-flow-2/scripts/adr_lint.py docs/adr exits 0; roborev evidence= line; push without force and without -u; CI green on the PR head; CI cost measured or stated as not measured
+  lint-skills exit 0; adr_lint exit 0 (also `--since origin/main` exit 0); `findings on 8c3a60e13; evidence=roborev:932` (one High finding, below); pushed plain `git push origin <branch>`; CI cost stated "not measured" in PR body; CI state: see Summary.
+- DONE: comment_ratio and doc_impact
+  comment_ratio: code lines 78, comment lines 0, 0.0%, max 5% met. doc_impact lists docs/journey/kc-decision-log/README.md: unaffected: it links workflow.md and the script by path and describes no migrations-path or skip rule; docs/journey/kc-decision-log/slices-proposal.yaml: unaffected: it lists number_guards.py as a path and a reserve use, not the declaration or skip behaviour.
+
+### Findings for FO
+
+- roborev:932 High: `none` disables R1/R2 without checking the base holds no `NNNN_name.sql`, so a misdeclared repository can modify an existing migration unseen; R7 only sees added files. Not fixed: AC-3 (Captain-accepted) says a modified or deleted existing `.sql` is not R7's business, and the declaration is the adopter's own statement. Deferred risk; would become material if an adopter declares `none` while holding migrations. Gate was run once; no repair round.
+
+### Summary
+
+Implemented `migrations-path: none` plus R7 as accepted; undeclared db task stays exit 2 with a message naming both declarations. The relay record replay moved from exit 2 to exit 0 with a 16-word output. One roborev High finding is an accepted non-goal, left to FO and the Captain.
