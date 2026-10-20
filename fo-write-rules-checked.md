@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:fo-write-rules-checked:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:fo-write-rules-checked-ideation-1
+              briefing:
+                id: briefing:fo-write-rules-checked:ideation:attempt-1:revision-1
+                digest: sha256:a855b119b8b772d21284fbf6b2dc1e75673e6c185ebfbb7971c8326423d7d5ca
+                room-ref: ./fo-write-rules-checked/review/ideation/briefing-1
 started: 2026-10-20T04:58:17Z
 ---
 

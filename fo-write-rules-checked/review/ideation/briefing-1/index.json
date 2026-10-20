@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-write-rules-checked:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of fo-write-rules-checked to enter implementation, with decisions D1-D7 as the Captain rules each one in the batch-4 sitting (listed first, asked one at a time)? An approval accepts a decision's recommendation only where his ruling says so; a decision he changes is recorded in the reason, and a scope change goes in as an amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-write-rules-checked:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4e5f7cd69774e9f652652f0e7e2d56160c1c9c17/fo-write-rules-checked.md",
+      "rev": "sha256:c728f19b321d8b935cb1a77671ee2eb39039965291069cb0d4729d3c166891d1",
+      "mediaType": "text/markdown",
+      "summary": "Ideation design: FO-write rules 1 to 3 are checked by the scripts FO already runs, rule 4 narrows to a named-carry sentence plus the verdict tag, and the gh pr merge guard is filed as its own task."
+    }
+  ]
+}
