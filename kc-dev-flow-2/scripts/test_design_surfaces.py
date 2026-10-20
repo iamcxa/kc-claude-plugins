@@ -1,5 +1,9 @@
+import contextlib
 import importlib.util
+import io
+import os
 from pathlib import Path
+import subprocess
 import tempfile
 import types
 import unittest
@@ -90,6 +94,7 @@ def mutated(old, new):
     source = (ROOT / "scripts/design_surfaces.py").read_text()
     assert old in source, "mutation must actually change the script"
     module = types.ModuleType("design_surfaces_mutant")
+    module.__file__ = str(ROOT / "scripts/design_surfaces.py")
     exec(compile(source.replace(old, new, 1), "design_surfaces_mutant", "exec"), module.__dict__)
     return module
 
@@ -1227,6 +1232,236 @@ Visible change: none
             self.assertEqual(ds.check_task(path), [])
             self.assertTrue(any("'Surfaces:' lines, expected exactly 1" in e for e in mutant.check_task(path)))
             self.assertTrue(any("'Surfaces:' lines, expected exactly 1" in e for e in mutant.check_task(path, seed=True)))
+
+
+GATED = """---
+title: seats
+profile: pilot
+status: ideation
+gates:
+    version: 1
+    records:
+        - id: gate:t:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:t-backlog-1
+              briefing:
+                id: briefing:t:backlog:attempt-1:revision-1
+                room-ref: ./t/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:t:backlog:1
+                by: person:captain
+                at: "2026-10-20T04:56:55Z"
+                decision: approve
+                reason: ok
+---
+
+# Task
+
+## Scope
+
+- Source: issue 1.
+- Bite: the first thing.
+- Non-goals: to be set at ideation.
+
+## FO alignment
+
+Surfaces: none
+Visible change: none
+
+## Acceptance criteria
+
+**AC-1**: a driver sees seats.
+"""
+AMENDED = """
+## Captain amendments
+
+### Amendment 1 — 2026-10-20, chat
+Captain: 「also this」 (chat)
+Supersedes: none
+"""
+GIT_ENV = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@example.invalid", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@example.invalid",
+           "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
+
+
+class ScopeCheckTests(unittest.TestCase):
+    """A Scope change after the backlog gate, on a task in a linked git worktree (as a split-root state checkout is, its .git a file)."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        base = Path(self.tmp.name)
+        self.main = base / "main"
+        self.work = base / "work"
+        self.git(base, "init", "-q", str(self.main))
+        self.write(self.main / "README.md", "state\n")
+        self.git(self.main, "add", "README.md")
+        self.git(self.main, "commit", "-q", "-m", "init")
+        self.git(self.main, "worktree", "add", "-q", "--detach", str(self.work), "HEAD")
+        self.task = self.work / "t.md"
+        self.write(self.task, GATED)
+        self.commit("t.md", "task")
+        sha = self.git(self.work, "rev-parse", "HEAD").stdout.strip()
+        room = self.work / "t" / "review" / "backlog" / "briefing-1"
+        room.mkdir(parents=True)
+        self.write(room / "index.json", f'{{"artifacts": [{{"uri": "git-root://state/{sha}/t.md"}}]}}')
+        self.commit("t/review/backlog/briefing-1/index.json", "briefing")
+        self.sha = sha
+
+    def git(self, cwd, *args):
+        return subprocess.run(["git", "-C", str(cwd), *args], capture_output=True, text=True, check=True, env={**os.environ, **GIT_ENV})
+
+    @staticmethod
+    def write(path, text):
+        Path(path).write_text(text)
+
+    def commit(self, rel, message):
+        self.git(self.work, "add", rel)
+        self.git(self.work, "commit", "-q", "-m", message)
+        return self.git(self.work, "rev-parse", "HEAD").stdout.strip()
+
+    def edit(self, old, new, task=None):
+        task = task or self.task
+        text = task.read_text()
+        assert old in text, old
+        task.write_text(text.replace(old, new, 1))
+
+    def run_main(self, task=None, module=ds):
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = module.main(["check", str(task or self.task)])
+        return code, out.getvalue()
+
+    def add_line(self, line="- Captain asked for one more thing."):
+        self.edit("- Non-goals: to be set", line + "\n- Non-goals: to be set")
+
+    def amend(self):
+        self.task.write_text(self.task.read_text().rstrip("\n") + "\n" + AMENDED)
+
+    def test_an_unchanged_scope_is_clean_and_prints_the_presentable_line(self):
+        self.assertEqual(ds.scope_hold(self.task), ("clean", self.sha))
+        self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n"))
+
+    def test_a_scope_line_added_after_the_backlog_gate_holds_with_a_line_addressed_to_fo(self):
+        self.add_line()
+        code, out = self.run_main()
+        self.assertEqual(code, 1)
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+        self.assertIn(f"Scope changed after the backlog gate ({self.sha[:8]}): \"- Captain asked for one more thing.\"", out)
+        self.assertLess(out.index("FO: restore the line"), out.index("Amendment"))
+        self.assertIn("with his words verbatim and where he said them", out)
+        self.assertTrue(out.rstrip("\n").endswith("A worker that sees this line reports it to FO and edits neither Scope nor amendments."), out)
+        self.assertNotIn("presentable", out)
+
+    def test_a_scope_line_removed_after_the_backlog_gate_holds(self):
+        self.edit("- Bite: the first thing.\n", "")
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+
+    def test_the_hold_reaches_only_a_task_in_ideation(self):
+        for stage in ("implementation", "validation", "done"):
+            with self.subTest(stage):
+                self.task.write_text(GATED.replace("status: ideation", f"status: {stage}"))
+                self.add_line()
+                self.assertEqual(ds.scope_hold(self.task), ("not run", f"stage is {stage}, not ideation"))
+                self.assertEqual(self.run_main(), (0, f"t.md: design surfaces presentable\nscope check not run: stage is {stage}, not ideation\n"))
+
+    def test_an_amendment_committed_with_the_edit_covers_it_and_an_edit_after_it_holds(self):
+        self.add_line()
+        self.amend()
+        self.assertEqual(ds.scope_hold(self.task), ("clean", "working copy"))
+        commit = self.commit("t.md", "scope line with its amendment")
+        self.assertEqual(ds.scope_hold(self.task), ("clean", commit))
+        self.add_line("- A second ask, after the amendment.")
+        verdict, line = ds.scope_hold(self.task)
+        self.assertEqual(verdict, "hold")
+        self.assertIn(f"Scope changed after the newest amendment ({commit[:8]})", line)
+        self.assertEqual(self.run_main()[0], 1)
+        self.edit("- Bite: the first thing.\n", "")
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+
+    def test_an_uncommitted_amendment_covers_an_uncommitted_scope_line(self):
+        self.add_line()
+        self.amend()
+        self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\n"))
+
+    def test_the_four_label_prefixes_the_readme_defines_are_filled_without_an_amendment(self):
+        for line in ("- Non-goals: nothing else.", "Budget: one day.", "- Stop condition: green CI.", "Follow-up: a later task."):
+            with self.subTest(line):
+                self.task.write_text(GATED)
+                self.add_line(line)
+                self.assertEqual(ds.scope_hold(self.task)[0], "clean")
+
+    def test_an_edit_outside_scope_is_not_a_scope_change(self):
+        self.edit("**AC-1**: a driver sees seats.", "**AC-1**: a driver sees seats left.")
+        self.assertEqual(ds.scope_hold(self.task)[0], "clean")
+
+    def test_a_task_the_check_cannot_judge_prints_why_and_exits_zero(self):
+        self.add_line()
+        self.edit("decision: approve", "decision: revise")
+        self.assertEqual(self.run_main(), (0, "t.md: design surfaces presentable\nscope check not run: no closed backlog approval\n"))
+        self.edit("decision: revise", "decision: approve")
+        index = self.work / "t" / "review" / "backlog" / "briefing-1" / "index.json"
+        original = index.read_text()
+        index.write_text(original.replace(self.sha, "0" * 40))
+        self.assertEqual(ds.scope_hold(self.task), ("not run", "backlog sha not readable by git"))
+        index.write_text("not json")
+        self.assertEqual(ds.scope_hold(self.task), ("not run", "backlog briefing unreadable"))
+        index.unlink()
+        self.assertEqual(ds.scope_hold(self.task), ("not run", "backlog briefing unreadable"))
+
+    def test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it(self):
+        self.add_line()
+        plain = Path(self.tmp.name) / "plain"
+        subprocess.run(["git", "-C", str(self.work), "archive", "HEAD", "t.md", "t", "--format=tar", "-o", str(Path(self.tmp.name) / "x.tar")], check=True)
+        plain.mkdir()
+        subprocess.run(["tar", "-x", "-C", str(plain), "-f", str(Path(self.tmp.name) / "x.tar")], check=True)
+        (plain / "t.md").write_text(self.task.read_text())
+        self.assertEqual(ds.scope_hold(plain / "t.md"), ("not run", "not in a git checkout"))
+        self.assertEqual(self.run_main(plain / "t.md")[0], 0)
+
+    def test_seed_mode_never_reads_git(self):
+        self.add_line()
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(ds.main(["check", "--seed", str(self.task)]), 0)
+        self.assertEqual(out.getvalue(), "t.md: FO alignment recorded\n")
+
+    def amended_commit(self):
+        self.add_line()
+        self.amend()
+        return self.commit("t.md", "scope line with its amendment")
+
+    def test_mutation_letting_any_amendment_exempt_every_later_edit_turns_the_edit_after_it_clean(self):
+        self.amended_commit()
+        self.add_line("- A second ask, after the amendment.")
+        mutant = mutated("    if newer:\n        commit = introducing_commit(task, max(newer))",
+                         '    if newer:\n        return "clean", "any amendment"\n        commit = introducing_commit(task, max(newer))')
+        self.assertEqual((ds.scope_hold(self.task)[0], mutant.scope_hold(self.task)[0]), ("hold", "clean"))
+
+    def test_mutation_reading_only_the_backlog_sha_holds_a_scope_change_an_amendment_records(self):
+        self.amended_commit()
+        mutant = mutated("    if newer:\n        commit = introducing_commit", "    if False:\n        commit = introducing_commit")
+        self.assertEqual((ds.scope_hold(self.task)[0], mutant.scope_hold(self.task)[0]), ("clean", "hold"))
+
+    def test_mutation_dropping_the_label_exemption_holds_a_non_goals_fill(self):
+        self.add_line("- Non-goals: nothing else.")
+        mutant = mutated("and not SCOPE_EXEMPT.match(l)]", "]")
+        self.assertEqual((ds.scope_hold(self.task)[0], mutant.scope_hold(self.task)[0]), ("clean", "hold"))
+
+    def test_mutation_dropping_the_stage_gate_holds_an_implementation_run(self):
+        self.task.write_text(GATED.replace("status: ideation", "status: implementation"))
+        self.add_line()
+        mutant = mutated('if not status or status.group(1) != "ideation":', "if not status:")
+        self.assertEqual((ds.scope_hold(self.task)[0], mutant.scope_hold(self.task)[0]), ("not run", "hold"))
+
+    def test_the_hold_wording_orders_restore_before_amendment_and_ends_with_the_worker_sentence(self):
+        self.add_line()
+        swapped = mutated("FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if ", "FO: add an '### Amendment N' with 'Supersedes: none' only if the Captain asked for it, restore the line otherwise; ")
+        code, out = self.run_main(module=swapped)
+        self.assertGreater(out.index("restore the line"), out.index("Amendment"))
+        _, real = self.run_main()
+        self.assertLess(real.index("restore the line"), real.index("Amendment"))
 
 
 if __name__ == "__main__":

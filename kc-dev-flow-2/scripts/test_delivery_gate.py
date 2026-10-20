@@ -91,6 +91,10 @@ def readme(d, body="extensions: [roborev, codex]\n"):
 TASK = "---\nprofile: pilot\n---\n\n# task\n"
 RECORDS = {"validation-1.md": record(HEAD40)}
 
+def tagged(cls):
+    return cls + (" (verdict ask)" if cls == "never" else "")
+
+
 CLAUSES = "Sufficiency: every acceptance criterion in the validation report was met.\nNecessity: the relay adopter reads it at each merge ask.\n"
 
 COPILOT_UNSTATED = ("Deliver #627 head 22d9cc94? Codex round 1 review:5500046230 found one P1. "
@@ -236,7 +240,7 @@ class DeliveryGateTests(unittest.TestCase):
 
     def test_each_exit_ends_with_the_next_line_for_the_ask(self):
         cases = (
-            (0, dict(), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."]),
+            (0, dict(), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."]),
             (1, dict(head="7679ab7a"), ["next: hold the ask; revalidate this head or tell the Captain the difference."]),
             (1, dict(text=COPILOT_UNSTATED), ["next: hold the ask until each second reviewer has an outcome."]),
             (1, dict(head="7679ab7a", text=COPILOT_UNSTATED),
@@ -271,7 +275,7 @@ SECURITY = (f"Security review (validation): security/validation-1.yaml at {HEAD4
             "Security finding (validation 1) 2: Needs decision: add the sentence\n"
             "Security finding (validation 1) 3: declined: stated unverified\n")
 EQUALS = f"PR head {HEAD40[:8]} equals dispatched candidate {HEAD40[:8]}; no second reviewer outcome is missing\n"
-PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text.\n"
+PILOT_OUT = EQUALS + "class: docs-only\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n"
 
 
 class ProdSecurityReviewTests(unittest.TestCase):
@@ -295,13 +299,13 @@ class ProdSecurityReviewTests(unittest.TestCase):
 
     def test_a_pilot_task_prints_the_two_old_lines_with_a_class_and_a_record_line_between(self):
         self.assertEqual(self.run_gate(profile="pilot", review="", report=None), (0, PILOT_OUT))
-        self.assertLessEqual(len(PILOT_OUT.split()), 55)
+        self.assertLessEqual(len(PILOT_OUT.split()), 68)
 
     def test_a_prod_task_with_a_disposed_review_gets_one_more_line_of_ten_words(self):
         code, out = self.run_gate()
         self.assertEqual(code, 0, out)
         note = "validation security review security/validation-1.yaml: 3 findings, 1 declined, 2 decisions\n"
-        self.assertEqual(out, EQUALS + note + "point: deferred: 'Security finding (validation 1) 3: declined:'\npoint: profile: 'prod'\nclass: never\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text.\n")
+        self.assertEqual(out, EQUALS + note + "point: deferred: 'Security finding (validation 1) 3: declined:'\npoint: profile: 'prod'\nclass: never (verdict ask)\nrecord: task/merge/ask-1.json\nnext: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.\n")
         self.assertEqual(len(note.split()), 10)
 
     def test_a_prod_task_with_a_hole_in_its_review_exits_1_and_holds_the_ask(self):
@@ -685,7 +689,7 @@ class ClassTests(unittest.TestCase):
         for paths, expected in self.ROWS:
             with self.subTest(str(paths[0])[:60]):
                 result, found = self.class_of(paths)
-                self.assertEqual((result.code, found), (0, expected), result.out)
+                self.assertEqual((result.code, found), (0, tagged(expected)), result.out)
 
     @staticmethod
     def readme_at(where):
@@ -701,15 +705,15 @@ class ClassTests(unittest.TestCase):
         for label, path, where in (("root", "README.md", None), ("in a folder", "flow/README.md", "flow")):
             with self.subTest(label):
                 result = run_check(files=(path,), setup=self.readme_at(where), workflow_dir_arg=where)
-                self.assertIn("class: never", result.lines, result.out)
+                self.assertIn("class: never (verdict ask)", result.lines, result.out)
         module = variant_of('r"^README\\.md$" if rel == "." else', 'r"^README\\.md$" if False else')
-        self.assertNotIn("class: never", run_variant(module, files=("README.md",), setup=self.readme_at(None)).lines)
+        self.assertNotIn("class: never (verdict ask)", run_variant(module, files=("README.md",), setup=self.readme_at(None)).lines)
 
     def test_a_release_pr_prod_task_and_db_task_are_never(self):
         for label, kwargs in (("release pr", dict(facts=dict(headRefName="release-please--branches--main"))),
                               ("db surface", dict(task=TASK + "Surfaces: db\n"))):
             with self.subTest(label):
-                self.assertIn("class: never", run_check(**kwargs).lines)
+                self.assertIn("class: never (verdict ask)", run_check(**kwargs).lines)
 
     def test_a_hundred_and_one_files_are_read_across_two_pages(self):
         paths = [f"docs/g{i}.md" for i in range(101)]
@@ -804,14 +808,14 @@ class CodexP1Tests(unittest.TestCase):
                 result = run_check(task=self.prod_task(value), setup=report, argv_head="40c714a6")
                 self.assertEqual(result.code, 0, result.out)
                 self.assertIn("point: profile: 'prod'", result.lines, result.out)
-                self.assertIn("class: never", result.lines, result.out)
-                self.assertEqual(nexts(result), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."], result.out)
+                self.assertIn("class: never (verdict ask)", result.lines, result.out)
+                self.assertEqual(nexts(result), ["next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."], result.out)
 
     def test_an_instruction_directory_at_any_depth_is_never(self):
         for path in ("packages/foo/agents/x.md", "a/b/c/references/r.md", "x/y/skills/z/SKILL.md", "p/q/extensions/e.py"):
             with self.subTest(path):
                 found = [l for l in run_check(files=(path,)).lines if l.startswith("class: ")]
-                self.assertEqual(found, ["class: never"])
+                self.assertEqual(found, ["class: never (verdict ask)"])
         self.assertIn("class: docs-only", run_check(files=("docs/my-agents/x.md", "docs/skillset/y.md")).lines)
 
 NEVER_ADDED = ["scripts/foo.py", "scripts/test_foo.py", "scripts/run.sh", "scripts/sub/x.py", ".githooks/pre-commit", ".githooks/sub/x.sh", ".roborev.toml",
@@ -827,10 +831,10 @@ class NeverAddedTests(unittest.TestCase):
     def test_each_added_never_path_is_never_alone_or_beside_a_docs_file_and_on_either_rename_name(self):
         for path in NEVER_ADDED:
             with self.subTest(path):
-                self.assertEqual(self.cls([path]), "never")
-                self.assertEqual(self.cls(["docs/a.md", path]), "never")
-                self.assertEqual(self.cls([dict(filename="docs/a.md", previous_filename=path)]), "never")
-                self.assertEqual(self.cls([dict(filename=path, previous_filename="docs/a.md")]), "never")
+                self.assertEqual(self.cls([path]), tagged("never"))
+                self.assertEqual(self.cls(["docs/a.md", path]), tagged("never"))
+                self.assertEqual(self.cls([dict(filename="docs/a.md", previous_filename=path)]), tagged("never"))
+                self.assertEqual(self.cls([dict(filename=path, previous_filename="docs/a.md")]), tagged("never"))
 
     def test_a_non_markdown_file_under_docs_is_not_docs_only(self):
         for path in DOCS_NOT_MD:
@@ -855,7 +859,7 @@ class NeverAddedTests(unittest.TestCase):
         }
         for path, (old, new) in mutations.items():
             with self.subTest(path):
-                self.assertNotEqual(self.cls([path], variant_of(old, new)), "never")
+                self.assertNotEqual(self.cls([path], variant_of(old, new)), tagged("never"))
         with self.subTest("docs md only"):
             self.assertEqual(self.cls(["docs/diagram.png"], variant_of(' and p.endswith(".md")', "")), "docs-only")
 
@@ -1096,6 +1100,137 @@ class MentionedLabelTests(unittest.TestCase):
         changed = [label for label, text in cases.items()
                    if run_variant(module, text=text, clauses=False).code != run_check(text=text, clauses=False).code]
         self.assertEqual(changed, list(self.MENTIONS))
+
+
+LATE_DECLINES = {
+    'captain-question-load': (
+        "Declined, with reasons: Deferred risk, the carried merge line prints even when the check's own verdict is ask (class never, a point, prod or db) [every task PR still reaches this validation gate question, the ask that verdict calls for; step 4 above and the verdict assignment in check show it]; Polish, ADR 0023's Options text says merging the head without the binding [the README sentence is the rule and is pinned by delivery-question-carries-merge]; Polish, three doc_impact.py documents carry no updated or unaffected line [each names only the test_sd_dispatch.py command, read by validation cycle 3]."),
+    'chat-only-evidence-observer-blind': (
+        'Declined, with reasons: Deferred risk, clause() reads a label after an abbreviation such as "e.g. Necessity: y" as stated [no committed briefing has that form; the validator\'s probe of clause() at 59fc3d12 is the only case]; Polish, the shortened list phrase leaves "before dispatching on it" unwatched [the full phrase trips the lint\'s 12-word duplicate check, shown by the implementation report]; Polish, AC-7 left 5 can\'t-tell rows against at most four [the two extra rows are outside the listed rule set, per the validator\'s AC-7 run]; Polish, the list lint matches a phrase inside a longer sentence [the six phrases are each one README sentence at 5a951034, read by the validator].'),
+    'special-role-calls-fire-when-needed': (
+        'Declined, with reasons: Deferred risk, a review reply carries its own review id and could inflate the round count [0 replies in 82 inline comments across the 38 window PRs, per validation]; Polish, no test pins the --paginate --slurp flags [gh rejects --slurp without --paginate loudly; only dropping both undercounts, past 30 comments, which no window PR reaches]; Polish, no synthetic row for a literal ### Feedback Cycles heading [the validator ran it synthetically and the replay hint covers it]; Polish, an owed line can pass the 60-word bound past six amendments [the most amendments on any task in the four repositories is six (journey-server-host-pilot, counted 2026-10-20), which the tests cover].'),
+    'fo-write-checks': (
+        'Declined, with reasons: P2, an amendment range such as 1 to 3 names only its ends [a false hold, never a missed one; on 2026-10-19 --names over the 8 committed records that write a range printed no amendment line]; Deferred risk, a prose line beginning with the reserved text passes [no record does this; material only if one hides an unrecorded number]; Deferred risk, a two-word bracket proves a bracket, not a reason [recorded as a known limit in ADR 0025]; Deferred risk, any amendment phrase in any checklist of the folder passes [the observer still reads the checklist]; Polish, AC-4 says 12 declined items where the count is 13 [a count in the task text, read by no gate].'),
+}
+
+SENTENCE = "Every other PR, the Release PR included, is asked one at a time."
+PASS_NEXT = ("next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. "
+             + SENTENCE)
+SRC_BULLETS = [
+    "- F1 Polish: no test asserts the `--paginate --slurp` flags of `review_rounds`.",
+    "- F2 Deferred risk: reply comments carry their own review ids and would count as rounds.",
+    "- F3 Polish: the synthetic suite has no row with the literal heading (AC-2 text).",
+    "- F4 Polish: the PR title names only the repair-pass slice.",
+    "- F5 Polish: an owed engineering-reviewer line lists every amendment number.",
+]
+GATEKEEPER_BULLETS = [
+    "- F1 Deferred risk (Codex P1, residual after the repair): the repair holds on every workflow run the API lists.",
+    "- F2 Deferred risk (security findings 1 and 3): the per-ask record is not read at merge time.",
+    "- F3 Polish: (a) mutation survivors (b) the request is not asserted to carry the head.",
+]
+
+
+def with_report(*bullets, heading="## Stage Report: validation"):
+    return TASK + "\n" + heading + "\n\n" + "\n".join(bullets) + "\n"
+
+
+def reasoned(count):
+    return "Declined, with reasons: " + "; ".join(f"Polish, finding {n} (a real reason here)" for n in range(1, count + 1)) + "."
+
+
+class FoWriteRuleTests(unittest.TestCase):
+    check = DeliveryGateTests.check
+
+    def test_the_pass_line_is_the_ask_plus_one_named_carry_sentence_and_a_hold_prints_no_ask(self):
+        result = run_check()
+        self.assertEqual((result.code, nexts(result)), (0, [PASS_NEXT]))
+        self.assertEqual(len(nexts(result)[0].split()), 40)
+        self.assertEqual(result.written["ask-1.json"]["next"], nexts(result)[0])
+        held = run_check(facts=dict(isDraft=True))
+        self.assertEqual(held.code, 1)
+        self.assertNotIn(SENTENCE, held.out)
+        self.assertNotIn("next: merge this head", held.out)
+
+    def test_the_sentence_names_no_pr_number_and_no_head(self):
+        self.assertTrue(gate.ASK.endswith(" " + SENTENCE))
+        self.assertNotRegex(SENTENCE, r"#\d|[0-9a-f]{7}")
+        module = variant_of(" Every other PR, the Release PR included, is asked one at a time.", " Every other PR, #672 included, is asked one at a time.")
+        self.assertNotEqual(nexts(run_variant(module)), [PASS_NEXT])
+        module = variant_of(" Every other PR, the Release PR included, is asked one at a time.", "")
+        self.assertNotEqual(nexts(run_variant(module)), [PASS_NEXT])
+
+    def test_the_class_line_carries_the_verdict_only_when_it_is_ask(self):
+        never = run_check(files=("scripts/x.py",))
+        self.assertIn("class: never (verdict ask)", never.lines)
+        self.assertEqual(never.written["ask-1.json"]["verdict"], "ask")
+        docs = run_check()
+        self.assertIn("class: docs-only", docs.lines)
+        self.assertEqual(docs.written["ask-1.json"]["verdict"], "merge")
+        pointed = run_check(text="Deferred risk, a thing (kept as is).")
+        self.assertIn("class: docs-only (verdict ask)", pointed.lines)
+        self.assertEqual(sorted(docs.written["ask-1.json"]), sorted(never.written["ask-1.json"]))
+        self.assertEqual(sorted(docs.written["ask-1.json"]), ["class", "head", "model", "necessity", "next", "points", "pr", "sufficiency", "time", "verdict"])
+        always = variant_of('f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else "")', 'f"class: {cls} (verdict ask)"')
+        never_tag = variant_of('f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else "")', 'f"class: {cls}"')
+        self.assertNotIn("class: docs-only", run_variant(always).lines)
+        self.assertNotIn("class: never (verdict ask)", run_variant(never_tag, files=("scripts/x.py",)).lines)
+
+    def test_the_four_late_declined_texts_parse_in_full_and_every_item_has_a_reason(self):
+        counts = {"captain-question-load": 3, "chat-only-evidence-observer-blind": 4, "special-role-calls-fire-when-needed": 4, "fo-write-checks": 5}
+        for slug, count in counts.items():
+            with self.subTest(slug):
+                self.assertEqual((len(gate.declined_items(LATE_DECLINES[slug])), gate.unreasoned_items(LATE_DECLINES[slug])), (count, []))
+                code, out = self.check(text=LATE_DECLINES[slug])
+                self.assertEqual(code, 0, out)
+
+    def test_a_one_word_bracket_in_either_form_is_still_no_reason(self):
+        for text in ("Declined: Polish, a thing (none).", "Declined: Polish, a thing [none]."):
+            code, out = self.check(text=text)
+            self.assertEqual(code, 1, out)
+            self.assertIn("declined item has no reason", out)
+
+    def test_each_parse_fix_turns_its_own_texts_red(self):
+        end = variant_of('(?<![eE]\\.[gG]\\.)(?<![iI]\\.[eE]\\.)(?<=[.)\\]])', '(?<=[.)])')
+        self.assertEqual(len(end.declined_items(LATE_DECLINES["chat-only-evidence-observer-blind"])), 1)
+        round_only = variant_of('if ch in "([":', 'if ch == "(":')
+        self.assertEqual(len(round_only.unreasoned_items(LATE_DECLINES["special-role-calls-fire-when-needed"])), 3)
+        self.assertEqual(len(gate.unreasoned_items(LATE_DECLINES["special-role-calls-fire-when-needed"])), 0)
+
+    def test_fewer_declined_items_than_deferred_risk_and_polish_bullets_holds_with_both_counts(self):
+        task = with_report(*SRC_BULLETS)
+        code, out = self.check(task=task, text=LATE_DECLINES["special-role-calls-fire-when-needed"])
+        self.assertEqual(code, 1, out)
+        self.assertIn("declined items (4) are fewer than the validation report's Deferred risk and Polish findings (5)", out)
+        self.assertIn("next: hold the ask; write one declined item for each finding, then run this check again.", out)
+        self.assertNotIn("next: merge this head", out)
+        self.assertEqual(self.check(task=task, text=reasoned(5))[0], 0)
+
+    def test_a_report_with_more_declined_items_than_findings_or_no_f_bullets_is_not_held(self):
+        self.assertIsNone(gate.findings_join(with_report(*GATEKEEPER_BULLETS), DECLINES["merge-gatekeeper"]))
+        self.assertEqual(self.check(task=with_report(*GATEKEEPER_BULLETS), text=reasoned(4))[0], 0)
+        self.assertEqual(self.check(task=with_report("- Deferred risk: one.", "- Polish: two.", "- Polish: three."), text=reasoned(1))[0], 0)
+        self.assertEqual(self.check(task=with_report(*SRC_BULLETS), text=reasoned(1))[0], 1)
+        self.assertEqual(self.check(task=TASK, text=reasoned(1))[0], 0)
+        self.assertEqual(self.check(task=with_report(*SRC_BULLETS[:2]), text=reasoned(2))[0], 0)
+
+    def test_the_comparison_is_strict_and_a_part_split_into_two_bullets_needs_two_items(self):
+        equal = self.check(task=with_report(*SRC_BULLETS[:3]), text=reasoned(3))
+        self.assertEqual(equal[0], 0, equal[1])
+        loose = variant_of("if owed and got < owed:", "if owed and got <= owed:")
+        with mock.patch.dict(globals(), gate=loose):
+            self.assertEqual(self.check(task=with_report(*SRC_BULLETS[:3]), text=reasoned(3))[0], 1)
+        parts = with_report("- F1 Deferred risk: (a) one part, no reason given.", "- F2 Deferred risk: (b) the other part.")
+        self.assertEqual(self.check(task=parts, text="Declined, with reasons: Deferred risk, (a) and (b) [part (a) is not reachable].")[0], 1)
+        self.assertEqual(self.check(task=parts, text="Declined, with reasons: Deferred risk, (a) [not reachable]; Deferred risk, (b) [fixed in this PR].")[0], 0)
+
+    def test_the_newest_validation_report_is_the_one_joined_and_bold_f_ids_count(self):
+        both = with_report(*SRC_BULLETS) + "\n## Stage Report: validation (cycle 2)\n\n- F1 Polish: only one left.\n"
+        self.assertEqual(self.check(task=both, text=reasoned(1))[0], 0)
+        bold = with_report("- **F1** Polish: one.", "- **F2** Deferred risk: two.")
+        self.assertEqual(self.check(task=bold, text=reasoned(1))[0], 1)
+        roman = with_report("- F1 P2: one.", "- F2 Deferred risk: two.", "* F3 Polish: three.")
+        self.assertEqual(self.check(task=roman, text=reasoned(1))[0], 1)
+        self.assertEqual(self.check(task=roman, text=reasoned(2))[0], 0)
 
 
 def tearDownModule():

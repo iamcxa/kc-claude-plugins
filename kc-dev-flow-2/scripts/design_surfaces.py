@@ -1,10 +1,23 @@
 #!/usr/bin/env python3
-"""Check a dev2 task file: the FO-alignment record, the artifacts its Surfaces: line owes, its acceptance criteria and any Captain amendments; exit 1 on any violation."""
+"""Check a dev2 task file: the FO-alignment record, the artifacts its Surfaces: line owes, its acceptance criteria and any Captain amendments; exit 1 on any violation.
+
+While the task's frontmatter says `status: ideation` it also holds a `## Scope` line added or removed after the backlog gate closed.
+The baseline is the task file at the commit that added the newest `### Amendment N — <date>` dated on or after the backlog approval
+(the working copy when that heading is uncommitted), else at the sha the backlog briefing binds (`git-root://state/<sha>/<path>`);
+lines opening with Non-goals, Budget, Stop condition or Follow-up: are exempt. The check reads git history and the working copy,
+not what the Captain said; an amendment covers every earlier unrecorded Scope edit. It prints `scope check not run: <why>` and
+leaves the exit code alone in any other stage, with no closed backlog approval, or outside a git checkout.
+"""
 import argparse
+import json
 import re
+import subprocess
 import sys
 from collections import Counter
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import decision_ledger
 
 KNOWN = {"ui", "db", "none"}
 FO_HEADING = re.compile(r"^## FO alignment[ \t]*$", re.M)
@@ -41,6 +54,12 @@ REPORT_ROOT_LINE = re.compile(r"^tob_security_review:", re.M)
 FINDINGS_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?findings:", re.M)
 SEVERITY_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?severity:", re.M)
 ITEM_FIRST_KEY = re.compile(r"[A-Za-z_][\w-]*:")
+SCOPE_EXEMPT = re.compile(r"\s*(?:[-*]\s*)?(?:Non-goals?\b|Budget\b|Stop condition\b|Follow-up:)", re.I)
+AMENDMENT_DATED = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
+BOUND_URI = re.compile(r"git-root://state/([0-9a-f]{40})/(.+)")
+SCOPE_HOLD = ("Scope changed after {what} ({sha}): \"{line}\". FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if "
+              "the Captain asked for it, with his words verbatim and where he said them. "
+              "A worker that sees this line reports it to FO and edits neither Scope nor amendments.")
 TABLE = re.compile(r"^[ \t]*\|.*\|[ \t]*\n[ \t]*\|[ \t:|-]*-[ \t:|-]*\|?[ \t]*$", re.M)
 
 
@@ -345,6 +364,75 @@ def check_design_review(path, body, declared, previews, errors):
     return f"design review {value}: {found} findings, {tally['fixed']} fixed, {tally['ac']} criteria, {tally['declined']} declined, {tally['decision']} decisions"
 
 
+def scope_lines(text):
+    found = re.search(r"^## Scope\b[^\n]*\n(.*?)(?=^## |\Z)", text or "", re.M | re.S)
+    return (found.group(1) if found else "").splitlines()
+
+
+def git_out(task, *args):
+    return subprocess.run(["git", "-C", str(task.parent), *args], capture_output=True)
+
+
+def file_at(task, commit, rel):
+    for name in (rel, rel[len("_archive/"):] if rel.startswith("_archive/") else f"_archive/{rel}"):
+        done = git_out(task, "show", f"{commit}:{name}")
+        if done.returncode == 0:
+            return done.stdout.decode("utf-8", "replace")
+    return None
+
+
+def introducing_commit(task, number):
+    done = git_out(task, "log", "--follow", "--format=%H", f"-G^### Amendment {number} — ", "--", task.name)
+    commits = done.stdout.decode().split()
+    return commits[-1] if commits else None
+
+
+def scope_hold(task):
+    """('hold', line) for a Scope change with no record, ('not run', why), or ('clean', baseline)."""
+    text = task.read_text()
+    front, body = decision_ledger.split_task(text)
+    if front is None:
+        return "not run", "no frontmatter"
+    status = FM_STATUS.search("\n".join(front))
+    if not status or status.group(1) != "ideation":
+        return "not run", f"stage is {status.group(1) if status else 'unknown'}, not ideation"
+    closed = [e for e in decision_ledger.gate_entries(front)
+              if e["stage"] == "backlog" and e["kind"] == "resolution" and e.get("decision") == "approve"]
+    if not closed:
+        return "not run", "no closed backlog approval"
+    gate = closed[-1]
+    try:
+        bound = BOUND_URI.fullmatch(json.loads((task.parent / gate["room"] / "index.json").read_text())["artifacts"][0]["uri"])
+    except (OSError, ValueError, KeyError, IndexError, TypeError):
+        return "not run", "backlog briefing unreadable"
+    if not bound:
+        return "not run", "backlog briefing artifact has no sha"
+    if git_out(task, "rev-parse", "--git-dir").returncode:
+        return "not run", "not in a git checkout"
+    baseline = file_at(task, bound.group(1), bound.group(2))
+    if baseline is None:
+        return "not run", "backlog sha not readable by git"
+    what, sha = "the backlog gate", bound.group(1)
+    day = (gate.get("at") or "")[:10]
+    newer = [int(n) for n, d in AMENDMENT_DATED.findall(body) if d >= day]
+    if newer:
+        commit = introducing_commit(task, max(newer))
+        if commit is None:
+            baseline, what, sha = text, "the newest amendment", "working copy"
+        else:
+            rel = git_out(task, "ls-files", "--full-name", "--", task.name).stdout.decode().strip() or task.name
+            baseline = file_at(task, commit, rel)
+            if baseline is None:
+                return "not run", f"amendment {max(newer)} commit not readable by git"
+            what, sha = "the newest amendment", commit
+    before, now = scope_lines(baseline), scope_lines(text)
+    changed = [l for l in now if l not in before] + [l for l in before if l not in now]
+    changed = [l for l in changed if l.strip() and not SCOPE_EXEMPT.match(l)]
+    if not changed:
+        return "clean", sha
+    return "hold", SCOPE_HOLD.format(what=what, sha=sha[:8], line=changed[0].strip()[:80])
+
+
 def check_task(path, seed=False, notes=None):
     errors = []
     text = path.read_text()
@@ -411,12 +499,17 @@ def main(argv=None):
     path = Path(args.task)
     notes = []
     errors = check_task(path, seed=args.seed, notes=notes)
+    verdict, why = ("clean", "") if args.seed else scope_hold(path)
+    if verdict == "hold":
+        errors.append(why)
     for error in errors:
         print(error)
     if not errors:
         print(f"{path.name}: {'FO alignment recorded' if args.seed else 'design surfaces presentable'}")
         for note in notes:
             print(note)
+    if verdict == "not run":
+        print(f"scope check not run: {why}")
     return 1 if errors else 0
 
 

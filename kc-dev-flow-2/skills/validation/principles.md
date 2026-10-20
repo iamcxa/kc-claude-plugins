@@ -51,7 +51,8 @@ smallest observable command whose output he can read, rather than being
 omitted silently.
 
 Report verdict, artifact identity, evidence and material limits in the existing
-SD stage report. A code repair returns through implementation feedback; scope or
+SD stage report. List each finding as its own `- F<N> <Class>: …` bullet, and split a
+finding with parts into one bullet per part. A code repair returns through implementation feedback; scope or
 profile changes return to the affected user decision. The user or named owner
 retains gate and delivery authority. Green checks do not prove merge or adoption.
 Do not invoke local fallback, push the trunk, merge, or clean up an owned worktree unless
