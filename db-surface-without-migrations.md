@@ -3,7 +3,7 @@ title: A db task in a repository with no migration files passes the number guard
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain, batch-4 sitting 2026-10-20: D1 「可以」 (declare with the value none of migrations-path:), D2 「要」 (include R7: an added NNNN_name.sql fails under none), both as recommended.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-20T04:57:48Z
 ---
 
