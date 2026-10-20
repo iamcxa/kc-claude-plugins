@@ -1,15 +1,20 @@
 #!/usr/bin/env python3
 """List the chief-engineer and engineering-reviewer calls a committed task state owes.
 
-Usage: role_triggers.py <state checkout> <task slug> [--rev REV]
+Usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N]
 Reads the task at REV (default HEAD) from committed bytes, never the disk; live or archived, flat or folder.
-Event A: a `- Cycle N` line with N >= 3 under `### Feedback Cycles`; owes a `Reviewer:` line for chief-engineer.
-Event B: a `### Amendment N` under `## Captain amendments` whose `Supersedes:` or `Design:` value does not start
-with `none`; owes one for engineering-reviewer. Fenced blocks are skipped everywhere.
-A call is `Reviewer: <agent> <model> <date> — <question>` whose question names `Cycle 3` or `Amendment N` (for B the
-date is not before the entry's). A waiver is `Reviewer: <agent> not run: <reason>` that also names the token.
-Records count only under `## FO alignment` and its subheadings.
-Exit 0 nothing owed; stdout counts the events read. Exit 1 one `next:` line per owed event. Exit 2 cannot tell
+Chief-engineer is owed at four repair passes: the `## Stage Report: implementation` headings minus one (or, given
+--review-rounds, N >= 2 review ids that left inline findings on the open PR).
+Engineering-reviewer is owed for each `### Amendment N` under `## Captain amendments` whose `Supersedes:` or
+`Design:` value does not start with `none`; one line per task, on fable when the frontmatter says `profile: prod`
+or the `Surfaces:` line under `## FO alignment` lists `db`, else on opus. Fenced blocks are skipped everywhere.
+A call is `Reviewer: <agent> <model> <date> — <question>` whatever the question says. A chief-engineer call or
+waiver clears the repair event. For engineering-reviewer a call dated no earlier than an amendment, on a model
+ranked haiku < sonnet < opus < fable by its leading word and no lower than the one required, or a waiver
+`Reviewer: <agent> not run <date>: <reason>` dated no earlier than it, clears that amendment.
+Records count only under `## FO alignment` and its subheadings; a call written under another heading leaves the
+event owed and adds a `next:` line naming that heading.
+Exit 0 nothing owed; stdout counts the events read. Exit 1 `next:` lines per owed role. Exit 2 cannot tell
 (usage, not a git work tree, REV names no commit, no task for the slug); stdout names the cause.
 """
 import re
@@ -27,17 +32,20 @@ def titled(hashes, text):
 
 
 AMENDMENTS_SECTION = titled("##", "Captain amendments")
-CYCLES_SECTION = titled("###", "Feedback Cycles")
 ALIGNMENT_SECTION = titled("##", "FO alignment")
-CYCLE = re.compile(r"^- Cycle (\d+)\b")
+IMPLEMENTATION_REPORT = re.compile(rf"^{SPACE}## Stage Report: implementation\b", re.I)
 AMENDMENT = re.compile(rf"^{SPACE}### Amendment (\d+)\b", re.I)
 DATE = re.compile(r"\d{4}-\d{2}-\d{2}")
 FIELD = re.compile(r"^(Supersedes|Design):[ \t]*(.*?)[ \t]*$")
+FRONT_PROFILE = re.compile(r"""^profile:[ \t]*["']?([^\s"']+)["']?[ \t]*$""", re.M)
+SURFACES_DB = re.compile(r"^Surfaces:.*\bdb\b", re.M)
 MARK = r"(?:-[ \t]+)?Reviewer:[ \t]*(?:kc-dev-flow-2:)?"
+REPAIRS, REVIEW_ROUNDS = 4, 2
+RANK = {"haiku": 0, "sonnet": 1, "opus": 2, "fable": 3}
 
 QUESTION = {
     "chief-engineer": "what is the smallest next step, given the findings so far?",
-    "engineering-reviewer": "does this amendment withdraw what the Captain approved, and what does that change in the build?",
+    "engineering-reviewer": "do these amendments withdraw what the Captain approved, and what changes in the build?",
 }
 
 
@@ -51,16 +59,20 @@ def git(state, *args):
 
 
 def parse(args):
-    rev = "HEAD"
-    if "--rev" in args:
-        at = args.index("--rev")
-        if at + 1 >= len(args):
-            raise Unverifiable("usage: --rev needs a value")
-        rev = args[at + 1]
-        args = args[:at] + args[at + 2:]
+    options = {"--rev": "HEAD", "--review-rounds": None}
+    for name in options:
+        if name in args:
+            at = args.index(name)
+            if at + 1 >= len(args):
+                raise Unverifiable(f"usage: {name} needs a value")
+            options[name] = args[at + 1]
+            args = args[:at] + args[at + 2:]
+    rounds = options["--review-rounds"]
+    if rounds is not None and not rounds.isdigit():
+        raise Unverifiable("usage: --review-rounds needs a whole number")
     if len(args) != 2 or "/" in args[1] or args[1] in ("", ".", ".."):
-        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV]")
-    return Path(args[0]), args[1], rev
+        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N]")
+    return Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds)
 
 
 def read_task(state, slug, rev):
@@ -90,8 +102,8 @@ def outside_fences(text):
 
 
 def events(lines):
-    """Return (cycle numbers, [(amendment number, entry date or None)]) for amendments that replace something."""
-    cycles, amendments = [], []
+    """Return (implementation reports, [(amendment number, entry date or None)]) for amendments that replace something."""
+    reports, amendments = 0, []
     section = ""
     entry = None
     for line in lines:
@@ -100,33 +112,17 @@ def events(lines):
             amendment = AMENDMENT.match(line)
             if not amendment:
                 section = line
+            if IMPLEMENTATION_REPORT.match(line):
+                reports += 1
             found = DATE.search(line)
             entry = [int(amendment.group(1)), found.group(0) if found else None, False] \
                 if amendment and AMENDMENTS_SECTION.match(section) else None
             continue
-        cycle = CYCLE.match(line)
-        if CYCLES_SECTION.match(section) and cycle:
-            cycles.append(int(cycle.group(1)))
         field = FIELD.match(line)
         if entry and not entry[2] and field and field.group(2) and not field.group(2).lower().startswith("none"):
             entry[2] = True
             amendments.append((entry[0], entry[1]))
-    return cycles, amendments
-
-
-def cleared(lines, agent, token, latest=None):
-    name = re.escape(agent)
-    call = re.compile(rf"^{MARK}{name}[ \t]+\S+[ \t]+({DATE.pattern})[ \t]+[—–-][ \t]+(.+)$")
-    waiver = re.compile(rf"^{MARK}{name}[ \t]+not run:[ \t]*(.*)$")
-    for line in lines:
-        line = line.strip()
-        made, waived = call.match(line), waiver.match(line)
-        if made and re.search(token, made.group(2)) and (latest is None or made.group(1) >= latest):
-            return True
-        if waived and re.search(token, waived.group(1)):
-            if re.sub(r"[\s()\[\]:;,.\-—–]+", "", re.sub(token, "", waived.group(1))):
-                return True
-    return False
+    return reports, amendments
 
 
 def alignment(lines):
@@ -139,26 +135,84 @@ def alignment(lines):
             yield line
 
 
-def owed_line(slug, agent, happened, token):
-    return (f"next: {slug} {happened}; dispatch kc-dev-flow-2:{agent} with the question \"{token}: {QUESTION[agent]}\" "
-            f"and record `Reviewer: kc-dev-flow-2:{agent} <model> <date> — <question>` under ## FO alignment; "
-            f"or, if you will not, record `Reviewer: kc-dev-flow-2:{agent} not run: <reason> {token}` instead.")
+def records(lines, agent):
+    """Return (calls, waivers): (model, date) and (date or None) for each `Reviewer:` line naming agent."""
+    name = re.escape(agent)
+    call = re.compile(rf"^{MARK}{name}[ \t]+(\S+)[ \t]+({DATE.pattern})[ \t]+[—–-][ \t]+\S")
+    waiver = re.compile(rf"^{MARK}{name}[ \t]+not run(?:[ \t]+({DATE.pattern}))?:[ \t]*(.*)$")
+    calls, waivers = [], []
+    for line in lines:
+        line = line.strip()
+        made, waived = call.match(line), waiver.match(line)
+        if made:
+            calls.append((made.group(1), made.group(2)))
+        elif waived and re.sub(r"[\s()\[\]:;,.\-—–]+", "", waived.group(2)):
+            waivers.append(waived.group(1))
+    return calls, waivers
 
 
-def check(state, slug, rev):
-    lines = list(outside_fences(read_task(state, slug, rev)))
-    cycles, amendments = events(lines)
-    records = list(alignment(lines))
+def rank(model):
+    word = re.match(r"[a-z]+", model.lower())
+    return RANK.get(word.group(0), -1) if word else -1
+
+
+def misplaced(lines, agent):
+    """Return the heading above the first call or waiver for agent that sits outside FO alignment, or None."""
+    kept = set(map(id, alignment(lines)))
+    heading = None
+    for line in lines:
+        if HEADING.match(line):
+            heading = line.strip()
+        if id(line) not in kept and heading and any(records([line], agent)):
+            return heading[:60]
+    return None
+
+
+def owed_line(slug, agent, happened, where="", model="<model>", waived=""):
+    return (f"next: {slug} {happened}; dispatch kc-dev-flow-2:{agent} {where}with the question \"{QUESTION[agent]}\" "
+            f"and record `Reviewer: kc-dev-flow-2:{agent} {model} <date> — <question>` under ## FO alignment; "
+            f"or, to decline, record `Reviewer: kc-dev-flow-2:{agent} not run{waived}: <reason>` instead.")
+
+
+def hint(slug, agent, heading):
+    return (f"next: {slug} has a Reviewer: line for {agent} under \"{heading}\", where it does not count; "
+            "move it under ## FO alignment.")
+
+
+def check(state, slug, rev, rounds=None):
+    text = read_task(state, slug, rev)
+    lines = list(outside_fences(text))
+    reports, amendments = events(lines)
+    kept = list(alignment(lines))
+    front = re.match(r"---\n(.*?)\n---\n", text, re.S)
+    profile = FRONT_PROFILE.search(front.group(1)) if front else None
+    strong = (profile and profile.group(1) == "prod", any(SURFACES_DB.match(line.strip()) for line in kept))
     owed, seen = [], 0
-    if any(number >= 3 for number in cycles):
+    repairs = max(reports - 1, 0)
+    if repairs >= REPAIRS or (rounds or 0) >= REVIEW_ROUNDS:
         seen += 1
-        if not cleared(records, "chief-engineer", r"\bCycle 3\b"):
-            owed.append(owed_line(slug, "chief-engineer", "has a third Feedback Cycle", "Cycle 3"))
-    for number, date in amendments:
-        seen += 1
-        token = f"Amendment {number}"
-        if not cleared(records, "engineering-reviewer", rf"\b{token}\b", date):
-            owed.append(owed_line(slug, "engineering-reviewer", f"has a Captain amendment {number} that replaces approved text", token))
+        calls, waivers = records(kept, "chief-engineer")
+        if not (calls or waivers):
+            found = [f"{repairs} repair passes"] * (repairs >= REPAIRS) + [f"{rounds} review rounds"] * ((rounds or 0) >= REVIEW_ROUNDS)
+            owed.append(owed_line(slug, "chief-engineer", "has " + " and ".join(found)))
+            owed += [hint(slug, "chief-engineer", h) for h in [misplaced(lines, "chief-engineer")] if h]
+    if amendments:
+        seen += len(amendments)
+        need = "fable" if any(strong) else "opus"
+        calls, waivers = records(kept, "engineering-reviewer")
+        open_numbers = []
+        for number, date in sorted(amendments):
+            by_call = any(rank(model) >= RANK[need] and (date is None or made >= date) for model, made in calls)
+            by_waiver = any(waived and (date is None or waived >= date) for waived in waivers)
+            if not (by_call or by_waiver):
+                open_numbers.append(str(number))
+        if open_numbers:
+            basis = ", ".join(name for name, on in zip(("profile prod", "Surfaces db"), strong) if on)
+            where = f"on {need}{f' ({basis})' if basis else ''} "
+            plural = "s" * (len(open_numbers) > 1)
+            happened = f"has replacing amendment{plural} {', '.join(open_numbers)}"
+            owed.append(owed_line(slug, "engineering-reviewer", happened, where, need, " <date>"))
+            owed += [hint(slug, "engineering-reviewer", h) for h in [misplaced(lines, "engineering-reviewer")] if h]
     if owed:
         return 1, "\n".join(owed)
     return 0, f"role triggers: {seen} event(s) read at {rev}, each with a call or a waiver."
@@ -167,8 +221,8 @@ def check(state, slug, rev):
 def main(argv=None):
     args = sys.argv[1:] if argv is None else list(argv)
     try:
-        state, slug, rev = parse(args)
-        code, message = check(state, slug, rev)
+        state, slug, rev, rounds = parse(args)
+        code, message = check(state, slug, rev, rounds)
     except Unverifiable as err:
         print(f"cannot tell whether a chief-engineer or engineering-reviewer call is owed: {err}. Hold and report the cause.")
         return 2

@@ -32,7 +32,8 @@ lists those extensions, and prints one `fact:` line per open task PR (state, dra
 with their review id) and one `next:` line per action FO owes: recording a PR a worker opened, marking a green
 draft ready, the observer check ahead of the merge sentinel, keeping one wait running, a task's newest
 dispatch record that names a package script without a directory (dispatch_records.py --newest), and a
-chief-engineer or engineering-reviewer call a live task owes (role_triggers.py). It prints no merge-ask
+chief-engineer or engineering-reviewer call a live task owes (role_triggers.py, given the number of review ids
+that left inline comments on the task's open PR). It prints no merge-ask
 or hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
 change. Exit 2 when a task cannot be read.
 """
@@ -264,6 +265,12 @@ def repo_of(worktree, ask):
     return ask("repo", "view", url, "--json", "nameWithOwner")["nameWithOwner"]
 
 
+def review_rounds(ref, ask):
+    repo, number = ref.split("#")
+    pages = ask("api", f"repos/{repo}/pulls/{number}/comments", "--paginate", "--slurp")
+    return len({c["pull_request_review_id"] for page in pages for c in page})
+
+
 def opened_pr(worktree, ask):
     repo = repo_of(worktree, ask)
     branch = git("-C", str(worktree), "branch", "--show-current")
@@ -291,11 +298,12 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     state = workflow / readme["state"] if readme.get("state") else workflow
     listed = set(re.findall(r"[\w-]+", readme.get("extensions", "")))
     wait = f"python3 {SCRIPTS / 'pr_watch.py'}" + (f" --state {shlex.quote(str(opts.state))}" if opts.given else "")
-    out, snaps, errors = [], {}, []
+    out, snaps, errors, live, rounds = [], {}, [], [], {}
     for slug, task in entities(state):
         meta = front(task)
         if "status" not in meta:
             continue
+        live.append(slug)
         if (state / slug / "dispatch").is_dir():
             done = subprocess.run([sys.executable, str(SCRIPTS / "dispatch_records.py"), "--newest", str(state), slug],
                                   capture_output=True, text=True)
@@ -307,11 +315,6 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
                            "and save it as the next record, else do nothing.")
             elif done.returncode:
                 errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
-        done = subprocess.run([sys.executable, str(SCRIPTS / "role_triggers.py"), str(state), slug], capture_output=True, text=True)
-        if done.returncode == 1:
-            out += done.stdout.splitlines()
-        elif done.returncode:
-            errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
         pr = meta.get("pr", "")
         try:
             where = toplevel(workflow) / meta["worktree"] if not pr and meta.get("worktree") else None
@@ -331,6 +334,8 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
             known = load(opts.state)
             codex, copilot = read_flags(known, ref, "codex" in listed, "copilot" in listed)
             now = settle(dict(look(ref, with_codex=codex, with_copilot=copilot)), known.get(ref, {}), clock)
+            if now["state"] == "OPEN":
+                rounds[slug] = review_rounds(ref, ask)
         except (RuntimeError, KeyError, ValueError, OSError) as error:
             errors.append(f"next: report {slug} to the Captain: {str(error)[:120]}.")
             continue
@@ -346,6 +351,13 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
                 check = f"python3 {SCRIPTS / 'observer_check.py'} {shlex.quote(str(state))} {slug}"
                 out += [f"next: let pr-merge record {slug}.", f"after pr-merge: run `{check}`.",
                         "after pr-merge: do each next: line it prints."]
+    for slug in live:
+        asked = [] if slug not in rounds else ["--review-rounds", str(rounds[slug])]
+        done = subprocess.run([sys.executable, str(SCRIPTS / "role_triggers.py"), str(state), slug, *asked], capture_output=True, text=True)
+        if done.returncode == 1:
+            out += done.stdout.splitlines()
+        elif done.returncode:
+            errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
     if snaps:
         already, _ = record(opts.state, load(opts.state), snaps)
         out += already + [f"next: run `{wait} wait` in the background, unless one is running.",

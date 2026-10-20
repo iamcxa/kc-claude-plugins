@@ -399,7 +399,8 @@ class TasksTests(unittest.TestCase):
 
     def tasks(self, answers, look=None, clock=None):
         table = self.root / "gh.json"
-        table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, **answers}))
+        quiet = {f"api repos/o/r/pulls/{n}/comments": [[]] for n in (7, 8, 9)}
+        table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, **quiet, **answers}))
         env = {"PATH": f"{self.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table)}
         out = io.StringIO()
         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
@@ -686,8 +687,9 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(code, 2)
         self.assertRegex(lines[0], r"^next: report some-task to the Captain: .*git cannot read the dispatch records")
 
-    def third_cycle(self, slug, extra="", archived=False, commit=True):
-        text = f"---\ntitle: {slug}\nstatus: validation\npr:\n---\n## FO alignment\n{extra}\n### Feedback Cycles\n- Cycle 3 (FO): x\n"
+    def fourth_repair(self, slug, extra="", archived=False, commit=True):
+        reports = "".join(f"\n## Stage Report: implementation{suffix}\n\n- DONE: x\n" for suffix in ("", *(f" (cycle {n})" for n in (2, 3, 4, 5))))
+        text = f"---\ntitle: {slug}\nstatus: validation\npr:\n---\n## FO alignment\n{extra}\n{reports}"
         target = self.state / ("_archive" if archived else "") / f"{slug}.md"
         target.parent.mkdir(exist_ok=True)
         target.write_text(text)
@@ -697,26 +699,80 @@ class TasksTests(unittest.TestCase):
 
     def test_a_live_task_owing_a_role_call_prints_the_line_until_it_is_recorded(self):
         self.readme("roborev")
-        self.third_cycle("some-task")
+        self.fourth_repair("some-task")
         code, lines = self.tasks({})
         self.assertEqual(code, 0, lines)
         self.assertEqual(len(lines), 1, lines)
-        self.assertRegex(lines[0], r"^next: some-task has a third Feedback Cycle; dispatch kc-dev-flow-2:chief-engineer ")
-        self.assertLessEqual(len(lines[0].split()), 52)
-        self.third_cycle("some-task", extra="Reviewer: kc-dev-flow-2:chief-engineer not run: Captain ordered it. Cycle 3")
+        self.assertRegex(lines[0], r"^next: some-task has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer ")
+        self.assertLessEqual(len(lines[0].split()), 60)
+        self.fourth_repair("some-task", extra="Reviewer: kc-dev-flow-2:chief-engineer not run: Captain ordered it")
         self.assertEqual(self.tasks({}), (0, []))
 
     def test_an_archived_task_owing_a_role_call_prints_nothing(self):
         self.readme("roborev")
-        self.third_cycle("some-task", archived=True)
+        self.fourth_repair("some-task", archived=True)
         self.assertEqual(self.tasks({}), (0, []))
 
     def test_a_task_the_role_check_cannot_read_is_reported_with_exit_2(self):
         self.readme("roborev")
-        self.third_cycle("some-task", commit=False)
+        self.fourth_repair("some-task", commit=False)
         code, lines = self.tasks({})
         self.assertEqual(code, 2)
         self.assertRegex(lines[0], r"^next: report some-task to the Captain: cannot tell whether a chief-engineer")
+
+    def comments(self, *review_ids):
+        page = [{"pull_request_review_id": rid} for rid in review_ids]
+        return {"api repos/o/r/pulls/7/comments": [page[:1], page[1:]] if page else [[]]}
+
+    def test_two_review_ids_with_inline_comments_on_an_open_task_pr_owe_chief_engineer(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        code, lines = self.tasks({"pr view 7": view(), **self.comments(11, 11, 12)})
+        self.assertEqual(code, 0, lines)
+        roles = [line for line in lines if "chief-engineer" in line]
+        self.assertEqual(len(roles), 1, lines)
+        self.assertRegex(roles[0], r"^next: some-task has 2 review rounds; dispatch kc-dev-flow-2:chief-engineer ")
+        self.assertLessEqual(len(roles[0].split()), 60)
+
+    def test_one_review_id_with_many_comments_and_no_comments_owe_nothing(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        for name, comments in (("one id, nine comments", self.comments(*[11] * 9)), ("no comments", self.comments())):
+            with self.subTest(name):
+                code, lines = self.tasks({"pr view 7": view(), **comments})
+                self.assertEqual(code, 0, lines)
+                self.assertFalse([line for line in lines if "chief-engineer" in line], lines)
+
+    def test_a_recorded_call_clears_the_review_round_line(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        text = (self.state / "some-task.md").read_text() + "## FO alignment\nReviewer: kc-dev-flow-2:chief-engineer opus 2026-10-18 — q\n"
+        (self.state / "some-task.md").write_text(text)
+        self.git(self.state, "add", "-A")
+        self.git(self.state, "commit", "-qm", "call")
+        code, lines = self.tasks({"pr view 7": view(), **self.comments(11, 12)})
+        self.assertEqual(code, 0, lines)
+        self.assertFalse([line for line in lines if "chief-engineer" in line], lines)
+
+    def test_a_merged_pr_is_not_read_for_review_rounds(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        code, lines = self.tasks({"pr view 7": view("MERGED"), "api repos/o/r/pulls/7/comments": None})
+        self.assertEqual((code, [line for line in lines if "chief-engineer" in line]), (0, []))
+
+    def test_a_failed_comment_read_is_reported_to_the_captain_with_exit_2(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        code, lines = self.tasks({"pr view 7": view(), "api repos/o/r/pulls/7/comments": None})
+        self.assertEqual(code, 2)
+        self.assertRegex(lines[0], r"^next: report some-task to the Captain: stub gh: no answer for api repos/o/r/pulls/7/comments")
+
+    def test_a_task_without_a_pr_is_judged_without_review_rounds(self):
+        self.readme("roborev")
+        self.fourth_repair("some-task")
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertIn("has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer", lines[0])
 
     def test_tasks_needs_one_workflow_directory(self):
         with contextlib.redirect_stdout(io.StringIO()):
@@ -839,7 +895,8 @@ class DefaultStateTests(unittest.TestCase):
         tasks.readme("roborev")
         tasks.task("some-task", pr="o/r#7")
         table = tasks.root / "gh.json"
-        table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, "pr view 7": view()}))
+        table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, "pr view 7": view(),
+                                     "api repos/o/r/pulls/7/comments": [[]]}))
         env = {"PATH": f"{tasks.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table),
                "HOME": str(self.home), "CLAUDE_CODE_SESSION_ID": "S"}
         out = io.StringIO()
