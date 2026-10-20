@@ -69,7 +69,7 @@ Design: rule 4 of the backlog Scope (issue #684) narrows in this task to the nam
 Captain: 「那就不做」 (chat, 2026-10-20, batch-4 sitting, question 10)
 Asked: 「所以我改建議：不做。理由記成「只有 1 個案例，比對字詞擋不住這一類錯」，之後交給觀察者在任務結案時抓。」
 Supersedes: AC-7, no replacement
-Design: rule 1 (a ruling written before its question) gets no check in this task; the D4 phrase check is not built; the observer stays the reader of rule 1. Reopen when a structured Captain-rulings field exists.
+Design: rule 1 (a ruling written before its question) gets no check in this task; the D4 phrase check is not built; the observer stays the reader of rule 1. Reopen when a structured Captain-rulings field exists. AC-10's ADR records rule 1 as unchecked, and its short title drops `one-to-three` for `fo-write-rules-are-checked-by-the-script-fo-runs-at-the-write`, following this ruling.
 Superseded text: **AC-7** `delivery_gate.py check` holds when `<task>-followups.md` beside the task claims the Captain's acceptance in its title or first paragraph.
 Override: recommended the phrase check (design D4); Captain chose no check, on FO's revised recommendation in chat; area: rule 1 enforcement
 
@@ -434,6 +434,10 @@ Reviewer: engineering-reviewer opus 2026-10-20 — do D1 (a Captain Scope change
 Reviewer: engineering-reviewer opus 2026-10-20, second read — does the cycle-2 fold of reviews/engineering-reviewer-1.md meet its conditions, and do its own additions (commit-time amendment rule, ideation-only Scope check, 「」 spans echoed in place of conn_quote, the ask-run teaching clause, the no-quote guard, and a repair under grant re-asking the merge, which reverses the flow ADR 0023 describes) open a merge the Captain did not authorize? Called because the fold changes merge-authority rules the first read did not see.
 
 Reviewer: chief-engineer opus 2026-10-20 — what is the smallest next step, given the findings so far? The second engineering-reviewer read (reviews/engineering-reviewer-2.md) found a new opening in the carried-merge grant the first read's conditions fixed (the merge-time teaching clause plus no digest check on an approved briefing), so the merge half is drifting.
+
+## Number guards
+
+ADR: 0027
 
 ## Stage Report: ideation
 
