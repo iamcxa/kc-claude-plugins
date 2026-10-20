@@ -15,3 +15,7 @@ Declined under the round-3 rule at the validation gate of task `delivery-gate-ve
 - F3 Polish: the cycle 5 implementation report does not restate `updated` or `unaffected` for the two documents `doc_impact.py` lists (`kc-dev-flow-2/README.md`, `references/sd/adoption.md`). Decline reason: the cycle 1 report carries both and the reason still holds at aa6fcc91.
 - F4 Polish: the exit 0 line prints the head as given (a prefix) where the record has 40 characters, and the exit 1 line for a validated-but-unpushed repair does not name pushing as a remedy. Decline reason: wording only; the exit codes are right.
 - F5 Polish: the `dispatch-record` swaps entry in `scripts/test_sd_dispatch.py` deletes the whole passage, so it is not specific to the `Candidate:` clause. Decline reason: the validator's direct removal of the clause fails the entry, so the pin holds.
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: each item fails closed or sits in archived text; triggers never fired.
