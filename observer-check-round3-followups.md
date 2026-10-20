@@ -23,3 +23,7 @@ Alignment: not needed before ideation; the finding and decline reason above are 
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: stale-report-after-rework trigger never observed in 27 observer reports.
