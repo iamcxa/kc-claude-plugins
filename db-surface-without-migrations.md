@@ -53,6 +53,17 @@ gates:
                 id: briefing:db-surface-without-migrations:validation:attempt-1:revision-1
                 digest: sha256:eb57ed101179eaabc485edf3bd588a948a836054f6e3d0a906c1392e0fe313f4
                 room-ref: ./db-surface-without-migrations/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:db-surface-without-migrations:validation:1
+                briefing: briefing:db-surface-without-migrations:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T14:33:11.186173Z"
+                decision: approve
+                reason: 'Captain 「合併」 (chat, 2026-10-20, batch-4 sitting, question 19): approve validation and merge iamcxa/kc-claude-plugins#686 at head 8c3a60e1312b289a768a7156af771bd3df49bb7e, as recommended.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-20T04:57:48Z
 worktree: .worktrees/spacedock-ensign-db-surface-without-migrations
 pr: iamcxa/kc-claude-plugins#686
