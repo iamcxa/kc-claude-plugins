@@ -242,3 +242,8 @@ is authorized; production licensing remains a separate owner task. Accepted boun
 native/browser and lifecycle evidence may be reused within its stated limits;
 it is not complete cost or retained-deployment acceptance. No CI was added;
 CI cost per PR was not measured.
+
+The optional [revocation candidate](delegation-revocation.md) adds lease-guarded
+outgoing delivery, separate close acknowledgment, mutation receipts and versioned
+security recovery. Existing metadata DDL and canvas schema remain unchanged;
+provider/activation evidence is still held.

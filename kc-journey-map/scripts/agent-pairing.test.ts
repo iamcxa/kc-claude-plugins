@@ -176,3 +176,126 @@ test('legacy ids sharing the agent prefix preserve their original authority and 
  assert.equal(a.actorType,'legacy');assert.equal(a.principalId,'old-owner-label')
  f.db.close()
 })
+
+test('outgoing send guard rejects absent, expired, malformed and invalidated leases at the actual send boundary',async()=>{
+ const {canSend,renewLease}=await import('../server/host/stream-lease')
+ const time=Date.now(),lease={streamId:'stream',room:'one',admission:{actorType:'legacy' as const,credentialId:'old',principalId:'old',rooms:['one'],cookie:false,expiresAt:time+100000},leaseUntil:time+30000}
+ assert.equal(canSend(lease,time),true)
+ for(const bad of [null,{...lease,leaseUntil:NaN},{...lease,leaseUntil:time},{...lease,invalidated:true}])assert.equal(canSend(bad,time),false)
+ const meta={get:async()=>{throw new Error('synthetic policy outage')}} as any
+ await assert.rejects(renewLease(meta,lease),/synthetic policy outage/)
+ assert.equal(lease.leaseUntil,time+30000)
+})
+
+test('revocation reserves audit before mutation and waits for actual indexed close acknowledgment',async()=>{
+ const {securityOperation}=await import('../server/host/security-store'),f=await fixture(),p=await f.pair()
+ const lease={streamId:'passive',room:'one',admission:{actorType:'agent',familyId:p.family.id,credentialId:p.credentialId,principalId:'owner',rooms:['one'],cookie:false,expiresAt:now+900000},leaseUntil:now+30000}
+ securityOperation(f.store,'stream-register',lease,now)
+ const original=f.store.put
+ f.store.put=(key,value)=>{if(key.startsWith('security-receipt:'))throw new Error('audit reservation failed');original(key,value)}
+ assert.throws(()=>f.run('revoke',{...f.human,familyId:p.family.id}),/audit reservation failed/)
+ assert.equal(f.store.get<any>('agent-family:'+p.family.id).revoked,false)
+ f.store.put=original
+ const result=f.run('revoke',{...f.human,familyId:p.family.id})
+ assert.equal(securityOperation(f.store,'status',result,now).streamsStopped,'stopping')
+ assert.equal(securityOperation(f.store,'status',result,now+30001).streamsStopped,'unknown')
+ assert.throws(()=>securityOperation(f.store,'stream-register',{...lease,streamId:'late'},now),/stream_denied/)
+ securityOperation(f.store,'stream-close',{streamId:'passive'},now+30002)
+ assert.equal(securityOperation(f.store,'status',result,now+30002).closeConfirmed,true)
+ f.db.close()
+})
+
+test('own revoke cannot target another authorizer and an agent cannot operate human or member controls',async()=>{
+ const f=await fixture(),p=await f.pair()
+ const other={...f.store.get<any>('browser-session:human'),memberId:'other'}
+ f.store.put('browser-session:other',other)
+ assert.throws(()=>f.run('revoke',{...f.human,sessionDigest:'other',memberId:'other',familyId:p.family.id}),/authorizer_denied/)
+ assert.equal(f.store.get<any>('agent-family:'+p.family.id).revoked,false)
+ const reply=await handle({private:true,origin,meta:{get:async()=>null},humanConfig:config,agentPairing:true} as any,new Request(origin+'/auth/logout',{method:'POST',headers:{Authorization:'Bearer '+p.credentialId+'.'+'a'.repeat(64),'Content-Type':'application/json',Origin:origin,'X-Journey-Entry':'1'},body:'{}'}))
+ assert.notEqual(reply.status,200)
+ f.db.close()
+})
+
+test('final mutation receipt failure exposes committed pending outcome and a reused operation never repeats mutation',async()=>{
+ const {securityOperation}=await import('../server/host/security-store'),{audited}=await import('../server/host/audit'),f=await fixture()
+ let effects=0,failFinalize=true
+ const host={private:true,meta:{security:async(op:string,input:any)=>{if(op==='finalize'&&failFinalize)throw new Error('synthetic final failure');return securityOperation(f.store,op,input,now)}}} as any
+ await assert.rejects(audited(host,null,'one','synthetic',async()=>++effects,'fixed-operation'),(error:any)=>error.details.outcome==='committed_receipt_pending'&&error.details.retry===false)
+ assert.equal(effects,1);failFinalize=false
+ await assert.rejects(audited(host,null,'one','synthetic',async()=>++effects,'fixed-operation'),/operation_already_reserved/)
+ assert.equal(effects,1)
+ assert.equal(f.store.get<any>('security-receipt:fixed-operation').final,false)
+ f.db.close()
+})
+
+test('shared legacy cutover requires every declared consumer in its original room and preserves original expiry',async()=>{
+ const {securityOperation}=await import('../server/host/security-store'),f=await fixture(),p=await f.pair()
+ const grant={credentialId:'shared',secretDigest:'a'.repeat(64),principalId:'old',rooms:['one'],expiresAt:now+50000,revoked:false}
+ f.store.put('grant:shared',grant)
+ securityOperation(f.store,'cutover-plan',{credentialId:'shared',synthetic:true,inventoryComplete:true,consumers:[{id:'one',familyId:p.family.id,rooms:['one']},{id:'two',familyId:p.family.id,rooms:['one']}]},now)
+ securityOperation(f.store,'cutover-verified',{credentialId:'shared',consumerId:'one',familyId:p.family.id,rooms:['one']},now)
+ assert.throws(()=>securityOperation(f.store,'revoke-legacy',{credentialId:'shared'},now),/cutover_consumers_unverified/)
+ assert.deepEqual(f.store.get('grant:shared'),grant)
+ assert.throws(()=>securityOperation(f.store,'cutover-verified',{credentialId:'shared',consumerId:'two',familyId:p.family.id,rooms:['elsewhere']},now),/cutover_consumer_denied/)
+ assert.throws(()=>securityOperation(f.store,'cutover-verified',{credentialId:'shared',consumerId:'two',familyId:p.family.id,rooms:['one']},now+50001),/cutover_legacy_expired_or_changed/)
+ securityOperation(f.store,'cutover-verified',{credentialId:'shared',consumerId:'two',familyId:p.family.id,rooms:['one']},now)
+ assert.equal(securityOperation(f.store,'revoke-legacy',{credentialId:'shared'},now).revoked,true)
+ assert.equal(f.store.get<any>('grant:shared').expiresAt,grant.expiresAt)
+ f.db.close()
+})
+
+test('security recovery quarantines stale authority and ordinary receipt pruning keeps tombstones and spent proof',async()=>{
+ const {securityOperation}=await import('../server/host/security-store'),f=await fixture(),p=await f.pair()
+ const archive={format:'journey-security-1',records:f.store.list('',10000).filter(row=>!row.key.startsWith('room:'))}
+ f.run('rotate',{familyId:p.family.id,generation:1,secretDigest:p.refreshDigest,nextDigest:'e'.repeat(64),accessId:'agt_new',accessDigest:'d'.repeat(64)})
+ const revoked=f.run('revoke',{...f.human,familyId:p.family.id})
+ assert.throws(()=>securityOperation(f.store,'restore-security',archive,now),/recovery_requires_fresh_backend_and_member_ids/)
+ f.store.put('human-config:v1',{...config,backendId:'recovered',members:[]})
+ securityOperation(f.store,'restore-security',archive,now)
+ assert.equal(f.store.get<any>('agent-family:'+p.family.id).revoked,true)
+ assert.ok(f.store.get('agent-spent:'+p.family.id+':1'))
+ assert.equal(f.store.get<any>('member:owner').enabled,false)
+ securityOperation(f.store,'prune',{},now+31*24*3600_000)
+ assert.ok(f.store.get('security-denial:'+revoked.operationId));assert.ok(f.store.get('agent-spent:'+p.family.id+':1'))
+ assert.equal(f.store.list('security-receipt:',100).length,0)
+ assert.throws(()=>bootstrapHuman(f.store,config),/immutable/)
+ f.db.close()
+})
+
+test('two real Node consumers verify sentinel read/write in the original room before shared legacy cutover',async()=>{
+ const {mkdtemp,writeFile,chmod}=await import('node:fs/promises'),{tmpdir}=await import('node:os'),{join}=await import('node:path')
+ const {NodeHost}=await import('../server/host/node'),{verifyCutoverConsumer}=await import('../server/host/cutover'),{backupPrivateHost}=await import('./private-backup')
+ const root=await mkdtemp(join(tmpdir(),'cutover-'));await chmod(root,0o700)
+ const secret='d'.repeat(64),grantFile=join(root,'grants.json'),configFile=join(root,'human.json'),dataDir=join(root,'data'),time=Date.now()
+ const liveConfig={...config,localOwnerUid:process.geteuid(),members:config.members.map(m=>m.id==='owner'?{...m,subject:'uid:'+process.geteuid()}:{...m,subject:'synthetic-other'})}
+ await writeFile(grantFile,JSON.stringify([{credentialId:'shared',secretDigest:await digest(secret),principalId:'old',rooms:['one'],expiresAt:time+600000,revoked:false}]))
+ await writeFile(configFile,JSON.stringify(liveConfig))
+ const previous={...process.env}
+ Object.assign(process.env,{JOURNEY_PRIVATE_DIR:dataDir,JOURNEY_GRANTS_FILE:grantFile,JOURNEY_HUMAN_CONFIG:configFile,JOURNEY_AGENT_PAIRING:'true',JOURNEY_ORIGIN:origin})
+ const host=new NodeHost()
+ try {
+  await host.document('one','GET',null)
+  await host.meta.put('browser-session:human',{actorType:'human',backendId:'synthetic',memberId:'owner',generation:1,expiresAt:time+900000,verifiedHumanSignInAt:time,humanRevalidateBy:time+604800000,csrfDigest:'csrf',revoked:false})
+  const context={sessionDigest:'human',csrfDigest:'csrf',memberId:'owner',backendId:'synthetic',signInAt:time,originalRoom:'one'}
+  async function installation(){
+   const request={requestId:crypto.randomUUID(),installationId:crypto.randomUUID(),memberId:'owner',label:'Synthetic cutover consumer',rooms:['one'],verifierDigest:await digest('verifier'),codeDigest:await digest(crypto.randomUUID())}
+   await host.meta.agent!('create',request)
+   const consent=await host.meta.agent!('inspect',{...context,codeDigest:request.codeDigest})
+   await host.meta.agent!('approve',{...context,codeDigest:request.codeDigest,consentId:consent.consentId})
+   const accessSecret='e'.repeat(64)
+   const issued=await host.meta.agent!('redeem',{...request,familyId:crypto.randomUUID(),refreshDigest:await digest('refresh'),accessId:'agt_'+crypto.randomUUID(),accessDigest:await digest(accessSecret)})
+   return authenticate(host.meta,new Headers({Authorization:'Bearer '+issued.credentialId+'.'+accessSecret}))
+  }
+  const one=await installation(),two=await installation(),before=await host.document('one','GET',null) as any
+  await host.meta.security!('cutover-plan',{credentialId:'shared',synthetic:true,inventoryComplete:true,consumers:[{id:'one',familyId:one.familyId,rooms:['one']},{id:'two',familyId:two.familyId,rooms:['one']}]})
+  await verifyCutoverConsumer(host,one,'shared','one')
+  await assert.rejects(host.revoke('shared'),/cutover_consumers_unverified/)
+  assert.equal((await authenticate(host.meta,new Headers({Authorization:'Bearer shared.'+secret}))).expiresAt,time+600000)
+  await verifyCutoverConsumer(host,two,'shared','two');assert.equal((await host.revoke('shared')).revoked,true)
+  await assert.rejects(authenticate(host.meta,new Headers({Authorization:'Bearer shared.'+secret})),/revoked/)
+  assert.deepEqual((await host.document('one','GET',null) as any).snapshot.documents,before.snapshot.documents)
+  assert.deepEqual(host.db.prepare("SELECT name FROM sqlite_master WHERE type='table'").all().map((r:any)=>r.name),['metadata'])
+  const archive=await backupPrivateHost(host);assert.ok(archive.security?.records.some(r=>r.key.startsWith('security-denial:')))
+  await (await import('node:fs/promises')).access(join(dataDir,'.journey-private-v2'))
+ }finally{await new Promise(resolve=>setTimeout(resolve,1100));host.close();for(const key of Object.keys(process.env))if(!(key in previous))delete process.env[key];Object.assign(process.env,previous)}
+})

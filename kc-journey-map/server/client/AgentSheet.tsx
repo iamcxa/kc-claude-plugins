@@ -4,7 +4,7 @@ import { journeyApi } from './api'
 import './agent-sheet.css'
 type Entry = { backendId: string; memberId: string; label: string }
 type Scope = { roomId: string; assets: boolean; saveDirectory: string | null; repositories: string[] }
-type Family = { id: string; label: string; installationId: string; memberId: string; scopes: Scope[]; revoked: boolean; reason?: string }
+type Family = { id: string; label: string; installationId: string; memberId: string; scopes: Scope[]; revoked: boolean; streamsStopped?: string; operationId?: string; reason?: string }
 type Consent = { id: string; consentId: string; label: string; installationId: string; backendId: string; authorizer: { id: string; label: string }; origin: string; scopes: Scope[]; expiresAt: number; status: string }
 const errors: Record<string,string> = {
  authorizer_denied:'這不是你的配對請求，或配對碼不正確。',request_expired:'配對請求已到期，請在原安裝重新開始。',request_consumed:'配對請求已兌換，請更新代理清單。',request_denied:'此請求已拒絕，請在原安裝重新開始。',request_cancelled:'此請求已取消，請在原安裝重新開始。',
@@ -63,7 +63,7 @@ export function AgentSheet({ entry }: { entry: Entry }) {
     <h3>已核准的代理安裝</h3><p>短期存取十五分鐘，自動更新，沒有閒置到期。瀏覽器登出不會撤銷代理。</p>
     <button className="secondary" disabled={busy} onClick={()=>void perform(async()=>{await inventory();setConsent(null)})}>更新代理清單</button>
     {!busy&&!families.length&&<p>目前沒有代理安裝。</p>}
-    {families.map(f=><section className="agent-family" key={f.id}><h3>{f.label}</h3><p>自行填寫的名稱 · 安裝 {f.installationId}</p><p>授權家族：{f.id}</p><Scopes scopes={f.scopes}/>{f.revoked?<><p>已撤銷；舊安裝不會復活。</p><p>請回原安裝確認撤銷，再啟動全新配對。</p></>:pending.includes(f.id)?<p>撤銷待確認。此處未確認完成；請保留暫停狀態並更新清單。</p>:<><p>目前授權有效。安裝端若顯示更新或安全儲存結果不明，必須停止呼叫，只能確認舊授權撤銷後重新配對。</p>{confirmation===f.id?<><p>確認撤銷這個安裝的所有畫布權限？</p><div className="agent-actions"><button className="destructive" disabled={busy} onClick={()=>void perform(async()=>{setPending(current=>[...current,f.id]);await post('revoke',{familyId:f.id});await inventory();setConfirmation(null)})}>確認撤銷此安裝</button><button className="secondary" disabled={busy} onClick={()=>setConfirmation(null)}>取消撤銷</button></div></>:<button className="secondary" disabled={busy} onClick={()=>setConfirmation(f.id)}>撤銷此安裝</button>}</>}</section>)}
+    {families.map(f=><section className="agent-family" key={f.id}><h3>{f.label}</h3><p>自行填寫的名稱 · 安裝 {f.installationId}</p><p>授權成員：{f.memberId}</p><p>授權家族：{f.id}</p><Scopes scopes={f.scopes}/>{f.revoked?<><p>新請求已拒絕；舊安裝不會復活。</p><p>{f.streamsStopped==='stopped'?'所有已登記連線已確認關閉。':f.streamsStopped==='stopping'?'正在停止既有連線；尚未確認全部關閉。':'既有連線停止結果未確認；請更新清單。'}</p><p>請回原安裝確認撤銷，再啟動全新配對。</p></>:pending.includes(f.id)?<p>撤銷待確認。此處未確認完成；請保留暫停狀態並更新清單。</p>:<><p>目前授權有效。安裝端若顯示更新或安全儲存結果不明，必須停止呼叫，只能確認舊授權撤銷後重新配對。</p>{confirmation===f.id?<><p>確認撤銷這個安裝的所有畫布權限？</p><div className="agent-actions"><button className="destructive" disabled={busy} onClick={()=>void perform(async()=>{setPending(current=>[...current,f.id]);await post('revoke',{familyId:f.id});await inventory();setConfirmation(null)})}>確認撤銷此安裝</button><button className="secondary" disabled={busy} onClick={()=>setConfirmation(null)}>取消撤銷</button></div></>:<button className="secondary" disabled={busy} onClick={()=>setConfirmation(f.id)}>撤銷此安裝</button>}</>}</section>)}
    </div>
   </dialog>,document.body)}</>
 }

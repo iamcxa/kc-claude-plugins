@@ -22,6 +22,7 @@ export async function agentRoute(host: Host, req: Request): Promise<Response | n
   const admission={ credentialId:h.member.id,principalId:h.member.id,actorType:'human' as const,humanSessionDigest:h.sessionDigest,rooms:h.rooms,expiresAt:h.session.expiresAt,cookie:true }
   await requireHumanContext(host.meta,admission,url)
   const result=await host.meta.agent!(op,{ sessionDigest:h.sessionDigest,csrfDigest:await digest(req.headers.get('x-journey-csrf') || ''),memberId:url.searchParams.get('_human'),backendId:url.searchParams.get('_backend'),signInAt:Number(url.searchParams.get('_humanAt')),originalRoom:url.searchParams.get('_humanRoom'),codeDigest:await digest(typeof body.code==='string' ? body.code.toUpperCase().replace(/[- ]/g,'') : ''),familyId:body.familyId,consentId:body.consentId })
+  if(op==='list' && host.meta.security)for(const family of result.families)if(family.revokeOperation){try{Object.assign(family,await host.meta.security('progress',{operationId:family.revokeOperation}))}catch{family.streamsStopped='unknown'}}
   return Response.json(result)
  }
  if (req.headers.has('origin') || req.headers.has('cookie') || req.headers.has('authorization')) deny(403,'installation_channel_required')

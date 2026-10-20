@@ -136,7 +136,7 @@ export async function humanRoute(host: HumanHost, req: Request): Promise<Respons
   if (!csrf || csrf !== cookieValue(req.headers, 'journey_human_csrf')) deny(403, 'csrf_denied')
   const result = await host.meta.human(path === '/auth/renew' ? 'renew' : 'logout', { sessionDigest: human.sessionDigest, csrfDigest: await digest(csrf) })
   const token = cookieValue(req.headers, 'journey_human')!
-  return Response.json(path === '/auth/logout' ? { loggedOut: true } : { ok: true, expiresAt: result.expiresAt, verifiedHumanSignInAt: result.verifiedHumanSignInAt, humanRevalidateBy: result.humanRevalidateBy }, { headers: cookies(host.origin, path === '/auth/logout' ? '' : token, path === '/auth/logout' ? '' : csrf, path === '/auth/logout' ? 0 : result.expiresAt) })
+  return Response.json(path === '/auth/logout' ? result : { ok: true, expiresAt: result.expiresAt, verifiedHumanSignInAt: result.verifiedHumanSignInAt, humanRevalidateBy: result.humanRevalidateBy }, { headers: cookies(host.origin, path === '/auth/logout' ? '' : token, path === '/auth/logout' ? '' : csrf, path === '/auth/logout' ? 0 : result.expiresAt) })
  }
  return deny(404, 'unknown_human_operation')
 }

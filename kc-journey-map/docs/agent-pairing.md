@@ -3,7 +3,7 @@
 This second-story Pilot foundation is disabled unless
 `JOURNEY_AGENT_PAIRING=true` is explicitly set on the server. It requires private
 storage and the existing verified-human configuration. Keep it disabled outside
-fresh synthetic validation: active-stream revocation, hosted/provider proof and
+fresh synthetic validation: hosted/provider stream-stop proof and
 independent native-client collaboration remain separate work. There is no live
 deployment, production credential migration, standing CI change or measured
 per-PR cost in this change.
@@ -143,7 +143,9 @@ an older security backup or use a binary that bypasses typed admission or the lo
 confirmation checkpoint. Preserve that checkpoint until the patched helper confirms
 revoke; an older helper that ignores it is not a safe rollback. Restarting
 with the setting disabled advances policy generation; enabling it again cannot
-revive the prior families. New HTTP denial does not prove bounded stream stop.
+revive the prior families. New HTTP denial does not prove bounded stream stop. The
+[revocation candidate](delegation-revocation.md) documents local lease/close proof,
+security recovery versioning and the remaining activation hold.
 
 Three-step fresh-shell local acceptance, normally below five minutes after
 locked dependencies and browser are installed:
