@@ -3,7 +3,10 @@ title: special-role-triggers follow-ups declined at the #664 delivery gate (fenc
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:09:48Z
+archived: 2026-10-20T05:09:48Z
 ---
 
 Declined by FO at the #664 delivery gate (head b300d9ba, 2026-10-18); reasons also in that task's gate summary.
