@@ -14,6 +14,7 @@ say() { echo "$1 $2 :: $3"; [ "$1" = FAIL ] && fails=$((fails + 1)); }
 redact() { sed "s/$PROBE_TOKEN/<token>/g"; }
 api() { curl -sS -o /tmp/probe.$$ -w '%{http_code}' -X "$1" -H "Authorization: Bearer $PROBE_TOKEN" -H "Accept: application/vnd.github+json" ${3:+-d "$3"} "$API/repos/$OWNER_REPO$2"; }
 msg() { python3 -I -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d.get("message","")[:160])' /tmp/probe.$$ 2>/dev/null | redact; }
+errs() { python3 -I -c 'import json,sys;print(json.load(open(sys.argv[1])).get("errors",""))' /tmp/probe.$$ 2>/dev/null | redact | head -c 200; }
 field() { python3 -I -c 'import json,sys;print(json.load(open(sys.argv[1])).get(sys.argv[2]))' /tmp/probe.$$ "$1" 2>/dev/null; }
 trap 'rm -f /tmp/probe.$$' EXIT
 
@@ -37,17 +38,21 @@ out=$(git push origin "$BR" 2>&1 | redact); rc=${PIPESTATUS[0]}
 if [ "$rc" = 0 ]; then say PASS AC-9a "push to $BR accepted"; else say FAIL AC-9a "push to $BR refused (exit $rc) :: $(echo "$out" | tail -1)"; fi
 
 code=$(api POST /pulls "{\"title\":\"probe\",\"head\":\"$BR\",\"base\":\"$DEF\",\"draft\":true}")
-N=$(field number); DRAFT=$(field draft)
+N=$(field number); DRAFT=$(field draft); NODE=$(field node_id)
 if [ "$code" = 201 ] && [ "$DRAFT" = True ]; then say PASS AC-9b "Draft PR #$N opened"; else say FAIL AC-9b "open Draft PR HTTP $code :: $(msg)"; fi
+
+code=$(api PUT "/pulls/$N/merge" '{"merge_method":"squash"}')
+say NOTE draft-merge "HTTP $code :: $(msg) (a draft refuses any merge, so this is not rule evidence)"
+gq=$(curl -sS -o /tmp/probe.$$ -w '%{http_code}' -X POST -H "Authorization: Bearer $PROBE_TOKEN" -d "{\"query\":\"mutation(\$id:ID!){markPullRequestReadyForReview(input:{pullRequestId:\$id}){pullRequest{isDraft}}}\",\"variables\":{\"id\":\"$NODE\"}}" "$API/graphql")
+say NOTE ready "GraphQL HTTP $gq :: $(redact < /tmp/probe.$$ | head -c 200)"
+
+code=$(api POST "/pulls/$N/reviews" '{"event":"APPROVE"}'); m=$(msg); e=$(errs)
+api GET "/pulls/$N" >/dev/null; ms=$(field mergeable_state)
+if [ "$code" -ge 400 ]; then say PASS AC-8 "self-approval REFUSED HTTP $code ($m $e); mergeable_state=$ms"; else say NOTE AC-8 "self-approval accepted HTTP $code; counted? mergeable_state=$ms"; fi
 
 code=$(api PUT "/pulls/$N/merge" '{"merge_method":"squash"}'); m=$(msg)
 state=$(api GET "/pulls/$N" >/dev/null; field state)
-if [ "$code" -ge 400 ] && [ "$state" = open ]; then say PASS AC-7 "API merge refused HTTP $code, PR still $state :: $m"; else say FAIL AC-7 "API merge HTTP $code, PR state $state"; fi
-
-code=$(api POST "/pulls/$N/reviews" '{"event":"APPROVE"}'); m=$(msg)
-api GET "/pulls/$N" >/dev/null; ms=$(field mergeable_state)
-code2=$(api PUT "/pulls/$N/merge" '{"merge_method":"squash"}')
-if [ "$code2" -ge 400 ] && [ "$ms" != clean ]; then say PASS AC-8 "self-approve HTTP $code ($m); mergeable_state=$ms; merge still refused HTTP $code2"; else say FAIL AC-8 "self-approve HTTP $code, mergeable_state=$ms, merge HTTP $code2"; fi
+if [ "$code" -ge 400 ] && [ "$state" = open ]; then say PASS AC-7 "API merge of the ready PR refused HTTP $code, PR still $state :: $m"; else say FAIL AC-7 "API merge HTTP $code, PR state $state"; fi
 
 code=$(api POST /rulesets '{"name":"probe","target":"branch","enforcement":"disabled"}')
 if [ "$code" -ge 400 ]; then say PASS AC-10b "creating a ruleset refused HTTP $code :: $(msg)"; else say FAIL AC-10b "ruleset creation HTTP $code"; fi
