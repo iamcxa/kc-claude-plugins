@@ -26,6 +26,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-20T08:18:17Z
+worktree: .worktrees/spacedock-ensign-interrogation-replay-on-batch-3-poc
 ---
 
 ## Scope
