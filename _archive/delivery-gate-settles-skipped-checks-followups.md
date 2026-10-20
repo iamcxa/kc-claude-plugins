@@ -3,7 +3,10 @@ title: delivery-gate-settles-skipped-checks follow-ups accepted at the #680 deli
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:11:03Z
+archived: 2026-10-20T05:11:03Z
 ---
 
 Residuals the engineering-reviewer named (reviews/engineering-reviewer-1.md in the archived task, 2026-10-20), accepted at the #680 delivery gate; build only when the trigger below is seen.
