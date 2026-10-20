@@ -13,3 +13,7 @@ Declined by FO at validation-1 of prod-security-validation-gate (PR #659, head f
 - Deferred risk: Opus and Fable under the Reach brief are one run each; no real refusal has occurred in 17 runs.
 - Polish: `validation_security.py check` run on its own accepts a review at any dispatched head; only `delivery_gate.py` binds it to the PR head.
 - Polish: a task with no readable `profile:` now holds the merge ask (exit 1) where the design said the check returns early; safer, recorded as a deviation.
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: its deferred risks never fired; the worker-skip hold is enforced by delivery_gate.py calling validation_security.check_task.
