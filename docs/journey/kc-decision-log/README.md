@@ -1,38 +1,49 @@
-# kc-decision-log 故事與交付規劃
+# kc-decision-log 原生故事與切片地圖
 
-P1「讀對同一份裁示」已選為第一個 release，採用 kc-dev-flow-2 的 **Pilot** profile。主要 journey 保留 8 個活動、28 個故事；P1 為 S01、S02、S04、S10、S11。P2、P3、P4a、P4b、P5 仍為候選，S03、S12、S28 明示延後。
+本目錄使用 `kc-journey-map` 原生 YAML、Markdown 說明及 tldraw `.tldr` 快照。可繪製來源是 [journey.yaml](journey.yaml)；故事總覽與六個切片頁由同一次原生 render 產生，快照為 [journey.tldr](journey.tldr)。
 
-先發布並合併地圖，再沿既有 dev2／Spacedock 流程準備 P1 的正式 brief、估算與驗證；後續依實際結果逐片以小批次推進。此選擇沒有一次啟動全部六片。
+P1「帶著精確裁示走完一次交接」已選，採 dev2 Pilot，故事為 S01、S10、S11、S19、S20、S21、S22；2026-10-20 自原「讀對同一份裁示」重切。P2、P3、P4a、P4b、P5 的既有提案歸屬以「候選」標明，供完整地圖討論；S03、S12、S17、S28、S29、S30 延後且不指派 release。畫入候選切片不等於啟動開發。
 
-## 閱讀與來源責任
+## 來源與畫布
 
-| 文件 | 用途與編輯責任 |
-| --- | --- |
-| [完整故事地圖](story-map.md) | 可讀投影：完整活動、故事細節、規則及 P1 release band |
-| [切片地圖](slice-map.md) | 可讀投影：六片成果、範圍、依賴、移除測試與驗收條件 |
-| [journey.yaml](journey.yaml) | 故事 ID、活動順序、卡片、細節、規則、責任與已選 release membership 的唯一編輯來源 |
-| [slices-proposal.yaml](slices-proposal.yaml) | 候選切片的成果、範圍、依賴、驗收與 D1–D4 設計選擇的編輯來源；其中 `story_ids` 是提案索引，已選 membership 以 journey 為準 |
-| [設計說明](design-notes.md) | 權限、版本觀測、更新與 ADR 修訂的設計理由及合成案例；不另定故事或 membership |
+| 內容 | 原生來源 | 畫布位置 |
+| --- | --- | --- |
+| 8 個活動、30 張故事、原卡片文字 | `steps[].activity`、`steps[].stories[].card` | Story map |
+| 六片名稱、成果與故事歸屬 | `releases[]`、`stories[].release` | Story map 的六條 release band；六個 journey-board 頁 |
+| 35 個既有技術問答 | `stories[].questions[]` 的 id／ask／answer／doc | 掛在所屬故事的切片頁；全文連到技術契約章節（為重切前 P1 撰寫） |
+| 28 個故事範圍連結、6 個切片說明連結 | 同一原生 questions／answer／doc 欄位 | 已指派故事的切片頁；四個延後故事的說明保留在來源及 Markdown |
+| 9 項規則、責任範圍與驗證限制 | `rules[]`、`ownership[]`、`status` | 責任帶、各切片規則卡與狀態卡 |
 
-兩份 `.yaml` 採 **JSON 語法的 YAML 1.2**，可由 JSON parser 讀取。Markdown 地圖由這兩份來源整理而成；更新時先改對應來源，再同步投影，避免另外形成一套故事或 release 權威。
+原生 1.7.0 的 Story map renderer 呈現故事與 release band；問答由 journey-board renderer 呈現在切片頁。本目錄沒有自行補繪另一套 HTML 或自訂圖形。未建立 `system`／`evidence` 的實作宣稱；原生切片頁的 flow placeholder 表示尚無實作流程證據。
 
-`detail` 是本規劃自訂的故事補充欄位，**不是 kc-journey-map 原生標準 schema**，不承諾原生 renderer 會顯示。`mode`、`proposal_state` 與整份 `slices-proposal.yaml`（含 `selected_release`、`selection`、`budget`、`admission_questions`、`dev2_alignment`）也是本規劃的補充資料；不代表新增工具 API、驗收機制或 dev2 workflow。原生 release band 使用 `releases` 與故事的 `release`。
+## 說明文件
 
-## 已確認的方向
+- [故事說明](story-map.md)：活動、六片歸屬、30 張故事的完整範圍、規則全文與原題對照。
+- [切片說明](slice-map.md)：六片成果、範圍、排除項、依賴、驗收條件及移除測試。
+- [設計理由與 D1–D5](design-notes.md)：決策權限、版本、受控提交與已確認選擇。
+- [CLI 優先設計](cli-first-design.md)：跨端工作模型及權限邊界。
+- [P1 技術契約](p1-technical-contract.md)：35 個技術問答的完整提案與待驗項目。
+- [P1 估工](p1-estimate.md)：重切後 P1 的粗估、依據與假設。
+- [P1 開發說明（草稿）](p1-development-brief.md)：交給 dev2 的五段式 Development Brief，待使用者接受交接。
 
-- D1：使用者手動轉交，或沿用已有驗證的通路；自動橋接延後。
-- D2：已配置來源落後、工作目錄乾淨且可 fast-forward 時，由 checkout 持有者依既定規則自行更新、重讀並回報；其餘保留原狀並說明原因。
-- D3：agent 沿用既有 Git／PR 工具，MCP 維持唯讀；寫入 MCP 與 host 代寫延後。
-- D4：實質變更新 ADR，小修留原 ADR；沿用 dev2 的格式、狀態、配號、取代方向與既有審查。適用層級的獲授權決策者仍負責裁決，host／MCP owner 身分不自動授予裁決權。
+卡片、順序、規則短句及 membership 編輯 YAML；長篇故事說明、切片驗收與技術章節編輯對應 Markdown。原生 `doc` 使用 GitHub blob 章節網址；同 repo branch 的文件與地圖一起送審。畫布手改須先用原生 readback 檢查，再處理來源；不以另一份自訂 YAML 重複管理 membership。
 
-dev2 對照基準為 repo 內的 0.25.0：見 [ADR 模板](../../../kc-dev-flow-2/references/adr-template.md)、[workflow](../../../kc-dev-flow-2/references/sd/workflow.md)、[implementation principles](../../../kc-dev-flow-2/skills/implementation/principles.md)、[ADR lint](../../../kc-dev-flow-2/scripts/adr_lint.py)、[number guards](../../../kc-dev-flow-2/scripts/number_guards.py) 與 [Pilot profile](../../../kc-dev-flow-2/references/profiles/pilot.md)。這些參照說明既有機制，不證明整體讀取服務或跨流程相容性已驗收。
+69 個文件連結的章節標題已按原生 popup 的 heading slug 核對。本次沿用的本機 host 尚未配置此 repo 的 `JOURNEY_DOC_REPOS`，實際 `/repo-doc` 回傳 `unavailable`；目前可用視窗內的 **Open on GitHub** 開啟文件。畫布內閱讀仍待 host 維護者依原生 canvas 合約設定，不能把章節檢查通過當成該功能已驗收。
 
-## 驗證界線與下一步
+## 原生重現
 
-六片的設計內容已完成獨立審查，涵蓋故事必要性、角色路徑、來源／權限邊界與可觀察終點。這是規劃意圖，讀取與切片實作狀態尚未驗證；故事沒有 `status` 或 `evidence`，不以 `exists`／`gap` 表示尚未查證的實作情況。
+下列命令從 repository root 執行，使用已備妥依賴的 `kc-journey-map`；亦可使用已安裝 plugin 的同名 CLI 並傳入本目錄的絕對來源路徑。server 的啟動、房間保存與文件連結設定依 [原生 canvas 合約](../../../kc-journey-map/skills/kc-journey-map/references/canvas.md)。
 
-真實三端登入與隔離、完整 hosted adapter、跨 repo 原生 ADR／Legacy 讀取、Git ancestry／race／安全更新、host refresh／last-good、dev2 整體 roundtrip、實際配號與 PR 重試仍須驗證。公開案例使用合成資料；私人 ADR、執行日誌、憑證與受保護證據留在原授權來源。
+```sh
+node kc-journey-map/lib/journey-render.mjs docs/journey/kc-decision-log/journey.yaml kc-decision-log-design --pages story-map,journey-board
+node kc-journey-map/lib/journey-read.mjs docs/journey/kc-decision-log/journey.yaml kc-decision-log-design
+node kc-journey-map/lib/journey-tldr.mjs export kc-decision-log-design docs/journey/kc-decision-log/journey.tldr
+```
 
-P1 與 Pilot 已選；**appetite、可信整合估算、正式 Development Brief 與 journey-handoff 檢查尚待完成**。未宣稱正式開發移交、產品 UAT、合併、部署或 host 載入通過。地圖發布與產品 P5 的「受控 PR」是不同工作範圍。
+本機房間：[kc-decision-log-design](http://127.0.0.1:3737/?room=kc-decision-log-design)。頁面選單包含 Story map 及 P1、P2、P3、P4a、P4b、P5。`.tldr` 是該房間原生匯出的快照，YAML 仍是版本化來源；快照若要匯入，使用新房間以保留其他手動畫布。
 
-既有 [journey lint](../../../kc-journey-map/lib/journey-lint.mjs) 會對這種未填實作狀態的意圖來源報 `no-status`；其意義是未進入實作查核，不應以補造狀態消除訊息。正式 handoff 仍依 [release slicing](../../../kc-journey-map/skills/kc-journey-map/references/release-slicing.md) 與既有 dev2 流程辦理，本目錄不另建 standing verifier 或 CI。
+## 驗證界線
+
+2026-10-20 起 30 張故事都標 `status: gap`：kc-decision-log 尚無實作。開發進度由 `kc-journey-progress` 依 Spacedock 任務的 `journey`／`journey-release`／`journey-story` 回填；`exists` 必須附可搜尋的證據符號。render、原生 schema 接收、readback、快照內容及實際畫面分開核對。P1 的故事數 7（`slice_because` 記錄理由），其餘切片 3、3、2、5、4。
+
+新 CLI 尚未實作／部署，Claude→Codex 交接驗收、正式 fit 與 ready handoff 均未成立。投入為四個完整工作日；P1 粗估 16–30 active 工程小時，未經校準。ADR 格式、Status、配號及審查沿用 dev2 原機制；任務與驗收沿用 dev2／Spacedock。
