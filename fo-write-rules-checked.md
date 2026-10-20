@@ -296,6 +296,7 @@ Alignment: not needed before ideation; the Captain approved batch 4.
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+Reviewer: engineering-reviewer opus 2026-10-20 — do D1 (a Captain Scope change between gates becomes an amendment) and D2/D3/D6 (the carried merge read from a Merges: line, printed on verdict ask, PRs with no task outside every check) keep the Captain's merge and approval authority, or open a merge he did not authorize? Called under the special-role combination the Captain agreed (「同意這個組合」, 2026-10-20): a change to merge, authority or approval rules calls the engineering-reviewer.
 
 ## Stage Report: ideation
 
