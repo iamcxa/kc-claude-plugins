@@ -3,7 +3,7 @@ title: FO runs a batch of tasks in sittings, so the Captain answers each stage's
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain, batch-4 sitting 2026-10-20: D1 「好」 (no sitting counter, Amendment 1; Override: recommended the derived recording burst; Captain chose no sitting counter; area: sitting measurement); D2 「好，那就下一版，跟故事地圖一起」 (Cut 2 moves into new-work-starts-from-a-story-map for the next release, Amendment 2; Override: recommended its own task two releases out; Captain chose the story-map task, next release; area: Cut 2 placement); D3 「好」 (reserve per task at its implementation dispatch, interim rule dropped); D4 「按建議」 and 「先不放，直到有方式可以找到“重複出現的同類發現”」 (rules 1 and 2 out; rule 3 replaced by his concurrency direction as its own task, Amendment 3).'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-20T04:57:55Z
 ---
 
