@@ -16,7 +16,7 @@ export function nativeArguments(client, config, store, mcpConfig, cwd) {
  if (client === 'claude') return ['-p', '--output-format', 'stream-json', '--verbose', '--restricted', '--disable-slash-commands', '--no-chrome', '--strict-mcp-config', '--mcp-config', mcpConfig, '--setting-sources', '', '--settings', JSON.stringify({ disableAllHooks: true, disableClaudeAiConnectors: true, enabledPlugins: {} }), '--tools', '', '--allowedTools', tools.map(tool => 'mcp__journey__' + tool).join(','), '--disallowedTools', 'Bash,Edit,Write', '--permission-mode', 'dontAsk', '--permission-prompts', 'none', '--no-session-persistence']
  const settings = {
   'model_reasoning_effort': 'high', 'project_doc_max_bytes': 0, 'skills.include_instructions': false,
-  'agents.enabled': false, 'web_search': 'disabled',
+  'agents.enabled': false, 'web_search': 'disabled', 'suppress_unstable_features_warning': true,
   'mcp_servers.journey.command': process.execPath,
   'mcp_servers.journey.args': [helper, 'mcp', config, store],
   'mcp_servers.journey.enabled_tools': tools, 'mcp_servers.journey.tool_timeout_sec': 20,

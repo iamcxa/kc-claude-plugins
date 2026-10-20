@@ -11,6 +11,7 @@ test('paired launch configs contain only helper paths and preserve native login 
  assert.equal(env.API_TOKEN, undefined); assert.equal(env.JOURNEY_NATIVE_TOKEN, undefined); assert.equal(env.CODEX_THREAD_ID, undefined)
  const args = nativeArguments('codex', '/fixture/config', '/fixture/store', '/fixture/mcp', '/neutral')
  assert.ok(args.includes('--ignore-user-config')); assert.ok(args.includes('gpt-6.1-sol')); assert.ok(args.includes('read-only'))
+ assert.ok(args.includes('suppress_unstable_features_warning=true')); assert.ok(args.includes('features.skip_host_skill_discovery=true'));
  assert.ok(args.includes('model_reasoning_effort="high"')); assert.ok(args.some(a => a.includes('agent-helper.mjs') && a.includes('"mcp"')))
  assert.ok(!args.some(a => /bearer_token|JOURNEY_NATIVE_TOKEN/.test(a)))
  assert.ok(!args.some(a => a.startsWith('model_providers.')))

@@ -70,3 +70,47 @@ test('lost redemption reply persists original verifier for cancel only before a 
  await assert.rejects(()=>client.finish(),/repair_required/);await assert.rejects(()=>client.call({}),/repair_required/)
  await client.reconcile();assert.equal(data.state,'revoked');assert.equal(redemptions,1);assert.equal(cancellations,1)
 })
+
+function pairingFixture(apiEndpoint,fail) {
+ let data=null,staged,original
+ const requests=[]
+ const store={get:async()=>structuredClone(staged||data),set:async value=>{if(fail==='set'&&value.state==='pairing-pending')throw new Error('unknown_save');staged=structuredClone(value)},confirm:async()=>{if(fail==='confirm'&&staged.state==='pairing-pending'){staged=undefined;throw new Error('unknown_confirmation')}data=staged;staged=undefined}}
+ const fetcher=async(url,init)=>{
+  const body=JSON.parse(init.body);requests.push({path:new URL(url).pathname,body})
+  if(url.endsWith('/agents/start')){original=body;assert.equal(data.state,'repair-pending');return Response.json({id:body.requestId,code:'synthetic-code',verificationUrl:config.endpoint,scopes:[],expiresAt:Date.now()+300000,...(apiEndpoint===undefined?{}:{apiEndpoint})})}
+  if(url.endsWith('/agents/cancel')){assert.equal(body.requestId,original.requestId);assert.equal(body.verifier,original.verifier);return Response.json({revoked:true})}
+  if(url.endsWith('/agents/poll'))return Response.json({status:'approved'})
+  if(url.endsWith('/agents/redeem'))return Response.json({family:{id:'fresh-family',backendId:config.backendId},generation:1,refreshSecret:'c'.repeat(64),accessToken:'agt_fresh.'+'d'.repeat(64),expiresAt:Date.now()+900000})
+  throw new Error('unexpected operation')
+ }
+ return {client:new PairedInstallation(config,store,fetcher),restart:()=>new PairedInstallation(config,store,fetcher),requests,data:()=>data}
+}
+test('missing, mismatched and invalid start endpoints refuse approval details and keep original-verifier cancel across restart',async()=>{
+ for(const endpoint of [undefined,'https://other.invalid','not-an-origin',config.endpoint+'/']){
+  const f=pairingFixture(endpoint)
+  await assert.rejects(()=>f.client.begin(),/pairing_outcome_unknown_reconcile/)
+  assert.equal(f.data().state,'repair-pending');assert.match(f.data().verifier,/^[a-f0-9]{64}$/)
+  const restarted=f.restart()
+  await assert.rejects(()=>restarted.finish(),/repair_required/);await assert.rejects(()=>restarted.call({}),/repair_required/)
+  await assert.rejects(()=>restarted.begin(),/existing_installation_requires_reconcile/)
+  assert.equal((await restarted.reconcile()).state,'revoked')
+  assert.deepEqual(f.requests.map(r=>r.path),['/agents/start','/agents/cancel'])
+ }
+})
+test('matching canonical start endpoint durably enables the original verifier redemption',async()=>{
+ const f=pairingFixture(config.endpoint),pending=await f.client.begin()
+ assert.equal(pending.code,'synthetic-code');assert.equal(f.data().state,'pairing-pending')
+ assert.equal((await f.restart().finish()).state,'active')
+ assert.deepEqual(f.requests.map(r=>r.path),['/agents/start','/agents/poll','/agents/redeem'])
+ assert.equal(f.requests[0].body.verifier,f.requests[1].body.verifier);assert.equal(f.requests[0].body.verifier,f.requests[2].body.verifier)
+})
+test('unknown pending-state save or confirmation cannot unlock finish and preserves the original cancellation proof',async()=>{
+ for(const failure of ['set','confirm']){
+  const f=pairingFixture(config.endpoint,failure)
+  await assert.rejects(()=>f.client.begin(),/pairing_outcome_unknown_reconcile/)
+  await assert.rejects(()=>f.client.finish(),/repair_required/);await assert.rejects(()=>f.client.call({}),/repair_required/)
+  const restarted=f.restart();await assert.rejects(()=>restarted.finish(),/repair_required/)
+  assert.equal((await restarted.reconcile()).state,'revoked')
+  assert.deepEqual(f.requests.map(r=>r.path),['/agents/start','/agents/cancel'])
+ }
+})

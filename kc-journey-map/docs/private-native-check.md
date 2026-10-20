@@ -56,6 +56,9 @@ Claude account/model selection remains its existing native default. No global
 settings, model catalog or native executable changes are made. The launcher keeps
 the built-in provider configuration unchanged; application/tool replay is disabled,
 but undocumented native internal transport retries are not controlled or proven.
+The per-run suppress_unstable_features_warning flag hides development-feature
+startup warnings while retaining skip_host_skill_discovery. Native error/unknown
+events still stop the observer; no global warning or permission setting changes.
 
 Prepare an exact prompt file and a **new nonexistent** receipt directory per phase.
 Use absolute installed executable paths; run from this package:

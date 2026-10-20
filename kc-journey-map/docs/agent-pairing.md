@@ -174,3 +174,13 @@ Missing/changed snapshots on older in-flight requests fail scope_changed: use th
 original helper to cancel/reconcile, then seek fresh approval. No backfill or old
 family revival occurs; existing issued-family admission/renewal is unchanged.
 Arbitrary remote split-origin/alias configurations are unverified.
+
+The helper checks the start response's canonical API endpoint against its exact
+configured origin before presenting approval details. Until that match is durably
+confirmed, the original verifier is retained only for authenticated cancel/reconcile;
+finish and MCP calls remain unavailable, including after restart or unknown save.
+Missing/mismatched endpoint responses require reconciliation before fresh pairing.
+Existing issued installations remain compatible. The configured HTTPS origin is a
+user-trusted input: response equality detects disclosed mismatch, not an actively
+dishonest chosen endpoint that rewrites responses. It is not cryptographic endpoint
+identity or complete malicious-proxy protection.
