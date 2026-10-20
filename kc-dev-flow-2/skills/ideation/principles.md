@@ -16,6 +16,7 @@ use or repair what exists before adding a replacement. Record its conclusion in
 the same design, with a proportional observation showing why the change is needed.
 Use one PRFAQ with a future-facing proposition, short FAQ and acceptance evidence
 plan. Mermaid must match the prose's actors, order, alternatives and stops.
+When another task is live in the workflow, end the design with `### Batch overlap`: for each such task, the files, checks, tables and numbered records both would change, counting a shared index such as an ADR list, then a `Recommended order:` line; write `none` when none.
 Each recorded `Surfaces:` value owes its own artifact, fidelity before prettiness:
 - `ui` (a person sees or operates it; read from the surface, not the diff) —
   a `UI proposal:` line with the short text proposal first, then a `Preview:`
