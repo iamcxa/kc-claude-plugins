@@ -66,6 +66,14 @@ gates:
                 id: briefing:adr-required-statement:validation:attempt-1:revision-1
                 digest: sha256:8de84c22df06b87ec706b0cd394d57e2c612cd67f4d4c5f7df6f51cb4ede1300
                 room-ref: ./adr-required-statement/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-required-statement:validation:1
+                briefing: briefing:adr-required-statement:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T14:45:46.234021Z"
+                decision: hold
+                reason: 'Captain 「那就關掉」 (chat, 2026-10-20), on FO''s recommendation to close: the branch is 124 commits behind main, ADR 0009 is taken, its workflow.md lines exceed the word budget, the bite is one case, and its scope was relayed by a peer and never confirmed by him. Not merged; the task is closed.'
 started: 2026-10-07T14:17:33Z
 worktree: .worktrees/spacedock-ensign-adr-required-statement
 ---
