@@ -15,6 +15,17 @@ gates:
                 id: briefing:fo-batch-sittings:backlog:attempt-1:revision-1
                 digest: sha256:784c5e9786f17002565ff351e677fc6736db43128c3fa2320facf8d4fe332cef
                 room-ref: ./fo-batch-sittings/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-batch-sittings:backlog:1
+                briefing: briefing:fo-batch-sittings:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T04:57:05.128735Z"
+                decision: approve
+                reason: Captain approved the five batch-4 backlog gates presented together in chat (「按你建議」), answering FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
