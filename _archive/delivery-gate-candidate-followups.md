@@ -3,7 +3,10 @@ title: delivery_gate.py Candidate-line follow-ups declined at the #647 delivery 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:10:57Z
+archived: 2026-10-20T05:10:57Z
 ---
 
 Declined under the round-3 rule at the validation gate of task `delivery-gate-verdict-form` (iamcxa/kc-claude-plugins PR #647, head aa6fcc91, Codex round 4 clean at comment:6187737631). Validation cycle 4 recorded these five findings, none Material; per `## FO steps: review findings` step 5 none starts a repair cycle there, and each is filed here with its decline reason.
