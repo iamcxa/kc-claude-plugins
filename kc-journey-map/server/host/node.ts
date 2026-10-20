@@ -97,7 +97,7 @@ export class NodeHost implements Host {
   if (this.agentPairing && (!this.private || !this.humanConfig)) throw new Error('agent pairing requires private verified human entry')
   atomic(() => bootstrapAgent(sync, this.agentPairing, { assets: true, saveDirectory: process.env.JOURNEY_SAVE_DIR ? resolve(process.env.JOURNEY_SAVE_DIR) : null, repositories: this.roomRepos }))
   this.meta.agent = async (operation, input) => {
-   const result=atomic(() => captureAgent(() => agentOperation(sync, operation, input, room => this.agentScope(room))))
+   const result=atomic(() => captureAgent(() => agentOperation(sync, operation, input, room => this.agentScope(room), Date.now(), this.agentEndpoint())))
    if(result.ok && result.value?.operationId)result.value.denialCommitObservedAt=Date.now()
    const f=input.familyId ? sync.get<any>('agent-family:'+input.familyId) : null
    if(f?.revokeOperation)await this.notifyResult({operationId:f.revokeOperation})
@@ -121,6 +121,7 @@ export class NodeHost implements Host {
   this.db.prepare('INSERT OR IGNORE INTO metadata VALUES (?, ?)').run('room:' + id, JSON.stringify({ createdAt: Date.now() }))
   return entry.room
  }
+ agentEndpoint() { return ['localhost','127.0.0.1','[::1]'].includes(new URL(this.origin).hostname) ? 'http://127.0.0.1:'+this.port : this.origin }
  async document(id: string, method: string, prepared: any) { return operate(await this.openRoom(id), id, method, prepared) }
  async health() {
   return { rooms: this.private ? (await this.meta.list('room:')).map(e => e.key.slice(5)) : readdirSync(this.roomsDir).filter(f => f.endsWith('.db')).map(f => f.slice(0, -3)),

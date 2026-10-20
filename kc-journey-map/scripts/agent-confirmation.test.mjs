@@ -13,7 +13,7 @@ for(const [operation,ambiguousManifest] of [['rotation',false],['redemption',fal
  test(operation+' confirmation failure blocks queued/repeated calls and survives restart'+(ambiguousManifest?' with an unconfirmed manifest pointer':''),async()=>{
   const root=await mkdtemp(join(tmpdir(),'journey-agent-confirm-')),origin='http://127.0.0.1:3737'
   const config={endpoint:origin,backendId:'synthetic-confirm',installationId:crypto.randomUUID(),memberId:'owner',rooms:['one'],label:'synthetic confirmation'}
-  const settings={JOURNEY_PRIVATE_DIR:join(root,'data'),JOURNEY_GRANTS_FILE:join(root,'grants.json'),JOURNEY_HUMAN_CONFIG:join(root,'human.json'),JOURNEY_AGENT_PAIRING:'true',JOURNEY_ORIGIN:origin,JOURNEY_ROOM_REPOS:'{}'}
+  const settings={JOURNEY_PRIVATE_DIR:join(root,'data'),JOURNEY_GRANTS_FILE:join(root,'grants.json'),JOURNEY_HUMAN_CONFIG:join(root,'human.json'),JOURNEY_AGENT_PAIRING:'true',JOURNEY_ORIGIN:origin,JOURNEY_ROOM_REPOS:'{}',JOURNEY_API_PORT:'3737'}
   const previous=Object.fromEntries(Object.keys(settings).map(k=>[k,process.env[k]]))
   let host,store,damaged=false,armed=false,rotations=0,redemptions=0,operations=0,dropRevoke=false
   let failedFamily
@@ -89,3 +89,32 @@ for(const [operation,ambiguousManifest] of [['rotation',false],['redemption',fal
  })
 }
 
+
+for(const failure of ['endpoint','confirmation'])test('start '+failure+' refusal survives real protected-store restart with cancel-only proof',async()=>{
+ const root=await mkdtemp(join(tmpdir(),'journey-start-confirm-'))
+ const config={endpoint:'http://127.0.0.1:3737',backendId:'start-confirm',installationId:crypto.randomUUID(),memberId:'owner',rooms:['one'],label:'synthetic start confirmation'}
+ let store,damaged=false,original
+ const paths=[]
+ const fetcher=async(url,init)=>{
+  const body=JSON.parse(init.body);paths.push(new URL(url).pathname)
+  if(url.endsWith('/agents/start')){original=body;return Response.json({id:body.requestId,code:'synthetic',apiEndpoint:failure==='endpoint'?'https://other.invalid':config.endpoint})}
+  if(url.endsWith('/agents/cancel')){assert.equal(body.verifier,original.verifier);assert.equal(body.requestId,original.requestId);return Response.json({revoked:true})}
+  throw new Error('refused start must not poll, redeem or call MCP')
+ }
+ try{
+  store=await openProtectedStore(config,join(root,'protected'))
+  const set=store.set.bind(store)
+  store.set=async value=>{await set(value);if(failure==='confirmation'&&value.state==='pairing-pending'){await chmod(store.directory,0o500);damaged=true}}
+  let client=new PairedInstallation(config,store,fetcher)
+  await assert.rejects(()=>client.begin(),/pairing_outcome_unknown_reconcile/)
+  await assert.rejects(()=>client.finish(),/repair_required/)
+  if(damaged){await chmod(store.directory,0o700);damaged=false}
+  await store.close();store=await openProtectedStore(config,join(root,'protected'));client=new PairedInstallation(config,store,fetcher)
+  await assert.rejects(()=>client.finish(),/repair_required/);await assert.rejects(()=>client.call({}),/repair_required/)
+  assert.equal((await client.reconcile()).state,'revoked');await store.removeRevoked()
+  assert.deepEqual(paths,['/agents/start','/agents/cancel'])
+ }finally{
+  if(store){if(damaged)await chmod(store.directory,0o700);await store.close();store=await openProtectedStore(config,join(root,'protected'));const client=new PairedInstallation(config,store,fetcher);await client.reconcile();await store.removeRevoked();await store.close()}
+  await rm(root,{recursive:true,force:true})
+ }
+})

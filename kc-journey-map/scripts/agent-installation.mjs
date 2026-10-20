@@ -38,10 +38,12 @@ export class PairedInstallation {
  async begin() { return this.exclusive(async()=>{
   const old=await this.saved()
   if(old && old.state!=='revoked') throw new Error('existing_installation_requires_reconcile')
-  const pending={...this.base(),state:'pairing-pending',requestId:randomUUID(),verifier:secret()}
+  const pending={...this.base(),state:'repair-pending',requestId:randomUUID(),verifier:secret()}
   await this.save(pending)
   try {
    const result=await this.request('/agents/start',{...this.config,...pending})
+   if(result?.apiEndpoint!==this.config.endpoint) throw new Error('installation_endpoint_denied')
+   await this.save({...pending,state:'pairing-pending'})
    return {requestId:result.id,code:result.code,verificationUrl:result.verificationUrl,scopes:result.scopes,expiresAt:result.expiresAt}
   } catch { throw new Error('pairing_outcome_unknown_reconcile') }
  }) }

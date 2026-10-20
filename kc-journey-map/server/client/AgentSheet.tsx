@@ -5,7 +5,7 @@ import './agent-sheet.css'
 type Entry = { backendId: string; memberId: string; label: string }
 type Scope = { roomId: string; assets: boolean; saveDirectory: string | null; repositories: string[] }
 type Family = { id: string; label: string; installationId: string; memberId: string; scopes: Scope[]; revoked: boolean; streamsStopped?: string; operationId?: string; reason?: string }
-type Consent = { id: string; consentId: string; label: string; installationId: string; backendId: string; authorizer: { id: string; label: string }; origin: string; scopes: Scope[]; expiresAt: number; status: string }
+type Consent = { id: string; consentId: string; label: string; installationId: string; backendId: string; authorizer: { id: string; label: string }; origin: string; apiEndpoint: string; scopes: Scope[]; expiresAt: number; status: string }
 const errors: Record<string,string> = {
  authorizer_denied:'這不是你的配對請求，或配對碼不正確。',request_expired:'配對請求已到期，請在原安裝重新開始。',request_consumed:'配對請求已兌換，請更新代理清單。',request_denied:'此請求已拒絕，請在原安裝重新開始。',request_cancelled:'此請求已取消，請在原安裝重新開始。',
  verified_human_required:'請重新驗證原本的人類身分。',identity_changed:'身分已改變，請關閉並重新確認入口。',human_context_denied:'原本的身分或畫布權限已改變。',authority_denied:'目前成員或畫布權限已失效。',scope_changed:'請求的能力已改變，請取消後重新配對。',agent_rate_limited:'請求太頻繁，請稍後再試。',agent_pairing_disabled:'代理配對目前未啟用。',
@@ -57,7 +57,7 @@ export function AgentSheet({ entry }: { entry: Entry }) {
     <p>請在原安裝啟動配對。每個安裝分別核准與撤銷；安裝名稱由對方自行填寫。</p>
     <label htmlFor="agent-code">配對碼</label><input id="agent-code" value={code} autoComplete="off" spellCheck={false} onChange={event=>{setCode(event.target.value);setConsent(null)}}/>
     <button disabled={busy||!code.trim()} onClick={()=>void perform(async()=>{const result=await post('inspect',{code});consentCode.current=code;setConsent(result)})}>檢視配對請求</button>
-    {consent&&<section aria-label="配對請求"><h3>{consent.label}</h3><p>自行填寫的名稱，未驗證模型身分。</p><p>安裝識別：{consent.installationId}</p><p>核准者：{consent.authorizer.label} · {consent.authorizer.id}</p><p>目的地：{consent.origin} · {consent.backendId}</p><p>請求於 {new Date(consent.expiresAt).toLocaleTimeString()} 到期（五分鐘）。</p><Scopes scopes={consent.scopes}/>
+    {consent&&<section aria-label="配對請求"><h3>{consent.label}</h3><p>自行填寫的名稱，未驗證模型身分。</p><p>安裝識別：{consent.installationId}</p><p>核准者：{consent.authorizer.label} · {consent.authorizer.id}</p><p>API 端點：{consent.apiEndpoint}</p><p>人類登入入口：{consent.origin} · {consent.backendId}</p><p>請求於 {new Date(consent.expiresAt).toLocaleTimeString()} 到期（五分鐘）。</p><Scopes scopes={consent.scopes}/>
      {consent.status==='approved'?<p>已核准，等待原安裝兌換；尚未簽發安裝憑證。</p>:<><p>這些權限包含刪除及整份文件取代；核准不會簽發管理員權限。</p><div className="agent-actions"><button disabled={busy} onClick={()=>void perform(async()=>{await post('approve',{code:consentCode.current,consentId:consent.consentId});setConsent({...consent,status:'approved'})})}>核准這些畫布與能力</button><button className="secondary" disabled={busy} onClick={()=>void perform(async()=>{await post('deny',{code:consentCode.current,consentId:consent.consentId});setConsent(null);setNotice('已拒絕這次請求；既有安裝不受影響。')})}>拒絕這次請求</button></div></>}
     </section>}
     <h3>已核准的代理安裝</h3><p>短期存取十五分鐘，自動更新，沒有閒置到期。瀏覽器登出不會撤銷代理。</p>

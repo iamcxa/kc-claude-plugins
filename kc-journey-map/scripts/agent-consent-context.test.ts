@@ -9,7 +9,7 @@ test('approval requires the exact inspected original room and sign-in context',(
  for(const room of ['one','two'])store.put('room:'+room,{})
  store.put('browser-session:session',{actorType:'human',memberId:'owner',backendId:'synthetic',generation:1,expiresAt:now+900000,humanRevalidateBy:now+604800000,verifiedHumanSignInAt:now,csrfDigest:'csrf',revoked:false})
  const scope=(roomId:string)=>({roomId,records:'full-replacement' as const,assets:false,saveDirectory:null,repositories:[]})
- const run=(op:string,input:any)=>agentOperation(store,op,input,scope,now)
+ const run=(op:string,input:any)=>agentOperation(store,op,input,scope,now,'https://api.example.test')
  run('create',{requestId:'request',installationId:'installation',memberId:'owner',rooms:['one'],label:'test',verifierDigest:'a'.repeat(64),codeDigest:'b'.repeat(64)})
  const context={sessionDigest:'session',csrfDigest:'csrf',memberId:'owner',backendId:'synthetic',signInAt:now,originalRoom:'one',codeDigest:'b'.repeat(64)}
  const consent=run('inspect',context)

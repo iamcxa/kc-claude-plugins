@@ -28,9 +28,9 @@ async function fixture() {
  const human = { sessionDigest: 'human', csrfDigest: 'csrf', memberId: 'owner', backendId: 'synthetic', signInAt: now, originalRoom: 'one' }
  const request = { requestId: crypto.randomUUID(), installationId: crypto.randomUUID(), memberId: 'owner', label: 'self-reported test', rooms: ['one'], verifierDigest: await digest('v'.repeat(64)), codeDigest: await digest('CODE1234') }
  const material = async () => ({ familyId: crypto.randomUUID(), accessId: 'agt_'+crypto.randomUUID(), accessDigest: await digest('a'.repeat(64)), refreshDigest: await digest('r'.repeat(64)) })
- const run = (op: string, input: any, time = now, scopes = scope) => {
+ const run = (op: string, input: any, time = now, scopes = scope, endpoint = 'https://api.example.test') => {
   db.exec('BEGIN IMMEDIATE')
-  try { const result = agentOperation(store, op, input, scopes, time); db.exec('COMMIT'); return result }
+  try { const result = agentOperation(store, op, input, scopes, time, endpoint); db.exec('COMMIT'); return result }
   catch (error) { db.exec(error instanceof HostError ? 'COMMIT' : 'ROLLBACK'); throw error }
  }
  const approve=(input:any={...human,codeDigest:request.codeDigest},op='approve')=>{ const consent=run('inspect',input);return run(op,{...input,consentId:consent.consentId}) }
@@ -312,4 +312,31 @@ test('human and paired-agent leases cannot exceed the current exact room authori
   await assert.rejects(renewLease(meta,{...lease,leaseUntil:0}),/stream_denied|stream_room_expired/)
   records['member-room:owner:one'].expiresAt=expiry
  }
+})
+
+ test('server-owned endpoint is disclosed/bound, stale pending requests fail closed and issued families stay compatible',async()=>{
+ const f=await fixture()
+ try {
+  const pending=f.run('create',{...f.request,apiEndpoint:'https://attacker.invalid',endpoint:'https://attacker.invalid'})
+  assert.equal(pending.apiEndpoint,'https://api.example.test')
+  const context={...f.human,codeDigest:f.request.codeDigest},consent=f.run('inspect',context)
+  assert.equal(consent.apiEndpoint,'https://api.example.test');assert.equal(consent.origin,origin)
+  assert.throws(()=>f.run('approve',{...context,consentId:consent.consentId},now,scope,'https://changed.example.test'),/scope_changed/)
+  f.run('approve',{...context,consentId:consent.consentId})
+  const issued=await f.material()
+  assert.throws(()=>f.run('redeem',{...f.request,...issued},now,scope,'https://changed.example.test'),/scope_changed/)
+  const saved=f.store.get<any>('agent-request:'+f.request.requestId);delete saved.apiEndpoint;f.store.put('agent-request:'+f.request.requestId,saved)
+  for(const op of ['inspect','approve'])assert.throws(()=>f.run(op,{...context,consentId:consent.consentId}),/scope_changed/)
+  assert.throws(()=>f.run('redeem',{...f.request,...issued}),/scope_changed/)
+  assert.equal(f.store.get('agent-family:'+issued.familyId),null)
+  assert.equal(f.run('cancel',f.request).revoked,true)
+ }finally{f.db.close()}
+ const g=await fixture()
+ try{
+  const issued=await g.pair()
+  assert.equal('apiEndpoint' in issued.family,false)
+  const admitted=g.run('admit',{credentialId:issued.credentialId,secretDigest:issued.accessDigest},now,scope,'https://changed.example.test')
+  assert.deepEqual(admitted.rooms,['one'])
+  assert.equal(g.run('repair',{familyId:issued.family.id,generation:1,secretDigest:issued.refreshDigest}).revoked,true)
+ }finally{g.db.close()}
 })

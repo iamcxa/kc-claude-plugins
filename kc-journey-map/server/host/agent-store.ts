@@ -4,7 +4,7 @@ import { HUMAN_BOUND, type HumanConfig, type HumanSession, type Member, type Mem
 export type AgentScope = { roomId: string; records: 'full-replacement'; assets: boolean; saveDirectory: string | null; repositories: string[] }
 type Binding = { memberId: string; memberGeneration: number; roomGenerations: Record<string, number>; policyGeneration: number; backendId: string; scopes: AgentScope[] }
 export type AgentFamily = Binding & { id: string; installationId: string; label: string; createdAt: number; revoked: boolean; revokeOperation?: string; reason?: string; refresh: { generation: number; digest: string } }
-type PairRequest = Binding & { id: string; installationId: string; label: string; verifierDigest: string; codeDigest: string; expiresAt: number; status: string; familyId?: string }
+type PairRequest = Binding & { id: string; installationId: string; label: string; verifierDigest: string; codeDigest: string; expiresAt: number; status: string; familyId?: string; apiEndpoint?: string }
 const deny = (status: number, category: string): never => { throw new HostError(status, category, { category }) }
 const id = (v: unknown) => typeof v === 'string' && /^[a-zA-Z0-9_-]{1,128}$/.test(v)
 const hash = (v: unknown) => typeof v === 'string' && /^[a-f0-9]{64}$/.test(v)
@@ -68,7 +68,7 @@ function access(store: SyncMetadata, f: AgentFamily, input: any, now: number) {
 function material(store: SyncMetadata, input: any) {
  if (!id(input.accessId) || !input.accessId.startsWith('agt_') || !hash(input.accessDigest) || store.get('agent-access:'+input.accessId) || store.get('grant:'+input.accessId)) deny(400,'invalid_access_material')
 }
-export function agentOperation(store: SyncMetadata, operation: string, input: any, scope: (room: string) => AgentScope, now = Date.now()): any {
+export function agentOperation(store: SyncMetadata, operation: string, input: any, scope: (room: string) => AgentScope, now = Date.now(), apiEndpoint?: string): any {
  const policy=store.get<any>('agent-policy:v1')
  // Reconciliation accepts only existing proof and remains available while disabled.
  if (!policy?.enabled && !['cancel','repair'].includes(operation)) deny(503,'agent_pairing_disabled')
@@ -78,7 +78,9 @@ export function agentOperation(store: SyncMetadata, operation: string, input: an
   rate(store,'issue:'+input.memberId,5,60_000,now)
   if (store.get('agent-request:'+input.requestId) || store.get('agent-code:'+input.codeDigest)) deny(409,'request_collision')
   const bound=binding(store,input.memberId,[...input.rooms].sort(),scope,now)
-  const r: PairRequest={ ...bound,id:input.requestId,installationId:input.installationId,label:input.label,verifierDigest:input.verifierDigest,codeDigest:input.codeDigest,expiresAt:now+300_000,status:'pending' }
+  let endpoint: URL
+  try { endpoint=new URL(apiEndpoint!);if(endpoint.origin!==apiEndpoint || endpoint.username || endpoint.password || (endpoint.protocol!=='https:' && !(endpoint.protocol==='http:' && endpoint.hostname==='127.0.0.1' && Number(endpoint.port)>0))) throw new Error() } catch { deny(403,'scope_changed') }
+  const r: PairRequest={ ...bound,apiEndpoint,id:input.requestId,installationId:input.installationId,label:input.label,verifierDigest:input.verifierDigest,codeDigest:input.codeDigest,expiresAt:now+300_000,status:'pending' }
   store.put('agent-request:'+r.id,r); store.put('agent-code:'+r.codeDigest,r.id); receipt(store,'create',r.memberId,null,r.id,now)
   return publicRequest(r)
  }
@@ -96,8 +98,9 @@ export function agentOperation(store: SyncMetadata, operation: string, input: an
   if (!r || r.memberId!==m.id) deny(403,'authorizer_denied')
   if (['consumed','cancelled','denied'].includes(r!.status)) deny(410,'request_'+r!.status)
   if (r!.expiresAt<=now) deny(410,'request_expired')
+  if(operation!=='deny' && (!r!.apiEndpoint || r!.apiEndpoint!==apiEndpoint))deny(403,'scope_changed')
   current(store,r!,scope,now)
-  const context={ requestId:r!.id,sessionDigest:input.sessionDigest,csrfDigest:input.csrfDigest,memberId:input.memberId,backendId:input.backendId,signInAt:input.signInAt,originalRoom:input.originalRoom }
+  const context={ requestId:r!.id,apiEndpoint:r!.apiEndpoint,sessionDigest:input.sessionDigest,csrfDigest:input.csrfDigest,memberId:input.memberId,backendId:input.backendId,signInAt:input.signInAt,originalRoom:input.originalRoom }
   if (operation==='inspect') {
    const consentId=crypto.randomUUID();store.put('agent-consent:'+consentId,context)
    return { ...publicRequest(r!),consentId,authorizer:{ id:m.id,label:m.label },origin:store.get<HumanConfig>('human-config:v1')!.origin }
@@ -125,6 +128,7 @@ export function agentOperation(store: SyncMetadata, operation: string, input: an
   }
   if (['consumed','cancelled','denied'].includes(r!.status)) deny(410,'request_'+r!.status)
   if (r!.expiresAt<=now) deny(410,'request_expired')
+  if(!r!.apiEndpoint || r!.apiEndpoint!==apiEndpoint)deny(403,'scope_changed')
   current(store,r!,scope,now)
   if (operation==='poll') { rate(store,'poll:'+r!.id,1,2_000,now); return { status:r!.status,expiresAt:r!.expiresAt } }
   if (r!.status!=='approved') deny(409,'approval_pending')

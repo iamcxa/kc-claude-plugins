@@ -1,4 +1,4 @@
-# 0026. Verify human entry before opening an existing private room
+# 0031. Verify human entry before opening an existing private room
 
 Date: 2026-10-19
 
@@ -56,3 +56,11 @@ stream-stop leases or durable drafts. Local proofs are separate from actual
 provider login/session precedence, account eligibility and hosted route checks.
 Disabling the new entry preserves metadata and revocations; rolling security
 metadata backward is never a rollback mechanism. Formal merge remains reserved.
+
+## Provenance
+
+Renumbered from human-entry ADR 0026 to ADR 0031 only in this aggregate.
+The accepted decision text is unchanged from `afcf5bc2dad60c485efd07e8fda01a48245229ae`
+(`docs/adr/0026-verified-human-entry-preserves-private-room-core.md`).
+Main retains its separate role-calls ADR 0026. Original task reservation and
+validation evidence remain at their original paths and hashes.

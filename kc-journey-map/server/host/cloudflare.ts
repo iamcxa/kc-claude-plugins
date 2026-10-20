@@ -58,7 +58,7 @@ export class JourneyRegistry {
   const op = new URL(req.url).pathname
   if (op === '/agent') {
    try {
-    const result=this.ctx.storage.transactionSync(() => captureAgent(() => agentOperation(this.sync(), body.operation, body.input, room => agentScope(this.env, room))))
+    const result=this.ctx.storage.transactionSync(() => captureAgent(() => agentOperation(this.sync(), body.operation, body.input, room => agentScope(this.env, room), Date.now(), this.env.JOURNEY_ORIGIN)))
     if(result.ok && result.value?.operationId)result.value.denialCommitObservedAt=Date.now()
     const f=body.input.familyId ? this.get('agent-family:'+body.input.familyId) : null
     if(f?.revokeOperation)await this.notifyResult({operationId:f.revokeOperation})
