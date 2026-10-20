@@ -58,20 +58,26 @@ Captain's words:
 
 ## Acceptance criteria
 
-**AC-1**: On the exe.dev VM, hermes authenticated with a Codex token runs as a service and is back after a VM reboot without manual action.
-Verified by: service status and a hermes health/readback before and after one reboot, with timestamps; the token itself never appears in any record.
+**AC-6**: Amended by Captain, amendment 1. With only a GitHub App installation token, a push to the scratch repository's `main` is refused and `main` is unchanged.
+Verified by: `kc-ops-inbox/github-probe/probe.sh` line `AC-6` (refused push output, `main` sha equal before and after), plus both ruleset definitions read back with `gh api` showing an empty bypass list.
 
-**AC-2**: A correctly signed synthetic relay ceiling event makes hermes, with no human prompt, act as the First Officer and file exactly one ops task on the test repository's ops state branch; the same event with one changed byte is rejected and files nothing.
-Verified by: the webhook delivery log for both requests, the state-branch commit for the valid one, and no new commit for the altered one.
+**AC-7**: Amended by Captain, amendment 1. With only that token, merging a pull request through the API is refused and the pull request stays open.
+Verified by: probe line `AC-7` (HTTP status and message, pull request state read back).
 
-**AC-3**: The FO posts its diagnosis and options in a Slack thread and stops at the ops decision gate; with no Captain reply the gate stays open.
-Verified by: the Slack thread, and the gate record still unresolved after a stated wait.
+**AC-8**: Amended by Captain, amendment 1. With only that token, approving the App's own pull request does not satisfy the required review.
+Verified by: probe line `AC-8` (the approval's HTTP status, `mergeable_state` not clean, a second merge attempt still refused).
 
-**AC-4**: The Captain's reply in that thread is recorded as the gate result with his words, attributed to the Captain; a reply from a user outside the allowlist is refused and recorded nowhere as a decision.
-Verified by: the gate record after the Captain's reply, and the refusal for a second, non-allowlisted Slack user.
+**AC-9**: Amended by Captain, amendment 1. With only that token, pushing a branch under `ops/` and opening a Draft pull request succeed.
+Verified by: probe lines `AC-9a` and `AC-9b` (push accepted, Draft pull request number and `draft: true`).
 
-**AC-5**: The machine account the FO uses cannot push to the test repository's default branch or merge a pull request there; a GitHub ruleset enforces it.
-Verified by: the refused push output and the refused merge attempt, plus the ruleset read back with `gh api`, showing that account is not on the bypass list.
+**AC-10**: Amended by Captain, amendment 1. The runner holds no GitHub credential other than the installation token, and the token carries no Administration permission.
+Verified by: probe lines `AC-10a` (credential sources named by presence, no value) and `AC-10b` (creating a ruleset refused), plus the permissions the token mint reports (`contents` and `pull_requests` write only).
+
+**AC-11**: Amended by Captain, amendment 1. Given a fixture relay capacity event, a First Officer on host Claude Code or Codex, started through `spacedock dispatch build`, files exactly one ops task on an `ops/*` branch and opens one Draft pull request with the App token.
+Verified by: the dispatch artifact, the task commit on the `ops/*` branch, the Draft pull request, and the credential audit run in the First Officer's own environment.
+
+**AC-12**: Amended by Captain, amendment 1. The ops gate is recorded only after the First Officer reads the Captain's own GitHub review of that pull request, with his words and attributed to him.
+Verified by: the gate record, the review it cites (reviewer login and state), and the gate still open before that review.
 
 ## FO alignment
 
@@ -85,6 +91,22 @@ Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-20 — after the Captain pau
 Captain: 「可以，所以在 slack 回應的 agnet 跟實際調查動手的應該是兩個，但是共享某種資源，對嗎？」 (chat, 2026-10-20, while the POC was paused)
 Asked: 「第一版放棄「hermes 開機就當 FO」，權限邊界改放在 GitHub（App token 加 ruleset，加上你本人在 GitHub 的 review），然後先跑上面那個憑證測試，可以嗎？」 The test presented: with only a GitHub App token, 推 main、用 API 合併 PR、核准自己開的 PR are expected to be refused, and 推 ops/* 分支、開草稿 PR is expected to succeed; if those pass, 一個手動餵入的假事件，用 Spacedock 第一級支援的 Claude Code 或 Codex 跑 FO，寫一張 ops 任務到 ops/* 分支、開一個草稿 PR，你在 GitHub 上 review 核准.
 Supersedes: AC-1, AC-2, AC-3, AC-4, AC-5
+Superseded text:
+
+    **AC-1**: On the exe.dev VM, hermes authenticated with a Codex token runs as a service and is back after a VM reboot without manual action.
+    Verified by: service status and a hermes health/readback before and after one reboot, with timestamps; the token itself never appears in any record.
+
+    **AC-2**: A correctly signed synthetic relay ceiling event makes hermes, with no human prompt, act as the First Officer and file exactly one ops task on the test repository's ops state branch; the same event with one changed byte is rejected and files nothing.
+    Verified by: the webhook delivery log for both requests, the state-branch commit for the valid one, and no new commit for the altered one.
+
+    **AC-3**: The FO posts its diagnosis and options in a Slack thread and stops at the ops decision gate; with no Captain reply the gate stays open.
+    Verified by: the Slack thread, and the gate record still unresolved after a stated wait.
+
+    **AC-4**: The Captain's reply in that thread is recorded as the gate result with his words, attributed to the Captain; a reply from a user outside the allowlist is refused and recorded nowhere as a decision.
+    Verified by: the gate record after the Captain's reply, and the refusal for a second, non-allowlisted Slack user.
+
+    **AC-5**: The machine account the FO uses cannot push to the test repository's default branch or merge a pull request there; a GitHub ruleset enforces it.
+    Verified by: the refused push output and the refused merge attempt, plus the ruleset read back with `gh api`, showing that account is not on the bypass list.
 
 ## Stage Report: implementation
 
@@ -119,3 +141,27 @@ HOLD: the local hermes rehearsal is blocked on one permission. Candidate commit 
 ### Summary
 
 Authored the minimal ops workflow, hermes profile (config, SOUL, skill, guard plugin), signed-event sender and a hermes-free mechanics script; the Spacedock half of AC-2/3/4 runs. The hermes half is unrun because the editable install is denied; the Captain's two approvals (local install, own Codex login) stand and removal after rehearsal is recorded as a condition. No outward action was taken.
+
+## Stage Report: implementation (cycle 2)
+
+HOLD at the outward-action decision request. Candidate b4da27a8 on `spacedock-ensign/hermes-ops-fo-exe-dev-poc`; nothing run against GitHub yet.
+
+- DONE: Apply Captain amendment 1: move AC-1 to AC-5 verbatim into the amendment entry under `Superseded text:`, write replacement criteria AC-6 onward, each "Amended by Captain, amendment 1".
+  AC-1..AC-5 moved verbatim (indented block) under the entry's `Superseded text:`; AC-6 push to main refused, AC-7 API merge refused, AC-8 self-approval does not satisfy review, AC-9 `ops/*` push and Draft PR succeed, AC-10 no other credential and no Administration, AC-11 fixture event to one ops task and Draft PR via `spacedock dispatch build`, AC-12 gate recorded only after the Captain's GitHub review. No criterion id reused; frontmatter and the FO's entry lines untouched.
+- DONE: Prepare the probe locally with no outward action: App permission set, the two ruleset definitions, a probe script that uses only the installation token.
+  `kc-ops-inbox/github-probe/`: `app-permissions.json`, `ruleset-main.json` (pull request with 1 approval, last-push approval, no deletion, no force-push, empty bypass list), `ruleset-ops.json` (`ops/**`: no deletion, no force-push), `mint_token.sh`, `probe.sh`, `credential_audit.sh`, `askpass.sh`. Field names checked against GitHub's published OpenAPI description (rulesets, access_tokens, pulls) read today. Local proof against a fake API plus a local bare repo with a refusing pre-receive hook: verdict lines for AC-6..AC-10 all PASS; three mutations each flipped the matching line to FAIL (API accepts merge -> AC-7 and AC-8; remote accepts a main push -> AC-6; stray `GH_TOKEN` in env -> AC-10a). This proves the probe's verdict logic only; real GitHub behaviour (including whether an App's self-approval is refused or merely not counted) is unmeasured.
+- DONE: Send one decision request naming each outward action exactly, and wait.
+  Sent to `main` after this report; no outward action taken.
+- DONE: Clean the hermes rehearsal residue.
+  Ran `rm -rf /tmp/hermes-venv /tmp/hermes-src /tmp/ops-rehearsal /tmp/hermes-install.log /tmp/exe-docs /tmp/exe-docs.html` (and `/tmp/gh-oapi`, `/tmp/probe-test.*`, my two later scratch dirs). `ls -d` on each afterwards: "No such file or directory" for all; `~/.hermes` does not exist. No hermes login was ever made, so no `hermes auth logout` was needed (command, for the record: `hermes auth logout openai-codex`, hermes_cli/auth.py `logout_command`).
+
+### Findings for FO
+
+- `design_surfaces.py check` exits 1 on `## FO alignment`: needs a non-empty `Surfaces:` line and a `Visible change:` line. FO-owned text; I did not write them.
+- roborev on b4da27a8 (evidence=roborev:938, exit 1, no findings in `github-probe/`); both High findings are in the shelved hermes artifacts, not fixed per "do not extend": the guard regex is bypassable by shell expansion (same class as roborev:935), and `hermes-profile/config.yaml` never points hermes at the skill directory (`skills.external_dirs` empty), so the skill would not load. Both are moot while hermes-as-FO is shelved.
+- comment_ratio: `code lines 101, comment lines 1, 1.0%`, max 5% met, exit 0. doc_impact: 0 documents mention what changed (nothing to mark).
+- The slice runner must not inherit the Captain's own `gh` login, ssh keys or git credential helper; AC-11 therefore runs the credential audit inside the First Officer's actual environment, which for host Claude Code or Codex is not the empty-HOME probe environment.
+
+### Summary
+
+Amendment 1 applied to the entity; the credential probe is built and its logic proven locally, with real-GitHub behaviour still unmeasured. The hermes residue is gone. Next step is the Captain's yes to the named outward actions.
