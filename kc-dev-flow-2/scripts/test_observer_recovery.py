@@ -54,6 +54,9 @@ def exercise(base, binary):
     run(["git", "-C", repo, "add", "--", ".gitignore", "docs/dev2/README.md"])
     run(["git", "-C", repo, "commit", "-m", "test: seed workflow"])
     run(["git", "-C", repo, "push", "origin", "main"])
+    discovered = run([binary, "status", "--discover"], repo).stdout.split()
+    assert str(workflow.resolve()) in [str(Path(line).resolve()) for line in discovered], \
+        f"Spacedock discovery does not list the template workflow: {discovered}"
     state = workflow / ".spacedock-state"
     run(["git", "-C", repo, "worktree", "add", "--detach", state])
     run(["git", "-C", state, "checkout", "--orphan", "spacedock-state/dev2"])

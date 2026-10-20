@@ -24,6 +24,8 @@ Report the file's word count before and after, and the words each worker stage
 inlines. `kc-dev-flow-2/scripts/lint-skills.py` refuses a file whose count differs from its word budget and a passage of
 12 or more words that another package file repeats; a raise of the budget needs a Captain ruling
 in the budget steps, a cut lowers it in the same change, and listing an overlap says why.
+Its `commissioned-by:` value only seeds a new adoption, because commission and refit restamp it and
+the sync keeps the adopter's line; changing it conflicts at the next sync with every adopter stamped otherwise.
 
 Run `python3 kc-dev-flow-2/scripts/lint-skills.py` from the repository root. Before each push
 of a package change, run `python3 kc-dev-flow-2/extensions/roborev/roborev_gate.py --repo
