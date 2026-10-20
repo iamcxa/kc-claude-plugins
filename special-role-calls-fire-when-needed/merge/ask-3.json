@@ -1,0 +1,23 @@
+{
+  "class": "never",
+  "head": "f4447396265e18e7b2cbb681b4dbfe16d396530e",
+  "model": "not run",
+  "next": "next: ask for merge with this text.",
+  "points": [
+    "point: deferred: 'Limits judged. Agent body \"a stronger'",
+    "point: deferred: '- F2 Deferred risk: reply comments'",
+    "point: deferred: 'Deliver #682 head f4447396 (role calls'",
+    "point: deferred: 'Validation Verdict PASSED at f4447396 (validation-1;'",
+    "point: not-run: 'Validation Verdict PASSED at f4447396 (validation-1;'",
+    "point: path: 'docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-c'",
+    "point: path: 'kc-dev-flow-2/agents/engineering-reviewer.md'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/role_triggers.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_role_triggers.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#682",
+  "time": "2026-10-20T03:03:06Z",
+  "verdict": "ask"
+}
