@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:comment-check-reaches-delivery-gate:backlog:attempt-1:revision-1",
+  "question": "Admit this task to batch 4 as Pilot? FO put batch 4 in chat before this briefing (five tasks: commissioned-by-names-spacedock, db-surface-without-migrations for #678, comment-check-reaches-delivery-gate, fo-write-rules-checked for #684, fo-batch-sittings; all Pilot; order: commissioned-by first, #678 and comment-check in parallel, #684 after comment-check, fo-batch-sittings implementation after #678) and asked 「照這 5 件、全部用 Pilot，作為批次四的待辦關卡一次批准嗎？」. Approving accepts profile pilot, the scope above and that order.",
+  "artifacts": [
+    {
+      "id": "artifact:comment-check-reaches-delivery-gate:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/69ccb3fa186d210dbc988dd7ffa09d7d69b43069/comment-check-reaches-delivery-gate.md",
+      "rev": "sha256:f3dc2bef571acca6d739d6b77fadaa2a0127318993ebe5c1361b358dd20b2481",
+      "mediaType": "text/markdown",
+      "summary": "Batch 4 backlog, presented with the four other batch-4 tasks in one chat message."
+    }
+  ]
+}
