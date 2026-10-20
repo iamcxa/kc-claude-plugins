@@ -15,6 +15,17 @@ gates:
                 id: briefing:commissioned-by-names-spacedock:backlog:attempt-1:revision-1
                 digest: sha256:0b6e4f741ab8074c0515b6e1e71bf2110a08ee04e0753839968d3d418c79ff48
                 room-ref: ./commissioned-by-names-spacedock/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:commissioned-by-names-spacedock:backlog:1
+                briefing: briefing:commissioned-by-names-spacedock:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T04:46:26.74552Z"
+                decision: approve
+                reason: Captain answered in chat 「要，改」 to FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
