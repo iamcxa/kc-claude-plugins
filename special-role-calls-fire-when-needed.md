@@ -34,6 +34,17 @@ gates:
                 id: briefing:special-role-calls-fire-when-needed:ideation:attempt-1:revision-1
                 digest: sha256:b3d2938c84e45ae3b2f894e681b329e066feb05899e44973b0afb86216881c74
                 room-ref: ./special-role-calls-fire-when-needed/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:special-role-calls-fire-when-needed:ideation:1
+                briefing: briefing:special-role-calls-fire-when-needed:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T02:04:50.97076Z"
+                decision: approve
+                reason: 'Captain answered each decision in chat, one at a time, all as recommended: D1 「同意」, D2 「第四輪」, D3 「Ａ」 (after asking what B breaks and costs), D4 「Ａ」, D5 「同意」; the gate question states that approval accepts D1 to D5 as recommended'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-19T17:05:25Z
 ---
 
