@@ -343,6 +343,17 @@ if answer is None:
     sys.exit(1)
 print(json.dumps(answer))
 """
+SD_STUB = """#!/usr/bin/env python3
+import os, sys
+if sys.argv[1:] != ["status", "--workflow-dir", os.environ["SD_DIR"], "--next", "--json"]:
+    sys.stderr.write("stub spacedock: unexpected " + " ".join(sys.argv[1:]))
+    sys.exit(2)
+text = open(os.environ["SD_NEXT"]).read()
+if text == "FAIL":
+    sys.stderr.write("stub spacedock: down")
+    sys.exit(3)
+print(text)
+"""
 IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
             "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
 
@@ -361,6 +372,11 @@ class TasksTests(unittest.TestCase):
         stub = self.root / "bin/gh"
         stub.write_text(GH_STUB)
         stub.chmod(0o755)
+        sd = self.root / "bin/spacedock"
+        sd.write_text(SD_STUB)
+        sd.chmod(0o755)
+        self.next = self.root / "next.json"
+        self.next.write_text(json.dumps({"ready_gates": []}))
         self.repo = self.root / "repo"
         self.workflow = self.repo / "docs/dev2"
         self.state = self.workflow / ".spacedock-state"
@@ -397,11 +413,18 @@ class TasksTests(unittest.TestCase):
         self.git(self.state, "add", "-A")
         self.git(self.state, "commit", "-qm", "report")
 
+    def sd_env(self):
+        return {"SPACEDOCK_BIN": str(self.root / "bin/spacedock"), "SD_NEXT": str(self.next), "SD_DIR": str(self.workflow.resolve())}
+
+    def gates(self, *rows):
+        self.next.write_text(json.dumps({"ready_gates": [
+            {"id": slug, "slug": slug, "current": stage, "readiness": readiness} for slug, stage, readiness in rows]}))
+
     def tasks(self, answers, look=None, clock=None):
         table = self.root / "gh.json"
         quiet = {f"api repos/o/r/pulls/{n}/comments": [[]] for n in (7, 8, 9)}
         table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, **quiet, **answers}))
-        env = {"PATH": f"{self.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table)}
+        env = {"PATH": f"{self.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table), **self.sd_env()}
         out = io.StringIO()
         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
@@ -774,6 +797,94 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(code, 0, lines)
         self.assertIn("has 4 repair passes; dispatch kc-dev-flow-2:chief-engineer", lines[0])
 
+    def sitting_lines(self, lines):
+        return [line for line in lines if " await the Captain at " in line]
+
+    def test_gates_awaiting_the_captain_at_one_stage_print_one_sitting_line_naming_every_slug(self):
+        self.readme("roborev")
+        self.gates(("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"), ("c", "ideation", "awaiting-captain"))
+        code, lines = self.tasks({})
+        self.assertEqual((code, len(lines)), (0, 1), lines)
+        self.assertEqual(lines[0], "next: 3 gates await the Captain at ideation (a, b, c); unless already presented, "
+                                   "present them in one message and record each with his one answer.")
+        self.assertEqual(len(lines[0].split()), 26)
+
+    def test_one_awaiting_gate_prints_no_sitting_line(self):
+        self.readme("roborev")
+        self.gates(("a", "ideation", "awaiting-captain"), ("b", "validation", "awaiting-captain"))
+        self.assertEqual(self.tasks({}), (0, []))
+
+    def test_gates_still_needing_preparation_are_not_counted_in_a_sitting(self):
+        self.readme("roborev")
+        self.gates(*[(f"n{i}", "backlog", "needs-preparation") for i in range(15)],
+                   ("a", "backlog", "awaiting-captain"), ("b", "backlog", "awaiting-captain"))
+        code, lines = self.tasks({})
+        self.assertEqual(len(lines), 1, lines)
+        self.assertIn("2 gates await the Captain at backlog (a, b);", lines[0])
+        self.assertNotIn("n0", lines[0])
+
+    def test_each_stage_with_two_awaiting_gates_gets_its_own_line_and_only_validation_names_the_merge_order(self):
+        self.readme("roborev")
+        self.gates(("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"),
+                   ("c", "validation", "awaiting-captain"), ("d", "validation", "awaiting-captain"))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(lines), 2, lines)
+        self.assertIn("at ideation (a, b);", lines[0])
+        self.assertIn("at validation (c, d);", lines[1])
+        merge = "Name the merge order and each shared file from Batch overlap."
+        self.assertEqual([line.endswith(merge) for line in lines], [False, True])
+        self.assertEqual([len(line.split()) for line in lines], [25, 36])
+
+    def test_the_line_grows_by_one_word_per_slug(self):
+        self.readme("roborev")
+        self.gates(*[(f"t{i}", "ideation", "awaiting-captain") for i in range(5)])
+        code, lines = self.tasks({})
+        self.assertEqual(len(lines[0].split()), 28, lines)
+
+    def test_the_sitting_line_comes_before_the_wait_lines(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.gates(("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"))
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertIn(" await the Captain at ideation", lines[-3])
+        self.assertTrue(lines[-2].startswith("next: run `python3 "), lines)
+
+    def test_a_failed_or_misshapen_status_call_is_reported_to_the_captain_with_exit_2(self):
+        self.readme("roborev")
+        for name, body in (("exit 3", "FAIL"), ("no ready_gates", json.dumps({"dispatchable": []})),
+                           ("a gate without a stage", json.dumps({"ready_gates": [{"slug": "a", "readiness": "awaiting-captain"}]})),
+                           ("not json", "oops")):
+            with self.subTest(name):
+                self.next.write_text(body)
+                code, lines = self.tasks({})
+                self.assertEqual(code, 2, lines)
+                self.assertEqual(len(lines), 1, lines)
+                self.assertRegex(lines[0], r"^next: report the awaiting gates to the Captain: ")
+
+    def test_a_missing_spacedock_executable_is_reported_to_the_captain_with_exit_2(self):
+        self.readme("roborev")
+        table = self.root / "gh.json"
+        table.write_text("{}")
+        env = {"GH_STUB": str(table), **self.sd_env(), "SPACEDOCK_BIN": str(self.root / "bin/absent")}
+        out = io.StringIO()
+        with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
+            code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)])
+        self.assertEqual(code, 2)
+        self.assertRegex(out.getvalue(), r"^next: report the awaiting gates to the Captain: ")
+
+    def test_the_sitting_line_writes_no_file(self):
+        self.readme("roborev")
+        self.tasks({})
+
+        def tree():
+            return {str(p): p.read_bytes() for p in self.root.rglob("*") if p.is_file() and ".git" not in p.parts}
+        self.gates(("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"))
+        before = tree()
+        self.assertEqual(len(self.sitting_lines(self.tasks({})[1])), 1)
+        self.assertEqual(tree(), before)
+
     def test_tasks_needs_one_workflow_directory(self):
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(watch.main(["--state", str(self.watch), "tasks"]), 2)
@@ -898,7 +1009,7 @@ class DefaultStateTests(unittest.TestCase):
         table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, "pr view 7": view(),
                                      "api repos/o/r/pulls/7/comments": [[]]}))
         env = {"PATH": f"{tasks.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table),
-               "HOME": str(self.home), "CLAUDE_CODE_SESSION_ID": "S"}
+               "HOME": str(self.home), "CLAUDE_CODE_SESSION_ID": "S", **tasks.sd_env()}
         out = io.StringIO()
         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
             code = watch.main(["tasks", str(tasks.workflow)])

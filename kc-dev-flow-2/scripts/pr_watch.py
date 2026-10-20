@@ -33,7 +33,8 @@ with their review id) and one `next:` line per action FO owes: recording a PR a 
 draft ready, the observer check ahead of the merge sentinel, keeping one wait running, a task's newest
 dispatch record that names a package script without a directory (dispatch_records.py --newest), and a
 chief-engineer or engineering-reviewer call a live task owes (role_triggers.py, given the number of review ids
-that left inline comments on the task's open PR). It prints no merge-ask
+that left inline comments on the task's open PR), and one `next:` line per stage where two or more gates
+await the Captain (spacedock status --next; SPACEDOCK_BIN names the executable). It prints no merge-ask
 or hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
 change. Exit 2 when a task cannot be read.
 """
@@ -292,6 +293,21 @@ def entities(state):
     return sorted(found.items())
 
 
+def sittings(workflow):
+    binary = os.environ.get("SPACEDOCK_BIN") or "spacedock"
+    done = subprocess.run([binary, "status", "--workflow-dir", str(workflow), "--next", "--json"], capture_output=True, text=True)
+    if done.returncode:
+        raise RuntimeError((done.stderr or done.stdout).strip()[:120] or "spacedock status --next failed")
+    waiting = {}
+    for gate in json.loads(done.stdout)["ready_gates"]:
+        if gate["readiness"] == "awaiting-captain":
+            waiting.setdefault(gate["current"], []).append(gate["slug"])
+    return [f"next: {len(slugs)} gates await the Captain at {stage} ({', '.join(slugs)}); unless already presented, "
+            "present them in one message and record each with his one answer."
+            + (" Name the merge order and each shared file from Batch overlap." if stage == "validation" else "")
+            for stage, slugs in waiting.items() if len(slugs) > 1]
+
+
 def tasks(opts, look=look, ask=gh, clock=time.time):
     workflow = Path(opts.args[0]).resolve()
     readme = front(workflow / "README.md")
@@ -358,6 +374,10 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
             out += done.stdout.splitlines()
         elif done.returncode:
             errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
+    try:
+        out += sittings(workflow)
+    except (RuntimeError, KeyError, ValueError, OSError) as error:
+        errors.append(f"next: report the awaiting gates to the Captain: {str(error)[:120]}.")
     if snaps:
         already, _ = record(opts.state, load(opts.state), snaps)
         out += already + [f"next: run `{wait} wait` in the background, unless one is running.",
