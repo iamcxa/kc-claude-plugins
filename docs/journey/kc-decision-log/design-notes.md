@@ -1,108 +1,96 @@
 # kc-decision-log 設計說明
 
-這份規劃保留完整 28 個故事與六片端到端成果。使用者已選 P1「讀對同一份裁示」為第一個 release，採 kc-dev-flow-2 的 Pilot profile；其餘切片仍為候選。先發布並合併地圖，再由既有流程準備正式 brief 與驗證，之後逐片以小批次推進。這份地圖不建立產品 workflow、host、憑證或存取權限。
+D5 已接受 **CLI 優先、MCP 選配**；本PR為規劃設計；CLI未實作／部署，非ready handoff。完整 28 故事／8 活動及 D1–D4 保留，P1 五故事與 Pilot 不變。使用者先前投入原話「1-3天」；本輪已澄清「三個完整工作日」，appetite 上限 3 days，正式days scalar estimate仍為 `null`、fit `unknown`。具體工作模型見 [CLI 設計](cli-first-design.md)；故事與 AC 唯一來源見 [README](README.md)。
 
 ## 從完整故事看最小交付
 
-主角是使用者：指定自己的決策空間，釐清裁決權，討論與確認，再讓 agents 查詢正確版本、處理手上 checkout、交接既有流程，最後用證據重新決策。Claude、Codex、dot 是接手者；host 與本機 agent 在更新步驟各自負責自己的狀態。
+使用者指定自己的決策空間、釐清裁決權、討論與確認；Claude、Codex、dot 在各自已授權的執行環境讀取同一精確依據，再沿既有流程執行並帶證據回來。共用核心不意味共用一個遠端 process，也不將不同 repo 的裁示合成同一權威。
 
-設計包含：拒絕跨層 supersession、引用固定上層版本、把 freshness 拆成獨立觀測、先查再更新、更新後重讀、寫入只形成待審查變更。這些是為了落實已確認方向的候選行為；checkout 條件式自行更新已由使用者確認；具體資料欄位、host 維護機制、確認出處的保存格式與 MCP 工具名仍是後續技術細節。
+候選順序仍是 **P1 讀取 → P2 查核 → P3 安全更新 → P4a 單任務閉環 → P4b 跨層重審 → P5 受控 PR**。P1 的路徑是指定來源 → 真正三端執行 CLI → 核對身份／權限與同一原文 → 分清層級 → 回答有效或仍有疑義。最小共用 core／CLI 封裝、多 repo 原生 loader、JSON／人讀輸出與錯誤都服務這五故事；不是已可用的附屬工具，也不預切工程任務。
 
-建議的交付順序是 **P1 讀取 → P2 版本查核 → P3 安全更新 → P4a 單任務閉環 → P4b 跨層重審 → P5 受控 PR**。P1 已帶最小的協作引用，因此協作不必等待寫入 MCP。P4a 硬依賴 P1／P2，P3 只是建議先完成：可用既有人工核對與安全更新補足前置，不能略過 freshness 未知。P5 可整片延後，直到既有 Git／PR 方式顯現具體缺口。
-
-P1 的最小路徑是：使用者明確指定獨立 repo → 三端驗證身分 → 讀到同一精確來源 → 分清裁決層級 → 回答有效或仍有疑義。隔離、範圍與衝突拒絕是必要條件，不能為了變小移到後片。若跨客戶端登入不成立，先做範圍受限的相容性驗證並交付可行／不可行證據，再決定產品切片；本輪未執行跨客戶端登入實測。
-
-P1 與 Pilot 已選定；投入期限、可信整合工期與正式 Development Brief 尚待既有 dev2／Spacedock 流程完成。未執行 journey-handoff 檢查，不把 release 選擇或設計審查當作正式開發移交通過，也不由本圖產生另一份任務系統。
+S17 遠端 host 維護保留全圖、移出候選 P3 至 deferred，因 CLI loaded view 與 checkout 安全更新不要求遠端 host。沒有新增 slice。P3、P4a、P5 的 P2 都是建議順序，非整片硬依賴；P1 必要讀取能力保留。P3 的當次 Git 安全條件與更新後重讀、P4a 的精確 pin／freshness／適用性及接手者權限、P5 的已准來源／base／diff／前次不確定結果及提交前重查都不可跳過。可由既有 Git 等能力提供，不要求 P2 全部診斷產品先交付；替代路徑仍未端到端實測，查不明就 unknown／停止。P3 也是 P4a 建議順序，P5 可以整片延後。
 
 ## 權限與來源的分界
 
-| 對象 | 原文／狀態保存處 | 可決定什麼 | 可引用什麼 | 不由它決定的事 |
-| --- | --- | --- | --- | --- |
-| 共用工具引擎 | 本公開 repo 的規劃範圍 | 解析、查詢與一致的工具行為 | 合成 fixtures、公開規格 | 不持有使用者私人裁示，不授予裁決權 |
-| 使用者總指揮裁示 | 使用者指定並獲授權的獨立 Git repo | 由該層獲授權決策者確認的方向與適用範圍 | 工程證據的受保護引用 | 不自動批准任意外部動作，不取代工程 gate |
-| 工程 ADR | 各工程 repo | 該 repo 的工程方案與取捨 | 明確上層 ADR 版本及本地工程決策 | 不能以更新時間、key 或 supersession 覆蓋上層 |
-| dev2／Spacedock | 原有 workflow、任務及驗收來源 | 任務、執行、gate、驗收的原有權威 | 精確 ADR 引用 | 不因任務完成就自動改上層裁示 |
-| hosted transport／host | 現有運行實體 | 驗證 caller、依授權提供查詢、管理其 snapshot | 已配置且獲准的決策來源 | site owner 身分不等於通用的總指揮裁決權；本機 checkout 更新不代表已部署 |
-
-「工程 ADR 留原 repo」與「每人有獨立決策庫」同時成立：獨立庫保存上層裁示，工程 repo 保存其局部工程決策；不把所有工程 ADR 搬成一份共享權威。工程來源要另行註冊並按權限讀取，讀不到時保持未知，不為了補齊視圖擴大存取。
-
-project key 是命名空間，不足以單獨表示總指揮／工程層級。不同來源即使 ADR ID、Decision key 或數字相同，也不能碰撞。候選引用內容為：**來源 repo、層級、適用範圍、完整 ADR ID、path、commit、內容摘要**；這是語義需求，尚非已定 schema。
-
-## 版本查核究竟查什麼
-
-每筆比較都先綁定配置的 repo 與追蹤 ref，再記錄遠端 commit 及觀測時間。範圍至少分成：
-
-| 觀測對象 | 比較的本地／持有版本 | 目標 | 誰更新 |
-| --- | --- | --- | --- |
-| host 決策 snapshot | snapshot 的來源 commit S | 決策庫追蹤 ref 的目標 D | host 維護者／host agent，依既有權限 |
-| client checkout | agent 實際持有的 commit C | 該 checkout 所配置 repo／ref 的目標 T | 該 checkout 持有者在本機操作 |
-| host 部署 code | 部署自身可證明的 code revision | 部署來源及版本 | 既有部署流程與適用授權 |
-
-client checkout 可以是工具 code repo、決策 repo 或工程 repo，須按用途與來源分開。讀 MCP 不要求 client clone 私人決策庫。沒有 checkout 是「該觀測不適用」，不是 Git 關係的第六種狀態。
-
-工具 code checkout 進到 T，不能證明安裝中的 plugin、MCP schema 或 Sites 部署 code 也進到 T。host 的 S 追上 D，也不能證明 agent 的 C 已追上自己的 T。不要提供一個把這些混在一起的「全部最新」旗標。
-
-在已驗證相同 repo／ref、遠端目標可讀且祖先關係可判斷的前提下：
-
-| Git 關係 | 顯示 | 自動更新候選行為 |
+| 對象 | 保存處／責任 | 權威邊界 |
 | --- | --- | --- |
-| C = T | 一致 | 不動；仍顯示觀測時間 |
-| C 是 T 的嚴格祖先 | 落後 | 僅在工作目錄乾淨、目標明確且現有授權允許時嘗試 fast-forward |
-| T 是 C 的嚴格祖先 | 領先 | 保留；回報本地未在目標 ref 的 commit，不自動退回 |
-| 雙方互非祖先 | 分岔 | 保留；由持有者按既有 Git 流程處理，不自動 merge／rebase／reset |
-| 遠端、commit 或祖先證據不足 | 遠端未知 | 說明原因與最後可用觀測，不以舊 cache 宣稱一致 |
+| 共用 code／CLI | 通用程式目標 `iamcxa/kc-claude-plugins`；解析、搜尋、effective 與引用 | 不攜帶私人 ADR／credential，不授予裁決權 |
+| 使用者總指揮裁示 | 使用者指定且獲授權的獨立 Git repo | 該層獲授權決策者確認方向；不自動許可外部動作 |
+| 工程 ADR | 各工程 repo 原生 path | 固定引用上層版本，不以較新時間／supersession 覆蓋上層 |
+| runtime／source binding | 已准 OS／filesystem／GitHub 或獨立環境；明確 repo／ref／commit／path／level／scope | CLI 設定防誤讀，不把 label／allowlist 稱為安全隔離 |
+| dev2／Spacedock | 既有 workflow、任務、gate 與驗收來源 | 任務及驗收不由 CLI、gh 或讀取結果產生 |
+| 選配 host／MCP | 原有運行者與授權邊界 | 另觀測自己的 snapshot／code；非 CLI P1 前提，不因本機更新即宣稱部署 |
 
-這個關係表同樣適用 host 的 S 對 D。repo／ref 不符時先回來源不符，不能跨 repo 算 ancestry。shallow history 或無法讀到 commit 若不足以判斷，也不能猜成分岔或落後。
+ADR、Accepted、合併、身分驗證與行動許可是不同事實。OS/process context、gh 帳號、Git remote credential、Sites owner 與裁決權也須分開。agent 可共用同一合法 owner 帳號協作；無需替每個 agent 建 GitHub 用戶，也不能用共用帳號作雙使用者隔離證據。
 
-MCP 對 agent 自報 commit 所作的查核是建議資訊；真正更新前，本機持有者還要重新確認 remote identity、HEAD、工作目錄與目標。不要把私人本機路徑、帶憑證 remote URL 或任意輸入直接變成遠端執行參數。
+已有 clone 的合法本機讀取可依 OS／filesystem 與 binding 執行，不必每次在線 gh 或取得 Sites 身份。gh 與 Git remote credential 可能不同；僅回報真正觀測到的身份。無 terminal／權限的 client 路徑另議，不繼承另一 runtime 的登入。真正負向隔離須由實際權限或分隔環境證明，同 OS 原本可讀的資料不能稱被 CLI 隔離；已觀測macOS兩已知檔的局部read-deny機制；完整query／Git helpers／objectstore／aliases隔離仍未驗，不要求使用者先建真帳號。
 
-## 更新與重讀的完整路徑
+獨立決策庫與工程 repo 不搬入工具 repo。來源域要包含 repo／層級／scope，不能只靠 project key 或同號 ADR；先分隔合法來源再建查詢 view，不先混 snapshot 再 filter。無權／不可讀來源保持未知，不擴權補齊。
 
-1. 先觀測 repo／ref、目標 commit、持有 commit、可用 ancestry、dirty 狀態與時間；來源不符或未知就停止依賴更新的動作。
-2. 呈現差異與受影響 ADR。影響不只看文字變更：還含刪除、更名、狀態／key／替代鏈改變，以及工程 ADR 所引用上層版本的變動。
-3. checkout 持有者按既有授權重新查核，再做允許的安全更新。dirty 含 staged、unstaged 與未追蹤檔；不自動 stash、不強制 reset、不靜默切錯分支。其他獨立 worktree 策略仍是候選，須按實際來源與任務另行評估。
-4. host 獨立讀自己的配置來源，驗證候選 snapshot 後才切換；失敗保留 last-good、明示舊 revision 與落後／未知，不把失敗當成功。
-5. 更新後各自回報實際 commit，再重讀受影響原文與有效判定。舊 `revision` 失效時重新取得索引及版本；不能沿用舊結論。
-6. 若檢查與更新之間 ref 移動，重新觀測或停止，不承諾「永遠最新」。裁示前提影響任務時回 dev2／Spacedock 重審，不能自行換掉任務目標。
+## 版本觀測與安全更新
 
-使用者已確認：agent 查到已配置來源落後、工作目錄乾淨且可 fast-forward，即自行更新、重讀並回報；其餘狀態保留原狀並說明原因。此規則適用 checkout 持有者，不新增 host 維護或背景執行權限。自動通知／輪詢、host 更新由何者觸發仍待機制設計；本圖不提供背景執行或 automation 授權。工具名也保持未定，不把範例名稱當介面承諾。
+| 觀測對象 | 保留的版本 | 更新責任 |
+| --- | --- | --- |
+| code／安裝包 | package、core／contract 版本、可證明的 code commit；無 checkout 就不適用 | 既有安裝／code checkout 持有者，非 CLI 自升級 |
+| 各 ADR repo | 明確 repo／ref、immutable data commit、原文 digest | 該 checkout 持有者依 D2 用既有 Git |
+| 各 runtime loaded view | 實際 data commit／digest、config、所用 core／contract、indexed_at | 讀取重建，不能假定另一 runtime 同步 |
+| 選配遠端 host | 自己載入的 data revision 與獨立 code 版本 | 原維護流程另行授權；S17 延後 |
 
-## 合成討論案例
+adapter 版本可與 core／contract 分開；看相容語義，不以號碼不同直接判不一致。同 core／contract、相同來源與 data commit 應有相同原文 digest、狀態與 effective；context／時間可不同。code checkout、安裝包、ADR revision、loaded view 不合成一個「全部最新」。
 
-案例全部虛構；`D0`、`D1`、`C0` 是示意符號，不是可呼叫 API 的真實 commit。
+離線讀固定 D0 可以成立，但遠端身份／ref／freshness 未觀測就是未知。P1 誠實標示 D0；P2 提供版本與阻礙查核；P3 才做 ADR 影響分析，再由持有者安全更新及重讀。各片當次必要查核可沿既有 Git 進行，不能為等待 P2 而省略，也不要求 P2 整片產品先完成。先核對相同 repo／ref 與 ancestry，再分同／落後／領先／分岔／remote unknown，另報 dirty 與觀測時間。shallow history 或無法取得 commit 不猜成落後。
 
-虛構使用者 Mira 把上層裁示放在 `example/mira-decisions`。其中 `GUIDE#0012@D0` 裁定「展示站先限團隊登入」。之後若實質改變規則，另立 `GUIDE#0013@D1`；D1 是 repo 新 commit，包含新 ADR 及舊 ADR 的明示取代狀態，不是把 0012 原話改寫成另一個意思。`example/harbor-app` 的工程 ADR `ENG#0012@C0` 固定引用 D0，選擇沿用既有登入服務。兩筆同號、同用一個引擎，也不共用裁決權。
+D2 已確認：配置來源落後、工作目錄乾淨且可 fast-forward，持有者按既有授權自行更新、重讀並回報；dirty、領先、分岔或未知保留。不自動 stash／reset／merge／rebase，不把任意 path／帶憑證 remote URL 變成執行參數。ref race 時重新觀測或停下。CLI 本身唯讀，不 fetch、不做 Git 更新。
 
-- **P1**：三端讀到相同上層原文與 D0，辨識工程紀錄只是局部方案；未登入或另一位合成使用者無法讀取。
-- **P2**：決策 repo 已到 D1、host 還在 D0；工具 code checkout 卻已對齊它自己的追蹤 ref。回報兩個獨立狀態。
-- **P3**：乾淨且落後的 checkout 可安全前進；有未提交說明文件時停下保留。host 驗證 D1 成功才切換，接手者重讀受影響裁示。
-- **P4a**：Claude 交接 `GUIDE#0013@D1` 引用給 Codex；Codex 透過既有流程完成一個合成任務，dot 讀回原 gate 證據。裁示中的「部署」字樣本身不提供部署許可。
-- **P4b**：D1 的新 ADR 改變工程方案的前提，工程 agent 帶回影響，由原適用決策者重審；若再實質改方向，另立後續 ADR，不能因 ENG 的 commit 較新就覆蓋 GUIDE。
-- **P5**：若日後需要寫入，Mira 確認特定 diff 與 base 後才送待審查 PR。base 已改變或前次結果不明，先查清，不覆蓋、不重複送出；PR、merge、Accepted、host 已載入分開核對。
+P3 更新後分別回報實際 checkout commit 與 loaded view；重讀受影響原文／effective，舊 revision 不沿用。失敗保留原可用狀態並說明舊版／未知。選配 host 候選驗證後才切換 last-good 的工作留 S17；不要求建立 host 才完成 CLI P3。
 
-## 已確認與待決的討論
+## 合成案例與後續批次
 
-- 協作交接：使用者先轉交，或沿用已有驗證的通路；自動橋接延後。每位接手者仍用自己的已驗證身分重讀原文及證據。
-- checkout 更新：已配置來源落後、乾淨且可 fast-forward 時自行更新並回報；其他狀態保留原狀。更新後重讀受影響 ADR。
+全部符號虛構。使用者在 `example/mira-decisions` 的 `GUIDE#0012@D0` 確認「展示站先限團隊登入」；`example/harbor-app` 的 `ENG#0012@C0` 固定引用它並選擇工程方案。實質改方向另立 `GUIDE#0013@D1`，原話及歷史保留。兩筆同號也不共用裁決權。
 
-目前的待決問題與確認紀錄統一維護於 [切片來源](slices-proposal.yaml)，可讀投影見 [切片地圖](slice-map.md)。避免在多份說明保留互相矛盾的問卷副本。
+- **P1**：三端各自合法執行 CLI，對照同一 D0／path／層級／digest／原狀態與 effective；真實權限分隔的另一使用者不能讀取。這是待驗收案例，不是本輪實測。
+- **P2**：一個 runtime 的 view 還在 D0、決策 checkout 已見 D1，工具安裝包又是另一版本；分別回報，不稱全部最新。
+- **P3**：乾淨落後 checkout 依 D2 前進；dirty 保留，各 runtime 重讀自己的 view。無遠端 host 仍可完成本路徑。
+- **P4a**：使用者轉交或走已有驗證通路；接手者在自己的已准環境讀精確引用，由原 dev2／Spacedock 完成一個任務並留下 gate 證據。自動 bridge 延後。
+- **P4b**：工程證據改變裁示前提，回適用層級原決策者重審；新的裁示不被工程較新 commit 反向覆蓋。
+- **P5**：確認具體 diff／base 後由既有 Git／gh 送待審查 PR；前次結果未知或 base 移動先查清。PR、merge、Accepted 與選配 view 載入分開核對。
 
-第一片已選 P1、profile 為 Pilot；開發投入期限、估算與正式 brief 留在既有 admission 流程處理。工程與上層的身分／範圍分離已確認，不重開此題。P4b 的人工重新裁示仍須精確確認版本及保存歷史，不因寫入 MCP 延後而略過。
+## ADR 寫入沿用原有權威
 
-## MCP 唯讀與 ADR 寫入的分工
+D3 保留：agent 可整理草案，並依該次已准動作用既有 Git／PR 工具；CLI 及選配 MCP 唯讀，不代配號、不造 task、不自動提交。內容為「部署」不代表已授權部署。確認須綁定原文／diff、repo、層級／scope、內容版本、base 與可信出處；變動須重新檢視。
 
-MCP 唯讀不代表使用者必須手動寫 ADR。Agent 仍可整理草案，持有該 repo 既有且適用權限的 agent，可透過 Git／PR 工具執行本次獲准的提交；若某個客戶端沒有該能力，由使用者轉交。另一個候選是由 agent 呼叫寫入 MCP、host 代寫，此時 host 需要承擔受控寫入、衝突及重試核對。
+D4 保留：實質變更新 ADR，小修原檔；沿用 dev2 **0.25.0** [ADR 模板](../../../kc-dev-flow-2/references/adr-template.md)、[workflow](../../../kc-dev-flow-2/references/sd/workflow.md) 的原 FO／number guards 與 [implementation principles](../../../kc-dev-flow-2/skills/implementation/principles.md)。取代為舊 ADR Status 的 Superseded by NNNN，草案不預配號；Recommended 缺欄按原規範記 not recorded。
 
-使用者已選 agent 沿用既有 Git／PR 工具，MCP 先維持唯讀；寫入 MCP 與 host 代寫延後。裁決者、Git 提交者及本次動作授權均須分清。共同的最小確認契約已寫入 S08／S24 及 P4b／P5 驗收條件：確認綁定原文／diff、repo、層級／scope、內容版本與 base，保留可核對的可信出處；內容或 base 改變需重新檢視。P1 已選 Pilot，後續候選尚未選入 release。
+D4是使用者已確認的產品政策，lint本身不判斷語意變更、誰已確認或是否應Accepted；配號與feedback仍走原FO機制。
 
-## ADR 機制沿用 dev2
+原格式沒有定義本產品的 effective 演算法。Accepted 與 query unresolved 分開，不改人類裁示，不強迫增欄或改路徑。小修／實質變更含糊時回原適用決策者，不能由 lint 證明語義。
 
-ADR 修訂政策已確認：實質變更新建 ADR、小修留原 ADR。沿用 dev2 0.25.0 原模板、狀態、原 FO／number guards 配號及 Git／PR 審查；取代是舊 ADR Status 的 Superseded by NNNN，不另設 supersedes 狀態／欄位。草案不預配號，原話及 Git 歷史保留，Recommended 舊缺欄按原規範記 not recorded。格式見 [dev2 ADR 模板](../../../kc-dev-flow-2/references/adr-template.md)，配號及審查見 [dev2 workflow](../../../kc-dev-flow-2/references/sd/workflow.md) 的 Decision records 與 Number guards；實作責任見 [implementation principles](../../../kc-dev-flow-2/skills/implementation/principles.md)。
+## 本批審閱與 admission 邊界
 
-dev2 並沒有在這些檔案定義 get_effective／Decision key 演算法；那是既有服務的保守查詢擴充。原 Accepted 與 query unresolved 分開，不以查詢不確定改寫人類裁示，也不強制新增欄位才承認原格式。小修／實質變更的語義分類無法由 lint 自動證明，含糊時回原適用決策者。
+先前 MCP 方向的六片獨立設計審查是歷史，不沿用為 CLI P1 AC／六片依賴增量的通過。前輪CLI actor／removal獨立審查僅支持其當時來源；後續問題／觀測及本次四包提案以增量核對為準，未重跑獨立整圖審查，與人類書面審閱、實測／UAT、fit 及 handoff 分開核對。已觀測 Codex 本機命令及 Claude CLI 啟動可用；新 CLI 尚不存在，Claude本人正常唯讀Git回執pending非denied；dot→已准delegated local task已有命令鏈基礎，三端新CLI、完整隔離harness與native loader仍待實作／驗證；歷史 unit tests 不等於新 UAT。舊 OAuth 失敗不改寫，CLI 方向不依賴修復也不宣稱已解決。
 
-## 公開規劃與驗證界線
+投入上限 3 days 不等於估算。[P1估工](p1-estimate.md)已有32–48 active工程小時粗估／風險40–64h，含整合、驗證與一次修正；未經同類交付校準，8h/day僅規劃換算，正式estimate null／fit unknown。歷史 MCP admission 的 brief／assessment／handoff hash 與 acceptance 不套用新來源。待 map／spec 審閱接受，先依 [release slicing](../../../kc-journey-map/skills/kc-journey-map/references/release-slicing.md) 以新 full-map requirements 重整 baseline，再走既有 cut／brief／handoff；P1／Pilot／投入不需重選。
 
-六片的故事必要性、角色路徑、來源／權限邊界與可觀察終點已完成獨立設計審查；P1 的選擇不代表其他五片已被接受。真實三端登入、完整 hosted adapter、跨 repo 讀取、Git race／安全更新、host last-good 與整體 dev2 roundtrip 尚未驗證。本次文件未賦予任何故事 `exists` 或 `gap`。
+本輪不改 SD state／gate、不實作或新增授權；全圖不造 `status`／`evidence`，不宣稱 ready handoff 或六片全接受。可讀投影見 [故事地圖](story-map.md) 與 [切片地圖](slice-map.md)。
 
-[README](README.md) 說明來源責任與自訂欄位；[完整故事地圖](story-map.md) 與 [切片地圖](slice-map.md) 是兩份可讀投影。
+## 本批陌生讀者核對
+
+兩native讀者在history-free白名單快照提43題；root逐題按已讀symbol／既有設計分成Fact或Gap後，35個穩定questions已回填P1。7 Fact、28 Gap中共有31主題仍含工程shaping／適配；沒有新產品value決策，也沒有新ADR或task。未實作能力不列成先要成品的外部前提；待補技術證據是正常Claude本人唯讀Git原回執；dot委派local task基礎已具，完整OS合成repo harness及三端CLI是P1待實作驗證，不是使用者先供成品。已知本task／delegated local命令與native reader啟動能力保留，不能推為三端UAT。
+
+## P1技術契約與投入提案
+
+四包是既有五故事的工程收斂，**尚未實作／驗證、未接受API**，不是新增release或任務。31個技術問題已有逐項提案，Gap仍在；見[P1技術契約](p1-technical-contract.md)與[估工及假設](p1-estimate.md)。
+
+| 契約包 | 對應P1故事 | 草案內容 | active工程小時 |
+| --- | --- | --- | --- |
+| [A 來源、權威與context](p1-technical-contract.md) | S01, S02, S04, S10 | 可信binding／authority／canonical引用與context來源；不賦予存取或裁決權。 | 4–6 |
+| [B 固定blob、唯讀loader與native parser](p1-technical-contract.md) | S01, S02, S10, S11 | 固定Git原blob／嚴格UTF8；native格式與Status沿dev2，原生lint結果與非權威衍生查詢分開，不將一筆診斷改成全庫失效。 | 8–12 |
+| [C CLI輸出、資源界線與可重現交付](p1-technical-contract.md) | S01, S02, S04, S10, S11 | Node24固定checkout入口、JSON／人讀、exit／paging／limits與code closure。 | 6–9 |
+| [D 獨立oracle與三端驗證回執](p1-technical-contract.md) | S02, S10 | committed合成blob獨立expected、三端發起鏈及整個query／Git helpers的OS負向harness。 | 8–12 |
+| 跨包整合／Pilot驗收重跑及一次修正 | 五故事整體 | 不重複計入各包局部驗證／D首次驗證 | 6–9 |
+
+投入已明確為**三個完整工作日**；先前原話「1-3天」保留，上限仍3 days，不再是工作日／日曆日待選。完整P1粗估**32–48 active工程小時**，條件風險範圍**40–64h**，未經同類交付校準。8h/day僅我方規劃換算（4–6／風險5–8工程工作天）；若據此換算三工作日為24h，估量不支持該假設下完整P1可交，但24h不是人類原話／承諾。正式estimate `null`、fit `unknown`，沒有三日可交證明或增加上限。
+
+Claude本人正常工作階段的唯讀Git原回執仍pending（非denied）；dot→已授權delegated local task已有命令鏈基礎，後續需各named client的真CLI回執，不要求dot前端直接shell。macOS兩已知檔4個read-deny cases只證局部機制，不是完整query／Git helpers／objectstore／aliases隔離或AC1通過。上述產品驗證由P1完成，不要求使用者先備妥成品。
+
+原生ADR格式／Status／配號／驗收與feedback沿dev2；原生lint整體check fail不改其他Accepted。已撤回整binding一律unresolved策略，衍生effective只作非權威查詢；見[dev2原生對齊](p1-technical-contract.md#native-dev2-alignment)。
