@@ -53,6 +53,17 @@ gates:
                 id: briefing:special-role-calls-fire-when-needed:validation:attempt-1:revision-1
                 digest: sha256:c431c16f923997f061003905fa54a0358a048090bbfc114252ae772167778ed3
                 room-ref: ./special-role-calls-fire-when-needed/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:special-role-calls-fire-when-needed:validation:1
+                briefing: briefing:special-role-calls-fire-when-needed:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T03:03:00.394772Z"
+                decision: approve
+                reason: 'Captain approved in chat (「合併」) after the gate briefing, which stated that approval merges #682 head f4447396 with --match-head-commit, removes its worktree, then merges Release PR #672 once it carries #682; the Deferred risk and three Polish declined into special-role-calls-fire-when-needed-followups as recommended'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-19T17:05:25Z
 worktree: .worktrees/spacedock-ensign-special-role-calls-fire-when-needed
 pr: iamcxa/kc-claude-plugins#682
