@@ -15,6 +15,17 @@ gates:
                 id: briefing:comment-check-reaches-delivery-gate:backlog:attempt-1:revision-1
                 digest: sha256:031acfc0c448802e0fef2adcad070477bf1ac3097064fe388c4ff9e099bf482e
                 room-ref: ./comment-check-reaches-delivery-gate/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:comment-check-reaches-delivery-gate:backlog:1
+                briefing: briefing:comment-check-reaches-delivery-gate:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T04:56:47.166787Z"
+                decision: approve
+                reason: Captain approved the five batch-4 backlog gates presented together in chat (「按你建議」), answering FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
