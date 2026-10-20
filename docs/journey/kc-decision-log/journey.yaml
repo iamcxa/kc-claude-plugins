@@ -1,4 +1,4 @@
-# kc-journey-map planning intent; no implementation status is asserted.
+# kc-journey-map journey; every story is status gap (2026-10-20): no kc-decision-log implementation exists yet.
 journey: kc-decision-log-design
 title: 使用者與 agents 共用決策的故事地圖
 persona: 使用者：對跨專案方向負責的總指揮；由 Claude、Codex、dot 協助讀取、交接與回報。
@@ -40,6 +40,7 @@ steps:
     stories:
       - id: S01
         card: 我指定獨立決策庫與追蹤分支
+        status: gap
         questions:
           - id: p1r-01
             ask: 原生 docs/adr 的 ADR ID 怎麼定？
@@ -110,6 +111,7 @@ steps:
         release: P1
       - id: S02
         card: 我讓三個客戶端讀取同一空間
+        status: gap
         questions:
           - id: cli-p1-u07
             ask: 唯讀loader如何避開Git副作用？
@@ -138,6 +140,7 @@ steps:
         release: P4a
       - id: S03
         card: 我能改設定而不誤讀別人的庫
+        status: gap
         questions:
           - id: scope-S03
             ask: 這張故事的範圍與限制是什麼？
@@ -152,6 +155,7 @@ steps:
     stories:
       - id: S04
         card: 我分清總指揮裁示與工程決策
+        status: gap
         questions:
           - id: cli-p1-u04
             ask: 精確引用與ADR選取如何區分？
@@ -180,6 +184,7 @@ steps:
         release: P4b
       - id: S05
         card: 我讓小範圍決策引用大範圍決策的版本
+        status: gap
         release: P4b
         questions:
           - id: scope-S05
@@ -192,6 +197,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p4b
       - id: S06
         card: 遇到跨層衝突時我請原裁決者處理
+        status: gap
         release: P4b
         questions:
           - id: scope-S06
@@ -208,6 +214,7 @@ steps:
     stories:
       - id: S07
         card: 我保留原話與決策出處
+        status: gap
         release: P5
         questions:
           - id: scope-S07
@@ -220,6 +227,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p5
       - id: S28
         card: 我比較可選方案再形成草案
+        status: gap
         questions:
           - id: scope-S28
             ask: 這張故事的範圍與限制是什麼？
@@ -227,6 +235,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s28
       - id: S08
         card: 我確認特定版本的裁示
+        status: gap
         release: P5
         questions:
           - id: scope-S08
@@ -235,6 +244,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s08
       - id: S09
         card: 我把草案送成可審查的變更
+        status: gap
         release: P5
         questions:
           - id: scope-S09
@@ -252,6 +262,7 @@ steps:
     stories:
       - id: S10
         card: 我查到原文與可重現的版本引用
+        status: gap
         questions:
           - id: p1r-07
             ask: 指紋算原始 bytes 還是字串？
@@ -322,6 +333,7 @@ steps:
         release: P1
       - id: S11
         card: 我知道哪些已生效或仍有疑義
+        status: gap
         questions:
           - id: p1r-12
             ask: 一筆壞檔會讓全部未定嗎？
@@ -368,6 +380,7 @@ steps:
         release: P1
       - id: S12
         card: 我分清查不到與沒有讀取權限
+        status: gap
         questions:
           - id: scope-S12
             ask: 這張故事的範圍與限制是什麼？
@@ -375,6 +388,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s12
       - id: S29
         card: 讀一筆裁示時看得到它的上層依據
+        status: gap
         questions:
           - id: scope-S29
             ask: 這張故事的範圍與限制是什麼？
@@ -382,6 +396,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s29
       - id: S30
         card: agent 在需要時自動查到相關裁示
+        status: gap
         questions:
           - id: hook-S30
             ask: 自動查詢用什麼機制？
@@ -400,6 +415,7 @@ steps:
     stories:
       - id: S13
         card: 我知道目前比的是哪個來源
+        status: gap
         release: P2
         questions:
           - id: scope-S13
@@ -412,6 +428,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p2
       - id: S14
         card: 我看懂一致落後領先分岔或未知
+        status: gap
         release: P2
         questions:
           - id: scope-S14
@@ -420,6 +437,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s14
       - id: S27
         card: 我知道更新被哪些本機狀態阻擋
+        status: gap
         release: P2
         questions:
           - id: scope-S27
@@ -428,6 +446,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s27
       - id: S15
         card: 我知道更新將影響哪些決策
+        status: gap
         release: P3
         questions:
           - id: scope-S15
@@ -440,6 +459,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p3
       - id: S16
         card: 持有 checkout 的 agent 安全更新
+        status: gap
         release: P3
         questions:
           - id: scope-S16
@@ -448,6 +468,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s16
       - id: S17
         card: 我讓 host 載入可驗證的新裁示
+        status: gap
         questions:
           - id: scope-S17
             ask: 這張故事的範圍與限制是什麼？
@@ -455,6 +476,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s17
       - id: S18
         card: 更新後我重讀並重檢原交接
+        status: gap
         release: P3
         questions:
           - id: scope-S18
@@ -471,6 +493,7 @@ steps:
     stories:
       - id: S19
         card: 我把裁示引用交給接手 agent
+        status: gap
         release: P1
         questions:
           - id: p1r-16
@@ -486,6 +509,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s19
       - id: S20
         card: 接手者先核對版本與行動範圍
+        status: gap
         release: P1
         questions:
           - id: p1r-18
@@ -512,6 +536,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s20
       - id: S21
         card: 我沿用既有任務及驗收入口
+        status: gap
         release: P1
         questions:
           - id: p1r-23
@@ -538,6 +563,7 @@ steps:
     stories:
       - id: S22
         card: 我看到執行與驗收的原始證據
+        status: gap
         release: P1
         questions:
           - id: p1r-26
@@ -552,6 +578,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s22
       - id: S23
         card: 我看出裁示與結果之間的差距
+        status: gap
         release: P4a
         questions:
           - id: scope-S23
@@ -569,6 +596,7 @@ steps:
     stories:
       - id: S24
         card: 我用新證據重新討論裁示
+        status: gap
         release: P4b
         questions:
           - id: scope-S24
@@ -577,6 +605,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s24
       - id: S25
         card: 我保留舊裁示與新舊關係
+        status: gap
         release: P5
         questions:
           - id: scope-S25
@@ -585,6 +614,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s25
       - id: S26
         card: 我讓受影響的協作者重新確認
+        status: gap
         release: P4b
         questions:
           - id: scope-S26

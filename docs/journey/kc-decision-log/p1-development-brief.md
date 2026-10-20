@@ -2,7 +2,7 @@
 
 The user directs several AI agents across products and tools, and wants one versioned source of his rulings that every agent reads at the same version: 「我需要指揮不同 FO，跨產品，跨 LLM，跨工具去達成我的目標」 (2026-10-19). Today his rulings live in a private decision repository that agents already write to through reviewed PRs. No agent has a tool to read a ruling at an exact commit and hand that exact reference to another agent; a session on 2026-10-19 found no ADR tool at all. Agent memories are per agent and unversioned.
 
-Source: `docs/journey/kc-decision-log/journey.yaml` (SHA-256 `13efda3ac00816428bed0fccda13a0ebf01135efe43561b4579b22b66eedd289`), journey `kc-decision-log-design`, release `P1`, stories S01, S10, S11, S19, S20, S21, S22. Companion detail: `slice-map.md` § P1 and § 已確認選擇 (D1–D13).
+Source: `docs/journey/kc-decision-log/journey.yaml` (SHA-256 `a86d14ea37798471159d9ba3d941da35ea2ccd25f01abe8ddcad29c70e6a9be4`), journey `kc-decision-log-design`, release `P1`, stories S01, S10, S11, S19, S20, S21, S22. Companion detail: `slice-map.md` § P1 and § 已確認選擇 (D1–D13).
 
 Facts, verified 2026-10-20:
 - A query prototype in the user's private decision repository has `parse`, `makeSnapshot` and `effective` (`source.mjs`, 136 lines) and `createService` (`service.mjs`, 67 lines). Its build reads ADRs from a fixed Git commit. It has no CLI entry point.

@@ -44,6 +44,6 @@ node kc-journey-map/lib/journey-tldr.mjs export kc-decision-log-design docs/jour
 
 ## 驗證界線
 
-這是 map-mode 規劃意圖，故事不填沒有證據的 status／evidence。原生 evidence lint 的 30 筆 `no-status` 不能解讀成格式全綠；render、原生 schema 接收、readback、快照內容及實際畫面分開核對。P1 的故事數 7（`slice_because` 記錄理由），其餘切片 3、3、2、5、4。
+2026-10-20 起 30 張故事都標 `status: gap`：kc-decision-log 尚無實作。開發進度由 `kc-journey-progress` 依 Spacedock 任務的 `journey`／`journey-release`／`journey-story` 回填；`exists` 必須附可搜尋的證據符號。render、原生 schema 接收、readback、快照內容及實際畫面分開核對。P1 的故事數 7（`slice_because` 記錄理由），其餘切片 3、3、2、5、4。
 
 新 CLI 尚未實作／部署，Claude→Codex 交接驗收、正式 fit 與 ready handoff 均未成立。投入為四個完整工作日；P1 粗估 16–30 active 工程小時，未經校準。ADR 格式、Status、配號及審查沿用 dev2 原機制；任務與驗收沿用 dev2／Spacedock。

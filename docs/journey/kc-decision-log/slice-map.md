@@ -176,7 +176,7 @@ dot經已授權且可執行CLI的路徑讀取同一裁示並參與交接；接�
 
 **故事：** S02, S23。狀態：候選。
 
-**重切說明：** 2026-10-20 P1 重切後，原 P4a 的 S19–S22 移入 P1；S02 自原 P1 移入本片，S23 留在本片。
+**重切說明：** 2026-10-20 P1 重切後，原 P4a 的 S19–S22 移入 P1；S02 自原 P1 移入本片，S23 留在本片。本片改名、改目標，以及 S04 與舊 P1-AC1／AC3 移至 P4b，由使用者 2026-10-20 回覆「照建議」接受。
 
 **沿用與新工作：** 沿用 P1 的 CLI、經任務紀錄的交接與 dev2／Spacedock 證據入口；新工作是 dot 端的已授權執行路徑，以及以原任務證據整理差距。
 
@@ -416,7 +416,7 @@ kc-decision-log 是一個人指揮多個 AI agent 時的裁示庫：大方向用
 | --- | --- |
 | design | 2026-10-20 使用者接受重切後七張故事、P1-AC1–AC6 與其修改，以及 D6–D13；兩位陌生讀者的 43 題已逐題答覆或延後。 |
 | technical | CLI 尚未實作；Claude 本機以 Git 讀固定 commit 已觀測，Codex 接手重讀與合成 dev2 任務未驗。 |
-| admission | 投入四個完整工作日；P1 粗估 16–30 active 工程小時，未校準，上限換算 3.75 天；handoff 待原生 `journey-handoff.mjs` 檢查與使用者接受。 |
+| admission | 投入四個完整工作日；P1 粗估 16–30 active 工程小時，未校準，上限換算 3.75 天。2026-10-20 使用者回覆「照建議」接受交接，原生 `journey-handoff.mjs` 檢查通過。 |
 
 dev2 基準：0.25.0。原始格式、狀態、配號及審查沿用 dev2。get_effective 與 Decision key 是保守查詢的設計補充，不是 dev2 原生要求。
 
@@ -427,7 +427,7 @@ dev2 基準：0.25.0。原始格式、狀態、配號及審查沿用 dev2。get_
 - [number_guards.py](../../../kc-dev-flow-2/scripts/number_guards.py)
 - [pilot.md](../../../kc-dev-flow-2/references/profiles/pilot.md)
 
-未宣稱任何切片產品通過、ready handoff 或開發授權。意圖來源省略實作 status／evidence，原生 journey lint 的 no-status 不用假造狀態消除。
+30 張故事都標 `status: gap`（2026-10-20，使用者回覆「照建議」），進度之後由 `kc-journey-progress` 依 dev2 任務回填。
 
 ## 本批 interrogation 結果
 
