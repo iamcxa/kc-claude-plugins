@@ -448,6 +448,7 @@ ADR: 0027
 - Cycle 2 (FO, 2026-10-20): Codex round 2 on #687 ffc1711c (evidence=review:5586968302) left 2 P2, to fix (rounds 1 and 2 fix every finding); one fix dispatch with a failing test per finding first, then a fresh validation recheck.
   - design_surfaces.py: an `### Amendment N — <date>` heading outside `## Captain amendments` (including inside a fenced block) is taken as the amendment baseline although check_amendments() never validates it, so an unrecorded Scope edit introduced with it passes; derive the baseline only from unfenced, validated entries in that section.
   - delivery_gate.py: any closing delimiter ends a reason bracket, so `[two words)` or `(two words]` passes as a reason; only the matching closer completes a bracket.
+  - FO pushed 2b86a624 under the Captain's 「那就推」 (chat, 2026-10-20) after the worker committed without pushing; FO requested Codex round 3.
 
 ## Stage Report: ideation
 
