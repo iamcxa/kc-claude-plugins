@@ -15,6 +15,17 @@ gates:
                 id: briefing:db-surface-without-migrations:backlog:attempt-1:revision-1
                 digest: sha256:fda81c6b7519c20de7d3f14d7920bdbe76020cf4f046d1f059cc203b30a50520
                 room-ref: ./db-surface-without-migrations/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:db-surface-without-migrations:backlog:1
+                briefing: briefing:db-surface-without-migrations:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T04:56:38.496698Z"
+                decision: approve
+                reason: Captain approved the five batch-4 backlog gates presented together in chat (「按你建議」), answering FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
