@@ -243,3 +243,22 @@ The two failures were both launch-line defects that only a real launch exposes, 
 - Probe branches `ops/probe-1792508024`, `-1792508099`, `-1792509891`, `-1792510266` and Draft PRs #1 to #4; two secrets; `OPS_APP_TOKEN` expires 16:31:00Z.
 - Captain's local Claude plugin cache still holds spacedock 0.27.3 beside 0.27.0; doctor: OK.
 - roborev not re-run on the last three small commits; comment_ratio and doc_impact unchanged in kind.
+
+## Stage Report: implementation (cycle 2, local full rehearsal PASSED)
+
+Local rehearsal at candidate 4a42f9ec (launch line moved unchanged into `slice/launch_fo.sh`), 2026-10-20 15:36:06Z to 15:38:28Z. Disposable clone of the assembled scratch tree, local bare remote, recording `gh` shim first on PATH, the Captain's default local Claude login (not handled by me), `--max-budget-usd 5`, `--output-format json` added only for the measurement. No GitHub side effect; no credential handled. Not exercised locally: the clean `env -i` environment and the in-job credential audit (run on the runner twice already), because the clean HOME has no Claude login.
+
+- DONE: The headless First Officer dispatched the triage worker.
+  Commits on the branch show the worker's work: `dispatch: ... entering triage`, `triage: ... diagnosis, options, recommendation`, `triage: stage report`; the task body holds Event, Diagnosis (known and unknown separated, no cause asserted), Options (three, each with a cost), Recommendation and the worker's Stage Report (3 of 3 checklist items DONE).
+- DONE: It reached the decision gate and stopped there.
+  `spacedock status --next --json` after the run: `ready_gates` row `current: decision`, `readiness: awaiting-captain`; the gate room is committed (`docs/ops/<slug>/review/decision/briefing-1/index.json`). No `gate record`, `gate consume` or merge was run (the FO's own report says so); the branch diff against master is exactly the task file and that room file.
+- DONE: Only the ops branch was pushed and the PR call was the expected one.
+  Remote branches: `master` (still `8e80b27`) and `ops/relay-bound-ceiling-near-2026-10-20`. The shim log holds the single call `pr create --draft --base master --head ops/<slug> --title ... --body ...`.
+- DONE: Measured cost and duration.
+  Claude Code JSON result: `duration_ms` 133138 (2 m 13 s model time; 2 m 22 s wall clock), `num_turns` 21, `is_error` false, `permission_denials` 0, `total_cost_usd` 0.7396 (imputed on the Captain's subscription login, not a bill). The runner step budget of 20 min and `--max-budget-usd 5` were far from reached.
+- Observation, not a defect: the worker tried to send its completion message to `team-lead` (not registered in a headless run); the FO accepted the worker's blocking return plus the committed stage report as completion and said so.
+
+### Findings for FO
+
+- Run 1 and run 2 failures were launch-line defects; this rehearsal used the same launch line the runner uses and passed, so the remaining unmeasured risks are the runner image only (Claude Code and plugin install already succeeded there twice) and whether GitHub triggers `ops-gate.yml` for the Captain's review of an App-authored Draft PR.
+- A third remote dispatch is a separate request: it needs the ruleset off/on and a master push (to land 4a42f9ec), a token re-mint and re-set, and one `gh workflow run`.
