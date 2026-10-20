@@ -517,6 +517,76 @@ class PartialRollupTests(unittest.TestCase):
         self.assertIn("workflow runs", result.out)
 
 
+class SettledChecksTests(unittest.TestCase):
+    SKIPPED, NEUTRAL = check_run() | dict(name="deploy", conclusion="SKIPPED"), check_run() | dict(name="rules", conclusion="NEUTRAL")
+    DEPLOY = dict(__typename="StatusContext", context="deploy-preview", state="SUCCESS")
+
+    def rollup(self, *items):
+        return dict(statusCheckRollup=list(items))
+
+    def test_a_skipped_or_neutral_check_beside_a_success_does_not_hold(self):
+        cases = {
+            "success skipped and neutral": self.rollup(check_run(), self.SKIPPED, self.NEUTRAL),
+            "one job skipped, run success, deploy status success": self.rollup(check_run(), self.SKIPPED, self.DEPLOY),
+            "skipped beside a green status context only": self.rollup(self.SKIPPED, self.DEPLOY),
+        }
+        for label, facts in cases.items():
+            with self.subTest(label):
+                result = run_check(facts=facts, runs=[workflow_run("ci")])
+                self.assertEqual((result.code, nexts(result)), (0, [gate.ASK]), result.out)
+
+    def test_a_head_on_which_no_check_succeeded_holds_in_at_most_13_words(self):
+        cases = {
+            "lone skipped": self.rollup(self.SKIPPED),
+            "lone neutral": self.rollup(self.NEUTRAL),
+            "skipped and neutral only": self.rollup(self.SKIPPED, self.NEUTRAL),
+        }
+        for label, facts in cases.items():
+            with self.subTest(label):
+                result = run_check(facts=facts)
+                self.assertEqual(result.code, 1, result.out)
+                hold = [line for line in result.lines if line.startswith("no check on this head")]
+                self.assertEqual(len(hold), 1, result.out)
+                self.assertLessEqual(len(hold[0].split()), 13)
+
+    def test_every_other_check_hold_stays_beside_a_success(self):
+        for conclusion in ("FAILURE", "CANCELLED", "TIMED_OUT", "STARTUP_FAILURE", "ACTION_REQUIRED", "STALE"):
+            with self.subTest(conclusion):
+                result = run_check(facts=self.rollup(check_run(), check_run() | dict(name="bad", conclusion=conclusion)))
+                self.assertEqual(result.code, 1, result.out)
+                self.assertIn("1 of 2 checks", result.out)
+        for status in ("PENDING", "QUEUED", "IN_PROGRESS"):
+            with self.subTest(status):
+                result = run_check(facts=self.rollup(check_run(), self.SKIPPED, check_run() | dict(name="late", status=status, conclusion=None)))
+                self.assertEqual(result.code, 1, result.out)
+        for state in ("PENDING", "FAILURE", "ERROR", "EXPECTED"):
+            with self.subTest(state):
+                result = run_check(facts=self.rollup(check_run(), self.SKIPPED, dict(self.DEPLOY, state=state)))
+                self.assertEqual(result.code, 1, result.out)
+        with self.subTest("failure beside skipped"):
+            self.assertEqual(run_check(facts=self.rollup(check_run() | dict(conclusion="FAILURE"), self.SKIPPED)).code, 1)
+
+    def test_a_status_context_is_not_settled_by_a_check_conclusion_word(self):
+        facts = self.rollup(check_run(), dict(self.DEPLOY, state="SKIPPED"))
+        self.assertEqual(run_check(facts=facts).code, 1)
+
+    def test_a_skipped_workflow_run_still_holds_beside_a_green_rollup(self):
+        facts = self.rollup(self.SKIPPED, self.DEPLOY)
+        for conclusion in ("skipped", "failure", "cancelled"):
+            with self.subTest(conclusion):
+                self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci", conclusion=conclusion)]).code, 1)
+
+    def test_settling_a_check_adds_no_gh_call(self):
+        base_calls = [
+            "pr view 9 --repo o/r --json headRefOid,isDraft,mergeable,statusCheckRollup,title,headRefName,baseRefName,changedFiles",
+            "api --paginate repos/o/r/pulls/9/files",
+            f"api repos/o/r/actions/runs?head_sha={HEAD40}&per_page=100",
+        ]
+        for label, facts in {"plain": None, "skipped and neutral": self.rollup(check_run(), self.SKIPPED, self.NEUTRAL)}.items():
+            with self.subTest(label):
+                self.assertEqual(run_check(facts=facts, runs=[workflow_run("ci")]).calls.splitlines(), base_calls)
+
+
 class PointTests(unittest.TestCase):
     VALIDATED = "{}\n\n## Stage Report: validation\n\n{}\n"
     CASES = {
