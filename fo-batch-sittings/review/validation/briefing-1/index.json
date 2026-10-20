@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-batch-sittings:validation:attempt-1:revision-1",
+  "question": "Approve validation of fo-batch-sittings and merge iamcxa/kc-claude-plugins#689 at head 1e9dabe50e4845e993ee90cbef55ff75020facfe with `gh pr merge 689 --squash --match-head-commit 1e9dabe50e4845e993ee90cbef55ff75020facfe`? FO recommends approve; approving accepts that recommendation, and FO merges this one PR only, after rerunning delivery_gate.py check; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-batch-sittings:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4703afcb2f4a5a50bd371ca998114b56f9e776a1/fo-batch-sittings.md",
+      "rev": "sha256:59c007af50f08de6b6555a20fb1c0861af7aca6fa9efdc02f3106ab20ef0c300",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: `pr_watch.py tasks` prints one line per stage where two or more gates await the Captain, telling FO to present them in one message (validation ran it on a real state copy with five awaiting gates), the ideation principle asks for a Batch overlap section, and ADR 0028 records the sitting and reservation rulings (AC-1, AC-2, AC-5, AC-6 at this head).\nNecessity: four files (pr_watch.py, its tests, one ideation sentence, ADR 0028), each named in Cut 1 as amended; no decision_ledger.py change, no Cut 2, no interim rule.\nValidation PASSED at 1e9dabe5. External rounds: Codex 1, clean on the head (evidence=summary:6293976188). roborev clean (evidence=roborev:939). CI green on the head. Second reviewer: not triggered (Surfaces none, pilot profile, no merge, approval, authority or review rule changed). The Draft PR was opened by FO under the Captain's 「授權你開 PR」 after the worker's create was refused by the permission check.\nFO declines: Polish, the status-failure line says \"report the awaiting gates\" where the design wrote \"report \u003cslug\u003e\" (the call is workflow-wide so no slug exists, and git grep finds no consumer of the old text); Polish, the ideation sentence is 47 words where the design counted 55 (shorter than budgeted, and lint-skills passes); Deferred risk, the sitting line prints on every pass while two or more gates await (Material only if an observer finds a stage's gates presented one by one while it printed); Deferred risk, AC-5 behaviour is unmeasured (the batch-5 observer counts designs written while another task was live)."
+    }
+  ]
+}

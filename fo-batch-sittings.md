@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:fo-batch-sittings:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:fo-batch-sittings-validation-1
+              briefing:
+                id: briefing:fo-batch-sittings:validation:attempt-1:revision-1
+                digest: sha256:81472d5232f087e945f409a321148e767831d05ec1c5a8491143cd9e005aef66
+                room-ref: ./fo-batch-sittings/review/validation/briefing-1
 started: 2026-10-20T04:57:55Z
 worktree: .worktrees/spacedock-ensign-fo-batch-sittings
 pr: iamcxa/kc-claude-plugins#689
