@@ -811,3 +811,121 @@ PASSED at ffc1711c8f55: the diff from the validated head d0c2e25b is the one ADR
 ### Summary
 
 Both Codex round 2 findings are fixed with a failing test first: the Scope baseline now comes only from validated entries in the unfenced amendments section (heading discovery and the introducing-commit search), and a reason bracket needs its own closer. Behaviour change to note: when no commit holds a valid entry for the amendment, the working copy is the baseline (an uncommitted amendment), as before for the no-commit case. Nothing pushed, commented on or marked ready.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independent verdict on PR #687 head 2b86a624 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at head 2b86a62490de (base ad44f0cb, PR open, not Draft, mergeable). Validation 1 and 2 cover AC-1 to AC-6 and AC-8 to AC-13 at d0c2e25b and ffc1711c; the diff from ffc1711c is the four files named (`git diff --name-only`: delivery_gate.py, design_surfaces.py and their two tests), so those verdicts carry except where F3 below says otherwise. Implementation cycle 3 limit judged: "when no commit holds a valid entry the working copy is the baseline" is the same rule as before for an uncommitted amendment, and a look-alike heading alone does not make `newer` non-empty, so it opens no bypass (test 1 shows the hold).
+- DONE: Recheck after the Cycle 2 repair: the diff from ffc1711c fixes the two Codex round-2 findings and the roborev:944 finding under Feedback Cycles and changes nothing else; rerun the mutations for those three behaviours, the Scope census and the real-task CLI cases, the full package suite, adr_lint, and confirm CI on this head
+  Mutations (copy of the scripts, python3 -B, each turns only its named test red): old ffc1711c scripts under the new tests 6 red (3 heading subtests, look-alike commit, 2 mismatched closers); heading discovery from the whole body 3 red; earliest hit without the section check 1 red; bracket closes on any closer 2 red; fence not honoured in `amendment_entries` 1 red (the fenced-inside-the-section subtest); restored 3 of 3 green. Full `unittest discover -s kc-dev-flow-2/scripts` 605 tests OK (377 s, caches cleared); `lint-skills.py` exit 0 (5374 of 5374); `adr_lint.py docs/adr --since ad44f0cb` exit 0 (27 files), `--require 27` exit 0; `comment_ratio.py` 1.2% (6 of 500, the 6 are fixture lines, cycle 3 adds no comment); `number_guards.py check` PASS; `dispatch_records.py` 10 records complete; `design_surfaces.py check` on this task presentable; `doc_impact.py` 0 documents. CI on 2b86a624 (run ids 39448903531, 39448903636, 39448903860, each headSha 2b86a624): unit tests pass 1m51s, version parity pass, multi-profile route gate pass, GitGuardian pass. `replay.py` R2 with the base scripts is identical to the saved output; with the candidate the late declines held by the check stay 0 and the F-id join holds 1.
+  Scope census, candidate `scope_hold` with the stage gate forced, over the 83 task files at 8eda9070: 43 clean, 8 held, 32 not run (ffc1711c: 44, 7, 32). Real-task CLI: special-role-calls exit 1 naming 291825e9; amendment-form-check exit 0, plus a Scope line exit 1 naming fc3e1c42; ideation-gaps exit 1 naming d5e0fd30 (F3).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five steps below, run with `env -i HOME PATH bash --noprofile --norc`; output as expected. adr_lint exit 0 (step 5). Verdict PASSED at 2b86a62490de623faf7365ef29931a9d5c35e3f9. Findings: F1 closed, F2 Deferred risk unchanged, F3 Polish new; no Material, no Needs decision.
+
+### Findings (cycle 3)
+
+- F1 Polish: closed at ffc1711c, unchanged.
+- F2 Deferred risk: unchanged. A `revise` that touches Scope at an open ideation gate now ends in a hold and an amendment; Material if an observer finds FO restoring a Captain-asked Scope line because of the hold, against his `revise`.
+- F3 Polish: the Codex round-2 repair makes two of this task's accepted evidence statements stale. AC-6 names ideation-gaps as clean "recorded by amendment 1, commit cfa03ada", and AC-11 gives the census as 44 clean, 7 held, 32 not run. ideation-gaps has no `## Captain amendments` section outside a fence: its only `### Amendment 1` is the template example in its Design (fenced, added by cfa03ada), so the earlier clean was the bug Codex found, and the repaired check correctly holds it. At 8eda9070 the candidate gives 43 / 8 / 32; amendment-form-check and journey-map-dev2-contract stay clean but now take a later baseline commit (fc3e1c42, 28f3a8d1: the earlier commits held the heading only as a fenced example). The prototype outputs in `measure/` (`proto_scope.py`) are unchanged and still print 44 / 7 / 32. Not harmful to a user: ideation-gaps is archived and the check does not run on a done task. FO states the corrected numbers at the gate; whether the two criterion texts are amended is FO's and the Captain's call. Validation 1 and 2 accepted the ideation-gaps case, so their AC-6 evidence on that fixture was a false clean.
+- Not verified: `roborev:944` and `roborev:945` (read from the implementation report only); CI runner cost (not measured); that an FO obeys the hold (prose-enforced, ADR 0014); `delivery_gate.py check` against a live PR through `gh`.
+
+### Acceptance script (2b86a624)
+
+Needs the Captain's workspace at the path below and network for one `git fetch`; it leaves nothing behind. Does not cover the full 605-test suite (CI runs it), `delivery_gate.py check` against a live PR, rule 1 (no check, by ruling), rule 4 beyond the printed sentence, or a Scope edit made after the ideation gate.
+
+```bash
+set -u
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+STATE=$REPO/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+PKGROOT=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0
+HEAD_SHA=2b86a62490de623faf7365ef29931a9d5c35e3f9
+BASE=ad44f0cbf42274ff65802cabc52ebe919f159fd5
+T=$(mktemp -d)
+
+echo "STEP 1: check out the PR head in a throwaway worktree; the repair since the last validated head touches four files"
+git -C $REPO fetch -q origin pull/687/head && git -C $REPO worktree add -q --detach $T/cand $HEAD_SHA && git -C $T/cand rev-parse HEAD
+git -C $T/cand diff --name-only ffc1711c8f55d8c948143d7fadb2d512471b9a92 HEAD
+PKG=$T/cand/kc-dev-flow-2/scripts
+
+echo "STEP 2: run the rule tests (about 20 seconds)"
+(cd $PKG && python3 -B -m unittest test_delivery_gate.FoWriteRuleTests test_design_surfaces.ScopeCheckTests 2>&1 | tail -3)
+
+echo "STEP 3: scope check on three real tasks of the state branch as of 2026-10-20 (rule 3)"
+git init -q $T/S && git -C $T/S fetch -q --no-tags $STATE 8eda9070b102163561d0a5e24f2c44442a625d97 && git -C $T/S checkout -q --detach FETCH_HEAD && git -C $T/S worktree add -q --detach $T/W HEAD
+cd $T/W
+sed -i '' 's/^status: done/status: ideation/' _archive/special-role-calls-fire-when-needed.md _archive/amendment-form-check.md _archive/ideation-gaps.md
+echo "-- a Captain scope line added after the backlog gate, no amendment: holds"
+python3 -B $PKG/design_surfaces.py check _archive/special-role-calls-fire-when-needed.md | cut -c1-110; echo "exit=${PIPESTATUS[0]}"
+echo "-- a task with a recorded amendment: clean; one more Scope line after it: holds"
+python3 -B $PKG/design_surfaces.py check _archive/amendment-form-check.md; echo "exit=$?"
+python3 - <<'PY'
+p="_archive/amendment-form-check.md"; t=open(p).read()
+open(p,"w").write(t.replace("## Scope\n","## Scope\n\n- A later Captain ask.\n",1))
+PY
+python3 -B $PKG/design_surfaces.py check _archive/amendment-form-check.md | cut -c1-110; echo "exit=${PIPESTATUS[0]}"
+echo "-- a task whose only '### Amendment 1' sits inside a fenced example is not amended: holds"
+python3 -B $PKG/design_surfaces.py check _archive/ideation-gaps.md | cut -c1-110; echo "exit=${PIPESTATUS[0]}"
+
+echo "STEP 4: a reason bracket needs its own closer, e.g. is not an item end, and the ask line names the Release PR (rule 2)"
+python3 -B - $PKG <<'PY'
+import sys; sys.path.insert(0, sys.argv[1])
+import delivery_gate as g
+ok = ('Declined, with reasons: Deferred risk, clause() reads a label after "e.g. Necessity: y" as stated [no committed briefing has that form]; '
+      'Polish, the shortened phrase leaves one phrase unwatched [the full phrase trips the lint]; '
+      'Polish, AC-7 left rows [the two extra rows are outside the set]; Polish, the lint matches a phrase [each is one README sentence].')
+print("declined items:", len(g.declined_items(ok)), "without a reason:", g.unreasoned_items(ok))
+for bad in ("Declined: Polish, a thing [two words).", "Declined: Polish, a thing (two words]."):
+    print("mismatched closer, without a reason:", len(g.unreasoned_items(bad)))
+print("ask line ends:", g.ASK[-66:], "| words:", len(g.ASK.split()))
+PY
+
+echo "STEP 5: the ADR passes its lint"
+cd $T/cand
+python3 -B $PKGROOT/scripts/adr_lint.py docs/adr --since $BASE --require 27; echo "exit=$?"
+
+echo "CLEANUP"
+cd /; git -C $REPO worktree remove --force $T/cand; rm -rf $T; echo done
+```
+
+Observed (fresh `env -i HOME="$HOME" PATH="$PATH" bash --noprofile --norc`, 2026-10-20), verbatim:
+
+```
+STEP 1: check out the PR head in a throwaway worktree; the repair since the last validated head touches four files
+2b86a62490de623faf7365ef29931a9d5c35e3f9
+kc-dev-flow-2/scripts/delivery_gate.py
+kc-dev-flow-2/scripts/design_surfaces.py
+kc-dev-flow-2/scripts/test_delivery_gate.py
+kc-dev-flow-2/scripts/test_design_surfaces.py
+STEP 2: run the rule tests (about 20 seconds)
+Ran 31 tests in 16.944s
+
+OK
+STEP 3: scope check on three real tasks of the state branch as of 2026-10-20 (rule 3)
+-- a Captain scope line added after the backlog gate, no amendment: holds
+Scope changed after the backlog gate (291825e9): "- Captain's scope addition, 2026-10-20: 「先加第一個�
+exit=1
+-- a task with a recorded amendment: clean; one more Scope line after it: holds
+amendment-form-check.md: design surfaces presentable
+exit=0
+Scope changed after the newest amendment (fc3e1c42): "- A later Captain ask.". FO: restore the line; add an '#
+exit=1
+-- a task whose only '### Amendment 1' sits inside a fenced example is not amended: holds
+Scope changed after the backlog gate (d5e0fd30): "Evidence (qnow and this repo): `dispatch build --stamp` succ
+exit=1
+STEP 4: a reason bracket needs its own closer, e.g. is not an item end, and the ask line names the Release PR (rule 2)
+declined items: 4 without a reason: []
+mismatched closer, without a reason: 1
+mismatched closer, without a reason: 1
+ask line ends: . Every other PR, the Release PR included, is asked one at a time. | words: 40
+STEP 5: the ADR passes its lint
+27 ADR file(s) checked, 0 legacy
+exit=0
+CLEANUP
+done
+```
+
+The `cut -c1-110` truncates inside a multibyte character on the first hold line; that is the script's own output and not a defect of the check. The ffc1711c scripts judge the ideation-gaps case clean (census above, run through `scope_hold`) and report 0 unreasoned items for both mismatched closers (the new tests fail on them), so the script tells old from new.
+
+### Summary
+
+PASSED at 2b86a62490de: the three repairs hold under their own mutations (old scripts turn 6 subtests red, each mutation only its test), 605 tests, lints, comment ratio and ADR lint are green, and CI is 4 of 4 on this head. One new Polish finding: the repaired check now holds ideation-gaps (its only amendment is a fenced example), so AC-6's ideation-gaps case and AC-11's census (44 / 7 / 32, now 43 / 8 / 32) no longer reproduce; the new behaviour is the correct one, and FO states the numbers at the gate. Nothing was pushed, commented on, marked ready or merged by this stage.
