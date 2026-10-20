@@ -11,3 +11,7 @@ Declined by FO at the #664 delivery gate (head b300d9ba, 2026-10-18); reasons al
 - Deferred risk: `kc-dev-flow-2/scripts/role_triggers.py` recognizes a fence opened with 0 to 3 plain spaces, while headings now accept any indent, tab or no-break space, so an event-shaped heading inside a fence opened with such an indent would count. No task writes such a fence today.
 - Deferred risk: a live task file that is not committed makes `pr_watch.py tasks` print `cannot tell` and exit 2 (as AC-4 specifies). Material only if FO routinely leaves a live task uncommitted at idle.
 - Polish: the implementation report says event B fires on 16 entries; the script gives 17. The design says "the third `- Cycle N` line"; the code uses N >= 3, the sounder reading. Relay's owner-link-and-account Cycle 3 was a validator REJECTED, so a chief-engineer call, not a waiver, is the expected answer there.
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: triggers never fired; remaining items are wording in past reports.
