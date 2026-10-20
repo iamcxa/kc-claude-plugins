@@ -1,5 +1,5 @@
 import { DatabaseSync } from 'node:sqlite'
-import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync, lstatSync } from 'node:fs'
+import { mkdirSync, readFileSync, readdirSync, writeFileSync, existsSync, lstatSync, renameSync } from 'node:fs'
 import { readFile, writeFile, mkdir, unlink } from 'node:fs/promises'
 import { join, resolve } from 'node:path'
 import { Readable } from 'node:stream'
@@ -8,6 +8,10 @@ import { HostError, operate } from './core'
 import { currentGrant, validateGrants, type Grant, type Admission, type Metadata } from './policy'
 import type { Host } from './transport'
 import { pruneExpiredSessions } from './session-retention'
+import { bootstrapHuman, humanOperation, validateHumanConfig, type HumanConfig, type SyncMetadata } from './human-store'
+import { bootstrapAgent, agentOperation, captureAgent, agentResult, type AgentScope } from './agent-store'
+import { securityOperation, matchesTarget } from './security-store'
+import { canSend, renewLease, type StreamLease } from './stream-lease'
 import { loadAsset, storeAsset } from '../assets'
 import { saveBoard, saveDir, saveTarget } from '../save'
 import { readRepoDoc } from '../repo-doc'
@@ -21,7 +25,10 @@ export class NodeHost implements Host {
  root = resolve(process.env.JOURNEY_PRIVATE_DIR || '.')
  roomsDir = this.private ? join(this.root, 'rooms') : (process.env.JOURNEY_ROOMS_DIR || './.rooms')
  rooms = new Map<string, { room: TLSocketRoom<any, any>; db: DatabaseSync }>()
- sockets = new Map<any, { admission: Admission | null; room: string; timer?: ReturnType<typeof setTimeout> }>()
+ humanConfig?: HumanConfig
+ agentPairing = process.env.JOURNEY_AGENT_PAIRING === 'true'
+ localHumanReady = false
+ sockets = new Map<any, { admission: Admission | null; room: string; lease?: StreamLease; timer?: ReturnType<typeof setTimeout> }>()
  db: DatabaseSync
  meta: Metadata
  roomRepos: Record<string, string[]> = JSON.parse(process.env.JOURNEY_ROOM_REPOS || '{}')
@@ -45,10 +52,11 @@ export class NodeHost implements Host {
     throw new Error('private storage root must be owned by the service user; stop writers and choose a directory owned by that user')
    if (root.mode & 0o077)
     throw new Error('private storage root must have no group/other access; stop writers, verify the intended directory and restrict it to 0700 before retrying')
-   const marker = join(this.root, '.journey-private-v1')
+   const marker = join(this.root, '.journey-private-v2')
+   if(!existsSync(marker) && existsSync(join(this.root,'.journey-private-v1')))renameSync(join(this.root,'.journey-private-v1'),marker)
    if (!existsSync(marker)) {
     if (readdirSync(this.root).length) throw new Error('private storage must start empty; retained-data import is not supported')
-    writeFileSync(marker, 'journey-private-v1\n', { flag: 'wx', mode: 0o600 })
+    writeFileSync(marker, 'journey-private-v2\n', { flag: 'wx', mode: 0o600 })
    }
   }
   mkdirSync(this.roomsDir, { recursive: true })
@@ -67,6 +75,33 @@ export class NodeHost implements Host {
    },
    list: async <T>(prefix: string) => (this.db.prepare('SELECT key, value FROM metadata WHERE substr(key,1,?) = ? ORDER BY key').all(prefix.length, prefix) as any[])
     .map(row => ({ key: row.key, value: JSON.parse(row.value) as T })),
+  }
+  const sync: SyncMetadata = {
+   get: <T>(key: string) => { const row = this.db.prepare('SELECT value FROM metadata WHERE key = ?').get(key) as any; return row ? JSON.parse(row.value) as T : null },
+   put: (key, value) => { this.db.prepare('INSERT OR REPLACE INTO metadata VALUES (?, ?)').run(key, JSON.stringify(value)) },
+   delete: key => { this.db.prepare('DELETE FROM metadata WHERE key = ?').run(key) },
+   list: (prefix, limit, after = '') => (this.db.prepare('SELECT key, value FROM metadata WHERE key >= ? AND key < ? AND key > ? ORDER BY key LIMIT ?').all(prefix, prefix + '\uffff', after, limit) as any[]).map(row => ({ key: row.key, value: JSON.parse(row.value) })),
+  }
+  const atomic = (action: () => any) => {
+   this.db.exec('BEGIN IMMEDIATE')
+   try { const result = action(); this.db.exec('COMMIT'); return result } catch (error) { this.db.exec('ROLLBACK'); throw error }
+  }
+  this.meta.security = async (operation, input) => operation==='progress'?this.notifyResult({operationId:input.operationId}):atomic(() => securityOperation(sync, operation, input))
+  this.meta.human = async (operation, input) => { const result=atomic(() => humanOperation(sync, operation, input));if(result?.operationId)result.denialCommitObservedAt=Date.now();return this.notifyResult(result) }
+  if (process.env.JOURNEY_HUMAN_CONFIG) {
+   if (!this.private) throw new Error('human entry requires private storage')
+   this.humanConfig = validateHumanConfig(JSON.parse(readFileSync(process.env.JOURNEY_HUMAN_CONFIG, 'utf8')), this.origin)
+   if (this.humanConfig.mode === 'local' && this.humanConfig.localOwnerUid !== process.geteuid?.()) throw new Error('local owner must be the service OS account')
+   atomic(() => bootstrapHuman(sync, this.humanConfig!))
+  }
+  if (this.agentPairing && (!this.private || !this.humanConfig)) throw new Error('agent pairing requires private verified human entry')
+  atomic(() => bootstrapAgent(sync, this.agentPairing, { assets: true, saveDirectory: process.env.JOURNEY_SAVE_DIR ? resolve(process.env.JOURNEY_SAVE_DIR) : null, repositories: this.roomRepos }))
+  this.meta.agent = async (operation, input) => {
+   const result=atomic(() => captureAgent(() => agentOperation(sync, operation, input, room => this.agentScope(room))))
+   if(result.ok && result.value?.operationId)result.value.denialCommitObservedAt=Date.now()
+   const f=input.familyId ? sync.get<any>('agent-family:'+input.familyId) : null
+   if(f?.revokeOperation)await this.notifyResult({operationId:f.revokeOperation})
+   return this.notifyResult(agentResult(result))
   }
   if (this.private) {
    const grants = validateGrants(JSON.parse(readFileSync(process.env.JOURNEY_GRANTS_FILE!, 'utf8')))
@@ -94,6 +129,9 @@ export class NodeHost implements Host {
  capabilities(room: string) {
   return { assets: true, save: !this.private || !!process.env.JOURNEY_SAVE_DIR,
    repoDoc: !this.private || !!this.roomRepos[room]?.length }
+ }
+ agentScope(roomId: string): AgentScope {
+  return { roomId, records: 'full-replacement', assets: true, saveDirectory: process.env.JOURNEY_SAVE_DIR ? resolve(process.env.JOURNEY_SAVE_DIR) : null, repositories: [...(this.roomRepos[roomId] || [])].sort() }
  }
  async putAsset(room: string, id: string, bytes: Uint8Array, type: string) {
   if (!this.private) return storeAsset(id, Readable.from([bytes]), type)
@@ -147,20 +185,46 @@ export class NodeHost implements Host {
   if (this.private && !this.roomRepos[room]?.includes(owner + '/' + repo)) throw new HostError(403, 'checkout forbidden')
   return readRepoDoc(owner, repo, refPath)
  }
- track(socket: any, admission: Admission | null, room: string) {
-  const timer = admission ? setTimeout(() => socket.close(1008, 'session expired'), Math.min(2 ** 31 - 1, admission.expiresAt - Date.now())) : undefined
-  this.sockets.set(socket, { admission, room, timer })
-  socket.on('close', () => { clearTimeout(timer); this.sockets.delete(socket) })
+ async notifyResult(result: any) {
+  if(!result?.operationId)return result
+  try {
+  const batch=await this.meta.security!('notify',{operationId:result.operationId})
+  for(const [socket,entry] of this.sockets)if(entry.admission && matchesTarget(entry.admission,entry.room,batch.target)) {
+   if(entry.lease)entry.lease.invalidated=true
+   socket.close(1008,'authority revoked')
+  }
+  const status=await this.meta.security!('notified',{operationId:result.operationId,cursor:batch.cursor,more:batch.more,ok:true})
+  return {...result,...status}
+  }catch{return {...result,denied:true,streamsStopped:'unknown',notification:'unknown'}}
+ }
+ async track(socket: any, admission: Admission | null, room: string) {
+  const entry: {admission: Admission|null;room:string;lease?:StreamLease;timer?:ReturnType<typeof setTimeout>}={admission,room}
+  if(admission)entry.lease={streamId:crypto.randomUUID(),room,admission,leaseUntil:0}
+  this.sockets.set(socket,entry)
+  socket.on('close',()=>{clearTimeout(entry.timer);this.sockets.delete(socket);if(entry.lease)entry.lease.invalidated=true;if(entry.lease)void this.meta.security!('stream-close',{streamId:entry.lease.streamId}).catch(()=>{})})
+  const schedule=()=>{
+   if(!entry.lease)return
+   entry.timer=setTimeout(async()=>{
+    try {await renewLease(this.meta,entry.lease!);await this.meta.security!('stream-register',entry.lease);if(this.sockets.has(socket))schedule()}
+    catch {entry.lease!.invalidated=true;socket.close(1008,'authority unavailable');socket.terminate()}
+   },Math.max(0,entry.lease.leaseUntil-Date.now()))
+   entry.timer.unref()
+  }
+  try {
+   if(entry.lease){await renewLease(this.meta,entry.lease);await this.meta.security!('stream-register',entry.lease);await renewLease(this.meta,entry.lease)}
+   if(socket.readyState!==1 || entry.lease?.invalidated)throw new HostError(403,'socket_closed')
+   schedule()
+  }catch(error){if(entry.lease)entry.lease.invalidated=true;socket.close(1008,'authority denied');if(socket.readyState===3&&entry.lease)await this.meta.security!('stream-close',{streamId:entry.lease.streamId});throw error}
+ }
+ send(socket: any,data: string) {
+  const entry=this.sockets.get(socket)
+  if(!entry || (entry.admission && !canSend(entry.lease))){if(entry?.lease)entry.lease.invalidated=true;socket.close(1008,'stream lease expired');return}
+  socket.send(data)
  }
  async revoke(credentialId: string) {
-  const grant = await this.meta.get<Grant>('grant:' + credentialId)
-  if (!grant) throw new Error('unknown credential')
-  await this.meta.put('grant:' + credentialId, { ...grant, revoked: true })
-  let closed = 0
-  for (const [socket, entry] of this.sockets) if (entry.admission?.credentialId === credentialId) { socket.close(1008, 'credential revoked'); socket.terminate(); closed++ }
-  const check = await this.meta.get<Grant>('grant:' + credentialId)
-  if (!check?.revoked) throw new Error('partial revocation')
-  return { revoked: true, closed }
+  const result=await this.meta.security!('revoke-legacy',{credentialId})
+  const status=await this.notifyResult(result)
+  return {...status,revoked:true,closed:[...this.sockets.values()].filter(e=>e.admission?.credentialId===credentialId).length===0?1:0}
  }
  async socketAllowed(admission: Admission | null, room: string) {
   if (!admission) return true

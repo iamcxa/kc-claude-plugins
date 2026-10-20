@@ -6,6 +6,11 @@ serving switch. Preserve the old POC address, data, Site audience and immutable
 served version; start the new backend with fresh storage. No data migration or
 old-service retirement is part of this delivery.
 
+The accepted next entry design and its activation hold are recorded in
+[the current planning snapshot](../../docs/journey/kc-journey-map/private-entry.md).
+Its opt-in first-story candidate does not change the deployed default or turn
+this legacy Sites entry into verified human authority.
+
 ## One backend and separate principals
 
 Use [private-host.md](private-host.md) for Node startup and

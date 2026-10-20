@@ -1,0 +1,6 @@
+.human-recovery{position:fixed;bottom:56px;left:0;right:0;z-index:840;max-height:45dvh;overflow:auto;box-sizing:border-box;padding:8px 12px;background:Canvas;color:CanvasText;border-top:1px solid GrayText;font:14px/1.5 system-ui;overflow-wrap:anywhere;color-scheme:light}
+body:has(.tl-theme__dark) .human-recovery{color-scheme:dark}
+.human-recovery-active.human-drafts-active .journey-canvas-root{bottom:calc(56px + var(--human-recovery-height,0px))!important}
+.human-recovery-active .journey-room-feedback{display:none}
+.human-recovery p{margin:4px 0 8px}.human-recovery button,.human-recovery a{min-height:44px;min-width:44px;box-sizing:border-box;border:1px solid GrayText;border-radius:8px;padding:10px 12px;font:inherit;cursor:pointer;color:CanvasText;background:Canvas;text-decoration:none;display:inline-flex;align-items:center}
+.human-recovery .recovery-toggle{border-color:transparent;font-weight:600;text-align:left}.recovery-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}.human-recovery button:disabled{opacity:.55;cursor:wait}.human-recovery a:focus-visible,.human-recovery button:focus-visible{outline:3px solid #f3a200;outline-offset:2px}

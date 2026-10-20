@@ -29,7 +29,7 @@ const inventory = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', longRo
 const grants = ['browser', 'restricted', 'other'].map(id => ({ credentialId: id, principalId: id, secretDigest: createHash('sha256').update(secret).digest('hex'), rooms: id === 'browser' ? inventory : id === 'restricted' ? ['A'] : ['Hidden'], expiresAt: Date.now() + 3600_000, revoked: false }))
 const grantFile = join(scratch, 'grants.json')
 await writeFile(grantFile, JSON.stringify(grants), { mode: 0o600 })
-const report = { adapter, nativeOnly: process.argv.includes('--native-only'), viewports: process.env.JOURNEY_CHECK_VIEWPORTS || 'all', candidate: execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), dirty: !!execFileSync('git', ['-C', root, 'status', '--porcelain'], { encoding: 'utf8' }).trim(), checks: [], hosted: 'NOT RUN', nativeAgents: 'NOT RUN', build: 'Vite development; SDK enforcement unchanged' }
+const report = { adapter, nativeOnly: process.argv.includes('--native-only'), legacyOnly: process.argv.includes('--legacy-only'), viewports: process.env.JOURNEY_CHECK_VIEWPORTS || 'all', candidate: execFileSync('git', ['-C', root, 'rev-parse', 'HEAD'], { encoding: 'utf8' }).trim(), dirty: !!execFileSync('git', ['-C', root, 'status', '--porcelain'], { encoding: 'utf8' }).trim(), checks: [], hosted: 'NOT RUN', nativeAgents: 'NOT RUN', build: 'Vite development; SDK enforcement unchanged' }
 const check = async (name, fn) => { await fn(); report.checks.push({ name, result: 'PASS' }); console.log('PASS ' + name) }
 const request = (path, id = 'browser', method = 'GET', body) => fetch(api + path, { method, headers: { Authorization: 'Bearer ' + token(id), ...(body ? { 'Content-Type': 'application/json' } : {}) }, body: body ? JSON.stringify(body) : undefined })
 const data = async (path, id, method, body) => { const response = await request(path, id, method, body); assert.equal(response.status, 200, await response.clone().text()); return response.json() }
@@ -74,7 +74,7 @@ try {
  })
  const key = join(scratch, 'key.pem'), cert = join(scratch, 'cert.pem')
  execFileSync('openssl', ['req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-keyout', key, '-out', cert, '-days', '1', '-subj', '/CN=localhost'], { stdio: 'pipe' })
- vite = await viteServer({ configFile: join(root, 'vite.config.mts'), optimizeDeps: { include: ['@tldraw/mermaid'] }, define: { 'import.meta.env.VITE_JOURNEY_API_URL': JSON.stringify(apiPrefix) }, server: { host: '127.0.0.1', port: browserPort, strictPort: true, https: { key: await readFile(key), cert: await readFile(cert) }, proxy: Object.fromEntries(['/connect', '/uploads/', '/repo-doc', '/save', '/session', '^/doc($|[?])', '/health', '/capabilities', '/mcp'].map(route => [apiPrefix ? apiPrefix + (route.startsWith('^') ? '/doc' : route) : route, { target: api, ws: route === '/connect', rewrite: path => apiPrefix ? path.slice(apiPrefix.length) : path }])) } })
+ vite = await viteServer({ configFile: join(root, 'vite.config.mts'), optimizeDeps: { include: ['@tldraw/mermaid'] }, define: { 'import.meta.env.VITE_JOURNEY_API_URL': JSON.stringify(apiPrefix) }, server: { host: '127.0.0.1', port: browserPort, strictPort: true, https: { key: await readFile(key), cert: await readFile(cert) }, proxy: Object.fromEntries(['/auth/', '/connect', '/uploads/', '/repo-doc', '/save', '/session', '^/doc($|[?])', '/health', '/capabilities', '/mcp'].map(route => [apiPrefix ? apiPrefix + (route.startsWith('^') ? '/doc' : route) : route, { target: api, ws: route === '/connect', rewrite: path => apiPrefix ? path.slice(apiPrefix.length) : path }])) } })
  await vite.listen()
  browser = await chromium.launch({ headless: true })
  const context = await browser.newContext({ ignoreHTTPSErrors: true, viewport: { width: 1280, height: 820 } })
@@ -118,9 +118,15 @@ try {
   await click(page.locator('.journey-room-options button').filter({ hasText: new RegExp('^' + room + '$') }))
  }
  const ordered = value => Array.isArray(value) ? value.map(ordered) : value && typeof value === 'object' ? Object.fromEntries(Object.entries(value).sort(([a], [b]) => a.localeCompare(b)).map(([key, item]) => [key, ordered(item)])) : value
- const ready = async room => {
+ const acknowledgeDocument = async room => waitFor(async () => {
+  const local = await page.evaluate(() => window.editor.store.getStoreSnapshot('document').store)
+  const remote = Object.fromEntries(records(await data('/doc?room=' + encodeURIComponent(room))).map(state => [state.id, state]))
+  return JSON.stringify(ordered(local)) === JSON.stringify(ordered(remote))
+ })
+ const ready = async (room, { retry = true } = {}) => {
   await page.waitForFunction(room => window.editor?.getShape('shape:' + room) || document.querySelector('[data-testid="room-trigger"]')?.title.includes('Edits not confirmed'), room)
   if (!await page.evaluate(room => !!window.editor?.getShape('shape:' + room), room)) {
+   assert.ok(retry, 'History navigation retained source; an explicit room retry would rewrite the history under test')
    const current = new URL(page.url()).searchParams.get('room')
    const snapshot = () => page.evaluate(() => window.editor.store.getStoreSnapshot('document').store)
    const held = JSON.stringify(ordered(await snapshot()))
@@ -162,9 +168,11 @@ try {
    throw error
   }
   await page.screenshot({ path: join(scratch, 'rooms-b.png') })
-  await page.goBack(); await ready('A')
+  await acknowledgeDocument('B')
+  await page.goBack(); await ready('A', { retry: false })
   assert.ok(JSON.stringify(await page.evaluate(() => window.editor.getShape('shape:A'))).includes('A acknowledged browser edit'))
-  await page.goForward(); await ready('B'); await page.reload(); await ready('B')
+  await acknowledgeDocument('A')
+  await page.goForward(); await ready('B', { retry: false }); await page.reload(); await ready('B', { retry: false })
   assert.deepEqual(shapes(await data('/doc?room=B')).map(shape => shape.id), ['shape:B'])
   await chooseRoom('A'); await ready('A')
   assert.ok(JSON.stringify((await rpc('get_doc', { room: 'A' }, 'restricted')).result.structuredContent).includes('A acknowledged browser edit'))
@@ -227,7 +235,7 @@ try {
  })
  await page.keyboard.press('Escape')
  }
- await checkNativeUi({ page, context, adapter, origin, scratch, saveDir, longRoom, data, request, check, click, ready, chooseRoom, openRooms })
+ if (!process.argv.includes('--legacy-only')) await checkNativeUi({ page, context, adapter, origin, scratch, saveDir, longRoom, data, request, check, click, ready, chooseRoom, openRooms })
  assert.deepEqual(external, [])
  await context.close()
  const restricted = await browser.newContext({ ignoreHTTPSErrors: true, viewport: { width: 1280, height: 820 } })

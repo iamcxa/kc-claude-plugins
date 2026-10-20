@@ -1,11 +1,16 @@
 import { canonicalRoom, HostError } from './core'
-export type Grant = { credentialId: string; secretDigest: string; principalId: string; rooms: string[]; expiresAt: number; revoked: boolean }
-export type Session = { credentialId: string; expiresAt: number }
+import { cookieValue, currentHuman } from './human'
+import type { HumanSession } from './human-store'
+export type Grant = { credentialId: string; secretDigest: string; principalId: string; rooms: string[]; expiresAt: number; revoked: boolean; revokeOperation?: string }
+export type Session = { credentialId: string; expiresAt: number; actorType?: 'legacy' | 'agent' | 'human'; humanSessionDigest?: string; familyId?: string }
 export type Admission = Session & { rooms: string[]; principalId: string; cookie: boolean }
 export interface Metadata {
  get<T>(key: string): Promise<T | null>
  put(key: string, value: unknown): Promise<void>
  list<T>(prefix: string): Promise<Array<{ key: string; value: T }>>
+ human?(operation: string, input: any): Promise<any>
+ agent?(operation: string, input: any): Promise<any>
+ security?(operation: string, input: any): Promise<any>
 }
 export async function digest(secret: string) {
  return [...new Uint8Array(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(secret)))].map(b => b.toString(16).padStart(2, '0')).join('')
@@ -23,6 +28,17 @@ export function validateGrants(grants: Grant[]) {
  return grants
 }
 export async function currentGrant(meta: Metadata, session: Session): Promise<Grant> {
+ if (session.actorType === 'agent') {
+  if (!meta.agent || session.expiresAt <= Date.now()) throw new HostError(401, 'agent_access_denied')
+  const a = await meta.agent('current', { credentialId: session.credentialId, familyId: session.familyId })
+  return { ...a, revoked: false, secretDigest: '' }
+ }
+ if (session.actorType === 'human') {
+  const saved = session.humanSessionDigest ? await meta.get<HumanSession>('browser-session:' + session.humanSessionDigest) : null
+  if (!saved || saved.memberId !== session.credentialId || session.expiresAt <= Date.now()) throw new HostError(401, 'authority_denied')
+  const current = await currentHuman(meta, saved)
+  return { credentialId: saved.memberId, principalId: current.member.id, rooms: current.rooms, expiresAt: Math.min(saved.expiresAt, session.expiresAt), revoked: false, secretDigest: '' }
+ }
  const grant = await meta.get<Grant>('grant:' + session.credentialId)
  if (!grant || grant.revoked || grant.expiresAt <= Date.now() || session.expiresAt <= Date.now())
   throw new HostError(401, 'credential expired, revoked or invalid')
@@ -35,16 +51,28 @@ export async function authenticate(meta: Metadata, headers: Headers): Promise<Ad
   const match = /^Bearer ([a-zA-Z0-9_-]+)\.([a-zA-Z0-9_-]{43,})$/.exec(bearer)
   if (!match) throw new HostError(401, 'invalid credential')
   const grant = await meta.get<Grant>('grant:' + match[1])
+  if (!grant && match[1].startsWith('agt_')) {
+   if (!meta.agent) throw new HostError(401, 'agent_access_denied')
+   return meta.agent('admit', { credentialId: match[1], secretDigest: await digest(match[2]) })
+  }
   if (!grant || await digest(match[2]) !== grant.secretDigest) throw new HostError(401, 'invalid credential')
   session = { credentialId: grant.credentialId, expiresAt: grant.expiresAt }
  } else {
+  const humanToken = cookieValue(headers, 'journey_human')
+  if (humanToken) {
+   const humanSessionDigest = await digest(humanToken)
+   const saved = await meta.get<HumanSession>('browser-session:' + humanSessionDigest)
+   if (!saved) throw new HostError(401, 'human_sign_in_required')
+   const current = await currentHuman(meta, saved)
+   return { credentialId: saved.memberId, actorType: 'human', humanSessionDigest, expiresAt: saved.expiresAt, rooms: current.rooms, principalId: current.member.id, cookie: true }
+  }
   const token = /(?:^|;\s*)journey_session=([^;]+)/.exec(headers.get('cookie') ?? '')?.[1]
   const found = token ? await meta.get<Session>('session:' + await digest(token)) : null
   if (!found) throw new HostError(401, 'credential required')
   session = found; cookie = true
  }
  const grant = await currentGrant(meta, session)
- return { ...session, expiresAt: Math.min(session.expiresAt, grant.expiresAt), rooms: grant.rooms, principalId: grant.principalId, cookie }
+ return { ...session, actorType: session.actorType || 'legacy', expiresAt: Math.min(session.expiresAt, grant.expiresAt), rooms: grant.rooms, principalId: grant.principalId, cookie }
 }
 export function authorize(admission: Admission | null, raw: string) {
  const room = canonicalRoom(raw)
@@ -58,6 +86,7 @@ export async function exchange(meta: Metadata, headers: Headers, origin: string)
  requireOrigin(headers, origin)
  if (!headers.has('authorization')) throw new HostError(401, 'bearer credential required')
  const a = await authenticate(meta, headers)
+ if (a.actorType === 'agent') throw new HostError(403, 'agent_browser_exchange_denied')
  const token = [...crypto.getRandomValues(new Uint8Array(32))].map(b => b.toString(16).padStart(2, '0')).join('')
  const expiresAt = Math.min(Date.now() + 15 * 60_000, a.expiresAt)
  await meta.put('session:' + await digest(token), { credentialId: a.credentialId, expiresAt })

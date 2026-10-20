@@ -1,5 +1,9 @@
 # Bounded native-client check on fresh Node
 
+This remains the historical legacy-credential recipe. New distinct installations
+use the [protected stdio helper](agent-pairing.md); actual separate Claude/Codex
+setup and same-room coedit acceptance remain the collaboration story's work.
+
 This is a ready recipe for independent validation, not evidence that the current
 candidate ran native clients. Use the normal approved Claude Code and Codex CLI
 authentication. The helper is loopback-only, runs one phase without automatic
