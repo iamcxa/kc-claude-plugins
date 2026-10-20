@@ -25,3 +25,7 @@ To be written at ideation.
 Needed at ideation: whether both land as one patch, once the Captain schedules this task.
 Surfaces: none
 Visible change: none
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage: every item is done on origin/main ad44f0cb (comment-triggered eyes read in codex_review.py state(); a missing gh raises a configuration error, test_a_missing_gh_is_a_configuration_error).
