@@ -3,7 +3,10 @@ title: laws_check.py follow-ups declined at the #651 delivery gate (readme pass-
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:10:14Z
+archived: 2026-10-20T05:10:14Z
 ---
 
 Declined or deferred at the validation gate of task `dev2-laws-check` (iamcxa/kc-claude-plugins PR #651, head 833b5c16), each with its reason in that gate summary.
