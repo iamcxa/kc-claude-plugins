@@ -683,3 +683,112 @@ PASSED at d0c2e25b95ef: every live criterion holds under its own falsifier, the 
 ### Summary
 
 The one-sentence ADR 0027 fix is committed as ffc1711c and passes both lints, all package tests and the roborev gate. The branch is not pushed because the permission check refused the push, so FO or the Captain must push ffc1711c (or allow the push) before CI and the validation recheck.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #687 head ffc1711c against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at head ffc1711c8f55 (base ad44f0cb, PR open and not a Draft at read time). Validation-1's verdict on AC-1 to AC-6 and AC-8 to AC-13 (AC-7 superseded) carries to this head because the diff from d0c2e25b is the one ADR sentence (next item); I did not re-run the 21 mutations, which exercise files this head does not change, and the acceptance script re-ran the criterion-level behaviour at ffc1711c. The cycle-1 limits stand as judged in validation 1; the new implementation limit (push refused, ffc1711c local only) is closed: FO pushed it and CI ran on ffc1711c.
+- DONE: Recheck after the Cycle 1 repair: the diff from d0c2e25b is the one ADR 0027 sentence the Feedback Cycles line names and nothing else; validation-1's verdict on every criterion carries to this head only if that holds, so rerun adr_lint and the full package suite at this head, and confirm CI on this head
+  `git diff d0c2e25b..ffc1711c` is 1 file, 1 insertion, 1 deletion; `--word-diff` shows "reads the" to "checks that an" and "question," to "question named the merge,", exactly the Feedback Cycles replacement. `git diff --name-only ad44f0cb ffc1711c` still lists the same 7 files. adr_lint `docs/adr --since ad44f0cb` exit 0 ("27 ADR file(s) checked, 0 legacy"), with `--require 27` exit 0; lint-skills exit 0 (5374 of 5374). Full `unittest discover -s kc-dev-flow-2/scripts` (python3 -B, caches cleared): Ran 600 tests, OK, 300 s. CI on ffc1711c, run 39443652982 headSha ffc1711c: unit tests (python3) pass 1m56s, multi-profile route gate pass, version parity pass, GitGuardian pass (4 of 4).
+  F1 is closed: the new sentence is true. `grep` over the scripts finds no code that checks an approved question names a merge; ADR 0023 says "Nothing checks that a merged PR's approved question named the merge"; the old wording is gone from ADR 0027 (count 0), the new one present once.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below (6 steps), run with `env -i HOME PATH bash --noprofile --norc`; observed output as expected. adr_lint exit 0 (also in step 6). Verdict PASSED at ffc1711c8f55d8c948143d7fadb2d512471b9a92. Findings: F1 (Polish, ADR sentence) closed by this head; F2 Deferred risk from validation 1 stays open and unchanged (no Material, no Needs decision, no new finding).
+
+### Findings (cycle 2)
+
+- F1 Polish: closed at ffc1711c (see above).
+- F2 Deferred risk: unchanged from validation 1. A `revise` that touches Scope at an open ideation gate now ends in a hold and an amendment; Material if an observer finds FO restoring a Captain-asked Scope line because of the hold, against his `revise`.
+- Not verified: `roborev:940` (read from the implementation report only); CI runner cost (not measured); that an FO obeys the hold or the sentence (prose-enforced, ADR 0014); `delivery_gate.py check` against a live PR. Observation, not a finding: PR #687 reads `isDraft: false` at ffc1711c; I did not change it.
+
+### Acceptance script (ffc1711c)
+
+Needs the Captain's workspace at the path below and network for one `git fetch`; it leaves nothing behind. Does not cover the full 600-test suite (CI runs it), `delivery_gate.py check` against a live PR, rule 1 (no check, by ruling), or rule 4 beyond the printed sentence.
+
+```bash
+set -u
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+STATE=$REPO/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+PKGROOT=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0
+HEAD_SHA=ffc1711c8f55d8c948143d7fadb2d512471b9a92
+BASE=ad44f0cbf42274ff65802cabc52ebe919f159fd5
+T=$(mktemp -d)
+
+echo "STEP 1: check out the PR head in a throwaway worktree; the repair since the validated head is one ADR file"
+git -C $REPO fetch -q origin pull/687/head && git -C $REPO worktree add -q --detach $T/cand $HEAD_SHA && git -C $T/cand rev-parse HEAD
+git -C $T/cand diff --stat d0c2e25b95ef8f5c49a3b05c31085dd1170b2ae7 HEAD | tail -2
+PKG=$T/cand/kc-dev-flow-2/scripts
+
+echo "STEP 2: run the new tests (about 15 seconds)"
+(cd $PKG && python3 -B -m unittest test_delivery_gate.FoWriteRuleTests test_design_surfaces.ScopeCheckTests 2>&1 | tail -3)
+
+echo "STEP 3: a Captain scope line added after the backlog gate must hold (rule 3)"
+git init -q $T/S && git -C $T/S fetch -q --no-tags $STATE 8eda9070b102163561d0a5e24f2c44442a625d97 && git -C $T/S checkout -q --detach FETCH_HEAD && git -C $T/S worktree add -q --detach $T/W HEAD
+cd $T/W
+sed -i '' 's/^status: done/status: ideation/' _archive/special-role-calls-fire-when-needed.md _archive/ideation-gaps.md
+python3 -B $PKG/design_surfaces.py check _archive/special-role-calls-fire-when-needed.md | cut -c1-120; echo "exit=${PIPESTATUS[0]}"
+
+echo "STEP 4: a scope change recorded by an amendment is clean; one more Scope line after it holds"
+python3 -B $PKG/design_surfaces.py check _archive/ideation-gaps.md; echo "exit=$?"
+python3 - <<'PY'
+p="_archive/ideation-gaps.md"; t=open(p).read()
+open(p,"w").write(t.replace("## Scope\n","## Scope\n\n- A later Captain ask.\n",1))
+PY
+python3 -B $PKG/design_surfaces.py check _archive/ideation-gaps.md | cut -c1-120; echo "exit=${PIPESTATUS[0]}"
+
+echo "STEP 5: the decline parse reads a reason in [ ] and does not cut at e.g. (rule 2), and the ask line names the Release PR"
+python3 -B - $PKG <<'PY'
+import sys; sys.path.insert(0, sys.argv[1])
+import delivery_gate as g
+t = ('Declined, with reasons: Deferred risk, clause() reads a label after "e.g. Necessity: y" as stated [no committed briefing has that form]; '
+     'Polish, the shortened phrase leaves one phrase unwatched [the full phrase trips the lint]; '
+     'Polish, AC-7 left rows [the two extra rows are outside the set]; Polish, the lint matches a phrase [each is one README sentence].')
+print("declined items:", len(g.declined_items(t)), "without a reason:", g.unreasoned_items(t))
+print("ask line ends:", g.ASK[-66:], "| words:", len(g.ASK.split()))
+PY
+
+echo "STEP 6: the ADR passes its lint, and states the bounded claim about the approved question"
+cd $T/cand
+python3 -B $PKGROOT/scripts/adr_lint.py docs/adr --since $BASE --require 27; echo "exit=$?"
+grep -c "No script checks that an approved question named the merge" docs/adr/0027-*.md
+grep -c "No script reads the approved question" docs/adr/0027-*.md
+
+echo "CLEANUP"
+cd /; git -C $REPO worktree remove --force $T/cand; rm -rf $T; echo done
+```
+
+Observed (fresh `env -i HOME="$HOME" PATH="$PATH" bash --noprofile --norc`, 2026-10-20), verbatim:
+
+```
+STEP 1: check out the PR head in a throwaway worktree; the repair since the validated head is one ADR file
+ffc1711c8f55d8c948143d7fadb2d512471b9a92
+ ...027-fo-write-rules-are-checked-by-the-script-fo-runs-at-the-write.md | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+STEP 2: run the new tests (about 15 seconds)
+Ran 26 tests in 14.175s
+
+OK
+STEP 3: a Captain scope line added after the backlog gate must hold (rule 3)
+Scope changed after the backlog gate (291825e9): "- Captain's scope addition, 2026-10-20: 「先加第一個，第二個
+exit=1
+STEP 4: a scope change recorded by an amendment is clean; one more Scope line after it holds
+ideation-gaps.md: design surfaces presentable
+exit=0
+Scope changed after the newest amendment (cfa03ada): "- A later Captain ask.". FO: restore the line; add an '### Amendme
+exit=1
+STEP 5: the decline parse reads a reason in [ ] and does not cut at e.g. (rule 2), and the ask line names the Release PR
+declined items: 4 without a reason: []
+ask line ends: . Every other PR, the Release PR included, is asked one at a time. | words: 40
+STEP 6: the ADR passes its lint, and states the bounded claim about the approved question
+27 ADR file(s) checked, 0 legacy
+exit=0
+1
+0
+CLEANUP
+done
+```
+
+Base scripts differ (validation 1): 1 declined item with 1 unreasoned, a 27-word `ASK`, and no Scope hold on special-role-calls.
+
+### Summary
+
+PASSED at ffc1711c8f55: the diff from the validated head d0c2e25b is the one ADR 0027 sentence, adr_lint and lint-skills exit 0, the full suite is 600 OK, CI is 4 of 4 green on this head, and the acceptance script behaves as written. F1 is closed; F2 stays Deferred risk. Nothing was pushed, commented on, marked ready or merged by this stage.
