@@ -341,3 +341,46 @@ One defect is FO's to correct before the gate is presentable: `python3 <package>
 ### Summary
 
 Cut 1 is implemented and pushed on `1e9dabe5`: the sitting line in `pr_watch.py tasks` (9 new tests, 5 mutations each caught), the Batch overlap sentence (47 words) and ADR 0028 with the reservation ruling. The Draft PR could not be opened because the permission check refused `gh pr create`; FO or the Captain must run the command above (body at /tmp/fbs-pr-body.md, which carries the without-it unanswered list). CI and its cost are therefore unread.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #689 head 1e9dabe5 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED on `1e9dabe50e4845e993ee90cbef55ff75020facfe` (detached throwaway worktree, base `ad44f0cb`; origin/main has since moved to `559e7bf2`, number_guards `check` passes against it). PR #689 Draft, mergeStateStatus CLEAN, CI on this head: unit tests 1m27s, multi-profile route gate 6s, version parity 57s, GitGuardian, all pass.
+  AC-1 `test_pr_watch.py` 87 OK (41 s). Falsifiers I ran by sed on `pr_watch.py`, caches cleared: count `needs-preparation` (1 test fails), ignore `current` (6), one gate = sitting (1), merge-order at every stage (3), swallow the status failure (5). My first "swallow" edit (drop only the exit-code raise) passed all 87 because bad stdout still fails JSON parsing and reports; that is the same reported outcome, not a gap.
+  AC-2 `git diff ad44f0cb..HEAD` over workflow.md, the mod, docs/dev2/README.md, lint-skills.py prints nothing; `lint-skills.py` exit 0, 5374 of 5374 (implementation recorded the one-word mutation exit 1; not rerun).
+  AC-3, AC-4, AC-7 superseded (Amendments 1 and 2), checked: no `--sittings` in the diff. AC-8 belongs to FO's story-map design gate; not verified here.
+  AC-5 open for behaviour by design; the sentence is in principles.md (596 to 643 words, 47 added, designed 55) and `lint-skills.py` passes.
+  AC-6 `adr_lint.py docs/adr --since ad44f0cb --require 28` exit 0; `test_number_guards` 24 OK. Falsifier search: workflow.md:433 says a ruling-born ADR number is reserved "before the next dispatch", which is the dispatch build, not a batch-start rule. ADR 0028's 0018 claim reproduced: reserved in state commit 77ebe044 at 2026-10-16 12:20:37, taken on main by c89c3090 at 23:54:39 (11.5 h).
+  Limits judged: the sitting line repeats each pass (Deferred risk; the ADR names the reopen trigger); the batch count of 62 answers: I reproduced only kc (45 rows to 25 answers by the 20 s rule on `c770d45f`), relay, web and qnow were not re-run (their states are private and the counts are the design's context, not an acceptance claim); the presentation is witnessed only by the record and chat (Deferred risk).
+- DONE: Run kc-dev-flow-2/scripts/pr_watch.py tasks against a real workflow state with two or more awaiting-captain gates at one stage (build one in a throwaway copy of a state checkout, never the live one) so the positive case is shown beyond the stubbed tests, and judge the status-failure line that differs from the design's report <slug> form
+  Throwaway: local clone of the `spacedock-state/dev2` branch (origin removed) under /tmp, `spacedock gate prepare` on four tasks, real 0.27.2 `status --next --json` then listed 5 awaiting gates. `pr_watch.py --state <throwaway> tasks` printed `2 gates await the Captain at validation (adr-required-statement, fo-write-rules-checked) ... Name the merge order ...` (36 words) and `3 gates await ... at ideation (comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, release-acceptance)` (26 words), exit 0, beside the other `next:` lines.
+  Failure line: with a missing binary and with a stub that exits 3, it prints `next: report the awaiting gates to the Captain: <reason>.` and exits 2. Judgment: Polish. The status call is workflow-wide and has no slug; no script or reference matches the `report <slug>` text (git grep); AC-1(e) names "the existing form", which the line follows apart from the noun. No repair.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `adr_lint.py docs/adr --since ad44f0cb`: exit 0 ("27 ADR file(s) checked, 0 legacy"); with `--require 28`: exit 0. Also: `comment_ratio.py` 0 comment lines of 119 code lines, exit 0; `doc_impact.py` lists 0 documents; `design_surfaces.py check` exit 0; `number_guards.py check` PASS; `dispatch_records.py` 4 records complete; test_lint_skills, test_adr_doc_checks, test_comment_ratio, test_design_surfaces OK.
+  Verdict: PASSED for `1e9dabe5`. No Material finding. Polish: the failure line noun (above); the ideation sentence is 47 words where the design counted 55 and its table 651 (643 real). Deferred risk: the sitting line prints on every pass while two or more gates await; becomes Material if an observer finds a stage's gates presented one by one while it printed. Deferred risk: AC-5 behaviour unmeasured until the batch-5 observer counts designs written while another task was live. Minimal necessity: sitting line and its 9 rows (bite: four adopters rebuilt sittings by hand; each row has a mutation that fails it), the ideation sentence (bite: relay 4 of 11 and web 5 of 5 designs lacked the heading; effect open) and ADR 0028 (bite: observers flagged the reservation conflict twice) each map to the goal; no deletion candidate.
+
+### Captain acceptance script (run by me from a fresh `env -i ... bash --noprofile --norc`; six steps, about two minutes, needs git, python3 and github.com)
+
+```bash
+# Step 1: get the PR head. Expect the line 1e9dabe50e4845e993ee90cbef55ff75020facfe
+T=$(mktemp -d) && git clone -q --filter=blob:none --no-checkout https://github.com/iamcxa/kc-claude-plugins.git "$T/repo" && cd "$T/repo" && git fetch -q origin pull/689/head && git checkout -q --detach FETCH_HEAD && git rev-parse HEAD
+# Step 2: unit tests of the changed script. Expect "Ran 87 tests" and OK (about 40 s)
+(cd kc-dev-flow-2/scripts && python3 -B -m unittest test_pr_watch 2>&1 | tail -3)
+# Step 3: three gates await, two of them at validation. Expect exactly one line "next: 2 gates await the Captain at validation (task-a, task-b); ... Name the merge order and each shared file from Batch overlap." and exit=0 (task-c alone at backlog prints nothing)
+mkdir -p "$T/flow" && printf -- '---\ncommissioned-by: probe\n---\n' > "$T/flow/README.md"
+printf '#!/bin/sh\necho "{\\"ready_gates\\":[{\\"slug\\":\\"task-a\\",\\"current\\":\\"validation\\",\\"readiness\\":\\"awaiting-captain\\"},{\\"slug\\":\\"task-b\\",\\"current\\":\\"validation\\",\\"readiness\\":\\"awaiting-captain\\"},{\\"slug\\":\\"task-c\\",\\"current\\":\\"backlog\\",\\"readiness\\":\\"awaiting-captain\\"}]}"\n' > "$T/fake-spacedock" && chmod +x "$T/fake-spacedock"
+SPACEDOCK_BIN="$T/fake-spacedock" python3 -B kc-dev-flow-2/scripts/pr_watch.py --state "$T/state.json" tasks "$T/flow"; echo "exit=$?"
+# Step 4: a failing status call is reported. Expect "next: report the awaiting gates to the Captain: [Errno 2] ..." and exit=2
+SPACEDOCK_BIN=/nonexistent python3 -B kc-dev-flow-2/scripts/pr_watch.py --state "$T/state.json" tasks "$T/flow"; echo "exit=$?"
+# Step 5: README, mod and budget untouched. Expect no diff output, then "5374 of 5374 words" and exit=0
+git diff --stat ad44f0cbf42274ff65802cabc52ebe919f159fd5..HEAD -- kc-dev-flow-2/references/sd/workflow.md kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md kc-dev-flow-2/scripts/lint-skills.py; python3 -B kc-dev-flow-2/scripts/lint-skills.py; echo "exit=$?"
+# Step 6: the new decision record is valid. Expect "27 ADR file(s) checked, 0 legacy" and exit=0
+python3 -B kc-dev-flow-2/scripts/adr_lint.py docs/adr --since ad44f0cbf42274ff65802cabc52ebe919f159fd5 --require 28; echo "exit=$?"
+```
+
+Observed (as run): step 1 printed `1e9dabe50e4845e993ee90cbef55ff75020facfe`; step 2 `Ran 87 tests in 54.8s` `OK`; step 3 the one validation line (36 words) and `exit=0`; step 4 `next: report the awaiting gates to the Captain: [Errno 2] No such file or directory: '/nonexistent'.` and `exit=2`; step 5 no diff, `references/sd/workflow.md: 5374 of 5374 words`, `exit=0`; step 6 `27 ADR file(s) checked, 0 legacy`, `exit=0`.
+Does not cover: whether an FO actually presents the gates in one message and records them after his answer (seen only in the record and chat); a real Spacedock `status --next` run inside this script (step 3 uses a stand-in; the real binary is covered by my throwaway-state run above); relay, web and qnow counts; the ideation sentence's effect on designs (AC-5).
+
+### Summary
+
+PASSED for `1e9dabe5`: every live criterion holds, five mutations are each caught by named tests, the positive case ran on a real state with five awaiting gates, and the acceptance script ran unchanged in a fresh shell. No Material finding; two Deferred risks and two Polish items are recorded above.
