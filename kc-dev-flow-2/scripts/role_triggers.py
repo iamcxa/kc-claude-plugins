@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """List the chief-engineer and engineering-reviewer calls a committed task state owes.
 
-Usage: role_triggers.py <state checkout> <task slug> [--rev REV]
+Usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N]
 Reads the task at REV (default HEAD) from committed bytes, never the disk; live or archived, flat or folder.
-Chief-engineer is owed at four repair passes: the `## Stage Report: implementation` headings minus one.
+Chief-engineer is owed at four repair passes: the `## Stage Report: implementation` headings minus one (or, given
+--review-rounds, N >= 2 review ids that left inline findings on the open PR).
 Engineering-reviewer is owed for each `### Amendment N` under `## Captain amendments` whose `Supersedes:` or
 `Design:` value does not start with `none`; one line per task, on fable when the frontmatter says `profile: prod`
 or the `Surfaces:` line under `## FO alignment` lists `db`, else on opus. Fenced blocks are skipped everywhere.
@@ -39,7 +40,7 @@ FIELD = re.compile(r"^(Supersedes|Design):[ \t]*(.*?)[ \t]*$")
 FRONT_PROFILE = re.compile(r"""^profile:[ \t]*["']?([^\s"']+)["']?[ \t]*$""", re.M)
 SURFACES_DB = re.compile(r"^Surfaces:.*\bdb\b", re.M)
 MARK = r"(?:-[ \t]+)?Reviewer:[ \t]*(?:kc-dev-flow-2:)?"
-REPAIRS = 4
+REPAIRS, REVIEW_ROUNDS = 4, 2
 RANK = {"haiku": 0, "sonnet": 1, "opus": 2, "fable": 3}
 
 QUESTION = {
@@ -58,16 +59,20 @@ def git(state, *args):
 
 
 def parse(args):
-    rev = "HEAD"
-    if "--rev" in args:
-        at = args.index("--rev")
-        if at + 1 >= len(args):
-            raise Unverifiable("usage: --rev needs a value")
-        rev = args[at + 1]
-        args = args[:at] + args[at + 2:]
+    options = {"--rev": "HEAD", "--review-rounds": None}
+    for name in options:
+        if name in args:
+            at = args.index(name)
+            if at + 1 >= len(args):
+                raise Unverifiable(f"usage: {name} needs a value")
+            options[name] = args[at + 1]
+            args = args[:at] + args[at + 2:]
+    rounds = options["--review-rounds"]
+    if rounds is not None and not rounds.isdigit():
+        raise Unverifiable("usage: --review-rounds needs a whole number")
     if len(args) != 2 or "/" in args[1] or args[1] in ("", ".", ".."):
-        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV]")
-    return Path(args[0]), args[1], rev
+        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N]")
+    return Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds)
 
 
 def read_task(state, slug, rev):
@@ -174,7 +179,7 @@ def hint(slug, agent, heading):
             "move it under ## FO alignment.")
 
 
-def check(state, slug, rev):
+def check(state, slug, rev, rounds=None):
     text = read_task(state, slug, rev)
     lines = list(outside_fences(text))
     reports, amendments = events(lines)
@@ -184,11 +189,12 @@ def check(state, slug, rev):
     strong = (profile and profile.group(1) == "prod", any(SURFACES_DB.match(line.strip()) for line in kept))
     owed, seen = [], 0
     repairs = max(reports - 1, 0)
-    if repairs >= REPAIRS:
+    if repairs >= REPAIRS or (rounds or 0) >= REVIEW_ROUNDS:
         seen += 1
         calls, waivers = records(kept, "chief-engineer")
         if not (calls or waivers):
-            owed.append(owed_line(slug, "chief-engineer", f"has {repairs} repair passes"))
+            found = [f"{repairs} repair passes"] * (repairs >= REPAIRS) + [f"{rounds} review rounds"] * ((rounds or 0) >= REVIEW_ROUNDS)
+            owed.append(owed_line(slug, "chief-engineer", "has " + " and ".join(found)))
             owed += [hint(slug, "chief-engineer", h) for h in [misplaced(lines, "chief-engineer")] if h]
     if amendments:
         seen += len(amendments)
@@ -215,8 +221,8 @@ def check(state, slug, rev):
 def main(argv=None):
     args = sys.argv[1:] if argv is None else list(argv)
     try:
-        state, slug, rev = parse(args)
-        code, message = check(state, slug, rev)
+        state, slug, rev, rounds = parse(args)
+        code, message = check(state, slug, rev, rounds)
     except Unverifiable as err:
         print(f"cannot tell whether a chief-engineer or engineering-reviewer call is owed: {err}. Hold and report the cause.")
         return 2

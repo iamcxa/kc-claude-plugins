@@ -92,6 +92,20 @@ class RoleTriggersTest(Fixture):
         self.assertEqual(run(self.state, SLUG, "--rev", "HEAD~1")[0], 0)
         self.assertEqual(run(self.state, SLUG)[0], 1)
 
+    def test_two_review_rounds_owe_chief_engineer_only_when_the_caller_passes_them(self):
+        self.put(task(repairs=1))
+        self.assertEqual(run(self.state, SLUG)[0], 0)
+        self.assertEqual(run(self.state, SLUG, "--review-rounds", 1)[0], 0)
+        code, out = run(self.state, SLUG, "--review-rounds", 2)
+        self.assertEqual((code, out.count("next:")), (1, 1))
+        self.assertIn("has 2 review rounds", out)
+        self.put(task(repairs=4))
+        self.assertIn("has 4 repair passes and 2 review rounds", run(self.state, SLUG, "--review-rounds", "2")[1])
+        self.put(task(repairs=1, extra=call(CE, "opus", "2026-10-18")))
+        self.assertEqual(run(self.state, SLUG, "--review-rounds", 3)[0], 0)
+        for bad in ("-1", "x", ""):
+            self.assertEqual(run(self.state, SLUG, "--review-rounds", bad)[0], 2, bad)
+
     def test_wording_does_not_decide_whether_a_call_counts_but_its_heading_does(self):
         self.put(task(repairs=4, extra=call(CE, "opus", "2026-10-18", "repair again, or narrow the PR?")))
         self.assertEqual(self.owed()[0], 0)
