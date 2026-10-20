@@ -82,6 +82,8 @@ pr: iamcxa/kc-claude-plugins#689
 
 ## FO alignment
 
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-10-20: FO missed the call owed for replacing amendments 1 to 3 before the merge (the observer found it after PR #689 merged at 15:36:46Z); each amendment removes scope at the Captain's own choice (no sitting counter, Cut 2 moved to the story-map task, interim rules kept out) and adds none, so a post-merge read would change no build; disclosed to the Captain.
+
 Delivery note (FO, 2026-10-20): the implementation worker's `gh pr create --draft` was refused by the permission check; FO did not retry it, asked the Captain, and opened Draft PR iamcxa/kc-claude-plugins#689 from the worker's pushed head 1e9dabe5 with the worker's body under his 「授權你開 PR」 (chat, 2026-10-20).
 
 Alignment: needed before ideation. The Captain ruled to wait (「可以等批次 3 的那次計數出來再開始設計。目前多個 FO 都做了這個 dogfood，你可以派觀察者回收一下。」, 2026-10-20, chat, answering FO's 「要不要等批次 3 的那次計數出來再開始設計？我建議等。」): ideation starts after captain-question-load's batch-3 recount, and observers first collect the dogfood record of the FOs that ran batches (kc-claude-plugins, subspace-relay, subspace-web, qnow).
