@@ -45,7 +45,8 @@ started: 2026-10-20T04:57:55Z
 Alignment: needed before ideation. The Captain ruled to wait (「可以等批次 3 的那次計數出來再開始設計。目前多個 FO 都做了這個 dogfood，你可以派觀察者回收一下。」, 2026-10-20, chat, answering FO's 「要不要等批次 3 的那次計數出來再開始設計？我建議等。」): ideation starts after captain-question-load's batch-3 recount, and observers first collect the dogfood record of the FOs that ran batches (kc-claude-plugins, subspace-relay, subspace-web, qnow).
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
-Visible change: the Captain answers one message per stage per batch instead of one per gate.
+Visible change: none
+Outside this repository's surfaces: the Captain answers one message per stage per batch instead of one per gate.
 
 ## Design
 
