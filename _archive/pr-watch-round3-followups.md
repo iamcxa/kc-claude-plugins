@@ -3,7 +3,10 @@ title: pr_watch.py keeps its lock file distinct from any --state path
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:10:44Z
+archived: 2026-10-20T05:10:44Z
 ---
 
 Declined under the round-3 rule from the third external review round (Codex) of iamcxa/kc-claude-plugins PR #594, 2026-10-11. The finding is neither P1 nor Material, so it started no repair cycle there and is filed here with its decline reason, per `## FO steps: review findings` step 5.
