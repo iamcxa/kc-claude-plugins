@@ -3,7 +3,10 @@ title: prod validation security review follow-ups declined at validation of #659
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:09:29Z
+archived: 2026-10-20T05:09:29Z
 ---
 
 Declined by FO at validation-1 of prod-security-validation-gate (PR #659, head fce79ed7, 2026-10-17); reasons also in that task's gate summary.
