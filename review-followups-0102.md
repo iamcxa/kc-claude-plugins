@@ -30,3 +30,7 @@ Needed at ideation: whether both follow-ups land as one patch and when, once the
 Result: the FO delegates these questions to ideation, which decides each with its source and returns any ruling that needs the Captain.
 Surfaces: none
 Visible change: none
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: both items done in #601 (spacedock status recovery step; Number guards covers any landed ADR).
