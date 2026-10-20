@@ -61,7 +61,7 @@ Chain read 2026-10-20 (Spacedock plugin 0.27.0 source in the plugin cache, binar
 **What is wrong today (measured 2026-10-20).**
 
 - In the repository's own checkout (origin/main ad44f0cb) `spacedock status --discover` lists `docs/dev`, `docs/ship`, `docs/ship-flow` and two `kc-ship-flow` fixtures, and neither `docs/dev2` nor `docs/dev2-poc`. In a fixture holding the template as `docs/dev2/README.md`, `spacedock status` from inside it stops with "no commissioned Spacedock workflow found", and the same command with `--workflow-dir` works. That is why FO runs: every command passes `--workflow-dir`.
-- Compass `read_workflow` returns `None` for a README whose line 2 is `kc-dev-flow-2`; with `spacedock@0.27.0` it returns the 5 stages (`backlog ideation implementation validation done`), and 4 for the POC derivation.
+- Compass `read_workflow` returns `None` for a README whose line 2 is `kc-dev-flow-2`; with `spacedock@0.27.0` it returns the 5 stages (`backlog ideation implementation validation done`), and 4 for the POC derivation. Compass does not scan for the directory: its stage strip takes the absolute workflow directory from the `spacedock status --boot` envelope in the FO session transcript (`workflow_dirs` in `compass_runtime/spacedock.py`) and skips a workflow whose `read_workflow` is `None` (the `continue` in the strip loop), so the prefix test is the one gate between a dev2 FO session and its strip (read 2026-10-20, Compass 1.3.0).
 
 **What changes.**
 
@@ -149,7 +149,7 @@ Verified by: the new assertion in that test, which compares real paths (macOS pr
 **AC-3** The derived POC README keeps the stamp and every package test that reads the template still passes.
 Verified by: the ten commands in "Package tests that read the template" exit 0 at the candidate (the CI workflow `kc-dev-flow-2-tests.yml` runs all ten); `python3 kc-dev-flow-2/scripts/poc_readme.py check docs/dev2-poc/README.md docs/dev2/README.md` exits 0 after the edit. Falsifier: editing only `docs/dev2/README.md` makes `check` exit 1 with a diff on line 2 (reproduced 2026-10-20).
 
-**AC-4** In this repository `docs/dev2/README.md` and `docs/dev2-poc/README.md` read `commissioned-by: spacedock@0.27.0` on line 2 and differ from origin/main in no other line, and Spacedock and Compass then see both.
+**AC-4** In this repository `docs/dev2/README.md` and `docs/dev2-poc/README.md` read `commissioned-by: spacedock@0.27.0` on line 2 and differ from origin/main in no other line, and Spacedock discovery and Compass's workflow reader then see both.
 Verified by: `git diff -U0 origin/main -- docs/dev2/README.md docs/dev2-poc/README.md` shows one changed line per file; `spacedock status --discover` from the repository root of the merge commit lists `docs/dev2` and `docs/dev2-poc` (today lists neither, 2026-10-20 on ad44f0cb); Compass `read_workflow(config, state, <dir>)` returns the 5 stage names for `docs/dev2` and the 4 for `docs/dev2-poc` (`None` for both today), run with the Compass install's own modules from a script kept outside the repository (probe used 2026-10-20, run as `python3 -B probe.py <compass skill dir> <workflow dir>...`):
 
 ```python
@@ -165,7 +165,7 @@ for d in sys.argv[2:]:
     print(d, None if r is None else r["stages"])
 ```
 
-Falsifier: leave either file unedited and its directory is missing from the discover output and Compass returns `None`.
+Falsifier: leave either file unedited and its directory is missing from the discover output and Compass returns `None`. Limit: only `read_workflow` was exercised, not the dashboard; that the stage strip renders for a live dev2 FO session is verified at validation by opening Compass with a session whose transcript holds a `status --boot` envelope for the edited `docs/dev2`, or is reported as unverified.
 
 **AC-5** The next sync from the previous release is clean for the known adopters.
 Verified by: for relay and web (`origin/HEAD`), qnow (`origin/next`) and this repository's two files: `git merge-file -p <README> <template at the release recorded in the README's x-release-please-version line> <candidate template>` exits 0 and keeps line 2 (`spacedock@0.27.0` for all five). Measured 2026-10-20 against origin/main as the candidate stand-in: exit 0 for all five; the same loop with `spacedock@` or `spacedock@0.27.2` exits 1 on relay, web and qnow. Falsifier: changing the candidate value away from `spacedock@0.27.0` fails the loop. Limit: an adopter that refit to a newer Spacedock before the release conflicts once on line 2; the sync PR says so and keeps its value. Rerun the loop at validation, because adopters move.
