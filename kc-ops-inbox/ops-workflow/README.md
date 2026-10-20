@@ -8,6 +8,7 @@ stages:
   defaults:
     worktree: false
     concurrency: 1
+    model: sonnet
   states:
     - name: triage
       initial: true
