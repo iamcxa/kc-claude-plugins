@@ -3,7 +3,7 @@ title: FO runs a batch of tasks in sittings, so the Captain answers each stage's
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-20T04:57:55Z
 worktree: .worktrees/spacedock-ensign-fo-batch-sittings
+pr: iamcxa/kc-claude-plugins#689
 ---
 
 ## Scope
