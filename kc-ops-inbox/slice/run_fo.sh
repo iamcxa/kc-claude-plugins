@@ -11,10 +11,6 @@ FO_HOME=$(mktemp -d)
 SLUG="relay-$(python3 -I -c 'import json,sys;d=json.load(open(sys.argv[1]));print(d["event"]+"-"+d["day"])' "$ROOT/$EVENT_FILE")"
 REMOTE=${REMOTE_URL:-https://github.com/$REPO.git}
 
-cleanenv=(env -i PATH="$PATH" HOME="$FO_HOME" GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1 GIT_TERMINAL_PROMPT=0
-  GIT_ASKPASS="$ROOT/github-probe/askpass.sh" PROBE_TOKEN="$OPS_APP_TOKEN" GH_TOKEN="$OPS_APP_TOKEN"
-  "$MODEL_VAR=${!MODEL_VAR:-}" AUDIT_ALLOW="PROBE_TOKEN GH_TOKEN $MODEL_VAR")
-
 echo "== job environment, credential-shaped names only"
 env | cut -d= -f1 | grep -E 'TOKEN|SECRET|PASSWORD|_KEY$' | sort | sed 's/^/  /'
 
@@ -27,6 +23,11 @@ if [ -z "${FO_LAUNCH:-}" ]; then
   HOME="$FO_HOME" spacedock install --host claude && HOME="$FO_HOME" spacedock doctor --host claude
 fi
 
+cleanenv=(env -i PATH="$PATH" HOME="$FO_HOME" GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1 GIT_TERMINAL_PROMPT=0
+  GIT_ASKPASS="$ROOT/github-probe/askpass.sh" PROBE_TOKEN="$OPS_APP_TOKEN" GH_TOKEN="$OPS_APP_TOKEN"
+  "$MODEL_VAR=${!MODEL_VAR:-}" AUDIT_ALLOW="PROBE_TOKEN GH_TOKEN $MODEL_VAR")
+
+"${cleanenv[@]}" sh -c "command -v spacedock" >/dev/null || { echo "spacedock is not on the First Officer PATH" >&2; exit 1; }
 WORK=$(mktemp -d)
 "${cleanenv[@]}" git clone -q "$REMOTE" "$WORK/repo"
 cd "$WORK/repo"
