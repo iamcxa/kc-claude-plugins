@@ -1,0 +1,10 @@
+HOLD     canvas-document-popup                          +14 -5: In scope: an optional popup inside the existing journey canvas that opens a supported
+amended  ideation-gaps                                  +1 -1
+HOLD     learning-serialize-evaluation                  +11 -0: In scope: `kc-dev-flow-2/scripts/learning.py`, `kc-dev-flow-2/scripts/test_learning.py`,
+HOLD     migration-and-number-guards                    +1 -0: Captain 2026-09-30, approving the design: 「准」 — the exit for a migration already applied a
+HOLD     release-please-exclude-paths                   +6 -1: In scope: `release-please-config.json` only — give `kc-dev-flow` the `exclude-paths`
+HOLD     release-review                                 +1 -1: Five-things rule, handed over 2026-09-30 by the peer session that drafted it (Captain not 
+HOLD     review-cadence                                 +1 -0: Captain amendments at the ideation gate, 2026-09-30 (「核准」): the package defaults the comme
+HOLD     special-role-calls-fire-when-needed            +1 -0: - Captain's scope addition, 2026-10-20: 「先加第一個，第二個列入評估」, answering FO's 「1. ER：例如碰到 prod、資
+{'clean': 43, 'HOLD': 7, 'not judged': 32, 'amended': 1}
+not judged: ['no closed backlog approval']

@@ -1,0 +1,25 @@
+corpus subspace-relay 1e22e52daf5ebb4de25d94ede4384a4c58eb0e8e = 1e22e52daf5e: 1626 commits, 64 task files, 191 gate resolutions, 202 briefings
+
+== R1 follow-ups task that claims the Captain's acceptance (title or first paragraph)
+follow-ups tasks seen: 0; flagged: 0
+
+== R2 declined items and validator findings, per validation briefing
+  briefings: 85
+  mention Deferred risk, Polish or declin* but carry no Declined/FO declines label: 30
+
+== R3 Scope edits after the backlog gate closed (Non-goals lines excepted), by era
+  events after the gate, all dates: 4 in 4 tasks; on or after 2026-09-30 (the amendment rule's day): 4 in 4 tasks, of which an amendment dated on or after the gate exists in 0
+  of the 4: first changed line names the Captain or quotes 「」: 2; other: 2
+   HOLD other ('live-web-notice', '29deda70', '2026-10-10T00:46:52+08:00', False, 1, 1, '- Check `/web/identity.json` once after the first successful mount and again when the tab returns fr')
+   HOLD captain-line ('agent-front-door', '95841f6f', '2026-10-12T22:56:14+08:00', False, 3, 2, "Phase one of two (Captain, 2026-10-12, 「就這樣切」): an agent holding a share link, or the site's root ad")
+   HOLD other ('front-door-hardening', '5c75bbaa', '2026-10-16T10:37:34+08:00', False, 1, 0, '5. ADR 54 records the decisions items 1 and 3 make, and the six findings deferred under Non-goals wi')
+   HOLD captain-line ('entry-without-name-field', '89c93e6c', '2026-10-19T18:32:21+08:00', False, 1, 0, '- Layout, revised by the Captain 2026-10-19 (gate record `revise`, 「按鈕怪怪的，Or 應該要保留，現在這樣反而太簡單了」): the')
+
+== R4 validation approvals: does the approved question carry the merge?
+  approvals: 58
+  by captain: 58
+  question carries the merge: 0
+  question says FO asks him to merge: 0
+  with a pr-merge sentinel: 57
+  sentinel and no carried merge: 57
+  merge/ask-N.json records (class, verdict): {}

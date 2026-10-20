@@ -1,0 +1,25 @@
+corpus subspace-web 96a54eef3ee97641f5b0caf49975e83179e4fd26 = 96a54eef3ee9: 645 commits, 28 task files, 96 gate resolutions, 97 briefings
+
+== R1 follow-ups task that claims the Captain's acceptance (title or first paragraph)
+follow-ups tasks seen: 0; flagged: 0
+
+== R2 declined items and validator findings, per validation briefing
+  briefings: 40
+  mention Deferred risk, Polish or declin* but carry no Declined/FO declines label: 15
+
+== R3 Scope edits after the backlog gate closed (Non-goals lines excepted), by era
+  events after the gate, all dates: 5 in 4 tasks; on or after 2026-09-30 (the amendment rule's day): 4 in 3 tasks, of which an amendment dated on or after the gate exists in 0
+  of the 4: first changed line names the Captain or quotes 「」: 1; other: 3
+   HOLD other ('holder-panel-header-and-polish', 'd56cfcd5', '2026-10-14T11:36:22+08:00', False, 2, 1, "- The feedback list is the desktop right panel's body, always open, for the holder (All feedback) an")
+   HOLD other ('holder-panel-header-and-polish', 'acc75f5b', '2026-10-14T13:41:58+08:00', False, 5, 4, '- The panel header is one line that names the list, counts it and says what is unsent, and agrees wi')
+   HOLD other ('disclosure-chevrons-follow-state', 'edfd5d88', '2026-10-16T22:47:55+08:00', False, 2, 2, '- The three controls show › when closed and ⌄ when open, in light and dark, desktop and phone, with ')
+   HOLD captain-line ('ac9-feedback-phone-revision-drawer-note-time', '0c62c45c', '2026-10-19T12:49:50+08:00', False, 2, 1, "Five separable items (the fifth is the Captain's observation on production Web 0.2.26, recorded in t")
+
+== R4 validation approvals: does the approved question carry the merge?
+  approvals: 29
+  by captain: 29
+  question carries the merge: 0
+  question says FO asks him to merge: 0
+  with a pr-merge sentinel: 28
+  sentinel and no carried merge: 28
+  merge/ask-N.json records (class, verdict): {}

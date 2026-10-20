@@ -1,0 +1,16 @@
+-- R4: real approved question of special-role-calls-fire-when-needed (no Merges: line)
+next: ask the Captain to merge; the question he approved names no merge of iamcxa/kc-claude-plugins#682.
+-- R4: same task, the question rewritten the way the Captain's text would read with the line (copy under a scratch dir, nothing written here)
+   carried   next: merge this head; the question he approved on 2026-10-20 names iamcxa/kc-claude-plugins#682 in its Merges: line. Ask instead if his reason (Captain approved in chat (「合併」) after the gate briefing, which stated that approval merges #682 head) says he merges or holds.
+   none      next: ask the Captain to merge; the question he approved names no merge of iamcxa/kc-claude-plugins#682.
+   other PR  next: ask the Captain to merge; the question he approved names no merge of iamcxa/kc-claude-plugins#682.
+-- R4 control: the question as approved, text only: 'hold Release PR #672' names #672 and not as a Merges: line -> False
+-- R2: the presented declined texts of the three gates written after #671 merged (2026-10-19T08:10Z), and fo-write-checks (its own gate, minutes before): 0.26.0 check vs fixed parse
+   captain-question-load                  items 3->3  unreasoned 2->0
+   chat-only-evidence-observer-blind      items 1->4  unreasoned 1->0
+   special-role-calls-fire-when-needed    items 4->4  unreasoned 3->0
+   fo-write-checks                        items 5->5  unreasoned 5->0
+-- R2: findings join on special-role (F-id bullets in the report vs the declined items of the presented text)
+   declined items (4) are fewer than the validation report's Deferred risk and Polish findings (5)
+-- R1: follow-ups tasks beside their task, as they stand at the pin
+   delivery-gate-settles-skipped-checks-followups.md claims the Captain's acceptance ("accepted") before the gate that records it

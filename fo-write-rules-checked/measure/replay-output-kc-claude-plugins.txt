@@ -1,0 +1,61 @@
+corpus .spacedock-state c770d45fe8e8a48853de2b9e8b33c5be6aac2de6 = c770d45fe8e8: 1712 commits, 83 task files, 148 gate resolutions, 165 briefings
+
+== R1 follow-ups task that claims the Captain's acceptance (title or first paragraph)
+follow-ups tasks seen: 26; flagged: 2
+  FLAG ('delivery-gate-settles-skipped-checks-followups', '4866e197', '2026-10-20T01:45', 'title', 'delivery-gate-settles-skipped-checks follow-ups accepted at the #680 delivery gate')
+  FLAG ('delivery-gate-settles-skipped-checks-followups', '4866e197', '2026-10-20T01:45', 'first paragraph', 'Residuals the engineering-reviewer named (reviews/engineering-reviewer-1.md in the archived task, 2026-10-20),')
+
+== R2 declined items and validator findings, per validation briefing
+  briefings: 57
+  mention Deferred risk, Polish or declin* but carry no Declined/FO declines label: 14
+  with a decline: 23
+  current parse < new parse: 1
+  current check would hold the presented text: 19
+  reason in [ ] only: 5
+  late (bound sha committed after #671 merged, 2026-10-19T08:10:12Z) with a decline: 3
+  late: the shipped check holds the presented text: 3
+  late: bracket-fixed check holds it: 0
+  all: bracket-fixed check holds it: 14
+  F-id bullets: 2
+  class bullets or counts, no F id: 8
+  no countable findings: 13
+  join on any countable form would hold: 1
+  join on F-id form would hold: 1
+   ('amendment-form-check', '2026-10-16', 'none', {}, '3 items', 'ok', '-')
+   ('captain-question-load', '2026-10-19', 'none', {}, '3 items', 'ok', '-')
+   ('chat-only-evidence-observer-blind', '2026-10-20', 'class/count', {'Deferred risk': 1, 'Polish': 3}, '4 items', 'ok', '-')
+   ('copilot-quota-refusal-is-not-a-review', '2026-10-13', 'class/count', {'Deferred risk': 3, 'Polish': 1}, '5 items', 'ok', '-')
+   ('extension-instruction-reaches-dispatch', '2026-10-16', 'class/count', {'Deferred risk': 2, 'Polish': 1}, '3 items', 'ok', '-')
+   ('extension-instruction-reaches-dispatch', '2026-10-17', 'class/count', {'Deferred risk': 2, 'Polish': 1}, '4 items', 'ok', '-')
+   ('fo-lifecycle-mod', '2026-10-14', 'class/count', {'Deferred risk': 2, 'Polish': 2}, '8 items', 'ok', '-')
+   ('fo-record-checks', '2026-10-13', 'class/count', {'Deferred risk': 3, 'Polish': 2}, '5 items', 'ok', '-')
+   ('fo-write-checks', '2026-10-19', 'none', {}, '5 items', 'ok', '-')
+   ('followup-dispatch-records-checked', '2026-10-14', 'class/count', {'Deferred risk': 1, 'Polish': 1}, '5 items', 'ok', '-')
+   ('merge-gatekeeper', '2026-10-18', 'F-id', {'Deferred risk': 2, 'Polish': 1}, '4 items', 'ok', '-')
+   ('names-check-before-dispatch', '2026-10-16', 'none', {}, '3 items', 'ok', '-')
+   ('number-guards-readme-shrink', '2026-10-19', 'none', {}, '2 items', 'ok', '-')
+   ('observer-before-merge-guard', '2026-10-13', 'none', {}, '5 items', 'ok', '-')
+   ('observer-before-merge-guard', '2026-10-13', 'none', {}, '5 items', 'ok', '-')
+   ('prod-security-review-gates', '2026-10-17', 'none', {}, '5 items', 'ok', '-')
+   ('prod-security-validation-gate', '2026-10-17', 'none', {}, '5 items', 'ok', '-')
+   ('special-role-calls-fire-when-needed', '2026-10-20', 'F-id', {'Polish': 4, 'Deferred risk': 1}, '4 items', 'HOLD-any', 'HOLD-F')
+   ('special-role-triggers', '2026-10-18', 'none', {}, '3 items', 'ok', '-')
+   ('ui-design-review-in-ideation', '2026-10-18', 'none', {}, '4 items', 'ok', '-')
+   ('worker-loads-declared-package', '2026-10-17', 'class/count', {'Deferred risk': 1, 'Polish': 1}, '3 items', 'ok', '-')
+   ('workflow-budget-ratchet', '2026-10-17', 'none', {}, '3 items', 'ok', '-')
+   ('workflow-checkout-must-match-trunk-rea', '2026-10-13', 'none', {}, '4 items', 'ok', '-')
+
+== R3 Scope edits after the backlog gate closed (Non-goals lines excepted), by era
+  events after the gate, all dates: 5 in 5 tasks; on or after 2026-09-30 (the amendment rule's day): 2 in 2 tasks, of which an amendment dated on or after the gate exists in 0
+  of the 2: first changed line names the Captain or quotes 「」: 2; other: 0
+   HOLD captain-line ('release-review', 'ecfee0d9', '2026-09-30T18:02:03+08:00', False, 1, 1, 'Five-things rule, handed over 2026-09-30 by the peer session that drafted it (Captain not yet ruled ')
+   HOLD captain-line ('special-role-calls-fire-when-needed', '8b5d694b', '2026-10-20T01:13:58+08:00', False, 1, 0, "- Captain's scope addition, 2026-10-20: 「先加第一個，第二個列入評估」, answering FO's 「1. ER：例如碰到 prod、資料庫、密鑰、合併權限")
+
+== R4 validation approvals: does the approved question carry the merge?
+  approvals: 43
+  by captain: 34
+  question carries the merge: 5
+  question says FO asks him to merge: 23
+  with a pr-merge sentinel: 43
+  sentinel and no carried merge: 38
+  merge/ask-N.json records (class, verdict): {('never', 'ask'): 13}
