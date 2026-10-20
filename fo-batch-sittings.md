@@ -277,6 +277,10 @@ Journey traced inside `pr_watch.py tasks` and `decision_ledger.py`. Completeness
 
 Past rulings read for this area: ADR 0010, 0011, 0020, 0023, 0024, 0026; gate-record `Override:` lines: none in the kc ledger.
 
+## Number guards
+
+ADR: 0028
+
 ## Stage Report: ideation
 
 - DONE: Fresh dispatch: the ideation-1 worker stopped when the session ended and wrote nothing. A design (PRFAQ and Mermaid) for FO batch sittings in kc-dev-flow-2, measured on the batch-2 and batch-3 counts and the four observer dogfood reports in the task folder (batch-3-count.md, dogfood/); include the Captain's list-then-ask-one-at-a-time pattern (targeted two releases out, later folded into Spacedock review continuity), settle the Number guards reservation-timing conflict named in Scope, and read new-work-starts-from-a-story-map (filed 2026-10-20) so a slice's open questions can be the sitting's list and the list exists once
