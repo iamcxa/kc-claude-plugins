@@ -1,0 +1,23 @@
+{
+  "class": "never",
+  "head": "1e9dabe50e4845e993ee90cbef55ff75020facfe",
+  "model": "not run",
+  "necessity": "four files (pr_watch.py, its tests, one ideation sentence, ADR 0028), each named in Cut 1 as amended; no decision_ledger.py change, no Cut 2, no interim rule.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text.",
+  "points": [
+    "point: deferred: 'Limits judged: the sitting line repeats'",
+    "point: deferred: 'Verdict: PASSED for `1e9dabe5`. No Material'",
+    "point: deferred: 'FO declines: Polish, the status-failure line'",
+    "point: amendment: 'Amendment 1 dated 2026-10-20'",
+    "point: amendment: 'Amendment 2 dated 2026-10-20'",
+    "point: amendment: 'Amendment 3 dated 2026-10-20'",
+    "point: path: 'docs/adr/0028-a-sitting-is-one-message-with-one-record-per-task.md'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/skills/ideation/principles.md'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#689",
+  "sufficiency": "`pr_watch.py tasks` prints one line per stage where two or more gates await the Captain, telling FO to present them in one message (validation ran it on a real state copy with five awaiting gates), th",
+  "time": "2026-10-20T15:30:10Z",
+  "verdict": "ask"
+}
