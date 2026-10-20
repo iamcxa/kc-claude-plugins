@@ -3,7 +3,7 @@ title: A chief-engineer or engineering-reviewer call fires when the work needs o
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain answered each decision in chat, one at a time, all as recommended: D1 「同意」, D2 「第四輪」, D3 「Ａ」 (after asking what B breaks and costs), D4 「Ａ」, D5 「同意」; the gate question states that approval accepts D1 to D5 as recommended'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-19T17:05:25Z
 ---
 
