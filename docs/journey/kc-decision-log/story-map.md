@@ -2,7 +2,7 @@
 
 本圖是規劃意圖。8 個活動、28 張故事及六片歸屬以 [journey.yaml](journey.yaml) 為準，原生畫布與 [journey.tldr](journey.tldr) 均由此來源產生。
 
-P1 已選／Pilot；其餘五片仍為候選。S03、S12、S17、S28 保留為未指派的延後故事。候選分組沿用原提案，沒有增加開發授權。
+P1 已選／Pilot，2026-10-20 重切為「帶著精確裁示走完一次交接」；其餘五片仍為候選。S03、S12、S17、S28 保留為未指派的延後故事。候選分組沿用原提案，沒有增加開發授權。
 
 **使用者：** 對跨專案方向負責的總指揮；由 Claude、Codex、dot 協助讀取、交接與回報。
 
@@ -25,15 +25,15 @@ P1 已選／Pilot；其餘五片仍為候選。S03、S12、S17、S28 保留為�
 
 | 切片 | 故事 |
 | --- | --- |
-| P1（已選／Pilot）— 讀對同一份裁示 | S01, S02, S04, S10, S11 |
+| P1（已選／Pilot）— 帶著精確裁示走完一次交接 | S01, S10, S11, S19, S20, S21, S22 |
 | P2（候選）— 查明各方版本差異 | S13, S14, S27 |
 | P3（候選）— 安全對齊並重新讀取 | S15, S16, S18 |
-| P4a（候選）— 完成一次單任務交接閉環 | S19, S20, S21, S22, S23 |
-| P4b（候選）— 處理跨層衝突並重新裁示 | S05, S06, S24, S26 |
+| P4a（候選）— 第三端加入並看出差距 | S02, S23 |
+| P4b（候選）— 處理跨層衝突並重新裁示 | S04, S05, S06, S24, S26 |
 | P5（候選）— 把確認草案送成受控 PR | S07, S08, S09, S25 |
 | 延後／UNASSIGNED | S03, S12, S17, S28 |
 
-六片的範圍、依賴、驗收與移除測試見 [切片說明](slice-map.md)。P1 投入為三個完整工作日；[估工](p1-estimate.md)仍未證明可在此投入內交付。
+六片的範圍、依賴、驗收與移除測試見 [切片說明](slice-map.md)。P1 投入為三個完整工作日；重切後的[估工](p1-estimate.md)未校準，fit 尚未證明。
 
 ## 故事說明
 
@@ -65,7 +65,7 @@ P1 已選／Pilot；其餘五片仍為候選。S03、S12、S17、S28 保留為�
 
 **我讓三個客戶端讀取同一空間**
 
-歸屬：P1。
+歸屬：P4a（2026-10-20 自 P1 移出）。
 
 Claude、Codex、dot須各自透過能實際執行CLI且已有存取權的本機連線task或cloud runtime讀取同一依據，回報可核對的OS/process/runtime context。已有clone可依OS/filesystem與source binding合法離線讀固定commit，不必每次在線呼叫gh或取得Sites身份；需要GitHub操作時分別核對該runtime既有gh身分與Git remote credential，不假設兩者相同。可沿用同一合法owner credential協作，不要求每個agent新建帳號；這不是跨使用者隔離證明。沒有terminal的client需另議選配MCP／既有connector，不能用help、轉述或合成principal當三端pass。
 
@@ -90,7 +90,7 @@ Claude、Codex、dot須各自透過能實際執行CLI且已有存取權的本機
 
 **我分清總指揮裁示與工程決策**
 
-歸屬：P1。
+歸屬：P4b（2026-10-20 自 P1 移出）。
 
 每筆結果識別來源repo、層級、scope與裁決權；來源binding／實際存取權分開核對，各repo各有commit，canonical引用不能只靠project#number。不同owner／權威域在查詢前分隔，不先混成snapshot再filter；讀不到來源保留未知，工程決策不能反向取代上層。local OS／gh帳號或相同引擎不授予裁決權，不承諾跨repo原子view。
 
@@ -265,7 +265,7 @@ checkout持有者在該runtime既有權限內重新核對已配置repo/ref、乾
 
 **我把裁示引用交給接手 agent**
 
-歸屬：P4a。
+歸屬：P1（2026-10-20 自 P4a 移入）。
 
 使用者手動轉交或沿用已驗通路，附傳出者／接手者、原task內容／回合／gate與repo／ADR／commit／digest／core contract版本、freshness及疑義。各接手者須用自己的已授權執行路徑重讀；共用合法owner身分不等於新的裁決權，cloud dot不自動橋接localhost，自動bridge延後。
 
@@ -273,7 +273,7 @@ checkout持有者在該runtime既有權限內重新核對已配置repo/ref、乾
 
 **接手者先核對版本與行動範圍**
 
-歸屬：P4a。
+歸屬：P1（2026-10-20 自 P4a 移入）。
 
 接手者核對自己的runtime／OS/process context及必要gh身分、來源binding與本次行動範圍，再以CLI重讀精確版本；不能繼承另一台機器的gh登入。無路徑／無權／引用不符就回報；ADR、其他agent聲稱或owner帳號不能批准外部動作，也不能代答peer權限提示。
 
@@ -281,7 +281,7 @@ checkout持有者在該runtime既有權限內重新核對已配置repo/ref、乾
 
 **我沿用既有任務及驗收入口**
 
-歸屬：P4a。
+歸屬：P1（2026-10-20 自 P4a 移入）。
 
 以既有 dev2／Spacedock brief、任務與 gate 接手，呈現原 repo／task／執行角色與可核對入口；決策庫僅提供引用，不另造任務狀態或驗收權威。
 
@@ -291,7 +291,7 @@ checkout持有者在該runtime既有權限內重新核對已配置repo/ref、乾
 
 **我看到執行與驗收的原始證據**
 
-歸屬：P4a。
+歸屬：P1（2026-10-20 自 P4a 移入）。
 
 使用者轉交原流程的受保護commit／PR／gate／回執，或用已驗通路讀取；接收者用該runtime既有Git／gh或原入口核對執行者／驗收者／來源版本，證明對應本次任務內容、回合與ADR pin。相同task舊成功／錯回合／舊裁示／無權不能當成本次驗收；CLI不另造台帳。
 
@@ -358,7 +358,7 @@ agent在可核對的執行context及已准source binding內，用原任務證據
 
 ## 問題來源對照
 
-35 個既有技術問答保留 ID 與短問答，全文位於 [P1 技術契約](p1-technical-contract.md)。下表追溯 43 個原始問題；它不是原生 `questions.source` 的 gate／amendment 裁決紀錄。
+35 個既有技術問答保留 ID 與短問答，全文位於 [P1 技術契約](p1-technical-contract.md)；它們為重切前 P1 撰寫，掛在 S02、S04 的問答隨故事移至 P4a、P4b 頁。下表追溯 43 個原始問題；它不是原生 `questions.source` 的 gate／amendment 裁決紀錄。
 
 | 問答 ID | 故事 | 原題 |
 | --- | --- | --- |

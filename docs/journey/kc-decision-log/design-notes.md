@@ -1,12 +1,14 @@
 # kc-decision-log 設計說明
 
-D5 已接受 **CLI 優先、MCP 選配**；本PR為規劃設計；CLI未實作／部署，非ready handoff。完整 28 故事／8 活動及 D1–D4 保留，P1 五故事與 Pilot 不變。使用者先前投入原話「1-3天」；本輪已澄清「三個完整工作日」，appetite 上限 3 days，正式days scalar estimate仍為 `null`、fit `unknown`。具體工作模型見 [CLI 設計](cli-first-design.md)；故事與 AC 唯一來源見 [README](README.md)。
+> **2026-10-20 重切：** P1 改為 S01、S10、S11、S19、S20、S21、S22（見[切片說明](slice-map.md#p1)）。本文件對 P1 三端、雙使用者隔離與多來源層級的描述屬重切前 P1，現分屬 P4a（dot）與 P4b（S04、隔離）。
+
+D5 已接受 **CLI 優先、MCP 選配**；本PR為規劃設計；CLI未實作／部署，非ready handoff。完整 28 故事／8 活動及 D1–D4 保留，P1 已重切為七張故事，Pilot 不變。使用者先前投入原話「1-3天」；本輪已澄清「三個完整工作日」，appetite 上限 3 days，正式days scalar estimate仍為 `null`、fit `unknown`。具體工作模型見 [CLI 設計](cli-first-design.md)；故事與 AC 唯一來源見 [README](README.md)。
 
 ## 從完整故事看最小交付
 
 使用者指定自己的決策空間、釐清裁決權、討論與確認；Claude、Codex、dot 在各自已授權的執行環境讀取同一精確依據，再沿既有流程執行並帶證據回來。共用核心不意味共用一個遠端 process，也不將不同 repo 的裁示合成同一權威。
 
-候選順序仍是 **P1 讀取 → P2 查核 → P3 安全更新 → P4a 單任務閉環 → P4b 跨層重審 → P5 受控 PR**。P1 的路徑是指定來源 → 真正三端執行 CLI → 核對身份／權限與同一原文 → 分清層級 → 回答有效或仍有疑義。最小共用 core／CLI 封裝、多 repo 原生 loader、JSON／人讀輸出與錯誤都服務這五故事；不是已可用的附屬工具，也不預切工程任務。
+候選順序是 **P1 交接薄片 → P2 查核 → P3 安全更新 → P4a 第三端與差距 → P4b 跨層重審 → P5 受控 PR**。P1 的路徑是指定來源 → 真正三端執行 CLI → 核對身份／權限與同一原文 → 分清層級 → 回答有效或仍有疑義。最小共用 core／CLI 封裝、多 repo 原生 loader、JSON／人讀輸出與錯誤都服務這五故事；不是已可用的附屬工具，也不預切工程任務。
 
 S17 遠端 host 維護保留全圖、移出候選 P3 至 deferred，因 CLI loaded view 與 checkout 安全更新不要求遠端 host。沒有新增 slice。P3、P4a、P5 的 P2 都是建議順序，非整片硬依賴；P1 必要讀取能力保留。P3 的當次 Git 安全條件與更新後重讀、P4a 的精確 pin／freshness／適用性及接手者權限、P5 的已准來源／base／diff／前次不確定結果及提交前重查都不可跳過。可由既有 Git 等能力提供，不要求 P2 全部診斷產品先交付；替代路徑仍未端到端實測，查不明就 unknown／停止。P3 也是 P4a 建議順序，P5 可以整片延後。
 
@@ -48,10 +50,10 @@ P3 更新後分別回報實際 checkout commit 與 loaded view；重讀受影響
 
 全部符號虛構。使用者在 `example/mira-decisions` 的 `GUIDE#0012@D0` 確認「展示站先限團隊登入」；`example/harbor-app` 的 `ENG#0012@C0` 固定引用它並選擇工程方案。實質改方向另立 `GUIDE#0013@D1`，原話及歷史保留。兩筆同號也不共用裁決權。
 
-- **P1**：三端各自合法執行 CLI，對照同一 D0／path／層級／digest／原狀態與 effective；真實權限分隔的另一使用者不能讀取。這是待驗收案例，不是本輪實測。
+- **P1**：Claude 用 CLI 讀出 `GUIDE#0012@D0` 的 path／digest／原狀態並交給 Codex；Codex 在自己的環境重讀一致後，經 dev2 完成一個合成任務，使用者取回對應 D0 的證據。這是待驗收案例，不是本輪實測。
 - **P2**：一個 runtime 的 view 還在 D0、決策 checkout 已見 D1，工具安裝包又是另一版本；分別回報，不稱全部最新。
 - **P3**：乾淨落後 checkout 依 D2 前進；dirty 保留，各 runtime 重讀自己的 view。無遠端 host 仍可完成本路徑。
-- **P4a**：使用者轉交或走已有驗證通路；接手者在自己的已准環境讀精確引用，由原 dev2／Spacedock 完成一個任務並留下 gate 證據。自動 bridge 延後。
+- **P4a**：dot 也以自己的已准路徑讀同一 D0 並參與交接；接手者用原任務證據整理裁示與結果的差距。自動 bridge 延後。
 - **P4b**：工程證據改變裁示前提，回適用層級原決策者重審；新的裁示不被工程較新 commit 反向覆蓋。
 - **P5**：確認具體 diff／base 後由既有 Git／gh 送待審查 PR；前次結果未知或 base 移動先查清。PR、merge、Accepted 與選配 view 載入分開核對。
 
@@ -79,21 +81,7 @@ D4是使用者已確認的產品政策，lint本身不判斷語意變更、誰�
 
 ## P1技術契約與投入提案
 
-四包是既有五故事的工程收斂，**尚未實作／驗證、未接受API**，不是新增release或任務。31個技術問題已有逐項提案，Gap仍在；見[P1技術契約](p1-technical-contract.md)與[估工及假設](p1-estimate.md)。
-
-| 契約包 | 對應P1故事 | 草案內容 | active工程小時 |
-| --- | --- | --- | --- |
-| [A 來源、權威與context](p1-technical-contract.md) | S01, S02, S04, S10 | 可信binding／authority／canonical引用與context來源；不賦予存取或裁決權。 | 4–6 |
-| [B 固定blob、唯讀loader與native parser](p1-technical-contract.md) | S01, S02, S10, S11 | 固定Git原blob／嚴格UTF8；native格式與Status沿dev2，原生lint結果與非權威衍生查詢分開，不將一筆診斷改成全庫失效。 | 8–12 |
-| [C CLI輸出、資源界線與可重現交付](p1-technical-contract.md) | S01, S02, S04, S10, S11 | Node24固定checkout入口、JSON／人讀、exit／paging／limits與code closure。 | 6–9 |
-| [D 獨立oracle與三端驗證回執](p1-technical-contract.md) | S02, S10 | committed合成blob獨立expected、三端發起鏈及整個query／Git helpers的OS負向harness。 | 8–12 |
-| 跨包整合／Pilot驗收重跑及一次修正 | 五故事整體 | 不重複計入各包局部驗證／D首次驗證 | 6–9 |
-
-投入已明確為**三個完整工作日**；先前原話「1-3天」保留，上限仍3 days，不再是工作日／日曆日待選。完整P1粗估**32–48 active工程小時**，條件風險範圍**40–64h**，未經同類交付校準。8h/day僅我方規劃換算（4–6／風險5–8工程工作天）；若據此換算三工作日為24h，估量不支持該假設下完整P1可交，但24h不是人類原話／承諾。正式estimate `null`、fit `unknown`，沒有三日可交證明或增加上限。
-
-Claude本人正常工作階段的唯讀Git原回執仍pending（非denied）；dot→已授權delegated local task已有命令鏈基礎，後續需各named client的真CLI回執，不要求dot前端直接shell。macOS兩已知檔4個read-deny cases只證局部機制，不是完整query／Git helpers／objectstore／aliases隔離或AC1通過。上述產品驗證由P1完成，不要求使用者先備妥成品。
-
-原生ADR格式／Status／配號／驗收與feedback沿dev2；原生lint整體check fail不改其他Accepted。已撤回整binding一律unresolved策略，衍生effective只作非權威查詢；見[dev2原生對齊](p1-technical-contract.md#native-dev2-alignment)。
+[P1技術契約](p1-technical-contract.md) 與其四包工時表為重切前 P1 撰寫，不再是投入依據；重切後的估工見 [P1 估工](p1-estimate.md)。
 
 ## 已確認選擇 D1–D5
 

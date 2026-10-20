@@ -2,7 +2,7 @@
 
 本目錄使用 `kc-journey-map` 原生 YAML、Markdown 說明及 tldraw `.tldr` 快照。可繪製來源是 [journey.yaml](journey.yaml)；故事總覽與六個切片頁由同一次原生 render 產生，快照為 [journey.tldr](journey.tldr)。
 
-P1「讀對同一份裁示」已選，採 dev2 Pilot，故事為 S01、S02、S04、S10、S11。P2、P3、P4a、P4b、P5 的既有提案歸屬以「候選」標明，供完整地圖討論；S03、S12、S17、S28 延後且不指派 release。畫入候選切片不等於啟動開發。
+P1「帶著精確裁示走完一次交接」已選，採 dev2 Pilot，故事為 S01、S10、S11、S19、S20、S21、S22；2026-10-20 自原「讀對同一份裁示」重切。P2、P3、P4a、P4b、P5 的既有提案歸屬以「候選」標明，供完整地圖討論；S03、S12、S17、S28 延後且不指派 release。畫入候選切片不等於啟動開發。
 
 ## 來源與畫布
 
@@ -10,7 +10,7 @@ P1「讀對同一份裁示」已選，採 dev2 Pilot，故事為 S01、S02、S04
 | --- | --- | --- |
 | 8 個活動、28 張故事、原卡片文字 | `steps[].activity`、`steps[].stories[].card` | Story map |
 | 六片名稱、成果與故事歸屬 | `releases[]`、`stories[].release` | Story map 的六條 release band；六個 journey-board 頁 |
-| 35 個既有技術問答 | `stories[].questions[]` 的 id／ask／answer／doc | P1 切片頁；全文連到技術契約章節 |
+| 35 個既有技術問答 | `stories[].questions[]` 的 id／ask／answer／doc | 掛在所屬故事的切片頁；全文連到技術契約章節（為重切前 P1 撰寫） |
 | 28 個故事範圍連結、6 個切片說明連結 | 同一原生 questions／answer／doc 欄位 | 已指派故事的切片頁；四個延後故事的說明保留在來源及 Markdown |
 | 9 項規則、責任範圍與驗證限制 | `rules[]`、`ownership[]`、`status` | 責任帶、各切片規則卡與狀態卡 |
 
@@ -23,7 +23,7 @@ P1「讀對同一份裁示」已選，採 dev2 Pilot，故事為 S01、S02、S04
 - [設計理由與 D1–D5](design-notes.md)：決策權限、版本、受控提交與已確認選擇。
 - [CLI 優先設計](cli-first-design.md)：跨端工作模型及權限邊界。
 - [P1 技術契約](p1-technical-contract.md)：35 個技術問答的完整提案與待驗項目。
-- [P1 估工](p1-estimate.md)：三個完整工作日的投入上限與估算限制。
+- [P1 估工](p1-estimate.md)：重切後 P1 的粗估、依據與假設。
 
 卡片、順序、規則短句及 membership 編輯 YAML；長篇故事說明、切片驗收與技術章節編輯對應 Markdown。原生 `doc` 使用 GitHub blob 章節網址；同 repo branch 的文件與地圖一起送審。畫布手改須先用原生 readback 檢查，再處理來源；不以另一份自訂 YAML 重複管理 membership。
 
@@ -43,6 +43,6 @@ node kc-journey-map/lib/journey-tldr.mjs export kc-decision-log-design docs/jour
 
 ## 驗證界線
 
-這是 map-mode 規劃意圖，故事不填沒有證據的 status／evidence。原生 evidence lint 的 28 筆 `no-status` 不能解讀成格式全綠；render、原生 schema 接收、readback、快照內容及實際畫面分開核對。P1 的故事數 5，其餘切片 3、3、5、4、4。
+這是 map-mode 規劃意圖，故事不填沒有證據的 status／evidence。原生 evidence lint 的 28 筆 `no-status` 不能解讀成格式全綠；render、原生 schema 接收、readback、快照內容及實際畫面分開核對。P1 的故事數 7（`slice_because` 記錄理由），其餘切片 3、3、2、5、4。
 
-新 CLI 尚未實作／部署，三端產品驗收、完整隔離、正式 fit 與 ready handoff 均未成立。投入已確認為三個完整工作日；粗估 32–48 active 工程小時、風險 40–64 小時，未經校準，不能據此宣稱三日可交。ADR 格式、Status、配號及審查沿用 dev2 原機制；任務與驗收沿用 dev2／Spacedock。
+新 CLI 尚未實作／部署，Claude→Codex 交接驗收、正式 fit 與 ready handoff 均未成立。投入已確認為三個完整工作日；重切後粗估 12–24 active 工程小時，未經校準。ADR 格式、Status、配號及審查沿用 dev2 原機制；任務與驗收沿用 dev2／Spacedock。

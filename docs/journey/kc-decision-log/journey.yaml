@@ -109,7 +109,11 @@ steps:
             ask: 這張故事的範圍與限制是什麼？
             answer: 規劃說明見文件；故事仍待實作與驗收。
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s02
-        release: P1
+          - id: slice-P4a
+            ask: P4a 的範圍、依賴與驗收如何界定？
+            answer: 本片範圍、排除項、依賴及驗收見文件。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p4a
+        release: P4a
       - id: S03
         card: 我能改設定而不誤讀別人的庫
         questions:
@@ -151,7 +155,7 @@ steps:
             ask: 這張故事的範圍與限制是什麼？
             answer: 規劃說明見文件；故事仍待實作與驗收。
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s04
-        release: P1
+        release: P4b
       - id: S05
         card: 我讓工程方案引用上層版本
         release: P4b
@@ -395,19 +399,15 @@ steps:
     stories:
       - id: S19
         card: 我把裁示引用交給接手 agent
-        release: P4a
+        release: P1
         questions:
           - id: scope-S19
             ask: 這張故事的範圍與限制是什麼？
             answer: 規劃說明見文件；故事仍待實作與驗收。
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s19
-          - id: slice-P4a
-            ask: P4a 的範圍、依賴與驗收如何界定？
-            answer: 本片範圍、排除項、依賴及驗收見文件。
-            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p4a
       - id: S20
         card: 接手者先核對版本與行動範圍
-        release: P4a
+        release: P1
         questions:
           - id: scope-S20
             ask: 這張故事的範圍與限制是什麼？
@@ -415,7 +415,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s20
       - id: S21
         card: 我沿用既有任務及驗收入口
-        release: P4a
+        release: P1
         questions:
           - id: scope-S21
             ask: 這張故事的範圍與限制是什麼？
@@ -430,7 +430,7 @@ steps:
     stories:
       - id: S22
         card: 我看到執行與驗收的原始證據
-        release: P4a
+        release: P1
         questions:
           - id: scope-S22
             ask: 這張故事的範圍與限制是什麼？
@@ -500,8 +500,9 @@ ownership:
     note: 負責 A8 重審；新證據回到 A3 討論與確認，不能由工具自動批准。
 releases:
   - id: P1
-    name: P1（已選／Pilot）— 讀對同一份裁示
-    goal: 使用者指定獨立決策repo／ref／commit後，Claude、Codex、dot在各自已授權且可執行CLI的環境，以可核對的身份／來源context讀到同一精確裁示與正確層級，或照實保留疑義。
+    name: P1（已選／Pilot）— 帶著精確裁示走完一次交接
+    goal: 使用者指定一個獨立決策repo與完整commit後，Claude以CLI讀出一筆裁示的精確引用與原狀態並交給Codex；Codex在自己的已授權環境以同一CLI重讀核對，經既有dev2／Spacedock完成一個合成任務，使用者取回對應該引用的原始執行與驗收證據。
+    slice_because: S21、S22沿用既有dev2／Spacedock與Git／gh；新工作在S01、S10、S11、S19、S20。拆開任一段，交接迴圈就不能端到端走完。
   - id: P2
     name: P2（候選）— 查明各方版本差異
     goal: 接手者分清各runtime的CLI code／ADR checkout與loaded view，知道已配置checkout相對ref的五態、時間及dirty阻礙；選配遠端host只在實際採用時另列。
@@ -509,8 +510,8 @@ releases:
     name: P3（候選）— 安全對齊並重新讀取
     goal: 各runtime持有者依既有Git權限安全更新已配置checkout或保留原狀並說明，再用CLI重讀實際ADR commit與loaded view；不以本片維護遠端host。
   - id: P4a
-    name: P4a（候選）— 完成一次單任務交接閉環
-    goal: 使用者讓一個 agent 把精確版本裁示交給另一個 agent，後者透過既有 dev2／Spacedock 完成一個合成任務及驗收，再帶原始證據與差距回來。
+    name: P4a（候選）— 第三端加入並看出差距
+    goal: dot經已授權且可執行CLI的路徑讀取同一裁示並參與交接；接手者以原任務證據整理裁示與結果之間的預期、實際、未知與影響。
   - id: P4b
     name: P4b（候選）— 處理跨層衝突並重新裁示
     goal: 工程方案引用的上層版本改變或出現衝突時，工程 agent 能呈現影響、交回適用決策者，並把確認後的新版本重新交接。
@@ -519,7 +520,7 @@ releases:
     goal: 在已配置來源內，使用者確認精確內容、範圍與 base 後，獲准提交者建立一個可審查 PR，回讀 PR 身分與提交內容，證明沒有重複或越權。此片的完成不等待 merge、ADR Accepted 或 host 載入。
 status:
   as_of: 2026-10-20
-  unproven: 規劃意圖；CLI、三端驗收、隔離與 fit 未驗。P1 已選，其餘候選。
+  unproven: 規劃意圖；CLI、交接驗收與 fit 未驗。P1 已重切並選定，其餘候選。
   unmerged: "本次 CLI-first 地圖更新於 PR #681 送審；未代表主分支已有產品實作。"
   undeployed: 新 CLI 未部署；舊 Sites／MCP 的觀測不作本版本驗收。
   irreversible: 本圖不授予外部動作；Git、PR、合併與部署各依原流程及適用授權。

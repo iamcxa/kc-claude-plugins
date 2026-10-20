@@ -1,5 +1,7 @@
 # P1 四包技術契約提案
 
+> **2026-10-20 重切：** 本契約為重切前 P1（S01、S02、S04、S10、S11）撰寫。新 P1 見[切片說明](slice-map.md#p1)，只取單一 binding 讀取、原文 digest、原 Status 與保守 effective 相關部分，由 dev2 ideation 依新驗收條件選用；三端、隔離與多來源議題屬 P4a／P4b。
+
 **這是P1工程契約草案，尚未實作、驗證，亦不是已接受API或ready handoff。** 僅收斂既有S01／S02／S04／S10／S11、三端／Pilot／D1–D5，不新增故事、規則或切片。候選介面與常數供書面審閱；原卡片／AC仍以[journey.yaml](journey.yaml)與[切片說明](slice-map.md)為準。工程量見[P1估工](p1-estimate.md)。投入已澄清為三個完整工作日；先前1-3天與3 days上限保留，32–48h／風險40–64h仍為未校準提案，未證fit。
 
 ## 共同入口與結果
