@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:fo-write-rules-checked:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:fo-write-rules-checked-backlog-1
+              briefing:
+                id: briefing:fo-write-rules-checked:backlog:attempt-1:revision-1
+                digest: sha256:4279d2f5be06967ca9000823beac267a910ff56e06f6429b249cef9c387dd3e8
+                room-ref: ./fo-write-rules-checked/review/backlog/briefing-1
 ---
 
 ## Scope
