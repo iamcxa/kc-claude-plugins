@@ -120,3 +120,85 @@ The falsifier holds under my independent scores (union 43%, best arm 43%, 0 ungr
 ### Summary
 
 The ten Codex runs, the 29-item keys and the blinded set are saved in the task folder; nothing is scored here. Limits: `sealed/coin.json` is committed beside the blinded lists (the reader is told not to open it; the file is not hidden from FO or a reader who ignores the instruction); the temp directory with the five snapshots was removed, so the reader rebuilds a snapshot from the bases in `READER.md` to check grounding; `raw/<task>/*-events.jsonl` (about 4.5 MB in all) is kept so the isolation audit can be rerun. No repository file, branch, commit or PR; roborev not run (no repository diff); `number_guards.py check` run from the code worktree (HEAD = base ad44f0cb): exit 0, PASS, migration guard skipped (run from the state checkout it exits 2, a merge-base error on the orphan state branch); `comment_ratio.py` and `adr_lint.py` have nothing to read (no diff). `READER.md` also forbids `extension.md` (its per-arm question counts match list lengths).
+
+## Stage Report: validation (cycle 2, extension 「擴大」, blind second reader)
+
+- DONE: Blind reader first: read only the task folder's blind/ (READER.md, the X and Y lists per task, answer-keys.md) and the code snapshots READER.md names; score every list item against its task's key (hit, partial, miss; quote the question and the key item), and record ungrounded questions; commit the scores as blind/scores.md before opening sealed/coin.json, report.md, extension.md, raw/ or the task file's stage reports
+  `blind/scores.md` committed at 6c55365c before I opened coin.json, report.md, extension.md, raw/ or any later stage report (I read only the entity's seed and gate front matter, lines 1-62). Every hit and partial is quoted there with its key item. Snapshots rebuilt from the three bases; ungrounded: 0 of 91 in X and 0 of 91 in Y (paths, symbols and quotes grepped, leftovers read; story-only quotes recur in both lists of a task; not a re-derivation of all 182 descriptions).
+- DONE: Only then unblind with sealed/coin.json and give per-arm totals (arm 3 plain, arm 4 engineering-reviewer lens) over the five tasks, tier 1 askable items separately from tier 2, and with the first run's captain-question-load scores (both readers) alongside; say whether the falsifier holds over all six tasks and whether arm 4 beats arm 3 beyond the run-to-run spread
+  Totals below (script step 3). Falsifier does not fire over six tasks; arm 4 beating arm 3 is not shown beyond the spread (Summary).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output) that shows the committed scores and the unblinded totals, run by you exactly as written in a fresh bash shell, with its observed output; your verdict and a one-paragraph recommendation for the interrogator mix the story-map design should use, with findings classified by the workflow's Review-finding disposition
+  Script and observed output follow; verdict PASSED (recommended); `adr_lint.py docs/adr --since ad44f0cb`: exit 0 (26 files); no repository diff (worktree HEAD ad44f0cb = base); no `boundary-crossed:`.
+
+### Totals (strict = hit; lenient adds partials; X/Y mapped to arms only after scores.md was committed)
+
+| Five new tasks | Arm 3 plain | Arm 4 lens |
+|---|---|---|
+| Tier 1 askable, 13 items: strict / lenient | 5 / 12 | 6 / 11 |
+| Tier 1 not askable (4, all special-role) | 0 | 0 |
+| Tier 2 askable, 7 items: strict / lenient | 1 / 4 | 1 / 5 |
+| Tier 2 not askable (5) | 0 | 0 |
+| Questions / ungrounded | 93 / 0 | 89 / 0 |
+| Grounded non-hit questions per strict hit (all tiers) | 87 / 6 = 14.5 | 82 / 7 = 11.7 |
+| Per task, tier 1 strict (ng, fo, co, dg, sr) | 0, 0, 2, 2, 1 | 0, 1, 3, 1, 1 |
+
+First run, captain-question-load (7 key items, not tagged askable or not): implementer 2 (arm 3) and 4 (arm 4); first validator 2 and 3. All six tasks, tier 1 strict: arm 3 = 7 (implementer or validator), arm 4 = 10 (implementer) or 9 (validator), of 24 items. Cost over the five new tasks (extension.md, tokens only): arm 4 3.65M input tokens against 3.20M (+14%), 1,149 s against 957 s of run time (+20%), USD not measured.
+
+### Acceptance script (four steps, under a minute, read-only)
+
+    S=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-poc-route/docs/dev2-poc/.spacedock-state
+    T=interrogation-replay-on-batch-3-poc
+    echo "== 1. the blind scores were committed before the coin file was read"
+    git -C "$S" log --format='%h %s' -- "$T/blind/scores.md"
+    echo "== 2. the committed per-list totals (X and Y, arm labels unknown at that point)"
+    sed -n '/^## Totals per list/,/^## Ungrounded check/p' "$S/$T/blind/scores.md" | grep -E '^\| (Questions|Tier 1 askable \(13|Tier 2 askable \(7|Ungrounded)'
+    echo "== 3. unblind: join the per-list numbers in scores.csv with sealed/coin.json"
+    python3 -I - "$S/$T" <<'PY'
+    import csv, json, sys, collections
+    d = sys.argv[1]
+    coin = json.load(open(d + "/sealed/coin.json"))["map"]
+    arm = {"a3": "arm 3 plain", "a4": "arm 4 lens"}
+    tot = collections.defaultdict(lambda: collections.Counter())
+    for r in csv.DictReader(open(d + "/blind/scores.csv")):
+        a = arm[coin[r["task"]][r["list"]]]
+        print(f'{r["task"]:38} {r["list"]} = {a}: T1 hit {r["t1_hit"]} partial {r["t1_partial"]}, T2 hit {r["t2_hit"]} partial {r["t2_partial"]}, Qs {r["questions"]}')
+        for k in ("questions", "t1_hit", "t1_partial", "t2_hit", "t2_partial", "ungrounded"):
+            tot[a][k] += int(r[k])
+    print()
+    for a in sorted(tot):
+        t = tot[a]
+        print(f'{a}: tier 1 askable strict {t["t1_hit"]}/13, lenient {t["t1_hit"]+t["t1_partial"]}/13; tier 2 askable strict {t["t2_hit"]}/7, lenient {t["t2_hit"]+t["t2_partial"]}/7; questions {t["questions"]}; ungrounded {t["ungrounded"]}')
+    PY
+    echo "== 4. the first run (captain-question-load), implementer's table and the first validator's re-score"
+    grep -E '^\| Strict hits' "$S/$T/report.md"
+    grep -oE 'Mine, strict \(of 7\): arm 1 = 2 \(K1 Q1, K7 Q18\), arm 2 = 1 \(K1 Q4\), arm 3 = 2 \(K1 Q1, K6 Q15\), arm 4 = 3 \(K1 Q1, K6 Q13, K7 Q15\)' "$S/$T.md"
+
+Observed (saved as a file, run under `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc`; the heredoc body is indented four spaces here, strip them when pasting):
+
+    == 1. ...
+    6c55365c state: update interrogation-replay-on-batch-3-poc
+    == 2. ...
+    | Questions | 91 | 91 |
+    | Tier 1 askable (13 items): strict hits | 5 | 6 |
+    | Tier 2 askable (7 items): strict hits | 1 | 1 |
+    | Ungrounded questions | 0 | 0 |
+    == 3. ... (ten per-list lines, then)
+    arm 3 plain: tier 1 askable strict 5/13, lenient 12/13; tier 2 askable strict 1/7, lenient 4/7; questions 93; ungrounded 0
+    arm 4 lens: tier 1 askable strict 6/13, lenient 11/13; tier 2 askable strict 1/7, lenient 5/7; questions 89; ungrounded 0
+    == 4. ...
+    | Strict hits (of 7) | 1 (14%) | 1 (14%) | 2 (29%) | 4 (57%) |
+    Mine, strict (of 7): arm 1 = 2 (K1 Q1, K7 Q18), arm 2 = 1 (K1 Q4), arm 3 = 2 (K1 Q1, K6 Q15), arm 4 = 3 (K1 Q1, K6 Q13, K7 Q15)
+
+The ten per-list lines map X/Y to arms as in `sealed/coin.json` (X is arm 4 for number-guards, chat-only and delivery-gate; arm 3 for fo-write-checks and special-role). A pass shows the committed scores and totals are as reported; it does not show my scoring is right (three borderline calls are listed at the end of `blind/scores.md`).
+
+### Findings (Review-finding disposition)
+
+- F1 Deferred risk: arm 4 over arm 3 is not shown beyond the spread. New tasks: 6 against 5 strict, arm 4 ahead on 2 tasks, behind on 1, tied on 2; the three borderline calls move it by one each way (range -1 to +2). First task: 4 against 2 (implementer) or 3 against 2 (validator). One run per arm per task, so run-to-run spread is unmeasured. Becomes Material if the design hard-codes the lens as the only interrogator on this gap.
+- F2 Deferred risk: 4 of the 7 union hits answer a choice the seed already spells (chat-only D1 and D3, delivery-gate D1, special-role's judgment-owed list, per the implementer's report; I did not re-read the seeds). Non-seeded hits are three (fo-write-checks FW1, chat-only CO2 by arm 4; delivery-gate DG2 by arm 3). Becomes Material if the design is sold as finding gaps the author has not already named.
+- F3 Deferred risk: no arm hit strictly 6 of 13 askable tier 1 items (number-guards NG1 and NG2, fo-write-checks FW2, chat-only CO4 the P1 (partial only), special-role SR1 and SR2), and 0 of 9 not-askable items (tiers 1 and 2). Tier 2 askable is 1 of 7 for each arm. Interrogation finds decision-shaped gaps, not review-found precision gaps; it does not replace validation or review.
+- F4 Polish: `READER.md` says `scores-<id>.md`, the checklist says `blind/scores.md`; I used the checklist name. `sealed/coin.json` sits committed beside the lists, as the implementer noted. `blind/scores.csv` is a transcription of the per-list numbers in `scores.md` made so step 3 can join with the coin.
+- Unverified: whether a second blind reader would agree on the 12 lenient partials; whether Opus's advisor sidecar or Codex's loaded user config shaped the first-run lists (first run only).
+
+### Summary
+
+The falsifier does not fire over six tasks: on the five new tasks the arms asked 7 of 13 askable tier 1 items between them (54%; best arm 6, 46%), on the first task 3 or 4 of 7, so no arm is near 25% and ungrounded questions are 0 per hit. Arm 4 leads arm 3 by one hit on the new tasks (two to three over six tasks) at +14% tokens, which sits inside rater disagreement, so I would not call the lens proven. Recommendation for the story-map design: make a pinned Codex run (gpt-6.1-sol, high effort) the interrogator, with the engineering-reviewer lens as the default because it was never more than one hit behind, led on 3 of 6 tasks, and cost 14% more; expect about 18 questions per story of which 1 in 13 to 16 is a key item, so the design needs a rank-and-cap triage step; add a plain Codex run only for a task whose Captain decision is hard to reverse, because the two arms hit different items on three of five tasks (union 7 against best 6); use a Claude sonnet run only as a cheap second view (it matched Opus at 1 of 7 on the first task for 0.29 against 1.92 USD imputed); and keep validation and review, since interrogation reached none of the 9 post-seed items and the one P1 only in part. To settle lens against plain, repeat each arm once on fo-write-checks and delivery-gate (where they split) and score blind with the same key.

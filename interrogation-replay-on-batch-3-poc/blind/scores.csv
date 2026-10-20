@@ -1,0 +1,11 @@
+task,list,questions,t1_hit,t1_partial,t2_hit,t2_partial,ungrounded
+number-guards-readme-shrink,X,11,0,1,0,0,0
+number-guards-readme-shrink,Y,9,0,2,0,0,0
+fo-write-checks,X,20,0,1,0,2,0
+fo-write-checks,Y,20,1,0,0,3,0
+chat-only-evidence-observer-blind,X,19,3,1,0,1,0
+chat-only-evidence-observer-blind,Y,21,2,2,0,1,0
+delivery-gate-settles-skipped-checks,X,18,1,1,0,0,0
+delivery-gate-settles-skipped-checks,Y,20,2,0,0,0,0
+special-role-calls-fire-when-needed,X,23,1,2,1,0,0
+special-role-calls-fire-when-needed,Y,21,1,2,1,0,0
