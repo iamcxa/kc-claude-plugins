@@ -3,7 +3,7 @@ title: The four FO-write rules observers keep finding broken are checked when FO
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain approved the five batch-4 backlog gates presented together in chat (「按你建議」), answering FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
