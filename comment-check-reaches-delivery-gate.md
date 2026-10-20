@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:comment-check-reaches-delivery-gate:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:comment-check-reaches-delivery-gate-ideation-1
+              briefing:
+                id: briefing:comment-check-reaches-delivery-gate:ideation:attempt-1:revision-1
+                digest: sha256:3d68baba47fc5a5dfa727d8ca725dae81b99971e7db9b6e6ab3f765a5ec495f1
+                room-ref: ./comment-check-reaches-delivery-gate/review/ideation/briefing-1
 started: 2026-10-20T04:58:11Z
 ---
 

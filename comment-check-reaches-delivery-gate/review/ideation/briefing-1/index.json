@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:comment-check-reaches-delivery-gate:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of comment-check-reaches-delivery-gate to enter implementation, with decisions D1-D3 as the Captain rules each one in the batch-4 sitting (listed first, asked one at a time)? An approval accepts a decision's recommendation only where his ruling says so; a decision he changes is recorded in the reason, and a scope change goes in as an amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:comment-check-reaches-delivery-gate:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d710989d904e0a4cdd8438823890f12f7e5eb26e/comment-check-reaches-delivery-gate.md",
+      "rev": "sha256:7855a5433cd17b5ab06214da8389fba25c5ffca4df2bcb7c0863ff31a541b06a",
+      "mediaType": "text/markdown",
+      "summary": "Ideation design: the comment check is measured at the delivered head and its validation line is bound to that head, or the prose rule stays with the 77-head measurement as the reason."
+    }
+  ]
+}
