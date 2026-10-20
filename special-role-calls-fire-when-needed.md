@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:special-role-calls-fire-when-needed:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:special-role-calls-fire-when-needed-validation-1
+              briefing:
+                id: briefing:special-role-calls-fire-when-needed:validation:attempt-1:revision-1
+                digest: sha256:c431c16f923997f061003905fa54a0358a048090bbfc114252ae772167778ed3
+                room-ref: ./special-role-calls-fire-when-needed/review/validation/briefing-1
 started: 2026-10-19T17:05:25Z
 worktree: .worktrees/spacedock-ensign-special-role-calls-fire-when-needed
 pr: iamcxa/kc-claude-plugins#682
