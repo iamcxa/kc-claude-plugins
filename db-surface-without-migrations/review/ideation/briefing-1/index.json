@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:db-surface-without-migrations:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of db-surface-without-migrations to enter implementation, with decisions D1-D2 as the Captain rules each one in the batch-4 sitting (listed first, asked one at a time)? An approval accepts a decision's recommendation only where his ruling says so; a decision he changes is recorded in the reason, and a scope change goes in as an amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:db-surface-without-migrations:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5b21cf294968bd36e31248c243d876e86320b3cb/db-surface-without-migrations.md",
+      "rev": "sha256:248af4017b2ee91274a119bda326df7ee718d775a2c02a03a94549e9cc52bacd",
+      "mediaType": "text/markdown",
+      "summary": "Ideation design: an adopter with a database and no migrations declares migrations-path: none, and an added migration file fails under it."
+    }
+  ]
+}

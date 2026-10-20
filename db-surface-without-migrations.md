@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:db-surface-without-migrations:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:db-surface-without-migrations-ideation-1
+              briefing:
+                id: briefing:db-surface-without-migrations:ideation:attempt-1:revision-1
+                digest: sha256:76dbc7aa5eae422dff2a4b1076a712c81897f45ddbb48701be2336433ec35c88
+                room-ref: ./db-surface-without-migrations/review/ideation/briefing-1
 started: 2026-10-20T04:57:48Z
 ---
 
