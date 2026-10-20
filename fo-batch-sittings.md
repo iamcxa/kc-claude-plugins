@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:fo-batch-sittings:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:fo-batch-sittings-ideation-1
+              briefing:
+                id: briefing:fo-batch-sittings:ideation:attempt-1:revision-1
+                digest: sha256:9bacc4c2c4137049e411f4e93a10c665c34bb96d24341230ed37db3538e29164
+                room-ref: ./fo-batch-sittings/review/ideation/briefing-1
 started: 2026-10-20T04:57:55Z
 ---
 
