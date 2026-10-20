@@ -15,6 +15,17 @@ gates:
                 id: briefing:fo-write-rules-checked:backlog:attempt-1:revision-1
                 digest: sha256:4279d2f5be06967ca9000823beac267a910ff56e06f6429b249cef9c387dd3e8
                 room-ref: ./fo-write-rules-checked/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-write-rules-checked:backlog:1
+                briefing: briefing:fo-write-rules-checked:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T04:56:55.823864Z"
+                decision: approve
+                reason: Captain approved the five batch-4 backlog gates presented together in chat (「按你建議」), answering FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
