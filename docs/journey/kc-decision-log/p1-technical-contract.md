@@ -1,6 +1,6 @@
 # P1 四包技術契約提案
 
-**這是P1工程契約草案，尚未實作、驗證，亦不是已接受API或ready handoff。** 僅收斂既有S01／S02／S04／S10／S11、三端／Pilot／D1–D5，不新增故事、規則或切片。候選介面與常數供書面審閱；原卡片／AC仍以[journey.yaml](journey.yaml)與[slices-proposal.yaml](slices-proposal.yaml)為準。工程量見[P1估工](p1-estimate.md)。投入已澄清為三個完整工作日；先前1-3天與3 days上限保留，32–48h／風險40–64h仍為未校準提案，未證fit。
+**這是P1工程契約草案，尚未實作、驗證，亦不是已接受API或ready handoff。** 僅收斂既有S01／S02／S04／S10／S11、三端／Pilot／D1–D5，不新增故事、規則或切片。候選介面與常數供書面審閱；原卡片／AC仍以[journey.yaml](journey.yaml)與[切片說明](slice-map.md)為準。工程量見[P1估工](p1-estimate.md)。投入已澄清為三個完整工作日；先前1-3天與3 days上限保留，32–48h／風險40–64h仍為未校準提案，未證fit。
 
 ## 共同入口與結果
 
@@ -123,13 +123,13 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 ## 31技術主題與35題全文
 
-以下保留35題的完整規劃提問／答覆；其中31技術主題仍分四包9／8／12／2，其餘4題為Fact核對，不新增story或slice。原題對照的唯一編輯來源為[slices-proposal.yaml](slices-proposal.yaml)的interrogation.mapping_by_question；native questions僅放短ask／answer／doc，不使用保留的source。
+以下保留35題的完整規劃提問／答覆；其中31技術主題仍分四包9／8／12／2，其餘4題為Fact核對，不新增story或slice。原題對照的唯一編輯來源為[故事問題來源對照](story-map.md#question-origins)；native questions僅放短ask／answer／doc，不使用保留的source。
 
 以上是工程提案與待驗假設，不等於新增的人類產品接受。P1／Pilot／appetite／D1-D5的既有明確接受在scope／premises仍相符時沿用；真正value／scope／acceptance改變才需新決定。正式estimate／fit及歷史guard分開保存；本草案沒有產生accepted digest或新的handoff結果。
 
-<a id="cli-p1-u01"></a>
+### cli-p1-u01
 
-### cli-p1-u01 · S11
+**所屬故事：S11**
 
 原題：C01, C23, X03；契約包：固定Git原文、唯讀loader與native parser。
 
@@ -141,9 +141,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：原生adr_lint對單次傳入adr_dir中*.md集合的檔名／重號／格式與明示target等診斷有錯時整體exit1，不改任何ADR Status；舊source.effective因snapshot.issues令全部source_validation_failed是額外服務策略，撤回作為新CLI既定規則。read/list可回安全可讀原文、raw Status與逐檔診斷。需要完整合法view的衍生查詢可操作級validation_failed／能力不足或非零error，不散發每筆ADR已失效；不新造per-record恢復或全庫生效gate。Gap／實作驗證仍在，未接受API。
 
-<a id="cli-p1-u03"></a>
+### cli-p1-u03
 
-### cli-p1-u03 · S01
+**所屬故事：S01**
 
 原題：C03, C07；契約包：固定Git原文、唯讀loader與native parser。
 
@@ -155,9 +155,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：每binding配置adr_roots；唯讀枚舉固定commit各root直接子檔，沿native NNNN-short-title.md規則；移除SOURCE_PATH projects限定與硬DOT依賴，不搬檔。 後續須驗：native docs/adr與舊projects根各保持Git原path，DOT非必要。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u04"></a>
+### cli-p1-u04
 
-### cli-p1-u04 · S04
+**所屬故事：S04**
 
 原題：C04；契約包：來源、權威與context契約。
 
@@ -169,9 +169,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：canonical reference固定repo_id/level/scope/record_id/path/commit/rawsha256；--id提案用原生四位ADR號NNNN、只在binding內解析；舊GUIDE#0012是先前例示，不承諾新CLI沿用MCP grammar。 後續須驗：同號跨repo可分；ID重複須歧義，--path只從該view已枚舉集合精確選。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u05"></a>
+### cli-p1-u05
 
-### cli-p1-u05 · S04
+**所屬故事：S04**
 
 原題：C05, C18；契約包：來源、權威與context契約。
 
@@ -183,9 +183,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：一次命令只建一個已准binding/fullcommit view；先在實際權限context分隔來源，無跨repo原子view承諾。上層引用保留另一repo的精確pin，不自動載入。 後續須驗：foreign source錯誤不影響本binding；不同repo各有revision。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u06"></a>
+### cli-p1-u06
 
-### cli-p1-u06 · S10
+**所屬故事：S10**
 
 原題：C06；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -197,9 +197,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：統一exit3/source_unavailable處理未知／未准binding、permission、missing repo/commit/object；不探無權存在性或回外來path。合法完整view內unknown record另可exit2；effective有效unknown_id為0。 此錯誤source/record/loaded_view=null，不echo未准path/remote/存在性或native Git stderr；只有合法view missing-record可附該view metadata。 後續須驗：未准/不存在/不可讀source同形；合法view unknown_record不混Accepted效力未知。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u07"></a>
+### cli-p1-u07
 
-### cli-p1-u07 · S02
+**所屬故事：S02**
 
 原題：C08；契約包：固定Git原文、唯讀loader與native parser。
 
@@ -213,9 +213,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：僅trusted repo/gitdir/common-dir；固定Git executable＋execFile argv，清GIT_*注入/trace，指定global/system config=/dev/null及no-lazy-fetch/no-replace/no-optional-locks/no-pager/literal-pathspecs、關fsmonitor/hooks；拒外來alternates/objectstore重導，不改safe.directory。 後續須驗：現有raw object四步成功但Apple bootstrap警告保留；後續測env/runtime整理、外owner/config/alternates/partial/network與子程序邊界。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u08"></a>
+### cli-p1-u08
 
-### cli-p1-u08 · S01
+**所屬故事：S01**
 
 原題：C09；契約包：固定Git原文、唯讀loader與native parser。
 
@@ -227,9 +227,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Fact：合法固定pin與不隱式fetch／login的邊界保留。Gap：技術草案已提出：必填符合repo object-format的40/64hex完整commit，type必須commit且解析結果與輸入一致；禁止ref/shortsha/HEAD與隱式fetch。缺object統一exit3；不以promisor下載補齊。 後續須驗：missing-object/partial-clone/networktrap需後續合成驗證，旗標解析成功不等於全無網路。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u09"></a>
+### cli-p1-u09
 
-### cli-p1-u09 · S10
+**所屬故事：S10**
 
 原題：C10, X14；契約包：固定Git原文、唯讀loader與native parser。
 
@@ -241,9 +241,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：先以raw Buffer算SHA256，再嚴格UTF8 decode並保留原換行/BOM bytes可往返；invalid UTF8、超limit、120000 symlink/160000 submodule明示exit5，不follow、不替換、不加base64二進位產品。100644/100755 regular blob可讀。 後續須驗：CRLF/BOM／控制碼／invalidUTF8／mode邊界案例；原Git blob不改。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u10"></a>
+### cli-p1-u10
 
-### cli-p1-u10 · S01
+**所屬故事：S01**
 
 原題：C11；契約包：來源、權威與context契約。
 
@@ -255,9 +255,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：顯式--config選既有可信JSON binding配置，無自動搜尋/掃repo；binding_fingerprint對正規化repo_id/tracking_ref/level/scope/adr_roots做SHA256，排除clonepath/別名/display/runtime。 後續須驗：不同clone同語義fingerprint相同；改scope/roots不同；config不授權OS存取。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u11"></a>
+### cli-p1-u11
 
-### cli-p1-u11 · S02
+**所屬故事：S02**
 
 原題：C12；契約包：來源、權威與context契約。
 
@@ -269,9 +269,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：context分observed(實際平台/process/程式來源)、declared(既有named-client回執引用)、unknown；不自造Sites ID或attestation，不把CLI --client字串當真發起者。 後續須驗：不能觀測的gh/remote/權威不驗證；metadata留來源與時間。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u12"></a>
+### cli-p1-u12
 
-### cli-p1-u12 · S10
+**所屬故事：S10**
 
 原題：C13；契約包：來源、權威與context契約。
 
@@ -283,9 +283,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：所有JSON/人讀回應明示source_content_is_data與authorization=none；ADR文字不形成外部動作/任務/裁決權。只memory與本次requested stdout，無dist/cache/raw logs。 後續須驗：包含惡意指令的合成ADR仍作字串回覆，不觸發tool。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u13"></a>
+### cli-p1-u13
 
-### cli-p1-u13 · S04
+**所屬故事：S04**
 
 原題：C14；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -297,9 +297,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：只搜尋已准單view；採literal case-sensitive字串匹配，不做lowercase/NFC轉換；snippet以原文Unicode scalar offset定位、至多240 scalars且標excerpt=true，不冒稱完整原文。 後續須驗：大小寫差異、CJK/Unicode與轉義控制碼對照原文位置。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u14"></a>
+### cli-p1-u14
 
-### cli-p1-u14 · S11
+**所屬故事：S11**
 
 原題：C15；契約包：固定Git原文、唯讀loader與native parser。
 
@@ -311,9 +311,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Fact：舊source.effective的missing key／same-key多Accepted／全snapshot issues規則是服務自訂，不是dev2原生機制。Gap：native格式／Status／target存在性以adr_lint為準；原生不定義Decision key、effective或循環／同key多Accepted拒絕。衍生查詢只沿同域明示鏈，資料不足／鏈疑義明示未知或能力不足，不改Accepted、不把自訂key／循環／同key衝突列native格式錯，也不一律令整庫ADR失效；實作驗證仍在。
 
-<a id="cli-p1-u16"></a>
+### cli-p1-u16
 
-### cli-p1-u16 · S11
+**所屬故事：S11**
 
 原題：C17；契約包：固定Git原文、唯讀loader與native parser。
 
@@ -325,9 +325,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：adapter依dev2 0.25.0原生檔名／重號、first-nonblank整數號title、Date regex、四章、first-nonblank Status及Words／Options presence；Recommended僅required或since changed要求，Legacy沿前30行與原require規則。舊core的真日曆Date／整section Status／structured Words／全部Recommended等較嚴規則不能偷渡成native拒絕。raw bytes保留與native lint通過分開；只有實跑原工具及正確since／require／commit證據才能報native_validation_passed，Gap／實作驗證仍在。
 
-<a id="cli-p1-u17"></a>
+### cli-p1-u17
 
-### cli-p1-u17 · S10
+**所屬故事：S10**
 
 原題：C19, X08, X11；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -339,9 +339,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：list/search預設50、max100，每頁明示complete/has_more/next；cursor綁fingerprint/domain/fullcommit/contract/op/query/offset/limit且驗bounds，跨view拒exit2；不提供無限--all。 後續須驗：page交集/缺漏、改query/commit/domain/limit、偽造offset與cursor size都測；cursor非授權。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u18"></a>
+### cli-p1-u18
 
-### cli-p1-u18 · S10
+**所屬故事：S10**
 
 原題：C20；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -353,9 +353,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：分dev2 read-basis、package/core/contract與可證code checkout/source-closure fingerprint；code HEAD不是loaded code證明。closure mismatch/dirty或來源不明=>comparable=false/unknown仍可回原文。 後續須驗：data dirty不阻固定Git D0；view digest排時間/PID/localpath並採UTF8 byte順序非locale。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u19"></a>
+### cli-p1-u19
 
-### cli-p1-u19 · S02
+**所屬故事：S02**
 
 原題：C21, X12；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -367,9 +367,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：候選入口node <code-checkout>/kc-decision-log/cli.mjs，Node24、固定可核對code/manifest與共用core，不需globalinstall/npm publish/new deps；metadata --help/version不算查詢驗收。 後續須驗：三端相同入口/closure/contract，正常CLI從checkout執行；目前只是提案沒有檔案/API已存在。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u22"></a>
+### cli-p1-u22
 
-### cli-p1-u22 · S10
+**所屬故事：S10**
 
 原題：C25；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -381,9 +381,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：穩定view摘要含fingerprint/contract/fullcommit與按path byte排序的mode/blob OID/rawsha；排indexed_at/PID/localclonepath/context。observed_at僅標觀測時間，remote/gh未查=>unknown，非latest。 後續須驗：不同runtime可比stable subset，時間/路徑差異不得誤報原文不一致。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u23"></a>
+### cli-p1-u23
 
-### cli-p1-u23 · S04
+**所屬故事：S04**
 
 原題：X01；契約包：來源、權威與context契約。
 
@@ -395,9 +395,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：authority只回既有可信人類確認/原流程引用之declared evidence與核對狀態，Words為attribution；config/gh不製造decider、不新增簽章PKI。 後續須驗：錯層/未知確認如實標，無適用權威不說已批准外部動作。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u24"></a>
+### cli-p1-u24
 
-### cli-p1-u24 · S01
+**所屬故事：S01**
 
 原題：X02；契約包：來源、權威與context契約。
 
@@ -409,9 +409,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：tracking_ref只是配置／後片freshness；P1可讀該配置repo/roots中本地既存、合法可讀完整歷史pin，即使不在目前ref，也只稱該commit。無新增全history掃描/遠端取object或額外ancestry限制。 後續須驗：D0在ref前進D1後仍可重現；未宣稱D0最新/仍為現ref。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u25"></a>
+### cli-p1-u25
 
-### cli-p1-u25 · S04
+**所屬故事：S04**
 
 原題：X04；契約包：來源、權威與context契約。
 
@@ -423,9 +423,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：只在本已准config依static repo/roots語義重疊判斷level/scope衝突，拒configuration_ambiguous/exit2，不任選/升權。不為找衝突讀其他owner/private config或打開未准binding；未知不升權。 後續須驗：衝突配置在query前被拒，不改原文/人類權威。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u26"></a>
+### cli-p1-u26
 
-### cli-p1-u26 · S01
+**所屬故事：S01**
 
 原題：X05；契約包：來源、權威與context契約。
 
@@ -437,9 +437,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：repo_id由可信binding宣告並沿既有repo證據核對；clonepath/URL aliases非全域identity，fork相同commit仍不同configured repo_id；offline標configuration-derived，不假server attestation。 後續須驗：同repo兩clone可比，不同repo_id不合併，無強制gh在線。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u27"></a>
+### cli-p1-u27
 
-### cli-p1-u27 · S01
+**所屬故事：S01**
 
 原題：X06；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -451,9 +451,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：所有source命令必填--commit完整OID，省略exit2/missing_commit；不默HEAD，也不在查詢內解析會移動ref。若操作者要pin ref由既有Git工具先解析再明示傳入。 後續須驗：HEAD/branch/shortsha/tagOID/缺參數都不當可接受commit。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u28"></a>
+### cli-p1-u28
 
-### cli-p1-u28 · S10
+**所屬故事：S10**
 
 原題：X07；契約包：固定Git原文、唯讀loader與native parser。
 
@@ -465,9 +465,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：同ID多path=>read --id exit2/ambiguous_id並只列合法view matches；可read --path精確已枚舉path取得各自原文，不能任意path；effective對重複ID保守unresolved。 後續須驗：不find首筆，不改資料以抹掉duplicate。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u29"></a>
+### cli-p1-u29
 
-### cli-p1-u29 · S11
+**所屬故事：S11**
 
 原題：X09；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -479,9 +479,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Fact：service.read找不到ID會拒絕；source.effective unknown_id為有效unresolved。Gap：技術草案已提出：合法完整view內read unknown_record=>exit2；effective unknown_id=>exit0、record_present=false與明示reason，與現有Accepted但缺key不同；source不可讀統一exit3。 後續須驗：JSON與人讀同一reason；未知source不洩漏ID存在性。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u30"></a>
+### cli-p1-u30
 
-### cli-p1-u30 · S01
+**所屬故事：S01**
 
 原題：X10；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -493,9 +493,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：P1只memory及本次requestedstdout，不dist/raw/index cache或原文logs；診斷僅受控reason/counters，原文不進stderr。後續持久化跨保護邊界需另scope。 後續須驗：檔案寫入觀察與OS限制後驗；Apple Git bootstrap warnings不等於已證零副作用。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u31"></a>
+### cli-p1-u31
 
-### cli-p1-u31 · S01
+**所屬故事：S01**
 
 原題：X13；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -507,9 +507,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：full commit存在且configured ADR root在Git tree確為directory（可只含README.md/index.md/template.md/.gitkeep明示skip檔）而無ADR candidate，才exit0 items=[]/complete=true。root不存在/型別錯、repo無commit或missing object均source_unavailable/exit3，不能假空；Git不保存純空dir。 後續須驗：合法含skip檔空root、缺root、root為blob、無commit、missing object與denied source分別驗；無錯誤偽裝empty。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u32"></a>
+### cli-p1-u32
 
-### cli-p1-u32 · S10
+**所屬故事：S10**
 
 原題：X15；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -521,9 +521,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：人讀保留合法LF（可留TAB）排版，CR/ESC/其餘C0+C1明示escape；JSON依法escape。rawsha取原blob，BOM/CRLF bytes round-trip須驗，不默丟BOM，不以sanitize結果冒稱原文。 後續須驗：terminal escape、換行/CR/tab及Unicode offset驗證，不改原文。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u33"></a>
+### cli-p1-u33
 
-### cli-p1-u33 · S10
+**所屬故事：S10**
 
 原題：X16；契約包：CLI輸出、資源界線與可重現交付。
 
@@ -535,9 +535,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：候選pilot limits明列blob1MiB/view16MiB/2000records/stdout8MiB/config64KiB/query256scalars/cursor4096bytes/Git10s/query30s；超過exit5 resource_limit，無silenttruncate，無SLA或benchmark宣稱。 後續須驗：limit前/等/後、輸出JSON膨脹、timeout與child終止boundary後驗；數值是工程建議。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u34"></a>
+### cli-p1-u34
 
-### cli-p1-u34 · S10
+**所屬故事：S10**
 
 原題：X17；契約包：獨立oracle與三端驗證回執。
 
@@ -549,9 +549,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：獨立由committed合成Git blobs與原dev2人工expected確認path/commit/rawsha/status/明示鏈；oracle不得呼叫被測parser/service建立expected；三端agree只是必要不充分。 後續須驗：獨立錯parser/錯digest mutant亦須被oracle發現，這是驗收方法非新standing verifier。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u35"></a>
+### cli-p1-u35
 
-### cli-p1-u35 · S02
+**所屬故事：S02**
 
 原題：X18；契約包：獨立oracle與三端驗證回執。
 
@@ -565,9 +565,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Gap：技術草案已提出：使用既有事件鏈留named-client initiation、runtime/cwd、命令/exit、source/contract/code closure與result；dot可走已准delegated local route，不能一端跑三次貼名。Claude需正常既有session的真命令回執，不用OutsideVoice reviewer Bash。 後續須驗：後續用同一公開checkout唯讀rev-parse最小命令取得原tool_use/result；新CLI三端查詢仍屬產品UAT。 Gap／實作與驗證仍在，候選介面未成為已接受API。
 
-<a id="cli-p1-u21"></a>
+### cli-p1-u21
 
-### cli-p1-u21 · S01（Fact核對）
+**所屬故事：S01**（Fact核對）
 
 原題：C24；非新增技術主題。
 
@@ -575,9 +575,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Fact：AC1實際權限分隔test context未定位即未驗，不可因此簽整片pass；合成principals／label／allowlist不代替權限隔離。不新建帳號、不默縮五故事／三端目標；本輪原則已明示。
 
-<a id="cli-p1-u20"></a>
+### cli-p1-u20
 
-### cli-p1-u20 · S10（Fact核對）
+**所屬故事：S10**（Fact核對）
 
 原題：C22；非新增技術主題。
 
@@ -585,9 +585,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Fact：interrogation prompt明示snapshot只收白名單，未帶scripts/lint.mjs不證明原repo缺檔。package.start／demo是既有HTTP server路徑，不能當CLI；不據此增刪產品範圍。
 
-<a id="cli-p1-u02"></a>
+### cli-p1-u02
 
-### cli-p1-u02 · S11（Fact核對）
+**所屬故事：S11**（Fact核對）
 
 原題：C02；非新增技術主題。
 
@@ -595,9 +595,9 @@ OS合成negative harness提案：A/B各在真OS受限context執行**整個query�
 
 **完整規劃答覆：** Fact：dev2原生沒有Decision key／effective／resolved／unresolved；Accepted缺Decision key不是原生格式錯。原Status與原文保留；若衍生查詢缺資料只能表示非權威的未知／能力限制，不新增key、不改需求或Accepted。
 
-<a id="cli-p1-u15"></a>
+### cli-p1-u15
 
-### cli-p1-u15 · S11（Fact核對）
+**所屬故事：S11**（Fact核對）
 
 原題：C16；非新增技術主題。
 

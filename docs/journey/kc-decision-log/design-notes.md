@@ -94,3 +94,27 @@ D4是使用者已確認的產品政策，lint本身不判斷語意變更、誰�
 Claude本人正常工作階段的唯讀Git原回執仍pending（非denied）；dot→已授權delegated local task已有命令鏈基礎，後續需各named client的真CLI回執，不要求dot前端直接shell。macOS兩已知檔4個read-deny cases只證局部機制，不是完整query／Git helpers／objectstore／aliases隔離或AC1通過。上述產品驗證由P1完成，不要求使用者先備妥成品。
 
 原生ADR格式／Status／配號／驗收與feedback沿dev2；原生lint整體check fail不改其他Accepted。已撤回整binding一律unresolved策略，衍生effective只作非權威查詢；見[dev2原生對齊](p1-technical-contract.md#native-dev2-alignment)。
+
+## 已確認選擇 D1–D5
+
+### D1 · P4 協作交接通路
+
+使用者先轉交，或沿用已有驗證的通路；自動橋接延後。
+
+### D2 · checkout 安全更新觸發
+
+agent 查到已配置 repo／ref 落後、工作目錄乾淨且可 fast-forward 時，依既定規則自行更新、重讀受影響 ADR 並回報；其他狀態保留原狀並說明原因。
+
+### D3 · ADR 提交入口
+
+Agent 用既有 Git／PR 工具；kc-decision-log MCP 先維持唯讀，寫入 MCP 及 host 代寫延後。
+
+### D4 · ADR 修訂與 dev2 對齊
+
+實質變更新建 ADR，小修留原 ADR；格式、狀態、取代關係、配號及原審查沿用 dev2 既有機制，不另創一套。
+
+### D5 · CLI優先、MCP選配的讀取入口
+
+採CLI-first：各agent有可執行命令且有repo存取權時，用同core的CLI讀取／搜尋／effective／精確引用；git負責版本與安全更新，gh或既有工具負責GitHub身分／PR，MCP僅在需要時選配。
+
+D5 原先確認的是方向；後續使用者另行授權本地圖文件 PR 及本機原生畫布同步。產品實作、部署與新增授權各依原流程處理。

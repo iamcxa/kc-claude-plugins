@@ -36,8 +36,8 @@
 
 優先補正常既有Claude工作階段一條公開checkout唯讀命令回執，工程估量維持32–48 active小時／條件風險40–64h。原P1／Pilot／D1–D5及已澄清的三完整工作日不重問；不因修正文案倒推三日fit或擅縮目標。
 
-既有明確接受在scope／premises仍相符時沿用；格式或Fact/Gap記錄不自動要求重選。真正改投入／value／scope／acceptance才呈現新決定。本估算作為自訂effort_proposal回到故事地圖；**原appetite不變，正式days scalar estimate仍null／fit unknown，不構成API接受、實作授權或accepted digest。** 歷史assessment／guard不改寫。
+既有明確接受在scope／premises仍相符時沿用；格式或Fact/Gap記錄不自動要求重選。真正改投入／value／scope／acceptance才呈現新決定。本估算保留在此 Markdown，供原生問答及切片說明引用；**原appetite不變，正式days scalar estimate仍null／fit unknown，不構成API接受、實作授權或accepted digest。** 歷史assessment／guard不改寫。
 
-具體介面與31題指向見[P1技術契約草案](p1-technical-contract.md)；機器可讀的範圍、假設與分包列於[slices-proposal.yaml](slices-proposal.yaml)的自訂effort_proposal，非原生estimate schema。
+具體介面與31題指向見[P1技術契約草案](p1-technical-contract.md)；範圍、假設與分包見[切片說明](slice-map.md#p1)及本頁；不另創原生 estimate schema。
 
 目前沒有已證不可行的技術阻塞。Claude本人正常唯讀Git命令原回執仍pending（非denied）；完整OS harness與三端CLI屬P1待實作驗證，不要求使用者先提供成品。投入時間基準已明確三完整工作日；若後續確認估量超過既定投入，再呈現是否加額或讓完整P1維持draft的具體選擇，不默縮目標或自增預算。

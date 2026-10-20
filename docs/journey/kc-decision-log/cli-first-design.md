@@ -70,7 +70,7 @@ raw Buffer先SHA再嚴格UTF8，保留原path／BOM／CRLF；不follow symlink/s
 
 沒有 terminal 的 client 須另議選配 MCP／既有 connector。CLI help、另一端轉述、合成 principal、某一 local runtime 的 gh metadata／pull 權限都不代表三端端到端通過。先前一次 Claude 遠端 OAuth client registration 失敗保留為歷史證據；CLI-first 不以修復它為前提，也不宣稱它已解決。
 
-P1 六項 AC 的唯一來源仍是 [切片來源](slices-proposal.yaml)：真實權限負向隔離、三端同一精確依據、不同 repo／層級、固定 D0 與三種版本、context／binding／錯誤、原生 ADR 與保守 effective。P1 最小 vertical outcome 包含 CLI 封裝、來源解析、身份邊界與整合驗證；不只做 help，也不提前實作 freshness 或 PR。所有案例使用合成資料。
+P1 六項 AC 的唯一來源仍是 [切片說明](slice-map.md#p1)：真實權限負向隔離、三端同一精確依據、不同 repo／層級、固定 D0 與三種版本、context／binding／錯誤、原生 ADR 與保守 effective。P1 最小 vertical outcome 包含 CLI 封裝、來源解析、身份邊界與整合驗證；不只做 help，也不提前實作 freshness 或 PR。所有案例使用合成資料。
 
 ## 6. 審閱、投入與既有流程
 
@@ -84,7 +84,7 @@ P2 對 P3／P4a／P5 是建議順序，不是整片硬依賴。P3 動作前須�
 
 ## 7. 已完成提問檢查，技術缺口仍保留
 
-兩native陌生讀者只讀history-free白名單快照，43原題逐題triage、合成35個穩定P1 questions：7 Fact、28 Gap；其中31主題已有四包具體工程草案，實作／驗證仍在，沒有新的human value決策。短問答以[journey.yaml](journey.yaml)的questions為準；全文見[P1契約](p1-technical-contract.md)，原題mapping見[slices-proposal.yaml](slices-proposal.yaml)的interrogation.mapping_by_question，可讀投影見[故事地圖](story-map.md)。原始events、最終回答、scope audit與工具stdout／stderr留本批task驗證紀錄。
+兩native陌生讀者只讀history-free白名單快照，43原題逐題triage、合成35個穩定P1 questions：7 Fact、28 Gap；其中31主題已有四包具體工程草案，實作／驗證仍在，沒有新的human value決策。短問答以[journey.yaml](journey.yaml)的questions為準；全文見[P1契約](p1-technical-contract.md)，原題mapping見[故事問題來源對照](story-map.md#question-origins)，可讀投影見[故事地圖](story-map.md)。原始events、最終回答、scope audit與工具stdout／stderr留本批task驗證紀錄。
 
 技術open集中在：native path／DOT／Legacy parser適配、合法binding先分view與可讀故障粒度、canonical/config/context身分、受控Git object與raw bytes、error／paging／資源限制與安全人讀、封裝與真實client回執、獨立Git blob oracle。它們服務既有P1目標，沒有各自新建task或新授權。
 

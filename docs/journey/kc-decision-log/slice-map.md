@@ -2,7 +2,7 @@
 
 **D5：CLI 優先、MCP 視需要選配；本PR為規劃設計；CLI未實作／部署，非ready handoff。** P1／Pilot 已選，先前投入原話「1-3天」；本輪已澄清「三個完整工作日」、上限 **3 days**；正式days scalar estimate `null`、fit `unknown`。其他切片仍候選，不一次啟動六片。
 
-編輯來源是 [slices-proposal.yaml](slices-proposal.yaml)；完整故事與已選 membership 以 [journey.yaml](journey.yaml) 為準。工作模型見 [CLI 設計](cli-first-design.md)，完整活動見 [故事地圖](story-map.md)。本頁不另建 task、release 或 gate 權威。
+六片名稱、成果及故事歸屬以原生 [journey.yaml](journey.yaml) 的 releases／stories[].release 為準；本頁保存範圍、依賴與驗收說明。原生 Story map 顯示六條 release band，六個 journey-board 頁顯示各片故事與問答；各片的 slice-Px 問答連至本頁。P1 已選，其餘仍為候選。工作模型見 [CLI 設計](cli-first-design.md)，完整活動見 [故事地圖](story-map.md)。
 
 ## 六片與順序
 
@@ -24,7 +24,9 @@
 
 歷史 MCP 入場文件不是新 CLI 來源的 baseline 或 acceptance。待 map／設計與六片增量具體審閱接受，先以新 full-map requirements 重整 baseline，再依原有 [release slicing](../../../kc-journey-map/skills/kc-journey-map/references/release-slicing.md) cut／brief／handoff；不以舊 hash 製造 CLI 拒絕或通過。P1 五故事／Pilot／投入仍有效。
 
-## P1 — 讀對同一份裁示
+## P1
+
+**讀對同一份裁示**
 
 使用者指定獨立決策repo／ref／commit後，Claude、Codex、dot在各自已授權且可執行CLI的環境，以可核對的身份／來源context讀到同一精確裁示與正確層級，或照實保留疑義。
 
@@ -85,7 +87,9 @@
 
 Claude本人正常工作階段的唯讀Git原回執仍pending（非denied）；dot→已授權delegated local task已有命令鏈基礎，後續需各named client的真CLI回執，不要求dot前端直接shell。macOS兩已知檔4個read-deny cases只證局部機制，不是完整query／Git helpers／objectstore／aliases隔離或AC1通過。上述產品驗證由P1完成，不要求使用者先備妥成品。
 
-## P2 — 查明各方版本差異
+## P2
+
+**查明各方版本差異**
 
 接手者分清各runtime的CLI code／ADR checkout與loaded view，知道已配置checkout相對ref的五態、時間及dirty阻礙；選配遠端host只在實際採用時另列。
 
@@ -125,7 +129,9 @@ Claude本人正常工作階段的唯讀Git原回執仍pending（非denied）；d
 
 **移除測試：** S13 不在就不知道比較哪個 repo／ref；S14 不在就不知道五態；S27 不在就無法回答本片承諾的本機更新阻礙。三者均直接支撐本片終點。
 
-## P3 — 安全對齊並重新讀取
+## P3
+
+**安全對齊並重新讀取**
 
 各runtime持有者依既有Git權限安全更新已配置checkout或保留原狀並說明，再用CLI重讀實際ADR commit與loaded view；不以本片維護遠端host。
 
@@ -165,7 +171,9 @@ Claude本人正常工作階段的唯讀Git原回執仍pending（非denied）；d
 
 **移除測試：** S15界定需重讀的影響；S16由持有者完成安全checkout更新；S18證明CLI loaded view與判定已重讀。移除任一就無法安全重新採用新裁示。S17只服務選配遠端host，非CLI成果必要，留在全圖延後。
 
-## P4a — 完成一次單任務交接閉環
+## P4a
+
+**完成一次單任務交接閉環**
 
 使用者讓一個 agent 把精確版本裁示交給另一個 agent，後者透過既有 dev2／Spacedock 完成一個合成任務及驗收，再帶原始證據與差距回來。
 
@@ -215,7 +223,9 @@ Claude本人正常工作階段的唯讀Git原回執仍pending（非denied）；d
 
 **移除測試：** 移除精確引用、接手重查、既有任務入口或證據讀回，就不能完成一次可重現的單任務閉環；跨層變動的完整重審另在 P4b。
 
-## P4b — 處理跨層衝突並重新裁示
+## P4b
+
+**處理跨層衝突並重新裁示**
 
 工程方案引用的上層版本改變或出現衝突時，工程 agent 能呈現影響、交回適用決策者，並把確認後的新版本重新交接。
 
@@ -259,7 +269,9 @@ Claude本人正常工作階段的唯讀Git原回執仍pending（非denied）；d
 
 **移除測試：** 只有單任務交接，無法處理上層方向變更；引用版本、拒絕反向覆蓋、回到原裁決者與重新交接缺一，就不能完成一次跨層重新決策。
 
-## P5 — 把確認草案送成受控 PR
+## P5
+
+**把確認草案送成受控 PR**
 
 在已配置來源內，使用者確認精確內容、範圍與 base 後，獲准提交者建立一個可審查 PR，回讀 PR 身分與提交內容，證明沒有重複或越權。此片的完成不等待 merge、ADR Accepted 或 host 載入。
 
@@ -392,6 +404,6 @@ dev2 基準：0.25.0。原始格式、狀態、配號及審查沿用 dev2。get_
 
 ## 本批 interrogation 結果
 
-兩native讀者43原題 → 35個story question主題：7 Fact、28 Gap；31主題含技術shaping／適配，無未答的人類value決策。短問答見[故事地圖](story-map.md)及[journey來源](journey.yaml)的questions，全文見[P1契約](p1-technical-contract.md)，原題mapping見slices-proposal.yaml的interrogation.mapping_by_question；Gap並未實作，三端／隔離／fit仍未驗。沒有新增story、slice或task，也沒有沿舊MCP接受。
+兩native讀者43原題 → 35個story question主題：7 Fact、28 Gap；31主題含技術shaping／適配，無未答的人類value決策。短問答見[故事地圖](story-map.md)及[journey來源](journey.yaml)的questions，全文見[P1契約](p1-technical-contract.md)，原題對照見[故事問題來源對照](story-map.md#question-origins)；Gap並未實作，三端／隔離／fit仍未驗。沒有新增story、slice或task，也沒有沿舊MCP接受。
 
 原生ADR格式／Status／配號／驗收與feedback沿dev2；原生lint整體check fail不改其他Accepted。已撤回整binding一律unresolved策略，衍生effective只作非權威查詢；見[dev2原生對齊](p1-technical-contract.md#native-dev2-alignment)。
