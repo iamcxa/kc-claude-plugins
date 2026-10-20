@@ -215,7 +215,7 @@ CLI以JSON與人讀模式回傳已授權的執行context／選定binding，以�
 
 歸屬：延後／UNASSIGNED（2026-10-20 依 D10 新增）。
 
-agent 在做決定的時機自動得到相關裁示，不靠任務說明手寫提醒。機制與 dev2 的 ADR 標題 hook 共用，觸發時機等排入某一片時再定。
+agent 在做決定的時機自動得到相關裁示，不靠任務說明手寫提醒。機制與 dev2 的 ADR 標題 hook 共用（dev2 待辦任務 `agent-reads-governing-adr`），觸發時機等排入某一片時再定。
 
 ### A5 對齊手上的版本
 

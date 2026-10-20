@@ -385,7 +385,7 @@ steps:
         questions:
           - id: hook-S30
             ask: 自動查詢用什麼機制？
-            answer: 與 dev2 的 ADR 標題 hook 共用機制；dev2 任務待定。
+            answer: 與 dev2 任務 agent-reads-governing-adr 共用機制。
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#d10-唯讀-skill-與-hook
           - id: scope-S30
             ask: 這張故事的範圍與限制是什麼？

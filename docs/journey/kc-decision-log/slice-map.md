@@ -388,7 +388,7 @@ CLI 做成 kc-claude-plugins 的 `kc-decision-log` plugin，自原型複製並�
 
 ### D10 唯讀 skill 與 hook
 
-P1 交付一個簡短的唯讀 skill：拿到裁示引用時先以 CLI 重讀、比對指紋，不一致就停。hook 不進 P1；它與 dev2 的 ADR 標題 hook 共用機制，dev2 那張任務待定，見 S30。
+P1 交付一個簡短的唯讀 skill：拿到裁示引用時先以 CLI 重讀、比對指紋，不一致就停。hook 不進 P1；它與 dev2 的 ADR 標題 hook 共用機制，即 dev2 待辦任務 `agent-reads-governing-adr`（2026-10-20 建立），見 S30。
 
 使用者 2026-10-20 回覆「同意」。影響：P1-AC7、S30。
 
