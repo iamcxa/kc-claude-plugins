@@ -3,7 +3,10 @@ title: pr_watch.py tasks round-3 follow-ups (frontmatter list form, stale review
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-20T05:10:50Z
+archived: 2026-10-20T05:10:50Z
 ---
 
 Declined under the round-3 rule from the third Codex review round of iamcxa/kc-claude-plugins PR #643 (head 5b280387, review:5513822090), 2026-10-14, task `fo-lifecycle-mod`. Neither is P1 or Material, so neither started a repair cycle there; the same round's P1 is repaired in that task.
