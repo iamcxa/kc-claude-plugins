@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:commissioned-by-names-spacedock:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:commissioned-by-names-spacedock-validation-1
+              briefing:
+                id: briefing:commissioned-by-names-spacedock:validation:attempt-1:revision-1
+                digest: sha256:ee88d1910f26c1a7cb99ade3bb2b586a246b837177d739e327adb5d702b7b2b7
+                room-ref: ./commissioned-by-names-spacedock/review/validation/briefing-1
 started: 2026-10-20T04:57:42Z
 worktree: .worktrees/spacedock-ensign-commissioned-by-names-spacedock
 pr: iamcxa/kc-claude-plugins#685

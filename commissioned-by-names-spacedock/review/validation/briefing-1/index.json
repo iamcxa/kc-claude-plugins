@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:commissioned-by-names-spacedock:validation:attempt-1:revision-1",
+  "question": "Approve validation of commissioned-by-names-spacedock and merge iamcxa/kc-claude-plugins#685 at head 187f93a534f4792f6d747288947e2e43af589ce8 with `gh pr merge 685 --squash --match-head-commit 187f93a534f4792f6d747288947e2e43af589ce8`? FO recommends approve; approving accepts that recommendation, and FO merges this one PR only, after rerunning delivery_gate.py check; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:commissioned-by-names-spacedock:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5460aaa0070621f8bd30563150cd12ab31c7924c/commissioned-by-names-spacedock.md",
+      "rev": "sha256:6704393c5f188ce9b4f4d84d7cf151c7dcb6d4ebd39feebae4ddf6b3851b726f",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: the template, both of this repository's READMEs and a real-binary discovery assertion name spacedock@0.27.0, so Spacedock discovery and Compass list the dev2 workflows (AC-2, AC-4 reproduced by validation at this head).\nNecessity: five files, 8 insertions and 3 deletions, each named in the approved design; no other file changed.\nValidation PASSED at 187f93a5 (AC-1 to AC-8, each falsifier run). Codex clean on the head (evidence=summary:6291599352). roborev clean (evidence=roborev:931). CI green on the head. Second reviewer: not triggered (no db surface, pilot profile, no merge, approval, authority or review rule changed). Not run: spacedock:refit (it waits for Captain confirmations; its stamp edit was simulated) and a browser view of Compass (its strip renderer ran on a real boot envelope).\nFO declines: F1 Polish, the maintain-flow sentence opening \"Its\" reads as the lint script (prose no check reads, so it is reworded at the next edit of that file rather than in a repair cycle); F2 Deferred risk, an adopter stamped differently conflicts once on line 2 (measured 0 of 6 adopter READMEs conflicting at 0.27.0 in AC-5, and the PR body states the one-time conflict)."
+    }
+  ]
+}
