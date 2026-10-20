@@ -795,3 +795,18 @@ Base scripts differ (validation 1): 1 declined item with 1 unreasoned, a 27-word
 ### Summary
 
 PASSED at ffc1711c8f55: the diff from the validated head d0c2e25b is the one ADR 0027 sentence, adr_lint and lint-skills exit 0, the full suite is 600 OK, CI is 4 of 4 green on this head, and the acceptance script behaves as written. F1 is closed; F2 stays Deferred risk. Nothing was pushed, commented on, marked ready or merged by this stage.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: In kc-dev-flow-2/scripts/design_surfaces.py, the Scope check takes its amendment baseline only from unfenced `### Amendment N` entries inside `## Captain amendments` that the amendment check validates; a test first shows a heading outside that section, and one inside a fenced block, letting an unrecorded Scope edit pass at ffc1711c, then passes after the fix
+  `amendment_entries()` is the one reader for both `check_amendments` and `scope_hold` (cbf2a3b5). `test_an_amendment_heading_outside_the_amendments_section_or_inside_a_fence_is_no_baseline` (3 subtests: under another section, fenced under another section, fenced inside the amendments section) was red at ffc1711c ('clean' != 'hold' x3), green after. Roborev run 1 found `introducing_commit()` still picked an earlier same-number look-alike commit; fixed in 2b86a624 (first commit whose file records the amendment in the section); `test_an_earlier_look_alike_heading_with_the_same_number_is_not_the_amendment_commit` was red on cbf2a3b5 ('hold' != 'clean'), green after.
+- DONE: In kc-dev-flow-2/scripts/delivery_gate.py, a reason bracket completes only on its matching closer; a test first shows `[two words)` and `(two words]` accepted at ffc1711c, then held after the fix, with `(two words)` and `[two words]` still accepted
+  `brackets()` keeps a stack of expected closers (cbf2a3b5). `test_a_reason_bracket_completes_only_on_its_matching_closer` was red at ffc1711c for both mismatched forms (0 != 1 unreasoned) and green after; it also asserts `(two words)`, `[two words]`, `[part (a) is not reachable]` and `(see [1] for why)` stay reasons.
+- DONE: All package test files pass; kc-dev-flow-2/scripts/lint-skills.py and kc-dev-flow-2/scripts/adr_lint.py docs/adr --since ad44f0cbf42274ff65802cabc52ebe919f159fd5 --require 27 exit 0; commit on the branch and do not push (FO pushes under the Captain's word); commit the stage report
+  At 2b86a624: `unittest discover -s kc-dev-flow-2/scripts` 605 tests OK; `test_sd_dispatch.py --sd-plugin-root` Spacedock 0.27.3 exit 0; lint-skills exit 0; adr_lint exit 0. Two code commits on spacedock-ensign/fo-write-rules-checked (cbf2a3b5, 2b86a624), not pushed. Mutations (python3 -B, caches cleared): closing on any closer turns 3 tests red (the bracket test x2, its mutation test); reading amendment headings from the whole body or taking the earliest commit without the section check turns the heading tests red (4 and 1).
+- DONE: Roborev gate before reporting
+  Run 1 on cbf2a3b5: `findings on cbf2a3b54; evidence=roborev:944` (High, introducing_commit; fixed in scope). Run 2 on 2b86a624: `clean on 2b86a6249; evidence=roborev:945`.
+
+### Summary
+
+Both Codex round 2 findings are fixed with a failing test first: the Scope baseline now comes only from validated entries in the unfenced amendments section (heading discovery and the introducing-commit search), and a reason bracket needs its own closer. Behaviour change to note: when no commit holds a valid entry for the amendment, the working copy is the baseline (an uncommitted amendment), as before for the no-commit case. Nothing pushed, commented on or marked ready.
