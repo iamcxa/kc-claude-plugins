@@ -445,6 +445,9 @@ ADR: 0027
 
 - Cycle 1 (FO, 2026-10-20): validation-1 F1 Polish on #687 d0c2e25b, to fix because it breaks the repository rule that an absolute claim names its enforcement point (CLAUDE.md); Codex clean on the head (evidence=summary:6293027583); copilot not run: "Copilot was unable to review this pull request because the user who requested the review has reached their quota limit." (review:5586368524). FO fix authorization, then a fresh validation recheck.
   - ADR 0027 Consequences: "No script reads the approved question" is false (decision_ledger.py question() reads it); the bounded claim is that no script checks that an approved question named the merge.
+- Cycle 2 (FO, 2026-10-20): Codex round 2 on #687 ffc1711c (evidence=review:5586968302) left 2 P2, to fix (rounds 1 and 2 fix every finding); one fix dispatch with a failing test per finding first, then a fresh validation recheck.
+  - design_surfaces.py: an `### Amendment N — <date>` heading outside `## Captain amendments` (including inside a fenced block) is taken as the amendment baseline although check_amendments() never validates it, so an unrecorded Scope edit introduced with it passes; derive the baseline only from unfenced, validated entries in that section.
+  - delivery_gate.py: any closing delimiter ends a reason bracket, so `[two words)` or `(two words]` passes as a reason; only the matching closer completes a bracket.
 
 ## Stage Report: ideation
 
