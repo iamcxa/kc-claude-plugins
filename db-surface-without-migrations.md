@@ -75,7 +75,8 @@ flowchart TD
   B -- a directory --> C[R1 to R3 and R6 as today]
   B -- none --> D[print: migration guard skipped, README declares none]
   D --> R7{candidate adds a NNNN_name.sql file}
-  R7 -- yes --> F7[FAIL R7: exit 1, adopter declares a real path]
+  R7 -- yes --> F7[FAIL R7 recorded: adopter declares a real path]
+  F7 --> E
   R7 -- no --> E
   B -- absent --> G{task has Surfaces: db}
   G -- yes --> H[exit 2: message names a directory or none; FO holds]
@@ -87,7 +88,7 @@ flowchart TD
   J -- no --> L[PASS, exit 0]
 ```
 
-Branches match the prose: a directory, `none`, absent plus db (the only exit 2 left on this path), absent plus not db. Under `none` the ADR rules run for db and non-db tasks alike, which today they do only for non-db tasks.
+Branches match the prose: a directory, `none`, absent plus db (the only exit 2 left on this path), absent plus not db. An R7 failure is recorded and the ADR rules still run, so the exit 1 reports both. Under `none` the ADR rules run for db and non-db tasks alike, which today they do only for non-db tasks.
 
 ### Existing-code check (chain: Spacedock, kc-dev-flow-2, sibling adopters)
 
@@ -98,7 +99,7 @@ Branches match the prose: a directory, `none`, absent plus db (the only exit 2 l
 
 ### Reconciling the README
 
-`references/sd/workflow.md`, FO steps: number guards, bullet "POC marker", says "Without `migrations-path:` the migration rules are skipped, so a POC is not guarded until the README declares it." That is true for a non-db task and for a POC and false for a db task (exit 2). Replacement, the same 18 words by the lint's own counter so `WORKFLOW_BUDGET_STEPS` needs no step: "Without `migrations-path:` a db task exits 2 and a POC is not guarded; `none` declares no migration files." The Check bullet already says "Exit 2 is a configuration error, which returns to FO as a hold"; the script's message, not the README, says how to resolve it (the rule #670 set for this section).
+`references/sd/workflow.md`, FO steps: number guards, bullet "POC marker", says "Without `migrations-path:` the migration rules are skipped, so a POC is not guarded until the README declares it." That is true for a non-db task and for a POC and false for a db task (exit 2). Replacement, 18 words against the old 18 by whitespace split (the budget counter, `len(text.split())` in `lint-skills.py`), so `WORKFLOW_BUDGET_STEPS` needs no step: "Without `migrations-path:` a db task exits 2 and a POC is not guarded; `none` declares no migration files." The Check bullet already says "Exit 2 is a configuration error, which returns to FO as a hold"; the script's message, not the README, says how to resolve it (the rule #670 set for this section).
 
 ### Batch overlap
 
@@ -116,7 +117,7 @@ Files the design would change: `kc-dev-flow-2/scripts/number_guards.py`; `kc-dev
 
 ### Words FO reads at each moment
 
-Counted with `lint-skills.py`'s `normalized_words`, unchanged base (ad44f0cb) against the candidate design. The Number guards text FO reads is in `workflow.md` plus the script output it quotes.
+Counted by whitespace split, unchanged base (ad44f0cb) against the candidate design. The Number guards text FO reads is in `workflow.md` plus the script output it quotes.
 
 | Moment | Before | After |
 | --- | --- | --- |
@@ -147,7 +148,7 @@ Verified by: new `ReserveTests` cases (exit codes and the printed line); `check`
 Verified by: `python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_number_guards.py'` at the candidate. The ideation prototype (a small diff on a copy of origin/main's script, run from a temp directory outside the repository) passed all 24 on 2026-10-20.
 
 **AC-6** `workflow.md`'s POC marker sentence is replaced by the 18-word text above, no section gains words, and no budget step is added.
-Verified by: `python3 kc-dev-flow-2/scripts/lint-skills.py` exit 0 with `WORKFLOW_BUDGET_STEPS` untouched; `python3 kc-dev-flow-2/scripts/test_poc_readme.py` exit 0 (the sentence reaches the derived POC README). Falsifier: any extra word in the section makes the lint print "exceeds the budget". Limit: the lint counts words, not meaning; that the sentence is true is covered by AC-1 and AC-3, which exercise each of its three claims.
+Verified by: `python3 kc-dev-flow-2/scripts/lint-skills.py` exit 0 with `WORKFLOW_BUDGET_STEPS` untouched (the lint's own count settles the equal-words claim); `python3 kc-dev-flow-2/scripts/test_poc_readme.py` exit 0 (the sentence reaches the derived POC README). Falsifier: any extra word in the section makes the lint print "exceeds the budget". Limit: the lint counts words, not meaning; that the sentence is true is covered by AC-1 and AC-3, which exercise each of its three claims.
 
 **AC-7** ADR 0002 carries one Amended paragraph recording `none`, R7, the ADR rules running under it, and the order "update the package, then declare `none`", quoting the Captain's words at this task's ideation gate (the quote is filled from the gate record at implementation).
 Verified by: `python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr` exit 0 at the candidate and the paragraph's quoted span found verbatim in the gate record. No new ADR number is reserved.
@@ -180,20 +181,19 @@ D1 and D2 are coupled: R7 is meaningful only because `none` is a declaration; if
 - DONE: A `### Batch overlap` section naming each file the design would change and each other batch-4 task and live task of other sessions that changes the same file or check, so FO can order implementation
   `### Batch overlap`: 4 files changed; fo-batch-sittings (first, per its Scope), adr-required-statement, release-acceptance, commissioned-by-names-spacedock share `workflow.md` or its word budget; delivery_gate tasks and the two other live tasks do not overlap.
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
-  `### Words FO reads at each moment`: same counter as `lint-skills.py`; startup 18 to 18; remaining exit 2 19 to 27; db task with no migrations 263 hand-written words to a 10-word output line (after-number unmeasured until AC-8).
+  `### Words FO reads at each moment`: whitespace-split counter, as the budget lint uses; startup 18 to 18; remaining exit 2 19 to 27; db task with no migrations 263 hand-written words to a 10-word output line (after-number unmeasured until AC-8).
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
   AC-1 to AC-9 each carry a command and a falsifier; D1 (value `none` or new key) and D2 (R7) in `### Needs decision`, no past `Override:` bears on them (`git grep -n 'Override:'` read 2026-10-20; ADR 0002 read).
-
-Per criterion, current evidence (a throwaway prototype in /tmp/dbs_eval, not a candidate; nothing is verified at a candidate):
-- AC-1: prototype exits 2 with both declarations in the message on the db fixture; candidate test not written.
-- AC-2: prototype fixtures `task_db` with `none`: skip line, `FAIL R5` exit 1; clean relay replay exit 0 with `PASS`; released script exits 2 on the same db fixtures. Candidate test not written.
-- AC-3: prototype exits 1 with `FAIL R7: db/migs/0001_x.sql` on an added sql file; not yet a test.
-- AC-4: released script with `none` exits 2 "no migration file matching ... under 'none'" (reproduced); prototype `reserve` branch edited but not run; not yet verified.
-- AC-5: prototype passed the 24 existing tests (copy pointed at the prototype script, 2026-10-20); candidate run not yet done.
-- AC-6: word counts 18 to 18 by the lint's regex on the sentences; `lint-skills.py` and `test_poc_readme.py` not yet run on a candidate.
-- AC-7: not yet verified (ADR paragraph and the gate quote come at implementation).
-- AC-8: prototype replay on the relay README copy: exit 2 without the key, exit 0 with it, 2026-10-20; the after word count is not yet measured.
-- AC-9: old-script behaviour under `none` reproduced (exit 2 on a `Surfaces: ui` task); the PR body line is not yet written.
+  Per criterion, current evidence (a throwaway prototype in /tmp/dbs_eval, not a candidate; nothing is verified at a candidate):
+  - AC-1: prototype exits 2 with both declarations in the message on the db fixture; candidate test not written.
+  - AC-2: prototype fixtures `task_db` with `none`: skip line, `FAIL R5` exit 1; clean relay replay exit 0 with `PASS`; released script exits 2 on the same db fixtures. Candidate test not written.
+  - AC-3: prototype exits 1 with `FAIL R7: db/migs/0001_x.sql` on an added sql file; not yet a test.
+  - AC-4: released script with `none` exits 2 "no migration file matching ... under 'none'" (reproduced); prototype `reserve` branch edited but not run; not yet verified.
+  - AC-5: prototype passed the 24 existing tests (copy pointed at the prototype script, 2026-10-20); candidate run not yet done.
+  - AC-6: word counts 18 to 18 by whitespace split on the two sentences; `lint-skills.py` and `test_poc_readme.py` not yet run on a candidate.
+  - AC-7: not yet verified (ADR paragraph and the gate quote come at implementation).
+  - AC-8: prototype replay on the relay README copy: exit 2 without the key, exit 0 with it, 2026-10-20; the after word count is not yet measured.
+  - AC-9: old-script behaviour under `none` reproduced (exit 2 on a `Surfaces: ui` task); the PR body line is not yet written.
 
 ### Summary
 
