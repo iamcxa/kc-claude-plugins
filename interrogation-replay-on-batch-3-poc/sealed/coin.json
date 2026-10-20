@@ -1,0 +1,25 @@
+{
+  "note": "Sealed. The blind second reader must not open this file before its scores are saved. a3 = Codex plain prompt, a4 = Codex with the engineering-reviewer lens.",
+  "map": {
+    "number-guards-readme-shrink": {
+      "X": "a4",
+      "Y": "a3"
+    },
+    "fo-write-checks": {
+      "X": "a3",
+      "Y": "a4"
+    },
+    "chat-only-evidence-observer-blind": {
+      "X": "a4",
+      "Y": "a3"
+    },
+    "delivery-gate-settles-skipped-checks": {
+      "X": "a4",
+      "Y": "a3"
+    },
+    "special-role-calls-fire-when-needed": {
+      "X": "a3",
+      "Y": "a4"
+    }
+  }
+}
