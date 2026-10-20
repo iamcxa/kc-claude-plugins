@@ -34,6 +34,17 @@ gates:
                 id: briefing:commissioned-by-names-spacedock:ideation:attempt-1:revision-1
                 digest: sha256:cf9f4947f9205ab5368796e8f8e2625746e8fcd1ae79bafde219b95105bf5719
                 room-ref: ./commissioned-by-names-spacedock/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:commissioned-by-names-spacedock:ideation:1
+                briefing: briefing:commissioned-by-names-spacedock:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T12:43:27.123565Z"
+                decision: approve
+                reason: 'Captain 「寫」 (chat, 2026-10-20, batch-4 sitting, question 1): D1 as recommended — the template names spacedock@0.27.0.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-20T04:57:42Z
 ---
 
