@@ -3,7 +3,7 @@ title: FO runs a batch of tasks in sittings, so the Captain answers each stage's
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「合併」 (chat, 2026-10-20): approve validation and merge iamcxa/kc-claude-plugins#689 at head 1e9dabe50e4845e993ee90cbef55ff75020facfe, as recommended.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-20T04:57:55Z
 worktree: .worktrees/spacedock-ensign-fo-batch-sittings
 pr: pr-merge:689
+verdict: PASSED
+completed: 2026-10-20T15:42:27Z
+archived: 2026-10-20T15:42:27Z
 ---
 
 ## Scope
