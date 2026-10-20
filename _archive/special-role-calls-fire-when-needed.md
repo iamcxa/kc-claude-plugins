@@ -3,7 +3,7 @@ title: A chief-engineer or engineering-reviewer call fires when the work needs o
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain approved in chat (「合併」) after the gate briefing, which stated that approval merges #682 head f4447396 with --match-head-commit, removes its worktree, then merges Release PR #672 once it carries #682; the Deferred risk and three Polish declined into special-role-calls-fire-when-needed-followups as recommended'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-19T17:05:25Z
 worktree: .worktrees/spacedock-ensign-special-role-calls-fire-when-needed
 pr: pr-merge:682
+verdict: PASSED
+completed: 2026-10-20T03:10:41Z
+archived: 2026-10-20T03:10:41Z
 ---
 
 ## Scope
