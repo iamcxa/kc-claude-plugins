@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.26.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.25.0...kc-dev-flow-2-v0.26.0) (2026-10-20)
+
+
+### Features
+
+* **kc-dev-flow-2:** a delivery gate question may carry the merge of the validated head ([#675](https://github.com/iamcxa/kc-claude-plugins/issues/675)) ([5a95103](https://github.com/iamcxa/kc-claude-plugins/commit/5a951034f270efe967f56d1d3c3c69436d37b8ad))
+* **kc-dev-flow-2:** FO-write checks refuse a missing reserved line, an unnamed amendment, an unlanded ADR and a reasonless decline ([#671](https://github.com/iamcxa/kc-claude-plugins/issues/671)) ([18dbf49](https://github.com/iamcxa/kc-claude-plugins/commit/18dbf490b399ecaa8ec288188bd1cf25e5c9d3ab))
+* **kc-dev-flow-2:** list chat-only FO rules as not judged and hold a merge ask without Sufficiency and Necessity clauses ([#679](https://github.com/iamcxa/kc-claude-plugins/issues/679)) ([891a9a2](https://github.com/iamcxa/kc-claude-plugins/commit/891a9a24b51e5e9fda02a992c6a27910a216787d))
+* **kc-dev-flow-2:** role calls are owed on repair passes and review rounds, and cleared by a dated call ([#682](https://github.com/iamcxa/kc-claude-plugins/issues/682)) ([36b07f8](https://github.com/iamcxa/kc-claude-plugins/commit/36b07f8114a454a7ea5fa5cc2c6cecf84e12d2a6))
+* **kc-dev-flow-2:** shrink the Number guards README passage to what number_guards.py cannot tell its reader ([#670](https://github.com/iamcxa/kc-claude-plugins/issues/670)) ([5b6a83b](https://github.com/iamcxa/kc-claude-plugins/commit/5b6a83bc36026d4f204805db124df85fa1653bf9))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** the delivery check settles a check run its repository skips by design ([#680](https://github.com/iamcxa/kc-claude-plugins/issues/680)) ([a722229](https://github.com/iamcxa/kc-claude-plugins/commit/a72222925f955e3f006bd22e6993fb47f612e616))
+
 ## [0.25.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.24.0...kc-dev-flow-2-v0.25.0) (2026-10-18)
 
 
