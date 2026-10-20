@@ -53,6 +53,17 @@ gates:
                 id: briefing:fo-batch-sittings:validation:attempt-1:revision-1
                 digest: sha256:81472d5232f087e945f409a321148e767831d05ec1c5a8491143cd9e005aef66
                 room-ref: ./fo-batch-sittings/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-batch-sittings:validation:1
+                briefing: briefing:fo-batch-sittings:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T15:36:31.764543Z"
+                decision: approve
+                reason: 'Captain 「合併」 (chat, 2026-10-20): approve validation and merge iamcxa/kc-claude-plugins#689 at head 1e9dabe50e4845e993ee90cbef55ff75020facfe, as recommended.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-20T04:57:55Z
 worktree: .worktrees/spacedock-ensign-fo-batch-sittings
 pr: iamcxa/kc-claude-plugins#689
