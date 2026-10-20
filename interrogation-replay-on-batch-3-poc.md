@@ -47,6 +47,17 @@ gates:
                 id: briefing:interrogation-replay-on-batch-3-poc:validation:attempt-2:revision-1
                 digest: sha256:29d501132fe916227615b24f524c19e8876661558170f9c199164b12b797f48c
                 room-ref: ./interrogation-replay-on-batch-3-poc/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:interrogation-replay-on-batch-3-poc:validation:2
+                briefing: briefing:interrogation-replay-on-batch-3-poc:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-20T12:42:13.386046Z"
+                decision: approve
+                reason: 'Captain 「好，照結果結案」 (chat, 2026-10-20): close the POC on the recorded result, no further arm run; the lens-versus-plain difference stays unresolved as stated in the briefing.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-20T08:18:17Z
 worktree: .worktrees/spacedock-ensign-interrogation-replay-on-batch-3-poc
 ---
