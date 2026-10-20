@@ -3,7 +3,7 @@ title: A pre-build story interrogation, replayed on batch 3, asks ahead of time 
 variant: kc-dev-flow-2
 profile: poc
 merge: local
-status: backlog
+status: implementation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain approved in chat (「准」) after the gate briefing: profile poc, the one-task budget and the falsifier as written'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
