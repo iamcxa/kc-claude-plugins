@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-19T17:05:25Z
 worktree: .worktrees/spacedock-ensign-special-role-calls-fire-when-needed
-pr: iamcxa/kc-claude-plugins#682
+pr: pr-merge:682
 ---
 
 ## Scope
