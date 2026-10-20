@@ -18,3 +18,7 @@ Declined by FO at the #671 delivery gate (head 13ceb00d, 2026-10-19); reasons al
 - Declined by FO at the #675 delivery gate (validation cycle 3 F7, Deferred risk): `delivery_gate.py` prints the carried-merge `next:` line on every exit-0 run, including runs whose own record says `verdict: ask` (`class: never`, a `point:` line, prod, db). Every task PR still reaches its validation gate question, which is the ask that verdict calls for, so no merge happens without his approval today; it becomes Material if a merge is ever carried without that question. Fix sketched: print the carried line only when `verdict == "merge"` (the `verdict` assignment in `check`), else the old ask line.
 - Polish (validation F6): ADR 0023's Options text says "merging the head" without the `--match-head-commit` binding the README now carries.
 - Polish (captain-question-load validation F5, declined at the #675 delivery gate): the three documents `doc_impact.py` lists (kc-dev-flow-2/README.md, references/sd/adoption.md, learning.md) carry no `updated` or `unaffected` line in the implementation reports; each names only the `test_sd_dispatch.py` command.
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: its two live items (the carried-merge next: line printed without reading the approved question or a hold, and printed even when the verdict is ask) were taken into fo-write-rules-checked, whose design answers them as D2 and D3; the other items are closed with reasons in that triage.
