@@ -34,3 +34,7 @@ To be written at ideation.
 Needed at ideation: none beyond the order above.
 Surfaces: none
 Visible change: none
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: all 8 items done on origin/main, mostly by #601.
