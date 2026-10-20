@@ -17,6 +17,17 @@ gates:
                 id: briefing:hermes-ops-fo-exe-dev-poc:backlog:attempt-1:revision-1
                 digest: sha256:7873820c9a15ab58c15bdecf5642a0da830af438a0b42b98c111ef11b927ac54
                 room-ref: ./hermes-ops-fo-exe-dev-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:hermes-ops-fo-exe-dev-poc:backlog:1
+                briefing: briefing:hermes-ops-fo-exe-dev-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T13:49:38.919445Z"
+                decision: approve
+                reason: Captain answered 「可以」 in chat on 2026-10-20 to the presented entry (title, five acceptance criteria, non-goals, 2-day budget, stop conditions, outward actions each asked first, profile poc), after directing 「不，第一版我想先 poc 讓 hermes 預設 boot FO，用exe.dev 接 codex token」. Accepts direction and entry to implementation only; no VM, token placement, repository, ruleset, Slack app, PR or merge authority is inferred.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 First proof for the new `kc-ops-inbox` package: one always-on hermes instance acts as the First Officer of an `ops` Spacedock workflow, so an event reaches a person and an agent at once and every step lands in a repository task. The riskiest claim is unexercised: no recorded run has a Hermes Agent instance act as a Spacedock First Officer (`kc-hermes-spacedock` main at 556217b, 2026-08-25, still launches the FO as a separate Claude process; Spacedock 0.27 lists Claude Code, Codex and Pi as tier-1 and Hermes-class agents as "through skill systems").
