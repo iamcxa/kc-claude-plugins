@@ -548,3 +548,118 @@ Rule 4 in this task is now the named-carry sentence on the `ASK` line plus the `
 ### Summary
 
 Rules 2 and 3 are checked at the scripts FO runs (the decline parse and F-id join at `delivery_gate.py`, the Scope hold at `design_surfaces.py` while a task is in ideation); rule 4 is the 13-word sentence and the `(verdict ask)` tag; rule 1 has no check, recorded in ADR 0027. Every falsifier turned red under a mutation, the replays reproduce the design's numbers, and CI is green on Draft PR 687.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #687 head d0c2e25b against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at head d0c2e25b95ef (base ad44f0cb = origin/main, PR open and Draft, CI 4 of 4 SUCCESS); AC-1 to AC-6 and AC-8 to AC-13 met, AC-7 superseded (Amendment 2) with no rule-1 code in the diff; per-criterion evidence and the limits judged are under `### Evidence by criterion`.
+- DONE: Rerun the design's replays at this head (replay.py over the four repositories' records, the Scope census, the ADR 0024 replay.sh) and the real-task CLI cases the suite does not hold (special-role-calls, ideation-gaps), and judge the edited shipped test expectations (the tagged() helper, PILOT_OUT 55 to 68, mutated() __file__) as mechanical or not
+  replay.py: this repository identical to the saved output with the base scripts, relay, web and qnow identical with the candidate's; census 44 clean, 7 held, 32 not run (same 7 slugs); ADR 0024 replay.sh 12 of 12 `exit=0`, identical; both real-task cases behave as AC-6 says; the three test edits are mechanical (shown below).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run with `env -i ... bash --noprofile --norc`, output as expected; `adr_lint.py docs/adr --since ad44f0cbf42274ff65802cabc52ebe919f159fd5` printed `27 ADR file(s) checked, 0 legacy`, exit 0 (with `--require 27` also exit 0); findings F1 Polish and F2 Deferred risk, no Material and no Needs decision.
+
+### Findings
+
+- F1 Polish: ADR 0027 Consequences says "No script reads the approved question", but `decision_ledger.py` `question()` reads a briefing's question (it prints the ledger); the bounded claim is "no script checks that an approved question named the merge" (ADR 0023). Contract: CLAUDE.md "An absolute claim names its enforcement point". No user-visible loss.
+- F2 Deferred risk: the README sentence kept in `## Captain amendments` still sends a Captain change asked at an open gate to `revise` (the worker reworks it), while the new Scope check holds any unrecorded Scope edit made while `status: ideation`, so a `revise` that touches Scope now ends in a hold and an amendment. The design priced this (D1 "Worse under yes") and the Captain ruled 「要」; AC-9 allowed only the phrase swap. Material if an observer finds FO restoring a Captain-asked Scope line because of the hold, against his `revise`.
+
+### Evidence by criterion
+
+Candidate worktree detached at d0c2e25b95ef, base ad44f0cb in a second one; scripts run with `python3 -B`, caches cleared per mutation. Package scripts from 0.26.0 for the stage commands.
+- Suite: `unittest discover -s kc-dev-flow-2/scripts` 600 tests OK (261 s). `lint-skills.py` exit 0, `5374 of 5374 words`. `comment_ratio.py` 1.4% (6 of 438), exit 0. `number_guards.py check` PASS. `doc_impact.py` 0 documents. `dispatch_records.py` 6 records complete. `design_surfaces.py check` on this task: presentable.
+- AC-1 sentence deleted: 2 tests red. AC-13 `#672` in place of "the Release PR": 2 red. `ASK` is 40 words (27 + 13).
+- AC-2 tag always: 1 red; tag never: 1 red (`test_the_class_line_carries_the_verdict_only_when_it_is_ask`, which also asserts the saved record's keys).
+- AC-3 shipped end-of-item pattern: 2 red; `( )` only: red on 3 late texts; one-word bracket accepted: 1 red.
+- AC-4 `<` to `<=`: 4 red; join off: 4 red; first report instead of newest: 1 red.
+- AC-5 `git diff --word-diff` is a pure insertion of 22 words; lint exit 0.
+- AC-6 any-amendment rule: 3 red; backlog-sha only: 4 red; no label exemption: red (4+); uncommitted amendment not its own baseline: 2 red; git skip removed: 1 red. CLI on the real tasks in a scratch linked worktree at state 8eda9070 (status set to ideation there): special-role-calls exit 1 naming 291825e9; ideation-gaps exit 0; plus a Scope line exit 1 naming cfa03ada; a line removed exit 1; a Non-goals line, and an uncommitted Amendment 2 beside a Scope line, exit 0; status done and an extraction outside git print `scope check not run`, exit 0. Base design_surfaces.py on special-role-calls: exit 0 (the check is new).
+- AC-8 `git diff --name-only`: the 7 named files only; `words.py` identical to the saved table (5422, 170, 232, 466, 464); `role_triggers.py` on a `Supersedes: none` / `Design: none` amendment: `0 event(s) read`, exit 0.
+- AC-9 one hunk (`during implementation` to `between gates`); `git grep` for the old phrase in kc-dev-flow-2 finds no pin.
+- AC-10 the five statements are in the file; the Words line matches the ideation gate's recorded reason D1 to D7 word for word; the D7 guard task exists in state (`merge-guard-stops-unasked-merges`).
+- AC-11 candidate `scope_hold` over the 83 task files at 8eda9070: 44 / 7 / 32, the same 7 slugs; at current state head (84 files) the same 44 / 7 and 33 not run; the five batch-4 task files print presentable at status ideation. `proto_gate.py` and `proto_scope.py` outputs identical to the saved files.
+- AC-12 stage gate removed: 4 red; worker sentence dropped: red; seed mode reading git: red; the restore-before-Amendment order is asserted by a test.
+- Old `test_delivery_gate.py` against the candidate: 68 tests, 62 failures in 9 methods (36, 12, 4, 3, 2, 2, 1, 1, 1), the design's count; with the two lines reverted in the candidate, the old file passes 68 of 68, so every shipped assertion changed only for the tag or the sentence.
+- Edited expectations, mechanical: `tagged()` adds the tag for class `never` (always verdict ask, 13 of 13 saved records); `PILOT_OUT` is a constant of 57 words under a cap that keeps the old 11-word headroom (55 for 44); `mutated().__file__` is set because `design_surfaces.py` now resolves its `decision_ledger` import from `__file__`.
+- Limits judged: (1) shipped Scope tests build a tempdir linked worktree, not the real state checkout: accepted, I ran the real-task cases and the fixture's `.git` is a file as the state checkout's is; the real-task cases stay out of the suite. (2) `check_task` unchanged and the 13 `notes` assertions untouched: confirmed by the diff. (3) adopter README copies keep "during implementation" until the next sync: accepted; merge-tree of this head with #685 (187f93a5) and #686 (8c3a60e1) reports no conflict, and the phrase swap is word-neutral. (4) no second reviewer asked: accepted, the design carried two engineering-reviewer reads and the implementation changed nothing they covered.
+- Not verified: `roborev:933` and the roborev run (read from the report only); CI runner cost (not measured); that an FO obeys the hold or the sentence (prose-enforced, ADR 0014); `delivery_gate.py check` against a live PR through `gh` (the suite fakes `gh`); the full `proto_narrow.py` (replaced by the direct old-file run above).
+
+### Acceptance script
+
+Needs the Captain's workspace at the path below and network for one `git fetch`; it leaves nothing behind. Does not cover: the full 600-test suite (CI runs it), `delivery_gate.py check` against a live PR, the merge-time `next:` line on a real task, rule 1 (no check, by ruling) and rule 4 beyond the printed sentence.
+
+```bash
+set -u
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+STATE=$REPO/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+HEAD_SHA=d0c2e25b95ef8f5c49a3b05c31085dd1170b2ae7
+T=$(mktemp -d)
+
+echo "STEP 1: check out the PR head in a throwaway worktree"
+git -C $REPO fetch -q origin pull/687/head && git -C $REPO worktree add -q --detach $T/cand $HEAD_SHA && git -C $T/cand rev-parse HEAD
+PKG=$T/cand/kc-dev-flow-2/scripts
+
+echo "STEP 2: run the new tests (about 15 seconds)"
+(cd $PKG && python3 -B -m unittest test_delivery_gate.FoWriteRuleTests test_design_surfaces.ScopeCheckTests 2>&1 | tail -3)
+
+echo "STEP 3: build a scratch copy of the state branch as of 2026-10-20 ideation"
+git init -q $T/S && git -C $T/S fetch -q --no-tags $STATE 8eda9070b102163561d0a5e24f2c44442a625d97 && git -C $T/S checkout -q --detach FETCH_HEAD && git -C $T/S worktree add -q --detach $T/W HEAD && echo scratch ready
+cd $T/W
+sed -i '' 's/^status: done/status: ideation/' _archive/special-role-calls-fire-when-needed.md _archive/ideation-gaps.md
+
+echo "STEP 4: a Captain scope line added after the backlog gate must hold (rule 3)"
+python3 -B $PKG/design_surfaces.py check _archive/special-role-calls-fire-when-needed.md | cut -c1-120; echo "exit=${PIPESTATUS[0]}"
+
+echo "STEP 5: a task whose scope change is recorded by an amendment is clean; one more Scope line after it holds"
+python3 -B $PKG/design_surfaces.py check _archive/ideation-gaps.md; echo "exit=$?"
+python3 - <<'PY'
+p="_archive/ideation-gaps.md"; t=open(p).read()
+open(p,"w").write(t.replace("## Scope\n","## Scope\n\n- A later Captain ask.\n",1))
+PY
+python3 -B $PKG/design_surfaces.py check _archive/ideation-gaps.md | cut -c1-120; echo "exit=${PIPESTATUS[0]}"
+
+echo "STEP 6: the decline parse reads a reason in [ ] and does not cut at e.g. (rule 2), and the ask line names the Release PR"
+python3 -B - $PKG <<'PY'
+import sys; sys.path.insert(0, sys.argv[1])
+import delivery_gate as g
+t = ('Declined, with reasons: Deferred risk, clause() reads a label after "e.g. Necessity: y" as stated [no committed briefing has that form]; '
+     'Polish, the shortened phrase leaves one phrase unwatched [the full phrase trips the lint]; '
+     'Polish, AC-7 left rows [the two extra rows are outside the set]; Polish, the lint matches a phrase [each is one README sentence].')
+print("declined items:", len(g.declined_items(t)), "without a reason:", g.unreasoned_items(t))
+print("ask line ends:", g.ASK[-66:], "| words:", len(g.ASK.split()))
+PY
+
+echo "CLEANUP"
+cd /; git -C $REPO worktree remove --force $T/cand; rm -rf $T; echo done
+```
+
+Observed (fresh `env -i HOME="$HOME" PATH="$PATH" bash --noprofile --norc`, 2026-10-20), verbatim:
+
+```
+STEP 1: check out the PR head in a throwaway worktree
+d0c2e25b95ef8f5c49a3b05c31085dd1170b2ae7
+STEP 2: run the new tests (about 15 seconds)
+Ran 26 tests in 13.931s
+
+OK
+STEP 3: build a scratch copy of the state branch as of 2026-10-20 ideation
+scratch ready
+STEP 4: a Captain scope line added after the backlog gate must hold (rule 3)
+Scope changed after the backlog gate (291825e9): "- Captain's scope addition, 2026-10-20: 「先加第一個，第二個
+exit=1
+STEP 5: a task whose scope change is recorded by an amendment is clean; one more Scope line after it holds
+ideation-gaps.md: design surfaces presentable
+exit=0
+Scope changed after the newest amendment (cfa03ada): "- A later Captain ask.". FO: restore the line; add an '### Amendme
+exit=1
+STEP 6: the decline parse reads a reason in [ ] and does not cut at e.g. (rule 2), and the ask line names the Release PR
+declined items: 4 without a reason: []
+ask line ends: . Every other PR, the Release PR included, is asked one at a time. | words: 40
+CLEANUP
+done
+```
+
+The base scripts print `1` declined item with 1 unreasoned, an `ASK` of 27 words, and no Scope hold on special-role-calls (exit 0), so the script tells base from candidate.
+
+### Summary
+
+PASSED at d0c2e25b95ef: every live criterion holds under its own falsifier, the replays and the real-task cases reproduce the design's numbers, and the shipped test edits are mechanical. Two findings, neither Material: an overbroad sentence in the ADR (Polish) and a README sentence that still routes a Scope `revise` to rework (Deferred risk). Nothing was pushed, commented on, marked ready or merged.
