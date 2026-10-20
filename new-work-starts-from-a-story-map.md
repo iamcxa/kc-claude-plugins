@@ -43,4 +43,5 @@ gates:
 Alignment: needed before ideation: the design and fo-batch-sittings are read together so the batch list exists once.
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
-Visible change: when the Captain starts new work, dev2 asks whether to draw a story map first, and a release's open questions become the list FO asks one at a time.
+Visible change: none
+Outside this repository's surfaces: when the Captain starts new work, dev2 asks whether to draw a story map first, and a release's open questions become the list FO asks one at a time.
