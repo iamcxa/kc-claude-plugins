@@ -66,8 +66,9 @@ The existing server metadata table is unchanged. Optional audit correlation
 format version **1** adds context/request fingerprints to newly reserved human
 mutation receipts. Older/unrelated receipts without these fields return unknown
 to draft reconciliation; no SQL migration or server-record rewrite is applied.
-The seven-day verified-human deadline and receipt-retention/tombstone rules are
-unchanged. Receipt expiry cannot clear a browser draft.
+The fourteen-day verified-human deadline follows [human entry](human-entry.md);
+receipt-retention/tombstone rules remain unchanged. Neither human sign-in expiry
+nor receipt expiry can clear a browser draft.
 
 ## Local checks and acceptance limits
 

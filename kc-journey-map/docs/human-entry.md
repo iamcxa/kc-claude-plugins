@@ -65,7 +65,11 @@ match the signed subject and provider login `iat` must establish a human event.
 Token issuance never substitutes for login time. Non-2xx responses, redirects,
 service identities, unknown/expired login time or mismatches fail closed.
 See [Cloudflare's identity fields](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/).
-No app session outlives seven days from that event, even after renewed assertions.
+No new app session outlives fourteen days from that event, even after renewed assertions.
+Captain amendment 4 (2026-10-20) extends the original seven-day maximum;
+existing stored earlier deadlines remain unchanged. Fifteen-minute app sessions
+renew only up to their recorded original-event deadline. This does not change
+agent credential lifetimes or draft retention.
 
 ## Owner-local sign-in
 
@@ -161,7 +165,7 @@ node scripts/human-entry-browser-check.mjs
 The first checks owned policy and generated signatures; the second runs the
 Cloudflare adapter in local workerd with synthetic provider responses; the third
 uses fresh Node storage, real owner peer approval and an isolated browser. These
-are local evidence. Actual provider login/session precedence, seven-day account
+are local evidence. Actual provider login/session precedence, fourteen-day account
 revalidation, route protection, HTTPS human-cookie behavior on real hosts,
 unsupported peer platforms and Free workload/cost fit remain unrun.
 There is no CI change or measured per-PR cost.

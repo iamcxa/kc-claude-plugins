@@ -31,7 +31,7 @@ Approval alone issues no credentials. Requests expire after five minutes.
 
 Each redemption creates a separate installation family and fifteen-minute access.
 Access and renewal intersect current policy/backend, member and room generations;
-remove/regrant or disable/reenable cannot revive old authority. Human seven-day
+remove/regrant or disable/reenable cannot revive old authority. Human fourteen-day
 sign-in deadlines and browser logout do not expire agents; no inactivity expiry
 is introduced. Legacy credential behavior/expiries remain unchanged.
 

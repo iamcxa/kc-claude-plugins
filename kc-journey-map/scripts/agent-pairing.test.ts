@@ -61,7 +61,7 @@ test('exact authorizer, original verifier and immutable scope gate a one-shot in
  f.db.close()
 })
 
-test('renewal ignores human seven-day age and inactivity but enforces current authority and exact rotation', async () => {
+test('renewal ignores human sign-in age and inactivity but enforces current authority and exact rotation', async () => {
  const f = await fixture(), paired = await f.pair()
  const input = { familyId: paired.family.id, generation: 1, secretDigest: paired.refreshDigest, nextDigest: await digest('n'.repeat(64)), accessId: 'agt_next', accessDigest: await digest('b'.repeat(64)) }
  const renewed = f.run('rotate', input, now + 30*24*3600_000)

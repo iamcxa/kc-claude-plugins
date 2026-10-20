@@ -31,17 +31,39 @@ test('local handoff binds owner, original verifier and origin; consumes exactly 
  assert.equal(session.humanRevalidateBy, now + HUMAN_BOUND)
  assert.throws(() => humanOperation(store, 'challenge-consume', challenge, now), /challenge_expired_or_consumed/)
 })
-test('renewal preserves original event and denies exact seven-day boundary and disabled membership', () => {
+test('renewal preserves the original fourteen-day deadline, including day seven and its exact boundary', () => {
  const { store } = fixture(), now = 10_000
+ const deadline = now + 14 * 24 * 60 * 60_000
+ assert.equal(HUMAN_BOUND, 1_209_600_000)
  humanOperation(store, 'challenge-create', challenge, now)
  humanOperation(store, 'challenge-approve', { ...challenge, peerUid: 501 }, now)
  let session = humanOperation(store, 'challenge-consume', challenge, now)
- for (let time = now + 600_000; time < now + HUMAN_BOUND; time += 600_000) session = humanOperation(store, 'renew', challenge, time)
+ assert.equal(session.expiresAt, now + 900_000)
+ for (let time = now + 600_000; time < deadline; time += 600_000) {
+  session = humanOperation(store, 'renew', challenge, time)
+  assert.equal(session.humanRevalidateBy, deadline)
+  assert.equal(session.expiresAt, Math.min(time + 900_000, deadline))
+  if (time === now + 7 * 24 * 60 * 60_000) assert.equal(session.verifiedHumanSignInAt, now)
+ }
+ session = humanOperation(store, 'renew', challenge, deadline - 1)
  assert.equal(session.verifiedHumanSignInAt, now)
- assert.equal(session.humanRevalidateBy, now + HUMAN_BOUND)
- assert.throws(() => humanOperation(store, 'renew', challenge, now + HUMAN_BOUND), /human_revalidation_due/)
+ assert.equal(session.humanRevalidateBy, deadline)
+ assert.equal(session.expiresAt, deadline)
+ for (const time of [deadline, deadline + 1]) assert.throws(() => humanOperation(store, 'renew', challenge, time), /human_revalidation_due/)
  humanOperation(store, 'disable-member', { memberId: 'owner' }, now)
  assert.throws(() => humanOperation(store, 'renew', challenge, now + 1), /member_denied/)
+})
+test('a persisted earlier seven-day deadline survives renewal and denies its original cutoff', () => {
+ const { store } = fixture(), now = 10_000, deadline = now + 7 * 24 * 60 * 60_000
+ store.put('browser-session:session', { actorType: 'human', backendId: config.backendId, memberId: 'owner', generation: 1, expiresAt: deadline, verifiedHumanSignInAt: now, humanRevalidateBy: deadline, csrfDigest: challenge.csrfDigest, revoked: false })
+ const restored = fixture().store
+ restored.put('browser-session:session', store.get('browser-session:session'))
+ const session = humanOperation(restored, 'renew', challenge, deadline - 1)
+ assert.equal(session.humanRevalidateBy, deadline)
+ assert.equal(session.verifiedHumanSignInAt, now)
+ assert.equal(session.expiresAt, deadline)
+ for (const time of [deadline, deadline + 1]) assert.throws(() => humanOperation(restored, 'renew', challenge, time), /human_revalidation_due/)
+ assert.equal(restored.get<any>('browser-session:session').humanRevalidateBy, deadline)
 })
 test('expired and unapproved challenges never mint and policy generation blocks removal/regrant resurrection', () => {
  const { store } = fixture(), now = 10_000
@@ -62,7 +84,7 @@ test('signed Cloudflare assertion correlates provider login event; token issuanc
  const now = Date.now(), seconds = Math.floor(now / 1000)
  const keys = await crypto.subtle.generateKey({ name: 'RSASSA-PKCS1-v1_5', modulusLength: 2048, publicExponent: new Uint8Array([1, 0, 1]), hash: 'SHA-256' }, true, ['sign', 'verify'])
  const jwk = { ...await crypto.subtle.exportKey('jwk', keys.publicKey), kid: 'test', alg: 'RS256' }
- const base = { iss: providerConfig.issuer, aud: [providerConfig.audience], sub: 'person', identity_nonce: 'nonce', type: 'app', iat: seconds, nbf: seconds, exp: seconds + 300 }
+ const base = { iss: providerConfig.issuer, aud: [providerConfig.audience], sub: 'person', identity_nonce: 'nonce', type: 'app', iat: seconds - 1, nbf: seconds - 1, exp: seconds + 300 }
  const sign = async (claims: any, alg = 'RS256') => { const body = b64(JSON.stringify({ alg, kid: 'test', typ: 'JWT' })) + '.' + b64(JSON.stringify(claims)); return body + '.' + b64(new Uint8Array(await crypto.subtle.sign('RSASSA-PKCS1-v1_5', keys.privateKey, new TextEncoder().encode(body)))) }
  let identity: any = { user_uuid: 'person', iat: seconds - 600, service_token_status: false }
  const fetcher = async (url: any, init: any) => {
@@ -79,8 +101,13 @@ test('signed Cloudflare assertion correlates provider login event; token issuanc
  await assert.rejects(() => verifyCloudflareIdentity(valid.slice(0, -4) + 'xxxx', providerConfig, fetcher as any, now), /provider_identity_denied/)
  identity = { user_uuid: 'different', iat: seconds - 600 }
  await assert.rejects(() => verifyCloudflareIdentity(valid, providerConfig, fetcher as any, now), /provider_identity_denied/)
- identity = { user_uuid: 'person', iat: seconds - 604800 }
- await assert.rejects(() => verifyCloudflareIdentity(valid, providerConfig, fetcher as any, now), /human_revalidation_due/)
+ identity = { user_uuid: 'person', iat: seconds - 7 * 24 * 3600 }
+ assert.equal((await verifyCloudflareIdentity(valid, providerConfig, fetcher as any, now)).signInAt, identity.iat * 1000)
+ identity = { user_uuid: 'person', iat: seconds - 14 * 24 * 3600 }
+ const deadline = identity.iat * 1000 + 1_209_600_000
+ assert.equal((await verifyCloudflareIdentity(valid, providerConfig, fetcher as any, deadline - 1)).signInAt, identity.iat * 1000)
+ const fresh = await sign({ ...base, iat: seconds, nbf: seconds })
+ for (const time of [deadline, deadline + 1]) await assert.rejects(() => verifyCloudflareIdentity(fresh, providerConfig, fetcher as any, time), /human_revalidation_due/)
  identity = { user_uuid: 'person', iat: seconds - 1, service_token_status: true }
  await assert.rejects(() => verifyCloudflareIdentity(valid, providerConfig, fetcher as any, now), /provider_identity_denied/)
  await assert.rejects(() => verifyCloudflareIdentity(valid, providerConfig, (async () => { throw new Error('outage') }) as any, now), /provider_unavailable/)

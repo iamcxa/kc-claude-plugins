@@ -1,7 +1,7 @@
 import { canonicalRoom, HostError } from './core'
 import { denial } from './security-store'
 
-export const HUMAN_BOUND = 7 * 24 * 60 * 60_000
+export const HUMAN_BOUND = 14 * 24 * 60 * 60_000
 export const HUMAN_ACCESS = 15 * 60_000
 export type HumanConfig = {
  version: 1; backendId: string; origin: string; mode: 'local' | 'cloudflare'; issuer: string

@@ -64,3 +64,15 @@ The accepted decision text is unchanged from `afcf5bc2dad60c485efd07e8fda01a4824
 (`docs/adr/0026-verified-human-entry-preserves-private-room-core.md`).
 Main retains its separate role-calls ADR 0026. Original task reservation and
 validation evidence remain at their original paths and hashes.
+
+### Captain amendment 4 — 2026-10-20
+
+**Words:** 「兩週（建議）」 — Captain, answering: 「真人登入最久維持多久再收驗證碼？建議兩週，兼顧方便與私人畫布安全；一個月也可行，但遺失裝置時留下的登入時間更長。撤銷權限仍會提早生效。」
+
+The human maximum is now fourteen days (1,209,600,000 milliseconds) from the
+original verified sign-in. This supersedes only the seven-day maximum above;
+the original decision and provenance remain historical. Fifteen-minute app
+sessions renew only up to their recorded deadline, never a sliding deadline
+from a new token issuance. Stored earlier deadlines are not extended.
+Revocation, agent credentials, draft retention, canvas data and complete-record
+concurrency remain unchanged. This addendum grants no deployment or activation.

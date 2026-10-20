@@ -10,6 +10,10 @@ slices, with eight stories grouped 3/2/2/1. Formal merge remains a separate huma
 decision. Cloudflare must stay on Free; canvas IDs, data and complete-record
 concurrency remain unchanged. Detailed account and usage evidence stays local.
 
+Captain amendment 4 (2026-10-20) sets the current human deadline to fourteen
+days from the original verified sign-in; stored earlier deadlines stay unchanged.
+The frozen planning source retains its historical seven-day choice.
+
 [draw-a-journey.yaml](draw-a-journey.yaml) is the recoverable planning source.
 Its 31 questions are design dispositions, not runtime passes. Historical wording
 about pending whole-design approval is superseded by this confirmation. The
@@ -33,7 +37,7 @@ header, arbitrary UID, email, legacy principal or first visitor establishes a
 person. Browser sign-in and machine credentials remain separate authorities.
 
 The browser app session lasts at most 15 minutes and may renew while healthy;
-its original human event and seven-day deadline never slide. Admission checks
+its original human event and fourteen-day deadline never slide. Admission checks
 current member state, authorization generation and room policy. Each mounted
 human context also binds its original backend, member and sign-in event.
 Application data routes return typed failures; only the human login path enters
@@ -66,7 +70,7 @@ or a green build does not establish actual provider acceptance or deployment.
 
 Local evidence covers signed synthetic provider inputs in the actual Worker
 runtime, real owner peer approval, real browser entry and negative admission.
-Actual Cloudflare sign-in, seven-day provider/session precedence, configured
+Actual Cloudflare sign-in, fourteen-day provider/session precedence, configured
 Access path protection, remote Node hosting, Free eligibility/workload fit and
 public delivery are not established. Current production defaults and credentials
 remain unchanged. Independent validation and the later safety stories remain
@@ -77,7 +81,7 @@ flowchart TD
  O[Operator binds exact verified identity and room grants] --> H[Human opens original URL]
  H --> V{Configured provider or owner-local verification succeeds?}
  V -- no --> X[Typed refusal; no room opened]
- V -- yes --> S[Short app session; fixed original seven-day deadline]
+ V -- yes --> S[Short app session; fixed original fourteen-day deadline]
  S --> U{URL specifies room?}
  U -- yes --> A{Exact room grant and registration still valid?}
  U -- no --> R{Same-member remembered room still valid?}
