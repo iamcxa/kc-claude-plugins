@@ -281,7 +281,16 @@ try {
   for (const room of ['denied', 'missing']) { await page.goto(origin + '/?room=' + room); await page.locator('.human-entry').waitFor(); assert.equal(await page.evaluate(() => !!window.editor), false); assert.equal(new URL(page.url()).searchParams.get('room'), room) }
   assert.equal(await metadata('get', { key: 'room:missing' }), null)
  })
- await page.goto(origin + '/?room=A'); await ready('A'); await stableSource()
+ const initialBaseRead = page.waitForResponse(response => {
+  const url = new URL(response.url())
+  return url.origin === origin && url.pathname === '/doc' && url.searchParams.get('room') === 'A' && response.request().method() === 'GET'
+ }, { timeout: 8000 }).then(async response => {
+  assert.equal(response.status(), 200, 'initial draft base response failed')
+  const documents = records(await response.json())
+  assert.ok(documents.some(record => record.id === 'shape:A'), 'initial draft base body missing source sentinel')
+  report.finalBaseRead = { room: 'A', status: response.status(), records: documents.length, completedAtMs: Date.now() }
+ })
+ await Promise.all([initialBaseRead, (async () => { await page.goto(origin + '/?room=A'); await ready('A'); await stableSource() })()])
  await check('source revocation freezes retained editor, sends no source document confirmation and alternative opens separately', async () => {
   await page.evaluate(() => { window.sourceEditor = window.editor })
   const key = 'member-room:person:A', grant = await metadata('get', { key })
