@@ -53,6 +53,17 @@ gates:
                 id: briefing:commissioned-by-names-spacedock:validation:attempt-1:revision-1
                 digest: sha256:ee88d1910f26c1a7cb99ade3bb2b586a246b837177d739e327adb5d702b7b2b7
                 room-ref: ./commissioned-by-names-spacedock/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:commissioned-by-names-spacedock:validation:1
+                briefing: briefing:commissioned-by-names-spacedock:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T14:31:39.751858Z"
+                decision: approve
+                reason: 'Captain 「同意合併」 (chat, 2026-10-20, batch-4 sitting, question 18), after asking what the two declined points were and being shown both: approve validation and merge iamcxa/kc-claude-plugins#685 at head 187f93a534f4792f6d747288947e2e43af589ce8, as recommended.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-20T04:57:42Z
 worktree: .worktrees/spacedock-ensign-commissioned-by-names-spacedock
 pr: iamcxa/kc-claude-plugins#685
