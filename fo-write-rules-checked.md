@@ -668,3 +668,18 @@ The base scripts print `1` declined item with 1 unreasoned, an `ASK` of 27 words
 ### Summary
 
 PASSED at d0c2e25b95ef: every live criterion holds under its own falsifier, the replays and the real-task cases reproduce the design's numbers, and the shipped test edits are mechanical. Two findings, neither Material: an overbroad sentence in the ADR (Polish) and a README sentence that still routes a Scope `revise` to rework (Deferred risk). Nothing was pushed, commented on, marked ready or merged.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: In docs/adr/0027-fo-write-rules-are-checked-by-the-script-fo-runs-at-the-write.md, Consequences, replace "No script reads the approved question, so" with "No script checks that an approved question named the merge, so", and change nothing else
+  Commit ffc1711c on spacedock-ensign/fo-write-rules-checked; `git diff d0c2e25b..ffc1711c --stat` is 1 file, 1 insertion, 1 deletion (the one sentence start).
+- DONE: kc-dev-flow-2/scripts/adr_lint.py docs/adr --since ad44f0cb... --require 27 exits 0 and kc-dev-flow-2/scripts/lint-skills.py exits 0 on the new head
+  Run on ffc1711c: adr_lint "27 ADR file(s) checked, 0 legacy" exit 0; lint-skills PASS exit 0.
+- FAILED: All package test files pass; push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  Tests: every kc-dev-flow-2/scripts/test_*.py exits 0 on ffc1711c; test_sd_dispatch.py needs --sd-plugin-root and passed against local Spacedock 0.27.0 (CI pins v0.27.2, not run here). Push NOT done: `git push origin spacedock-ensign/fo-write-rules-checked` was refused by the permission check ("Create Public Surface"), so I stopped as instructed; ffc1711c is local only and CI has not run on it. The stage report is committed to the state checkout, not pushed.
+- DONE: roborev gate (before reporting)
+  `python3 .../roborev_gate.py --repo <worktree> --base d0c2e25b` printed "clean on ffc1711c8; evidence=roborev:940".
+
+### Summary
+
+The one-sentence ADR 0027 fix is committed as ffc1711c and passes both lints, all package tests and the roborev gate. The branch is not pushed because the permission check refused the push, so FO or the Captain must push ffc1711c (or allow the push) before CI and the validation recheck.
