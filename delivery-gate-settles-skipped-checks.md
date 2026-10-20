@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-19T15:34:07Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-settles-skipped-checks
-pr: iamcxa/kc-claude-plugins#680
+pr: pr-merge:680
 ---
 
 ## Scope
