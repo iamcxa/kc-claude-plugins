@@ -1,0 +1,3 @@
+name: ops-gate-guard
+version: "0.1"
+description: Allow spacedock gate decisions only from the Captain's Slack session.
