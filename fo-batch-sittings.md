@@ -305,3 +305,37 @@ ADR: 0028
 
 The design puts the sitting rule in a `pr_watch.py tasks` line (26 words, printed only when two or more gates await at one stage), adds `decision_ledger.py --sittings` so the answer count is read from state (it reproduced two observers' hand counts, relay 19 and web 8), adds one worker-read sentence for `### Batch overlap`, and changes neither the README, the mod nor the word budget. The reservation conflict is settled by keeping the README rule: `reserve` already makes per-task reservations unique and the one collision came from a number held 11.5 hours. The list-then-ask pattern is Cut 2, a later task; durable per-row answers need Spacedock review continuity.
 One defect is FO's to correct before the gate is presentable: `python3 <package>/scripts/design_surfaces.py check fo-batch-sittings.md` exits 1 with `'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'`. The `## FO alignment` lines are FO's record, so I left them; either `Visible change: none` or a `ui` surface resolves it. The checker raised nothing else on the design, criteria or diagrams.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main (ad44f0cb) implementing Cut 1 (item 1 sitting line with tests, item 3 ideation sentence, item 4 docs/adr/0028), no `--sittings`, no Cut 2, no D4 interim rule
+  Code is committed and pushed as `1e9dabe5` on `spacedock-ensign/fo-batch-sittings` (4 files: pr_watch.py, test_pr_watch.py, ideation principles.md, ADR 0028). FAILED part: the Draft PR was not opened; see the next item.
+- FAILED: Open the Draft PR
+  `gh pr create --draft` was refused by the auto-mode permission check ([Create Public Surface]); I did not work around it. PR body is ready at /tmp/fbs-pr-body.md; the command is `gh pr create --draft --repo iamcxa/kc-claude-plugins --base main --head spacedock-ensign/fo-batch-sittings --title "feat(kc-dev-flow-2): tell FO to present a stage's awaiting gates as one sitting" --body-file /tmp/fbs-pr-body.md`.
+- DONE: AC-1 sitting line. 9 new rows in `TasksTests` (87 tests pass; stub `spacedock` asserts the exact argv)
+  (a) three awaiting: one line naming a, b, c, 26 words; (b) one awaiting: none; (c) 15 needs-preparation + 2 awaiting: line names the two; (d) 2+2 across stages: two lines, only validation ends with the merge-order sentence, 25 and 36 words; (e) exit 3, no `ready_gates`, a gate with no stage, non-JSON, absent executable: `next: report the awaiting gates to the Captain: ...`, exit 2; (f) 5 slugs = 28 words. Also: line sits before the wait lines; the run writes no file.
+  Falsifiers run by mutation (python3 -B, caches cleared): count needs-preparation (3 tests fail), ignore `current` (6), one gate = sitting (1), merge-order at every stage (3), swallow status failure (1).
+  Deviation: the error form is `report the awaiting gates` not `report <slug>`, a workflow-wide call has no slug.
+  Live: real spacedock 0.27.2 output parses; the workflow had 1 awaiting at validation and 1 at ideation, so no line, exit 0. The positive case is stub-only.
+- DONE: AC-2 README, mod and word budget unchanged
+  `git diff ad44f0cb --stat` over workflow.md, the mod, docs/dev2/README.md and lint-skills.py prints nothing; `lint-skills.py` exits 0 (5374 of 5374). Mutation: one added word to workflow.md makes it exit 1 (5375 exceeds 5374).
+- SKIPPED: AC-3, AC-4, AC-7
+  Superseded with no replacement (Amendments 1 and 2).
+- DONE: AC-5 sentence landed (open for behaviour)
+  `skills/ideation/principles.md` 596 to 643 words; the sentence is 47 words, not the designed 55. `lint-skills.py` passes. Behaviour stays open until the batch-5 observer counts designs written while another task was live.
+- DONE: AC-6 reservation ruling lands without a README change
+  ADR 0028 Consequences carry the 0018 collision (reserved 2026-10-16 12:20, taken on main 23:54). `adr_lint.py docs/adr --since ad44f0cb --require 28` exits 0; mutation with the ADR file absent exits 1 (`required ADR 28 does not exist`). `test_number_guards.py`: 24 tests OK. Falsifier search (package text telling FO to reserve before a task's own dispatch): none found.
+- SKIPPED: AC-8
+  A seam FO checks at the story-map design gate, not this task.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py exits 0; adr_lint.py docs/adr --since <base> --require 28 exits 0
+  Both run on `1e9dabe5`. Also pass: test_lint_skills, test_adr_doc_checks, test_comment_ratio, test_design_surfaces. Comment lines added in code: 0 (two module-docstring lines).
+- DONE: roborev evidence= line
+  `clean on 1e9dabe50; evidence=roborev:939` (first run on the pre-amend commit: roborev:937). No findings.
+- DONE: push without force and without -u
+  `git push origin spacedock-ensign/fo-batch-sittings` created the remote branch.
+- FAILED: CI green on the PR head; CI cost measured or stated
+  No PR exists, so no CI run was read. Cost: not measured. The workflow `kc-dev-flow-2-tests.yml` has a 15-minute job timeout; locally `test_pr_watch.py` takes about 37 s.
+
+### Summary
+
+Cut 1 is implemented and pushed on `1e9dabe5`: the sitting line in `pr_watch.py tasks` (9 new tests, 5 mutations each caught), the Batch overlap sentence (47 words) and ADR 0028 with the reservation ruling. The Draft PR could not be opened because the permission check refused `gh pr create`; FO or the Captain must run the command above (body at /tmp/fbs-pr-body.md, which carries the without-it unanswered list). CI and its cost are therefore unread.
