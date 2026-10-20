@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-20T04:57:42Z
 worktree: .worktrees/spacedock-ensign-commissioned-by-names-spacedock
-pr: iamcxa/kc-claude-plugins#685
+pr: pr-merge:685
 ---
 
 ## Scope
