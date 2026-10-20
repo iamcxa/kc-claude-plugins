@@ -24,3 +24,7 @@ To be written at ideation.
 Needed at ideation: none beyond the finding.
 Surfaces: none
 Visible change: none
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: lock path fix done in #601.
