@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { journeyApi, setHumanContext, type HumanContext } from './api'
 import './human-entry.css'
+import { AgentSheet } from './AgentSheet'
 type Entry = { backendId: string; memberId: string; label: string; rooms: string[]; room: string | null; expiresAt: number; verifiedHumanSignInAt: number; status: string }
 const secret = () => [...crypto.getRandomValues(new Uint8Array(32))].map(b => b.toString(16).padStart(2, '0')).join('')
 async function post(path: string, body: object) {
@@ -135,7 +136,7 @@ export function HumanEntry({ children }: { children: (entry: HumanCanvasEntry) =
    setEntry(current => current ? { ...current, room } : null)
    try { localStorage.setItem('journey-human-history:' + window.location.origin + ':' + entry.backendId + ':' + entry.memberId, room) } catch {}
   }
-  return <><div className="human-entry-identity">{entry.label} · {problem ? '先前驗證身分，存取已暫停' : '身分已驗證'}</div>{children({ context, problem, activate })}</>
+  return <>{problem ? <div className="human-entry-identity">{entry.label} · 先前驗證身分，存取已暫停</div> : <AgentSheet entry={entry}/>}{children({ context, problem, activate })}</>
  }
  return <main className="human-entry"><section aria-labelledby="human-entry-title" aria-busy={busy}>
   <p className="human-entry-eyebrow">私人畫布</p><h1 id="human-entry-title">{busy ? '正在確認入口' : entry ? '選擇畫布' : '驗證後進入畫布'}</h1>

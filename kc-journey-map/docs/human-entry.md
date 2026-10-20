@@ -1,5 +1,10 @@
 # Optional verified-human entry
 
+The subsequent disabled [agent-pairing foundation](agent-pairing.md) reuses this
+verified-human entry. Agents and legacy credentials cannot approve requests or
+exchange themselves into human/browser authority. Human expiry remains separate
+from agent-family lifetime.
+
 This first-story Pilot candidate is off by default. It does not configure an
 identity provider, deploy a host, change existing credentials or authorize a
 cutover. [Accepted design](../../docs/journey/kc-journey-map/private-entry.md)
@@ -113,8 +118,9 @@ retry is introduced. The UI never says connected before target sync succeeds.
 The protected Node stdio operator channel accepts `disable-member` and
 `set-room` for current member policy; Cloudflare operator access uses its private
 registry control, not a public route. These commit denial/generation first and
-return `streamsStopped: unverified`. The later stream-lease story owns bounded
-active-stream stop; neither a denial receipt nor this response proves it.
+return separate denial and stream-progress states through the
+[revocation candidate](delegation-revocation.md). A denial receipt does not prove
+an actual close; the account sheet distinguishes stopping, unknown and confirmed close.
 Lifecycle receipts contain only internal IDs, category/outcome and server time.
 Creation processes at most 64 oldest receipt rows and removes those older than
 30 days; idle retention has no deletion deadline. Security records and revocation
@@ -144,7 +150,8 @@ owned processes. Retain the entire metadata database, generations, revoked
 sessions, member state and legacy grant expiries. Never restore an older security
 backup or run a version that bypasses those checks. If an enabled test deployment
 needs immediate denial, disable its member through the protected control first;
-active-stream stop remains explicitly unverified until the later safety story.
+local active-stream evidence is documented in the revocation candidate; provider
+stream-stop and retained activation remain unverified.
 This candidate is not authorization for production activation or formal merge.
 
 The native permitted-room menu and retained-source switching are described in
