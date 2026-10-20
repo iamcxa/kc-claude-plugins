@@ -15,6 +15,17 @@ gates:
                 id: briefing:interrogation-replay-on-batch-3-poc:backlog:attempt-1:revision-1
                 digest: sha256:a5555d361feb6b200d07e23e6376f9a6c371f11ad3e624453d9cd0f43abaa7f6
                 room-ref: ./interrogation-replay-on-batch-3-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:interrogation-replay-on-batch-3-poc:backlog:1
+                briefing: briefing:interrogation-replay-on-batch-3-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T08:18:08.275168Z"
+                decision: approve
+                reason: 'Captain approved in chat (「准」) after the gate briefing: profile poc, the one-task budget and the falsifier as written'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
