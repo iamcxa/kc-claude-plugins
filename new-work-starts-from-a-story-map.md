@@ -15,6 +15,17 @@ gates:
                 id: briefing:new-work-starts-from-a-story-map:backlog:attempt-1:revision-1
                 digest: sha256:172f38f458c4a4441c6f52af602c87a82de07dcafa690adfb01feb8840890348
                 room-ref: ./new-work-starts-from-a-story-map/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:new-work-starts-from-a-story-map:backlog:1
+                briefing: briefing:new-work-starts-from-a-story-map:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T05:18:19.565691Z"
+                decision: approve
+                reason: Captain answered in chat 「可以」 to FO's proposal put before it (quoted in Scope and the gate question); this briefing binds that question and answer after the fact
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
