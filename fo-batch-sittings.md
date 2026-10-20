@@ -384,3 +384,16 @@ Does not cover: whether an FO actually presents the gates in one message and rec
 ### Summary
 
 PASSED for `1e9dabe5`: every live criterion holds, five mutations are each caught by named tests, the positive case ran on a real state with five awaiting gates, and the acceptance script ran unchanged in a fresh shell. No Material finding; two Deferred risks and two Polish items are recorded above.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Open the Draft PR: confirm PR #689 exists on branch spacedock-ensign/fo-batch-sittings at head 1e9dabe50e4845e993ee90cbef55ff75020facfe
+  `rtk proxy gh pr view 689 --repo iamcxa/kc-claude-plugins --json number,isDraft,headRefOid,headRefName,state,mergeStateStatus,url` returned number 689, headRefName spacedock-ensign/fo-batch-sittings, headRefOid 1e9dabe50e4845e993ee90cbef55ff75020facfe, state OPEN, mergeStateStatus CLEAN. Read-only; nothing opened.
+  `isDraft` is false, but validation read the PR as Draft. It changed after validation; not changed by this cycle.
+- DONE: CI green on the PR head; CI cost measured or stated: each check, its result and duration
+  `rtk proxy gh pr checks 689 --repo iamcxa/kc-claude-plugins`, four checks, all pass: GitGuardian Security Checks 1s; multi-profile route gate (live Spacedock) 6s (run 39444745021); unit tests (python3) 1m27s (run 39442058558); version parity (plugin.json / marketplace.json / codex / README) 57s (run 39442058619). None pending, none failing.
+  CI cost: not measured beyond the durations above; no billing or minutes data was read.
+
+### Summary
+
+Cycle 2 confirms PR #689 is open at head 1e9dabe5 with all four CI checks passing, which resolves the two cycle-1 FAILED items (PR not opened; CI unread). The PR is no longer Draft, which validation did not expect; FO or the Captain should confirm that was intended. No code, branch, PR or other section was changed.
