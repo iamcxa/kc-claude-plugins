@@ -29,3 +29,7 @@ Alignment: not needed before ideation; the findings and decline reasons above ar
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: the wait-class rule is gone; remaining items are polish or covered by delivery_gate.py ci_problem and pr_watch.py next_for.
