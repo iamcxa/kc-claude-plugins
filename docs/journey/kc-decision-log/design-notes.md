@@ -1,8 +1,8 @@
 # kc-decision-log 設計說明
 
-> **2026-10-20 重切：** P1 改為 S01、S10、S11、S19、S20、S21、S22（見[切片說明](slice-map.md#p1)）。本文件對 P1 三端、雙使用者隔離與多來源層級的描述屬重切前 P1，現分屬 P4a（dot）與 P4b（S04、隔離）。
+> **2026-10-20 重切：** P1 改為 S01、S10、S11、S19、S20、S21、S22（見[切片說明](slice-map.md#p1)）。本文件對 P1 三端、雙使用者隔離與多來源層級的描述屬重切前 P1，現分屬 P4a（dot）與 P4b（S04、隔離）。dot 是 ChatGPT 上沒有終端機的 agent，讀取需 MCP／connector（見切片說明 D13）；本文件中 dot 經本機 task 執行 CLI 的描述未經證實。
 
-D5 已接受 **CLI 優先、MCP 選配**；本PR為規劃設計；CLI未實作／部署，非ready handoff。完整 28 故事／8 活動及 D1–D4 保留，P1 已重切為七張故事，Pilot 不變。使用者先前投入原話「1-3天」；本輪已澄清「三個完整工作日」，appetite 上限 3 days，正式days scalar estimate仍為 `null`、fit `unknown`。具體工作模型見 [CLI 設計](cli-first-design.md)；故事與 AC 唯一來源見 [README](README.md)。
+D5 已接受 **CLI 優先、MCP 選配**；本PR為規劃設計；CLI未實作／部署，非ready handoff。完整 30 故事／8 活動及 D1–D4 保留，P1 已重切為七張故事，Pilot 不變。使用者先前投入原話「1-3天」；本輪已澄清「三個完整工作日」，appetite 上限 3 days，正式days scalar estimate仍為 `null`、fit `unknown`。具體工作模型見 [CLI 設計](cli-first-design.md)；故事與 AC 唯一來源見 [README](README.md)。
 
 ## 從完整故事看最小交付
 
@@ -84,6 +84,8 @@ D4是使用者已確認的產品政策，lint本身不判斷語意變更、誰�
 [P1技術契約](p1-technical-contract.md) 與其四包工時表為重切前 P1 撰寫，不再是投入依據；重切後的估工見 [P1 估工](p1-estimate.md)。
 
 ## 已確認選擇 D1–D5
+
+D6 起的已確認選擇見[切片說明](slice-map.md#已確認選擇)。
 
 ### D1 · P4 協作交接通路
 

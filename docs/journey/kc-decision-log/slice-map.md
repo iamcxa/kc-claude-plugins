@@ -18,7 +18,7 @@
 ## 投入與入場
 
 - appetite：3 days，使用者原話「1-3天」，其後澄清為「三個完整工作日」。
-- estimate：重切後 P1 粗估 12–24 active 工程小時，未經同類交付校準；依據與假設見 [P1 估工](p1-estimate.md)。fit 在 handoff 檢查前仍未證明。
+- estimate：P1 粗估 16–30 active 工程小時，未經同類交付校準；上限超過三個 8 小時工作日，依據與假設見 [P1 估工](p1-estimate.md)。fit 未證明，由 handoff 檢查與使用者決定。
 - 重切前 P1（S01, S02, S04, S10, S11）的 32–48 小時粗估不再適用；它計入了已移出本片的雙使用者隔離測試與三端驗收。
 - P1 之後逐片以小批次規劃、驗證與決定；沒有一次啟動全部候選切片。
 
@@ -40,13 +40,16 @@
 
 - 一個已配置的合成決策 repo binding；CLI 只讀它，必填完整 commit，不默用 HEAD／ref、不 fetch
 - 依 binding 的 ADR root 讀原生 dev2 路徑，回傳 repo、path、ADR ID、完整 commit、原文 digest 與原 Status，JSON 與人讀兩種輸出
-- 保守 effective：只有明示 Accepted，或同 repo 明示 `Superseded by` 鏈末端的 Accepted 才算生效，其餘 unresolved
+- 保守 effective 沿用原型規則（D9）：有 Decision key 且同 key 只有一筆的明示 Accepted，或同 binding 明示 `Superseded by` 鏈末端的這種 Accepted 才算生效，其餘 unresolved；合成資料帶 Decision key
+- 一個簡短的唯讀 skill（D10）：拿到裁示引用時先以 CLI 重讀、比對指紋，不一致就停；Claude 與 Codex 都能載入
 - 使用者把 Claude 讀出的引用手動轉交 Codex；Codex 在自己的已授權環境以同一 CLI 重讀並核對
-- 經既有 dev2／Spacedock 完成一個合成任務，使用者取回對應該引用的 task／gate／PR 證據
+- 兩個 dev2 任務（D7）：任務一由 Claude 協調者做 CLI；任務二由 Paseo 啟動的 Codex 協調者執行合成任務，其 worker 先以 CLI 重讀再動手
+- 合成任務是一個由合成裁示決定的 CLI 小功能，做到 PR 合併；使用者取回對應該引用的 task／gate／PR 證據
 
 **不做**
 
-- dot 端讀取或交接（P4a）
+- dot 端讀取或交接（P4a；dot 無終端機，需 MCP／connector）
+- hook（D10，見 S30）
 - 多個決策 repo、上層／工程層級分隔與跨層引用（P4b）
 - 兩個使用者之間的作業系統隔離驗證（移至 P4b）；本片不宣稱租戶隔離
 - CLI 寫入 Git、配號、建 task、開 PR 或 merge；自動 Git 更新、package 升級或部署
@@ -57,19 +60,23 @@
 
 | 依賴 | 性質 | 可用性／限制 |
 | --- | --- | --- |
-| 使用者私人決策 repo 內的既有查詢原型 | 實作基礎 | 存在且有測試；`SOURCE_PATH` 綁 `projects/KEY/docs/adr`，需改為依 binding 的 ADR root。CLI 程式最終放在哪個 repo 尚未決定。 |
+| 使用者私人決策 repo 內的既有查詢原型 | 實作基礎 | 存在且有測試；`SOURCE_PATH` 綁 `projects/KEY/docs/adr`，需改為依 binding 的 ADR root。核心複製並改寫進 `kc-decision-log` plugin，原型不動（D8）。 |
 | Claude 本機以 Git 讀固定 commit | 交接起點 | 2026-10-20 Claude 在本機以 `git show <完整commit>:<ADR path>` 讀出一筆既有 ADR，exit 0。這只證明 Git 路徑可用，不是新 CLI 的驗收。 |
-| Codex 在自己的環境執行 CLI 並讀同一來源 | 交接接手端 | Codex 本機命令與 gh 可用（重切前記錄）；新 CLI 尚不存在，接手重讀未驗。 |
+| Codex 協調者與 Codex worker 在同一台機器執行 CLI 並讀同一 clone | 交接接手端（D7） | 由 Paseo 啟動 Codex 協調者；Spacedock 的 worker 執行環境跟隨協調者，Claude 協調者不能派 Codex worker。Codex 環境的 Node 24 與 clone 讀取未驗；Codex 不執行合併。 |
 | 既有 dev2／Spacedock 流程 | S21、S22 的任務與證據入口 | 本 repo 有 `docs/dev2` workflow；合成任務尚未建立。 |
 
 **驗收條件**
 
-- P1-AC1：合成決策 repo 是唯一已配置 binding；CLI 對未配置 binding、錯 repo／path、缺 commit 或非完整 commit 清楚拒絕並以非零 exit 結束，不把 caller 自稱或任意路徑當授權，不新增存取。
+- P1-AC1：合成決策 repo 是唯一已配置 binding；CLI 對未配置 binding、錯 repo／path、缺 commit 或非完整 commit 拒絕並以非零 exit 結束，不同原因可有不同訊息（P1 不宣稱隔離）；不把 caller 自稱或任意路徑當授權，不新增存取。
 - P1-AC2：CLI 固定讀 D0 時，即使 ref 後來前進到 D1 仍只宣稱 D0；回傳 repo、path、ADR ID、完整 commit、原文 digest 與原 Status，JSON 與人讀模式對照同一結果。
-- P1-AC3：用合成 Accepted、Proposed、同 repo 明示取代、缺 Decision key 與壞鏈資料，CLI 照原文報 Status；effective 只在明示 Accepted 或同 repo 取代鏈末端 Accepted 時為生效，其餘 unresolved；不改原文；unresolved 與工具失敗分開。
-- P1-AC4：使用者把 Claude 讀出的引用手動轉交 Codex，標明傳出者、接手者、原任務與 repo／ADR／commit／digest；Codex 在自己的已授權環境實際執行同一 CLI 重讀，結果可對照一致。不一致時回報並停止，不默默改執行目標；貼文自稱或另一端登入不算本端通過。
-- P1-AC5：合成 ADR 即使寫「部署／發訊」也不取代本次行動授權；peer 權限提示交回原持有者或使用者，FO 不代答。
-- P1-AC6：經既有 dev2／Spacedock 完成一個合成任務；使用者取回原 task／gate／PR 引用，核對它對應本次任務內容、回合與採用的 ADR commit。無法證明關聯就顯示未知；不複製受保護日誌、不另造台帳。
+- P1-AC3：用合成 Accepted（帶 Decision key）、Proposed、同 binding 明示取代、缺 Decision key、同 key 兩筆 Accepted 與壞鏈資料，CLI 照原文報 Status；effective 依 D9，缺 key 與同 key 多筆 Accepted 皆 unresolved；不改原文；unresolved 與工具失敗分開。
+- P1-AC4：使用者把 Claude 讀出的引用手動轉交 Codex，標明傳出者、接手者、原任務與 repo／ADR／commit／digest；Codex worker 在自己的已授權環境實際執行同一 CLI 重讀，由 CLI 以預期內容指紋比對，不符即非零 exit；只有 effective 指向被轉交的那一筆才開工，未定或被取代就停下回報，不默默改執行目標。貼文自稱或另一端登入不算本端通過。
+- P1-AC5：合成 ADR 寫「部署／發訊」時，任務紀錄中沒有任何部署或發訊動作；peer 權限提示交回原持有者或使用者，FO 不代答。
+- P1-AC6：經既有 dev2／Spacedock 完成一個合成任務，PR 由使用者合併或逐 PR 授權 Claude 協調者合併；使用者取回原 task／gate／PR 引用，核對它對應本次任務內容、回合與採用的 ADR commit。無法證明關聯就顯示未知；不複製受保護日誌、不另造台帳。
+
+- P1-AC7：唯讀 skill 讓 agent 拿到裁示引用時先以 CLI 重讀、比對指紋，不一致就停；任務二的 Codex worker 實際使用並留下紀錄。
+
+P1-AC1–AC6 與其修改由使用者 2026-10-20 回覆「同意」接受；AC7 隨 D10 加入。
 
 **移除測試：** S01 沒有可讀且可拒絕的來源；S10 交接只剩轉述；S11 接手者可能照仍在提議或已被取代的裁示行動；S19 交接段不存在；S20 「讀的是同一份」只能靠對方自稱；S21 沒有執行入口；S22 證據回不到使用者，迴圈不閉合。移除任一張，本片的端到端成果就不成立。
 
@@ -190,7 +197,7 @@ dot經已授權且可執行CLI的路徑讀取同一裁示並參與交接；接�
 | 依賴 | 性質 | 可用性／限制 |
 | --- | --- | --- |
 | P1 | 硬依賴 | CLI 與 Claude→Codex 交接須先成立。 |
-| dot 實際可執行 CLI 且有來源存取權的 runtime 路徑 | 驗收條件 | dot→已授權 delegated local task 已有 shell／Git／gh metadata 鏈（重切前記錄）；新 CLI 回執未驗。 |
+| dot 讀取同一裁示的路徑 | 驗收條件 | dot 是 ChatGPT 上的 agent，沒有終端機，Paseo 只在本機，dot 連不到（使用者決策 repo 的 DOT#0008 記為延後）；需 MCP／connector（D5、D13）。 |
 
 **驗收條件**
 
@@ -309,7 +316,9 @@ dot經已授權且可執行CLI的路徑讀取同一裁示並參與交接；接�
 | S28 | 我比較可選方案再形成草案 | 方案比較可先沿用既有討論方式；在已確認內容後建立 PR 的片段不另建比較介面。 |
 | S17 | 我讓 host 載入可驗證的新裁示 | CLI-first當前P1/P3成果不需遠端host維護；保留故事與last-good要求，日後確定選配遠端adapter需求及既有授權後再排，不新增slice或把host當CLI前提。 |
 
-## D1–D5 已確認選擇
+## 已確認選擇
+
+D1–D4 標為已確認，但 2026-10-20 搜尋已索引的 Claude／Codex 紀錄未找到使用者原話，出處待使用者確認。D7–D13 部分內容來自 2026-10-20 一次提出的 11 題，使用者回覆「同意」全部接受。
 
 ### D1 P4 協作交接通路
 
@@ -353,13 +362,61 @@ Agent 用既有 Git／PR 工具；kc-decision-log MCP 先維持唯讀，寫入 M
 
 影響：P1, P2, P3, P4a, P4b, P5, S01, S02, S04, S08, S09, S10, S11, S13, S14, S15, S16, S17, S18, S19, S20, S22, S23, S26。
 
+### D6 決策空間與層級
+
+通用工具、多個決策空間，各自是獨立 repo；小範圍決策以明確版本引用大範圍決策，推導出的決定仍由使用者確認。
+
+使用者 2026-10-20 回覆「同意」。影響：S05、S29、P4b。
+
+### D7 P1 兩個任務
+
+任務一由 Claude 協調者與 Claude worker 做 CLI（S01、S10、S11）。任務二由 Paseo 啟動的 Codex 協調者執行合成任務，其 Codex worker 先以 CLI 重讀再動手；Codex 跑不起 CLI 即 P1 未過，不以 `git show` 代替。合成任務是一個由合成裁示決定的 CLI 小功能，做到 PR 合併才算完成：由使用者合併或逐 PR 授權 Claude 協調者合併，Codex 不合併。
+
+使用者 2026-10-20 回覆「可以」（兩個任務）與「同意」（完成終點）。影響：P1、S19–S22。
+
+### D8 程式位置與 plugin
+
+CLI 做成 kc-claude-plugins 的 `kc-decision-log` plugin，自原型複製並改寫查詢核心，原型不動。0.1.0 起登記 marketplace 並標實驗中，因為 `version-parity-check.sh` 要求每個 plugin 目錄都有登記；先本機測試安裝，再接 release-please。
+
+使用者 2026-10-20 回覆「放在plugin沒問題」與「同意」。影響：P1。
+
+### D9 P1 生效判定沿用原型規則
+
+沒有 Decision key 的 Accepted，或同 binding 同 key 有多筆 Accepted，皆為 unresolved；合成資料比照真實紀錄帶 Decision key（2026-10-20 檢查：使用者決策 repo 的 15 筆紀錄都有）。工程 repo 的 dev2 ADR 沒有 Decision key，其判定規則延到工具開始讀工程 repo 時再定。
+
+使用者 2026-10-20 回覆「同意」。影響：S11、P1-AC3。
+
+### D10 唯讀 skill 與 hook
+
+P1 交付一個簡短的唯讀 skill：拿到裁示引用時先以 CLI 重讀、比對指紋，不一致就停。hook 不進 P1；它與 dev2 的 ADR 標題 hook 共用機制，dev2 那張任務待定，見 S30。
+
+使用者 2026-10-20 回覆「同意」。影響：P1-AC7、S30。
+
+### D11 格式標準
+
+CLI 的測試以 dev2 `adr_lint.py` 作 ADR 格式的對照標準，避免另一份解析器與 dev2 格式走樣。
+
+使用者 2026-10-20 回覆「同意」。影響：S11。
+
+### D12 agent 自主範圍
+
+沿用 [ADR 0011](../../adr/0011-fo-decides-for-the-captain-by-a-delegation-ladder.md) 的授權階梯：agent 能自行決定的範圍以專門的授權 ADR 給出；權限、關卡批准、合併、對外動作、不可逆變更與金錢永不授權。不另增欄位或寫法。
+
+使用者 2026-10-20 回覆「同意」。影響：P5、各決策空間。
+
+### D13 定位
+
+kc-decision-log 是一個人指揮多個 AI agent 時的裁示庫：大方向用使用者的原話寫一次、有版本、分空間存放，agents 讀同一份，小決定引用大決定，省掉重複的對話。核心依據是使用者 2026-10-19 的話：「我需要指揮不同 FO，跨產品，跨 LLM，跨工具去達成我的目標」。dot 等沒有終端機的 agent 需待 MCP／connector 才能讀；在此之前「讀同一份」只對可執行 CLI 的 agent 成立。成功指標是每次要使用者決定的題數，以及引用使用者層裁示的 `Precedent:` 行數；兩者目前都沒有基準值。
+
+使用者 2026-10-20 回覆「同意」。
+
 ## 驗證層級與待驗收項
 
 | 層級 | 現況 |
 | --- | --- |
-| design | 2026-10-20 重切由使用者接受七張故事的範圍；新 P1 的驗收條件由保留故事的既有要求推導，尚未經人類逐條審閱。 |
+| design | 2026-10-20 使用者接受重切後七張故事、P1-AC1–AC6 與其修改，以及 D6–D13；兩位陌生讀者的 43 題已逐題答覆或延後。 |
 | technical | CLI 尚未實作；Claude 本機以 Git 讀固定 commit 已觀測，Codex 接手重讀與合成 dev2 任務未驗。 |
-| admission | 投入三個完整工作日；重切後粗估 12–24 active 工程小時，未校準；fit 與 handoff 待原生 `journey-handoff.mjs` 檢查。 |
+| admission | 投入三個完整工作日；P1 粗估 16–30 active 工程小時，未校準，上限超過投入；fit 與 handoff 待原生 `journey-handoff.mjs` 檢查。 |
 
 dev2 基準：0.25.0。原始格式、狀態、配號及審查沿用 dev2。get_effective 與 Decision key 是保守查詢的設計補充，不是 dev2 原生要求。
 

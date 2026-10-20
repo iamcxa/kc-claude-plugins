@@ -2,7 +2,7 @@
 journey: kc-decision-log-design
 title: 使用者與 agents 共用決策的故事地圖
 persona: 使用者：對跨專案方向負責的總指揮；由 Claude、Codex、dot 協助讀取、交接與回報。
-one_journey: 使用者確認的裁示有獨立Git原文與明確權限；agents在各自已授權的執行環境用同一CLI核心讀對版本、對齊自己持有的checkout，交由既有流程執行，再帶證據回來重新決策。
+one_journey: 使用者用自己的原話把大方向寫一次、有版本、分空間存放；可執行CLI的agents讀同一份並對齊版本，小決定引用大決定的版本，交由既有流程執行，再帶證據回來重新決策。
 now:
   - id: n1
     card: 在對話與 Git 之間核對裁示
@@ -41,6 +41,26 @@ steps:
       - id: S01
         card: 我指定獨立決策庫與追蹤分支
         questions:
+          - id: p1r-01
+            ask: 原生 docs/adr 的 ADR ID 怎麼定？
+            answer: Gap：原型路徑綁 projects/KEY；改為 binding 內四位號。
+          - id: p1r-02
+            ask: ADR 目錄有 README 等檔會整個失敗嗎？
+            answer: Gap：原型會丟錯；照 adr_lint 的略過清單處理。
+          - id: p1r-03
+            ask: CLI 程式放在哪裡？
+            answer: 已裁：kc-decision-log plugin，原型不動。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#d8-程式位置與-plugin
+          - id: p1r-04
+            ask: binding 的 repo 身分怎麼核對？
+            answer: Gap：同機同 clone，以 remote 與 commit 存在為準。
+          - id: p1r-05
+            ask: 怎麼避免真實 ADR 成為驗收資料？
+            answer: Gap：驗收資料一律合成；CLI 不強制。
+          - id: p1r-06
+            ask: 拒絕時要不要區分原因？
+            answer: 已裁：只要求非零 exit，可分原因。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p1
           - id: cli-p1-u03
             ask: 如何沿用原生路徑而不依賴DOT？
             answer: Gap：依配置root讀原生路徑，不搬檔；loader仍待驗。
@@ -56,6 +76,8 @@ steps:
           - id: cli-p1-u21
             ask: 如何驗證真正權限隔離？
             answer: Fact：隔離須真實權限；局部OS觀測未完成AC1。
+            status: deferred
+            because: 隔離驗證已移至 P4b（2026-10-20 重切）。
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/p1-technical-contract.md#cli-p1-u21
           - id: cli-p1-u24
             ask: 可讀不在目前ref的歷史pin嗎？
@@ -157,7 +179,7 @@ steps:
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s04
         release: P4b
       - id: S05
-        card: 我讓工程方案引用上層版本
+        card: 我讓小範圍決策引用大範圍決策的版本
         release: P4b
         questions:
           - id: scope-S05
@@ -231,6 +253,22 @@ steps:
       - id: S10
         card: 我查到原文與可重現的版本引用
         questions:
+          - id: p1r-07
+            ask: 指紋算原始 bytes 還是字串？
+            answer: Gap：原型雜湊 UTF-8 字串；改為原始 bytes。
+          - id: p1r-08
+            ask: 跨機器排序會不同嗎？
+            answer: Gap：localeCompare 改為位元組順序。
+          - id: p1r-09
+            ask: 交接要帶哪個版本號？
+            answer: Gap：CLI 自身版本加 dev2 格式基準。
+          - id: p1r-10
+            ask: P1 要 list 與 search 嗎？
+            answer: Fact：P1 只讀一筆與 effective。
+          - id: p1r-11
+            ask: 交接結果由誰比對？
+            answer: 已裁：CLI 比對預期指紋，不符非零 exit。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p1
           - id: cli-p1-u06
             ask: 如何避免錯誤洩漏來源存在性？
             answer: Gap：未准來源統一拒絕，不探存在；錯誤對照仍待驗。
@@ -258,6 +296,8 @@ steps:
           - id: cli-p1-u22
             ask: 三端哪些語義必須一致？
             answer: Gap：固定來源與核心比較語義，時間可異；仍待驗。
+            status: deferred
+            because: 三端一致屬 P4a 的 S02（2026-10-20 重切）。
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/p1-technical-contract.md#cli-p1-u22
           - id: cli-p1-u28
             ask: 同號ADR如何避免任取一份？
@@ -283,6 +323,20 @@ steps:
       - id: S11
         card: 我知道哪些已生效或仍有疑義
         questions:
+          - id: p1r-12
+            ask: 一筆壞檔會讓全部未定嗎？
+            answer: Gap：原型整份未定；改為逐筆判定。
+          - id: p1r-13
+            ask: 沒有 Decision key 的 Accepted 算生效嗎？
+            answer: 已裁：沿用原型，無 key 或同 key 多筆皆未定。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#d9-p1-生效判定沿用原型規則
+          - id: p1r-14
+            ask: parser 比 dev2 lint 嚴怎麼辦？
+            answer: Gap：以 adr_lint 為格式標準對齊。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#d11-格式標準
+          - id: p1r-15
+            ask: 同 repo 取代指什麼範圍？
+            answer: Fact：P1 等於同一個 binding。
           - id: cli-p1-u01
             ask: 同一來源壞檔會影響哪些查詢？
             answer: Gap：檢查失敗不改Status；原文可讀，衍生查詢仍待驗。
@@ -319,6 +373,24 @@ steps:
             ask: 這張故事的範圍與限制是什麼？
             answer: 規劃說明見文件；故事仍待實作與驗收。
             doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s12
+      - id: S29
+        card: 讀一筆裁示時看得到它的上層依據
+        questions:
+          - id: scope-S29
+            ask: 這張故事的範圍與限制是什麼？
+            answer: 規劃說明見文件；故事仍待實作與驗收。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s29
+      - id: S30
+        card: agent 在需要時自動查到相關裁示
+        questions:
+          - id: hook-S30
+            ask: 自動查詢用什麼機制？
+            answer: 與 dev2 的 ADR 標題 hook 共用機制；dev2 任務待定。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#d10-唯讀-skill-與-hook
+          - id: scope-S30
+            ask: 這張故事的範圍與限制是什麼？
+            answer: 規劃說明見文件；故事仍待實作與驗收。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/story-map.md#s30
   - id: A5
     activity: 對齊手上的版本
     rules:
@@ -401,6 +473,13 @@ steps:
         card: 我把裁示引用交給接手 agent
         release: P1
         questions:
+          - id: p1r-16
+            ask: 取代鏈指到另一筆時照哪筆做？
+            answer: 已裁：effective 須指向轉交那筆才開工。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p1
+          - id: p1r-17
+            ask: 要做交接範本嗎？
+            answer: Gap：交接格式即 CLI 輸出的引用區塊。
           - id: scope-S19
             ask: 這張故事的範圍與限制是什麼？
             answer: 規劃說明見文件；故事仍待實作與驗收。
@@ -409,6 +488,24 @@ steps:
         card: 接手者先核對版本與行動範圍
         release: P1
         questions:
+          - id: p1r-18
+            ask: Codex 端讀不到或跑不起 CLI 怎麼辦？
+            answer: 已裁：同機讀同一 clone；跑不起即未過。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#d7-p1-兩個任務
+          - id: p1r-19
+            ask: effective 未定時可以開工嗎？
+            answer: 已裁：未定即停下回報。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p1
+          - id: p1r-20
+            ask: freshness 未知可以執行嗎？
+            answer: Fact：交接標未觀測；新舊比對屬 P2。
+          - id: p1r-21
+            ask: 任務改動、重送或重啟怎麼辦？
+            answer: Fact：沿 dev2 修訂與重新派工，每次重讀。
+          - id: p1r-22
+            ask: 「不授權部署」怎麼驗收？
+            answer: 已裁：任務紀錄沒有部署動作即通過。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#p1
           - id: scope-S20
             ask: 這張故事的範圍與限制是什麼？
             answer: 規劃說明見文件；故事仍待實作與驗收。
@@ -417,6 +514,17 @@ steps:
         card: 我沿用既有任務及驗收入口
         release: P1
         questions:
+          - id: p1r-23
+            ask: 合成任務做到哪算完成？
+            answer: 已裁：PR 合併才算；內容是裁示決定的小功能。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#d7-p1-兩個任務
+          - id: p1r-24
+            ask: Codex 以什麼身分接手？
+            answer: 已裁：Paseo 開 Codex 協調者，其 worker 接手。
+            doc: https://github.com/iamcxa/kc-claude-plugins/blob/docs/kc-decision-log-cli-map/docs/journey/kc-decision-log/slice-map.md#d7-p1-兩個任務
+          - id: p1r-25
+            ask: 裁示引用寫在 dev2 的哪裡？
+            answer: Gap：寫進任務說明本文，不改 dev2 模板。
           - id: scope-S21
             ask: 這張故事的範圍與限制是什麼？
             answer: 規劃說明見文件；故事仍待實作與驗收。
@@ -432,6 +540,12 @@ steps:
         card: 我看到執行與驗收的原始證據
         release: P1
         questions:
+          - id: p1r-26
+            ask: 使用者怎麼取回證據？
+            answer: Fact：同機讀 PR 與歸檔任務檔。
+          - id: p1r-27
+            ask: 共用帳號時怎麼分執行者與驗收者？
+            answer: Fact：dev2 派工紀錄區分，驗收是新 worker。
           - id: scope-S22
             ask: 這張故事的範圍與限制是什麼？
             answer: 規劃說明見文件；故事仍待實作與驗收。

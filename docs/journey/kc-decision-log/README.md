@@ -2,13 +2,13 @@
 
 本目錄使用 `kc-journey-map` 原生 YAML、Markdown 說明及 tldraw `.tldr` 快照。可繪製來源是 [journey.yaml](journey.yaml)；故事總覽與六個切片頁由同一次原生 render 產生，快照為 [journey.tldr](journey.tldr)。
 
-P1「帶著精確裁示走完一次交接」已選，採 dev2 Pilot，故事為 S01、S10、S11、S19、S20、S21、S22；2026-10-20 自原「讀對同一份裁示」重切。P2、P3、P4a、P4b、P5 的既有提案歸屬以「候選」標明，供完整地圖討論；S03、S12、S17、S28 延後且不指派 release。畫入候選切片不等於啟動開發。
+P1「帶著精確裁示走完一次交接」已選，採 dev2 Pilot，故事為 S01、S10、S11、S19、S20、S21、S22；2026-10-20 自原「讀對同一份裁示」重切。P2、P3、P4a、P4b、P5 的既有提案歸屬以「候選」標明，供完整地圖討論；S03、S12、S17、S28、S29、S30 延後且不指派 release。畫入候選切片不等於啟動開發。
 
 ## 來源與畫布
 
 | 內容 | 原生來源 | 畫布位置 |
 | --- | --- | --- |
-| 8 個活動、28 張故事、原卡片文字 | `steps[].activity`、`steps[].stories[].card` | Story map |
+| 8 個活動、30 張故事、原卡片文字 | `steps[].activity`、`steps[].stories[].card` | Story map |
 | 六片名稱、成果與故事歸屬 | `releases[]`、`stories[].release` | Story map 的六條 release band；六個 journey-board 頁 |
 | 35 個既有技術問答 | `stories[].questions[]` 的 id／ask／answer／doc | 掛在所屬故事的切片頁；全文連到技術契約章節（為重切前 P1 撰寫） |
 | 28 個故事範圍連結、6 個切片說明連結 | 同一原生 questions／answer／doc 欄位 | 已指派故事的切片頁；四個延後故事的說明保留在來源及 Markdown |
@@ -18,7 +18,7 @@ P1「帶著精確裁示走完一次交接」已選，採 dev2 Pilot，故事為 
 
 ## 說明文件
 
-- [故事說明](story-map.md)：活動、六片歸屬、28 張故事的完整範圍、規則全文與原題對照。
+- [故事說明](story-map.md)：活動、六片歸屬、30 張故事的完整範圍、規則全文與原題對照。
 - [切片說明](slice-map.md)：六片成果、範圍、排除項、依賴、驗收條件及移除測試。
 - [設計理由與 D1–D5](design-notes.md)：決策權限、版本、受控提交與已確認選擇。
 - [CLI 優先設計](cli-first-design.md)：跨端工作模型及權限邊界。
@@ -43,6 +43,6 @@ node kc-journey-map/lib/journey-tldr.mjs export kc-decision-log-design docs/jour
 
 ## 驗證界線
 
-這是 map-mode 規劃意圖，故事不填沒有證據的 status／evidence。原生 evidence lint 的 28 筆 `no-status` 不能解讀成格式全綠；render、原生 schema 接收、readback、快照內容及實際畫面分開核對。P1 的故事數 7（`slice_because` 記錄理由），其餘切片 3、3、2、5、4。
+這是 map-mode 規劃意圖，故事不填沒有證據的 status／evidence。原生 evidence lint 的 30 筆 `no-status` 不能解讀成格式全綠；render、原生 schema 接收、readback、快照內容及實際畫面分開核對。P1 的故事數 7（`slice_because` 記錄理由），其餘切片 3、3、2、5、4。
 
-新 CLI 尚未實作／部署，Claude→Codex 交接驗收、正式 fit 與 ready handoff 均未成立。投入已確認為三個完整工作日；重切後粗估 12–24 active 工程小時，未經校準。ADR 格式、Status、配號及審查沿用 dev2 原機制；任務與驗收沿用 dev2／Spacedock。
+新 CLI 尚未實作／部署，Claude→Codex 交接驗收、正式 fit 與 ready handoff 均未成立。投入已確認為三個完整工作日；P1 粗估 16–30 active 工程小時，未經校準，上限超過投入。ADR 格式、Status、配號及審查沿用 dev2 原機制；任務與驗收沿用 dev2／Spacedock。

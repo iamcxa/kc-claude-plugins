@@ -1,17 +1,18 @@
-# P1工程工作量粗估（重切後，提案）
+# P1工程工作量粗估（提案）
 
-**重切後 P1 粗估 12–24 active 工程小時，未經同類交付校準；fit 在原生 handoff 檢查前仍未證明。** 投入是使用者澄清的「三個完整工作日」，原話「1-3天」。
+**P1 粗估 16–30 active 工程小時，未經同類交付校準；上限超過三個 8 小時工作日，fit 未證明。** 投入是使用者澄清的「三個完整工作日」，原話「1-3天」。8 小時一天是換算假設，不是使用者的話。
 
-重切前 P1（S01, S02, S04, S10, S11）的 32–48 小時粗估不再適用：它計入的雙使用者 OS 隔離測試、三端回執與多來源分隔已移至 P4a／P4b。該版本保留在本 PR 2026-10-20 重切前的提交歷史。
+本版反映 2026-10-20 已接受的 D7（兩個 dev2 任務，任務二由 Codex 協調者執行）、D8（程式放進 `kc-decision-log` plugin）、D9（生效判定沿用原型規則）與 D10（唯讀 skill）。重切前 P1 的 32–48 小時與重切當下的 12–24 小時都不再適用，保留在本 PR 的提交歷史。
 
 | 工作 | active 工程小時 | 依據 |
 | --- | --- | --- |
-| CLI：binding 配置、拒絕未配置來源、依 ADR root 讀固定 commit、JSON／人讀輸出與 exit code | 4–8 | 既有查詢原型已有 `parse`／`makeSnapshot`／`effective` 與 `createService`，build 已以 `git rev-parse`／`ls-tree`／`show` 讀固定 commit；需去掉 `SOURCE_PATH` 的 `projects/KEY` 限定、改讀外部 repo、加 CLI 入口。 |
-| 合成決策 repo 與驗收 fixtures | 1–2 | Accepted、Proposed、同 repo 取代、缺 Decision key、壞鏈；D0 → D1 ref 前進。既有測試含合成 fixtures 可參考。 |
-| Codex 在自己的環境執行同一 CLI | 1–2 | Codex 本機命令可用；需確認它能讀到同一 repo 與 commit。 |
-| 一個合成 dev2 任務走完 Pilot 並取回證據 | 4–8 | 沿用本 repo `docs/dev2` workflow；無同類任務的實測週期。 |
-| 整合與一次修正 | 2–4 | 跨段介面（引用格式、交接內容、證據核對）。 |
+| 查詢核心移入 plugin 並改寫：binding、依 ADR root 讀固定 commit、原始 bytes 指紋、略過非 ADR 檔、位元組排序、逐筆判定、JSON／人讀輸出與 exit code、預期指紋比對；測試以 `adr_lint.py` 對照 | 6–10 | 原型 `source.mjs` 136 行、`service.mjs` 67 行，連同測試共 810 行（2026-10-20 實測）；問答列出的六項落差都在這段程式裡。 |
+| plugin 骨架：Claude 與 Codex manifest、marketplace 登記、release-please 設定、版本一致性檢查、本機安裝測試、公開內容檢查 | 2–4 | 本 repo 既有 plugin 的做法與 `version-parity-check.sh`；沒有本 repo 新增 plugin 的實測工時。 |
+| 唯讀 skill 與其驗收 | 1–2 | 一份短 skill，加上任務二的實際使用紀錄。 |
+| 合成決策 repo 與驗收資料 | 1–2 | 帶 Decision key 的 Accepted、Proposed、取代、缺 key、同 key 兩筆、壞鏈；D0 → D1 ref 前進。 |
+| 任務二：Paseo 啟動 Codex 協調者，Codex worker 重讀並實作裁示決定的小功能，開 PR 並等合併 | 4–8 | 另一個 repo 已有 Codex 協調者跑 dev2 的紀錄；本 repo 沒有實測週期，Codex 環境的 Node 24 與 clone 讀取未驗。 |
+| 整合與一次修正 | 2–4 | 引用格式、交接內容、證據核對之間的介面。 |
 
-**假設：** 既有查詢原型大小為 2026-10-20 實測：`source.mjs` 136 行、`service.mjs` 67 行，連同測試共 810 行。工時是依此推的判斷，不是測得的生產率。估算假設 CLI 放在既有原型旁；若改放到公開 repo，搬移與公開內容檢查另計，未估。
+**合計 16–30 小時。** 工時是依上列依據推的判斷，不是測得的生產率；不含等待使用者批准與合併的時間。
 
-**未知：** dev2 合成任務的實際週期、Codex 端讀取路徑、CLI 程式放置位置。超過投入時，回到使用者決定縮範圍或加投入，不自行擴大預算。
+**未知：** 任務二的實際週期、Codex 環境能否執行 CLI、dev2 兩個任務的關卡往返次數。超過投入時，回到使用者決定縮範圍或加投入，不自行擴大預算。
