@@ -13,6 +13,7 @@ jobs:
     timeout-minutes: 5
     permissions:
       contents: write
+      pull-requests: read
     steps:
       - name: Record the gate from the Captain's review
         env:

@@ -15,7 +15,9 @@ HEAD_SHA=$(git rev-parse HEAD)
 "$SD" status --workflow-dir "$WORKFLOW_DIR" --next --json | grep -q "\"slug\":\"$SLUG\".*\"readiness\":\"awaiting-captain\"" \
   || { echo "no-op: gate for $SLUG is not awaiting the Captain"; exit 0; }
 
-get "/pulls/$PR/reviews?per_page=100" | python3 -I -c '
+REVIEWS=$(get "/pulls/$PR/reviews?per_page=100") || { echo "fail: cannot read the reviews of PR $PR" >&2; exit 1; }
+rc=0
+echo "$REVIEWS" | python3 -I -c '
 import json, sys
 captain, head = sys.argv[1], sys.argv[2]
 rows = [r for r in json.load(sys.stdin)
@@ -26,7 +28,9 @@ if not rows:
 r = rows[-1]
 body = " ".join((r.get("body") or "").split())
 print(r["id"], {"APPROVED": "approve", "CHANGES_REQUESTED": "revise"}[r["state"]], body or "(no comment)")
-' "$CAPTAIN" "$HEAD_SHA" > /tmp/review.$$ || { echo "no-op: no review by $CAPTAIN on $HEAD_SHA"; rm -f /tmp/review.$$; exit 0; }
+' "$CAPTAIN" "$HEAD_SHA" > /tmp/review.$$ || rc=$?
+if [ "$rc" = 3 ]; then echo "no-op: no review by $CAPTAIN on $HEAD_SHA"; rm -f /tmp/review.$$; exit 0; fi
+if [ "$rc" != 0 ]; then echo "fail: could not read the reviews of PR $PR" >&2; rm -f /tmp/review.$$; exit 1; fi
 read -r RID DECISION WORDS < /tmp/review.$$; rm -f /tmp/review.$$
 
 "$SD" gate record "$SLUG" --workflow-dir "$WORKFLOW_DIR" --decision "$DECISION" --actor person:captain \
