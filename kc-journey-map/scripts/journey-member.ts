@@ -38,8 +38,8 @@ export async function runMemberCommand({op,target,binding,read,send,confirm,save
  let result
  try {result=await send(op,{target,proof,operationId})}catch{result={result:'unknown',category:'response_unavailable',retry:false}}
  const receipt={operationId,candidate,observedAt:proof.observedAt,proof,target,result,readback:null}
- if(result.result==='unknown'){
-  try{receipt.readback=await send('inspect',{target,proof,operationId})}catch{receipt.readback={result:'unknown'}}
+ if(op==='enroll' && result.result==='unknown'){
+  try{const readback=await send('inspect',{target,proof,operationId});receipt.readback=readback?.result==='refused'?{result:'unknown',category:readback.category}:readback}catch{receipt.readback={result:'unknown'}}
  }
  try{save(receipt)}catch{return {result:'unknown',category:'local_receipt_unavailable',retry:false}}
  return {result:result.result,category:result.category,readback:receipt.readback?.result||null}
@@ -59,6 +59,7 @@ async function main() {
   const response=await fetch(url,{headers:{Authorization:'Bearer '+token},redirect:'error',signal:AbortSignal.timeout(15_000)})
   if(!response.ok)throw new Error('provider_unavailable');return response.json()
  }
+ let operatorToken:string|undefined
  let nodeReader:ReturnType<typeof createInterface>|undefined
  const pending=new Map<string,{done:(v:any)=>void;reject:(e:Error)=>void;timer:ReturnType<typeof setTimeout>}>()
  const send=async(operation:string,input:any)=>{
@@ -69,7 +70,7 @@ async function main() {
   }
   if(profile.transport?.mode!=='cloudflare-private')throw new Error('unsupported_transport')
   const url=new URL(profile.transport.url);if(url.protocol!=='https:'||url.pathname!=='/'||url.search||url.hash||url.username||url.password)throw new Error('invalid_private_endpoint')
-  const operatorToken=readFileSync(protectedFd(profile.transport.credentialFd),'utf8').trim()
+  operatorToken ??= readFileSync(protectedFd(profile.transport.credentialFd),'utf8').trim()
   const response=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+operatorToken},body:JSON.stringify({op:'member-'+operation,writersStopped:true,input}),redirect:'error',signal:AbortSignal.timeout(15_000)})
   if(!response.ok){if(response.status>=500)throw new Error('response_unknown');return {result:'refused',category:'private_operation_denied'}}return response.json()
  }

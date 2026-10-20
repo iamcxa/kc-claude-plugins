@@ -47,6 +47,9 @@ IDs, never arbitrary paths. Profiles are owner-only files with:
 
 An assistant needs this protected, exact invocation plus Kent's specific approval.
 An ordinary paired client or chat message does not create operator authority.
+For a Cloudflare invocation, the protected operator descriptor is validated and
+read once; the credential remains only in process memory for the initial request
+and its one exact-target readback. It is never logged or saved in the receipt.
 Tokens remain behind the existing approved credential wrapper. The command does
 not discover credentials or configure accounts. Close the descriptor after use.
 
@@ -98,7 +101,10 @@ deployed boundary. Keep Cloudflare Free and usage/account details local.
 - `refused`: invalid authority, identity, scope, default-off or confirmed rollback.
 - `unknown`: response/commit effect or saving the local receipt cannot be established.
   Never retry enrollment automatically. The command attempts protected exact
-  `inspect` after a lost send response; retain its result separately.
+  `inspect` after a lost send response; retain its result separately. A member
+  operation error after dispatch stays unknown through the private service;
+  pre-send validation and authorization denials remain refusals. A failed
+  recovery inspection stays unknown, without another inspection or enrollment.
 
 Inspection reports `matching-current-state`, `absent`, `conflict` or `unknown`,
 with receipt availability separately. Matching current state is not proof of which

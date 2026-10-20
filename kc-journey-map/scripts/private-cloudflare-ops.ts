@@ -20,7 +20,8 @@ export default {
     if(req.headers.has('origin') || req.headers.get('content-type')?.split(';')[0] !== 'application/json')throw new Error('private JSON required')
     const target=command.input?.target
     if(!target || target.rooms?.some((r:any)=>!rooms.includes(r.roomId)))throw new Error('member target outside operator scope')
-    result=await host.memberOperation(command.op.slice(7),command.input)
+    try {result=await host.memberOperation(command.op.slice(7),command.input)}
+    catch {result={result:'unknown',category:'member_response_unavailable',retry:false}}
    }
    if (command.op === 'backup') result = await backupPrivateHost(host)
    if (command.op === 'restore') {
