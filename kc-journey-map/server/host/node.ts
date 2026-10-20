@@ -199,12 +199,9 @@ export class NodeHost implements Host {
  }
  async track(socket: any, admission: Admission | null, room: string) {
   const entry: {admission: Admission|null;room:string;lease?:StreamLease;timer?:ReturnType<typeof setTimeout>}={admission,room}
-  if(admission) {
-   entry.lease=await renewLease(this.meta,{streamId:crypto.randomUUID(),room,admission,leaseUntil:0})
-   await this.meta.security!('stream-register',entry.lease)
-  }
-  if(socket.readyState!==1){if(entry.lease)await this.meta.security!('stream-close',{streamId:entry.lease.streamId});throw new HostError(403,'socket_closed')}
+  if(admission)entry.lease={streamId:crypto.randomUUID(),room,admission,leaseUntil:0}
   this.sockets.set(socket,entry)
+  socket.on('close',()=>{clearTimeout(entry.timer);this.sockets.delete(socket);if(entry.lease)entry.lease.invalidated=true;if(entry.lease)void this.meta.security!('stream-close',{streamId:entry.lease.streamId}).catch(()=>{})})
   const schedule=()=>{
    if(!entry.lease)return
    entry.timer=setTimeout(async()=>{
@@ -213,8 +210,11 @@ export class NodeHost implements Host {
    },Math.max(0,entry.lease.leaseUntil-Date.now()))
    entry.timer.unref()
   }
-  socket.on('close',()=>{clearTimeout(entry.timer);this.sockets.delete(socket);if(entry.lease)void this.meta.security!('stream-close',{streamId:entry.lease.streamId}).catch(()=>{})})
-  schedule()
+  try {
+   if(entry.lease){await renewLease(this.meta,entry.lease);await this.meta.security!('stream-register',entry.lease);await renewLease(this.meta,entry.lease)}
+   if(socket.readyState!==1 || entry.lease?.invalidated)throw new HostError(403,'socket_closed')
+   schedule()
+  }catch(error){if(entry.lease)entry.lease.invalidated=true;socket.close(1008,'authority denied');if(socket.readyState===3&&entry.lease)await this.meta.security!('stream-close',{streamId:entry.lease.streamId});throw error}
  }
  send(socket: any,data: string) {
   const entry=this.sockets.get(socket)

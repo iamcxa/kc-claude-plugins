@@ -26,7 +26,9 @@ authoritative denial transaction and a separately observed stream stop.
 **Recommended:** transactional app denial plus 30-second outgoing authorization leases, bounded indexed notification and explicit close acknowledgment.
 
 Every actual outgoing send checks its absolute lease, original credential expiry
-and known invalidation. Incoming writes require fresh policy. Node uses existing
+and known invalidation. The current exact room grant also caps the lease;
+notification visibility precedes final authoritative registration and initial
+sync. An aborted upgrade emits no private snapshot and clears its unused index. Incoming writes require fresh policy. Node uses existing
 per-socket one-shot timers. Cloudflare stores exact attachments, refreshes at most
 64 due sockets concurrently per wake/alarm and closes excess due sockets for
 reconnect; one persisted earliest room alarm replaces any permanent interval.

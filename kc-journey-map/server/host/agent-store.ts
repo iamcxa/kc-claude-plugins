@@ -156,7 +156,7 @@ export function agentOperation(store: SyncMetadata, operation: string, input: an
   if (!f || f.revoked) deny(403,'family_revoked')
   current(store,f!,scope,now)
   if(operation==='admit')receipt(store,'admit',f!.memberId,f!.id,null,now)
-  return { credentialId:a.credentialId,familyId:f!.id,actorType:'agent',principalId:f!.memberId,rooms:f!.scopes.map(s=>s.roomId),expiresAt:a.expiresAt,cookie:false }
+  return { credentialId:a.credentialId,familyId:f!.id,actorType:'agent',principalId:f!.memberId,rooms:f!.scopes.map(s=>s.roomId),expiresAt:Math.min(a.expiresAt,...f!.scopes.map(s=>store.get<MemberRoom>('member-room:'+f!.memberId+':'+s.roomId)!.expiresAt)),cookie:false }
  }
  return deny(400,'unknown_agent_operation')
 }
