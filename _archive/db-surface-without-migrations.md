@@ -3,7 +3,7 @@ title: A db task in a repository with no migration files passes the number guard
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「合併」 (chat, 2026-10-20, batch-4 sitting, question 19): approve validation and merge iamcxa/kc-claude-plugins#686 at head 8c3a60e1312b289a768a7156af771bd3df49bb7e, as recommended.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-20T04:57:48Z
 worktree: .worktrees/spacedock-ensign-db-surface-without-migrations
 pr: pr-merge:686
+verdict: PASSED
+completed: 2026-10-20T14:39:41Z
+archived: 2026-10-20T14:39:41Z
 ---
 
 ## Scope
