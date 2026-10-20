@@ -14,7 +14,7 @@ merge ask/merge, ask run, text lacks a Merges line          451    447
 merge ask/merge, ask run, text has a Merges line            451    438
 merge ask/merge, merge run, Merges line names the PR        451    466
 merge ask/merge, merge run, no Merges line for the PR       451    441
-  one-time hold line, R2 findings join: +30
+  one-time hold line, R2 findings join: +36
   one-time hold line, R1 follow-ups claim: +26
   one-time hold line, R3 scope: +30
 per-call script lines: base last line 27 words; candidate: {'ask run, text lacks a Merges line': 23, 'ask run, text has a Merges line': 14, 'merge run, Merges line names the PR': 40, 'merge run, no Merges line for the PR': 15}

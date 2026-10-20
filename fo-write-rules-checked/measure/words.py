@@ -2,6 +2,9 @@
 """Words FO reads at each lifecycle moment, base (origin/main ad44f0cb, 0.26.0) and candidate, counted with str.split().
 
 Usage: python3 -I -B words.py workflow-0.26.0.md mod-0.26.0.md
+The two inputs are the base sources, written by
+  git -C <kc-claude-plugins> show ad44f0cb:kc-dev-flow-2/references/sd/workflow.md > workflow-0.26.0.md
+  git -C <kc-claude-plugins> show ad44f0cb:kc-dev-flow-2/references/sd/mods/kc-dev-flow-2.md > mod-0.26.0.md
 The candidate README is the base with one sentence edit (E1 below) applied in memory; script output lines are the
 strings the design prints, typed here so the count is reproducible. A moment's number is every passage and every script output
 that instructs a step due then.
@@ -50,7 +53,7 @@ NEW_PASS = {
         "record: task/merge/ask-2.json", "next: ask the Captain to merge; the question he approved names no merge of iamcxa/kc-claude-plugins#682."],
 }
 HOLDS = {
-    "R2 findings join": "declined items (3) are fewer than the validation report's Deferred risk and Polish findings (5): add a declined item or a stated fix for each, then run this check again.",
+    "R2 findings join": "declined items (3) are fewer than the validation report's Deferred risk and Polish findings (5): add a declined item for each, naming the fix as its reason when FO fixed it, then run this check again.",
     "R1 follow-ups claim": "chat-only-followups.md claims the Captain's acceptance in its title or first paragraph (\"accepted\") before the gate that records it: say what FO declined and cite no ruling.",
     "R3 scope": "Scope changed after the backlog gate (fbcb7a9e): \"Captain's scope addition, 2026-10-20: ...\": if the Captain asked for it, add an '### Amendment N' with 'Supersedes: none'; otherwise restore the line.",
 }
