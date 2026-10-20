@@ -385,10 +385,21 @@ def file_at(task, commit, rel):
     return None
 
 
+def records_amendment(text, number):
+    return any((m := AMENDMENT_DATED.match(e)) and int(m.group(1)) == number for e in amendment_entries((text or "").split("\n")) or [])
+
+
 def introducing_commit(task, number):
     done = git_out(task, "log", "--follow", "--format=%H", f"-G^### Amendment {number} — ", "--", task.name)
-    commits = done.stdout.decode().split()
-    return commits[-1] if commits else None
+    rel = git_out(task, "ls-files", "--full-name", "--", task.name).stdout.decode().strip() or task.name
+    unreadable = None
+    for commit in reversed(done.stdout.decode().split()):
+        baseline = file_at(task, commit, rel)
+        if baseline is None:
+            unreadable = (commit, None)
+        elif records_amendment(baseline, number):
+            return commit, baseline
+    return unreadable
 
 
 def scope_hold(task):
@@ -421,15 +432,14 @@ def scope_hold(task):
     dated = [AMENDMENT_DATED.match(e) for e in amendment_entries(body.split("\n")) or []]
     newer = [int(m.group(1)) for m in dated if m and m.group(2) >= day]
     if newer:
-        commit = introducing_commit(task, max(newer))
-        if commit is None:
+        found = introducing_commit(task, max(newer))
+        if found is None:
             baseline, what, sha = text, "the newest amendment", "working copy"
         else:
-            rel = git_out(task, "ls-files", "--full-name", "--", task.name).stdout.decode().strip() or task.name
-            baseline = file_at(task, commit, rel)
+            sha, baseline = found
             if baseline is None:
                 return "not run", f"amendment {max(newer)} commit not readable by git"
-            what, sha = "the newest amendment", commit
+            what = "the newest amendment"
     before, now = scope_lines(baseline), scope_lines(text)
     changed = [l for l in now if l not in before] + [l for l in before if l not in now]
     changed = [l for l in changed if l.strip() and not SCOPE_EXEMPT.match(l)]

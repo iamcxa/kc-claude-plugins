@@ -1396,6 +1396,19 @@ class ScopeCheckTests(unittest.TestCase):
                 self.assertIn(f"Scope changed after the backlog gate ({self.sha[:8]})", line)
                 self.assertEqual(self.run_main()[0], 1)
 
+    def test_an_earlier_look_alike_heading_with_the_same_number_is_not_the_amendment_commit(self):
+        self.task.write_text(GATED.rstrip("\n") + "\n\n## Design\n\n### Amendment 1 — 2026-10-20, chat\n")
+        self.commit("t.md", "look-alike heading")
+        self.add_line()
+        self.commit("t.md", "unrecorded scope line")
+        self.amend()
+        real = self.commit("t.md", "the recorded amendment")
+        self.assertEqual(ds.scope_hold(self.task), ("clean", real))
+        self.add_line("- A second ask, after the amendment.")
+        verdict, line = ds.scope_hold(self.task)
+        self.assertEqual(verdict, "hold", line)
+        self.assertIn(f"Scope changed after the newest amendment ({real[:8]})", line)
+
     def test_an_uncommitted_amendment_covers_an_uncommitted_scope_line(self):
         self.add_line()
         self.amend()
@@ -1451,8 +1464,8 @@ class ScopeCheckTests(unittest.TestCase):
     def test_mutation_letting_any_amendment_exempt_every_later_edit_turns_the_edit_after_it_clean(self):
         self.amended_commit()
         self.add_line("- A second ask, after the amendment.")
-        mutant = mutated("    if newer:\n        commit = introducing_commit(task, max(newer))",
-                         '    if newer:\n        return "clean", "any amendment"\n        commit = introducing_commit(task, max(newer))')
+        mutant = mutated("    if newer:\n        found = introducing_commit(task, max(newer))",
+                         '    if newer:\n        return "clean", "any amendment"\n        found = introducing_commit(task, max(newer))')
         self.assertEqual((ds.scope_hold(self.task)[0], mutant.scope_hold(self.task)[0]), ("hold", "clean"))
 
     def test_mutation_reading_amendment_headings_from_the_whole_body_clears_a_look_alike_heading(self):
@@ -1464,7 +1477,7 @@ class ScopeCheckTests(unittest.TestCase):
 
     def test_mutation_reading_only_the_backlog_sha_holds_a_scope_change_an_amendment_records(self):
         self.amended_commit()
-        mutant = mutated("    if newer:\n        commit = introducing_commit", "    if False:\n        commit = introducing_commit")
+        mutant = mutated("    if newer:\n        found = introducing_commit", "    if False:\n        found = introducing_commit")
         self.assertEqual((ds.scope_hold(self.task)[0], mutant.scope_hold(self.task)[0]), ("clean", "hold"))
 
     def test_mutation_dropping_the_label_exemption_holds_a_non_goals_fill(self):
