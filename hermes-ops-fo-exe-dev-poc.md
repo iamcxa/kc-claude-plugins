@@ -79,6 +79,13 @@ Direction alignment before implementation: not needed; host, FO runtime and mode
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-20 — after the Captain paused the POC to ask for mainstream day-2 practice: resume hermes-as-FO with confinement, re-shape to read-only agent with GitHub-authenticated approval, or something smaller. Advice: escalate; first run a GitHub App token versus main-ruleset probe on a scratch repo (push main, API merge, self-approve refused; ops/* push and Draft PR accepted), then one vertical slice with a host claude or codex FO.
 
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-20, chat
+Captain: 「可以，所以在 slack 回應的 agnet 跟實際調查動手的應該是兩個，但是共享某種資源，對嗎？」 (chat, 2026-10-20, while the POC was paused)
+Asked: 「第一版放棄「hermes 開機就當 FO」，權限邊界改放在 GitHub（App token 加 ruleset，加上你本人在 GitHub 的 review），然後先跑上面那個憑證測試，可以嗎？」 The test presented: with only a GitHub App token, 推 main、用 API 合併 PR、核准自己開的 PR are expected to be refused, and 推 ops/* 分支、開草稿 PR is expected to succeed; if those pass, 一個手動餵入的假事件，用 Spacedock 第一級支援的 Claude Code 或 Codex 跑 FO，寫一張 ops 任務到 ops/* 分支、開一個草稿 PR，你在 GitHub 上 review 核准.
+Supersedes: AC-1, AC-2, AC-3, AC-4, AC-5
+
 ## Stage Report: implementation
 
 HOLD: the local hermes rehearsal is blocked on one permission. Candidate commit 638ef2117 on `spacedock-ensign/hermes-ops-fo-exe-dev-poc` (artifacts under `kc-ops-inbox/`).
