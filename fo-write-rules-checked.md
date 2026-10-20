@@ -204,14 +204,14 @@ sequenceDiagram
         FO->>FO: rewrite once, run again
     end
     S->>ST: write merge/ask-N.json
-    S-->>FO: class: never (verdict ask); next: merge this head if the approved question named the merge ... else ask. Every other PR, the Release PR included, is asked one at a time.
+    S-->>FO: class: never (verdict ask), then next: merge this head if the approved question named the merge ... else ask. Every other PR, the Release PR included, is asked one at a time.
     FO->>ST: gate prepare, state commit
     FO->>C: ask (the question names the merge, ADR 0023)
     C-->>FO: approves (or says wait, or says he merges)
     FO->>ST: gate record --actor person:captain, reason with his 「words」
     FO->>S: check again, to merge
     S-->>FO: the same last line
-    FO->>FO: read the approved question and his reason (the README's rule; the script does not)
+    FO->>FO: read the approved question and his reason (the README's rule, the script does not)
     alt the question named the merge and he did not say he merges or holds
         FO->>GH: merge with --match-head-commit
     else any other case
@@ -457,7 +457,20 @@ The reviewer's conditions are folded: the Scope check now reads the file at the 
 - DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
   `measure/words.py` rerun: startup 5422 both ways, ideation pass 170 both ways, ideation after a Scope edit 232 (+62 once), merge ask and merge run 466 (verdict `ask`) and 464 (`merge`) against 451. Two moments rise and are named for the Captain; cycle 2's 438, 448 and 478 are parked in `words-output-cycle2-deferred.txt`.
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
-  AC-1 to AC-13 with evidence, falsifier and mutation where one applies; `### Needs decision` D1 to D7, D2 now the scope choice. `design_surfaces.py check` on this file: "design surfaces presentable", exit 0.
+  `### Needs decision` D1 to D7, D2 now the scope choice. `design_surfaces.py check` on this file (cycle 3): "design surfaces presentable", exit 0. Current evidence per criterion (every test named is future work unless marked done):
+  AC-1 done now: `proto_gate.py` prints the 40-word line; `check` returns before its `ASK` emit on a hold (0.26.0 source); the test and mutation are not yet written.
+  AC-2 done now: `proto-narrow-output.txt` (tag alone: 60 assertions in 7 methods); the new test is not yet written.
+  AC-3 done now: `proto-gate-output.txt` items `1->4`, unreasoned `2->0, 1->0, 3->0, 5->0`; `replay.py r2` late `0`.
+  AC-4 done now: join hold `(4)` and `(5)` on special-role-calls; 0 false holds on the other F-bullet reports (`replay-output-*.txt`); fixtures not yet written.
+  AC-5 not yet verified: the sentence is unwritten; `lint-skills.py` and the next batch's reports are future checks.
+  AC-6 done now: `proto-scope-output.txt` (44 clean, 7 held, 32 not run) and `proto-scope-fixtures-output.txt`, byte-identical in cycle 3; package tests not yet written.
+  AC-7 done now: `replay.py r1` 1 of 26 files held, 0 elsewhere; `proto_gate.py` prints the one hit; tests not yet written.
+  AC-8 partly done: `words.py` prints 5422, 170, 232, 466, 464; `role_triggers.py` `0 event(s) read` (cycle 2 run); the diff, `lint-skills.py` and suites are not yet verified.
+  AC-9 not yet verified: the diff is implementation; cycle 2 found no test pin on the old phrase.
+  AC-10 not yet verified: the ADR lands at implementation; the five statements are drafted in `### What changes` item 6.
+  AC-11 done now: every table re-derived in cycle 3 at the same pins (`diff` identical, `proto-narrow-output.txt` new).
+  AC-12 done now: the worker-run hold and edit-after-amendment cases in `proto-scope-fixtures-output.txt`; package tests not yet written.
+  AC-13 not yet verified: the exact sentence is in `proto_gate.py`; the assertion is future.
 
 ### Limits and flags for FO
 
