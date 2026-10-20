@@ -1,0 +1,21 @@
+{
+  "note": "Pins and state checkouts the design measured on 2026-10-20; checkouts are private to this machine. The window table is read from ../../special-role-calls-fire-when-needed.md '#### Per-task counts, window of 38'.",
+  "repos": {
+    "kcp":   {"checkout": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state", "pin": "dc6530d404cbd5560d197b62e6e15228b7634f39"},
+    "relay": {"checkout": "/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2/.spacedock-state", "pin": "9579d59afde3be7ffa05d8c8bc2f981d5b5e1663"},
+    "web":   {"checkout": "/Users/kent/conductor/workspaces/subspace-web/dev2-fo/docs/dev2/.spacedock-state", "pin": "96a54eef3ee97641f5b0caf49975e83179e4fd26"},
+    "qnow":  {"checkout": "/Users/kent/conductor/repos/qnow-adopt-dev2/docs/dev2/.spacedock-state", "pin": "8ce9bd7674ba459fdc8ce54375ed241a91de62b8"}
+  },
+  "expected": {
+    "population_tasks": 287,
+    "window_tasks": 38,
+    "window_chief_engineer_fires": 10, "window_chief_engineer_true_unclear_false": [9, 1, 0],
+    "window_engineering_reviewer_fires": 9, "window_engineering_reviewer_true_unclear_false": [7, 2, 0],
+    "population_chief_engineer_fires": 32, "population_engineering_reviewer_fires": 39,
+    "population_engineering_reviewer_fable": 12, "population_engineering_reviewer_opus": 27,
+    "owed_lines": {"chief-engineer": 8, "engineering-reviewer": 9, "fable": 2, "opus": 7, "heading_hint": 1},
+    "stays_owed_with_hint": "prod-security-review-gates",
+    "clear": ["merge-gatekeeper", "ui-design-review-in-ideation", "captain-question-load"],
+    "slice2_window_chief_engineer_fires": 11
+  }
+}
