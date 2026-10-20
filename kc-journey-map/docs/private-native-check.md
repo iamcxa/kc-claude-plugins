@@ -53,7 +53,9 @@ bearer/token environment option. The launcher passes a small environment retaini
 existing login locations, uses a fresh neutral cwd and sets per-run isolation. Codex
 uses fixed gpt-6.1-sol/high, no daemon, ignores user config and uses read-only sandbox.
 Claude account/model selection remains its existing native default. No global
-settings, model catalog or native executable changes are made.
+settings, model catalog or native executable changes are made. The launcher keeps
+the built-in provider configuration unchanged; application/tool replay is disabled,
+but undocumented native internal transport retries are not controlled or proven.
 
 Prepare an exact prompt file and a **new nonexistent** receipt directory per phase.
 Use absolute installed executable paths; run from this package:

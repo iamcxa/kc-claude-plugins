@@ -13,6 +13,7 @@ test('paired launch configs contain only helper paths and preserve native login 
  assert.ok(args.includes('--ignore-user-config')); assert.ok(args.includes('gpt-6.1-sol')); assert.ok(args.includes('read-only'))
  assert.ok(args.includes('model_reasoning_effort="high"')); assert.ok(args.some(a => a.includes('agent-helper.mjs') && a.includes('"mcp"')))
  assert.ok(!args.some(a => /bearer_token|JOURNEY_NATIVE_TOKEN/.test(a)))
+ assert.ok(!args.some(a => a.startsWith('model_providers.')))
 })
 test('native event observation retains real failure calls and refuses extra/wrapper or unobservable items', () => {
  const seen = new Map()
