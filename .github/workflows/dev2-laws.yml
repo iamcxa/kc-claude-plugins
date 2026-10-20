@@ -23,7 +23,7 @@ jobs:
         uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
         with:
           repository: iamcxa/kc-claude-plugins
-          ref: "2775096a9b2ed240fe96f1777496af4b05afbfd5"
+          ref: "22219a3e4bc48a69a893bd757923e8c034d1ba6e"
           sparse-checkout: kc-dev-flow-2
           persist-credentials: false
           path: package
