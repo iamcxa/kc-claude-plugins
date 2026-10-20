@@ -3,7 +3,7 @@ title: A pre-build story interrogation, replayed on batch 3, asks ahead of time 
 variant: kc-dev-flow-2
 profile: poc
 merge: local
-status: implementation
+status: validation
 gates:
     version: 1
     records:
