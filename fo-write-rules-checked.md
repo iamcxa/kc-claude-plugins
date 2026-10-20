@@ -441,6 +441,11 @@ Reviewer: chief-engineer opus 2026-10-20 — what is the smallest next step, giv
 
 ADR: 0027
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-20): validation-1 F1 Polish on #687 d0c2e25b, to fix because it breaks the repository rule that an absolute claim names its enforcement point (CLAUDE.md); Codex clean on the head (evidence=summary:6293027583); copilot not run: "Copilot was unable to review this pull request because the user who requested the review has reached their quota limit." (review:5586368524). FO fix authorization, then a fresh validation recheck.
+  - ADR 0027 Consequences: "No script reads the approved question" is false (decision_ledger.py question() reads it); the bounded claim is that no script checks that an approved question named the merge.
+
 ## Stage Report: ideation
 
 - DONE: Fresh dispatch: the ideation-1 worker stopped when the session ended and wrote nothing. A design (PRFAQ and Mermaid) for checking the four rules in Scope at the moment FO writes, extending the #671 checks (kc-dev-flow-2/scripts/dispatch_records.py, kc-dev-flow-2/scripts/delivery_gate.py, laws L2) and #682's kc-dev-flow-2/scripts/role_triggers.py before any new script, measured as a replay over every committed task, briefing and gate record of this workflow (which of the four would have been held, and false holds), avoiding phrase matching where a structured field exists, per the Captain's 2026-10-20 direction on special-role triggers; also take in the two live items of fo-write-checks-followups (the carried-merge next: line printed without reading the approved question or a hold, and printed even when the check's own verdict is ask)
