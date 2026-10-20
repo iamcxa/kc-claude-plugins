@@ -61,6 +61,7 @@ if (process.env.JOURNEY_CONTROL_STDIO === '1') {
  })
 }
 const address = await app.listen({ port: host.port, host: '127.0.0.1' })
+host.port = (app.server.address() as { port: number }).port
 const printHost = (process.env.JOURNEY_ALLOWED_HOSTS || '').split(',').find(Boolean) || hostname()
 console.log(`doc API on ${address}  (canvas: http://${printHost}:3737/?room=default)`)
 for (const signal of ['SIGINT', 'SIGTERM'] as const) process.once(signal, () => { stopOwner(); host.close(); app.close().finally(() => process.exit()) })

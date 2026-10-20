@@ -164,3 +164,13 @@ not an induced real-Keychain corruption. The browser check exercises the actual
 tldraw app, real helper, pointer/keyboard/focus and light/dark desktop/390px plus
 touch-device emulation. Physical phone, live provider, deployment, Free budget
 fit, native model-client use and established-stream stop remain unverified.
+
+Canonical API disclosure comes from trusted adapter boot/listener state, separately
+from the human-entry origin. Loopback Node uses its fixed127.0.0.1 listener's actual
+port; configured same-origin remote Node and Cloudflare use JOURNEY_ORIGIN. Request
+Host/forwarding headers and caller endpoint fields do not establish this value.
+New pending requests snapshot it and inspection/approval/redemption recheck it.
+Missing/changed snapshots on older in-flight requests fail scope_changed: use the
+original helper to cancel/reconcile, then seek fresh approval. No backfill or old
+family revival occurs; existing issued-family admission/renewal is unchanged.
+Arbitrary remote split-origin/alias configurations are unverified.

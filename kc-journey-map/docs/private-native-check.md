@@ -110,3 +110,7 @@ Run launcher regressions with `node --test scripts/private-native-client.test.mj
 Existing agent installation/protected-store and host-contract checks remain separate
 from native-client/browser acceptance; no CI trigger, dependency or deployment change
 is introduced by this recipe.
+
+The [pairing guide](agent-pairing.md) owns canonical endpoint derivation, consent
+binding and recovery for stale in-flight requests. Verify that exact API endpoint
+separately from the human-entry origin before approving each installation.

@@ -53,7 +53,7 @@ export class JourneyRegistry {
   const body = await req.json() as any
   const op = new URL(req.url).pathname
   if (op === '/agent') {
-   try { return Response.json(agentResult(this.ctx.storage.transactionSync(() => captureAgent(() => agentOperation(this.sync(), body.operation, body.input, room => agentScope(this.env, room)))))) }
+   try { return Response.json(agentResult(this.ctx.storage.transactionSync(() => captureAgent(() => agentOperation(this.sync(), body.operation, body.input, room => agentScope(this.env, room), Date.now(), this.env.JOURNEY_ORIGIN))))) }
    catch (error) { return Response.json({ error: error instanceof HostError ? error.message : 'metadata unavailable', ...(error instanceof HostError ? error.details : {}) }, { status: error instanceof HostError ? error.status : 503 }) }
   }
   if (op === '/human') {
