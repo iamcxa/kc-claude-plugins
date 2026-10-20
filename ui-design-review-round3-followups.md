@@ -16,3 +16,7 @@ Declined by FO under the round-3 rule (README review-finding disposition, step 5
   - Deferred risk: the shipped brief named the cycle-3 phone refresh defect in 2 of 3 runs, one run per cell (AC-6; the cycle-1 Refresh button miss is recorded in the brief under the Captain's ideation ruling D1).
   - Deferred risk: review and finding line counts are file-wide over unfenced text, so a column-0 `Design review:` line quoted in prose is refused.
   - Polish: step 4 of `kc-dev-flow-2/skills/ideation/design-review.md` says the line "names the last report" without "one line"; a `preview:` value with a trailing YAML comment is refused.
+
+## Closed
+
+Closed by the Captain 2026-10-20 (「照建議關掉 19 張。」) on FO's follow-up triage against origin/main ad44f0cb: fenced Preview reads fixed in #663; other raw reads unobserved (0 fenced lines in 482 state files).
