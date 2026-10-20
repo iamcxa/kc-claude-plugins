@@ -53,6 +53,17 @@ gates:
                 id: briefing:delivery-gate-settles-skipped-checks:validation:attempt-1:revision-1
                 digest: sha256:a933d2f21d4909d52400174a5647c9bb523655639ad45cdbe8be2f11535bfa9d
                 room-ref: ./delivery-gate-settles-skipped-checks/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-settles-skipped-checks:validation:1
+                briefing: briefing:delivery-gate-settles-skipped-checks:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-20T02:10:02.588173Z"
+                decision: approve
+                reason: 'Captain approved delivery in chat (「准」) after the gate briefing: FO merges #680 head 559f5da6 with --match-head-commit and removes its clean, pushed worktree; the engineering-reviewer''s two residuals accepted into delivery-gate-settles-skipped-checks-followups and roborev:914''s High waived as false, as the gate question states'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-19T15:34:07Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-settles-skipped-checks
 pr: iamcxa/kc-claude-plugins#680
