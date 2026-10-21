@@ -26,6 +26,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-21T13:01:50Z
+worktree: .worktrees/spacedock-ensign-kc-adr-dependency-poc
 ---
 
 ## Scope
