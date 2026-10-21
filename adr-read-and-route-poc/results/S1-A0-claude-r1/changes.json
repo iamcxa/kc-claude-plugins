@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/AGENTS.md",
+  "status": "modified",
+  "content": "# mira-app\n\nNotes for agents working in this repository.\n\n- Run the tests with `npm test`.\n- Source is in `src/`; the report job is `src/report_job.js`.\n- Keep changes small and in the style of the code around them.\n\nStanding rulings (see `../mira-decisions/docs/adr`):\n\n- ADR 0001: customer data only in EU regions; configure hosted services with an EU region (e.g. `eu-west-1`).\n- ADR 0005: never write a customer's name into a log.\n"
+ },
+ {
+  "path": "mira-decisions/docs/adr/0005-no-customer-names-in-logs.md",
+  "status": "added",
+  "content": "# 5. No customer names in logs\n\nDate: 2026-10-21\n\n## Status\n\nAccepted\n\n## Context\n\nReport jobs are moving to a hosted queue service and carry each shop's customer list. Mira set a rule for everything she builds while this was being decided.\n\n## Decision\n\n**Words:** \u300cnothing we build may ever write a customer's name into a log\u300d \u2014 Mira Example, 2026-10-21\n\n**Options considered:**\n- never log customer names, in any product (chosen)\n\n**Recommended:** never log customer names, in any product.\n\n**Decision key:** no-customer-names-in-logs\n\nNo product, repo or service may write a customer's name into a log (application, queue, error or debug logs included). This applies to every repo and product Mira has, now and later.\n\n## Consequences\n\nLog statements must use an opaque identifier or a count instead of a name. Code that handles customer lists, such as report jobs, needs care in error messages.\n"
+ }
+]

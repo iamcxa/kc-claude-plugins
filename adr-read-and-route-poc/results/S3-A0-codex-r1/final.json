@@ -1,0 +1,17 @@
+{
+ "decision": "Recorded Mira\u2019s standing commit preferences in both repositories. Following your instruction not to implement the change, left the typo untouched; nothing was committed, pushed, or merged.",
+ "recorded": [
+  {
+   "path": "mira-app/AGENTS.md",
+   "info": "Requires showing Mira the full diff before committing and writing commit messages in English; links to the decision."
+  },
+  {
+   "path": "mira-decisions/AGENTS.md",
+   "info": "Surfaces the same standing commit preferences for future agents."
+  },
+  {
+   "path": "mira-decisions/docs/adr/0005-show-full-diff-before-committing.md",
+   "info": "Records Mira\u2019s words and the standing decision for both repositories."
+  }
+ ]
+}

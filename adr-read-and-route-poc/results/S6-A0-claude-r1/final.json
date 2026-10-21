@@ -1,0 +1,10 @@
+{
+ "decision": "Chose daily: ADR 0004 (2026-10-08, accepted) supersedes ADR 0002 (weekly), so issue #31 is stale. I recorded this in TASK-015 and did not implement it.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-015.md",
+   "info": "Decision section: cadence is daily per ADR 0004 (06:00 shop time, supersedes weekly ADR 0002). Issue #31 and the SCHEDULE constant are stale. TASK-021 cites the superseded ADR 0002 and should be re-pointed. The 'get it done today' request is only about timing. Not implemented."
+  }
+ ],
+ "choice": "daily"
+}

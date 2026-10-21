@@ -1,0 +1,10 @@
+{
+ "choice": "sqlite_index",
+ "decision": "Chose sqlite_index because ADR 0001 requires the report cache to be an on-disk SQLite file and never only in process memory. Recorded Mira's 50 MB cache limit and the 1 GB kiosk RAM as new ADR 0005 in mira-app. Nothing was implemented or committed.",
+ "recorded": [
+  {
+   "path": "mira-app/docs/adr/0005-report-cache-never-exceeds-50-mb.md",
+   "info": "New ADR with Mira's verbatim words: the kiosk has 1 GB RAM and the report cache must never grow past 50 MB (covers memory and disk, index included). Also records the choice of the SQLite index over the in-memory LRU, per ADR 0001."
+  }
+ ]
+}

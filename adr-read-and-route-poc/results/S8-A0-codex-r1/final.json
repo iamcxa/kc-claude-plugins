@@ -1,0 +1,18 @@
+{
+ "decision": "Choose eu-west-1 because verified, in-force ADR 0001 requires EU storage. Recorded the choice and the agent\u2019s unconfirmed performance hypothesis; no feature implementation, commits, pushes, or merges.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-020.md",
+   "info": "Region choice and rationale, ruling digest and status verification, implementation still pending, and the unconfirmed agent hypothesis with suggested validation."
+  }
+ ],
+ "choice": "eu-west-1",
+ "ruling_check": {
+  "adr": "0001",
+  "commit": "39f397435a078f1a86db014e9eae952a96e0e20e",
+  "digest": "sha256:e4de6f8d2999b7d9027f9ccd7bffbcb6ed959efca64bb3a60a3e054c8c6bd4ca",
+  "digest_matches_cited": true,
+  "in_force": true,
+  "action": "proceed"
+ }
+}

@@ -1,0 +1,14 @@
+{
+ "decision": "Choose sqlite_index to preserve the existing SQLite cache and avoid adding memory pressure on the 1 GB kiosk. The complete cache, including its index, must stay within 50 MB; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "mira-app/docs/adr/0005-speed-up-report-loading-with-a-sqlite-index.md",
+   "info": "Records the technical choice, rationale, constraints, decision-log link, and pending implementation validation."
+  },
+  {
+   "path": "mira-decisions/docs/adr/0005-kiosk-report-cache-is-limited-to-50-mb.md",
+   "info": "Preserves Mira\u2019s message, the kiosk\u2019s 1 GB RAM limit, and the hard 50 MB report-cache cap."
+  }
+ ],
+ "choice": "sqlite_index"
+}

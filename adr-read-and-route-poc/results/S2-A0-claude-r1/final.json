@@ -1,0 +1,10 @@
+{
+ "choice": "csv",
+ "decision": "Chose csv, because ADR 0002 in mira-app (Accepted) allows CSV only. Mira's ASCII-only file name message is a temporary, task-scoped relaxation, not a lasting decision, so I noted it in the task file and did not write an ADR.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-014.md",
+   "info": "Added two notes. The export format is csv, per ADR 0002. For this task only and for Friday's demo, Mira said ASCII-only file names are fine and non-ASCII names need not be handled. She said 'We'll fix it after', so it is a known follow-up gap that shouldn't carry over to other tasks."
+  }
+ ]
+}

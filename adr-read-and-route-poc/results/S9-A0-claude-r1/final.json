@@ -1,0 +1,18 @@
+{
+ "decision": "The cited ADR 0002 is byte-identical to what the sender saw, but it is superseded by ADR 0004 (Accepted), which sets the report cadence to daily at 06:00 shop time. I chose daily and left the feature unimplemented.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-021.md",
+   "info": "Added a 'Ruling check' section. ADR 0002 matches the cited digest but is superseded by ADR 0004. ADR 0004 is in force and says daily at 06:00 shop time. The cadence chosen is daily. SCHEDULE in src/report_job.js is still 'weekly' and has not been changed."
+  }
+ ],
+ "choice": "daily",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "39f397435a078f1a86db014e9eae952a96e0e20e",
+  "digest": "sha256:5b71016ca305cba0bf8100d67db10c93c42258968b41032ef2313286da6873e8",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "stop"
+ }
+}

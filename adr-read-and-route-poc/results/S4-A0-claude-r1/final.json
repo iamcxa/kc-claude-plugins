@@ -1,0 +1,9 @@
+{
+ "decision": "Recorded the QR-code-on-receipt review idea as a deferred story (S10) in the app's story map. Mira described it as a wish, not a ruling, so I wrote no ADR. I didn't touch src/receipt.js, which holds only two spacing constants and gave no clear tidy to make.",
+ "recorded": [
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Added S10 under 'Deferred (not in the release plan)': shops print a QR code on each receipt so customers can leave a review; Mira's idea, not this release and not soon, kept so it isn't lost; not designed or built."
+  }
+ ]
+}

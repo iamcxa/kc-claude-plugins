@@ -1,0 +1,13 @@
+{
+ "decision": "Fixed the footer typo (uncommitted) and added Mira's two standing commit rules (show full diff first, English messages) to mira-app/AGENTS.md, which agents read each session. I didn't add an ADR, because these are workflow preferences, not product rulings.",
+ "recorded": [
+  {
+   "path": "mira-app/src/report_job.js",
+   "info": "Footer typo fixed: 'Reprot' -> 'Report' (uncommitted)."
+  },
+  {
+   "path": "mira-app/AGENTS.md",
+   "info": "Added standing instructions from Mira: show her the full diff before committing anything; write commit messages in English."
+  }
+ ]
+}

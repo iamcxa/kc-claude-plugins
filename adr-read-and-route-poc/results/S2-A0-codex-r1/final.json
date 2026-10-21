@@ -1,0 +1,10 @@
+{
+ "decision": "Choose CSV, as required by accepted ADR 0002. Record Mira\u2019s ASCII-only filename exception for TASK-014 and the outstanding follow-up; no feature implementation, commits, pushes, or merges were made.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-014.md",
+   "info": "CSV choice with decision references, Mira\u2019s exact message, task-only filename scope, and follow-up for non-ASCII filenames after Friday\u2019s demo."
+  }
+ ],
+ "choice": "csv"
+}

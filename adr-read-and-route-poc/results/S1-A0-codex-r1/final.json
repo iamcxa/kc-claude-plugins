@@ -1,0 +1,18 @@
+{
+ "decision": "Choose eu-west-1 because Mira\u2019s accepted shared decision requires customer data to stay in EU regions. Recorded her universal ban on logging customer names; no feature was implemented and nothing was committed, pushed or merged.",
+ "recorded": [
+  {
+   "path": "AGENTS.md",
+   "info": "Links shared rulings and the queue region decision; states the customer-name logging prohibition."
+  },
+  {
+   "path": "docs/adr/0005-report-queue-uses-eu-west-1.md",
+   "info": "Records the region choice, delegated authority, EU-only rationale and applicable logging rule."
+  },
+  {
+   "path": "../mira-decisions/docs/adr/0005-customer-names-never-go-in-logs.md",
+   "info": "Records Mira\u2019s accepted prohibition on logging customer names across every repository and product."
+  }
+ ],
+ "choice": "eu-west-1"
+}

@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/docs/adr/0005-report-cache-never-exceeds-50-mb.md",
+  "status": "added",
+  "content": "# 5. Report cache never exceeds 50 MB\n\nDate: 2026-10-21\n\n## Status\n\nAccepted\n\n## Context\n\nThe kiosk has only 1 GB of RAM. Loading a report is too slow and the cache needs a speed-up, so the cache's size has to be bounded.\n\n## Decision\n\n**Words:** \u300cFYI the kiosk has only 1 GB of RAM. The report cache must never grow past 50 MB.\u300d \u2014 Mira Example, 2026-10-21\n\n**Options considered:**\n- add an index to the existing SQLite cache (chosen) \u2014 fits ADR 0001 (cache is a SQLite file, never only in process memory)\n- in-memory LRU cache \u2014 rejected: ADR 0001 forbids caching only in process memory; it would also eat into the 1 GB RAM\n\n**Recommended:** SQLite index.\n\n**Decision key:** report-cache-size-limit\n\nThe report cache must never grow past 50 MB. Any speed-up, including an index, must keep the cache within this limit, and the cache needs a size bound or eviction so it cannot exceed it.\n\n## Consequences\n\nThe index counts toward the 50 MB. Whoever implements the speed-up must check the cache size including the index. The limit is stated for \"the report cache\" without saying memory or disk; treat it as covering both until Mira says otherwise.\n"
+ }
+]

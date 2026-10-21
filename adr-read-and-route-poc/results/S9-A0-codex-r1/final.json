@@ -1,0 +1,18 @@
+{
+ "decision": "Stopped because the cited ADR 0002 matches the supplied digest but is superseded by accepted ADR 0004, which specifies daily reports. Recorded the stale reference and successor details; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-021.md",
+   "info": "Marked blocked; recorded digest verification, superseded status, successor reference and digest, and stop disposition."
+  }
+ ],
+ "choice": "none",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "39f397435a078f1a86db014e9eae952a96e0e20e",
+  "digest": "sha256:5b71016ca305cba0bf8100d67db10c93c42258968b41032ef2313286da6873e8",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "stop"
+ }
+}

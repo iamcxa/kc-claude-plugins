@@ -1,0 +1,10 @@
+{
+ "decision": "Choose daily at 06:00 shop time: accepted ADR 0004 supersedes the weekly ruling. Recorded the decision and Mira\u2019s deadline without implementing the feature.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-015.md",
+   "info": "Daily cadence, verified ADR reference, pending implementation, and Mira\u2019s request to finish today (2026-10-21, Asia/Taipei)."
+  }
+ ],
+ "choice": "daily"
+}

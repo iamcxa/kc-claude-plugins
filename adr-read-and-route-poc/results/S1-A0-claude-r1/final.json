@@ -1,0 +1,14 @@
+{
+ "decision": "Chose eu-west-1 because ADR 0001 requires customer lists to live in EU regions only, and these jobs carry the customer list. Recorded Mira's no-customer-names-in-logs rule as a new ADR that applies to every product, with a pointer in this repo's AGENTS.md. Nothing is committed.",
+ "choice": "eu-west-1",
+ "recorded": [
+  {
+   "path": "../mira-decisions/docs/adr/0005-no-customer-names-in-logs.md",
+   "info": "New accepted ADR (key no-customer-names-in-logs): Mira's verbatim words that nothing we build may ever write a customer's name into a log, for every repo and product."
+  },
+  {
+   "path": "AGENTS.md",
+   "info": "Added a pointer to ADR 0001 (EU regions only, use eu-west-1) and ADR 0005 (no customer names in logs)."
+  }
+ ]
+}

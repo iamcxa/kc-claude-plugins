@@ -1,0 +1,10 @@
+{
+ "decision": "Keep the CSV export: Mira\u2019s request to help Haruto does not supersede the accepted CSV-only decision. No feature was implemented.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Recorded keep_as_is, Mira\u2019s exact message, the governing ADR, and follow-up to verify Haruto\u2019s spreadsheet needs and help with CSV import or conversion."
+  }
+ ],
+ "choice": "keep_as_is"
+}

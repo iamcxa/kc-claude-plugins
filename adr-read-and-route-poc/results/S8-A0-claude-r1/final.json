@@ -1,0 +1,18 @@
+{
+ "decision": "Chose eu-west-1: ADR 0001 (verified, Accepted, not superseded) requires EU regions only for customer data. Recorded the choice and the unconfirmed slow-dev-server hunch in TASK-020; no feature implemented.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-020.md",
+   "info": "Added Notes section: region eu-west-1 chosen per ADR 0001 with the ruling check (commit, digest match, in force); bucket not yet created; the nightly-export-slows-dev-server idea is recorded as an unconfirmed hunch of the agent's, not from Mira."
+  }
+ ],
+ "choice": "eu-west-1",
+ "ruling_check": {
+  "adr": "0001",
+  "commit": "39f397435a078f1a86db014e9eae952a96e0e20e",
+  "digest": "sha256:e4de6f8d2999b7d9027f9ccd7bffbcb6ed959efca64bb3a60a3e054c8c6bd4ca",
+  "digest_matches_cited": true,
+  "in_force": true,
+  "action": "proceed"
+ }
+}

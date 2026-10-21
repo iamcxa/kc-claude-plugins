@@ -1,0 +1,18 @@
+{
+ "decision": "Stop. The cited digest does not match ADR 0003 at that commit, and the ruling (in force) requires Mira's recorded approval for a new kind of customer message. No approval for a report-ready email exists in the log.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-022.md",
+   "info": "Status set to blocked. Added an agent check note covering the digest mismatch, the missing customer-outreach approval, and what is needed to unblock."
+  }
+ ],
+ "choice": "stop",
+ "ruling_check": {
+  "adr": "0003",
+  "commit": "39f397435a078f1a86db014e9eae952a96e0e20e",
+  "digest": "sha256:c2c20d6ed7807f7b667324a8e336a2a48502985548d0b79c514d1e742c7f3f11",
+  "digest_matches_cited": false,
+  "in_force": true,
+  "action": "stop"
+ }
+}

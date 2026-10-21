@@ -1,0 +1,13 @@
+{
+ "decision": "Tidied receipt spacing and preserved Mira\u2019s QR review idea as deferred, with no implementation scheduled. No feature implemented or commits made; npm test ran successfully but contains no actual tests.",
+ "recorded": [
+  {
+   "path": "src/receipt.js",
+   "info": "Increased receipt padding to 16 and line gap to 8."
+  },
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Added deferred story S10 for receipt QR reviews, explicitly marked not this release and not soon."
+  }
+ ]
+}

@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: blocked (needs Mira decision)\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n- 2026-10-21: Mira said \"Haruto is a good customer, so please make him happy.\" This is a wish, not a ruling on export formats.\n- ADR 0002 (docs/adr/0002-reports-are-exported-as-csv-only.md; Mira, \"CSV only; I will not maintain a second export format\") forbids XLSX until it is superseded. Nothing has superseded it, so the export was left as CSV and no XLSX was added.\n- To unblock: Mira must say explicitly whether to add XLSX (superseding ADR 0002). If yes, record a new ADR in the decision log first. Cheaper alternative within ADR 0002: tell Haruto his accountant can open/convert the CSV in Excel.\n"
+ }
+]

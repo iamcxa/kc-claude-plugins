@@ -1,0 +1,55 @@
+{
+ "run": "S9-A0-codex-r1",
+ "scenario": "S9",
+ "arm": "A0",
+ "host": "codex",
+ "rep": 1,
+ "model_requested": "gpt-6.1-sol",
+ "model_reported": "gpt-6.1-sol",
+ "argv": [
+  "codex",
+  "exec",
+  "-m",
+  "gpt-6.1-sol",
+  "-c",
+  "model_reasoning_effort=\"high\"",
+  "--json",
+  "--skip-git-repo-check",
+  "-s",
+  "workspace-write",
+  "--add-dir",
+  "/tmp/adrpoc-runs/S9-A0-codex-r1/mira-decisions",
+  "--disable",
+  "memories",
+  "-C",
+  "/tmp/adrpoc-runs/S9-A0-codex-r1/mira-app",
+  "--output-schema",
+  "/tmp/adrpoc-runs/S9-A0-codex-r1/.kc-decision-log/schema.json",
+  "-o",
+  "/tmp/adrpoc-runs/S9-A0-codex-r1/.kc-decision-log/last-message.txt",
+  "<prompt.txt>"
+ ],
+ "env_overrides": {
+  "HOME": "<run>/home",
+  "CODEX_HOME": "<run>/codex-home"
+ },
+ "cwd": "<run>/mira-app",
+ "exit_code": 0,
+ "timed_out": false,
+ "elapsed_s": 73.9,
+ "world": {
+  "D0": "ec6fef8b8d479120dc3da2291fc5b56cefeaf8c1",
+  "D1": "39f397435a078f1a86db014e9eae952a96e0e20e",
+  "A0": "d575712413af46cd8a1dd25b06405c6506ead70d",
+  "digests": {
+   "0001@D1": "sha256:e4de6f8d2999b7d9027f9ccd7bffbcb6ed959efca64bb3a60a3e054c8c6bd4ca",
+   "0002@D0": "sha256:ee8ed9b786330b426dd5bdd5d216f1ed7a80c12d97a303ecd94c6252960c4a80",
+   "0002@D1": "sha256:5b71016ca305cba0bf8100d67db10c93c42258968b41032ef2313286da6873e8",
+   "0003@D1": "sha256:c2c20d6ed7807f7b667324a8e336a2a48502985548d0b79c514d1e742c7f3f11",
+   "0004@D1": "sha256:3e0eadfd7e9a4678b313052fcf6070c20f109c4d241f83ee8804d0a8352a83ea"
+  },
+  "wrong_digest_0003": "sha256:c2c20d6ed7807f7b667324a8e336a2a48502985548d0b79c514d1e742c000000"
+ },
+ "stderr_tail": "Reading additional input from stdin...\n2026-10-21T06:47:14.451552Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: \"Bearer resource_metadata=\\\"https://codex-app.tldraw.xyz/.well-known/oauth-protected-resource/mcp\\\", scope=\\\"openid profile email offline_access\\\"\" })\n",
+ "answered": true
+}

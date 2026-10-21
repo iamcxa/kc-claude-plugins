@@ -1,0 +1,10 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as CSV. ADR 0002 says CSV only until it is superseded, and Mira's \"make Haruto happy\" is not an explicit reversal. I marked the task blocked pending her explicit decision.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-016.md",
+   "info": "Status changed to blocked (needs Mira decision). Added notes: Mira's 2026-10-21 message is a wish, not a ruling. ADR 0002 forbids XLSX until superseded. To unblock, Mira must explicitly choose XLSX, and a new ADR would be recorded first. Alternative: Haruto's accountant opens or converts the CSV."
+  }
+ ]
+}
