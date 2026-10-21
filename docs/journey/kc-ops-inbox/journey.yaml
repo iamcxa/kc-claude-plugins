@@ -1,0 +1,229 @@
+# Operator journey for the planned kc-ops-inbox package. YAML is the canonical source.
+# Every story is gap or unverified: the package has no code on main (see status).
+# Release membership is a proposal; the Captain has not selected any release.
+
+journey: kc-ops-inbox
+title: "kc-ops-inbox | Know when my platform needs me, and let an agent prepare the answer"
+
+measured:
+  ref: "kc-claude-plugins branch iamcxa/kc-ops-inbox at ad44f0cb; POC task hermes-ops-fo-exe-dev-poc, closed 2026-10-21"
+  date: 2026-10-21
+  repos: [kc-claude-plugins, subspace-relay, qnow]
+
+persona: >
+  Operator: the person who runs a project on a platform (relay and qnow are the first two adopters, each deployed separately), pays for it, and decides when its limits move.
+
+one_journey: >
+  When something happens on the platform, I hear about it at once, an agent prepares one recommendation in the same moment, I decide in my own repository, and every step stays on record.
+
+now:
+  - id: now-logs
+    card: "Reads function logs to learn a limit is full"
+    pain: "a full ceiling or a growing store is invisible until someone looks"
+    workaround: "reads the logs by hand (relay journey spacedock-review-ops, ops-r1 goal, Kent 2026-10-19)"
+  - id: now-terminal
+    card: "Raises a limit from a terminal"
+    pain: "needs a machine and a command at the moment of the incident"
+  - id: now-qnow
+    card: "qnow has no error monitoring or incident process yet"
+    pain: "production-operations is a gap in release r12 of qnow's journey"
+
+rules:
+  - {id: untrusted-event, text: "Event content is untrusted data; only allowlisted fields reach an agent (design brief, Agent authority)."}
+  - {id: agent-lane, text: "The agent acts as its own App or machine account, never as the Captain, and a default-branch ruleset it cannot bypass requires a PR and the Captain's approval."}
+  - {id: no-prod-credential, text: "The agent holds no production credential; a dangerous action runs only after a Captain gate or through one narrow single-purpose inbox tool."}
+  - {id: gate-from-captain, text: "The ops gate is recorded from the Captain's own GitHub review with his words; Spacedock does not check who records it, so the recording script is the check."}
+  - {id: repo-record, text: "Every step lands in the project's own repository as a workflow task: the event, the triage, each decision with the Captain's words, the actions and the outcome."}
+  - {id: team-instance, text: "One shared codebase; each team deploys its own instance (qnow and relay are separate teams)."}
+  - {id: code-goes-to-dev2, text: "An ops task never changes code; a code change is handed to a dev2 task."}
+
+steps:
+  - id: set-up
+    card: "Set up an inbox for my project"
+    activity: "Set up an inbox for my project"
+    stories:
+      - id: run-own-instance
+        card: "My team runs its own inbox, apart from other teams'"
+        release: inbox-r1
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Kent 2026-10-19: 「qnow跟relay有個分開部署，因為是不同團隊的用途」; design brief, Server."}
+          - id: host
+            ask: "Serverless or a long-running websocket host? Brief candidates: Cloudflare Durable Objects, or a VM host."
+      - id: agent-lane-held
+        card: "The agent can open Draft PRs on ops branches and nothing more"
+        release: inbox-r1
+        status: unverified
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Kent 2026-10-19: 「沒有權限做危險動作例如推main且沒有權限合併pr」. POC AC-6 to AC-10 held once on a scratch repo with a GitHub App token and rulesets."}
+          - id: not-shown
+            ask: "Not shown by the POC: a reviewer other than the Captain, in-job token minting, or any repo but the scratch one."
+    system:
+      - "POC: GitHub App token (contents and pull_requests write) plus two rulesets with empty bypass lists on a scratch repo."
+    rules: [team-instance, agent-lane, no-prod-credential]
+
+  - id: hear
+    card: "Hear that something happened"
+    activity: "Hear that something happened"
+    stories:
+      - id: accept-verified-event
+        card: "Only a signed event from a known sender reaches the inbox"
+        release: inbox-r1
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Design brief, Input channels: events are versioned and carry allowlisted fields only. The POC did not build intake."}
+          - id: more-relay-events
+            ask: "Which relay events besides the signed-in ceiling? FO listed: anonymous ceiling filling, refusal spikes, Netlify usage or cost warnings. Captain has not confirmed."
+      - id: dedupe-repeat-event
+        card: "A repeated or out-of-order event notifies me once"
+        release: inbox-r1
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Design brief, Aggregation: dedupe, ordering and repeat handling. Not proven by the POC."}
+      - id: slack-notice-with-link
+        card: "Slack tells me at once, with a link to what the agent found"
+        release: inbox-r1
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Kent 2026-10-19: 「目的是人要知道」; relay ops-r1 goal, Slack at 80% and full. Slack was not exercised in the POC."}
+      - id: informational-fast-path
+        card: "A routine report is recorded and closed without asking me"
+        release: inbox-r3
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Design brief, Aggregation: an informational fast path that records and closes without a gate."}
+          - id: daily-summary
+            ask: "Is the daily traffic summary the first such report? FO suggestion, Captain has not confirmed."
+      - id: second-project-channel
+        card: "qnow's error alerts reach its own inbox the same way"
+        release: inbox-r3
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Design brief, Input channels: qnow's Sentry issue alert; qnow journey story production-operations (gap, r12). qnow task production-incident-agent is on Captain hold."}
+          - id: qnow-diagnosis
+            ask: "Does qnow add its own diagnosis mechanism, and how does it run on the mac mini? Kent asked 2026-10-20; no ruling yet."
+    system:
+      - "Design: input channel, verify and allowlist, aggregate, then project to Slack and to an agent (Kent 2026-10-19, 2026-10-20)."
+    rules: [untrusted-event, team-instance]
+
+  - id: see
+    card: "See what the agent found"
+    activity: "See what the agent found"
+    stories:
+      - id: agent-files-task-and-pr
+        card: "An agent files one ops task and a Draft PR for the event"
+        release: inbox-r1
+        status: unverified
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "POC AC-11: a headless Claude Code First Officer on a GitHub-hosted runner turned a fixture event into one task and one Draft PR (run 39453880412, 86 s), once, on a scratch repo."}
+          - id: self-hosted
+            ask: "Would a self-hosted runner be better? Kent asked 2026-10-20: 「理論上是否跑在 self host 的 runner 更好？」. The POC used a hosted runner; self-hosted was not exercised."
+          - id: workflow-shape
+            ask: "How is the generic ops workflow varied per project (ops, then ops2 only for a breaking redesign)? POC used a minimal workflow."
+      - id: one-recommendation
+        card: "The task carries one recommendation I can accept or reject"
+        release: inbox-r1
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Kent 2026-10-19: 「agent要同步進行解決方案呈現」; relay story agent-recommends, 「第二個應該要接到某個 agent」. The POC used a fixture; no real diagnosis."}
+          - id: options
+            ask: "Does the recommendation choose between raise by N, hold, and stop writes? FO proposal, Captain has not confirmed."
+    system:
+      - "POC: Spacedock dispatch on a hosted Actions runner files a task on an ops/* branch and opens a Draft PR with the App token."
+    rules: [agent-lane, repo-record, code-goes-to-dev2]
+
+  - id: decide
+    card: "Decide in my own repository"
+    activity: "Decide in my own repository"
+    stories:
+      - id: gate-from-captain-review
+        card: "My GitHub review on the Draft PR is the recorded decision"
+        release: inbox-r1
+        status: unverified
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "POC AC-12: the gate was recorded by a script from the Captain's review 5593555088, with his words; the FO did not record it. Captain amendment 2026-10-20 moved the authority boundary to GitHub."}
+          - id: gate-actor
+            ask: "Spacedock accepts any caller as the Captain (POC validation step 6); and recording the gate pushed to the PR and dismissed his approval, so merging needed a second review. What closes both?"
+      - id: raise-from-link
+        card: "I raise today's limit from the notice, without a terminal"
+        release: inbox-r2
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Kent 2026-10-19: 「第二個是怎麼反應與手動的提升開關」; relay story raise-from-link. Brief: a dangerous action runs after a Captain gate or through one narrow inbox tool."}
+          - id: raise-path
+            ask: "Does the raise run as a narrow inbox tool calling relay's operator endpoint, or as a relay-owned link? Not decided."
+    system:
+      - "POC: gate recorded by an ops-gate workflow on pull_request_review, filtered to the Captain's login."
+    rules: [gate-from-captain, no-prod-credential]
+
+  - id: remember
+    card: "Keep the record"
+    activity: "Keep the record"
+    stories:
+      - id: outcome-on-task
+        card: "After I act, the task records what was done and what happened"
+        release: inbox-r2
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Design brief, Outcome: the actions taken and the outcome are recorded in the repository as a workflow task. Not shown by the POC, which stopped at the gate."}
+      - id: diagnosis-queryable
+        card: "Each diagnosis is kept where I can query it, like an ADR"
+        release: inbox-r4
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Kent 2026-10-19: 「應該要像是ADR 一樣留在 relay blob or db 內方便查詢，可能 blob 優先因為更便宜且不需要即時回應」; brief: integrate kc-decision-log or the project's ADRs."}
+          - id: where-kept
+            ask: "Relay blob (Kent 10/19) or the repository task (brief)? Is keeping every self-diagnosis as an ADR-like record wanted? FO listed, unconfirmed."
+      - id: history-outlives-logs
+        card: "Refusal and traffic history outlives the log retention"
+        release: inbox-r4
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Relay story refusal-history (ops-r1, gap); relay's history duty moved to kc-ops-inbox after 2026-10-19."}
+    system:
+      - "POC: the gate record sits in the task file on the ops branch (docs/ops/<task>.md)."
+    rules: [repo-record]
+
+  - id: ask
+    card: "Ask how the service is doing"
+    activity: "Ask how the service is doing"
+    stories:
+      - id: ask-is-it-healthy
+        card: "I ask whether the service is healthy and get an answer from raw data"
+        release: inbox-r4
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Relay story fo-answers (ops-r3, gap), Kent 2026-10-19 goal: answers from raw data, no dashboard."}
+          - id: adhoc-wanted
+            ask: "Is the ad-hoc 'is relay healthy' question an inbox scenario? FO listed, Captain has not confirmed."
+      - id: slack-agent-answers
+        card: "In Slack I talk to an agent that shares the investigator's records"
+        release: inbox-r4
+        status: gap
+        questions:
+          - {id: source, ask: "Where does this come from?", answer: "Kent 2026-10-20: 「在 slack 回應的 agnet 跟實際調查動手的應該是兩個，但是共享某種資源」. The brief puts steering an agent from Slack outside the first slice."}
+          - id: build-or-hermes
+            ask: "Does the inbox build this agent itself, or reuse Hermes? Kent 2026-10-20: 「所以 inbox 應該要自己建，對嗎？」, no ruling yet."
+    rules: [untrusted-event, repo-record]
+
+releases:
+  - id: inbox-r1
+    name: "PROPOSED R1 | Notice and one recommendation"
+    goal: "Before: a full ceiling is invisible until someone reads logs. After: relay sends a signed event, the inbox verifies and dedupes it and posts a Slack notice with a link, an agent files one ops task with one recommendation and a Draft PR, and my GitHub review records the decision. FO candidate for the next slice; raise-from-link and the in-service agent are deferred."
+    slice_because: "three of the eight stories were exercised once at POC depth and are the authority boundary: without them an agent could push to the default branch or record the gate itself; the other five are the notice path the Captain named. The Captain may cut it."
+  - id: inbox-r2
+    name: "PROPOSED R2 | Act from the notice"
+    goal: "After: I raise the limit from the notice without a terminal, and the task records what was done and what happened."
+  - id: inbox-r3
+    name: "PROPOSED R3 | More events, a second project"
+    goal: "After: routine reports close without a gate, and qnow's error alerts reach qnow's own inbox."
+  - id: inbox-r4
+    name: "PROPOSED R4 | Remember and ask"
+    goal: "After: diagnoses and history outlive the logs and can be queried, and I can ask how the service is doing from Slack."
+
+status:
+  as_of: "2026-10-21"
+  unproven: "No story is exists: the package has no code. Three stories ran once on a scratch repo (POC, passed at POC depth) and stay unverified."
+  unmerged: "The POC candidate sits on branch spacedock-ensign/hermes-ops-fo-exe-dev-poc; kc-ops-inbox is absent from origin/main."
+  undeployed: "Nothing is deployed; no event intake, dedupe, Slack notice or live producer exists. The POC ran on a scratch repo only."
+  irreversible: "None today: nothing writes to production. raise-from-link (R2) will change a production limit, behind a Captain gate."
