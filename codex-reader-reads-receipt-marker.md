@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:codex-reader-reads-receipt-marker:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:codex-reader-reads-receipt-marker-ideation-1
+              briefing:
+                id: briefing:codex-reader-reads-receipt-marker:ideation:attempt-1:revision-1
+                digest: sha256:6ae84bc0c2edf3a170435b532e4e397fc5190b6ce7f56a8c211b63281e821795
+                room-ref: ./codex-reader-reads-receipt-marker/review/ideation/briefing-1
 ---
 
 ## Scope

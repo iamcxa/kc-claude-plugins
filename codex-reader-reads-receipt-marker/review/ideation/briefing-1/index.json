@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-reads-receipt-marker:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of codex-reader-reads-receipt-marker to enter implementation, with its Needs-decision items as the Captain rules each one in the batch-5 sitting (listed first, asked one at a time)? An approval accepts a decision's recommendation only where his ruling says so; a decision he changes is recorded in the reason, and a scope change goes in as an amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-reads-receipt-marker:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0755ac769e181fc1859cbb37a28ead96f8a25b26/codex-reader-reads-receipt-marker.md",
+      "rev": "sha256:04a84752242c78f14ea58b5e1fdf9dd178168cd1a7be84ce90635bb463cd1b73",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 ideation design: The Codex review reader recognizes the clean receipt that now opens with a receipt marker"
+    }
+  ]
+}
