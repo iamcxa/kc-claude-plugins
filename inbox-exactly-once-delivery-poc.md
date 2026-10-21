@@ -4,7 +4,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-inbox-exactly-once-delivery-poc
 pr:
 gates:
     version: 1
@@ -28,6 +28,7 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-21T08:46:20Z
 ---
 
 Second proof for `kc-ops-inbox`, before the inbox-r1 Pilot is admitted. The riskiest unexecuted assumption, named by the engineering-reviewer on 2026-10-21: an event entering a real inbox reaches a running First Officer exactly once, at a measured latency, even when the sender retries. The first POC (`hermes-ops-fo-exe-dev-poc`, closed PASSED 2026-10-21) never sent anything through an inbox.
