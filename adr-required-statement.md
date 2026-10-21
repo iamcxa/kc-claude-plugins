@@ -378,3 +378,5 @@ Closed 2026-10-20 at the open validation gate. Captain 「那就關掉」, on FO
 Reason, read 2026-10-20: the candidate b73a69c2 on the local branch `spacedock-ensign/adr-required-statement` (never pushed) is 124 commits behind origin/main; ADR 0009 is now `0009-self-improvement-is-a-three-position-switch-unlocked-by-change-class.md`; its 57 added `workflow.md` lines exceed the word budget `lint-skills.py` now enforces, which needs a Captain raise; the bite is one subspace-web dev2-poc case; the scope was relayed by a peer session and is marked "not yet confirmed by the Captain in this session"; no state commit on the task since 2026-10-08.
 
 The branch and its worktree stay on this machine as reference. Reopen as a new, smaller task from current main (a Captain-rulings field without ADR enforcement) if he asks for it; fo-write-rules-checked Amendment 2 names such a field as the reopen condition of its rule-1 check.
+
+Archive blocked: `merge guard --verdict rejected` and `status --set status=done verdict=rejected completed` both refuse a held entity; FO does not use `--force`. Filed spacedock-dev/spacedock#847 (2026-10-21) at the Captain's 「開」.
