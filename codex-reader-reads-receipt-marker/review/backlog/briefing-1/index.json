@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-reads-receipt-marker:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of codex-reader-reads-receipt-marker to enter ideation under the pilot profile, with the Scope above as written? FO recommends approve, as one of the six batch-5 tasks the Captain accepted 2026-10-21 (「可以」); approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-reads-receipt-marker:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6aeee4fed36c198211ea5a03965ca4b1f17136ea/codex-reader-reads-receipt-marker.md",
+      "rev": "sha256:113de83ac06760bed0eb0bba9dc0f168fa5e00ad45c1438bb40759dd919f2757",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 backlog: The Codex review reader recognizes the clean receipt that now opens with a receipt marker"
+    }
+  ]
+}

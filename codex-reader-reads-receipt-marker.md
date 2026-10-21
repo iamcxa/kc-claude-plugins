@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:codex-reader-reads-receipt-marker:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:codex-reader-reads-receipt-marker-backlog-1
+              briefing:
+                id: briefing:codex-reader-reads-receipt-marker:backlog:attempt-1:revision-1
+                digest: sha256:954f905eed0bf5f054d44426a866e286ecd1b4507504852fb324d8c1ada7bf90
+                room-ref: ./codex-reader-reads-receipt-marker/review/backlog/briefing-1
 ---
 
 ## Scope
