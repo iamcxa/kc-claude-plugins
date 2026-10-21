@@ -49,6 +49,7 @@ Design: this task's scope gains fo-batch-sittings' Cut 2 (before asking, list ev
 ## FO alignment
 
 Alignment: needed before ideation: the design and fo-batch-sittings are read together so the batch list exists once.
+Result: aligned 2026-10-21 with the Captain's 「照建議，但是這四題有細節要讓我知道的嗎」, answering FO's four points: (1) the archived fo-batch-sittings design (its Cut 2, List once section and AC-8) is the authoritative input; (2) this task owns the batch decision list, composed from the tasks' own sections and the map's questions:, with no second stored list; (3) the target is the next kc-dev-flow-2 release (0.28.0) and what cannot ship in it is cut into later tasks; (4) the release-preparation intake (intake/release-preparation-from-kc-paseo-plugins.md) joins this design, with interrogate-then-review order and a durable review record first and canvas redraw and a new question class later; the release-acceptance task of another session keeps its own scope and the boundary is drawn in the design.
 Release review: not needed: workflow maintenance, on no journey map.
 Surfaces: none
 Visible change: none
