@@ -29,11 +29,11 @@ gates:
               application:
                 target-stage: ideation
                 state: pending
-journey: kc-decision-log-design
-journey-release: P1
-journey-story: S20
-journey-required-tasks: '["kc-decision-log-handoff-trial"]'
-journey-mapping-complete: true
+journey:
+journey-release:
+journey-story:
+journey-required-tasks:
+journey-mapping-complete:
 ---
 
 P1's value is that a second agent acts on the exact ruling it was handed, not on a paraphrase. This task proves it end to end. The Claude side writes a ruling reference into this task. A Codex first officer, started through Paseo, runs the task, and its Codex worker re-reads the ruling with the CLI from `kc-decision-log-cli` before it implements a small CLI feature that the synthetic ruling decides. The user gets back evidence tied to that reference.
@@ -84,3 +84,8 @@ Supersedes: none
 Captain: 「照建議」 (this FO's Paseo session, reply to a three-item batch)
 Asked: 「任務二裡「用同一個 CLI」的驗收也要跟著改成用 skill 的做法。」 within item 2 of the batch (task one shrinks to the read-adr skill plus a config template, no CLI).
 Supersedes: AC-1 (replacement written at this task's ideation: the Codex worker re-reads with the read-adr skill's git recipe and compares the digest)
+
+### Amendment 3 — 2026-10-21, chat
+Captain: 「可以，這次授權跳過地圖，先做工具」 (this FO's Paseo session)
+Asked: 「任務二（Codex 交接演練）：記成延後，留在待辦。」
+Supersedes: none
