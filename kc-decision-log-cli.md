@@ -394,3 +394,51 @@ The task is redone as a skill-only plugin: `kc-adr:read-adr` with a reading reci
 ### Summary
 
 The plugin is built and committed (e2ac9041, not pushed). AC-4, AC-5, AC-6, AC-9 and AC-10 are recorded, and AC-8 is met on Claude (9/10 against A0 7/10) after Captain amendment 5 regraded S8 offline; Codex placement (6/10, equal to A0) is a reported known limit. AC-9 is a real dev2 dispatch where the worker loaded the skill unprompted on both hosts (one run each). AC-6's literal clause "reports the D0 commit and digest" is not shown by the two B1 S11 answers (they took the accepted alt path). Affected documents (`doc_impact.py`): CLAUDE.md updated (plugin count, kc-adr); ARCHITECTURE.md, PRODUCT.md, docs/dev/README.md, the cross-model-arbitration spec, quality-pipeline.md, kc-plugin-release SKILL.md, kc-team-ops/README.md and learning.md unaffected: each names the marketplace or release files as a mechanism and lists no plugin set. For FO: `## Scope` and the title still describe the CLI plugin.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on candidate e2ac9041637552332b27ab66c845308ccbe95d0f against AC-4, AC-5, AC-6, AC-8, AC-9 and AC-10, the approved cycle-2 design, and Captain amendments 1 to 5. **Recommendation: REJECTED. Remedy: an amended criterion (Captain); no skill rework, no evidence repair.**
+  Checked from stored evidence plus an offline regrade (no agent run): AC-5, AC-8, AC-9, AC-10 met; AC-4 met with two deviations; AC-6 not met as written (see Findings). Candidate tree `kc-adr` is 54b89e44, the tree every run's `meta.json` records; `git status kc-adr` empty.
+- DONE: Regrade offline with the harness score script and the falsifiers; confirm amendment 5's S8 change moved only three cells and the scorer change is limited to the any-of rule.
+  Copy of the task folder: `score.py` and `score.py --rescore-arm A0` reproduce `results.md`, `results.json`, `results-a0-v2.md` byte for byte; `falsifiers.py` 27 ok, 0 not. `git diff e18b72ed^ e18b72ed` on `results*.json`: exactly three runs change (S8 B1 claude, S8 B1 codex, S8 A0 claude; A0p repeats the A0 run), and only the `placement` field. `score.py` diff is `required_one_of` plus its vacuity selfcheck. Both changed B1 cells wrote the hunch under `## Open items` in the task file, so they meet Q1.
+- DONE: Review the code change itself: manifests, marketplace entry, release-please wiring, README and CLAUDE.md edits, the skill text against the design, no dev2 script or template copied, the writing-tool paragraph as the single resolvable place, the dated CHANGES.md deviations.
+  Diff has 10 files, 169 added lines, markdown and JSON only. Claude and Codex manifests agree on version, description, keywords, license (no drift); `version-parity-check.sh`, `skill-frontmatter-lint.sh`, `release-metadata.test.sh` (36 pass), `release-please-config-check.sh` (kc-adr-v0.1.0 in first-release contract) and `marketplace-verify.sh` (L0-L2, kc-adr installs) all exit 0 at the candidate. `text_check.py` 14/14: dev2 tool names occur only under `## Where the tools are`; `git ls-files kc-adr` has no dev2 script or template. CHANGES.md items 1-10 are dated before run 1 in `ledger.jsonl` (34 lines, 00:50:51 to 00:58:36); items 11 and 12 follow the runs they name. `comment_ratio.py` 0 comment lines, exit 0; `design_surfaces.py check` exit 0; `dispatch_records.py` "5 dispatch record(s) complete"; `number_guards.py check` PASS (no section, no ADR landed); `doc_impact.py` lists 9 documents, each carries `updated` or `unaffected` in the implementation report, spot-check agrees; grep of `kc-adr` for private names, paths and keys finds nothing.
+- DONE: A minimal acceptance script FO can run in a fresh shell, and the `adr_lint.py docs/adr --since c27e76590c1d2dc910e7fa2d332242a7534df0b0` command run with its exit code.
+  `adr_lint.py`: "28 ADR file(s) checked, 0 legacy", exit 0 (package 0.27.0; 0.26.0 is byte-identical and also exit 0). The script below ran under `bash --noprofile --norc` at this candidate: every step gave the expected output.
+
+### Findings
+
+- **AC-6 not met as written (Needs decision, the task cannot own it).** Its Pass line says all four cells report the cited commit and matching digest. S8 does (2/2). In S11 both B1 answers report ADR 0023 at head with 0023's own digest (`results/S11-B1-*/final.json`), the "alt" path; each worker did compute the D0 digest (3 hits per trace) but did not report it. The Evidence plan says that alt path is accepted (as S9), and `SKILL.md` tells the worker both "report the digest you computed" and "report the end's own digest, not the cited one's", so the AC and the design disagree. Both A0 runs reported D0 and its digest. The skill shows no measured advantage on S11. Remedy: Captain amends AC-6 to accept the alt path (as for S9), or asks for a skill edit that reports the cited digest too, which reopens all 34 runs (cap spent).
+- **AC-4 deviations (Polish).** Its falsifier says removing the manifest `skills` key hides the skill; on Codex it does not (`ac4/install-falsifiers.txt`, mutation `nokey` still lists it). Codex `plugin list` names the plugin, not the skill; the skill is shown by `debug prompt-input`. Install on both hosts is shown.
+- **Deferred risk.** The text check's "names the stop" regexes are loose substring tests; behaviour is carried by S5, S10, S12 instead. Would become material if a stop sentence were deleted and S10/S12 were not rerun.
+- **Open questions the implementer raised, not ruled on.** (1) S8 expectation: amendment 5 settled it and I regraded under it; the any-of scorer cannot tell open items from other task-file text, though both B1 cells are under `## Open items`. (2) `## Scope` and the title still describe the CLI plugin `kc-decision-log`; Captain/FO-owned, unedited.
+
+### Limits (read, not verified here)
+
+AC-8 meets its bar exactly (Claude 9/10 against A0 7/10), and only after the S8 regrade; Codex 6/10 equals A0 (known limit, no bar). AC-10 "5 of 6" counts S9 cells by their digest handoff; `consulted` is scored only for S6 and S7 (3 of 4 Y). AC-9: one dispatch per cell, run directly not through a first officer, Claude loaded kc-adr by `--plugin-dir` not install; the control (no kc-adr) also passed checks (b) to (e), so only the skill load (a) differs. I ran no agent scenario. Not verified: a real release-please run, the Phase 2 post-merge sync, tag, push, PR.
+
+### Minimal acceptance script
+
+Needs `claude` and `codex` on PATH, Codex logged in (`~/.codex/auth.json`), about 2 minutes, no secret read. Covers the build and offline regrade only; not agent behaviour.
+
+    WT=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-kc-decision-log-cli
+    TASK=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/kc-decision-log-cli
+    PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0
+    BASE=c27e76590c1d2dc910e7fa2d332242a7534df0b0
+    # 1 expect: e2ac9041637552332b27ab66c845308ccbe95d0f then 0
+    cd "$WT" && git rev-parse HEAD && git status --short kc-adr | wc -l
+    # 2 expect: a kc-adr row ending "ok", "Version parity: all plugins consistent", "all skill directories have valid frontmatter"
+    bash scripts/version-parity-check.sh | tail -3; bash scripts/skill-frontmatter-lint.sh | tail -1
+    # 3 expect: 14 then 0
+    python3 -B "$TASK/ac4/text_check.py" "$WT" | grep -c '^ok'; python3 -B "$TASK/ac4/text_check.py" "$WT" | grep -c '^FAIL'
+    # 4 expect: "Skills (1)  read-adr" for Claude; "installed, enabled" and "kc-adr:read-adr" for Codex; "install_check exit=0"
+    bash "$TASK/ac4/install_check.sh" "$WT"; echo "install_check exit=$?"
+    # 5 expect: "results.md identical", then 27, then 0
+    D=$(mktemp -d) && cp -R "$TASK" "$D/t" && cd "$D/t/harness" && python3 -B score.py >/dev/null && diff ../results.md "$TASK/results.md" && echo "results.md identical"
+    python3 -B falsifiers.py | grep -c '^ok'; python3 -B falsifiers.py | grep -vc '^ok'
+    # 6 expect: "28 ADR file(s) checked, 0 legacy" then adr_lint exit=0
+    cd "$WT" && python3 -B "$PKG/scripts/adr_lint.py" docs/adr --since "$BASE"; echo "adr_lint exit=$?"
+
+### Summary
+
+REJECTED, for one reason the Captain owns: AC-6's Pass line is stricter than the design's accepted S11 path, and the skill's two reporting rules explain the gap. Everything else holds on an independent regrade: AC-5, AC-8 (at the bar), AC-9 and AC-10 are met, the S8 regrade moved three runs by one field, and the diff is clean. No product byte needs to change if the Captain amends AC-6 (and may tidy AC-4's two clauses).
