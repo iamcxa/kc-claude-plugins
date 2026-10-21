@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-counts-code-review-only:backlog:attempt-1:revision-1",
+  "question": "Open the task for the summary path that reads a security review as a code-review round, in batch 5 after codex-reader-reads-receipt-marker, under the pilot profile? (FO's batch-5 question 6: 「「摘要留言把安全性審查讀成程式碼審查」要不要另開一張任務，放進第五批？」) FO recommends yes; approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-counts-code-review-only:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/229615a970ef049328a7d9dac6d83f477f723c6a/codex-reader-counts-code-review-only.md",
+      "rev": "sha256:41fe6383e82adc0235b6372b65e9eeaf008b7f681b990c143f6c4f638448db0c",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 backlog, from codex-reader-reads-receipt-marker D3."
+    }
+  ]
+}
