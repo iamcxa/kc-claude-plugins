@@ -34,6 +34,14 @@ gates:
                 id: briefing:fo-write-checks-parse-top-level:ideation:attempt-1:revision-1
                 digest: sha256:1756e1f8fee246c2952b9ea386caefe9205c4161f5d17005df09fd20c50b2fbe
                 room-ref: ./fo-write-checks-parse-top-level/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-write-checks-parse-top-level:ideation:1
+                briefing: briefing:fo-write-checks-parse-top-level:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T09:48:01.32697Z"
+                decision: hold
+                reason: 'Captain 「關掉」 (chat, 2026-10-21), on FO''s recommendation 「我的答案是不值得，建議關掉」: both findings are reviewer-constructed and the ideation measurement over 305 task files and 735 gate questions in four state checkouts changed 0 verdicts; questions 7 to 9 lapse. Override: recommended building the two fixes (design); Captain chose closing, on FO''s revised recommendation in chat; area: round-3 parser edge cases.'
 ---
 
 ## Scope
