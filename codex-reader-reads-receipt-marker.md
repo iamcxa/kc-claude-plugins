@@ -58,6 +58,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-21T14:52:37Z
+worktree: .worktrees/spacedock-ensign-codex-reader-reads-receipt-marker
 ---
 
 ## Scope
