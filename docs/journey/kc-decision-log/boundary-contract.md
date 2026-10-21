@@ -13,7 +13,7 @@ kc-adr 負責讓 agent 把 ADR 讀對、寫對、寫到對的地方，任何 rep
 | kc-journey-map | 使用者看得到的能力，包括延後的功能 | 裁示 |
 | 使用者 | 裁決、合併、授權 | — |
 
-ADR 寫入的工具今天都在 dev2：格式模板、`number_guards.py` 的配號、`adr_lint.py` 檢查。**未決，等 POC。** 使用者的設想是 kc-adr 為獨立套件，dev2 直接取用、永遠用最新版，之後其他流程（例如財務）也能取用；dev2-poc 任務 `kc-adr-dependency-poc` 正在比較原生 plugin 相依、符號連結、執行時解析，以及「包住不搬」這個對照組。在 POC 回報前，`read-adr` 的寫入部分照舊指向 dev2 的工具。下面是「包住不搬」這個對照組的理由（dev2 FO 2026-10-21 審過）： 不搬也不會壞的理由：目前所有使用者都裝了 dev2，包括 moneyflow（它有 `docs/dev2`）；搬家要改四個 adopter 的 README 與版本，還要把 ADR 與 migration 共用的配號拆開。`read-adr` 寫入時指向 dev2 的模板、叫 agent 跑 dev2 的 `adr_lint.py`、編號交給協調者用 `number_guards.py` 保留，kc-adr 不帶任何副本。它從已安裝的 kc-dev-flow-2 解析 `<package>` 路徑，不寫死路徑，並註明它對應的 kc-dev-flow-2 版本，避免指向失效。出現不靠 dev2 寫 ADR 的 repo，或要開 monorepo 命名空間（那是 dev2 的改動）時，再重新討論。
+ADR 寫入的工具今天都在 dev2：格式模板、`number_guards.py` 的配號、`adr_lint.py` 檢查。**已裁決：工具搬到 kc-adr，但用 dev2 的人只要裝 dev2 一個**（使用者 2026-10-22 在 dev2 FO 的工作階段回覆「可以」）。kc-adr 成為 ADR 模板、ADR 格式檢查與配號中 ADR 部分的來源；每次 dev2 發版前，CI 從 kc-adr 複製進 dev2，副本與來源不一致時 CI 失敗。其他使用者直接安裝 kc-adr。做法由 dev2 待辦任務 `kc-adr-tools-with-dev2-copy` 與 kc-adr 一起設計，第一步先測複製進去的目錄在兩個 host 上都裝得起來；配號保留檔歸誰也在那張任務裡定。在那張任務完成前，`read-adr` 的寫入部分照舊指向 dev2 的工具。
 
 ## 範圍外：跨領域怎麼組織
 
