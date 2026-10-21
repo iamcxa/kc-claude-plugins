@@ -365,3 +365,35 @@ The 900-second window is now two consecutive unrecognized reads of one comment a
 - Amendment 2's text has no "backlog task" branch and says Supersedes: none; I built its two branches only and put the dropped branch to the Captain as D6.
 - Mutant N8 was first written with a quoting slip (syntax error, red for the wrong reason); rewritten before counting.
 - Read-only handling: this cycle ran `git fetch -q origin` in this repository (origin/main still c27e7659) and `gh pr list` read-only; no adopter clone touched. Prototype, mutant and measurement files are in `/tmp/ideation-d3` and `/tmp/ideation-d2`, outside every repository.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main (c27e76590c1d2dc910e7fa2d332242a7534df0b0) implementing the cycle-3 design and Captain Amendments 1 to 3: kc-dev-flow-2/extensions/codex/codex_review.py and its tests (v1 receipt marker read as clean; exit 5 with unrecognized=comment:<id> for an unread Codex comment naming the head), kc-dev-flow-2/scripts/pr_watch.py and kc-dev-flow-2/scripts/test_pr_watch.py (give up after two consecutive unrecognized reads at least 180 s apart, three lines, the upstream line with its three branches per Amendments 2 and 3), and the one EXTENSION.md sentence; every file the design names and no other
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/693, head a3ce3c8b on spacedock-ensign/codex-reader-reads-receipt-marker, commits 6939ffb7 and a3ce3c8b; `git diff --name-only origin/main...HEAD` lists exactly the five files; `comment_ratio.py` 0 comment lines added; `doc_impact.py` lists 0 documents.
+- DONE: Every acceptance criterion green with the evidence each names, each falsifier shown failing by a mutation you run (python3 -B, caches cleared), including AC-1's live read of iamcxa/kc-paseo-plugins#8 and the 22-PR base-versus-candidate replay; the upstream line's third branch (package repository files a backlog task) carries its own test
+  AC-1 live exit 0 `evidence=comment:6296013066`, base exit 4. AC-6 replay: 21 same, 1 differing (paseo #8), 2 removed assertion lines in test_codex_review.py (4 to 5), 0 in test_pr_watch.py. AC-9 stand-in (marker constant `v9`) exit 5 `unrecognized=comment:6296013066`. Reader tests 18 and watcher tests 92 (87 base, 5 new) pass. Deviations: AC-8 and AC-11, below.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py exits 0; roborev evidence= line; push without force and without -u; CI green on the PR head; CI cost measured or stated as not measured
+  lint-skills exit 0 (it first failed: EXTENSION.md named `pr_watch.py` without `<package>/scripts/`; fixed, word count unchanged at 227). `evidence=roborev:986` (clean on a3ce3c8b1, one run). Plain `git push origin <branch>`. CI on head a3ce3c8b: unit tests 1m24s, version parity 57s, multi-profile route gate 7s, all pass; those are measured job durations of this run, billed minutes not measured; no new job.
+
+### Per-criterion evidence
+
+Mutants run on copies with `python3 -B -I`, caches excluded, each red in the test named for it (runner in /tmp/impl-crm, outside the repository):
+- AC-2/AC-3/AC-4 (reader): M1 any `codex-` marker stripped, 4 red (2 tests); M2 marker stripped anywhere, red only after I added a body with a blank line before the marker (it survived the cycle-3 tests, 1 red now); M3 no head test, 2; M4 `lstrip()` of all whitespace, 1; M5 verdict test dropped, 2; M6 bare `startswith`, 2.
+- AC-5: M15 receipt preferred regardless of time, 2 red.
+- AC-9: M7 `evidence=` printed on exit 5, 1; M8 any bot comment counts, 5; M13 summary comments counted, 1; M16 quoted `evidence=` not rewritten, 1; M17 quote not capped at 120, 1; M18 earliest id named, 1.
+- AC-10 (watcher): N1 no gap between reads 2; N2 900 s window 2 (1 failure, 1 error: the fake look list runs out); N3 other word keeps the pair 1; N4 one count per PR 1; N5 `codex-reported` not stored 1; N6 id in the evidence slot 1 (reader-side test); N7 exit 5 left as error 1.
+- AC-11: N8 draft-the-issue fallback removed 2; N9 `peers` branch removed 1; N10 backlog branch removed 1 (its own test, `test_the_upstream_line_has_the_package_repository_file_a_backlog_task_and_the_others_use_peers_or_an_issue`, asserts the three branches in order).
+- `test_sd_dispatch.py --sd-plugin-root <spacedock 0.27.3 cache>` passes, including the `codex-round` case (not run at ideation).
+
+### Summary
+
+The ideation prototype was adopted as written and Amendment 3 added: the upstream line now opens with "in the repository that holds kc-dev-flow-2 itself, file a backlog task; elsewhere, if `peers` ...; otherwise draft the issue and ask the Captain". One survivor was found and killed (M2). The PR is Draft; I did not mark it ready.
+
+### Deviations and disclosures
+
+- AC-8 says the give-up lines are at most 77 words; with Amendment 3's first branch they are 89 (counted with `len(split())` on the live-ref output). AC-8 is not superseded by the amendment (Supersedes: none), so this is for FO or the Captain to rule: raise the bound or shorten the line.
+- AC-11 asserts the upstream line does not contain "backlog"; Amendment 3's Design withdraws that line, so the code and the test now say the opposite. I changed the test, not the criterion text, and recorded no move of AC-11 (Supersedes: none); FO should move AC-11 under the amendment protocol.
+- D6 in `## Unresolved decisions` is answered by Amendment 3 (the branch is back); I did not edit that section.
+- The ideation prototype's `/tmp/ideation-d3` files were the starting point; their base files were `cmp`-identical to origin/main c27e7659 before I copied the five files.
+- Not measured: billed CI minutes; FO's compliance with the merge-ask and upstream lines (no check reads them).
+- No `git config` or remote write other than the branch push; no review requested, no comment on any PR.
