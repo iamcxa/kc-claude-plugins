@@ -485,3 +485,14 @@ PASSED on head a3ce3c8b1747b8737fd01b275a4e1f3fb7a1d58d: every criterion's evide
 - The dispatch's 0.26.0 adr_lint path and the loaded 0.27.0 package gave the same result; the skill loaded from 0.27.0.
 - I did not edit the acceptance criteria, product bytes or the PR; no push, comment, review request or ready.
 - Not measured: billed CI minutes; FO's compliance with the merge-ask and upstream lines. Scratch files are in /tmp/val-crm, outside every repository.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: In kc-dev-flow-2/scripts/test_pr_watch.py, test_wait_gives_up_on_two_unrecognized_reads_three_minutes_apart_once_and_names_the_comment asserts that the give-up output contains "in the merge ask as Codex unread" and "the Captain decides"; show each new assertion red by deleting its phrase from kc-dev-flow-2/scripts/pr_watch.py in a scratch copy (python3 -B), and change no product line
+  Commit de5104be adds two `assertIn` lines to that test and touches no product file. Scratch copy in /tmp/crm-ac13.*: deleting "in the merge ask as Codex unread" from pr_watch.py gives 1 FAIL in that test; deleting "the Captain decides" gives 1 FAIL in that test; unmutated 92 OK.
+- DONE: All package test files pass; push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  All 23 `test_*.py` files and `lint-skills.py` exit 0 (`test_sd_dispatch.py` with the spacedock 0.27.3 cache root; `test_observer_recovery.py` with `SPACEDOCK_BIN`). `git push origin spacedock-ensign/codex-reader-reads-receipt-marker`, head de5104be. CI on that head: unit tests, version parity, multi-profile route gate, GitGuardian all SUCCESS. `comment_ratio.py` 0 comment lines of 203; diff still the same five files. roborev gate (base a3ce3c8b, the previous head): `clean on de5104be0; evidence=roborev:997`, exit 0, one run.
+
+### Summary
+
+The merge-ask half of the D2 ruling is now pinned: both phrases are asserted and each deletion turns that one test red. No product line changed; PR #693 stays Draft and F1 (AC-8 and AC-11 under Amendment 3) is still FO's to move.
