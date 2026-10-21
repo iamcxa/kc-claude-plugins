@@ -398,3 +398,79 @@ The ideation prototype was adopted as written and Amendment 3 added: the upstrea
 - The ideation prototype's `/tmp/ideation-d3` files were the starting point; their base files were `cmp`-identical to origin/main c27e7659 before I copied the five files.
 - Not measured: billed CI minutes; FO's compliance with the merge-ask and upstream lines (no check reads them).
 - No `git config` or remote write other than the branch push; no review requested, no comment on any PR.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #693 head a3ce3c8b against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Head a3ce3c8b1747 checked out detached in a throwaway worktree (removed). AC-1 live: candidate exit 0 `evidence=comment:6296013066`, base exit 4. AC-2 to AC-5 and AC-9: 18 reader tests pass; 13 mutants I ran, each red (D1 bare startswith 2, any `codex-` marker 3, `lstrip()` 1, verdict test dropped 2, head test dropped 2, marker stripped anywhere 1, clean preferred over later findings 3, `evidence=` token on exit 5 1, any comment counts 5, summary counted 1, quoted `evidence=` kept 1, 120 cap lifted 1, earliest id 1). AC-6: 21 of 22 live PRs print the same line, the one difference is kc-paseo-plugins#8; 2 removed lines in `test_codex_review.py`, 0 in `test_pr_watch.py`; base 87 watcher tests pass. AC-7: 5 files, 0 `#` lines (`comment_ratio.py` 0 of 201). AC-9 live stand-in (marker `v9`, run from /tmp): exit 5, `unrecognized=comment:6296013066`; real subprocess seam `pr_watch.codex()` returns `unrecognized(comment:6296013066)`. AC-10: 92 watcher tests pass; 9 mutants red (no gap 2, window 900 s 1+1 error, other word keeps pair 1, `codex-reported` not stored 1, exit 5 unmapped 1, id in evidence slot 1, per-comment compare dropped 1, plus the two below). AC-11: draft-issue fallback removed 2, `peers` branch removed 2, backlog branch removed 1. Limits judged: kept first read lives in the wait process (host-ended wait restarts the count): accepted, a named limit that fails safe (never clean, FO still has the merge-ask rule); `peers` Joins names information requests only: accepted, `peers` unedited and the fallback is the drafted issue; no check reads the merge ask or the upstream report: accepted as a named limit, see F2.
+- DONE: Judge AC-8 and AC-11 against Captain Amendment 3 (FO recorded 'Supersedes: none' although it changes both): say whether the implementation matches the amendment and whether any other criterion is affected
+  The implementation matches Amendment 3: the third `next:` line reads "in the repository that holds kc-dev-flow-2 itself, file a backlog task; elsewhere, if `peers` is listed and a kc-dev-flow-2 maintainer FO is reachable, send it through `peers`; otherwise draft the issue and ask the Captain whether to file it", the branch order the Amendment's Design gives, with its own test. Give-up output measured by `len(split())` on the live ref: 89 words, so AC-8's "at most 77" fails as written; AC-11's "not 'backlog'" is reversed as written. Both literal failures follow from the Captain's 「加回來」, so the code is right and the criteria are stale (F1). Also stale and affected: AC-10's "91 tests" (now 92: 87 base + 5 new), the Design's printed-lines block and "77 words", the words table row 77, the PRFAQ's upstream sentence, and D6 (answered by the Amendment). AC-1 to AC-7 and AC-9 are not affected. AC-8's other clauses hold: EXTENSION.md 227 words (base 185), `git diff c27e7659 a3ce3c8b -- references skills README.md` empty, the idle `next:` wait test passes unchanged.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `bash --noprofile --norc` (first run failed at Step 5 on an import path under `-I`; fixed in the script and rerun whole, passed, 1 m 10 s). `adr_lint.py docs/adr --since c27e7659` exit 0 "28 ADR file(s) checked, 0 legacy", from both the 0.26.0 path in the dispatch and the 0.27.0 package. Verdict: PASSED on head a3ce3c8b1747b8737fd01b275a4e1f3fb7a1d58d, no Material finding; F1 is a record repair by FO before the gate.
+
+### Findings
+
+- F1 Polish: AC-8 (77-word bound) and AC-11 (no "backlog") contradict the candidate, and Amendment 3 moved neither nor wrote replacements; the Design printed-lines block, PRFAQ sentence, AC-10's "91 tests" and D6 are stale. Why not Material: the code does what the Captain ruled; no user loses anything. Action: FO moves AC-8 and AC-11 under Amendment 3 (supersede, new ids "Amended by Captain, amendment 3") and refreshes the stale figures. Only if the Captain wants the 89-word line cut is it a Needs decision.
+- F2 Deferred risk: nothing guards the `EXTENSION.md` exit-5 sentence (42 words) or FO following the printed `next:` lines. I deleted the sentence in a scratch copy: `lint-skills.py`, `test_sd_dispatch.py` and both suites stayed green. It becomes Material if an FO reads exit 5 as clean or skips the merge-ask quote on a real Codex shape change; the merge-ask-holds-missing-clauses task is the named owner.
+- F3 Polish: the exit-5 line's 120-character quote can cut mid-sha (`5ff307de` on the live body). No harm; the id carries the lookup.
+- F4 Deferred risk: the first unrecognized read is kept inside the wait process; a host that ends the wait early restarts the count, so a Codex shape change can print nothing until a wait lasts 180 s. Material only if FO waits are routinely shorter than that.
+
+### Evidence checks run
+
+- `comment_ratio.py c27e7659 a3ce3c8b`: 0 comment lines of 201 code lines, exit 0. `doc_impact.py`: 0 documents. `design_surfaces.py check`: presentable. `dispatch_records.py`: 5 records complete. `lint-skills.py` exit 0. `test_sd_dispatch.py --sd-plugin-root <spacedock 0.27.3>` exit 0 (the `codex-round` case passes, as on base). No `## Number guards` check owed (no db, ADR: none).
+- PR #693 checks read, not rerun: GitGuardian, multi-profile route gate, unit tests, version parity all pass on a3ce3c8b; still Draft.
+
+### Captain's acceptance script (run as written in a fresh bash, output observed)
+
+Needs `git`, `python3`, and `gh` logged in with read access to iamcxa/kc-paseo-plugins. Five minutes or less (observed 1 m 10 s).
+
+```
+# Step 1: fetch the PR head (expect: a3ce3c8b)
+D=$(mktemp -d) && cd "$D" && git init -q c && cd c && git remote add origin https://github.com/iamcxa/kc-claude-plugins.git && git fetch -q --depth 1 origin refs/pull/693/head && git checkout -q --detach FETCH_HEAD && git rev-parse --short=8 HEAD
+
+# Step 2: the real incident, new reader (expect: "clean on 5ff307de6: ... evidence=comment:6296013066" and exit=0)
+python3 -B -I kc-dev-flow-2/extensions/codex/codex_review.py iamcxa/kc-paseo-plugins 8; echo "exit=$?"
+
+# Step 3: the same comment, old reader from before the change (expect: "not reviewed: no Codex evidence covers 5ff307de6" and exit=4)
+git fetch -q --depth 1 origin c27e76590c1d2dc910e7fa2d332242a7534df0b0 && git show FETCH_HEAD:kc-dev-flow-2/extensions/codex/codex_review.py > "$D/old_review.py" && python3 -B -I "$D/old_review.py" iamcxa/kc-paseo-plugins 8; echo "exit=$?"
+
+# Step 4: pretend Codex changed its marker to v9 (expect: "not recognized on 5ff307de6: ..." with unrecognized=comment:6296013066, no evidence= token, and exit=5)
+sed 's/codex-review-receipt:v1 -->\\n/codex-review-receipt:v9 -->\\n/' kc-dev-flow-2/extensions/codex/codex_review.py > "$D/v9_review.py" && python3 -B -I "$D/v9_review.py" iamcxa/kc-paseo-plugins 8; echo "exit=$?"
+
+# Step 5: the wait gives up after two unread reads 180 s apart (expect: 3 lines starting "iamcxa/kc-paseo-plugins#8 codex=unrecognized(comment:6296013066): not recognized on two reads 180s apart", then two "next:" lines, then "exit 0 elapsed 180")
+(cd kc-dev-flow-2/scripts && python3 -B -I - <<'PY'
+import io, contextlib, sys, tempfile
+sys.path.insert(0, ".")
+from pathlib import Path
+import pr_watch as w, test_pr_watch as t
+REF = "iamcxa/kc-paseo-plugins#8"
+odd = t.snap(codex="unrecognized(comment:6296013066)", **{"watch-codex": True})
+tc = t.PrWatchTests("test_the_codex_reader_is_found_in_its_extension")
+with tempfile.TemporaryDirectory() as d:
+    st, now, seq = Path(d, "w.json"), [0], iter([odd] * 20)
+    with contextlib.redirect_stdout(io.StringIO()):
+        tc.run_main(["add", REF], [t.snap(codex="not-reviewed")], st)
+    def sleep(s): now[0] += s
+    code = w.main(["--state", str(st), "wait", "60"], look=lambda ref, **kw: next(seq), sleep=sleep, clock=lambda: now[0])
+    print("exit", code, "elapsed", now[0])
+PY
+)
+
+# Step 6: both test suites (expect: "Ran 18 tests ... OK" and "Ran 92 tests ... OK", about 40 s)
+python3 -B -I kc-dev-flow-2/extensions/codex/test_codex_review.py 2>&1 | tail -3; python3 -B -I kc-dev-flow-2/scripts/test_pr_watch.py 2>&1 | tail -3
+```
+
+Observed: Step 1 `a3ce3c8b`; Step 2 `clean on 5ff307de6: Codex Review comment says no issues on the head; evidence=comment:6296013066 at 2026-10-20T16:38:29Z`, exit=0; Step 3 `not reviewed: no Codex evidence covers 5ff307de6`, exit=4; Step 4 `not recognized on 5ff307de6: "<!-- codex-review-receipt:v1 --> Codex Review: Didn't find any major issues. Chef's kiss. **Reviewed commit:** `5ff307de"; unrecognized=comment:6296013066 at 2026-10-20T16:38:29Z`, exit=5; Step 5 the three lines as expected (89 words) then `exit 0 elapsed 180`; Step 6 `Ran 18 tests ... OK`, `Ran 92 tests in 42.205s ... OK`.
+
+Does not cover: a real Codex posting a new shape on an open PR (kc-paseo-plugins#8 is merged, so Steps 4 and 5 use a changed marker string and a fake clock, not a live wait); FO obeying the `next:` lines; the Captain's merge-ask wording; CI.
+
+### Summary
+
+PASSED on head a3ce3c8b1747b8737fd01b275a4e1f3fb7a1d58d: every criterion's evidence reproduces and every falsifier I ran goes red. The code matches Amendment 3; AC-8 and AC-11 read wrong only because FO recorded 'Supersedes: none', which F1 asks FO to correct before the gate.
+
+### Deviations and disclosures
+
+- `git fetch -q origin` in the implementation worktree to read origin/main (c27e7659 unchanged) updated remote-tracking refs only; no file, branch or config changed. Two throwaway detached worktrees (candidate and base) were added with `git worktree add` and removed.
+- The dispatch's 0.26.0 adr_lint path and the loaded 0.27.0 package gave the same result; the skill loaded from 0.27.0.
+- I did not edit the acceptance criteria, product bytes or the PR; no push, comment, review request or ready.
+- Not measured: billed CI minutes; FO's compliance with the merge-ask and upstream lines. Scratch files are in /tmp/val-crm, outside every repository.
