@@ -67,6 +67,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-21T19:12:41Z
+worktree: .worktrees/spacedock-ensign-merge-ask-holds-missing-clauses
 ---
 
 ## Scope
