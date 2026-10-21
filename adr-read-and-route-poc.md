@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 worktree: .worktrees/spacedock-ensign-adr-read-and-route-poc
-pr:
+pr: local-merge:c27e76590c1d2dc910e7fa2d332242a7534df0b0
 gates:
     version: 1
     records:
@@ -49,6 +49,7 @@ gates:
                 target-stage: done
                 state: pending
 started: 2026-10-21T06:22:26Z
+mod-block: merge:pr-merge
 ---
 
 P1 proves the mechanics only: a task description tells the worker to use the skill, so it does. The value the user wants is unproven. Does an agent consult the governing ruling before deciding when nobody reminds it, and does it put new information in the right home rather than turning everything into an ADR? The user, 2026-10-21: 「確保 skill/hook 可以讓 agent 知道要讀 ADR 之外還要知道可以怎樣區分，因為不是全部資訊都要寫到 ADR」; he approved building this POC (「建立這個 POC」). The result also decides whether kc-decision-log could later replace dev2's ADR reading, which must first be proven easier for agents (boundary contract draft, PR #691).
