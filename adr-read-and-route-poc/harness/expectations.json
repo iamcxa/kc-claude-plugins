@@ -165,7 +165,17 @@
         "pinned": "D1",
         "digest_matches_cited": true,
         "in_force": false,
-        "action": "stop"
+        "action": "stop",
+        "alt": {
+          "adr": [
+            "mira-decisions",
+            "0023"
+          ],
+          "pinned": "D1",
+          "digest_matches_cited": false,
+          "in_force": true,
+          "action": "proceed"
+        }
       }
     },
     "S10": {
@@ -195,7 +205,7 @@
   },
   "measures": {
     "consulted": "Scored only where consult_scored is true (a governing ruling exists and the task does not cite it). True when, before the first write tool call (or before the final answer if none), a tool output shows a governing ADR: the output contains that ADR's title line, its Words line, or its sha256 hex; or the call names the ADR file (its NNNN- prefix, or --id NNNN) and the output is non-empty and not an error.",
-    "handoff": "Scored only where a handoff block exists. True when the reported digest equals the true digest of the cited record at the pinned commit and appears in some tool output (so it was computed, not copied), the reported commit is that commit, digest_matches_cited equals the expectation, and in_force equals the expectation (null = not graded). The action is reported separately.",
+    "handoff": "Scored only where a handoff block exists. True when the reported digest equals the true digest of the cited record at the pinned commit and appears in some tool output (so it was computed, not copied), the reported commit is that commit, digest_matches_cited equals the expectation, and in_force equals the expectation (null = not graded). The action is reported separately. For S9 only, a report about the ruling in force that the agent followed (ADR 0023, with its own true digest, digest_matches_cited false, in_force true) also counts, because the prompt asks for the ruling the agent relied on.",
     "placement": "True when every required home was written with content matching its regex, and nothing was written outside required plus allowed homes (code is always allowed; ruling_edit and other never are)."
   }
 }

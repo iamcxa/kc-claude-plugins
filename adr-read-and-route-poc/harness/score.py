@@ -136,10 +136,20 @@ def norm_digest(d):
 
 
 def handoff(final, exp, events):
-    h = exp["handoff"]
     rc = (final or {}).get("ruling_check")
     if not rc:
         return {"ok": False, "why": "no ruling_check in the answer", "action_ok": False}
+    primary = handoff_one(rc, exp["handoff"], events)
+    alt = exp["handoff"].get("alt")
+    if not primary["ok"] and alt:
+        second = handoff_one(rc, alt, events)
+        if second["ok"]:
+            second["via"] = "alt"
+            return second
+    return primary
+
+
+def handoff_one(rc, h, events):
     repo, num = h["adr"]
     commit = WORLD[h["pinned"]]
     true_digest = norm_digest(WORLD["digests"][f"{num}@{h['pinned']}"])

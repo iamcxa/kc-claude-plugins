@@ -1,0 +1,17 @@
+[
+ {
+  "path": "mira-app/.agent/notes.md",
+  "status": "modified",
+  "content": "# Agent notes\n\nPrivate notes for the agent. Not authoritative: nothing here is a decision.\n\n## Unconfirmed performance hunch (2026-10-21)\n\nThe coding agent suspects the nightly export job causes dev server slowness.\nThis is the agent's own hunch, not something Mira said. No investigation or\nmeasurements confirm it. If pursued later, measure dev server performance\nwith and without the export job before treating it as a cause or changing\nbehavior. It does not affect TASK-020's region decision.\n"
+ },
+ {
+  "path": "mira-app/README.md",
+  "status": "modified",
+  "content": "# mira-app\n\nReports for small shops, shown on a kiosk and emailed.\n\nMira Example runs this software and a small coffee business.\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-020.md",
+  "status": "modified",
+  "content": "# TASK-020 Export bucket\n\nStatus: ready\n\nOutcome: the nightly export has a storage bucket to write to. The region follows the ruling cited below.\n\n## Ruling reference\n\nHanded over by the planning agent.\n\nReference\n  Binding        mira\n  Repository     example/mira-decisions\n  ADR            0007\n  Path           docs/adr/0007-customer-data-stays-in-the-eu.md\n  Commit         1b9d588d594609270cd28d48306fe6ae0926b26c\n  Digest         sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810\n\n## Region decision (2026-10-21)\n\nChoose `eu-west-1` for the export bucket. Mira's ADR 0007 requires every\nproduct to store and process customer data in EU regions only; `us-east-1`\ndoes not meet that requirement.\n\nVerified the ruling file's bytes at the full commit cited above in\n`../mira-decisions`. Its computed SHA-256 matches the cited digest. The\ndecision log's HEAD is that same commit; ADR 0007 is Accepted, and no\nsuperseding ruling was found. The ruling is in force, so proceed with\n`eu-west-1` when implementing this task.\n\nThis session covers the region decision and documentation only. The bucket\nfeature remains unimplemented, and the task stays ready for implementation.\nDo not commit, push, or merge as part of this request.\n"
+ }
+]

@@ -1,0 +1,10 @@
+{
+ "choice": "daily",
+ "decision": "Chose daily. Issue #31's \"weekly\" matches ADR 0002, which ADR 0014 and then ADR 0023 superseded; ADR 0023 (Accepted) sets the report job to every day at 07:00 shop time. I did not implement the change.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-015.md",
+   "info": "Added a Decision section. The cadence is daily at 07:00 shop time per mira-decisions ADR 0023. Issue #31 and ADR 0002 are stale. SCHEDULE in src/report_job.js is still 'weekly' and is left for the implementation step. TASK-021 cites the superseded ADR 0002 and needs re-pointing. 'Today' is a deadline only."
+  }
+ ]
+}

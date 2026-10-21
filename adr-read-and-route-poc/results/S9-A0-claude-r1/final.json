@@ -1,0 +1,18 @@
+{
+ "decision": "The cited ADR 0002 (weekly) is superseded by 0014, which 0023 then superseded. 0023 is Accepted and says daily at 07:00 shop time, so I chose daily and noted it in the task file.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-021.md",
+   "info": "Added a 'Ruling update' section. ADR 0002 is superseded by 0014, then by 0023. The ruling in force is 0023: the report job runs daily at 07:00 shop time. Source is commit 1b9d588d594609270cd28d48306fe6ae0926b26c."
+  }
+ ],
+ "choice": "daily",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "proceed"
+ }
+}
