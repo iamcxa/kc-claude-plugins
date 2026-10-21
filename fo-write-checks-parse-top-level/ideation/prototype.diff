@@ -1,0 +1,48 @@
+--- base/kc-dev-flow-2/scripts/delivery_gate.py	2026-10-21 14:21:12
++++ cand2/kc-dev-flow-2/scripts/delivery_gate.py	2026-10-21 15:45:22
+@@ -66,7 +66,7 @@
+ AC_NOT_RUN = re.compile(r"(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b", re.I)
+ AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
+ DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
+-DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
++DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n|\n(?=[ \t]*(?:[-*+][ \t]+)?(?:[\w.-]+[ \t]+)?(?:Declined|FO declines)\b)")
+ FINDING = re.compile(r"^\s*[-*]\s*\*{0,2}F\d+\*{0,2}\s*[:(]?\s*\(?\s*(?:Deferred risk|Polish)\b", re.M)
+ MAX_POINTS = 12
+ CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
+@@ -156,10 +156,13 @@
+ 
+ 
+ def declined_items(text):
+-    items = []
++    items, stop = [], 0
+     for start in DECLINE_START.finditer(text):
++        if start.start() < stop:
++            continue
+         rest = text[start.end():]
+         end = DECLINE_END.search(rest)
++        stop = start.end() + (end.start() if end else len(rest))
+         depth, item = 0, ""
+         for ch in (rest[:end.start()] if end else rest).strip().rstrip("."):
+             depth = max(depth + (ch in "([") - (ch in ")]"), 0)
+--- base/kc-dev-flow-2/scripts/design_surfaces.py	2026-10-21 14:21:12
++++ cand2/kc-dev-flow-2/scripts/design_surfaces.py	2026-10-21 15:45:21
+@@ -369,8 +369,17 @@
+ 
+ 
+ def scope_lines(text):
+-    found = re.search(r"^## Scope\b[^\n]*\n(.*?)(?=^## |\Z)", text or "", re.M | re.S)
+-    return (found.group(1) if found else "").splitlines()
++    text, inside, start, at = text or "", False, None, 0
++    for line in text.split("\n"):
++        if FENCE.match(line):
++            inside = not inside
++        elif not inside and line.startswith("## "):
++            if start is not None:
++                return text[start:at].splitlines()
++            if re.match(r"## Scope\b", line) and at + len(line) < len(text):
++                start = at + len(line) + 1
++        at += len(line) + 1
++    return text[start:].splitlines() if start is not None else []
+ 
+ 
+ def git_out(task, *args):
