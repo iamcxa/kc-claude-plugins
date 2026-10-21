@@ -26,6 +26,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-21T18:40:25Z
+worktree: .worktrees/spacedock-ensign-interrogation-astra-vs-sol-poc
 ---
 
 ## Scope
