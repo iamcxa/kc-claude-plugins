@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:idle-names-failing-seeds:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:idle-names-failing-seeds-backlog-1
+              briefing:
+                id: briefing:idle-names-failing-seeds:backlog:attempt-1:revision-1
+                digest: sha256:7c87384f34520e309482b27e2f4e058013380194f7803458e4c9202129d212ec
+                room-ref: ./idle-names-failing-seeds/review/backlog/briefing-1
 ---
 
 ## Scope

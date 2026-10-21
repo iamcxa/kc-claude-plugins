@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:idle-names-failing-seeds:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of idle-names-failing-seeds to enter ideation under the pilot profile, with the Scope above as written? FO recommends approve, as one of the six batch-5 tasks the Captain accepted 2026-10-21 (「可以」); approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:idle-names-failing-seeds:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/201ba563f80d621065f3979992f3be61a63843c5/idle-names-failing-seeds.md",
+      "rev": "sha256:f4a1f7b8556af48b3833ad81891037bcd28e65f30bcfdde0e9641db7fc72468d",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 backlog: FO's idle check names each backlog task whose seed check fails before its gate is prepared"
+    }
+  ]
+}
