@@ -3,7 +3,7 @@ title: The Codex reader counts a code-review round only from a code review, neve
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain 「可以」 (chat, 2026-10-21, batch-5 sitting), answering FO question on D1 (option B, read the summary code_review object, recommended); this briefing binds that answer after the fact; implementation waits for codex-reader-reads-receipt-marker, which edits the same file.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
