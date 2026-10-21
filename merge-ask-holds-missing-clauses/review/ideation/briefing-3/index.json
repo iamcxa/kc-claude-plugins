@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-ask-holds-missing-clauses:ideation:attempt-3:revision-1",
+  "question": "Approve the narrowed ideation design of merge-ask-holds-missing-clauses (cycle 3: hold C only) to enter implementation? FO recommends approve; approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:merge-ask-holds-missing-clauses:ideation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/938ea903a4f82a355485d5d3dafefb261944b3b4/merge-ask-holds-missing-clauses.md",
+      "rev": "sha256:62a27127620016f4e3be4c7d44fc9634dbd319e5735c744416f8c623f3ac5642",
+      "mediaType": "text/markdown",
+      "summary": "delivery_gate.py check holds a merge ask while role_triggers.py reports an owed repair-pass or amendment call in the committed task; replay holds fo-batch-sittings and no complete ask; a hold adds 63 words."
+    }
+  ]
+}
