@@ -58,6 +58,7 @@ async function dispatchToken({ env, fetchImpl, nowS }) {
   return { token: out.token, permissions: out.permissions };
 }
 
+// Platform-neutral: a Web Request in, a Web Response out; store is { set(key, value, { onlyIfNew }) -> { modified }, delete(key) }.
 export async function handle(req, deps) {
   const { store, fetchImpl, env, now = Date.now, log = console.log } = deps;
   const t = { arrival: now() };
