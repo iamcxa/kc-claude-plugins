@@ -348,3 +348,57 @@ The gate job pushes its record commit (`1f01f013c0`) onto the PR branch, which m
 ### Summary
 
 All of AC-6 to AC-12 now carry real GitHub evidence: the App token cannot reach main, merge, self-approve or edit workflows; a headless Claude Code First Officer on a hosted runner filed one task and one Draft PR under a clean credential audit; and the gate was recorded by a script only after the Captain's own GitHub review, with nothing merged. The one design wrinkle found is that the gate record commit invalidates the approval it records, so merging needs a second approval.
+
+## Stage Report: validation
+
+Recommend PASSED for the amended outcome (AC-6 to AC-12) at POC depth, with the limits below. Artifact: candidate aae7041b on `spacedock-ensign/hermes-ops-fo-exe-dev-poc` (base ad44f0cb, 28 files, 747 added lines, all under `kc-ops-inbox/`); live repository `iamcxa/ops-inbox-probe-scratch` read 2026-10-21 with the Captain's `gh` login, reads only. Scratch master `bdff186` equals the candidate's assembled tree (`make_scratch_tree.sh` output hashed against 11 files on master: all same).
+
+- DONE: Independently verify AC-6 to AC-12 against the exact artifacts with read-only checks, and name any claim only the implementer's report supports.
+  Read back live: both rulesets active, `bypass_actors` empty, main-protect requires 1 approval with last-push approval and stale-review dismissal; master history has only the Captain's pushes (made with the ruleset off) and no App commit; 7 PRs open, 0 merged, all by the App; PRs 1-5 and 7 have 0 reviews (supports AC-6, AC-7, AC-8 by consequence); PR #6 is Draft, 2 files (one task, one gate room), run 39453880412 success with log `no other GitHub credential source found` and 2 `PASS AC-11` lines; the task at `8329b5a3f3` has no `resolution:`, at `1f01f013c0` it has `by: person:captain`, `decision: approve`, reason citing review 5593555088 by `iamcxa`; the commit `dispatch: ... entering triage` is the text `dispatch build --stamp` writes (found in the spacedock binary), so the FO did go through `dispatch build`. Only the implementer's report supports: the refusal texts and codes (push declined, 405, 422, 403) because probe stdout is not retained; the token's permission set (mint response); the empty-HOME AC-10a result; that the Captain personally submitted the three reviews (the API shows only login `iamcxa`); all three mutation proofs; the 0.74 USD and 133 s local rehearsal.
+- DONE: Write a minimal acceptance script of read-only commands the First Officer can run exactly as written in a fresh shell, each with its expected output.
+  Script below; every command was run once by me and produced the stated output.
+- DONE: Give the verdict on goal sufficiency and minimal necessity, run adr_lint with its exit code, and list unverified obligations.
+  Sufficiency: met at POC depth, with the AC-12 wording caveat. Necessity: `hermes-profile/` and `rehearsal/` (9 files, 268 of 747 lines) map to retired AC-1..AC-5, not to the amended outcome; the rest maps to AC-6..AC-12. `python3 .../adr_lint.py docs/adr --since ad44f0cbf42274ff65802cabc52ebe919f159fd5`: `26 ADR file(s) checked, 0 legacy`, exit 0. Other checks: comment_ratio exit 0 (see limit below), doc_impact exit 0, design_surfaces exit 0, dispatch_records exit 0 (18 complete). `boundary-crossed:` none; see limits.
+
+### Acceptance script (read-only; needs `gh` signed in as a user who can read the private repo, and the worktree for step 6)
+
+    R=iamcxa/ops-inbox-probe-scratch
+
+1. Rulesets on the default branch and on `ops/**` have no bypass actor.
+       for id in 25482703 25482704; do gh api repos/$R/rulesets/$id --jq '[.enforcement,(.bypass_actors|length),.conditions.ref_name.include[0],([.rules[].type]|join(","))]|@tsv'; done
+   Expect two lines: `active	0	~DEFAULT_BRANCH	deletion,non_fast_forward,pull_request` and `active	0	refs/heads/ops/**	deletion,non_fast_forward`.
+2. Default branch holds only the Captain's setup pushes and nothing was merged.
+       gh api repos/$R/branches/master --jq .commit.sha; gh pr list -R $R --state all --json mergedAt,author --jq '[(map(select(.mergedAt!=null))|length),(map(select(.author.login!="app/ops-inbox-probe-iamcxa"))|length),length]|@tsv'
+   Expect `bdff186a3181b1bfbeae4a3b582460bd824b2767` then `0	0	7` (merged, not by the App, total).
+3. AC-11: the headless First Officer run produced one Draft PR with one task and a clean credential audit.
+       gh api repos/$R/pulls/6 --jq '[.user.login,.draft,.merged,.head.ref]|@tsv'; gh api repos/$R/pulls/6/files --jq '[.[].filename]|join(" ")'; gh run view 39453880412 -R $R --log | grep -c "PASS AC-11"; gh run view 39453880412 -R $R --log | grep -o "no other GitHub credential source found"
+   Expect `ops-inbox-probe-iamcxa[bot]	true	false	ops/relay-bound-ceiling-near-2026-10-20`; the two files `docs/ops/relay-bound-ceiling-near-2026-10-20.md docs/ops/relay-bound-ceiling-near-2026-10-20/review/decision/briefing-1/index.json`; `2`; `no other GitHub credential source found`.
+4. AC-12: the gate was open on the head the Captain reviewed, and is recorded from his review.
+       F=docs/ops/relay-bound-ceiling-near-2026-10-20.md; gh api repos/$R/pulls/6/reviews --jq '.[]|select(.id==5593555088)|[.user.login,.commit_id]|@tsv'; gh api "repos/$R/contents/$F?ref=8329b5a3f3c3d707ce26bfb08165213bcc370dcb" --jq .content | base64 -d | grep -c "resolution:"; gh api "repos/$R/contents/$F?ref=1f01f013c0daebb56ab7839fbe425ae5fdfea8b2" --jq .content | base64 -d | grep -E "^ +(by|decision|reason):"
+   Expect `iamcxa	8329b5a3f3c3d707ce26bfb08165213bcc370dcb`; `0`; then `by: person:captain`, `decision: approve`, `reason: 'GitHub review 5593555088 by iamcxa on 8329b5a3f3c3d707ce26bfb08165213bcc370dcb: a new test approval'`.
+5. Not satisfied for merging: the record commit dismissed the approval.
+       gh api repos/$R/pulls/6 --jq '[.merged,.mergeable_state]|@tsv'; gh api repos/$R/pulls/6/reviews --jq '.[]|select(.id==5593555088)|.state'
+   Expect `false	blocked` and `DISMISSED`.
+6. Local only, shows what does NOT enforce AC-12 (the boundary is the ops-gate script plus the FO prompt, not Spacedock).
+       D=$(mktemp -d) && cd "$D" && gh repo clone iamcxa/ops-inbox-probe-scratch r -- -q && cd r && git checkout -q 8329b5a3f3c3d707ce26bfb08165213bcc370dcb && /Users/kent/.local/bin/spacedock gate record relay-bound-ceiling-near-2026-10-20 --workflow-dir docs/ops --decision approve --actor person:captain --reason "local probe" | cut -c1-60; cd /tmp && rm -rf "$D"
+   Expect `recorded gate=gate:relay-bound-ceiling-near-2026-10-20:decis` (a plain caller string is accepted as the Captain; nothing is pushed).
+
+Does not cover: the refusal behaviour itself (push to the default branch, API merge, self-approval, ruleset creation, workflow edit); that needs a write with the App token and is only in the implementer's report plus the consequences in steps 1-2. Nor a reviewer other than `iamcxa`, nor a fresh run.
+
+### Verdict
+
+- Goal sufficiency: the amended outcome is shown at POC depth: the App token's reach ended at `ops/*` + Draft PR on the one real run, a headless Claude Code First Officer on a hosted runner filed one task and one Draft PR, and the gate was recorded from the Captain's review with his words. Caveat for the Captain to accept: AC-12 says "the First Officer reads" the review; a workflow script read it, not the FO. The Verified-by line is met either way.
+- Minimal necessity: keep `github-probe/`, `slice/`, `ops-workflow/` (each maps to AC-6..AC-12, a named falsifier or the safety boundary). `hermes-profile/` and `rehearsal/` (9 files, 268 lines) have no consumer in the amended outcome and carry two open roborev High findings (guard regex bypass, skill never loaded); they are a removal candidate for the Captain, not deleted by me. `kc-ops-inbox/README.md` still describes the old workflow (`inbox -> resolution -> done`) and the hermes credential table, and now misdescribes the ops workflow (`triage -> decision -> resolution -> done`): Polish.
+
+### Material limits and unverified obligations
+
+- AC-12 "only after" is not enforced by the platform: any caller of `spacedock gate record` can put `person:captain` on a gate (step 6), and the FO is allowed `Bash(spacedock:*)`. In the one run the FO did not do it, because its prompt forbids it; the GitHub review is checked only by the `ops-gate` script and the PR merge rule. Observed once, not tested adversarially. Deferred risk: becomes Material if an untrusted event can steer the FO.
+- Not exercised on GitHub: a reviewer other than `iamcxa` (only the local mutation shows the login filter), an App approving someone else's PR, in-workflow App-token minting (a pre-minted 1 hour token was used), a self-hosted or long-lived runner, Actions minutes beyond about 2 min per FO run, real subscription cost (0.74 USD is imputed).
+- AC-11 audit ran in the same `env -i` array the FO is launched with, not inside the claude process; the FO also holds the Captain's `CLAUDE_CODE_OAUTH_TOKEN` and the App token. AC-10 limits only GitHub credentials.
+- roborev:948 Critical, accepted for a scratch POC: `run_fo.sh` and `ops-gate.yml` run `install.sh` from the mutable `main` of spacedock-dev/spacedock while tokens are present. The gate approval and the merge approval are two reviews (the gate job's push dismisses the first).
+- comment_ratio (1.0%) measures only the one `.py` file in this diff (101 code lines); I counted the shell and YAML comments by hand: about 30 header lines, all usage or contract facts, none narrating the change.
+- Left on GitHub (a fixture, not a running service): scratch repository with 8 branches, PRs #1-#7, two secrets, the App and its key file. `boundary-crossed:` none, since nothing here must persist; if the Captain wants `ops-gate` to keep running as an ops inbox, that is `external-seam` and `beyond-session` work and returns to profile selection. Local side effect disclosed earlier: spacedock 0.27.3 plugin cache beside 0.27.0.
+
+### Summary
+
+PASSED recommended: AC-6 to AC-12 hold on live GitHub state I read myself, with the refusal outputs themselves resting on the implementer's report. The Captain's calls are the AC-12 wording (script, not FO), removing the 268 lines of shelved hermes work, and the unenforced gate attribution if this ever leaves POC.
