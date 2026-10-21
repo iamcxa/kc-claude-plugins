@@ -58,6 +58,20 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-21, chat
+Captain: 「如果改成連續兩次或三次讀不懂結果就放棄呢？讀不懂跟讀不到不一樣對吧」 then 「可以」 (chat, 2026-10-21, batch-5 sitting)
+Asked: 「改成「連續 2 次讀不懂、間隔 3 分鐘，就放棄並提示」，可以嗎？」
+Supersedes: none
+Design: the give-up is by count, not by a 900-second window: on the first read that finds an unrecognized Codex comment on the head, wait records it silently; if the next read 3 minutes later still finds no recognized verdict on the head, wait gives up once for that comment id and prints the lines. A head with no Codex comment yet is unchanged (it waits as today).
+
+### Amendment 2 — 2026-10-21, chat
+Captain: 「應該寫成，按照peers ext做，如果沒啟用或是沒有可用的peers就發issue。或是做一個paseo ext讓fo知道怎麼用paseo cli。合理嗎？因為不是每個人都用paseo 作為harness」 then 「對，就照這樣。任務也要開」 (chat, 2026-10-21, batch-5 sitting)
+Asked: 「提示訊息會寫成：「這是 kc-dev-flow-2 的問題，要回報上游：有啟用 `peers`、也找得到維護 FO，就照 `peers` 傳給它；沒有的話，擬好 issue 內容，問 Captain 要不要開。」」
+Supersedes: none
+Design: the upstream line names no harness: with `peers` listed and a kc-dev-flow-2 maintainer peer reachable, FO reports through `peers`; otherwise FO drafts the issue and asks the Captain whether to file it. A Paseo host binding for `peers` is its own task.
+
 ## Design
 
 Cycle 2, revised 2026-10-21 for the Captain's D2 ruling (the ideation gate's resolution reason: revise). D1 is as ruled and unchanged. This block replaces the cycle-1 Design, words table, decisions and criteria; the cycle-1 stage report below is kept as history.
