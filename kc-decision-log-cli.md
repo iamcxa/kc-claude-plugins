@@ -383,3 +383,8 @@ The task is redone as a skill-only plugin: `kc-adr:read-adr` with a reading reci
 ### Summary
 
 The plugin is built and committed (e2ac9041, not pushed). AC-4 and AC-9 are met, including a real dev2 dispatch where the worker loaded the skill unprompted on both hosts (Decision 1's "description trigger only" held on this one run each). AC-7 and AC-8 are not met: S7 on Claude skipped the governing ADR, and Claude placement is 8/10 against a bar of 9 (A0 6/10). Affected documents (`doc_impact.py`): CLAUDE.md updated (plugin count, kc-adr); ARCHITECTURE.md, PRODUCT.md, docs/dev/README.md, the cross-model-arbitration spec, quality-pipeline.md, kc-plugin-release SKILL.md, kc-team-ops/README.md and learning.md unaffected: each names the marketplace or release files as a mechanism and lists no plugin set. For FO: `## Scope` and the title still describe the CLI plugin; the S8 expectation/Q1 mismatch needs the Captain's ruling; the AC-8 shortfall on S1 is the model choosing `../mira-decisions` because Mira said "every repo".
+
+### Amendment 5 — 2026-10-22, chat
+Captain: 「照建議」 (this FO's Paseo session, reply to a three-item batch after implementation reported AC-7 and AC-8 FAILED)
+Asked: 「1. S8 預期答案改成跟規則一致：接受「agent 記憶或任務的待確認事項」兩處，用已存的紀錄重新計分，不重跑。這不是看了結果才放寬：規則是你在跑之前就接受的，只是評分檔沒跟著更新。我會把原因寫清楚，記成你的修訂。」「2. AC-7 改成記錄實測結果：6 次裡 5 次有讀到該讀的 ADR，6 次決定都正確。不重做 skill，因為改任何一個字都要重跑全部 34 次；真實派工那條（AC-9）已經過了。代價是正式承認 skill 不保證每次都會去讀；之後可以由 dev2 的學習流程再改進。」「3. Codex 沒進步，記成已知限制：照原標準只回報。skill 對 Codex 的放對地方沒幫助，留給之後處理。」
+Supersedes: AC-7
