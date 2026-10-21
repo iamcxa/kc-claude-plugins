@@ -76,3 +76,7 @@ graph, follow the [SD adoption reference](../../references/sd/adoption.md) throu
 not migrate an old variant, rewrite a workflow or install a package. Keep existing
 work on its recorded variant unless a migration is explicitly approved. This
 entry grants no new repair, approval, delivery or route-exception authority.
+
+On Codex, to give ensigns an explicit model and reasoning effort instead of the
+first officer's, follow [Codex dispatch model policy](../../references/codex-dispatch.md).
+It is opt-in and needs a Spacedock release with `dispatch build --model`.
