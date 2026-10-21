@@ -454,3 +454,42 @@ Needs `claude` and `codex` on PATH, Codex logged in (`~/.codex/auth.json`), abou
 ### Summary
 
 REJECTED, for one reason the Captain owns: AC-6's Pass line is stricter than the design's accepted S11 path, and the skill's two reporting rules explain the gap. Everything else holds on an independent regrade: AC-5, AC-8 (at the bar), AC-9 and AC-10 are met, the S8 regrade moved three runs by one field, and the diff is clean. No product byte needs to change if the Captain amends AC-6 (and may tidy AC-4's two clauses).
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Verify that AC-11 and AC-12 state the stored evidence accurately and that the superseded blocks moved verbatim; verify that no skill byte, candidate code, harness file or result changed since the first verdict.
+  `AC-4` and `AC-6` blocks are byte-identical to the `0d1ef85e` text inside Amendment 6's `Superseded text:` and absent from `## Acceptance criteria`; AC-5, AC-8, AC-9 and AC-10 are unchanged. AC-11 figures match the stored files: S8 both hosts digest 76d4ddd9 with `digest_matches_cited` true; S11 both hosts ADR 0023 at D1, digest bea52c60, `in_force` true, `choice` daily; D0 digest d3d544af in a tool output in each B1 trace and not reported (A0 did). AC-12 matches `ac4/install-transcript.txt`, `install-falsifiers.txt` and `text_check.py` (14/14), and states the Codex `skills` key limit. `git diff --name-only 0d1ef85e HEAD -- kc-decision-log-cli` lists only `dispatch/implementation-3.md` and `dispatch/validation-2.md` (a64e4ae0 touched the entity and no harness, result, ac4 or ac9 file); candidate worktree still at e2ac9041, `kc-adr` tree 54b89e44, `git status` empty; validation cycle-1 report unchanged.
+- DONE: Re-render the verdict against AC-5, AC-8, AC-9, AC-10, AC-11 and AC-12 and update the stage report; keep the minimal acceptance script current. **Recommendation: PASSED.**
+  AC-5 met (S10 and S12 stop 4/4). AC-8 met at the bar (Claude 9/10 against A0 7/10; Codex 6/10 reported). AC-9 met (loaded before first ADR access, number 0024, `adr_lint --require 0024` exit 0, no dev2 copy; control differs only in the load). AC-10 met (6/6 correct, 5/6 consulted, no ADR edited). AC-11 met as amended (S8 2/2, S11 2/2 on the in-force record). AC-12 met as amended (install lists `read-adr` on both hosts, text check 14/14). No scenario re-run. `adr_lint.py docs/adr --since c27e76590c1d2dc910e7fa2d332242a7534df0b0`: "28 ADR file(s) checked, 0 legacy", exit 0. The cycle-1 script ran again unchanged under `bash --noprofile --norc`: every step gave its expected output.
+
+### Findings (cycle 2)
+
+- **Known limit, accepted by the Captain (not a finding against delivery).** The skill's two reporting rules differ, so a superseded citation yields the chain end's digest and not the cited one's; filed as `read-adr-reporting-rule-followup`, no skill byte changed here.
+- **Unchanged limits from cycle 1.** AC-8 passes exactly at its bar and only after the S8 regrade; AC-10 counts S9 cells by digest handoff; AC-9 is one dispatch per cell, run directly, Claude via `--plugin-dir`; the text check's stop-name regexes are loose substring tests; no real release-please run, tag, push, PR or post-merge sync.
+- **For FO, not ruled.** `## Scope` and the task title still describe the CLI plugin `kc-decision-log`.
+
+### Minimal acceptance script (current; identical to cycle 1, map AC-12 to steps 3-4, AC-5/8/10/11 to step 5)
+
+Needs `claude` and `codex` on PATH, Codex logged in (`~/.codex/auth.json`), about 2 minutes, no secret read. Covers the build and the offline regrade only, not agent behaviour.
+
+    WT=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-kc-decision-log-cli
+    TASK=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/kc-decision-log-cli
+    PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0
+    BASE=c27e76590c1d2dc910e7fa2d332242a7534df0b0
+    # 1 expect: e2ac9041637552332b27ab66c845308ccbe95d0f then 0
+    cd "$WT" && git rev-parse HEAD && git status --short kc-adr | wc -l
+    # 2 expect: a kc-adr row ending "ok", "Version parity: all plugins consistent", "all skill directories have valid frontmatter"
+    bash scripts/version-parity-check.sh | tail -3; bash scripts/skill-frontmatter-lint.sh | tail -1
+    # 3 expect: 14 then 0
+    python3 -B "$TASK/ac4/text_check.py" "$WT" | grep -c '^ok'; python3 -B "$TASK/ac4/text_check.py" "$WT" | grep -c '^FAIL'
+    # 4 expect: "Skills (1)  read-adr" for Claude; "installed, enabled" and "kc-adr:read-adr" for Codex; "install_check exit=0"
+    bash "$TASK/ac4/install_check.sh" "$WT"; echo "install_check exit=$?"
+    # 5 expect: "results.md identical", then 27, then 0
+    D=$(mktemp -d) && cp -R "$TASK" "$D/t" && cd "$D/t/harness" && python3 -B score.py >/dev/null && diff ../results.md "$TASK/results.md" && echo "results.md identical"
+    python3 -B falsifiers.py | grep -c '^ok'; python3 -B falsifiers.py | grep -vc '^ok'
+    # 6 expect: "28 ADR file(s) checked, 0 legacy" then adr_lint exit=0
+    cd "$WT" && python3 -B "$PKG/scripts/adr_lint.py" docs/adr --since "$BASE"; echo "adr_lint exit=$?"
+
+### Summary
+
+PASSED against the amended criteria. Amendment 6 moved AC-4 and AC-6 verbatim, AC-11 and AC-12 match the stored evidence, and nothing in the candidate, skill, harness or results changed since the first verdict. The delivery decision, the unfixed reporting rule (filed as `read-adr-reporting-rule-followup`) and the stale `## Scope` stay with the Captain and FO.
