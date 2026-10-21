@@ -3,7 +3,7 @@ title: The four FO-write rules observers keep finding broken are checked when FO
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「批准」 (chat, 2026-10-21): approve validation and merge iamcxa/kc-claude-plugins#687 at head 2b86a62490de623faf7365ef29931a9d5c35e3f9, removing its clean pushed worktree, as recommended; the two Codex round-3 P2 are declined into backlog task fo-write-checks-parse-top-level.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-20T04:58:17Z
 worktree: .worktrees/spacedock-ensign-fo-write-rules-checked
 pr: pr-merge:687
+verdict: PASSED
+completed: 2026-10-21T00:44:59Z
+archived: 2026-10-21T00:44:59Z
 ---
 
 ## Scope
