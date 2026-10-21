@@ -34,7 +34,9 @@ draft ready, the observer check ahead of the merge sentinel, keeping one wait ru
 dispatch record that names a package script without a directory (dispatch_records.py --newest), and a
 chief-engineer or engineering-reviewer call a live task owes (role_triggers.py, given the number of review ids
 that left inline comments on the task's open PR), and one `next:` line per stage where two or more gates
-await the Captain (spacedock status --next; SPACEDOCK_BIN names the executable). It prints no merge-ask
+await the Captain (spacedock status --next; SPACEDOCK_BIN names the executable), and one `next:` line naming
+each backlog task that is waiting for its gate, holds a `## FO alignment` section and fails
+design_surfaces.py check --seed, when the workflow has an ideation stage. It prints no merge-ask
 or hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
 change. Exit 2 when a task cannot be read.
 """
@@ -55,6 +57,9 @@ SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 SCRIPTS = Path(__file__).resolve().parent
 CODEX = Path(__file__).resolve().parents[1] / "extensions/codex/codex_review.py"
 COPILOT = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_review.py"
+SEED = SCRIPTS / "design_surfaces.py"
+FO_HEADING = re.compile(r"^## FO alignment[ \t]*$", re.M)
+IDEATION_STAGE = re.compile(r"^[ \t]*-[ \t]+name:[ \t]*ideation[ \t]*$", re.M)
 FIELDS = "state,isDraft,mergeable,mergeStateStatus,headRefOid,statusCheckRollup,title"
 SETTLE_SECONDS = 60
 TRACKED = ("state", "draft", "mergeable", "checks", "unchecked", "head", "codex", "codex-evidence",
@@ -293,19 +298,48 @@ def entities(state):
     return sorted(found.items())
 
 
-def sittings(workflow):
+def ready_rows(workflow):
     binary = os.environ.get("SPACEDOCK_BIN") or "spacedock"
     done = subprocess.run([binary, "status", "--workflow-dir", str(workflow), "--next", "--json"], capture_output=True, text=True)
     if done.returncode:
         raise RuntimeError((done.stderr or done.stdout).strip()[:120] or "spacedock status --next failed")
+    return json.loads(done.stdout)["ready_gates"]
+
+
+def sittings(rows):
     waiting = {}
-    for gate in json.loads(done.stdout)["ready_gates"]:
+    for gate in rows:
         if gate["readiness"] == "awaiting-captain":
             waiting.setdefault(gate["current"], []).append(gate["slug"])
     return [f"next: {len(slugs)} gates await the Captain at {stage} ({', '.join(slugs)}); unless already presented, "
             "present them in one message and record each with his one answer."
             + (" Name the merge order and each shared file from Batch overlap." if stage == "validation" else "")
             for stage, slugs in waiting.items() if len(slugs) > 1]
+
+
+def seeds(rows, found, readme):
+    if not IDEATION_STAGE.search(readme):
+        return [], []
+    failing, errors = [], []
+    for row in rows:
+        task = found.get(row.get("slug"))
+        if row.get("current") != "backlog" or row.get("readiness") != "needs-preparation" or not task:
+            continue
+        try:
+            if not FO_HEADING.search(task.read_text(errors="replace")):
+                continue
+            done = subprocess.run([sys.executable, str(SEED), "check", "--seed", str(task)], capture_output=True, text=True)
+        except OSError as error:
+            errors.append(f"next: report {row['slug']} to the Captain: {str(error)[:120]}.")
+            continue
+        if done.returncode == 1 and done.stdout.strip():
+            failing.append(row["slug"])
+        elif done.returncode:
+            why = ((done.stdout or done.stderr).strip().splitlines() or [f"exit {done.returncode}"])[-1]
+            errors.append(f"next: report {row['slug']} to the Captain: {why[:120]}.")
+    line = [f"next: the seed check fails for these backlog tasks ({', '.join(failing)}); before preparing the gate of one, "
+            f"fix its ## FO alignment and run `python3 {SEED} check --seed <task>`."] if failing else []
+    return line, errors
 
 
 def tasks(opts, look=look, ask=gh, clock=time.time):
@@ -315,7 +349,8 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     listed = set(re.findall(r"[\w-]+", readme.get("extensions", "")))
     wait = f"python3 {SCRIPTS / 'pr_watch.py'}" + (f" --state {shlex.quote(str(opts.state))}" if opts.given else "")
     out, snaps, errors, live, rounds = [], {}, [], [], {}
-    for slug, task in entities(state):
+    found = entities(state)
+    for slug, task in found:
         meta = front(task)
         if "status" not in meta:
             continue
@@ -375,9 +410,14 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
         elif done.returncode:
             errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
     try:
-        out += sittings(workflow)
+        rows = ready_rows(workflow)
+        out += sittings(rows)
     except (RuntimeError, KeyError, ValueError, OSError) as error:
         errors.append(f"next: report the awaiting gates to the Captain: {str(error)[:120]}.")
+    else:
+        line, broken = seeds(rows, dict(found), (workflow / "README.md").read_text(errors="replace"))
+        out += line
+        errors += broken
     if snaps:
         already, _ = record(opts.state, load(opts.state), snaps)
         out += already + [f"next: run `{wait} wait` in the background, unless one is running.",
