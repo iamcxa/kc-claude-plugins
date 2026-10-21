@@ -3,7 +3,7 @@ title: FO's idle check names each backlog task whose seed check fails before its
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: 'Captain, batch-5 sitting: D1 「可以」 (2026-10-22, answering FO two recommendations together: kc-adr packaging and, for this task, name only tasks that already carry an FO alignment section, 8 names today), D2 「可以照建議」 (2026-10-22, no word offset; the added line prints only while a task is named and vanishes once its seed record is fixed). Both as recommended; approving enters implementation.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
