@@ -76,6 +76,8 @@ These restate the Scope's bar line by line and add no requirement; FO omitted th
 
 ## FO alignment
 
+Correction (FO, 2026-10-22): the validation resolution recorded 2026-10-22 quotes the Captain's 「可以」, which answered FO's packaging recommendation, not the close question (observer finding). He then answered the close question itself: Asked: 「kc-adr 接法的 POC，要照驗證結果結案嗎？」 Captain: 「同意結案」 (chat, 2026-10-22). This is the ruling the close rests on. The resolution's Override line is not in the parseable form; corrected here: Override: recommended run-time resolution; Captain chose a CI-synced copy in dev2; area: kc-adr packaging.
+
 Not needed before implementation. The Captain asked for this POC (「好，開」, 2026-10-21) after FO showed him its four questions, arms and bar, restated above. Release review: not needed: the task belongs to no release.
 Surfaces: none
 Visible change: none
