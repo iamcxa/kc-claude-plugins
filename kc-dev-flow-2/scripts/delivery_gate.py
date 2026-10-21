@@ -11,8 +11,10 @@ The PR head is compared, as a prefix, with each line; it passes when it matches 
 --text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
 at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token. Each `;`-separated item after `Declined...:` or
-`FO declines...:` (up to the next sentence that opens with a label and a colon, or a blank line) needs a bracket of two or
-more words holding its reason; this proves a bracket exists, not that it is a reason.
+`FO declines...:` (up to the next sentence that opens with a label and a colon, or a blank line; a label after `e.g.` or `i.e.`
+does not end it) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
+it is a reason. When the newest `## Stage Report: validation` lists `- F<N> Deferred risk:` or `- F<N> Polish:` bullets, fewer
+declined items than those bullets holds; a report with no such bullets is not joined.
 The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
 a confirmation clause is missing, a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
 `## Number guards` has no `<adr-path>/NNNN-*.md` in the directory at the PR head (README `adr-path:`, default `docs/adr`;
@@ -24,7 +26,8 @@ included), the PR is a draft or not mergeable, its base is not the README's
 README cannot be read, or an input is unusable. Every problem is printed.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
-and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask.
+and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask. The `class:` line ends
+`(verdict ask)` when the saved verdict is `ask`.
 """
 import argparse
 import datetime
@@ -63,11 +66,12 @@ NOT_RUN = re.compile(r"\b[\w.-]+ not run:\s*\S", re.I)
 AC_NOT_RUN = re.compile(r"(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b", re.I)
 AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
-DECLINE_END = re.compile(r"(?<=[.)])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
+DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
+FINDING = re.compile(r"^\s*[-*]\s*\*{0,2}F\d+\*{0,2}\s*[:(]?\s*\(?\s*(?:Deferred risk|Polish)\b", re.M)
 MAX_POINTS = 12
 CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
                  "Necessity": "who uses this change and what breaks without it"}
-ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text."
+ASK = "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time."
 
 
 def clean(line):
@@ -169,14 +173,14 @@ def declined_items(text):
 
 
 def brackets(item):
-    found, depth, start = [], 0, 0
+    found, expect, start = [], [], 0
     for i, ch in enumerate(item):
-        if ch == "(":
-            start = i + 1 if depth == 0 else start
-            depth += 1
-        elif ch == ")" and depth:
-            depth -= 1
-            if depth == 0:
+        if ch in "([":
+            start = i + 1 if not expect else start
+            expect.append(")" if ch == "(" else "]")
+        elif expect and ch == expect[-1]:
+            expect.pop()
+            if not expect:
                 found.append(item[start:i])
     return found
 
@@ -192,6 +196,15 @@ def unstated_confirmations(text):
 
 def unreasoned_items(text):
     return [item for item in declined_items(text) if not any(len(b.split()) >= 2 for b in brackets(item))]
+
+
+def findings_join(task_text, gate_text):
+    report = (VALIDATION_SECTION.findall(task_text) or [""])[-1]
+    owed, got = len(FINDING.findall(report)), len(declined_items(gate_text))
+    if owed and got < owed:
+        return (f"declined items ({got}) are fewer than the validation report's Deferred risk and Polish findings ({owed}): "
+                "add a declined item for each, naming the fix as its reason when FO fixed it.")
+    return None
 
 
 def adr_names(repo, head, adr_dir):
@@ -427,6 +440,10 @@ def check(args):
         problems.append(f"declined item has no reason: {tok(item)}")
         nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
 
+    if (why := findings_join(task_text, gate_text)):
+        problems.append(why)
+        nexts.append("next: hold the ask; write one declined item for each finding, then run this check again.")
+
     for label in unstated_confirmations(gate_text):
         problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
         nexts.append("next: hold the ask; add the missing clause to the question or summary.")
@@ -450,7 +467,7 @@ def check(args):
     cls = classify(paths, never or release_pr or profile_prod or bool(re.search(r"^Surfaces:.*\bdb\b", task_text, re.M)))
     points = points_for(task_text, gate_text, record, never, facts, profile_prod, root)
     verdict = "merge" if not points and cls != "never" else "ask"
-    emit(*points, f"class: {cls}")
+    emit(*points, f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else ""))
 
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
                                 "points": points, "next": ASK,
