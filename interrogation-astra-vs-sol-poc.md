@@ -15,6 +15,17 @@ gates:
                 id: briefing:interrogation-astra-vs-sol-poc:backlog:attempt-1:revision-1
                 digest: sha256:6ef8383f7f43b26c086a10d0d0bda0dba892691226ca3300cff070f466ac740b
                 room-ref: ./interrogation-astra-vs-sol-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:interrogation-astra-vs-sol-poc:backlog:1
+                briefing: briefing:interrogation-astra-vs-sol-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T18:39:58.881816Z"
+                decision: approve
+                reason: Captain 「可以但我還是不太確定，你說的是故事地圖套件的qa問答部分嗎？」 (chat, 2026-10-22), answering FO question put before it (quoted in the gate question); FO then confirmed it is the kc-journey-map interrogate mode. This briefing binds that answer after the fact.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
