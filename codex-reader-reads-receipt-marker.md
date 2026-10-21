@@ -3,7 +3,7 @@ title: The Codex review reader recognizes the clean receipt that now opens with 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「繼續」 (chat, 2026-10-21), answering FO's question 「這 5 張都批准進入設計嗎？」 for the five batch-5 backlog gates presented together; approves entering ideation under the pilot profile, as recommended.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
