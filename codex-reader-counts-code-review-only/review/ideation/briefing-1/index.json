@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-counts-code-review-only:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of codex-reader-counts-code-review-only to enter implementation, with D1 option B (read the summary code_review object), implemented after codex-reader-reads-receipt-marker merges? FO recommends approve with B; approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-counts-code-review-only:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0d9d7600443c721b3a3c7f2d71ba3d5cd9f98922/codex-reader-counts-code-review-only.md",
+      "rev": "sha256:1f6ac423ca7cc01b192bdc36ce283131c0d73c977b5e562d96ec656c54b2d03b",
+      "mediaType": "text/markdown",
+      "summary": "Ideation design: a round counts as clean only from the summary code_review object; replay 0 false clean and 0 missed clean on 22 own and 100 public PRs."
+    }
+  ]
+}
