@@ -496,3 +496,73 @@ PASSED on head a3ce3c8b1747b8737fd01b275a4e1f3fb7a1d58d: every criterion's evide
 ### Summary
 
 The merge-ask half of the D2 ruling is now pinned: both phrases are asserted and each deletion turns that one test red. No product line changed; PR #693 stays Draft and F1 (AC-8 and AC-11 under Amendment 3) is still FO's to move.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #693 head de5104be against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Head de5104be005d checked out detached in a throwaway worktree (removed). `git diff a3ce3c8b de5104be` is 2 added `assertIn` lines in `kc-dev-flow-2/scripts/test_pr_watch.py` and nothing else; the PR's five files are unchanged in list. Product bytes (`codex_review.py`, `pr_watch.py`, `EXTENSION.md`) are byte-identical to a3ce3c8b, so my cycle-1 evidence for AC-1 to AC-7, AC-9 and AC-10 carries over and was re-confirmed by the Step 2 to Step 6 reruns below; the cycle-1 falsifier results stand. Limits (wait-process-local first read; `peers` Joins; no reader of the merge ask) unchanged: accepted as before.
+- DONE: Recheck after the Cycle 1 repair: the diff from a3ce3c8b adds only the two merge-ask assertions to kc-dev-flow-2/scripts/test_pr_watch.py; confirm AC-12 and AC-13 (amended criteria) at this head, each new assertion red when its phrase is deleted, the full package suite, and CI on this head
+  Diff confirmed as stated. AC-12: EXTENSION.md `len(split())` 227 (base 185), give-up output 89 words (counted from the live run), `git diff c27e7659 de5104be -- references skills README.md` empty. AC-13: the three branches are in order (backlog task, `peers`, drafted issue; asserted by `test_the_upstream_line_has_the_package_repository_file_a_backlog_task_and_the_others_use_peers_or_an_issue`) and both merge-ask phrases print in the live output. Mutants on a scratch copy (python3 -B, `cmp` shows pr_watch.py restored identical): deleting "in the merge ask as Codex unread, " gives 1 FAIL (`'in the merge ask as Codex unread' not found`), deleting "; the Captain decides" gives 1 FAIL (`'the Captain decides' not found`), both in `test_wait_gives_up_on_two_unrecognized_reads_three_minutes_apart_once_and_names_the_comment`; unmutated 92 OK. Full suite: `lint-skills.py` exit 0 and all 22 `test_*.py` files the CI workflow lists exit 0 (`test_sd_dispatch.py` with the Spacedock 0.27.3 cache root, `test_observer_recovery.py` with `SPACEDOCK_BIN`). CI on de5104be read: GitGuardian, route gate, unit tests (2m1s), version parity all pass.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below run as written under `env -i ... bash --noprofile --norc`, passed first time. `adr_lint.py docs/adr --since c27e7659` exit 0 "28 ADR file(s) checked, 0 legacy" (0.27.0 and 0.26.0 packages alike). `comment_ratio.py c27e7659 de5104be` 0 comment lines of 203, exit 0; `doc_impact.py` 0 documents, exit 0. Verdict: PASSED on head de5104be005df145062b834e69223342e8fdd664, no Material finding.
+
+### Findings
+
+- F1 (cycle 1, Polish, unchanged, FO's record move): AC-8 and AC-11 sit as the stale text in the task's Acceptance criteria; Amendment 3 now carries them under `Superseded text:` and AC-12 and AC-13 replace them, so the contradiction is resolved. Remaining stale figures to refresh: AC-10 says "91 tests" (now 92), Design printed-lines block and words table say 77 words (89), PRFAQ upstream sentence, D6 answered by Amendment 3.
+- F2 (Deferred risk, narrowed): the merge-ask half of the printed lines is now pinned by test. Still unguarded: the `EXTENSION.md` exit-5 sentence and FO following the `next:` lines; Material only if an FO reads exit 5 as clean on a real Codex shape change; owner merge-ask-holds-missing-clauses.
+- F3 (Polish): the 120-character quote can cut mid-sha; the id carries the lookup.
+- F4 (Deferred risk): the first unrecognized read is kept in the wait process; a wait ended by the host before 180 s restarts the count. Material only if FO waits are routinely shorter than 180 s.
+- F5 (Polish, record): PR #693 is not Draft on GitHub (`ready_for_review` by iamcxa 2026-10-21T15:30:03Z, `isDraft: false`), while both implementation reports say "Draft". Nothing was marked ready by this stage; FO should state the PR's real state at the gate.
+
+### Captain's acceptance script (run as written in a fresh bash, output observed)
+
+Needs `git`, `python3`, and `gh` logged in with read access to iamcxa/kc-paseo-plugins. About a minute (observed under 1 m 10 s).
+
+```
+# Step 1: fetch the PR head (expect: de5104be)
+D=$(mktemp -d) && cd "$D" && git init -q c && cd c && git remote add origin https://github.com/iamcxa/kc-claude-plugins.git && git fetch -q --depth 1 origin refs/pull/693/head && git checkout -q --detach FETCH_HEAD && git rev-parse --short=8 HEAD
+
+# Step 2: the real incident, new reader (expect: "clean on 5ff307de6: ... evidence=comment:6296013066" and exit=0)
+python3 -B -I kc-dev-flow-2/extensions/codex/codex_review.py iamcxa/kc-paseo-plugins 8; echo "exit=$?"
+
+# Step 3: the same comment, old reader from before the change (expect: "not reviewed: no Codex evidence covers 5ff307de6" and exit=4)
+git fetch -q --depth 1 origin c27e76590c1d2dc910e7fa2d332242a7534df0b0 && git show FETCH_HEAD:kc-dev-flow-2/extensions/codex/codex_review.py > "$D/old_review.py" && python3 -B -I "$D/old_review.py" iamcxa/kc-paseo-plugins 8; echo "exit=$?"
+
+# Step 4: pretend Codex changed its marker to v9 (expect: "not recognized on 5ff307de6: ..." with unrecognized=comment:6296013066, no evidence= token, and exit=5)
+sed 's/codex-review-receipt:v1 -->\\n/codex-review-receipt:v9 -->\\n/' kc-dev-flow-2/extensions/codex/codex_review.py > "$D/v9_review.py" && python3 -B -I "$D/v9_review.py" iamcxa/kc-paseo-plugins 8; echo "exit=$?"
+
+# Step 5: the wait gives up after two unread reads 180 s apart (expect: 3 lines starting "iamcxa/kc-paseo-plugins#8 codex=unrecognized(comment:6296013066): not recognized on two reads 180s apart", the first "next:" line containing "in the merge ask as Codex unread" and "the Captain decides", the second "next:" line naming the backlog task, `peers` and the drafted issue in that order, then "exit 0 elapsed 180")
+(cd kc-dev-flow-2/scripts && python3 -B -I - <<'PY'
+import io, contextlib, sys, tempfile
+sys.path.insert(0, ".")
+from pathlib import Path
+import pr_watch as w, test_pr_watch as t
+REF = "iamcxa/kc-paseo-plugins#8"
+odd = t.snap(codex="unrecognized(comment:6296013066)", **{"watch-codex": True})
+tc = t.PrWatchTests("test_the_codex_reader_is_found_in_its_extension")
+with tempfile.TemporaryDirectory() as d:
+    st, now, seq = Path(d, "w.json"), [0], iter([odd] * 20)
+    with contextlib.redirect_stdout(io.StringIO()):
+        tc.run_main(["add", REF], [t.snap(codex="not-reviewed")], st)
+    def sleep(s): now[0] += s
+    code = w.main(["--state", str(st), "wait", "60"], look=lambda ref, **kw: next(seq), sleep=sleep, clock=lambda: now[0])
+    print("exit", code, "elapsed", now[0])
+PY
+)
+
+# Step 6: both test suites (expect: "Ran 18 tests ... OK" and "Ran 92 tests ... OK", about 40 s)
+python3 -B -I kc-dev-flow-2/extensions/codex/test_codex_review.py 2>&1 | tail -3; python3 -B -I kc-dev-flow-2/scripts/test_pr_watch.py 2>&1 | tail -3
+```
+
+Observed: Step 1 `de5104be`; Step 2 `clean on 5ff307de6: ... evidence=comment:6296013066 at 2026-10-20T16:38:29Z`, exit=0; Step 3 `not reviewed: no Codex evidence covers 5ff307de6`, exit=4; Step 4 `not recognized on 5ff307de6: "<!-- codex-review-receipt:v1 --> Codex Review: ..."; unrecognized=comment:6296013066`, exit=5; Step 5 the three lines (first `next:` ends "in the merge ask as Codex unread, never clean; the Captain decides.", second names the backlog task, then `peers`, then the drafted issue) then `exit 0 elapsed 180`; Step 6 `Ran 18 tests ... OK`, `Ran 92 tests in 36.226s ... OK`.
+
+Does not cover: a real Codex posting a new shape on an open PR (kc-paseo-plugins#8 is merged; Steps 4 and 5 use a changed marker string and a fake clock); FO obeying the `next:` lines; the Captain's merge-ask wording; billed CI minutes (not measured).
+
+### Summary
+
+PASSED on head de5104be005df145062b834e69223342e8fdd664: the repair adds exactly the two merge-ask assertions, each goes red when its phrase is deleted, AC-12 and AC-13 hold, the full package suite and CI are green. No Material finding; F1 and F5 are FO record items.
+
+### Deviations and disclosures
+
+- Two throwaway items only: a detached worktree of the candidate (removed) and scratch mutants in /tmp/val-crm2, outside every repository. No push, comment, review request or ready by me; no product byte or criterion edited.
+- The full-suite run used my own loop over the CI workflow's list rather than CI itself; CI's own result was read, not rerun.
