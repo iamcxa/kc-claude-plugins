@@ -43,6 +43,14 @@ gates:
                 id: briefing:merge-ask-holds-missing-clauses:ideation:attempt-2:revision-1
                 digest: sha256:dc4db3f0ee7d99ed559fdee99a5754748d1f0a4f327753367b08802856a07376
                 room-ref: ./merge-ask-holds-missing-clauses/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-ask-holds-missing-clauses:ideation:2
+                briefing: briefing:merge-ask-holds-missing-clauses:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-21T17:35:24.501766Z"
+                decision: revise
+                reason: 'Captain 「這問題過去壞過什麼？嚴重嗎」 then 「可以」 (chat, 2026-10-22, batch-5 sitting) to FO revised recommendation: narrow this task to hold C only (a merge ask holds while the task owes a special-role call); holds A (round count) and B (carried clauses) are dropped, because neither caused harm (B omission fails safe by ADR 0023 and only cost extra Captain asks; A omission is an observer finding only), while C is the one observed skipped check (fo-batch-sittings merged owing an engineering-reviewer call); D1 lapses. Override: recommended building A, B (option a) and C (design); Captain chose C only, on FO revised recommendation; area: merge-ask holds. Revise: the design returns to ideation to narrow.'
 ---
 
 ## Scope
