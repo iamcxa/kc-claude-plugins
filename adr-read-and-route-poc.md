@@ -1,7 +1,7 @@
 ---
 id:
 title: Agents consult the governing ruling and route new information to its right home
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -28,7 +28,7 @@ gates:
                 reason: Captain replied 「照建議」 to the six-item batch (2026-10-21), whose item 2 approved this POC backlog gate as filed, starting after kc-decision-log-cli merges. Consume waits for that start condition.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 P1 proves the mechanics only: a task description tells the worker to use the skill, so it does. The value the user wants is unproven. Does an agent consult the governing ruling before deciding when nobody reminds it, and does it put new information in the right home rather than turning everything into an ADR? The user, 2026-10-21: 「確保 skill/hook 可以讓 agent 知道要讀 ADR 之外還要知道可以怎樣區分，因為不是全部資訊都要寫到 ADR」; he approved building this POC (「建立這個 POC」). The result also decides whether kc-decision-log could later replace dev2's ADR reading, which must first be proven easier for agents (boundary contract draft, PR #691).
