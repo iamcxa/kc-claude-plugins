@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:interrogation-astra-vs-sol-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:interrogation-astra-vs-sol-poc-backlog-1
+              briefing:
+                id: briefing:interrogation-astra-vs-sol-poc:backlog:attempt-1:revision-1
+                digest: sha256:6ef8383f7f43b26c086a10d0d0bda0dba892691226ca3300cff070f466ac740b
+                room-ref: ./interrogation-astra-vs-sol-poc/review/backlog/briefing-1
 ---
 
 ## Scope

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:interrogation-astra-vs-sol-poc:backlog:attempt-1:revision-1",
+  "question": "Run the astra interrogation arm on the closed POC's five tasks under the poc profile, one arm, five runs, one blind scoring pass? (FO's chat proposal 「要先跑這一組比較嗎？」) FO recommends yes; approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:interrogation-astra-vs-sol-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/8464f7ce79d93fee0231c19afdfdab65340ba61a/interrogation-astra-vs-sol-poc.md",
+      "rev": "sha256:f9075705b5e363bc8c4bd24a8d1761a0b6a1df3f02f73a5ca626a6a5c7ca6fbd",
+      "mediaType": "text/markdown",
+      "summary": "POC: gpt-6-astra high with the ER lens versus the recorded gpt-6.1-sol arms."
+    }
+  ]
+}
