@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-write-checks-parse-top-level:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of fo-write-checks-parse-top-level to enter implementation, with its Needs-decision items as the Captain rules each one in the batch-5 sitting (listed first, asked one at a time)? An approval accepts a decision's recommendation only where his ruling says so; a decision he changes is recorded in the reason, and a scope change goes in as an amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-write-checks-parse-top-level:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a5a3cabc4029854754152a230dc281184b789a96/fo-write-checks-parse-top-level.md",
+      "rev": "sha256:82665de18dab371f9c5870394c19cb22e9280b76174b5d5a473447b2d4866b45",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 ideation design: The FO-write checks parse only top-level declines and unfenced Scope, closing two Codex round-3 edge cases"
+    }
+  ]
+}

@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:fo-write-checks-parse-top-level:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:fo-write-checks-parse-top-level-ideation-1
+              briefing:
+                id: briefing:fo-write-checks-parse-top-level:ideation:attempt-1:revision-1
+                digest: sha256:1756e1f8fee246c2952b9ea386caefe9205c4161f5d17005df09fd20c50b2fbe
+                room-ref: ./fo-write-checks-parse-top-level/review/ideation/briefing-1
 ---
 
 ## Scope
