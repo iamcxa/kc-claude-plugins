@@ -34,6 +34,17 @@ gates:
                 id: briefing:codex-reader-counts-code-review-only:ideation:attempt-1:revision-1
                 digest: sha256:e37cc6f6b642b856b7f7584471453e61173c1ca8773588267e5f6a86949bfa0f
                 room-ref: ./codex-reader-counts-code-review-only/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-counts-code-review-only:ideation:1
+                briefing: briefing:codex-reader-counts-code-review-only:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T15:31:19.443495Z"
+                decision: approve
+                reason: Captain 「可以」 (chat, 2026-10-21, batch-5 sitting), answering FO question on D1 (option B, read the summary code_review object, recommended); this briefing binds that answer after the fact; implementation waits for codex-reader-reads-receipt-marker, which edits the same file.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
