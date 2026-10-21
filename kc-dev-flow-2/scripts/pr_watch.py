@@ -25,7 +25,7 @@ reported by the next wait, once.
 
 A Codex comment the reader does not recognize (codex=unrecognized(comment:ID)) is not an outcome. If the
 next read RECHECK_SECONDS later still finds that comment unrecognized, wait stops once for that comment and
-prints it with the next: lines for the merge ask and the report upstream.
+prints it with the next: lines for the merge ask and the report upstream. A look that fails is not a read.
 
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
 only for a PR added with --codex or --copilot, from that extension's reader when it is
@@ -171,9 +171,11 @@ def wait_next(ref, now, decisive):
     return lines + (next_for(ref, now) if {"mergeable", "draft", "checks", "unchecked"} & set(decisive) else [])
 
 
-def unread_lines(state, first, clock):
+def unread_lines(state, first, clock, read):
     lines = []
     for ref, snap in load(state).items():
+        if ref not in read:
+            continue
         word = snap.get("codex", "")
         if not word.startswith("unrecognized(") or snap.get("codex-reported") == word:
             first.pop(ref, None)
@@ -239,7 +241,7 @@ def record(state, known, snaps):
     return already, update(state, put=snaps, keep_flags=True)
 
 
-def sweep(state, look=look, nexts=None, clock=time.time):
+def sweep(state, look=look, nexts=None, clock=time.time, read=None):
     seen = load(state)
     start = {ref: dict(entry) for ref, entry in seen.items()}
     changes, rows = [], []
@@ -257,6 +259,8 @@ def sweep(state, look=look, nexts=None, clock=time.time):
             changes.append((line, bool(decisive)))
             if decisive and nexts is not None:
                 nexts.extend(n for n in wait_next(ref, now, decisive) if n not in nexts)
+        if read is not None:
+            read.add(ref)
         rows.append(f"{ref:34} {now['state']:7} draft={now['draft']!s:5} {now['mergeable']:11} "
                     f"checks={now['checks']:8} codex={now['codex']:12} "
                     f"copilot={now.get('copilot', '-'):12} {now['title']}")
@@ -454,12 +458,12 @@ def main(argv=None, look=look, sleep=time.sleep, ask=gh, clock=time.time):
         every = int(opts.args[0]) if opts.args else 60
         first = {}
         while True:
-            nexts = []
-            changes, _, watching = sweep(opts.state, look, nexts, clock)
+            nexts, read = [], set()
+            changes, _, watching = sweep(opts.state, look, nexts, clock, read)
             if any(decisive for _, decisive in changes) or not watching:
                 print("\n".join([line for line, _ in changes] + nexts or ["watch list is empty"]))
                 return 0
-            gave_up = unread_lines(opts.state, first, clock)
+            gave_up = unread_lines(opts.state, first, clock, read)
             if gave_up:
                 print("\n".join([line for line, _ in changes] + gave_up))
                 return 0

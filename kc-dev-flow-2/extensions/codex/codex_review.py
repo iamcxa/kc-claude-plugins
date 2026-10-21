@@ -12,8 +12,9 @@ Exit 1 findings: that result carries a severity badge on the head, in a review, 
 Exit 2 configuration error: bad arguments or a gh call that failed.
 Exit 3 running: Codex's eyes reaction is on the pull request.
 Exit 4 not reviewed: no Codex evidence covers the head commit yet, or the head moved while reading.
-Exit 5 not recognized: no evidence covers the head, but a Codex comment names the head in a shape this
-  reader does not read (unrecognized=comment:<id>, its first 120 characters quoted); no evidence= token, so no round.
+Exit 5 not recognized: no evidence covers the head, or the newest evidence is clean and a newer Codex comment
+  names the head in a shape this reader does not read (unrecognized=comment:<id>, its first 120 characters
+  quoted); no evidence= token, so no round.
 """
 import json
 import re
@@ -99,12 +100,13 @@ def state(repo, pr, call=gh, pages=pages):
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
     if any(r["content"] == "eyes" for r in reactions):
         return 3, f"running: a Codex review is in progress; head {head[:9]}"
+    known = {e[1] for e in evidence}
+    odd = [c for c in issue if not c["body"].startswith(SUMMARY) and names_head(c["body"]) and f"comment:{c['id']}" not in known]
+    if odd and (not evidence or max(evidence)[2] == 0 and max(c["created_at"] for c in odd) > max(evidence)[0]):
+        last = max(odd, key=lambda c: c["created_at"])
+        quote = " ".join(last["body"].split())[:120].replace("evidence=", "evidence:")
+        return 5, f'not recognized on {head[:9]}: "{quote}"; unrecognized=comment:{last["id"]} at {last["created_at"]}'
     if not evidence:
-        odd = [c for c in issue if not c["body"].startswith(SUMMARY) and names_head(c["body"])]
-        if odd:
-            last = max(odd, key=lambda c: c["created_at"])
-            quote = " ".join(last["body"].split())[:120].replace("evidence=", "evidence:")
-            return 5, f'not recognized on {head[:9]}: "{quote}"; unrecognized=comment:{last["id"]} at {last["created_at"]}'
         return 4, f"not reviewed: no Codex evidence covers {head[:9]}"
     when, ident, code, detail = max(evidence)
     word = "findings" if code else "clean"

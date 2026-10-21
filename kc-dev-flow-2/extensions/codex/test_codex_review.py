@@ -220,6 +220,23 @@ class CodexReviewTests(unittest.TestCase):
         summary["body"] += f"\n\n**Reviewed commit:** `{HEAD[:10]}`"
         self.assertEqual(self.check(comments=[summary])[0], 4)
 
+    def test_a_newer_unread_comment_on_the_head_after_a_clean_one_is_never_clean(self):
+        v2 = REAL.format(sha=HEAD[:10]).replace("receipt:v1", "receipt:v2")
+        clean = receipt(REAL.format(sha=HEAD[:10]), ident=7, at=T1)
+        code, line = self.check(comments=[clean, receipt(v2, ident=31, at=T2)])
+        self.assertEqual(code, 5)
+        self.assertIn("unrecognized=comment:31", line)
+        self.assertNotIn("evidence=", line)
+        self.assertEqual(self.check(comments=[receipt(v2, ident=31, at=T1), receipt(REAL.format(sha=HEAD[:10]), ident=7, at=T2)])[0], 0)
+        self.assertEqual(self.check(comments=[said(HEAD[:10], ident=7, at=T1), receipt(v2, ident=31, at=T2)])[0], 5)
+        self.assertEqual(self.check(reviews=[review(HEAD, at=T1, body="Codex Review: Didn't find any major issues.")],
+                                    comments=[receipt(v2, ident=31, at=T2)])[0], 5)
+        self.assertEqual(self.check(reviews=[review(HEAD, at=T1)], inline=[finding(HEAD)], comments=[receipt(v2, ident=31, at=T2)])[0], 1)
+        later = receipt(REAL.format(sha=HEAD[:10]), ident=8, at="2026-10-10T12:00:00Z")
+        self.assertEqual(self.check(comments=[clean, receipt(v2, ident=31, at=T2), later])[0], 0)
+        self.assertEqual(self.check(comments=[clean, receipt(v2.replace(HEAD[:10], OLD[:10]), ident=31, at=T2)])[0], 0)
+        self.assertEqual(self.check(comments=[clean, receipt(v2, ident=31, at=T2, user=PERSON)])[0], 0)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -183,6 +183,39 @@ class PrWatchTests(unittest.TestCase):
             self.assertEqual(slept, 30)
             self.assertNotIn("report it upstream", out)
 
+    def test_a_look_that_fails_is_not_a_second_unrecognized_read(self):
+        odd = snap(codex="unrecognized(comment:31)")
+        failed = RuntimeError("gh: api rate limit")
+
+        def wait_through(state, looks):
+            seq, now, slept = iter(looks), [0], []
+
+            def look(ref, **kw):
+                item = next(seq)
+                if isinstance(item, Exception):
+                    raise item
+                return item
+
+            def sleep(seconds):
+                slept.append(seconds)
+                now[0] += 60
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = watch.main(["--state", str(state), "wait", "60"], look=look, sleep=sleep, clock=lambda: now[0])
+            return code, out.getvalue(), len(slept)
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, out, slept = wait_through(state, [odd, failed, failed, failed, snap(mergeable="CONFLICTING")])
+            self.assertEqual(slept, 4)
+            self.assertNotIn("report it upstream", out)
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, out, slept = wait_through(state, [odd, failed, failed, failed, odd])
+            self.assertEqual(slept, 4)
+            self.assertIn("o/r#1 codex=unrecognized(comment:31): not recognized on two reads 180s apart", out)
+
     def test_the_codex_reader_is_found_in_its_extension(self):
         self.assertTrue(watch.CODEX.exists(), watch.CODEX)
 
