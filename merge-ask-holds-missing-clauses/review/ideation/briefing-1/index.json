@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-ask-holds-missing-clauses:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of merge-ask-holds-missing-clauses to enter implementation, with its Needs-decision items as the Captain rules each one in the batch-5 sitting (listed first, asked one at a time)? An approval accepts a decision's recommendation only where his ruling says so; a decision he changes is recorded in the reason, and a scope change goes in as an amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:merge-ask-holds-missing-clauses:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3f36d0de700848c39b60182b55bc77b3d233b53e/merge-ask-holds-missing-clauses.md",
+      "rev": "sha256:0c5f97100593710135183040b0ef9fe0aa6fc0ff41879aff5d7f1a2ce8f964bd",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 ideation design: The merge-ask check holds a question that omits the round count or the carried clauses, or a task that owes a special-role call"
+    }
+  ]
+}

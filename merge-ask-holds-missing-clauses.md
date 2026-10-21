@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:merge-ask-holds-missing-clauses:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:merge-ask-holds-missing-clauses-ideation-1
+              briefing:
+                id: briefing:merge-ask-holds-missing-clauses:ideation:attempt-1:revision-1
+                digest: sha256:c4950c3956668b0da8e5ea80d1db62bb916395d7f1cda7b221e58d5a55ad52a1
+                room-ref: ./merge-ask-holds-missing-clauses/review/ideation/briefing-1
 ---
 
 ## Scope
