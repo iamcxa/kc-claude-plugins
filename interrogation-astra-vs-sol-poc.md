@@ -61,3 +61,29 @@ Visible change: none
 ### Summary
 
 The astra arm ran on the five closed-POC snapshots with the arm-4 lens prompt and pinned flags; all pins verified from the rollouts. Answers are in `blind/` for a blind scorer (AC-2 is the scorer's step, not done here). Snapshots were deleted after the runs; no code was changed (roborev not run: no repository diff).
+
+## Stage Report: validation
+
+- DONE: Score the five blind answers in the task folder's blind/ (files <task>-Z.md, READER.md) against the closed POC's answer keys at .../_archive/interrogation-replay-on-batch-3-poc/answer-keys.md with the same rubric and tier-1 strict rule the closed POC's blind/scores.md used, without opening raw/, report.md, the entity's implementation report, or anything naming the model; record per task and in total the tier-1 strict hits, lenient hits and ungrounded questions
+  Scores with quotes in `interrogation-astra-vs-sol-poc/blind/scores-validation-ensign.md`, written before the next item. Tier 1 askable strict, astra: NG 0/2, FW 1/2, CO 2/4, DG 2/2, SR 1/3 = 6 of 13; lenient (strict + partial) 11 of 13 (5 partials: NG1, FW2, CO3, SR1, SR2). Tier 1 late-only 0 of 4. Tier 2 askable 1 of 7 strict (SR8), 3 partial. Ungrounded 0 of 85 (code symbols and paths grepped in git-archive snapshots of the three bases; Story quotes grepped in the key's archived task files).
+  Order opened: dispatch file, ensign contract and runtime reference, stage definition, entity lines 1-53 (frontmatter, Scope, Acceptance criteria, FO alignment; the implementation report below it was not read), blind/READER.md, closed POC blind/READER.md, closed POC blind/answer-keys.md, then Z files in the order number-guards, fo-write-checks, chat-only, delivery-gate, special-role, then snapshots and archived task seeds for the ungrounded check; scores file written; only then report.md and the closed POC's blind/scores.md. raw/ was never opened.
+- DONE: After scoring, and only then, open report.md and the closed POC's blind/scores.md, table this arm beside sol lens (6 of 13 strict) and sol plain (5 of 13), and give the verdict per the Scope's bar (a difference within one item reads as no difference)
+  Verdict: no difference. Astra 6 of 13 equals sol lens (6) and is one above sol plain (5); the bar is one item.
+
+| Tier 1 askable (13 items) | Astra lens (this run) | Sol lens | Sol plain |
+|---|---|---|---|
+| Strict hits | 6 | 6 | 5 |
+| Lenient (strict + partial) | 11 | 11 or 12 | 11 or 12 |
+| Ungrounded questions | 0 of 85 | 0 | 0 |
+| Questions | 85 | 89 or 91 | 91 or 93 |
+| Tokens in / out (5 runs) | 3,703,502 / 30,404 | 3,647,778 / 38,714 | 3,204,452 / 33,847 |
+| Wall, summed s | 1,070 | 1,149 | 957 |
+
+  Sol columns: the closed POC's scores.md scored two unlabelled lists, X 5 and Y 6 strict, lenient 11 and 12; the sealed mapping is the task's stated 6 (lens) and 5 (plain), so lenient per arm is read from X and Y without re-mapping here. Tokens and wall from report.md. Per task astra tier-1 strict: NG 0, FW 1, CO 2, DG 2, SR 1, which equals the closed list with 6; the one swap is CO2 (astra) for CO3 (that list).
+  Never asked by astra, as by sol: NG2, CO4, SR2 as a threshold, and all four late-only tier-1 items (SR4 to SR7).
+- FAILED: AC-2 as written ("a scorer that does not know the arm"; falsifier "a score assigned with the arm known")
+  This scorer knew the arm from the dispatch title and knew the sol totals from the checklist before scoring, so AC-2's falsifier literally holds. Kept blind: raw/, report.md, the closed scores.md and the implementation report stayed closed until the scores file was written; every score carries its quote. FO to rule whether that satisfies AC-2.
+
+### Summary
+
+Astra at high effort with the lens scored 6 of 13 tier-1 askable items strict, with 0 ungrounded questions, against 6 for sol lens and 5 for sol plain: no difference by the one-item bar. Scorer variance is about the size of the gap: two calls (DG2, FW1) sit on the hit/partial line and flipping both gives 4, while promoting CO3 and FW2 gives 8. Sample is five tasks, one run per arm, a different scorer from the closed POC, and a second reading of 13 items cannot separate the arms. roborev not run: no repository diff.
