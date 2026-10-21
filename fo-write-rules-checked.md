@@ -53,6 +53,17 @@ gates:
                 id: briefing:fo-write-rules-checked:validation:attempt-1:revision-1
                 digest: sha256:51c8c9bcf8cb8047364554fb2e6ea4409871d612d13d9da981e9f1b0a97637d5
                 room-ref: ./fo-write-rules-checked/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-write-rules-checked:validation:1
+                briefing: briefing:fo-write-rules-checked:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T00:36:28.458708Z"
+                decision: approve
+                reason: 'Captain 「批准」 (chat, 2026-10-21): approve validation and merge iamcxa/kc-claude-plugins#687 at head 2b86a62490de623faf7365ef29931a9d5c35e3f9, removing its clean pushed worktree, as recommended; the two Codex round-3 P2 are declined into backlog task fo-write-checks-parse-top-level.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-20T04:58:17Z
 worktree: .worktrees/spacedock-ensign-fo-write-rules-checked
 pr: iamcxa/kc-claude-plugins#687
