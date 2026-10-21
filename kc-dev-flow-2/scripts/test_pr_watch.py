@@ -142,6 +142,8 @@ class PrWatchTests(unittest.TestCase):
             line = [row for row in out.splitlines() if "report it upstream" in row]
             self.assertEqual(len(line), 1)
             self.assertIn("in the repository that holds kc-dev-flow-2 itself, file a backlog task; elsewhere, if `peers`", line[0])
+            for part in ("file a backlog task", "`peers`", "draft the issue"):
+                self.assertIn(part, line[0])
             self.assertLess(line[0].index("file a backlog task"), line[0].index("`peers`"))
             self.assertLess(line[0].index("`peers`"), line[0].index("draft the issue"))
 

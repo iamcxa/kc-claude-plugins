@@ -185,7 +185,8 @@ class CodexReviewTests(unittest.TestCase):
                      "<!-- codex-review-receipt:v1 -->" + said_clean,
                      "<!-- codex-review-receipt:v1 -->\n\nnote\n\n" + said_clean,
                      "<!-- codex-review-receipt:v1 -->\n\n \n" + said_clean,
-                     "<!-- codex-review-receipt:v1 -->\r\n\r\n" + said_clean):
+                     "<!-- codex-review-receipt:v1 -->\r\n\r\n" + said_clean,
+                     "\n<!-- codex-review-receipt:v1 -->\n\n" + said_clean):
             with self.subTest(body[:60]):
                 self.assertEqual(self.check(comments=[receipt(body)])[0], 5)
 
