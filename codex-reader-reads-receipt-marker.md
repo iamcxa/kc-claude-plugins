@@ -72,6 +72,12 @@ Asked: 「提示訊息會寫成：「這是 kc-dev-flow-2 的問題，要回報�
 Supersedes: none
 Design: the upstream line names no harness: with `peers` listed and a kc-dev-flow-2 maintainer peer reachable, FO reports through `peers`; otherwise FO drafts the issue and asks the Captain whether to file it. A Paseo host binding for `peers` is its own task.
 
+### Amendment 3 — 2026-10-21, chat
+Captain: 「加回來」 (chat, 2026-10-21, batch-5 sitting)
+Asked: 「Codex 新格式那張，要不要把「在這個 repo，FO 直接開一張待辦任務」那一句加回來？」
+Supersedes: none
+Design: the upstream line gains a first branch: in the repository that holds kc-dev-flow-2 itself, FO files a backlog task with the comment id and raw text; elsewhere, report through `peers` if listed and a maintainer FO is reachable, otherwise draft the issue and ask the Captain (Amendment 2).
+
 ## Design
 
 Cycle 3, revised 2026-10-21 for Captain Amendments 1 and 2 (above). Cycle 2 carried the D2 ruling (the ideation gate's resolution reason: revise); D1, the reader's exit 5 and everything not named below are as in cycle 2. Amendment 1 replaces the 900-second window by a count of two reads; Amendment 2 replaces the upstream line. The cycle-1 and cycle-2 stage reports below are kept as history.
