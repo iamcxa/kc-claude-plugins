@@ -65,3 +65,4 @@ Verified by: the inbox credential's permission set read back, a refused push att
 Direction alignment before implementation: not needed; the Captain approved running this probe in chat on 2026-10-21, and each outward action asks first.
 Surfaces: none
 Visible change: none
+Captain standing ask, 2026-10-21 (with the backlog approval): 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate of this task.
