@@ -53,7 +53,7 @@ async function dispatchToken({ env, fetchImpl, nowS }) {
     method: "POST",
     body: JSON.stringify({ repositories: [env.OPS_REPO.split("/")[1]], permissions: { actions: "write" } }),
   });
-  if (res.status !== 201) throw new Error(`token-mint-${res.status}`);
+  if (res.status !== 201) throw Object.assign(new Error(`token-mint-${res.status}`), { refused: true });
   const out = await res.json();
   return { token: out.token, permissions: out.permissions };
 }
@@ -108,12 +108,13 @@ export async function handle(req, deps) {
         return_run_details: true,
       }),
     });
-    if (res.status !== 200 && res.status !== 204) throw new Error(`dispatch-${res.status}`);
+    if (res.status !== 200 && res.status !== 204) throw Object.assign(new Error(`dispatch-${res.status}`), { refused: true });
     run = res.status === 200 ? await res.json() : { workflow_run_id: null, html_url: `https://github.com/${env.OPS_REPO}/actions` };
   } catch (err) {
-    await store.delete(key);
-    log(JSON.stringify({ evt: "dispatch-failed", id: ev.id, error: String(err.message), t }));
-    return json(502, { error: "dispatch-failed" });
+    // A transport error may follow a dispatch GitHub already accepted, so only a definite refusal releases the claim.
+    if (err.refused) await store.delete(key);
+    log(JSON.stringify({ evt: "dispatch-failed", id: ev.id, error: String(err.message), released: Boolean(err.refused), t }));
+    return json(err.refused ? 502 : 504, { error: err.refused ? "dispatch-refused" : "dispatch-ambiguous" });
   }
   t.dispatched = now();
 

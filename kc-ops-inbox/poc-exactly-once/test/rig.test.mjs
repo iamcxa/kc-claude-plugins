@@ -60,7 +60,7 @@ async function rig({ failDispatch = false, noRunDetails = false } = {}) {
   };
   const logs = [];
   const call = (init) => handle(new Request("http://inbox.test/inbox", init), { store, fetchImpl: fetch, env, log: (l) => logs.push(l) });
-  return { state, store, call, logs, close: () => server.close() };
+  return { state, store, env, call, logs, close: () => server.close() };
 }
 
 test("three sends of one webhook-id, third re-signed 61s later, start exactly one run", { timeout: 90000 }, async () => {
@@ -150,5 +150,15 @@ test("a 204 dispatch reply keeps the claim, since the run did start", async () =
   assert.equal((await r.call(req)).status, 202);
   assert.equal((await r.call(req)).status, 200);
   assert.equal(r.state.dispatches.length, 1);
+  r.close();
+});
+
+test("a lost dispatch reply keeps the claim so a retry cannot start a second run", async () => {
+  const r = await rig();
+  const req = signedRequest({ secret: SECRET, webhookId: "msg_evt-8", body: fixtureEvent("evt-8"), timestamp: Math.floor(Date.now() / 1000) });
+  const lossy = (url, init) => (String(url).includes("/dispatches") ? Promise.reject(new Error("socket hang up")) : fetch(url, init));
+  const res = await handle(new Request("http://inbox.test/inbox", req), { store: r.store, fetchImpl: lossy, env: r.env, log() {} });
+  assert.equal(res.status, 504);
+  assert.equal(r.store.m.size, 1);
   r.close();
 });
