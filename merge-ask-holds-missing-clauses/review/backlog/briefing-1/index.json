@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:merge-ask-holds-missing-clauses:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of merge-ask-holds-missing-clauses to enter ideation under the pilot profile, with the Scope above as written? FO recommends approve, as one of the six batch-5 tasks the Captain accepted 2026-10-21 (「可以」); approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:merge-ask-holds-missing-clauses:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/93b0a93b049d65a964f3769219898e1b41f140bd/merge-ask-holds-missing-clauses.md",
+      "rev": "sha256:5b8d20821acade885c114558343a622ad2c6bbb6bef07b084a83876cabb1488e",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 backlog: The merge-ask check holds a question that omits the round count or the carried clauses, or a task that owes a special-role call"
+    }
+  ]
+}

@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:merge-ask-holds-missing-clauses:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:merge-ask-holds-missing-clauses-backlog-1
+              briefing:
+                id: briefing:merge-ask-holds-missing-clauses:backlog:attempt-1:revision-1
+                digest: sha256:ddccb57f67c68ec8d052dd67533a52aff3d9e499946b1ccb0473cb30c5239dd8
+                room-ref: ./merge-ask-holds-missing-clauses/review/backlog/briefing-1
 ---
 
 ## Scope
