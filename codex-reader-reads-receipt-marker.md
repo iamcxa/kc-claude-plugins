@@ -72,6 +72,8 @@ pr: iamcxa/kc-claude-plugins#693
 
 ## FO alignment
 
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-22 — do these amendments withdraw what the Captain approved, and what changes in the build? Owed by role_triggers.py for the task's Captain amendments.
+
 Alignment: not needed before ideation; the fix is named.
 Surfaces: none
 Visible change: none
