@@ -332,6 +332,15 @@ Verified by: a synthetic repository with D0 and D1 commits; outputs compared, an
 Evidence clause: `node --test test/read.test.mjs` creates D0, then D1 (which rewrites one record), then `git branch -f main D1`; runs `read --commit D0` in JSON and in human mode and asserts both give the same repository, path, ADR ID, commit and Status, that the commit is D0, and that the digest equals SHA-256 of `git cat-file blob D0:<path>` computed in a separate process; a fixture file that is not valid UTF-8 must exit 5. Falsifier: hashing the decoded string, or resolving `main`, fails the digest or commit assertion (preview mutations). Current evidence: preview runs 1-4 and 55 pass; the committed test does not exist yet.
 Design: the scope beyond Amendment 3 — no binding config for a separate decision repository; reading works on any repo's docs/adr; Amendment 1's tracking_ref and synthetic decision repository generator are deferred with kc-decision-log-handoff-trial
 
+### Amendment 5 — 2026-10-22, chat
+Captain: 「照建議」 (this FO's Paseo session, reply to a three-item batch after implementation reported AC-7 and AC-8 FAILED)
+Asked: 「1. S8 預期答案改成跟規則一致：接受「agent 記憶或任務的待確認事項」兩處，用已存的紀錄重新計分，不重跑。這不是看了結果才放寬：規則是你在跑之前就接受的，只是評分檔沒跟著更新。我會把原因寫清楚，記成你的修訂。」「2. AC-7 改成記錄實測結果：6 次裡 5 次有讀到該讀的 ADR，6 次決定都正確。不重做 skill，因為改任何一個字都要重跑全部 34 次；真實派工那條（AC-9）已經過了。代價是正式承認 skill 不保證每次都會去讀；之後可以由 dev2 的學習流程再改進。」「3. Codex 沒進步，記成已知限制：照原標準只回報。skill 對 Codex 的放對地方沒幫助，留給之後處理。」
+Supersedes: AC-7
+Superseded text:
+**AC-7**: Amended by Captain, amendment 3. The worker judges "in force" from the Status and `Superseded by` lines it reads. It relies on an Accepted record, follows a supersession chain to its end and reports the end's own digest, and does not act on a Proposed or Deprecated record. Source files are unchanged. Not covered: two Accepted records on one topic are not detected (amendment 3).
+Verified by: scenarios S6 (near-duplicate titles, a Deprecated and a Proposed look-alike), S7 and S9, arm B1, both hosts; the workspace diff shows no edited ADR.
+Evidence clause: `python3 run.py run --scenarios S6,S7,S9 --arms B1 --hosts claude,codex --rep 1` then `python3 score.py`. Pass: consulted and choice correct in S6 and S7, the chain end (ADR 0023 with its own digest, or a stop on 0002) in S9, in all six cells, and no `ruling_edit` in any cell. Falsifier: a copy of a stored S6 run edited to drop the read of ADR 0023 must score N on `consulted`. Current evidence: arm A0 passed these on both hosts (`results.md`), so this is a no-regression check; arm B1 has not run.
+
 ## Stage Report: ideation (cycle 2)
 
 - DONE: Redo the design as the read-adr skill per Captain amendment 3 and Captain amendment 4, and per boundary contract v2 (PR #691): the reading recipe, the five ordered routing questions with the one-home rule and "instruction files point, they do not restate", writing guidance that wraps dev2, and the optional prefix spec.
@@ -385,12 +394,3 @@ The task is redone as a skill-only plugin: `kc-adr:read-adr` with a reading reci
 ### Summary
 
 The plugin is built and committed (e2ac9041, not pushed). AC-4, AC-5, AC-6, AC-9 and AC-10 are recorded, and AC-8 is met on Claude (9/10 against A0 7/10) after Captain amendment 5 regraded S8 offline; Codex placement (6/10, equal to A0) is a reported known limit. AC-9 is a real dev2 dispatch where the worker loaded the skill unprompted on both hosts (one run each). AC-6's literal clause "reports the D0 commit and digest" is not shown by the two B1 S11 answers (they took the accepted alt path). Affected documents (`doc_impact.py`): CLAUDE.md updated (plugin count, kc-adr); ARCHITECTURE.md, PRODUCT.md, docs/dev/README.md, the cross-model-arbitration spec, quality-pipeline.md, kc-plugin-release SKILL.md, kc-team-ops/README.md and learning.md unaffected: each names the marketplace or release files as a mechanism and lists no plugin set. For FO: `## Scope` and the title still describe the CLI plugin.
-
-### Amendment 5 — 2026-10-22, chat
-Captain: 「照建議」 (this FO's Paseo session, reply to a three-item batch after implementation reported AC-7 and AC-8 FAILED)
-Asked: 「1. S8 預期答案改成跟規則一致：接受「agent 記憶或任務的待確認事項」兩處，用已存的紀錄重新計分，不重跑。這不是看了結果才放寬：規則是你在跑之前就接受的，只是評分檔沒跟著更新。我會把原因寫清楚，記成你的修訂。」「2. AC-7 改成記錄實測結果：6 次裡 5 次有讀到該讀的 ADR，6 次決定都正確。不重做 skill，因為改任何一個字都要重跑全部 34 次；真實派工那條（AC-9）已經過了。代價是正式承認 skill 不保證每次都會去讀；之後可以由 dev2 的學習流程再改進。」「3. Codex 沒進步，記成已知限制：照原標準只回報。skill 對 Codex 的放對地方沒幫助，留給之後處理。」
-Supersedes: AC-7
-Superseded text:
-**AC-7**: Amended by Captain, amendment 3. The worker judges "in force" from the Status and `Superseded by` lines it reads. It relies on an Accepted record, follows a supersession chain to its end and reports the end's own digest, and does not act on a Proposed or Deprecated record. Source files are unchanged. Not covered: two Accepted records on one topic are not detected (amendment 3).
-Verified by: scenarios S6 (near-duplicate titles, a Deprecated and a Proposed look-alike), S7 and S9, arm B1, both hosts; the workspace diff shows no edited ADR.
-Evidence clause: `python3 run.py run --scenarios S6,S7,S9 --arms B1 --hosts claude,codex --rep 1` then `python3 score.py`. Pass: consulted and choice correct in S6 and S7, the chain end (ADR 0023 with its own digest, or a stop on 0002) in S9, in all six cells, and no `ruling_edit` in any cell. Falsifier: a copy of a stored S6 run edited to drop the read of ADR 0023 must score N on `consulted`. Current evidence: arm A0 passed these on both hosts (`results.md`), so this is a no-regression check; arm B1 has not run.
