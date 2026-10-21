@@ -77,3 +77,17 @@ Visible change: none
 ### Summary
 
 Run-time resolution is the only arm that meets all four bar items on both hosts; Claude's native dependency works as an install-time add-on but Codex has no equivalent, and a symlink fails on both. A tag-name mismatch (Claude needs `<plugin>--v<version>`, release-please cuts `<plugin>-vX.Y.Z`) would affect the native arm and was read from files, not run. Not proved: a live model session, auto-update, disabled-but-installed kc-adr, carlove-v1 READMEs.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: kc-dev-flow-2/scripts/design_surfaces.py check on the task file: FO added `## Acceptance criteria` restating the Scope's bar; run the check and record its output and exit code
+  `python3 -B <package>/scripts/design_surfaces.py check .spacedock-state/kc-adr-dependency-poc.md` printed `kc-adr-dependency-poc.md: design surfaces presentable` and `scope check not run: stage is implementation, not ideation`; exit code 0 (cycle 1 exited 1 on the missing section).
+- DONE: Map AC-1 to AC-4 to report.md's result table, Ruling and adopter section, one line each, without changing report.md
+  AC-1 -> result table, Installs column: one row per arm and host (A, B, C Claude and Codex; D control as one row for both hosts), each cell observed or marked (doc).
+  AC-2 -> result table, "kc-adr update reaches dev2" column: observed on both hosts for C (Claude `update kc-adr` 2.3.0 to 2.4.0; Codex `marketplace upgrade` 2.2.0 to 2.3.0); A on Claude yes only by `update kc-adr`; B Claude no (copy stayed 2.0.0); n/a where install failed or nothing couples (A and B on Codex, D).
+  AC-3 -> result table, "Absent kc-adr refuses loudly" column: C exit 3 with the printed install message on both hosts; A on Claude partly (dev2-native `failed to load`, no live model session); B bundled so never absent; n/a for A and B on Codex, and D.
+  AC-4 -> result table, "Incompatible version caught" column (C exit 4 on both hosts, A on Claude at install and update) plus the `## Ruling` (run-time resolution) and `## What a move would change (the four adopters)` (three of four verified by `git grep`; carlove-v1 has no checkout and is marked unverified).
+
+### Summary
+
+The design check now exits 0 on the task file with FO's acceptance criteria in place. AC-1 to AC-4 each point at the existing report.md section that holds their evidence; report.md, the other task sections and every repository file are unchanged. Cells marked n/a in report.md (Codex native, Codex symlink, wrap control) are not observed failures of the criteria, they are arms with no mechanism on that host; AC-3's falsifier (exit 0 or silence) did not occur in any observed cell.
