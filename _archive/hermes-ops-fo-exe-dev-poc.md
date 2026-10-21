@@ -1,6 +1,6 @@
 ---
 title: hermes boots as the ops First Officer on exe.dev with a Codex token, and stops at the Captain's gate
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -46,8 +46,11 @@ gates:
                 reason: 'Captain answered 「准」 in chat on 2026-10-21 to the presented validation gate whose decision line was: approve to close the POC on the evidence with no PR, keep branch spacedock-ensign/hermes-ops-fo-exe-dev-poc as reference, and return the next step to planning; cleanup listed separately. He first asked 「目前可以宣稱什麼？」 and was shown the bounded claims (rulesets and the Captain-only review record verified live; refusal outputs report-only; spacedock gate record does not authenticate the actor). Accepts PASSED at POC depth; no PR, merge, deletion or downstream task is authorized.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-20T13:51:57Z
+verdict: PASSED
+completed: 2026-10-21T01:25:21Z
+archived: 2026-10-21T01:25:21Z
 ---
 
 First proof for the new `kc-ops-inbox` package: one always-on hermes instance acts as the First Officer of an `ops` Spacedock workflow, so an event reaches a person and an agent at once and every step lands in a repository task. The riskiest claim is unexercised: no recorded run has a Hermes Agent instance act as a Spacedock First Officer (`kc-hermes-spacedock` main at 556217b, 2026-08-25, still launches the FO as a separate Claude process; Spacedock 0.27 lists Claude Code, Codex and Pi as tier-1 and Hermes-class agents as "through skill systems").
