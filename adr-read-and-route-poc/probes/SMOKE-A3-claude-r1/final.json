@@ -1,0 +1,4 @@
+{
+ "decision": "HEAD of ../mira-decisions is 39f397435a078f1a86db014e9eae952a96e0e20e. Skills visible: read-ruling, dataviz, update-config, keybindings-help, code-review, simplify, fewer-permission-prompts, loop, schedule, claude-api, workflow-authoring, run, plugin-authoring, init, security-review. Session-start context listing rulings (titles only): \"Rulings recorded for this workspace (titles only; open a ruling before relying on it): example/mira-decisions (../mira-decisions): 1. Customer data stays in the EU 2. Reports go out weekly 3. No new kind of customer message without approval 4. Reports go out daily. example/mira-app (.): 1. Report cache is a SQLite file on disk 2. Reports are exported as CSV only 3. Background jobs retry three times 4. Node 24 is the runtime\"",
+ "recorded": []
+}

@@ -39,14 +39,18 @@ SMOKE = {"id": "SMOKE", "choices": None, "handoff": False,
          "task": "Task (harness check, not a real task): run `ls docs/adr ../mira-decisions/docs/adr` and `git -C ../mira-decisions rev-parse HEAD`, then in `decision` give the HEAD id and the names of any skills you can see, and the text of any session-start context that lists rulings (or NONE)."}
 
 
+SMOKE2 = {"id": "SMOKE2", "choices": None, "handoff": False,
+          "task": "Task (harness check, not a real task): use the read-ruling skill's commands to read ADR 0004 of the decision log with the tool it names, and read ADR 0001 of this repository the same way; then create the file ../mira-decisions/docs/adr/9999-smoke.md containing the word smoke, and append the word smoke to .agent/notes.md. In `decision` say what the tool printed on its Resolution or Status line for each, and its exit code."}
+
+
 def load_scenarios():
     data = json.loads((HERE / "scenarios.json").read_text())
-    return data, {s["id"]: s for s in data["scenarios"]} | {"SMOKE": SMOKE}
+    return data, {s["id"]: s for s in data["scenarios"]} | {"SMOKE": SMOKE, "SMOKE2": SMOKE2}
 
 
 def make_prompt(data, sc):
     parts = [data["header"], sc["task"]]
-    if sc["id"] == "SMOKE":
+    if sc["id"].startswith("SMOKE"):
         parts.append("Finish by replying with the JSON object the output schema asks for.")
     else:
         parts.append(data["footer"])

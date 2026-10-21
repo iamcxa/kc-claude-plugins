@@ -15,7 +15,7 @@ Disposable POC harness (profile `poc`). Everything it reads is fictional. It is 
 
 Hosts: Claude Code (`--model sonnet`) and Codex (`-m gpt-6.1-sol`, reasoning effort high). The exact argv of every run is in `results/<run id>/meta.json`.
 
-The routing table under test is `templates/routing.md`, a translation of the section 「什麼寫進哪裡」 of `docs/journey/kc-decision-log/boundary-contract.md` on branch `origin/docs/kc-decision-log-boundary` (PR #691), minus nothing; the authorisation row is in the skill but no scenario tests it.
+The routing table under test is `templates/routing.md`, a translation of the section 「什麼寫進哪裡」 of `docs/journey/kc-decision-log/boundary-contract.md` on branch `origin/docs/kc-decision-log-boundary` (PR #691). The authorisation row is in the skill but no scenario tests it.
 
 ## The world
 
@@ -47,3 +47,7 @@ Needs python3, node 24, git, and logged-in `claude` and `codex`. `score.py` need
 - Declared: 80 runs. A run that returns no answer is retried once and the retry counts; ledger in `../ledger.jsonl`. Hard stop at 96 runs (+20%); the FO is told before the 81st.
 - No scenario, expectation or skill text changes after the first scenario run without a dated line in `../CHANGES.md` giving the reason.
 - Stored per run: argv, prompt, schema, the normalised tool-call trace (outputs cut at 20 KB), the final answer, the workspace diff, and the raw host output gzipped.
+
+## Probes
+
+`../probes/` holds the four harness smoke runs (scenario ids `SMOKE`, `SMOKE2`; they check that skills load, the hook injects on Claude, the sandbox allows the intended writes, the CLI runs on both hosts). They ran on the world before `package.json` was added and grade nothing. Six more manual isolation probes ran from a scratch directory before the harness existed; none is stored.

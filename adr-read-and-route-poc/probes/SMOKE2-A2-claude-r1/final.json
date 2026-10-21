@@ -1,0 +1,13 @@
+{
+ "decision": "Mira ADR 0004 (reports go out daily): Resolution line \"EFFECTIVE: this record is the ruling in force\", exit 0. App ADR 0001 (report cache is a SQLite file on disk): Status line \"Accepted\", exit 0.",
+ "recorded": [
+  {
+   "path": "../mira-decisions/docs/adr/9999-smoke.md",
+   "info": "Created with the word smoke. This is a harness-check file, not a real ADR."
+  },
+  {
+   "path": ".agent/notes.md",
+   "info": "Appended the word smoke."
+  }
+ ]
+}

@@ -1,0 +1,13 @@
+{
+ "decision": "ADR 0004 (mira) printed Resolution: EFFECTIVE: this record is the ruling in force; exit code 0. ADR 0001 (app) printed Status: Accepted; exit code 0; npm test failed with exit code 254 because package.json is missing.",
+ "recorded": [
+  {
+   "path": "../mira-decisions/docs/adr/9999-smoke.md",
+   "info": "Created containing smoke."
+  },
+  {
+   "path": ".agent/notes.md",
+   "info": "Appended smoke."
+  }
+ ]
+}

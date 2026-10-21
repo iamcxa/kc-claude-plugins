@@ -1,0 +1,4 @@
+{"run": "SMOKE-A3-claude-r1", "started": 1792564902.8156931, "host": "claude", "arm": "A3", "scenario": "SMOKE", "rep": 1}
+{"run": "SMOKE-A2-codex-r1", "started": 1792564902.81586, "host": "codex", "arm": "A2", "scenario": "SMOKE", "rep": 1}
+{"run": "SMOKE2-A2-claude-r1", "started": 1792564959.720772, "host": "claude", "arm": "A2", "scenario": "SMOKE2", "rep": 1}
+{"run": "SMOKE2-A2-codex-r1", "started": 1792564959.720914, "host": "codex", "arm": "A2", "scenario": "SMOKE2", "rep": 1}

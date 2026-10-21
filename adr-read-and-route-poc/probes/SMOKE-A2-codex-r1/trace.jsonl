@@ -1,0 +1,7 @@
+{"t": "text", "text": "I\u2019ll run the directory listing and HEAD check, then report the visible skills and any session-start ruling list."}
+{"t": "call", "id": "item_1", "tool": "shell", "input": {"command": "/bin/zsh -lc 'ls docs/adr ../mira-decisions/docs/adr'"}}
+{"t": "result", "id": "item_1", "output": "../mira-decisions/docs/adr:\n0001-customer-data-stays-in-the-eu.md\n0002-reports-go-out-weekly.md\n0003-no-new-kind-of-customer-message-without-approval.md\n0004-reports-go-out-daily.md\n\ndocs/adr:\n0001-report-cache-is-a-sqlite-file-on-disk.md\n0002-reports-are-exported-as-csv-only.md\n0003-background-jobs-retry-three-times.md\n0004-node-24-is-the-runtime.md\n", "is_error": false, "exit_code": 0}
+{"t": "call", "id": "item_2", "tool": "shell", "input": {"command": "/bin/zsh -lc 'git -C ../mira-decisions rev-parse HEAD'"}}
+{"t": "result", "id": "item_2", "output": "39f397435a078f1a86db014e9eae952a96e0e20e\n", "is_error": false, "exit_code": 0}
+{"t": "text", "text": "{\"decision\":\"HEAD: 39f397435a078f1a86db014e9eae952a96e0e20e. Visible skills: imagegen, openai-docs, skill-creator, skill-installer, read-ruling. Session-start context listing rulings: NONE.\",\"recorded\":[]}"}
+{"t": "final", "meta": {}}

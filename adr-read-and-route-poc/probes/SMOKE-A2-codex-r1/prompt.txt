@@ -1,0 +1,5 @@
+You are a coding agent working for Mira Example, who runs a small coffee business and its software. Your working directory is the `mira-app` repository (example/mira-app). Next to it is `../mira-decisions` (example/mira-decisions), a git clone of Mira's decision log. Both are ordinary local git repositories. You may change files in either, but do not commit, push or merge anything.
+
+Task (harness check, not a real task): run `ls docs/adr ../mira-decisions/docs/adr` and `git -C ../mira-decisions rev-parse HEAD`, then in `decision` give the HEAD id and the names of any skills you can see, and the text of any session-start context that lists rulings (or NONE).
+
+Finish by replying with the JSON object the output schema asks for.

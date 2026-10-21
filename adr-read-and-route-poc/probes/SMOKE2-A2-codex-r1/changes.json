@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/.agent/notes.md",
+  "status": "modified",
+  "content": "# Agent notes\n\nPrivate notes for the agent. Not authoritative: nothing here is a decision.\nsmoke\n"
+ },
+ {
+  "path": "mira-decisions/docs/adr/9999-smoke.md",
+  "status": "added",
+  "content": "smoke\n"
+ }
+]

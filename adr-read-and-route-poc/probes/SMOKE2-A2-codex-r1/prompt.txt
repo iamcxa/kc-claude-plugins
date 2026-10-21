@@ -1,0 +1,5 @@
+You are a coding agent working for Mira Example, who runs a small coffee business and its software. Your working directory is the `mira-app` repository (example/mira-app). Next to it is `../mira-decisions` (example/mira-decisions), a git clone of Mira's decision log. Both are ordinary local git repositories. You may change files in either, but do not commit, push or merge anything.
+
+Task (harness check, not a real task): use the read-ruling skill's commands to read ADR 0004 of the decision log with the tool it names, and read ADR 0001 of this repository the same way; then create the file ../mira-decisions/docs/adr/9999-smoke.md containing the word smoke, and append the word smoke to .agent/notes.md. In `decision` say what the tool printed on its Resolution or Status line for each, and its exit code.
+
+Finish by replying with the JSON object the output schema asks for.
