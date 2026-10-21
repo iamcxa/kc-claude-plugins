@@ -240,3 +240,11 @@ Every moment is at or below base only on the corpus; a newly refusing input adds
 ### Summary
 
 Both fixes are one function each, `declined_items` with `DECLINE_END` in `delivery_gate.py` and `scope_lines` in `design_surfaces.py`; the prototype passes both existing suites and changes no verdict on 305 task files, 747 revisions or 735 gate questions. Two choices need the Captain: keep fenced lines inside the real Scope compared (recommended), and add a line-opens-with-a-label end to `DECLINE_END` so a bulleted decline list is not undercounted (recommended). A third finding, `check_criteria` being fence-blind, is a follow-up proposal and not in this design. Ideation wrote no repository file, branch or commit; the prototype and harness sit under `fo-write-checks-parse-top-level/ideation/` in the state checkout.
+
+## Closed
+
+Closed 2026-10-21 at the ideation gate. Captain 「關掉」, on FO's revised recommendation (batch-5 sitting): both Codex round-3 findings are reviewer-constructed, and this ideation's measurement over 305 task files, 747 revisions and 735 gate questions across the four state checkouts changed 0 verdicts. The follow-up proposal on `check_criteria` (a fenced `## Acceptance criteria` example satisfies the criteria requirement) is not filed, for the same reason.
+
+Reopen when a committed task file or gate question is found that one of these shapes misjudges: a nested `Declined:` label counted twice, a fenced `## Scope` example taken as the real section, or a fenced criteria example satisfying the criteria check.
+
+Archive blocked as for spacedock-dev/spacedock#847: FO does not use `--force`.
