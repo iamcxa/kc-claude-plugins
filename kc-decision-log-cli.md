@@ -1,7 +1,7 @@
 ---
 id:
 title: Agents read and route ADRs with the kc-adr read-adr skill
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -63,7 +63,7 @@ gates:
                 reason: Captain replied 「准設計」 (2026-10-22) to the cycle-2 ideation gate; accepts the design, the four recommended decisions, AC-5 to AC-9, the rewritten AC-4 evidence and the 28-run evidence plan as stated in the gate question.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 journey:
 journey-release:
 journey-story:
