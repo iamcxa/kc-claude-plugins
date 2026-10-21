@@ -3,7 +3,7 @@ title: The Codex review reader recognizes the clean receipt that now opens with 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -57,7 +57,7 @@ gates:
                 reason: 'Captain, batch-5 sitting 2026-10-21, his rulings on this design given one at a time and recorded as they came: D1 「codex 先這樣，如果 codex 改了我們就跟著改 ext 就好，除非有明確更好的辦法」; D2 option C with the two additions (attempt-1 revise reason); Amendment 1 「可以」 (two consecutive unrecognized reads); Amendment 2 「對，就照這樣。任務也要開」 (peers, else a drafted issue); Amendment 3 「加回來」 (a backlog task in the package repository). This briefing binds those answers after the fact; approving enters implementation.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
