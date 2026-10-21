@@ -62,6 +62,8 @@ Verified by: the report section, checked against the results table.
 ## FO alignment
 
 Not needed before implementation. The Captain asked for this POC and approved building it (「建立這個 POC」, 2026-10-21); the scope above restates the design he was shown. Release review: not needed: the task belongs to no release (it informs deferred story S30 and dev2 task `agent-reads-governing-adr`).
+Surfaces: none
+Visible change: none
 
 ## Captain amendments
 
