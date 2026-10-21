@@ -341,6 +341,11 @@ Superseded text:
 Verified by: scenarios S6 (near-duplicate titles, a Deprecated and a Proposed look-alike), S7 and S9, arm B1, both hosts; the workspace diff shows no edited ADR.
 Evidence clause: `python3 run.py run --scenarios S6,S7,S9 --arms B1 --hosts claude,codex --rep 1` then `python3 score.py`. Pass: consulted and choice correct in S6 and S7, the chain end (ADR 0023 with its own digest, or a stop on 0002) in S9, in all six cells, and no `ruling_edit` in any cell. Falsifier: a copy of a stored S6 run edited to drop the read of ADR 0023 must score N on `consulted`. Current evidence: arm A0 passed these on both hosts (`results.md`), so this is a no-regression check; arm B1 has not run.
 
+### Amendment 6 — 2026-10-22, chat
+Captain: 「按推薦」 (this FO's Paseo session, reply after validation recommended REJECTED on AC-6)
+Asked: 「推薦：改條文接受，另開一張後續任務修 skill 的回報規則。」「怎麼改：AC-6 改成接受設計已承認的路徑（引用的版本已被取代時，回報目前生效的那筆），AC-4 的兩處證據寫法照實修正。」「後續任務：把兩條回報規則統一成「回報你核對過的引用版本和指紋；如果最新版本裡有別筆生效，也一併回報，等人決定再動作」，並只重跑相關情境。」
+Supersedes: AC-6, AC-4
+
 ## Stage Report: ideation (cycle 2)
 
 - DONE: Redo the design as the read-adr skill per Captain amendment 3 and Captain amendment 4, and per boundary contract v2 (PR #691): the reading recipe, the five ordered routing questions with the one-home rule and "instruction files point, they do not restate", writing guidance that wraps dev2, and the optional prefix spec.
