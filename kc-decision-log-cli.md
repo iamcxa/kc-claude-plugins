@@ -1,6 +1,6 @@
 ---
 id:
-title: Agents read a ruling at an exact commit with the kc-decision-log CLI
+title: Agents read and route ADRs with the kc-adr read-adr skill
 status: ideation
 variant: kc-dev-flow-2
 profile: pilot
