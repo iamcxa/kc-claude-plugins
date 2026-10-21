@@ -15,6 +15,17 @@ gates:
                 id: briefing:merge-ask-holds-missing-clauses:backlog:attempt-1:revision-1
                 digest: sha256:ddccb57f67c68ec8d052dd67533a52aff3d9e499946b1ccb0473cb30c5239dd8
                 room-ref: ./merge-ask-holds-missing-clauses/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-ask-holds-missing-clauses:backlog:1
+                briefing: briefing:merge-ask-holds-missing-clauses:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T07:28:43.415116Z"
+                decision: approve
+                reason: Captain 「繼續」 (chat, 2026-10-21), answering FO's question 「這 5 張都批准進入設計嗎？」 for the five batch-5 backlog gates presented together; approves entering ideation under the pilot profile, as recommended.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
