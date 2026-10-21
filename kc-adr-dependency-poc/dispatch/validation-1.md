@@ -1,7 +1,7 @@
 # validation-1
 
 Dispatched: c27e76590c1d2dc910e7fa2d332242a7534df0b0 (dev2-poc workflow checkout, kc-dev-flow-2 0.27.0 README); POC report
-Candidate: c29f4ab94312c510c244ab2f7726a63c481c7395
+Candidate: 57a411c0d0ea54eb6d898b400c1333fd7f569472
 Model: sonnet
 
 ## Checklist
