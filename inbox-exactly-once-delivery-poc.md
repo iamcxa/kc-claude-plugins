@@ -17,6 +17,17 @@ gates:
                 id: briefing:inbox-exactly-once-delivery-poc:backlog:attempt-1:revision-1
                 digest: sha256:d47faa0fe293d6907a0cdd832659441bac780a94a9b691f67c168f3bd7e74362
                 room-ref: ./inbox-exactly-once-delivery-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:inbox-exactly-once-delivery-poc:backlog:1
+                briefing: briefing:inbox-exactly-once-delivery-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T08:38:26.64456Z"
+                decision: approve
+                reason: Captain answered 「准，請持續針對套件的意義做觀察與回饋」 in chat on 2026-10-21 to the backlog gate question, which stated that approving accepts the four criteria, non-goals, the 1-day budget and the stop conditions as written and enters implementation; each outward action still asks first. No Netlify site, secret, Slack destination, App permission change or default-branch push is authorized by this approval.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Second proof for `kc-ops-inbox`, before the inbox-r1 Pilot is admitted. The riskiest unexecuted assumption, named by the engineering-reviewer on 2026-10-21: an event entering a real inbox reaches a running First Officer exactly once, at a measured latency, even when the sender retries. The first POC (`hermes-ops-fo-exe-dev-poc`, closed PASSED 2026-10-21) never sent anything through an inbox.
