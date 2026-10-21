@@ -12,7 +12,7 @@ export async function fingerprint(value: unknown) {
 }
 export function validateDraftContext(c:DraftContext):DraftContext {
  const {origin,backend,member,issuer,subject,generation,signInAt,revalidateBy,room}=c
- if([backend,member,room].some(v=>typeof v!=='string'||!/^[a-zA-Z0-9_-]{1,128}$/.test(v)) || [issuer,subject].some(v=>typeof v!=='string'||!v||v.length>2048) || new URL(origin).origin!==origin || (typeof window!=='undefined'&&origin!==window.location.origin) || !Number.isSafeInteger(generation)||generation<1 || !Number.isSafeInteger(signInAt)||!Number.isSafeInteger(revalidateBy)||revalidateBy<=signInAt||revalidateBy>signInAt+604800000)throw new Error('draft_context_invalid')
+ if([backend,member,room].some(v=>typeof v!=='string'||!/^[a-zA-Z0-9_-]{1,128}$/.test(v)) || [issuer,subject].some(v=>typeof v!=='string'||!v||v.length>2048) || new URL(origin).origin!==origin || (typeof window!=='undefined'&&origin!==window.location.origin) || !Number.isSafeInteger(generation)||generation<1 || !Number.isSafeInteger(signInAt)||!Number.isSafeInteger(revalidateBy)||revalidateBy<=signInAt||revalidateBy>signInAt+1209600000)throw new Error('draft_context_invalid')
  return {origin,backend,member,issuer,subject,generation,signInAt,revalidateBy,room}
 }
 export const samePerson = (a: DraftContext, b: DraftContext) => ['origin', 'backend', 'member', 'issuer', 'subject'].every(key => a[key as keyof DraftContext] === b[key as keyof DraftContext])
