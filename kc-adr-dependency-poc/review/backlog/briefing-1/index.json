@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-adr-dependency-poc:backlog:attempt-1:revision-1",
+  "question": "Open the kc-adr dependency POC with the four questions, four arms and bar in its Scope, to enter implementation under the poc profile? (FO's question: 「照這樣開 POC 嗎？」) FO recommends yes; approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:kc-adr-dependency-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0637ec09eecab33ef2edd560987a25624886538e/kc-adr-dependency-poc.md",
+      "rev": "sha256:1a3a2468234dfb9acb2404ea8fb4bf5f802375170448d544919028db48e5cc15",
+      "mediaType": "text/markdown",
+      "summary": "POC: how dev2 consumes an independent kc-adr package on Claude Code and Codex."
+    }
+  ]
+}

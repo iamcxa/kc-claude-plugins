@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:kc-adr-dependency-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:kc-adr-dependency-poc-backlog-1
+              briefing:
+                id: briefing:kc-adr-dependency-poc:backlog:attempt-1:revision-1
+                digest: sha256:d8d71475e10d32cce09012486c4aa2839131756a72eab60d9346a9a219f80c90
+                room-ref: ./kc-adr-dependency-poc/review/backlog/briefing-1
 ---
 
 ## Scope
