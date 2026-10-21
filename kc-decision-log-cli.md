@@ -267,3 +267,8 @@ Captain: 「照建議」 (this FO's Paseo session "decision-log P1 重切與 dev
 Asked: 「1. 改名為 `kc-adr`（上一則）：plugin 和指令都叫 `kc-adr`，skill 叫 `read-adr`，地圖旅程名稱不變。」「3. 補上追蹤分支：設定檔多一個 `tracking_ref` 欄位，P1 只記錄並原樣回報，不拿它去解析；用它比對新舊版本是 P2 的事。這樣 S01 的卡片就成立了。」「4. 合成決策 repo 由任務一建：任務一的實作要附一份產生腳本和固定的裁示文字，在本機產生虛構的決策 repo 和 Codex 用的設定檔。裡面那筆裁示定為「人讀輸出預設用繁體中文」：任務一的工具維持英文預設，任務二由 Codex 照裁示改成繁中，看結果就知道它有沒有照做。這會擴大任務一的範圍，我會在兩個任務裡記成你的修訂。」
 Supersedes: none
 Design: "### Command surface" and "### Read-only skill (D10)" and "### Plugin layout and delivery notes" — names kc-decision-log, read-ruling and the binding fields
+
+### Amendment 2 — 2026-10-21, chat
+Captain: 「先跑 poc」 (this FO's Paseo session "decision-log P1 重切與 dev2 交接")
+Asked: 「請你決定一件事：先用預覽工具跑四組條件的 POC，再決定任務一的規模嗎？」 with 「CLI 那組沒有明顯勝過 git 那組，任務一就縮成「skill 加設定檔」（只有情境裡真的出現主題衝突，才保留一個判斷生效的小腳本）；勝過就照原設計做。」
+Supersedes: none
