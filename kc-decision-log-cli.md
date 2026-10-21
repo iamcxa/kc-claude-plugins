@@ -53,6 +53,17 @@ gates:
                 id: briefing:kc-decision-log-cli:ideation:attempt-2:revision-1
                 digest: sha256:11f3dc8111a488e41d8f93ae60a44e5945f7cd4ce02d405c58514eecc1daa92d
                 room-ref: ./kc-decision-log-cli/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-decision-log-cli:ideation:2
+                briefing: briefing:kc-decision-log-cli:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-21T16:34:54.550061Z"
+                decision: approve
+                reason: Captain replied 「准設計」 (2026-10-22) to the cycle-2 ideation gate; accepts the design, the four recommended decisions, AC-5 to AC-9, the rewritten AC-4 evidence and the 28-run evidence plan as stated in the gate question.
+              application:
+                target-stage: implementation
+                state: pending
 journey:
 journey-release:
 journey-story:
