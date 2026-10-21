@@ -15,6 +15,17 @@ gates:
                 id: briefing:agent-reads-governing-adr:backlog:attempt-1:revision-1
                 digest: sha256:4555cfe2d87c5df9e402e1068a17b3198b7ff83581d292254a521244ec91a858
                 room-ref: ./agent-reads-governing-adr/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:agent-reads-governing-adr:backlog:1
+                briefing: briefing:agent-reads-governing-adr:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T07:28:59.894802Z"
+                decision: approve
+                reason: Captain 「繼續」 (chat, 2026-10-21), answering FO's question 「這 5 張都批准進入設計嗎？」 for the five batch-5 backlog gates presented together; approves entering ideation under the pilot profile, as recommended.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
