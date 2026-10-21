@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:agent-reads-governing-adr:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:agent-reads-governing-adr-backlog-1
+              briefing:
+                id: briefing:agent-reads-governing-adr:backlog:attempt-1:revision-1
+                digest: sha256:4555cfe2d87c5df9e402e1068a17b3198b7ff83581d292254a521244ec91a858
+                room-ref: ./agent-reads-governing-adr/review/backlog/briefing-1
 ---
 
 ## Scope

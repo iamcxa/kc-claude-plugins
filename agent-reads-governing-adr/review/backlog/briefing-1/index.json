@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:agent-reads-governing-adr:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of agent-reads-governing-adr to enter ideation under the pilot profile, with the Scope above as written? FO recommends approve, as one of the six batch-5 tasks the Captain accepted 2026-10-21 (「可以」); approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:agent-reads-governing-adr:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f0eec4defc5e23687e1b351351c9a72028b525f8/agent-reads-governing-adr.md",
+      "rev": "sha256:d1baab102c092d574bd06d22c0dd21c514130b938d939ce52f9e618f7d672c18",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 backlog: An agent reads the governing ADR at the moment it decides, from a pointer and an injected title list it cannot miss"
+    }
+  ]
+}
