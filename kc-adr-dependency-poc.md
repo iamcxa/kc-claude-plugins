@@ -3,7 +3,7 @@ title: dev2 uses an independent kc-adr package for ADR writing tools, installed 
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
