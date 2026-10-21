@@ -48,6 +48,8 @@ gates:
 
 ## FO alignment
 
+Reviewer: engineering-reviewer opus 2026-10-21 — do holds A, B and C in delivery_gate.py, and the ADR 0023 and 0026 amendments, keep the Captain's merge and approval authority, or block an ask he should be able to receive or let one through he should not? Called under the special-role combination the Captain agreed (「同意這個組合」, 2026-10-20): a change to merge, authority or approval rules calls the engineering-reviewer.
+
 Alignment: not needed before ideation; the Captain chose the combination and the check.
 Surfaces: none
 Visible change: none
