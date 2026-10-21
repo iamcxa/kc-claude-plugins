@@ -3,7 +3,7 @@ title: The Codex reader counts a code-review round only from a code review, neve
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「可以，但要注意這個安全性審查是選用功能，不是每個人都會打開，請你動手設計時要跟 codex 確認一下它的規格」 (chat, 2026-10-21, batch-5 question 6), answering FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact; the constraint is in Scope.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
