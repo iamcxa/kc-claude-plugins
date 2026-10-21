@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:inbox-exactly-once-delivery-poc:backlog:attempt-1:revision-1",
+  "question": "Admit this POC (profile poc) with the four criteria, non-goals, the 1-day budget and the stop conditions as written? Approving accepts all of them as written and enters implementation; each outward action still asks first.",
+  "artifacts": [
+    {
+      "id": "artifact:inbox-exactly-once-delivery-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/46dd6f9f7334bc3066af59b37cd8bc65ddd8c642/inbox-exactly-once-delivery-poc.md",
+      "rev": "sha256:fc57f8faab69ccbf771ffcd770be2808e57093eabbbc7dabfbd43c7ce0ad0f18",
+      "mediaType": "text/markdown",
+      "summary": "Probe before the inbox-r1 Pilot: a Netlify function verifies a Standard-Webhooks-signed CloudEvents fixture, dedupes with a strong Blobs onlyIfNew write, dispatches the scratch workflow with an Actions-write-only credential and posts the run link to Slack; three sends of one webhook-id must yield one run, a tampered send none, with latency measured."
+    }
+  ]
+}

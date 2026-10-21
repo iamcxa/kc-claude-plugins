@@ -6,6 +6,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:inbox-exactly-once-delivery-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:inbox-exactly-once-delivery-poc-backlog-1
+              briefing:
+                id: briefing:inbox-exactly-once-delivery-poc:backlog:attempt-1:revision-1
+                digest: sha256:d47faa0fe293d6907a0cdd832659441bac780a94a9b691f67c168f3bd7e74362
+                room-ref: ./inbox-exactly-once-delivery-poc/review/backlog/briefing-1
 ---
 
 Second proof for `kc-ops-inbox`, before the inbox-r1 Pilot is admitted. The riskiest unexecuted assumption, named by the engineering-reviewer on 2026-10-21: an event entering a real inbox reaches a running First Officer exactly once, at a measured latency, even when the sender retries. The first POC (`hermes-ops-fo-exe-dev-poc`, closed PASSED 2026-10-21) never sent anything through an inbox.
