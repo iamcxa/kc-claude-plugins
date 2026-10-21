@@ -287,6 +287,10 @@ Evidence commands run from `<package>/extensions/codex/` or `<package>/scripts/`
 
 ADR: none. The design lands no ADR; ADR 0013's closing sentence already states the positive-rule principle it follows.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-22): engineering-reviewer-1 (reviews/) must-change 1, to fix: the merge-ask half of the D2 ruling has no test; deleting "in the merge ask as Codex unread" or "the Captain decides" from the give-up lines leaves all 92 test_pr_watch tests green. FO fix authorization, then a fresh validation recheck (AC-13).
+
 ## Stage Report: ideation
 
 - DONE: Design the reader change against the real comment bodies: iamcxa/kc-paseo-plugins#8 comment 6296013066 and the clean receipts on this repository's batch-4 PRs #685 to #689, keeping the extension's limit that an unrecognized shape never reads as clean, with a test per shape
