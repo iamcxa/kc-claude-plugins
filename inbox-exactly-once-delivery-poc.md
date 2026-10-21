@@ -67,6 +67,7 @@ Direction alignment before implementation: not needed; the Captain approved runn
 Surfaces: none
 Visible change: none
 Captain standing ask, 2026-10-21 (with the backlog approval): 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate of this task.
+Captain direction, 2026-10-21 (chat): 「你要注意一件事，平台是剛好是 netlify，不是平台一定是 netlify。五個都同意，這些裡面哪些你可以幫我做？」. FO reading, not his words: the inbox core must not depend on Netlify; Netlify hosts this POC only.
 
 ## Stage Report: implementation
 
