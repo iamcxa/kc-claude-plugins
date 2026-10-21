@@ -1,6 +1,6 @@
 ---
 title: A signed event sent three times wakes the ops workflow exactly once, and the inbox cannot push code
-status: backlog
+status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -27,7 +27,7 @@ gates:
                 reason: Captain answered 「准，請持續針對套件的意義做觀察與回饋」 in chat on 2026-10-21 to the backlog gate question, which stated that approving accepts the four criteria, non-goals, the 1-day budget and the stop conditions as written and enters implementation; each outward action still asks first. No Netlify site, secret, Slack destination, App permission change or default-branch push is authorized by this approval.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Second proof for `kc-ops-inbox`, before the inbox-r1 Pilot is admitted. The riskiest unexecuted assumption, named by the engineering-reviewer on 2026-10-21: an event entering a real inbox reaches a running First Officer exactly once, at a measured latency, even when the sender retries. The first POC (`hermes-ops-fo-exe-dev-poc`, closed PASSED 2026-10-21) never sent anything through an inbox.
