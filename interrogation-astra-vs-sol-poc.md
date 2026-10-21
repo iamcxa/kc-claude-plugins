@@ -3,7 +3,7 @@ title: The journey-map interrogation's Codex stranger on the user's default mode
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
