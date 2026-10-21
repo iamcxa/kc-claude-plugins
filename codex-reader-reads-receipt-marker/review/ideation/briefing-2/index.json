@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-reads-receipt-marker:ideation:attempt-2:revision-1",
+  "question": "Approve the ideation design of codex-reader-reads-receipt-marker (cycle 3) with Captain Amendments 1 to 3 to enter implementation? FO recommends approve; approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-reads-receipt-marker:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/e0ed4146b3eb0209b407b71996c150462c91ca58/codex-reader-reads-receipt-marker.md",
+      "rev": "sha256:2bea2afed13576ab7e65a66277835043e548b7ece238b5073554c5ac9844dbac",
+      "mediaType": "text/markdown",
+      "summary": "Cycle-3 design: v1 receipt marker read as clean (D1); an unrecognized Codex comment on the head reads exit 5, and wait gives up after two consecutive unrecognized reads 180 s apart with three lines (Amendment 1); the upstream line per Amendments 2 and 3."
+    }
+  ]
+}
