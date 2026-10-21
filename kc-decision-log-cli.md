@@ -228,12 +228,14 @@ Visible change: Agents can run a `kc-decision-log` CLI and load a read-only skil
 - DONE: AC-1..AC-4 each carry a reproducible evidence clause; unresolved decisions for the Captain (e.g. command name, plugin layout, whether D9's prototype rule needs any change) are listed. No repository file, branch or commit is written.
   Four decisions listed with recommendations (command name, layout, D9 per-record reading, `--require-effective`). Written only to the state checkout: task file, `preview/`, `design/`; no repository file, branch or commit.
 
-### Acceptance criteria status
-
-- AC-1: design states the refusals and exit codes 2/3; preview runs 31-54 pass (unconfigured binding, short commit, ref name, absent commit, wrong repository, wrong `adr_root`, `..`, decoy `GIT_DIR`, usage errors); committed `test/refusals.test.mjs` not written, so not yet verified in the product.
-- AC-2: design states D0-pinned reads and raw-byte digest; preview runs 1-4 and 55 pass (digest equals separately hashed `git cat-file blob` bytes, JSON and human agree, invalid UTF-8 refused); product test not written.
-- AC-3: design states Status as written and the `effective` order; preview runs 9-30 and 58-62 plus the `adr_lint.py` comparison (same 7 files flagged) pass; expected table is hand-written in the preview, committed `expected.json` and tests not written.
-- AC-4: design states the skill text and layout; nothing run (the preview does not touch plugin loading); install on both hosts and Codex use stay unverified until implementation and the handoff trial.
+- SKIPPED: AC-1 not verified in the product
+  Design states the refusals and exit codes 2 and 3; preview runs 31-54 pass (unconfigured binding, short commit, ref name, absent commit, wrong repository, wrong `adr_root`, `..`, decoy `GIT_DIR`, usage errors); `test/refusals.test.mjs` is not written.
+- SKIPPED: AC-2 not verified in the product
+  Design states D0-pinned reads and the raw-byte digest; preview runs 1-4 and 55 pass (digest equals separately hashed `git cat-file blob` bytes, JSON and human agree, invalid UTF-8 refused); the product test is not written.
+- SKIPPED: AC-3 not verified in the product
+  Design states Status as written and the `effective` order; preview runs 9-30 and 58-62 and the `adr_lint.py` comparison (same 7 files flagged) pass against a hand-written table; the committed `expected.json` and tests are not written.
+- SKIPPED: AC-4 not verified
+  Design states the skill text and layout; nothing run, the preview does not touch plugin loading; install on both hosts and Codex use wait for implementation and the handoff trial.
 
 ### Summary
 
