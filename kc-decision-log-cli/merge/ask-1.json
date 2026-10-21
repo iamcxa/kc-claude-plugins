@@ -1,0 +1,25 @@
+{
+  "class": "never",
+  "head": "e2ac9041637552332b27ab66c845308ccbe95d0f",
+  "model": "not run",
+  "necessity": "the adr-read-and-route-poc measured agents misplacing new information (6/10 without help), and the consumer is the dev2 worker that loads read-adr.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: \"- **Deferred risk.** The text check's\"",
+    "point: amendment: 'Amendment 5 dated 2026-10-22'",
+    "point: amendment: 'Amendment 6 dated 2026-10-22'",
+    "point: path: '.claude-plugin/marketplace.json'",
+    "point: path: '.release-please-manifest.json'",
+    "point: path: 'CLAUDE.md'",
+    "point: path: 'kc-adr/.claude-plugin/plugin.json'",
+    "point: path: 'kc-adr/.codex-plugin/plugin.json'",
+    "point: path: 'kc-adr/skills/read-adr/SKILL.md'",
+    "point: path: 'kc-adr/skills/read-adr/prefix.md'",
+    "point: path: 'kc-adr/skills/read-adr/writing.md'",
+    "point: path: 'release-please-config.json'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#695",
+  "sufficiency": "the read-adr skill delivers the accepted single purpose (read a ruling at an exact commit and put new information in its one home), and a real dev2 dispatch loaded and followed it on both hosts (AC-9)",
+  "time": "2026-10-21T18:27:48Z",
+  "verdict": "ask"
+}
