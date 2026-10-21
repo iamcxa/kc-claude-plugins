@@ -42,6 +42,11 @@ gates:
                 at: "2026-10-21T13:29:14.659939Z"
                 decision: revise
                 reason: 'Captain, batch-5 sitting 2026-10-21: D1 first 「可以，但也找adr fo討論一下」 (option A), then, after the kc-adr peer''s POC evidence and its ceiling-effect caveat, 「可以」 to FO''s revised recommendation: build the pointer and the named-path check now and no title hook; the hook waits for the dev2-poc long-session POC (moment-of-use-rules-long-session-poc). Override: recommended option A (design D1); Captain chose no hook now, on FO''s revised recommendation; area: ADR title hook. D2 「Qnow那樣可以」: this task lands only this repository and FO hands qnow its own task. D3 「可以，建立agent.md，這個應該統一成此檔案而不是Claude.md，合理嗎？」 then 「可以」: create AGENTS.md with the pointer and add  to CLAUDE.md; moving the rest of CLAUDE.md is task agents-md-holds-instructions. D4 「可以」: a path-filtered CI job, not required. Revise: the design returns to ideation to drop the hook and carry D3.'
+            - id: gate-attempt:agent-reads-governing-adr-ideation-2
+              briefing:
+                id: briefing:agent-reads-governing-adr:ideation:attempt-2:revision-1
+                digest: sha256:4bf66c1383357c714735271a9a58731234dc290d2f208df1e8192f27d83d11cc
+                room-ref: ./agent-reads-governing-adr/review/ideation/briefing-2
 ---
 
 ## Scope

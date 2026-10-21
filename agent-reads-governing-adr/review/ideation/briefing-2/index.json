@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:agent-reads-governing-adr:ideation:attempt-2:revision-1",
+  "question": "Approve the ideation design of agent-reads-governing-adr (cycle 2) with Captain Amendment 1 to enter implementation? FO recommends approve; approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:agent-reads-governing-adr:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/47a7cfc56311356a7906f41d03a8a6195d1bf8a5/agent-reads-governing-adr.md",
+      "rev": "sha256:a5962175e689f687c6da1f036c1738d8e5ff83968259e7afe5ab7ae3fbd765b8",
+      "mediaType": "text/markdown",
+      "summary": "AGENTS.md pointer (no ADR text) imported by CLAUDE.md, a path check that refuses branch refs (Amendment 1), a path-filtered non-required CI job; no title hook; qnow as its own task."
+    }
+  ]
+}
