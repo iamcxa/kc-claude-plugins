@@ -91,3 +91,142 @@ Run-time resolution is the only arm that meets all four bar items on both hosts;
 ### Summary
 
 The design check now exits 0 on the task file with FO's acceptance criteria in place. AC-1 to AC-4 each point at the existing report.md section that holds their evidence; report.md, the other task sections and every repository file are unchanged. Cells marked n/a in report.md (Codex native, Codex symlink, wrap control) are not observed failures of the criteria, they are arms with no mechanism on that host; AC-3's falsifier (exit 0 or silence) did not occur in any observed cell.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on report.md at state 57a411c0d0ea54eb6d898b400c1333fd7f569472 against the Scope's four questions and bar: re-run at least one decisive probe per arm on each host yourself, in a fresh isolated HOME, CLAUDE_CONFIG_DIR and CODEX_HOME, and judge each limit the report states
+  Verdict recommended: PASSED. Re-run on Claude 2.1.305 and codex-cli 0.162.1; report.md is byte-identical at 57a411c0 and 4ebf5d3a (`git diff --stat` empty). A native: Claude install `(+ 1 dependency: kc-adr)`, `update dev2-native` "already at the latest", `update kc-adr` 2.3.0 to 2.4.0, 3.0.0 not taken (`highest ... satisfying ^2.0`), uninstall kc-adr gives `failed to load ... Dependency "kc-adr@vpoc-mk" is not installed`, `^4.0` unsatisfiable gives `Requires "kc-adr@vpoc-mk" ^4.0, installed 3.0.0`; Codex `dependencies` array accepted, `codex plugin add dev2-native` left kc-adr `not installed`. B symlink: Claude cache holds a real directory, stayed 3.0.0 after the source moved to 3.1.0; Codex drops it. C run-time: Claude and Codex each exit 3 absent, exit 4 on 4.0.0 against 3.0.0..4.0.0, exit 0 present; Claude `update kc-adr` 3.1.0 to 3.2.0 and Codex `marketplace upgrade` 4.0.0 to 3.5.0 to 3.6.0 each moved the resolved path with dev2-resolve untouched at 0.1.0. D control not run (no coupling). Limits judged below as F1 to F4.
+- DONE: Confirm from each tool's own docs or --help the two load-bearing negatives: Codex has no plugin dependency field, and Codex drops a symlinked directory from an installed plugin
+  Negative 1 holds: `codex app-server generate-json-schema` types PluginDetail, PluginSummary, PluginInterface, PluginInstallParams and every other Plugin* type carry no field whose body mentions "depend"; developers.openai.com/codex/plugins/build documents no dependency field. Negative 2 holds by observation only: Codex docs and `--help` are silent on symlinks; the marketplace checkout had `vendor-kc-adr -> ../kc-adr` and the installed cache did not, from a git marketplace and from a local-path marketplace, and an in-plugin link (`inner-link -> skills`) was dropped too, so the drop is not limited to links that leave the plugin.
+- DONE: Confirm the real ~/.claude and ~/.codex configs hold no probe entry before and after your run, and state the isolation used; your verdict names the state revision, with findings classified by the workflow's Review-finding disposition
+  Isolation: one `mktemp -d` under /tmp holding HOME, CLAUDE_CONFIG_DIR, CODEX_HOME and a git-config URL rewrite to a local bare repo; deleted afterwards. The four real files (known_marketplaces.json, installed_plugins.json, settings.json, config.toml) have identical shasum before and after, mtimes 20:03 or earlier (task started 21:01), and grep for probe names (mine and the implementer's) counts 0; no kc-adr entry exists under ~/.claude/plugins, ~/.codex/plugins, ~/.codex/local-plugins or ~/.agents. The implementer's slip claim (one `marketplace add /mk` on the real config, "Path does not exist") is consistent with that state; I had no pre-slip hash, so "wrote nothing" rests on those mtimes and the grep. Verdict state revision: 57a411c0d0ea54eb6d898b400c1333fd7f569472.
+- DONE: python3 <package>/scripts/dispatch_records.py and design_surfaces.py check on the task
+  `dispatch_records.py` printed `3 dispatch record(s) complete`, exit 0; `design_surfaces.py check` printed `design surfaces presentable`, exit 0.
+- SKIPPED: adr_lint.py, comment_ratio.py, number_guards.py, doc_impact.py, roborev
+  No repository diff or base exists (the candidate is report.md in the state checkout), the task has no `## Number guards` and `Surfaces: none`; the dispatch states roborev was not run for the same reason.
+
+### Findings
+
+- F1 Deferred risk: a Claude folder marketplace (the `~/.claude/plugins/local` style) loads the plugin in place, but `installed_plugins.json` keeps the old cache path until `claude plugin update`. I reproduced it: source edited to 9.2.0, `claude plugin list` said 9.2.0, the index still said 9.1.0 at `cache/vpoc-folder/kc-adr/9.1.0`. A resolver that reads the index checks a stale version between a source edit and an update. Material if the author's live-edit layout must pass the version check; the report discloses it and the sync helper's `update` closes it.
+- F2 Deferred risk: the native arm's tag name. Claude resolves against `<plugin>--v<version>` and release-please cuts `<plugin>-vX.Y.Z`; neither the implementer nor I ran it with release-please tags (my tags were `--v`). Material only if the native arm is chosen; the recommendation does not use it.
+- F3 Polish: I did not reproduce the report's `has conflicting version requirements` and `is installed at 2.0.0, which does not satisfy` messages; they match Claude's documented behaviour (plugin-dependencies page) and bear on the native arm only.
+- F4 Polish: the run-time resolver I tested is my own ~25 lines written from the report's rules, because the implementer deleted theirs; what I confirmed is the host layout facts (`installed_plugins.json` for Claude, `plugins/cache/*/kc-adr/*` for Codex), exit codes and the update behaviour, not the implementer's code. AC-3 and AC-4 for arm C are therefore confirmed as a mechanism, not as dev2 code (none exists).
+
+### What this does not prove
+
+No live model session, so what a worker sees on a failed load or exit 3 is unobserved. Auto-update, a disabled-but-installed kc-adr, cross-marketplace dependencies, Codex `--ref` pinning, Windows and the four adopters' README counts (carlove-v1 unverified) were not rerun. No `boundary-crossed:` found: all probe state lived in a deleted temp directory and nothing persists.
+
+### Minimal acceptance script
+
+Runs in about 2 minutes on a machine with `claude`, `codex`, `git` and `python3`; uses a temp HOME, CLAUDE_CONFIG_DIR and CODEX_HOME under /tmp/kc-adr-accept and touches no real config. Run each step in a fresh shell, in order.
+
+Step 1, build the sandbox and a three-plugin stand-in marketplace:
+
+```bash
+T=/tmp/kc-adr-accept; rm -rf $T; mkdir -p $T/home $T/claude $T/codex $T/bare/vpoc $T/mk
+for f in ~/.claude/plugins/known_marketplaces.json ~/.claude/plugins/installed_plugins.json ~/.claude/settings.json ~/.codex/config.toml; do shasum $f; done > $T/real.sha
+printf '[user]\n name = v\n email = v@example.com\n[url "file://%s/bare/vpoc/"]\n insteadOf = https://github.com/vpoc/\n insteadOf = git@github.com:vpoc/\n[protocol "file"]\n allow = always\n' $T > $T/home/.gitconfig
+cat > $T/env.sh <<EOF
+export RH=$HOME T=$T HOME=$T/home CLAUDE_CONFIG_DIR=$T/claude CODEX_HOME=$T/codex GIT_CONFIG_GLOBAL=$T/home/.gitconfig
+EOF
+. $T/env.sh; cd $T/mk
+python3 - <<'EOF'
+import json, os
+def w(p, s):
+    os.makedirs(os.path.dirname(p), exist_ok=True); open(p, "w").write(s if isinstance(s, str) else json.dumps(s))
+for d in (".claude-plugin", ".codex-plugin"):
+    w(f"kc-adr/{d}/plugin.json", {"name": "kc-adr", "version": "3.1.0"})
+    w(f"dev2-native/{d}/plugin.json", {"name": "dev2-native", "version": "0.1.0", "dependencies": [{"name": "kc-adr", "version": "^3.0"}]})
+    w(f"dev2-symlink/{d}/plugin.json", {"name": "dev2-symlink", "version": "0.1.0"})
+    w(f"dev2-resolve/{d}/plugin.json", {"name": "dev2-resolve", "version": "0.1.0"})
+w("dev2-resolve/bin/kc-adr-range", "3.0.0 4.0.0\n")
+w("dev2-resolve/bin/resolve.py", '''import json, os, sys, glob
+here = os.path.dirname(os.path.realpath(__file__))
+v = lambda s: tuple(int(x) for x in s.split("-")[0].split("."))
+lo, hi = [v(x) for x in open(here + "/kc-adr-range").read().split()]
+if os.environ.get("KC_ADR_ROOT"): cands = [os.environ["KC_ADR_ROOT"]]
+elif "/claude/" in here:
+    idx = json.load(open(os.environ["CLAUDE_CONFIG_DIR"] + "/plugins/installed_plugins.json"))["plugins"]
+    cands = [e["installPath"] for k, es in idx.items() if k.startswith("kc-adr@") for e in es]
+else:
+    cands = glob.glob(os.environ["CODEX_HOME"] + "/plugins/cache/*/kc-adr/*")
+found = []
+for c in cands:
+    for m in (".claude-plugin", ".codex-plugin"):
+        try: found.append((c, json.load(open(c + "/" + m + "/plugin.json"))["version"])); break
+        except Exception: pass
+if not found: print("REFUSE: kc-adr is not installed (needs 3.0.0 <= version < 4.0.0)"); sys.exit(3)
+ok = [c for c, ver in found if lo <= v(ver) < hi]
+if not ok: print("REFUSE: kc-adr out of range 3.0.0..4.0.0, found " + str([x[1] for x in found])); sys.exit(4)
+print("OK " + ok[0])
+''')
+names = ["kc-adr", "dev2-native", "dev2-symlink", "dev2-resolve"]
+w(".claude-plugin/marketplace.json", {"name": "vpoc-mk", "owner": {"name": "v"}, "plugins": [{"name": n, "source": "./" + n, "description": "x"} for n in names]})
+w(".agents/plugins/marketplace.json", {"name": "vpoc-mk", "plugins": [{"name": n, "source": {"source": "local", "path": "./" + n}, "policy": {"installation": "AVAILABLE", "authentication": "ON_INSTALL"}, "category": "Developer Tools"} for n in names]})
+EOF
+ln -s ../kc-adr dev2-symlink/vendor-kc-adr
+git init -q -b main; git add -A; git commit -qm v3.1.0; git tag kc-adr--v3.1.0
+git init -q --bare $T/bare/vpoc/mk.git; git push -q $T/bare/vpoc/mk.git main --tags
+echo "sandbox ready: HOME=$HOME"
+```
+
+Expect: `sandbox ready: HOME=/tmp/kc-adr-accept/home`.
+
+Step 2, Claude native dependency and symlink:
+
+```bash
+. /tmp/kc-adr-accept/env.sh
+claude plugin marketplace add vpoc/mk 2>&1 | tail -1
+claude plugin install dev2-native@vpoc-mk 2>&1 | tail -1
+claude plugin uninstall kc-adr@vpoc-mk 2>&1 | tail -1
+claude plugin list 2>&1 | grep -A4 'dev2-native'
+claude plugin install dev2-symlink@vpoc-mk 2>&1 | tail -1
+file $CLAUDE_CONFIG_DIR/plugins/cache/vpoc-mk/dev2-symlink/0.1.0/vendor-kc-adr
+```
+
+Expect: install ends `(+ 1 dependency: kc-adr)`; uninstall warns `required by dev2-native`; list shows `Status: ✘ failed to load` and `Dependency "kc-adr@vpoc-mk" is not installed`; `file` says `directory` (a frozen copy, not a link).
+
+Step 3, Codex has no dependency and drops the symlink:
+
+```bash
+. /tmp/kc-adr-accept/env.sh
+codex plugin marketplace add vpoc/mk 2>&1 | head -1
+codex plugin add dev2-native@vpoc-mk 2>&1 | head -1
+codex plugin add dev2-symlink@vpoc-mk 2>&1 | head -1
+codex plugin list 2>&1 | grep -E '^(kc-adr|dev2-native|dev2-symlink)'
+ls -A $CODEX_HOME/plugins/cache/vpoc-mk/dev2-symlink/0.1.0; echo ---; ls -A $CODEX_HOME/.tmp/marketplaces/vpoc-mk/dev2-symlink
+```
+
+Expect: `kc-adr@vpoc-mk  not installed` while dev2-native is `installed, enabled`; the first `ls` lists `.claude-plugin` and `.codex-plugin` only; the second (after `---`) also lists `vendor-kc-adr`.
+
+Step 4, run-time resolution on both hosts:
+
+```bash
+. /tmp/kc-adr-accept/env.sh
+claude plugin install dev2-resolve@vpoc-mk 2>&1 | tail -1
+codex plugin add dev2-resolve@vpoc-mk 2>&1 | head -1
+CR=$CLAUDE_CONFIG_DIR/plugins/cache/vpoc-mk/dev2-resolve/0.1.0/bin/resolve.py; XR=$CODEX_HOME/plugins/cache/vpoc-mk/dev2-resolve/0.1.0/bin/resolve.py
+echo "kc-adr absent:"; python3 -B $CR; echo "claude exit=$?"; python3 -B $XR; echo "codex exit=$?"
+mkdir -p $T/old/.codex-plugin; echo '{"name":"kc-adr","version":"4.0.0"}' > $T/old/.codex-plugin/plugin.json
+echo "kc-adr 4.0.0 (too new):"; KC_ADR_ROOT=$T/old python3 -B $CR; echo "claude exit=$?"; KC_ADR_ROOT=$T/old python3 -B $XR; echo "codex exit=$?"
+claude plugin install kc-adr@vpoc-mk 2>&1 | tail -1; codex plugin add kc-adr@vpoc-mk 2>&1 | head -1
+echo "kc-adr 3.1.0 installed:"; python3 -B $CR; echo "claude exit=$?"; python3 -B $XR; echo "codex exit=$?"
+```
+
+Expect: absent prints `REFUSE: kc-adr is not installed (needs 3.0.0 <= version < 4.0.0)` with exit 3 on both hosts; too new prints `REFUSE: kc-adr out of range 3.0.0..4.0.0, found ['4.0.0']` with exit 4 on both; installed prints `OK <path under that host's cache>/kc-adr/3.1.0...` with exit 0 on both.
+
+Step 5, confirm nothing touched the real configs, then delete the sandbox:
+
+```bash
+. /tmp/kc-adr-accept/env.sh
+cd / && shasum -c $T/real.sha && grep -c -E 'vpoc|dev2-native|dev2-resolve|dev2-symlink' $RH/.claude/plugins/known_marketplaces.json $RH/.claude/plugins/installed_plugins.json $RH/.claude/settings.json $RH/.codex/config.toml
+rm -rf /tmp/kc-adr-accept; ls /tmp/kc-adr-accept 2>&1 | head -1
+```
+
+Expect: four `: OK` lines, four `:0` counts, then `ls: /tmp/kc-adr-accept: No such file or directory`. (If another session edits one of the four real files during the run, that file's `shasum -c` line fails for that reason alone; check its probe-name count.)
+
+Does not cover: a kc-adr update (needs a second published version), a live model session, auto-update, the folder-marketplace layout, release-please tag names, or any dev2 code (the stand-in resolver is a probe, not a design).
+
+### Summary
+
+PASSED recommended at state 57a411c0: every decisive probe I re-ran on Claude and Codex matched report.md, both load-bearing negatives hold (the symlink one by observation only, since neither tool documents it), and the real configs are unchanged. Run-time resolution is confirmed as the only arm that meets the bar on both hosts; the open limits are F1 (folder marketplace stale index) and F2 (native-arm tag names), both Deferred risk.
