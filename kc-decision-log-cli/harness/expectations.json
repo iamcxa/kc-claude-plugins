@@ -126,9 +126,7 @@
       "choice_wrong": [
         "us-east-1"
       ],
-      "required_homes": {
-        "agent_notes": "(?i)(nightly|slow)"
-      },
+      "required_homes": {},
       "allowed_homes": [
         "task_file"
       ],
@@ -141,7 +139,15 @@
         "digest_matches_cited": true,
         "in_force": true,
         "action": "proceed"
-      }
+      },
+      "required_one_of": [
+        {
+          "agent_notes": "(?i)(nightly|slow)"
+        },
+        {
+          "task_file": "(?i)slow"
+        }
+      ]
     },
     "S9": {
       "governing": [],

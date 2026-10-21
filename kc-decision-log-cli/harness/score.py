@@ -127,7 +127,10 @@ def placement(changes, exp):
         files = by_home.get(home, [])
         if not files or not any(re.search(rx, f.get("content", "")) for f in files):
             missing.append(home)
-    allowed = set(exp["required_homes"]) | set(exp["allowed_homes"])
+    one_of = exp.get("required_one_of")
+    if one_of and not any(any(re.search(rx, f.get("content", "")) for f in by_home.get(home, [])) for alt in one_of for home, rx in alt.items()):
+        missing.append("one of " + "/".join(h for alt in one_of for h in alt))
+    allowed = set(exp["required_homes"]) | set(exp["allowed_homes"]) | {h for alt in (one_of or []) for h in alt}
     forbidden = sorted(h for h in written if h not in allowed)
     return {"ok": not missing and not forbidden, "missing": missing, "forbidden": forbidden,
             "written": sorted(written), "files": [c["path"] for c in changes]}
@@ -313,7 +316,7 @@ def tables(grades):
 
 def selfcheck():
     for sid, exp in SCEN.items():
-        for home, rx in exp["required_homes"].items():
+        for home, rx in list(exp["required_homes"].items()) + [kv for alt in exp.get("required_one_of", []) for kv in alt.items()]:
             for path, text in BASE.items():
                 if classify(path, "modified") == home and re.search(rx, text):
                     raise SystemExit(f"{sid}: base file {path} already matches the {home} regex, so the check would be vacuous")

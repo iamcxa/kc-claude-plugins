@@ -602,10 +602,8 @@
   "answered": true,
   "model": "claude-sonnet-5-5",
   "placement": {
-   "ok": false,
-   "missing": [
-    "agent_notes"
-   ],
+   "ok": true,
+   "missing": [],
    "forbidden": [],
    "written": [
     "task_file"

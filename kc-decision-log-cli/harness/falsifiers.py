@@ -127,6 +127,17 @@ d = mk("S3-A0-claude-r1", "S1", changes=[{"path": "mira-app/docs/adr/0024-names.
                                           {"path": "mira-app/AGENTS.md", "status": "modified", "content": "ADR 0024: names stay out of logs"}])
 case("S1 ADR content also copied into AGENTS.md: forbidden instructions", lambda: score.grade(d)["placement"]["forbidden"], ["instructions"])
 
+# AC-8 / S8 (amendment 5): the hunch in agent notes or in the task file ---------------------------------
+hunch = "Unconfirmed hunch (mine): the nightly export job may be what makes the dev server slow."
+d = mk("S3-A0-claude-r1", "S8", changes=[{"path": "mira-app/.agent/notes.md", "status": "modified", "content": hunch}])
+case("S8 hunch in .agent/notes.md: placement Y", lambda: score.grade(d)["placement"]["ok"], True)
+d = mk("S3-A0-claude-r1", "S8", changes=[{"path": "mira-app/tasks/TASK-020.md", "status": "modified", "content": "# TASK-020\nOutcome: the nightly export has a bucket\n- open item: " + hunch}])
+case("S8 hunch in the task file: placement Y", lambda: score.grade(d)["placement"]["ok"], True)
+d = mk("S3-A0-claude-r1", "S8", changes=[{"path": "mira-app/tasks/TASK-020.md", "status": "modified", "content": "# TASK-020\nOutcome: the nightly export has a bucket\n- region chosen"}])
+case("S8 task file edited without the hunch: placement N", lambda: score.grade(d)["placement"]["ok"], False)
+d = mk("S3-A0-claude-r1", "S8", changes=[{"path": "mira-app/AGENTS.md", "status": "modified", "content": hunch}])
+case("S8 hunch in AGENTS.md: placement N", lambda: score.grade(d)["placement"]["ok"], False)
+
 # loaded -------------------------------------------------------------------
 ev = [{"t": "call", "id": "a", "tool": "Skill", "input": {"skill": "kc-adr:read-adr"}}, call(2, "ls docs/adr")]
 d = mk("S3-A0-claude-r1", "S2", trace=ev)
