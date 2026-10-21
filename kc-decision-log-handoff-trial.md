@@ -70,6 +70,7 @@ Verified by: the worker's stage report naming the skill load and the CLI run it 
 ## FO alignment
 
 Not needed before ideation, for the same accepted shape (「照建議」, 2026-10-20 and 2026-10-21). The Codex first officer start (model `gpt-6.1-sol`, reasoning effort high) was part of that acceptance. Release review: kc-decision-log-design/P1 marked changed (signal 1: task admitted into the release). Surfaces is ui because a person reads and operates the CLI's human-readable output.
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-22 — do these amendments withdraw what the Captain approved, and what changes in the build? Result: nothing built, no approval withdrawn; cannot resume as recorded because its scope assumes the dropped CLI, so it needs a new backlog ruling first.
 Surfaces: ui
 Visible change: One small CLI behaviour follows what a synthetic ruling decides; ideation names the behaviour.
 
