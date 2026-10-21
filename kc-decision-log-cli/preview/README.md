@@ -39,7 +39,7 @@ Expected digest from D0 compared at D1 (run 8, human, stderr, exit 4):
 
 ## Mutations: does each check have teeth?
 
-Each row changes one line of a copy of `cli.mjs` and reruns `run.mjs` (own verification script, not kept here). "Caught" means the run exited non-zero and printed a mismatch. Run numbers are in `transcript.txt`; a first pass of this table on 2026-10-21 reported the CRLF row as not caught because the mutation script's pattern had not matched, which the second pass corrected.
+Each row changes one line of a copy of `cli.mjs` and reruns `run.mjs` (own verification script, not kept here). "Caught" means the run exited non-zero and printed a mismatch. Run numbers are in `transcript.txt`; an earlier pass of this table on 2026-10-21, before the malformed-key stop existed, did not catch the CRLF row (removing the normalisation only broke record 0012's own key and no run queried it); it is caught now that such a record blocks every answer.
 
 | Mutation | Result |
 | --- | --- |

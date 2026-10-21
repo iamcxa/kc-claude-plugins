@@ -75,7 +75,7 @@ Budget: P1 appetite is four full working days across both tasks; estimate 16–3
 
 ```mermaid
 flowchart TD
-  A[agent holds a reference: binding, ADR number, full commit, digest] --> B[run read, or effective with --expect-digest and --require-effective, always with --commit]
+  A[agent holds a reference: binding, ADR number, full commit, digest] --> B["run read, or effective with --expect-digest and --require-effective, always with --commit"]
   B --> C{arguments valid, binding named in the config, commit 40 or 64 hex?}
   C -->|no| X2[exit 2: nothing is read]
   C -->|yes| D{origin URL matches the binding repository, commit exists, adr_root is a folder at that commit?}
@@ -94,8 +94,8 @@ flowchart TD
   J -->|no| L[exit 0: unresolved with a reason]
   K --> M{is_effective true?}
   M -->|yes| P[exit 0: agent may rely on the ruling]
-  M -->|no, superseded| S[with --require-effective: exit 6; agent stops and reports the effective ADR]
-  L --> S2[with --require-effective: exit 6; agent stops and reports the reason]
+  M -->|no, superseded| S["with --require-effective: exit 6; agent stops and reports the effective ADR"]
+  L --> S2["with --require-effective: exit 6; agent stops and reports the reason"]
 ```
 
 Without `--require-effective` the S and S2 answers exit 0 and the caller must read `resolution` and `is_effective`; the skill always passes the flag, so a non-zero exit is the only stop signal it needs. What the agent does after each exit is the skill's text.
@@ -209,7 +209,7 @@ Evidence clause: with `HOME=$(mktemp -d)`, `claude plugin marketplace add <workt
 2. **Plugin layout (Captain).** Recommend `bin/` plus `lib/` modules (binding, git source, parse, effective, output) over one file. The parse and effective rules are tested alone with no repository, and the prototype is already two modules. Worse: more files for a few hundred lines.
 3. **D9's prototype rule (Captain).** Recommend no change to its two rules. One reading needs his confirmation: I took p1r-12 ("one broken file made everything unresolved; change to per-record") to mean `effective` depends only on the record, its chain and its key group, with two view-wide stops (an unreadable record; an Accepted record whose Decision key line is doubled or malformed) because those cannot be placed in any group. If he wants the prototype's "any issue anywhere blocks everything" kept, preview runs 9-18 and AC-3's per-record case change, and one bad ADR blocks every ruling in the repository again.
 
-4. **A flag that makes "not the ruling in force" a non-zero exit (Captain).** The brief asks for an expected-digest option, not this one; round 2 of the design review found that an agent testing only the exit code would treat "unresolved" and "superseded" as a pass. Recommend `effective --require-effective`, exit 6, off by default so AC-3's "unresolved is reported separately from tool failure" holds for every other caller; the skill always passes it. Worse: one more flag and one more exit code to keep; without it the skill must read the Resolution line, which a hurried agent can skip. Coupled with 3: both change what a non-zero answer means.
+4. **A flag that makes "not the ruling in force" a non-zero exit (Captain).** The brief asks for an expected-digest option, not this one; round 2 of the design review found that an agent testing only the exit code would treat "unresolved" and "superseded" as a pass. Recommend `effective --require-effective`, exit 6, off by default so AC-3's "unresolved is reported separately from tool failure" holds for every other caller; the skill always passes it. Worse: one more flag and one more exit code to keep; without it the skill must read the Resolution line, which a hurried agent can skip.
 
 No past `Override:` bears on these four (read 2026-10-21). Not decided here, recorded for the implementer: exit 4 is reused for a digest mismatch (the technical contract's cancelled candidate 4 meant something else and is not carried over); an unknown ADR number is a refusal (exit 2), not `unresolved`, so a handoff naming a missing record stops loudly; whether Codex exposes a plugin-root variable and runs Node 24 is verified in the handoff trial, not here.
 
@@ -239,4 +239,4 @@ Visible change: Agents can run a `kc-decision-log` CLI and load a read-only skil
 
 ### Summary
 
-The read path is designed as `read` and `effective` over one binding at a full commit, with a SHA-256 over raw blob bytes, Status as written, D9 kept, and `effective` judged per record instead of per folder (p1r-12, with two view-wide stops). The preview runs it against a fictional repository and `adr_lint.py`; the first mutation pass gave a false "not caught" for the CRLF port (a non-matching pattern), corrected in the README. Known limits: Codex plugin root and Node 24 unverified, 15-file folder only, lint parity shown only on these fixtures. Extra committed paths beyond the entity: `kc-decision-log-cli/preview/` (README, transcript, 3 scripts) and `kc-decision-log-cli/design/` (two review reports).
+The read path is designed as `read` and `effective` over one binding at a full commit, with a SHA-256 over raw blob bytes, Status as written, D9 kept, and `effective` judged per record instead of per folder (p1r-12, with two view-wide stops). The preview runs it against a fictional repository and `adr_lint.py`; an early mutation pass did not catch removal of the CRLF port, and the later pass does, because a malformed-key record then blocks every answer (preview README). Known limits: Codex plugin root and Node 24 unverified, 15-file folder only, lint parity shown only on these fixtures. Extra committed paths beyond the entity: `kc-decision-log-cli/preview/` (README, transcript, 3 scripts) and `kc-decision-log-cli/design/` (two review reports).
