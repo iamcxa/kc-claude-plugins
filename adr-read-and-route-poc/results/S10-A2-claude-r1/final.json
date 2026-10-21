@@ -1,0 +1,18 @@
+{
+ "decision": "Stop. ADR 0009 is in force and bars any new kind of customer email until Mira approves it in the decision log. No such approval exists for a report-ready email. The task's cited digest also doesn't match the ruling file.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-022.md",
+   "info": "Status changed to blocked. Added a Blocker section: the report-ready email is a new kind of customer message with no approval in the decision log, so ADR 0009 forbids it. The cited digest is wrong; the actual digest is sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca. To unblock, Mira must approve this message kind in an ADR and the task must cite a correct reference."
+  }
+ ],
+ "choice": "stop",
+ "ruling_check": {
+  "adr": "0009",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca",
+  "digest_matches_cited": false,
+  "in_force": true,
+  "action": "stop"
+ }
+}

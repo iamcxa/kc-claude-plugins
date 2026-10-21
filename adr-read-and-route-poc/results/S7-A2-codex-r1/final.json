@@ -1,0 +1,14 @@
+{
+ "decision": "Keep CSV-only exports: accepted ADR 0011 prohibits XLSX until superseded. Mira\u2019s message prioritizes helping Haruto without replacing that rule.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Recorded Mira\u2019s message, the decision, verified ruling reference, and follow-up to establish the accountant\u2019s CSV compatibility."
+  },
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Added XLSX to Deferred, linked to TASK-016 and the prerequisite ruling change."
+  }
+ ],
+ "choice": "keep_as_is"
+}

@@ -1,0 +1,18 @@
+{
+ "decision": "Stop: the ruling check refused the cited reference because its digest does not match the ruling file. TASK-022 is marked blocked; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-022.md",
+   "info": "Recorded the stop decision, digest mismatch, tool refusal, unknown in-force status, and requirement to correct and recheck the reference."
+  }
+ ],
+ "choice": "stop",
+ "ruling_check": {
+  "adr": "0009",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca",
+  "digest_matches_cited": false,
+  "in_force": null,
+  "action": "stop"
+ }
+}

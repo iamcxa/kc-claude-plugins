@@ -1,0 +1,14 @@
+{
+ "decision": "Keep CSV exports: Accepted ADR 0011 requires CSV-only exports, and Mira\u2019s message does not supersede it. Recorded Haruto\u2019s importance and deferred XLSX; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Mira\u2019s exact message, keep_as_is decision, pinned ruling reference, deferred status, and follow-up."
+  },
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Deferred XLSX request linked to TASK-016 and ADR 0011."
+  }
+ ],
+ "choice": "keep_as_is"
+}

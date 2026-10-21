@@ -1,0 +1,10 @@
+{
+ "decision": "Choose daily: effective ADR 0023 requires reports every day at 07:00 shop time, overriding issue #31\u2019s older weekly request. No feature implementation, commits, pushes, or merges were made.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-015.md",
+   "info": "Recorded the daily cadence, verified ruling with commit and digest, Mira\u2019s request to finish today, and pending implementation."
+  }
+ ],
+ "choice": "daily"
+}

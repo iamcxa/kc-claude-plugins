@@ -1,0 +1,14 @@
+{
+ "decision": "Choose sqlite_index to retain the required SQLite storage and limit memory pressure on the 1 GB kiosk. The cache, including its index, must stay within 50 MB; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "docs/adr/0024-report-cache-must-never-exceed-50-mb.md",
+   "info": "Proposed app ADR preserving Mira\u2019s 1 GB hardware constraint and strict 50 MB cache cap, pending coordinator confirmation."
+  },
+  {
+   "path": "tasks/TASK-023.md",
+   "info": "Records the sqlite_index choice, rationale, governing rulings, and implementation validation requirements."
+  }
+ ],
+ "choice": "sqlite_index"
+}

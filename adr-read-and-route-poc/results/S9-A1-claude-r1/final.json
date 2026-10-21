@@ -1,0 +1,18 @@
+{
+ "decision": "The cited ADR 0002 (weekly) is superseded by 0014, which 0023 then superseded. 0023 is Accepted: daily at 07:00 shop time. I chose daily and added a note to the task file. I did not implement the feature.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-021.md",
+   "info": "Agent note: cited ADR 0002 is superseded (0002 -> 0014 -> 0023). The cadence in force is daily at 07:00 shop time per ADR 0023. The task's ruling reference should be updated to 0023."
+  }
+ ],
+ "choice": "daily",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "proceed"
+ }
+}

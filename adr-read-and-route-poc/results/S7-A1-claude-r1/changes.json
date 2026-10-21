@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- S10 A shop owner downloads the report as an XLSX file (requested by Haruto, TASK-016; blocked by ADR 0011 until Mira supersedes it).\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: ready\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n\n## Decision (2026-10-21): keep_as_is\n\n- ADR 0011 (docs/adr/0011-reports-are-exported-as-csv-only.md, Accepted) says the export is CSV only; no XLSX until a newer record supersedes it.\n- Mira's message, \"Haruto is a good customer, so please make him happy\", is a wish, not a ruling. It does not mention XLSX or ADR 0011, so it does not supersede it. No XLSX was added.\n- To unblock: Mira must decide explicitly to allow XLSX (a new superseding ADR confirmed by her). Until then Haruto's accountant can open the CSV in their spreadsheet tool (not verified with Haruto).\n- Outcome of this task is open: XLSX is deferred, see story map.\n"
+ }
+]

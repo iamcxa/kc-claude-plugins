@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-021.md",
+  "status": "modified",
+  "content": "# TASK-021 Report job cadence\n\nStatus: ready\n\nOutcome: the report job runs on the cadence set by the ruling cited below.\n\n## Ruling reference\n\nHanded over by the planning agent.\n\nReference\n  Binding        mira\n  Repository     example/mira-decisions\n  ADR            0002\n  Path           docs/adr/0002-reports-go-out-weekly.md\n  Commit         1b9d588d594609270cd28d48306fe6ae0926b26c\n  Digest         sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06\n\n## Ruling check (added by agent)\n\nThe cited ADR 0002 (weekly) is superseded: 0002 -> 0014 -> 0023. The ruling in force for decision key `report-cadence` is ADR 0023 (example/mira-decisions, commit 1b9d588d594609270cd28d48306fe6ae0926b26c, digest sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366): the report job runs daily at 07:00 shop time.\n\nChosen cadence: `daily` (07:00 shop time). The feature itself is not implemented here.\n"
+ }
+]

@@ -1,0 +1,13 @@
+{
+ "decision": "Tidied receipt spacing and preserved the QR review idea as deferred, with no scheduled release or feature implementation. npm test completed but contains no actual tests; git diff --check passed.",
+ "recorded": [
+  {
+   "path": "src/receipt.js",
+   "info": "Increased padding from 12 to 16 and line gap from 4 to 8."
+  },
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Added S10 under Deferred: receipt QR codes for customer reviews, explicitly not this release or soon."
+  }
+ ]
+}

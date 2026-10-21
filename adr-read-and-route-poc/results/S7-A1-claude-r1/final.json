@@ -1,0 +1,14 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as CSV only. ADR 0011 is Accepted and forbids XLSX until Mira supersedes it, and \"make him happy\" doesn't do that.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-016.md",
+   "info": "Decision section: keep_as_is. ADR 0011 (CSV only, Accepted) is in force. Mira's message is not a superseding ruling. XLSX needs an explicit decision from Mira."
+  },
+  {
+   "path": "mira-app/docs/journey/story-map.md",
+   "info": "Added S10 (XLSX download, requested by Haruto in TASK-016, blocked by ADR 0011) to the Deferred section."
+  }
+ ]
+}

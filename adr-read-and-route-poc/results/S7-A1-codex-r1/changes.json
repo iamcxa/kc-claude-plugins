@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- S10 Haruto downloads an XLSX report for his accountant's spreadsheet tool ([TASK-016](../../tasks/TASK-016.md)). Deferred while [ADR 0011](../adr/0011-reports-are-exported-as-csv-only.md) requires CSV-only exports; Mira says satisfying Haruto matters. Check whether CSV meets the accountant's needs before revisiting the ruling.\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: deferred\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n- Mira's message (2026-10-21): \"Haruto is a good customer, so please make him happy.\"\n\n## Decision (2026-10-21)\n\nChoice: `keep_as_is`.\n\nADR 0011, \"Reports are exported as CSV only\", is Accepted and requires CSV-only exports until superseded. Read in example/mira-app at commit `1de3a5310af3c81580a18def0d338c99baee7f04`, path `docs/adr/0011-reports-are-exported-as-csv-only.md`, digest `sha256:0cf48d38bb1dfce8c9eb4277a4a4c873fc80d007f3a7fcf28fb07b82c77d799d`.\n\nMira's message establishes that satisfying Haruto matters, but does not explicitly replace the CSV-only ruling. Keep the existing export and defer XLSX in the story map. No feature implementation is part of this task.\n\nFollow-up: establish whether the existing CSV meets the accountant's spreadsheet needs. If XLSX is necessary, revisit ADR 0011 through a new superseding ruling before implementation.\n"
+ }
+]

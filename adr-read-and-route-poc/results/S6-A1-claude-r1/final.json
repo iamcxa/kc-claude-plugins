@@ -1,0 +1,10 @@
+{
+ "choice": "daily",
+ "decision": "Chose daily. Issue #31 (weekly) is stale: ADR 0002 (weekly) was superseded by 0014, and 0023 (Accepted, daily at 07:00 shop time) superseded that. I did not implement the change or write a new ADR, since 0023 already covers the rule.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-015.md",
+   "info": "Added a Decision section. It records the choice of daily over weekly. It says issue #31 is stale. It cites mira-decisions ADR 0023 (Accepted), read at commit 1b9d588d594609270cd28d48306fe6ae0926b26c, and notes that the 07:00 shop time is in that ADR. It describes the pending change to SCHEDULE in src/report_job.js, and says Mira's request to finish today did not change the choice."
+  }
+ ]
+}

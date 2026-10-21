@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- S10 Exported files can have non-ASCII names. Skipped in TASK-014 for Friday's demo (ASCII-only file names); Mira will fix it after the demo.\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-014.md",
+  "status": "modified",
+  "content": "# TASK-014 Customer export\n\nStatus: in progress\n\nOutcome: a shop owner can export a report to a file and open it on their own computer.\n\n## Notes\n\n- The owner downloads from the report page.\n- Format: `csv`, as app ADR 0011 (CSV only) requires; no xlsx or pdf.\n- File names: ASCII-only for this task only (Mira, for Friday's demo: \"For this task only, don't bother with non-ASCII file names. ASCII-only is fine for Friday's demo. We'll fix it after.\"). This is a temporary scope cut, not a product rule or a change to any ADR. Non-ASCII file names are to be handled after the demo (see the story map, Deferred).\n"
+ }
+]

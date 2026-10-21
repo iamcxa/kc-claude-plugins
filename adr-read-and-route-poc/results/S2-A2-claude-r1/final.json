@@ -1,0 +1,14 @@
+{
+ "choice": "csv",
+ "decision": "I chose csv because app ADR 0011 (Accepted) says exports are CSV only until a newer record supersedes it. Mira's ASCII-only file name request applies to this task only, so I recorded it in the task file and the story map, not in a new ADR.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-014.md",
+   "info": "Format is csv, as required by app ADR 0011. File names are ASCII-only for this task only, per Mira's message for Friday's demo. This is a temporary scope cut, not a product rule, and non-ASCII names are to be handled after the demo."
+  },
+  {
+   "path": "mira-app/docs/journey/story-map.md",
+   "info": "Added S10 to the Deferred section: exported files can have non-ASCII names. It was skipped in TASK-014 for the demo, and Mira will fix it after."
+  }
+ ]
+}

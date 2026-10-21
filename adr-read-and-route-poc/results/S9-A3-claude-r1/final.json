@@ -1,0 +1,18 @@
+{
+ "decision": "The cited ADR 0002 (weekly) is superseded by 0014 and then 0023. ADR 0023, the ruling in force, says daily at 07:00 shop time, so I chose daily and noted the supersession in the task file.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-021.md",
+   "info": "Added a ruling-check section. It says ADR 0002 is superseded (0002 -> 0014 -> 0023). ADR 0023 is in force, so the report job runs daily at 07:00 shop time. It gives the commit and digest of 0023 and the chosen cadence, daily."
+  }
+ ],
+ "choice": "daily",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "proceed"
+ }
+}

@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- [TASK-016](../../tasks/TASK-016.md) A shop owner downloads an XLSX report for their accountant. Haruto requested this; CSV compatibility with his accountant's tool is unverified. Revisit if needed after ADR 0011's CSV-only rule is superseded.\n- S9 A shop owner invites a second manager.\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: decided \u2014 XLSX deferred\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n- Mira's message for this task: \"Haruto is a good customer, so please make him happy.\"\n\n## Decision\n\nChoose `keep_as_is`: retain the CSV export and defer XLSX. Mira's message expresses the importance of helping Haruto, but does not explicitly replace the accepted CSV-only rule or approve a second format.\n\nGoverning ruling: [app ADR 0011](../docs/adr/0011-reports-are-exported-as-csv-only.md), read with `kc-decision-log` at commit `1de3a5310af3c81580a18def0d338c99baee7f04`, digest `sha256:0cf48d38bb1dfce8c9eb4277a4a4c873fc80d007f3a7fcf28fb07b82c77d799d`; Status: Accepted. Mira's recorded direction is \"CSV only; I will not maintain a second export format.\" The ruling requires supersession before XLSX can be added.\n\nFollow-up: establish whether Haruto's accountant can use the existing CSV and what specifically fails if it cannot. Compatibility has not been verified, so the requested outcome remains unresolved. If XLSX is necessary, bring that evidence to Mira for a replacement ADR confirmed by the coordinator before adding it. The XLSX request is tracked in the [story map's Deferred section](../docs/journey/story-map.md#deferred-not-in-the-release-plan).\n\nThis task records the choice only; no feature implementation or customer communication was performed.\n"
+ }
+]

@@ -168,6 +168,12 @@ def handoff_one(rc, h, events):
     return {"ok": not problems, "why": "; ".join(problems), "action_ok": rc.get("action") == h["action"], "reported": rc}
 
 
+def hook_seen(run_dir):
+    import gzip
+    with gzip.open(run_dir / "raw.jsonl.gz", "rt") as f:
+        return any("Rulings recorded for this workspace" in line and "hook" in line.lower() for line in f)
+
+
 def grade(run_dir):
     meta = json.loads((run_dir / "meta.json").read_text())
     sid = meta["scenario"]
@@ -193,7 +199,7 @@ def grade(run_dir):
     g["diag"] = {"tool_calls": len(calls), "skill_used": any(e["tool"] == "Skill" or "read-ruling" in json.dumps(e["input"]) for e in calls),
                  "used_cli": "cli.mjs" in text, "used_git_show": bool(re.search(r"git\b.*\bshow\b", text)),
                  "used_shasum": "shasum" in text or "sha256sum" in text or "crypto" in text,
-                 "hook_seen": any("Rulings recorded for this workspace" in json.dumps(e) for e in events)}
+                 "hook_seen": hook_seen(run_dir)}
     return g
 
 

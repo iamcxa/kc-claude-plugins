@@ -1,0 +1,13 @@
+{
+ "decision": "Fixed the typo (uncommitted). Mira's message is a standing working-process rule, so I added it to AGENTS.md (the home for how agents work) instead of writing an ADR. Nothing was committed.",
+ "recorded": [
+  {
+   "path": "src/report_job.js",
+   "info": "Footer typo fixed: 'Reprot' -> 'Report' (uncommitted)."
+  },
+  {
+   "path": "AGENTS.md",
+   "info": "Added two standing rules from Mira: always show her the full diff before committing anything, and write commit messages in English."
+  }
+ ]
+}

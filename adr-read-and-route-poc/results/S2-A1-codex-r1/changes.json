@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- A shop owner downloads an export with a non-ASCII filename. Deferred until after Friday's demo per Mira's TASK-014-only ASCII filename exception; see [TASK-014](../../tasks/TASK-014.md#demo-scope).\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-014.md",
+  "status": "modified",
+  "content": "# TASK-014 Customer export\n\nStatus: in progress\n\nOutcome: a shop owner can export a report to a file and open it on their own computer.\n\n## Notes\n\n- The owner downloads from the report page.\n\n## Export format\n\n- Use `csv`, following Accepted ADR 0011, [Reports are exported as CSV only](../docs/adr/0011-reports-are-exported-as-csv-only.md), in example/mira-app at commit `1de3a5310af3c81580a18def0d338c99baee7f04`.\n\n## Demo scope\n\n- Mira's instruction: \"For this task only, don't bother with non-ASCII file names. ASCII-only is fine for Friday's demo. We'll fix it after.\"\n- For TASK-014 only, export filenames may be ASCII-only for Friday's demo. This is a task-specific exception, not a permanent product rule.\n- Non-ASCII export filename support is deferred until after the demo; track it in the [story map's Deferred section](../docs/journey/story-map.md#deferred-not-in-the-release-plan).\n"
+ }
+]

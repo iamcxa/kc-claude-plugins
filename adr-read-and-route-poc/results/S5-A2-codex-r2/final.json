@@ -1,0 +1,14 @@
+{
+ "decision": "Choose sqlite_index to preserve the required SQLite cache and avoid an additional report cache in the kiosk\u2019s limited RAM. Recorded the constraints and choice; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "docs/adr/0024-report-cache-must-never-exceed-50-mb.md",
+   "info": "Proposed app ADR recording Mira\u2019s 1 GB RAM constraint and mandatory 50 MB cache cap."
+  },
+  {
+   "path": "tasks/TASK-023.md",
+   "info": "Records sqlite_index, its rationale, applicable rulings, and implementation validation requirements."
+  }
+ ],
+ "choice": "sqlite_index"
+}

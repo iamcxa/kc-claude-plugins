@@ -1,0 +1,9 @@
+{
+ "decision": "Recorded Mira\u2019s standing workflow instructions and left the change uncommitted. Left the footer unchanged, following your instruction not to implement the task itself.",
+ "recorded": [
+  {
+   "path": "AGENTS.md",
+   "info": "Always show Mira the full diff before committing anything, and write commit messages in English."
+  }
+ ]
+}

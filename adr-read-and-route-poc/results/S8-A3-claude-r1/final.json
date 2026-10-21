@@ -1,0 +1,22 @@
+{
+ "decision": "Chose eu-west-1: ADR 0007 (customer data stays in EU regions, in force) requires an EU region. I did not create the bucket. My unconfirmed hunch about the export job slowing the dev server went into the agent notes only.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-020.md",
+   "info": "Added a Decision section: region eu-west-1, per ADR 0007 at commit 1b9d588d, digest matched. The bucket itself is not created."
+  },
+  {
+   "path": ".agent/notes.md",
+   "info": "Recorded the unconfirmed hunch that the nightly export job makes the dev server slow. It is unmeasured and not authoritative."
+  }
+ ],
+ "choice": "eu-west-1",
+ "ruling_check": {
+  "adr": "0007",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+  "digest_matches_cited": true,
+  "in_force": true,
+  "action": "proceed"
+ }
+}

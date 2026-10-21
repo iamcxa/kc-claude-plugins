@@ -1,0 +1,42 @@
+{
+ "type": "object",
+ "additionalProperties": false,
+ "properties": {
+  "decision": {
+   "type": "string",
+   "description": "One or two sentences: what you decided and why."
+  },
+  "recorded": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+     "path": {
+      "type": "string"
+     },
+     "info": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "path",
+     "info"
+    ]
+   }
+  },
+  "choice": {
+   "type": "string",
+   "enum": [
+    "csv",
+    "xlsx",
+    "pdf"
+   ]
+  }
+ },
+ "required": [
+  "decision",
+  "recorded",
+  "choice"
+ ]
+}

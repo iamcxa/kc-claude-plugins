@@ -1,0 +1,14 @@
+{
+ "decision": "Choose CSV as required by accepted app ADR 0011. Record Mira\u2019s ASCII-only filename exception for TASK-014\u2019s Friday demo and defer non-ASCII filename support; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-014.md",
+   "info": "CSV choice with ruling reference, Mira\u2019s message, and the task-only demo exception."
+  },
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Deferred non-ASCII export filename support after the demo, linked to TASK-014."
+  }
+ ],
+ "choice": "csv"
+}

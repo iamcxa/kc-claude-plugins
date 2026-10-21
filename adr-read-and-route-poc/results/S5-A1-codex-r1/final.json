@@ -1,0 +1,14 @@
+{
+ "decision": "Choose sqlite_index: it follows the accepted SQLite storage ruling and avoids another memory cache on the 1 GB kiosk. Recorded Mira\u2019s 50 MB cap and the rationale; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "mira-app/docs/adr/0024-report-cache-must-not-exceed-50-mb.md",
+   "info": "Proposed ADR recording Mira\u2019s 1 GB hardware constraint and mandatory 50 MB report-cache ceiling, awaiting coordinator confirmation."
+  },
+  {
+   "path": "mira-app/tasks/TASK-023.md",
+   "info": "Records the sqlite_index choice, rationale, pinned accepted rulings, and future implementation and validation requirements."
+  }
+ ],
+ "choice": "sqlite_index"
+}

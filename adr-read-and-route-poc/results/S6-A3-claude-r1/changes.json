@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-015.md",
+  "status": "modified",
+  "content": "# TASK-015 Report job cadence\n\nStatus: ready\n\nOutcome: the report job runs on the cadence the business wants.\n\n## Notes\n\n- Issue #31 (opened in May) says: \"make the report job run weekly\".\n- The current value is in src/report_job.js.\n\n## Decision (2026-10-21)\n\n- Cadence: `daily`, not `weekly`. Governing ruling: mira-decisions ADR 0023 \"Reports go out daily at 07:00\" (key `report-cadence`, in force at mira-decisions commit 1b9d588d594609270cd28d48306fe6ae0926b26c, digest sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366). It supersedes ADR 0014 (daily, 06:00), which superseded ADR 0002 (weekly).\n- Issue #31 (May, \"weekly\") is stale: it predates ADR 0014/0023. It should be answered or closed with a pointer to ADR 0023.\n- The ruling also fixes the time: 07:00 shop time. `SCHEDULE` in src/report_job.js is currently `'weekly'`; the implementer should set it to daily and handle the 07:00 shop-time run.\n- Mira asked for this to be done \"today\". That is a deadline for the work, not a change to the decision. Nothing was implemented in this session.\n"
+ }
+]

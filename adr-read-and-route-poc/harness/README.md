@@ -39,6 +39,7 @@ Secondary: whether the `choice` equals the ruling's answer.
     python3 run.py run --scenarios S1,S2 --arms A0,A1 --hosts claude,codex --rep 1 --jobs 3
     python3 score.py                  # re-grades every results/<run id>/ and writes ../results.md and ../results.json
     python3 score.py --run S6-A0-claude-r1
+    python3 extras.py                 # effort per arm, homes written, post hoc lenient placement, repeat-run comparison -> ../extras.md
 
 Needs python3, node 24, git, and logged-in `claude` and `codex`. `score.py` needs no agent and no network.
 

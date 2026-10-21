@@ -1,0 +1,10 @@
+{
+ "choice": "daily",
+ "decision": "Chose daily: ADR 0023 in the decision log is the ruling in force (daily at 07:00 shop time) and it supersedes the weekly cadence in issue #31. I did not implement the change.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-015.md",
+   "info": "Added a Decision section. It records the choice of daily, citing ADR 0023 (07:00 shop time, which replaced ADR 0014 and ADR 0002) and noting that issue #31 is superseded. It also lists the follow-up to change SCHEDULE in src/report_job.js, and notes that Mira's \"today\" request is a deadline for this task only."
+  }
+ ]
+}

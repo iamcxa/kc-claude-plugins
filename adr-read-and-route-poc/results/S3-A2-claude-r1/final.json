@@ -1,0 +1,13 @@
+{
+ "decision": "Fixed the typo (uncommitted) and recorded Mira's two standing working rules in AGENTS.md. They describe how agents work, not a product decision, so I wrote no ADR.",
+ "recorded": [
+  {
+   "path": "src/report_job.js",
+   "info": "Footer typo fixed: 'Reprot' -> 'Report' (uncommitted)."
+  },
+  {
+   "path": "AGENTS.md",
+   "info": "Added two standing rules from Mira: show her the full diff before committing anything, and write commit messages in English."
+  }
+ ]
+}

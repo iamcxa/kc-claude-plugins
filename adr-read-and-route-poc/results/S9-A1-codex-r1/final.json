@@ -1,0 +1,18 @@
+{
+ "decision": "Chose none: ADR 0002\u2019s digest matches, but it is superseded; the [read-ruling skill](/private/tmp/adrpoc-runs/S9-A1-codex-r1/mira-app/.agents/skills/read-ruling/SKILL.md) requires: \u201cIf they match but Status is not `Accepted`, stop and report which ruling is in force.\u201d Accepted ADR 0023 sets daily reports at 07:00 shop time; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-021.md",
+   "info": "Recorded blocked status, verified commit and digest, supersession chain, current ruling, choice none, and implementation and git-operation constraints."
+  }
+ ],
+ "choice": "none",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "stop"
+ }
+}

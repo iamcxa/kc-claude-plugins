@@ -1,0 +1,22 @@
+{
+ "decision": "Chose eu-west-1 because ADR 0007 (Accepted) requires customer data to stay in EU regions. I recorded the decision in the task file and kept the slow-dev-server hunch in agent notes only, as unverified.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-020.md",
+   "info": "Decision section: region eu-west-1, per ADR 0007 at commit 1b9d588d594609270cd28d48306fe6ae0926b26c with digest verified. The bucket is not created."
+  },
+  {
+   "path": "mira-app/.agent/notes.md",
+   "info": "Unconfirmed hunch that the nightly export job slows the dev server, marked as not measured and not authoritative."
+  }
+ ],
+ "choice": "eu-west-1",
+ "ruling_check": {
+  "adr": "0007",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+  "digest_matches_cited": true,
+  "in_force": true,
+  "action": "proceed"
+ }
+}

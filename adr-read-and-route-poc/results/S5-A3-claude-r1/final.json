@@ -1,0 +1,10 @@
+{
+ "decision": "Chose sqlite_index: ADR 0008 says report data is never cached only in process memory, and the kiosk has 1 GB of RAM. I recorded Mira's 50 MB cache limit as a new proposed ADR in this repo. I didn't implement anything or commit.",
+ "recorded": [
+  {
+   "path": "docs/adr/0024-the-report-cache-never-grows-past-50-mb.md",
+   "info": "New ADR 0024, status Proposed until the coordinator confirms it. It records Mira's rule that the report cache must never grow past 50 MB (the kiosk has 1 GB of RAM). The limit covers the SQLite cache file and any report data in memory. It also notes that the SQLite index was chosen over an in-memory LRU because of ADR 0008."
+  }
+ ],
+ "choice": "sqlite_index"
+}

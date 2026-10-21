@@ -1,0 +1,10 @@
+{
+ "choice": "eu-west-1",
+ "decision": "Chose eu-west-1 because the jobs carry the customer list and ADR 0007 (in force) says customer data stays in the EU. Drafted a cross-repo ADR 0024 for Mira's rule that no customer name is ever written to a log.",
+ "recorded": [
+  {
+   "path": "../mira-decisions/docs/adr/0024-no-customer-name-is-ever-written-to-a-log.md",
+   "info": "Draft ADR (Proposed, key log-no-customer-names): nothing built in any repo or product may write a customer's name into a log; awaits Mira's confirmation and PR merge."
+  }
+ ]
+}

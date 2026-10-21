@@ -1,0 +1,10 @@
+{
+ "choice": "daily",
+ "decision": "Chose daily. mira-decisions ADR 0023 (daily at 07:00 shop time) is the ruling in force and supersedes ADR 0002 (weekly) and ADR 0014. Issue #31 is out of date. I did not implement the feature.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-015.md",
+   "info": "Added a Decision section. It says the cadence is daily under ADR 0023 (commit 1b9d588, digest bea52c60\u2026), which supersedes ADRs 0014 and 0002. It says issue #31 is stale, that the ruling fixes 07:00 shop time, and that SCHEDULE in src/report_job.js is still 'weekly'. It also notes that Mira's \"today\" is a deadline, not a change to the decision, and that nothing is implemented yet."
+  }
+ ]
+}

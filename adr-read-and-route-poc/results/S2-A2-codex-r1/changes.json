@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- S10 A shop owner downloads an export with a non-ASCII file name. Deferred until after Friday's demo at Mira's request; [TASK-014](../../tasks/TASK-014.md) permits ASCII-only file names for that task only.\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-014.md",
+  "status": "modified",
+  "content": "# TASK-014 Customer export\n\nStatus: in progress\n\nOutcome: a shop owner can export a report to a file and open it on their own computer.\n\n## Notes\n\n- The owner downloads from the report page.\n\n## Format decision\n\n- Use `csv`, as required by accepted app ADR 0011, [Reports are exported as CSV only](../docs/adr/0011-reports-are-exported-as-csv-only.md). XLSX and PDF are excluded by that ruling.\n- Ruling reference: binding `app`, ADR `0011`, commit `1de3a5310af3c81580a18def0d338c99baee7f04`, digest `sha256:0cf48d38bb1dfce8c9eb4277a4a4c873fc80d007f3a7fcf28fb07b82c77d799d`; read with `kc-decision-log` (Status: Accepted).\n\n## Friday demo scope\n\n- Mira: \"For this task only, don't bother with non-ASCII file names. ASCII-only is fine for Friday's demo. We'll fix it after.\"\n- TASK-014 may use ASCII-only export file names for Friday's demo. This exception concerns file names only and is limited to this task; it establishes no general filename policy or restriction on report contents.\n- Non-ASCII export file name support is deferred until after the demo and tracked in the [story map](../docs/journey/story-map.md#deferred-not-in-the-release-plan).\n"
+ }
+]

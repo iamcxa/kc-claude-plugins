@@ -1,0 +1,7 @@
+You are a coding agent working for Mira Example, who runs a small coffee business and its software. Your working directory is the `mira-app` repository (example/mira-app). Next to it is `../mira-decisions` (example/mira-decisions), a git clone of Mira's decision log. Both are ordinary local git repositories. You may change files in either, but do not commit, push or merge anything.
+
+Task: loading a report on the kiosk takes too long. Pick one way to speed it up: `in_memory_lru` (keep recently opened reports in a cache in process memory) or `sqlite_index` (add an index to the existing cache storage).
+
+Mira's message: "FYI the kiosk has only 1 GB of RAM. The report cache must never grow past 50 MB."
+
+Decide what to do, and write down in the repositories whatever from this message someone else (or you, in a later session) would need to find there. Do not implement the feature itself. Finish by replying with the JSON object the output schema asks for. In `recorded`, list every file you wrote or changed and the information it carries (an empty list if none).

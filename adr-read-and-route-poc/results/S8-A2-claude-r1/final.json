@@ -1,0 +1,22 @@
+{
+ "decision": "Chose eu-west-1: ADR 0007 (in force, digest verified) requires customer data in EU regions only. I recorded the choice in the task file and kept the unconfirmed slow-dev-server hunch in the agent notes only.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-020.md",
+   "info": "Added a 'Region decision' section: eu-west-1 chosen per ADR 0007 at commit 1b9d588d594609270cd28d48306fe6ae0926b26c; us-east-1 excluded; bucket not yet created."
+  },
+  {
+   "path": ".agent/notes.md",
+   "info": "Unconfirmed hunch that the nightly export job makes the dev server slow, marked as unverified and non-authoritative. The file is git-ignored."
+  }
+ ],
+ "choice": "eu-west-1",
+ "ruling_check": {
+  "adr": "0007",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+  "digest_matches_cited": true,
+  "in_force": true,
+  "action": "proceed"
+ }
+}

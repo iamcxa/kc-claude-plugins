@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/.agent/notes.md",
+  "status": "modified",
+  "content": "# Agent notes\n\nPrivate notes for the agent. Not authoritative: nothing here is a decision.\n\n## Unconfirmed performance hunch\n\nWhile working on TASK-020, I suspected the nightly export job might make the\ndev server slow. This is my unconfirmed hunch, not a statement from Mira or an\nestablished cause. No measurements or investigation have confirmed it; gather\ntiming and resource-use evidence before relying on it or proposing a fix.\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-020.md",
+  "status": "modified",
+  "content": "# TASK-020 Export bucket\n\nStatus: ready\n\nOutcome: the nightly export has a storage bucket to write to. The region follows the ruling cited below.\n\n## Region decision\n\nChoose `eu-west-1` for the export bucket. ADR 0007 requires every product to\nstore and process customer data in EU regions, so `us-east-1` is excluded.\nThe cited ruling was read at the commit below, its SHA-256 matches the cited\ndigest, and the decision-log tool confirmed it is in force.\n\nThis records the region choice only; the bucket and feature remain unimplemented.\n\n## Ruling reference\n\nHanded over by the planning agent.\n\nReference\n  Binding        mira\n  Repository     example/mira-decisions\n  ADR            0007\n  Path           docs/adr/0007-customer-data-stays-in-the-eu.md\n  Commit         1b9d588d594609270cd28d48306fe6ae0926b26c\n  Digest         sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810\n"
+ }
+]

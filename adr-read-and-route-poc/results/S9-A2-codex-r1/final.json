@@ -1,0 +1,13 @@
+{
+ "decision": "The [read-ruling skill](/private/tmp/adrpoc-runs/S9-A2-codex-r1/mira-app/.agents/skills/read-ruling/SKILL.md) requires \u201cstop and report what the tool printed\u201d on exit 6. The tool returned exit 6: ADR 0002 is NOT EFFECTIVE; the ruling in force is ADR 0023 (chain 0002 \u2192 0014 \u2192 0023), so I stopped without selecting a cadence or changing files.",
+ "recorded": [],
+ "choice": "none",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "stop"
+ }
+}

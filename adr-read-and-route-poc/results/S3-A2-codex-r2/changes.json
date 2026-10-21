@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/AGENTS.md",
+  "status": "modified",
+  "content": "# mira-app\n\nNotes for agents working in this repository.\n\n- Run the tests with `npm test`.\n- Source is in `src/`; the report job is `src/report_job.js`.\n- Keep changes small and in the style of the code around them.\n- Always show Mira the full diff before committing anything.\n- Write commit messages in English.\n"
+ }
+]

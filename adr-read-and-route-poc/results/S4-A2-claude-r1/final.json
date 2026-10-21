@@ -1,0 +1,9 @@
+{
+ "decision": "I recorded the QR-code review idea as a deferred story (S10) in the story map. Mira said it's not for this release or soon, so it needs no ADR or task, and I didn't implement it. I made no spacing change because src/receipt.js only has two padding constants, so I left it as is.",
+ "recorded": [
+  {
+   "path": "mira-app/docs/journey/story-map.md",
+   "info": "Added S10 to the Deferred section: shops print a QR code on each receipt so customers can leave a review. It's Mira's idea, not this release and not soon, not started, and receipt lines are limited by ADR 0023."
+  }
+ ]
+}

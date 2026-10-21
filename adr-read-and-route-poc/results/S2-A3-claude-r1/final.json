@@ -1,0 +1,14 @@
+{
+ "choice": "csv",
+ "decision": "Chose csv because ADR 0011 (in force) says CSV only. Mira's ASCII-only file name allowance applies to this task only, so I put it in the task file and listed the later fix as a deferred story. I wrote no new ADR.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-014.md",
+   "info": "File format is csv per ADR 0011. Mira's allowance for ASCII-only file names for Friday's demo applies to this task only, and the fix comes later."
+  },
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Added S10 to the Deferred section: non-ASCII export file names, to be fixed after the Friday demo."
+  }
+ ]
+}

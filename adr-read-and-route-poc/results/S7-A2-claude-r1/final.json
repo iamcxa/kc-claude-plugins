@@ -1,0 +1,14 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as CSV. ADR 0011 (CSV only, Mira's own words) is in force, and \"make him happy\" doesn't supersede it. I recorded the XLSX request as blocked on a new ruling from Mira.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-016.md",
+   "info": "Added notes: Mira's message does not lift ADR 0011, no XLSX added, keep as is. Haruto's need is a spreadsheet for his accountant, and CSV may already cover it (unconfirmed). Deferred as S10."
+  },
+  {
+   "path": "mira-app/docs/journey/story-map.md",
+   "info": "Added deferred story S10: XLSX download for Haruto's accountant, blocked by ADR 0011 until Mira supersedes it."
+  }
+ ]
+}

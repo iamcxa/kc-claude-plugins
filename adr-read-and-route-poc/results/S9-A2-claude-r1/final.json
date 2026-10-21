@@ -1,0 +1,18 @@
+{
+ "decision": "The cited ADR 0002 (weekly) is superseded (0002 -> 0014 -> 0023). ADR 0023 is in force: reports go out daily at 07:00 shop time. I chose daily and noted this in the task file. I did not implement it.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-021.md",
+   "info": "Added a 'Ruling check' section. It says cited ADR 0002 is superseded, that ADR 0023 (commit 1b9d588d, digest sha256:bea52c60...7366) is in force, and that the cadence is daily at 07:00 shop time. It also says src/report_job.js SCHEDULE is still 'weekly' and must change, and that the task's reference should point to 0023."
+  }
+ ],
+ "choice": "daily",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "proceed"
+ }
+}

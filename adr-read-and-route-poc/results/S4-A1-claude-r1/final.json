@@ -1,0 +1,9 @@
+{
+ "decision": "The QR-review idea is a deferred user-facing feature, so I added it to the story map's Deferred section and left the code alone. No ADR is needed because Mira set no rule or limit. I also made no spacing change in src/receipt.js, since it only holds two padding constants and nothing there looked untidy.",
+ "recorded": [
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Added S10 to the Deferred section: print a QR code on each receipt so customers can leave a review. It is an idea only, not this release and not soon, and not designed. The entry points to this repo's ADR 0023 (receipts print at most 40 characters per line) and the decision log's ADR 0009 (no new kind of customer message without approval) as things to check when it is picked up."
+  }
+ ]
+}

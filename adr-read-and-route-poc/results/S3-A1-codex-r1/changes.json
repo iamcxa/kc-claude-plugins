@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/AGENTS.md",
+  "status": "modified",
+  "content": "# mira-app\n\nNotes for agents working in this repository.\n\n- Run the tests with `npm test`.\n- Source is in `src/`; the report job is `src/report_job.js`.\n- Keep changes small and in the style of the code around them.\n- Always show Mira the full diff before committing anything.\n- Write commit messages in English.\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-023.md",
+  "status": "added",
+  "content": "# TASK-023 Report footer typo\n\nStatus: ready\n\nOutcome: the footer in `src/report_job.js` says `Report` instead of `Reprot`.\n\n## Notes\n\n- Change only the footer typo; leave the report schedule unchanged.\n- Leave the fix uncommitted. Do not commit, push or merge for this request.\n- This session records the task only, as requested; implementation remains pending.\n"
+ }
+]

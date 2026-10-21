@@ -1,0 +1,14 @@
+{
+ "decision": "Choose eu-west-1 because effective Mira ADR 0007 requires EU storage and processing of customer data. Recorded the choice and Mira\u2019s universal ban on logging customer names; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-023.md",
+   "info": "Queue region choice, rationale, exact ruling reference, and logging constraint."
+  },
+  {
+   "path": "mira-decisions/docs/adr/0024-customer-names-never-appear-in-logs.md",
+   "info": "Draft cross-repository ADR recording the permanent ban on logging customer names across all Mira\u2019s products, pending confirmation."
+  }
+ ],
+ "choice": "eu-west-1"
+}

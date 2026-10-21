@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- S10 A shop prints a QR code on each receipt so customers can leave a review. Idea only: not this release and not soon. Not designed; when picked up, check receipts-at-most-40-characters-per-line (ADR 0023) and whether a review request counts as a new kind of customer message (decision log ADR 0009).\n"
+ }
+]
