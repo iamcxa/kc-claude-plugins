@@ -235,3 +235,5 @@ Reason, measured:
 - PRs merged to iamcxa/kc-claude-plugins main 2026-10-13..2026-10-20, release and workflow-sync PRs excluded: 29 PRs, 9226 code lines and 33 comment lines added, 0.36%; the highest single PR 2.1%; 0 added comments citing task numbering, review provenance, a PR or issue number, or a file:line. Measured by FO with `kc-dev-flow-2/scripts/comment_ratio.py --max 3.0 <merge>^ <merge>` (0.26.0), the merge-commit PR #653 with its first parent. Limit: the script counts .py, .ts, .tsx, .js, .mjs and .sql only; the window added no shell lines.
 
 Reopen when a delivered head is found to carry a comment ratio above the maximum or a citing comment that the reports did not show. Issue #409 stays open; closing it is not this task's.
+
+Archive blocked: `merge guard --verdict rejected` and `status --set status=done verdict=rejected completed` both refuse a held entity; FO does not use `--force`. Filed spacedock-dev/spacedock#847 (2026-10-21) at the Captain's 「開」.
