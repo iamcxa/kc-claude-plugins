@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-write-rules-checked:validation:attempt-1:revision-1",
+  "question": "Approve validation of fo-write-rules-checked and merge iamcxa/kc-claude-plugins#687 at head 2b86a62490de623faf7365ef29931a9d5c35e3f9 with `gh pr merge 687 --squash --match-head-commit 2b86a62490de623faf7365ef29931a9d5c35e3f9`? FO recommends approve; approving accepts that recommendation, and covers merging this full head after FO reruns delivery_gate.py check and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-write-rules-checked:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9217f2ae44eeaaebb11410d3c65fe82ba128495f/fo-write-rules-checked.md",
+      "rev": "sha256:a05cae23db6bfc804ee402e49e189d888a327a70311a3ef6caddd502b90a3976",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: rule 3 holds an unrecorded Scope edit during ideation (design_surfaces.py), rule 2 reads bracket reasons and joins declines to F-numbered findings (delivery_gate.py), rule 4 prints the named-carry sentence and the (verdict ask) tag, and ADR 0027 records them; rule 1 is not built (Amendment 2). Validation PASSED at this head (cycle 3), with AC-1 to AC-6 and AC-8 to AC-13 held.\nNecessity: delivery_gate.py, design_surfaces.py, their tests, one validation sentence, one workflow.md phrase and ADR 0027, each named in the design as amended; nothing from the deferred D7 section.\nExternal rounds: Codex 3 (round 1 clean on d0c2e25b, evidence=summary:6293027583; round 2 two P2 fixed in Cycle 2, evidence=review:5586968302; round 3 two P2 declined below, evidence=review:5587635979). copilot not run: \"Copilot was unable to review this pull request because the user who requested the review has reached their quota limit.\" (review:5586368524); Second reviewer: copilot because the PR changes merge and approval rules, not run as quoted; a retry is offered once the quota resets. roborev clean (evidence=roborev:945). CI green on the head. Corrected evidence: the Scope census at state 8eda9070 is 43 clean, 8 held, 32 not run (AC-11's 44/7/32 predates the Cycle 2 fix), and ideation-gaps now holds, because its only amendment heading is a fenced example (AC-6's clean case was the round-2 bug).\nFO declines: Codex round 3 P2, declined_items() counts a nested Declined: label inside a reason as a second item (round 3 rule: filed as backlog task fo-write-checks-parse-top-level); Codex round 3 P2, the Scope search can pick a fenced ## Scope example ahead of the real one (round 3 rule: filed in the same backlog task); Deferred risk F2, a revise that touches Scope at an open ideation gate now ends in a hold and an amendment (priced in D1 and ruled 「要」, Material only if an observer finds FO restoring a Captain-asked Scope line); Polish F3, AC-6 and AC-11 state pre-repair numbers (corrected above, and the repaired check is the right one)."
+    }
+  ]
+}

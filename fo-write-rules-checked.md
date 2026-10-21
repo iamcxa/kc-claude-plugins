@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:fo-write-rules-checked:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:fo-write-rules-checked-validation-1
+              briefing:
+                id: briefing:fo-write-rules-checked:validation:attempt-1:revision-1
+                digest: sha256:51c8c9bcf8cb8047364554fb2e6ea4409871d612d13d9da981e9f1b0a97637d5
+                room-ref: ./fo-write-rules-checked/review/validation/briefing-1
 started: 2026-10-20T04:58:17Z
 worktree: .worktrees/spacedock-ensign-fo-write-rules-checked
 pr: iamcxa/kc-claude-plugins#687
