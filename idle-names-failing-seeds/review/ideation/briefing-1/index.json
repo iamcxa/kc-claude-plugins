@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:idle-names-failing-seeds:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of idle-names-failing-seeds to enter implementation, with its Needs-decision items as the Captain rules each one in the batch-5 sitting (listed first, asked one at a time)? An approval accepts a decision's recommendation only where his ruling says so; a decision he changes is recorded in the reason, and a scope change goes in as an amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:idle-names-failing-seeds:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/14886ca2bcc18efcd4234cee44a48264b61343d2/idle-names-failing-seeds.md",
+      "rev": "sha256:f3b4a14f86f0ebe119120ebbde3002291d75bd24e678a0c4b82f8d48080d1382",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 ideation design: FO's idle check names each backlog task whose seed check fails before its gate is prepared"
+    }
+  ]
+}

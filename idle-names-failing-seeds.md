@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:idle-names-failing-seeds:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:idle-names-failing-seeds-ideation-1
+              briefing:
+                id: briefing:idle-names-failing-seeds:ideation:attempt-1:revision-1
+                digest: sha256:583aeacab8b3a2741f897fa7ac35e3f29ab850a4130a3bec95fd313e44dc237b
+                room-ref: ./idle-names-failing-seeds/review/ideation/briefing-1
 ---
 
 ## Scope
