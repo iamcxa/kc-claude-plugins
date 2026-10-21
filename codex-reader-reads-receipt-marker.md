@@ -15,6 +15,17 @@ gates:
                 id: briefing:codex-reader-reads-receipt-marker:backlog:attempt-1:revision-1
                 digest: sha256:954f905eed0bf5f054d44426a866e286ecd1b4507504852fb324d8c1ada7bf90
                 room-ref: ./codex-reader-reads-receipt-marker/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-reads-receipt-marker:backlog:1
+                briefing: briefing:codex-reader-reads-receipt-marker:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T07:28:37.960689Z"
+                decision: approve
+                reason: Captain 「繼續」 (chat, 2026-10-21), answering FO's question 「這 5 張都批准進入設計嗎？」 for the five batch-5 backlog gates presented together; approves entering ideation under the pilot profile, as recommended.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
