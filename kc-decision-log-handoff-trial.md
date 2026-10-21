@@ -29,6 +29,11 @@ gates:
               application:
                 target-stage: ideation
                 state: pending
+journey: kc-decision-log-design
+journey-release: P1
+journey-story: S20
+journey-required-tasks: '["kc-decision-log-handoff-trial"]'
+journey-mapping-complete: true
 ---
 
 P1's value is that a second agent acts on the exact ruling it was handed, not on a paraphrase. This task proves it end to end. The Claude side writes a ruling reference into this task. A Codex first officer, started through Paseo, runs the task, and its Codex worker re-reads the ruling with the CLI from `kc-decision-log-cli` before it implements a small CLI feature that the synthetic ruling decides. The user gets back evidence tied to that reference.
