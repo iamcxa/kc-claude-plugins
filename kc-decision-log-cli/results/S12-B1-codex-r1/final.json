@@ -1,0 +1,18 @@
+{
+ "decision": "Stop: neither available clone matches the cited repository example/mira-billing. No ruling could be read, so its commit, computed digest, digest comparison, and current status could not be verified.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-024.md",
+   "info": "Marked blocked; recorded the missing clone, unverified planning summary, and requirements to unblock. No feature implemented."
+  }
+ ],
+ "choice": "stop",
+ "ruling_check": {
+  "adr": "0005",
+  "commit": "",
+  "digest": "",
+  "digest_matches_cited": false,
+  "in_force": null,
+  "action": "stop"
+ }
+}

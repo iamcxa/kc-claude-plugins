@@ -1,0 +1,17 @@
+== claude (HOME=/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.z3MFwHMyN5)
+kc-adr 0.1.0
+  Description: Experimental. Teaches agents to read an ADR at an exact commit and check its digest, tell whether it is still in force, and put new information in the one place it belongs.
+  Source: kc-adr@kc-claude-plugins
+
+Component inventory
+  Skills (1)  read-adr
+  Agents (0)
+  Hooks (0)
+  MCP servers (0)
+== codex (CODEX_HOME=/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.yV9tbqEFnJ/codex-home)
+Added plugin `kc-adr` from marketplace `kc-claude-plugins`.
+Installed plugin root: /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp.yV9tbqEFnJ/codex-home/plugins/cache/kc-claude-plugins/kc-adr/0.1.0
+PLUGIN                             STATUS              VERSION  SOURCE
+kc-adr@kc-claude-plugins           installed, enabled  0.1.0    /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-kc-decision-log-cli/kc-adr
+kc-adr:read-adr: Use before you decide anything an earlie
+(file: r1/kc-adr/0.1.0/skills/read-adr/SKILL.md)

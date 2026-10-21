@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-024.md",
+  "status": "modified",
+  "content": "# TASK-024 Invoice numbers\n\nStatus: blocked\n\nOutcome: invoices are numbered the way the ruling cited below says. Summary from the planning agent: invoice numbers carry the shop's prefix, for example SHOP-0001.\n\n## Ruling reference\n\nHanded over by the planning agent.\n\nReference\n  Binding        billing\n  Repository     example/mira-billing\n  ADR            0005\n  Path           docs/adr/0005-invoice-numbering.md\n  Commit         3f1c9b7a2d4e8f605a1b3c7d9e0f2a4b6c8d1e3f\n  Digest         sha256:5d41402abc4b2a76b9719d911017c5925d41402abc4b2a76b9719d911017c592\n\n## Decision\n\nStop: the cited ruling cannot be verified. The available local clones have\norigins `https://github.com/example/mira-app.git` and\n`https://github.com/example/mira-decisions.git`; neither matches the cited\nrepository `example/mira-billing`.\n\nADR 0005 has not been read at the cited commit. Its digest has not been\ncomputed or compared, and whether it is in force is unknown. The planning\nagent's prefix summary is unverified and is not a basis for implementation.\n\nTo unblock, provide a local clone with an origin matching `example/mira-billing`\nand the cited commit, or a corrected ruling reference. Read the ruling at the\nreferenced commit, compute and compare its digest, and check whether it is in\nforce before deciding how to number invoices. No feature code was changed.\n"
+ }
+]

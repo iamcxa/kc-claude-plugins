@@ -1,0 +1,15 @@
+{
+ "id": "codex-b1",
+ "host": "codex",
+ "kc_adr_installed": true,
+ "a_loaded_before_first_adr_access": true,
+ "b_git_show_and_shasum": true,
+ "c_new_adr_files": [
+  "docs/adr/0024-the-kiosk-report-cache-must-not-exceed-50-mb.md"
+ ],
+ "c_number_is_reserved": true,
+ "d_adr_lint_exit": 0,
+ "d_adr_lint_tail": "24 ADR file(s) checked, 0 legacy",
+ "e_no_copy_of_dev2_tools": true,
+ "worktree_scored": "/tmp/adrpoc-ac9/codex-b1/mira-app/.worktrees/spacedock-ensign-report-cache-limit-codex-b1"
+}

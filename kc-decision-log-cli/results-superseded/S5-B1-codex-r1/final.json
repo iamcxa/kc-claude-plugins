@@ -1,0 +1,5 @@
+{
+ "decision": "Choose sqlite_index to preserve the SQLite cache required by Accepted ADR 0008, verified at commit dda0e11103a43f9b8a8b23cde52408f1eea6a626 with SHA-256 9a5b484045c499e95cbccb741536e453d79888c39d854ed4ed70e5f5fc16a51c. Recording Mira\u2019s 1 GB RAM context and strict 50 MB cache limit as ADR 0024 is blocked: the kc-adr:read-adr skill\u2019s [writing instructions](/private/tmp/adrpoc-runs/S5-B1-codex-r1/codex-home/plugins/cache/kc-claude-plugins/kc-adr/0.1.0/skills/read-adr/writing.md) require \u201cNeither: stop\u201d when the required kc-dev-flow-2 package is missing; provide its package root to complete the record.",
+ "recorded": [],
+ "choice": "sqlite_index"
+}

@@ -1,0 +1,10 @@
+{
+ "choice": "csv",
+ "decision": "Format is csv, because ADR 0011 in mira-app (Accepted, nothing supersedes it) allows CSV only. Mira's ASCII-only file name remark covers this task only, so I put it in TASK-014 with the follow-up still owed. It is not an ADR and not a new rule.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-014.md",
+   "info": "Two notes added. (1) The file format follows docs/adr/0011-reports-are-exported-as-csv-only.md, by pointer only. (2) Mira's words of 2026-10-22: ASCII-only file names are fine for Friday's demo, for this task only. The fix for non-ASCII file names is still owed after the demo. It is not a standing rule."
+  }
+ ]
+}

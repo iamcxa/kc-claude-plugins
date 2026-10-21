@@ -1,0 +1,18 @@
+{
+ "decision": "Chose daily. The cited ADR 0014 (digest matches at 6ca078b) is superseded by ADR 0023 at HEAD, which keeps the daily cadence and sets the time to 07:00 shop time. I made no code change.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-023.md",
+   "info": "Added a ruling-check note. ADR 0014 is superseded by 0023, and ADR 0023 sets daily at 07:00 shop time. src/report_job.js still has SCHEDULE='weekly' and needs changing in the implementation step."
+  }
+ ],
+ "choice": "daily",
+ "ruling_check": {
+  "adr": "0014",
+  "commit": "6ca078bb848966bf9e398d75717e384c533a41bd",
+  "digest": "sha256:d3d544af6856343e2f377ea805270fab5e554cf4beb05a348213efce6b3f1993",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "proceed"
+ }
+}

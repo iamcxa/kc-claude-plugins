@@ -1,0 +1,10 @@
+{
+ "decision": "Choose keep_as_is: ADR 0011 requires CSV-only exports, and Mira\u2019s message does not supersede it. No feature was implemented.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Recorded Mira\u2019s message, the keep_as_is decision and rationale, and follow-up to investigate CSV compatibility with Haruto\u2019s accountant\u2019s tool."
+  }
+ ],
+ "choice": "keep_as_is"
+}

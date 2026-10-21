@@ -1,0 +1,13 @@
+{
+ "decision": "Recorded Mira\u2019s standing agent instructions and the pending typo task. Left implementation untouched per your final instruction; nothing was committed, pushed or merged.",
+ "recorded": [
+  {
+   "path": "AGENTS.md",
+   "info": "Always show Mira the full diff before committing; write commit messages in English."
+  },
+  {
+   "path": "tasks/TASK-025.md",
+   "info": "Pending Reprot \u2192 Report footer fix in src/report_job.js; leave uncommitted and do not commit, push or merge."
+  }
+ ]
+}

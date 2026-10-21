@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-014.md",
+  "status": "modified",
+  "content": "# TASK-014 Customer export\n\nStatus: in progress\n\nOutcome: a shop owner can export a report to a file and open it on their own computer.\n\n## Notes\n\n- The owner downloads from the report page.\n- File format: follows `docs/adr/0011-reports-are-exported-as-csv-only.md` (Accepted, no newer record supersedes it). Not chosen here.\n- Scope limit for this task only (Mira Example, 2026-10-22): \"For this task only, don't bother with non-ASCII file names. ASCII-only is fine for Friday's demo. We'll fix it after.\" So the export may assume ASCII-only file names for the demo. Follow-up still owed: support non-ASCII file names. This is not a standing rule and not a ruling for other tasks.\n"
+ }
+]

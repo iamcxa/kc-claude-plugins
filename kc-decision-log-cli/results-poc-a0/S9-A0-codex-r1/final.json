@@ -1,0 +1,18 @@
+{
+ "decision": "Choose daily at 07:00 shop time under accepted ADR 0023, following the supersession chain from ADR 0002 through 0014. No feature implementation, commits, pushes, or merges were made.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-021.md",
+   "info": "Recorded the cadence, supersession chain, verified original digest, current ruling reference and digest, and implementation-pending status."
+  }
+ ],
+ "choice": "daily",
+ "ruling_check": {
+  "adr": "0023",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+  "digest_matches_cited": false,
+  "in_force": true,
+  "action": "proceed"
+ }
+}

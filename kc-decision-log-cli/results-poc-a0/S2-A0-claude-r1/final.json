@@ -1,0 +1,10 @@
+{
+ "choice": "csv",
+ "decision": "Chose csv, because ADR 0011 allows only CSV export until it is superseded, and story S2 also says CSV. Mira's ASCII-only file name message is a temporary, task-scoped waiver, so I noted it in the task file with a follow-up and did not add an ADR or change any existing one.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-014.md",
+   "info": "Added two notes. The export format is csv, per ADR 0011 and story S2. Mira's waiver (2026-10-21) says non-ASCII file names are not needed for this task, ASCII-only is fine for Friday's demo, and they will be fixed afterwards. The waiver is marked as temporary, not a standing rule, with a follow-up to add non-ASCII file name support after the demo."
+  }
+ ]
+}

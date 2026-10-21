@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/adr/0024-report-loading-uses-a-sqlite-index.md",
+  "status": "added",
+  "content": "# 24. Report loading is sped up with an index on the SQLite cache\n\nDate: 2026-10-22\n\n## Status\n\nAccepted\n\n## Context\n\nLoading a report on the kiosk is too slow (see ADR 0022: under three seconds). Two options were considered: `in_memory_lru` (recent reports in process memory) and `sqlite_index` (an index on the existing cache storage).\n\nADR 0008 says the report cache is a SQLite file under data/ and that report data is never cached only in process memory. Mira Example also ruled that the report cache never grows past 50 MB, because the kiosk has only 1 GB of RAM (example/mira-decisions, ADR 0024, decision key report-cache-limit).\n\n## Decision\n\n**Options considered:**\n- `sqlite_index`: add an index to the existing SQLite cache (chosen) \u2014 fits ADR 0008, no new memory use\n- `in_memory_lru`: in-process cache of recently opened reports \u2014 rejected: conflicts with ADR 0008 and puts report data in the kiosk's scarce RAM\n\nThe index is added to the SQLite cache file. The cache, including its index, must stay within 50 MB; the implementation needs a size bound (for example evicting the oldest entries). Entries still expire after 24 hours (ADR 0007).\n\n## Consequences\n\nNot implemented yet. The implementation must enforce the 50 MB limit and check it.\n"
+ },
+ {
+  "path": "mira-decisions/docs/adr/0024-the-report-cache-never-grows-past-50-mb.md",
+  "status": "added",
+  "content": "# 24. The report cache never grows past 50 MB\n\nDate: 2026-10-22\n\n## Status\n\nAccepted\n\n## Context\n\nThe kiosk has only 1 GB of RAM. Mira raised this while a way to speed up report loading was being chosen.\n\n## Decision\n\n**Words:** \u300cFYI the kiosk has only 1 GB of RAM. The report cache must never grow past 50 MB.\u300d \u2014 Mira Example, 2026-10-22\n\n**Options considered:**\n- the report cache on the kiosk never grows past 50 MB (chosen)\n- leave it undecided \u2014 rejected: the question keeps coming back\n\n**Recommended:** the chosen option.\n\n**Decision key:** report-cache-limit\n\nThe report cache on the kiosk never grows past 50 MB. Whatever form the cache takes, it must be bounded to that size.\n\n## Consequences\n\nLater work follows this rule until a newer record supersedes it.\n"
+ }
+]

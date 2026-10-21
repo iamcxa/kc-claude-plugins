@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-decisions/docs/adr/0024-no-customer-name-is-ever-written-to-a-log.md",
+  "status": "added",
+  "content": "# 24. No customer name is ever written to a log\n\nDate: 2026-10-22\n\n## Status\n\nAccepted\n\n## Context\n\nThe decision came up on 2026-10-22, while choosing a region for the hosted report queue; the people involved needed one rule to point at.\n\n## Decision\n\n**Words:** \u300cnothing we build may ever write a customer's name into a log.\u300d \u2014 Mira Example, 2026-10-22\n\n**Options considered:**\n- no product or repository writes a customer's name into any log (chosen)\n- leave it undecided \u2014 rejected: the question keeps coming back\n\n**Recommended:** the chosen option.\n\n**Decision key:** log-no-customer-names\n\nNothing we build, in any repository or product, writes a customer's name into a log.\n\n## Consequences\n\nLater work follows this rule until a newer record supersedes it.\n"
+ }
+]

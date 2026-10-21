@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: ready\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n- 2026-10-22: Mira said: \"Haruto is a good customer, so please make him happy.\" This does not say to build XLSX, set a priority, or change the CSV export, so nothing was built and the export stays as it is. Still open for Mira: should an XLSX export be added, and is it wanted now? Haruto's underlying need is that his accountant can open the report; ask him or Mira whether CSV opened in the spreadsheet tool would be enough.\n"
+ }
+]

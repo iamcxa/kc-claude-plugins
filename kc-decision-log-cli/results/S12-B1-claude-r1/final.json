@@ -1,0 +1,18 @@
+{
+ "decision": "Stop: the cited ruling (example/mira-billing ADR 0005) can't be read because no local clone of that repo exists. Its digest and status are unverified, and the SHOP-0001 format is only the planner's retelling.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-024.md",
+   "info": "Added an 'Open items' section. It records that the task is blocked because there is no local clone of example/mira-billing, so the ruling at the cited commit couldn't be read or digest-checked. It also says the SHOP-0001 prefix is unverified and what is needed to unblock."
+  }
+ ],
+ "choice": "stop",
+ "ruling_check": {
+  "adr": "0005",
+  "commit": "3f1c9b7a2d4e8f605a1b3c7d9e0f2a4b6c8d1e3f",
+  "digest": "unavailable: ruling file not read (no clone of example/mira-billing)",
+  "digest_matches_cited": false,
+  "in_force": null,
+  "action": "stop"
+ }
+}

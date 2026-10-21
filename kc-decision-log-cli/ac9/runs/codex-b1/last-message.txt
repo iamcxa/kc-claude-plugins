@@ -1,0 +1,1 @@
+Held: ADR 0024 is written and passes lint, but the sandbox blocks commits. The supplied task also fails required checks for missing FO alignment and acceptance criteria. Details are in the [stage report](/tmp/adrpoc-ac9/codex-b1/mira-app/.worktrees/spacedock-ensign-report-cache-limit-codex-b1/docs/dev2/report-cache-limit-codex-b1.md).

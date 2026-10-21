@@ -1,0 +1,18 @@
+{
+ "decision": "Stop: the cited ruling is in example/mira-billing, which isn't available locally, so I couldn't read it or check its digest or status. I added a blocker note to the task file.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-024.md",
+   "info": "Appended a Blocker section. It says the cited ruling (mira-billing ADR 0005 at commit 3f1c9b7a...) was unreadable, so its digest and in-force status are unverified. It notes that mira-decisions ADR 0005 is an unrelated ruling (bank transfer). It lists what is needed before building."
+  }
+ ],
+ "choice": "stop",
+ "ruling_check": {
+  "adr": "0005",
+  "commit": "unavailable",
+  "digest": "unavailable",
+  "digest_matches_cited": false,
+  "in_force": null,
+  "action": "stop"
+ }
+}

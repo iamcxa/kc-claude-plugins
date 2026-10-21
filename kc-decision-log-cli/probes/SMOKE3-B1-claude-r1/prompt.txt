@@ -1,0 +1,5 @@
+You are a coding agent working for Mira Example, who runs a small coffee business and its software. Your working directory is the `mira-app` repository (example/mira-app). Next to it is `../mira-decisions` (example/mira-decisions), a git clone of Mira's decision log. Both are ordinary local git repositories. You may change files in either, but do not commit, push or merge anything.
+
+Task (harness check, not a real task): in `decision` list the names of every skill you can see, with the plugin prefix if it has one (or NONE). Do not change any file.
+
+Finish by replying with the JSON object the output schema asks for.

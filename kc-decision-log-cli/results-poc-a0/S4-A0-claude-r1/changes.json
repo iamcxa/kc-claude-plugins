@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- S10 A customer scans a QR code printed on the receipt to leave a review. (Mira, 2026-10-21: someday; not this release and not soon. Idea kept so it isn't lost; not designed or scheduled.)\n"
+ }
+]

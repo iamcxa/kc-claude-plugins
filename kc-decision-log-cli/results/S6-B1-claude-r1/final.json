@@ -1,0 +1,10 @@
+{
+ "choice": "daily",
+ "decision": "Chose daily. Issue #31 (weekly) is stale: ADR 0002 (weekly) was superseded by 0014, which was superseded by 0023. 0023 is Accepted and sets daily at 07:00 shop time. I recorded the decision and the deadline in the task file and did not implement the change.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-015.md",
+   "info": "Added a Decision section and an Open items section. The decision is daily, because ADR 0023 is in force (chain 0002 -> 0014 -> 0023) and issue #31 is stale. The ADR reference is repo example/mira-decisions, path docs/adr/0023-reports-go-out-daily-at-07-00.md, commit 1b9d588d594609270cd28d48306fe6ae0926b26c, digest sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366. The open items say Mira wants this done today (2026-10-22) and that src/report_job.js still has SCHEDULE='weekly'. They also say issue #31 needs closing or updating."
+  }
+ ]
+}

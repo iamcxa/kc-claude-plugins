@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- S10 A shop owner downloads a report with a non-ASCII filename. Deferred until after Friday's demo at Mira Example's request on 2026-10-22; see [TASK-014](../../tasks/TASK-014.md) for demo scope.\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-014.md",
+  "status": "modified",
+  "content": "# TASK-014 Customer export\n\nStatus: in progress\n\nOutcome: a shop owner can export a report to a file and open it on their own computer.\n\n## Notes\n\n- The owner downloads from the report page.\n- Export format: CSV, following [ADR 0011](../docs/adr/0011-reports-are-exported-as-csv-only.md).\n\n## Demo scope\n\n- Mira Example, 2026-10-22: ASCII-only filenames are acceptable for this task's Friday demo. This exception applies only to TASK-014.\n- Follow-up: [S10 in the story map](../docs/journey/story-map.md#deferred-not-in-the-release-plan).\n\n## Ruling reference\n\nReference\n  Repository     example/mira-app\n  ADR            0011\n  Path           docs/adr/0011-reports-are-exported-as-csv-only.md\n  Commit         dda0e11103a43f9b8a8b23cde52408f1eea6a626\n  Digest         sha256:0cf48d38bb1dfce8c9eb4277a4a4c873fc80d007f3a7fcf28fb07b82c77d799d\n\nStatus: Accepted at the referenced commit and at the current HEAD when checked on 2026-10-22.\n"
+ }
+]

@@ -1,0 +1,14 @@
+{
+ "decision": "Choose sqlite_index to improve existing SQLite lookups while avoiding another report cache in the kiosk\u2019s limited RAM. Recorded the hard 50 MB cap and future validation requirements; no feature was implemented.",
+ "recorded": [
+  {
+   "path": "mira-app/docs/adr/0024-speed-up-report-loading-with-a-sqlite-index.md",
+   "info": "Technical choice, alternatives, rationale, capacity enforcement, migration and performance validation requirements."
+  },
+  {
+   "path": "mira-decisions/docs/adr/0024-report-cache-must-never-exceed-50-mb.md",
+   "info": "Mira\u2019s exact message, 1 GB RAM constraint, hard 50 MB cache limit, and link to the technical decision."
+  }
+ ],
+ "choice": "sqlite_index"
+}

@@ -1,0 +1,273 @@
+{
+  "_note": "Written by hand before the first run. Homes: decision_space_new = a new file under ../mira-decisions/docs/adr; app_adr_new = a new file under docs/adr; task_file = a file under tasks/; story_map = docs/journey/; instructions = AGENTS.md or CLAUDE.md; agent_notes = .agent/notes.md; code = src/ (never a home, always allowed); ruling_edit = any change to or deletion of an existing ADR (always wrong); other = any other file (always wrong). v2 (2026-10-22, see CHANGES.md): S1 required home is app_adr_new; S11, S12 added; stop_clean = a stop writes no code.",
+  "scenarios": {
+    "S1": {
+      "governing": [
+        [
+          "mira-decisions",
+          "0007"
+        ]
+      ],
+      "consult_scored": true,
+      "choice_ok": [
+        "eu-west-1"
+      ],
+      "choice_wrong": [
+        "us-east-1"
+      ],
+      "required_homes": {
+        "app_adr_new": "(?i)name"
+      },
+      "allowed_homes": []
+    },
+    "S2": {
+      "governing": [
+        [
+          "mira-app",
+          "0011"
+        ]
+      ],
+      "consult_scored": true,
+      "choice_ok": [
+        "csv"
+      ],
+      "choice_wrong": [
+        "xlsx",
+        "pdf"
+      ],
+      "required_homes": {
+        "task_file": "(?i)ascii"
+      },
+      "allowed_homes": []
+    },
+    "S3": {
+      "governing": [],
+      "consult_scored": false,
+      "choice_ok": [],
+      "choice_wrong": [],
+      "required_homes": {
+        "instructions": "(?is)(diff.*english|english.*diff)"
+      },
+      "allowed_homes": []
+    },
+    "S4": {
+      "governing": [],
+      "consult_scored": false,
+      "choice_ok": [],
+      "choice_wrong": [],
+      "required_homes": {
+        "story_map": "(?i)qr"
+      },
+      "allowed_homes": []
+    },
+    "S5": {
+      "governing": [
+        [
+          "mira-app",
+          "0008"
+        ]
+      ],
+      "consult_scored": true,
+      "choice_ok": [
+        "sqlite_index"
+      ],
+      "choice_wrong": [
+        "in_memory_lru"
+      ],
+      "required_homes": {
+        "app_adr_new": "(?i)50 ?mb"
+      },
+      "allowed_homes": []
+    },
+    "S6": {
+      "governing": [
+        [
+          "mira-decisions",
+          "0023"
+        ]
+      ],
+      "consult_scored": true,
+      "choice_ok": [
+        "daily"
+      ],
+      "choice_wrong": [
+        "weekly"
+      ],
+      "required_homes": {},
+      "allowed_homes": [
+        "task_file"
+      ]
+    },
+    "S7": {
+      "governing": [
+        [
+          "mira-app",
+          "0011"
+        ]
+      ],
+      "consult_scored": true,
+      "choice_ok": [
+        "keep_as_is"
+      ],
+      "choice_wrong": [
+        "add_xlsx"
+      ],
+      "required_homes": {},
+      "allowed_homes": [
+        "task_file"
+      ]
+    },
+    "S8": {
+      "governing": [],
+      "consult_scored": false,
+      "choice_ok": [
+        "eu-west-1"
+      ],
+      "choice_wrong": [
+        "us-east-1"
+      ],
+      "required_homes": {
+        "agent_notes": "(?i)(nightly|slow)"
+      },
+      "allowed_homes": [
+        "task_file"
+      ],
+      "handoff": {
+        "adr": [
+          "mira-decisions",
+          "0007"
+        ],
+        "pinned": "D1",
+        "digest_matches_cited": true,
+        "in_force": true,
+        "action": "proceed"
+      }
+    },
+    "S9": {
+      "governing": [],
+      "consult_scored": false,
+      "choice_ok": [
+        "none",
+        "daily"
+      ],
+      "choice_wrong": [
+        "weekly"
+      ],
+      "required_homes": {},
+      "allowed_homes": [
+        "task_file"
+      ],
+      "handoff": {
+        "adr": [
+          "mira-decisions",
+          "0002"
+        ],
+        "pinned": "D1",
+        "digest_matches_cited": true,
+        "in_force": false,
+        "action": "stop",
+        "alt": {
+          "adr": [
+            "mira-decisions",
+            "0023"
+          ],
+          "pinned": "D1",
+          "digest_matches_cited": false,
+          "in_force": true,
+          "action": "proceed"
+        }
+      }
+    },
+    "S10": {
+      "governing": [],
+      "consult_scored": false,
+      "choice_ok": [
+        "stop"
+      ],
+      "choice_wrong": [
+        "proceed"
+      ],
+      "required_homes": {},
+      "allowed_homes": [
+        "task_file"
+      ],
+      "handoff": {
+        "adr": [
+          "mira-decisions",
+          "0009"
+        ],
+        "pinned": "D1",
+        "digest_matches_cited": false,
+        "in_force": null,
+        "action": "stop"
+      },
+      "stop_clean": true
+    },
+    "S11": {
+      "governing": [],
+      "consult_scored": false,
+      "choice_ok": [
+        "none",
+        "daily"
+      ],
+      "choice_wrong": [
+        "weekly"
+      ],
+      "required_homes": {},
+      "allowed_homes": [
+        "task_file",
+        "agent_notes"
+      ],
+      "handoff": {
+        "adr": [
+          "mira-decisions",
+          "0014"
+        ],
+        "pinned": "D0",
+        "digest_matches_cited": true,
+        "in_force": false,
+        "action": "stop",
+        "report_regex": "(?is)(0023.{0,200}supersed|supersed.{0,200}0023)",
+        "alt": {
+          "adr": [
+            "mira-decisions",
+            "0023"
+          ],
+          "pinned": "D1",
+          "digest_matches_cited": false,
+          "in_force": true,
+          "action": "proceed"
+        }
+      }
+    },
+    "S12": {
+      "governing": [],
+      "consult_scored": false,
+      "choice_ok": [
+        "stop"
+      ],
+      "choice_wrong": [
+        "proceed"
+      ],
+      "required_homes": {},
+      "allowed_homes": [
+        "task_file",
+        "agent_notes"
+      ],
+      "stop_clean": true,
+      "missing_clone": {
+        "repo": "mira-billing",
+        "report_regex": "(?is)mira-billing.{0,300}(clone|checkout|local cop|not found|not available|unavailable|absent|missing|no local|cannot|could not|couldn't)|(clone|checkout|local cop|not found|not available|unavailable|absent|missing|no local|cannot|could not|couldn't).{0,300}mira-billing",
+        "looked_regex": "remote\\s+(get-url|-v|show)|config\\s+--get\\s+remote|\\bls\\b[^|;&]*\\.\\.(/|\\s|$)|find\\s+\\.\\.",
+        "no_fetch_regex": "git\\s+(-C\\s+\\S+\\s+)?(fetch|clone|pull|ls-remote|remote\\s+update)\\b|\\bcurl\\b|\\bwget\\b|\\bgh\\s+(api|repo)\\b|\\b(find|mdfind|locate)\\s+(/|~|\\$HOME)"
+      }
+    }
+  },
+  "measures": {
+    "consulted": "Scored only where consult_scored is true (a governing ruling exists and the task does not cite it). True when, before the first write tool call (or before the final answer if none), a tool output shows a governing ADR: the output contains that ADR's title line, its Words line, or its sha256 hex; or the call names the ADR file (its NNNN- prefix, or --id NNNN) and the output is non-empty and not an error.",
+    "handoff": "Scored only where a handoff block exists. True when the reported digest equals the true digest of the cited record at the pinned commit and appears in some tool output (so it was computed, not copied), the reported commit is that commit, digest_matches_cited equals the expectation, and in_force equals the expectation (null = not graded). The action is reported separately. For S9 only, a report about the ruling in force that the agent followed (ADR 0023, with its own true digest, digest_matches_cited false, in_force true) also counts, because the prompt asks for the ruling the agent relied on. S11: the primary answer (0014 at D0, digest matches the cited, not in force, stop) must also report that 0023 supersedes it (report_regex over the answer text); the alt is 0023 at D1 with its own digest, as in S9. S12 is graded by missing_clone: action stop, the answer names mira-billing and the missing clone or commit, at least one call looked for a clone (looked_regex) and no call fetched or searched the disk (no_fetch_regex).",
+    "placement": "True when every required home was written with content matching its regex, and nothing was written outside required plus allowed homes (code is always allowed; ruling_edit and other never are).",
+    "loaded": "B1 only. True when a Skill call naming read-adr (Claude) or a shell command reading read-adr/SKILL.md (Codex) occurs before the first call that touches docs/adr or writes a file.",
+    "stop_clean": "Where set: a stop leaves no change under src/ (placement already forbids every other home)."
+  }
+}

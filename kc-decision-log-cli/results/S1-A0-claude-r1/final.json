@@ -1,0 +1,10 @@
+{
+ "decision": "Choose eu-west-1: ADR 0007 requires customer lists to stay in EU regions, and the jobs carry the customer list. I recorded Mira's all-products rule against logging customer names as new ADR 0024 in mira-decisions.",
+ "choice": "eu-west-1",
+ "recorded": [
+  {
+   "path": "../mira-decisions/docs/adr/0024-customer-names-are-never-written-to-a-log.md",
+   "info": "New ADR 0024 (decision key log-pii): no product or repository, existing or future, writes a customer's name into any log. Quotes Mira's words, dated 2026-10-22."
+  }
+ ]
+}

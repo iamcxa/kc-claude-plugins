@@ -1,0 +1,22 @@
+{
+ "decision": "Choose eu-west-1: accepted ADR 0007 requires customer lists to remain in EU regions. ADR lint passed; npm test reports no tests.",
+ "recorded": [
+  {
+   "path": "tasks/hosted-report-queue.md",
+   "info": "Records the region choice without implementing it; verifies ADR 0007 at commit 1b9d588d594609270cd28d48306fe6ae0926b26c, sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810."
+  },
+  {
+   "path": "docs/adr/0024-customer-names-never-appear-in-logs.md",
+   "info": "Canonical accepted ruling prohibiting customer names in logs across all Mira's repositories and products."
+  },
+  {
+   "path": "AGENTS.md",
+   "info": "Directs future agents to applicable ADRs and links ADR 0024."
+  },
+  {
+   "path": "../mira-decisions/README.md",
+   "info": "Links to canonical ADR 0024 for discovery across products."
+  }
+ ],
+ "choice": "eu-west-1"
+}

@@ -1,0 +1,14 @@
+{
+ "decision": "Choose eu-west-1: existing ADR 0007 requires customer data in EU regions only, and the jobs carry customer lists. Mira's \"never write a customer's name into a log\" rule applies to all products, so I recorded it as new ADR 0024.",
+ "recorded": [
+  {
+   "path": "../mira-decisions/docs/adr/0024-no-customer-name-is-ever-written-to-a-log.md",
+   "info": "New ADR 0024 (key log-pii): nothing built in any repo or product may ever write a customer's name into a log, quoting Mira's words, dated 2026-10-21."
+  },
+  {
+   "path": "AGENTS.md",
+   "info": "One-line pointer to ../mira-decisions/docs/adr, naming ADR 0007 (EU regions only) and ADR 0024 (no customer names in logs)."
+  }
+ ],
+ "choice": "eu-west-1"
+}

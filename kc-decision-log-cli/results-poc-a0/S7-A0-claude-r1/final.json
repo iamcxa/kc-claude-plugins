@@ -1,0 +1,10 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as CSV only. ADR 0011 forbids adding XLSX until it is superseded, and Mira's \"make him happy\" doesn't supersede it. I noted that and the open question in TASK-016.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-016.md",
+   "info": "Mira's message (Haruto is a good customer, make him happy) is goodwill and not a ruling. ADR 0011 (CSV only) still applies, so no XLSX was added. Open question for Mira on whether to supersede ADR 0011 with a new ADR. Haruto's underlying need is for his accountant's spreadsheet tool to use the report."
+  }
+ ]
+}

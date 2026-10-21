@@ -1,0 +1,9 @@
+##### mutation noskills
+  Skills (0)
+FAIL claude: details does not list read-adr
+FAIL codex: prompt input does not list kc-adr:read-adr
+rc=
+##### mutation nokey
+  Skills (1)  read-adr
+kc-adr:read-adr: Use before you decide anything an earlie
+rc=

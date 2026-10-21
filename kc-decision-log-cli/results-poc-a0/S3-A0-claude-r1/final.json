@@ -1,0 +1,17 @@
+{
+ "decision": "Fixed the Reprot typo in the footer and left it uncommitted. Mira's message set a standing rule (show the full diff before committing, write commit messages in English), so I recorded it as a new ADR and as a line in AGENTS.md for future sessions. I did not run npm test.",
+ "recorded": [
+  {
+   "path": "mira-app/src/report_job.js",
+   "info": "Footer typo fixed: 'Reprot ends here.' is now 'Report ends here.' Uncommitted."
+  },
+  {
+   "path": "mira-decisions/docs/adr/0024-show-the-full-diff-before-committing-and-write-commits-in-english.md",
+   "info": "New ADR 0024 (accepted, 2026-10-21, decision key commit-workflow). Records Mira's standing rule: show her the full diff before committing anything, and write commit messages in English. Quotes her words."
+  },
+  {
+   "path": "mira-app/AGENTS.md",
+   "info": "Added a line telling agents to show Mira the full diff before committing and to write commit messages in English, with a pointer to ADR 0024. Uncommitted."
+  }
+ ]
+}

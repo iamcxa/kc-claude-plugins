@@ -1,0 +1,14 @@
+{
+ "decision": "Choose sqlite_index to preserve the persistent SQLite cache required by ADR 0008 while respecting Mira\u2019s resource limits. Implementation remains pending.",
+ "recorded": [
+  {
+   "path": "docs/adr/0024-the-report-cache-must-not-exceed-50-mb.md",
+   "info": "Records Mira\u2019s exact words, the kiosk\u2019s 1 GB RAM, and the mandatory 50 MB cache ceiling."
+  },
+  {
+   "path": "tasks/report-cache-performance.md",
+   "info": "Records the approach, rationale, ADR pointer, implementation follow-up, and governing ADR commits and digests."
+  }
+ ],
+ "choice": "sqlite_index"
+}

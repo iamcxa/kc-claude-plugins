@@ -1,0 +1,10 @@
+{
+ "decision": "Selected eu-west-1 under accepted mira-decisions ADR 0007. Recording the universal customer-name logging ban as ADR 0024 remains unfinished: the read-adr skill\u2019s [writing instructions](/private/tmp/adrpoc-runs/S1-B1-codex-r1/codex-home/plugins/cache/kc-claude-plugins/kc-adr/0.1.0/skills/read-adr/writing.md) say \u201cNeither: stop. A repo without kc-dev-flow-2 has no writing tools.\u201d, and that package is absent.",
+ "recorded": [
+  {
+   "path": "tasks/hosted-report-queue.md",
+   "info": "Region selection, verified ADR 0007 commit and digest, task-scoped delegation, and the blocker to recording ADR 0024. No feature implementation."
+  }
+ ],
+ "choice": "eu-west-1"
+}

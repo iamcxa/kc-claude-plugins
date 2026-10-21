@@ -1,0 +1,10 @@
+{
+ "choice": "eu-west-1",
+ "decision": "Chose eu-west-1 because existing ADR 0007 (Mira, 2026-09-12) requires customer data to stay in EU regions, and the jobs carry customer lists; no new ADR was needed for that. Recorded Mira's new cross-product rule on customer names in logs as ADR 0024 in mira-decisions.",
+ "recorded": [
+  {
+   "path": "/tmp/adrpoc-runs/S1-B1-claude-r1/mira-decisions/docs/adr/0024-no-customer-name-is-ever-written-to-a-log.md",
+   "info": "New Accepted ADR 0024 with Mira's words: nothing we build, in any repo or product, may write a customer's name into a log (decision key log-no-customer-names). I wrote it in the format of the existing ADRs because the kc-dev-flow-2 template and linter were not found, so I did not run the linter."
+  }
+ ]
+}

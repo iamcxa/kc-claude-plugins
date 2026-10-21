@@ -1,0 +1,18 @@
+{
+ "decision": "Chose daily. The cited ADR 0014 (daily at 06:00) is superseded at head by ADR 0023, which is Accepted and sets daily at 07:00 shop time. I did not implement the change.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-023.md",
+   "info": "Added a 'Ruling in force' section. It records that ADR 0014 is superseded by 0023 at mira-decisions head 1b9d588d594609270cd28d48306fe6ae0926b26c, gives the digest of 0023, and sets the cadence to daily at 07:00 shop time. It notes that SCHEDULE in src/report_job.js is still 'weekly' and not yet implemented."
+  }
+ ],
+ "choice": "daily",
+ "ruling_check": {
+  "adr": "0023",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+  "digest_matches_cited": false,
+  "in_force": true,
+  "action": "proceed"
+ }
+}

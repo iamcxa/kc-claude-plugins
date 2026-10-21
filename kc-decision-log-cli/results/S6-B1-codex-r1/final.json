@@ -1,0 +1,10 @@
+{
+ "decision": "Choose daily: Accepted ADR 0023 supersedes the weekly ruling and specifies 07:00 shop time. No feature implementation was made.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-015.md",
+   "info": "Recorded Mira\u2019s completion request for 2026-10-22, the governing ADR\u2019s repository, path, full commit and verified SHA-256, its supersession chain, and pending implementation status."
+  }
+ ],
+ "choice": "daily"
+}

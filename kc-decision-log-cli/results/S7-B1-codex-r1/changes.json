@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: decided \u2014 keep_as_is\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n- Mira said: \"Haruto is a good customer, so please make him happy.\"\n\n## Decision\n\nChoose `keep_as_is`. Mira's message gives customer context for this task; it\ndoes not explicitly supersede the governing ADR. Leave the export as it is.\nNo feature implementation is part of this task's decision work.\n\nReconsider XLSX if Mira explicitly changes the governing ruling. The requested\noutcome remains unresolved; this decision does not establish that CSV meets\nHaruto's accountant's needs.\n\n## Governing ruling\n\n- Repository: `example/mira-app`\n- Path: `docs/adr/0011-reports-are-exported-as-csv-only.md`\n- Commit: `dda0e11103a43f9b8a8b23cde52408f1eea6a626`\n- Digest: `sha256:0cf48d38bb1dfce8c9eb4277a4a4c873fc80d007f3a7fcf28fb07b82c77d799d`\n- Status: `Accepted` at the pinned commit and at current HEAD when checked.\n"
+ }
+]

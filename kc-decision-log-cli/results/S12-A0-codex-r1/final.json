@@ -1,0 +1,18 @@
+{
+ "decision": "Stop: the cited billing ruling is unavailable locally, and GitHub returned 404, so its contents, digest, and authority cannot be verified. Empty commit and digest fields indicate that no ruling bytes were read.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-024.md",
+   "info": "Marked blocked; recorded verification failures, the stop decision, and steps to resume. No feature implemented."
+  }
+ ],
+ "choice": "stop",
+ "ruling_check": {
+  "adr": "0005",
+  "commit": "",
+  "digest": "",
+  "digest_matches_cited": false,
+  "in_force": null,
+  "action": "stop"
+ }
+}

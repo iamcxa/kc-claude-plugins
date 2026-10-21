@@ -1,0 +1,13 @@
+{
+ "decision": "Fixed the typo and left it uncommitted. Mira's two requests are standing instructions on how agents work, not rulings on direction. They went into AGENTS.md as short bullets, with no ADR and no copy elsewhere. No existing ADR covers commits or language.",
+ "recorded": [
+  {
+   "path": "src/report_job.js",
+   "info": "Footer typo fixed: 'Reprot' is now 'Report'. Uncommitted."
+  },
+  {
+   "path": "AGENTS.md",
+   "info": "Two operating instructions from Mira: show her the full diff before committing anything, and write commit messages in English."
+  }
+ ]
+}

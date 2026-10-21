@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/AGENTS.md",
+  "status": "modified",
+  "content": "# mira-app\n\nNotes for agents working in this repository.\n\n- Run the tests with `npm test`.\n- Source is in `src/`; the report job is `src/report_job.js`.\n- Company-wide rules are in `../mira-decisions/docs/adr`; e.g. 0007 (customer data in EU regions only) and 0024 (never write a customer's name into a log).\n- Keep changes small and in the style of the code around them.\n"
+ },
+ {
+  "path": "mira-decisions/docs/adr/0024-no-customer-name-is-ever-written-to-a-log.md",
+  "status": "added",
+  "content": "# 24. No customer name is ever written to a log\n\nDate: 2026-10-21\n\n## Status\n\nAccepted\n\n## Context\n\nWhile choosing a region for the hosted report-job queue, Mira added a rule that applies to everything she builds.\n\n## Decision\n\n**Words:** \u300cnothing we build may ever write a customer's name into a log\u300d \u2014 Mira Example, 2026-10-21 (said for every repo and product, not just mira-app)\n\n**Options considered:**\n- no product or repo writes a customer's name into any log (chosen)\n- leave it undecided \u2014 rejected: the question keeps coming back\n\n**Recommended:** the chosen option.\n\n**Decision key:** log-pii\n\nNothing we build, in any repo or for any product, ever writes a customer's name into a log.\n\n## Consequences\n\nLater work follows this rule until a newer record supersedes it.\n"
+ }
+]

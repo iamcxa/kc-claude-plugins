@@ -1,0 +1,10 @@
+{
+ "decision": "Keep the export as it is: Accepted ADR 0011 requires CSV-only exports, and Mira\u2019s message does not supersede it.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Recorded Mira\u2019s message, the keep_as_is decision, the verified ADR commit and digest, and Haruto\u2019s unresolved need."
+  }
+ ],
+ "choice": "keep_as_is"
+}

@@ -1,0 +1,9 @@
+{
+ "decision": "Mira's message is a deferred idea, not a ruling, so I added it to the story map's \"Deferred (not in the release plan)\" section and wrote no ADR. I did not implement the feature, and I left the receipt spacing in src/receipt.js unchanged.",
+ "recorded": [
+  {
+   "path": "mira-app/docs/journey/story-map.md",
+   "info": "Added deferred story S10: a customer scans a QR code printed on the receipt to leave a review. Mira (2026-10-21) said it is someday, not this release and not soon, and the idea is kept so it isn't lost. It is not designed or scheduled."
+  }
+ ]
+}

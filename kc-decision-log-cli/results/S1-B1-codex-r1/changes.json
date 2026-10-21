@@ -1,0 +1,22 @@
+[
+ {
+  "path": "mira-app/AGENTS.md",
+  "status": "modified",
+  "content": "# mira-app\n\nNotes for agents working in this repository.\n\n- Run the tests with `npm test`.\n- Source is in `src/`; the report job is `src/report_job.js`.\n- Keep changes small and in the style of the code around them.\n- Before making decisions, read relevant ADRs in `docs/adr/` and `../mira-decisions/docs/adr/` (example/mira-decisions). See also [ADR 0024](docs/adr/0024-customer-names-never-appear-in-logs.md).\n"
+ },
+ {
+  "path": "mira-app/docs/adr/0024-customer-names-never-appear-in-logs.md",
+  "status": "added",
+  "content": "# 24. Customer names never appear in logs\n\nDate: 2026-10-22\n\n## Status\n\nAccepted\n\n## Context\n\nWhile delegating the region choice for hosted report jobs, Mira gave a separate instruction covering every repository and product she owns. This ADR is its canonical record; example/mira-decisions links here for discovery across products.\n\n## Decision\n\n**Words:** \u300cAnd one more thing, for every repo and product I have, not just this one: nothing we build may ever write a customer's name into a log.\u300d \u2014 Mira Example, 2026-10-22\n\n**Options considered:**\n- none \u2014 a direct instruction\n\n**Recommended:** none \u2014 a direct instruction\n\nNothing we build may ever write a customer's name into a log. This applies to every repository and product Mira owns, including future work.\n\n## Consequences\n\nAll work must follow this constraint, including the hosted report queue migration. Recording this ruling does not implement logging changes or establish that existing software complies.\n"
+ },
+ {
+  "path": "mira-app/tasks/hosted-report-queue.md",
+  "status": "added",
+  "content": "# Hosted report queue region\n\nStatus: region decided; implementation pending\n\nMira delegated this task's region choice: \"Pick whichever you think is right.\"\n\nChoose `eu-west-1` for hosted report jobs carrying each shop's customer list. Of the two offered regions, this satisfies the ruling below; `us-east-1` does not.\n\n## Ruling reference\n\nReference\n  Repository     example/mira-decisions\n  ADR            0007\n  Path           docs/adr/0007-customer-data-stays-in-the-eu.md\n  Commit         1b9d588d594609270cd28d48306fe6ae0926b26c\n  Digest         sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810\n\nVerified Accepted at that commit and at the clone's current HEAD (the same commit).\n\n## Other applicable ruling\n\nSee [mira-app ADR 0024](../docs/adr/0024-customer-names-never-appear-in-logs.md).\n\n## Scope\n\nThis task records the region choice only. Queue configuration and feature implementation remain pending.\n"
+ },
+ {
+  "path": "mira-decisions/README.md",
+  "status": "modified",
+  "content": "# mira-decisions\n\nMira's decision log. Rulings live in docs/adr.\n\nCross-product ruling recorded in another repository: [example/mira-app ADR 0024](../mira-app/docs/adr/0024-customer-names-never-appear-in-logs.md). That ADR is the canonical record; this entry is a pointer only.\n"
+ }
+]

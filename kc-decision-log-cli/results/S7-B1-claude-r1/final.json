@@ -1,0 +1,10 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as it is. Mira's message is a general wish to please Haruto. It doesn't ask for XLSX, give a priority, or rule on direction, so I didn't treat it as approval to build. I added a note to the task file with her words and the open question, and wrote no ADR because there is no ruling to record.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-016.md",
+   "info": "Added a dated note with Mira's message (\"Haruto is a good customer, so please make him happy.\"). The note says it is not an instruction to build XLSX and that nothing was built. It also lists the open question for Mira: whether XLSX is wanted now, or whether CSV opened in the accountant's spreadsheet tool would be enough."
+  }
+ ]
+}

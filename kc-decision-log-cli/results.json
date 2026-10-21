@@ -1,0 +1,2668 @@
+[
+ {
+  "run": "S1-A0-claude-r1",
+  "scenario": "S1",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-decisions/0007",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S1-A0-claude-r1/mira-decisions; cat docs/adr/0007* docs/adr/0015* docs/adr/0023* docs/adr/0014*; ls ../mira-app ../mira-app/src\"}"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [
+    "app_adr_new"
+   ],
+   "forbidden": [
+    "decision_space_new"
+   ],
+   "written": [
+    "decision_space_new"
+   ],
+   "files": [
+    "mira-decisions/docs/adr/0024-customer-names-are-never-written-to-a-log.md"
+   ]
+  },
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S1-A0-codex-r1",
+  "scenario": "S1",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 4,
+   "adr": "mira-decisions/0007",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc \\\"git status --short; rg --files --hidden -g '\\\"'!.git'\\\"'; cat README.md; cat docs/adr/0007-customer-data-stays-in-the-eu.md docs/adr/0015-analytics-events-carry-no-email-ad"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "decision_space_new",
+    "instructions"
+   ],
+   "written": [
+    "app_adr_new",
+    "decision_space_new",
+    "instructions"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-app/docs/adr/0024-report-jobs-use-eu-west-1.md",
+    "mira-decisions/docs/adr/0024-customer-names-never-appear-in-logs.md"
+   ]
+  },
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S1-B1-claude-r1",
+  "scenario": "S1",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-decisions/0007",
+   "rule": "output marker",
+   "call": "{\"command\": \"D=/tmp/adrpoc-runs/S1-B1-claude-r1/mira-decisions; cd $D/docs/adr; cat 0007* 0015* 0008*; cat ../../README.md; head -20 0023*; S=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [
+    "app_adr_new"
+   ],
+   "forbidden": [
+    "decision_space_new"
+   ],
+   "written": [
+    "decision_space_new"
+   ],
+   "files": [
+    "mira-decisions/docs/adr/0024-no-customer-name-is-ever-written-to-a-log.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S1-B1-codex-r1",
+  "scenario": "S1",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 12,
+   "adr": "mira-decisions/0007",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc 'git show dda0e11103a43f9b8a8b23cde52408f1eea6a626:docs/adr/0004-logs-are-kept-14-days-on-the-kiosk.md; cat tasks/TASK-011.md tasks/TASK-014.md tasks/TASK-015.md tasks/TASK-0"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "instructions",
+    "other",
+    "task_file"
+   ],
+   "written": [
+    "app_adr_new",
+    "instructions",
+    "other",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-app/docs/adr/0024-customer-names-never-appear-in-logs.md",
+    "mira-app/tasks/hosted-report-queue.md",
+    "mira-decisions/README.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 11,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S10-B1-claude-r1",
+  "scenario": "S10",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-022.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0009",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "loaded": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S10-B1-codex-r1",
+  "scenario": "S10",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-022.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0009",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "loaded": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 8,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S11-A0-claude-r1",
+  "scenario": "S11",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-023.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": false,
+   "reported": {
+    "adr": "0014",
+    "commit": "6ca078bb848966bf9e398d75717e384c533a41bd",
+    "digest": "sha256:d3d544af6856343e2f377ea805270fab5e554cf4beb05a348213efce6b3f1993",
+    "digest_matches_cited": true,
+    "in_force": false,
+    "action": "proceed"
+   }
+  },
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S11-A0-codex-r1",
+  "scenario": "S11",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-023.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0014",
+    "commit": "6ca078bb848966bf9e398d75717e384c533a41bd",
+    "digest": "sha256:d3d544af6856343e2f377ea805270fab5e554cf4beb05a348213efce6b3f1993",
+    "digest_matches_cited": true,
+    "in_force": false,
+    "action": "stop"
+   }
+  },
+  "choice": "none",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 12,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S11-B1-claude-r1",
+  "scenario": "S11",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-023.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0023",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "proceed"
+   },
+   "via": "alt"
+  },
+  "loaded": true,
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S11-B1-codex-r1",
+  "scenario": "S11",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-023.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0023",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "proceed"
+   },
+   "via": "alt"
+  },
+  "loaded": true,
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 10,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S12-A0-claude-r1",
+  "scenario": "S12",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-024.md"
+   ]
+  },
+  "handoff": {
+   "ok": false,
+   "why": "fetch, clone or disk search: cd /private/tmp/adrpoc-runs/S12-A0-claude-r1; ls -a . ..; find / -type d -name '",
+   "action_ok": true,
+   "reported": {
+    "adr": "0005",
+    "commit": "unavailable",
+    "digest": "unavailable",
+    "digest_matches_cited": false,
+    "in_force": null,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 8,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S12-A0-codex-r1",
+  "scenario": "S12",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-024.md"
+   ]
+  },
+  "handoff": {
+   "ok": false,
+   "why": "the answer does not name the missing clone or commit",
+   "action_ok": true,
+   "reported": {
+    "adr": "0005",
+    "commit": "",
+    "digest": "",
+    "digest_matches_cited": false,
+    "in_force": null,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 13,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S12-B1-claude-r1",
+  "scenario": "S12",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-024.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0005",
+    "commit": "3f1c9b7a2d4e8f605a1b3c7d9e0f2a4b6c8d1e3f",
+    "digest": "unavailable: ruling file not read (no clone of example/mira-billing)",
+    "digest_matches_cited": false,
+    "in_force": null,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "loaded": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S12-B1-codex-r1",
+  "scenario": "S12",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-024.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0005",
+    "commit": "",
+    "digest": "",
+    "digest_matches_cited": false,
+    "in_force": null,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "loaded": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S2-B1-claude-r1",
+  "scenario": "S2",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 9,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S2-B1-claude-r1/mira-app; cat docs/adr/0011* docs/adr/0010* ; cat docs/journey/story-map.md; cat tasks/TASK-016.md tasks/TASK-020.md; grep -n -i \\\"csv\\\\|ascii\\"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-014.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "csv",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S2-B1-codex-r1",
+  "scenario": "S2",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 12,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc 'cat CLAUDE.md docs/journey/story-map.md; git show dda0e11103a43f9b8a8b23cde52408f1eea6a626:docs/adr/0011-reports-are-exported-as-csv-only.md; git show dda0e11103a43f9b8a8b23"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "story_map"
+   ],
+   "written": [
+    "story_map",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/docs/journey/story-map.md",
+    "mira-app/tasks/TASK-014.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "csv",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 9,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S3-B1-claude-r1",
+  "scenario": "S3",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "instructions"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-app/src/report_job.js"
+   ]
+  },
+  "loaded": true,
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S3-B1-codex-r1",
+  "scenario": "S3",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "task_file"
+   ],
+   "written": [
+    "instructions",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-app/tasks/TASK-025.md"
+   ]
+  },
+  "loaded": true,
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 9,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S4-B1-claude-r1",
+  "scenario": "S4",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "story_map"
+   ],
+   "files": [
+    "mira-app/docs/journey/story-map.md"
+   ]
+  },
+  "loaded": true,
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S4-B1-codex-r1",
+  "scenario": "S4",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "story_map"
+   ],
+   "files": [
+    "mira-app/docs/journey/story-map.md",
+    "mira-app/src/receipt.js"
+   ]
+  },
+  "loaded": true,
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 8,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S5-A0-claude-r1",
+  "scenario": "S5",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-app/0008",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd ../mira-app; cat docs/adr/0007* docs/adr/0008* docs/adr/0022*; cat .agent/notes.md; cat tasks/TASK-024.md tasks/TASK-023.md; grep -ril \\\"cache\\\\|memory\\\\|RAM\\\" tasks docs\"}"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "decision_space_new"
+   ],
+   "written": [
+    "app_adr_new",
+    "decision_space_new"
+   ],
+   "files": [
+    "mira-app/docs/adr/0024-report-loading-uses-a-sqlite-index.md",
+    "mira-decisions/docs/adr/0024-the-report-cache-never-grows-past-50-mb.md"
+   ]
+  },
+  "choice": "sqlite_index",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S5-A0-codex-r1",
+  "scenario": "S5",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 8,
+   "adr": "mira-app/0008",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc 'cat AGENTS.md CLAUDE.md README.md package.json src/report_job.js src/cache.js tasks/TASK-024.md docs/adr/0007-report-cache-entries-expire-after-24-hours.md docs/adr/0008-the"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "decision_space_new"
+   ],
+   "written": [
+    "app_adr_new",
+    "decision_space_new"
+   ],
+   "files": [
+    "mira-app/docs/adr/0024-speed-up-report-loading-with-a-sqlite-index.md",
+    "mira-decisions/docs/adr/0024-report-cache-must-never-exceed-50-mb.md"
+   ]
+  },
+  "choice": "sqlite_index",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 11,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S5-B1-claude-r1",
+  "scenario": "S5",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 9,
+   "adr": "mira-app/0008",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S5-B1-claude-r1/mira-app; cat docs/adr/0008* docs/adr/0007* docs/adr/0022*; cat .agent/notes.md; ls docs/journey tasks; git status --short\"}"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "app_adr_new"
+   ],
+   "files": [
+    "mira-app/docs/adr/0024-the-report-cache-never-grows-past-50-mb.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "sqlite_index",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 8,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S5-B1-codex-r1",
+  "scenario": "S5",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 12,
+   "adr": "mira-app/0008",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc 'git show dda0e11103a43f9b8a8b23cde52408f1eea6a626:docs/adr/0007-report-cache-entries-expire-after-24-hours.md; git show dda0e11103a43f9b8a8b23cde52408f1eea6a626:docs/adr/000"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "task_file"
+   ],
+   "written": [
+    "app_adr_new",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/docs/adr/0024-the-report-cache-must-not-exceed-50-mb.md",
+    "mira-app/tasks/report-cache-performance.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "sqlite_index",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 11,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S6-B1-claude-r1",
+  "scenario": "S6",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 7,
+   "adr": "mira-decisions/0023",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd ../mira-decisions; for n in 0002 0014 0023 0011 0012 0017; do f=$(ls docs/adr/$n-*); echo \\\"=== $f\\\"; cat $f; done; cat ../mira-app/.agent/notes.md; git status --short\"}"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-015.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S6-B1-codex-r1",
+  "scenario": "S6",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 12,
+   "adr": "mira-decisions/0023",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc 'cat README.md; git show 1b9d588d594609270cd28d48306fe6ae0926b26c:docs/adr/0002-reports-go-out-weekly.md; git show 1b9d588d594609270cd28d48306fe6ae0926b26c:docs/adr/0014-repo"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-015.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 10,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S7-B1-claude-r1",
+  "scenario": "S7",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": false,
+  "consulted_evidence": {
+   "limit": 8
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-016.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "keep_as_is",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S7-B1-codex-r1",
+  "scenario": "S7",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 10,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc \\\"git show dda0e11103a43f9b8a8b23cde52408f1eea6a626:docs/adr/0011-reports-are-exported-as-csv-only.md; git show dda0e11103a43f9b8a8b23cde52408f1eea6a626:docs/adr/0010-exports"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-016.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "keep_as_is",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 10,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S8-B1-claude-r1",
+  "scenario": "S8",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": false,
+   "missing": [
+    "agent_notes"
+   ],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-020.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0007",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+    "digest_matches_cited": true,
+    "in_force": true,
+    "action": "proceed"
+   }
+  },
+  "loaded": true,
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S8-B1-codex-r1",
+  "scenario": "S8",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": false,
+   "missing": [
+    "agent_notes"
+   ],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-020.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0007",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+    "digest_matches_cited": true,
+    "in_force": true,
+    "action": "proceed"
+   }
+  },
+  "loaded": true,
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 9,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S9-B1-claude-r1",
+  "scenario": "S9",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-021.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0023",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "proceed"
+   },
+   "via": "alt"
+  },
+  "loaded": true,
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S9-B1-codex-r1",
+  "scenario": "S9",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-021.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0023",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "proceed"
+   },
+   "via": "alt"
+  },
+  "loaded": true,
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 11,
+   "skill_used": true,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results"
+ },
+ {
+  "run": "S1-A0-claude-r1",
+  "scenario": "S1",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-decisions/0007",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd ../mira-decisions && cat docs/adr/0007* docs/adr/0015* docs/adr/0023*; grep -il \\\"log\\\" docs/adr/*; cat ../mira-app/.agent/notes.md; cat ../mira-app/docs/adr/0004*\"}"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [
+    "app_adr_new"
+   ],
+   "forbidden": [
+    "decision_space_new",
+    "instructions"
+   ],
+   "written": [
+    "decision_space_new",
+    "instructions"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-decisions/docs/adr/0024-no-customer-name-is-ever-written-to-a-log.md"
+   ]
+  },
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S1-A0-codex-r1",
+  "scenario": "S1",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 6,
+   "adr": "mira-decisions/0007",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc \\\"ls -la && cat README.md && cat docs/adr/0007-customer-data-stays-in-the-eu.md docs/adr/0015-analytics-events-carry-no-email-addresses.md docs/adr/0022-decisions-are-reviewe"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "decision_space_new",
+    "instructions"
+   ],
+   "written": [
+    "app_adr_new",
+    "decision_space_new",
+    "instructions"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-app/docs/adr/0024-hosted-report-jobs-use-eu-west-1.md",
+    "mira-decisions/docs/adr/0024-customer-names-never-appear-in-logs.md"
+   ]
+  },
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 10,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S10-A0-claude-r1",
+  "scenario": "S10",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-022.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0009",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S10-A0-codex-r1",
+  "scenario": "S10",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-022.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0009",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 10,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S2-A0-claude-r1",
+  "scenario": "S2",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S2-A0-claude-r1; cat mira-app/docs/adr/0011* mira-app/docs/adr/0012*; cat mira-app/docs/journey/story-map.md; grep -il \\\"file name\\\\|filename\\\\|export\\\\|ascii\\"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-014.md"
+   ]
+  },
+  "choice": "csv",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S2-A0-codex-r1",
+  "scenario": "S2",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 10,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc 'cat AGENTS.md README.md tasks/TASK-014.md docs/adr/0011-reports-are-exported-as-csv-only.md docs/adr/0010-exports-are-generated-in-a-background-job.md docs/adr/0012-export-d"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-014.md"
+   ]
+  },
+  "choice": "csv",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 13,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S3-A0-claude-r1",
+  "scenario": "S3",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "decision_space_new"
+   ],
+   "written": [
+    "decision_space_new",
+    "instructions"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-app/src/report_job.js",
+    "mira-decisions/docs/adr/0024-show-the-full-diff-before-committing-and-write-commits-in-english.md"
+   ]
+  },
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S3-A0-codex-r1",
+  "scenario": "S3",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "task_file"
+   ],
+   "written": [
+    "instructions",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-app/tasks/TASK-023.md"
+   ]
+  },
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S4-A0-claude-r1",
+  "scenario": "S4",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "story_map"
+   ],
+   "files": [
+    "mira-app/docs/journey/story-map.md"
+   ]
+  },
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S4-A0-codex-r1",
+  "scenario": "S4",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "story_map"
+   ],
+   "files": [
+    "mira-app/docs/journey/story-map.md",
+    "mira-app/src/receipt.js"
+   ]
+  },
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S5-A0-claude-r1",
+  "scenario": "S5",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-app/0008",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd ../mira-app; cat docs/adr/0008* docs/adr/0007* docs/adr/0022* docs/adr/0015*; ls -a .agent .claude; cat .agent/* 2>/dev/null | head -40; cat docs/journey/story-map.md; grep -il \\\"cache"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "decision_space_new"
+   ],
+   "written": [
+    "app_adr_new",
+    "decision_space_new"
+   ],
+   "files": [
+    "mira-app/docs/adr/0024-the-report-cache-never-grows-past-50-mb.md",
+    "mira-decisions/docs/adr/0024-the-kiosk-report-cache-never-grows-past-50-mb.md"
+   ]
+  },
+  "choice": "sqlite_index",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S5-A0-codex-r1",
+  "scenario": "S5",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 6,
+   "adr": "mira-app/0008",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc 'cat AGENTS.md README.md CLAUDE.md package.json src/cache.js src/report_job.js tasks/TASK-022.md docs/adr/0007-report-cache-entries-expire-after-24-hours.md docs/adr/0008-the"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "decision_space_new"
+   ],
+   "written": [
+    "app_adr_new",
+    "decision_space_new"
+   ],
+   "files": [
+    "mira-app/docs/adr/0024-speed-up-report-loading-with-a-sqlite-index.md",
+    "mira-decisions/docs/adr/0024-kiosk-report-cache-must-not-exceed-50-mb.md"
+   ]
+  },
+  "choice": "sqlite_index",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 9,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S6-A0-claude-r1",
+  "scenario": "S6",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-decisions/0023",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S6-A0-claude-r1; cd mira-decisions/docs/adr; cat 0014* 0023* 0012*; grep -i -B2 -A2 \\\"cadence\\\\|daily\\\\|weekly\\\" 0022* 0011*; cat /private/tmp/adrpoc-runs/S6-A"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-015.md"
+   ]
+  },
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S6-A0-codex-r1",
+  "scenario": "S6",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 6,
+   "adr": "mira-decisions/0023",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc \\\"cat README.md docs/adr/0002-reports-go-out-weekly.md docs/adr/0014-reports-go-out-daily.md docs/adr/0023-reports-go-out-daily-at-07-00.md; rg --files --hidden -g 'AGENTS.md"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-015.md"
+   ]
+  },
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 8,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S7-A0-claude-r1",
+  "scenario": "S7",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S7-A0-claude-r1/mira-app; cat docs/adr/0011*  docs/adr/0010*; cat docs/journey/story-map.md; cat tasks/TASK-015.md\"}"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-016.md"
+   ]
+  },
+  "choice": "keep_as_is",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S7-A0-codex-r1",
+  "scenario": "S7",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 4,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc \\\"cat AGENTS.md README.md tasks/TASK-016.md docs/adr/0011-reports-are-exported-as-csv-only.md docs/adr/0010-exports-are-generated-in-a-background-job.md; git status --short; "
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-016.md"
+   ]
+  },
+  "choice": "keep_as_is",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S8-A0-claude-r1",
+  "scenario": "S8",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": false,
+   "missing": [
+    "agent_notes"
+   ],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-020.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0007",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+    "digest_matches_cited": true,
+    "in_force": true,
+    "action": "proceed"
+   }
+  },
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S8-A0-codex-r1",
+  "scenario": "S8",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "other"
+   ],
+   "written": [
+    "agent_notes",
+    "other",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/.agent/notes.md",
+    "mira-app/README.md",
+    "mira-app/tasks/TASK-020.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0007",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+    "digest_matches_cited": true,
+    "in_force": true,
+    "action": "proceed"
+   }
+  },
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 10,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S9-A0-claude-r1",
+  "scenario": "S9",
+  "arm": "A0p",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-021.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": false,
+   "reported": {
+    "adr": "0002",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+    "digest_matches_cited": true,
+    "in_force": false,
+    "action": "proceed"
+   }
+  },
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S9-A0-codex-r1",
+  "scenario": "S9",
+  "arm": "A0p",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-021.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0023",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "proceed"
+   },
+   "via": "alt"
+  },
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 11,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S10-A0-claude-r1",
+  "scenario": "S10",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-022.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0009",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S10-A0-codex-r1",
+  "scenario": "S10",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-022.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0009",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "stop"
+   }
+  },
+  "stop_clean": true,
+  "choice": "stop",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 10,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S2-A0-claude-r1",
+  "scenario": "S2",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S2-A0-claude-r1; cat mira-app/docs/adr/0011* mira-app/docs/adr/0012*; cat mira-app/docs/journey/story-map.md; grep -il \\\"file name\\\\|filename\\\\|export\\\\|ascii\\"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-014.md"
+   ]
+  },
+  "choice": "csv",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S2-A0-codex-r1",
+  "scenario": "S2",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 10,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc 'cat AGENTS.md README.md tasks/TASK-014.md docs/adr/0011-reports-are-exported-as-csv-only.md docs/adr/0010-exports-are-generated-in-a-background-job.md docs/adr/0012-export-d"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-014.md"
+   ]
+  },
+  "choice": "csv",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 13,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S3-A0-claude-r1",
+  "scenario": "S3",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "decision_space_new"
+   ],
+   "written": [
+    "decision_space_new",
+    "instructions"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-app/src/report_job.js",
+    "mira-decisions/docs/adr/0024-show-the-full-diff-before-committing-and-write-commits-in-english.md"
+   ]
+  },
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S3-A0-codex-r1",
+  "scenario": "S3",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "task_file"
+   ],
+   "written": [
+    "instructions",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/AGENTS.md",
+    "mira-app/tasks/TASK-023.md"
+   ]
+  },
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S4-A0-claude-r1",
+  "scenario": "S4",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "story_map"
+   ],
+   "files": [
+    "mira-app/docs/journey/story-map.md"
+   ]
+  },
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S4-A0-codex-r1",
+  "scenario": "S4",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "story_map"
+   ],
+   "files": [
+    "mira-app/docs/journey/story-map.md",
+    "mira-app/src/receipt.js"
+   ]
+  },
+  "choice": null,
+  "choice_ok": null,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S6-A0-claude-r1",
+  "scenario": "S6",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-decisions/0023",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S6-A0-claude-r1; cd mira-decisions/docs/adr; cat 0014* 0023* 0012*; grep -i -B2 -A2 \\\"cadence\\\\|daily\\\\|weekly\\\" 0022* 0011*; cat /private/tmp/adrpoc-runs/S6-A"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-015.md"
+   ]
+  },
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S6-A0-codex-r1",
+  "scenario": "S6",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 6,
+   "adr": "mira-decisions/0023",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc \\\"cat README.md docs/adr/0002-reports-go-out-weekly.md docs/adr/0014-reports-go-out-daily.md docs/adr/0023-reports-go-out-daily-at-07-00.md; rg --files --hidden -g 'AGENTS.md"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-015.md"
+   ]
+  },
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 8,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S7-A0-claude-r1",
+  "scenario": "S7",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 5,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S7-A0-claude-r1/mira-app; cat docs/adr/0011*  docs/adr/0010*; cat docs/journey/story-map.md; cat tasks/TASK-015.md\"}"
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-016.md"
+   ]
+  },
+  "choice": "keep_as_is",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S7-A0-codex-r1",
+  "scenario": "S7",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 4,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"/bin/zsh -lc \\\"cat AGENTS.md README.md tasks/TASK-016.md docs/adr/0011-reports-are-exported-as-csv-only.md docs/adr/0010-exports-are-generated-in-a-background-job.md; git status --short; "
+  },
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-016.md"
+   ]
+  },
+  "choice": "keep_as_is",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 6,
+   "skill_used": false,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S8-A0-claude-r1",
+  "scenario": "S8",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": false,
+   "missing": [
+    "agent_notes"
+   ],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-020.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0007",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+    "digest_matches_cited": true,
+    "in_force": true,
+    "action": "proceed"
+   }
+  },
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S8-A0-codex-r1",
+  "scenario": "S8",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "other"
+   ],
+   "written": [
+    "agent_notes",
+    "other",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/.agent/notes.md",
+    "mira-app/README.md",
+    "mira-app/tasks/TASK-020.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0007",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+    "digest_matches_cited": true,
+    "in_force": true,
+    "action": "proceed"
+   }
+  },
+  "choice": "eu-west-1",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 10,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S9-A0-claude-r1",
+  "scenario": "S9",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-021.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": false,
+   "reported": {
+    "adr": "0002",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+    "digest_matches_cited": true,
+    "in_force": false,
+    "action": "proceed"
+   }
+  },
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 5,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ },
+ {
+  "run": "S9-A0-codex-r1",
+  "scenario": "S9",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "model": "gpt-6.1-sol",
+  "placement": {
+   "ok": true,
+   "missing": [],
+   "forbidden": [],
+   "written": [
+    "task_file"
+   ],
+   "files": [
+    "mira-app/tasks/TASK-021.md"
+   ]
+  },
+  "handoff": {
+   "ok": true,
+   "why": "",
+   "action_ok": true,
+   "reported": {
+    "adr": "0023",
+    "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+    "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+    "digest_matches_cited": false,
+    "in_force": true,
+    "action": "proceed"
+   },
+   "via": "alt"
+  },
+  "choice": "daily",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 11,
+   "skill_used": false,
+   "used_git_show": true,
+   "used_shasum": true
+  },
+  "source": "results-poc-a0"
+ }
+]

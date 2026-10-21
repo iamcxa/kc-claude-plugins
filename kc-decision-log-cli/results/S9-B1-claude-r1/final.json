@@ -1,0 +1,18 @@
+{
+ "decision": "The cited ADR 0002 (weekly) is superseded by 0014, which 0023 supersedes in turn. 0023 is Accepted and sets the cadence to daily at 07:00 shop time, so I chose daily. I did not implement it.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-021.md",
+   "info": "Added a note that ADR 0002 is superseded (0002 -> 0014 -> 0023). It records ADR 0023 as in force with its commit and digest, the daily cadence at 07:00 shop time, and that src/report_job.js still says weekly and is not yet changed."
+  }
+ ],
+ "choice": "daily",
+ "ruling_check": {
+  "adr": "0023",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+  "digest_matches_cited": false,
+  "in_force": true,
+  "action": "proceed"
+ }
+}

@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-024.md",
+  "status": "modified",
+  "content": "# TASK-024 Invoice numbers\n\nStatus: ready\n\nOutcome: invoices are numbered the way the ruling cited below says. Summary from the planning agent: invoice numbers carry the shop's prefix, for example SHOP-0001.\n\n## Ruling reference\n\nHanded over by the planning agent.\n\nReference\n  Binding        billing\n  Repository     example/mira-billing\n  ADR            0005\n  Path           docs/adr/0005-invoice-numbering.md\n  Commit         3f1c9b7a2d4e8f605a1b3c7d9e0f2a4b6c8d1e3f\n  Digest         sha256:5d41402abc4b2a76b9719d911017c5925d41402abc4b2a76b9719d911017c592\n\n## Blocker (agent note, 2026-10-22)\n\nNot started. The cited ruling (example/mira-billing, ADR 0005, commit 3f1c9b7a2d4e8f605a1b3c7d9e0f2a4b6c8d1e3f) could not be read: that repository is not available locally, so its digest and in-force status are unverified. The task only has the planning agent's summary (prefix such as SHOP-0001).\nNote: `../mira-decisions` has a different ADR 0005 (shops-pay-by-bank-transfer-not-card), which is unrelated to invoice numbering and was not used.\nNeeded before building: access to example/mira-billing at the cited commit, confirm the digest matches and the ADR is still in force (not superseded).\n"
+ }
+]

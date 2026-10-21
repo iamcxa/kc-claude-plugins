@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- S10 A shop prints a QR code on each receipt so customers can leave a review.\n  - Mira Example, 2026-10-21: \"Someday shops should be able to print a QR code on each receipt so customers can leave a review. Not this release and not soon. I just don't want us to lose the idea.\"\n  - Deferred idea only; no implementation scheduled, and outside this release and near-term plans.\n"
+ },
+ {
+  "path": "mira-app/src/receipt.js",
+  "status": "modified",
+  "content": "// Receipt page layout.\nexport const RECEIPT_PADDING = 16;\nexport const RECEIPT_LINE_GAP = 6;\n"
+ }
+]
