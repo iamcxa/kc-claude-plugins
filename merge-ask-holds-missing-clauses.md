@@ -38,6 +38,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-21T08:13:25.945624Z"
                 reason: engineering-reviewer-1 (reviews/) requires design changes before the ideation gate; a fold cycle follows
+            - id: gate-attempt:merge-ask-holds-missing-clauses-ideation-2
+              briefing:
+                id: briefing:merge-ask-holds-missing-clauses:ideation:attempt-2:revision-1
+                digest: sha256:dc4db3f0ee7d99ed559fdee99a5754748d1f0a4f327753367b08802856a07376
+                room-ref: ./merge-ask-holds-missing-clauses/review/ideation/briefing-2
 ---
 
 ## Scope
