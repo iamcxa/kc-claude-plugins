@@ -18,6 +18,17 @@ gates:
                 id: briefing:kc-decision-log-cli:backlog:attempt-1:revision-1
                 digest: sha256:58faf03afa587f2be459207b3981906de76b4934138e74a381e6ebaaa70e7dd8
                 room-ref: ./kc-decision-log-cli/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-decision-log-cli:backlog:1
+                briefing: briefing:kc-decision-log-cli:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T01:19:19.23991Z"
+                decision: approve
+                reason: Captain replied 「照建議」 to the joint backlog presentation of kc-decision-log-cli and kc-decision-log-handoff-trial (2026-10-21); accepts the filed outcome, scope, budget and AC-1..AC-4, and the stated journey mapping P1/S10.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 The user directs several AI agents and wants one versioned source of his rulings that each agent reads at the same version (「我需要指揮不同 FO，跨產品，跨 LLM，跨工具去達成我的目標」, 2026-10-19). Today no agent has a tool to read a ruling at an exact commit. This task builds that tool and the read-only skill that tells agents to use it; task `kc-decision-log-handoff-trial` then proves a Claude→Codex handoff with it.
