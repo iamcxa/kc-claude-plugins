@@ -48,11 +48,11 @@ gates:
               application:
                 target-stage: implementation
                 state: pending
-journey: kc-decision-log-design
-journey-release: P1
-journey-story: S10
-journey-required-tasks: '["kc-decision-log-cli"]'
-journey-mapping-complete: true
+journey:
+journey-release:
+journey-story:
+journey-required-tasks:
+journey-mapping-complete:
 started: 2026-10-21T01:21:24Z
 ---
 
@@ -234,9 +234,9 @@ No past `Override:` bears on these four (read 2026-10-21). Not decided here, rec
 
 ## FO alignment
 
-Not needed before ideation. The Captain accepted the outcome, scope, two-task split, budget and this session as FO (「照建議」, 2026-10-20 and 2026-10-21); the committed brief is the planning authority. Release review: kc-decision-log-design/P1 marked changed (signal 1: task admitted into the release). Release review: kc-decision-log-design/P1 at 533051fb (fresh review-release worker, 2026-10-21: no map edit; holes folded in by Amendment 1; two tasks kept, Captain 「照建議」). Surfaces is ui because a person reads and operates the CLI's human-readable output.
-Surfaces: ui
-Visible change: Agents can run a `kc-decision-log` CLI and load a read-only skill to read one ruling at an exact commit.
+Not needed before ideation. The Captain accepted the outcome, scope, two-task split, budget and this session as FO (「照建議」, 2026-10-20 and 2026-10-21); the committed brief is the planning authority. Release review: kc-decision-log-design/P1 marked changed (signal 1: task admitted into the release). Release review: kc-decision-log-design/P1 at 533051fb (fresh review-release worker, 2026-10-21: no map edit; holes folded in by Amendment 1; two tasks kept, Captain 「照建議」). Surfaces is ui because a person reads and operates the CLI's human-readable output. Amendment 4 (2026-10-21): the deliverable is now the read-adr skill, which no person operates, so Surfaces is none. Release review: not needed: the Captain authorized skipping the map for this task (「這次授權跳過地圖，先做工具」); journey fields cleared.
+Surfaces: none
+Visible change: none
 
 ## Stage Report: ideation
 
@@ -278,3 +278,9 @@ Captain: 「照建議」 (this FO's Paseo session "decision-log P1 重切與 dev
 Asked: 「2. 任務一縮小，退回設計階段重做：照事先講好的規則，任務一改成「plugin 裡只放 `read-adr` skill 加設定檔範本」。skill 教 agent 用 `git show` 讀固定版本、用 shasum 比對指紋、看 Status 和取代行，並附上「什麼寫進哪裡」的規則。不做 CLI，也不做判斷生效的小腳本，因為 POC 裡沒有出現衝突的情況。前面修訂裡的合成決策 repo 產生腳本、`tracking_ref`、`kc-adr` 名稱照舊。這會改掉已接受的驗收條件：拒絕錯誤來源、生效判定這兩條要改寫，S11「知道哪些已生效」改成靠 agent 讀 Status 和取代行，同主題衝突偵測就沒了。任務二裡「用同一個 CLI」的驗收也要跟著改成用 skill 的做法。這些都會記成你的修訂，任務一重做設計後，設計關卡再給你批一次。」
 Supersedes: AC-1, AC-3 (replacements come from the redone ideation)
 Design: the whole "## Design" section (CLI read path, command surface, exit codes, the six-gap decisions as CLI code) is redone as a skill-plus-config design; evidence basis is adr-read-and-route-poc (dev2-poc, archived done)
+
+### Amendment 4 — 2026-10-21, chat
+Captain: 「可以，這次授權跳過地圖，先做工具」 (this FO's Paseo session; earlier the same day: 「對，等於這個工具只管一個目的，跨領域的東西留在外面，這個工具完全不在乎」 and 「可以，但是前綽應該是選用，不是必要」)
+Asked: 「請你決定一件事：任務一現在就照 v2 開始設計，地圖晚點再重畫，可以嗎？」 with 「任務一：交付 `read-adr` skill（用 git 讀固定版本、核對指紋、看 Status 和取代行，加上「寫到哪裡」五問）和選用前綴的規格；驗收改成 dev2 的 worker 實際載入並照做。」「任務二（Codex 交接演練）：記成延後，留在待辦。」 v2 is docs/journey/kc-decision-log/boundary-contract.md on PR #691.
+Supersedes: AC-2 (replacements come from the redone ideation)
+Design: the scope beyond Amendment 3 — no binding config for a separate decision repository; reading works on any repo's docs/adr; Amendment 1's tracking_ref and synthetic decision repository generator are deferred with kc-decision-log-handoff-trial
