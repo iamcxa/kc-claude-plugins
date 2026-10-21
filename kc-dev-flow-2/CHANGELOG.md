@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.27.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.26.0...kc-dev-flow-2-v0.27.0) (2026-10-21)
+
+
+### Features
+
+* **kc-dev-flow-2:** a db task passes the number guard where the adopter declares migrations-path: none ([#686](https://github.com/iamcxa/kc-claude-plugins/issues/686)) ([559e7bf](https://github.com/iamcxa/kc-claude-plugins/commit/559e7bf299c5dea0fcf439aa197c126f335b178a))
+* **kc-dev-flow-2:** check the FO-write rules at the script FO runs at the write ([#687](https://github.com/iamcxa/kc-claude-plugins/issues/687)) ([f08a1f1](https://github.com/iamcxa/kc-claude-plugins/commit/f08a1f141004ea525a226a16111ee1e94768a458))
+* **kc-dev-flow-2:** tell FO to present a stage's awaiting gates as one sitting ([#689](https://github.com/iamcxa/kc-claude-plugins/issues/689)) ([6fc17a6](https://github.com/iamcxa/kc-claude-plugins/commit/6fc17a66ea324165694f1128f904f1e5e8a8b31e))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** name spacedock@0.27.0 in the workflow template's commissioned-by ([#685](https://github.com/iamcxa/kc-claude-plugins/issues/685)) ([0a361fe](https://github.com/iamcxa/kc-claude-plugins/commit/0a361fe454b47b66527f488e01f8f9c4d8cac1b6))
+
 ## [0.26.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.25.0...kc-dev-flow-2-v0.26.0) (2026-10-20)
 
 
