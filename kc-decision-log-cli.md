@@ -291,6 +291,7 @@ No past `Override:` bears on these four (read 2026-10-21).
 
 Not needed before ideation. The Captain accepted the outcome, scope, two-task split, budget and this session as FO (「照建議」, 2026-10-20 and 2026-10-21); the committed brief is the planning authority. Release review: kc-decision-log-design/P1 marked changed (signal 1: task admitted into the release). Release review: kc-decision-log-design/P1 at 533051fb (fresh review-release worker, 2026-10-21: no map edit; holes folded in by Amendment 1; two tasks kept, Captain 「照建議」). Surfaces is ui because a person reads and operates the CLI's human-readable output. Amendment 4 (2026-10-21): the deliverable is now the read-adr skill, which no person operates, so Surfaces is none. Release review: not needed: the Captain authorized skipping the map for this task (「這次授權跳過地圖，先做工具」); journey fields cleared.
 Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-22 — do these amendments withdraw what the Captain approved, and what changes in the build? Result: adjust: no approval withdrawn without his words except the synthetic-repo generator; Amendment 5 item 1 understated that the approved evidence plan said "S3, S4, S8 homes unchanged"; AC-9's "installed as a user would install it" not met on Claude (--plugin-dir); Scope never superseded; dispatch-record provenance gaps.
+FO record notes, 2026-10-22: Amendment 4's "v2" is boundary-contract.md as the Captain read it at docs/kc-decision-log-boundary 5fc10587 (PR #691, still open). Amendments 1, 3 and 4 carry FO-written words in their Supersedes or Design lines (observer finding); they are left as recorded, not rewritten after the fact.
 Surfaces: none
 Visible change: none
 
@@ -373,6 +374,12 @@ Evidence clause: `python3 run.py run --scenarios S8,S11 --arms B1 --hosts claude
 **AC-4**: The read-only skill tells an agent holding a ruling reference to re-read it at the cited commit with `git`, compare the digest and stop on a mismatch. It loads on Claude and Codex.
 Verified by: the skill files and manifest entries, a local install that lists the skill on both hosts, and a text check of the shipped files.
 Evidence clause: with `HOME=$(mktemp -d)`, `claude plugin marketplace add <worktree>`, `claude plugin install kc-adr@kc-claude-plugins`, `claude plugin details kc-adr`; and the Codex equivalent through `codex plugin marketplace`, `codex plugin add kc-adr@kc-claude-plugins`, `codex plugin list` (subcommands exist per `--help`, 2026-10-21; the Codex marketplace arguments are confirmed at implementation). Each listing must show `read-adr`. A text check asserts: `SKILL.md` names the stops (digest mismatch, missing clone or commit, non-Accepted Status, broken chain), the five questions in order, the one-home rule and the pointer rule; `writing.md` names `adr-template.md`, `adr_lint.py` and `number_guards.py reserve --kind adr` only under its `## Where the tools are` heading and contains no literal `kc-dev-flow-2/0.` path; `prefix.md` says the prefix is optional and that monorepo namespaces are deferred; `git ls-files kc-adr` lists no `adr_lint.py`, `number_guards.py` or `adr-template.md`. Falsifier: removing the skill folder or the manifest `skills` key makes a listing lack it; adding a copy of `adr_lint.py` fails the `ls-files` check, and moving `adr_lint.py` into a step line fails the heading check. Current evidence: none run; whether a Codex worker loads a plugin skill from the plugin cache is probed in harness change (1) of `### Evidence plan`.
+
+### Amendment 7 — 2026-10-22, chat
+Captain: 「照建議」 (this FO's Paseo session, reply to a four-item batch after the engineering reviewer's report; he first asked 「4是什麼意思？」 and the explanation followed)
+Asked: 「我當時說：「這不是看了結果才放寬：規則是你在跑之前就接受的，只是評分檔沒跟著更新。」實際上，你批准的設計證據計畫裡明寫「S3、S4、S8 的預期位置不變」」「1. S8 重新計分（照事實重新裁一次）：建議維持重新計分，並把 AC-8 一併記成被修訂。」「2. AC-9 補一次真正安裝的 Claude 派工：只要一次執行，就能補齊證據。」「3. 範圍改成 v2：「範圍」段落正式改成 kc-adr 的單一用途（讀對、寫到對的地方，只有 skill）。」「4. 合成決策 repo 產生腳本移出 kc-adr，留給任務二：任務二維持延後；恢復時，先重新走待辦關卡。」
+Supersedes: AC-8
+Design: ## Scope
 
 ## Stage Report: ideation (cycle 2)
 

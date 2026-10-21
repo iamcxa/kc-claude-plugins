@@ -1,3 +1,4 @@
+FO provenance note, 2026-10-22: built with dispatch build --stamp at state commit 2c8f2802 (2026-10-21 20:51) and sent right after; one follow-up message to this worker (tool ownership) is recorded late as ideation-3.md.
 Dispatched: from c27e76590c1d2dc910e7fa2d332242a7534df0b0
 Model: sonnet
 

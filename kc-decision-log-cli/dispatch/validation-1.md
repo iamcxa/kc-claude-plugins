@@ -1,3 +1,4 @@
+FO provenance note, 2026-10-22: the first version of this record (91e87338, 01:11) was never sent; its dispatch build refused because the implementation report was incomplete. The version at ba44ac0b (01:20) is the one dispatched.
 Candidate: e2ac9041637552332b27ab66c845308ccbe95d0f
 Dispatched: from e2ac9041637552332b27ab66c845308ccbe95d0f
 Model: sonnet
