@@ -1,0 +1,18 @@
+{
+  "name": "kc-adr",
+  "description": "Experimental. Teaches agents to read an ADR at an exact commit and check its digest, tell whether it is still in force, and put new information in the one place it belongs.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "experimental",
+    "adr",
+    "decision-record",
+    "git",
+    "claude-code",
+    "codex"
+  ]
+}

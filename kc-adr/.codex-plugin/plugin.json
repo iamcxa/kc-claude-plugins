@@ -1,0 +1,35 @@
+{
+  "name": "kc-adr",
+  "version": "0.1.0",
+  "description": "Experimental. Teaches agents to read an ADR at an exact commit and check its digest, tell whether it is still in force, and put new information in the one place it belongs.",
+  "author": {
+    "name": "Kent Chen",
+    "url": "https://github.com/iamcxa"
+  },
+  "license": "MIT",
+  "keywords": [
+    "experimental",
+    "adr",
+    "decision-record",
+    "git",
+    "claude-code",
+    "codex"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "KC ADR",
+    "shortDescription": "Read an ADR at an exact commit and put new information in the right place",
+    "longDescription": "Experimental. Teaches agents to read an ADR at an exact commit and check its digest, tell whether it is still in force, and put new information in the one place it belongs.",
+    "developerName": "Kent Chen",
+    "category": "Productivity",
+    "capabilities": [
+      "Read"
+    ],
+    "websiteURL": "https://github.com/iamcxa/kc-claude-plugins/tree/main/kc-adr",
+    "defaultPrompt": [
+      "Read the ADR this task cites and check its digest",
+      "Where should this new information be written down?"
+    ],
+    "brandColor": "#0EA5E9"
+  }
+}
