@@ -72,3 +72,10 @@ Verified by: the worker's stage report naming the skill load and the CLI run it 
 Not needed before ideation, for the same accepted shape (「照建議」, 2026-10-20 and 2026-10-21). The Codex first officer start (model `gpt-6.1-sol`, reasoning effort high) was part of that acceptance. Release review: kc-decision-log-design/P1 marked changed (signal 1: task admitted into the release). Surfaces is ui because a person reads and operates the CLI's human-readable output.
 Surfaces: ui
 Visible change: One small CLI behaviour follows what a synthetic ruling decides; ideation names the behaviour.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-21, chat
+Captain: 「照建議」 (this FO's Paseo session "decision-log P1 重切與 dev2 交接", reply to the six-item batch)
+Asked: 「1. 改名為 `kc-adr`（上一則）：plugin 和指令都叫 `kc-adr`，skill 叫 `read-adr`，地圖旅程名稱不變。」「4. 合成決策 repo 由任務一建：任務一的實作要附一份產生腳本和固定的裁示文字，在本機產生虛構的決策 repo 和 Codex 用的設定檔。裡面那筆裁示定為「人讀輸出預設用繁體中文」：任務一的工具維持英文預設，任務二由 Codex 照裁示改成繁中，看結果就知道它有沒有照做。」「5. 關卡引用裁示版本：任務二的每個關卡摘要，由 Codex 協調者附上裁示的引用區塊。」
+Supersedes: none
