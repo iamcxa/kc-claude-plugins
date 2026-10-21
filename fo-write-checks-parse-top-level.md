@@ -15,6 +15,17 @@ gates:
                 id: briefing:fo-write-checks-parse-top-level:backlog:attempt-1:revision-1
                 digest: sha256:8bcea6368a28ede1bb44811cc281012dda12f422dcbde366130b6862102c29a2
                 room-ref: ./fo-write-checks-parse-top-level/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-write-checks-parse-top-level:backlog:1
+                briefing: briefing:fo-write-checks-parse-top-level:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T07:28:48.712207Z"
+                decision: approve
+                reason: Captain 「繼續」 (chat, 2026-10-21), answering FO's question 「這 5 張都批准進入設計嗎？」 for the five batch-5 backlog gates presented together; approves entering ideation under the pilot profile, as recommended.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
