@@ -120,6 +120,8 @@ class PrWatchTests(unittest.TestCase):
             self.assertIn("gh api repos/o/r/issues/comments/31 --jq .body", out)
             self.assertIn("raw text", out)
             self.assertIn("never clean", out)
+            self.assertIn("in the merge ask as Codex unread", out)
+            self.assertIn("the Captain decides", out)
             self.assertIn("kc-dev-flow-2 problem, report it upstream", out)
             self.assertIn("`peers` is listed and a kc-dev-flow-2 maintainer FO is reachable, send it through `peers`", out)
             self.assertIn("otherwise draft the issue and ask the Captain whether to file it", out)
