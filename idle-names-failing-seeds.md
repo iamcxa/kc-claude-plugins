@@ -34,6 +34,17 @@ gates:
                 id: briefing:idle-names-failing-seeds:ideation:attempt-1:revision-1
                 digest: sha256:583aeacab8b3a2741f897fa7ac35e3f29ab850a4130a3bec95fd313e44dc237b
                 room-ref: ./idle-names-failing-seeds/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:idle-names-failing-seeds:ideation:1
+                briefing: briefing:idle-names-failing-seeds:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T17:16:35.631806Z"
+                decision: approve
+                reason: 'Captain, batch-5 sitting: D1 「可以」 (2026-10-22, answering FO two recommendations together: kc-adr packaging and, for this task, name only tasks that already carry an FO alignment section, 8 names today), D2 「可以照建議」 (2026-10-22, no word offset; the added line prints only while a task is named and vanishes once its seed record is fixed). Both as recommended; approving enters implementation.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
