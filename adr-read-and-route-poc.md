@@ -130,3 +130,59 @@ The CLI arm does not clearly beat the plain-git arm on any of the three measures
 - Codex 0.162.1 silently skips an untrusted SessionStart hook: in a scratch project with a fresh CODEX_HOME, no hook text reached the model and stderr showed only an unrelated MCP auth error. I did not verify whether the command ran. The two ways around it (`--dangerously-bypass-hook-trust`, forging a trusted_hash) were denied by the permission system and not used.
 - Harness limits: Claude auto memory off and sandbox on; Codex per-run HOME and workspace-write; the 4 smoke runs are in `probes/`; six earlier manual isolation probes are not stored. Cleanup: temp workspaces under /tmp and one probe project folder under ~/.claude/projects removed; the harness itself is disposable and the only persistent change is the state-checkout folder.
 - Changes after the first run, each with a reason in `CHANGES.md`: world rebuilt (Amendment 2), S9 grader reading widened after A0 evidence and before any arm run.
+
+## Stage Report: validation
+
+- DONE: Independent check of AC-1..AC-3: re-grade the stored traces with `python3 harness/score.py` and match the results table.
+  Regraded in a throwaway copy: `results.md` and `results.json` (76 runs) byte-equal to the committed ones; `extras.py` output also equal. Checked against the stored traces; not re-run end to end (cap spent, as instructed).
+- DONE: Confirm from git history that scenarios and expectations were committed before the first run, and that every later change has a dated reason in CHANGES.md.
+  `bf132615` (14:41:36) holds scenarios, expectations, score.py and templates; first ledger run starts 14:44:19. Later changes: `d6cbbe96` world rebuild and S9 grader reading (`2bccb244`, 17:21:29, before the first A1-A3 run at 17:21:33) both have dated CHANGES.md entries. Templates are unchanged since `bf132615`. Scenario prompts S1-S10 unchanged; only the handoff footer changed, as CHANGES.md says. One undated change: `score.py` `hook_seen` (diagnostic column only, no measure affected).
+- DONE: Confirm 96 runs, the arms and hosts per Amendments 1 and 2, and that Codex arm 4 was not run.
+  `ledger.jsonl` has 96 rows (20 small-world A0, 70 arm runs, 6 repeats): A0 20+20, A1 10+10, A2 13+13, A3 claude 10, A3 codex 0; no A3 codex run directory exists. argv in `meta.json`: claude `--model sonnet` (reported claude-sonnet-5-5) x43, codex `gpt-6.1-sol` with high reasoning x33.
+- DONE: Check that the report applies the Amendment 1 decision rule to this evidence (CLI arm versus plain-git arm) without overclaiming.
+  Counts reproduce: consulted 5/5 vs 5/5 and handoff 3/3 vs 3/3 on both hosts, placement 8 vs 9 (Claude) and 5 vs 5 (Codex); CLI costs +16% / +21% tokens. The report says outright that the rule outcome is not a ruling and that "no advantage here" is not "no advantage". I find no overclaim in the rule application.
+- DONE: Check that the "does not prove" limits match the data: ceiling on consult and handoff, untested CLI edge cases, sample size, ambiguous S2 and S7.
+  All four are in the report and match results.md/extras.md (35 of 35 consult cells; 1 of 14 repeat measures flipped; S2/S7 lenient 10/10 Claude, 7/10 Codex). Two limits are missing or wrong, see Findings.
+- DONE: A minimal acceptance script the FO can run in a fresh shell, and the `adr_lint.py docs/adr --since <base>` command run with its exit code.
+  Script below, run by me in a fresh shell: steps 1-4 printed OK. `python3 <package>/scripts/adr_lint.py docs/adr --since origin/main` in the code worktree: "28 ADR file(s) checked, 0 legacy", exit 0. The local `main` ref is stale (a219ca13), so the base is `origin/main` = worktree HEAD c27e7659; the code worktree has no diff, so lint has no added record to require.
+- DONE: Record unverified obligations.
+  `dispatch_records.py <task folder>` exits 1: no `dispatch/` folder for this task (finding for FO). `comment_ratio.py bf132615^ HEAD` on the state checkout: 22 of 1139 lines, 1.9%, exit 0. `number_guards.py check` PASS, `design_surfaces.py check` exits 0 now, `doc_impact.py origin/main HEAD` lists 0 documents. No `boundary-crossed:` found: the harness is disposable, writes only under /tmp and the state folder, no persistent seam.
+
+### Verdict
+
+Recommend PASSED for the proof as recorded: the table, counts and decision-rule application reproduce from the stored traces, and the order of commits supports AC-2. Material limits and corrections follow; none changes the rule outcome (CLI does not clearly beat plain git).
+
+### Findings
+
+- Missing limit: the handoff measure is partly prompted. The output schema (`ruling_check`) has fields `digest_matches_cited` and `in_force`, so every agent, A0 included, is asked to compare. 3/3 handoff in every arm therefore does not show agents verify unprompted; it shows they verify correctly when asked to report it. The report's "no prompt tells the agent to consult or confirm" holds for the consult measure only.
+- Grader widening: without the S9 `alt` reading (added after seeing A0 evidence, documented), A0 codex handoff is 2/3, not 3/3. No effect on A1-A3 or the rule, but the table's A0 cell depends on it.
+- Report error: "Rows the skill fixed: agent notes (S8 hunch: ... with skill 6/6)" should be 5/5; five skill-arm rep-1 runs exist (A1 x2, A2 x2, A3 claude).
+- Codex hook skip is not verified: the report says no hook text reached the model; whether the command ran is unknown (the report says so). The Codex hook arm stays unanswered.
+- Undated `hook_seen` change in `score.py` after the A0 commit; diagnostic only.
+- For FO: `dispatch_records.py` exit 1 (no dispatch records); the stored `harness/__pycache__` pyc files are committed to the state branch (disposable, not harmful).
+
+### Minimal acceptance script
+
+Needs python3 and git; no agent, network or secret. Runs in a fresh shell, about 1 minute.
+
+    S=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-poc-route/docs/dev2-poc/.spacedock-state
+    T=$S/adr-read-and-route-poc
+    # 1. regrade stored traces in a scratch copy; expect no diff output and the OK line
+    D=$(mktemp -d) && cp -R "$T" "$D/p" && (cd "$D/p/harness" && python3 -B score.py >/dev/null) && diff "$D/p/results.md" "$T/results.md" && cmp "$D/p/results.json" "$T/results.json" && echo "1 OK: regrade equals committed table"
+    # 2. run counts; expect "2 OK" with 96 total, A3 codex absent
+    python3 -B - "$T" <<'P'
+    import json,sys,collections
+    L=[json.loads(l) for l in open(sys.argv[1]+"/ledger.jsonl")]
+    c=collections.Counter((r["arm"],r["host"]) for r in L)
+    assert len(L)==96, len(L)
+    assert c[("A3","codex")]==0 and c[("A3","claude")]==10
+    print("2 OK:",len(L),"runs",dict(sorted(c.items())))
+    P
+    # 3. expectations committed before the first run; expect the OK line
+    first=$(python3 -B -c "import json;print(int(min(json.loads(l)['started'] for l in open('$T/ledger.jsonl'))))")
+    exp=$(git -C "$S" log --format=%ct --diff-filter=A -- adr-read-and-route-poc/harness/expectations.json | tail -1)
+    [ "$exp" -lt "$first" ] && echo "3 OK: expectations added $((first-exp))s before first run"
+    # 4. decision-record lint; expect "28 ADR file(s) checked, 0 legacy" and exit 0
+    cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-poc-route/.worktrees/spacedock-ensign-adr-read-and-route-poc && python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0/scripts/adr_lint.py docs/adr --since origin/main; echo "4 exit $?"
+
+Does not cover: a fresh agent re-run (cap spent), the CLI's edge cases, the Codex hook arm, any model other than the two pinned.
