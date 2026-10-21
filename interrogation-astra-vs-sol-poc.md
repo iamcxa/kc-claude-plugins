@@ -50,3 +50,14 @@ worktree: .worktrees/spacedock-ensign-interrogation-astra-vs-sol-poc
 Not needed before implementation. The Captain asked for this run (「可以」, 2026-10-22) after FO stated its arm, tasks and comparison, restated above. Release review: not needed: the task belongs to no release.
 Surfaces: none
 Visible change: none
+
+## Stage Report: implementation
+
+- DONE: Run one arm, `codex exec --sandbox read-only --skip-git-repo-check --cd <snap> --json -m gpt-6-astra -c model_reasoning_effort='"high"' -o <answer> -` with the lens prompt, on the same five task snapshots and prompts the closed POC used (its raw/run-ext.sh and extension.md), with the same isolation; save each answer and event stream under the task folder; confirm each rollout carries "model":"gpt-6-astra" and "effort":"high" (AC-1)
+  Five runs, exit 0 each, saved in `interrogation-astra-vs-sol-poc/raw/<task>/`. Rollouts for all five hold only `"model":"gpt-6-astra"` and `"effort":"high"`; prompts differ from the closed POC's arm 4 only in snapshot path (diff, 5/5); isolation audit over 82 commands found 0 outside-snapshot paths, `..`, `~`, or `git` commands. Details in `report.md`.
+- DONE: Write the five answers as blind files under the task folder (no arm or model name in a file name or body) for a separate blind scorer, and a short report.md with tokens, wall time and commands per run beside the closed POC's arm-3 and arm-4 totals; do not score the answers yourself
+  `blind/<task>-Z.md` x5 plus `blind/READER.md`; grep for astra/gpt/codex in blind/ finds nothing. `report.md` tables astra 3,703,502 in / 30,404 out / 82 commands / 1,070 s summed beside arm 3 (3,204,452 / 33,847 / 68 / 957) and arm 4 (3,647,778 / 38,714 / 86 / 1,149). No answer was read against the keys.
+
+### Summary
+
+The astra arm ran on the five closed-POC snapshots with the arm-4 lens prompt and pinned flags; all pins verified from the rollouts. Answers are in `blind/` for a blind scorer (AC-2 is the scorer's step, not done here). Snapshots were deleted after the runs; no code was changed (roborev not run: no repository diff).
