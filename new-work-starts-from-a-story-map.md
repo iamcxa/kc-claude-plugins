@@ -82,7 +82,7 @@ Pilot. Read 2026-10-21 against origin/main `c27e7659` (kc-dev-flow-2 0.27.0, kc-
 - *Is the record a second list of questions?* No. Questions stay in the map's `questions:`. The record holds one row per ruling, and the map's answer links to that row with `doc:`. An open question is stored nowhere else, and the sitting list is composed in chat and written nowhere (fo-batch-sittings AC-8).
 - *Why must interrogation come first?* In kc-paseo-plugins r1.5 review-release ran first, and its task split rested on answers to which the interrogation then added nine open questions (intake, "Order mattered").
 - *What if he wants a question settled at a task's ideation?* That is a ruling: his words become the row, the answer says the task's ideation settles it, and handoff passes. A question class for it is a later cut (L2).
-- *Does the `Release review:` line change?* No. Its grammar stays as the README and release-acceptance define it. FO names the commit that adds the record, so `git show <commit>:<journey file>` and `git show <commit>:<record>` reproduce the map and the review together.
+- *Does the `Release review:` line change?* No. Its grammar stays as the README and release-acceptance define it. FO names the commit that adds the record, so `git show <commit>:<journey file>` and `git show <commit>:<record>` reproduce the map and the review together. That commit touches the journey file only when the review proposed a map edit; the journey file is still read at it, and the README's freshness rule and release-acceptance's checker take any commit, so this is a reading of "journey-file commit", not a new form.
 - *What does this not prove?* That the list or the sitting saves the Captain answers: nothing measures it yet (POC, "What this does not prove"). The record's `Interrogation:` line carries the counts so the first use can be counted (Limits).
 
 ### Chain check (Spacedock, then kc-dev-flow-2, then siblings; 2026-10-21)
@@ -135,14 +135,14 @@ flowchart TD
 ### Cut 1 (this task, next release)
 
 kc-journey-map:
-1. `references/release-review.md` gains a step 0 and the record. Order: interrogate, then the decision list, then map first, walk, slice check, task split, record. Step 0: unless the last record's `Interrogation:` line postdates the last change to this release's stories in the journey file, run `interrogation.md` first; the walk then re-checks only answers changed since that interrogation (intake recommendation 1). The record lives at `<journey file directory>/reviews/<journey>/<release-id>.md` (the path `node lib/journey-review.mjs path <journey.yaml> <release-id>` prints), one file per release, rewritten by each review, so git history holds every review. The worker writes it and proposes it in the same docs PR as the map edit. Shape:
+1. `references/release-review.md` gains a step 0 and the record. Order: interrogate, then the decision list, then map first, walk, slice check, task split, record. Step 0: unless the last record's `Interrogation:` line postdates the last change to this release's stories in the journey file, run `interrogation.md` first; the walk then re-checks only answers changed since that interrogation (intake recommendation 1). The record lives at `<journey file directory>/reviews/<journey>/<release-id>.md` (the path `node lib/journey-review.mjs path <journey.yaml> <release-id>` prints), one file per release, rewritten by each review, so git history holds every review. The worker writes it and proposes it in the same docs PR as the map edit. The handoff's pre-cut copy is the map with the rulings applied and membership not yet changed: `journey-handoff.mjs` compares question fields as requirements (`withoutCuts` strips only `release` fields, `releases` and `slice_limit`), so a copy taken before the answers refuses with `requirements changed or deleted` (read in `check()` at c27e7659). Shape:
 
     ```
     # Release review: <journey>/<release-id>
     Reviewed: <YYYY-MM-DD>; map at <commit read>; code at <repository>@<commit>
     Interrogation: <YYYY-MM-DD>; asked <n>; decision rows <n>; open after <n>; <model> <effort> <lens or plain>[; <second model>]
     ## Rulings
-    | Question | Story | Asked | Words | Date |
+    | Question | Story | Words | Date |
     ## Map edit
     ## Walk
     ## Holes
@@ -256,13 +256,13 @@ Recommended order: idle-names-failing-seeds and fo-write-checks-parse-top-level 
 Source: intake recommendation 2 ("a durable release-review record ... beside the journey"); FO alignment Result point 4.
 Verified by: `node --test kc-journey-map/lib/journey-review.test.mjs` on temp copies of the book-pickup example: a journey in its own directory, and two journeys with the same release id `r1` in one flat directory, which get two different paths. Falsifier: dropping the `<journey>` segment gives the two flat journeys one path.
 
-**AC-2** `node lib/journey-review.mjs check <record> <journey.yaml>` exits 0 on a complete r1 record, and exits 1 with its own message when: (a) the heading names another journey or a release the map lacks; (b) the `Interrogation:` line is missing or lacks its counts; (c) any story on the release has an open question as `openQuestions()` reads it (the order check); (d) a `## Rulings` row names a question no release story holds, or that question's `doc:` does not end with `#<question id>` and the record's path; (e) a release question whose `doc:` links into this record has no row; (f) a `## Tasks` row names a `journey-story` not on the release.
+**AC-2** `node lib/journey-review.mjs check <record> <journey.yaml>` exits 0 on a complete r1 record, and exits 1 with its own message when: (a) the heading names another journey or a release the map lacks; (b) the `Interrogation:` line is missing or lacks its counts; (c) any story on the release has an open question as `openQuestions()` reads it (the order check); (d) a `## Rulings` row names a question no release story holds, or that question's `doc:` does not end with `#<question id>` and the record's path, or the row carries a column other than question, story, words and date (the ask stays in the map); (e) a release question whose `doc:` links into this record has no row; (f) a `## Tasks` row names a `journey-story` not on the release.
 Source: intake recommendation 1 and method gaps 2 and 4; D1; fo-batch-sittings AC-8.
 Verified by: the same test file, one mutation of the complete fixture per case, each asserting exit 1 and its message. Falsifier: removing the open-question check passes (c); removing (e) lets the map link a ruling the record does not hold.
 
-**AC-3** The pre-task path runs end to end without a model: in a disposable git repository holding the example map with one open question on r1, `journey-handoff.mjs --digest` names `open questions on <story>`; after one commit adds the record row and the question's `answer:` and `doc:`, `journey-review.mjs check` at that commit exits 0, `git show <commit>:<record path>` reproduces the record, and the handoff output no longer names open questions.
+**AC-3** The pre-task path runs end to end without a model: in a disposable git repository holding the example map with one open question on r1, `journey-handoff.mjs --digest` refuses naming `open questions on <story>`; after one commit adds the record row and the question's `answer:` and `doc:`, `journey-review.mjs check` at that commit exits 0, `git show <commit>:<record path>` reproduces the record, and with the pre-cut copy taken at that commit, r1's membership applied and the fixture assessment, `journey-handoff.mjs --digest` exits 0.
 Source: D1; FAQ on the `Release review:` line.
-Verified by: `bash kc-journey-map/scripts/journey-dev2-loop-smoke.sh` (CI job `journey-dev2-loop-smoke`, path-filtered; its added time is not measured). Falsifier: a commit with the map answer and no record row makes `check` exit 1 (AC-2 e).
+Verified by: `bash kc-journey-map/scripts/journey-dev2-loop-smoke.sh` (CI job `journey-dev2-loop-smoke`, path-filtered; its added time is not measured). Falsifier: a commit with the map answer and no record row makes `check` exit 1 (AC-2 e); a pre-cut copy taken before the answer makes the handoff refuse with `requirements changed or deleted`.
 
 **AC-4** A dispatched review worker follows the order and leaves the record: on the book-pickup example in a disposable repository with one open question on r1, a fresh worker given kc-journey-map's `review-release` runs the interrogation before the walk, returns the decision row as one list, and after an answer supplied by the rehearsal writes a record that `journey-review.mjs check` accepts, with the `Interrogation:` line naming the models, effort and lens that ran (D4).
 Source: intake ("Order mattered"); POC recommendation; Captain's 「切片地圖」 ask in Scope.
@@ -327,7 +327,7 @@ Held before design: `## FO alignment` records alignment as needed with no `Resul
   AC-1 to AC-12 each carry Verified by and a falsifier; D1 to D4 each carry a recommendation, what gets worse and alternatives. Current evidence per criterion:
   AC-1: not yet verified; nothing is built.
   AC-2: not yet verified; the order predicate it reuses is `openQuestions()` in `model.mjs` at c27e7659, read.
-  AC-3: not yet verified; `journey-handoff.mjs` refuses on open questions today (its `check()`, read).
+  AC-3: not yet verified; read in `journey-handoff.mjs` `check()`: it refuses on open questions, and `withoutCuts` compares question fields, so the pre-cut copy must follow the answers (now stated in Cut 1 item 1).
   AC-4: not yet verified; needs one live rehearsal at implementation.
   AC-5: not yet verified; base seed branch reads only Surfaces and Visible change (`check_task`, read).
   AC-6: partly: the expected names come from a grep for `Release review:` in task files holding `## FO alignment` at the four pinned heads; the built check is not run.
