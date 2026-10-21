@@ -212,3 +212,55 @@ The design joins two outputs the package already has: the `needs-preparation` ro
 ### Summary
 
 pr_watch.py gains `ready_rows()` (the one `status --next --json` call, shared with `sittings(rows)`) and `seeds()`, which runs the real `design_surfaces.py check --seed` only for backlog needs-preparation rows holding a `## FO alignment` heading when the README has an ideation stage; exit 1 with output names the slug, any other failure is a `report <slug> to the Captain` line with exit 2. Limits: the line reminds only; it helps only if FO runs the idle hook before `gate prepare`; PR #693 edits other functions of the same two files, so a textual rebase may be needed after it merges. No files outside the design were needed.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #694 head 1c57c156 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED for head 1c57c156d034fcd1a7a73efb9a70370a57c1f97f (base c27e7659, only `pr_watch.py` and `test_pr_watch.py` change; head unchanged on the PR, CLEAN/MERGEABLE, merge-tree with current main and with #693 head both clean). `python3 -B -m unittest discover` over the package scripts: 626 tests OK; `test_pr_watch`: 95 OK; `lint-skills.py` exit 0; CI on the head all pass (read from `gh pr checks`, not re-run).
+  Falsifiers I wrote and ran (scratch fixtures under /tmp, `SPACEDOCK_BIN` stub, mutated copies of `pr_watch.py`, python3 -B): AC-1/AC-5/AC-7 a refused record is named in one 28-word line, an accepted one is not; six refused records give one 33-word line; AC-2 deleting the readiness test (M1), the stage test (M2) or the README ideation test (M3) names its own fixture; AC-3 deleting the heading test (M4) runs the seed check for the unseeded task (2 runs instead of 1); AC-4 counting exit 1 alone (M5) names the crash with exit 0 and no report, raising on a crash (M6) drops the sitting line, a second status call (M7) doubles the stub's call count; AC-5 one line per slug (M8) prints 6 lines; AC-6 requiring `profile:` (M9) leaves 20c0e85d and 37b5540a unnamed; line order: moving the seed line after the wait lines (M10) fails `test_the_seed_line_comes_after_the_sitting_line_and_before_the_wait_lines`. The unmutated candidate passes every scenario.
+  AC-8: `git diff --stat origin/main...HEAD` lists only the two files; `doc_impact.py` lists 0 documents; `comment_ratio.py` 151 code lines, 0 comment lines, exit 0; all other package scripts byte-identical to the 0.27.0 cache (`cmp`).
+  Limits judged: (1) reminder only, helps only if FO runs the idle hook before `gate prepare`: accepted, the design says so and `gate prepare` is outside this package; (2) flow-style `stages:` lists name nothing: accepted, deferred risk (F3); (3) the heading regex copies `design_surfaces.py`'s `FO_HEADING` and can drift: accepted, the seed command's verdict still decides each name (F3); (4) textual rebase after #693: not a conflict now, `git merge-tree` of the two heads exits 0.
+- DONE: Re-measure the named tasks on the four state checkouts as they stand at your run and compare with an oracle you write yourself, not the implementer's; confirm the line prints nothing when no task is named
+  2026-10-22, candidate scripts, Spacedock 0.27.2, own oracle `/tmp/val-idle/tools/oracle.py` (README ideation line, `status --next --json` backlog/needs-preparation rows, a `## FO alignment` line, then `design_surfaces.py check --seed` exit 1 with stdout) against `pr_watch.py tasks --state <scratch>` on each state checkout; heads when measured: kc-claude-plugins 6618dc28, qnow (qnow-adopt-dev2) 43a30c917, subspace-relay (beirut-dev2) 75de0a38, subspace-web (dev2-fo) d0c46b6, POC workflow (qnow-dev2-poc) 414e58ace.
+  Names equal the oracle on every checkout: kcp 0, qnow 6 (booking-multi-service, office-staff-management-next, rls-census-covers-bypasses, technician-progress-report, vehicle-catalog-upkeep, vehicle-service-history), relay 2 (agent-front-door-publish, author-handle), web 0, POC 0 (no ideation stage). A second sweep that seed-checks every backlog/needs-preparation task and then splits by heading gives seed-fail 9/55/4/2/3 and fail-with-heading 0/6/2/0/0, so no failing task with a heading is unnamed. The line is 33 words in qnow and 29 in relay; kcp, web and POC print no seed line (web and POC print nothing at all); base against candidate output differs only by the seed line in qnow (36 to 69 words) and relay (375 to 404 with live PR fact drift).
+  AC-6 replay: committed files at 20c0e85d, 37b5540a, 355dc920 (fo-batch-sittings) and 8cd642eb (commissioned-by-names-spacedock) each named as backlog/needs-preparation rows (the first two carry no `profile:`).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  `python3 <package>/scripts/adr_lint.py docs/adr --since c27e7659`: "28 ADR file(s) checked, 0 legacy", exit 0 (package 0.27.0; the dispatch named 0.26.0 and the loaded skill's root was used). `dispatch_records.py`: 3 records complete, exit 0; `design_surfaces.py check` on this task: presentable, exit 0; no `## Number guards` section; no ADR added by the candidate.
+  Acceptance script run unchanged with `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc`, exit 0; observed output is under the script. Verdict PASSED at head 1c57c156d034fcd1a7a73efb9a70370a57c1f97f; no Material finding.
+
+### Acceptance script
+
+Needs this checkout of the repository at `$REPO`, the relay and web workflow directories below, network access for `gh`, and about one minute. It does not cover a live FO session reading the line before `gate prepare`, qnow, or a workflow whose `stages:` is a flow-style list.
+
+```
+REPO=/Users/kent/Project/kc-claude-workspace/kc-claude-plugins
+CAND=$(mktemp -d)/cand
+STATE=$(mktemp -d)
+RELAY=/Users/kent/conductor/workspaces/subspace-relay/beirut-dev2/docs/dev2
+WEB=/Users/kent/conductor/workspaces/subspace-web/dev2-fo/docs/dev2
+# 1. Check out PR 694 at the validated head in a throwaway worktree; expect the printed SHA 1c57c156d034fcd1a7a73efb9a70370a57c1f97f
+git -C "$REPO" fetch -q origin pull/694/head && git -C "$REPO" worktree add -q --detach "$CAND" 1c57c156d034fcd1a7a73efb9a70370a57c1f97f && git -C "$CAND" rev-parse HEAD
+cd "$CAND/kc-dev-flow-2/scripts"
+# 2. Run the script's tests; expect "Ran 95 tests" and "OK" (about one minute)
+python3 -B -m unittest test_pr_watch 2>&1 | tail -3
+# 3. Idle line on the relay backlog; expect one line naming agent-front-door-publish and author-handle
+python3 -B pr_watch.py --state "$STATE/relay.json" tasks "$RELAY" | grep 'seed check fails' | sed 's/; before.*//'
+# 4. Idle line on the web backlog, where no task fails; expect the count 0
+python3 -B pr_watch.py --state "$STATE/web.json" tasks "$WEB" | grep -c 'seed check fails'
+# 5. A task whose record the seed check accepts is not named, a refused one is, using the real check; expect "OK"
+python3 -B -m unittest test_pr_watch.TasksTests.test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not 2>&1 | tail -1
+# 6. Remove the throwaway worktree; expect no output and the path gone
+cd "$REPO" && git worktree remove --force "$CAND" && ls "$CAND" 2>&1 | head -1
+```
+
+Observed (2026-10-22, fresh bash, exit 0): step 1 `1c57c156d034fcd1a7a73efb9a70370a57c1f97f`; step 2 `Ran 95 tests in 48.611s` then `OK`; step 3 `next: the seed check fails for these backlog tasks (agent-front-door-publish, author-handle)`; step 4 `0`; step 5 `OK`; step 6 `ls: .../cand: No such file or directory`. Steps 3 and 4 read live state, so the names change once FO fixes those records.
+
+### Findings
+
+- F1 Polish: the ideation note "10 of 10 heading-bearing files in the POC checkout fail the seed check" reads 4 of 4 today, and that checkout has no backlog task with a heading, so a live run cannot show the README route test working there; the route test is proved by the fixture (S5) and mutation M3 instead. No user-visible loss.
+- F2 Deferred risk: the line helps only if FO runs `pr_watch.py tasks` between the seed commit and `gate prepare` (no window at all in `commissioned-by-names-spacedock`); it becomes Material if a future skipped seed check is shown to have had no idle pass before its gate.
+- F3 Deferred risk: a flow-style `stages: [...]` list names nothing, and the heading regex can drift from `design_surfaces.py`; either becomes Material if an adopter README uses a flow-style list or `FO_HEADING` changes without this copy.
+
+### Summary
+
+PASSED at head 1c57c156d034fcd1a7a73efb9a70370a57c1f97f: every criterion held under my own fixtures and ten mutations, my independent oracle named the same 0, 6, 2, 0 and 0 tasks as the candidate on the four state checkouts and the POC control, and the line prints nothing when no task is named. Unverified by me: the CI runs and roborev evidence (read only), and any live FO session using the line. The throwaway worktree was removed; nothing was pushed or commented.
