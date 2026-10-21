@@ -5,7 +5,7 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 worktree: .worktrees/spacedock-ensign-hermes-ops-fo-exe-dev-poc
-pr:
+pr: local-merge:a219ca13e84566ac306be3cbd7d5c32ef357e536
 gates:
     version: 1
     records:
