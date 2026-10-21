@@ -290,6 +290,7 @@ No past `Override:` bears on these four (read 2026-10-21).
 ## FO alignment
 
 Not needed before ideation. The Captain accepted the outcome, scope, two-task split, budget and this session as FO (「照建議」, 2026-10-20 and 2026-10-21); the committed brief is the planning authority. Release review: kc-decision-log-design/P1 marked changed (signal 1: task admitted into the release). Release review: kc-decision-log-design/P1 at 533051fb (fresh review-release worker, 2026-10-21: no map edit; holes folded in by Amendment 1; two tasks kept, Captain 「照建議」). Surfaces is ui because a person reads and operates the CLI's human-readable output. Amendment 4 (2026-10-21): the deliverable is now the read-adr skill, which no person operates, so Surfaces is none. Release review: not needed: the Captain authorized skipping the map for this task (「這次授權跳過地圖，先做工具」); journey fields cleared.
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-22 — do these amendments withdraw what the Captain approved, and what changes in the build? Result: adjust: no approval withdrawn without his words except the synthetic-repo generator; Amendment 5 item 1 understated that the approved evidence plan said "S3, S4, S8 homes unchanged"; AC-9's "installed as a user would install it" not met on Claude (--plugin-dir); Scope never superseded; dispatch-record provenance gaps.
 Surfaces: none
 Visible change: none
 
