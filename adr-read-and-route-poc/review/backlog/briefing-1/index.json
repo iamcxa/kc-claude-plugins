@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-read-and-route-poc:backlog:attempt-1:revision-1",
+  "question": "Approve adr-read-and-route-poc into implementation as profile poc, with the outcome, scope, non-goals, one-day budget, the declared ~60 runs (stop above +20%) and AC-1..AC-3 as filed, starting only after kc-decision-log-cli merges?",
+  "artifacts": [
+    {
+      "id": "artifact:adr-read-and-route-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7a729807e17bed0218b747fc97b783b8acfeb243/adr-read-and-route-poc.md",
+      "rev": "sha256:c1155462db01f50818f8f233c91d45969a0372a90ecc489ad179e9bfad3cecbd",
+      "mediaType": "text/markdown",
+      "summary": "POC: do agents consult the governing ruling unprompted and route new information to the right home, under no help / skill / skill+hook, on Claude and Codex; tests the routing table in the boundary contract draft (PR #691)."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:adr-read-and-route-poc:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/f08a1f141004ea525a226a16111ee1e94768a458/docs/dev2-poc/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:32c0c7a02c13ac640fe39c173a68114b7bff06fc93b655a0615036e370606b96"
+    }
+  ]
+}
