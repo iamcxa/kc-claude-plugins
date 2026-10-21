@@ -1,0 +1,143 @@
+# Behavior Diff: run the same task against the Before and After version of a
+# changed SKILL.md / CLAUDE.md / AGENTS.md and publish the comparison report.
+# Adapted from spacedock-dev/behavior-diff-action examples/behavior-diff.yml (v0.1.1).
+#
+# Runs automatically when a same-repository PR that changes an instruction file
+# is opened (trust-policy: same-repository). Fork PRs and later pushes need an
+# explicit approval of the exact head SHA, either:
+#   - a single-line PR comment: /behavior-diff <full-head-sha> ["path"] [fast]
+#   - Actions -> Behavior Diff -> Run workflow (PR number + reviewed head SHA)
+#
+# Every target spends 2 preparation calls + 6 Opus trial sessions + 1 extraction
+# call on the subscription token. A PR changing more than max-files instruction
+# files fails prepare before any model call; select one file by comment instead.
+#
+# Requires the `behavior-diff` environment holding CLAUDE_CODE_OAUTH_TOKEN.
+# This repository is PUBLIC: publication: comment makes reports public.
+name: Behavior Diff
+
+on:
+  pull_request:
+    types: [opened]
+    paths: ['**/SKILL.md', '**/AGENTS.md', '**/CLAUDE.md']
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: PR number
+        required: true
+        type: string
+      approved-sha:
+        description: Full current PR head SHA that you have reviewed
+        required: true
+        type: string
+      file:
+        description: Exact instruction path (blank selects all eligible changes)
+        type: string
+      fast:
+        description: One trial per side
+        type: boolean
+        default: false
+
+permissions: {}
+
+# Publication has no atomic compare-and-swap API. Keep this exact per-PR group
+# shared by every workflow publishing Behavior Diff comments in this repository.
+concurrency:
+  group: behavior-diff-${{ github.repository }}-${{ github.event.pull_request.number || github.event.issue.number || inputs.pr }}-${{ (github.event_name == 'workflow_dispatch' || (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) || (github.event_name == 'issue_comment' && github.event.issue.pull_request && startsWith(github.event.comment.body, '/behavior-diff ') && contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))) && 'comparison' || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  prepare:
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository) ||
+      (github.event_name == 'issue_comment' && github.event.issue.pull_request &&
+       startsWith(github.event.comment.body, '/behavior-diff ') &&
+       contains(fromJSON('["OWNER","MEMBER","COLLABORATOR"]'), github.event.comment.author_association))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+    outputs:
+      matrix: ${{ steps.prepare.outputs.matrix }}
+      status: ${{ steps.prepare.outputs.status }}
+    steps:
+      - uses: spacedock-dev/behavior-diff-action@d0ca905940bf694ad2fe6738fe10464e9a7e9628 # v0.1.1
+        id: prepare
+        with:
+          mode: prepare
+          trust-policy: same-repository
+          publication: comment
+          pr: ${{ inputs.pr }}
+          approved-sha: ${{ inputs.approved-sha }}
+          file: ${{ inputs.file }}
+          fast: ${{ inputs.fast || false }}
+          max-files: '3'
+
+  run:
+    needs: prepare
+    if: needs.prepare.outputs.status == 'ready'
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    permissions:
+      contents: read
+      pull-requests: read
+    # Protected environment; the model secret lives here only.
+    environment: behavior-diff
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      # Each plugin keeps its skills under <plugin>/skills/, which Claude does not
+      # discover as project skills. plugin-root relocates the target's plugin to
+      # .claude for both snapshots; the root CLAUDE.md needs no relocation.
+      - name: Resolve plugin root
+        id: plugin
+        env:
+          TARGET_PATH: ${{ matrix.path }}
+        run: |
+          root=""
+          case "$TARGET_PATH" in
+            */*) root="${TARGET_PATH%%/*}" ;;
+          esac
+          echo "root=$root" >> "$GITHUB_OUTPUT"
+
+      - uses: spacedock-dev/behavior-diff-action@d0ca905940bf694ad2fe6738fe10464e9a7e9628 # v0.1.1
+        env:
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        with:
+          mode: run
+          selection: ${{ toJSON(matrix) }}
+          trust-policy: same-repository
+          publication: comment
+          plugin-root: ${{ steps.plugin.outputs.root }}
+          pr: ${{ inputs.pr }}
+          approved-sha: ${{ inputs.approved-sha }}
+          file: ${{ inputs.file }}
+          fast: ${{ inputs.fast || false }}
+          timeout-minutes: '45'
+          retention-days: '7'
+
+  publish:
+    needs: [prepare, run]
+    if: ${{ always() && needs.prepare.outputs.status == 'ready' }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    permissions:
+      actions: read
+      pull-requests: write
+      contents: read
+    strategy:
+      fail-fast: false
+      max-parallel: 1
+      matrix: ${{ fromJSON(needs.prepare.outputs.matrix) }}
+    steps:
+      - uses: spacedock-dev/behavior-diff-action@d0ca905940bf694ad2fe6738fe10464e9a7e9628 # v0.1.1
+        with:
+          mode: publish
+          selection: ${{ toJSON(matrix) }}
+          publication: comment
