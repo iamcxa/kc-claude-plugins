@@ -1,6 +1,6 @@
 ---
 title: hermes boots as the ops First Officer on exe.dev with a Codex token, and stops at the Captain's gate
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
