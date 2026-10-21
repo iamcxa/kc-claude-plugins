@@ -15,6 +15,17 @@ gates:
                 id: briefing:kc-adr-dependency-poc:backlog:attempt-1:revision-1
                 digest: sha256:d8d71475e10d32cce09012486c4aa2839131756a72eab60d9346a9a219f80c90
                 room-ref: ./kc-adr-dependency-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-adr-dependency-poc:backlog:1
+                briefing: briefing:kc-adr-dependency-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T13:01:23.915549Z"
+                decision: approve
+                reason: Captain 「好，開」 (chat, 2026-10-21), answering FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
