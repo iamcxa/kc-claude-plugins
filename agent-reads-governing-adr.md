@@ -3,7 +3,7 @@ title: An agent reads the governing ADR at the moment it decides, from a pointer
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -57,7 +57,7 @@ gates:
                 reason: 'Captain, batch-5 sitting, his rulings on the cycle-2 design given one at a time: D1 「ADR 讀取那張，路徑檢查改成「禁止指向分支」」 (2026-10-22, Amendment 1; Override: recommended resolving refs against origin; Captain chose refusing branch refs; area: ADR path check); D2 「照建議不量」 (2026-10-22, no behaviour measurement gates the PR, recorded under without-it unanswered). This briefing binds those answers after the fact; approving enters implementation.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
