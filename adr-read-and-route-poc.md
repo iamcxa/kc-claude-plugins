@@ -69,3 +69,8 @@ Not needed before implementation. The Captain asked for this POC and approved bu
 Captain: 「先跑 poc」 (P1 FO's Paseo session "decision-log P1 重切與 dev2 交接")
 Asked: 「請你決定一件事：先用預覽工具跑四組條件的 POC，再決定任務一的規模嗎？」 with the proposal: 「1. 現在就跑 POC，用設計階段那個可以實際操作的預覽工具。」「2. 多加第四種條件，專門比 CLI 本身：「skill 教 agent 用 git 加 shasum 讀、看 Status 行」對比「skill 加 CLI」。量三件事：做決定前有沒有去查；交接時版本和指紋對不對；資訊放得對不對。」「3. 先講好判斷規則：CLI 那組沒有明顯勝過 git 那組，任務一就縮成「skill 加設定檔」（只有情境裡真的出現主題衝突，才保留一個判斷生效的小腳本）；勝過就照原設計做。」「POC 從約 60 次執行增加到約 80 次。」
 Supersedes: none
+
+### Amendment 2 — 2026-10-21, chat
+Captain: 「可以」 (P1 FO's Paseo session, reply to a two-item batch)
+Asked: 「1. Codex 的第四組（上一則）：只在 Claude 上跑，不繞過 Codex 的 hook 信任機制。」「2. 重建測試世界：照上面「真實規模、不偏袒 CLI、拿掉查詢提示」的做法重建，第一組重跑。總共約 90 次執行：已經用掉的 20 次加上接下來 70 次，在 worker 設的上限 96 次以內。」
+Supersedes: none
