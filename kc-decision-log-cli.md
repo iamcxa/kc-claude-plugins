@@ -272,3 +272,9 @@ Design: "### Command surface" and "### Read-only skill (D10)" and "### Plugin la
 Captain: 「先跑 poc」 (this FO's Paseo session "decision-log P1 重切與 dev2 交接")
 Asked: 「請你決定一件事：先用預覽工具跑四組條件的 POC，再決定任務一的規模嗎？」 with 「CLI 那組沒有明顯勝過 git 那組，任務一就縮成「skill 加設定檔」（只有情境裡真的出現主題衝突，才保留一個判斷生效的小腳本）；勝過就照原設計做。」
 Supersedes: none
+
+### Amendment 3 — 2026-10-21, chat
+Captain: 「照建議」 (this FO's Paseo session "decision-log P1 重切與 dev2 交接", reply to a three-item batch; he first asked 「換句話說是怎樣」 and the plain restatement followed)
+Asked: 「2. 任務一縮小，退回設計階段重做：照事先講好的規則，任務一改成「plugin 裡只放 `read-adr` skill 加設定檔範本」。skill 教 agent 用 `git show` 讀固定版本、用 shasum 比對指紋、看 Status 和取代行，並附上「什麼寫進哪裡」的規則。不做 CLI，也不做判斷生效的小腳本，因為 POC 裡沒有出現衝突的情況。前面修訂裡的合成決策 repo 產生腳本、`tracking_ref`、`kc-adr` 名稱照舊。這會改掉已接受的驗收條件：拒絕錯誤來源、生效判定這兩條要改寫，S11「知道哪些已生效」改成靠 agent 讀 Status 和取代行，同主題衝突偵測就沒了。任務二裡「用同一個 CLI」的驗收也要跟著改成用 skill 的做法。這些都會記成你的修訂，任務一重做設計後，設計關卡再給你批一次。」
+Supersedes: AC-1, AC-3 (replacements come from the redone ideation)
+Design: the whole "## Design" section (CLI read path, command surface, exit codes, the six-gap decisions as CLI code) is redone as a skill-plus-config design; evidence basis is adr-read-and-route-poc (dev2-poc, archived done)
