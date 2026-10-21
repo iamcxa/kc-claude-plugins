@@ -47,7 +47,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.26.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.27.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -381,7 +381,7 @@ the product's journey map, not here.
 ## Captain amendments
 
 A change the Captain makes to what he has accepted, whether at a gate approval,
-during implementation or at a validation gate, is an amendment. A change he asks for
+between gates or at a validation gate, is an amendment. A change he asks for
 while the gate that would accept it is still open is not one: he calls `revise`; at a stage
 with no `feedback-to` that dispatches a worker, that stage's worker reworks it; at a stage
 whose gate has a `feedback-to`, the revision goes to that target and the stage's worker
@@ -470,8 +470,8 @@ Applies when the task's `Surfaces:` includes `db`, or the task lands an ADR, inc
   records `Applied: none as of <candidate sha>`, so a task with neither line has a
   skipped record. A task with no `Migration:` line records no `Applied:` line.
 - **POC marker.** FO presents the `boundary-crossed: persistent-state` marker at the
-  validation gate. Without `migrations-path:` the migration rules are skipped, so a POC
-  is not guarded until the README declares it.
+  validation gate. Without `migrations-path:` a db task exits 2 and a POC is not guarded;
+  `none` declares no migration files.
 - **Collision.** When two tasks hold one migration number (`check` reports R3 or R5 on
   the later candidate; nothing compares task files), the task whose migration is applied
   keeps it and the other, unapplied task renumbers, so no reset is needed. A migration
