@@ -37,6 +37,17 @@ gates:
                 id: briefing:adr-read-and-route-poc:validation:attempt-1:revision-1
                 digest: sha256:1d6c26d2a0b1a0643e70d6ff3f387135215ef0db1178e97d11b854bf62287bc0
                 room-ref: ./adr-read-and-route-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-read-and-route-poc:validation:1
+                briefing: briefing:adr-read-and-route-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T11:20:01.507097Z"
+                decision: approve
+                reason: 'Captain replied 「照建議」 (2026-10-21) to the three-item batch whose item 1 approved this validation gate: accept the POC result as PASSED and close it, with no delivery PR.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-21T06:22:26Z
 ---
 
