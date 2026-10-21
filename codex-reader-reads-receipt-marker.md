@@ -290,6 +290,10 @@ ADR: none. The design lands no ADR; ADR 0013's closing sentence already states t
 ### Feedback Cycles
 
 - Cycle 1 (FO, 2026-10-22): engineering-reviewer-1 (reviews/) must-change 1, to fix: the merge-ask half of the D2 ruling has no test; deleting "in the merge ask as Codex unread" or "the Captain decides" from the give-up lines leaves all 92 test_pr_watch tests green. FO fix authorization, then a fresh validation recheck (AC-13).
+- Cycle 2 (FO, 2026-10-22): Codex code review round 1 on #693 de5104be (review:5603366440; the first real code review, after FO requested `@codex review`, since ready-for-review had run only the security review) left 1 P1 and 1 P2, to fix (a P1 blocks every round; round 1 fixes every finding).
+  - P1, codex_review.py: when the head already has recognized evidence and a later Codex comment on the head is unread, the unread-comment check is skipped and `max(evidence)` returns the older verdict, so an older clean plus a newer unread shape reads clean; compare the newest head-naming unread comment against the recognized evidence.
+  - P2, pr_watch.py: after one unrecognized read, a later `look` failure leaves the stale snapshot, which the loop rereads as a second unrecognized read, so 180 s of API failures yields a false give-up and upstream report; count only successful rereads.
+  - FO note: on this head the reader printed `not reviewed: no Codex evidence covers de5104be0` although a Codex code review with findings exists; the repair also states why.
 
 ## Stage Report: ideation
 
