@@ -34,6 +34,10 @@ gates:
                 id: briefing:merge-ask-holds-missing-clauses:ideation:attempt-1:revision-1
                 digest: sha256:c4950c3956668b0da8e5ea80d1db62bb916395d7f1cda7b221e58d5a55ad52a1
                 room-ref: ./merge-ask-holds-missing-clauses/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-10-21T08:13:25.945624Z"
+                reason: engineering-reviewer-1 (reviews/) requires design changes before the ideation gate; a fold cycle follows
 ---
 
 ## Scope
