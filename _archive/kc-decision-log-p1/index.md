@@ -60,6 +60,7 @@ Visible change: Each authenticated MCP client can identify its caller and source
 
 The MCP client response presentation is a ui surface in this workflow. Ideation must provide its corresponding proposal and a readable preview. This classification does not approve a new custom webpage UI, frontend product or database schema; a necessary scope or persistent schema change returns for surface/profile review before dispatch.
 Release review: P1 changed, signal 1 (new task preparation for the selected release); before first implementation dispatch, perform the existing fresh release review and derive the smallest batch from its output. This task has not yet been formally admitted or mapped into story-progress frontmatter.
+Superseded and archived without admission on 2026-10-21: the P1 re-cut (PR #681, main 533051fb) replaced this outcome with kc-decision-log-cli and kc-decision-log-handoff-trial. Captain 「照建議」 to item 3 of a three-item batch (「舊任務 `kc-decision-log-p1`（前一則）：移到歸檔，並註明已被兩個新任務取代。」).
 
 ## Route-back conditions
 
