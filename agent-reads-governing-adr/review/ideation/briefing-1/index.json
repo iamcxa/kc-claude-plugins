@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:agent-reads-governing-adr:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of agent-reads-governing-adr to enter implementation, with its Needs-decision items as the Captain rules each one in the batch-5 sitting (listed first, asked one at a time)? An approval accepts a decision's recommendation only where his ruling says so; a decision he changes is recorded in the reason, and a scope change goes in as an amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:agent-reads-governing-adr:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/bb2050991a8f05f3f26675c6fc29d7e35e23f2b4/agent-reads-governing-adr.md",
+      "rev": "sha256:1f85cc6d7f03aee47d551de40f51142edd39ef024baf237ef6b1be365d8f439a",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 ideation design: An agent reads the governing ADR at the moment it decides, from a pointer and an injected title list it cannot miss"
+    }
+  ]
+}

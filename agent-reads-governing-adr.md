@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:agent-reads-governing-adr:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:agent-reads-governing-adr-ideation-1
+              briefing:
+                id: briefing:agent-reads-governing-adr:ideation:attempt-1:revision-1
+                digest: sha256:9a5e57c703f57686bd8709b095c120407178e4b2c85df1b6d0d45e7159b0f48a
+                room-ref: ./agent-reads-governing-adr/review/ideation/briefing-1
 ---
 
 ## Scope
