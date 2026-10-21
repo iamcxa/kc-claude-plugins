@@ -48,3 +48,20 @@ worktree: .worktrees/spacedock-ensign-kc-adr-dependency-poc
 Not needed before implementation. The Captain asked for this POC (「好，開」, 2026-10-21) after FO showed him its four questions, arms and bar, restated above. Release review: not needed: the task belongs to no release.
 Surfaces: none
 Visible change: none
+
+## Stage Report: implementation
+
+- DONE: Answer the four questions in the task Scope with real installs, one arm at a time (native dependency if either host has one, symlink, run-time resolution, wrap-not-move as the control), on Claude Code and on Codex, each claim citing the tool's own docs, `--help` or the observed install result
+  Claude has native dependencies (docs plugin-dependencies; observed install, update, uninstall, conflict). Codex has none (manifest docs, `app-server generate-json-schema` types, observed install). Symlink survives Claude install only as a frozen copy and is dropped silently by Codex. Run-time resolution met the bar on both hosts. Table in report.md.
+- DONE: A report under the task folder in the state checkout (report.md) with one row per arm and host against the bar (installs, update reaches dev2, absent kc-adr refuses loudly, incompatible version caught), the recommended arm, and what a move would change in the four adopters' READMEs and pins
+  `kc-adr-dependency-poc/report.md` in the state checkout. Recommends run-time resolution; adopter counts verified for three of four (carlove-v1 has no checkout locally, stated as unverified).
+- DONE: Every probe runs with throwaway plugin roots and an isolated config (for example a temporary HOME or CLAUDE_CONFIG_DIR and a temporary Codex home), never the Captain's real ~/.claude or ~/.codex installs, and each probe directory is removed after; the report states the isolation used
+  Temporary HOME, CLAUDE_CONFIG_DIR, CODEX_HOME under /tmp; directory deleted; real config files grep-clean and unmodified. One slip (a command ran once against the real config with a nonexistent path, wrote nothing) is disclosed in report.md.
+- SKIPPED: roborev, comment_ratio.py, number_guards.py, doc_impact.py
+  No repository diff exists (the POC writes only report.md in the state checkout); the task has no `## Number guards` section and `Surfaces: none`.
+- FAILED: `python3 <package>/scripts/design_surfaces.py check <task>`
+  Exit 1: `missing '## Acceptance criteria' section`. The POC route skips ideation, so the task never had one; I did not add one (task body is FO's). Returns to FO.
+
+### Summary
+
+Run-time resolution is the only arm that meets all four bar items on both hosts; Claude's native dependency works as an install-time add-on but Codex has no equivalent, and a symlink fails on both. A tag-name mismatch (Claude needs `<plugin>--v<version>`, release-please cuts `<plugin>-vX.Y.Z`) would affect the native arm and was read from files, not run. Not proved: a live model session, auto-update, disabled-but-installed kc-adr, carlove-v1 READMEs.
