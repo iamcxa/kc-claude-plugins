@@ -47,6 +47,17 @@ gates:
                 id: briefing:codex-reader-reads-receipt-marker:ideation:attempt-2:revision-1
                 digest: sha256:e543e1daa323804d543d10450f228e94b00e4f7977c35fa1b88f501af9621abe
                 room-ref: ./codex-reader-reads-receipt-marker/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-reads-receipt-marker:ideation:2
+                briefing: briefing:codex-reader-reads-receipt-marker:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-21T14:51:56.758613Z"
+                decision: approve
+                reason: 'Captain, batch-5 sitting 2026-10-21, his rulings on this design given one at a time and recorded as they came: D1 「codex 先這樣，如果 codex 改了我們就跟著改 ext 就好，除非有明確更好的辦法」; D2 option C with the two additions (attempt-1 revise reason); Amendment 1 「可以」 (two consecutive unrecognized reads); Amendment 2 「對，就照這樣。任務也要開」 (peers, else a drafted issue); Amendment 3 「加回來」 (a backlog task in the package repository). This briefing binds those answers after the fact; approving enters implementation.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
