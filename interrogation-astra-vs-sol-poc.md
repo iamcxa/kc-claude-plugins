@@ -3,7 +3,7 @@ title: The journey-map interrogation's Codex stranger on the user's default mode
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: backlog
+status: implementation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「可以但我還是不太確定，你說的是故事地圖套件的qa問答部分嗎？」 (chat, 2026-10-22), answering FO question put before it (quoted in the gate question); FO then confirmed it is the kc-journey-map interrogate mode. This briefing binds that answer after the fact.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
