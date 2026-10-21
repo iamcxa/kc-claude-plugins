@@ -1,7 +1,7 @@
 ---
 id:
 title: Agents read and route ADRs with the kc-adr read-adr skill
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
