@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-decision-log-handoff-trial:backlog:attempt-1:revision-1",
+  "question": "Approve kc-decision-log-handoff-trial into ideation as profile pilot, with the outcome, scope, non-goals, shared budget and AC-1..AC-4 as filed, to be consumed and run by a Paseo-started Codex FO (gpt-6.1-sol, high) after kc-decision-log-cli is done? Approval also accepts FO's recommendation to set journey kc-decision-log-design / P1 / S20 on this task, with journey-required-tasks [kc-decision-log-handoff-trial] and journey-mapping-complete true.",
+  "artifacts": [
+    {
+      "id": "artifact:kc-decision-log-handoff-trial:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/28a5babeac241d8babc6d67e65385d2fa89486d4/kc-decision-log-handoff-trial.md",
+      "rev": "sha256:534de9d310e5fd15f62bea745bfd3c10fb23b78bbd10920f1193f3a606778ab5",
+      "mediaType": "text/markdown",
+      "summary": "Task two of P1: a Codex worker re-reads a handed-over ruling with the CLI and builds the small CLI feature it decides (S19-S22), ending at a merged PR; Codex does not merge."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:kc-decision-log-handoff-trial:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/ad44f0cbf42274ff65802cabc52ebe919f159fd5/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:fb5ff8fa64a7d5c1d3dbf6a4153274b2b642cf4819b9a77418db99447b158971"
+    }
+  ]
+}

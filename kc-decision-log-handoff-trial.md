@@ -7,6 +7,17 @@ profile: pilot
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:kc-decision-log-handoff-trial:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:kc-decision-log-handoff-trial-backlog-1
+              briefing:
+                id: briefing:kc-decision-log-handoff-trial:backlog:attempt-1:revision-1
+                digest: sha256:dd3c957b0b0fd08ab4b6d8b8b79350a90ba68d68df4c8f273807e2e3ace71d59
+                room-ref: ./kc-decision-log-handoff-trial/review/backlog/briefing-1
 ---
 
 P1's value is that a second agent acts on the exact ruling it was handed, not on a paraphrase. This task proves it end to end. The Claude side writes a ruling reference into this task. A Codex first officer, started through Paseo, runs the task, and its Codex worker re-reads the ruling with the CLI from `kc-decision-log-cli` before it implements a small CLI feature that the synthetic ruling decides. The user gets back evidence tied to that reference.
