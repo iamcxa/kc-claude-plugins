@@ -1,0 +1,77 @@
+design_review:
+  preview: ./kc-decision-log-cli/preview/README.md
+  findings:
+    - severity: MAJOR
+      dimension: hierarchy
+      where: "effective, human, run 17 (superseded record)"
+      seen: "The Resolution line starts with the word RESOLVED and the 'NOT this record; it is superseded' qualifier comes after it, so a person who reads only the first token takes the record as effective; the superseding ADR is also named three times (Status 'Superseded by 0004', 'ADR 0004', 'chain 0003 -> 0004') plus once more on the Effective line."
+      fix: "Lead the line with the answer for this record (for example 'NOT EFFECTIVE: superseded, effective record is ADR 0004') and drop the repeated chain or Effective restatements."
+    - severity: MAJOR
+      dimension: states
+      where: "human output, all 33 runs"
+      seen: "The proposal promises a one-line human REFUSED line, but all 15 refusals (runs 6, 19-29) are shown only as JSON; no REFUSED line, no stderr/stdout split and no human digest-mismatch output appears anywhere."
+      fix: "Add human-format transcripts for at least digest_mismatch, commit_not_full, ambiguous_id and unsupported_record, and show which stream they use."
+    - severity: MAJOR
+      dimension: consistency
+      where: "JSON, read (run 1) vs effective (runs 7-16)"
+      seen: "Read JSON has ok, command, tool, a reference object and status {written,state}, while effective JSON is flat with status as a bare string and no reference (binding, repository, path, commit, digest) although human effective output opens with that Reference block; refusals carry ok:false but effective successes carry no ok at all."
+      fix: "Give effective JSON the same envelope as read (ok, command, reference, status object) and add the resolution fields to it, or state that this is only the transcript trimming fields."
+    - severity: MAJOR
+      dimension: flow
+      where: "effective at D2 and D3, runs 31-32"
+      seen: "Asking about the healthy record 0001 returns UNRESOLVED with only the code view_has_unreadable_record or view_has_unplaceable_record and no id or path of the offending record (0015 or 0017), so the person is blocked with nothing to act on."
+      fix: "Name the blocking record id and path in the Resolution line and in the JSON detail."
+    - severity: MINOR
+      dimension: flow
+      where: "effective, runs 7-18, exit codes"
+      seen: "Resolved-as-this-record, resolved-to-a-different-record and UNRESOLVED all exit 0, and refusals 2 and 3 each cover unlike causes (bad flag, unknown_id and ambiguous_id all exit 2), so a caller that tests only the exit code cannot tell yes from no."
+      fix: "Document an exit-code table, and either give not-effective its own code or state plainly that callers must read the Resolution field."
+    - severity: MINOR
+      dimension: flow
+      where: "read with --expect-digest, run 5"
+      seen: "A matching --expect-digest prints the same result as no check (JSON shows only ok and digest) and no human line is shown saying the digest was compared and matched."
+      fix: "Print a 'Digest  matches expected' line (and a field in JSON) whenever --expect-digest was given."
+    - severity: MINOR
+      dimension: consistency
+      where: "effective, human, View line (runs 17-18) vs run 33 JSON"
+      seen: "'View  16 records, 3 skipped, nonconforming: Zebra.md, alpha.md, notes.md' reads as though the three names are the skipped files, but in JSON the skipped files are README.md, index.md and template.md, and the human line also drops invalid_records (0011, 0013), so human and JSON state different facts."
+      fix: "Split into separate 'skipped' and 'nonconforming' items and include the invalid records in both formats."
+    - severity: MINOR
+      dimension: spacing
+      where: "human output, label column"
+      seen: "Labels align at column 13 for Status, Decision key, Resolution and the Reference rows, but 'Authorization none: ...' starts at column 14; the Reference block uses lowercase snake_case labels (adr_id) while the labels around it are capitalised ('Decision key'), and the block has no blank line or end marker before Status."
+      fix: "Widen the label column to the longest label (or rename it), use one label case, and put a blank line after the Reference block."
+    - severity: MINOR
+      dimension: hierarchy
+      where: "read and effective, human, top of output"
+      seen: "Two lines (command echo and 'Reference') and six Reference rows come before Status, so the Resolution line sits after about ten lines; the constant 'Authorization none: a record is not approval...' line is repeated on every run and is not in the proposal, and 'none' can be misread as 'not authorised'."
+      fix: "Drop the command echo and move Authorization to a footer or to --help, and keep Status and Resolution within the first lines."
+    - severity: MINOR
+      dimension: consistency
+      where: "Reference block labels vs flags"
+      seen: "The labels cannot be pasted back as flags: 'adr_id' is --id and 'digest' is --expect-digest, and the preview shows --config, which the proposal does not list."
+      fix: "Use the flag names in the Reference block (id, expect-digest) or document the mapping, and list --config in the proposal."
+    - severity: MINOR
+      dimension: states
+      where: "human output, unhappy variants"
+      seen: "Human output is shown only for valid records and for UNRESOLVED decision_key_missing; no human line for an invalid or legacy-format verdict, a legacy record (JSON status is the empty string, run 16), an unreadable record, or Proposed/Rejected, and raw reason codes like decision_key_missing are printed with no plain explanation."
+      fix: "Show the human format line for each verdict and a short plain-language reason beside every code."
+    - severity: MINOR
+      dimension: states
+      where: "refusal JSON, runs 19-27"
+      seen: "Most refusals carry detail {} (commit_not_full does not echo the offending value, binding_not_configured does not list known bindings) and ambiguous_id gives its two paths as one comma-joined string."
+      fix: "Put the received value and the next step in detail, and use an array for paths."
+    - severity: MINOR
+      dimension: theme-size
+      where: "narrow terminal (about 80 columns)"
+      seen: "The digest row is about 84 columns, the run 17 Resolution line about 90, the Effective line (path plus digest) about 122, and each CR in the escaped CRLF text (run 4) becomes a six-character \\u000d, so lines wrap or double in length."
+      fix: "Wrap or truncate-with-full-value rules for width, put long values on their own row, and show escapes in a shorter form such as \\r."
+    - severity: MINOR
+      dimension: theme-size
+      where: "not shown: color, non-TTY, long values, many items"
+      seen: "No transcript shows colour or NO_COLOR, piped output, a very long Status or Decision key, a non-ASCII path or key, an unbounded nonconforming list, or a real-size ADR folder; the read command dumps the full source text with no limit."
+      fix: "Add a transcript for each case and decide a cap or a flag for the source text and the nonconforming list."
+  limitations:
+    - "Only text transcripts were available: terminal width, colour, light and dark themes and the stdout/stderr split could not be seen."
+    - "Several JSON runs (3, 5, 28, 30) and the text field of run 1 are visibly trimmed by the transcript author, so a missing field in them cannot be told apart from a real omission."
+    - "No --help text, no human refusal, and no human output for invalid, legacy or unreadable records exist in the previews, so those states could not be judged."

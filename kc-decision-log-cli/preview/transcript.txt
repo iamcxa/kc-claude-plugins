@@ -1,0 +1,1125 @@
+Fictional repository: /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/kcdl-preview-y7DOPo
+D0 = d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9
+D1 = 736dc673bebc92da7b5e0266266065d35e20c975
+D2 = 0edb76092a3b163ed6be8a5cf0ef64af00a39f95 (branch main now points at D2: true)
+D3 = 799adbc524de4155573fd1de5910968ba55c64b3 (side branch off D1)
+
+## Reading one ruling at an exact commit (AC-2)
+
+### 1. read 0003 at D0 although main has moved on, JSON, digest checked against git cat-file bytes
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0003
+{
+  "ok": true,
+  "command": "read",
+  "tool": {
+    "name": "kc-decision-log",
+    "version": "0.1.0-preview",
+    "format_baseline": "dev2 adr_lint.py"
+  },
+  "reference": {
+    "binding": "mira",
+    "repository": "example/mira-decisions",
+    "path": "docs/adr/0003-reports-are-weekly.md",
+    "adr_id": "0003",
+    "commit": "d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9",
+    "digest": "sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c"
+  },
+  "status": {
+    "written": "Accepted",
+    "state": "Accepted"
+  },
+  "decision_key": "report-cadence",
+  "format": {
+    "legacy": false,
+    "errors": []
+  },
+  "authorization": "none",
+  "text": "(445 chars, omitted here)"
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 2. read 0003 at D0, human
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0003 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0003
+  Path         docs/adr/0003-reports-are-weekly.md
+  Commit       d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9
+  Digest       sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c
+
+Status         Accepted
+Decision key   report-cadence
+Format         dev2-valid (adr_lint rules)
+
+A record is not approval or permission to act.
+---- source text, bytes untouched (control characters shown escaped) ----
+# 3. Reports are weekly
+
+Date: 2026-10-09
+
+## Status
+
+Accepted
+
+## Context
+
+A fictional team at the Café needed a ruling about "reports are weekly".
+
+## Decision
+
+**Words:** 「照這個方向」 — Mira Example, 2026-10-09
+
+**Options considered:**
+- the chosen option (chosen)
+- the other option — rejected: it costs more
+
+**Recommended:** the chosen option.
+
+**Decision key:** report-cadence
+
+## Consequences
+
+Nothing outside this fictional record changes.
+exit 0   as expected
+
+### 3. read 0003 at D1: new bytes, new digest, Status as written
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D1 --id 0003
+{
+  "reference": {
+    "binding": "mira",
+    "repository": "example/mira-decisions",
+    "path": "docs/adr/0003-reports-are-weekly.md",
+    "adr_id": "0003",
+    "commit": "736dc673bebc92da7b5e0266266065d35e20c975",
+    "digest": "sha256:3f479df950bc375e0f90a39576c9a953ee986443986261b7cf9862c9b1eabd2c"
+  },
+  "status": {
+    "written": "Superseded by 0004",
+    "state": "Superseded"
+  }
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 4. read 0012 (CRLF file) in human mode: CR is shown escaped, digest is of the raw bytes
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D1 --id 0012 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0012
+  Path         docs/adr/0012-crlf-record.md
+  Commit       736dc673bebc92da7b5e0266266065d35e20c975
+  Digest       sha256:51db8261b7a4969346134fee491a1ae122f5fc41c5713fdf6daa56d4109e25cc
+
+Status         Accepted
+Decision key   crlf
+Format         dev2-valid (adr_lint rules)
+
+A record is not approval or permission to act.
+---- source text, bytes untouched (control characters shown escaped) ----
+# 12. CRLF record\r
+\r
+Date: 2026-10-09\r
+\r
+## Status\r
+\r
+Accepted\r
+\r
+## Context\r
+\r
+A fictional team at the Café needed a ruling about "crlf record".\r
+\r
+## Decision\r
+\r
+**Words:** 「照這個方向」 — Mira Example, 2026-10-09\r
+\r
+**Options considered:**\r
+- the chosen option (chosen)\r
+- the other option — rejected: it costs more\r
+\r
+**Recommended:** the chosen option.\r
+\r
+**Decision key:** crlf\r
+\r
+## Consequences\r
+\r
+Nothing outside this fictional record changes.\r
+exit 0   as expected
+
+## Handoff comparison (expected digest)
+
+### 5. expected digest matches
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0003 --expect-digest sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c
+{
+  "ok": true,
+  "digest": "sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c"
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 6. expected digest from D0 compared at D1: mismatch stops with exit 4
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D1 --id 0003 --expect-digest sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c
+{
+  "ok": false,
+  "reason": "digest_mismatch",
+  "detail": {
+    "expected": "sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c",
+    "actual": "sha256:3f479df950bc375e0f90a39576c9a953ee986443986261b7cf9862c9b1eabd2c",
+    "reference": "docs/adr/0003-reports-are-weekly.md"
+  }
+}
+exit 4   as expected
+
+### 7. expected digest matches, human: the check is stated
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0003 --expect-digest sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0003
+  Path         docs/adr/0003-reports-are-weekly.md
+  Commit       d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9
+  Digest       sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c
+
+Status         Accepted
+Decision key   report-cadence
+Format         dev2-valid (adr_lint rules)
+Digest check   matches the expected digest
+
+A record is not approval or permission to act.
+---- source text, bytes untouched (control characters shown escaped) ----
+# 3. Reports are weekly
+
+Date: 2026-10-09
+
+## Status
+
+Accepted
+
+## Context
+
+A fictional team at the Café needed a ruling about "reports are weekly".
+
+## Decision
+
+**Words:** 「照這個方向」 — Mira Example, 2026-10-09
+
+**Options considered:**
+- the chosen option (chosen)
+- the other option — rejected: it costs more
+
+**Recommended:** the chosen option.
+
+**Decision key:** report-cadence
+
+## Consequences
+
+Nothing outside this fictional record changes.
+exit 0   as expected
+
+### 8. digest mismatch, human: one REFUSED block on stderr, exit 4
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D1 --id 0003 --expect-digest sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c --format human
+
+[stderr]
+REFUSED digest_mismatch
+  expected     sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c
+  actual       sha256:3f479df950bc375e0f90a39576c9a953ee986443986261b7cf9862c9b1eabd2c
+  reference    docs/adr/0003-reports-are-weekly.md
+exit 4   as expected
+
+## What counts as effective (AC-3)
+
+### 9. effective 0003 at D0
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0003
+{
+  "status": {
+    "written": "Accepted",
+    "state": "Accepted"
+  },
+  "decision_key": "report-cadence",
+  "resolution": "resolved",
+  "reason": null,
+  "blocking": null,
+  "chain": [
+    "0003"
+  ],
+  "effective_id": "0003",
+  "is_effective": true
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 10. effective 0003 at D1
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D1 --id 0003
+{
+  "status": {
+    "written": "Superseded by 0004",
+    "state": "Superseded"
+  },
+  "decision_key": "report-cadence",
+  "resolution": "resolved",
+  "reason": null,
+  "blocking": null,
+  "chain": [
+    "0003",
+    "0004"
+  ],
+  "effective_id": "0004",
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 11. effective 0001 at D1
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D1 --id 0001
+{
+  "status": {
+    "written": "Accepted",
+    "state": "Accepted"
+  },
+  "decision_key": "team-login-first",
+  "resolution": "resolved",
+  "reason": null,
+  "blocking": null,
+  "chain": [
+    "0001"
+  ],
+  "effective_id": "0001",
+  "is_effective": true
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 12. effective 0002 at D0
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0002
+{
+  "status": {
+    "written": "Proposed",
+    "state": "Proposed"
+  },
+  "decision_key": "export-format",
+  "resolution": "unresolved",
+  "reason": "no_explicit_accepted_target",
+  "blocking": null,
+  "chain": [
+    "0002"
+  ],
+  "effective_id": null,
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 13. effective 0005 at D0
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0005
+{
+  "status": {
+    "written": "Accepted",
+    "state": "Accepted"
+  },
+  "decision_key": null,
+  "resolution": "unresolved",
+  "reason": "decision_key_missing",
+  "blocking": null,
+  "chain": [],
+  "effective_id": null,
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 14. effective 0006 at D0
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0006
+{
+  "status": {
+    "written": "Accepted",
+    "state": "Accepted"
+  },
+  "decision_key": "retention-days",
+  "resolution": "unresolved",
+  "reason": "conflicting_accepted_records",
+  "blocking": null,
+  "chain": [],
+  "effective_id": null,
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 15. effective 0008 at D0
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0008
+{
+  "status": {
+    "written": "Superseded by 0099",
+    "state": "Superseded"
+  },
+  "decision_key": "dangling",
+  "resolution": "unresolved",
+  "reason": "missing_target",
+  "blocking": null,
+  "chain": [
+    "0008"
+  ],
+  "effective_id": null,
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 16. effective 0009 at D0
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0009
+{
+  "status": {
+    "written": "Superseded by 0010",
+    "state": "Superseded"
+  },
+  "decision_key": "cycle",
+  "resolution": "unresolved",
+  "reason": "cycle",
+  "blocking": null,
+  "chain": [
+    "0009",
+    "0010"
+  ],
+  "effective_id": null,
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 17. effective 0011 at D0
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0011
+{
+  "status": {
+    "written": "Accepted",
+    "state": "Accepted"
+  },
+  "decision_key": "bad-date",
+  "resolution": "unresolved",
+  "reason": "record_invalid",
+  "blocking": null,
+  "chain": [],
+  "effective_id": null,
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 18. effective 0014 at D0
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0014
+{
+  "status": {
+    "written": "",
+    "state": null
+  },
+  "decision_key": null,
+  "resolution": "unresolved",
+  "reason": "legacy_record",
+  "blocking": null,
+  "chain": [],
+  "effective_id": null,
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 19. effective 0003 at D1, human
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D1 --id 0003 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0003
+  Path         docs/adr/0003-reports-are-weekly.md
+  Commit       736dc673bebc92da7b5e0266266065d35e20c975
+  Digest       sha256:3f479df950bc375e0f90a39576c9a953ee986443986261b7cf9862c9b1eabd2c
+
+Status         Superseded by 0004
+Decision key   report-cadence
+Format         dev2-valid (adr_lint rules)
+Resolution     NOT EFFECTIVE: superseded; the ruling in force is ADR 0004   (chain 0003 -> 0004)
+Ruling ADR     0004 (same commit)
+Ruling path    docs/adr/0004-reports-are-daily.md
+Ruling digest  sha256:0226996d750f919eaa726d72390928f54e67e62b6fa410c8c47d0bfb34ba2f36
+Folder         16 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+### 20. effective 0003 at D1, JSON in full (same envelope as read plus the resolution fields)
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D1 --id 0003
+{
+  "ok": true,
+  "command": "effective",
+  "tool": {
+    "name": "kc-decision-log",
+    "version": "0.1.0-preview",
+    "format_baseline": "dev2 adr_lint.py"
+  },
+  "reference": {
+    "binding": "mira",
+    "repository": "example/mira-decisions",
+    "path": "docs/adr/0003-reports-are-weekly.md",
+    "adr_id": "0003",
+    "commit": "736dc673bebc92da7b5e0266266065d35e20c975",
+    "digest": "sha256:3f479df950bc375e0f90a39576c9a953ee986443986261b7cf9862c9b1eabd2c"
+  },
+  "status": {
+    "written": "Superseded by 0004",
+    "state": "Superseded"
+  },
+  "decision_key": "report-cadence",
+  "format": {
+    "legacy": false,
+    "errors": []
+  },
+  "authorization": "none",
+  "resolution": "resolved",
+  "reason": null,
+  "blocking": null,
+  "chain": [
+    "0003",
+    "0004"
+  ],
+  "effective_id": "0004",
+  "is_effective": false,
+  "effective_reference": {
+    "binding": "mira",
+    "repository": "example/mira-decisions",
+    "path": "docs/adr/0004-reports-are-daily.md",
+    "adr_id": "0004",
+    "commit": "736dc673bebc92da7b5e0266266065d35e20c975",
+    "digest": "sha256:0226996d750f919eaa726d72390928f54e67e62b6fa410c8c47d0bfb34ba2f36"
+  },
+  "view": {
+    "records": 16,
+    "skipped": [
+      "README.md",
+      "index.md",
+      "template.md"
+    ],
+    "nonconforming": [
+      "Zebra.md",
+      "alpha.md",
+      "notes.md"
+    ],
+    "invalid_records": [
+      "0011",
+      "0013"
+    ]
+  }
+}
+exit 0   as expected
+
+### 21. effective 0001 at D1, human: this record is the ruling in force
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D1 --id 0001 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0001
+  Path         docs/adr/0001-demo-site-is-team-login-first.md
+  Commit       736dc673bebc92da7b5e0266266065d35e20c975
+  Digest       sha256:b1901a6efa0c64b229a1c8aac6033da4043c206eb67f2a669d5e3e43b5351f47
+
+Status         Accepted
+Decision key   team-login-first
+Format         dev2-valid (adr_lint rules)
+Resolution     EFFECTIVE: this record is the ruling in force
+Folder         16 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+### 22. effective with --expect-digest: compared with the requested record (0003 at D1), not the ruling in force
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D1 --id 0003 --expect-digest sha256:3f479df950bc375e0f90a39576c9a953ee986443986261b7cf9862c9b1eabd2c --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0003
+  Path         docs/adr/0003-reports-are-weekly.md
+  Commit       736dc673bebc92da7b5e0266266065d35e20c975
+  Digest       sha256:3f479df950bc375e0f90a39576c9a953ee986443986261b7cf9862c9b1eabd2c
+
+Status         Superseded by 0004
+Decision key   report-cadence
+Format         dev2-valid (adr_lint rules)
+Digest check   matches the expected digest
+Resolution     NOT EFFECTIVE: superseded; the ruling in force is ADR 0004   (chain 0003 -> 0004)
+Ruling ADR     0004 (same commit)
+Ruling path    docs/adr/0004-reports-are-daily.md
+Ruling digest  sha256:0226996d750f919eaa726d72390928f54e67e62b6fa410c8c47d0bfb34ba2f36
+Folder         16 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+### 23. effective --expect-digest with the digest of the ruling in force: refused, because it is not the requested record
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D1 --id 0003 --expect-digest sha256:0226996d750f919eaa726d72390928f54e67e62b6fa410c8c47d0bfb34ba2f36
+{
+  "ok": false,
+  "reason": "digest_mismatch",
+  "detail": {
+    "expected": "sha256:0226996d750f919eaa726d72390928f54e67e62b6fa410c8c47d0bfb34ba2f36",
+    "actual": "sha256:3f479df950bc375e0f90a39576c9a953ee986443986261b7cf9862c9b1eabd2c",
+    "reference": "docs/adr/0003-reports-are-weekly.md"
+  }
+}
+exit 4   as expected
+
+### 24. effective --require-effective on a superseded record: exit 6, answer still printed
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D1 --id 0003 --require-effective --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0003
+  Path         docs/adr/0003-reports-are-weekly.md
+  Commit       736dc673bebc92da7b5e0266266065d35e20c975
+  Digest       sha256:3f479df950bc375e0f90a39576c9a953ee986443986261b7cf9862c9b1eabd2c
+
+Status         Superseded by 0004
+Decision key   report-cadence
+Format         dev2-valid (adr_lint rules)
+Resolution     NOT EFFECTIVE: superseded; the ruling in force is ADR 0004   (chain 0003 -> 0004)
+Ruling ADR     0004 (same commit)
+Ruling path    docs/adr/0004-reports-are-daily.md
+Ruling digest  sha256:0226996d750f919eaa726d72390928f54e67e62b6fa410c8c47d0bfb34ba2f36
+Folder         16 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 6   as expected
+
+### 25. effective --require-effective on an unresolved record: exit 6
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0005 --require-effective --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0005
+  Path         docs/adr/0005-no-key-record.md
+  Commit       d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9
+  Digest       sha256:b4b3450712c5c78a40a9b4ee2a367c48631a80a736f7fd3c6f0f9f42e05fc269
+
+Status         Accepted
+Decision key   (none)
+Format         dev2-valid (adr_lint rules)
+Resolution     UNRESOLVED: the record has no Decision key, so nothing tells whether it is the one in force (decision_key_missing)
+Folder         15 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 6   as expected
+
+### 26. effective --require-effective on the ruling in force: exit 0
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D1 --id 0004 --require-effective --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0004
+  Path         docs/adr/0004-reports-are-daily.md
+  Commit       736dc673bebc92da7b5e0266266065d35e20c975
+  Digest       sha256:0226996d750f919eaa726d72390928f54e67e62b6fa410c8c47d0bfb34ba2f36
+
+Status         Accepted
+Decision key   report-cadence
+Format         dev2-valid (adr_lint rules)
+Resolution     EFFECTIVE: this record is the ruling in force
+Folder         16 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+### 27. effective 0002 (Proposed), human
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0002 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0002
+  Path         docs/adr/0002-export-format-is-csv.md
+  Commit       d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9
+  Digest       sha256:0cfb0277b94d4e97f20521268bd226a46fac46b1a5dfa6aed3b707867b200777
+
+Status         Proposed
+Decision key   export-format
+Format         dev2-valid (adr_lint rules)
+Resolution     UNRESOLVED: the chain ends at a record that is not Accepted (Proposed or Deprecated) (no_explicit_accepted_target)
+Folder         15 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+### 28. effective 0011 (fails the format check), human
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0011 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0011
+  Path         docs/adr/0011-bad-date.md
+  Commit       d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9
+  Digest       sha256:6514561a4883532c1199491d35dc3c7a1aa92315893e917b1444414592f20c71
+
+Status         Accepted
+Decision key   bad-date
+Format         NOT dev2-valid: date
+Resolution     UNRESOLVED: the record (or one it depends on) fails the dev2 format check (record_invalid)
+Folder         15 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+### 29. effective 0014 (Legacy), human
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0014 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0014
+  Path         docs/adr/0014-legacy-record.md
+  Commit       d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9
+  Digest       sha256:7c5d40067ae344f58867d048f42d764ece4dc91b8d1ebddbfc62dfcbea9439d1
+
+Status         (empty)
+Decision key   (none)
+Format         legacy (not checked by adr_lint; Status is not a dev2 state)
+Resolution     UNRESOLVED: a Legacy record is not format-checked and is never a ruling (legacy_record)
+Folder         15 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+### 30. effective 0005, human: unresolved is exit 0, not a tool failure
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0005 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0005
+  Path         docs/adr/0005-no-key-record.md
+  Commit       d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9
+  Digest       sha256:b4b3450712c5c78a40a9b4ee2a367c48631a80a736f7fd3c6f0f9f42e05fc269
+
+Status         Accepted
+Decision key   (none)
+Format         dev2-valid (adr_lint rules)
+Resolution     UNRESOLVED: the record has no Decision key, so nothing tells whether it is the one in force (decision_key_missing)
+Folder         15 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+## Refusals (AC-1)
+
+### 31. short commit, human: one REFUSED block on stderr, exit 2
+$ kc-decision-log read --config $CONFIG --binding mira --commit d19041009ce4 --id 0001 --format human
+
+[stderr]
+REFUSED commit_not_full
+  received     d19041009ce4
+exit 2   as expected
+
+### 32. two files share 0016, human
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0016 --format human
+
+[stderr]
+REFUSED ambiguous_id
+  paths        docs/adr/0016-twin-a.md, docs/adr/0016-twin-b.md
+exit 2   as expected
+
+### 33. commit that does not exist, human
+$ kc-decision-log read --config $CONFIG --binding mira --commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --id 0001 --format human
+
+[stderr]
+REFUSED commit_not_found
+  commit       aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+exit 3   as expected
+
+### 34. wrong repository, human
+$ kc-decision-log read --config $CONFIG[repository=example/other-decisions] --binding mira --commit $D0 --id 0001 --format human
+
+[stderr]
+REFUSED repository_mismatch
+  configured   example/other-decisions
+  origin       example/mira-decisions
+exit 3   as expected
+
+### 35. wrong ADR path, human
+$ kc-decision-log read --config $CONFIG[adr_root=docs/decisions] --binding mira --commit $D0 --id 0001 --format human
+
+[stderr]
+REFUSED adr_root_missing
+  adr_root     docs/decisions
+  commit       d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9
+exit 3   as expected
+
+### 36. ID that does not exist, human
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0042 --format human
+
+[stderr]
+REFUSED unknown_id
+  id           0042
+exit 2   as expected
+
+### 37. binding that is not configured, human: the configured names are listed
+$ kc-decision-log read --config $CONFIG --binding ghost --commit $D0 --id 0001 --format human
+
+[stderr]
+REFUSED binding_not_configured
+  configured   mira
+exit 2   as expected
+
+### 38. usage error: no --id
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0
+{
+  "ok": false,
+  "reason": "bad_arguments",
+  "detail": {
+    "problem": "--id is four digits, for example 0003"
+  }
+}
+exit 2   as expected
+
+### 39. usage error: id that is not four digits
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 3
+{
+  "ok": false,
+  "reason": "bad_arguments",
+  "detail": {
+    "problem": "--id is four digits, for example 0003"
+  }
+}
+exit 2   as expected
+
+### 40. usage error: no --config
+$ kc-decision-log read --binding mira --commit $D0 --id 0001
+{
+  "ok": false,
+  "reason": "bad_arguments",
+  "detail": {
+    "problem": "--config is required"
+  }
+}
+exit 2   as expected
+
+### 41. usage error: unknown --format
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0001 --format yaml
+{
+  "ok": false,
+  "reason": "bad_arguments",
+  "detail": {
+    "problem": "--format is json or human, not yaml"
+  }
+}
+exit 2   as expected
+
+### 42. usage error: unknown flag --path
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0001 --path docs/adr/0001-demo-site-is-team-login-first.md
+{
+  "ok": false,
+  "reason": "bad_arguments",
+  "detail": {
+    "problem": "unknown flag --path"
+  }
+}
+exit 2   as expected
+
+### 43. usage error: --require-effective on read
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0001 --require-effective
+{
+  "ok": false,
+  "reason": "bad_arguments",
+  "detail": {
+    "problem": "--require-effective belongs to effective"
+  }
+}
+exit 2   as expected
+
+### 44. malformed --expect-digest
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0001 --expect-digest abc
+{
+  "ok": false,
+  "reason": "bad_expected_digest",
+  "detail": {
+    "received": "abc"
+  }
+}
+exit 2   as expected
+
+### 45. binding that is not configured
+$ kc-decision-log read --config $CONFIG --binding ghost --commit $D0 --id 0001
+{
+  "ok": false,
+  "reason": "binding_not_configured",
+  "detail": {
+    "configured": [
+      "mira"
+    ]
+  }
+}
+exit 2   as expected
+
+### 46. short commit
+$ kc-decision-log read --config $CONFIG --binding mira --commit d19041009ce4 --id 0001
+{
+  "ok": false,
+  "reason": "commit_not_full",
+  "detail": {
+    "received": "d19041009ce4"
+  }
+}
+exit 2   as expected
+
+### 47. ref name instead of a commit
+$ kc-decision-log read --config $CONFIG --binding mira --commit main --id 0001
+{
+  "ok": false,
+  "reason": "commit_not_full",
+  "detail": {
+    "received": "main"
+  }
+}
+exit 2   as expected
+
+### 48. full-length commit that does not exist
+$ kc-decision-log read --config $CONFIG --binding mira --commit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa --id 0001
+{
+  "ok": false,
+  "reason": "commit_not_found",
+  "detail": {
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  }
+}
+exit 3   as expected
+
+### 49. wrong repository in the binding
+$ kc-decision-log read --config $CONFIG[repository=example/other-decisions] --binding mira --commit $D0 --id 0001
+{
+  "ok": false,
+  "reason": "repository_mismatch",
+  "detail": {
+    "configured": "example/other-decisions",
+    "origin": "example/mira-decisions"
+  }
+}
+exit 3   as expected
+
+### 50. wrong ADR path in the binding
+$ kc-decision-log read --config $CONFIG[adr_root=docs/decisions] --binding mira --commit $D0 --id 0001
+{
+  "ok": false,
+  "reason": "adr_root_missing",
+  "detail": {
+    "adr_root": "docs/decisions",
+    "commit": "d19041009ce42819b6b1bfdb5cf6b6ffa6aa1cf9"
+  }
+}
+exit 3   as expected
+
+### 51. adr_root that climbs out of the repository
+$ kc-decision-log read --config $CONFIG[adr_root=../elsewhere] --binding mira --commit $D0 --id 0001
+{
+  "ok": false,
+  "reason": "invalid_binding",
+  "detail": {
+    "binding": "mira",
+    "adr_root": "../elsewhere"
+  }
+}
+exit 2   as expected
+
+### 52. two files share the number 0016: refused, both paths named; other IDs unaffected (see 0001 at D1 above)
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0016
+{
+  "ok": false,
+  "reason": "ambiguous_id",
+  "detail": {
+    "paths": [
+      "docs/adr/0016-twin-a.md",
+      "docs/adr/0016-twin-b.md"
+    ]
+  }
+}
+exit 2   as expected
+
+### 53. ID that does not exist
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0042
+{
+  "ok": false,
+  "reason": "unknown_id",
+  "detail": {
+    "id": "0042"
+  }
+}
+exit 2   as expected
+
+### 54. caller exports GIT_DIR of another repository: ignored, same digest as scenario 1
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D0 --id 0003   (env GIT_DIR set)
+{
+  "ok": true,
+  "digest": "sha256:ee6faaa00563b364272c4bf36b21d61e6c0aee22c4a46233f6c9ee930e84cf4c"
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+## A record that cannot be read at all (D2 adds a file with invalid UTF-8)
+
+### 55. read the unreadable record: refused, no digest of substituted bytes
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D2 --id 0015
+{
+  "ok": false,
+  "reason": "unsupported_record",
+  "detail": {
+    "path": "docs/adr/0015-not-utf8.md",
+    "why": "invalid_utf8"
+  }
+}
+exit 5   as expected
+
+### 56. read the unreadable record, human
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D2 --id 0015 --format human
+
+[stderr]
+REFUSED unsupported_record
+  path         docs/adr/0015-not-utf8.md
+  why          invalid_utf8
+exit 5   as expected
+
+### 57. read a normal record in the same view: still works
+$ kc-decision-log read --config $CONFIG --binding mira --commit $D2 --id 0001
+{
+  "ok": true,
+  "digest": "sha256:b1901a6efa0c64b229a1c8aac6033da4043c206eb67f2a669d5e3e43b5351f47"
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 58. effective 0001 at D2
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D2 --id 0001
+{
+  "status": {
+    "written": "Accepted",
+    "state": "Accepted"
+  },
+  "decision_key": "team-login-first",
+  "resolution": "unresolved",
+  "reason": "view_has_unreadable_record",
+  "blocking": [
+    "docs/adr/0015-not-utf8.md"
+  ],
+  "chain": [],
+  "effective_id": null,
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 59. effective 0001 at D2, human: the blocking file is named
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D2 --id 0001 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0001
+  Path         docs/adr/0001-demo-site-is-team-login-first.md
+  Commit       0edb76092a3b163ed6be8a5cf0ef64af00a39f95
+  Digest       sha256:b1901a6efa0c64b229a1c8aac6033da4043c206eb67f2a669d5e3e43b5351f47
+
+Status         Accepted
+Decision key   team-login-first
+Format         dev2-valid (adr_lint rules)
+Resolution     UNRESOLVED: a file in the ADR folder cannot be read, so no ruling can be confirmed (view_has_unreadable_record)
+Blocking       docs/adr/0015-not-utf8.md
+Folder         16 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+## An Accepted record whose Decision key cannot be placed (D3, a side commit after D1, adds ADR 0017 with two key lines)
+
+### 60. effective 0001 at D3
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D3 --id 0001
+{
+  "status": {
+    "written": "Accepted",
+    "state": "Accepted"
+  },
+  "decision_key": "team-login-first",
+  "resolution": "unresolved",
+  "reason": "view_has_unplaceable_record",
+  "blocking": [
+    "docs/adr/0017-two-keys.md"
+  ],
+  "chain": [],
+  "effective_id": null,
+  "is_effective": false
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+### 61. effective 0001 at D3, human: the blocking file is named
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D3 --id 0001 --format human
+Reference
+  Binding      mira
+  Repository   example/mira-decisions
+  ADR          0001
+  Path         docs/adr/0001-demo-site-is-team-login-first.md
+  Commit       799adbc524de4155573fd1de5910968ba55c64b3
+  Digest       sha256:b1901a6efa0c64b229a1c8aac6033da4043c206eb67f2a669d5e3e43b5351f47
+
+Status         Accepted
+Decision key   team-login-first
+Format         dev2-valid (adr_lint rules)
+Resolution     UNRESOLVED: an Accepted record has a doubled or malformed Decision key, so it could conflict with any ruling (view_has_unplaceable_record)
+Blocking       docs/adr/0017-two-keys.md
+Folder         17 ADR files read; skipped: README.md, index.md, template.md
+Nonconforming  Zebra.md, alpha.md, notes.md
+Format-invalid 0011, 0013
+
+A record is not approval or permission to act.
+exit 0   as expected
+
+## Skipped files and byte-order sort
+
+### 62. effective view lists what it did not read as ADRs (README, index, template are skipped silently; the rest are named)
+$ kc-decision-log effective --config $CONFIG --binding mira --commit $D0 --id 0001
+{
+  "records": 15,
+  "skipped": [
+    "README.md",
+    "index.md",
+    "template.md"
+  ],
+  "nonconforming": [
+    "Zebra.md",
+    "alpha.md",
+    "notes.md"
+  ],
+  "invalid_records": [
+    "0011",
+    "0013"
+  ]
+}
+(subset of the JSON fields, chosen by the transcript)
+exit 0   as expected
+
+## Format oracle: adr_lint.py on the same D1 tree
+adr_lint.py exit 1; files it flags:  0008-points-at-nothing.md, 0011-bad-date.md, 0013-bom-record.md, 0016-twin-b.md, Zebra.md, alpha.md, notes.md
+preview view flags:               0008-points-at-nothing.md, 0011-bad-date.md, 0013-bom-record.md, 0016-twin-b.md, Zebra.md, alpha.md, notes.md
+same set: as expected
+
+All 62 scenarios and the lint comparison matched their hand-written expectations.

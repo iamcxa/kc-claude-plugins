@@ -1,0 +1,73 @@
+design_review:
+  preview: ./kc-decision-log-cli/preview/README.md
+  findings:
+    - severity: MAJOR
+      dimension: states
+      where: transcript.txt runs 28, 31, 32, 33, 34, 36 (JSON). The human form of these refusals is not shown.
+      seen: Six refusals (commit_not_found, repository_mismatch, adr_root_missing, invalid_binding, unknown_id) carry `"detail": {}`, so no commit, id, repository or path is named, while commit_not_full, ambiguous_id and digest_mismatch do name their values.
+      fix: Give every REFUSED block and JSON detail the offending value (the commit, the id, expected versus actual repository, the adr_root) and show each human refusal in the transcript.
+    - severity: MAJOR
+      dimension: flow
+      where: transcript.txt runs 9-25 and README run 42 (`effective`, exit 0 for EFFECTIVE, NOT EFFECTIVE and UNRESOLVED)
+      seen: `effective` exits 0 for all three answers, including "UNRESOLVED ... do not rely on this record", and only the text or `is_effective` tells them apart.
+      fix: Add a distinct exit code (or an opt-in flag) for NOT EFFECTIVE and UNRESOLVED, so an agent that checks only the exit code cannot treat "do not rely" as a pass.
+    - severity: MAJOR
+      dimension: flow
+      where: the `--expect-digest` flag, shown only on `read` (runs 5-8). It is never shown with `effective` in human or JSON output.
+      seen: When `effective` resolves to a different ruling (run 19 prints both a Digest and a Ruling digest), nothing says which digest `--expect-digest` is compared against, and no `Digest check` line appears in any `effective` run.
+      fix: State the flag's scope (queried record or ruling in force) and show an `effective --expect-digest` run in both formats.
+    - severity: MAJOR
+      dimension: hierarchy
+      where: transcript.txt run 24 (Legacy record, human)
+      seen: The human output prints `Status            (not a dev2 status)` while the JSON for the same record (run 18) has `"status": ""`, so the human line is not "exactly as written". The label column is also two spaces too wide there.
+      fix: Print the written status verbatim (for example `(empty)`), move the "not a dev2 status" note to the Format line, and keep the label column aligned.
+    - severity: MINOR
+      dimension: hierarchy
+      where: transcript.txt runs 19-25, 42, 44 (`effective`, human) and README excerpts for runs 19 and 42
+      seen: The answer (Resolution) sits on line 11 of 14-18, below a header, six Reference lines, a blank line and three lines of Status, Decision key and Format. Unresolved runs lead with a snake_case code (`UNRESOLVED: no_explicit_accepted_target`) and only the next line gives the plain reason, although the proposal says the reason is in plain words.
+      fix: Keep the Reference block but put Resolution first or bold the answer, and lead its reason with the plain-words text, with the code in parentheses.
+    - severity: MINOR
+      dimension: spacing
+      where: transcript.txt runs 19-25, 42, 44 (the Folder, Not ADRs and Format-invalid lines)
+      seen: Every `effective` output ends with three folder-wide lines (Folder, Not ADRs, Format-invalid) that are not about this record and do not say whether they affect the answer; in run 23 the Format line and `Format-invalid 0011` state the same fact twice, and the human label "Not ADRs" is `nonconforming` in the JSON.
+      fix: Collapse the folder facts into one line (or print them only on request) and use one label across human and JSON.
+    - severity: MINOR
+      dimension: spacing
+      where: transcript.txt runs 22-25, 42, 44 (Why, Blocking and the continuation line)
+      seen: The sentence "unresolved is an answer, not a failure: do not rely on this record" is repeated in every unresolved run, and in runs 42 and 44 it sits under the `Blocking` line, so it reads as part of Blocking instead of Why. The footer "A record is not approval or permission to act." follows two lines later.
+      fix: Say the "not a failure" point once (in the footer or in the docs), and keep Why and its continuation together before Blocking.
+    - severity: MINOR
+      dimension: flow
+      where: transcript.txt run 19 (NOT EFFECTIVE) against the Reference block
+      seen: For the ruling in force the human output gives only Ruling path and Ruling digest, with no Ruling commit or ADR line. The JSON `effective_reference` carries the full set, so the pasteable block exists only in JSON.
+      fix: Print a second Reference block, or the same six fields, for the ruling in force.
+    - severity: MINOR
+      dimension: consistency
+      where: transcript.txt runs 8, 26, 27, 39 against the Reference block (human output)
+      seen: Reference and fact lines use padded columns without colons, while REFUSED blocks use `key: value` with a colon and a different indent.
+      fix: Use one key-value style for both.
+    - severity: MINOR
+      dimension: consistency
+      where: transcript.txt runs 9-18 against runs 1 and 20 (JSON)
+      seen: The same `effective` JSON shows `"status": "Accepted"` and `"key"` in runs 9-18 but `"status": {"written", "state"}` and `"decision_key"` in run 20, so the shape of the "same facts" is unclear even though the transcript calls them subsets.
+      fix: Show the real full JSON for each outcome type, or use identical field names in the excerpts.
+    - severity: MINOR
+      dimension: states
+      where: README "What this preview does not show"; transcript.txt runs 42, 44, 45
+      seen: Many-item and long-content cases are not shown: `Blocking`, `Not ADRs`, `Format-invalid` and `paths` lists in a real-size folder, a very long source text with no end marker, long paths, and non-ASCII file names. Usage errors (missing `--id`, an id such as `3`, a malformed `--expect-digest`, an unknown `--format`, no `--config`) are also not shown.
+      fix: Add runs for a long list (with a cap such as "and N more"), an oversized record, a non-ASCII path and each usage error, with their exit codes.
+    - severity: MINOR
+      dimension: theme-size
+      where: transcript.txt runs 19 and 44 (Resolution and Why lines); README line 64 (width, colour and terminal not exercised)
+      seen: The Resolution line is about 100 columns wide and the Why line in run 44 about 110, with continuation lines hard-indented 15 spaces, so they wrap badly in an 80-column or narrow terminal. Colour and non-ASCII path widths are not shown.
+      fix: Wrap at 80 columns with a hanging indent and show one run at 60 columns, one with NO_COLOR, and one with a CJK file name.
+    - severity: MINOR
+      dimension: platform
+      where: the proposed command (`--format human` is opt-in) and the exit-code scheme in transcript.txt (2 for six different refusals, 3, 4, 5)
+      seen: Default output is JSON, so a person who omits `--format human` gets JSON with no cue, and exit 2 covers bad input, unknown id and ambiguous_id alike with no legend of the codes.
+      fix: Print a one-line hint to stderr when stdout is a terminal and `--format` is not given, and list the exit codes in `--help` and in the README.
+  limitations:
+    - Terminal width, colour, light and dark themes, and phone-sized terminals were not shown in the previews, so findings on them are about missing coverage only.
+    - Human renderings of the exit-3 refusals, unknown_id and binding_not_configured, and of `effective --expect-digest`, do not exist in the previews, so those findings rest on the JSON runs or on what is missing.
+    - Only the two named files were read, so exit-code meanings and flag semantics beyond what the transcript shows were inferred from the transcript and the proposal line.
+    - There are no pictures; the "controls" inventory is the flag set (`--binding`, `--commit`, `--id`, `--expect-digest`, `--config`, `--format`), which is consistent in style, with no icon or button mix to compare.
