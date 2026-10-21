@@ -1,0 +1,8 @@
+{
+  "name": "ops-inbox-poc-exactly-once",
+  "private": true,
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node --test --test-force-exit test/*.test.mjs" },
+  "dependencies": { "@netlify/blobs": "11.1.5" }
+}

@@ -1,0 +1,48 @@
+name: ops-event
+on:
+  workflow_dispatch:
+    inputs:
+      event_id:
+        description: CloudEvents id
+        required: true
+      event_source:
+        description: CloudEvents source
+        required: true
+      event_type:
+        description: CloudEvents type
+        required: true
+permissions: {}
+jobs:
+  branch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Mint a push-capable token inside this run only
+        id: mint
+        uses: actions/create-github-app-token@64ab729a6294000f5aa4a4bc0b73d1f32bc45510 # v3.3.0
+        with:
+          client-id: ${{ vars.OPS_PUSH_APP_CLIENT_ID }}
+          private-key: ${{ secrets.OPS_PUSH_APP_PRIVATE_KEY }}
+          permission-contents: write
+      - name: Create ops/<id> from the default branch
+        env:
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
+          REPO: ${{ github.repository }}
+          EVENT_ID: ${{ inputs.event_id }}
+        run: |
+          set -euo pipefail
+          [[ "$EVENT_ID" =~ ^[A-Za-z0-9._-]{1,64}$ ]] || { echo "unsafe event id" >&2; exit 1; }
+          sha=$(gh api "repos/$REPO/git/ref/heads/${{ github.event.repository.default_branch }}" --jq .object.sha)
+          gh api "repos/$REPO/git/refs" -f ref="refs/heads/ops/$EVENT_ID" -f sha="$sha" --jq .ref
+      - name: Probe the minted token's limits, value never printed
+        env:
+          GH_TOKEN: ${{ steps.mint.outputs.token }}
+          REPO: ${{ github.repository }}
+        run: |
+          set +e
+          echo "token present: ${GH_TOKEN:+yes}"
+          probe() { printf '%s -> ' "$1"; shift; gh api "$@" 2>&1 | head -c 160 | tr '\n' ' '; echo; }
+          probe "contents (requested write): list branches" "repos/$REPO/branches" --jq 'length'
+          probe "issues (not requested): comment on nonexistent issue, 403 means not granted, 404 means granted" -X POST "repos/$REPO/issues/999999/comments" -f body=x
+          probe "actions (not requested): list runs" "repos/$REPO/actions/runs" --jq .total_count
+          probe "pull_requests (not requested): list" "repos/$REPO/pulls" --jq length
