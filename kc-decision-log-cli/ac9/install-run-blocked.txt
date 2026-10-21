@@ -1,0 +1,10 @@
+2026-10-22 AC-9 repair attempt (amendment 7 item 2): install kc-adr as a user would, in an isolated HOME, then one Claude B1 dispatch.
+Marketplace root: the task worktree (kc-adr tree 54b89e44 = origin/main 7244594b kc-adr tree 54b89e44, same bytes).
+
+$ HOME=$(mktemp -d)  claude plugin marketplace add <worktree>        -> Successfully added marketplace: kc-claude-plugins
+$ HOME=<same>        claude plugin install kc-adr@kc-claude-plugins  -> Successfully installed plugin: kc-adr@kc-claude-plugins (scope: user)
+$ HOME=<same>        claude plugin marketplace add spacedock-dev/marketplace; claude plugin install spacedock@spacedock; claude plugin install kc-dev-flow-2@kc-claude-plugins -> all installed
+$ HOME=<same>        claude -p --model sonnet "reply with the word ok"  -> Not logged in · Please run /login
+$ CLAUDE_CONFIG_DIR=$(mktemp -d) claude -p --model sonnet "reply ok"     -> Not logged in · Please run /login
+
+Result: the install works in an isolated HOME, but a worker cannot run there: Claude Code's login is held per config location and is not carried into a fresh HOME or CLAUDE_CONFIG_DIR. No dispatch was run. The real ~/.claude was not changed (installed_plugins.json and settings.json contain no kc-adr).
