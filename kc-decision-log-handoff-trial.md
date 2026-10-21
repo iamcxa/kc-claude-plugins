@@ -79,3 +79,8 @@ Visible change: One small CLI behaviour follows what a synthetic ruling decides;
 Captain: 「照建議」 (this FO's Paseo session "decision-log P1 重切與 dev2 交接", reply to the six-item batch)
 Asked: 「1. 改名為 `kc-adr`（上一則）：plugin 和指令都叫 `kc-adr`，skill 叫 `read-adr`，地圖旅程名稱不變。」「4. 合成決策 repo 由任務一建：任務一的實作要附一份產生腳本和固定的裁示文字，在本機產生虛構的決策 repo 和 Codex 用的設定檔。裡面那筆裁示定為「人讀輸出預設用繁體中文」：任務一的工具維持英文預設，任務二由 Codex 照裁示改成繁中，看結果就知道它有沒有照做。」「5. 關卡引用裁示版本：任務二的每個關卡摘要，由 Codex 協調者附上裁示的引用區塊。」
 Supersedes: none
+
+### Amendment 2 — 2026-10-21, chat
+Captain: 「照建議」 (this FO's Paseo session, reply to a three-item batch)
+Asked: 「任務二裡「用同一個 CLI」的驗收也要跟著改成用 skill 的做法。」 within item 2 of the batch (task one shrinks to the read-adr skill plus a config template, no CLI).
+Supersedes: AC-1 (replacement written at this task's ideation: the Codex worker re-reads with the read-adr skill's git recipe and compares the digest)
