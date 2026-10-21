@@ -37,6 +37,17 @@ gates:
                 id: briefing:kc-decision-log-cli:ideation:attempt-1:revision-1
                 digest: sha256:cce15b8efeda22a461978bb7d4ed6056875a08f25b02b4516f9a9e0e5208a7f7
                 room-ref: ./kc-decision-log-cli/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-decision-log-cli:ideation:1
+                briefing: briefing:kc-decision-log-cli:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T03:01:58.982465Z"
+                decision: approve
+                reason: Captain replied 「兩題照建議」 to the joint presentation of this ideation gate and the POC question (2026-10-21); accepts the design and the four recommended decisions as stated in the gate question. Consume waits for the signal-4 release review and the Captain's answer on the plugin/command name.
+              application:
+                target-stage: implementation
+                state: pending
 journey: kc-decision-log-design
 journey-release: P1
 journey-story: S10
