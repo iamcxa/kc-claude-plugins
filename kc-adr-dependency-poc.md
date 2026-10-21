@@ -43,6 +43,18 @@ worktree: .worktrees/spacedock-ensign-kc-adr-dependency-poc
 - Inputs: the kc-adr boundary contract (PR #691, `docs/journey/kc-decision-log/boundary-contract.md`), its wrap proposal (relayed 2026-10-21), `number_guards.py` (one script and one reservation file for ADR and migration numbers, ADR 0002), `adr_lint.py`, the ADR template.
 - Non-goals: moving any tool now; changing any adopter; splitting `number_guards.py` (the report only says what a split would need).
 
+## Acceptance criteria
+
+These restate the Scope's bar line by line and add no requirement; FO omitted the section from the seed (the dev2-poc route has no ideation stage to write it), and the implementation report's design check exited 1 on its absence.
+
+**AC-1** Each arm's install is observed on Claude Code and on Codex. Evidence: report.md result table, Installs column, one observed row per arm and host. Falsifier: a cell filled from documentation alone is marked as such.
+
+**AC-2** For each arm, whether a kc-adr update reaches dev2 is observed on both hosts. Evidence: the result table's update column. Falsifier: an update run where dev2's resolved kc-adr version does not change.
+
+**AC-3** For each arm, whether an absent kc-adr refuses loudly is observed on both hosts. Evidence: the result table's absent column with the printed message or state. Falsifier: an absent kc-adr that exits 0 or prints nothing.
+
+**AC-4** For each arm, whether an incompatible kc-adr version is caught is observed on both hosts, and the report recommends one arm and names what a move would change in the four adopters' READMEs and pins. Evidence: the result table's version column, the Ruling and the adopter section. Falsifier: an out-of-range version that runs.
+
 ## FO alignment
 
 Not needed before implementation. The Captain asked for this POC (「好，開」, 2026-10-21) after FO showed him its four questions, arms and bar, restated above. Release review: not needed: the task belongs to no release.
