@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:adr-read-and-route-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:adr-read-and-route-poc-validation-1
+              briefing:
+                id: briefing:adr-read-and-route-poc:validation:attempt-1:revision-1
+                digest: sha256:1d6c26d2a0b1a0643e70d6ff3f387135215ef0db1178e97d11b854bf62287bc0
+                room-ref: ./adr-read-and-route-poc/review/validation/briefing-1
 started: 2026-10-21T06:22:26Z
 ---
 

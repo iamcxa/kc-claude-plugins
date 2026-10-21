@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-read-and-route-poc:validation:attempt-1:revision-1",
+  "question": "Approve the adr-read-and-route-poc result as PASSED and close the POC? The evidence is recorded in the state folder and no delivery PR is made, since the harness is disposable and the code worktree has no diff. The result answers Amendment 1's rule: the CLI arm does not clearly beat the plain-git arm. How task one changes is a separate decision.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-read-and-route-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/95e9199815a86d4a82cac4ff26bc7776b882f858/adr-read-and-route-poc.md",
+      "rev": "sha256:82af50b322031f561ca9ce5470a2afffa4c802539abf999793545d70004e53f8",
+      "mediaType": "text/markdown",
+      "summary": "POC on a rebuilt realistic world (22-23 ADRs, a two-step supersession chain): every arm read the governing ruling (35/35) and handoff 3/3; placement Claude 6/9/8/8, Codex 6/5/5 of 10; CLI arm +16-21% tokens versus git; 96 runs at the cap; Codex arm 4 not run, Codex silently skips untrusted hooks. Validation PASSED; FO re-ran the 4-step acceptance script, all OK."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:adr-read-and-route-poc:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c27e76590c1d2dc910e7fa2d332242a7534df0b0/docs/dev2-poc/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:a759f95c5bac0a98ddbe2804833b5420935add9deef79d0a51053f8c1d9faef5"
+    }
+  ]
+}
