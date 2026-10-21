@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-decision-log-cli:ideation:attempt-2:revision-1",
+  "question": "Approve the redone kc-decision-log-cli design (cycle 2, the kc-adr read-adr skill) into implementation? Approval accepts the four recommended decisions as stated in its Unresolved decisions: (1) workers load read-adr through its description trigger only, measured by AC-9, with no dev2 change unless AC-9 shows a miss; (2) layout SKILL.md plus writing.md and prefix.md; (3) AC-8 bar: Claude at least 9/10 and above the re-scored no-skill arm, Codex reported, not gated; (4) the agent may not fetch a missing clone or commit. Approval also accepts the new criteria AC-5 to AC-9, the rewritten AC-4 evidence, and the 28-run evidence plan (hard stop 34).",
+  "artifacts": [
+    {
+      "id": "artifact:kc-decision-log-cli:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/85d6da768c59c7f2a1e64d42470c9ec7fc9bbf69/kc-decision-log-cli.md",
+      "rev": "sha256:bf8a8898ed1318b4872b5eba0f364b0cb9da9769d0115d70e13830422544d2d0",
+      "mediaType": "text/markdown",
+      "summary": "Ideation cycle 2: kc-adr is skill-only (read-adr: git show + shasum reading recipe, five routing questions, writing guidance naming dev2's tools by role in one resolvable paragraph pending kc-adr-dependency-poc, optional ME#NNNN short names). AC-5/6/7 replace AC-1/2/3; AC-8 routing and AC-9 real dev2 dispatch are new; nothing run yet."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:kc-decision-log-cli:ideation:attempt-2:revision-1:item-2",
+      "uri": "git-root://main/c27e76590c1d2dc910e7fa2d332242a7534df0b0/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:d8b3639df236541f0a6cb378df697c0bfe22c51457d9346893c4aef3bfb4594a"
+    }
+  ]
+}

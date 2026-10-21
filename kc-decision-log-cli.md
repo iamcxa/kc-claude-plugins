@@ -47,7 +47,12 @@ gates:
                 reason: Captain replied 「兩題照建議」 to the joint presentation of this ideation gate and the POC question (2026-10-21); accepts the design and the four recommended decisions as stated in the gate question. Consume waits for the signal-4 release review and the Captain's answer on the plugin/command name.
               application:
                 target-stage: implementation
-                state: pending
+                state: superseded
+            - id: gate-attempt:kc-decision-log-cli-ideation-2
+              briefing:
+                id: briefing:kc-decision-log-cli:ideation:attempt-2:revision-1
+                digest: sha256:11f3dc8111a488e41d8f93ae60a44e5945f7cd4ce02d405c58514eecc1daa92d
+                room-ref: ./kc-decision-log-cli/review/ideation/briefing-2
 journey:
 journey-release:
 journey-story:
