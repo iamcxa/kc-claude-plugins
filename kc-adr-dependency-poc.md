@@ -34,6 +34,17 @@ gates:
                 id: briefing:kc-adr-dependency-poc:validation:attempt-1:revision-1
                 digest: sha256:af308fb00b04d0d360c5d7c9f875d5abcb030ac6fdbcbcd50dc81e9c6ea9715d
                 room-ref: ./kc-adr-dependency-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-adr-dependency-poc:validation:1
+                briefing: briefing:kc-adr-dependency-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T16:40:31.399622Z"
+                decision: approve
+                reason: 'Captain 「可以」 (chat, 2026-10-22) to FO recommendation 「工具搬到 kc-adr，但用 dev2 的人只要裝 dev2 一個」: kc-adr holds the ADR writing tools as the source, dev2 carries a copy that CI syncs from kc-adr before each dev2 release, and CI fails when the copy and the source differ; the copy-at-release shape is untested and is verified first in the move task. Override: the POC recommended run-time resolution; Captain chose a CI-synced copy in dev2, on FO recommendation, for a single install; area: kc-adr packaging. The POC closes as passed.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-21T13:01:50Z
 worktree: .worktrees/spacedock-ensign-kc-adr-dependency-poc
 ---
