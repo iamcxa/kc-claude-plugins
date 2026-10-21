@@ -1,7 +1,7 @@
 ---
 id:
 title: Agents consult the governing ruling and route new information to its right home
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
