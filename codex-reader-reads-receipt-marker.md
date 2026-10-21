@@ -96,6 +96,7 @@ Captain: 「加回來」 (chat, 2026-10-21, batch-5 sitting)
 Asked: 「Codex 新格式那張，要不要把「在這個 repo，FO 直接開一張待辦任務」那一句加回來？」
 Supersedes: none
 Design: the upstream line gains a first branch: in the repository that holds kc-dev-flow-2 itself, FO files a backlog task with the comment id and raw text; elsewhere, report through `peers` if listed and a maintainer FO is reachable, otherwise draft the issue and ask the Captain (Amendment 2).
+Correction (FO, 2026-10-21): this amendment changes two criteria although its Supersedes line says none (FO's error): AC-8's 77-word bound on the give-up output (89 words with the added branch) and AC-11's assertion that the upstream line contains no backlog branch. Validation-1 judged the candidate against this amendment; the criteria texts are stale where they disagree with it.
 
 ## Design
 
