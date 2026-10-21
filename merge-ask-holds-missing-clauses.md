@@ -3,7 +3,7 @@ title: The merge-ask check holds a question that omits the round count or the ca
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -66,7 +66,7 @@ gates:
                 reason: 'Captain, batch-5 sitting: the narrowing 「可以」 (2026-10-22, attempt-2 revise reason) and D2 「按建議**不算**」 (2026-10-22: the hold does not count review rounds; idle still prints the review-round call). This briefing binds those answers after the fact; approving enters implementation.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
