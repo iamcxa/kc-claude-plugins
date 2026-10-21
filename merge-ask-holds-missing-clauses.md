@@ -56,6 +56,17 @@ gates:
                 id: briefing:merge-ask-holds-missing-clauses:ideation:attempt-3:revision-1
                 digest: sha256:ee1623472c5fb09dd9f43c23f9147cee6bd73e32494ee23ddf9d1ec7ed79ff35
                 room-ref: ./merge-ask-holds-missing-clauses/review/ideation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-ask-holds-missing-clauses:ideation:3
+                briefing: briefing:merge-ask-holds-missing-clauses:ideation:attempt-3:revision-1
+                by: person:captain
+                at: "2026-10-21T19:12:14.351089Z"
+                decision: approve
+                reason: 'Captain, batch-5 sitting: the narrowing 「可以」 (2026-10-22, attempt-2 revise reason) and D2 「按建議**不算**」 (2026-10-22: the hold does not count review rounds; idle still prints the review-round call). This briefing binds those answers after the fact; approving enters implementation.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
