@@ -111,7 +111,7 @@ The CLI arm does not clearly beat the plain-git arm on any of the three measures
 
 ### What this does not prove
 
-- Ceiling: agents read the ADR folder unprompted in all 40 scored consult cells (no-help included), so these scenarios cannot show a skill or CLI raising consultation; the prompt names the decision log's location, and each folder holds 23 records, which `cat` handles.
+- Ceiling: agents read the governing ruling before deciding in all 35 scored consult cells (no-help included), so these scenarios cannot show a skill or CLI raising consultation; the prompt names the decision log's location, and each folder holds 23 records, which `cat` handles.
 - The CLI's own strengths were not exercised, by the Captain's instruction to keep the world realistic: no pair of Accepted records under one key, no CRLF, BOM or non-UTF-8 record, no huge folder. "No advantage here" is not "no advantage".
 - Size: one run per cell (6 repeats), 3 handoff and 5 consult scenarios; 1 of 14 repeated measures flipped, so a one-scenario gap (10 points) is inside the noise.
 - Fictional data, one model per host (sonnet resolved to claude-sonnet-5-5; gpt-6.1-sol at high), headless runs, a skill that is always opened (10 of 10 when listed). The hook is a harness piece and was tested on Claude only; the Codex hook arm is unanswered.
@@ -126,5 +126,5 @@ The CLI arm does not clearly beat the plain-git arm on any of the three measures
 ### Findings for the record
 
 - Codex 0.162.1 silently skips an untrusted SessionStart hook: in a scratch project with a fresh CODEX_HOME, no hook text reached the model and stderr showed only an unrelated MCP auth error. I did not verify whether the command ran. The two ways around it (`--dangerously-bypass-hook-trust`, forging a trusted_hash) were denied by the permission system and not used.
-- Harness limits: Claude auto memory off and sandbox on; Codex per-run HOME and workspace-write; five of the six isolation probes and the 4 smoke runs are in `probes/` (the rest unstored). Cleanup: temp workspaces under /tmp and one probe project folder under ~/.claude/projects removed; the harness itself is disposable and the only persistent change is the state-checkout folder.
+- Harness limits: Claude auto memory off and sandbox on; Codex per-run HOME and workspace-write; the 4 smoke runs are in `probes/`; six earlier manual isolation probes are not stored. Cleanup: temp workspaces under /tmp and one probe project folder under ~/.claude/projects removed; the harness itself is disposable and the only persistent change is the state-checkout folder.
 - Changes after the first run, each with a reason in `CHANGES.md`: world rebuilt (Amendment 2), S9 grader reading widened after A0 evidence and before any arm run.
