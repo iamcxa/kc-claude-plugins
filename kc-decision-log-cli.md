@@ -1,7 +1,7 @@
 ---
 id:
 title: Agents read a ruling at an exact commit with the kc-decision-log CLI
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -28,7 +28,7 @@ gates:
                 reason: Captain replied 「照建議」 to the joint backlog presentation of kc-decision-log-cli and kc-decision-log-handoff-trial (2026-10-21); accepts the filed outcome, scope, budget and AC-1..AC-4, and the stated journey mapping P1/S10.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 journey: kc-decision-log-design
 journey-release: P1
 journey-story: S10
