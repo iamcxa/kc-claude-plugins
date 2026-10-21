@@ -1,6 +1,6 @@
-# kc-adr 與 dev2 的邊界合約（草稿 v2）
+# kc-adr 與 dev2 的邊界合約（v2）
 
-**方向已接受，細節待接受。** 使用者 2026-10-21 接受：kc-adr 是讓 agent 讀寫 ADR 的套件，dev2 是第一個使用者、moneyflow 是第二個；每個 repo 的 ADR 就是它自己的決策紀錄；前綴是選用的（「可以，但是前綽應該是選用，不是必要」）。本文其餘內容是提案。v1 的「決策空間」概念由此取消。
+**kc-adr 只管一件事：讓 agent 在一個 repo 裡把 ADR 讀對、寫對、寫到對的地方。跨領域的組織方式留在工具外面，工具不在乎。** 使用者 2026-10-21 接受：kc-adr 是讓 agent 讀寫 ADR 的套件，dev2 是第一個使用者、moneyflow 是第二個；每個 repo 的 ADR 就是它自己的決策紀錄；前綴是選用的（「可以，但是前綽應該是選用，不是必要」）；並確認範圍（「對，等於這個工具只管一個目的，跨領域的東西留在外面，這個工具完全不在乎」）。v1 的「決策空間」概念由此取消。
 
 ## 定位
 
@@ -15,15 +15,9 @@ kc-adr 負責讓 agent 把 ADR 讀對、寫對、寫到對的地方，任何 rep
 
 ADR 寫入的工具今天都在 dev2：格式模板、`number_guards.py` 的配號、`adr_lint.py` 檢查。這些要搬到 kc-adr，還是由 kc-adr 包住 dev2 的工具，**待 dev2 FO 與使用者決定**。在決定前，kc-adr 不另做一套。
 
-## 每個 repo 的 ADR 就是它的決策紀錄
+## 範圍外：跨領域怎麼組織
 
-| 種類 | 例子 | 放什麼 |
-| --- | --- | --- |
-| 單一產品 repo | qnow、moneyflow | 這個產品內的裁決 |
-| monorepo | kc-claude-plugins（多個 plugin） | 各 plugin 的裁決，以及跨 plugin 的方向 |
-| 人生目標 repo | me-company（「me as a company」） | 人生方向、職涯，以及要被多個 repo 依據的個人原則 |
-
-一筆 ADR 需要依據另一個 repo 的裁決時，以引用區塊固定引用那一筆的版本（repo、路徑、版本、指紋），不複製內容。
+哪些事放哪個 repo、要不要有一個跨產品或人生目標的 repo（例如 monorepo 或 me-company）、上下層怎麼引用，由使用者自己安排，kc-adr 不規定也不檢查。kc-adr 只保證兩件事：在任何一個 repo 裡讀寫 ADR 的做法一致；一筆 ADR 引用另一個 repo 的某一筆時，照引用區塊（repo、路徑、版本、指紋）讀得到並核對得了。
 
 ## 前綴（選用）
 
@@ -40,7 +34,7 @@ POC（dev2-poc `adr-read-and-route-poc`，已結案）顯示，agent 本來就�
 
 - 用 `git show <版本>:<路徑>` 讀固定版本，用 `shasum -a 256` 核對指紋；
 - 看 Status 與 `Superseded by` 行，判斷一筆是否還在生效；
-- 依引用區塊跨 repo 讀，讀不到就停下回報，不靠轉述。
+- 有引用區塊指向另一個 repo 時，照區塊讀並核對，讀不到就停下回報，不靠轉述。
 
 ## 寫到哪裡
 
@@ -52,12 +46,11 @@ POC（dev2-poc `adr-read-and-route-poc`，已結案）顯示，agent 本來就�
 | 2 | 這只影響眼前這個任務嗎？ | 任務檔 |
 | 3 | 這是延後要做、使用者看得到的功能嗎？ | 故事地圖（一個任務裡的實作取捨不算，留在任務檔） |
 | 4 | 這是給 agent 的操作指示（怎麼工作），而不是使用者對方向的裁決嗎？ | CLAUDE.md／AGENTS.md |
-| 5 | 這是使用者的裁決，而且只關係到某一個 repo 嗎？ | 那個 repo 的 ADR |
-| — | 以上皆否：使用者的裁決，跨好幾個 repo | 它們共同的上層：同一個 monorepo，或 me-company |
+| 5 | 以上皆否：這是使用者的裁決 | 目前這個 repo 的 ADR；要放到別的 repo，由使用者決定（範圍外） |
 
 **指示檔只指位置，不重述裁示。** CLAUDE.md／AGENTS.md 可以寫「ADR 在哪裡、何時去查」，不抄某一筆的內容。抄過去的摘要會過時，例如 qnow 的 AGENTS.md 指向一個已刪除的分支去讀 ADR 0001（2026-10-20 以 `git ls-remote` 確認）。
 
-授權 agent 自行決定的範圍，是一筆專門的授權 ADR（ADR 0011 L3），放在被授權者所屬的 repo。錢、合併、對外動作與不可逆變更永不授權。
+授權 agent 自行決定的範圍，是一筆專門的授權 ADR（ADR 0011 L3）。錢、合併、對外動作與不可逆變更永不授權。
 
 **POC 看到的錯誤與對應的規則：**
 
@@ -68,31 +61,18 @@ POC（dev2-poc `adr-read-and-route-poc`，已結案）顯示，agent 本來就�
 | 工作習慣被寫成 ADR | 第 4 問 |
 | 未確認的直覺被寫進任務檔當結論 | 第 1 問 |
 
-## 用真實例子檢查
-
-| 例子 | 依規則的去處 | 現在在哪裡 |
-| --- | --- | --- |
-| 「長期打造 FO's FO」 | kc-claude-plugins（跨這個 monorepo 內多個 plugin 的方向） | 只以背景出現在原型 repo 一筆 2026-10-19 的跨 FO 試跑裁示裡 |
-| qnow 用 Clerk 做身分驗證 | qnow | qnow 的 ADR 0001 |
-| dev2 的授權階梯 | kc-claude-plugins | kc-claude-plugins 的 ADR 0011 |
-| 「先開 Draft PR，CI 綠了再轉 ready」 | 指示檔（第 4 問） | 使用者的全域 CLAUDE.md |
-| 家庭財務的裁示 | moneyflow；人生層次的財務原則放 me-company | 原型 repo 的財務命名空間 |
-| 「錢永不授權」這類跨產品原則 | me-company | 只在 kc-claude-plugins 的 ADR 0011 裡 |
-
-**原型 repo 的去留待決：** 原型 repo 裡的裁示要按上表搬到各自的 repo，還是原地保留、只改讀法，待使用者決定。
-
 ## 與 dev2 的接點
 
 - **提醒：** dev2 任務 `agent-reads-governing-adr` 的 hook 會在工作階段開始時列出 ADR 標題，指示檔加一段指向 `docs/adr`。kc-adr 不另做 hook；之後若要列出其他 repo 的標題，換掉 hook 背後的腳本即可（S30）。
-- **先例：** 協調者的 `Precedent:` 行照舊引用 ADR；跨 repo 時改用引用區塊。
+- **先例：** 協調者的 `Precedent:` 行照舊引用 ADR。
 - **worker：** dev2 的 worker 讀寫 ADR 時載入 kc-adr 的 skill。這是 dev2 作為第一個使用者的接法，要 dev2 FO 同意。
 
-## P1 重排提案（待接受）
+## P1 重排（隨本文接受）
 
 - **任務一：** 交付 `read-adr` skill（讀的做法，加上「寫到哪裡」五問）與選用前綴的規格，不做讀取工具。驗收以 dev2 的 worker 實際載入並照做為準。
 - **任務二：** 原本的 Codex 交接演練延後到後面的切片，因為它成本高，也不再是證明價值的第一步。
 - **moneyflow 接入：** 列為第二個使用者，排在任務一之後。
-- **地圖：** 「決策空間」相關的故事用字要改成以 repo 為單位，例如 S01；改動在你接受本提案後提出。
+- **地圖：** 現有地圖是為「總指揮的決策空間」畫的，與 kc-adr 的範圍不再相符；如何重畫另行決定。
 
 ## 限制
 
