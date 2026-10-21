@@ -34,6 +34,14 @@ gates:
                 id: briefing:codex-reader-reads-receipt-marker:ideation:attempt-1:revision-1
                 digest: sha256:6ae84bc0c2edf3a170435b532e4e397fc5190b6ce7f56a8c211b63281e821795
                 room-ref: ./codex-reader-reads-receipt-marker/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-reads-receipt-marker:ideation:1
+                briefing: briefing:codex-reader-reads-receipt-marker:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T09:12:30.121922Z"
+                decision: revise
+                reason: 'Captain, batch-5 sitting 2026-10-21: D1 「codex 先這樣，如果 codex 改了我們就跟著改 ext 就好，除非有明確更好的辦法」 (exact v1 marker only, as recommended); D2 「Ｃ，且加上一個設計，如果是這樣先自我修復，且就回報上游改 ext，合理嗎？」 then 「就照這樣」 to FO''s form: on a wait timeout with an unrecognized Codex comment, the timeout line names it, the merge ask quotes the raw comment for the Captain to decide (never read as clean), and FO reports upstream (a backlog task here, the kc-dev-flow-2 maintainer FO elsewhere); Override: recommended no hint (D2); Captain chose option C with the two additions; area: unrecognized Codex comments. D3 「可以」: a separate batch-5 task. Revise: the design returns to ideation to carry D2 (AC-7 and AC-8 no longer hold as written).'
 ---
 
 ## Scope
