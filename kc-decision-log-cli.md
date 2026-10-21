@@ -29,6 +29,11 @@ gates:
               application:
                 target-stage: ideation
                 state: pending
+journey: kc-decision-log-design
+journey-release: P1
+journey-story: S10
+journey-required-tasks: '["kc-decision-log-cli"]'
+journey-mapping-complete: true
 ---
 
 The user directs several AI agents and wants one versioned source of his rulings that each agent reads at the same version (「我需要指揮不同 FO，跨產品，跨 LLM，跨工具去達成我的目標」, 2026-10-19). Today no agent has a tool to read a ruling at an exact commit. This task builds that tool and the read-only skill that tells agents to use it; task `kc-decision-log-handoff-trial` then proves a Claude→Codex handoff with it.
