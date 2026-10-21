@@ -135,7 +135,7 @@ def norm_digest(d):
     return re.sub(r"^sha256:", "", str(d or "").strip().lower())
 
 
-def handoff(final, exp):
+def handoff(final, exp, events):
     h = exp["handoff"]
     rc = (final or {}).get("ruling_check")
     if not rc:
@@ -146,6 +146,8 @@ def handoff(final, exp):
     problems = []
     if norm_digest(rc.get("digest")) != true_digest:
         problems.append("digest differs from the true digest at the pinned commit")
+    elif not any(true_digest in e.get("output", "").lower() for e in events if e["t"] == "result"):
+        problems.append("the reported digest never appears in a tool output, so it was not computed")
     c = str(rc.get("commit", "")).strip().lower()
     if len(c) < 7 or not commit.startswith(c):
         problems.append("commit is not the pinned commit")
@@ -172,7 +174,7 @@ def grade(run_dir):
         g["consulted"], g["consulted_evidence"] = ok, ev
     g["placement"] = placement(changes, exp)
     if "handoff" in exp:
-        g["handoff"] = handoff(final, exp)
+        g["handoff"] = handoff(final, exp, events)
     choice = (final or {}).get("choice")
     g["choice"] = choice
     g["choice_ok"] = (choice in exp["choice_ok"]) if exp["choice_ok"] else None

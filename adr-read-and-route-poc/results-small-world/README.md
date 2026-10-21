@@ -1,0 +1,1 @@
+The 20 no-help (A0) runs on the first, small world (4 ADRs per repository). Graded by world.py, score.py and expectations.json as of commit 53378629 (results.md, results.json here). They are kept as a data point: they hit the ceiling (consulted 10/10, handoff 6/6, placement 14/20), which is why the world was rebuilt. They are not part of the main results table.

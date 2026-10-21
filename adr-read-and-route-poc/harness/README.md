@@ -4,7 +4,7 @@ Disposable POC harness (profile `poc`). Everything it reads is fictional. It is 
 
 ## What it runs
 
-10 hand-written scenarios (`scenarios.json`) x 4 arms x 2 hosts, one run each, about 80 runs.
+10 hand-written scenarios (`scenarios.json`) x 4 arms x 2 hosts, one run each, about 80 runs; arm A3 runs on Claude only (Codex 0.162.1 silently skips an untrusted SessionStart hook and its trust bypass was not approved), so 70 cells.
 
 | Arm | What the agent is given |
 | --- | --- |
@@ -19,12 +19,12 @@ The routing table under test is `templates/routing.md`, a translation of the sec
 
 ## The world
 
-`world.py` builds, per run and deterministically (fixed dates, so commit ids and digests are identical on every build, asserted against `expected_world.json`), two git repositories: `mira-decisions` (4 decision-space ADRs over commits D0 and D1; ADR 0002 is superseded by 0004 at D1) and `mira-app` (4 dev2-format ADRs, tasks, a story map, `AGENTS.md`/`CLAUDE.md` with no word about ADRs, `.agent/notes.md`). Both ADR folders pass the real `adr_lint.py`.
+`world.py` builds, per run and deterministically (fixed dates, so commit ids and digests are identical on every build, asserted against `expected_world.json`), two git repositories: `mira-decisions` (22 ADRs at D0, 23 at D1; the cadence key runs 0002 weekly -> 0014 daily -> 0023 daily at 07:00, so at D1 ADR 0002 is superseded in two steps; near-duplicate titles such as a Deprecated monthly report and a Proposed hourly kiosk refresh) and `mira-app` (23 dev2-format ADRs, tasks, a story map, `AGENTS.md`/`CLAUDE.md` with no word about ADRs, `.agent/notes.md`). Both ADR folders pass the real `adr_lint.py`.
 
 ## Measures (defined in `expectations.json` before any run)
 
-1. Consulted the governing ruling before deciding: from tool calls and outputs only, scored where a governing ruling exists and the task does not cite it (S1, S2, S5, S6, S7).
-2. Handoff version and digest matched: scored on the three scenarios whose task file carries a Reference block (S8 valid, S9 cited record already superseded, S10 digest does not match). The task text tells the agent to confirm the citation, so this measure tests how well it can, not whether it thinks to.
+1. Consulted the governing ruling before deciding: from tool calls and outputs only, scored where a governing ruling exists and the task does not cite it (S1, S2, S5, S6, S7). No prompt tells the agent to consult or confirm anything.
+2. Handoff version and digest matched: scored on the three scenarios whose task file carries a Reference block (S8 valid, S9 cited record already superseded, S10 digest does not match). The prompt only asks it to report the ruling it relied on, with the digest it read; the digest must also appear in a tool output.
 3. New information in the home the routing table names: from the filesystem diff of the run's workspace, not from the agent's own list.
 Secondary: whether the `choice` equals the ruling's answer.
 
@@ -44,7 +44,7 @@ Needs python3, node 24, git, and logged-in `claude` and `codex`. `score.py` need
 
 ## Rules fixed before the first scenario run
 
-- Declared: 80 runs. A run that returns no answer is retried once and the retry counts; ledger in `../ledger.jsonl`. Hard stop at 96 runs (+20%); the FO is told before the 81st.
+- Declared: about 80 runs; Amendment 2 moved the world to a larger one after the first 20 runs, so the cap counts those 20 too: 70 planned + 20 = 90, hard stop 96. A run that returns no answer is retried once and the retry counts; ledger in `../ledger.jsonl`. Hard stop at 96 runs (+20%); the FO is told before passing it.
 - No scenario, expectation or skill text changes after the first scenario run without a dated line in `../CHANGES.md` giving the reason.
 - Stored per run: argv, prompt, schema, the normalised tool-call trace (outputs cut at 20 KB), the final answer, the workspace diff, and the raw host output gzipped.
 
