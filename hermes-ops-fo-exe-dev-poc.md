@@ -36,6 +36,17 @@ gates:
                 id: briefing:hermes-ops-fo-exe-dev-poc:validation:attempt-1:revision-1
                 digest: sha256:efa2a07c475295767789300e97f3a81ef243941dca98489abefba30e0be08718
                 room-ref: ./hermes-ops-fo-exe-dev-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:hermes-ops-fo-exe-dev-poc:validation:1
+                briefing: briefing:hermes-ops-fo-exe-dev-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T01:20:26.128865Z"
+                decision: approve
+                reason: 'Captain answered 「准」 in chat on 2026-10-21 to the presented validation gate whose decision line was: approve to close the POC on the evidence with no PR, keep branch spacedock-ensign/hermes-ops-fo-exe-dev-poc as reference, and return the next step to planning; cleanup listed separately. He first asked 「目前可以宣稱什麼？」 and was shown the bounded claims (rulesets and the Captain-only review record verified live; refusal outputs report-only; spacedock gate record does not authenticate the actor). Accepts PASSED at POC depth; no PR, merge, deletion or downstream task is authorized.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-20T13:51:57Z
 ---
 
