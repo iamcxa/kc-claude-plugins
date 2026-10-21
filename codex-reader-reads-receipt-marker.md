@@ -3,7 +3,7 @@ title: The Codex review reader recognizes the clean receipt that now opens with 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -60,6 +60,7 @@ gates:
                 state: consumed
 started: 2026-10-21T14:52:37Z
 worktree: .worktrees/spacedock-ensign-codex-reader-reads-receipt-marker
+pr: iamcxa/kc-claude-plugins#693
 ---
 
 ## Scope
