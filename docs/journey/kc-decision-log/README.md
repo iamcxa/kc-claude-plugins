@@ -25,6 +25,7 @@ P1「帶著精確裁示走完一次交接」已選，採 dev2 Pilot，故事為 
 - [P1 技術契約](p1-technical-contract.md)：35 個技術問答的完整提案與待驗項目。
 - [P1 估工](p1-estimate.md)：重切後 P1 的粗估、依據與假設。
 - [P1 開發說明（草稿）](p1-development-brief.md)：交給 dev2 的五段式 Development Brief，待使用者接受交接。
+- [邊界合約（草稿）](boundary-contract.md)：kc-decision-log、dev2、故事地圖各自負責什麼，合在一起時在哪裡接上，以及什麼資訊寫進哪裡。
 
 卡片、順序、規則短句及 membership 編輯 YAML；長篇故事說明、切片驗收與技術章節編輯對應 Markdown。原生 `doc` 使用 GitHub blob 章節網址；同 repo branch 的文件與地圖一起送審。畫布手改須先用原生 readback 檢查，再處理來源；不以另一份自訂 YAML 重複管理 membership。
 
