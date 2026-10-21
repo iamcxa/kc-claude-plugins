@@ -47,6 +47,17 @@ gates:
                 id: briefing:agent-reads-governing-adr:ideation:attempt-2:revision-1
                 digest: sha256:4bf66c1383357c714735271a9a58731234dc290d2f208df1e8192f27d83d11cc
                 room-ref: ./agent-reads-governing-adr/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:agent-reads-governing-adr:ideation:2
+                briefing: briefing:agent-reads-governing-adr:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-21T18:54:42.569077Z"
+                decision: approve
+                reason: 'Captain, batch-5 sitting, his rulings on the cycle-2 design given one at a time: D1 「ADR 讀取那張，路徑檢查改成「禁止指向分支」」 (2026-10-22, Amendment 1; Override: recommended resolving refs against origin; Captain chose refusing branch refs; area: ADR path check); D2 「照建議不量」 (2026-10-22, no behaviour measurement gates the PR, recorded under without-it unanswered). This briefing binds those answers after the fact; approving enters implementation.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
