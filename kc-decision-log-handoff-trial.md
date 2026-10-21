@@ -18,6 +18,17 @@ gates:
                 id: briefing:kc-decision-log-handoff-trial:backlog:attempt-1:revision-1
                 digest: sha256:dd3c957b0b0fd08ab4b6d8b8b79350a90ba68d68df4c8f273807e2e3ace71d59
                 room-ref: ./kc-decision-log-handoff-trial/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-decision-log-handoff-trial:backlog:1
+                briefing: briefing:kc-decision-log-handoff-trial:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T01:19:22.524559Z"
+                decision: approve
+                reason: Captain replied 「照建議」 to the joint backlog presentation (2026-10-21); accepts the filed outcome, scope, budget and AC-1..AC-4, the stated journey mapping P1/S20, and consumption by a Paseo-started Codex FO after kc-decision-log-cli is done.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 P1's value is that a second agent acts on the exact ruling it was handed, not on a paraphrase. This task proves it end to end. The Claude side writes a ruling reference into this task. A Codex first officer, started through Paseo, runs the task, and its Codex worker re-reads the ruling with the CLI from `kc-decision-log-cli` before it implements a small CLI feature that the synthetic ruling decides. The user gets back evidence tied to that reference.
