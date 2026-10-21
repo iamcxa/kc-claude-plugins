@@ -3,7 +3,7 @@ title: dev2 uses an independent kc-adr package for ADR writing tools, installed 
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: backlog
+status: implementation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「好，開」 (chat, 2026-10-21), answering FO's question put before it (quoted in the gate question); this briefing binds that question and answer after the fact.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
