@@ -15,6 +15,17 @@ gates:
                 id: briefing:idle-names-failing-seeds:backlog:attempt-1:revision-1
                 digest: sha256:7c87384f34520e309482b27e2f4e058013380194f7803458e4c9202129d212ec
                 room-ref: ./idle-names-failing-seeds/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:idle-names-failing-seeds:backlog:1
+                briefing: briefing:idle-names-failing-seeds:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-21T07:28:54.464776Z"
+                decision: approve
+                reason: Captain 「繼續」 (chat, 2026-10-21), answering FO's question 「這 5 張都批准進入設計嗎？」 for the five batch-5 backlog gates presented together; approves entering ideation under the pilot profile, as recommended.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
