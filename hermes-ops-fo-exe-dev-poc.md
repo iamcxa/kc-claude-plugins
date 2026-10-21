@@ -28,6 +28,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:hermes-ops-fo-exe-dev-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:hermes-ops-fo-exe-dev-poc-validation-1
+              briefing:
+                id: briefing:hermes-ops-fo-exe-dev-poc:validation:attempt-1:revision-1
+                digest: sha256:efa2a07c475295767789300e97f3a81ef243941dca98489abefba30e0be08718
+                room-ref: ./hermes-ops-fo-exe-dev-poc/review/validation/briefing-1
 started: 2026-10-20T13:51:57Z
 ---
 

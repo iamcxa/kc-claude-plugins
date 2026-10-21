@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:hermes-ops-fo-exe-dev-poc:validation:attempt-1:revision-1",
+  "question": "Accept the POC result (AC-6 to AC-12 PASSED at POC depth, candidate aae7041b) and decide its delivery: keep the candidate as a Draft PR of kc-ops-inbox POC artifacts, or close the POC with evidence only?",
+  "artifacts": [
+    {
+      "id": "artifact:hermes-ops-fo-exe-dev-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/487d38a1b6f8064a04939c6abeb457b65cae9aa2/hermes-ops-fo-exe-dev-poc.md",
+      "rev": "sha256:16dbf168fd3910c4e92f35c772e0390da825e28011124a4276346634f5b56831",
+      "mediaType": "text/markdown",
+      "summary": "Validation recommends PASSED: a GitHub App token under two no-bypass rulesets reaches only ops/* and Draft PRs; a headless Claude Code FO on a hosted runner filed one ops task and Draft PR; the gate was recorded from the Captain's own GitHub review. Limits: spacedock gate record does not authenticate the actor; refusal outputs rest on the implementer's report; 268 lines of shelved hermes work have no consumer."
+    }
+  ]
+}
