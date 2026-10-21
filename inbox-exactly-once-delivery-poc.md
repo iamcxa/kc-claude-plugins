@@ -105,3 +105,9 @@ ADR: none added. Cleanup: nothing created outside the worktree; `/tmp/ghapi.json
 ### Summary
 
 The riskiest logic is built and falsified locally (dedupe, signature, dispatch call, narrow token request) with three mutation proofs, and two roborev findings were fixed. AC-1 to AC-4 are held on one bundled outward-action request; nothing outward was done.
+
+### Cycle 2 addendum: after the Captain's 2026-10-21 approval of all five actions
+- Platform boundary: `inbox-core.mjs` imports nothing from Netlify. Netlify-specific: `netlify/functions/inbox.mjs` (11 lines), `netlify.toml` (6 lines), the `@netlify/blobs` entry in `package.json`. Commit bc3eb38e; 9 of 9 tests pass.
+- Done: scratch site `ops-inbox-poc-a66194` (https://ops-inbox-poc-a66194.netlify.app, id 695f5bf3-ba28-42e1-9d12-e7010be5c123) on team Spacedock (Pro plan; Recce is Free and was avoided), deployed with the function at `/inbox`. Set `OPS_REPO`, `OPS_WORKFLOW`, `OPS_REF` and secret `WEBHOOK_SECRET` (copy at ~/.config/ops-inbox-poc/webhook-secret, mode 0600, never printed). Scratch repo Actions variable `OPS_PUSH_APP_CLIENT_ID` set.
+- Refused by the permission system, not worked around: `gh secret set OPS_PUSH_APP_PRIVATE_KEY` (secret-store write), ruleset 25482703 off (CI bypass), and the first live send (production-URL call). The Captain runs the first two himself or adds a permission rule; nothing from them was attempted twice.
+- Still the Captain's: the Slack incoming webhook, the new Actions-write-only App, its key and `DISPATCH_*` values. Real sends and AC-1 to AC-4 follow after those.
