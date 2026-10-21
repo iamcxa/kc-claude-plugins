@@ -3,7 +3,7 @@ title: FO's idle check names each backlog task whose seed check fails before its
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-21T17:17:02Z
 worktree: .worktrees/spacedock-ensign-idle-names-failing-seeds
+pr: iamcxa/kc-claude-plugins#694
 ---
 
 ## Scope
