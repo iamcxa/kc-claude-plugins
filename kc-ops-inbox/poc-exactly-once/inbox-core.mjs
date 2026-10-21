@@ -108,8 +108,8 @@ export async function handle(req, deps) {
         return_run_details: true,
       }),
     });
-    if (res.status !== 200) throw new Error(`dispatch-${res.status}`);
-    run = await res.json();
+    if (res.status !== 200 && res.status !== 204) throw new Error(`dispatch-${res.status}`);
+    run = res.status === 200 ? await res.json() : { workflow_run_id: null, html_url: `https://github.com/${env.OPS_REPO}/actions` };
   } catch (err) {
     await store.delete(key);
     log(JSON.stringify({ evt: "dispatch-failed", id: ev.id, error: String(err.message), t }));

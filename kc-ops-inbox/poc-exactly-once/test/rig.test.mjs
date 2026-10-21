@@ -21,7 +21,7 @@ function memoryStore(delayMs = 0) {
   };
 }
 
-async function rig({ failDispatch = false } = {}) {
+async function rig({ failDispatch = false, noRunDetails = false } = {}) {
   const { privateKey, publicKey } = generateKeyPairSync("rsa", { modulusLength: 2048 });
   const state = { dispatches: [], mints: [], slack: [], refused: [] };
   const server = http.createServer(async (req, res) => {
@@ -42,6 +42,7 @@ async function rig({ failDispatch = false } = {}) {
       if (auth !== "ghs_fake") return send(401, {});
       const b = JSON.parse(raw);
       if (failDispatch) return send(500, {});
+      if (noRunDetails) { state.dispatches.push(b); res.writeHead(204); return res.end(); }
       if (b.return_run_details !== true) return send(204, {});
       state.dispatches.push(b);
       return send(200, { workflow_run_id: 1000 + state.dispatches.length, run_url: "u", html_url: `https://example.test/run/${1000 + state.dispatches.length}` });
@@ -141,4 +142,13 @@ test("a failed dispatch releases the claim so the sender's retry can start the r
   assert.equal((await bad.call(req)).status, 502);
   assert.equal(bad.store.m.size, 0);
   bad.close();
+});
+
+test("a 204 dispatch reply keeps the claim, since the run did start", async () => {
+  const r = await rig({ noRunDetails: true });
+  const req = signedRequest({ secret: SECRET, webhookId: "msg_evt-7", body: fixtureEvent("evt-7"), timestamp: Math.floor(Date.now() / 1000) });
+  assert.equal((await r.call(req)).status, 202);
+  assert.equal((await r.call(req)).status, 200);
+  assert.equal(r.state.dispatches.length, 1);
+  r.close();
 });
