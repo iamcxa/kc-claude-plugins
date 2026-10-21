@@ -64,6 +64,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:kc-decision-log-cli:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:kc-decision-log-cli-validation-1
+              briefing:
+                id: briefing:kc-decision-log-cli:validation:attempt-1:revision-1
+                digest: sha256:ffc028503d085a69b91b19a508e47b25804256bd6123c15a47618cd342421b34
+                room-ref: ./kc-decision-log-cli/review/validation/briefing-1
 journey:
 journey-release:
 journey-story:

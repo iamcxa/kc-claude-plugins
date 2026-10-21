@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-decision-log-cli:validation:attempt-1:revision-1",
+  "question": "Approve kc-decision-log-cli validation as PASSED and deliver it? Approval also covers: push branch spacedock-ensign/kc-decision-log-cli at e2ac9041637552332b27ab66c845308ccbe95d0f; create a Draft PR titled 'feat(kc-adr): add the experimental read-adr skill plugin at 0.1.0' with the presented body; mark it ready once CI is green; later external-review rounds on the same PR; and merging the full head once delivery_gate.py check passes, with --match-head-commit set to it. If the Captain says he merges or holds, the merge is excluded.",
+  "artifacts": [
+    {
+      "id": "artifact:kc-decision-log-cli:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5549f4deddc4e50bebb3d7986509f3674612804b/kc-decision-log-cli.md",
+      "rev": "sha256:f6eba5e5981adac5187ed4c6c0ce3bccc6ffa004f5665e1626aa782d247953d7",
+      "mediaType": "text/markdown",
+      "summary": "Validation cycle 2 PASSED on AC-5, AC-8 (Claude 9/10 vs no-skill 7/10, at the bar after amendment 5), AC-9 (real dev2 dispatch loads read-adr), AC-10, AC-11 and AC-12. FO re-ran the six-step acceptance script in a fresh shell and every step matched. Candidate e2ac9041: 10 files, 169 lines, markdown and JSON only. Known limits: the reporting-rule follow-up, Codex shows no placement gain, tool ownership pending kc-adr-tools-with-dev2-copy."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:kc-decision-log-cli:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c27e76590c1d2dc910e7fa2d332242a7534df0b0/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:d8b3639df236541f0a6cb378df697c0bfe22c51457d9346893c4aef3bfb4594a"
+    }
+  ]
+}
