@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 worktree: .worktrees/spacedock-ensign-kc-decision-log-cli
-pr:
+pr: 695
 gates:
     version: 1
     records:
@@ -89,6 +89,7 @@ journey-story:
 journey-required-tasks:
 journey-mapping-complete:
 started: 2026-10-21T01:21:24Z
+mod-block: merge:pr-merge
 ---
 
 The user directs several AI agents and wants one versioned source of his rulings that each agent reads at the same version (「我需要指揮不同 FO，跨產品，跨 LLM，跨工具去達成我的目標」, 2026-10-19). Today no agent has a tool to read a ruling at an exact commit. This task builds that tool and the read-only skill that tells agents to use it; task `kc-decision-log-handoff-trial` then proves a Claude→Codex handoff with it.
