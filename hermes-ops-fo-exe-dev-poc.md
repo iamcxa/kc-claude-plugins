@@ -315,7 +315,14 @@ Candidate aae7041b on `spacedock-ensign/hermes-ops-fo-exe-dev-poc`; scratch repo
 - DONE: Every outward action (exe.dev VM, any spend, Codex token placement, test GitHub repository and ruleset, machine account, Slack app, any message to a human) is raised to the First Officer as a decision request and waited on before it is taken; none is taken on your own judgment.
   Each taken action followed a relayed Captain yes: scratch repository and rulesets, the probe, four ruleset off/on cycles with master pushes (`ea02925`, `fbccbc3`, `bdff186` and the first setup commit `b3ff9ce`), `OPS_APP_TOKEN` sets, one extra App push, three dispatches, one empty App commit to the PR branch. No exe.dev VM, Slack app, Codex token or message to a human.
 - DONE: AC-1 to AC-5 each carry primary evidence in the stage report, or are named not run with the exact pending approval or blocker; a stop condition that fires ends the stage with a hold report.
-  AC-1..AC-5 superseded by amendment 1; AC-6 to AC-12 all carry evidence below (AC-6 to AC-11 in the cycle 3 report).
+  AC-1..AC-5 superseded by amendment 1. AC-6 to AC-12 evidence, one line each (results unchanged from the cycle 3 report):
+  AC-6 PASS: push to `master` declined ("push declined due to repository rule violations"), master sha unchanged, re-proved after every ruleset re-enable (last at master `bdff186`); rulesets 25482703 and 25482704 read back with `bypass_actors: []`.
+  AC-7 PASS: API merge of a ready (non-draft) App PR returned HTTP 405 "Repository rule violations found. New changes require approval from someone other than the last pusher."; the PR stayed open.
+  AC-8 PASS: the App's self-approval was refused, HTTP 422 `Review Can not approve your own pull request`, zero reviews recorded (refused, not accepted-and-not-counted).
+  AC-9 PASS: push to `ops/probe-*` accepted and a Draft PR opened (HTTP 201, `draft: true`, author `ops-inbox-probe-iamcxa[bot]`).
+  AC-10 PASS: probe under an empty `env -i` HOME found no other GitHub credential; token permissions `{contents: write, metadata: read, pull_requests: write}`; ruleset creation as the App returned 403; an App push editing `.github/workflows/ops-gate.yml` was refused without the `workflows` permission.
+  AC-11 PASS: run 39453880412 (86 s, success): headless First Officer filed one task on `ops/relay-bound-ceiling-near-2026-10-20` and Draft PR #6; `verify_slice.sh` PASS twice; in-job credential audit clean.
+  AC-12 PASS: the gate was recorded by script `ops-gate` run 39522787636 from the Captain's review 5593555088; detail in the AC-12 section below.
 
 ### AC-12 evidence (PASS)
 
