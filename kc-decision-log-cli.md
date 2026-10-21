@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:kc-decision-log-cli:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:kc-decision-log-cli-ideation-1
+              briefing:
+                id: briefing:kc-decision-log-cli:ideation:attempt-1:revision-1
+                digest: sha256:cce15b8efeda22a461978bb7d4ed6056875a08f25b02b4516f9a9e0e5208a7f7
+                room-ref: ./kc-decision-log-cli/review/ideation/briefing-1
 journey: kc-decision-log-design
 journey-release: P1
 journey-story: S10

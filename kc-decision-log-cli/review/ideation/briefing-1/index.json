@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-decision-log-cli:ideation:attempt-1:revision-1",
+  "question": "Approve the kc-decision-log-cli design into implementation? Approval accepts the four recommended decisions as stated in the task's Unresolved decisions: (1) command kc-decision-log run as node \u003cpackage root\u003e/bin/kc-decision-log.mjs from the skill's location, no PATH shim or npm publish; (2) bin/ plus lib/ modules; (3) D9's two rules unchanged, with effective judged per record (record, chain, key group) plus two view-wide stops; (4) effective --require-effective, exit 6, off by default and always passed by the skill.",
+  "artifacts": [
+    {
+      "id": "artifact:kc-decision-log-cli:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/efc517960cb62416162a11c63b61b51224ad0573/kc-decision-log-cli.md",
+      "rev": "sha256:a874182198345e8d8038f7a9c1c80f5e4510cbcf5fbff28acff947d8b65e5d48",
+      "mediaType": "text/markdown",
+      "summary": "Ideation for kc-decision-log-cli: PRFAQ, flowchart, six prototype gaps each decided, effective check order, command and exit table, read-only skill read-ruling, UI proposal and an operable preview (62 runs plus an adr_lint.py comparison, re-run by FO on 2026-10-21 and matched); 2 design-review rounds dispositioned; design_surfaces.py check exit 0; ACs carry evidence clauses, product tests not yet written."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:kc-decision-log-cli:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/f08a1f141004ea525a226a16111ee1e94768a458/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:f5a4509ae8efbcba7e34f924be91790dadc09c046ee79baa34627735c6949ca5"
+    }
+  ]
+}
