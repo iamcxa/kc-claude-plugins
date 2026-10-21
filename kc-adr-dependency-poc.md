@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:kc-adr-dependency-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:kc-adr-dependency-poc-validation-1
+              briefing:
+                id: briefing:kc-adr-dependency-poc:validation:attempt-1:revision-1
+                digest: sha256:af308fb00b04d0d360c5d7c9f875d5abcb030ac6fdbcbcd50dc81e9c6ea9715d
+                room-ref: ./kc-adr-dependency-poc/review/validation/briefing-1
 started: 2026-10-21T13:01:50Z
 worktree: .worktrees/spacedock-ensign-kc-adr-dependency-poc
 ---
