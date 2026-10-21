@@ -47,6 +47,7 @@ gates:
                 state: pending
 started: 2026-10-21T13:01:50Z
 worktree: .worktrees/spacedock-ensign-kc-adr-dependency-poc
+pr: local-merge:ad229c27a0f35a43576b7ed17a0102558c334611
 ---
 
 ## Scope
