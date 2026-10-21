@@ -58,6 +58,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-21T18:55:34Z
+worktree: .worktrees/spacedock-ensign-agent-reads-governing-adr
 ---
 
 ## Scope
