@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-write-checks-parse-top-level:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of fo-write-checks-parse-top-level to enter ideation under the pilot profile, with the Scope above as written? FO recommends approve, as one of the six batch-5 tasks the Captain accepted 2026-10-21 (「可以」); approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-write-checks-parse-top-level:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/32856ea78745d83bcd48b2a92d987894caa5b380/fo-write-checks-parse-top-level.md",
+      "rev": "sha256:556b866a6e2f470c9fcc413c8c254c43e68b8b8b138e93a39391cc645056721a",
+      "mediaType": "text/markdown",
+      "summary": "Batch 5 backlog: The FO-write checks parse only top-level declines and unfenced Scope, closing two Codex round-3 edge cases"
+    }
+  ]
+}
