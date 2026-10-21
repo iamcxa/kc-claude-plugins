@@ -90,3 +90,9 @@ Supersedes: AC-1 (replacement written at this task's ideation: the Codex worker 
 Captain: 「可以，這次授權跳過地圖，先做工具」 (this FO's Paseo session)
 Asked: 「任務二（Codex 交接演練）：記成延後，留在待辦。」
 Supersedes: none
+
+### Amendment 4 — 2026-10-22, chat
+Captain: 「照建議」 (P1 FO's Paseo session, reply to a four-item batch)
+Asked: 「4. 合成決策 repo 產生腳本移出 kc-adr，留給任務二：任務二維持延後；恢復時，先重新走待辦關卡。」 with 「正式定為：不在 kc-adr 任務一裡做，改記到任務二名下；任務二目前延後，恢復時要重新走待辦關卡（因為它原本的範圍建立在已經取消的 CLI 上），到時再一起決定還要不要這支腳本。」
+Supersedes: none
+
