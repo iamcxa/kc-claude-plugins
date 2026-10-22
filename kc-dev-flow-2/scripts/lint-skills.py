@@ -12,7 +12,7 @@ VARIANT = "kc-dev-flow-2"
 STAGES = ("ideation", "implementation", "validation")
 PROFILES = ("poc", "pilot", "prod")
 AGENT_MODELS = {"engineering-reviewer": ("opus", "xhigh"), "chief-engineer": ("opus", "xhigh"),
-                "observer": ("sonnet", "high")}
+                "observer": ("sonnet", "high"), "design-director": ("sonnet", "high")}
 DEFAULT_ROOT = Path(__file__).resolve().parents[1]
 BASIC_LINT = DEFAULT_ROOT.parent / "scripts/skill-frontmatter-lint.sh"
 LINK = re.compile(r"\[[^\]]+\]\(([^)]+)\)")
@@ -28,6 +28,9 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=-64, why="dispatch_records.py and design_surfaces.py print the parts and defects; the README points to them"),
     dict(delta=-18, why="delivery_gate.py prints the hold and ask lines; the README points to it"),
     dict(delta=-55, why="number_guards.py prints the R2 and R6 next steps and --help lists the flags and rules; the README points to them"),
+    dict(delta=15, why="the ideation and validation gate material carries the design check's upheld declines, decision lines and picture paths for the Captain",
+         captain="「可以」 (Captain, ideation gate of design-director-runs-ui-design-review, 2026-10-22), answering 「設計總監的設計已經把你的 6 題裁定全部改進去了，可以開設計閘門。要你決定的是：可以進入實作嗎？我建議可以。」 whose presentation named raising this budget by 15 words, 5374 to 5389",
+         loaded="startup and resume of the First Officer, and its ideation and validation gate preparation for a ui task"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.

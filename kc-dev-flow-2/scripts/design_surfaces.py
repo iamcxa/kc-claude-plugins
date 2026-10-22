@@ -9,6 +9,7 @@ not what the Captain said; an amendment covers every earlier unrecorded Scope ed
 leaves the exit code alone in any other stage, with no closed backlog approval, or outside a git checkout.
 """
 import argparse
+import hashlib
 import json
 import re
 import subprocess
@@ -20,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import decision_ledger
 
 KNOWN = {"ui", "db", "none"}
+CAPTAIN_QUOTE = re.compile(r"「[^」]*\S[^」]*」")
 FO_HEADING = re.compile(r"^## FO alignment[ \t]*$", re.M)
 SURFACES = re.compile(r"^Surfaces:\s*(.*)$", re.M)
 VISIBLE = re.compile(r"^Visible change:\s*(.*)$", re.M)
@@ -49,6 +51,19 @@ SEVERITY_SCALE = ("CRITICAL", "HIGH", "MEDIUM", "LOW")
 DESIGN_SCALE = ("MAJOR", "MINOR")
 DESIGN_REVIEW_LINE = re.compile(r"^Design review:[ \t]*(\S.*)$", re.M)
 DESIGN_FINDING_LINE = re.compile(r"^Design finding (\d+):[ \t]*(\S.*)$", re.M)
+DECLINE_CHECK_LINE = re.compile(r"^Decline check:[ \t]*(\S.*)$", re.M)
+BUILT_REVIEW_LINE = re.compile(r"^Built screen review:[ \t]*(\S.*)$", re.M)
+BUILT_FINDING_LINE = re.compile(r"^Built screen finding (\d+):[ \t]*(\S.*)$", re.M)
+BUILT_DECLINE_LINE = re.compile(r"^Built screen decline check:[ \t]*(\S.*)$", re.M)
+DECLINED = re.compile(r"declined:\s*\S")
+NEEDS_DECISION = re.compile(r"Needs decision:\s*\S")
+HOST_REASON = re.compile(r"declined:\s*host component\b")
+HOST_FORM = re.compile(r"declined:\s*host component\s+\S.*?\s+at\s+\S+:\s*\S")
+RULING_ITEM = re.compile(r"^[ \t]*-[ \t]+finding:[ \t]*(\S.*)$", re.M)
+RULING_FIELD = re.compile(r"^[ \t]+([a-z]+):[ \t]*(.*)$", re.M)
+RULINGS = ("upheld", "overruled", "decision")
+KINDS = ("host-look", "other-task", "recorded-ruling")
+ADR_TITLE = re.compile(r"\bADR:[ \t]*\S[^\n]*$")
 REPORT_FINDINGS_KEY = re.compile(r"^([ \t]+)findings:(.*)$", re.M)
 REPORT_ROOT_LINE = re.compile(r"^tob_security_review:", re.M)
 FINDINGS_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?findings:", re.M)
@@ -82,6 +97,11 @@ def has_erdiagram(body):
     return False
 
 
+def preview_target(task_dir, value):
+    target = Path(value)
+    return target if target.is_absolute() else task_dir / value
+
+
 def check_ui(name, body, task_dir, errors):
     proposal = UI_PROPOSAL.search(body)
     if not proposal:
@@ -93,9 +113,7 @@ def check_ui(name, body, task_dir, errors):
     value = preview.group(1).strip()
     if URL.match(value):
         return
-    target = Path(value)
-    if not target.is_absolute():
-        target = task_dir / value
+    target = preview_target(task_dir, value)
     if not target.exists():
         errors.append(f"{name}: surface 'ui' Preview '{value}' does not exist")
 
@@ -309,6 +327,119 @@ def check_security(path, body, declared, errors):
     return f"security review {value}: {found} findings, {tally['ac']} acceptance criteria, {tally['declined']} declined, {tally['decision']} decisions"
 
 
+def task_folder(path):
+    return path.parent if path.name == "index.md" else path.parent / path.stem
+
+
+def saved_report(name, label, value, folder, errors):
+    report = folder / value
+    if Path(value).is_absolute() or ".." in Path(value).parts or not report.is_file():
+        errors.append(f"{name}: '{label}' names '{value}', not a report file inside the task folder")
+        return None
+    return report.read_text()
+
+
+def design_report(name, value, text, errors, on_preview):
+    """The severities of a design_review report, or None after appending its defects to errors."""
+    shape = report_shape(text, "design_review")
+    if shape:
+        errors.extend(f"{name}: '{value}' {problem}" for problem in shape)
+        return None
+    child = re.match(r"[ \t]*", FINDINGS_LINE.search(text).group(0)).group(0)
+    block = re.search(r"^design_review:.*\n((?:[ \t].*\n|[ \t]*\n|#.*\n)*)", text + "\n", re.M).group(1)
+    on_preview(re.findall(rf"^{child}preview:[ \t]*(.*)$", block, re.M))
+    severities, problems = report_severities(text, DESIGN_SCALE)
+    if problems:
+        errors.extend(f"{name}: '{value}' {problem}" for problem in problems)
+        return None
+    plain = len(SEVERITY_LINE.findall(text))
+    if plain != len(severities):
+        errors.append(f"{name}: '{value}' has {plain} 'severity:' lines but {len(severities)} in its findings items; every severity line must be a key of one findings item")
+        return None
+    return severities
+
+
+def read_rulings(text):
+    marks = list(RULING_ITEM.finditer(text))
+    items = []
+    for index, mark in enumerate(marks):
+        stop = marks[index + 1].start() if index + 1 < len(marks) else len(text)
+        fields = {}
+        for key, value in RULING_FIELD.findall(text[mark.end():stop]):
+            fields.setdefault(key, value.strip().strip("\"'"))
+        raw = mark.group(1).strip().strip("\"'")
+        fields["finding"] = int(raw) if raw.isdigit() else raw
+        items.append(fields)
+    return items
+
+
+def plural_groups(count):
+    return f"{count} group" if count == 1 else f"{count} groups"
+
+
+def check_rulings(name, value, text, found, lines, word, errors, titled):
+    """Check a design_decline_check report against the dispositions; return (upheld numbers, overruled count, decision groups)."""
+    ruled = {}
+    for item in read_rulings(text):
+        number = item["finding"]
+        if not isinstance(number, int) or not 1 <= number <= found:
+            errors.append(f"{name}: '{value}' rules finding {number}, which the review does not list ({found} listed)")
+        elif number in ruled:
+            errors.append(f"{name}: '{value}' rules finding {number} more than once")
+        elif item.get("ruling") not in RULINGS:
+            errors.append(f"{name}: '{value}' rules finding {number} as '{item.get('ruling', '')}', not one of {', '.join(RULINGS)}")
+        else:
+            ruled[number] = item
+    declined = [n for n in range(1, found + 1) if DECLINED.match(lines.get(n, ""))]
+    for number in declined:
+        entry = lines[number]
+        if number not in ruled:
+            errors.append(f"{name}: declined finding {number} has no ruling in '{value}'")
+        elif ruled[number]["ruling"] != "upheld":
+            errors.append(f"{name}: declined finding {number} is ruled {ruled[number]['ruling']} in '{value}'; write 'fixed:', an AC-<id> or 'Needs decision:' for it, not 'declined:'")
+        if HOST_REASON.match(entry) and not HOST_FORM.match(entry):
+            errors.append(f"{name}: '{word} finding {number}:' declines a host component without 'host component <Name> at <path>: <reason>'")
+    groups = {}
+    for number, item in sorted(ruled.items()):
+        entry = lines.get(number, "")
+        if item["ruling"] == "upheld" and number not in declined:
+            errors.append(f"{name}: '{value}' upholds finding {number}, which is not a declined finding")
+        if item["ruling"] != "decision":
+            continue
+        if number not in declined and not NEEDS_DECISION.match(entry):
+            errors.append(f"{name}: finding {number} is ruled decision in '{value}' and needs a '{word} finding {number}: Needs decision:' line")
+        kind, owner = item.get("kind", ""), item.get("owner", "")
+        if kind not in KINDS or not owner:
+            errors.append(f"{name}: decision ruling for finding {number} needs a kind of {', '.join(KINDS)} and an owner")
+        elif titled and kind == "host-look" and not item.get("adr") and not ADR_TITLE.search(entry):
+            errors.append(f"{name}: 'Design finding {number}:' is a host-look decision and must end 'ADR: <short title>'")
+        key = (kind, owner.strip().casefold())
+        group = groups.setdefault(key, dict(kind=kind, owner=owner, numbers=[], change=item.get("change", "")))
+        group["numbers"].append(number)
+    upheld = [n for n, item in sorted(ruled.items()) if item["ruling"] == "upheld" and n in declined]
+    overruled = sum(1 for item in ruled.values() if item["ruling"] == "overruled")
+    return upheld, overruled, list(groups.values())
+
+
+def ruling_notes(word, lines, upheld, groups):
+    notes = [f"upheld {word} {n}: {lines[n].split(':', 1)[1].strip()}" for n in upheld]
+    for group in groups:
+        found = ", ".join(str(n) for n in group["numbers"])
+        notes.append(f"decision {group['kind']}, owner {group['owner']} (findings {found}): {group['change']}")
+    return notes
+
+
+def decline_report(name, label, lines_found, folder, errors):
+    value = lines_found[0].strip()
+    text = saved_report(name, label, value, folder, errors)
+    if text is None:
+        return None, value
+    if len(re.findall(r"^design_decline_check:", text, re.M)) != 1:
+        errors.append(f"{name}: '{value}' is not a design_decline_check report: expected exactly 1 'design_decline_check:' line at column 0")
+        return None, value
+    return text, value
+
+
 def check_design_review(path, body, declared, previews, errors):
     name = path.name
     review = DESIGN_REVIEW_LINE.search(body)
@@ -322,30 +453,19 @@ def check_design_review(path, body, declared, previews, errors):
     if value.lower().startswith("not run"):
         errors.append(f"{name}: design review not run ({value}); a missing reviewer holds the stage")
         return None
-    folder = path.parent if path.name == "index.md" else path.parent / path.stem
-    report = folder / value
-    if Path(value).is_absolute() or ".." in Path(value).parts or not report.is_file():
-        errors.append(f"{name}: 'Design review:' names '{value}', not a report file inside the task folder")
+    folder = task_folder(path)
+    text = saved_report(name, "Design review:", value, folder, errors)
+    if text is None:
         return None
-    text = report.read_text()
-    shape = report_shape(text, "design_review")
-    if shape:
-        errors.extend(f"{name}: '{value}' {problem}" for problem in shape)
-        return None
-    child = re.match(r"[ \t]*", FINDINGS_LINE.search(text).group(0)).group(0)
-    block = re.search(r"^design_review:.*\n((?:[ \t].*\n|[ \t]*\n|#.*\n)*)", text + "\n", re.M).group(1)
-    named = re.findall(rf"^{child}preview:[ \t]*(.*)$", block, re.M)
-    if len(named) != 1:
-        errors.append(f"{name}: '{value}' has {len(named)} 'preview:' lines directly under 'design_review:', expected exactly 1")
-    elif named[0].strip().strip("\"'") not in previews:
-        errors.append(f"{name}: '{value}' reviewed preview '{named[0].strip().strip(chr(34)+chr(39))}' but the task's 'Preview:' line names {', '.join(repr(p) for p in previews)}")
-    severities, problems = report_severities(text, DESIGN_SCALE)
-    if problems:
-        errors.extend(f"{name}: '{value}' {problem}" for problem in problems)
-        return None
-    plain = len(SEVERITY_LINE.findall(text))
-    if plain != len(severities):
-        errors.append(f"{name}: '{value}' has {plain} 'severity:' lines but {len(severities)} in its findings items; every severity line must be a key of one findings item")
+
+    def on_preview(named):
+        if len(named) != 1:
+            errors.append(f"{name}: '{value}' has {len(named)} 'preview:' lines directly under 'design_review:', expected exactly 1")
+        elif named[0].strip().strip("\"'") not in previews:
+            errors.append(f"{name}: '{value}' reviewed preview '{named[0].strip().strip(chr(34)+chr(39))}' but the task's 'Preview:' line names {', '.join(repr(p) for p in previews)}")
+
+    severities = design_report(name, value, text, errors, on_preview)
+    if severities is None:
         return None
     found = len(severities)
     lines = {int(n): v.strip() for n, v in DESIGN_FINDING_LINE.findall(body)}
@@ -365,7 +485,92 @@ def check_design_review(path, body, declared, previews, errors):
             errors.append(f"{name}: report finding {number} has no 'Design finding {number}:' line naming a declared AC-<id>, 'fixed: <what changed>', 'declined: <reason>' (MINOR only) or 'Needs decision: <text>'")
     for number in sorted(set(lines) - set(range(1, found + 1))):
         errors.append(f"{name}: 'Design finding {number}:' has no finding in '{value}' ({found} listed)")
-    return f"design review {value}: {found} findings, {tally['fixed']} fixed, {tally['ac']} criteria, {tally['declined']} declined, {tally['decision']} decisions"
+    summary = f"design review {value}: {found} findings, {tally['fixed']} fixed, {tally['ac']} criteria, {tally['declined']} declined, {tally['decision']} decisions"
+    rulings = []
+    checks = DECLINE_CHECK_LINE.findall(body)
+    if len(checks) > 1:
+        errors.append(f"{name}: {len(checks)} 'Decline check:' lines, expected exactly 1; a rerun replaces the old line with the last report")
+    elif checks:
+        ruled, check_value = decline_report(name, "Decline check:", checks, folder, errors)
+        if ruled is not None:
+            upheld, overruled, groups = check_rulings(name, check_value, ruled, found, lines, "Design", errors, True)
+            summary += f"; decline check {check_value}: {len(upheld)} upheld, {overruled} overruled, {sum(len(g['numbers']) for g in groups)} decisions in {plural_groups(len(groups))}"
+            rulings = ruling_notes("decline", lines, upheld, groups)
+    elif tally["declined"]:
+        errors.append(f"{name}: a 'Design finding n: declined:' line needs a 'Decline check:' line naming the saved ruling report")
+    return [summary, *(f"preview: {preview}" for preview in preview_lines(path, previews)), *rulings]
+
+
+def preview_lines(path, previews):
+    task_dir = path.resolve().parent
+    return [value if URL.match(value) else str(preview_target(task_dir, value)) for value in previews]
+
+
+def file_digest(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def check_built_screen(path, body, previews, errors):
+    name = path.name
+    reviews = BUILT_REVIEW_LINE.findall(body)
+    if len(reviews) > 1:
+        errors.append(f"{name}: {len(reviews)} 'Built screen review:' lines, expected exactly 1; a rerun replaces the old line with the last report")
+        return None
+    if not reviews:
+        errors.append(f"{name}: built screen review not run: a ui task with a design review needs a 'Built screen review:' line or a quoted waiver")
+        return None
+    value = reviews[0].strip()
+    if value.startswith("waived"):
+        if not CAPTAIN_QUOTE.search(value):
+            errors.append(f"{name}: built screen review not run: a waiver needs the Captain's words in 「…」")
+        return None
+    folder = task_folder(path)
+    text = saved_report(name, "Built screen review:", value, folder, errors)
+    if text is None:
+        return None
+    named = []
+    severities = design_report(name, value, text, errors, named.extend)
+    if severities is None:
+        return None
+    shot_name = named[0].strip().strip("\"'") if len(named) == 1 else ""
+    picture = folder / shot_name
+    if not shot_name or Path(shot_name).is_absolute() or ".." in Path(shot_name).parts or not picture.is_file():
+        errors.append(f"{name}: built screen review not run: '{value}' names no screenshot file inside the task folder")
+        return None
+    task_dir, seen = path.resolve().parent, set()
+    for preview in previews:
+        if URL.match(preview):
+            continue
+        target = preview_target(task_dir, preview)
+        seen.update(file_digest(p) for p in (target.rglob("*") if target.is_dir() else [target]) if p.is_file())
+    if file_digest(picture) in seen:
+        errors.append(f"{name}: built screen review not run: '{value}' names a screenshot that is an ideation picture, or has the bytes of one")
+        return None
+    found = len(severities)
+    lines = {int(n): v.strip() for n, v in BUILT_FINDING_LINE.findall(body)}
+    repeated(BUILT_FINDING_LINE.findall(body), "Built screen", name, errors)
+    for number in range(1, found + 1):
+        entry = lines.get(number, "")
+        token = entry.split()[0] if entry else ""
+        if severities[number - 1] == "MAJOR" and re.fullmatch(r"F\d+", token):
+            if not re.search(rf"^[ \t]*[-*][ \t]+{token}[ \t]+\S[^\n:]*:", body, re.M):
+                errors.append(f"{name}: 'Built screen finding {number}:' names {token}, but the report has no '- {token} <Class>:' bullet")
+        elif not (severities[number - 1] == "MINOR" and (DECLINED.match(entry) or NEEDS_DECISION.match(entry))):
+            errors.append(f"{name}: built screen finding {number} has no 'Built screen finding {number}:' line naming F<N> (MAJOR), 'declined: <reason>' (MINOR only) or 'Needs decision: <text>' (MINOR only)")
+    for number in sorted(set(lines) - set(range(1, found + 1))):
+        errors.append(f"{name}: 'Built screen finding {number}:' has no finding in '{value}' ({found} listed)")
+    declines = BUILT_DECLINE_LINE.findall(body)
+    upheld, groups = [], []
+    if len(declines) > 1:
+        errors.append(f"{name}: {len(declines)} 'Built screen decline check:' lines, expected exactly 1; a rerun replaces the old line with the last report")
+    elif declines:
+        ruled, check_value = decline_report(name, "Built screen decline check:", declines, folder, errors)
+        if ruled is not None:
+            upheld, _, groups = check_rulings(name, check_value, ruled, found, lines, "Built screen", errors, False)
+    elif any(DECLINED.match(entry) for entry in lines.values()):
+        errors.append(f"{name}: a 'Built screen finding n: declined:' line needs a 'Built screen decline check:' line naming the saved ruling report")
+    summary = f"built screen review {value}: {found} findings, {len(upheld)} upheld declines, {sum(len(g['numbers']) for g in groups)} decisions in {plural_groups(len(groups))}"
+    return [summary, f"preview: {picture.resolve()}", *ruling_notes("built-screen decline", lines, upheld, groups)]
 
 
 def scope_lines(text):
@@ -500,7 +705,12 @@ def check_task(path, seed=False, notes=None):
         shown = [v.strip() for v in PREVIEW.findall("\n".join(unfenced(body.split("\n"))))]
         summary = check_design_review(path, plain, declared, shown, errors)
         if summary and notes is not None:
-            notes.append(summary)
+            notes.extend(summary)
+    if "ui" in surfaces and status and status.group(1) == "validation" and DESIGN_REVIEW_LINE.search(plain):
+        shown = [v.strip() for v in PREVIEW.findall("\n".join(unfenced(body.split("\n"))))]
+        summary = check_built_screen(path, plain, shown, errors)
+        if summary and notes is not None:
+            notes.extend(summary)
     return errors
 
 

@@ -936,6 +936,16 @@ DESIGN_LINES = """Design review: design/ideation-1.yaml
 Design finding 1: fixed: the header is one line in preview.html
 Design finding 2: declined: the inset matches the shell
 Design finding 3: AC-2
+Decline check: design/declines-1.yaml
+"""
+
+DECLINE_REPORT = """design_decline_check:
+  adrs_read: none
+  rulings:
+    - finding: 2
+      ruling: upheld
+      evidence: after-desktop.png shows the inset equal to the shell's
+      change: none
 """
 
 NEWER_DESIGN_REPORT = """design_review:
@@ -986,7 +996,7 @@ Verified by: a test.
 
 
 class DesignReviewTests(unittest.TestCase):
-    def run_check(self, review=DESIGN_LINES, report=DESIGN_REPORT, module=ds, profile="pilot", status="ideation", surfaces="ui", outside=False, folder_form=False, previews="Preview: preview.html\n", extra=None):
+    def run_check(self, review=DESIGN_LINES, report=DESIGN_REPORT, module=ds, profile="pilot", status="ideation", surfaces="ui", outside=False, folder_form=False, previews="Preview: preview.html\n", extra=None, declines=DECLINE_REPORT):
         text = UI.format(review=review).replace("Preview: preview.html\n", previews).replace("profile: pilot", f"profile: {profile}").replace("status: ideation", f"status: {status}")
         visible = "a person sees a panel." if "ui" in surfaces else "none"
         text = text.replace("Surfaces: ui\nVisible change: a person sees a panel.", f"Surfaces: {surfaces}\nVisible change: {visible}")
@@ -1000,6 +1010,8 @@ class DesignReviewTests(unittest.TestCase):
                 folder.joinpath("ideation-1.yaml").write_text(report)
                 if outside:
                     Path(d, "x.yaml").write_text(report)
+            if declines is not None:
+                folder.joinpath("declines-1.yaml").write_text(declines)
             for later, body in (extra or {}).items():
                 folder.joinpath(later).write_text(body)
             task_file.write_text(text)
@@ -1011,11 +1023,19 @@ class DesignReviewTests(unittest.TestCase):
         self.assertEqual(len([e for e in errors if why in e]), 1, errors)
         return errors
 
-    def test_a_reviewed_ui_design_passes_and_prints_one_short_line(self):
+    def test_a_reviewed_ui_design_passes_and_prints_its_summary_preview_and_upheld_decline(self):
         errors, notes = self.run_check()
         self.assertEqual(errors, [])
-        self.assertEqual(notes, ["design review design/ideation-1.yaml: 3 findings, 1 fixed, 1 criteria, 1 declined, 0 decisions"])
+        self.assertEqual(notes[0], "design review design/ideation-1.yaml: 3 findings, 1 fixed, 1 criteria, 1 declined, 0 decisions; decline check design/declines-1.yaml: 1 upheld, 0 overruled, 0 decisions in 0 groups")
+        self.assertEqual(notes[2:], ["upheld decline 2: the inset matches the shell"])
+
+    def test_a_review_without_a_decline_prints_one_short_line_and_the_preview(self):
+        lines = DESIGN_LINES.replace("declined: the inset matches the shell", "Needs decision: x").replace("Decline check: design/declines-1.yaml\n", "")
+        errors, notes = self.run_check(review=lines, declines=None)
+        self.assertEqual(errors, [])
+        self.assertEqual(notes[0], "design review design/ideation-1.yaml: 3 findings, 1 fixed, 1 criteria, 0 declined, 1 decisions")
         self.assertLessEqual(len(notes[0].split()), 14)
+        self.assertEqual(len(notes), 2)
 
     def test_a_folder_task_passes_with_its_own_report(self):
         self.assertEqual(self.run_check(folder_form=True)[0], [])
@@ -1130,8 +1150,9 @@ class DesignReviewTests(unittest.TestCase):
     def test_mutation_dropping_the_minor_test_lets_a_declined_major_pass(self):
         mutant = mutated(' and severities[number - 1] == "MINOR"', "")
         review = DESIGN_LINES.replace("finding 3: AC-2", "finding 3: declined: accepted")
-        self.assertTrue(self.run_check(review=review)[0])
-        self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
+        both = DECLINE_REPORT + "    - finding: 3\n      ruling: upheld\n      evidence: x\n      change: none\n"
+        self.assertTrue(self.run_check(review=review, declines=both)[0])
+        self.assertEqual(self.run_check(review=review, declines=both, module=mutant)[0], [])
 
     def test_mutation_dropping_the_preview_rule_lets_another_preview_pass(self):
         mutant = mutated('elif named[0].strip().strip("\\"\'") not in previews:', "elif False:")
@@ -1157,7 +1178,7 @@ class DesignReviewTests(unittest.TestCase):
 
     def test_mutation_dropping_the_duplicate_rule_lets_two_dispositions_pass(self):
         mutant = mutated("repeated(DESIGN_FINDING_LINE.findall(body), \"Design\", name, errors)", "None")
-        review = DESIGN_LINES + "Design finding 2: Needs decision: x\n"
+        review = DESIGN_LINES + "Design finding 1: fixed: again\n"
         self.assertTrue(self.run_check(review=review)[0])
         self.assertEqual(self.run_check(review=review, module=mutant)[0], [])
 
@@ -1498,6 +1519,317 @@ class ScopeCheckTests(unittest.TestCase):
         self.assertGreater(out.index("restore the line"), out.index("Amendment"))
         _, real = self.run_main()
         self.assertLess(real.index("restore the line"), real.index("Amendment"))
+
+
+MINORS = """design_review:
+  preview: preview.html
+  findings:
+    - severity: MINOR
+      dimension: spacing
+      where: a.png
+      seen: one
+      fix: one
+    - severity: MINOR
+      dimension: spacing
+      where: a.png
+      seen: two
+      fix: two
+    - severity: MINOR
+      dimension: spacing
+      where: a.png
+      seen: three
+      fix: three
+"""
+
+
+def ruled(*items):
+    out = "design_decline_check:\n  adrs_read: none\n  rulings:\n"
+    for number, ruling, extra in items:
+        out += f"    - finding: {number}\n      ruling: {ruling}\n      evidence: seen in a.png\n      change: change {number}\n"
+        out += "".join(f"      {key}: {value}\n" for key, value in extra.items())
+    return out
+
+
+class MutantMixin:
+    def mutation(self, old, new, why, runner, **kwargs):
+        """The real script reports `why` exactly once; the script with `old` replaced reports it nowhere."""
+        mutant = mutated(old, new)
+        real = runner(**kwargs)[0]
+        self.assertEqual(len([e for e in real if why in e]), 1, real)
+        try:
+            broken = runner(module=mutant, **kwargs)[0]
+        except Exception as crash:
+            broken = [f"crash {crash!r}"]
+        self.assertFalse(any(why in e for e in broken), broken)
+
+
+class DeclineCheckTests(MutantMixin, unittest.TestCase):
+    run_check = DesignReviewTests.run_check
+
+    def refused(self, why, **kwargs):
+        errors, _ = self.run_check(**kwargs)
+        self.assertEqual(len([e for e in errors if why in e]), 1, errors)
+
+    def three(self, *dispositions):
+        lines = "Design review: design/ideation-1.yaml\n" + "".join(f"Design finding {n}: {d}\n" for n, d in enumerate(dispositions, 1))
+        return lines + "Decline check: design/declines-1.yaml\n"
+
+    def test_a_declined_finding_without_a_decline_check_line_is_refused(self):
+        self.mutation('elif tally["declined"]:', "elif False:", "needs a 'Decline check:' line", self.run_check,
+                      review=DESIGN_LINES.replace("Decline check: design/declines-1.yaml\n", ""), declines=None)
+
+    def test_two_decline_check_lines_are_refused(self):
+        self.mutation("if len(checks) > 1:", "if False:", "2 'Decline check:' lines", self.run_check,
+                      review=DESIGN_LINES + "Decline check: design/declines-1.yaml\n")
+
+    def test_a_decline_check_naming_a_missing_file_or_the_wrong_shape_is_refused(self):
+        self.refused("'Decline check:' names 'design/declines-9.yaml'", review=DESIGN_LINES.replace("declines-1", "declines-9"))
+        self.refused("is not a design_decline_check report", declines=DECLINE_REPORT.replace("design_decline_check:", "design_review:"))
+
+    def test_a_declined_finding_with_no_ruling_is_refused(self):
+        self.mutation("""errors.append(f"{name}: declined finding {number} has no ruling in '{value}'")""", "pass",
+                      "declined finding 2 has no ruling", self.run_check, declines=ruled())
+
+    def test_an_upheld_ruling_for_a_finding_that_is_not_declined_is_refused(self):
+        self.mutation("""if item["ruling"] == "upheld" and number not in declined:""", "if False:",
+                      "upholds finding 1, which is not a declined finding", self.run_check,
+                      declines=ruled((1, "upheld", {}), (2, "upheld", {})))
+
+    def test_a_ruling_for_a_finding_the_review_does_not_list_is_refused(self):
+        self.mutation("if not isinstance(number, int) or not 1 <= number <= found:", "if not isinstance(number, int):",
+                      "rules finding 9, which the review does not list", self.run_check,
+                      declines=ruled((2, "upheld", {}), (9, "overruled", {})))
+        self.refused("rules finding 2 more than once", declines=ruled((2, "upheld", {}), (2, "upheld", {})))
+        self.refused("rules finding 2 as 'maybe'", declines=ruled((2, "maybe", {})))
+
+    def test_a_declined_finding_ruled_overruled_or_decision_is_refused(self):
+        self.mutation("""elif ruled[number]["ruling"] != "upheld":""", "elif False:",
+                      "declined finding 2 is ruled overruled", self.run_check, declines=ruled((2, "overruled", {})))
+        self.refused("declined finding 2 is ruled decision",
+                     declines=ruled((2, "decision", {"kind": "other-task", "owner": "T5"})))
+
+    def test_an_overruled_decline_redisposed_passes_and_counts(self):
+        review = self.three("declined: one", "fixed: redrawn", "declined: three")
+        declines = ruled((1, "upheld", {}), (2, "overruled", {}), (3, "upheld", {}))
+        errors, notes = self.run_check(review=review, report=MINORS, declines=declines)
+        self.assertEqual(errors, [])
+        self.assertTrue(notes[0].endswith("; decline check design/declines-1.yaml: 2 upheld, 1 overruled, 0 decisions in 0 groups"), notes[0])
+        self.assertEqual([n for n in notes if n.startswith("upheld decline")], ["upheld decline 1: one", "upheld decline 3: three"])
+
+    def test_the_gate_material_lists_each_upheld_decline_not_a_count(self):
+        review = self.three("declined: one", "fixed: redrawn", "declined: three")
+        declines = ruled((1, "upheld", {}), (2, "overruled", {}), (3, "upheld", {}))
+        mutant = mutated("""notes = [f"upheld {word} {n}: {lines[n].split(':', 1)[1].strip()}" for n in upheld]""", "notes = []")
+        self.assertEqual(len([n for n in self.run_check(review=review, report=MINORS, declines=declines)[1] if n.startswith("upheld decline")]), 2)
+        self.assertEqual([n for n in self.run_check(review=review, report=MINORS, declines=declines, module=mutant)[1] if n.startswith("upheld")], [])
+
+    def test_a_host_component_decline_needs_its_name_and_declaration_path(self):
+        bare = DESIGN_LINES.replace("declined: the inset", "declined: host component Input: the inset")
+        self.mutation("if HOST_REASON.match(entry) and not HOST_FORM.match(entry):", "if False:",
+                      "declines a host component without", self.run_check, review=bare)
+        named = DESIGN_LINES.replace("declined: the inset", "declined: host component Input at ui.d.ts: the inset")
+        self.assertEqual(self.run_check(review=named)[0], [])
+
+    def test_a_decision_ruling_needs_a_line_a_kind_and_an_owner(self):
+        two = self.three("declined: one", "Needs decision: two ADR: Plugin buttons", "declined: three")
+        good = ruled((1, "upheld", {}), (2, "decision", {"kind": "host-look", "owner": "Captain"}), (3, "upheld", {}))
+        self.assertEqual(self.run_check(review=two, report=MINORS, declines=good)[0], [])
+        self.mutation("if number not in declined and not NEEDS_DECISION.match(entry):", "if False:",
+                      "needs a 'Design finding 2: Needs decision:' line", self.run_check,
+                      review=self.three("declined: one", "fixed: two", "declined: three"), report=MINORS, declines=good)
+        for label, extra in {"bad kind": {"kind": "elsewhere", "owner": "Captain"}, "no owner": {"kind": "host-look"}, "no kind": {"owner": "Captain"}}.items():
+            with self.subTest(label):
+                self.mutation("if kind not in KINDS or not owner:", "if False:", "needs a kind of host-look, other-task, recorded-ruling and an owner",
+                              self.run_check, review=two, report=MINORS,
+                              declines=ruled((1, "upheld", {}), (2, "decision", extra), (3, "upheld", {})))
+
+    def test_a_host_look_decision_must_end_with_the_adr_title(self):
+        plain = self.three("declined: one", "Needs decision: two", "declined: three")
+        host = ruled((1, "upheld", {}), (2, "decision", {"kind": "host-look", "owner": "Captain"}), (3, "upheld", {}))
+        self.mutation('elif titled and kind == "host-look" and not item.get("adr") and not ADR_TITLE.search(entry):', "elif False:",
+                      "is a host-look decision and must end 'ADR: <short title>'", self.run_check, review=plain, report=MINORS, declines=host)
+        other = ruled((1, "upheld", {}), (2, "decision", {"kind": "other-task", "owner": "T5"}), (3, "upheld", {}))
+        self.assertEqual(self.run_check(review=plain, report=MINORS, declines=other)[0], [])
+
+    def test_decisions_of_one_kind_and_owner_print_once(self):
+        review = self.three("Needs decision: a ADR: Plugin buttons", "Needs decision: b ADR: Plugin buttons", "Needs decision: c ADR: Plugin buttons") + "Design finding 4: Needs decision: d\n"
+        report = MINORS + "    - severity: MINOR\n      dimension: spacing\n      where: a.png\n      seen: four\n      fix: four\n"
+        declines = ruled((1, "decision", {"kind": "host-look", "owner": "Captain"}), (2, "decision", {"kind": "host-look", "owner": " captain "}),
+                         (3, "decision", {"kind": "host-look", "owner": "Product"}), (4, "decision", {"kind": "other-task", "owner": "T5"}))
+        errors, notes = self.run_check(review=review, report=report, declines=declines)
+        self.assertEqual(errors, [])
+        self.assertIn("4 decisions in 3 groups", notes[0])
+        self.assertEqual([n for n in notes if n.startswith("decision")],
+                         ["decision host-look, owner Captain (findings 1, 2): change 1", "decision host-look, owner Product (findings 3): change 3", "decision other-task, owner T5 (findings 4): change 4"])
+        key = "key = (kind, owner.strip().casefold())"
+        for new in ("key = (kind, number)", "key = (kind,)", "key = (kind, owner)"):
+            with self.subTest(new):
+                self.assertNotEqual(self.run_check(review=review, report=report, declines=declines, module=mutated(key, new))[1], notes)
+
+    def test_each_preview_path_is_printed_resolved_and_a_url_as_written(self):
+        previews = "Preview: preview.html\nPreview: https://example.test/p\n"
+        notes = self.run_check(previews=previews)[1]
+        shown = [n for n in notes if n.startswith("preview: ")]
+        self.assertEqual(len(shown), 2)
+        self.assertTrue(Path(shown[0][len("preview: "):]).is_absolute() and shown[0].endswith("/preview.html"), shown)
+        self.assertEqual(shown[1], "preview: https://example.test/p")
+        for old, new in (('*(f"preview: {preview}" for preview in preview_lines(path, previews))', "*[]"),
+                         ("str(preview_target(task_dir, value))", "value")):
+            with self.subTest(new):
+                self.assertNotEqual(self.run_check(previews=previews, module=mutated(old, new))[1], notes)
+
+
+VALIDATION_TASK = """---
+title: a ui task
+profile: pilot
+status: validation
+---
+
+## FO alignment
+
+Surfaces: ui
+Visible change: a person sees a panel.
+
+## Design
+
+UI proposal: a panel.
+Preview: preview.html
+{review}
+## Acceptance criteria
+
+**AC-1**: a.
+Verified by: a test.
+
+## Stage Report: validation
+
+- F1 Behaviour: the count is said twice in the built header
+{lines}"""
+
+BUILT_REPORT = """design_review:
+  preview: design/built-1.png
+  findings:
+    - severity: MAJOR
+      dimension: hierarchy
+      where: built-1.png
+      seen: the count is stated twice
+      fix: keep one
+    - severity: MINOR
+      dimension: spacing
+      where: built-1.png
+      seen: tight inset
+      fix: widen it
+    - severity: MINOR
+      dimension: consistency
+      where: built-1.png
+      seen: chevron
+      fix: one convention
+"""
+
+BUILT_LINES = """Built screen review: design/validation-1.yaml
+Built screen finding 1: F1
+Built screen finding 2: declined: the inset matches the shell
+Built screen finding 3: Needs decision: the chevron is the host's
+Built screen decline check: design/validation-declines-1.yaml
+"""
+
+
+class BuiltScreenTests(MutantMixin, unittest.TestCase):
+    def run_check(self, lines=BUILT_LINES, report=BUILT_REPORT, declines=None, shot=b"built screen", status="validation", reviewed=True,
+                  previews="Preview: preview.html\n", module=ds):
+        declines = ruled((2, "upheld", {})) if declines is None else declines
+        review = "\nDesign review: design/ideation-1.yaml\n" if reviewed else ""
+        text = VALIDATION_TASK.format(review=review, lines=lines).replace("status: validation", f"status: {status}").replace("Preview: preview.html\n", previews)
+        with tempfile.TemporaryDirectory() as d:
+            folder = Path(d, "task", "design")
+            folder.mkdir(parents=True)
+            Path(d, "preview.html").write_text("<html></html>")
+            folder.joinpath("validation-1.yaml").write_text(report)
+            folder.joinpath("validation-declines-1.yaml").write_text(declines)
+            if shot is not None:
+                folder.joinpath("built-1.png").write_bytes(shot)
+            path = Path(d, "task.md")
+            path.write_text(text)
+            notes = []
+            return module.check_task(path, notes=notes), notes
+
+    def not_run(self, **kwargs):
+        errors, _ = self.run_check(**kwargs)
+        self.assertEqual(len([e for e in errors if "built screen review not run" in e]), 1, errors)
+
+    def test_a_built_screen_review_with_every_disposition_passes_and_prints_its_lines(self):
+        errors, notes = self.run_check()
+        self.assertEqual(errors, [])
+        self.assertEqual(notes[0], "built screen review design/validation-1.yaml: 3 findings, 1 upheld declines, 0 decisions in 0 groups")
+        self.assertTrue(Path(notes[1][len("preview: "):]).is_absolute() and notes[1].endswith("/design/built-1.png"), notes)
+        self.assertEqual(notes[2:], ["upheld built-screen decline 2: the inset matches the shell"])
+
+    def test_a_ui_task_without_a_built_screen_review_or_waiver_is_refused(self):
+        self.not_run(lines="")
+        self.not_run(lines="Built screen review: waived\n")
+        self.not_run(shot=None)
+        self.assertEqual(self.run_check(lines='Built screen review: waived 「Kent: skip it」\n')[0], [])
+
+    def test_two_built_screen_review_lines_are_refused(self):
+        errors, _ = self.run_check(lines=BUILT_LINES + "Built screen review: design/validation-1.yaml\n")
+        self.assertEqual(len([e for e in errors if "2 'Built screen review:' lines" in e]), 1, errors)
+
+    def test_an_ideation_picture_is_not_a_built_screen(self):
+        self.not_run(shot=b"<html></html>")
+        self.not_run(previews="Preview: task/design\n")
+        self.assertEqual(self.run_check(shot=b"different bytes")[0], [])
+
+    def test_a_task_without_a_design_review_or_not_at_validation_is_not_refused(self):
+        self.assertEqual(self.run_check(lines="", reviewed=False), ([], []))
+        self.assertEqual(self.run_check(lines="", status="implementation"), ([], []))
+
+    def test_each_branch_of_the_screenshot_rule_has_a_mutant_that_passes_what_it_refuses(self):
+        gate = 'if "ui" in surfaces and status and status.group(1) == "validation" and DESIGN_REVIEW_LINE.search(plain):'
+        cases = {
+            "status gate": (gate, 'if "ui" in surfaces and status and DESIGN_REVIEW_LINE.search(plain):', dict(lines="", status="implementation")),
+            "design review condition": (gate, 'if "ui" in surfaces and status and status.group(1) == "validation":', dict(lines="", reviewed=False)),
+            "file exists": ("or not picture.is_file():", ":", dict(shot=None)),
+            "same bytes as a preview": ("if file_digest(picture) in seen:", "if False:", dict(shot=b"<html></html>")),
+            "same bytes inside a preview folder": ("if file_digest(picture) in seen:", "if False:", dict(previews="Preview: task/design\n")),
+            "quote": ("if not CAPTAIN_QUOTE.search(value):", "if False:", dict(lines="Built screen review: waived\n")),
+            "missing line": ("if not reviews:", "if False:", dict(lines="")),
+        }
+        for label, (old, new, kwargs) in cases.items():
+            with self.subTest(label):
+                real = self.run_check(**kwargs)[0]
+                try:
+                    broken = self.run_check(module=mutated(old, new), **kwargs)[0]
+                except Exception as crash:
+                    broken = [f"crash {crash!r}"]
+                refusal = [e for e in real if "built screen review not run" in e]
+                if label in ("status gate", "design review condition"):
+                    self.assertEqual((real, len(broken)), ([], 1), broken)
+                    self.assertIn("built screen review not run", broken[0])
+                else:
+                    self.assertEqual(len(refusal), 1, real)
+                    self.assertFalse(any("built screen review not run" in e for e in broken), broken)
+
+    def test_a_decline_needs_its_ruling_report_and_an_overruled_one_becomes_a_decision(self):
+        self.mutation("elif any(DECLINED.match(entry) for entry in lines.values()):", "elif False:",
+                      "needs a 'Built screen decline check:' line", self.run_check,
+                      lines=BUILT_LINES.replace("Built screen decline check: design/validation-declines-1.yaml\n", ""))
+        self.mutation("""elif ruled[number]["ruling"] != "upheld":""", "elif False:", "declined finding 2 is ruled overruled",
+                      self.run_check, declines=ruled((2, "overruled", {})))
+        moved = BUILT_LINES.replace("declined: the inset matches the shell", "Needs decision: the inset is the host's")
+        errors, notes = self.run_check(lines=moved, declines=ruled((2, "decision", {"kind": "host-look", "owner": "Captain"})))
+        self.assertEqual(errors, [])
+        self.assertEqual(notes[0], "built screen review design/validation-1.yaml: 3 findings, 0 upheld declines, 1 decisions in 1 group")
+        self.assertEqual(notes[-1], "decision host-look, owner Captain (findings 2): change 2")
+        self.mutation("""errors.append(f"{name}: 'Built screen finding {number}:' names {token}, but the report has no '- {token} <Class>:' bullet")""", "pass",
+                      "names F9, but the report has no", self.run_check, lines=BUILT_LINES.replace("finding 1: F1", "finding 1: F9"))
+        self.mutation("elif not (severities[number - 1] ==", "elif False and not (severities[number - 1] ==", "built screen finding 3 has no", self.run_check,
+                      lines=BUILT_LINES.replace("Built screen finding 3: Needs decision: the chevron is the host's\n", ""))
+        self.mutation("""if HOST_REASON.match(entry) and not HOST_FORM.match(entry):""", "if False:", "declines a host component without", self.run_check,
+                      lines=BUILT_LINES.replace("declined: the inset", "declined: host component Input: the inset"))
+
+    def test_the_picture_and_the_upheld_lines_reach_the_output(self):
+        for old, new in (('f"preview: {picture.resolve()}"', '""'), ('*ruling_notes("built-screen decline", lines, upheld, groups)', "*[]")):
+            with self.subTest(new):
+                self.assertNotEqual(self.run_check(module=mutated(old, new))[1], self.run_check()[1])
 
 
 if __name__ == "__main__":
