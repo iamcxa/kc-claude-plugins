@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:idle-names-failing-seeds:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:idle-names-failing-seeds-validation-1
+              briefing:
+                id: briefing:idle-names-failing-seeds:validation:attempt-1:revision-1
+                digest: sha256:e505b28ad4ba41832c1cc87983b4ae4dcfbe2f4452daa780d941025b8a5e0485
+                room-ref: ./idle-names-failing-seeds/review/validation/briefing-1
 started: 2026-10-21T17:17:02Z
 worktree: .worktrees/spacedock-ensign-idle-names-failing-seeds
 pr: iamcxa/kc-claude-plugins#694

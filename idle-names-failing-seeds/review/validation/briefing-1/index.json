@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:idle-names-failing-seeds:validation:attempt-1:revision-1",
+  "question": "Approve validation of idle-names-failing-seeds and merge iamcxa/kc-claude-plugins#694 at head 1c57c156d034fcd1a7a73efb9a70370a57c1f97f with `gh pr merge 694 --squash --match-head-commit 1c57c156d034fcd1a7a73efb9a70370a57c1f97f`? FO recommends approve; approving accepts that recommendation, covers merging this full head after FO reruns delivery_gate.py check, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:idle-names-failing-seeds:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/89ada26930f757bfe9de1153df192969999eed57/idle-names-failing-seeds.md",
+      "rev": "sha256:4a4336b10a3497ab212ae4e05eab4f10d564b5aede1a64c906822a024d50b89c",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: `pr_watch.py tasks` prints one next: line naming each backlog task whose seed check fails and prints nothing when none fails; validation PASSED at this head with an independent oracle naming the same 0, 6, 2, 0 and 0 tasks on the four state checkouts and the POC control; the head merged onto current origin/main 4befab1f passes test_pr_watch.py (101 tests) and the codex extension tests.\nNecessity: two files (kc-dev-flow-2/scripts/pr_watch.py, kc-dev-flow-2/scripts/test_pr_watch.py), the shape the Captain chose, no new script.\nExternal rounds: Codex 1 (code review:5608166400 on this head, one P2, comment:4343627800; the ready-for-review event ran only the security review, clean; FO requested the code review with @codex review). Second reviewer: none, the PR changes no merge, review or approval rule.\nFO declines: Deferred risk, Codex P2 comment:4343627800, a `## FO alignment` heading only inside a fenced example would make the line name a task falsely (a scan of every backlog task in the dev2 state checkout on 2026-10-22 found none with a fenced FO alignment heading; the failure names a task, it hides none; Material if such a task appears); Polish F1, the POC-checkout count in the ideation note is stale (the route is proved by fixture S5 and mutation M3); Deferred risk F2, the line helps only if FO runs the idle pass between seed commit and gate prepare (Material if a skipped seed check had no idle pass before its gate); Deferred risk F3, a flow-style stages list names nothing and the heading regex can drift from design_surfaces.py (Material if an adopter uses a flow-style list or FO_HEADING changes)."
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "class": "never",
+  "head": "1c57c156d034fcd1a7a73efb9a70370a57c1f97f",
+  "model": "not run",
+  "necessity": "two files (kc-dev-flow-2/scripts/pr_watch.py, kc-dev-flow-2/scripts/test_pr_watch.py), the shape the Captain chose, no new script.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'Limits judged: (1) reminder only, helps'",
+    "point: deferred: '- F2 Deferred risk: the line'",
+    "point: deferred: '- F3 Deferred risk: a flow-style'",
+    "point: deferred: 'FO declines: Deferred risk, Codex P2'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#694",
+  "sufficiency": "`pr_watch.py tasks` prints one next: line naming each backlog task whose seed check fails and prints nothing when none fails; validation PASSED at this head with an independent oracle naming the same ",
+  "time": "2026-10-22T03:45:59Z",
+  "verdict": "ask"
+}
