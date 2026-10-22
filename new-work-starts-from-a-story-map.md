@@ -699,3 +699,117 @@ Both repaired candidates pass: #705 head 954ad170 and #704 head b5448997 meet ev
 ### Summary
 
 The three Cycle 2 P2s are fixed on #704 with one test each, each shown failing on its mutant, and the new head has CI green and a clean roborev gate. #705 is unchanged.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independent verdict on PR #705 head 954ad170 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for #705 head 954ad1704adb83622e068579b3a84576a27709d6 (base cebd0ab9; merges cleanly with origin/main 126efaf0 by `git merge-tree`). Re-run on a detached throwaway worktree: AC-7 `skills/dev/SKILL.md` 707 to 763 words, sentence 56; AC-8 `test_pr_watch.py` 101 OK, and three mutations each fail it (list line for a single awaiting gate, a 51-word line, the line once per pass); AC-9 and AC-10 diffs over the listed paths empty, `lint-skills.py` 5374 of 5374; AC-11 `adr_lint.py docs/adr --since cebd0ab9 --require 0029` exit 0 (29 files, package 0.28.0) and `--require 0030` exit 1; `comment_ratio.py` 0 of 25 lines; `number_guards.py check` PASS; `doc_impact.py` 0 documents; `dispatch_records.py` 10 records complete; `design_surfaces.py check` exit 0; no `/Users/` or adopter string in the added lines; `gh pr checks` all five SUCCESS. AC-6 not re-run this cycle: #705 is byte-unchanged since cycle 2's live re-run at this head (new-capability asks before a profile, "no" is recorded as `Release review: not needed:` with his words, a bug asks nothing); one run per case on one host stays the limit. Limits judged: dev ask fires only at the `dev` entry (accepted in Limits).
+- DONE: Fresh recheck after the Cycle 2 repair: #705 is unchanged since your last recheck at this head; validate iamcxa/kc-claude-plugins PR #704 (kc-journey-map) head f0d3f442 in its own throwaway worktree, judging the three Codex P2 of review:5612546695 against the repair and the seven new tests, and whether AC-13 still holds
+  PASSED for #704 head f0d3f442d5e62e4876f457f01a48b63a9c15506f (merges cleanly with origin/main). `node --test lib/*.test.mjs` 252 of 252 (node 24.18); the AC-13/AC-3 files 50 of 50; `journey-dev2-loop-smoke.sh` all steps passed (CI path-filters it out); AC-9 paths empty; no version file touched; schema diff is the one `source` row, 1.1.0; `comment_ratio.py` 3 of 329 lines (0.9%); `adr_lint.py docs/adr --since cebd0ab9` exit 0. Review 5612546695 holds exactly three comments (read by review id): 4347057307 (malformed date, numeric words) fixed, probes refuse `nope`, `7`, `2026-02-30`, `2026-10-01T00:00:00Z` and `words: 5` and accept `2026-10-01`; 4347057317 (separator) fixed, a table with no separator is refused with a reason and its first row is still read (`elsewhere` named); 4347057331 (ADR owed with doc:) fixed, refused with "already holds doc:". AC-13 (a) to (f) still hold: 21 one-line mutations of `journey-review.mjs` run against `journey-review.test.mjs`, 20 killed (date rule, `<` to `<=`, date format, words type, separator, ADR-owed doc, source kind, open question, both, neither, Reviewed, section presence, order, lens arm, off-release row, heading journey and release, Interrogation line, counts, ref); one survives (F4). Codex has not reviewed f0d3f442.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc acceptance.sh`, 66 s, every step as expected. `python3 .../0.28.0/scripts/adr_lint.py docs/adr --since cebd0ab9 --require 0029` at #705 head: "29 ADR file(s) checked, 0 legacy", exit 0; at #704 head without `--require` (it adds no ADR; ADR 0029 is on #705): "28 ADR file(s) checked", exit 0. Verdict: PASSED for 954ad1704adb83622e068579b3a84576a27709d6 (#705) and for f0d3f442d5e62e4876f457f01a48b63a9c15506f (#704); no Material finding. `gh pr view` shows both PRs not Draft (`isDraft: false`); I did not change that.
+
+### Findings
+
+- F1 Deferred risk (carried): #705's `dev` sentence ("which interrogates the release before splitting it") is true only once #704 is in a kc-journey-map release; roborev:1044 High and Codex P1 4345825352 rest on it. Material if a kc-dev-flow-2 release goes out while kc-journey-map has no release containing #704 (value-ac[AC-6]); merge and release #704 first.
+- F2 Deferred risk (carried, unchanged): `journey-review.mjs check` exits 0 on a Tasks table that lists one of three r1 stories. AC-13 (e) holds no completeness rule; adding one is a Captain change to AC-13.
+- F3 Deferred risk (carried, not re-run): the checker cannot see a rule-5 ruling that never reached `Carries`; ADR 0029 Consequences name the later swap, not this omission.
+- F4 Polish: `Carries` accepts only a `kind: release` question in code (a `kind: gate` question carried as `ADR owed` is refused, probed), but no test pins that half of AC-13 (e): replacing `q.source?.kind === 'release'` with `q.source` in the Carries lookup survives all 28 tests of `journey-review.test.mjs`. The test for a non-release id uses an id that matches no question.
+- F5 Polish (carried): the yes path of the `dev` sentence was read, not re-run this cycle; neither `release-review.md` nor `interrogation.md` tells a worker that a moved story's earlier ruling keeps its original `ref`; worker-read growth (`release-review.md` 688 to 1017, `interrogation.md` 812 to 1223) has no AC bounding it.
+- Cycle 2 F5, F6 and F7 are resolved by f0d3f442 (see the second item).
+
+### Unverified obligations
+
+- AC-5 Codex rehearsal not re-run (about 163k Codex tokens); AC-6 yes path and the baseline arm not re-run; sanitize-check applied as grep over the added lines, not by invoking the skill.
+- Codex has not reviewed #704 f0d3f442 or #705 954ad170; `adr-path-check` and the multi-profile gate are CI results read from `gh pr view`, not re-run.
+- Not shown anywhere: that the Captain's answers per sitting fall, the cap of 10, a first real preparation on a released install.
+
+### Acceptance script
+
+Needs git, node 22.13 or newer, npm, python3 and network access to GitHub; touches only a temp directory.
+
+```
+D=$(mktemp -d)
+echo "== Step 1: fetch the kc-journey-map PR head and install its dependencies"
+git clone -q --depth 1 --no-checkout https://github.com/iamcxa/kc-claude-plugins.git "$D/r" && cd "$D/r" \
+  && git fetch -q --depth 1 origin pull/704/head && git checkout -q FETCH_HEAD && git rev-parse HEAD \
+  && cd kc-journey-map && npm ci --ignore-scripts --silent >/dev/null 2>&1; echo "npm ci exit=$?"
+echo "== Step 2: the review-record, schema and reconcile tests"
+node --test lib/journey-review.test.mjs lib/schemas.test.mjs lib/journey-reconcile.test.mjs 2>&1 | grep -E '^ℹ (tests|pass|fail) '
+echo "== Step 3: schema version and record path"
+node lib/schemas.mjs journey-map-question | head -1
+node lib/journey-review.mjs path skills/kc-journey-map/references/journey.example.yaml r1
+echo "== Step 4: the checker on the three repaired cases (a good record, then three bad ones)"
+E=skills/kc-journey-map/references/journey.example.yaml
+mk() { sed "14s|status: unverified}|status: unverified, questions: [{id: hold-rule, ask: \"May a reader hold two copies?\", status: answered, $1, source: {kind: release, ref: \"book-pickup/r1\", words: $2, date: $3}}]}|" $E > "$D/$4.yaml"; }
+mk 'answer: "One only."' '"One copy only."' 2026-10-22 good
+mk 'answer: "One only."' '"One copy only."' nope baddate
+mk 'answer: "One only."' 5 2026-10-22 badwords
+mk 'doc: "https://example.test/adr/0001"' '"One copy only."' 2026-10-22 hasdoc
+head='# Release review: book-pickup/r1
+Reviewed: 2026-10-22; map at abc1234; code at example@abc1234
+Interrogation: 2026-10-22; questions 12; dropped 3; decision rows 2; asked 2; open after 0; codex gpt-6.1-sol high lens
+## Map edit
+none
+## Walk
+none
+## Holes
+none
+## Slice
+3 of 4 limit
+## Tasks
+| Task | journey-story | Required tasks | Carries |'
+printf '%s\n|---|---|---|---|\n| Reserve a copy | reserve-copy | reserve-copy | - |\n' "$head" > "$D/ok.md"
+printf '%s\n| Elsewhere | elsewhere | - | - |\n| Reserve a copy | reserve-copy | reserve-copy | - |\n' "$head" > "$D/nosep.md"
+printf '%s\n|---|---|---|---|\n| Reserve a copy | reserve-copy | reserve-copy | ADR owed: hold-rule |\n' "$head" > "$D/owed.md"
+node lib/journey-review.mjs check "$D/ok.md" "$D/good.yaml"; echo "good record: exit=$?"
+node lib/journey-review.mjs check "$D/ok.md" "$D/baddate.yaml"; echo "source.date nope: exit=$?"
+node lib/journey-review.mjs check "$D/ok.md" "$D/badwords.yaml"; echo "source.words a number: exit=$?"
+node lib/journey-review.mjs check "$D/nosep.md" "$D/good.yaml"; echo "Tasks table without separator row: exit=$?"
+node lib/journey-review.mjs check "$D/owed.md" "$D/hasdoc.yaml"; echo "ADR owed on a question that holds doc: exit=$?"
+echo "== Step 5: the kc-dev-flow-2 PR head, the dev sentence size and the sitting list line"
+cd "$D/r" && git fetch -q --depth 1 origin pull/705/head && git checkout -q FETCH_HEAD && git rev-parse HEAD
+wc -w < kc-dev-flow-2/skills/dev/SKILL.md
+python3 kc-dev-flow-2/scripts/lint-skills.py | grep '5374 of'
+python3 -B -m unittest kc-dev-flow-2/scripts/test_pr_watch.py 2>&1 | tail -3
+```
+
+Observed (2026-10-22, 66 s):
+
+```
+== Step 1: fetch the kc-journey-map PR head and install its dependencies
+f0d3f442d5e62e4876f457f01a48b63a9c15506f
+npm ci exit=0
+== Step 2: the review-record, schema and reconcile tests
+ℹ tests 50
+ℹ pass 50
+ℹ fail 0
+== Step 3: schema version and record path
+journey-map-question 1.1.0
+skills/kc-journey-map/references/reviews/book-pickup/r1.md
+== Step 4: the checker on the three repaired cases (a good record, then three bad ones)
+review record ok: <temp dir>/ok.md
+good record: exit=0
+REVIEW REFUSED: reserve-copy/hold-rule: source.date is empty or not a YYYY-MM-DD date
+source.date nope: exit=1
+REVIEW REFUSED: reserve-copy/hold-rule: source.words is empty or not a string
+source.words a number: exit=1
+REVIEW REFUSED: the Tasks table lacks its separator row after the header
+task Elsewhere: journey-story elsewhere is not a story on release r1
+Tasks table without separator row: exit=1
+REVIEW REFUSED: task Reserve a copy: ADR owed hold-rule already holds doc:, so its ADR exists and is not owed
+ADR owed on a question that holds doc: exit=1
+== Step 5: the kc-dev-flow-2 PR head, the dev sentence size and the sitting list line
+954ad1704adb83622e068579b3a84576a27709d6
+     763
+references/sd/workflow.md: 5374 of 5374 words; no unlisted passage repeats it
+Ran 101 tests in 39.049s
+
+OK
+```
+
+Does not cover: live model behaviour (the dev ask, the Codex interrogation, a worker's walk), CI, the ADR lint (needs the package scripts), release-please output, or any real release preparation.
+
+### Summary
+
+Both repaired candidates pass: #705 head 954ad170 and #704 head f0d3f442 meet every criterion on the evidence I re-ran, the three Cycle 2 Codex P2 are fixed with a failing-then-passing test each, and AC-13 still holds (20 of 21 mutations killed; the survivor is a test gap, Polish F4). No Material finding; the cross-PR dependency (F1) needs #704 merged and released before #705. Throwaway worktrees and refs were removed; nothing was pushed, commented or marked ready.
