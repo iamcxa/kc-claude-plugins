@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "199d8141c34a5bff9d9ac3db7d6a09525a0f0384",
+  "model": "not run",
+  "necessity": "five files (codex_review.py, test_codex_review.py, pr_watch.py, test_pr_watch.py, one EXTENSION.md sentence), each named in the design and amendments.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F2 Deferred risk: nothing guards'",
+    "point: deferred: '- F4 Deferred risk: the first'",
+    "point: deferred: '- F2 (Deferred risk, narrowed): the'",
+    "point: deferred: '- F4 (Deferred risk): the first'",
+    "point: deferred: '- F3 Deferred risk: older findings'",
+    "point: deferred: '- F4 Deferred risk: a clean'",
+    "point: deferred: '- F5 Deferred risk (carried): nothing'",
+    "point: deferred: '- F6 Deferred risk (carried): the'",
+    "point: deferred: 'FO declines: Polish F1, the known-set'",
+    "point: not-run: 'External rounds: Codex 2 (round 1'",
+    "point: path: 'kc-dev-flow-2/extensions/codex/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/extensions/codex/codex_review.py'",
+    "point: more: 4 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#693",
+  "sufficiency": "the reader reads the v1 receipt-led clean comment as clean (kc-paseo-plugins#8 exit 4 to 0), never reads an unread Codex comment as clean (exit 5, and a newer unread after an older clean is not clean)",
+  "time": "2026-10-22T01:20:40Z",
+  "verdict": "ask"
+}
