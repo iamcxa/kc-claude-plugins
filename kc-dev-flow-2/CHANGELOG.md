@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.28.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.27.0...kc-dev-flow-2-v0.28.0) (2026-10-22)
+
+
+### Features
+
+* **kc-dev-flow-2:** name backlog tasks whose seed check fails in the idle tasks line ([#694](https://github.com/iamcxa/kc-claude-plugins/issues/694)) ([cebd0ab](https://github.com/iamcxa/kc-claude-plugins/commit/cebd0ab93c7f9b681d55434cfc99c19b2d9dd8ba))
+* **kc-dev-flow-2:** read the Codex clean receipt that opens with a receipt marker ([#693](https://github.com/iamcxa/kc-claude-plugins/issues/693)) ([4befab1](https://github.com/iamcxa/kc-claude-plugins/commit/4befab1f1d98cde0dfa107dbb12404c69f445af0))
+
 ## [0.27.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.26.0...kc-dev-flow-2-v0.27.0) (2026-10-21)
 
 

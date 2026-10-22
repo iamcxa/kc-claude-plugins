@@ -175,7 +175,7 @@
       "name": "kc-dev-flow-2",
       "source": "./kc-dev-flow-2",
       "description": "Development workflow run by Spacedock, with profile principles, stage skills, advisory roles, an observer and optional extensions.",
-      "version": "0.27.0",
+      "version": "0.28.0",
       "keywords": [
         "development-workflow",
         "profiles",
@@ -187,7 +187,7 @@
       "name": "kc-adr",
       "source": "./kc-adr",
       "description": "Experimental. Teaches agents to read an ADR at an exact commit and check its digest, tell whether it is still in force, and put new information in the one place it belongs.",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "keywords": [
         "experimental",
         "adr",
