@@ -131,6 +131,16 @@ try{
  assert.equal((await memberContext.request.get(f.origin+path('/auth/room-members','one',m))).status(),403)
  await memberContext.close()
  pass('actual synthetic ordinary-member session (even operator role) has no owner shortcut and guarded read is denied')
+ let releaseLogout,seenLogout
+ const logoutSeen=new Promise(resolve=>{seenLogout=resolve})
+ await page.route('**/auth/logout?**',async route=>{const response=await route.fetch();seenLogout();await new Promise(resolve=>{releaseLogout=resolve});await route.fulfill({response}).catch(()=>{})})
+ const beforeLate=writes
+ await logout();await click(page.getByRole('button',{name:'確認登出'}));await logoutSeen
+ await page.getByRole('heading',{name:'正在結束登入'}).waitFor();assert.equal(await page.evaluate(()=>!!window.editor),false)
+ await page.reload();await page.getByRole('heading',{name:/正在結束登入|登出結果未確認/}).waitFor();releaseLogout();await page.waitForTimeout(100)
+ assert.equal(writes,beforeLate+1);assert.equal(await page.evaluate(()=>!!window.editor),false)
+ await page.unroute('**/auth/logout?**');await login()
+ pass('delayed actual committed logout reply and reload keep private canvas closed, never replay the write, and require explicit real reentry')
  assert.deepEqual(errors,[])
  report.candidateTree='working candidate; exact committed tree recorded by implementation report'
  await writeFile(join(f.scratch,'report.json'),JSON.stringify(report,null,2));console.log('evidence='+join(f.scratch,'report.json'))
