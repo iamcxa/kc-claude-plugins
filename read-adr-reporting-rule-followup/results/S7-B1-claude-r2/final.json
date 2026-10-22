@@ -1,0 +1,14 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as it is. Accepted ADR 0011 in mira-app (CSV only, no XLSX until superseded) is still in force, and Mira's \"make him happy\" message doesn't supersede it. I wrote Haruto's request down but implemented nothing.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Status changed to blocked. Notes say Mira's message is not a ruling and does not supersede ADR 0011 (CSV only). They also say the export was left unchanged, and that XLSX needs an explicit new ADR from Mira."
+  },
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Added the deferred story S10, an XLSX download requested by Haruto. It is blocked by ADR 0011 and points to tasks/TASK-016.md."
+  }
+ ]
+}

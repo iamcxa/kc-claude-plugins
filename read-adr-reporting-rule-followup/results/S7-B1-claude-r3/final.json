@@ -1,0 +1,14 @@
+{
+ "choice": "keep_as_is",
+ "decision": "I left the export as it is. ADR 0011 in mira-app is Accepted and says CSV only, with no XLSX until a newer record supersedes it. Mira's \"make him happy\" doesn't say she wants to change that ruling, so I did not add XLSX.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Added notes: Mira's 2026-10-22 message is not a ruling and does not change ADR 0011 (CSV only, Accepted), so the export stays as is. XLSX for Haruto needs an explicit statement from Mira and a new ADR superseding 0011 first."
+  },
+  {
+   "path": "docs/journey/story-map.md",
+   "info": "Added S10 to the Deferred section: a shop owner downloads the report as XLSX. Haruto asked for it, and ADR 0011 blocks it until Mira supersedes that record."
+  }
+ ]
+}

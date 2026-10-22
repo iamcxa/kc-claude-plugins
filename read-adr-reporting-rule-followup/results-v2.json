@@ -203,6 +203,88 @@
   "source": "results"
  },
  {
+  "run": "S7-B1-claude-r2",
+  "scenario": "S7",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 2,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 9,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /private/tmp/adrpoc-runs/S7-B1-claude-r2/mira-app; cat docs/adr/0011*; ls docs/adr; cat docs/journey/story-map.md; grep -n -i -B2 -A5 \\\"xlsx\\\\|excel\\\\|export\\\" tasks/TASK-020.md; cat d"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "story_map"
+   ],
+   "written": [
+    "story_map",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/docs/journey/story-map.md",
+    "mira-app/tasks/TASK-016.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "keep_as_is",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 7,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
+  "run": "S7-B1-claude-r3",
+  "scenario": "S7",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 3,
+  "answered": true,
+  "model": "claude-sonnet-5-5",
+  "consulted": true,
+  "consulted_evidence": {
+   "event": 11,
+   "adr": "mira-app/0011",
+   "rule": "output marker",
+   "call": "{\"command\": \"cd /tmp/adrpoc-runs/S7-B1-claude-r3/mira-app && cat docs/adr/0011-reports-are-exported-as-csv-only.md docs/journey/story-map.md; ls docs/adr; git log --oneline -3 -- docs; git rev-parse H"
+  },
+  "placement": {
+   "ok": false,
+   "missing": [],
+   "forbidden": [
+    "story_map"
+   ],
+   "written": [
+    "story_map",
+    "task_file"
+   ],
+   "files": [
+    "mira-app/docs/journey/story-map.md",
+    "mira-app/tasks/TASK-016.md"
+   ]
+  },
+  "loaded": true,
+  "choice": "keep_as_is",
+  "choice_ok": true,
+  "diag": {
+   "tool_calls": 8,
+   "skill_used": true,
+   "used_git_show": false,
+   "used_shasum": false
+  },
+  "source": "results"
+ },
+ {
   "run": "S7-B1-codex-r1",
   "scenario": "S7",
   "arm": "B1",

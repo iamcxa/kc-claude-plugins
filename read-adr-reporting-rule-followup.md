@@ -275,6 +275,7 @@ I read all four answers: each reports the cited record (0002 at D1 "Superseded b
 24 cells, stored Y 23, new Y 23, one Y-to-N flip. Not met.
 - REGRESSION S7 Claude placement (stored Y, new N): the worker wrote a deferred story S10 to `mira-app/docs/journey/story-map.md` besides the task file; S7 allows only the task file. Trace: the Bash call `python3 - <<'E' p='docs/journey/story-map.md' ...` appending "- S10 A shop owner downloads the report as an XLSX file ...". Choice `keep_as_is`, loaded Y.
 - Same cell group moved the other way: S7 Claude consulted N to Y (it read ADR 0011 this time).
+- Amendment 1 follow-up (2 more S7 Claude runs): both N on placement too, so all three S7 Claude runs wrote the story map; per the pre-agreed rule this is a real regression. See `## Stage Report: implementation (cycle 2)`.
 - All other 22 cells Y to Y, including S9 under v2. Not repeated to turn it Y (task rule). Likely cause is sampling: S7 carries no handoff block and no citation, the changed skill lines are the Accepted and chain bullets plus the citation paragraph, and routing line 3 ("A deferred feature a user will see? The story map") is unchanged; one run per cell cannot separate that from an effect of the new text. Compare falsifier: unchanged copy, 0 regressions and 23 stored Y; one Y cell set to N prints that cell as `REGRESSION` and no other.
 
 ### Limits and deviations
@@ -287,3 +288,18 @@ I read all four answers: each reports the cited record (0002 at D1 "Superseded b
 ### Summary
 
 The skill change is committed (`5a2e901f`) and AC-1 passes 4 of 4 with the falsifiers showing the grader rejects the old behaviour and each single-part failure. AC-2 is not met: S7 Claude wrote a deferred story to the story map, 23 of 24 cells Y to Y otherwise; this is reported, not re-run. FO decides whether one regression in one run, probably sampling, blocks the gate. Needs decision for FO: accept AC-2 as a known limit, or authorise a confirming S7 Claude re-run (beyond the declared 8, hard stop 10 allows only no-answer retries).
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Run exactly 2 more S7 B1 Claude runs with the same skill bytes (worktree commit 5a2e901f), the same harness and model claude --model sonnet.
+  `S7-B1-claude-r2` (21.0 s) and `S7-B1-claude-r3` (24.3 s), both answered, 0 retries; each `meta.json` records commit `5a2e901f`, kc-adr tree `a1991d0e`; `git status --porcelain -- kc-adr` clean before the runs. Count is now 10 counted runs; none further.
+- DONE: Record the two runs in the ledger and in CHANGES.md.
+  `read-adr-reporting-rule-followup/ledger.jsonl` has 10 lines; `CHANGES.md` item 6 states the rule before the runs, item 7 the outcome.
+- FAILED: S7 placement must not regress against the stored run (AC-2): the decision rule calls it a real regression.
+  S7 Claude placement: r1 N, r2 N, r3 N (stored run Y). Every run wrote deferred story S10 to `mira-app/docs/journey/story-map.md` (forbidden home under S7) besides `tasks/TASK-016.md`. Other measures on all three runs: consulted Y, choice `keep_as_is` Y, skill loaded Y. Stopped, skill not edited, per the rule.
+- DONE: Update the AC-2 evidence line and the stage report.
+  AC-2 evidence: 24 cells, stored Y 23, new Y 22 at rep 1, one regression (S7 Claude placement), now 0 of 3 Y on re-runs. Transcripts: `results/S7-B1-claude-r{1,2,3}/trace.jsonl` (the story-map write is the Bash `python3 - <<'E'` call that opens `docs/journey/story-map.md`), final answers in `final.json`, graded fields via `python3 harness/score.py --rule v2 --run S7-B1-claude-r2`.
+
+### Summary
+
+All three S7 Claude runs on the candidate skill put the deferred XLSX story in the story map; the stored run of the shipped skill wrote only the task file. The rule the Captain agreed makes this a real regression, so I stopped, left the skill unchanged and made no more runs. Limit: the stored side is one run, and there is no control arm of the shipped skill under the same prompt now, so I cannot say which skill line causes it; routing line 3 (deferred feature goes to the story map) is unchanged text, so the new paragraph or the reworded bullets are suspects, not proven. Next step for FO and the Captain: a skill repair or accepting the limit, which needs a new ruling (and new runs if repaired).
