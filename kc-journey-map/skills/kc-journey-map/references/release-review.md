@@ -94,7 +94,7 @@ Interrogation: <YYYY-MM-DD>; questions <n>; dropped <n>; decision rows <n>; aske
 | Task | journey-story | Required tasks | Carries |
 ```
 
-`Carries` holds `ADR owed: <question id>` entries separated by commas, or `-`. The record holds no
+On the `Interrogation:` line, `questions` is what the stranger returned, `dropped` those removed as unconfirmed or duplicate, and `asked` the decision rows put to the Captain over every sitting. `Carries` holds `ADR owed: <question id>` entries separated by commas, or `-`. The record holds no
 ruling: a ruling is the map question's `answer:` and `source:` (`interrogation.md`). Run
 `node lib/journey-review.mjs check <record> <journey.yaml>` before proposing; exit 1 names what to
 return to. It checks shape, order and ruling fields, not that the walk was done well or that the
