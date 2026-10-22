@@ -343,3 +343,75 @@ The hold is built as designed, green locally, and published as Draft PR #703 (pu
 - Draft PR #703 is open at head 1e47b8c6; its body should carry the HEAD-versus-disk residual and the replay table (I have not read the body).
 - After release, tasks that owe a call hold at their merge ask (codex-reader-reads-receipt-marker, new-work-starts-from-a-story-map and the others in Batch overlap); intended.
 - Mutation copies and scripts are in /tmp/mah_mut, /tmp/mah_replay, /tmp/mah_proto; nothing outside the three files in the repository.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #703 head 1e47b8c6 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at head 1e47b8c6108371ec379ad4fae18a80df2cdd0b81 (detached throwaway worktree, removed; base e66c9b32, which origin/main cebd0ab9 has not touched in the three changed files). The head is a Draft PR (read `gh pr view 703`), so no ask can pass today.
+  AC-1 met: `test_delivery_gate.py` 86 tests OK (147.8 s), six `OwedRoleCallTests` unmocked. Falsifiers I ran on copies: call replaced by `code, said = 0, []` fails 5 of 6 (the sixth patches the function itself); `elif code:` hold branch off fails the not-a-git-tree and cannot-start cases (2); `nexts.extend(said)` dropped fails the amendment and disk-only-call cases (2); problem line moved to `holds` fails the same 2.
+  AC-2 met: I replayed the 10 archived asks with the candidate's `role_triggers.py` at two commits per task (briefing-1 added, and ask-1 added): fo-batch-sittings exit 1 (engineering-reviewer, amendments 1, 2, 3) both ways, fo-write-checks exit 1 (4 repair passes, predates the counts), the other eight exit 0. Falsifier: with the call removed fo-batch-sittings would pass (mutant 1 above).
+  AC-3 met: pass path stdout and `ask-1.json` keys identical to base on three fixtures with the REAL `role_triggers.py` and a committed task (the implementer's script mocked it). Falsifier: a mutant printing one line on a pass turns all three to `stdout same=False`. Hold at fo-batch-sittings = 11 + 52 = 63 words (counted). `git diff --name-only` lists the delivery_gate script, its test file and the ADR 0026 file only. `lint-skills.py` exit 0; a seven-word append to `workflow.md` makes it print the budget FAIL.
+  AC-4 met: `delivery_gate.py --help` names `role_triggers.py` and `committed`; `adr_lint.py` exit 0; with the call removed the old 80 cases still pass (86 run, exactly the 5 new fail; 102.3 s), which is the proof they do not cover the hold. CI on this head (run 39709868868, `headSha` 1e47b8c6): unit tests, route gate, version parity, GitGuardian all pass.
+  AC-5 half met: on a scratch clone of the state at f14108b3, this task's ask exits 1 only on `the PR is a draft` and a not-mergeable line, no special-role line (the committed task owes nothing); with `### Amendment 1` (Supersedes: AC-1) written but uncommitted the check does not see it; once committed it prints `merge-ask-holds-missing-clauses owes a special-role call (role_triggers.py reads the task as committed)` and the engineering-reviewer `next:` line, exit 1; base prints neither. NOT met as written: the exit 0 for the committed task cannot be reached while the PR is a Draft; it stays for FO's ask on a ready PR.
+  Limits judged: HEAD-versus-disk gap holds as stated (F2); folder tasks (roborev High) are held earlier by the existing missing-dispatch-record line in both base and candidate, so no regression (F1); the six live tasks that will hold after release are intended (F3).
+- DONE: Name in the report whether the Captain-confirmed narrowing holds: hold C only (owed special-role call), no review-round count (D2)
+  Holds. The code diff has one hold (`owed_role_calls` and one block in `check()`), `role_triggers.py` is called without `--review-rounds` (the only `rounds` text added is the docstring "(no --review-rounds)"), no round-count or carried-clause check exists, ADR 0023 is untouched, and `references/`, `skills/`, `extensions/`, the mod, `pr_watch.py` and `role_triggers.py` are untouched.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run with `bash --noprofile --norc` from /tmp: every step printed its expected line, exit 0. `adr_lint.py docs/adr --since e66c9b32` on the candidate: "28 ADR file(s) checked, 0 legacy", exit 0. `comment_ratio.py e66c9b32 1e47b8c6`: 78 code lines, 0 comment lines, exit 0. `dispatch_records.py` 5 records complete; `doc_impact.py` 0 documents; `design_surfaces.py check` presentable. No `## Number guards` section (Surfaces: none, no new ADR number). Verdict PASSED at 1e47b8c6; no Material finding.
+
+### Findings
+
+- F1 Deferred risk: a folder task (`<slug>/index.md`) would get slug `index` in `owed_role_calls` (roborev:1006, High). Today `check` already holds a folder task on the missing dispatch record in base and candidate (run 2026-10-22: both print "no latest validation dispatch record under .../index/dispatch"), and folder support is a stated non-goal. Becomes Material if `delivery_gate.py` gains folder-task support without fixing the stem.
+- F2 Deferred risk: `role_triggers.py` reads committed bytes and `check()` the disk, so an uncommitted amendment is let through and an uncommitted call still holds (pinned by two unmocked cases; seen in my scratch run). Becomes Material if an FO ask is found to have passed with an uncommitted amendment that later needed a call; 0 of 23 saved asks show it.
+- F3 Deferred risk: after release, tasks that owe a call hold at their merge ask (codex-reader-reads-receipt-marker, new-work-starts-from-a-story-map, adr-required-statement, kc-decision-log-cli, kc-decision-log-handoff-trial, pr-review-lite-value-pilot) until the call or a dated waiver is committed. Intended by the Captain's narrowing; becomes Material if a hold lacks a recorded route (none seen: the `next:` line names it).
+- F4 Polish: the ADR 0026 Amended paragraph ends the exit-2 clause with 「可以」, which settled the narrowing, not the exit-2 behaviour; the design the Captain approved at attempt 3 holds it. No user-visible loss.
+- F5 Polish: the amendment to ADR 0026 is the one durable choice the ideation report says the worker made for the Captain ("dropping it changes no behaviour"); the approved attempt-3 briefing carries it, so it stays under that approval and is listed for the without-it check.
+
+### Unverified obligations
+
+- AC-5 first half (exit 0 on this task's own ask) needs a ready PR; run it at FO's merge ask with the candidate checkout as `<package>`.
+- I did not rerun the whole package suite locally (CI did, green at this head), the roborev review, or any mutation of `role_triggers.py` itself (untouched).
+
+### Minimal acceptance script
+
+Needs this repository's checkout at the path below and `gh`-free network for the fetch; runs in about 15 seconds.
+
+```bash
+R=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree
+STATE=$R/docs/dev2/.spacedock-state
+C=/tmp/pr703-accept
+S=/tmp/pr703-state
+rm -rf $C $S; git -C $R worktree prune
+# 1. Check out PR 703's head, detached, in a throwaway worktree.
+git -C $R fetch -q origin pull/703/head
+git -C $R worktree add -q --detach $C 1e47b8c6108371ec379ad4fae18a80df2cdd0b81
+git -C $C rev-parse HEAD
+# expect: 1e47b8c6108371ec379ad4fae18a80df2cdd0b81
+# 2. Run the six cases that call the real role_triggers.py.
+(cd $C && python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_delivery_gate.py -k OwedRoleCallTests 2>&1 | tail -3)
+# expect: "Ran 6 tests" then "OK"
+# 3. The skipped call from batch 4, read as committed when fo-batch-sittings' validation briefing was added.
+python3 -B $C/kc-dev-flow-2/scripts/role_triggers.py $STATE fo-batch-sittings --rev 073bf8ba | cut -c1-110; echo "exit ${PIPESTATUS[0]}"
+# expect: "next: fo-batch-sittings has replacing amendments 1, 2, 3; dispatch kc-dev-flow-2:engineering-reviewer ..." and "exit 1"
+# 4. The merge-ask check on a scratch copy of this task's state, before and after a committed amendment with no call.
+git clone -q $STATE $S && git -C $S checkout -q f14108b3
+printf 'Sufficiency: every criterion met.\nNecessity: the check is the one place the call is refused.\nMerge ask.\n' > /tmp/pr703-gate.txt
+CHECK="python3 -B $C/kc-dev-flow-2/scripts/delivery_gate.py check $S/merge-ask-holds-missing-clauses.md --pr iamcxa/kc-claude-plugins#703 --text-file /tmp/pr703-gate.txt --workflow-dir $R/docs/dev2"
+$CHECK | grep -c "special-role"
+# expect: 0 (the PR is a Draft so other hold lines print, none about a special-role call)
+printf '\n## Captain amendments\n\n### Amendment 1 - 2026-10-22\nSupersedes: AC-1\n' >> $S/merge-ask-holds-missing-clauses.md
+$CHECK | grep -c "special-role"
+# expect: 0 (written but not state-committed: the known limit, the script reads committed bytes)
+git -C $S -c user.name=t -c user.email=t@t commit -q -am amendment
+$CHECK | grep "special-role" | cut -c1-120
+# expect: "merge-ask-holds-missing-clauses owes a special-role call (role_triggers.py reads the task as committed)"
+# 5. Clean up.
+git -C $R worktree remove --force $C; rm -rf $S /tmp/pr703-gate.txt
+```
+
+Observed (fresh `bash --noprofile --norc`, 2026-10-22): `1e47b8c6108371ec379ad4fae18a80df2cdd0b81`; `Ran 6 tests in 3.680s` / `OK`; the fo-batch-sittings `next:` line and `exit 1`; `0`; `0`; the special-role problem line; script exit 0.
+Does not cover: an ask passing on a ready PR (exit 0 path), CI behaviour, an uncommitted amendment being caught, folder tasks, review-round calls.
+
+### Summary
+
+PASSED at 1e47b8c6: the narrowed hold (C only, no review-round count) is built as approved, the observed fo-batch-sittings omission holds and no complete archived ask does, the pass path is byte-identical to base with the real script, and every falsifier I ran failed the right tests. One acceptance half (exit 0 on a ready PR) cannot run while the PR is a Draft; the rest are Deferred risks or Polish.
