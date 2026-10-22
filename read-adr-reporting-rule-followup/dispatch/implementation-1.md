@@ -5,7 +5,7 @@ Model: sonnet
 
 Apply the approved SKILL.md change to kc-adr/skills/read-adr/SKILL.md exactly as shown in the task's Design (frontmatter unchanged). Apply the harness schema change (ruling_check gains status; nullable in_force_record; S9 alt removed) in this task's copied harness, with expectations already committed before the first run.
 Run the declared 8 runs (B1 x S6, S7, S9, S11 x Claude and Codex; hard stop 10, retries for no answer only), installing the candidate kc-adr as a user would on both hosts, and report AC-1 and AC-2 per cell with the falsifiers. Report honestly any criterion not met.
-Closing checks: version-parity-check.sh, skill-frontmatter-lint.sh, comment_ratio.py on the diff, design_surfaces.py check, and the roborev step in the scope notes. Commit in the worktree; FO handles push, PR and release.
+Closing checks: version-parity-check.sh, skill-frontmatter-lint.sh, /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0/scripts/comment_ratio.py on the diff, /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0/scripts/design_surfaces.py check, and the roborev step in the scope notes. Commit in the worktree; FO handles push, PR and release.
 
 ## Scope notes
 
