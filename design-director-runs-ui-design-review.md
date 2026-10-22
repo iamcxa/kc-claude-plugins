@@ -49,6 +49,7 @@ Design: the role runs the existing brief on sonnet; the author's declines go to 
 Captain rulings on D-1 to D-6 (ideation sitting, 2026-10-22, chat, each given to FO's question one at a time; to be bound at the ideation gate):
 - D-1 「按你建議」, answering 「「整個畫面實際操作審一次」要不要變成正式的一關？」 with FO's recommendation: it belongs to the release-acceptance task as a second pass on the same operated walk, run by the design director, with a class for works but unusable; this task does not build it.
 - D-2 「可以」, answering 「改成「檢查程式印出預覽圖的路徑，隨閘門資料一起給你」，可以嗎？」 (FO had corrected its earlier claim: today design_surfaces.py checks that the Preview file exists but prints only the design review report path and counts): design_surfaces.py check also prints each `Preview:` path, so the paths reach the briefing through the same workflow.md sentence that carries the upheld declines; no further workflow.md words. Override: recommended no FO rule (design D-2); Captain chose the checker printing preview paths; area: screenshots at ui gates.
+- D-3 「按建議，這個再等搜集幾輪經驗」, answering 「預覽圖要不要畫出改動處周圍的整頁，桌機和手機寬度都畫？」 with FO's recommendation: not in this task; revisit after more rounds of experience.
 
 Alignment: needed at ideation; the declared model and whether the helper joins are his, after the measurement and the POC.
 Result: aligned 2026-10-22 by Amendment 1 (model stays sonnet; the astra helper is dropped; dev2-poc design-helper-astra-poc closed without running) and the backlog gate resolution (duty wording, two passes, host-component declines checked, replay before shipping).
