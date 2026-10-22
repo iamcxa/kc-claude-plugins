@@ -346,3 +346,101 @@ Four runs of the shipped skill wrote only the task file on S7 and three of three
 ### Summary
 
 One sentence in routing question 3 fixed the S7 placement regression (0 of 3 before, 3 of 3 after) without disturbing the main goal (S9 and S11 4 of 4 again). Limits: one run per cell, 3 runs for S7; the cause was found by the control runs, and the sentence targets the observed behaviour (workers recording the ADR-blocked XLSX request as a deferred story) rather than a proven line; S6 and S7 Codex were not re-run on the final bytes. The skill branch head is `45dcf093`; FO handles push, PR and release.
+
+## Stage Report: validation
+
+Verdict: PASSED on candidate `45dcf0931b150561bd944b9ec52b8fafecef3136` (read only; I wrote nothing to it). No agent scenario was re-run.
+
+- DONE: Independent verdict on candidate 45dcf0931b150561bd944b9ec52b8fafecef3136 against AC-1 and AC-2, the approved design, and Captain amendment 1, Captain amendment 2 and Captain amendment 3. Regrade the stored runs offline (score.py, compare.py, falsifiers.py) and confirm the reported counts: AC-1 4/4 on 45dcf093, S7 Claude 3/3 after the fix, control 0/3 story-map writes on the shipped skill, 20 counted runs. Re-run no agent scenario.
+  Regraded in a scratch copy (no write to the state checkout): `falsifiers.py` 32 of 32 ok and byte-identical to the stored `falsifiers-output.txt`; `score.py --rule v3` AC-1 4 of 4 Y on `results/` (5a2e901f) and 4 of 4 Y on `results-fix/` (45dcf093; each `meta.json` plugin.commit `45dcf093`, kc-adr tree `1079b77b` = `git rev-parse 45dcf093:kc-adr`); S7 Claude placement per run: r1-r3 (5a2e901f) N, control r4-r6 (8bf7b9e4, tree `6628f335`) Y x3 (only `tasks/TASK-016.md`), fixed r7-r9 Y x3; `compare.py` on the stored rep 1 gives 24 cells, stored Y 23, new Y 23, 1 regression (S7 Claude placement), exit 1; ledger 20 lines = 10 + 3 + 7. I also read the four fix-run AC-1 answers: each holds the cited record (0002 at D1 "Superseded by 0014", or 0014 at D0 "Accepted") with its digest, 0023 at D1 Accepted with its own digest, action stop, choice none, only `tasks/TASK-021.md` or `TASK-023.md` changed.
+- DONE: Review the code change itself: the full SKILL.md diff against base cebd0ab93c7f9b681d55434cfc99c19b2d9dd8ba matches the approved design plus amendment 3's one sentence, and nothing else changed. Also review the dated CHANGES.md items and the decision rules recorded before each extra run set.
+  `git diff cebd0ab9 45dcf093 --stat` is one file (`kc-adr/skills/read-adr/SKILL.md`, +5/-3, 674 to 772 words); the Accepted bullet, chain bullet and citation paragraph are word for word the design's diff, and the one added sentence in routing question 3 matches Amendment 3 (「ADR 已經拒絕的需求不算延後的功能，只記在任務檔」); frontmatter untouched, `version-parity-check.sh` and `skill-frontmatter-lint.sh` exit 0. Decision rules: each Amendment (1, 2, 3) states its rule in the Captain's words and was state-committed before its run set (12:37:58, 12:49:44, 12:55:54 +08 vs first run 12:38:39, 12:50:42, 12:56:53 +08), and CHANGES.md items 6, 8, 11 repeat them faithfully; but those CHANGES items were committed together with the outcomes (after the runs started), so the pre-run record is the amendment, not CHANGES.md. Item 8's "exactly 1 of 3: not decisive" is not in Amendment 2; it was never exercised (result was 0 of 3).
+- DONE: A minimal acceptance script FO can run in a fresh shell, and `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0/scripts/adr_lint.py docs/adr --since cebd0ab93c7f9b681d55434cfc99c19b2d9dd8ba` run with its exit code. Write REJECTED with the remedy if any criterion is unmet.
+  Script below, also saved as `read-adr-reporting-rule-followup/acceptance.sh`; I ran it with `env -i ... bash --noprofile --norc`: all 8 steps PASS, "ALL PASS", exit 0. `adr_lint.py docs/adr --since cebd0ab9` run in the candidate worktree: "28 ADR file(s) checked, 0 legacy", exit 0. No ADR was added or changed (the task reserves no number).
+
+### Limits and unverified obligations (judged, not hidden)
+
+- S6 Codex and S7 Codex were not re-run on 45dcf093; their Y cells come from 5a2e901f, which differs only by the one routing-question-3 sentence. Amendment 3 set the fix proof as S7 Claude 3/3 plus S9/S11 4/4, which is met, so I do not reject on this. Residual risk: the sentence could change Codex S6/S7 placement; unmeasured.
+- `compare.py` reads rep 1 only. The AC-2 "final bytes" grid in script step 6 is my derived mix (S6 and S7 Codex from 5a2e901f; S7 Claude, S9 from 45dcf093 with the rep renamed to 1): 24 cells, stored Y 23, new Y 24, 0 regressions. It is a regrade aid, not a fresh 24-cell run; the 3 failing runs of 5a2e901f stay in the record.
+- One run per cell; S7 Claude after the fix is 3 of 3 against 4 of 4 for the shipped skill (n is small). The sentence targets the observed behaviour; which earlier line caused the story-map write was never isolated (control proved the change did, not which line).
+- AC-1's report half is slot-assisted (no control arm under the new slots); the stop half is not (nothing in the prompt mentions stopping). Claude installs through `--plugin-dir`, not a real-HOME marketplace install (CHANGES item 5).
+- The Design said one `fix(kc-adr)` commit; there are two (`5a2e901f`, `45dcf093`). Squash at merge makes it one. No push, no PR, no release yet; the release-please version is read from the bot PR.
+
+### Acceptance script (`read-adr-reporting-rule-followup/acceptance.sh`)
+
+```bash
+#!/usr/bin/env bash
+# Offline acceptance for read-adr-reporting-rule-followup, candidate 45dcf093. Runs no agent. Writes only under a mktemp dir.
+set -eu
+WT=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree
+CAND=$WT/.worktrees/spacedock-ensign-read-adr-reporting-rule-followup
+STATE=$WT/docs/dev2/.spacedock-state
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0
+BASE=cebd0ab93c7f9b681d55434cfc99c19b2d9dd8ba
+HEAD_SHA=45dcf0931b150561bd944b9ec52b8fafecef3136
+ok() { echo "PASS $*"; }; bad() { echo "FAIL $*"; exit 1; }
+
+# 1. candidate is the pinned commit; only SKILL.md changed
+[ "$(git -C "$CAND" rev-parse HEAD)" = "$HEAD_SHA" ] || bad "candidate HEAD is not $HEAD_SHA"
+[ "$(git -C "$CAND" diff --name-only $BASE $HEAD_SHA)" = "kc-adr/skills/read-adr/SKILL.md" ] || bad "diff touches more than SKILL.md"
+ok "1 pinned commit, one file changed"
+
+# 2. scratch copy so score.py cannot write into the state checkout
+T=$(mktemp -d /tmp/acc-readadr.XXXXXX)
+mkdir -p "$T/_archive/kc-decision-log-cli"
+cp -R "$STATE/_archive/kc-decision-log-cli/results" "$T/_archive/kc-decision-log-cli/results"
+cp -R "$STATE/read-adr-reporting-rule-followup" "$T/task"
+cd "$T/task"
+
+# 3. grader falsifiers: 32 cases, all as expected
+python3 -B harness/falsifiers.py > "$T/fals.txt"
+[ "$(grep -c '^ok' "$T/fals.txt")" = 32 ] && [ "$(grep -vc '^ok' "$T/fals.txt")" = 0 ] || bad "falsifiers not 32/32"
+ok "3 falsifiers 32 of 32"
+
+# 4. AC-1: 4 of 4 cells Y on the original runs (5a2e901f) and on the final bytes (45dcf093)
+python3 -B harness/score.py --rule v3 >/dev/null
+python3 -B harness/score.py --rule v3 --results results-fix >/dev/null
+for f in results-v3.md results-v3-results-fix.md; do
+  [ "$(grep -c '^| S\(9\|11\) \(claude\|codex\) .*| Y | - |$' $f)" = 4 ] || bad "AC-1 not 4/4 in $f"
+done
+for r in results-fix/S9-B1-claude-r7 results-fix/S9-B1-codex-r7 results-fix/S11-B1-claude-r7 results-fix/S11-B1-codex-r7; do
+  grep -q '"commit": "45dcf0931b150561bd944b9ec52b8fafecef3136"' $r/meta.json || bad "$r not run on 45dcf093"
+done
+ok "4 AC-1 4/4 on both byte versions; fix runs carry commit 45dcf093"
+
+# 5. S7 Claude placement: candidate before fix 0/3, shipped control 0/3 wrote story map (3/3 Y), fixed 3/3 Y
+place() { python3 -B harness/score.py --rule v2 --results "$1" --run "$2" | python3 -I -c 'import sys,json;d=json.load(sys.stdin);g=d if isinstance(d,dict) else d[0];print(g["placement"]["ok"])'; }
+for r in r1 r2 r3; do [ "$(place results S7-B1-claude-$r)" = False ] || bad "S7 $r expected N"; done
+for r in r4 r5 r6; do [ "$(place results-control S7-B1-claude-$r)" = True ] || bad "control $r expected Y"; done
+for r in r7 r8 r9; do [ "$(place results-fix S7-B1-claude-$r)" = True ] || bad "fixed S7 $r expected Y"; done
+ok "5 S7 Claude placement: 5a2e901f 0/3, shipped control 3/3, 45dcf093 3/3"
+
+# 6. AC-2: rep-1 compare on the original runs shows exactly the one S7 regression; the final-bytes grid shows none
+set +e; python3 -B harness/compare.py > "$T/c1.txt"; c1=$?; set -e
+[ "$c1" = 1 ] && [ "$(grep -c REGRESSION "$T/c1.txt")" = 1 ] && grep -q 'S7 | claude | placement | Y | N | REGRESSION' "$T/c1.txt" || bad "original compare not the one expected regression"
+mkdir "$T/final"
+for r in S6-B1-claude-r1 S6-B1-codex-r1 S7-B1-codex-r1; do cp -R results/$r "$T/final/"; done
+cp -R results-fix/S7-B1-claude-r7 "$T/final/S7-B1-claude-r1"; cp -R results-fix/S9-B1-claude-r7 "$T/final/S9-B1-claude-r1"; cp -R results-fix/S9-B1-codex-r7 "$T/final/S9-B1-codex-r1"
+python3 -I - "$T/final" <<'PY'
+import json,sys
+for r in ("S7-B1-claude-r1","S9-B1-claude-r1","S9-B1-codex-r1"):
+    p=f"{sys.argv[1]}/{r}/meta.json"; m=json.load(open(p)); m["rep"]=1; m["run"]=r; json.dump(m,open(p,"w"))
+PY
+python3 -B harness/compare.py --new "$T/final" | tail -1 | grep -q 'stored Y 23, new Y 24, regressions 0' || bad "final-bytes grid has a regression"
+ok "6 AC-2: original rep 1 = 1 regression; final-bytes grid = 0 (S6 and S7 Codex cells are from 5a2e901f)"
+
+# 7. run counts: 20 ledger lines
+[ "$(wc -l < ledger.jsonl | tr -d ' ')" = 20 ] || bad "ledger is not 20 runs"
+ok "7 ledger 20 runs"
+
+# 8. adr_lint at the candidate, exit code printed
+cd "$CAND"
+set +e; python3 -I "$PKG/scripts/adr_lint.py" docs/adr --since $BASE; rc=$?; set -e
+echo "adr_lint exit $rc"; [ "$rc" = 0 ] || bad "adr_lint exit $rc"
+ok "8 adr_lint exit 0"
+rm -rf "$T"; echo "ALL PASS"
+```
+
+### Summary
+
+PASSED. AC-1 holds 4 of 4 on both 5a2e901f and the final 45dcf093, the grader's 32 falsifiers pass, S7 Claude is 3 of 3 after the fix (0 of 3 before, shipped control 3 of 3 clean), the diff is the approved design plus the one amendment sentence and nothing else, and `adr_lint` exits 0. Limits are the unmeasured Codex S6/S7 cells on the final bytes, one run per cell, and CHANGES.md rules committed with their outcomes rather than before the runs.
