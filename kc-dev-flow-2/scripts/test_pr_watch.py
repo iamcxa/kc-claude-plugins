@@ -478,6 +478,8 @@ import os, sys
 if sys.argv[1:] != ["status", "--workflow-dir", os.environ["SD_DIR"], "--next", "--json"]:
     sys.stderr.write("stub spacedock: unexpected " + " ".join(sys.argv[1:]))
     sys.exit(2)
+if os.environ.get("SD_LOG"):
+    open(os.environ["SD_LOG"], "a").write("call\\n")
 text = open(os.environ["SD_NEXT"]).read()
 if text == "FAIL":
     sys.stderr.write("stub spacedock: down")
@@ -515,6 +517,7 @@ class TasksTests(unittest.TestCase):
         self.git(self.state, "init", "-q", "-b", "main")
         (self.state / "README.md").write_text("state\n")
         self.watch = self.root / "watch.json"
+        self.log_calls = False
 
     def git(self, where, *args):
         done = subprocess.run(["git", "-C", str(where), *args], capture_output=True, text=True, env={**os.environ, **IDENTITY})
@@ -524,16 +527,16 @@ class TasksTests(unittest.TestCase):
     def readme(self, extensions):
         (self.workflow / "README.md").write_text(f"---\nentity-type: task\nextensions: [{extensions}]\nstate: .spacedock-state\n---\n")
 
-    def task(self, slug, pr="", worktree=True, branch="feat-x", status="validation", folder=False):
+    def task(self, slug, pr="", worktree=True, branch="feat-x", status="validation", folder=False, body=b"body\n"):
         where = self.repo / ".worktrees" / slug
         if worktree and not where.exists():
             where.mkdir(parents=True)
             self.git(where, "init", "-q", "-b", branch)
             self.git(where, "remote", "add", "origin", "https://github.com/o/r.git")
-        lines = ["---", f"title: {slug}", f"status: {status}", f"pr: {pr}"] + ([f"worktree: .worktrees/{slug}"] if worktree else []) + ["---", "body"]
+        lines = ["---", f"title: {slug}", f"status: {status}", f"pr: {pr}"] + ([f"worktree: .worktrees/{slug}"] if worktree else []) + ["---"]
         target = self.state / (f"{slug}/index.md" if folder else f"{slug}.md")
         target.parent.mkdir(exist_ok=True)
-        target.write_text("\n".join(lines) + "\n")
+        target.write_bytes(("\n".join(lines) + "\n").encode() + body)
         self.git(self.state, "add", "-A")
         self.git(self.state, "commit", "-qm", f"task {slug}")
 
@@ -544,7 +547,8 @@ class TasksTests(unittest.TestCase):
         self.git(self.state, "commit", "-qm", "report")
 
     def sd_env(self):
-        return {"SPACEDOCK_BIN": str(self.root / "bin/spacedock"), "SD_NEXT": str(self.next), "SD_DIR": str(self.workflow.resolve())}
+        return {"SPACEDOCK_BIN": str(self.root / "bin/spacedock"), "SD_NEXT": str(self.next), "SD_DIR": str(self.workflow.resolve()),
+                **({"SD_LOG": str(self.root / "sd.log")} if self.log_calls else {})}
 
     def gates(self, *rows):
         self.next.write_text(json.dumps({"ready_gates": [
@@ -1014,6 +1018,121 @@ class TasksTests(unittest.TestCase):
         before = tree()
         self.assertEqual(len(self.sitting_lines(self.tasks({})[1])), 1)
         self.assertEqual(tree(), before)
+
+    def ideation_readme(self):
+        (self.workflow / "README.md").write_text(
+            "---\nentity-type: task\nextensions: [roborev]\nstate: .spacedock-state\nstages:\n  states:\n"
+            "    - name: backlog\n    - name: ideation\n---\n")
+
+    def backlog(self, slug, surfaces="none", visible="none", heading=True):
+        record = f"## FO alignment\n\nSurfaces: {surfaces}\nVisible change: {visible}\n" if heading else "## Scope\n\nnothing\n"
+        self.task(slug, status="backlog", worktree=False, body=record.encode())
+
+    def seed_lines(self, lines):
+        return [line for line in lines if line.startswith("next: the seed check fails")]
+
+    def counting_seed(self):
+        log = self.root / "seed.log"
+        stub = self.root / "seed_stub.py"
+        stub.write_text(f"import sys\nopen({str(log)!r}, 'a').write(sys.argv[-1] + '\\n')\nprint('stub: refused')\nsys.exit(1)\n")
+        patch = mock.patch.object(watch, "SEED", stub)
+        patch.start()
+        self.addCleanup(patch.stop)
+        return lambda: log.read_text().splitlines() if log.exists() else []
+
+    def test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not(self):
+        self.ideation_readme()
+        self.backlog("bad", visible="a change you can see")
+        self.backlog("fine")
+        self.gates(("bad", "backlog", "needs-preparation"), ("fine", "backlog", "needs-preparation"))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(lines), 1, lines)
+        self.assertEqual(lines[0], "next: the seed check fails for these backlog tasks (bad); before preparing the gate of one, "
+                                   f"fix its ## FO alignment and run `python3 {watch.SEED} check --seed <task>`.")
+        self.assertEqual(len(lines[0].split()), 28)
+
+    def test_the_seed_line_names_every_slug_once_one_word_each_and_writes_no_file(self):
+        self.ideation_readme()
+        slugs = [f"t{i}" for i in range(6)]
+        for slug in slugs:
+            self.backlog(slug, visible="shown")
+        self.gates(*[(slug, "backlog", "needs-preparation") for slug in slugs])
+        self.tasks({})
+
+        def tree():
+            return {str(p): p.read_bytes() for p in self.root.rglob("*") if p.is_file() and ".git" not in p.parts}
+        before = tree()
+        code, lines = self.tasks({})
+        self.assertEqual((code, len(lines)), (0, 1), lines)
+        self.assertTrue(lines[0].startswith("next: the seed check fails for these backlog tasks (t0, t1, t2, t3, t4, t5); "), lines)
+        self.assertEqual(len(lines[0].split()), 33)
+        self.assertEqual(tree(), before)
+
+    def test_a_record_with_no_profile_is_named_before_its_gate_is_prepared(self):
+        self.ideation_readme()
+        self.backlog("early", visible="shown")
+        self.gates(("early", "backlog", "needs-preparation"))
+        self.assertIn("(early)", self.tasks({})[1][0])
+
+    def test_a_failing_record_is_not_named_from_another_readiness_stage_route_or_a_missing_file(self):
+        runs = self.counting_seed()
+        cases = (("approved-awaiting-advance", "backlog", "approved-awaiting-advance", True),
+                 ("stage", "ideation", "needs-preparation", True),
+                 ("no ideation stage in README", "backlog", "needs-preparation", False),
+                 ("no task file", "backlog", "needs-preparation", True))
+        for name, stage, readiness, ideation in cases:
+            with self.subTest(name):
+                (self.ideation_readme if ideation else lambda: self.readme("roborev"))()
+                self.backlog(f"kept-{len(name)}")
+                self.gates(("ghost" if name == "no task file" else f"kept-{len(name)}", stage, readiness))
+                code, lines = self.tasks({})
+                self.assertEqual((code, lines), (0, []))
+                self.assertEqual(runs(), [])
+
+    def test_a_task_with_no_alignment_section_is_not_named_and_the_seed_check_does_not_run_for_it(self):
+        runs = self.counting_seed()
+        self.ideation_readme()
+        self.backlog("unseeded", heading=False)
+        self.backlog("seeded")
+        self.gates(("unseeded", "backlog", "needs-preparation"), ("seeded", "backlog", "needs-preparation"))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertIn("(seeded)", lines[0])
+        self.assertNotIn("unseeded", lines[0])
+        self.assertEqual([Path(r).name for r in runs()], ["seeded.md"])
+
+    def test_tasks_makes_one_status_call_and_a_crash_in_the_seed_check_is_reported_beside_the_sitting_line(self):
+        self.ideation_readme()
+        self.backlog("broken")
+        (self.state / "broken.md").write_bytes(b"---\nstatus: backlog\n---\n## FO alignment\n\xff\n")
+        self.gates(("broken", "backlog", "needs-preparation"), ("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"))
+        self.log_calls = True
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2, lines)
+        self.assertEqual(len(self.sitting_lines(lines)), 1, lines)
+        self.assertEqual(self.seed_lines(lines), [])
+        self.assertEqual(len([line for line in lines if line.startswith("next: report broken to the Captain: ")]), 1, lines)
+        self.assertEqual((self.root / "sd.log").read_text().splitlines(), ["call"])
+
+    def test_the_seed_line_comes_after_the_sitting_line_and_before_the_wait_lines(self):
+        self.ideation_readme()
+        self.task("some-task", pr="o/r#7")
+        self.backlog("bad", visible="shown")
+        self.gates(("bad", "backlog", "needs-preparation"), ("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"))
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertIn(" await the Captain at ideation", lines[-4])
+        self.assertTrue(lines[-3].startswith("next: the seed check fails"), lines)
+        self.assertTrue(lines[-2].startswith("next: run `python3 "), lines)
+
+    def test_a_failed_status_call_names_no_seed_task(self):
+        self.ideation_readme()
+        self.backlog("bad", visible="shown")
+        self.next.write_text("FAIL")
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2, lines)
+        self.assertEqual(self.seed_lines(lines), [])
 
     def test_tasks_needs_one_workflow_directory(self):
         with contextlib.redirect_stdout(io.StringIO()):
