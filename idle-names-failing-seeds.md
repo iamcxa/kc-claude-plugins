@@ -53,6 +53,17 @@ gates:
                 id: briefing:idle-names-failing-seeds:validation:attempt-1:revision-1
                 digest: sha256:e505b28ad4ba41832c1cc87983b4ae4dcfbe2f4452daa780d941025b8a5e0485
                 room-ref: ./idle-names-failing-seeds/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:idle-names-failing-seeds:validation:1
+                briefing: briefing:idle-names-failing-seeds:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T03:52:44.847785Z"
+                decision: approve
+                reason: 'Captain: 「合併 694」 (chat, 2026-10-22), answering 「#694 要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head after FO reruns the merge check and removing its worktree, one PR only; digest e505b28a. Accepts the FO recommendation as the bound question states.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-21T17:17:02Z
 worktree: .worktrees/spacedock-ensign-idle-names-failing-seeds
 pr: iamcxa/kc-claude-plugins#694
