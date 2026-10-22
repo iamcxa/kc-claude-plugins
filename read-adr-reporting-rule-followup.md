@@ -243,10 +243,11 @@ The shipped Accepted line ("the head governs") and chain line ("report the end's
 ## Stage Report: implementation
 
 - DONE: Apply the approved SKILL.md change to kc-adr/skills/read-adr/SKILL.md exactly as shown in the task's Design (frontmatter unchanged). Apply the harness schema change (ruling_check gains status; nullable in_force_record; S9 alt removed) in this task's copied harness, with expectations already committed before the first run.
-  Worktree commit `5a2e901f` (`fix(kc-adr): ...`, only `kc-adr/skills/read-adr/SKILL.md`, +4/-2 lines, 674 to 751 words as designed); harness, `expectations-v3.json` (S9/S11, no alt) and `CHANGES.md` committed in the state checkout before any run (state commit `HEAD` message "harness copy ... (before any run)"); 2 SMOKE3 probes (not counted, `probes/`) showed `kc-adr:read-adr` loaded on both hosts, and the Codex-installed SKILL.md is byte-identical to the worktree file.
+  Worktree commit `5a2e901f` (`fix(kc-adr): ...`, only `kc-adr/skills/read-adr/SKILL.md`, +4/-2 lines, 674 to 751 words as designed); harness, `expectations-v3.json` (S9/S11, no alt) and `CHANGES.md` committed in the state checkout before any run (state commit `4635a858`, "harness copy ... (before any run)", earlier than the first run in `ledger.jsonl`); 2 SMOKE3 probes (not counted, `probes/`) showed `kc-adr:read-adr` loaded on both hosts, and the Codex-installed SKILL.md is byte-identical to the worktree file.
 - DONE: Run the declared 8 runs (B1 x S6, S7, S9, S11 x Claude and Codex; hard stop 10, retries for no answer only), installing the candidate kc-adr as a user would on both hosts, and report AC-1 and AC-2 per cell with the falsifiers. Report honestly any criterion not met.
   8 runs, 0 retries, all answered, each `meta.json` records kc-adr tree `a1991d0e` at `5a2e901f`. Install deviation below. AC-1 met 4 of 4; AC-2 NOT met: 1 regression (S7 Claude placement).
 - DONE: Closing checks: version-parity-check.sh, skill-frontmatter-lint.sh, comment_ratio.py on the diff, design_surfaces.py check, and the roborev step in the scope notes.
+  Pre-merge gates named in the Design's `### Release`: `kc-plugin-forge-sanitize-check kc-adr` on the worktree files (`CHANGELOG.md`, `skills/read-adr/*.md`) with the rules in `~/.claude/kc-plugins-config/sanitize-rules.yaml`: 0 REJECT, 0 BLOCK, 0 WARN. Codex manifest drift and `marketplace-verify.sh` not run: `git diff cebd0ab9 HEAD --stat` shows one file, `kc-adr/skills/read-adr/SKILL.md`, so no manifest, frontmatter or `marketplace.json` byte changed (`version-parity-check.sh` below confirms parity).
   `scripts/version-parity-check.sh` exit 0 (kc-adr 0.1.0 parity, untouched); `scripts/skill-frontmatter-lint.sh` exit 0 (57 files); `comment_ratio.py cebd0ab9 HEAD`: "code lines 0, comment lines 0, 0.0%"; `design_surfaces.py check` on the task: "design surfaces presentable"; roborev_gate.py `clean on 5a2e901f3; evidence=roborev:1011` (first pass, no findings).
 
 ### AC-1 (rule v3; `harness/falsifiers.py` first, then S9 and S11, then `score.py --rule v3`)
@@ -271,8 +272,9 @@ I read all four answers: each reports the cited record (0002 at D1 "Superseded b
 
 ### Limits and deviations
 
-- Claude B1 installs with `--plugin-dir <worktree>/kc-adr` as in the parent harness, not a real-HOME marketplace install: the harness runs `--setting-sources project`, so user-installed plugins are not read, and re-pointing the user's `kc-claude-plugins` marketplace would change every live session here. The user's kc-adr 0.1.0 install was never touched, so nothing to restore. Codex installs through a per-run `CODEX_HOME` marketplace add of the worktree. Recorded in `CHANGES.md` item 5.
+- Claude B1 installs with `--plugin-dir <worktree>/kc-adr` as in the parent harness, not a real-HOME marketplace install: the harness runs `--setting-sources project`, so user-installed plugins are not read (`probes/SMOKE3-B1-claude-r1/final.json` lists `kc-adr:read-adr` and built-ins only, while the user's enabled kc-dev-flow-2 appears only in the Codex probe, which installs per run), and re-pointing the user's `kc-claude-plugins` marketplace would change every live session here. The user's kc-adr 0.1.0 install was never touched, so nothing to restore. Codex installs through a per-run `CODEX_HOME` marketplace add of the worktree. Recorded in `CHANGES.md` item 5.
 - Comment ratio covers only the worktree diff; the harness copy lives in the state checkout and was not measured.
+- ADRs added or changed: none; the task reserves no number (D1 was accepted at the ideation gate per its resolution reason).
 - No push, no PR (no grant in the scope notes). Release is release-please's, version not asserted.
 
 ### Summary
