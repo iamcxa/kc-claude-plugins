@@ -95,7 +95,7 @@ def state(repo, pr, call=gh, pages=pages):
                 found_before = any(e[2] == 1 and e[0] <= c["updated_at"] for e in evidence)
                 if (review.get("status") == "completed" and review.get("has_any_findings") is False
                         and review.get("commit_sha") == head and not found_before):
-                    evidence.append((c["updated_at"], f"summary:{c['id']}@{c['updated_at']}", 0, "summary marks the code review of the head completed"))
+                    evidence.append((c["updated_at"], f"summary:{c['id']}@{head[:9]}", 0, "summary marks the code review of the head completed"))
     if call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"] != head:
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
     if any(r["content"] == "eyes" for r in reactions):

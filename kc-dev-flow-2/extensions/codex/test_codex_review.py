@@ -181,6 +181,23 @@ class CodexReviewTests(unittest.TestCase):
         self.assertEqual(self.check(comments=[old_shape])[0], 4)
         self.assertEqual(self.check(comments=[marker(HEAD, "completed", security=sec, user=PERSON)])[0], 4)
 
+    def test_a_summary_edit_after_the_code_review_does_not_make_a_second_round(self):
+        ident = lambda line: line.split("evidence=")[1].split(" at ")[0]
+        sec = side(HEAD, "completed")
+        before = marker(HEAD, "completed", security=side(None, "running", None), at=T1)
+        after = {**marker(HEAD, "completed", security=sec, at=T1), "updated_at": T2}
+        (code1, line1), (code2, line2) = self.check(comments=[before]), self.check(comments=[after])
+        self.assertEqual((code1, code2), (0, 0))
+        self.assertEqual(ident(line1), ident(line2))
+        later = {**marker(HEAD, "completed", at=T1), "updated_at": T2}
+        self.assertEqual(ident(self.check(comments=[marker(HEAD, "completed", at=T1)])[1]), ident(self.check(comments=[later])[1]))
+
+    def test_a_clean_code_review_on_a_new_head_is_a_new_round(self):
+        ident = lambda line: line.split("evidence=")[1].split(" at ")[0]
+        call, pages = fake(comments=[marker(OLD, "completed")], heads=(OLD,))
+        old = codex.state("o/r", "1", call=call, pages=pages)[1]
+        self.assertNotEqual(ident(old), ident(self.check(comments=[marker(HEAD, "completed", at=T2)])[1]))
+
     def test_a_head_that_moves_while_reading_has_no_verdict(self):
         self.assertEqual(self.check(comments=[said(HEAD[:10])], heads=(HEAD, OLD))[0], 4)
 
