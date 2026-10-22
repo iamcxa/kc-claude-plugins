@@ -15,6 +15,17 @@ gates:
                 id: briefing:roborev-threshold-catches-pr-findings-poc:backlog:attempt-1:revision-1
                 digest: sha256:a1303f2d5f177088d9613b89b12077a78f7ba3dfd70efbb4243965a668e662d6
                 room-ref: ./roborev-threshold-catches-pr-findings-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:roborev-threshold-catches-pr-findings-poc:backlog:1
+                briefing: briefing:roborev-threshold-catches-pr-findings-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T04:33:18.976941Z"
+                decision: approve
+                reason: Captain 「做」 (chat, 2026-10-22), answering FO 「要先做這個 roborev 門檻 POC 嗎？我建議做。」, put after FO stated the three heads, the local-clean versus PR-findings gap and the threshold rerun; this briefing binds that answer after the fact.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
