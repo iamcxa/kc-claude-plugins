@@ -67,6 +67,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:merge-ask-holds-missing-clauses:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:merge-ask-holds-missing-clauses-validation-1
+              briefing:
+                id: briefing:merge-ask-holds-missing-clauses:validation:attempt-1:revision-1
+                digest: sha256:cd006fe603ac38bf315c48b2fbd8b750f36cdaaba3919068e03ccc7ec36b1dc8
+                room-ref: ./merge-ask-holds-missing-clauses/review/validation/briefing-1
 started: 2026-10-21T19:12:41Z
 worktree: .worktrees/spacedock-ensign-merge-ask-holds-missing-clauses
 pr: iamcxa/kc-claude-plugins#703
