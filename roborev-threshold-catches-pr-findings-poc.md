@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:roborev-threshold-catches-pr-findings-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:roborev-threshold-catches-pr-findings-poc-backlog-1
+              briefing:
+                id: briefing:roborev-threshold-catches-pr-findings-poc:backlog:attempt-1:revision-1
+                digest: sha256:a1303f2d5f177088d9613b89b12077a78f7ba3dfd70efbb4243965a668e662d6
+                room-ref: ./roborev-threshold-catches-pr-findings-poc/review/backlog/briefing-1
 ---
 
 ## Scope

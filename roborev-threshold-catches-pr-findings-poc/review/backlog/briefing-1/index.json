@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:roborev-threshold-catches-pr-findings-poc:backlog:attempt-1:revision-1",
+  "question": "Approve the roborev threshold POC into implementation? FO recommends yes; approving accepts that recommendation: six local roborev Codex runs (heads 1c57c156, 589c54e5, a3ce3c8b; thresholds medium and low) matched against the Codex PR findings on those heads.",
+  "artifacts": [
+    {
+      "id": "artifact:roborev-threshold-catches-pr-findings-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/bc7c3985b960fb96e8893c996b8af5002502de50/roborev-threshold-catches-pr-findings-poc.md",
+      "rev": "sha256:39b2c47cda3cd4624aca3b320035bb1343cc660a2e36f3c49b1f28b27464b482",
+      "mediaType": "text/markdown",
+      "summary": "Seed as filed: the local roborev Codex review read clean on #694 and #698 heads where the Codex PR review then posted one and two P2; this POC reads roborev default threshold from its own source, then reruns at medium and low on three heads; bar: worth a change only if it catches PR findings on two of three heads; budget six runs."
+    }
+  ]
+}
