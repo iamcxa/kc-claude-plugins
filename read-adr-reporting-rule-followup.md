@@ -96,6 +96,7 @@ Evidence clause: the S6 and S7 runs `python3 harness/run.py run --scenarios S6,S
 ## FO alignment
 
 Not needed before ideation: the Captain asked for this follow-up and stated its rule (amendment 6 of kc-decision-log-cli, 2026-10-22, 「按推薦」). Release review: not needed: the task belongs to no release (the map was skipped for kc-adr by the Captain's authorization).
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-22 — do these amendments withdraw what the Captain approved, and what changes in the build? Result (after merge): adjust. No approval silently withdrawn; merged tree equals the validated head. Defect: the gate summary and PR #706 body said two cells were not re-run on the final bytes; three were (S6 Claude, S6 Codex, S7 Codex). FO correction 2026-10-22: the residual is three cells, not two.
 Surfaces: none
 Visible change: none
 
