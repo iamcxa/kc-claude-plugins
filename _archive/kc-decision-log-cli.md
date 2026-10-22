@@ -1,7 +1,7 @@
 ---
 id:
 title: Agents read and route ADRs with the kc-adr read-adr skill
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -82,14 +82,17 @@ gates:
                 reason: 'Captain replied 「通過」 (2026-10-22) to the validation gate: PASSED and deliver as stated in the gate question (push the branch, Draft PR with the presented body, ready after CI, external-review rounds, merge the full head once delivery_gate.py check passes).'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 journey:
 journey-release:
 journey-story:
 journey-required-tasks:
 journey-mapping-complete:
 started: 2026-10-21T01:21:24Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: PASSED
+completed: 2026-10-22T01:18:37Z
+archived: 2026-10-22T01:18:37Z
 ---
 
 The user directs several AI agents and wants one versioned source of his rulings that each agent reads at the same version (「我需要指揮不同 FO，跨產品，跨 LLM，跨工具去達成我的目標」, 2026-10-19). Today no agent has a tool to read a ruling at an exact commit. This task builds that tool and the read-only skill that tells agents to use it; task `kc-decision-log-handoff-trial` then proves a Claude→Codex handoff with it.
