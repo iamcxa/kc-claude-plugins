@@ -34,6 +34,17 @@ gates:
                 id: briefing:new-work-starts-from-a-story-map:ideation:attempt-1:revision-1
                 digest: sha256:27c10e9299bc70771c32d34dad3b4e6e7873e1c61ad3eb2013d9fb1c6b168fff
                 room-ref: ./new-work-starts-from-a-story-map/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:new-work-starts-from-a-story-map:ideation:1
+                briefing: briefing:new-work-starts-from-a-story-map:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T03:43:17.865141Z"
+                decision: approve
+                reason: 'Captain: 「可以」 (chat, 2026-10-22), answering FO''s chat gate presentation 「故事地圖那張任務：設計可以進入實作嗎？我建議批准。」 which listed what approval accepts: D5 option (a), the scope added since the backlog gate (Cut 2, Cut 1 items 1 to 4, a kc-journey-map PR with journey-map-question 1.0.0 to 1.1.0), and the AC-8 departure; digest 27c10e92. Approving accepts the FO recommendation as the bound question states.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
