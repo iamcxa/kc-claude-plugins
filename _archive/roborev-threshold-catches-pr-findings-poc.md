@@ -3,7 +3,7 @@ title: The local roborev Codex review catches the findings Codex's PR review lat
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -44,10 +44,13 @@ gates:
                 reason: Captain 「可以」 (chat, 2026-10-22), answering 「roborev 門檻 POC 照結果結案、不改設定，可以嗎？我建議結案。」 whose presentation stated closing changes nothing (.roborev.toml stays at high, roborev_gate.py unchanged); digest f443497b. Accepts the FO recommendation as the bound question states.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-22T04:33:47Z
 worktree: .worktrees/spacedock-ensign-roborev-threshold-catches-pr-findings-poc
 pr: local-merge:a763ba5d63ae96451c732058bf7fc2f9cb4ce1ac
+verdict: PASSED
+completed: 2026-10-22T05:01:18Z
+archived: 2026-10-22T05:01:18Z
 ---
 
 ## Scope
