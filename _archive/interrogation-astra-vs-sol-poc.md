@@ -3,7 +3,7 @@ title: The journey-map interrogation's Codex stranger on the user's default mode
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -44,10 +44,13 @@ gates:
                 reason: 'Captain 「結案」 (chat, 2026-10-22), answering FO question put before it (quoted in the gate question). AC-2 is not met as written: the scorer knew the arm because FO named it in the dispatch; the file-opening order and per-score quotes are recorded for a re-score. This briefing binds the answer after the fact.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-21T18:40:25Z
 worktree: .worktrees/spacedock-ensign-interrogation-astra-vs-sol-poc
 pr: local-merge:061f647f77ea4e18322f31b48666d7b111165ca2
+verdict: PASSED
+completed: 2026-10-22T01:01:41Z
+archived: 2026-10-22T01:01:41Z
 ---
 
 ## Scope
