@@ -5,11 +5,11 @@ import { mkdir, readFile } from 'node:fs/promises'
 import { createInterface } from 'node:readline'
 import { pathToFileURL } from 'node:url'
 let operatorModule
-export async function startCloudflare({ dir, port, origin, grants, failRegistration = false }) {
+export async function startCloudflare({ dir, port, origin, grants, humanConfig, failRegistration = false, plugins = [] }) {
  await mkdir(dir, { recursive: true })
  const bundle = join(dir, 'worker.mjs')
  const entry = new URL('../server/host/cloudflare.ts', import.meta.url).pathname
- await build({ entryPoints: [entry], outfile: bundle, bundle: true, format: 'esm', platform: 'browser', conditions: ['workerd', 'worker', 'browser'], external: ['cloudflare:workers'], logLevel: 'silent' })
+ await build({ entryPoints: [entry], outfile: bundle, bundle: true, format: 'esm', platform: 'browser', conditions: ['workerd', 'worker', 'browser'], external: ['cloudflare:workers'], plugins, logLevel: 'silent' })
  let script = await readFile(bundle, 'utf8')
  if (failRegistration) script = script.replace('export {', `const OriginalRegistry = JourneyRegistry;
 class FaultRegistry extends OriginalRegistry {
@@ -22,7 +22,7 @@ class FaultRegistry extends OriginalRegistry {
 export {`).replace('JourneyRegistry,', 'FaultRegistry as JourneyRegistry,')
  const mf = new Miniflare({
   script, modules: true, compatibilityDate: '2026-07-01', compatibilityFlags: ['nodejs_compat'], host: '127.0.0.1', port,
-  bindings: { JOURNEY_ORIGIN: origin, JOURNEY_GRANTS: JSON.stringify(grants) },
+  bindings: { JOURNEY_ORIGIN: origin, JOURNEY_GRANTS: JSON.stringify(grants), ...(humanConfig ? { JOURNEY_HUMAN_CONFIG: JSON.stringify(humanConfig) } : {}) },
   durableObjects: { ROOMS: { className: 'JourneyRoom', useSQLite: true }, REGISTRY: { className: 'JourneyRegistry', useSQLite: true } },
   durableObjectsPersist: join(dir, 'objects'), r2Buckets: ['ASSETS'], r2Persist: join(dir, 'assets'),
  })

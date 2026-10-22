@@ -7,14 +7,16 @@ function ordered(value: unknown): unknown {
 	return value
 }
 
-export async function confirmRoomSwitch(editor: Editor | null, roomId: string): Promise<boolean> {
+export const documentFingerprint = (editor: Editor) => JSON.stringify(ordered(editor.store.getStoreSnapshot('document').store))
+
+export async function confirmRoomSwitch(editor: Editor | null, roomId: string, onDenied?: () => void): Promise<boolean> {
 	if (!editor) return true
 	editor.complete()
-	const snapshot = () => JSON.stringify(ordered(editor.store.getStoreSnapshot('document').store))
+	const snapshot = () => documentFingerprint(editor)
 	const before = snapshot()
 	try {
 		const response = await fetch(journeyApi('/doc?room=' + encodeURIComponent(roomId)), { signal: AbortSignal.timeout(8000) })
-		if (!response.ok) return false
+		if (!response.ok) { if (response.status === 401 || response.status === 403) onDenied?.(); return false }
 		const result = await response.json()
 		const remote = Object.fromEntries(result.snapshot.documents.map(({ state }: { state: { id: string } }) => [state.id, state]))
 		return before === snapshot() && before === JSON.stringify(ordered(remote))

@@ -86,6 +86,8 @@ exit or tool success alone is not evidence that an intended note was saved.
 Rotate by issuing a new ID, installing its digest-only grant, and confirming its
 scoped read before revoking the old ID through operator control. Existing IDs are
 immutable on startup: editing a JSON entry does not update a persisted grant.
+Inventory every consumer sharing the old credential and verify each new consumer
+in its original room before matching revoke; one successful consumer is insufficient.
 Never reuse an old ID. On suspected compromise, revoke before distributing the
 replacement and accept the short interruption. Confirm old access is denied;
 remove its local secret after successful revocation. Expiry is not a substitute
@@ -119,7 +121,9 @@ node --import tsx scripts/private-node-ops.ts restore /absolute/private-operator
 ```
 
 Every archived ID is restored as revoked, including one revoked after that
-backup was taken. Old sessions are never restored. Existing targets and reused
+backup was taken. Archived sessions/families are quarantined by the security-aware restore;
+human-enabled recovery requires the security section and fresh backend/member IDs.
+See [revocation recovery](delegation-revocation.md#security-recovery-and-rollback). Existing targets and reused
 credential IDs are refused. A failure after partial initialization leaves the
 target quarantined: keep evidence, stop it and retry into another fresh target.
 Do not repair or merge tldraw tables manually.
@@ -158,7 +162,7 @@ download returns 404. Photos and file attachments are outside this hosted slice.
 Cloudflare does not support direct remote Durable Object bindings in local
 development. Its [documented route](https://developers.cloudflare.com/workers/local-development/#using-remote-resources-with-durable-objects-and-workflows)
 is a remote service binding to a Worker that accesses the objects. The isolated
-`private-cloudflare-ops.ts` bridge follows that route and exposes only backup,
+`private-cloudflare-ops.ts` bridge follows that route and exposes backup,
 fresh restore and revoke, delegating existing host functions. It has no public
 admin endpoint, arbitrary forwarding or SQL operation.
 
@@ -276,3 +280,12 @@ This exercises real local storage and Miniflare service bindings, fresh restore,
 revocation quarantine, rollback preservation, absent assets and normal production
 license-input wiring. It creates only ignored synthetic scratch data and closes
 its emulators. No CI or monitor was added; CI cost per PR was not measured.
+
+## Private member command
+
+The separate [member-enrollment runbook](member-enrollment.md) documents the
+default-off `member-enroll` and read-only `member-inspect` allowlist additions.
+Keep the existing stopped-writers discipline and separate operator credential;
+ordinary browser cookies and paired agents cannot administer. A confirmed create
+is atomic; an uncertain response requires exact readback and never automatic retry.
+No provider change, real grant, deployment or activation is authorized by this code.

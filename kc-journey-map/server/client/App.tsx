@@ -1,8 +1,8 @@
 // Adapted from tldraw's `templates/simple-server-example` (MIT).
 import { useSync } from '@tldraw/sync'
-import { useCallback, useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { Editor, TLAssetStore, TLShape, Tldraw, serializeTldrawJson } from 'tldraw'
+import { Editor, TLAssetStore, TLShape, Tldraw, serializeTldrawJson, type TLStoreWithStatus } from 'tldraw'
 import 'tldraw/tldraw.css'
 import { parseGithubBlobUrl } from '../../lib/repo-doc.mjs'
 import { storyBorder } from '../../lib/records.mjs'
@@ -11,10 +11,17 @@ import './doc-popup.css'
 import { SaveButton } from './SaveButton'
 import { StickyBackbone } from './StickyBackbone'
 import { addSequencePage } from './sequence'
-import { journeyApi } from './api'
+import { journeyApi, type HumanContext } from './api'
 import { RoomPageMenu, RoomSelector, type ConnectionState } from './RoomSelector'
-import { confirmRoomSwitch } from './confirm-room-switch'
+import { confirmRoomSwitch, documentFingerprint } from './confirm-room-switch'
+import { verifyRoomAdmission, RoomAdmissionError, sourceAdmissionLost } from './room-admission'
 import { assetUploadId } from './asset-upload-id'
+import { HumanEntry, type HumanCanvasEntry } from './HumanEntry'
+import { recoveryCause, type RecoveryCause } from './access-recovery'
+import { RecoveryNotice } from './RecoveryNotice'
+import { HumanDraftPanel } from './HumanDraftPanel'
+import { humanSocket, type HumanSocketParams } from './human-socket'
+import type { DraftContext } from '../draft-data'
 
 const APP_NAME = 'kc-journey-map'
 
@@ -43,11 +50,6 @@ function useChapterPopupIntercept(editor: Editor | null, onOpen: (target: DocTar
 		container.addEventListener('click', handler, { capture: true })
 		return () => container.removeEventListener('click', handler, { capture: true })
 	}, [editor, onOpen])
-}
-
-function subscribeToLocation(onChange: () => void) {
-	window.addEventListener('popstate', onChange)
-	return () => window.removeEventListener('popstate', onChange)
 }
 
 function syncDocumentTitle(editor: Editor, roomId: string) {
@@ -97,80 +99,213 @@ function syncStoryBorders(editor: Editor) {
 }
 
 export default function App() {
-	const search = useSyncExternalStore(subscribeToLocation, () => window.location.search)
-	const [roomId, setRoomId] = useState(() => new URLSearchParams(search).get('room') || 'default')
-	const [connection, setConnection] = useState<ConnectionState>('loading')
-	const [switching, setSwitching] = useState(false)
-	const [switchError, setSwitchError] = useState(false)
-	const editor = useRef<Editor | null>(null)
-	const acceptedUrl = useRef(window.location.href)
-	const navigation = useRef(0)
-	const onEditor = useCallback((value: Editor | null) => { editor.current = value }, [])
-	const navigate = useCallback(async (url: URL, push: boolean) => {
-		const attempt = ++navigation.current
-		setSwitching(true)
-		const confirmed = await confirmRoomSwitch(editor.current, roomId)
-		if (attempt !== navigation.current) return
-		setSwitching(false)
-		setSwitchError(!confirmed)
-		if (!confirmed) {
-			if (!push) { window.history.replaceState(null, '', acceptedUrl.current); window.dispatchEvent(new PopStateEvent('popstate')) }
-			return
-		}
-		if (push) window.history.pushState(null, '', url)
-		acceptedUrl.current = url.href
-		editor.current = null
-		setRoomId(url.searchParams.get('room') || 'default')
-		if (push) window.dispatchEvent(new PopStateEvent('popstate'))
-	}, [roomId])
-	useEffect(() => {
-		const url = new URL(window.location.href)
-		if ((url.searchParams.get('room') || 'default') !== roomId) void navigate(url, false)
-		else acceptedUrl.current = url.href
-	}, [search, roomId, navigate])
-	return <RoomSelector roomId={roomId} connection={connection} switching={switching} switchError={switchError} onNavigate={next => {
-			const url = new URL(window.location.href)
-			url.searchParams.set('room', next); url.searchParams.delete('d'); url.hash = ''
-			void navigate(url, true)
-		}}>
-		<RoomCanvas key={roomId} roomId={roomId} onConnection={setConnection} onEditor={onEditor} />
-	</RoomSelector>
+ return <HumanEntry>{entry => <CanvasApp entry={entry} />}</HumanEntry>
 }
 
-function RoomCanvas({ roomId, onConnection, onEditor }: { roomId: string; onConnection: (state: ConnectionState) => void; onEditor: (editor: Editor | null) => void }) {
+type RoomSession = { id: number; roomId: string; uri: string; context?:DraftContext; store?: TLStoreWithStatus }
+function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
+ const [active, setActive] = useState<RoomSession>(() => {
+  const roomId = entry.context?.room || new URLSearchParams(window.location.search).get('room') || 'default'
+  return { id: 0, roomId, context:entry.context?{...entry.context,room:roomId}:undefined, uri: journeyApi('/connect/' + encodeURIComponent(roomId)) }
+ })
+ const [target, setTarget] = useState<RoomSession | null>(null)
+ const [connection, setConnection] = useState<ConnectionState>('loading')
+ const [switching, setSwitching] = useState(false)
+ const [switchError, setSwitchError] = useState('')
+ const [frozen, setFrozen] = useState(false)
+ const [recovery,setRecovery]=useState<RecoveryCause|null>(null)
+ const editor = useRef<Editor | null>(null)
+ const [currentEditor,setCurrentEditor]=useState<Editor|null>(null)
+ const lifetime=useRef(0),frozenRef=useRef(false),historyRecorded=useRef(new Set<number>())
+ const activeId = useRef(active.id); activeId.current = active.id
+ const acceptedUrl = useRef(window.location.href)
+ const navigation = useRef(0)
+ const latestEntry = useRef(entry); latestEntry.current = entry
+ const pending = useRef<{ id: number; url: URL; push: boolean; fingerprint: string; controller: AbortController } | null>(null)
+ const freeze = useCallback((cause?:RecoveryCause) => {
+  if(cause)setRecovery(current=>current?.category==='draft_original_outcome_unknown'?current:cause)
+  frozenRef.current=true
+  navigation.current++; pending.current?.controller.abort(); pending.current = null
+  setTarget(null); setSwitching(false); setFrozen(true)
+  editor.current?.updateInstanceState({ isReadonly: true })
+  setSwitchError('Source access paused. Work retained here. Reopen this original room in a separate tab and verify access.')
+ }, [])
+ useEffect(() => { if (entry.problem) freeze(recoveryCause(new Error(entry.problem))) }, [entry.problem, freeze])
+ useEffect(() => {lifetime.current++;return()=>{lifetime.current++;navigation.current++; pending.current?.controller.abort()}}, [])
+ const restoreUrl = () => {
+  if (window.location.href !== acceptedUrl.current) {
+   window.history.replaceState(null, '', acceptedUrl.current)
+   window.dispatchEvent(new PopStateEvent('popstate'))
+  }
+ }
+ const navigate = useCallback(async (url: URL, push: boolean) => {
+  const next = url.searchParams.get('room') || (latestEntry.current.context ? '' : 'default')
+  if (next === active.roomId) return
+  if (frozen) { if (!push) restoreUrl(); return }
+  const id = ++navigation.current
+  pending.current?.controller.abort()
+  const controller = new AbortController()
+  pending.current = { id, url, push, fingerprint: '', controller }
+  setTarget(null); setSwitching(true); setSwitchError('')
+  if (!push) restoreUrl()
+  const context = latestEntry.current.context
+  try {
+   if (context) await verifyRoomAdmission(active.roomId, context, controller.signal)
+   if (id !== navigation.current) return
+   const confirmed = await confirmRoomSwitch(editor.current, active.roomId, () => freeze())
+   if (id !== navigation.current) return
+   if (!confirmed) throw new Error('Edits not confirmed. Stay here; select a room to retry.')
+   const fingerprint = editor.current ? documentFingerprint(editor.current) : ''
+   if (context) await verifyRoomAdmission(next, context, controller.signal)
+   if (id !== navigation.current) return
+   pending.current!.fingerprint = fingerprint
+   setTarget({ id, roomId: next, context:context?{...context,room:next}:undefined, uri: journeyApi('/connect/' + encodeURIComponent(next), context ? { ...context, room: next } : null) })
+  } catch (error) {
+   if (id !== navigation.current) return
+   if (sourceAdmissionLost(error, active.roomId)) { freeze(recoveryCause(error)); return }
+   setTarget(null); setSwitching(false); pending.current = null
+   setSwitchError(error instanceof RoomAdmissionError ? `Target ${next} unavailable (${error.category}). Original room retained.` : error instanceof Error ? error.message : 'Room switch failed. Original room retained.')
+  }
+ }, [active.roomId, frozen, freeze])
+ const failTarget = useCallback(async (id: number, message: string) => {
+  const attempt = pending.current
+  if (attempt?.id !== id) return
+  try {
+   const context = latestEntry.current.context
+   if (context) await verifyRoomAdmission(active.roomId, context, attempt.controller.signal)
+  } catch (error) {
+   if (pending.current?.id !== id) return
+   if (sourceAdmissionLost(error, active.roomId)) { freeze(recoveryCause(error)); return }
+  }
+  if (pending.current?.id !== id) return
+  attempt.controller.abort(); pending.current = null; navigation.current++
+  setTarget(null); setSwitching(false); setSwitchError(message)
+ }, [active.roomId, freeze])
+ const onStore = useCallback((id: number, store: TLStoreWithStatus) => {
+  if (id === activeId.current && store.status === 'error') setConnection('error')
+  setActive(current => current.id === id && !(store.status === 'error' && current.store?.status === 'synced-remote') ? { ...current, store } : current)
+  setTarget(current => current?.id === id ? { ...current, store } : current)
+ }, [])
+ useEffect(() => {
+  if (!target || !pending.current || target.id !== pending.current.id) return
+  const attempt = pending.current
+  if (target.store?.status === 'error') {
+   void failTarget(target.id, `Target ${target.roomId} could not connect. Original room retained.`); return
+  }
+  if (target.store?.status !== 'synced-remote' || target.store.connectionStatus !== 'online') return
+  let canceled = false
+  void (async () => {
+   try {
+    const context = latestEntry.current.context
+    if (context) {
+     await verifyRoomAdmission(active.roomId, context, attempt.controller.signal)
+     await verifyRoomAdmission(target.roomId, context, attempt.controller.signal)
+    }
+    if (canceled || attempt.id !== navigation.current) return
+    if (editor.current && documentFingerprint(editor.current) !== attempt.fingerprint) throw new Error('Source changed while connecting. Stay here; select a room to retry.')
+    if (attempt.push) window.history.pushState(null, '', attempt.url)
+    else window.history.replaceState(null, '', attempt.url)
+    acceptedUrl.current = attempt.url.href
+    activeId.current = target.id; editor.current = null;setCurrentEditor(null)
+    pending.current = null; setActive(target); setTarget(null); setSwitching(false); setSwitchError('')
+    window.dispatchEvent(new PopStateEvent('popstate'))
+   } catch (error) {
+    if (canceled || attempt.id !== navigation.current) return
+    if (sourceAdmissionLost(error, active.roomId)) { freeze(recoveryCause(error)); return }
+    pending.current = null; setTarget(null); setSwitching(false)
+    setSwitchError(error instanceof Error ? error.message : 'Target unavailable. Original room retained.')
+   }
+  })()
+  return () => { canceled = true }
+ }, [target, active.roomId, freeze, failTarget])
+ useEffect(() => {
+  if (!target) return
+  const id = target.id
+  const timer = setTimeout(() => {
+   if (pending.current?.id !== id) return
+   void failTarget(id, `Target ${target.roomId} timed out. Original room retained.`)
+  }, 8000)
+  return () => clearTimeout(timer)
+ }, [target?.id, failTarget])
+ useEffect(() => {
+  const onHistory = () => {
+   const url = new URL(window.location.href)
+   if (url.href !== acceptedUrl.current && (url.searchParams.get('room') || 'default') !== active.roomId) void navigate(url, false)
+  }
+  window.addEventListener('popstate', onHistory, { capture: true })
+  return () => window.removeEventListener('popstate', onHistory, { capture: true })
+ }, [active.roomId, navigate])
+ const onEditor = useCallback((id: number, value: Editor | null) => { if (id === activeId.current) {editor.current = value;setCurrentEditor(value)} }, [])
+ useEffect(()=>{
+  const id=active.id,life=lifetime.current
+  if(!active.context || frozen || historyRecorded.current.has(id) || active.store?.status!=='synced-remote' || active.store.connectionStatus!=='online')return
+  historyRecorded.current.add(id)
+  void latestEntry.current.activate(active.roomId,()=>activeId.current===id&&!frozenRef.current&&life===lifetime.current)
+ },[active,frozen])
+ const pausedCheck = useRef(false)
+ useEffect(() => {
+  if (frozen || !entry.context || (connection !== 'offline' && connection !== 'error') || pausedCheck.current) return
+  pausedCheck.current = true
+  const controller = new AbortController()
+  verifyRoomAdmission(active.roomId, entry.context, controller.signal).catch(error => { if (error instanceof RoomAdmissionError && error.denied) freeze(recoveryCause(error)) }).finally(() => { pausedCheck.current = false })
+  return () => controller.abort()
+ }, [connection, active.roomId, entry.context?.member, frozen, freeze])
+ return <RoomSelector roomId={active.roomId} human={entry.context} connection={connection} switching={switching} switchError={switchError} frozen={frozen} onDenied={freeze} onNavigate={next => {
+  const url = new URL(acceptedUrl.current)
+  url.searchParams.set('room', next); url.searchParams.delete('d'); url.hash = ''
+  if (frozen) { window.open(url.href, '_blank', 'noopener,noreferrer'); return }
+  void navigate(url, true)
+ }}>
+  {[...(!frozen ? [active] : []), ...(target ? [target] : [])].map(session => <RoomSync key={session.id} session={session} onStore={onStore} onPause={session.id===active.id?freeze:()=>void failTarget(session.id,'Target access paused. Original room retained.')} />)}
+  {recovery && active.context && <RecoveryNotice context={active.context} cause={recovery} onCause={cause=>setRecovery(current=>current?.category==='draft_original_outcome_unknown'?current:cause)}/> }
+  <RoomCanvas key={active.id} session={active} frozen={frozen} onConnection={setConnection} onEditor={onEditor} />
+  {active.context && <HumanDraftPanel key={'draft:'+active.id} context={active.context} label={entry.label} editor={currentEditor} connection={connection} onPause={freeze} onVerified={()=>setRecovery(null)}/> }
+ </RoomSelector>
+}
+
+function RoomSync({ session, onStore, onPause }: { session: RoomSession; onStore: (id: number, store: TLStoreWithStatus) => void; onPause:(cause?:RecoveryCause)=>void }) {
+ const assets = useMemo(() => canvasAssets(session.roomId), [session.roomId])
+ const pause=useRef(onPause);pause.current=onPause
+ const connect=useMemo(()=>session.context?(params:HumanSocketParams)=>humanSocket(session.uri,session.context!,cause=>pause.current(cause),params):undefined,[session.uri])
+ const store = useSync({ ...(connect?{connect}:{uri:session.uri}), assets })
+ useEffect(() => { onStore(session.id, store) }, [session.id, store, onStore])
+ return null
+}
+
+function RoomCanvas({ session, frozen, onConnection, onEditor }: { session: RoomSession; frozen: boolean; onConnection: (state: ConnectionState) => void; onEditor: (id: number, editor: Editor | null) => void }) {
+ const roomId = session.roomId
+ const store = session.store || { status: 'loading' as const }
 	const components = useMemo(
-		() => ({ PageMenu: RoomPageMenu, SharePanel: () => <SaveButton roomId={roomId} />, InFrontOfTheCanvas: StickyBackbone }),
-		[roomId]
+		() => ({ PageMenu: RoomPageMenu, SharePanel: () => frozen ? null : <SaveButton roomId={roomId} />, InFrontOfTheCanvas: StickyBackbone }),
+		[roomId, frozen]
 	)
-	const store = useSync({
-		uri: journeyApi(`/connect/${encodeURIComponent(roomId)}`),
-		assets: useMemo(() => canvasAssets(roomId), [roomId]),
-	})
 	useEffect(() => {
 		if (store.status !== 'synced-remote') document.title = `${roomId} | ${APP_NAME}`
-		onConnection(store.status === 'synced-remote' ? store.connectionStatus === 'online' ? 'connected' : 'offline' : store.status === 'error' ? 'error' : 'loading')
-	}, [roomId, store, onConnection])
+		onConnection(frozen ? 'error' : store.status === 'synced-remote' ? store.connectionStatus === 'online' ? 'connected' : 'offline' : store.status === 'error' ? 'error' : 'loading')
+	}, [roomId, store, onConnection, frozen])
 
 	const [editor, setEditor] = useState<Editor | null>(null)
 	const [popup, setPopup] = useState<{ target: DocTarget; trigger: HTMLElement } | null>(null)
-	useChapterPopupIntercept(editor, (target, trigger) => setPopup({ target, trigger }))
+	useChapterPopupIntercept(frozen ? null : editor, (target, trigger) => setPopup({ target, trigger }))
 
+ useEffect(() => { if (frozen) setPopup(null) }, [frozen])
 	return (
-		<div style={{ position: 'fixed', inset: 0 }}>
+		<div className="journey-canvas-root" style={{ position: 'fixed', inset: 0 }}>
 			<Tldraw
 				licenseKey={import.meta.env.VITE_TLDRAW_LICENSE_KEY}
 				store={store}
 				components={components}
 				deepLinks
 				onMount={(editor) => {
-					onEditor(editor)
+					onEditor(session.id, editor)
+     if (frozen) editor.updateInstanceState({ isReadonly: true })
 					;(window as any).editor = editor
 					;(window as any).addSequencePage = (input: Parameters<typeof addSequencePage>[1]) => addSequencePage(editor, input)
 					;(window as any).serializeTldrawJson = () => serializeTldrawJson(editor)
 					const stopBorders = syncStoryBorders(editor)
 					const stopTitle = syncDocumentTitle(editor, roomId)
 					setEditor(editor)
-					return () => { onEditor(null); stopBorders(); stopTitle() }
+					return () => { onEditor(session.id, null); stopBorders(); stopTitle() }
 				}}
 			/>
 			{popup &&

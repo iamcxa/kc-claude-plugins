@@ -1,6 +1,14 @@
 import { canonicalAsset, HostError, prepareDoc } from './core'
+import { audited } from './audit'
+import { agentRoute } from './agent'
+import { humanRoute, registeredHumanRoom, requireHumanContext } from './human'
+import type { HumanConfig } from './human-store'
 import { authenticate, authorize, exchange, requireOrigin, type Admission, type Metadata } from './policy'
 export interface Host {
+ humanConfig?: HumanConfig
+ agentPairing?: boolean
+ localHumanReady?: boolean
+ publicRequestUrl?: boolean
  private: boolean
  origin: string
  port: number
@@ -14,10 +22,13 @@ export interface Host {
  repoDoc?(room: string, url: URL): Promise<unknown>
 }
 const json = (value: unknown, status = 200) => Response.json(value, { status })
-export async function admit(host: Host, headers: Headers, raw: string, write = false, socket = false) {
+export async function admit(host: Host, headers: Headers, raw: string, write = false, socket = false, context?: URL) {
  const admission = host.private ? await authenticate(host.meta, headers) : null
  if (host.private && (socket || (write && admission?.cookie))) requireOrigin(headers, host.origin)
- return { room: authorize(admission, raw), admission }
+ if (context) await requireHumanContext(host.meta, admission, context)
+ const room = authorize(admission, raw)
+ if (admission?.actorType === 'human') await registeredHumanRoom(host.meta, room, admission.rooms)
+ return { room, admission }
 }
 async function health(host: Host, admission: Admission | null) {
  const h = await host.health(admission?.rooms)
@@ -52,8 +63,10 @@ async function mcp(host: Host, req: Request, admission: Admission | null) {
   if (name === 'health') value = await health(host, admission)
   else if (['get_doc', 'patch_doc', 'put_doc'].includes(name)) {
    const room = authorize(admission, args.room ?? 'default')
+   if (admission?.actorType === 'human' && new URL(req.url).searchParams.get('_humanRoom') !== room) throw new HostError(403, 'room_context_changed', { category: 'room_context_changed' })
+   if (admission?.actorType === 'human') await registeredHumanRoom(host.meta, room, admission.rooms)
    const method = { get_doc: 'GET', patch_doc: 'PATCH', put_doc: 'PUT' }[name as string]!
-   value = await host.document(room, method, prepareDoc(method, args.body))
+   value = method==='GET' ? await host.document(room,method,prepareDoc(method,args.body)) : await audited(host,admission,room,'mcp:'+name,()=>host.document(room,method,prepareDoc(method,args.body)),req.headers.get('x-journey-operation')||undefined)
   } else return json({ jsonrpc: '2.0', id: rpc.id, error: { code: -32601, message: 'unknown tool' } })
   result = { content: [{ type: 'text', text: JSON.stringify(value) }], structuredContent: value }
  } else return json({ jsonrpc: '2.0', id: rpc.id, error: { code: -32601, message: 'method not found' } })
@@ -67,25 +80,35 @@ export async function handle(host: Host, req: Request): Promise<Response> {
 async function route(host: Host, req: Request): Promise<Response> {
  try {
   const url = new URL(req.url), method = req.method
+  const agent = await agentRoute(host, req)
+  if (agent) return agent
+  const entry = await humanRoute(host, req)
+  if (entry) return entry
   if (url.pathname === '/session' && method === 'POST') {
    if (!host.private) throw new HostError(400, 'sessions require private mode')
    const session = await exchange(host.meta, req.headers, host.origin)
    return Response.json({ ok: true, expiresAt: session.expiresAt }, { headers: { 'Set-Cookie': session.cookie, 'Cache-Control': 'no-store' } })
   }
   const admission = host.private ? await authenticate(host.meta, req.headers) : null
+  await requireHumanContext(host.meta, admission, url)
   if (host.private && method !== 'GET' && admission?.cookie) requireOrigin(req.headers, host.origin)
   const rawRoom = url.searchParams.get('room') || 'default'
   const room = ['/mcp', '/health'].includes(url.pathname) ? rawRoom : authorize(admission, rawRoom)
+  if (admission?.actorType === 'human' && !['/mcp', '/health'].includes(url.pathname)) await registeredHumanRoom(host.meta, room, admission.rooms)
   if (url.pathname === '/mcp') return await mcp(host, req, admission)
   if (url.pathname === '/health' && method === 'GET') return json(await health(host, admission))
   if (url.pathname === '/capabilities' && method === 'GET') return json(host.capabilities(room))
   if (url.pathname === '/doc' && ['GET', 'PATCH', 'PUT'].includes(method))
-   return json(await host.document(room, method, prepareDoc(method, method === 'GET' ? null : await req.json())))
+   {
+    const prepared=prepareDoc(method,method==='GET'?null:await req.json())
+    return json(method==='GET'?await host.document(room,method,prepared):await audited(host,admission,room,'document:'+method,()=>host.document(room,method,prepared),req.headers.get('x-journey-operation')||undefined,'committed',prepared))
+   }
   if (url.pathname.startsWith('/uploads/')) {
    const raw = decodeURIComponent(url.pathname.slice('/uploads/'.length)), id = canonicalAsset(raw)
    if (host.private && (raw !== id || !id || id === '.' || id === '..')) throw new HostError(403, 'asset forbidden')
    if (method === 'PUT') {
-    await host.putAsset(room, id, new Uint8Array(await req.arrayBuffer()), req.headers.get('content-type') || 'application/octet-stream')
+    const bytes=new Uint8Array(await req.arrayBuffer())
+    await audited(host,admission,room,'asset:PUT',()=>host.putAsset(room,id,bytes,req.headers.get('content-type')||'application/octet-stream'),req.headers.get('x-journey-operation')||undefined)
     return json({ ok: true })
    }
    if (method === 'GET') {
@@ -95,12 +118,21 @@ async function route(host: Host, req: Request): Promise<Response> {
   }
   if (url.pathname === '/save' && ['GET', 'POST'].includes(method)) {
    if (!host.capabilities(room).save || !host.save) return new Response('save unsupported', { status: 501 })
-   return json(await host.save(room, url, method, method === 'POST' ? await req.json() : null))
+   const body=method==='POST'?await req.json():null
+   return json(method==='POST'?await audited(host,admission,room,'save:POST',()=>host.save!(room,url,method,body),req.headers.get('x-journey-operation')||undefined):await host.save(room,url,method,body))
   }
   if (url.pathname === '/repo-doc' && method === 'GET') return json(host.capabilities(room).repoDoc && host.repoDoc
    ? await host.repoDoc(room, url) : { state: 'unavailable', reason: 'checkout capability is unavailable' })
   throw new HostError(404, 'not found')
  } catch (e) {
+  if (e instanceof HostError && new URL(req.url).pathname.startsWith('/auth/') && host.humanConfig && host.meta.human) {
+   try { await host.meta.human('record-denial', { category:  /^[a-z_]{1,64}$/.test(e.message) ? e.message : 'entry_unavailable' }) }
+   catch { return json({ error: 'entry receipt unavailable', category: 'host_unavailable' }, 503) }
+  }
+  if (e instanceof HostError && new URL(req.url).pathname === '/auth/login') {
+   const message = e.status === 503 ? '身分服務暫時無法使用。請回到原分頁，稍後重試。' : e.message === 'human_revalidation_due' ? '需要重新驗證身分。請回到原分頁重新開始登入。' : '這次登入未獲授權或已失效。請回到原分頁重新確認。'
+   return new Response('<!doctype html><meta charset="utf-8"><title>登入未完成</title><p>' + message + '</p>', { status: e.status, headers: { 'Content-Type': 'text/html; charset=utf-8', 'Content-Security-Policy': "default-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'" } })
+  }
   if (e instanceof HostError) return json({ error: e.message, ...e.details }, e.status)
   if (e instanceof SyntaxError) return json({ error: 'invalid JSON' }, 400)
   return json({ error: 'host operation failed' }, 503)

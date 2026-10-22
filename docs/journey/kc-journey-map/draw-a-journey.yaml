@@ -1,250 +1,776 @@
-# Ongoing kc-journey-map product planning; YAML is the canonical source.
-# Historical observations and accepted direction retain their original scope.
-# See README.md for evidence chronology; code paths refer to kc-journey-map/.
-
+# Canonical recoverable plan; current authority: private-entry.md.
+# Question answers are accepted design dispositions, never runtime passes.
 journey: draw-a-journey
 title: Draw a map with this skill
-
 measured:
   ref: "Historical example observation: branch iamcxa/journey-map-skill-merge, PR #394"
   date: 2026-09-10
-  repos: [kc-claude-plugins]
-
+  repos:
+    - kc-claude-plugins
 persona: >
-  An engineer who has to say what a system does today, and be believed — and then say which part to build next.
-
+  An engineer who has to say what a system does today, and be believed — and then say which part to
+  build next.
 one_journey: >
-  An engineer writes one journey file, and every board, contract and lint they see is generated from it — with authored intent and evidence kept in the file.
-
+  An engineer writes one journey file, and every board, contract and lint they see is generated from
+  it — with authored intent and evidence kept in the file.
 now:
   - id: now-prose
-    card: "Writes the flow as prose in a doc"
-    pain: "no column forces the evidence next to the claim"
+    card: Writes the flow as prose in a doc
+    pain: no column forces the evidence next to the claim
   - id: now-whiteboard
-    card: "Draws it on a whiteboard"
-    pain: "goes stale the day it is drawn, and nothing says so"
-    workaround: "re-draws it before each review"
+    card: Draws it on a whiteboard
+    pain: goes stale the day it is drawn, and nothing says so
+    workaround: re-draws it before each review
   - id: now-taste
-    card: "Splits the work into tickets by feel"
-    pain: "the split is defensible only by whoever made it"
-
+    card: Splits the work into tickets by feel
+    pain: the split is defensible only by whoever made it
 steps:
   - id: write
-    card: "Writes the steps and the evidence into a file"
-    activity: "Write the journey"
+    card: Writes the steps and the evidence into a file
+    activity: Write the journey
     stories:
-      - {id: name-the-steps-a-person-take, card: "Name the steps a person takes", release: r1, status: exists, evidence: loadModel}
-      - {id: cite-the-code-each-step-runs, card: "Cite the code each step runs", release: r2, status: exists, evidence: systemText}
-      - {id: name-what-must-stay-true, card: "Name what must stay true", release: r2, status: exists, evidence: ruleText}
+      - id: name-the-steps-a-person-take
+        card: Name the steps a person takes
+        release: r1
+        status: exists
+        evidence: loadModel
+      - id: cite-the-code-each-step-runs
+        card: Cite the code each step runs
+        release: r2
+        status: exists
+        evidence: systemText
+      - id: name-what-must-stay-true
+        card: Name what must stay true
+        release: r2
+        status: exists
+        evidence: ruleText
     system:
-      - "docs/journey/<slug>.yaml in the repository being described — steps, rules, slices, status"
+      - docs/journey/<slug>.yaml in the repository being described — steps, rules, slices, status
       - "No coordinates are stored: layout is computed from order, so a move is a one-line diff"
-    cites: [kc-claude-plugins]
-    rules: [file-is-truth, no-cell-from-memory]
-
+    cites:
+      - kc-claude-plugins
+    rules:
+      - file-is-truth
+      - no-cell-from-memory
   - id: render
-    card: "Renders the selected boards"
-    activity: "Put it on a board"
+    card: Renders the selected boards
+    activity: Put it on a board
     stories:
-      - {id: ask-which-boards-to-draw, card: "Ask which boards to draw, through the host's selection UI", release: r1, status: exists, evidence: buildAllPages}
-      - {id: default-to-the-journey-alone, card: "Get the user journey alone when nobody answers", release: r1, status: exists, evidence: DEFAULT_PROJECTIONS}
-      - {id: draw-the-journey-board-if-ask, card: "Draw the per-release journey board, but only if asked for it", release: r1, status: exists, evidence: buildJourneyBoard}
-      - {id: get-a-story-map-and-an-journ, card: "Get a story map, rendered to canvas", release: r1, status: exists, evidence: buildStoryMap}
-      - {id: re-render-after-every-change, card: "Re-render after every change", release: r1, status: exists, evidence: renderToRoom}
-      - {id: export-an-image-for-a-report, card: "Export an image for a report", release: r1, status: exists, evidence: toImage}
-      - {id: see-updated-map-without-waiting, card: "See the updated map quickly after each discussion change", release: r3, status: unverified}
+      - id: ask-which-boards-to-draw
+        card: Ask which boards to draw, through the host's selection UI
+        release: r1
+        status: exists
+        evidence: buildAllPages
+      - id: default-to-the-journey-alone
+        card: Get the user journey alone when nobody answers
+        release: r1
+        status: exists
+        evidence: DEFAULT_PROJECTIONS
+      - id: draw-the-journey-board-if-ask
+        card: Draw the per-release journey board, but only if asked for it
+        release: r1
+        status: exists
+        evidence: buildJourneyBoard
+      - id: get-a-story-map-and-an-journ
+        card: Get a story map, rendered to canvas
+        release: r1
+        status: exists
+        evidence: buildStoryMap
+      - id: re-render-after-every-change
+        card: Re-render after every change
+        release: r1
+        status: exists
+        evidence: renderToRoom
+      - id: export-an-image-for-a-report
+        card: Export an image for a report
+        release: r1
+        status: exists
+        evidence: toImage
+      - id: see-updated-map-without-waiting
+        card: See the updated map quickly after each discussion change
+        release: r3
+        status: unverified
     system:
-      - "Current: buildAllPages/renderToRoom batch chosen projections in one PATCH; journey-board includes all releases."
-      - "R3 direction: show the verified live board first; reuse an existing compatible server. Export PNGs on user request or when justified by the conversation context."
-    cites: [kc-claude-plugins]
-    rules: [board-is-a-cache, handmade-cards-survive, selection-is-per-call, r3-feedback-measurement]
-    command: "RenderJourney(journeyFile, roomId, selection)"
+      - "Current: buildAllPages/renderToRoom batch chosen projections in one PATCH; journey-board
+        includes all releases."
+      - "R3 direction: show the verified live board first; reuse an existing compatible server.
+        Export PNGs on user request or when justified by the conversation context."
+    cites:
+      - kc-claude-plugins
+    rules:
+      - board-is-a-cache
+      - handmade-cards-survive
+      - selection-is-per-call
+      - r3-feedback-measurement
+    command: RenderJourney(journeyFile, roomId, selection)
     events:
-      - "ShapesUpserted"
-      - "OwnedShapesRemoved"
-      - "RecordRejected"
-    state: "the room document"
-    readmodel: "the story map a person looks at"
+      - ShapesUpserted
+      - OwnedShapesRemoved
+      - RecordRejected
+    state: the room document
+    readmodel: the story map a person looks at
     note: >
-      R1: scoped Codex Plan-mode selection and Default-mode rendering were verified; see
-      README.md. buildAllPages supports rendering, not host-UI proof. Native multi-select,
-      Default-mode async UI and other hosts remain unverified.
-
+      R1: scoped Codex Plan-mode selection and Default-mode rendering were verified; see README.md.
+      buildAllPages supports rendering, not host-UI proof. Native multi-select, Default-mode async
+      UI and other hosts remain unverified.
   - id: contract
-    card: "Generates a per-release contract alongside the boards"
-    activity: "Check it against the code"
+    card: Generates a per-release contract alongside the boards
+    activity: Check it against the code
     stories:
-      - {id: generate-a-contract-per-release, card: "Generate a per-release contract, never authored by hand", release: r2, status: exists, evidence: buildReleaseContract}
-      - {id: run-three-lints-that-can-fail, card: "Run status and evidence lints, each shown firing on a real defect", release: r2, status: exists, evidence: lintJourney}
+      - id: generate-a-contract-per-release
+        card: Generate a per-release contract, never authored by hand
+        release: r2
+        status: exists
+        evidence: buildReleaseContract
+      - id: run-three-lints-that-can-fail
+        card: Run status and evidence lints, each shown firing on a real defect
+        release: r2
+        status: exists
+        evidence: lintJourney
     system:
-      - "lib/release-contract.mjs -> one document per release: each story's status, evidence symbol and rule ids"
-      - "lib/lint.mjs -> no-status, invalid-status, exists-without-evidence, evidence-not-found; the last re-greps the repository every run"
-    cites: [kc-claude-plugins]
-    rules: [contract-is-generated, grep-is-the-check]
-    command: "LintJourney(journeyFile, repoRoot)"
+      - "lib/release-contract.mjs -> one document per release: each story's status, evidence symbol
+        and rule ids"
+      - lib/lint.mjs -> no-status, invalid-status, exists-without-evidence, evidence-not-found; the
+        last re-greps the repository every run
+    cites:
+      - kc-claude-plugins
+    rules:
+      - contract-is-generated
+      - grep-is-the-check
+    command: LintJourney(journeyFile, repoRoot)
     events:
-      - "ContractGenerated"
-      - "LintPassed"
-      - "LintViolationFound"
-    state: "nothing — the file is the only state; the contract and the lint result are both derived"
-    readmodel: "the release contract document, and the lint's violation list"
-
+      - ContractGenerated
+      - LintPassed
+      - LintViolationFound
+    state: nothing — the file is the only state; the contract and the lint result are both derived
+    readmodel: the release contract document, and the lint's violation list
   - id: share
-    card: "Puts the board in front of someone who has no checkout"
-    activity: "Let someone else in"
+    card: Puts the board in front of someone who has no checkout
+    activity: Let someone else in
     stories:
-      - {id: hand-someone-a-link-to-board, card: "Hand someone a link to the board", release: null, status: exists, evidence: startTunnel}
-      - {id: land-on-the-board-i-shared, card: "Have them land on the board I shared, not an empty one", release: null, status: gap}
-      - {id: share-without-edit-rights, card: "Let them read it without handing over edit rights", release: null, status: gap}
-      - {id: know-a-link-i-sent-has-died, card: "Know that a link I already sent has stopped working", release: null, status: gap}
+      - id: hand-someone-a-link-to-board
+        card: Hand someone a link to the board
+        release: null
+        status: exists
+        evidence: startTunnel
+      - id: share-without-edit-rights
+        card: Let them read it without handing over edit rights
+        release: null
+        status: gap
+      - id: know-a-link-i-sent-has-died
+        card: Know that a link I already sent has stopped working
+        release: null
+        status: gap
     system:
-      - "server/tunnel.ts -> a cloudflared quick tunnel onto JOURNEY_SHARE_PORT; the canvas API is deliberately never the target"
-      - "vite.share.config.mts proxies /connect/ and /uploads/ only; every other path returns the SPA shell"
-      - "server/client/App.tsx takes the room from ?room= and falls back to a room named default"
-      - "tunnelStatus reports running from the child process and targetUp from a socket to the target; neither observes the public URL"
-    cites: [kc-claude-plugins]
-    rules: [share-is-not-read-only, link-dies-with-the-process]
-
+      - server/tunnel.ts -> a cloudflared quick tunnel onto JOURNEY_SHARE_PORT; the canvas API is
+        deliberately never the target
+      - vite.share.config.mts proxies /connect/ and /uploads/ only; every other path returns the SPA
+        shell
+      - server/client/App.tsx takes the room from ?room= and falls back to a room named default
+      - tunnelStatus reports running from the child process and targetUp from a socket to the
+        target; neither observes the public URL
+    cites:
+      - kc-claude-plugins
+    rules:
+      - share-is-not-read-only
+      - link-dies-with-the-process
+  - id: private-entry
+    card: Signs in and enters the intended private canvas
+    activity: Enter my private canvas
+    stories:
+      - id: land-on-the-board-i-shared
+        card: Have them land on the board I shared, not an empty one
+        release: r4
+        status: gap
+        questions:
+          - id: q-r4-no-room-choice
+            ask: With no room requested, should entry restore the last permitted room or use a configured first
+              room?
+            answer: Explicit URL first; otherwise resume only the same member’s still-permitted last room.
+              Recheck current policy before opening.
+            doc: http://127.0.0.1:4759/docs/adr/LOCAL-entry-room-priority.md#decision
+          - id: q-r4-no-eligible-history
+            ask: On first use or no eligible history, accept a permitted-room chooser with no automatic A
+              default?
+            answer: Show the registered permitted-room chooser on first use or stale history. Empty inventory
+              stays stopped; no automatic default.
+            doc: http://127.0.0.1:4759/docs/adr/LOCAL-entry-room-priority.md#first-use-and-denied-target-ruling
+          - id: q-r4-legacy-day2-data
+            ask: Must old Day2 links keep the existing qnow-day2 canvas?
+            answer: Preserve the original qnow-day2 ID, records and links. No replacement, copy, clear, implicit
+              empty creation or data migration.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-07
+    system:
+      - "Current: server/host/policy.ts authenticate/exchange validates grants and creates 15-minute
+        grant-backed cookies; it does not bind verified human accounts."
+      - "Proposed: a login-only Cloudflare Access route validates signed issuer/audience/expiry
+        identity, resolves an enabled app member, and creates a short app session. Same-origin app
+        APIs deny absent credentials."
+    cites:
+      - kc-claude-plugins
+    rules:
+      - private-entry-identity
+      - private-room-selection
+      - private-scope
+    note: Accepted 2026-10-19 design. The opt-in first-story candidate has local Node browser/owner-peer
+      and simulated-provider Worker evidence only. Exact-room entry preserves original IDs/data.
+      Sites remains legacy; actual provider setup and activation are unrun.
+  - id: choose-private-room
+    card: Chooses another permitted room from the canvas
+    activity: Choose my room
+    stories:
+      - id: switch-my-permitted-rooms
+        card: Switch my permitted rooms without leaving the canvas
+        release: r4
+        status: unverified
+        evidence: permittedRoomCatalog
+        questions:
+          - id: q-r4-fourth-room-registration
+            ask: Which existing registration procedure can add a permitted fourth room without a new frontend
+              path or build?
+            answer: Operator registration and an exact member-room grant make an existing room eligible without
+              a new frontend build. Catalog reads metadata, not document telemetry.
+          - id: q-r4-partial-catalog-failure
+            ask: Can an expired Day2 credential disable otherwise valid A and B?
+            answer: Independent room grants remain independent. One expired room cannot disable valid rooms;
+              policy/service failure stays explicit and fails closed.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-05
+          - id: q-r4-switch-failure
+            ask: Which original context survives denied source confirmation, a failed target or concurrent
+              coediting?
+            answer: Confirm source edits before switching; retain the original editor on failed confirmation or
+              target admission. A denied URL never selects another room automatically.
+              Revoked-source work stays frozen; another room requires an explicit new context.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-04
+    system:
+      - "Current: server/client/RoomSelector.tsx RoomPageMenu integrates the room menu with the
+        native canvas toolbar."
+      - "Proposed: app-member room grants filter one catalog; menu labels never authorize. A/B are
+        legacy test rooms; Day2 means qnow-day2."
+    cites:
+      - kc-claude-plugins
+    rules:
+      - private-room-data
+      - private-room-selection
+      - private-scope
+    note: Accepted design preserves native selector, existing room IDs/data and operator registration.
+      First-entry selection is in the first candidate; full catalog and switching acceptance remain
+      separate. No room-management platform.
+  - id: return-private-room
+    card: Returns to the same permitted room
+    activity: Return to my work
+    stories:
+      - id: resume-my-authorized-room
+        card: Return to my room after reload or sign-in
+        release: r4
+        status: unverified
+        questions:
+          - id: q-r4-unsent-work-boundary
+            ask: Do unconfirmed edits survive reload or have a guaranteed hosted export?
+            answer: Human browser drafts are accepted, separate from sync and agent process state. Only
+              acknowledged durable browser saves may claim local persistence; hosted export is not
+              guaranteed. Explicit verified restoration never silently overwrites cloud data.
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+          - id: q-r4-history-isolation
+            ask: Whose last-worked room is remembered across tabs and accounts, and when is it updated?
+            answer: History is local to origin/backend/member. Update it only after successful exact-room
+              admission; stale, denied or different-member history cannot substitute a room.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-06
+          - id: q-draft-local-ack
+            ask: Which human edits survive reload, tab close or crash, and what happens when browser persistence
+              fails or disappears?
+            answer: "Persist immutable human draft versions in IndexedDB transactions and acknowledge only after
+              durable completion. Failed saves retain the open tab and show failure;
+              eviction/private browsing/clearing remain explicit limits. No time expiry: retain
+              until verified restore plus cloud sync or manual deletion."
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+          - id: q-draft-identity-recheck
+            ask: Who may discover, review and restore a local draft after account/room change, revocation or
+              later regrant?
+            answer: Before draft discovery/review and again before apply, require the original verified
+              person/backend/room and current permission. Regrant allows explicit review only, never
+              automatic resume or cloud write. A changed shared cookie cannot reconnect the old
+              context.
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+          - id: q-draft-multitab-isolation
+            ask: How do multiple browser tabs preserve distinct acknowledged draft versions without
+              cross-account leakage or overwriting one another?
+            answer: Use immutable backend/member/room/tab/version keys and atomic head updates. Separate tabs
+              retain distinct versions; metadata discovery never grants access. Do not merge or
+              overwrite other tabs/accounts.
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+          - id: q-draft-apply-receipt
+            ask: How can explicit restoration handle changed cloud data or a partial/lost apply response without
+              silent overwrite, duplicate retry or premature cleanup?
+            answer: Compare reviewed base/selected fingerprints with current cloud state before explicit apply.
+              Keep an attempt receipt and retain every draft on unknown or partial result; reconcile
+              readback before retry. Remove only the exact version after verified restoration and
+              cloud sync, or manual deletion.
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-human-local-draft-direction
+    system:
+      - "Current: server/client/App.tsx room navigation and confirm-room-switch.ts compare the
+        local/remote document before leaving."
+      - "Proposed: pause writes on session expiry; retain original tab; separate reauthentication
+        checks the same account and room before an explicit resume."
+    cites:
+      - kc-claude-plugins
+    rules:
+      - private-room-data
+      - private-failure-visible
+    note: Accepted design requires same-person/current-room review and explicit restoration against
+      current cloud state. Durable local acknowledgement differs from cloud sync. No automatic
+      write/merge, cross-origin migration or guaranteed hosted export. Draft implementation and
+      runtime proof remain owed.
+  - id: recover-private-access
+    card: Understands unavailable access and chooses a safe next step
+    activity: Recover my access
+    stories:
+      - id: understand-room-access-failure
+        card: See why my room cannot open and recover safely
+        release: r6
+        status: unverified
+        questions:
+          - id: q-r4-expiry-no-renewal
+            ask: May Day2 access be renewed just to finish this release?
+            answer: Do not extend legacy expiry to finish delivery. Verify each corresponding new connection in
+              its original room before matching legacy revoke; already expired/revoked credentials
+              remain denied.
+          - id: q-r4-expiry-recovery-ui
+            ask: After Day2 access expires, which recovery screen and explicit next action should Captain see?
+            answer: Keep the requested room and original local work visible while paused. Distinguish ordinary
+              expiry from denied authority; fresh verification and explicit same-person/room
+              recovery are separate from choosing another room.
+          - id: q-r6-denial-contract
+            ask: How do browser and MCP clients distinguish expiry, revoked access, outage and known quota
+              exhaustion?
+            answer: Separate normal expiry, revoked/disabled authority, provider/network outage, known quota
+              exhaustion and unknown mutation outcome. HTTP/MCP data routes use typed errors, never
+              provider HTML or blind mutation retry.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-03
+          - id: q-logout-unconfirmed
+            ask: What must explicit browser logout do with unconfirmed work in the original tab?
+            answer: Allow cancel or explicit browser-session logout while retaining the original frozen local
+              work and close/reload warning. Logout does not revoke independent installations or
+              delete retained drafts.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-19
+      - id: revoke-delegated-agent-access
+        card: Revoke one agent or disable its authorizing member
+        release: r6
+        status: gap
+        questions:
+          - id: q-revoke-bound
+            ask: What bounded behavior makes app revocation and provider-policy removal distinct?
+            answer: "Commit app denial/generation first; reject new operations and incoming writes immediately.
+              Later stream leases target an observed stop within 60 seconds and report confirmation
+              separately. Provider-only removal has no app-wide stop guarantee: app disable/revoke
+              first, provider removal second."
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-09
+          - id: q-audit-boundary
+            ask: What minimal identity evidence is recorded without changing concurrency?
+            answer: "Record minimal operator-only lifecycle and mutation-batch admission/outcome receipts:
+              actor/authorizer/credential IDs, room or unknown, category and server time. No tokens,
+              digests, document payload or per-record event sourcing. Keep committed/receipt-pending
+              distinct from unknown outcome; 30-day receipts exclude security tombstones."
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-11
+          - id: q-operator-lifecycle
+            ask: Which bounded operator surface manages verified bindings, legacy revoke and member disable?
+            answer: Use the existing protected operator boundary for explicit exact verified bindings, room
+              grants, legacy revoke and member disable. No first-visitor owner, email/label
+              inference, invitation service or general admin platform.
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-legacy-connection-rollout-direction
+          - id: q-auth-backup-safety
+            ask: How can recovery restore documents without reviving stale human or delegated authority?
+            answer: Document recovery must not restore old security authority. Preserve generations, revoked
+              families/sessions and original expiries through backup/rollback; remove/regrant or
+              disable/reenable never revives old authority.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-17
+    system:
+      - "Current: server/host/policy.ts currentGrant/authorize rejects expired/revoked grants and
+        forbidden rooms."
+      - "Proposed: distinguish login expiry, explicit permission removal and transport outage; stop
+        reads/writes/reconnect/wake admission on actual app revocation."
+    cites:
+      - kc-claude-plugins
+    rules:
+      - private-entry-identity
+      - private-failure-visible
+    note: Complete design confirmed 2026-10-19. Recovery retains original human work and identity/room
+      context, requires explicit restoration, and preserves drafts through unknown outcomes.
+      Stream-stop, durable storage/manual deletion, permission-regrant review and apply receipts
+      remain later implementation/runtime work. No private agent transcripts or credentials are
+      persisted as human drafts.
   - id: workshop
-    card: "Moves the cards around with other people"
-    activity: "Talk over it"
+    card: Moves the cards around with other people
+    activity: Talk over it
     stories:
-      - {id: reorder-the-columns, card: "Reorder the columns", release: r1, status: exists, evidence: readRoom}
-      - {id: reword-a-card, card: "Reword a card", release: r1, status: exists, evidence: readRoom}
-      - {id: add-a-card-nobody-had-though, card: "Add a card nobody had thought of", release: r1, status: exists, evidence: readRoom}
+      - id: reorder-the-columns
+        card: Reorder the columns
+        release: r1
+        status: exists
+        evidence: readRoom
+      - id: reword-a-card
+        card: Reword a card
+        release: r1
+        status: exists
+        evidence: readRoom
+      - id: add-a-card-nobody-had-though
+        card: Add a card nobody had thought of
+        release: r1
+        status: exists
+        evidence: readRoom
     system:
-      - "The tldraw room syncs every open tab; edits are ordinary canvas edits"
-      - "Each rendered shape carries meta.journey {nodeId, kind}; a hand-added card carries none"
-    cites: [kc-claude-plugins]
-    rules: [handmade-cards-survive]
-
+      - The tldraw room syncs every open tab; edits are ordinary canvas edits
+      - Each rendered shape carries meta.journey {nodeId, kind}; a hand-added card carries none
+    cites:
+      - kc-claude-plugins
+    rules:
+      - handmade-cards-survive
+  - id: agent-collaboration
+    card: Works with an authorized agent in the chosen room
+    activity: Work with my agent
+    stories:
+      - id: pair-my-agent-installation
+        card: Approve a named agent installation for selected rooms
+        release: r5
+        status: gap
+        questions:
+          - id: q-pair-human-binding
+            ask: How is a pairing code bound to its initiating client and verified authorizer?
+            answer: Only a verified enabled human can approve an exact immutable requested room set within
+              current grants. Bind the one-shot request to its initiating verifier; a code or
+              self-reported agent label is not authority.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-18
+          - id: q-pair-supported-client
+            ask: Do current Claude and Codex clients support the proposed pairing flow?
+            answer: Use the bounded installation helper for stable native stdio and protected endpoint
+              forwarding. Actual Claude/Codex configuration and secure OS credential storage remain
+              runtime obligations; no universal OAuth/client support is claimed.
+          - id: q-pair-lifetime-policy
+            ask: When do proposed lifetimes begin, and which interruptions require fresh human consent?
+            answer: "Approved defaults: pairing 5 minutes, local handoff 60 seconds, access 15 minutes, human
+              sign-in at most 7 non-sliding days. Persistent installation consent lasts until
+              revoke; short-access expiry normally renews automatically. Human age does not force
+              agent re-pairing."
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-persistent-installation-renewal-direction
+          - id: q-pair-atomic-retry
+            ask: How are atomic redemption, lost replies and agent-to-human-session escalation prevented?
+            answer: Consume one initiating verifier once in a metadata transaction that creates one family and
+              returns secrets once. Lost pairing reply permits only revoke/cancel reconciliation
+              before a fresh request; agent/legacy credentials cannot mint humans or approve
+              pairing.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-15
+          - id: q-agent-renewal-family
+            ask: What permits automatic renewal, and how do family revoke, lost membership and compromised
+              secrets affect an installation?
+            answer: Effective delegation is the intersection of current authorizer room grants and approved
+              installation scope. Rotating refresh preserves persistent consent without inactivity
+              expiry. Revoked family, member disable and room-generation loss deny renewal/access;
+              secure helper storage and revocation proof are required.
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-persistent-installation-renewal-direction
+          - id: q-agent-refresh-races
+            ask: How will refresh rotation detect replay and handle concurrent requests or a lost response
+              without minting duplicates or reviving authority?
+            answer: Single-flight helper refresh plus atomic spent-digest rotation prevents duplicate branches.
+              Authenticated replay revokes; random guesses cannot revoke. Unknown refresh/lost reply
+              or failed secure save pauses that installation, confirms revoke-only reconciliation,
+              then requires fresh human pairing. Ordinary network loss alone is not repair.
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-persistent-installation-renewal-direction
+      - id: collaborate-in-my-permitted-room
+        card: Work with my authorized agent in the same room
+        release: r5
+        status: unverified
+        questions:
+          - id: q-r4-independent-agent-rights
+            ask: Does adding Day2 to the human menu also give Codex or Claude access?
+            answer: A human menu entry gives no agent rights. Each installation needs its own explicit pairing
+              and delegated rooms; independent legacy grants retain only original scopes/expiry.
+          - id: q-r4-browser-agent-store
+            ask: Which path proves the browser and native agents use the same existing canvas?
+            answer: Verify browser and each native agent against the same backend, original room/record IDs and
+              authorized read/write path using synthetic sentinels. Local simulation, connector
+              configuration or a login page alone is not full native/hosted proof.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-13
+          - id: q-agent-data-authority
+            ask: Should delegated room read/write include whole-document replacement and enabled Node
+              capabilities, or be explicitly narrowed?
+            answer: Retain existing room read/write powers, including delete and whole-document replacement,
+              with explicit exact-scope consent disclosure. Node save/checkout apply only when
+              configured and granted. Do not silently add read-only/per-action narrowing or a
+              concurrency redesign.
+            doc: http://127.0.0.1:4759/docs/design-brief.md#accepted-delegated-capability-scope
+          - id: q-agent-attribution
+            ask: How can a human identify stateless agent activity without claiming fabricated live presence?
+            answer: Show server-derived recent activity and installation identity separately from self-reported
+              labels. Stateless tool calls are not fabricated online/model presence; no
+              cryptographic per-record model attribution is added.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-14
+    system:
+      - "Current: server/host/policy.ts Grant has a principalId label and room list; transport.ts
+        exposes native /mcp; neither proves a verified human binding."
+      - "Proposed: bounded pairing helper issues an independent app credential per installation,
+        authorized by a verified enabled member. Effective rooms intersect current member and
+        delegated room grants."
+    cites:
+      - kc-claude-plugins
+    rules:
+      - private-room-data
+      - private-agent-boundary
+      - private-scope
+    note: "Complete design confirmed 2026-10-19: persistent installation consent, automatic normal
+      renewal, exact current-authority intersection and family revoke. Conservative unknown-refresh
+      repair requires confirmed revoke then fresh human pairing. Helper/native-client/secure
+      storage/rotation proof remain owed; room data/concurrency are unchanged."
+  - id: host-private-journey
+    card: Uses the same journey on the selected host
+    activity: Keep host choice portable
+    stories:
+      - id: use-common-api-across-hosts
+        card: Use one room contract on Node or Cloudflare
+        release: r7
+        status: gap
+        questions:
+          - id: q-host-parity
+            ask: Which host obligations must match while keeping Cloudflare Free?
+            answer: Preserve the shared document/admission/lifecycle/error contract and explicit host capability
+              differences. Cloudflare must stay Free; actual account eligibility,
+              sockets/alarms/reads/writes/CPU/storage and representative workload remain unmeasured
+              local-only proof. No paid upgrade or automatic scope expansion.
+            doc: http://127.0.0.1:4759/docs/interrogation-v2-triage.md#theme-16
+    system:
+      - "Current: server/host/node.ts and cloudflare.ts adapt shared transport/policy/core."
+      - "Proposed: extend shared admission metadata, retain room engine/data/concurrency; isolate
+        provider identity and hosting adapters."
+    rules:
+      - private-room-data
+      - private-agent-boundary
+      - private-scope
+    note: Accepted design requires shared admission/error behavior with explicit host capability
+      differences, Cloudflare Free and local-only usage detail. Local adapter tests are not real
+      provider/Free workload acceptance. No deployment, provider/account changes, Sites removal or
+      original-data migration is authorized.
   - id: readback
-    card: "Takes the changes back into the file"
-    activity: "Fold it back in"
+    card: Takes the changes back into the file
+    activity: Fold it back in
     stories:
-      - {id: see-what-changed, card: "See what changed", release: r1, status: exists, evidence: diffAgainstModel}
-      - {id: apply-the-wording-and-the-or, card: "Apply the wording and the order", release: r1, status: exists, evidence: applyDiff}
+      - id: see-what-changed
+        card: See what changed
+        release: r1
+        status: exists
+        evidence: diffAgainstModel
+      - id: apply-the-wording-and-the-or
+        card: Apply the wording and the order
+        release: r1
+        status: exists
+        evidence: applyDiff
     system:
-      - "lib/journey-read.mjs reports reordered, reworded, duplicated, unclaimed, missing"
-      - "--write applies identity-based activity/story wording and story-map order, release and priority changes; duplicate identities and conflicting edits are refused, stale wording is skipped"
-    cites: [kc-claude-plugins]
-    rules: [lossy-inverse, ambiguity-refused]
-    command: "ApplyDiff(journeyFile, roomId, outPath?)"
+      - lib/journey-read.mjs reports reordered, reworded, duplicated, unclaimed, missing
+      - --write applies identity-based activity/story wording and story-map order, release and
+        priority changes; duplicate identities and conflicting edits are refused, stale wording is
+        skipped
+    cites:
+      - kc-claude-plugins
+    rules:
+      - lossy-inverse
+      - ambiguity-refused
+    command: ApplyDiff(journeyFile, roomId, outPath?)
     events:
-      - "CardReworded"
-      - "StoriesReprioritised"
-      - "ColumnsReordered"
-      - "ReorderRefused"
-      - "ConflictRefused"
-    state: "the journey file"
-    readmodel: "the diff report"
+      - CardReworded
+      - StoriesReprioritised
+      - ColumnsReordered
+      - ReorderRefused
+      - ConflictRefused
+    state: the journey file
+    readmodel: the diff report
     note: >
-      Read covers story-map and release-board wording, plus legacy activity cards. Release-detail positions do not change global order, release membership or story priority. A story's status, evidence and question are written by hand and not yet round-tripped from the canvas.
-
+      Read covers story-map and release-board wording, plus legacy activity cards. Release-detail
+      positions do not change global order, release membership or story priority. A story's status,
+      evidence and question are written by hand and not yet round-tripped from the canvas.
   - id: model
-    card: "Names the command, the events and the state behind each step"
-    activity: "Model the functions"
+    card: Names the command, the events and the state behind each step
+    activity: Model the functions
     stories:
-      - {id: start-from-a-journey-or-from, card: "Start from a journey, or from prose", release: r3, status: unverified}
-      - {id: name-one-command-per-step, card: "Name one command per step", release: r3, status: unverified}
-      - {id: name-the-events-it-emits-inc, card: "Name the events it emits, including the refusals", release: r3, status: unverified}
-      - {id: name-the-state-it-changes-an, card: "Name the state it changes and the view it feeds", release: r3, status: unverified}
+      - id: start-from-a-journey-or-from
+        card: Start from a journey, or from prose
+        release: r3
+        status: unverified
+      - id: name-one-command-per-step
+        card: Name one command per step
+        release: r3
+        status: unverified
+      - id: name-the-events-it-emits-inc
+        card: Name the events it emits, including the refusals
+        release: r3
+        status: unverified
+      - id: name-the-state-it-changes-an
+        card: Name the state it changes and the view it feeds
+        release: r3
+        status: unverified
     system:
-      - "Current: canvas.md documents source command, events including refusals, state and readmodel; funcmap.mjs reads these authored fields."
-    cites: [kc-claude-plugins]
-    rules: [file-is-truth, r3-model-authoring]
-    note: >
+      - "Current: canvas.md documents source command, events including refusals, state and
+        readmodel; funcmap.mjs reads these authored fields."
+    cites:
+      - kc-claude-plugins
+    rules:
+      - file-is-truth
+      - r3-model-authoring
+    note: |
       Source authoring support exists; the complete user exercise remains unverified.
-
   - id: funcmap
-    card: "Reads the function map beside the journey"
-    activity: "Put it on a board"
+    card: Reads the function map beside the journey
+    activity: Put it on a board
     stories:
-      - {id: see-a-third-page-command-eve, card: "See a third page: Command, Event, State, Read model", release: r3, status: exists, evidence: buildFunctionMap}
-      - {id: workshop-it-and-read-it-back, card: "Workshop it and read it back the same way", release: null, status: gap}
+      - id: see-a-third-page-command-eve
+        card: "See a third page: Command, Event, State, Read model"
+        release: r3
+        status: exists
+        evidence: buildFunctionMap
+      - id: workshop-it-and-read-it-back
+        card: Workshop it and read it back the same way
+        release: null
+        status: gap
     system:
-      - "Current: buildFunctionMap projects authored fields when requested and labels missing fields as not modelled."
-    cites: [kc-claude-plugins]
-    rules: [same-columns-new-lanes, r3-model-authoring]
+      - "Current: buildFunctionMap projects authored fields when requested and labels missing fields
+        as not modelled."
+    cites:
+      - kc-claude-plugins
+    rules:
+      - same-columns-new-lanes
+      - r3-model-authoring
     note: >
       Edit the source and redraw. Direct function-model canvas writeback is deferred; supported
       story-card readback is separate.
-
   - id: handoff
-    card: "Discusses the event order with planning"
-    activity: "Hand it to planning"
+    card: Discusses the event order with planning
+    activity: Hand it to planning
     stories:
-      - {id: hand-the-order-to-planning, card: "Hand the agreed release to development planning", release: r3, status: unverified}
+      - id: hand-the-order-to-planning
+        card: Hand the agreed release to development planning
+        release: r3
+        status: unverified
     system:
-      - "Current guidance: Prepare one release reuses decisions, asks only material unresolved questions, and produces one Development Brief for later dev-flow technical shaping."
-    cites: [kc-claude-plugins]
-    rules: [r3-handoff-authority]
-    note: >
+      - "Current guidance: Prepare one release reuses decisions, asks only material unresolved
+        questions, and produces one Development Brief for later dev-flow technical shaping."
+    cites:
+      - kc-claude-plugins
+    rules:
+      - r3-handoff-authority
+    note: |
       Producer/consumer proof exists; complete journey acceptance remains unverified.
-
 releases:
   - id: r1
-    name: "RELEASE 1"
-    goal: "A person can draw a story map by talking, and plan with it."
+    name: RELEASE 1
+    goal: A person can draw a story map by talking, and plan with it.
   - id: r2
-    name: "RELEASE 2"
-    goal: "The same map can be checked against the code that exists."
+    name: RELEASE 2
+    goal: The same map can be checked against the code that exists.
   - id: r3
-    name: "RELEASE 3"
-    goal: "Author a function model, iterate on it quickly, and hand one agreed Development Brief to development planning."
-
+    name: RELEASE 3
+    goal: Author a function model, iterate on it quickly, and hand one agreed Development Brief to
+      development planning.
+  - id: r4
+    name: RELEASE 4 · ACCEPTED DESIGN
+    goal: A verified human enters and returns to the intended permitted canvas through one native entry.
+  - id: r5
+    name: RELEASE 5 · ACCEPTED DESIGN
+    goal: A verified human pairs one agent installation and coedits the same permitted room with a
+      distinct actor.
+  - id: r6
+    name: RELEASE 6 · ACCEPTED DESIGN
+    goal: A human safely recovers expired sessions and independently revokes agents or members without
+      losing same-tab work.
+  - id: r7
+    name: RELEASE 7 · ACCEPTED DESIGN
+    goal: The complete private journey has equivalent Node and Cloudflare admission with local Free-plan
+      usage proof.
 ownership:
   - id: own-author
-    owner: "The engineer"
+    owner: The engineer
     from: write
     to: write
-    note: "owns the claims, the citations and the model"
+    note: owns the claims, the citations and the model
   - id: own-tool
-    owner: "The skill"
+    owner: The skill
     from: render
     to: readback
-    note: "owns the drawing, the contract, the lint and the read-back"
-
+    note: owns the drawing, the contract, the lint and the read-back
 rules:
   - id: file-is-truth
-    text: "The file in the repository is the source of truth; every board or document is generated from it"
+    text: The file in the repository is the source of truth; every board or document is generated from it
   - id: board-is-a-cache
-    text: "Read or export canvas edits before rerendering; the room is a projection of the journey file"
+    text: Read or export canvas edits before rerendering; the room is a projection of the journey file
   - id: handmade-cards-survive
-    text: "A shape with no meta.journey is never touched by a re-render, and is reported as unclaimed"
+    text: A shape with no meta.journey is never touched by a re-render, and is reported as unclaimed
   - id: no-cell-from-memory
-    text: "Every System Flow cell cites something read this session; a recalled fact is a hypothesis"
+    text: Every System Flow cell cites something read this session; a recalled fact is a hypothesis
   - id: contract-is-generated
-    text: "The per-release contract is generated from the journey file on every run; there is no hand-edit path"
+    text: The per-release contract is generated from the journey file on every run; there is no
+      hand-edit path
   - id: grep-is-the-check
-    text: "A lint that can be made to fire on a real defect is a check; one that cannot is decoration"
+    text: A lint that can be made to fire on a real defect is a check; one that cannot is decoration
   - id: share-is-not-read-only
-    text: "The shared front-end syncs over the same /connect/ channel the canvas uses; a link holder edits the board"
+    text: The shared front-end syncs over the same /connect/ channel the canvas uses; a link holder
+      edits the board
   - id: link-dies-with-the-process
-    text: "A quick tunnel's hostname cannot be chosen and is not reused; every restart invalidates a link already sent"
+    text: A quick tunnel's hostname cannot be chosen and is not reused; every restart invalidates a link
+      already sent
   - id: lossy-inverse
-    text: "Lane 2 and lane 3 have no honest inverse — canvas text cannot be mapped back to a rule id"
+    text: Lane 2 and lane 3 have no honest inverse — canvas text cannot be mapped back to a rule id
   - id: ambiguity-refused
-    text: "tldraw copies meta verbatim on duplicate, so a duplicated nodeId refuses the whole reorder"
+    text: tldraw copies meta verbatim on duplicate, so a duplicated nodeId refuses the whole reorder
   - id: model-is-written-not-derived
-    text: "A function map is written by a person reading the code, not transformed out of prose by the tool"
+    text: A function map is written by a person reading the code, not transformed out of prose by the
+      tool
   - id: same-columns-new-lanes
-    text: "The function map keeps the journey's columns and swaps the lanes; it is not a second tool"
+    text: The function map keeps the journey's columns and swaps the lanes; it is not a second tool
   - id: events-carry-order
-    text: "Event order is authored modeling input; the projection does not infer causality or build order"
+    text: Event order is authored modeling input; the projection does not infer causality or build order
   - id: selection-is-per-call
-    text: "Which projections a render draws is chosen per call, never stored in the journey file — the same file renders one way for a stand-up and another for a release review"
-
+    text: Which projections a render draws is chosen per call, never stored in the journey file — the
+      same file renders one way for a stand-up and another for a release review
   - id: r3-feedback-measurement
-    text: "R3 direction: keep an existing compatible server running; never stop a non-owned server for cleanup. Full request-to-visible-link timing and compatibility detection remain unverified; baseline and target are unset. The POC does not justify renderer optimization."
+    text: "R3 direction: keep an existing compatible server running; never stop a non-owned server for
+      cleanup. Full request-to-visible-link timing and compatibility detection remain unverified;
+      baseline and target are unset. The POC does not justify renderer optimization."
   - id: r3-model-authoring
-    text: "Author the model in the source; a standalone handler is not required. Edit then redraw; direct function-map canvas writeback stays deferred. Event order alone does not establish causality or a build schedule."
+    text: Author the model in the source; a standalone handler is not required. Edit then redraw; direct
+      function-map canvas writeback stays deferred. Event order alone does not establish causality
+      or a build schedule.
   - id: r3-handoff-authority
-    text: "Dev-flow owns technical shaping once, under existing profile/admission authority. No automatic task creation or scheduling; task counts do not prove a story exists or a journey is accepted."
-
+    text: Dev-flow owns technical shaping once, under existing profile/admission authority. No automatic
+      task creation or scheduling; task counts do not prove a story exists or a journey is accepted.
+  - id: private-entry-identity
+    text: Verify provider identity before app-member binding. Browser cookie, agent credential and
+      deployment token are distinct. Never log credentials.
+  - id: private-room-data
+    text: Keep A, B and qnow-day2 ids and all data. Old links and switching never copy, clear or replace
+      documents.
+  - id: private-room-selection
+    text: "Accepted entry rule: explicit URL room first; otherwise resume the last-worked
+      still-permitted room. First use or ineligible remembered room shows available-room selection.
+      An explicit unauthorized URL shows recovery without automatic room substitution. Recheck
+      current permission; no A default."
+  - id: private-failure-visible
+    text: Show requested room and safe recovery after failure. No false connected/saved claim. Recheck
+      access on return.
+  - id: private-agent-boundary
+    text: Agent rooms intersect current authorizer grants and delegated grants; expiry/revoke/disable
+      deny reads and writes. Denied operations change nothing.
+  - id: private-scope
+    text: Accepted 2026-10-19 design; Pilot implementation in four slices. Preserve room
+      engine/data/concurrency. Cloudflare Free; detailed usage receipts remain local. Formal merge
+      needs separate Captain confirmation.
 status:
-  unproven: "2026-09-11: R3 direction is accepted; the complete model-authoring and development-handoff journey remains unverified. Local feedback timing excludes LLM/human delay and does not establish full request-to-link latency."
-  unmerged: "This planning source records scoped observations and accepted direction; it does not report current repository-wide PR or merge state."
-  undeployed: "Local canvas evidence only; no production deployment or full R3 target-user acceptance is claimed."
-  irreversible: "Deleting a room loses unexported native edits. Read back edits or export a .tldr backup first; generated contracts can be rebuilt."
-  as_of: "2026-09-11"
+  unproven: "2026-10-19: complete technical design confirmed for Pilot implementation in four slices,
+    eight stories (3/2/2/1), and 31 design question dispositions. Historical QA references to
+    pending overall design approval are superseded by this confirmation and private-entry.md. This
+    first-entry and room-catalog source candidates have local synthetic evidence only; independent
+    validation and actual provider, stream stop, installation storage, draft durability and Free
+    workload proofs remain separate. No whole-journey runtime acceptance or activation is claimed."
+  unmerged: This planning source records scoped observations and accepted direction; it does not
+    report current repository-wide PR or merge state.
+  undeployed: The new verified-human entry is opt-in and the deployed default is unchanged. No
+    provider configuration, live credential changes, original-room writes or deployment have been
+    performed.
+  irreversible: Deleting a room loses unexported native edits. Read back edits or export a .tldr
+    backup first; generated contracts can be rebuilt.
+  as_of: 2026-10-19
