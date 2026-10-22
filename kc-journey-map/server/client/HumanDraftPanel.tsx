@@ -33,12 +33,12 @@ function DraftPreview({review}:{review:DraftReview}) {
  const store=useMemo(()=>{const value=createTLStore();value.put(Object.values(review.version.records));return value},[review.version])
  return <div className="human-draft-preview" data-testid="detached-draft"><Tldraw store={{status:'not-synced',store}} hideUi onMount={editor=>{editor.updateInstanceState({isReadonly:true})}}/></div>
 }
-export function HumanDraftPanel({context,label,editor,connection,onPause,onVerified}:{context:DraftContext;label:string;editor:Editor|null;connection:string;onPause:(cause?:RecoveryCause)=>void;onVerified:()=>void}) {
+export function HumanDraftPanel({context,label,editor,connection,onPause,onVerified,native=false}:{native?:boolean;context:DraftContext;label:string;editor:Editor|null;connection:string;onPause:(cause?:RecoveryCause)=>void;onVerified:()=>void}) {
  const [open,setOpen]=useState(false),[status,setStatus]=useState('尚無本機儲存'),[persistent,setPersistent]=useState(''),[problem,setProblem]=useState(''),[busy,setBusy]=useState(false),[items,setItems]=useState<VersionItem[]>([]),[allowed,setAllowed]=useState(false),[review,setReview]=useState<DraftReview|null>(null),[attempt,setAttempt]=useState<ApplyAttempt|null>(null),[deleting,setDeleting]=useState<VersionItem|null>(null),[probe,setProbe]=useState<Probe|null>(null),[theme,setTheme]=useState('light')
  const lineage=useRef({tabId:crypto.randomUUID(),draftId:crypto.randomUUID()}),dialog=useRef<HTMLDialogElement>(null),trigger=useRef<HTMLButtonElement>(null),operation=useRef(new AbortController()),epoch=useRef(0),alive=useRef(true)
  useEffect(()=>{
   alive.current=true
-  document.body.classList.add('human-drafts-active')
+  if(!native)document.body.classList.add('human-drafts-active')
   let active=true
   if(navigator.storage?.persist)void navigator.storage.persist().then(value=>{if(active)setPersistent(value?'已取得持續儲存許可；瀏覽器清除仍會遺失資料。':'未取得持續儲存許可；瀏覽器可能清除本機草稿。')}).catch(()=>{if(active)setPersistent('持續儲存許可未確認；瀏覽器可能清除本機草稿。')})
   else setPersistent('此瀏覽器無持續儲存許可；清除或私密模式可能遺失草稿。')
@@ -48,6 +48,7 @@ export function HumanDraftPanel({context,label,editor,connection,onPause,onVerif
   const observer=new MutationObserver(update);observer.observe(document.body,{subtree:true,attributes:true,attributeFilter:['class']});update()
   return()=>{active=false;alive.current=false;epoch.current++;operation.current.abort();channel.close();observer.disconnect();document.body.classList.remove('human-drafts-active')}
  },[])
+ useEffect(()=>{const open=()=>setOpen(true);window.addEventListener('journey-open-drafts',open);return()=>window.removeEventListener('journey-open-drafts',open)},[])
  useEffect(()=>{
   if(!editor)return
   let timer:ReturnType<typeof setTimeout>|undefined,pending:Documents|null=null,queue=Promise.resolve()
@@ -56,10 +57,13 @@ export function HumanDraftPanel({context,label,editor,connection,onPause,onVerif
    if(!pending)return
    const records=pending;pending=null
    if(alive.current)setStatus('正在儲存本機版本…')
-   queue=queue.then(async()=>{const db=await humanDrafts();const version=await db.save(context,lineage.current.draftId,lineage.current.tabId,await base,records);if(alive.current)setStatus('已儲存本機 v'+version.key[5])}).catch(error=>{if(alive.current){setStatus('未儲存本機版本');setProblem(errorText(error))}})
+   queue=queue.catch(()=>{}).then(async()=>{const db=await humanDrafts();const version=await db.save(context,lineage.current.draftId,lineage.current.tabId,await base,records);if(alive.current)setStatus('已儲存本機 v'+version.key[5])}).catch(error=>{if(alive.current){setStatus('未儲存本機版本');setProblem(errorText(error))}throw error})
+   void queue.catch(()=>{})
   }
   const stop=editor.store.listen(()=>{pending=structuredClone(editor.store.getStoreSnapshot('document').store) as Documents;clearTimeout(timer);timer=setTimeout(flush,200)},{scope:'document',source:'user'})
-  return()=>{stop();clearTimeout(timer);flush()}
+  const beforeLogout=(event:Event)=>{flush();(event as CustomEvent<Promise<void>[]>).detail.push(queue)}
+  window.addEventListener('journey-before-logout',beforeLogout)
+  return()=>{window.removeEventListener('journey-before-logout',beforeLogout);stop();clearTimeout(timer);flush()}
  },[editor])
  async function inventory(signal:AbortSignal) {
   const current=await verifiedDraftContext(context,false,signal)
@@ -84,7 +88,7 @@ export function HumanDraftPanel({context,label,editor,connection,onPause,onVerif
  const confirmSync:SyncConfirmation=(current,patch,signal)=>new Promise((resolve,reject)=>{const id=crypto.randomUUID();let settled=false;const clear=(error?:Error)=>{if(settled)return;settled=true;setProbe(value=>value?.id===id?null:value);if(error)reject(error);else resolve()};setProbe({id,context:current,patch,signal,resolve:()=>clear(),reject:error=>clear(error)})})
  const close=()=>{operation.current.abort();epoch.current++;setBusy(false);setOpen(false);setReview(null);setAttempt(null);setDeleting(null)}
  return <>
-  <div className="human-draft-bar" data-theme={theme}><span role="status">{label} · {status} · 雲端{connection==='connected'?'已連線':'未連線或已暫停'}</span><button ref={trigger} onClick={()=>setOpen(true)}>本機草稿</button></div>
+  {!native&&<div className="human-draft-bar" data-theme={theme}><span role="status">{label} · {status} · 雲端{connection==='connected'?'已連線':'未連線或已暫停'}</span><button ref={trigger} onClick={()=>setOpen(true)}>本機草稿</button></div>}
   {probe&&<SyncProbe key={probe.id} probe={probe}/>}
   {open&&createPortal(<dialog ref={dialog} className="human-draft-dialog" data-theme={theme} aria-labelledby="human-draft-title" onCancel={event=>{event.preventDefault();close()}}>
    <header><h2 id="human-draft-title" tabIndex={-1}>本機草稿</h2><button aria-label="關閉本機草稿" onClick={close}>×</button></header>

@@ -27,6 +27,7 @@ export class NodeHost implements Host {
  roomsDir = this.private ? join(this.root, 'rooms') : (process.env.JOURNEY_ROOMS_DIR || './.rooms')
  rooms = new Map<string, { room: TLSocketRoom<any, any>; db: DatabaseSync }>()
  humanConfig?: HumanConfig
+ nativeAccount = process.env.JOURNEY_NATIVE_ACCOUNT === 'true'
  agentPairing = process.env.JOURNEY_AGENT_PAIRING === 'true'
  localHumanReady = false
  sockets = new Map<any, { admission: Admission | null; room: string; lease?: StreamLease; timer?: ReturnType<typeof setTimeout> }>()

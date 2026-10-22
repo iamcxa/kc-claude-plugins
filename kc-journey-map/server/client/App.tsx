@@ -11,7 +11,7 @@ import './doc-popup.css'
 import { SaveButton } from './SaveButton'
 import { StickyBackbone } from './StickyBackbone'
 import { addSequencePage } from './sequence'
-import { journeyApi, type HumanContext } from './api'
+import { journeyFetch, journeyApi, type HumanContext } from './api'
 import { RoomPageMenu, RoomSelector, type ConnectionState } from './RoomSelector'
 import { confirmRoomSwitch, documentFingerprint } from './confirm-room-switch'
 import { verifyRoomAdmission, RoomAdmissionError, sourceAdmissionLost } from './room-admission'
@@ -22,6 +22,8 @@ import { RecoveryNotice } from './RecoveryNotice'
 import { HumanDraftPanel } from './HumanDraftPanel'
 import { humanSocket, type HumanSocketParams } from './human-socket'
 import type { DraftContext } from '../draft-data'
+
+import { NativeAccountProvider, NativeMainMenu } from './NativeAccount'
 
 const APP_NAME = 'kc-journey-map'
 
@@ -67,7 +69,7 @@ const canvasAssets = (roomId: string): TLAssetStore => ({
 	async upload(_asset, file) {
 		// crypto.randomUUID is unavailable over plain http on a private-network hostname.
 		const name = assetUploadId(file.name)
-		const res = await fetch(journeyApi(`/uploads/${encodeURIComponent(name)}?room=${encodeURIComponent(roomId)}`), { method: 'PUT', body: file })
+		const res = await journeyFetch(journeyApi(`/uploads/${encodeURIComponent(name)}?room=${encodeURIComponent(roomId)}`), { method: 'PUT', body: file })
 		if (!res.ok) throw new Error(`upload failed: ${res.status} ${res.statusText}`)
 		return { src: `${ASSET_SCHEME}${name}` }
 	},
@@ -250,7 +252,7 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
   verifyRoomAdmission(active.roomId, entry.context, controller.signal).catch(error => { if (error instanceof RoomAdmissionError && error.denied) freeze(recoveryCause(error)) }).finally(() => { pausedCheck.current = false })
   return () => controller.abort()
  }, [connection, active.roomId, entry.context?.member, frozen, freeze])
- return <RoomSelector roomId={active.roomId} human={entry.context} connection={connection} switching={switching} switchError={switchError} frozen={frozen} onDenied={freeze} onNavigate={next => {
+ return <NativeAccountProvider entry={entry} context={active.context||null} paused={frozen||switching}><RoomSelector roomId={active.roomId} human={entry.context} connection={connection} switching={switching} switchError={switchError} frozen={frozen} onDenied={freeze} onNavigate={next => {
   const url = new URL(acceptedUrl.current)
   url.searchParams.set('room', next); url.searchParams.delete('d'); url.hash = ''
   if (frozen) { window.open(url.href, '_blank', 'noopener,noreferrer'); return }
@@ -259,8 +261,8 @@ function CanvasApp({ entry }: { entry: HumanCanvasEntry }) {
   {[...(!frozen ? [active] : []), ...(target ? [target] : [])].map(session => <RoomSync key={session.id} session={session} onStore={onStore} onPause={session.id===active.id?freeze:()=>void failTarget(session.id,'Target access paused. Original room retained.')} />)}
   {recovery && active.context && <RecoveryNotice context={active.context} cause={recovery} onCause={cause=>setRecovery(current=>current?.category==='draft_original_outcome_unknown'?current:cause)}/> }
   <RoomCanvas key={active.id} session={active} frozen={frozen} onConnection={setConnection} onEditor={onEditor} />
-  {active.context && <HumanDraftPanel key={'draft:'+active.id} context={active.context} label={entry.label} editor={currentEditor} connection={connection} onPause={freeze} onVerified={()=>setRecovery(null)}/> }
- </RoomSelector>
+  {active.context && <HumanDraftPanel key={'draft:'+active.id} context={active.context} label={entry.label} native={entry.nativeAccount} editor={currentEditor} connection={connection} onPause={freeze} onVerified={()=>setRecovery(null)}/> }
+ </RoomSelector></NativeAccountProvider>
 }
 
 function RoomSync({ session, onStore, onPause }: { session: RoomSession; onStore: (id: number, store: TLStoreWithStatus) => void; onPause:(cause?:RecoveryCause)=>void }) {
@@ -276,7 +278,7 @@ function RoomCanvas({ session, frozen, onConnection, onEditor }: { session: Room
  const roomId = session.roomId
  const store = session.store || { status: 'loading' as const }
 	const components = useMemo(
-		() => ({ PageMenu: RoomPageMenu, SharePanel: () => frozen ? null : <SaveButton roomId={roomId} />, InFrontOfTheCanvas: StickyBackbone }),
+		() => ({ MainMenu: NativeMainMenu, PageMenu: RoomPageMenu, SharePanel: () => frozen ? null : <SaveButton roomId={roomId} />, InFrontOfTheCanvas: StickyBackbone }),
 		[roomId, frozen]
 	)
 	useEffect(() => {
@@ -305,7 +307,7 @@ function RoomCanvas({ session, frozen, onConnection, onEditor }: { session: Room
 					const stopBorders = syncStoryBorders(editor)
 					const stopTitle = syncDocumentTitle(editor, roomId)
 					setEditor(editor)
-					return () => { onEditor(session.id, null); stopBorders(); stopTitle() }
+					return () => { onEditor(session.id, null); stopBorders(); stopTitle(); if((window as any).editor===editor){delete (window as any).editor;delete (window as any).addSequencePage;delete (window as any).serializeTldrawJson} }
 				}}
 			/>
 			{popup &&

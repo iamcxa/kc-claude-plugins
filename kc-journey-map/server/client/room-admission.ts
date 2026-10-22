@@ -1,11 +1,11 @@
-import { journeyApi, type HumanContext } from './api'
+import { journeyFetch, journeyApi, type HumanContext } from './api'
 import { recoveryResponse } from './access-recovery'
 
 export class RoomAdmissionError extends Error {
  constructor(public sourceRoom: string, public category: string, public denied: boolean) { super(`Room ${sourceRoom} unavailable (${category}). Original room retained.`) }
 }
 export async function verifyRoomAdmission(roomId: string, context: HumanContext, signal: AbortSignal) {
- const response = await fetch(journeyApi('/auth/entry?' + new URLSearchParams({ room: roomId })), { signal: AbortSignal.any([signal, AbortSignal.timeout(8000)]) })
+ const response = await journeyFetch(journeyApi('/auth/entry?' + new URLSearchParams({ room: roomId })), { signal: AbortSignal.any([signal, AbortSignal.timeout(8000)]) })
  const result = await recoveryResponse(response).catch(error=>{throw new RoomAdmissionError(roomId,error.message,response.status===401||response.status===403||response.status===404)})
  if (result.room !== roomId || result.memberId !== context.member || result.backendId !== context.backend || result.verifiedHumanSignInAt !== context.signInAt) throw new RoomAdmissionError(roomId, 'identity_changed', true)
 }

@@ -1,0 +1,8 @@
+.journey-private-dialog{max-width:min(560px,calc(100vw - 32px));overflow-wrap:anywhere}
+.journey-private-dialog p{margin:0 0 12px;line-height:1.5}
+.journey-private-dialog ul{padding-left:20px;margin:12px 0}
+.journey-private-dialog li+li{margin-top:16px;border-top:1px solid var(--tl-color-divider);padding-top:16px}
+.journey-private-dialog .tlui-button{min-height:44px;height:auto;white-space:normal}
+.journey-private-dialog .agent-sheet-body{padding:0}
+.journey-private-dialog .agent-sheet-body button{min-height:44px;width:100%;margin:8px 0;padding:8px;border:1px solid var(--tl-color-divider);background:var(--tl-color-muted-2);color:var(--tl-color-text-1);border-radius:6px}
+.journey-private-dialog input{width:100%;min-height:44px;box-sizing:border-box;background:var(--tl-color-panel);color:var(--tl-color-text-1);border:1px solid var(--tl-color-divider);padding:8px}

@@ -10,6 +10,7 @@ export type HumanConfig = {
 }
 export type Member = { id: string; issuer: string; subject: string; label: string; role: 'operator' | 'member'; enabled: boolean; generation: number }
 export type HumanSession = { actorType: 'human'; backendId: string; memberId: string; generation: number; expiresAt: number; verifiedHumanSignInAt: number; humanRevalidateBy: number; csrfDigest: string; revoked: boolean }
+export type OwnerBinding = { schemaVersion: 1; backendId: string; ownerMemberId: string; issuer: string; subject: string; initializationOperationId: string; initializedAt: number }
 export type MemberRoom = { memberId: string; roomId: string; expiresAt: number; revoked: boolean; generation: number }
 export type SyncMetadata = {
  get<T = any>(key: string): T | null; put(key: string, value: unknown): void; delete(key: string): void
@@ -90,6 +91,18 @@ function mint(store: SyncMetadata, config: HumanConfig, input: any, memberId: st
 export function humanOperation(store: SyncMetadata, operation: string, input: any, now = Date.now()): any {
  const config = store.get<HumanConfig>('human-config:v1')
  if (!config) fail(503, 'human_entry_unconfigured')
+ if (operation === 'owner-bind') {
+  const {member:m} = activeSession(store, config!, input.sessionDigest, now)
+  if (input.backendId !== config!.backendId || input.ownerMemberId !== m.id || input.issuer !== m.issuer || input.subject !== m.subject || !id(input.initializationOperationId)) fail(403,'owner_binding_denied')
+  const binding:OwnerBinding={schemaVersion:1,backendId:config!.backendId,ownerMemberId:m.id,issuer:m.issuer,subject:m.subject,initializationOperationId:input.initializationOperationId,initializedAt:now}
+  const previous=store.get<OwnerBinding>('owner:'+config!.backendId)
+  if(previous) {
+   if(previous.schemaVersion!==1 || previous.backendId!==binding.backendId || previous.ownerMemberId!==binding.ownerMemberId || previous.issuer!==binding.issuer || previous.subject!==binding.subject || previous.initializationOperationId!==binding.initializationOperationId)fail(409,'owner_binding_exists')
+   return {bound:true,initializationOperationId:previous.initializationOperationId}
+  }
+  store.put('owner:'+config!.backendId,binding)
+  return {bound:true,initializationOperationId:binding.initializationOperationId}
+ }
  if (operation === 'record-denial') {
   if (!/^[a-z_]{1,64}$/.test(input.category)) fail(400, 'invalid_receipt')
   receipt(store, 'entry', null, null, input.category, now)
@@ -156,6 +169,31 @@ export function humanOperation(store: SyncMetadata, operation: string, input: an
  }
  const { session, member: m } = activeSession(store, config!, input.sessionDigest, now)
  if (input.csrfDigest !== session.csrfDigest) fail(403, 'csrf_denied')
+ if (['account-read','owner-room-members'].includes(operation)) {
+  if(input.backendId!==config!.backendId || input.memberId!==m.id || input.signInAt!==session.verifiedHumanSignInAt)fail(403,'identity_changed')
+  const room=input.roomId,grant=store.get<MemberRoom>('member-room:'+m.id+':'+room)
+  if(!room || canonicalRoom(room)!==room || !grant || grant.memberId!==m.id || grant.roomId!==room || grant.revoked || grant.expiresAt<=now)fail(403,'room_denied')
+  if(!store.get('room:'+room))fail(404,'room_missing')
+  const binding=store.get<OwnerBinding>('owner:'+config!.backendId)
+  const owner=!!binding && binding.schemaVersion===1 && binding.backendId===config!.backendId && binding.ownerMemberId===m.id && binding.issuer===m.issuer && binding.subject===m.subject && id(binding.initializationOperationId) && Number.isFinite(binding.initializedAt)
+  if(operation==='account-read')return {backendId:config!.backendId,memberId:m.id,roomId:room,owner,grant:{expiresAt:grant!.expiresAt}}
+  if(!owner)fail(403,'owner_required')
+  const members=[]
+  let after=''
+  for(;;) {
+   const rows=store.list('member-room:',128,after)
+   for(const row of rows) {
+    const g=row.value as MemberRoom
+    if(g.roomId!==room || row.key!=='member-room:'+g.memberId+':'+room)continue
+    const person=store.get<Member>('member:'+g.memberId)
+    if(!person)continue
+    members.push({memberId:person.id,label:person.label,owner:person.id===binding!.ownerMemberId && person.issuer===binding!.issuer && person.subject===binding!.subject,enabled:person.enabled,expiresAt:g.expiresAt,revoked:g.revoked,status:!person.enabled?'disabled':g.revoked?'revoked':g.expiresAt<=now?'expired':'allowed'})
+   }
+   if(rows.length<128)break
+   after=rows[rows.length-1].key
+  }
+  return {backendId:config!.backendId,memberId:m.id,roomId:room,members}
+ }
  if (operation === 'renew') {
   session.expiresAt = Math.min(now + HUMAN_ACCESS, session.humanRevalidateBy)
   store.put('browser-session:' + input.sessionDigest, session)

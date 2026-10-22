@@ -1,5 +1,7 @@
 # Optional verified-human entry
 
+Optional native account/session controls are default-off; see [native account](native-account.md) for the current entry, owner-read, logout and draft-preservation behavior. Existing authority and restore contracts below remain in force.
+
 The subsequent disabled [agent-pairing foundation](agent-pairing.md) reuses this
 verified-human entry. Agents and legacy credentials cannot approve requests or
 exchange themselves into human/browser authority. Human expiry remains separate

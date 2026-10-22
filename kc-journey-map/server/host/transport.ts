@@ -5,6 +5,7 @@ import { humanRoute, registeredHumanRoom, requireHumanContext } from './human'
 import type { HumanConfig } from './human-store'
 import { authenticate, authorize, exchange, requireOrigin, type Admission, type Metadata } from './policy'
 export interface Host {
+ nativeAccount?: boolean
  humanConfig?: HumanConfig
  agentPairing?: boolean
  localHumanReady?: boolean

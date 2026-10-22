@@ -1,5 +1,7 @@
 # Optional distinct agent installations
 
+Optional native account/session controls are default-off; see [native account](native-account.md) for the current entry, owner-read, logout and draft-preservation behavior. Existing authority and restore contracts below remain in force.
+
 This second-story Pilot foundation is disabled unless
 `JOURNEY_AGENT_PAIRING=true` is explicitly set on the server. It requires private
 storage and the existing verified-human configuration. Keep it disabled outside

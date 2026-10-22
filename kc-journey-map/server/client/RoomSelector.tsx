@@ -1,7 +1,8 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
 import { DefaultPageMenu, TldrawUiButton, TldrawUiButtonIcon, TldrawUiButtonLabel, TldrawUiDropdownMenuContent, TldrawUiDropdownMenuGroup, TldrawUiDropdownMenuItem, TldrawUiDropdownMenuRoot, TldrawUiDropdownMenuTrigger, TldrawUiInput, useMenuIsOpen } from 'tldraw'
-import { journeyApi, type HumanContext } from './api'
+import { journeyFetch, journeyApi, type HumanContext } from './api'
 import './room-selector.css'
+import { NativeRoomAccessItem } from './NativeAccount'
 import { recoveryCause, recoveryResponse, type RecoveryCause } from './access-recovery'
 
 export type ConnectionState = 'loading' | 'connected' | 'offline' | 'error'
@@ -21,7 +22,7 @@ export function RoomSelector({ children, ...navigation }: RoomNavigation & { chi
 		const controller = new AbortController()
 		setLoading(true)
 		setError(false)
-		fetch(journeyApi(human ? '/auth/rooms' : '/health'), { signal: controller.signal })
+		journeyFetch(journeyApi(human ? '/auth/rooms' : '/health'), { signal: controller.signal })
 			.then(async response => {
 				const result = await recoveryResponse(response).catch(error=>{if(human && [401,403].includes(response.status))onDenied(recoveryCause(error));throw error})
 				const rows = human ? result.rooms : result.rooms?.map((roomId: string) => ({ roomId, displayName: roomId }))
@@ -91,6 +92,7 @@ export function RoomPageMenu() {
 						{!matching.length && !room.loading && !room.unavailable && <p className="journey-room-empty">{room.rooms.length ? 'No matching rooms' : 'No permitted registered rooms'}</p>}
 					</div>
 				</TldrawUiDropdownMenuGroup>
+				<NativeRoomAccessItem close={()=>setOpen(false)}/>
 				<div className="journey-room-footer">
 					<div className="journey-rooms-status" role="status">{room.status}</div>
 					<TldrawUiButton type="normal" disabled={room.loading || room.frozen} onClick={room.refresh} aria-label="Refresh rooms"><TldrawUiButtonLabel>Refresh</TldrawUiButtonLabel></TldrawUiButton>

@@ -59,6 +59,7 @@ if (process.env.JOURNEY_CONTROL_STDIO === '1') {
   try {
    const command = JSON.parse(line)
    const result = command.op === 'revoke' ? await host.revoke(command.credentialId)
+    : command.op === 'owner-bind' && command.writersStopped===true && ownerControl() && host.nativeAccount && host.humanConfig ? await host.meta.human!('owner-bind',command.input)
     : ['member-enroll','member-inspect'].includes(command.op) && command.writersStopped===true && ownerControl() ? await host.memberOperation(command.op.slice(7),command.input)
     : ['disable-member', 'set-room'].includes(command.op) && host.humanConfig ? await host.meta.human!(command.op, command)
     : command.op === 'export' ? await exportRoom(host, command.room)

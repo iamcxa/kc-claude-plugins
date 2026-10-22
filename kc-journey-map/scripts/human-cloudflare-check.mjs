@@ -18,7 +18,7 @@ const assertion = data + '.' + Buffer.from(await crypto.subtle.sign('RSASSA-PKCS
 const bundle = await build({ entryPoints: [join(root, 'server/host/cloudflare.ts')], bundle: true, write: false, format: 'esm', platform: 'browser', conditions: ['workerd', 'worker', 'browser'], external: ['cloudflare:workers'], logLevel: 'silent' })
 let providerDown = false
 const mf = new Miniflare({ script: bundle.outputFiles[0].text, modules: true, compatibilityDate: '2026-07-01', compatibilityFlags: ['nodejs_compat'], host: '127.0.0.1', port: 0,
- bindings: { JOURNEY_ORIGIN: origin, JOURNEY_GRANTS: JSON.stringify(grants), JOURNEY_HUMAN_CONFIG: JSON.stringify(config), JOURNEY_AGENT_PAIRING: process.env.JOURNEY_TEST_PAIRING==='true'?'true':'false' },
+ bindings: { JOURNEY_NATIVE_ACCOUNT:'true', JOURNEY_ORIGIN: origin, JOURNEY_GRANTS: JSON.stringify(grants), JOURNEY_HUMAN_CONFIG: JSON.stringify(config), JOURNEY_AGENT_PAIRING: process.env.JOURNEY_TEST_PAIRING==='true'?'true':'false' },
  durableObjects: { ROOMS: { className: 'JourneyRoom', useSQLite: true }, REGISTRY: { className: 'JourneyRegistry', useSQLite: true } }, durableObjectsPersist: join(scratch, 'objects'),
  outboundService: async req => {
   if (providerDown) return new WorkerResponse('synthetic outage', { status: 503 })
@@ -72,6 +72,22 @@ try {
  const token = /journey_human=([^;]+)/.exec(cookie)[1], sessionKey = 'browser-session:' + await hash(token)
  await metadata('put', { key: 'session:expired-synthetic', value: { credentialId: 'seed', expiresAt: 1 } })
  assert.equal((await request('/session', { method: 'POST', headers: { Origin: origin, Authorization: 'Bearer seed.' + secret } })).status, 200)
+ const contextPath=path=>path+'?'+new URLSearchParams({_human:'person',_backend:'cf-synthetic',_humanAt:String((now-600)*1000),_humanRoom:'one'})
+ assert.equal((await request(contextPath('/auth/account'),{headers:{Cookie:cookie}})).status,200)
+ assert.equal((await request(contextPath('/auth/account'),{headers:{Cookie:cookie}}).then(r=>r.json())).owner,false)
+ assert.equal((await request(contextPath('/auth/room-members'),{headers:{Cookie:cookie}})).status,403)
+ const ownerInput={backendId:'cf-synthetic',ownerMemberId:'person',issuer,subject:'subject',sessionDigest:await hash(token),initializationOperationId:'synthetic-owner-init'}
+ await metadata('human',{operation:'owner-bind',input:ownerInput})
+ const binding=await metadata('get',{key:'owner:cf-synthetic'})
+ const forbidden=await registry.fetch('https://registry/human',{method:'POST',body:JSON.stringify({operation:'owner-bind',input:{...ownerInput,subject:'different'}})})
+ assert.equal(forbidden.status,403)
+ assert.deepEqual(await metadata('get',{key:'owner:cf-synthetic'}),binding)
+ const listing=await request(contextPath('/auth/room-members'),{headers:{Cookie:cookie}})
+ assert.equal(listing.status,200)
+ assert.deepEqual((await listing.json()).members.map(m=>m.memberId),['person'])
+ for(const path of ['/auth/room-members','/auth/room-members?_human=person&_backend=other&_humanAt='+((now-600)*1000)+'&_humanRoom=one','/auth/room-members?_human=person&_backend=cf-synthetic&_humanAt='+((now-600)*1000)+'&_humanRoom=two'])assert.equal((await request(path,{headers:{Cookie:cookie}})).status,403)
+ assert.equal((await request(contextPath('/auth/room-members'),{headers:{Authorization:'Bearer seed.'+secret}})).status,403)
+ pass('local Cloudflare SQLite adapter binds exact verified owner once, refuses changed binding, returns only actual current-room grant and denies absent/wrong context and bearer bypass')
  const storedSession = await metadata('get', { key: sessionKey })
  assert.equal(storedSession.expiresAt, session.expiresAt); assert.equal(storedSession.verifiedHumanSignInAt, session.verifiedHumanSignInAt)
  assert.equal('csrfDigest' in session, false)

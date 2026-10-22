@@ -10,7 +10,7 @@ import { securityOperation, matchesTarget } from './security-store'
 import { canSend, renewLease, type StreamLease } from './stream-lease'
 import { bootstrapAgent, agentOperation, captureAgent, agentResult, type AgentScope } from './agent-store'
 
-type Env = { ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string; JOURNEY_HUMAN_CONFIG?: string; JOURNEY_AGENT_PAIRING?: string; JOURNEY_MEMBER_ENROLLMENT?:string; JOURNEY_MEMBER_BINDING?:string }
+type Env = { ROOMS: any; REGISTRY: any; ASSETS?: any; STATIC?: any; JOURNEY_NATIVE_ACCOUNT?: string; JOURNEY_ORIGIN: string; JOURNEY_GRANTS: string; JOURNEY_HUMAN_CONFIG?: string; JOURNEY_AGENT_PAIRING?: string; JOURNEY_MEMBER_ENROLLMENT?:string; JOURNEY_MEMBER_BINDING?:string }
 const agentScope = (env: Env, roomId: string): AgentScope => ({ roomId, records: 'full-replacement', assets: !!env.ASSETS, saveDirectory: null, repositories: [] })
 const stub = (namespace: any, id: string) => namespace.get(namespace.idFromName(id))
 const assetBlobKey = /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/
@@ -119,11 +119,13 @@ export class CloudflareHost implements Host {
  private = true
  publicRequestUrl = true
  humanConfig?: HumanConfig
+ nativeAccount: boolean
  agentPairing: boolean
  meta: RegistryMetadata
  port: number
  origin: string
  constructor(private env: Env) {
+  this.nativeAccount = env.JOURNEY_NATIVE_ACCOUNT === 'true'
   this.agentPairing = env.JOURNEY_AGENT_PAIRING === 'true'
   this.origin = env.JOURNEY_ORIGIN
   const origin = new URL(this.origin)

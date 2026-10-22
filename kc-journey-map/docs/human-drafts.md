@@ -1,5 +1,7 @@
 # Origin-local human drafts and explicit restoration
 
+Optional native account/session controls are default-off; see [native account](native-account.md) for the current entry, owner-read, logout and draft-preservation behavior. Existing authority and restore contracts below remain in force.
+
 The optional verified-human entry enables this default-off draft candidate.
 It uses the existing registered room IDs and complete-record mutation engine.
 [ADR 0030](../../docs/adr/0030-human-drafts-restore-explicitly-from-origin-local-versions.md)

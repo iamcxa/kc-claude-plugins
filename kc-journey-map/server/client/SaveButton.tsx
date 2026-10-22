@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from 'react'
 import { serializeTldrawJson, useEditor } from 'tldraw'
-import { journeyApi } from './api'
+import { journeyFetch, journeyApi } from './api'
 import './canvas-save.css'
 
 // A viewer front-end answers with the SPA fallback HTML here, so the content type decides.
 async function call<T>(roomId: string, path: string, method: 'GET' | 'POST' | 'DELETE', body?: unknown): Promise<T | null> {
 	try {
-		const res = await fetch(journeyApi(path + (path.includes('?') ? '&' : '?') + 'room=' + encodeURIComponent(roomId)), {
+		const res = await journeyFetch(journeyApi(path + (path.includes('?') ? '&' : '?') + 'room=' + encodeURIComponent(roomId)), {
 			method,
 			headers: body ? { 'Content-Type': 'application/json' } : undefined,
 			body: body ? JSON.stringify(body) : undefined,
