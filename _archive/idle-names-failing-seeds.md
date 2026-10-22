@@ -3,7 +3,7 @@ title: FO's idle check names each backlog task whose seed check fails before its
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain: 「合併 694」 (chat, 2026-10-22), answering 「#694 要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head after FO reruns the merge check and removing its worktree, one PR only; digest e505b28a. Accepts the FO recommendation as the bound question states.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-21T17:17:02Z
 worktree: .worktrees/spacedock-ensign-idle-names-failing-seeds
 pr: pr-merge:694
+verdict: PASSED
+completed: 2026-10-22T03:58:07Z
+archived: 2026-10-22T03:58:07Z
 ---
 
 ## Scope
