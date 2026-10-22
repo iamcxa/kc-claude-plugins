@@ -67,6 +67,8 @@ Design: the role runs the existing brief on sonnet; the author's declines go to 
 
 ## FO alignment
 
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-22 — implementation left AC-7 met in 1 of 3 runs of the shipped agent and AC-3 and the real-flow clause of AC-13 unrunnable without a real adopter ideation; what is the smallest next step?
+
 Captain rulings on D-1 to D-6 (ideation sitting, 2026-10-22, chat, each given to FO's question one at a time; to be bound at the ideation gate):
 - D-1 「按你建議」, answering 「「整個畫面實際操作審一次」要不要變成正式的一關？」 with FO's recommendation: it belongs to the release-acceptance task as a second pass on the same operated walk, run by the design director, with a class for works but unusable; this task does not build it.
 - D-2 「可以」, answering 「改成「檢查程式印出預覽圖的路徑，隨閘門資料一起給你」，可以嗎？」 (FO had corrected its earlier claim: today design_surfaces.py checks that the Preview file exists but prints only the design review report path and counts): design_surfaces.py check also prints each `Preview:` path, so the paths reach the briefing through the same workflow.md sentence that carries the upheld declines; no further workflow.md words. Override: recommended no FO rule (design D-2); Captain chose the checker printing preview paths; area: screenshots at ui gates.
