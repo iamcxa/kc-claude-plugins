@@ -1,0 +1,22 @@
+{
+  "class": "never",
+  "head": "1e47b8c6108371ec379ad4fae18a80df2cdd0b81",
+  "model": "not run",
+  "necessity": "three files (kc-dev-flow-2/scripts/delivery_gate.py, kc-dev-flow-2/scripts/test_delivery_gate.py, one Amended paragraph in ADR 0026), the narrowed hold C the Captain kept.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F1 Deferred risk: a folder'",
+    "point: deferred: '- F2 Deferred risk: `role_triggers.py` reads'",
+    "point: deferred: '- F3 Deferred risk: after release,'",
+    "point: deferred: 'FO declines: Deferred risk, Codex P2'",
+    "point: not-run: 'External rounds: Codex 1 (code review:5609183269'",
+    "point: path: 'docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-c'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#703",
+  "sufficiency": "delivery_gate.py check runs role_triggers.py on the committed task and holds the merge ask while a chief-engineer or engineering-reviewer call is owed (exit 1 adds one problem line plus its next: line",
+  "time": "2026-10-22T09:54:48Z",
+  "verdict": "ask"
+}
