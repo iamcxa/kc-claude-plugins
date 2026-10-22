@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-adr-format-source:backlog:attempt-1:revision-1",
+  "question": "Approve kc-adr-format-source into ideation as profile pilot, with the outcome, scope (kc-adr becomes the source of the ADR template and adr_lint.py with AdrLintTests; 'the recommender' wording; writing.md points at them and gains the single-writer numbering rule), non-goals, half-day budget and AC-1..AC-3 as filed, to run after read-adr-reporting-rule-followup?",
+  "artifacts": [
+    {
+      "id": "artifact:kc-adr-format-source:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/242641cec92b7d97442e41a4b965f2cd541eea2d/kc-adr-format-source.md",
+      "rev": "sha256:0a18302ad914bafea8683fe9d74b63987a1acc40abd733f68ce14986396f055c",
+      "mediaType": "text/markdown",
+      "summary": "kc-adr's side of the narrowed packaging ruling (dev2 FO owns the copies, sync script and byte compare). Content byte-identical to dev2's files except the template wording."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:kc-adr-format-source:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c27e76590c1d2dc910e7fa2d332242a7534df0b0/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:d8b3639df236541f0a6cb378df697c0bfe22c51457d9346893c4aef3bfb4594a"
+    }
+  ]
+}
