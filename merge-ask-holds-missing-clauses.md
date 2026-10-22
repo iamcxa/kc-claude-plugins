@@ -3,7 +3,7 @@ title: The merge-ask check holds a question that omits the round count or the ca
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
