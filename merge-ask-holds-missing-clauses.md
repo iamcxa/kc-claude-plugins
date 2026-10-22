@@ -320,7 +320,7 @@ The design is now one hold: `check` runs the real `role_triggers.py` on the comm
 ## Stage Report: implementation
 
 - DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main (e66c9b32) implementing the narrowed cycle-3 design, only those files
-  Commit 1e47b8c6 on `spacedock-ensign/merge-ask-holds-missing-clauses` (based on origin/main e66c9b32): `delivery_gate.py` (+19), `test_delivery_gate.py`, ADR 0026 (one Amended paragraph); no review-round count. FAILED part: the push was refused by the permission check ("Out-of-Place Publication"), so the branch is local and no PR exists; stopped per the dispatch, not worked around.
+  Commit 1e47b8c6 on `spacedock-ensign/merge-ask-holds-missing-clauses` (based on origin/main e66c9b32): `delivery_gate.py` (+19), `test_delivery_gate.py`, ADR 0026 (one Amended paragraph); no review-round count. My own push was refused by the permission check ("Out-of-Place Publication") and I stopped; FO then pushed this head on the Captain's 「准」 and opened Draft PR iamcxa/kc-claude-plugins#703.
 - DONE: Every acceptance criterion green with the evidence each names, each falsifier shown failing by a mutation (python3 -B, caches cleared), replay over the archived merge asks, HEAD-versus-disk residual stated
   AC-1: six `OwedRoleCallTests` run the real `role_triggers.py` (amendment no call 1; no amendment 0; amendment+call 0; disk-only amendment 0; disk-only call 1; not a git tree 2). Mutations on copies in /tmp/mah_mut: call removed fails 5 of 6; role_triggers read from disk fails the disk-only case; exit-2 branch off fails 2; `nexts.extend(said)` dropped fails 2.
   AC-2: replay of 10 archived asks with the candidate's `role_triggers.py` (/tmp/mah_replay/replay6.py): fo-batch-sittings exit 1 (engineering-reviewer, amendments 1, 2, 3), fo-write-checks exit 1 (predates the counts), the other eight exit 0.
@@ -330,16 +330,16 @@ The design is now one hold: `check` runs the real `role_triggers.py` on the comm
   Residual for the PR body: `role_triggers.py` reads the task at HEAD of the state checkout and `check()` reads the disk, so an amendment not yet state-committed is let through and a call not yet committed holds; pinned by two cases.
 - DONE: lint-skills.py and adr_lint.py exit 0; roborev evidence= line
   `lint-skills.py` exit 0; `adr_lint.py docs/adr --since e66c9b32` exit 0 (28 files); roborev exit 1, `evidence=roborev:1006`, one High finding, not rerun (below).
-- FAILED: push without force and without -u; CI green on the PR head; CI cost measured or stated as not measured
-  The push was denied by the permission check, so there is no remote branch, no PR and no CI run. CI cost: no workflow edit; the suite is already run by `kc-dev-flow-2-tests.yml`, and the six new cases add about 7 s locally (measured, 6 tests in 5 to 7 s); CI minutes not measured.
+- DONE: push without force and without -u; CI green on the PR head; CI cost measured or stated as not measured
+  The push was FO's, not mine, on the Captain's 「准」: head 1e47b8c6 without -u or force, Draft PR iamcxa/kc-claude-plugins#703 (open, draft, head 1e47b8c6 read with `gh pr view 703`). `gh pr checks 703` read by me: unit tests (python3) pass 1m19s, multi-profile route gate (live Spacedock) pass 6s, version parity pass 44s, GitGuardian pass. CI cost: no workflow edit; the suite is already run by `kc-dev-flow-2-tests.yml`; the unit-tests job took 1m19s on this head (measured), the six new cases add about 7 s locally.
 
 ### Summary
 
-The hold is built as designed and green locally, but not published: the push was refused, so FO or the Captain must push or grant it. roborev's one finding (folder-form tasks get slug `index`) is not a regression: `dispatched_candidates` returns `([], None)` for `<slug>/index.md` (run 2026-10-22), so such an ask already exits 2 before the new block, and folder support is a stated non-goal.
+The hold is built as designed, green locally, and published as Draft PR #703 (pushed by FO) with CI green on head 1e47b8c6. roborev's one finding (folder-form tasks get slug `index`) is not a regression: `dispatched_candidates` returns `([], None)` for `<slug>/index.md` (run 2026-10-22), so such an ask already exits 2 before the new block, and folder support is a stated non-goal.
 
 ### Notes for FO
 
 - roborev finding, High, `delivery_gate.py` `owed_role_calls`: folder task passes `<state>/<slug>` and slug `index`. Declined as out of scope (Non-goals); not reran roborev.
-- Push the code branch (no -u, no force) and open the Draft PR titled `feat(kc-dev-flow-2): hold a merge ask on a task whose committed state owes a repair-pass or amendment call`; PR body must carry the HEAD-versus-disk residual and the replay table.
+- Draft PR #703 is open at head 1e47b8c6; its body should carry the HEAD-versus-disk residual and the replay table (I have not read the body).
 - After release, tasks that owe a call hold at their merge ask (codex-reader-reads-receipt-marker, new-work-starts-from-a-story-map and the others in Batch overlap); intended.
 - Mutation copies and scripts are in /tmp/mah_mut, /tmp/mah_replay, /tmp/mah_proto; nothing outside the three files in the repository.
