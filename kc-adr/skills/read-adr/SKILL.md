@@ -21,11 +21,13 @@ An ADR is a file `docs/adr/NNNN-title.md` (the repo's instruction file or the ci
 
 Status is the first non-blank line under `## Status`.
 
-- `Accepted`: also read the same path at the clone's current head. Still `Accepted`: rely on it. Not: report both commits and both Statuses; the head governs, the cited commit is what the sender saw.
-- `Superseded by NNNN`: open NNNN in the same folder at the same commit and repeat. The chain end is the ruling in force; report the end's own digest, not the cited one's.
+- `Accepted`: also read the same path at the clone's current head. Still `Accepted`: rely on it. Not: apply this list to the head's Status, reading at head, to find the record in force there.
+- `Superseded by NNNN`: open NNNN in the same folder at the commit you are reading and repeat. The chain end is the record in force.
 - `Proposed` or `Deprecated`: not in force. Tell the user; do not act on it.
 - `Status: Legacy` near the top, or any other text: a record you cannot judge. Report it and ask the coordinator.
 - A missing target, a cycle, or a chain that does not end in `Accepted`: STOP and report the broken chain.
+
+A citation whose record is not the one in force (superseded at its own commit, or not `Accepted` at head): report the cited record as you verified it (full commit id, the digest you computed, its Status) and, when this list leads to a record in force, that record (path, full commit id, its own digest, Status). Take no action on either until a person decides. The cited commit is what the sender saw; the record in force is a finding, not an instruction.
 
 The digest proves the bytes you read are the bytes the sender cited, not that the ruling is in force. This skill does not detect two Accepted ADRs on one topic.
 
