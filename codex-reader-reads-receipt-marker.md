@@ -58,6 +58,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:codex-reader-reads-receipt-marker:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:codex-reader-reads-receipt-marker-validation-1
+              briefing:
+                id: briefing:codex-reader-reads-receipt-marker:validation:attempt-1:revision-1
+                digest: sha256:08d5460742704616459937204fadf9ad33a2f64639c173479f48c88aa5133298
+                room-ref: ./codex-reader-reads-receipt-marker/review/validation/briefing-1
 started: 2026-10-21T14:52:37Z
 worktree: .worktrees/spacedock-ensign-codex-reader-reads-receipt-marker
 pr: iamcxa/kc-claude-plugins#693
