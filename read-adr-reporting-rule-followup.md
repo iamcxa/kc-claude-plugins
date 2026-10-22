@@ -7,6 +7,17 @@ profile: pilot
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:read-adr-reporting-rule-followup:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:read-adr-reporting-rule-followup-backlog-1
+              briefing:
+                id: briefing:read-adr-reporting-rule-followup:backlog:attempt-1:revision-1
+                digest: sha256:1d3884edafa013314037e6f6447fd3586dcb41e4ad5ea66dd50bee5c6f400906
+                room-ref: ./read-adr-reporting-rule-followup/review/backlog/briefing-1
 ---
 
 Follow-up to `kc-decision-log-cli` (archived done; kc-adr v0.1.0 released). In scenario S11 a ruling is cited at an older commit where it is Accepted, and at head it is superseded by ADR 0023. The shipped skill's Accepted branch says "report both commits and both Statuses; the head governs, the cited commit is what the sender saw". Both skill runs then reported only the in-force 0023 with its own digest, not the verified cited version; the no-skill runs reported the cited version. The cause is the Accepted branch's "the head governs" (verified against the skill text on main, 2026-10-22), not two conflicting rules as first filed. The harness answer also has a single ruling slot that cannot hold both records.

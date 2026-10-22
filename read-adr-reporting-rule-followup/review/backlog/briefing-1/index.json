@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:read-adr-reporting-rule-followup:backlog:attempt-1:revision-1",
+  "question": "Approve read-adr-reporting-rule-followup into ideation as profile pilot, with the corrected premise, scope (rewrite the Accepted branch so the worker reports the cited commit, digest and Status plus any in-force record and waits; widen the harness answer schema; rerun only S6, S7, S9, S11 on both hosts with the count declared first; release the next kc-adr version), non-goals, half-day budget and AC-1..AC-2 as filed?",
+  "artifacts": [
+    {
+      "id": "artifact:read-adr-reporting-rule-followup:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7430cc515043bc001c7d6ca9a9adc2e03e0b1067/read-adr-reporting-rule-followup.md",
+      "rev": "sha256:61edad0b642db28a138e86e8554453af38d1f3260e64f3c26def3c7e3df3ea55",
+      "mediaType": "text/markdown",
+      "summary": "Follow-up to kc-decision-log-cli: the shipped read-adr skill's Accepted branch says 'the head governs', so on a citation superseded at head the workers reported only the in-force ADR. Fix the rule to the Captain's wording and rerun the four affected scenarios."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:read-adr-reporting-rule-followup:backlog:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c27e76590c1d2dc910e7fa2d332242a7534df0b0/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:d8b3639df236541f0a6cb378df697c0bfe22c51457d9346893c4aef3bfb4594a"
+    }
+  ]
+}
