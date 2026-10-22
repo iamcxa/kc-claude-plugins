@@ -1,0 +1,15 @@
+{
+ "id": "claude-inst",
+ "host": "claude",
+ "kc_adr_installed": "installed",
+ "a_loaded_before_first_adr_access": true,
+ "b_git_show_and_shasum": true,
+ "c_new_adr_files": [
+  "docs/adr/0024-the-report-cache-never-grows-past-50-mb.md"
+ ],
+ "c_number_is_reserved": true,
+ "d_adr_lint_exit": 0,
+ "d_adr_lint_tail": "24 ADR file(s) checked, 0 legacy",
+ "e_no_copy_of_dev2_tools": true,
+ "worktree_scored": "/tmp/adrpoc-ac9/claude-inst/mira-app/.worktrees/spacedock-ensign-report-cache-limit-claude-inst"
+}

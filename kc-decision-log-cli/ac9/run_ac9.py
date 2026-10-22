@@ -109,6 +109,14 @@ ADR: {RESERVED}
     return w, env, {"reserved": reserved, "base_commit": commit, "path": path, "digest": digest}
 
 
+def installed_identity():
+    data = json.loads((Path.home() / ".claude" / "plugins" / "installed_plugins.json").read_text())
+    rec = data["plugins"]["kc-adr@kc-claude-plugins"][0]
+    W = Path(os.environ["KC_ADR_ROOT"])
+    same = subprocess.run(["diff", "-r", str(W / "kc-adr"), rec["installPath"]], capture_output=True, text=True).stdout.strip() == ""
+    return {**rec, "installed_bytes_equal_candidate_kc_adr": same}
+
+
 def run(i, host, kc_adr):
     d, app, wf = paths(i)
     env_json = json.loads((d / "envelope.json").read_text())
@@ -128,7 +136,7 @@ def run(i, host, kc_adr):
                 "--strict-mcp-config", "--permission-mode", "dontAsk",
                 "--allowedTools", "Bash", "Read", "Write", "Edit", "Glob", "Grep", "Skill",
                 "--no-session-persistence", "--max-budget-usd", "6", "--output-format", "stream-json", "--verbose"]
-        if kc_adr:
+        if kc_adr == "dir":
             argv += ["--plugin-dir", str(KC_ADR_ROOT / "kc-adr")]
         argv += [prompt]
         env = {**os.environ, "CLAUDE_CODE_DISABLE_AUTO_MEMORY": "1"}
@@ -160,9 +168,9 @@ def run(i, host, kc_adr):
     events, final, model = harness_run.normalize_claude(lines) if host == "claude" else harness_run.normalize_codex(lines, od / "last-message.txt")
     (od / "trace.jsonl").write_text("\n".join(json.dumps(e) for e in events) + "\n")
     safe = [a if a != prompt else "<prompt>" for a in argv]
-    (od / "meta.json").write_text(json.dumps({"id": i, "host": host, "kc_adr": kc_adr, "argv": safe, "exit_code": p.returncode, "elapsed_s": round(elapsed, 1),
+    (od / "meta.json").write_text(json.dumps({"id": i, "host": host, "kc_adr": kc_adr or False, "argv": safe, "exit_code": p.returncode, "elapsed_s": round(elapsed, 1),
                                               "model_reported": model, "stderr_tail": p.stderr[-1500:],
-                                              "plugin": harness_run.plugin_identity() if kc_adr else None}, indent=1))
+                                              "plugin": installed_identity() if kc_adr == "installed" else (harness_run.plugin_identity() if kc_adr else None)}, indent=1))
     print(f"{i}: exit={p.returncode} events={len(events)} {round(elapsed)}s")
 
 
@@ -204,12 +212,12 @@ if __name__ == "__main__":
     ap.add_argument("cmd", choices=["build", "run", "score"])
     ap.add_argument("--id", required=True)
     ap.add_argument("--host", default="claude")
-    ap.add_argument("--kc-adr", default="yes")
+    ap.add_argument("--kc-adr", default="yes", help="yes|dir: --plugin-dir (Claude) or per-run Codex install; installed: the user's installed plugin, no --plugin-dir; no: control")
     a = ap.parse_args()
     if a.cmd == "build":
         w, env, info = build(a.id, a.host)
         print(json.dumps({"envelope": env, **info}, indent=1))
     elif a.cmd == "run":
-        run(a.id, a.host, a.kc_adr == "yes")
+        run(a.id, a.host, {"yes": "dir", "dir": "dir", "installed": "installed", "no": ""}[a.kc_adr])
     else:
         scorer(a.id)
