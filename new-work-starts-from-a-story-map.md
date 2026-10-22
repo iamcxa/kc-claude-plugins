@@ -341,6 +341,11 @@ Verified by: one live rehearsal per case recorded in the implementation Stage Re
 
 ADR: 0029
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-22): Codex review on #704 e2f3cb0f (review:5610899867; and #705 02dc9e01 review:5610893517) left two P1 and four P2 across both PRs, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - #704 P1 comment:4345830345: a story moved between releases keeps its earlier ruling source.ref, but check requires every ruling to name the current release. #704 P2 comment:4345830357: check accepts a record missing the Reviewed line and the Map edit, Walk, Holes and Slice sections. #704 P2 comment:4345830365: a source kind other than gate, amendment or release skips every check. #704 P2 comment:4345830376: a plain-only Interrogation arm passes though the lens arm is required. #705 P1 comment:4345825352 and P1 comment:4345825366 read kc-journey-map on main, not #704: judge whether #704 already resolves them (review-release step 0 interrogates; interrogation.md routes by the five questions) and say so with the file lines. #705 P2 comment:4345825358: the dev sentence records the answer verbatim as Release review:, while the workflow requires the journey/release at commit form for the positive case. Also validation Polish F4 and F5 on ADR 0029 (the order is said to be kept by check, which only proves an Interrogation line exists; the intake it cites lives only on the state branch).
+
 ## Stage Report: ideation
 
 - SKIPPED: Holistic design of new work starting from a story map and its slices (Scope touchpoints, Amendment 1 Cut 2, interrogation POC and kc-decision-log P1 inputs, decisions listed first) — held: `## FO alignment` records `Alignment: needed before ideation` with no `Result:` line, and ideation principles (`skills/ideation/principles.md`, opening paragraph) require stopping and reporting instead of starting the design
