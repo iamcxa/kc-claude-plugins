@@ -443,3 +443,88 @@ Redesigned under the Captain's four rulings. A pre-task ruling now lands where k
 ### Summary
 
 All Cut 1 items are built and committed on two branches off origin/main cebd0ab9, delivered as Draft PRs #704 (kc-journey-map, head e2f3cb0f) and #705 (kc-dev-flow-2, head 02dc9e01), both with every listed check passing. FO pushed the branches and opened the PRs because my own push was refused. One decision is left for FO: the roborev High finding on #704 (`journey-review.mjs check` accepts a Tasks table that omits release stories), not fixed because AC-2 (e) lists no completeness check.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #705 head 02dc9e01 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for #705 head 02dc9e01affe22784690312760d64f866257d2b1 (base cebd0ab9). Re-run on a detached throwaway worktree: AC-7 dev SKILL 707 to 763 words, sentence +56; AC-8 `test_pr_watch.py` 101 tests OK, and three mutations each fail it (list line printed for a single awaiting gate, 51-word line, list line once per pass); AC-9 and AC-10 diffs over the listed paths empty, `lint-skills.py` 5374 of 5374; AC-11 `comment_ratio.py` 0 of 25 lines, `number_guards.py check` PASS, `doc_impact.py` 0 documents, `dispatch_records.py` 5 records complete, `design_surfaces.py check` exit 0, sanitize classes (BLOCK, REJECT, WARN regexes) over the 59 added lines clean, no version file in the 4 changed files, `gh pr checks` all pass at this head. AC-6 re-run on this head with `claude -p --plugin-dir` sonnet in a copy of the rehearsal repo: new-capability request asks "draw a story map first" before any profile recommendation, after "no" the filed task carries `Release review: not needed: 「No, we do not need a map for this one.」`, bug request asks no map question (0 mentions). Limits judged: dev ask fires only at the `dev` entry (design Limits, accepted); AC-6 is one run per case on one host (a first re-run was void: the copied fixture held a task the earlier run had filed, so I removed it and re-ran).
+- DONE: This task has two PRs: also validate iamcxa/kc-claude-plugins PR #704 (kc-journey-map) head e2f3cb0fc5ae5b3205778ea8d8056ac5c3005ac9 against the criteria it carries (Cut 1 items 1 to 5), in its own throwaway worktree; judge the roborev High finding on #704 (journey-review.mjs check accepts a Tasks table that omits release stories) against AC-2 as approved, and the worker-read word growth (release-review.md 688 to 1017, interrogation.md 812 to 1223) against the design's estimates
+  PASSED for #704 head e2f3cb0f. `node --test lib/*.test.mjs` 236 of 236 (CI's own command; node 24.18); AC-1 to AC-4 files 34 of 34. 13 source mutations of `journey-review.mjs` (heading journey, heading release, Interrogation line missing, count missing, no codex arm, open question, both answer and doc, neither, ref, empty words, task story off release, Carries id, path journey segment) are each killed by `journey-review.test.mjs`, 0 survive. AC-3 falsifiers: `current` left at 1.0.0 exits 1 with the hash message; a reconcile change counting a `kind: release` answer as `unsourced` fails the new row; the schema diff is the one `source` row, hash 61395de1. AC-9 diff over kc-dev-flow-2, fold, handoff, model and the loop smoke script empty; `adr_lint`, `number_guards`, `comment_ratio` (3 of 266 lines), `skill-frontmatter-lint.sh` pass; `journey-dev2-loop-smoke.sh` did not run in CI (path filter), I ran it locally at this head: all steps passed. AC-5 evidence read, not re-run (see Unverified): the Codex rollout of 12:12 on 2026-10-22 shows gpt-6.1-sol, effort high, 158,863 in and 3,842 out, commands inside the snapshot, and the rehearsal's record at `/tmp/ensign-rehearsal/ac5/docs/journey/reviews/book-pickup/r1.md` passes `check` (exit 0) when I run it. Roborev High: F1. Word growth: F3.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc acceptance.sh`, 86 s, every step as expected. `adr_lint.py docs/adr --since cebd0ab93c7f --require 0029` at #705 head: "29 ADR file(s) checked, 0 legacy", exit 0; at #704 head (no ADR) exit 0. Verdict PASSED for 02dc9e01 and for e2f3cb0f; no Material finding.
+
+### Findings
+
+- F1 Deferred risk: #704 `journey-review.mjs check` exits 0 on a record whose `## Tasks` table lists one of the three r1 stories (step 4 below). AC-2 (a) to (e) as approved holds no completeness check and the design's Limits say the check proves shape, order and ruling fields only; the walk's "story with no task" hole is the control, and a story with status `exists` legitimately has no task, so a completeness rule needs a design call. Material when a prepared release's split is found missing a non-`exists` story; adding it is a Captain change to AC-2, not a repair.
+- F2 Deferred risk: the same checker cannot see a rule-5 ruling whose question never reached `Carries` as `ADR owed` (it cannot tell rule 3 from rule 5), so that ruling would have no ADR route. ADR 0029 Consequences name the later `answer:` to `doc:` swap as unchecked, not this omission. Material when a prepared release has a ruling later work must respect that is in neither an ADR nor `Carries`.
+- F3 Polish: worker-read words grew more than estimated: release-review.md 688 to 1017 (+329 net, estimate 850), interrogation.md 812 to 1223 (+411 net, 648 added and 237 removed, estimate 1000), SKILL.md 2578 to 2587 (estimate 2600). No AC bounds them; every FO-read figure matches the design (dev 763, sitting +52, README 5374). The additions map to Cut 1 items 1 and 2 (order, record, lens, classes, rank and cap, ruling form). Material only if a preparation worker is shown to miss a rule for its length.
+- F4 Polish: ADR 0029 says the order "is kept by `journey-review.mjs check`"; the checker proves an `Interrogation:` line exists and no question is open, not that interrogation preceded the walk (step 4 shows a record with no walk passing). A bounded claim per the repository CLAUDE.md rule on absolutes.
+- F5 Polish: ADR 0029 Context cites "the task's release-preparation intake, 2026-10-21", a file that exists only on the state branch, not on trunk (`git grep release-preparation-from` on #705 finds none).
+- F6 Deferred risk: the `dev` sentence in #705 says `review-release` interrogates before splitting, which is true only once #704's kc-journey-map release ships. Material if a kc-dev-flow-2 release goes out without the kc-journey-map release from the same release-please run.
+
+### Unverified obligations
+
+- AC-5 live rehearsal (worker order, no `claude -p`, one `codex exec`) was read from the implementer's artifacts and the Codex rollout metadata, not re-run (about 163k Codex tokens); order inside the sonnet worker's transcript was not re-read.
+- AC-6 "no" and bug cases were re-run once on one host; the origin/main baseline arm was not re-run (the diff shows the sentence absent at base).
+- Sanitize-check applied as its three rule classes by grep over the added lines, not by invoking the skill.
+- Not shown anywhere: that the Captain's answers per sitting fall (design Limits), the cap of 10, a first real preparation on a released install.
+
+### Acceptance script
+
+Needs git, node 22.13 or newer, npm, python3 and network access to GitHub; touches only a temp directory.
+
+```
+D=$(mktemp -d)
+echo "== Step 1: fetch the kc-journey-map PR head and install its dependencies"
+git clone -q --depth 1 --no-checkout https://github.com/iamcxa/kc-claude-plugins.git "$D/r" && cd "$D/r" \
+  && git fetch -q --depth 1 origin pull/704/head && git checkout -q FETCH_HEAD && git rev-parse HEAD \
+  && cd kc-journey-map && npm ci --ignore-scripts --silent >/dev/null 2>&1; echo "npm ci exit=$?"
+echo "== Step 2: the review-record, schema and reconcile tests"
+node --test lib/journey-review.test.mjs lib/schemas.test.mjs lib/journey-reconcile.test.mjs 2>&1 | grep -E '^ℹ (tests|pass|fail) '
+echo "== Step 3: schema version and record path"
+node lib/schemas.mjs journey-map-question | head -1
+node lib/journey-review.mjs path skills/kc-journey-map/references/journey.example.yaml r1
+echo "== Step 4: the checker refuses a record with no Interrogation line, and accepts a record that lists one story of three (known limit)"
+J=skills/kc-journey-map/references/journey.example.yaml
+printf '# Release review: book-pickup/r1\n## Tasks\n| Task | journey-story | Required tasks | Carries |\n|---|---|---|---|\n| Reserve | reserve-copy | reserve-copy | - |\n' > "$D/bad.md"
+node lib/journey-review.mjs check "$D/bad.md" $J; echo "exit=$?"
+printf '# Release review: book-pickup/r1\nInterrogation: 2026-10-22; questions 1; dropped 0; decision rows 0; asked 0; open after 0; codex gpt-6.1-sol high lens\n## Tasks\n| Task | journey-story | Required tasks | Carries |\n|---|---|---|---|\n| Reserve | reserve-copy | reserve-copy | - |\n' > "$D/omit.md"
+node lib/journey-review.mjs check "$D/omit.md" $J; echo "exit=$?"
+echo "== Step 5: the kc-dev-flow-2 PR head, the dev sentence size and the sitting list line"
+cd "$D/r" && git fetch -q --depth 1 origin pull/705/head && git checkout -q FETCH_HEAD && git rev-parse HEAD
+wc -w < kc-dev-flow-2/skills/dev/SKILL.md
+python3 kc-dev-flow-2/scripts/lint-skills.py | grep '5374 of'
+python3 -B -m unittest kc-dev-flow-2/scripts/test_pr_watch.py 2>&1 | tail -3
+```
+
+Expected and observed (2026-10-22, 86 s):
+
+```
+== Step 1 ...
+e2f3cb0fc5ae5b3205778ea8d8056ac5c3005ac9
+npm ci exit=0
+== Step 2 ...
+ℹ tests 34
+ℹ pass 34
+ℹ fail 0
+== Step 3 ...
+journey-map-question 1.1.0
+skills/kc-journey-map/references/reviews/book-pickup/r1.md
+== Step 4 ...
+REVIEW REFUSED: the Interrogation: line is missing; a release is interrogated before it is reviewed
+exit=1
+review record ok: <temp dir>/omit.md
+exit=0
+== Step 5 ...
+02dc9e01affe22784690312760d64f866257d2b1
+     763
+references/sd/workflow.md: 5374 of 5374 words; no unlisted passage repeats it
+Ran 101 tests in 56.023s
+OK
+```
+
+Does not cover: live model behaviour (the dev ask, the Codex interrogation, a worker's walk), CI, the ADR lint (needs the package scripts), or any real release preparation.
+
+### Summary
+
+Both candidates pass: #705 head 02dc9e01 and #704 head e2f3cb0f meet AC-1 to AC-11 on the evidence I re-ran, each falsifier I tried fails the way the criterion says, and no Material finding exists. The roborev High on #704 is a Deferred risk under AC-2 as approved (F1, shown by step 4 of the script), the worker-read growth is Polish (F3); FO decides whether the Captain wants a completeness check added to AC-2 or the F4 and F5 wording fixed before merge. Validation worktrees and refs were removed; nothing was pushed, commented or marked ready.
