@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:design-helper-astra-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:design-helper-astra-poc-backlog-1
+              briefing:
+                id: briefing:design-helper-astra-poc:backlog:attempt-1:revision-1
+                digest: sha256:483d0b686312ba00cc7324126db011cdf66da64c0675cb5772619dd7822b3504
+                room-ref: ./design-helper-astra-poc/review/backlog/briefing-1
 ---
 
 ## Scope
