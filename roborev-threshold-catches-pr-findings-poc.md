@@ -26,6 +26,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-22T04:33:47Z
+worktree: .worktrees/spacedock-ensign-roborev-threshold-catches-pr-findings-poc
 ---
 
 ## Scope
