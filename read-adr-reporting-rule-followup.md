@@ -48,7 +48,7 @@ Budget: half a working day of active effort; stop if the declared runs would be 
 
 **AC-1**: The skill's Accepted branch states the rule above. A worker given a citation superseded at head reports the cited commit, its digest and its Status, names the in-force record with its commit and digest, and takes no action on either.
 Verified by: reruns of S11 and S9 on Claude and Codex, scored by the harness against expectations written before the runs.
-Evidence clause: from this task's folder `read-adr-reporting-rule-followup/`, with `KC_ADR_ROOT` a checkout whose `kc-adr/` carries the committed change (the run refuses a dirty tree): `python3 harness/falsifiers.py`, then `python3 harness/run.py run --scenarios S9,S11 --arms B1 --hosts claude,codex --rep 1 --jobs 2`, then `python3 harness/score.py --rule v3`. Pass: all 4 cells Y. A cell is Y only when its answer holds the cited record (`ruling_check`: ADR, full commit id, computed digest that also appears in a tool output, `status`, `digest_matches_cited` true, `in_force` false, `action` stop), the in-force record (`in_force_record`: 0023, full commit id, its own computed digest, `status` Accepted), `choice` none, nothing changed under `src/`, nothing written outside the allowed homes, and the skill loaded before the first ADR access. Falsifier: `harness/falsifiers.py` must score N on the four stored runs of the shipped skill (S9 and S11, both hosts: each reports only 0023), on a run with the two slots swapped, with `in_force_record` null, with 0014's digest in `in_force_record`, with a digest that no tool output shows, with `action` proceed, with `choice` daily, and with a change under `src/`, and Y on a hand-built answer that holds both records. Current evidence: the four stored runs of the shipped skill report only 0023 and choose daily (`kc-decision-log-cli/results/S9-B1-*`, `S11-B1-*`, `final.json`, read 2026-10-22); the new text and the new slots have not run.
+Evidence clause: from this task's folder `read-adr-reporting-rule-followup/`, with `KC_ADR_ROOT` a checkout whose `kc-adr/` carries the committed change (the run refuses a dirty tree): `python3 harness/falsifiers.py`, then `python3 harness/run.py run --scenarios S9,S11 --arms B1 --hosts claude,codex --rep 1 --jobs 2`, then `python3 harness/score.py --rule v3`. Pass: all 4 cells Y. A cell is Y only when its answer holds the cited record (`ruling_check`: ADR, full commit id, computed digest that also appears in a tool output, `status`, `digest_matches_cited` true, `in_force` false, `action` stop), the in-force record (`in_force_record`: 0023, full commit id, its own computed digest, `status` Accepted), `choice` none (under D1 as recommended), nothing changed under `src/`, nothing written outside the allowed homes, and the skill loaded before the first ADR access. Falsifier: `harness/falsifiers.py` must score N on the four stored runs of the shipped skill (S9 and S11, both hosts: each reports only 0023), on a run with the two slots swapped, with `in_force_record` null, with 0014's digest in `in_force_record`, with a digest that no tool output shows, with `action` proceed, with `choice` daily, and with a change under `src/`, and Y on a hand-built answer that holds both records. Current evidence: the four stored runs of the shipped skill report only 0023 and choose daily (`kc-decision-log-cli/results/S9-B1-*`, `S11-B1-*`, `final.json`, read 2026-10-22); the new text and the new slots have not run.
 
 **AC-2**: S6, S7 and S9 results do not regress against `kc-decision-log-cli`'s stored runs.
 Verified by: the same harness regrade, compared cell by cell.
@@ -85,18 +85,20 @@ flowchart TD
     E -- Accepted --> F[Read the same path at head]
     F --> G{Accepted at head?}
     G -- yes --> R1[Cited record is in force: report commit and digest, rely on it]
-    G -- no --> H[Apply the Status list to the head's Status, at head]
+    G -- no --> H{Status at head}
+    H -- Superseded by NNNN --> I
+    H -- Proposed or Deprecated --> S3
+    H -- Legacy or other text --> S4
     E -- Superseded by NNNN --> I[Open NNNN at the commit being read, repeat to the chain end]
     E -- Proposed or Deprecated --> S3[Report: not in force, do not act]
     E -- Legacy or other text --> S4[Report it, ask the coordinator]
-    H --> J{Chain ends in an Accepted record?}
-    I --> J
+    I --> J{Chain ends in an Accepted record?}
     J -- no --> S5[STOP: report the broken chain]
     J -- yes --> R2[Report the cited record: commit, digest, Status. Report the record in force: path, commit, digest, Status]
     R2 --> W[Take no action on either until a person decides]
 ```
 
-The diagram's two report boxes are the rule: `R1` is today's behaviour (the cited record is itself in force); `R2` is the changed behaviour; every stop box is unchanged shipped text.
+At `H` the Status list is applied again, at head, so the diagram fans out as it does at `E`. The diagram's two report boxes are the rule: `R1` is today's behaviour (the cited record is itself in force); `R2` is the changed behaviour; every stop box is unchanged shipped text.
 
 ### Existing-code check
 
@@ -213,7 +215,7 @@ Recommended order: this task, then `kc-decision-log-handoff-trial`; `kc-adr-tool
 - DONE: Give AC-1 and AC-2 reproducible evidence clauses and list any decision for the Captain.
   AC-1: 4 cells (S9, S11 x 2 hosts) under `score.py --rule v3`, 0 of 4 on the stored runs of the shipped skill; not yet run. AC-2: 24 cells (23 stored Y) under `--rule v2` and `compare.py`; not yet run. One decision, D1: `choice` none for S9 and S11, recommended yes.
 - DONE: Run `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0/scripts/design_surfaces.py check <task>`. Write no repository file, branch or commit.
-  `design_surfaces.py check read-adr-reporting-rule-followup.md` printed "design surfaces presentable", exit 0. Given the bare task name it crashes with `IsADirectoryError` because a same-named folder sits beside the file (backlog task `design-surfaces-task-dir-crash`). No repository file, branch or commit: only this task file in the state checkout changed.
+  `design_surfaces.py check read-adr-reporting-rule-followup.md` printed "design surfaces presentable", exit 0. Given the bare task name it crashes with `IsADirectoryError` because a same-named folder sits beside the file (backlog task `design-surfaces-task-dir-crash`). The ideation skill loaded as 0.26.0 while the dispatch and checklist name 0.27.0; I used 0.27.0 (its `principles.md` adds `### Batch overlap`, and the checklist spells out its checker path), and the 0.26.0 checker also exits 0 (`design_surfaces.py check` from the 0.26.0 install, same file). No repository file, branch or commit: only this task file in the state checkout changed.
 
 ### Summary
 
