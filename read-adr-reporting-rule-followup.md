@@ -1,7 +1,7 @@
 ---
 id:
 title: read-adr reports the verified cited version and any newer in-force ruling, then waits
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
