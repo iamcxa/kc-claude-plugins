@@ -81,6 +81,8 @@ Verified by: the same test file, one mutation of the complete fixture per case, 
 
 ## FO alignment
 
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-22 — Codex rounds 1 to 3 on #704 each found new input-validation gaps in journey-review.mjs check (round 3: an impossible Interrogation date, a release ruling without status answered, duplicate question ids); what is the smallest next step to a merge ask?
+
 Captain rulings on D1 to D4 (batch-5 sitting, 2026-10-22, chat, each given to FO's question one at a time; to be bound at the ideation gate):
 - D1 「可以，照 kc-adr 那套 5 問規則」: kc-adr five-question routing (PR #691); a slice-only answer lives in the map question's answer and source fields (needs a journey-map-question schema change); a ruling later work must respect becomes an ADR and the map question links it. Override: recommended the review record; Captain chose the map fields under the five-question rule; area: slice ruling home.
 - D2 「就不做」: no Release review seed hold; the dev entry asks whether to map first. Override: recommended the seed hold; Captain chose none; area: Release review line.
