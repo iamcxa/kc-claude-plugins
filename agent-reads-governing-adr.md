@@ -3,7 +3,7 @@ title: An agent reads the governing ADR at the moment it decides, from a pointer
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -60,6 +60,7 @@ gates:
                 state: consumed
 started: 2026-10-21T18:55:34Z
 worktree: .worktrees/spacedock-ensign-agent-reads-governing-adr
+pr: iamcxa/kc-claude-plugins#698
 ---
 
 ## Scope
