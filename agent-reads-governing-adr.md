@@ -79,7 +79,7 @@ gates:
                 state: pending
 started: 2026-10-21T18:55:34Z
 worktree: .worktrees/spacedock-ensign-agent-reads-governing-adr
-pr: iamcxa/kc-claude-plugins#698
+pr: pr-merge:698
 ---
 
 ## Scope
