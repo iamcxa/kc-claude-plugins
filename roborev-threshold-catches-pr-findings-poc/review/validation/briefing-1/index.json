@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:roborev-threshold-catches-pr-findings-poc:validation:attempt-1:revision-1",
+  "question": "Close roborev-threshold-catches-pr-findings-poc with its result, no threshold change? FO recommends closing; approving accepts that recommendation: the bar (local catches on two of three heads) is not met, 1 of 5 Codex PR findings caught (#698 fragment, at medium and low), so .roborev.toml and roborev_gate.py stay unchanged.",
+  "artifacts": [
+    {
+      "id": "artifact:roborev-threshold-catches-pr-findings-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e9f5123f52d0c14d8c6c642ba664b8797e2c72b6/roborev-threshold-catches-pr-findings-poc.md",
+      "rev": "sha256:59d8755af6af511c5160057aaf41560b4076514b22a00118d6d865a83d027bcf",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED (AC-1, AC-2 met as written); the bar is not met. The gate ran at high because .roborev.toml sets review_min_severity = \"high\" at all three heads; roborev v0.62.0 default is no filter and SEVERITY_THRESHOLD_MET means every finding was below the active threshold. Medium and low runs: #694 0 of 1, #698 1 of 2, #693 0 of 2 (the P1 missed even at low). For #694 and #693 the cause is not the threshold. Open: F2 an unchecked extra local finding on #694; F4 one head where high hid a finding medium showed, Material if a second head repeats it."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:roborev-threshold-catches-pr-findings-poc:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/e9f5123f52d0c14d8c6c642ba664b8797e2c72b6/roborev-threshold-catches-pr-findings-poc/report.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:a12b22d79b2d151ca6d0ebc658c4181a67d8e64c2f6d8a59365d1a786037d98e"
+    }
+  ]
+}

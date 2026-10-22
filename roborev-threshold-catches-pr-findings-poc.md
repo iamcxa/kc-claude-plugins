@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:roborev-threshold-catches-pr-findings-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:roborev-threshold-catches-pr-findings-poc-validation-1
+              briefing:
+                id: briefing:roborev-threshold-catches-pr-findings-poc:validation:attempt-1:revision-1
+                digest: sha256:f443497b5f87b1ecb6c8bead8ac93858fb7a14a8a08a2c1a7df46c23140e25ad
+                room-ref: ./roborev-threshold-catches-pr-findings-poc/review/validation/briefing-1
 started: 2026-10-22T04:33:47Z
 worktree: .worktrees/spacedock-ensign-roborev-threshold-catches-pr-findings-poc
 ---
