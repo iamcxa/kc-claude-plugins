@@ -66,6 +66,17 @@ gates:
                 id: briefing:agent-reads-governing-adr:validation:attempt-1:revision-1
                 digest: sha256:9566713fa2ada0206f2c25fa92a07ed67457b3b59a4cceee422e6952fa6792a2
                 room-ref: ./agent-reads-governing-adr/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:agent-reads-governing-adr:validation:1
+                briefing: briefing:agent-reads-governing-adr:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T07:50:08.470378Z"
+                decision: approve
+                reason: Captain 「合併」 (chat, 2026-10-22), answering 「#698（讓代理讀到主導它的 ADR）已經可以合併。要你決定的是：#698 要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only, and disclosed that the check refuses every ref form, not only branches; digest 9566713f. Accepts the FO recommendation as the bound question states.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-21T18:55:34Z
 worktree: .worktrees/spacedock-ensign-agent-reads-governing-adr
 pr: iamcxa/kc-claude-plugins#698
