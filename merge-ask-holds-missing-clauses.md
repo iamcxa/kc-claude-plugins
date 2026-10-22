@@ -313,3 +313,30 @@ The design is now one hold: `check` runs the real `role_triggers.py` on the comm
 - The entity title and the `## Scope` bullets A and B still describe the three-hold task; the title is frontmatter (FO owns it) and Scope records the Captain's original source. The `## FO alignment` Reviewer line asks the engineering-reviewer about holds A, B and C; the narrowed design is a strict subset of what it reviewed, so whether another call is owed is FO's judgment.
 - ADR 0026's amendment is the one durable choice I made for the Captain: dropping it changes no behaviour, and the Captain's ruling left it to the narrowed change.
 - Prototypes and scripts: `/tmp/mah_proto/pkg5`, `/tmp/mah_proto/pkg5m`, `/tmp/mah_proto/c_integration5.py`, `/tmp/mah_replay/replay5.py`; nothing was written to the repository. Adopter repositories were read with `git ls-tree` only.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main (e66c9b32) implementing the narrowed cycle-3 design, only those files
+  Commit 1e47b8c6 on `spacedock-ensign/merge-ask-holds-missing-clauses` (based on origin/main e66c9b32): `delivery_gate.py` (+19), `test_delivery_gate.py`, ADR 0026 (one Amended paragraph); no review-round count. FAILED part: the push was refused by the permission check ("Out-of-Place Publication"), so the branch is local and no PR exists; stopped per the dispatch, not worked around.
+- DONE: Every acceptance criterion green with the evidence each names, each falsifier shown failing by a mutation (python3 -B, caches cleared), replay over the archived merge asks, HEAD-versus-disk residual stated
+  AC-1: six `OwedRoleCallTests` run the real `role_triggers.py` (amendment no call 1; no amendment 0; amendment+call 0; disk-only amendment 0; disk-only call 1; not a git tree 2). Mutations on copies in /tmp/mah_mut: call removed fails 5 of 6; role_triggers read from disk fails the disk-only case; exit-2 branch off fails 2; `nexts.extend(said)` dropped fails 2.
+  AC-2: replay of 10 archived asks with the candidate's `role_triggers.py` (/tmp/mah_replay/replay6.py): fo-batch-sittings exit 1 (engineering-reviewer, amendments 1, 2, 3), fo-write-checks exit 1 (predates the counts), the other eight exit 0.
+  AC-3: pass path stdout and record keys identical to base e66c9b32 on three fixtures (/tmp/mah_proto/pass_identical7.py); new hold lines at fo-batch-sittings 11 + 52 = 63 words; `git diff --stat` lists only the three files.
+  AC-4: `python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p test_delivery_gate.py` 86 tests OK (80 old + 6 new, 192.5 s); `delivery_gate.py --help` names `role_triggers.py` and `committed`; the five old call sites patch `owed_role_calls` through `quiet_roles()`.
+  AC-5: not run here (validation owns it); `role_triggers.py` on this task in the state checkout exits 0, 0 events.
+  Residual for the PR body: `role_triggers.py` reads the task at HEAD of the state checkout and `check()` reads the disk, so an amendment not yet state-committed is let through and a call not yet committed holds; pinned by two cases.
+- DONE: lint-skills.py and adr_lint.py exit 0; roborev evidence= line
+  `lint-skills.py` exit 0; `adr_lint.py docs/adr --since e66c9b32` exit 0 (28 files); roborev exit 1, `evidence=roborev:1006`, one High finding, not rerun (below).
+- FAILED: push without force and without -u; CI green on the PR head; CI cost measured or stated as not measured
+  The push was denied by the permission check, so there is no remote branch, no PR and no CI run. CI cost: no workflow edit; the suite is already run by `kc-dev-flow-2-tests.yml`, and the six new cases add about 7 s locally (measured, 6 tests in 5 to 7 s); CI minutes not measured.
+
+### Summary
+
+The hold is built as designed and green locally, but not published: the push was refused, so FO or the Captain must push or grant it. roborev's one finding (folder-form tasks get slug `index`) is not a regression: `dispatched_candidates` returns `([], None)` for `<slug>/index.md` (run 2026-10-22), so such an ask already exits 2 before the new block, and folder support is a stated non-goal.
+
+### Notes for FO
+
+- roborev finding, High, `delivery_gate.py` `owed_role_calls`: folder task passes `<state>/<slug>` and slug `index`. Declined as out of scope (Non-goals); not reran roborev.
+- Push the code branch (no -u, no force) and open the Draft PR titled `feat(kc-dev-flow-2): hold a merge ask on a task whose committed state owes a repair-pass or amendment call`; PR body must carry the HEAD-versus-disk residual and the replay table.
+- After release, tasks that owe a call hold at their merge ask (codex-reader-reads-receipt-marker, new-work-starts-from-a-story-map and the others in Batch overlap); intended.
+- Mutation copies and scripts are in /tmp/mah_mut, /tmp/mah_replay, /tmp/mah_proto; nothing outside the three files in the repository.
