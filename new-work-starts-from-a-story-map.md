@@ -567,3 +567,120 @@ Both candidates pass: #705 head 02dc9e01 and #704 head e2f3cb0f meet AC-1 to AC-
 ### Summary
 
 Both branches carry the Cycle 1 repairs and are pushed with CI green; the Amendment 2 date rule is in AC-13. One roborev finding on #705 remains and is the cross-PR dependency on #704, for FO to settle by merge order.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #705 head 954ad170 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for #705 head 954ad1704adb83622e068579b3a84576a27709d6 (base cebd0ab9). Cycle 1 changed only the dev sentence and ADR 0029 wording (`git diff 02dc9e01 954ad170`: 2 files), so the AC-8 mutations from cycle 1 stand. Re-run on a detached throwaway worktree: AC-7 `skills/dev/SKILL.md` 707 to 763 words (+56); AC-8 `test_pr_watch.py` 101 OK; AC-9 and AC-10 diffs over the listed paths empty and `lint-skills.py` 5374 of 5374; AC-11 `adr_lint.py docs/adr --since cebd0ab9 --require 0029` exit 0 (29 files) and `--require 0030` exit 1 "required ADR 0030 does not exist"; `comment_ratio.py` 0 of 25 lines; `number_guards.py check` PASS; `doc_impact.py` 0 documents; `dispatch_records.py` 8 records complete; `design_surfaces.py check` exit 0; `skill-frontmatter-lint.sh` exit 0; no adopter or home-path string in the added lines; `gh pr checks` all pass. AC-6 re-run on this head (`claude -p --plugin-dir`, sonnet, fresh copy of the rehearsal repo with its filed task removed): the new-capability request asked "do you want to draw a story map ... first?" before any profile recommendation; after "no" and "Pilot" the filed task carries `Release review: not needed: 「No, we do not need a map for this one.」`; the bug request asked no map question (0 assistant mentions of map or journey). Limits judged: one run per case on one host (accepted); the yes path (`Release review: <journey>/<release-id> at <commit>`) was not re-run, only its wording is read (F4).
+- DONE: Fresh recheck after the Cycle 1 repair of both PRs: also validate iamcxa/kc-claude-plugins PR #704 (kc-journey-map) head b5448997bed198f2c8a5ade83f7e52ed55190c3d in its own throwaway worktree; judge each Codex finding of review:5610899867 and review:5610893517 against the repair, the replacement of AC-2 under Captain Amendment 2 (the date rule for moved stories), and the roborev High on #705 that the implementation report names as the cross-PR dependency on #704
+  PASSED for #704 head b5448997. `node --test lib/*.test.mjs` 245 of 245 (node 24.18); the three AC-13/AC-3 files 43 of 43; `journey-dev2-loop-smoke.sh` all steps passed (CI path-filters it out); `comment_ratio.py` 3 of 303 lines; AC-9 paths empty; the AC-5 rehearsal record still passes `check`. AC-13 falsifiers, each a one-line source mutation killed by `journey-review.test.mjs` (0 survive of 8): date rule removed, `<` to `<=` (same-day ruling would pass), any ref accepted before the date, Reviewed check removed, section presence removed, order check removed, source-kind check removed, any arm instead of lens arm. Amendment 2 is applied as ADR 0005 asks: AC-2 sits verbatim under `Superseded text:`, the replacement is AC-13 with a fresh id, and `--ac-scan` lists no AC-2. Codex review:5610899867: P1 4345830345 (moved story) fixed, a ruling dated before the Interrogation date naming another release of the map exits 0, same day or another journey exits 1 (script step 4); P2 4345830357 (Reviewed and five sections) fixed, step 4; P2 4345830365 (unknown source kind) fixed, test `releaes`; P2 4345830376 (plain-only arm) fixed, step 4. Codex review:5610893517 on #705: P1 4345825352 (interrogation never runs) is resolved by #704, not by #705: `release-review.md` line 10 order and line 12 `## 0. Interrogate and ask first`, kc-journey-map `SKILL.md` lines 37-38, where `origin/main` `release-review.md` has no word of interrogation; P1 4345825366 (routing) is resolved by #704 `interrogation.md` lines 110-117 (five questions, `ADR owed`), where base line 92 still says "the project's decision record"; P2 4345825358 (`Release review:` form) is answered by the sentence now naming "the workflow's `Release review:` line", whose form `workflow.md` lines 156-157 defines, and F4 and F5 of cycle 1 are fixed (ADR 0029 says what the checker proves, intake parenthetical gone). roborev:1044 High on #705 is the same dependency: true only with #704 merged and released first (F1). A new Codex review of b5448997 (review:5612546695, 10:09Z) holds three P2s that I reproduced; they are F5 to F7.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and output below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc acceptance.sh`, 106 s, every step as expected. `python3 .../0.28.0/scripts/adr_lint.py docs/adr --since cebd0ab9 --require 0029` at #705 head: "29 ADR file(s) checked, 0 legacy", exit 0 (the 0.27.0 root gives the same); at #704 head (no ADR) exit 0. Verdict: PASSED for 954ad1704adb83622e068579b3a84576a27709d6 (#705) and for b5448997bed198f2c8a5ade83f7e52ed55190c3d (#704); no Material finding. If FO applies cycle 1's "fix every finding" rule to round 2, F5 to F7 are three small repairs in `journey-review.mjs` and send #704 back.
+
+### Findings
+
+- F1 Deferred risk: #705 ships a sentence ("which interrogates the release before splitting it") true only once #704 is in kc-journey-map; roborev:1044 High and Codex P1 4345825352 rest on this. Material if a kc-dev-flow-2 release goes out while kc-journey-map has no release containing #704 (value-ac[AC-6]); merge and release #704 first.
+- F2 Deferred risk (carried from cycle 1 F1, unchanged, confirmed again): `journey-review.mjs check` exits 0 on a Tasks table that lists one of three r1 stories. AC-13 (e) holds no completeness rule; a completeness rule is a Captain change to AC-13.
+- F3 Deferred risk (carried from cycle 1 F2, not re-run): the checker cannot see a rule-5 ruling that never reached `Carries`; ADR 0029 Consequences name the later swap, not this omission.
+- F4 Polish: the dev sentence no longer states the positive-case form; the yes path was read, not re-run this cycle (the implementer's one run wrote `book-pickup/r1 at 1a2b3c4` with facts supplied).
+- F5 Deferred risk (Codex 4347057307, reproduced): `source.date: nope`, `7` and a numeric `source.words: 5` on a current-release ruling pass `check` (exit 0). AC-13 (d) as approved tests emptiness only. A date starting with a digit below 2 (for example `1`) compares as earlier and would let an other-release ref through; that needs a wrong date written by the worker, which the Limits already call a transcription. Material when a record is certified with a malformed date that matters to the date rule.
+- F6 Deferred risk (Codex 4347057317, reproduced): a Tasks table with no separator row has its first data row skipped, so an off-release story there passes (`elsewhere` row, exit 0). AC-13 (e) literally covers a row naming a story not on the release; the trigger is a hand-written malformed table, unobserved because the template in `release-review.md` carries the separator.
+- F7 Deferred risk (Codex 4347057331, reproduced): `ADR owed: q` is accepted for a `kind: release` question that already holds `doc:` instead of `answer:`, so a fulfilled ADR can be carried as owed. AC-13 (e) says kind: release only; the answer-to-doc swap is ADR 0029's named unchecked step (L7).
+- F8 Polish: neither `release-review.md` nor `interrogation.md` tells a worker that a moved story's earlier ruling keeps its original `ref` (grep for moved, another release and earlier finds nothing); the checker accepts it, the worker text is silent.
+- F9 Polish: carried, unchanged: worker-read growth (`release-review.md` 688 to 1017, `interrogation.md` 812 to 1223); no AC bounds it.
+
+### Unverified obligations
+
+- AC-5 live rehearsal (Codex run, worker order) read from artifacts, not re-run (about 163k Codex tokens): the rehearsal record still passes the cycle-1 checker, nothing more.
+- AC-6 yes path not re-run; the baseline arm not re-run (the diff shows the sentence absent at base).
+- Sanitize-check applied as grep over the added lines, not by invoking the skill. `--ac-scan` showed AC-13 as unevidenced before this report; this report cites it.
+- Not shown anywhere: that the Captain's answers per sitting fall, the cap of 10, a first real preparation on a released install. Codex has not reviewed #705 after its repair.
+
+### Acceptance script
+
+Needs git, node 22.13 or newer, npm, python3 and network access to GitHub; touches only a temp directory.
+
+```
+D=$(mktemp -d)
+echo "== Step 1: fetch the kc-journey-map PR head and install its dependencies"
+git clone -q --depth 1 --no-checkout https://github.com/iamcxa/kc-claude-plugins.git "$D/r" && cd "$D/r" \
+  && git fetch -q --depth 1 origin pull/704/head && git checkout -q FETCH_HEAD && git rev-parse HEAD \
+  && cd kc-journey-map && npm ci --ignore-scripts --silent >/dev/null 2>&1; echo "npm ci exit=$?"
+echo "== Step 2: the review-record, schema and reconcile tests"
+node --test lib/journey-review.test.mjs lib/schemas.test.mjs lib/journey-reconcile.test.mjs 2>&1 | grep -E '^ℹ (tests|pass|fail) '
+echo "== Step 3: schema version and record path"
+node lib/schemas.mjs journey-map-question | head -1
+node lib/journey-review.mjs path skills/kc-journey-map/references/journey.example.yaml r1
+echo "== Step 4: the checker on a story moved from r2 to r1 whose ruling names r2"
+E=skills/kc-journey-map/references/journey.example.yaml
+Q='questions: [{id: hold-rule, ask: "May a reader hold two copies?", status: answered, answer: "One only.", source: {kind: release, ref: "book-pickup/r2", words: "One copy only.", date: 2026-10-01}}]'
+sed "14s|status: unverified}|status: unverified, $Q}|" $E > "$D/moved.yaml"
+sed 's|date: 2026-10-01|date: 2026-10-22|' "$D/moved.yaml" > "$D/sameday.yaml"
+cat > "$D/ok.md" <<'EOF'
+# Release review: book-pickup/r1
+Reviewed: 2026-10-22; map at abc1234; code at example@abc1234
+Interrogation: 2026-10-22; questions 12; dropped 3; decision rows 2; asked 2; open after 0; codex gpt-6.1-sol high lens
+## Map edit
+none
+## Walk
+none
+## Holes
+none
+## Slice
+3 of 4 limit
+## Tasks
+| Task | journey-story | Required tasks | Carries |
+|---|---|---|---|
+| Reserve a copy | reserve-copy | reserve-copy | - |
+EOF
+node lib/journey-review.mjs check "$D/ok.md" "$D/moved.yaml"; echo "earlier ruling naming r2: exit=$?"
+node lib/journey-review.mjs check "$D/ok.md" "$D/sameday.yaml"; echo "same-day ruling naming r2: exit=$?"
+grep -v -e '^Reviewed:' -e '^## Walk' "$D/ok.md" > "$D/thin.md"
+node lib/journey-review.mjs check "$D/thin.md" "$D/moved.yaml"; echo "record missing Reviewed and Walk: exit=$?"
+sed 's| lens$| plain: hard to reverse|' "$D/ok.md" > "$D/plain.md"
+node lib/journey-review.mjs check "$D/plain.md" "$D/moved.yaml"; echo "plain arm only: exit=$?"
+echo "== Step 5: the kc-dev-flow-2 PR head, the dev sentence size and the sitting list line"
+cd "$D/r" && git fetch -q --depth 1 origin pull/705/head && git checkout -q FETCH_HEAD && git rev-parse HEAD
+wc -w < kc-dev-flow-2/skills/dev/SKILL.md
+python3 kc-dev-flow-2/scripts/lint-skills.py | grep '5374 of'
+python3 -B -m unittest kc-dev-flow-2/scripts/test_pr_watch.py 2>&1 | tail -3
+```
+
+Observed (2026-10-22, 106 s):
+
+```
+== Step 1: fetch the kc-journey-map PR head and install its dependencies
+b5448997bed198f2c8a5ade83f7e52ed55190c3d
+npm ci exit=0
+== Step 2: the review-record, schema and reconcile tests
+ℹ tests 43
+ℹ pass 43
+ℹ fail 0
+== Step 3: schema version and record path
+journey-map-question 1.1.0
+skills/kc-journey-map/references/reviews/book-pickup/r1.md
+== Step 4: the checker on a story moved from r2 to r1 whose ruling names r2
+review record ok: <temp dir>/ok.md
+earlier ruling naming r2: exit=0
+REVIEW REFUSED: reserve-copy/hold-rule: source.ref is "book-pickup/r2", expected "book-pickup/r1"
+same-day ruling naming r2: exit=1
+REVIEW REFUSED: the record lacks the "Reviewed:" line
+the record lacks the "## Walk" section
+record missing Reviewed and Walk: exit=1
+REVIEW REFUSED: the Interrogation: line names no lens arm; "codex <model> <effort> lens" is required, "codex <model> <effort> plain: <why hard to reverse>" is extra
+plain arm only: exit=1
+== Step 5: the kc-dev-flow-2 PR head, the dev sentence size and the sitting list line
+954ad1704adb83622e068579b3a84576a27709d6
+     763
+references/sd/workflow.md: 5374 of 5374 words; no unlisted passage repeats it
+Ran 101 tests in 84.993s
+
+OK
+env -i HOME=$HOME PATH=$PATH bash --noprofile --norc   21.29s user 22.14s system 41% cpu 1:45.59 total
+```
+
+Does not cover: live model behaviour (the dev ask, the Codex interrogation, a worker's walk), CI, the ADR lint (needs the package scripts), release-please output, or any real release preparation.
+
+### Summary
+
+Both repaired candidates pass: #705 head 954ad170 and #704 head b5448997 meet every criterion on the evidence I re-ran, the Amendment 2 date rule works and fails the way AC-13 says, and the cycle 1 Codex findings are fixed or, for #705's two P1s, resolved by #704. No Material finding; the cross-PR dependency (F1) needs #704 merged and released first. Codex's later review of b5448997 left three reproduced P2s (F5 to F7) for FO to dispose. Validation worktrees, refs and the rehearsal copy were removed; nothing was pushed, commented or marked ready.
