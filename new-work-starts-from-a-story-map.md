@@ -686,3 +686,16 @@ Does not cover: live model behaviour (the dev ask, the Codex interrogation, a wo
 ### Summary
 
 Both repaired candidates pass: #705 head 954ad170 and #704 head b5448997 meet every criterion on the evidence I re-ran, the Amendment 2 date rule works and fails the way AC-13 says, and the cycle 1 Codex findings are fixed or, for #705's two P1s, resolved by #704. No Material finding; the cross-PR dependency (F1) needs #704 merged and released first. Codex's later review of b5448997 left three reproduced P2s (F5 to F7) for FO to dispose. Validation worktrees, refs and the rehearsal copy were removed; nothing was pushed, commented or marked ready.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: On feat/story-map-kc-journey-map (#704) in kc-journey-map/lib/journey-review.mjs: refuse a source.date that is not an ISO YYYY-MM-DD date and a source.words that is not a non-empty string; read a Tasks table whose separator row is missing without skipping its first data row (or refuse the table with a reason); refuse an ADR owed entry whose question already holds doc: instead of answer:; one failing-then-passing test per fix in kc-journey-map/lib/journey-review.test.mjs
+  f0d3f442 (2 files, +34 -7). 7 tests added; before the fix all 7 exited 0 (expected 1). The Tasks table without its separator is refused with a reason and its rows are still read from the first data row. Messages: `source.date is empty or not a YYYY-MM-DD date` (number 7, `nope`, `2026-13-45`), `source.words is empty or not a string` (number 7), `the Tasks table lacks its separator row after the header` (plus `journey-story elsewhere is not a story on release r1` for an off-release first row), `ADR owed hold-rule already holds doc:`. The AC-5 rehearsal record still passes `check`.
+- DONE: Run the full kc-journey-map lib/*.test.mjs suite and show each new test failing on the matching mutant; leave #705 unchanged
+  Suite 252 of 252 (`node --test lib/*.test.mjs`). One mutant per fix, each reverted after: date check back to non-empty fails the 3 date tests; words check back to truthiness fails the words test; separator forced true fails both table tests; the `asked.doc` refusal deleted fails the ADR owed test; fixed file restored byte-identical. #705 untouched (954ad170).
+- DONE: All package test files pass; push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  Pushed `origin feat/story-map-kc-journey-map` b5448997..f0d3f442, no -u, no force. CI at f0d3f442 per `gh pr view`: model tests node 22.13.0 and 24, route gate, version parity, GitGuardian all SUCCESS. Roborev gate base cebd0ab9: `clean on f0d3f442d; evidence=roborev:1048`.
+
+### Summary
+
+The three Cycle 2 P2s are fixed on #704 with one test each, each shown failing on its mutant, and the new head has CI green and a clean roborev gate. #705 is unchanged.
