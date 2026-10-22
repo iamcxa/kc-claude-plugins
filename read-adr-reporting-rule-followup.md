@@ -48,6 +48,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:read-adr-reporting-rule-followup:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:read-adr-reporting-rule-followup-validation-1
+              briefing:
+                id: briefing:read-adr-reporting-rule-followup:validation:attempt-1:revision-1
+                digest: sha256:7f2bc36d1b0adbd512685154ea6759e5ceeaebcc7ac4582473c6b852deb9da6c
+                room-ref: ./read-adr-reporting-rule-followup/review/validation/briefing-1
 started: 2026-10-22T03:51:42Z
 ---
 

@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:read-adr-reporting-rule-followup:validation:attempt-1:revision-1",
+  "question": "Approve read-adr-reporting-rule-followup validation as PASSED and deliver it? Approval also covers: push branch spacedock-ensign/read-adr-reporting-rule-followup at 45dcf0931b150561bd944b9ec52b8fafecef3136; create a Draft PR titled 'fix(kc-adr): read-adr reports the verified citation and any newer in-force ruling, then waits' with the presented body; mark it ready once CI is green; later external-review rounds on the same PR; merging the full head once delivery_gate.py check passes, with --match-head-commit set to it; and, after merge, removing its clean, pushed worktree and local branch. If the Captain says he merges or holds, the merge is excluded. The kc-adr release PR that follows is asked separately.",
+  "artifacts": [
+    {
+      "id": "artifact:read-adr-reporting-rule-followup:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/64a04683f57ebd9cd3457603a78ebf54e01d1b0c/read-adr-reporting-rule-followup.md",
+      "rev": "sha256:e3f3f38c4fa45ec7989ca0a57c5243f2e7ff4264a673fb81f94a6b9f8aafce85",
+      "mediaType": "text/markdown",
+      "summary": "Validation PASSED: AC-1 4/4 on final bytes (shipped 0/4), S7 Claude 3/3 after the amendment-3 fix (first version 0/3, shipped control 3/3), 20 runs, falsifiers 32/32; FO re-ran the 8-step acceptance script in a fresh shell, all PASS. One file changed. Limits: S6/S7 Codex not re-run on final bytes; one run per cell."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:read-adr-reporting-rule-followup:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c27e76590c1d2dc910e7fa2d332242a7534df0b0/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:d8b3639df236541f0a6cb378df697c0bfe22c51457d9346893c4aef3bfb4594a"
+    }
+  ]
+}
