@@ -249,3 +249,30 @@ The design puts the work in each adopter, not the package: a one-paragraph point
 ### Summary
 
 The design shrinks to a 39-word `AGENTS.md` paragraph, one `@AGENTS.md` line in `CLAUDE.md`, a standard-library check script with a test, and a path-filtered non-required CI job; the startup rise falls from +451 to +40 words. The check's `git show REF:` form can bite only on qnow today, which D1 states; the pointer's read-effect is unmeasured and goes to `without-it unanswered` (D2). `## FO alignment` still carries no `Result:` line; FO records it before `gate prepare`.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(scripts): ...) from a branch off origin/main (7244594bef4e1c9c42db0ed8ff42509ba6d48dd3) implementing the cycle-2 design with Captain Amendment 1; only the five files
+  iamcxa/kc-claude-plugins#698 (Draft), head 589c54e5, base 7244594b; `git diff --name-only 7244594b` lists AGENTS.md, CLAUDE.md, scripts/adr-path-check.py, scripts/adr-path-check.test.py, .github/workflows/adr-path-check.yml (AC-6); AC-2 `git diff --numstat` prints `1 0 CLAUDE.md`. Net diff is the five files: commits fae04b78 (red probe) and 589c54e5 (its revert) cancel.
+- DONE: AC-1 pointer short, restates no ADR; AC-2 one-line CLAUDE.md change
+  /tmp/adrmut/ac1.py: 39 words, 0 of 28 ADR slugs found; falsifier (a slug added to the paragraph) exits 1, 40 words, slug hit. AC-2 falsifier: an extra blank line gives `2 0`.
+- DONE: AC-3 pointer reaches the main session, an ensign and codex exec
+  Clean clone of 3120bd18: `claude -p --model haiku`, a `spacedock:ensign` Agent call (`by_type` spacedock:ensign 1) and `codex exec -s read-only` each answered `ls docs/adr`; clone without the `@AGENTS.md` line: main `NONE`, ensign `NONE`.
+- DONE: AC-5 job runs on intended PRs only and is not required
+  Red run 39658927004 (`AGENTS.md:7: docs/adr/9999-does-not-exist.md: no such file in the tree`), green after revert run 39659320119; `required_status_checks` contexts are version parity and multi-profile route gate only. A push touching only an unrelated file cannot be shown on #698 itself (a pull_request path filter reads the whole PR diff, which holds AGENTS.md); shown on a stacked throwaway Draft PR #699 (one unrelated file): no adr-path-check run. #699 and branch spacedock-ensign/adr-path-check-probe-unrelated are left open for FO/Captain to close.
+- DONE: AC-7 words recounted with an independent script (/tmp/adrmut/words.py)
+  CLAUDE.md 1316 to 1317 plus AGENTS.md 39 = +40 at FO start and ensign start; no other moment's text changed (AC-6 list). The rise is disclosed; ADR 0020 budgets the workflow README, not CLAUDE.md.
+- DONE: AC-8 the path check passes a trunk path and refuses for the stated reason; each falsifier shown failing by a mutation (python3 -B, caches cleared)
+  `python3 scripts/adr-path-check.test.py` 14 cases, exit 0, each asserting the printed reason. Mutants (/tmp/adrmut/run.py), each turning only its named case(s) red: resolve ref locally -> `..._exists_only_locally`; directory test always true -> 2 directory cases; empty ref reason -> 4 refusal cases; empty missing-file reason -> 3 cases; `git fetch origin` when a remote exists -> `test_no_remote_is_contacted`; on-disk existence -> `test_untracked_file_does_not_count`; refusal removed -> 4 ref cases.
+- DONE: roborev evidence= line
+  `clean on 3120bd18c; evidence=roborev:1005` (run before the push; later commits only add and remove a probe line in AGENTS.md). Not rerun.
+- DONE: CI green on the PR head; the new job's cost per PR
+  Head 589c54e5: adr-path-check, multi-profile route gate, review CI routing, version parity, GitGuardian all pass. adr-path-check job 6 s on ubuntu-latest (one sample, run 39659320119).
+- DONE: PR body lists the unmeasured read effect under without-it unanswered (D2)
+  #698 body `## without-it unanswered`: read effect unmeasured; `REF:` refusal has no consumer in this repository; compaction reload and Codex subagent not probed.
+- DONE: comment_ratio and affected documents
+  `comment_ratio.py`: code lines 209, comment lines 2, 1.0%, max 5% met. `doc_impact.py` lists learning.md: unaffected: it mentions `run_check` only as a function in laws_check.py. `design_surfaces.py check` exit 0. No ADR landed, no Number guards.
+
+### Summary
+
+#698 lands the 39-word pointer, the `@AGENTS.md` import, a standard-library check that tests tracked paths and refuses any `REF:docs/adr/...` form without fetching, and a path-filtered non-required job. Two slips of mine: a `git commit --amend` after a failed `git revert -q` rewrote the probe commit locally (push was rejected, nothing remote changed; I reset to the pushed commit and redid the revert), and the `claude -p` and codex probes ran the host's global hooks. Limits: the check sees `REF:docs/adr` and `docs/adr` path forms only (GitHub blob URLs and prose are not read); the read effect is unmeasured.
