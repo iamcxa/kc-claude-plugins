@@ -3,7 +3,7 @@ title: The Codex reader counts a code-review round only from a code review, neve
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-22T01:22:21Z
 worktree: .worktrees/spacedock-ensign-codex-reader-counts-code-review-only
+pr: iamcxa/kc-claude-plugins#702
 ---
 
 ## Scope
