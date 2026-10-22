@@ -37,7 +37,7 @@ When a person tells you something, or you learn something, ask in order; the fir
 
 1. An unconfirmed guess, note or idea of yours? Agent memory or the task's open items. Never write it as a ruling or as a conclusion.
 2. Matters only to the current task? The task file.
-3. A deferred feature a user will see? The story map. An implementation trade-off inside one task is not this; it stays in the task file.
+3. A deferred feature a user will see? The story map. An implementation trade-off inside one task is not this; it stays in the task file. A request an ADR has already turned down is not a deferred feature either; note it in the task file only.
 4. An operating instruction to agents (how to work), not the person's ruling on direction? `CLAUDE.md` or `AGENTS.md`.
 5. Otherwise it is the person's ruling: an ADR in the current repo. Another repo is the user's choice, not yours.
 
