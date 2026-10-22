@@ -3,7 +3,7 @@ title: The local roborev Codex review catches the findings Codex's PR review lat
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: backlog
+status: implementation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「做」 (chat, 2026-10-22), answering FO 「要先做這個 roborev 門檻 POC 嗎？我建議做。」, put after FO stated the three heads, the local-clean versus PR-findings gap and the threshold rerun; this briefing binds that answer after the fact.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
