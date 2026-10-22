@@ -264,6 +264,11 @@ Asked: 「請你決定一件事：修 skill 嗎？」 with 「改法：在「寫
 Supersedes: none
 Design: the "Where new information goes" routing list in SKILL.md, question 3
 
+### Amendment 4 — 2026-10-22, chat
+Captain: 「補」 (this FO's Paseo session, after the engineering reviewer found three cells, not two, unmeasured on the final bytes)
+Asked: 「請你決定一件事：發版前，先在合併後的版本上補跑那 3 格嗎？」 with 「S6 的 Claude、S6 的 Codex、S7 的 Codex 各跑 1 次，用同一套標準評分。3 格都過，就請你合併 #701；任何一格不過，就停下來，先不發版。」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: Design the fix for read-adr's Accepted branch to the Captain's wording: the worker reports the cited commit, its verified digest and its Status; if a different record is in force at head, it also reports that record's commit and digest; it takes no action on either until a person decides. Align the chain-end line with the same rule. Show the exact new SKILL.md text against the shipped text at origin/main.
