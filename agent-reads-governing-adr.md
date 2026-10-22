@@ -277,3 +277,44 @@ The design shrinks to a 39-word `AGENTS.md` paragraph, one `@AGENTS.md` line in 
 ### Summary
 
 #698 lands the 39-word pointer, the `@AGENTS.md` import, a standard-library check that tests tracked paths and refuses any `REF:docs/adr/...` form without fetching, and a path-filtered non-required job. Two slips of mine: a `git commit --amend` after a failed `git revert -q` rewrote the probe commit locally (push was rejected, nothing remote changed; I reset to the pushed commit and redid the revert), and the `claude -p` and codex probes ran the host's global hooks. Limits: the check sees `REF:docs/adr` and `docs/adr` path forms only (GitHub blob URLs and prose are not read); the read effect is unmeasured.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #698 head 589c54e5 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Head 589c54e57fe969b6049bad737be8615e96b7b54e (base 7244594b), detached throwaway worktree, removed after. AC-1: 39 words, 0 of 28 ADR slugs found; a slug added gives a hit. AC-2: `1 0 CLAUDE.md`. AC-4 is superseded by Amendment 1 (AC-8). AC-5: runs 39658774234 success, 39658927004 failure (`AGENTS.md:7: docs/adr/9999-does-not-exist.md: no such file in the tree`), 39659320119 success (6 s); `required_status_checks` lists only version parity and the multi-profile route gate; #699 head 55cd9f1e ran two other workflows and no adr-path-check. AC-6: exactly the five paths; no `kc-dev-flow-2/`, `docs/dev2/`, `docs/adr/`, `.claude/`, `.codex/` path. AC-7: own count CLAUDE.md 1316 to 1317 plus AGENTS.md 39 = +40; non-start texts untouched by the five paths. AC-8: 14 cases exit 0, plus my nine mutants (below). `comment_ratio.py` exit 0, 1.0% (2 shebang lines); module docstrings read, they carry exit codes and the trunk rule. `doc_impact.py` lists learning.md; its only hit is `run_check` as a function name, so `unaffected` holds. `design_surfaces.py check` exit 0; `dispatch_records.py` exit 0 (4 records); no `## Number guards`, no migration. Merge result with current origin/main e66c9b32: `git merge-tree` clean, check exit 0.
+- DONE: Re-run AC-3's probes yourself in a clean clone of the head with an isolated config where a probe could write host settings, and AC-8's cases and mutants; judge the without-it unanswered items in the PR body; note that throwaway probe PR #699 is still open (closing it is the Captain's)
+  AC-3 in a clean clone of 589c54e5 with `--setting-sources project,local`, `--strict-mcp-config` and an empty MCP file, `--no-session-persistence`, `DISABLE_PLUGIN_AUTOLOAD=1` (no host hooks), and `codex exec --ephemeral --ignore-user-config` under a temp `CODEX_HOME` (temp copy removed): main `ls docs/adr`; `spacedock:ensign` Agent call `ls docs/adr` (2 of 2, task_started subagent_type confirmed); Codex `ls docs/adr`. Same clone minus `@AGENTS.md`: main NONE, ensign NONE (2 of 2), Codex still answers (as the task says). First probe with `--setting-sources local` showed the ensign and a general-purpose subagent with no CLAUDE.md at all (main still had it), so the ensign sees the import only when project settings are a source (see F4). AC-8 mutants on a copy (python3 -B), each turns only its named case(s) red: ref resolved locally -> `..._exists_only_locally`; directory test always true -> 2 directory cases; ref reason emptied or refusal removed -> the 4 ref cases; missing-file reason emptied -> 3 cases; on-disk existence counts -> `test_untracked_file_does_not_count`; always exit 0 -> 9 cases; nested files ignored -> `test_nested_instruction_file_is_read`; control unmutated green. Two of my first mutants were invalid (wrong cwd, missing import) and I rebuilt them before trusting them. Real text: qnow `origin/next` AGENTS.md lines 20-30 exit 1 naming `docs/qnow-target-architecture-adr`. #699 (head 55cd9f1e, base the #698 branch) is still open as are its branch; closing is the Captain's. Without-it items: judged in F2, F3, F4.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.26.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and observed output below. `adr_lint.py docs/adr --since 7244594bef4e1c9c42db0ed8ff42509ba6d48dd3` from the 0.26.0 root: `28 ADR file(s) checked, 0 legacy`, exit 0 (0.27.0 root: same, exit 0). Verdict: PASSED at 589c54e57fe969b6049bad737be8615e96b7b54e; no Material finding.
+
+### Findings
+
+- F1 Polish: `@AGENTS.md` is the last line of CLAUDE.md directly under a sentence with no blank line, so GitHub renders it inside that paragraph; the import works (probed). No user-visible loss.
+- F2 Deferred risk: the pointer's read effect is unmeasured and the peer's 35-of-35 no-help figure is relayed, not re-verified; without-it, agents may read the ADR anyway. Captain ruled D2 (no measurement gate). Becomes Material if a two-arm run (pointer vs none) shows no difference, which would fail the without-it test for AGENTS.md and the import.
+- F3 Deferred risk: the `REF:` refusal has no consumer in this repository (it names no ref); it is what Amendment 1 asked for and qnow's task copies it. Keep. Becomes Material if qnow's task does not adopt the script.
+- F4 Deferred risk: after-compaction reload and a Codex subagent are unprobed; in my first probe a subagent got no CLAUDE.md when project settings were excluded, so the pointer reaches an ensign only where project settings load, which is the normal dispatch. Becomes Material if a supported dispatch excludes project settings.
+- F5 Polish: the check reads `docs/adr` paths and `REF:docs/adr` forms only; GitHub blob URLs and prose ("lives on branch X") pass, as stated. A `word:docs/adr/` with no space is read as a ref (`note:docs/adr/` flagged in my probe).
+- F6 Polish: the design counted 0 ADR mentions in CLAUDE.md at c27e765; at base 7244594b a `grep -i 'adr'` finds 2, both the plugin name `kc-adr`, not pointers. The kc-adr `read-adr` skill (#695) is a different layer (skill vs instruction-file pointer) and does not conflict.
+
+### Minimal acceptance script (run by me in `env -i bash --noprofile --norc`, 2026-10-22)
+
+Run in order in one shell; needs git, python3 and network.
+
+1. `rm -rf /tmp/adr698-accept && git init -q /tmp/adr698-accept && cd /tmp/adr698-accept && git fetch -q --depth 1 https://github.com/iamcxa/kc-claude-plugins.git 589c54e57fe969b6049bad737be8615e96b7b54e && git checkout -q --detach FETCH_HEAD && git rev-parse HEAD`
+   Expected and observed: `589c54e57fe969b6049bad737be8615e96b7b54e`
+2. `python3 -B scripts/adr-path-check.test.py 2>&1 | tail -3`
+   Observed: `Ran 14 tests in 7.101s`, blank line, `OK`
+3. `python3 -B -I scripts/adr-path-check.py; echo "exit $?"`
+   Observed: `exit 0` (no other output)
+4. `printf '\nSee `docs/adr/9999-nope.md`.\n' >> AGENTS.md; python3 -B -I scripts/adr-path-check.py; echo "exit $?"; git checkout -q -- AGENTS.md`
+   Observed: `AGENTS.md:7: docs/adr/9999-nope.md: no such file in the tree` then `exit 1`
+5. `printf '\n`git show some-branch:docs/adr/0001-x.md`\n' >> AGENTS.md; python3 -B -I scripts/adr-path-check.py; echo "exit $?"; git checkout -q -- AGENTS.md`
+   Observed: ``AGENTS.md:7: some-branch:docs/adr/0001-x.md: names ref `some-branch`; point at the file on the trunk (`docs/adr/0001-x.md`), not at a branch or ref`` then `exit 1`
+6. `wc -w < AGENTS.md | tr -d ' '; tail -n 1 CLAUDE.md`
+   Observed: `39` then `@AGENTS.md`
+
+Not covered: whether an agent then reads the ADR; that Claude Code and Codex carry the paragraph (my probes above, needs logged-in `claude` and `codex`); the CI job and its not-required status (runs 39658927004, 39659320119, branch protection); words at other moments; compaction and Codex subagents.
+
+### Summary
+
+PASSED at 589c54e5: every live criterion re-run, each falsifier turns only its own test red, the pointer reaches the Claude main session, an ensign and Codex, and the job is red on a bad path, green on the fix and not required. Six findings, none Material; the unanswered items are Deferred risks the Captain already ruled on (D2, Amendment 1). My probes ran with host hooks off and a temp Codex home; I did not probe the host-settings-write risk beyond `--no-session-persistence`, so a trust entry in `~/.claude.json` for the temp clone path is possible.
