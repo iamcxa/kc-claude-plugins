@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:new-work-starts-from-a-story-map:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:new-work-starts-from-a-story-map-ideation-1
+              briefing:
+                id: briefing:new-work-starts-from-a-story-map:ideation:attempt-1:revision-1
+                digest: sha256:27c10e9299bc70771c32d34dad3b4e6e7873e1c61ad3eb2013d9fb1c6b168fff
+                room-ref: ./new-work-starts-from-a-story-map/review/ideation/briefing-1
 ---
 
 ## Scope

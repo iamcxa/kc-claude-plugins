@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:new-work-starts-from-a-story-map:ideation:attempt-1:revision-1",
+  "question": "Approve ideation of new-work-starts-from-a-story-map and enter implementation? FO recommends approve; approving accepts D5 option (a) (the first task filed on that question's story lands the ADR, numbered at its implementation dispatch as today), the scope added since the backlog gate (fo-batch-sittings Cut 2, Result point 4 Cut 1 items 1 to 4, and a second PR in kc-journey-map with the journey-map-question schema 1.0.0 to 1.1.0), and the stated AC-8 departure (a ruling made before any task exists skips footprint and fold).",
+  "artifacts": [
+    {
+      "id": "artifact:new-work-starts-from-a-story-map:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e81c328d5ea72c9f951ee435801fce113258af8e/new-work-starts-from-a-story-map.md",
+      "rev": "sha256:e831142c5b62885f5268f7dc1dcfe798ea0369492566d7d9c0a37172ab2498c4",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 3 redesign under the Captain rulings D1 to D4 (FO alignment, 2026-10-22) closing engineering-reviewer-1 must-changes 1 to 7. Slice-only answers live on the map question (answer plus source kind release); a ruling later work must respect becomes an ADR the question links; the review record holds counts and no rulings. No seed hold. Interrogation: one Codex sol run with the engineering-reviewer lens, a plain run where a decision is hard to reverse, rank and cap at 10 per sitting. Words FO reads: dev entry +56, sitting line +52 per stage, README unchanged. Two PRs: kc-dev-flow-2 (after #693 and #694, which share pr_watch.py) and kc-journey-map. design_surfaces.py check exit 0; AC-1 to AC-11 each evidenced; nothing built yet."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:new-work-starts-from-a-story-map:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/e81c328d5ea72c9f951ee435801fce113258af8e/new-work-starts-from-a-story-map/reviews/engineering-reviewer-1.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:a2f4ece97ce5d95cc0c81aec3f6821a02dc4a770ff84e0caa411b3f59116a759"
+    }
+  ]
+}
