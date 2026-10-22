@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:design-director-runs-ui-design-review:ideation:attempt-1:revision-1",
+  "question": "Approve ideation of design-director-runs-ui-design-review and enter implementation? FO recommends approve; approving accepts that recommendation, including: D-7 option as designed (the validator proposes each MINOR disposition, the design director rules the declines, an overruled MINOR goes to the Captain as Needs decision), and raising the workflow.md word budget by 15 words, 5374 to 5389 (ideation Gate content +1, validation Gate content +14), so the upheld declines and preview paths reach both gates.",
+  "artifacts": [
+    {
+      "id": "artifact:design-director-runs-ui-design-review:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/238206394a7b54b8eef8ec336e7e0e660f3b2514/design-director-runs-ui-design-review.md",
+      "rev": "sha256:fa7ec3095f249bd71f998738067104c269aa059bd73fffdc84705e49696860cf",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 3 folds the Captain rulings D-1 to D-6 and the design-guide ruling (FO alignment, 2026-10-22). Builds: a kc-dev-flow-2:design-director agent and skill on sonnet; pass 1a blind picture review, pass 1b the director rules each decline the author proposes (upheld, overruled, decision), a host-component decline must name the component and path; design_surfaces.py refuses a declined finding with no upheld ruling and prints upheld declines, decision lines grouped by kind and owner, and each Preview: path; validation refuses a ui task with no built-screen review with a non-preview screenshot unless the Captain waives in quoted words (D-5); pass 2b rules validation MINOR declines (D-6). Host-look rulings land as ADRs in the product repository and the director reads them through kc-adr:read-adr; without kc-adr installed it records adrs_read: unavailable. Replay: control arm upheld 23 of 39 declines, the wording 12 to 14; the Captain Browse complaint stays upheld in every arm and none of the four blocking critique rows reaches a fix; the whole-screen review is in release-acceptance (D-1). New ADR, number at implementation. AC-1 to AC-13; engineering-reviewer-1 adjust, its six items closed in cycle 2."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:design-director-runs-ui-design-review:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/238206394a7b54b8eef8ec336e7e0e660f3b2514/design-director-runs-ui-design-review/reviews/engineering-reviewer-1.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:0018e52528b8bfd4aeb32eba47f7d80998bea4eb2eb1df3349118161758f759c"
+    }
+  ]
+}

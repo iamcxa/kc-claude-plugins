@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:design-director-runs-ui-design-review:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:design-director-runs-ui-design-review-ideation-1
+              briefing:
+                id: briefing:design-director-runs-ui-design-review:ideation:attempt-1:revision-1
+                digest: sha256:cafdccd64aa81a9edd08f2342a41f216e44b5a34bd4d7a34b71bd1528b19ef74
+                room-ref: ./design-director-runs-ui-design-review/review/ideation/briefing-1
 ---
 
 ## Scope
