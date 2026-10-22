@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 worktree: .worktrees/spacedock-ensign-read-adr-reporting-rule-followup
-pr: 706
+pr: pr-merge:706
 gates:
     version: 1
     records:
