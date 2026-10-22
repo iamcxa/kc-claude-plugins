@@ -47,6 +47,7 @@ gates:
                 state: pending
 started: 2026-10-21T18:40:25Z
 worktree: .worktrees/spacedock-ensign-interrogation-astra-vs-sol-poc
+pr: local-merge:061f647f77ea4e18322f31b48666d7b111165ca2
 ---
 
 ## Scope
