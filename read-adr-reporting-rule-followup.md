@@ -37,6 +37,17 @@ gates:
                 id: briefing:read-adr-reporting-rule-followup:ideation:attempt-1:revision-1
                 digest: sha256:6661224b29eb537f006ccefcc1b4d01e258fc051a256546478873920461b7dfe
                 room-ref: ./read-adr-reporting-rule-followup/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:read-adr-reporting-rule-followup:ideation:1
+                briefing: briefing:read-adr-reporting-rule-followup:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T04:16:47.676976Z"
+                decision: approve
+                reason: Captain replied 「准設計關卡」 (2026-10-22) to the ideation gate; accepts the SKILL.md change, harness schema change, expectations, the 8-run plan and the D1 recommendation as stated in the gate question.
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-22T03:51:42Z
 ---
 
