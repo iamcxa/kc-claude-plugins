@@ -1,6 +1,7 @@
 import contextlib
 import importlib.util
 import io
+import json
 from pathlib import Path
 import unittest
 from unittest import mock
@@ -14,10 +15,21 @@ BOT, PERSON = {"login": codex.BOT}, {"login": "someone"}
 T1, T2 = "2026-10-10T10:00:00Z", "2026-10-10T11:00:00Z"
 
 
-def marker(sha, status, repo="o/r", pr=1, lead="<!-- codex-pull-request-review-summary -->\n", at=T1, user=BOT):
-    meta = f'{{"headSha":"{sha}","status":"{status}","repository":"{repo}","pullRequestNumber":{pr}}}'
+NONE = {"commit_sha": None, "has_any_findings": None, "has_unresolved_findings": None, "status": None}
+
+
+def side(sha, status, found=False):
+    return {"commit_sha": sha, "has_any_findings": found, "has_unresolved_findings": found, "status": status}
+
+
+def marker(sha, status, code=None, security=NONE, lead="<!-- codex-pull-request-review-summary -->\n", at=T1, user=BOT, found=False):
+    state = json.dumps({"code_review": code if code is not None else side(sha, status, found), "security_review": security})
+    sec = ""
+    if security["status"]:
+        meta = json.dumps({"headSha": security["commit_sha"], "status": security["status"], "repository": "o/r", "pullRequestNumber": 1})
+        sec = f"<!-- codex-security-review:v1 {meta} -->\n"
     return {"id": 9, "user": user, "created_at": at, "updated_at": at,
-            "body": f"{lead}<!-- codex-security-review:v1 {meta} -->\n## Codex Review Summary"}
+            "body": f"{lead}<!-- codex-review-state:v1 {state} -->\n{sec}## Codex Review Summary"}
 
 
 def said(sha, at=T1, ident=7, user=BOT, lead="Codex Review: Didn't find any major issues."):
@@ -105,10 +117,8 @@ class CodexReviewTests(unittest.TestCase):
         self.assertEqual(self.check(comments=[marker(HEAD, "completed", user=PERSON)])[0], 4)
         self.assertEqual(self.check(reactions=[{"user": BOT, "content": "+1"}])[0], 4)
 
-    def test_a_marker_outside_codex_summary_or_for_another_pr_is_ignored(self):
+    def test_a_marker_outside_codex_summary_is_ignored(self):
         self.assertEqual(self.check(comments=[marker(HEAD, "completed", lead="Suggested change:\n")])[0], 4)
-        self.assertEqual(self.check(comments=[marker(HEAD, "completed", pr=2)])[0], 4)
-        self.assertEqual(self.check(comments=[marker(HEAD, "completed", repo="x/y")])[0], 4)
         below = marker(HEAD, "completed", lead="<!-- codex-pull-request-review-summary -->\n## Codex Review Summary\n")
         self.assertEqual(self.check(comments=[below])[0], 4)
 
@@ -147,6 +157,29 @@ class CodexReviewTests(unittest.TestCase):
         self.assertEqual(self.check(comments=[loose])[0], 1)
         self.assertEqual(self.check(comments=[other])[0], 4)
         self.assertEqual(self.check(comments=[named, marker(HEAD, "completed", at=T2)])[0], 1)
+
+    def test_only_a_code_review_result_on_the_head_makes_a_summary_clean(self):
+        sec = side(HEAD, "completed")
+        cases = {
+            "code review completed clean on the head": (marker(HEAD, "completed"), 0),
+            "security off: code review clean": (marker(HEAD, "completed", security=NONE), 0),
+            "security on and clean, code review clean": (marker(HEAD, "completed", security=sec), 0),
+            "security completed, code review never ran": (marker(HEAD, "x", code=NONE, security=sec), 4),
+            "security completed, code review running": (marker(HEAD, "x", code=side(None, "running", None), security=sec), 4),
+            "code review failed": (marker(HEAD, "failed"), 4),
+            "code review clean on an old head": (marker(OLD, "completed"), 4),
+            "code review clean with no head named": (marker(None, "completed"), 4),
+            "code review completed, finding unknown": (marker(HEAD, "completed", found=None), 4),
+            "code review completed with a finding": (marker(HEAD, "completed", found=True), 4),
+            "code review row missing": ({**marker(HEAD, "x"), "body": "<!-- codex-pull-request-review-summary -->\n<!-- codex-review-state:v1 {} -->\n## s"}, 4),
+        }
+        for name, (comment, code) in cases.items():
+            with self.subTest(name):
+                self.assertEqual(self.check(comments=[comment])[0], code)
+        old_shape = {"id": 9, "user": BOT, "created_at": T1, "updated_at": T1,
+                     "body": '<!-- codex-pull-request-review-summary -->\n<!-- codex-security-review:v1 {"headSha":"%s","status":"completed"} -->\n## s' % HEAD}
+        self.assertEqual(self.check(comments=[old_shape])[0], 4)
+        self.assertEqual(self.check(comments=[marker(HEAD, "completed", security=sec, user=PERSON)])[0], 4)
 
     def test_a_head_that_moves_while_reading_has_no_verdict(self):
         self.assertEqual(self.check(comments=[said(HEAD[:10])], heads=(HEAD, OLD))[0], 4)

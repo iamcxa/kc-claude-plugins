@@ -5,8 +5,8 @@ Usage: codex_review.py <owner/repo> <pr>
 The latest Codex result on the head decides, and its evidence id is printed so a round
 is counted once per id.
 Exit 0 clean: that result is Codex's "Didn't find any major issues" on the head, as a
-  comment naming the head or a badge-free review of it, or its summary marking the head
-  completed with no finding on the head before it.
+  comment naming the head or a badge-free review of it, or its summary marking the code
+  review of the head completed with no finding, and no finding on the head before it.
 Exit 1 findings: that result carries a severity badge on the head, in a review, a line
   comment, or a comment that names the head or names no commit (fail closed).
 Exit 2 configuration error: bad arguments or a gh call that failed.
@@ -23,7 +23,7 @@ import sys
 
 BOT = "chatgpt-codex-connector[bot]"
 SUMMARY = "<!-- codex-pull-request-review-summary -->"
-MARKER = re.compile(r"^<!-- codex-[a-z-]+-review:v1 (\{[^\n]*\}) -->$", re.M)
+MARKER = re.compile(r"^<!-- codex-review-state:v1 (\{[^\n]*\}) -->$", re.M)
 P1 = re.compile(r"!\[P[01] Badge\]")
 BADGE = re.compile(r"!\[P\d Badge\]")
 CLEAN = "Didn't find any major issues"
@@ -91,11 +91,11 @@ def state(repo, pr, call=gh, pages=pages):
     for c in issue:
         if c["body"].startswith(SUMMARY):
             for m in MARKER.finditer(c["body"].split("\n## ", 1)[0]):
-                meta = json.loads(m.group(1))
+                review = json.loads(m.group(1)).get("code_review") or {}
                 found_before = any(e[2] == 1 and e[0] <= c["updated_at"] for e in evidence)
-                if (meta.get("repository") == repo and str(meta.get("pullRequestNumber")) == str(pr)
-                        and meta.get("headSha") == head and meta.get("status") == "completed" and not found_before):
-                    evidence.append((c["updated_at"], f"summary:{c['id']}@{c['updated_at']}", 0, "summary marks the head completed"))
+                if (review.get("status") == "completed" and review.get("has_any_findings") is False
+                        and review.get("commit_sha") == head and not found_before):
+                    evidence.append((c["updated_at"], f"summary:{c['id']}@{c['updated_at']}", 0, "summary marks the code review of the head completed"))
     if call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"] != head:
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
     if any(r["content"] == "eyes" for r in reactions):
