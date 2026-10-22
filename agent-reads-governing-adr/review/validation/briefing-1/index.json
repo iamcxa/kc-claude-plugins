@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:agent-reads-governing-adr:validation:attempt-1:revision-1",
+  "question": "Approve validation of agent-reads-governing-adr and merge iamcxa/kc-claude-plugins#698 at head 589c54e57fe969b6049bad737be8615e96b7b54e with `gh pr merge 698 --squash --match-head-commit 589c54e57fe969b6049bad737be8615e96b7b54e`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:agent-reads-governing-adr:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/cca582bcfacc022b54b1369dba4c5b13e464a490/agent-reads-governing-adr.md",
+      "rev": "sha256:ca36a13f08863da8233042853eb957c3a964e7aa188601a4160606ae752ccf65",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: AGENTS.md carries a 39-word pointer to docs/adr and CLAUDE.md imports it with @AGENTS.md, which reached the Claude main session, a spacedock:ensign subagent and Codex in a clean-clone probe and was absent without the import; scripts/adr-path-check.py fails a missing ADR path and refuses any branch, tag, HEAD or SHA reference with a reason to point at the trunk file (Amendment 1), in a path-filtered CI job that is not a required check; validation PASSED at this head with 14 tests and nine independent mutants.\nNecessity: five files (AGENTS.md, CLAUDE.md one line, scripts/adr-path-check.py, scripts/adr-path-check.test.py, one workflow file), each named in the design and Amendment 1.\nDisclosure: the check refuses every ref form, not only branches (engineering-reviewer-1 finding 1): the Captain's words were 「禁止指向分支」 and the design text says \"a branch or other ref\"; tag, HEAD and SHA forms are refused too (test_other_ref_forms_are_refused); narrowing it later is one regex (REF_FORM).\nExternal rounds: Codex 1 (code review:5608491991 on this head, two P2: comment:4343898813, comment:4343898818; the ready-for-review event ran only the security review; FO requested the code review with @codex review). second reviewer: not triggered.\nEngineering-reviewer call for Amendment 1: reviews/engineering-reviewer-1.md (proceed, no Material finding).\nFO declines: Deferred risk, Codex P2 comment:4343898813, `./docs/adr` and `/docs/adr` prefixed paths are not inspected (git grep over every AGENTS.md and CLAUDE.md on origin/main and this branch, 2026-10-22, finds no such form; Material if an instruction file adopts one); Deferred risk, Codex P2 comment:4343898818, a `#fragment` suffix makes a valid ADR path read as missing (no instruction file on origin/main or this branch links a fragment, same grep; it fails loud in a non-required job; Material if one is added); Polish F1, `@AGENTS.md` renders inside the paragraph above it (the import works, probed); Deferred risk F2, the pointer's read effect is unmeasured (Captain ruled D2, no measurement gate); Deferred risk F3, the REF refusal has no consumer in this repository (Amendment 1 asked for it); Deferred risk F4, compaction reload and Codex subagents unprobed (the normal dispatch loads project settings, probed; Material if a supported dispatch excludes them); Polish F5, blob URLs and prose branch names pass (stated in the PR body as a limit); Polish F6, the design's count of ADR mentions in CLAUDE.md was stale (0 at c27e765, 2 at base, both the plugin name kc-adr, not pointers)."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:agent-reads-governing-adr:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/cca582bcfacc022b54b1369dba4c5b13e464a490/agent-reads-governing-adr/reviews/engineering-reviewer-1.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:c4bb8dcac94adfb26ec4f1a8ad78ec235ade8755de9fc69a747edff8a2150d59"
+    }
+  ]
+}

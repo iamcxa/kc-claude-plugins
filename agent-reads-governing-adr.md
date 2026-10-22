@@ -58,6 +58,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:agent-reads-governing-adr:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:agent-reads-governing-adr-validation-1
+              briefing:
+                id: briefing:agent-reads-governing-adr:validation:attempt-1:revision-1
+                digest: sha256:9566713fa2ada0206f2c25fa92a07ed67457b3b59a4cceee422e6952fa6792a2
+                room-ref: ./agent-reads-governing-adr/review/validation/briefing-1
 started: 2026-10-21T18:55:34Z
 worktree: .worktrees/spacedock-ensign-agent-reads-governing-adr
 pr: iamcxa/kc-claude-plugins#698
