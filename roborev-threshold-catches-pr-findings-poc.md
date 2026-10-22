@@ -47,6 +47,7 @@ gates:
                 state: pending
 started: 2026-10-22T04:33:47Z
 worktree: .worktrees/spacedock-ensign-roborev-threshold-catches-pr-findings-poc
+pr: local-merge:a763ba5d63ae96451c732058bf7fc2f9cb4ce1ac
 ---
 
 ## Scope
