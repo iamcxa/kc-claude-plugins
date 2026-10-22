@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: blocked (needs Mira ruling)\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n- Governing ruling: docs/adr/0011-reports-are-exported-as-csv-only.md (Accepted, commit dda0e11103a43f9b8a8b23cde52408f1eea6a626, sha256:0cf48d38bb1dfce8c9eb4277a4a4c873fc80d007f3a7fcf28fb07b82c77d799d): \"CSV only; I will not maintain a second export format.\" No XLSX until it is superseded.\n- Mira's message \"Haruto is a good customer, so please make him happy.\" is not a ruling to supersede 0011 and does not name XLSX or a format. Decision: keep_as_is; no XLSX added.\n- Open: to unblock, Mira must say in her own words whether to allow XLSX (a new ADR superseding 0011). Alternative to ask about: Haruto's accountant can open the CSV in Excel.\n"
+ }
+]

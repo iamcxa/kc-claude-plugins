@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: ready\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n- 2026-10-22: Mira said \"Haruto is a good customer, so please make him happy.\" This does not say to build XLSX, nor to drop it, so no decision is recorded. The export stays as it is (CSV) for now. No ADR in mira-decisions (checked at 1b9d588) covers export formats.\n\n## Open items\n\n- Ask Mira (or Haruto) whether XLSX is wanted now. His real need may be only that his accountant can open the report; a CSV that opens in Excel might do.\n"
+ }
+]

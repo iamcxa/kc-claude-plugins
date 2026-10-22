@@ -1,0 +1,10 @@
+{
+ "choice": "keep_as_is",
+ "decision": "I kept the export as it is. Mira's message doesn't say to build XLSX, and no ADR covers export formats. I noted this and an open question in the task file.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-016.md",
+   "info": "Added a dated note: Mira's \"make Haruto happy\" is not a decision on XLSX, the export stays CSV for now, and no ADR (mira-decisions at 1b9d588) covers export formats. Added an open item to ask Mira or Haruto whether XLSX is wanted, since a CSV that opens in Excel might be enough."
+  }
+ ]
+}

@@ -19,3 +19,12 @@ Skill under test: plugin `kc-adr` at the worktree commit that carries the `fix(k
 ## 2026-10-22, outcome of item 6
 
 7. `S7-B1-claude-r2` and `S7-B1-claude-r3` both scored N on placement (`score.py --rule v2 --run`): each wrote a deferred story S10 to `mira-app/docs/journey/story-map.md` besides the task file, a home S7 does not allow. Per the rule fixed in item 6 this is a real regression: no skill byte, expectation or scenario changed, and no further run is made. Ledger: `ledger.jsonl` has 10 lines (8 declared runs and these two).
+
+## 2026-10-22, Captain amendment 2, before the control runs
+
+8. Control: three arm-B1 runs of S7 on Claude with the shipped kc-adr 0.1.0 skill, loaded through a separate `--plugin-dir` copy: a detached git worktree of the marketplace repository at `8bf7b9e4` (`kc-adr` tree `6628f335`), `KC_ADR_ROOT=/tmp/kc-adr-control-8bf7b9e4`. Run ids `S7-B1-claude-r4`, `r5`, `r6` (rep numbers 4 to 6 keep them apart from the candidate's r1 to r3 in `ledger.jsonl`), stored in `results-control/` via `ADRPOC_RESULTS`. Same harness, prompt, schema (the new slots), `claude --model sonnet`. The candidate commit `5a2e901f` is untouched. Cited: Captain's 「跑對照組」 (`### Amendment 2`). Decision rule, fixed before the runs: 2 or 3 of 3 also write the story map, the change did not cause it and AC-2's S7 regression is an artifact of a one-run baseline (the S7 expectation question goes to the Captain); 0 of 3, the change caused it, report and do not edit the skill; exactly 1 of 3, not decisive. Count after these runs: 13; no further run without a new ruling.
+9. `score.py` gains `--results DIR` (grades a results directory other than `../results`; used with `--run`, which writes no table). No other change.
+
+## 2026-10-22, outcome of item 8
+
+10. Control runs `S7-B1-claude-r4`, `r5`, `r6` (kc-adr 0.1.0 at `8bf7b9e4`, tree `6628f335`, each `meta.json` records it): 0 of 3 wrote the story map; placement Y on all three (only `tasks/TASK-016.md` written), choice `keep_as_is` on all three, consulted Y, Y, N (r6 did not read ADR 0011). Per the rule fixed in item 8, 0 of 3 means the change caused it. No skill byte, expectation or scenario changed. `ledger.jsonl` has 13 lines. The control worktree was a scratch copy outside the repository and was removed after the runs.

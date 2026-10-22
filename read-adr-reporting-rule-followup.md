@@ -281,6 +281,7 @@ I read all four answers: each reports the cited record (0002 at D1 "Superseded b
 - REGRESSION S7 Claude placement (stored Y, new N): the worker wrote a deferred story S10 to `mira-app/docs/journey/story-map.md` besides the task file; S7 allows only the task file. Trace: the Bash call `python3 - <<'E' p='docs/journey/story-map.md' ...` appending "- S10 A shop owner downloads the report as an XLSX file ...". Choice `keep_as_is`, loaded Y.
 - Same cell group moved the other way: S7 Claude consulted N to Y (it read ADR 0011 this time).
 - Amendment 1 follow-up (2 more S7 Claude runs): both N on placement too, so all three S7 Claude runs wrote the story map; per the pre-agreed rule this is a real regression. See `## Stage Report: implementation (cycle 2)`.
+- Amendment 2 control (shipped 0.1.0 skill, 3 S7 Claude runs r4 to r6): 0 of 3 wrote the story map, so by the pre-agreed rule the change caused it. See `## Stage Report: implementation (cycle 3)`.
 - All other 22 cells Y to Y, including S9 under v2. Not repeated to turn it Y (task rule). Likely cause is sampling: S7 carries no handoff block and no citation, the changed skill lines are the Accepted and chain bullets plus the citation paragraph, and routing line 3 ("A deferred feature a user will see? The story map") is unchanged; one run per cell cannot separate that from an effect of the new text. Compare falsifier: unchanged copy, 0 regressions and 23 stored Y; one Y cell set to N prints that cell as `REGRESSION` and no other.
 
 ### Limits and deviations
@@ -308,3 +309,16 @@ The skill change is committed (`5a2e901f`) and AC-1 passes 4 of 4 with the falsi
 ### Summary
 
 All three S7 Claude runs on the candidate skill put the deferred XLSX story in the story map; the stored run of the shipped skill wrote only the task file. The rule the Captain agreed makes this a real regression, so I stopped, left the skill unchanged and made no more runs. Limit: the stored side is one run, and there is no control arm of the shipped skill under the same prompt now, so I cannot say which skill line causes it; routing line 3 (deferred feature goes to the story map) is unchanged text, so the new paragraph or the reworded bullets are suspects, not proven. Next step for FO and the Captain: a skill repair or accepting the limit, which needs a new ruling (and new runs if repaired).
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Run the control: exactly 3 S7 B1 Claude runs with the shipped kc-adr 0.1.0 skill (SKILL.md as released at origin/main 8bf7b9e4), loaded through a separate `--plugin-dir` copy of kc-adr at 8bf7b9e4, candidate commit 5a2e901f untouched, same harness, prompt and model.
+  `S7-B1-claude-r4`, `r5`, `r6` in `results-control/`; each `meta.json` records commit `8bf7b9e4`, kc-adr tree `6628f335`, `--plugin-dir /tmp/kc-adr-control-8bf7b9e4/kc-adr` (a detached worktree, removed afterwards); all answered, 0 retries (23.2 s, 19.4 s, 19.8 s). Count is 13; no further run.
+- DONE: Apply the decision rule, fixed before the runs.
+  0 of 3 control runs wrote the story map (placement Y x3, only `tasks/TASK-016.md` written, choice `keep_as_is` x3, consulted Y Y N, loaded Y x3), against 3 of 3 candidate runs (r1 to r3). The rule's 0-of-3 branch: the change caused it. Skill not edited.
+- DONE: Record the runs in the ledger and CHANGES.md, update the AC-2 evidence and the stage report.
+  `ledger.jsonl` 13 lines; `CHANGES.md` items 8 to 10 (rule before, outcome after); `score.py` gained `--results` (item 9). AC-2 evidence: S7 Claude placement is a real regression of the candidate skill, stored/control 4 of 4 Y (stored r1, control r4 to r6), candidate 0 of 3 Y. AC-2 remains not met. Grade a run with `python3 harness/score.py --rule v2 --results results-control --run S7-B1-claude-r4`.
+
+### Summary
+
+Four runs of the shipped skill wrote only the task file on S7 and three of three runs of the candidate also wrote the story map, so the new text causes the extra write; I did not edit the skill, as the rule says. What the data does not show is which line does it: all three candidate story-map entries say "blocked by ADR 0011", and the candidate runs all read ADR 0011 while one control run did not, so the paragraph "the record in force is a finding" or the rewritten Accepted bullet may have made workers record the blocked XLSX request. That is a hypothesis, not tested. Needs the Captain: repair the skill (new runs and a new ruling) or accept the S7 Claude placement regression as a known limit.

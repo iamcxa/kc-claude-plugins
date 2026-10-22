@@ -4,6 +4,7 @@
   python3 score.py --rule v3             # grades ../results/ under expectations.json + expectations-v3.json (S9, S11 overlaid); AC-1
   python3 score.py --rule v2             # grades ../results/ under the stored expectations.json unchanged; AC-2 (then compare.py)
   python3 score.py --rule v3 --run S11-B1-claude-r1   # print one run's grading with its evidence
+  python3 score.py --rule v2 --results ../results-control --run S7-B1-claude-r4   # grade runs stored elsewhere (use with --run; no table written)
 
 Grading reads only the stored trace.jsonl, final.json, changes.json and meta.json, so it re-runs on the
 committed results without an agent. The ADR markers come from rebuilding the deterministic world.
@@ -399,7 +400,8 @@ def main():
     rule = sys.argv[sys.argv.index("--rule") + 1] if "--rule" in sys.argv else None
     if rule not in SCEN_BY_RULE:
         raise SystemExit("--rule v2|v3 is required")
-    grades = grade_dir(RESULTS, rule)
+    results = Path(sys.argv[sys.argv.index("--results") + 1]).resolve() if "--results" in sys.argv else RESULTS
+    grades = grade_dir(results, rule)
     if "--run" in sys.argv:
         rid = sys.argv[sys.argv.index("--run") + 1]
         print(json.dumps(next(g for g in grades if g["run"] == rid), indent=1))

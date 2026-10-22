@@ -1,0 +1,10 @@
+{
+ "choice": "keep_as_is",
+ "decision": "I kept the export as it is. ADR 0011 (Accepted) says CSV only and no second format. Mira's message doesn't mention XLSX or overrule that ruling, so I didn't add one or write a new ADR.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Status changed to blocked (needs Mira ruling). Added the governing ADR 0011 with its commit and digest. Added Mira's message, which is not a ruling, and the decision to keep as is. Added the open item: Mira must say in her own words whether to allow XLSX, which would be a new ADR superseding 0011."
+  }
+ ]
+}

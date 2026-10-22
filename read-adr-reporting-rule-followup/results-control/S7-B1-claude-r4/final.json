@@ -1,0 +1,10 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as CSV. ADR 0011 (Accepted) says CSV only until it is superseded. Mira's message doesn't mention XLSX or override that ruling, so I didn't add XLSX. I wrote the open questions in the task file.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Notes added: ADR 0011 (CSV only) is in force and not superseded. Mira's 2026-10-22 message, quoted, doesn't lift it, so the export stays CSV. Open items: ask Mira whether to supersede ADR 0011 (a new ADR needs her words); a new dependency must be MIT or Apache-2.0 (mira-decisions ADR 0020); unconfirmed guess that the accountant's tool may already open the CSV, so ask Haruto what fails."
+  }
+ ]
+}
