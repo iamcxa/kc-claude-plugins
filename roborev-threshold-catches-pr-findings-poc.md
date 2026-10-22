@@ -51,3 +51,18 @@ Alignment: not needed before implementation; the Captain approved the run („ÄåÂÅ
 Release review: not needed: the task belongs to no release.
 Surfaces: none
 Visible change: none
+
+## Stage Report: implementation
+
+- DONE: Read roborev's own documentation or source for the default --min-severity of `roborev review` and the meaning of `SEVERITY_THRESHOLD_MET`; quote the passage with its file or URL (AC-1)
+  Quoted in report.md from roborev v0.62.0 `internal/config/workflow.go` and `docs/guides/reviewing-code.md`: default is no filter; the marker means all findings are below the active threshold. The repo's `.roborev.toml` sets `review_min_severity = "high"` at all three heads, so the gate ran at high, not unfiltered.
+- DONE: In throwaway worktrees outside every repository checkout, at heads 1c57c156 (#694), 589c54e5 (#698) and a3ce3c8b (#693 round 1) of iamcxa/kc-claude-plugins, each against the base the PR was reviewed on, run `roborev review --since <base> --repo <worktree> --wait --agent codex` with `--min-severity medium` and then `--min-severity low`; record each command, job id, agent, head, base, finding list, tokens and wall time (AC-2)
+  Six runs, jobs 1014 to 1019, agent codex, one each, no rerun; commands, SHAs, finding lists, tokens and wall times are in report.md.
+- DONE: Match each local finding against that head's Codex PR findings (read with `gh api repos/iamcxa/kc-claude-plugins/pulls/<N>/comments --paginate`, reviews 5608166400, 5608491991, 5603366440) by file and problem; write report.md in the task folder with the per-head, per-threshold caught / missed / extra table and the bar's reading; remove the worktrees
+  report.md in `roborev-threshold-catches-pr-findings-poc/`: caught 1 of 5 PR findings, on 1 of 3 heads (#698 fragment finding, both thresholds); the bar of two heads is not met; #694 and #693 caught none at any threshold. Worktrees removed and pruned.
+
+### Summary
+
+Lowering the roborev threshold to medium or low catches a Codex PR finding on 1 of 3 heads, below the two-head bar; on the other two heads the cause is not the threshold. The task's premise was off: the gate's earlier reviews ran at `high` through the repo's `.roborev.toml`, not at roborev's no-filter default. Limits: one sample per cell, no rerun, one repo, and one local-extra finding on #694 not checked as a real defect.
+
+No code or configuration changed, so `comment_ratio.py`, `doc_impact.py` and `number_guards.py` have no candidate to run on; no ADR added; no PR opened (no push grant). `boundary-crossed:` none. Cleanup done. Raw run output is in `/tmp/rr-runs`, outside any repository.
