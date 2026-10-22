@@ -3,7 +3,7 @@ title: The local roborev Codex review catches the findings Codex's PR review lat
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
