@@ -69,6 +69,7 @@ gates:
                 state: consumed
 started: 2026-10-21T19:12:41Z
 worktree: .worktrees/spacedock-ensign-merge-ask-holds-missing-clauses
+pr: iamcxa/kc-claude-plugins#703
 ---
 
 ## Scope
@@ -82,6 +83,8 @@ worktree: .worktrees/spacedock-ensign-merge-ask-holds-missing-clauses
 - Non-goals: the other candidates of the same list (D: seed check before a backlog gate; E: amendment wording and Override placement; F: single occurrences), each the Captain's separate call.
 
 ## FO alignment
+
+Delivery (FO, 2026-10-22): the worker's push was refused by the permission check; FO pushed head 1e47b8c6 and opened Draft iamcxa/kc-claude-plugins#703 on the Captain's 「准」 (chat, 2026-10-22), answering 「「合併提問補漏」的分支，可以讓我推上去並開 Draft PR 嗎？」.
 
 Reviewer: engineering-reviewer opus 2026-10-21 — do holds A, B and C in delivery_gate.py, and the ADR 0023 and 0026 amendments, keep the Captain's merge and approval authority, or block an ask he should be able to receive or let one through he should not? Called under the special-role combination the Captain agreed (「同意這個組合」, 2026-10-20): a change to merge, authority or approval rules calls the engineering-reviewer.
 
