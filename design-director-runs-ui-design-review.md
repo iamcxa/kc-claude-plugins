@@ -47,6 +47,9 @@ Design: the role runs the existing brief on sonnet; the author's declines go to 
 ## FO alignment
 
 Alignment: needed at ideation; the declared model and whether the helper joins are his, after the measurement and the POC.
+Result: aligned 2026-10-22 by Amendment 1 (model stays sonnet; the astra helper is dropped; dev2-poc design-helper-astra-poc closed without running) and the backlog gate resolution (duty wording, two passes, host-component declines checked, replay before shipping).
+
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-22 — do these amendments withdraw what the Captain approved, and what changes in the build?
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
