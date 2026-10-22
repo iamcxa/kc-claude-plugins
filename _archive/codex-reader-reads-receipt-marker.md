@@ -3,7 +3,7 @@ title: The Codex review reader recognizes the clean receipt that now opens with 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -76,10 +76,13 @@ gates:
                 reason: 'Captain: 「合併」 (chat, 2026-10-22), answering 「#693（Codex 新格式）要合併嗎？（驗證閘門，紀錄指紋 08d54607）我建議合併。」; accepts the FO recommendation in the bound gate question: approve validation and merge #693 at head 199d8141c34a5bff9d9ac3db7d6a09525a0f0384.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-21T14:52:37Z
 worktree: .worktrees/spacedock-ensign-codex-reader-reads-receipt-marker
 pr: pr-merge:693
+verdict: PASSED
+completed: 2026-10-22T01:28:51Z
+archived: 2026-10-22T01:28:51Z
 ---
 
 ## Scope
