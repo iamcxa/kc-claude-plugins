@@ -1,0 +1,34 @@
+design_decline_check:
+  rulings:
+    - finding: 1
+      ruling: upheld
+      evidence: In preview-mixed-desktop-light.png and -dark.png the result rows share the bold title and divider of the action rows, but only the two action rows carry a button, so nobody can mistake "set" or "failed: ..." for something to press. Looked in ui.d.ts SettingsRow for a variant or style prop and found none; a Results heading is possible only through SettingsSection title or the plugin's own text, which is r1.5 layout and nothing is mis-acted on meanwhile.
+      change:
+    - finding: 3
+      ruling: decision
+      evidence: preview-mixed-desktop-light.png shows Test and Save as the same filled black button. SettingsActionProps in ui.d.ts has actionLabel, onPress, disabled, label, hint, error, children and testID, with no variant, style or size prop; only the plugin's own react-native button could draw an outlined Test, and that is a custom build.
+      change: The Captain, who accepts a departure from the host's SettingsAction look (outlined Test via the plugin's own button) or accepts both as primary.
+    - finding: 4
+      ruling: upheld
+      evidence: Comparing preview-before-test-light.png (Save row near the top) with preview-mixed-desktop-light.png (Save about 190px lower) confirms the shift. The Test button does not move, and the rows that land where Save was are not pressable, so a mis-tap does nothing and nobody is misled or at risk.
+      change:
+    - finding: 6
+      ruling: decision
+      evidence: preview-before-test-light.png shows only the empty pre-Test state and cannot show stale results, but the author's reason is that clearing is another task's work. In the meantime a "set" row stays visible after the vault or reference is edited and the person may Save believing it was verified, which is a wrong action the picture does not rule out.
+      change: The task that owns journey test-variables/q1 in r1.5; until it lands, the Captain decides whether to ship without a stale or run-Test-again cue.
+    - finding: 8
+      ruling: overruled
+      evidence: preview-longname-phone-light.png still shows the name broken as "BUIL / D_AGENT". SettingsRowProps in ui.d.ts types label as a plain string the plugin supplies, and offers a children ReactNode slot, so the plugin can supply break points itself; the declaration has no wrapping or truncation prop, but it does not forbid this.
+      change: Insert soft-break points (zero-width space) after underscores in the label, or render the name in the children slot with its own Text; criterion is that a 63-character name wraps only at underscores at the phone width.
+    - finding: 9
+      ruling: overruled
+      evidence: preview-mixed-desktop-light.png shows Save directly under failed rows with a bare "Save this project" and no hint, while the Test row beside it has one. The author's reason says saving is allowed but does not supply the cue the finding asked for, and SettingsActionProps in ui.d.ts has a hint?: string prop that can carry it.
+      change: Add a hint to the Save SettingsAction stating what is saved (the vault and variable settings for this project) and that saving stays allowed when variables fail; criterion is that the Save row shows that text in the mixed-failure preview.
+    - finding: 10
+      ruling: upheld
+      evidence: preview-everycause-desktop-light.png shows all seven cause texts, and each names the thing to fix (token, field, vault, reachability), so nobody is misled or blocked. Adding remedy hints would depart from the ruled "failed: <cause>" form in ADR 0002 and belongs to r1.5's setup steps.
+      change:
+    - finding: 11
+      ruling: decision
+      evidence: preview-everycause-phone-dark.png and preview-longname-phone-light.png show the 36px phone buttons. SettingsActionProps in ui.d.ts has no size, height or style prop and states no height, so the author's "approximation" claim cannot be confirmed from the declaration; only the plugin's own 44px button could meet the finding.
+      change: The Captain, who accepts a departure from the host's SettingsAction look (own 44px buttons) or accepts the host's size; Paseo host owns the real height.

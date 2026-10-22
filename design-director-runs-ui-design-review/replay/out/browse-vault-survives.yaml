@@ -1,0 +1,46 @@
+design_decline_check:
+  rulings:
+    - finding: 1
+      ruling: overruled
+      evidence: In preview-oneskipped-desktop-light.png and preview-oneskipped-phone-light.png, "deploy key" has the same bold title and row shape as "Pick fields from the vault" and the variable rows, and nothing marks it as a result. ui.d.ts SettingsRowProps has no weight prop, but it does have `children?: ReactNode`, and react-native.d.ts declares `Icon`. The plugin can also render its own text.
+      change: Put a muted marker (an Icon or a short muted tag) in the SettingsRow children slot of each skipped row, or render skipped rows as the plugin's own quieter rows. Acceptance criterion - in the one-skipped preview, a skipped row cannot be mistaken for a variable row or the action row.
+    - finding: 2
+      ruling: upheld
+      evidence: preview-allskipped-desktop-light.png and preview-many-desktop-light.png repeat the same sentence, which costs length but states nothing false and gives no wrong action. The reason holds, because the proposal puts the item type in the sentence, so it can differ per item. The unbounded-run case is owned by pick-field/q2 in release r1b.
+      change:
+    - finding: 3
+      ruling: overruled
+      evidence: preview-failure-desktop-light.png and preview-failure-phone-light.png still show the red error line directly under the grey hint with no gap. ui.d.ts SettingsActionProps has no spacing prop, but SettingsRowProps carries `error?: string | null` and `children`, so the error can go in its own host row, which is the reviewer's second fix.
+      change: Show the fixed failure sentence as the `error` of a separate SettingsRow directly under the Browse vault row, instead of SettingsAction's own error line. Acceptance criterion - the failure preview shows a visible gap between the help line and the error.
+    - finding: 4
+      ruling: decision
+      evidence: preview-oneskipped-desktop-light.png shows skipped rows at about 63px, the same as the hinted "Pick fields" row, against about 57px for the unhinted variable rows. ui.d.ts SettingsRow and SettingsSelect declare no height or padding prop and no slot that sets it. Only a custom row build could equalise them.
+      change: The Captain, who accepts a departure from the Paseo host's row look.
+    - finding: 5
+      ruling: upheld
+      evidence: In all pictures the filled Browse vault button is the card's one action, and nothing misleads. The reviewer's own fix says "Keep as today".
+      change:
+    - finding: 6
+      ruling: decision
+      evidence: preview-oneskipped-phone-light.png, preview-failure-phone-light.png and preview-longtitle-phone-light.png show the Browse vault button at about 36px and the selects at about 30px, with help text wrapping to three lines beside the button. SettingsActionProps and SettingsSelectProps in ui.d.ts have no size, style or layout prop, so only a custom button build could reach 44px.
+      change: The Captain, who accepts a departure from the Paseo host's look. Paseo's host owners decide any change to the host components themselves.
+    - finding: 7
+      ruling: upheld
+      evidence: preview-failure-desktop-light.png and preview-failure-phone-light.png show "1Password rejected the token", which is accurate and gives a person nothing to act on wrongly. The fixed cause text is the ruling in ADR 0002, and the remedy sentence is owned by the T1 and setup-guide work.
+      change:
+    - finding: 9
+      ruling: upheld
+      evidence: preview-many-desktop-light.png now runs to "key 8" and the card closes, so the cut-off is fixed. A long card of skipped rows misleads or blocks no one, and capping or scrolling is owned by the bounded browse in release r1b (pick-field/q2).
+      change:
+    - finding: 10
+      ruling: upheld
+      evidence: preview-allskipped-desktop-light.png shows each skipped item named with its reason directly under Browse vault, so a person sees the run finished and why nothing filled. The silent empty vault is a stated non-goal and unchanged from today.
+      change:
+    - finding: 11
+      ruling: upheld
+      evidence: preview-clean-desktop-light.png shows the variable rows now holding op:// values in selects, so a clean run is visible on the fields. A person acts on nothing wrongly, and the silence is today's behaviour.
+      change:
+    - finding: 13
+      ruling: overruled
+      evidence: preview-oneskipped-phone-dark.png and preview-clean-desktop-light.png show skipped rows with no state marker. "No control by design" does not answer a request for a marker, and a marker is not a control. SettingsRow `children` and the react-native.d.ts `Icon` can supply one. The chevron size is a separate matter - SettingsSelectProps has no chevron prop - and it stays host-owned.
+      change: Give each skipped row the same muted marker as the finding 1 fix, via SettingsRow children with Icon. Acceptance criterion - every skipped row in the one-skipped and many previews carries the marker, and the select chevron is left to the host.

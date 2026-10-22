@@ -1,0 +1,30 @@
+design_decline_check:
+  rulings:
+    - finding: 1
+      ruling: overruled
+      evidence: In preview-desktop-dark-3-variables.png and preview-desktop-dark-12-variables.png the monospace names are as bright as the regular-weight title, the amber icon is small and dim, and there is no container, so the block reads like reply text. The decline reason names no host component and does not answer what was seen, since host theme colours do not change weight or hierarchy.
+      change: Make the title semibold and the names a muted tone or smaller weight, and add a tinted background or left rule. This is possible with the plugin's own react-native View and Text. Criterion - in the 3-variable preview the title is visibly the strongest element and the block is visibly separate from "mock reply".
+    - finding: 2
+      ruling: upheld
+      evidence: In preview-desktop-dark-12-variables.png the 12 rows run from about y=153 to y=351 and "mock reply" still sits at y=404 on the 800px panel. In preview-compact-dark-12-variables.png the reply is still on screen at about y=888. No name is hidden and the reply is not pushed out of view, so nobody is misled or blocked at this size.
+      change:
+    - finding: 3
+      ruling: overruled
+      evidence: In preview-compact-dark-12-variables.png and preview-compact-light-12-variables.png "PROJECT_SERVICE_00_AUTHORIZATION_BEARER_TO" breaks onto the next line as "KEN_VALUE — no token stored for this repository", so one variable reads as two items and the name is hard to copy. The reason names no host component or declaration path, and the plugin's own Text and View parts can place the cause on its own line. Long causes are also untested, since no picture shows one wrapping.
+      change: Render the cause on its own line when the name does not fit, or break the name only after an underscore. Add a preview where a long name and a long cause both wrap. Criterion - no variable name is split mid-word in any preview.
+    - finding: 4
+      ruling: overruled
+      evidence: preview-desktop-dark-unknown-cause.png still shows "STRIPE_API_KEY — could not be set". The author says Design item 4 sets the fallback to "reason not available", so the picture does not show the text the decline relies on and cannot support it. Where to fix the mapping is left to the settings Test row under ADR 0002, which I accept.
+      change: Re-render the unknown-cause preview with "reason not available" as the fallback text. Criterion - the fallback line in that preview reads exactly "reason not available". The next-step line stays out of scope per ADR 0002.
+    - finding: 5
+      ruling: upheld
+      evidence: preview-desktop-dark-12-variables.png shows causes in uneven grammar ("the field is empty", "field not found in the vault", "1Password rejected the token"). Each is understandable and none could lead a person to act wrongly. The wording and its string table belong to the plain-failure-reason task, and this task only imports it.
+      change:
+    - finding: 6
+      ruling: decision
+      evidence: No picture shows a scrolled-away notice, a resumed or reloaded agent, or a long cause line, so the picture cannot confirm the decline. The scrolled-away case is an ordinary timeline row and is documented as a known limit. A resumed agent that shows no notice could make a person think it started with all its variables, and nothing in the set shows that case.
+      change: The owner is the r2 task, which the author cites for the resumed-agent state. The Captain decides at the design gate whether leaving that state unpictured until r2 is acceptable. The long-cause preview is covered by finding 3.
+    - finding: 7
+      ruling: overruled
+      evidence: preview-compact-light-12-variables.png shows the amber icon turned brown and the muted cause text as light grey on white. The author admits desktop light and mid width were never checked, and no picture shows a 1-variable light case. "Host theme tokens" is not a declared host component and does not show that contrast holds.
+      change: Add previews for desktop light and phone light with 1 variable, and record the contrast ratio of the muted cause text and the amber icon in light. Criterion - muted text and icon each meet at least 4.5:1 against the light background, or a stronger token is chosen.

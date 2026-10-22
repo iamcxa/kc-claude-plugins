@@ -1,0 +1,38 @@
+design_decline_check:
+  rulings:
+    - finding: 3
+      ruling: overruled
+      evidence: "Picture 4 (Token works) and pictures 7, 8, 9, 10 and 11 use one plain white label weight with no icon or colour. ui.d.ts SettingsActionProps extends SettingsRowProps, which has `error?: string | null` (picture 13 shows it as red text under the Vault label) and `children?: ReactNode`. react-native.d.ts also declares `Icon: ComponentType<PluginIconProps>`. The plugin can also render its own views."
+      change: "Carry each failure cause in the row's `error` slot or put an `Icon` or coloured text in `children`, so success and failure read differently. Criterion: in the previews of the success state and of each of the six failure states, the status line shows a distinct icon or colour at a glance."
+    - finding: 4
+      ruling: upheld
+      evidence: "Picture 2 repeats the name from the input above, and picture 4 gives a count next to the list. Both are one short line, and nobody is misled or blocked. The name ties the not-checked state to the edited account, since typing no longer runs a check. The count states the one-versus-several case, and picture 5 shows it as 'Can read 1 vault: relay-dev'."
+      change: ""
+    - finding: 7
+      ruling: overruled
+      evidence: "Pictures 1, 2 and 3 show the Vault as an empty box. Nothing says it is waiting for a check, and it looks like the disabled controls. ui.d.ts SettingsInputProps has `placeholder?: string` and `disabled?: boolean`, so the claim that the host control has no placeholder is wrong. The locked fixture also differs: Vault is 'relay-dev' in dark picture 7 and empty in the light and compact pictures."
+      change: "Pass a `placeholder` such as 'Check the token first' (or `disabled`) to the empty Vault input. Criterion: the locked preview has the same Vault value in dark desktop, light desktop and compact."
+    - finding: 8
+      ruling: upheld
+      evidence: "Picture 5 shows the Vault select holding 'relay-dev' and the status line directly above saying 'Can read 1 vault: relay-dev'. The only readable vault is the one chosen, so the person sees the value and the reason for it together. The screen shows no saved or unsaved marker on any other field either."
+      change: ""
+    - finding: 9
+      ruling: overruled
+      evidence: "Pictures 2 and 3 show the Vault as an empty box after the name is edited. That contradicts the claim that the previous vault is kept, and a person reads it as cleared and may re-enter or abandon the choice. The row has no hint line, while SettingsRowProps in ui.d.ts offers `hint?: string`."
+      change: "Keep showing the previous vault, marked 'not checked', until Check runs. Criterion: the previews after a name edit show the old Vault value. The one-line help text on the Vault row naming its scope is a decision for the task project-env-variable-row-edit and journey token-works/q3, the work the author cited."
+    - finding: 10
+      ruling: upheld
+      evidence: "Picture 6 shows 'No token in Keychain / Paste it below and save it.' with Check enabled and Save token dim, which is its empty-input look in every picture. Pressing Check there re-checks and does no harm. Check also finds a token saved elsewhere, and the headline names the next step."
+      change: ""
+    - finding: 11
+      ruling: overruled
+      evidence: "Picture 3 shows the button relabelled 'Checking...' and wider, while the status line already says 'Checking token...'. ui.d.ts SettingsActionProps has `actionLabel: string` and `disabled?: boolean` and no width or spinner prop, but the label is the plugin's to set. The plugin can also render its own button."
+      change: "Keep `actionLabel` as 'Check' and set `disabled` while checking, or use a plugin-rendered fixed-width button. Criterion: the Check button is the same width in the not-checked and checking previews."
+    - finding: 12
+      ruling: decision
+      evidence: "The compact pictures (ok-three-vaults and locked) show Check, Choose... and Save token at about 30 to 32px, the same height as the host's Add, Browse vault and Import buttons. ui.d.ts SettingsActionProps and SettingsSelectProps have no height or size prop. Only plugin-built buttons could reach 44px, and they would depart from the host's look."
+      change: "Kent decides whether to accept a departure from the host's look for 44px phone controls. The alternative is to accept the host's control height as the baseline and record that."
+    - finding: 13
+      ruling: overruled
+      evidence: "Light shows only the locked and ok-three-vaults states, and compact shows only those two in dark. Picture 13 shows a Vault select about 280px wide with the label 'relay-dev (this token cannot read it)'. No compact preview shows it fit at phone width. Kent's own use on his Mac does not cover phone width or the light theme."
+      change: "Add light and compact previews for the ok-no-vault, chosen-vault-not-readable and unexpected states. Criterion: the long Vault label fits at 430px without clipping."

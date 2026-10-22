@@ -1,0 +1,42 @@
+design_decline_check:
+  rulings:
+    - finding: 2
+      ruling: upheld
+      evidence: In preview-desktop-dark-testing.png the Test button reads "Testing..." and no row shows a result. That looks like the untested state, so no stale or false result is on screen while the test runs.
+      change:
+    - finding: 4
+      ruling: upheld
+      evidence: In preview-desktop-dark-results-cleared.png the results are gone after the DB_URL edit, and the Test button is enabled and labelled "Test". Nothing on screen claims a result, so nobody is misled. The author recorded the silent choice, which is the finding's own second option.
+      change:
+    - finding: 5
+      ruling: decision
+      evidence: None of the pictures shows a long cause, a whole-test error such as 1Password locked, or a long list. I cannot check the author's reason against any picture I may read, because the two other drawings it relies on (journey test-each-variable/q7 and project-env-variable-row-edit's twelve-long previews) are outside the files I may open. The decline rests on other tasks, and the picture does not show that nothing is at stake meanwhile.
+      change: Owner is journey test-each-variable/q7 for the whole-test error state. The Captain confirms whether the many-variables and long-cause previews are owned by project-env-variable-row-edit.
+    - finding: 6
+      ruling: overruled
+      evidence: preview-desktop-dark-results-shown.png still shows "set" and "failed: the 1Password field is empty" in the same small grey, with no colour or icon. ui.d.ts has SettingsRowProps with `error?: string | null`, which SettingsInput and SettingsAction inherit, and `children?: ReactNode`. So the declaration does offer a way to mark a failure apart from a success, and the plugin can also render its own coloured Text.
+      change: Pass the failure cause through the row's `error` prop (or a plugin-drawn coloured Text) and keep "set" as a neutral hint. The criterion is that in the shown previews a failed row differs from a set row by more than its wording, in dark and light.
+    - finding: 7
+      ruling: decision
+      evidence: Comparing preview-desktop-dark-results-shown.png and preview-desktop-dark-results-cleared.png, the "Check and save" header sits at about y=1101 when results are shown and about y=1085 when cleared, a 16px shift. The edited field itself moves up about 14px (DB_URL input from y=336 to y=322). The shift is real, and it comes from where the result line sits, which the author says belongs to project-env-variable-row-edit.
+      change: Owner is project-env-variable-row-edit, which owns the row layout. That task decides whether to reserve the result line's height or to accept the jump.
+    - finding: 8
+      ruling: decision
+      evidence: preview-desktop-dark-results-shown.png shows "New variable name" = DB_URL with Add greyed out and no message. The user is blocked with no stated reason. The decline is "today's behaviour" plus another task, so the picture does not show that nothing is at stake. ui.d.ts SettingsInputProps inherits `error?: string | null`, so a reason line is possible.
+      change: Owner is project-env-variable-row-edit, which the author says changes Add. That task decides whether to show an "already exists" reason, or the Captain accepts the silent disabled Add.
+    - finding: 9
+      ruling: decision
+      evidence: The Test row help text in preview-desktop-dark-results-shown.png says what Set means but not whether it checks the unsaved edits on screen or the saved project. Rows show the draft while the test could run against the saved copy, so a person could misread a result. The author's reason is that the answer is an open journey question, test-each-variable/q2, so one clause of help text cannot be written yet.
+      change: Owner is journey test-each-variable/q2, decided by the Captain. Once it is answered, add one clause to the Test row help text.
+    - finding: 10
+      ruling: decision
+      evidence: In ui.d.ts, SettingsActionProps has only actionLabel, onPress and disabled (plus the inherited label, hint, error, children and testID). It has no variant, style or tone prop, so the author is right that the host component has no primary or destructive variant. The plugin could draw its own react-native buttons, as its own screen already does, but that departs from the host's look. In preview-desktop-dark-results-shown.png Save, Discard, Test and the two Remove buttons all look alike.
+      change: Owner is the Captain, who accepts or rejects a departure from the Paseo host look (plugin-drawn Save and Remove buttons), or asks the Paseo host to add a variant.
+    - finding: 11
+      ruling: decision
+      evidence: In preview-compact-dark-results-shown.png the Remove, Test and Save buttons measure about 30 to 34px tall. ui.d.ts SettingsActionProps and SettingsRowProps carry no size, style or hit-area prop, so the plugin cannot raise them through the host component. Only plugin-drawn buttons could, which departs from the host's look.
+      change: Owner is the Captain, who accepts or rejects plugin-drawn 44px buttons, or raises the touch-target size with the Paseo host.
+    - finding: 12
+      ruling: overruled
+      evidence: preview-compact-dark-results-shown.png and preview-compact-light-results-shown.png already wrap the Test help text over four lines beside a short "Test" button. The "Testing..." label drawn in preview-desktop-dark-testing.png is wider and fainter. At compact size it would narrow the text column further. The wrap and the disabled contrast in light are not shown in any existing picture, so the shown and cleared pictures do not cover them.
+      change: Add testing previews for desktop light, compact dark and compact light. The criterion is that "Testing..." is readable in light and the help text wraps cleanly beside it at compact size.

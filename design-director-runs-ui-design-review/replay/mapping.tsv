@@ -1,0 +1,12 @@
+critique_row	critique_finding	review_finding	recorded_disposition	run1_ruling	run2_ruling	outcome
+1	hidden mode switch (Browse vault)	browse-vault-survives #11 (MINOR states)	declined: today's behaviour	upheld	upheld	stays closed; adjacent variable-row-edit #16 decision and #11 decision/overruled
+2	reference cut off hides what tells rows apart	variable-row-edit #18 (MINOR states)	declined: host input scrolls	overruled	overruled	fix named is the Testing state and failure count; the cut-off itself is not what the change addresses
+4	flat picker of raw paths	variable-row-edit #16 (MINOR states)	declined: owned by T5 / r1b	decision	decision	decision, owner another task (T5)
+5	add variable takes three separated steps	variable-row-edit #4 (MINOR hierarchy)	declined: today's host rows	overruled	overruled	fix: one row (children slot)
+6	one edit wipes every result	variable-row-edit #1 (MAJOR states)	Needs decision (already at the Captain)	not replayed	not replayed	unchanged
+7	failures give no next step	plain-failure-reason #10 and browse-vault-survives #7	declined: ruled cause form (ADR 0002)	upheld	upheld	stays closed (paste-token-check-first #10, partly fixed, was not replayed)
+8	connection card is six rows of equal weight	variable-row-edit #3 (MINOR hierarchy)	declined: host chrome, today's layout	upheld	upheld	stays closed (variable-row-edit #5 decision, owner T1)
+9a	Save/Discard/Stop managing unsaved cue	variable-row-edit #2 (MAJOR flow)	Needs decision (already at the Captain)	not replayed	not replayed	unchanged
+9b	Stop managing sits with Save; confirm styles destructive like Keep	variable-row-edit #12, #13 (MINOR flow, system-fit)	declined: host action row has one style; host Modal has no danger style	overruled, overruled	overruled, overruled	fix: own section; own danger button in the modal body
+10	notes posing as rows	browse-vault-survives #1 (MINOR hierarchy)	declined: SettingsRow has no weight control	overruled	overruled	fix: marker via children slot
+12	success grey like a hint	variable-row-edit #7 (primary), test-results-match-draft #6 (secondary)	declined: owned by T4; hint line text only	upheld, overruled	upheld, overruled	primary stays closed; secondary overruled (use the error prop for failures, keep set neutral)

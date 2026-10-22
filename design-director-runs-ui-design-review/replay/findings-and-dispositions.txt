@@ -1,0 +1,379 @@
+===== project-env-browse-vault-survives design/ideation-1.yaml 13
+[browse-vault-survives #1] MINOR hierarchy | preview-oneskipped-desktop-light.png, preview-oneskipped-phone-light.png
+   seen: The skipped row ("deploy key") has the same bold title weight and the same row shape as the "Pick fields from the vault" row and the variable rows, with no right-hand control. It can read as a variable that has no value, and nothing marks it as a result of the Browse vault action.
+   fix: Give skipped rows a quieter title weight, or a muted skipped marker, so they read as a result list and not as variables or actions.
+   DISP: declined: rows are Paseo's `SettingsRow`, which has no weight or marker control; the `Not listed:` help text marks the row as a result.
+[browse-vault-survives #2] MINOR hierarchy | preview-allskipped-desktop-light.png, preview-many-desktop-light.png
+   seen: Every skipped row repeats the identical sentence "Not listed: 1Password could not read this item (ssh key)", so the same fact is said two times in allskipped and six or more times in many.
+   fix: When rows share a reason, say it once above the group and keep only the item title per row. If the per-row text stays, say so in the proposal.
+   DISP: declined: the type in the reason can differ per item, and a long run of identical rows is the unbounded-vault case journey pick-field/q2 (release r1b) owns.
+[browse-vault-survives #3] MINOR spacing | preview-failure-desktop-light.png, preview-failure-phone-light.png
+   seen: The red error line sits directly under the grey help line with no gap and is the same small size. The rows above hold the empty placeholder inputs, so the failure shows no variables filled and no skipped rows.
+   fix: Add a small gap above the error line, or move it into its own row, so it separates from the help text.
+   DISP: declined: spacing of the action's error line is Paseo's `SettingsAction`; the preview only approximates it.
+[browse-vault-survives #4] MINOR spacing | preview-oneskipped-desktop-light.png vs the variable rows
+   seen: Skipped rows are about 63px tall, taller than the two-line variable rows at about 57px. The vertical rhythm inside the card is therefore not uniform.
+   fix: Match the skipped row height to the variable rows or give both one defined row padding.
+   DISP: declined: row height is Paseo's row component; the preview only approximates it.
+[browse-vault-survives #5] MINOR system-fit | all desktop and phone pictures
+   seen: The filled 36px-high Browse vault button sits in the same card as 30px-high select controls. It is the only filled, high-contrast control, and the other rows have none.
+   fix: Keep as today, since it is the card's one action. Otherwise align the control heights.
+   DISP: declined: Browse vault stays the card's one action, as today.
+[browse-vault-survives #6] MINOR platform | preview-oneskipped-phone-light.png, preview-failure-phone-light.png, preview-longtitle-phone-light.png
+   seen: On the phone size the Browse vault button is about 36px high and the select controls about 30px high. Both are under the usual 44px touch target. The help text wraps to three lines beside the button.
+   fix: Raise both touch targets to at least 44px on phone, or stack the button below the help text.
+   DISP: declined: button and select size are Paseo's components, unchanged by this task.
+[browse-vault-survives #7] MINOR flow | preview-failure-desktop-light.png, preview-failure-phone-light.png
+   seen: "1Password rejected the token" says what went wrong but not what to do or where to fix the token. The skipped rows likewise give no next step.
+   fix: Add the fix to each fixed sentence, for example where the token is set, or accept this as today's behaviour and say so.
+   DISP: declined: a remedy sentence belongs to the token-cause and setup-guide work (T1 and the setup-guide release); the fixed cause text is the ruled form (ADR 0002).
+[browse-vault-survives #8] MINOR states | states with no picture
+   seen: The set has no picture of: failure in dark, failure with the other three causes (no token, could not be reached, unrecognised error), loading on phone or dark, and a re-browse that shows loading, failure or a clean result while skipped rows from the previous run exist.
+   fix: Add those pictures. Say whether old skipped rows clear on a new run and whether a failure keeps or clears them.
+   DISP: fixed: failure in dark, failure with the unrecognised-error sentence, loading on phone dark and eight-skipped pictures added; the previous result clears on a new press and a failure keeps no skipped rows, written into the design above.
+[browse-vault-survives #9] MINOR states | preview-many-desktop-light.png
+   seen: The picture is cut off at "key 6", and the skipped list grows without a limit, so the card gets as long as the number of skipped items.
+   fix: Cap the list, for example show three rows plus "and N more", or let it scroll inside the card, and show the end of the many state.
+   DISP: declined: capping or scrolling the skipped list is the bounded browse of release r1b (pick-field/q2); `preview-many-desktop-light.png` and `preview-many-phone-dark.png` are redrawn to the end of the list.
+[browse-vault-survives #10] MINOR states | preview-allskipped-desktop-light.png
+   seen: When every item is skipped, the variable rows still show empty placeholder inputs. Nothing says that no variable could be filled, and the only difference from the "before" picture is the rows below.
+   fix: Show a cue for the all-skipped case, for example a fixed sentence that no item could be listed.
+   DISP: declined: with every item skipped, each is named with its reason, which is the cue; a silent empty vault is unchanged from today and is a stated non-goal.
+[browse-vault-survives #11] MINOR states | preview-clean-desktop-light.png
+   seen: After a clean run there is no confirmation that it finished and filled the fields. The variable rows change from text inputs to selects without any cue.
+   fix: Add a short fixed result line, or state that this silence is intended and as today.
+   DISP: declined: no confirmation after a clean run is today's behaviour and unchanged here.
+[browse-vault-survives #12] MINOR theme-size | set coverage
+   seen: Dark is shown only for oneskipped, at desktop and phone. Phone is shown only for oneskipped, failure and longtitle. The following are not shown: allskipped and many on phone or dark, longtitle on desktop or dark, and failure in dark. The red error colour is not checked on a dark background.
+   fix: Add dark pictures for failure and many, phone pictures for allskipped and many, and a dark picture for longtitle.
+   DISP: fixed: dark and phone pictures added for failure, eight skipped, all skipped and long title; the red error colour is drawn on a dark background in `preview-failure-desktop-dark.png`.
+[browse-vault-survives #13] MINOR consistency | preview-clean-desktop-light.png, preview-oneskipped-phone-dark.png
+   seen: The select controls have a tiny down-pointing triangle, about 6px, as the only affordance. The skipped rows have no state marker at all, while the same kind of row elsewhere has a control.
+   fix: Use one chevron size across the card and give the skipped rows a state marker such as a small muted icon.
+   DISP: declined: the select arrow is Paseo's `SettingsSelect`; skipped rows carry no control by design.
+===== project-env-notice-missing-variable design/ideation-1.yaml 7
+[notice-missing-variable #1] MINOR hierarchy | preview-desktop-dark-3-variables.png, preview-desktop-dark-12-variables.png
+   seen: The bright white monospace variable names are at least as strong as the 13px title, and the amber 14px icon is dim. The block is plain text with no container, so it reads like part of the reply rather than a warning.
+   fix: Give the notice a subtle tinted background or left rule, and make the title semibold, so the title reads first and the names read second.
+   DISP: declined: weight and a container are polish; the row uses the host's theme colours, and Kent's own use in AC-1 judges whether it reads as a notice.
+[notice-missing-variable #2] MINOR spacing | preview-desktop-dark-12-variables.png, preview-compact-dark-12-variables.png
+   seen: At 12 variables the list is a flat 12-line block of about 220px on a 800px desktop panel and about 560px on the 1688px phone, with no grouping or cap. It pushes "mock reply" down by that amount.
+   fix: Cap the visible rows (for example 5) with an inline "and N more" line, or group variables that share a cause.
+   DISP: declined: Kent's repositories map a handful of variables; capping or grouping would hide names, which are the point of the row. Twelve was a stress case.
+[notice-missing-variable #3] MINOR spacing | preview-compact-dark-12-variables.png, preview-compact-light-12-variables.png
+   seen: Long names such as PROJECT_SERVICE_00_AUTHORIZATION_BEARER_TOKEN_VALUE hard-break mid-word ("TO" / "KEN_VALUE"), so one variable looks like two items. Only the variable name wraps here, and no picture shows a long cause wrapping.
+   fix: Put the cause on its own line under a long name, or break only at underscores, and add a preview where a long name and a long cause both wrap.
+   DISP: declined: the host wraps text by character and names that long are rare; a long cause is not an r1 case because the labels are short fixed phrases.
+[notice-missing-variable #4] MINOR flow | preview-desktop-dark-unknown-cause.png
+   seen: The fallback cause "could not be set" is the only cause text with no cause class behind it. It is the least informative line, and the notice offers no next step for any cause (for example where to fix the mapping).
+   fix: Use a fallback that names what to check ("reason not reported - check the project's variable mapping"), and make the other causes say what to change.
+   DISP: declined: ADR 0002 and the Captain's ruling ask for the variable and its cause class; where to fix it is the settings Test row. The fallback text is set to "reason not available" in Design item 4.
+[notice-missing-variable #5] MINOR consistency | preview-desktop-dark-12-variables.png
+   seen: Cause phrasing varies in form ("the field is empty", "field not found in the vault", "no token stored for this repository", "1Password rejected the token"). Some have articles and some do not, and one mixes a tool name with a noun.
+   fix: Write all causes in one pattern, for example "<noun> <state>", and keep it as one string table.
+   DISP: declined: the label wording and its grammar belong to plain-failure-reason's one string table; this task only imports it.
+[notice-missing-variable #6] MINOR states | set of previews
+   seen: No picture shows a notice scrolled out of view in a long timeline, a notice on a resumed or reloaded agent, or a 12-variable list with one very long cause line. The set has no variant for a partial cause class mix beyond the 12-variable one.
+   fix: Add previews for a long timeline with the notice scrolled away, and for a resumed or reloaded agent that shows the notice or not.
+   DISP: declined: the row is an ordinary timeline row at the top and scrolls away with the conversation (stated in Design and Known limits); the resumed-agent state is r2.
+[notice-missing-variable #7] MINOR theme-size | set of previews
+   seen: Desktop is shown only in dark, and phone light only with 12 variables. There is no desktop light, no phone light with 1 variable and no tablet width. In the phone light picture the amber icon turns brown and the muted cause text is lighter grey, and contrast was not shown for the 1-variable case.
+   fix: Add desktop light and phone light with 1 variable, and check the contrast of the muted cause text and the amber icon in light.
+   DISP: declined: colours come from the host theme tokens, and light was checked on phone size with 12 variables; desktop light and mid width are unverified and Kent's own use covers them.
+===== project-env-paste-token-check-first design/ideation-1.yaml 14
+[paste-token-check-first #1] MAJOR states | preview-warning-*.png (all four); no picture of Replace pressed
+   seen: After the warning row, no picture shows what happens when Replace is pressed (Checking... label, which button shows it, where a 1Password rejection appears, whether the warning row stays), and Save token is already greyed out while Replace and Cancel are both live.
+   fix: Add a picture of the warning card with Replace pressed (checking) and one of Replace followed by a rejected token, showing where the status and the "Not saved:" text go and what happens to Replace and Cancel.
+   DISP: fixed: `preview-replace-checking-desktop-light.png` and `preview-replace-rejected-desktop-light.png` added; Replace closes the warning, the Save token button reads "Checking…", and a refusal appears under the field.
+[paste-token-check-first #2] MAJOR states | preview-shape-desktop-light.png and the set as a whole
+   seen: Only one of the shape refusals is drawn (space, quote, backslash or line break); the not-ops_ and not-128-characters reasons have no picture, and the field is masked so the person cannot see what is wrong in what they pasted.
+   fix: Show the other shape reasons (wrong prefix, wrong length) and state the actual length or the first problem so the person can act without seeing the masked text.
+   DISP: fixed: `preview-prefix-desktop-light.png` and `preview-length128-desktop-light.png` added beside the character refusal; each message names its problem, the 128 one names the length, and AC-3 tests the texts.
+[paste-token-check-first #3] MINOR hierarchy | preview-rejected-desktop-light.png, preview-rejected-desktop-dark.png, preview-unreachable-desktop-light.png, preview-opmissing-desktop-light.png
+   seen: The card shows "Token works" in the row above the field and, a few lines below, "Not saved: 1Password rejected the token" (or could not be reached or tool not found), so two status facts about "the token" sit in one card without saying one is the stored token and one is the pasted token.
+   fix: Label the top row as the stored token (for example "Saved token works") or tie the error text to "the pasted token".
+   DISP: declined: the top row is the stored token's state and is T1's row; "Not saved:" in front of the refusal says the pasted token was the one refused.
+[paste-token-check-first #4] MINOR flow | preview-saved-desktop-light.png vs preview-idle-desktop-light.png
+   seen: The saved picture is almost identical to idle (same "Token works" row, empty field), with only a faint small caption "Saved after 1Password accepted it." as the success cue, and the idle row already read "Token works" before saving.
+   fix: Give success a visible cue (for example a check mark or brief highlight on the token row) and show the case where the row changes from "No token in Keychain" to "Token works".
+   DISP: fixed: the caption is removed from the saved picture, `preview-saved-newname-desktop-light.png` replaces it, and with `preview-rejected-newproject-phone-light.png` shows the row going from "No token in Keychain" to "Token works".
+[paste-token-check-first #5] MINOR hierarchy | preview-saved-desktop-light.png, preview-idle-desktop-light.png
+   seen: "Saved after 1Password accepted it." repeats the help text above the field ("only after 1Password accepts it"), and the row "Save token to Keychain" beside the button "Save token" says the same action twice.
+   fix: Drop the repeated caption or the repeated row label so each fact appears once.
+   DISP: fixed: the repeated caption is removed in every picture; the row label "Save token to Keychain" beside the button is today's screen and stays.
+[paste-token-check-first #6] MINOR hierarchy | preview-warning-desktop-light.png, preview-warning-two-desktop-light.png, preview-warning-phone-dark.png
+   seen: The warning card says the project name three times (heading, "Replace the token under relay-dev-read", and the field), and each action row has a label that only restates its button ("Keep the current token" next to Cancel, "Replace the token under ..." next to Replace).
+   fix: Keep the warning heading and the two buttons and remove or shorten the explaining row labels.
+   DISP: declined: each `SettingsAction` row needs its own label; the labels are as short as the component allows.
+[paste-token-check-first #7] MINOR system-fit | preview-warning-desktop-light.png, preview-warning-desktop-dark.png
+   seen: Replace and Cancel are both solid black (white in dark) buttons of equal weight in stacked rows, so the destructive choice and the safe choice look alike and there are three filled buttons in one card; Save token (about 106x36), Replace (about 86x36) and Cancel (about 78x36) also differ in width.
+   fix: Make Cancel a secondary (outline or text) button, make Replace the only filled one (or a warning tone), and give the two buttons the same width.
+   DISP: declined: `SettingsAction` has one button style and no width or variant prop, so a secondary Cancel is not available.
+[paste-token-check-first #8] MINOR flow | preview-warning-desktop-light.png
+   seen: The warning row sits below a greyed Save token button with no sign of why it is grey, and it is not shown what happens to the warning if the person edits the service account name or the token while it is open.
+   fix: Show the warning card with the name field edited (warning clears or stays) and tie the grey Save token to the open warning.
+   DISP: fixed: the Flow section states that editing the name or the token closes the warning and that Save token is disabled while it is open.
+[paste-token-check-first #9] MINOR states | preview-checking-desktop-light.png
+   seen: "Checking..." is the same grey as the disabled Save token in idle, with no spinner, and nothing shows whether the name and token fields are locked or how a slow check can be stopped.
+   fix: Add a spinner or progress mark, show the fields as locked, and show what a slow check looks like.
+   DISP: declined: the busy state is the existing disabled "Checking…" button; Paseo's components have no spinner, field lock or cancel, and a slow check ends at the 30 s call timeout as "1Password could not be reached".
+[paste-token-check-first #10] MINOR states | preview-unreachable-desktop-light.png, preview-opmissing-desktop-light.png
+   seen: "1Password could not be reached" and "the 1Password command-line tool (op) was not found" give no next step (retry, check network, install link), and the long op message is only drawn at desktop width.
+   fix: Add a short next step to each cause and show the long message on phone.
+   DISP: fixed: the long `op` message is drawn on a phone in `preview-opmissing-phone-light.png`; a next step per cause is T1's fixed text and not added here (declined for that part).
+[paste-token-check-first #11] MINOR states | set as a whole
+   seen: There is no picture of three or more projects sharing a name, a very long project or service account name, a read-only card, or a warning and an error at the same time.
+   fix: Add pictures for a long name, three or more sharing projects, and read-only.
+   DISP: declined: three or more sharing projects and a long name wrap as the two-project picture does, and the screen has no read-only mode.
+[paste-token-check-first #12] MINOR platform | preview-warning-phone-dark.png, preview-rejected-newproject-phone-light.png
+   seen: Buttons on phone are about 34-36 px tall (Save token, Replace, Cancel), below the common 44 px touch target, and project names break mid-word at the hyphen ("relay-dev-" then "read") in the field help, the warning heading and the Replace label.
+   fix: Raise phone button height to at least 44 px and keep project names on one line (wrap the sentence, not the name).
+   DISP: declined: touch target size and where a name wraps belong to Paseo's components.
+[paste-token-check-first #13] MINOR consistency | preview-warning-desktop-light.png, preview-warning-desktop-dark.png
+   seen: The warning is signalled by orange or amber colour of the heading only, with no icon, while the error lines use red text only with no icon.
+   fix: Add a warning icon (and an error icon) so state does not depend on colour alone.
+   DISP: declined: `SettingsRow` has no icon or colour control; the real warning is plain hint text.
+[paste-token-check-first #14] MINOR theme-size | set as a whole
+   seen: Idle, checking, saved, shape, unreachable and opmissing are drawn only in desktop light; rejected is the only state in both light and dark on desktop; phone shows only warning dark and rejected-newproject light; warning light on phone, and warning-two and dark states on phone are missing.
+   fix: Add the missing theme and size combinations, at least phone light for warning and phone dark for the error states, or state that they reuse the same card.
+   DISP: fixed: `preview-opmissing-phone-light.png` added; the other combinations reuse the same card and differ only in theme and width.
+===== project-env-plain-failure-reason design/ideation-1.yaml 13
+[plain-failure-reason #1] MINOR hierarchy | preview-mixed-desktop-light.png, preview-mixed-desktop-dark.png
+   seen: Variable rows use the same bold title, divider and inset as the action rows "Resolve every variable now" and "Save this project", so results read as more actions inside one card.
+   fix: Give result rows a visibly different treatment, for example a sub-heading such as "Results", a smaller name, or a monospace name.
+   DISP: declined: result rows are the same Paseo `SettingsRow` kind as today; a Results heading is settings-screen layout, a stated non-goal (r1.5).
+[plain-failure-reason #2] MINOR hierarchy | preview-before-test-light.png and the mixed pictures
+   seen: The row help line ("Shows set or failed per variable, with the reason; never the value") and the footnote ("the plugin names the cause only. It never shows what 1Password or the Keychain printed") both say the output never shows the raw value or tool output.
+   fix: Keep one of the two statements and drop the other.
+   DISP: fixed: the footnote under the card is removed from `preview.html` and every picture redrawn; the row's own help line keeps the statement.
+[plain-failure-reason #3] MINOR hierarchy | preview-mixed-desktop-light.png
+   seen: Test and Save are the same filled black button at the same size, so neither reads as the main action. Both sit in one card with only a "Check" row between them.
+   fix: Make Test a secondary (outlined) button, or make a deliberate choice that Save is the primary action.
+   DISP: declined: Test and Save are Paseo's own `SettingsAction` buttons; their styling is not this task's.
+[plain-failure-reason #4] MINOR spacing | preview-mixed-desktop-light.png and preview-before-test-light.png
+   seen: The Save row moves down by about 190px (3 rows) once results appear, so the Save button changes position after Test is pressed.
+   fix: Move the results out of the middle of the card, or place Save so it does not shift (for example above the results).
+   DISP: declined: Save moves down as rows appear today as well; layout is a stated non-goal (r1.5).
+[plain-failure-reason #5] MINOR states | all six pictures
+   seen: No picture shows the loading state while Test runs, the Test button's busy or disabled state, an all-set result, or a project with zero variables.
+   fix: Add previews for running, all set and no variables, and say what Test does when there is nothing to resolve.
+   DISP: fixed: `preview-testing-light.png` and `preview-allset-light.png` added; a project with no variables shows no rows after Test, as today, and this task does not change it.
+[plain-failure-reason #6] MINOR states | preview-before-test-light.png
+   seen: Before Test, the card shows no result rows, and nothing shows that earlier results become stale after the config changes.
+   fix: Show the stale or "run Test again" state, or state that results are cleared on edit.
+   DISP: declined: clearing results when the draft changes is journey `test-variables/q1` in r1.5, outside this task.
+[plain-failure-reason #7] MINOR states | preview-everycause-desktop-light.png, preview-everycause-phone-dark.png
+   seen: Seven rows push Save to the bottom, and the pictures are cropped there (the desktop Save is cut off; the phone footnote is missing). The page shows no collapse, scroll or summary for a long variable list.
+   fix: Show a many-items state with its end, and consider a count line such as "N failed" or a max-height with scroll.
+   DISP: fixed: the every-cause pictures are redrawn tall enough to show the Save row at the end, on desktop light, desktop dark and phone dark.
+[plain-failure-reason #8] MINOR states | preview-longname-phone-light.png
+   seen: The long variable name breaks mid-word ("BUIL / D_AGENT") onto the next line.
+   fix: Break at underscores or truncate with a full-name tooltip or expander.
+   DISP: declined: wrapping of a long name belongs to Paseo's row component and is unchanged by this task; the picture only approximates it.
+[plain-failure-reason #9] MINOR flow | preview-mixed-desktop-light.png
+   seen: Save sits directly under failed rows with no cue whether saving is still allowed or what "this project" covers.
+   fix: Say in the Save row whether failures block saving, and what is saved (for example "Saves the vault and variable settings for this project").
+   DISP: declined: whether Save is allowed with failing variables is unchanged by this task; saving stays allowed as today.
+[plain-failure-reason #10] MINOR flow | preview-everycause-desktop-light.png
+   seen: Failure rows give only a cause and no next step (no token stored, the field is empty, outside the chosen vault), and none has an action or link to fix it.
+   fix: Add a short fix hint or a link to the relevant setting on the rows where the user can act.
+   DISP: declined: the cause text is the ruled form (ADR 0002); remedy hints belong to r1.5's setup steps.
+[plain-failure-reason #11] MINOR platform | preview-everycause-phone-dark.png, preview-longname-phone-light.png
+   seen: The Test and Save buttons are about 36px tall on the phone, under the usual 44px touch target.
+   fix: Raise the phone button height to at least 44px.
+   DISP: declined: button size is Paseo's `SettingsAction`; the preview's 36px is an approximation, not a requirement.
+[plain-failure-reason #12] MINOR theme-size | set of six pictures
+   seen: Several combinations are missing, including before-test in dark and on phone, mixed results on phone (light and dark), every cause on desktop dark, and the long name in dark or on desktop.
+   fix: Add the missing combinations or confirm they come from the same tokens.
+   DISP: fixed: `preview-mixed-phone-dark.png` and `preview-everycause-desktop-dark.png` added; the remaining combinations share one theme-token set.
+[plain-failure-reason #13] MINOR theme-size | all pictures
+   seen: The "set" line and the help text are small grey text at about 11-12px, and the red "failed" text is also small. On the light desktop picture these have low contrast against the pale card.
+   fix: Raise the size or contrast of the secondary text and the red, and check it against WCAG AA.
+   DISP: fixed: the failure hint is redrawn in the muted hint style, not red, because `SettingsRow` has no colour control; contrast then follows Paseo's own theme.
+===== project-env-test-results-match-draft design/ideation-2.yaml 12
+[test-results-match-draft #1] MAJOR flow | preview-desktop-dark-results-shown.png, "Stop managing this project" row and the "Remove API_KEY" rows
+   seen: The project-level "Stop managing this project" button and the per-variable buttons all read "Remove", share one outlined style, and sit in the same column with no confirm or undo cue.
+   fix: Give the project-level action a distinct label and destructive styling plus a confirm, or state its scope on the row.
+   DISP: Needs decision: the project-level "Remove" row is project-env-variable-row-edit's row layout; its draft previews draw a stop confirmation. Nothing in this task changes it; FO confirms it stays there. Not a Captain decision unless that task drops it.
+[test-results-match-draft #2] MINOR states | preview-desktop-dark-testing.png
+   seen: Only the Test button changes (to a faint "Testing..."); no variable row shows progress.
+   fix: Show a "testing" cue on each variable row, or on the Test row's help text.
+   DISP: declined: row progress marks are new UI nobody asked for; the Test button already reads "Testing…".
+[test-results-match-draft #3] MAJOR states | set (no picture): editing while a Test is running
+   seen: No picture shows the proposed case of editing while a Test runs and the result being dropped, so a person sees the button revert to "Test" with no result and no explanation.
+   fix: Add a preview of this case with a short cue, for example "Settings changed, run Test again", or an explicit decision that silence is intended.
+   DISP: AC-1 — the design (FAQ "Kent edits while Test runs?", first state diagram) and AC-1's last sentence require that a late result is dropped; the end state is the same screen as the cleared pictures. Silence is intended.
+[test-results-match-draft #4] MINOR states | preview-desktop-dark-results-cleared.png
+   seen: After the results are cleared, nothing on the Test row or the variable rows says why they vanished or that Test needs to be run again.
+   fix: Add a muted "Changed since last test" cue on the Test row, or accept silence and record that choice.
+   DISP: declined: the cleared screen is the outcome asked for; recorded in the FAQ ("Why no results cleared message?").
+[test-results-match-draft #5] MINOR states | all previews
+   seen: Only the spaces-only and blank failure causes are drawn. There is no preview of a long or wrapping cause, a whole-test error such as 1Password being locked, or many variables.
+   fix: Add previews for a long cause, a test-level error, and a list long enough to scroll.
+   DISP: declined: this task adds no cause text beyond the one reworded, a whole-test error is journey `test-each-variable/q7` (not this task), and many variables is drawn by project-env-variable-row-edit's `preview-*-twelve-long.png`.
+[test-results-match-draft #6] MINOR hierarchy | preview-desktop-dark-results-shown.png, API_KEY and BLANK_ONE rows
+   seen: "set" and "failed: the 1Password field is empty" are drawn in the same small, low-contrast grey with no colour or icon, so a failure is no more prominent than a success.
+   fix: Give "failed" a distinct colour or icon, and keep "set" neutral.
+   DISP: declined: the hint line of `SettingsRow` (Paseo 0.12.0 plugin UI) takes text only; colouring a failure belongs to the row component of project-env-variable-row-edit, whose draft previews colour it.
+[test-results-match-draft #7] MINOR spacing | preview-desktop-dark-results-shown.png vs preview-desktop-dark-results-cleared.png
+   seen: Rows with a result are about 69px tall and rows without are about 65px, so the Check and save section shifts by about 16px when the results clear.
+   fix: Reserve the result line's height in every row, or accept the jump knowingly.
+   DISP: declined: the height of a result line is that task's row layout.
+[test-results-match-draft #8] MINOR flow | preview-desktop-dark-results-shown.png, "New variable name" = DB_URL, Add disabled
+   seen: Add is greyed out because the name duplicates an existing variable, but no message says why.
+   fix: Add an inline "already exists" hint, or note that the greyed-out Add is existing behaviour.
+   DISP: declined: a disabled Add with no reason is today's behaviour; project-env-variable-row-edit changes Add.
+[test-results-match-draft #9] MINOR flow | preview-desktop-dark-results-shown.png, Test row
+   seen: The Test row does not say whether it checks the unsaved edits on screen or the saved project, although this task's name implies the draft.
+   fix: Add a few words to the Test row's help text saying what the test is run against.
+   DISP: declined: whether Test checks the draft or the saved project is journey `test-each-variable/q2`, not placed in a release; kept out as listed below.
+[test-results-match-draft #10] MINOR system-fit | preview-desktop-dark-results-shown.png, Check and save card
+   seen: Test, Save, Discard and Remove are all the same outlined buttons, so nothing marks Save as primary or Remove as destructive.
+   fix: Give Save a primary style and Remove a destructive one.
+   DISP: declined: `SettingsAction` has no primary or destructive variant, so the plugin cannot style these buttons.
+[test-results-match-draft #11] MINOR platform | preview-compact-dark-results-shown.png
+   seen: Remove, Test and Save buttons are about 30 to 34px tall at compact size, below the usual 44px touch target.
+   fix: Raise the compact button hit area to 44px.
+   DISP: declined: button sizes come from Paseo's `SettingsAction`, which the plugin does not size.
+[test-results-match-draft #12] MINOR theme-size | set (no picture): testing state in light theme and at compact size
+   seen: The testing state is drawn only for desktop dark.
+   fix: Add testing previews for desktop light and both compact themes.
+   DISP: declined: the testing state differs between themes and sizes only by colour and wrapping, which the shown and cleared pictures already cover.
+===== project-env-token-works-cause design/ideation-2.yaml 13
+[token-works-cause #1] MAJOR flow | preview-desktop-dark-12-ok-no-vault.png and preview-desktop-dark-13-chosen-vault-not-readable.png
+   seen: The Vault control reads "relay-dev (this token cannot read it)" but the "Browse vault" button beside "Pick fields from the vault" is drawn bright and enabled, while in pictures 4 and 6-11 it is dimmed.
+   fix: Draw "Browse vault" disabled whenever the chosen vault is not in the readable list, and say why in its help line.
+   DISP: fixed: Browse vault is now disabled when the chosen vault is not readable (pictures 12 and 13 redrawn, the button dim).
+[token-works-cause #2] MAJOR hierarchy | preview-desktop-dark-13-chosen-vault-not-readable.png
+   seen: The status line still reads "Token works / Can read 2 vaults: relay-prod, personal" in plain text, and the only warning is a parenthetical inside the closed Vault control, with no error colour, no icon and no next-step line.
+   fix: Give the Vault row its own error styling and a one-line fix ("Pick relay-prod or personal"), or carry the problem into the status line.
+   DISP: fixed: the Vault row now carries an error line "This token cannot read that vault. Choose one it can read." (picture 13 redrawn); the status line stays a plain list of readable vaults.
+[token-works-cause #3] MINOR hierarchy | preview-desktop-dark-4 against 7, 8, 9, 10 and 11
+   seen: The success headline "Token works" and every failure headline use the same plain white label weight, with no icon or colour, so a failure reads like a field label and success is not visually distinct from failure.
+   fix: Add a small status icon or colour to the headline (success, warning, error) and keep the next-step line in muted text.
+   DISP: declined: the host's `SettingsAction` row has no icon or colour slot; the headline text carries the outcome and Kent's own use judges whether it reads at a glance.
+[token-works-cause #4] MINOR hierarchy | preview-desktop-dark-2-not-checked.png, preview-desktop-dark-4-ok-three-vaults.png
+   seen: Picture 2 repeats the account name already shown in the input above ("Not checked for relay-dev-read yet") and adds "Press Check." beside a Check button. Picture 4 gives the count and the list ("Can read 3 vaults: relay-dev, relay-prod, personal").
+   fix: Drop the repeated name, the "Press Check." line and the count, and keep the list only.
+   DISP: declined: "Not checked for <name> yet" names the account because the input above can be truncated on a phone, and "Press Check." is the one next step; the vault count stays because "1 vault" versus several decides whether one is picked for the person.
+[token-works-cause #5] MINOR states | preview-desktop-dark-11-unexpected.png
+   seen: The "unrecognised" row has no next-step line, though the proposal calls for a fixed one beneath every status. It is a single long sentence, and the row is 4px shorter than the others, so everything below shifts up.
+   fix: Add a fixed next-step line (for example "Check again; if it persists, run op in a terminal") and use the same row height.
+   DISP: fixed: the unrecognised state gained the next-step line "Check again." (picture 11 redrawn); its row now has the same height as the others.
+[token-works-cause #6] MINOR states | set as a whole
+   seen: The proposal lists a "truncated" cause but no preview shows it. No picture shows a long vault list or a long account name in the status line, a Check that times out or hangs, the state after Save token, or an open Vault menu of unreadable or zero options (picture 12 shows a dropdown with nothing to offer).
+   fix: Add previews for truncated, a long vault list (wrap or "+N more"), a long account name, and a Check timeout with a way out.
+   DISP: AC-1 covers the truncated label (a 128-character row in its test); a long vault list wraps in the host row; a hung check shows as locked (Keychain) or unreachable (`op`).
+[token-works-cause #7] MINOR states | preview-desktop-dark-1-no-account.png, -2-not-checked.png, -3-checking.png, preview-desktop-light-locked.png, preview-compact-dark-locked.png
+   seen: The Vault field is an empty plain box with no placeholder, no chevron and no reason it is empty, so it is unclear if it is disabled or editable. In the failure states 6-11 the same row is a text input holding "relay-dev", and the locked fixture differs between pictures (Vault empty in the light and compact pictures, "relay-dev" in dark picture 7).
+   fix: Give the empty Vault a placeholder or disabled style ("Check the token first") and use one fixture across the sizes and themes.
+   DISP: declined: the empty Vault box is the existing input of today before a check, with no placeholder in the host control; the locked fixture differs between pictures only because they were taken in different runs.
+[token-works-cause #8] MINOR flow | preview-desktop-dark-5-ok-one-vault-picked.png
+   seen: The Vault field shows "relay-dev" with no cue that Check chose it automatically, and no sign of whether it is saved.
+   fix: Add a short cue ("Chosen automatically: only vault this token can read") that clears once the person changes it.
+   DISP: declined: the person sees the vault chosen in the Vault field the moment Check ends and Save keeps it; a "chosen automatically" cue adds a second line about a state the field already shows.
+[token-works-cause #9] MINOR flow | preview-desktop-dark-2-not-checked.png and -3-checking.png
+   seen: Once the account name is edited, the Vault drops to an empty box, while in failure states (6-11) the chosen vault stays. The previews do not say whether the old choice is kept or cleared, and the Vault row has no help line saying what the choice scopes, unlike its neighbours.
+   fix: Keep the previous vault visible (marked "not checked") until Check runs, and add a one-line help text on the Vault row naming its scope.
+   DISP: declined: the previous vault is kept in the draft while the name changes; the Vault row's help text belongs to project-env-variable-row-edit and journey token-works/q3, not this task.
+[token-works-cause #10] MINOR flow | preview-desktop-dark-6-no-token.png
+   seen: The headline says "Paste it below and save it", but the bright, enabled button on the row is Check, while the Save token button two rows down is the dim one the person needs.
+   fix: Disable Check in the no-token state, or show how a pasted token enables Save token and triggers a re-check.
+   DISP: declined: Check is also how a token saved from elsewhere is found; the no-token headline names the next step and Save token enables as soon as a token is typed.
+[token-works-cause #11] MINOR spacing | preview-desktop-dark-3-checking.png
+   seen: The Check button turns into a wider "Checking..." button (about 97px against about 67px) with no spinner, so the control changes width.
+   fix: Keep the button width fixed and show a spinner instead of changing the label length.
+   DISP: declined: the host button changes width with its label, as every `SettingsAction` here already does.
+[token-works-cause #12] MINOR platform | preview-compact-dark-ok-three-vaults.png, preview-compact-dark-locked.png
+   seen: Check, Choose... and Save token are about 30-32px tall, below the usual 44px touch target for a phone-width layout.
+   fix: Raise the compact button and select height to at least 44px, or confirm the host's own control height is the accepted baseline.
+   DISP: declined: button height on a phone is the host's control size; Kent uses this on his Mac.
+[token-works-cause #13] MINOR theme-size | set as a whole
+   seen: Light is shown only for locked and ok-three-vaults, and compact only for dark ok-three-vaults and locked. Light is missing for states 1-3, 5-6, 8-13; compact is missing the failure states, picture 13 (a Vault control about 280px wide) and picture 12.
+   fix: Add light and compact previews for at least the "ok-no-vault", "chosen-vault-not-readable" and "unexpected" states, and check the long Vault label fits at 430px.
+   DISP: declined: light and compact follow the same rows as dark desktop; Kent's own use on his Mac covers them.
+===== project-env-variable-row-edit design/ideation-1.yaml 21
+[variable-row-edit #1] MAJOR states | preview-desktop-dark-tested.png, preview-desktop-dark-twelve-long.png (set, failed and Not applied lines)
+   seen: The Test result now sits on the same row as an editable reference field, but no preview shows a row whose reference was edited after Test; it would still read "set" or "failed: field not found in the vault".
+   fix: Add a state where editing a reference clears or greys that row's result line (for example "Changed since last test"), and show it in a preview.
+   DISP: Needs decision: a row edited after Test keeps its result until T4 clears it (T4 AC-1 already owns that, and T4 runs after this task); recommendation: leave it to T4 and merge T4 before Kent accepts r1.5.
+[variable-row-edit #2] MAJOR flow | preview-desktop-dark-browse-loaded.png, preview-desktop-dark-import-skipped.png, preview-desktop-dark-add-refused.png (Save card)
+   seen: After rows are added or changed (NEW_ONE appended, fields picked), Save, Discard and Stop managing look the same as before, so nothing says there are unsaved edits. Test also does not say whether it checks the draft or the saved values.
+   fix: Show an unsaved-changes cue (primary or enabled Save, a "Not saved" line) and one line on whether Test uses the draft or the saved values.
+   DISP: Needs decision: the unsaved-changes cue is the Captain's deferred story unsaved-warning (release r3) and stays out; recommendation: add one sentence to the Test row hint here, "Checks the variables as edited here, saved or not", which this preview does not yet show.
+[variable-row-edit #3] MINOR hierarchy | preview-desktop-dark-tested.png (blocks before first content)
+   seen: Inventory of the page area above the first content: page title (about 24px), a "Back to plugins" link, a "work" section label, then the first card row (Main checkout) at about y=215 of 1500 (14%). The sidebar "Back" repeats the same exit as "Back to plugins". The variables card starts at about y=629 (42%), below a six-row token and vault setup card.
+   fix: Drop one of the two back controls, and consider putting Environment variables above or beside the token setup card.
+   DISP: declined: the page title, Back link and the token and vault card order are the host's chrome and today's layout, outside this task.
+[variable-row-edit #4] MINOR hierarchy | preview-desktop-dark-tested.png (action rows), all desktop and compact previews
+   seen: Each action row repeats its button label as the row label: "Add variable" / Add, "Check the variables" / Test, "Save this project" / Save, "Discard changes" / Discard, "Save token to Keychain" / Save token. "New variable name" and "Add variable" also take two rows for one action.
+   fix: Merge the name field and Add into one row, and drop row labels that only repeat the button text.
+   DISP: declined: the action rows and the separate name field and Add button are today's rows from the host kit; merging them is not in the accepted scope.
+[variable-row-edit #5] MINOR hierarchy | preview-desktop-dark-tested.png and the other desktop previews ("Token works" row)
+   seen: The row "Token works" has a label but no value, help text or control, so it reads as an assertion beside a disabled Save token and an empty "ops_..." field.
+   fix: Give the row a visible state ("Not checked", "Works", "Failed: reason") or remove it until it has one.
+   DISP: declined: the token row belongs to project-env-token-works-cause (T1).
+[variable-row-edit #6] MINOR hierarchy | preview-desktop-dark-tested.png and preview-desktop-dark-saved.png (PATH row)
+   seen: "Not applied" is drawn in the same red as "failed: ..." lines. In the saved state PATH is the only row with a red line, before any Test.
+   fix: Use a neutral or amber tone for "Not applied", since it is a rule and not a failure.
+   DISP: declined: ADR 0004 rules a reserved name a failed variable, so it takes the failed tone; the saved-state red line is the intended cue that the variable does nothing.
+[variable-row-edit #7] MINOR hierarchy | preview-desktop-dark-tested.png (set rows)
+   seen: The success line says only "set". It is plain grey, and in the saved state the same rows have no line at all, so "set" does not read as a Test result.
+   fix: Word it as a result ("resolved") and show it in a clear success tone.
+   DISP: declined: the word set and its explanation belong to T4 (AC-2 there); the words come from `rowHint`.
+[variable-row-edit #8] MINOR spacing | preview-desktop-dark-saved.png vs preview-desktop-dark-tested.png
+   seen: Running Test adds a second line to each row. Rows grow from about 66px to 69px and the Test row moves down about 15px, so the layout shifts under the pointer.
+   fix: Reserve the result-line height in every row, or pin the row height.
+   DISP: declined: the host row grows by one line when a result appears; pinning the height would need fixed-height rows that break long names (see twelve-long).
+[variable-row-edit #9] MINOR spacing | preview-desktop-dark-tested.png (variable rows vs add row)
+   seen: Reference fields are about 260px wide and start at x=781. The "New variable name" field is about 180px wide and starts at x=947, so two input widths and left edges sit in one card.
+   fix: Use one input width and left edge in the card, or make the name field align with the reference column.
+   DISP: declined: the name field is the host's input at its own width; the reference field is wider so references stay readable.
+[variable-row-edit #10] MINOR system-fit | preview-desktop-dark-twelve-long.png and preview-desktop-dark-tested.png
+   seen: Each row ends in a 78x32 outlined "Remove" text button. It has the same weight as Test, Save and Browse vault, so twelve rows give twelve equal-weight text buttons.
+   fix: Make Remove a quieter control, such as an icon button with a label, or a destructive text style at lower emphasis.
+   DISP: declined: the Captain asked for a Remove button on each row; it uses the host button look, and Kent's own use in AC-1 judges its weight.
+[variable-row-edit #11] MINOR system-fit | preview-desktop-dark-browse-loaded.png vs the Vault control "Dev"
+   seen: The Vault selector is a small outlined button with a chevron. The new field pills are wide filled boxes with a chevron that open a modal list, and the Vault selector's open state is not shown, so the two chevron controls look different and behave differently.
+   fix: Use one dropdown style for both, or show the Vault open state and make both open the same kind of menu.
+   DISP: declined: the host kit exports no bare select; the pill shows the full reference where the nested host select truncated it (observed, see Row composition).
+[variable-row-edit #12] MINOR system-fit | all previews (Save card)
+   seen: Save, Discard and Stop managing are the same outlined 32px buttons. No button in the page is primary, and Stop managing, which deletes data now, sits in the group named "Save".
+   fix: Make Save the primary button, and move Stop managing to its own destructive group away from Save and Discard.
+   DISP: declined: the host action row has one style; Stop managing is renamed and confirmed (q7), which marks it apart from Save.
+[variable-row-edit #13] MINOR flow | preview-desktop-dark-stop-confirm.png
+   seen: The dialog offers "Keep" and "Stop managing" as two identical outlined buttons in settings-style rows, plus an X, so the destructive choice is not marked. The title says "Stop managing work?" while the page title says "row-edit-spike", so "work" is not tied to the project.
+   fix: Style the destructive button as danger, use plain Cancel and Confirm footer buttons, and name the project the same way as the page title.
+   DISP: declined: the host Modal offers no danger style; the dialog names the project as the section title does, and the plugin id in the page title is a spike artefact.
+[variable-row-edit #14] MINOR flow | preview-desktop-dark-add-refused.png
+   seen: The refusal text sits under the left-hand label, about 20px away from the name field at the right edge. The field shows a green focus ring while the text is red, and the typed name is clipped on the left ("YLD_INSERT_LIBRARIES"). The "LINEAR_API_KEY" placeholder in the name field is the same as an existing variable name.
+   fix: Put the message under the field, use an error ring, and use a placeholder that is not an existing name. Also show the refusal for a duplicate name.
+   DISP: declined: the message uses the host input's error slot; the placeholder and focus ring are the host's, and the duplicate refusal is drawn in preview-desktop-light-add-refused-duplicate.png.
+[variable-row-edit #15] MINOR flow | preview-desktop-dark-import-skipped.png
+   seen: The skipped-names notice replaces the Import help text in the same small grey style, so it is easy to miss. The picture does not show which rows Import added (NEW_ONE has no cue) or whether it overwrote the prompt text.
+   fix: Show the notice as a warning line with a dismiss control, and mark the rows Import added.
+   DISP: declined: Import's help line is the host's text slot; the skipped names are named there, and marking added rows is not accepted scope.
+[variable-row-edit #16] MINOR states | preview-desktop-dark-browse-loaded.png, preview-desktop-dark-browse-picker.png
+   seen: The picker shows only four fields in a plain list with the current one in green text. There is no search, scroll, loading, empty or error view. Refs on the rows (database/url, path/credential, dyld) are not in the list, with no cue. The picker pill replaces the free-text field, so a person cannot type or keep such a ref.
+   fix: Add a check mark for the current choice, a "not in vault" line, and loading, empty and error views. Keep a way to type a ref.
+   DISP: declined: Browse vault listing states belong to T5 and the r1b rebuild (pick-field); today's select also replaces free text.
+[variable-row-edit #17] MINOR states | preview-desktop-dark-empty.png
+   seen: The Environment variables card in the empty state starts straight at "New variable name" with no sentence saying that no variables are set yet.
+   fix: Add one empty-state line above the add row.
+   DISP: declined: the first row of an empty card is the name field with its label, which already says what to do.
+[variable-row-edit #18] MINOR states | preview-desktop-dark-twelve-long.png, preview-compact-dark-twelve-long.png
+   seen: Long references are cut hard at the field edge ("very-long-t", "very-lon") with no ellipsis. With 12 rows the Test button is about 800px below the first row, so a person clicking Test may not see any result on the rows. No Test-running state is shown anywhere.
+   fix: Add an ellipsis and a full-value tooltip, a "Testing..." line, and a count such as "5 failed" next to Test.
+   DISP: declined: the host input scrolls long values and the button reads Testing… while a run is on; a failure count is not in scope.
+[variable-row-edit #19] MINOR platform | preview-compact-dark-tested.png
+   seen: At the 390px size, Remove, Test, Add, Browse vault and Import are about 28-33px tall, Remove sits about 8px from the reference field, and the dialog close X is about 20px.
+   fix: Raise compact controls to at least 44px, and add spacing between the field and Remove.
+   DISP: declined: control sizes are the host's, the same as today's screen at 390 px.
+[variable-row-edit #20] MINOR platform | preview-desktop-dark-browse-picker.png vs the Vault menu
+   seen: The field pill has a chevron, which suggests an inline menu, but it opens a centred modal with a close X, unlike the Vault dropdown.
+   fix: Open an anchored menu under the pill, or drop the chevron if a modal stays.
+   DISP: declined: the pill opens a modal list because the host exports no anchored menu to plugins; the chevron states that it opens a choice.
+[variable-row-edit #21] MINOR theme-size | preview set
+   seen: Light theme is shown only for the tested desktop state. Compact is shown for saved, tested and twelve-long only. Add-refused, import-skipped, stop-confirm, browse-loaded, browse-picker and empty are missing in compact and in light. The dialogs are about 520px wide against a 390px compact width.
+   fix: Add compact previews of the dialogs and the add-refused state, and light previews of the error and dialog states.
+   DISP: fixed: drew the missing states, compact add-refused and stop-managing dialog (a bottom sheet) and light add-refused with a duplicate, as preview-compact-dark-add-refused.png, preview-compact-dark-stop-confirm.png and preview-desktop-light-add-refused-duplicate.png.

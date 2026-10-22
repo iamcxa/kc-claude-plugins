@@ -1,0 +1,74 @@
+design_decline_check:
+  rulings:
+    - finding: 3
+      ruling: upheld
+      evidence: "preview-desktop-dark-tested.png shows the sidebar Back, the \"Back to plugins\" link and the variables card at about 42%. All of them are reachable and none misleads a person."
+      change: ""
+    - finding: 4
+      ruling: overruled
+      evidence: "In preview-desktop-dark-tested.png the variable rows already put a field and a button in one row. ui.d.ts SettingsRow has `children?: ReactNode` and react-native.d.ts exports TextInput, so the name field and Add can share one row."
+      change: "Render the name field and Add inside one SettingsRow with children, as the variable rows do. Criterion - the empty-state preview shows one row for adding a variable and no row label that only repeats a button label."
+    - finding: 5
+      ruling: decision
+      evidence: "preview-desktop-dark-tested.png shows \"Token works\" with no value beside a disabled Save token. It reads as a claim that the token works while nothing was checked, so a person could act on it wrongly."
+      change: "The owner is task project-env-token-works-cause (T1), which the author cited."
+    - finding: 6
+      ruling: upheld
+      evidence: "preview-desktop-dark-saved.png shows PATH with \"Not applied: the agent needs its own value to run\" in red before any Test. The words say it is a rule and not a failure, and the red matches the recorded ruling that a reserved name counts as failed."
+      change: ""
+    - finding: 7
+      ruling: upheld
+      evidence: "preview-desktop-dark-tested.png shows \"set\" in grey beside the red \"failed: ...\" lines. Next to those failure lines it reads as the passing result, so no wrong action follows."
+      change: ""
+    - finding: 8
+      ruling: overruled
+      evidence: "preview-desktop-dark-saved.png has rows 66px apart and preview-desktop-dark-tested.png has them 69px apart. The Test row drops about 15px, and the PATH row, which already had a line, is 69px in both. ui.d.ts SettingsRow takes `hint?: string`, so every row can carry a line before Test and no fixed height is needed."
+      change: "Pass a hint on every variable row (for example \"Not tested yet\") so row height is the same before and after Test. Criterion - the Test row's y position is identical in the saved and tested previews."
+    - finding: 9
+      ruling: overruled
+      evidence: "ui.d.ts SettingsInputProps has no width or style prop. The reference field in preview-desktop-dark-tested.png is already the plugin's own composition at x=781, and SettingsRow children plus react-native.d.ts TextInput can build the name field at the same width."
+      change: "Build the name field as an own TextInput in a SettingsRow, with the same width and left edge as the reference fields. Criterion - the name field and the reference fields start at the same x in the tested preview."
+    - finding: 10
+      ruling: decision
+      evidence: "preview-desktop-dark-twelve-long.png shows twelve equal-weight Remove buttons beside Test and Save. The Remove button is the plugin's own part, and the author's reason says Kent judges its weight in AC-1, so a quieter style is a look call and nothing in the picture misleads a person."
+      change: "The owner is Kent as Captain, through AC-1."
+    - finding: 11
+      ruling: decision
+      evidence: "ui.d.ts SettingsSelect extends SettingsRowProps and needs a label, so the host exports no bare select. preview-desktop-dark-browse-loaded.png shows the own wide pill beside the small outlined Vault selector, and making them match means building one of them as a custom look."
+      change: "The owner is Kent as Captain, who accepts a departure from the host look."
+    - finding: 12
+      ruling: overruled
+      evidence: "ui.d.ts SettingsActionProps has no variant or emphasis prop, so a primary Save needs a custom button. But SettingsSection can group rows, and preview-desktop-dark-browse-loaded.png still shows Stop managing, which deletes data now, in the Save group; the author's reason does not answer that."
+      change: "Move Stop managing into its own SettingsSection. Criterion - no destructive row sits in the Save section. Whether Save becomes a primary custom button is for Kent to decide."
+    - finding: 13
+      ruling: overruled
+      evidence: "react-native.d.ts ModalProps has `children: ReactNode`, so the plugin can put its own buttons in the dialog body. preview-desktop-dark-stop-confirm.png shows two identical outlined buttons, Keep and Stop managing, in the host's row style."
+      change: "Render the dialog body with an own Cancel button and an own danger-styled Confirm button. Criterion - the confirm preview shows the destructive button in a distinct style."
+    - finding: 14
+      ruling: overruled
+      evidence: "ui.d.ts SettingsInputProps has `placeholder?: string`, so the placeholder is the plugin's choice. preview-desktop-dark-add-refused.png and preview-desktop-dark-empty.png show the placeholder LINEAR_API_KEY, which is an existing variable name. The duplicate refusal is drawn in preview-desktop-light-add-refused-duplicate.png."
+      change: "Set the placeholder to a name that is not a variable in the list (for example MY_VARIABLE). Criterion - the add-refused and empty previews show a placeholder that is not an existing name."
+    - finding: 15
+      ruling: overruled
+      evidence: "In preview-desktop-dark-import-skipped.png the skipped names appear only as the grey help line. react-native.d.ts useToast offers `variant: \"warning\"`, and ui.d.ts SettingsRow offers `error`, so a warning is available from host parts."
+      change: "Show a warning toast naming the skipped names when Import skips some, and keep the help line. Criterion - the import-skipped preview shows the warning toast."
+    - finding: 16
+      ruling: decision
+      evidence: "preview-desktop-dark-browse-loaded.png shows every field turned into a pill, including DATABASE_URL, PATH and the DYLD ref that preview-desktop-dark-browse-picker.png does not list. After Browse vault a person cannot type or keep such a ref."
+      change: "The owner is task T5 and its r1b rebuild (pick-field), which the author cited."
+    - finding: 17
+      ruling: upheld
+      evidence: "preview-desktop-dark-empty.png shows the card opening with the labelled \"New variable name\" field, then Add variable, Browse vault and Import. The card has nothing else in it, so a person is not blocked or misled."
+      change: ""
+    - finding: 18
+      ruling: overruled
+      evidence: "No picture shows a Testing state, and the reason says the button reads \"Testing…\", so it does not answer what the finding saw. ui.d.ts SettingsAction has `hint?: string` and `disabled`, so a running line and a failure count can sit on the Test row."
+      change: "Show \"Testing…\" and disable the button while a run is on, and set the Test row hint to \"N failed\" after a run. Criterion - the previews include a testing state and a tested state with the count."
+    - finding: 19
+      ruling: overruled
+      evidence: "preview-compact-dark-tested.png shows the Remove button at about 32px tall and about 8px from the reference field. Remove is the plugin's own button in its own row, so its size and gap are the plugin's to set."
+      change: "In the compact layout make Remove at least 44px tall and add a gap from the field. Criterion - the compact tested preview shows Remove at 44px or more with a visible gap."
+    - finding: 20
+      ruling: overruled
+      evidence: "preview-desktop-dark-browse-picker.png shows a chevron pill that opens a centred modal. The pill is the plugin's own part, and ui.d.ts and react-native.d.ts export Icon, so the plugin can change the icon or build an inline list."
+      change: "Replace the chevron with an icon that does not suggest an inline menu, or open an inline list under the pill. Criterion - the browse previews show no chevron on a control that opens a modal."
