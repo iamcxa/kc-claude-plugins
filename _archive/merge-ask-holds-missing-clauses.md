@@ -3,7 +3,7 @@ title: The merge-ask check holds a question that omits the round count or the ca
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -85,10 +85,13 @@ gates:
                 reason: Captain 「合併」 (chat, 2026-10-22), answering 「#703（合併提問補漏）要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only, and that Copilot was not run (quota); digest cd006fe6. Accepts the FO recommendation as the bound question states.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-21T19:12:41Z
 worktree: .worktrees/spacedock-ensign-merge-ask-holds-missing-clauses
 pr: pr-merge:703
+verdict: PASSED
+completed: 2026-10-22T10:05:52Z
+archived: 2026-10-22T10:05:53Z
 ---
 
 ## Scope
