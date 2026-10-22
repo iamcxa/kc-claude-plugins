@@ -322,3 +322,21 @@ PASSED at 127662897. The reader now counts a summary only through `code_review`;
 - My oracle is a fresh re-implementation (clean review/comment on the head, or summary `code_review` completed/clean/head); it shares the `code_review` object with the candidate, so the public zero measures consistency with Codex's own state. Base showed 1 public false clean (design recorded 0); the candidate had 0; I did not trace that one PR. Public repository names are not recorded.
 - Not run by me: `lint-skills.py` and the other CI-listed test files (read CI results only: four checks pass on the head).
 - Scratch files live in /tmp (replay, mutants); both throwaway worktrees were removed. No push, no PR comment, no `ready`.
+
+## Stage Report: implementation (cycle 1)
+
+- DONE: In kc-dev-flow-2/extensions/codex/codex_review.py state(), change the summary evidence id from summary:<comment id>@<comment updated_at> to summary:<comment id>@<first 9 hex of the head>, keeping the tuple's time as updated_at so ordering and the printed at-time are unchanged
+  Commit 28807397: one token in the evidence append (`@{head[:9]}`); the tuple time is still `c["updated_at"]`; diff vs origin/main...HEAD still lists only the two files, comment_ratio.py 0 added comment lines.
+- DONE: Keep both new tests in kc-dev-flow-2/extensions/codex/test_codex_review.py: a summary edit after a clean code review keeps one evidence id (security on and off), and a clean code review on a new head gets a new id; show each failing on the matching mutant (old updated_at id; comment id alone)
+  `test_a_summary_edit_after_the_code_review_does_not_make_a_second_round` asserts equal ids when updated_at moves T1 to T2 (security running to completed, and security off); M8 (id from updated_at) turns only it red. `test_a_clean_code_review_on_a_new_head_is_a_new_round` asserts a clean verdict on another head has another id; M9 (comment id alone) turns only it red. Before the fix the first test failed with `summary:9@...T10:00:00Z != summary:9@...T11:00:00Z`.
+- DONE: Rerun mutants M1 to M7 and the AC-5 replay on one cached read per PR; state the two residuals in the stage report
+  Mutants (python3 -B -I, fresh temp dir each): M1 8 red, M2 3, M3 1, M4 3, M5 7, M6 2, M7 1, M8 1, M9 1; M1 and M5 now also turn the two new tests red. Replay 2026-10-22 (/tmp/ensign-replay/replay.py, one cache): own 22 candidate 0 false clean / 0 missed (base 5 / 0); public 100 candidate 0 / 0, base 2 false clean and 28 missed (oracle-clean 33; the live draw moved since the earlier run); no fetch or reader errors.
+  Residual 1: a clean re-review of the same head keeps one id and counts once.
+  Residual 2: a PR mid-flight at release may be recounted once, because the id format changes from `@<timestamp>` to `@<head>`.
+- DONE: All package test files pass; push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  Every file in kc-dev-flow-2-tests.yml exits 0 (test_sd_dispatch.py against spacedock 0.27.3 cache PASS; lint-skills.py 0). Pushed `git push origin spacedock-ensign/codex-reader-counts-code-review-only`, 12766289..28807397, no -u, no force. CI on 28807397: unit tests pass 2m0s, route gate pass 7s, version parity pass 54s, GitGuardian pass.
+  roborev_gate.py --base 4befab1f (PR base): `clean on 288073978; evidence=roborev:1022` exit 0 (a first run with --base origin/main e1f43044 also exit 0, evidence=roborev:1021).
+
+### Summary
+
+The Codex summary round is now identified by the comment id plus the head, so a later security-review edit of the same summary no longer yields a second id for one clean code-review verdict. Both new tests fail on their own mutant and the earlier seven mutants and the live replay still hold.
