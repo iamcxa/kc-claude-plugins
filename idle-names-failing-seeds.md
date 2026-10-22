@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-21T17:17:02Z
 worktree: .worktrees/spacedock-ensign-idle-names-failing-seeds
-pr: iamcxa/kc-claude-plugins#694
+pr: pr-merge:694
 ---
 
 ## Scope
