@@ -1767,7 +1767,7 @@ class BuiltScreenTests(MutantMixin, unittest.TestCase):
         self.not_run(lines="")
         self.not_run(lines="Built screen review: waived\n")
         self.not_run(shot=None)
-        self.assertEqual(self.run_check(lines='Built screen review: waived 「Kent: skip it」\n')[0], [])
+        self.assertEqual(self.run_check(lines='Built screen review: waived 「skip it」\n')[0], [])
 
     def test_two_built_screen_review_lines_are_refused(self):
         errors, _ = self.run_check(lines=BUILT_LINES + "Built screen review: design/validation-1.yaml\n")
