@@ -12,6 +12,9 @@ Exit 1 findings: that result carries a severity badge on the head, in a review, 
 Exit 2 configuration error: bad arguments or a gh call that failed.
 Exit 3 running: Codex's eyes reaction is on the pull request.
 Exit 4 not reviewed: no Codex evidence covers the head commit yet, or the head moved while reading.
+Exit 5 not recognized: no evidence covers the head, or the newest evidence is clean and a newer Codex comment
+  names the head in a shape this reader does not read (unrecognized=comment:<id>, its first 120 characters
+  quoted); no evidence= token, so no round.
 """
 import json
 import re
@@ -24,7 +27,14 @@ MARKER = re.compile(r"^<!-- codex-[a-z-]+-review:v1 (\{[^\n]*\}) -->$", re.M)
 P1 = re.compile(r"!\[P[01] Badge\]")
 BADGE = re.compile(r"!\[P\d Badge\]")
 CLEAN = "Didn't find any major issues"
+RECEIPT = "<!-- codex-review-receipt:v1 -->\n"
 REVIEWED = re.compile(r"^\*\*Reviewed commit:\*\* `([0-9a-f]{7,40})`$", re.M)
+
+
+def says_review(body):
+    if body.startswith(RECEIPT):
+        body = body[len(RECEIPT):].lstrip("\n")
+    return body.startswith("Codex Review:")
 
 
 def gh(*args):
@@ -76,7 +86,7 @@ def state(repo, pr, call=gh, pages=pages):
         found, p1 = badges(c["body"])
         if found and (names_head(c["body"]) or not REVIEWED.search(c["body"])):
             evidence.append((c["created_at"], f"comment:{c['id']}", 1, f"{found} finding(s) in a comment, {p1} at P0/P1"))
-        elif c["body"].startswith("Codex Review:") and CLEAN in c["body"] and names_head(c["body"]):
+        elif says_review(c["body"]) and CLEAN in c["body"] and names_head(c["body"]):
             evidence.append((c["created_at"], f"comment:{c['id']}", 0, "Codex Review comment says no issues on the head"))
     for c in issue:
         if c["body"].startswith(SUMMARY):
@@ -90,6 +100,12 @@ def state(repo, pr, call=gh, pages=pages):
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
     if any(r["content"] == "eyes" for r in reactions):
         return 3, f"running: a Codex review is in progress; head {head[:9]}"
+    known = {e[1] for e in evidence}
+    odd = [c for c in issue if not c["body"].startswith(SUMMARY) and names_head(c["body"]) and f"comment:{c['id']}" not in known]
+    if odd and (not evidence or max(evidence)[2] == 0 and max(c["created_at"] for c in odd) > max(evidence)[0]):
+        last = max(odd, key=lambda c: c["created_at"])
+        quote = " ".join(last["body"].split())[:120].replace("evidence=", "evidence:")
+        return 5, f'not recognized on {head[:9]}: "{quote}"; unrecognized=comment:{last["id"]} at {last["created_at"]}'
     if not evidence:
         return 4, f"not reviewed: no Codex evidence covers {head[:9]}"
     when, ident, code, detail = max(evidence)

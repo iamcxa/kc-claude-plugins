@@ -23,6 +23,10 @@ bound, not a proof: a check that starts later is missed, and its later green is 
 A Codex or Copilot outcome already there when add first looks is printed as "already" and
 reported by the next wait, once.
 
+A Codex comment the reader does not recognize (codex=unrecognized(comment:ID)) is not an outcome. If the
+next read RECHECK_SECONDS later still finds that comment unrecognized, wait stops once for that comment and
+prints it with the next: lines for the merge ask and the report upstream. A look that fails is not a read.
+
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
 only for a PR added with --codex or --copilot, from that extension's reader when it is
 present. Exit 2 is a configuration error.
@@ -57,6 +61,7 @@ CODEX = Path(__file__).resolve().parents[1] / "extensions/codex/codex_review.py"
 COPILOT = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_review.py"
 FIELDS = "state,isDraft,mergeable,mergeStateStatus,headRefOid,statusCheckRollup,title"
 SETTLE_SECONDS = 60
+RECHECK_SECONDS = 180
 TRACKED = ("state", "draft", "mergeable", "checks", "unchecked", "head", "codex", "codex-evidence",
            "copilot", "copilot-evidence")
 OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
@@ -98,8 +103,9 @@ def reader(script, repo, number, words=None):
         return "-", "-"
     done = subprocess.run([sys.executable, str(script), repo, number], capture_output=True, text=True)
     evidence = (re.findall(r"evidence=(\S+)", done.stdout) or [None])[-1]
-    verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed"}).get(done.returncode, "error")
-    return verdict, evidence or "-"
+    verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed", 5: "unrecognized"}).get(done.returncode, "error")
+    odd = re.findall(r"unrecognized=(\S+)", done.stdout)
+    return (f"{verdict}({odd[-1]})" if odd and verdict == "unrecognized" else verdict), evidence or "-"
 
 
 def codex(repo, number):
@@ -165,6 +171,31 @@ def wait_next(ref, now, decisive):
     return lines + (next_for(ref, now) if {"mergeable", "draft", "checks", "unchecked"} & set(decisive) else [])
 
 
+def unread_lines(state, first, clock, read):
+    lines = []
+    for ref, snap in load(state).items():
+        if ref not in read:
+            continue
+        word = snap.get("codex", "")
+        if not word.startswith("unrecognized(") or snap.get("codex-reported") == word:
+            first.pop(ref, None)
+            continue
+        if first.get(ref, ("", 0))[0] != word:
+            first[ref] = (word, clock())
+            continue
+        if clock() - first[ref][1] < RECHECK_SECONDS:
+            continue
+        repo, number = ref.split("#")
+        lines += [f"{ref} codex={word}: not recognized on two reads {RECHECK_SECONDS}s apart",
+                  f"next: quote that comment's raw text, from `gh api repos/{repo}/issues/comments/{word[word.index(':') + 1:-1]} --jq .body`, "
+                  "in the merge ask as Codex unread, never clean; the Captain decides.",
+                  "next: this is a kc-dev-flow-2 problem, report it upstream with the comment id and its raw text: in the repository "
+                  "that holds kc-dev-flow-2 itself, file a backlog task; elsewhere, if `peers` is listed and a kc-dev-flow-2 maintainer FO "
+                  "is reachable, send it through `peers`; otherwise draft the issue and ask the Captain whether to file it."]
+        update(state, put={ref: {"codex-reported": word}}, keep_flags=True)
+    return lines
+
+
 def load(state):
     return json.loads(state.read_text()) if state.exists() else {}
 
@@ -210,7 +241,7 @@ def record(state, known, snaps):
     return already, update(state, put=snaps, keep_flags=True)
 
 
-def sweep(state, look=look, nexts=None, clock=time.time):
+def sweep(state, look=look, nexts=None, clock=time.time, read=None):
     seen = load(state)
     start = {ref: dict(entry) for ref, entry in seen.items()}
     changes, rows = [], []
@@ -228,6 +259,8 @@ def sweep(state, look=look, nexts=None, clock=time.time):
             changes.append((line, bool(decisive)))
             if decisive and nexts is not None:
                 nexts.extend(n for n in wait_next(ref, now, decisive) if n not in nexts)
+        if read is not None:
+            read.add(ref)
         rows.append(f"{ref:34} {now['state']:7} draft={now['draft']!s:5} {now['mergeable']:11} "
                     f"checks={now['checks']:8} codex={now['codex']:12} "
                     f"copilot={now.get('copilot', '-'):12} {now['title']}")
@@ -423,11 +456,16 @@ def main(argv=None, look=look, sleep=time.sleep, ask=gh, clock=time.time):
             print("\n".join(rows + ([line for line, _ in changes] or ["no change since the last look"])))
             return 0
         every = int(opts.args[0]) if opts.args else 60
+        first = {}
         while True:
-            nexts = []
-            changes, _, watching = sweep(opts.state, look, nexts, clock)
+            nexts, read = [], set()
+            changes, _, watching = sweep(opts.state, look, nexts, clock, read)
             if any(decisive for _, decisive in changes) or not watching:
                 print("\n".join([line for line, _ in changes] + nexts or ["watch list is empty"]))
+                return 0
+            gave_up = unread_lines(opts.state, first, clock, read)
+            if gave_up:
+                print("\n".join([line for line, _ in changes] + gave_up))
                 return 0
             sleep(every)
     except (RuntimeError, KeyError, ValueError, OSError) as error:

@@ -86,6 +86,136 @@ class PrWatchTests(unittest.TestCase):
                                                        snap(**{"codex-evidence": "comment:2"})], state)
             self.assertIn("codex-evidence - -> comment:2", out)
 
+    def test_the_codex_reader_names_an_unrecognized_comment_without_evidence(self):
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d, "codex_review.py")
+            fake.write_text("print('not recognized on aaa: \"x\"; unrecognized=comment:31 at t')\nraise SystemExit(5)\n")
+            old, watch.CODEX = watch.CODEX, fake
+            try:
+                self.assertEqual(watch.codex("o/r", "1"), ("unrecognized(comment:31)", "-"))
+            finally:
+                watch.CODEX = old
+        self.assertFalse(watch.outcome("codex", "not-reviewed", "unrecognized(comment:31)"))
+
+    def wait_with_clock(self, state, looks, step):
+        seq, now, slept = iter(looks), [0], []
+        def clock():
+            return now[0]
+        def sleep(seconds):
+            slept.append(seconds)
+            now[0] += step
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = watch.main(["--state", str(state), "wait", "60"], look=lambda ref, **kw: next(seq), sleep=sleep, clock=clock)
+        return code, out.getvalue(), len(slept)
+
+    def test_wait_gives_up_on_two_unrecognized_reads_three_minutes_apart_once_and_names_the_comment(self):
+        odd = snap(codex="unrecognized(comment:31)", **{"watch-codex": True})
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, out, slept = self.wait_with_clock(state, [odd] * 40, 60)
+            self.assertEqual((code, slept), (0, 3))
+            self.assertIn("o/r#1 codex=unrecognized(comment:31): not recognized on two reads 180s apart", out)
+            self.assertIn("gh api repos/o/r/issues/comments/31 --jq .body", out)
+            self.assertIn("raw text", out)
+            self.assertIn("never clean", out)
+            self.assertIn("in the merge ask as Codex unread", out)
+            self.assertIn("the Captain decides", out)
+            self.assertIn("kc-dev-flow-2 problem, report it upstream", out)
+            self.assertIn("`peers` is listed and a kc-dev-flow-2 maintainer FO is reachable, send it through `peers`", out)
+            self.assertIn("otherwise draft the issue and ask the Captain whether to file it", out)
+            code, out, slept = self.wait_with_clock(state, [odd] * 5 + [snap(codex="clean", **{"codex-evidence": "summary:5"})], 300)
+            self.assertNotIn("report it upstream", out)
+            self.assertIn("codex unrecognized(comment:31) -> clean", out)
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, out, slept = self.wait_with_clock(state, [odd] * 40, 300)
+            self.assertEqual(slept, 1)
+            self.assertIn("report it upstream", out)
+
+    def test_the_upstream_line_has_the_package_repository_file_a_backlog_task_and_the_others_use_peers_or_an_issue(self):
+        odd = snap(codex="unrecognized(comment:31)", **{"watch-codex": True})
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, out, slept = self.wait_with_clock(state, [odd] * 40, 60)
+            line = [row for row in out.splitlines() if "report it upstream" in row]
+            self.assertEqual(len(line), 1)
+            self.assertIn("in the repository that holds kc-dev-flow-2 itself, file a backlog task; elsewhere, if `peers`", line[0])
+            for part in ("file a backlog task", "`peers`", "draft the issue"):
+                self.assertIn(part, line[0])
+            self.assertLess(line[0].index("file a backlog task"), line[0].index("`peers`"))
+            self.assertLess(line[0].index("`peers`"), line[0].index("draft the issue"))
+
+    def test_a_recognized_verdict_before_the_second_read_wakes_wait_without_the_report(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            looks = [snap(codex="unrecognized(comment:31)")] * 2 + [snap(codex="clean", **{"codex-evidence": "summary:5"})]
+            code, out, slept = self.wait_with_clock(state, looks, 60)
+            self.assertIn("codex unrecognized(comment:31) -> clean", out)
+            self.assertNotIn("report it upstream", out)
+
+    def test_only_consecutive_unrecognized_reads_of_one_comment_count_and_silence_never_ends_a_wait(self):
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            looks = [snap(codex="unrecognized(comment:31)"), snap(codex="unrecognized(comment:32)"),
+                     snap(codex="unrecognized(comment:32)")]
+            code, out, slept = self.wait_with_clock(state, looks, 300)
+            self.assertEqual(slept, 2)
+            self.assertIn("comment:32", out)
+            self.assertNotIn("comment:31", out)
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            looks = [snap(codex="unrecognized(comment:31)"), snap(codex="running"),
+                     snap(codex="unrecognized(comment:31)"), snap(mergeable="CONFLICTING")]
+            code, out, slept = self.wait_with_clock(state, looks, 300)
+            self.assertEqual(slept, 3)
+            self.assertNotIn("report it upstream", out)
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, out, slept = self.wait_with_clock(state, [snap(codex="not-reviewed")] * 30 + [snap(mergeable="CONFLICTING")], 300)
+            self.assertEqual(slept, 30)
+            self.assertNotIn("report it upstream", out)
+
+    def test_a_look_that_fails_is_not_a_second_unrecognized_read(self):
+        odd = snap(codex="unrecognized(comment:31)")
+        failed = RuntimeError("gh: api rate limit")
+
+        def wait_through(state, looks):
+            seq, now, slept = iter(looks), [0], []
+
+            def look(ref, **kw):
+                item = next(seq)
+                if isinstance(item, Exception):
+                    raise item
+                return item
+
+            def sleep(seconds):
+                slept.append(seconds)
+                now[0] += 60
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = watch.main(["--state", str(state), "wait", "60"], look=look, sleep=sleep, clock=lambda: now[0])
+            return code, out.getvalue(), len(slept)
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, out, slept = wait_through(state, [odd, failed, failed, failed, snap(mergeable="CONFLICTING")])
+            self.assertEqual(slept, 4)
+            self.assertNotIn("report it upstream", out)
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, out, slept = wait_through(state, [odd, failed, failed, failed, odd])
+            self.assertEqual(slept, 4)
+            self.assertIn("o/r#1 codex=unrecognized(comment:31): not recognized on two reads 180s apart", out)
+
     def test_the_codex_reader_is_found_in_its_extension(self):
         self.assertTrue(watch.CODEX.exists(), watch.CODEX)
 
