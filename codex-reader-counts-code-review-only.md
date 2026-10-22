@@ -226,6 +226,11 @@ Evidence commands run from `<package>/extensions/codex/` of the implementation c
 
 ADR: none. The design lands no ADR.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-22): Codex review on #702 12766289 (review:5609156241) left one P1, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 comment:4344458066 (codex_review.py): the summary evidence id uses the comment-wide updated_at, so a later security_review edit of the same summary yields a second summary:@ id for one unchanged clean code_review, and FO counts one code-review verdict as two rounds; tie the evidence identity to the code-review transition.
+
 ## Stage Report: ideation
 
 - DONE: First establish Codex's code-review and security-review output from Codex's own documentation or specification (cite the source), then design the reader so a round counts only from a code-review result on the head, correct with security review off, on, or only one of the two run; measure on the 22 sampled live PRs plus #685, #686 and #689; order the implementation after codex-reader-reads-receipt-marker, which edits the same file
