@@ -75,6 +75,17 @@ gates:
                 id: briefing:merge-ask-holds-missing-clauses:validation:attempt-1:revision-1
                 digest: sha256:cd006fe603ac38bf315c48b2fbd8b750f36cdaaba3919068e03ccc7ec36b1dc8
                 room-ref: ./merge-ask-holds-missing-clauses/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:merge-ask-holds-missing-clauses:validation:1
+                briefing: briefing:merge-ask-holds-missing-clauses:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T09:57:52.300986Z"
+                decision: approve
+                reason: Captain 「合併」 (chat, 2026-10-22), answering 「#703（合併提問補漏）要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only, and that Copilot was not run (quota); digest cd006fe6. Accepts the FO recommendation as the bound question states.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-21T19:12:41Z
 worktree: .worktrees/spacedock-ensign-merge-ask-holds-missing-clauses
 pr: iamcxa/kc-claude-plugins#703
