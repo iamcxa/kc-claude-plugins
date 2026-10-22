@@ -18,3 +18,5 @@ Profile: poc. Approved run: `## Scope` and `## Acceptance criteria` in the task 
 Never run `git remote set-url` or any `git config` write in a worktree of this repository.
 
 Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here).
+
+Correction (FO, 2026-10-22, validation finding F1, added after dispatch): roborev not run: the POC changes no code, so there is no candidate to review.
