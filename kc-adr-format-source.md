@@ -18,6 +18,17 @@ gates:
                 id: briefing:kc-adr-format-source:backlog:attempt-1:revision-1
                 digest: sha256:0ff592f3b9d7d312d87b0d8e04248b95e257c8ffb0fde8b9f651a4a9e8088212
                 room-ref: ./kc-adr-format-source/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-adr-format-source:backlog:1
+                briefing: briefing:kc-adr-format-source:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T04:37:34.563536Z"
+                decision: approve
+                reason: Captain replied 「照建議」 (2026-10-22) to a two-item batch whose item 2 was this backlog gate; accepts the outcome, scope, non-goals, half-day budget and AC-1..AC-3 as filed, to run after read-adr-reporting-rule-followup.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 The Captain ruled on 2026-10-22, in this FO's Paseo session (「同意」, to the item 「縮小你 10/22 的裁決並採用上面的同步方式：kc-adr 只當模板和格式檢查的來源，配號留在 dev2。副本由同步腳本產生，必過檢查做逐位元比對。格式照 dev2 現有的採用，只把「FO」改成「推薦者」。」), and confirmed it in the dev2 FO's session (「ADR 工具要改用 kc-adr 那邊轉述的縮小版。」, recorded as amendment 1 of dev2 task `kc-adr-tools-with-dev2-copy`). The dev2 FO split the work: this task lands kc-adr's side, and the dev2 task generates dev2's copies from it and adds the byte compare. A repo that does not run dev2 (a future finance flow) can then get the ADR template and linter by installing kc-adr.
