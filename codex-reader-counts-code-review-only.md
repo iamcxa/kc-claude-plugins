@@ -283,3 +283,37 @@ The summary-comment path of the Codex reader now reads `code_review` of `codex-r
 - `test_sd_dispatch.py` needs `--sd-plugin-root`; run against the spacedock 0.27.3 cache, all PASS. Other CI-listed tests run locally, all exit 0.
 - Scratch scripts and the replay cache live in /tmp (outside every repository); public repository names appear only in that scratch output, not in this file or the PR.
 - No ADR, no `Applied` or migration; `doc_impact.py origin/main HEAD` lists 0 documents.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #702 head 12766289 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at 127662897 (Draft, open, CI green: unit tests, route gate, version parity, GitGuardian). AC-1: five security-only heads (685, 686, 689, paseo 10, 11) candidate exit 4 `not reviewed: no Codex evidence covers <sha>`, previous reader exit 0 (685's live summary has `code_review` all null, `security_review` completed). AC-2/3/4: `test_codex_review.py` 20 tests OK; my own mutants, each alone: security marker read again (M1) red on the clean row and the security rows, no `commit_sha==head` (M2) red on the old-head row, unknown finding as none (M3) red only on the unknown-finding row, no `status==completed` (M4) red, `security_review` read (M5) red on the security-only rows, no finding-before guard (M6) 2 red, no summary-lead check (M7) 1 red, any author (M8) red. AC-5 (one cached read per PR, my own oracle, 2026-10-22): own 22 base 5 false clean / 0 missed, candidate 0 / 0; fresh public 100 (28 oracle-clean) base 1 false clean / 26 missed, candidate 0 / 0, no read errors. AC-6: diff vs origin/main lists exactly the two files, comment_ratio 41 code / 0 comment lines, exit 0. AC-7: diff of EXTENSION.md, README.md, references is empty. AC-8: 4befab1f (receipt merge) is an ancestor of origin/main and of the head. Limits judged: reads an undocumented marker (Codex change goes quiet, reads exit 4, never clean; Deferred risk); a security finding without a P-badge reads as nothing (stated non-goal; Deferred risk); two removed assertions (repo and PR number in a marker) are covered because comments come from this PR's own `issues/{pr}/comments` list filtered to the bot (read in `state()`; M8 shows the author filter is tested).
+- DONE: Merge onto current origin/main (coordinator request)
+  origin/main is cebd0ab9 (holds #694); `git merge --no-commit` of the head into a throwaway worktree: no conflict, only the two codex files change; `test_codex_review.py` 20 tests OK and `test_pr_watch.py` 101 tests OK on the merged tree. Both throwaway worktrees removed.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output
+  Script below, run as `env -i HOME PATH bash --noprofile --norc`, output as the expected lines.
+- DONE: `adr_lint.py docs/adr --since <base>` with its exit code
+  `adr_lint.py docs/adr --since 4befab1f` and `--since origin/main`: "28 ADR file(s) checked, 0 legacy", exit 0 both. Also: `dispatch_records.py` exit 0 (3 records complete); `design_surfaces.py check` exit 0; `doc_impact.py 4befab1f HEAD` lists 0 documents, exit 0; no `## Number guards` check owed (Surfaces none, ADR none).
+- DONE: Verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  PASSED for 127662897fc547dedd501a59c953c8d3ece9cddb. F1 Deferred risk: the summary path depends on the undocumented `codex-review-state:v1` marker; becomes Material if Codex changes it and a repository then waits to the timeout with Codex unread. F2 Deferred risk: a Codex security finding with no P-badge reads as nothing; Material only if the Captain asks the reader to act on security findings (task non-goal). No Material finding, no repair needed.
+
+### Acceptance script (Captain)
+
+    D=$(mktemp -d)
+    git clone -q --filter=blob:none --no-checkout https://github.com/iamcxa/kc-claude-plugins.git "$D/r" && cd "$D/r" && git fetch -q origin 127662897fc547dedd501a59c953c8d3ece9cddb && git checkout -q 127662897fc547dedd501a59c953c8d3ece9cddb && git log -1 --format='head %h'
+    cd kc-dev-flow-2/extensions/codex && python3 -B -I test_codex_review.py 2>&1 | tail -3
+    python3 -B -I codex_review.py iamcxa/kc-claude-plugins 685; echo "exit=$?"
+    git show 4befab1f1d98cde0dfa107dbb12404c69f445af0:kc-dev-flow-2/extensions/codex/codex_review.py > "$D/base_reader.py"; python3 -B -I "$D/base_reader.py" iamcxa/kc-claude-plugins 685; echo "exit=$?"
+    python3 -B -I codex_review.py iamcxa/kc-claude-plugins 682; echo "exit=$?"
+
+Needs `git`, `python3`, and `gh` signed in (read-only). Observed: `head 12766289`; `Ran 20 tests ... OK`; step 3 `not reviewed: no Codex evidence covers 187f93a53` exit=4; step 4 (previous reader, same PR) `clean on 187f93a53: summary marks the head completed; ...` exit=0; step 5 `clean on f44473962: summary marks the code review of the head completed; ...` exit=0. Not covered: a repository with security review enabled and Codex security findings; PRs whose Codex comments change after 2026-10-22 (live PRs move; 685 and 682 are merged-era heads); the Captain's own Codex setup.
+
+### Summary
+
+PASSED at 127662897. The reader now counts a summary only through `code_review`; five security-only heads that read clean before read not reviewed, and clean code reviews still read clean with security off or on. Every criterion re-ran green, each mutant fails its own test, the head merges cleanly onto cebd0ab9 with all codex and pr_watch tests passing.
+
+### Deviations and disclosures
+
+- My oracle is a fresh re-implementation (clean review/comment on the head, or summary `code_review` completed/clean/head); it shares the `code_review` object with the candidate, so the public zero measures consistency with Codex's own state. Base showed 1 public false clean (design recorded 0); the candidate had 0; I did not trace that one PR. Public repository names are not recorded.
+- Not run by me: `lint-skills.py` and the other CI-listed test files (read CI results only: four checks pass on the head).
+- Scratch files live in /tmp (replay, mutants); both throwaway worktrees were removed. No push, no PR comment, no `ready`.
