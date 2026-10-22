@@ -34,6 +34,17 @@ gates:
                 id: briefing:release-acceptance:ideation:attempt-1:revision-1
                 digest: sha256:e116df03a231a92b70ed0f22b9a4c4bca407b794c88f948e2e32d76796a25de9
                 room-ref: ./review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-acceptance:ideation:1
+                briefing: briefing:release-acceptance:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T09:10:52.710747Z"
+                decision: approve
+                reason: 'Captain 「准」 (gate decision d-51p8nj, 2026-10-22), relayed by the Comms Officer (Paseo agent bccc97d3); FO read his words on the [User] line of that agent''s activity carrying d-51p8nj: "Gate: release-acceptance · stage ideation · briefing:release-acceptance:ideation:attempt-1:revision-1 · sha256:e116df03a231 / Decision: approve / My words: 「准」". The open briefing matched (digest e116df03a231). No condition in his words.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Issue iamcxa/kc-claude-plugins#571: a release is reviewed as one journey before its tasks are split, but nothing enforces that review, and nothing walks a release as a whole after its stories are built.
