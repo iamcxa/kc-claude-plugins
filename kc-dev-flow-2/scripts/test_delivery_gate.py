@@ -54,6 +54,10 @@ else:
 """
 
 
+def quiet_roles():
+    return mock.patch.object(gate, "owed_role_calls", return_value=(0, []))
+
+
 def pr_json(head=HEAD40, files=1, **over):
     data = dict(state="OPEN", headRefOid=head, isDraft=False, mergeable="MERGEABLE", title="feat(x): y", headRefName="feat", baseRefName="main",
                 changedFiles=files, statusCheckRollup=[dict(__typename="CheckRun", name="unit", status="COMPLETED", conclusion="SUCCESS")])
@@ -116,7 +120,7 @@ class DeliveryGateTests(unittest.TestCase):
             argv = ["check", str(task_file), "--pr", pr, "--text-file", str(text_file)] + (["--head", head] if head else [])
             out = io.StringIO()
             world.setdefault("head", (head or HEAD40).lower().ljust(40, "0"))
-            with stubbed(d, **world), contextlib.redirect_stdout(out), \
+            with stubbed(d, **world), contextlib.redirect_stdout(out), quiet_roles(), \
                     mock.patch.object(gate, "run_gh", gh or mock.Mock(side_effect=AssertionError("gh called"))):
                 code = gate.main(argv)
             OUTPUTS.append(out.getvalue())
@@ -292,7 +296,7 @@ class ProdSecurityReviewTests(unittest.TestCase):
                 Path(d, "task", "security", "validation-1.yaml").write_text(report)
             readme(d)
             out = io.StringIO()
-            with stubbed(d, head=head.ljust(40, "0")), contextlib.redirect_stdout(out):
+            with stubbed(d, head=head.ljust(40, "0")), contextlib.redirect_stdout(out), quiet_roles():
                 code = gate.main(["check", str(task_file), "--pr", "o/r#9", "--text-file", str(text_file), "--head", head])
             OUTPUTS.append(out.getvalue())
             return code, out.getvalue().replace(d, "<tmp>")
@@ -353,7 +357,7 @@ class ProdSecurityReviewTests(unittest.TestCase):
                 Path(d, "gate.txt").write_text(CLAUSES + "Merge ask.")
                 readme(d)
                 out = io.StringIO()
-                with stubbed(d), contextlib.redirect_stdout(out):
+                with stubbed(d), contextlib.redirect_stdout(out), quiet_roles():
                     code = gate.main(["check", str(Path(d, "task.md")), "--pr", "o/r#9", "--text-file", str(Path(d, "gate.txt")), "--head", HEAD40[:8]])
                 self.assertEqual(code, 1, out.getvalue())
                 self.assertIn("cannot read a 'profile:'", out.getvalue())
@@ -396,7 +400,7 @@ def variant_of(old, new):
 
 
 def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=None, readme_body="extensions: [roborev, codex]\n",
-              records=RECORDS, setup=None, argv_head="same", stub_fail=None, workflow_dir_arg=None, runs=None, clauses=True):
+              records=RECORDS, setup=None, argv_head="same", stub_fail=None, workflow_dir_arg=None, runs=None, clauses=True, roles=False):
     with tempfile.TemporaryDirectory() as d:
         readme(d, readme_body)
         Path(d, "task.md").write_text(task)
@@ -413,7 +417,7 @@ def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=N
         out = io.StringIO()
         with stubbed(d, head=head, files=files, pr=pr_json(head=head, files=len(files), **(facts or {})), runs=runs), \
                 mock.patch.dict(os.environ, {"STUB_GH_FAIL": stub_fail or ""}), \
-                contextlib.redirect_stdout(out):
+                contextlib.redirect_stdout(out), (contextlib.nullcontext() if roles else quiet_roles()):
             code = gate.main(argv)
         written = {p.name: json.loads(p.read_text()) for p in sorted(Path(d, "task", "merge").glob("ask-*.json"))}
         calls = Path(d, "stub", "calls.log").read_text() if Path(d, "stub", "calls.log").exists() else ""
@@ -473,7 +477,7 @@ class HoldTests(unittest.TestCase):
         self.assertIn("next: hold the ask; revalidate this head or tell the Captain the difference.", code.out)
 
     def test_a_readme_without_a_trunk_holds_with_exit_2(self):
-        with tempfile.TemporaryDirectory() as d, stubbed(d), contextlib.redirect_stdout(io.StringIO()) as out:
+        with tempfile.TemporaryDirectory() as d, stubbed(d), contextlib.redirect_stdout(io.StringIO()) as out, quiet_roles():
             Path(d, "task.md").write_text(TASK)
             Path(d, "gate.txt").write_text(CLAUSES)
             Path(d, "README.md").write_text("---\nextensions: []\n---\n")
@@ -1249,6 +1253,74 @@ class FoWriteRuleTests(unittest.TestCase):
         roman = with_report("- F1 P2: one.", "- F2 Deferred risk: two.", "* F3 Polish: three.")
         self.assertEqual(self.check(task=roman, text=reasoned(1))[0], 1)
         self.assertEqual(self.check(task=roman, text=reasoned(2))[0], 0)
+
+
+ALIGNED = "---\nprofile: pilot\n---\n\n# task\n\n## FO alignment\n\nAlignment: not needed.\n"
+AMENDED = ALIGNED + "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-20\n\nSupersedes: AC-1\n"
+REVIEWED = AMENDED.replace("Alignment: not needed.\n", "Alignment: not needed.\nReviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-21 \u2014 do these amendments withdraw what was approved?\n")
+OWED = "next: task has replacing amendment 1; dispatch kc-dev-flow-2:engineering-reviewer on opus "
+
+
+def committed(text):
+    def setup(d):
+        git = ["git", "-C", d, "-c", "user.name=t", "-c", "user.email=t@t", "-c", "core.hooksPath=/dev/null", "-c", "commit.gpgsign=false"]
+        subprocess.run([*git, "init", "-q", "-b", "main"], check=True)
+        Path(d, "task.md").write_text(text)
+        subprocess.run([*git, "add", "task.md"], check=True)
+        subprocess.run([*git, "commit", "-qm", "task"], check=True)
+    return setup
+
+
+def on_disk(committed_text, disk_text):
+    def setup(d):
+        committed(committed_text)(d)
+        Path(d, "task.md").write_text(disk_text)
+    return setup
+
+
+class OwedRoleCallTests(unittest.TestCase):
+    """These run the real role_triggers.py: a test that patches owed_role_calls cannot fail when the call is removed."""
+
+    def test_a_committed_amendment_with_no_call_holds_with_the_scripts_next_line(self):
+        result = run_check(task=AMENDED, setup=committed(AMENDED), roles=True)
+        self.assertEqual(result.code, 1, result.out)
+        self.assertIn("task owes a special-role call (role_triggers.py reads the task as committed)", result.lines)
+        self.assertEqual(sum(l.startswith(OWED) for l in result.lines), 1, result.out)
+        self.assertEqual(result.written, {})
+
+    def test_a_task_that_owes_nothing_or_whose_call_is_committed_passes_with_a_record(self):
+        for label, text in (("no amendment", ALIGNED), ("amendment with a dated call", REVIEWED)):
+            with self.subTest(label):
+                result = run_check(task=text, setup=committed(text), roles=True)
+                self.assertEqual(result.code, 0, result.out)
+                self.assertEqual(list(result.written), ["ask-1.json"])
+                self.assertNotIn("special-role", result.out)
+
+    def test_an_edit_not_yet_state_committed_is_not_seen_and_a_call_not_yet_committed_does_not_clear(self):
+        unseen = run_check(task=AMENDED, setup=on_disk(ALIGNED, AMENDED), roles=True)
+        self.assertEqual(unseen.code, 0, unseen.out)
+        uncleared = run_check(task=REVIEWED, setup=on_disk(AMENDED, REVIEWED), roles=True)
+        self.assertEqual(uncleared.code, 1, uncleared.out)
+        self.assertIn(OWED, uncleared.out)
+
+    def test_a_state_that_is_not_a_git_work_tree_holds_with_exit_2_and_the_scripts_message(self):
+        result = run_check(task=AMENDED, roles=True)
+        self.assertEqual(result.code, 2, result.out)
+        self.assertIn("is not a git work tree. Hold and report the cause.", result.out)
+        self.assertIn("next: hold the ask and show the Captain these lines.", result.lines)
+        self.assertEqual(result.written, {})
+
+    def test_the_hold_adds_to_other_problems_instead_of_replacing_them(self):
+        result = run_check(task=AMENDED, setup=committed(AMENDED), roles=True, facts=dict(isDraft=True))
+        self.assertEqual(result.code, 1, result.out)
+        self.assertIn("the PR is a draft", result.lines)
+        self.assertIn("task owes a special-role call (role_triggers.py reads the task as committed)", result.lines)
+
+    def test_a_script_that_cannot_start_holds_with_exit_2(self):
+        with mock.patch.object(gate, "owed_role_calls", side_effect=OSError("no interpreter")):
+            result = run_check(roles=True)
+        self.assertEqual(result.code, 2, result.out)
+        self.assertIn("cannot run role_triggers.py: no interpreter", result.lines)
 
 
 def tearDownModule():
