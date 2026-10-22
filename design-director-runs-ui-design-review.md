@@ -46,6 +46,9 @@ Design: the role runs the existing brief on sonnet; the author's declines go to 
 
 ## FO alignment
 
+Captain rulings on D-1 to D-6 (ideation sitting, 2026-10-22, chat, each given to FO's question one at a time; to be bound at the ideation gate):
+- D-1 「按你建議」, answering 「「整個畫面實際操作審一次」要不要變成正式的一關？」 with FO's recommendation: it belongs to the release-acceptance task as a second pass on the same operated walk, run by the design director, with a class for works but unusable; this task does not build it.
+
 Alignment: needed at ideation; the declared model and whether the helper joins are his, after the measurement and the POC.
 Result: aligned 2026-10-22 by Amendment 1 (model stays sonnet; the astra helper is dropped; dev2-poc design-helper-astra-poc closed without running) and the backlog gate resolution (duty wording, two passes, host-component declines checked, replay before shipping).
 
