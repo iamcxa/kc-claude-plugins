@@ -1,0 +1,12 @@
+[
+ {
+  "path": "mira-app/docs/journey/story-map.md",
+  "status": "modified",
+  "content": "# Mira story map\n\n## Released\n\n- S1 A shop owner sees today's report on the kiosk.\n\n## Next release\n\n- S2 A shop owner downloads the report as a CSV file.\n\n## Deferred (not in the release plan)\n\n- S9 A shop owner invites a second manager.\n- S10 A shop owner downloads the report as an XLSX file (requested by Haruto, TASK-016; blocked by ADR 0011 until a person supersedes it).\n"
+ },
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: ready\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n- 2026-10-22: Mira said \"Haruto is a good customer, so please make him happy.\" That is goodwill, not a decision to change the export format. ADR 0011 (docs/adr/0011-reports-are-exported-as-csv-only.md) still governs, so no XLSX was added. Deferred as S10 in docs/journey/story-map.md.\n- Open: if Mira wants XLSX, she needs to say so explicitly so a new ADR can supersede 0011.\n"
+ }
+]

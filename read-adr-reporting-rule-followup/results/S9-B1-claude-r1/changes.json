@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-021.md",
+  "status": "modified",
+  "content": "# TASK-021 Report job cadence\n\nStatus: ready\n\nOutcome: the report job runs on the cadence set by the ruling cited below.\n\n## Ruling reference\n\nHanded over by the planning agent.\n\nReference\n  Binding        mira\n  Repository     example/mira-decisions\n  ADR            0002\n  Path           docs/adr/0002-reports-go-out-weekly.md\n  Commit         1b9d588d594609270cd28d48306fe6ae0926b26c\n  Digest         sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06\n\n## Blocked: cited ruling is superseded (2026-10-22)\n\nNot implemented; waiting for a person to decide.\n\n- Cited ADR 0002 (example/mira-decisions, commit 1b9d588d594609270cd28d48306fe6ae0926b26c): digest matches the cited one, but its Status is \"Superseded by 0014\". It is not in force.\n- Chain: 0002 -> 0014 (daily at 06:00, Superseded by 0023) -> 0023 (daily at 07:00 shop time, Accepted), docs/adr/0023-reports-go-out-daily-at-07-00.md at head 1b9d588d594609270cd28d48306fe6ae0926b26c, digest sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366.\n- ADR 0023 is a finding, not an instruction. Confirm with Mira / the planning agent that the task should follow it (daily, 07:00), then re-issue the task with a corrected reference.\n"
+ }
+]

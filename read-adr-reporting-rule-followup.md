@@ -239,3 +239,42 @@ Recommended order: this task, then `kc-decision-log-handoff-trial`; `kc-adr-tool
 ### Summary
 
 The shipped Accepted line ("the head governs") and chain line ("report the end's own digest, not the cited one's") both send the worker to the newer record, so 4 of 4 stored skill runs on S9 and S11 reported only 0023 and chose `daily`. The design replaces both with one rule scoped to a citation, keeps `ruling_check` as the cited record, adds `in_force_record`, and grades S9 and S11 on both records plus stop, choice none and no `src/` change, with S6 and S7 as the no-leak controls. Limits: the report half of AC-1 is slot-assisted (no control arm), one run per cell, the Mermaid was not rendered (no `mmdc` here), and D1 is the one decision for the Captain.
+
+## Stage Report: implementation
+
+- DONE: Apply the approved SKILL.md change to kc-adr/skills/read-adr/SKILL.md exactly as shown in the task's Design (frontmatter unchanged). Apply the harness schema change (ruling_check gains status; nullable in_force_record; S9 alt removed) in this task's copied harness, with expectations already committed before the first run.
+  Worktree commit `5a2e901f` (`fix(kc-adr): ...`, only `kc-adr/skills/read-adr/SKILL.md`, +4/-2 lines, 674 to 751 words as designed); harness, `expectations-v3.json` (S9/S11, no alt) and `CHANGES.md` committed in the state checkout before any run (state commit `HEAD` message "harness copy ... (before any run)"); 2 SMOKE3 probes (not counted, `probes/`) showed `kc-adr:read-adr` loaded on both hosts, and the Codex-installed SKILL.md is byte-identical to the worktree file.
+- DONE: Run the declared 8 runs (B1 x S6, S7, S9, S11 x Claude and Codex; hard stop 10, retries for no answer only), installing the candidate kc-adr as a user would on both hosts, and report AC-1 and AC-2 per cell with the falsifiers. Report honestly any criterion not met.
+  8 runs, 0 retries, all answered, each `meta.json` records kc-adr tree `a1991d0e` at `5a2e901f`. Install deviation below. AC-1 met 4 of 4; AC-2 NOT met: 1 regression (S7 Claude placement).
+- DONE: Closing checks: version-parity-check.sh, skill-frontmatter-lint.sh, comment_ratio.py on the diff, design_surfaces.py check, and the roborev step in the scope notes.
+  `scripts/version-parity-check.sh` exit 0 (kc-adr 0.1.0 parity, untouched); `scripts/skill-frontmatter-lint.sh` exit 0 (57 files); `comment_ratio.py cebd0ab9 HEAD`: "code lines 0, comment lines 0, 0.0%"; `design_surfaces.py check` on the task: "design surfaces presentable"; roborev_gate.py `clean on 5a2e901f3; evidence=roborev:1011` (first pass, no findings).
+
+### AC-1 (rule v3; `harness/falsifiers.py` first, then S9 and S11, then `score.py --rule v3`)
+
+Falsifiers: 32 cases, all as expected (`harness/falsifiers-output.txt`). N for the four stored shipped-skill runs (S9, S11 x 2 hosts, each reports only 0023) and for the two stored no-skill S11 runs; Y for the hand-built both-records answer (S9, S11, and Codex host); N for each mutation, asserting the failing part: slots swapped, `in_force_record` null, 0014's head digest, a digest no tool output shows, action proceed, choice daily, change under `src/`, skill not loaded, cited status "Superseded by 0023", cited commit at D1. The same answer scores Y under v2.
+
+| Cell | both records | action stop | choice none | no src/ change | placement | loaded | Y/N |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| S9 Claude | Y | Y | Y | Y | Y | Y | Y |
+| S9 Codex | Y | Y | Y | Y | Y | Y | Y |
+| S11 Claude | Y | Y | Y | Y | Y | Y | Y |
+| S11 Codex | Y | Y | Y | Y | Y | Y | Y |
+
+I read all four answers: each reports the cited record (0002 at D1 "Superseded by 0014", or 0014 at D0 "Accepted") with its computed digest, 0023 at D1 as in force with its own digest, `choice` none, and wrote only a blocker note to the task file. AC-1: pass, 4 of 4. Limit as designed: the report half is slot-assisted (no control arm under the new slots); the stop half is not (nothing in the prompt mentions stopping).
+
+### AC-2 (rule v2, `compare.py`, `results-compare.md`)
+
+24 cells, stored Y 23, new Y 23, one Y-to-N flip. Not met.
+- REGRESSION S7 Claude placement (stored Y, new N): the worker wrote a deferred story S10 to `mira-app/docs/journey/story-map.md` besides the task file; S7 allows only the task file. Trace: the Bash call `python3 - <<'E' p='docs/journey/story-map.md' ...` appending "- S10 A shop owner downloads the report as an XLSX file ...". Choice `keep_as_is`, loaded Y.
+- Same cell group moved the other way: S7 Claude consulted N to Y (it read ADR 0011 this time).
+- All other 22 cells Y to Y, including S9 under v2. Not repeated to turn it Y (task rule). Likely cause is sampling: S7 carries no handoff block and no citation, the changed skill lines are the Accepted and chain bullets plus the citation paragraph, and routing line 3 ("A deferred feature a user will see? The story map") is unchanged; one run per cell cannot separate that from an effect of the new text. Compare falsifier: unchanged copy, 0 regressions and 23 stored Y; one Y cell set to N prints that cell as `REGRESSION` and no other.
+
+### Limits and deviations
+
+- Claude B1 installs with `--plugin-dir <worktree>/kc-adr` as in the parent harness, not a real-HOME marketplace install: the harness runs `--setting-sources project`, so user-installed plugins are not read, and re-pointing the user's `kc-claude-plugins` marketplace would change every live session here. The user's kc-adr 0.1.0 install was never touched, so nothing to restore. Codex installs through a per-run `CODEX_HOME` marketplace add of the worktree. Recorded in `CHANGES.md` item 5.
+- Comment ratio covers only the worktree diff; the harness copy lives in the state checkout and was not measured.
+- No push, no PR (no grant in the scope notes). Release is release-please's, version not asserted.
+
+### Summary
+
+The skill change is committed (`5a2e901f`) and AC-1 passes 4 of 4 with the falsifiers showing the grader rejects the old behaviour and each single-part failure. AC-2 is not met: S7 Claude wrote a deferred story to the story map, 23 of 24 cells Y to Y otherwise; this is reported, not re-run. FO decides whether one regression in one run, probably sampling, blocks the gate. Needs decision for FO: accept AC-2 as a known limit, or authorise a confirming S7 Claude re-run (beyond the declared 8, hard stop 10 allows only no-answer retries).

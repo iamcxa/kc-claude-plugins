@@ -1,0 +1,2 @@
+{"run": "SMOKE3-B1-claude-r1", "started": 1792643047.799792, "host": "claude", "arm": "B1", "scenario": "SMOKE3", "rep": 1}
+{"run": "SMOKE3-B1-codex-r1", "started": 1792643048.5546932, "host": "codex", "arm": "B1", "scenario": "SMOKE3", "rep": 1}

@@ -1,0 +1,8 @@
+{"run": "S9-B1-claude-r1", "started": 1792643088.893101, "host": "claude", "arm": "B1", "scenario": "S9", "rep": 1}
+{"run": "S9-B1-codex-r1", "started": 1792643090.278434, "host": "codex", "arm": "B1", "scenario": "S9", "rep": 1}
+{"run": "S11-B1-claude-r1", "started": 1792643118.5437891, "host": "claude", "arm": "B1", "scenario": "S11", "rep": 1}
+{"run": "S11-B1-codex-r1", "started": 1792643145.717244, "host": "codex", "arm": "B1", "scenario": "S11", "rep": 1}
+{"run": "S6-B1-claude-r1", "started": 1792643212.365681, "host": "claude", "arm": "B1", "scenario": "S6", "rep": 1}
+{"run": "S6-B1-codex-r1", "started": 1792643214.4390998, "host": "codex", "arm": "B1", "scenario": "S6", "rep": 1}
+{"run": "S7-B1-claude-r1", "started": 1792643240.072551, "host": "claude", "arm": "B1", "scenario": "S7", "rep": 1}
+{"run": "S7-B1-codex-r1", "started": 1792643263.16826, "host": "codex", "arm": "B1", "scenario": "S7", "rep": 1}

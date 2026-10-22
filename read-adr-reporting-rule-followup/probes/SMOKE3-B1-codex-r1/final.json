@@ -1,0 +1,4 @@
+{
+ "decision": "imagegen (NONE), openai-docs (NONE), skill-creator (NONE), skill-installer (NONE), kc-adr:read-adr, kc-dev-flow-2:chief-engineer, kc-dev-flow-2:dev, kc-dev-flow-2:engineering-reviewer, kc-dev-flow-2:evaluate-learning, kc-dev-flow-2:ideation, kc-dev-flow-2:implementation, kc-dev-flow-2:learn, kc-dev-flow-2:maintain-flow, kc-dev-flow-2:observer, kc-dev-flow-2:validation.",
+ "recorded": []
+}

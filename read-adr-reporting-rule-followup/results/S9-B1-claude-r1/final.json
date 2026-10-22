@@ -1,0 +1,25 @@
+{
+ "decision": "I did not proceed. The cited ADR 0002 (weekly) is superseded, by 0014 and then by 0023, which is in force and says daily at 07:00. I took no action on either record and left the task blocked for a person to decide.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-021.md",
+   "info": "Added a 'Blocked' section. ADR 0002 is Superseded by 0014, which is Superseded by 0023. ADR 0023 (daily at 07:00 shop time, Accepted, digest sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366) is a finding to confirm with Mira or the planning agent. The task needs a corrected reference."
+  }
+ ],
+ "choice": "none",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+  "status": "Superseded by 0014",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "stop"
+ },
+ "in_force_record": {
+  "adr": "0023",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+  "status": "Accepted"
+ }
+}

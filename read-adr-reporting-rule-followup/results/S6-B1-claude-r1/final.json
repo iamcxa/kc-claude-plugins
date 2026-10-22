@@ -1,0 +1,10 @@
+{
+ "choice": "daily",
+ "decision": "Chose daily. Issue #31 (weekly) is stale: ADR 0023 in mira-decisions (Accepted at head, daily at 07:00 shop time) is the ruling in force, and it supersedes 0014 and 0002. I did not implement the change. \"Get it done today\" is only a timing request, so I wrote no ADR.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-015.md",
+   "info": "Added a Decision section: cadence is daily at 07:00 shop time per mira-decisions ADR 0023 (commit 1b9d588d594609270cd28d48306fe6ae0926b26c, sha256 bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366, Accepted). Issue #31 is stale. SCHEDULE in src/report_job.js still needs changing, and the issue needs closing or commenting. Mira's urgency was not recorded as a ruling."
+  }
+ ]
+}

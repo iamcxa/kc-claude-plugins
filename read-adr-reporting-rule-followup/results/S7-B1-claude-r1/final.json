@@ -1,0 +1,14 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as CSV. ADR 0011 (Accepted, not superseded) says CSV only until superseded, and Mira's \"make Haruto happy\" is goodwill, not a ruling to override it. I noted the XLSX request as deferred and flagged that Mira must explicitly say so to change it.",
+ "recorded": [
+  {
+   "path": "mira-app/docs/journey/story-map.md",
+   "info": "Added deferred story S10: shop owner downloads the report as XLSX (Haruto's request, TASK-016), blocked by ADR 0011 until a person supersedes it."
+  },
+  {
+   "path": "mira-app/tasks/TASK-016.md",
+   "info": "Added notes: Mira's message on 2026-10-22 was goodwill, not a format decision; ADR 0011 still governs so no XLSX was added; deferred as S10; open item that Mira must explicitly ask for XLSX so a new ADR can supersede 0011."
+  }
+ ]
+}

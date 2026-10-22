@@ -1,0 +1,25 @@
+{
+ "decision": "Stop and choose none: the cited ADR 0002 is superseded through ADR 0014 by accepted ADR 0023. The read-adr skill requires a person's decision before proceeding; TASK-021 records the blocker.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-021.md",
+   "info": "Marked blocked; recorded verified citation, supersession chain, in-force reference, cadence choice none, and required human decision. No feature implemented."
+  }
+ ],
+ "choice": "none",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+  "status": "Superseded by 0014",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "stop"
+ },
+ "in_force_record": {
+  "adr": "0023",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+  "status": "Accepted"
+ }
+}

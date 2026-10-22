@@ -1,0 +1,25 @@
+{
+ "decision": "The cited ADR 0014 is superseded by ADR 0023 at head. I took no action and left the job unchanged, because a person has to decide whether 0023 governs this task. I noted the blocker in the task file.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-023.md",
+   "info": "Status changed to blocked. Open item says cited ADR 0014 is Superseded by 0023 at head 1b9d588d594609270cd28d48306fe6ae0926b26c. ADR 0023 is Accepted (sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366), stays daily and moves the time to 07:00. No cadence was set, and a person must confirm."
+  }
+ ],
+ "choice": "none",
+ "ruling_check": {
+  "adr": "0014",
+  "commit": "6ca078bb848966bf9e398d75717e384c533a41bd",
+  "digest": "sha256:d3d544af6856343e2f377ea805270fab5e554cf4beb05a348213efce6b3f1993",
+  "status": "Accepted",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "stop"
+ },
+ "in_force_record": {
+  "adr": "0023",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+  "status": "Accepted"
+ }
+}
