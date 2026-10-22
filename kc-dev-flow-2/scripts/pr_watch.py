@@ -339,15 +339,21 @@ def ready_rows(workflow):
     return json.loads(done.stdout)["ready_gates"]
 
 
+LIST_LINE = ("next: before asking, list each open decision of these tasks once, from their decision sections and the map's "
+             "open questions on their journey-story, with its home, a plain sentence, your recommendation and what gets worse; "
+             "then ask one at a time; a decision that blocks no worker waits for the next sitting.")
+
+
 def sittings(rows):
     waiting = {}
     for gate in rows:
         if gate["readiness"] == "awaiting-captain":
             waiting.setdefault(gate["current"], []).append(gate["slug"])
-    return [f"next: {len(slugs)} gates await the Captain at {stage} ({', '.join(slugs)}); unless already presented, "
-            "present them in one message and record each with his one answer."
-            + (" Name the merge order and each shared file from Batch overlap." if stage == "validation" else "")
-            for stage, slugs in waiting.items() if len(slugs) > 1]
+    return [line for stage, slugs in waiting.items() if len(slugs) > 1 for line in (
+        f"next: {len(slugs)} gates await the Captain at {stage} ({', '.join(slugs)}); unless already presented, "
+        "present them in one message and record each with his one answer."
+        + (" Name the merge order and each shared file from Batch overlap." if stage == "validation" else ""),
+        LIST_LINE)]
 
 
 def seeds(rows, found, readme):

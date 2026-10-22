@@ -45,6 +45,7 @@ recommend a profile using the framework's intended use and applicable shared
 profile principles. Ask the user to select it before profile-dependent work.
 An explicit valid selection is sufficient; FO records it with the variant in
 the work item through the existing workflow. Recommendation is not selection.
+For new work that adds a capability no journey map holds, ask once, before recommending a profile, whether to draw a story map first with kc-journey-map (`map`, `plan-release`, then `review-release`, which interrogates the release before splitting it). Record his answer on each resulting task as its `Release review:` line, or `Release review: not needed: <his words>`.
 
 Hand the resolved project root, explicit workflow directory, work item, approved
 selection/scope and bounded outcome to `spacedock:first-officer`, with this

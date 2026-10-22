@@ -934,14 +934,19 @@ class TasksTests(unittest.TestCase):
     def sitting_lines(self, lines):
         return [line for line in lines if " await the Captain at " in line]
 
+    def list_lines(self, lines):
+        return [line for line in lines if line.startswith("next: before asking, list each open decision")]
+
     def test_gates_awaiting_the_captain_at_one_stage_print_one_sitting_line_naming_every_slug(self):
         self.readme("roborev")
         self.gates(("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"), ("c", "ideation", "awaiting-captain"))
         code, lines = self.tasks({})
-        self.assertEqual((code, len(lines)), (0, 1), lines)
+        self.assertEqual((code, len(lines)), (0, 2), lines)
         self.assertEqual(lines[0], "next: 3 gates await the Captain at ideation (a, b, c); unless already presented, "
                                    "present them in one message and record each with his one answer.")
         self.assertEqual(len(lines[0].split()), 26)
+        self.assertEqual(lines[1], watch.LIST_LINE)
+        self.assertEqual(len(lines[1].split()), 52)
 
     def test_one_awaiting_gate_prints_no_sitting_line(self):
         self.readme("roborev")
@@ -953,7 +958,7 @@ class TasksTests(unittest.TestCase):
         self.gates(*[(f"n{i}", "backlog", "needs-preparation") for i in range(15)],
                    ("a", "backlog", "awaiting-captain"), ("b", "backlog", "awaiting-captain"))
         code, lines = self.tasks({})
-        self.assertEqual(len(lines), 1, lines)
+        self.assertEqual((len(self.sitting_lines(lines)), len(self.list_lines(lines))), (1, 1), lines)
         self.assertIn("2 gates await the Captain at backlog (a, b);", lines[0])
         self.assertNotIn("n0", lines[0])
 
@@ -963,12 +968,13 @@ class TasksTests(unittest.TestCase):
                    ("c", "validation", "awaiting-captain"), ("d", "validation", "awaiting-captain"))
         code, lines = self.tasks({})
         self.assertEqual(code, 0, lines)
-        self.assertEqual(len(lines), 2, lines)
+        self.assertEqual(len(lines), 4, lines)
         self.assertIn("at ideation (a, b);", lines[0])
-        self.assertIn("at validation (c, d);", lines[1])
+        self.assertIn("at validation (c, d);", lines[2])
+        self.assertEqual([lines[1], lines[3]], [watch.LIST_LINE] * 2)
         merge = "Name the merge order and each shared file from Batch overlap."
-        self.assertEqual([line.endswith(merge) for line in lines], [False, True])
-        self.assertEqual([len(line.split()) for line in lines], [25, 36])
+        self.assertEqual([line.endswith(merge) for line in (lines[0], lines[2])], [False, True])
+        self.assertEqual([len(line.split()) for line in (lines[0], lines[2])], [25, 36])
 
     def test_the_line_grows_by_one_word_per_slug(self):
         self.readme("roborev")
@@ -982,7 +988,8 @@ class TasksTests(unittest.TestCase):
         self.gates(("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"))
         code, lines = self.tasks({"pr view 7": view()})
         self.assertEqual(code, 0, lines)
-        self.assertIn(" await the Captain at ideation", lines[-3])
+        self.assertIn(" await the Captain at ideation", lines[-4])
+        self.assertEqual(lines[-3], watch.LIST_LINE)
         self.assertTrue(lines[-2].startswith("next: run `python3 "), lines)
 
     def test_a_failed_or_misshapen_status_call_is_reported_to_the_captain_with_exit_2(self):
@@ -1016,7 +1023,8 @@ class TasksTests(unittest.TestCase):
             return {str(p): p.read_bytes() for p in self.root.rglob("*") if p.is_file() and ".git" not in p.parts}
         self.gates(("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"))
         before = tree()
-        self.assertEqual(len(self.sitting_lines(self.tasks({})[1])), 1)
+        lines = self.tasks({})[1]
+        self.assertEqual((len(self.sitting_lines(lines)), len(self.list_lines(lines))), (1, 1))
         self.assertEqual(tree(), before)
 
     def ideation_readme(self):
@@ -1122,7 +1130,8 @@ class TasksTests(unittest.TestCase):
         self.gates(("bad", "backlog", "needs-preparation"), ("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"))
         code, lines = self.tasks({"pr view 7": view()})
         self.assertEqual(code, 0, lines)
-        self.assertIn(" await the Captain at ideation", lines[-4])
+        self.assertIn(" await the Captain at ideation", lines[-5])
+        self.assertEqual(lines[-4], watch.LIST_LINE)
         self.assertTrue(lines[-3].startswith("next: the seed check fails"), lines)
         self.assertTrue(lines[-2].startswith("next: run `python3 "), lines)
 
