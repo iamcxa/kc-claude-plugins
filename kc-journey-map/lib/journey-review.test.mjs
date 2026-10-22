@@ -91,7 +91,7 @@ for (const [name, mutate, message] of [
 	['a heading naming a release the map lacks', () => ({ record: RECORD.replace('book-pickup/r1', 'book-pickup/r9') }), /release r9, which the map lacks/],
 	['a missing Interrogation line', () => ({ record: RECORD.replace(/Interrogation:.*\n/, '') }), /Interrogation: line is missing/],
 	['an Interrogation line lacking a count', () => ({ record: RECORD.replace('dropped 3; ', '') }), /lacks the count "dropped <n>"/],
-	['an Interrogation line naming no codex arm', () => ({ record: RECORD.replace('codex gpt-6.1-sol high lens', 'claude sonnet') }), /names no codex arm/],
+	['an Interrogation line naming no codex arm', () => ({ record: RECORD.replace('codex gpt-6.1-sol high lens', 'claude sonnet') }), /names no lens arm/],
 	['a plain arm without its reason', () => ({ record: RECORD.replace('lens', 'lens; codex gpt-6.1-sol high plain') }), /plain arm must say why/],
 	['an interrogation that did not run', () => ({ record: RECORD.replace(/Interrogation:.*\n/, 'Interrogation: interrogation not run: codex missing\n') }), /interrogation did not run: interrogation not run: codex missing/],
 	['an open question on a release story', () => { const map = journey(true); map.steps[1].stories[0].questions[0] = { id: 'ready-where', ask: 'Where?' }; return { map } }, /open questions on check-ready: ready-where/],
@@ -107,6 +107,33 @@ for (const [name, mutate, message] of [
 	const r = f.check()
 	assert.equal(r.status, 1, r.stdout)
 	assert.match(r.stderr, message)
+})
+
+const earlier = (ref, date) => { const map = journey(true); Object.assign(map.steps[0].stories[0].questions[0].source, { ref, date }); return { map } }
+for (const [name, mutate, message] of [
+	['a record without its Reviewed line', () => ({ record: RECORD.replace(/Reviewed:.*\n/, '') }), /lacks the "Reviewed:" line/],
+	['a record without its Map edit section', () => ({ record: RECORD.replace('## Map edit\nAnswers applied to two questions.\n', '') }), /lacks the "## Map edit" section/],
+	['a record without its Walk section', () => ({ record: RECORD.replace(/## Walk\n\| Step \| Actor \|\n\|---\|---\|\n/, '') }), /lacks the "## Walk" section/],
+	['a record without its Holes section', () => ({ record: RECORD.replace('## Holes\nnone\n', '') }), /lacks the "## Holes" section/],
+	['a record without its Slice section', () => ({ record: RECORD.replace('## Slice\n3 of 4 limit\n', '') }), /lacks the "## Slice" section/],
+	['a record whose sections are out of order', () => ({ record: RECORD.replace('## Holes\nnone\n', '').replace('## Tasks', '## Holes\nnone\n## Tasks') }), /sections are out of order/],
+	['an answer whose source kind is not a schema kind', () => { const map = journey(true); map.steps[0].stories[0].questions[0].source.kind = 'releaes'; return { map } }, /hold-rule: source\.kind "releaes" is not gate, amendment or release/],
+	['an Interrogation line with a plain arm and no lens arm', () => ({ record: RECORD.replace('codex gpt-6.1-sol high lens', 'codex gpt-6.1-sol high plain: hard to reverse') }), /names no lens arm/],
+]) test(`check refuses ${name}`, (t) => {
+	const r = fixture(t, mutate()).check()
+	assert.equal(r.status, 1, r.stdout)
+	assert.match(r.stderr, message)
+})
+
+test('a story moved between releases keeps its earlier ruling source.ref, and a ruling made at this interrogation must still name this release', (t) => {
+	const moved = fixture(t, earlier('book-pickup/r2', '2026-10-01')).check()
+	assert.equal(moved.status, 0, moved.stderr)
+	const current = fixture(t, earlier('book-pickup/r2', '2026-10-22')).check()
+	assert.equal(current.status, 1)
+	assert.match(current.stderr, /hold-rule: source\.ref is "book-pickup\/r2"/)
+	const foreign = fixture(t, earlier('other/r2', '2026-10-01')).check()
+	assert.equal(foreign.status, 1)
+	assert.match(foreign.stderr, /hold-rule: source\.ref is "other\/r2"/)
 })
 
 test('a question with neither answer nor doc is refused as the order check and as a release question', (t) => {

@@ -9,6 +9,8 @@ import { normalizeStory, openQuestions } from './model.mjs'
 
 const text = (value) => (typeof value === 'string' ? value.trim().length > 0 : value instanceof Date || typeof value === 'number')
 const SAFE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
+const KINDS = ['gate', 'amendment', 'release']
+const SECTIONS = ['## Map edit', '## Walk', '## Holes', '## Slice', '## Tasks']
 const COUNTS = ['questions', 'dropped', 'decision rows', 'asked', 'open after']
 
 export const recordPath = (journeyPath, model, releaseId) => {
@@ -28,7 +30,7 @@ function interrogationProblems(line) {
 		if (!parts.some((part) => new RegExp(`^${count} \\d+$`).test(part))) problems.push(`the Interrogation: line lacks the count "${count} <n>"`)
 	}
 	const arms = parts.map((part) => /^codex (\S+) (\S+) (lens|plain)(?:: (.+))?$/.exec(part)).filter(Boolean)
-	if (arms.length === 0) problems.push('the Interrogation: line names no codex arm as "codex <model> <effort> lens" or "codex <model> <effort> plain: <why hard to reverse>"')
+	if (!arms.some((arm) => arm[3] === 'lens')) problems.push('the Interrogation: line names no lens arm; "codex <model> <effort> lens" is required, "codex <model> <effort> plain: <why hard to reverse>" is extra')
 	if (arms.some((arm) => arm[3] === 'plain' && !arm[4])) problems.push('a plain arm must say why the decision is hard to reverse')
 	return problems
 }
@@ -48,6 +50,8 @@ export function checkRecord(record, journeyText) {
 	const heading = /^# Release review: (\S+)\/(\S+)\s*$/.exec(lines[0] ?? '')
 	if (!heading) return ['the record must start with "# Release review: <journey>/<release-id>"']
 	const [, journey, releaseId] = heading
+	const day = (value) => (value instanceof Date ? value.toISOString() : String(value)).slice(0, 10)
+	const interrogatedOn = /^Interrogation: (\d{4}-\d{2}-\d{2})/m.exec(record)?.[1]
 	if (journey !== model.journey) fail(`heading names journey ${journey}, the map is ${model.journey}`)
 	if (!(model.releases ?? []).some((r) => r.id === releaseId)) fail(`heading names release ${releaseId}, which the map lacks`)
 	for (const problem of interrogationProblems(lines.find((l) => l.startsWith('Interrogation:')))) fail(problem)
@@ -57,15 +61,24 @@ export function checkRecord(record, journeyText) {
 	for (const story of onRelease) {
 		const open = openQuestions(story)
 		if (open.length) fail(`open questions on ${story.id}: ${open.map((q) => q.id).join(', ')}; the release is interrogated and asked before it is reviewed`)
-		for (const q of story.questions.filter((entry) => entry.source?.kind === 'release')) {
+		for (const q of story.questions.filter((entry) => entry.source)) {
 			const where = `${story.id}/${q.id}`
-			if (q.source.ref !== `${model.journey}/${releaseId}`) fail(`${where}: source.ref is ${JSON.stringify(q.source.ref)}, expected "${model.journey}/${releaseId}"`)
+			if (!KINDS.includes(q.source.kind)) { fail(`${where}: source.kind ${JSON.stringify(q.source.kind)} is not gate, amendment or release`); continue }
+			if (q.source.kind !== 'release') continue
+			const earlier = interrogatedOn && day(q.source.date) < interrogatedOn && (model.releases ?? []).some((r) => q.source.ref === `${model.journey}/${r.id}`)
+			if (q.source.ref !== `${model.journey}/${releaseId}` && !earlier) fail(`${where}: source.ref is ${JSON.stringify(q.source.ref)}, expected "${model.journey}/${releaseId}"`)
 			if (!text(q.source.words)) fail(`${where}: source.words is empty`)
 			if (!text(q.source.date)) fail(`${where}: source.date is empty`)
 			if (q.answer && q.doc) fail(`${where}: holds both answer and doc; a ruling has one home`)
 			if (!q.answer && !q.doc) fail(`${where}: holds neither answer nor doc`)
 		}
 	}
+
+	if (!/^Reviewed: \S/m.test(record)) fail('the record lacks the "Reviewed:" line')
+	const at = SECTIONS.map((section) => lines.indexOf(section))
+	for (const [i, section] of SECTIONS.entries()) if (at[i] < 0) fail(`the record lacks the "${section}" section`)
+	const found = at.filter((index) => index >= 0)
+	if (found.some((index, i) => i > 0 && index < found[i - 1])) fail(`the record sections are out of order; expected ${SECTIONS.join(', ')}`)
 
 	const rows = tasksTable(record)
 	if (!rows || rows.length < 2) fail('the record lacks a "## Tasks" table')
