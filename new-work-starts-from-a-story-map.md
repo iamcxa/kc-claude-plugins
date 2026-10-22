@@ -68,6 +68,12 @@ Asked: 「第 15 題：「先列清單、再一題一題問」這個做法，要
 Supersedes: none
 Design: this task's scope gains fo-batch-sittings' Cut 2 (before asking, list every open decision of the tasks at a stage once, each with its home, one plain sentence, FO's recommendation and what gets worse, then ask them one at a time), designed together with the story map, targeted at the next release. fo-batch-sittings Amendment 2 and its `## Design` Cut 2 and AC-8 seam are the source.
 
+### Amendment 2 — 2026-10-22, chat
+Captain: 「可以」 (chat, 2026-10-22)
+Asked: 「AC-2(d) 改成這條看日期的規則，可以嗎？」, where FO had stated the rule: a ruling dated before this interrogation may name an earlier release of the same journey as its source; a ruling made at this interrogation must still name the current release.
+Supersedes: AC-2
+Design: `journey-review.mjs check` accepts a `source.kind: release` ref naming another release of the same journey when the ruling's `date` is before the record's `Interrogation:` date; a ruling dated on or after it must name `<journey>/<release-id>`; a ref to another journey still fails.
+
 ## FO alignment
 
 Captain rulings on D1 to D4 (batch-5 sitting, 2026-10-22, chat, each given to FO's question one at a time; to be bound at the ideation gate):
