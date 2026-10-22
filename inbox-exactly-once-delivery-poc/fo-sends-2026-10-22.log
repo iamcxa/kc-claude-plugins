@@ -1,0 +1,6 @@
+id=poc2-20261022T084821 tamper_id=poc2-20261022T084821-t start=2026-10-22T08:48:21Z
+send1 {"sentAt":1792658902096,"receivedAt":1792658905514,"status":202,"body":{"status":"dispatched","id":"poc2-20261022T084821","run_id":39750507891,"run_url":"https://github.com/iamcxa/ops-inbox-probe-scratch/actions/runs/39750507891","t":{"arrival":1792658903546,"verified":1792658903548,"claimed":1792658903688,"minted":1792658903991,"dispatched":1792658905353,"slack":1792658905419},"tokenPermissions":{"actions":"write","metadata":"read"}}}
+send2 {"sentAt":1792658905808,"receivedAt":1792658906983,"status":200,"body":{"status":"duplicate","id":"poc2-20261022T084821"}}
+send3 {"sentAt":1792658969186,"receivedAt":1792658970223,"status":200,"body":{"status":"duplicate","id":"poc2-20261022T084821"}}
+tamper {"sentAt":1792658970316,"receivedAt":1792658971275,"status":401,"body":{"error":"signature-mismatch"}}
+end=2026-10-22T08:49:31Z
