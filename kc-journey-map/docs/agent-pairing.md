@@ -11,7 +11,7 @@ deployment, production credential migration, standing CI change or measured
 per-PR cost in this change.
 
 The [accepted private-entry plan](../../docs/journey/kc-journey-map/private-entry.md)
-owns current product scope; [ADR 0027](../../docs/adr/0027-distinct-agent-families-and-revoke-only-repair.md)
+owns current product scope; [ADR 0034](../../docs/adr/0034-distinct-agent-families-and-revoke-only-repair.md)
 owns authority and recovery decisions. Frozen design reports are historical and
 unchanged. A local test or screenshot does not authorize activation.
 

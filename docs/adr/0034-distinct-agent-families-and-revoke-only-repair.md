@@ -1,4 +1,4 @@
-# 0027. Bind each agent installation to exact human consent and rotating authority
+# 0034. Bind each agent installation to exact human consent and rotating authority
 
 Date: 2026-10-19
 
