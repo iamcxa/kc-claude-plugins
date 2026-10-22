@@ -125,6 +125,22 @@ for (const [name, mutate, message] of [
 	assert.match(r.stderr, message)
 })
 
+const ruling = (field, value) => () => { const map = journey(true); map.steps[0].stories[0].questions[0].source[field] = value; return { map } }
+const NO_SEPARATOR = RECORD.replace('|---|---|---|---|\n', '')
+for (const [name, mutate, message] of [
+	['a release source.date that is not text', ruling('date', 7), /hold-rule: source\.date is empty or not a YYYY-MM-DD date/],
+	['a release source.date that is not a date', ruling('date', 'nope'), /hold-rule: source\.date is empty or not a YYYY-MM-DD date/],
+	['a release source.date that is not a calendar day', ruling('date', '2026-13-45'), /hold-rule: source\.date is empty or not a YYYY-MM-DD date/],
+	['a release source.words that is not text', ruling('words', 7), /hold-rule: source\.words is empty or not a string/],
+	['a Tasks table without its separator row', () => ({ record: NO_SEPARATOR }), /Tasks table lacks its separator row/],
+	['an off-release first task row in a table without its separator row', () => ({ record: NO_SEPARATOR.replace('| Reserve a copy | reserve-copy |', '| Reserve a copy | elsewhere |') }), /task Reserve a copy: journey-story elsewhere is not a story on release r1/],
+	['an ADR owed entry whose question already holds doc', () => { const map = journey(true); const q = map.steps[0].stories[0].questions[0]; delete q.answer; q.doc = 'https://example.test/adr'; return { map } }, /ADR owed hold-rule already holds doc:/],
+]) test(`check refuses ${name}`, (t) => {
+	const r = fixture(t, mutate()).check()
+	assert.equal(r.status, 1, r.stdout)
+	assert.match(r.stderr, message)
+})
+
 test('a story moved between releases keeps its earlier ruling source.ref, and a ruling made at this interrogation must still name this release', (t) => {
 	const moved = fixture(t, earlier('book-pickup/r2', '2026-10-01')).check()
 	assert.equal(moved.status, 0, moved.stderr)

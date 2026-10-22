@@ -7,7 +7,13 @@ import { pathToFileURL } from 'node:url'
 import { parse } from 'yaml'
 import { normalizeStory, openQuestions } from './model.mjs'
 
-const text = (value) => (typeof value === 'string' ? value.trim().length > 0 : value instanceof Date || typeof value === 'number')
+const words = (value) => typeof value === 'string' && value.trim().length > 0
+const isoDay = (value) => {
+	const day = value instanceof Date && !Number.isNaN(value.getTime()) ? value.toISOString().slice(0, 10) : value
+	if (typeof day !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(day)) return null
+	const parsed = new Date(`${day}T00:00:00Z`)
+	return Number.isNaN(parsed.getTime()) || parsed.toISOString().slice(0, 10) !== day ? null : day
+}
 const SAFE = /^[A-Za-z0-9][A-Za-z0-9._-]*$/
 const KINDS = ['gate', 'amendment', 'release']
 const SECTIONS = ['## Map edit', '## Walk', '## Holes', '## Slice', '## Tasks']
@@ -50,7 +56,6 @@ export function checkRecord(record, journeyText) {
 	const heading = /^# Release review: (\S+)\/(\S+)\s*$/.exec(lines[0] ?? '')
 	if (!heading) return ['the record must start with "# Release review: <journey>/<release-id>"']
 	const [, journey, releaseId] = heading
-	const day = (value) => (value instanceof Date ? value.toISOString() : String(value)).slice(0, 10)
 	const interrogatedOn = /^Interrogation: (\d{4}-\d{2}-\d{2})/m.exec(record)?.[1]
 	if (journey !== model.journey) fail(`heading names journey ${journey}, the map is ${model.journey}`)
 	if (!(model.releases ?? []).some((r) => r.id === releaseId)) fail(`heading names release ${releaseId}, which the map lacks`)
@@ -65,10 +70,10 @@ export function checkRecord(record, journeyText) {
 			const where = `${story.id}/${q.id}`
 			if (!KINDS.includes(q.source.kind)) { fail(`${where}: source.kind ${JSON.stringify(q.source.kind)} is not gate, amendment or release`); continue }
 			if (q.source.kind !== 'release') continue
-			const earlier = interrogatedOn && day(q.source.date) < interrogatedOn && (model.releases ?? []).some((r) => q.source.ref === `${model.journey}/${r.id}`)
+			const earlier = interrogatedOn && isoDay(q.source.date) && isoDay(q.source.date) < interrogatedOn && (model.releases ?? []).some((r) => q.source.ref === `${model.journey}/${r.id}`)
 			if (q.source.ref !== `${model.journey}/${releaseId}` && !earlier) fail(`${where}: source.ref is ${JSON.stringify(q.source.ref)}, expected "${model.journey}/${releaseId}"`)
-			if (!text(q.source.words)) fail(`${where}: source.words is empty`)
-			if (!text(q.source.date)) fail(`${where}: source.date is empty`)
+			if (!words(q.source.words)) fail(`${where}: source.words is empty or not a string`)
+			if (!isoDay(q.source.date)) fail(`${where}: source.date is empty or not a YYYY-MM-DD date`)
 			if (q.answer && q.doc) fail(`${where}: holds both answer and doc; a ruling has one home`)
 			if (!q.answer && !q.doc) fail(`${where}: holds neither answer nor doc`)
 		}
@@ -85,7 +90,9 @@ export function checkRecord(record, journeyText) {
 	else {
 		const header = rows[0].join('|')
 		if (header !== 'Task|journey-story|Required tasks|Carries') fail(`the Tasks table header is "${header}", expected Task | journey-story | Required tasks | Carries`)
-		for (const cells of rows.slice(2)) {
+		const separated = rows[1].every((cell) => /^:?-+:?$/.test(cell))
+		if (!separated) fail('the Tasks table lacks its separator row after the header')
+		for (const cells of rows.slice(separated ? 2 : 1)) {
 			const [task, storyId, , carries = '-'] = cells
 			const story = onRelease.find((entry) => entry.id === storyId)
 			if (!story) { fail(`task ${task}: journey-story ${storyId} is not a story on release ${releaseId}`); continue }
@@ -93,7 +100,11 @@ export function checkRecord(record, journeyText) {
 			for (const entry of carries.split(',').map((part) => part.trim())) {
 				const owed = /^ADR owed: (\S+)$/.exec(entry)
 				if (!owed) fail(`task ${task}: Carries entry ${JSON.stringify(entry)} is not "ADR owed: <question id>"`)
-				else if (!story.questions.some((q) => q.id === owed[1] && q.source?.kind === 'release')) fail(`task ${task}: ADR owed ${owed[1]} is not a kind: release question on ${storyId}`)
+				else {
+					const asked = story.questions.find((q) => q.id === owed[1] && q.source?.kind === 'release')
+					if (!asked) fail(`task ${task}: ADR owed ${owed[1]} is not a kind: release question on ${storyId}`)
+					else if (asked.doc) fail(`task ${task}: ADR owed ${owed[1]} already holds doc:, so its ADR exists and is not owed`)
+				}
 			}
 		}
 	}
