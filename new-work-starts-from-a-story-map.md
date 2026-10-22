@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-22T04:01:40Z
+worktree: .worktrees/spacedock-ensign-new-work-starts-from-a-story-map
 ---
 
 ## Scope
