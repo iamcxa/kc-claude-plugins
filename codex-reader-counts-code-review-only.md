@@ -254,3 +254,31 @@ The reader's summary path reads the security review's marker, so a head Codex re
 - The ideation skill and its principles loaded from kc-dev-flow-2 0.27.0, matching the dispatch.
 - 100 public PRs of other organisations were read through `gh` (read-only) for the security-off layout; their names are not recorded here, only counts. Prototype, replay scripts and mutants are in `/tmp/ideation-ccr`, outside every repository.
 - The usage limit interrupted this stage once; the work resumed from the same prototype and was re-measured in one cached pass, so the figures above come from that pass.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (fix(kc-dev-flow-2): ...) from a branch off origin/main (4befab1f1d98cde0dfa107dbb12404c69f445af0, which holds codex-reader-reads-receipt-marker's merge) implementing the approved design (D1 option B): the Codex reader counts a clean round from the summary comment's `code_review` object (status completed, has_any_findings false, commit_sha equal to the head) in place of the security marker; only kc-dev-flow-2/extensions/codex/codex_review.py and kc-dev-flow-2/extensions/codex/test_codex_review.py change
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/702, head 12766289, base 4befab1f; `git diff --name-only origin/main...HEAD` lists exactly those two files (AC-6, AC-8: base holds the receipt merge).
+- DONE: Every acceptance criterion AC-1 to AC-8 green with the evidence each names, each falsifier (M1 to M7) shown failing by a mutation you run (python3 -B, caches cleared), including the AC-5 live replay of base and candidate on one cache (own 22 PRs and a fresh public draw of 100; public repository names not recorded)
+  AC-1: five security-only heads (685, 686, 689, paseo 10, 11) candidate exit 4 `not reviewed: no Codex evidence covers <sha>`, base exit 0 `summary marks the head completed`.
+  AC-2/3/4: `python3 -B -I test_codex_review.py` 20 tests OK; the new test's 11 subtests fail when its row's rule is broken (M1 to M7 below), the old guard tests are unedited apart from the `marker` helper and two removed assertions.
+  M1 6 red, M2 3, M3 1, M4 3, M5 5, M6 2, M7 1, each alone, `python3 -B -I`, fresh temp dir per mutant (script /tmp/ensign-mut.py); M3 fails only the unknown-finding row, M7 only the non-summary-lead test.
+  AC-5 (one cached read per PR, 2026-10-22): own 22 base 5 false clean / 0 missed, candidate 0 / 0; fresh public 100 base 0 / 24 missed (28 oracle-clean), candidate 0 / 0; no fetch or reader errors. Script /tmp/ensign-replay/replay.py.
+  AC-6: 0 added comment lines; AC-7: diff of EXTENSION.md, README.md, references is empty; AC-8: `git merge-base --is-ancestor` holds, base is origin/main 4befab1f.
+- DONE: comment_ratio.py reports 0 added comment lines; lint-skills.py exits 0; roborev evidence= line; push without force and without -u; CI green on the PR head; CI cost measured or stated as not measured
+  `comment_ratio.py origin/main HEAD`: code lines 41, comment lines 0, 0.0%, exit 0.
+  lint-skills.py: the repo's own `kc-dev-flow-2/scripts/lint-skills.py` (what CI runs) exits 0; the package-cache copy named in the dispatch exits 1 with `repository frontmatter check missing: .../kc-dev-flow-2/scripts/skill-frontmatter-lint.sh` (cache install lacks that repo-level script, also with `--root`); not a candidate defect.
+  roborev_gate.py: `clean on 127662897; evidence=roborev:1007` (exit 0, first run).
+  `git push origin <branch>` fast, no -u, no force. CI on 12766289: unit tests (python3) pass 1m50s, multi-profile route gate pass 6s, version parity pass 55s, GitGuardian pass. Cost: job wall time as above; billed minutes not measured; no workflow change.
+
+### Summary
+
+The summary-comment path of the Codex reader now reads `code_review` of `codex-review-state:v1` (completed, `has_any_findings` false, `commit_sha` equal to the head) and never the security marker or object, so security off, on or only one run read correctly; security-only heads read exit 4. The prototype from ideation was ported onto the receipt-fixed origin/main (7 changed lines in the reader, 39 added and 6 removed in the test file), then re-measured in the repository: all seven mutants red, replay 0 false clean and 0 missed clean for the candidate.
+
+### Deviations and disclosures
+
+- Public draw differs from the design's recorded one: base missed 24 (design recorded 21 on the receipt-fixed base; the draw is fresh and Codex reviewed more heads since). Candidate result unchanged at 0 / 0.
+- Dispatch named the package-cache `lint-skills.py`; it cannot run from the cache install (see above). The repo copy, which CI runs, exits 0.
+- `test_sd_dispatch.py` needs `--sd-plugin-root`; run against the spacedock 0.27.3 cache, all PASS. Other CI-listed tests run locally, all exit 0.
+- Scratch scripts and the replay cache live in /tmp (outside every repository); public repository names appear only in that scratch output, not in this file or the PR.
+- No ADR, no `Applied` or migration; `doc_impact.py origin/main HEAD` lists 0 documents.
