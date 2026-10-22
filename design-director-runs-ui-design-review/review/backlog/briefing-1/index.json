@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:design-director-runs-ui-design-review:backlog:attempt-1:revision-1",
+  "question": "Approve design-director-runs-ui-design-review into ideation? FO recommends yes; approving accepts that recommendation: ideation words the design director by duty, not persona: it owns the open design decisions (no decline closes without its reason checked against the picture; upheld declines listed at the gate for the Captain, who keeps the final say), it runs two passes (pictures at ideation, built-screen screenshots at validation, with what only the running screen can settle handed forward), and a decline citing the host component is checked against that component; the wording is tested by replaying the 10 already-raised paseo findings before it ships.",
+  "artifacts": [
+    {
+      "id": "artifact:design-director-runs-ui-design-review:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/893e4e8cc6486162e7bfdfd1c76997440e50bdcd/design-director-runs-ui-design-review.md",
+      "rev": "sha256:685a6558ef3d50c54809207f56058f83e09fd724cf21b39daedbdb92036f1b5e",
+      "mediaType": "text/markdown",
+      "summary": "Inputs: intake/ui-design-review-measurement-2026-10-22.md (reviewer raised 10 of 14 later problems; 70 of 93 findings declined by the author, 37 citing the host component; 4 of 7 validations had no screenshot) and intake/design-role-research-2026-10-22.md (published design skills are persona plus checklist; in human critique the owner decides; design review and design QA are two stages; no evidence persona wording changes what a reviewer notices). Amendment 1 sets the scope; model stays sonnet."
+    }
+  ]
+}

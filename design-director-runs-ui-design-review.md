@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:design-director-runs-ui-design-review:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:design-director-runs-ui-design-review-backlog-1
+              briefing:
+                id: briefing:design-director-runs-ui-design-review:backlog:attempt-1:revision-1
+                digest: sha256:a26c4da383fb5f17a359d53ce8aeccd8035d5bc3e1fcedfb55edc67fda39a563
+                room-ref: ./design-director-runs-ui-design-review/review/backlog/briefing-1
 ---
 
 ## Scope
