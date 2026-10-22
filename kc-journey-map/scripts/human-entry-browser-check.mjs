@@ -33,7 +33,7 @@ try {
  const before = await (await request('/doc?room=one')).json()
  process.env.JOURNEY_API_PORT = String(apiPort)
  process.env.JOURNEY_HUMAN_CONFIG = configFile
- vite = await viteServer({ configFile: join(root, 'vite.config.mts'), server: { host: '127.0.0.1', port: uiPort, strictPort: true } })
+ vite = await viteServer({ cacheDir:join(scratch,'vite-cache'),configFile: join(root, 'vite.config.mts'), server: { host: '127.0.0.1', port: uiPort, strictPort: true } })
  await vite.listen()
  browser = await chromium.launch({ headless: true })
  const context = await browser.newContext({ viewport: { width: 1280, height: 800 } })
@@ -83,12 +83,21 @@ try {
  assert.equal(await page.evaluate(() => !!window.editor), false)
  assert.equal((await request('/health').then(r => r.json())).rooms.includes('missing'), false)
  pass('authorized but unregistered room creates no document')
- await page.evaluate(() => { localStorage.setItem('journey-human-history:' + window.location.origin + ':browser-synthetic:owner', 'stale-unregistered') })
+ await page.evaluate(async identity => {
+  const db=await new Promise((resolve,reject)=>{const request=indexedDB.open('journey-human-drafts');request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)})
+  await new Promise((resolve,reject)=>{const tx=db.transaction(['roomHistory'],'readwrite');tx.objectStore('roomHistory').put({context:{origin:location.origin,backend:identity.backendId,member:identity.memberId,issuer:identity.issuer,subject:identity.subject},room:'stale-unregistered',token:'synthetic-stale-history'},[identity.backendId,identity.memberId]);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error)})
+  db.close()
+ },entryState)
  await page.goto(origin + '/')
  await page.getByRole('status').filter({ hasText: '請選擇你有權限' }).waitFor()
  assert.equal(await page.evaluate(() => !!window.editor), false)
  await page.getByRole('button', { name: 'one', exact: true }).click()
  await page.waitForFunction(() => !!window.editor)
+ await page.waitForFunction(async () => {
+  const db=await new Promise((resolve,reject)=>{const request=indexedDB.open('journey-human-drafts');request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)})
+  const value=await new Promise((resolve,reject)=>{const request=db.transaction(['roomHistory']).objectStore('roomHistory').get(['browser-synthetic','owner']);request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error)})
+  db.close();return value?.room==='one'
+ })
  await page.goto(origin + '/')
  await page.waitForFunction(() => !!window.editor)
  assert.equal(new URL(page.url()).searchParams.get('room'), 'one')
