@@ -88,7 +88,7 @@ gates:
                 state: pending
 started: 2026-10-21T19:12:41Z
 worktree: .worktrees/spacedock-ensign-merge-ask-holds-missing-clauses
-pr: iamcxa/kc-claude-plugins#703
+pr: pr-merge:703
 ---
 
 ## Scope
