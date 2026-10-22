@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:interrogation-astra-vs-sol-poc:validation:attempt-1:revision-1",
+  "question": "Close the astra-vs-sol interrogation POC on its result (astra lens 6 of 13 strict, sol lens 6, sol plain 5: no difference within one item), with the AC-2 caveat that the scorer knew the arm? (FO question: 「astra 和 sol 比較的那個 POC，要照結果結案嗎？」) FO recommends closing; approving accepts that recommendation.",
+  "artifacts": [
+    {
+      "id": "artifact:interrogation-astra-vs-sol-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/773c3935fa516dbc699beb8c61354c77df8314e3/interrogation-astra-vs-sol-poc.md",
+      "rev": "sha256:afab2ad4f6746cb6c5925acc78c14149923250ca30c10434958a330d6c4b8dfc",
+      "mediaType": "text/markdown",
+      "summary": "One astra arm over the closed POC five tasks; blind files scored against the same keys; AC-2 not met as written (the dispatch named the arm, FO design error); the Captain kept sol on cost."
+    }
+  ]
+}

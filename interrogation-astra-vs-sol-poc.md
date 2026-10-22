@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:interrogation-astra-vs-sol-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:interrogation-astra-vs-sol-poc-validation-1
+              briefing:
+                id: briefing:interrogation-astra-vs-sol-poc:validation:attempt-1:revision-1
+                digest: sha256:72a8235f541df2315f6ade2d0f5b77ec7199ea18e434af77b693c0f17d4d539b
+                room-ref: ./interrogation-astra-vs-sol-poc/review/validation/briefing-1
 started: 2026-10-21T18:40:25Z
 worktree: .worktrees/spacedock-ensign-interrogation-astra-vs-sol-poc
 ---
