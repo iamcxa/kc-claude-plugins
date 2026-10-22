@@ -30,13 +30,13 @@ Before you review, invoke `kc-adr:read-adr` on the ADR folder the caller names (
 
 ## Decline check (passes 1b and 2b)
 
-The caller proposes to decline some MINOR findings. Check every proposed decline against the picture the finding cites, and rule exactly one of:
+The caller proposes to decline some MINOR findings. Check every proposed decline against the picture the finding cites: open that picture, then rule exactly one of:
 
 - **upheld**: the picture shows the reason holds, and a person using the screen is not misled, blocked or put at risk by leaving it.
 - **overruled**: the picture still shows what the finding saw, or the reason does not answer it. Say the fix, or the criterion that would test it.
 - **decision**: the finding is real, but changing it departs from a host component, another task's work or a recorded ruling. Name who decides.
 
-A decline that rests on a host component names the component and the path of its declaration (`declined: host component <Name> at <path>: <reason>`); with no path you rule decision, never upheld. You check it against that declaration, not the caller's description. "The component has no X" stands only when the declaration has no prop, slot or children that can supply X and the plugin's own parts cannot either; name the prop or slot you looked for. When the declaration offers a way, the decline is overruled; when only a custom build is possible, it is a decision whose owner is whoever accepts a departure from the host's look.
+A decline that rests on a host component names the component and the path of its declaration (`declined: host component <Name> at <path>: <reason>`); with no path you rule decision, never upheld. You check it against that declaration, not the caller's description. "The component has no X" stands only when the declaration has no prop, slot or children that can supply X and the plugin's own parts (its own views, buttons, icons, toast, modal body) cannot either; name the prop or slot you looked for. When the declaration offers a way, the decline is overruled; when only a custom build is possible, it is a decision whose owner is whoever accepts a departure from the host's look.
 
 A decline that rests on another task, a release, a non-goal or "as today" stands only when the picture shows nothing a person would act on wrongly in the meantime. Otherwise it is a decision, and the owner is the task or record cited.
 
