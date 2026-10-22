@@ -8,7 +8,7 @@ Accepted
 
 ## Context
 
-One adopter's release ran `review-release` first, and its task split rested on answers to which the interrogation then added nine open questions (the task's release-preparation intake, 2026-10-21). kc-journey-map's `interrogation.md` ran a Claude and a Codex worker and sent every decision to "the project's decision record", which in a kc-dev-flow-2 repository has no number route before a task exists. kc-adr's `read-adr` (`Where new information goes`) already ranks where a ruling lives: the task file, the story map, an instruction file, or an ADR. Two POCs on five task snapshots found `gpt-6-astra` with the reviewer lens, `gpt-6.1-sol` with it and sol plain within one of 13 key items of each other (6, 6, 5).
+One adopter's release ran `review-release` first, and its task split rested on answers to which the interrogation then added nine open questions. kc-journey-map's `interrogation.md` ran a Claude and a Codex worker and sent every decision to "the project's decision record", which in a kc-dev-flow-2 repository has no number route before a task exists. kc-adr's `read-adr` (`Where new information goes`) already ranks where a ruling lives: the task file, the story map, an instruction file, or an ADR. Two POCs on five task snapshots found `gpt-6-astra` with the reviewer lens, `gpt-6.1-sol` with it and sol plain within one of 13 key items of each other (6, 6, 5).
 
 ## Decision
 
@@ -23,7 +23,7 @@ One adopter's release ran `review-release` first, and its task split rested on a
 
 **Recommended:** D1 the review record, D2 a seed hold, D4 Codex plus a Claude sonnet run, and D5 option (a). The Captain chose differently on D1, D2 and D4.
 
-A release is interrogated and its decisions are asked before it is walked or split, and the order is kept by `journey-review.mjs check`. A pre-task ruling has one home by kc-adr's five questions: the map question for this slice or one task he settles now, an ADR for a ruling later work must respect, and nothing in the review record. Later work that prepares a release follows this order and routing.
+A release is interrogated and its decisions are asked before it is walked or split, and `journey-review.mjs check` refuses a record with no `Interrogation:` line or with a question still open. A pre-task ruling has one home by kc-adr's five questions: the map question for this slice or one task he settles now, an ADR for a ruling later work must respect, and nothing in the review record. Later work that prepares a release follows this order and routing.
 
 ## Consequences
 
