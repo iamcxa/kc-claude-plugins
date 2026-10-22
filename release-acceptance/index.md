@@ -215,6 +215,14 @@ Verified by: an import-scan test in each plugin; `git diff --stat origin/main --
 6. **Map-level entry points.** Recommend no new field now: the walker finds the entry and the report records it. What gets worse: a missing entry point is found by the walker, not read off the map.
 7. **Budget and stop condition** as written under Design. Recommend accept.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-22, chat
+Captain: 「按你建議」 (chat, 2026-10-22, the design-director-runs-ui-design-review ideation sitting, D-1)
+Asked: 「「整個畫面實際操作審一次」要不要變成正式的一關？」, with FO's recommendation that it belongs to this task: a second pass over the same operated walk, run by kc-dev-flow-2:design-director, with a finding class for works but unusable.
+Supersedes: none
+Design: the release walk gains a second pass over the same operated walk, run by the design director, judging whether each story is usable, not only whether it works; its findings carry a class for works but unusable.
+
 ## FO alignment
 
 Release: none (package workflow change; kc-claude-plugins has no journey map).
