@@ -56,6 +56,17 @@ gates:
                 id: briefing:read-adr-reporting-rule-followup:validation:attempt-1:revision-1
                 digest: sha256:7f2bc36d1b0adbd512685154ea6759e5ceeaebcc7ac4582473c6b852deb9da6c
                 room-ref: ./read-adr-reporting-rule-followup/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:read-adr-reporting-rule-followup:validation:1
+                briefing: briefing:read-adr-reporting-rule-followup:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T07:26:23.778821Z"
+                decision: approve
+                reason: 'Captain replied 「准」 (2026-10-22) to the validation gate: PASSED and deliver as stated in the gate question (push, Draft PR with the presented body, ready after CI, external-review rounds, merge the full head once delivery_gate.py check passes, then remove the clean pushed worktree and local branch).'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-22T03:51:42Z
 ---
 
