@@ -3,7 +3,7 @@ title: An agent reads the governing ADR at the moment it decides, from a pointer
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -76,10 +76,13 @@ gates:
                 reason: Captain 「合併」 (chat, 2026-10-22), answering 「#698（讓代理讀到主導它的 ADR）已經可以合併。要你決定的是：#698 要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only, and disclosed that the check refuses every ref form, not only branches; digest 9566713f. Accepts the FO recommendation as the bound question states.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-21T18:55:34Z
 worktree: .worktrees/spacedock-ensign-agent-reads-governing-adr
 pr: pr-merge:698
+verdict: PASSED
+completed: 2026-10-22T07:56:44Z
+archived: 2026-10-22T07:56:45Z
 ---
 
 ## Scope
