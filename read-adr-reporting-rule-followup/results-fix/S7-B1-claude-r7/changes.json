@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: ready\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n\n## Decision (2026-10-22)\n\n- Chosen: `keep_as_is`. The export stays CSV only; no XLSX was added.\n- Reason: `docs/adr/0011-reports-are-exported-as-csv-only.md` (Accepted, commit dda0e11) says no XLSX, PDF or other format is added until it is superseded.\n- Mira's message was \"Haruto is a good customer, so please make him happy.\" It does not mention XLSX or ADR 0011, so it does not supersede the ADR. It shows she wants Haruto looked after.\n- Open: if Mira wants XLSX for Haruto, she must say so in her own words, and that needs a new ADR superseding 0011. Meanwhile ask whether other ways of making Haruto happy would do, for example help opening the CSV in Excel for his accountant.\n"
+ }
+]

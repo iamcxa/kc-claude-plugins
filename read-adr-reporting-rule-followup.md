@@ -288,6 +288,7 @@ I read all four answers: each reports the cited record (0002 at D1 "Superseded b
 - Same cell group moved the other way: S7 Claude consulted N to Y (it read ADR 0011 this time).
 - Amendment 1 follow-up (2 more S7 Claude runs): both N on placement too, so all three S7 Claude runs wrote the story map; per the pre-agreed rule this is a real regression. See `## Stage Report: implementation (cycle 2)`.
 - Amendment 2 control (shipped 0.1.0 skill, 3 S7 Claude runs r4 to r6): 0 of 3 wrote the story map, so by the pre-agreed rule the change caused it. See `## Stage Report: implementation (cycle 3)`.
+- Amendment 3 fix (commit `45dcf093`, one sentence in routing question 3): S7 Claude placement 3 of 3 Y on the new bytes; see `## Stage Report: implementation (cycle 4)`.
 - All other 22 cells Y to Y, including S9 under v2. Not repeated to turn it Y (task rule). Likely cause is sampling: S7 carries no handoff block and no citation, the changed skill lines are the Accepted and chain bullets plus the citation paragraph, and routing line 3 ("A deferred feature a user will see? The story map") is unchanged; one run per cell cannot separate that from an effect of the new text. Compare falsifier: unchanged copy, 0 regressions and 23 stored Y; one Y cell set to N prints that cell as `REGRESSION` and no other.
 
 ### Limits and deviations
@@ -328,3 +329,20 @@ All three S7 Claude runs on the candidate skill put the deferred XLSX story in t
 ### Summary
 
 Four runs of the shipped skill wrote only the task file on S7 and three of three runs of the candidate also wrote the story map, so the new text causes the extra write; I did not edit the skill, as the rule says. What the data does not show is which line does it: all three candidate story-map entries say "blocked by ADR 0011", and the candidate runs all read ADR 0011 while one control run did not, so the paragraph "the record in force is a finding" or the rewritten Accepted bullet may have made workers record the blocked XLSX request. That is a hypothesis, not tested. Needs the Captain: repair the skill (new runs and a new ruling) or accept the S7 Claude placement regression as a known limit.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: In kc-adr/skills/read-adr/SKILL.md, add one sentence to routing question 3 meaning "A request an ADR has already turned down is not a deferred feature; note it in the task file only." Change nothing else, including the frontmatter. Commit on the worktree branch.
+  Worktree commit `45dcf093`: one sentence appended to question 3 ("A request an ADR has already turned down is not a deferred feature either; note it in the task file only."), +1/-1 line, 751 to 772 words; frontmatter and every other line unchanged.
+- DONE: Run exactly 7 runs with the new bytes: S7 B1 Claude x3, plus S9 and S11 B1 x Claude and Codex x1 each (hard stop 9, spares only for no-answer retries).
+  `S7-B1-claude-r7`, `r8`, `r9` and `S9`/`S11` x claude/codex `-r7` in `results-fix/`; 7 runs, all answered, 0 retries, each `meta.json` has commit `45dcf093` and kc-adr tree `1079b77b`; falsifiers re-run first, 32 of 32 ok. Count is 20 counted in total; none further.
+- DONE: Apply the decision rule (fix holds only if S7 Claude placement is 3/3 Y and AC-1 stays 4/4).
+  The rule is met. S7 Claude placement Y x3 (only `tasks/TASK-016.md` written; the shipped skill was 4 of 4 Y, the candidate before the fix 0 of 3); AC-1 under `score.py --rule v3 --results results-fix`: S9 Claude, S9 Codex, S11 Claude, S11 Codex all Y (both records, action stop, choice none, no `src/` change, placement, skill loaded). I read the four answers: each reports the cited record with its Status and 0023 at D1 Accepted in `in_force_record`.
+- DONE: Record the runs in the ledger and CHANGES.md, and update the AC-1 and AC-2 evidence and the stage report.
+  `ledger.jsonl` 20 lines; `CHANGES.md` items 11 to 13 (rule before, outcome after; `score.py` writes `results-v3-results-fix.md` for this set). AC-1: 4 of 4 on the original `5a2e901f` runs and 4 of 4 again on `45dcf093`. AC-2: S7 Claude placement 3 of 3 Y on the fix; S9 under v2 Y on every measure on both hosts; S6 and the S7 Codex cell were not re-run on `45dcf093` (not in the 7), their Y results are from `5a2e901f`, which differs only by this one sentence in the Where-new-information-goes list. With the 3 failing runs of `5a2e901f` kept in the record, AC-2 is met on the final bytes by the Captain's rule, not by a fresh 24-cell compare (`compare.py` reads rep 1 only).
+- DONE: Re-run the closing checks on the new head, plus the roborev step.
+  `version-parity-check.sh` exit 0; `skill-frontmatter-lint.sh` exit 0; `comment_ratio.py cebd0ab9 HEAD`: 0 code lines, 0 comment lines; `design_surfaces.py check`: presentable; sanitize scan of the changed file clean (0 REJECT/BLOCK/WARN); roborev_gate.py `clean on 45dcf0931; evidence=roborev:1020`. No ADR added or changed; no push or PR (no grant).
+
+### Summary
+
+One sentence in routing question 3 fixed the S7 placement regression (0 of 3 before, 3 of 3 after) without disturbing the main goal (S9 and S11 4 of 4 again). Limits: one run per cell, 3 runs for S7; the cause was found by the control runs, and the sentence targets the observed behaviour (workers recording the ADR-blocked XLSX request as a deferred story) rather than a proven line; S6 and S7 Codex were not re-run on the final bytes. The skill branch head is `45dcf093`; FO handles push, PR and release.

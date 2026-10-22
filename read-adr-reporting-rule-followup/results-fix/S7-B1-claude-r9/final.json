@@ -1,0 +1,10 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as CSV only. ADR 0011 in mira-app (Accepted) bars XLSX until Mira supersedes it, and \"make him happy\" is not a decision to do that. I recorded this in the task file only.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Set status to blocked pending Mira. Added a decision note: export kept as CSV under ADR 0011; Mira's message was a wish rather than a ruling; XLSX needs her explicit supersession of ADR 0011 or telling Haruto that the CSV opens in Excel."
+  }
+ ]
+}

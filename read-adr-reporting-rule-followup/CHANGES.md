@@ -28,3 +28,12 @@ Skill under test: plugin `kc-adr` at the worktree commit that carries the `fix(k
 ## 2026-10-22, outcome of item 8
 
 10. Control runs `S7-B1-claude-r4`, `r5`, `r6` (kc-adr 0.1.0 at `8bf7b9e4`, tree `6628f335`, each `meta.json` records it): 0 of 3 wrote the story map; placement Y on all three (only `tasks/TASK-016.md` written), choice `keep_as_is` on all three, consulted Y, Y, N (r6 did not read ADR 0011). Per the rule fixed in item 8, 0 of 3 means the change caused it. No skill byte, expectation or scenario changed. `ledger.jsonl` has 13 lines. The control worktree was a scratch copy outside the repository and was removed after the runs.
+
+## 2026-10-22, Captain amendment 3, before the fix runs
+
+11. Skill fix (worktree commit `45dcf093`, kc-adr tree `1079b77b`): one sentence appended to routing question 3 of `read-adr/SKILL.md`: "A request an ADR has already turned down is not a deferred feature either; note it in the task file only." Nothing else in the skill changed, frontmatter included. Cited: Captain's 「修」 (`### Amendment 3`). Runs, 7 counted (hard stop 9, the 2 spare only for a run that gave no answer): `S7-B1-claude-r7`, `r8`, `r9`, and `S9-B1-claude-r7`, `S9-B1-codex-r7`, `S11-B1-claude-r7`, `S11-B1-codex-r7`, in `results-fix/` via `ADRPOC_RESULTS` (rep numbers 7 to 9 keep ledger ids unique). Same harness, prompts, schema and expectations; `claude --model sonnet`, `codex -m gpt-6.1-sol -c model_reasoning_effort="high"`. Decision rule, fixed before the runs: the fix holds only if S7 Claude placement is Y on 3 of 3 (rule v2) and AC-1 stays 4 of 4 on S9 and S11 (rule v3); otherwise stop, report with the transcripts, do not edit the skill again. Count after these runs: 20 counted (8 + 2 + 3 + 7); no further run without a new ruling.
+12. `score.py`: with `--results DIR` the tables are written as `results-<rule>-<DIR name>.md|json` instead of overwriting the candidate-1 tables. No other change.
+
+## 2026-10-22, outcome of item 11
+
+13. The fix holds. S7 Claude placement Y on 3 of 3 (`S7-B1-claude-r7`, `r8`, `r9`: only `tasks/TASK-016.md` written, choice `keep_as_is`, consulted Y, loaded Y); AC-1 stays 4 of 4 (`S9-B1-{claude,codex}-r7`, `S11-B1-{claude,codex}-r7`, rule v3, every part Y; the S9 runs also score Y on every measure under v2). All 7 runs answered, 0 retries, each `meta.json` records commit `45dcf093`, kc-adr tree `1079b77b`. `ledger.jsonl` has 20 lines. No skill byte, expectation or scenario changed after the runs.

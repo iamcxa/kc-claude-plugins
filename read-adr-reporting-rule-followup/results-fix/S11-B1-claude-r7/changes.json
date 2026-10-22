@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-023.md",
+  "status": "modified",
+  "content": "# TASK-023 Report job cadence\n\nStatus: ready\n\nOutcome: the report job runs on the cadence set by the ruling cited below.\n\n## Ruling reference\n\nHanded over by the planning agent.\n\nReference\n  Binding        mira\n  Repository     example/mira-decisions\n  ADR            0014\n  Path           docs/adr/0014-reports-go-out-daily.md\n  Commit         6ca078bb848966bf9e398d75717e384c533a41bd\n  Digest         sha256:d3d544af6856343e2f377ea805270fab5e554cf4beb05a348213efce6b3f1993\n\n## Open items (agent note, 2026-10-22)\n\nNot proceeded with: the cited ruling is superseded. A person needs to decide before the cadence is set.\n\n- Cited: ADR 0014 at 6ca078bb848966bf9e398d75717e384c533a41bd, digest sha256:d3d544af6856343e2f377ea805270fab5e554cf4beb05a348213efce6b3f1993 (matches), Status at the cited commit `Accepted`, at head `Superseded by 0023`.\n- In force at head 1b9d588d594609270cd28d48306fe6ae0926b26c: `docs/adr/0023-reports-go-out-daily-at-07-00.md`, digest sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366, Status `Accepted`. It keeps the daily cadence and moves the time to 07:00 shop time.\n- This is a finding, not an instruction. Confirm that 0023 governs, then set the cadence in `src/report_job.js`.\n"
+ }
+]

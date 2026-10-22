@@ -1,0 +1,10 @@
+{
+ "choice": "keep_as_is",
+ "decision": "Kept the export as CSV. App ADR 0011 (Accepted, not superseded) says CSV only and no XLSX until a newer record supersedes it. Mira's \"make him happy\" doesn't name XLSX or lift that rule, so it isn't a ruling.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-016.md",
+   "info": "Added notes: Mira's message and why it isn't a ruling; decision to keep CSV per ADR 0011; open item that XLSX needs Mira to explicitly supersede ADR 0011."
+  }
+ ]
+}

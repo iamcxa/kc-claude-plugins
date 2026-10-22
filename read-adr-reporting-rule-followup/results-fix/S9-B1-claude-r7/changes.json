@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-021.md",
+  "status": "modified",
+  "content": "# TASK-021 Report job cadence\n\nStatus: blocked\n\nOutcome: the report job runs on the cadence set by the ruling cited below.\n\n## Ruling reference\n\nHanded over by the planning agent.\n\nReference\n  Binding        mira\n  Repository     example/mira-decisions\n  ADR            0002\n  Path           docs/adr/0002-reports-go-out-weekly.md\n  Commit         1b9d588d594609270cd28d48306fe6ae0926b26c\n  Digest         sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06\n\n## Open items (agent finding, 2026-10-22)\n\nNot started: the cited ruling is not the one in force.\n\n- Cited: ADR 0002 (weekly) at 1b9d588d594609270cd28d48306fe6ae0926b26c, digest matched, Status `Superseded by 0014`.\n- Chain: 0002 -> 0014 (daily 06:00, also `Superseded by 0023`) -> 0023 `Accepted`, digest sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366 (docs/adr/0023-reports-go-out-daily-at-07-00.md, same commit = repo head). It says daily at 07:00 shop time.\n- 0023 is a finding, not an instruction. A person must confirm the cadence (and whether this task's outcome should change) before the report job is touched.\n"
+ }
+]

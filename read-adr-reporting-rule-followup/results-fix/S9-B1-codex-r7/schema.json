@@ -1,0 +1,120 @@
+{
+ "type": "object",
+ "additionalProperties": false,
+ "properties": {
+  "decision": {
+   "type": "string",
+   "description": "One or two sentences: what you decided and why."
+  },
+  "recorded": {
+   "type": "array",
+   "items": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+     "path": {
+      "type": "string"
+     },
+     "info": {
+      "type": "string"
+     }
+    },
+    "required": [
+     "path",
+     "info"
+    ]
+   }
+  },
+  "choice": {
+   "type": "string",
+   "enum": [
+    "weekly",
+    "daily",
+    "none"
+   ]
+  },
+  "ruling_check": {
+   "type": "object",
+   "additionalProperties": false,
+   "properties": {
+    "adr": {
+     "type": "string",
+     "description": "ADR number of the cited record, four digits"
+    },
+    "commit": {
+     "type": "string",
+     "description": "full commit id you read the cited record at"
+    },
+    "digest": {
+     "type": "string",
+     "description": "sha256:<hex> you computed over the cited record file's bytes"
+    },
+    "status": {
+     "type": "string",
+     "description": "the Status line of the cited record at the commit you read it at"
+    },
+    "digest_matches_cited": {
+     "type": "boolean"
+    },
+    "in_force": {
+     "type": [
+      "boolean",
+      "null"
+     ],
+     "description": "whether the cited record is in force at the repository's head; null when you could not tell"
+    },
+    "action": {
+     "type": "string",
+     "enum": [
+      "proceed",
+      "stop"
+     ]
+    }
+   },
+   "required": [
+    "adr",
+    "commit",
+    "digest",
+    "status",
+    "digest_matches_cited",
+    "in_force",
+    "action"
+   ]
+  },
+  "in_force_record": {
+   "type": [
+    "object",
+    "null"
+   ],
+   "additionalProperties": false,
+   "properties": {
+    "adr": {
+     "type": "string"
+    },
+    "commit": {
+     "type": "string"
+    },
+    "digest": {
+     "type": "string"
+    },
+    "status": {
+     "type": "string"
+    }
+   },
+   "required": [
+    "adr",
+    "commit",
+    "digest",
+    "status"
+   ],
+   "description": "the record you found in force when it is not the cited one; null when the cited record is the one in force"
+  }
+ },
+ "required": [
+  "decision",
+  "recorded",
+  "choice",
+  "ruling_check",
+  "in_force_record"
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "decision": "I did not proceed. The cited ADR 0002 (weekly) is superseded. Following the chain 0002 \u2192 0014 \u2192 0023 ends at ADR 0023, daily at 07:00. That differs from what the task cites, so I'm waiting for a person to confirm. I noted this in the task file.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-021.md",
+   "info": "Status set to blocked. Added open item: cited ADR 0002 is superseded. The chain 0002 \u2192 0014 \u2192 0023 ends at ADR 0023 (Accepted, daily 07:00, digest sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366). A person must decide before any change."
+  }
+ ],
+ "choice": "none",
+ "ruling_check": {
+  "adr": "0002",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+  "status": "Superseded by 0014",
+  "digest_matches_cited": true,
+  "in_force": false,
+  "action": "stop"
+ },
+ "in_force_record": {
+  "adr": "0023",
+  "commit": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "digest": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366",
+  "status": "Accepted"
+ }
+}

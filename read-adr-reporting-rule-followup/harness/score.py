@@ -406,11 +406,12 @@ def main():
         rid = sys.argv[sys.argv.index("--run") + 1]
         print(json.dumps(next(g for g in grades if g["run"] == rid), indent=1))
         return
-    (HERE.parent / f"results-{rule}.json").write_text(json.dumps(grades, indent=1))
+    tag = f"-{results.name}" if results != RESULTS else ""
+    (HERE.parent / f"results-{rule}{tag}.json").write_text(json.dumps(grades, indent=1))
     md = tables(grades)
     if rule == "v3":
         md += "\n\nAC-1 cells (S9 and S11; every part must be Y):\n\n" + ac1_table(grades)
-    (HERE.parent / f"results-{rule}.md").write_text(md + "\n")
+    (HERE.parent / f"results-{rule}{tag}.md").write_text(md + "\n")
     print(md)
 
 
