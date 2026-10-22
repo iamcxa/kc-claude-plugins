@@ -1,0 +1,23 @@
+{
+  "class": "never",
+  "head": "589c54e57fe969b6049bad737be8615e96b7b54e",
+  "model": "not run",
+  "necessity": "five files (AGENTS.md, CLAUDE.md one line, scripts/adr-path-check.py, scripts/adr-path-check.test.py, one workflow file), each named in the design and Amendment 1.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: \"- F2 Deferred risk: the pointer's\"",
+    "point: deferred: '- F3 Deferred risk: the `REF:`'",
+    "point: deferred: '- F4 Deferred risk: after-compaction reload'",
+    "point: deferred: 'FO declines: Deferred risk, Codex P2'",
+    "point: amendment: 'Amendment 1 dated 2026-10-22'",
+    "point: path: '.github/workflows/adr-path-check.yml'",
+    "point: path: 'AGENTS.md'",
+    "point: path: 'CLAUDE.md'",
+    "point: path: 'scripts/adr-path-check.py'",
+    "point: path: 'scripts/adr-path-check.test.py'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#698",
+  "sufficiency": "AGENTS.md carries a 39-word pointer to docs/adr and CLAUDE.md imports it with @AGENTS.md, which reached the Claude main session, a spacedock:ensign subagent and Codex in a clean-clone probe and was ab",
+  "time": "2026-10-22T07:50:15Z",
+  "verdict": "ask"
+}
