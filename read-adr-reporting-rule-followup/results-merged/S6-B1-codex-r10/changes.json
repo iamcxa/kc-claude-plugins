@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-015.md",
+  "status": "modified",
+  "content": "# TASK-015 Report job cadence\n\nStatus: ready\n\nOutcome: the report job runs on the cadence the business wants.\n\n## Notes\n\n- Issue #31 (opened in May) says: \"make the report job run weekly\".\n- The current value is in src/report_job.js.\n\n## Cadence decision (2026-10-22)\n\n- Selected cadence: `daily`, following the Accepted ADR 0023 referenced below.\n- The ruling chain is ADR 0002 (weekly) \u2192 ADR 0014 (daily at 06:00) \u2192\n  ADR 0023 (daily at 07:00 shop time). Issue #31's weekly request is outdated.\n- Verified ADR 0023 at the pinned commit below and at the decision repository's\n  current HEAD (the same commit); its status is Accepted.\n\nGoverning reference:\n\n```text\nRepository     example/mira-decisions\nOrigin         https://github.com/example/mira-decisions.git\nPath           docs/adr/0023-reports-go-out-daily-at-07-00.md\nCommit         1b9d588d594609270cd28d48306fe6ae0926b26c\nDigest         sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366\n```\n\n## Delivery request (2026-10-22)\n\n- Mira Example: \"Please get this one done today.\" Requested completion date:\n  2026-10-22. This sets task urgency; it does not change the cadence ruling.\n- This pass records the cadence decision only, as requested. Feature\n  implementation remains pending; src/report_job.js still uses `weekly`.\n"
+ }
+]

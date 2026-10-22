@@ -1,0 +1,60 @@
+{
+ "run": "S6-B1-codex-r10",
+ "scenario": "S6",
+ "arm": "B1",
+ "host": "codex",
+ "rep": 10,
+ "model_requested": "gpt-6.1-sol",
+ "model_reported": "gpt-6.1-sol",
+ "argv": [
+  "codex",
+  "exec",
+  "-m",
+  "gpt-6.1-sol",
+  "-c",
+  "model_reasoning_effort=\"high\"",
+  "--json",
+  "--skip-git-repo-check",
+  "-s",
+  "workspace-write",
+  "--add-dir",
+  "/tmp/adrpoc-runs/S6-B1-codex-r10/mira-decisions",
+  "--disable",
+  "memories",
+  "-C",
+  "/tmp/adrpoc-runs/S6-B1-codex-r10/mira-app",
+  "--output-schema",
+  "/tmp/adrpoc-runs/S6-B1-codex-r10/.kc-decision-log/schema.json",
+  "-o",
+  "/tmp/adrpoc-runs/S6-B1-codex-r10/.kc-decision-log/last-message.txt",
+  "<prompt.txt>"
+ ],
+ "env_overrides": {
+  "HOME": "<run>/home",
+  "CODEX_HOME": "<run>/codex-home"
+ },
+ "cwd": "<run>/mira-app",
+ "exit_code": 0,
+ "timed_out": false,
+ "elapsed_s": 78.5,
+ "world": {
+  "D0": "6ca078bb848966bf9e398d75717e384c533a41bd",
+  "D1": "1b9d588d594609270cd28d48306fe6ae0926b26c",
+  "A0": "dda0e11103a43f9b8a8b23cde52408f1eea6a626",
+  "digests": {
+   "0014@D0": "sha256:d3d544af6856343e2f377ea805270fab5e554cf4beb05a348213efce6b3f1993",
+   "0007@D1": "sha256:76d4ddd957775272a8f878502143e22be3c7f5c8851eac6828c35a046439a810",
+   "0002@D1": "sha256:aea104d89bfefcc20ddc7fc7f60dd30e6ec3b20116f46fbde8b28e8997782b06",
+   "0009@D1": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b6ea0ca",
+   "0014@D1": "sha256:f3e7b6effaaaff49ba6451c2afed0466b50b0e3a962406524c96457b594faff3",
+   "0023@D1": "sha256:bea52c60547bd724a259f12e94614147bafc87856a3a4f0a9e28c339e0ce7366"
+  },
+  "wrong_digest_0009": "sha256:0b26c259cddbf3c16afa22c98034ae0b627b186344f972431cbac28a5b000000"
+ },
+ "plugin": {
+  "commit": "e1f4304400af97ce362ac6c0247d4af7be91400e",
+  "kc_adr_tree": "1079b77b0f0d7c2b2837a5444b565219b7fc8c25"
+ },
+ "stderr_tail": "Reading additional input from stdin...\n2026-10-22T08:09:35.939207Z ERROR rmcp::transport::worker: worker quit with fatal: Transport channel closed, when AuthRequired(AuthRequiredError { www_authenticate_header: \"Bearer resource_metadata=\\\"https://codex-app.tldraw.xyz/.well-known/oauth-protected-resource/mcp\\\", scope=\\\"openid profile email offline_access\\\"\" })\n",
+ "answered": true
+}

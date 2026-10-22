@@ -37,3 +37,11 @@ Skill under test: plugin `kc-adr` at the worktree commit that carries the `fix(k
 ## 2026-10-22, outcome of item 11
 
 13. The fix holds. S7 Claude placement Y on 3 of 3 (`S7-B1-claude-r7`, `r8`, `r9`: only `tasks/TASK-016.md` written, choice `keep_as_is`, consulted Y, loaded Y); AC-1 stays 4 of 4 (`S9-B1-{claude,codex}-r7`, `S11-B1-{claude,codex}-r7`, rule v3, every part Y; the S9 runs also score Y on every measure under v2). All 7 runs answered, 0 retries, each `meta.json` records commit `45dcf093`, kc-adr tree `1079b77b`. `ledger.jsonl` has 20 lines. No skill byte, expectation or scenario changed after the runs.
+
+## 2026-10-22, Captain amendment 4, before the merged-bytes runs
+
+14. Three arm-B1 runs on the merged bytes: a detached worktree of the marketplace repository at `e1f43044` (`kc-adr` tree `1079b77b`, identical to the fix commit `45dcf093`), `KC_ADR_ROOT=/tmp/kc-adr-merged-e1f43044`. Cells: `S6-B1-claude-r10`, `S6-B1-codex-r10`, `S7-B1-codex-r10` (rep 10 keeps ledger ids unique), in `results-merged/` via `ADRPOC_RESULTS`. Claude loads kc-adr through `--plugin-dir`, Codex through the per-run `CODEX_HOME` marketplace add of that checkout; the user's installed kc-adr is untouched. Same harness, prompts, schema and pins. Graded under rule v2 against the stored cells (`results/` of `kc-decision-log-cli`: S6 Y/Y/Y/Y both hosts; S7 Codex Y/Y/Y/Y). Cited: Captain's 「補」 (`### Amendment 4`). Decision rule, fixed before the runs: all three Y, AC-2 holds on the final bytes; any N, stop, report with transcripts, do not edit the skill. Count after these runs: 23; no further run.
+
+## 2026-10-22, outcome of item 14
+
+15. All three cells Y under rule v2: `S6-B1-claude-r10`, `S6-B1-codex-r10`, `S7-B1-codex-r10` (consulted Y, placement Y with only `tasks/` task file written, choice `daily`, `daily`, `keep_as_is` as expected, skill loaded Y), each equal to its stored cell (Y/Y/Y/Y). Each `meta.json` records commit `e1f43044`, kc-adr tree `1079b77b`; the Codex-installed `SKILL.md` has the same sha256 (`e7e89cf7...`) as the checkout's. Per the rule fixed in item 14, AC-2 holds on the final bytes. No skill byte, expectation or scenario changed. `ledger.jsonl` has 23 lines; the scratch checkout is removed.

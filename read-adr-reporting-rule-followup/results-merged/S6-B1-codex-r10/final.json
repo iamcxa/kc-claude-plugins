@@ -1,0 +1,10 @@
+{
+ "decision": "Choose daily: Accepted ADR 0023 requires reports daily at 07:00 shop time and supersedes the weekly ruling. Recorded the decision without implementing the feature.",
+ "recorded": [
+  {
+   "path": "mira-app/tasks/TASK-015.md",
+   "info": "Daily cadence choice, supersession chain, verified ADR commit and SHA-256, Mira\u2019s request for completion on 2026-10-22, and pending implementation."
+  }
+ ],
+ "choice": "daily"
+}

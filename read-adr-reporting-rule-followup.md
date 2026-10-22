@@ -314,6 +314,7 @@ I read all four answers: each reports the cited record (0002 at D1 "Superseded b
 - Same cell group moved the other way: S7 Claude consulted N to Y (it read ADR 0011 this time).
 - Amendment 1 follow-up (2 more S7 Claude runs): both N on placement too, so all three S7 Claude runs wrote the story map; per the pre-agreed rule this is a real regression. See `## Stage Report: implementation (cycle 2)`.
 - Amendment 2 control (shipped 0.1.0 skill, 3 S7 Claude runs r4 to r6): 0 of 3 wrote the story map, so by the pre-agreed rule the change caused it. See `## Stage Report: implementation (cycle 3)`.
+- Amendment 4 merged-bytes check (`e1f43044`, tree `1079b77b`): S6 Claude, S6 Codex and S7 Codex, one run each, all Y and equal to their stored cells; AC-2 holds on the final bytes. See the 2026-10-22 note at the end.
 - Amendment 3 fix (commit `45dcf093`, one sentence in routing question 3): S7 Claude placement 3 of 3 Y on the new bytes; see `## Stage Report: implementation (cycle 4)`.
 - All other 22 cells Y to Y, including S9 under v2. Not repeated to turn it Y (task rule). Likely cause is sampling: S7 carries no handoff block and no citation, the changed skill lines are the Accepted and chain bullets plus the citation paragraph, and routing line 3 ("A deferred feature a user will see? The story map") is unchanged; one run per cell cannot separate that from an effect of the new text. Compare falsifier: unchanged copy, 0 regressions and 23 stored Y; one Y cell set to N prints that cell as `REGRESSION` and no other.
 
@@ -470,3 +471,7 @@ rm -rf "$T"; echo "ALL PASS"
 ### Summary
 
 PASSED. AC-1 holds 4 of 4 on both 5a2e901f and the final 45dcf093, the grader's 32 falsifiers pass, S7 Claude is 3 of 3 after the fix (0 of 3 before, shipped control 3 of 3 clean), the diff is the approved design plus the one amendment sentence and nothing else, and `adr_lint` exits 0. Limits are the unmeasured Codex S6/S7 cells on the final bytes, one run per cell, and CHANGES.md rules committed with their outcomes rather than before the runs.
+
+### Note 2026-10-22 (after Amendment 4)
+
+Ran the three cells the final bytes had not measured, on a detached checkout of `e1f43044` (kc-adr tree `1079b77b`, identical to `45dcf093`; Claude `--plugin-dir`, Codex per-run `CODEX_HOME`, user's install untouched): `S6-B1-claude-r10`, `S6-B1-codex-r10`, `S7-B1-codex-r10` in `results-merged/`. All three Y under rule v2 (consulted Y, placement Y, choice `daily`/`daily`/`keep_as_is`, skill loaded Y), each equal to its stored Y/Y/Y/Y cell, all answered, 0 retries. By the pre-agreed rule AC-2 holds on the final bytes. Count is 23 runs; no more. Limits: one run per cell; S7 Claude placement and S9 and S11 were already measured on these bytes in cycle 4. CHANGES.md items 14 and 15, ledger.jsonl 23 lines; earlier reports unchanged.

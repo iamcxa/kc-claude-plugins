@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/tasks/TASK-016.md",
+  "status": "modified",
+  "content": "# TASK-016 XLSX export request\n\nStatus: resolved \u2014 keep_as_is\n\nOutcome: Haruto (shop owner) can use his report in the spreadsheet tool his accountant uses.\n\n## Notes\n\n- Haruto asked for \"an Excel file instead of CSV\".\n- Mira Example: \"Haruto is a good customer, so please make him happy.\"\n\n## Decision\n\nChoice: `keep_as_is`.\n\nMira's message does not explicitly change the ruling in\n[ADR 0011](../docs/adr/0011-reports-are-exported-as-csv-only.md).\nThe XLSX request is closed under that ruling, rather than deferred to the story map.\nNo feature implementation is part of this task.\n\nVerified ruling in `example/mira-app`:\n\n- Path: `docs/adr/0011-reports-are-exported-as-csv-only.md`\n- Commit: `dda0e11103a43f9b8a8b23cde52408f1eea6a626`\n- Digest: `sha256:0cf48d38bb1dfce8c9eb4277a4a4c873fc80d007f3a7fcf28fb07b82c77d799d`\n- Status: `Accepted`, also confirmed at current HEAD.\n"
+ }
+]

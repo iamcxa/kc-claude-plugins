@@ -1,0 +1,10 @@
+{
+ "decision": "Keep the CSV export as it is. ADR 0011 remains Accepted, and Mira\u2019s message does not explicitly supersede its CSV-only ruling.",
+ "recorded": [
+  {
+   "path": "tasks/TASK-016.md",
+   "info": "Recorded Mira\u2019s message, the keep_as_is resolution, and the governing ADR\u2019s verified commit, SHA-256 digest and status."
+  }
+ ],
+ "choice": "keep_as_is"
+}
