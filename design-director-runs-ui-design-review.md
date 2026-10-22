@@ -34,6 +34,17 @@ gates:
                 id: briefing:design-director-runs-ui-design-review:ideation:attempt-1:revision-1
                 digest: sha256:cafdccd64aa81a9edd08f2342a41f216e44b5a34bd4d7a34b71bd1528b19ef74
                 room-ref: ./design-director-runs-ui-design-review/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:design-director-runs-ui-design-review:ideation:1
+                briefing: briefing:design-director-runs-ui-design-review:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T11:30:35.929803Z"
+                decision: approve
+                reason: Captain 「可以」 (chat, 2026-10-22), answering 「設計總監的設計已經把你的 6 題裁定全部改進去了，可以開設計閘門。要你決定的是：可以進入實作嗎？我建議可以。」 whose presentation listed that approval accepts D-7 as designed and raising the workflow.md word budget by 15 words, 5374 to 5389 (ideation Gate content +1, validation Gate content +14); digest cafdccd6. Accepts the FO recommendation as the bound question states. Rulings D-1 to D-6 and the design-guide ruling are recorded under FO alignment.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
