@@ -66,6 +66,17 @@ gates:
                 id: briefing:codex-reader-reads-receipt-marker:validation:attempt-1:revision-1
                 digest: sha256:08d5460742704616459937204fadf9ad33a2f64639c173479f48c88aa5133298
                 room-ref: ./codex-reader-reads-receipt-marker/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-reads-receipt-marker:validation:1
+                briefing: briefing:codex-reader-reads-receipt-marker:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T01:20:20.121797Z"
+                decision: approve
+                reason: 'Captain: 「合併」 (chat, 2026-10-22), answering 「#693（Codex 新格式）要合併嗎？（驗證閘門，紀錄指紋 08d54607）我建議合併。」; accepts the FO recommendation in the bound gate question: approve validation and merge #693 at head 199d8141c34a5bff9d9ac3db7d6a09525a0f0384.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-21T14:52:37Z
 worktree: .worktrees/spacedock-ensign-codex-reader-reads-receipt-marker
 pr: iamcxa/kc-claude-plugins#693
