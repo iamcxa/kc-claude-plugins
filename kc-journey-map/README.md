@@ -139,6 +139,8 @@ node lib/journey-tldr.mjs      import <in.tldr> <roomId>
 node lib/journey-progress.mjs  docs/journey/<slug>.yaml --workflow-dir <dir> [--draw <room> --pages …]
 node lib/journey-fold.mjs      docs/journey/<slug>.yaml --footprints <task folder>/footprints.jsonl --out <draft.yaml>
 node lib/journey-reconcile.mjs docs/journey/<slug>.yaml --workflow-dir <dir>
+node lib/journey-review.mjs    path docs/journey/<slug>.yaml <releaseId>
+node lib/journey-review.mjs    check <record.md> docs/journey/<slug>.yaml
 node lib/schemas.mjs           journey-map-question
 ```
 
@@ -154,7 +156,10 @@ file, and changes only the folded questions' own lines (`answer`, `status: answe
 `source` carrying his words and date); it creates no story or question and lists one that is
 missing as `no-story` or `no-question`. Approving the draft as a docs-only pull request is the
 Captain's. `journey-reconcile.mjs` prints `unfolded` and `stale-open`, which must be 0 at release
-review, and `unsourced` and `pending`, which are information.
+review, and `unsourced` and `pending`, which are information. A ruling made while a release is
+prepared, before any task exists, is written into the question by `review-release` as `answer:` and
+`source: {kind: release, ...}` in that docs pull request, with no footprint and no fold
+(`skills/kc-journey-map/references/release-review.md`).
 
 **Where the contract's history lives.** Two record shapes are versioned, each by its producer:
 `journey-footprint` by kc-dev-flow-2 and `journey-map-question` (the question fields, including
