@@ -57,6 +57,25 @@ try{
  }
  pass('1280/390 light/dark native account, room, save, synthetic local document and logout cancel; controls hit-tested')
  assert.equal(await page.locator('.agent-account,.human-draft-bar').count(),0)
+ const sourceFingerprint=value=>JSON.stringify(value,(_key,item)=>item&&typeof item==='object'&&!Array.isArray(item)?Object.fromEntries(Object.entries(item).sort(([a],[b])=>a.localeCompare(b))):item)
+ const sourceAcknowledged=(before,remote,after)=>sourceFingerprint(before)===sourceFingerprint(after)&&sourceFingerprint(before)===sourceFingerprint(remote)
+ const sourceDeadline=performance.now()+8000
+ let sourceConfirmed=false,sourceAttempts=0
+ while(performance.now()<sourceDeadline){
+  const before=await page.evaluate(()=>window.editor.store.getStoreSnapshot('document').store)
+  let result
+  try{
+   const response=await context.request.get(f.origin+path('/doc','one')+'&room=one',{timeout:Math.max(1,sourceDeadline-performance.now())})
+   assert.equal(response.status(),200,'Source room one acknowledgment read failed')
+   result=await response.json()
+  }catch(error){throw new Error('Source room one acknowledgment could not be confirmed within 8000ms',{cause:error})}
+  const remote=Object.fromEntries(result.snapshot.documents.map(({state})=>[state.id,state]))
+  const after=await page.evaluate(()=>window.editor.store.getStoreSnapshot('document').store)
+  sourceAttempts++
+  if(sourceAcknowledged(before,remote,after)){sourceConfirmed=true;break}
+ }
+ assert.ok(sourceConfirmed,'Source room one did not acknowledge the exact stable local document within 8000ms; room switch was not attempted')
+ report.sourceAcknowledgment={room:'one',attempts:sourceAttempts,exactDocumentMatch:true,localStableAcrossRead:true}
  await click(page.getByTestId('room-trigger'));await click(page.locator('[data-room-id="two"]'));await page.waitForURL('**room=two');await page.waitForFunction(()=>!!window.editor)
  await account();await click(page.getByRole('button',{name:'管理目前房間成員'}));await page.getByText('目前房間：two',{exact:true}).waitFor()
  assert.equal(await page.getByText('Synthetic member',{exact:true}).count(),0);await page.keyboard.press('Escape')
