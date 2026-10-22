@@ -34,6 +34,17 @@ gates:
                 id: briefing:roborev-threshold-catches-pr-findings-poc:validation:attempt-1:revision-1
                 digest: sha256:f443497b5f87b1ecb6c8bead8ac93858fb7a14a8a08a2c1a7df46c23140e25ad
                 room-ref: ./roborev-threshold-catches-pr-findings-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:roborev-threshold-catches-pr-findings-poc:validation:1
+                briefing: briefing:roborev-threshold-catches-pr-findings-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T04:57:16.646383Z"
+                decision: approve
+                reason: Captain 「可以」 (chat, 2026-10-22), answering 「roborev 門檻 POC 照結果結案、不改設定，可以嗎？我建議結案。」 whose presentation stated closing changes nothing (.roborev.toml stays at high, roborev_gate.py unchanged); digest f443497b. Accepts the FO recommendation as the bound question states.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-22T04:33:47Z
 worktree: .worktrees/spacedock-ensign-roborev-threshold-catches-pr-findings-poc
 ---
