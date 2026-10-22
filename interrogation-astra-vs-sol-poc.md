@@ -66,6 +66,8 @@ worktree: .worktrees/spacedock-ensign-interrogation-astra-vs-sol-poc
 
 ## FO alignment
 
+Correction (FO, 2026-10-22, observer finding): the validation summary's "the Captain kept sol on cost" rests on his words 「按建議**不算**。那就保留 sol，因為 astra 比較貴」 (chat, 2026-10-22), answering FO's report of this POC's result; that ruling is recorded as D4 in dev2 task new-work-starts-from-a-story-map. AC-2 was not met as written because FO's dispatch named the arm and the sol totals; FO's design error, not amended.
+
 Not needed before implementation. The Captain asked for this run (「可以」, 2026-10-22) after FO stated its arm, tasks and comparison, restated above. Release review: not needed: the task belongs to no release.
 Surfaces: none
 Visible change: none
