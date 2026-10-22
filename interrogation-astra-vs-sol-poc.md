@@ -34,6 +34,17 @@ gates:
                 id: briefing:interrogation-astra-vs-sol-poc:validation:attempt-1:revision-1
                 digest: sha256:72a8235f541df2315f6ade2d0f5b77ec7199ea18e434af77b693c0f17d4d539b
                 room-ref: ./interrogation-astra-vs-sol-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:interrogation-astra-vs-sol-poc:validation:1
+                briefing: briefing:interrogation-astra-vs-sol-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T00:57:17.702785Z"
+                decision: approve
+                reason: 'Captain 「結案」 (chat, 2026-10-22), answering FO question put before it (quoted in the gate question). AC-2 is not met as written: the scorer knew the arm because FO named it in the dispatch; the file-opening order and per-score quotes are recorded for a re-score. This briefing binds the answer after the fact.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-21T18:40:25Z
 worktree: .worktrees/spacedock-ensign-interrogation-astra-vs-sol-poc
 ---
