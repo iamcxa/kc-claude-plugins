@@ -225,6 +225,13 @@ One commit `fix(kc-adr): ...` touching only `kc-adr/skills/read-adr/SKILL.md`; r
 
 Recommended order: this task, then `kc-decision-log-handoff-trial`; `kc-adr-tools-with-dev2-copy` independent.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-22, chat
+Captain: 「照建議」 (this FO's Paseo session, reply to a two-item batch after implementation reported one AC-2 regression)
+Asked: 「1. S7 退步：授權多跑 2 次 S7 的 Claude，判斷規則先講好：兩次都過，就記為情境本身模糊造成的偶發，AC-2 照實記錄；只要有一次不過，就當成真的退步，回頭查 skill。代價是超出原本宣告的 8 次，多 2 次執行。」
+Supersedes: none
+
 ## Stage Report: ideation
 
 - DONE: Design the fix for read-adr's Accepted branch to the Captain's wording: the worker reports the cited commit, its verified digest and its Status; if a different record is in force at head, it also reports that record's commit and digest; it takes no action on either until a person decides. Align the chain-end line with the same rule. Show the exact new SKILL.md text against the shipped text at origin/main.
