@@ -15,6 +15,14 @@ gates:
                 id: briefing:design-helper-astra-poc:backlog:attempt-1:revision-1
                 digest: sha256:483d0b686312ba00cc7324126db011cdf66da64c0675cb5772619dd7822b3504
                 room-ref: ./design-helper-astra-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:design-helper-astra-poc:backlog:1
+                briefing: briefing:design-helper-astra-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T05:04:07.675031Z"
+                decision: hold
+                reason: Captain 「設計總監照建議。這個角色會叫什麼？GPT 同伴仍保留提案，之後再討論」 (chat, 2026-10-22), answering FO 「設計總監任務的範圍要不要照量測結果調整？」 whose point 4 was 「astra 輔助 POC 結案，不跑。」; closed without running. The GPT partner remains a proposal for later discussion.
 ---
 
 ## Scope
