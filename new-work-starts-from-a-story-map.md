@@ -3,7 +3,7 @@ title: New work starts from a story map and its slices, and the slice's open que
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-22T04:01:40Z
 worktree: .worktrees/spacedock-ensign-new-work-starts-from-a-story-map
+pr: iamcxa/kc-claude-plugins#705
 ---
 
 ## Scope
