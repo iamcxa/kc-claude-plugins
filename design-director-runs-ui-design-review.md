@@ -15,6 +15,17 @@ gates:
                 id: briefing:design-director-runs-ui-design-review:backlog:attempt-1:revision-1
                 digest: sha256:a26c4da383fb5f17a359d53ce8aeccd8035d5bc3e1fcedfb55edc67fda39a563
                 room-ref: ./design-director-runs-ui-design-review/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:design-director-runs-ui-design-review:backlog:1
+                briefing: briefing:design-director-runs-ui-design-review:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-22T07:27:22.671295Z"
+                decision: approve
+                reason: 'Captain 「可以」 (chat, 2026-10-22), answering 「設計總監任務可以進入設計階段嗎？我建議可以。」 whose presentation listed what approval accepts: duty wording (owns the open design decisions; upheld declines listed for the Captain, who keeps the final say), two passes (pictures, then built-screen screenshots), host-component declines checked, and a replay of the 10 already-raised paseo findings before shipping; digest a26c4da3. Accepts the FO recommendation as the bound question states.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
