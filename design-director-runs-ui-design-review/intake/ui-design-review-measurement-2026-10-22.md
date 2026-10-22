@@ -1,0 +1,13 @@
+# UI design review measurement, 2026-10-08 to 2026-10-22
+
+Read-only measurement dispatched by FO (general-purpose, sonnet), returned 2026-10-22. Raw scratch was left in /tmp/ui-review-measure (not durable). Condensed by FO; counts are the measurer's.
+
+- The design review shipped in kc-dev-flow-2 0.25.0 on 2026-10-18 (#663). qnow ui tasks ideated on 0.13.0 to 0.24.0, so no review existed there. The review ran on 8 tasks, 10 reports: 7 kc-paseo-plugins tasks (9 reports) and kc-decision-log-cli (2 reports, later `Surfaces: none`).
+- kc-paseo-plugins, last reports of 7 tasks: 93 findings, 8 MAJOR. Dispositions: 70 declined, 18 fixed, 3 Needs decision, 2 AC. By keyword, 37 of the 70 declines cite a host component or kit (`SettingsRow`, `SettingsAction`, `SettingsSelect`, "host", "component"); 22 cite another task, a release, a non-goal, "unchanged/today" or an ADR; 11 other. First-report dispositions of the two re-run tasks were never committed.
+- Later critique: `ux-review-r1.5/index.html` in the paseo dev2 state checkout (uncommitted), a design critique of the merged screen on main 1adf630, 14 findings (4 blocking, 6 confusing, 4 polish), cited by 8 task bodies committed 2026-10-22; the Captain's words there 「這個 UX 完全不行」.
+- Mapping of the 14: 10 covered by a per-task review finding (#1, 2, 4, 5, 6, 7, 8, 9, 10, 12), of which 2 at MAJOR (#6, #9, both variable-row-edit, Needs decision) and 8 at MINOR (declined; #7 partly fixed); #14 partly covered; 2 whole misses, both polish (#11 the four-line Test hint at 400px, visible in test-results `preview-compact-dark-results-shown.png`; the unstyled closing sentence in #14); 2 outside the brief (#3 needs a running app; #13 a screen never pictured); part of #2 needs a real vault and a Test run.
+- Validation: 4 of 7 paseo validation reports say no screenshot of the candidate screen exists (browse-vault, paste-token, plain-failure-reason, token-works-cause).
+- One Codex P2 after review (paseo PR #15, comment 4336583725): the Browse gate the review asked for blocked readable vault IDs; outside the brief (needs data and code).
+- qnow context only (no review existed): 8 Captain revise gates with UI content in 7 tasks; 18 of 92 Codex inline comments on 8 ui PRs are UI-visible (8 accessibility or keyboard, 8 missing error or retry states, 1 narrow-screen wrap, 1 copy accuracy).
+- Tasks that changed UI but recorded `Surfaces: none`: 0 found from PR file lists (diffs not read).
+- Limits: 6 of 9 paseo reports fail YAML parsing (unquoted colons), counted by regex; the critique-to-review mapping is the measurer's reading; not every preview was viewed; organisation repositories not covered; zero Copilot reviews appear in any fetched PR.
