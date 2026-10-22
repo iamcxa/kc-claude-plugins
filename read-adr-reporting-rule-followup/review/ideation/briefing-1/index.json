@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:read-adr-reporting-rule-followup:ideation:attempt-1:revision-1",
+  "question": "Approve the read-adr-reporting-rule-followup design into implementation? Approval accepts the shown SKILL.md change, the harness schema change (ruling_check plus a nullable in_force_record, S9 alt removed), the S6/S7/S9/S11 expectations, the 8-run plan (hard stop 10, retries only), and the recommendation on decision D1: 'take no action until a person decides' means choice none on S9 and S11.",
+  "artifacts": [
+    {
+      "id": "artifact:read-adr-reporting-rule-followup:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/341235a003c282df7d5e673c689a7481e002b159/read-adr-reporting-rule-followup.md",
+      "rev": "sha256:6e590ac9a1fdfbf40f026ccb4aafad883b5a91f973c69ad9e55eb6490d8d4db3",
+      "mediaType": "text/markdown",
+      "summary": "Ideation: one citation-scoped paragraph states the Captain's rule; the Accepted and chain lines lose 'the head governs' and 'report the end's own digest', so S6/S7 (no citation) still decide. +77 words, frontmatter unchanged. Stored shipped-skill runs score 0/4 on AC-1 under the new grader; 8 new runs planned. design_surfaces check presentable."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:read-adr-reporting-rule-followup:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c27e76590c1d2dc910e7fa2d332242a7534df0b0/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:d8b3639df236541f0a6cb378df697c0bfe22c51457d9346893c4aef3bfb4594a"
+    }
+  ]
+}

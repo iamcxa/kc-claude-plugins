@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:read-adr-reporting-rule-followup:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:read-adr-reporting-rule-followup-ideation-1
+              briefing:
+                id: briefing:read-adr-reporting-rule-followup:ideation:attempt-1:revision-1
+                digest: sha256:6661224b29eb537f006ccefcc1b4d01e258fc051a256546478873920461b7dfe
+                room-ref: ./read-adr-reporting-rule-followup/review/ideation/briefing-1
 started: 2026-10-22T03:51:42Z
 ---
 
