@@ -237,6 +237,12 @@ Captain: 「跑對照組」 (this FO's Paseo session, after the two confirming S
 Asked: 「請你決定一件事：先跑對照組嗎？」 with 「用舊版 skill（0.1.0）在同樣的設定下跑 S7 的 Claude 3 次，當對照組」「舊版 3 次裡有 2 次以上也寫進故事地圖，代表不是這次改動造成的，退步記為「原本的比較基準只有 1 次、不可靠」。S7 預期答案對不對，另外交給你裁。」「舊版 3 次都沒寫進故事地圖，代表是這次改動造成的，回頭修 skill。」「代價是再多 3 次執行，共 13 次，需要你批准超出宣告的次數。」
 Supersedes: none
 
+### Amendment 3 — 2026-10-22, chat
+Captain: 「修」 (this FO's Paseo session, after the control showed the change caused the S7 regression)
+Asked: 「請你決定一件事：修 skill 嗎？」 with 「改法：在「寫到哪裡」第 3 問補一句：「ADR 已經拒絕的需求不算延後的功能，只記在任務檔。」這直接針對錯誤行為，不用先查出是哪一句引起的。」「重跑：S7 的 Claude 3 次：要 3/3 正確才算修好，因為舊版是 4/4。S9、S11 兩邊各 1 次：確認主要目標不被改壞，要維持 4/4。共 7 次，上限 9 次，多出的只用在沒回答時重試。」「如果修完還是不過，就停下來，回頭查是哪一句造成的。」
+Supersedes: none
+Design: the "Where new information goes" routing list in SKILL.md, question 3
+
 ## Stage Report: ideation
 
 - DONE: Design the fix for read-adr's Accepted branch to the Captain's wording: the worker reports the cited commit, its verified digest and its Status; if a different record is in force at head, it also reports that record's commit and digest; it takes no action on either until a person decides. Align the chain-end line with the same rule. Show the exact new SKILL.md text against the shipped text at origin/main.
