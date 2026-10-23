@@ -5,5 +5,11 @@
       "1.0.0": "363b56d71283a6829e3e7a9b5aba18efa339b955b81671e7bf0932ede7e8c7e4",
       "1.1.0": "61395de136ea0ec908f60469296a611ef4a074bd8dc89f185b45a6f4c5deea62"
     }
+  },
+  "release-walk": {
+    "current": "1.0.0",
+    "versions": {
+      "1.0.0": "441cd6a5dc1ed95fb80220dea11e0bb39a9ef5ecb797b4fb8bfd209da76aa8fa"
+    }
   }
 }
