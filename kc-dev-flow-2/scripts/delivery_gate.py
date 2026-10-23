@@ -24,6 +24,9 @@ other than SUCCESS, SKIPPED or NEUTRAL, no check on the head finished SUCCESS
 included), the PR is a draft or not mergeable, its base is not the README's
 `trunk:`, or the file list is shorter than `changedFiles`. Exit 2 when the record has no Candidate line, a head, the PR or the
 README cannot be read, or an input is unusable. Every problem is printed.
+A task whose committed state owes a chief-engineer or engineering-reviewer call also holds: `role_triggers.py` runs on the task folder and stem
+(no --review-rounds), reading the task as committed at HEAD of its state checkout, so an edit not yet state-committed is not seen; exit 1 from it
+adds one problem line and its `next:` lines, exit 2 holds with its message.
 Exit 0 prints `point:` lines (pointers into the records and the changed paths, at most 12, each value an escaped bounded token),
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
 and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask. The `class:` line ends
@@ -41,6 +44,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from design_surfaces import FM_PROFILE
 from number_guards import task_facts
 
+ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
 CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
 RECORD = re.compile(r"^validation-(\d+)\.md$")
 SECOND_REVIEWER = re.compile(r"Second reviewer:\s*([\w.-]+)\s+because", re.I)
@@ -102,6 +106,11 @@ def dispatched_candidates(task):
     except (OSError, UnicodeDecodeError):
         return [], path
     return CANDIDATE.findall(header), path
+
+
+def owed_role_calls(task):
+    done = subprocess.run([sys.executable, str(ROLE_TRIGGERS), str(task.parent), task.stem], capture_output=True, text=True)
+    return done.returncode, [clean(line) for line in (done.stdout or done.stderr).splitlines()]
 
 
 def gh(*args):
@@ -447,6 +456,16 @@ def check(args):
     for label in unstated_confirmations(gate_text):
         problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
         nexts.append("next: hold the ask; add the missing clause to the question or summary.")
+
+    try:
+        code, said = owed_role_calls(task)
+    except OSError as error:
+        code, said = 2, [f"cannot run role_triggers.py: {clean(str(error))}"]
+    if code == 1:
+        problems.append(f"{task.stem} owes a special-role call (role_triggers.py reads the task as committed)")
+        nexts.extend(said)
+    elif code:
+        holds.extend(said or [f"role_triggers.py exited {code} with no message"])
 
     emit(*problems, *holds)
     if problems:

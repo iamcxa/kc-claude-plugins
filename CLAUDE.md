@@ -112,3 +112,4 @@ Plugin-internal rules (trigger conditions, internal agent registry, shared-confi
 - `kc-pr-flow/CLAUDE.md`
 
 `kc-team-ops`, `kc-journey-map`, `kc-ship-flow`, and `kc-adr` do not currently have a CLAUDE.md.
+@AGENTS.md

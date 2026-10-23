@@ -19,7 +19,7 @@ const run = (dir) => spawnSync('node', [join(dir, 'schemas.mjs'), 'journey-map-q
 test('the table and version print and the recorded hash binds them', () => {
 	const r = run(here)
 	assert.equal(r.status, 0, r.stderr)
-	assert.match(r.stdout, /^journey-map-question 1\.0\.0\n\| field \| rule \|/)
+	assert.match(r.stdout, /^journey-map-question 1\.1\.0\n\| field \| rule \|/)
 	assert.match(r.stdout, /\| `source` \|/)
 })
 
@@ -29,16 +29,16 @@ test('an edited table with an unchanged version exits 1 naming the schema', (t) 
 	writeFileSync(file, readFileSync(file, 'utf8').replace("['source',", "['origin',"))
 	const r = run(dir)
 	assert.equal(r.status, 1)
-	assert.match(r.stderr, /journey-map-question: the field table changed but version 1\.0\.0 did not/)
+	assert.match(r.stderr, /journey-map-question: the field table changed but version 1\.1\.0 did not/)
 })
 
 test('a bumped version with no recorded hash exits 1', (t) => {
 	const dir = copy(t)
 	const file = join(dir, 'contract-versions.json')
-	writeFileSync(file, readFileSync(file, 'utf8').replace('"current": "1.0.0"', '"current": "1.1.0"'))
+	writeFileSync(file, readFileSync(file, 'utf8').replace('"current": "1.1.0"', '"current": "1.2.0"'))
 	const r = run(dir)
 	assert.equal(r.status, 1)
-	assert.match(r.stderr, /current version 1\.1\.0 has no recorded hash/)
+	assert.match(r.stderr, /current version 1\.2\.0 has no recorded hash/)
 })
 
 test('the printed history pointers name files that exist and a runnable command', () => {
