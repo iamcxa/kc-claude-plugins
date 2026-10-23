@@ -3,7 +3,7 @@ title: A release is walked after its last story by picky-user reviewers on diffe
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
