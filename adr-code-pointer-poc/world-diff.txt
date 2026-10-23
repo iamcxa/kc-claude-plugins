@@ -1,4 +1,6 @@
+6b77e60e88f8d9b3cf4c659f7cd7834a8d8d209a
+bf505ff64eaf765c28a4975e9c74b970d92211ca
 diff -r -x .git A0/mira-app/src/report_mailer.js P/mira-app/src/report_mailer.js
-1a2
-> // Reading each report back from the store before mailing is deliberate: see docs/adr/0024-report-emails-are-sent-from-the-stored-copy.md
+8a9
+>   // Reading the report back from the store before mailing is deliberate: see docs/adr/0024-report-emails-are-sent-from-the-stored-copy.md
 

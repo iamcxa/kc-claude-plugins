@@ -6,7 +6,7 @@ import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
-LINE = "// Reading each report back from the store before mailing is deliberate: see docs/adr/0024-report-emails-are-sent-from-the-stored-copy.md"
+LINE = "  // Reading the report back from the store before mailing is deliberate: see docs/adr/0024-report-emails-are-sent-from-the-stored-copy.md"
 ADR = "docs/adr/0024-report-emails-are-sent-from-the-stored-copy.md"
 SITE = "mira-app/src/report_mailer.js"
 MARK = "the copy we kept has to be the copy they got"
@@ -19,8 +19,8 @@ def classify(changes):
     if c["status"] == "deleted":
         return "deleted (site file deleted)"
     lines = c.get("content", "").splitlines()
-    if len(lines) > 1 and lines[1] == LINE:
-        return "kept (verbatim, same place)"
+    if LINE in lines and "loadReport(`daily-" in lines[lines.index(LINE) + 1]:
+        return "kept (verbatim, above the daily read-back)"
     if LINE in lines:
         return f"moved (verbatim, now line {lines.index(LINE) + 1})"
     hits = [i + 1 for i, l in enumerate(lines) if ADR in l]

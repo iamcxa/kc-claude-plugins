@@ -371,8 +371,10 @@ export async function sendCorrection(shop, rows, day, note) {
 """
 
 
-POINTER_LINE = "// Reading each report back from the store before mailing is deliberate: see docs/adr/0024-report-emails-are-sent-from-the-stored-copy.md\n"
-REPORT_MAILER_JS_POINTER = REPORT_MAILER_JS.replace("// Sends report emails to shop owners.\n", "// Sends report emails to shop owners.\n" + POINTER_LINE, 1)
+POINTER_LINE = "  // Reading the report back from the store before mailing is deliberate: see docs/adr/0024-report-emails-are-sent-from-the-stored-copy.md\n"
+_FIRST_READ_BACK = "  const body = await loadReport(`daily-${shop.id}-${day}`);\n"
+assert REPORT_MAILER_JS.count(_FIRST_READ_BACK) == 1
+REPORT_MAILER_JS_POINTER = REPORT_MAILER_JS.replace(_FIRST_READ_BACK, POINTER_LINE + _FIRST_READ_BACK, 1)
 
 
 def hidden_adr():
