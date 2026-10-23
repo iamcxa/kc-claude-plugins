@@ -230,6 +230,10 @@ Verified by: `git diff --stat origin/main`; `adr_lint.py`; the PR's check list; 
 2. **Delete the sentence "no script checks that line".** Recommend: delete (minus 5 words, a cut step with a reason). What gets worse: FO reads no pointer to the hold; it learns of it only from the `next:` line, as with the seed line. The other choice is to replace it with a pointer to `pr_watch.py tasks`, about +8 words, which needs a quoted ruling.
 3. **Accept the known false holds.** Recommend: accept; each clears with one `Release review:` line. What gets worse: a hold of a task whose review ran but was never written down (production-go-live today), and one whose ruling changed no map (qnow-release-migration, historical), each stops the dispatch until FO writes the line, and 13 of the 17 historical holds could not be classified as true or false from the state branches. The other choice, holding only when no `Release review:` line exists at all, would skip qnow-release-migration but also miss booking-outcomes, a verified true hold whose mark line itself starts `Release review:`; it trades one false hold for one missed true one.
 
+## Number guards
+
+ADR: 0032
+
 ## Stage Report: ideation
 
 - DONE: Design the dispatch-time hold on current origin/main: read the review record format (kc-journey-map release-review.md Record section, kc-journey-map/lib/journey-review.mjs), decide how staleness is read (the map at the record's map-at commit against the map now, by story ids and goals), where the check runs (a kc-dev-flow-2/scripts/pr_watch.py next: line, an extension, the implementation skill, or a Spacedock precondition, with the words FO reads at each moment and whether the workflow.md budget rises), and acceptance criteria with falsifiers including the R4 shape; read release-acceptance/index.md for the superseded AC-1 to AC-4 and the phase-1 drift report
