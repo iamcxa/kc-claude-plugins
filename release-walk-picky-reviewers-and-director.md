@@ -3,7 +3,7 @@ title: A release is walked after its last story by picky-user reviewers on diffe
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「可以」 (chat, 2026-10-23), answering the bound question, put before it in chat; approving enters ideation.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
