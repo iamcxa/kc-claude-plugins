@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:product-review-path-before-backlog:backlog:attempt-1:revision-1",
+  "question": "挑剔使用者流程要不要併進「版本驗收」的第二個 PR？ FO recommended folding it in; this task then closes as folded into release-acceptance Amendment 3.",
+  "artifacts": [
+    {
+      "id": "artifact:product-review-path-before-backlog:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1d48ee062b71884ac1c416a9918202e939a8229f/product-review-path-before-backlog.md",
+      "rev": "sha256:edbb5dda0e0130a7d783230bad16c55d30c6fe45f0feb6ab285d683d26e2df34",
+      "mediaType": "text/markdown",
+      "summary": "Folded: the picky-user reviewers and the design director ruling become the second pass of the release-acceptance walk (Amendment 3 there)."
+    }
+  ]
+}
