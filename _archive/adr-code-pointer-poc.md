@@ -3,7 +3,7 @@ title: Does a code-side pointer to the protecting ADR stop an agent from undoing
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -44,10 +44,13 @@ gates:
                 reason: 'Captain 「准」 (2026-10-23) to validation briefing-1: closes the POC with the validator''s reading; no code delivery, local-merge sentinel at c27e7659, archive, remove the empty worktree.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-23T08:26:43Z
 worktree: .worktrees/spacedock-ensign-adr-code-pointer-poc
 pr: local-merge:c27e76590c1d2dc910e7fa2d332242a7534df0b0
+verdict: PASSED
+completed: 2026-10-23T08:50:29Z
+archived: 2026-10-23T08:50:29Z
 ---
 
 Filed on the Captain's 「可以，先測試這個，然後再考慮其他方案。」 (chat, 2026-10-23), answering FO's 「我建議的下一步：撤回這道關卡，先開一個 POC。同一題，在程式碼旁加上那行註解，Claude 和 Codex 各跑 2 次，共 4 次。…要撤回這道關卡、改開註解 POC 嗎？」, after FO proposed a code-side comment as a cheaper alternative to an edit-time hook (dev2 task `adr-protected-path-guard`, its backlog gate withdrawn).
