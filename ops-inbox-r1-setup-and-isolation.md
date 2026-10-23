@@ -1,5 +1,5 @@
 ---
-title: A project connects to its own ops inbox in one setup step, a signed event reaches a person and an agent, and the inbox can wake only that project's ops workflow
+title: "A relay event becomes one decision an agent has prepared: the Captain hears at once, later events of the same incident join its ops task, the options cite relay's ADRs, and the inbox can start only the project's ops workflow"
 status: implementation
 variant: kc-dev-flow-2
 profile: pilot
@@ -126,6 +126,11 @@ Visible change: Each relay ceiling event shows up as one Slack notice; a new inc
 Release review: not needed: the kc-ops-inbox journey map (inbox-r1) is only on branch iamcxa/kc-ops-inbox at 0a1d59ce and not on the trunk; set journey fields when it lands.
 Captain standing ask, 2026-10-21: 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate.
 
+## Number guards
+
+ADR: 0031
+FO note: this task holds one ADR number, for the axis ADR (AC-6). The trigger-repository and state-branch ruling (D2, D3) needs a second ADR; per Number guards a second ADR returns to FO, so FO files it as a follow-up task instead of reserving a second number here.
+
 ## Captain amendments
 
 ### Amendment 1 — 2026-10-23, chat
@@ -137,6 +142,11 @@ Superseded text:
 
 **AC-2**: On a scratch project, the setup command completes the agent-doable steps, prints each Captain-only step with its exact command, and reports every step as verified by read-back.
 Verified by: one full setup run log on a scratch project, and the read-back of each created resource.
+
+### Amendment 2 — 2026-10-23, ideation gate
+Captain: 「准」 (chat, 2026-10-23, ideation gate attempt 2)
+Asked: the committed ideation gate question at briefing `briefing:ops-inbox-r1-setup-and-isolation:ideation:attempt-2:revision-1`, which stated that approving accepts the cycle-2 re-cut as written, including AC-8 superseding AC-3, AC-11 superseding AC-4, and a 3.5-day budget with AC-5's second adapter deferred.
+Supersedes: AC-3, AC-4, AC-5
 
 ## Design
 
