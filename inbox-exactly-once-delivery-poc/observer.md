@@ -1,0 +1,31 @@
+Observer report: inbox-exactly-once-delivery-poc, window 46dd6f9f (task file added, 2026-10-21 16:00) to HEAD fb9a91a0 (validation approve recorded, 2026-10-23 11:37). 17 state commits.
+
+violation | rule: "A change the Captain makes to what he has accepted, whether at a gate approval, between gates or at a validation gate, is an amendment. ... FO appends one entry per amendment to the task's `## Captain amendments` section" and "`Asked:` is required when his words do not name what they settle" (Captain amendments) | evidence: "Captain direction, 2026-10-21 (chat): 「你要注意一件事，平台是剛好是 netlify，不是平台一定是 netlify。五個都同意，這些裡面哪些你可以幫我做？」. FO reading, not his words: the inbox core must not depend on Netlify" sits under `## FO alignment`; no `## Captain amendments` section and no `Asked:` line exist in the task (1ce91f8a, HEAD). Accepted Scope reads "One Netlify function on a scratch Netlify site".
+
+violation | rule: "FO may explicitly decline evidenced Deferred risk or Polish in the existing committed gate summary, naming the finding, reason, candidate revision and the lines or evidence it rests on" (FO steps: review findings, step 2) | evidence: the validation question says only "F2 to F4 are carried into the inbox-r1 Pilot as recorded limits"; it gives no reason and no lines or evidence. The briefing summary names F1, F2 and F4 but not F3. No `### FO declines` section (b9eeb6ae, fb9a91a0). The validator labelled F2 to F4 Deferred risk or Polish; FO's own assessment of them is absent.
+
+violation | rule: "Record `id`, `title`, `status`, `variant: kc-dev-flow-2`, and the user's selected `profile`" (Schema) | evidence: frontmatter has `title`, `status`, `variant`, `profile` and no `id` (46dd6f9f, HEAD). Sibling task bend-cost-laws-poc also has no `id`, so this may be how the workflow writes tasks, not an FO slip.
+
+ok | rule: "A Captain ruling is his reply to the question it settles, given after that question was put. FO never records as his ruling: silence on a decision the question did not state approval accepts" (FO steps: review findings) | evidence: validation resolution reason: "He did not answer F1 (the AC-3 Slack leg); it stays an open, unmeasured limit carried into inbox-r1, not a ruling." (fb9a91a0). Both gate rulings are `by: person:captain`, quote his words (「准，請持續針對套件的意義做觀察與回饋」, 「准」), and have no Override and no Precedent.
+
+ok | rule: "His plain approval accepts that recommendation only when the gate question says so" (FO steps: review findings) | evidence: backlog question "Approving accepts all of them as written and enters implementation" (cf3fe5f4); validation question "Approving accepts that recommendation." (b9eeb6ae).
+
+can't tell | rule: "A Needs decision put to the Captain at a gate carries FO's recommendation" (FO steps: review findings) | evidence: the committed question for F1 lists two ways to close it ("either giving the #kctest message time or saying AC-3 counts dispatch latency only") and names neither as recommended (b9eeb6ae). The gate text as presented in chat is outside state.
+
+can't tell | rule: outward actions "always asked" (FO steps: review findings) | evidence: "FO redeployed the scratch site and ran send.mjs itself at the Captain's request" (dispatch/implementation-1-message-2.md, 41e701f1). The request is not quoted. The approval of the five actions is quoted in dispatch/implementation-1-message-1.md (1ce91f8a). The question was put in the hold report (743eaede).
+
+ok | rule: "FO runs `python3 <package>/scripts/design_surfaces.py check`" (Amendments / backlog) | evidence: replay of 46dd6f9f's task file with `--seed` exits 0: "inbox-exactly-once-delivery-poc.md: FO alignment recorded". The workflow has no ideation stage, so there is no ideation briefing.
+
+ok | rule: "FO runs `python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists" (Stages) | evidence: at HEAD "5 dispatch record(s) complete", exit 0. The Package root line, the `main` send line, the checklist and the full `Candidate: cd079cb88756f6d84ace6bdbbb1459c23cd1db78` line are present (2e57f224). The script cannot show it ran before the commits.
+
+ok | rule: "Put the printed `evidence=` line ... in the stage report" (roborev extension, instruction FO adds to scope notes) | evidence: dispatch implementation-1 carries the roborev line (6f3c3626). The report holds "evidence=roborev:964" and "evidence=roborev:965" (743eaede).
+
+can't tell | rule: "FO runs `python3 <package>/scripts/delivery_gate.py check` before the merge ask", and "FO confirms both goal sufficiency and minimal necessity" (validation) | evidence: absent. There is no `inbox-exactly-once-delivery-poc/merge/ask-N.json` and no PR. The validator wrote both verdicts (b9028bdc); FO's own confirmation is not recorded.
+
+can't tell | rule: "Before the gate, FO runs the stage's minimal acceptance script exactly as written in a fresh shell, then presents every step in full beside its observed output" (validation) | evidence: absent. The six-step script is in the task (b9028bdc). The task holds no FO run or output; that happened in chat or a shell.
+
+can't tell | rule: "FO records `second reviewer: <name> because <trigger>` or `second reviewer: not triggered` in the gate summary", and "`<name> not run: <reason>`" for a listed extension (Extensions) | evidence: absent from both gate summaries. No PR exists, and the codex and copilot extensions read only PR review rounds, so I could not tell whether the rule applied here.
+
+Role triggers: `python3 <package>/scripts/role_triggers.py STATE TASK --rev HEAD` prints "0 event(s) read at HEAD", so no `next:` line. No `Reviewer:` line exists. No condition for one applies (no `db` surface, no ideation, validation not sent back).
+
+Coverage: I read the task file at HEAD in full and every diff in the window. I read all 5 dispatch files, both briefing index.json files, both log files, the ledger rows for this task, and the full README. Not evaluated, because their only witness is chat or a shell: package_version and workflow_checkout, `peers` use (no peer-quoted ruling appears in state), and the release-review, number-guard and ADR rules (none applied: poc, Surfaces none, no ADR). I did not judge product content or worker reports.
