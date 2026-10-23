@@ -3,7 +3,7 @@ title: An ADR that protects code names its files, each file carries a pointer ba
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
