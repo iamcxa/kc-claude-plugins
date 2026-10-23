@@ -319,3 +319,89 @@ AC-1 and AC-2 verified; AC-3 verified on Codex, not on Claude (repo-choice defec
 ### Summary
 
 AC-3 now holds on both hosts for the single-repo world: Codex PASS (cycle 1) and Claude 2 of 2 PASS (cycle 2), each listing the file, adding the pointer and passing the linter, with no clearing of the field. The two-repo Claude FAIL is kept as the cross-repo routing limit, and that FAIL did not come from this change (the no-change arm failed the same way). Code is unchanged (head 286ba13a, `kc-adr` tree 454c94e4), so roborev and the closing checks from cycle 1 stand. Cycle 2 shows nothing about whether a Claude run in the two-repo world would route to `mira-app`.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on candidate 286ba13ac488222b2cb338406207fad48d2c2f32 (base 0701aa8debd45b3fe7eab7e930141319d52f3aa2) against AC-1..AC-3, the approved design with its three decisions, and Captain amendment 1.
+  Verdict: PASSED, with the limits under Unverified and Findings. No criterion is unmet. Artifact: `git rev-parse HEAD` of the candidate worktree is 286ba13a; clean tree; `git diff --name-only` base..HEAD lists 4 kc-adr files and nothing under kc-dev-flow-2.
+- DONE: Re-run in a scratch copy: kc-adr `test_adr_lint.py` (21 tests); old-vs-new linter output over this repository's ADRs at base and the candidate.
+  21 tests OK (`git archive` of the candidate under /tmp). All four pairings (old or new linter over the base or candidate `docs/adr`, 30 ADRs) exit 0 with identical output (same md5); relay's 54 ADRs (beirut-dev2 at 840a0039): old and new exit 0, identical output; none of them lists `**Protects:**`.
+- DONE: The falsifier that empties the superseded scan.
+  Replacing `cited_by(site) & set(superseded)` with `& set()` in a copy: 1 failure, `test_a_file_pointing_at_a_superseded_adr_fails_naming_file_and_newer_adr` (asserts exit 1 and the text `src/mailer.js: points at ADR 0002, Superseded by 0003`); the pass-when-only-newer test cannot fail under this mutation, it guards the opposite error. The design's scratch count was 2; the implementer reported 1; observed 1.
+- DONE: dev2's `test_adr_doc_checks.py` with kc-adr's new template and linter overlaid on dev2's paths, to show what the dev2 copy will meet.
+  Overlay of the candidate's `adr_lint.py` and `adr-template.md` onto `kc-dev-flow-2/scripts` and `references`: 9 of 9 pass (also 9 of 9 unmodified), and `test_dispatch_records` 47 and `test_pr_watch` 101 pass; the dev2 copy will meet two new checks that do nothing in an adopter whose ADRs list no files. dev2 template then differs from kc-adr's only by the existing one-word drift ("worker or FO") until the sync task lands. `lint-skills.py` fails only on the scratch layout (`skill-frontmatter-lint.sh` missing); not a candidate defect.
+- DONE: AC-3 from stored evidence: re-grade the stored S15 runs with the committed grader; confirm the pass rule and grader commit (c47b9d7d) and the single-repo variant commit (9e9ebaf5) each precede their runs and nothing gradeable changed after.
+  `score_s15.py --linter <candidate adr_lint.py>` (sha256 203f097c, as stored) in a scratch copy of the task folder reproduces all six stored grades byte for byte: candidate claude FAIL, codex PASS; no-change claude FAIL, codex FAIL; single-repo claude r1 PASS, r2 PASS. `falsifiers-s15.py` with the candidate linter: 16 of 16 ok. Order: c47b9d7d 17:22:59 before the first runs 17:23:16 and 17:23:23; 9e9ebaf5 17:33:38 before the cycle-2 runs 17:33:46; `git diff c47b9d7d HEAD -- harness` touches only `run.py` (the `--single-repo` change at 9e9ebaf5), nothing after 9e9ebaf5; `score_s15.py`, `expectations-s15.json`, `scenarios.json` unchanged since c47b9d7d. Every `meta.json` records plugin commit 286ba13a (candidate) or 0701aa8 (no-change) and the same two models.
+- DONE: Judge whether the two-repo Claude FAIL is fully explained as the existing cross-repo routing limit (both arms) and whether the agent clearing the field to none is a risk this change introduces.
+  The FAIL is explained: in both arms the agent wrote the ADR in `mira-decisions` (grade reason identical, ADR not in mira-app) before any new rule mattered; one run per arm. It does not explain the clearing: in the candidate trace the agent first listed `mira-app/src/report_mailer.js`, the linter said it does not exist, and it rewrote to `**Protects:** none` plus a prose line and kept the pointer, which is the "work around it" step 6 forbids. That exit exists only with this change and is a consequence of listing across repositories; recorded as a Deferred risk below.
+- DONE: Review the code: four kc-adr files only, no kc-dev-flow-2 file; the template label keeps the four required sections; the prefix match and listed-files-only scan match the approved decisions; writing.md steps 4-6 match the design text.
+  Template adds `**Protects:** none` inside Decision, tests still require exactly four `##` sections. `cites` is `<where>/(\d{4})(?!\d)`, scan runs over `listed` paths only (`test_a_file_no_adr_lists_is_not_scanned`, `..longer_number..`). `writing.md` steps 4-6 are the design text word for word; old 4-5 are now 6-7. `comment_ratio.py` exit 0 (160 code lines, 0 comment lines); I read the diff and found no added comment. `design_surfaces.py check` exit 0; `dispatch_records.py` exit 0 (4 complete).
+- DONE: A minimal acceptance script FO can run in a fresh shell, and `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since 0701aa8debd45b3fe7eab7e930141319d52f3aa2` with its exit code.
+  Command run from the candidate worktree: `30 ADR file(s) checked, 0 legacy`, exit 0 (the 0.26.0 copy and the candidate's own kc-adr linter print the same, exit 0). The script below ran as written in `env -i bash`, all six steps with the expected observations.
+
+### Findings
+
+- Deferred risk (cross-repo clearing): evidence fields: released workflow, none promised (`read-adr/SKILL.md` home 5: the ADR goes in the current repo, "another repo is the user's choice"); harm, an ADR plus pointer that no list names, so the superseded check never sees that file; value criterion, none (AC-1..AC-3 hold); trigger, one two-repo trace. Would become Material if an adopter keeps its decision log in a repository other than its code and adopts kc-adr, or if the Captain rules that case supported. A "pointer implies a listing" check is the known remedy and is deliberately out of scope (Decision 3).
+- Polish: `**Protects:** nonetheless` is read as `none` (prefix test, `rest.lower().startswith("none")`); no user-visible loss.
+- Polish: `doc_impact.py` lists three documents (`kc-nightwatch/skills/kc-nightwatch/SKILL.md`, `kc-nightwatch/skills/kc-nightwatch-report/SKILL.md`, `kc-pr-flow/skills/break-point-probe/reference/precision-ladder.md`) on the word `repo_root`, and the implementation report records none of the three. Each is `unaffected: an unrelated placeholder or variable also named repo_root`; kc-adr's README and `read-adr/SKILL.md` describe the template and linter in general terms that stay true.
+- Minimal necessity: each of the four files maps to AC-1..AC-3 or a named falsifier; no comment lines; `--root` serves an ADR folder outside the git toplevel and is tested by `test_an_adr_folder_outside_the_root_asks_for_root`.
+
+### Unverified
+
+- No agent run was repeated (budget spent); Claude single-repo is 2 of 2 PASS in a world chosen after the two-repo FAIL, under Amendment 1; no no-change Claude arm exists in the single-repo world. For Claude, the rule's effect rests on the two-repo pair: the no-change run wrote no list and no pointer, the candidate run listed the file and added the pointer before the linter refused it.
+- Codex is one candidate run and one no-change run; the claim is the contrast (PASS against no list, no pointer), not a rate. Both hosts' behaviour in a two-repo world after the file is routed correctly is unknown.
+- dev2 users get the checks only through the sync task and a dev2 release; this stage did not touch dev2 files.
+
+### Minimal acceptance script
+
+Run in a fresh bash. It needs the candidate worktree, the state checkout (step 6) and kc-dev-flow-2 0.28.0 in the plugin cache, named at its top. Not covered: any new agent run, the dev2 copy, a cross-repo ADR folder.
+
+```bash
+set -u
+C=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-adr-protected-path-guard
+STATE=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0
+BASE=0701aa8debd45b3fe7eab7e930141319d52f3aa2
+cd "$C"
+
+echo "== 1. candidate identity (expect 286ba13ac488222b2cb338406207fad48d2c2f32, 4 kc-adr files, none under kc-dev-flow-2)"
+git rev-parse HEAD; git diff --name-only $BASE HEAD
+
+echo "== 2. kc-adr tests (expect: Ran 21 tests, OK)"
+python3 -B -m unittest discover -s kc-adr/scripts -p 'test_*.py' 2>&1 | grep -E '^(Ran|OK|FAILED)'
+
+echo "== 3. linter over this repository's ADRs and the package command (expect both: 30 ADR file(s) checked, exit=0)"
+python3 -B kc-adr/scripts/adr_lint.py docs/adr; echo "exit=$?"
+python3 -B $PKG/scripts/adr_lint.py docs/adr --since $BASE; echo "exit=$?"
+
+echo "== 4. scratch repo: a listed file with no pointer is refused, then accepted once it carries one"
+W=$(mktemp -d); cd "$W"; mkdir -p docs/adr src
+sed -e 's/^# NNNN\./# 2./' -e 's/Date: YYYY-MM-DD/Date: 2026-10-23/' -e 's/^\*\*Protects:\*\* none$/**Protects:**\n- `src\/mailer.js` — the read-back/' "$C/kc-adr/references/adr-template.md" > docs/adr/0002-mail-the-copy.md
+echo "export function send() {}" > src/mailer.js
+python3 -B "$C/kc-adr/scripts/adr_lint.py" docs/adr --root .; echo "exit=$? (expect 1: ... src/mailer.js has no pointer; add a comment line 'see docs/adr/0002-mail-the-copy.md')"
+echo "// see docs/adr/0002-mail-the-copy.md" >> src/mailer.js
+python3 -B "$C/kc-adr/scripts/adr_lint.py" docs/adr --root .; echo "exit=$? (expect 0)"
+
+echo "== 5. same scratch repo: ADR 0002 superseded by 0003, file still points at 0002"
+python3 - <<'PY'
+from pathlib import Path
+old = Path("docs/adr/0002-mail-the-copy.md").read_text()
+Path("docs/adr/0003-newer.md").write_text(old.replace("# 2.", "# 3."))
+Path("docs/adr/0002-mail-the-copy.md").write_text(old.replace("## Status\n\nAccepted", "## Status\n\nSuperseded by 0003"))
+PY
+echo "// see docs/adr/0003-newer.md" >> src/mailer.js
+python3 -B "$C/kc-adr/scripts/adr_lint.py" docs/adr --root .; echo "exit=$? (expect 1: src/mailer.js: points at ADR 0002, Superseded by 0003; point it at 0003 or the record in force)"
+python3 - <<'PY'
+from pathlib import Path
+p = Path("src/mailer.js"); p.write_text(p.read_text().replace("// see docs/adr/0002-mail-the-copy.md\n", ""))
+PY
+python3 -B "$C/kc-adr/scripts/adr_lint.py" docs/adr --root .; echo "exit=$? (expect 0)"
+
+echo "== 6. regrade the stored S15 runs with the committed grader in a scratch copy (expect: results fail+pass, results-base fail+fail, results-single pass+pass)"
+G=$(mktemp -d); git -C "$STATE" archive HEAD adr-protected-path-guard | tar -x -C "$G"; cd "$G/adr-protected-path-guard"
+for r in results results-base results-single; do python3 -I -B harness/score_s15.py --linter "$C/kc-adr/scripts/adr_lint.py" --results $r | grep -E '^\| B1' | cut -d'|' -f2,3; done
+```
+
+### Summary
+
+PASSED: AC-1 and AC-2 hold on the exact candidate (21 tests, falsifier caught, old and new output identical over 30 and 54 ADRs); AC-3 holds on Codex and, in a single-repo world, on Claude 2 of 2, with every stored grade reproduced offline and both commits ordered before their runs. The two-repo Claude FAIL is the existing cross-repo routing limit in both arms, but the agent's clearing of the field to `none` is change-specific and recorded as a Deferred risk. Residuals: no no-change Claude arm in the single-repo world, three polish items, and dev2 gets nothing until the sync.
