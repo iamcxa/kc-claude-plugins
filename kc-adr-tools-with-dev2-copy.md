@@ -15,6 +15,17 @@ gates:
                 id: briefing:kc-adr-tools-with-dev2-copy:backlog:attempt-1:revision-1
                 digest: sha256:f5cd3cdbcb6bcc64b409b35c708c04ebae4d1590dbc380e534680f4a001b1f73
                 room-ref: ./kc-adr-tools-with-dev2-copy/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-adr-tools-with-dev2-copy:backlog:1
+                briefing: briefing:kc-adr-tools-with-dev2-copy:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T10:26:12.037201Z"
+                decision: approve
+                reason: Captain 「可以」 (chat, 2026-10-23), answering the bound question as put in chat; approving enters ideation.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
