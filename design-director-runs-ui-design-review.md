@@ -907,3 +907,217 @@ PASSED on f3ac6101: both Codex P2 and Polish F4, F5 are fixed, each P2 test fail
 ### Summary
 
 The Cycle 2 P1 and three P2 are fixed with a mutation-checked test each, and ADR 0030 is Accepted. No criterion text changed.
+
+## Stage Report: validation (cycle 3)
+
+- DONE: Independent verdict on PR #708 head e033956e against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Head e033956e955503fcf81c134ace19d9cc9fd1dd25 (PR head confirmed by `gh pr view 708`; base 126efaf0); checked out detached in a throwaway worktree, removed after; AC-1 to AC-13 re-run with my own falsifiers, AC-14 holds, AC-15 owed; evidence under "Evidence by criterion (cycle 3)".
+- DONE: Fresh recheck after the Cycle 2 repair (Codex review:5623395171, one P1 and three P2): judge each fix, its test and mutant, ADR 0030 now Accepted, and whether AC-1 to AC-14 still hold (AC-15 owed)
+  P1 and the three P2 are fixed, each test fails only on its own mutant; ADR 0030 reads Accepted; AC-1 to AC-14 hold; the P1 fix narrows where the built-screen lines may sit (F9, Deferred risk).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script run with `env -i ... bash --noprofile --norc` (6 steps, rc 0); adr_lint exit 0; verdict PASSED on e033956e, no Material finding.
+
+### Verdict
+
+PASSED, recommended, for head e033956e955503fcf81c134ace19d9cc9fd1dd25 (base 126efaf06b4d3f06c29d6b071189ed7771c41ee9). No Material finding. Product bytes and the recorded candidate were not changed; I pushed nothing, commented on no PR and did not touch its Draft state (`gh pr view` shows `isDraft: false`, MERGEABLE, 5 of 5 checks SUCCESS on this head).
+
+### Judgment: does the Cycle 2 repair narrow AC-6 as approved?
+
+Yes, in one place; classified F9 below. The words "in the body or the stage report" are the approved Design's (`### Ideation records and the check`, At validation, the `Built screen review:` bullet). AC-6's own text and evidence cases name no location, and every AC-6 case still holds at this head (my probes below). Before e033956e the review, finding and decline-check lines were read from the whole task body; now from the last `## Stage Report: validation` section only (`validation_report`, applied at the top of `check_built_screen`). Observed through the real CLI against f3ac6101 and e033956e on the same fixtures: a waiver under a body section outside any stage report passes at f3ac6101 and is refused at e033956e; a waiver kept in an earlier validation report no longer satisfies a later one (the Codex P1); identical lines kept in two validation reports no longer trip "2 'Built screen review:' lines"; a waiver in the last validation report passes at both. FO authorized exactly this ("scope them to the current validation report as the F-bullet lookup is", Cycle 2), the Captain's D-5 words 「要擋下，不然找它的意義就消失了」 name no location, and both D-5 exits (a review with a non-ideation screenshot, or a quoted waiver) remain, so the check refuses more, not less.
+
+### Findings
+
+- F1 Deferred risk, unchanged: a worker can write `Built screen review: waived 「any text」` and pass (AC-6 states this limit).
+- F2 Deferred risk, unchanged: any task-local file whose bytes differ from every `Preview:` file passes as the built screenshot (AC-6 states this limit).
+- F3 Deferred risk, unchanged: a ui task at validation with no `Design review:` line is not refused; ADR 0030 now names the exemption (F4, closed).
+- F6 Deferred risk, unchanged: validation-gate word count unmeasured on a real run; AC-13 real-flow clause not run; AC-15 owed at the first kc-paseo-plugins ui ideation after release.
+- F7 Polish, unchanged: AC-14 run provenance; AC-14 sets no bound.
+- F8 Deferred risk, unchanged: `rulings:  # comment` or CRLF on the `rulings:` key line gives zero rulings and refuses a valid report (fail-closed). The new root check does allow a trailing comment on the `design_decline_check:` line (probe: accepted).
+- F9 Deferred risk, new: the built-screen review, finding and decline-check lines, and a Captain waiver, count only inside the last validation Stage Report. (1) Workflow: unreleased; the normal path, the validator writing them in its own report as `validation/principles.md` now says, passes. (2) Harm: a line or waiver FO or the Captain records in the body, or one carried over from an earlier validation cycle, is refused; fail-closed and cured by writing it in the last validation report. (3) Boundary: none established; D-5 and AC-6 hold and are stricter. (4) Trigger: none observed. Material if a Captain waiver given at a validation gate, after the validator's report, is recorded by FO outside that report and the task stalls on the refusal, or if the Captain wants one waiver to carry across validation cycles. It is not Needs decision: no Captain ruling names a location and FO's authorization covers the scoping; it turns into one if the Captain wants the waiver to persist.
+- F10 Polish, new: two texts did not follow the narrowing. The approved Design line "in the body or the stage report" is now stale against `validation/principles.md` and the code, and the refusal "built screen review not run: a ui task with a design review needs a 'Built screen review:' line or a quoted waiver" does not say it reads only the last validation Stage Report, so a person whose line sits in the body sees a refusal that looks wrong (probe E). One clause in each fixes it; the implementation report's own line "AC-6 ... is narrowed by this authorization" is the record that exists today.
+
+### Evidence by criterion (cycle 3)
+
+- Package root: the skill loaded 0.27.0, the dispatch and checklist say 0.28.0. adr_lint ran from both and from the candidate's own copy (same output, exit 0); comment_ratio, doc_impact, number_guards, dispatch_records ran from 0.28.0; lint-skills and the tests ran from the candidate.
+- Candidate checks: `lint-skills.py` exit 0 (5389 of 5389 words); all 20 test files OK (design_surfaces 173, lint_skills 37, delivery_gate 86, pr_watch 101; `test_observer_recovery` and `test_sd_dispatch` collect 0 tests under unittest, as at the earlier heads); comment_ratio 0.5% of 5% (3 lines in a test fixture string); number_guards PASS; dispatch_records "10 dispatch record(s) complete"; `design_surfaces.py check` on this task file exit 0; doc_impact lists ADR 0020, README (updated), maintain-flow SKILL.md and learning.md, unchanged from the earlier validations; the cycle 4 delta is three hunks of `design_surfaces.py`, one line of `principles.md`, the ADR Status word and tests.
+- P1 (lookups scan the whole body): probes A to H on one fixture through the real CLI at f3ac6101 and e033956e. Stale waiver in the cycle 1 report with no line in the cycle 2 report: accepted then, refused now. Identical lines in both reports: refused then ("2 lines"), accepted now. Lines under a `###` sub-heading of the report count; lines in a fence do not; lines in a validation report followed by a later implementation report count. Mutant (copy, `python3 -B`, drop `body = validation_report(body)`): fails `test_an_f_bullet_must_be_in_the_current_validation_report` and `test_the_review_finding_and_decline_lines_are_read_from_the_current_validation_report_only`, nothing else.
+- P2 scalar root: `design_decline_check: |`, `: >-` and `: {}` are refused ("a value after its colon, so its children are not a mapping"), the bare line and `:  # note` pass; f3ac6101 passed all of them. Mutant (drop the root test) fails `test_a_scalar_design_decline_check_root_is_refused` only.
+- P2 empty evidence or change: `evidence:`, `change:` and `change: ""` are refused ("without 'change'"), `change: none` passes; f3ac6101 accepted all. Mutant (`key not in item`) fails `test_an_empty_evidence_or_change_counts_as_missing`; it also trips the older missing-key test, because that test asserts the real source line, which my mutant edited.
+- P2 ADR 0030: Status reads `Accepted`; its Words line carries the ideation-gate 「可以」; `adr_lint docs/adr --since 126efaf0 --require 0030` exit 0 (0.28.0, 0.27.0 and the candidate's copy); with the Options line removed, exit 1 "Decision needs a '**Options considered:**' line".
+- AC-1: `model: inherit` gives "design-director agent: existing sonnet/high policy changed"; removing the skill folder gives "missing skills: design-director". AC-2: the 32 `>` lines of the base `design-review.md` and of `review-brief.md` are identical under `diff`; `design-review.md` has none; one edited word prints in `diff`. AC-8: pr_watch, delivery_gate, role_triggers diff empty; `workflow.md` two hunks, 5389 words; one stray word gives "5390 words exceeds the budget of 5389". AC-9: as the ADR line above; ADR 0022 carries the pointer line.
+- AC-4, 5, 6, 10, 11, 13: my own harness (`python3 -B`, source mutants on a copy, real CLI). Mutants that bite: no Decline-check line; overruled still declined; host component without `<Name> at <path>`; decision without kind; host-look without `ADR:` title; report without the root; upheld line printing; preview line printing; grouping by kind alone; grouping without case-folding; no built-screen line; ideation byte-copy as screenshot; waiver without quote; declined MINOR without a decline-check line. Real script refuses: F7 naming no bullet; a finding with no disposition. Passing cases pass (waiver with quote, full set).
+- AC-12 and AC-14 not rerun: the delta since f3ac6101 touches no agent, SKILL.md or review-brief text. AC-14 holds as recorded; AC-15 is owed, not run.
+
+### adr_lint
+
+`python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since 126efaf06b4d3f06c29d6b071189ed7771c41ee9`, run in the candidate checkout: "29 ADR file(s) checked, 0 legacy", exit 0 (also with `--require 0030`).
+
+### Minimal acceptance script
+
+Run by me exactly as written in a fresh shell (`env -i`, no profile). It needs git, python3 and network access to github.com; it fetches the head into a temp directory. It covers the checker, the lint, the tests, ADR 0030's status and the agent file. It does not run the model: how the director rules (AC-14, AC-12), a live pass 2a run, the decline-check key-line shape (F8) and the first real paseo ideation (AC-15) are not covered.
+
+```bash
+# Acceptance script for kc-claude-plugins PR #708 (design director), head e033956e
+# Needs: git, python3, network access to github.com. No secret. Run in a fresh bash shell.
+set -u
+H='##'
+W=$(mktemp -d) && cd "$W" && git init -q repo && cd repo \
+  && git fetch -q --depth 1 https://github.com/iamcxa/kc-claude-plugins.git e033956e955503fcf81c134ace19d9cc9fd1dd25 \
+  && git checkout -q FETCH_HEAD && git log --oneline -1 && R=$PWD && S=$R/kc-dev-flow-2/scripts && cd "$S"
+echo "--- step 1: the plugin lint passes with the 15-word budget raise"
+python3 -B lint-skills.py; echo "exit=$?"
+echo "--- step 2: the two test suites for this change pass"
+python3 -B -m unittest test_design_surfaces test_lint_skills 2>&1 | grep -E "^(Ran|OK|FAILED)"
+echo "--- step 3: at validation, a waiver kept in an earlier validation report does not satisfy a later one"
+V=$W/v; mkdir -p $V/task/design; cd $V
+printf 'built screen bytes' > task/design/built-1.png
+printf '<html></html>\n' > preview.html
+cat > task/design/validation-1.yaml <<'T'
+design_review:
+  preview: design/built-1.png
+  findings:
+    - severity: MAJOR
+      dimension: hierarchy
+      where: built-1.png
+      seen: the count is stated twice
+      fix: keep one
+T
+mk() { cat > task.md <<T
+---
+title: a ui task
+profile: pilot
+status: validation
+---
+
+$H FO alignment
+
+Surfaces: ui
+Visible change: a person sees a panel.
+
+$H Design
+
+UI proposal: a panel.
+Preview: preview.html
+
+Design review: design/ideation-1.yaml
+
+$H Acceptance criteria
+
+**AC-1**: a.
+Verified by: a test.
+
+$H Stage Report: validation
+
+- F1 Behaviour: the count is said twice
+$1
+
+$H Stage Report: validation (cycle 2)
+
+- F1 Behaviour: the count is still said twice
+$2
+T
+}
+mk "Built screen review: waived 「an earlier cycle's words」" ""
+python3 -B "$S/design_surfaces.py" check task.md; echo "exit=$?"
+echo "--- step 4: the same lines kept in both validation reports are accepted"
+L='Built screen review: design/validation-1.yaml
+Built screen finding 1: F1'
+mk "$L" "$L"
+python3 -B "$S/design_surfaces.py" check task.md; echo "exit=$?"
+echo "--- step 5: a decline report with an empty evidence is refused"
+T=$W/t; mkdir -p $T/task/design; cd $T
+printf '<html></html>\n' > preview.html
+cat > task.md <<T
+---
+title: a ui task
+profile: pilot
+status: ideation
+---
+
+$H FO alignment
+
+Surfaces: ui
+Visible change: a person sees a panel.
+
+$H Design
+
+UI proposal: a panel.
+Preview: preview.html
+
+${H}# Design review
+
+Design review: design/ideation-1.yaml
+Design finding 1: declined: the inset matches the shell
+Decline check: design/declines-1.yaml
+
+$H Acceptance criteria
+
+**AC-1**: a.
+Verified by: a test.
+T
+cat > task/design/ideation-1.yaml <<'T'
+design_review:
+  preview: preview.html
+  findings:
+    - severity: MINOR
+      dimension: spacing
+      where: after-desktop.png
+      seen: tight inset
+      fix: widen it
+  limitations:
+    - the operable preview was not opened
+T
+cat > task/design/declines-1.yaml <<'T'
+design_decline_check:
+  adrs_read: none
+  rulings:
+    - finding: 1
+      ruling: upheld
+      evidence:
+      change: none
+T
+python3 -B "$S/design_surfaces.py" check task.md; echo "exit=$?"
+echo "--- step 6: ADR 0030 is Accepted, its lint passes, and the agent declares sonnet"
+grep -A2 '^## Status' "$R"/docs/adr/0030-*.md | tail -1
+python3 -B "$S/adr_lint.py" "$R/docs/adr" --require 0030; echo "exit=$?"
+grep -E '^(model|reasoning):' "$S/../agents/design-director.md"
+```
+
+Observed output (rc 0; the temp directory name differs per run):
+
+```
+e033956 fix(kc-dev-flow-2): read the built-screen lines from the current validation report and validate the decline-check root
+--- step 1: the plugin lint passes with the 15-word budget raise
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5389 of 5389 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+exit=0
+--- step 2: the two test suites for this change pass
+Ran 210 tests in 18.436s
+OK
+--- step 3: at validation, a waiver kept in an earlier validation report does not satisfy a later one
+task.md: built screen review not run: a ui task with a design review needs a 'Built screen review:' line or a quoted waiver
+scope check not run: stage is validation, not ideation
+exit=1
+--- step 4: the same lines kept in both validation reports are accepted
+task.md: design surfaces presentable
+built screen review design/validation-1.yaml: 1 findings, 0 upheld declines, 0 decisions in 0 groups
+preview: <temp dir>/v/task/design/built-1.png
+scope check not run: stage is validation, not ideation
+exit=0
+--- step 5: a decline report with an empty evidence is refused
+task.md: 'design/declines-1.yaml' rules finding 1 without 'evidence'
+task.md: declined finding 1 has no ruling in 'design/declines-1.yaml'
+scope check not run: no closed backlog approval
+exit=1
+--- step 6: ADR 0030 is Accepted, its lint passes, and the agent declares sonnet
+Accepted
+29 ADR file(s) checked, 0 legacy
+exit=0
+model: sonnet
+reasoning: high
+```
+
+### Summary
+
+PASSED on e033956e: the Cycle 2 P1 and the three P2 are fixed, each test fails only on its own mutant, ADR 0030 is Accepted, and AC-1 to AC-14 hold. The P1 fix narrows where the built-screen lines and a waiver may sit to the last validation Stage Report, which is stricter than the approved "body or the stage report" and is Deferred risk F9 with a Polish record fix F10; AC-15 stays owed.
