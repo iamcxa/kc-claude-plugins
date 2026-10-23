@@ -14,7 +14,7 @@ under `extensions:` in its workflow README frontmatter, and only when it keeps a
   `Environment:` names only (target, deployed ref, `<wrapper>`, opt-in variables, identities by role);
   `Smoke:` one passing path through the proof line and the condition it fails on; `Reviewers:` id,
   model, persona and how each operates the product, at least two, distinct personas, distinct models.
-- **Instruction FO adds to an acceptance task's implementation scope notes:** "Lead the walk. Save
+- **Acceptance task's implementation scope notes:** FO adds this to the first implementation record of an acceptance task, and of no other task: "Lead the walk. Save
   `node <kc-journey-map>/lib/journey-walk.mjs <journey file> <release>` as `walk/walk.json`, run the smoke
   path into `walk/smoke.json`, write `walk/meta.json`, run `ra deferred <journey>/<release> --workflow-dir <dir>`,
   and launch each reviewer fresh and one at a time with its `model`, giving it persona, walk list, deferred
