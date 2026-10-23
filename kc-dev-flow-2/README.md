@@ -180,6 +180,7 @@ workflow's `## Extensions` section is the rule FO follows.
 | [copilot](extensions/copilot/EXTENSION.md) | FO review rounds, each push and the merge ask | requests and reads GitHub Copilot review rounds on the PR head |
 | [learn](extensions/learn/EXTENSION.md) | FO, through the `kc-dev-flow-2` mod in `references/sd/mods/`, before the merge sentinel and right after a task is archived | checks `observer.md` is committed before the sentinel (`scripts/observer_check.py`), runs `learn` and the observer, and presents both results |
 | [journey-map](extensions/journey-map/EXTENSION.md) | FO, after a gate ruling on a journey task, before `merge guard`, and after the archive | writes a footprint for a ruling that answers a map question, checks it before the merge guard, and folds it into the map as a docs-only pull request |
+| [release-acceptance](extensions/release-acceptance/EXTENSION.md) | an acceptance task for a release, from implementation to the validation gate and the close | walks a finished release with reviewers on different Claude models, has the design director rule on their complaints and the deferred findings, and records the walk in the task folder |
 
 ## Learning loop
 
