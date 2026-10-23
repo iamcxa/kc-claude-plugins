@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-adr-tools-with-dev2-copy:ideation:attempt-1:revision-1",
+  "question": "Approve ideation of kc-adr-tools-with-dev2-copy (cycle 2) and enter implementation? FO recommends approve; approving accepts that recommendation: the design with the Captain rulings D1 to D5 recorded under FO alignment, including D1's accepted costs (a lint-skills.py exemption for the byte-copied read-adr folder; about 77 more words per session, twice where kc-adr is also installed; two writing.md lines false in dev2 until the kc-adr session rewords them) and the D4 exception to the one-plugin-per-PR rule, named in the PR body.",
+  "artifacts": [
+    {
+      "id": "artifact:kc-adr-tools-with-dev2-copy:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f0bd398e4e573061ccaed9180c8a0481e58c3173/kc-adr-tools-with-dev2-copy.md",
+      "rev": "sha256:4d5e0f93902bfb55cc85b936499f5cddbd600c3e23cf13ffc6ea19713b6fedfd",
+      "mediaType": "text/markdown",
+      "summary": "kc-adr is the source of adr-template.md, adr_lint.py (with #712 Protects checks) and the read-adr skill folder; a sync script copies them byte-identical into kc-dev-flow-2 (references/, scripts/, skills/read-adr resolving as kc-dev-flow-2:read-adr); the required parity job runs the byte compare, its test and kc-adr test_adr_lint.py on every PR (D3); the design-director names the dev2 copy; implementation principles point workers at the copied writing instructions (D5); a kc-adr tool change is one two-plugin PR released with dev2 (D4), with backlog kc-adr-dev2-sharing-better-way. Install probes on Claude Code 2.1.309 and codex-cli 0.162.1 (isolated). engineering-reviewer-1: adjust; nothing approved is withdrawn."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:kc-adr-tools-with-dev2-copy:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/f0bd398e4e573061ccaed9180c8a0481e58c3173/kc-adr-tools-with-dev2-copy/reviews/engineering-reviewer-1.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:256252364a79b2554c18d682f8ee35f889d4e3ea4023afd992ec911ed4cb0905"
+    }
+  ]
+}

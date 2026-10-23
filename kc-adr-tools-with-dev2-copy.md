@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:kc-adr-tools-with-dev2-copy:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:kc-adr-tools-with-dev2-copy-ideation-1
+              briefing:
+                id: briefing:kc-adr-tools-with-dev2-copy:ideation:attempt-1:revision-1
+                digest: sha256:dc1204687677391e0440e70c3c50bdfd58d8b7e65872e361527637467e90048b
+                room-ref: ./kc-adr-tools-with-dev2-copy/review/ideation/briefing-1
 ---
 
 ## Scope
