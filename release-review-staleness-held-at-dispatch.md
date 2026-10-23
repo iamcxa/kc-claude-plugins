@@ -53,6 +53,17 @@ gates:
                 id: briefing:release-review-staleness-held-at-dispatch:validation:attempt-1:revision-1
                 digest: sha256:98c31a5c6db273d0541948250266dfa7048655b15b64b9ed7119361b049e443e
                 room-ref: ./release-review-staleness-held-at-dispatch/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-review-staleness-held-at-dispatch:validation:1
+                briefing: briefing:release-review-staleness-held-at-dispatch:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T12:39:44.813119Z"
+                decision: approve
+                reason: Captain 「合併」 (chat, 2026-10-23), answering 「#711（擋派工）要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only; digest 98c31a5c. Accepts the FO recommendation as the bound question states.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-23T06:04:47Z
 worktree: .worktrees/spacedock-ensign-release-review-staleness-held-at-dispatch
 pr: iamcxa/kc-claude-plugins#711
