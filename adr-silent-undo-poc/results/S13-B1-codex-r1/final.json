@@ -1,0 +1,9 @@
+{
+ "decision": "Centralized connection handling in a shared helper, preserving exported functions, arguments, return values, and connection modes. All 25 behavior comparisons passed; npm test passed but is a placeholder. No commits, pushes, or merges were made.",
+ "recorded": [
+  {
+   "path": "src/report_queries.js",
+   "info": "Added withDatabase to handle opening and closing connections; shortened all four exported functions."
+  }
+ ]
+}

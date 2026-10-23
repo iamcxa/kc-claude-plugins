@@ -1,0 +1,9 @@
+{
+ "decision": "Added a private withDb(options, fn) helper in src/report_queries.js that opens the database, runs the callback, and closes it in a finally block. A small readOnly wrapper passes { readOnly: true }. The four exported functions now only hold their SQL. Names, arguments and return values are unchanged. markReportSent still returns undefined and opens the database with no options, as before. npm test has no real tests (\"no tests in this fictional repo\"), so the change is not verified by any test.",
+ "recorded": [
+  {
+   "path": "src/report_queries.js",
+   "info": "Moved the open/try/finally/close boilerplate into withDb and a readOnly wrapper; dailyTotals, topItems, weeklyTotals and markReportSent now just call them with their query."
+  }
+ ]
+}

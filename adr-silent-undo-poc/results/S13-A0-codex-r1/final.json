@@ -1,0 +1,9 @@
+{
+ "decision": "Centralized connection handling in a shared helper while preserving exported signatures, return values, and database modes. Behavioral checks passed; npm test completed but contains no tests. No commits were made.",
+ "recorded": [
+  {
+   "path": "src/report_queries.js",
+   "info": "Added a shared connection helper and shortened all four query functions, preserving cleanup on errors."
+  }
+ ]
+}

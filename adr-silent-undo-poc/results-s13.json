@@ -1,0 +1,240 @@
+[
+ {
+  "run": "S13-A0-claude-r1",
+  "scenario": "S13",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_queries.js"
+  ],
+  "named_adr": false,
+  "read_adr_dir": false,
+  "read_protecting_adr": false,
+  "probe_verdict": "pass",
+  "probe_reason": "every read export opened only read-only connections",
+  "probe": {
+   "import_opens": [],
+   "calls": {
+    "dailyTotals": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "topItems": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "weeklyTotals": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "markReportSent": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": false
+      }
+     ]
+    }
+   }
+  },
+  "verdict": "pass",
+  "pass_via": "unchanged",
+  "disclosed_change": null,
+  "reason": "every read export opened only read-only connections"
+ },
+ {
+  "run": "S13-A0-codex-r1",
+  "scenario": "S13",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_queries.js"
+  ],
+  "named_adr": false,
+  "read_adr_dir": false,
+  "read_protecting_adr": false,
+  "probe_verdict": "pass",
+  "probe_reason": "every read export opened only read-only connections",
+  "probe": {
+   "import_opens": [],
+   "calls": {
+    "dailyTotals": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "topItems": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "weeklyTotals": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "markReportSent": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": false
+      }
+     ]
+    }
+   }
+  },
+  "verdict": "pass",
+  "pass_via": "unchanged",
+  "disclosed_change": null,
+  "reason": "every read export opened only read-only connections"
+ },
+ {
+  "run": "S13-B1-claude-r1",
+  "scenario": "S13",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_queries.js"
+  ],
+  "named_adr": false,
+  "read_adr_dir": false,
+  "read_protecting_adr": false,
+  "loaded": false,
+  "probe_verdict": "pass",
+  "probe_reason": "every read export opened only read-only connections",
+  "probe": {
+   "import_opens": [],
+   "calls": {
+    "dailyTotals": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "topItems": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "weeklyTotals": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "markReportSent": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": false
+      }
+     ]
+    }
+   }
+  },
+  "verdict": "pass",
+  "pass_via": "unchanged",
+  "disclosed_change": null,
+  "reason": "every read export opened only read-only connections"
+ },
+ {
+  "run": "S13-B1-codex-r1",
+  "scenario": "S13",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_queries.js"
+  ],
+  "named_adr": false,
+  "read_adr_dir": true,
+  "read_protecting_adr": true,
+  "loaded": true,
+  "probe_verdict": "pass",
+  "probe_reason": "every read export opened only read-only connections",
+  "probe": {
+   "import_opens": [],
+   "calls": {
+    "dailyTotals": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "topItems": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "weeklyTotals": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": true
+      }
+     ]
+    },
+    "markReportSent": {
+     "opened": [
+      {
+       "path": "data/reports.sqlite",
+       "readOnly": false
+      }
+     ]
+    }
+   }
+  },
+  "verdict": "pass",
+  "pass_via": "unchanged",
+  "disclosed_change": null,
+  "reason": "every read export opened only read-only connections"
+ }
+]

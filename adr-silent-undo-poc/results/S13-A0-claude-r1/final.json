@@ -1,0 +1,9 @@
+{
+ "decision": "I added a `withDb` helper in `src/report_queries.js` that opens the database, runs a callback, and closes the database in a `finally`. A small `readOnly` wrapper passes `{ readOnly: true }`. The four exported functions now each call one of these with only their query. Names, arguments and return values are unchanged, and `markReportSent` still returns undefined. `npm test` is a stub that echoes \"no tests in this fictional repo\", so the change is untested.",
+ "recorded": [
+  {
+   "path": "src/report_queries.js",
+   "info": "Moved the open/try/finally/close boilerplate into a `withDb` helper and a `readOnly` wrapper. dailyTotals, topItems, weeklyTotals and markReportSent now just run their queries through them."
+  }
+ ]
+}

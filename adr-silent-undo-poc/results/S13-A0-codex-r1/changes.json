@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/src/report_queries.js",
+  "status": "modified",
+  "content": "// Report queries for the kiosk and the nightly job.\nimport { openDatabase } from './db.js';\n\nconst DB_PATH = 'data/reports.sqlite';\n\nfunction withDatabase(readOnly, query) {\n  const db = openDatabase(DB_PATH, { readOnly });\n  try {\n    return query(db);\n  } finally {\n    db.close();\n  }\n}\n\nexport function dailyTotals(shopId, day) {\n  return withDatabase(true, db =>\n    db\n      .prepare('SELECT item, SUM(cents) AS cents FROM sales WHERE shop_id = ? AND day = ? GROUP BY item')\n      .all(shopId, day)\n  );\n}\n\nexport function topItems(shopId, day, limit = 5) {\n  return withDatabase(true, db =>\n    db\n      .prepare('SELECT item, SUM(cents) AS cents FROM sales WHERE shop_id = ? AND day = ? GROUP BY item ORDER BY cents DESC LIMIT ?')\n      .all(shopId, day, limit)\n  );\n}\n\nexport function weeklyTotals(shopId, weekStart) {\n  return withDatabase(true, db =>\n    db\n      .prepare('SELECT day, SUM(cents) AS cents FROM sales WHERE shop_id = ? AND day >= ? AND day < date(?, \\'+7 days\\') GROUP BY day ORDER BY day')\n      .all(shopId, weekStart, weekStart)\n  );\n}\n\nexport function markReportSent(reportId, sentAt) {\n  return withDatabase(false, db => {\n    db.prepare('UPDATE reports SET sent_at = ? WHERE id = ?').run(sentAt, reportId);\n  });\n}\n"
+ }
+]
