@@ -3,7 +3,7 @@ title: An ADR that protects code names its files, each file carries a pointer ba
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'Captain 「准」 (2026-10-23) to validation briefing-1: accepts validation on 286ba13a and delivery as asked (push, Draft PR with the shown body, ready after CI, review rounds, merge with --match-head-commit once delivery_gate.py passes, remove worktree and local branch), the Deferred risk as a known limit and the two Polish findings declined.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-23T08:55:00Z
 worktree: .worktrees/spacedock-ensign-adr-protected-path-guard
 pr: pr-merge:712
+verdict: PASSED
+completed: 2026-10-23T10:08:49Z
+archived: 2026-10-23T10:08:49Z
 ---
 
 ## Scope
