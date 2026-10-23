@@ -1,5 +1,6 @@
 {
   "v1": {
+    "ops.inbox.selftest": "sha256:09cceac954525be54955307dd9fc1f27f8fa856c4343c2ab565ee805b9578c12",
     "relay.capacity.ceiling": "sha256:a97afa385d7cb3104314695c3ea2d32ce81e7807b6a02599b5c132bc14f0c539",
     "sentry.issue.alert": "sha256:2b1df052920f95ce4fa7b5fab850ad75283543f0cf2d71df142ebc3b25ce49cf"
   }

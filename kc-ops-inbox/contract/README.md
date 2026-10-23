@@ -21,7 +21,7 @@ A retry may re-sign (new timestamp) and must keep the CloudEvent `id`: the inbox
 | `specversion` | `"1.0"` |
 | `id` | `^[A-Za-z0-9._-]{1,64}$`; unique within `source` |
 | `source` | non-empty, at most 200 characters; names the producer |
-| `type` | `relay.capacity.ceiling` or `sentry.issue.alert` |
+| `type` | `relay.capacity.ceiling`, `sentry.issue.alert` or `ops.inbox.selftest` |
 | `subject` | `^[A-Za-z0-9._/-]{1,100}$` and the per-type rule below; the incident within the source |
 | `time` | RFC 3339 |
 | `dataschema` | `https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/<type>.json` |
@@ -35,6 +35,8 @@ Any other attribute, and any `data` field outside the list, is refused, not drop
 `relay.capacity.ceiling` — subject `ceiling/<tier>/<day>`, `<day>` equal to `data.day`. Data (all required): `v` (integer >= 1), `event`, `at` (RFC 3339), `day` (`YYYY-MM-DD`), `count`, `limit` (integers >= 0), `limitSource`. Holds no account identifier (relay ADR 0049).
 
 `sentry.issue.alert` — subject `issue/<issue_id>`. Data: required `issue_id`, `title`, `level`, `project`, `web_url` (`https://`); optional `event_id`, `culprit`, `triggered_rule`, `datetime`, `release`. Strings are at most 500 characters.
+
+`ops.inbox.selftest` — sent only by the setup read-back; subject `selftest/<id>`; data `v`, `project` (`owner/name`). It files no task.
 
 ## Keys
 
