@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-hidden-reason-poc:backlog:attempt-1:revision-1",
+  "question": "Approve this backlog item as filed? Approval accepts the question, the no-ADR control, the budget (12 counted runs: control, A0, B1 x Claude, Codex x 2) and the stop point (if the control changes the choice in fewer than 3 of 4 runs, stop and report without running A0 or B1), profile poc; then implementation.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-hidden-reason-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1b261d79e05035e61cb0616c2f0301993241e615/adr-hidden-reason-poc.md",
+      "rev": "sha256:532c96519a4c944d664204df55a66a3ef063c693c4eee0bdb8404904d18f237b",
+      "mediaType": "text/markdown",
+      "summary": "Follow-up to adr-silent-undo-poc on the Captain's 「開」: the protected choice shows no reason in the code; a no-ADR control proves the scenario can detect an undo; result decides between a deterministic ADR-path guard in kc-adr and stopping at the current three points."
+    }
+  ]
+}
