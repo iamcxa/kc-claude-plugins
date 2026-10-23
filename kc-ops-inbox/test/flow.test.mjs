@@ -8,7 +8,7 @@ import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { run } from "../bin/ops-run.mjs";
-import { recordGate, pickReview } from "../bin/record-gate.mjs";
+import { recordGate, pickReview, namedOption } from "../bin/record-gate.mjs";
 import { relayEvent } from "./rig.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -223,6 +223,9 @@ function review(id, state, login, sha, body = "") { return { id, state, body, co
 test("pickReview takes only the Captain's latest deciding review on the current head", () => {
   const rows = [review(1, "APPROVED", "other", "h"), review(2, "APPROVED", CAPTAIN, "old"), review(3, "COMMENTED", CAPTAIN, "h", "Option 2"), review(4, "DISMISSED", CAPTAIN, "h")];
   assert.equal(pickReview(rows, CAPTAIN, "h").id, 3);
+  assert.equal(pickReview([review(5, "COMMENTED", CAPTAIN, "h", "why is the limit 50?")], CAPTAIN, "h"), null);
+  assert.equal(namedOption("option 1 or option 2?"), null);
+  assert.equal(namedOption("Option 2, as written in Option 2"), "2");
   assert.equal(pickReview(rows.slice(0, 2), CAPTAIN, "h"), null);
 });
 
@@ -261,6 +264,25 @@ test("gate: a changes-requested review records revise and followed no; another r
   gh.state.reviews = [review(1, "APPROVED", "stranger", head), review(2, "APPROVED", CAPTAIN, "0".repeat(40))];
   assert.equal((await recordGate(gateEnv(gh), checkout)).result, "no-op");
   gh.state.reviews.push(review(3, "CHANGES_REQUESTED", CAPTAIN, head, "Option 2"));
+  const out = await recordGate(gateEnv(gh), checkout);
+  assert.deepEqual([out.decision, out.followed], ["revise", "no"]);
+  gh.close();
+});
+
+test("gate: a Comment question leaves the gate open, so the Captain's later approval still records", opts, async () => {
+  const { gh, checkout } = await gateFixture();
+  const head = gh.state.prs[0].head.sha;
+  gh.state.reviews = [review(1, "COMMENTED", CAPTAIN, head, "Why 50?")];
+  assert.equal((await recordGate(gateEnv(gh), checkout)).result, "no-op");
+  gh.state.reviews.push(review(2, "APPROVED", CAPTAIN, head, "ok"));
+  const out = await recordGate(gateEnv(gh), checkout);
+  assert.deepEqual([out.result, out.decision], ["recorded", "approve"]);
+  gh.close();
+});
+
+test("gate: a Comment naming one option records revise with that review", opts, async () => {
+  const { gh, checkout } = await gateFixture();
+  gh.state.reviews = [review(3, "COMMENTED", CAPTAIN, gh.state.prs[0].head.sha, "Option 2 please")];
   const out = await recordGate(gateEnv(gh), checkout);
   assert.deepEqual([out.decision, out.followed], ["revise", "no"]);
   gh.close();

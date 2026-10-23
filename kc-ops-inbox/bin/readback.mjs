@@ -43,7 +43,7 @@ export const ROW_DEFS = [
   ["R21", "S9", "project variable OPS_CAPTAIN_LOGIN is set"],
   ["R22", "S12", "every recorded gate names the Captain's review on that pull request's head"],
 ];
-const GATE_DECISIONS = { approve: "APPROVED", revise: "CHANGES_REQUESTED", hold: "COMMENTED" };
+const GATE_DECISIONS = { approve: ["APPROVED"], revise: ["CHANGES_REQUESTED", "COMMENTED"] };
 
 const norm = (v) => JSON.stringify(sortKeys(v));
 function sortKeys(v) {
@@ -325,7 +325,7 @@ export async function readback(ctx, { project, trigger, inbox, slackLink, workfl
         const reason = reasonRaw.replace(/^'|'$/g, "").replace(/''/g, "'");
         const m = reason.match(/^GitHub review (\d+) by (\S+) on ([0-9a-f]{40}):/);
         const rev = m && reviews.ok ? reviews.json.find((r) => String(r.id) === m[1]) : null;
-        const ok = m && rev && m[2] === login && rev.user?.login === login && rev.commit_id === m[3] && prs[0].head.sha === m[3] && GATE_DECISIONS[decision] === rev.state;
+        const ok = m && rev && m[2] === login && rev.user?.login === login && rev.commit_id === m[3] && prs[0].head.sha === m[3] && GATE_DECISIONS[decision]?.includes(rev.state);
         if (!ok) forged.push(`${slug} (${decision})`);
       }
     }

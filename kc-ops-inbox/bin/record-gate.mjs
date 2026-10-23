@@ -7,11 +7,17 @@ import { join } from "node:path";
 import { client } from "./lib/github.mjs";
 
 const WORKFLOW_DIR = "docs/ops";
-const DECISIONS = { APPROVED: "approve", CHANGES_REQUESTED: "revise", COMMENTED: "hold" };
+const DECISIONS = { APPROVED: "approve", CHANGES_REQUESTED: "revise", COMMENTED: "revise" };
+
+// A Comment review decides only when it names exactly one option; otherwise it is a question and the gate stays open, because `gate record` closes the attempt.
+export const namedOption = (body) => {
+  const found = new Set([...(body ?? "").matchAll(/\boption\s*([1-9])\b/gi)].map((m) => m[1]));
+  return found.size === 1 ? [...found][0] : null;
+};
 
 // The latest review by the Captain that is on the current head and decides something.
 export function pickReview(reviews, captain, headSha) {
-  const rows = reviews.filter((r) => r.user?.login === captain && r.commit_id === headSha && Object.hasOwn(DECISIONS, r.state));
+  const rows = reviews.filter((r) => r.user?.login === captain && r.commit_id === headSha && Object.hasOwn(DECISIONS, r.state) && (r.state !== "COMMENTED" || namedOption(r.body)));
   return rows.length ? rows[rows.length - 1] : null;
 }
 

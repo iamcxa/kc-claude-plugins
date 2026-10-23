@@ -53,7 +53,7 @@ export function incompleteSections(text) {
   });
 }
 
-const HOW_TO_DECIDE = "**How to decide:** approve this pull request to accept the recommendation; to choose another option, submit a review with \"Request changes\" or \"Comment\" whose text names the option (for example \"Option 2\"). Your review is the recorded decision; a review that names no single option is recorded with your words and leaves the option open. In r1 nothing runs after it: you carry out the option yourself, and merging keeps this record on the default branch.";
+const HOW_TO_DECIDE = "**How to decide:** approve this pull request to accept the recommendation; to choose another option, submit a review with \"Request changes\", or \"Comment\" naming exactly one option (for example \"Option 2\"). Your review is the recorded decision, with your words. A Comment that names no single option is a question: it records nothing and the decision stays open. In r1 nothing runs after the decision: you carry out the option yourself, and merging keeps this record on the default branch.";
 
 // Adds the fixed decision text after the Recommendation and the measures at the end.
 export function finalize(text, { received, recommended }) {
