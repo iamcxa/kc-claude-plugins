@@ -44,6 +44,7 @@ Captain ruling (chat, 2026-10-23): 「重做檢查」, answering 「這一輪要
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-23 — the ideation replay shows the designed map-diff hold would not have caught R4 (its signals 1 and 2 were not map edits; only an unrelated card reword tripped it); what is the smallest next step?
 
 Alignment: needed at ideation; where the check lives and whether it raises the word budget are his to accept.
+Result: aligned 2026-10-23 by the Captain's 「重做檢查」 (recorded above): the check reads the dispatched task's own record; the remaining choices are the Captain decisions in the task.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
