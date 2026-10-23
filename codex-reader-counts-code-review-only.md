@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:codex-reader-counts-code-review-only:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:codex-reader-counts-code-review-only-validation-1
+              briefing:
+                id: briefing:codex-reader-counts-code-review-only:validation:attempt-1:revision-1
+                digest: sha256:a95991ccfb2b52131c7914a4c859d5f5e990eddf874e298d27feab23695401de
+                room-ref: ./codex-reader-counts-code-review-only/review/validation/briefing-1
 started: 2026-10-22T01:22:21Z
 worktree: .worktrees/spacedock-ensign-codex-reader-counts-code-review-only
 pr: iamcxa/kc-claude-plugins#702
