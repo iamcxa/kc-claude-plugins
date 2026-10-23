@@ -53,6 +53,17 @@ gates:
                 id: briefing:design-director-runs-ui-design-review:validation:attempt-1:revision-1
                 digest: sha256:d2127e04ff607c70ae39f2fcac3a89cc30206a639ebb550de70fee878a1c0031
                 room-ref: ./design-director-runs-ui-design-review/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:design-director-runs-ui-design-review:validation:1
+                briefing: briefing:design-director-runs-ui-design-review:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T06:12:51.484885Z"
+                decision: approve
+                reason: Captain 「合併。剛才 paseo fo 提的那個模型後續是怎樣？…」 (chat, 2026-10-23), answering 「#708（設計總監）要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only, with Copilot not run (quota) and AC-15 owed after release; digest d2127e04. Accepts the FO recommendation as the bound question states.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-22T11:31:12Z
 worktree: .worktrees/spacedock-ensign-design-director-runs-ui-design-review
 pr: iamcxa/kc-claude-plugins#708
