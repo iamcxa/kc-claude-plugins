@@ -40,6 +40,7 @@ gates:
 
 Captain rulings on D1 to D5 (ideation sitting, 2026-10-23, chat, each given to FO's question one at a time; to be bound at the ideation gate):
 - D5 「拆」, answering 「這張任務要不要拆成兩半？」 with FO's recommendation (option A): this task delivers Part A (the walk: smoke check, at least two reviewers, the director's ruling table, the record) in one PR; Part B (the due trigger, the journeys key, the pr_watch.py line) is a follow-up task, release-walk-due-trigger, after this PR and #711 merge. D4 goes with Part B to that task.
+- D1 「好」, answering 「D1 改成「像 POC 一樣本機結案，地圖要改才開地圖 PR」，可以嗎？」 (raised by his 「可以，但退一步想，這是最好的嗎？」 on FO's first recommendation): an acceptance task closes like a dev2-poc task, with the record in the task folder and a `local-merge:<state commit>` sentinel through merge guard; a map edit the walk proposes goes in its own journey PR through the normal path; no docs-only record PR. This is his explicit choice of the no-PR finalize the workflow treats as an exception, to be landed as an ADR. Override: recommended option A, a docs-only record PR (design D1); Captain chose the POC-style local finalize; area: acceptance task close path.
 
 Alignment: needed at ideation; the open points named in the starting design are his.
 Surfaces: none
