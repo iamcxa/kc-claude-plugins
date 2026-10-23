@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:design-director-runs-ui-design-review:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:design-director-runs-ui-design-review-validation-1
+              briefing:
+                id: briefing:design-director-runs-ui-design-review:validation:attempt-1:revision-1
+                digest: sha256:d2127e04ff607c70ae39f2fcac3a89cc30206a639ebb550de70fee878a1c0031
+                room-ref: ./design-director-runs-ui-design-review/review/validation/briefing-1
 started: 2026-10-22T11:31:12Z
 worktree: .worktrees/spacedock-ensign-design-director-runs-ui-design-review
 pr: iamcxa/kc-claude-plugins#708

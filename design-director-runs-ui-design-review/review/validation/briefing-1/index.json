@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:design-director-runs-ui-design-review:validation:attempt-1:revision-1",
+  "question": "Approve validation of design-director-runs-ui-design-review and merge iamcxa/kc-claude-plugins#708 at head e033956e955503fcf81c134ace19d9cc9fd1dd25 with `gh pr merge 708 --squash --match-head-commit e033956e955503fcf81c134ace19d9cc9fd1dd25`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:design-director-runs-ui-design-review:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c8a83d7f178a10a57ff0d37cde3b497630f9d119/design-director-runs-ui-design-review.md",
+      "rev": "sha256:8401d67486699eb80c4508532a7bdb0529ada989255c9cf7787de737cde145df",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: a named kc-dev-flow-2:design-director agent (sonnet, high) runs the ui design review at ideation (pass 1a pictures, pass 1b rules each proposed decline) and at validation (pass 2a built-screen screenshots, 2b decline check); design_surfaces.py refuses a declined finding without an upheld ruling, prints upheld declines, grouped decision lines and each Preview path, and refuses a ui task at validation with no built-screen review unless the Captain waives it in quoted words; workflow.md budget 5374 to 5389 under his 「可以」; ADR 0030 Accepted; validation cycle 3 PASSED at this head (173 design_surfaces tests, every falsifier bites).\nNecessity: the agent, the design-director skill and review brief, design_surfaces.py and its tests, the ideation and validation instructions, the workflow.md sentence and clause with the lint-skills.py budget step, ADR 0030 and the ADR 0022 pointer, the files the approved design names.\nExternal rounds: Codex 3 (round 1 review:5623263990 two P2, fixed in Cycle 1; round 2 review:5623395171 one P1 and three P2, fixed in Cycle 2; round 3 review:5623843736 on this head, two P2, declined below and filed). Second reviewer: copilot because the PR changes review rules. copilot not run: \"Copilot was unable to review this pull request because the user who requested the review has reached their quota limit.\" (review:5624549574); a retry is offered once the quota resets.\nEngineering-reviewer calls: reviews/engineering-reviewer-1.md (Amendment 1, adjust, its items closed in ideation cycle 2) and reviews/engineering-reviewer-2.md (Amendment 2, proceed).\nFO declines: Deferred risk, Codex P2 comment:4356044042, an HTTP(S) Preview is not hashed so a saved remote ideation image passes as the built screenshot (round 3; filed as built-screen-check-round3-followups; 0 of 42 kc-paseo-plugins Preview lines are URLs, engineering-reviewer-2, 2026-10-23); Deferred risk, Codex P2 comment:4356044048, one F token may serve several MAJORs (round 3; same backlog task; two MAJORs fixed by one repair may share one); Deferred risk F1, a waiver passes on any quoted span (stated in AC-6); Deferred risk F2, any task-local file that differs from every preview passes as the screenshot (AC-6's stated limit); Deferred risk F3, a ui task at validation with no Design review line is not refused (AC-6 requires the exemption; ADR 0030 now names it); Deferred risk F6, the validation-gate word count and AC-13's real-flow clause were not measured on a real run (AC-15 owed after release); Deferred risk F8, a rulings line with a trailing comment or CRLF reads zero rulings (fails closed; no saved report has it); Deferred risk F9, Built screen lines are read only from the last validation Stage Report, narrower than the design's wording (refuses more, never less; Material if a gate-time waiver stalls a task); Polish F7, the AC-14 runs predate commit ec70dfeb (raw runs now saved under replay/ac14-runs; AC-14 sets no bound); Polish F10, the refusal text does not say it reads only the last validation report (wording only; validation/principles.md states where the lines go)."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:design-director-runs-ui-design-review:validation:attempt-1:revision-1:item-2",
+      "uri": "git-root://state/c8a83d7f178a10a57ff0d37cde3b497630f9d119/design-director-runs-ui-design-review/reviews/engineering-reviewer-2.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:aa858abf1b10bfa72031a73ade9540af36db864fe14baeeb96bf3c43ee8c4aaa"
+    }
+  ]
+}
