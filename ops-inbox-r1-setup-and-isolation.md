@@ -119,6 +119,7 @@ Surfaces: ui
 Visible change: Each relay ceiling event shows up as one Slack notice; a new incident brings a Draft PR whose ops record cites relay's ADRs and is decided by the Captain's GitHub review, and later events of the same incident join it.
 Release review: not needed: the kc-ops-inbox journey map (inbox-r1) is only on branch iamcxa/kc-ops-inbox at 0a1d59ce and not on the trunk; set journey fields when it lands.
 Captain standing ask, 2026-10-21: 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate.
+Captain ruling, 2026-10-23 (chat): 「可以沿用」 to reusing the two POC GitHub Apps (ops-inbox-probe-iamcxa as the agent App, ops-inbox-dispatch-iamcxa as the dispatch App) after deleting the scratch repository, rotating both private keys and transferring both Apps to spacedock-dev; and 「准」 to keeping both Apps' keys in relay's own 1Password vault (named relay-dev or agent-relay-dev; the Captain uses the one his 1Password shows), one Secure Note per App. Open for implementation: `netlify env:set` takes the value on argv, against the stdin-only rule kc-paseo-plugins' project-env follows (PR #21); replace it or record it as a limit.
 
 ## Number guards
 
