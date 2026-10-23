@@ -1,0 +1,23 @@
+{
+  "class": "never",
+  "head": "d84ebde04c874524ede1d55587db9b9a1692c627",
+  "model": "not run",
+  "necessity": "twelve files (ADR 0031, kc-journey-map/README.md, lib/journey-walk.mjs and lib/journey-accept.mjs with their tests, lib/schemas.mjs and lib/contract-versions.json, progress and schemas tests, SKILL.md",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F1 Deferred risk: `journey-accept.mjs` exits'",
+    "point: deferred: '- F1 Deferred risk: `journey-accept.mjs` exits'",
+    "point: deferred: 'FO declines: Deferred risk F1, journey-accept'",
+    "point: acceptance-not-run: '`git diff e3a92e98 d84ebde0` is one'",
+    "point: amendment: 'Amendment 2 dated 2026-10-23'",
+    "point: amendment: 'Amendment 3 dated 2026-10-23'",
+    "point: amendment: 'Amendment 4 dated 2026-10-23'",
+    "point: path: 'docs/adr/0031-a-release-is-accepted-by-walking-it-and-the-plugins-meet-at-two-na'",
+    "point: path: 'kc-journey-map/skills/kc-journey-map/SKILL.md'",
+    "point: path: 'kc-journey-map/skills/kc-journey-map/references/accept-release.md'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#709",
+  "sufficiency": "kc-journey-map gains the accept-release mode (journey-walk.mjs prints the release's walk list; journey-accept.mjs turns a release-acceptance/v1 report into map-edit proposals without writing the map),",
+  "time": "2026-10-23T13:20:03Z",
+  "verdict": "ask"
+}

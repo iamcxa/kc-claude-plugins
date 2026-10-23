@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:release-acceptance:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:release-acceptance-validation-1
+              briefing:
+                id: briefing:release-acceptance:validation:attempt-1:revision-1
+                digest: sha256:eb6620a860068f193c0a21686fbeae63dcbd81ed4e14feae1d9326003eb069dc
+                room-ref: ./review/validation/briefing-1
 started: 2026-10-23T03:28:31Z
 worktree: .worktrees/spacedock-ensign-release-acceptance
 pr: iamcxa/kc-claude-plugins#709
