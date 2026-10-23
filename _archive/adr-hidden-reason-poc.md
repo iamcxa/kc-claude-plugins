@@ -3,7 +3,7 @@ title: When an ADR-protected choice shows no reason in the code, does an agent u
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -44,10 +44,13 @@ gates:
                 reason: 'Captain 「准」 (2026-10-23) to validation briefing-1: closes the POC with the validator''s corrected reading; no code delivery, local-merge sentinel at c27e7659, archive, remove the empty worktree.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-23T07:42:43Z
 worktree: .worktrees/spacedock-ensign-adr-hidden-reason-poc
 pr: local-merge:c27e76590c1d2dc910e7fa2d332242a7534df0b0
+verdict: PASSED
+completed: 2026-10-23T08:16:16Z
+archived: 2026-10-23T08:16:16Z
 ---
 
 Filed on the Captain's 「開」 (chat, 2026-10-23), answering FO's 「要不要開「理由藏起來」POC？做法是 ADR 保護的設計在程式碼上看不出理由，再加一組對照，確認題目真的會讓 agent 犯錯。」, after `adr-silent-undo-poc` closed with no cell needing the ADR because the protected flag was visible at every call site.
