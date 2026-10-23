@@ -19,8 +19,8 @@ under `extensions:` in its workflow README frontmatter, and only when it keeps a
   path into `walk/smoke.json`, write `walk/meta.json`, run `ra deferred <journey>/<release> --workflow-dir <dir>`,
   and launch each reviewer fresh and one at a time with its `model`, giving it persona, walk list, deferred
   list and environment only. Run `ra check <folder> --tier walk`, then pass 3 of `kc-dev-flow-2:design-director`
-  on sonnet into `walk/ruling-sonnet.json`, `ra escalate <folder> --workflow-dir <dir>`, pass 3 on opus for the
-  listed items into `walk/ruling-opus.json`, `ra build <folder>`, `ra check <folder> --tier final`, and
+  on sonnet into `walk/ruling-sonnet.json`, `ra escalate <folder> --workflow-dir <dir>`, pass 3 on opus with the `Items:` line it
+  prints into `walk/ruling-opus.json`, `ra build <folder>`, `ra check <folder> --tier final`, and
   `ra render <folder> > <folder>/walk/record.md`. Commit the walk folder path-scoped to the state checkout.
   Open no pull request."
 - **Validation:** re-runs `check --tier final` and `render --check`, re-performs every non-`works` story

@@ -135,6 +135,10 @@ def text(value):
     return isinstance(value, str) and bool(value.strip())
 
 
+def release_id(value):
+    return text(value) and len(value.split()) == 1
+
+
 def strings(value):
     return isinstance(value, list) and all(isinstance(v, str) for v in value)
 
@@ -358,7 +362,7 @@ def mark_problems(w, who, prior):
             continue
         if m.get("status") not in MARKS or not text(m.get("reason")):
             out.append(f"reviewer {who}: mark of {m.get('complaint')!r} needs a status of {', '.join(MARKS)} and a reason")
-        elif m["status"] == "deferred" and not text(m.get("release")):
+        elif m["status"] == "deferred" and not release_id(m.get("release")):
             out.append(f"reviewer {who}: deferral of {m.get('complaint')!r} names no release")
     prior_ids = {c for ids in prior_owned(prior).values() for c in ids}
     out += [f"reviewer {who}: new complaint {c['id']!r} reuses a prior complaint id"
@@ -502,8 +506,8 @@ def ruling_problems(report, workflow_dir, journey, release, deferred_ids, prior)
             out.append(f"{tag}: real no or do-not-solve needs a why")
         if e.get("ruling") == "solve" and not (text(e.get("how")) and text(e.get("when"))):
             out.append(f"{tag}: solve needs a how and a when")
-        if e.get("ruling") == "solve" and e.get("when") in ("next-release", "later") and not text(e.get("release")):
-            out.append(f"{tag}: deferral names no release (when {e['when']} needs release)")
+        if e.get("ruling") == "solve" and e.get("when") in ("next-release", "later") and not release_id(e.get("release")):
+            out.append(f"{tag}: deferral names no release id (when {e['when']} needs release, one word)")
     ruled = {d.get("item") for d in ruling.get("deferred", []) if isinstance(d, dict)}
     out += [f"deferred item {i} has no director ruling" for i in deferred_ids if i not in ruled]
     out += [f"ruling names deferred item {i}, which is not a deferred item of the release" for i in sorted(map(str, ruled)) if i not in deferred_ids]

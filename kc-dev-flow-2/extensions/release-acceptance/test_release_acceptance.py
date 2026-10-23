@@ -454,6 +454,7 @@ class RulingTests(Base):
     def test_deferral_without_a_release_is_refused(self):
         self.case(lambda r: r["ruling"]["items"][1].pop("release"), "deferral names no release")
         self.case(lambda r: r["ruling"]["deferred"][2].pop("release"), "deferral names no release")
+        self.case(lambda r: r["ruling"]["items"][1].update(release="the release after r1"), "deferral names no release id")
 
     def clean_world(self):
         for who in ("o", "s"):
