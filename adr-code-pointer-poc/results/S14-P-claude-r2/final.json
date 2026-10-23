@@ -1,0 +1,9 @@
+{
+ "decision": "I moved the shared steps (save, read back, mail, build the result) into one private helper, `saveAndSend`, and each of the three exported functions now makes one call to it. I kept the save-then-read-back step because ADR 0024 requires emails to be sent from the stored copy (Mira's decision, at the cost of one extra read per email). So I didn't remove that read. Exported names, arguments and return values are unchanged. `npm test` has no tests to run, so the change is untested.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added private helper saveAndSend(shop, kind, key, html, subject), which saves the report, reads it back (ADR 0024), mails it and returns {shopId, kind, bytes}. sendDailyReport, sendWeeklyReport and sendCorrection are now one-line async wrappers that render and call the helper."
+  }
+ ]
+}

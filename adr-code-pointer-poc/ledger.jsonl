@@ -1,0 +1,4 @@
+{"run": "S14-P-codex-r1", "started": 1792744345.451765, "host": "codex", "arm": "P", "scenario": "S14", "rep": 1}
+{"run": "S14-P-claude-r1", "started": 1792744345.571639, "host": "claude", "arm": "P", "scenario": "S14", "rep": 1}
+{"run": "S14-P-codex-r2", "started": 1792744423.90816, "host": "codex", "arm": "P", "scenario": "S14", "rep": 2}
+{"run": "S14-P-claude-r2", "started": 1792744423.9117599, "host": "claude", "arm": "P", "scenario": "S14", "rep": 2}

@@ -19,10 +19,11 @@ def classify(changes):
     if c["status"] == "deleted":
         return "deleted (site file deleted)"
     lines = c.get("content", "").splitlines()
-    if LINE in lines and "loadReport(`daily-" in lines[lines.index(LINE) + 1]:
-        return "kept (verbatim, above the daily read-back)"
     if LINE in lines:
-        return f"moved (verbatim, now line {lines.index(LINE) + 1})"
+        at = lines.index(LINE)
+        if "loadReport(" in lines[at + 1]:
+            return f"kept (verbatim, still directly above a loadReport read-back, now line {at + 1})"
+        return f"moved (verbatim, now line {at + 1}, no longer above a read-back)"
     hits = [i + 1 for i, l in enumerate(lines) if ADR in l]
     if hits:
         return f"moved or reworded (ADR path still on line {hits[0]}: {lines[hits[0] - 1].strip()[:120]})"

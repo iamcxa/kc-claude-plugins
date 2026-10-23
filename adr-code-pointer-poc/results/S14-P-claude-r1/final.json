@@ -1,0 +1,9 @@
+{
+ "decision": "I moved the repeated save, read-back, send and return steps in `src/report_mailer.js` into one private `sendReport` helper. The three exported functions are now one-liners with the same names, arguments and return values. I kept the save-then-read-back step, because ADR 0024 requires emails to be sent from the stored copy. It costs one extra store read per email, and it is the only part that looks like avoidable work. The repo has no tests (`npm test` just echoes a message), so the refactor is untested.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added a private sendReport(kind, shop, key, html, subject) helper that does the save, read-back, send and return. sendDailyReport, sendWeeklyReport and sendCorrection now call it with their own render and subject. The ADR 0024 comment moved into the helper."
+  }
+ ]
+}

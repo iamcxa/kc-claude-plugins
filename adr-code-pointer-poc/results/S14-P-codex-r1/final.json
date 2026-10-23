@@ -1,0 +1,9 @@
+{
+ "decision": "Refactored the shared send sequence into one helper, keeping each exported function short and preserving arguments and return values. Each email renders once and retains the required stored-copy read. npm test and targeted behavior checks passed; nothing was committed, pushed, or merged.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Centralized saving, loading, sending, and result creation; computes the storage key once per email."
+  }
+ ]
+}

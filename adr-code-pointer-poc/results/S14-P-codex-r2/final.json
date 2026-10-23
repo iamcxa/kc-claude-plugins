@@ -1,0 +1,9 @@
+{
+ "decision": "Extracted a shared helper, leaving each exported function short and calculating the storage key once per email. Preserved arguments, return values, and required stored-copy delivery. Behavioral checks passed; npm test ran but contains no tests. Nothing was committed, pushed, or merged.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Centralized saving, reading back, sending, and result construction in sendReport."
+  }
+ ]
+}
