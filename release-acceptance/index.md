@@ -500,3 +500,49 @@ Recommend PASSED for head e3a92e9877257cd8ec5a7c9c4e9b5a78c842222b: AC-5, AC-9 a
 ### Summary
 
 Applied the two authorized description edits to close the Codex P1 on #709 and pushed d84ebde0; CI is green. No PR comment, review request or ready mark was made. The finding is ready for a fresh validation recheck.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #709 head d84ebde0 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Recommend PASSED for d84ebde04c874524ede1d55587db9b9a1692c627 (AC-5, AC-9, AC-10, the only criteria left after Amendments 2 and 4). Detached throwaway checkout, `npm ci` from the lockfile: `node --test lib/*.test.mjs` 263/263 (Node 24.18.0), `tsc` clean, `journey-dev2-loop-smoke.sh` "all steps passed", `skill-frontmatter-lint.sh` exit 0. Real `git merge --no-commit` onto current origin/main ac1d4103 (which now holds ADR 0032 and #708): no conflict, 263/263 on the merged tree, `adr_lint.py --require 0031` exit 0. My own mutations, each failing the named test: AC-5 reverse order (4 fail), proof_line from name (2), no release filter (4), nondeterministic output (2); AC-9 broken->gap (1), works proposes (2), schema unchecked (1), off-release unchecked (1), CLI appends to the map (2); AC-10 `release-acceptance` read as a journey field (1), story-less task ignored (2). Stated limits (journey-accept tested on a synthetic report; no every-story-walked check; null `source.commit` on an uncommitted map) accepted as in the first validation; the lib files are unchanged since e3a92e98.
+- DONE: Recheck the Cycle 1 repair: the Codex P1 on the kc-journey-map SKILL.md description (accept-release mode missing from discovery metadata) is resolved at this head, and nothing else in the PR changed
+  `git diff e3a92e98 d84ebde0` is one file, one line (`kc-journey-map/SKILL.md` description). Parsed frontmatter: keys name+description only, 892 chars (was 698); the four phrases "accept this release", "release acceptance", "walk the release", "驗收這個 release" and "pending delivery acceptance" are absent at e3a92e98 and present at d84ebde0. Codex re-reviewed `d84ebde04c` at 2026-10-23T13:13:49Z: "Didn't find any major issues". Not run: live skill discovery routing (no test, per FO's decision).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script under `### Acceptance script`, run as `env -i HOME PATH bash --noprofile --norc`, output matches. `adr_lint.py docs/adr --since c3514876339cb732d0bea8b2d2dd45c234bcdeaf` (PR base): "30 ADR file(s) checked, 0 legacy", exit 0; `--since origin/main` exit 0; with `--require 0031` exit 0. `comment_ratio.py` 0.6% (2 of 332 lines) exit 0; `number_guards.py check` PASS; `doc_impact.py` 0 documents; `design_surfaces.py check` exit 0; `dispatch_records.py` exit 1 (F5). Findings below; none Material.
+
+### Findings
+
+- F1 Deferred risk: `journey-accept.mjs` exits 0 with `proposals: []` when per-story results sit under `walks[{stories}]` instead of a top-level `stories` array (re-probed at d84ebde0, same as before). Material if release-walk-picky-reviewers-and-director ships `release-acceptance/v1` without top-level `stories[]` and this reader is not changed; carry to that task.
+- F2 Polish: a report listing one story twice yields two identical proposals (code unchanged since e3a92e98); the duplicate refusal belongs to the report checker in the other task.
+- F3 Polish: ADR 0031 heading says "meet only at two named schemas" while the slug and `accept-release.md` say "meet at two named schemas"; the "only" has no enforcing import-scan test here (that test sits in the moved AC-12). Bounded today: neither new `.mjs` imports kc-dev-flow-2 files.
+- F4 Polish: `journey-accept` output `note` restates `accept-release.md` and the ADR; see the first validation's `### Without-it`, which stands (keep `unproven.current` and "Which mode when", remove `note`; Kent rules).
+- F5 Polish (for FO): `dispatch_records.py` exits 1 on `ideation-1.md` ("needs a scope-notes line naming main as the completion recipient"), the 2026-10-10 ideation record, not the candidate; implementation-1 to -4 and validation-1 pass.
+- F6 Polish (for FO): the Codex P1 review thread (comment 4359783072 on SKILL.md) is still `isResolved: false` on GitHub although the description fix and Codex's no-finding re-review are in; resolving it is FO's or the Captain's action, I did not touch it.
+
+### Observations for FO
+
+- `gh pr view 709` shows `isDraft: false` at validation time; I did not mark it ready (nothing was pushed, commented or requested by me). Two `@codex review` comments by the repository owner postdate the repair commit.
+- Package root: the loaded skill said 0.27.0, the dispatch 0.28.0; I ran scripts from 0.28.0 as the checklist names. `adr_lint.py`, `comment_ratio.py`, `number_guards.py` and `validation/principles.md` are byte-identical in both (`cmp`).
+- A fresh checkout needs `npm ci` in kc-journey-map before the suite runs (without it 14 of 37 tests fail on a missing `yaml` package); the acceptance script uses the implementation worktree, which has `node_modules`.
+- Not verified by me: billed CI minutes; the sanitize-check skill (I grepped the first validation's added lines; the delta since is one description line with no adopter, host or secret markers); any real walk (PR 2 not built); Node 22.13.0 locally (CI passes it).
+
+### Acceptance script
+
+Run from the candidate checkout at d84ebde0 (dependencies installed in `kc-journey-map`); expected output follows each step. Not covered: any real release walk, the kc-dev-flow-2 half, skill discovery routing, merge.
+
+    cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-acceptance/kc-journey-map
+    M=skills/kc-journey-map/references/journey.example.yaml
+    echo "== 1 candidate"; git rev-parse HEAD; git status --short | wc -l; sed -n 3p skills/kc-journey-map/SKILL.md | grep -o -E '"accept this release"|"release acceptance"|"walk the release"|"驗收這個 release"'
+    echo "== 2 walk list"; node lib/journey-walk.mjs $M r1 | node -e 'const d=JSON.parse(require("fs").readFileSync(0,"utf8"));console.log(d.schema,d.stories.map(s=>s.id).join(","),d.proof_line===d.release.goal)'
+    R=$(mktemp -d)/report.json
+    echo '{"schema":"release-acceptance/v1","walk":{"journey":"book-pickup","release":"r1"},"stories":[{"id":"reserve-copy","result":"works"},{"id":"check-ready","result":"missing-entry-point"},{"id":"collect-book","result":"not-reachable"}],"not_tested":["refund path"]}' > $R
+    echo "== 3 proposals"; B=$(shasum -a 256 < $M); node lib/journey-accept.mjs $M $R | node -e 'const d=JSON.parse(require("fs").readFileSync(0,"utf8"));console.log(JSON.stringify(d.proposals.map(p=>[p.story,p.from,p.to])));console.log(d.unproven.proposed)'
+    echo "== 4 map unchanged"; [ "$B" = "$(shasum -a 256 < $M)" ] && echo same; git status --short | wc -l
+    echo "== 5 refusal"; sed 's#release-acceptance/v1#release-acceptance/v2#' $R > $R.v2; node lib/journey-accept.mjs $M $R.v2; echo "exit=$?"
+    echo "== 6 tests"; node --test lib/*.test.mjs 2>&1 | grep -E '^ℹ (tests|pass|fail)'
+
+Observed (fresh `env -i` bash): `d84ebde04c874524ede1d55587db9b9a1692c627` and `0` and the four quoted phrases; `release-walk/v1 reserve-copy,check-ready,collect-book true`; `[["check-ready","unverified","gap"]]` and `Not reachable in the release walk: collect-book. Not tested: refund path.`; `same` and `0`; `ACCEPT REFUSED: report schema is "release-acceptance/v2", not release-acceptance/v1` with `exit=1`; `tests 263`, `pass 263`, `fail 0`.
+
+### Summary
+
+Recommend PASSED for head d84ebde04c874524ede1d55587db9b9a1692c627: the repair is exactly one description line, it names the accept-release intent and four trigger phrases within the 1024-character limit, Codex re-reviewed this head with no major finding, and AC-5, AC-9 and AC-10 hold under my own mutations with a clean merge onto current origin/main. No finding is Material; F1 carries to release-walk-picky-reviewers-and-director. Throwaway worktree removed; nothing pushed, commented or marked ready.
