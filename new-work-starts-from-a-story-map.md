@@ -819,3 +819,57 @@ Does not cover: live model behaviour (the dev ask, the Codex interrogation, a wo
 ### Summary
 
 Both repaired candidates pass: #705 head 954ad170 and #704 head f0d3f442 meet every criterion on the evidence I re-ran, the three Cycle 2 Codex P2 are fixed with a failing-then-passing test each, and AC-13 still holds (20 of 21 mutations killed; the survivor is a test gap, Polish F4). No Material finding; the cross-PR dependency (F1) needs #704 merged and released before #705. Throwaway worktrees and refs were removed; nothing was pushed, commented or marked ready.
+
+
+## Stage Report: validation (cycle 4)
+
+- DONE: Independent verdict on PR #705 head 32ad029f against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED for #705 head 32ad029f059b5c0690344677518643a253856515 (base origin/main 8bfac961, which holds #704 as 8041829e). Re-run on a detached throwaway worktree: AC-7 `skills/dev/SKILL.md` 707 to 763, the one added line is 56 words; AC-8 `test_pr_watch.py` 101 OK, list line 52 words, and three mutations each fail `TasksTests` (list line for one awaiting gate: 1 failure; line dropped from the second stage: 2 failures; 51-word line: 1 failure); AC-9 and AC-10 diffs over the listed paths empty, `lint-skills.py` 5374 of 5374 exit 0, and one added README word makes it fail ("5375 words exceeds the budget of 5374"); AC-11 `adr_lint.py docs/adr --since origin/main --require 0029` exit 0 ("29 ADR file(s) checked"), same with `--since cebd0ab9`, `--require 0030` exit 1 ("required ADR 0030 does not exist"); `number_guards.py check` PASS; `doc_impact.py` 0 documents; `design_surfaces.py check` exit 0; `gh pr view` checks adr-path-check, route gate, unit tests, version parity, GitGuardian all SUCCESS. The #704-owned criteria now live on main and still hold on this tree: `node --test lib/*.test.mjs` 252 of 252, `journey-dev2-loop-smoke.sh` all steps passed; mutations dropping the `<journey>` path segment (AC-1), `current` back to 1.0.0 (AC-3) and the open-question check (AC-13 c) each fail their tests (1, 3 and 2 failures). AC-6 and AC-5 not re-run (see Unverified); limits judged: dev ask fires only at the `dev` entry (accepted in Limits), one run per case on one host (a limit, not an untested claim: #705's own diff is patch-identical to the one cycle 2 ran).
+- DONE: Recheck #705 only: its new head merges origin/main (holding #704, merged as 8041829e) into 954ad170 with no change of its own; confirm the diff against 954ad170 is only the merged main commits, the #705 criteria still hold on the merged tree (dev sentence 56 words, kc-dev-flow-2/scripts/test_pr_watch.py, the lint-skills budget, ADR 0029 lint with --require 0029), and judge Codex round 4 comment:4355609818 (the sitting line versus the ADR 0028 one-message sitting) as Material or not, citing both texts; #704 is merged and is not your candidate
+  32ad029f is a merge of 954ad170 and 8bfac961: its tree id 29cba083 equals `git merge-tree --write-tree 954ad170 8bfac961`, no file differs from the merge outside the files main changed (#698, #701, #702, #703, #704, #706), and `git diff cebd0ab9 954ad170` and `git diff origin/main 32ad029f` have the same patch-id (36af107a7bce), 4 files. All criteria above hold on the merged tree. Comment 4355609818 (read by id on pulls/705/comments, path `pr_watch.py`, commit 32ad029f): NOT Material, Deferred risk F1 below.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and output below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc /tmp/acceptance705.sh`, about 2 min, every step as expected. Package `adr_lint.py` (0.28.0, byte-identical to the repo copy by `cmp`) at the head: `--since origin/main --require 0029` exit 0. Verdict PASSED for 32ad029f059b5c0690344677518643a253856515; no Material finding.
+
+### Findings
+
+- F1 Deferred risk (new, Codex round 4 comment:4355609818, P2): the generated sitting line says "present them in one message and record each with his one answer", and the new list line says "list each open decision ... once ... then ask one at a time". Texts. ADR 0028 Decision: "A sitting is every gate awaiting the Captain at one stage, put in one message, each task keeping its own Briefing, question and record, with his one answer quoted in each", and the same Decision lists "The list-then-ask-one-at-a-time pattern is not in this task; it moves to the story-map task for the next release (chosen, D2)". Reading: the first line governs where the gates are shown (one message), the second how the decisions inside them are asked; ADR 0028 itself assigns the second to this task, and the Captain asked for it (Amendment 1, 2026-10-20: list every open decision once, then ask them one at a time), so the pair is not a contradiction of a ruling. Four fields: (1) released user and workflow: FO at a batch sitting, supported; (2) observable harm: none observed, no sitting has run with the new line; (3) boundary: `contract[docs/adr/0028-a-sitting-is-one-message-with-one-record-per-task.md#Consequences]`, whose reopen condition is "a stage's gates presented one by one while the line was printed"; (4) trigger evidence: none, `test_pr_watch.py` pins the two lines' order, not what FO does with them. Field 2 and 4 fail, so not Material. Would become Material if a record or the Captain's chat shows FO presenting one stage's gates one by one after the list line, or skipping the one-message presentation. A one-clause wording change ("list in that message, then ask one at a time") would remove the ambiguity but changes the 52-word text AC-8 (d) pins, so it is not authorized here.
+- F2 Deferred risk (carried, updated): #705's `dev` sentence names `review-release` interrogating the release, true only once #704 is in a kc-journey-map release. #704 is on main (8041829e); release PR #707 proposes kc-journey-map 1.8.0 with #704 and kc-dev-flow-2 0.29.0 (does not yet hold #705). Material if a kc-dev-flow-2 release containing #705 is published before kc-journey-map 1.8.0 (value-ac[AC-6]); merge #707 first.
+- F3 Deferred risk (carried, now on main): `journey-review.mjs check` exits 0 on a Tasks table listing one of three r1 stories (AC-13 e has no completeness rule). F4 Deferred risk (carried): the checker cannot see a rule-5 ruling that never reached `Carries`.
+- F5 Polish (carried): no test pins that `Carries` accepts only `kind: release` (cycle 3 F4); neither `release-review.md` nor `interrogation.md` says a moved story keeps its original `ref`; worker-read growth has no AC.
+
+### Unverified obligations
+
+- AC-5 Codex rehearsal (about 163k Codex tokens) and AC-6 yes path not re-run: both rest on bytes unchanged since the cycles that ran them (#705 own diff patch-identical; main's merged commits touch no `skills/dev`). Codex has not reviewed the merge commit beyond round 4's one comment; sanitize-check applied as grep over added lines in earlier cycles, not re-run; `adr-path-check` and the route gate are CI results read from `gh pr view`.
+
+### Acceptance script
+
+Needs git, node 22.13 or newer, npm, python3 and network access to GitHub; touches only a temp directory. Full text is saved at `/tmp/acceptance705.sh`; steps:
+
+```
+1 clone iamcxa/kc-claude-plugins, fetch pull/705/head, print HEAD; test the tree equals git merge-tree of HEAD^1 HEAD^2
+2 wc -w kc-dev-flow-2/skills/dev/SKILL.md at the merge-base and the head
+3 python3 kc-dev-flow-2/scripts/lint-skills.py | grep '5374 of'
+4 python3 -B: pr_watch.sittings() on 2 awaiting gates and on 1; then python3 -B -m unittest test_pr_watch.TasksTests
+5 python3 kc-dev-flow-2/scripts/adr_lint.py docs/adr --since origin/main --require 0029
+6 cd kc-journey-map; npm ci --ignore-scripts; node --test lib/*.test.mjs
+```
+
+Observed:
+
+```
+32ad029f059b5c0690344677518643a253856515
+tree equals a clean merge of its two parents: yes
+merge-base words: 707  head words: 763
+references/sd/workflow.md: 5374 of 5374 words; no unlisted passage repeats it
+2 gate(s) -> 2 line(s); list line second: True ; words: 52
+1 gate(s) -> 0 line(s); list line second: False ; words: 52
+Ran 53 tests in 45.150s  OK
+29 ADR file(s) checked, 0 legacy   (exit=0)
+ℹ tests 252  ℹ pass 252  ℹ fail 0
+```
+
+Does not cover: live model behaviour (the dev ask, the Codex interrogation, FO's reading of the two sitting lines), CI, release-please output.
+
+### Summary
+
+#705 head 32ad029f is a clean merge of main into 954ad170 with the PR's own diff unchanged, and every criterion holds on the merged tree. Codex round 4 is a Deferred risk, not Material: ADR 0028 itself hands the ask-one-at-a-time pattern to this task and the Captain asked for it, but no sitting has run the two lines together. Throwaway worktree removed; nothing pushed, commented, requested or marked ready.
