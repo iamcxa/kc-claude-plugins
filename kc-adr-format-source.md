@@ -1,7 +1,7 @@
 ---
 id:
 title: kc-adr is the source of the ADR template and the ADR linter
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -47,7 +47,7 @@ gates:
                 reason: Captain replied 「准」 (2026-10-23) to the ideation gate after asking what 'the recommender' means; accepts the design and the D1 and D2 scope additions as stated in the gate question.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-23T02:38:26Z
 ---
 
