@@ -284,6 +284,14 @@ Files this design would change: new `kc-dev-flow-2/extensions/release-acceptance
 
 Recommended order: #709, then this task's PR (no #711 dependency now), then release-walk-due-trigger after this PR and #711; design-director-model-follows-task and #674 in any order, rebasing the later of each pair.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-23, chat
+Captain: 「准」 (chat, 2026-10-23)
+Asked: 「下一件要你決定：「版本走查」這個任務開工前，要不要把 project-env 那邊試跑後的教訓加進去？我建議加三點。」, with the three points: 「1. 設計總監的裁決附一張對照表：每個抱怨一行，寫明交給哪個任務、驗收時的狀態（修好、修一半、延到哪個版本、不修）和原因。」「2. 你試用之前，先讓原本那幾位挑剔使用者照他們自己的清單再走一次，逐條標記，也可以補新的抱怨。」「3. 你試用時，從這張對照表開始看。」 and 「第四點我建議不加：它要求每個任務的驗證者也重跑相關的抱怨步驟。第 2 點已經在最後找原本的人重看，再加一次只是多花一倍的錢。」
+Supersedes: none
+Design: (1) the director's ruling carries one row per reviewer complaint with the task it went to and its status at acceptance (fixed, partly fixed, deferred to a named release, will not fix) and the reason; (2) before the Captain's UAT, the original picky-user reviewers re-walk their own list, mark each item and may add new complaints; (3) the Captain's UAT starts from that table. A per-task validator re-running the reviewer steps is not included. Source of the proposal: intake/paseo-fo-addendum-2026-10-23.md, points 1 to 3.
+
 ## Stage Report: ideation
 
 - DONE: Design the kc-dev-flow-2 half of the release walk from the starting design in release-acceptance/index.md (### PR 2 design and the implementation stage report cycle 3) and Captain Amendments 1 and 3 there, against current origin/main (#708 design-director merged; #709 kc-journey-map walk list open): the moved criteria AC-6, AC-7, AC-8, AC-11, AC-12 rewritten for the reviewer-and-director walk, plus criteria for reviewer count and diversity, the fixture smoke check, deferred findings feeding reviewers and director, director pass 3 and its ruling table with one live run, and the close path; a Captain decision with a recommendation and what gets worse for each open point (close path, director model and inputs, a non-Claude operating reviewer now or as a POC, a journeys README key, PR budget)
