@@ -37,6 +37,17 @@ gates:
                 id: briefing:kc-adr-format-source:ideation:attempt-1:revision-1
                 digest: sha256:2a2be4db2113152eb9fbbf8e6c232f5b0ed9ba414e31d37676d5dc9c34f70430
                 room-ref: ./kc-adr-format-source/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-adr-format-source:ideation:1
+                briefing: briefing:kc-adr-format-source:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T03:39:51.329924Z"
+                decision: approve
+                reason: Captain replied 「准」 (2026-10-23) to the ideation gate after asking what 'the recommender' means; accepts the design and the D1 and D2 scope additions as stated in the gate question.
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-23T02:38:26Z
 ---
 
