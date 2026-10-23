@@ -410,6 +410,9 @@ def structure_problems(report, folder, walk_list, deferred_ids, prior):
     if not walks:
         out.append("no reviewer walks")
     out += walk_problems(walks, walk_ids, folder, deferred_ids, prior)
+    returned = {w["reviewer"].get("id") for w in walks if isinstance(w.get("reviewer"), dict)}
+    out += [f"prior reviewer {who} is absent from the re-walk, so their complaints are unmarked"
+            for who in prior_owned(prior) if prior is not None and who not in returned]
     reviewers = [w.get("reviewer") for w in walks if isinstance(w.get("reviewer"), dict)]
     if report.get("reviewers") != reviewers:
         out.append("reviewers[] does not match the reviewers of walks[]")

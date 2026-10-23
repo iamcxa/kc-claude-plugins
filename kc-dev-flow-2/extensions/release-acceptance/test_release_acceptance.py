@@ -728,6 +728,23 @@ class RewalkTests(Base):
         code, out = self.rewalk_check(folder)
         self.assertEqual(code, 1)
         self.assertIn("fewer than two reviewers operated", out)
+        self.assertIn("prior reviewer s is absent from the re-walk", out)
+
+    def test_a_third_prior_reviewer_missing_is_refused_though_two_still_operate(self):
+        third = reviewer_o()
+        third["reviewer"] = {"id": "t", "model": "haiku", "persona": "screen-reader user"}
+        third["complaints"] = [complaint("t1", ["check-ready"], 1)]
+        third["stories"] = [story("reserve-copy", "works"), story("check-ready", "broken", ["t1"]), story("collect-book", "works")]
+        write_walk(self.folder, [reviewer_o(), reviewer_s(), third])
+        (code, out), _ = pipeline(self.folder, self.wf)
+        self.assertEqual(code, 0, out)
+        self.prior = self.tmp_path / "prior-report.json"
+        shutil.copy(self.walk / "report.json", self.prior)
+        folder = self.second_folder()
+        code, out = self.rewalk_check(folder)
+        self.assertEqual(code, 1)
+        self.assertIn("prior reviewer t is absent from the re-walk", out)
+        self.assertNotIn("fewer than two", out)
 
     def test_a_mark_needs_a_known_status_a_reason_and_a_deferral_its_release(self):
         self.first_walk()
