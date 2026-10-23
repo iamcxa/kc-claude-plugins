@@ -15,6 +15,10 @@ gates:
                 id: briefing:adr-protected-path-guard:backlog:attempt-1:revision-1
                 digest: sha256:7a78134a35d63f1efe239a12082a435681ded25af41ef62885cf060ab7f27e44
                 room-ref: ./adr-protected-path-guard/review/backlog/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-10-23T08:25:36.682526Z"
+                reason: 'Captain 「可以，先測試這個，然後再考慮其他方案。」 (2026-10-23) to FO''s 「要撤回這道關卡、改開註解 POC 嗎？」: a code-side ADR comment POC runs first; this item waits for its result and for the other options he named.'
 ---
 
 ## Scope
