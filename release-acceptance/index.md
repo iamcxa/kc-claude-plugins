@@ -227,6 +227,8 @@ Design: the release walk gains a second pass over the same operated walk, run by
 
 ## FO alignment
 
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-23 — the implementation phase-1 drift check found the approved design's review-record premise replaced on main (#704) and recommends returning the kc-dev-flow-2 half to ideation; what is the smallest next step?
+
 Release: none (package workflow change; kc-claude-plugins has no journey map).
 Release review: not needed: no release.
 Needed at ideation: the design of both halves (the kc-dev-flow-2 rule and task, the kc-journey-map mode) and the contract between them, against the existing Release review rule in kc-dev-flow-2 references/sd/workflow.md and kc-journey-map's review-release mode.
