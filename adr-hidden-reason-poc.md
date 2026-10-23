@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:adr-hidden-reason-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:adr-hidden-reason-poc-validation-1
+              briefing:
+                id: briefing:adr-hidden-reason-poc:validation:attempt-1:revision-1
+                digest: sha256:ce4c1a208b057b246fb2ba34917f5c22bc91e5fa566374c40eca211701e45912
+                room-ref: ./adr-hidden-reason-poc/review/validation/briefing-1
 started: 2026-10-23T07:42:43Z
 worktree: .worktrees/spacedock-ensign-adr-hidden-reason-poc
 ---

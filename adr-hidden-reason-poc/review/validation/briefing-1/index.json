@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-hidden-reason-poc:validation:attempt-1:revision-1",
+  "question": "Validation PASSED. Approve closing this POC with the validator's corrected reading: control 4/4 undone; with the ADR 2/8 undone, both by runs that never read the protecting ADR (6/6 that read it kept the choice; correlated, not causal); 4/8, not 6/8, found it unprompted; kc-adr shows no effect at n=2 (Claude never invoked the skill); a path check would have flagged both undoing runs but was not built? Approval records no code delivery (local-merge sentinel at c27e7659), archives the task and removes its empty worktree.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-hidden-reason-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/09a27dfba0eb7fede15248e7fbea2dffc770bcee/adr-hidden-reason-poc.md",
+      "rev": "sha256:c9e720b35771bdca9b0989f1024343443e945082070c7308214473d624de701f",
+      "mediaType": "text/markdown",
+      "summary": "12 runs, freeze 2ebb5e4c before the first run, control committed before treatment; FO re-ran accept-s14.sh in an env -i shell: PASSED (C 4/4, A0 1/4, B1 1/4 changed). Limits: the prompt's 'no more work per email' lever drives the control and the undo; no dedup-only base rate; n=2 per cell (2/8 Wilson 7-59%); the prompt points at ../mira-decisions, which lacks ADR 0024; no fixture tests; read/skill columns are heuristics; accept script hard-codes the node path. Sufficiency: shows the failure exists when the agent does not read the ADR. Necessity: state-only harness and results, no repository change."
+    }
+  ]
+}
