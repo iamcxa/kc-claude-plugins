@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-code-pointer-poc:backlog:attempt-1:revision-1",
+  "question": "我建議的下一步：撤回這道關卡，先開一個 POC。同一題，在程式碼旁加上那行註解，Claude 和 Codex 各跑 2 次，共 4 次。…要撤回這道關卡、改開註解 POC 嗎？ (FO's chat question, 2026-10-23, put before this briefing; this seed files exactly that arm and run count.)",
+  "artifacts": [
+    {
+      "id": "artifact:adr-code-pointer-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fd8a8b56e76facb2cfae5345f0127b98d55e533a/adr-code-pointer-poc.md",
+      "rev": "sha256:8b084acd77ec2cc77e33cd38de29724aa8fdcf496912d34c3ee9a4d4b358b3c2",
+      "mediaType": "text/markdown",
+      "summary": "One arm on the archived S14 scenario: protected site carries a pointer comment to ADR 0024, ADR present, no kc-adr; Claude and Codex x2 = 4 runs; compare with archived A0 1/4 and control 4/4."
+    }
+  ]
+}
