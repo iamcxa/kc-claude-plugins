@@ -34,6 +34,17 @@ gates:
                 id: briefing:adr-hidden-reason-poc:validation:attempt-1:revision-1
                 digest: sha256:ce4c1a208b057b246fb2ba34917f5c22bc91e5fa566374c40eca211701e45912
                 room-ref: ./adr-hidden-reason-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-hidden-reason-poc:validation:1
+                briefing: briefing:adr-hidden-reason-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T08:12:00.472511Z"
+                decision: approve
+                reason: 'Captain 「准」 (2026-10-23) to validation briefing-1: closes the POC with the validator''s corrected reading; no code delivery, local-merge sentinel at c27e7659, archive, remove the empty worktree.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-23T07:42:43Z
 worktree: .worktrees/spacedock-ensign-adr-hidden-reason-poc
 ---
