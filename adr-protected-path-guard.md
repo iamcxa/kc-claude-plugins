@@ -75,7 +75,7 @@ gates:
                 state: pending
 started: 2026-10-23T08:55:00Z
 worktree: .worktrees/spacedock-ensign-adr-protected-path-guard
-pr: 712
+pr: pr-merge:712
 ---
 
 ## Scope
