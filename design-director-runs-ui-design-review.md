@@ -65,6 +65,12 @@ Asked: 「設計總監任務的範圍要不要照量測結果調整？」, with 
 Supersedes: none
 Design: the role runs the existing brief on sonnet; the author's declines go to the design director, and the ones it upholds are listed at the ideation gate; validation adds a design director review of screenshots of the built screen; the astra helper is dropped from this task. Evidence: intake/ui-design-review-measurement-2026-10-22.md.
 
+### Amendment 2 — 2026-10-23, chat
+Captain: 「可以」 (chat, 2026-10-23)
+Asked: 「同意這樣改嗎？」, where FO stated the two changes: (1) AC-7 is restated to the measured result, with no pass bound: on the final wording both runs overruled more declines than the no-wording control (12 and 9 against 6) and upheld fewer (13 and 18 against 23), and one run missed the original bounds; (2) AC-3 runs at the first kc-paseo-plugins ui ideation after release: the upheld-decline lines must appear in the briefing FO prepares, their count equal to the checker's, and a mismatch returns to kc-dev-flow-2 as a wiring defect.
+Supersedes: AC-7, AC-3
+Design: AC-7 records the measured runs instead of a bound; AC-3 becomes a post-release check on the first paseo ui ideation, keeping its falsifier (briefing upheld-decline line count equals the checker's count).
+
 ## FO alignment
 
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-22 — implementation left AC-7 met in 1 of 3 runs of the shipped agent and AC-3 and the real-flow clause of AC-13 unrunnable without a real adopter ideation; what is the smallest next step?
