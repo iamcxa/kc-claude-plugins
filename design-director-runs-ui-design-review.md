@@ -645,3 +645,250 @@ PASSED on af4fb87e: the checker, lint, budget raise, ADR and agent file behave a
 ### Summary
 
 Both Codex P2 and validation Polish F4 and F5 are fixed with a mutation-checked test each; the F5 fix also changed SKILL.md (pass 2a input `Task folder:`) because roborev showed the brief and principles disagreed. AC-14 and AC-15 are untouched.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on PR #708 head f3ac6101 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Head f3ac610184b2bfc5b424309219186d9d3f5a5ec2 (PR head confirmed by `gh pr view 708`; base 126efaf0); checked out detached in a throwaway worktree, removed after; per-criterion evidence under "Evidence by criterion (cycle 2)".
+- DONE: Fresh recheck after the Cycle 1 repair (Codex review:5623263990, two P2) and validation Polish F4 and F5: judge each fix, its test and mutant, and whether AC-1 to AC-13, AC-14 and AC-15 (owed) still hold
+  Both P2 and F4, F5 fixed and each P2 test bites on a mutant only it catches; AC-1 to AC-13 hold, AC-14 holds, AC-15 is owed (not run).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script run with `env -i ... bash --noprofile --norc` (6 steps, rc 0); adr_lint exit 0; verdict PASSED on f3ac6101, no Material finding.
+
+### Verdict
+
+PASSED, recommended, for head f3ac610184b2bfc5b424309219186d9d3f5a5ec2 (base 126efaf06b4d3f06c29d6b071189ed7771c41ee9). No Material finding. Product bytes and the recorded candidate were not changed. CI on the head: 5 of 5 checks SUCCESS, MERGEABLE; `gh pr view` showed `isDraft: false` at my read (I did not change it).
+
+### Findings
+
+- F1 Deferred risk, unchanged from the first validation (af4fb87e): a worker can write `Built screen review: waived 「any text」` and pass; the commit under review did not touch it.
+- F2 Deferred risk, unchanged: any task-local file whose bytes differ from every `Preview:` file passes as the built screenshot (AC-6 states this limit).
+- F3 Deferred risk, unchanged: a ui task with no `Design review:` line at validation is not refused (AC-6 requires the exemption).
+- F4 Polish, closed: ADR 0030 Recommended now names the exemption and why (`check_task` runs the built-screen rule only where a `Design review:` line exists).
+- F5 Deferred risk, closed: `skills/validation/principles.md` and `skills/design-director/SKILL.md` agree on a task-folder-relative path plus `Task folder:`. I ran the shipped agent (sonnet, candidate plugin) once on pass 2a with that input: it opened `design/built-1.png` and wrote `preview: design/built-1.png`; the saved report passes `design_surfaces.py check` (exit 0), and the same report with an absolute `preview:` is refused ("names no screenshot file inside the task folder").
+- F6 Deferred risk, unchanged: the validation-gate word count was not measured on a real run; AC-13's real-flow clause is not run (AC-13 allows it); AC-15 is owed at the first kc-paseo-plugins ui ideation after release.
+- F7 Polish, unchanged: AC-14 run provenance (duplicate run directory; run start times against commit ec70dfeb); AC-14 sets no bound, so no verdict depends on it.
+- F8 Deferred risk, new: the stricter ruling reader (`rulings_lines`) matches the key line only as `rulings:` with nothing after it, and splits on newline. A trailing comment (`rulings: # ruled`) or CRLF line endings give zero rulings, so a valid report is refused with "declined finding N has no ruling" (the base reader accepted both). Fail-closed; the brief's report shape has no comment, and all 17 saved shipped-agent and prototype reports read the same item lists under both versions. Material if a saved report is seen refused for this reason; the fix is a trailing-comment and carriage-return allowance in the key match.
+
+### Evidence by criterion (cycle 2)
+
+- Package root: the skill loaded 0.27.0, the dispatch and checklist say 0.28.0; the scripts I ran (adr_lint, comment_ratio, doc_impact, number_guards, dispatch_records) are identical between the two (`diff -rq` lists only pr_watch, the codex extension, workflow.md and manifests). adr_lint ran from both. lint-skills and the tests ran from the candidate.
+- Candidate checks: `lint-skills.py` exit 0 (5389 of 5389 words); all 20 test files OK (design_surfaces 170, lint_skills 37, delivery_gate 86, pr_watch 101); comment_ratio 0.5% of 5% (3 lines, all `##` lines inside a test fixture string); number_guards PASS; dispatch_records "8 dispatch record(s) complete"; doc_impact lists ADR 0020, README, maintain-flow SKILL.md and learning.md as in the first validation (README updated; the other three unaffected per the implementation report).
+- P2 one (ruling items read anywhere): my fixtures through the real CLI. Rulings under `notes:` beside `rulings: []`, or under a second top-level key, are refused by f3ac6101 ("declined finding 2 has no ruling") and were accepted by af4fb87e; items without `evidence` and `change` are refused by f3ac6101 and were accepted by af4fb87e; a fenced report with reordered keys, a block scalar holding `finding: 99` and `ruling: overruled` text and a quoted finding number reads correctly in f3ac6101 and was refused by af4fb87e. `evidence` and `change` are required in the `SKILL.md` report shape, so the refusal matches the contract.
+- P2 two (F bullet searched in the whole body): fixtures at validation: an `- F1` bullet only in an earlier `## Stage Report: validation`, or only in an implementation report, is refused by f3ac6101 and was accepted by af4fb87e; a bullet in the latest validation report (also one after a fenced block holding a `## ` line, since `check_task` strips fenced lines first) passes.
+- Mutants (copy of the candidate scripts, `python3 -B`, baseline 170 OK): reading the whole report fails `test_a_ruling_outside_the_rulings_list_does_not_count` only; dropping the required-fields branch fails `test_a_ruling_missing_its_evidence_or_change_is_refused` only; searching the whole body fails `test_an_f_bullet_must_be_in_the_current_validation_report` only.
+- AC-1: on a copy, `model: inherit` gives "design-director agent: existing sonnet/high policy changed"; removing the skill folder gives "missing skills: design-director". AC-2: `diff` of the base and candidate blockquotes is empty; `design-review.md` has no `>` lines. AC-8: pr_watch, delivery_gate, role_triggers diff empty; workflow.md two hunks, 5389 words. AC-9: `adr_lint docs/adr --since 126efaf0 --require 0030` exit 0; with its Options line deleted exit 1 "Decision needs a '**Options considered:**' line"; ADR 0022 carries the pointer line. AC-4, 5, 6, 10, 11, 13: the 170-test suite at the head plus the first validation's per-branch falsifiers, which this delta does not touch except the two repaired branches above.
+- AC-12 and AC-14 not rerun: the delta since af4fb87e changed only the pass 2a row and sentence of `SKILL.md`, not passes 1a, 1b or 2b, so the measured 1b runs stand; AC-14 sets no bound. AC-15 is owed, not run.
+
+### adr_lint
+
+`python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since 126efaf06b4d3f06c29d6b071189ed7771c41ee9`, run in the candidate checkout: "29 ADR file(s) checked, 0 legacy", exit 0 (also from 0.27.0 with `--require 0030`, exit 0).
+
+### Minimal acceptance script
+
+Run by me exactly as written in a fresh shell (`env -i`, no profile). It needs git, python3 and network access to github.com; it fetches the head into a temp directory. It covers the checker, the lint, the tests and the agent file only. It does not run the model: how the director rules (AC-14, AC-12), the pass 2a path form with a live model, and the first real paseo ideation (AC-15) are not covered.
+
+```bash
+# Acceptance script for kc-claude-plugins PR #708 (design director), head f3ac6101
+# Needs: git, python3, network access to github.com. No secret. Run in a fresh bash shell.
+set -u
+H='##'
+W=$(mktemp -d) && cd "$W" && git init -q repo && cd repo \
+  && git fetch -q --depth 1 https://github.com/iamcxa/kc-claude-plugins.git f3ac610184b2bfc5b424309219186d9d3f5a5ec2 \
+  && git checkout -q FETCH_HEAD && git log --oneline -1 && S=$PWD/kc-dev-flow-2/scripts && cd "$S"
+echo "--- step 1: the plugin lint passes with the 15-word budget raise"
+python3 -B lint-skills.py; echo "exit=$?"
+echo "--- step 2: the two test suites for this change pass"
+python3 -B -m unittest test_design_surfaces test_lint_skills 2>&1 | grep -E "^(Ran|OK|FAILED)"
+echo "--- step 3: a ui task at ideation, one decline ruled upheld, prints the gate lines"
+T=$W/t; mkdir -p $T/task/design; cd $T
+printf '<html></html>\n' > preview.html
+cat > task.md <<T
+---
+title: a ui task
+profile: pilot
+status: ideation
+---
+
+$H FO alignment
+
+Surfaces: ui
+Visible change: a person sees a panel.
+
+$H Design
+
+UI proposal: a panel.
+Preview: preview.html
+
+${H}# Design review
+
+Design review: design/ideation-1.yaml
+Design finding 1: fixed: the header is one line in preview.html
+Design finding 2: declined: the inset matches the shell
+Design finding 3: AC-2
+Design finding 4: Needs decision: the host has no slot for this button ADR: Plugin-drawn buttons
+Decline check: design/declines-1.yaml
+
+$H Acceptance criteria
+
+**AC-1**: a.
+Verified by: a test.
+**AC-2**: b.
+Verified by: a test.
+T
+cat > task/design/ideation-1.yaml <<'T'
+design_review:
+  preview: preview.html
+  findings:
+    - severity: MAJOR
+      dimension: hierarchy
+      where: after-desktop.png
+      seen: the count is stated twice
+      fix: keep one
+    - severity: MINOR
+      dimension: spacing
+      where: after-desktop.png
+      seen: tight inset
+      fix: widen it
+    - severity: MAJOR
+      dimension: consistency
+      where: after-phone.png
+      seen: opposite chevrons
+      fix: one convention
+    - severity: MINOR
+      dimension: consistency
+      where: after-phone.png
+      seen: button is not the host's
+      fix: use the host button
+  limitations:
+    - the operable preview was not opened
+T
+cat > task/design/declines-1.yaml <<'T'
+design_decline_check:
+  adrs_read: none
+  rulings:
+    - finding: 2
+      ruling: upheld
+      evidence: after-desktop.png shows the inset equal to the shell's
+      change: none
+    - finding: 4
+      ruling: decision
+      evidence: the host declaration has no slot for it
+      change: the Captain accepts a custom button or not
+      kind: host-look
+      owner: Captain
+T
+python3 -B "$S/design_surfaces.py" check task.md; echo "exit=$?"
+echo "--- step 4: the same rulings placed outside the rulings list are refused"
+cat > task/design/declines-1.yaml <<'T'
+design_decline_check:
+  adrs_read: none
+  rulings: []
+  notes:
+    - finding: 2
+      ruling: upheld
+      evidence: after-desktop.png shows the inset equal to the shell's
+      change: none
+T
+python3 -B "$S/design_surfaces.py" check task.md; echo "exit=$?"
+echo "--- step 5: at validation, an F bullet kept from an earlier validation report does not count"
+mkdir -p $W/v/task/design && cd $W/v
+printf 'built screen bytes' > task/design/built-1.png
+printf '<html></html>\n' > preview.html
+cat > task/design/validation-1.yaml <<'T'
+design_review:
+  preview: design/built-1.png
+  findings:
+    - severity: MAJOR
+      dimension: hierarchy
+      where: built-1.png
+      seen: the count is stated twice
+      fix: keep one
+T
+mk() { cat > task.md <<T
+---
+title: a ui task
+profile: pilot
+status: validation
+---
+
+$H FO alignment
+
+Surfaces: ui
+Visible change: a person sees a panel.
+
+$H Design
+
+UI proposal: a panel.
+Preview: preview.html
+
+Design review: design/ideation-1.yaml
+
+$H Acceptance criteria
+
+**AC-1**: a.
+Verified by: a test.
+
+$H Stage Report: validation
+
+- F1 Behaviour: the count is said twice
+
+$H Stage Report: validation (cycle 2)
+
+- DONE: re-checked
+$1
+Built screen review: design/validation-1.yaml
+Built screen finding 1: F1
+T
+}
+mk ""
+python3 -B "$S/design_surfaces.py" check task.md; echo "exit=$?"
+echo "(now the cycle 2 report names its own F1 bullet)"
+mk "- F1 Behaviour: the count is still said twice"
+python3 -B "$S/design_surfaces.py" check task.md; echo "exit=$?"
+echo "--- step 6: the agent declares sonnet"
+grep -E '^(model|reasoning):' "$S/../agents/design-director.md"
+```
+
+Observed output (rc 0; the temp directory name differs per run):
+
+```
+f3ac610 fix(kc-dev-flow-2): name one path form for the pass 2a screenshot
+--- step 1: the plugin lint passes with the 15-word budget raise
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5389 of 5389 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+exit=0
+--- step 2: the two test suites for this change pass
+Ran 207 tests in 24.570s
+OK
+--- step 3: a ui task at ideation, one decline ruled upheld, prints the gate lines
+task.md: design surfaces presentable
+design review design/ideation-1.yaml: 4 findings, 1 fixed, 1 criteria, 1 declined, 1 decisions; decline check design/declines-1.yaml: 1 upheld, 0 overruled, 1 decisions in 1 group
+preview: <temp dir>/t/preview.html
+upheld decline 2: the inset matches the shell
+decision host-look, owner Captain (findings 4): the Captain accepts a custom button or not
+scope check not run: no closed backlog approval
+exit=0
+--- step 4: the same rulings placed outside the rulings list are refused
+task.md: declined finding 2 has no ruling in 'design/declines-1.yaml'
+scope check not run: no closed backlog approval
+exit=1
+--- step 5: at validation, an F bullet kept from an earlier validation report does not count
+task.md: 'Built screen finding 1:' names F1, but the current validation report has no '- F1 <Class>:' bullet
+scope check not run: stage is validation, not ideation
+exit=1
+(now the cycle 2 report names its own F1 bullet)
+task.md: design surfaces presentable
+built screen review design/validation-1.yaml: 1 findings, 0 upheld declines, 0 decisions in 0 groups
+preview: <temp dir>/v/task/design/built-1.png
+scope check not run: stage is validation, not ideation
+exit=0
+--- step 6: the agent declares sonnet
+model: sonnet
+reasoning: high
+```
+
+### Summary
+
+PASSED on f3ac6101: both Codex P2 and Polish F4, F5 are fixed, each P2 test fails only on its own mutant, the live pass 2a run now writes the relative path the check accepts, and AC-1 to AC-13 and AC-14 hold. One new Deferred risk (F8: a comment or CRLF on the `rulings:` line refuses a valid report, fail-closed); AC-15 stays owed.
