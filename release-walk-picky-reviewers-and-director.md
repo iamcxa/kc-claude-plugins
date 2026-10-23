@@ -68,6 +68,7 @@ Result: aligned 2026-10-23 by the Captain's rulings D1, D2, D3 and D5 recorded a
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-23 — do these amendments withdraw what the Captain approved, and what changes in the build?
 
 ## Design
 
