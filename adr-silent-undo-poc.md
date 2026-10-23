@@ -3,7 +3,7 @@ title: Does an agent quietly undo an ADR-protected choice during an unrelated re
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
