@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-review-staleness-held-at-dispatch:backlog:attempt-1:revision-1",
+  "question": "「擋派工」這一段，是照我更正後的建議退回設計重做（不涵蓋），還是照 D2 不做（涵蓋）？ FO recommended returning it to design (not covered by D2); approving enters ideation.",
+  "artifacts": [
+    {
+      "id": "artifact:release-review-staleness-held-at-dispatch:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/638818cce0bbe6668d6d7c273b9a7bc2aff97ec9/release-review-staleness-held-at-dispatch.md",
+      "rev": "sha256:93b80df91069019d62c23334c18bc71071a2d6fba8d4248a365fc9a682a9b690",
+      "mediaType": "text/markdown",
+      "summary": "Seed as filed: the dispatch-time review hold leaves release-acceptance (its Amendment 2, superseding AC-1 to AC-4) for a redesign on the #704 review-record file; bite R4 (issue #571 item 1)."
+    }
+  ]
+}
