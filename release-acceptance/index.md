@@ -1,6 +1,6 @@
 ---
 title: Every release is walked end to end as a whole after its last story is built, and the pre-implementation release review is enforced at dispatch
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-23T03:28:31Z
 worktree: .worktrees/spacedock-ensign-release-acceptance
+pr: iamcxa/kc-claude-plugins#709
 ---
 
 Issue iamcxa/kc-claude-plugins#571: a release is reviewed as one journey before its tasks are split, but nothing enforces that review, and nothing walks a release as a whole after its stories are built.
