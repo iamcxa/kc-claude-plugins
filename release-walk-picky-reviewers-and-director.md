@@ -69,6 +69,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-23 — do these amendments withdraw what the Captain approved, and what changes in the build?
+  Result (adjust, medium): Amendment 1 withdraws nothing; AC-1 to AC-14 stay and new criteria take fresh ids. Open for the Captain: whether point 2's re-walk is a second run of the extension after the fix tasks land (no conflict) or holds this task open until they land (overrides D1, `### Close path` and AC-10). Build effects: a release named on deferrals (`when` names none), the complaint-to-task link recorded on the filed task, a re-walk mode with its refusals, record.md opening with the table; the AC-13 600-word cap is at risk; the re-walk ships tested on fixtures only; release-walk-due-trigger needs its own re-walk signal.
 
 ## Design
 
