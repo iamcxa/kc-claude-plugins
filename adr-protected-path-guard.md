@@ -1,5 +1,5 @@
 ---
-title: An agent that edits a file an accepted ADR protects is shown that ADR at the moment of the edit
+title: An ADR that protects code names its files, each file carries a pointer back to it, and the linter keeps both true
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -23,21 +23,26 @@ gates:
 
 ## Scope
 
-- Source: the Captain 「開」 (chat, 2026-10-23), answering FO's 「現在要決定的：要不要開一個 pilot 任務，做 ADR 路徑檢查？ 我建議開。」, which described: an optional ADR field naming the code paths it protects, a script listing which protected paths a change touches and their ADRs, a reminder at edit time, and acceptance by re-running the same scenario with and without the guard.
-- Bite: dev2-poc `adr-hidden-reason-poc` (archived 2026-10-23): with the protecting ADR present, 2 of 8 refactor runs undid a choice only that ADR explains; both never read it, and both edited the protected file (`src/report_mailer.js`); the 6 runs that read it kept the choice; kc-adr showed no effect (Claude never invoked the skill). The no-ADR control undid it 4 of 4.
-- Upstream first: spacedock 0.27 and kc-dev-flow-2 0.28.0 have no ADR-to-code-path mapping (`adr-path:` is only the ADR directory; grep 2026-10-23). Sibling adopters (carlove, subspace-relay) not yet checked; ideation checks them. Harness to reuse: `_archive/adr-hidden-reason-poc/harness/` (S14) in the `spacedock-state/dev2-poc` checkout.
-- Ships in kc-adr: the optional field in `kc-adr/references/adr-template.md` and `adr_lint.py` acceptance of it, a checker script, and the edit-time reminder. Whether Codex can run an edit-time reminder is to be verified at ideation, not assumed.
-- Non-goals: back-filling the field into existing ADRs; changing kc-dev-flow-2's copies (owned by `kc-adr-tools-with-dev2-copy`); a CI-only check with no edit-time reminder.
+- Source: the Captain 「開」 (chat, 2026-10-23) to FO's 「現在要決定的：要不要開一個 pilot 任務，做 ADR 路徑檢查？ 我建議開。」; then 「可以，先測試這個，然後再考慮其他方案。」 (backlog gate withdrawn for a code-side comment POC); then 「可以。」 (chat, 2026-10-23) to FO's 「你要決定的：要不要把 `adr-protected-path-guard` 改成這個範圍，再重新開它的 backlog 關卡？」, where "this scope" was: an optional ADR template field listing the files it protects; a `writing.md` rule to add a one-line `see docs/adr/NNNN-…md` pointer at each such site; a linter check that each listed file exists and carries the pointer, and that no code still points at a superseded ADR; no hook.
+- Bite: dev2-poc `adr-hidden-reason-poc` (archived 2026-10-23): with the protecting ADR present, 2 of 8 refactor runs undid a choice only that ADR explains, both without reading it; control without the ADR 4 of 4. dev2-poc `adr-code-pointer-poc` (archived 2026-10-23): with one pointer comment at the site, 0 of 4 undone and 4 of 4 opened the ADR; in both Claude runs the trace shows the comment was the route to the ADR (a tie with 1 of 4 at this size, not shown to lower the rate).
+- Upstream first: spacedock 0.27 and kc-dev-flow-2 0.28.0 have no ADR-to-code mapping (`adr-path:` is only the ADR directory; grep 2026-10-23); sibling adopters (carlove, subspace-relay) are checked at ideation.
+- Ships in kc-adr: the optional field in `kc-adr/references/adr-template.md`, the pointer rule in `kc-adr/skills/read-adr/writing.md`, and the two checks in `kc-adr/scripts/adr_lint.py`, with tests.
+- Non-goals: an edit-time hook; back-filling the field or pointers into existing ADRs; changing kc-dev-flow-2's copies (owned by `kc-adr-tools-with-dev2-copy`).
 
 ## Acceptance criteria
 
-**AC-1**: Given an accepted ADR that names protected paths, the checker lists every changed file matching them with the ADR's number and title, and lists nothing for a change outside them; tests pin both, and `adr_lint.py` still passes every existing ADR without the field.
-**AC-2**: On Claude Code, an edit to a protected file shows the agent that ADR's number, title and path before it continues; an edit elsewhere shows nothing. Shown by a recorded run, not by reading the hook.
-**AC-3**: Re-running S14 with the guard on, pass rule unchanged from the archived harness, gives fewer undone choices than the archived A0 cells, on the run count approved at ideation; the report states the counts and limits.
+**AC-1**: An accepted ADR may list the files it protects; `adr_lint.py` fails when a listed file is missing or lacks a pointer to that ADR, and passes every existing ADR that has no list.
+Verified by: linter tests for a missing file, a missing pointer and a correct pointer, plus a run over the repository's existing ADRs, exit 0.
+
+**AC-2**: `adr_lint.py` fails when code points at an ADR whose Status is `Superseded by NNNN`, naming the file and the newer ADR.
+Verified by: a linter test with a superseded ADR and a file still pointing at it, and a falsifier that removes the check and sees the test fail.
+
+**AC-3**: `writing.md` tells a writer whose ADR protects code to list the files and add the pointer at each site, and an agent writing such an ADR does both.
+Verified by: a text check of `writing.md`, and one recorded agent run per host (Claude, Codex) in a fictional repo that writes an ADR protecting a named file and passes the linter.
 
 ## FO alignment
 
-Alignment: needed at ideation: the field name, where the reminder runs, Codex support and the AC-3 run count are design choices for the Captain.
+Alignment: needed at ideation: the field name, the pointer format and how the linter finds pointers are design choices for the Captain.
 Surfaces: none
 Visible change: none
 Release review: not needed: the map was skipped for kc-adr by the Captain's authorization.
