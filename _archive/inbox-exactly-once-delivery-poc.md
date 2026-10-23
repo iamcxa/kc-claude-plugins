@@ -1,6 +1,6 @@
 ---
 title: A signed event sent three times wakes the ops workflow exactly once, and the inbox cannot push code
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -46,8 +46,11 @@ gates:
                 reason: Captain answered 「准」 in chat on 2026-10-23 to the validation gate question, which stated that approving accepts PASSED at POC depth for candidate cd079cb8 and closing on the evidence with no PR, keeping branch spacedock-ensign/inbox-exactly-once-delivery-poc as reference. He did not answer F1 (the AC-3 Slack leg); it stays an open, unmeasured limit carried into inbox-r1, not a ruling. No cleanup, PR or downstream task is authorized.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-21T08:46:20Z
+verdict: PASSED
+completed: 2026-10-23T03:40:35Z
+archived: 2026-10-23T03:40:35Z
 ---
 
 Second proof for `kc-ops-inbox`, before the inbox-r1 Pilot is admitted. The riskiest unexecuted assumption, named by the engineering-reviewer on 2026-10-21: an event entering a real inbox reaches a running First Officer exactly once, at a measured latency, even when the sender retries. The first POC (`hermes-ops-fo-exe-dev-poc`, closed PASSED 2026-10-21) never sent anything through an inbox.
