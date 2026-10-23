@@ -29,6 +29,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:kc-adr-format-source:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:kc-adr-format-source-ideation-1
+              briefing:
+                id: briefing:kc-adr-format-source:ideation:attempt-1:revision-1
+                digest: sha256:2a2be4db2113152eb9fbbf8e6c232f5b0ed9ba414e31d37676d5dc9c34f70430
+                room-ref: ./kc-adr-format-source/review/ideation/briefing-1
 started: 2026-10-23T02:38:26Z
 ---
 

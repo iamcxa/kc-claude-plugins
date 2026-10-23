@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-adr-format-source:ideation:attempt-1:revision-1",
+  "question": "Approve the kc-adr-format-source design into implementation? Approval accepts: the paths kc-adr/references/adr-template.md (dev2's template with 'the worker or FO' -\u003e 'the recommender') and kc-adr/scripts/adr_lint.py (byte-identical), plus kc-adr/scripts/test_adr_lint.py with AdrLintTests only (not synced); the writing.md replacement text; AC-2 verified by an overlay run of dev2's suites with kc-adr's files on dev2's paths; and the two recommended scope additions: D1 edit writing.md items 2 and 5 so they no longer contradict the single-writer numbering rule outside dev2, and D2 correct the README kc-adr paragraph and boundary-contract.md claims that this change makes false, in the same PR.",
+  "artifacts": [
+    {
+      "id": "artifact:kc-adr-format-source:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fd3fe57c918a5f51cc21fd7360ac57a5787b9c8c/kc-adr-format-source.md",
+      "rev": "sha256:4476de86ceafee1e70fa737bc7e0d1ad45d5b041372a1bb10497f8fa73359854",
+      "mediaType": "text/markdown",
+      "summary": "Ideation: plain cp/cmp paths for the dev2 FO's sync; test file split because dev2's mixes DocImpactTests; overlay rehearsal green (9/9, 35/35, 47/47, lint 0) and two template falsifiers fail as expected. No collision with the merged read-adr follow-up (it touched only SKILL.md)."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:kc-adr-format-source:ideation:attempt-1:revision-1:item-2",
+      "uri": "git-root://main/c27e76590c1d2dc910e7fa2d332242a7534df0b0/docs/dev2/README.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:d8b3639df236541f0a6cb378df697c0bfe22c51457d9346893c4aef3bfb4594a"
+    }
+  ]
+}
