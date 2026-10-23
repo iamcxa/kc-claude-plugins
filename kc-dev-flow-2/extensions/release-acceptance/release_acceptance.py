@@ -502,7 +502,7 @@ def ruling_problems(report, workflow_dir, journey, release, deferred_ids, prior)
             out.append(f"{tag}: real no or do-not-solve needs a why")
         if e.get("ruling") == "solve" and not (text(e.get("how")) and text(e.get("when"))):
             out.append(f"{tag}: solve needs a how and a when")
-        if e.get("when") in ("next-release", "later") and not text(e.get("release")):
+        if e.get("ruling") == "solve" and e.get("when") in ("next-release", "later") and not text(e.get("release")):
             out.append(f"{tag}: deferral names no release (when {e['when']} needs release)")
     ruled = {d.get("item") for d in ruling.get("deferred", []) if isinstance(d, dict)}
     out += [f"deferred item {i} has no director ruling" for i in deferred_ids if i not in ruled]
