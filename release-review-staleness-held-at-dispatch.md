@@ -34,6 +34,17 @@ gates:
                 id: briefing:release-review-staleness-held-at-dispatch:ideation:attempt-1:revision-1
                 digest: sha256:e308ad7357991e82bf3d1f1445de3100d89b85a6c59197b810ba17f994e90e4a
                 room-ref: ./release-review-staleness-held-at-dispatch/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-review-staleness-held-at-dispatch:ideation:1
+                briefing: briefing:release-review-staleness-held-at-dispatch:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T06:04:20.913288Z"
+                decision: approve
+                reason: Captain 「可以」 (chat, 2026-10-23), answering 「「擋派工」的設計閘門：可以進入實作嗎？我建議可以。批准等於接受三件事：用寬鬆比對認出標記、刪掉說明裡 5 個字、接受已知的誤擋。」; digest e308ad73. Accepts the FO recommendation and the three Captain decisions as the bound question states.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
