@@ -726,6 +726,9 @@ def cmd_escalate(args):
         print(f"escalate {key}: {', '.join(reasons)}")
     if not listed:
         print("escalate: none")
+        return 0
+    groups = {i.get("id"): i.get("from", []) for i in ruling.get("items", [])}
+    print("Items: " + "; ".join(f"{k} ({', '.join(groups[k])})" if k in groups else k for k in listed))
     return 0
 
 
@@ -740,6 +743,9 @@ def merge_rulings(sonnet, opus, found):
     absent = sorted(listed - set(pick))
     if stray or absent:
         raise Refused(f"opus ruling must cover exactly the escalated entries (absent: {absent}, not escalated: {stray})")
+    regrouped = [i["id"] for i in sonnet.get("items", []) if i["id"] in listed and set(pick[i["id"]].get("from", [])) != set(i.get("from", []))]
+    if regrouped:
+        raise Refused(f"opus ruling groups different complaints under item {', '.join(regrouped)}")
     merged = {"director": {"agent": "kc-dev-flow-2:design-director", "models": models}, "items": [], "deferred": []}
     for kind, key in (("items", "id"), ("deferred", "item")):
         for entry in sonnet.get(kind, []):

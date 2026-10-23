@@ -559,6 +559,20 @@ class EscalationTests(Base):
         self.assertEqual([t["title"] for t in report["ruling"]["tasks"]],
                          ["Fix check-ready and the reserve action", "Add the collect link"])
 
+    def test_escalate_prints_the_items_line_with_each_item_s_complaints(self):
+        _, out = self.listed()
+        self.assertIn("Items: i1 (o1, s1); i2 (o2, s2); i3 (s3); i4 (s4); t-collect-a#declined-1; t-reserve#F1", out)
+
+    def test_build_refuses_an_opus_ruling_that_groups_other_complaints_under_an_item(self):
+        run("escalate", self.folder, "--workflow-dir", self.wf)
+        sonnet = read(self.walk / "ruling-sonnet.json")
+        opus = {"items": [dict(i, **{"from": ["o3"]}) if i["id"] == "i1" else i for i in sonnet["items"] if i["id"] != "i5"],
+                "deferred": [d for d in sonnet["deferred"] if d["item"] != "t-ready#F1"], "tasks": []}
+        put(self.walk / "ruling-opus.json", opus)
+        code, out = run("build", self.folder, "--workflow-dir", self.wf)
+        self.assertEqual(code, 1)
+        self.assertIn("groups different complaints under item i1", out)
+
     def test_build_refuses_an_opus_ruling_that_misses_an_escalated_item(self):
         run("escalate", self.folder, "--workflow-dir", self.wf)
         put(self.walk / "ruling-opus.json", {"items": [], "deferred": [], "tasks": []})
