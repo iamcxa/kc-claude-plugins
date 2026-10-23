@@ -238,6 +238,12 @@ Asked: 「挑剔使用者流程要不要併進「版本驗收」的第二個 PR�
 Supersedes: none
 Design: the release walk's second pass (Amendment 1) is run by at least two picky-user reviewers on different providers or models and personas, then the design director's ruling table with at most three backlog tasks; deferred-to-UAT findings feed both; a fixture smoke check precedes the reviewers; a single-model fallback where only one provider is available. Source of the proposal: dev2 task product-review-path-before-backlog (intake/method-notes-for-dev2.md).
 
+### Amendment 4 — 2026-10-23, chat
+Captain: 「可以」 (chat, 2026-10-23)
+Asked: 「把版本驗收的第二個 PR 拆成新任務、先過設計閘門，目前這張只用 #709 結案，可以嗎？」
+Supersedes: AC-6, AC-7, AC-8, AC-11, AC-12 (no replacement: moved to release-walk-picky-reviewers-and-director)
+Design: this task closes with PR 1 (iamcxa/kc-claude-plugins#709, kc-journey-map: AC-5, AC-9, AC-10); the kc-dev-flow-2 half of the walk, with Amendments 1 and 3, moves to task release-walk-picky-reviewers-and-director for its own design gate.
+
 ## FO alignment
 
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-23 — the implementation phase-1 drift check found the approved design's review-record premise replaced on main (#704) and recommends returning the kc-dev-flow-2 half to ideation; what is the smallest next step?
