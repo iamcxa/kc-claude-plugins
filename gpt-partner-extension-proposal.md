@@ -13,6 +13,7 @@ status: backlog
 - Naming noted by FO, not ruled: `peers` is already the session-messaging extension, so a name such as `gpt-partner` or `codex-partner` avoids reading as its variant; renaming `codex` and `copilot` to `codex-review` and `copilot-review` would change the four adopters' `extensions:` lists, so it would ship in the same PR as the new extension with the old names still accepted.
 - Upstream first: kc-dev-flow-2 extensions codex, copilot, roborev, peers (none pairs a GPT run with a role); `codex exec` (`-m`, `-i` images).
 - Added 2026-10-23: the Captain on release-walk-picky-reviewers-and-director D3: 「可以先用同模型。我在想這裡其實應該要用類似 ext 做法，我之前提過的，等於該 ext 會啟用不同模型的支援能力，這樣比較能排除問題」. The extension's scope now includes enabling release-walk reviewers (picky users) on non-Claude providers; that the release walk needs this is evidence for reopening the discussion. Unverified: a non-Claude reviewer operating a product from a Claude-hosted FO (dev2 workers follow the FO's host; codex exec --sandbox read-only reads code only).
+- Added 2026-10-23: the Captain (chat): 「codex 夥伴任務新增一個點，可以按狀況選用派 astra/sol 當 ensign worker，目前 qnow fo 正在 dogfood。如果效果跟本來一樣好，那我希望 codex 夥伴要納入來做，這樣可以明顯分攤額度消耗，提升並行效率，因為他們額度較便宜，所以同樣等級模型可以開更高的推理」. Conditional on the qnow FO's dogfood showing results as good as the Claude ensigns; that comparison is the evidence to read when the discussion reopens. Related backlog: dispatch-sets-reasoning-effort.
 - Non-goals: anything before the Captain reopens the discussion.
 
 ## FO alignment
