@@ -55,6 +55,7 @@ Design: this task is the next priority; the sync also carries what iamcxa/kc-cla
 ## FO alignment
 
 Alignment: needed at ideation; the reservation-file owner and the copy's path are the Captain's to accept.
+Result: aligned 2026-10-23 by Captain Amendments 1 and 2: the copy keeps dev2's paths; number_guards.py and the reservation stay in dev2; the remaining choices are the design's Captain decisions.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
