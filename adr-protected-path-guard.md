@@ -62,6 +62,17 @@ gates:
                 id: briefing:adr-protected-path-guard:validation:attempt-1:revision-1
                 digest: sha256:600db5293c95d8f3b218ad98d1f105d28ce82dd45bf66038aad7fbfd70f8ef66
                 room-ref: ./adr-protected-path-guard/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-protected-path-guard:validation:1
+                briefing: briefing:adr-protected-path-guard:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T09:51:49.543352Z"
+                decision: approve
+                reason: 'Captain 「准」 (2026-10-23) to validation briefing-1: accepts validation on 286ba13a and delivery as asked (push, Draft PR with the shown body, ready after CI, review rounds, merge with --match-head-commit once delivery_gate.py passes, remove worktree and local branch), the Deferred risk as a known limit and the two Polish findings declined.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-23T08:55:00Z
 worktree: .worktrees/spacedock-ensign-adr-protected-path-guard
 ---
