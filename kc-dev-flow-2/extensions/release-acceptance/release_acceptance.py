@@ -333,7 +333,9 @@ def evidence_problems(folder, tag, files):
         return []
     if not strings(files):
         return [f"{tag}: evidence is not a list of file names"]
-    return [f"{tag}: evidence {f} is not a file in {folder.name}/walk" for f in files if not (folder / "walk" / f).is_file()]
+    root = (folder / "walk").resolve()
+    return [f"{tag}: evidence {f} is not a file in {folder.name}/walk" for f in files
+            if not ((root / f).resolve().is_file() and root in (root / f).resolve().parents)]
 
 
 def prior_owned(prior):
@@ -416,6 +418,8 @@ def structure_problems(report, folder, walk_list, deferred_ids, prior):
     reviewers = [w.get("reviewer") for w in walks if isinstance(w.get("reviewer"), dict)]
     if report.get("reviewers") != reviewers:
         out.append("reviewers[] does not match the reviewers of walks[]")
+    ids = collections.Counter(r.get("id") for r in reviewers)
+    out += [f"reviewer id {i!r} appears {n} times" for i, n in ids.items() if n > 1]
     out += diversity_problems(reviewers, report.get("diversity"))
     count = sum(operated(w) for w in walks)
     if count < 2:

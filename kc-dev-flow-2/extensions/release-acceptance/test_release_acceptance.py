@@ -294,6 +294,26 @@ class MalformedTests(Base):
     def test_proof_line_must_be_present(self):
         self.case("o", lambda d: d.pop("proof_line"), "proof line is absent")
 
+    def test_evidence_outside_the_walk_folder_is_refused(self):
+        outside = self.tmp_path / "outside.png"
+        outside.write_bytes(PNG)
+        self.case("o", lambda d: d["stories"][0].update(evidence=["../../../../outside.png"]), "outside.png is not a file")
+        self.setUp()
+        self.case("o", lambda d: d["stories"][0].update(evidence=[str(outside)]), "outside.png is not a file")
+
+    @property
+    def tmp_path(self):
+        return Path(self.tmp.name)
+
+    def test_one_reviewer_id_reported_twice_is_refused(self):
+        other = reviewer_s()
+        other["reviewer"]["id"] = "o"
+        other["complaints"] = [dict(c, id=f"x{c['id']}") for c in other["complaints"]]
+        for r in other["stories"]:
+            r["complaints"] = [f"x{c}" for c in r["complaints"]]
+        put(self.walk / "reviewer-s.json", other)
+        self.refused("walk", "reviewer id 'o' appears 2 times")
+
     def test_evidence_must_be_a_file(self):
         self.case("o", lambda d: d["stories"][0].update(evidence=["gone.png"]), "evidence gone.png is not a file")
 
