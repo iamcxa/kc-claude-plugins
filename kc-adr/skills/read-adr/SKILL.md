@@ -45,4 +45,4 @@ When a person tells you something, or you learn something, ask in order; the fir
 - **Instruction files point, they do not restate.** They may say where the ADRs are and when to look, never copy an ADR's content: a copy goes stale.
 - **Authorisation.** What you may decide alone is its own authorisation ADR. Money, merges, outside actions and irreversible changes are never authorised.
 
-To write the ADR read `writing.md` in this folder; no words from the person, or no reserved number, means do not write one: ask the coordinator. A short cross-repo citation such as `ME#0003` is the optional convention in `prefix.md`.
+To write the ADR read `writing.md` in this folder; no words from the person means do not write one: ask the coordinator. How to number it is in `writing.md`. A short cross-repo citation such as `ME#0003` is the optional convention in `prefix.md`.
