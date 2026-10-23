@@ -3,7 +3,7 @@ title: The first implementation dispatch of a task in a release is held while th
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain 「可以」 (chat, 2026-10-23), answering 「「擋派工」的設計閘門：可以進入實作嗎？我建議可以。批准等於接受三件事：用寬鬆比對認出標記、刪掉說明裡 5 個字、接受已知的誤擋。」; digest e308ad73. Accepts the FO recommendation and the three Captain decisions as the bound question states.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
