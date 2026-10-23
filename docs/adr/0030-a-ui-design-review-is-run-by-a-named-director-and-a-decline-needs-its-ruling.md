@@ -24,7 +24,7 @@ Measured 2026-10-22 on 7 kc-paseo-plugins tasks: the design review raised 93 fin
 - project learning for a standing host-look ruling — not chosen, a ruling on direction is an ADR in the product's repository
 - a release-level operated whole-screen review in this task — not chosen, release-acceptance owns it
 
-**Recommended:** the first option, as the Captain's 「設計總監照建議」 accepted. A host-look departure the Captain rules lands as an ADR in the product's repository at its first appearance. Validation refuses a ui task with no built-screen review unless the Captain waives it in quoted words. At validation the same ruling applies to the MINOR findings the validator proposes to decline.
+**Recommended:** the first option, as the Captain's 「設計總監照建議」 accepted. A host-look departure the Captain rules lands as an ADR in the product's repository at its first appearance. Validation refuses a ui task that has a `Design review:` line and no built-screen review unless the Captain waives it in quoted words; a ui task with no `Design review:` line (ideated before the review existed) is exempt, because `design_surfaces.py check` tests the built-screen rule only where that line exists. At validation the same ruling applies to the MINOR findings the validator proposes to decline.
 
 ## Consequences
 

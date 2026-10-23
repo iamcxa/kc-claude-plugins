@@ -36,7 +36,10 @@ seeing it.
 When the task's `Surfaces:` include `ui` and it has a `Design review:` line, dispatch
 `kc-dev-flow-2:design-director` with that screenshot (pass 2a: `Screenshots:`,
 `Criteria:` naming the criteria whose text names the running screen, `ADR folder:` as
-in [design-review.md](../ideation/design-review.md)). Save its report as
+in [design-review.md](../ideation/design-review.md)). Give `Screenshots:` as an absolute
+path so the director can open it; in the saved report the `preview:` value must be that
+same file's path relative to the task folder (for example `design/built-1.png`), because
+the check resolves it there and refuses an absolute one. Save its report as
 `design/validation-<N>.yaml` and write `Built screen review: design/validation-<N>.yaml`
 with one `Built screen finding <n>:` line per finding: `F<N>` for a MAJOR, naming
 its bullet in your report, and `declined: <reason>` or `Needs decision: <text>` for a

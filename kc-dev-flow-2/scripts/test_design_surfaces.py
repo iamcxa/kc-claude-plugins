@@ -1602,6 +1602,25 @@ class DeclineCheckTests(MutantMixin, unittest.TestCase):
         self.refused("rules finding 2 more than once", declines=ruled((2, "upheld", {}), (2, "upheld", {})))
         self.refused("rules finding 2 as 'maybe'", declines=ruled((2, "maybe", {})))
 
+    def test_a_ruling_outside_the_rulings_list_does_not_count(self):
+        elsewhere = "design_decline_check:\n  adrs_read: none\n  rulings:\n  notes:\n    - finding: 2\n      ruling: upheld\n      evidence: e\n      change: none\n"
+        after = ruled() + "other:\n  rulings:\n    - finding: 2\n      ruling: upheld\n      evidence: e\n      change: none\n"
+        mutant = mutated("lines = rulings_lines(text)", "lines = text.split(chr(10))")
+        for label, report in {"another key": elsewhere, "after the root": after}.items():
+            with self.subTest(label):
+                self.refused("declined finding 2 has no ruling", declines=report)
+                self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+        fenced = "```yaml\n" + DECLINE_REPORT + "```\n"
+        self.assertEqual(self.run_check(declines=fenced)[0], [])
+
+    def test_a_ruling_missing_its_evidence_or_change_is_refused(self):
+        mutant = mutated("elif missing := [key for key in RULING_REQUIRED if key not in item]:", "elif False:")
+        for key in ("evidence", "change"):
+            with self.subTest(key):
+                report = "".join(line for line in DECLINE_REPORT.splitlines(True) if not line.lstrip().startswith(key + ":"))
+                self.refused(f"rules finding 2 without '{key}'", declines=report)
+                self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+
     def test_a_declined_finding_ruled_overruled_or_decision_is_refused(self):
         self.mutation("""elif ruled[number]["ruling"] != "upheld":""", "elif False:",
                       "declined finding 2 is ruled overruled", self.run_check, declines=ruled((2, "overruled", {})))
@@ -1700,9 +1719,9 @@ Preview: preview.html
 **AC-1**: a.
 Verified by: a test.
 
-## Stage Report: validation
+{earlier}## Stage Report: validation
 
-- F1 Behaviour: the count is said twice in the built header
+{bullet}
 {lines}"""
 
 BUILT_REPORT = """design_review:
@@ -1735,10 +1754,11 @@ Built screen decline check: design/validation-declines-1.yaml
 
 class BuiltScreenTests(MutantMixin, unittest.TestCase):
     def run_check(self, lines=BUILT_LINES, report=BUILT_REPORT, declines=None, shot=b"built screen", status="validation", reviewed=True,
-                  previews="Preview: preview.html\n", module=ds):
+                  previews="Preview: preview.html\n", module=ds,
+                  earlier="", bullet="- F1 Behaviour: the count is said twice in the built header"):
         declines = ruled((2, "upheld", {})) if declines is None else declines
         review = "\nDesign review: design/ideation-1.yaml\n" if reviewed else ""
-        text = VALIDATION_TASK.format(review=review, lines=lines).replace("status: validation", f"status: {status}").replace("Preview: preview.html\n", previews)
+        text = VALIDATION_TASK.format(review=review, lines=lines, earlier=earlier, bullet=bullet).replace("status: validation", f"status: {status}").replace("Preview: preview.html\n", previews)
         with tempfile.TemporaryDirectory() as d:
             folder = Path(d, "task", "design")
             folder.mkdir(parents=True)
@@ -1819,12 +1839,23 @@ class BuiltScreenTests(MutantMixin, unittest.TestCase):
         self.assertEqual(errors, [])
         self.assertEqual(notes[0], "built screen review design/validation-1.yaml: 3 findings, 0 upheld declines, 1 decisions in 1 group")
         self.assertEqual(notes[-1], "decision host-look, owner Captain (findings 2): change 2")
-        self.mutation("""errors.append(f"{name}: 'Built screen finding {number}:' names {token}, but the report has no '- {token} <Class>:' bullet")""", "pass",
-                      "names F9, but the report has no", self.run_check, lines=BUILT_LINES.replace("finding 1: F1", "finding 1: F9"))
+        self.mutation("""errors.append(f"{name}: 'Built screen finding {number}:' names {token}, but the current validation report has no '- {token} <Class>:' bullet")""", "pass",
+                      "names F9, but the current validation report has no", self.run_check, lines=BUILT_LINES.replace("finding 1: F1", "finding 1: F9"))
         self.mutation("elif not (severities[number - 1] ==", "elif False and not (severities[number - 1] ==", "built screen finding 3 has no", self.run_check,
                       lines=BUILT_LINES.replace("Built screen finding 3: Needs decision: the chevron is the host's\n", ""))
         self.mutation("""if HOST_REASON.match(entry) and not HOST_FORM.match(entry):""", "if False:", "declines a host component without", self.run_check,
                       lines=BUILT_LINES.replace("declined: the inset", "declined: host component Input: the inset"))
+
+    def test_an_f_bullet_must_be_in_the_current_validation_report(self):
+        stale = "## Stage Report: validation\n\n- F1 Behaviour: kept from the first cycle\n\n"
+        why = "names F1, but the current validation report has no"
+        mutant = mutated("validation_report(body), re.M)", "body, re.M)")
+        for label, kwargs in {"earlier cycle only": dict(earlier=stale, bullet="- nothing"), "another stage": dict(bullet="- nothing", earlier="## Stage Report: implementation\n\n- F1 Behaviour: x\n\n")}.items():
+            with self.subTest(label):
+                self.assertEqual(len([e for e in self.run_check(**kwargs)[0] if why in e]), 1)
+                self.assertFalse(any(why in e for e in self.run_check(module=mutant, **kwargs)[0]))
+        self.assertEqual(self.run_check(earlier=stale)[0], [])
+        self.assertEqual(self.run_check(earlier=stale, bullet="- F1 Behaviour: this cycle")[0], [])
 
     def test_the_picture_and_the_upheld_lines_reach_the_output(self):
         for old, new in (('f"preview: {picture.resolve()}"', '""'), ('*ruling_notes("built-screen decline", lines, upheld, groups)', "*[]")):

@@ -359,15 +359,55 @@ def design_report(name, value, text, errors, on_preview):
     return severities
 
 
+RULING_REQUIRED = ("evidence", "change")
+
+
+def rulings_lines(text):
+    """The lines of the `rulings:` list directly under the `design_decline_check:` root, and nothing else."""
+    lines = text.split("\n")
+    root = next((i for i, line in enumerate(lines) if line.startswith("design_decline_check:")), None)
+    if root is None:
+        return []
+    block = []
+    for line in lines[root + 1:]:
+        if line.strip() and not line[0].isspace() and not line.startswith("#"):
+            break
+        block.append(line)
+    child = min((len(line) - len(line.lstrip()) for line in block if line.strip() and not line.lstrip().startswith("#")), default=1)
+    key = next((i for i, line in enumerate(block) if re.fullmatch(rf"[ \t]{{{child}}}rulings:[ \t]*", line)), None)
+    if key is None:
+        return []
+    depth = len(block[key]) - len(block[key].lstrip())
+    kept = []
+    for line in block[key + 1:]:
+        body = line.lstrip()
+        if not body or body.startswith("#"):
+            continue
+        indent = len(line) - len(body)
+        if indent < depth or (indent == depth and not body.startswith("- ")):
+            break
+        kept.append(line)
+    return kept
+
+
 def read_rulings(text):
-    marks = list(RULING_ITEM.finditer(text))
+    lines = rulings_lines(text)
+    marks = [i for i, line in enumerate(lines) if re.match(r"[ \t]*-[ \t]", line)]
+    if not marks:
+        return []
+    first = min(len(lines[i]) - len(lines[i].lstrip()) for i in marks)
+    marks = [i for i in marks if len(lines[i]) - len(lines[i].lstrip()) == first]
     items = []
     for index, mark in enumerate(marks):
-        stop = marks[index + 1].start() if index + 1 < len(marks) else len(text)
+        dash = re.match(r"([ \t]*)-([ \t]+)", lines[mark])
+        field = len(dash.group(1)) + 1 + len(dash.group(2))
+        stop = marks[index + 1] if index + 1 < len(marks) else len(lines)
         fields = {}
-        for key, value in RULING_FIELD.findall(text[mark.end():stop]):
-            fields.setdefault(key, value.strip().strip("\"'"))
-        raw = mark.group(1).strip().strip("\"'")
+        for line in [" " * dash.end() + lines[mark][dash.end():]] + lines[mark + 1:stop]:
+            found = re.match(rf"[ \t]{{{field}}}([a-z]+):[ \t]*(.*)$", line)
+            if found:
+                fields.setdefault(found.group(1), found.group(2).strip().strip("\"'"))
+        raw = fields.get("finding", "")
         fields["finding"] = int(raw) if raw.isdigit() else raw
         items.append(fields)
     return items
@@ -386,6 +426,8 @@ def check_rulings(name, value, text, found, lines, word, errors, titled):
             errors.append(f"{name}: '{value}' rules finding {number}, which the review does not list ({found} listed)")
         elif number in ruled:
             errors.append(f"{name}: '{value}' rules finding {number} more than once")
+        elif missing := [key for key in RULING_REQUIRED if key not in item]:
+            errors.append(f"{name}: '{value}' rules finding {number} without {', '.join(repr(key) for key in missing)}")
         elif item.get("ruling") not in RULINGS:
             errors.append(f"{name}: '{value}' rules finding {number} as '{item.get('ruling', '')}', not one of {', '.join(RULINGS)}")
         else:
@@ -506,6 +548,13 @@ def preview_lines(path, previews):
     return [value if URL.match(value) else str(preview_target(task_dir, value)) for value in previews]
 
 
+def validation_report(body):
+    """The text of the last `## Stage Report: validation` section, or empty."""
+    sections = re.split(r"(?m)^(?=## )", body)
+    reports = [part for part in sections if re.match(r"## Stage Report: validation\b", part)]
+    return reports[-1] if reports else ""
+
+
 def file_digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
@@ -553,8 +602,8 @@ def check_built_screen(path, body, previews, errors):
         entry = lines.get(number, "")
         token = entry.split()[0] if entry else ""
         if severities[number - 1] == "MAJOR" and re.fullmatch(r"F\d+", token):
-            if not re.search(rf"^[ \t]*[-*][ \t]+{token}[ \t]+\S[^\n:]*:", body, re.M):
-                errors.append(f"{name}: 'Built screen finding {number}:' names {token}, but the report has no '- {token} <Class>:' bullet")
+            if not re.search(rf"^[ \t]*[-*][ \t]+{token}[ \t]+\S[^\n:]*:", validation_report(body), re.M):
+                errors.append(f"{name}: 'Built screen finding {number}:' names {token}, but the current validation report has no '- {token} <Class>:' bullet")
         elif not (severities[number - 1] == "MINOR" and (DECLINED.match(entry) or NEEDS_DECISION.match(entry))):
             errors.append(f"{name}: built screen finding {number} has no 'Built screen finding {number}:' line naming F<N> (MAJOR), 'declined: <reason>' (MINOR only) or 'Needs decision: <text>' (MINOR only)")
     for number in sorted(set(lines) - set(range(1, found + 1))):
