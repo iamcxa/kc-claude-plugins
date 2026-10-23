@@ -212,7 +212,7 @@ Design: the release walk gains a second pass over the same operated walk, run by
 ### Amendment 2 — 2026-10-23, chat
 Captain: 「照更正後的建議退回設計重做」 (chat, 2026-10-23)
 Asked: 「「擋派工」這一段，是照我更正後的建議退回設計重做（不涵蓋），還是照 D2 不做（涵蓋）？」, where FO's corrected recommendation was: ADR 0029 D2 does not cover the dispatch-time hold, because D2's seed hold had no recorded bite while this one has R4 (issue #571 item 1); only the dispatch-hold part returns to design, rebuilt on #704's review-record file by comparing the map at the record's commit with the map now.
-Supersedes: AC-1, AC-2, AC-3, AC-4
+Supersedes: AC-1, AC-2, AC-3, AC-4 (no replacement: moved to release-review-staleness-held-at-dispatch)
 Design: the pre-implementation review hold (design `Enforcing the pre-implementation review (second half of #571)` and AC-1 to AC-4) leaves this task and is redesigned in its own task, release-review-staleness-held-at-dispatch; this task keeps the release walk: PR 1 (kc-journey-map, #709) and PR 2 (kc-dev-flow-2, after #708).
 Superseded text:
 
