@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-adr-tools-with-dev2-copy:validation:attempt-1:revision-1",
+  "question": "Approve validation of kc-adr-tools-with-dev2-copy and merge iamcxa/kc-claude-plugins#713 at head 037d2cf60d9371180ec9a772e8321644a03f9c25 with `gh pr merge 713 --squash --match-head-commit 037d2cf60d9371180ec9a772e8321644a03f9c25`, with Codex and Copilot not read on this head? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; say 「等 Codex」 to hold the merge for Codex instead; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:kc-adr-tools-with-dev2-copy:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d6a79a5eebce1a13e3c47085742882681c090abd/kc-adr-tools-with-dev2-copy.md",
+      "rev": "sha256:e94557ca8791ff3a0a07b83a09329242cefab91518471e44490aec6ee222006c",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: kc-dev-flow-2 ships byte copies of kc-adr's ADR template, adr_lint.py and the read-adr skill (resolving as kc-dev-flow-2:read-adr), scripts/kc-adr-copy-sync.sh syncs and checks them, and marketplace-parity.yml refuses a PR whose copies differ; validation PASSED at this head (nine criteria re-run with falsifiers, install probe equal on Claude Code and Codex, CI green with a recorded red-then-green).\nNecessity: thirteen files (the three copied kc-dev-flow-2 paths plus prefix.md and writing.md, kc-adr/skills/read-adr/writing.md, the sync script and its test, the CI step, lint-skills.py and its test, the design-director pointer, implementation/principles.md).\nExternal rounds: none read. Codex not read: the code review of this head has shown running since the first request at 12:38Z with no update, and again since one re-request at 13:38Z through 15:16Z (no third request). RoboRev clean on this head (evidence=roborev:1108). Second reviewer: copilot because the change touches authority rules (read-adr's Authorisation section becomes a kc-dev-flow-2 skill). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back.\nFO declines: Polish F1, AC-3's grep hits a comment line (the trigger has no paths filter; a wording slip in the task's criterion, not in the PR); Deferred risk F2, release-please will probably also propose a kc-adr bump for the two-plugin squash commit (D4 accepted the two-plugin PR; one look at the next Release PR shows it); Deferred risk F3, a kc-decision-log contract table lists adr_lint.py checks without the two Protects checks (outside this design's file list; no consumer reads the list as the check set; routed to the kc-decision-log owner); Deferred risk F4, the copy check compares contents, not file modes (modes equal now; no copied file is run directly)."
+    }
+  ]
+}

@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:kc-adr-tools-with-dev2-copy:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:kc-adr-tools-with-dev2-copy-validation-1
+              briefing:
+                id: briefing:kc-adr-tools-with-dev2-copy:validation:attempt-1:revision-1
+                digest: sha256:f60c44ccefd9f877a3193b711f4afc0e8fd811c21175052ec9bec98961f822e9
+                room-ref: ./kc-adr-tools-with-dev2-copy/review/validation/briefing-1
 started: 2026-10-23T12:13:05Z
 worktree: .worktrees/spacedock-ensign-kc-adr-tools-with-dev2-copy
 pr: iamcxa/kc-claude-plugins#713
