@@ -1,0 +1,19 @@
+{
+  "class": "never",
+  "head": "286ba13ac488222b2cb338406207fad48d2c2f32",
+  "model": "not run",
+  "necessity": "four kc-adr files, each mapped to AC-1..AC-3 or a named falsifier; no kc-dev-flow-2 file.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'The FAIL is explained: in both'",
+    "point: deferred: '- Deferred risk (cross-repo clearing): evidence'",
+    "point: deferred: 'PASSED: AC-1 and AC-2 hold on'",
+    "point: amendment: 'Amendment 1 dated 2026-10-23'",
+    "point: path: 'kc-adr/references/adr-template.md'",
+    "point: path: 'kc-adr/skills/read-adr/writing.md'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#712",
+  "sufficiency": "an ADR's protected files carry pointers the linter enforces, superseded pointers are refused naming the newer ADR, and agents on both hosts follow writing.md (Codex candidate PASS vs no-change FAIL; C",
+  "time": "2026-10-23T10:01:49Z",
+  "verdict": "ask"
+}
