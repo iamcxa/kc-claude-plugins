@@ -232,6 +232,9 @@ The two-file copy (template and linter) installs byte-exact on Claude Code and C
 - DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
   AC-1 to AC-9 each with an evidence command and a falsifier; open decision D5 with recommendation and the worse side; known limits listed separately.
 
+- DONE: Design check on the committed cycle-2 text
+  `python3 -I <package>/scripts/design_surfaces.py check <entity>` from the dispatch's package root (kc-dev-flow-2 0.28.0 cache) printed "design surfaces presentable", exit 0. Read-only probe of the synced linter on an adopter corpus: `adr_lint.py` from kc-adr over subspace-relay's working-tree `docs/adr` (33 files, no `--since`) exit 0, same as dev2's current copy; the validation mode `--since <base>` was not run on it.
+
 ### Summary
 
 D1 to D4 are folded in and marked ruled. Copying the read-adr folder is not free of consequences the Captain did not rule on: dev2's `lint-skills.py` rejects a byte copy (4 FAILs observed) so it needs a small exemption, the skill listing adds 78 words per session (the one FO-read rise), and the copied writing.md carries two lines that are false in dev2 (known limit). One decision remains, D5, whether a 10-word pointer in implementation principles is how the Protects rule reaches a worker. Disclosed: no live model session loaded the copied skill; the isolated sandbox was rebuilt and `shasum -c` of the four real config files passed; the dispatch's package root is 0.28.0.
