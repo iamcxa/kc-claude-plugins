@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ops-inbox-r1-setup-and-isolation:ideation:attempt-2:revision-1",
+  "question": "Approve the cycle-2 re-cut as written in '### Re-cut proposal': the proposed title and Scope; AC-6 to AC-12 as the criteria, with AC-8 superseding AC-3 and AC-11 superseding AC-4; D1 at-most-once, D4 Netlify one site per project, D6 no agent-creations ruleset on relay in r1 with a runbook check instead, D7 the producer's CloudEvents subject as the incident key, D8 a joined event is recorded only, D9 the live event from a relay deploy preview with a lowered ceiling, and D10 a 3.5-day budget with AC-5's second adapter deferred? Approving accepts all of these as written and enters implementation; relay's emitter is a relay task the relay FO and the Captain open separately.",
+  "artifacts": [
+    {
+      "id": "artifact:ops-inbox-r1-setup-and-isolation:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/264ad47cab33d49e8c28679d913c4f23c0daaece/ops-inbox-r1-setup-and-isolation.md",
+      "rev": "sha256:1d309b15ef999efe04f0096964dfe828c5389dd2fa67ad5f811008cb2321b0fa",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 2 re-cuts r1 around the confirmed day-2 axis: axis ADR first (kc-adr format); contract v1 adds subject as the incident key; later events of one incident join its ops task (probe P3: source+subject grouped 5 of 5, others wrong); the FO cites relay's ADRs by commit and digest and a check refuses forged citations (probe P5: 4 faults refused, true block passed); isolation and the state-branch gate are kept; setup is a runbook plus read-back script; one live event from relay's own code on a deploy preview. Estimate 3.75 days, 3.5 with the second adapter deferred, over the approved 3."
+    }
+  ]
+}
