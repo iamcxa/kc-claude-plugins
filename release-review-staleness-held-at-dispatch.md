@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-23T06:04:47Z
 worktree: .worktrees/spacedock-ensign-release-review-staleness-held-at-dispatch
-pr: iamcxa/kc-claude-plugins#711
+pr: pr-merge:711
 ---
 
 ## Scope
