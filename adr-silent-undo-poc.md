@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:adr-silent-undo-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:adr-silent-undo-poc-validation-1
+              briefing:
+                id: briefing:adr-silent-undo-poc:validation:attempt-1:revision-1
+                digest: sha256:54d9b39e4ef372ec82b6e8a5c5a7fa661de633a6138a605f3b368f98f50eecc9
+                room-ref: ./adr-silent-undo-poc/review/validation/briefing-1
 started: 2026-10-23T05:55:41Z
 worktree: .worktrees/spacedock-ensign-adr-silent-undo-poc
 ---

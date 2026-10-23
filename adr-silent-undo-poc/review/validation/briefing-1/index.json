@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-silent-undo-poc:validation:attempt-1:revision-1",
+  "question": "Validation PASSED. Approve closing this POC with AC-3 read as the validator corrected it: no cell undid the choice, but the choice was visible at every call site and no cell needed the ADR to keep it, so the result supports none of add nothing, AGENTS.md pointer or code-side comment over the others? Approval records no code delivery (local-merge sentinel at c27e7659, nothing to merge), archives the task, and removes its empty worktree.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-silent-undo-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c03c6871a46edd743bcefb185e397bbf41740dd5/adr-silent-undo-poc.md",
+      "rev": "sha256:a446b9bd9ff423c6dbf05648f315a0899f0c85e18fa24974e557ebe9c6119f2d",
+      "mediaType": "text/markdown",
+      "summary": "4 runs (A0/B1 x claude/codex), pass rule committed at 12bc4a2d before the first run; all 4 pass via unchanged; FO re-ran accept-s13.sh in an env -i shell (node on PATH): PASSED. Only B1 codex read ADR 0009; the literal readOnly flag at each call site carried the choice. Validator: 'fits add nothing' overclaims; five added limits (no positive control, prompt says keep behaviour, writable sibling makes the mode salient, A0 codex saw the ADR filename, B1 not a kc-adr test). Sufficiency: answers the question asked for a visible choice only. Necessity: state-only harness copy and results, no repository change."
+    }
+  ]
+}
