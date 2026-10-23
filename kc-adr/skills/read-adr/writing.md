@@ -16,7 +16,7 @@ This plugin ships the ADR template and the ADR linter. `<kc-adr>` is the folder 
 - ADR linter: `python3 <kc-adr>/scripts/adr_lint.py docs/adr --require NNNN`
 - Number reserver, only in a repo that runs kc-dev-flow-2: `python3 <package>/scripts/number_guards.py reserve --kind adr --task <task>`
 
-Numbering: where no number was reserved for you, one writer at a time adds an ADR, and its number is one above the highest on the base branch; under kc-dev-flow-2, use `number_guards.py reserve` instead.
+Numbering: where no number was reserved for you, one writer at a time adds an ADR, and its number is one above the highest on the base branch; under kc-dev-flow-2, the coordinator reserves it with `number_guards.py reserve`; ask for one.
 
 Resolve `<package>` (needed only for the reserver) in this order, never as a literal path (`${CLAUDE_PLUGIN_ROOT}` is this plugin's root, not kc-dev-flow-2's):
 
