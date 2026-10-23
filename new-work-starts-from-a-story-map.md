@@ -53,6 +53,17 @@ gates:
                 id: briefing:new-work-starts-from-a-story-map:validation:attempt-1:revision-1
                 digest: sha256:c80ac3138a06f2aec2662d6e16e27b09145bcb07af543b94f13fd8bae448111d
                 room-ref: ./new-work-starts-from-a-story-map/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:new-work-starts-from-a-story-map:validation:1
+                briefing: briefing:new-work-starts-from-a-story-map:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T03:26:45.612788Z"
+                decision: approve
+                reason: Captain 「合併」 (chat, 2026-10-23), answering 「#705（故事地圖的 dev2 部分）要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only; digest c80ac313. Accepts the FO recommendation as the bound question states.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-22T04:01:40Z
 worktree: .worktrees/spacedock-ensign-new-work-starts-from-a-story-map
 pr: iamcxa/kc-claude-plugins#705
