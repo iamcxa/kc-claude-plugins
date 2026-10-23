@@ -274,6 +274,7 @@ Release review: not needed: no release.
 Needed at ideation: the design of both halves (the kc-dev-flow-2 rule and task, the kc-journey-map mode) and the contract between them, against the existing Release review rule in kc-dev-flow-2 references/sd/workflow.md and kc-journey-map's review-release mode.
 Surfaces: none
 Visible change: none
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-23 — do these amendments withdraw what the Captain approved, and what changes in the build? (called after the #709 merge; owed before the merge ask and missed by FO)
 
 ## Number guards
 
