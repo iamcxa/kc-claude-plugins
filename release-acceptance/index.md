@@ -163,18 +163,6 @@ Two PRs, one per plugin, either may merge first because the contract is pinned b
 Source: Captain 2026-10-10 (a mode that produces the walk list from the map); issue #571 ("along the journey map's story order").
 Verified by: `node --test kc-journey-map/lib/journey-walk.test.mjs` on the example (r1 yields reserve-copy, check-ready, collect-book in that order); a mutated copy with two steps swapped yields the swapped order.
 
-**AC-6**: `release_acceptance.py check` accepts the R3-shape report and routes it: the one-owner defect to its owner, the known gap to its gap story, 8 works, `clean: no`.
-Source: `r3-acceptance.md` (results table, X-1 routed to a single task).
-Verified by: `python3 kc-dev-flow-2/scripts/test_release_acceptance.py` asserts exit 0 and each of those output lines for the R3-shape fixture. Falsifier: deleting the `owners` entry of the defect makes it print `route: review-release` instead.
-
-**AC-7**: The R4-shape reports separate environment from defect and route cross-task holes to `review-release`: the morning report (4 not-reachable, one cause) prints `Captain decision: environment` and `clean: no`; the evening report (6 works, proof performed) prints `route: review-release` for the defect with a story and no owner, `route: bug task, no story` for the defect with no story, and `route: <owner>` for the one-owner defect.
-Source: `r4-acceptance.md` (four "not reachable" rows, C-1, C-2, C-3); issue #571 item 2 ("A failure that crosses tasks feeds back into a release review (signal 3)"); Captain decision on the environment question below.
-Verified by: the same test file, two fixtures, asserting those lines.
-
-**AC-8**: A malformed report is refused: each of a schema string other than `release-acceptance/v1`, a walk story missing, a duplicate or unknown story, a result outside the four, a `not-reachable` row without `cause`, a non-works row naming no finding, a `works` row without evidence, an undefined finding id, a `defect` without `owners`, and an absent proof line exits 1 with its own message.
-Source: the Captain's wording 「功能做完但流程不能走，沒有進入點」 requires every story to carry a result; the contract rule that consumers refuse unknown schemas.
-Verified by: `test_release_acceptance.py`, one mutation of the R3-shape fixture per bullet, each asserting exit 1 and the message.
-
 **AC-9**: `journey-accept.mjs` turns a report into map proposals only: on a map whose six stories are `exists`, a `broken` row proposes `unverified`, a `missing-entry-point` row proposes `gap`, `works` and `not-reachable` propose no status change, `not-reachable` stories and `not_tested` appear in the proposed `unproven` text; the journey file bytes are unchanged afterwards; a wrong schema string or a story not on the release exits 1.
 Source: Captain 2026-10-10 ("takes the result back"); `cell-contract.md` ("`exists` ... does not mean delivery acceptance").
 Verified by: `node --test kc-journey-map/lib/journey-accept.test.mjs` with a sha256 comparison of the YAML before and after.
@@ -182,14 +170,6 @@ Verified by: `node --test kc-journey-map/lib/journey-accept.test.mjs` with a sha
 **AC-10**: The acceptance task cannot become a journey orphan: with the task's frontmatter as specified (`release-acceptance` set, no `journey*` fields), `findOrphans` lists nothing; the same task with `journey` and `journey-release` set and no story is listed.
 Source: Captain 2026-10-10 (「現在開」 on the acceptance task as a normal workflow task); `progress.mjs` `findOrphans` (journey-progress exits 1 on an orphan).
 Verified by: a case in `kc-journey-map/lib/progress.test.mjs`. Limit: unit level; AC-11 covers the live listing.
-
-**AC-11**: The trigger and its duplicate guard work on a real Spacedock listing: in a disposable workflow, `spacedock new <release>-acceptance` plus `status --set <task> release-acceptance=<journey>/<R>` makes `status --archived --all-fields --json` show the field, and the documented guard finds it; `journey-progress.mjs` on that workflow reports release R `acceptance: pending delivery acceptance` once all its story tasks are done.
-Source: Captain 2026-10-09 ("每個 release 應該要在故事都完成後，立一張票做 release scale 的驗收").
-Verified by: a scratch-workflow run recorded in the implementation Stage Report, in the style of the archived `release-review` rehearsal ("a scratch-workflow rehearsal ... `status --set`"). Not yet verified: whether Spacedock 0.27.2 keeps an unknown frontmatter field through `state commit`.
-
-**AC-12**: The plugins stay joined only by the two documented schemas: neither imports files from the other plugin directory; each doc prints an example JSON that its consumer's test loads; `review-release` text is unchanged; both plugins pass the sanitize check with no adopter name, host or data in docs or fixtures; no version file is edited; the ADR passes `adr_lint.py`.
-Source: Captain 2026-09-06 (contracts only, schemas with the producer); Scope non-goal ("rewriting the existing review-release mode"); repository rule on public plugins.
-Verified by: an import-scan test in each plugin; `git diff --stat origin/main -- kc-journey-map/skills/kc-journey-map/references/release-review.md` empty; `Skill: kc-plugin-forge:kc-plugin-forge-sanitize-check kc-dev-flow-2` and `... kc-journey-map` clean; `python3 kc-dev-flow-2/scripts/adr_lint.py` exit 0; both existing CI suites green.
 
 ## Captain decisions
 
@@ -243,6 +223,27 @@ Captain: 「可以」 (chat, 2026-10-23)
 Asked: 「把版本驗收的第二個 PR 拆成新任務、先過設計閘門，目前這張只用 #709 結案，可以嗎？」
 Supersedes: AC-6, AC-7, AC-8, AC-11, AC-12 (no replacement: moved to release-walk-picky-reviewers-and-director)
 Design: this task closes with PR 1 (iamcxa/kc-claude-plugins#709, kc-journey-map: AC-5, AC-9, AC-10); the kc-dev-flow-2 half of the walk, with Amendments 1 and 3, moves to task release-walk-picky-reviewers-and-director for its own design gate.
+Superseded text:
+
+**AC-6**: `release_acceptance.py check` accepts the R3-shape report and routes it: the one-owner defect to its owner, the known gap to its gap story, 8 works, `clean: no`.
+Source: `r3-acceptance.md` (results table, X-1 routed to a single task).
+Verified by: `python3 kc-dev-flow-2/scripts/test_release_acceptance.py` asserts exit 0 and each of those output lines for the R3-shape fixture. Falsifier: deleting the `owners` entry of the defect makes it print `route: review-release` instead.
+
+**AC-7**: The R4-shape reports separate environment from defect and route cross-task holes to `review-release`: the morning report (4 not-reachable, one cause) prints `Captain decision: environment` and `clean: no`; the evening report (6 works, proof performed) prints `route: review-release` for the defect with a story and no owner, `route: bug task, no story` for the defect with no story, and `route: <owner>` for the one-owner defect.
+Source: `r4-acceptance.md` (four "not reachable" rows, C-1, C-2, C-3); issue #571 item 2 ("A failure that crosses tasks feeds back into a release review (signal 3)"); Captain decision on the environment question below.
+Verified by: the same test file, two fixtures, asserting those lines.
+
+**AC-8**: A malformed report is refused: each of a schema string other than `release-acceptance/v1`, a walk story missing, a duplicate or unknown story, a result outside the four, a `not-reachable` row without `cause`, a non-works row naming no finding, a `works` row without evidence, an undefined finding id, a `defect` without `owners`, and an absent proof line exits 1 with its own message.
+Source: the Captain's wording 「功能做完但流程不能走，沒有進入點」 requires every story to carry a result; the contract rule that consumers refuse unknown schemas.
+Verified by: `test_release_acceptance.py`, one mutation of the R3-shape fixture per bullet, each asserting exit 1 and the message.
+
+**AC-11**: The trigger and its duplicate guard work on a real Spacedock listing: in a disposable workflow, `spacedock new <release>-acceptance` plus `status --set <task> release-acceptance=<journey>/<R>` makes `status --archived --all-fields --json` show the field, and the documented guard finds it; `journey-progress.mjs` on that workflow reports release R `acceptance: pending delivery acceptance` once all its story tasks are done.
+Source: Captain 2026-10-09 ("每個 release 應該要在故事都完成後，立一張票做 release scale 的驗收").
+Verified by: a scratch-workflow run recorded in the implementation Stage Report, in the style of the archived `release-review` rehearsal ("a scratch-workflow rehearsal ... `status --set`"). Not yet verified: whether Spacedock 0.27.2 keeps an unknown frontmatter field through `state commit`.
+
+**AC-12**: The plugins stay joined only by the two documented schemas: neither imports files from the other plugin directory; each doc prints an example JSON that its consumer's test loads; `review-release` text is unchanged; both plugins pass the sanitize check with no adopter name, host or data in docs or fixtures; no version file is edited; the ADR passes `adr_lint.py`.
+Source: Captain 2026-09-06 (contracts only, schemas with the producer); Scope non-goal ("rewriting the existing review-release mode"); repository rule on public plugins.
+Verified by: an import-scan test in each plugin; `git diff --stat origin/main -- kc-journey-map/skills/kc-journey-map/references/release-review.md` empty; `Skill: kc-plugin-forge:kc-plugin-forge-sanitize-check kc-dev-flow-2` and `... kc-journey-map` clean; `python3 kc-dev-flow-2/scripts/adr_lint.py` exit 0; both existing CI suites green.
 
 ## FO alignment
 
@@ -418,3 +419,14 @@ AC-6 to AC-8, AC-11 and AC-12 stay as written but are rewired as above; if FO pr
 ### Summary
 
 PR 2 becomes one extension plus a director pass: trigger by `due` and a `pr_watch.py` next-line, registry by ADR 0012, reviewers operating the walk on at least two Claude models with a declared single-model fallback, deferred findings fed to both reviewers and director, a ruling table capped at three tasks, and closure through a docs-only PR. I recommend returning to ideation for a Captain gate: Amendment 3 turns the walker into reviewers and adds the director's ruling table, which changes the report shape, three of the five remaining criteria and the budget he approved (two PRs, one now large), and four points are his: the 16b closing path, the director's model and input rule (item 8), a non-Claude operating reviewer (R-e), and the `journeys:` README key. AC-1 to AC-4 are moved; `design_surfaces.py check` stays red until FO adds "no replacement" to Amendment 2's `Supersedes:` line.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: Move AC-6, AC-7, AC-8, AC-11 and AC-12 under `Superseded text:` in Captain Amendment 4 per ADR 0005 (moved to release-walk-picky-reviewers-and-director, no replacement here); change no other criterion and no code
+  The five blocks moved verbatim under Amendment 4's `Superseded text:`; AC-5, AC-9 and AC-10 untouched; no code. `design_surfaces.py check index.md` exits 0 ("design surfaces presentable").
+- DONE: Append a short stage report naming the moved criteria and confirming the task's remaining criteria are AC-5, AC-9 and AC-10, delivered by PR #709
+  `## Acceptance criteria` now holds exactly AC-5, AC-9 and AC-10, the three PR #709 (kc-journey-map, Draft) delivers with the evidence in the cycle 2 report; AC-1 to AC-4 sit in Amendment 2 and AC-6, AC-7, AC-8, AC-11, AC-12 in Amendment 4.
+
+### Summary
+
+Criteria moved per ADR 0005; the task's remaining scope is PR #709 alone. Nothing was pushed except the state branch by `spacedock state commit`.
