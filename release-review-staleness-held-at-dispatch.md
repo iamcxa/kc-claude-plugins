@@ -15,6 +15,17 @@ gates:
                 id: briefing:release-review-staleness-held-at-dispatch:backlog:attempt-1:revision-1
                 digest: sha256:1c7555d374a257bf44a3e8d5bea90c4b4310b7781b20bfa5319ba9ed6c2f2ce5
                 room-ref: ./release-review-staleness-held-at-dispatch/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-review-staleness-held-at-dispatch:backlog:1
+                briefing: briefing:release-review-staleness-held-at-dispatch:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T04:34:27.271348Z"
+                decision: approve
+                reason: Captain 「照更正後的建議退回設計重做」 (chat, 2026-10-23), answering the bound question, put before it in chat with FO's corrected recommendation; approving enters ideation.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
