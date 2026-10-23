@@ -49,6 +49,17 @@ gates:
                 id: briefing:ops-inbox-r1-setup-and-isolation:ideation:attempt-2:revision-1
                 digest: sha256:796125a8f2c1b4f0abada6aeeeab5363903700eb583b8732242d17bfa65ca49e
                 room-ref: ./ops-inbox-r1-setup-and-isolation/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ops-inbox-r1-setup-and-isolation:ideation:2
+                briefing: briefing:ops-inbox-r1-setup-and-isolation:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-23T05:25:27.54142Z"
+                decision: approve
+                reason: 'Captain answered 「准」 in chat on 2026-10-23 to the ideation gate question (attempt 2), which stated that approving accepts as written: the proposed title and Scope; AC-6 to AC-12, with AC-8 superseding AC-3 and AC-11 superseding AC-4; D1 at-most-once, D4 Netlify one site per project, D6 no agent-creations ruleset on relay in r1 with a runbook check instead, D7 the producer''s subject as the incident key, D8 a joined event recorded only, D9 the live event from a relay deploy preview, D10 a 3.5-day budget with AC-5''s second adapter deferred; and enters implementation. Relay''s emitter is a separate relay task.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-23T03:50:16Z
 ---
 
