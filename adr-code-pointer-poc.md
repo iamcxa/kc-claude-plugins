@@ -47,6 +47,7 @@ gates:
                 state: pending
 started: 2026-10-23T08:26:43Z
 worktree: .worktrees/spacedock-ensign-adr-code-pointer-poc
+pr: local-merge:c27e76590c1d2dc910e7fa2d332242a7534df0b0
 ---
 
 Filed on the Captain's 「可以，先測試這個，然後再考慮其他方案。」 (chat, 2026-10-23), answering FO's 「我建議的下一步：撤回這道關卡，先開一個 POC。同一題，在程式碼旁加上那行註解，Claude 和 Codex 各跑 2 次，共 4 次。…要撤回這道關卡、改開註解 POC 嗎？」, after FO proposed a code-side comment as a cheaper alternative to an edit-time hook (dev2 task `adr-protected-path-guard`, its backlog gate withdrawn).
