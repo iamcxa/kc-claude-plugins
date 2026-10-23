@@ -296,3 +296,15 @@ test("gate: a pull request from a non-ops branch is ignored", opts, async () => 
   assert.deepEqual([out.result, out.why], ["no-op", "branch feature/x is not ops/*"]);
   gh.close();
 });
+
+test("the askpass helper answers git's prompts only for the GitHub host", () => {
+  const ask = (prompt, env = {}) => spawnSync("sh", [join(here, "../trigger/askpass.sh"), prompt], { env: { OPS_GIT_TOKEN: "tok", PATH: process.env.PATH, ...env }, encoding: "utf8" });
+  assert.equal(ask("Username for 'https://github.com': ").stdout.trim(), "x-access-token");
+  assert.equal(ask("Password for 'https://x-access-token@github.com': ").stdout.trim(), "tok");
+  for (const p of ["Password for 'https://x-access-token@evil.example': ", "Password for 'https://x-access-token@github.com.evil.example': ", "Username for 'https://evil.example': ", "Passphrase for key: "]) {
+    const r = ask(p);
+    assert.notEqual(r.status, 0, p);
+    assert.equal(r.stdout, "", p);
+  }
+  assert.equal(ask("Password for 'https://x-access-token@ghe.example': ", { OPS_ASKPASS_HOST: "ghe.example" }).stdout.trim(), "tok");
+});

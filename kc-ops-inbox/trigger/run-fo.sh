@@ -8,7 +8,7 @@ HERE=$(cd "$(dirname "$0")" && pwd)
 MODEL_VAR=ANTHROPIC_API_KEY; [ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && MODEL_VAR=CLAUDE_CODE_OAUTH_TOKEN
 FO_HOME=$(mktemp -d)
 ASKPASS="$FO_HOME/askpass"
-printf '#!/bin/sh\ncase "$1" in Username*) echo x-access-token ;; *) echo "$OPS_GIT_TOKEN" ;; esac\n' > "$ASKPASS"; chmod 700 "$ASKPASS"
+cp "$HERE/askpass.sh" "$ASKPASS"; chmod 700 "$ASKPASS"
 
 clean=(env -i PATH="$PATH" HOME="$FO_HOME" GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1 GIT_TERMINAL_PROMPT=0
   GIT_ASKPASS="$ASKPASS" OPS_GIT_TOKEN="$OPS_GIT_TOKEN" GH_TOKEN="$OPS_GIT_TOKEN" "$MODEL_VAR=${!MODEL_VAR:-}"

@@ -37,7 +37,7 @@ export const ROW_DEFS = [
   ["R15", "S10", "ruleset main matches its file, no bypass"],
   ["R16", "S10", "ruleset ops-branches matches its file, no bypass"],
   ["R17", "S10", "ruleset state-branch matches its file, no bypass"],
-  ["R18", "S10", "no project workflow holds a secret an agent branch could reach"],
+  ["R18", "S10", "no project workflow holds a secret or a write token an agent branch could reach"],
   ["R19", "S10", "ruleset trigger-main matches its file, no bypass"],
   ["R20", "S11", "ops-gate.yml is on the default branch, pinned to a commit"],
   ["R21", "S9", "project variable OPS_CAPTAIN_LOGIN is set"],
@@ -77,6 +77,12 @@ export function holdsSecret(text) {
   return /\$\{\{[^}]*\bsecrets\b/.test(rest) || /^\s*secrets:\s*inherit\b/m.test(rest);
 }
 
+// The workflow's automatic GITHUB_TOKEN may write: no permissions block (the repository default applies), write-all, or any write grant.
+export function tokenCanWrite(text) {
+  if (!/^\s*permissions\s*:/m.test(text)) return true;
+  return /permissions\s*:\s*write-all/.test(text) || /^\s+[a-z-]+\s*:\s*write\s*(#.*)?$/m.test(text);
+}
+
 const globToRe = (g) => new RegExp(`^${g.replace(/[.+^${}()|\\]/g, "\\$&").replace(/\*\*/g, "\u0000").replace(/\*/g, "[^/]*").replace(/\u0000/g, ".*")}$`);
 const AGENT_REFS = ["ops/x", "spacedock-state/ops"];
 
@@ -112,12 +118,12 @@ export function triggersOf(text) {
   return { events, push };
 }
 
-// Workflows that hold a secret and could run on a ref the agent can write: a pull request or workflow_run event, or a push to
+// Workflows that hold a secret or a write-capable token and could run on a ref the agent can write: a pull request or workflow_run event, or a push to
 // an ops/* or state ref, or (when the agent may create any branch) to any ref but the default branch.
 export function exposedWorkflows(files, { defaultBranch, agentCreationsApplied }) {
   const out = [];
   for (const f of files) {
-    if (!holdsSecret(f.text)) continue;
+    if (!holdsSecret(f.text) && !tokenCanWrite(f.text)) continue;
     const t = triggersOf(f.text);
     const pullish = t.unreadable || [...t.events].some((e) => /^(pull_request|pull_request_target|pull_request_review|workflow_run|issue_comment|issues)$/.test(e));
     let pushHit = false;
@@ -296,7 +302,7 @@ export async function readback(ctx, { project, trigger, inbox, slackLink, workfl
       files.push({ name: f.name, text: Buffer.from(r.json.content ?? "", "base64").toString("utf8") });
     }
     const exposed = exposedWorkflows(files, { defaultBranch: repo.json.default_branch, agentCreationsApplied: applied });
-    const seen = `${rulesetNote}; ${files.filter((f) => holdsSecret(f.text)).length} of ${files.length} workflows use a secret; reachable from an agent ref: ${exposed.length ? exposed.join(", ") : "none"}`;
+    const seen = `${rulesetNote}; ${files.filter((f) => holdsSecret(f.text)).length} of ${files.length} workflows use a secret and ${files.filter((f) => tokenCanWrite(f.text)).length} can write with GITHUB_TOKEN; reachable from an agent ref: ${exposed.length ? exposed.join(", ") : "none"}`;
     if (!exposed.length) return set("R18", "PASS", seen);
     if (workflowsChecked) return set("R18", "PASS", `Captain read ${exposed.join(", ")} and attested no secret job runs for an agent branch or pull request; ${seen}`);
     set("R18", "FAIL", seen, "guard or remove the listed workflows' secrets, apply ruleset-agent-creations.json (S10), or read them and rerun with --workflows-checked");

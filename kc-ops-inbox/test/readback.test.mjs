@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
-import { readback, render, rulesetMatches, holdsSecret, triggersOf, exposedWorkflows, parseArgs, ROW_DEFS } from "../bin/readback.mjs";
+import { readback, render, rulesetMatches, holdsSecret, tokenCanWrite, triggersOf, exposedWorkflows, parseArgs, ROW_DEFS } from "../bin/readback.mjs";
 import { handle } from "../core/inbox-core.mjs";
 import { rig, SECRET, TRIGGER, PROJECT } from "./rig.mjs";
 
@@ -17,7 +17,7 @@ const INBOX = "https://site.netlify.app/inbox";
 function world(over = {}) {
   const w = {
     triggerPrivate: true, workflows: 1, branches: 1, triggerWorkflow: `    ref: ${SHA}\n`, vars: ["OPS_PROJECT_REPO", "OPS_AGENT_APP_CLIENT_ID"], projectVars: ["OPS_CAPTAIN_LOGIN"],
-    secrets: ["CLAUDE_CODE_OAUTH_TOKEN", "OPS_AGENT_APP_PRIVATE_KEY"], stateBranch: true, gate: `  ref: ${SHA}\n`, projectWorkflows: [{ name: "ci.yml", text: "on: push\njobs: {}\n" }],
+    secrets: ["CLAUDE_CODE_OAUTH_TOKEN", "OPS_AGENT_APP_PRIVATE_KEY"], stateBranch: true, gate: `  ref: ${SHA}\n`, projectWorkflows: [{ name: "ci.yml", text: "on: push\npermissions:\n  contents: read\njobs: {}\n" }],
     gates: {}, reviews: {}, prHead: "b".repeat(40), runCount: 5, runConclusion: "success", rulesets: { project: ["ruleset-main.json", "ruleset-ops-branches.json", "ruleset-state-branch.json"], trigger: ["ruleset-trigger-main.json"] },
     ...over,
   };
@@ -183,6 +183,18 @@ test("R18 does not pass on the ruleset alone: a secret job triggered on ops/** f
   assert.equal((await r18(withWf([opsPush], true), { workflowsChecked: true })).v, "PASS", "the Captain's attestation names the files and overrides");
   assert.equal((await r18(withWf([{ name: "s.yml", text: "on: push\nenv: ${{ secrets.X }}\n" }], true))).v, "FAIL", "push with no branch filter reaches ops/**");
   assert.equal((await r18(withWf([{ name: "t.yml", text: "on: [workflow_dispatch]\nenv: ${{ secrets.X }}\n" }], true))).v, "PASS");
+});
+
+test("a workflow an agent branch can trigger fails R18 when its automatic token can write, with no secret in it", async () => {
+  const wf = (perm) => ({ name: "lint.yml", text: `on:\n  pull_request:\n${perm}jobs:\n  a:\n    steps:\n      - run: x\n` });
+  for (const perm of ["", "permissions: write-all\n", "permissions:\n  contents: write\n"]) {
+    const row = await r18(withWf([wf(perm)], true));
+    assert.equal(row.v, "FAIL", JSON.stringify(perm));
+    assert.match(row.obs, /can write with GITHUB_TOKEN; reachable from an agent ref: lint\.yml/);
+  }
+  assert.equal((await r18(withWf([wf("permissions:\n  contents: read\n")], true))).v, "PASS");
+  assert.equal(tokenCanWrite("jobs:\n  a:\n    permissions:\n      pull-requests: write\n"), true);
+  assert.equal(tokenCanWrite("permissions: {}\njobs: {}\n"), false);
 });
 
 test("every form of the secrets context counts as holding a secret, and an exact GITHUB_TOKEN reference does not", () => {

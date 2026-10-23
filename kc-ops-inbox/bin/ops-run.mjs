@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // The trigger repository's run: open an incident, join an event to it, or read the agent token back (selftest).
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync, chmodSync, appendFileSync } from "node:fs";
+import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync, chmodSync, appendFileSync, copyFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -56,7 +56,7 @@ export async function run(env = process.env) {
     origin: `${env.OPS_GIT_BASE || "https://github.com"}/${project}.git`,
   };
   const askpass = join(ctx.work, "askpass");
-  writeFileSync(askpass, '#!/bin/sh\ncase "$1" in Username*) echo x-access-token ;; *) echo "$OPS_GIT_TOKEN" ;; esac\n');
+  copyFileSync(join(here, "../trigger/askpass.sh"), askpass);
   chmodSync(askpass, 0o700);
   ctx.gitEnv = { ...process.env, GIT_ASKPASS: askpass, OPS_GIT_TOKEN: agent.token, GIT_TERMINAL_PROMPT: "0", GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_NOSYSTEM: "1" };
 
