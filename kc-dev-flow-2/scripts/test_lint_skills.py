@@ -138,7 +138,7 @@ class RouteMutationTests(unittest.TestCase):
         self.refuses("skills/implementation/SKILL.md: uses <package> but has no 'Package root:' line")
 
     def copy_kc_adr_skill(self, name):
-        shutil.copytree(ROOT.parent / "kc-adr/skills/read-adr", self.root / "skills" / name)
+        shutil.copytree(ROOT.parent / "kc-adr/skills/read-adr", self.root / "skills" / name, dirs_exist_ok=True)
 
     def test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not(self):
         self.copy_kc_adr_skill("read-adr")

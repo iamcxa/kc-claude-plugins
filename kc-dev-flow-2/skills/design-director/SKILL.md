@@ -26,7 +26,7 @@ In 1a and 2a follow the [review brief](review-brief.md) and return its report. I
 
 ## ADR folder
 
-Before you review, invoke `kc-adr:read-adr` on the ADR folder the caller names (`ADR folder: <path>`, or `none`) and open the records whose titles bear on how the screen looks or on host components. List what you opened in `adrs_read`, each with the Status that skill reports; rely only on the record that skill finds in force. A question a record in force already settles is not a decision: rule it by the record and write `adr: <path>`. If the skill is not available, write `adrs_read: unavailable` and treat no question as settled by a record.
+Before you review, invoke `kc-dev-flow-2:read-adr` on the ADR folder the caller names (`ADR folder: <path>`, or `none`) and open the records whose titles bear on how the screen looks or on host components. List what you opened in `adrs_read`, each with the Status that skill reports; rely only on the record that skill finds in force. A question a record in force already settles is not a decision: rule it by the record and write `adr: <path>`. If the skill is not available, write `adrs_read: unavailable` and treat no question as settled by a record.
 
 ## Decline check (passes 1b and 2b)
 
