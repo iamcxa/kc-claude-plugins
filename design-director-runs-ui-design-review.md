@@ -894,3 +894,16 @@ reasoning: high
 ### Summary
 
 PASSED on f3ac6101: both Codex P2 and Polish F4, F5 are fixed, each P2 test fails only on its own mutant, the live pass 2a run now writes the relative path the check accepts, and AC-1 to AC-13 and AC-14 hold. One new Deferred risk (F8: a comment or CRLF on the `rulings:` line refuses a valid report, fail-closed); AC-15 stays owed.
+
+## Stage Report: implementation (cycle 4)
+
+- DONE: In kc-dev-flow-2/scripts/design_surfaces.py: scope the built-screen review, finding and decline-check lookups to the current validation report as validation_report(body) already does for the F bullets; refuse a design_decline_check root whose value is a scalar rather than a mapping; treat an empty evidence: or change: value as missing; one failing-then-passing test per fix in kc-dev-flow-2/scripts/test_design_surfaces.py, each shown failing on the matching mutant
+  Commit e033956e. `check_built_screen` now reads every `Built screen ...` line from the last validation Stage Report. A `design_decline_check:` line with a value after its colon is refused. An empty `evidence:` or `change:` is missing. Tests: `test_the_review_finding_and_decline_lines_are_read_from_the_current_validation_report_only` (an earlier cycle's waiver no longer satisfies; preserved lines no longer trip the duplicate refusal; mutant: search the whole body, shown failing both ways), `test_a_scalar_design_decline_check_root_is_refused` (mutant: drop the root-value test), `test_an_empty_evidence_or_change_counts_as_missing` (mutant: key-presence only). Narrowing: the built-screen lines must now sit in the validation Stage Report, not anywhere in the body (principles.md says so); AC-6's "in the body or the stage report" is narrowed by this authorization.
+- DONE: Set ADR 0030's status to Accepted (the Captain approved the design at the ideation gate, 2026-10-22); docs/adr lint still exits 0
+  Status Accepted; `adr_lint.py docs/adr --since 126efaf0 --require 0030` exit 0.
+- DONE: All package test files pass; push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  All 20 test files OK (design_surfaces 173); pushed f3ac6101..e033956e, no -u, no force; CI green on e033956e (unit tests 2m2s, parity 53s); `evidence=roborev:1069` clean on e033956e. The saved shipped-agent decline reports still pass the check.
+
+### Summary
+
+The Cycle 2 P1 and three P2 are fixed with a mutation-checked test each, and ADR 0030 is Accepted. No criterion text changed.
