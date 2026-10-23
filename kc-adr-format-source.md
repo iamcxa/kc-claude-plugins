@@ -6,7 +6,7 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 worktree: .worktrees/spacedock-ensign-kc-adr-format-source
-pr: 710
+pr: pr-merge:710
 gates:
     version: 1
     records:
