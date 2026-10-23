@@ -54,6 +54,8 @@ Design: this task is the next priority; the sync also carries what iamcxa/kc-cla
 
 ## FO alignment
 
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-23 — do these amendments withdraw what the Captain approved, and what changes in the build?
+
 Captain rulings (ideation sitting, 2026-10-23, chat, one at a time; to be bound at the ideation gate):
 - D1 「對，除非有更好的做法，不然先這樣應該才可以確保結果。或是，除非這個 read-adr 技能對 dev2 沒用」, answering 「D1 改成「附上，把讀 ADR 技能複製進 dev2」，可以嗎？」 (after his 「為何不要？技能如果搬過去變成 dev2 的其實沒關係，對吧？」): the read-adr skill is copied into kc-dev-flow-2/skills/read-adr (resolving as kc-dev-flow-2:read-adr), kept identical to kc-adr's by the same sync and compare as the two tools; the design director and other dev2 text name the dev2 copy. FO checks before implementation that read-adr is used by dev2 (consumers: the design-director skill, the AGENTS.md ADR pointer, new-work-checks-what-exists-first) and whether its text names kc-adr paths that a byte copy cannot carry. Override: recommended only the two tools (design D1); Captain chose copying the skill too; area: single-install scope.
 - D2 「可以」, answering 「寫 ADR 的「保護檔案」規則，不另外手寫，直接用複製過來的那份，可以嗎？」: no hand-written Protects rule in kc-dev-flow-2/skills/implementation/principles.md; the rule arrives with the copied read-adr skill folder (writing.md steps 4 to 6), byte-identical to kc-adr's. Override: recommended hand-writing it (design D2); Captain chose the copied skill's text; area: Protects rule placement. Also answered in chat: Claude Code supports plugin dependencies and Codex does not (dev2-poc kc-adr-dependency-poc, 2026-10-22), so one copy mechanism serves both hosts.
