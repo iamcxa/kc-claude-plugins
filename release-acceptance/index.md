@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-23T03:28:31Z
 worktree: .worktrees/spacedock-ensign-release-acceptance
-pr: iamcxa/kc-claude-plugins#709
+pr: pr-merge:709
 ---
 
 Issue iamcxa/kc-claude-plugins#571: a release is reviewed as one journey before its tasks are split, but nothing enforces that review, and nothing walks a release as a whole after its stories are built.
@@ -275,6 +275,7 @@ Needed at ideation: the design of both halves (the kc-dev-flow-2 rule and task, 
 Surfaces: none
 Visible change: none
 Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-23 — do these amendments withdraw what the Captain approved, and what changes in the build? (called after the #709 merge; owed before the merge ask and missed by FO)
+  Result (proceed, high): nothing merged contradicts an approval; all 12 approved criteria survive verbatim under their amendments with live owners; #709 delivers AC-5, AC-9, AC-10 and the approved Part 2 mode only; no new task needed. Noted: kc-plugin-forge-sanitize-check on kc-journey-map runs before its Release PR merges.
 
 ## Number guards
 
