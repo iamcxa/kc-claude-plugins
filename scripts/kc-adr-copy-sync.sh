@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-# usage: kc-adr-copy-sync.sh sync|check
-# kc-dev-flow-2 ships copies of three kc-adr paths so a dev2 user installs one package.
-# sync overwrites each copy from kc-adr; check exits 1 when a copy's contents differ.
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"

@@ -13,7 +13,6 @@ FAIL=0
 pass() { printf 'ok - %s\n' "$1"; PASS=$((PASS + 1)); }
 fail() { printf 'not ok - %s\n' "$1"; FAIL=$((FAIL + 1)); }
 
-# A scratch tree holding only the script and the three kc-adr sources, synced.
 fresh_tree() {
   rm -rf "$TMP_DIR/t"
   mkdir -p "$TMP_DIR/t/scripts" "$TMP_DIR/t/kc-adr/references" "$TMP_DIR/t/kc-adr/scripts" \
@@ -25,7 +24,6 @@ fresh_tree() {
   "$TMP_DIR/t/scripts/kc-adr-copy-sync.sh" sync >/dev/null 2>&1
 }
 
-# expect_check LABEL EXPECTED_RC NEEDLE: run check on the scratch tree.
 expect_check() {
   local label="$1" want="$2" needle="$3" output rc
   output="$("$TMP_DIR/t/scripts/kc-adr-copy-sync.sh" check 2>&1)"
