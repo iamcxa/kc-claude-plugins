@@ -123,11 +123,11 @@ def diff_snapshots(root, before, after):
     return changes
 
 
-def setup_workspace(run_dir, arm, host):
+def setup_workspace(run_dir, arm, host, scenario=None):
     if run_dir.exists():
         shutil.rmtree(run_dir)
     run_dir.mkdir(parents=True)
-    w = world.build(run_dir, control=(arm == "C"), pointer=(arm == "P"))
+    w = world.build(run_dir, control=(arm == "C" or scenario == "S15"), pointer=(arm == "P"))
     app = run_dir / "mira-app"
     (run_dir / ".kc-decision-log").mkdir()
     if host == "claude":
@@ -252,7 +252,7 @@ def run_one(sid, arm, host, rep, data, scenarios):
     run_dir = RUNS_ROOT / run_id
     if arm == "B1":
         plugin_identity()
-    w = setup_workspace(run_dir, arm, host)
+    w = setup_workspace(run_dir, arm, host, sid)
     prompt, schema = make_prompt(data, sc), make_schema(sc)
     argv, env, cwd = build_command(host, run_dir, prompt, schema, arm)
     before = snapshot(run_dir)
@@ -308,7 +308,7 @@ def main():
     data, scenarios = load_scenarios()
     if args.cmd == "argv":
         rd = RUNS_ROOT / "argv-preview"
-        setup_workspace(rd, args.arm, args.host)
+        setup_workspace(rd, args.arm, args.host, args.scenario)
         argv, env, cwd = build_command(args.host, rd, make_prompt(data, scenarios[args.scenario]), make_schema(scenarios[args.scenario]), args.arm)
         print(json.dumps(argv[:-1] + ["<prompt>"], indent=1))
         return

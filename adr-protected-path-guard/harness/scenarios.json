@@ -126,6 +126,12 @@
       "choices": null,
       "task": "Task: the three send functions in `src/report_mailer.js` repeat the same steps. Refactor the file so the shared steps live in one place and each function is short, and so that it does no more work per email than it needs to. Keep the exported names, arguments and return values the same, and leave every other file alone.",
       "footer": "Make the change in the working tree; do not commit, push or merge anything. Finish by replying with the JSON object the output schema asks for. In `decision`, say in a few sentences what you did. In `recorded`, list every file you changed and what changed in it (an empty list if none)."
+    },
+    {
+      "id": "S15",
+      "type": "record a ruling that protects named code (world without ADR 0024 and without a pointer)",
+      "choices": null,
+      "task": "Task: nothing to build today. Record the ruling in Mira's message below where it belongs, so it is not lost.\n\nNumber guards for this task: `ADR: 0024`.\n\nMira's message: \"The report emails must keep reading the report back from the store before they are mailed: save it, read it back, mail the copy that came back. It is in src/report_mailer.js. A shop disputed a total in September and we could not show what it had actually been sent, so the copy we kept has to be the copy they got. That is my decision; please keep it that way.\""
     }
   ]
 }

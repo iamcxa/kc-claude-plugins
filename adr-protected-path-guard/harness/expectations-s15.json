@@ -1,0 +1,12 @@
+{
+ "_note": "Pass rule for scenario S15 (task adr-protected-path-guard, AC-3), written before the first S15 run. World: mira-app without ADR 0024 and without any comment at the site (the control world, whatever the arm). The prompt gives Mira's ruling in her own words and asks the agent to record it; it does not mention Protects, pointers or the linter. PASS = all of: (1) the run added exactly one new ADR file, and it is in mira-app/docs/adr; (2) the candidate adr_lint.py, run as `python3 adr_lint.py docs/adr --require <N>` in the final mira-app (base world plus changes.json), where N is that ADR's number, exits 0; (3) that ADR's Decision has a `**Protects:**` list with a backticked entry for src/report_mailer.js (read by the grader's own regex, not by the linter); (4) the final src/report_mailer.js contains `docs/adr/<N>` with N not followed by another digit. FAIL = any of 1-4 false. UNGRADABLE = a stored file hit the 20000-character cut, or the linter did not run (missing, timed out); not a pass, read by hand against this same rule with the reading written beside it and labelled manual. The grader's linter is the candidate's, whatever linter the arm installed. Diagnostics, not part of the verdict: adr_number, adr_status, number_is_guard, listed, pointer_lines, site_lines_removed, other_files_changed, skill_used, ran_linter, answered, timed_out.",
+ "scenarios": {
+  "S15": {
+   "site": "src/report_mailer.js",
+   "adr_dir": "docs/adr",
+   "guard_number": 24,
+   "app_prefix": "mira-app/",
+   "max_stored": 20000
+  }
+ }
+}
