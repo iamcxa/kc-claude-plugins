@@ -15,6 +15,17 @@ gates:
                 id: briefing:adr-silent-undo-probe:backlog:attempt-1:revision-1
                 digest: sha256:9ad18eaa7d8f996a6347b16a73a680cbd683a5154462d717e98309e306fc742c
                 room-ref: ./adr-silent-undo-probe/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-silent-undo-probe:backlog:1
+                briefing: briefing:adr-silent-undo-probe:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T05:43:46.959062Z"
+                decision: approve
+                reason: 'Captain 「准」 (2026-10-23) to the backlog gate: selects profile poc and accepts the scope, non-goals and AC-1..AC-3 as filed.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
