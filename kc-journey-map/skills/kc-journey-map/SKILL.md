@@ -34,8 +34,8 @@ is judged against.
 | **draw** | no journey exists yet | the board, derived from code |
 | **check** | a journey exists — board, screenshot, or a list of cards | the mismatch table **first**, then the corrected board |
 | **sequence companion** | a sequence is requested, or handoffs/branches need explanation alongside a journey | an optional native editable page from repository `.mmd` — `references/sequence.md` |
-| **interrogate** | a release is cut and about to go to development, or built stories need their gaps found | every question on the release's stories answered, deferred, or linked to a decision record — `references/interrogation.md` |
-| **review-release** | a task is admitted into a release, the Captain rules a scope change, a UAT failure crosses tasks, or a batch is about to enter implementation | the release walked as one journey before its tasks are split: proposed map edit, walk table with the holes named, slice check, task list — `references/release-review.md` |
+| **interrogate** | a release is cut and about to go to development, or built stories need their gaps found | one Codex stranger's questions, ranked; each ruling lands on the map question by kc-adr's five questions — `references/interrogation.md` |
+| **review-release** | a task is admitted into a release, the Captain rules a scope change, a UAT failure crosses tasks, or a batch is about to enter implementation | interrogate first, then the release walked as one journey before its tasks are split: map edit, walk table with the holes named, slice check, task list, and a dated review record — `references/release-review.md` |
 | **add-story** | a capability was named and deferred in conversation ("not in this release") and a journey for it already exists | one appended `gap` story under its step, no evidence, no `release` — see "Adding one deferred story" below |
 
 Claude and Codex use this same entrypoint and sequence reference. Offer a sequence

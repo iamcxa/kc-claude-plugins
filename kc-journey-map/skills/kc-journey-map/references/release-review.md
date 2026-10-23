@@ -7,7 +7,15 @@ batch is about to enter implementation. Tasks are added one at a time; nothing e
 checks that together they still form one complete journey. The Captain decides
 membership. The worker writes no task field and no code.
 
-Follow this order: **map first → path walk → slice check → task split.**
+Follow this order: **interrogate and ask → map first → path walk → slice check → task split → record.**
+
+## 0. Interrogate and ask first
+
+Unless the last record's `Interrogation:` date postdates the last change to this release's
+stories in the journey file, run `interrogation.md` on the release before anything else. It
+leaves each question answered, deferred or open, and lists the decisions only the Captain can
+settle, ranked, to ask one at a time. Reviewing first splits tasks on answers an interrogation
+can still overturn. After step 0 the walk re-checks only the answers changed since it.
 
 ## 1. Update the map first
 
@@ -65,8 +73,36 @@ list the exhaustive task set per story so it can write `journey-required-tasks`.
 One `journey-story` per task: a task that delivers several stories is a limit
 `kc-journey-progress` does not read; say so and propose one task per story.
 
+## Record
+
+Write one file per release at the path `node lib/journey-review.mjs path <journey.yaml> <release-id>`
+prints (`<journey file directory>/reviews/<journey>/<release-id>.md`). Each review rewrites it, so git
+history holds every review. Propose it in the same docs PR as the map edit; no validation gate covers
+that PR, and the Captain merges it on his own word. The handoff's pre-cut copy is the map with the
+answers applied and membership not yet changed; a copy taken before the answers refuses with
+`requirements changed or deleted`.
+
+```
+# Release review: <journey>/<release-id>
+Reviewed: <YYYY-MM-DD>; map at <commit read>; code at <repository>@<commit>
+Interrogation: <YYYY-MM-DD>; questions <n>; dropped <n>; decision rows <n>; asked <n>; open after <n>; codex <model> <effort> lens[; codex <model> <effort> plain: <why hard to reverse>]
+## Map edit
+## Walk
+## Holes
+## Slice
+## Tasks
+| Task | journey-story | Required tasks | Carries |
+```
+
+On the `Interrogation:` line, `questions` is what the stranger returned, `dropped` those removed as unconfirmed or duplicate, and `asked` the decision rows put to the Captain over every sitting. `Carries` holds `ADR owed: <question id>` entries separated by commas, or `-`. The record holds no
+ruling: a ruling is the map question's `answer:` and `source:` (`interrogation.md`). Run
+`node lib/journey-review.mjs check <record> <journey.yaml>` before proposing; exit 1 names what to
+return to. It checks shape, order and ruling fields, not that the walk was done well or that the
+Captain was asked.
+
 ## Output
 
 The proposed map edit; the walk table with the holes named; the slice count with its
-split or reason; the task list with proposed journey fields. Report anything the walk
-could not establish as unverified rather than filling it in.
+split or reason; the task list with proposed journey fields; the record path and the
+checker's pass line. Report anything the walk could not establish as unverified rather
+than filling it in.
