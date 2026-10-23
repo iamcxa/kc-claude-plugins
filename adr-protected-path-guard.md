@@ -261,6 +261,14 @@ Surfaces: none
 Visible change: none
 Release review: not needed: the map was skipped for kc-adr by the Captain's authorization.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-23, chat
+Captain: 「准重跑」 (kc-adr FO's Paseo session)
+Asked: "你要決定的：要不要准 Claude 重跑 2 次？ 用同一題的單一 repo 版本，ADR 和程式碼放在同一個 repo，判定規則不變，跑之前先存檔。"
+Supersedes: none
+Design: none
+
 ## Stage Report: ideation
 
 - DONE: Design the kc-adr change at main 0701aa8debd45b3fe7eab7e930141319d52f3aa2: (1) the optional template field, (2) the exact pointer format and how the linter finds it, (3) the `writing.md` text for the writer, (4) the two linter checks. Show exact text and the check's algorithm.
