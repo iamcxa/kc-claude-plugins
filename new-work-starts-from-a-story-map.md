@@ -81,6 +81,8 @@ Verified by: the same test file, one mutation of the complete fixture per case, 
 
 ## FO alignment
 
+Delivery (FO, 2026-10-23): the Captain merged iamcxa/kc-claude-plugins#704 himself at head f0d3f442 (merge commit 8041829e, merged by iamcxa, read with gh pr view), answering 「#704 由你自己按合併，可以嗎？我建議這樣做。」 with 「704 合併」. FO made no merge ask for #704: delivery_gate.py check held it with "reserved ADR 0029 has no docs/adr/0029-*.md at PR head f0d3f442d5e6", because ADR 0029 lands on the sibling #705 (backlog task merge-check-reads-two-pr-tasks). The ask text FO prepared is /tmp/fo-q-704.txt, not committed.
+
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-22 — Codex rounds 1 to 3 on #704 each found new input-validation gaps in journey-review.mjs check (round 3: an impossible Interrogation date, a release ruling without status answered, duplicate question ids); what is the smallest next step to a merge ask?
 
 Captain rulings on D1 to D4 (batch-5 sitting, 2026-10-22, chat, each given to FO's question one at a time; to be bound at the ideation gate):
