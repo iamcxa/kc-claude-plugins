@@ -15,6 +15,17 @@ gates:
                 id: briefing:adr-code-pointer-poc:backlog:attempt-1:revision-1
                 digest: sha256:ce770ddd976f4aaef4a1e368d2a6e53504ca4d3f7f3d62d81fd5880bb6e209f9
                 room-ref: ./adr-code-pointer-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-code-pointer-poc:backlog:1
+                briefing: briefing:adr-code-pointer-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T08:26:09.734904Z"
+                decision: approve
+                reason: 'Captain 「可以，先測試這個，然後再考慮其他方案。」 (chat, 2026-10-23), answering FO''s question quoted in this briefing: accepts the comment arm, Claude and Codex x2, 4 runs, profile poc.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Filed on the Captain's 「可以，先測試這個，然後再考慮其他方案。」 (chat, 2026-10-23), answering FO's 「我建議的下一步：撤回這道關卡，先開一個 POC。同一題，在程式碼旁加上那行註解，Claude 和 Codex 各跑 2 次，共 4 次。…要撤回這道關卡、改開註解 POC 嗎？」, after FO proposed a code-side comment as a cheaper alternative to an edit-time hook (dev2 task `adr-protected-path-guard`, its backlog gate withdrawn).
