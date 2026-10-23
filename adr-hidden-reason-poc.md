@@ -15,6 +15,17 @@ gates:
                 id: briefing:adr-hidden-reason-poc:backlog:attempt-1:revision-1
                 digest: sha256:3d3a1467a9819ac11eaf8318ea58cc84e466317972954f241eef94cec7409009
                 room-ref: ./adr-hidden-reason-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-hidden-reason-poc:backlog:1
+                briefing: briefing:adr-hidden-reason-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T07:42:35.278987Z"
+                decision: approve
+                reason: 'Captain 「准」 (2026-10-23) to the backlog gate: accepts the question, the no-ADR control, 12 counted runs and the stop point, profile poc.'
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Filed on the Captain's 「開」 (chat, 2026-10-23), answering FO's 「要不要開「理由藏起來」POC？做法是 ADR 保護的設計在程式碼上看不出理由，再加一組對照，確認題目真的會讓 agent 犯錯。」, after `adr-silent-undo-poc` closed with no cell needing the ADR because the protected flag was visible at every call site.
