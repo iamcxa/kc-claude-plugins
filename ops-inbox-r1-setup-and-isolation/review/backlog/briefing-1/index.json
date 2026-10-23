@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ops-inbox-r1-setup-and-isolation:backlog:attempt-1:revision-1",
+  "question": "Admit inbox-r1 as a Pilot (profile pilot, five-stage route) with the five criteria, non-goals, a 3-day budget (FO proposal) and the stop conditions as written? Approving accepts all of them as written, including the 3-day budget, and enters ideation on opus.",
+  "artifacts": [
+    {
+      "id": "artifact:ops-inbox-r1-setup-and-isolation:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/31718557e63010f02d265d9f4a00f66bc4fadf74/ops-inbox-r1-setup-and-isolation.md",
+      "rev": "sha256:195cb7b1652c0e37c9d6e5ddc9d5e123970165a1182c3814351198c507e0017b",
+      "mediaType": "text/markdown",
+      "summary": "inbox-r1 Pilot: contract v1 with validator and fixtures; one setup command that does the agent-doable steps, lists the Captain-only ones and reads each back; an inbox credential that can start only the project's ops workflow; a signed event yields one observed Slack message and one ops task plus Draft PR whose GitHub review is recorded without dismissing the approval; a platform-neutral core under two adapters."
+    }
+  ]
+}
