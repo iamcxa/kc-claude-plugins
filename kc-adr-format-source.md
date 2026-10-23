@@ -232,3 +232,24 @@ Not decisions, recorded as residual: the unverified assumption that `read-adr-re
 ### Summary
 
 kc-adr gets the template and linter as byte copies of dev2's (one phrase changed) plus an extracted `AdrLintTests` file, and `writing.md` points at them; dev2's sync is a `cp` and its compare a `cmp` over the two stable paths. The wording change did not break dev2's lint or tests in a scratch overlay run, but that run is the only thing that can show it, so AC-2 must include it. Two Captain decisions: D1 (steps 2 and 5 in `writing.md` contradict the new numbering sentence) and D2 (README and boundary-contract claims become false); the CI step for kc-adr's tests is a requirement on the dev2 task. Unverified: that `read-adr-reporting-rule-followup` does not also edit `writing.md`.
+
+## Stage Report: implementation
+
+- DONE: Build the approved design: kc-adr/references/adr-template.md ("the worker or FO" -> "the recommender"), kc-adr/scripts/adr_lint.py (byte-identical), kc-adr/scripts/test_adr_lint.py (AdrLintTests only); apply the approved writing.md replacement text; D1 and D2; no dev2 file changes.
+  Commit 57b86de4 on spacedock-ensign/kc-adr-format-source, base c3514876339cb732d0bea8b2d2dd45c234bcdeaf (rebased ff from 8bfac961; the dev2 linter, template, test file, kc-adr, README and boundary-contract had no diff between the two). Six files: three new kc-adr files, `writing.md` (replacement section plus items 2 and 5 per D1, version stamp 0.28.0 read from `kc-dev-flow-2/.claude-plugin/plugin.json` at base), README kc-adr paragraph (0.1.0 -> 0.1.1, tools stated), boundary-contract tools paragraph.
+- DONE: AC-1 evidence.
+  `git show $B:kc-dev-flow-2/scripts/adr_lint.py | cmp - kc-adr/scripts/adr_lint.py` exit 0; template diff is the single hunk `21c21`; `git diff --stat $B..$C -- kc-dev-flow-2` is empty. Fails if the linter differs by one byte or any dev2 file is touched.
+- DONE: AC-2 evidence.
+  kc-adr `test_adr_lint.py`: Ran 8 OK, from kc-adr and from /tmp. dev2 at candidate: `test_adr_doc_checks.py` 9 OK, `test_lint_skills.py` 35 OK, `test_dispatch_records.py` 47 OK, `lint-skills.py` exit 0. Overlay (scratch `git archive` of C, kc-adr template and linter copied onto dev2 paths): same four green, repo's 29 ADRs pass the linter. Not run: `test_sd_dispatch.py` (requires `--sd-plugin-root`, no pinned Spacedock root provided; this change touches no dev2 file); extension suites.
+- DONE: Two template falsifiers.
+  Label `**Recommended:**` -> `Recommended:` in a scratch copy: `test_adr_lint.py` FAILED (failures=3) (asserts the required-record rule and the template-is-valid test); `## Status` -> `## State`: FAILED (failures=5). Neither would pass with a damaged template.
+- DONE: AC-3 evidence.
+  Text check on `## Where the tools are`: both `<kc-adr>/` paths present, both `<package>/` template/linter paths absent, `<package>/scripts/number_guards.py reserve` present, the "one above the highest" sentence also names `number_guards.py reserve`. From `kc-adr/skills/read-adr`, `test -f ../../references/adr-template.md && test -f ../../scripts/adr_lint.py` exit 0. Dry run in a scratch git repo: highest 0003 -> new 0004 written from the template; `adr_lint.py docs/adr --require 0004` and `--since <main sha>` both exit 0; a second file numbered 0003 exits 1 ("number 3 is also used by"). Limit as designed: one tree only, concurrent writers are not caught (ADR 0002).
+- DONE: Closing checks.
+  `version-parity-check.sh` exit 0 (kc-adr 0.1.1 all sources); `skill-frontmatter-lint.sh` exit 0; `comment_ratio.py` "code lines 216, comment lines 1, 0.5%, maximum 5% met" (the one comment is in the byte-identical linter); `design_surfaces.py check` exit 0 "presentable"; `doc_impact.py` lists 0 documents; sanitize-check on kc-adr (rules from `sanitize-rules.yaml`, 8 block literals, REJECT and WARN patterns): 0 BLOCK, 0 REJECT, 0 WARN. No ADR added or changed, no `## Number guards` section.
+- DONE: Roborev step.
+  `roborev_gate.py --repo <worktree> --base c3514876...` exit 0: `clean on 57b86de48; evidence=roborev:1066`.
+
+### Summary
+
+kc-adr now ships the ADR template and linter as byte copies of dev2's (one phrase changed) plus `test_adr_lint.py`, `writing.md` points at them with the single-writer numbering rule, and the README and boundary contract no longer say kc-adr ships no tools. No dev2 file, version or CI workflow was touched. Residuals for FO: `kc-adr/skills/read-adr/SKILL.md` still ends "no reserved number means do not write one: ask the coordinator" (owned by `read-adr-reporting-rule-followup`; it may also edit `writing.md`, so a merge collision is possible, unchecked); `test_sd_dispatch.py` not run; the CI step that runs `kc-adr/scripts/test_adr_lint.py` and the compare's trigger paths are owed by dev2 task `kc-adr-tools-with-dev2-copy`; push, PR and release are FO's.
