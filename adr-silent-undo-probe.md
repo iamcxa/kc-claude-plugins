@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:adr-silent-undo-probe:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:adr-silent-undo-probe-ideation-1
+              briefing:
+                id: briefing:adr-silent-undo-probe:ideation:attempt-1:revision-1
+                digest: sha256:5853ea9f380eddf474bd65976b4ba9cd340d0a966dd93b7284a509b7227fd08e
+                room-ref: ./adr-silent-undo-probe/review/ideation/briefing-1
 started: 2026-10-23T05:44:16Z
 ---
 

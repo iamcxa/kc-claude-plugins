@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-silent-undo-probe:ideation:attempt-1:revision-1",
+  "question": "Hold this task here? It moves to the dev2-poc workflow as adr-silent-undo-poc per Captain amendment 1; this copy stays at ideation, held, and is not dispatched again.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-silent-undo-probe:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b679ddee2b2b2f6c307485692cb18d0cc080774e/adr-silent-undo-probe.md",
+      "rev": "sha256:ae00c7b3ece443856306d73ae344fea2f9cb02355acd33cc825ea0756c59c12f",
+      "mediaType": "text/markdown",
+      "summary": "Profile poc does not match this five-stage route (README Schema: accepts pilot or prod only); the ideation worker skipped by the poc route and wrote no design. The same scope now runs in dev2-poc."
+    }
+  ]
+}
