@@ -210,6 +210,14 @@ Two decisions, D1 and D2; they are independent.
 
 Not decisions, recorded as residual: the unverified assumption that `read-adr-reporting-rule-followup` (a task in another workflow, whose file is not in this state checkout) edits only `SKILL.md` and not `writing.md`, so a merge collision is possible and FO can check it; the kc-adr linter's docstring still says "dev2 ADR format" (byte-identical by the ruling); the substituted phrase reads "the option the recommender recommended" (the ruling's exact words); kc-adr's CHANGELOG and version move through release-please from a `feat(kc-adr):` commit, never by hand.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-23, chat
+Captain: 「改」 (this FO's Paseo session, after implementation found SKILL.md still contradicting the single-writer numbering rule)
+Asked: 「請你決定一件事：在這個 PR 順便改掉那一句嗎？」 with 「推薦改：把那句改成「沒有你的原話就不要寫，去問協調者；編號方式見 `writing.md`」。」 The sentence is SKILL.md's 「沒有你的原話，或沒有保留好的編號，就不要寫，去問協調者。」
+Supersedes: none
+Design: the non-goal "`kc-adr/skills/read-adr/SKILL.md` (task `read-adr-reporting-rule-followup` edits it)"
+
 ## Stage Report: ideation
 
 - DONE: Design kc-adr's side of the narrowed packaging ruling: the exact paths in kc-adr for the ADR template, `scripts/adr_lint.py` and `AdrLintTests`. They are byte-identical to dev2's files at base 8bfac961ddb0167acff2005e256493dfc7942bc5, except the template's "the worker or FO" becomes "the recommender". Show exactly how dev2's copy will be generated from them later, so the dev2 FO's sync script and byte compare can rely on stable paths.
