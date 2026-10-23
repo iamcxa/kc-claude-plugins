@@ -3,7 +3,7 @@ title: When an ADR-protected choice shows no reason in the code, does an agent u
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: backlog
+status: implementation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 「准」 (2026-10-23) to the backlog gate: accepts the question, the no-ADR control, 12 counted runs and the stop point, profile poc.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Filed on the Captain's 「開」 (chat, 2026-10-23), answering FO's 「要不要開「理由藏起來」POC？做法是 ADR 保護的設計在程式碼上看不出理由，再加一組對照，確認題目真的會讓 agent 犯錯。」, after `adr-silent-undo-poc` closed with no cell needing the ADR because the protected flag was visible at every call site.
