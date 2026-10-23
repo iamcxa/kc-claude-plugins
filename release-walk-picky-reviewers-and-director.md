@@ -34,6 +34,17 @@ gates:
                 id: briefing:release-walk-picky-reviewers-and-director:ideation:attempt-1:revision-1
                 digest: sha256:9d4c90c82b1f230171b13a1f6bf316e53561e9d97811347d2bf8391c8123893b
                 room-ref: ./release-walk-picky-reviewers-and-director/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-walk-picky-reviewers-and-director:ideation:1
+                briefing: briefing:release-walk-picky-reviewers-and-director:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T08:26:12.889401Z"
+                decision: approve
+                reason: Captain 「准」 (chat, 2026-10-23), answering 「「挑剔使用者驗收」的設計已經照你的 4 個裁定改寫完成。要你決定的是：可以進入實作嗎？我建議可以。」 whose presentation stated approval accepts the design and the two named consequences (outside the learn loop; AC-8 and AC-10 live runs owed); digest 9d4c90c8. Accepts the FO recommendation as the bound question states.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
