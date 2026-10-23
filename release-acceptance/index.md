@@ -53,6 +53,17 @@ gates:
                 id: briefing:release-acceptance:validation:attempt-1:revision-1
                 digest: sha256:eb6620a860068f193c0a21686fbeae63dcbd81ed4e14feae1d9326003eb069dc
                 room-ref: ./review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-acceptance:validation:1
+                briefing: briefing:release-acceptance:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T13:21:59.177753Z"
+                decision: approve
+                reason: 'Captain 「准」 answering the briefing-1 question (merge #709 at d84ebde04c874524ede1d55587db9b9a1692c627; approving accepts keeping the note field, unproven.current and Which mode when)'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-23T03:28:31Z
 worktree: .worktrees/spacedock-ensign-release-acceptance
 pr: iamcxa/kc-claude-plugins#709
