@@ -3,7 +3,7 @@ title: Does an agent quietly undo an ADR-protected choice during an unrelated re
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 「准」 (2026-10-23) to the backlog gate: selects profile poc and accepts the scope, non-goals and AC-1..AC-3 as filed.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
