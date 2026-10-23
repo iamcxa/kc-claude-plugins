@@ -118,7 +118,9 @@ advises the next smallest integrated delivery step. Their agents and skills reta
 the existing role boundaries and Opus/xhigh policy. Neither is a routine gate,
 and POC defaults to no consultation. Observer reads FO's writes to one task's
 state against the workflow rules; its agent declares Sonnet, and it reports without
-repairing. Exact `kc-dev-flow-2:` references prevent
+repairing. The design director reviews a ui task's pictures and screenshots and
+rules on each decline the author or validator proposes; its agent declares Sonnet, and
+it advises and holds no gate. Exact `kc-dev-flow-2:` references prevent
 declared links from accidentally selecting the baseline; actual host resolution
 still needs a separate behavioral test.
 

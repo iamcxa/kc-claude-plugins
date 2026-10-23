@@ -33,6 +33,21 @@ Captain ruling, is a finding for FO.
 When the change alters what a user sees, the evidence includes a screenshot of the
 changed screen at the candidate; reading the code or a passing render test is not
 seeing it.
+When the task's `Surfaces:` include `ui` and it has a `Design review:` line, dispatch
+`kc-dev-flow-2:design-director` with that screenshot (pass 2a: `Screenshots:`,
+`Criteria:` naming the criteria whose text names the running screen, `ADR folder:` as
+in [design-review.md](../ideation/design-review.md)). Give `Screenshots:` as the path relative to the task folder (for example
+`design/built-1.png`) and add `Task folder:` with its absolute path so the director can open it;
+the report's `preview:` copies that relative path, which is the form the check resolves and
+the only one it accepts. Save its report as
+`design/validation-<N>.yaml` and write `Built screen review: design/validation-<N>.yaml`
+in your validation Stage Report (the check reads the last one) with one `Built screen finding <n>:` line per finding: `F<N>` for a MAJOR, naming
+its bullet in your report, and `declined: <reason>` or `Needs decision: <text>` for a
+MINOR. Send each MINOR you would decline to the director first (pass 2b), save the
+rulings as `design/validation-declines-<N>.yaml` and name them on a
+`Built screen decline check:` line; a decline it overrules or sends to a decision
+becomes `Needs decision:`. Only the Captain's quoted words waive the review:
+`Built screen review: waived 「<his words>」`.
 
 For a decisive check, identify evidence that it detects the relevant known error.
 Reuse applicable negative or mutation evidence; only when it is missing, run the

@@ -103,6 +103,14 @@ class RouteMutationTests(unittest.TestCase):
         self.change("agents/observer.md", "model: sonnet", "model: inherit")
         self.refuses("observer agent: existing sonnet/high policy changed")
 
+    def test_design_director_keeps_its_declared_model(self):
+        self.change("agents/design-director.md", "model: sonnet", "model: inherit")
+        self.refuses("design-director agent: existing sonnet/high policy changed")
+
+    def test_design_director_needs_its_skill(self):
+        shutil.rmtree(self.root / "skills/design-director")
+        self.refuses("missing skills: design-director")
+
     def test_bare_script_name(self):
         self.change("skills/implementation/principles.md", "<package>/scripts/comment_ratio.py", "comment_ratio.py")
         self.refuses("skills/implementation/principles.md: script comment_ratio.py is named without")
