@@ -60,6 +60,7 @@ Verified by: a text check of `writing.md`, and one recorded agent run per host (
 ## FO alignment
 
 Alignment: needed at ideation: the field name, the pointer format and how the linter finds pointers are design choices for the Captain.
+Result: direction aligned before dispatch: the Captain chose the pointer-and-linter route over a hook (「可以。」, then 「都准」 to the revised backlog gate, 2026-10-23); the field name, pointer format and pointer lookup are presented as options with a recommendation at the ideation gate.
 Surfaces: none
 Visible change: none
 Release review: not needed: the map was skipped for kc-adr by the Captain's authorization.
