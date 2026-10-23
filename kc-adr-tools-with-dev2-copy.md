@@ -3,7 +3,7 @@ title: kc-adr holds the ADR writing tools, and dev2 ships a CI-synced copy so a 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-23T12:13:05Z
 worktree: .worktrees/spacedock-ensign-kc-adr-tools-with-dev2-copy
+pr: iamcxa/kc-claude-plugins#713
 ---
 
 ## Scope
