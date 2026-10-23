@@ -3,7 +3,7 @@ title: Does a code-side pointer to the protecting ADR stop an agent from undoing
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
