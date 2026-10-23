@@ -15,6 +15,17 @@ gates:
                 id: briefing:release-walk-picky-reviewers-and-director:backlog:attempt-1:revision-1
                 digest: sha256:6de9d2629d6e8b4fc0ca15135fccd425d1501e32d0f28ae67ef95ffdcc3225d1
                 room-ref: ./release-walk-picky-reviewers-and-director/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-walk-picky-reviewers-and-director:backlog:1
+                briefing: briefing:release-walk-picky-reviewers-and-director:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T07:25:41.956214Z"
+                decision: approve
+                reason: Captain 「可以」 (chat, 2026-10-23), answering the bound question, put before it in chat; approving enters ideation.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
