@@ -36,6 +36,17 @@ gates:
                 id: briefing:inbox-exactly-once-delivery-poc:validation:attempt-1:revision-1
                 digest: sha256:030ef420bf49a417e0fd31625e1098f16c1c96d841614ee793539422bbc20eb2
                 room-ref: ./inbox-exactly-once-delivery-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:inbox-exactly-once-delivery-poc:validation:1
+                briefing: briefing:inbox-exactly-once-delivery-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T03:37:18.577415Z"
+                decision: approve
+                reason: Captain answered 「准」 in chat on 2026-10-23 to the validation gate question, which stated that approving accepts PASSED at POC depth for candidate cd079cb8 and closing on the evidence with no PR, keeping branch spacedock-ensign/inbox-exactly-once-delivery-poc as reference. He did not answer F1 (the AC-3 Slack leg); it stays an open, unmeasured limit carried into inbox-r1, not a ruling. No cleanup, PR or downstream task is authorized.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-21T08:46:20Z
 ---
 
