@@ -359,6 +359,11 @@ Recommended order: no hard constraint. If fo-write-checks-parse-top-level merges
 
 ADR: 0030
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-23): Codex review on #708 af4fb87e (review:5623263990) left two P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); the findings name the line and the input, so FO authorizes the fix directly with validation Polish F4 and F5, then a fresh validation recheck.
+  - P2 comment:4355556546: design_surfaces.py reads ruling items anywhere in the decline-check report, not only under design_decline_check.rulings, and accepts items missing their required fields. P2 comment:4355556553: the built-screen F-number lookup searches the whole task body, so an F bullet kept from an earlier validation cycle satisfies a new one.
+
 ## Stage Report: ideation
 
 - DONE: Design the kc-dev-flow-2:design-director agent and skill per Amendment 1 and the backlog gate resolution: duty wording (owns the open design decisions; every decline the author proposes is checked against the picture by the design director; upheld declines listed at the ideation gate for the Captain, who keeps the final say), two passes (pictures at ideation, built-screen screenshots at validation, with what only the running screen can settle handed forward), a host-component decline checked against that component, model sonnet; read intake/ui-design-review-measurement-2026-10-22.md and intake/design-role-research-2026-10-22.md; prototype the duty wording outside the repository and replay it on the 10 already-raised kc-paseo-plugins findings (mapping in the measurement intake) to show whether each would now reach the Captain or a fix, before proposing it
