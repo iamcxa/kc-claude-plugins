@@ -38,6 +38,9 @@ gates:
 
 ## FO alignment
 
+Captain rulings on D1 to D5 (ideation sitting, 2026-10-23, chat, each given to FO's question one at a time; to be bound at the ideation gate):
+- D5 「拆」, answering 「這張任務要不要拆成兩半？」 with FO's recommendation (option A): this task delivers Part A (the walk: smoke check, at least two reviewers, the director's ruling table, the record) in one PR; Part B (the due trigger, the journeys key, the pr_watch.py line) is a follow-up task, release-walk-due-trigger, after this PR and #711 merge. D4 goes with Part B to that task.
+
 Alignment: needed at ideation; the open points named in the starting design are his.
 Surfaces: none
 Visible change: none
