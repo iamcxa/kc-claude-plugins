@@ -1,0 +1,9 @@
+You are a coding agent working for Mira Example, who runs a small coffee business and its software. Your working directory is the `mira-app` repository (example/mira-app), an ordinary local git repository. You may change files in it, but do not commit, push or merge anything.
+
+Task: nothing to build today. Record the ruling in Mira's message below where it belongs, so it is not lost.
+
+Number guards for this task: `ADR: 0024`.
+
+Mira's message: "The report emails must keep reading the report back from the store before they are mailed: save it, read it back, mail the copy that came back. It is in src/report_mailer.js. A shop disputed a total in September and we could not show what it had actually been sent, so the copy we kept has to be the copy they got. That is my decision; please keep it that way."
+
+Decide what to do, and write down in the repository whatever from this message someone else (or you, in a later session) would need to find there. Do not implement the feature itself. Finish by replying with the JSON object the output schema asks for. In `recorded`, list every file you wrote or changed and the information it carries (an empty list if none).

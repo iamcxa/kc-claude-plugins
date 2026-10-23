@@ -1,0 +1,13 @@
+{
+ "decision": "Recorded Mira's ruling as new ADR 0024, since it is her decision on direction, and added a pointer comment in src/report_mailer.js. I did not change any behaviour. The ADR linter passed.",
+ "recorded": [
+  {
+   "path": "docs/adr/0024-report-emails-mail-the-copy-read-back-from-the-store.md",
+   "info": "Accepted ADR 0024 with Mira's verbatim words (2026-10-23). Report emails must save the report, read it back from the store, and mail the copy that came back. Reason: a shop disputed a total in September and we could not show what it had been sent. Lists src/report_mailer.js under Protects."
+  },
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added one comment line near the top, `see docs/adr/0024-report-emails-mail-the-copy-read-back-from-the-store.md`, pointing at the ruling. No code changed."
+  }
+ ]
+}

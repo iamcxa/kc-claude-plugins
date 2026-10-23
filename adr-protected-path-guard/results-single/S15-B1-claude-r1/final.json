@@ -1,0 +1,13 @@
+{
+ "decision": "Recorded Mira's ruling as ADR 0024 (her own words, the reserved number), because it is her decision on direction. Added a pointer comment in src/report_mailer.js. I implemented nothing, and the ADR linter passes.",
+ "recorded": [
+  {
+   "path": "docs/adr/0024-report-emails-mail-the-copy-read-back-from-the-store.md",
+   "info": "New ADR 0024, Accepted, with Mira's verbatim words. Rule: report emails save the report, read it back from the store and mail the copy that came back. Reason: a total was disputed in September and we could not show what had been sent. Lists src/report_mailer.js under Protects."
+  },
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added one comment line near the top, 'see docs/adr/0024-report-emails-mail-the-copy-read-back-from-the-store.md', so the ruling is findable from the code. No logic changed."
+  }
+ ]
+}
