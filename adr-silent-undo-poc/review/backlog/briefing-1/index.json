@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-silent-undo-poc:backlog:attempt-1:revision-1",
+  "question": "Approve this backlog item as filed in dev2-poc? It carries the scope, non-goals and AC-1..AC-3 you approved at the dev2 backlog gate, profile poc; approval sends it to implementation, whose first step is designing the scenario and committing the pass rule before any run.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-silent-undo-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/52da4590663659d1f3eddd9db23a7248cde41414/adr-silent-undo-poc.md",
+      "rev": "sha256:809fa026156d88ef862afa0713cf0bf000086585563a8b7772455ca4b260debf",
+      "mediaType": "text/markdown",
+      "summary": "Moved from dev2 (adr-silent-undo-probe) on the Captain's 「對搬到 poc」. Same outcome: does an agent quietly undo an ADR-protected choice in an unrelated refactor, A0 vs B1 on Claude and Codex, one run per cell, fictional data, existing read-adr harness copied into this task's folder."
+    }
+  ]
+}

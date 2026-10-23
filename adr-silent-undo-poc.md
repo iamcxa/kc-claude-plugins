@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:adr-silent-undo-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:adr-silent-undo-poc-backlog-1
+              briefing:
+                id: briefing:adr-silent-undo-poc:backlog:attempt-1:revision-1
+                digest: sha256:4487764ffd094a3926d3af5119fe3f83618b31891e760bebc30856752cd71012
+                room-ref: ./adr-silent-undo-poc/review/backlog/briefing-1
 ---
 
 Moved from the dev2 workflow on the Captain's 「對搬到 poc」 (chat, 2026-10-23), answering FO's "What you need to decide: I recommend moving the task to the POC workflow (`dev2-poc`)." after FO found the dev2 five-stage route accepts only pilot or prod. The scope below is the one he approved there with 「准」 at the dev2 backlog gate (`adr-silent-undo-probe`, 2026-10-23).
