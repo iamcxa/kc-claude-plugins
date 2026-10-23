@@ -75,6 +75,7 @@ Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-23 — do these amendm
 Captain ruling (chat, 2026-10-23): 「按你建議」, answering 「還在等你決定：「原本的使用者再走一次」要選讀法一（我建議），還是讀法二？」, where the readings put were 「讀法一（我建議）：走查任務照原計畫收尾。等修正任務都做完，再用同一個工具做第二次走查，就是圖上的 E。這跟你之前定的「走完就收」不衝突。」 and 「讀法二：走查任務一直開著，等修正都完成、原本的使用者重看過才收。這會推翻你之前定的「走完就收」，任務也會拖很久。」: Amendment 1 point 2 is a second run of the extension on the same release after the fix tasks land; this task closes per D1.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-23 — implementation marks AC-8(b) failed (escalation condition 4 catches every solved item; the opus pass cost more than an all-opus control); what is the smallest next step, given the findings so far?
   Result (escalate to the Captain): land #714 with escalation as D2 ruled; record AC-8 partly met with the measured tokens and AC-6's evidence restated as the design's upper bound; file one follow-up task for the escalation premise. Narrowing condition 4 cannot pass AC-8(b) on this fixture (condition 1 fires on the polish item, whose owning task's ideation ran on opus), and the opus pass cost is mostly fixed context reading (cache reads 242k to 300k of 294k to 358k), so escalation saves tokens only when nothing escalates. FO may accept alone: JSON for YAML, the EXTENSION.md bullet rename, the `Items:` line, AC-9 `not run:` in CI, the one-word release id.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-10-23: Amendment 2 is itself the withdrawal (its Supersedes line names it), and the chief-engineer result above already states the build effect of removing the per-item escalation.
 
 ## Design
 
@@ -310,6 +311,12 @@ Captain: 「准」 (chat, 2026-10-23)
 Asked: 「下一件要你決定：「版本走查」這個任務開工前，要不要把 project-env 那邊試跑後的教訓加進去？我建議加三點。」, with the three points: 「1. 設計總監的裁決附一張對照表：每個抱怨一行，寫明交給哪個任務、驗收時的狀態（修好、修一半、延到哪個版本、不修）和原因。」「2. 你試用之前，先讓原本那幾位挑剔使用者照他們自己的清單再走一次，逐條標記，也可以補新的抱怨。」「3. 你試用時，從這張對照表開始看。」 and 「第四點我建議不加：它要求每個任務的驗證者也重跑相關的抱怨步驟。第 2 點已經在最後找原本的人重看，再加一次只是多花一倍的錢。」
 Supersedes: none
 Design: (1) the director's ruling carries one row per reviewer complaint with the task it went to and its status at acceptance (fixed, partly fixed, deferred to a named release, will not fix) and the reason; (2) before the Captain's UAT, the original picky-user reviewers re-walk their own list, mark each item and may add new complaints; (3) the Captain's UAT starts from that table. A per-task validator re-running the reviewer steps is not included. Source of the proposal: intake/paseo-fo-addendum-2026-10-23.md, points 1 to 3.
+
+### Amendment 2 — 2026-10-23, chat
+Captain: 「好」 (chat, 2026-10-23)
+Asked: 「要我照這個方向改嗎？」, after 「我的看法是：現在最有幫助的，是把「省錢的升級機制」拿掉，把剩下的走查工具收進來，然後找一次真的版本來跑。不要再在測試資料上打磨升級規則。」 and the recommendation 「設計總監每次走查只用一個模型：這次走查涉及的任務裡，只要有任何一個是用 opus 設計的，就用 opus，否則用 sonnet。這保留了你說的「跟著設計模型走」，只拿掉「逐項升級」這一層。這樣做會讓 #714 退回去小改一輪，還要重寫 ADR 0033，但之後每次走查都比較便宜，維護的東西也比較少。」
+Supersedes: the per-item escalation in `### Director pass 3 and per-item escalation (Captain D2)`, AC-8 and AC-14 (no replacement for the per-item conditions)
+Design: the design director runs on one model per walk: opus when any task the walk covers was designed on opus, otherwise sonnet.
 
 ## Number guards
 
