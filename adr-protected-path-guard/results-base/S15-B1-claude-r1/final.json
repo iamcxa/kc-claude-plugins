@@ -1,0 +1,9 @@
+{
+ "decision": "Wrote Mira's ruling as ADR 0024 in mira-decisions, using her own words and the reserved number. It is a person's direction, so it belongs in an ADR. I changed no code, since the mailer already saves, reads back and mails the copy. The ADR linter passed.",
+ "recorded": [
+  {
+   "path": "/tmp/ppg/runs-base/S15-B1-claude-r1/mira-decisions/docs/adr/0024-report-emails-mail-the-copy-read-back-from-the-store.md",
+   "info": "New ADR 0024 (Accepted, 2026-10-23). Report emails in mira-app src/report_mailer.js must save the report, read it back from the store and mail the copy that came back, so the kept copy is the copy the shop received. Reason: a total disputed in September could not be shown as sent. Includes Mira's verbatim words. Not committed."
+  }
+ ]
+}

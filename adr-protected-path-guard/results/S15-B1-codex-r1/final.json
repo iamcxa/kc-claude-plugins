@@ -1,0 +1,13 @@
+{
+ "decision": "Recorded Mira\u2019s lasting ruling as Accepted ADR 0024 in mira-app, with pointers beside all three protected mail sequences. Behavior is unchanged; ADR lint passed, and npm test reported no tests.",
+ "recorded": [
+  {
+   "path": "mira-app/docs/adr/0024-report-emails-use-the-copy-read-back-from-the-store.md",
+   "info": "Mira\u2019s exact words, September dispute rationale, and requirement to save, read back, then mail the returned copy."
+  },
+  {
+   "path": "mira-app/src/report_mailer.js",
+   "info": "ADR pointers at the daily, weekly, and correction send sequences."
+  }
+ ]
+}

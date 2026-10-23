@@ -1,0 +1,13 @@
+{
+ "decision": "Mira's message is her own ruling on direction, so I recorded it as a new ADR 0024 in mira-decisions, using her words. I added a one-line pointer comment in report_mailer.js and implemented nothing. The ADR linter passes.",
+ "recorded": [
+  {
+   "path": "/tmp/ppg/runs/S15-B1-claude-r1/mira-decisions/docs/adr/0024-report-emails-mail-the-copy-read-back-from-the-store.md",
+   "info": "New ADR 0024, Accepted, dated 2026-10-23. It holds Mira's verbatim words and the rule: report emails (daily, weekly, correction) save the report, read it back from the store, and mail the copy that came back, so the kept copy is the copy the shop received. The reason is the September disputed total. It names src/report_mailer.js in mira-app. Protects is none, because the linter only accepts files inside the ADR repo."
+  },
+  {
+   "path": "/private/tmp/ppg/runs/S15-B1-claude-r1/mira-app/src/report_mailer.js",
+   "info": "Added one comment line near the top, pointing to mira-decisions docs/adr/0024-report-emails-mail-the-copy-read-back-from-the-store.md. It says the read-back is a ruling. No code logic changed."
+  }
+ ]
+}

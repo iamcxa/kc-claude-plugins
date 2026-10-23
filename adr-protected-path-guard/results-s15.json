@@ -1,0 +1,56 @@
+[
+ {
+  "run": "S15-B1-claude-r1",
+  "scenario": "S15",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "timed_out": false,
+  "source": "results",
+  "plugin_commit": "286ba13ac488222b2cb338406207fad48d2c2f32",
+  "skill_used": true,
+  "ran_linter": true,
+  "other_files_changed": [],
+  "adr_number": null,
+  "adr_status": null,
+  "number_is_guard": null,
+  "listed": [],
+  "pointer_lines": [],
+  "site_lines_removed": null,
+  "linter_exit": null,
+  "verdict": "fail",
+  "reason": "the new ADR mira-decisions/docs/adr/0024-report-emails-mail-the-copy-read-back-from-the-store.md is not in mira-app",
+  "linter_sha256": "203f097c37799e051718ca339035aad64f240b8134c20afb3dfd66cc381b25f4"
+ },
+ {
+  "run": "S15-B1-codex-r1",
+  "scenario": "S15",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "timed_out": false,
+  "source": "results",
+  "plugin_commit": "286ba13ac488222b2cb338406207fad48d2c2f32",
+  "skill_used": true,
+  "ran_linter": true,
+  "other_files_changed": [],
+  "adr_number": 24,
+  "adr_status": "Accepted",
+  "number_is_guard": true,
+  "listed": [
+   "src/report_mailer.js"
+  ],
+  "pointer_lines": [
+   "// see docs/adr/0024-report-emails-use-the-copy-read-back-from-the-store.md",
+   "// see docs/adr/0024-report-emails-use-the-copy-read-back-from-the-store.md",
+   "// see docs/adr/0024-report-emails-use-the-copy-read-back-from-the-store.md"
+  ],
+  "site_lines_removed": 0,
+  "linter_exit": 0,
+  "verdict": "pass",
+  "reason": "one new ADR lists the site, the linter passes, the site carries the pointer",
+  "linter_sha256": "203f097c37799e051718ca339035aad64f240b8134c20afb3dfd66cc381b25f4"
+ }
+]

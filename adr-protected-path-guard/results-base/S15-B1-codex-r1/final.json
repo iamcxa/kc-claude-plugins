@@ -1,0 +1,13 @@
+{
+ "decision": "Recorded Mira\u2019s ruling as Accepted ADR 0024 in mira-app, with an agent-facing pointer. No implementation changed; ADR lint passed, and npm test reported no tests.",
+ "recorded": [
+  {
+   "path": "mira-app/docs/adr/0024-report-emails-send-the-stored-copy.md",
+   "info": "Mira\u2019s verbatim ruling, September dispute rationale, affected mailer, and required save\u2013read\u2013mail sequence."
+  },
+  {
+   "path": "mira-app/AGENTS.md",
+   "info": "Pointer to ADR 0024 for future report email changes."
+  }
+ ]
+}

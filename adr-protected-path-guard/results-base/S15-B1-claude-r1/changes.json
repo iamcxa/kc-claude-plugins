@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-decisions/docs/adr/0024-report-emails-mail-the-copy-read-back-from-the-store.md",
+  "status": "added",
+  "content": "# 24. Report emails mail the copy read back from the store\n\nDate: 2026-10-23\n\n## Status\n\nAccepted\n\n## Context\n\nA shop disputed a total in September, and we could not show what it had actually been sent. The report emails in `src/report_mailer.js` (mira-app) save the report, read it back from the store, and mail the copy that came back.\n\n## Decision\n\n**Words:** \u300cThe report emails must keep reading the report back from the store before they are mailed: save it, read it back, mail the copy that came back.\u300d \u2014 Mira Example, 2026-10-23\n\n**Options considered:**\n- keep save, read back, mail the copy that came back (chosen)\n- none other \u2014 a direct instruction\n\n**Recommended:** none \u2014 a direct instruction\n\nReport emails (daily, weekly and correction) are mailed from the copy read back from the store after saving, never from the in-memory rendering. The copy we keep must be the copy the shop got. Do not remove or bypass the read-back step, for example as a simplification or optimisation.\n\n## Consequences\n\nWe can show what a shop was actually sent. The extra store read per email stays. Only a newer record from Mira reopens this.\n"
+ }
+]

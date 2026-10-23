@@ -1,0 +1,4 @@
+{"run": "S15-B1-claude-r1", "started": 1792747396.623605, "host": "claude", "arm": "B1", "scenario": "S15", "rep": 1}
+{"run": "S15-B1-codex-r1", "started": 1792747396.850349, "host": "codex", "arm": "B1", "scenario": "S15", "rep": 1}
+{"run": "S15-B1-claude-r1", "started": 1792747403.372382, "host": "claude", "arm": "B1", "scenario": "S15", "rep": 1}
+{"run": "S15-B1-codex-r1", "started": 1792747403.4004831, "host": "codex", "arm": "B1", "scenario": "S15", "rep": 1}
