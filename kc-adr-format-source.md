@@ -235,6 +235,12 @@ Asked: 「請你決定一件事：在這個 PR 順便改掉那一句嗎？」 wi
 Supersedes: none
 Design: the non-goal "`kc-adr/skills/read-adr/SKILL.md` (task `read-adr-reporting-rule-followup` edits it)"
 
+### Amendment 2 — 2026-10-23, chat
+Captain: 「照建議」 (this FO's Paseo session, validation gate briefing-1)
+Asked: "Approving the recommendation also approves fix 4, which rewords a sentence you approved: writing.md's \"under kc-dev-flow-2, use `number_guards.py reserve` instead\" becomes \"under kc-dev-flow-2, the coordinator reserves it with `number_guards.py reserve`; ask for one.\""
+Supersedes: none
+Design: the numbering sentence in `### The exact \`writing.md\` change`
+
 ## Stage Report: ideation
 
 - DONE: Design kc-adr's side of the narrowed packaging ruling: the exact paths in kc-adr for the ADR template, `scripts/adr_lint.py` and `AdrLintTests`. They are byte-identical to dev2's files at base 8bfac961ddb0167acff2005e256493dfc7942bc5, except the template's "the worker or FO" becomes "the recommender". Show exactly how dev2's copy will be generated from them later, so the dev2 FO's sync script and byte compare can rely on stable paths.
