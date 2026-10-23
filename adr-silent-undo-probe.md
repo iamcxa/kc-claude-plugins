@@ -34,6 +34,14 @@ gates:
                 id: briefing:adr-silent-undo-probe:ideation:attempt-1:revision-1
                 digest: sha256:5853ea9f380eddf474bd65976b4ba9cd340d0a966dd93b7284a509b7227fd08e
                 room-ref: ./adr-silent-undo-probe/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-silent-undo-probe:ideation:1
+                briefing: briefing:adr-silent-undo-probe:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T05:55:12.834391Z"
+                decision: hold
+                reason: 'Captain 「准」 (2026-10-23) to the hold: the task moved to dev2-poc as adr-silent-undo-poc (amendment 1); this copy stays at ideation and is not dispatched again.'
 started: 2026-10-23T05:44:16Z
 ---
 
