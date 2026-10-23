@@ -92,6 +92,14 @@ Visible change: An operator runs one setup command for a project; afterwards eac
 Release review: not needed: the kc-ops-inbox journey map (inbox-r1) is only on branch iamcxa/kc-ops-inbox at 0a1d59ce and not on the trunk; set journey fields when it lands.
 Captain standing ask, 2026-10-21: 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-23, chat
+Captain: 「同意」 (chat, 2026-10-23), after 「對，這樣可以」 to the day-2 axis and the ten-item priority.
+Asked: 「照這樣做嗎？具體是：把現在 r1 的 ideation 退回；第一件事寫這份主軸 ADR；再照優先順序重擬 r1：聚合、帶脈絡的診斷、真的接上 relay 放前面，設定自動化延後。」
+Supersedes: AC-2
+Design: the ideation design of attempt 1 (## Design) is redone around the confirmed axis.
+
 ## Design
 
 ### PRFAQ
