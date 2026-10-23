@@ -50,6 +50,14 @@ Surfaces: none
 Visible change: none
 Release review: not needed: a measurement with no shipped change.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-23, chat
+Captain: 「對搬到 poc」 (this FO's Paseo session)
+Asked: "What you need to decide: I recommend moving the task to the POC workflow (`dev2-poc`)."
+Supersedes: none
+Design: none
+
 ## Stage Report: ideation
 
 - SKIPPED: Design the one new scenario (world additions, ADR text, code site, task prompt, ADR-comment choice)
