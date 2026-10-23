@@ -39,6 +39,8 @@ gates:
 
 ## FO alignment
 
+Captain ruling (chat, 2026-10-23): 「重做檢查」, answering 「這一輪要你決定：要改用「讀任務自己的紀錄」重做這個檢查，還是關掉這張任務？CE 和我都建議重做。」: the hold is rebuilt on the dispatched task's own record (a signal 1 or 2 mark in its `## FO alignment` with no later `Release review: <journey>/<release-id> at <commit>` or `not needed: <reason>` line holds the first implementation dispatch), replacing the map-diff design of ideation cycle 1 and the "compare the map at the record's commit with the map now" wording of release-acceptance Amendment 2's Asked line. Override: recommended (cycle 1 design) the map-diff check; Captain chose the task-record check on chief-engineer advice; area: dispatch-time review hold.
+
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-23 — the ideation replay shows the designed map-diff hold would not have caught R4 (its signals 1 and 2 were not map edits; only an unrelated card reword tripped it); what is the smallest next step?
 
 Alignment: needed at ideation; where the check lives and whether it raises the word budget are his to accept.
