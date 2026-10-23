@@ -35,6 +35,9 @@ TIMEOUT = 900
 ARMS = {"C": "control: no ADR 0024, no help", "A0": "ADR 0024, no help", "B1": "ADR 0024 and plugin kc-adr (skill read-adr)",
         "P": "ADR 0024, no help, one comment line at src/report_mailer.js pointing at the ADR"}
 KC_ADR_ROOT = Path(os.environ.get("KC_ADR_ROOT", ""))
+SINGLE = False  # --single-repo: the workspace holds mira-app only; the ADR folder and the code share one repository
+SINGLE_HEADER = ("You are a coding agent working for Mira Example, who runs a small coffee business and its software. Your working directory is the `mira-app` "
+                 "repository (example/mira-app), an ordinary local git repository. You may change files in it, but do not commit, push or merge anything.")
 
 SMOKE = {"id": "SMOKE", "choices": None, "handoff": False,
          "task": "Task (harness check, not a real task): run `ls docs/adr ../mira-decisions/docs/adr` and `git -C ../mira-decisions rev-parse HEAD`, then in `decision` give the HEAD id and the names of any skills you can see, and the text of any session-start context that lists rulings (or NONE)."}
@@ -59,11 +62,12 @@ def plugin_identity():
 
 
 def make_prompt(data, sc):
-    parts = [data["header"], sc["task"]]
+    parts = [SINGLE_HEADER if SINGLE else data["header"], sc["task"]]
     if sc["id"].startswith("SMOKE"):
         parts.append("Finish by replying with the JSON object the output schema asks for.")
     else:
-        parts.append(sc.get("footer", data["footer"]))
+        footer = sc.get("footer", data["footer"])
+        parts.append(footer.replace("the repositories", "the repository") if SINGLE else footer)
         if sc.get("handoff"):
             parts.append(data["handoff_footer_extra"])
     return "\n\n".join(parts)
@@ -129,6 +133,8 @@ def setup_workspace(run_dir, arm, host, scenario=None):
     run_dir.mkdir(parents=True)
     w = world.build(run_dir, control=(arm == "C" or scenario == "S15"), pointer=(arm == "P"))
     app = run_dir / "mira-app"
+    if SINGLE:
+        shutil.rmtree(run_dir / "mira-decisions")
     (run_dir / ".kc-decision-log").mkdir()
     if host == "claude":
         (app / ".claude").mkdir(exist_ok=True)
@@ -157,7 +163,7 @@ def build_command(host, run_dir, prompt, schema, arm):
         argv = ["claude", "-p", "--model", CLAUDE_MODEL, "--setting-sources", "project", "--settings", str(settings_path),
                 "--strict-mcp-config", "--permission-mode", "dontAsk",
                 "--allowedTools", "Bash", "Read", "Write", "Edit", "Glob", "Grep", "Skill",
-                "--add-dir", str(run_dir / "mira-decisions"), "--no-session-persistence",
+                *([] if SINGLE else ["--add-dir", str(run_dir / "mira-decisions")]), "--no-session-persistence",
                 "--max-budget-usd", "3", "--output-format", "stream-json", "--verbose",
                 "--json-schema", schema_json, prompt]
         if arm == "B1":
@@ -174,7 +180,7 @@ def build_command(host, run_dir, prompt, schema, arm):
         schema_path = run_dir / ".kc-decision-log" / "schema.json"
         schema_path.write_text(schema_json)
         argv = ["codex", "exec", "-m", CODEX_MODEL, "-c", f'model_reasoning_effort="{CODEX_EFFORT}"', "--json",
-                "--skip-git-repo-check", "-s", "workspace-write", "--add-dir", str(run_dir / "mira-decisions"),
+                "--skip-git-repo-check", "-s", "workspace-write", *([] if SINGLE else ["--add-dir", str(run_dir / "mira-decisions")]),
                 "--disable", "memories", "-C", str(app), "--output-schema", str(schema_path),
                 "-o", str(run_dir / ".kc-decision-log" / "last-message.txt"), prompt]
         env = {**os.environ, "HOME": str(run_dir / "home"), "CODEX_HOME": str(chome)}
@@ -285,7 +291,7 @@ def run_one(sid, arm, host, rep, data, scenarios):
     meta = {"run": run_id, "scenario": sid, "arm": arm, "host": host, "rep": rep, "model_requested": CLAUDE_MODEL if host == "claude" else CODEX_MODEL,
             "model_reported": model, "argv": safe_argv, "env_overrides": {k: ("<run>/" + Path(v).name if k in ("HOME", "CODEX_HOME") else v)
                                                                       for k, v in env.items() if k in ("HOME", "CODEX_HOME", "CLAUDE_CODE_DISABLE_AUTO_MEMORY") and v},
-            "cwd": "<run>/mira-app", "exit_code": rc, "timed_out": timed_out, "elapsed_s": round(elapsed, 1),
+            "cwd": "<run>/mira-app", "variant": "single-repo" if SINGLE else "two-repo", "exit_code": rc, "timed_out": timed_out, "elapsed_s": round(elapsed, 1),
             "world": w, "plugin": plugin_identity() if arm == "B1" else None, "stderr_tail": stderr[-1500:], "answered": final is not None}
     (out_dir / "meta.json").write_text(json.dumps(meta, indent=1))
     return meta
@@ -300,11 +306,15 @@ def main():
     r.add_argument("--hosts", required=True)
     r.add_argument("--rep", type=int, default=1)
     r.add_argument("--jobs", type=int, default=3)
+    r.add_argument("--single-repo", action="store_true")
     a = sub.add_parser("argv")
     a.add_argument("--scenario", required=True)
     a.add_argument("--arm", required=True)
     a.add_argument("--host", required=True)
+    a.add_argument("--single-repo", action="store_true")
     args = ap.parse_args()
+    global SINGLE
+    SINGLE = args.single_repo
     data, scenarios = load_scenarios()
     if args.cmd == "argv":
         rd = RUNS_ROOT / "argv-preview"

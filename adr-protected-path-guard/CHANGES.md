@@ -10,3 +10,7 @@ Copied on 2026-10-23 from `_archive/adr-code-pointer-poc/harness/` in the spaced
 - Not changed: `world.py`, `specs.py`, `expected_world.json`, `graders/`, S1..S14, the other expectations and graders.
 - Arms: `B1` with `KC_ADR_ROOT` at the candidate commit (results in `results/`); the same `B1` with `KC_ADR_ROOT` at `0701aa8` (the arm without the change; results in `results-base/`, run with `ADRPOC_RESULTS`).
 - 2026-10-23, before the first run: the falsifier count in this file was corrected from 17 to 16 (`falsifiers-s15-output.txt`: 16 ok, 0 FAIL); no case was removed. The grader, pass rule and scenario did not change after the first run.
+
+## Cycle 2 (Captain amendment 1: single-repo Claude rerun)
+
+- 2026-10-23, before the first cycle-2 run: `harness/run.py` gains `--single-repo`. The workspace then holds `mira-app` only (`mira-decisions` is removed after the deterministic world build, so the world commit check still holds); the header says one repository (`SINGLE_HEADER`), the footer says "the repository" instead of "the repositories", and the claude and codex argv drop `--add-dir .../mira-decisions`. `meta.json` records `variant`. The S15 task text, `expectations-s15.json`, `score_s15.py`, the falsifiers and every other scenario are unchanged. Run ids stay `S15-B1-claude-rN`; the cycle-2 records go to `results-single/` (set `ADRPOC_RESULTS`), apart from `results/` and `results-base/`.
