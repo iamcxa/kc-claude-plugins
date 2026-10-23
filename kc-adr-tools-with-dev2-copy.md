@@ -283,3 +283,66 @@ D1 to D4 are folded in and marked ruled. Copying the read-adr folder is not free
 ### Summary
 
 The sync script, its test, the parity steps, the three copies, the lint exemption, the design-director name and the D5 pointer are in Draft PR 713, with the writing.md edits applied to kc-adr and carried by the sync. Every acceptance criterion was exercised and each falsifier failed under its mutation; the first push was red and the second green as AC-3 requires. Unmeasured: no live model session loaded the copied skill, and whether workers follow the D5 pointer; the copy compare covers contents, not modes; `test_sd_dispatch.py` fails locally here and not in CI (also at base). PR left Draft: not marked ready, no review requested.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #713 head 037d2cf6 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Candidate 037d2cf60d9371180ec9a772e8321644a03f9c25 (detached throwaway worktree, removed after), base fd630b2a (still origin/main by `git ls-remote`). AC-1 to AC-9 each re-run; every falsifier failed as the AC says (below). Limits: no live model session (unverified, agreed); contents-not-modes (modes are equal here, `python3` runs the script so modes do not matter); `test_sd_dispatch.py` needs `--sd-plugin-root`, so rc 2 at both base and candidate here, CI run 39953296698 green (not re-run by me).
+- DONE: Run the install probe yourself in isolated configs on both hosts (kc-dev-flow-2:read-adr resolves; the copies equal kc-adr); judge the D4 two-plugin exception and the planning-doc flag (docs/journey/kc-decision-log/p1-technical-contract.md does not mention the Protects checks)
+  Claude Code 2.1.309 and codex-cli 0.162.1, HOME/CLAUDE_CONFIG_DIR/CODEX_HOME in /tmp, git-URL marketplace built from the head: installed `adr_lint.py`, `adr-template.md` `cmp` 0 and `skills/read-adr` `diff -r` 0 on both; Claude lists 12 skills incl. read-adr; Codex lists `kc-dev-flow-2:read-adr`, and `kc-adr:read-adr` beside it with kc-adr installed. Falsifier: folder removed gives 11 skills / 0 read-adr on both; one byte added makes `cmp` exit 1. Real config files `shasum` equal before and after. D4 exception: accepted (F2). Planning-doc flag: F3.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and observed output below; ran with `env -i ... bash --noprofile --norc`, rc 0, 24 s. `adr_lint.py docs/adr --since fd630b2a20d53cc3482159857c1143f34f70dd8f` from the 0.28.0 path: "30 ADR file(s) checked, 0 legacy", exit 0 (the 0.27.0 copy and the candidate's own copy give the same). Verdict: PASSED for 037d2cf6, no Material finding.
+
+### Evidence by criterion (all run by me at 037d2cf6; python3 -B)
+
+- AC-1: install probe above plus AC-8 below. AC-2: `kc-adr-copy-sync.test.sh` 12 passed; `diff -rq` replaced by `true` in the script: test exits 1, 5 cases fail; `check` exit 0 on the head, `bogus` mode exit 2, `sync` leaves no diff, `check` from `/` exit 0. AC-3: run 39952116720 (92002be9) failure with three "differs from kc-adr/..." lines; 39952831093 (af7fb6a2) and 39953296668 (head) success; the head log shows `Ran 21 tests ... OK`; `on: pull_request:` has no filter; the protection API lists the parity context as required.
+- AC-4: `test_adr_lint.py` Ran 21 OK; `elif ...cited_by(site)` to `elif False:` in both files: `check` exit 0, `test_adr_lint.py` exit 1 (4 failures), `test_adr_doc_checks.py` exit 0. AC-5: grep no hit; `cmp` of writing.md exit 0, steps 4 and 5 present; a "Protects" line in implementation principles makes the grep hit. AC-6: `lint-skills.py` PASS, `test_lint_skills.py` 40 OK; `SYNCED_SKILLS = set()` prints the 4 FAILs and 7 tests fail. AC-7: no `kc-adr:read-adr` in kc-dev-flow-2; folder deleted prints `unknown variant skill kc-dev-flow-2:read-adr`.
+- AC-8: kc-adr 0.1.2 with an edited SKILL.md and dev2 untouched: `diff -r` of the two cache folders exits 1 on both hosts (Claude: dev2 "already at the latest version"); dev2 0.28.1 with the synced file: exit 0 on both; the PR's diff stat lists no `docs/dev2/README.md` or `workflow.md`. AC-9: workflow.md 5389 (lint 5389 of 5389), implementation principles 707, design-director 871.
+- Other checks: `comment_ratio.py` 2.1% of 96 code lines, max 5%, exit 0 (two added comment lines, in `lint-skills.py`; the claim names its enforcer `scripts/kc-adr-copy-sync.sh`); `design_surfaces.py check` presentable, exit 0; `dispatch_records.py` 4 records complete, exit 0; `doc_impact.py` lists 10 documents and the implementation report carries a line for each, ARCHITECTURE.md's repo-script list already omits `adr-path-check.py` and the dev-flow checks so `unaffected` holds; no `## Number guards` section and no ADR file added, so number_guards does not apply; the writing.md edits equal the three agreed in `intake/kc-adr-fo-writing-md-edits-2026-10-23.md`, and `grep '<kc-adr>'` over the copied skill finds nothing.
+
+### Findings (Review-finding disposition)
+
+- F1 Polish: AC-3's evidence command `grep -n 'paths:' .github/workflows/marketplace-parity.yml` hits line 15, a comment that says "no `paths:` filter"; the trigger (`on: pull_request:`) has no filter. A wording slip in the task's AC, not in the PR.
+- F2 Deferred risk: the squash commit `feat(kc-dev-flow-2): ...` touches `kc-adr/skills/read-adr/writing.md`, so release-please will probably attribute it to kc-adr too and propose a kc-adr bump with a line scoped `kc-dev-flow-2`. D4 accepted the two-plugin PR and the PR body names it; the attribution was not run (implementation says the same). Material if the next Release PR bumps kc-adr past what the Captain accepts, which one look at that Release PR shows.
+- F3 Deferred risk: `docs/journey/kc-decision-log/p1-technical-contract.md` line 57 (table row "原生格式檢查") says dev2's `adr_lint.py` "只檢查" a list that omits the two Protects checks; the section is headed as dev2 0.25.0's native mechanism and says a reader cannot report a lint pass without running the tool, and slice-map.md line 397 uses `adr_lint.py` as the oracle, so no consumer reads the list as the check set. Not edited by this PR (outside the design's file list, implementation flagged it). Material if the CLI adapter is built from that table instead of running the tool; route a one-line doc refresh to the kc-decision-log owner.
+- F4 Deferred risk: the byte compare is by contents; a mode or symlink change in a copy passes `check`. Modes are equal now. Material only if a copied file ever needs its mode (an executable script run directly); none is.
+
+### Summary
+
+PASSED at 037d2cf6: nine criteria re-run with their falsifiers, install probe on both hosts equal and resolving, CI green on the head with a recorded red-then-green. Unverified obligations: no live model session loaded the copied skill and whether workers follow the D5 pointer; release-please attribution of the two-plugin PR; `sanitize-check` for the public plugin was not run (the copied bytes already ship in kc-adr); Windows and OMP not run. Disclosed: the loaded validation skill's package root is 0.27.0 and the dispatch says 0.28.0; `adr_lint.py` is byte-equal in both (`diff` exit 0) and was run from the 0.28.0 path the checklist names, other scripts from 0.27.0.
+
+### Minimal acceptance script (Captain; needs git, python3, claude, network to github.com; about 25 seconds)
+
+```
+# Step 1: check out the PR head
+rm -rf /tmp/pr713-accept && git clone -q --single-branch --branch spacedock-ensign/kc-adr-tools-with-dev2-copy https://github.com/iamcxa/kc-claude-plugins.git /tmp/pr713-accept && cd /tmp/pr713-accept && git checkout -q --detach 037d2cf60d9371180ec9a772e8321644a03f9c25 && git rev-parse HEAD
+# Step 2: the three copies equal their kc-adr sources
+cd /tmp/pr713-accept && ./scripts/kc-adr-copy-sync.sh check; echo "exit=$?"
+# Step 3: edit one kc-adr source without its copy; the check must refuse and name kc-adr
+cd /tmp/pr713-accept && echo x >> kc-adr/skills/read-adr/SKILL.md && ./scripts/kc-adr-copy-sync.sh check; echo "exit=$?"; git checkout -q -- kc-adr
+# Step 4: the sync script's own test and kc-adr's linter test (both run in the required CI job)
+cd /tmp/pr713-accept && ./scripts/kc-adr-copy-sync.test.sh | tail -1 && python3 -B kc-adr/scripts/test_adr_lint.py 2>&1 | grep -E '^(Ran|OK|FAILED)'
+# Step 5: dev2's skill lint accepts the copied skill
+cd /tmp/pr713-accept && python3 -B kc-dev-flow-2/scripts/lint-skills.py; echo "exit=$?"
+# Step 6: install dev2 from this checkout into an empty Claude Code config and list its skills
+cd /tmp/pr713-accept && SB=$(mktemp -d) && env HOME=$SB CLAUDE_CONFIG_DIR=$SB/c claude plugin marketplace add /tmp/pr713-accept >/dev/null && env HOME=$SB CLAUDE_CONFIG_DIR=$SB/c claude plugin install kc-dev-flow-2@kc-claude-plugins >/dev/null && env HOME=$SB CLAUDE_CONFIG_DIR=$SB/c claude plugin details kc-dev-flow-2@kc-claude-plugins | grep 'Skills ('
+```
+
+Observed output (fresh `bash --noprofile --norc`, exit 0):
+
+```
+037d2cf60d9371180ec9a772e8321644a03f9c25
+exit=0
+kc-dev-flow-2/skills/read-adr differs from kc-adr/skills/read-adr. Edit kc-adr/skills/read-adr (kc-adr is the source), run scripts/kc-adr-copy-sync.sh sync, and commit both plugins' files.
+exit=1
+12 passed, 0 failed
+Ran 21 tests in 1.297s
+OK
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5389 of 5389 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+exit=0
+  Skills (12)  chief-engineer, design-director, dev, engineering-reviewer, evaluate-learning, ideation, implementation, learn, maintain-flow, observer, read-adr, validation
+```
+
+Does not cover: Codex (my probe above did), a kc-adr change reaching users through a dev2 release (AC-8, my probe), CI, and any live model session using the copied skill.
