@@ -106,7 +106,7 @@ Verified by: relay's function log line for the event id, the inbox log line for 
 
 Direction alignment before ideation: not needed; the Captain set the focus on 2026-10-23 and the contract direction on 2026-10-21. Ideation runs on opus (contract and authority boundary are hard to reverse).
 Surfaces: ui
-Visible change: An operator runs one setup command for a project; afterwards each signed event shows up as one Slack message and one ops task with a Draft PR that the Captain decides by GitHub review.
+Visible change: Each relay ceiling event shows up as one Slack notice; a new incident brings a Draft PR whose ops record cites relay's ADRs and is decided by the Captain's GitHub review, and later events of the same incident join it.
 Release review: not needed: the kc-ops-inbox journey map (inbox-r1) is only on branch iamcxa/kc-ops-inbox at 0a1d59ce and not on the trunk; set journey fields when it lands.
 Captain standing ask, 2026-10-21: 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate.
 
