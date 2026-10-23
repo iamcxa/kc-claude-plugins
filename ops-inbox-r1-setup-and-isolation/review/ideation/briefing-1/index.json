@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ops-inbox-r1-setup-and-isolation:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design with D1 to D5 as recommended (at-most-once delivery; a per-project trigger repository holding only the ops workflow; the gate recorded on spacedock-state/ops; Netlify host with a plain Node adapter; one Node setup CLI with plan, apply and verify), the AC-3 and AC-4 wording changes D2 and D3 carry, setup also applying a restrict-creations ruleset that limits the agent App to ops/** and spacedock-state/ops in the project repository, and a path-filtered kc-ops-inbox test job in CI? Approving accepts all of these as written and enters implementation.",
+  "artifacts": [
+    {
+      "id": "artifact:ops-inbox-r1-setup-and-isolation:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/be672328b75d4061c4891bc09f3f6dbd380e7daf/ops-inbox-r1-setup-and-isolation.md",
+      "rev": "sha256:641603cc7240502578dd3aa4e6ad5005d13a398a61c3b761a60b15802365ec4e",
+      "mediaType": "text/markdown",
+      "summary": "Read-only probe of GitHub's permission map shows no permission limits a credential to one workflow and Actions write also re-runs any run, so the inbox App is installed only on a per-project trigger repository holding one workflow (D2). The gate is recorded on the state branch so the Captain's approval is not dismissed (D3). Estimate 3 days, at the budget. Risk: the agent App can push any branch in the project repository, where push-triggered workflows run with its secrets; FO adds a restrict-creations ruleset to setup."
+    }
+  ]
+}

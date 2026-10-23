@@ -28,6 +28,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:ops-inbox-r1-setup-and-isolation:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:ops-inbox-r1-setup-and-isolation-ideation-1
+              briefing:
+                id: briefing:ops-inbox-r1-setup-and-isolation:ideation:attempt-1:revision-1
+                digest: sha256:8a63004df26c992a368f5fea89e22e1239fd9fc07590624e7d6dde4f13a116a1
+                room-ref: ./ops-inbox-r1-setup-and-isolation/review/ideation/briefing-1
 started: 2026-10-23T03:50:16Z
 ---
 
