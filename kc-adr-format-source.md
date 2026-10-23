@@ -398,3 +398,100 @@ The four text fixes are in one commit on the worktree branch; every cycle-2 chec
 ### Feedback Cycles
 
 - Cycle 1 (Captain, 2026-10-23): validation gate briefing-1 closed revise (「照建議」) on 91b9e8af after the engineering reviewer returned adjust; routed to implementation as four text fixes, all to fix: B1 restore the two-host first step in boundary-contract.md, B2 restore the ruling's words and place there, B3 add "one writer at a time" to the README numbering line, fix 4 the writing.md numbering sentence per Captain amendment 2. Implementation cycle 3 landed them in 0b5a9ddf; fresh validation recheck next.
+
+## Stage Report: validation (cycle 2)
+
+- DONE: Independent verdict on candidate 0b5a9ddf7eec59c0870175d7fa09da2e9626a4de against AC-1..AC-3, the approved design with D1 and D2, and Captain amendments 1 and 2.
+  Verdict PASSED. Worktree HEAD is the candidate, clean status, merge-base is base c3514876, three commits (57b86de4, 91b9e8af, 0b5a9ddf), 7 files, `git diff --stat <base>..<candidate> -- kc-dev-flow-2` empty.
+- DONE: B1: the two-host first step is back in boundary-contract.md and agrees with kc-adr-tools-with-dev2-copy's Scope.
+  boundary-contract ends 「…第一步先測複製進去的目錄在兩個 host 上都裝得起來」 (string match true); that task's Scope "First step" says a copied directory installs on Claude Code and Codex from the marketplace; same step, same owner.
+- DONE: B2: the quoted ruling words and place match the task preamble.
+  Checked by script: 「kc-adr 只當模板和格式檢查的來源，配號留在 dev2」 is a verbatim substring of the preamble and of boundary-contract; the doc's 「同意」, "this FO's Paseo session" (kc-adr task FO) and "dev2 FO's session" are the preamble's words; the template sentence says "the worker or FO" becomes "the recommender", which is what the diff does.
+- DONE: B3: the README numbering line says one writer at a time.
+  README line 143: 「one writer at a time adds an ADR and its number is one above the highest on the base branch, and number reservation stays in kc-dev-flow-2.」
+- DONE: Fix 4: the writing.md sentence equals amendment 2's text and agrees with items 2 and 5 and with SKILL.md.
+  grep count 1 for "under kc-dev-flow-2, the coordinator reserves it with `number_guards.py reserve`; ask for one."; item 5 says the coordinator reserves and "You do not run it", item 2 asks the coordinator, SKILL.md line 48 sends numbering to writing.md. The cycle-1 polish finding (sentence read as telling the writer to run the reserver) no longer applies.
+- DONE: The round changed only README.md, docs/journey/kc-decision-log/boundary-contract.md and kc-adr/skills/read-adr/writing.md over 91b9e8af.
+  `git diff --stat 91b9e8af 0b5a9ddf`: those three files, one line each (3 insertions, 3 deletions).
+- DONE: AC-1 re-run: `cmp` on the linter and `diff` on the template against base dev2's files.
+  Acceptance steps 1 to 3: linter `cmp` exit 0; template diff is `21c21` only; zero dev2 files changed. Fails if one linter byte differs or the template differs outside line 21.
+- DONE: AC-2 re-run: kc-adr `test_adr_lint.py`, dev2 suites at the candidate, and the overlay run of dev2's suites.
+  In scratch `git archive` copies at the candidate: kc-adr tests Ran 8 OK (from kc-adr and from /tmp); dev2 as filed `test_adr_doc_checks.py` 9, `test_lint_skills.py` 35, `test_dispatch_records.py` 47 OK, `lint-skills.py` exit 0; overlay (kc-adr template and linter copied onto dev2 paths, `cmp` clean): same four green, 29 repo ADRs pass the linter. The `AdrLintTests` body is identical to dev2's (compared by script).
+- DONE: The two template falsifiers.
+  `**Recommended:**` to `Recommended:` makes `test_adr_lint.py` FAILED (failures=3), asserting the required-record rule; `## Status` to `## State` FAILED (failures=5), asserting the format rule. A damaged template cannot pass.
+- DONE: The single-writer dry run.
+  Acceptance step 6: base highest 0003, new number 0004 from the template, `adr_lint.py --require 0004` exit 0 and `--since <main>` exit 0. Limit as designed: one tree only, two concurrent writers are not caught (ADR 0002).
+- DONE: Package checks at the candidate.
+  `comment_ratio.py` 216 code lines, 1 comment line (in the byte-identical linter), 0.5%, max 5% met, exit 0; `dispatch_records.py` "6 dispatch record(s) complete" exit 0; `design_surfaces.py check` presentable exit 0; `doc_impact.py` lists 0 documents; `version-parity-check.sh` exit 0; `skill-frontmatter-lint.sh` exit 0. Package root 0.28.0 used throughout; the task has no `## Number guards` and the candidate adds no ADR.
+- DONE: `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since c3514876339cb732d0bea8b2d2dd45c234bcdeaf`, run with its exit code.
+  Run in the candidate worktree: "29 ADR file(s) checked, 0 legacy", exit 0.
+- DONE: A minimal acceptance script FO can run in a fresh shell, run exactly as written with its observed output.
+  Below; run with `env -i HOME PATH sh`: script exit 0, every step as expected.
+- SKIPPED: `test_sd_dispatch.py`, the extension suites, an agent scenario for the SKILL.md and writing.md numbering sentences, CI for `kc-adr/` and the byte compare.
+  `test_sd_dispatch.py` needs `--sd-plugin-root` (not run; no dev2 file changed); no agent ran either sentence, so whether an agent numbers correctly from them is unmeasured; CI for kc-adr and the compare are owed by dev2 task `kc-adr-tools-with-dev2-copy`. The read-adr follow-up e1f43044 is already in base, so no writing.md collision.
+
+### Findings
+
+- Polish: README states kc-adr "0.1.1" while release-please moves the version from the `feat(kc-adr):` commit, so the stamp ages as the old 0.1.0 stamp did. No current user-visible loss.
+- Polish: boundary-contract's place wording ("kc-adr 任務 FO 的 Paseo 工作階段") is the implementer's reading of the preamble's "this FO's Paseo session"; it matches the preamble, and a different session name would be a one-word edit.
+
+### Minimal acceptance script
+
+Needs only the candidate worktree path, `git` and `python3`. No secret. It does not cover: dev2 suites other than `test_adr_doc_checks.py` (run above in the overlay), the two-host install of a copied directory (dev2 task owns it), concurrency of two writers, CI, or agent behaviour.
+
+```sh
+#!/bin/sh
+set -u
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-kc-adr-format-source
+B=c3514876339cb732d0bea8b2d2dd45c234bcdeaf
+C=0b5a9ddf7eec59c0870175d7fa09da2e9626a4de
+S=$(mktemp -d /tmp/kc-adr-accept.XXXXXX); rc=0
+git -C "$REPO" archive "$C" | tar -x -C "$S" || exit 1
+echo "1. linter byte-identical to base dev2 linter (expect: exit 0)"
+git -C "$REPO" show "$B:kc-dev-flow-2/scripts/adr_lint.py" | cmp - "$S/kc-adr/scripts/adr_lint.py" && echo "   exit 0" || rc=1
+echo "2. template differs from base dev2 template only at line 21 (expect exactly one line: 21c21)"
+git -C "$REPO" show "$B:kc-dev-flow-2/references/adr-template.md" | diff - "$S/kc-adr/references/adr-template.md" | grep -E "^[0-9]+[acd]"
+echo "3. no dev2 file touched (expect: 0)"
+git -C "$REPO" diff --name-only "$B" "$C" -- kc-dev-flow-2 | wc -l
+echo "4. kc-adr tests (expect: Ran 8 tests ... OK)"
+(cd "$S/kc-adr" && python3 -B scripts/test_adr_lint.py 2>&1 | grep -E '^(Ran|OK|FAILED)')
+echo "5. dev2 suite with kc-adr files on dev2 paths (expect: Ran 9 tests ... OK)"
+for f in references/adr-template.md scripts/adr_lint.py; do cp "$S/kc-adr/$f" "$S/kc-dev-flow-2/$f"; done
+(cd "$S/kc-dev-flow-2/scripts" && python3 -B test_adr_doc_checks.py 2>&1 | grep -E '^(Ran|OK|FAILED)')
+echo "6. single-writer dry run (expect: new number 0004, then two exit=0 lines)"
+D="$S/dry"; mkdir -p "$D/docs/adr" && cd "$D" && git init -q -b main && git config user.email a@b.c && git config user.name t
+mk() { sed -e "s/^# NNNN\./# $1./" -e "s/^Date: YYYY-MM-DD/Date: 2026-01-01/" "$S/kc-adr/references/adr-template.md" > "docs/adr/$1-$2.md"; }
+mk 0001 first; mk 0002 second; mk 0003 third
+git add -A && git commit -q -m base && MAIN=$(git rev-parse HEAD) && git checkout -q -b feat
+HIGH=$(git ls-tree --name-only main docs/adr/ | sed 's|.*/||' | grep -E '^[0-9]{4}-' | cut -c1-4 | sort | tail -1)
+N=$(printf '%04d' $((10#$HIGH+1))); echo "   new number $N"
+mk "$N" a-new-ruling
+python3 "$S/kc-adr/scripts/adr_lint.py" docs/adr --require "$N" >/dev/null; echo "   --require exit=$?"
+python3 "$S/kc-adr/scripts/adr_lint.py" docs/adr --since "$MAIN" >/dev/null; echo "   --since exit=$?"
+exit $rc
+```
+
+Observed output (exit 0):
+
+```
+1. linter byte-identical to base dev2 linter (expect: exit 0)
+   exit 0
+2. template differs from base dev2 template only at line 21 (expect exactly one line: 21c21)
+21c21
+3. no dev2 file touched (expect: 0)
+       0
+4. kc-adr tests (expect: Ran 8 tests ... OK)
+Ran 8 tests in 0.412s
+OK
+5. dev2 suite with kc-adr files on dev2 paths (expect: Ran 9 tests ... OK)
+Ran 9 tests in 0.659s
+OK
+6. single-writer dry run (expect: new number 0004, then two exit=0 lines)
+   new number 0004
+   --require exit=0
+   --since exit=0
+```
+
+### Summary
+
+PASSED: candidate 0b5a9ddf meets AC-1..AC-3, D1, D2 and both amendments, and B1, B2, B3 and fix 4 are each fixed at this head with the round touching only the three named files. Every check was re-run in scratch copies and both template falsifiers fail the kc-adr tests as they should. Two polish findings, no repair needed. Unverified: `test_sd_dispatch.py`, extension suites, agent behaviour on the numbering sentences, and CI for `kc-adr/` plus the byte compare (owed by dev2 task `kc-adr-tools-with-dev2-copy`).
