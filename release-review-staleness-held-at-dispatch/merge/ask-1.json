@@ -1,0 +1,21 @@
+{
+  "class": "never",
+  "head": "62ba1e714894456fe7e4a287d5381f55ca64e4df",
+  "model": "not run",
+  "necessity": "five files (kc-dev-flow-2/scripts/pr_watch.py, kc-dev-flow-2/scripts/test_pr_watch.py, the workflow.md Release review bullet losing \"; no script checks that line\", the kc-dev-flow-2/scripts/lint-skill",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F3 Deferred risk: a review'",
+    "point: deferred: 'PASSED at 62ba1e714894: the hold catches'",
+    "point: deferred: 'FO declines: Polish F1, docs/dev2/README.md and'",
+    "point: path: 'docs/adr/0032-a-release-changed-mark-with-no-later-review-line-holds-the-first-i'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#711",
+  "sufficiency": "pr_watch.py tasks prints one next: hold line for a task at implementation with no dispatch yet whose ## FO alignment carries a signal 1 or 2 mark and no later Release review line, so the R4 record sha",
+  "time": "2026-10-23T12:39:03Z",
+  "verdict": "ask"
+}
