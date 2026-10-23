@@ -24,6 +24,17 @@ gates:
                 id: briefing:adr-protected-path-guard:backlog:attempt-2:revision-1
                 digest: sha256:90b15d5f7a18f5f619085d7b7105f1b4f755897d4defd61648195ba8e2bb1280
                 room-ref: ./adr-protected-path-guard/review/backlog/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-protected-path-guard:backlog:2
+                briefing: briefing:adr-protected-path-guard:backlog:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-23T08:54:22.09855Z"
+                decision: approve
+                reason: 'Captain 「都准」 (2026-10-23) to the revised backlog gate (with the coupled dev2 scope line): accepts the re-scoped outcome, non-goals and AC-1..AC-3, profile pilot.'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
