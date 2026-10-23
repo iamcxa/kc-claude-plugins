@@ -32,13 +32,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 45
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Check out kc-ops-inbox at the commit this file pins
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          repository: iamcxa/kc-claude-plugins
+          ref: __KC_OPS_INBOX_SHA__
+          path: src
+          persist-credentials: false
       - name: Install the pinned tools
         if: inputs.mode != 'selftest'
         env:
           OPS_TOOLS_DIR: ${{ runner.temp }}/tools
         run: |
-          bash kc-ops-inbox/trigger/install-tools.sh
+          bash src/kc-ops-inbox/trigger/install-tools.sh
           echo "$OPS_TOOLS_DIR/bin" >> "$GITHUB_PATH"
           echo "$OPS_TOOLS_DIR/npm/bin" >> "$GITHUB_PATH"
       - name: Run
@@ -55,4 +61,4 @@ jobs:
           OPS_AGENT_APP_CLIENT_ID: ${{ vars.OPS_AGENT_APP_CLIENT_ID }}
           OPS_AGENT_APP_PRIVATE_KEY: ${{ secrets.OPS_AGENT_APP_PRIVATE_KEY }}
           CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-        run: node kc-ops-inbox/bin/ops-run.mjs
+        run: node src/kc-ops-inbox/bin/ops-run.mjs

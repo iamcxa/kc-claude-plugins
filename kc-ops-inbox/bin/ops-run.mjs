@@ -80,6 +80,7 @@ function cloneProject(ctx, name) {
   git(ctx, dir, "config", "user.name", "ops-first-officer");
   git(ctx, dir, "config", "user.email", "ops-first-officer@users.noreply.github.com");
   appendFileSync(join(dir, ".git/info/exclude"), "docs/ops/.spacedock-state/\n");
+  git(ctx, dir, "fetch", "-q", "--depth", "1", "origin", "+spacedock-state/ops:refs/heads/spacedock-state/ops");
   sd(ctx, dir, ["state", "init"]);
   return dir;
 }
