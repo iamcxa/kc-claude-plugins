@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:new-work-starts-from-a-story-map:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:new-work-starts-from-a-story-map-validation-1
+              briefing:
+                id: briefing:new-work-starts-from-a-story-map:validation:attempt-1:revision-1
+                digest: sha256:c80ac3138a06f2aec2662d6e16e27b09145bcb07af543b94f13fd8bae448111d
+                room-ref: ./new-work-starts-from-a-story-map/review/validation/briefing-1
 started: 2026-10-22T04:01:40Z
 worktree: .worktrees/spacedock-ensign-new-work-starts-from-a-story-map
 pr: iamcxa/kc-claude-plugins#705
