@@ -34,6 +34,17 @@ gates:
                 id: briefing:kc-adr-tools-with-dev2-copy:ideation:attempt-1:revision-1
                 digest: sha256:dc1204687677391e0440e70c3c50bdfd58d8b7e65872e361527637467e90048b
                 room-ref: ./kc-adr-tools-with-dev2-copy/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-adr-tools-with-dev2-copy:ideation:1
+                briefing: briefing:kc-adr-tools-with-dev2-copy:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T12:12:29.959087Z"
+                decision: approve
+                reason: Captain 「可以」 (chat, 2026-10-23), answering 「「ADR 工具副本」的設計可以進入實作嗎？我建議可以。」 whose presentation stated approval accepts the design with rulings D1 to D5 and D1's accepted costs (the lint exemption, about 77 more words per session, twice where kc-adr is installed) and the one-plugin-per-PR exception named in the PR body; digest dc120468. Accepts the FO recommendation as the bound question states.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
