@@ -15,6 +15,14 @@ gates:
                 id: briefing:product-review-path-before-backlog:backlog:attempt-1:revision-1
                 digest: sha256:8f9d4c151bcc4e5601b416881458c8903d2b588f979ad9bc00fc9fb9ff839091
                 room-ref: ./product-review-path-before-backlog/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:product-review-path-before-backlog:backlog:1
+                briefing: briefing:product-review-path-before-backlog:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T07:14:50.021254Z"
+                decision: hold
+                reason: 'Captain 「並進去」 (chat, 2026-10-23), answering the bound question: folded into release-acceptance Captain Amendment 3; this task is closed without its own work.'
 ---
 
 ## Scope
