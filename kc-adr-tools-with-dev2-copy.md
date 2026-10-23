@@ -54,6 +54,9 @@ Design: this task is the next priority; the sync also carries what iamcxa/kc-cla
 
 ## FO alignment
 
+Captain rulings (ideation sitting, 2026-10-23, chat, one at a time; to be bound at the ideation gate):
+- D1 「對，除非有更好的做法，不然先這樣應該才可以確保結果。或是，除非這個 read-adr 技能對 dev2 沒用」, answering 「D1 改成「附上，把讀 ADR 技能複製進 dev2」，可以嗎？」 (after his 「為何不要？技能如果搬過去變成 dev2 的其實沒關係，對吧？」): the read-adr skill is copied into kc-dev-flow-2/skills/read-adr (resolving as kc-dev-flow-2:read-adr), kept identical to kc-adr's by the same sync and compare as the two tools; the design director and other dev2 text name the dev2 copy. FO checks before implementation that read-adr is used by dev2 (consumers: the design-director skill, the AGENTS.md ADR pointer, new-work-checks-what-exists-first) and whether its text names kc-adr paths that a byte copy cannot carry. Override: recommended only the two tools (design D1); Captain chose copying the skill too; area: single-install scope.
+
 Alignment: needed at ideation; the reservation-file owner and the copy's path are the Captain's to accept.
 Result: aligned 2026-10-23 by Captain Amendments 1 and 2: the copy keeps dev2's paths; number_guards.py and the reservation stay in dev2; the remaining choices are the design's Captain decisions.
 Surfaces: none
