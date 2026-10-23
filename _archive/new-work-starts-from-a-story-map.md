@@ -3,7 +3,7 @@ title: New work starts from a story map and its slices, and the slice's open que
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: Captain 「合併」 (chat, 2026-10-23), answering 「#705（故事地圖的 dev2 部分）要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only; digest c80ac313. Accepts the FO recommendation as the bound question states.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-22T04:01:40Z
 worktree: .worktrees/spacedock-ensign-new-work-starts-from-a-story-map
 pr: pr-merge:705
+verdict: PASSED
+completed: 2026-10-23T03:37:03Z
+archived: 2026-10-23T03:37:03Z
 ---
 
 ## Scope
