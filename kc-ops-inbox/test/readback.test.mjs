@@ -17,7 +17,7 @@ const INBOX = "https://site.netlify.app/inbox";
 function world(over = {}) {
   const w = {
     triggerPrivate: true, workflows: 1, branches: 1, triggerWorkflow: `    ref: ${SHA}\n`, vars: ["OPS_PROJECT_REPO", "OPS_AGENT_APP_CLIENT_ID"], projectVars: ["OPS_CAPTAIN_LOGIN"],
-    secrets: ["CLAUDE_CODE_OAUTH_TOKEN", "OPS_AGENT_APP_PRIVATE_KEY"], stateBranch: true, gate: `  ref: ${SHA}\n`, projectWorkflows: [{ name: "ci.yml", text: "on: push\npermissions:\n  contents: read\njobs: {}\n" }],
+    secrets: ["CLAUDE_CODE_OAUTH_TOKEN", "OPS_AGENT_APP_PRIVATE_KEY"], stateBranch: true, gate: `  ref: ${SHA}\n`, projectWorkflows: [{ name: "ci.yml", text: "on: push\npermissions:\n  contents: read\njobs:\n  a:\n    runs-on: ubuntu-latest\n    steps: []\n" }],
     gates: {}, reviews: {}, prHead: "b".repeat(40), runCount: 5, runConclusion: "success", rulesets: { project: ["ruleset-main.json", "ruleset-ops-branches.json", "ruleset-state-branch.json"], trigger: ["ruleset-trigger-main.json"] },
     ...over,
   };
@@ -185,16 +185,38 @@ test("R18 does not pass on the ruleset alone: a secret job triggered on ops/** f
   assert.equal((await r18(withWf([{ name: "t.yml", text: "on: [workflow_dispatch]\nenv: ${{ secrets.X }}\n" }], true))).v, "PASS");
 });
 
+const job = (extra = "") => `jobs:\n  a:\n    runs-on: ubuntu-latest\n${extra}    steps: []\n`;
+
 test("a workflow an agent branch can trigger fails R18 when its automatic token can write, with no secret in it", async () => {
-  const wf = (perm) => ({ name: "lint.yml", text: `on:\n  pull_request:\n${perm}jobs:\n  a:\n    steps:\n      - run: x\n` });
-  for (const perm of ["", "permissions: write-all\n", "permissions:\n  contents: write\n"]) {
-    const row = await r18(withWf([wf(perm)], true));
-    assert.equal(row.v, "FAIL", JSON.stringify(perm));
-    assert.match(row.obs, /can write with GITHUB_TOKEN; reachable from an agent ref: lint\.yml/);
+  const wf = (body) => ({ name: "lint.yml", text: `on:\n  pull_request:\n${body}` });
+  const writes = {
+    "no permissions": job(),
+    "write-all": `permissions: write-all\n${job()}`,
+    "top-level write": `permissions:\n  contents: write\n${job()}`,
+    "flow-style write": `permissions: { contents: write }\n${job()}`,
+    "quoted write": `permissions:\n  "contents": "write"\n${job()}`,
+    "job-level write under a read top level": `permissions:\n  contents: read\n${job("    permissions:\n      pull-requests: write\n")}`,
+    "job-level flow write": `permissions: read-all\n${job("    permissions: { issues: 'write' }\n")}`,
+    "one job read, another unset": `jobs:\n  a:\n    permissions: {}\n    steps: []\n  b:\n    steps: []\n`,
+    "no jobs": `permissions:\n  contents: read\n`,
+    "a malformed document": `permissions: [unclosed\n${job()}`,
+  };
+  for (const [label, body] of Object.entries(writes)) {
+    const row = await r18(withWf([wf(body)], true));
+    assert.equal(row.v, "FAIL", label);
   }
-  assert.equal((await r18(withWf([wf("permissions:\n  contents: read\n")], true))).v, "PASS");
+  const reads = {
+    "top-level read": `permissions:\n  contents: read\n${job()}`,
+    "flow-style read": `permissions: { contents: read, pull-requests: read }\n${job()}`,
+    "read-all": `permissions: read-all\n${job()}`,
+    "empty set": `permissions: {}\n${job()}`,
+    "every job explicit, none top-level": `jobs:\n  a:\n    permissions: { contents: read }\n    steps: []\n  b:\n    permissions: {}\n    steps: []\n`,
+    "job narrows a write-free top level": `permissions:\n  contents: read\n${job("    permissions: {}\n")}`,
+  };
+  for (const [label, body] of Object.entries(reads)) assert.equal((await r18(withWf([wf(body)], true))).v, "PASS", label);
+  assert.match((await r18(withWf([wf(job())], true))).obs, /can write with GITHUB_TOKEN; reachable from an agent ref: lint\.yml/);
   assert.equal(tokenCanWrite("jobs:\n  a:\n    permissions:\n      pull-requests: write\n"), true);
-  assert.equal(tokenCanWrite("permissions: {}\njobs: {}\n"), false);
+  assert.equal(tokenCanWrite("permissions: {}\njobs:\n  a:\n    steps: []\n"), false);
 });
 
 test("every form of the secrets context counts as holding a secret, and an exact GITHUB_TOKEN reference does not", () => {
@@ -208,6 +230,8 @@ test("triggers are read from the inline, list and block forms of on:", () => {
   const t = triggersOf("on:\n  push:\n    branches: [main, 'ops/**']\n  workflow_dispatch:\njobs: {}\n");
   assert.deepEqual([...t.events], ["push", "workflow_dispatch"]);
   assert.deepEqual(t.push.branches, ["main", "ops/**"]);
+  assert.deepEqual([...triggersOf('"on": { push: { branches: ["main"] } }\n').events], ["push"]);
+  assert.deepEqual(triggersOf("on:\n  push:\n    branches-ignore: [docs]\n").push.ignore, ["docs"]);
   assert.equal(exposedWorkflows([{ name: "x", text: "name: n\njobs: {}\n${{ secrets.A }}" }], { defaultBranch: "main", agentCreationsApplied: true }).length, 1, "no on: block is unreadable and counts as exposed");
 });
 

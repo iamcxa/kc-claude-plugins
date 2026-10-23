@@ -6,6 +6,7 @@ import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { parse as parseYaml } from "yaml";
 import { signBody, SCHEMA_BASE } from "../core/inbox-core.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
@@ -77,43 +78,50 @@ export function holdsSecret(text) {
   return /\$\{\{[^}]*\bsecrets\b/.test(rest) || /^\s*secrets:\s*inherit\b/m.test(rest);
 }
 
-// The workflow's automatic GITHUB_TOKEN may write: no permissions block (the repository default applies), write-all, or any write grant.
+const parseWorkflow = (text) => {
+  try {
+    const doc = parseYaml(text);
+    return doc && typeof doc === "object" && !Array.isArray(doc) ? doc : null;
+  } catch {
+    return null;
+  }
+};
+
+const grantsWrite = (perms) =>
+  perms === "write-all" || (perms && typeof perms === "object" && !Array.isArray(perms) && Object.values(perms).some((v) => String(v).toLowerCase() === "write"));
+const isPermissions = (p) => p === "read-all" || p === "write-all" || (p !== null && typeof p === "object" && !Array.isArray(p));
+
+// The automatic GITHUB_TOKEN may write unless every job's effective permissions are explicit and none grants write.
+// A workflow that does not parse, has no jobs map, or leaves a job without explicit permissions counts as write-capable.
 export function tokenCanWrite(text) {
-  if (!/^\s*permissions\s*:/m.test(text)) return true;
-  return /permissions\s*:\s*write-all/.test(text) || /^\s+[a-z-]+\s*:\s*write\s*(#.*)?$/m.test(text);
+  const doc = parseWorkflow(text);
+  if (!doc || !doc.jobs || typeof doc.jobs !== "object" || Array.isArray(doc.jobs) || Object.keys(doc.jobs).length === 0) return true;
+  if (doc.permissions !== undefined && !isPermissions(doc.permissions)) return true;
+  for (const job of Object.values(doc.jobs)) {
+    if (!job || typeof job !== "object") return true;
+    const effective = job.permissions !== undefined ? job.permissions : doc.permissions;
+    if (!isPermissions(effective) || grantsWrite(effective)) return true;
+  }
+  return false;
 }
 
 const globToRe = (g) => new RegExp(`^${g.replace(/[.+^${}()|\\]/g, "\\$&").replace(/\*\*/g, "\u0000").replace(/\*/g, "[^/]*").replace(/\u0000/g, ".*")}$`);
 const AGENT_REFS = ["ops/x", "spacedock-state/ops"];
 
-// The `on:` block of a workflow as { events: Set, push: { branches, ignore } }, from the forms workflows use; anything unreadable counts as exposed.
+// The workflow's events and push filters from its parsed `on:`; anything unreadable counts as exposed.
 export function triggersOf(text) {
-  const lines = text.split("\n");
-  const at = lines.findIndex((l) => /^["']?on["']?\s*:/.test(l));
-  if (at < 0) return { unreadable: true, events: new Set(), push: null };
-  const head = lines[at].replace(/^["']?on["']?\s*:\s*/, "").replace(/#.*$/, "").trim();
-  const events = new Set();
+  const doc = parseWorkflow(text);
+  const on = doc ? (doc.on !== undefined ? doc.on : doc.true) : undefined;
+  if (on === undefined || on === null) return { unreadable: true, events: new Set(), push: null };
+  let events;
   let push = null;
-  if (head) {
-    for (const e of head.replace(/[\[\]]/g, "").split(",").map((x) => x.trim()).filter(Boolean)) events.add(e);
-    if (events.has("push")) push = { branches: null, ignore: null };
-    return { events, push };
-  }
-  const block = [];
-  for (let i = at + 1; i < lines.length && (lines[i].trim() === "" || /^\s/.test(lines[i])); i += 1) block.push(lines[i]);
-  let current = null;
-  for (const l of block) {
-    const m = l.match(/^(\s+)([A-Za-z_]+)\s*:\s*(.*)$/);
-    if (m && m[1].length === (block.find((x) => x.trim())?.match(/^\s*/)[0].length ?? 0)) { current = m[2]; events.add(current); if (current === "push") push = { branches: null, ignore: null }; continue; }
-    if (current === "push") {
-      const f = l.match(/^\s+(branches|branches-ignore)\s*:\s*(.*)$/);
-      if (f) {
-        const list = f[2].trim();
-        const key = f[1] === "branches" ? "branches" : "ignore";
-        push[key] = list ? list.replace(/[\[\]]/g, "").split(",").map((x) => x.trim().replace(/^['"]|['"]$/g, "")).filter(Boolean) : [];
-        push.open = key;
-      } else if (push.open && /^\s+-\s+/.test(l)) push[push.open].push(l.replace(/^\s+-\s+/, "").replace(/#.*$/, "").trim().replace(/^['"]|['"]$/g, ""));
-    }
+  if (typeof on === "string") events = new Set([on]);
+  else if (Array.isArray(on)) events = new Set(on.map(String));
+  else events = new Set(Object.keys(on));
+  if (events.has("push")) {
+    const cfg = !Array.isArray(on) && typeof on === "object" ? on.push : null;
+    const list = (v) => (v === undefined || v === null ? null : [].concat(v).map(String));
+    push = { branches: list(cfg?.branches), ignore: list(cfg?.["branches-ignore"]), tags: list(cfg?.tags) };
   }
   return { events, push };
 }

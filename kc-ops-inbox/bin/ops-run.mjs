@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // The trigger repository's run: open an incident, join an event to it, or read the agent token back (selftest).
 import { spawnSync } from "node:child_process";
-import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync, chmodSync, appendFileSync, copyFileSync } from "node:fs";
+import { mkdtempSync, writeFileSync, readFileSync, existsSync, mkdirSync, readdirSync, appendFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -55,10 +55,11 @@ export async function run(env = process.env) {
     gh: client(env, agent.token), work: mkdtempSync(join(tmpdir(), "ops-run-")), sd: env.SPACEDOCK_BIN || "spacedock",
     origin: `${env.OPS_GIT_BASE || "https://github.com"}/${project}.git`,
   };
-  const askpass = join(ctx.work, "askpass");
-  copyFileSync(join(here, "../trigger/askpass.sh"), askpass);
-  chmodSync(askpass, 0o700);
-  ctx.gitEnv = { ...process.env, GIT_ASKPASS: askpass, OPS_GIT_TOKEN: agent.token, GIT_TERMINAL_PROMPT: "0", GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_NOSYSTEM: "1" };
+  const helper = join(here, "../trigger/credential-helper.sh");
+  ctx.gitEnv = {
+    ...process.env, OPS_GIT_TOKEN: agent.token, GIT_TERMINAL_PROMPT: "0", GIT_ASKPASS: "", GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_NOSYSTEM: "1",
+    GIT_CONFIG_COUNT: "2", GIT_CONFIG_KEY_0: "credential.helper", GIT_CONFIG_VALUE_0: "", GIT_CONFIG_KEY_1: "credential.helper", GIT_CONFIG_VALUE_1: helper,
+  };
 
   let branch = env.OPS_BRANCH;
   if (mode === "join") {

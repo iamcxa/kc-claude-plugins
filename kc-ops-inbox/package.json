@@ -2,7 +2,14 @@
   "name": "kc-ops-inbox",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=20" },
-  "scripts": { "test": "node --test --test-force-exit test/*.test.mjs" },
-  "dependencies": { "@netlify/blobs": "11.1.5" }
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test --test-force-exit test/*.test.mjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "11.1.5",
+    "yaml": "2.9.1"
+  }
 }

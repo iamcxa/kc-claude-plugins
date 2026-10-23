@@ -297,14 +297,36 @@ test("gate: a pull request from a non-ops branch is ignored", opts, async () => 
   gh.close();
 });
 
-test("the askpass helper answers git's prompts only for the GitHub host", () => {
-  const ask = (prompt, env = {}) => spawnSync("sh", [join(here, "../trigger/askpass.sh"), prompt], { env: { OPS_GIT_TOKEN: "tok", PATH: process.env.PATH, ...env }, encoding: "utf8" });
-  assert.equal(ask("Username for 'https://github.com': ").stdout.trim(), "x-access-token");
-  assert.equal(ask("Password for 'https://x-access-token@github.com': ").stdout.trim(), "tok");
-  for (const p of ["Password for 'https://x-access-token@evil.example': ", "Password for 'https://x-access-token@github.com.evil.example': ", "Username for 'https://evil.example': ", "Passphrase for key: "]) {
-    const r = ask(p);
-    assert.notEqual(r.status, 0, p);
-    assert.equal(r.stdout, "", p);
+test("the credential helper gives the token to git only for https on the exact GitHub host", () => {
+  const helper = join(here, "../trigger/credential-helper.sh");
+  const ask = (input, env = {}) => spawnSync("git", ["-c", "credential.helper=", "-c", `credential.helper=${helper}`, "credential", "fill"], {
+    input, encoding: "utf8", env: { OPS_GIT_TOKEN: "tok", PATH: process.env.PATH, GIT_TERMINAL_PROMPT: "0", GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_NOSYSTEM: "1", ...env },
+  });
+  const ok = ask("url=https://github.com/o/p.git\n\n");
+  assert.equal(ok.status, 0);
+  assert.match(ok.stdout, /^username=x-access-token$/m);
+  assert.match(ok.stdout, /^password=tok$/m);
+  for (const url of [
+    "https://evil.example/o/p.git", "https://github.com.evil.example/o/p.git", "https://github.com@evil.example/o/p.git", "https://x-access-token@evil.example/o/p.git",
+    "https://evil.example@github.com.evil.example/o/p.git", "http://github.com/o/p.git", "https://someone-else@github.com/o/p.git", "ssh://github.com/o/p.git",
+  ]) {
+    const r = ask(`url=${url}\n\n`);
+    assert.ok(!r.stdout.includes("tok"), url);
+    assert.notEqual(r.status, 0, url);
   }
-  assert.equal(ask("Password for 'https://x-access-token@ghe.example': ", { OPS_ASKPASS_HOST: "ghe.example" }).stdout.trim(), "tok");
+  const ghe = ask("url=https://ghe.example/o/p.git\n\n", { OPS_CREDENTIAL_HOST: "ghe.example" });
+  assert.match(ghe.stdout, /^password=tok$/m);
+  assert.equal(spawnSync("sh", [helper, "store"], { input: "protocol=https\nhost=github.com\n\n", env: { OPS_GIT_TOKEN: "tok", PATH: process.env.PATH }, encoding: "utf8" }).stdout, "");
+});
+
+test("the credential audit passes inside run-fo's environment and flags any other credential source", () => {
+  const helper = join(here, "../trigger/credential-helper.sh");
+  const audit = (extra = {}) => spawnSync("bash", [join(here, "../trigger/credential-audit.sh")], {
+    encoding: "utf8", env: { PATH: process.env.PATH, HOME: mkdtempSync(join(tmpdir(), "audit-")), GIT_CONFIG_GLOBAL: "/dev/null", GIT_CONFIG_NOSYSTEM: "1", GIT_CONFIG_COUNT: "2",
+      GIT_CONFIG_KEY_0: "credential.helper", GIT_CONFIG_VALUE_0: "", GIT_CONFIG_KEY_1: "credential.helper", GIT_CONFIG_VALUE_1: helper, OPS_CREDENTIAL_HELPER: helper, OPS_GIT_TOKEN: "tok",
+      AUDIT_ALLOW: "OPS_GIT_TOKEN", ...extra },
+  });
+  assert.equal(audit().status, 0, audit().stdout);
+  assert.equal(audit({ AWS_SECRET: "x" }).status, 1);
+  assert.equal(audit({ GIT_CONFIG_VALUE_1: "/tmp/other-helper" }).status, 1);
 });

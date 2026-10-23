@@ -7,7 +7,7 @@ A signed ops event becomes one decision an agent has prepared for the Captain (d
 | `contract/` | Contract v1: what a producer sends, the validator, published schemas, fixtures. Start with `contract/README.md`. |
 | `core/inbox-core.mjs` | The platform-neutral inbox: verifies, claims event and incident, dispatches the trigger workflow, posts the Slack notice. Imports only `node:crypto`. |
 | `netlify/functions/inbox.mjs` | The Netlify adapter (Blobs store). Another host writes its own adapter over the same core. |
-| `trigger/` | `ops-event.yml` (the one workflow in the trigger repository), the First Officer prompt and its launcher. |
+| `trigger/` | `ops-event.yml` (the one workflow in the trigger repository), the First Officer prompt and launcher, and the git credential helper that answers only for https on the GitHub host. |
 | `bin/ops-run.mjs` | The trigger run: opens an incident (record, Draft PR, gate) or joins an event to it. |
 | `bin/check-citations.mjs` | Re-reads every ADR reference block of a record with git and sha256. |
 | `gate/ops-gate.yml`, `bin/record-gate.mjs` | Records the gate from the Captain's own GitHub review, writing only the state branch. |

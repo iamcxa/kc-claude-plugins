@@ -7,12 +7,12 @@ set -euo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
 MODEL_VAR=ANTHROPIC_API_KEY; [ -n "${CLAUDE_CODE_OAUTH_TOKEN:-}" ] && MODEL_VAR=CLAUDE_CODE_OAUTH_TOKEN
 FO_HOME=$(mktemp -d)
-ASKPASS="$FO_HOME/askpass"
-cp "$HERE/askpass.sh" "$ASKPASS"; chmod 700 "$ASKPASS"
+HELPER="$HERE/credential-helper.sh"
 
 clean=(env -i PATH="$PATH" HOME="$FO_HOME" GIT_CONFIG_GLOBAL=/dev/null GIT_CONFIG_NOSYSTEM=1 GIT_TERMINAL_PROMPT=0
-  GIT_ASKPASS="$ASKPASS" OPS_GIT_TOKEN="$OPS_GIT_TOKEN" GH_TOKEN="$OPS_GIT_TOKEN" "$MODEL_VAR=${!MODEL_VAR:-}"
-  AUDIT_ALLOW="OPS_GIT_TOKEN GH_TOKEN $MODEL_VAR")
+  GIT_CONFIG_COUNT=2 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0= GIT_CONFIG_KEY_1=credential.helper GIT_CONFIG_VALUE_1="$HELPER"
+  OPS_CREDENTIAL_HELPER="$HELPER" OPS_GIT_TOKEN="$OPS_GIT_TOKEN" "$MODEL_VAR=${!MODEL_VAR:-}"
+  AUDIT_ALLOW="OPS_GIT_TOKEN $MODEL_VAR")
 
 "${clean[@]}" spacedock install --host claude
 "${clean[@]}" spacedock doctor --host claude
