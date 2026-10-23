@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-adr-format-source:validation:attempt-1:revision-1",
+  "question": "Validation PASSED, but the engineering reviewer says adjust. Return to implementation (feedback-to) for four text fixes before delivery? Approving the recommendation also approves fix 4, which rewords a sentence you approved: writing.md's \"under kc-dev-flow-2, use `number_guards.py reserve` instead\" becomes \"under kc-dev-flow-2, the coordinator reserves it with `number_guards.py reserve`; ask for one.\"",
+  "artifacts": [
+    {
+      "id": "artifact:kc-adr-format-source:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e7d08e0f291ea3864fb4a713a36afba2168339a1/kc-adr-format-source.md",
+      "rev": "sha256:865c58c86e5e2895bead5e3c873bc237c09ea168b6bc6854e3456c4245c61347",
+      "mediaType": "text/markdown",
+      "summary": "Candidate 91b9e8af passes AC-1..3 and the six-step acceptance script in a fresh shell. Engineering reviewer (opus): no approval withdrawn; defects B1 boundary-contract drops the two-host first step its owning dev2 task still lists, B2 it no longer cites the ruling's words, B3 README numbering line drops 'one writer at a time'; residual: writing.md reads as telling a dev2 writer to run the reserver (ADR 0002: FO reserves), now without SKILL.md's stop. Recommend revise: fixes B1-B3 plus the reword."
+    }
+  ]
+}

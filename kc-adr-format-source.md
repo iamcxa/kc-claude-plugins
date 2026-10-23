@@ -48,6 +48,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:kc-adr-format-source:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:kc-adr-format-source-validation-1
+              briefing:
+                id: briefing:kc-adr-format-source:validation:attempt-1:revision-1
+                digest: sha256:dc7fec93a25fa0ca52f40f329cb1ddb204bdcc0d840523be6b9a8212b14dcaba
+                room-ref: ./kc-adr-format-source/review/validation/briefing-1
 started: 2026-10-23T02:38:26Z
 ---
 
