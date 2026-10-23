@@ -278,3 +278,73 @@ kc-adr now ships the ADR template and linter as byte copies of dev2's (one phras
 ### Summary
 
 SKILL.md's numbering clause now defers to `writing.md` and keeps the "no words, do not write" rule, so the two files agree. Head is 91b9e8af; every earlier cycle-1 result still holds because the one-line change touches no script, template or dev2 file. The earlier cycle's `test_sd_dispatch.py` and extension-suite limit stands.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on candidate 91b9e8af2538745e0f2f059a1c218e009e7f20fe against AC-1..AC-3, the approved design with D1 and D2, and Captain amendment 1.
+  Verdict PASSED. Worktree HEAD is the candidate, base c3514876 is its merge-base, two commits (57b86de4, 91b9e8af), 7 files, `git diff --stat <base>..<candidate> -- kc-dev-flow-2` empty.
+- DONE: AC-1, re-run: `cmp` on the linter and `diff` on the template against the base's dev2 files.
+  Linter `cmp` exit 0; template diff is one hunk, `21c21`, "worker or FO" to "recommender". Fails if one byte of the linter differs or the template differs outside line 21.
+- DONE: AC-2, re-run: kc-adr `test_adr_lint.py`, dev2's suites, and the overlay run on dev2's paths.
+  Scratch `git archive` of the candidate: kc-adr tests Ran 8 OK (from kc-adr and from /tmp); dev2 `test_adr_doc_checks.py` 9, `test_lint_skills.py` 35, `test_dispatch_records.py` 47 OK, `lint-skills.py` exit 0. Overlay (kc-adr template and linter copied onto dev2 paths): same four green, repo's 29 ADRs pass the linter, and `cmp` of both pairs is clean. The extracted `AdrLintTests` body is identical to dev2's (compared programmatically).
+- DONE: The two template falsifiers.
+  `**Recommended:**` to `Recommended:` makes `test_adr_lint.py` FAIL (failures=3), asserting the required-record rule; `## Status` to `## State` FAILS (failures=5), asserting the format rule. A damaged template cannot pass.
+- DONE: AC-3, re-run: text check, relative-path check, single-writer dry run, and SKILL.md/writing.md agreement on numbering.
+  `## Where the tools are` has both `<kc-adr>/` paths, no `<package>/` template or linter path, the `number_guards.py reserve` reserver line, and the "one above the highest" sentence names `number_guards.py reserve`. `test -f ../../references/adr-template.md && test -f ../../scripts/adr_lint.py` from the read-adr folder exits 0. Dry run (acceptance step 6): highest 0003, new 0004 from the template, `--require 0004` and `--since <main>` both exit 0. "no reserved number" is in neither file; SKILL.md sends numbering to `writing.md`. Limit as designed: one tree only, two concurrent writers are not caught (ADR 0002).
+- DONE: Review the code change: 7 files, no kc-dev-flow-2 file, README and boundary-contract accurate, D1 items 2 and 5 consistent with the numbering rule.
+  README now says kc-adr ships template and linter and reservation stays in dev2, and 0.1.1 matches plugin.json, codex manifest and marketplace (`version-parity-check.sh` exit 0). boundary-contract states the narrowed ruling and names the dev2 task as owner of copy and sync. writing.md version stamp 0.28.0 equals `kc-dev-flow-2/.claude-plugin/plugin.json` at base. Two polish findings, below. Necessity: every surface maps to an AC, D1, D2 or amendment 1; the test file is what AC-2 and the falsifiers run on.
+- DONE: `/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since c3514876339cb732d0bea8b2d2dd45c234bcdeaf`, run with its exit code.
+  Run in the candidate worktree: "29 ADR file(s) checked, 0 legacy", exit 0. The candidate adds no ADR and the task has no `## Number guards`, so no `--require`.
+- DONE: Package checks at the candidate.
+  `comment_ratio.py` 216 code lines, 1 comment line (in the byte-identical linter), 0.5%, max 5% met, exit 0; `dispatch_records.py` "4 dispatch record(s) complete" exit 0; `design_surfaces.py check` presentable exit 0; `doc_impact.py` lists 0 documents; `skill-frontmatter-lint.sh` exit 0. The skill header resolved 0.26.0, the dispatch 0.28.0; `diff -rq` differs only in manifests and `.in_use`, so the scripts are the same bytes.
+- DONE: Merge collision with the read-adr follow-up.
+  `git merge-base --is-ancestor e1f43044 c3514876` true: the follow-up is already in this task's base, so there is no collision to resolve; its SKILL.md sentence is the line amendment 1 changed.
+- DONE: A minimal acceptance script FO can run in a fresh shell.
+  Below; run by me with `env -i` (empty environment but HOME and PATH): exit 0, all six steps as expected. Output of the scratch directory is under /tmp.
+- SKIPPED: `test_sd_dispatch.py`, the extension suites, an agent scenario for the SKILL.md sentence, CI for `kc-adr/` and the byte compare.
+  Not run: `test_sd_dispatch.py` needs `--sd-plugin-root`; no agent scenario was run, so whether an agent numbers correctly from SKILL.md is unmeasured; CI for kc-adr and the compare are owed by dev2 task `kc-adr-tools-with-dev2-copy`.
+
+### Findings
+
+- Polish: `writing.md` item 5 says "You do not run it" about the number reserver, while the section's numbering sentence says "under kc-dev-flow-2, use `number_guards.py reserve` instead". The sentence is the Captain's ruled wording and the design's approved text; it reads as an instruction to the coordinator. No current user-visible loss.
+- Polish: README states kc-adr "0.1.1"; release-please will move the version from the `feat(kc-adr):` commit, so the stamp ages the same way the old 0.1.0 stamp did.
+
+### Minimal acceptance script
+
+Needs only the candidate worktree path below, `git`, `python3`. No secret. It does not cover: dev2's suites other than `test_adr_doc_checks.py` (steps run in the overlay above), concurrency of two writers, CI, or agent behaviour.
+
+```sh
+#!/bin/sh
+set -u
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-kc-adr-format-source
+B=c3514876339cb732d0bea8b2d2dd45c234bcdeaf
+C=91b9e8af2538745e0f2f059a1c218e009e7f20fe
+S=$(mktemp -d /tmp/kc-adr-accept.XXXXXX); rc=0
+git -C "$REPO" archive "$C" | tar -x -C "$S" || exit 1
+echo "1. linter byte-identical to base dev2 linter (expect: exit 0)"
+git -C "$REPO" show "$B:kc-dev-flow-2/scripts/adr_lint.py" | cmp - "$S/kc-adr/scripts/adr_lint.py" && echo "   exit 0" || rc=1
+echo "2. template differs from base dev2 template only at line 21 (expect exactly one line: 21c21)"
+git -C "$REPO" show "$B:kc-dev-flow-2/references/adr-template.md" | diff - "$S/kc-adr/references/adr-template.md" | grep -E "^[0-9]+[acd]"
+echo "3. no dev2 file touched (expect: 0)"
+git -C "$REPO" diff --name-only "$B" "$C" -- kc-dev-flow-2 | wc -l
+echo "4. kc-adr tests (expect: Ran 8 tests ... OK)"
+(cd "$S/kc-adr" && python3 -B scripts/test_adr_lint.py 2>&1 | grep -E '^(Ran|OK|FAILED)')
+echo "5. dev2 suite with kc-adr files on dev2 paths (expect: Ran 9 tests ... OK)"
+for f in references/adr-template.md scripts/adr_lint.py; do cp "$S/kc-adr/$f" "$S/kc-dev-flow-2/$f"; done
+(cd "$S/kc-dev-flow-2/scripts" && python3 -B test_adr_doc_checks.py 2>&1 | grep -E '^(Ran|OK|FAILED)')
+echo "6. single-writer dry run (expect: new number 0004, then two exit=0 lines)"
+D="$S/dry"; mkdir -p "$D/docs/adr" && cd "$D" && git init -q -b main && git config user.email a@b.c && git config user.name t
+mk() { sed -e "s/^# NNNN\./# $1./" -e "s/^Date: YYYY-MM-DD/Date: 2026-01-01/" "$S/kc-adr/references/adr-template.md" > "docs/adr/$1-$2.md"; }
+mk 0001 first; mk 0002 second; mk 0003 third
+git add -A && git commit -q -m base && MAIN=$(git rev-parse HEAD) && git checkout -q -b feat
+HIGH=$(git ls-tree --name-only main docs/adr/ | sed 's|.*/||' | grep -E '^[0-9]{4}-' | cut -c1-4 | sort | tail -1)
+N=$(printf '%04d' $((10#$HIGH+1))); echo "   new number $N"
+mk "$N" a-new-ruling
+python3 "$S/kc-adr/scripts/adr_lint.py" docs/adr --require "$N" >/dev/null; echo "   --require exit=$?"
+python3 "$S/kc-adr/scripts/adr_lint.py" docs/adr --since "$MAIN" >/dev/null; echo "   --since exit=$?"
+exit $rc
+```
+
+### Summary
+
+PASSED: the candidate meets AC-1..AC-3, D1, D2 and amendment 1; every check was re-run in scratch copies, and both template falsifiers fail the kc-adr tests as they should. Two polish findings, no repair needed. Unverified: `test_sd_dispatch.py`, extension suites, agent behaviour on the SKILL.md sentence, and CI for `kc-adr/` plus the byte compare (owed by dev2 task `kc-adr-tools-with-dev2-copy`).
