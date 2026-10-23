@@ -1,0 +1,82 @@
+design_review:
+  preview: ops-inbox-r1-setup-and-isolation/preview/
+  findings:
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-slack.png, every notice (context line)
+      seen: The proposal puts arrival time in the context line, but every context line shows only event id, source and contract version; the only time is Slack's own 08:48 stamp, identical on all notices.
+      fix: Add the arrival time to the context line, or drop it from the proposal and say that the Slack post time stands in for it.
+    - severity: MINOR
+      dimension: consistency
+      where: preview-slack.png, "Needs a look" notice (light and dark)
+      seen: The agent line uses the ✅ and ⚠️ emoji, but the UNCERTAIN line uses a plain "?" glyph that is nearly invisible on the light theme and thinner than the other two icons.
+      fix: Use one icon set for all three agent outcomes, with a visible UNCERTAIN icon (for example ❓) in both themes.
+    - severity: MINOR
+      dimension: spacing
+      where: preview-slack.png, phone width (390 px), context lines
+      seen: The context line wraps mid-token ("urn:ops-" / "inbox:setup") and leaves "· contract v1" alone on its own line.
+      fix: Separate the context fields with line breaks or non-breaking pairs so a wrap never splits a field.
+    - severity: MINOR
+      dimension: states
+      where: preview-slack.png, phone width and dark theme
+      seen: Phone shows 4 of the 9 desktop states and dark shows 4 of 9; the longest event id (64), the escaped mention, the UNCERTAIN and the retried states are not drawn on phone, and the long-text and no-field states are not drawn in dark.
+      fix: Draw at least the 64-character event id, the UNCERTAIN notice and the escaped mention at phone width, and the truncated long-text notice in dark.
+    - severity: MINOR
+      dimension: states
+      where: preview-slack.png, truncated long-text notice
+      seen: The field text ends in "failed becau…" with no cue to where the full event can be read.
+      fix: Add a link or the run reference that leads to the full text, or say in the notice that the text was cut at 200 characters.
+    - severity: MINOR
+      dimension: flow
+      where: preview-slack.png, "Needs action" notice
+      seen: The "agent NOT started" notice stays in the channel with no later cue when the same event id starts after a retry, so the two notices read as a contradiction.
+      fix: Have the "started after a retry" notice name the earlier "NOT started" notice, or say that it replaces it.
+    - severity: MINOR
+      dimension: states
+      where: preview-setup.png, verify blocks
+      seen: Verify shows FAIL, ERROR and WAIT, but the Slack-visibility row (C5) is shown only as WAIT. A link that was given but points to the wrong message or channel has no row.
+      fix: Add a verify block where C5 is FAIL with its named fix, for a link that does not match the self-test notice.
+    - severity: MINOR
+      dimension: states
+      where: preview-setup.png, apply blocks
+      seen: Apply shows only an A5 FAIL case. FAIL on A1 to A4, and verify run before apply, are not drawn.
+      fix: Add one apply block showing an early step failing (so later steps are skipped), and one verify block showing a clean-slate run.
+    - severity: MINOR
+      dimension: consistency
+      where: preview-setup.png, setup verify blocks
+      seen: Step ids repeat across rows (C1 twice, C4 twice, C5 twice), and the order is A1, A2, A3, A5, A6, C1 and so on. A4 is skipped without a note, so "step" is not a unique key and the order does not match the plan.
+      fix: Give each row a unique id (for example C1a and C1b), and note that A4 has no read-back.
+    - severity: MINOR
+      dimension: consistency
+      where: preview-setup.png, setup verify blocks (exit codes)
+      seen: A run with only a WAIT row ("Setup is not complete. Exit 1.") exits with the same code as a run with FAIL or ERROR rows, and nothing explains the difference between ERROR and FAIL.
+      fix: Give WAIT its own exit code, and add one line that defines PASS, FAIL, ERROR and WAIT.
+    - severity: MINOR
+      dimension: flow
+      where: preview-setup.png, setup plan A3, A6, C4, C5
+      seen: The proposal says each step has its exact command, but A3 has `<root commit of .ops-inbox/state-root>`, A6 has `<C2 Client ID>`, C4 has `<producer's secret-set command>`, and C5 says "(paste the URL when asked)", so those lines cannot be run as written.
+      fix: Show these as clearly marked fill-in values with the command that produces each one, or state that the plan lists templates.
+    - severity: MINOR
+      dimension: flow
+      where: preview-setup.png, plan C6 and the apply blocks
+      seen: C6 says the ruleset files are "written by setup apply", but none of the A1 to A6 results reports writing them.
+      fix: Show which agent step writes the ruleset files, and report it as an apply result row.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-setup.png, banner line under every command
+      seen: Each block repeats a banner with project, trigger, inbox and contract v1, which repeats the --project and --host on the command line right above it.
+      fix: Print the banner once per run, or only the parts that are not in the command.
+    - severity: MINOR
+      dimension: states
+      where: preview-setup.png, verify "read by" column
+      seen: The "read by" cell is cut with "…" for A3 and C7 (`gh api repos/<project>/branches/…`), so the exact read-back command is not visible.
+      fix: Show the full command in the cell, or print the full command on a second line for cut rows.
+    - severity: MINOR
+      dimension: theme-size
+      where: preview-setup.png, all blocks
+      seen: Everything is one dark terminal, about 140 to 150 columns wide, and the plan and verify tables wrap mid-token in the plan; a narrow (80-column) terminal and a light terminal are not shown.
+      fix: Show the verify table and one plan line at 80 columns, and say that output is plain text with no colour dependence.
+  limitations:
+    - Both pictures are locally drawn mocks, so the real Slack rendering (the orange bar, emoji, the escaped "<!channel>" text, link colours) and real terminal wrapping could not be seen.
+    - No controls are drawn; the only clickable items are three inline links in Slack. Touch-target size, disclosure and menu conventions therefore could not be judged.
+    - No dark or phone view of the setup output, and no Slack picture beyond the three sizes shown (desktop light, desktop dark, phone width).

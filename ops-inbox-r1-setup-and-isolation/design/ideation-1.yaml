@@ -1,0 +1,93 @@
+design_review:
+  preview: ops-inbox-r1-setup-and-isolation/preview/
+  findings:
+    - severity: MAJOR
+      dimension: flow
+      where: preview-setup.png, setup plan (Order line) vs setup apply
+      seen: The plan says to run A1 A2, then C1 C2, then A3 to A6 (A6 sets OPS_AGENT_APP_CLIENT_ID, which only exists after C2). The apply output runs A1 to A6 in one command and lists only C3 to C7 as still open, so C1 and C2 are never mentioned.
+      fix: Make apply either stop at the C1/C2 dependency and say so, or state in plan and apply that C1 and C2 must be done before running it, and list C1 C2 as open or done in the apply report.
+    - severity: MAJOR
+      dimension: flow
+      where: preview-setup.png, setup plan, steps A3 to A6 and C1 to C2
+      seen: The proposal promises each step with its exact command. A3, A4, A5 and A6 end in "..." and A2 and A4 carry unexplained trailing text. The C1 and C2 "open https://github.com/settings/apps/new?..." URLs are cut off at the right edge (C2 ends "pull_requests=wri").
+      fix: Print every command in full and wrapped, or write the full commands to a file the plan names, so each step can be copied and run as shown.
+    - severity: MAJOR
+      dimension: hierarchy
+      where: preview-setup.png, both setup verify blocks, result column
+      seen: Passing rows show raw values with no verdict (true, present, 202, ok, "refused 422", "verified, posted ..."). "refused 422" and "FAILED ..." both read as errors, and only the failing and waiting rows carry a verdict word.
+      fix: Add a fixed verdict column (PASS, FAIL, WAIT) separate from the observed value, so the count line and the rows use the same vocabulary.
+    - severity: MAJOR
+      dimension: states
+      where: preview-setup.png, setup apply
+      seen: Only the all-succeeded apply is shown. There is no output for a failed agent step (for example A1 repo already exists, A5 deploy fails), a partial run, or a re-run where steps are already done, and the exit code shown is only 0.
+      fix: Add apply previews for a failed step and for an idempotent re-run, each with a per-step result word and a non-zero exit code.
+    - severity: MAJOR
+      dimension: consistency
+      where: preview-slack.png, caption "A duplicate send posts nothing" vs the NOT started card
+      seen: The caption says a duplicate send posts nothing, but the NOT started card says "The sender's retry can start it". A retry is a repeat send of the same event id, and the previews never show what the retry posts.
+      fix: Show the notice a retry produces after NOT started and after UNCERTAIN, and reword the caption to say exactly which repeats post nothing.
+    - severity: MINOR
+      dimension: flow
+      where: preview-slack.png, "Setup self-test" card
+      seen: The card says "Nothing to do:" and then, in the same sentence, tells the reader to paste the link into setup verify. It also has two body paragraphs plus an agent line, where the proposal allows one field line and one agent line.
+      fix: Reword to "No task was filed. Captain: paste this message's link into setup verify", and fold the body into one line.
+    - severity: MINOR
+      dimension: flow
+      where: preview-setup.png, setup verify (one failed read-back, Slack waiting)
+      seen: The Fix line covers only the failed row and sits below the table, not on the row. The waiting row's way forward appears only inside the row as "(--slack-permalink)", and the footer never says to re-run with that flag. Exit 1 is shown for failed plus waiting, but not for waiting alone.
+      fix: Put one next-action line per non-passing row (re-run with --slack-permalink <link>) and show a waiting-only variant with its exit code.
+    - severity: MINOR
+      dimension: flow
+      where: preview-setup.png, setup apply
+      seen: Apply opens a PR, creates a repository and runs "netlify deploy --prod", with nothing shown that asks for confirmation. Only the plan's "Nothing was changed" line works as a preview.
+      fix: Have apply print "this will run A1 to A6" with a confirm or a --yes flag, or state in the plan that apply is not interactive.
+    - severity: MINOR
+      dimension: states
+      where: preview-slack.png, all light, dark and phone cards
+      seen: No card shows long event text (the sentry card is short), an event with no allowlisted field, or a branch name that cannot wrap. Dark theme shows only started and UNCERTAIN, and phone width shows only two started variants, so NOT started, the self-test and the escaped-mention card are missing at both.
+      fix: Add dark and phone versions of the NOT started, self-test and long-text cards, and one card with no allowlisted field.
+    - severity: MINOR
+      dimension: states
+      where: preview-setup.png, setup verify
+      seen: Only FAILED and WAITING are shown. A read-back that cannot run (gh not logged in, inbox unreachable, network down) has no row form, and no terminal narrower than about 130 columns is shown for the plan or verify tables.
+      fix: Add an ERROR row form distinct from FAILED, and show verify and plan at 80 columns.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-slack.png, NOT started and UNCERTAIN cards vs the started cards
+      seen: The failure states differ from "Agent started" only by bold weight and one word (NOT, UNCERTAIN). The bold paragraph is heavier than the heading above it.
+      fix: Add one non-text cue to the failure lines (a prefix glyph or label such as "Needs action"), and keep the heading as the heaviest line.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-slack.png, every card, and preview-setup.png, every block
+      seen: Facts repeat. Slack shows "08:48" in the header and "arrived 08:48:23Z" in the context line, and the event id is repeated inside the task branch name. In the setup output the project and trigger repository appear in the command line, the header line, the "trigger repository" line, and the verify legend line.
+      fix: Drop one of each pair (the branch need not embed the event id in the notice, and the verify legend can replace the repeated header line).
+    - severity: MINOR
+      dimension: spacing
+      where: preview-setup.png, setup verify, C2 row
+      seen: "agent App token: contents, pull requests, 1 repository" runs straight into the "read by" column ("repository self-test run:") with no gap, unlike every other row.
+      fix: Size the what-is-read-back column to its longest cell, or truncate with an ellipsis.
+    - severity: MINOR
+      dimension: spacing
+      where: preview-slack.png, phone width cards
+      seen: Long unbroken tokens (event id, task branch hash) break mid-hash at 390 px (for example "a1b2c3 / d4e"), and the agent line wraps to 3 to 5 lines.
+      fix: Shorten the displayed event id and branch (for example the first 8 characters of the hash) in the notice, keeping the full value in the link target or run log.
+    - severity: MINOR
+      dimension: platform
+      where: preview-slack.png, light theme and phone context lines
+      seen: The context line is small light-grey text on white, and the run links are bare numbers ("run 39750507891") with no meaning to a reader.
+      fix: Raise the context-line contrast and label the run link with the event or repo name.
+    - severity: MINOR
+      dimension: consistency
+      where: preview-slack.png, sentry-shaped card
+      seen: The text "(shown as text, never as a mention)" sits inside the notice body, so it reads as part of the shipped message. The card also uses a "source urn:sentry:fixture" source on a production-looking notice.
+      fix: Move that note out of the card into the picture caption.
+    - severity: MINOR
+      dimension: states
+      where: preview-slack.png, "Agent started" lines
+      seen: Every started card ends "(Draft PR follows)" with no link, and no previewed notice shows the PR opening or failing.
+      fix: Either show the follow-up PR notice or drop the promise from the started line.
+  limitations:
+    - Both previews are static mock images, not the real Slack render or a real terminal. Link hover and focus states, terminal colour (the setup output is dark only), and the Slack mobile client's own chrome could not be judged.
+    - I cannot tell whether the cut-off C1 and C2 URLs are a mock crop or the real output width.
+    - Touch-target size is not measurable. The only controls are inline text links (the run link and the runs link), with no buttons, chips or menus in either picture.
+    - Only light and dark desktop and one 390 px phone width appear, and only for Slack. No other width or theme was provided.
