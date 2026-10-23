@@ -31,6 +31,8 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=15, why="the ideation and validation gate material carries the design check's upheld declines, decision lines and picture paths for the Captain",
          captain="「可以」 (Captain, ideation gate of design-director-runs-ui-design-review, 2026-10-22), answering 「設計總監的設計已經把你的 6 題裁定全部改進去了，可以開設計閘門。要你決定的是：可以進入實作嗎？我建議可以。」 whose presentation named raising this budget by 15 words, 5374 to 5389",
          loaded="startup and resume of the First Officer, and its ideation and validation gate preparation for a ui task"),
+    dict(delta=-5, why="pr_watch.py tasks now reads the Release review line, so the clause 'no script checks that line' is false and goes",
+         captain="「可以」 (chat, 2026-10-23) to the ideation gate question that named deleting 'no script checks that line'"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
