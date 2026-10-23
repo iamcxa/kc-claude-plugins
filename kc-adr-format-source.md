@@ -394,3 +394,7 @@ PASSED: the candidate meets AC-1..AC-3, D1, D2 and amendment 1; every check was 
 ### Summary
 
 The four text fixes are in one commit on the worktree branch; every cycle-2 check was re-run on the new head and passes. The sanitize-check was run as the skill's rules by hand (grep over the rule file), not through the skill itself. Residuals unchanged: `test_sd_dispatch.py` not run, no agent run measured the reworded numbering sentence, and `read-adr-reporting-rule-followup` may collide on writing.md.
+
+### Feedback Cycles
+
+- Cycle 1 (Captain, 2026-10-23): validation gate briefing-1 closed revise (「照建議」) on 91b9e8af after the engineering reviewer returned adjust; routed to implementation as four text fixes, all to fix: B1 restore the two-host first step in boundary-contract.md, B2 restore the ruling's words and place there, B3 add "one writer at a time" to the README numbering line, fix 4 the writing.md numbering sentence per Captain amendment 2. Implementation cycle 3 landed them in 0b5a9ddf; fresh validation recheck next.
