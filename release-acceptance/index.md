@@ -431,3 +431,50 @@ PR 2 becomes one extension plus a director pass: trigger by `due` and a `pr_watc
 ### Summary
 
 Criteria moved per ADR 0005; the task's remaining scope is PR #709 alone. Nothing was pushed except the state branch by `spacedock state commit`.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #709 head e3a92e98 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Recommend PASSED for e3a92e9877257cd8ec5a7c9c4e9b5a78c842222b. `node --test lib/*.test.mjs` 263/263 in a detached throwaway checkout; `tsc` clean; `journey-dev2-loop-smoke.sh` "all steps passed". My own mutations, all failing the named test: AC-5 reverse order / nondeterministic output / proof line altered (6 tests: 4, 2, 2 fail); AC-9 not_tested dropped / not-reachable ids dropped / unverified->gap rule removed / unknown result accepted / journey mismatch accepted / CLI appends to the map (each 1 fail, last "neither file changed"); AC-10 story-less task ignored (2 fail) / any release-acceptance task an orphan (1 fail). Limits judged under `### Limits`.
+- DONE: This task now closes with PR #709 only: validate AC-5, AC-9 and AC-10 (the remaining criteria after Captain Amendments 2 and 4); confirm #709 merges cleanly onto current origin/main (which now holds #708 and #705); judge the two without-it unanswered items in the PR body
+  AC-5, AC-9, AC-10 met at pilot depth. Real `git merge --no-commit` of e3a92e98 onto origin/main 0701aa8d: no conflict, 263/263 pass on the merged tree, `adr_lint.py --require 0031` exit 0, `adr-path-check.py` exit 0; open #711 adds ADR 0032, no number clash. Both without-it items judged under `### Without-it`.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.28.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and observed output under `### Acceptance script`, run with `env -i HOME PATH bash --noprofile --norc`. `adr_lint.py docs/adr --since c3514876339cb732d0bea8b2d2dd45c234bcdeaf` (base) and `--since origin/main`: "30 ADR file(s) checked, 0 legacy", exit 0 both; with `--require 0031` exit 0. Findings F1 to F5 below; none Material.
+
+### Findings
+
+- F1 Deferred risk: `journey-accept.mjs` exits 0 with no proposals when the report has no top-level `stories` array (probed: a report with `walks[{stories}]` prints `proposals: []`). The cycle 3 PR 2 design (item 9) puts per-story results under `walks[]`. Material if release-walk-picky-reviewers-and-director ships `release-acceptance/v1` without top-level `stories[]` and this reader is not changed; carry to that task.
+- F2 Polish: a report listing one story twice yields two identical proposals; the report checker that refuses duplicates is PR 2's.
+- F3 Polish: ADR 0031 heading reads "the two plugins meet only at two named schemas" while the slug, `accept-release.md` and the schema footer say "the plugins meet at two named schemas"; "only" has its enforcing import-scan test in the moved AC-12, not here. Bounded by inspection today: neither new `.mjs` imports kc-dev-flow-2 files.
+- F4 Polish: `journey-accept` output `note` restates `accept-release.md` and the ADR; see `### Without-it`.
+- F5 Polish (for FO): `dispatch_records.py <task folder>` exits 1: "ideation-1.md: needs a scope-notes line naming main as the completion recipient". It is the 2026-10-10 ideation record (package 0.14.0), not the candidate; implementation-1 to -4 and validation-1 pass.
+
+### Without-it
+
+- `journey-accept` fields `note` and `unproven.current`: keep `unproven.current`, remove `note`. Without `current`, the Captain accepting `proposed` verbatim overwrites the map's existing `unproven` text and has nothing beside it to compare; `accept-release.md` promises it "printed beside the current line" and the AC-9 test asserts it. `note` is a constant string already in the doc and ADR; nothing breaks without it. Kent rules.
+- `accept-release.md` "Which mode when": keep. It traces to drift-report item 9 above (`interrogation.md` already covers built stories; `review-release` step 0 needs `codex`), and I verified both statements against `interrogation.md` § When and `release-review.md` § 0. Without it a caller sends a cross-task walk finding to `review-release` unaware that it stops without `codex`. Not from Captain words. Kent rules.
+
+### Limits
+
+Stated by implementation, judged: (1) `journey-accept` tested on a synthetic report, because `release-acceptance/v1` ships with PR 2: accepted, see F1. (2) `journey-accept` does not check every story was walked: accepted, in doc and ADR. (3) `source.commit` is null while the map is uncommitted: accepted, tested, documented. Not verified by me: `version-parity-check.sh` and the sanitize-check skill (CI version parity passes on the head; I grepped the added lines for adopter, host, path and secret markers: none); billed CI minutes; any real walk (PR 2 not built); model-tests on Node 22.13.0 (CI passes it, I ran Node 24.18.0). Package root: the loaded skill said 0.27.0, the dispatch 0.28.0; I ran scripts from 0.28.0 as the checklist names (adr_lint.py and the validation skill are byte-identical in both).
+
+### Acceptance script
+
+Run from the candidate checkout; expected output follows each step. Not covered: any real release walk, the kc-dev-flow-2 half, merge.
+
+    cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-release-acceptance/kc-journey-map
+    M=skills/kc-journey-map/references/journey.example.yaml
+    echo "== 1 candidate"; git rev-parse HEAD; git status --short | wc -l
+    echo "== 2 walk list"; node lib/journey-walk.mjs $M r1 | node -e 'const d=JSON.parse(require("fs").readFileSync(0,"utf8"));console.log(d.schema,d.stories.map(s=>s.id).join(","),d.proof_line===d.release.goal)'
+    R=$(mktemp -d)/report.json
+    echo '{"schema":"release-acceptance/v1","walk":{"journey":"book-pickup","release":"r1"},"stories":[{"id":"reserve-copy","result":"works"},{"id":"check-ready","result":"missing-entry-point"},{"id":"collect-book","result":"not-reachable"}],"not_tested":["refund path"]}' > $R
+    echo "== 3 proposals"; B=$(shasum -a 256 < $M); node lib/journey-accept.mjs $M $R | node -e 'const d=JSON.parse(require("fs").readFileSync(0,"utf8"));console.log(JSON.stringify(d.proposals.map(p=>[p.story,p.from,p.to])));console.log(d.unproven.proposed)'
+    echo "== 4 map unchanged"; [ "$B" = "$(shasum -a 256 < $M)" ] && echo same; git status --short | wc -l
+    echo "== 5 refusal"; sed 's#release-acceptance/v1#release-acceptance/v2#' $R > $R.v2; node lib/journey-accept.mjs $M $R.v2; echo "exit=$?"
+    echo "== 6 tests"; node --test lib/*.test.mjs 2>&1 | grep -E '^ℹ (tests|pass|fail)'
+
+Observed: `e3a92e9877257cd8ec5a7c9c4e9b5a78c842222b` and `0`; `release-walk/v1 reserve-copy,check-ready,collect-book true`; `[["check-ready","unverified","gap"]]` and `Not reachable in the release walk: collect-book. Not tested: refund path.`; `same` and `0`; `ACCEPT REFUSED: report schema is "release-acceptance/v2", not release-acceptance/v1` with `exit=1`; `tests 263`, `pass 263`, `fail 0`.
+
+### Summary
+
+Recommend PASSED for head e3a92e9877257cd8ec5a7c9c4e9b5a78c842222b: AC-5, AC-9 and AC-10 hold under my own mutations, #709 merges cleanly onto origin/main 0701aa8d with the suite and ADR lint green, and no finding is Material. F1 is the one to carry forward: the reader silently accepts a report whose per-story results are not at top-level `stories`, which PR 2's current design would produce. Throwaway worktrees removed; nothing pushed or commented.
