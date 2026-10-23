@@ -28,7 +28,7 @@ V3 = json.loads((HERE / "expectations-v3.json").read_text())
 SCEN_BY_RULE = {"v2": EXP["scenarios"], "v3": {**EXP["scenarios"], **V3["scenarios"]}}
 SCEN = SCEN_BY_RULE["v2"]
 ARM_ORDER = ["A0", "A0p", "B1"]
-S14_ARMS = ["C", "A0", "B1"]
+S14_ARMS = ["C", "A0", "B1", "P"]
 HOSTS = ["claude", "codex"]
 REAL = [f"S{i}" for i in range(1, 13)]
 

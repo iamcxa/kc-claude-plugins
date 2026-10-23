@@ -32,7 +32,8 @@ CLAUDE_MODEL = "sonnet"
 CODEX_MODEL = "gpt-6.1-sol"
 CODEX_EFFORT = "high"
 TIMEOUT = 900
-ARMS = {"C": "control: no ADR 0024, no help", "A0": "ADR 0024, no help", "B1": "ADR 0024 and plugin kc-adr (skill read-adr)"}
+ARMS = {"C": "control: no ADR 0024, no help", "A0": "ADR 0024, no help", "B1": "ADR 0024 and plugin kc-adr (skill read-adr)",
+        "P": "ADR 0024, no help, one comment line at src/report_mailer.js pointing at the ADR"}
 KC_ADR_ROOT = Path(os.environ.get("KC_ADR_ROOT", ""))
 
 SMOKE = {"id": "SMOKE", "choices": None, "handoff": False,
@@ -126,7 +127,7 @@ def setup_workspace(run_dir, arm, host):
     if run_dir.exists():
         shutil.rmtree(run_dir)
     run_dir.mkdir(parents=True)
-    w = world.build(run_dir, control=(arm == "C"))
+    w = world.build(run_dir, control=(arm == "C"), pointer=(arm == "P"))
     app = run_dir / "mira-app"
     (run_dir / ".kc-decision-log").mkdir()
     if host == "claude":

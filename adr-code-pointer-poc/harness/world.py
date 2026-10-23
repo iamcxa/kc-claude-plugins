@@ -371,6 +371,10 @@ export async function sendCorrection(shop, rows, day, note) {
 """
 
 
+POINTER_LINE = "// Reading each report back from the store before mailing is deliberate: see docs/adr/0024-report-emails-are-sent-from-the-stored-copy.md\n"
+REPORT_MAILER_JS_POINTER = REPORT_MAILER_JS.replace("// Sends report emails to shop owners.\n", "// Sends report emails to shop owners.\n" + POINTER_LINE, 1)
+
+
 def hidden_adr():
     """ADR 0024: protects the save-then-read-back step in src/report_mailer.js. Absent from the control world."""
     return adr("24", "Report emails are sent from the stored copy", "2026-09-22", "Accepted",
@@ -383,7 +387,7 @@ def hidden_adr():
                "Each report email costs one extra read of the report store.")
 
 
-def build_app(dest, d0, d1, digs, control=False):
+def build_app(dest, d0, d1, digs, control=False, pointer=False):
     repo = dest / "mira-app"
     repo.mkdir(parents=True)
     git(repo, "init", "-q", "-b", "main")
@@ -411,7 +415,7 @@ Notes for agents working in this repository.
     write(repo / "src" / "store.js", STORE_JS)
     write(repo / "src" / "mail.js", MAIL_JS)
     write(repo / "src" / "report_render.js", REPORT_RENDER_JS)
-    write(repo / "src" / "report_mailer.js", REPORT_MAILER_JS)
+    write(repo / "src" / "report_mailer.js", REPORT_MAILER_JS_POINTER if pointer else REPORT_MAILER_JS)
     write(repo / "src" / "receipt.js","// Receipt page layout.\nexport const RECEIPT_PADDING = 12;\nexport const RECEIPT_LINE_GAP = 4;\n")
     t, wrong = tasks(d0, d1, digs)
     for name, text in t.items():
@@ -436,17 +440,19 @@ Notes for agents working in this repository.
     return wrong, git(repo, "rev-parse", "HEAD")
 
 
-def build(dest, check=True, control=False):
-    """control=True builds the same repositories without mira-app's ADR 0024 (arm C)."""
+def build(dest, check=True, control=False, pointer=False):
+    """control=True builds the same repositories without mira-app's ADR 0024 (arm C); pointer=True adds the one comment line to src/report_mailer.js (arm P)."""
     dest = Path(dest)
     d0, d1, digs = build_decisions(dest)
-    wrong, a0 = build_app(dest, d0, d1, digs, control)
+    wrong, a0 = build_app(dest, d0, d1, digs, control, pointer)
     world = {"D0": d0, "D1": d1, "A0": a0, "digests": digs, "wrong_digest_0009": wrong}
     if check:
         exp = json.loads((HERE / "expected_world.json").read_text())
         if control:
             exp = {**exp, "A0": exp["A0_control"]}
-        exp = {k: v for k, v in exp.items() if k != "A0_control"}
+        if pointer:
+            exp = {**exp, "A0": exp["A0_pointer"]}
+        exp = {k: v for k, v in exp.items() if k not in ("A0_control", "A0_pointer")}
         if exp != world:
             raise SystemExit(f"world drifted from expected_world.json:\n{json.dumps(world, indent=1)}")
     return world
