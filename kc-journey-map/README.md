@@ -95,6 +95,7 @@ deleted to make a re-render clean.
 | **draw** | No journey exists yet and you want one from the code | The board, derived from entry points |
 | **check** | A journey already exists — board, screenshot, or a list of cards | The mismatch table first, then the corrected board |
 | **sequence companion** | Actors, handoffs or branches need explaining alongside a journey | An editable Mermaid sequence page rendered from a repository `.mmd` |
+| **accept-release** | Every story of a release has its development tasks done | The release's walk list for an end-to-end operated walk, then proposed map edits from the walk's report; never written |
 | **add-story** | A capability was named and deferred in conversation, and the journey already exists | One appended `gap` story under its step, no evidence, no `release` |
 
 Map mode asserts intent, so it cites nothing and badges nothing. Draw and check mode are
@@ -141,7 +142,10 @@ node lib/journey-fold.mjs      docs/journey/<slug>.yaml --footprints <task folde
 node lib/journey-reconcile.mjs docs/journey/<slug>.yaml --workflow-dir <dir>
 node lib/journey-review.mjs    path docs/journey/<slug>.yaml <releaseId>
 node lib/journey-review.mjs    check <record.md> docs/journey/<slug>.yaml
+node lib/journey-walk.mjs      docs/journey/<slug>.yaml <releaseId>
+node lib/journey-accept.mjs    docs/journey/<slug>.yaml <report.json>
 node lib/schemas.mjs           journey-map-question
+node lib/schemas.mjs           release-walk
 ```
 
 `journey-tldr.mjs import` replaces the entire target document, including manually drawn
@@ -169,6 +173,10 @@ in this plugin's release-please `CHANGELOG.md`; the first shape and each MAJOR c
 in the marketplace repository's `docs/adr/` (the one titled "a Captain ruling reaches the map
 as a versioned footprint"). Read the CHANGELOG when a consumer refuses a version or a question
 carries a field you do not know, and read the ADR before removing or renaming a field.
+
+The walk list `journey-walk.mjs` prints is a further versioned shape, `release-walk/v1`, owned by this
+plugin: `node lib/schemas.mjs release-walk` prints its table, and its first shape has an ADR (the one
+titled "a release is accepted by walking it, and the plugins meet at two named schemas").
 
 ## The four evidence lints
 
@@ -237,6 +245,7 @@ Packaged with the skill, under `skills/kc-journey-map/references/`:
 | `map-from-conversation.md` | Map mode and plan-release mode |
 | `release-slicing.md` | Proposing release boundaries and preparing a development handoff |
 | `release-review.md` | `review-release`: walking a changed release as one journey before its tasks are split |
+| `accept-release.md` | `accept-release`: the walk list for a built release, and the map proposals a walk's report yields |
 | `sequence.md` | The optional Mermaid sequence companion |
 | `journey.example.yaml` + `example/` | A worked fictional book-pickup fixture |
 

@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { test } from 'node:test'
-import { ADR_TITLE, footer } from './schemas.mjs'
+import { ADR_TITLES, footer } from './schemas.mjs'
 
 const here = dirname(fileURLToPath(import.meta.url))
 const copy = (t) => {
@@ -14,7 +14,7 @@ const copy = (t) => {
 	for (const f of ['schemas.mjs', 'contract-versions.json']) cpSync(join(here, f), join(dir, f))
 	return dir
 }
-const run = (dir) => spawnSync('node', [join(dir, 'schemas.mjs'), 'journey-map-question'], { encoding: 'utf8' })
+const run = (dir, name = 'journey-map-question') => spawnSync('node', [join(dir, 'schemas.mjs'), name], { encoding: 'utf8' })
 
 test('the table and version print and the recorded hash binds them', () => {
 	const r = run(here)
@@ -45,19 +45,35 @@ test('the printed history pointers name files that exist and a runnable command'
 	const repo = join(here, '..', '..')
 	assert.ok(existsSync(join(repo, 'kc-journey-map', 'CHANGELOG.md')))
 	const adrs = existsSync(join(repo, 'docs', 'adr')) ? readdirSync(join(repo, 'docs', 'adr')) : []
-	assert.ok(adrs.some((f) => f.endsWith(`-${ADR_TITLE}.md`)), `an ADR titled ${ADR_TITLE} exists`)
-	const text = footer('journey-map-question')
-	assert.match(text, /node kc-journey-map\/lib\/schemas\.mjs journey-map-question/)
-	assert.match(text, /kc-journey-map\/CHANGELOG\.md/)
-	const r = spawnSync('node', [join(repo, 'kc-journey-map', 'lib', 'schemas.mjs'), 'journey-map-question'], { encoding: 'utf8' })
-	assert.ok(r.stdout.includes(text))
+	for (const [name, title] of Object.entries(ADR_TITLES)) {
+		assert.ok(adrs.some((f) => f.endsWith(`-${title}.md`)), `an ADR titled ${title} exists`)
+		const text = footer(name)
+		assert.ok(text.includes(`node kc-journey-map/lib/schemas.mjs ${name}`))
+		assert.ok(text.includes(title), `the ${name} footer names its own ADR`)
+		assert.match(text, /kc-journey-map\/CHANGELOG\.md/)
+		const r = spawnSync('node', [join(repo, 'kc-journey-map', 'lib', 'schemas.mjs'), name], { encoding: 'utf8' })
+		assert.ok(r.stdout.includes(text))
+	}
+})
+
+test('release-walk prints its table and version, and an edited table with an unchanged version exits 1', (t) => {
+	const ok = run(here, 'release-walk')
+	assert.equal(ok.status, 0, ok.stderr)
+	assert.match(ok.stdout, /^release-walk 1\.0\.0\n\| field \| rule \|/)
+	assert.match(ok.stdout, /\| `proof_line` \|/)
+	const dir = copy(t)
+	const file = join(dir, 'schemas.mjs')
+	writeFileSync(file, readFileSync(file, 'utf8').replace("['proof_line',", "['proof',"))
+	const r = run(dir, 'release-walk')
+	assert.equal(r.status, 1)
+	assert.match(r.stderr, /release-walk: the field table changed but version 1\.0\.0 did not/)
 })
 
 test('the README and SKILL.md send a reader to the schema command, the CHANGELOG and the ADR, and say when', () => {
 	const plugin = join(here, '..')
 	const readme = readFileSync(join(plugin, 'README.md'), 'utf8').replace(/\s+/g, ' ')
 	const skill = readFileSync(join(plugin, 'skills', 'kc-journey-map', 'SKILL.md'), 'utf8').replace(/\s+/g, ' ')
-	for (const pointer of ['`node lib/schemas.mjs journey-map-question`', 'release-please `CHANGELOG.md`', "`docs/adr/`", 'Read the CHANGELOG when', 'read the ADR before']) {
+	for (const pointer of ['`node lib/schemas.mjs journey-map-question`', '`node lib/schemas.mjs release-walk`', 'release-please `CHANGELOG.md`', "`docs/adr/`", 'Read the CHANGELOG when', 'read the ADR before']) {
 		assert.ok(readme.includes(pointer), `README names ${pointer}`)
 	}
 	for (const pointer of ['node lib/schemas.mjs journey-map-question', '`CHANGELOG.md`', 'Rulings from kc-dev-flow-2']) {
