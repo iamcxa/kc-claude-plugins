@@ -122,6 +122,11 @@ export function parseEvent({ secret, headers, body, nowS }) {
     nowS,
   });
   if (bad) return { ok: false, status: 401, reason: bad };
+  return validateBody(body);
+}
+
+// The contract rules without the signature, for a receiver that got the body from the inbox.
+export function validateBody(body) {
   const refuse = (reason) => ({ ok: false, status: 400, reason });
 
   let ev;
@@ -329,7 +334,7 @@ export async function handle(req, deps) {
       method: "POST",
       body: JSON.stringify({
         ref: env.OPS_REF || "main",
-        inputs: { mode, branch: branch ?? "", incident: keys.incident, event: body, opening_run: String(opening?.runId ?? "") },
+        inputs: { mode, branch: branch ?? "", incident: keys.incident, event: body, opening_run: String(opening?.runId ?? ""), received: new Date(t.arrival).toISOString() },
         return_run_details: true,
       }),
     });

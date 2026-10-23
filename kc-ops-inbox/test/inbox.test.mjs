@@ -19,6 +19,7 @@ test("a new incident opens: one dispatch in mode open, one 'New incident' notice
   assert.equal(JSON.parse(d.inputs.event).id, "signed-in-2026-10-20-80");
   assert.match(d.inputs.branch, /^ceiling-signed-in-2026-10-20-[0-9a-f]{8}$/);
   assert.equal(d.return_run_details, true);
+  assert.match(d.inputs.received, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
   assert.equal(r.state.slack.length, 1);
   assert.match(agentLine(r.state.slack[0]), /New incident `ceiling\/signed-in\/2026-10-20` · agent started/);
   r.close();

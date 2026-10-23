@@ -1,0 +1,58 @@
+name: ops-event
+on:
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: open, join or selftest
+        required: true
+      branch:
+        description: Incident branch name under ops/
+        required: false
+        default: ""
+      incident:
+        description: Incident key
+        required: false
+        default: ""
+      event:
+        description: The signed CloudEvent body, contract v1
+        required: true
+      opening_run:
+        description: Run id that opened the incident, when known
+        required: false
+        default: ""
+      received:
+        description: When the inbox received the event
+        required: false
+        default: ""
+permissions:
+  actions: read
+  contents: read
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install the pinned tools
+        if: inputs.mode != 'selftest'
+        env:
+          OPS_TOOLS_DIR: ${{ runner.temp }}/tools
+        run: |
+          bash kc-ops-inbox/trigger/install-tools.sh
+          echo "$OPS_TOOLS_DIR/bin" >> "$GITHUB_PATH"
+          echo "$OPS_TOOLS_DIR/npm/bin" >> "$GITHUB_PATH"
+      - name: Run
+        env:
+          OPS_MODE: ${{ inputs.mode }}
+          OPS_BRANCH: ${{ inputs.branch }}
+          OPS_EVENT: ${{ inputs.event }}
+          OPS_OPENING_RUN: ${{ inputs.opening_run }}
+          OPS_RECEIVED: ${{ inputs.received }}
+          PROJECT_REPO: ${{ vars.OPS_PROJECT_REPO }}
+          TRIGGER_REPO: ${{ github.repository }}
+          TRIGGER_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GITHUB_TOKEN: ${{ github.token }}
+          OPS_AGENT_APP_CLIENT_ID: ${{ vars.OPS_AGENT_APP_CLIENT_ID }}
+          OPS_AGENT_APP_PRIVATE_KEY: ${{ secrets.OPS_AGENT_APP_PRIVATE_KEY }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: node kc-ops-inbox/bin/ops-run.mjs
