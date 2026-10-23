@@ -3,7 +3,7 @@ title: A release is walked after its last story by picky-user reviewers on diffe
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain 「准」 (chat, 2026-10-23), answering 「「挑剔使用者驗收」的設計已經照你的 4 個裁定改寫完成。要你決定的是：可以進入實作嗎？我建議可以。」 whose presentation stated approval accepts the design and the two named consequences (outside the learn loop; AC-8 and AC-10 live runs owed); digest 9d4c90c8. Accepts the FO recommendation as the bound question states.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
