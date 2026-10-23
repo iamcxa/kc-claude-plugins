@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:inbox-exactly-once-delivery-poc:validation:attempt-1:revision-1",
+  "question": "Accept PASSED at POC depth for candidate cd079cb8 and close the POC on the evidence with no PR, keeping branch spacedock-ensign/inbox-exactly-once-delivery-poc as reference? Approving accepts that recommendation. F1 (AC-3 Slack leg) is closed by the Captain either giving the #kctest message time or saying AC-3 counts dispatch latency only; F2 to F4 are carried into the inbox-r1 Pilot as recorded limits.",
+  "artifacts": [
+    {
+      "id": "artifact:inbox-exactly-once-delivery-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b9028bdcf989e943d128751504a008050e3e1389/inbox-exactly-once-delivery-poc.md",
+      "rev": "sha256:fc25c8032e6ebff39b79a06e8079fcc75a1cff014ad9f9f0dab317a27bb94fd1",
+      "mediaType": "text/markdown",
+      "summary": "Validation recommends PASSED: three sends of one signed event over 67 s gave exactly one workflow run and one ops branch; a tampered send started nothing; the inbox credential is Actions-write only and its push was refused 403; the inbox core imports only node:crypto. Open: Slack message time unmeasured (F1); Actions write can dispatch any workflow in the repo (F2); Blobs atomicity under parallel retries unproven (F4)."
+    }
+  ]
+}

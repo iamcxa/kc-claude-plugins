@@ -28,6 +28,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:inbox-exactly-once-delivery-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:inbox-exactly-once-delivery-poc-validation-1
+              briefing:
+                id: briefing:inbox-exactly-once-delivery-poc:validation:attempt-1:revision-1
+                digest: sha256:030ef420bf49a417e0fd31625e1098f16c1c96d841614ee793539422bbc20eb2
+                room-ref: ./inbox-exactly-once-delivery-poc/review/validation/briefing-1
 started: 2026-10-21T08:46:20Z
 ---
 
