@@ -34,6 +34,17 @@ gates:
                 id: briefing:adr-silent-undo-poc:validation:attempt-1:revision-1
                 digest: sha256:54d9b39e4ef372ec82b6e8a5c5a7fa661de633a6138a605f3b368f98f50eecc9
                 room-ref: ./adr-silent-undo-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-silent-undo-poc:validation:1
+                briefing: briefing:adr-silent-undo-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T06:17:12.244561Z"
+                decision: approve
+                reason: 'Captain 「准結案」 (2026-10-23) to validation briefing-1: closes the POC with AC-3 as the validator corrected it (supports none of the three options); no code delivery, local-merge sentinel at c27e7659, archive, remove the empty worktree.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-23T05:55:41Z
 worktree: .worktrees/spacedock-ensign-adr-silent-undo-poc
 ---
