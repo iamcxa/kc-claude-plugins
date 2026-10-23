@@ -483,3 +483,20 @@ Observed: `e3a92e9877257cd8ec5a7c9c4e9b5a78c842222b` and `0`; `release-walk/v1 r
 ### Summary
 
 Recommend PASSED for head e3a92e9877257cd8ec5a7c9c4e9b5a78c842222b: AC-5, AC-9 and AC-10 hold under my own mutations, #709 merges cleanly onto origin/main 0701aa8d with the suite and ADR lint green, and no finding is Material. F1 is the one to carry forward: the reader silently accepts a report whose per-story results are not at top-level `stories`, which PR 2's current design would produce. Throwaway worktrees removed; nothing pushed or commented.
+
+## Stage Report: implementation (cycle 1 repair)
+
+- DONE: In kc-journey-map/skills/kc-journey-map/SKILL.md, edit only the frontmatter description: accept-release sentence and four trigger phrases inserted; no test added
+  Commit d84ebde0 changes 1 line (the description); no test, per FO decision that a substring test on metadata proves no routing.
+- DONE: Run scripts/skill-frontmatter-lint.sh on the worktree and confirm the new description stays under 1024 characters
+  Lint exit 0 ("all skill directories have valid frontmatter"); description is 892 chars. Limit: whether discovery routes "accept this release" to the skill was not run live.
+- DONE: All package test files pass; push with an explicit remote and branch, no -u; CI green on the new head
+  `node --test lib/*.test.mjs` in kc-journey-map: 263 pass, 0 fail. Pushed `git push origin spacedock-ensign/release-acceptance` (e3a92e98..d84ebde0). `gh pr checks 709` on d84ebde0: all six checks pass (adr-path-check, GitGuardian, model tests node 22.13.0 and 24, multi-profile route gate, version parity).
+- DONE: roborev gate
+  `clean on d84ebde04; evidence=roborev:1111` (base c3514876, the PR base).
+- DONE: commit the stage report
+  Committed with spacedock state commit.
+
+### Summary
+
+Applied the two authorized description edits to close the Codex P1 on #709 and pushed d84ebde0; CI is green. No PR comment, review request or ready mark was made. The finding is ready for a fresh validation recheck.
