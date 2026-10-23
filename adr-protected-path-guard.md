@@ -3,7 +3,7 @@ title: An ADR that protects code names its files, each file carries a pointer ba
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -53,7 +53,7 @@ gates:
                 reason: 'Captain 「准」 (2026-10-23) to ideation briefing-1: accepts the design and the three recommended decisions as stated in the question (Protects label, docs/adr/NNNN prefix match, listed-files-only superseded check); no pre-commit example added.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-23T08:55:00Z
 ---
 
