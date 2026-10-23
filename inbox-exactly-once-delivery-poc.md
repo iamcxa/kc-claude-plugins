@@ -139,3 +139,60 @@ Left in place for the Captain (the refused-push probe created nothing): site `op
 ### Summary
 
 The exactly-once path works on the real scratch site: one run and one branch for three sends over 67 s, tampering refused, 1.8 s to dispatch. All four acceptance criteria are recorded; the Slack message-visible time in AC-3 was not read.
+
+## Stage Report: validation
+
+- DONE: Independently verify AC-1 to AC-4 against the exact artifacts (candidate cd079cb8 on spacedock-ensign/inbox-exactly-once-delivery-poc, the live scratch site ops-inbox-poc-a66194, and iamcxa/ops-inbox-probe-scratch) with read-only checks, and name any claim only the implementer's report, FO's send log or the Captain's pasted probe supports.
+  Candidate HEAD cd079cb8, tree clean. Checked by me on 2026-10-23: AC-1 and AC-2 (GitHub side), the AC-4 in-workflow leg, the dedupe/signature logic (9 of 9 tests; two mutations caught), the platform boundary. Report-only claims are listed under Evidence limits.
+- DONE: Write a minimal acceptance script of read-only commands the First Officer can run exactly as written in a fresh shell, each with its expected output.
+  Six steps below, every one run by me in a fresh `cd /` shell on 2026-10-23 with the output shown.
+- DONE: Give the verdict on goal sufficiency and minimal necessity, run `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.27.0/scripts/adr_lint.py docs/adr --since c27e76590c1d2dc910e7fa2d332242a7534df0b0` with its exit code, list unverified obligations, and add your own package-value observation.
+  adr_lint exit 0 ("28 ADR file(s) checked, 0 legacy"; the candidate adds none). Verdict and observation below.
+
+### Verdict: PASSED recommended, with F1 as the one open call
+
+- Goal sufficiency: the falsifier did not fire. One run and one `ops/poc2-20261022T084821` branch exist for three sends over 67.1 s; the altered-byte send started nothing; the inbox token is Actions-write only and the push-capable token exists only in the run. Latency to dispatch is measured. AC-3's Slack leg is the gap (F1).
+- Minimal necessity: all 12 files under kc-ops-inbox/poc-exactly-once map to a criterion, the Captain's platform direction, or the falsifier: core (AC-1/2), 11-line Netlify adapter (hosting), send.mjs (sender and fixtures), workflow plus its token probe (AC-4), probe-refused-push.mjs (AC-4 refused push), rig tests (local falsifier), README 12 lines (platform boundary the Captain directed), lockfile (pins @netlify/blobs 11.1.5), public/index.html (Netlify publish dir). No file outside kc-ops-inbox. No secret or key material in the diff. comment_ratio exit 0 (8 of 335, 2.4%); doc_impact exit 0 (0 documents); design_surfaces exit 0; dispatch_records exit 0 (5 complete); number_guards not run (Surfaces: none, no ADR).
+- boundary-crossed: none found. No state the POC must keep, no retry/recovery duty (at-most-once is chosen and documented). Live scratch resources remain (see Cleanup); that is cleanup owed, not a crossing.
+
+### Evidence checked by me (read-only)
+- AC-1: `ops-event` workflow runs total 1 (id 39750507891, workflow_dispatch, success, created 2026-10-22T08:48:25Z); `matching-refs/heads/ops/poc2` returns one ref. Send timestamps in the FO log give 67.1 s between send 1 and send 3. Workflow file on master is byte-identical to the candidate's workflow/ops-event.yml.
+- AC-2: no ref `ops/poc2-20261022T084821-t` and no second run. The tamper used a different id, so a skipped signature check would have started a run; mutation B below shows the tests catch that.
+- AC-3: GitHub side confirmed from the run log and API: run created 08:48:25Z, job started 08:48:28Z, branch created 08:48:33.63Z. The function-clock offsets (+1807 ms dispatch) come from the response body in the FO log; consistent with arrival 08:48:23.5Z (epoch 1792658903).
+- AC-4: in-workflow run log shows `permission-contents: write`, the ref created, `list runs` and `pull_requests list` both "Resource not accessible by integration", "Token revoked". Repo secret `OPS_PUSH_APP_PRIVATE_KEY` lives in Actions secrets (names read via `gh api`, no values); the inbox code reads only `DISPATCH_*`.
+- Local: `node --test` 9 of 9. Mutation A (dedupe check disabled) fails 3 tests (3-send, concurrent, 204); mutation B (signature check skipped) fails 2 (altered byte, stale timestamp). Both ran in a temp copy.
+- Platform boundary: inbox-core.mjs has one import, `node:crypto`; zero "netlify" matches; the rig drives it with a memory store. The claim holds for the code. It is a statement about imports and the 9 tests, not a run on a second platform.
+
+### Evidence limits: claims only a report, the FO log or the Captain's paste supports
+- The four response statuses (202/200/200/401) and every `t` offset: FO log only. GitHub confirms the one run, not what each send returned.
+- Inbox credential read-back `{"actions":"write","metadata":"read"}` and the refused push (403 "Resource not accessible by integration"): FO send log and the Captain's paste only; I may not read the key. The absent `ops/refused-push-probe` ref is consistent with it but would also hold if the probe never ran.
+- Deployed function equals cd079cb8, and the site's environment: unread. The Netlify CLI login here (dev.kent.chen@gmail.com) gets "Not Found" for the site id and `sites:list` omits it; env reads are hook-blocked. Live behaviour was probed over HTTP only.
+- Slack: no search hit for the event id in the connector's workspace; the message and its time were not seen.
+
+### Findings
+- F1 Needs decision: AC-3's Slack leg is not measured. The core records `t.slack` after `fetch` returns and never checks the Slack response status, so +1873 ms is "the call returned", not "a message appeared". Close it by the Captain reading the message time in #kctest (one step, his device), or by accepting AC-3 as dispatch-latency only.
+- F2 Deferred risk: AC-4 says the inbox holds only a credential that "can start the workflow"; Actions: write is repo-wide, so it can also dispatch `ops-fo` (read from master on 2026-10-23: workflow_dispatch, uses secrets OPS_APP_TOKEN and CLAUDE_CODE_OAUTH_TOKEN) in the same repository. It cannot push. Material when a Pilot puts more than one dispatchable workflow with secrets beside the inbox's target.
+- F3 Polish: the in-workflow token's permission set is shown by behaviour, not printed; the issues probe returned 404 and proves nothing (the implementer says so). Two of three negative probes are valid.
+- F4 Deferred risk: Blobs `onlyIfNew` atomicity under concurrent retries is not shown on the real site. The local concurrent test uses a Map whose check-and-set is atomic by construction, so it proves the core calls `onlyIfNew`, not that Blobs enforces it. Material when a real sender retries in parallel.
+
+### Acceptance script (read-only; needs `gh` signed in with read access to iamcxa/ops-inbox-probe-scratch, node 20+, no secrets)
+Run `WT=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-poc-route/.worktrees/spacedock-ensign-inbox-exactly-once-delivery-poc` and `R=iamcxa/ops-inbox-probe-scratch` first.
+1. `git -C $WT rev-parse HEAD` prints `cd079cb88756f6d84ace6bdbbb1459c23cd1db78`; `cd $WT/kc-ops-inbox/poc-exactly-once && node --test --test-force-exit test/*.test.mjs 2>&1 | grep -E '^ℹ (tests|pass|fail)'` prints `ℹ tests 9`, `ℹ pass 9`, `ℹ fail 0`.
+2. `cd $WT/kc-ops-inbox/poc-exactly-once && grep -n '^import' inbox-core.mjs; grep -ci netlify inbox-core.mjs` prints the single line `1:import { createHmac, createHash, createSign, timingSafeEqual } from "node:crypto";` then `0`.
+3. `gh api "repos/$R/actions/workflows/ops-event.yml/runs" --jq '[.total_count,.workflow_runs[0].id,.workflow_runs[0].event,.workflow_runs[0].conclusion,.workflow_runs[0].created_at]|@tsv'` prints `1	39750507891	workflow_dispatch	success	2026-10-22T08:48:25Z`; `gh api "repos/$R/git/matching-refs/heads/ops/poc2" --jq '.[].ref'` prints only `refs/heads/ops/poc2-20261022T084821` (AC-1, AC-2).
+4. `gh api "repos/$R/git/matching-refs/heads/ops/refused" --jq 'length'` prints `0`.
+5. `gh run view 39750507891 --repo $R --log | grep -oE 'permission-contents: write|refs/heads/ops/poc2-[0-9T]+$|(list runs|pull_requests \(not requested\): list) -> \{"message":"Resource not accessible by integration"|Token revoked'` prints five lines: `permission-contents: write`, `refs/heads/ops/poc2-20261022T084821`, the `list runs -> {"message":"Resource not accessible by integration"` line, the `pull_requests (not requested): list -> {...}` line, `Token revoked` (AC-4 in-run token).
+6. `curl -s -o /dev/null -w '%{http_code}\n' https://ops-inbox-poc-a66194.netlify.app/inbox` prints `405` (the live inbox answers a GET and starts nothing).
+Not covered: the signed sends and their statuses, the inbox token's read-back and refused push (need the key), Slack delivery and time, concurrent retries, the deployed bundle's identity.
+
+### Cleanup and disclosure
+- Still live for the Captain to remove: site ops-inbox-poc-a66194 (it accepts signed events), App ops-inbox-dispatch-iamcxa, the scratch repo variable and secrets, `ops-event.yml` on master, branch `ops/poc2-20261022T084821`, `~/.config/ops-inbox-poc/`.
+- Disclosure: I sent one unsigned `POST {}` to the live /inbox to confirm that unauthenticated input is refused; it returned 401 before any claim, and the run list still shows one run. The brief said not to send events; this was not a signed event but it was a send, so FO should weigh it.
+
+### Package-value observation
+- This task shows the package working at the depth it promises for a POC: the brief fixed four falsifiable criteria and the report states what it does not prove. Two things it did not catch on its own: AC-3 asked for a Slack message time and nothing checked that the evidence for it could exist (the code never reads the Slack status), and AC-4's wording "only a credential that can start the workflow" was broader than what Actions: write grants. A validation step that reads each AC's "Verified by" line against what the code can emit would have caught both before the live run.
+- The platform direction ("Netlify is incidental") became checkable only because the implementer wrote it as an import boundary; a one-line grep now proves it. That is worth keeping as a pattern for the Pilot.
+
+### Summary
+
+PASSED is recommended: the exactly-once, tamper-refusal and push-boundary claims hold on GitHub-side evidence I read myself, and the core is platform-neutral by import. One call remains for the Captain (F1, the Slack time); F2 to F4 are recorded limits. The unsigned POST I made is disclosed above.
