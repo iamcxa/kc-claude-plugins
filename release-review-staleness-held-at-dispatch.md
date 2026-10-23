@@ -3,7 +3,7 @@ title: The first implementation dispatch of a task in a release is held while th
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「照更正後的建議退回設計重做」 (chat, 2026-10-23), answering the bound question, put before it in chat with FO's corrected recommendation; approving enters ideation.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
