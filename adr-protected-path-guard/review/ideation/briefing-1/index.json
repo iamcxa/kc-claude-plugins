@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-protected-path-guard:ideation:attempt-1:revision-1",
+  "question": "Approve the design and enter implementation? Approval also accepts the three recommended decisions: (1) the field is a bold label **Protects:** in the Decision section (template default 'none'); (2) the writer writes the full path 'see docs/adr/NNNN-short-title.md' and the linter accepts a 'docs/adr/NNNN' prefix in both checks, so a retitle does not break it; (3) the superseded-ADR check reads only the files ADRs list, not every tracked file.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-protected-path-guard:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3cc217a502f29bbaebcdd11d33341c97262b00de/adr-protected-path-guard.md",
+      "rev": "sha256:2e90a7d838893d225da8f1db01fee4a577a2f9723a8642dd0b96cfc0bd152ae5",
+      "mediaType": "text/markdown",
+      "summary": "Design: **Protects:** label (not a new heading, so the four required sections stay); pointer as a comment in the file's own syntax, read as text; check 1 for Accepted ADRs (listed file exists and cites the ADR); check 2 (no listed file cites a superseded ADR, naming the newer one); about 65 lines added to the 114-line linter. Upstream checked: spacedock, kc-dev-flow-2, subspace-relay (54 ADRs, no field), carlove (no docs/adr). Scratch prototype only (deleted): old and new linter give the same output on 30 + 54 existing ADRs; dev2's ADR tests pass; four mutations each caught. AC-3 agent runs via the code-pointer harness are implementation work. dev2 copy diverges from kc-adr's linter; kc-adr-tools-with-dev2-copy carries it."
+    }
+  ]
+}

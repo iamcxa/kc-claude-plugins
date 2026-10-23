@@ -35,6 +35,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:adr-protected-path-guard:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:adr-protected-path-guard-ideation-1
+              briefing:
+                id: briefing:adr-protected-path-guard:ideation:attempt-1:revision-1
+                digest: sha256:2e1ca7cf4d0553bd411634dcb7290a944fb75aeef889d2883e160943f080bc56
+                room-ref: ./adr-protected-path-guard/review/ideation/briefing-1
 started: 2026-10-23T08:55:00Z
 ---
 
