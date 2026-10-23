@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/sentry.issue.alert.json",
+  "title": "Sentry issue alert",
+  "type": "object",
+  "required": [
+    "specversion",
+    "id",
+    "source",
+    "type",
+    "subject",
+    "time",
+    "dataschema",
+    "data"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "specversion": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]{1,64}$"
+    },
+    "source": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200
+    },
+    "type": {
+      "const": "sentry.issue.alert"
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^issue/[A-Za-z0-9._-]{1,64}$"
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "dataschema": {
+      "const": "https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/sentry.issue.alert.json"
+    },
+    "datacontenttype": {
+      "const": "application/json"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "issue_id",
+        "title",
+        "level",
+        "project",
+        "web_url"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "issue_id": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "event_id": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "title": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "level": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "culprit": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "project": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "web_url": {
+          "type": "string",
+          "pattern": "^https://",
+          "maxLength": 500
+        },
+        "triggered_rule": {
+          "type": "string",
+          "maxLength": 500
+        },
+        "datetime": {
+          "type": "string",
+          "format": "date-time",
+          "maxLength": 500
+        },
+        "release": {
+          "type": "string",
+          "maxLength": 500
+        }
+      }
+    }
+  }
+}

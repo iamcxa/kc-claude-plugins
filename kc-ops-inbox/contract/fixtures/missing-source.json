@@ -1,0 +1,10 @@
+{
+  "secret": "whsec_a2Mtb3BzLWluYm94LWZpeHR1cmUtc2VjcmV0LW5vdC1hLWNyZWRlbnRpYWw=",
+  "now": 1792454430,
+  "headers": {
+    "webhook-id": "msg_signed-in-2026-10-20-80",
+    "webhook-timestamp": "1792454430",
+    "webhook-signature": "v1,sgvPyVDvOEc5BWBd7naHtUAnk1UYM1vBi7nXRCbHw08="
+  },
+  "body": "{\"specversion\":\"1.0\",\"id\":\"signed-in-2026-10-20-80\",\"type\":\"relay.capacity.ceiling\",\"subject\":\"ceiling/signed-in/2026-10-20\",\"time\":\"2026-10-20T00:00:00Z\",\"dataschema\":\"https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/relay.capacity.ceiling.json\",\"datacontenttype\":\"application/json\",\"data\":{\"v\":1,\"event\":\"bound-ceiling-near\",\"at\":\"2026-10-20T00:00:00Z\",\"day\":\"2026-10-20\",\"count\":40,\"limit\":50,\"limitSource\":\"default\"}}"
+}
