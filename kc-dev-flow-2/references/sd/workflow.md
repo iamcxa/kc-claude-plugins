@@ -154,7 +154,7 @@ differently, or `Visible change: none`.
   runs the review at once. FO writes no map and no candidate; the Captain accepts
   membership in conversation or at this gate. FO records under `## FO alignment` either
   `Release review: <journey>/<release-id> at <journey-file commit>` or
-  `Release review: not needed: <reason>`; no script checks that line. When FO approves
+  `Release review: not needed: <reason>`. When FO approves
   a task into a release story at this gate it sets the three fields with
   `spacedock status --workflow-dir <dir> --set <task> journey=<the map's journey: value> journey-release=<id> journey-story=<id>`;
   a worker never edits frontmatter. Where the adopter tracks completion with

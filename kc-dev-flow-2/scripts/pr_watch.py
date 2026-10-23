@@ -40,8 +40,11 @@ chief-engineer or engineering-reviewer call a live task owes (role_triggers.py, 
 that left inline comments on the task's open PR), and one `next:` line per stage where two or more gates
 await the Captain (spacedock status --next; SPACEDOCK_BIN names the executable), and one `next:` line naming
 each backlog task that is waiting for its gate, holds a `## FO alignment` section and fails
-design_surfaces.py check --seed, when the workflow has an ideation stage. It prints no merge-ask
-or hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
+design_surfaces.py check --seed, when the workflow has an ideation stage, and one `next:` line naming each
+task at implementation with no worktree and no dispatch/implementation-*.md whose `## FO alignment` marks a
+release changed by `signal 1` or `signal 2` with no `Release review:` line after the last mark (a hold
+FO owes, not a gate: spacedock dispatch build still builds it). It prints no merge-ask
+or merge-hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
 change. Exit 2 when a task cannot be read.
 """
 import argparse
@@ -64,6 +67,8 @@ COPILOT = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_revi
 SEED = SCRIPTS / "design_surfaces.py"
 FO_HEADING = re.compile(r"^## FO alignment[ \t]*$", re.M)
 IDEATION_STAGE = re.compile(r"^[ \t]*-[ \t]+name:[ \t]*ideation[ \t]*$", re.M)
+RELEASE_MARK = re.compile(r"\bsignals?[ \t]+[12]\b", re.I)
+RELEASE_REVIEW = re.compile(r"^[ \t]*Release review:[ \t]+(?:not needed:[ \t]*\S|\S+/\S+[ \t]+at[ \t]+\S)")
 FIELDS = "state,isDraft,mergeable,mergeStateStatus,headRefOid,statusCheckRollup,title"
 SETTLE_SECONDS = 60
 RECHECK_SECONDS = 180
@@ -381,6 +386,33 @@ def seeds(rows, found, readme):
     return line, errors
 
 
+def holds(found, state):
+    held, errors = [], []
+    for slug, task in found:
+        try:
+            meta = front(task)
+            if meta.get("status") != "implementation" or meta.get("worktree") or any((state / slug / "dispatch").glob("implementation-*.md")):
+                continue
+            mark = review = -1
+            inside = False
+            for number, line in enumerate(task.read_text(errors="replace").split("\n")):
+                if line.startswith("## "):
+                    inside = bool(FO_HEADING.match(line))
+                elif inside and RELEASE_REVIEW.match(line):
+                    review = number
+                elif inside and RELEASE_MARK.search(line):
+                    mark = number
+        except OSError as error:
+            errors.append(f"next: report {slug} to the Captain: {str(error)[:120]}.")
+            continue
+        if mark > review:
+            held.append(slug)
+    line = [f"next: hold the first implementation dispatch of {', '.join(held)}: each ## FO alignment marks a release changed by "
+            "signal 1 or 2 with no Release review: line after it. Dispatch kc-journey-map's review-release, write its "
+            "Release review: line (or Release review: not needed: <reason>) under ## FO alignment, then run this again."] if held else []
+    return line, errors
+
+
 def tasks(opts, look=look, ask=gh, clock=time.time):
     workflow = Path(opts.args[0]).resolve()
     readme = front(workflow / "README.md")
@@ -457,6 +489,9 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
         line, broken = seeds(rows, dict(found), (workflow / "README.md").read_text(errors="replace"))
         out += line
         errors += broken
+    line, broken = holds(found, state)
+    out += line
+    errors += broken
     if snaps:
         already, _ = record(opts.state, load(opts.state), snaps)
         out += already + [f"next: run `{wait} wait` in the background, unless one is running.",

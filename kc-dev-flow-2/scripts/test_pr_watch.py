@@ -1143,6 +1143,124 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(code, 2, lines)
         self.assertEqual(self.seed_lines(lines), [])
 
+    R4_MARK = "Release: j/r4. Signal 1 (task filed into a release by the Captain's ruling).\n"
+
+    def aligned(self, slug, lines, status="implementation", extra="journey: j\n", heading="## FO alignment"):
+        body = f"\nbody\n\n{heading}\n\n{lines}Surfaces: none\n"
+        target = self.state / f"{slug}.md"
+        target.write_text(f"---\ntitle: {slug}\nstatus: {status}\n{extra}---\n{body}")
+        self.git(self.state, "add", "-A")
+        self.git(self.state, "commit", "-qm", f"task {slug}")
+
+    def held_slugs(self):
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        held = [line for line in lines if line.startswith("next: hold the first implementation dispatch of ")]
+        self.assertLessEqual(len(held), 1, lines)
+        return held[0].split(" of ", 1)[1].split(":", 1)[0].split(", ") if held else []
+
+    def test_the_record_shape_of_a_release_changed_task_with_no_review_line_is_held_by_name(self):
+        self.readme("roborev")
+        self.aligned("r4", self.R4_MARK)
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines, ["next: hold the first implementation dispatch of r4: each ## FO alignment marks a release changed by "
+                                 "signal 1 or 2 with no Release review: line after it. Dispatch kc-journey-map's review-release, write its "
+                                 "Release review: line (or Release review: not needed: <reason>) under ## FO alignment, then run this again."])
+        self.assertEqual(len(lines[0].split()), 50)
+
+    def test_only_a_documented_review_line_after_the_last_mark_clears_the_hold(self):
+        self.readme("roborev")
+        cleared = {
+            "a later review at a commit": self.R4_MARK + "Release review: j/r4 at abc1234\n",
+            "a later not-needed review": self.R4_MARK + "Release review: not needed: map unchanged\n",
+            "a later review quoting a signal": self.R4_MARK + "Release review: j/r4 at abc1234 (covers signal 1)\n",
+        }
+        held = {
+            "a review before the mark": "Release review: j/r4 at abc1234\n" + self.R4_MARK,
+            "a review-looking line that is a mark": self.R4_MARK + "Release review: j/r4 changed (signal 2).\n",
+            "a not-needed review with no reason": self.R4_MARK + "Release review: not needed:\n",
+            "a review with no commit": self.R4_MARK + "Release review: j/r4 at\n",
+            "a new mark after the review": self.R4_MARK + "Release review: j/r4 at abc1234\nSignal 2 (goal reworded).\n",
+        }
+        for index, (name, lines) in enumerate({**cleared, **held}.items()):
+            self.aligned(f"c{index}", lines)
+        got = self.held_slugs()
+        for index, name in enumerate({**cleared, **held}):
+            with self.subTest(name):
+                self.assertEqual(f"c{index}" in got, name in held)
+
+    def test_every_mark_form_seen_in_adopter_history_holds(self):
+        self.readme("roborev")
+        forms = [
+            "Release: j/r4. Signal 1 (task filed).\n",
+            "Release r4 marked changed (signal 1: new story membership).\n",
+            "Release review: r4 is marked changed by signal 1 (admitted).\n",
+            "Release review: j/r4 changed (signal 2).\n",
+            "Release review: signal 1, new membership proposed.\n",
+            "Release review: signal 1 \u2014 admitted into a story.\n",
+            "marked changed: signal 1 (admitted) and signal 2 (goal reworded).\n",
+        ]
+        for index, text in enumerate(forms):
+            self.aligned(f"f{index}", text)
+        self.assertEqual(self.held_slugs(), [f"f{index}" for index in range(len(forms))])
+
+    def test_a_task_outside_the_first_implementation_dispatch_or_with_no_mark_is_not_held(self):
+        self.readme("roborev")
+        self.aligned("backlog-task", self.R4_MARK, status="backlog")
+        self.aligned("validation-task", self.R4_MARK, status="validation")
+        self.aligned("worktree-task", self.R4_MARK, extra="journey: j\npr: o/r#7\nworktree: .worktrees/worktree-task\n")
+        self.aligned("recorded", self.R4_MARK)
+        self.record("recorded", "## Checklist\n\nnothing\n")
+        self.aligned("no-section", self.R4_MARK, heading="## Scope")
+        self.aligned("no-mark", "Needed at ideation: none.\n")
+        self.aligned("later-signals", "Signal 3 (UAT failure).\nsignal 4 (batch checkpoint).\n")
+        self.aligned("shorter", "Signals 12 and signal 10 are not marks.\n")
+        (self.state / "other-heading.md").write_text(
+            "---\ntitle: x\nstatus: implementation\n---\n## FO alignment\n\nSurfaces: none\n\n## Notes\n\n" + self.R4_MARK)
+        self.git(self.state, "add", "-A")
+        self.git(self.state, "commit", "-qm", "other heading")
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual([line for line in lines if "hold the first implementation dispatch" in line], [])
+
+    def test_the_hold_names_every_held_slug_in_one_line_after_the_seed_line_and_before_the_wait_lines(self):
+        self.ideation_readme()
+        self.task("some-task", pr="o/r#7")
+        self.backlog("bad", visible="shown")
+        self.aligned("one", self.R4_MARK)
+        self.aligned("two", "Signal 2 (goal reworded).\n")
+        self.gates(("bad", "backlog", "needs-preparation"))
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertTrue(lines[-4].startswith("next: the seed check fails"), lines)
+        self.assertTrue(lines[-3].startswith("next: hold the first implementation dispatch of one, two: "), lines)
+        self.assertTrue(lines[-2].startswith("next: run `python3 "), lines)
+        self.assertEqual(len(lines[-3].split()), 51)
+
+    def test_the_hold_still_prints_when_the_status_call_fails_and_writes_no_file(self):
+        self.readme("roborev")
+        self.aligned("r4", self.R4_MARK)
+        self.tasks({})
+        self.next.write_text("FAIL")
+
+        def tree():
+            return {str(p): p.read_bytes() for p in self.root.rglob("*") if p.is_file() and ".git" not in p.parts}
+        before = tree()
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2, lines)
+        self.assertEqual(len([line for line in lines if line.startswith("next: hold the first implementation dispatch of r4: ")]), 1, lines)
+        self.assertEqual(len([line for line in lines if line.startswith("next: report the awaiting gates")]), 1, lines)
+        self.assertEqual(tree(), before)
+
+    def test_an_unreadable_task_file_is_reported_to_the_captain_beside_the_held_one(self):
+        self.readme("roborev")
+        self.aligned("r4", self.R4_MARK)
+        line, errors = watch.holds([("ghost", self.state / "ghost.md"), ("r4", self.state / "r4.md")], self.state)
+        self.assertEqual(len(errors), 1)
+        self.assertRegex(errors[0], r"^next: report ghost to the Captain: ")
+        self.assertTrue(line[0].startswith("next: hold the first implementation dispatch of r4: "), line)
+
     def test_tasks_needs_one_workflow_directory(self):
         with contextlib.redirect_stdout(io.StringIO()):
             self.assertEqual(watch.main(["--state", str(self.watch), "tasks"]), 2)
