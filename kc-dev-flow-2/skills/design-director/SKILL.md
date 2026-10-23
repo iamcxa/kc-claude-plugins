@@ -19,10 +19,10 @@ The caller's first line is `Pass: <name>`. Each pass has its own inputs and read
 | --- | --- | --- | --- |
 | 1a | ideation | `UI proposal:`, `Previews:`, `ADR folder:` | a `design_review` report |
 | 1b | ideation | `Findings:` (a saved report), `Proposed declines:`, `Pictures:`, `Declarations:`, `ADR folder:` | a `design_decline_check` report |
-| 2a | validation | `Screenshots:` of the built screen, `Criteria:` whose text names the running screen, `ADR folder:` | a `design_review` report |
+| 2a | validation | `Screenshots:` of the built screen, `Task folder:`, `Criteria:` whose text names the running screen, `ADR folder:` | a `design_review` report |
 | 2b | validation | as 1b, with `Pictures:` the screenshots the findings cite | a `design_decline_check` report |
 
-In 1a and 2a follow the [review brief](review-brief.md) and return its report. In 2a the screenshots are the pictures under review, and what a screenshot cannot settle (a resize, a real vault, a Test run) goes in `limitations`.
+In 1a and 2a follow the [review brief](review-brief.md) and return its report. In 2a the screenshots are the pictures under review, each named relative to `Task folder:` (open it there, and copy the relative path as given into `preview:`), and what a screenshot cannot settle (a resize, a real vault, a Test run) goes in `limitations`.
 
 ## ADR folder
 
