@@ -79,6 +79,7 @@ Verified by: a text check of `writing.md`, plus a single-writer dry run that num
 Not needed before ideation: the Captain stated the narrowed scope and the split was agreed with the dev2 FO. Release review: not needed: the map was skipped for kc-adr by the Captain's authorization.
 Surfaces: none
 Visible change: none
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-23 — do these amendments withdraw what the Captain approved, and what changes in the build? Result (before the validation gate): adjust. No approval silently withdrawn; all 7 files trace to scope, D1, D2 or amendment 1. Defects: amendment 1's Design line withdraws the whole SKILL.md non-goal while the Captain approved one sentence, so SKILL.md is graded against the Asked sentence only; the boundary-contract rewrite drops 「第一步先測複製進去的目錄在兩個 host 上都裝得起來」, which kc-adr-tools-with-dev2-copy still lists, and no longer cites the ruling's words; the README numbering line drops "one writer at a time". Residual: with SKILL.md's stop gone, writing.md's "under kc-dev-flow-2, use `number_guards.py reserve` instead" reads as telling the writer to run the reserver, where ADR 0002 has the First Officer reserve; no agent run measured it.
 
 ## Design
 
