@@ -55,6 +55,7 @@ gates:
                 target-stage: implementation
                 state: consumed
 started: 2026-10-23T08:55:00Z
+worktree: .worktrees/spacedock-ensign-adr-protected-path-guard
 ---
 
 ## Scope
