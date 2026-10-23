@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-22T11:31:12Z
 worktree: .worktrees/spacedock-ensign-design-director-runs-ui-design-review
-pr: iamcxa/kc-claude-plugins#708
+pr: pr-merge:708
 ---
 
 ## Scope
