@@ -3,7 +3,7 @@ title: A named design-director role runs the ui design review in place of a gene
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: Captain 「合併。剛才 paseo fo 提的那個模型後續是怎樣？…」 (chat, 2026-10-23), answering 「#708（設計總監）要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only, with Copilot not run (quota) and AC-15 owed after release; digest d2127e04. Accepts the FO recommendation as the bound question states.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-22T11:31:12Z
 worktree: .worktrees/spacedock-ensign-design-director-runs-ui-design-review
 pr: pr-merge:708
+verdict: PASSED
+completed: 2026-10-23T06:21:51Z
+archived: 2026-10-23T06:21:52Z
 ---
 
 ## Scope
