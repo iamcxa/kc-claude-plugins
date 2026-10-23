@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-protected-path-guard:backlog:attempt-2:revision-1",
+  "question": "Approve this backlog item as revised? Approval accepts the re-scoped outcome (ADR lists protected files; each file carries a pointer; the linter checks both and flags pointers to superseded ADRs; no hook), the non-goals and AC-1..AC-3, profile pilot; then ideation.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-protected-path-guard:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/a066905a9079e446efabf66918e95ca8b536f262/adr-protected-path-guard.md",
+      "rev": "sha256:e16955e35de1e1084a08e7a644cff084f0acc92a13ac937476e596ec0a83d052",
+      "mediaType": "text/markdown",
+      "summary": "Re-scoped on the Captain's 「可以。」 after adr-code-pointer-poc: the pointer reached the agent at edit time on both hosts with no hook (0/4 undone; Claude traces show the comment led to the ADR). The linter makes the pointer deterministic and catches rot. Ships in kc-adr only."
+    }
+  ]
+}

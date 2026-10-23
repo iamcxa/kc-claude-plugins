@@ -19,6 +19,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-23T08:25:36.682526Z"
                 reason: 'Captain 「可以，先測試這個，然後再考慮其他方案。」 (2026-10-23) to FO''s 「要撤回這道關卡、改開註解 POC 嗎？」: a code-side ADR comment POC runs first; this item waits for its result and for the other options he named.'
+            - id: gate-attempt:adr-protected-path-guard-backlog-2
+              briefing:
+                id: briefing:adr-protected-path-guard:backlog:attempt-2:revision-1
+                digest: sha256:90b15d5f7a18f5f619085d7b7105f1b4f755897d4defd61648195ba8e2bb1280
+                room-ref: ./adr-protected-path-guard/review/backlog/briefing-2
 ---
 
 ## Scope
