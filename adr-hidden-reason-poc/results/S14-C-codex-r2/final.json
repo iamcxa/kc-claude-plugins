@@ -1,0 +1,9 @@
+{
+ "decision": "Extracted the shared save, send, and result logic into one helper. Each exported function is now a short wrapper, and emails use the rendered HTML directly, avoiding a redundant disk read. Manual checks passed; npm test ran but contains no tests.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added the shared helper, shortened all three send functions, and removed loadReport usage while preserving exports, arguments, and return values."
+  }
+ ]
+}

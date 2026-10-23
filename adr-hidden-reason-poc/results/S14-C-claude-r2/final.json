@@ -1,0 +1,9 @@
+{
+ "decision": "I moved the shared steps (save the report, send the mail, build the result) into one private helper, `sendReport`, in `src/report_mailer.js`. Each exported function is now a one-line call to it. I also dropped the `loadReport` call that re-read the file `saveReport` had just written. It returned the same HTML we already had in memory, so it only added a disk read per email. Exported names, arguments and resolved values are unchanged. The repo has no tests (`npm test` just echoes a message), so I couldn't verify behaviour by running anything.",
+ "recorded": [
+  {
+   "path": "mira-app/src/report_mailer.js",
+   "info": "Added shared helper sendReport (save, send, return result); the three send functions now delegate to it. Removed the redundant loadReport read-back and its import; the mail body is the rendered html directly. Exports, arguments and return shapes are unchanged."
+  }
+ ]
+}

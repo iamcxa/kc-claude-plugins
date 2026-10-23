@@ -1,0 +1,9 @@
+{
+ "decision": "Moved the shared steps (save report, send mail, build result) into one private helper, saveAndSend, so each exported function is a one-liner. I also removed the loadReport call that re-read the file just written, since it returned the same HTML. Each email now does one fewer disk read, and saveReport is still called. Exports, arguments and return values are unchanged. I only syntax-checked the file with `node --check` and did not run `npm test`.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added a private saveAndSend helper and reduced the three send functions to calls to it. Dropped the loadReport import and the read-back after saveReport, and the mail body is now the rendered html."
+  }
+ ]
+}

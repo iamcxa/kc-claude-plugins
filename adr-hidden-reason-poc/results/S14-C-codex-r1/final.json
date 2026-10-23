@@ -1,0 +1,9 @@
+{
+ "decision": "Extracted a shared helper for saving, sending, and returning report metadata. Each exported function stays short, with unchanged arguments and return values; sending now reuses rendered HTML instead of rereading it. Behavior checks passed; npm test ran but contains no tests.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Centralized shared steps and removed the redundant loadReport call. No other files changed."
+  }
+ ]
+}

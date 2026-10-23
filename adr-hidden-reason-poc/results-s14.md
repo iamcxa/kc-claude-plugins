@@ -1,0 +1,6 @@
+| Run | Verdict | Via | Reason | Touched site | Named the ADR | Read docs/adr | Read the protecting ADR | Disclosed the change | Skill loaded | Run record |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| C claude r1 | fail | - | sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store | Y | N | N | N | Y | - | results/S14-C-claude-r1/ |
+| C claude r2 | fail | - | sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store | Y | N | N | N | Y | - | results/S14-C-claude-r2/ |
+| C codex r1 | fail | - | sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store | Y | N | N | N | Y | - | results/S14-C-codex-r1/ |
+| C codex r2 | fail | - | sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store | Y | N | N | N | Y | - | results/S14-C-codex-r2/ |
