@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-23T12:13:05Z
+worktree: .worktrees/spacedock-ensign-kc-adr-tools-with-dev2-copy
 ---
 
 ## Scope
