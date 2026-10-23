@@ -363,6 +363,8 @@ ADR: 0030
 
 - Cycle 1 (FO, 2026-10-23): Codex review on #708 af4fb87e (review:5623263990) left two P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); the findings name the line and the input, so FO authorizes the fix directly with validation Polish F4 and F5, then a fresh validation recheck.
   - P2 comment:4355556546: design_surfaces.py reads ruling items anywhere in the decline-check report, not only under design_decline_check.rulings, and accepts items missing their required fields. P2 comment:4355556553: the built-screen F-number lookup searches the whole task body, so an F bullet kept from an earlier validation cycle satisfies a new one.
+- Cycle 2 (FO, 2026-10-23): Codex review on #708 f3ac6101 (review:5623395171) left one P1 and three P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); FO authorizes the fix directly, then a fresh validation recheck.
+  - P1 comment:4355670203: the built-screen review, finding and decline-check lookups still scan the whole task body, so a prior cycle's waiver satisfies a later cycle or a preserved line trips the duplicate-line error; scope them to the current validation report as the F-bullet lookup is. P2 comment:4355670210: a scalar design_decline_check root (`|`) is parsed as rulings; validate the root and its direct children. P2 comment:4355670216: an empty evidence: or change: value passes; treat empty as missing. P2 comment:4355670224: ADR 0030 is Proposed, which read-adr treats as not in force; mark it Accepted (the Captain approved the design at the ideation gate).
 
 ## Stage Report: ideation
 
