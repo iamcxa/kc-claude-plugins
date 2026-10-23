@@ -45,6 +45,7 @@ Captain rulings on D1 to D5 (ideation sitting, 2026-10-23, chat, each given to F
 - D3 「可以先用同模型。我在想這裡其實應該要用類似 ext 做法，我之前提過的，等於該 ext 會啟用不同模型的支援能力，這樣比較能排除問題」, answering FO's D3 question (Claude reviewers only now, non-Claude later): the walk's reviewers run on Claude models now (distinct personas, opus and sonnet); support for reviewers on other providers comes through an extension that enables multi-model support, the GPT partner proposal (backlog task gpt-partner-extension-proposal), not a POC inside this task. Override: recommended a POC task for a non-Claude operating reviewer (design D3); Captain chose an extension for multi-model support; area: non-Claude reviewers.
 
 Alignment: needed at ideation; the open points named in the starting design are his.
+Result: aligned 2026-10-23 by the Captain's rulings D1, D2, D3 and D5 recorded above; no decision is open.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
