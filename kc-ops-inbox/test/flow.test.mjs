@@ -47,7 +47,7 @@ async function fakeGithub(f) {
   const state = { prs: [], comments: [], patches: [], reviews: [], runs: {}, headSha: null };
   const server = http.createServer(async (req, res) => {
     let raw = ""; for await (const c of req) raw += c;
-    const send = (s, b) => { res.writeHead(s, { "content-type": "application/json" }); res.end(JSON.stringify(b)); };
+    const send = (s, b) => { res.writeHead(s, { "content-type": "application/json", connection: "close" }); res.end(JSON.stringify(b)); };
     const u = req.url;
     if (u === `/repos/${PROJECT}/installation`) return send(200, { id: 7 });
     if (u === "/app/installations/7/access_tokens") return send(201, { token: "ghs_fake", permissions: { contents: "write", pull_requests: "write", metadata: "read" }, repositories: [{ full_name: PROJECT }] });

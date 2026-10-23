@@ -62,7 +62,7 @@ export async function rig({ dispatchStatus = 200, slackStatus = 200, mintStatus 
     let raw = "";
     for await (const c of req) raw += c;
     const auth = (req.headers.authorization || "").replace("Bearer ", "");
-    const send = (s, b) => { res.writeHead(s, { "content-type": "application/json" }); res.end(JSON.stringify(b)); };
+    const send = (s, b) => { res.writeHead(s, { "content-type": "application/json", connection: "close" }); res.end(JSON.stringify(b)); };
     if (req.url === "/slack") {
       state.slack.push(JSON.parse(raw));
       return send(state.flags.slackStatus, {});
