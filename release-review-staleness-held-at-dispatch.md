@@ -3,7 +3,7 @@ title: The first implementation dispatch of a task in a release is held while th
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-23T06:04:47Z
 worktree: .worktrees/spacedock-ensign-release-review-staleness-held-at-dispatch
+pr: iamcxa/kc-claude-plugins#711
 ---
 
 ## Scope
