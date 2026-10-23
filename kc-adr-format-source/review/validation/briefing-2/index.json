@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:kc-adr-format-source:validation:attempt-2:revision-1",
+  "question": "Validation PASSED on 0b5a9ddf after one review round. Approve delivery? Approval means: push spacedock-ensign/kc-adr-format-source, open a Draft PR with the shown body, mark ready after CI is green, run the review rounds, and merge with --match-head-commit once delivery_gate.py passes; then remove the candidate worktree and its local branch.",
+  "artifacts": [
+    {
+      "id": "artifact:kc-adr-format-source:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/390f3fc8c06209bc3fb636d5fca875da441b26bf/kc-adr-format-source.md",
+      "rev": "sha256:7a9985cfa75a7e191123149ffd38ddb0caceda3051fc9e4c8eda3995eaa5f502",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 2 validation PASSED on 0b5a9ddf: B1, B2, B3 and fix 4 (amendment 2) each fixed, round touched only README.md, boundary-contract.md and writing.md; AC-1..3 re-run; FO re-ran the six-step acceptance script in an empty-environment shell, exit 0. Limits: no agent run on the numbering wording; CI byte compare owed by kc-adr-tools-with-dev2-copy; test_sd_dispatch.py not run."
+    }
+  ]
+}

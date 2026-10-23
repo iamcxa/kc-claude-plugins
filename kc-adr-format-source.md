@@ -64,6 +64,11 @@ gates:
                 at: "2026-10-23T04:05:40.400193Z"
                 decision: revise
                 reason: 'Captain 「照建議」 (accepts direction, returns to implementation): fix B1 restore 「第一步先測複製進去的目錄在兩個 host 上都裝得起來」 in boundary-contract.md; B2 restore the ruling''s words and where they were said in boundary-contract.md; B3 add ''one writer at a time'' to the README numbering line; fix 4 reword writing.md''s ''under kc-dev-flow-2, use `number_guards.py reserve` instead'' to ''under kc-dev-flow-2, the coordinator reserves it with `number_guards.py reserve`; ask for one.'''
+            - id: gate-attempt:kc-adr-format-source-validation-2
+              briefing:
+                id: briefing:kc-adr-format-source:validation:attempt-2:revision-1
+                digest: sha256:fc94b68db2c6264c8e6b99fae23cc2b4a0a7e32386f3c4ecd07cf0e1a9953c71
+                room-ref: ./kc-adr-format-source/review/validation/briefing-2
 started: 2026-10-23T02:38:26Z
 ---
 
