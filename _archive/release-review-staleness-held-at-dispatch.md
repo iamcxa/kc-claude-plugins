@@ -3,7 +3,7 @@ title: The first implementation dispatch of a task in a release is held while th
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: Captain 「合併」 (chat, 2026-10-23), answering 「#711（擋派工）要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only; digest 98c31a5c. Accepts the FO recommendation as the bound question states.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-23T06:04:47Z
 worktree: .worktrees/spacedock-ensign-release-review-staleness-held-at-dispatch
 pr: pr-merge:711
+verdict: PASSED
+completed: 2026-10-23T12:46:37Z
+archived: 2026-10-23T12:46:37Z
 ---
 
 ## Scope
