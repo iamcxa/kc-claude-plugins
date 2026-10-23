@@ -120,6 +120,7 @@ Visible change: Each relay ceiling event shows up as one Slack notice; a new inc
 Release review: not needed: the kc-ops-inbox journey map (inbox-r1) is only on branch iamcxa/kc-ops-inbox at 0a1d59ce and not on the trunk; set journey fields when it lands.
 Captain standing ask, 2026-10-21: 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate.
 Captain ruling, 2026-10-23 (chat): 「可以沿用」 to reusing the two POC GitHub Apps (ops-inbox-probe-iamcxa as the agent App, ops-inbox-dispatch-iamcxa as the dispatch App) after deleting the scratch repository, rotating both private keys and transferring both Apps to spacedock-dev; and 「准」 to keeping both Apps' keys in relay's own 1Password vault (named relay-dev or agent-relay-dev; the Captain uses the one his 1Password shows), one Secure Note per App. Open for implementation: `netlify env:set` takes the value on argv, against the stdin-only rule kc-paseo-plugins' project-env follows (PR #21); replace it or record it as a limit.
+FO outward actions, 2026-10-23, on the Captain's 「同意」: pushed branch spacedock-ensign/ops-inbox-r1-setup-and-isolation at 1e65b046 to origin (no PR); created private repo spacedock-dev/subspace-relay-ops-trigger with only .github/workflows/ops-event.yml pinned to kc-claude-plugins 1e65b046 (commit 34f1ff5b); created Netlify site subspace-relay-ops-inbox (project a1e2e99d-a93f-4ac4-b20f-2503e8f1062f) on the Spacedock team, linked to the worktree's kc-ops-inbox/, with OPS_TRIGGER_REPO and OPS_WORKFLOW set; not deployed yet (S8 needs the App IDs).
 
 ## Number guards
 
