@@ -73,6 +73,7 @@ Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-23 — do these amendments withdraw what the Captain approved, and what changes in the build?
   Result (adjust, medium): Amendment 1 withdraws nothing; AC-1 to AC-14 stay and new criteria take fresh ids. Open for the Captain: whether point 2's re-walk is a second run of the extension after the fix tasks land (no conflict) or holds this task open until they land (overrides D1, `### Close path` and AC-10). Build effects: a release named on deferrals (`when` names none), the complaint-to-task link recorded on the filed task, a re-walk mode with its refusals, record.md opening with the table; the AC-13 600-word cap is at risk; the re-walk ships tested on fixtures only; release-walk-due-trigger needs its own re-walk signal.
 Captain ruling (chat, 2026-10-23): 「按你建議」, answering 「還在等你決定：「原本的使用者再走一次」要選讀法一（我建議），還是讀法二？」, where the readings put were 「讀法一（我建議）：走查任務照原計畫收尾。等修正任務都做完，再用同一個工具做第二次走查，就是圖上的 E。這跟你之前定的「走完就收」不衝突。」 and 「讀法二：走查任務一直開著，等修正都完成、原本的使用者重看過才收。這會推翻你之前定的「走完就收」，任務也會拖很久。」: Amendment 1 point 2 is a second run of the extension on the same release after the fix tasks land; this task closes per D1.
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-23 — implementation marks AC-8(b) failed (escalation condition 4 catches every solved item; the opus pass cost more than an all-opus control); what is the smallest next step, given the findings so far?
 
 ## Design
 
