@@ -162,25 +162,15 @@ def write_walk(folder, reviewers=None, ruling=None):
     put(walk / "shot.png", PNG)
     put(walk / "smoke.json", {"result": "passed", "check": "reserve then collect; fails on an empty vault", "evidence": ["shot.png"]})
     put(walk / "meta.json", {"target": {"environment": "staging", "ref": "abc"}, "diversity": {"mode": "multi-model"},
-                             "not_tested": ["resize"], "data_left": ["one reservation"]})
+                             "not_tested": ["resize"], "data_left": ["one reservation"], "director_model": "opus"})
     for r in reviewers or [reviewer_o(), reviewer_s()]:
         put(walk / f"reviewer-{r['reviewer']['id']}.json", r)
-    put(walk / "ruling-sonnet.json", ruling or sonnet_ruling())
+    put(walk / "ruling.json", ruling or sonnet_ruling())
 
 
 def pipeline(folder, wf, prior=None):
-    """escalate, write an opus ruling that repeats the listed entries with the escalation's own reasons, build."""
-    walk = Path(folder) / "walk"
-    code, out = run("escalate", folder, "--workflow-dir", wf)
-    assert code == 0, out
-    listed = [m.group(1) for m in re.finditer(r"^escalate (\S+):", out, re.M)]
-    sonnet = read(walk / "ruling-sonnet.json")
-    opus = {"items": [i for i in sonnet["items"] if i["id"] in listed],
-            "deferred": [d for d in sonnet["deferred"] if d["item"] in listed],
-            "tasks": [t for t in sonnet["tasks"] if set(t["from_items"]) <= set(listed)]}
-    put(walk / "ruling-opus.json", opus)
     args = ["build", folder, "--workflow-dir", wf] + (["--prior", prior] if prior else [])
-    return run(*args), out
+    return run(*args), ""
 
 
 class Base(unittest.TestCase):
@@ -499,7 +489,7 @@ class RulingTests(Base):
         ruling = sonnet_ruling()
         ruling["items"] = [ruling["items"][1]]
         ruling["tasks"] = []
-        put(self.walk / "ruling-sonnet.json", ruling)
+        put(self.walk / "ruling.json", ruling)
 
     def test_a_works_but_unusable_item_ruled_solve_this_round_is_not_clean(self):
         self.clean_world()
@@ -525,94 +515,67 @@ class DirectorSkillTests(unittest.TestCase):
     def test_skill_has_pass_three_and_the_agent_keeps_sonnet(self):
         skill = (PACKAGE / "skills/design-director/SKILL.md").read_text()
         row = next(line for line in skill.splitlines() if line.startswith("| 3 |"))
-        for name in ("Reviewer reports:", "Deferred:", "Screenshots:", "Walk:", "Task folder:", "ADR folder:", "Items:"):
+        for name in ("Reviewer reports:", "Deferred:", "Screenshots:", "Walk:", "Task folder:", "ADR folder:"):
             self.assertIn(name, row)
         self.assertIn("release_ruling", skill)
+        self.assertNotIn("Items:", skill)
         agent = (PACKAGE / "agents/design-director.md").read_text()
         self.assertRegex(agent, r"(?m)^model: sonnet$")
 
 
-class EscalationTests(Base):
-    def listed(self):
-        code, out = run("escalate", self.folder, "--workflow-dir", self.wf)
+class DirectorModelTests(Base):
+    def model(self):
+        code, out = run("director-model", self.folder, "--workflow-dir", self.wf)
         self.assertEqual(code, 0, out)
-        return {m.group(1): m.group(2) for m in re.finditer(r"^escalate (\S+): (.*)$", out, re.M)}, out
+        return out
 
-    def test_each_condition_prints_its_reason_and_the_plain_item_prints_none(self):
-        found, out = self.listed()
-        self.assertEqual(found["i1"], "backlog-or-decision")
-        self.assertEqual(found["i2"], "design-opus:t-reserve, backlog-or-decision")
-        self.assertEqual(found["i3"], "reviewers-disagree, backlog-or-decision")
-        self.assertEqual(found["i4"], "unverified, backlog-or-decision")
-        self.assertNotIn("i5", found)
-        self.assertIn("design-opus:t-reserve", found["t-reserve#F1"])
-        self.assertIn("reviewers-disagree", found["t-reserve#F1"])
-        self.assertIn("reviewers-disagree", found["t-collect-a#declined-1"])
-        self.assertNotIn("t-ready#F1", found)
+    def test_opus_when_a_task_of_the_release_ran_its_ideation_on_opus(self):
+        out = self.model()
+        self.assertIn("director model: opus (design-opus:t-reserve)", out)
 
-    def test_poc_and_unrecorded_owners_print_notes_and_do_not_count_as_opus(self):
-        found, out = self.listed()
+    def test_sonnet_when_no_task_did(self):
+        put(self.wf / ".spacedock-state/t-reserve/dispatch/ideation-1.md", "Model: sonnet\n")
+        self.assertIn("director model: sonnet", self.model())
+        self.assertNotIn("opus", self.model())
+
+    def test_poc_and_unrecorded_tasks_print_notes_and_do_not_count_as_opus(self):
+        put(self.wf / ".spacedock-state/t-reserve/dispatch/ideation-1.md", "Model: sonnet\n")
+        out = self.model()
         self.assertIn("no ideation stage: t-collect-b", out)
         self.assertIn("ideation model unrecorded: t-collect-a", out)
-        self.assertNotIn("design-opus:t-collect", out)
+        self.assertIn("director model: sonnet", out)
 
-    def test_an_archived_owner_s_opus_counts(self):
+    def test_an_archived_task_s_opus_counts(self):
+        put(self.wf / ".spacedock-state/t-reserve/dispatch/ideation-1.md", "Model: sonnet\n")
         put(self.wf / ".spacedock-state/_archive/t-ready/dispatch/ideation-1.md", "Model: claude-opus-4\n")
-        found, _ = self.listed()
-        self.assertEqual(found["i1"], "design-opus:t-ready, backlog-or-decision")
-        self.assertIn("t-ready#F1", found)
+        self.assertIn("director model: opus (design-opus:t-ready)", self.model())
 
     def test_any_ideation_record_naming_opus_counts(self):
+        put(self.wf / ".spacedock-state/t-reserve/dispatch/ideation-1.md", "Model: sonnet\n")
         put(self.wf / ".spacedock-state/t-collect-a/dispatch/ideation-1.md", "Model: sonnet\n")
         put(self.wf / ".spacedock-state/t-collect-a/dispatch/ideation-2.md", "Model: opus\n")
-        found, _ = self.listed()
-        self.assertIn("design-opus:t-collect-a", found["i3"])
+        self.assertIn("director model: opus (design-opus:t-collect-a)", self.model())
 
-    def test_nothing_listed_prints_none(self):
-        put(self.walk / "ruling-sonnet.json", {"items": [dict(sonnet_ruling()["items"][4])] , "deferred": [], "tasks": []})
-        _, out = self.listed()
-        self.assertIn("escalate: none", out)
+    def test_a_task_of_another_release_does_not_count(self):
+        put(self.wf / ".spacedock-state/t-reserve/dispatch/ideation-1.md", "Model: sonnet\n")
+        put(self.wf / ".spacedock-state/t-other/dispatch/ideation-1.md", "Model: opus\n")
+        self.assertIn("director model: sonnet", self.model())
 
-    def test_a_sonnet_ruled_item_that_meets_a_condition_is_refused_and_opus_with_its_fields_is_accepted(self):
+    def test_the_report_records_one_model_and_check_refuses_a_different_one(self):
         report = self.built()
-        self.assertEqual(report["ruling"]["items"][3]["model"], "opus")
-        self.assertEqual(report["ruling"]["items"][3]["sonnet_ruling"], {"real": "unverified", "ruling": "decision"})
+        self.assertEqual(report["ruling"]["director"], {"agent": "kc-dev-flow-2:design-director", "model": "opus"})
         self.assertEqual(self.check("final")[0], 0)
-        self.edit_report(lambda r: r["ruling"]["items"][3].update(model="sonnet", escalated_for=[]))
-        self.refused("final", "ruling i4: meets unverified")
+        self.edit_report(lambda r: r["ruling"]["director"].update(model="sonnet"))
+        self.refused("final", "ruling.director.model is 'sonnet' but the walk covers tasks that call for opus")
         self.built()
-        self.edit_report(lambda r: r["ruling"]["items"][3].pop("sonnet_ruling"))
-        self.refused("final", "model opus needs escalated_for and sonnet_ruling")
+        self.edit_report(lambda r: r["ruling"]["director"].pop("model"))
+        self.refused("final", "ruling.director.model is None")
 
-    def test_the_merged_ruling_names_each_model_and_keeps_sonnet_for_the_rest(self):
+    def test_no_item_carries_a_per_item_model(self):
         report = self.built()
-        by_id = {i["id"]: i for i in report["ruling"]["items"]}
-        self.assertEqual(by_id["i5"]["model"], "sonnet")
-        self.assertEqual(by_id["i5"]["escalated_for"], [])
-        self.assertEqual(report["ruling"]["director"]["models"], ["sonnet", "opus"])
-        self.assertEqual([t["title"] for t in report["ruling"]["tasks"]],
-                         ["Fix check-ready and the reserve action", "Add the collect link"])
-
-    def test_escalate_prints_the_items_line_with_each_item_s_complaints(self):
-        _, out = self.listed()
-        self.assertIn("Items: i1 (o1, s1); i2 (o2, s2); i3 (s3); i4 (s4); t-collect-a#declined-1; t-reserve#F1", out)
-
-    def test_build_refuses_an_opus_ruling_that_groups_other_complaints_under_an_item(self):
-        run("escalate", self.folder, "--workflow-dir", self.wf)
-        sonnet = read(self.walk / "ruling-sonnet.json")
-        opus = {"items": [dict(i, **{"from": ["o3"]}) if i["id"] == "i1" else i for i in sonnet["items"] if i["id"] != "i5"],
-                "deferred": [d for d in sonnet["deferred"] if d["item"] != "t-ready#F1"], "tasks": []}
-        put(self.walk / "ruling-opus.json", opus)
-        code, out = run("build", self.folder, "--workflow-dir", self.wf)
-        self.assertEqual(code, 1)
-        self.assertIn("groups different complaints under item i1", out)
-
-    def test_build_refuses_an_opus_ruling_that_misses_an_escalated_item(self):
-        run("escalate", self.folder, "--workflow-dir", self.wf)
-        put(self.walk / "ruling-opus.json", {"items": [], "deferred": [], "tasks": []})
-        code, out = run("build", self.folder, "--workflow-dir", self.wf)
-        self.assertEqual(code, 1)
-        self.assertIn("opus ruling must cover exactly the escalated entries", out)
+        for item in report["ruling"]["items"] + report["ruling"]["deferred"]:
+            self.assertFalse({"model", "escalated_for", "sonnet_ruling"} & set(item))
+        self.assertEqual(run("escalate", self.folder, "--workflow-dir", self.wf)[0], 2)
 
 
 class RecordTests(Base):

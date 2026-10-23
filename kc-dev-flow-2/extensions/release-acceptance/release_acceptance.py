@@ -4,8 +4,8 @@
   deferred JOURNEY/RELEASE --workflow-dir D     list findings earlier tasks of the release deferred
   check FOLDER --tier walk|final --workflow-dir D [--prior REPORT]
                                                 exit 1 when the walk cannot be accepted as it stands
-  escalate FOLDER --workflow-dir D              list the ruling items that need a second run on opus
-  build FOLDER --workflow-dir D [--prior REPORT]  write walk/report.json from the walk files and both rulings
+  director-model FOLDER --workflow-dir D        print the one model the design director runs on for this walk
+  build FOLDER --workflow-dir D [--prior REPORT]  write walk/report.json from the walk files and walk/ruling.json
   render FOLDER [--check]                       print record.md from report.json; --check compares walk/record.md
   schema release-acceptance                     print the field table, its version and where the history lives
 
@@ -38,14 +38,14 @@ FIELDS = (
     ("stories", "one `{id, result, reported_by[], entry, evidence[], cause}` per walk story, the most severe result"),
     ("proof_line", "`{result, evidence[], cause}`, the most severe result"),
     ("walks", "one reviewer's own report each: stories, proof_line, complaints, deferred_verdicts, would_miss, recommend, marks"),
-    ("ruling", "`{director{agent, models[]}, items[], deferred[], tasks[]}`"),
+    ("ruling", "`{director{agent, model}, items[], deferred[], tasks[]}`; one director model per walk"),
     ("complaint_rows", "one `{complaint, reviewer, task, status, reason}` per reviewer complaint"),
     ("not_tested", "strings, what the walk did not exercise"),
     ("data_left", "strings, data the walk left in the product"),
     ("prior", "`{digest}` of the first walk's report.json, present only on a re-walk"),
 )
 VERSIONS = HERE / "contract-versions.json"
-ADR_TITLE = "a-release-walk-is-operated-by-reviewers-on-different-models-and-ruled-by-the-design-director-with-contested-items-moved-to-opus"
+ADR_TITLE = "a-release-walk-is-operated-by-reviewers-on-different-models-and-ruled-by-the-design-director-on-one-model-per-walk"
 FOOTER = (
     "Current table: python3 kc-dev-flow-2/extensions/release-acceptance/release_acceptance.py schema release-acceptance\n"
     "Every version: kc-dev-flow-2/CHANGELOG.md, written by release-please from each commit.\n"
@@ -442,46 +442,16 @@ def structure_problems(report, folder, walk_list, deferred_ids, prior):
     return out
 
 
-def conditions(item_id, stories, owners, walks, ruling_item, tasks, deferred_owner=None):
-    """Reasons one ruling entry needs a second run on opus, as (reason list, notes); deferred_owner marks a deferred entry."""
+def director_model(workflow_dir, journey, release):
+    """(model, reasons, notes): opus when any task of the release ran its ideation on opus, else sonnet."""
     reasons, notes = [], []
-    slugs = {t.slug: t for sid in stories for t in owners.get(sid, [])}
-    slugs.update(deferred_owner or {})
-    for slug, task in slugs.items():
+    for task in release_tasks(workflow_dir, journey, release):
         opus, note = ideation_model(task)
         if opus:
-            reasons.append(f"design-opus:{slug}")
+            reasons.append(f"design-opus:{task.slug}")
         elif note:
             notes.append(note)
-    differs = any(len({r.get("result") for w in walks for r in w.get("stories", []) if r.get("id") == sid}) > 1 for sid in stories)
-    if deferred_owner is not None:
-        differs = len({v.get("verdict") for w in walks for v in w.get("deferred_verdicts", []) if v.get("item") == item_id}) > 1
-    if differs:
-        reasons.append("reviewers-disagree")
-    if ruling_item.get("real") == "unverified":
-        reasons.append("unverified")
-    if ruling_item.get("ruling") == "decision" or any(item_id in t.get("from_items", []) for t in tasks):
-        reasons.append("backlog-or-decision")
-    return reasons, notes
-
-
-def escalations(ruling, walks, workflow_dir, journey, release):
-    """{entry id: reasons} for every item and deferred entry, plus the notes about unrecorded ideation models."""
-    owners = owners_by_story(workflow_dir, journey, release)
-    by_slug = {t.slug: t for t in release_tasks(workflow_dir, journey, release)}
-    tasks = ruling.get("tasks", [])
-    found, notes = {}, []
-    for item in ruling.get("items", []):
-        reasons, more = conditions(item.get("id"), item.get("stories", []), owners, walks, item, tasks)
-        found[item.get("id")] = reasons
-        notes += more
-    for entry in ruling.get("deferred", []):
-        slug = str(entry.get("item", "")).split("#")[0]
-        reasons, more = conditions(entry.get("item"), [], owners, walks, entry, tasks,
-                                   {slug: by_slug[slug]} if slug in by_slug else {})
-        found[entry.get("item")] = reasons
-        notes += more
-    return found, sorted(set(notes))
+    return ("opus" if reasons else "sonnet"), reasons, notes
 
 
 def ruling_problems(report, workflow_dir, journey, release, deferred_ids, prior):
@@ -527,16 +497,10 @@ def ruling_problems(report, workflow_dir, journey, release, deferred_ids, prior)
     out += [f"task {t.get('title')!r} has no from_items" for t in tasks if not t.get("from_items")]
     ids = {e.get("id") or e.get("item") for e in entries}
     out += [f"task {t.get('title')!r} names unknown item {i}" for t in tasks for i in t.get("from_items", []) if i not in ids]
-    found, _ = escalations(ruling, walks, workflow_dir, journey, release)
-    for e in entries:
-        key = e.get("id") or e.get("item")
-        if e.get("model") == "opus":
-            if not e.get("escalated_for") or not isinstance(e.get("sonnet_ruling"), dict):
-                out.append(f"ruling {key}: model opus needs escalated_for and sonnet_ruling")
-        elif e.get("model") != "sonnet":
-            out.append(f"ruling {key}: model is not sonnet or opus")
-        elif found.get(key):
-            out.append(f"ruling {key}: meets {', '.join(found[key])} and is still ruled on sonnet")
+    model = director_model(workflow_dir, journey, release)[0]
+    declared = (ruling.get("director") or {}).get("model")
+    if declared != model:
+        out.append(f"ruling.director.model is {declared!r} but the walk covers tasks that call for {model} (see director-model)")
     return out
 
 
@@ -723,56 +687,17 @@ def read_ruling(path):
     return ruling.get("release_ruling", ruling)
 
 
-def cmd_escalate(args):
+def cmd_director_model(args):
     try:
-        folder = Path(args.folder)
-        _, walk_list = loaded(folder)
-        report = assemble(folder, walk_list)
-        ruling = read_ruling(folder / "walk" / "ruling-sonnet.json")
-        found, notes = escalations(ruling, report["walks"], args.workflow_dir, walk_list["journey"], walk_list["release"]["id"])
-    except (Refused, KeyError, OSError, TypeError, AttributeError) as error:
+        _, walk_list = loaded(Path(args.folder))
+        model, reasons, notes = director_model(args.workflow_dir, walk_list["journey"], walk_list["release"]["id"])
+    except (Refused, KeyError, OSError) as error:
         print(f"REFUSED: {error}")
         return 1
     for note in notes:
         print(note)
-    listed = {k: v for k, v in found.items() if v}
-    for key, reasons in listed.items():
-        print(f"escalate {key}: {', '.join(reasons)}")
-    if not listed:
-        print("escalate: none")
-        return 0
-    groups = {i.get("id"): i.get("from", []) for i in ruling.get("items", [])}
-    print("Items: " + "; ".join(f"{k} ({', '.join(groups[k])})" if k in groups else k for k in listed))
+    print(f"director model: {model}" + (f" ({', '.join(reasons)})" if reasons else ""))
     return 0
-
-
-def merge_rulings(sonnet, opus, found):
-    """Opus's rulings for the escalated entries, sonnet's for the rest, the three script-written fields set."""
-    listed = {k for k, v in found.items() if v}
-    models = ["sonnet"] + (["opus"] if listed else [])
-    pick = {}
-    for entry in opus.get("items", []) + opus.get("deferred", []):
-        pick[entry.get("id") or entry.get("item")] = entry
-    stray = sorted(set(map(str, pick)) - listed)
-    absent = sorted(listed - set(pick))
-    if stray or absent:
-        raise Refused(f"opus ruling must cover exactly the escalated entries (absent: {absent}, not escalated: {stray})")
-    regrouped = [i["id"] for i in sonnet.get("items", []) if i["id"] in listed and set(pick[i["id"]].get("from", [])) != set(i.get("from", []))]
-    if regrouped:
-        raise Refused(f"opus ruling groups different complaints under item {', '.join(regrouped)}")
-    merged = {"director": {"agent": "kc-dev-flow-2:design-director", "models": models}, "items": [], "deferred": []}
-    for kind, key in (("items", "id"), ("deferred", "item")):
-        for entry in sonnet.get(kind, []):
-            name = entry[key]
-            if name in listed:
-                new = dict(pick[name], model="opus", escalated_for=found[name],
-                           sonnet_ruling={"real": entry.get("real"), "ruling": entry.get("ruling")})
-            else:
-                new = dict(entry, model="sonnet", escalated_for=[])
-            merged[kind].append(new)
-    kept = [t for t in sonnet.get("tasks", []) if not set(t.get("from_items", [])) <= listed]
-    merged["tasks"] = kept + opus.get("tasks", [])
-    return merged
 
 
 def cmd_build(args):
@@ -786,10 +711,10 @@ def cmd_build(args):
         problems = structure_problems(report, folder, walk_list, deferred_ids, prior)
         if problems:
             raise Refused("; ".join(problems))
-        sonnet = read_ruling(walk_dir / "ruling-sonnet.json")
-        found, _ = escalations(sonnet, report["walks"], args.workflow_dir, journey, release)
-        opus = read_ruling(walk_dir / "ruling-opus.json") if any(found.values()) else {}
-        report["ruling"] = merge_rulings(sonnet, opus, found)
+        ruling = read_ruling(walk_dir / "ruling.json")
+        meta = read_json(walk_dir / "meta.json") if (walk_dir / "meta.json").is_file() else {}
+        report["ruling"] = {"director": {"agent": "kc-dev-flow-2:design-director", "model": meta.get("director_model")},
+                            "items": ruling.get("items", []), "deferred": ruling.get("deferred", []), "tasks": ruling.get("tasks", [])}
         if prior is not None:
             report["prior"] = {"digest": prior_digest}
         rows = expected_rows(report, prior)
@@ -835,14 +760,15 @@ def render_text(report, digest):
     out += table(["story", "result", "reported by", "entry", "cause"],
                  [[s["id"], s["result"], ", ".join(s["reported_by"]), s["entry"], s["cause"]] for s in report["stories"]])
     out += ["", "## Ruling", ""]
-    out += table(["item", "from", "stories", "real", "ruling", "when", "class", "model", "escalated for", "why"],
+    out += [f"Director model: {ruling.get('director', {}).get('model')}", ""]
+    out += table(["item", "from", "stories", "real", "ruling", "when", "class", "why"],
                  [[i.get("id"), ", ".join(i.get("from", [])), ", ".join(i.get("stories", [])), i.get("real"), i.get("ruling"),
-                   (i.get("when") or "") + (f" ({i['release']})" if i.get("release") else ""), i.get("class"), i.get("model"),
-                   ", ".join(i.get("escalated_for", [])), i.get("why", "")] for i in ruling.get("items", [])])
+                   (i.get("when") or "") + (f" ({i['release']})" if i.get("release") else ""), i.get("class"),
+                   i.get("why", "")] for i in ruling.get("items", [])])
     out += ["", "## Deferred findings", ""]
-    out += table(["item", "ruling", "when", "model", "how"],
+    out += table(["item", "ruling", "when", "how"],
                  [[e.get("item"), e.get("ruling"), (e.get("when") or "") + (f" ({e['release']})" if e.get("release") else ""),
-                   e.get("model"), e.get("how", "")] for e in ruling.get("deferred", [])])
+                   e.get("how", "")] for e in ruling.get("deferred", [])])
     out += ["", "## Proposed backlog tasks", ""]
     out += table(["title", "scope", "after", "from items"],
                  [[t.get("title"), t.get("scope"), ", ".join(t.get("after", [])), ", ".join(t.get("from_items", []))] for t in ruling.get("tasks", [])])
@@ -886,10 +812,10 @@ def main(argv=None):
     p.add_argument("--workflow-dir", required=True)
     p.add_argument("--prior")
     p.set_defaults(run=cmd_check)
-    p = sub.add_parser("escalate")
+    p = sub.add_parser("director-model")
     p.add_argument("folder")
     p.add_argument("--workflow-dir", required=True)
-    p.set_defaults(run=cmd_escalate)
+    p.set_defaults(run=cmd_director_model)
     p = sub.add_parser("build")
     p.add_argument("folder")
     p.add_argument("--workflow-dir", required=True)

@@ -14,15 +14,15 @@ under `extensions:` in its workflow README frontmatter, and only when it keeps a
   `Environment:` names only (target, deployed ref, `<wrapper>`, opt-in variables, identities by role);
   `Smoke:` one passing path through the proof line and the condition it fails on; `Reviewers:` id,
   model, persona and how each operates the product, at least two, distinct personas, distinct models.
-- **Acceptance task's implementation scope notes:** FO adds this to the first implementation record of an acceptance task, and of no other task: "Lead the walk. Save
-  `node <kc-journey-map>/lib/journey-walk.mjs <journey file> <release>` as `walk/walk.json`, run the smoke
-  path into `walk/smoke.json`, write `walk/meta.json`, run `ra deferred <journey>/<release> --workflow-dir <dir>`,
-  and launch each reviewer fresh and one at a time with its `model`, giving it persona, walk list, deferred
-  list and environment only. Run `ra check <folder> --tier walk`, then pass 3 of `kc-dev-flow-2:design-director`
-  on sonnet into `walk/ruling-sonnet.json`, `ra escalate <folder> --workflow-dir <dir>`, pass 3 on opus with the `Items:` line it
-  prints into `walk/ruling-opus.json`, `ra build <folder>`, `ra check <folder> --tier final`, and
-  `ra render <folder> > <folder>/walk/record.md`. Commit the walk folder path-scoped to the state checkout.
-  Open no pull request."
+- **Acceptance task's implementation scope notes:** FO adds this to the first implementation record of an
+  acceptance task, and of no other task: "Lead the walk. Save `node <kc-journey-map>/lib/journey-walk.mjs
+  <journey file> <release>` as `walk/walk.json`, run the smoke path into `walk/smoke.json`, run `ra deferred
+  <journey>/<release> --workflow-dir <dir>`, and launch each reviewer fresh and one at a time with its `model`,
+  giving it persona, walk list, deferred list and environment only. Write `walk/meta.json`, with `director_model`
+  as `ra director-model <folder> --workflow-dir <dir>` prints it: opus when any task of the release ran its
+  ideation on opus, else sonnet. Run `ra check <folder> --tier walk`, pass 3 of `kc-dev-flow-2:design-director`
+  on that model into `walk/ruling.json`, `ra build <folder>`, `ra check <folder> --tier final` and `ra render
+  <folder> > <folder>/walk/record.md`. Commit the walk folder path-scoped to the state checkout. Open no pull request."
 - **Validation:** re-runs `check --tier final` and `render --check`, re-performs every non-`works` story
   and the proof line, and names the state commit as `Candidate:`. The gate question says approving accepts
   the walk and closes the task with no pull request, FO setting `pr: local-merge:<sha>` and running `merge
