@@ -69,6 +69,17 @@ gates:
                 id: briefing:kc-adr-format-source:validation:attempt-2:revision-1
                 digest: sha256:fc94b68db2c6264c8e6b99fae23cc2b4a0a7e32386f3c4ecd07cf0e1a9953c71
                 room-ref: ./kc-adr-format-source/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-adr-format-source:validation:2
+                briefing: briefing:kc-adr-format-source:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-23T04:22:42.6248Z"
+                decision: approve
+                reason: 'Captain 「准」 (2026-10-23) to briefing-2: accepts validation on 0b5a9ddf and delivery as asked: push, Draft PR with the shown body, ready after CI, review rounds, merge with --match-head-commit once delivery_gate.py passes, then remove the candidate worktree and local branch.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-23T02:38:26Z
 ---
 
