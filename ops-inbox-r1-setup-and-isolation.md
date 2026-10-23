@@ -88,15 +88,6 @@ Captain's words:
 **AC-1**: Contract v1 validates the relay-shaped and Sentry-shaped fixtures and rejects a fixture with a missing attribute, a bad signature or a field outside the allowlist.
 Verified by: the validator's output on each fixture, with exit codes.
 
-**AC-3**: The inbox's credential starts the project's ops workflow and is refused when it tries to start any other workflow in that repository.
-Verified by: one accepted dispatch and one refused dispatch with the same credential, against a repository holding a second workflow with secrets.
-
-**AC-4**: A signed event produces one Slack message seen in the channel and one ops task with one recommendation on an ops/* branch with a Draft PR; after the Captain's review, the gate is recorded with his words and his approval still stands on the PR.
-Verified by: the Slack message with its time, the task and Draft PR, the gate record, and the PR's review state after recording.
-
-**AC-5**: The inbox core passes the same tests under the Netlify adapter and under a second adapter or plain Node harness.
-Verified by: both test runs and the core's import list.
-
 **AC-6**: The axis ADR lands in kc-claude-plugins `docs/adr/` in the kc-adr template under the number FO reserves, and its `**Words:**` lines quote the Captain's two answers of 2026-10-23 verbatim. Amended by Captain, amendment 1.
 Verified by: `python3 kc-adr/scripts/adr_lint.py docs/adr --require <NNNN>` exit 0 at the candidate, and each `**Words:**` quote equal character for character to the answer in `asked-day2-axis-2026-10-23.md` and to the `Captain:` line of amendment 1.
 
@@ -117,6 +108,9 @@ Verified by: the Slack message link with its time, the task and the Draft PR (`d
 
 **AC-12**: One event emitted by relay's own code on a relay deploy, not by a fixture or a send script, travels the path of AC-9 to AC-11 to a recorded gate. Amended by Captain, amendment 1.
 Verified by: relay's function log line for the event id, the inbox log line for the same id, and AC-11's evidence for that id.
+
+**AC-13**: The inbox core imports only node:crypto and its tests pass under the Netlify adapter. Amended by Captain, amendment 2.
+Verified by: `grep -h '^import' kc-ops-inbox/core/*.mjs` printing only `node:crypto`, and the core's test run under the Netlify adapter with zero failures.
 
 ## FO alignment
 
@@ -147,6 +141,16 @@ Verified by: one full setup run log on a scratch project, and the read-back of e
 Captain: 「准」 (chat, 2026-10-23, ideation gate attempt 2)
 Asked: the committed ideation gate question at briefing `briefing:ops-inbox-r1-setup-and-isolation:ideation:attempt-2:revision-1`, which stated that approving accepts the cycle-2 re-cut as written, including AC-8 superseding AC-3, AC-11 superseding AC-4, and a 3.5-day budget with AC-5's second adapter deferred.
 Supersedes: AC-3, AC-4, AC-5
+Superseded text:
+
+**AC-3**: The inbox's credential starts the project's ops workflow and is refused when it tries to start any other workflow in that repository.
+Verified by: one accepted dispatch and one refused dispatch with the same credential, against a repository holding a second workflow with secrets.
+
+**AC-4**: A signed event produces one Slack message seen in the channel and one ops task with one recommendation on an ops/* branch with a Draft PR; after the Captain's review, the gate is recorded with his words and his approval still stands on the PR.
+Verified by: the Slack message with its time, the task and Draft PR, the gate record, and the PR's review state after recording.
+
+**AC-5**: The inbox core passes the same tests under the Netlify adapter and under a second adapter or plain Node harness.
+Verified by: both test runs and the core's import list.
 
 ## Design
 
