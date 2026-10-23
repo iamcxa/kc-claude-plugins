@@ -140,7 +140,7 @@ See the package [README](./kc-dev-flow-2/README.md) and
 
 ### [kc-adr](./kc-adr/)
 
-**Experimental (0.1.0).** One skill, `read-adr`, and no tool. It teaches an agent to read an ADR at an exact commit with `git show` and check its digest with `shasum`, to tell from Status and `Superseded by` whether the ADR is still in force, and to choose the one place new information belongs. For writing an ADR it points at the template, linter and number reservation of kc-dev-flow-2 and ships no copy.
+**Experimental (0.1.1).** One skill, `read-adr`, and the ADR template and linter it points at. It teaches an agent to read an ADR at an exact commit with `git show` and check its digest with `shasum`, to tell from Status and `Superseded by` whether the ADR is still in force, and to choose the one place new information belongs. For writing an ADR it ships the template and the linter; one writer at a time adds an ADR and its number is one above the highest on the base branch, and number reservation stays in kc-dev-flow-2.
 
 **Use when:** A task cites a ruling, or an agent is about to decide something an ADR may govern or to write down something a person told it.
 
