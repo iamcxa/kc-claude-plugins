@@ -397,6 +397,9 @@ def structure_problems(report, folder, walk_list, deferred_ids, prior):
     if report.get("walk") != {"journey": walk_list["journey"], "release": walk_list["release"]["id"],
                               "source_commit": (walk_list.get("source") or {}).get("commit")}:
         out.append("walk does not match walk.json (journey, release, source_commit)")
+    target = report.get("target")
+    if not isinstance(target, dict) or not (text(target.get("environment")) and text(target.get("ref"))):
+        out.append("target needs a non-empty environment and ref")
     smoke = report.get("smoke")
     if not isinstance(smoke, dict):
         out.append("smoke is absent")

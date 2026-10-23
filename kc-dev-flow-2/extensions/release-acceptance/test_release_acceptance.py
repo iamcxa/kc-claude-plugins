@@ -366,12 +366,12 @@ class DiversityTests(Base):
 
     def test_equal_models_with_no_declaration_are_refused(self):
         self.edit_reviewer("s", lambda d: d["reviewer"].update(model="opus"))
-        put(self.walk / "meta.json", {"target": {}})
+        put(self.walk / "meta.json", {"target": {"environment": "staging", "ref": "abc"}})
         self.refused("walk", "diversity.mode is not declared")
 
     def test_single_model_declaration_is_accepted_and_says_so(self):
         self.edit_reviewer("s", lambda d: d["reviewer"].update(model="opus"))
-        put(self.walk / "meta.json", {"diversity": {"mode": "single-model"}})
+        put(self.walk / "meta.json", {"target": {"environment": "staging", "ref": "abc"}, "diversity": {"mode": "single-model"}})
         code, out = self.check("walk")
         self.assertEqual(code, 0, out)
         self.assertIn("reviewers: 2 (models: 1)", out)
@@ -380,6 +380,19 @@ class DiversityTests(Base):
     def test_a_provider_key_is_an_unknown_key(self):
         self.edit_reviewer("s", lambda d: d["reviewer"].update(provider="other"))
         self.refused("walk", "unknown key ['provider']")
+
+
+class TargetTests(Base):
+    def test_a_walk_names_the_environment_and_ref_it_ran_against(self):
+        for target in ({}, {"environment": "staging"}, {"ref": "abc"}, {"environment": " ", "ref": "abc"}):
+            put(self.walk / "meta.json", {"target": target, "diversity": {"mode": "multi-model"}})
+            self.refused("walk", "target needs a non-empty environment and ref")
+        (self.walk / "meta.json").write_text("{}")
+        self.refused("walk", "target needs")
+        self.setUp()
+        self.built()
+        self.edit_report(lambda r: r.pop("target"))
+        self.refused("final", "target needs")
 
 
 class SmokeTests(Base):
