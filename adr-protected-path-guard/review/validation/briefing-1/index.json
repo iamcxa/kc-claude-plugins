@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-protected-path-guard:validation:attempt-1:revision-1",
+  "question": "Validation PASSED on 286ba13a. Approve delivery? Approval means: push spacedock-ensign/adr-protected-path-guard, open a Draft PR with the shown body, mark ready after CI is green, run the review rounds, and merge with --match-head-commit once delivery_gate.py passes; then remove the candidate worktree and its local branch. It also accepts the Deferred risk as a stated known limit (an ADR in another repository than its code cannot list that code, and an agent cleared the list to none to pass the linter) and the two Polish findings as declined.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-protected-path-guard:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/45caf0ece4849500ceeba4ada1201fdb4fdebf8f/adr-protected-path-guard.md",
+      "rev": "sha256:3c1ce28df37a3ceadbade91ad692a81b011d6e350ce639487d6d66bae2921e97",
+      "mediaType": "text/markdown",
+      "summary": "Candidate 286ba13a (base 0701aa8): 4 kc-adr files. AC-1/AC-2: 21 tests, falsifier caught, identical linter output over 30 + 54 ADRs, dev2 ADR tests 9/9 overlaid. AC-3: Codex candidate PASS vs no-change FAIL; Claude single-repo 2/2 PASS (amendment 1); two-repo Claude FAIL in both arms (existing cross-repo routing). FO re-ran the six-step acceptance script in an env -i shell: all steps as expected. Sufficiency: an ADR's protected files carry pointers the linter enforces, and agents on both hosts follow writing.md. Necessity: four files, each mapped to an AC or falsifier. second reviewer: not triggered. FO declines: the 'none' prefix match (nonetheless reads as none, no user-visible loss); the three doc_impact matches (unrelated repo_root placeholders)."
+    }
+  ]
+}

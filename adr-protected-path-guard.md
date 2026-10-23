@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:adr-protected-path-guard:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:adr-protected-path-guard-validation-1
+              briefing:
+                id: briefing:adr-protected-path-guard:validation:attempt-1:revision-1
+                digest: sha256:600db5293c95d8f3b218ad98d1f105d28ce82dd45bf66038aad7fbfd70f8ef66
+                room-ref: ./adr-protected-path-guard/review/validation/briefing-1
 started: 2026-10-23T08:55:00Z
 worktree: .worktrees/spacedock-ensign-adr-protected-path-guard
 ---
