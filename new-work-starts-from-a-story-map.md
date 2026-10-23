@@ -363,6 +363,7 @@ ADR: 0029
 - Cycle 2 (FO, 2026-10-22): Codex review on #704 b5448997 (review:5612546695) left three P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); the validation recheck reproduced all three, so FO authorizes the fix directly, then a fresh validation recheck.
   - P2 comment:4347057307: a malformed source.date (nope, 7) or a numeric source.words passes check. P2 comment:4347057317: a Tasks table with no separator row has its first data row skipped. P2 comment:4347057331: ADR owed is accepted for a question that already holds doc:.
 - Cycle 3 (FO, 2026-10-22): Codex round 3 on #704 f0d3f442 (review:5612786931) left three P2 (comment:4347244844, comment:4347244848, comment:4347244851); none is Material or P1, so per workflow.md findings step 5 FO declines them in the merge ask and files backlog task journey-review-check-round3-followups (chief-engineer advice, Reviewer line under FO alignment). No repair cycle.
+- Cycle 4 (FO, 2026-10-23): Codex round 3 on #705 954ad170 (review:5623291232) left one P1 and one P2. P1 comment:4355580152 (no journey-review.mjs in this commit) read #705's tree, which predates #704's merge; FO updated #705's branch with origin/main (gh pr update-branch, new head 32ad029f, which holds kc-journey-map/lib/journey-review.mjs) and requested a Codex re-review; no code change. P2 comment:4355580158 (the sitting next: line names no cap of 10) is round 3, neither Material nor P1: declined in the merge ask and added to backlog task journey-review-check-round3-followups.
 
 ## Stage Report: ideation
 
