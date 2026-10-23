@@ -5,7 +5,7 @@ h2{font-size:15px;margin:18px 0 6px}.note{font-size:12px;color:#444;margin:0 0 6
 .avatar{width:36px;height:36px;border-radius:6px;background:#4a154b;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
 .col{min-width:0;overflow-wrap:anywhere}.app{font-size:10px;background:#ddd;color:#555;padding:1px 3px;border-radius:2px}
 .dark .app{background:#333;color:#aaa}.ts{font-size:12px;color:#616061}.h{font-weight:700}
-.agent{margin-top:4px}.agent.warn{border-left:3px solid #e8912d;padding-left:6px}.agent u{color:#1264a3;text-decoration:none}.dark .agent u{color:#1d9bd1}
+.agent{margin-top:4px}.agent.warn{border-left:3px solid #e8912d;padding-left:6px}.agent.warn.red{border-left:4px solid #e01e5a}.nw{white-space:nowrap}.agent u{color:#1264a3;text-decoration:none}.dark .agent u{color:#1d9bd1}
 .agent code{font-size:13px;background:#f6f6f6;border:1px solid #ddd;border-radius:3px;padding:0 3px;color:#c01343}.dark .agent code{background:#222529;border-color:#444;color:#e8a6b6}
 .ctx{font-size:12px;color:#616061;margin-top:4px}.dark .ctx{color:#ababad}
 .phone .msg{max-width:358px}pre{background:#0d1117;color:#e6edf3;padding:12px;font-size:12px;border-radius:6px;white-space:pre-wrap;word-break:break-all;max-width:1340px}
@@ -14,13 +14,13 @@ h2{font-size:15px;margin:18px 0 6px}.note{font-size:12px;color:#444;margin:0 0 6
 .gh h3{font-size:16px;margin:18px 0 6px}.gh table{border-collapse:collapse}.gh td,.gh th{border:1px solid #d0d7de;padding:4px 8px;font-size:13px}.gh.dark td,.gh.dark th{border-color:#30363d}
 .gh code{background:rgba(175,184,193,.2);padding:0 4px;border-radius:4px;font-size:12px}.gh ul{padding-left:20px}.gh li.sub{list-style:circle;margin-left:18px;font-size:12px}
 .cite{background:#ddf4ff;color:#0969da;border-radius:10px;padding:0 6px;font-size:12px;white-space:nowrap}.gh.dark .cite{background:#121d2f;color:#4493f8}
-.gh.phone{max-width:358px;padding:12px}.gh hr{border:0;border-top:1px solid #d0d7de}</style>
+.cite.bad{background:#ffebe9;color:#cf222e}.gh.phone{max-width:358px;padding:12px}.gh blockquote{margin:0;padding:6px 12px;border-left:4px solid #bf8700;background:#fff8c5;color:#3b2300}.gh.dark blockquote{background:#272115;color:#e3b341;border-color:#9e6a03}.gh hr{border:0;border-top:1px solid #d0d7de}</style>
 <h2>The ops record docs/ops/&lt;incident&gt;.md as the Captain reads it in the Draft PR (DISPOSABLE; GitHub draws the real one)</h2>
-<p class="note">Light, desktop: the record when the PR opens. Below it: the same PR after a later event joined (the record is unchanged; the event arrives as a comment and on the task). Then dark, and phone width.</p>
+<p class="note">Light, desktop: the record when the PR opens. Then the same PR after a later event joined: the record file is unchanged, the PR description's first line says the recommendation predates the event, and the event arrives as a comment and on the task. Then a record with one refused citation, the joined state in dark, and phone width. An event whose agent did not start has no record: its Slack notice is the only trace. An incident holds at most two relay events (80% and full) per tier and day.</p>
 <div class="gh"><h1>ops: relay signed-in ceiling, 2026-10-20</h1>
-<p>Incident <code>ceiling/bound/2026-10-20</code> · source https://&lt;relay deploy&gt;/ops · contract v1 · ops task <code>ceiling-bound-2026-10-20</code> on spacedock-state/ops</p>
+<p>Incident <code class="nw">ceiling/bound/2026-10-20</code> · source https://&lt;relay deploy&gt;/ops · contract v1 · ops task <code class="nw">ceiling-bound-2026-10-20</code> on spacedock-state/ops</p>
 <h3>Events</h3>
-<table><tr><th>#</th><th>received</th><th>event id</th><th>what</th><th>fields</th></tr><tr><td>1</td><td>08:48:03Z</td><td>bound-2026-10-20-80</td><td>bound-ceiling-near</td><td>count 120 · limit 150 · limitSource default</td></tr></table>
+<table><tr><th>#</th><th>received</th><th>event id</th><th>what</th><th>fields</th></tr><tr><td>1</td><td>08:48:03Z</td><td><code class="nw">bound-2026-10-20-80</code></td><td>bound-ceiling-near</td><td>count 120; limit 150; limitSource default</td></tr></table>
 <h3>Diagnosis</h3>
 <ul>
 <li class="">Known: 120 of 150 signed-in publishes by 08:48 UTC; no override record today, so the default 150 applies.</li>
@@ -29,41 +29,36 @@ h2{font-size:15px;margin:18px 0 6px}.note{font-size:12px;color:#444;margin:0 0 6
 <h3>Options</h3>
 <ul>
 <li class="">1. <b>Hold.</b> At 150 the ceiling refuses with 429 until 00:00 UTC; a refused publish spends nothing <span class="cite">ADR 0060</span>. Cost: signed-in publishers refused for the rest of the day.</li>
-<li class="">2. <b>Raise today's limit to 300.</b> You run <code>scripts/bound-ceiling --production --limit 300 --reason "&lt;why&gt;"</code>; it lapses at midnight, at most 1000 <span class="cite">ADR 0060</span>. The agent holds no store credential. Cost: up to 150 more Briefings' credits.</li>
-<li class="">3. <b>Change the default.</b> A code change to <code>RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT</code> goes to a dev task, not this ops task; adding a silent ceiling elsewhere needs a new ruling <span class="cite">ADR 0001</span>.</li>
+<li class="">2. <b>Raise today's limit to 300.</b> You run <code class="nw">scripts/bound-ceiling --production --limit 300 --reason "&lt;why&gt;"</code>; it lapses at midnight, at most 1000 <span class="cite">ADR 0060</span>. The agent holds no store credential. Cost: up to 150 more Briefings' credits.</li>
+<li class="">3. <b>Change the default.</b> A code change to <code class="nw">RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT</code> goes to a dev task, not this ops task; adding a silent ceiling elsewhere needs a new ruling <span class="cite">ADR 0001</span>.</li>
 </ul>
 <h3>Recommendation</h3>
 <p>Option 1, hold: 120 by 08:48 is the first near event, and a raise can follow the full event within seconds.</p>
+<p><b>How to decide:</b> approve this pull request to accept the recommendation; to choose another option, submit a review with "Request changes" or "Comment" whose text names the option (for example "Option 2"). Your review is the recorded decision; a review that names no single option is recorded with your words and leaves the option open. In r1 nothing runs after it: you carry out the option yourself, and merging keeps this record on the default branch.</p>
 <h3>Rulings cited</h3>
-<p>Read per kc-adr read-adr, step 1, at the commit this run checked out. Each block passed the citation check.</p>
+<p>Read by kc-adr read-adr, step 1, in spacedock-dev/subspace-relay at commit <code class="nw">485306242b806b0bbeea8fc1ff0abfe6568de959</code>. Each block was checked with git and shasum.</p>
 <ul>
-<li class="">relay ADR 0060 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0060 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0060-the-signed-in-tier-has-its-own-exact-site-wide-daily-ceiling.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:bd63ef2d6aa7e58a9ee87dc73a5d7fa85f69e4ac96298ebd3be7c7824c33d5a3</li>
-<li class="sub">status: Accepted</li>
-<li class="">relay ADR 0049 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0049 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0049-refusals-are-counted-from-log-lines-and-never-stored.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:7fdadd7f72315258236532df243f6567e7ac1b785454feb08d9461962779ba61</li>
-<li class="sub">status: Accepted</li>
-<li class="">relay ADR 0001 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0001 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0001-no-upper-bound-on-daily-quota-overrides.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:c4f794037330a48808cd74e6602705f0213de5421e2d87d0ec6609054ce2bcf0</li>
-<li class="sub">status: Accepted</li>
 </ul>
 <h3>Measures</h3>
 <ul>
 <li class="">Event received 08:48:03Z · recommendation ready (Draft PR opened) 08:50:31Z · 2 min 28 s</li>
-<li class="">Your decision: filled in by ops-gate from your review (followed the recommendation: yes or no)</li>
-</ul></div><h2>After a later event joined (light, desktop)</h2><div class="gh"><h1>ops: relay signed-in ceiling, 2026-10-20</h1>
-<p>Incident <code>ceiling/bound/2026-10-20</code> · source https://&lt;relay deploy&gt;/ops · contract v1 · ops task <code>ceiling-bound-2026-10-20</code> on spacedock-state/ops</p>
+<li class="">Your decision: ops-gate records it from your review on the ops task (state branch), not in this file, with followed: yes when you approve, otherwise no</li>
+</ul></div><h2>After a later event joined (light, desktop)</h2><div class="gh"><p><b>PR description, first line (the join run edits it; the record file below does not change):</b></p>
+<blockquote>Event 2 (bound-ceiling-full, 150 of 150) joined at 11:02:40Z, after this recommendation was written. See the comment at the end.</blockquote>
+<hr>
+<h1>ops: relay signed-in ceiling, 2026-10-20</h1>
+<p>Incident <code class="nw">ceiling/bound/2026-10-20</code> · source https://&lt;relay deploy&gt;/ops · contract v1 · ops task <code class="nw">ceiling-bound-2026-10-20</code> on spacedock-state/ops</p>
 <h3>Events</h3>
-<table><tr><th>#</th><th>received</th><th>event id</th><th>what</th><th>fields</th></tr><tr><td>1</td><td>08:48:03Z</td><td>bound-2026-10-20-80</td><td>bound-ceiling-near</td><td>count 120 · limit 150 · limitSource default</td></tr></table>
+<table><tr><th>#</th><th>received</th><th>event id</th><th>what</th><th>fields</th></tr><tr><td>1</td><td>08:48:03Z</td><td><code class="nw">bound-2026-10-20-80</code></td><td>bound-ceiling-near</td><td>count 120; limit 150; limitSource default</td></tr></table>
 <h3>Diagnosis</h3>
 <ul>
 <li class="">Known: 120 of 150 signed-in publishes by 08:48 UTC; no override record today, so the default 150 applies.</li>
@@ -72,46 +67,41 @@ h2{font-size:15px;margin:18px 0 6px}.note{font-size:12px;color:#444;margin:0 0 6
 <h3>Options</h3>
 <ul>
 <li class="">1. <b>Hold.</b> At 150 the ceiling refuses with 429 until 00:00 UTC; a refused publish spends nothing <span class="cite">ADR 0060</span>. Cost: signed-in publishers refused for the rest of the day.</li>
-<li class="">2. <b>Raise today's limit to 300.</b> You run <code>scripts/bound-ceiling --production --limit 300 --reason "&lt;why&gt;"</code>; it lapses at midnight, at most 1000 <span class="cite">ADR 0060</span>. The agent holds no store credential. Cost: up to 150 more Briefings' credits.</li>
-<li class="">3. <b>Change the default.</b> A code change to <code>RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT</code> goes to a dev task, not this ops task; adding a silent ceiling elsewhere needs a new ruling <span class="cite">ADR 0001</span>.</li>
+<li class="">2. <b>Raise today's limit to 300.</b> You run <code class="nw">scripts/bound-ceiling --production --limit 300 --reason "&lt;why&gt;"</code>; it lapses at midnight, at most 1000 <span class="cite">ADR 0060</span>. The agent holds no store credential. Cost: up to 150 more Briefings' credits.</li>
+<li class="">3. <b>Change the default.</b> A code change to <code class="nw">RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT</code> goes to a dev task, not this ops task; adding a silent ceiling elsewhere needs a new ruling <span class="cite">ADR 0001</span>.</li>
 </ul>
 <h3>Recommendation</h3>
 <p>Option 1, hold: 120 by 08:48 is the first near event, and a raise can follow the full event within seconds.</p>
+<p><b>How to decide:</b> approve this pull request to accept the recommendation; to choose another option, submit a review with "Request changes" or "Comment" whose text names the option (for example "Option 2"). Your review is the recorded decision; a review that names no single option is recorded with your words and leaves the option open. In r1 nothing runs after it: you carry out the option yourself, and merging keeps this record on the default branch.</p>
 <h3>Rulings cited</h3>
-<p>Read per kc-adr read-adr, step 1, at the commit this run checked out. Each block passed the citation check.</p>
+<p>Read by kc-adr read-adr, step 1, in spacedock-dev/subspace-relay at commit <code class="nw">485306242b806b0bbeea8fc1ff0abfe6568de959</code>. Each block was checked with git and shasum.</p>
 <ul>
-<li class="">relay ADR 0060 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0060 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0060-the-signed-in-tier-has-its-own-exact-site-wide-daily-ceiling.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:bd63ef2d6aa7e58a9ee87dc73a5d7fa85f69e4ac96298ebd3be7c7824c33d5a3</li>
-<li class="sub">status: Accepted</li>
-<li class="">relay ADR 0049 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0049 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0049-refusals-are-counted-from-log-lines-and-never-stored.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:7fdadd7f72315258236532df243f6567e7ac1b785454feb08d9461962779ba61</li>
-<li class="sub">status: Accepted</li>
-<li class="">relay ADR 0001 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0001 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0001-no-upper-bound-on-daily-quota-overrides.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:c4f794037330a48808cd74e6602705f0213de5421e2d87d0ec6609054ce2bcf0</li>
-<li class="sub">status: Accepted</li>
 </ul>
 <h3>Measures</h3>
 <ul>
 <li class="">Event received 08:48:03Z · recommendation ready (Draft PR opened) 08:50:31Z · 2 min 28 s</li>
-<li class="">Your decision: filled in by ops-gate from your review (followed the recommendation: yes or no)</li>
+<li class="">Your decision: ops-gate records it from your review on the ops task (state branch), not in this file, with followed: yes when you approve, otherwise no</li>
 </ul>
 <hr>
 <p><b>Comment by relay-ops-agent[bot], 11:02:40Z</b></p>
-<p>Event 2 joined this incident: <code>bound-2026-10-20-100</code> · bound-ceiling-full · count 150 · limit 150. It is recorded on the ops task (<code>events/bound-2026-10-20-100.json</code>).</p>
+<p>Event 2 joined this incident: <code class="nw">bound-2026-10-20-100</code> · bound-ceiling-full · count 150; limit 150. It is recorded on the ops task (<code class="nw">events/bound-2026-10-20-100.json</code>).</p>
 <p>The recommendation above was written before this event; r1 runs no new agent for a joined event.</p></div>
-<h2>Dark theme</h2><div class="gh dark"><h1>ops: relay signed-in ceiling, 2026-10-20</h1>
-<p>Incident <code>ceiling/bound/2026-10-20</code> · source https://&lt;relay deploy&gt;/ops · contract v1 · ops task <code>ceiling-bound-2026-10-20</code> on spacedock-state/ops</p>
+<h2>One citation refused by the check (light, desktop)</h2><div class="gh"><p><b>PR description, first line:</b></p>
+<blockquote>Citations: 2 OK, 1 REFUSED. Do not rely on the refused one.</blockquote>
+<hr>
+<h1>ops: relay signed-in ceiling, 2026-10-20</h1>
+<p>Incident <code class="nw">ceiling/bound/2026-10-20</code> · source https://&lt;relay deploy&gt;/ops · contract v1 · ops task <code class="nw">ceiling-bound-2026-10-20</code> on spacedock-state/ops</p>
 <h3>Events</h3>
-<table><tr><th>#</th><th>received</th><th>event id</th><th>what</th><th>fields</th></tr><tr><td>1</td><td>08:48:03Z</td><td>bound-2026-10-20-80</td><td>bound-ceiling-near</td><td>count 120 · limit 150 · limitSource default</td></tr></table>
+<table><tr><th>#</th><th>received</th><th>event id</th><th>what</th><th>fields</th></tr><tr><td>1</td><td>08:48:03Z</td><td><code class="nw">bound-2026-10-20-80</code></td><td>bound-ceiling-near</td><td>count 120; limit 150; limitSource default</td></tr></table>
 <h3>Diagnosis</h3>
 <ul>
 <li class="">Known: 120 of 150 signed-in publishes by 08:48 UTC; no override record today, so the default 150 applies.</li>
@@ -120,41 +110,37 @@ h2{font-size:15px;margin:18px 0 6px}.note{font-size:12px;color:#444;margin:0 0 6
 <h3>Options</h3>
 <ul>
 <li class="">1. <b>Hold.</b> At 150 the ceiling refuses with 429 until 00:00 UTC; a refused publish spends nothing <span class="cite">ADR 0060</span>. Cost: signed-in publishers refused for the rest of the day.</li>
-<li class="">2. <b>Raise today's limit to 300.</b> You run <code>scripts/bound-ceiling --production --limit 300 --reason "&lt;why&gt;"</code>; it lapses at midnight, at most 1000 <span class="cite">ADR 0060</span>. The agent holds no store credential. Cost: up to 150 more Briefings' credits.</li>
-<li class="">3. <b>Change the default.</b> A code change to <code>RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT</code> goes to a dev task, not this ops task; adding a silent ceiling elsewhere needs a new ruling <span class="cite">ADR 0001</span>.</li>
+<li class="">2. <b>Raise today's limit to 300.</b> You run <code class="nw">scripts/bound-ceiling --production --limit 300 --reason "&lt;why&gt;"</code>; it lapses at midnight, at most 1000 <span class="cite">ADR 0060</span>. The agent holds no store credential. Cost: up to 150 more Briefings' credits.</li>
+<li class="">3. <b>Change the default.</b> A code change to <code class="nw">RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT</code> goes to a dev task, not this ops task; adding a silent ceiling elsewhere needs a new ruling <span class="cite bad">ADR 0001 REFUSED</span>.</li>
 </ul>
 <h3>Recommendation</h3>
 <p>Option 1, hold: 120 by 08:48 is the first near event, and a raise can follow the full event within seconds.</p>
+<p><b>How to decide:</b> approve this pull request to accept the recommendation; to choose another option, submit a review with "Request changes" or "Comment" whose text names the option (for example "Option 2"). Your review is the recorded decision; a review that names no single option is recorded with your words and leaves the option open. In r1 nothing runs after it: you carry out the option yourself, and merging keeps this record on the default branch.</p>
 <h3>Rulings cited</h3>
-<p>Read per kc-adr read-adr, step 1, at the commit this run checked out. Each block passed the citation check.</p>
+<p>Read by kc-adr read-adr, step 1, in spacedock-dev/subspace-relay at commit <code class="nw">485306242b806b0bbeea8fc1ff0abfe6568de959</code>. Each block was checked with git and shasum.</p>
 <ul>
-<li class="">relay ADR 0060 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0060 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0060-the-signed-in-tier-has-its-own-exact-site-wide-daily-ceiling.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:bd63ef2d6aa7e58a9ee87dc73a5d7fa85f69e4ac96298ebd3be7c7824c33d5a3</li>
-<li class="sub">status: Accepted</li>
-<li class="">relay ADR 0049 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0049 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0049-refusals-are-counted-from-log-lines-and-never-stored.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:7fdadd7f72315258236532df243f6567e7ac1b785454feb08d9461962779ba61</li>
-<li class="sub">status: Accepted</li>
-<li class="">relay ADR 0001 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0001 · <b>REFUSED: digest-mismatch</b> (the file at that commit does not have this digest)</li>
 <li class="sub">path: docs/adr/0001-no-upper-bound-on-daily-quota-overrides.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
-<li class="sub">digest: sha256:c4f794037330a48808cd74e6602705f0213de5421e2d87d0ec6609054ce2bcf0</li>
-<li class="sub">status: Accepted</li>
+<li class="sub">digest: sha256:0000000000000000000000000000000000000000000000000000000000000000</li>
 </ul>
 <h3>Measures</h3>
 <ul>
 <li class="">Event received 08:48:03Z · recommendation ready (Draft PR opened) 08:50:31Z · 2 min 28 s</li>
-<li class="">Your decision: filled in by ops-gate from your review (followed the recommendation: yes or no)</li>
-</ul></div><h2>Phone width (390 px)</h2><div class="gh phone"><h1>ops: relay signed-in ceiling, 2026-10-20</h1>
-<p>Incident <code>ceiling/bound/2026-10-20</code> · source https://&lt;relay deploy&gt;/ops · contract v1 · ops task <code>ceiling-bound-2026-10-20</code> on spacedock-state/ops</p>
+<li class="">Your decision: ops-gate records it from your review on the ops task (state branch), not in this file, with followed: yes when you approve, otherwise no</li>
+</ul></div>
+<h2>Dark theme, after a later event joined</h2><div class="gh dark"><p><b>PR description, first line (the join run edits it; the record file below does not change):</b></p>
+<blockquote>Event 2 (bound-ceiling-full, 150 of 150) joined at 11:02:40Z, after this recommendation was written. See the comment at the end.</blockquote>
+<hr>
+<h1>ops: relay signed-in ceiling, 2026-10-20</h1>
+<p>Incident <code class="nw">ceiling/bound/2026-10-20</code> · source https://&lt;relay deploy&gt;/ops · contract v1 · ops task <code class="nw">ceiling-bound-2026-10-20</code> on spacedock-state/ops</p>
 <h3>Events</h3>
-<table><tr><th>#</th><th>received</th><th>event id</th><th>what</th><th>fields</th></tr><tr><td>1</td><td>08:48:03Z</td><td>bound-2026-10-20-80</td><td>bound-ceiling-near</td><td>count 120 · limit 150 · limitSource default</td></tr></table>
+<table><tr><th>#</th><th>received</th><th>event id</th><th>what</th><th>fields</th></tr><tr><td>1</td><td>08:48:03Z</td><td><code class="nw">bound-2026-10-20-80</code></td><td>bound-ceiling-near</td><td>count 120; limit 150; limitSource default</td></tr></table>
 <h3>Diagnosis</h3>
 <ul>
 <li class="">Known: 120 of 150 signed-in publishes by 08:48 UTC; no override record today, so the default 150 applies.</li>
@@ -163,39 +149,73 @@ h2{font-size:15px;margin:18px 0 6px}.note{font-size:12px;color:#444;margin:0 0 6
 <h3>Options</h3>
 <ul>
 <li class="">1. <b>Hold.</b> At 150 the ceiling refuses with 429 until 00:00 UTC; a refused publish spends nothing <span class="cite">ADR 0060</span>. Cost: signed-in publishers refused for the rest of the day.</li>
-<li class="">2. <b>Raise today's limit to 300.</b> You run <code>scripts/bound-ceiling --production --limit 300 --reason "&lt;why&gt;"</code>; it lapses at midnight, at most 1000 <span class="cite">ADR 0060</span>. The agent holds no store credential. Cost: up to 150 more Briefings' credits.</li>
-<li class="">3. <b>Change the default.</b> A code change to <code>RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT</code> goes to a dev task, not this ops task; adding a silent ceiling elsewhere needs a new ruling <span class="cite">ADR 0001</span>.</li>
+<li class="">2. <b>Raise today's limit to 300.</b> You run <code class="nw">scripts/bound-ceiling --production --limit 300 --reason "&lt;why&gt;"</code>; it lapses at midnight, at most 1000 <span class="cite">ADR 0060</span>. The agent holds no store credential. Cost: up to 150 more Briefings' credits.</li>
+<li class="">3. <b>Change the default.</b> A code change to <code class="nw">RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT</code> goes to a dev task, not this ops task; adding a silent ceiling elsewhere needs a new ruling <span class="cite">ADR 0001</span>.</li>
 </ul>
 <h3>Recommendation</h3>
 <p>Option 1, hold: 120 by 08:48 is the first near event, and a raise can follow the full event within seconds.</p>
+<p><b>How to decide:</b> approve this pull request to accept the recommendation; to choose another option, submit a review with "Request changes" or "Comment" whose text names the option (for example "Option 2"). Your review is the recorded decision; a review that names no single option is recorded with your words and leaves the option open. In r1 nothing runs after it: you carry out the option yourself, and merging keeps this record on the default branch.</p>
 <h3>Rulings cited</h3>
-<p>Read per kc-adr read-adr, step 1, at the commit this run checked out. Each block passed the citation check.</p>
+<p>Read by kc-adr read-adr, step 1, in spacedock-dev/subspace-relay at commit <code class="nw">485306242b806b0bbeea8fc1ff0abfe6568de959</code>. Each block was checked with git and shasum.</p>
 <ul>
-<li class="">relay ADR 0060 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0060 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0060-the-signed-in-tier-has-its-own-exact-site-wide-daily-ceiling.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:bd63ef2d6aa7e58a9ee87dc73a5d7fa85f69e4ac96298ebd3be7c7824c33d5a3</li>
-<li class="sub">status: Accepted</li>
-<li class="">relay ADR 0049 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0049 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0049-refusals-are-counted-from-log-lines-and-never-stored.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:7fdadd7f72315258236532df243f6567e7ac1b785454feb08d9461962779ba61</li>
-<li class="sub">status: Accepted</li>
-<li class="">relay ADR 0001 · OK</li>
-<li class="sub">repo: spacedock-dev/subspace-relay</li>
+<li class="">relay ADR 0001 · OK · Accepted</li>
 <li class="sub">path: docs/adr/0001-no-upper-bound-on-daily-quota-overrides.md</li>
-<li class="sub">commit: 485306242b806b0bbeea8fc1ff0abfe6568de959</li>
 <li class="sub">digest: sha256:c4f794037330a48808cd74e6602705f0213de5421e2d87d0ec6609054ce2bcf0</li>
-<li class="sub">status: Accepted</li>
 </ul>
 <h3>Measures</h3>
 <ul>
 <li class="">Event received 08:48:03Z · recommendation ready (Draft PR opened) 08:50:31Z · 2 min 28 s</li>
-<li class="">Your decision: filled in by ops-gate from your review (followed the recommendation: yes or no)</li>
+<li class="">Your decision: ops-gate records it from your review on the ops task (state branch), not in this file, with followed: yes when you approve, otherwise no</li>
 </ul>
 <hr>
 <p><b>Comment by relay-ops-agent[bot], 11:02:40Z</b></p>
-<p>Event 2 joined this incident: <code>bound-2026-10-20-100</code> · bound-ceiling-full · count 150 · limit 150. It is recorded on the ops task (<code>events/bound-2026-10-20-100.json</code>).</p>
+<p>Event 2 joined this incident: <code class="nw">bound-2026-10-20-100</code> · bound-ceiling-full · count 150; limit 150. It is recorded on the ops task (<code class="nw">events/bound-2026-10-20-100.json</code>).</p>
+<p>The recommendation above was written before this event; r1 runs no new agent for a joined event.</p></div><h2>Phone width (390 px)</h2><div class="gh phone"><p><b>PR description, first line (the join run edits it; the record file below does not change):</b></p>
+<blockquote>Event 2 (bound-ceiling-full, 150 of 150) joined at 11:02:40Z, after this recommendation was written. See the comment at the end.</blockquote>
+<hr>
+<h1>ops: relay signed-in ceiling, 2026-10-20</h1>
+<p>Incident <code class="nw">ceiling/bound/2026-10-20</code> · source https://&lt;relay deploy&gt;/ops · contract v1 · ops task <code class="nw">ceiling-bound-2026-10-20</code> on spacedock-state/ops</p>
+<h3>Events</h3>
+<table><tr><th>#</th><th>received</th><th>event id</th><th>what</th><th>fields</th></tr><tr><td>1</td><td>08:48:03Z</td><td><code class="nw">bound-2026-10-20-80</code></td><td>bound-ceiling-near</td><td>count 120; limit 150; limitSource default</td></tr></table>
+<h3>Diagnosis</h3>
+<ul>
+<li class="">Known: 120 of 150 signed-in publishes by 08:48 UTC; no override record today, so the default 150 applies.</li>
+<li class="">Not known: who is publishing; relay telemetry carries no account identifier <span class="cite">ADR 0049</span>. Whether the rate continues.</li>
+</ul>
+<h3>Options</h3>
+<ul>
+<li class="">1. <b>Hold.</b> At 150 the ceiling refuses with 429 until 00:00 UTC; a refused publish spends nothing <span class="cite">ADR 0060</span>. Cost: signed-in publishers refused for the rest of the day.</li>
+<li class="">2. <b>Raise today's limit to 300.</b> You run <code class="nw">scripts/bound-ceiling --production --limit 300 --reason "&lt;why&gt;"</code>; it lapses at midnight, at most 1000 <span class="cite">ADR 0060</span>. The agent holds no store credential. Cost: up to 150 more Briefings' credits.</li>
+<li class="">3. <b>Change the default.</b> A code change to <code class="nw">RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT</code> goes to a dev task, not this ops task; adding a silent ceiling elsewhere needs a new ruling <span class="cite">ADR 0001</span>.</li>
+</ul>
+<h3>Recommendation</h3>
+<p>Option 1, hold: 120 by 08:48 is the first near event, and a raise can follow the full event within seconds.</p>
+<p><b>How to decide:</b> approve this pull request to accept the recommendation; to choose another option, submit a review with "Request changes" or "Comment" whose text names the option (for example "Option 2"). Your review is the recorded decision; a review that names no single option is recorded with your words and leaves the option open. In r1 nothing runs after it: you carry out the option yourself, and merging keeps this record on the default branch.</p>
+<h3>Rulings cited</h3>
+<p>Read by kc-adr read-adr, step 1, in spacedock-dev/subspace-relay at commit <code class="nw">485306242b806b0bbeea8fc1ff0abfe6568de959</code>. Each block was checked with git and shasum.</p>
+<ul>
+<li class="">relay ADR 0060 · OK · Accepted</li>
+<li class="sub">path: docs/adr/0060-the-signed-in-tier-has-its-own-exact-site-wide-daily-ceiling.md</li>
+<li class="sub">digest: sha256:bd63ef2d6aa7e58a9ee87dc73a5d7fa85f69e4ac96298ebd3be7c7824c33d5a3</li>
+<li class="">relay ADR 0049 · OK · Accepted</li>
+<li class="sub">path: docs/adr/0049-refusals-are-counted-from-log-lines-and-never-stored.md</li>
+<li class="sub">digest: sha256:7fdadd7f72315258236532df243f6567e7ac1b785454feb08d9461962779ba61</li>
+<li class="">relay ADR 0001 · OK · Accepted</li>
+<li class="sub">path: docs/adr/0001-no-upper-bound-on-daily-quota-overrides.md</li>
+<li class="sub">digest: sha256:c4f794037330a48808cd74e6602705f0213de5421e2d87d0ec6609054ce2bcf0</li>
+</ul>
+<h3>Measures</h3>
+<ul>
+<li class="">Event received 08:48:03Z · recommendation ready (Draft PR opened) 08:50:31Z · 2 min 28 s</li>
+<li class="">Your decision: ops-gate records it from your review on the ops task (state branch), not in this file, with followed: yes when you approve, otherwise no</li>
+</ul>
+<hr>
+<p><b>Comment by relay-ops-agent[bot], 11:02:40Z</b></p>
+<p>Event 2 joined this incident: <code class="nw">bound-2026-10-20-100</code> · bound-ceiling-full · count 150; limit 150. It is recorded on the ops task (<code class="nw">events/bound-2026-10-20-100.json</code>).</p>
 <p>The recommendation above was written before this event; r1 runs no new agent for a joined event.</p></div>

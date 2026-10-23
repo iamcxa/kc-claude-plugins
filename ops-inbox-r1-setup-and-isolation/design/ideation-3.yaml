@@ -1,0 +1,88 @@
+design_review:
+  preview: ops-inbox-r1-setup-and-isolation/preview/
+  findings:
+    - severity: MAJOR
+      dimension: flow
+      where: preview-setup.png, S9 step and the FAIL row R14 in "one FAIL, one ERROR" read-back
+      seen: R14 says "next: run S9 again for ruleset-agent-creations.json", but the S9 command is a for-loop that POSTs all four rulesets plus the trigger ruleset, so rerunning it as written re-creates the four rulesets that already passed.
+      fix: Give S9 one command per ruleset (or an idempotent create-or-update) so the next line can name a single safe command.
+    - severity: MAJOR
+      dimension: flow
+      where: preview-setup.png, S7 (also S2, S3, S5, S6, S8)
+      seen: Several steps are not an exact command; S7 ends "(also OPS_WORKFLOW, DISPATCH_APP_ID, DISPATCH_INSTALLATION_ID)" with no values, S5 says "claude setup-token, then: gh secret set ...", S6 says "(paste the URL when asked)", and S2/S3 are "open URL then Install App > ...".
+      fix: Write each step's commands out in full, with one placeholder per value taken from an earlier step, so that an agent running an "agent may run" step does not have to guess.
+    - severity: MAJOR
+      dimension: flow
+      where: preview-record.png, Measures ("Your decision: filled in by ops-gate from your review") and Options
+      seen: Three numbered Options are shown but nothing says how the Captain picks one (review verdict, comment, label), or what picking does, so the scope of the choice is not stated.
+      fix: Add one line under Recommendation saying exactly how to rule on an Option and what happens next.
+    - severity: MAJOR
+      dimension: hierarchy
+      where: preview-record.png, "After a later event joined" (light desktop and phone)
+      seen: The Events table, Diagnosis ("Known: 120 of 150") and Recommendation stay unchanged at the top, and the only cue that event 2 (150 of 150) arrived is a comment below the long Rulings cited block.
+      fix: Put a one-line "recommendation predates event 2" banner at the top of the record, not only in the comment.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-setup.png, "one FAIL, one ERROR and the Slack row waiting" block
+      seen: The three non-passing rows (R3, R13, R14) have the same plain text weight as the twelve PASS rows around them, and a legend line sits between the table and the count line.
+      fix: Mark non-pass rows (for example a leading ">" or listing them first) and drop or shrink the legend.
+    - severity: MINOR
+      dimension: states
+      where: preview-setup.png, read-back output
+      seen: Only "all PASS" and "FAIL + ERROR + WAIT" are shown; the first-run case of 14 PASS plus only WAIT (no --slack-link yet) is missing, so its summary line and exit code are unknown.
+      fix: Add a third output showing only the WAIT row remaining, with its summary line and exit code.
+    - severity: MINOR
+      dimension: states
+      where: preview-record.png and preview-slack.png
+      seen: No record with a failed ADR check (Rulings cited shows only "OK"), no record for an agent-NOT-started or UNCERTAIN event, no Events table with many rows, and no Slack notice showing the 200-character cut.
+      fix: Add one preview each for a failed ADR check, a NOT-started record, a many-row Events table and a truncated field line.
+    - severity: MINOR
+      dimension: theme-size
+      where: preview-slack.png dark and phone sections; preview-record.png dark section
+      seen: Dark Slack shows only 3 of the 4 agent-line kinds (no Needs action), phone Slack shows 3 (no UNCERTAIN), the dark record stops after Rulings cited (no Measures or joined comment), and the setup runbook is shown only in a dark terminal at desktop width.
+      fix: Show every agent-line kind in dark and phone, the full record in dark, and the runbook at phone width.
+    - severity: MINOR
+      dimension: consistency
+      where: preview-slack.png, Needs action vs Needs a look notices
+      seen: Both carry the same orange left bar and differ only in the emoji and the word, while Joins incident has a grey plus with no bar; in dark the grey plus is barely visible.
+      fix: Use a distinct bar colour per severity (NOT started stronger than UNCERTAIN) and a higher-contrast Joins icon in dark.
+    - severity: MINOR
+      dimension: consistency
+      where: preview-slack.png, "Read-back self-test" notice
+      seen: Its heading is "Read-back self-test · spacedock-dev/subspace-relay" and its agent line reads "Self-test run started; no task is filed", unlike the producer-and-event heading and four fixed agent lines of the other notices.
+      fix: Use the producer and event heading form, or state in the proposal that self-test is a fifth variant.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-slack.png, Needs action notice
+      seen: It tells the reader to "Run the read-back (S11)", a runbook step label that a person reading only Slack has not been given; every "ops run" link also has identical text across notices.
+      fix: Say "run the setup read-back" and give each link text that names its target.
+    - severity: MINOR
+      dimension: spacing
+      where: preview-slack.png phone width, Joins incident notice; preview-record.png phone Events table
+      seen: The incident id splits mid-date ("2026-10-" / "20") in Slack, and the phone Events table wraps the event id over three lines and runs "limitSource default" together after the previous field.
+      fix: Keep ids unbroken (non-breaking hyphen or a shorter id) and separate fields in the fields cell with a visible delimiter.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-record.png, Rulings cited
+      seen: The same commit hash is printed three times and each of three blocks carries repo, path, commit and a 64-character digest, so this block is the longest part of the record and sits between Recommendation and Measures.
+      fix: State the shared commit once above the blocks and keep per-ADR path, digest and result only, or fold the blocks.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-setup.png, step headings S7, S9
+      seen: The S7 and S9 headings are one or two sentences long (S9 wraps mid-word "th/e other four"), and owner (Captain only, agent may run, anyone) is plain text identical in weight to the rest of the heading.
+      fix: Keep each heading to owner plus one short action and move the explanation to a line beneath it.
+    - severity: MINOR
+      dimension: flow
+      where: preview-setup.png, S5 and S11
+      seen: "<wrapper>" (S11, and the read-back command line) and "<relay site>" (S5) are not defined in the header that defines <project>, <trigger> and <inbox>.
+      fix: Define each placeholder in the header block or replace it with the actual command.
+    - severity: MINOR
+      dimension: platform
+      where: preview-setup.png, long command lines; preview-slack.png phone width
+      seen: Commands such as the S1 `gh api` call and the S4 `netlify env:set` are hard-wrapped mid-token ("ops-even/t.yml", "netlify.ap/p/inbox"), which is unsafe if copied, and inline links ("ops run", "Check the runs") are text-height targets on the 390 px phone.
+      fix: Use a no-wrap scrolling code block or backslash line continuations, and put the key link on its own line in Slack.
+  limitations:
+    - The record picture is 900x5622 shown at 320 px wide, so ADR digests, commit hashes and small table text were only partly legible; spacing values were judged by eye, not measured.
+    - Pictures are static; I could not open any link, click any control, or see hover, focus, loading, or the real Slack Block Kit rendering.
+    - Only the single picture per size was in scope; cycle-1 drafts were not read as instructed.
+    - Since the proposal has no controls other than text links, my inventory had no buttons, chips, menus or checkboxes to compare for system fit; the finding there is that none is shown.

@@ -1,0 +1,118 @@
+design_review:
+  preview: ops-inbox-r1-setup-and-isolation/preview/
+  findings:
+    - severity: MAJOR
+      dimension: states
+      where: preview-slack.png, light desktop, "Needs action" notice (agent NOT started)
+      seen: The red notice says "the sender's next retry can still start it", but the proposal says a resent event posts nothing, and no picture shows what the channel shows after a retry starts the agent.
+      fix: Draw the follow-up state (a retry starts the agent) and say whether it posts a notice, or change the Needs action text so it does not promise a retry that leaves no trace.
+    - severity: MAJOR
+      dimension: flow
+      where: preview-setup.png, "Read-back, first run: only the Slack row waiting" and step S12
+      seen: The first run is the normal path (19 PASS, only R14 WAIT), yet it ends "The project is not connected. Exit 1." and S12 never says that WAIT on R14 is expected until the Captain pastes the Slack message link.
+      fix: Word the WAIT-only ending as "waiting for the Slack link" (not "not connected"), and add a line to S12 saying the first run waits on R14 and how to rerun with --slack-link.
+    - severity: MINOR
+      dimension: flow
+      where: preview-setup.png, steps S7 and S12
+      seen: S7 says "Read back by: R13 R14", but R14 can only pass after S12 sends the self-test and the Captain copies its link, so S7 cannot be finished in its own step.
+      fix: Move R14 to S12 in the step column and the S7 "Read back by" line, or say in S7 that R14 is proven in S12.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-setup.png, runbook headings "## S3 · Captain only, web · ..."
+      seen: The owner (Captain only, agent may run, anyone) is plain monospace text in the middle of the heading, the same weight as the title, so a Captain-only secret step reads like any other.
+      fix: Put the owner first in the heading, for example "S5 · CAPTAIN ONLY · ...", so the line can be scanned.
+    - severity: MINOR
+      dimension: consistency
+      where: preview-setup.png, step headings S3 and S4
+      seen: The owner reads "Captain only, web", which adds a channel word that is not one of the three owners the runbook defines.
+      fix: Use only the three owner labels and put "web" in the action line.
+    - severity: MINOR
+      dimension: flow
+      where: preview-setup.png, S5 "Then delete the two downloaded files"
+      seen: The delete is prose with no command, and the read-back row for S5 (R10) only reads the stored key names, so nothing proves the private-key files are gone.
+      fix: Give the exact delete command and a read-back row for it, or state that deletion is not verified.
+    - severity: MINOR
+      dimension: consistency
+      where: preview-setup.png, runbook commands vs. read-back "read by" column
+      seen: Runbook commands show real names (spacedock-dev/subspace-relay), the read-back output shows unresolved `<trigger>` and `<project>`, and S8 mixes `<S3 App ID>` placeholders the person must fill with the pre-filled `<project>` style.
+      fix: Show resolved values in the output rows, and mark the fill-by-hand placeholders in S8 differently from the header variables.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-setup.png, read-back output blocks
+      seen: Every output repeats the legend "(FAIL read back but wrong · ERROR could not read · WAIT needs you)" and the "20 PASS" count, and PASS/FAIL/ERROR/WAIT look the same except for the faint `>` marker.
+      fix: Print the legend only when a non-pass row exists, and make the `>` marker and verdict word of non-pass rows stand out (uppercase or a symbol).
+    - severity: MINOR
+      dimension: spacing
+      where: preview-setup.png, top of runbook before S1
+      seen: Before S1 a person passes a caption, a title, a 5-line variable block and two explanation paragraphs, about 8% of the panel, and the two paragraphs mostly explain the S-step format.
+      fix: Cut the two intro paragraphs to one line, or move the variable block below S1.
+    - severity: MINOR
+      dimension: states
+      where: preview-setup.png, read-back output set
+      seen: Only PASS, a WAIT-only run and a mixed FAIL/ERROR/WAIT run are shown; there is no all-ERROR run (not logged in to gh or netlify), no wrong --slack-link (R14 FAIL), and no long-output wrap case that the picture itself shows breaking inside words ("in\nn 10 s", "ops-even\nt.yml").
+      fix: Add a not-logged-in run and a bad-link run, and state whether the real Markdown scrolls or wraps (the caption says scroll, the picture wraps).
+    - severity: MINOR
+      dimension: theme-size
+      where: preview-setup.png (dark code block only, desktop width)
+      seen: The runbook and read-back output are shown only as a dark block at desktop width, with no light theme and no narrow width.
+      fix: Show the runbook rendered in light theme and at about 390 px, or state that it is theme- and width-independent plain text.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-record.png, light desktop, first record view
+      seen: The decision the Captain must make (Recommendation and "How to decide") sits about five blocks down, after Events, Diagnosis and Options, and the Recommendation restates Option 1 that Options already described.
+      fix: Put Recommendation and "How to decide" directly under the incident line, or cut the restated Option 1 text from the Recommendation.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-record.png, "after a later event" views (light, dark, phone)
+      seen: The same fact (recommendation predates event 2, which is in a comment) is said in the yellow first-line banner, in the Measures note and again in the bot comment, while the Events table below still shows only the first event.
+      fix: Keep the banner and the comment, cut the Measures note, and either add the joined event to the table or label it "events at recommendation time".
+    - severity: MINOR
+      dimension: consistency
+      where: preview-record.png, refused-citation view
+      seen: The first-line banner and the Rulings block name the REFUSED citation, but the Options still show the inline [ADR NNNN] marker in the same style as accepted ones.
+      fix: Mark a refused citation inline in Options the same way (for example "[ADR 0001 REFUSED]").
+    - severity: MINOR
+      dimension: flow
+      where: preview-record.png, "How to decide" line
+      seen: Choosing another option means typing the option name into free review text, and the line does not say what happens if the text names no option or two.
+      fix: Add one clause saying a review that names no single option leaves the record undecided.
+    - severity: MINOR
+      dimension: theme-size
+      where: preview-record.png, dark and phone sections
+      seen: Dark and phone show only the "after a later event" record; the first view and the refused view are not shown in either, and at 390 px the Events table is squeezed into four narrow columns with heavy wrapping.
+      fix: Show the first and refused views in dark and phone, and let the Events table become stacked rows on a narrow screen.
+    - severity: MINOR
+      dimension: states
+      where: preview-record.png, Events table and Measures
+      seen: The table has one row, "Your decision" appears only as "no decision yet", and there is no picture of many events, a long Diagnosis, a decided record or a merged record.
+      fix: Add one many-events record and one decided record.
+    - severity: MINOR
+      dimension: states
+      where: preview-slack.png, dark theme and phone sections
+      seen: The 200-character cut ("...becau..."), the escaped <!channel> text and the Joins/self-test long-source wrapping appear only in the light desktop section; dark shows no long or escaped case, and phone shows neither.
+      fix: Add the long-text and escaped-mention notices to the dark and phone sections.
+    - severity: MINOR
+      dimension: system-fit
+      where: preview-slack.png, "Needs a look" notice
+      seen: "Trigger repository runs" is an inline link worded like a button, and the notice does not say what clicking it starts or where it goes.
+      fix: Reword it as a destination ("Open repository runs") or say what it triggers.
+    - severity: MINOR
+      dimension: consistency
+      where: preview-slack.png, New incident vs Read-back self-test notices
+      seen: Both use the same green check and same plain layout (no bar), so the setup self-test looks like a real incident start at a glance.
+      fix: Give the self-test its own glyph or bar colour.
+    - severity: MINOR
+      dimension: hierarchy
+      where: preview-slack.png, "Needs action" and "Needs a look" notices
+      seen: The label and its sentence say the same thing twice ("Needs action · agent NOT started", "Needs a look · agent start UNCERTAIN"), and in Joins the word "event" means both the number (event 2) and the id in the context line.
+      fix: Drop the repeated state words from one side, and call the number "event 2" and the id "id".
+    - severity: MINOR
+      dimension: platform
+      where: preview-slack.png, phone section
+      seen: Inline links ("run for this incident", "run that opened it", "Trigger repository runs") are one text line high and wrap, and the heading "spacedock-dev/subspace-relay" and the source URL break mid-name.
+      fix: Keep each link on its own short line and avoid breaking names in the heading and source text.
+  limitations:
+    - The record picture (900x7248) was shown downscaled to about 248 px wide, so table cells, digests and small body text were only partly legible; I did not crop or zoom because that would mean writing a file.
+    - Statements about the record's Rulings and Options markers are from the legible parts of the picture only.
+    - Pictures are static mocks, so I could not check hover, focus, link targets, GitHub's real rendering or Slack's real Block Kit rendering.
+    - Contrast and exact pixel sizes were estimated by eye, not measured.
