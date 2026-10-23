@@ -39,6 +39,8 @@ gates:
 
 ## FO alignment
 
+Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-23 — the ideation replay shows the designed map-diff hold would not have caught R4 (its signals 1 and 2 were not map edits; only an unrelated card reword tripped it); what is the smallest next step?
+
 Alignment: needed at ideation; where the check lives and whether it raises the word budget are his to accept.
 Surfaces: none
 Visible change: none
