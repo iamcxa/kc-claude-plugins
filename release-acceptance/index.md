@@ -231,6 +231,12 @@ Asked: 「「擋派工」這一段，是照我更正後的建議退回設計重�
 Supersedes: AC-1, AC-2, AC-3, AC-4
 Design: the pre-implementation review hold (design `Enforcing the pre-implementation review (second half of #571)` and AC-1 to AC-4) leaves this task and is redesigned in its own task, release-review-staleness-held-at-dispatch; this task keeps the release walk: PR 1 (kc-journey-map, #709) and PR 2 (kc-dev-flow-2, after #708).
 
+### Amendment 3 — 2026-10-23, chat
+Captain: 「並進去」 (chat, 2026-10-23)
+Asked: 「挑剔使用者流程要不要併進「版本驗收」的第二個 PR？」, where FO stated: the people who operate the walk become at least two picky-user reviewers on different models with different personas; the design director reads their reports and rules per item whether to solve it, how and when, proposing at most three backlog tasks; findings earlier tasks deferred to the Captain's UAT feed it; projects without several model tools fall back to one; a fixture smoke check runs before the reviewers.
+Supersedes: none
+Design: the release walk's second pass (Amendment 1) is run by at least two picky-user reviewers on different providers or models and personas, then the design director's ruling table with at most three backlog tasks; deferred-to-UAT findings feed both; a fixture smoke check precedes the reviewers; a single-model fallback where only one provider is available. Source of the proposal: dev2 task product-review-path-before-backlog (intake/method-notes-for-dev2.md).
+
 ## FO alignment
 
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-23 — the implementation phase-1 drift check found the approved design's review-record premise replaced on main (#704) and recommends returning the kc-dev-flow-2 half to ideation; what is the smallest next step?
