@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:adr-protected-path-guard:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:adr-protected-path-guard-backlog-1
+              briefing:
+                id: briefing:adr-protected-path-guard:backlog:attempt-1:revision-1
+                digest: sha256:7a78134a35d63f1efe239a12082a435681ded25af41ef62885cf060ab7f27e44
+                room-ref: ./adr-protected-path-guard/review/backlog/briefing-1
 ---
 
 ## Scope

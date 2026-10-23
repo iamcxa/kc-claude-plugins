@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-protected-path-guard:backlog:attempt-1:revision-1",
+  "question": "Approve this backlog item as filed? Approval accepts the outcome, scope, non-goals and AC-1..AC-3, profile pilot; ideation then designs the field, the checker, where the reminder runs (Claude Code confirmed; Codex to verify) and proposes the AC-3 run count for your approval.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-protected-path-guard:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f8d7af7409e70489ef3ae306a17032e142c80c48/adr-protected-path-guard.md",
+      "rev": "sha256:f3efd1629aa42375cabe03150d5c0f568dd0e977ca6715329349de4a9ba3ef1e",
+      "mediaType": "text/markdown",
+      "summary": "From the Captain's 「開」 after adr-hidden-reason-poc: 2/8 undone runs both skipped the ADR and both edited the protected file; a path guard is deterministic and does not depend on the agent choosing to read. Ships in kc-adr; no dev2 copy change."
+    }
+  ]
+}
