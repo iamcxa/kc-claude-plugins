@@ -3,7 +3,7 @@ title: A named design-director role runs the ui design review in place of a gene
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-22T11:31:12Z
 worktree: .worktrees/spacedock-ensign-design-director-runs-ui-design-review
+pr: iamcxa/kc-claude-plugins#708
 ---
 
 ## Scope
