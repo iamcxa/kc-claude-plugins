@@ -3,7 +3,7 @@ title: Does an agent quietly undo an ADR-protected choice during an unrelated re
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -44,10 +44,13 @@ gates:
                 reason: 'Captain 「准結案」 (2026-10-23) to validation briefing-1: closes the POC with AC-3 as the validator corrected it (supports none of the three options); no code delivery, local-merge sentinel at c27e7659, archive, remove the empty worktree.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-23T05:55:41Z
 worktree: .worktrees/spacedock-ensign-adr-silent-undo-poc
 pr: local-merge:c27e76590c1d2dc910e7fa2d332242a7534df0b0
+verdict: PASSED
+completed: 2026-10-23T06:21:53Z
+archived: 2026-10-23T06:21:53Z
 ---
 
 Moved from the dev2 workflow on the Captain's 「對搬到 poc」 (chat, 2026-10-23), answering FO's "What you need to decide: I recommend moving the task to the POC workflow (`dev2-poc`)." after FO found the dev2 five-stage route accepts only pilot or prod. The scope below is the one he approved there with 「准」 at the dev2 backlog gate (`adr-silent-undo-probe`, 2026-10-23).
