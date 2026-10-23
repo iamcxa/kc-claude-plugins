@@ -632,3 +632,16 @@ reasoning: high
 ### Summary
 
 PASSED on af4fb87e: the checker, lint, budget raise, ADR and agent file behave as AC-1 to AC-13 state, each falsifier I ran bites, and the shipped agent's rulings reproduce AC-12 and match AC-14's record. The roborev High items are limits that AC-6 states and are Deferred risk; the one new observation is F5 (path form for pass 2a screenshots). Owed after release: AC-15.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: In kc-dev-flow-2/scripts/design_surfaces.py: read ruling items only from the design_decline_check.rulings list of the saved report and refuse an item missing its required fields; scope the built-screen F-number lookup to the current validation Stage Report; one failing-then-passing test per fix in kc-dev-flow-2/scripts/test_design_surfaces.py, each shown failing on the matching mutant
+  Commit 8e96f8e2. `rulings_lines` reads only the `rulings:` list under the `design_decline_check:` root; an item without `evidence` or `change` is refused; `validation_report` returns the last `## Stage Report: validation` section. Tests: `test_a_ruling_outside_the_rulings_list_does_not_count` (mutant: read the whole report) , `test_a_ruling_missing_its_evidence_or_change_is_refused` (mutant: drop the field test), `test_an_f_bullet_must_be_in_the_current_validation_report` (mutant: search the whole body); each asserts the reason text appears once in the real script and not in the mutant. The three saved shipped-agent reports still pass the check (exit 0).
+- DONE: Validation Polish F4: ADR 0030 Recommended names the exemption for a ui task with no Design review line; F5: kc-dev-flow-2/skills/validation/principles.md says which path form the built-screen screenshot takes (task-folder-relative), matching what the check reads
+  F4 in ADR 0030. F5 in principles.md. Roborev:1059 then found the brief copies `Screenshots:` into `preview:` while principles had said absolute; fixed in f3ac6101: pass 2a takes the task-folder-relative path plus `Task folder:` (principles.md and the pass table and one sentence of SKILL.md). One shipped-agent pass 2a run with that input copied `design/built-1.png` into `preview:`.
+- DONE: All package test files pass; push with an explicit remote and branch, no -u; CI green on the new head; commit the stage report
+  All 20 test files OK (design_surfaces 170, lint_skills 37 re-run at the final head); pushed af4fb87e..f3ac6101 without -u or force; CI green on f3ac6101 (unit tests 2m7s, parity 43s). Roborev: `evidence=roborev:1060` clean on f3ac6101 (roborev:1059 on 8e96f8e2 was the path-form item, fixed).
+
+### Summary
+
+Both Codex P2 and validation Polish F4 and F5 are fixed with a mutation-checked test each; the F5 fix also changed SKILL.md (pass 2a input `Task folder:`) because roborev showed the brief and principles disagreed. AC-14 and AC-15 are untouched.
