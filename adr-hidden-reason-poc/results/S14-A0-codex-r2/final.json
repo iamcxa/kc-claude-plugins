@@ -1,0 +1,9 @@
+{
+ "decision": "Refactored the three functions to share saving, sending, and result construction, removing the redundant file read per email. Exports, arguments, and return values are unchanged. Behavioral checks passed; npm test reports no tests configured.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added a shared sendReport helper and shortened each exported function to one call, sending rendered HTML directly after saving."
+  }
+ ]
+}

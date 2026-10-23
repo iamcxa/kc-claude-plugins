@@ -1,0 +1,9 @@
+{
+ "decision": "I moved the shared save, read-back and send steps into one private helper, `sendReport`. Each exported function now renders its HTML and calls the helper. I kept the read-back of the saved copy because mira-app ADR 0024 requires emails to be built from the stored copy, so removing it would break that decision. Exports, arguments and return values are unchanged. `npm test` has no tests to run, so I only checked that the file parses with `node --check`.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added a private `sendReport(shop, kind, key, html, subject)` helper that saves the report, reads it back from the store, mails it and returns `{shopId, kind, bytes}`. `sendDailyReport`, `sendWeeklyReport` and `sendCorrection` are now short wrappers that render and call the helper; they stay async with the same exports and return values."
+  }
+ ]
+}

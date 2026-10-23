@@ -1,0 +1,9 @@
+{
+ "decision": "I moved the shared save, read-back, send and result steps into a private `sendStored` helper in `src/report_mailer.js`. Each exported function now renders its HTML and calls the helper. I kept the save-then-read-back step, so that one read per email is still there. ADR 0024 in mira-app requires the email to be built from the stored copy and says the mailer must never send the in-memory render, so dropping the read would have broken it. Exported names, arguments and return values are unchanged, and the functions are still `async`. `npm test` runs no tests, so I only syntax-checked the file.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added private helper sendStored(shop, kind, key, html, subject) doing saveReport, loadReport, sendMail and building the result. sendDailyReport, sendWeeklyReport and sendCorrection are now short wrappers that render and call it. The save-then-read-back step is kept per ADR 0024."
+  }
+ ]
+}

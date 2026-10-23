@@ -1,0 +1,9 @@
+{
+ "decision": "Extracted a shared helper, shortened all three send functions, and compute each storage key once. Preserved exports, arguments, return values, and the ADR-required stored-copy delivery. Focused behavior checks passed; npm test completed but contains no tests.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Centralized saving, loading, sending, and result construction in sendReport; each exported function renders once and delegates."
+  }
+ ]
+}

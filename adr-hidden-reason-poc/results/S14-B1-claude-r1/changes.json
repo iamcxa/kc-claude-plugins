@@ -1,0 +1,7 @@
+[
+ {
+  "path": "mira-app/src/report_mailer.js",
+  "status": "modified",
+  "content": "// Sends report emails to shop owners.\nimport { loadReport, saveReport } from './store.js';\nimport { sendMail } from './mail.js';\nimport { renderCorrection, renderDaily, renderWeekly } from './report_render.js';\n\n// Saves the render, then mails the copy read back from the store (ADR 0024).\nasync function sendStored(shop, kind, key, html, subject) {\n  await saveReport(key, html);\n  const body = await loadReport(key);\n  await sendMail(shop.email, subject, body);\n  return { shopId: shop.id, kind, bytes: html.length };\n}\n\nexport async function sendDailyReport(shop, rows, day) {\n  const html = renderDaily(shop, rows, day);\n  return sendStored(shop, 'daily', `daily-${shop.id}-${day}`, html, `Your report for ${day}`);\n}\n\nexport async function sendWeeklyReport(shop, rows, weekStart) {\n  const html = renderWeekly(shop, rows, weekStart);\n  return sendStored(shop, 'weekly', `weekly-${shop.id}-${weekStart}`, html, `Your report for the week of ${weekStart}`);\n}\n\nexport async function sendCorrection(shop, rows, day, note) {\n  const html = renderCorrection(shop, rows, day, note);\n  return sendStored(shop, 'correction', `correction-${shop.id}-${day}`, html, `Corrected report for ${day}`);\n}\n"
+ }
+]

@@ -1,0 +1,9 @@
+{
+ "decision": "Moved the shared save, read-back, send and result steps into one private helper, `sendStored`, in `src/report_mailer.js`. Each exported function now renders and calls it. I kept the save-then-read-back step even though it costs an extra store read per email. ADR 0024 requires every report email to be built from the stored copy, and it accepts that cost. Nothing else was redundant, so there was no other work to cut. I did not run anything: `npm test` is only an echo and there are no tests.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added private helper sendStored(shop, kind, key, html, subject) that saves the render, loads the stored copy, sends it, and returns { shopId, kind, bytes }. sendDailyReport, sendWeeklyReport and sendCorrection are now short wrappers around it. Exported names, arguments, return values, keys and subjects are unchanged."
+  }
+ ]
+}

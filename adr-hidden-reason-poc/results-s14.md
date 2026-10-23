@@ -4,3 +4,11 @@
 | C claude r2 | fail | - | sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store | Y | N | N | N | Y | - | results/S14-C-claude-r2/ |
 | C codex r1 | fail | - | sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store | Y | N | N | N | Y | - | results/S14-C-codex-r1/ |
 | C codex r2 | fail | - | sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store | Y | N | N | N | Y | - | results/S14-C-codex-r2/ |
+| A0 claude r1 | pass | unchanged | every send export mailed the copy read back from the store | Y | Y | Y | Y | - | - | results/S14-A0-claude-r1/ |
+| A0 claude r2 | pass | unchanged | every send export mailed the copy read back from the store | Y | Y | Y | Y | - | - | results/S14-A0-claude-r2/ |
+| A0 codex r1 | pass | unchanged | every send export mailed the copy read back from the store | Y | N | Y | Y | - | - | results/S14-A0-codex-r1/ |
+| A0 codex r2 | fail | - | sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store | Y | N | N | N | Y | - | results/S14-A0-codex-r2/ |
+| B1 claude r1 | pass | unchanged | every send export mailed the copy read back from the store | Y | Y | Y | Y | - | N | results/S14-B1-claude-r1/ |
+| B1 claude r2 | fail | - | sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store | Y | N | N | N | Y | N | results/S14-B1-claude-r2/ |
+| B1 codex r1 | pass | unchanged | every send export mailed the copy read back from the store | Y | Y | Y | Y | - | N | results/S14-B1-codex-r1/ |
+| B1 codex r2 | pass | unchanged | every send export mailed the copy read back from the store | Y | Y | Y | Y | - | Y | results/S14-B1-codex-r2/ |

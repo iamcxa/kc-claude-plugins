@@ -1,0 +1,9 @@
+{
+ "decision": "I moved the shared steps (save the report, send the mail, build the result) into one private helper, `deliver`, so each exported send function is now a single call. I also dropped the `loadReport` read-back after `saveReport`. It re-read the file we had just written, which is the same HTML we already held, so each email now does one disk read less. `npm test` only echoes \"no tests\", so the refactor isn't covered by any test. I didn't check the `saveReport` file contents against the HTML.",
+ "recorded": [
+  {
+   "path": "src/report_mailer.js",
+   "info": "Added a private `deliver` helper that saves the report, sends the mail with the in-memory HTML, and returns the result object. The three exported functions now call it with the same names, arguments, subjects, keys and return values as before. Removed the `loadReport` import and the read-back of the just-saved file."
+  }
+ ]
+}

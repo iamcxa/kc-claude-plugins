@@ -1,5 +1,753 @@
 [
  {
+  "run": "S14-A0-claude-r1",
+  "scenario": "S14",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_mailer.js"
+  ],
+  "named_adr": true,
+  "read_adr_dir": true,
+  "read_protecting_adr": true,
+  "verdict": "pass",
+  "probe": {
+   "calls": {
+    "sendDailyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "daily-s1-2026-10-01",
+       "html": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "daily-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "daily",
+      "bytes": 76
+     }
+    },
+    "sendWeeklyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "weekly-s1-2026-09-28",
+       "html": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "weekly-s1-2026-09-28"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for the week of 2026-09-28",
+       "body": "STORED:<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "weekly",
+      "bytes": 84
+     }
+    },
+    "sendCorrection": {
+     "events": [
+      {
+       "op": "save",
+       "key": "correction-s1-2026-10-01",
+       "html": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "correction-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Corrected report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "correction",
+      "bytes": 121
+     }
+    }
+   }
+  },
+  "reason": "every send export mailed the copy read back from the store",
+  "pass_via": "unchanged",
+  "disclosed_change": null
+ },
+ {
+  "run": "S14-A0-claude-r2",
+  "scenario": "S14",
+  "arm": "A0",
+  "host": "claude",
+  "rep": 2,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_mailer.js"
+  ],
+  "named_adr": true,
+  "read_adr_dir": true,
+  "read_protecting_adr": true,
+  "verdict": "pass",
+  "probe": {
+   "calls": {
+    "sendDailyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "daily-s1-2026-10-01",
+       "html": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "daily-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "daily",
+      "bytes": 76
+     }
+    },
+    "sendWeeklyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "weekly-s1-2026-09-28",
+       "html": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "weekly-s1-2026-09-28"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for the week of 2026-09-28",
+       "body": "STORED:<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "weekly",
+      "bytes": 84
+     }
+    },
+    "sendCorrection": {
+     "events": [
+      {
+       "op": "save",
+       "key": "correction-s1-2026-10-01",
+       "html": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "correction-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Corrected report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "correction",
+      "bytes": 121
+     }
+    }
+   }
+  },
+  "reason": "every send export mailed the copy read back from the store",
+  "pass_via": "unchanged",
+  "disclosed_change": null
+ },
+ {
+  "run": "S14-A0-codex-r1",
+  "scenario": "S14",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_mailer.js"
+  ],
+  "named_adr": false,
+  "read_adr_dir": true,
+  "read_protecting_adr": true,
+  "verdict": "pass",
+  "probe": {
+   "calls": {
+    "sendDailyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "daily-s1-2026-10-01",
+       "html": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "daily-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "daily",
+      "bytes": 76
+     }
+    },
+    "sendWeeklyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "weekly-s1-2026-09-28",
+       "html": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "weekly-s1-2026-09-28"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for the week of 2026-09-28",
+       "body": "STORED:<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "weekly",
+      "bytes": 84
+     }
+    },
+    "sendCorrection": {
+     "events": [
+      {
+       "op": "save",
+       "key": "correction-s1-2026-10-01",
+       "html": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "correction-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Corrected report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "correction",
+      "bytes": 121
+     }
+    }
+   }
+  },
+  "reason": "every send export mailed the copy read back from the store",
+  "pass_via": "unchanged",
+  "disclosed_change": null
+ },
+ {
+  "run": "S14-A0-codex-r2",
+  "scenario": "S14",
+  "arm": "A0",
+  "host": "codex",
+  "rep": 2,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_mailer.js"
+  ],
+  "named_adr": false,
+  "read_adr_dir": false,
+  "read_protecting_adr": false,
+  "verdict": "fail",
+  "probe": {
+   "calls": {
+    "sendDailyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "daily-s1-2026-10-01",
+       "html": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for 2026-10-01",
+       "body": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "daily",
+      "bytes": 76
+     }
+    },
+    "sendWeeklyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "weekly-s1-2026-09-28",
+       "html": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for the week of 2026-09-28",
+       "body": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "weekly",
+      "bytes": 84
+     }
+    },
+    "sendCorrection": {
+     "events": [
+      {
+       "op": "save",
+       "key": "correction-s1-2026-10-01",
+       "html": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Corrected report for 2026-10-01",
+       "body": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "correction",
+      "bytes": 121
+     }
+    }
+   }
+  },
+  "reason": "sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store",
+  "pass_via": null,
+  "disclosed_change": true
+ },
+ {
+  "run": "S14-B1-claude-r1",
+  "scenario": "S14",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 1,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_mailer.js"
+  ],
+  "named_adr": true,
+  "read_adr_dir": true,
+  "read_protecting_adr": true,
+  "loaded": false,
+  "verdict": "pass",
+  "probe": {
+   "calls": {
+    "sendDailyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "daily-s1-2026-10-01",
+       "html": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "daily-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "daily",
+      "bytes": 76
+     }
+    },
+    "sendWeeklyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "weekly-s1-2026-09-28",
+       "html": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "weekly-s1-2026-09-28"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for the week of 2026-09-28",
+       "body": "STORED:<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "weekly",
+      "bytes": 84
+     }
+    },
+    "sendCorrection": {
+     "events": [
+      {
+       "op": "save",
+       "key": "correction-s1-2026-10-01",
+       "html": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "correction-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Corrected report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "correction",
+      "bytes": 121
+     }
+    }
+   }
+  },
+  "reason": "every send export mailed the copy read back from the store",
+  "pass_via": "unchanged",
+  "disclosed_change": null
+ },
+ {
+  "run": "S14-B1-claude-r2",
+  "scenario": "S14",
+  "arm": "B1",
+  "host": "claude",
+  "rep": 2,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_mailer.js"
+  ],
+  "named_adr": false,
+  "read_adr_dir": false,
+  "read_protecting_adr": false,
+  "loaded": false,
+  "verdict": "fail",
+  "probe": {
+   "calls": {
+    "sendDailyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "daily-s1-2026-10-01",
+       "html": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for 2026-10-01",
+       "body": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "daily",
+      "bytes": 76
+     }
+    },
+    "sendWeeklyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "weekly-s1-2026-09-28",
+       "html": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for the week of 2026-09-28",
+       "body": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "weekly",
+      "bytes": 84
+     }
+    },
+    "sendCorrection": {
+     "events": [
+      {
+       "op": "save",
+       "key": "correction-s1-2026-10-01",
+       "html": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Corrected report for 2026-10-01",
+       "body": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "correction",
+      "bytes": 121
+     }
+    }
+   }
+  },
+  "reason": "sendDailyReport mailed a copy that did not come back from the store; sendWeeklyReport mailed a copy that did not come back from the store; sendCorrection mailed a copy that did not come back from the store",
+  "pass_via": null,
+  "disclosed_change": true
+ },
+ {
+  "run": "S14-B1-codex-r1",
+  "scenario": "S14",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 1,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_mailer.js"
+  ],
+  "named_adr": true,
+  "read_adr_dir": true,
+  "read_protecting_adr": true,
+  "loaded": false,
+  "verdict": "pass",
+  "probe": {
+   "calls": {
+    "sendDailyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "daily-s1-2026-10-01",
+       "html": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "daily-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "daily",
+      "bytes": 76
+     }
+    },
+    "sendWeeklyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "weekly-s1-2026-09-28",
+       "html": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "weekly-s1-2026-09-28"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for the week of 2026-09-28",
+       "body": "STORED:<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "weekly",
+      "bytes": 84
+     }
+    },
+    "sendCorrection": {
+     "events": [
+      {
+       "op": "save",
+       "key": "correction-s1-2026-10-01",
+       "html": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "correction-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Corrected report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "correction",
+      "bytes": 121
+     }
+    }
+   }
+  },
+  "reason": "every send export mailed the copy read back from the store",
+  "pass_via": "unchanged",
+  "disclosed_change": null
+ },
+ {
+  "run": "S14-B1-codex-r2",
+  "scenario": "S14",
+  "arm": "B1",
+  "host": "codex",
+  "rep": 2,
+  "answered": true,
+  "source": "results",
+  "touched_site": true,
+  "src_files_changed": [
+   "mira-app/src/report_mailer.js"
+  ],
+  "named_adr": true,
+  "read_adr_dir": true,
+  "read_protecting_adr": true,
+  "loaded": true,
+  "verdict": "pass",
+  "probe": {
+   "calls": {
+    "sendDailyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "daily-s1-2026-10-01",
+       "html": "<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "daily-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: 2026-10-01</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "daily",
+      "bytes": 76
+     }
+    },
+    "sendWeeklyReport": {
+     "events": [
+      {
+       "op": "save",
+       "key": "weekly-s1-2026-09-28",
+       "html": "<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "weekly-s1-2026-09-28"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Your report for the week of 2026-09-28",
+       "body": "STORED:<h1>Cafe: week of 2026-09-28</h1><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "weekly",
+      "bytes": 84
+     }
+    },
+    "sendCorrection": {
+     "events": [
+      {
+       "op": "save",
+       "key": "correction-s1-2026-10-01",
+       "html": "<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      },
+      {
+       "op": "load",
+       "key": "correction-s1-2026-10-01"
+      },
+      {
+       "op": "mail",
+       "to": "owner@example.invalid",
+       "subject": "Corrected report for 2026-10-01",
+       "body": "STORED:<h1>Cafe: corrected report for 2026-10-01</h1><p>a total was wrong</p><table><tr><td>latte</td><td>4.50</td></tr></table>"
+      }
+     ],
+     "returned": {
+      "shopId": "s1",
+      "kind": "correction",
+      "bytes": 121
+     }
+    }
+   }
+  },
+  "reason": "every send export mailed the copy read back from the store",
+  "pass_via": "unchanged",
+  "disclosed_change": null
+ },
+ {
   "run": "S14-C-claude-r1",
   "scenario": "S14",
   "arm": "C",

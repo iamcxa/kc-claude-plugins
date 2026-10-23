@@ -2,3 +2,11 @@
 {"run": "S14-C-claude-r1", "started": 1792741969.537117, "host": "claude", "arm": "C", "scenario": "S14", "rep": 1}
 {"run": "S14-C-codex-r2", "started": 1792742042.361758, "host": "codex", "arm": "C", "scenario": "S14", "rep": 2}
 {"run": "S14-C-claude-r2", "started": 1792742042.363502, "host": "claude", "arm": "C", "scenario": "S14", "rep": 2}
+{"run": "S14-A0-claude-r1", "started": 1792742133.5926552, "host": "claude", "arm": "A0", "scenario": "S14", "rep": 1}
+{"run": "S14-A0-codex-r1", "started": 1792742133.666879, "host": "codex", "arm": "A0", "scenario": "S14", "rep": 1}
+{"run": "S14-B1-claude-r1", "started": 1792742134.344341, "host": "claude", "arm": "B1", "scenario": "S14", "rep": 1}
+{"run": "S14-B1-codex-r1", "started": 1792742134.726988, "host": "codex", "arm": "B1", "scenario": "S14", "rep": 1}
+{"run": "S14-A0-claude-r2", "started": 1792742243.7852108, "host": "claude", "arm": "A0", "scenario": "S14", "rep": 2}
+{"run": "S14-A0-codex-r2", "started": 1792742243.7988422, "host": "codex", "arm": "A0", "scenario": "S14", "rep": 2}
+{"run": "S14-B1-claude-r2", "started": 1792742244.023228, "host": "claude", "arm": "B1", "scenario": "S14", "rep": 2}
+{"run": "S14-B1-codex-r2", "started": 1792742244.5082188, "host": "codex", "arm": "B1", "scenario": "S14", "rep": 2}
