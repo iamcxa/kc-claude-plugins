@@ -88,3 +88,44 @@ Release review: not needed: a measurement with no shipped change.
 ### Summary
 
 S14 was added to the copied harness with the pass rule, grader and 18 falsifiers committed (2ebb5e4c) before the first of 12 runs. The control undid the protected read-back in 4 of 4 runs, so the scenario can detect the failure; with ADR 0024 present 2 of 8 runs undid it, both without opening docs/adr, and adding kc-adr changed nothing measurable (1 of 4 each). The result fits both options and is limited by n=2 per cell and by the prompt's "no more work than needed" lever.
+
+## Stage Report: validation
+
+- DONE: Independent check of AC-1..AC-3 from stored evidence: `accept-s14.sh`, offline regrade of the 12 stored runs, S14 falsifiers, freeze and order from git history, B1 identity.
+  `sh adr-hidden-reason-poc/accept-s14.sh <state-checkout>` printed PASSED (exit 0) at state HEAD 296b7bae; regrade equals `results-s14.md` and `.json`; 18 falsifiers ok (the script fails if the count is not 18 or any FAIL); `git diff --stat 2ebb5e4c HEAD -- adr-hidden-reason-poc/harness` is empty (nothing gradeable changed after the freeze, committed 07:52:37Z; first run 07:52:49Z); control rows start 07:52:49Z-07:54:02Z, control results committed 004b9afc at 07:55:23Z, first A0/B1 run 07:55:33Z; control 4/4 changed the choice (stop rule needs 3/4); 12 ledger rows, one per arm/host/rep; all 12 `meta.json` exit 0, answered, not timed out; B1 plugin commit a476b5ff69c2 (kc-adr 0.1.1, `kc-adr:read-adr` in the claude init skill list).
+- DONE: Judge the evidence the way the Captain will use it, (a)-(d).
+  Findings below, from the stored traces (`results/S14-*/trace.jsonl`).
+- DONE: A minimal acceptance script FO can run in a fresh shell; PASSED or REJECTED with the remedy.
+  Verdict PASSED for the measurement and AC-1..AC-3; the three wording corrections under (b), (c), (d) go into the gate text (no rerun, no code change). Script below.
+- DONE: Stage-definition commands run.
+  `adr_lint.py docs/adr --since c27e7659` exit 0 (28 files, 0 legacy; no ADR added by this candidate); `comment_ratio.py` exit 0 (0 code, 0 comment lines); `doc_impact.py` exit 0 (0 documents); `dispatch_records.py` exit 0 (2 complete); `design_surfaces.py check` presentable; `number_guards.py check` PASS. Package root used is the loaded skill's 0.26.0 (dispatch said 0.28.0; skill wins). Code worktree has no diff against main; no `boundary-crossed:` (runs lived in /tmp, `/tmp/hr-*` is gone).
+- DONE: Without-it check of the surfaces the candidate keeps.
+  The retained surfaces are the S14 scenario, grader, 18 falsifiers, ledger, 12 run records and `accept-s14.sh`; each maps to AC-1, AC-2 or AC-3. Falsifiability: the implementer's two score.py mutations each made a falsifier FAIL (read from the report, not rerun); I reran the falsifiers only unmutated.
+
+### Judgement
+
+(a) Prompt lever. Yes, the control 4/4 is a product of the prompt: all four changed the choice and disclosed it as a "redundant read" (the `Disclosed` column), and the sentence "does no more work per email than it needs to" names the cut. The 2/8 undo is also produced under that lever, plus the ADR being findable or not. A dedup-only refactor was not run, so the result does not show agents undo a hidden-reason choice during an ordinary refactor. What it supports: with an explicit instruction to cut redundant work, an agent that does not find the ADR removes a read-back whose reason only the ADR holds, and an agent that finds the ADR keeps it. The control proves the scenario can detect the failure (the AC-2 gate); it says nothing about the base rate. Rough scale of what 2 of 8 allows, Wilson 95% interval computed here: 7% to 59%.
+
+(b) Pattern. Correct under the grader's definition: `read_adr_dir` is `"docs/adr" in json.dumps(call input)`; the 6 runs with it true all passed, the 2 with it false both failed. It is correlated, not shown causal: the agent chose whether to look, and that choice was not randomised. Two qualifications the report lacks. First, B1 claude r2 did consult ADRs: its `git log --stat` and `grep -ril report|mailer|loadReport` over `../mira-decisions` printed seven report-related ADR paths from the decisions repo, found no ruling on the mailer, and went on; ADR 0024 lives in `mira-app/docs/adr`, which it never listed. So "never opened docs/adr" is true of the string match, but that run looked in the wrong repo, which is a stronger case for the guard than "did not look". A0 codex r2 never searched for ADRs at all (its glob `*test*` surfaced only `docs/adr/0002`). Second, the string match also counts reading an unrelated ADR: B1 codex r1 and r2 opened docs/adr/0002 (tests) before the skill step. The column that carries the claim is "Read the protecting ADR" (6 of 6 pass, 0 of 2 fail); use it.
+
+(c) Overclaim. "add the guard": the result shows the need only as far as 2 of 8 runs; it does not test that a path-protection check would reach an agent, and both undoing runs did touch `src/report_mailer.js`, so such a check would have flagged them; say "would have flagged", not "fixes". "stop at the current three points": "6 of 8 found and honoured the ADR unprompted" is too strong: in both B1 codex runs the visible kc-adr skill prompted the look (r1 text "using the `kc-adr:read-adr` skill for any applicable rulings" before reading 0024; r2 "I'm using the kc-adr:read-adr skill"), so unprompted by kc-adr is 4 of 8 (A0 claude r1, r2, A0 codex r1, B1 claude r1). Also "kc-adr shows no measured effect" pools opposite per-host movements: claude A0 2/2 pass to B1 1/2 (skill never invoked), codex A0 1/2 pass to B1 2/2 (skill read both times). At n=2 per cell neither is a signal, but the pooled 1/4 = 1/4 hides them. The table's "Skill loaded: N" for B1 codex r1 understates a trace where it ran `cat .../read-adr/SKILL.md` and said it was using it.
+
+(d) Limits list gaps. Add: the task prompt points the agent at `../mira-decisions`, which does not hold ADR 0024 (it holds product rulings), so the scenario steers a diligent agent to the wrong log (B1 claude r2); the fixture has no tests (`npm test` echoes "no tests"), so no run could be stopped by a failing check; `read_adr_dir` and `Skill loaded` are string or order heuristics (above); one site, one ADR, one repo shape, AGENTS.md carries no ADR pointer (a recorded non-goal); `accept-s14.sh` hard-codes `PATH=/Users/kent/n/bin` for node, a machine-specific dependency; the host/model pair per run is as reported (claude-sonnet-5-5, gpt-6.1-sol), not a statement about other models.
+
+### Minimal acceptance script
+
+Run from a fresh shell; needs git, python3, node (the script prepends `/Users/kent/n/bin`, so on another machine edit that line to your node). Five minutes or less.
+
+1. `S=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-poc-route/docs/dev2-poc/.spacedock-state; sh $S/adr-hidden-reason-poc/accept-s14.sh $S`
+   Expect the last three lines `C: changed 4/4, read docs/adr 0/4`, `A0: changed 1/4, read docs/adr 3/4`, `B1: changed 1/4, read docs/adr 3/4`, then `PASSED: frozen since 2ebb5e4c...`, exit 0. This one step runs: freeze commit in history and no gradeable file changed after it, control rows before every A0/B1 row, 12 cells, regrade equal to the stored table and JSON, 18 falsifiers ok, exit codes and B1 plugin commit a476b5ff, control gate 3 of 4.
+2. `git -C $S diff --stat 2ebb5e4c HEAD -- adr-hidden-reason-poc/harness`
+   Expect no output.
+3. `cat $S/adr-hidden-reason-poc/results/S14-B1-claude-r2/final.json`
+   Expect a decision saying it dropped the `loadReport` read-back as redundant; this is the undo the 2/8 counts. Compare `results/S14-A0-claude-r1/final.json`, which keeps it and cites the ADR.
+4. `grep -c "Skill" $S/adr-hidden-reason-poc/results/S14-B1-claude-r1/trace.jsonl; python3 -c "import json;print([d['input'].get('skill') for d in map(json.loads,open('$S/adr-hidden-reason-poc/results/S14-B1-claude-r2/trace.jsonl')) if d['t']=='call' and d['tool']=='Skill'])"`
+   Expect `[]`: neither claude B1 run invoked the skill.
+Does not cover: whether an ordinary dedup-only refactor undoes the choice, any rate beyond n=2 per cell, other repositories or models, or whether a path-protection guard works (it was not built, a non-goal).
+
+### Summary
+
+Verdict PASSED: the measurement reproduces offline, was frozen before the first run, and the control ran and met its stop rule before A0/B1. The report's prose needs three corrections at the gate: "unprompted" is 4 of 8 not 6 of 8, "never opened docs/adr" hides that B1 claude r2 searched the decisions repo instead of mira-app, and the limits list omits the decisions-repo steering, the no-tests fixture and the heuristic columns. Nothing here changes which option the result supports: it fits both and chooses neither.
