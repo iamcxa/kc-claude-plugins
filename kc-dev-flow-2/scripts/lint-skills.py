@@ -44,6 +44,9 @@ KNOWN_DUPLICATES = {
 }
 OBSERVER = "skills/observer/SKILL.md"
 CHAT_ONLY = re.compile(r"<!-- chat-only-rules -->\n(.*?)<!-- /chat-only-rules -->", re.S)
+# Skill folders copied byte for byte from kc-adr by scripts/kc-adr-copy-sync.sh; the copy is
+# checked against its kc-adr source there, not against this package's skill conventions.
+SYNCED_SKILLS = {"read-adr"}
 BOUND_SCRIPT_DIR = re.compile(r"(?:<package>/|(?:\.\./)+|kc-dev-flow-2/)scripts/")
 
 
@@ -85,6 +88,8 @@ def lint_tree(root, basic_lint=BASIC_LINT):
     for skill in sorted(skills):
         path = root / "skills" / skill / "SKILL.md"
         body = read(path)
+        if skill in SYNCED_SKILLS:
+            continue
         calls = re.findall(r"^Invocation: `([^`]+)`$", body, re.MULTILINE)
         if calls != [f"{VARIANT}:{skill}"]:
             errors.append(f"{skill}: expected one exact variant Invocation")
@@ -107,11 +112,15 @@ def lint_tree(root, basic_lint=BASIC_LINT):
         where = path.relative_to(root)
         if UNBOUND_ROOT.search(text):
             errors.append(f"{where}: package path must be <package>/scripts/NAME, not {{package}} or /absolute/plugin")
+        if where.parts[0] == "skills" and where.parts[1] in SYNCED_SKILLS:
+            continue
         for match in script.finditer(text):
             home, bound = homes[match["name"]]
             if not (match["dir"] and bound.fullmatch(match["dir"])):
                 errors.append(f"{where}: script {match['name']} is named without <package>/{home}")
     for folder in sorted((root / "skills").glob("*")):
+        if folder.name in SYNCED_SKILLS:
+            continue
         if any("<package>" in read(md) for md in folder.rglob("*.md")) and not PACKAGE_ROOT.search(
                 read(folder / "SKILL.md")):
             errors.append(f"skills/{folder.name}/SKILL.md: uses <package> but has no 'Package root:' line")

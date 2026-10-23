@@ -137,6 +137,28 @@ class RouteMutationTests(unittest.TestCase):
         self.change("skills/implementation/SKILL.md", "Package root: ${CLAUDE_PLUGIN_ROOT}\n", "")
         self.refuses("skills/implementation/SKILL.md: uses <package> but has no 'Package root:' line")
 
+    def copy_kc_adr_skill(self, name):
+        shutil.copytree(ROOT.parent / "kc-adr/skills/read-adr", self.root / "skills" / name)
+
+    def test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not(self):
+        self.copy_kc_adr_skill("read-adr")
+        self.assertEqual(lint.lint_tree(self.root), [])
+        self.copy_kc_adr_skill("read-adr-unlisted")
+        self.refuses("read-adr-unlisted: expected one exact variant Invocation")
+        self.refuses("skills/read-adr-unlisted/writing.md: script adr_lint.py is named without <package>/scripts/")
+        self.refuses("skills/read-adr-unlisted/SKILL.md: uses <package> but has no 'Package root:' line")
+
+    def test_a_synced_skill_is_checked_only_when_listed(self):
+        self.copy_kc_adr_skill("read-adr")
+        with mock.patch.object(lint, "SYNCED_SKILLS", set()):
+            self.refuses("read-adr: expected one exact variant Invocation")
+
+    def test_a_synced_skill_still_refuses_an_unbound_package_path(self):
+        self.copy_kc_adr_skill("read-adr")
+        path = self.root / "skills/read-adr/writing.md"
+        path.write_text(path.read_text() + "\n{package}/scripts/number_guards.py\n")
+        self.refuses("skills/read-adr/writing.md: package path must be <package>/scripts/NAME")
+
     def test_a_chat_only_rule_the_workflow_no_longer_says_is_named(self):
         self.change("references/sd/workflow.md", "presents\n  every step in full beside its observed output", "shows\n  each step with its output")
         self.refuses("chat-only rule 'presents every step in full beside its observed output' is not in references/sd/workflow.md")
