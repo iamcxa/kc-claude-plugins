@@ -371,3 +371,26 @@ exit $rc
 ### Summary
 
 PASSED: the candidate meets AC-1..AC-3, D1, D2 and amendment 1; every check was re-run in scratch copies, and both template falsifiers fail the kc-adr tests as they should. Two polish findings, no repair needed. Unverified: `test_sd_dispatch.py`, extension suites, agent behaviour on the SKILL.md sentence, and CI for `kc-adr/` plus the byte compare (owed by dev2 task `kc-adr-tools-with-dev2-copy`).
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: B1: in docs/journey/kc-decision-log/boundary-contract.md, restore the clause 「第一步先測複製進去的目錄在兩個 host 上都裝得起來」 in the tools paragraph, as the first step owned by dev2 task kc-adr-tools-with-dev2-copy.
+  The paragraph now ends 「…由 dev2 任務 `kc-adr-tools-with-dev2-copy` 負責，第一步先測複製進去的目錄在兩個 host 上都裝得起來。」
+- DONE: B2: replace 「已裁決（使用者 2026-10-22 縮小範圍）」 with the ruling's own words and where they were said; template sentence says the build replaces "the worker or FO" with "the recommender".
+  Now 「使用者 2026-10-22 在 kc-adr 任務 FO 的 Paseo 工作階段回覆「同意」，裁示為「kc-adr 只當模板和格式檢查的來源，配號留在 dev2」，並在 dev2 FO 的工作階段確認」; 「模板裡的「the worker or FO」改成「the recommender」」. The place wording is my reading of the preamble's "this FO's Paseo session" and "dev2 FO's session"; correct it if the session names differ.
+- DONE: B3: README.md kc-adr paragraph says one writer at a time adds an ADR and its number is one above the highest on the base branch.
+  README line 143: 「one writer at a time adds an ADR and its number is one above the highest on the base branch, and number reservation stays in kc-dev-flow-2.」
+- DONE: Fix 4 (Captain amendment 2): writing.md numbering sentence reworded, nothing else changed.
+  Now 「…under kc-dev-flow-2, the coordinator reserves it with `number_guards.py reserve`; ask for one.」; the commit touches three files, one line each (3 insertions, 3 deletions, then the B2 place edit amended in).
+- DONE: Commit on the worktree branch.
+  Head 0b5a9ddf7eec59c0870175d7fa09da2e9626a4de on spacedock-ensign/kc-adr-format-source (one commit over 91b9e8af; base c3514876); only README.md, boundary-contract.md and writing.md changed; `git diff c3514876 HEAD --stat -- kc-dev-flow-2` is empty.
+- DONE: Re-run AC-3 on the new head.
+  Text check of `## Where the tools are`: both `<kc-adr>/` paths present (1,1), `<package>` template/linter paths absent (0), reserver present (1), new numbering sentence present (1); `test -f` on both relative paths exit 0; "no reserved number" in neither writing.md nor SKILL.md, and SKILL.md sends numbering to writing.md. Dry run in a scratch git repo with ADRs filled from the template: highest 0003, new 0004, `adr_lint.py --require 0004` and `--since <seed sha>` exit 0; a second 0003 exits 1 ("number 3 is also used by"). Falsified by: dropping the Date line fails the linter; the duplicate is rejected. Still one tree only (ADR 0002); no agent scenario was run.
+- DONE: Re-run closing checks.
+  `version-parity-check.sh` exit 0 (kc-adr 0.1.1 everywhere); `skill-frontmatter-lint.sh` exit 0; `comment_ratio.py` 0.5%, 5% max met; kc-adr `test_adr_lint.py` Ran 8 OK; linter `cmp` vs base dev2 exit 0, template differs only at line 21. Sanitize-check run inline from `~/.claude/kc-plugins-config/sanitize-rules.yaml` over the 8 kc-adr md/py files and the added README/boundary-contract lines: 0 BLOCK, 0 REJECT, 0 WARN.
+- DONE: roborev_gate.py --repo <worktree> --base c3514876339cb732d0bea8b2d2dd45c234bcdeaf.
+  Exit 0: `clean on 0b5a9ddf7; evidence=roborev:1071` (an earlier run on the pre-amend head ca4367e2 was also clean, roborev:1070).
+
+### Summary
+
+The four text fixes are in one commit on the worktree branch; every cycle-2 check was re-run on the new head and passes. The sanitize-check was run as the skill's rules by hand (grep over the rule file), not through the skill itself. Residuals unchanged: `test_sd_dispatch.py` not run, no agent run measured the reworded numbering sentence, and `read-adr-reporting-rule-followup` may collide on writing.md.
