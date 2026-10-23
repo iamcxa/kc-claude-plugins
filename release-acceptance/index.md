@@ -260,6 +260,11 @@ Visible change: none
 
 ADR: 0031
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-23): Codex review on #709 e3a92e98 (review:5628565363) left 1 P1, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P1 kc-journey-map/skills/kc-journey-map/SKILL.md frontmatter: the description used for skill discovery does not mention the new accept-release mode (accepting a built release, walking it, pending delivery acceptance), so a plain request such as "accept this release" may not load the skill; add the intent and representative trigger phrases.
+
 ## Stage Report: ideation
 
 - DONE: Design (PRFAQ with Mermaid) for release-scale acceptance as a standard mechanism, per the Captain's ruling recorded in ## Scope: the kc-dev-flow-2 half (when the acceptance task opens, who walks it, what the report carries, how a cross-task failure routes back to release review as signal 3), the kc-journey-map half (a mode that produces the walk list: stories in order, entry points, the release proof line; and takes the result back to card status), and the declared contract between them, read against origin/main 2256b2288e8c15a1ecd2b7356859249d75b4d6f6 (kc-dev-flow-2 references/sd/workflow.md § Release review; kc-journey-map's review-release mode)
