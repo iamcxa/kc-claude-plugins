@@ -49,3 +49,18 @@ Alignment: not needed before ideation: the Captain stated the scenario and the a
 Surfaces: none
 Visible change: none
 Release review: not needed: a measurement with no shipped change.
+
+## Stage Report: ideation
+
+- SKIPPED: Design the one new scenario (world additions, ADR text, code site, task prompt, ADR-comment choice)
+  Recorded profile is poc; kc-dev-flow-2 0.28.0 ideation route for poc is `skip` ("report the inapplicable dispatch; do not perform stage work"). No design produced.
+- SKIPPED: Pass rule, score.py reading, falsifier
+  Same route mismatch; no placeholder design.
+- SKIPPED: Run plan (arms A0/B1, hosts, commands, locations, wall time)
+  Same route mismatch.
+- SKIPPED: AC-1..AC-3 evidence clauses, Captain decisions, design_surfaces.py check
+  Same route mismatch; no design artifact exists to check.
+
+### Summary
+
+Route mismatch reported to FO: this task is recorded `profile: poc`, whose ideation row is `skip` in both the 0.26.0 and 0.28.0 skill route tables, so no ideation stage work was done and no repository file, branch or commit was made. The dispatch checklist asks for a full design; FO must either resolve the routing (poc proceeds from the approved implementation entry, where the scenario design can be the worker's first step) or record a Captain-approved profile change to pilot before ideation is re-dispatched. Nothing was written earlier in this task, so there was nothing to de-duplicate after the session reset.
