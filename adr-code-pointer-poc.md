@@ -3,7 +3,7 @@ title: Does a code-side pointer to the protecting ADR stop an agent from undoing
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-status: backlog
+status: implementation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 「可以，先測試這個，然後再考慮其他方案。」 (chat, 2026-10-23), answering FO''s question quoted in this briefing: accepts the comment arm, Claude and Codex x2, 4 runs, profile poc.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 Filed on the Captain's 「可以，先測試這個，然後再考慮其他方案。」 (chat, 2026-10-23), answering FO's 「我建議的下一步：撤回這道關卡，先開一個 POC。同一題，在程式碼旁加上那行註解，Claude 和 Codex 各跑 2 次，共 4 次。…要撤回這道關卡、改開註解 POC 嗎？」, after FO proposed a code-side comment as a cheaper alternative to an edit-time hook (dev2 task `adr-protected-path-guard`, its backlog gate withdrawn).
