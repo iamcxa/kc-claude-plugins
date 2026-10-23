@@ -1,7 +1,7 @@
 ---
 id:
 title: kc-adr is the source of the ADR template and the ADR linter
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
