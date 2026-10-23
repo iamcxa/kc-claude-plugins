@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-code-pointer-poc:validation:attempt-1:revision-1",
+  "question": "Validation PASSED. Approve closing this POC with the validator's reading: comment arm 0/4 undone vs archived A0 1/4, a tie at this size (if the comment did nothing, 4/4 occurs about 32% of the time); the traces show the comment was the route to the ADR in both Claude runs and probably Codex r2; it supports a code-side pointer as 'no counter-evidence, mechanism visible', not 'shown to work'? Approval records no code delivery (local-merge sentinel at c27e7659), archives the task and removes its empty worktree.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-code-pointer-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/16b0d4902e6bf158b72646c6b3e48d734c0e22f1/adr-code-pointer-poc.md",
+      "rev": "sha256:fe8cc0efd48262498ed6648af0da9aba2a5578990435918272e119fec5451356",
+      "mediaType": "text/markdown",
+      "summary": "4 runs, freeze 29fae059 before the first run, only the comment line and arm wiring differ, prompt and grader byte-identical; FO re-ran accept-pointer.sh in an env -i shell: PASSED (P undone 0/4, opened the ADR 4/4) and the trace-order step (claude 1 4, 1 4; codex 4 7, 4 7). Added limits: the prompt names the commented file; one comment covered three sites only because agents extracted one helper; pointer rot untested; exact filename in the comment; hook not run. Sufficiency: answers whether the pointer reaches the agent at edit time. Necessity: one comment line, state-only."
+    }
+  ]
+}

@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:adr-code-pointer-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:adr-code-pointer-poc-validation-1
+              briefing:
+                id: briefing:adr-code-pointer-poc:validation:attempt-1:revision-1
+                digest: sha256:a6c20e79b55168cfbbb8a7e8e0a17f6a7f1331c71a79f8a6f98369c19816462a
+                room-ref: ./adr-code-pointer-poc/review/validation/briefing-1
 started: 2026-10-23T08:26:43Z
 worktree: .worktrees/spacedock-ensign-adr-code-pointer-poc
 ---
