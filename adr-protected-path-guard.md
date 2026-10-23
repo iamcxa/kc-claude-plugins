@@ -43,6 +43,17 @@ gates:
                 id: briefing:adr-protected-path-guard:ideation:attempt-1:revision-1
                 digest: sha256:2e1ca7cf4d0553bd411634dcb7290a944fb75aeef889d2883e160943f080bc56
                 room-ref: ./adr-protected-path-guard/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-protected-path-guard:ideation:1
+                briefing: briefing:adr-protected-path-guard:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T09:14:00.709283Z"
+                decision: approve
+                reason: 'Captain 「准」 (2026-10-23) to ideation briefing-1: accepts the design and the three recommended decisions as stated in the question (Protects label, docs/adr/NNNN prefix match, listed-files-only superseded check); no pre-commit example added.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-23T08:55:00Z
 ---
 
