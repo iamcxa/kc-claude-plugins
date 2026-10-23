@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:release-review-staleness-held-at-dispatch:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:release-review-staleness-held-at-dispatch-ideation-1
+              briefing:
+                id: briefing:release-review-staleness-held-at-dispatch:ideation:attempt-1:revision-1
+                digest: sha256:e308ad7357991e82bf3d1f1445de3100d89b85a6c59197b810ba17f994e90e4a
+                room-ref: ./release-review-staleness-held-at-dispatch/review/ideation/briefing-1
 ---
 
 ## Scope

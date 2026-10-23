@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-review-staleness-held-at-dispatch:ideation:attempt-1:revision-1",
+  "question": "Approve ideation of release-review-staleness-held-at-dispatch (cycle 2) and enter implementation? FO recommends approve; approving accepts that recommendation, including the three Captain decisions as recommended: (1) a mark is recognised by a regex over signal 1 or signal 2 in the task's ## FO alignment, with no new workflow.md words; (2) the sentence \"no script checks that line\" is deleted from workflow.md, a 5-word cut (5374 to 5369); (3) the known false holds are accepted, each cleared by one Release review line.",
+  "artifacts": [
+    {
+      "id": "artifact:release-review-staleness-held-at-dispatch:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ae801b968449ed87e091abb76609ef8d6174e0be/release-review-staleness-held-at-dispatch.md",
+      "rev": "sha256:6ee2e1b7c61d1ce5e8c8f40ee0b3104cab6ee9b17c664849628c32859575564a",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 2 per the Captain's 「重做檢查」: pr_watch.py tasks prints one next: line beside seeds() holding a task at implementation with no dispatch yet whose ## FO alignment carries a signal 1 or 2 mark and no later Release review line (not needed: or \u003cjourney\u003e/\u003crelease\u003e at \u003ccommit\u003e). It reads only the task file, so the R4 record (journey only, prose Signal 1) holds. Advice, not a gate: Spacedock 0.27.2 dispatch build takes no precondition. Replay over four adopters' committed history: 17 holds in 196 dispatches; 3 verified true (R4 among them), 1 verified false, 13 unclassified (relay review reports live outside its state branch). One live task held today (its review ran, its line was never written). Map-diff design, review_stale.py and the journey-map PR removed."
+    }
+  ]
+}
