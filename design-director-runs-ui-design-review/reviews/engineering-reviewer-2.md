@@ -1,0 +1,49 @@
+# Engineering reviewer 2: Amendment 2 and the build at e033956e
+
+Verdict: proceed. Amendment 2 withdraws none of the Captain's rulings D-1 to D-6. The build at e033956e955503fcf81c134ace19d9cc9fd1dd25 matches AC-1 to AC-14. The Cycle 2 narrowing is stricter than D-5 asks, never looser. No finding is Material, so nothing blocks the merge ask. One text item should be settled before the first kc-paseo-plugins ui ideation after release: AC-15 keeps less of AC-3 than Amendment 2's own `Design:` line says it keeps (finding 1).
+
+Read: the task file (Amendments 1 and 2, FO alignment, ACs, Feedback Cycles, all stage reports); `gh pr diff 708` and `design_surfaces.py`, `validation/principles.md`, `references/sd/workflow.md`, `skills/design-director/SKILL.md` fetched at e033956e with `gh api .../contents?ref=`; Codex review 5623843736 (two P2); the PR body; `Preview:` lines in every kc-paseo-plugins worktree (2026-10-23). Nothing was checked out, no tests were rerun (validation ran them three times), and no state was edited. The skill loaded from the 0.27.0 cache, but the dispatch names 0.28.0. I ran no package script from either version.
+
+## Findings
+
+- **1 Adjust (task text, Captain-owned; does not block the merge).** AC-15 copies the words of Amendment 2 (2). It is narrower than the amendment's own `Design:` line, "AC-3 becomes a post-release check on the first paseo ui ideation, keeping its falsifier". AC-15 keeps one clause of AC-3: the upheld-decline lines in the briefing and their count. It drops four others:
+  - the transcript showing `subagent_type: kc-dev-flow-2:design-director` and no `general-purpose`, which is the task's headline claim (AC-3 itself said a substring check of `design-review.md` is no proof);
+  - that `design/ideation-<N>.yaml` and `design/declines-<N>.yaml` exist;
+  - the `preview:` lines reaching the briefing (D-2: "so the paths reach the briefing");
+  - the `decision` lines reaching the briefing (D-4).
+
+  Because the same checker output and the same `workflow.md` sentence carry all of these lines, AC-15 is an adequate stand-in for the briefing wiring. After the change, though, no criterion offers any real-flow evidence that a ui ideation actually dispatches the named agent. AC-15's `Falsifier:` also states its pass condition, not a disproof; this is inherited from the amendment's wording. Two other criteria still point at the superseded AC-3: AC-10 ("AC-3 shows the lines in the briefing") and AC-13 ("proven only by the AC-3 mechanism"). The cheapest fix runs no extra model work, because it is the same post-release ideation: AC-15 carries the whole AC-3 evidence list, and AC-10 and AC-13 point at AC-15. Criteria are preserved under FO's correction rule (`workflow.md`, "preserve scope, acceptance criteria, …"), so this is one Captain question, not an FO edit.
+- **2 Polish (AC-14 record).** AC-14 matches Amendment 2 (1). The validation counts agree:
+  - run 2: 13 upheld, 12 overruled, 14 decisions;
+  - run 3: 18 upheld, 9 overruled, 12 decisions;
+  - control: 23 upheld, 6 overruled, 10 decisions.
+
+  The only parts AC-14 drops are parts of AC-7's bound: the per-row expectations (#5, #10, #9b, #4) and "every decision carries a kind and owner". The checker still enforces kind and owner (refusal 5, `check_rulings`), so nothing outside the bound is withdrawn. Two weaknesses remain:
+  - The raw run outputs live only in `/tmp/dd-impl/ac7run1`, `ac7run2` and `ac7c`, with `ac7` a duplicate of `ac7run2`. None is in the task folder, so once `/tmp` is cleared the figures cannot be re-derived.
+  - Validation F7 still applies: runs 2 and 3 started before commit ec70dfeb, so "final wording" is not tied to shipped bytes.
+
+  AC-14 sets no bound, so no verdict depends on either point. Copying the three run folders into `replay/` would fix the first.
+- **3 Deferred risk (F9 against D-5; I agree with the class).** `check_built_screen` now starts with `body = validation_report(body)`. That makes the review, finding, decline-check and waiver lines count only inside the last `## Stage Report: validation`. The narrowing only refuses more, never less. Both D-5 exits survive: a screenshot that is not an ideation picture, and `waived 「…」`. D-5's words 「要擋下，不然找它的意義就消失了」 name no location. The cost lands on the waiver exit. `principles.md` tells only the validator where to write a waiver. Nothing tells FO where to record one the Captain gives at the validation gate, and FO's correction rule preserves "worker evidence, prior reports". So a waiver given at the gate needs a fresh validation dispatch before the check passes. That is a stall, not a breach of D-5. It becomes Material at the first waiver given at a gate that stalls this way.
+- **4 Deferred risk (Codex 4356044042, URL Preview; confirmed in code).** In `check_built_screen`, the line `if URL.match(preview): continue` puts no digest for an HTTP(S) `Preview:` into `seen`. `check_ui` accepts that form, so an ideation picture saved locally from its URL passes as the built screenshot. The build matches the AC-6 text: every case there names a file Preview. It misses the literal words of D-5, "not an ideation preview". The task's Design sentence "Clauses (b) and (c) close the hole…" is an absolute claim that is false for a URL Preview. ADR 0030 makes no such claim. This is a sub-case of F2 (any file with different bytes passes). Exposure in the first consumer is 0 of 42 `Preview:` lines in kc-paseo-plugins (main and both state worktrees, 2026-10-23), measured on that repository only. This is Codex round 3, and the task's cycle rule is "rounds 1 and 2 fix every finding; a P1 blocks in every round", so a P2 here does not block. Cheapest fail-closed fix if it bites: refuse a built-screen review while any `Preview:` is a URL. Trigger: a ui task with a URL Preview reaches validation.
+- **5 Polish / follow-up (Codex 4356044048, one F token for several MAJORs; confirmed in code).** For each MAJOR, the loop only checks that a `- F<N> ` bullet exists in the current validation report. It does not check that the token is unique, and it does not check the bullet's class. The approved Design states the class limit ("the check confirms the bullet exists, not its class"), and AC-13 asks only that the bullet exist. So the build matches the criteria. Two MAJORs fixed by one repair can honestly share a bullet. The larger limit already accepted in the design is that a MAJOR can map to a Polish bullet. Round 3 P2, not blocking.
+
+Context, not a finding: as designed and approved, the validation `Gate content` sentence includes the check output but, unlike the ideation sentence, does not make a non-zero exit "not presentable". The D-5 refusal therefore rests on the validator running the check (`workflow.md`, "run by implementation and validation … exits 1") and on the Captain seeing the output at the gate.
+
+```yaml
+engineering_reviewer_report:
+  question: Do Amendment 2's AC-14 and AC-15 carry exactly what it states and withdraw nothing else, does PR #708 at e033956e match the amended criteria including the Cycle 2 narrowing against D-5, and does any finding (including Codex round 3) block the merge ask?
+  revision: iamcxa/kc-claude-plugins#708 head e033956e955503fcf81c134ace19d9cc9fd1dd25 (base 126efaf0); task file design-director-runs-ui-design-review.md as read 2026-10-23
+  conclusion: AC-14 is faithful and withdraws only AC-7's bound. AC-15 matches Amendment 2's sentence but is narrower than its Design line, and leaves the named-agent real-flow evidence and the preview and decision briefing lines without a criterion. The build matches AC-1 to AC-14. The validation-report-only reading is stricter than D-5 and keeps both exits. Both Codex round 3 P2 are confirmed in code and both are Deferred risk or Polish. No Material finding.
+  material_evidence:
+    - Amendment 2 Design line "AC-3 becomes a post-release check ... keeping its falsifier" against AC-15's single clause; AC-10 and AC-13 still cite AC-3
+    - Validation counts run2 13/12/14, run3 18/9/12, control 23/6/10 match Amendment 2's figures; raw outputs only under /tmp/dd-impl
+    - check_built_screen begins with validation_report(body); principles.md routes the waiver to the validator's report; workflow.md FO correction rule preserves prior reports
+    - check_built_screen skips URL previews when building the seen digest set; 0 of 42 Preview lines in kc-paseo-plugins are URLs (one repository, 2026-10-23)
+    - The MAJOR loop tests bullet existence only; the Design states class is not checked; Codex review 5623843736 is round 3, two P2, under the recorded rule that only a P1 blocks after round 2
+    - Limit - no test rerun and no live model run by this seat; relies on the three validation runs for suite and mutant results
+  risk_tradeoff: Every open item is fail-closed or bounded and costs one or two lines to fix. A new head now would cost another validation cycle and a Codex round 4 to close P2s with no observed trigger. The durable obligation is AC-15. After archive it lives only in the archived task file and the PR body's Residuals; no workflow todo holds it. Without one, the first paseo ui ideation after release can pass unchecked. The cheapest alternative is to record that todo at merge and settle the AC-15 scope question with it.
+  recommendation: proceed
+  confidence: high
+  disproof_condition: An adopter ui task with a URL Preview reaches validation and passes with its ideation image; a waiver the Captain gives at the validation gate stalls a task on the refusal; the AC-15 count mismatches at the first paseo ui ideation; or a real ideation transcript shows general-purpose instead of design-director.
+  authority_boundary: The Captain owns the merge, the AC-15 scope question and any change to an acceptance criterion; FO holds the validation gate and the disposition of the Codex round 3 findings; this seat advises only and changed no state, PR or code.
+```
