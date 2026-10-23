@@ -24,6 +24,12 @@ Asked: 「ADR 工具要不要改用 kc-adr 那邊轉述的縮小版？」, which
 Supersedes: none
 Design: kc-adr is the source of `adr-template.md` and `adr_lint.py` (with its tests); `number_guards.py` stays whole in dev2; dev2 keeps byte-identical copies at `scripts/adr_lint.py` and `references/adr-template.md`, generated from kc-adr by a sync script; a byte compare of the two files runs in a required check and names kc-adr as the place to edit; the template's "the worker or FO" wording becomes "the recommender".
 
+### Amendment 2 — 2026-10-23, chat
+Captain: 「對」 (chat, 2026-10-23)
+Asked: 「kc-adr 那邊說你批准了這件事：先做「ADR 工具副本」這張任務，並把 kc-adr 剛加的「保護檔案」兩項檢查也一起同步到 dev2。這是你的意思嗎？我建議照做。」 (confirming the kc-adr FO's relay of his 「准」 in its session)
+Supersedes: none
+Design: this task is the next priority; the sync also carries what iamcxa/kc-claude-plugins#712 merged into kc-adr (squash fd630b2a): the `**Protects:** none` label in kc-adr/references/adr-template.md, kc-adr/skills/read-adr/writing.md steps 4 to 6, and the two new kc-adr/scripts/adr_lint.py checks (an Accepted ADR's listed file exists and points at it; a listed file does not point at a Superseded ADR).
+
 ## FO alignment
 
 Alignment: needed at ideation; the reservation-file owner and the copy's path are the Captain's to accept.
