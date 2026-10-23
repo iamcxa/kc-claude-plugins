@@ -3,7 +3,7 @@ title: An ADR that protects code names its files, each file carries a pointer ba
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -34,7 +34,7 @@ gates:
                 reason: 'Captain 「都准」 (2026-10-23) to the revised backlog gate (with the coupled dev2 scope line): accepts the re-scoped outcome, non-goals and AC-1..AC-3, profile pilot.'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
