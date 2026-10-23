@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:release-walk-picky-reviewers-and-director:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:release-walk-picky-reviewers-and-director-ideation-1
+              briefing:
+                id: briefing:release-walk-picky-reviewers-and-director:ideation:attempt-1:revision-1
+                digest: sha256:9d4c90c82b1f230171b13a1f6bf316e53561e9d97811347d2bf8391c8123893b
+                room-ref: ./release-walk-picky-reviewers-and-director/review/ideation/briefing-1
 ---
 
 ## Scope

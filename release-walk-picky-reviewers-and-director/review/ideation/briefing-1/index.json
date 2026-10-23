@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-walk-picky-reviewers-and-director:ideation:attempt-1:revision-1",
+  "question": "Approve ideation of release-walk-picky-reviewers-and-director (cycle 2) and enter implementation? FO recommends approve; approving accepts that recommendation: the design as folded with the Captain rulings D1, D2, D3 and D5 recorded under FO alignment, and two consequences FO names: an acceptance task closed by a local-merge sentinel falls outside the learn loop (learn rejects local-merge rows), and AC-8 and AC-10 still need a live run (sonnet against opus on the designed cases; a scratch local-merge close of a pilot merge: pr task).",
+  "artifacts": [
+    {
+      "id": "artifact:release-walk-picky-reviewers-and-director:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6f18f83e6af43af6250a19d88f7e688cb5ce1f11/release-walk-picky-reviewers-and-director.md",
+      "rev": "sha256:b5dfb05011b1a25f719ce3d412309849d624e5e84c7b61184c18cf8a8101bdd7",
+      "mediaType": "text/markdown",
+      "summary": "Part A only (D5): a release-acceptance extension; an implementation worker runs the fixture smoke check, then at least two Claude reviewers on distinct personas and models (D3), then director pass 3 on sonnet with an escalate script sending an item to opus when its owning task ideation ran on opus, the reviewers disagree, sonnet rules it unverified, or sonnet rules a backlog task or a Captain decision (D2); the table names each item model; deferred-to-UAT findings feed reviewers and director; the report keeps top-level stories[] so journey-accept.mjs (#709) reads it unchanged; the task closes like a dev2-poc task with the record in walk/ and a local-merge sentinel, a map edit in its own journey PR (D1), landed as an ADR. No workflow.md words for a workflow that does not list the extension. Depends on #709 merging first."
+    }
+  ]
+}
