@@ -34,6 +34,17 @@ gates:
                 id: briefing:adr-code-pointer-poc:validation:attempt-1:revision-1
                 digest: sha256:a6c20e79b55168cfbbb8a7e8e0a17f6a7f1331c71a79f8a6f98369c19816462a
                 room-ref: ./adr-code-pointer-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adr-code-pointer-poc:validation:1
+                briefing: briefing:adr-code-pointer-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T08:47:04.31858Z"
+                decision: approve
+                reason: 'Captain 「准」 (2026-10-23) to validation briefing-1: closes the POC with the validator''s reading; no code delivery, local-merge sentinel at c27e7659, archive, remove the empty worktree.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-23T08:26:43Z
 worktree: .worktrees/spacedock-ensign-adr-code-pointer-poc
 ---
