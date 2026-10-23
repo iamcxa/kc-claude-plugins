@@ -53,6 +53,17 @@ gates:
                 id: briefing:codex-reader-counts-code-review-only:validation:attempt-1:revision-1
                 digest: sha256:a95991ccfb2b52131c7914a4c859d5f5e990eddf874e298d27feab23695401de
                 room-ref: ./codex-reader-counts-code-review-only/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-counts-code-review-only:validation:1
+                briefing: briefing:codex-reader-counts-code-review-only:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-23T02:36:18.328843Z"
+                decision: approve
+                reason: Captain 「合併」 (chat, 2026-10-23), answering 「#702（Codex 讀取器只算程式審查）要合併嗎？我建議合併。」 whose presentation stated approval covers merging this head, later external-review rounds on this PR and removing its worktree, one PR only, and the declined round-2 P2; digest a95991cc. Accepts the FO recommendation as the bound question states.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-22T01:22:21Z
 worktree: .worktrees/spacedock-ensign-codex-reader-counts-code-review-only
 pr: iamcxa/kc-claude-plugins#702
