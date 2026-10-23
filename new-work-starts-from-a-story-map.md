@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-22T04:01:40Z
 worktree: .worktrees/spacedock-ensign-new-work-starts-from-a-story-map
-pr: iamcxa/kc-claude-plugins#705
+pr: pr-merge:705
 ---
 
 ## Scope
