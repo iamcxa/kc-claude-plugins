@@ -1,4 +1,4 @@
-<!doctype html><meta charset="utf-8"><title>Slack notice preview</title><style>body{font-family:-apple-system,Helvetica,Arial,sans-serif;margin:16px;background:#f3f3f3}
+<!doctype html><meta charset="utf-8"><title>Slack notice preview, r1 cycle 2</title><style>body{font-family:-apple-system,Helvetica,Arial,sans-serif;margin:16px;background:#f3f3f3}
 h2{font-size:15px;margin:18px 0 6px}.note{font-size:12px;color:#444;margin:0 0 6px;max-width:720px}
 .msg{display:flex;gap:10px;padding:10px 14px;border-radius:6px;margin:6px 0;font-size:15px;line-height:1.4;max-width:720px}
 .msg.light{background:#fff;color:#1d1c1d}.msg.dark{background:#1a1d21;color:#d1d2d3}
@@ -6,76 +6,61 @@ h2{font-size:15px;margin:18px 0 6px}.note{font-size:12px;color:#444;margin:0 0 6
 .col{min-width:0;overflow-wrap:anywhere}.app{font-size:10px;background:#ddd;color:#555;padding:1px 3px;border-radius:2px}
 .dark .app{background:#333;color:#aaa}.ts{font-size:12px;color:#616061}.h{font-weight:700}
 .agent{margin-top:4px}.agent.warn{border-left:3px solid #e8912d;padding-left:6px}.agent u{color:#1264a3;text-decoration:none}.dark .agent u{color:#1d9bd1}
+.agent code{font-size:13px;background:#f6f6f6;border:1px solid #ddd;border-radius:3px;padding:0 3px;color:#c01343}.dark .agent code{background:#222529;border-color:#444;color:#e8a6b6}
 .ctx{font-size:12px;color:#616061;margin-top:4px}.dark .ctx{color:#ababad}
-.phone .msg{max-width:358px}pre{background:#0d1117;color:#e6edf3;padding:12px;font-size:12px;border-radius:6px;white-space:pre-wrap;word-break:break-all;max-width:1340px}</style>
-<h2>Slack notice, proposed (DISPOSABLE mock drawn locally; Slack draws the real one)</h2>
-<p class="note">One notice per event and outcome. A repeat send of an event that already started, or whose start is uncertain, posts nothing. A repeat after "NOT started" posts at most one more notice: "started after a retry", or nothing if GitHub refuses again. Event text is escaped: the sentry card's "&lt;!channel&gt;" is plain text, not a mention. Field text is cut at 200 characters.</p>
-<h2>Light theme, desktop width: started, NOT started, started after a retry, UNCERTAIN, self-test, longest event id (64), escaped mention, long field text, no allowlisted fields</h2>
+.phone .msg{max-width:358px}pre{background:#0d1117;color:#e6edf3;padding:12px;font-size:12px;border-radius:6px;white-space:pre-wrap;word-break:break-all;max-width:1340px}
+.gh{background:#fff;color:#1f2328;border:1px solid #d0d7de;border-radius:6px;padding:16px 24px;max-width:860px;font-size:14px;line-height:1.5}
+.gh.dark{background:#0d1117;color:#e6edf3;border-color:#30363d}.gh h1{font-size:22px;border-bottom:1px solid #d0d7de;padding-bottom:6px}.gh.dark h1{border-color:#30363d}
+.gh h3{font-size:16px;margin:18px 0 6px}.gh table{border-collapse:collapse}.gh td,.gh th{border:1px solid #d0d7de;padding:4px 8px;font-size:13px}.gh.dark td,.gh.dark th{border-color:#30363d}
+.gh code{background:rgba(175,184,193,.2);padding:0 4px;border-radius:4px;font-size:12px}.gh ul{padding-left:20px}.gh li.sub{list-style:circle;margin-left:18px;font-size:12px}
+.cite{background:#ddf4ff;color:#0969da;border-radius:10px;padding:0 6px;font-size:12px;white-space:nowrap}.gh.dark .cite{background:#121d2f;color:#4493f8}
+.gh.phone{max-width:358px;padding:12px}.gh hr{border:0;border-top:1px solid #d0d7de}</style>
+<h2>Slack notice, proposed (DISPOSABLE mock drawn locally; Slack draws the real one from the Block Kit payload)</h2>
+<p class="note">One notice per accepted event and outcome. A resent event (same source and id) posts nothing. The first event of an incident (same source and subject) says "New incident" and starts the agent; a later one says "Joins incident" and starts no agent. Event text is escaped: "&lt;!channel&gt;" below is plain text, not a mention. Field text is cut at 200 characters.</p>
+<h2>Light theme, desktop width: one day's channel in order (new incident, its later event, another incident), then NOT started, UNCERTAIN, read-back self-test, escaped mention</h2>
 <div class="msg light"><div class="avatar">OI</div><div class="col">
 <div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent">✅ Agent started · <u>mira-shop ops run</u>; its Draft PR links from the run</div>
-<div class="ctx">event relay-ceiling-20261020-a1b2 · source urn:relay:prod · contract v1</div></div></div>
+<div class="h">relay · signed-in ceiling near</div><div>120 of 150 signed-in publishes today (limit source: default)</div><div class="agent">✅ New incident <code>ceiling/bound/2026-10-20</code> · agent started · <u>ops run</u>; its Draft PR links from the run</div>
+<div class="ctx">event bound-2026-10-20-80 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div><div class="msg light"><div class="avatar">OI</div><div class="col">
+<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">11:02</span></div>
+<div class="h">relay · signed-in ceiling full</div><div>150 of 150 signed-in publishes today (limit source: default)</div><div class="agent">➕ Joins incident <code>ceiling/bound/2026-10-20</code> (event 2) · recorded on its ops task, no new agent run · <u>first run</u></div>
+<div class="ctx">event bound-2026-10-20-100 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div><div class="msg light"><div class="avatar">OI</div><div class="col">
+<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">14:20</span></div>
+<div class="h">relay · anonymous ceiling full</div><div>50 of 50 anonymous publishes today (limit source: RELAY_ANON_SITE_DAILY_BRIEFING_LIMIT)</div><div class="agent">✅ New incident <code>ceiling/anonymous/2026-10-20</code> · agent started · <u>ops run</u>; its Draft PR links from the run</div>
+<div class="ctx">event anon-2026-10-20-100 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div>
 <div class="msg light"><div class="avatar">OI</div><div class="col">
 <div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent warn">⚠️ Needs action · agent NOT started: GitHub refused the dispatch (HTTP 403). Run ops-inbox setup verify; the sender's next retry can still start it.</div>
-<div class="ctx">event relay-ceiling-20261020-a1b2 · source urn:relay:prod · contract v1</div></div></div>
+<div class="h">relay · signed-in ceiling near</div><div>120 of 150 signed-in publishes today (limit source: default)</div><div class="agent warn">⚠️ Needs action · agent NOT started: GitHub refused the dispatch (HTTP 403). Run the read-back (S11); the sender's next retry can still start it.</div>
+<div class="ctx">event bound-2026-10-20-80 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div>
 <div class="msg light"><div class="avatar">OI</div><div class="col">
 <div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent">✅ Agent started after a retry · <u>mira-shop ops run</u>; its Draft PR links from the run</div>
-<div class="ctx">event relay-ceiling-20261020-a1b2 · source urn:relay:prod · contract v1</div></div></div>
+<div class="h">relay · signed-in ceiling near</div><div>120 of 150 signed-in publishes today (limit source: default)</div><div class="agent warn">❓ Needs a look · agent start UNCERTAIN: GitHub did not answer in 10 s, and the inbox will not resend this event. <u>Check the runs</u></div>
+<div class="ctx">event bound-2026-10-20-80 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div>
 <div class="msg light"><div class="avatar">OI</div><div class="col">
 <div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent warn">❓ Needs a look · agent start UNCERTAIN: GitHub did not answer in 10 s, and the inbox will not resend this event. <u>Check the runs</u></div>
-<div class="ctx">event relay-ceiling-20261020-a1b2 · source urn:relay:prod · contract v1</div></div></div>
+<div class="h">Read-back self-test · spacedock-dev/subspace-relay</div><div>Signature verified; the dispatch App reaches only the trigger repository.</div><div class="agent">✅ <u>Self-test run</u> started; no task is filed. Captain: paste this message's link into the read-back.</div>
+<div class="ctx">event readback-selftest-7f3a91c2 · source urn:ops-inbox:readback · contract v1</div></div></div>
 <div class="msg light"><div class="avatar">OI</div><div class="col">
 <div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">Setup self-test · example-owner/mira-shop</div><div>Signature verified; the dispatch App reaches only the trigger repository.</div><div class="agent">✅ <u>Self-test run</u> started; no task is filed. Captain: paste this message's link into setup verify.</div>
-<div class="ctx">event setup-selftest-7f3a91c2 · source urn:ops-inbox:setup · contract v1</div></div></div>
-<div class="msg light"><div class="avatar">OI</div><div class="col">
-<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent">✅ Agent started · <u>mira-shop ops run</u>; its Draft PR links from the run</div>
-<div class="ctx">event relay-ceiling-20261020-a1b2c3d4e5f60718293a4b5c6d7e8f90a1b2c3d4e · source urn:relay:prod · contract v1</div></div></div>
-<div class="msg light"><div class="avatar">OI</div><div class="col">
-<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">sentry-shaped · error</div><div>TypeError: &lt;!channel&gt; total is undefined · checkout/pay</div><div class="agent">✅ Agent started · <u>mira-shop ops run</u>; its Draft PR links from the run</div>
-<div class="ctx">event sentry-4471-91ab · source urn:sentry:mira-shop · contract v1</div></div></div>
-<div class="msg light"><div class="avatar">OI</div><div class="col">
-<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">sentry-shaped · error</div><div>Error: request to payments provider failed after 3 attempts while confirming order totals for a basket with many items and a discount code applied at checkout, then the fallback path also failed becau…</div><div class="agent">✅ Agent started · <u>mira-shop ops run</u>; its Draft PR links from the run</div>
-<div class="ctx">event sentry-4472-02cd · source urn:sentry:mira-shop · contract v1</div></div></div>
-<div class="msg light"><div class="avatar">OI</div><div class="col">
-<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>(the event sent no allowlisted fields)</div><div class="agent">✅ Agent started · <u>mira-shop ops run</u>; its Draft PR links from the run</div>
-<div class="ctx">event relay-ceiling-20261021-c3d4 · source urn:relay:prod · contract v1</div></div></div>
+<div class="h">sentry-shaped · error</div><div>TypeError: &lt;!channel&gt; total is undefined · checkout/pay</div><div class="agent">✅ New incident <code>issue/4501</code> · agent started · <u>ops run</u>; its Draft PR links from the run</div>
+<div class="ctx">event e1a2b3c4 · source urn:sentry:example · contract v1</div></div></div>
 <h2>Dark theme</h2><div class="msg dark"><div class="avatar">OI</div><div class="col">
 <div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent">✅ Agent started · <u>mira-shop ops run</u>; its Draft PR links from the run</div>
-<div class="ctx">event relay-ceiling-20261020-a1b2 · source urn:relay:prod · contract v1</div></div></div>
-<div class="msg dark"><div class="avatar">OI</div><div class="col">
+<div class="h">relay · signed-in ceiling near</div><div>120 of 150 signed-in publishes today (limit source: default)</div><div class="agent">✅ New incident <code>ceiling/bound/2026-10-20</code> · agent started · <u>ops run</u>; its Draft PR links from the run</div>
+<div class="ctx">event bound-2026-10-20-80 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div><div class="msg dark"><div class="avatar">OI</div><div class="col">
+<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">11:02</span></div>
+<div class="h">relay · signed-in ceiling full</div><div>150 of 150 signed-in publishes today (limit source: default)</div><div class="agent">➕ Joins incident <code>ceiling/bound/2026-10-20</code> (event 2) · recorded on its ops task, no new agent run · <u>first run</u></div>
+<div class="ctx">event bound-2026-10-20-100 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div><div class="msg dark"><div class="avatar">OI</div><div class="col">
 <div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent warn">⚠️ Needs action · agent NOT started: GitHub refused the dispatch (HTTP 403). Run ops-inbox setup verify; the sender's next retry can still start it.</div>
-<div class="ctx">event relay-ceiling-20261020-a1b2 · source urn:relay:prod · contract v1</div></div></div>
-<div class="msg dark"><div class="avatar">OI</div><div class="col">
-<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent warn">❓ Needs a look · agent start UNCERTAIN: GitHub did not answer in 10 s, and the inbox will not resend this event. <u>Check the runs</u></div>
-<div class="ctx">event relay-ceiling-20261020-a1b2 · source urn:relay:prod · contract v1</div></div></div>
-<div class="msg dark"><div class="avatar">OI</div><div class="col">
-<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">Setup self-test · example-owner/mira-shop</div><div>Signature verified; the dispatch App reaches only the trigger repository.</div><div class="agent">✅ <u>Self-test run</u> started; no task is filed. Captain: paste this message's link into setup verify.</div>
-<div class="ctx">event setup-selftest-7f3a91c2 · source urn:ops-inbox:setup · contract v1</div></div></div>
+<div class="h">relay · signed-in ceiling near</div><div>120 of 150 signed-in publishes today (limit source: default)</div><div class="agent warn">❓ Needs a look · agent start UNCERTAIN: GitHub did not answer in 10 s, and the inbox will not resend this event. <u>Check the runs</u></div>
+<div class="ctx">event bound-2026-10-20-80 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div>
 <h2>Phone width (390 px)</h2><div class="phone"><div class="msg light"><div class="avatar">OI</div><div class="col">
 <div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent">✅ Agent started · <u>mira-shop ops run</u>; its Draft PR links from the run</div>
-<div class="ctx">event relay-ceiling-20261020-a1b2 · source urn:relay:prod · contract v1</div></div></div>
-<div class="msg light"><div class="avatar">OI</div><div class="col">
+<div class="h">relay · signed-in ceiling near</div><div>120 of 150 signed-in publishes today (limit source: default)</div><div class="agent">✅ New incident <code>ceiling/bound/2026-10-20</code> · agent started · <u>ops run</u>; its Draft PR links from the run</div>
+<div class="ctx">event bound-2026-10-20-80 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div><div class="msg light"><div class="avatar">OI</div><div class="col">
+<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">11:02</span></div>
+<div class="h">relay · signed-in ceiling full</div><div>150 of 150 signed-in publishes today (limit source: default)</div><div class="agent">➕ Joins incident <code>ceiling/bound/2026-10-20</code> (event 2) · recorded on its ops task, no new agent run · <u>first run</u></div>
+<div class="ctx">event bound-2026-10-20-100 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div><div class="msg light"><div class="avatar">OI</div><div class="col">
 <div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">relay · signed-in ceiling near</div><div>40 of 50 signed-in publishes today (limit source: default)</div><div class="agent warn">⚠️ Needs action · agent NOT started: GitHub refused the dispatch (HTTP 403). Run ops-inbox setup verify; the sender's next retry can still start it.</div>
-<div class="ctx">event relay-ceiling-20261020-a1b2 · source urn:relay:prod · contract v1</div></div></div>
-<div class="msg light"><div class="avatar">OI</div><div class="col">
-<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">sentry-shaped · error</div><div>Error: request to payments provider failed after 3 attempts while confirming order totals for a basket with many items and a discount code applied at checkout, then the fallback path also failed becau…</div><div class="agent">✅ Agent started · <u>mira-shop ops run</u>; its Draft PR links from the run</div>
-<div class="ctx">event sentry-4472-02cd · source urn:sentry:mira-shop · contract v1</div></div></div>
-<div class="msg light"><div class="avatar">OI</div><div class="col">
-<div class="who"><b>ops-inbox</b> <span class="app">APP</span> <span class="ts">08:48</span></div>
-<div class="h">Setup self-test · example-owner/mira-shop</div><div>Signature verified; the dispatch App reaches only the trigger repository.</div><div class="agent">✅ <u>Self-test run</u> started; no task is filed. Captain: paste this message's link into setup verify.</div>
-<div class="ctx">event setup-selftest-7f3a91c2 · source urn:ops-inbox:setup · contract v1</div></div></div></div>
+<div class="h">relay · signed-in ceiling near</div><div>120 of 150 signed-in publishes today (limit source: default)</div><div class="agent warn">⚠️ Needs action · agent NOT started: GitHub refused the dispatch (HTTP 403). Run the read-back (S11); the sender's next retry can still start it.</div>
+<div class="ctx">event bound-2026-10-20-80 · source https://&lt;relay deploy&gt;/ops · contract v1</div></div></div></div>

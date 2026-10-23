@@ -1,0 +1,170 @@
+<!doctype html><meta charset="utf-8"><title>Setup output preview</title><style>body{font-family:-apple-system,Helvetica,Arial,sans-serif;margin:16px;background:#f3f3f3}
+h2{font-size:15px;margin:18px 0 6px}.note{font-size:12px;color:#444;margin:0 0 6px;max-width:720px}
+.msg{display:flex;gap:10px;padding:10px 14px;border-radius:6px;margin:6px 0;font-size:15px;line-height:1.4;max-width:720px}
+.msg.light{background:#fff;color:#1d1c1d}.msg.dark{background:#1a1d21;color:#d1d2d3}
+.avatar{width:36px;height:36px;border-radius:6px;background:#4a154b;color:#fff;font-weight:700;display:flex;align-items:center;justify-content:center;flex:none}
+.col{min-width:0;overflow-wrap:anywhere}.app{font-size:10px;background:#ddd;color:#555;padding:1px 3px;border-radius:2px}
+.dark .app{background:#333;color:#aaa}.ts{font-size:12px;color:#616061}.h{font-weight:700}
+.agent{margin-top:4px}.agent.warn{border-left:3px solid #e8912d;padding-left:6px}.agent u{color:#1264a3;text-decoration:none}.dark .agent u{color:#1d9bd1}
+.ctx{font-size:12px;color:#616061;margin-top:4px}.dark .ctx{color:#ababad}
+.phone .msg{max-width:358px}pre{background:#0d1117;color:#e6edf3;padding:12px;font-size:12px;border-radius:6px;white-space:pre-wrap;word-break:break-all;max-width:1340px}</style>
+<h2>ops-inbox setup output, proposed (DISPOSABLE; printed by setup-preview.mjs; long lines wrap as a terminal wraps them)</h2>
+<h2>setup plan</h2><pre>$ ops-inbox setup plan --project example-owner/mira-shop --host netlify
+kc-ops-inbox setup · contract v1 · &lt;project&gt; example-owner/mira-shop · &lt;trigger&gt; example-owner/mira-shop-ops-trigger · &lt;inbox&gt; https://mira-shop-ops-inbox.netlify.app/inbox
+
+1. Captain first, because apply needs their ids:
+  C1  Register the dispatch App and install it on &lt;trigger&gt; only; note its App ID and installation ID
+        open "https://github.com/settings/apps/new?name=mira-shop-ops-dispatch&amp;public=false&amp;webhook_active=false&amp;url=https://github.com/example-owner/mira-shop&amp;actions=write"
+        then Install App &gt; Only select repositories &gt; example-owner/mira-shop-ops-trigger
+  C2  Register the agent App and install it on &lt;project&gt; only; note its Client ID
+        open "https://github.com/settings/apps/new?name=mira-shop-ops-agent&amp;public=false&amp;webhook_active=false&amp;url=https://github.com/example-owner/mira-shop&amp;contents=write&amp;pull_requests=write"
+        then Install App &gt; Only select repositories &gt; example-owner/mira-shop
+
+2. Agent steps, run by: ops-inbox setup apply --yes --dispatch-app-id &lt;C1&gt; --dispatch-installation-id &lt;C1&gt; --agent-client-id &lt;C2&gt;
+   (apply is not interactive: --yes is its confirmation; without it apply prints this list and stops)
+  A1  Create &lt;trigger&gt;, private
+        gh repo create example-owner/mira-shop-ops-trigger --private --add-readme
+  A2  Commit its only workflow
+        gh api -X PUT repos/example-owner/mira-shop-ops-trigger/contents/.github/workflows/ops-event.yml -f message="add ops-event" -f content=@.ops-inbox/ops-event.yml.b64
+  A3  Create the state branch spacedock-state/ops in &lt;project&gt;
+        gh api -X POST repos/example-owner/mira-shop/git/refs -f ref=refs/heads/spacedock-state/ops -f sha=&lt;root commit of .ops-inbox/state-root&gt;
+  A4  Open the setup Draft PR (ops-gate.yml, docs/ops/README.md)
+        git push origin ops-inbox-setup
+        gh pr create -R example-owner/mira-shop --draft --head ops-inbox-setup --title "chore(ops): connect the ops inbox" --body-file .ops-inbox/setup-pr.md
+  A5  Deploy the inbox, set its non-secret settings (needs C1's ids)
+        netlify sites:create --name mira-shop-ops-inbox
+        netlify deploy --prod --site mira-shop-ops-inbox --dir .ops-inbox/site --functions .ops-inbox/site/functions
+        netlify env:set OPS_TRIGGER_REPO example-owner/mira-shop-ops-trigger --site mira-shop-ops-inbox   (also OPS_WORKFLOW, OPS_PROJECT_REPO, DISPATCH_APP_ID, DISPATCH_INSTALLATION_ID)
+  A6  Set &lt;trigger&gt;'s variables (needs C2's Client ID)
+        gh variable set OPS_PROJECT_REPO -R example-owner/mira-shop-ops-trigger --body example-owner/mira-shop
+        gh variable set OPS_AGENT_APP_CLIENT_ID -R example-owner/mira-shop-ops-trigger --body &lt;C2 Client ID&gt;
+
+3. Captain-only steps (run each yourself; setup never sees a key, secret or webhook URL):
+  C3  Store the two App keys, then delete the downloaded files
+        netlify env:set DISPATCH_APP_PRIVATE_KEY --secret --site mira-shop-ops-inbox "$(cat ~/Downloads/mira-shop-ops-dispatch.*.private-key.pem)"
+        gh secret set OPS_AGENT_APP_PRIVATE_KEY -R example-owner/mira-shop-ops-trigger &lt; ~/Downloads/mira-shop-ops-agent.*.private-key.pem
+  C4  Store the signing secret in the inbox and the producer, and the model token
+        ops-inbox secret new | tee &gt;(netlify env:set WEBHOOK_SECRET --secret --site mira-shop-ops-inbox) | &lt;producer's secret-set command&gt;
+        claude setup-token, then: gh secret set CLAUDE_CODE_OAUTH_TOKEN -R example-owner/mira-shop-ops-trigger
+  C5  Create a Slack incoming webhook for one channel and store its URL
+        netlify env:set SLACK_WEBHOOK_URL --secret --site mira-shop-ops-inbox   (paste the URL when asked)
+  C6  Apply the four rulesets (files written by setup apply)
+        gh api -X POST repos/example-owner/mira-shop/rulesets --input .ops-inbox/ruleset-main.json
+        gh api -X POST repos/example-owner/mira-shop/rulesets --input .ops-inbox/ruleset-ops-branches.json
+        gh api -X POST repos/example-owner/mira-shop/rulesets --input .ops-inbox/ruleset-state-branch.json
+        gh api -X POST repos/example-owner/mira-shop-ops-trigger/rulesets --input .ops-inbox/ruleset-trigger-main.json
+  C7  Review and merge the setup PR
+        gh pr view ops-inbox-setup -R example-owner/mira-shop --web
+
+4. ops-inbox setup verify
+
+Nothing was changed. Exit 0.</pre>
+<h2>setup apply without --yes</h2><pre>$ ops-inbox setup apply --project example-owner/mira-shop --host netlify
+kc-ops-inbox setup · contract v1 · &lt;project&gt; example-owner/mira-shop · &lt;trigger&gt; example-owner/mira-shop-ops-trigger · &lt;inbox&gt; https://mira-shop-ops-inbox.netlify.app/inbox
+
+Would run A1 A2 A3 A4 A5 A6 (see setup plan). Nothing was changed.
+Add --yes to run them. Exit 2.</pre>
+<h2>setup apply, first run (one step failed, one waiting)</h2><pre>$ ops-inbox setup apply --yes --dispatch-app-id 1408871 --dispatch-installation-id 93120455 --project example-owner/mira-shop --host netlify
+kc-ops-inbox setup · contract v1 · &lt;project&gt; example-owner/mira-shop · &lt;trigger&gt; example-owner/mira-shop-ops-trigger · &lt;inbox&gt; https://mira-shop-ops-inbox.netlify.app/inbox
+
+  step  verdict  action        result
+  A1    PASS     created       private
+  A2    PASS     committed     1 workflow
+  A3    PASS     created       spacedock-state/ops
+  A4    PASS     opened        Draft PR #12
+  A5    FAIL     not deployed  netlify deploy: 'Not logged in' (run: netlify login)
+  A6    WAIT     skipped       needs --agent-client-id from C2
+
+wrote .ops-inbox/ (the four ruleset files C6 applies, ops-event.yml, setup-pr.md)
+4 of 6 agent steps done; a rerun changes only what differs.
+next: fix A5's login, finish C2, then rerun the same command with --agent-client-id. Exit 1.</pre>
+<h2>setup apply, rerun (idempotent)</h2><pre>$ ops-inbox setup apply --yes --dispatch-app-id 1408871 --dispatch-installation-id 93120455 --agent-client-id Iv23liExample --project example-owner/mira-shop --host netlify
+kc-ops-inbox setup · contract v1 · &lt;project&gt; example-owner/mira-shop · &lt;trigger&gt; example-owner/mira-shop-ops-trigger · &lt;inbox&gt; https://mira-shop-ops-inbox.netlify.app/inbox
+
+  step  verdict  action        result
+  A1    PASS     unchanged     already private
+  A2    PASS     unchanged     ops-event.yml matches
+  A3    PASS     unchanged     spacedock-state/ops present
+  A4    PASS     unchanged     Draft PR #12 open
+  A5    PASS     deployed      https://mira-shop-ops-inbox.netlify.app/inbox
+  A6    PASS     set           2 of 2 variables
+
+wrote .ops-inbox/ (the four ruleset files C6 applies, ops-event.yml, setup-pr.md)
+6 of 6 agent steps done; a rerun changes only what differs.
+next: Captain-only steps C3 to C7 (see setup plan), then ops-inbox setup verify. Exit 0.</pre>
+<h2>setup verify, all PASS</h2><pre>$ ops-inbox setup verify --slack-permalink https://example.slack.com/archives/C0EXAMPLE/p1792665727000100 --project example-owner/mira-shop --host netlify
+kc-ops-inbox setup · contract v1 · &lt;project&gt; example-owner/mira-shop · &lt;trigger&gt; example-owner/mira-shop-ops-trigger · &lt;inbox&gt; https://mira-shop-ops-inbox.netlify.app/inbox
+
+  step  verdict  what is read back                                         read by                                                         observed
+  A1    PASS     trigger repository is private                             gh api repos/&lt;trigger&gt;                                          private: true
+  A2    PASS     trigger repository: 1 workflow, 1 branch                  gh api repos/&lt;trigger&gt;/actions/workflows                        1 workflow, 1 branch
+  A3    PASS     state branch spacedock-state/ops exists                   gh api repos/&lt;project&gt;/branches/spacedock-state%2Fops           present
+  A5    PASS     inbox answers, contract v1, settings present              GET &lt;inbox&gt;/health                                              5 of 5 settings present
+  A6    PASS     trigger variables set                                     gh variable list -R &lt;trigger&gt;                                   2 of 2
+  C1a   PASS     dispatch token: actions write, 1 repository               self-test: inbox token mint                                     actions:write, &lt;trigger&gt; only
+  C1b   PASS     dispatch App cannot reach the project                     self-test: mint for &lt;project&gt;                                   refused (422), as required
+  C2    PASS     agent token: contents, PRs, 1 repository                  self-test run: create-github-app-token                          contents+PR write, &lt;project&gt; only
+  C3    PASS     App keys stored (names only)                              gh secret list; &lt;inbox&gt;/health                                  2 of 2
+  C4a   PASS     signing secret matches                                    self-test: signed POST &lt;inbox&gt;                                  accepted (202)
+  C4b   PASS     model token stored (name only)                            gh secret list -R &lt;trigger&gt;                                     present
+  C5a   PASS     Slack webhook accepted the self-test notice               self-test: webhook reply                                        ok
+  C5b   PASS     self-test notice seen in the channel                      Captain: --slack-permalink &lt;link&gt;                               posted 10:42:07Z
+  C6    PASS     4 rulesets match the files, no bypass actor               gh api repos/&lt;project|trigger&gt;/rulesets                         4 of 4
+  C7    PASS     setup PR merged: ops-gate.yml on default branch (also A4)  gh api repos/&lt;project&gt;/contents/.github/workflows/ops-gate.yml  present
+
+PASS read back as set · FAIL read back but wrong · ERROR could not be read · WAIT needs the Captain
+
+15 PASS, 0 FAIL, 0 ERROR, 0 WAIT of 15.
+Setup complete: a signed event can reach Slack and wake only this project's ops workflow. Exit 0.</pre>
+<h2>setup verify, FAIL, ERROR and WAIT rows</h2><pre>$ ops-inbox setup verify --project example-owner/mira-shop --host netlify
+kc-ops-inbox setup · contract v1 · &lt;project&gt; example-owner/mira-shop · &lt;trigger&gt; example-owner/mira-shop-ops-trigger · &lt;inbox&gt; https://mira-shop-ops-inbox.netlify.app/inbox
+
+  step  verdict  what is read back                                         read by                                                         observed
+  A1    PASS     trigger repository is private                             gh api repos/&lt;trigger&gt;                                          private: true
+  A2    PASS     trigger repository: 1 workflow, 1 branch                  gh api repos/&lt;trigger&gt;/actions/workflows                        1 workflow, 1 branch
+  A3    PASS     state branch spacedock-state/ops exists                   gh api repos/&lt;project&gt;/branches/spacedock-state%2Fops           present
+  A5    ERROR    inbox answers, contract v1, settings present              GET &lt;inbox&gt;/health                                              could not read: &lt;inbox&gt; did not answer in 10 s
+                 next: check the site is deployed (A5), then verify again
+  A6    PASS     trigger variables set                                     gh variable list -R &lt;trigger&gt;                                   2 of 2
+  C1a   PASS     dispatch token: actions write, 1 repository               self-test: inbox token mint                                     actions:write, &lt;trigger&gt; only
+  C1b   PASS     dispatch App cannot reach the project                     self-test: mint for &lt;project&gt;                                   refused (422), as required
+  C2    PASS     agent token: contents, PRs, 1 repository                  self-test run: create-github-app-token                          contents+PR write, &lt;project&gt; only
+  C3    PASS     App keys stored (names only)                              gh secret list; &lt;inbox&gt;/health                                  2 of 2
+  C4a   PASS     signing secret matches                                    self-test: signed POST &lt;inbox&gt;                                  accepted (202)
+  C4b   PASS     model token stored (name only)                            gh secret list -R &lt;trigger&gt;                                     present
+  C5a   PASS     Slack webhook accepted the self-test notice               self-test: webhook reply                                        ok
+  C5b   WAIT     self-test notice seen in the channel                      Captain: --slack-permalink &lt;link&gt;                               no message link given
+                 next: open the self-test notice in Slack, Copy link, rerun verify with --slack-permalink &lt;link&gt;
+  C6    FAIL     4 rulesets match the files, no bypass actor               gh api repos/&lt;project|trigger&gt;/rulesets                         main-protect has 1 bypass actor, expected 0
+                 next: remove the bypass actor in &lt;project&gt; Settings &gt; Rules &gt; Rulesets, then verify again
+  C7    PASS     setup PR merged: ops-gate.yml on default branch (also A4)  gh api repos/&lt;project&gt;/contents/.github/workflows/ops-gate.yml  present
+
+PASS read back as set · FAIL read back but wrong · ERROR could not be read · WAIT needs the Captain
+
+12 PASS, 1 FAIL, 1 ERROR, 1 WAIT of 15.
+Setup is not complete. Exit 1.</pre>
+<h2>setup verify, only the Slack step waiting</h2><pre>$ ops-inbox setup verify --project example-owner/mira-shop --host netlify
+kc-ops-inbox setup · contract v1 · &lt;project&gt; example-owner/mira-shop · &lt;trigger&gt; example-owner/mira-shop-ops-trigger · &lt;inbox&gt; https://mira-shop-ops-inbox.netlify.app/inbox
+
+  step  verdict  what is read back                                         read by                                                         observed
+  A1    PASS     trigger repository is private                             gh api repos/&lt;trigger&gt;                                          private: true
+  A2    PASS     trigger repository: 1 workflow, 1 branch                  gh api repos/&lt;trigger&gt;/actions/workflows                        1 workflow, 1 branch
+  A3    PASS     state branch spacedock-state/ops exists                   gh api repos/&lt;project&gt;/branches/spacedock-state%2Fops           present
+  A5    PASS     inbox answers, contract v1, settings present              GET &lt;inbox&gt;/health                                              5 of 5 settings present
+  A6    PASS     trigger variables set                                     gh variable list -R &lt;trigger&gt;                                   2 of 2
+  C1a   PASS     dispatch token: actions write, 1 repository               self-test: inbox token mint                                     actions:write, &lt;trigger&gt; only
+  C1b   PASS     dispatch App cannot reach the project                     self-test: mint for &lt;project&gt;                                   refused (422), as required
+  C2    PASS     agent token: contents, PRs, 1 repository                  self-test run: create-github-app-token                          contents+PR write, &lt;project&gt; only
+  C3    PASS     App keys stored (names only)                              gh secret list; &lt;inbox&gt;/health                                  2 of 2
+  C4a   PASS     signing secret matches                                    self-test: signed POST &lt;inbox&gt;                                  accepted (202)
+  C4b   PASS     model token stored (name only)                            gh secret list -R &lt;trigger&gt;                                     present
+  C5a   PASS     Slack webhook accepted the self-test notice               self-test: webhook reply                                        ok
+  C5b   WAIT     self-test notice seen in the channel                      Captain: --slack-permalink &lt;link&gt;                               no message link given
+                 next: open the self-test notice in Slack, Copy link, rerun verify with --slack-permalink &lt;link&gt;
+  C6    PASS     4 rulesets match the files, no bypass actor               gh api repos/&lt;project|trigger&gt;/rulesets                         4 of 4
+  C7    PASS     setup PR merged: ops-gate.yml on default branch (also A4)  gh api repos/&lt;project&gt;/contents/.github/workflows/ops-gate.yml  present
+
+PASS read back as set · FAIL read back but wrong · ERROR could not be read · WAIT needs the Captain
+
+14 PASS, 0 FAIL, 0 ERROR, 1 WAIT of 15.
+Setup is not complete. Exit 1.</pre>

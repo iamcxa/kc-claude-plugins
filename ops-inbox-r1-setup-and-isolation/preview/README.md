@@ -1,17 +1,16 @@
-# Preview: the ops-inbox setup command and the Slack notice
+# Preview: r1 cycle 2, the runbook and read-back, the Slack notice, and the ops record
 
-DISPOSABLE. A sketch of the proposed output so the design can be run and looked at before anything is built. It is not the product and not a base for the implementation. It uses a fictional project (`example-owner/mira-shop`), calls no network, reads no secret and changes nothing outside this folder.
+DISPOSABLE. A sketch of what a person sees, so the re-cut design can be run and looked at before anything is built. It is not the product and not a base for the implementation. It uses relay (`spacedock-dev/subspace-relay`, the dogfood project) with a fictional trigger repository, inbox site and event times; the three ADR reference blocks in the record are real (read-only from relay's clone at origin/main `485306242b80`, probe P5). It calls no network, reads no secret and changes nothing outside this folder.
 
 Needs: node 20 or later. Run from this folder:
 
-    node setup-preview.mjs plan               # exit 0: every step, who does it, the exact command
-    node setup-preview.mjs apply noyes        # exit 2: without --yes apply only lists what it would run
-    node setup-preview.mjs apply first        # exit 1: one agent step failed, one waits on a Captain step
-    node setup-preview.mjs apply rerun        # exit 0: rerun changes only what differs
-    node setup-preview.mjs verify ok          # exit 0: every step read back
-    node setup-preview.mjs verify failed      # exit 1: a FAIL, an ERROR and the Slack step waiting
-    node setup-preview.mjs verify waiting     # exit 1: only the Slack step waiting
-    node setup-preview.mjs slack started      # the Slack payload (also: refused, retried, uncertain, selftest, long, sentry, longtext, nofields)
-    node setup-preview.mjs html               # rewrites slack.html and terminal.html from the same text
+    node r1-preview.mjs runbook              # exit 0: the written setup runbook, S1 to S11, owner and exact command per step
+    node r1-preview.mjs readback ok          # exit 0: every read-back row PASS
+    node r1-preview.mjs readback failed      # exit 1: a FAIL, an ERROR and the Slack row waiting
+    node r1-preview.mjs slack opened         # the Block Kit payload (also: joined, other, refused, uncertain, selftest, escaped)
+    node r1-preview.mjs record joined        # the ops record in the Draft PR (also: opened)
+    node r1-preview.mjs html                 # rewrites slack.html, terminal.html and record.html from the same text
 
-Pictures: `preview-slack.png` (slack.html: nine notice states in light, four in dark, four at phone width) and `preview-setup.png` (terminal.html: plan, three apply runs, three verify runs). Both were rendered on 2026-10-23, after the second design review's cheap fixes, with `agent-browser screenshot --full` (the browser CLI the repository's e2e-pipeline uses), at 900 px and 1400 px wide. The Slack pictures are a local mock of Slack's look; Slack draws the real message from the Block Kit payload `slack <state>` prints.
+Pictures: `preview-slack.png` (slack.html: seven notices light, three dark, three at phone width, 900 px), `preview-record.png` (record.html: the record as opened, after a joined event, dark, phone width, 900 px) and `preview-setup.png` (terminal.html: runbook and two read-back runs, 1400 px). Rendered on 2026-10-23 with `agent-browser screenshot --full`, the browser CLI the repository's e2e-pipeline uses.
+
+`cycle-1/` holds the attempt-1 previews of the setup command (plan, apply, verify), which amendment 1 withdrew; they are context, not under review.

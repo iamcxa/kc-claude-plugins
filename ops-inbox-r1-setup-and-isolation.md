@@ -72,9 +72,6 @@ Captain's words:
 **AC-1**: Contract v1 validates the relay-shaped and Sentry-shaped fixtures and rejects a fixture with a missing attribute, a bad signature or a field outside the allowlist.
 Verified by: the validator's output on each fixture, with exit codes.
 
-**AC-2**: On a scratch project, the setup command completes the agent-doable steps, prints each Captain-only step with its exact command, and reports every step as verified by read-back.
-Verified by: one full setup run log on a scratch project, and the read-back of each created resource.
-
 **AC-3**: The inbox's credential starts the project's ops workflow and is refused when it tries to start any other workflow in that repository.
 Verified by: one accepted dispatch and one refused dispatch with the same credential, against a repository holding a second workflow with secrets.
 
@@ -83,6 +80,27 @@ Verified by: the Slack message with its time, the task and Draft PR, the gate re
 
 **AC-5**: The inbox core passes the same tests under the Netlify adapter and under a second adapter or plain Node harness.
 Verified by: both test runs and the core's import list.
+
+**AC-6**: The axis ADR lands in kc-claude-plugins `docs/adr/` in the kc-adr template under the number FO reserves, and its `**Words:**` lines quote the Captain's two answers of 2026-10-23 verbatim. Amended by Captain, amendment 1.
+Verified by: `python3 kc-adr/scripts/adr_lint.py docs/adr --require <NNNN>` exit 0 at the candidate, and each `**Words:**` quote equal character for character to the answer in `asked-day2-axis-2026-10-23.md` and to the `Captain:` line of amendment 1.
+
+**AC-7**: The written setup runbook gives every step its owner and exact command, and the read-back script reports each step PASS, FAIL, ERROR or WAIT from the live resources and exits 0 only when every row passes. Amended by Captain, amendment 1.
+Verified by: the read-back output on relay with every row PASS and each row's raw read-back, and one run with one step not done reporting that row not PASS and exit 1.
+
+**AC-8**: The inbox's credential starts the ops workflow in the project's trigger repository, which holds no other workflow, and is refused when it tries to start or re-run a workflow in the project repository, which holds a second workflow with secrets. Amended by Captain, amendment 1; proposed to supersede AC-3.
+Verified by: the read-back self-test's calls (dispatch of the trigger workflow answered 200 with a run id; dispatch of a project workflow refused; re-run of a project run refused; token mint for the project refused), `gh api repos/<trigger>/actions/workflows --jq .total_count` printing `1`, and the project's run list unchanged.
+
+**AC-9**: Two signed events with one source and subject and different ids give one ops task holding both events, one Draft PR, one agent run, and one Slack notice each (New incident, then Joins incident); an event with another subject gives a second task; a resent copy of an accepted event gives no notice, task or run. Amended by Captain, amendment 1.
+Verified by: the inbox log line per event id, the task and event files on `spacedock-state/ops`, the open `ops/*` pull requests, the trigger runs and which of them ran the First Officer, and the Slack messages.
+
+**AC-10**: The ops record's options cite the project's ADRs by reference block (repository, path, full commit, sha256 digest, status), read by kc-adr's read-adr rules; the citation check passes every block of the record and refuses a block with a wrong digest, a missing path, a missing commit or an ADR not Accepted. Amended by Captain, amendment 1.
+Verified by: the record on the live incident's Draft PR holding at least one block, the check's output on it (exit 0), and its output on four copies each carrying one of the four faults (exit 1 with the matching reason).
+
+**AC-11**: A signed event produces one Slack message seen in the channel and one ops task on the state branch whose recommendation is the record file on an ops/* branch with a Draft PR; after the Captain's review, the gate is recorded with his words, the time from the event's arrival to the Draft PR and whether his review approved the recommendation, and his approval still stands on the PR. Amended by Captain, amendment 1; proposed to supersede AC-4.
+Verified by: the Slack message link with its time, the task and the Draft PR (`draft: true`, author the agent App), the gate commit on `spacedock-state/ops` with `by: person:captain`, the review id and the two measures, and `gh api repos/<project>/pulls/<n>/reviews` showing his review `APPROVED` on an unchanged head.
+
+**AC-12**: One event emitted by relay's own code on a relay deploy, not by a fixture or a send script, travels the path of AC-9 to AC-11 to a recorded gate. Amended by Captain, amendment 1.
+Verified by: relay's function log line for the event id, the inbox log line for the same id, and AC-11's evidence for that id.
 
 ## FO alignment
 
@@ -99,36 +117,67 @@ Captain: 「同意」 (chat, 2026-10-23), after 「對，這樣可以」 to the 
 Asked: 「照這樣做嗎？具體是：把現在 r1 的 ideation 退回；第一件事寫這份主軸 ADR；再照優先順序重擬 r1：聚合、帶脈絡的診斷、真的接上 relay 放前面，設定自動化延後。」
 Supersedes: AC-2
 Design: the ideation design of attempt 1 (## Design) is redone around the confirmed axis.
+Superseded text:
+
+**AC-2**: On a scratch project, the setup command completes the agent-doable steps, prints each Captain-only step with its exact command, and reports every step as verified by read-back.
+Verified by: one full setup run log on a scratch project, and the read-back of each created resource.
 
 ## Design
 
+Cycle 2 (2026-10-23), after amendment 1. Kept from attempt 1, as the Captain asked: contract v1, the trigger-repository isolation, the state-branch gate record. Redone: everything else, ordered by the confirmed axis (`asked-day2-axis-2026-10-23.md`). `## Scope`, the title and `Visible change:` are not edited here; the re-cut below is the proposal for the next ideation gate.
+
+### Re-cut proposal (for the next ideation gate)
+
+**Proposed title:** A relay event becomes one decision an agent has prepared: the Captain hears at once, later events of the same incident join its ops task, the options cite relay's ADRs, and the inbox can start only the project's ops workflow
+
+**Proposed Scope**, each line tagged with the Captain's priority number from the axis:
+- First deliverable: the axis ADR in kc-claude-plugins `docs/adr/`, kc-adr format, his words (AC-6).
+- Contract v1 (2): CloudEvents 1.0 and Standard Webhooks signing, an allowlisted field set, the dedupe key `source` + `id`, the incident key `source` + `subject`, a version; validator and fixtures (AC-1).
+- Isolation (0): the inbox's credential starts workflows only in the project's trigger repository, which holds one workflow (AC-8).
+- Aggregation (2): the first event of an incident opens one ops task and starts the agent; a later event of the same incident joins that task and starts no agent (AC-9).
+- ADR-aware diagnosis (1, 5): the First Officer reads the project's ADRs by kc-adr's read-adr rules and cites them by reference block in its options; a citation check verifies every block (AC-10).
+- Person and agent, record and gate (1, 3, 4): one Slack notice per event; one ops task on `spacedock-state/ops`, one record file and Draft PR on `ops/<incident>`; the gate recorded from the Captain's GitHub review with his words and the axis's two measures (AC-11).
+- Setup (8, deferred): a written runbook plus a read-back script, no setup automation (AC-7).
+- Dogfood: one event emitted by relay's own code, end to end (AC-12). Relay writes its emitter in a relay task against contract v1.
+- Platform-neutral core: imports only `node:crypto`; the second adapter is the first cut (D10, AC-5).
+- Non-goals (r2 or later): live conversation with the agent, a UI, dot and other response adapters (6, 7); re-running the agent for a joined event (D8); raise-from-link; acting on the decision and archiving; Sentry or qnow live; relay production (D9); setup automation; guaranteed delivery; Spacedock gate-actor authentication (upstream).
+- Budget: 3 days as approved; this design estimates 3.5 with the D10 cut (see Estimate), which is the stop condition "the estimate exceeds the budget".
+- Stop conditions: kept from `## Scope`, plus: relay's emitter is not on a relay deploy when AC-12 is due.
+
+**Criteria:** amendment 1 supersedes AC-2. AC-6 to AC-12 are the replacements and additions. AC-8 restates AC-3 and AC-11 restates AC-4 with the coupled wording D2 and D3 carried in attempt 1; amendment 1's `Supersedes:` line names only AC-2, so AC-3 and AC-4 stay declared until the Captain's ruling names them.
+
+**What r1 needs from relay, and when** (relay's task, written by relay against contract v1; this task edits nothing in relay):
+- Emit `relay.capacity.ceiling` at 80% and at full, per tier (signed-in and anonymous): `id` `<tier>-<day>-<80|100>`, so a repeat of one crossing is a duplicate; `subject` `ceiling/<tier>/<day>`; `data` only `v, event, at, day, count, limit, limitSource` (POC1's field set, which holds no account identifier, as relay ADR 0049 requires; the removed notice's account concentration is not asked for). Sign with Standard Webhooks; POST to the inbox URL; a failed send is logged and never blocks a publish.
+- Carry the setup PR's two files (`ops-gate.yml`, `docs/ops/README.md`) from the package, so what lands in relay goes through relay's own review.
+- When: relay can start once contract v1 lands (day 1); the emitter must be on a relay deploy by day 3 for AC-12. Relay ADR 0060 says it reopens "when `kc-ops-inbox` asks for the notice"; this list is that ask, and relay's ruling on it is relay's.
+
 ### PRFAQ
 
-**kc-ops-inbox r1: one command connects a project to its own ops inbox; a signed event reaches the Captain on Slack and an agent's recommendation on a Draft PR; the inbox can start nothing but that project's ops workflow.**
+**kc-ops-inbox r1: when relay's capacity ceiling fills, the Captain hears at once, and the Draft PR he opens already holds an agent's recommendation that cites relay's own rulings; later events of the same day join that one task.**
 
-An operator runs `ops-inbox setup` for a project. The command does every step an agent may do, prints each step only the Captain may do with its exact command, and then reads every step back; it exits 0 only when all of them check out. From then on, a producer such as relay sends one signed CloudEvent. The inbox checks the signature and the contract, posts one Slack notice saying whether the agent started, and starts the project's ops workflow. A First Officer on a GitHub-hosted runner files one ops task with one recommendation and opens a Draft PR. The Captain decides by his GitHub review; a job records his words as the gate without touching the PR branch, so the same approval still stands for the merge. The inbox's credential can start workflows in exactly one place, the project's trigger repository, which holds only the ops trigger workflow.
+A relay deploy sends one signed CloudEvent when a ceiling reaches 80% and another when it is full. The inbox checks the signature and the contract, drops a resent event, and asks whether the event's incident (its source and subject) is new. A new incident starts the project's ops workflow through the trigger repository and posts "New incident" on Slack; a later event of the same incident posts "Joins incident", starts no agent, and is recorded on the incident's task and as a comment on its Draft PR. For a new incident, a First Officer on a GitHub-hosted runner reads relay's ADRs at the commit it checked out, writes a diagnosis, two or three options and one recommendation, and cites each ruling it relied on by repository, path, commit and digest; a check verifies every citation before the Draft PR opens. The Captain decides by his GitHub review; a job records his words, how long the recommendation took and whether he approved it, on the state branch, so his approval stands for the merge. Each decision recorded this way is the precedent the next one can lean on, which is the axis the Captain confirmed on 2026-10-23.
 
 FAQ
-- **Why a separate trigger repository?** GitHub has no per-workflow dispatch permission. Actions write is repository-wide and also re-runs any past run and disables workflows (probe P1 below). The only boundary GitHub enforces on an App token is the list of repositories it is installed on, so the inbox's App is installed on a repository that holds one workflow.
-- **What does the Captain still do by hand?** Seven steps: register and install two Apps (one click each through a prefilled link), store two keys, the signing secret and the model token, create the Slack webhook, apply four rulesets, merge the setup PR. Setup prints each command and checks each result.
-- **Is delivery guaranteed?** No. r1 is at-most-once for the agent (POC2's choice; guaranteed delivery is a non-goal). Every outcome is visible: the Slack notice says started, not started, or uncertain. See D1.
-- **Does it depend on Netlify?** No. The core imports only `node:crypto` and runs under a Netlify adapter and a plain Node server adapter with the same tests (AC-5; ADR 0018 is the same one-core-two-adapters ruling for the journey server).
-- **What can the agent do?** As POC1 proved: push `ops/*` and the state branch, open Draft PRs; not push the default branch, merge, approve its own PR, edit workflows or change rulesets.
-- **What does it cost per event?** Not measured for r1. POC1: about 2 runner minutes and an imputed 0.74 USD for one FO run; POC2: 1.8 s from arrival to dispatch.
+- **Why is the setup a runbook now?** The Captain deferred setup automation (amendment 1). The runbook lists eleven steps with owner and command; a read-back script proves each one and exits 0 only when all pass. Seven steps stay Captain-only (Apps, keys, secrets, Slack webhook, rulesets, merging the setup PR).
+- **What makes two events one incident?** The same `source` and `subject`. The producer sets `subject` because it knows the thing the event is about (relay: the tier and UTC day; Sentry: the issue). Probe P3 compared four keys on one day of events; only this one grouped them the way the remedies group (see Aggregation).
+- **Does the agent rethink when the full event follows the near one?** Not in r1. The joined event is recorded and shown on the PR with "the recommendation above was written before this event" (D8).
+- **Can the agent invent an ADR?** It can write one into its record, but the citation check refuses any block whose path, commit, digest or status does not hold (probe P5: four faults, four refusals). The check cannot tell whether the agent applied a real ruling correctly; the Captain's review does.
+- **Is relay production connected?** No. The live event comes from a relay deploy preview with a lowered ceiling (D9); production adds an always-on service and a production secret, which returns to profile selection.
+- **What does an event cost?** Not measured for r1. POC1: about 2 runner minutes and an imputed 0.74 USD per First Officer run; a joined event runs no model.
 
 ### How an event travels
 
 ```mermaid
 sequenceDiagram
     autonumber
-    participant P as Producer
+    participant P as Relay deploy (producer)
     participant I as Inbox (core and host adapter)
     participant S as Slack channel
     participant T as Trigger repository (ops-event run)
-    participant R as Project repository
+    participant R as Project repository (relay)
     participant C as Captain
     participant G as ops-gate job (project repository)
-    P->>I: POST signed CloudEvent with Standard Webhooks headers
+    P->>I: POST signed CloudEvent with source, id, subject, type and data
     alt signature missing, wrong or older than 300 s
         I-->>P: 401, nothing claimed or started (stop)
     else not contract v1: missing attribute or a field outside the allowlist
@@ -136,31 +185,42 @@ sequenceDiagram
     else source and id already claimed
         I-->>P: 200 duplicate, no notice, no run (stop)
     else new event
-        I->>I: claim source and id (write only if new)
-        I->>T: workflow_dispatch ops-event.yml with the dispatch App token (actions write, trigger repository only)
+        I->>I: claim source and id, then claim the incident (source and subject) if it is new
+        I->>T: workflow_dispatch ops-event.yml, mode open for a new incident or join for an existing one
         alt GitHub refused
-            I->>I: release the claim
-            I->>S: one notice for this outcome: agent NOT started
+            I->>I: release the claims this event made
+            I->>S: notice: agent NOT started
             I-->>P: 502, the sender's retry may start it
         else no answer within 10 s
-            I->>S: one notice for this outcome: agent start UNCERTAIN, the inbox will not resend
-            I-->>P: 504, claim kept (at-most-once)
-        else run created
-            I->>S: one notice for this outcome: agent started, with the run link
+            I->>S: notice: start UNCERTAIN, the inbox will not resend
+            I-->>P: 504, claims kept (at-most-once)
+        else run created in mode join
+            I->>S: notice: Joins incident, no new agent run
             I-->>P: 202
-            T->>T: validate the event again, mint the agent token for the project repository only
-            T->>R: create ref ops/<id> from the default branch
-            alt ref already exists
-                T->>T: exit as a duplicate run (stop)
+            T->>T: wait for the incident's opening run to finish
+            alt the incident's Draft PR is open
+                T->>R: event file on spacedock-state/ops and a comment on the Draft PR (stop)
+            else the opening run failed, or the PR is merged or closed
+                T->>R: open a new incident the same way as mode open below
+            end
+        else run created in mode open
+            I->>I: record the run id on the incident
+            I->>S: notice: New incident, agent started, with the run link
+            I-->>P: 202
+            T->>R: create ops/<incident>, the task and its first event file on spacedock-state/ops
+            alt ref ops/<incident> already exists
+                T->>R: treat the event as joined: event file and PR comment (stop)
             else ref created
-                T->>R: First Officer triage: task and prepared gate on spacedock-state/ops, record file on ops/<id>, Draft PR
+                T->>R: First Officer triage: read docs/adr at the checked-out commit, diagnosis, options citing ADRs, one recommendation
+                T->>T: citation check on every reference block
+                T->>R: record file with each block's check result on ops/<incident>, Draft PR
                 C->>R: GitHub review of the Draft PR
                 R->>G: pull_request_review event
                 alt reviewer is not the Captain, or the review is not on the PR head
                     G->>G: no-op, the gate stays open (stop)
                 else the Captain's review on the PR head
-                    G->>R: gate record with his words, committed to spacedock-state/ops only
-                    Note over R: the PR head does not move, so his approval stands and also satisfies the merge rule
+                    G->>R: gate record with his words, time to recommendation, approved or not; committed to spacedock-state/ops only
+                    Note over R: the PR head does not move, so his approval stands and satisfies the merge rule
                 end
             end
         end
@@ -171,138 +231,195 @@ sequenceDiagram
 
 ```mermaid
 flowchart TD
-    A[setup plan: every step, its owner and exact command; changes nothing] --> B[setup apply: agent steps A1 to A6; each reads back before it writes; a step waiting on a Captain step is skipped and named]
-    B --> C[Captain runs the printed steps C1 to C7: two Apps, keys and secrets, Slack webhook, four rulesets, merge the setup PR]
-    C --> B2[setup apply again for steps that waited]
-    B2 --> E[setup verify: read back every step, then one signed self-test through the inbox]
-    E --> F{every step verified?}
+    A[Captain opens the runbook] --> B[steps S1 to S10 in order; an agent may run S1, S7 and S8; S2 to S6, S9 and S10 are Captain-only]
+    B --> E[S11: read-back script reads every step back and sends one signed self-test event]
+    E --> F{every row PASS?}
     F -- yes --> G[exit 0: project connected]
-    F -- a read-back failed --> H[exit 1: names the step and its fix] --> C
-    F -- Slack visibility not yet confirmed --> J[exit 1: asks for the notice's link] --> K[Captain reruns verify with --slack-permalink] --> E
+    F -- a FAIL or ERROR row --> H[exit 1: the row names its step and the fix] --> B
+    F -- only the Slack row waits --> J[exit 1: asks for the self-test notice's link] --> K[Captain reruns the read-back with --slack-link] --> E
 ```
+
+### Axis ADR draft (AC-6)
+
+Lands in kc-claude-plugins `docs/adr/` as the first implementation commit; FO reserves the number; file short title `every-ops-event-becomes-a-prepared-decision`. Draft, in the kc-adr template:
+
+> # NNNN. Every ops event becomes a decision an agent has prepared, and each decision makes the next easier to hand to an agent
+>
+> Date: 2026-10-23
+>
+> ## Status
+>
+> Accepted
+>
+> ## Context
+>
+> kc-ops-inbox began from the Captain's outcome of 2026-10-19: 「拉出一個ops inbox抽象，確保必要資訊可以一次到位到inbox 變成一個聚合事件，然後後面可以投影到slack，或是投影給agent … 目的是人要知道，然後agent要同步進行解決方案呈現，要有一個repo內的ops workflow，來按照sd流程進行排查」. Two POCs closed PASSED (`hermes-ops-fo-exe-dev-poc`, 2026-10-21; `inbox-exactly-once-delivery-poc`, 2026-10-23). The first r1 design centred on a one-step setup command and permission isolation. Before its gate the First Officer proposed a day-2 axis and a ten-item priority: Netlify and Sentry already notify, so the value is not a faster alert. The Captain confirmed it, and r1 was sent back and re-cut around it (task `ops-inbox-r1-setup-and-isolation`, amendment 1).
+>
+> ## Decision
+>
+> **Words:** 「對，這樣可以，這可以使用 kc-adr 紀錄嗎？還是用 dev2 adr 紀錄？」 — Captain, 2026-10-23, in chat, to the First Officer's axis and priority (verbatim question in the task folder, `asked-day2-axis-2026-10-23.md`)
+> **Words:** 「同意」 — Captain, 2026-10-23, in chat, to 「照這樣做嗎？具體是：把現在 r1 的 ideation 退回；第一件事寫這份主軸 ADR；再照優先順序重擬 r1：聚合、帶脈絡的診斷、真的接上 relay 放前面，設定自動化延後。」
+>
+> **Options considered:**
+> - each ops event reaches the person as a decision an agent has already prepared, and each decision makes the next easier to hand to an agent (chosen)
+> - a faster alert: Netlify and Sentry already notify
+> - setup automation and permission isolation first (the attempt-1 r1 focus, 2026-10-23)
+>
+> **Recommended:** the axis and the priority order, as the First Officer proposed them.
+>
+> kc-ops-inbox work is ordered by this priority, highest first: 0 (precondition) the platform limits the agent's authority, so it cannot push the default branch or merge; 1 the agent investigates at the same time and presents a solution; 2 the necessary information arrives complete and the events of one matter aggregate into one; 3 the person knows at once; 4 every step is recorded in the repository's ops workflow, with the Captain's words; 5 decisions connect to kc-decision-log or the project's ADRs; 6 more response adapters (dot, a Netlify agent and others); 7 live streaming, live conversation with the agent, the simplest UI; 8 independent deployment per project and a generic flow with per-project configuration; 9 versioned evolution such as ops and ops2. A release does not take a lower item at the cost of a higher one. Progress is measured by two numbers: the time from an event to a recommendation the person can decide on directly, and the share of the person's decisions that follow the agent's recommendation.
+>
+> ## Consequences
+>
+> Easier: deciding what a release takes, and turning each recorded decision into precedent. Harder: setup stays a written runbook with Captain-only steps until item 8 is taken. Not built: kc-decision-log; any decision the agent takes alone, which needs its own ruling (kc-claude-plugins ADR 0011 governs delegation to the First Officer). Reopen when the Captain reorders the items, or when the second measure is high enough that he asks for delegation.
+
+The two `**Words:**` lines quote his answers verbatim; the priority list is rendered in English from the First Officer's table, which the task folder holds verbatim in Chinese. His question 「這可以使用 kc-adr 紀錄嗎？還是用 dev2 adr 紀錄？」 was answered by his asks in the gate reason: kc-adr format in kc-claude-plugins `docs/adr`.
 
 ### Contract v1 (AC-1)
 
-One module, `kc-ops-inbox/contract/`, used by the validator CLI, the inbox core and the trigger run, so there is one implementation of the rules.
+One module, `kc-ops-inbox/contract/`, used by the validator CLI, the inbox core and the trigger run, so there is one implementation of the rules. Kept from attempt 1, with `subject` now required:
 
 | Part | Rule | Source |
 | --- | --- | --- |
-| Transport | `webhook-id`, `webhook-timestamp`, `webhook-signature` headers; HMAC-SHA256 over `id.timestamp.body`, `v1,<base64>`; `whsec_` secret; timestamp within 300 s; body at most 16 KiB (fits the 65,535-character dispatch input limit) | Standard Webhooks spec; POC2 core |
-| Envelope | CloudEvents 1.0 structured JSON. Required: `specversion` "1.0", `id` (`^[A-Za-z0-9._-]{1,64}$`, branch-safe), `source` (at most 200 characters), `type` (one of the allowlisted types), `time`, `dataschema`. Allowed besides: `datacontenttype`, `subject`, `data`. Any other attribute is refused. | CloudEvents 1.0.2 |
-| Version | `dataschema` is `.../kc-ops-inbox/contract/v1/<type>.json`; an incompatible change gets a new URI (v2). Each schema's digest is pinned in `contract-versions.json`, and a test fails when a schema changes without a version entry. | CloudEvents `dataschema` guidance; kc-journey-map `contract-versions.json` pattern |
-| Allowlist | `relay.capacity.ceiling`: `v, event, at, day, count, limit, limitSource` (POC1 fixture fields). `sentry.issue.alert`: `issue_id, event_id, title, level, culprit, project, web_url, triggered_rule, datetime, release` (a subset of Sentry's issue-alert `data.event`; `user`, `request`, `contexts`, `exception` and `tags` are excluded). A field outside the list is refused, not dropped. | Sentry issue-alert docs; journey rule `untrusted-event` |
-| Dedupe key | `sha256(source + "\n" + id)`; producers must keep `source` + `id` unique (CloudEvents rule). `webhook-id` is not the key, because POC2's sender used a different value for it. | CloudEvents; POC2 |
-| Slack text | Event strings are escaped (`&`, `<`, `>`) before they reach Slack, so an event cannot mention a channel or forge a link. | Slack message formatting |
+| Transport | `webhook-id`, `webhook-timestamp`, `webhook-signature` headers; HMAC-SHA256 over `id.timestamp.body`, `v1,<base64>`; `whsec_` secret; timestamp within 300 s; body at most 16 KiB | Standard Webhooks spec; POC2 core |
+| Envelope | CloudEvents 1.0 structured JSON. Required: `specversion` "1.0", `id` (`^[A-Za-z0-9._-]{1,64}$`), `source` (at most 200 characters), `type` (allowlisted), `subject` (`^[A-Za-z0-9._/-]{1,100}$`, the incident within the source), `time`, `dataschema`. Allowed besides: `datacontenttype`, `data`. Any other attribute is refused. | CloudEvents 1.0.2 (`subject`: the subject of the event in the context of the producer) |
+| Version | `dataschema` is `.../kc-ops-inbox/contract/v1/<type>.json`; an incompatible change gets v2; each schema's digest is pinned in `contract-versions.json` with a test | kc-journey-map `contract-versions.json` pattern |
+| Allowlist and subject rule | `relay.capacity.ceiling`: `v, event, at, day, count, limit, limitSource`; subject `ceiling/<tier>/<day>`. `sentry.issue.alert`: `issue_id, event_id, title, level, culprit, project, web_url, triggered_rule, datetime, release`; subject `issue/<issue_id>`. A field outside the list is refused, not dropped. | POC1 fixture; Sentry issue-alert docs; relay ADR 0049 |
+| Keys | dedupe `sha256(source + "\n" + id)`; incident `sha256(source + "\n" + subject)` | CloudEvents; probe P3 |
+| Slack text | Event strings are escaped (`&`, `<`, `>`) before Slack | Slack message formatting |
 
-Validator: `node kc-ops-inbox/contract/validate.mjs <fixture.json>`; a fixture holds `headers` and `body`; the signing secret is read from `OPS_INBOX_TEST_SECRET` or the fixture's test-only `secret` field. Exit 0 prints `valid <type> <dedupe key>`; exit 1 prints one reason: `missing-attribute: <name>`, `signature-mismatch`, `timestamp-out-of-tolerance`, `field-not-allowed: <path>`, `unknown-type: <type>`; exit 2 is a usage error. Fixtures: `relay-ceiling.json`, `sentry-issue.json`, `missing-source.json`, `bad-signature.json`, `extra-field.json` (adds `data.user`).
+Validator: `node kc-ops-inbox/contract/validate.mjs <fixture.json>`; exit 0 prints `valid <type> <dedupe key> <incident key>`; exit 1 prints one reason (`missing-attribute: <name>`, `signature-mismatch`, `timestamp-out-of-tolerance`, `field-not-allowed: <path>`, `unknown-type: <type>`); exit 2 is a usage error. Fixtures: `relay-ceiling-near.json`, `relay-ceiling-full.json`, `sentry-issue.json`, `missing-source.json`, `missing-subject.json`, `bad-signature.json`, `extra-field.json`.
 
-### Setup command (AC-2)
+### Aggregation (AC-9)
 
-`node kc-ops-inbox/bin/ops-inbox.mjs setup plan|apply|verify --project <owner/repo> --host netlify [--slack-permalink <link>]`, run on the Captain's machine under his `gh` and `netlify` logins. The step list, owners and read-backs are the preview's (`preview/setup-preview.mjs plan`, `verify ok`).
+- The inbox keeps two create-only claims: the event (`source`, `id`) and the incident (`source`, `subject`). A new incident claim means mode `open`; an existing one means mode `join`, and the stored record names the opening run.
+- Mode `open` runs as attempt 1 did, on branch `ops/<incident>`, where `<incident>` is the subject made branch-safe plus the first 8 hex of the incident key. If the ref already exists (two first events raced past the inbox's claim, POC2 finding F4), the run treats its event as joined, so the ref create is the backstop.
+- Mode `join` waits for the opening run to finish, then writes `events/<id>.json` beside the task on `spacedock-state/ops` and comments on the incident's open Draft PR. When the opening run failed or the PR is merged or closed, it opens a new incident `ops/<incident>-<event id>` instead; later joins go to the newest open PR of that incident.
+- One file per event, not an append to the task file: probe P4 showed two concurrent appends to one task file conflict on `pull --rebase`, and two new files rebase cleanly.
+- What a joined event does beyond the record is D8.
 
-- `plan` writes nothing and prints the agent steps A1 to A6 and the Captain-only steps C1 to C7 (App registration, keys, secrets, Slack webhook, rulesets, merging the setup PR), each with its exact command. App registration uses GitHub's prefilled registration link (`/settings/apps/new?name=…&public=false&webhook_active=false&actions=write`), so the Captain only checks and clicks Create.
-- `apply` runs only A1 to A6: create the private trigger repository and push its one workflow, create `spacedock-state/ops`, open the setup Draft PR in the project (`.github/workflows/ops-gate.yml`, `docs/ops/README.md`), deploy the inbox and set its non-secret settings, set the trigger repository's variables. Each step reads its target first and writes only when it differs, so a rerun changes nothing.
-- `verify` reads every step back (15 checks in the preview) and sends one signed self-test event through the inbox, reading `WEBHOOK_SECRET` from its environment as provided by the Captain's secrets wrapper; it never prints a value. The self-test reads back what the Captain's login cannot (probe P2): the dispatch token's permissions and repositories from the mint response, a refused mint for the project repository, a refused dispatch of a project workflow, the agent token's permissions from the self-test run, and the Slack webhook's `ok`. Exit 0 only when every check passes.
-- One step has no machine read-back: whether the self-test notice is visible in the channel. An incoming webhook answers `ok` and does not return the message timestamp (Slack docs), so verify waits for the Captain's message link, checks that it names the self-test notice's channel and a time after the self-test was sent, and reads the time from it. Reading the channel by machine would need a Slack app with history scope, which r1 does not add.
+### ADR-aware diagnosis (AC-10)
 
-### Isolation (AC-3)
+- The triage stage of the ops workflow follows kc-adr read-adr step 1 on the project clone: pin the checked-out commit, list `docs/adr/` titles, open those that bear on the event, check each one's Status at that commit. The runner installs kc-adr at the published tag `kc-adr-v0.1.1` (ls-remote, 2026-10-23), the same way it installs Spacedock, rather than copying its rules.
+- Each option that relies on a ruling marks it `[ADR NNNN]`; `## Rulings cited` holds one reference block per ruling (repository, path, full commit, `sha256:` digest, status).
+- `kc-ops-inbox/bin/check-citations.mjs <record> --repo <clone>` re-reads every block with git and shasum and refuses `commit-missing`, `path-missing`, `digest-mismatch` or `not-in-force(<status>)`; the run writes each block's result into the record and the PR body's first line counts them, so a refused citation is visible, not removed.
+- Which ADRs bear on the event stays the model's judgement; the check proves the blocks are real, not that they were applied correctly.
 
-The inbox's dispatch App has Actions write only and is installed only on the trigger repository. The trigger repository holds one workflow file and one branch, and its default-branch ruleset needs the Captain's approval, so nobody but the Captain can add a second workflow. The trigger run mints the agent App's token for the project repository inside the run (POC2 pattern, `actions/create-github-app-token` with `owner` and `repositories`). The agent App's key lives in the trigger repository's secrets, not in the project's, so the project's other workflows cannot use it, and the inbox's credential cannot reach the project's secrets.
+### Isolation (AC-8; AC-3 until superseded)
 
-Rejected: Actions write on the project repository (any workflow, plus re-run, disable and the OIDC subject template, probe P1); `repository_dispatch` (needs Contents write, which can push, probe P1); an issue-triggered ops workflow (Issues write starts every issue-triggered workflow and edits issues); the ops workflow pulling events on a schedule (no credential, but scheduled runs start no sooner than every 5 minutes, which loses "agent at once").
+Kept from attempt 1. The dispatch App has Actions write only and is installed only on the trigger repository, which holds one workflow file and one branch under a default-branch ruleset that needs the Captain's approval. The trigger run mints the agent App's token for the project repository inside the run (`actions/create-github-app-token` with `owner` and `repositories`); the agent App's key lives in the trigger repository's secrets. Rejected, from probe P1: Actions write on the project repository (any workflow, re-run, disable, OIDC subject template); `repository_dispatch` (needs Contents write); issue-triggered workflows; a scheduled pull. The agent App's branch scope in the project repository is D6.
 
-### Event to person and agent, and the gate (AC-4)
+### Person and agent, the gate and the two measures (AC-11; AC-4 until superseded)
 
-- The ops workflow is split-root: the Spacedock task and its gate live on branch `spacedock-state/ops` in the project repository (`spacedock state init` sets up the checkout on a runner). The Draft PR on `ops/<id>` adds one file, `docs/ops/<id>.md`: the event fields, the diagnosis, the options and one recommendation. Merging it puts the record on the default branch.
-- `ops-gate.yml` (project repository, `pull_request_review`) records the gate only from the review of the login in `OPS_CAPTAIN_LOGIN` on the PR head, with his words (POC1's `record_gate_from_review.sh`), and pushes only the state branch. GitHub dismisses an approval when a push changes the PR's diff (rulesets docs); the state branch is not in the diff, so the approval stands and is the one the merge rule counts.
-- Fixes carried from POC1: `ops-gate.yml` must be on the default branch before any ops PR is opened (a `pull_request_review` run reads the workflow from the PR's merge ref); a failed review read exits 1 instead of a no-op; Spacedock's install script is pinned to a release and its checksum checked (roborev:948 Critical), not fetched from `main`.
-- The ops workflow's stages in r1: `triage` then `decision` (gate). Acting on the decision and archiving after the merge are inbox-r2.
+- Kept from attempt 1: the task and its gate on `spacedock-state/ops`; the record file `docs/ops/<incident>.md` on the Draft PR; `ops-gate.yml` records the gate only from the review of `OPS_CAPTAIN_LOGIN` on the PR head and pushes only the state branch, so the approval is not dismissed (rulesets docs: dismissal follows pushes "that affect the diff"); POC1's fixes (ops-gate on the default branch first, a failed review read exits 1, Spacedock's installer pinned and checksummed).
+- New: the gate record carries `received` (inbox arrival), `recommended` (Draft PR created) and `followed: yes` when the review state is `APPROVED`, otherwise `no` with his words. These are the axis's two measures per task; nothing in r1 sums them across tasks.
+- The ops workflow's stages in r1: `triage`, then `decision` (gate).
+
+### Setup runbook and read-back (AC-7)
+
+`kc-ops-inbox/setup/RUNBOOK.md` holds steps S1 to S11 as the preview prints them: owner (Captain only, agent may run, anyone), what, the exact command, and the read-back rows that prove it. `kc-ops-inbox/bin/readback.mjs --project --trigger --inbox [--slack-link]` reads 15 rows with the Captain's `gh` and `netlify` logins and one signed self-test event (secret through the Captain's secrets wrapper, never printed). It keeps attempt 1's read-back design: what the Captain's login cannot read (probe P2: App installations) is read through the self-test run; Slack visibility needs his message link. Attempt 1's `plan` and `apply` are withdrawn.
+
+### Live relay event (AC-12)
+
+The relay task's emitter, deployed on a relay deploy preview with the signing secret set only in the deploy-preview context. The ceiling is lowered for the run with relay's own operator script (`scripts/bound-ceiling --prefix pr-N/ --limit 5`, relay ADR 0060), and four then five signed-in publishes cross 80% and full: one new incident and one joined event from relay's real code. Relay ADR 0002 already keeps the daily-ceiling case off relay production. Production is D9.
 
 ### Platform-neutral core (AC-5)
 
-`core/` takes a Web `Request`, a store (`create-if-new`, `get`, `delete`), `fetch`, an env map and a clock, and imports only `node:crypto`. Adapters: Netlify (`@netlify/blobs` with strong consistency, POC2's 11 lines) and plain Node (`node:http`, a file store whose create-if-new is an exclusive file create). One test file runs against both adapters. A path-filtered CI job runs it on pull requests that touch `kc-ops-inbox/**` (cost per such PR not measured; about one ubuntu minute expected).
+Kept from attempt 1: `core/` takes a Web `Request`, a store (`create-if-new`, `get`, `delete`), `fetch`, an env map and a clock, and imports only `node:crypto`; adapters for Netlify (`@netlify/blobs`, strong consistency) and plain Node. D10 proposes deferring the second adapter and keeping the import-list check. A path-filtered CI job runs the tests on pull requests that touch `kc-ops-inbox/**` (cost not measured).
 
 ### Acceptance evidence plan
 
-- **AC-1**: `for f in kc-ops-inbox/contract/v1/fixtures/*.json; do node kc-ops-inbox/contract/validate.mjs "$f"; echo "exit $?"; done` prints `valid` and exit 0 for `relay-ceiling` and `sentry-issue`, and exit 1 with `missing-attribute: source`, `signature-mismatch` and `field-not-allowed: data.user` for the other three; plus the contract-digest test.
-- **AC-2**: on a new scratch project, the logs of `setup plan`, `setup apply` and `setup verify` (exit 0, every check verified), saved in the task folder, and each check's raw read-back output.
-- **AC-3**: the verify self-test's JSON (dispatch of the trigger workflow answered 200 with a run id; dispatch of the project's second workflow, which uses a secret, refused; re-run of a project run refused; mint for the project refused 422), plus `gh api repos/<trigger>/actions/workflows --jq .total_count` printing `1` and the project's second workflow run list unchanged. The wording of AC-3 needs D2's coupled change.
-- **AC-4**: one signed relay-shaped event sent with `send.mjs` through the secrets wrapper; the Slack message link with its time (Captain); the run id; the `ops/<id>` ref and the Draft PR (`draft: true`, author the agent App); the task on `spacedock-state/ops`; after the Captain's review, the `ops-gate` run log and the state commit with `by: person:captain` and the review id; then `gh api repos/<project>/pulls/<n>/reviews` shows his review `APPROVED`, not `DISMISSED`, on the unchanged head.
-- **AC-5**: `npm test` run once per adapter with equal pass counts and zero failures, and `grep -h '^import' kc-ops-inbox/core/*.mjs` printing only `node:crypto` imports.
+- **AC-1**: the validator on the seven fixtures: `valid` with both keys and exit 0 for the three valid ones; exit 1 with `missing-attribute: source`, `missing-attribute: subject`, `signature-mismatch` and `field-not-allowed: data.user`; plus the contract-digest test.
+- **AC-3 / AC-8**: the read-back self-test's JSON (trigger dispatch 200 with a run id; project workflow dispatch refused; project re-run refused; mint for the project refused 422), the trigger workflow count `1`, the project run list unchanged.
+- **AC-4 / AC-11**: on the AC-12 incident: Slack link and time (Captain), the run id, `ops/<incident>` and the Draft PR (`draft: true`, agent App author), the task on `spacedock-state/ops`, the `ops-gate` run log and gate commit with `by: person:captain`, review id, `received`, `recommended` and `followed`, then `gh api repos/<project>/pulls/<n>/reviews` showing `APPROVED` on the unchanged head.
+- **AC-5**: `npm test` per adapter with equal pass counts and zero failures, and `grep -h '^import' kc-ops-inbox/core/*.mjs` printing only `node:crypto`; under D10, the import list and the Netlify run only.
+- **AC-6**: the linter's exit 0 with `--require`, and a byte comparison of each quote with its source.
+- **AC-7**: the read-back on relay, every row PASS with raw output; and one run before S9 is applied, reporting R14 not PASS and exit 1.
+- **AC-9**: the AC-12 run (near, then full: one task, two event files, one Draft PR, one First Officer run, notices New then Joins), one anonymous-tier event (a second task), and the first event resent with the package's send script (inbox log `duplicate`, no notice, no run).
+- **AC-10**: `check-citations.mjs` on the live record (exit 0, at least one block) and on four copies, each with one fault (exit 1, the four reasons), as probe P5 ran.
+- **AC-12**: relay's function log line and the inbox log line for the same event id, joined to AC-11's evidence.
 
-### Probes run before the gate (2026-10-23)
+### Probes run before the gate
 
-- **P1 ran (read-only):** downloaded GitHub's own permission map, `src/github-apps/data/fpt-2022-11-28/server-to-server-permissions.json` at github/docs `481d4e35beb53953e277d0b11ba4a18f8c8ade4f` (committed 2026-10-22), and listed every endpoint that starts or re-runs a workflow. Result: `POST .../actions/workflows/{workflow_id}/dispatches` needs `actions:write`; `POST .../dispatches` (repository_dispatch) needs `contents:write`; the only workflow-named permission is `workflows` (editing workflow files). `actions:write` grants 15 endpoints, including re-running any run or failed job, enabling or disabling any workflow, deleting runs and logs, approving fork runs and `PUT .../actions/oidc/customization/sub`. No permission names a single workflow. This is the fact POC2's F2 noted only for dispatch: re-run also reaches any secret-bearing workflow.
-- **P2 ran (read-only, the Captain's `gh` login):** `gh api /user/installations` returned 403 "You must authenticate with an access token authorized to a GitHub App"; so setup cannot read back an App's installation with his login, and the self-test reads it with the App's own token. The same login read `rulesets`, `actions/secrets` (count only, no values) and `actions/workflows` on iamcxa/kc-claude-plugins (exit 0 each), so those read-backs work.
-- **Docs only, not run:** that a token minted for the trigger repository is refused for the project (installation-token docs: "cannot be granted access to repositories that the installation was not granted access to"); that a state-branch push leaves an approval standing (rulesets docs: dismissal follows pushes "that affect the diff"); the prefilled App registration link; Slack's `ok` reply; `@netlify/blobs` offering a local test server for the Netlify adapter run.
-- Not touched: relay, qnow, the scratch repository and site, any secret, App, ruleset, deployment or push.
+Cycle 2, 2026-10-23, local or read-only, no model run; scripts in `/tmp/ops-r1-probes/` (not kept):
+- **P3, what makes two events one incident (local):** `node p3-incident-key.mjs` on one day of relay ceiling events (near and full signed-in, a producer retry, anonymous full, next day near) and three Sentry events of two issues, each labelled with the remedy it needs (relay ADRs 0043 and 0060 give the tiers different remedies). After dedupe dropped the retry: `source+id` 7 groups (2 wrong pairs), `source+type` 2 (7 wrong), `source+type+data.day` 3 (4 wrong), `source+subject` 5 (0 wrong), expected 5. Limit: the labels are this design's, so the probe shows only that `subject` can carry the grouping with no type-specific code in the inbox; whether relay sets it right is AC-12's.
+- **P4, concurrent joins (local bare git repository):** two writers joining one incident on `spacedock-state/ops` at once: appending to the task file gave `CONFLICT (content)` on `pull --rebase`; one file per event rebased and pushed. Hence per-event files.
+- **P5, citing the project's ADRs (read-only git on relay's clone, no fetch):** read-adr step 1 at relay origin/main `485306242b806b0bbeea8fc1ff0abfe6568de959`: 63 ADRs; a title grep for the event's terms found 9, of which 0001, 0043, 0049, 0054 and 0060 bear on a ceiling event and 4 do not; all 9 `Accepted`, digests computed (0060: `sha256:bd63ef2d…c33d5a3`). The citation check passed the true 0060 block and refused a wrong digest, a missing path, a missing commit, and the superseded ADR 0003 (`not-in-force(Superseded by 0021)`). Limit: the title grep stands in for the model's choice, which needs a First Officer run (not run; FO's leave needed).
+- **P6, the axis ADR draft against kc-adr's linter (local):** the draft below, unquoted into a scratch `docs/adr/0099-every-ops-event-becomes-a-prepared-decision.md` with `adr_lint.py` from origin/main `a476b5ff`: `--require 0099` exit 0; with the `**Words:**` lines removed, exit 1 "Decision needs a '**Words:**' line"; `--require 0100`, exit 1. 0099 is a placeholder, not a reservation.
+- Cycle 1's P1 (GitHub's permission map: no per-workflow permission; Actions write re-runs any run) and P2 (`gh api /user/installations` 403 with the Captain's login) stand; their detail is in the attempt-1 design at state commit `790b5542`.
+- Not touched: relay (read only, no checkout or fetch), qnow, any scratch repository or site, any secret, App, ruleset, deployment or push.
 
 ### Sources read (2026-10-23)
 
-- GitHub: events that trigger workflows (https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows): workflow_dispatch runs only if the file is on the default branch, 25 inputs, 65,535 characters. Workflow dispatch REST (https://docs.github.com/en/rest/actions/workflows): 200 with `workflow_run_id`; the `return_run_details` flag and the 204 reply are POC2's observed behaviour, not this page's summary. Installation tokens (https://docs.github.com/en/rest/apps/apps#create-an-installation-access-token-for-an-app). Rulesets (https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets). App registration by URL parameters (https://docs.github.com/en/apps/sharing-github-apps/registering-a-github-app-using-url-parameters) and by manifest (https://docs.github.com/en/apps/sharing-github-apps/registering-a-github-app-from-a-manifest). `actions/create-github-app-token` README (https://github.com/actions/create-github-app-token): `owner`, `repositories`, `client-id`.
-- Slack incoming webhooks (https://docs.slack.dev/messaging/sending-messages-using-incoming-webhooks/): one fixed channel, `ok` reply, no timestamp returned.
-- CloudEvents 1.0.2 (https://github.com/cloudevents/spec/blob/v1.0.2/cloudevents/spec.md); Standard Webhooks (https://github.com/standard-webhooks/standard-webhooks/blob/main/spec/standard-webhooks.md); Sentry issue alerts (https://docs.sentry.io/organization/integrations/integration-platform/webhooks/issue-alerts/).
+- kc-adr at kc-claude-plugins origin/main `a476b5ff`: `references/adr-template.md`, `skills/read-adr/SKILL.md`, `writing.md`, `prefix.md`; tags `kc-adr-v0.1.0`, `kc-adr-v0.1.1` (`git ls-remote`).
+- Relay at origin/main `48530624`, read only: ADRs 0001, 0043, 0049, 0060 in full; titles of all 63; `RELAY_BOUND_SITE_DAILY_BRIEFING_LIMIT` and `RELAY_ANON_SITE_DAILY_BRIEFING_LIMIT` in `netlify/` and `docs/architecture.md`.
+- POC branches: POC1 `slice/fixture-event.json`, `slice/fo-prompt.md`, `slice/run_fo.sh`, `ops-workflow/README.md`; POC2 `inbox-core.mjs`, `netlify/functions/inbox.mjs`, `workflow/ops-event.yml`.
+- Attempt 1's external sources (GitHub, Slack, CloudEvents, Standard Webhooks, Sentry) are unchanged; list at state commit `790b5542`.
 
 ### Existing-code check
 
-Upstream first: Spacedock 0.27.2's commands include no inbox or webhook intake (`spacedock --help`); kc-dev-flow and kc-dev-flow-2 have none; `origin/main` has no CloudEvents or Standard Webhooks code (`git grep`, 2026-10-23). What exists and is reused: POC2's core (signature, claim, dispatch, 9 tests) and Netlify adapter on `spacedock-ensign/inbox-exactly-once-delivery-poc` at cd079cb8; POC1's `ops-gate.yml`, `record_gate_from_review.sh`, `run_fo.sh` and rulesets on `spacedock-ensign/hermes-ops-fo-exe-dev-poc` at aae7041b; kc-journey-map's `contract-versions.json` digest pin; Spacedock split-root and `spacedock state init`. Both POC branches are reference: implementation copies and rewrites them under `kc-ops-inbox/`, without POC1's shelved `hermes-profile/` and `rehearsal/`.
+Upstream first: Spacedock has no inbox or aggregation; kc-dev-flow and kc-dev-flow-2 have none; kc-adr (published `kc-adr-v0.1.1`) already owns the ADR template, the linter and the read-at-commit rules, so r1 installs it and writes only the citation check, which applies read-adr step 2 by machine; kc-decision-log is planned, not built (`docs/journey/kc-decision-log/`). Reused as reference: POC2's core and adapter (`cd079cb8`), POC1's `ops-gate.yml`, `record_gate_from_review.sh` and `run_fo.sh` (`aae7041b`), kc-journey-map's `contract-versions.json` pin. Sentry already groups events into issues; the contract takes its `issue_id` as the subject rather than grouping again.
 
 ### UI surface
 
-UI proposal: The operator sees two things. (1) `ops-inbox setup` output, plain text with no colour: `plan` lists the Captain's first steps C1 and C2, the agent steps A1 to A6 and the remaining Captain-only steps C3 to C7, each with its command (a `<...>` marks a value an earlier step prints); `apply --yes` runs A1 to A6, reports each with a verdict (PASS, FAIL, WAIT) and an exit code, and a rerun changes only what differs; `verify` prints one row per read-back with a verdict (PASS, FAIL, ERROR, WAIT), what is read, how, and what was observed, a `next:` line under each row that did not pass, a count and an exit code; the Slack-visibility row waits for the Captain's message link. (2) One Slack notice per event and outcome: a bold heading (producer and event), one line from the allowlisted fields cut at 200 characters, one agent line with an icon (started with the run link, Needs action when NOT started with the reason, Needs a look when UNCERTAIN with the runs link and "will not resend"), and a small context line (event id, source, contract version; Slack's own post time stands in for arrival, about 2 s later in POC2); event text is escaped, never a mention.
+UI proposal: A person sees three things. (1) The setup runbook, plain text: steps S1 to S11, each with its owner (Captain only, agent may run, anyone), its exact command and the read-back rows that prove it; and the read-back script's output, one row per read-back with step, verdict (PASS, FAIL, ERROR, WAIT), what is read, how, and what was observed, a `next:` line under each row that did not pass, a count and an exit code; the Slack row waits for the Captain's message link. (2) One Slack notice per accepted event: a bold heading (producer and event), one line from the allowlisted fields cut at 200 characters, one agent line (New incident with its subject and the run link; Joins incident with its subject and event number, no new agent run; Needs action when NOT started; Needs a look when UNCERTAIN), and a context line (event id, source, contract version); a resent event posts nothing; event text is escaped, never a mention. (3) The ops record in the Draft PR, rendered by GitHub: title, incident line, an Events table, Diagnosis (known, not known), two or three numbered Options with cost, each ruling marked `[ADR NNNN]`, one Recommendation, Rulings cited (one reference block per ADR with its check result), and Measures (received, recommended, the Captain's decision); a joined event arrives as a comment that says the recommendation predates it.
 Preview: ops-inbox-r1-setup-and-isolation/preview/
 
 ### Unresolved decisions for the Captain
 
-Each has one recommendation. D2 and D3 each carry an acceptance-criterion wording change, because the recommended mechanism changes what the approved sentence can test.
+Each has one recommendation and what gets worse. D2, D3 and D5 of attempt 1 are closed by amendment 1 (D2 and D3 kept as AC-8 and AC-11; D5 replaced by the runbook).
 
-- **D1, delivery semantics.** Recommend at-most-once for the agent, as POC2 chose and the Non-goals keep: claim, then dispatch; a refusal releases the claim, an unanswered dispatch keeps it, and Slack says which. What gets worse: an unanswered dispatch that GitHub actually lost starts no agent until someone resends by hand. The cheap alternative, at-least-once without reconciliation, releases the claim on no answer too and relies on the `ops/<id>` ref as a second duplicate check in the run; it costs one wasted runner start per duplicate and could post a second notice.
-- **D2, the mechanism that limits the inbox credential to one workflow.** Recommend a per-project trigger repository that holds only `ops-event.yml`, with the dispatch App installed only there. What gets worse: a second repository per project, one more ruleset, and the trigger workflow and the agent key live outside the project repository. Coupled wording change, AC-3: "The inbox's credential starts the ops workflow in the project's trigger repository, which holds no other workflow, and is refused when it tries to start or re-run a workflow in the project repository, which holds a second workflow with secrets."
-- **D3, where the gate record lives.** Recommend the split-root state branch `spacedock-state/ops` in the project repository, with the Draft PR carrying only the record file `docs/ops/<id>.md`. What gets worse: the task (state branch) and its record (PR) are two files; the state branch needs its own ruleset; the agent App can still write the state branch, so a forged gate commit stays possible (Spacedock gate-actor authentication is upstream and a non-goal; the merge still needs the Captain's review). Coupled wording change, AC-4: "... and one ops task on the state branch whose recommendation is the record file on an ops/* branch with a Draft PR; ..." with the rest unchanged.
-- **D4, the inbox host.** Recommend Netlify, one site per project on the Captain's Pro team, as POC2 ran it; the plain Node adapter is the second adapter for AC-5 and a fallback host (mac mini or a VM). What gets worse: per-project Netlify sites and their secrets; Blobs' atomicity under parallel retries stays unproven (POC2 F4), bounded by the `ops/<id>` ref check, though a race could still post two notices.
-- **D5, the form of the setup command.** Recommend one Node CLI in the package with `plan`, `apply` and `verify`, run on the Captain's machine, with App registration by prefilled link. What gets worse: seven Captain steps stay manual, and the manifest flow (one click returns the App id and private key) is not used, because the command would then hold the private key, and the Scope lists keys as Captain-only.
+- **D1, delivery semantics.** Recommend at-most-once, as POC2 chose: claim, then dispatch; a refusal releases the claims, an unanswered dispatch keeps them, and Slack says which. Worse: a dispatch GitHub lost starts nothing until someone resends; for a joined event, only that event's record is lost.
+- **D4, the inbox host.** Recommend Netlify, one site per project, as POC2 ran it. Worse: per-project sites and secrets; Blobs' atomicity under parallel first events stays unproven (POC2 F4), now bounded for incidents by the `ops/<incident>` ref create.
+- **D6, the agent App's branch scope in the project repository.** Recommend that setup applies the `agent-creations` ruleset in r1, not as a follow-up: only `ops/**` and `spacedock-state/ops` may be created except by the repository admin role and any release bot the project lists. The dogfood is relay, whose push-triggered workflows run with relay's secrets, and the agent App can otherwise push any branch name. Worse: a fifth ruleset, and a bot relay forgets to list is refused branch creation; R14 reads the bypass list back.
+- **D7, the incident key.** Recommend the producer's CloudEvents `subject`, required in v1, with a per-type rule in the contract (`ceiling/<tier>/<day>`, `issue/<issue_id>`). Worse: relay must set it right, and a producer that sets it too wide merges unrelated events. Alternative: the inbox derives the key from type-specific data fields, which puts code for every new producer in the inbox.
+- **D8, what a joined event does.** Recommend record only: event file on the task, PR comment, Slack "Joins incident", no new agent run. Worse: a recommendation written at 80% can be read after the full event; the comment says so. Alternative: re-run triage while the gate is open, about 0.25 day more and one model run per joined event; a review given before it would not be dismissed, because the re-run would push only while no review is recorded.
+- **D9, where the live relay event comes from.** Recommend a relay deploy preview with a lowered ceiling. Worse: r1 never sees production traffic; the first real incident waits for the production connection. Alternative: relay production in r1, which adds an always-on inbox and a production secret, and so returns to profile selection before implementation.
+- **D10, the budget.** Recommend 3.5 days, with AC-5's second adapter deferred to item 8 (the import-list check keeps the core neutral; ADR 0018's two-adapter ruling is for the journey server, not this core). Worse: neutrality is shown by imports, not by a second host. Without the extra half day, the next cut is the live relay event (AC-12), which the Captain asked for.
 
-No past ruling goes against these: `git -C <state> grep -n 'Override:'` (2026-10-23) has no hit on an inbox, ops, delivery, credential or host question; ADR 0018 (one core, Node and Cloudflare adapters) agrees with D4 and AC-5; ADR 0003 (secret reads are the adopter's) agrees with verify taking the signing secret only through the wrapper.
+No past ruling goes against these: `git -C <state> grep -n 'Override:'` (2026-10-23) hits only `agent-reads-governing-adr` (ADR title hook, ADR path check), neither in this area. Relay ADRs 0002, 0049 and 0060 agree with D9, the relay field set and the near and full events.
 
-ADR draft, landed by implementation (FO reserves the number): "An ops inbox starts workflows only in its project's trigger repository, and the ops gate is recorded on the state branch." Ruling: D2 and D3 as accepted.
+ADR drafts landed by implementation (FO reserves the numbers): the axis ADR above (AC-6); and, from attempt 1, "An ops inbox starts workflows only in its project's trigger repository, and the ops gate is recorded on the state branch", ruling D2 and D3 as kept by amendment 1.
+
+### Estimate against the 3-day budget
+
+| Work | Priority | Days |
+| --- | --- | --- |
+| Axis ADR (AC-6) | ask | 0.25 |
+| Contract v1 with subject, validator, fixtures (AC-1) | 2 | 0.5 |
+| Inbox core: claims, modes, notices, Netlify adapter | 0, 2, 3 | 0.5 |
+| Second adapter and shared tests (AC-5) | 8 | 0.25 |
+| Trigger run: open and join, event files, PR comment (AC-9) | 2 | 0.5 |
+| Ops workflow: triage with ADR reading, record, citation check (AC-10) | 1, 5 | 0.5 |
+| ops-gate with the two measures (AC-11) | 4 | 0.25 |
+| Runbook and read-back script (AC-7) | 8 | 0.5 |
+| Dogfood on relay: Captain's steps, one live run, evidence (AC-12) | dogfood | 0.5 |
+| Total | | 3.75; 3.5 with D10 |
+
+Over the 3-day budget either way: the stop condition "the estimate exceeds the budget" holds, and D10 is the planning delta. Not counted: relay's own task (emitter and the setup PR files), and waiting on it.
 
 ### Risks and profile
 
-- Estimate: 3 days, at the budget's limit (contract 0.5, core and adapters 0.5, workflows and split-root ops workflow 1, setup CLI 1, scratch run 0.5, overlapping). If it runs over, the cut is `setup apply` (print the agent steps too); that is the stop condition "estimate exceeds the budget" and returns to the Captain.
-- The agent App can push any branch name in the project repository, and a push-triggered workflow there runs the pushed code with that repository's secrets. POC1's scratch repository had no such workflow; relay and qnow do. Follow-up proposal for FO, not adopted here: setup adds a "restrict creations" ruleset limiting the agent to `ops/**` and `spacedock-state/ops`.
-- The trigger repository holds the Captain's model token (`CLAUDE_CODE_OAUTH_TOKEN`), as POC1 did.
-- Profile: on a scratch project nothing here needs a new obligation. Connecting relay or qnow adds production credentials and an always-on service, which returns to profile selection then.
+- AC-12 depends on a relay task outside this budget; contract v1 is the first code deliverable so relay can start on day 1.
+- The setup touches relay itself: two Apps installed on relay, five rulesets, a state branch, the setup PR. All are Captain steps or go through relay's review, but they are relay changes this task's implementation will ask for.
+- The trigger repository holds the Captain's model token, as POC1 did.
+- The citation check proves a block is real, not that the ruling was read right; a wrong reading reaches the Captain as a plausible option.
+- Profile: Pilot holds while the live event comes from a relay deploy preview (D9). Connecting relay production adds a production secret in relay and an always-on inbox, which returns to profile selection.
 
 ### Package-value observation
 
-The package made this design checkable before any build: its rule "read third-party mechanisms from their own docs" led to GitHub's permission map, which settled AC-3 in one read-only run, and showed that the approved AC-3 wording cannot be met in one repository. That is the kind of finding POC2's validator wished it had before its live run. The cost showed too: the backlog gate approved criterion wording no one had tested against the vendor's permission model, so two criteria now come back as decisions.
+Measured against the confirmed axis: kc-adr's read-at-commit rules turned priority 5, "decisions connect to the project's ADRs", from a hope about model quality into a check a script can run: probe P5 refused all four forged citations and passed the true one, so AC-10 can fail. The cost showed in the order of work: the backlog gate approved a scope before the axis was asked, and one full ideation cycle, including two design reviews (17 and 15 findings) on a setup command, went to what the axis now ranks item 8; the axis question cost one chat turn. Neither the package nor r1 yet sums the axis's two measures across tasks; r1 only records them per task.
 
 ### Batch overlap
 
-- `journey-canvas-hosted-poc`, `journey-server-host-pilot`, `release-acceptance`, `pr-review-lite-value-pilot`: no shared file; this task writes only `kc-ops-inbox/**` and one new `.github/workflows/kc-ops-inbox-tests.yml`.
-- `adr-required-statement`, `kc-adr-format-source`: the shared ADR index `docs/adr/` if this task's ADR lands; FO reserves its number at dispatch.
-- `design-director-runs-ui-design-review`, `comment-check-reaches-delivery-gate`, `fo-write-checks-parse-top-level`: change package rules this task's later stages follow, not its files.
+- `adr-required-statement` (validation), `kc-adr-format-source` (archived): the shared ADR index `docs/adr/`; this task lands two ADRs whose numbers FO reserves at dispatch.
+- `design-director-runs-ui-design-review` (validation): changes who runs this kind of design review; this cycle ran the package 0.27.0 rule (a sonnet general-purpose reviewer).
+- `journey-canvas-hosted-poc`, `journey-server-host-pilot`, `release-acceptance`, `pr-review-lite-value-pilot`, `comment-check-reaches-delivery-gate`, `fo-write-checks-parse-top-level`, `release-review-staleness-held-at-dispatch`: no shared file; this task writes `kc-ops-inbox/**`, two `docs/adr/` files and one `.github/workflows/kc-ops-inbox-tests.yml`.
 Recommended order: none required.
 
 ### Design review
 
-Design review: design/ideation-2.yaml
-Round 1 (`design/ideation-1.yaml`, 5 MAJOR and 12 MINOR) was redrawn: plan prints Captain steps C1 and C2 first and every command in full; apply needs `--yes` and shows a failed, a waiting and a rerun case; verify has a verdict column and a `next:` line per non-passing row; the Slack page shows the notice after a retry, explains which repeats post nothing, and adds dark and phone states. Round 2 is the last allowed run; the fixes marked "after round 2" below were not reviewed again.
-Design finding 1: declined: Slack's own post time stands in for arrival (about 2 s later in POC2); after round 2 the UI proposal says so
-Design finding 2: fixed: after round 2, the UNCERTAIN icon is ❓ (`:question:`) in preview-slack.png, light and dark
-Design finding 3: declined: Slack wraps the real context line itself; the mock's mid-token wrap is the browser's and cannot be fixed by our text
-Design finding 4: declined: the drawn dark and phone states cover each layout difference (warning bar, wrapping, long text); the remaining states use the same three lines
-Design finding 5: declined: the cut text is the allowlisted field only; the full event is in the task's `## Event` section, which the run link leads to
-Design finding 6: declined: the notices are one per outcome by design and are time-ordered in the channel; changing an earlier notice would need a Slack app beyond an incoming webhook, which r1 does not add (Slack docs: incoming webhooks "do not allow you to delete a message after it's been posted")
-Design finding 7: declined: verify only checks that a link was given and points at the self-test channel and time; a wrong link is a FAIL row of the same form as the drawn C6 FAIL
-Design finding 8: declined: an early-step failure has the same row form as the drawn A5 FAIL, and each step reads its target first, so later steps run or wait on their own inputs, not on order
-Design finding 9: fixed: after round 2, verify rows have unique ids (C1a, C1b, C4a, C4b, C5a, C5b) in preview-setup.png, and the C7 row says it also covers A4
-Design finding 10: fixed: after round 2, verify prints one line defining PASS, FAIL, ERROR and WAIT in preview-setup.png; one non-zero exit code is kept so a script needs one test
-Design finding 11: declined: each `<...>` value is printed by an earlier step the line names (C1, C2) or is the producer's own command, which setup cannot know; C5's prompt keeps the webhook URL out of shell history
-Design finding 12: fixed: after round 2, apply's report includes "wrote .ops-inbox/ (the four ruleset files C6 applies, ...)" in preview-setup.png
-Design finding 13: declined: the banner adds the trigger repository and inbox URL, which the command line does not show, so a pasted log stands alone
-Design finding 14: fixed: after round 2, the A3 and C7 read-back commands are printed in full in preview-setup.png
-Design finding 15: declined: the output is plain text with no colour (now stated in the UI proposal); an 80-column terminal wraps it, which is acceptable for a command run a few times per project
+DESIGN_REVIEW_PLACEHOLDER
 
 ## Stage Report: ideation
 
