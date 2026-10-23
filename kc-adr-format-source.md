@@ -261,3 +261,20 @@ kc-adr gets the template and linter as byte copies of dev2's (one phrase changed
 ### Summary
 
 kc-adr now ships the ADR template and linter as byte copies of dev2's (one phrase changed) plus `test_adr_lint.py`, `writing.md` points at them with the single-writer numbering rule, and the README and boundary contract no longer say kc-adr ships no tools. No dev2 file, version or CI workflow was touched. Residuals for FO: `kc-adr/skills/read-adr/SKILL.md` still ends "no reserved number means do not write one: ask the coordinator" (owned by `read-adr-reporting-rule-followup`; it may also edit `writing.md`, so a merge collision is possible, unchecked); `test_sd_dispatch.py` not run; the CI step that runs `kc-adr/scripts/test_adr_lint.py` and the compare's trigger paths are owed by dev2 task `kc-adr-tools-with-dev2-copy`; push, PR and release are FO's.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Apply Captain amendment 1: change only the sentence in kc-adr/skills/read-adr/SKILL.md, so that a missing person's words still mean do not write one and ask the coordinator, and numbering points to writing.md; frontmatter and every other line unchanged; commit on the worktree branch.
+  Commit 91b9e8af (one line changed, 1 insertion 1 deletion): "...no words from the person means do not write one: ask the coordinator. How to number it is in `writing.md`." The first five lines of SKILL.md match the base byte for byte; the rest of the diff is that one line.
+- DONE: Re-run the AC-3 text check so that it also covers SKILL.md and writing.md agreeing on numbering.
+  The `## Where the tools are` checks pass again (both `<kc-adr>/` paths present, `<package>/` template and linter absent, reserver present, "one above the highest" sentence names `number_guards.py reserve`, `test -f` on both relative paths exit 0). Agreement: the phrase "no reserved number" is now in neither file (grep count 0 and 0), and SKILL.md line 48 sends numbering to `writing.md`, which holds the single-writer rule. This is a text check; no agent scenario was re-run for this sentence.
+- DONE: Re-run the closing checks on the new head.
+  `version-parity-check.sh` consistent; `skill-frontmatter-lint.sh` valid; `comment_ratio.py` 0.5%, maximum 5% met; `design_surfaces.py check` presentable; sanitize-check on kc-adr 0 BLOCK, 0 REJECT, 0 WARN; `git diff <base> HEAD --stat -- kc-dev-flow-2` empty.
+- DONE: Roborev step on the new head.
+  `roborev_gate.py --repo <worktree> --base c3514876...` exit 0: `clean on 91b9e8af2; evidence=roborev:1067`.
+- DONE: State that no agent scenario was re-run for this sentence.
+  No agent scenario ran in either cycle, so whether an agent now numbers correctly from SKILL.md is not measured; only the text agreement is.
+
+### Summary
+
+SKILL.md's numbering clause now defers to `writing.md` and keeps the "no words, do not write" rule, so the two files agree. Head is 91b9e8af; every earlier cycle-1 result still holds because the one-line change touches no script, template or dev2 file. The earlier cycle's `test_sd_dispatch.py` and extension-suite limit stands.
