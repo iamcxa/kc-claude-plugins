@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-23T13:50:48Z
 worktree: .worktrees/spacedock-ensign-release-walk-picky-reviewers-and-director
+pr: iamcxa/kc-claude-plugins#714
 ---
 
 ## Scope
