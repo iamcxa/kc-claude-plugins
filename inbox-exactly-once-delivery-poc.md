@@ -5,7 +5,7 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 worktree: .worktrees/spacedock-ensign-inbox-exactly-once-delivery-poc
-pr:
+pr: local-merge:c3514876339cb732d0bea8b2d2dd45c234bcdeaf
 gates:
     version: 1
     records:
