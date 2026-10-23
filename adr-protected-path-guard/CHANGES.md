@@ -9,3 +9,4 @@ Copied on 2026-10-23 from `_archive/adr-code-pointer-poc/harness/` in the spaced
 - `harness/falsifiers-s15.py`: 16 synthetic final workspaces the grader must grade as expected, each with its reason.
 - Not changed: `world.py`, `specs.py`, `expected_world.json`, `graders/`, S1..S14, the other expectations and graders.
 - Arms: `B1` with `KC_ADR_ROOT` at the candidate commit (results in `results/`); the same `B1` with `KC_ADR_ROOT` at `0701aa8` (the arm without the change; results in `results-base/`, run with `ADRPOC_RESULTS`).
+- 2026-10-23, before the first run: the falsifier count in this file was corrected from 17 to 16 (`falsifiers-s15-output.txt`: 16 ok, 0 FAIL); no case was removed. The grader, pass rule and scenario did not change after the first run.
