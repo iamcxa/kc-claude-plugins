@@ -27,8 +27,8 @@ export function client(env, token) {
 export async function mintToken(env, { clientId, privateKey, repo, permissions }) {
   const jwt = client(env, appJwt({ appId: clientId, privateKeyPem: privateKey, nowS: Math.floor(Date.now() / 1000) }));
   const inst = await jwt("GET", `/repos/${repo}/installation`);
-  if (inst.status !== 200) throw new Error(`installation-lookup-${inst.status}`);
+  if (inst.status !== 200) throw new Error(`installation-lookup-${inst.status} from ${apiBase(env)}`);
   const res = await jwt("POST", `/app/installations/${inst.json.id}/access_tokens`, { repositories: [repo.split("/")[1]], permissions });
-  if (res.status !== 201) throw new Error(`token-mint-${res.status}`);
+  if (res.status !== 201) throw new Error(`token-mint-${res.status} from ${apiBase(env)}`);
   return { token: res.json.token, permissions: res.json.permissions, repositories: (res.json.repositories ?? []).map((r) => r.full_name ?? r.name) };
 }

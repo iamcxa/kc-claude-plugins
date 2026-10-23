@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
-import { readback, render, rulesetMatches, secretWorkflows, parseArgs, ROW_DEFS } from "../bin/readback.mjs";
+import { readback, render, rulesetMatches, holdsSecret, triggersOf, exposedWorkflows, parseArgs, ROW_DEFS } from "../bin/readback.mjs";
 import { handle } from "../core/inbox-core.mjs";
 import { rig, SECRET, TRIGGER, PROJECT } from "./rig.mjs";
 
@@ -18,7 +18,7 @@ function world(over = {}) {
   const w = {
     triggerPrivate: true, workflows: 1, branches: 1, triggerWorkflow: `    ref: ${SHA}\n`, vars: ["OPS_PROJECT_REPO", "OPS_AGENT_APP_CLIENT_ID"], projectVars: ["OPS_CAPTAIN_LOGIN"],
     secrets: ["CLAUDE_CODE_OAUTH_TOKEN", "OPS_AGENT_APP_PRIVATE_KEY"], stateBranch: true, gate: `  ref: ${SHA}\n`, projectWorkflows: [{ name: "ci.yml", text: "on: push\njobs: {}\n" }],
-    runCount: 5, runConclusion: "success", rulesets: { project: ["ruleset-main.json", "ruleset-ops-branches.json", "ruleset-state-branch.json"], trigger: ["ruleset-trigger-main.json"] },
+    gates: {}, reviews: {}, prHead: "b".repeat(40), runCount: 5, runConclusion: "success", rulesets: { project: ["ruleset-main.json", "ruleset-ops-branches.json", "ruleset-state-branch.json"], trigger: ["ruleset-trigger-main.json"] },
     ...over,
   };
   return w;
@@ -49,6 +49,13 @@ function ctxFor(w, gh, { slackKnown = true } = {}) {
       if (!rs[3]) return ok(files.map((f, i) => ({ id: i + 1, name: setup(f).name })));
       return ok(w.liveOverride?.[files[Number(rs[3]) - 1]] ?? setup(files[Number(rs[3]) - 1]));
     }
+    if (path === `repos/${PROJECT}`) return ok({ default_branch: "main" });
+    if (path === `repos/${PROJECT}/git/trees/spacedock-state%2Fops?recursive=1`) return ok({ tree: Object.keys(w.gates).map((slug) => ({ path: `${slug}/index.md` })) });
+    if (key === `variable get OPS_CAPTAIN_LOGIN -R ${PROJECT} --json value`) return ok({ value: "captain" });
+    let g;
+    if ((g = path?.match(/^repos\/[^/]+\/[^/]+\/contents\/([^/]+)\/index\.md\?ref=/))) return ok({ content: b64(w.gates[g[1]]) });
+    if ((g = path?.match(/^repos\/[^/]+\/[^/]+\/pulls\?state=all&head=o:ops\/(.+)$/))) return ok([{ number: 1, head: { sha: w.prHead } }]);
+    if (path?.match(/\/pulls\/1\/reviews/)) return ok(w.reviews[Object.keys(w.gates)[0]] ?? []);
     if (path === `repos/${PROJECT}/contents/.github/workflows`) return ok(w.projectWorkflows.map((f) => ({ name: f.name })));
     if (path?.startsWith(`repos/${PROJECT}/contents/.github/workflows/ops-gate.yml`)) return w.gate === null ? fail() : ok({ content: b64(w.gate) });
     if (path?.startsWith(`repos/${PROJECT}/contents/.github/workflows/`)) return ok({ content: b64(w.projectWorkflows.find((f) => path.endsWith(f.name)).text) });
@@ -79,7 +86,7 @@ test("a fully set up project reads back every row PASS, with the self-test going
   assert.deepEqual(rows.filter((r) => r.v !== "PASS").map((r) => `${r.id} ${r.v} ${r.obs}`), []);
   assert.equal(rows.length, ROW_DEFS.length);
   assert.equal(gh.state.dispatches[0].inputs.mode, "selftest");
-  assert.match(render(rows, { banner: "b" }), /^21 PASS, 0 FAIL, 0 ERROR, 0 WAIT of 21|\n21 PASS, 0 FAIL, 0 ERROR, 0 WAIT of 21\nConnected/);
+  assert.match(render(rows, { banner: "b" }), /22 PASS, 0 FAIL, 0 ERROR, 0 WAIT of 22\nConnected/);
   gh.close();
 });
 
@@ -154,18 +161,67 @@ test("without a Slack link R14 waits, and with only R14 waiting the exit is stil
   gh.close();
 });
 
-test("R18 waits for the Captain's workflow check unless the agent-creations ruleset is applied, and lists workflows holding secrets", async () => {
-  const gh = await rig();
-  const w = world({ projectWorkflows: [{ name: "release.yml", text: "env:\n  T: ${{ secrets.NPM_TOKEN }}\n" }, { name: "ci.yml", text: "env:\n  T: ${{ secrets.GITHUB_TOKEN }}\n" }] });
-  const rows = await readback(ctxFor(w, gh), args({ workflowsChecked: false }));
-  const r18 = rows.find((r) => r.id === "R18");
-  assert.equal(r18.v, "WAIT");
-  assert.match(r18.obs, /release\.yml/);
-  assert.ok(!/ci\.yml/.test(r18.obs));
-  const applied = world({ rulesets: { project: ["ruleset-main.json", "ruleset-ops-branches.json", "ruleset-state-branch.json", "ruleset-agent-creations.json"], trigger: ["ruleset-trigger-main.json"] } });
-  assert.equal(verdicts(await readback(ctxFor(applied, gh), args({ workflowsChecked: false }))).R18, "PASS");
-  assert.deepEqual(secretWorkflows([{ name: "a", text: "${{ secrets.GITHUB_TOKEN }}" }, { name: "b", text: "${{ secrets.X }}" }]), ["b"]);
-  gh.close();
+const NPM = { name: "release.yml", text: "on:\n  push:\n    branches: [main]\nenv:\n  T: ${{ secrets.NPM_TOKEN }}\n" };
+const withWf = (wfs, rulesetApplied = false) => world({ projectWorkflows: wfs, rulesets: { project: ["ruleset-main.json", "ruleset-ops-branches.json", "ruleset-state-branch.json", ...(rulesetApplied ? ["ruleset-agent-creations.json"] : [])], trigger: ["ruleset-trigger-main.json"] } });
+const r18 = async (w, a = {}) => { const gh = await rig(); const rows = await readback(ctxFor(w, gh), args({ workflowsChecked: false, ...a })); gh.close(); return rows.find((r) => r.id === "R18"); };
+
+test("R18 passes only by the workflows' triggers: a secret job on the default branch alone passes, one an agent ref can reach fails", async () => {
+  assert.equal((await r18(withWf([NPM]))).v, "PASS", "a push to the default branch alone is safe even without the ruleset");
+  const develop = { name: "release.yml", text: "on:\n  push:\n    branches: [main, develop]\nenv:\n  T: ${{ secrets.NPM_TOKEN }}\n" };
+  assert.equal((await r18(withWf([develop]))).v, "FAIL", "without the ruleset the agent can create a develop branch");
+  assert.equal((await r18(withWf([develop], true))).v, "PASS", "with the ruleset only ops/** and the state branch remain");
+  const reached = (await r18(withWf([{ name: "ci.yml", text: "on:\n  pull_request:\njobs:\n  a:\n    env:\n      T: ${{ secrets.X }}\n" }], true)));
+  assert.equal(reached.v, "FAIL");
+  assert.match(reached.obs, /reachable from an agent ref: ci\.yml/);
+});
+
+test("R18 does not pass on the ruleset alone: a secret job triggered on ops/** fails with the ruleset applied", async () => {
+  const opsPush = { name: "deploy.yml", text: "on:\n  push:\n    branches:\n      - main\n      - 'ops/**'\njobs:\n  a:\n    steps:\n      - run: x\n        env:\n          T: ${{ secrets.DEPLOY }}\n" };
+  const row = await r18(withWf([opsPush], true));
+  assert.equal(row.v, "FAIL");
+  assert.match(row.obs, /agent-creations ruleset matches.*deploy\.yml/);
+  assert.equal((await r18(withWf([opsPush], true), { workflowsChecked: true })).v, "PASS", "the Captain's attestation names the files and overrides");
+  assert.equal((await r18(withWf([{ name: "s.yml", text: "on: push\nenv: ${{ secrets.X }}\n" }], true))).v, "FAIL", "push with no branch filter reaches ops/**");
+  assert.equal((await r18(withWf([{ name: "t.yml", text: "on: [workflow_dispatch]\nenv: ${{ secrets.X }}\n" }], true))).v, "PASS");
+});
+
+test("every form of the secrets context counts as holding a secret, and an exact GITHUB_TOKEN reference does not", () => {
+  for (const t of ["${{ secrets.NPM_TOKEN }}", "${{ secrets['NPM_TOKEN'] }}", '${{ secrets["NPM_TOKEN"] }}', "${{ secrets[matrix.name] }}", "${{ toJSON(secrets) }}", "jobs:\n  c:\n    uses: ./.github/workflows/x.yml\n    secrets: inherit\n", "${{ secrets.GITHUB_TOKEN_X }}", "${{ secrets.GITHUB_TOKEN }} ${{ secrets.Y }}"]) assert.equal(holdsSecret(t), true, t);
+  for (const t of ["${{ secrets.GITHUB_TOKEN }}", "${{ secrets['GITHUB_TOKEN'] }}", "run: echo no secrets here", "name: secretsmith"]) assert.equal(holdsSecret(t), false, t);
+});
+
+test("triggers are read from the inline, list and block forms of on:", () => {
+  assert.deepEqual([...triggersOf("on: push\n").events], ["push"]);
+  assert.deepEqual([...triggersOf("on: [push, pull_request]\n").events], ["push", "pull_request"]);
+  const t = triggersOf("on:\n  push:\n    branches: [main, 'ops/**']\n  workflow_dispatch:\njobs: {}\n");
+  assert.deepEqual([...t.events], ["push", "workflow_dispatch"]);
+  assert.deepEqual(t.push.branches, ["main", "ops/**"]);
+  assert.equal(exposedWorkflows([{ name: "x", text: "name: n\njobs: {}\n${{ secrets.A }}" }], { defaultBranch: "main", agentCreationsApplied: true }).length, 1, "no on: block is unreadable and counts as exposed");
+});
+
+const GATE = (id, login, sha, decision = "approve") => `---\ngates:\n    records:\n        - attempts:\n            - resolution:\n                by: person:captain\n                decision: ${decision}\n                reason: 'GitHub review ${id} by ${login} on ${sha}: ok | followed yes'\n---\n`;
+const HEAD = "b".repeat(40);
+const gateRow = async (over) => { const gh = await rig(); const rows = await readback(ctxFor(world(over), gh), args()); gh.close(); return rows.find((r) => r.id === "R22"); };
+const rev = (id, state, login = "captain", sha = HEAD) => ({ id, state, commit_id: sha, user: { login } });
+
+test("R22 passes for a gate that follows from the Captain's review on the head and fails for a forged one", async () => {
+  assert.equal((await gateRow({})).v, "PASS");
+  const good = await gateRow({ gates: { inc: GATE(9, "captain", HEAD) }, reviews: { inc: [rev(9, "APPROVED")] } });
+  assert.equal(good.v, "PASS");
+  assert.match(good.obs, /1 recorded gate\(s\) checked/);
+  const forged = [
+    ["no such review", { gates: { inc: GATE(9, "captain", HEAD) }, reviews: { inc: [rev(8, "APPROVED")] } }],
+    ["review by someone else", { gates: { inc: GATE(9, "captain", HEAD) }, reviews: { inc: [rev(9, "APPROVED", "stranger")] } }],
+    ["gate names another login", { gates: { inc: GATE(9, "stranger", HEAD) }, reviews: { inc: [rev(9, "APPROVED", "stranger")] } }],
+    ["review on an old commit", { gates: { inc: GATE(9, "captain", "c".repeat(40)) }, reviews: { inc: [rev(9, "APPROVED", "captain", "c".repeat(40))] } }],
+    ["decision differs from the review", { gates: { inc: GATE(9, "captain", HEAD, "approve") }, reviews: { inc: [rev(9, "CHANGES_REQUESTED")] } }],
+    ["a reason that cites no review", { gates: { inc: "---\n                decision: approve\n                reason: trust me\n---\n" }, reviews: { inc: [] } }],
+  ];
+  for (const [label, over] of forged) {
+    const row = await gateRow(over);
+    assert.equal(row.v, "FAIL", label);
+    assert.match(row.obs, /inc \(approve\)/, label);
+  }
 });
 
 test("an unreadable resource is ERROR, not FAIL, and the run does not stop", async () => {

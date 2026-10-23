@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Records the ops gate from the Captain's own GitHub review of the pull request head. Writes only the state branch,
+// Records the ops gate from the Captain's own GitHub review of the head commit. Writes only the state branch,
 // so the pull request head does not move and the review is not dismissed.
 import { spawnSync } from "node:child_process";
 import { existsSync, readFileSync, writeFileSync } from "node:fs";

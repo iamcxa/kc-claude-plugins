@@ -131,4 +131,4 @@ Reads with your gh and netlify logins and sends one signed self-test event. The 
 
 `<wrapper>` is your secrets wrapper, which puts `WEBHOOK_SECRET` in the read-back's environment without printing it.
 
-Read back by: R14
+Read back by: R14 R22

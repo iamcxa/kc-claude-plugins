@@ -2,6 +2,7 @@
 // Reads every setup step back from the live resources and sends one signed self-test event.
 // Exit 0 only when every row is PASS. Prints no secret value.
 import { spawnSync } from "node:child_process";
+import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -40,7 +41,9 @@ export const ROW_DEFS = [
   ["R19", "S10", "ruleset trigger-main matches its file, no bypass"],
   ["R20", "S11", "ops-gate.yml is on the default branch, pinned to a commit"],
   ["R21", "S9", "project variable OPS_CAPTAIN_LOGIN is set"],
+  ["R22", "S12", "every recorded gate names the Captain's review on that pull request's head"],
 ];
+const GATE_DECISIONS = { approve: "APPROVED", revise: "CHANGES_REQUESTED", hold: "COMMENTED" };
 
 const norm = (v) => JSON.stringify(sortKeys(v));
 function sortKeys(v) {
@@ -68,8 +71,65 @@ export function rulesetMatches(file, live) {
   return null;
 }
 
-export function secretWorkflows(files) {
-  return files.filter((f) => /\$\{\{\s*secrets\.(?!GITHUB_TOKEN\b)\w+/.test(f.text)).map((f) => f.name);
+// Any use of the secrets context holds a secret; only an exact GITHUB_TOKEN reference does not.
+export function holdsSecret(text) {
+  const rest = text.replace(/secrets\.GITHUB_TOKEN\b/g, "").replace(/secrets\[\s*(['"])GITHUB_TOKEN\1\s*\]/g, "");
+  return /\$\{\{[^}]*\bsecrets\b/.test(rest) || /^\s*secrets:\s*inherit\b/m.test(rest);
+}
+
+const globToRe = (g) => new RegExp(`^${g.replace(/[.+^${}()|\\]/g, "\\$&").replace(/\*\*/g, "\u0000").replace(/\*/g, "[^/]*").replace(/\u0000/g, ".*")}$`);
+const AGENT_REFS = ["ops/x", "spacedock-state/ops"];
+
+// The `on:` block of a workflow as { events: Set, push: { branches, ignore } }, from the forms workflows use; anything unreadable counts as exposed.
+export function triggersOf(text) {
+  const lines = text.split("\n");
+  const at = lines.findIndex((l) => /^["']?on["']?\s*:/.test(l));
+  if (at < 0) return { unreadable: true, events: new Set(), push: null };
+  const head = lines[at].replace(/^["']?on["']?\s*:\s*/, "").replace(/#.*$/, "").trim();
+  const events = new Set();
+  let push = null;
+  if (head) {
+    for (const e of head.replace(/[\[\]]/g, "").split(",").map((x) => x.trim()).filter(Boolean)) events.add(e);
+    if (events.has("push")) push = { branches: null, ignore: null };
+    return { events, push };
+  }
+  const block = [];
+  for (let i = at + 1; i < lines.length && (lines[i].trim() === "" || /^\s/.test(lines[i])); i += 1) block.push(lines[i]);
+  let current = null;
+  for (const l of block) {
+    const m = l.match(/^(\s+)([A-Za-z_]+)\s*:\s*(.*)$/);
+    if (m && m[1].length === (block.find((x) => x.trim())?.match(/^\s*/)[0].length ?? 0)) { current = m[2]; events.add(current); if (current === "push") push = { branches: null, ignore: null }; continue; }
+    if (current === "push") {
+      const f = l.match(/^\s+(branches|branches-ignore)\s*:\s*(.*)$/);
+      if (f) {
+        const list = f[2].trim();
+        const key = f[1] === "branches" ? "branches" : "ignore";
+        push[key] = list ? list.replace(/[\[\]]/g, "").split(",").map((x) => x.trim().replace(/^['"]|['"]$/g, "")).filter(Boolean) : [];
+        push.open = key;
+      } else if (push.open && /^\s+-\s+/.test(l)) push[push.open].push(l.replace(/^\s+-\s+/, "").replace(/#.*$/, "").trim().replace(/^['"]|['"]$/g, ""));
+    }
+  }
+  return { events, push };
+}
+
+// Workflows that hold a secret and could run on a ref the agent can write: a pull request or workflow_run event, or a push to
+// an ops/* or state ref, or (when the agent may create any branch) to any ref but the default branch.
+export function exposedWorkflows(files, { defaultBranch, agentCreationsApplied }) {
+  const out = [];
+  for (const f of files) {
+    if (!holdsSecret(f.text)) continue;
+    const t = triggersOf(f.text);
+    const pullish = t.unreadable || [...t.events].some((e) => /^(pull_request|pull_request_target|pull_request_review|workflow_run|issue_comment|issues)$/.test(e));
+    let pushHit = false;
+    if (t.push) {
+      const pats = t.push.branches;
+      if (t.push.ignore || pats === null) pushHit = true;
+      else if (agentCreationsApplied) pushHit = pats.some((g) => AGENT_REFS.some((r) => globToRe(g).test(r)));
+      else pushHit = !pats.every((g) => g === defaultBranch);
+    }
+    if (pullish || pushHit) out.push(f.name);
+  }
+  return out;
 }
 
 const row = (id, v, obs, next) => ({ id, v, obs, ...(next ? { next } : {}) });
@@ -161,7 +221,7 @@ export async function readback(ctx, { project, trigger, inbox, slackLink, workfl
   await guard(["R7", "R8", "R9", "R11", "R13"], async () => {
     const secret = ctx.env.WEBHOOK_SECRET;
     if (!secret) throw new Error("WEBHOOK_SECRET is not in the environment; run through your secrets wrapper");
-    const id = `readback-selftest-${ctx.now().toString(36)}`;
+    const id = `readback-selftest-${randomUUID()}`;
     const event = JSON.stringify({ specversion: "1.0", id, source: "urn:ops-inbox:readback", type: "ops.inbox.selftest", subject: `selftest/${id}`, time: new Date(ctx.now()).toISOString(), dataschema: `${SCHEMA_BASE}/ops.inbox.selftest.json`, data: { v: 1, project } });
     const ts = String(Math.floor(ctx.now() / 1000));
     const res = await ctx.fetch(inbox, { method: "POST", headers: { "content-type": "application/cloudevents+json", "webhook-id": `msg_${id}`, "webhook-timestamp": ts, "webhook-signature": signBody({ secret, id: `msg_${id}`, timestamp: ts, body: event }) }, body: event });
@@ -215,22 +275,61 @@ export async function readback(ctx, { project, trigger, inbox, slackLink, workfl
   await guard(["R18"], async () => {
     const all = ctx.ghJson(["api", `repos/${project}/rulesets?per_page=100`]);
     if (!all.ok) return set("R18", "ERROR", `could not read: ${all.err}`, "check your gh login");
-    const creation = all.json.find((r) => r.name === JSON.parse(readFileSync(join(SETUP, AGENT_CREATIONS), "utf8")).name);
+    const wanted = JSON.parse(readFileSync(join(SETUP, AGENT_CREATIONS), "utf8"));
+    const creation = all.json.find((r) => r.name === wanted.name);
+    let applied = false;
+    let rulesetNote = "no agent-creations ruleset";
     if (creation) {
       const live = ctx.ghJson(["api", `repos/${project}/rulesets/${creation.id}`]);
-      const why = live.ok ? rulesetMatches(JSON.parse(readFileSync(join(SETUP, AGENT_CREATIONS), "utf8")), live.json) : live.err;
-      return set("R18", why ? "FAIL" : "PASS", why ? `agent-creations ruleset: ${why}` : "agent-creations ruleset matches: the agent can create only ops/** and the state branch", why ? "fix or delete the ruleset (S10)" : null);
+      const why = live.ok ? rulesetMatches(wanted, live.json) : live.err;
+      if (why) return set("R18", "FAIL", `agent-creations ruleset: ${why}`, "fix or delete the ruleset (S10)");
+      applied = true;
+      rulesetNote = "agent-creations ruleset matches";
     }
+    const repo = ctx.ghJson(["api", `repos/${project}`]);
     const list = ctx.ghJson(["api", `repos/${project}/contents/.github/workflows`]);
-    const names = list.ok ? list.json.filter((f) => /\.ya?ml$/.test(f.name)).map((f) => f.name) : [];
-    const files = names.map((name) => {
-      const f = ctx.ghJson(["api", `repos/${project}/contents/.github/workflows/${name}`]);
-      return { name, text: f.ok ? Buffer.from(f.json.content ?? "", "base64").toString("utf8") : "" };
-    });
-    const holding = secretWorkflows(files);
-    const seen = `workflows using a secret besides GITHUB_TOKEN: ${holding.length ? holding.join(", ") : "none"}`;
-    if (workflowsChecked) return set("R18", "PASS", `Captain checked: no workflow runs with a secret on a push to a non-default branch or a pull request from any author; ${seen}`);
-    set("R18", "WAIT", seen, holding.length === 0 ? "no workflow uses a secret: rerun with --workflows-checked" : "read each listed workflow; if none runs with its secret on a push to a non-default branch or a pull request from any author rerun with --workflows-checked, otherwise apply ruleset-agent-creations.json (S10, last line)");
+    if (!repo.ok || !list.ok) return set("R18", "ERROR", `could not read the project's workflows: ${repo.ok ? list.err : repo.err}`, "check your gh login");
+    const files = [];
+    for (const f of list.json.filter((x) => /\.ya?ml$/.test(x.name))) {
+      const r = ctx.ghJson(["api", `repos/${project}/contents/.github/workflows/${f.name}`]);
+      if (!r.ok) return set("R18", "ERROR", `could not read ${f.name}: ${r.err}`, "read back again");
+      files.push({ name: f.name, text: Buffer.from(r.json.content ?? "", "base64").toString("utf8") });
+    }
+    const exposed = exposedWorkflows(files, { defaultBranch: repo.json.default_branch, agentCreationsApplied: applied });
+    const seen = `${rulesetNote}; ${files.filter((f) => holdsSecret(f.text)).length} of ${files.length} workflows use a secret; reachable from an agent ref: ${exposed.length ? exposed.join(", ") : "none"}`;
+    if (!exposed.length) return set("R18", "PASS", seen);
+    if (workflowsChecked) return set("R18", "PASS", `Captain read ${exposed.join(", ")} and attested no secret job runs for an agent branch or pull request; ${seen}`);
+    set("R18", "FAIL", seen, "guard or remove the listed workflows' secrets, apply ruleset-agent-creations.json (S10), or read them and rerun with --workflows-checked");
+  });
+
+  await guard(["R22"], async () => {
+    const tree = ctx.ghJson(["api", `repos/${project}/git/trees/spacedock-state%2Fops?recursive=1`]);
+    if (!tree.ok) return set("R22", "ERROR", `could not read the state branch: ${tree.err}`, "check S9 and your gh login");
+    const tasks = tree.json.tree.filter((e) => /^[^/]+\/index\.md$/.test(e.path)).map((e) => e.path.split("/")[0]);
+    const captain = ctx.ghJson(["variable", "get", "OPS_CAPTAIN_LOGIN", "-R", project, "--json", "value"]);
+    const login = captain.ok ? captain.json.value : null;
+    if (!login) return set("R22", "ERROR", "could not read OPS_CAPTAIN_LOGIN", "set it (S9)");
+    let checked = 0;
+    const forged = [];
+    for (const slug of tasks) {
+      const file = ctx.ghJson(["api", `repos/${project}/contents/${slug}/index.md?ref=spacedock-state%2Fops`]);
+      if (!file.ok) return set("R22", "ERROR", `could not read ${slug}: ${file.err}`, "read back again");
+      const text = Buffer.from(file.json.content ?? "", "base64").toString("utf8");
+      const resolutions = [...text.matchAll(/^\s+decision: (\w+)\n\s+reason: (.+)$/gm)];
+      if (!resolutions.length) continue;
+      const pr = ctx.ghJson(["api", `repos/${project}/pulls?state=all&head=${project.split("/")[0]}:ops/${slug}`]);
+      const prs = pr.ok ? pr.json : [];
+      const reviews = prs[0] ? ctx.ghJson(["api", `repos/${project}/pulls/${prs[0].number}/reviews?per_page=100`]) : { ok: false, json: [] };
+      for (const [, decision, reasonRaw] of resolutions) {
+        checked += 1;
+        const reason = reasonRaw.replace(/^'|'$/g, "").replace(/''/g, "'");
+        const m = reason.match(/^GitHub review (\d+) by (\S+) on ([0-9a-f]{40}):/);
+        const rev = m && reviews.ok ? reviews.json.find((r) => String(r.id) === m[1]) : null;
+        const ok = m && rev && m[2] === login && rev.user?.login === login && rev.commit_id === m[3] && prs[0].head.sha === m[3] && GATE_DECISIONS[decision] === rev.state;
+        if (!ok) forged.push(`${slug} (${decision})`);
+      }
+    }
+    set("R22", forged.length ? "FAIL" : "PASS", `${checked} recorded gate(s) checked${forged.length ? `; no matching review by ${login} on the head: ${forged.join(", ")}` : ""}`, forged.length ? "the gate record does not follow from a review: treat the task's decision as unrecorded and investigate who pushed spacedock-state/ops" : null);
   });
 
   await guard(["R20"], async () => {

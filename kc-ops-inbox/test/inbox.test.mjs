@@ -109,7 +109,7 @@ test("a refused join releases only its own event claim and leaves the incident o
   const res = await r.call(signedRequest(full()));
   assert.equal(res.status, 502);
   assert.ok([...r.store.m.keys()].some((k) => k.startsWith("incident.")));
-  assert.ok(![...r.store.m.keys()].some((k) => k.startsWith("event.") && r.store.m.get(k).includes("100")));
+  assert.ok(![...r.store.m.keys()].some((k) => k.startsWith("event.") && JSON.parse(r.store.m.get(k)).id === "signed-in-2026-10-20-100"));
   r.close();
 });
 
