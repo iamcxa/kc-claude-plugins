@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-review-staleness-held-at-dispatch:validation:attempt-1:revision-1",
+  "question": "Approve validation of release-review-staleness-held-at-dispatch and merge iamcxa/kc-claude-plugins#711 at head 62ba1e714894456fe7e4a287d5381f55ca64e4df with `gh pr merge 711 --squash --match-head-commit 62ba1e714894456fe7e4a287d5381f55ca64e4df`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:release-review-staleness-held-at-dispatch:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7a3061702cb3562945d883eb991dcd93443591a8/release-review-staleness-held-at-dispatch.md",
+      "rev": "sha256:b4ad2328c93f581c61e61e71bb49a2a5282a71a596362200aebf61a4e3d05727",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: pr_watch.py tasks prints one next: hold line for a task at implementation with no dispatch yet whose ## FO alignment carries a signal 1 or 2 mark and no later Release review line, so the R4 record shape holds and a documented review line clears it; validation PASSED at this head (108 pr_watch tests, ten mutations each failing only its named tests, a replay over four adopters' state branches holding the same 17 tasks the design named).\nNecessity: five files (kc-dev-flow-2/scripts/pr_watch.py, kc-dev-flow-2/scripts/test_pr_watch.py, the workflow.md Release review bullet losing \"; no script checks that line\", the kc-dev-flow-2/scripts/lint-skills.py 5-word cut step carrying the Captain's quoted words, ADR 0032).\nExternal rounds: Codex 1 (summary comment on this head: code review completed with no findings, evidence=summary:6359848887@62ba1e714). second reviewer: not triggered.\nFO declines: Polish F1, docs/dev2/README.md and docs/dev2-poc/README.md still carry the cut clause (synced copies; the release sync rewrites them); Polish F2, an unreadable task file through tasks stops with the existing configuration error (no worse than base); Deferred risk F3, a bulleted or bold Release review line does not clear the hold (all 80 adopter review lines are at column 0; fails closed; Material if an FO writes bulleted review lines and the hold loops); Polish F4, the design counted one live hold and today's qnow state holds two (the second is a true hold); Deferred risk, the hold is advice only (Spacedock 0.27.2 dispatch build takes no precondition; whether an FO obeys the line is unmeasured)."
+    }
+  ]
+}

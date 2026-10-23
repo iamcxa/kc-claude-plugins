@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:release-review-staleness-held-at-dispatch:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:release-review-staleness-held-at-dispatch-validation-1
+              briefing:
+                id: briefing:release-review-staleness-held-at-dispatch:validation:attempt-1:revision-1
+                digest: sha256:98c31a5c6db273d0541948250266dfa7048655b15b64b9ed7119361b049e443e
+                room-ref: ./release-review-staleness-held-at-dispatch/review/validation/briefing-1
 started: 2026-10-23T06:04:47Z
 worktree: .worktrees/spacedock-ensign-release-review-staleness-held-at-dispatch
 pr: iamcxa/kc-claude-plugins#711
