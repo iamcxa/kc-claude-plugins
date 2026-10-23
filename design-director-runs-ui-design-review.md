@@ -78,6 +78,8 @@ Superseded text:
 
 ## FO alignment
 
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-23 — do these amendments withdraw what the Captain approved, and what changes in the build?
+
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-22 — implementation left AC-7 met in 1 of 3 runs of the shipped agent and AC-3 and the real-flow clause of AC-13 unrunnable without a real adopter ideation; what is the smallest next step?
 
 Captain rulings on D-1 to D-6 (ideation sitting, 2026-10-22, chat, each given to FO's question one at a time; to be bound at the ideation gate):
