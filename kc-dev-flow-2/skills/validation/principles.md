@@ -41,7 +41,7 @@ in [design-review.md](../ideation/design-review.md)). Give `Screenshots:` as the
 the report's `preview:` copies that relative path, which is the form the check resolves and
 the only one it accepts. Save its report as
 `design/validation-<N>.yaml` and write `Built screen review: design/validation-<N>.yaml`
-with one `Built screen finding <n>:` line per finding: `F<N>` for a MAJOR, naming
+in your validation Stage Report (the check reads the last one) with one `Built screen finding <n>:` line per finding: `F<N>` for a MAJOR, naming
 its bullet in your report, and `declined: <reason>` or `Needs decision: <text>` for a
 MINOR. Send each MINOR you would decline to the director first (pass 2b), save the
 rulings as `design/validation-declines-<N>.yaml` and name them on a

@@ -1614,12 +1614,27 @@ class DeclineCheckTests(MutantMixin, unittest.TestCase):
         self.assertEqual(self.run_check(declines=fenced)[0], [])
 
     def test_a_ruling_missing_its_evidence_or_change_is_refused(self):
-        mutant = mutated("elif missing := [key for key in RULING_REQUIRED if key not in item]:", "elif False:")
+        mutant = mutated("elif missing := [key for key in RULING_REQUIRED if not item.get(key)]:", "elif False:")
         for key in ("evidence", "change"):
             with self.subTest(key):
                 report = "".join(line for line in DECLINE_REPORT.splitlines(True) if not line.lstrip().startswith(key + ":"))
                 self.refused(f"rules finding 2 without '{key}'", declines=report)
                 self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+
+    def test_an_empty_evidence_or_change_counts_as_missing(self):
+        mutant = mutated("if not item.get(key)]:", "if key not in item]:")
+        for key in ("evidence", "change"):
+            with self.subTest(key):
+                report = DECLINE_REPORT.replace(next(l for l in DECLINE_REPORT.splitlines() if l.lstrip().startswith(key + ":")), f"      {key}:")
+                self.refused(f"rules finding 2 without '{key}'", declines=report)
+                self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+
+    def test_a_scalar_design_decline_check_root_is_refused(self):
+        mutant = mutated("""    if re.sub(r"(?:^|[ \\t]+)#.*$", "", root.group(1)).strip():""", "    if False:")
+        report = DECLINE_REPORT.replace("design_decline_check:", "design_decline_check: |", 1)
+        self.refused("has a 'design_decline_check:' line with a value after its colon", declines=report)
+        self.assertEqual(self.run_check(declines=report, module=mutant)[0], [])
+        self.assertEqual(self.run_check(declines=DECLINE_REPORT.replace("design_decline_check:", "design_decline_check:  # rulings", 1))[0], [])
 
     def test_a_declined_finding_ruled_overruled_or_decision_is_refused(self):
         self.mutation("""elif ruled[number]["ruling"] != "upheld":""", "elif False:",
@@ -1849,13 +1864,25 @@ class BuiltScreenTests(MutantMixin, unittest.TestCase):
     def test_an_f_bullet_must_be_in_the_current_validation_report(self):
         stale = "## Stage Report: validation\n\n- F1 Behaviour: kept from the first cycle\n\n"
         why = "names F1, but the current validation report has no"
-        mutant = mutated("validation_report(body), re.M)", "body, re.M)")
+        mutant = mutated("body = validation_report(body)", "pass")
         for label, kwargs in {"earlier cycle only": dict(earlier=stale, bullet="- nothing"), "another stage": dict(bullet="- nothing", earlier="## Stage Report: implementation\n\n- F1 Behaviour: x\n\n")}.items():
             with self.subTest(label):
                 self.assertEqual(len([e for e in self.run_check(**kwargs)[0] if why in e]), 1)
                 self.assertFalse(any(why in e for e in self.run_check(module=mutant, **kwargs)[0]))
         self.assertEqual(self.run_check(earlier=stale)[0], [])
         self.assertEqual(self.run_check(earlier=stale, bullet="- F1 Behaviour: this cycle")[0], [])
+
+    def test_the_review_finding_and_decline_lines_are_read_from_the_current_validation_report_only(self):
+        mutant = mutated("body = validation_report(body)", "pass")
+        old = "## Stage Report: validation\n\n- F1 Behaviour: first cycle\n" + BUILT_LINES + "\n"
+        waived = "## Stage Report: validation\n\nBuilt screen review: waived 「an earlier cycle's waiver」\n\n"
+        self.not_run(earlier=waived, lines="")
+        self.assertEqual(self.run_check(earlier=old)[0], [])
+        errors = self.run_check(earlier=old, module=mutant)[0]
+        self.assertTrue(any("2 'Built screen review:' lines" in e for e in errors), errors)
+        self.assertFalse(any("built screen review not run" in e for e in self.run_check(earlier=waived, lines="", module=mutant)[0]))
+        errors, _ = self.run_check(lines="")
+        self.assertTrue(any("built screen review not run" in e for e in errors), errors)
 
     def test_the_picture_and_the_upheld_lines_reach_the_output(self):
         for old, new in (('f"preview: {picture.resolve()}"', '""'), ('*ruling_notes("built-screen decline", lines, upheld, groups)', "*[]")):

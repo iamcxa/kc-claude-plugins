@@ -426,7 +426,7 @@ def check_rulings(name, value, text, found, lines, word, errors, titled):
             errors.append(f"{name}: '{value}' rules finding {number}, which the review does not list ({found} listed)")
         elif number in ruled:
             errors.append(f"{name}: '{value}' rules finding {number} more than once")
-        elif missing := [key for key in RULING_REQUIRED if key not in item]:
+        elif missing := [key for key in RULING_REQUIRED if not item.get(key)]:
             errors.append(f"{name}: '{value}' rules finding {number} without {', '.join(repr(key) for key in missing)}")
         elif item.get("ruling") not in RULINGS:
             errors.append(f"{name}: '{value}' rules finding {number} as '{item.get('ruling', '')}', not one of {', '.join(RULINGS)}")
@@ -478,6 +478,10 @@ def decline_report(name, label, lines_found, folder, errors):
         return None, value
     if len(re.findall(r"^design_decline_check:", text, re.M)) != 1:
         errors.append(f"{name}: '{value}' is not a design_decline_check report: expected exactly 1 'design_decline_check:' line at column 0")
+        return None, value
+    root = re.search(r"^design_decline_check:(.*)$", text, re.M)
+    if re.sub(r"(?:^|[ \t]+)#.*$", "", root.group(1)).strip():
+        errors.append(f"{name}: '{value}' has a 'design_decline_check:' line with a value after its colon, so its children are not a mapping")
         return None, value
     return text, value
 
@@ -561,6 +565,7 @@ def file_digest(path):
 
 def check_built_screen(path, body, previews, errors):
     name = path.name
+    body = validation_report(body)
     reviews = BUILT_REVIEW_LINE.findall(body)
     if len(reviews) > 1:
         errors.append(f"{name}: {len(reviews)} 'Built screen review:' lines, expected exactly 1; a rerun replaces the old line with the last report")
@@ -602,7 +607,7 @@ def check_built_screen(path, body, previews, errors):
         entry = lines.get(number, "")
         token = entry.split()[0] if entry else ""
         if severities[number - 1] == "MAJOR" and re.fullmatch(r"F\d+", token):
-            if not re.search(rf"^[ \t]*[-*][ \t]+{token}[ \t]+\S[^\n:]*:", validation_report(body), re.M):
+            if not re.search(rf"^[ \t]*[-*][ \t]+{token}[ \t]+\S[^\n:]*:", body, re.M):
                 errors.append(f"{name}: 'Built screen finding {number}:' names {token}, but the current validation report has no '- {token} <Class>:' bullet")
         elif not (severities[number - 1] == "MINOR" and (DECLINED.match(entry) or NEEDS_DECISION.match(entry))):
             errors.append(f"{name}: built screen finding {number} has no 'Built screen finding {number}:' line naming F<N> (MAJOR), 'declined: <reason>' (MINOR only) or 'Needs decision: <text>' (MINOR only)")
