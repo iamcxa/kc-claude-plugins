@@ -1,0 +1,40 @@
+name: kc-ops-inbox tests
+
+# Runs the package's own tests. The flow tests need the pinned Spacedock binary, which the
+# package's install script provides, and fail instead of skipping when it is missing.
+on:
+  pull_request:
+    paths:
+      - "kc-ops-inbox/**"
+      - ".github/workflows/kc-ops-inbox-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-ops-inbox/**"
+      - ".github/workflows/kc-ops-inbox-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: kc-ops-inbox node tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Install Spacedock at the package's pin
+        env:
+          OPS_TOOLS_DIR: ${{ runner.temp }}/tools
+          OPS_SKIP_CLAUDE: "1"
+        run: |
+          bash kc-ops-inbox/trigger/install-tools.sh
+          echo "$OPS_TOOLS_DIR/bin" >> "$GITHUB_PATH"
+      - name: Install dependencies
+        working-directory: kc-ops-inbox
+        run: npm ci
+      - name: Test
+        working-directory: kc-ops-inbox
+        env:
+          OPS_REQUIRE_SPACEDOCK: "1"
+        run: npm test
