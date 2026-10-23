@@ -13,7 +13,7 @@ kc-adr 負責讓 agent 把 ADR 讀對、寫對、寫到對的地方，任何 rep
 | kc-journey-map | 使用者看得到的能力，包括延後的功能 | 裁示 |
 | 使用者 | 裁決、合併、授權 | — |
 
-ADR 寫入的工具今天都在 dev2：格式模板、`number_guards.py` 的配號、`adr_lint.py` 檢查。**已裁決：工具搬到 kc-adr，但用 dev2 的人只要裝 dev2 一個**（使用者 2026-10-22 在 dev2 FO 的工作階段回覆「可以」）。kc-adr 成為 ADR 模板、ADR 格式檢查與配號中 ADR 部分的來源；每次 dev2 發版前，CI 從 kc-adr 複製進 dev2，副本與來源不一致時 CI 失敗。其他使用者直接安裝 kc-adr。做法由 dev2 待辦任務 `kc-adr-tools-with-dev2-copy` 與 kc-adr 一起設計，第一步先測複製進去的目錄在兩個 host 上都裝得起來；配號保留檔歸誰也在那張任務裡定。在那張任務完成前，`read-adr` 的寫入部分照舊指向 dev2 的工具。
+ADR 寫入的工具：格式模板與 `adr_lint.py` 檢查的來源是 kc-adr，配號（`number_guards.py`）留在 dev2。**已裁決（使用者 2026-10-22 縮小範圍）：** kc-adr 只當模板和格式檢查的來源，配號留在 dev2；dev2 的副本由同步腳本從 kc-adr 複製，必過檢查做逐位元比對；格式照 dev2 現有的採用，只把「FO」改成「推薦者」。用 dev2 的人只要裝 dev2 一個，其他使用者直接安裝 kc-adr；不用 dev2 的 repo 由單一寫入者把新 ADR 編為 base 分支最高號加一。dev2 的副本與同步由 dev2 任務 `kc-adr-tools-with-dev2-copy` 負責。
 
 ## 範圍外：跨領域怎麼組織
 
