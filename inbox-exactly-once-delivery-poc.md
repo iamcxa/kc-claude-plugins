@@ -1,6 +1,6 @@
 ---
 title: A signed event sent three times wakes the ops workflow exactly once, and the inbox cannot push code
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
