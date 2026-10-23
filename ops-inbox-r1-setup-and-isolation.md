@@ -4,7 +4,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-ops-inbox-r1-setup-and-isolation
 pr:
 gates:
     version: 1
