@@ -1,0 +1,18 @@
+{
+  "class": "never",
+  "head": "0b5a9ddf7eec59c0870175d7fa09da2e9626a4de",
+  "model": "not run",
+  "necessity": "seven files, each from AC-1..AC-3, D1, D2 or Captain amendments 1 and 2; no kc-dev-flow-2 file.",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: amendment: 'Amendment 1 dated 2026-10-23'",
+    "point: amendment: 'Amendment 2 dated 2026-10-23'",
+    "point: path: 'kc-adr/references/adr-template.md'",
+    "point: path: 'kc-adr/skills/read-adr/SKILL.md'",
+    "point: path: 'kc-adr/skills/read-adr/writing.md'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#710",
+  "sufficiency": "kc-adr ships the ADR template and linter at stable paths, writing.md points at them and states the single-writer numbering rule, and validation PASSED on this head with the six-step acceptance script ",
+  "time": "2026-10-23T04:31:39Z",
+  "verdict": "ask"
+}
