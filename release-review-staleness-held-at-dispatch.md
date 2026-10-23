@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-23T06:04:47Z
+worktree: .worktrees/spacedock-ensign-release-review-staleness-held-at-dispatch
 ---
 
 ## Scope
