@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:release-walk-picky-reviewers-and-director:backlog:attempt-1:revision-1",
+  "question": "把版本驗收的第二個 PR 拆成新任務、先過設計閘門，目前這張只用 #709 結案，可以嗎？ FO recommended splitting; approving enters this task into ideation.",
+  "artifacts": [
+    {
+      "id": "artifact:release-walk-picky-reviewers-and-director:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c0ff2d55d432c43f5a76ce39659a005cbb231bef/release-walk-picky-reviewers-and-director.md",
+      "rev": "sha256:a6d4d68103114351140703b4c728f9b277e3260ce50ad6e9e9dc7ad8777cb3de",
+      "mediaType": "text/markdown",
+      "summary": "Seed as filed: the kc-dev-flow-2 half of the release walk with release-acceptance Amendments 1 and 3, moved here by its Amendment 4; starting design is release-acceptance PR 2 design."
+    }
+  ]
+}
