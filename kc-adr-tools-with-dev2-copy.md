@@ -3,7 +3,7 @@ title: kc-adr holds the ADR writing tools, and dev2 ships a CI-synced copy so a 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain 「可以」 (chat, 2026-10-23), answering 「「ADR 工具副本」的設計可以進入實作嗎？我建議可以。」 whose presentation stated approval accepts the design with rulings D1 to D5 and D1's accepted costs (the lint exemption, about 77 more words per session, twice where kc-adr is installed) and the one-plugin-per-PR exception named in the PR body; digest dc120468. Accepts the FO recommendation as the bound question states.
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
