@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adr-silent-undo-probe:backlog:attempt-1:revision-1",
+  "question": "Approve this backlog item as filed? Approval selects profile poc (a measurement whose output is a report, no shipped change) and accepts the scope, non-goals and AC-1..AC-3: one new scenario in the existing read-adr harness, arms A0 and B1 on Claude and Codex, one run per cell, pass rule committed before the first run; then ideation.",
+  "artifacts": [
+    {
+      "id": "artifact:adr-silent-undo-probe:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d6679bd22734af8bec5589e6616c44d909552761/adr-silent-undo-probe.md",
+      "rev": "sha256:51e487e12362f4bc5cf5911d71b95cb0b857fa3367702f03b5d768ebf9831419",
+      "mediaType": "text/markdown",
+      "summary": "Seed from the Captain's 「可以」 (2026-10-23) to FO's proposed measurement after re-reading the ADR-your-agent-never-read article: does an agent quietly undo an ADR-protected choice during an unrelated refactor, with and without kc-adr. Reuses _archive/read-adr-reporting-rule-followup/harness; fictional data; no kc-adr change."
+    }
+  ]
+}

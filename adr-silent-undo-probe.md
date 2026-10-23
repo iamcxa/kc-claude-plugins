@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:adr-silent-undo-probe:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:adr-silent-undo-probe-backlog-1
+              briefing:
+                id: briefing:adr-silent-undo-probe:backlog:attempt-1:revision-1
+                digest: sha256:9ad18eaa7d8f996a6347b16a73a680cbd683a5154462d717e98309e306fc742c
+                room-ref: ./adr-silent-undo-probe/review/backlog/briefing-1
 ---
 
 ## Scope
