@@ -1,0 +1,32 @@
+{
+  "schema": "release-walk/v1",
+  "journey": "book-pickup",
+  "persona": "A reader.",
+  "release": {
+    "id": "r1",
+    "name": "RELEASE 1",
+    "goal": "A reader can reserve a book, check readiness and collect it."
+  },
+  "source": {
+    "file": "journey.yaml",
+    "commit": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "proof_line": "A reader can reserve a book, check readiness and collect it.",
+  "stories": [
+    {
+      "order": 1,
+      "id": "reserve-copy",
+      "card": "reserve-copy"
+    },
+    {
+      "order": 2,
+      "id": "check-ready",
+      "card": "check-ready"
+    },
+    {
+      "order": 3,
+      "id": "collect-book",
+      "card": "collect-book"
+    }
+  ]
+}

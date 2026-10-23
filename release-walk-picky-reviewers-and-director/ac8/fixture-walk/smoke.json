@@ -1,0 +1,7 @@
+{
+  "result": "passed",
+  "check": "reserve then collect; fails on an empty vault",
+  "evidence": [
+    "shot.png"
+  ]
+}

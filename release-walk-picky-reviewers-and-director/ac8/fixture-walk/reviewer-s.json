@@ -1,0 +1,110 @@
+{
+  "reviewer": {
+    "id": "s",
+    "model": "sonnet",
+    "persona": "keyboard-only power user"
+  },
+  "stories": [
+    {
+      "id": "reserve-copy",
+      "result": "works",
+      "entry": "home page",
+      "evidence": [
+        "shot.png"
+      ],
+      "complaints": [
+        "s2"
+      ]
+    },
+    {
+      "id": "check-ready",
+      "result": "broken",
+      "entry": "home page",
+      "evidence": [
+        "shot.png"
+      ],
+      "complaints": [
+        "s1"
+      ]
+    },
+    {
+      "id": "collect-book",
+      "result": "missing-entry-point",
+      "entry": "reader view",
+      "evidence": [
+        "shot.png"
+      ],
+      "complaints": [
+        "s3"
+      ]
+    }
+  ],
+  "proof_line": {
+    "result": "broken",
+    "evidence": [],
+    "cause": ""
+  },
+  "complaints": [
+    {
+      "id": "s1",
+      "stories": [
+        "check-ready"
+      ],
+      "rank": 1,
+      "seen": "Check if ready does nothing; I never learn whether the book is ready.",
+      "evidence": [
+        "s1.png"
+      ]
+    },
+    {
+      "id": "s2",
+      "stories": [
+        "reserve-copy"
+      ],
+      "rank": 2,
+      "seen": "Could not see the Reserve button without tabbing through five fields.",
+      "evidence": [
+        "s2.png"
+      ]
+    },
+    {
+      "id": "s3",
+      "stories": [
+        "collect-book"
+      ],
+      "rank": 1,
+      "seen": "As a reader I found no way to collect the book from the reservation page.",
+      "evidence": [
+        "s3.png"
+      ]
+    },
+    {
+      "id": "s4",
+      "stories": [],
+      "rank": 4,
+      "seen": "The page felt like it took about ten seconds to load.",
+      "evidence": [
+        "s4.png"
+      ]
+    }
+  ],
+  "deferred_verdicts": [
+    {
+      "item": "t-ready#F1",
+      "verdict": "agree",
+      "why": "same"
+    },
+    {
+      "item": "t-reserve#F1",
+      "verdict": "agree",
+      "why": "same"
+    },
+    {
+      "item": "t-collect-a#declined-1",
+      "verdict": "cannot-tell",
+      "why": "no picture"
+    }
+  ],
+  "would_miss": "mouse paths",
+  "recommend": "add a collect link"
+}

@@ -1,0 +1,10 @@
+ideation model unrecorded: t-collect-a
+no ideation stage: t-collect-b
+escalate i1: backlog-or-decision
+escalate i2: reviewers-disagree, backlog-or-decision
+escalate i3: design-opus:t-reserve, backlog-or-decision
+escalate i4: design-opus:t-reserve, backlog-or-decision
+escalate i5: unverified, backlog-or-decision
+escalate t-reserve#F1: design-opus:t-reserve, reviewers-disagree
+escalate t-collect-a#declined-1: reviewers-disagree, backlog-or-decision
+Items: i1 (o1, s1); i2 (s3); i3 (o2, s2); i4 (o3); i5 (s4); t-reserve#F1; t-collect-a#declined-1

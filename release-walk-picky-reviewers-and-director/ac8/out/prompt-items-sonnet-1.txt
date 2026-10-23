@@ -1,0 +1,25 @@
+Pass: 3
+Task folder: /tmp/ac8/world/.spacedock-state/r1-acceptance
+Reviewer reports:
+- walk/reviewer-o.json
+- walk/reviewer-s.json
+Deferred:
+- t-collect-a#declined-1: - declined: host component Button at x.d.ts: no such prop
+- t-ready#F1: - F1 Deferred risk: ready can read stale
+- t-reserve#F1: - F1 Polish: the reserve button label is long
+Screenshots:
+- walk/o-collect.png
+- walk/o1.png
+- walk/o2.png
+- walk/o3.png
+- walk/s1.png
+- walk/s2.png
+- walk/s3.png
+- walk/s4.png
+- walk/shot.png
+Walk:
+- reserve-copy | Reserve a copy for pickup | activity: Reserve a book
+- check-ready | See that the book is ready to collect | activity: Know when to visit
+- collect-book | Collect the reserved book | activity: Take the book home
+ADR folder: none
+Items: i1 (o1, s1); i2 (s3); i3 (o2, s2); i4 (o3); i5 (s4); t-reserve#F1; t-collect-a#declined-1

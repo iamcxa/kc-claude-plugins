@@ -1,0 +1,68 @@
+{
+ "opus-control": {
+  "model": [
+   "claude-opus-5-5"
+  ],
+  "input": 10,
+  "output": 3989,
+  "cache_read": 243546,
+  "cache_creation": 45058,
+  "total": 292603,
+  "is_error": false
+ },
+ "opus-items-sonnet-1": {
+  "model": [
+   "claude-opus-5-5"
+  ],
+  "input": 12,
+  "output": 3745,
+  "cache_read": 300163,
+  "cache_creation": 53875,
+  "total": 357795,
+  "is_error": false
+ },
+ "opus-items-sonnet-2": {
+  "model": [
+   "claude-opus-5-5"
+  ],
+  "input": 10,
+  "output": 4197,
+  "cache_read": 241789,
+  "cache_creation": 47719,
+  "total": 293715,
+  "is_error": false
+ },
+ "sonnet-1": {
+  "model": [
+   "claude-sonnet-5-5"
+  ],
+  "input": 10,
+  "output": 5312,
+  "cache_read": 239479,
+  "cache_creation": 44365,
+  "total": 289166,
+  "is_error": false
+ },
+ "sonnet-2": {
+  "model": [
+   "claude-sonnet-5-5"
+  ],
+  "input": 8,
+  "output": 5177,
+  "cache_read": 182994,
+  "cache_creation": 45415,
+  "total": 233594,
+  "is_error": false
+ },
+ "sonnet-3": {
+  "model": [
+   "claude-sonnet-5-5"
+  ],
+  "input": 8,
+  "output": 5386,
+  "cache_read": 212422,
+  "cache_creation": 13399,
+  "total": 231215,
+  "is_error": false
+ }
+}

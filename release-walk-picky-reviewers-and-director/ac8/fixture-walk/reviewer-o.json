@@ -1,0 +1,97 @@
+{
+  "reviewer": {
+    "id": "o",
+    "model": "opus",
+    "persona": "impatient first-timer"
+  },
+  "stories": [
+    {
+      "id": "reserve-copy",
+      "result": "works",
+      "entry": "home page",
+      "evidence": [
+        "shot.png"
+      ],
+      "complaints": [
+        "o2"
+      ]
+    },
+    {
+      "id": "check-ready",
+      "result": "broken",
+      "entry": "home page",
+      "evidence": [
+        "shot.png"
+      ],
+      "complaints": [
+        "o1"
+      ]
+    },
+    {
+      "id": "collect-book",
+      "result": "works",
+      "entry": "signed in as desk staff",
+      "evidence": [
+        "o-collect.png"
+      ],
+      "complaints": []
+    }
+  ],
+  "proof_line": {
+    "result": "broken",
+    "evidence": [],
+    "cause": ""
+  },
+  "complaints": [
+    {
+      "id": "o1",
+      "stories": [
+        "check-ready"
+      ],
+      "rank": 1,
+      "seen": "The status stays on 'Checking...' for two minutes and the Check button is disabled, so I cannot tell if my book is ready.",
+      "evidence": [
+        "o1.png"
+      ]
+    },
+    {
+      "id": "o2",
+      "stories": [
+        "reserve-copy"
+      ],
+      "rank": 2,
+      "seen": "Reserve button is below the fold at laptop size.",
+      "evidence": [
+        "o2.png"
+      ]
+    },
+    {
+      "id": "o3",
+      "stories": [],
+      "rank": 3,
+      "seen": "Two labels for the same action: 'Reserve a copy' and 'Hold a book'.",
+      "evidence": [
+        "o3.png"
+      ]
+    }
+  ],
+  "deferred_verdicts": [
+    {
+      "item": "t-ready#F1",
+      "verdict": "agree",
+      "why": "saw it"
+    },
+    {
+      "item": "t-reserve#F1",
+      "verdict": "disagree",
+      "why": "blocks me"
+    },
+    {
+      "item": "t-collect-a#declined-1",
+      "verdict": "agree",
+      "why": "fine"
+    }
+  ],
+  "would_miss": "a keyboard-only path",
+  "recommend": "fix check-ready first"
+}

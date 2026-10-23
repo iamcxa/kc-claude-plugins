@@ -1,0 +1,15 @@
+{
+  "target": {
+    "environment": "staging",
+    "ref": "abc"
+  },
+  "diversity": {
+    "mode": "multi-model"
+  },
+  "not_tested": [
+    "resize"
+  ],
+  "data_left": [
+    "one reservation"
+  ]
+}
