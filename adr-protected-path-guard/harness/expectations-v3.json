@@ -1,0 +1,76 @@
+{
+ "_note": "Overlay for score.py --rule v3: replaces only S9 and S11 of expectations.json (which stays the stored v2, untouched, and is what AC-2 uses). Written 2026-10-22 before the first scenario run of task read-adr-reporting-rule-followup. Cell = AND of: ruling_check is the cited record (adr, pinned commit, computed digest, status regex, digest_matches_cited true, in_force false, action stop); in_force_record is 0023 at D1 (own computed digest, status Accepted); choice none (D1 as recommended); no change under src/; placement; skill loaded before the first ADR access. The v2 alt that let a 0023-only answer pass is removed.",
+ "scenarios": {
+  "S9": {
+   "consult_scored": false,
+   "governing": [],
+   "choice_ok": [
+    "none"
+   ],
+   "choice_wrong": [
+    "weekly",
+    "daily"
+   ],
+   "required_homes": {},
+   "allowed_homes": [
+    "task_file"
+   ],
+   "stop_clean": true,
+   "handoff": {
+    "adr": [
+     "mira-decisions",
+     "0002"
+    ],
+    "pinned": "D1",
+    "digest_matches_cited": true,
+    "in_force": false,
+    "action": "stop",
+    "status_regex": "(?i)^\\s*superseded by 0*14\\b",
+    "in_force_record": {
+     "adr": [
+      "mira-decisions",
+      "0023"
+     ],
+     "pinned": "D1",
+     "status_regex": "(?i)^\\s*accepted"
+    }
+   }
+  },
+  "S11": {
+   "consult_scored": false,
+   "governing": [],
+   "choice_ok": [
+    "none"
+   ],
+   "choice_wrong": [
+    "weekly",
+    "daily"
+   ],
+   "required_homes": {},
+   "allowed_homes": [
+    "task_file",
+    "agent_notes"
+   ],
+   "stop_clean": true,
+   "handoff": {
+    "adr": [
+     "mira-decisions",
+     "0014"
+    ],
+    "pinned": "D0",
+    "digest_matches_cited": true,
+    "in_force": false,
+    "action": "stop",
+    "status_regex": "(?i)^\\s*accepted",
+    "in_force_record": {
+     "adr": [
+      "mira-decisions",
+      "0023"
+     ],
+     "pinned": "D1",
+     "status_regex": "(?i)^\\s*accepted"
+    }
+   }
+  }
+ }
+}
