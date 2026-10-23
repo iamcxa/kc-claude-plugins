@@ -23,6 +23,10 @@ bound, not a proof: a check that starts later is missed, and its later green is 
 A Codex or Copilot outcome already there when add first looks is printed as "already" and
 reported by the next wait, once.
 
+A Codex comment the reader does not recognize (codex=unrecognized(comment:ID)) is not an outcome. If the
+next read RECHECK_SECONDS later still finds that comment unrecognized, wait stops once for that comment and
+prints it with the next: lines for the merge ask and the report upstream. A look that fails is not a read.
+
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
 only for a PR added with --codex or --copilot, from that extension's reader when it is
 present. Exit 2 is a configuration error.
@@ -34,7 +38,9 @@ draft ready, the observer check ahead of the merge sentinel, keeping one wait ru
 dispatch record that names a package script without a directory (dispatch_records.py --newest), and a
 chief-engineer or engineering-reviewer call a live task owes (role_triggers.py, given the number of review ids
 that left inline comments on the task's open PR), and one `next:` line per stage where two or more gates
-await the Captain (spacedock status --next; SPACEDOCK_BIN names the executable). It prints no merge-ask
+await the Captain (spacedock status --next; SPACEDOCK_BIN names the executable), and one `next:` line naming
+each backlog task that is waiting for its gate, holds a `## FO alignment` section and fails
+design_surfaces.py check --seed, when the workflow has an ideation stage. It prints no merge-ask
 or hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
 change. Exit 2 when a task cannot be read.
 """
@@ -55,8 +61,12 @@ SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 SCRIPTS = Path(__file__).resolve().parent
 CODEX = Path(__file__).resolve().parents[1] / "extensions/codex/codex_review.py"
 COPILOT = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_review.py"
+SEED = SCRIPTS / "design_surfaces.py"
+FO_HEADING = re.compile(r"^## FO alignment[ \t]*$", re.M)
+IDEATION_STAGE = re.compile(r"^[ \t]*-[ \t]+name:[ \t]*ideation[ \t]*$", re.M)
 FIELDS = "state,isDraft,mergeable,mergeStateStatus,headRefOid,statusCheckRollup,title"
 SETTLE_SECONDS = 60
+RECHECK_SECONDS = 180
 TRACKED = ("state", "draft", "mergeable", "checks", "unchecked", "head", "codex", "codex-evidence",
            "copilot", "copilot-evidence")
 OUTCOMES = {"state": None, "draft": None, "mergeable": {"CONFLICTING"},
@@ -98,8 +108,9 @@ def reader(script, repo, number, words=None):
         return "-", "-"
     done = subprocess.run([sys.executable, str(script), repo, number], capture_output=True, text=True)
     evidence = (re.findall(r"evidence=(\S+)", done.stdout) or [None])[-1]
-    verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed"}).get(done.returncode, "error")
-    return verdict, evidence or "-"
+    verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed", 5: "unrecognized"}).get(done.returncode, "error")
+    odd = re.findall(r"unrecognized=(\S+)", done.stdout)
+    return (f"{verdict}({odd[-1]})" if odd and verdict == "unrecognized" else verdict), evidence or "-"
 
 
 def codex(repo, number):
@@ -165,6 +176,31 @@ def wait_next(ref, now, decisive):
     return lines + (next_for(ref, now) if {"mergeable", "draft", "checks", "unchecked"} & set(decisive) else [])
 
 
+def unread_lines(state, first, clock, read):
+    lines = []
+    for ref, snap in load(state).items():
+        if ref not in read:
+            continue
+        word = snap.get("codex", "")
+        if not word.startswith("unrecognized(") or snap.get("codex-reported") == word:
+            first.pop(ref, None)
+            continue
+        if first.get(ref, ("", 0))[0] != word:
+            first[ref] = (word, clock())
+            continue
+        if clock() - first[ref][1] < RECHECK_SECONDS:
+            continue
+        repo, number = ref.split("#")
+        lines += [f"{ref} codex={word}: not recognized on two reads {RECHECK_SECONDS}s apart",
+                  f"next: quote that comment's raw text, from `gh api repos/{repo}/issues/comments/{word[word.index(':') + 1:-1]} --jq .body`, "
+                  "in the merge ask as Codex unread, never clean; the Captain decides.",
+                  "next: this is a kc-dev-flow-2 problem, report it upstream with the comment id and its raw text: in the repository "
+                  "that holds kc-dev-flow-2 itself, file a backlog task; elsewhere, if `peers` is listed and a kc-dev-flow-2 maintainer FO "
+                  "is reachable, send it through `peers`; otherwise draft the issue and ask the Captain whether to file it."]
+        update(state, put={ref: {"codex-reported": word}}, keep_flags=True)
+    return lines
+
+
 def load(state):
     return json.loads(state.read_text()) if state.exists() else {}
 
@@ -210,7 +246,7 @@ def record(state, known, snaps):
     return already, update(state, put=snaps, keep_flags=True)
 
 
-def sweep(state, look=look, nexts=None, clock=time.time):
+def sweep(state, look=look, nexts=None, clock=time.time, read=None):
     seen = load(state)
     start = {ref: dict(entry) for ref, entry in seen.items()}
     changes, rows = [], []
@@ -228,6 +264,8 @@ def sweep(state, look=look, nexts=None, clock=time.time):
             changes.append((line, bool(decisive)))
             if decisive and nexts is not None:
                 nexts.extend(n for n in wait_next(ref, now, decisive) if n not in nexts)
+        if read is not None:
+            read.add(ref)
         rows.append(f"{ref:34} {now['state']:7} draft={now['draft']!s:5} {now['mergeable']:11} "
                     f"checks={now['checks']:8} codex={now['codex']:12} "
                     f"copilot={now.get('copilot', '-'):12} {now['title']}")
@@ -293,19 +331,54 @@ def entities(state):
     return sorted(found.items())
 
 
-def sittings(workflow):
+def ready_rows(workflow):
     binary = os.environ.get("SPACEDOCK_BIN") or "spacedock"
     done = subprocess.run([binary, "status", "--workflow-dir", str(workflow), "--next", "--json"], capture_output=True, text=True)
     if done.returncode:
         raise RuntimeError((done.stderr or done.stdout).strip()[:120] or "spacedock status --next failed")
+    return json.loads(done.stdout)["ready_gates"]
+
+
+LIST_LINE = ("next: before asking, list each open decision of these tasks once, from their decision sections and the map's "
+             "open questions on their journey-story, with its home, a plain sentence, your recommendation and what gets worse; "
+             "then ask one at a time; a decision that blocks no worker waits for the next sitting.")
+
+
+def sittings(rows):
     waiting = {}
-    for gate in json.loads(done.stdout)["ready_gates"]:
+    for gate in rows:
         if gate["readiness"] == "awaiting-captain":
             waiting.setdefault(gate["current"], []).append(gate["slug"])
-    return [f"next: {len(slugs)} gates await the Captain at {stage} ({', '.join(slugs)}); unless already presented, "
-            "present them in one message and record each with his one answer."
-            + (" Name the merge order and each shared file from Batch overlap." if stage == "validation" else "")
-            for stage, slugs in waiting.items() if len(slugs) > 1]
+    return [line for stage, slugs in waiting.items() if len(slugs) > 1 for line in (
+        f"next: {len(slugs)} gates await the Captain at {stage} ({', '.join(slugs)}); unless already presented, "
+        "present them in one message and record each with his one answer."
+        + (" Name the merge order and each shared file from Batch overlap." if stage == "validation" else ""),
+        LIST_LINE)]
+
+
+def seeds(rows, found, readme):
+    if not IDEATION_STAGE.search(readme):
+        return [], []
+    failing, errors = [], []
+    for row in rows:
+        task = found.get(row.get("slug"))
+        if row.get("current") != "backlog" or row.get("readiness") != "needs-preparation" or not task:
+            continue
+        try:
+            if not FO_HEADING.search(task.read_text(errors="replace")):
+                continue
+            done = subprocess.run([sys.executable, str(SEED), "check", "--seed", str(task)], capture_output=True, text=True)
+        except OSError as error:
+            errors.append(f"next: report {row['slug']} to the Captain: {str(error)[:120]}.")
+            continue
+        if done.returncode == 1 and done.stdout.strip():
+            failing.append(row["slug"])
+        elif done.returncode:
+            why = ((done.stdout or done.stderr).strip().splitlines() or [f"exit {done.returncode}"])[-1]
+            errors.append(f"next: report {row['slug']} to the Captain: {why[:120]}.")
+    line = [f"next: the seed check fails for these backlog tasks ({', '.join(failing)}); before preparing the gate of one, "
+            f"fix its ## FO alignment and run `python3 {SEED} check --seed <task>`."] if failing else []
+    return line, errors
 
 
 def tasks(opts, look=look, ask=gh, clock=time.time):
@@ -315,7 +388,8 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     listed = set(re.findall(r"[\w-]+", readme.get("extensions", "")))
     wait = f"python3 {SCRIPTS / 'pr_watch.py'}" + (f" --state {shlex.quote(str(opts.state))}" if opts.given else "")
     out, snaps, errors, live, rounds = [], {}, [], [], {}
-    for slug, task in entities(state):
+    found = entities(state)
+    for slug, task in found:
         meta = front(task)
         if "status" not in meta:
             continue
@@ -375,9 +449,14 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
         elif done.returncode:
             errors.append(f"next: report {slug} to the Captain: {(done.stdout or done.stderr).strip()[:120]}.")
     try:
-        out += sittings(workflow)
+        rows = ready_rows(workflow)
+        out += sittings(rows)
     except (RuntimeError, KeyError, ValueError, OSError) as error:
         errors.append(f"next: report the awaiting gates to the Captain: {str(error)[:120]}.")
+    else:
+        line, broken = seeds(rows, dict(found), (workflow / "README.md").read_text(errors="replace"))
+        out += line
+        errors += broken
     if snaps:
         already, _ = record(opts.state, load(opts.state), snaps)
         out += already + [f"next: run `{wait} wait` in the background, unless one is running.",
@@ -423,11 +502,16 @@ def main(argv=None, look=look, sleep=time.sleep, ask=gh, clock=time.time):
             print("\n".join(rows + ([line for line, _ in changes] or ["no change since the last look"])))
             return 0
         every = int(opts.args[0]) if opts.args else 60
+        first = {}
         while True:
-            nexts = []
-            changes, _, watching = sweep(opts.state, look, nexts, clock)
+            nexts, read = [], set()
+            changes, _, watching = sweep(opts.state, look, nexts, clock, read)
             if any(decisive for _, decisive in changes) or not watching:
                 print("\n".join([line for line, _ in changes] + nexts or ["watch list is empty"]))
+                return 0
+            gave_up = unread_lines(opts.state, first, clock, read)
+            if gave_up:
+                print("\n".join([line for line, _ in changes] + gave_up))
                 return 0
             sleep(every)
     except (RuntimeError, KeyError, ValueError, OSError) as error:

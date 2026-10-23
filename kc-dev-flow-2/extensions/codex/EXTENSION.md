@@ -9,7 +9,10 @@ Reads Codex GitHub review rounds on a delivery PR. A repository uses it by listi
 - **Read:** FO reads each round with `python3 <package>/extensions/codex/codex_review.py
   <owner/repo> <pr>`: exit 0 is a clean round on the head, exit 1 its findings, exit 3 or 4
   no verdict on the head yet, so the round is not counted and merge is not asked for; FO
-  counts one round per `evidence=` id it prints. Exit 2 is a configuration error, reported
+  counts one round per `evidence=` id it prints. Exit 5 is a Codex comment on the head that the
+  reader does not recognize (`unrecognized=comment:<id>`): no round and never clean; FO keeps
+  waiting as for exit 4 until `<package>/scripts/pr_watch.py wait` gives up on it, then does the
+  `next:` lines it prints. Exit 2 is a configuration error, reported
   as `codex not run: <reason>`.
 - **After a repair:** when FO pushes a repair to the PR, it comments `@codex review` there,
   because a push brings no new review by itself.

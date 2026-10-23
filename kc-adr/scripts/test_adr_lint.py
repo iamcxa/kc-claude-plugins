@@ -1,0 +1,131 @@
+import importlib.util
+from pathlib import Path
+import subprocess
+import tempfile
+import unittest
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def load(name, file):
+    spec = importlib.util.spec_from_file_location(name, ROOT / "scripts" / file)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
+
+adr = load("adr_lint", "adr_lint.py")
+TEMPLATE = (ROOT / "references/adr-template.md").read_text()
+
+
+def record(number, status="Accepted", body=None):
+    text = body if body is not None else TEMPLATE
+    return text.replace("# NNNN.", f"# {number}.").replace("Date: YYYY-MM-DD", "Date: 2026-09-23").replace(
+        "## Status\n\nAccepted", f"## Status\n\n{status}")
+
+
+class AdrLintTests(unittest.TestCase):
+    def run_lint(self, files, *require):
+        with tempfile.TemporaryDirectory() as d:
+            for name, text in files.items():
+                Path(d, name).write_text(text)
+            return adr.main([d, "--require", *require]) if require else adr.main([d])
+
+    def test_the_template_itself_is_a_valid_record(self):
+        self.assertEqual(self.run_lint({"0002-first.md": record(2)}, "2"), 0)
+
+    def test_each_format_rule_refuses(self):
+        cases = {
+            "missing words": record(2).replace("**Words:**", "Words:"),
+            "missing options": record(2).replace("**Options considered:**", "Options:"),
+            "section order": record(2).replace("## Context", "## Background"),
+            "bad status": record(2, status="Done"),
+            "dangling supersede": record(2, status="Superseded by 0009"),
+            "title number": record(3),
+            "no date": record(2).replace("Date: 2026-09-23", ""),
+        }
+        for label, text in cases.items():
+            with self.subTest(label):
+                self.assertEqual(self.run_lint({"0002-first.md": text}), 1)
+
+    def test_a_required_record_needs_the_recommended_line_and_an_old_one_does_not(self):
+        old = record(2).replace("**Recommended:**", "Recommended:")
+        self.assertEqual(self.run_lint({"0002-first.md": old}), 0)
+        self.assertEqual(self.run_lint({"0002-first.md": old}, "2"), 1)
+        self.assertEqual(self.run_lint({"0002-first.md": old, "0003-second.md": record(3)}, "3"), 0)
+
+    def lint_output(self, args):
+        import contextlib, io
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            code = adr.main(args)
+        return code, out.getvalue()
+
+    def test_since_requires_every_record_changed_after_the_base_and_no_other(self):
+        old = record(2).replace("**Recommended:**", "Recommended:")
+        with tempfile.TemporaryDirectory() as d:
+            git = lambda *a: subprocess.run(["git", "-C", d, *a], check=True, capture_output=True, text=True).stdout
+            git("init", "-q")
+            for n in (2, 3, 4):
+                Path(d, f"000{n}-r.md").write_text(old.replace("# 2.", f"# {n}."))
+            git("add", ".")
+            git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", "base")
+            base = git("rev-parse", "HEAD").strip()
+            Path(d, "0003-r.md").write_text(Path(d, "0003-r.md").read_text() + "\nAmended.\n")
+            Path(d, "0005-r.md").write_text(old.replace("# 2.", "# 5."))
+            code, out = self.lint_output([d, "--since", base])
+            self.assertEqual(code, 1)
+            self.assertIn("required ADR 0003", out)
+            self.assertIn("required ADR 0005", out)
+            self.assertNotIn("0002", out)
+            self.assertNotIn("0004", out)
+            for n in (3, 5):
+                f = Path(d, f"000{n}-r.md")
+                f.write_text(f.read_text().replace("**Options considered:**", "**Recommended:** not recorded\n\n**Options considered:**"))
+            self.assertEqual(self.lint_output([d, "--since", base])[0], 0)
+            self.assertEqual(self.lint_output([d, "--since", "no-such-commit"])[0], 2)
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "0002-r.md").write_text(record(2))
+            self.assertEqual(self.lint_output([d, "--since", "HEAD"])[0], 2)
+            code, out = self.lint_output([d])
+            self.assertEqual(code, 0)
+            self.assertIn("changed records not checked", out)
+
+    def test_since_lets_a_legacy_record_take_a_forward_line(self):
+        legacy = "# Old architecture notes\n\nStatus: Legacy\n\nfree-form text\n"
+        with tempfile.TemporaryDirectory() as d:
+            git = lambda *a: subprocess.run(["git", "-C", d, *a], check=True, capture_output=True, text=True).stdout
+            git("init", "-q")
+            Path(d, "0001-old.md").write_text(legacy)
+            git("add", ".")
+            git("-c", "user.name=t", "-c", "user.email=t@t", "commit", "-q", "-m", "base")
+            base = git("rev-parse", "HEAD").strip()
+            Path(d, "0001-old.md").write_text(legacy + "\n> Amended by ADR 0002.\n")
+            self.assertEqual(self.lint_output([d, "--since", base])[0], 0)
+            self.assertEqual(self.lint_output([d, "--since", base, "--require", "1"])[0], 1)
+
+    def test_an_amended_older_record_says_not_recorded_and_the_refusal_says_how(self):
+        old = record(2).replace("**Recommended:**", "Recommended:")
+        amended = old.replace("**Options considered:**", "**Recommended:** not recorded\n\n**Options considered:**")
+        self.assertEqual(self.run_lint({"0002-first.md": amended}, "2"), 0)
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "0002-first.md").write_text(old)
+            import contextlib, io
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                self.assertEqual(adr.main([d, "--require", "2"]), 1)
+            self.assertIn("not recorded", out.getvalue())
+
+    def test_file_names_and_numbers(self):
+        self.assertEqual(self.run_lint({"2-first.md": record(2)}), 1)
+        self.assertEqual(self.run_lint({"0002-first.md": record(2), "0002-second.md": record(2)}), 1)
+
+    def test_legacy_is_skipped_but_cannot_satisfy_a_required_record(self):
+        legacy = "# Old architecture notes\n\nStatus: Legacy\n\nfree-form text\n"
+        self.assertEqual(self.run_lint({"0001-old.md": legacy, "0002-new.md": record(2)}, "2"), 0)
+        self.assertEqual(self.run_lint({"0001-old.md": legacy}, "1"), 1)
+        self.assertEqual(self.run_lint({"0002-new.md": record(2)}, "3"), 1)
+
+
+if __name__ == "__main__":
+    unittest.main()

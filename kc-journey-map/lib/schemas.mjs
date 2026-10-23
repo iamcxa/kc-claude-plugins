@@ -10,7 +10,7 @@ export const SCHEMAS = {
 	'journey-map-question': [
 		['id', 'explicit string, unique inside its story; a question without one cannot be folded'],
 		['ask, status, because, answer, doc', 'as `model.mjs` reads them; `status` is `open`, `answered` or `deferred`; `because` is owed when `deferred`'],
-		['source', '`{kind: gate or amendment, ref: "<task slug>/<footprint source>", words, date}`; optional, written only by journey-fold.mjs'],
+		['source', '`{kind: gate, amendment or release, ref: "<task slug>/<footprint source>" for gate and amendment, "<journey>/<release-id>" for release, words, date}`; optional; gate and amendment written by journey-fold.mjs, release by a release preparation before any task exists'],
 	],
 }
 export const ADR_TITLE = 'a-captain-ruling-reaches-the-map-as-a-versioned-footprint'

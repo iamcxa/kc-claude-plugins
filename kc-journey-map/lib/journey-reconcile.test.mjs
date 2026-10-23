@@ -68,6 +68,14 @@ test('changing one answer text on a copy moves unsourced by one', () => {
 	assert.equal(Number(value(reconcile(more, []), 'unsourced')), base + 1)
 })
 
+test('an answer sourced by a release preparation is not unsourced', () => {
+	const base = Number(value(reconcile(FLOW, []), 'unsourced'))
+	const answered = '{id: q1, status: answered, ask: "Who issues codes?", answer: "Platform.", source: {kind: release, ref: "shop/r1", words: "Platform issues them.", date: 2026-10-22}}'
+	const sourced = FLOW.replace('{id: q1, status: open, ask: "Who issues codes?"}', answered)
+	assert.equal(value(reconcile(sourced, []), 'answered'), '2')
+	assert.equal(Number(value(reconcile(sourced, []), 'unsourced')), base)
+})
+
 test('the command exits 1 on a duplicate story id and 0 on distinct ids', (t) => {
 	const dir = mkdtempSync(join(tmpdir(), 'reconcile-'))
 	t.after(() => rmSync(dir, { recursive: true, force: true }))

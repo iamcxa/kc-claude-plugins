@@ -47,7 +47,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.27.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.28.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -188,9 +188,9 @@ ADR draft live in the task file, and a draft carries no ADR number.
   approvals and stops, acceptance evidence/limits, and each recorded
   `Surfaces:` value's artifact. The gate is not presentable without the
   artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
-  `python3 <package>/scripts/design_surfaces.py check <task>`; a non-zero exit
-  means the gate is not presentable, and FO includes the checker's output in
-  the gate material. Required diagram defects or missing current-stage
+  `python3 <package>/scripts/design_surfaces.py check <task>`, includes its
+  output in the gate material at any exit, and treats a non-zero exit as the gate
+  not presentable. Required diagram defects or missing current-stage
   evidence block recommendation and gate preparation/presentation; honest
   unverified future checks do not.
   FO may correct design prose/Mermaid to reflect established decisions under an
@@ -225,7 +225,9 @@ repair is dispatched under the lane in Stages.
   `python3 <package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit
   code, and unverified obligations recorded in the existing SD Stage Report.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
-  and limits, and the user's pending delivery decision. Before the gate, FO runs the
+  and limits, and the user's pending delivery decision. For a `ui` task FO runs
+  `python3 <package>/scripts/design_surfaces.py check <task>` and includes its
+  output. Before the gate, FO runs the
   stage's minimal acceptance script exactly as written in a fresh shell, then presents
   every step in full beside its observed output, never a pointer or a shortened step.
   A step FO cannot run (a secret, a sign-in, the Captain's own device) is marked not
