@@ -96,3 +96,6 @@ Captain: 「照建議」 (P1 FO's Paseo session, reply to a four-item batch)
 Asked: 「4. 合成決策 repo 產生腳本移出 kc-adr，留給任務二：任務二維持延後；恢復時，先重新走待辦關卡。」 with 「正式定為：不在 kc-adr 任務一裡做，改記到任務二名下；任務二目前延後，恢復時要重新走待辦關卡（因為它原本的範圍建立在已經取消的 CLI 上），到時再一起決定還要不要這支腳本。」
 Supersedes: none
 
+## Closed
+
+Retired by the Captain 2026-10-25 (「按建議退休」, kc-adr FO's Paseo session) on FO's recommendation: its premise is gone. It builds a feature in the `kc-decision-log` plugin and starts after `kc-decision-log-cli`; the product narrowed to kc-adr and dev2-poc `adr-read-and-route-poc` showed a read CLI adds nothing. A future handoff test is filed fresh against kc-adr.
