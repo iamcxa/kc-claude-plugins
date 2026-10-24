@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.29.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.28.0...kc-dev-flow-2-v0.29.0) (2026-10-24)
+
+
+### Features
+
+* **kc-dev-flow-2:** a named design director runs the ui design review and rules on every decline ([#708](https://github.com/iamcxa/kc-claude-plugins/issues/708)) ([0701aa8](https://github.com/iamcxa/kc-claude-plugins/commit/0701aa8debd45b3fe7eab7e930141319d52f3aa2))
+* **kc-dev-flow-2:** ask once whether to draw a story map, and list open decisions before a sitting ([#705](https://github.com/iamcxa/kc-claude-plugins/issues/705)) ([c351487](https://github.com/iamcxa/kc-claude-plugins/commit/c3514876339cb732d0bea8b2d2dd45c234bcdeaf))
+* **kc-dev-flow-2:** CI-synced copies of kc-adr's ADR template, linter and read-adr skill ([#713](https://github.com/iamcxa/kc-claude-plugins/issues/713)) ([bc69b67](https://github.com/iamcxa/kc-claude-plugins/commit/bc69b6754b74912f4fa43814e24f5605174e8977))
+* **kc-dev-flow-2:** hold a merge ask on a task whose committed state owes a repair-pass or amendment call ([#703](https://github.com/iamcxa/kc-claude-plugins/issues/703)) ([126efaf](https://github.com/iamcxa/kc-claude-plugins/commit/126efaf06b4d3f06c29d6b071189ed7771c41ee9))
+* **kc-dev-flow-2:** hold the first implementation dispatch while a release-changed mark has no review line ([#711](https://github.com/iamcxa/kc-claude-plugins/issues/711)) ([ac1d410](https://github.com/iamcxa/kc-claude-plugins/commit/ac1d41033081ec6b8b2696f98f986ee5ad4f99e0))
+* **kc-dev-flow-2:** walk a release with picky-user reviewers and have the design director rule on it ([#714](https://github.com/iamcxa/kc-claude-plugins/issues/714)) ([dde14c4](https://github.com/iamcxa/kc-claude-plugins/commit/dde14c434593f645c8806aa96f910911243c1868))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** count a Codex round from the summary's code review, never from a security review ([#702](https://github.com/iamcxa/kc-claude-plugins/issues/702)) ([8bfac96](https://github.com/iamcxa/kc-claude-plugins/commit/8bfac961ddb0167acff2005e256493dfc7942bc5))
+
 ## [0.28.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.27.0...kc-dev-flow-2-v0.28.0) (2026-10-22)
 
 
