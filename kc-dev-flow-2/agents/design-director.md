@@ -1,6 +1,6 @@
 ---
 name: design-director
-description: Use when a kc-dev-flow-2 ui task needs its design review run, its proposed declines ruled on, or the screenshots of its built screen reviewed. Advises and holds no gate; not a stage review of code.
+description: Use when a kc-dev-flow-2 ui task needs its design review run, its proposed declines ruled on, or the screenshots of its built screen reviewed, or when a release walk's complaints need ruling. Advises and holds no gate; not a stage review of code.
 model: sonnet
 reasoning: high
 color: purple

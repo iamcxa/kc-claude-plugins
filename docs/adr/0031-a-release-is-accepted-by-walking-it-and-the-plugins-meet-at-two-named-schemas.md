@@ -1,10 +1,10 @@
-# 0031. A release is accepted by walking it, and the two plugins meet only at two named schemas
+# 0031. A release is accepted by walking it, and the two plugins meet at two named schemas
 
 Date: 2026-10-23
 
 ## Status
 
-Proposed
+Accepted
 
 ## Context
 
@@ -22,8 +22,8 @@ A release whose stories are all development-complete is not thereby usable: `jou
 
 **Recommended:** the first option, as the approved design of `release-acceptance` states it.
 
-A release is accepted by operating it end to end from the person's first situation, not by counting finished tasks. kc-journey-map prints the walk list and turns a walk's report into proposed map edits; it writes neither the map nor the report. kc-dev-flow-2 owns the walk, its report and how a failure routes. The two meet only at `release-walk/v1` and `release-acceptance/v1`; each side refuses a schema string it does not know.
+A release is accepted by operating it end to end from the person's first situation, not by counting finished tasks. kc-journey-map prints the walk list and turns a walk's report into proposed map edits; it writes neither the map nor the report. kc-dev-flow-2 owns the walk, its report and how a failure routes. The two meet at `release-walk/v1` and `release-acceptance/v1` and import none of each other's files; each side refuses a schema string it does not know. kc-dev-flow-2's side is enforced by `test_no_released_file_names_a_kc_journey_map_path` in `release-acceptance`'s tests; kc-journey-map's side holds by inspection.
 
 ## Consequences
 
-This record is Proposed until the kc-dev-flow-2 half merges: only `release-walk/v1`, `journey-walk.mjs` and `journey-accept.mjs` exist when it lands, and `journey-accept.mjs` reads a `release-acceptance/v1` report whose producer is not yet shipped, so its consumer tests use a synthetic report. `journey-accept.mjs` checks the schema string, the journey, the release, that each story is on the release and that each result is one of four; it does not check that every story was walked or that a finding is right. `source.commit` pins the walk to a map revision only when the journey file is committed. A clean walk leaves no mark on the map: its acceptance lives in the caller's own gate record. Reopen if a consumer needs a field the walk list lacks, or if a walk's report proposes an edit the Captain rejects as unfounded.
+The kc-dev-flow-2 half now exists (ADR 0033): `release_acceptance.py` produces the `release-acceptance/v1` report that `journey-accept.mjs` reads, and its tests run the shipped `journey-accept.mjs` on a produced report where node and its dependency are present. `journey-accept.mjs` checks the schema string, the journey, the release, that each story is on the release and that each result is one of four; it does not check that every story was walked or that a finding is right. `source.commit` pins the walk to a map revision only when the journey file is committed. A clean walk leaves no mark on the map: its acceptance lives in the caller's own gate record. Reopen if a consumer needs a field the walk list lacks, or if a walk's report proposes an edit the Captain rejects as unfounded.
