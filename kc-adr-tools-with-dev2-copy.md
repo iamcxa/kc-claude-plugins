@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-23T12:13:05Z
 worktree: .worktrees/spacedock-ensign-kc-adr-tools-with-dev2-copy
-pr: iamcxa/kc-claude-plugins#713
+pr: pr-merge:713
 ---
 
 ## Scope
