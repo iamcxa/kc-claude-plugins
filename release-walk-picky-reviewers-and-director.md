@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:release-walk-picky-reviewers-and-director:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:release-walk-picky-reviewers-and-director-validation-1
+              briefing:
+                id: briefing:release-walk-picky-reviewers-and-director:validation:attempt-1:revision-1
+                digest: sha256:bde4c32dadd47e778190feee13c97c552eca7fedec04e0864c8527295ece988b
+                room-ref: ./release-walk-picky-reviewers-and-director/review/validation/briefing-1
 started: 2026-10-23T13:50:48Z
 worktree: .worktrees/spacedock-ensign-release-walk-picky-reviewers-and-director
 pr: iamcxa/kc-claude-plugins#714
