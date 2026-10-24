@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "037d2cf60d9371180ec9a772e8321644a03f9c25",
+  "model": "not run",
+  "necessity": "thirteen files (the three copied kc-dev-flow-2 paths plus prefix.md and writing.md, kc-adr/skills/read-adr/writing.md, the sync script and its test, the CI step, lint-skills.py and its test, the desig",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F2 Deferred risk: the squash'",
+    "point: deferred: '- F3 Deferred risk: `docs/journey/kc-decision-log/p1-technical-contract.md` line'",
+    "point: deferred: '- F4 Deferred risk: the byte'",
+    "point: deferred: \"FO declines: Polish F1, AC-3's grep\"",
+    "point: not-run: 'External rounds: none read. Codex not'",
+    "point: amendment: 'Amendment 2 dated 2026-10-23'",
+    "point: path: '.github/workflows/marketplace-parity.yml'",
+    "point: path: 'kc-adr/skills/read-adr/writing.md'",
+    "point: path: 'kc-dev-flow-2/references/adr-template.md'",
+    "point: path: 'kc-dev-flow-2/scripts/adr_lint.py'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_lint_skills.py'",
+    "point: more: 8 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#713",
+  "sufficiency": "kc-dev-flow-2 ships byte copies of kc-adr's ADR template, adr_lint.py and the read-adr skill (resolving as kc-dev-flow-2:read-adr), scripts/kc-adr-copy-sync.sh syncs and checks them, and marketplace-p",
+  "time": "2026-10-24T01:10:11Z",
+  "verdict": "ask"
+}
