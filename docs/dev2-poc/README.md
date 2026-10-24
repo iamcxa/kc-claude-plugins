@@ -43,7 +43,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.27.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.29.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -150,7 +150,7 @@ differently, or `Visible change: none`.
   runs the review at once. FO writes no map and no candidate; the Captain accepts
   membership in conversation or at this gate. FO records under `## FO alignment` either
   `Release review: <journey>/<release-id> at <journey-file commit>` or
-  `Release review: not needed: <reason>`; no script checks that line. When FO approves
+  `Release review: not needed: <reason>`. When FO approves
   a task into a release story at this gate it sets the three fields with
   `spacedock status --workflow-dir <dir> --set <task> journey=<the map's journey: value> journey-release=<id> journey-story=<id>`;
   a worker never edits frontmatter. Where the adopter tracks completion with
@@ -186,7 +186,9 @@ repair is dispatched under the lane in Stages.
   `python3 <package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit
   code, and unverified obligations recorded in the existing SD Stage Report.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
-  and limits, and the user's pending delivery decision. Before the gate, FO runs the
+  and limits, and the user's pending delivery decision. For a `ui` task FO runs
+  `python3 <package>/scripts/design_surfaces.py check <task>` and includes its
+  output. Before the gate, FO runs the
   stage's minimal acceptance script exactly as written in a fresh shell, then presents
   every step in full beside its observed output, never a pointer or a shortened step.
   A step FO cannot run (a secret, a sign-in, the Captain's own device) is marked not
