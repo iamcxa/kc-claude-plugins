@@ -3,7 +3,7 @@ title: kc-adr holds the ADR writing tools, and dev2 ships a CI-synced copy so a 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「合併可以」 answering the briefing-1 question (merge #713 at 037d2cf60d9371180ec9a772e8321644a03f9c25 with Codex and Copilot not read)'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-23T12:13:05Z
 worktree: .worktrees/spacedock-ensign-kc-adr-tools-with-dev2-copy
 pr: pr-merge:713
+verdict: PASSED
+completed: 2026-10-24T01:18:27Z
+archived: 2026-10-24T01:18:27Z
 ---
 
 ## Scope
