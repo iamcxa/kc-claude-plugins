@@ -328,6 +328,11 @@ Verified by: `test_release_acceptance.py` on the `two-reviewer` fixture and the 
 ADR: 0033
 ADR: 0034
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-24): Codex review on #714 bb2108d4 (review:5636050872) left 2 P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 release_acceptance.py: the clean-walk predicate reads only ruling.items, so a deferred finding ruled solve with when: this-round still prints clean: yes and record.md repeats it; include actionable deferred rulings. P2 release_acceptance.py: a report whose solve items have no task (tasks: []) passes build and check --tier final, leaving accepted fixes linked to none; check that every actionable solve entry is covered by a task's from_items (or an existing filed task).
+
 ## Stage Report: ideation
 
 - DONE: Design the kc-dev-flow-2 half of the release walk from the starting design in release-acceptance/index.md (### PR 2 design and the implementation stage report cycle 3) and Captain Amendments 1 and 3 there, against current origin/main (#708 design-director merged; #709 kc-journey-map walk list open): the moved criteria AC-6, AC-7, AC-8, AC-11, AC-12 rewritten for the reviewer-and-director walk, plus criteria for reviewer count and diversity, the fixture smoke check, deferred findings feeding reviewers and director, director pass 3 and its ruling table with one live run, and the close path; a Captain decision with a recommendation and what gets worse for each open point (close path, director model and inputs, a non-Claude operating reviewer now or as a POC, a journeys README key, PR budget)
