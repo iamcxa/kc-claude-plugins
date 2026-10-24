@@ -53,6 +53,17 @@ gates:
                 id: briefing:kc-adr-tools-with-dev2-copy:validation:attempt-1:revision-1
                 digest: sha256:f60c44ccefd9f877a3193b711f4afc0e8fd811c21175052ec9bec98961f822e9
                 room-ref: ./kc-adr-tools-with-dev2-copy/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:kc-adr-tools-with-dev2-copy:validation:1
+                briefing: briefing:kc-adr-tools-with-dev2-copy:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-24T01:10:05.264729Z"
+                decision: approve
+                reason: 'Captain 「合併可以」 answering the briefing-1 question (merge #713 at 037d2cf60d9371180ec9a772e8321644a03f9c25 with Codex and Copilot not read)'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-23T12:13:05Z
 worktree: .worktrees/spacedock-ensign-kc-adr-tools-with-dev2-copy
 pr: iamcxa/kc-claude-plugins#713
