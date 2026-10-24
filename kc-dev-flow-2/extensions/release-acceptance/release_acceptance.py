@@ -567,6 +567,7 @@ def is_clean(report):
     ruling = report.get("ruling", {})
     return (all(r["result"] == "works" for r in report["stories"]) and report["proof_line"]["result"] == "works"
             and report["smoke"].get("result") == "passed"
+            and not any(m.get("status") == "partly-fixed" for w in report["walks"] for m in w.get("marks", []))
             and not any(solves_this_round(e) for e in ruling.get("items", []) + ruling.get("deferred", [])))
 
 

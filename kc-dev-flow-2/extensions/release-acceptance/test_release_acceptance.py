@@ -796,6 +796,26 @@ class RewalkTests(Base):
         folder = self.second_folder(lambda o, s: o["complaints"][0].update(id="o1"))
         self.assertIn("reuses a prior complaint id", self.rewalk_check(folder)[1])
 
+    def rewalk_clean_line(self, mutate=None):
+        folder = self.second_folder(mutate)
+        (code, out), _ = self.rebuild(folder)
+        self.assertEqual(code, 0, out)
+        code, out = run("check", folder, "--tier", "final", "--workflow-dir", self.wf, "--prior", self.prior)
+        self.assertEqual(code, 0, out)
+        return next(line for line in out.splitlines() if line.startswith("clean:"))
+
+    def test_a_rewalk_with_a_partly_fixed_prior_complaint_is_not_clean(self):
+        self.first_walk()
+        self.assertEqual(self.rewalk_clean_line(), "clean: no")
+
+    def test_a_rewalk_is_clean_when_every_prior_complaint_is_fixed_deferred_or_will_not_fix(self):
+        self.first_walk()
+        self.assertEqual(self.rewalk_clean_line(lambda o, s: o["marks"][1].update(status="fixed")), "clean: yes")
+        self.assertEqual(self.rewalk_clean_line(
+            lambda o, s: o["marks"][1].update(status="deferred", release="r2")), "clean: yes")
+        self.assertEqual(self.rewalk_clean_line(
+            lambda o, s: o["marks"][1].update(status="will-not-fix")), "clean: yes")
+
     def test_marks_without_a_prior_walk_are_refused(self):
         o = reviewer_o()
         o["marks"] = [{"complaint": "o1", "status": "fixed", "reason": "r"}]
