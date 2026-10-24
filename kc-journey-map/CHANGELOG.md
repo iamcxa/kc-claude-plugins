@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.8.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.7.0...kc-journey-map-v1.8.0) (2026-10-24)
+
+
+### Features
+
+* **kc-journey-map:** interrogate a release before reviewing it, and route its rulings by kc-adr's five questions ([#704](https://github.com/iamcxa/kc-claude-plugins/issues/704)) ([8041829](https://github.com/iamcxa/kc-claude-plugins/commit/8041829e74e887fd34396fcdd88995f6e3633dbf))
+* **kc-journey-map:** print a release's walk list and turn a walk's report into map proposals ([#709](https://github.com/iamcxa/kc-claude-plugins/issues/709)) ([1694ade](https://github.com/iamcxa/kc-claude-plugins/commit/1694ade349babde54f6c9791df77be8c63b48bbb))
+
 ## [1.7.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-journey-map-v1.6.1...kc-journey-map-v1.7.0) (2026-10-17)
 
 

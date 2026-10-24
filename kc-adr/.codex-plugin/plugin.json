@@ -1,6 +1,6 @@
 {
   "name": "kc-adr",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "Experimental. Teaches agents to read an ADR at an exact commit and check its digest, tell whether it is still in force, and put new information in the one place it belongs.",
   "author": {
     "name": "Kent Chen",
