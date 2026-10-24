@@ -332,6 +332,8 @@ ADR: 0034
 
 - Cycle 1 (FO, 2026-10-24): Codex review on #714 bb2108d4 (review:5636050872) left 2 P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P2 release_acceptance.py: the clean-walk predicate reads only ruling.items, so a deferred finding ruled solve with when: this-round still prints clean: yes and record.md repeats it; include actionable deferred rulings. P2 release_acceptance.py: a report whose solve items have no task (tasks: []) passes build and check --tier final, leaving accepted fixes linked to none; check that every actionable solve entry is covered by a task's from_items (or an existing filed task).
+- Cycle 2 (FO, 2026-10-24): Codex review on #714 20ea472d (review:5636392914) left 1 P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 release_acceptance.py: on a re-walk, an original complaint marked partly-fixed (or otherwise not fixed) while every story and the proof line work leaves clean: yes, because the clean predicate reads only the current director items and deferred entries; keep unresolved prior complaints in the calculation until fixed or explicitly dispositioned (deferred to a named release or will not fix).
 
 ## Stage Report: ideation
 
