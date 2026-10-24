@@ -500,6 +500,46 @@ class RulingTests(Base):
         self.edit_report(lambda r: r["ruling"]["items"][0].update(when="this-round"))
         self.assertIn("clean: no", self.check("final")[1])
 
+    def test_a_deferred_finding_ruled_solve_this_round_is_not_clean(self):
+        self.clean_world()
+        fix = {"title": "Fix the reserve finding", "scope": "one", "after": [], "from_items": ["t-reserve#F1"]}
+        self.built()
+        self.edit_report(lambda r: (r["ruling"]["deferred"][2].update(when="this-round"), r["ruling"]["tasks"].append(fix)))
+        code, out = self.check("final")
+        self.assertEqual(code, 0, out)
+        self.assertIn("clean: no", out)
+        report = read(self.walk / "report.json")
+        self.assertFalse(ra.is_clean({**report, "stories": [dict(s, result="works") for s in report["stories"]],
+                                      "proof_line": {"result": "works"}, "ruling": {"items": [], "deferred": [
+                                          {"item": "x#F1", "ruling": "solve", "when": "this-round"}]}}))
+        self.assertTrue(ra.is_clean({**report, "stories": [dict(s, result="works") for s in report["stories"]],
+                                     "proof_line": {"result": "works"}, "ruling": {"items": [], "deferred": [
+                                         {"item": "x#F1", "ruling": "solve", "when": "later"}]}}))
+
+    def test_a_this_round_solve_no_task_covers_is_refused(self):
+        self.built()
+        self.edit_report(lambda r: r["ruling"].update(tasks=[]))
+        out = self.refused("final", "ruling i1: solve this-round is covered by no task")
+        self.assertIn("ruling i3: solve this-round is covered by no task", out)
+        self.assertNotIn("ruling i2:", out)
+        self.built()
+        self.edit_report(lambda r: (r["ruling"]["deferred"][2].update(when="this-round"),
+                                    r["ruling"]["tasks"][0]["from_items"].remove("i2")))
+        self.refused("final", "ruling t-reserve#F1: solve this-round is covered by no task")
+
+    def test_a_filed_task_that_names_the_complaints_covers_a_this_round_solve(self):
+        filed = self.wf / ".spacedock-state/fix-all.md"
+        put(filed, task_file({"journey": "book-pickup", "journey-release": "r1"}, "Scope.\nWalk complaints: o1\n"))
+        self.built()
+        self.edit_report(lambda r: r["ruling"].update(tasks=[]))
+        out = self.refused("final", "ruling i3: solve this-round is covered by no task")
+        self.assertNotIn("ruling i1:", out)
+        put(filed, task_file({"journey": "book-pickup", "journey-release": "r1"}, "Scope.\nWalk complaints: o1, s3\n"))
+        self.built()
+        self.edit_report(lambda r: r["ruling"].update(tasks=[]))
+        code, out = self.check("final")
+        self.assertEqual(code, 0, out)
+
     def test_ruling_check_prints_nothing_for_a_clean_run_without_this_round_work(self):
         self.built()
         report = read(self.walk / "report.json")

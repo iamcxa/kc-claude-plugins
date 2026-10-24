@@ -497,6 +497,11 @@ def ruling_problems(report, workflow_dir, journey, release, deferred_ids, prior)
     out += [f"task {t.get('title')!r} has no from_items" for t in tasks if not t.get("from_items")]
     ids = {e.get("id") or e.get("item") for e in entries}
     out += [f"task {t.get('title')!r} names unknown item {i}" for t in tasks for i in t.get("from_items", []) if i not in ids]
+    filed = complaint_links(workflow_dir, journey, release)
+    in_task = {i for t in tasks for i in t.get("from_items", [])}
+    out += [f"ruling {e.get('id') or e.get('item')}: solve this-round is covered by no task's from_items and no filed task"
+            for e in entries if solves_this_round(e) and (e.get("id") or e.get("item")) not in in_task
+            and not any(filed.get(c) for c in e.get("from", []) if isinstance(e.get("from"), list))]
     model = director_model(workflow_dir, journey, release)[0]
     declared = (ruling.get("director") or {}).get("model")
     if declared != model:
@@ -554,12 +559,15 @@ def row_problems(report, prior):
     return out
 
 
+def solves_this_round(entry):
+    return entry.get("real", "yes") == "yes" and entry.get("ruling") == "solve" and entry.get("when") == "this-round"
+
+
 def is_clean(report):
     ruling = report.get("ruling", {})
     return (all(r["result"] == "works" for r in report["stories"]) and report["proof_line"]["result"] == "works"
             and report["smoke"].get("result") == "passed"
-            and not any(i.get("real") == "yes" and i.get("ruling") == "solve" and i.get("when") == "this-round"
-                        for i in ruling.get("items", [])))
+            and not any(solves_this_round(e) for e in ruling.get("items", []) + ruling.get("deferred", [])))
 
 
 def loaded(folder):
