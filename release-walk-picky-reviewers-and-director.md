@@ -53,6 +53,17 @@ gates:
                 id: briefing:release-walk-picky-reviewers-and-director:validation:attempt-1:revision-1
                 digest: sha256:bde4c32dadd47e778190feee13c97c552eca7fedec04e0864c8527295ece988b
                 room-ref: ./release-walk-picky-reviewers-and-director/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:release-walk-picky-reviewers-and-director:validation:1
+                briefing: briefing:release-walk-picky-reviewers-and-director:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-24T03:59:27.826398Z"
+                decision: approve
+                reason: 'Captain 「准」 (decision d-olr2mv), his words read on the [User] line of Paseo agent bccc97d3-fe08-4f5e-8794-1af3ecff7209 (Comms Officer) activity on 2026-10-24, answering briefing:release-walk-picky-reviewers-and-director:validation:attempt-1:revision-1 sha256:bde4c32dadd4 (merge #714 at 0535aa2c17ba08e01ccead7892fdfd0570906696)'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-23T13:50:48Z
 worktree: .worktrees/spacedock-ensign-release-walk-picky-reviewers-and-director
 pr: iamcxa/kc-claude-plugins#714
