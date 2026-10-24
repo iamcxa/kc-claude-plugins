@@ -37,8 +37,8 @@ what needs rechecking. Return scope/profile changes or unresolved inputs to FO.
 Report changes, evidence, limits and remaining work in the SD stage report;
 a worker report is not a gate approval or stage transition.
 
-Write one file per decision, `docs/adr/NNNN-short-title.md`, in the ADR format of the
-kc-dev-flow-2 package's `references/adr-template.md`, with the decider's own words, the
+Write one file per decision, `docs/adr/NNNN-short-title.md`, following `writing.md` of
+`kc-dev-flow-2:read-adr`, in the ADR format of the kc-dev-flow-2 package's `references/adr-template.md`, with the decider's own words, the
 options considered and the option recommended inside Decision;
 `<package>/scripts/adr_lint.py --require` refuses a required record without the
 recommended line. An older record a change touches without that line takes

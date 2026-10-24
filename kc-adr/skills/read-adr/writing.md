@@ -12,18 +12,16 @@ For an agent that has reached home 5 in `SKILL.md`.
 
 ## Where the tools are
 
-This plugin ships the ADR template and the ADR linter. `<kc-adr>` is the folder two levels above this file's folder, the one that holds `skills/`; take it from the path you read this file at, not from a search.
+This plugin ships the ADR template and the ADR linter. `<plugin>` is the plugin that holds this skill: the folder two levels above this file's folder, the one that holds `skills/`; take it from the path you read this file at, not from a search.
 
-- ADR template: `<kc-adr>/references/adr-template.md`
-- ADR linter: `python3 <kc-adr>/scripts/adr_lint.py docs/adr --require NNNN`
+- ADR template: `<plugin>/references/adr-template.md`
+- ADR linter: `python3 <plugin>/scripts/adr_lint.py docs/adr --require NNNN`
 - Number reserver, only in a repo that runs kc-dev-flow-2: `python3 <package>/scripts/number_guards.py reserve --kind adr --task <task>`
 
 Numbering: where no number was reserved for you, one writer at a time adds an ADR, and its number is one above the highest on the base branch; under kc-dev-flow-2, the coordinator reserves it with `number_guards.py reserve`; ask for one.
 
-Resolve `<package>` (needed only for the reserver) in this order, never as a literal path (`${CLAUDE_PLUGIN_ROOT}` is this plugin's root, not kc-dev-flow-2's):
+Resolve `<package>` (needed only for the reserver) in this order, never as a literal path:
 
 1. The `Package root:` line in your dispatch notes or in the loaded kc-dev-flow-2 skill header.
 2. The installed copy: on Claude Code the `installPath` of `kc-dev-flow-2@kc-claude-plugins` in `~/.claude/plugins/installed_plugins.json`; on Codex the version directory under `~/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/`.
 3. Neither: there is no reserver; number as above.
-
-The reserver's path is written against kc-dev-flow-2 0.28.0. Read `version` in `<package>/.claude-plugin/plugin.json`; if it differs, still use the file and report "written against 0.28.0, found X".
