@@ -531,3 +531,24 @@ Does not cover: a live reviewer or director run, a real release, the close throu
 ### Summary
 
 Recommend PASSED at 20ea472d: both Codex P2 findings reproduce at bb2108d4 and are resolved here, shown through the command line and by seven mutations that each fail a test; every live criterion still holds (66 of 70 mutations killed, the four survivors are clauses no criterion names). The new refusal and the `clean` change tighten behaviour beyond AC-7's list and the design's sentence without falsifying either; no text change is required, and writing them as criteria is the Captain's optional edit (F7). No Material finding and no Needs decision; the extension has still never run on a live walk.
+
+## Stage Report: implementation (cycle 2 fix)
+
+- DONE: Apply the proposed one-line fix in release_acceptance.py is_clean exactly; keep the two new tests
+  Commit 0535aa2c, pushed to spacedock-ensign/release-walk-picky-reviewers-and-director (no -u). The clean change: `is_clean` adds `and not any(m.get("status") == "partly-fixed" for w in report["walks"] for m in w.get("marks", []))`, so a re-walk with any partly-fixed mark prints `clean: no`; fixed, deferred (with release) and will-not-fix (with reason) stay clean.
+- DONE: Reproduced the Codex P2 (review:5636392914) as a failing test before the fix
+  `RewalkTests.test_a_rewalk_with_a_partly_fixed_prior_complaint_is_not_clean` failed `'clean: yes' != 'clean: no'` at 20ea472d; it asserts clean: no on the default re-walk fixture (o2 partly-fixed, all stories and proof line works, smoke passed). Removing the new line in `is_clean` fails it again.
+- DONE: Control against over-correction
+  `test_a_rewalk_is_clean_when_every_prior_complaint_is_fixed_deferred_or_will_not_fix` changes only o2's mark to fixed, deferred with release r2, then will-not-fix and asserts clean: yes each time; it passed before and after the fix, so it fails if `is_clean` treated deferred or will-not-fix as unresolved.
+- DONE: Did not edit AC-16 or any criterion, the design's Routing and clean paragraph, or EXTENSION.md
+  The diff is two files: release_acceptance.py (+1) and test_release_acceptance.py (+20). Wording gap (director-facing text) stays with F7 as the FO decided. Residual: a reviewer's will-not-fix or deferred mark is not checked against an actual director or Captain ruling.
+- DONE: All package test files pass
+  Every command in .github/workflows/kc-dev-flow-2-tests.yml (lint-skills.py and all 15 test files incl. test_release_acceptance.py, 78 tests) exited 0 locally with python3 -B.
+- DONE: roborev gate
+  `clean on 0535aa2c1; evidence=roborev:1135` (exit 0, first run).
+- DONE: CI green on the new head
+  `gh pr checks 714` at head 0535aa2c: unit tests (python3) pass, version parity pass, review CI routing pass, multi-profile route gate pass, adr-path-check pass, GitGuardian pass.
+
+### Summary
+
+The clean predicate now treats a partly-fixed re-walk mark as unresolved; one source line and two tests, no criterion or doc text changed. No PR comment, review request or ready mark was made.
