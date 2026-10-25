@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:codex-review-hang-detected:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:codex-review-hang-detected-validation-1
+              briefing:
+                id: briefing:codex-review-hang-detected:validation:attempt-1:revision-1
+                digest: sha256:76cedc867497887b2cb3fcfc590b03374c4fd0d44d7641d9dabe0f399220c142
+                room-ref: ./codex-review-hang-detected/review/validation/briefing-1
 started: 2026-10-25T15:11:39Z
 worktree: .worktrees/spacedock-ensign-codex-review-hang-detected
 pr: iamcxa/kc-claude-plugins#722

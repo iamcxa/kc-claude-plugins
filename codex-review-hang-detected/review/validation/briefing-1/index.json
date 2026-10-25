@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-review-hang-detected:validation:attempt-1:revision-1",
+  "question": "Approve validation of codex-review-hang-detected and merge iamcxa/kc-claude-plugins#722 at head c61275186d61779873519732931342fb654aab37 with `gh pr merge 722 --squash --match-head-commit c61275186d61779873519732931342fb654aab37`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-review-hang-detected:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fb592f20b7f87174de55950fc2d4146d07dec7c6/codex-review-hang-detected.md",
+      "rev": "sha256:acc0ab6cfb5777931768dae98e6a8394f65a3bbd715a9ab90232028b8f5f3610",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: kc-dev-flow-2/extensions/codex/codex_review.py reports a code review running more than 1800 s with no summary update as stalled (exit 6), lets the summary marker decide over a stuck PR-level eyes reaction, and kc-dev-flow-2/scripts/pr_watch.py asks for one re-request then names Codex not run; validation PASSED at this head (249 tests, about 15 mutations, a replay over 50 live PRs where no verdict moved into exit 3).\nNecessity: five files (codex_review.py, its test, EXTENSION.md, pr_watch.py, its test).\nExternal rounds: Codex 1 (code review of this head completed with no findings, evidence=summary:6399566681@c61275186, read with the reader from #722 because the main reader misreads a stuck security eyes reaction as running). RoboRev clean on this head (evidence=roborev:1174). Second reviewer: copilot because the change touches review rules (how a Codex review is read and named unread). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back.\nFO declines: Polish F1, AC-4's literal falsifier does not fail (the real guard is outcome() rejecting the parenthesised word; stated in both reports); Deferred risk F2, a summary update between two stalls with no re-request still prints the second-stall line (read from code, not run; Material only if a PR is named unread with no re-request tried); Deferred risk F3, a code review that never starts reads exit 4 with no stall limit (outside the Scope; the old reader waited as long)."
+    }
+  ]
+}
