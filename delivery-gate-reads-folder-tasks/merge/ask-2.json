@@ -1,0 +1,23 @@
+{
+  "class": "never",
+  "head": "1c480fecf7d84e7bb4a15483fb8b3bc808dab630",
+  "model": "not run",
+  "necessity": "five files (delivery_gate.py, dispatch_records.py, their two tests, ADR 0036); doc_impact lists learning.md, unaffected: its dispatch_records.py passages concern pointer and --names wording this chang",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F2 Deferred risk: `check` reads'",
+    "point: deferred: 'PASSED for head 1c480fec: every criterion'",
+    "point: deferred: 'FO declines: Polish F1, the implementation'",
+    "point: not-run: 'External rounds: Codex 1 (code review'",
+    "point: path: 'docs/adr/0036-a-reserved-adr-may-land-on-a-named-sibling-pr-of-the-same-task.md'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_records.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#720",
+  "sufficiency": "kc-dev-flow-2/scripts/delivery_gate.py and kc-dev-flow-2/scripts/dispatch_records.py read a folder task (index.md or the folder), and delivery_gate.py accepts a reserved ADR at a named --sibling-pr's ",
+  "time": "2026-10-25T17:48:35Z",
+  "verdict": "ask"
+}
