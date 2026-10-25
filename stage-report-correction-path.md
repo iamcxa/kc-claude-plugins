@@ -202,3 +202,42 @@ Spacedock read the correction and refused it only because it lacked a Summary, s
 ### Summary
 
 The refusal step in `workflow.md` and the three worker skills now tell FO and workers to correct a report with a complete new report under the same heading ending in a superseding Summary; the 22-word raise (5385 to 5407) is recorded in `lint-skills.py` under his gate answer, and the real-binary `corrected-report` exercise is in `test_sd_dispatch.py`. Open: AC-5 is one run per arm and the base arm did not reproduce the addendum; the skill loaded for this dispatch resolved to the 0.29.0 cache while the dispatch named 0.30.0, so package scripts were run from 0.30.0 as the dispatch wrote them, and the installed Spacedock binary is 0.27.2 (the CI pin) with the 0.27.3 plugin root.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #721 head ae9467dd against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at ae9467dd (base ac67eb0a, one commit, seven design files, CI all green, merge state CLEAN). AC-1: grep prints `:1` in ideation, implementation, validation; sentence removed from implementation skill fails `test_sd_dispatch.py` listing only `correction-form-implementation`. AC-2: clause removed from `workflow.md` fails listing only `correction-request`. AC-3: `lint-skills.py` exit 0 at "5407 of 5407"; raise step removed gives "5407 words exceeds the budget of 5385"; the ideation gate question (`review/ideation/briefing-1/index.json`) names 5385 to 5407 and the resolution quotes 「全准」. AC-4: `test_sd_dispatch.py` exit 0 (binary 0.27.2, plugin root 0.27.3, 47 fixes); adding a Summary to the `(correction)` section makes the refusal assertion fail, so refusal rests on the missing Summary. AC-5: see next item. AC-6: seven paths, no `docs/dev2/` or adopter file; `comment_ratio.py` code 42, comment 0, 0.0%, exit 0. Limits judged: 0.27.3 binary not installed here and CI pins 0.27.2 (selector and completeness files identical in 0.27.0 and 0.27.3 per ideation; I ran 0.27.2 only), acceptable; AC-5 one run per arm, see next item.
+- DONE: Judge AC-5's one run per arm: the base arm edited the report in place and advanced instead of reproducing the short addendum, so say whether the change is needed (without-it) or only changes the correction's form
+  The change only changes the correction's form in worker runs; it is not shown needed by them. I ran three more fresh sonnet workers per arm on real-Spacedock fixtures (a FAILED item whose cause is fixable, FO line returned as the base README says, the candidate arm adding the AC-2 request): candidate 3 of 3 appended a second complete `## Stage Report: implementation` with "supersedes" and `status --set` advanced; base 3 of 3 also advanced (1 appended a complete second report with no supersede line, 2 edited the report in place), none wrote an addendum or omitted the Summary. With the implementer's run the base is 0 of 4 failing. The need rests on the archived two-round bite (a `(correction)` section with no Summary) and the measured hazard that a short addendum passes Spacedock and hides items from the newest-report readers (ideation fact 3); see F3.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.29.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script is the Minimal acceptance script below, run with `env -i HOME PATH bash --noprofile --norc`; observed output matched every expected line. `python3 -B <0.29.0>/scripts/adr_lint.py docs/adr --since ac67eb0a56d6f78baa5fb2973f9727cefa3e06b9` printed "35 ADR file(s) checked, 0 legacy", exit 0 (no ADR added or changed, none reserved). Also run: `number_guards` not owed (no `## Number guards`), `dispatch_records.py` "3 dispatch record(s) complete" exit 0, `design_surfaces.py check` presentable exit 0, `doc_impact.py` lists five documents (see F1).
+
+- F1 Polish: the implementation report records no `updated` or `unaffected: <reason>` for the five documents `doc_impact.py` lists (README `updated`; ADR 0020, `references/sd/adoption.md`, `skills/maintain-flow/SKILL.md`, root `learning.md` need `unaffected`). I read each: the ADR is satisfied by the recorded raise, the other three describe the lint or the CLI test generally and say nothing the change contradicts.
+- F2 Polish: the added skill sentence says "the validation readers use the newest report"; `delivery_gate.py` `points_for` joins every `## Stage Report: validation` section, so the claim holds for the finding count, `design_surfaces.py` and `release_acceptance.py` but not for every reader. Bound it to those readers.
+- F3 Deferred risk: the 189 words added across three worker skills are not shown needed once FO sends the 22-word request, since base and candidate workers both advanced in 0 of 7 failing runs. It becomes material if a worker given the candidate FO request, or none, again writes a Summary-less or partial correction and loses an earlier item from the newest report.
+- Observation for FO, no class: PR #721 is already ready (isDraft false), CI green, no review recorded; the implementation checklist asked for a Draft PR.
+
+### Minimal acceptance script
+
+Run in a fresh bash shell (nothing needed beyond `spacedock` on PATH and the kc-claude-plugins checkout below); it leaves nothing behind.
+
+    REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree
+    SD_ROOT=/Users/kent/.claude/plugins/cache/spacedock/spacedock/0.27.3
+    export PYTHONDONTWRITEBYTECODE=1 SPACEDOCK_BIN="$(command -v spacedock)"
+    1. C="$(mktemp -d)/cand"; git -C "$REPO" worktree add --detach "$C" ae9467dd4b4ce61b3bbd724c5d25cd7e307f0ad0; cd "$C" && git rev-parse HEAD
+       expect: ae9467dd4b4ce61b3bbd724c5d25cd7e307f0ad0
+    2. grep -c 'To correct a report, append a complete new one under the same' kc-dev-flow-2/skills/{ideation,implementation,validation}/SKILL.md
+       expect: three lines, each ending :1
+    3. python3 -B kc-dev-flow-2/scripts/lint-skills.py; echo "exit=$?"
+       expect: "5407 of 5407 words", exit=0
+    4. python3 -B kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root "$SD_ROOT" 2>&1 | grep -o 'a correction without a Summary refused[^;]*'
+       expect: "a correction without a Summary refused and named alone by the checklist read, a complete report under the exact heading accepted"
+    5. delete the sentence from kc-dev-flow-2/skills/implementation/SKILL.md (python re.sub of " To correct a report ... hiding the earlier items."), rerun step 4's command piped to `grep -c "^FAIL"`, then `git checkout -- kc-dev-flow-2/skills/implementation/SKILL.md`
+       expect: 1
+    6. cd /; git -C "$REPO" worktree remove --force "$C"
+       expect: no error
+    Does not cover: a real worker following the rule (AC-5 is worker runs, not this script), Spacedock 0.27.3 binary, CI.
+
+### Summary
+
+PASSED at ae9467dd: every AC re-run with a falsifier, the real-binary exercise, lint, ADR lint and the script all hold. The change alters the form of a correction and closes a measured hazard but worker runs (0 of 7 base failures) do not show it is needed; that is a Deferred risk, with two Polish findings and no Material one.
