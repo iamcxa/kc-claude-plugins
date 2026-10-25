@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "8340c3baa3333de6d281c55523d07927bc6e7abd",
+  "model": "not run",
+  "necessity": "the nine design paths plus ADR 0035 (workflow.md, kc-dev-flow-2/README.md, references/sd/adoption.md, lint-skills.py and three test files, the journey-map and release-acceptance EXTENSION.md files); n",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'Clause cut: accepted as Deferred risk'",
+    "point: deferred: 'Script below, saved at /tmp/val716-accept.sh and'",
+    "point: deferred: '- F1 Deferred risk: the release-acceptance'",
+    "point: deferred: 'PASSED at head 8340c3baa3333de6d281c55523d07927bc6e7abd: every criterion'",
+    "point: deferred: 'FO declines: Deferred risk F1, the'",
+    "point: not-run: 'External rounds: none read. Codex not'",
+    "point: acceptance-not-run: '- F1 Deferred risk: the release-acceptance'",
+    "point: path: 'docs/adr/0035-learn-and-peers-are-on-by-default-and-an-adopter-picks-the-recomme'",
+    "point: path: 'kc-dev-flow-2/extensions/journey-map/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/extensions/release-acceptance/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/adoption.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: more: 5 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#716",
+  "sufficiency": "the workflow template line is extensions: [learn, peers], the package README Extensions table carries a Tier column (learn and peers required; journey-map with release-acceptance one recommended choic",
+  "time": "2026-10-25T06:02:12Z",
+  "verdict": "ask"
+}
