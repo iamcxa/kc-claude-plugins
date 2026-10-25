@@ -43,3 +43,4 @@ Surfaces: none
 Visible change: none
 Release review: not needed: the kc-ops-inbox journey map (branch iamcxa/kc-ops-inbox at 0a1d59ce, not on the trunk) holds this as its contract and more-events stories.
 Captain standing ask, 2026-10-21: 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate.
+Ideation inputs relayed by qnow dev2 FO, Captain 2026-10-25 (verbatim, in order): 「有個機制在 ops-inbox 內收數據，送上 ext storage，例如第一階段支援 netlify blob，然後投影到 posthog？這樣等於是原始資料在手上，用第三方做視覺化，也剛好避開真實度的問題？」; 「這裡存放有三個方向，你們倆個評估一下：1. 用類似 DDB 的東西 2. PSQL 3. jsonl 按某種單位分段，例如檔案大小，或時間；用檔案路徑分段，例如時間。哪一個又快又便宜？有時間差沒關係，即時不是要真的 real time 就是很接近就好」; 「目前兩個服務剛好都跑在 netlify。這裡如果成本很低，那就請你先串 PH」. Whether DDB means DynamoDB or DuckDB is unanswered. These words do not decide the inbox runtime: the Captain said on 2026-10-21 「平台是剛好是 netlify，不是平台一定是 netlify」, and the Paseo Hub POC is evaluating a daemon host. FO proposes adding the inbox-side store to this task's ideation.
