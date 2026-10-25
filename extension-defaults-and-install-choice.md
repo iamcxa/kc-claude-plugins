@@ -233,3 +233,8 @@ Required pair goes in the template line, tiers live in one README table that `li
 ### Summary
 
 The template ships `extensions: [learn, peers]`, the package README tiers every extension and `lint-skills.py` checks the required rows against the template line, and `adoption.md` asks once which recommended rows to add. Two things need FO: the release-acceptance clause had to shrink to 5 words under its 600-word cap, and the AC-4 falsifier did not fire (the sentence buys a report line, not the exclusion). Not tested: Ask UI rendering and option cap; whether FO obeys the no-step clause on a listed extension.
+
+## Stage Report: implementation (correction)
+
+- DONE: AC-4 falsifier
+  Supersedes the FAILED line "AC-4 falsifier as written". Run F (adoption.md without "Never list a row whose probe failed", sonnet, disposable repo, roborev absent) ended with no `not listed: roborev, ...` line, which AC-4 (A) requires ("a line saying roborev was not listed because its probe failed"); run A with the sentence printed it. Removing the sentence therefore fails AC-4 (A), though by the report line and not by roborev appearing in `extensions:` as the AC's wording predicted (roborev stayed unchecked in both runs, because step 1 shows a failed row unchecked).
