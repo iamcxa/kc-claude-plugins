@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:role-triggers-owe-ce-on-review-drift:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of role-triggers-owe-ce-on-review-drift to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that role_triggers.py owes a chief-engineer call when consecutive review rounds find new findings in the surface the last round fixed, and the merge ask holds while any role call is owed; profile pilot (script and skill text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:role-triggers-owe-ce-on-review-drift:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/59180e252cb00b6d0685c56bf5ef1490bf03b836/role-triggers-owe-ce-on-review-drift.md",
+      "rev": "sha256:ad9171f38416dc1983f073a8b5eb13016b8bad11e8a9ba6aeb9556fb7041eccf",
+      "mediaType": "text/markdown",
+      "summary": "Bite: #709 merged with an engineering-reviewer call owed (delivery_gate.py exited 0); #714 rounds 1 to 3 each hit the same clean predicate with no chief-engineer call; #704 and #675 earlier. Ideation owes what counts as the same surface (his to accept)."
+    }
+  ]
+}

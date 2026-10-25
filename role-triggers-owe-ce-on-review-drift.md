@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:role-triggers-owe-ce-on-review-drift:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:role-triggers-owe-ce-on-review-drift-backlog-1
+              briefing:
+                id: briefing:role-triggers-owe-ce-on-review-drift:backlog:attempt-1:revision-1
+                digest: sha256:e4942e964e1d983794b901ff2d56e41b0efc2df16c990358038750a773c37d39
+                room-ref: ./role-triggers-owe-ce-on-review-drift/review/backlog/briefing-1
 ---
 
 ## Scope
