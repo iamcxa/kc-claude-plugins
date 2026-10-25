@@ -15,6 +15,17 @@ gates:
                 id: briefing:role-triggers-owe-ce-on-review-drift:backlog:attempt-1:revision-1
                 digest: sha256:e4942e964e1d983794b901ff2d56e41b0efc2df16c990358038750a773c37d39
                 room-ref: ./role-triggers-owe-ce-on-review-drift/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:role-triggers-owe-ce-on-review-drift:backlog:1
+                briefing: briefing:role-triggers-owe-ce-on-review-drift:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T14:15:25.976039Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 backlog sitting, which listed this task's backlog briefing-1 question
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
