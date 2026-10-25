@@ -19,6 +19,7 @@ status: backlog
 ## FO alignment
 
 Alignment: needed before ideation: the required set is the Captain's.
+Result: aligned 2026-10-25 by the Captain's 「那就這樣做，learn+peers預設開啟，其他建議」 (chat), after his peers question.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
