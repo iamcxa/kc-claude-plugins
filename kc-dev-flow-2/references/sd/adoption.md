@@ -156,11 +156,32 @@ redirect it to `/dev/null` and read the result from the next deploy.
 
 ## Extensions
 
-An adopter lists the optional extensions it uses under `extensions:` in its workflow
-README frontmatter, for example `extensions: [codex, learn]`; the line sits above
-`state:`, where the package template puts it, so a three-way re-sync merges it cleanly.
-Each `<package>/extensions/<name>/EXTENSION.md` names what that extension needs; check
-it is available before listing it. An empty list changes nothing.
+The template lists the `required` extensions of the package README table (`learn`, `peers`);
+`extensions:` sits above `state:`, where the template puts it. Each
+`<package>/extensions/<name>/EXTENSION.md` names what that extension needs.
+
+Ask which recommended or optional rows to add once, before the Captain reviews the README:
+
+1. Probe each row's **Needs** read-only and show the result beside it: `journey-map` with
+   `release-acceptance` needs a `docs/journey/*.yaml` file, `python3` and `node`; `codex` needs `gh auth
+   status` to pass; `roborev` needs `roborev status` to pass; `copilot` needs `gh` 2.92 or later
+   authenticated. Show a row whose probe failed unchecked with the reason.
+2. Put one multi-select to the Captain through the host's structured Ask UI, or in plain chat
+   when none is available: the required rows shown as already on, `journey-map` with
+   `release-acceptance` as one choice that writes both names, `codex`, `roborev`, and `copilot`
+   unchecked and marked quota-limited.
+3. Write the chosen names after the required ones. Never list a row whose probe failed; report
+   `not listed: <name>, <reason>` and list it only when the Captain insists after seeing the reason.
+4. With no answer, or a worker that cannot ask, keep the template line and report
+   `recommended not chosen: <names>`, naming each recommended extension (`journey-map` and `release-acceptance` are two names)
+   in the order step 2 lists them, whatever its probe said, and not the optional `copilot`.
+5. When `codex` and `copilot` are both listed, write `second-reviewer: copilot`; otherwise leave it empty.
+
+The `extensions:` line is the adopter's own after adoption. At a re-sync, `git merge-file` against
+the template's new line merges an adopter `[]` clean to `[learn, peers]`, merges an equal list
+clean, and conflicts on any other list (measured 2026-10-25). Keep the adopter's value when it
+conflicts, and when a clean merge changed it, restore it; no check reads a re-synced README for a
+dropped extension, so the adopter's review of the sync PR is the only check.
 
 ## Before activation
 

@@ -613,6 +613,16 @@ class TasksTests(unittest.TestCase):
         self.task("some-task", pr="o/r#7")
         self.assertEqual(self.tasks({"pr view 7": view("MERGED")}), (0, []))
 
+    def test_peers_and_the_journey_extensions_add_no_line_while_a_pr_is_open(self):
+        self.task("some-task", pr="o/r#7")
+        outputs = []
+        for listed in ("", "peers, journey-map, release-acceptance"):
+            self.watch.unlink(missing_ok=True)
+            self.readme(listed)
+            outputs.append(self.tasks({"pr view 7": view()}))
+        self.assertEqual(outputs[0], outputs[1])
+        self.assertEqual(outputs[0][0], 0)
+
     def test_codex_and_copilot_are_added_with_their_watch_columns_only_when_listed(self):
         self.task("some-task", pr="o/r#7")
         for listed, expected in (("codex, copilot", (True, True)), ("codex", (True, False)), ("roborev", (False, False))):

@@ -33,6 +33,9 @@ WORKFLOW_BUDGET_STEPS = [
          loaded="startup and resume of the First Officer, and its ideation and validation gate preparation for a ui task"),
     dict(delta=-5, why="pr_watch.py tasks now reads the Release review line, so the clause 'no script checks that line' is false and goes",
          captain="「可以」 (chat, 2026-10-23) to the ideation gate question that named deleting 'no script checks that line'"),
+    dict(delta=1, why="the template ships extensions: [learn, peers], one more token than the empty list",
+         captain="「那就這樣做，learn+peers預設開啟，其他建議」 (chat, 2026-10-25), after his peers question",
+         loaded="startup and resume of the First Officer, which reads the README frontmatter"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
@@ -184,6 +187,7 @@ def lint_tree(root, basic_lint=BASIC_LINT):
             errors.append(f"{role} agent: existing {policy[0]}/{policy[1]} policy changed")
     errors += workflow_size_and_duplicates(root)
     errors += chat_only_errors(root)
+    errors += extension_tier_errors(root)
     return errors
 
 
@@ -215,6 +219,35 @@ def budget_errors(count, steps=None):
     elif count < budget:
         errors.append(f"{WORKFLOW}: {count} words is {budget - count} under the budget of {budget}; "
                       f"add a cut step of {count - budget} with a 'why' to WORKFLOW_BUDGET_STEPS")
+    return errors
+
+
+def extension_tier_errors(root):
+    readme, workflow = root / "README.md", root / WORKFLOW
+    if not readme.is_file() or not workflow.is_file():
+        return ["README.md or " + WORKFLOW + ": missing, so the extension tiers cannot be compared"]
+    tiers = {}
+    in_table = False
+    for line in readme.read_text().splitlines():
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if not line.startswith("|"):
+            in_table = False
+        elif cells[:2] == ["Extension", "Tier"]:
+            in_table = True
+        elif in_table:
+            match = re.match(r"\[([a-z0-9-]+)\]\(extensions/", cells[0])
+            if match and len(cells) > 1:
+                tiers[match.group(1)] = cells[1]
+    if not tiers:
+        return ["README.md: no `Extension | Tier` table under Extensions"]
+    match = re.search(r"^extensions: \[([^\]]*)\]$", workflow.read_text(), re.MULTILINE)
+    if not match:
+        return [f"{WORKFLOW}: no one-line `extensions: [...]` in the frontmatter"]
+    listed = [name.strip() for name in match.group(1).split(",") if name.strip()]
+    errors = [f"README.md: `{name}` is required but {WORKFLOW} extensions: does not list it"
+              for name, tier in tiers.items() if tier == "required" and name not in listed]
+    errors += [f"{WORKFLOW}: extensions: lists `{name}` but its README tier is `{tiers.get(name, 'absent')}`, not `required`"
+               for name in listed if tiers.get(name) != "required"]
     return errors
 
 

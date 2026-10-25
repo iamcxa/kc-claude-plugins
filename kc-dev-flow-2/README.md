@@ -170,17 +170,19 @@ claim equivalent tamper detection.
 Optional tools join as extensions in [`extensions/`](extensions/), each described by its
 `EXTENSION.md`. An adopter lists the ones it uses under `extensions:` in its workflow
 README frontmatter; an unlisted extension is not probed and changes nothing. The
-workflow's `## Extensions` section is the rule FO follows.
+workflow's `## Extensions` section is the rule FO follows. The template lists the `required`
+rows; the install ask in [`adoption.md`](references/sd/adoption.md) offers the rest, and
+`scripts/lint-skills.py` checks that the `required` rows and the template line agree.
 
-| Extension | Joins | Adds |
-| --- | --- | --- |
-| [codex](extensions/codex/EXTENSION.md) | FO review rounds and the merge ask | reads Codex GitHub review rounds on the PR head |
-| [roborev](extensions/roborev/EXTENSION.md) | implementation, before the report | a local roborev review of the committed changes |
-| [peers](extensions/peers/EXTENSION.md) | FO, when the answer lives in a live peer session's work | asks that peer in the same harness, with addressing, message and authority rules; otherwise FO finds the answer itself |
-| [copilot](extensions/copilot/EXTENSION.md) | FO review rounds, each push and the merge ask | requests and reads GitHub Copilot review rounds on the PR head |
-| [learn](extensions/learn/EXTENSION.md) | FO, through the `kc-dev-flow-2` mod in `references/sd/mods/`, before the merge sentinel and right after a task is archived | checks `observer.md` is committed before the sentinel (`scripts/observer_check.py`), runs `learn` and the observer, and presents both results |
-| [journey-map](extensions/journey-map/EXTENSION.md) | FO, after a gate ruling on a journey task, before `merge guard`, and after the archive | writes a footprint for a ruling that answers a map question, checks it before the merge guard, and folds it into the map as a docs-only pull request |
-| [release-acceptance](extensions/release-acceptance/EXTENSION.md) | an acceptance task for a release, from implementation to the validation gate and the close | walks a finished release with reviewers on different Claude models, has the design director rule on their complaints and the deferred findings, and records the walk in the task folder |
+| Extension | Tier | Joins | Adds |
+| --- | --- | --- | --- |
+| [codex](extensions/codex/EXTENSION.md) | recommended | FO review rounds and the merge ask | reads Codex GitHub review rounds on the PR head |
+| [roborev](extensions/roborev/EXTENSION.md) | recommended | implementation, before the report | a local roborev review of the committed changes |
+| [peers](extensions/peers/EXTENSION.md) | required | FO, when the answer lives in a live peer session's work | asks that peer in the same harness, with addressing, message and authority rules; otherwise FO finds the answer itself |
+| [copilot](extensions/copilot/EXTENSION.md) | optional | FO review rounds, each push and the merge ask | requests and reads GitHub Copilot review rounds on the PR head |
+| [learn](extensions/learn/EXTENSION.md) | required | FO, through the `kc-dev-flow-2` mod in `references/sd/mods/`, before the merge sentinel and right after a task is archived | checks `observer.md` is committed before the sentinel (`scripts/observer_check.py`), runs `learn` and the observer, and presents both results |
+| [journey-map](extensions/journey-map/EXTENSION.md) | recommended | FO, after a gate ruling on a journey task, before `merge guard`, and after the archive | writes a footprint for a ruling that answers a map question, checks it before the merge guard, and folds it into the map as a docs-only pull request |
+| [release-acceptance](extensions/release-acceptance/EXTENSION.md) | recommended, with journey-map | an acceptance task for a release, from implementation to the validation gate and the close | walks a finished release with reviewers on different Claude models, has the design director rule on their complaints and the deferred findings, and records the walk in the task folder |
 
 ## Learning loop
 
