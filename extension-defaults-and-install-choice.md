@@ -3,7 +3,7 @@ title: Required extensions are on by default and an adopter picks the recommende
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain 「准」 (chat, 2026-10-25) answering the ideation briefing-1 question, accepting D1 to D3 as recommended
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
