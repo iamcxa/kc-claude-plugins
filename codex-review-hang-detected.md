@@ -53,6 +53,17 @@ gates:
                 id: briefing:codex-review-hang-detected:validation:attempt-1:revision-1
                 digest: sha256:76cedc867497887b2cb3fcfc590b03374c4fd0d44d7641d9dabe0f399220c142
                 room-ref: ./codex-review-hang-detected/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-review-hang-detected:validation:1
+                briefing: briefing:codex-review-hang-detected:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T17:48:19.490484Z"
+                decision: approve
+                reason: 'Captain 「照建議」 (chat, 2026-10-26) answering the batch-6 merge sitting, which listed this task''s validation briefing-1 question (merge #722 at c61275186d61779873519732931342fb654aab37)'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-25T15:11:39Z
 worktree: .worktrees/spacedock-ensign-codex-review-hang-detected
 pr: iamcxa/kc-claude-plugins#722
