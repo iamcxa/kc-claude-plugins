@@ -1,0 +1,251 @@
+diff --color -ru base/scripts/delivery_gate.py cand/scripts/delivery_gate.py
+--- base/scripts/delivery_gate.py	2026-10-25 23:01:15
++++ cand/scripts/delivery_gate.py	2026-10-25 23:01:15
+@@ -194,6 +194,14 @@
+     return found
+ 
+ 
++GRANT = re.compile(r"--match-head-commit")
++HOLD_OUT = re.compile(r"\b(?:unless|if)\b[^.;\n]{0,60}\b(?:merges?|holds?)\b", re.I)
++
++
++def grant_without_hold_out(text):
++    return bool(GRANT.search(text)) and not HOLD_OUT.search(text)
++
++
+ def clause(text, label):
+     found = re.search(rf"(?:^[ \t]*|[.!?][ \t]+){label}:[ \t]*(\S[^\n]*)", text, re.M)
+     return found.group(1) if found else None
+@@ -348,6 +356,30 @@
+     return path
+ 
+ 
++def text_problems(task_text, gate_text, at_gate=False):
++    problems, nexts = [], []
++    for reviewer in unstated_second_reviewers(gate_text):
++        nexts.append("next: hold the ask until each second reviewer has an outcome.")
++        problems.append(f"second reviewer {reviewer} has no stated outcome: "
++                        f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
++
++    for item in unreasoned_items(gate_text):
++        problems.append(f"declined item has no reason: {tok(item)}")
++        nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
++
++    if (why := findings_join(task_text, gate_text)):
++        problems.append(why)
++        nexts.append("next: hold the ask; write one declined item for each finding, then run this check again.")
++
++    for label in unstated_confirmations(gate_text):
++        problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
++        nexts.append("next: hold the ask; add the missing clause to the question or summary.")
++    if at_gate and grant_without_hold_out(gate_text):
++        problems.append("the gate text names the merge with --match-head-commit but not 'unless he says he merges or holds'")
++        nexts.append("next: hold the gate; add the clause that lets him keep the merge, then run this check again.")
++    return problems, nexts
++
++
+ def check(args):
+     task, text_file = Path(args.task), Path(args.text_file)
+     pr = PR.match(args.pr)
+@@ -440,23 +472,10 @@
+         problems.append(error)
+         nexts.append("next: hold the ask; run the validation security review at this head, or tell the Captain.")
+ 
+-    for reviewer in unstated_second_reviewers(gate_text):
+-        nexts.append("next: hold the ask until each second reviewer has an outcome.")
+-        problems.append(f"second reviewer {reviewer} has no stated outcome: "
+-                        f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
++    found, wanted = text_problems(task_text, gate_text)
++    problems += found
++    nexts += wanted
+ 
+-    for item in unreasoned_items(gate_text):
+-        problems.append(f"declined item has no reason: {tok(item)}")
+-        nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
+-
+-    if (why := findings_join(task_text, gate_text)):
+-        problems.append(why)
+-        nexts.append("next: hold the ask; write one declined item for each finding, then run this check again.")
+-
+-    for label in unstated_confirmations(gate_text):
+-        problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
+-        nexts.append("next: hold the ask; add the missing clause to the question or summary.")
+-
+     try:
+         code, said = owed_role_calls(task)
+     except OSError as error:
+@@ -496,6 +515,19 @@
+     return 0
+ 
+ 
++def question(args):
++    try:
++        task_text, gate_text = Path(args.task).read_text(), Path(args.text_file).read_text()
++    except OSError as error:
++        emit(f"cannot read input: {error}")
++        return 2
++    problems, nexts = text_problems(task_text, gate_text, at_gate=True)
++    emit(*problems, *dict.fromkeys(nexts))
++    if not problems:
++        emit("gate text complete")
++    return 1 if problems else 0
++
++
+ def main(argv=None):
+     parser = argparse.ArgumentParser(prog="delivery_gate.py", description=__doc__,
+                                      formatter_class=argparse.RawDescriptionHelpFormatter)
+@@ -506,8 +538,11 @@
+     sub.add_argument("--text-file", required=True)
+     sub.add_argument("--head")
+     sub.add_argument("--workflow-dir")
++    ask = commands.add_parser("question")
++    ask.add_argument("task")
++    ask.add_argument("--text-file", required=True)
+     args = parser.parse_args(argv)
+-    return check(args)
++    return question(args) if args.command == "question" else check(args)
+ 
+ 
+ if __name__ == "__main__":
+diff --color -ru base/scripts/design_surfaces.py cand/scripts/design_surfaces.py
+--- base/scripts/design_surfaces.py	2026-10-25 23:01:15
++++ cand/scripts/design_surfaces.py	2026-10-25 23:01:15
+@@ -70,6 +70,9 @@
+ SEVERITY_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?severity:", re.M)
+ ITEM_FIRST_KEY = re.compile(r"[A-Za-z_][\w-]*:")
+ SCOPE_EXEMPT = re.compile(r"\s*(?:[-*]\s*)?(?:Non-goals?\b|Budget\b|Stop condition\b|Follow-up:)", re.I)
++ALIGN_NEEDED = re.compile(r"^Alignment:[ \t]*needed\b", re.I | re.M)
++RESULT_LINE = re.compile(r"^Result:[ \t]*\S", re.M)
++JSON_QUOTE = re.compile(r'\\"')
+ AMENDMENT_DATED = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
+ BOUND_URI = re.compile(r"git-root://state/([0-9a-f]{40})/(.+)")
+ SCOPE_HOLD = ("Scope changed after {what} ({sha}): \"{line}\". FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if "
+@@ -143,6 +146,36 @@
+     return kept
+ 
+ 
++def alignment_owes_result(text):
++    fo, _ = split_fo("\n".join(unfenced(text.split("\n"))))
++    return bool(ALIGN_NEEDED.search(fo)) and not RESULT_LINE.search(fo)
++
++
++def escaped_amendment_lines(lines):
++    found = []
++    for entry in amendment_entries(lines) or []:
++        title, moved = entry.split("\n", 1)[0].strip(), False
++        for line in entry.split("\n")[1:]:
++            moved = moved or line.startswith("Superseded text:")
++            if not moved and JSON_QUOTE.search(line):
++                found.append((title, line.split(":", 1)[0]))
++    return found
++
++
++def owed_overrides(text):
++    fm, body = decision_ledger.split_task(text)
++    if fm is None:
++        return []
++    chosen = {" ".join(m.group("chose").split())[:18] for e in decision_ledger.gate_entries(fm) if e["kind"] == "resolution"
++              for m in [decision_ledger.OVERRIDE.search(e.get("reason") or "")] if m}
++    found = []
++    for line in unfenced(body.split("\n")):
++        m = decision_ledger.OVERRIDE.search(line)
++        if m and not m.group("rec").startswith(("<", ".", "…")) and " ".join(m.group("chose").split())[:18] not in chosen:
++            found.append(" ".join(line[m.start():].split()))
++    return found
++
++
+ def check_criteria(name, lines, errors):
+     body = section(lines, AC_HEADING)
+     if body is None:
+@@ -163,7 +196,20 @@
+     return None if body is None else re.split(r"(?m)^(?=### )", "\n".join(body))[1:]
+ 
+ 
+-def check_amendments(name, lines, declared, errors):
++AMENDMENT_NAMED = re.compile(r"amendments?[ \t]+((?:\d+(?:[ \t]*(?:,[ \t]*(?:and|&)?|and|&|to|-)[ \t]*)?)+)", re.I)
++
++
++def dispatched_amendments(folder, texts=None):
++    texts = [p.read_text() for p in sorted(Path(folder, "dispatch").glob("*.md"))] if texts is None else texts
++    named = set()
++    for text in texts:
++        found = re.search(r"^## Checklist[ \t]*\n((?:(?!^## )[\s\S])*)", text, re.M)
++        for m in AMENDMENT_NAMED.finditer(found.group(1) if found else ""):
++            named |= {int(n) for n in re.findall(r"\d+", m.group(1))}
++    return named
++
++
++def check_amendments(name, lines, declared, errors, dispatched=None):
+     entries = amendment_entries(lines)
+     if entries is None:
+         return
+@@ -177,7 +223,9 @@
+         value = line.group(1) if line else ""
+         waiver = NO_REPLACEMENT.search(value)
+         named = set(AC_ID.findall(value[:waiver.start()] if waiver else value))
+-        for superseded in sorted(named & declared):
++        digits = re.search(r"\d+", title)
++        waits = dispatched is not None and int(digits.group() if digits else index + 1) not in dispatched
++        for superseded in sorted(set() if waits else named & declared):
+             errors.append(f"{name}: '{title}' supersedes {superseded} but it is still declared in '## Acceptance criteria'")
+         held = {found for found, _ in moved[index]}
+         if held - named:
+@@ -747,7 +795,11 @@
+         check_db(path.name, body, errors)
+     lines = text.split("\n")
+     declared = check_criteria(path.name, lines, errors)
+-    check_amendments(path.name, lines, declared, errors)
++    check_amendments(path.name, lines, declared, errors, dispatched_amendments(task_folder(path)))
++    for title, key in escaped_amendment_lines(lines):
++        errors.append(f"{path.name}: '{title}' {key} line holds a backslash-quote copied from JSON; FO writes his words and the question as they were said")
++    for line in owed_overrides(text):
++        notes.append(f"{path.name}: this Override line is in no gate resolution reason: {line[:120]}") if notes is not None else None
+     front = FRONTMATTER.match(text)
+     profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
+     plain = "\n".join(unfenced(lines))
+diff --color -ru base/scripts/dispatch_records.py cand/scripts/dispatch_records.py
+--- base/scripts/dispatch_records.py	2026-10-25 23:01:15
++++ cand/scripts/dispatch_records.py	2026-10-25 23:01:15
+@@ -35,7 +35,7 @@
+ 
+ sys.path.insert(0, str(Path(__file__).resolve().parent))
+ from delivery_gate import CANDIDATE, RECORD  # noqa: E402
+-from design_surfaces import AMENDMENTS_HEADING, section, unfenced  # noqa: E402
++from design_surfaces import AMENDMENTS_HEADING, alignment_owes_result, escaped_amendment_lines, section, unfenced  # noqa: E402
+ from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
+ 
+ PACKAGE = Path(__file__).resolve().parent.parent
+@@ -164,6 +164,7 @@
+     return 1 if found else 0
+ 
+ 
++NUMBER = re.compile(r"\d+")
+ AMENDMENT_ENTRY = re.compile(r"(?m)^(?=### )")
+ AMENDMENT_NAMED = re.compile(r"amendments?[ \t]+((?:\d+(?:[ \t]*(?:,[ \t]*(?:and|&)?|and|&|to|-)[ \t]*)?)+)", re.I)
+ 
+@@ -195,6 +196,11 @@
+             lines += [f"{file}:1: reserved line '{kind}: {n:04d}' missing from scope notes; copy it from the task's "
+                       "'## Number guards' into this record's '## Scope notes', then run this check again"
+                       for kind, n in reserved if not re.search(rf"(?m)^[ \t]*(?:[-*][ \t]+)?(?:Number guards:[ \t]*)?{kind}:[ \t]*0*{n}\b", notes)]
++        text = task.read_text()
++        if re.fullmatch(r"ideation-\d+\.md", path.name) and alignment_owes_result(text):
++            lines.append(f"{file}:1: '## FO alignment' records alignment as needed with no 'Result:' line; record the Captain's alignment result as 'Result: <what he answered>' there, then run this check again")
++        lines += [f"{file}:1: Captain amendment {NUMBER.search(title).group()} {key} line holds a backslash-quote copied from JSON; write his words as he said them, then run this check again"
++                  for title, key in escaped_amendment_lines(text.split("\n")) if NUMBER.search(title)]
+         named = {int(n) for record in path.parent.glob("*.md")
+                  for m in AMENDMENT_NAMED.finditer(named_section(record.read_text(), "Checklist"))
+                  for n in re.findall(r"\d+", m.group(1))}
+diff --color -ru base/scripts/laws_check.py cand/scripts/laws_check.py
+--- base/scripts/laws_check.py	2026-10-25 23:01:15
++++ cand/scripts/laws_check.py	2026-10-25 23:01:15
+@@ -182,7 +182,9 @@
+             for line in lines if code == 1 else []:
+                 match = re.fullmatch(r"(.+\.md):(\d+): (bare package script name \S+|no 'Candidate: <40-hex head>' line|"
+                                      r"reserved line '[^']+' missing from scope notes|"
+-                                     r"Captain amendment \d+ named in no dispatch checklist)(?:;.*)?", line)
++                                     r"Captain amendment \d+ named in no dispatch checklist|"
++                                     r"'## FO alignment' records alignment as needed with no 'Result:' line|"
++                                     r"Captain amendment \d+ (?:Captain|Asked) line holds a backslash-quote copied from JSON)(?:;.*)?", line)
+                 if not match:
+                     raise Cannot(f"dispatch_records.py --names exited 1 with output this runner does not parse: {line}")
+                 key = next((v for v in mine.values() if str(Path(tmp) / v[0]) == match[1]), None)

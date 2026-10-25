@@ -1,0 +1,63 @@
+candidate scripts: /tmp/fwl/cand/kc-dev-flow-2/scripts
+kc-claude-plugins head 60e36068635b, 139 task files
+qnow head f5207c1ae3e4, 123 task files
+subspace-relay head 9033594bad57, 87 task files
+subspace-web head 731c93389f01, 46 task files
+
+[1] Result line owed at the commit that added each ideation dispatch record
+  kc-claude-plugins: 89 ideation records, 24 with alignment needed, 16 would be refused
+     fo-lifecycle-mod ideation-1 2026-10-14
+     fo-batch-sittings ideation-1 2026-10-20
+     fo-batch-sittings ideation-2 2026-10-20
+     new-work-starts-from-a-story-map ideation-1 2026-10-21
+     agent-reads-governing-adr ideation-1 2026-10-21
+     agent-reads-governing-adr ideation-2 2026-10-21
+     design-director-runs-ui-design-review ideation-1 2026-10-22
+     release-review-staleness-held-at-dispatch ideation-1 2026-10-23
+     release-review-staleness-held-at-dispatch ideation-2 2026-10-23
+     release-walk-picky-reviewers-and-director ideation-1 2026-10-23
+     release-walk-picky-reviewers-and-director ideation-2 2026-10-23
+     adr-protected-path-guard ideation-1 2026-10-23
+     kc-adr-tools-with-dev2-copy ideation-1 2026-10-23
+     fo-written-lines-checked-before-dispatch ideation-1 2026-10-25
+     delivery-gate-reads-folder-tasks ideation-1 2026-10-25
+     role-triggers-owe-ce-on-review-drift ideation-1 2026-10-25
+  qnow: 33 ideation records, 0 with alignment needed, 0 would be refused
+  subspace-relay: 51 ideation records, 0 with alignment needed, 0 would be refused
+  subspace-web: 26 ideation records, 0 with alignment needed, 0 would be refused
+
+[2] backslash-quote on an amendment line, task files at head
+  kc-claude-plugins/_archive/kc-adr-format-source.md: ### Amendment 2 — 2026-10-23, chat Asked
+  total: 1
+
+[3] validation gate questions: merge named with --match-head-commit and no hold-out clause
+  kc-claude-plugins: 78 questions, 24 name the merge, 7 lack the clause
+     _archive/adr-protected-path-guard 2026-10-23
+     _archive/commissioned-by-names-spacedock 2026-10-20
+     _archive/db-surface-without-migrations 2026-10-20
+     _archive/fo-batch-sittings 2026-10-20
+     _archive/fo-write-rules-checked 2026-10-21
+     _archive/idle-names-failing-seeds 2026-10-22
+     _archive/kc-adr-format-source 2026-10-23
+  qnow: 123 questions, 0 name the merge, 0 lack the clause
+  subspace-relay: 106 questions, 0 name the merge, 0 lack the clause
+  subspace-web: 48 questions, 0 name the merge, 0 lack the clause
+
+[4] Override: recommended line in a task body and in no gate resolution reason, task files at head
+  kc-claude-plugins/_archive/codex-reader-reads-receipt-marker.md: Override: recommended two upstream branches, no backlog task (design D6); Captain chose a backlog ta
+  kc-claude-plugins/_archive/design-director-runs-ui-design-review.md: Override: recommended no FO rule (design D-2); Captain chose the checker printing preview paths; are
+  kc-claude-plugins/_archive/design-director-runs-ui-design-review.md: Override: recommended recording it as project learning (design D-4); Captain chose an ADR per kind i
+  kc-claude-plugins/_archive/design-director-runs-ui-design-review.md: Override: recommended option A, MINOR defaults to Polish with a count (design D-6); Captain chose th
+  kc-claude-plugins/_archive/fo-batch-sittings.md: Override: recommended its own task two releases out (design D2); Captain chose the story-map task, n
+  kc-claude-plugins/_archive/fo-write-rules-checked.md: Override: recommended the phrase check (design D4); Captain chose no check, on FO's revised recommen
+  kc-claude-plugins/_archive/kc-adr-tools-with-dev2-copy.md: Override: recommended only the two tools (design D1); Captain chose copying the skill too; area: sin
+  kc-claude-plugins/_archive/kc-adr-tools-with-dev2-copy.md: Override: recommended hand-writing it (design D2); Captain chose the copied skill's text; area: Prot
+  kc-claude-plugins/_archive/new-work-starts-from-a-story-map.md: Override: recommended the review record; Captain chose the map fields under the five-question rule; 
+  kc-claude-plugins/_archive/new-work-starts-from-a-story-map.md: Override: recommended the seed hold; Captain chose none; area: Release review line.
+  kc-claude-plugins/_archive/new-work-starts-from-a-story-map.md: Override: recommended Codex plus a Claude sonnet run; Captain chose sol lens only; area: interrogato
+  kc-claude-plugins/_archive/release-review-staleness-held-at-dispatch.md: Override: recommended (cycle 1 design) the map-diff check; Captain chose the task-record check on ch
+  kc-claude-plugins/_archive/release-walk-picky-reviewers-and-director.md: Override: recommended option A, a docs-only record PR (design D1); Captain chose the POC-style local
+  kc-claude-plugins/_archive/release-walk-picky-reviewers-and-director.md: Override: recommended as shipped, sonnet with a flip on AC-8 (design D2); Captain chose per-item esc
+  kc-claude-plugins/_archive/release-walk-picky-reviewers-and-director.md: Override: recommended a POC task for a non-Claude operating reviewer (design D3); Captain chose an e
+  subspace-relay/_archive/launch-stories-verified.md: Override: recommended (ideation) the relay-side reading, three of four; Captain chose all four, the 
+  total: 16
