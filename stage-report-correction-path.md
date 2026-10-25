@@ -61,6 +61,11 @@ gates:
                 at: "2026-10-25T17:51:56.48908Z"
                 decision: revise
                 reason: 'Captain 「照建議」 (chat, 2026-10-26) answering the batch-6 merge sitting, accepting FO''s recommended revise for #721: remove the three worker-skill sentences (189 words, not shown needed in 4 base runs) and keep only the README request to FO, then recheck'
+            - id: gate-attempt:stage-report-correction-path-validation-2
+              briefing:
+                id: briefing:stage-report-correction-path:validation:attempt-2:revision-1
+                digest: sha256:5df6ff99fd1199c2f78e16bcee4ea9ffa54dbafdbc2376e3bee23c70721550c8
+                room-ref: ./stage-report-correction-path/review/validation/briefing-2
 started: 2026-10-25T15:11:49Z
 worktree: .worktrees/spacedock-ensign-stage-report-correction-path
 pr: iamcxa/kc-claude-plugins#721

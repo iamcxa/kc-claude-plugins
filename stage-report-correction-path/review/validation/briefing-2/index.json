@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:stage-report-correction-path:validation:attempt-2:revision-1",
+  "question": "Approve validation of stage-report-correction-path and merge iamcxa/kc-claude-plugins#721 at head f559d3d6c6c8e89e2712b6f06e966cc3e14fc563 with `gh pr merge 721 --squash --match-head-commit f559d3d6c6c8e89e2712b6f06e966cc3e14fc563`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:stage-report-correction-path:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/1b67c494e23427327983ea96273b738a3e4502f4/stage-report-correction-path.md",
+      "rev": "sha256:55b40468ac0a9d0e44b63b15a49ec5254da1c84ab0a55efd5952dfc4dc7bc373",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: the workflow README tells FO to ask for a correction as a complete new stage report ending in a superseding Summary (22 words, budget 5385 to 5407); the worker-skill sentences are removed per Captain Amendment 1; validation PASSED at this head (removing the README clause fails only correction-request, the raise step and the real-binary exercise hold, the three SKILL.md files are byte-identical to base).\nNecessity: four files (workflow.md, lint-skills.py, test_sd_dispatch.py, kc-dev-flow-2/README.md).\nExternal rounds: Codex 2 (round 1 on ae9467dd clean; round 2 on this head: code review completed with no findings, evidence=summary:6399508360@f559d3d6c). RoboRev clean on this head (evidence=roborev:1183). second reviewer: not triggered.\nFO declines: Polish F1, the PR body was stale (FO rewrote it to this head on 2026-10-26); Polish F2, the task file still carried AC-1, AC-5 and the skill Design bullets (recorded as Captain Amendment 1 with its Supersedes line); Polish F3, the implementation reports omit doc-impact lines for five documents (README updated, the rest read by validation and unaffected); Deferred risk F4, no worker run shows the README request is needed (named in the PR body as its known limit)."
+    }
+  ]
+}
