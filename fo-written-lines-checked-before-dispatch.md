@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-25T17:52:33Z
+worktree: .worktrees/spacedock-ensign-fo-written-lines-checked-before-dispatch
 ---
 
 ## Scope
