@@ -15,6 +15,17 @@ gates:
                 id: briefing:fo-written-lines-checked-before-dispatch:backlog:attempt-1:revision-1
                 digest: sha256:6667a4ab51adf17bf65b0f6113bfca69dbe1a538dc9e7a44a6d71c2f9c00e3b4
                 room-ref: ./fo-written-lines-checked-before-dispatch/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-written-lines-checked-before-dispatch:backlog:1
+                briefing: briefing:fo-written-lines-checked-before-dispatch:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T14:15:20.477144Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 backlog sitting, which listed this task's backlog briefing-1 question
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
