@@ -203,6 +203,10 @@ Counted per root `learning.md` "Measure the words FO reads at each moment": ever
 | merge ask, reserved ADR missing, no flag (D1 = A) | 2 lines, 35 words | + one `next:` line, 17 words | up 17 on this hold only |
 | merge ask, `--sibling-pr` used and passing (D1 = A) | not possible | + one `sibling:` line, 15 words | up 15 on that pass only |
 
+## Number guards
+
+ADR: 0036
+
 ## Stage Report: ideation
 
 - DONE: Design the outcome under ## Scope: kc-dev-flow-2/scripts/delivery_gate.py check reads a folder task (its index.md or the folder) and, from the folded merge-check-reads-two-pr-tasks, a task that delivers through two PRs, so a number reserved on a sibling PR does not hold the ask; check whether other package scripts share the same path derivation; whether a task may deliver through two PRs at all is the Captain's decision to put at the gate; name every file, the falsifier and the evidence each criterion needs
