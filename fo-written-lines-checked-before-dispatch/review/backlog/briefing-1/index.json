@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-written-lines-checked-before-dispatch:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of fo-written-lines-checked-before-dispatch to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that FO-written task lines are checked before dispatch and before a gate is prepared (the Result line for an alignment-needed dispatch, FO words in Captain amendment entries, the delivery question's merges-or-holds clause, and Override placement in the gate resolution reason, folding the two Override tasks and fo-write-checks-parse-top-level); profile pilot (script and skill text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:fo-written-lines-checked-before-dispatch:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/fb50327eb2b5abd3736a022c3ab410df9dc23ccf/fo-written-lines-checked-before-dispatch.md",
+      "rev": "sha256:3ec8991423883578bafbca23f14838b76925f6aa63d708c8c160233b0946531e",
+      "mediaType": "text/markdown",
+      "summary": "Bite: 46 observer violations in the 14 latest archived observer reports (FO count, 2026-10-25); this task's checks cover 15. Ideation owes which check runs where (dispatch, gate prepare, delivery_gate) and what each refuses."
+    }
+  ]
+}
