@@ -3,7 +3,7 @@ title: A Codex review that stops updating is detected, re-requested once, and na
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-25T15:11:39Z
 worktree: .worktrees/spacedock-ensign-codex-review-hang-detected
+pr: iamcxa/kc-claude-plugins#722
 ---
 
 ## Scope
