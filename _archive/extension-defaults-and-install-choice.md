@@ -3,7 +3,7 @@ title: Required extensions are on by default and an adopter picks the recommende
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「准合併」 (chat, 2026-10-25) answering the validation briefing-1 question (merge #716 at 8340c3baa3333de6d281c55523d07927bc6e7abd with Codex and Copilot not read, keeping the shortened clause and the extra tier test)'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-25T03:47:39Z
 worktree: .worktrees/spacedock-ensign-extension-defaults-and-install-choice
 pr: pr-merge:716
+verdict: PASSED
+completed: 2026-10-25T07:14:05Z
+archived: 2026-10-25T07:14:05Z
 ---
 
 ## Scope
