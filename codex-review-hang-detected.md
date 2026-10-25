@@ -15,6 +15,17 @@ gates:
                 id: briefing:codex-review-hang-detected:backlog:attempt-1:revision-1
                 digest: sha256:8d6370a2df1cee659d9ed60f37236370a6b23366d940c6c00c446a78f45549da
                 room-ref: ./codex-review-hang-detected/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-review-hang-detected:backlog:1
+                briefing: briefing:codex-review-hang-detected:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T14:15:37.472492Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 backlog sitting, which listed this task's backlog briefing-1 question
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
