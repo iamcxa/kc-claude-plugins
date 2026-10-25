@@ -15,6 +15,17 @@ gates:
                 id: briefing:delivery-gate-reads-folder-tasks:backlog:attempt-1:revision-1
                 digest: sha256:04ce3fbc310de40dd326f41fe75d711d523c543fe4e2052007e5d609f2ff37cb
                 room-ref: ./delivery-gate-reads-folder-tasks/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-reads-folder-tasks:backlog:1
+                briefing: briefing:delivery-gate-reads-folder-tasks:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T14:15:31.710779Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 backlog sitting, which listed this task's backlog briefing-1 question
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
