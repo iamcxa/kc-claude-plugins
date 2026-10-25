@@ -13,6 +13,8 @@ spec.loader.exec_module(codex)
 HEAD, OLD = "a" * 40, "b" * 40
 BOT, PERSON = {"login": codex.BOT}, {"login": "someone"}
 T1, T2 = "2026-10-10T10:00:00Z", "2026-10-10T11:00:00Z"
+MIN = 60
+NOW = codex.epoch(T1) + MIN
 
 
 NONE = {"commit_sha": None, "has_any_findings": None, "has_unresolved_findings": None, "status": None}
@@ -74,10 +76,18 @@ def fake(reactions=(), inline=(), reviews=(), comments=(), heads=(HEAD,), trigge
     return call, pages
 
 
+def at(minutes):
+    return f"2026-10-10T10:{minutes:02d}:00Z"
+
+
+def asking(at, ident=40, user=PERSON):
+    return {"id": ident, "user": user, "created_at": at, "body": "@codex review"}
+
+
 class CodexReviewTests(unittest.TestCase):
-    def check(self, **kw):
+    def check(self, now=NOW, **kw):
         call, pages = fake(**kw)
-        return codex.state("o/r", "1", call=call, pages=pages)
+        return codex.state("o/r", "1", call=call, pages=pages, now=now)
 
     def test_eyes_on_the_latest_codex_review_comment_means_running(self):
         old = {"id": 39, "user": PERSON, "created_at": T1, "body": "@codex review"}
@@ -113,7 +123,7 @@ class CodexReviewTests(unittest.TestCase):
         self.assertEqual(self.check(comments=[said(HEAD[:10], lead="Quoting an old note:")])[0], 5)
         self.assertEqual(self.check(comments=[marker(HEAD, "completed")])[0], 0)
         self.assertEqual(self.check(comments=[marker(OLD, "completed")])[0], 4)
-        self.assertEqual(self.check(comments=[marker(HEAD, "running")])[0], 4)
+        self.assertEqual(self.check(comments=[marker(HEAD, "running")])[0], 3)
         self.assertEqual(self.check(comments=[marker(HEAD, "completed", user=PERSON)])[0], 4)
         self.assertEqual(self.check(reactions=[{"user": BOT, "content": "+1"}])[0], 4)
 
@@ -268,7 +278,8 @@ class CodexReviewTests(unittest.TestCase):
         self.assertEqual(self.check(comments=[receipt(v2)], heads=(HEAD, OLD))[0], 4)
         summary = marker(HEAD, "running")
         summary["body"] += f"\n\n**Reviewed commit:** `{HEAD[:10]}`"
-        self.assertEqual(self.check(comments=[summary])[0], 4)
+        self.assertEqual(self.check(comments=[summary])[0], 3)
+        self.assertNotIn("evidence=", self.check(comments=[summary])[1])
 
     def test_a_newer_unread_comment_on_the_head_after_a_clean_one_is_never_clean(self):
         v2 = REAL.format(sha=HEAD[:10]).replace("receipt:v1", "receipt:v2")
@@ -286,6 +297,67 @@ class CodexReviewTests(unittest.TestCase):
         self.assertEqual(self.check(comments=[clean, receipt(v2, ident=31, at=T2), later])[0], 0)
         self.assertEqual(self.check(comments=[clean, receipt(v2.replace(HEAD[:10], OLD[:10]), ident=31, at=T2)])[0], 0)
         self.assertEqual(self.check(comments=[clean, receipt(v2, ident=31, at=T2, user=PERSON)])[0], 0)
+
+    def test_a_code_review_the_summary_shows_running_is_running_until_the_limit_and_stalled_after(self):
+        self.assertEqual(codex.STALL_SECONDS, 1800)
+        running = [marker(HEAD, "running", at=T1)]
+        self.assertEqual(self.check(comments=running, now=codex.epoch(T1) + 29 * MIN)[0], 3)
+        self.assertEqual(self.check(comments=running, now=codex.epoch(T1) + 31 * MIN)[0], 6)
+
+    def test_exit_6_needs_a_running_code_review_of_the_head_and_no_result_on_it(self):
+        late = codex.epoch(T1) + 40 * MIN
+        code, line = self.check(comments=[marker(HEAD, "running", at=T1)], now=late)
+        self.assertEqual(code, 6)
+        self.assertIn(f"stalled={T1}", line)
+        self.assertNotIn("evidence=", line)
+        secured = marker(HEAD, "completed", security=side(HEAD, "running"), at=T1)
+        self.assertEqual(self.check(comments=[secured], now=late)[0], 0)
+        self.assertEqual(self.check(comments=[marker(OLD, "running", at=T1)], now=late)[0], 4)
+        self.assertEqual(self.check(comments=[marker(HEAD, "failed", at=T1)], now=late)[0], 4)
+        self.assertEqual(self.check(comments=[marker(HEAD, "running", at=T1, user=PERSON)], now=late)[0], 4)
+
+    def test_the_stall_clock_starts_at_the_later_of_the_summary_and_a_persons_request_and_not_a_bots_quote(self):
+        running = marker(HEAD, "running", at=T1)
+        quote = receipt(REAL.format(sha=OLD[:10]), at=at(20), ident=8)
+        late = codex.epoch(T1) + 40 * MIN
+        code, line = self.check(comments=[running, quote], now=late)
+        self.assertEqual(code, 6)
+        self.assertIn(f"stalled={T1}", line)
+        self.assertEqual(self.check(comments=[running, asking(at(20))], now=late)[0], 3)
+        code, line = self.check(comments=[running, asking(at(20))], now=codex.epoch(T1) + 55 * MIN)
+        self.assertEqual(code, 6)
+        self.assertIn(f"stalled={at(20)}", line)
+        self.assertEqual(self.check(comments=[running, asking(at(20), user=BOT)], now=codex.epoch(T1) + 55 * MIN)[1].count(T1), 1)
+
+    def test_a_result_on_the_head_wins_over_a_stalled_summary(self):
+        running, late = marker(HEAD, "running", at=T1), codex.epoch(T2) + 40 * MIN
+        v2 = REAL.format(sha=HEAD[:10]).replace("receipt:v1", "receipt:v2")
+        self.assertEqual(self.check(reviews=[review(HEAD)], inline=[finding(HEAD)], comments=[running], now=late)[0], 1)
+        self.assertEqual(self.check(comments=[running, said(HEAD[:10])], now=late)[0], 0)
+        self.assertEqual(self.check(comments=[running, receipt(v2, ident=31)], now=late)[0], 5)
+        self.assertEqual(self.check(comments=[running, said(HEAD[:10]), asking(T2)], now=late)[0], 0)
+
+    def test_a_summary_marker_decides_and_an_eyes_reaction_does_not(self):
+        eyes = [{"user": BOT, "content": "eyes"}]
+        code, line = self.check(reactions=eyes, comments=[marker(HEAD, "completed")])
+        self.assertEqual(code, 0)
+        self.assertIn("evidence=summary:9@", line)
+        self.assertEqual(self.check(reactions=eyes, comments=[marker(OLD, "completed")])[0], 4)
+        self.assertEqual(self.check(reactions=eyes, comments=[marker(HEAD, "completed", found=True)])[0], 4)
+        self.assertEqual(self.check(reactions=eyes, comments=[marker(HEAD, "failed")])[0], 4)
+        stuck = {41: eyes}
+        self.assertEqual(self.check(comments=[marker(HEAD, "completed"), asking(T2, ident=41)], trigger_reactions=stuck)[0], 0)
+
+    def test_eyes_still_mean_running_when_the_summary_has_no_marker(self):
+        eyes = [{"user": BOT, "content": "eyes"}]
+        bare = {"id": 9, "user": BOT, "created_at": T1, "updated_at": T1, "body": "<!-- codex-pull-request-review-summary -->\n## Codex Review Summary"}
+        self.assertEqual(self.check(reactions=eyes, comments=[bare])[0], 3)
+        self.assertEqual(self.check(reactions=eyes)[0], 3)
+
+    def test_a_stalled_review_is_neither_a_round_nor_a_clean_one(self):
+        code, line = self.check(comments=[marker(HEAD, "running", at=T1)], now=codex.epoch(T1) + 31 * MIN)
+        self.assertNotIn(code, (0, 1))
+        self.assertNotIn("evidence=", line)
 
 
 if __name__ == "__main__":
