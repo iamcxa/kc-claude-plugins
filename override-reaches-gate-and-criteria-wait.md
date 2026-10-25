@@ -14,6 +14,7 @@ status: backlog
 - Not in scope: detecting FO's own words inside an amendment's Design line (point 3); every word of that line is FO's rendering, so no script tells transcription from addition; the observer keeps it.
 - Upstream first: `design_surfaces.py` (amendment checks), `decision_ledger.py` (override field), the README's Captain amendments and FO steps: review findings.
 - Priority: last in batch 5 (the Captain's ruling).
+- Folded 2026-10-25 into fo-written-lines-checked-before-dispatch (the Captain 「可以」 (chat, 2026-10-25), answering 「需要你決定：這份第 6 批的清單可以嗎？」 about FO's batch-6 list); not run on its own while that task is live.
 
 ## FO alignment
 
