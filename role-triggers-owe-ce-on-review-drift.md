@@ -238,3 +238,53 @@ The ask's gate half already holds on 0.29.0, so the work narrows to making the c
 ### Summary
 
 Review-round events now clear only on a chief-engineer call or waiver dated no earlier than the newest round, using `review_facts` and `--drift-date`, fed by the one comment read `pr_watch.py tasks` already makes; the repair-pass clear and the merge ask are unchanged. Replay of #714 turns exit 0 into exit 1. Limit: a call earlier on the same date as the newest round still clears it.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #719 head c3eef23f against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict: PASSED recommended for head c3eef23fc9704bb3d453bc51124b38d67ee83bc4 (base ac67eb0a, detached throwaway worktree, removed). Tests rerun: test_role_triggers + test_pr_watch 135 OK, test_delivery_gate 86 OK (unchanged file, real role_triggers.py).
+  AC-1 `review_facts` on the live comment lists (gh api, 2026-10-25): #714 (3, 2026-10-24), #704 (3, 2026-10-22), #675 (2, 2026-10-19), #709 (1, None); falsifiers: ordering by review id fails 1 test, dating by latest comment fails 1.
+  AC-2 scratch clone, committed `Reviewer:` line under `## FO alignment`: call 10-24 exit 0, call 10-25 exit 0, dated waiver 10-24 exit 0, call 10-23 exit 1, undated waiver exit 1, none exit 1; falsifier: removing the date test fails 5 tests.
+  AC-3 #704 at 4dfb2816~1 with `--drift-date 2026-10-22` exit 1, at 4dfb2816 exit 0; captain-question-load (#675) at 35bdf5ef~1 exit 1 with and without date; existing R/W rows unchanged; falsifier: dating the repair clear fails 13 tests.
+  AC-4 stub-gh test reads comments once and prints the owed line, then clears on a 10-24 call; falsifier: dropping `--drift-date` in pr_watch fails 1 test.
+  AC-5 delivery_gate.py untouched; its 86 tests pass.
+  AC-6 owed line 49 words (bound 56; base 44; #704 shape 49), workflow.md 5385 words, `git diff ac67eb0a c3eef23f -- kc-dev-flow-2/references` empty.
+  AC-7 one appended `Amended 2026-10-25` paragraph, no Decision or Status line changed; adr_lint exit 0. Its claim 「全准」 accepting D1 and D2 matches the ideation briefing-1 question, which says approving accepts the recommendation.
+- DONE: Judge the stated limit (a call made earlier on the same date as the newest round still clears it) and replay the #714 case at f6cddd6b with and without --drift-date
+  The limit is real and inherent: a `Reviewer:` line carries a date, no time, so no date test can separate a call before the round from one after it on the same day; it is a bounded, stated limit (F2). Replay on a scratch clone of the state branch: without the flag exit 0 ("each with a call or a waiver", same as origin/main's script); with `--drift-date 2026-10-24` exit 1 and the line "has 3 review rounds, the newest on 2026-10-24".
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i ... /bin/bash --noprofile --norc` 2026-10-25; every step matched. adr_lint (package 0.29.0) "35 ADR file(s) checked, 0 legacy", exit 0; comment_ratio 0 comment lines, 0.0%, exit 0; number_guards PASS exit 0; doc_impact 0 documents; dispatch_records.py "3 dispatch record(s) complete", exit 0.
+  Findings: F1 Polish, F2 Deferred risk, F3 Deferred risk; none Material, none Needs decision.
+
+### Findings
+
+- F1 Polish: the task file's AC-1 and AC-3 still carry the path-surface rows (#675 expected `(2, none)`, the A,B,A row, the different-file row) that the ideation text said to delete if D1 took S; the candidate follows S and returns (2, 2026-10-19) for #675. No user-visible loss; the task text is stale.
+- F2 Deferred risk: an unrelated chief-engineer call made earlier on the same date as the newest round still clears it. Material if a recorded PR shows such a call hiding a later round and the merge ask reached.
+- F3 Deferred risk: a comment list with a missing or malformed `created_at` yields no date, so the old date-blind clear applies (fail-open); and the round's date is UTC while the call date is whatever FO writes. Not observed: all four recorded lists carry ISO timestamps. Material if a list without timestamps, or a call correctly made after a round but dated before its UTC date, is recorded.
+
+### Not verified
+
+CI on the PR head (5 checks) and `roborev:1171` read from the implementation report, not rerun; the merge ask does not count review rounds by D2 (a PR with rounds and an ignored idle line reaches the ask); per-call cost unmeasured.
+
+### Minimal acceptance script
+
+Needs this machine's colombo checkout and kc-dev-flow-2 0.29.0 install; changes nothing outside a temp directory. Does not cover the live `pr_watch.py tasks` against GitHub, or a merge.
+
+    V=$(mktemp -d)
+    R=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+    STATE=$R/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+    PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.29.0
+    S=release-walk-picky-reviewers-and-director
+    git -C $R fetch -q origin pull/719/head && git -C $R worktree add -q --detach $V/wt c3eef23fc9704bb3d453bc51124b38d67ee83bc4 && git -C $V/wt log --oneline -1
+    git clone -q --no-checkout $STATE $V/state && git -C $V/state cat-file -t f6cddd6b
+    python3 -B $V/wt/kc-dev-flow-2/scripts/role_triggers.py $V/state $S --rev f6cddd6b --review-rounds 3; echo "exit=$?"
+    python3 -B $V/wt/kc-dev-flow-2/scripts/role_triggers.py $V/state $S --rev f6cddd6b --review-rounds 3 --drift-date 2026-10-24 | cut -c1-90; echo "exit=${PIPESTATUS[0]}"
+    (cd $V/wt/kc-dev-flow-2/scripts && python3 -B -m unittest test_role_triggers 2>&1 | tail -3)
+    (cd $V/wt && python3 -B $PKG/scripts/adr_lint.py docs/adr --since ac67eb0a; echo "exit=$?")
+    git -C $R worktree remove --force $V/wt; rm -rf $V
+
+Observed: `c3eef23f feat(kc-dev-flow-2): a chief-engineer call must be dated no earlier than the newest review round`; `commit`; "role triggers: 3 event(s) read at f6cddd6b, each with a call or a waiver." exit=0; "next: release-walk-picky-reviewers-and-director has 3 review rounds, the newest on 2026-10" exit=1; "Ran 25 tests ... OK"; "35 ADR file(s) checked, 0 legacy" exit=0.
+
+### Summary
+
+PASSED recommended at c3eef23f: the #714 miss (exit 0 at f6cddd6b) becomes exit 1 with the newest round's date, every falsifier I ran fails a test, and the repair-pass clear and the merge ask are untouched. Two bounded limits (same-day call, missing timestamp) are Deferred risk and one stale task-text note is Polish; nothing needs the Captain's decision.
