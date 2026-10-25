@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-25T03:47:39Z
+worktree: .worktrees/spacedock-ensign-extension-defaults-and-install-choice
 ---
 
 ## Scope
