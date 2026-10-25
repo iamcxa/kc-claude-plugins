@@ -34,6 +34,17 @@ gates:
                 id: briefing:stage-report-correction-path:ideation:attempt-1:revision-1
                 digest: sha256:6a08373658f57cbef54a90db4b37d261513594691836ca7adf5b0752a4fd9206
                 room-ref: ./stage-report-correction-path/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:stage-report-correction-path:ideation:1
+                briefing: briefing:stage-report-correction-path:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T15:10:19.402174Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 ideation sitting, which listed this task's ideation briefing-1 question with its decisions as recommended
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
