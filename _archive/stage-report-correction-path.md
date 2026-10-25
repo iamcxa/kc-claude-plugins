@@ -3,7 +3,7 @@ title: A worker that corrects its stage report writes a complete new report unde
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -76,10 +76,13 @@ gates:
                 reason: 'Captain 「合併」 (chat, 2026-10-26) answering the validation attempt-2 briefing question (merge #721 at f559d3d6c6c8e89e2712b6f06e966cc3e14fc563)'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-25T15:11:49Z
 worktree: .worktrees/spacedock-ensign-stage-report-correction-path
 pr: pr-merge:721
+verdict: PASSED
+completed: 2026-10-25T18:23:57Z
+archived: 2026-10-25T18:23:57Z
 ---
 
 ## Scope
