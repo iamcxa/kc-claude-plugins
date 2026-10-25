@@ -3,7 +3,7 @@ title: role_triggers.py owes a chief-engineer call when consecutive review round
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-25T15:11:29Z
 worktree: .worktrees/spacedock-ensign-role-triggers-owe-ce-on-review-drift
+pr: iamcxa/kc-claude-plugins#719
 ---
 
 ## Scope
