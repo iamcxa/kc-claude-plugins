@@ -3,7 +3,7 @@ title: delivery_gate.py reads a folder task's index.md
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 ideation sitting, which listed this task's ideation briefing-1 question with its decisions as recommended
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
