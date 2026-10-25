@@ -71,6 +71,11 @@ Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 FO ruling 2026-10-26 on validation F5 (ADR need): D2 (a script judges only the backslash-quote) and D4 (Override gets a note only) govern only this task's checks and stay in the task; D1, D3 and D5 rest on ADR 0027, ADR 0020 and ADR 0010, which the validation report names. No new ADR.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-26): Codex review on #724 5b7c0b2e (review:5644681449) left 1 P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 kc-dev-flow-2/scripts/design_surfaces.py: the escaped-quote check flags any amendment line before Superseded text (Design:, Supersedes:, an Asked: continuation), though D2 applies it only to Captain: and Asked: lines; the resulting diagnostic does not match kc-dev-flow-2/scripts/laws_check.py L2, so CI aborts with an unparseable-output error. Restrict the check to the Captain: and Asked: lines (validation F2 names the same).
+
 ## Stage Report: ideation
 
 - FAILED: Design checks for the four FO-written line classes under ## Scope (Result line before an alignment-needed dispatch, FO words in Captain amendment entries, the delivery question's merges-or-holds clause, Override placement in the gate resolution reason), reading the folded tasks from their own files; say where each check runs, what it refuses, and the falsifier; name every file and the evidence each criterion needs
