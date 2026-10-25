@@ -46,3 +46,18 @@ Alignment: needed before ideation: which checks run where (dispatch, gate, obser
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Stage Report: ideation
+
+- FAILED: Design checks for the four FO-written line classes under ## Scope (Result line before an alignment-needed dispatch, FO words in Captain amendment entries, the delivery question's merges-or-holds clause, Override placement in the gate resolution reason), reading the folded tasks from their own files; say where each check runs, what it refuses, and the falsifier; name every file and the evidence each criterion needs
+  Held, no design started: `## FO alignment` records `Alignment: needed before ideation` and the task has no `Result:` line (`grep -n Result` on this file hits only Scope lines 35 and 40, which quote the rule). The ideation stage text and `skills/ideation/principles.md` say to stop and report in that case.
+- FAILED: A `### Batch overlap` section naming each file the design would change and each other batch or live task
+  Not started; depends on the design.
+- FAILED: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  Not started; depends on the design.
+- FAILED: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  Not started; no `## Acceptance criteria` section written.
+
+### Summary
+
+This task was dispatched into ideation while it is itself an instance of Gap 2 (alignment needed, no `Result:` line), so the package rule held the worker. To release it, FO records a `Result:` line under `## FO alignment` (the alignment question is "which checks run where: dispatch, gate prepare, observer"; the Captain's batch-6 「可以」 and backlog 「全准」 are the only recorded words, and neither is a Result). Then FO re-dispatches ideation or messages this worker to continue. No other file was changed.
