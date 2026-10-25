@@ -3,7 +3,7 @@ title: Required extensions are on by default and an adopter picks the recommende
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-25T03:47:39Z
 worktree: .worktrees/spacedock-ensign-extension-defaults-and-install-choice
+pr: iamcxa/kc-claude-plugins#716
 ---
 
 ## Scope
