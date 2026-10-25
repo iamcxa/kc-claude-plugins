@@ -81,6 +81,7 @@ Alignment: not needed: documents an observed Spacedock behaviour.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer not run 2026-10-26: Amendment 1 only removes the worker-skill sentences, and validation rechecked the trimmed head (PASSED at f559d3d6) against the remaining criteria.
 
 ## Design
 
@@ -187,6 +188,14 @@ Files this design would change: `kc-dev-flow-2/references/sd/workflow.md` (the `
 | any task that raises or cuts the word ledger | the `WORKFLOW_BUDGET_STEPS` list end and the README count | the second to merge re-measures and appends its own step |
 
 Recommended order: no other task needs to land first; if a second task raises the ledger, whichever merges later rebases `lint-skills.py` and `workflow.md` and re-runs the lint. Every kc-dev-flow-2 change shares one release-please component; a PR title `feat(kc-dev-flow-2): ...` carries it.
+
+## Captain amendments
+
+### Amendment 1 — 2026-10-26, chat
+Captain: 「照建議」 (chat, 2026-10-26)
+Asked: 「**決定：** 一次回覆就好，例如「照建議」：合併 #719、#720、#722，#721 先修再審；或者「全部合併」：#721 照原樣合併。」, with the #721 row 「先拿掉一部分，再合併」 and 「照「拿掉也不會壞就不加」的原則，先刪掉那 189 字，再重新驗證」
+Supersedes: AC-1 and AC-5 (no replacement: the worker-skill sentences they cover are removed)
+Design: the three worker-skill sentences are removed; only the README request to FO stays.
 
 ## Stage Report: ideation
 
