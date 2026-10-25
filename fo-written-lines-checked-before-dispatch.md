@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:fo-written-lines-checked-before-dispatch:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:fo-written-lines-checked-before-dispatch-ideation-1
+              briefing:
+                id: briefing:fo-written-lines-checked-before-dispatch:ideation:attempt-1:revision-1
+                digest: sha256:e31ed480bd450de8d460f8296d4bb295fe94f2cd56f4cbaee80e7e1d42d9b848
+                room-ref: ./fo-written-lines-checked-before-dispatch/review/ideation/briefing-1
 ---
 
 ## Scope

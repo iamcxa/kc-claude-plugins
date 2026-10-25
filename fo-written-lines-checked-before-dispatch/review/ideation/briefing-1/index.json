@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-written-lines-checked-before-dispatch:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of fo-written-lines-checked-before-dispatch to enter implementation? FO recommends approve; approving accepts that recommendation, including the Captain decisions as recommended: (D1) the Result line and a backslash-quote on Captain:/Asked: lines are refused by dispatch_records.py --names at the record and the Result line again by laws_check.py in CI, the merges-or-holds clause by a new delivery_gate.py question command run before the validation gate prepare, and Override placement and waiting criteria reported as notes by design_surfaces.py check; (D2) a script judges only the backslash-quote in amendment entries, the rest stays with the observer; (D3) the README gains the 14 words telling FO to run the question command, raising the workflow word budget 5385 to 5399 with this answer quoted; (D4) Override gets the note only; (D5) the fo-write-checks-parse-top-level fixes ride along. Implementation starts after delivery-gate-reads-folder-tasks lands.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-written-lines-checked-before-dispatch:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ffa0f4a0b60345fdbd8efd19ccc8c37347f6b58e/fo-written-lines-checked-before-dispatch.md",
+      "rev": "sha256:2af23410662b1fc860c8744aef2a34f43f79a24b4c403c98939e283217205c5c",
+      "mediaType": "text/markdown",
+      "summary": "AC-1 to AC-10. Measured over four state checkouts: 16 of 24 alignment-needed ideation records lack a Result line; 7 of 24 merge-naming validation questions lack the clause; 16 Override lines in 9 tasks match no gate reason; a 395-file verdict replay changes 20 rows, each explained."
+    }
+  ]
+}
