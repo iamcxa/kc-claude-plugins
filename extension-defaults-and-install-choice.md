@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:extension-defaults-and-install-choice:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:extension-defaults-and-install-choice-validation-1
+              briefing:
+                id: briefing:extension-defaults-and-install-choice:validation:attempt-1:revision-1
+                digest: sha256:4709b72bd555a3279f770b143eed737e91aa74a30a9cabe17915843d83b595f2
+                room-ref: ./extension-defaults-and-install-choice/review/validation/briefing-1
 started: 2026-10-25T03:47:39Z
 worktree: .worktrees/spacedock-ensign-extension-defaults-and-install-choice
 pr: iamcxa/kc-claude-plugins#716
