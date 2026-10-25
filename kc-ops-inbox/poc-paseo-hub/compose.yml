@@ -5,7 +5,7 @@ services:
     image: ops-poc-paseo:local
     container_name: ops-poc-paseo
     ports:
-      - "127.0.0.1:6767:6767"
+      - "127.0.0.1:6768:6767"
     env_file: ${POC_ENV_FILE:?path of the Captain-owned env file outside the repository}
     volumes:
       - paseo-home:/home/paseo

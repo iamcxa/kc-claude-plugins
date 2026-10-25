@@ -15,7 +15,9 @@ done
 [ -s "${GH_CONFIG_DIR:-$HOME/.config/gh}/hosts.yml" ] && note "gh login file present"
 ls "$HOME"/.ssh/id_* >/dev/null 2>&1 && note "ssh private key present"
 [ -f "$HOME/.netrc" ] && note ".netrc present"
-[ -f "$PASEO_HOME_DIR/hub-relationship.json" ] && note "daemon Hub relationship credential present: $PASEO_HOME_DIR/hub-relationship.json (readable by uid $(id -u))"
+for n in hub-relationship.json hub-credentials.json daemon-keypair.json local-credential; do
+  [ -s "$PASEO_HOME_DIR/$n" ] && note "daemon credential file present: $PASEO_HOME_DIR/$n (readable by uid $(id -u))"
+done
 for f in "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.credentials.json" "$HOME/.claude.json" "${CODEX_HOME:-$HOME/.codex}/auth.json"; do
   [ -s "$f" ] && grep -Eq 'oauth|accessToken|refresh|api[_-]?key|OPENAI' "$f" 2>/dev/null && note "provider login file present: $f"
 done
