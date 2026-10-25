@@ -53,6 +53,17 @@ gates:
                 id: briefing:extension-defaults-and-install-choice:validation:attempt-1:revision-1
                 digest: sha256:4709b72bd555a3279f770b143eed737e91aa74a30a9cabe17915843d83b595f2
                 room-ref: ./extension-defaults-and-install-choice/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extension-defaults-and-install-choice:validation:1
+                briefing: briefing:extension-defaults-and-install-choice:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T07:07:54.403579Z"
+                decision: approve
+                reason: 'Captain 「准合併」 (chat, 2026-10-25) answering the validation briefing-1 question (merge #716 at 8340c3baa3333de6d281c55523d07927bc6e7abd with Codex and Copilot not read, keeping the shortened clause and the extra tier test)'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-25T03:47:39Z
 worktree: .worktrees/spacedock-ensign-extension-defaults-and-install-choice
 pr: iamcxa/kc-claude-plugins#716
