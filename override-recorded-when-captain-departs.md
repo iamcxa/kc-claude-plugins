@@ -14,6 +14,7 @@ status: backlog
 - Directions named by the peer, not decided: (a) widen the Override rule to revise rulings and revised recommendations; (b) a scorer over ledger rows that extracts recommended and chosen options and reports agreement against chance (idea from grahac/brainprint pipeline/decisions.py and pipeline/score.py; brainprint itself judged unsuitable).
 - Upstream first: Spacedock gate record (reason text); kc-dev-flow-2 decision_ledger.py, workflow.md review-finding disposition; ADR 0011.
 - Non-goals: mining session history.
+- Folded 2026-10-25 into fo-written-lines-checked-before-dispatch (the Captain 「可以」 (chat, 2026-10-25), answering 「需要你決定：這份第 6 批的清單可以嗎？」 about FO's batch-6 list); not run on its own while that task is live.
 
 ## FO alignment
 
