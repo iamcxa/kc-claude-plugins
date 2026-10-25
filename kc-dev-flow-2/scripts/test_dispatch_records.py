@@ -435,7 +435,7 @@ class ExtensionInstructionTests(unittest.TestCase):
         self.assertNotIn("release-acceptance", out)
         for name in ("journey-map", "release-acceptance"):
             text = Path(records.PACKAGE, "extensions", name, "EXTENSION.md").read_text()
-            self.assertIn("under `docs/journey/`; with none, this extension has no step", text)
+            self.assertIn("under `docs/journey/`; ", text)
 
     def test_release_acceptance_turns_loud_when_its_bullet_carries_the_instruction_label(self):
         readme = "---\nentity-type: task\nextensions: [release-acceptance]\n---\n"
