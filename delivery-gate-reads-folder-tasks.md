@@ -60,6 +60,7 @@ worktree: .worktrees/spacedock-ensign-delivery-gate-reads-folder-tasks
 ## FO alignment
 
 Alignment: needed at ideation: whether a task may deliver through two PRs (folded merge-check-reads-two-pr-tasks) is the Captain's.
+Result: aligned 2026-10-25 at the ideation gate by the Captain's 「全准」 to the batch-6 ideation sitting, which put this task's decisions with recommendations.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
