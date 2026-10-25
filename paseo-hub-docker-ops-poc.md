@@ -6,6 +6,17 @@ profile: poc
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:paseo-hub-docker-ops-poc:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:paseo-hub-docker-ops-poc-backlog-1
+              briefing:
+                id: briefing:paseo-hub-docker-ops-poc:backlog:attempt-1:revision-1
+                digest: sha256:cb18189c6b22695ed9728f5f1217911a914bcfb62362cc5443f1567bc065bed3
+                room-ref: ./paseo-hub-docker-ops-poc/review/backlog/briefing-1
 ---
 
 Tests whether Paseo Hub plus a deployed Paseo daemon can replace kc-ops-inbox r1's internet-facing inbox, trigger repository and GitHub-hosted runner, and add live conversation with the agent (the Captain's priority 7), without losing platform-enforced agent authority (priority 0). r1 (`ops-inbox-r1-setup-and-isolation`, dev2) is built locally and its live setup is paused until this POC closes.

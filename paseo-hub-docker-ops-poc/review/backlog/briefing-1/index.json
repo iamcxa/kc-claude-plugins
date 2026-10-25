@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-hub-docker-ops-poc:backlog:attempt-1:revision-1",
+  "question": "Admit this POC (profile poc) with the five criteria, non-goals, a 1-day budget and the stop conditions as written? Approving accepts all of them as written, including the 1-day budget, enters implementation, and lets FO move the dev2-poc workflow checkout to origin/main (the dispatch precondition reported by workflow_checkout.py); each outward action still asks first.",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-hub-docker-ops-poc:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a4d95ee1dd30c13a7c79050aab1dee2936b18560/paseo-hub-docker-ops-poc.md",
+      "rev": "sha256:710c8de8a3b6659fffaa30bd0b2259b22444baf1ed372b20a7f396364383eae2",
+      "mediaType": "text/markdown",
+      "summary": "Probe whether Paseo Hub plus a Paseo daemon in Docker can replace r1's internet-facing inbox, trigger repository and GitHub-hosted runner and add live conversation: one deliveryKey sent twice gives one run; the run files an ops task and Draft PR with only a Hub-minted token that cannot push main or merge; the container holds no other credential; the Captain talks to the agent from the Paseo app; an event to a stopped daemon is refused visibly."
+    }
+  ]
+}
