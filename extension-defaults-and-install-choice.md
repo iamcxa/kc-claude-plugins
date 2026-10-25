@@ -186,6 +186,10 @@ Files this design would change: `kc-dev-flow-2/references/sd/workflow.md` (front
 
 Recommended order: this task before adoption-asks-which-extensions; otherwise any order. Every kc-dev-flow-2 change shares one release-please component; a PR title `feat(kc-dev-flow-2): …` carries it.
 
+## Number guards
+
+ADR: 0035
+
 ## Stage Report: ideation
 
 - DONE: Design the change for the Captain's outcome under ## Scope: the exact workflow template extensions line (learn and peers), the repository README list of recommended extensions (journey-map with release-acceptance as one choice, codex, roborev) and optional copilot, where an adopter chooses at install through a UI (check spacedock:commission, spacedock:refit and references/sd/adoption.md first), and how release-acceptance stays quiet without a journey file; name every file and the evidence each criterion needs
