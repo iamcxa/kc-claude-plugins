@@ -250,3 +250,70 @@ Folder-task support is five small edits in `delivery_gate.py` through the existi
 ### Summary
 
 Implemented the approved design from the ideation prototype (the folder rule through the existing `task_folder`, `--sibling-pr`, `dispatch_records.py` joining) with small test clean-ups, ADR 0036 and a Draft PR #720; no version bump, no review requested. FO note: the ideation report's open `Result:` line under `## FO alignment` is still FO's to add; the design's follow-up (`decision_ledger.py` globbing `*.md`) is not in this PR.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #720 head 1c480fec against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at head 1c480fecf7d84e7bb4a15483fb8b3bc808dab630 (base ac67eb0a is current origin/main). Seven modules from a detached checkout: 454 tests OK (170s). AC-1..AC-7 and AC-9 hold; AC-4: the 7 removed test lines are `run_check`/`STUB_GH`/`run_names` plumbing, no assertion edited; AC-8: diff lists 4 scripts and ADR 0036 only; lint-skills.py exit 0. Own mutation run (`/tmp/val720-mutate.sh`, python3 -B, fresh copy per mutant): 13 of 13 killed, naming the AC-1 (3), AC-2, AC-3 (2), AC-5 (2), AC-6, AC-7 (2) mutants plus two I added (reserved-number match loosened to any ADR; sibling note not recorded), each by the test the AC names. Limits judged: file-exists-not-merges and newest-record-only are true and safe (probe: a sibling head only in an older record holds as "not a dispatched candidate"); flat-task companion folder as argument gives "cannot read input: .../index.md" exit 2 as stated; CI cost "not measured" is honest (no workflow file changed); `decision_ledger.py` follow-up is correctly outside this diff.
+- DONE: Replay the #704/#705 case with and without --sibling-pr, and check ADR 0036 against ADR 0025 D2 and the Captain's gate words
+  Replay (archived task copy plus the one added `Candidate:` line for f0d3f442, read-only gh, 2026-10-25): base script and candidate without the flag both print "reserved ADR 0029 has no docs/adr/0029-*.md at PR head f0d3f442d5e6"; candidate with `--sibling-pr iamcxa/kc-claude-plugins#705` does not (remaining lines are replay artefacts: PR already merged, copy is not a git work tree). ADR 0036 narrows 0025 D2 and says so ("otherwise stands"): no flag, closed sibling, undispatched head or absent file all keep 0025's hold. The ideation briefing question (`review/ideation/briefing-1`) says approving accepts D1 and D2 as recommended, so 「全准」 does cover them, and 0036 quotes the same words and the same gate record.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.29.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Six-step script below, run with `env -i HOME PATH bash --noprofile --norc` as written, all observed outputs match. `adr_lint.py docs/adr --since ac67eb0a56d6f78baa5fb2973f9727cefa3e06b9 --require 0036`: "36 ADR file(s) checked, 0 legacy", exit 0. Also: comment_ratio 0.0% (exit 0), number_guards check PASS (exit 0), dispatch_records on this task's folder "3 dispatch record(s) complete" (exit 0), design_surfaces check presentable, `gh pr checks 720`: all 5 pass.
+
+### Findings
+
+- F1 Polish: `doc_impact.py ac67eb0a 1c480fec` lists `learning.md` (it names `dispatch_records.py`) and the implementation report carries no `updated` or `unaffected: <reason>` line for it. Validator's assessment: `unaffected: its dispatch_records.py passages concern is_pointer and `--names` diagnostic wording; this change only resolves a folder task's path.` No behaviour or boundary is at risk; FO may copy that line into the gate.
+- F2 Deferred risk: `check` reads every `--sibling-pr` whenever the task reserves an ADR, even when the ADR is already at this PR head, so a closed or undispatched sibling then holds a ready ask (probe: ADR present at head plus a closed sibling gives exit 1, "an ADR it carries will not land"). Design Mechanism 3 said siblings are read only when the ADR is missing. Trigger needs FO to pass the flag when it is not needed; the hold's `next:` line teaches the flag only on a missing ADR. Material if FO passes the flag by habit on single-PR tasks.
+
+No Material finding, no Needs decision. Observation for FO, not a finding: `gh pr view 720` reports `isDraft: false` at validation time although the implementation report says Draft; the state of the PR is the Captain's and I changed nothing.
+
+### Acceptance script (run exactly as written in a fresh bash shell, 2026-10-25)
+
+```bash
+# Needs: git, python3, an authenticated gh (read-only calls), the dev2 workflow checkout below.
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.29.0
+CAND=1c480fecf7d84e7bb4a15483fb8b3bc808dab630
+BASE=ac67eb0a56d6f78baa5fb2973f9727cefa3e06b9
+T=$(mktemp -d)
+
+echo "STEP 1: check out the candidate and the base in throwaway directories"
+git -C "$REPO" fetch -q origin pull/720/head && git -C "$REPO" worktree add -q --detach "$T/cand" $CAND && mkdir "$T/base" && git -C "$REPO" archive $BASE kc-dev-flow-2/scripts | tar -x -C "$T/base"
+git -C "$T/cand" rev-parse HEAD
+
+echo "STEP 2: run the new tests (folder tasks, sibling PR, dispatch records)"
+(cd "$T/cand/kc-dev-flow-2/scripts" && python3 -B -m unittest test_delivery_gate.FolderTaskTests test_delivery_gate.SiblingPrTests test_dispatch_records.TaskFactTests 2>&1 | grep -E '^(Ran|OK|FAILED)')
+
+echo "STEP 3: a folder task (release-acceptance, PR 709): lines naming the wrong folder index/dispatch, base then candidate"
+mkdir "$T/ra" && cp -R "$REPO/docs/dev2/.spacedock-state/_archive/release-acceptance" "$T/ra/" && echo gate > "$T/gate.txt"
+for S in base cand; do
+  printf '%s: ' $S
+  python3 -B -I "$T/$S/kc-dev-flow-2/scripts/delivery_gate.py" check "$T/ra/release-acceptance/index.md" --pr iamcxa/kc-claude-plugins#709 --head d84ebde04c874524ede1d55587db9b9a1692c627 --text-file "$T/gate.txt" --workflow-dir "$REPO/docs/dev2" 2>&1 | grep -c 'index/dispatch'
+done
+
+echo "STEP 4: two-PR task (PRs 704 and 705): lines saying reserved ADR 0029 is missing, base, candidate without the flag, candidate with it"
+mkdir "$T/sm" && cp -R "$REPO/docs/dev2/.spacedock-state/_archive/new-work-starts-from-a-story-map" "$REPO/docs/dev2/.spacedock-state/_archive/new-work-starts-from-a-story-map.md" "$T/sm/"
+python3 -I - "$T/sm/new-work-starts-from-a-story-map/dispatch/validation-4.md" <<'PY'
+import sys
+p = sys.argv[1]
+t = open(p).read()
+first = "Candidate: 32ad029f059b5c0690344677518643a253856515\n"
+open(p, "w").write(t.replace(first, first + "Candidate: f0d3f442d5e62e4876f457f01a48b63a9c15506f\n", 1))
+PY
+run() { python3 -B -I "$1/kc-dev-flow-2/scripts/delivery_gate.py" check "$T/sm/new-work-starts-from-a-story-map.md" --pr iamcxa/kc-claude-plugins#704 --head f0d3f442d5e62e4876f457f01a48b63a9c15506f --text-file "$T/gate.txt" --workflow-dir "$REPO/docs/dev2" "${@:2}" 2>&1 | grep -c 'reserved ADR 0029'; }
+printf 'base: ';               run "$T/base"
+printf 'candidate, no flag: '; run "$T/cand"
+printf 'candidate, flag: ';    run "$T/cand" --sibling-pr iamcxa/kc-claude-plugins#705
+
+echo "STEP 5: ADR lint on the candidate"
+(cd "$T/cand" && python3 -B "$PKG/scripts/adr_lint.py" docs/adr --since $BASE --require 0036; echo "exit $?")
+
+echo "STEP 6: remove the throwaway directories"
+git -C "$REPO" worktree remove --force "$T/cand" && rm -rf "$T" && echo removed
+```
+
+Observed output: STEP 1 prints `1c480fecf7d84e7bb4a15483fb8b3bc808dab630`; STEP 2 `Ran 19 tests in 2.041s` then `OK`; STEP 3 `base: 1` and `cand: 0`; STEP 4 `base: 1`, `candidate, no flag: 1`, `candidate, flag: 0`; STEP 5 `36 ADR file(s) checked, 0 legacy` and `exit 0`; STEP 6 `removed`. Any other number in STEP 3 or 4 means the folder rule or the flag is not working. Not covered: a real folder-task merge ask end to end (the replay holds for other reasons, as the merged PRs cannot pass), `--sibling-pr` against a PR that is still open, the unchanged flat-task path beyond the 454-test suite, and CI cost.
+
+### Summary
+
+PASSED for head 1c480fec: every criterion holds, 13 of 13 of my own mutants die to the named tests, the #704/#705 replay behaves as designed, and ADR 0036 stays inside ADR 0025 D2 and the Captain's accepted words. Two findings, both non-blocking (F1 Polish: missing `doc_impact` record for `learning.md`; F2 Deferred risk: siblings are read even when the ADR is already at this head). Throwaway worktrees and temp copies were removed; nothing was pushed, commented on or marked ready.
