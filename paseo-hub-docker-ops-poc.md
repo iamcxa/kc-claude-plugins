@@ -101,3 +101,38 @@ Release review: not needed: the kc-ops-inbox journey map (branch iamcxa/kc-ops-i
 ### Summary
 
 All local rehearsal that needs no outward action is done and committed on spacedock-ensign/paseo-hub-docker-ops-poc (a1275d36); every AC is waiting on the one approval request above. Two reachable credentials (daemon Hub file, daemon password) are the likely AC-3 finding, and Hub gives the event to the agent only as prompt text.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: Read Paseo's own docs and the Hub OpenAPI first, verify each fact the task lists before relying on it, and rehearse everything that needs no outward action locally (a Docker image for the daemon from Paseo's documented Docker setup, the fixture ops event, the in-container credential audit, the ops task and Draft PR step against a local bare remote).
+  Done in cycle 1 (f4921948). Cycle 2 changed the image to Codex 0.162.1 (npm version verified), commits b4dc790c and c0cf7488 on spacedock-ensign/paseo-hub-docker-ops-poc.
+- DONE: Raise every outward action to the First Officer as one decision request naming the exact target, owner, scope and cost if known (Hub account and tokens, registering the daemon, connecting a GitHub App to Hub, running the container, placing the model credential, any push outside your worktree branch); take none on your own judgment and never read or print a credential.
+  The Captain approved the seven actions (「同意」, relayed 2026-10-25) with PASEO_PASSWORD unset and Codex via ChatGPT device login. No credential value was printed; the API key file was sourced into the sender's environment only. One request was refused by the permission layer and not worked around: reading the agent's `PASEO_HUB_CONFIG_JSON` from `/proc` (see AC-3).
+- FAILED: Record AC-1 to AC-5 with primary evidence, or name each not run with its exact pending approval or blocker; a stop condition that fires ends the stage with a hold report naming the fallback r1 as designed; include one package-value observation.
+  AC-4 is not yet run: the agent is idle in the container and waits for the Captain's message from the Paseo app; AC-5 first half failed against its text. Details below; no stop condition fired.
+
+### AC results
+
+- AC-1 met (second attempt). Key `ac1c-poc-20261025T151021`, project `default`, two sends 35 s apart: both HTTP 200, same `providerEventReceiptId` 1ae1abb2-d9f5-4df3-ad80-1de45f50c734 and `triggerRunId` 06585fa7-1a46-4867-acbd-5b26467df148; `paseo ls -a` in the container shows exactly one agent (2e9a99f, codex, created at the first send). Hub dedupes by key; the repeat does not start a second agent. The two attempts before it (keys `ac1-poc-20261025T143236`, `ac1b-poc-20261025T145558`) were dedupe-correct but failed inside Hub, see Root cause.
+- AC-2 met. Draft PR https://github.com/iamcxa/ops-inbox-probe-scratch/pull/8, author `paseo-bot[bot]`, head `ops/poc-20261025t151042z`, base master, files `docs/ops/poc-20261025t151042z.md` and its gate briefing json; master unchanged at fe8dd63c. The agent ran `/opt/poc/ac2-probe.sh 7` with its Hub-provided environment: installation repositories lists only `iamcxa/ops-inbox-probe-scratch`; push to master was `remote rejected (push declined due to repository rule violations)`; merge of PR 7 was refused ("New changes require approval from someone other than the last pusher"); `gh issue create` was refused (`Resource not accessible by integration (createIssue)`). Limits: the "another repository" probe read the public `iamcxa/kc-claude-plugins`, which any token can read, so it proves nothing; the token's `permissions` object from `/installation/repositories` reads all false and does not show contents/pull_requests write. Read-back of the grant is therefore by behaviour (branch push and Draft PR accepted, issue write refused), not by a permissions listing.
+- AC-3 fails on its text, passes on "no Captain credential". Audit run by the live agent (names only): `hub-relationship.json`, `daemon-keypair.json`, `local-credential` in `/home/paseo/.paseo` (readable by uid 1000, the agent's uid) plus the allowed `/home/paseo/.codex/auth.json`; no PASEO_PASSWORD (unset), no gh login, ssh key, netrc or git helper other than Hub's. The Hub CLI login file was an empty shell after logout. Env names show `GH_TOKEN`, five `GIT_CONFIG_*` pairs and `PASEO_HUB_CONFIG_JSON`; that last variable is not matched by the audit and its content was not inspected (permission layer refused the `/proc` read), so whether it carries an execution credential is unknown. `GH_PAGER` was a false audit hit, now noted.
+- AC-4 not run, pending: needs the Captain to add host `127.0.0.1:6768` (no password) in the Paseo app and message agent "Hub agent" (2e9a99f); the answer is read with `paseo logs 2e9a99f`.
+- AC-5 first half not met, second half met. With the container stopped, every send was HTTP 200 `running` (key `ac5-poc-143340` and seven more over 180 s); the documented 409 `daemon_not_connected` never appeared, so the sender saw no refusal. After the restart at 14:47:23 UTC and 6 minutes of watching, the agent list stayed `[]`, the daemon log had no create request, and the pending runs read `failed` on re-send. Hub's UI showed those runs as "Running" while offline.
+
+### Root cause of the earlier failed runs
+
+Hub's GitHub App installation 175142369 lacked the scratch repository or its permissions (docs: "Requested authority cannot exceed the GitHub App installation"); the Captain fixed the grant (「補好了」) and the next run started. Hub gave no failure detail anywhere the Captain or my key could read, which cost three attempts.
+
+### Findings
+
+- Docs vs behaviour: the docs promise `daemon_not_connected` and "nothing is queued"; observed, offline sends are accepted as `running` and silently end `failed` later. A sender cannot learn the daemon was down from the API response.
+- `deliveryKey` dedupe works at the receipt level and a repeat returns the current status (it flipped running to failed on the failed runs), matching "no replay of an earlier response".
+- Hub starts the agent as a normal Paseo agent; the Codex agent dispatched a Spacedock triage worker and opened the Draft PR on its own from the delimited prompt, with `mode: full-access` and thinking `low`. To keep the token alive for the probes I steered the agent not to call `hub.finish_execution`; that is an operator action, not part of the unattended path.
+- The hosted Hub proves the flow only; the Captain's plan is a self-hosted Hub at the exe.dev step.
+- Cleanup: remove `ops-poc-paseo`, its two named volumes and image `ops-poc-paseo:local`; the trigger `ops-event-poc` cannot be disabled from the Hub UI and stays active until removed with a Hub CLI login; Draft PR 8 and branch `ops/poc-20261025t151042z` stay (ruleset forbids deleting `ops/*`). The GitHub token expires about 16:10 UTC.
+- Gates after cycle 2: roborev not re-run on c0cf7488 (docs/config edits only); comment_ratio 0 comment lines.
+- Package-value observation: the dispatch's rule "name each not run with its exact blocker" held up; what the package lacked was a way to see why a Hub run failed, so the FO-side audit of the GitHub grant found in minutes what three live attempts did not. A pre-flight check of the App installation's repository and permissions, before the first send, would have saved two failed runs.
+
+### Summary
+
+AC-1, AC-2, AC-3 (qualified) and AC-5 second half are recorded with primary evidence; AC-4 waits on the Captain's message, and AC-5's sender-visible refusal does not exist in Hub as observed. No stop condition fired; the fallback r1 as designed is not triggered by these results.
