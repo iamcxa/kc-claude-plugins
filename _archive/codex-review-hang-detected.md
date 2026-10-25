@@ -3,7 +3,7 @@ title: A Codex review that stops updating is detected, re-requested once, and na
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「照建議」 (chat, 2026-10-26) answering the batch-6 merge sitting, which listed this task''s validation briefing-1 question (merge #722 at c61275186d61779873519732931342fb654aab37)'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-25T15:11:39Z
 worktree: .worktrees/spacedock-ensign-codex-review-hang-detected
 pr: pr-merge:722
+verdict: PASSED
+completed: 2026-10-25T18:02:10Z
+archived: 2026-10-25T18:02:10Z
 ---
 
 ## Scope
