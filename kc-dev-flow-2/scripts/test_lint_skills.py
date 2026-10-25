@@ -190,6 +190,18 @@ class RouteMutationTests(unittest.TestCase):
         patch.start()
         self.addCleanup(patch.stop)
 
+    def test_a_required_extension_missing_from_the_template_line_is_named(self):
+        self.change(lint.WORKFLOW, "extensions: [learn, peers]", "extensions: [learn]")
+        self.refuses("`peers` is required but " + lint.WORKFLOW + " extensions: does not list it")
+
+    def test_a_listed_extension_that_is_not_required_is_named(self):
+        self.change(lint.WORKFLOW, "extensions: [learn, peers]", "extensions: [learn, peers, codex]")
+        self.refuses("extensions: lists `codex` but its README tier is `recommended`, not `required`")
+
+    def test_a_row_marked_required_that_the_template_omits_is_named(self):
+        self.change("README.md", "(extensions/codex/EXTENSION.md) | recommended |", "(extensions/codex/EXTENSION.md) | required |")
+        self.refuses("`codex` is required but " + lint.WORKFLOW + " extensions: does not list it")
+
     def test_workflow_over_its_word_budget(self):
         self.with_words(lint.workflow_budget(SHIPPED) - len(self.workflow_text().split()) + 1)
         self.refuses(f"exceeds the budget of {lint.workflow_budget()}")

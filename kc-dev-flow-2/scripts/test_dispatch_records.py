@@ -427,6 +427,37 @@ class ExtensionInstructionTests(unittest.TestCase):
             with self.subTest(repr(ending)):
                 self.assertEqual(self.check({"implementation-1.md": COMPLETE + f"Run {ROBOREV_PATH}{ending}"})[0], 0)
 
+    def test_journey_map_and_release_acceptance_stay_quiet_without_an_acceptance_instruction(self):
+        readme = "---\nentity-type: task\nextensions: [learn, peers, journey-map, release-acceptance, codex]\n---\n"
+        code, out = self.check({"implementation-1.md": COMPLETE}, readme=readme)
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("journey-map", out)
+        self.assertNotIn("release-acceptance", out)
+        for name in ("journey-map", "release-acceptance"):
+            text = Path(records.PACKAGE, "extensions", name, "EXTENSION.md").read_text()
+            self.assertIn("under `docs/journey/`; with none, this extension has no step", text)
+
+    def test_release_acceptance_turns_loud_when_its_bullet_carries_the_instruction_label(self):
+        readme = "---\nentity-type: task\nextensions: [release-acceptance]\n---\n"
+        source = Path(records.PACKAGE, "extensions", "release-acceptance", "EXTENSION.md").read_text()
+        label = "- **Acceptance task's implementation scope notes:** FO adds"
+        self.assertIn(label, source)
+        loud = source.replace(label, "- **Joins:** implementation\n- **Instruction FO adds to the scope notes:** "
+                                     "run python3 <package>/extensions/release-acceptance/release_acceptance.py; FO adds", 1)
+        with tempfile.TemporaryDirectory() as d:
+            package = Path(d, "pkg")
+            (package / "extensions" / "release-acceptance").mkdir(parents=True)
+            (package / "extensions" / "release-acceptance" / "EXTENSION.md").write_text(loud)
+            Path(d, "README.md").write_text(readme)
+            folder = Path(d, "task")
+            (folder / "dispatch").mkdir(parents=True)
+            (folder / "dispatch" / "implementation-1.md").write_text(COMPLETE)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = records.main([str(folder)], package=package)
+        self.assertEqual(code, 1)
+        self.assertIn("release-acceptance worker instruction is absent", out.getvalue())
+
     def test_an_unlisted_extension_is_not_checked(self):
         self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme=NO_EXTENSIONS)[0], 0)
         self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme="---\nentity-type: task\nextensions: [codex]\n---\n")[0], 0)

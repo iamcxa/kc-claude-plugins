@@ -2,7 +2,8 @@
 
 Walks a release after its last story with picky-user reviewers on different Claude models, then has
 the design director rule on what they found. A repository uses it by listing `release-acceptance`
-under `extensions:` in its workflow README frontmatter, and only when it keeps a kc-journey-map file.
+under `extensions:` in its workflow README frontmatter, and only when it keeps a kc-journey-map file
+under `docs/journey/`; with none, this extension has no step and FO writes no `release-acceptance not run` line for it.
 
 - **Needs:** python3 for `<package>/extensions/release-acceptance/release_acceptance.py` (below `ra`);
   node and a kc-journey-map release that ships `lib/journey-walk.mjs` for the walk list. The walk list is
