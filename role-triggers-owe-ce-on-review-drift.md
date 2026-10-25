@@ -217,3 +217,22 @@ Recommended order: this task before prod-split-owes-chief-engineer-route-review;
 ### Summary
 
 The ask's gate half already holds on 0.29.0, so the work narrows to making the chief-engineer clear respect the date of the drifting review round, passing that date from the one comment read `pr_watch.py` already makes, and amending ADR 0026. Two decisions for the Captain: whether to keep the path surface or re-owe on any new round (recommended: any new round), and whether the merge ask also counts review rounds, which reverses his 2026-10-22 ruling (recommended: keep it). Alignment gap: `## FO alignment` records "Alignment: needed at ideation" with no `Result:` line; I proceeded because the dispatch names the surface definition as this stage's output, and `design_surfaces.py check` exits 0 ("design surfaces presentable", 2026-10-25).
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (ac67eb0a) implementing the approved design and acceptance criteria, D1 as S (any new round after a call owes a fresh call, no file-path surface), D2 keep, only the files the design names
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/719, commit c3eef23f: role_triggers.py, pr_watch.py, test_role_triggers.py, test_pr_watch.py, ADR 0026 (delivery_gate.py untouched, D2 kept).
+- DONE: Every acceptance criterion green with the evidence each names
+  AC-1 `review_facts` rows from the recorded #714/#704/#675/#709 shapes plus out-of-id-order, midnight and no-timestamp rows; AC-2 on a scratch clone of the state branch at f6cddd6b: no flag exit 0, `--drift-date 2026-10-24` exit 1, committed call 10-24 clears, 10-23 leaves it owed; AC-3 existing R/W rows unchanged, 25 + 110 tests pass; AC-4 `test_a_call_older_than_the_newest_review_round...` (one comments read logged, owed line, cleared by a 10-24 call); AC-5 delivery_gate.py unchanged; AC-6 owed line 49 words (base 44, bound 56), workflow.md 5385 words with empty diff; AC-7 one Amended paragraph appended, adr_lint exit 0.
+- DONE: Each falsifier shown failing by a mutation (python3 -B, caches cleared)
+  Six mutations each failed a test: date comparison removed (3 failures in test_a_call_or_waiver_older...), ordering by review id (1), dating by latest comment (1), `--drift-date` dropped in pr_watch (1), undated case dated (1), repair clear dated (1).
+- DONE: lint-skills.py, adr_lint.py docs/adr --since, number_guards.py check, comment_ratio.py exit 0
+  lint-skills 0; adr_lint "35 ADR file(s) checked" 0; number_guards "PASS: no findings" 0; comment_ratio 0 comment lines, 0.0% of 119 code lines (maximum 5%); doc_impact.py lists 0 documents. Scripts run from package 0.30.0 as the dispatch named (the loaded skill's root said 0.29.0).
+- DONE: roborev evidence line
+  `clean on c3eef23fc; evidence=roborev:1171`
+- DONE: Push without force and without -u; CI green on the PR head; CI cost measured or stated as not measured
+  Pushed once to the branch; 5 checks pass on c3eef23f (unit tests python3 2m5s, adr-path-check, multi-profile route gate, version parity, GitGuardian); no CI step added, cost not measured.
+
+### Summary
+
+Review-round events now clear only on a chief-engineer call or waiver dated no earlier than the newest round, using `review_facts` and `--drift-date`, fed by the one comment read `pr_watch.py tasks` already makes; the repair-pass clear and the merge ask are unchanged. Replay of #714 turns exit 0 into exit 1. Limit: a call earlier on the same date as the newest round still clears it.
