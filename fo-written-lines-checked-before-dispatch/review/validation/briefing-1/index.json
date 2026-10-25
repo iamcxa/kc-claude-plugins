@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-written-lines-checked-before-dispatch:validation:attempt-1:revision-1",
+  "question": "Approve validation of fo-written-lines-checked-before-dispatch and merge iamcxa/kc-claude-plugins#724 at head b0b2cbf3f4b6156b544c2a9574d3482e7eb1dd15 with `gh pr merge 724 --squash --match-head-commit b0b2cbf3f4b6156b544c2a9574d3482e7eb1dd15`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-written-lines-checked-before-dispatch:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f9f9b8ddcc7929687a6621e5cd8beaffcc8af38c/fo-written-lines-checked-before-dispatch.md",
+      "rev": "sha256:614edf09b414124b4258f5081994ad266be4d90a567cd1a74d9ee95d49f78bee",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: before FO writes them, the checks now refuse a dispatch record that needs alignment but has no Result line, a Captain or Asked amendment line carrying a JSON backslash, a delivery question without the merge hold-out clause naming who holds, and they print one note for an Override placed where the gate does not read it; the README tells FO to run delivery_gate.py question before validation (14 words, budget 5407 to 5421); validation PASSED at this head (ten criteria with falsifiers, 537 tests plus the real dispatch transport, a five-step acceptance script, corpus replay of 1076 revisions with zero unexplained differences).\nNecessity: twelve files (laws.md, workflow.md, delivery_gate.py, design_surfaces.py, dispatch_records.py, laws_check.py, lint-skills.py and their five test files).\nExternal rounds: Codex 3 (rounds 1 and 2 each one P2, both fixed; round 3 on this head: code review completed with no findings, evidence=summary:6401529779@b0b2cbf3f). RoboRev on the implementation head (evidence=roborev:1196). second reviewer: copilot triggered by the merge and review rules, not run (quota).\nFO declines: Polish F1, the implementation reports omit adoption.md's disposition (its transport command is unchanged); Polish F6, the task's word table says an Override note adds 12 words where the output has 10 (the test fixture is right, the table is not shipped); Deferred risk F4, an amendment with no later dispatch can leave superseded criteria declared without an error (not observed; filed for later, not in this PR)."
+    }
+  ]
+}
