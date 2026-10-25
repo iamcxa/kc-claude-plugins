@@ -230,3 +230,75 @@ The Scope's premise is half right: real stalls exist (3188 to 19448 s against a 
 ### Summary
 
 Implemented the approved design as one commit (c6127518) on PR #722 (Draft): exit 6 `stalled=<since>` in the codex reader with the summary marker deciding over eyes (D1 as recommended), and `stall_lines()` in `pr_watch.py wait` for the once-then-unread policy. Two existing assertions changed from exit 4 to 3 as the design predicted; no other file touched. The "stalled is an outcome" falsifier in AC-4 needed `outcome()` to strip the parenthesis as well, since an exact-match set never contains `stalled(<since>)`. Limits unchanged from the design: the old verdict reads for about 14 s after a same-head re-request, detection can lag by the security row's last update, and the asked-once mark is per session.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #722 head c6127518 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at c61275186d61779873519732931342fb654aab37 (base ac67eb0a, detached throwaway checkout, removed after). 249 tests (codex, pr_watch, role_triggers, delivery_gate) OK; CI 5 checks SUCCESS; `git diff --name-only` is the five designed files; `wc -w EXTENSION.md` 310 (base 227, cap 335); both docstrings carry exit 6 / the stalled paragraph; `comment_ratio` 0 of 169; `doc_impact` 0 documents; `lint-skills.py` PASS; `design_surfaces.py check` and `dispatch_records.py` (3 records) exit 0.
+  Falsifiers I ran (python3 -B, copies in /tmp, one mutation each): AC-1 limit 180 and 14400 each fail `...until_the_limit_and_stalled_after`; AC-2 `if stalled` before evidence fails `a_result_on_the_head_wins`, bot comments counted as triggers fail the clock test (two ways), dropping the person trigger fails it, any running row (not only the head's) fails two tests; AC-3 unconditional eyes fails `a_summary_marker_decides...`; AC-5 dropping the `since` key, dropping the head key (two ways) and a second `@codex review` line each fail `test_wait_asks_for_one_re_request...`; AC-4 removing the exit-6 word fails `...names_a_stalled_review...`; AC-6 `evidence=` on exit 6 fails two tests.
+  AC-4 as written (adding `stalled` to `OUTCOMES["codex"]` fails) is not true: I ran it and it passes (rc 0), as did the parenthesis strip alone; only both together fail two tests. The implementation report said so; see F1.
+  Limits judged: (a) old verdict for ~14 s after a same-head re-request: accepted, observed once, bounded by Codex's summary update. (b) detection lags by the security row's last update: accepted, never early; qnow #1296 shows 10 min. (c) asked-once mark per session: accepted, one extra comment at most; but see F2.
+- DONE: Replay the reader on the live PRs the report names (kc-claude-plugins #716, #713, #709, #714, #715 and qnow #1296, #1298) and judge the changed meaning of exit 3 for every codex-extension adopter
+  Base reader (origin/main) versus candidate, run 2026-10-25 15:3xZ: kcp #716 3 to 0 (`comment:6393874798`), #713 3 to 1 (`review:5628338608`), #709 0 to 0, #714 1 to 1, #715 3 to 4, qnow #1296 3 to 6 (`stalled=2026-10-22T10:10:44Z`), #1298 3 to 1 (`review:5612967048`); also #708 3 to 1, #1303 3 to 6.
+  Wider sweep, latest 30 kcp and 20 qnow PRs, base to candidate: 0-0 17, 1-1 8, 4-4 11, 3-0 4, 3-1 3, 3-4 4, 3-6 3, and no PR moved into 3 or out of 0/1/4/6 otherwise. The 3-to-4 PRs (#696, #706, #715, #717) have a summary whose `code_review` row is all null with only the security row running: no code review ever started, so "not reviewed" is the true reading and 3 was the stuck security eyes.
+  Judgment: exit 3 now means "the summary shows the code review of the head running and updated under 30 minutes ago", or "eyes with no summary marker". Every consumer in the repository (FO text in `EXTENSION.md`, `pr_watch.reader`, `delivery_gate`, `role_triggers`) reads 3 and 4 as the same no-verdict, so no consumer changes behaviour except by now seeing a verdict that was masked. The one visible loss is F3. Exit 6 is new: only `pr_watch.reader` maps exit codes to words, and it ships in the same package.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.29.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run with `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc <file>` in about 60 s; every expected line observed.
+  `python3 <package 0.29.0>/scripts/adr_lint.py docs/adr --since ac67eb0a56d6f78baa5fb2973f9727cefa3e06b9`: "35 ADR file(s) checked, 0 legacy", exit 0; `number_guards.py check` exit 0.
+  Verdict: PASSED at c61275186d61779873519732931342fb654aab37. No Material finding. F1 and F3 Polish or Deferred risk, F2 Deferred risk, F4 an observation for FO; none needs a Captain decision beyond the delivery ask (D1 was decided as recommended).
+
+### Findings
+
+- F1 Polish: AC-4's stated falsifier ("adding `stalled` to `OUTCOMES["codex"]` fails it") does not fail; the real guard is that `outcome()` never accepts `stalled(<since>)`, and it fails only when `stalled` is in the set and the parenthesis is stripped. No user-visible loss; the implementation report already states it.
+- F2 Deferred risk: `stall_lines` keys the second step on a different `since`, and `since` also moves when Codex updates the summary (a security-row change). A stall, then a summary update with no FO `@codex review`, then a second stall prints "stalled again after the re-request" and the unread line though FO asked nothing. Read from `stall_lines` and `state()`, not run live. Trigger unobserved; it becomes Material if a PR is named "Codex not read" without a re-request having been tried.
+- F3 Deferred risk: a code review that never starts (code row all null, security eyes on: #696, #706, #715, #717, 4 of 50 sampled) reads exit 4 where the old reader said exit 3; neither is a stall, so FO still waits with no limit. Not a regression in behaviour and not in the Scope; it becomes Material if the Captain wants never-started reviews named unread.
+- F4 Observation (FO): qnow #1307 is OPEN with the code row `running` since 2026-10-24T19:28:55Z and the candidate reader exits 6 on it: a live, unrecorded stall. PR #722 reads `isDraft=false` at this check; the implementation report called it Draft.
+
+### Acceptance script
+
+Needs `git`, `python3` and `gh` signed in with read access to iamcxa/qnow. Covers the reader and the `pr_watch` wait text through unit tests; does not cover a live `pr_watch wait` session, a real re-request comment, or any PR after this date (the live PRs are merged and Codex could still edit a summary).
+
+```bash
+set -u
+D=$(mktemp -d)
+git clone --quiet --no-checkout https://github.com/iamcxa/kc-claude-plugins.git "$D/repo"
+git -C "$D/repo" fetch --quiet origin pull/722/head
+git -C "$D/repo" checkout --quiet --detach c61275186d61779873519732931342fb654aab37
+R="$D/repo/kc-dev-flow-2"
+echo "== 1. candidate head"; git -C "$D/repo" rev-parse HEAD
+echo "== 2. unit tests"; (cd "$D/repo" && python3 -B kc-dev-flow-2/extensions/codex/test_codex_review.py 2>&1 | tail -3; python3 -B kc-dev-flow-2/scripts/test_pr_watch.py -k stalled -k re_request 2>&1 | tail -3)
+echo "== 3. a real stall (qnow #1296)"; python3 -B -I "$R/extensions/codex/codex_review.py" iamcxa/qnow 1296; echo "exit=$?"
+echo "== 4. an answered review the old reader hid (kc-claude-plugins #716, #713)"
+for n in 716 713; do python3 -B -I "$R/extensions/codex/codex_review.py" iamcxa/kc-claude-plugins $n | cut -c1-150; echo "exit=${PIPESTATUS[0]}"; done
+echo "== 5. same PR, reader before this change"
+git -C "$D/repo" show ac67eb0a56d6f78baa5fb2973f9727cefa3e06b9:kc-dev-flow-2/extensions/codex/codex_review.py > "$D/base_reader.py"
+python3 -B -I "$D/base_reader.py" iamcxa/kc-claude-plugins 716; echo "exit=$?"
+rm -rf "$D"
+```
+
+Observed (2026-10-25):
+
+```
+== 1. candidate head
+c61275186d61779873519732931342fb654aab37
+== 2. unit tests
+Ran 29 tests in 0.003s
+OK
+Ran 3 tests in 0.069s
+OK
+== 3. a real stall (qnow #1296)
+stalled: the Codex code review of ebc59cf96 shows running with no update; stalled=2026-10-22T10:10:44Z
+exit=6
+== 4. an answered review the old reader hid (kc-claude-plugins #716, #713)
+clean on 8340c3baa: Codex Review comment says no issues on the head; evidence=comment:6393874798 at 2026-10-25T05:22:39Z
+exit=0
+findings on 037d2cf60: 1 line finding(s), 1 badge(s), 0 at P0/P1; evidence=review:5628338608 at 2026-10-23T12:41:08Z
+exit=1
+== 5. same PR, reader before this change
+running: a Codex review is in progress; head 8340c3baa
+exit=3
+```
+
+### Summary
+
+PASSED at c61275186d61779873519732931342fb654aab37: every criterion holds on the exact head, each falsifier I ran fails the intended test (AC-4's literal falsifier does not, F1), and the live replay matches the implementation report. The exit-3 change only exposes verdicts the stuck security eyes hid, and it separates never-started code reviews (exit 4, F3) from real stalls (exit 6). No Material finding; four lines for FO, none for the Captain beyond delivery.
