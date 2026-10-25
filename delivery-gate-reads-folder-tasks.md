@@ -3,7 +3,7 @@ title: delivery_gate.py reads a folder task's index.md
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-25T15:11:06Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-reads-folder-tasks
+pr: iamcxa/kc-claude-plugins#720
 ---
 
 ## Scope
