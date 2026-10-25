@@ -1288,7 +1288,8 @@ class FoWriteRuleTests(unittest.TestCase):
 
 MERGE_ASK = "Deliver #9 head 40c714a6. Approving merges it with gh pr merge --match-head-commit 40c714a6{tail}"
 HOLD_OUT_TAIL = {"unless he says he merges or holds": ", unless he says he merges or holds.",
-                 "if the Captain says he merges or holds": ". If the Captain says he merges or holds, ask again."}
+                 "if the Captain says he merges or holds": ". If the Captain says he merges or holds, ask again.",
+                 "unless you say you merge or hold": ", unless you say you merge or hold."}
 
 
 class QuestionTests(unittest.TestCase):
@@ -1330,12 +1331,14 @@ class QuestionTests(unittest.TestCase):
         self.assertIn("cannot read input", said.getvalue())
 
     def test_mutation_accepting_any_merge_word_lets_the_clause_less_question_pass(self):
-        wide = variant_of(r'\b(?:unless|if)\b[^.;\n]{0,60}\bsays?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b', r"merge")
+        wide = variant_of(r'\b(?:unless|if)\b\s+(?:he|you|the\s+captain|captain)\s+says?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b', r"merge")
         self.assertEqual(self.ask(MERGE_ASK.format(tail="."))[0], 1)
         self.assertEqual(self.ask(MERGE_ASK.format(tail="."), module=wide)[0], 0)
-        unrelated = MERGE_ASK.format(tail=", if CI is green; the merge holds until then.")
-        self.assertEqual(self.ask(unrelated)[0], 1)
-        self.assertEqual(self.ask(unrelated, module=wide)[0], 0)
+        for tail in (", if CI is green; the merge holds until then.", ", unless CI says it merges or holds."):
+            with self.subTest(tail):
+                unrelated = MERGE_ASK.format(tail=tail)
+                self.assertEqual(self.ask(unrelated)[0], 1)
+                self.assertEqual(self.ask(unrelated, module=wide)[0], 0)
 
     def test_the_merge_time_check_does_not_judge_the_hold_out_clause(self):
         text = MERGE_ASK.format(tail=".")

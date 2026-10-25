@@ -37,7 +37,7 @@ and one last `next:` line, the `ASK` line: merge when the approved question name
 
 Usage: delivery_gate.py question <task file or task folder> --text-file <file>
 Runs the text checks of `check` on the validation gate question before `gate prepare`, and also refuses text that names the merge with
-`--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `say`, then `merge` or `hold`). Exit 0
+`--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `he`, `you`, `the Captain` or `Captain`, then `say`, then `merge` or `hold`). Exit 0
 prints `gate text complete`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge that clause.
 """
 import argparse
@@ -229,7 +229,7 @@ def brackets(item):
 
 
 GRANT = re.compile(r"--match-head-commit")
-HOLD_OUT = re.compile(r"\b(?:unless|if)\b[^.;\n]{0,60}\bsays?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b", re.I)
+HOLD_OUT = re.compile(r"\b(?:unless|if)\b\s+(?:he|you|the\s+captain|captain)\s+says?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b", re.I)
 
 
 def grant_without_hold_out(text):
