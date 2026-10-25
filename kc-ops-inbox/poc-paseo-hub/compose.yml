@@ -1,5 +1,5 @@
-# The POC daemon. No bind mount of the host: all state lives in named volumes. The model credential and the daemon password
-# come from poc.env, which the Captain creates outside the repository (see README); this file names no value.
+# The POC daemon. No bind mount of the host: all state lives in named volumes. POC_ENV_FILE may be /dev/null: the Codex login
+# is made inside the container and no password is set.
 services:
   paseo:
     image: ops-poc-paseo:local

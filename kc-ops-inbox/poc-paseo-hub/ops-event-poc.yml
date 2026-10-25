@@ -12,8 +12,8 @@ run:
     daemon: <daemon-slug>
     cwd: /workspace
   agent:
-    provider: claude
-    mode: acceptEdits
+    provider: codex
+    mode: full-access
   github:
     connection: <github-connection-slug>
     repositories: [iamcxa/ops-inbox-probe-scratch]

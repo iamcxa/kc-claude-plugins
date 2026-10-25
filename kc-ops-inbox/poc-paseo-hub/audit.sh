@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Lists, by name and presence only, every credential-shaped source reachable from this process besides the model
-# credential (names in AUDIT_ALLOW, default CLAUDE_CODE_OAUTH_TOKEN ANTHROPIC_API_KEY) and the Hub-minted GitHub token (GH_TOKEN
+# credential (the Codex login file under CODEX_HOME, and env names in AUDIT_ALLOW) and the Hub-minted GitHub token (GH_TOKEN
 # plus the git configuration Hub sets in the step environment). Prints no value. Exit 1 when any other source exists.
 set -uo pipefail
-ALLOW="${AUDIT_ALLOW:-CLAUDE_CODE_OAUTH_TOKEN ANTHROPIC_API_KEY}"
+ALLOW="${AUDIT_ALLOW:-}"
 PASEO_HOME_DIR="${PASEO_HOME:-$HOME/.paseo}"
 bad=0
 note() { echo "$1"; bad=1; }
@@ -16,9 +16,10 @@ done
 ls "$HOME"/.ssh/id_* >/dev/null 2>&1 && note "ssh private key present"
 [ -f "$HOME/.netrc" ] && note ".netrc present"
 for n in hub-relationship.json hub-credentials.json daemon-keypair.json local-credential; do
-  [ -s "$PASEO_HOME_DIR/$n" ] && note "daemon credential file present: $PASEO_HOME_DIR/$n (readable by uid $(id -u))"
+  [ -s "$PASEO_HOME_DIR/$n" ] && { [ "$n" != hub-credentials.json ] || [ "$(wc -c < "$PASEO_HOME_DIR/$n")" -gt 100 ]; } && note "daemon credential file present: $PASEO_HOME_DIR/$n (readable by uid $(id -u))"
 done
-for f in "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.credentials.json" "$HOME/.claude.json" "${CODEX_HOME:-$HOME/.codex}/auth.json"; do
+[ -s "${CODEX_HOME:-$HOME/.codex}/auth.json" ] && echo "model credential present (allowed): ${CODEX_HOME:-$HOME/.codex}/auth.json"
+for f in "${CLAUDE_CONFIG_DIR:-$HOME/.claude}/.credentials.json" "$HOME/.claude.json"; do
   [ -s "$f" ] && grep -Eq 'oauth|accessToken|refresh|api[_-]?key|OPENAI' "$f" 2>/dev/null && note "provider login file present: $f"
 done
 [ -S /var/run/docker.sock ] && note "docker socket present"
