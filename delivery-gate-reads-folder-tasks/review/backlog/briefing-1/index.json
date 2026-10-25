@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-reads-folder-tasks:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of delivery-gate-reads-folder-tasks to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that delivery_gate.py check reads a folder task (index.md or the folder) and, folding merge-check-reads-two-pr-tasks, a task delivering through two PRs, so a reserved number on a sibling PR does not hold the ask; profile pilot (script and skill text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-reads-folder-tasks:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/39d6ac9e21b69fd1ef155eca1d012efa718c8ded/delivery-gate-reads-folder-tasks.md",
+      "rev": "sha256:6313fd85f4f406604cf8bcba235a648c373b8145c7889b11ad3c4a756b677c0b",
+      "mediaType": "text/markdown",
+      "summary": "Bite: release-acceptance needed a temporary .md copy beside a symlink (2026-10-23); #704 was held for an ADR on sibling #705. Ideation owes whether a task may deliver through two PRs at all (his to accept)."
+    }
+  ]
+}
