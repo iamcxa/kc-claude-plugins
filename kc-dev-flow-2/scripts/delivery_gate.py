@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Check what FO is about to ask the Captain to merge.
 
-Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>] [--workflow-dir <dir>]
+Usage: delivery_gate.py check <task file or task folder> --pr <owner/repo>#<N> --text-file <file> [--head <sha>] [--sibling-pr <owner/repo>#<N>]... [--workflow-dir <dir>]
+
+A task is `<slug>.md` or `<slug>/index.md`; a folder argument means its `index.md`. Records are read and saved in the task's own folder `<slug>/`.
 
 The dispatched heads are the whole `Candidate: <40-hex head>` lines above the first `## ` heading of the
 highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check reads no validation verdict.
@@ -18,7 +20,8 @@ declined items than those bullets holds; a report with no such bullets is not jo
 The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
 a confirmation clause is missing, a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
 `## Number guards` has no `<adr-path>/NNNN-*.md` in the directory at the PR head (README `adr-path:`, default `docs/adr`;
-the directory is read, not the PR's file list), a prod task's security review fails, a check on the head is not finished or finished
+the directory is read, not the PR's file list; a `--sibling-pr` whose head is a dispatched Candidate and not closed supplies the file instead, and
+is recorded as `siblings`), a prod task's security review fails, a check on the head is not finished or finished
 other than SUCCESS, SKIPPED or NEUTRAL, no check on the head finished SUCCESS
 (an empty rollup, or only skipped and neutral checks), a workflow run on the head is not completed and successful (a skipped run
 included), the PR is a draft or not mergeable, its base is not the README's
@@ -41,7 +44,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from design_surfaces import FM_PROFILE
+from design_surfaces import FM_PROFILE, task_folder
 from number_guards import task_facts
 
 ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
@@ -96,7 +99,7 @@ def utcnow():
 
 
 def dispatched_candidates(task):
-    records = [(int(m.group(1)), path) for path in (task.with_suffix("") / "dispatch").glob("validation-*.md")
+    records = [(int(m.group(1)), path) for path in (task_folder(task) / "dispatch").glob("validation-*.md")
                if (m := RECORD.match(path.name))]
     if not records:
         return [], None
@@ -109,7 +112,8 @@ def dispatched_candidates(task):
 
 
 def owed_role_calls(task):
-    done = subprocess.run([sys.executable, str(ROLE_TRIGGERS), str(task.parent), task.stem], capture_output=True, text=True)
+    folder = task_folder(task)
+    done = subprocess.run([sys.executable, str(ROLE_TRIGGERS), str(folder.parent), folder.name], capture_output=True, text=True)
     return done.returncode, [clean(line) for line in (done.stdout or done.stderr).splitlines()]
 
 
@@ -138,6 +142,28 @@ def pr_runs(repo, head):
     if page["total_count"] != len(runs):
         raise ValueError(f"the head has {page['total_count']} workflow runs and one page lists {len(runs)}")
     return runs
+
+
+def sibling_adr_names(siblings, adr_dir, candidates, problems, nexts):
+    found = []
+    for text in siblings:
+        pr = PR.match(text)
+        if not pr:
+            problems.append(f"--sibling-pr must look like owner/repo#N, got {tok(text)}")
+            nexts.append("next: hold the ask; write each sibling PR as owner/repo#N.")
+            continue
+        repo, number = pr.groups()
+        info = json.loads(gh("pr", "view", number, "--repo", repo, "--json", "headRefOid,state"))
+        head = str(info["headRefOid"]).lower()
+        if info.get("state") == "CLOSED":
+            problems.append(f"sibling {text} is closed without merging: an ADR it carries will not land")
+            nexts.append("next: hold the ask; reopen the sibling PR or land the ADR file on this PR.")
+        elif head not in candidates:
+            problems.append(f"sibling {text} head {head[:12]} is not a dispatched candidate ({' '.join(candidates) or 'none'})")
+            nexts.append("next: hold the ask; revalidate the sibling head with a Candidate line, or tell the Captain.")
+        else:
+            found.append((f"{text} head {head[:12]}", adr_names(repo, head, adr_dir)))
+    return found
 
 
 def pr_files(repo, number):
@@ -242,7 +268,8 @@ def readme_front(path):
 
 
 def find_readme(task, workflow_dir):
-    for folder in ([Path(workflow_dir)] if workflow_dir else [task.parent, task.parent.parent]):
+    entries = task_folder(task).parent
+    for folder in ([Path(workflow_dir)] if workflow_dir else [entries, entries.parent]):
         scalars, lists = readme_front(folder / "README.md")
         if "trunk" in scalars:
             return folder, scalars, lists
@@ -340,7 +367,7 @@ def runs_problem(runs):
 
 
 def write_record(task, rec):
-    folder = task.with_suffix("") / "merge"
+    folder = task_folder(task) / "merge"
     folder.mkdir(parents=True, exist_ok=True)
     taken = [int(m.group(1)) for p in folder.glob("ask-*.json") if (m := re.fullmatch(r"ask-(\d+)\.json", p.name))]
     path = folder / f"ask-{max(taken, default=0) + 1}.json"
@@ -350,6 +377,8 @@ def write_record(task, rec):
 
 def check(args):
     task, text_file = Path(args.task), Path(args.text_file)
+    if task.is_dir():
+        task = task / "index.md"
     pr = PR.match(args.pr)
     try:
         task_text, gate_text = task.read_text(), text_file.read_text()
@@ -360,14 +389,14 @@ def check(args):
         emit(f"--pr must look like owner/repo#N, got {tok(args.pr)}")
         return 2
     repo, number = pr.groups()
-    problems, holds, nexts = [], [], []
+    problems, holds, nexts, sibling_notes = [], [], [], []
     workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
     if not workflow_dir:
         holds.append("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
 
     candidates, record = dispatched_candidates(task)
     if not candidates:
-        holds.append(f"no latest validation dispatch record under {task.with_suffix('')}/dispatch has a 'Candidate: <40-hex head>' line")
+        holds.append(f"no latest validation dispatch record under {task_folder(task)}/dispatch has a 'Candidate: <40-hex head>' line")
         nexts.append("next: hold the ask; dispatch validation of this head with a Candidate line, or tell the Captain.")
     if args.head:
         head = args.head.lower()
@@ -420,13 +449,21 @@ def check(args):
         adr_dir = (scalars.get("adr-path") or "docs/adr").strip("/")
         try:
             names = adr_names(repo, str(facts["headRefOid"]).lower(), adr_dir)
-        except (OSError, RuntimeError, subprocess.SubprocessError) as error:
-            holds.append(f"cannot read {adr_dir} at the head of {args.pr}: {error}")
+            others = sibling_adr_names(args.sibling_pr, adr_dir, candidates, problems, nexts)
+        except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
+            holds.append(f"cannot read {adr_dir} at the head of {args.pr} or a sibling PR: {error}")
         else:
             for number in reserved:
-                if not any(re.fullmatch(rf"{number:04d}-.+\.md", name) for name in names):
-                    problems.append(f"reserved ADR {number:04d} has no {adr_dir}/{number:04d}-*.md at PR head {str(facts['headRefOid'])[:12]}")
-                    nexts.append(f"next: hold the ask; land the ADR file on this PR or delete the 'ADR: {number:04d}' line from the task, then run this check again.")
+                has = lambda listed: any(re.fullmatch(rf"{number:04d}-.+\.md", name) for name in listed)
+                if has(names):
+                    continue
+                where = [label for label, listed in others if has(listed)]
+                if where:
+                    sibling_notes.append(f"sibling: reserved ADR {number:04d} is at {where[0]}, a dispatched candidate of this task")
+                    continue
+                problems.append(f"reserved ADR {number:04d} has no {adr_dir}/{number:04d}-*.md at PR head {str(facts['headRefOid'])[:12]}")
+                nexts.append(f"next: hold the ask; land the ADR file on this PR or delete the 'ADR: {number:04d}' line from the task, then run this check again.")
+                nexts.append("next: when this task delivers the ADR on another PR, run this check again with --sibling-pr <owner/repo>#<N>.")
 
     security_errors, security_note = [], None
     at_head = [c for c in candidates if head and c.startswith(head)]
@@ -462,7 +499,7 @@ def check(args):
     except OSError as error:
         code, said = 2, [f"cannot run role_triggers.py: {clean(str(error))}"]
     if code == 1:
-        problems.append(f"{task.stem} owes a special-role call (role_triggers.py reads the task as committed)")
+        problems.append(f"{task_folder(task).name} owes a special-role call (role_triggers.py reads the task as committed)")
         nexts.extend(said)
     elif code:
         holds.extend(said or [f"role_triggers.py exited {code} with no message"])
@@ -474,7 +511,7 @@ def check(args):
     if holds:
         emit(*(dict.fromkeys(nexts) or ["next: hold the ask and show the Captain these lines."]))
         return 2
-    emit(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing")
+    emit(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing", *sibling_notes)
     if security_note:
         emit(security_note)
     paths = list(dict.fromkeys(p for f in files for p in (f.get("filename"), f.get("previous_filename")) if p))
@@ -489,10 +526,10 @@ def check(args):
     emit(*points, f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else ""))
 
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
-                                "points": points, "next": ASK,
+                                "points": points, "next": ASK, **({"siblings": sibling_notes} if sibling_notes else {}),
                                 "sufficiency": clean(clause(gate_text, "Sufficiency"))[:200],
                                 "necessity": clean(clause(gate_text, "Necessity"))[:200], "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
-    emit(f"record: {task.stem}/merge/{saved.name}", ASK)
+    emit(f"record: {task_folder(task).name}/merge/{saved.name}", ASK)
     return 0
 
 
@@ -505,6 +542,7 @@ def main(argv=None):
     sub.add_argument("--pr", required=True)
     sub.add_argument("--text-file", required=True)
     sub.add_argument("--head")
+    sub.add_argument("--sibling-pr", action="append", default=[])
     sub.add_argument("--workflow-dir")
     args = parser.parse_args(argv)
     return check(args)
