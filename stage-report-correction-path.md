@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:stage-report-correction-path:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:stage-report-correction-path-validation-1
+              briefing:
+                id: briefing:stage-report-correction-path:validation:attempt-1:revision-1
+                digest: sha256:da72336c3829224ad70573a4b013e1ea6f1f98ee88809bc62b0bd0d06c588033
+                room-ref: ./stage-report-correction-path/review/validation/briefing-1
 started: 2026-10-25T15:11:49Z
 worktree: .worktrees/spacedock-ensign-stage-report-correction-path
 pr: iamcxa/kc-claude-plugins#721

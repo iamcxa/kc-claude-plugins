@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:stage-report-correction-path:validation:attempt-1:revision-1",
+  "question": "Approve validation of stage-report-correction-path and merge iamcxa/kc-claude-plugins#721 at head ae9467dd4b4ce61b3bbd724c5d25cd7e307f0ad0 with `gh pr merge 721 --squash --match-head-commit ae9467dd4b4ce61b3bbd724c5d25cd7e307f0ad0`? FO recommends revise instead of merge: remove the three worker-skill sentences and keep only the README request, then recheck; say 「照原樣合併」 to merge this head as it is. Approving the merge instead covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:stage-report-correction-path:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/de33722c97c7e2a8930880a2cd3babbcca786a7e/stage-report-correction-path.md",
+      "rev": "sha256:69d7eb320595db0043234e7b8097f789cce8aa13aaa4dc6a23242e4371182c52",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: the workflow README tells FO to ask for a complete new stage report ending in a superseding Summary (22 words, budget 5385 to 5407), and the three worker skills say the same; validation PASSED at this head (each sentence's removal fails its named test, the real Spacedock binary refuses a Summary-less correction).\nNecessity: seven design files; the three worker-skill sentences (189 words) are not shown needed: base workers made no partial correction in 4 runs.\nExternal rounds: Codex 1 (code review of this head completed with no findings, evidence=summary:6399508360@ae9467dd4, read with the reader from #722 because the main reader misreads a stuck security eyes reaction as running). RoboRev clean on this head (evidence=roborev:1173). second reviewer: not triggered.\nFO declines: Polish F1, the implementation report omits doc-impact lines for five listed documents (each read by validation and unaffected); Polish F2, a skill sentence says the validation readers use the newest report though delivery_gate.py joins every validation report (bounded wording, removed if the skill sentences go); Deferred risk F3, the 189 skill words are not shown needed once FO sends the 22-word request (named in the question)."
+    }
+  ]
+}
