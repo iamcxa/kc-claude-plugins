@@ -15,6 +15,7 @@ status: backlog
 - Non-goals: a separate Paseo extension; a Codex binding.
 
 - Added 2026-10-25: the Captain (chat): 「可先建這些設定檔。未來如果要做 SD paseo plugin 可能不會有這些設定檔，因為這是 dev2 專有的，所以 paseo ext可能還是必要」, after FO proposed Paseo agent profiles (dev2 general worker, dev2 special role, Codex worker, Codex reviewer, Gemini picky user) set up by hand before any extension. This reopens the 2026-10-21 choice above (no separate Paseo extension; a Paseo binding inside `peers`): a dev2 Paseo extension may be needed to map dev2 roles to Paseo profiles, which a Spacedock Paseo plugin would not carry. Paseo facts (2026-10-25): `list_profiles` returned none; the paseo skill says to read every profile's `notes` before `create_agent` and fall back to provider discovery when none fits; the paseo-advisor, paseo-committee and paseo-handoff skills all pick by profile notes.
+- Added 2026-10-25: Paseo offers no supported way for an agent to create a profile (MCP has `list_profiles` only; the CLI has no profile command; `~/.paseo/config.json` has no profiles key); the Captain created the five profiles in the app, and `list_profiles` read them back the same day (Codex profiles use mode `auto-review`). A dev2 Paseo extension can point users at the app, not create profiles.
 
 ## FO alignment
 
