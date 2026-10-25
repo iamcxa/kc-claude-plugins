@@ -257,3 +257,14 @@ Run in a fresh bash shell (nothing needed beyond `spacedock` on PATH and the kc-
 ### Summary
 
 PASSED at ae9467dd: every AC re-run with a falsifier, the real-binary exercise, lint, ADR lint and the script all hold. The change alters the form of a correction and closes a measured hazard but worker runs (0 of 7 base failures) do not show it is needed; that is a Deferred risk, with two Polish findings and no Material one.
+
+## Stage Report: implementation
+
+- DONE: On PR #721 remove the correction sentence from each of the three worker skills (kc-dev-flow-2/skills/ideation/SKILL.md, kc-dev-flow-2/skills/implementation/SKILL.md, kc-dev-flow-2/skills/validation/SKILL.md) and the tests or wording fixes that pin them; keep the 22-word README request to FO, its word-budget raise and its tests unchanged (Captain revise 2026-10-26: the skill sentences were not shown needed in 4 base runs)
+  Commit f559d3d6 restores the three SKILL.md files to base ac67eb0a (`git diff --name-only ac67eb0a...HEAD` now lists README.md, references/sd/workflow.md, lint-skills.py, test_sd_dispatch.py) and deletes the three `correction-form-<stage>` FIXES entries; the `correction-request` fix, the 22-word clause in workflow.md, the 22-word raise step and the `corrected-report` exercise are untouched. `grep -rn "To correct a report\|correction-form" kc-dev-flow-2` prints nothing.
+- DONE: All remaining tests and mutations green; kc-dev-flow-2/scripts/lint-skills.py and kc-dev-flow-2/scripts/test_sd_dispatch.py exit 0; roborev evidence= line; push without force and without -u; CI green on the PR head; append a complete new implementation report under the exact heading ending in a superseding Summary, and commit it
+  `lint-skills.py` exit 0 ("5407 of 5407 words"); `test_sd_dispatch.py --sd-plugin-root <0.27.3>` exit 0 with binary 0.27.2, now 44 wording fixes (47 before). Mutation 1: removing the FO clause from workflow.md makes `test_sd_dispatch.py` fail on the wording-fix assertion (names only `correction-request`); mutation 2: removing the raise step makes lint print "5407 words exceeds the budget of 5385"; both restored. `evidence=roborev:1183` (clean on f559d3d6c). Plain `git push origin <branch>` ae9467dd..f559d3d6; CI on head f559d3d6c: unit tests, version parity, multi-profile route gate and GitGuardian all pass. PR #721 is not a draft (isDraft false), unchanged by me.
+
+### Summary
+
+This report supersedes the earlier `## Stage Report: implementation` above. Per the Captain's revise, PR #721 no longer touches the three worker skills: only the 22-word FO request in workflow.md, its raise to 5407 words, the real-binary `corrected-report` exercise and the README test sentence remain, at head f559d3d6c with CI green. The earlier report's AC-5 worker runs, which tested the skill sentence, no longer apply to this head.
