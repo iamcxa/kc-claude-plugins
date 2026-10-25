@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-25T15:11:39Z
 worktree: .worktrees/spacedock-ensign-codex-review-hang-detected
-pr: iamcxa/kc-claude-plugins#722
+pr: pr-merge:722
 ---
 
 ## Scope
