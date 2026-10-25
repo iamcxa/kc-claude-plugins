@@ -53,6 +53,17 @@ gates:
                 id: briefing:role-triggers-owe-ce-on-review-drift:validation:attempt-1:revision-1
                 digest: sha256:61e54452c2d00d87e96c1fbfbd23b506a33eafb82996db767c41a3cc42e75c95
                 room-ref: ./role-triggers-owe-ce-on-review-drift/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:role-triggers-owe-ce-on-review-drift:validation:1
+                briefing: briefing:role-triggers-owe-ce-on-review-drift:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T17:48:16.698232Z"
+                decision: approve
+                reason: 'Captain 「照建議」 (chat, 2026-10-26) answering the batch-6 merge sitting, which listed this task''s validation briefing-1 question (merge #719 at c3eef23fc9704bb3d453bc51124b38d67ee83bc4)'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-25T15:11:29Z
 worktree: .worktrees/spacedock-ensign-role-triggers-owe-ce-on-review-drift
 pr: iamcxa/kc-claude-plugins#719
