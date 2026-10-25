@@ -12,10 +12,11 @@ status: backlog
 - Outcome: `delivery_gate.py check` accepts a folder task (its `index.md` or the folder) and reads `<task>/dispatch`, with a test.
 - Upstream first: none checked yet; check whether other package scripts share the same path derivation before fixing one.
 - Non-goals: other scripts' folder support unless they share the helper.
+- Batch 6 (2026-10-25): the Captain 「可以」 (chat, 2026-10-25), answering 「需要你決定：這份第 6 批的清單可以嗎？」 about FO's batch-6 list, which placed this task third, after fo-written-lines-checked-before-dispatch (same script), and folded into it merge-check-reads-two-pr-tasks (whether a task may deliver through two PRs stays the Captain's at ideation).
 
 ## FO alignment
 
-Alignment: not needed: one script's path handling, observed failure.
+Alignment: needed at ideation: whether a task may deliver through two PRs (folded merge-check-reads-two-pr-tasks) is the Captain's.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
