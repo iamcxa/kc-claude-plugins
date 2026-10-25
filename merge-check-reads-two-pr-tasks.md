@@ -13,6 +13,7 @@ status: backlog
 - Shape to design: how a task declares more than one delivery PR, and how the number guard and the merge-ask check read a reserved number satisfied by a sibling PR of the same task.
 - Upstream first: Spacedock `pr:` field and merge guard; kc-dev-flow-2 `delivery_gate.py`, `number_guards.py`; kc-ship-flow.
 - Non-goals: changing how a single-PR task is checked.
+- Folded 2026-10-25 into delivery-gate-reads-folder-tasks (the Captain 「可以」 (chat, 2026-10-25), answering 「需要你決定：這份第 6 批的清單可以嗎？」 about FO's batch-6 list); not run on its own while that task is live.
 
 ## FO alignment
 
