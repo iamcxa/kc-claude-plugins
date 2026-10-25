@@ -3,7 +3,7 @@ title: A worker that corrects its stage report writes a complete new report unde
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 backlog sitting, which listed this task's backlog briefing-1 question
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
