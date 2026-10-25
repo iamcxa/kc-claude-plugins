@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adoption-asks-which-extensions:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of adoption-asks-which-extensions, narrowed to its remaining half, to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that dispatch_records.py, and the observer reading it, judges a dispatch record only against the extensions the workflow README listed when that record was dispatched; profile pilot.",
+  "artifacts": [
+    {
+      "id": "artifact:adoption-asks-which-extensions:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/13d67da58085ca686ddc4488033260df25f4ac22/adoption-asks-which-extensions.md",
+      "rev": "sha256:e27ae52f3d204d8f8dd4a66da92bc0361f38344de78e4e117920250e29cedc2c",
+      "mediaType": "text/markdown",
+      "summary": "Bite: iamcxa/kc-paseo-plugins listed roborev and others on 2026-10-21 after four tasks had run, and dispatch_records.py then flagged every earlier implementation record as missing the roborev instruction, which an observer counted as a violation. The adoption ask and defaults half shipped in #716 (ADR 0035). Ideation owes: how the script learns the list in force at a record's dispatch (its Dispatched SHA and the README at that commit, or another source), and the falsifier."
+    }
+  ]
+}
