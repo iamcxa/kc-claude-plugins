@@ -34,6 +34,17 @@ gates:
                 id: briefing:delivery-gate-reads-folder-tasks:ideation:attempt-1:revision-1
                 digest: sha256:3d1a40d1ac68f1d2d98a903b5e1d53c171ef72f2b3974a0411d259297cd09029
                 room-ref: ./delivery-gate-reads-folder-tasks/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-reads-folder-tasks:ideation:1
+                briefing: briefing:delivery-gate-reads-folder-tasks:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T15:10:07.08743Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 ideation sitting, which listed this task's ideation briefing-1 question with its decisions as recommended
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
