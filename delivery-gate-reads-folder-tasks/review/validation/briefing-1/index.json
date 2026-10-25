@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-reads-folder-tasks:validation:attempt-1:revision-1",
+  "question": "Approve validation of delivery-gate-reads-folder-tasks and merge iamcxa/kc-claude-plugins#720 at head 1c480fecf7d84e7bb4a15483fb8b3bc808dab630 with `gh pr merge 720 --squash --match-head-commit 1c480fecf7d84e7bb4a15483fb8b3bc808dab630`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-reads-folder-tasks:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/49de06817027b8e357ab8547ebb2b9c5e22ffe13/delivery-gate-reads-folder-tasks.md",
+      "rev": "sha256:2eb3885ca05acd32b01e194873d8edc312422d832d6f13807f9a8d55820a59a4",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: kc-dev-flow-2/scripts/delivery_gate.py and kc-dev-flow-2/scripts/dispatch_records.py read a folder task (index.md or the folder), and delivery_gate.py accepts a reserved ADR at a named --sibling-pr's validated head, recorded in ADR 0036; validation PASSED at this head (454 tests over seven modules, 13 mutations each killed, the #704/#705 replay held without the flag and clean with it).\nNecessity: five files (delivery_gate.py, dispatch_records.py, their two tests, ADR 0036); doc_impact lists learning.md, unaffected: its dispatch_records.py passages concern pointer and --names wording this change does not touch.\nExternal rounds: Codex 1 (code review of this head completed with no findings, evidence=summary:6399479714@1c480fecf, read with the reader from #722 because the main reader misreads a stuck security eyes reaction as running). RoboRev clean on this head (evidence=roborev:1172). Second reviewer: copilot because the change touches merge rules (which reserved ADR holds a merge ask). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back.\nFO declines: Polish F1, the implementation report omits the doc-impact line for learning.md (unaffected, stated in Necessity); Deferred risk F2, check reads every --sibling-pr even when the ADR is already at this head, so a closed sibling passed by habit holds the ask (only when FO passes the flag needlessly; fails closed)."
+    }
+  ]
+}

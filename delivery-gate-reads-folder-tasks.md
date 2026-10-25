@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:delivery-gate-reads-folder-tasks:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:delivery-gate-reads-folder-tasks-validation-1
+              briefing:
+                id: briefing:delivery-gate-reads-folder-tasks:validation:attempt-1:revision-1
+                digest: sha256:e99dbb184d7ff1869f1324af5dc45559671dc68fa7a07d5b4071076695f71333
+                room-ref: ./delivery-gate-reads-folder-tasks/review/validation/briefing-1
 started: 2026-10-25T15:11:06Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-reads-folder-tasks
 pr: iamcxa/kc-claude-plugins#720
