@@ -34,6 +34,17 @@ gates:
                 id: briefing:role-triggers-owe-ce-on-review-drift:ideation:attempt-1:revision-1
                 digest: sha256:8db9e35296216363430a873da202b99a801512ab53a05fd7a78d4ebca3f27e37
                 room-ref: ./role-triggers-owe-ce-on-review-drift/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:role-triggers-owe-ce-on-review-drift:ideation:1
+                briefing: briefing:role-triggers-owe-ce-on-review-drift:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T15:10:00.69812Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 ideation sitting, which listed this task's ideation briefing-1 question with its decisions as recommended
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
