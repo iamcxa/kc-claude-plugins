@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:adoption-asks-which-extensions:ideation:attempt-1:revision-1",
+  "question": "Hold adoption-asks-which-extensions at its ideation gate instead of entering implementation? FO recommends hold; approving that recommendation means you answer hold: the measured bite is three historical records (one archived record in this repository, two archived kc-paseo-plugins records dispatched while their README listed extensions: []), no live task is affected, and #716 now has adopters choose extensions at install, so the task waits until a late listing flags a live record. Approve instead to enter implementation with D1 (list taken from the record's Dispatched SHA) and D2 (fall back to the supplied README) as recommended.",
+  "artifacts": [
+    {
+      "id": "artifact:adoption-asks-which-extensions:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b99b171cd3745113211944b66bc286cc5fe17615/adoption-asks-which-extensions.md",
+      "rev": "sha256:ed81de330969a0a49d3f82a542ee8995a240a656b4521d54374efd01ecf64d5b",
+      "mediaType": "text/markdown",
+      "summary": "Ideation measured 1 false flag in 71 dispatch folders on this repository's two state branches (the 2026-10-08 journey-map-dev2-contract record; the other 5 roborev flags are true). FO measured kc-paseo-plugins on 2026-10-25: 2 of 25 dev2 folders flagged, both archived, both dispatched at 60799d96 whose README reads extensions: [] (late listing confirmed); dev2-poc 0 of 11. The Scope's own example (interrogation-replay-on-batch-3-poc) is a true flag. Design if built: five files (dispatch_records.py, number_guards.py split, two test files, laws.md L2 bounds), AC-1 to AC-7; stdout and exit codes unchanged, one stderr line on the fallback path."
+    }
+  ]
+}

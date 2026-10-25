@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:adoption-asks-which-extensions:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:adoption-asks-which-extensions-ideation-1
+              briefing:
+                id: briefing:adoption-asks-which-extensions:ideation:attempt-1:revision-1
+                digest: sha256:eb9112981e721860bf2dc93b11b20ef1d6095331e974bb7301525b59ed440b16
+                room-ref: ./adoption-asks-which-extensions/review/ideation/briefing-1
 ---
 
 ## Scope
