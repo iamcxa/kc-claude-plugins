@@ -160,7 +160,7 @@ def escaped_amendment_lines(lines):
         title, moved = entry.split("\n", 1)[0].strip(), False
         for line in entry.split("\n")[1:]:
             moved = moved or line.startswith("Superseded text:")
-            if not moved and JSON_QUOTE.search(line):
+            if not moved and line.startswith(("Captain:", "Asked:")) and JSON_QUOTE.search(line):
                 found.append((title, line.split(":", 1)[0]))
     return found
 

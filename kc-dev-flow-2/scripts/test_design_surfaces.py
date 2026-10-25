@@ -392,6 +392,13 @@ class AmendmentTests(unittest.TestCase):
         eager = mutated("set() if waits else named & declared", "named & declared")
         self.assertTrue(self.errors(AMENDMENT, both, eager))
 
+    def test_a_backslash_quote_on_any_other_amendment_line_is_not_judged(self):
+        for line in ('Design: the \\"old\\" paragraph.\n', 'Supersedes: AC-2 \\"x\\"\n', 'a continuation line with \\"x\\"\n'):
+            with self.subTest(line):
+                text = AMENDMENT.replace("Supersedes: AC-2\n", "Supersedes: AC-2\n" + line, 1)
+                self.assertEqual(ds.escaped_amendment_lines(text.split("\n")), [])
+                self.assertFalse(any("backslash-quote" in e for e in self.errors(text)), self.errors(text))
+
     def test_a_backslash_quote_on_a_captain_or_asked_line_is_refused_outside_a_moved_criterion(self):
         for key in ("Captain", "Asked"):
             with self.subTest(key):
@@ -399,7 +406,7 @@ class AmendmentTests(unittest.TestCase):
                 text = AMENDMENT.replace("Supersedes: AC-2\n", line + "Supersedes: AC-2\n")
                 errors = self.errors(text)
                 self.assertTrue(any(f"'### Amendment 1" in e and f"{key} line holds a backslash-quote" in e for e in errors), errors)
-        moved = AMENDMENT.replace("**AC-2**: the old outcome.", '**AC-2**: the \\"old\\" outcome.')
+        moved = AMENDMENT.replace("**AC-2**: the old outcome.", '**AC-2**: the old outcome.\nAsked: the \\"old\\" question')
         self.assertEqual(self.errors(moved), [])
         self.assertEqual(self.errors(AMENDMENT.replace("Supersedes: AC-2\n", 'Asked: he said "yes"\nSupersedes: AC-2\n')), [])
         unskipped = mutated('moved = moved or line.startswith("Superseded text:")', "moved = False")

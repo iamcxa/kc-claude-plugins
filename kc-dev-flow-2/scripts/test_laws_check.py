@@ -363,6 +363,16 @@ class L2Test(Base):
         self.assertEqual(code, 1, out)
         self.assertRegex(out, r"record=t/dispatch/implementation-1\.md .*Captain amendment 1 Asked line holds a backslash-quote")
 
+    def test_a_backslash_quote_on_a_design_or_continuation_line_is_no_l2_event_and_does_not_abort_the_runner(self):
+        for line in ('Design: the \\"old\\" paragraph.\n', 'a continuation with \\"x\\"\n'):
+            with self.subTest(line):
+                amended = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nAsked: y\n" + line
+                repo = Repo(self.tmp / f"l2-other-{abs(hash(line))}")
+                before = repo.commit("base", keep="x")
+                repo.commit("record", t=task(body=amended), **{"t__dispatch__implementation-2": record(checklist="- Captain amendment 1: do it")})
+                code, out = self.judge(repo, before)
+                self.assertEqual(code, 0, out)
+
     def test_mutation_reverting_the_runner_pattern_makes_the_new_lines_unjudgeable(self):
         scripts = self.tmp / "reverted"
         shutil.copytree(SCRIPTS, scripts, ignore=shutil.ignore_patterns("__pycache__", "test_*"))

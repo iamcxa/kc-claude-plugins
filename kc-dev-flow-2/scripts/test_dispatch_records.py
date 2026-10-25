@@ -404,6 +404,9 @@ class TaskFactTests(unittest.TestCase):
         moved = task.format(asked="he said yes", tail='Superseded text:\n**AC-1**: a \\"quoted\\" word.\n')
         self.assertEqual(self.run_names(moved, {"implementation-1.md": named}), (0, []))
         self.assertEqual(self.run_names(task.format(asked="he said yes", tail=""), {"implementation-1.md": named}), (0, []))
+        for other in ('Design: the \\"old\\" paragraph.\n', 'a continuation with \\"x\\"\n'):
+            with self.subTest(other):
+                self.assertEqual(self.run_names(task.format(asked="he said yes", tail=other), {"implementation-1.md": named}), (0, []))
 
 
 ROBOREV_PATH = "/abs/kc-dev-flow-2/extensions/roborev/roborev_gate.py"
