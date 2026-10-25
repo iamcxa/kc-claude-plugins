@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:delivery-gate-reads-folder-tasks:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of delivery-gate-reads-folder-tasks to enter implementation? FO recommends approve; approving accepts that recommendation, including the Captain decisions as recommended: (D1) a task may deliver through two PRs: delivery_gate.py gains a repeatable --sibling-pr flag that accepts a reserved ADR found at a sibling PR's validated head, recorded in a short new ADR because it departs from ADR 0025 D2; (D2) dispatch_records.py joins this task, since it shares the folder helper and silently skips the reserved-line check for folder tasks. This task lands before fo-written-lines-checked-before-dispatch.",
+  "artifacts": [
+    {
+      "id": "artifact:delivery-gate-reads-folder-tasks:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e29d2c9ffc8fd03fc3a93e90fa4d3e85bd173cf0/delivery-gate-reads-folder-tasks.md",
+      "rev": "sha256:5c10fcec60f0a05acdce310f0509e401ff45adafbd8961d35571b7da9683e3df",
+      "mediaType": "text/markdown",
+      "summary": "AC-1 to AC-9; a prototype passes 454 tests (444 at origin/main) and 11 mutants each fail a named test; the #704/#705 case replays clean with the flag."
+    }
+  ]
+}

@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:delivery-gate-reads-folder-tasks:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:delivery-gate-reads-folder-tasks-ideation-1
+              briefing:
+                id: briefing:delivery-gate-reads-folder-tasks:ideation:attempt-1:revision-1
+                digest: sha256:3d1a40d1ac68f1d2d98a903b5e1d53c171ef72f2b3974a0411d259297cd09029
+                room-ref: ./delivery-gate-reads-folder-tasks/review/ideation/briefing-1
 ---
 
 ## Scope
