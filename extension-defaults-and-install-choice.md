@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:extension-defaults-and-install-choice:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:extension-defaults-and-install-choice-ideation-1
+              briefing:
+                id: briefing:extension-defaults-and-install-choice:ideation:attempt-1:revision-1
+                digest: sha256:bef436e4ed72f396aaa2675abc62db600f655bd79dd4f0d20ff2ec8384ed1d4f
+                room-ref: ./extension-defaults-and-install-choice/review/ideation/briefing-1
 ---
 
 ## Scope

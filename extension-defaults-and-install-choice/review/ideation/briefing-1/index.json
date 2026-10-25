@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extension-defaults-and-install-choice:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of extension-defaults-and-install-choice to enter implementation? FO recommends approve; approving accepts that recommendation, including the three Captain decisions as recommended: (D1) the recommended list goes in the package README (kc-dev-flow-2/README.md § Extensions), not the root README; (D2) copilot is offered in the install ask, unchecked and labelled quota-limited, and choosing both codex and copilot writes second-reviewer: copilot; (D3) the template line becomes extensions: [learn, peers] and each adopter accepts one conflict hunk on that line at its next re-sync, keeping its own list.",
+  "artifacts": [
+    {
+      "id": "artifact:extension-defaults-and-install-choice:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/deae3d7a4824343568e04c3cb557718f0b8f1137/extension-defaults-and-install-choice.md",
+      "rev": "sha256:9d1209a09d3f6bfc80e5a26c1e3b0a80d45c32df2423e6dcd595af3960385558",
+      "mediaType": "text/markdown",
+      "summary": "Design: workflow.md template line extensions: [learn, peers] (+1 word ledger step quoting the Captain), a Tier column in the package README Extensions table (learn and peers required; journey-map with release-acceptance one recommended choice; codex and roborev recommended; copilot optional), one install multi-select ask in references/sd/adoption.md with each row probed first and a no-UI fallback that keeps the template and reports what was not chosen, and a 19-word clause in the journey-map and release-acceptance EXTENSION.md files that keeps them silent without a journey file. Ten files, AC-1 to AC-8 with falsifiers; the Ask UI rendering is not exercised by a worker. Overlap: backlog adoption-asks-which-extensions covers the same subject and is shrunk or closed after this lands."
+    }
+  ]
+}
