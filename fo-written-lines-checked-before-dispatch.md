@@ -43,6 +43,7 @@ gates:
 ## FO alignment
 
 Alignment: needed before ideation: which checks run where (dispatch, gate, observer) is a design choice the Captain may want to see.
+Result: aligned 2026-10-25 on the outcome by the Captain's 「全准」 answering this task's backlog briefing-1 question, which named the four line classes to check; where each check runs (dispatch, gate prepare, delivery_gate.py, observer) is put to him as a decision at the ideation gate. Recorded after the first ideation dispatch, which held for its absence (FO error, the gap this task closes).
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
