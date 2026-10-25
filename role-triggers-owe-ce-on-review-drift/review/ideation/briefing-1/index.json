@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:role-triggers-owe-ce-on-review-drift:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of role-triggers-owe-ce-on-review-drift to enter implementation? FO recommends approve; approving accepts that recommendation, including the Captain decisions as recommended: (D1) after a chief-engineer call, any new review round owes a fresh call (no file-path surface); (D2) the merge ask keeps not counting review rounds, your 2026-10-22 ruling. The merge-ask hold for owed calls already shipped in 0.29.0 (#703); the real gap is that any chief-engineer call clears the review-round event whatever its date, which this task fixes with a dated clear.",
+  "artifacts": [
+    {
+      "id": "artifact:role-triggers-owe-ce-on-review-drift:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3310896b4611a89ca0da4072a6e742558d343770/role-triggers-owe-ce-on-review-drift.md",
+      "rev": "sha256:524a66baec066b7d8400a440b3412bfa00c8f944c68338d20829764516e3162d",
+      "mediaType": "text/markdown",
+      "summary": "AC-1 to AC-7. Replays: #714 is the only new catch (3 rounds on one file cleared by an unrelated 2026-10-23 call); #709's case is already held by #703; #704 already fires; #675 predates the round trigger."
+    }
+  ]
+}
