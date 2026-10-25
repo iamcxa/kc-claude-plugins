@@ -3,7 +3,7 @@ title: A dispatch record written before an extension was listed is not judged ag
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「准」 (chat, 2026-10-25) answering the backlog briefing-1 question (narrowed task enters ideation on pilot)
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
