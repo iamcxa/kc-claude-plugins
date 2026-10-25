@@ -52,6 +52,7 @@ gates:
 - Decline reason at the gate: neither is P1 or Material; both need a crafted text (a nested decline label, a fenced Scope example ahead of the real one) that no task in the four measured state checkouts holds — to re-measure at ideation.
 - Bite: none observed beyond the reviewer's constructed examples.
 - Non-goals: any other change to the two scripts.
+- Folded 2026-10-25 into fo-written-lines-checked-before-dispatch (the Captain 「可以」 (chat, 2026-10-25), answering 「需要你決定：這份第 6 批的清單可以嗎？」 about FO's batch-6 list); not run on its own while that task is live.
 
 ## FO alignment
 
