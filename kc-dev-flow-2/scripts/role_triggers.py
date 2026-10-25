@@ -1,15 +1,19 @@
 #!/usr/bin/env python3
 """List the chief-engineer and engineering-reviewer calls a committed task state owes.
 
-Usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N]
+Usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N [--drift-date YYYY-MM-DD]]
 Reads the task at REV (default HEAD) from committed bytes, never the disk; live or archived, flat or folder.
 Chief-engineer is owed at four repair passes: the `## Stage Report: implementation` headings minus one (or, given
 --review-rounds, N >= 2 review ids that left inline findings on the open PR).
+--drift-date is the UTC date of the newest review round (`review_facts`); given it, a call or waiver clears the
+review-round event only when dated no earlier than it, so a call about something else dated before the newest
+round leaves it owed. A call made earlier on the same date as that round still clears it. Without it, any call or
+waiver clears, as before.
 Engineering-reviewer is owed for each `### Amendment N` under `## Captain amendments` whose `Supersedes:` or
 `Design:` value does not start with `none`; one line per task, on fable when the frontmatter says `profile: prod`
 or the `Surfaces:` line under `## FO alignment` lists `db`, else on opus. Fenced blocks are skipped everywhere.
 A call is `Reviewer: <agent> <model> <date> — <question>` whatever the question says. A chief-engineer call or
-waiver clears the repair event. For engineering-reviewer a call dated no earlier than an amendment, on a model
+waiver clears the repair event, with no date test: a stage-report heading has no date. For engineering-reviewer a call dated no earlier than an amendment, on a model
 ranked haiku < sonnet < opus < fable by its leading word and no lower than the one required, or a waiver
 `Reviewer: <agent> not run <date>: <reason>` dated no earlier than it, clears that amendment.
 Records count only under `## FO alignment` and its subheadings; a call written under another heading leaves the
@@ -41,6 +45,7 @@ FRONT_PROFILE = re.compile(r"""^profile:[ \t]*["']?([^\s"']+)["']?[ \t]*$""", re
 SURFACES_DB = re.compile(r"^Surfaces:.*\bdb\b", re.M)
 MARK = r"(?:-[ \t]+)?Reviewer:[ \t]*(?:kc-dev-flow-2:)?"
 REPAIRS, REVIEW_ROUNDS = 4, 2
+ROUND_DATE = re.compile(rf"^{DATE.pattern}(?=T)")
 RANK = {"haiku": 0, "sonnet": 1, "opus": 2, "fable": 3}
 
 QUESTION = {
@@ -58,8 +63,22 @@ def git(state, *args):
     return done.returncode, done.stdout.decode("utf-8", "replace")
 
 
+def review_facts(comments):
+    """Return (review rounds, UTC date of the newest round or None) from a pulls/<N>/comments list.
+
+    A round is a distinct pull_request_review_id; its time is its earliest comment's created_at. The date is None
+    below two rounds or when any round has no ISO timestamp.
+    """
+    stamps = {}
+    for comment in comments:
+        stamps.setdefault(comment["pull_request_review_id"], []).append(comment.get("created_at") or "")
+    if len(stamps) < REVIEW_ROUNDS or not all(ROUND_DATE.match(at) for ats in stamps.values() for at in ats):
+        return len(stamps), None
+    return len(stamps), max(min(ats) for ats in stamps.values())[:10]
+
+
 def parse(args):
-    options = {"--rev": "HEAD", "--review-rounds": None}
+    options = {"--rev": "HEAD", "--review-rounds": None, "--drift-date": None}
     for name in options:
         if name in args:
             at = args.index(name)
@@ -70,9 +89,12 @@ def parse(args):
     rounds = options["--review-rounds"]
     if rounds is not None and not rounds.isdigit():
         raise Unverifiable("usage: --review-rounds needs a whole number")
+    drift = options["--drift-date"]
+    if drift is not None and not re.fullmatch(DATE.pattern, drift):
+        raise Unverifiable("usage: --drift-date needs YYYY-MM-DD")
     if len(args) != 2 or "/" in args[1] or args[1] in ("", ".", ".."):
-        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N]")
-    return Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds)
+        raise Unverifiable("usage: role_triggers.py <state checkout> <task slug> [--rev REV] [--review-rounds N [--drift-date YYYY-MM-DD]]")
+    return Path(args[0]), args[1], options["--rev"], None if rounds is None else int(rounds), drift
 
 
 def read_task(state, slug, rev):
@@ -179,7 +201,7 @@ def hint(slug, agent, heading):
             "move it under ## FO alignment.")
 
 
-def check(state, slug, rev, rounds=None):
+def check(state, slug, rev, rounds=None, drift=None):
     text = read_task(state, slug, rev)
     lines = list(outside_fences(text))
     reports, amendments = events(lines)
@@ -192,9 +214,15 @@ def check(state, slug, rev, rounds=None):
     if repairs >= REPAIRS or (rounds or 0) >= REVIEW_ROUNDS:
         seen += 1
         calls, waivers = records(kept, "chief-engineer")
-        if not (calls or waivers):
-            found = [f"{repairs} repair passes"] * (repairs >= REPAIRS) + [f"{rounds} review rounds"] * ((rounds or 0) >= REVIEW_ROUNDS)
-            owed.append(owed_line(slug, "chief-engineer", "has " + " and ".join(found)))
+        dated = [made for _, made in calls] + [waived for waived in waivers if waived]
+        repair_owed = repairs >= REPAIRS and not (calls or waivers)
+        rounds_owed = (rounds or 0) >= REVIEW_ROUNDS and not (
+            any(made >= drift for made in dated) if drift else calls or waivers)
+        if repair_owed or rounds_owed:
+            found = [f"{repairs} repair passes"] * repair_owed + [f"{rounds} review rounds"] * rounds_owed
+            if rounds_owed and drift:
+                found[-1] += f", the newest on {drift}"
+            owed.append(owed_line(slug, "chief-engineer", "has " + " and ".join(found), waived=" <date>" if drift else ""))
             owed += [hint(slug, "chief-engineer", h) for h in [misplaced(lines, "chief-engineer")] if h]
     if amendments:
         seen += len(amendments)
@@ -221,8 +249,8 @@ def check(state, slug, rev, rounds=None):
 def main(argv=None):
     args = sys.argv[1:] if argv is None else list(argv)
     try:
-        state, slug, rev, rounds = parse(args)
-        code, message = check(state, slug, rev, rounds)
+        state, slug, rev, rounds, drift = parse(args)
+        code, message = check(state, slug, rev, rounds, drift)
     except Unverifiable as err:
         print(f"cannot tell whether a chief-engineer or engineering-reviewer call is owed: {err}. Hold and report the cause.")
         return 2

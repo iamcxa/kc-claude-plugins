@@ -37,7 +37,7 @@ with their review id) and one `next:` line per action FO owes: recording a PR a 
 draft ready, the observer check ahead of the merge sentinel, keeping one wait running, a task's newest
 dispatch record that names a package script without a directory (dispatch_records.py --newest), and a
 chief-engineer or engineering-reviewer call a live task owes (role_triggers.py, given the number of review ids
-that left inline comments on the task's open PR), and one `next:` line per stage where two or more gates
+that left inline comments on the task's open PR and the date of the newest of those rounds), and one `next:` line per stage where two or more gates
 await the Captain (spacedock status --next; SPACEDOCK_BIN names the executable), and one `next:` line naming
 each backlog task that is waiting for its gate, holds a `## FO alignment` section and fails
 design_surfaces.py check --seed, when the workflow has an ideation stage, and one `next:` line naming each
@@ -59,6 +59,9 @@ import shlex
 import subprocess
 import sys
 import time
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from role_triggers import review_facts  # noqa: E402
 
 SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 SCRIPTS = Path(__file__).resolve().parent
@@ -312,7 +315,7 @@ def repo_of(worktree, ask):
 def review_rounds(ref, ask):
     repo, number = ref.split("#")
     pages = ask("api", f"repos/{repo}/pulls/{number}/comments", "--paginate", "--slurp")
-    return len({c["pull_request_review_id"] for page in pages for c in page})
+    return review_facts([c for page in pages for c in page])
 
 
 def opened_pr(worktree, ask):
@@ -474,7 +477,8 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
                 out += [f"next: let pr-merge record {slug}.", f"after pr-merge: run `{check}`.",
                         "after pr-merge: do each next: line it prints."]
     for slug in live:
-        asked = [] if slug not in rounds else ["--review-rounds", str(rounds[slug])]
+        count, newest = rounds.get(slug, (None, None))
+        asked = [] if count is None else ["--review-rounds", str(count)] + (["--drift-date", newest] if newest else [])
         done = subprocess.run([sys.executable, str(SCRIPTS / "role_triggers.py"), str(state), slug, *asked], capture_output=True, text=True)
         if done.returncode == 1:
             out += done.stdout.splitlines()

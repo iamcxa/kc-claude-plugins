@@ -7,6 +7,9 @@ import tempfile
 import unittest
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from role_triggers import review_facts  # noqa: E402
+
 SCRIPT = Path(__file__).with_name("role_triggers.py")
 IDENTITY = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@t",
             "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
@@ -105,6 +108,59 @@ class RoleTriggersTest(Fixture):
         self.assertEqual(run(self.state, SLUG, "--review-rounds", 3)[0], 0)
         for bad in ("-1", "x", ""):
             self.assertEqual(run(self.state, SLUG, "--review-rounds", bad)[0], 2, bad)
+
+    def test_the_newest_review_round_dates_the_call_that_must_clear_it(self):
+        def comment(rid, at):
+            return {"pull_request_review_id": rid, "created_at": at}
+        recorded = {
+            "three rounds on one day-pair": ([comment(5636050872, "2026-10-24T01:13:27Z"), comment(5636392914, "2026-10-24T02:18:49Z"),
+                                              comment(5636428225, "2026-10-24T02:30:30Z")], (3, "2026-10-24")),
+            "a round of two comments": ([comment(5610899867, "2026-10-22T07:53:41Z"), comment(5612546695, "2026-10-22T10:09:03Z"),
+                                         comment(5612786931, "2026-10-22T10:30:11Z"), comment(5612786931, "2026-10-22T10:30:12Z")],
+                                        (3, "2026-10-22")),
+            "two rounds": ([comment(5569526052, "2026-10-19T09:33:52Z"), comment(5569986438, "2026-10-19T10:08:56Z")], (2, "2026-10-19")),
+            "one round": ([comment(5628565363, "2026-10-23T13:01:09Z")], (1, None)),
+            "ids out of time order": ([comment(20, "2026-10-20T08:00:00Z"), comment(10, "2026-10-22T08:00:00Z")], (2, "2026-10-22")),
+            "a round dated by its earliest comment": ([comment(1, "2026-10-20T08:00:00Z"), comment(2, "2026-10-21T23:59:00Z"),
+                                                       comment(2, "2026-10-22T00:01:00Z")], (2, "2026-10-21")),
+            "no timestamps": ([{"pull_request_review_id": 1}, {"pull_request_review_id": 2}], (2, None)),
+            "no comments": ([], (0, None)),
+        }
+        for name, (comments, expected) in recorded.items():
+            with self.subTest(name):
+                self.assertEqual(review_facts(comments), expected)
+
+    def test_a_call_or_waiver_older_than_the_newest_round_leaves_the_rounds_owed(self):
+        def judged(extra, *more):
+            self.put(task(repairs=1, extra=extra))
+            return run(self.state, SLUG, "--review-rounds", 3, "--drift-date", "2026-10-24", *more)
+        code, out = judged("")
+        self.assertEqual((code, out.count("next:")), (1, 1))
+        self.assertIn("has 3 review rounds, the newest on 2026-10-24;", out)
+        self.assertIn("`Reviewer: kc-dev-flow-2:chief-engineer not run <date>: <reason>`", out)
+        self.assertLessEqual(len(out.split()), 56)
+        cleared = {"a call on the round's date": call(CE, "opus", "2026-10-24"), "a call after it": call(CE, "opus", "2026-10-25"),
+                   "a dated waiver on it": f"Reviewer: {CE} not run 2026-10-24: Captain ordered it"}
+        left = {"a call the day before": call(CE, "opus", "2026-10-23"), "an undated waiver": f"Reviewer: {CE} not run: Captain ordered it",
+                "a dated waiver the day before": f"Reviewer: {CE} not run 2026-10-23: Captain ordered it"}
+        for name, line in cleared.items():
+            with self.subTest(name):
+                self.assertEqual(judged(line)[0], 0)
+        for name, line in left.items():
+            with self.subTest(name):
+                self.assertEqual(judged(line)[0], 1)
+
+    def test_without_a_drift_date_any_call_still_clears_and_a_repair_call_never_needs_a_date(self):
+        self.put(task(repairs=1, extra=call(CE, "opus", "2026-10-18")))
+        self.assertEqual(run(self.state, SLUG, "--review-rounds", 3)[0], 0)
+        self.put(task(repairs=4, extra=call(CE, "opus", "2026-10-18")))
+        code, out = run(self.state, SLUG, "--review-rounds", 3, "--drift-date", "2026-10-24")
+        self.assertEqual(code, 1)
+        self.assertIn("has 3 review rounds, the newest on 2026-10-24;", out)
+        self.assertNotIn("repair passes", out)
+        self.assertEqual(run(self.state, SLUG, "--review-rounds", 1, "--drift-date", "2026-10-24")[0], 0)
+        for bad in ("2026-10", "x", ""):
+            self.assertEqual(run(self.state, SLUG, "--review-rounds", 3, "--drift-date", bad)[0], 2, bad)
 
     def test_wording_does_not_decide_whether_a_call_counts_but_its_heading_does(self):
         self.put(task(repairs=4, extra=call(CE, "opus", "2026-10-18", "repair again, or narrow the PR?")))
