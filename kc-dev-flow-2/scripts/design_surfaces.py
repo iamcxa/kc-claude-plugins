@@ -7,6 +7,9 @@ The baseline is the task file at the commit that added the newest `### Amendment
 lines opening with Non-goals, Budget, Stop condition or Follow-up: are exempt. The check reads git history and the working copy,
 not what the Captain said; an amendment covers every earlier unrecorded Scope edit. It prints `scope check not run: <why>` and
 leaves the exit code alone in any other stage, with no closed backlog approval, or outside a git checkout.
+A `Captain:` or `Asked:` amendment line holding a JSON backslash-quote is an error unless it sits after a `Superseded text:` line. A superseded
+criterion that is still declared is an error only once a `dispatch/*.md` checklist names the amendment; before that it waits for its worker. An
+`Override: recommended ...; Captain chose ...; area: ...` line in the body that no gate resolution reason carries is printed as a note, exit code unchanged.
 """
 import argparse
 import hashlib
@@ -70,6 +73,9 @@ FINDINGS_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?findings:", re.M)
 SEVERITY_LINE = re.compile(r"^[ \t]*(?:-[ \t]+)?severity:", re.M)
 ITEM_FIRST_KEY = re.compile(r"[A-Za-z_][\w-]*:")
 SCOPE_EXEMPT = re.compile(r"\s*(?:[-*]\s*)?(?:Non-goals?\b|Budget\b|Stop condition\b|Follow-up:)", re.I)
+ALIGN_NEEDED = re.compile(r"^Alignment:[ \t]*needed\b", re.I | re.M)
+RESULT_LINE = re.compile(r"^Result:[ \t]*\S", re.M)
+JSON_QUOTE = re.compile(r'\\"')
 AMENDMENT_DATED = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 BOUND_URI = re.compile(r"git-root://state/([0-9a-f]{40})/(.+)")
 SCOPE_HOLD = ("Scope changed after {what} ({sha}): \"{line}\". FO: restore the line; add an '### Amendment N' with 'Supersedes: none' only if "
@@ -143,6 +149,36 @@ def unfenced(lines):
     return kept
 
 
+def alignment_owes_result(text):
+    fo, _ = split_fo("\n".join(unfenced(text.split("\n"))))
+    return bool(ALIGN_NEEDED.search(fo)) and not RESULT_LINE.search(fo)
+
+
+def escaped_amendment_lines(lines):
+    found = []
+    for entry in amendment_entries(lines) or []:
+        title, moved = entry.split("\n", 1)[0].strip(), False
+        for line in entry.split("\n")[1:]:
+            moved = moved or line.startswith("Superseded text:")
+            if not moved and JSON_QUOTE.search(line):
+                found.append((title, line.split(":", 1)[0]))
+    return found
+
+
+def owed_overrides(text):
+    fm, body = decision_ledger.split_task(text)
+    if fm is None:
+        return []
+    chosen = {" ".join(m.group("chose").split())[:18] for e in decision_ledger.gate_entries(fm) if e["kind"] == "resolution"
+              for m in [decision_ledger.OVERRIDE.search(e.get("reason") or "")] if m}
+    found = []
+    for line in unfenced(body.split("\n")):
+        m = decision_ledger.OVERRIDE.search(line)
+        if m and not m.group("rec").startswith(("<", ".", "…")) and " ".join(m.group("chose").split())[:18] not in chosen:
+            found.append(" ".join(line[m.start():].split()))
+    return found
+
+
 def check_criteria(name, lines, errors):
     body = section(lines, AC_HEADING)
     if body is None:
@@ -163,7 +199,20 @@ def amendment_entries(lines):
     return None if body is None else re.split(r"(?m)^(?=### )", "\n".join(body))[1:]
 
 
-def check_amendments(name, lines, declared, errors):
+AMENDMENT_NAMED = re.compile(r"amendments?[ \t]+((?:\d+(?:[ \t]*(?:,[ \t]*(?:and|&)?|and|&|to|-)[ \t]*)?)+)", re.I)
+
+
+def dispatched_amendments(folder, texts=None):
+    texts = [p.read_text() for p in sorted(Path(folder, "dispatch").glob("*.md"))] if texts is None else texts
+    named = set()
+    for text in texts:
+        found = re.search(r"^## Checklist[ \t]*\n((?:(?!^## )[\s\S])*)", text, re.M)
+        for m in AMENDMENT_NAMED.finditer(found.group(1) if found else ""):
+            named |= {int(n) for n in re.findall(r"\d+", m.group(1))}
+    return named
+
+
+def check_amendments(name, lines, declared, errors, dispatched=None):
     entries = amendment_entries(lines)
     if entries is None:
         return
@@ -177,7 +226,9 @@ def check_amendments(name, lines, declared, errors):
         value = line.group(1) if line else ""
         waiver = NO_REPLACEMENT.search(value)
         named = set(AC_ID.findall(value[:waiver.start()] if waiver else value))
-        for superseded in sorted(named & declared):
+        digits = re.search(r"\d+", title)
+        waits = dispatched is not None and int(digits.group() if digits else index + 1) not in dispatched
+        for superseded in sorted(set() if waits else named & declared):
             errors.append(f"{name}: '{title}' supersedes {superseded} but it is still declared in '## Acceptance criteria'")
         held = {found for found, _ in moved[index]}
         if held - named:
@@ -756,7 +807,11 @@ def check_task(path, seed=False, notes=None):
         check_db(path.name, body, errors)
     lines = text.split("\n")
     declared = check_criteria(path.name, lines, errors)
-    check_amendments(path.name, lines, declared, errors)
+    check_amendments(path.name, lines, declared, errors, dispatched_amendments(task_folder(path)))
+    for title, key in escaped_amendment_lines(lines):
+        errors.append(f"{path.name}: '{title}' {key} line holds a backslash-quote copied from JSON; FO writes his words and the question as they were said")
+    if notes is not None:
+        notes.extend(f"{path.name}: this Override line is in no gate resolution reason: {line[:120]}" for line in owed_overrides(text))
     front = FRONTMATTER.match(text)
     profile, status = (FM_PROFILE.search(front.group(1)), FM_STATUS.search(front.group(1))) if front else (None, None)
     plain = "\n".join(unfenced(lines))

@@ -1286,6 +1286,61 @@ class FoWriteRuleTests(unittest.TestCase):
         self.assertEqual(len(joined.declined_items("- Declined: F1 a (two words).\n- Declined: F2 b (two words).")), 1)
 
 
+MERGE_ASK = "Deliver #9 head 40c714a6. Approving merges it with gh pr merge --match-head-commit 40c714a6{tail}"
+HOLD_OUT_TAIL = {"unless he says he merges or holds": ", unless he says he merges or holds.",
+                 "if the Captain says he merges or holds": ". If the Captain says he merges or holds, ask again."}
+
+
+class QuestionTests(unittest.TestCase):
+    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False):
+        with tempfile.TemporaryDirectory() as d:
+            if as_folder:
+                Path(d, "t").mkdir()
+                Path(d, "t", "index.md").write_text(task)
+                entry = Path(d, "t")
+            else:
+                entry = Path(d, "task.md")
+                entry.write_text(task)
+            Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + text)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = (module or gate).main(["question", str(entry), "--text-file", str(Path(d, "gate.txt"))])
+            return code, out.getvalue()
+
+    def test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused(self):
+        code, out = self.ask(MERGE_ASK.format(tail="."))
+        self.assertEqual(code, 1)
+        self.assertIn("names the merge with --match-head-commit but not 'unless he says he merges or holds'", out)
+        self.assertIn("next: hold the gate; add the clause that lets him keep the merge, then run this check again.", out)
+        self.assertNotIn("gate text complete", out)
+
+    def test_both_wordings_in_use_and_a_question_that_names_no_merge_pass(self):
+        for label, tail in HOLD_OUT_TAIL.items():
+            with self.subTest(label):
+                self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, "gate text complete\n"))
+        self.assertEqual(self.ask("Admit the sample task?"), (0, "gate text complete\n"))
+        self.assertEqual(self.ask(MERGE_ASK.format(tail="."), as_folder=True)[0], 1)
+
+    def test_the_other_text_checks_run_and_an_unreadable_input_exits_2(self):
+        code, out = self.ask(MERGE_ASK.format(tail=HOLD_OUT_TAIL["unless he says he merges or holds"]), clauses=False)
+        self.assertEqual(code, 1)
+        self.assertIn("the gate text has no 'Sufficiency:' clause", out)
+        with contextlib.redirect_stdout(io.StringIO()) as said:
+            self.assertEqual(gate.main(["question", "/nonexistent/task.md", "--text-file", "/nonexistent/gate.txt"]), 2)
+        self.assertIn("cannot read input", said.getvalue())
+
+    def test_mutation_accepting_any_merge_word_lets_the_clause_less_question_pass(self):
+        wide = variant_of(r'\b(?:unless|if)\b[^.;\n]{0,60}\b(?:merges?|holds?)\b', r"merge")
+        self.assertEqual(self.ask(MERGE_ASK.format(tail="."))[0], 1)
+        self.assertEqual(self.ask(MERGE_ASK.format(tail="."), module=wide)[0], 0)
+
+    def test_the_merge_time_check_does_not_judge_the_hold_out_clause(self):
+        text = MERGE_ASK.format(tail=".")
+        self.assertNotIn("keep the merge", run_check(text=text).out)
+        gated = variant_of("found, wanted = text_problems(task_text, gate_text)", "found, wanted = text_problems(task_text, gate_text, at_gate=True)")
+        self.assertIn("keep the merge", run_variant(gated, text=text).out)
+
+
 ALIGNED = "---\nprofile: pilot\n---\n\n# task\n\n## FO alignment\n\nAlignment: not needed.\n"
 AMENDED = ALIGNED + "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-20\n\nSupersedes: AC-1\n"
 REVIEWED = AMENDED.replace("Alignment: not needed.\n", "Alignment: not needed.\nReviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-21 \u2014 do these amendments withdraw what was approved?\n")

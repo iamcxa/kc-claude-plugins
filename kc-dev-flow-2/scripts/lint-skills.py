@@ -39,6 +39,9 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=22, why="FO's step after status --set refuses to leave a stage asks the worker for a complete new report that supersedes the earlier one",
          captain="「全准」 (Captain, chat, 2026-10-25), answering the ideation gate question of stage-report-correction-path, which named the 22 words and raising the workflow word budget 5385 to 5407",
          loaded="FO's step after status --set refuses to leave a stage, and startup and resume, which read the README"),
+    dict(delta=14, why="FO runs delivery_gate.py question on the validation gate question before gate prepare, so the merges-or-holds clause is checked before the Captain is asked",
+         captain="「全准」 (chat, 2026-10-25), answering the batch-6 ideation sitting that listed the ideation briefing-1 question of fo-written-lines-checked-before-dispatch with its decisions as recommended, D3 among them",
+         loaded="startup and resume of the First Officer, and its validation gate preparation"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.

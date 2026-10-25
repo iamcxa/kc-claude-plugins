@@ -286,9 +286,12 @@ class CriteriaTests(unittest.TestCase):
 
 
 class AmendmentTests(unittest.TestCase):
-    def errors(self, extra, criteria="**AC-1**: a driver sees seats.\n" + REPLACEMENT, module=ds):
+    def errors(self, extra, criteria="**AC-1**: a driver sees seats.\n" + REPLACEMENT, module=ds, named=()):
         text = BASE.split("## Acceptance criteria")[0] + "## Acceptance criteria\n\n" + criteria + extra
         with tempfile.TemporaryDirectory() as d:
+            if named:
+                Path(d, "task", "dispatch").mkdir(parents=True)
+                Path(d, "task", "dispatch", "implementation-1.md").write_text("## Checklist\n\n" + "".join(f"- Captain amendment {n}\n" for n in named))
             return module.check_task(write_task(d, text))
 
     def test_a_relocated_criterion_none_no_amendments_and_a_fenced_example_pass(self):
@@ -306,9 +309,9 @@ class AmendmentTests(unittest.TestCase):
                 self.assertTrue(any("no 'Captain:' line" in e for e in errors), errors)
 
     def test_a_superseded_id_still_declared_is_refused_including_a_redeclared_id(self):
-        errors = self.errors(AMENDMENT, BOTH)
+        errors = self.errors(AMENDMENT, BOTH, named=(1,))
         self.assertTrue(any("supersedes AC-2 but it is still declared" in e for e in errors), errors)
-        redeclared = self.errors(AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-1"), "**AC-1**: new text.\n")
+        redeclared = self.errors(AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-1"), "**AC-1**: new text.\n", named=(1,))
         self.assertTrue(any("supersedes AC-1" in e for e in redeclared), redeclared)
 
     def test_an_entry_holding_a_criterion_its_supersedes_line_does_not_name_is_refused(self):
@@ -380,6 +383,28 @@ class AmendmentTests(unittest.TestCase):
         cited = AMENDMENT.replace("**AC-2**: the old outcome.\n", "**AC-2**: the old outcome.\nVerified by: a test; see **AC-5** for the shared fixture.\n")
         self.assertEqual(self.errors(cited), [])
 
+    def test_a_superseded_criterion_waits_in_place_until_a_dispatch_checklist_names_the_amendment(self):
+        both = BOTH + REPLACEMENT
+        self.assertEqual(self.errors(AMENDMENT, both), [])
+        self.assertEqual(self.errors(AMENDMENT, both, named=(2,)), [])
+        errors = self.errors(AMENDMENT, both, named=(1,))
+        self.assertTrue(any("supersedes AC-2 but it is still declared" in e for e in errors), errors)
+        eager = mutated("set() if waits else named & declared", "named & declared")
+        self.assertTrue(self.errors(AMENDMENT, both, eager))
+
+    def test_a_backslash_quote_on_a_captain_or_asked_line_is_refused_outside_a_moved_criterion(self):
+        for key in ("Captain", "Asked"):
+            with self.subTest(key):
+                line = f'{key}: 「he said \\"yes\\"」\n'
+                text = AMENDMENT.replace("Supersedes: AC-2\n", line + "Supersedes: AC-2\n")
+                errors = self.errors(text)
+                self.assertTrue(any(f"'### Amendment 1" in e and f"{key} line holds a backslash-quote" in e for e in errors), errors)
+        moved = AMENDMENT.replace("**AC-2**: the old outcome.", '**AC-2**: the \\"old\\" outcome.')
+        self.assertEqual(self.errors(moved), [])
+        self.assertEqual(self.errors(AMENDMENT.replace("Supersedes: AC-2\n", 'Asked: he said "yes"\nSupersedes: AC-2\n')), [])
+        unskipped = mutated('moved = moved or line.startswith("Superseded text:")', "moved = False")
+        self.assertTrue(self.errors(moved, module=unskipped))
+
     def test_the_design_line_is_not_read(self):
         text = AMENDMENT.replace("Supersedes: AC-2\n", "Supersedes: AC-2\nDesign: the whole paragraph, reworded by FO beyond his words.\n")
         self.assertEqual(self.errors(text), [])
@@ -391,7 +416,7 @@ class AmendmentTests(unittest.TestCase):
                 errors = self.errors(text)
                 self.assertTrue(any("no 'Captain:' line" in e for e in errors), errors)
                 self.assertTrue(any("supersedes AC-2 but it is still declared" in e for e in self.errors(
-                    AMENDMENT.replace("## Captain amendments", heading), BOTH)))
+                    AMENDMENT.replace("## Captain amendments", heading), BOTH, named=(1,))))
 
     def test_mutation_matching_the_amendments_heading_case_sensitively_fails_its_case(self):
         mutant = mutated('## Captain amendments{GO_SPACE}$", re.I)', '## Captain amendments{GO_SPACE}$")')
@@ -401,8 +426,8 @@ class AmendmentTests(unittest.TestCase):
 
     def test_mutation_dropping_the_disjointness_rule_fails_its_case(self):
         mutant = mutated("& declared", "& set()")
-        self.assertTrue(self.errors(AMENDMENT, BOTH + REPLACEMENT))
-        self.assertEqual(self.errors(AMENDMENT, BOTH + REPLACEMENT, mutant), [])
+        self.assertTrue(self.errors(AMENDMENT, BOTH + REPLACEMENT, named=(1,)))
+        self.assertEqual(self.errors(AMENDMENT, BOTH + REPLACEMENT, mutant, named=(1,)), [])
 
     def test_mutation_dropping_the_moved_criterion_rule_fails_its_case(self):
         mutant = mutated("        if held - named:\n", "        if False:\n")
@@ -1304,6 +1329,64 @@ Supersedes: none
 """
 GIT_ENV = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@example.invalid", "GIT_COMMITTER_NAME": "t", "GIT_COMMITTER_EMAIL": "t@example.invalid",
            "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
+
+
+OVERRIDE_LINE = "Override: recommended option A; Captain chose option B; area: db"
+RESOLVED = """---
+title: t
+profile: pilot
+status: implementation
+gates:
+    version: 1
+    records:
+        - id: gate:t:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:t-ideation-1
+              briefing:
+                room-ref: ./t/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                by: person:captain
+                at: "2026-10-03T01:00:00Z"
+                decision: approve
+                reason: '{reason}'
+---
+
+"""
+
+
+class OverrideNoteTests(unittest.TestCase):
+    def notes(self, body_line, reason="ok", module=ds):
+        text = RESOLVED.format(reason=reason) + BASE + "\n" + body_line + "\n"
+        notes = []
+        with tempfile.TemporaryDirectory() as d:
+            errors = module.check_task(write_task(d, text), notes=notes)
+        return errors, notes
+
+    def test_an_override_line_no_gate_reason_carries_prints_one_note_and_changes_no_verdict(self):
+        errors, notes = self.notes(OVERRIDE_LINE)
+        self.assertEqual((errors, len(notes)), ([], 1))
+        self.assertIn(OVERRIDE_LINE, notes[0])
+        self.assertEqual(self.notes("")[1], [])
+
+    def test_a_reason_carrying_the_chosen_text_prints_nothing_even_when_the_rest_of_the_line_differs(self):
+        self.assertEqual(self.notes(OVERRIDE_LINE, reason="Override: recommended option C; Captain chose option B; area: ui")[1], [])
+        self.assertEqual(self.notes(OVERRIDE_LINE, reason=OVERRIDE_LINE)[1], [])
+
+    def test_a_placeholder_form_a_fenced_line_and_a_plain_chose_clause_print_nothing(self):
+        for line in ("Override: recommended <option>; Captain chose <option>; area: <area>",
+                     "Override: recommended ...; Captain chose ...; area: db",
+                     f"```\n{OVERRIDE_LINE}\n```"):
+            with self.subTest(line):
+                self.assertEqual(self.notes(line)[1], [])
+
+    def test_mutation_dropping_the_placeholder_test_or_the_carried_test_prints_a_note(self):
+        placeholder = mutated('not m.group("rec").startswith(("<", ".", "\u2026")) and ', "")
+        self.assertEqual(self.notes("Override: recommended <option>; Captain chose <option>; area: <area>")[1], [])
+        self.assertEqual(len(self.notes("Override: recommended <option>; Captain chose <option>; area: <area>", module=placeholder)[1]), 1)
+        uncarried = mutated("[:18] not in chosen", "[:18] not in set()")
+        self.assertEqual(len(self.notes(OVERRIDE_LINE, reason=OVERRIDE_LINE, module=uncarried)[1]), 1)
 
 
 class ScopeCheckTests(unittest.TestCase):
