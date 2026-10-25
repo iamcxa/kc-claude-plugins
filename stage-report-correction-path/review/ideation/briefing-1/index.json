@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:stage-report-correction-path:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of stage-report-correction-path to enter implementation? FO recommends approve; approving accepts that recommendation, including the Captain decisions as recommended: (D1) the README gains the 22 words FO uses to ask for a complete new report ending in a superseding Summary, raising the workflow word budget 5385 to 5407 with this answer quoted; (D2) a correction keeps counting as one more repair pass in role_triggers.py. Correction to the Scope: a (correction) heading is read; the earlier refusal came from its missing Summary.",
+  "artifacts": [
+    {
+      "id": "artifact:stage-report-correction-path:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c687b086f6a732adda9eec31edce143012453037/stage-report-correction-path.md",
+      "rev": "sha256:f61b5bdc7ac67861e951ab5cad6a6e3c9767ec225dfb0677fcd5b06dfd03d3b9",
+      "mediaType": "text/markdown",
+      "summary": "AC-1 to AC-6; four mutations each fail for the intended reason; the real Spacedock 0.27.3 binary refuses a correction without a Summary and accepts complete reports."
+    }
+  ]
+}
