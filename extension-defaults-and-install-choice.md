@@ -3,7 +3,7 @@ title: Required extensions are on by default and an adopter picks the recommende
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: 'Captain 「准」 (chat, 2026-10-25) answering the briefing-1 question (enter ideation on pilot: learn and peers on by default, the rest recommended, an install UI to choose)'
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
