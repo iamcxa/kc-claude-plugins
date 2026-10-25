@@ -34,6 +34,17 @@ gates:
                 id: briefing:extension-defaults-and-install-choice:ideation:attempt-1:revision-1
                 digest: sha256:bef436e4ed72f396aaa2675abc62db600f655bd79dd4f0d20ff2ec8384ed1d4f
                 room-ref: ./extension-defaults-and-install-choice/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extension-defaults-and-install-choice:ideation:1
+                briefing: briefing:extension-defaults-and-install-choice:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T03:47:14.096397Z"
+                decision: approve
+                reason: Captain 「准」 (chat, 2026-10-25) answering the ideation briefing-1 question, accepting D1 to D3 as recommended
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
