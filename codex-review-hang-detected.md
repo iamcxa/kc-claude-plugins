@@ -34,6 +34,17 @@ gates:
                 id: briefing:codex-review-hang-detected:ideation:attempt-1:revision-1
                 digest: sha256:210a8422cf49d5090cf2241f07681015aebc30f3b4e8b47254521bd31a638d18
                 room-ref: ./codex-review-hang-detected/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-review-hang-detected:ideation:1
+                briefing: briefing:codex-review-hang-detected:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T15:10:13.311264Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 ideation sitting, which listed this task's ideation briefing-1 question with its decisions as recommended
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
