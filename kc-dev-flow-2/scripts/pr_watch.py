@@ -27,6 +27,12 @@ A Codex comment the reader does not recognize (codex=unrecognized(comment:ID)) i
 next read RECHECK_SECONDS later still finds that comment unrecognized, wait stops once for that comment and
 prints it with the next: lines for the merge ask and the report upstream. A look that fails is not a read.
 
+A Codex review the reader reports stalled (codex=stalled(SINCE): the summary shows the code review of the head
+running with no update for STALL_SECONDS of codex_review.py and no result on the head) is not an outcome either. wait stops once with
+the `next:` line to comment `@codex review` once; a stall with a different SINCE on the same head stops it once
+more with the line for the merge ask as `codex not run: review stalled twice on <head>`. The mark that FO asked
+is in the per-session state file, so a new session asks once more.
+
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
 only for a PR added with --codex or --copilot, from that extension's reader when it is
 present. Exit 2 is a configuration error.
@@ -116,9 +122,10 @@ def reader(script, repo, number, words=None):
         return "-", "-"
     done = subprocess.run([sys.executable, str(script), repo, number], capture_output=True, text=True)
     evidence = (re.findall(r"evidence=(\S+)", done.stdout) or [None])[-1]
-    verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed", 5: "unrecognized"}).get(done.returncode, "error")
-    odd = re.findall(r"unrecognized=(\S+)", done.stdout)
-    return (f"{verdict}({odd[-1]})" if odd and verdict == "unrecognized" else verdict), evidence or "-"
+    verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed", 5: "unrecognized", 6: "stalled"}
+               ).get(done.returncode, "error")
+    odd = re.findall(r"(?:unrecognized|stalled)=(\S+)", done.stdout)
+    return (f"{verdict}({odd[-1]})" if odd and verdict in ("unrecognized", "stalled") else verdict), evidence or "-"
 
 
 def codex(repo, number):
@@ -206,6 +213,25 @@ def unread_lines(state, first, clock, read):
                   "that holds kc-dev-flow-2 itself, file a backlog task; elsewhere, if `peers` is listed and a kc-dev-flow-2 maintainer FO "
                   "is reachable, send it through `peers`; otherwise draft the issue and ask the Captain whether to file it."]
         update(state, put={ref: {"codex-reported": word}}, keep_flags=True)
+    return lines
+
+
+def stall_lines(state, read):
+    lines = []
+    for ref, snap in load(state).items():
+        word, head, mark = snap.get("codex", ""), snap.get("head"), snap.get("codex-stalled") or {}
+        if ref not in read or not word.startswith("stalled(") or (mark.get("head") == head and mark.get("step") == 2):
+            continue
+        since = word[len("stalled("):-1]
+        if mark.get("head") == head and mark.get("since") == since:
+            continue
+        again = mark.get("head") == head
+        lines += ([f"{ref} codex={word}: stalled again after the re-request.",
+                   f"next: report `codex not run: review stalled twice on {head}` and name Codex as not read in the merge ask; the Captain decides."]
+                  if again else
+                  [f"{ref} codex={word}: running past the stall limit.",
+                   f"next: comment `@codex review` on {ref} once; a stalled review is no round and never clean."])
+        update(state, put={ref: {"codex-stalled": {"head": head, "since": since, "step": 2 if again else 1}}}, keep_flags=True)
     return lines
 
 
@@ -548,7 +574,7 @@ def main(argv=None, look=look, sleep=time.sleep, ask=gh, clock=time.time):
             if any(decisive for _, decisive in changes) or not watching:
                 print("\n".join([line for line, _ in changes] + nexts or ["watch list is empty"]))
                 return 0
-            gave_up = unread_lines(opts.state, first, clock, read)
+            gave_up = unread_lines(opts.state, first, clock, read) + stall_lines(opts.state, read)
             if gave_up:
                 print("\n".join([line for line, _ in changes] + gave_up))
                 return 0

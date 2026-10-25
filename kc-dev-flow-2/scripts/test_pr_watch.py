@@ -16,6 +16,10 @@ spec = importlib.util.spec_from_file_location("pr_watch", Path(__file__).with_na
 watch = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(watch)
 
+gate_spec = importlib.util.spec_from_file_location("delivery_gate", Path(__file__).with_name("delivery_gate.py"))
+gate = importlib.util.module_from_spec(gate_spec)
+gate_spec.loader.exec_module(gate)
+
 REF = "o/r#1"
 
 
@@ -96,6 +100,59 @@ class PrWatchTests(unittest.TestCase):
             finally:
                 watch.CODEX = old
         self.assertFalse(watch.outcome("codex", "not-reviewed", "unrecognized(comment:31)"))
+
+    def test_the_codex_reader_names_a_stalled_review_by_its_start_and_it_is_no_outcome(self):
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d, "codex_review.py")
+            fake.write_text("print('stalled: the Codex code review of aaa shows running with no update; stalled=2026-10-10T10:00:00Z')\nraise SystemExit(6)\n")
+            old, watch.CODEX = watch.CODEX, fake
+            try:
+                self.assertEqual(watch.codex("o/r", "1"), ("stalled(2026-10-10T10:00:00Z)", "-"))
+            finally:
+                watch.CODEX = old
+        self.assertFalse(watch.outcome("codex", "running", "stalled(2026-10-10T10:00:00Z)"))
+        self.assertEqual(watch.facts(REF, snap(codex="stalled(t)", **{"watch-codex": True})), f"fact: {REF} OPEN draft=False checks=green codex=stalled(t)")
+
+    def test_wait_asks_for_one_re_request_then_names_codex_unread_once_per_head(self):
+        stalled = lambda since, head="aaaaaaaaa": snap(codex=f"stalled({since})", head=head, **{"watch-codex": True})
+        clean = snap(codex="clean", **{"codex-evidence": "summary:5"})
+        asks, unread = "next: comment `@codex review` on o/r#1 once", "codex not run: review stalled twice on aaaaaaaaa"
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, first, slept = self.wait_with_clock(state, [stalled("t1")] * 40, 60)
+            self.assertEqual((code, slept), (0, 0))
+            self.assertIn(asks, first)
+            self.assertNotIn("stalled twice", first)
+            code, again, slept = self.wait_with_clock(state, [stalled("t1")] * 2 + [clean], 60)
+            self.assertNotIn(asks, again)
+            self.assertNotIn("stalled twice", again)
+            self.assertEqual(slept, 2)
+            code, second, slept = self.wait_with_clock(state, [stalled("t2")] * 40, 60)
+            self.assertIn(unread, second)
+            self.assertIn("the Captain decides", second)
+            self.assertNotIn(asks, second)
+            code, third, slept = self.wait_with_clock(state, [stalled("t3")] * 2 + [clean], 60)
+            self.assertNotIn("stalled twice", third)
+            self.assertNotIn(asks, third)
+            code, other, slept = self.wait_with_clock(state, [stalled("t4", "bbbbbbbbb")] * 40, 60)
+            self.assertIn(asks, other)
+            self.assertNotIn("stalled twice", other)
+        mine = lambda text: [line for line in text.splitlines() if "codex=stalled(" in line or line.startswith("next:")]
+        self.assertEqual((len(mine(first)), len(mine(second))), (2, 2))
+        self.assertLessEqual(sum(len(line.split()) for line in mine(first)), 26)
+        self.assertLessEqual(sum(len(line.split()) for line in mine(second)), 37)
+
+    def test_a_stalled_review_gives_an_unread_line_the_gate_pattern_accepts(self):
+        self.assertTrue(gate.NOT_RUN.search("codex not run: review stalled twice on abc123"))
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            looks = lambda since: [snap(codex=f"stalled({since})", **{"watch-codex": True})] * 40
+            self.wait_with_clock(state, looks("t1"), 60)
+            code, out, slept = self.wait_with_clock(state, looks("t2"), 60)
+            self.assertTrue(gate.NOT_RUN.search(out))
+            self.assertNotIn("evidence=", out)
 
     def wait_with_clock(self, state, looks, step):
         seq, now, slept = iter(looks), [0], []
