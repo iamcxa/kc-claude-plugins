@@ -15,6 +15,17 @@ gates:
                 id: briefing:adoption-asks-which-extensions:backlog:attempt-1:revision-1
                 digest: sha256:73a4d3a8dff5439ca16e58ee160429f365f54577fcc0c6cab6dc09509946c9e6
                 room-ref: ./adoption-asks-which-extensions/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adoption-asks-which-extensions:backlog:1
+                briefing: briefing:adoption-asks-which-extensions:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T07:46:59.475331Z"
+                decision: approve
+                reason: Captain 「准」 (chat, 2026-10-25) answering the backlog briefing-1 question (narrowed task enters ideation on pilot)
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
