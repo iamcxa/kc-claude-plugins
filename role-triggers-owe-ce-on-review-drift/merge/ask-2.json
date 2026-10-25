@@ -1,0 +1,25 @@
+{
+  "class": "never",
+  "head": "c3eef23fc9704bb3d453bc51124b38d67ee83bc4",
+  "model": "not run",
+  "necessity": "four files plus one Amended paragraph in ADR 0026 (role_triggers.py, pr_watch.py, their two tests).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'Findings: F1 Polish, F2 Deferred risk,'",
+    "point: deferred: '- F2 Deferred risk: an unrelated'",
+    "point: deferred: '- F3 Deferred risk: a comment'",
+    "point: deferred: 'PASSED recommended at c3eef23f: the #714'",
+    "point: deferred: 'FO declines: Polish F1, the task'",
+    "point: not-run: 'External rounds: Codex 1 (code review'",
+    "point: path: 'docs/adr/0026-role-calls-are-owed-on-counts-read-from-task-records-and-a-dated-c'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/role_triggers.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_role_triggers.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#719",
+  "sufficiency": "a review-round event in kc-dev-flow-2/scripts/role_triggers.py clears only on a chief-engineer call or waiver dated no earlier than the newest round, and kc-dev-flow-2/scripts/pr_watch.py passes that ",
+  "time": "2026-10-25T17:49:05Z",
+  "verdict": "ask"
+}
