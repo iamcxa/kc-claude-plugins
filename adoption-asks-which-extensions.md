@@ -1,5 +1,5 @@
 ---
-title: Adoption asks which extensions to enable, and a record dispatched before an extension existed is not judged against it
+title: A dispatch record written before an extension was listed is not judged against it
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -14,10 +14,11 @@ status: backlog
 - Upstream first: `spacedock:commission` / `spacedock:refit` (what adoption asks), `adoption.md`, `dispatch_records.py`, the observer.
 - The Captain in this session, 2026-10-22, while ruling that the adoption-time story-map ask belongs to this task (new-work-starts-from-a-story-map D3): 「可以，但這裡有個問題是，dev2 安裝時沒有問使用者要開哪些 ext，且也沒有預設開哪些，建議開哪些的機制」. So the shape covers three parts: adoption asks which extensions to enable; a default set; and a mechanism that recommends extensions for the repository (for example from what the repository already has: a journey map, Codex review set up, a db surface). The story-map question (keep a story map or not) is one of the asks.
 - Non-goals: choosing extensions for any adopter.
+- Narrowed 2026-10-25: the Captain (chat): 「可以縮小後處理」, answering 「接下來要你決定：那張重複的舊票要怎麼處理？我建議縮小，不要關掉。」 with the recommendation 「所以我建議把這張票縮小成只處理後一半：一筆派工紀錄只拿它當時已經開啟的擴充來檢查。」 The adoption ask, the defaults and the recommendation tiers shipped in iamcxa/kc-claude-plugins#716 (task extension-defaults-and-install-choice, ADR 0035); this task now owns only the second half: `dispatch_records.py` (and the observer reading it) judges a dispatch record only against the extensions the workflow README listed when that record was dispatched.
 
 ## FO alignment
 
-Alignment: needed at ideation; the default set and the recommendation rules are the Captain's to accept (he named ask, defaults and recommendation on 2026-10-22).
+Alignment: not needed: the default set and recommendation rules were settled in #716 (ADR 0035); what remains is one script's judgement window.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
