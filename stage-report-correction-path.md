@@ -53,6 +53,14 @@ gates:
                 id: briefing:stage-report-correction-path:validation:attempt-1:revision-1
                 digest: sha256:da72336c3829224ad70573a4b013e1ea6f1f98ee88809bc62b0bd0d06c588033
                 room-ref: ./stage-report-correction-path/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:stage-report-correction-path:validation:1
+                briefing: briefing:stage-report-correction-path:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T17:51:56.48908Z"
+                decision: revise
+                reason: 'Captain 「照建議」 (chat, 2026-10-26) answering the batch-6 merge sitting, accepting FO''s recommended revise for #721: remove the three worker-skill sentences (189 words, not shown needed in 4 base runs) and keep only the README request to FO, then recheck'
 started: 2026-10-25T15:11:49Z
 worktree: .worktrees/spacedock-ensign-stage-report-correction-path
 pr: iamcxa/kc-claude-plugins#721
