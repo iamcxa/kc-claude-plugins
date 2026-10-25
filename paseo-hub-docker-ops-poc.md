@@ -4,7 +4,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-paseo-hub-docker-ops-poc
 pr:
 gates:
     version: 1
@@ -28,6 +28,7 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-25T04:19:20Z
 ---
 
 Tests whether Paseo Hub plus a deployed Paseo daemon can replace kc-ops-inbox r1's internet-facing inbox, trigger repository and GitHub-hosted runner, and add live conversation with the agent (the Captain's priority 7), without losing platform-enforced agent authority (priority 0). r1 (`ops-inbox-r1-setup-and-isolation`, dev2) is built locally and its live setup is paused until this POC closes.
@@ -72,3 +73,4 @@ Direction alignment before implementation: not needed; the Captain set the path 
 Surfaces: none
 Visible change: none
 Captain standing ask, 2026-10-21: 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate.
+Release review: not needed: the kc-ops-inbox journey map (branch iamcxa/kc-ops-inbox at 0a1d59ce, not on the trunk) already holds this capability as the open host question on story run-own-instance.
