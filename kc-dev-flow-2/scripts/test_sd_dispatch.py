@@ -311,6 +311,10 @@ FIXES = {
         need=("follow-up message with a line telling the worker to send its completion message to `main`",),
         old=(),
         swaps=((r" and follow-up message with a line telling the worker to send its completion message to `main`, because the completion block Spacedock appends names `team-lead`\.", "."),)),
+    "correction-request": dict(
+        need=("with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one",),
+        old=(),
+        swaps=((r" with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one,", ","),)),
 }
 
 
@@ -685,6 +689,36 @@ def exercise(base, binary, sd_root):
         run(["git", "-C", entity.parent, "commit", "-m", "test: report without the FAILED bullet"])
         run(advance, workflow)
 
+        workflow, entity = seed("corrected-report", "implementation")
+        stamped(workflow, entity, "implementation")
+
+        def append_report(text, message):
+            entity.write_text(entity.read_text() + text)
+            run(["git", "-C", entity.parent, "add", "--", entity.name])
+            run(["git", "-C", entity.parent, "commit", "-m", message])
+
+        advance = [binary, "status", "--workflow-dir", workflow, "--set", entity.stem, "status=validation", "started"]
+        append_report("\n## Stage Report: implementation\n\n"
+                      "- DONE: Synthetic first item\n  Synthetic evidence.\n"
+                      "- FAILED: Synthetic second item\n  Synthetic failure.\n\n### Summary\n\nSynthetic first report.\n",
+                      "test: report with a FAILED item")
+        refused = run(advance, workflow, expected=None)
+        assert refused.returncode != 0 and "durable, complete" in refused.stderr + refused.stdout, refused
+        append_report("\n## Stage Report: implementation (correction)\n\n"
+                      "- DONE: Synthetic second item\n  Synthetic evidence.\n",
+                      "test: correction without a Summary")
+        refused = run(advance, workflow, expected=None)
+        assert refused.returncode != 0 and "durable, complete" in refused.stderr + refused.stdout, refused
+        named = run([binary, "status", "--workflow-dir", workflow, "--read", entity.stem,
+                     "--stage", "implementation", "--checklist"], workflow).stdout
+        assert "Synthetic second item" in named and "Synthetic first item" not in named, named
+        append_report("\n## Stage Report: implementation\n\n"
+                      "- DONE: Synthetic first item\n  Synthetic evidence.\n"
+                      "- DONE: Synthetic second item\n  Synthetic evidence.\n\n"
+                      "### Summary\n\nThis report supersedes the two reports above it.\n",
+                      "test: complete report under the exact heading")
+        run(advance, workflow)
+
         source = " ".join(TEMPLATE.read_text().split())
         assert lane_gaps(source) == ([], []), lane_gaps(source)
         old_lane = re.sub(r"A feedback-reflow repair and an FO fix.*?will be delivered\.", OLD_LANE, source)
@@ -759,7 +793,7 @@ def exercise(base, binary, sd_root):
         print(f"PASS ({version}): 6 stage/host dispatch handoffs; wrong-stage and missing-stage refusals")
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
-        print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
+        print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone; a correction without a Summary refused and named alone by the checklist read, a complete report under the exact heading accepted")
         print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the " + str(len(FIXES)) + " wording fixes (" + ", ".join(FIXES) + ") are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist")

@@ -36,6 +36,9 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=1, why="the template ships extensions: [learn, peers], one more token than the empty list",
          captain="「那就這樣做，learn+peers預設開啟，其他建議」 (chat, 2026-10-25), after his peers question",
          loaded="startup and resume of the First Officer, which reads the README frontmatter"),
+    dict(delta=22, why="FO's step after status --set refuses to leave a stage asks the worker for a complete new report that supersedes the earlier one",
+         captain="「全准」 (Captain, chat, 2026-10-25), answering the ideation gate question of stage-report-correction-path, which named the 22 words and raising the workflow word budget 5385 to 5407",
+         loaded="FO's step after status --set refuses to leave a stage, and startup and resume, which read the README"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
