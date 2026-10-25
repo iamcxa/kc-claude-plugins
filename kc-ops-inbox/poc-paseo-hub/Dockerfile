@@ -14,3 +14,5 @@ RUN set -eux; \
       SPACEDOCK_INSTALL_FROM="https://github.com/spacedock-dev/spacedock/releases/download/v${SD_VERSION}" sh /tmp/sd-install.sh; \
     rm /tmp/sd-install.sh; \
     spacedock --version
+
+COPY audit.sh ac2-probe.sh /opt/poc/
