@@ -3,7 +3,7 @@ title: delivery_gate.py reads a folder task's index.md
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「照建議」 (chat, 2026-10-26) answering the batch-6 merge sitting, which listed this task''s validation briefing-1 question (merge #720 at 1c480fecf7d84e7bb4a15483fb8b3bc808dab630)'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-25T15:11:06Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-reads-folder-tasks
 pr: pr-merge:720
+verdict: PASSED
+completed: 2026-10-25T18:01:58Z
+archived: 2026-10-25T18:01:58Z
 ---
 
 ## Scope
