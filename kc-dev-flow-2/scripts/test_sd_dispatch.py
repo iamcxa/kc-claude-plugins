@@ -546,6 +546,12 @@ def exercise(base, binary, sd_root):
         assert ids == ["AC-1"] and checked.returncode == 0, (ids, checked.stdout)
         ids, checked = parity(criteria.format(old="**AC-2** (superseded by amendment 1): replaced outcome.\n")
                               + amendment.format(moved=""))
+        assert ids == ["AC-1", "AC-2"] and checked.returncode == 0, ("the criterion waits until a checklist names the amendment", ids, checked.stdout)
+        records = entity.parent / entity.stem / "dispatch"
+        records.mkdir(parents=True)
+        (records / "implementation-1.md").write_text("## Checklist\n\n- Captain amendment 1\n")
+        ids, checked = parity(criteria.format(old="**AC-2** (superseded by amendment 1): replaced outcome.\n")
+                              + amendment.format(moved=""))
         assert ids == ["AC-1", "AC-2"] and checked.returncode == 1, (ids, checked.stdout)
         assert "supersedes AC-2 but it is still declared" in checked.stdout, checked.stdout
         ids, checked = parity(criteria.format(old="**AC-2** (superseded by amendment 1): replaced outcome.\n")
