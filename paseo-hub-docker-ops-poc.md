@@ -17,6 +17,17 @@ gates:
                 id: briefing:paseo-hub-docker-ops-poc:backlog:attempt-1:revision-1
                 digest: sha256:cb18189c6b22695ed9728f5f1217911a914bcfb62362cc5443f1567bc065bed3
                 room-ref: ./paseo-hub-docker-ops-poc/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-hub-docker-ops-poc:backlog:1
+                briefing: briefing:paseo-hub-docker-ops-poc:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T04:18:31.203372Z"
+                decision: approve
+                reason: Captain answered 「准」 in chat on 2026-10-25 to the backlog gate question, which stated that approving accepts the five criteria, non-goals, the 1-day budget and the stop conditions as written, enters implementation, and lets FO move the dev2-poc workflow checkout to origin/main; each outward action still asks first.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 Tests whether Paseo Hub plus a deployed Paseo daemon can replace kc-ops-inbox r1's internet-facing inbox, trigger repository and GitHub-hosted runner, and add live conversation with the agent (the Captain's priority 7), without losing platform-enforced agent authority (priority 0). r1 (`ops-inbox-r1-setup-and-isolation`, dev2) is built locally and its live setup is paused until this POC closes.
