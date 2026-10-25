@@ -15,6 +15,17 @@ gates:
                 id: briefing:extension-defaults-and-install-choice:backlog:attempt-1:revision-1
                 digest: sha256:489608a5663bc9245fa192621c8e41ec457e0504f291319e7ac9354916a344cf
                 room-ref: ./extension-defaults-and-install-choice/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:extension-defaults-and-install-choice:backlog:1
+                briefing: briefing:extension-defaults-and-install-choice:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T03:12:06.190894Z"
+                decision: approve
+                reason: 'Captain 「准」 (chat, 2026-10-25) answering the briefing-1 question (enter ideation on pilot: learn and peers on by default, the rest recommended, an install UI to choose)'
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
