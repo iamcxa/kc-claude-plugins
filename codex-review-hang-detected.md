@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:codex-review-hang-detected:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:codex-review-hang-detected-backlog-1
+              briefing:
+                id: briefing:codex-review-hang-detected:backlog:attempt-1:revision-1
+                digest: sha256:8d6370a2df1cee659d9ed60f37236370a6b23366d940c6c00c446a78f45549da
+                room-ref: ./codex-review-hang-detected/review/backlog/briefing-1
 ---
 
 ## Scope

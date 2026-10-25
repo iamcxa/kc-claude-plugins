@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-review-hang-detected:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of codex-review-hang-detected to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that a Codex review running with no update past a stated limit is reported as stalled, FO re-requests it once, and a second stall makes the merge ask name Codex as not read; profile pilot (script and skill text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:codex-review-hang-detected:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/96a2fe4a5bc5c59c28de9b9b7195102cbdc0a087/codex-review-hang-detected.md",
+      "rev": "sha256:7a440e56ea0ecff92337855681b94abf7eab29fcacd77d97caade6634204b307",
+      "mediaType": "text/markdown",
+      "summary": "Bite: six stalls on #709, #713, #714 (twice) and #716 in two days, each found by hand; one re-request cleared three. Ideation owes the limit and where the check lives (codex_review.py or pr_watch.py)."
+    }
+  ]
+}
