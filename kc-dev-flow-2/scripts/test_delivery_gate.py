@@ -1330,9 +1330,12 @@ class QuestionTests(unittest.TestCase):
         self.assertIn("cannot read input", said.getvalue())
 
     def test_mutation_accepting_any_merge_word_lets_the_clause_less_question_pass(self):
-        wide = variant_of(r'\b(?:unless|if)\b[^.;\n]{0,60}\b(?:merges?|holds?)\b', r"merge")
+        wide = variant_of(r'\b(?:unless|if)\b[^.;\n]{0,60}\bsays?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b', r"merge")
         self.assertEqual(self.ask(MERGE_ASK.format(tail="."))[0], 1)
         self.assertEqual(self.ask(MERGE_ASK.format(tail="."), module=wide)[0], 0)
+        unrelated = MERGE_ASK.format(tail=", if CI is green; the merge holds until then.")
+        self.assertEqual(self.ask(unrelated)[0], 1)
+        self.assertEqual(self.ask(unrelated, module=wide)[0], 0)
 
     def test_the_merge_time_check_does_not_judge_the_hold_out_clause(self):
         text = MERGE_ASK.format(tail=".")
