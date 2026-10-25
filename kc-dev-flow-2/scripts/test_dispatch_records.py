@@ -265,11 +265,12 @@ NOTES_WITH_BOTH = COMPLETE.replace("Package root:", "ADR: 0020\nMigration: 0007\
 
 
 class TaskFactTests(unittest.TestCase):
-    def run_names(self, task, records, target="implementation-1.md", folder="task"):
+    def run_names(self, task, records, target="implementation-1.md", folder="task", index=False):
         with tempfile.TemporaryDirectory() as d:
             if task is not None:
-                Path(d, folder).parent.mkdir(parents=True, exist_ok=True)
-                Path(d, f"{folder}.md").write_text(f"---\nprofile: pilot\n---\n\n# task\n{task}")
+                entry = Path(d, folder, "index.md") if index else Path(d, f"{folder}.md")
+                entry.parent.mkdir(parents=True, exist_ok=True)
+                entry.write_text(f"---\nprofile: pilot\n---\n\n# task\n{task}")
             for name, text in records.items():
                 Path(d, folder, "dispatch", name).parent.mkdir(parents=True, exist_ok=True)
                 Path(d, folder, "dispatch", name).write_text(text)
@@ -286,6 +287,21 @@ class TaskFactTests(unittest.TestCase):
         self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": NOTES_WITH_BOTH}), (0, []))
         short = COMPLETE.replace("Package root:", "ADR: 20\nMigration: 7\nPackage root:")
         self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": short}), (0, []))
+
+    def test_a_folder_task_is_judged_for_reserved_lines_like_a_flat_task(self):
+        flat = self.run_names(GUARDS, {"implementation-1.md": COMPLETE})
+        self.assertEqual(flat[0], 1)
+        self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": COMPLETE}, index=True), flat)
+        self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": NOTES_WITH_BOTH}, index=True), (0, []))
+
+    def test_a_folder_task_given_by_index_names_its_dispatch_records(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "task", "dispatch").mkdir(parents=True)
+            Path(d, "task", "index.md").write_text("---\nprofile: pilot\n---\n")
+            Path(d, "task", "dispatch", "implementation-1.md").write_text(COMPLETE)
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                records_module.main([str(Path(d, "task", "index.md"))])
+            self.assertNotIn("no dispatch records", out.getvalue())
 
     def test_a_reserved_number_named_only_outside_the_scope_notes_or_inside_a_longer_number_is_missing(self):
         in_checklist = COMPLETE.replace("1. Independent", "1. ADR: 0020 and Migration: 0007. Independent")

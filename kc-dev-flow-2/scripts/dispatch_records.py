@@ -35,7 +35,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
-from design_surfaces import AMENDMENTS_HEADING, section, unfenced  # noqa: E402
+from design_surfaces import AMENDMENTS_HEADING, section, task_folder, unfenced  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent.parent
@@ -185,7 +185,7 @@ def check_task_facts(files):
     for file in files:
         path = Path(file).resolve()
         folder = path.parent.parent
-        task = folder.parent / f"{folder.name}.md"
+        task = next((t for t in (folder / "index.md", folder.parent / f"{folder.name}.md") if t.is_file()), folder / "index.md")
         if path.parent.name != "dispatch" or not task.is_file():
             continue
         facts, lines = task_facts(task), []
@@ -240,7 +240,7 @@ def main(argv=None, package=PACKAGE):
         print(__doc__.strip())
         return 2
     task = Path(args[0])
-    folder = task.with_suffix("") if task.suffix == ".md" else task
+    folder = task_folder(task) if task.suffix == ".md" else task
     records = sorted((folder / "dispatch").glob("*.md"))
     if not records:
         print(f"{folder}: no dispatch records under dispatch/")
