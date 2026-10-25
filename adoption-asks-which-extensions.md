@@ -34,6 +34,14 @@ gates:
                 id: briefing:adoption-asks-which-extensions:ideation:attempt-1:revision-1
                 digest: sha256:eb9112981e721860bf2dc93b11b20ef1d6095331e974bb7301525b59ed440b16
                 room-ref: ./adoption-asks-which-extensions/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:adoption-asks-which-extensions:ideation:1
+                briefing: briefing:adoption-asks-which-extensions:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T13:52:52.554299Z"
+                decision: hold
+                reason: 'Captain 「准」 (chat, 2026-10-25) answering the ideation briefing-1 question, accepting FO''s recommended hold: the measured bite is three historical records and no live task; reopen when a late listing flags a live record'
 ---
 
 ## Scope
