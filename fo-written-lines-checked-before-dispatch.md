@@ -3,7 +3,7 @@ title: Three FO-written lines are checked before dispatch and gate, not found by
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-25T17:52:33Z
 worktree: .worktrees/spacedock-ensign-fo-written-lines-checked-before-dispatch
+pr: iamcxa/kc-claude-plugins#724
 ---
 
 ## Scope
