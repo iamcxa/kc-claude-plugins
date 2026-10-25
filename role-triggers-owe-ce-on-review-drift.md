@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-25T15:11:29Z
+worktree: .worktrees/spacedock-ensign-role-triggers-owe-ce-on-review-drift
 ---
 
 ## Scope
