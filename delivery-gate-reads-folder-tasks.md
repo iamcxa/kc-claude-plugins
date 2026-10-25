@@ -53,6 +53,17 @@ gates:
                 id: briefing:delivery-gate-reads-folder-tasks:validation:attempt-1:revision-1
                 digest: sha256:e99dbb184d7ff1869f1324af5dc45559671dc68fa7a07d5b4071076695f71333
                 room-ref: ./delivery-gate-reads-folder-tasks/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:delivery-gate-reads-folder-tasks:validation:1
+                briefing: briefing:delivery-gate-reads-folder-tasks:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T17:48:13.634592Z"
+                decision: approve
+                reason: 'Captain 「照建議」 (chat, 2026-10-26) answering the batch-6 merge sitting, which listed this task''s validation briefing-1 question (merge #720 at 1c480fecf7d84e7bb4a15483fb8b3bc808dab630)'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-25T15:11:06Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-reads-folder-tasks
 pr: iamcxa/kc-claude-plugins#720
