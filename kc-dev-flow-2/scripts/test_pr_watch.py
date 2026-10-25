@@ -467,6 +467,8 @@ GH_STUB = """#!/usr/bin/env python3
 import json, os, sys
 table = json.load(open(os.environ["GH_STUB"]))
 args = sys.argv[1:]
+if args[:2] == ["api", "repos/o/r/pulls/7/comments"] and os.environ.get("GH_COMMENT_LOG"):
+    open(os.environ["GH_COMMENT_LOG"], "a").write("read\\n")
 answer = table.get(" ".join(args[:3] if args[:2] == ["pr", "view"] else args[:2]))
 if answer is None:
     sys.stderr.write("stub gh: no answer for " + " ".join(args))
@@ -558,7 +560,7 @@ class TasksTests(unittest.TestCase):
         table = self.root / "gh.json"
         quiet = {f"api repos/o/r/pulls/{n}/comments": [[]] for n in (7, 8, 9)}
         table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, **quiet, **answers}))
-        env = {"PATH": f"{self.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table), **self.sd_env()}
+        env = {"PATH": f"{self.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table), "GH_COMMENT_LOG": str(self.root / "comments.log"), **self.sd_env()}
         out = io.StringIO()
         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
@@ -900,6 +902,31 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(len(roles), 1, lines)
         self.assertRegex(roles[0], r"^next: some-task has 2 review rounds; dispatch kc-dev-flow-2:chief-engineer ")
         self.assertLessEqual(len(roles[0].split()), 60)
+
+    def dated(self, *rounds):
+        page = [{"pull_request_review_id": rid, "created_at": at} for rid, at in rounds]
+        return {"api repos/o/r/pulls/7/comments": [page[:1], page[1:]]}
+
+    def call_recorded(self, date):
+        text = (self.state / "some-task.md").read_text() + f"## FO alignment\nReviewer: kc-dev-flow-2:chief-engineer opus {date} — q\n"
+        (self.state / "some-task.md").write_text(text)
+        self.git(self.state, "add", "-A")
+        self.git(self.state, "commit", "-qm", "call")
+
+    def test_a_call_older_than_the_newest_review_round_leaves_the_line_and_names_its_date(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.call_recorded("2026-10-23")
+        rounds = self.dated((5636050872, "2026-10-24T01:13:27Z"), (5636392914, "2026-10-24T02:18:49Z"), (5636428225, "2026-10-24T02:30:30Z"))
+        code, lines = self.tasks({"pr view 7": view(), **rounds})
+        roles = [line for line in lines if "chief-engineer" in line]
+        self.assertEqual((code, len(roles)), (0, 1), lines)
+        self.assertRegex(roles[0], r"^next: some-task has 3 review rounds, the newest on 2026-10-24; dispatch kc-dev-flow-2:chief-engineer ")
+        self.assertLessEqual(len(roles[0].split()), 56)
+        self.assertEqual((self.root / "comments.log").read_text(), "read\n")
+        self.call_recorded("2026-10-24")
+        code, lines = self.tasks({"pr view 7": view(), **rounds})
+        self.assertEqual((code, [line for line in lines if "chief-engineer" in line]), (0, []))
 
     def test_one_review_id_with_many_comments_and_no_comments_owe_nothing(self):
         self.readme("roborev")
