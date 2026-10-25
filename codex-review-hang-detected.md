@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:codex-review-hang-detected:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:codex-review-hang-detected-ideation-1
+              briefing:
+                id: briefing:codex-review-hang-detected:ideation:attempt-1:revision-1
+                digest: sha256:210a8422cf49d5090cf2241f07681015aebc30f3b4e8b47254521bd31a638d18
+                room-ref: ./codex-review-hang-detected/review/ideation/briefing-1
 ---
 
 ## Scope

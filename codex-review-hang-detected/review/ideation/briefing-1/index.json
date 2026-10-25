@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-review-hang-detected:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation design of codex-review-hang-detected to enter implementation? FO recommends approve; approving accepts that recommendation, including the Captain decisions as recommended: (D1) the change that lets the Codex summary comment decide over a stuck PR-level eyes reaction is in this task: it makes #713 read as findings and #716 as clean, which the old reader reported as running; the stall limit is 1800 s.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-review-hang-detected:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/9b28eb56e98753eeaea3ac75453843c765361118/codex-review-hang-detected.md",
+      "rev": "sha256:111f29ffcc681bc41e450b5517cf2bfb6099db4da24c622d4a3fd6c9a286f9a9",
+      "mediaType": "text/markdown",
+      "summary": "AC-1 to AC-7. Census of 225 requests on two repos: 4 real stalls (3188 to 19448 s), slowest normal answer 1033 s; 7 of 117 closed PRs kept a stuck eyes reaction from the security review. Exit 3 changes meaning for all codex-extension adopters; two existing assertions change."
+    }
+  ]
+}
