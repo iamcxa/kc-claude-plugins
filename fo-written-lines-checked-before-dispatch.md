@@ -462,3 +462,110 @@ PASSED at 5d0fa209c89701c9bb09b772ea7f867434988e8b: the Codex P2 and the roborev
 ### Summary
 
 This report supersedes the earlier implementation report. The Cycle 2 repair is committed and pushed as b0b2cbf3: the pre-validation instruction invokes delivery_gate.py through python3 and the workflow stays at 5421 words; all 25 package test files exit 0 (one integration test self-skipped), RoboRev is clean (roborev:1196), and all four CI checks pass on that head. Independent validation and the FO's next routing decision remain separate.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #724 head b0b2cbf3 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at b0b2cbf3f4b6156b544c2a9574d3482e7eb1dd15, base 454e5bfcd4261ffca95cf3f8ae058546f0f93280; assessed in a detached disposable checkout. Fresh `gh pr view 724 --repo iamcxa/kc-claude-plugins --json headRefOid,baseRefOid,title,state,isDraft,statusCheckRollup` confirmed the exact head, OPEN, not Draft, the scoped `feat(kc-dev-flow-2):` title and 4/4 SUCCESS. This is a validation recommendation, not a gate or delivery decision.
+  AC-1: reran `ideation/probe.py <candidate scripts>`: missing Result exits 1; present, not-needed, fenced and other-spelling rows exit 0. The suite's `TaskFactTests.test_mutation_dropping_the_result_check_lets_the_record_pass` changes the bad row to 0 when the call is removed.
+  AC-2: reran `laws_check.py <state> --before c63387d8956d^ --after c63387d8956d --readme <workflow README>`: candidate exit 1, L2 `1 events judged ..., 1 violated`, naming missing Result; base exit 0, 0 violations. `L2Test.test_mutation_reverting_the_runner_pattern_makes_the_new_lines_unjudgeable` proves reverting the parser gives exit 2, not a judged violation. Read L2 Rule/Judged by/Bounds against this output.
+  AC-3: probe rejects Asked backslashes in both entry checks, accepts clean/moved text; the amendment tests exercise Captain and Asked plus the Superseded-text-skip mutation. Cycle 1 tests also pass: Design, Supersedes and continuation lines are not judged and do not abort L2. The continuation limit is intentional, with the observer still owning prose.
+  AC-4: probe and `QuestionTests` refuse a missing clause and unrelated CI actor; accept he, you, Captain, and no-merge wording. Their widened-HOLD_OUT mutation accepts the bad question; their at_gate mutation adds the forbidden new hold to merge-time `check`. Existing merge checks remain covered by the complete delivery_gate suite.
+  AC-5: probe and `OverrideNoteTests` print one note without changing exit, suppress a carried chose-prefix and both placeholders; removing placeholder/carried checks prints unwanted notes. AC-6: probe exits 0 before a checklist names amendment 1, then 1; its eager-enforcement mutation rejects the waiting state. The real Spacedock transport suite passes with CLI 0.27.2 and plugin root 0.27.3; replacing only its fixture with the base version fails its still-declared assertion, justifying the approved twelfth file.
+  AC-7: reran the folded task's `ideation/measure.py <base scripts> <candidate scripts>`: 399 task files, 1076 revisions, 937 gate texts; 21 explained rows, zero differences in check --seed, scope_lines or gate-question rows. Nine rows add only Override notes; kc-adr-format-source changes 0 to 1 for the backslash; stage-report-correction-path changes 1 to 0 while kc-decision-log-handoff-trial and qnow/office-header-shows-phone stay 1 and lose waiting errors; eight task-body rows are declined_items/unreasoned_items on fo-write-checks, fo-write-rules-checked, fo-write-checks-parse-top-level and relay/account-publish-ceiling. The real backslash 0-to-1 and Override output differences show that the comparison detects changed verdicts. Full differing rows are in `/private/tmp/pr724-validation-evidence/verdicts.txt`.
+  Corpus heads at measurement: kc-claude-plugins a724b87fff2505393698420afda2f6b52384509d, qnow 49687864e5b808d077ab9f7210f592474c1ca41e, relay 6cf9d342df3b, web e85779731eb8afe0eacfa038eafaae8f8318430d. Relay advanced to 397c6bba71bd7e094c857263d76976eff4530059 during the run; only pair-once's task/artifacts changed. I extracted both committed snapshots and independently compared check, check --seed, declined_items and unreasoned_items: base/candidate identical at each snapshot. This was a live-checkout replay, not one atomic snapshot across repositories.
+  Amendment-history replay (`ideation/waits.py <base scripts> <candidate scripts>`) exits 0: kc-claude-plugins 709 revisions, 36 base errors/27 stopped; qnow 296, 33/33; relay 547, 12/9; web 315, 2/2. Total 1867 revisions with amendment sections: base flags 83, candidate retains 12. The growth from the older report's 80 reflects added state history. Raw revision rows: `/private/tmp/pr724-validation-evidence/waits.txt`. Fresh measure.py still finds 7 of 29 merge-naming questions lacking the clause, 1 escaped amendment line, 16 uncarried Override lines; the three qnow Alignment-needed records are expected refusals, not the design's older zero.
+  AC-8: candidate lint exits 0, 5421 of 5421; the actual base is 5407 after the preceding approved 22-word change, so this task still adds exactly 14 with the ideation gate's quoted 「全准」 and loaded moment. Removing only delta=14 gives exit 1, 5421 exceeds 5407; restoring it gives exit 0. Recount: Result 28; dispatch backslash 24; amendment backslash 26 and still-declared 18 for the six-word example heading; hold 17+18; pass 3. Override prefix is 10 plus the quoted line, not the table's 12 (F6). Startup +14 and a clean question +3 hold; idle and merge behavior are unchanged.
+  AC-9: folded prototype applies to the implementation base (`patch --dry-run -p3`, exit 0); reran its probe_ds.py and probe_dg.py. Nested declines count 2 instead of 4; bullets keep two items and expose the first bullet's missing reason; fenced Scope examples are skipped while fenced content in the real Scope remains compared. The suite executes each overlap, decline-ending and fence mutation and detects the corresponding regression.
+  AC-10: diff is exactly the 11 design files plus the explicitly approved test_sd_dispatch.py fixture, no .github/workflows change. The same allowlist against the older 33da2e3e base fails with unrelated paths, proving the scope check can reject. `python3 -B -m unittest test_design_surfaces test_delivery_gate test_dispatch_records test_laws_check test_pr_watch test_lint_skills`: 537 tests, OK, 184.685s. CI cost was not measured; its trigger and jobs were not changed.
+- DONE: Recheck the Cycle 2 repair: the README pre-validation instruction now runs kc-dev-flow-2/scripts/delivery_gate.py through python3 and works as written, the word count stays 5421, and nothing else changed since 5d0fa209
+  `git diff 5d0fa209 HEAD` is only the required sentence in references/sd/workflow.md. The script is tracked 100644. Extracted the old and new commands from their README lines and bound only placeholders: old command exits 126, Permission denied; new command exits 0, `gate text complete`. Both sentences have 14 words. Acceptance step 3 repeats the new command directly from the candidate text.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.30.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  The five-step script below ran unchanged in `env -i HOME=/Users/kent PATH=/usr/local/bin:/usr/bin:/bin:/opt/homebrew/bin bash --noprofile --norc /private/tmp/pr724-validation-evidence/acceptance.sh`, exit 0, and its trap removed its checkout. The initial sandbox run could not create linked-worktree metadata; the identical authorized rerun succeeded. Both the loaded Codex 0.30.0 package and the explicitly requested Claude 0.30.0 adr_lint command ran from the candidate with `docs/adr --since 454e5bfcd4261ffca95cf3f8ae058546f0f93280`: exit 0, 36 ADR files, 0 legacy. No number was reserved; the prior FO ruling settles the no-new-ADR question.
+  Loaded-package comment_ratio: exit 0, 405 code lines, 0 comments, 0.0%; every added code/docstring change was read. Both loaded-package and candidate dispatch_records report 10 complete records, and design_surfaces reports this task presentable. doc_impact still lists five documents: the implementation marks ADR 0020, package README, maintain-flow skill and learning.md unaffected; adoption.md's missing disposition remains F1. I checked adoption.md's transport command is still valid and unchanged.
+- SKIPPED: UI screenshots and design-director review
+  Surfaces: none and Visible change: none; this task exposes CLI checks, exercised below. No user interface changed.
+- SKIPPED: Repeating all 25 package test files and the release-acceptance integration test
+  Ran the 537 relevant tests and real transport suite; independently read exact-head CI success for the broader suite. The implementation's self-skipped release-acceptance integration remains unexercised, outside these changed checks. RoboRev 1196 is implementation-reported evidence, not a new validator run.
+
+### Findings and limits
+
+- F1 Polish: missing implementation disposition for kc-dev-flow-2/references/sd/adoption.md. User/workflow: adopter following the transport command; harm: none observed, command unchanged; boundary: contract[kc-dev-flow-2/references/sd/workflow.md#affected-documents] requires each listed document's disposition; trigger: doc_impact names five documents and the implementation records four. Same finding as before; no product repair is proposed here.
+- F4 Deferred risk: an amendment followed by no later dispatch can leave superseded criteria declared without a design_surfaces error. User/workflow: FO recording an amendment; harm: not observed in a supported new delivery; boundary: value-ac[AC-6] deliberately allows the wait; trigger needed for Material: delivery with no worker ever assigned to apply that amendment. dispatch_records still flags an amendment absent from every checklist. Same accepted limit as before.
+- F6 Polish: the task's word-count table says an Override note adds 12 words plus its quoted line; candidate output has 10 plus that line (test fixture: total 20, quoted line 10). User/workflow: FO reading a warning; harm: none, actual text is shorter and clean-path budgets pass; boundary: value-ac[AC-8] evidence recount is inaccurate; trigger: `OverrideNoteTests().notes(OVERRIDE_LINE)` and len(text.split()). Correct the evidence count when FO records its disposition; this does not require a code change.
+
+F2 and F3 from the earlier reports remain resolved by the Cycle 1 repairs. F5 remains settled by the FO ruling. Other accepted limits: Alignment spelling and Result presence are checked, not truth/timing; merge intent is inferred from the declared wording and only when --match-head-commit is present; the check reads proposed text, not an approved gate artifact; absent Override lines and which gate owns one cannot be recovered; a continuation of Asked is not checked; skipped FO runs remain possible, and the laws workflow was only claimed installed on one of four branches. No proof of new adoption, host skill execution, human approval or merge is claimed. Every retained change maps to these accepted checks, their mutations, the existing parser consumers, or the required transport fixture; no new production obligation was introduced.
+
+### Acceptance script
+
+No UI changed. Prerequisites: this local repository has the exact candidate object; Git, Bash and Python 3 are installed. Run the entire block in a fresh Bash shell. It creates and removes only a temporary checkout and fixtures; expected runtime is under five minutes. It does not cover the full historical replay, full test suite, hosted checks or the Captain's delivery decision.
+
+```bash
+# 1. Create and pin a disposable checkout; cleanup runs when this shell exits.
+set -eu
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree
+RUN=$(mktemp -d /private/tmp/pr724-acceptance.XXXXXX)
+git -C "$REPO" worktree add --quiet --detach "$RUN/code" b0b2cbf3f4b6156b544c2a9574d3482e7eb1dd15
+trap 'cd /; git -C "$REPO" worktree remove "$RUN/code"; rm -rf "$RUN"' EXIT
+S="$RUN/code/kc-dev-flow-2/scripts"
+export PYTHONDONTWRITEBYTECODE=1
+cd "$RUN"
+git -C "$RUN/code" rev-parse HEAD # expect b0b2cbf3f4b6156b544c2a9574d3482e7eb1dd15
+# 2. Refuse an ideation dispatch without Result, then accept its recorded result.
+mkdir -p t/dispatch
+printf '%s\n' '---' 'profile: pilot' '---' '' '## FO alignment' '' 'Alignment: needed before ideation: checks.' > t.md
+printf '%s\n' 'Dispatched: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa' 'Model: sonnet' '## Checklist' '- x' '## Scope notes' 'Package root: /p' 'Send your completion message to `main`.' > t/dispatch/ideation-1.md
+python3 -B -I "$S/dispatch_records.py" --names t/dispatch/ideation-1.md && exit 1 || test "$?" = 1
+printf '%s\n' 'Result: aligned by Captain.' >> t.md
+python3 -B -I "$S/dispatch_records.py" --names t/dispatch/ideation-1.md
+# expect missing Result diagnostic, then no output and exit 0
+# 3. Refuse a merge question without the clause, then run the README command exactly with placeholders bound.
+printf '%s\n' 'Sufficiency: accepted checks passed. Necessity: used before dispatch.' 'Approve merging with --match-head-commit.' > q.txt
+python3 -B -I "$S/delivery_gate.py" question t.md --text-file q.txt && exit 1 || test "$?" = 1
+printf '%s\n' 'Approval excludes the merge if the Captain says he merges or holds.' >> q.txt
+python3 -B - "$RUN/code" <<'PY'
+import pathlib, re, shlex, subprocess, sys
+root = pathlib.Path(sys.argv[1])
+line = next(x for x in (root/'kc-dev-flow-2/references/sd/workflow.md').read_text().splitlines() if x.startswith('Before the validation `gate prepare`'))
+command = re.findall(r'`([^`]+)`', line)[1].replace('<package>', str(root/'kc-dev-flow-2')).replace('<task>', 't.md').replace('<question-and-summary file>', 'q.txt')
+subprocess.run(shlex.split(command), check=True)
+PY
+# expect missing hold-out diagnostic, then gate text complete
+# 4. Refuse a backslash-quote on Asked; ignore it on a Design line.
+printf '%s\n' '---' 'title: x' 'profile: pilot' 'status: implementation' '---' '' '## FO alignment' '' 'Alignment: not needed' 'Surfaces: none' 'Visible change: none' '' '## Acceptance criteria' '' '**AC-1** Works.' '' '## Captain amendments' '' '### Amendment 1 — 2026-10-26, chat' 'Captain: 「ok」 (chat)' 'Asked: did you say \"yes\"?' 'Supersedes: none' > a.md
+python3 -B -I "$S/design_surfaces.py" check a.md && exit 1 || test "$?" = 1
+sed 's/^Asked:/Design:/' a.md > clean.md
+python3 -B -I "$S/design_surfaces.py" check clean.md
+# expect Asked backslash-quote diagnostic, then design surfaces presentable
+# 5. Confirm the exact workflow word budget and run the gate and Override cases, including their mutations.
+python3 -B -I "$S/lint-skills.py" # expect PASS and 5421 of 5421 words
+cd "$S"
+python3 -B -m unittest test_delivery_gate.QuestionTests test_design_surfaces.OverrideNoteTests
+# expect Ran 9 tests, OK
+```
+
+Observed output (2026-10-26), exit 0; step 2's repaired record prints nothing:
+
+```text
+b0b2cbf3f4b6156b544c2a9574d3482e7eb1dd15
+t/dispatch/ideation-1.md:1: '## FO alignment' records alignment as needed with no 'Result:' line; record the Captain's alignment result as 'Result: <what he answered>' there, then run this check again
+the gate text names the merge with --match-head-commit but not 'unless he says he merges or holds'
+next: hold the gate; add the clause that lets him keep the merge, then run this check again.
+gate text complete
+a.md: '### Amendment 1 — 2026-10-26, chat' Asked line holds a backslash-quote copied from JSON; FO writes his words and the question as they were said
+scope check not run: stage is implementation, not ideation
+clean.md: design surfaces presentable
+scope check not run: stage is implementation, not ideation
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5421 of 5421 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 1.289s
+
+OK
+```
+
+### Summary
+
+This report supersedes the earlier validation reports. PASSED at b0b2cbf3f4b6156b544c2a9574d3482e7eb1dd15: the Cycle 2 command now executes, the workflow remains at 5421 words, all ten criteria were assessed with fresh evidence and falsifiers, 537 tests plus real dispatch transport passed, and the five-step fresh-shell acceptance script matched. No Material finding; F1 and F6 are Polish and F4 is Deferred risk. The detached validation checkout and the acceptance checkout were removed after clean-status checks; candidate bytes were not repaired, and no push, PR comment, review request, ready transition, reset or git-config write was made. Pilot scope remains bounded; FO disposition, gate acceptance and delivery remain pending.
