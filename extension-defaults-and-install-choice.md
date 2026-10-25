@@ -208,3 +208,28 @@ ADR: 0035
 ### Summary
 
 Required pair goes in the template line, tiers live in one README table that `lint-skills.py` checks against that line, and the adopting agent asks once through the host Ask UI, never turning on a recommended row by silence or a failed probe. Two findings change the Scope's premises: a template default hits every adopter's next re-sync as a one-line conflict (measured with `git merge-file`), and the README word ledger refuses a one-token edit without a Captain-quoted raise step. Not tested by any worker: the Ask UI rendering and its option cap.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (feat(kc-dev-flow-2): ...) from a branch off origin/main (7a5c79c6) implementing the approved design and AC-1 to AC-8, with D1 to D3 as recommended; only the files the design names
+  Draft PR https://github.com/iamcxa/kc-claude-plugins/pull/716, head 8340c3baa333 (3 commits). Two departures: `docs/adr/0035-*.md` (the checklist requires it) and the release-acceptance clause is 5 words (`under \`docs/journey/\`; else no step.`) not 19, because `extensions/release-acceptance/test_release_acceptance.py` caps EXTENSION.md at 600 words and it stood at 595 (CI failed on 614 first). Restoring the full clause needs that cap raised, a file the design does not list: FO decision.
+- DONE: ADR 0035 records the Captain's rulings, quoting his words from ## Scope and the gate records
+  `docs/adr/0035-learn-and-peers-are-on-by-default-and-an-adopter-picks-the-recommended-extensions-at-install.md`; `adr_lint.py docs/adr --since 7a5c79c6 --require 0035` exit 0.
+- DONE: Every acceptance criterion green with its evidence; each falsifier shown failing by a mutation (python3 -B, caches cleared)
+  AC-1 `7:extensions: [learn, peers]`, `poc_readme.py derive` prints the same; `extensions: []` fails naming `learn`, `peers`. AC-2 lint 5385 of 5385; no raise step prints `5385 words exceeds the budget of 5384`. AC-3 check deleted fails all 3 tier tests (each asserts its printed reason). AC-5 `test_journey_map_and_release_acceptance_stay_quiet...` fails with the clause removed; `test_release_acceptance_turns_loud...` asserts `release-acceptance worker instruction is absent` (the fixture also adds a `Joins: implementation` line and a `<package>/extensions/release-acceptance/release_acceptance.py` path, since the real file has neither, so a rename alone stays quiet). AC-6 `test_peers_and_the_journey_extensions_add_no_line...` fails when `pr_watch.py tasks` prints a line for `peers`. AC-7 `adoption.md` § Extensions carries the three-case merge result. AC-8 `git diff --name-only origin/main...HEAD` lists the design's paths plus the ADR, no adopter file.
+- FAILED: AC-4 falsifier as written (without "Never list a row whose probe failed", roborev must appear)
+  Run twice on fresh sonnet workers; roborev stayed unlisted both times because step 1 already shows a failed row unchecked. What the sentence changed in the measured runs is the `not listed: roborev, ...` report line, present with it (run A) and absent without it (run F). Per AC-4 the AC is rewritten: FO or the Captain rules whether the sentence stays for that line.
+- DONE: AC-4 real run on a disposable repo (docs/journey/x.yaml, node present, roborev absent via /tmp/ac4/bin, scripted answers)
+  Final text: (A) `extensions: [learn, peers, journey-map, release-acceptance, codex, copilot]`, `second-reviewer: copilot`, `not listed: roborev, ...`; (B) `[learn, peers]`, `recommended not chosen: journey-map, release-acceptance, codex, roborev`; (C) no `docs/journey/`: `[learn, peers]`, `not listed: journey-map` and `not listed: release-acceptance`. Probes run: `python3 --version`, `node --version`, `gh auth status`, `gh --version`, `roborev status` (exit 127), a glob of `docs/journey/*.yaml`. Earlier runs found two guide gaps (python3 missing from the journey probe; step 4 ambiguity incl. copilot); fixed in adoption.md and A, B, C, F rerun. Ask UI rendering and its option cap not exercised.
+- DONE: lint-skills.py, adr_lint.py --require 0035, number_guards.py check, comment_ratio.py
+  lint exit 0 (5385 of 5385, repository copy); adr_lint exit 0; `number_guards.py check` PASS, base 7a5c79c64249 head 8340c3baa333; `comment_ratio.py` code lines 78, comment lines 0, 0.0%, maximum 5% met.
+- DONE: Affected documents (`doc_impact.py 7a5c79c6 HEAD`)
+  `kc-dev-flow-2/README.md` updated; `docs/adr/0020-*.md` unaffected: the budget mechanism is unchanged and the new raise step carries the Captain's quote and a loaded moment; `kc-dev-flow-2/skills/maintain-flow/SKILL.md` unaffected: it describes count-equals-budget, which still holds; `learning.md` unaffected: its lint-skills.py mention is a measure, not a rule this change alters.
+- DONE: roborev gate
+  `clean on 8340c3baa; evidence=roborev:1161`
+- DONE: push without force and without -u; CI green on the PR head; CI cost
+  CI green at 8340c3baa333 (unit tests 2m4s, version parity 55s, route gate 8s, ruling-to-map 22s, adr-path-check 6s per `gh pr checks`); billed minutes not measured. All CI test commands run locally before the fix push, all exit 0 (`test_sd_dispatch.py` run against the local Spacedock 0.27.3 root, CI uses 0.27.2).
+
+### Summary
+
+The template ships `extensions: [learn, peers]`, the package README tiers every extension and `lint-skills.py` checks the required rows against the template line, and `adoption.md` asks once which recommended rows to add. Two things need FO: the release-acceptance clause had to shrink to 5 words under its 600-word cap, and the AC-4 falsifier did not fire (the sentence buys a report line, not the exclusion). Not tested: Ask UI rendering and option cap; whether FO obeys the no-step clause on a listed extension.
