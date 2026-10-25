@@ -15,6 +15,17 @@ gates:
                 id: briefing:stage-report-correction-path:backlog:attempt-1:revision-1
                 digest: sha256:9d10466c445af6d14dd837ba071b4ed964dcb1629dad24a57fa3c24fba221969
                 room-ref: ./stage-report-correction-path/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:stage-report-correction-path:backlog:1
+                briefing: briefing:stage-report-correction-path:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T14:15:43.013909Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 backlog sitting, which listed this task's backlog briefing-1 question
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
