@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-25T15:11:06Z
 worktree: .worktrees/spacedock-ensign-delivery-gate-reads-folder-tasks
-pr: iamcxa/kc-claude-plugins#720
+pr: pr-merge:720
 ---
 
 ## Scope
