@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.30.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.29.0...kc-dev-flow-2-v0.30.0) (2026-10-25)
+
+
+### Features
+
+* **kc-dev-flow-2:** ship learn and peers as the template default and tier the extensions ([#716](https://github.com/iamcxa/kc-claude-plugins/issues/716)) ([d496ac3](https://github.com/iamcxa/kc-claude-plugins/commit/d496ac3d1a3dc606f0f48b1fc804b0b36f4af177))
+
 ## [0.29.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.28.0...kc-dev-flow-2-v0.29.0) (2026-10-24)
 
 
