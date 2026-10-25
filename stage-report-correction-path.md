@@ -3,7 +3,7 @@ title: A worker that corrects its stage report writes a complete new report unde
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
@@ -47,6 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-25T15:11:49Z
 worktree: .worktrees/spacedock-ensign-stage-report-correction-path
+pr: iamcxa/kc-claude-plugins#721
 ---
 
 ## Scope
