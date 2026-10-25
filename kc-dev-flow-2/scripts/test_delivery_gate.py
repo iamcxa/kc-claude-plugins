@@ -1265,6 +1265,26 @@ class FoWriteRuleTests(unittest.TestCase):
         self.assertEqual(self.check(task=roman, text=reasoned(1))[0], 1)
         self.assertEqual(self.check(task=roman, text=reasoned(2))[0], 0)
 
+    def test_a_label_inside_an_item_run_already_read_adds_no_item(self):
+        nested = "Declined: F1 a (see Declined: F9 x (y z)); F2 b (two words)."
+        self.assertEqual(len(gate.declined_items(nested)), 2)
+        task = with_report("- F1 Polish: one.", "- F2 Polish: two.", "- F3 Polish: three.")
+        code, out = self.check(task=task, text=nested)
+        self.assertEqual(code, 1, out)
+        self.assertIn("declined items (2) are fewer than the validation report's Deferred risk and Polish findings (3)", out)
+        overlapping = variant_of("        if start.start() < stop:\n            continue\n", "")
+        self.assertEqual(len(overlapping.declined_items(nested)), 4)
+
+    def test_a_bulleted_decline_list_keeps_its_count_and_each_bullet_its_own_reason_check(self):
+        for text in ("- Declined: F1 a (two words).\n- Declined: F2 b (two words).",
+                     "- V8 Declined, low: F1 a (two words).\n- V10 Declined, low: F2 b (two words)."):
+            with self.subTest(text):
+                self.assertEqual((len(gate.declined_items(text)), gate.unreasoned_items(text)), (2, []))
+        bare = "- Declined: F1 a\n- Declined: F2 b (two words)"
+        self.assertEqual(len(gate.unreasoned_items(bare)), 1)
+        joined = variant_of("|\\n(?=[ \\t]*(?:[-*+][ \\t]+)?(?:[\\w.-]+[ \\t]+)?(?:Declined|FO declines)\\b)", "")
+        self.assertEqual(len(joined.declined_items("- Declined: F1 a (two words).\n- Declined: F2 b (two words).")), 1)
+
 
 ALIGNED = "---\nprofile: pilot\n---\n\n# task\n\n## FO alignment\n\nAlignment: not needed.\n"
 AMENDED = ALIGNED + "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-20\n\nSupersedes: AC-1\n"

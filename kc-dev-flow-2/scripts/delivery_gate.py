@@ -13,8 +13,8 @@ The PR head is compared, as a prefix, with each line; it passes when it matches 
 --text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
 at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token. Each `;`-separated item after `Declined...:` or
-`FO declines...:` (up to the next sentence that opens with a label and a colon, or a blank line; a label after `e.g.` or `i.e.`
-does not end it) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
+`FO declines...:` (up to the next sentence that opens with a label and a colon, a blank line, or a line that opens a new decline; a label
+after `e.g.` or `i.e.`, or inside the item, does not start another) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
 it is a reason. When the newest `## Stage Report: validation` lists `- F<N> Deferred risk:` or `- F<N> Polish:` bullets, fewer
 declined items than those bullets holds; a report with no such bullets is not joined.
 The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
@@ -73,7 +73,7 @@ NOT_RUN = re.compile(r"\b[\w.-]+ not run:\s*\S", re.I)
 AC_NOT_RUN = re.compile(r"(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b", re.I)
 AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
-DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
+DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n|\n(?=[ \t]*(?:[-*+][ \t]+)?(?:[\w.-]+[ \t]+)?(?:Declined|FO declines)\b)")
 FINDING = re.compile(r"^\s*[-*]\s*\*{0,2}F\d+\*{0,2}\s*[:(]?\s*\(?\s*(?:Deferred risk|Polish)\b", re.M)
 MAX_POINTS = 12
 CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
@@ -191,10 +191,13 @@ def unstated_second_reviewers(text):
 
 
 def declined_items(text):
-    items = []
+    items, stop = [], 0
     for start in DECLINE_START.finditer(text):
+        if start.start() < stop:
+            continue
         rest = text[start.end():]
         end = DECLINE_END.search(rest)
+        stop = start.end() + (end.start() if end else len(rest))
         depth, item = 0, ""
         for ch in (rest[:end.start()] if end else rest).strip().rstrip("."):
             depth = max(depth + (ch in "([") - (ch in ")]"), 0)

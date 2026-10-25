@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Check a dev2 task file: the FO-alignment record, the artifacts its Surfaces: line owes, its acceptance criteria and any Captain amendments; exit 1 on any violation.
 
-While the task's frontmatter says `status: ideation` it also holds a `## Scope` line added or removed after the backlog gate closed.
+While the task's frontmatter says `status: ideation` it also holds a `## Scope` line (the first such heading outside a code fence) added or removed after the backlog gate closed.
 The baseline is the task file at the commit that added the newest `### Amendment N — <date>` dated on or after the backlog approval
 (the working copy when that heading is uncommitted), else at the sha the backlog briefing binds (`git-root://state/<sha>/<path>`);
 lines opening with Non-goals, Budget, Stop condition or Follow-up: are exempt. The check reads git history and the working copy,
@@ -628,8 +628,17 @@ def check_built_screen(path, body, previews, errors):
 
 
 def scope_lines(text):
-    found = re.search(r"^## Scope\b[^\n]*\n(.*?)(?=^## |\Z)", text or "", re.M | re.S)
-    return (found.group(1) if found else "").splitlines()
+    text, inside, start, at = text or "", False, None, 0
+    for line in text.split("\n"):
+        if FENCE.match(line):
+            inside = not inside
+        elif not inside and line.startswith("## "):
+            if start is not None:
+                return text[start:at].splitlines()
+            if re.match(r"## Scope\b", line) and at + len(line) < len(text):
+                start = at + len(line) + 1
+        at += len(line) + 1
+    return text[start:].splitlines() if start is not None else []
 
 
 def git_out(task, *args):

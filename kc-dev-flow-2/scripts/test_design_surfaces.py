@@ -1460,6 +1460,42 @@ class ScopeCheckTests(unittest.TestCase):
         index.unlink()
         self.assertEqual(ds.scope_hold(self.task), ("not run", "backlog briefing unreadable"))
 
+    def rebase_on(self, text):
+        self.task.write_text(text)
+        sha = self.commit("t.md", "task with a look-alike heading")
+        index = self.work / "t" / "review" / "backlog" / "briefing-1" / "index.json"
+        index.write_text(f'{{"artifacts": [{{"uri": "git-root://state/{sha}/t.md"}}]}}')
+        self.commit("t/review/backlog/briefing-1/index.json", "briefing")
+
+    def test_the_scope_is_the_first_scope_heading_outside_a_fence(self):
+        fence = "```"
+        self.rebase_on(GATED.replace("## Scope", f"## Design\n\n{fence}\n## Scope\n- example\n{fence}\n\n## Scope", 1))
+        self.assertEqual(ds.scope_hold(self.task)[0], "clean")
+        self.add_line()
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+        self.assertEqual(self.run_main()[0], 1)
+        flat = mutated('        elif not inside and line.startswith("## "):', '        elif line.startswith("## "):')
+        self.assertEqual(flat.scope_hold(self.task)[0], "clean")
+
+    def test_fenced_lines_inside_the_real_scope_stay_compared_and_a_fenced_heading_does_not_end_it(self):
+        fence = "```"
+        self.rebase_on(GATED.replace("- Non-goals: to be set at ideation.", f"{fence}\ncode line\n{fence}\n- Non-goals: to be set at ideation.", 1))
+        self.edit("code line", "code line changed")
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+        self.edit("code line changed", "code line")
+        self.assertEqual(ds.scope_hold(self.task)[0], "clean")
+        self.edit("code line", "## Not a heading")
+        self.rebase_on(self.task.read_text())
+        self.add_line()
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+        text = self.task.read_text()
+        self.assertIn("- Captain asked for one more thing.", ds.scope_lines(text))
+        flat = mutated('        elif not inside and line.startswith("## "):', '        elif line.startswith("## "):')
+        self.assertNotIn("- Captain asked for one more thing.", flat.scope_lines(text))
+        self.assertEqual(ds.scope_lines("## Scope\n```\nx\n```\n- a\n"), ["```", "x", "```", "- a"])
+        dropped = mutated("return text[start:at].splitlines()", "return unfenced(text[start:at].splitlines())")
+        self.assertNotIn("x", dropped.scope_lines("## Scope\n```\nx\n```\n- a\n## Next\n"))
+
     def test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it(self):
         self.add_line()
         plain = Path(self.tmp.name) / "plain"
