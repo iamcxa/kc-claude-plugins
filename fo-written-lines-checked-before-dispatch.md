@@ -75,6 +75,8 @@ FO ruling 2026-10-26 on validation F5 (ADR need): D2 (a script judges only the b
 
 - Cycle 1 (FO, 2026-10-26): Codex review on #724 5b7c0b2e (review:5644681449) left 1 P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
   - P2 kc-dev-flow-2/scripts/design_surfaces.py: the escaped-quote check flags any amendment line before Superseded text (Design:, Supersedes:, an Asked: continuation), though D2 applies it only to Captain: and Asked: lines; the resulting diagnostic does not match kc-dev-flow-2/scripts/laws_check.py L2, so CI aborts with an unparseable-output error. Restrict the check to the Captain: and Asked: lines (validation F2 names the same).
+- Cycle 2 (FO, 2026-10-26): Codex review on #724 5d0fa209 (review:5644876501) left 1 P2, to fix (rounds 1 and 2 fix every finding; a P1 blocks in every round); investigation first, then FO fix authorization, then a fresh validation recheck.
+  - P2 kc-dev-flow-2/references/sd/workflow.md: the new pre-validation instruction runs `<package>/scripts/delivery_gate.py question ...` directly, but the script is tracked as mode 100644, so it fails with Permission denied; invoke it with python3 as the adjacent merge-check instruction does (workflow.md word budget is exact at 5421: keep the count, for example by shortening the placeholder, or raise the step with the Captain's quoted words).
 
 ## Stage Report: ideation
 
