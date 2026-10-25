@@ -110,7 +110,7 @@ A checklist or scope-notes line that names a package script writes
 name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`
 on the saved record and rewrites each name it lists. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
 <dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
-DONE nor SKIPPED to the worker, and do not edit the worker's report. The refusal itself
+DONE nor SKIPPED to the worker with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one, and do not edit the worker's report. The refusal itself
 does not say why; other causes are a missing evidence line or Summary and an uncommitted
 report.
 

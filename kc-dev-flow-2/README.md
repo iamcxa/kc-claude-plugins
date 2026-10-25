@@ -313,7 +313,7 @@ It checks six stage/host handoffs, stage-definition fetches, PRFAQ/Mermaid gate
 context, the `## Dispatch facts` section, finding disposition and delivery authority,
 that scope notes naming the package root reach the dispatch file ahead of the checklist,
 and that a report ending `- FAILED: none.` is refused by SD and named by its
-checklist read. Both route graphs across three profiles exercise synthetic gate
+checklist read, and that a correction without a Summary is refused until a complete report follows. Both route graphs across three profiles exercise synthetic gate
 successors and stamped implementation / validation worktree reuse. Fresh validation is declared configuration, not an
 executed independent worker. Copied canonical hook discovery and merge-guard
 arming pass; the missing-hook control demonstrates local finalization's limit.
