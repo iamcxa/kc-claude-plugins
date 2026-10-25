@@ -34,6 +34,17 @@ gates:
                 id: briefing:fo-written-lines-checked-before-dispatch:ideation:attempt-1:revision-1
                 digest: sha256:e31ed480bd450de8d460f8296d4bb295fe94f2cd56f4cbaee80e7e1d42d9b848
                 room-ref: ./fo-written-lines-checked-before-dispatch/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-written-lines-checked-before-dispatch:ideation:1
+                briefing: briefing:fo-written-lines-checked-before-dispatch:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-25T15:09:55.263955Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-25) answering the batch-6 ideation sitting, which listed this task's ideation briefing-1 question with its decisions as recommended
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
