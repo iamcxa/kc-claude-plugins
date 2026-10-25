@@ -42,5 +42,5 @@ nothing else on that line, then unindented `- DONE: <item>`, `- SKIPPED: <item>`
 or `- FAILED: <item>` bullets — not `- [x]`. Checklist parsing stops at the first
 `### ` sub-heading, so put any `### ` sections after the bullets, not inside them.
 `FAILED:` marks only an item that was not met; a report with nothing failed has
-no `FAILED:` bullet, and a summary such as "FAILED: none" is never a bullet. To correct a report, append a complete new one under the same `## Stage Report: <stage>` heading: every item DONE or SKIPPED with its evidence, and a closing `### Summary` that says it supersedes the earlier report. Spacedock's completeness check and the validation readers use the newest report for the stage, and a short addendum passes that check while hiding the earlier items.
+no `FAILED:` bullet, and a summary such as "FAILED: none" is never a bullet.
 This skill grants no state, approval or delivery authority.

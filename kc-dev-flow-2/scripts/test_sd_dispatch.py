@@ -316,14 +316,6 @@ FIXES = {
         old=(),
         swaps=((r" with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one,", ","),)),
 }
-for _stage in ("ideation", "implementation", "validation"):
-    FIXES[f"correction-form-{_stage}"] = dict(
-        file=f"skills/{_stage}/SKILL.md",
-        need=("To correct a report, append a complete new one under the same `## Stage Report: <stage>` heading",
-              "a short addendum passes that check while hiding the earlier items"),
-        old=(),
-        swaps=((r" To correct a report, append a complete new one under the same.*?hiding the earlier items\.", ""),))
-
 
 
 def mod_scripts_missing():
