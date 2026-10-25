@@ -163,7 +163,7 @@ The template lists the `required` extensions of the package README table (`learn
 Ask which recommended or optional rows to add once, before the Captain reviews the README:
 
 1. Probe each row's **Needs** read-only and show the result beside it: `journey-map` with
-   `release-acceptance` needs a `docs/journey/*.yaml` file and `node`; `codex` needs `gh auth
+   `release-acceptance` needs a `docs/journey/*.yaml` file, `python3` and `node`; `codex` needs `gh auth
    status` to pass; `roborev` needs `roborev status` to pass; `copilot` needs `gh` 2.92 or later
    authenticated. Show a row whose probe failed unchecked with the reason.
 2. Put one multi-select to the Captain through the host's structured Ask UI, or in plain chat
@@ -173,7 +173,8 @@ Ask which recommended or optional rows to add once, before the Captain reviews t
 3. Write the chosen names after the required ones. Never list a row whose probe failed; report
    `not listed: <name>, <reason>` and list it only when the Captain insists after seeing the reason.
 4. With no answer, or a worker that cannot ask, keep the template line and report
-   `recommended not chosen: <names>`.
+   `recommended not chosen: <names>`, naming each recommended extension (`journey-map` and `release-acceptance` are two names)
+   in the order step 2 lists them, whatever its probe said, and not the optional `copilot`.
 5. When `codex` and `copilot` are both listed, write `second-reviewer: copilot`; otherwise leave it empty.
 
 The `extensions:` line is the adopter's own after adoption. At a re-sync, `git merge-file` against
