@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:stage-report-correction-path:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of stage-report-correction-path to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the dev2 worker skills and FO's correction message say a stage report is corrected by a complete new report under the exact stage heading; profile pilot (script and skill text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:stage-report-correction-path:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/31ce56df26ca9cb236041e255a14ab773c8b2ee2/stage-report-correction-path.md",
+      "rev": "sha256:3309d34ef3d938f8620c55fb5764386206459824084a5664ac1e4a64f53b7497",
+      "mediaType": "text/markdown",
+      "summary": "Bite: #716's implementation report needed two worker rounds because Spacedock reads only the latest exact-heading report and refuses one with a FAILED item. Ideation owes the exact wording and where it lives."
+    }
+  ]
+}
