@@ -69,6 +69,7 @@ Result: aligned 2026-10-25 on the outcome by the Captain's 「全准」 answerin
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+FO ruling 2026-10-26 on validation F5 (ADR need): D2 (a script judges only the backslash-quote) and D4 (Override gets a note only) govern only this task's checks and stay in the task; D1, D3 and D5 rest on ADR 0027, ADR 0020 and ADR 0010, which the validation report names. No new ADR.
 
 ## Stage Report: ideation
 
