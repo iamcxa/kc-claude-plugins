@@ -66,6 +66,17 @@ gates:
                 id: briefing:stage-report-correction-path:validation:attempt-2:revision-1
                 digest: sha256:5df6ff99fd1199c2f78e16bcee4ea9ffa54dbafdbc2376e3bee23c70721550c8
                 room-ref: ./stage-report-correction-path/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:stage-report-correction-path:validation:2
+                briefing: briefing:stage-report-correction-path:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-25T18:14:28.366438Z"
+                decision: approve
+                reason: 'Captain 「合併」 (chat, 2026-10-26) answering the validation attempt-2 briefing question (merge #721 at f559d3d6c6c8e89e2712b6f06e966cc3e14fc563)'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-25T15:11:49Z
 worktree: .worktrees/spacedock-ensign-stage-report-correction-path
 pr: iamcxa/kc-claude-plugins#721
