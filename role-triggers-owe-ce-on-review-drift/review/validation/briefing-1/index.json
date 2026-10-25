@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:role-triggers-owe-ce-on-review-drift:validation:attempt-1:revision-1",
+  "question": "Approve validation of role-triggers-owe-ce-on-review-drift and merge iamcxa/kc-claude-plugins#719 at head c3eef23fc9704bb3d453bc51124b38d67ee83bc4 with `gh pr merge 719 --squash --match-head-commit c3eef23fc9704bb3d453bc51124b38d67ee83bc4`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:role-triggers-owe-ce-on-review-drift:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/92328f30b3705b594c2cea489da15436181fa409/role-triggers-owe-ce-on-review-drift.md",
+      "rev": "sha256:141ce9a96fe58448aa8907c224d01fd354bb49e45a9521147578f17aa931b4ed",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: a review-round event in kc-dev-flow-2/scripts/role_triggers.py clears only on a chief-engineer call or waiver dated no earlier than the newest round, and kc-dev-flow-2/scripts/pr_watch.py passes that date; validation PASSED at this head (135 role_triggers and pr_watch tests plus 86 delivery_gate tests, six mutations each failing a test, the #714 replay exiting 1 with the date and 0 without).\nNecessity: four files plus one Amended paragraph in ADR 0026 (role_triggers.py, pr_watch.py, their two tests).\nExternal rounds: Codex 1 (code review of this head completed with no findings, evidence=summary:6399463489@c3eef23fc, read with the reader from #722 because the main reader misreads a stuck security eyes reaction as running). RoboRev clean on this head (evidence=roborev:1171). Second reviewer: copilot because the change touches review rules (when a chief-engineer call clears a review-round event). copilot not run: Copilot refused for quota on 2026-10-13 and the Captain has not said the quota is back.\nFO declines: Polish F1, the task file's AC-1 and AC-3 still show the path-surface rows D1 replaced (task text only; the candidate follows D1 as ruled); Deferred risk F2, an unrelated call made earlier on the same date as the newest round still clears it (a Reviewer line carries no time; stated in the docstring and ADR 0026); Deferred risk F3, a comment list without created_at keeps the old date-blind clear (all four recorded lists carry timestamps)."
+    }
+  ]
+}

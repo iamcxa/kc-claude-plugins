@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:role-triggers-owe-ce-on-review-drift:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:role-triggers-owe-ce-on-review-drift-validation-1
+              briefing:
+                id: briefing:role-triggers-owe-ce-on-review-drift:validation:attempt-1:revision-1
+                digest: sha256:61e54452c2d00d87e96c1fbfbd23b506a33eafb82996db767c41a3cc42e75c95
+                room-ref: ./role-triggers-owe-ce-on-review-drift/review/validation/briefing-1
 started: 2026-10-25T15:11:29Z
 worktree: .worktrees/spacedock-ensign-role-triggers-owe-ce-on-review-drift
 pr: iamcxa/kc-claude-plugins#719
