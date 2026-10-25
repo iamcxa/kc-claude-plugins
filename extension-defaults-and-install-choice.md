@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:extension-defaults-and-install-choice:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:extension-defaults-and-install-choice-backlog-1
+              briefing:
+                id: briefing:extension-defaults-and-install-choice:backlog:attempt-1:revision-1
+                digest: sha256:489608a5663bc9245fa192621c8e41ec457e0504f291319e7ac9354916a344cf
+                room-ref: ./extension-defaults-and-install-choice/review/backlog/briefing-1
 ---
 
 ## Scope

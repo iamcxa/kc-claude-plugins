@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:extension-defaults-and-install-choice:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of extension-defaults-and-install-choice to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is learn and peers on by default in the workflow template, journey-map with release-acceptance as one choice plus codex and roborev listed as recommended in the repository README, copilot optional, and an adopter choosing the recommended ones through a UI at install; the five existing adopters are not changed by this task; profile pilot.",
+  "artifacts": [
+    {
+      "id": "artifact:extension-defaults-and-install-choice:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/de460465e64497d9ce116e12c391393065675ba3/extension-defaults-and-install-choice.md",
+      "rev": "sha256:a57857c9d6622e430f9b98d50e02ceb345672631e45c0c92ca406f82236ac8fc",
+      "mediaType": "text/markdown",
+      "summary": "Outcome from the Captain's words in chat 2026-10-25 (Scope). Profile pilot: a template, README and adoption change, reversible, no product code. Ideation owes: the exact template line, the README list, where the install question lives (spacedock:commission, spacedock:refit or references/sd/adoption.md), and how release-acceptance without a journey file stays quiet."
+    }
+  ]
+}
