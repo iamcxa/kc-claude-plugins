@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-25T15:11:29Z
 worktree: .worktrees/spacedock-ensign-role-triggers-owe-ce-on-review-drift
-pr: iamcxa/kc-claude-plugins#719
+pr: pr-merge:719
 ---
 
 ## Scope
