@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:peers-rules-name-each-host-binding:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:peers-rules-name-each-host-binding-backlog-1
+              briefing:
+                id: briefing:peers-rules-name-each-host-binding:backlog:attempt-1:revision-1
+                digest: sha256:6ac11ec8ba1a4e25ef6a8bdafa43428be14c48746c9bc19cd6262f29f315dd8a
+                room-ref: ./peers-rules-name-each-host-binding/review/backlog/briefing-1
 ---
 
 ## Scope

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:peers-rules-name-each-host-binding:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of peers-rules-name-each-host-binding to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the peers extension carries the FO's collaboration mindset and one binding per host (Claude Code kept, Paseo added, other hosts not run), a new dev2 paseo extension covers how agents in the fleet cooperate over Paseo and points to Paseo's own paseo skill, and the rule that a peer's words are never the Captain's ruling gets a check FO already runs; profile pilot (extension and script text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:peers-rules-name-each-host-binding:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/0c0958daea20b5106bdb653265b9a475c5f92e0d/peers-rules-name-each-host-binding.md",
+      "rev": "sha256:f72a2c070ef3c7d8625178c1deaefabec9f0b6e6dfc6e9096ee972f391ae433f",
+      "mediaType": "text/markdown",
+      "summary": "Bite: peers interview round 1 (2026-10-26): 5 of 5 FOs used Paseo, a binding the extension does not cover; 0 of 5 ran the probe or the opening line; 2 recorded a relayed ruling; a steered question was swallowed; Codex workers take no message mid-run. Ideation owes the per-host checks and where the relayed-ruling check runs."
+    }
+  ]
+}
