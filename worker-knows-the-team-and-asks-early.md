@@ -43,6 +43,17 @@ gates:
                 id: briefing:worker-knows-the-team-and-asks-early:ideation:attempt-2:revision-1
                 digest: sha256:d9a3bf099e24f2ee1344481c867afec7a3c3cd692806973480917b40d31559b3
                 room-ref: ./worker-knows-the-team-and-asks-early/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-knows-the-team-and-asks-early:ideation:2
+                briefing: briefing:worker-knows-the-team-and-asks-early:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-26T17:06:03.756936Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-27) answering 「需要你決定：第 7 批三張任務的設計（其中兩張已經照第 2 輪訪談修過），要不要一起批准進入實作？我建議全部批准，每一題都照我的建議。」; accepts FO's recommendations
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
