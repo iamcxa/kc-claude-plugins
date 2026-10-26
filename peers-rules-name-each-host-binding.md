@@ -343,6 +343,10 @@ Captain: 「全准」 (chat, 2026-10-27)
 Asked: 「需要你決定：第 7 批三張任務的設計（其中兩張已經照第 2 輪訪談修過），要不要一起批准進入實作？我建議全部批准，每一題都照我的建議。」, with the peers row 「「你的裁定要附結構化出處」那個檢查拆成新待辦，和另一個 session 的 `adr-required-statement` 一起設計，我建議拆。」
 Supersedes: AC-4 and the active-task migration clause of AC-5 (no replacement in this task: the structured Captain-source check and its backfill move to backlog task captain-ruling-sources-checked)
 
+## Number guards
+
+ADR: 0038
+
 ## Stage Report: ideation
 
 - DONE: A design for peers and a new dev2 paseo extension: the FO collaboration mindset text, one binding section per host (Claude Code kept with its probe and opening line, Paseo added, other hosts not run) built from each host's own docs (Paseo: its paseo skill and `paseo agent --help`), what the paseo extension says versus what it points to in Paseo's own skill, and the script FO already runs that can refuse a Captain ruling recorded from a peer's relayed words; measured against the round-1 interview record fo-interviews-extension/peers-round-1.md
