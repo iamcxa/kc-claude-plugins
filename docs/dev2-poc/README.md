@@ -43,7 +43,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.30.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.31.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -106,7 +106,7 @@ A checklist or scope-notes line that names a package script writes
 name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`
 on the saved record and rewrites each name it lists. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
 <dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
-DONE nor SKIPPED to the worker, and do not edit the worker's report. The refusal itself
+DONE nor SKIPPED to the worker with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one, and do not edit the worker's report. The refusal itself
 does not say why; other causes are a missing evidence line or Summary and an uncommitted
 report.
 
@@ -481,6 +481,8 @@ repository-qualified PR merge before recording its landed sentinel and running S
 to finalize/archive. Where `learn` is listed, the sentinel waits for a committed observer report.
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
+
+Before the validation `gate prepare`, FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question-and-summary file>`.
 
 Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
 --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask, as does a head other than the latest `Candidate:`; FO shows the Captain what it printed.
