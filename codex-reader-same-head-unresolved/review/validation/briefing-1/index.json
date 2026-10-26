@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-same-head-unresolved:validation:attempt-1:revision-1",
+  "question": "Approve validation of codex-reader-same-head-unresolved and merge iamcxa/kc-claude-plugins#728 at head c2f3e313f4c04c243f5a49b4f72b876ff35b4d9b with `gh pr merge 728 --squash --match-head-commit c2f3e313f4c04c243f5a49b4f72b876ff35b4d9b`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-same-head-unresolved:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5bebeb6faaec8a4d7df0b07132ba4a91470338e5/codex-reader-same-head-unresolved.md",
+      "rev": "sha256:51ab3e328fc6d5819b201e7c89f8ec50c4dfa37453affa2a11c754c3aa88c46d",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: the Codex reader now exits 1 on a head where Codex left a finding even after a later no-issues receipt on that same head, naming the finding's evidence id and `not cleared by` the receipt; validation PASSED at this head (AC-1 to AC-8 with a mutation per criterion, 35 tests, an independent replay over #600 to #726: 375 heads, exactly one changes, #716 8340c3baa, clean to findings).\nNecessity: two files (kc-dev-flow-2/extensions/codex/codex_review.py, test_codex_review.py).\nExternal rounds: Codex 1 (round 1 on this head: no major issues, receipt at 2026-10-26T17:24:50Z, no line comments). RoboRev clean on this head (evidence=roborev:1227).\nFO declines: Polish F1, the `not cleared by` text names the latest receipt and a min() mutation passes all tests [message text only; exit code and evidence id are pinned by the 22-failure max(evidence) mutation]; Deferred risk F2, pr_watch.py wait reports no change when a same-head re-run finishes [verdict and evidence are unchanged by design; FO reads the reader at the merge ask]; F3 is the Captain's ideation D1 (a GitHub resolved mark does not clear a same-head finding)."
+    }
+  ]
+}

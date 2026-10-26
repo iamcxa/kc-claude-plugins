@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:codex-reader-same-head-unresolved:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:codex-reader-same-head-unresolved-validation-1
+              briefing:
+                id: briefing:codex-reader-same-head-unresolved:validation:attempt-1:revision-1
+                digest: sha256:e508a79badf5857bd9590ba92fa6df8b33f7e42e8eef723924b4db7aecd9ed14
+                room-ref: ./codex-reader-same-head-unresolved/review/validation/briefing-1
 started: 2026-10-26T17:08:13Z
 worktree: .worktrees/spacedock-ensign-codex-reader-same-head-unresolved
 pr: iamcxa/kc-claude-plugins#728
