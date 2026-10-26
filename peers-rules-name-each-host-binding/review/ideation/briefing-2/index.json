@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:peers-rules-name-each-host-binding:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of peers-rules-name-each-host-binding to enter implementation with the source check moved out? FO recommends approve; approving accepts that recommendation and both decisions as FO recommends: D1 the host policy as designed (binding chosen by how peers actually reach the session, so Claude Code inside Paseo uses Paseo; replying to an ask stays in peers without listing paseo; the optional paseo extension covers new asks, sent only to idle peers with activeTurnBehavior named, deferral at most five minutes, and an explicit steer only for a reply the running asker requested); D2 the structured Captain-source check and its backfill of active tasks leave this task for a new backlog task coordinated with adr-required-statement, so AC-4 and the source part of AC-5 are superseded by a Captain amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:peers-rules-name-each-host-binding:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/f8a7ec8dd1075d62a2778e8a8f91acfcdf996438/peers-rules-name-each-host-binding.md",
+      "rev": "sha256:d540ce5fad7cce2ac2d52843170c68c85fdd9c8e08b73fe8cbe0bd3f255fe9af",
+      "mediaType": "text/markdown",
+      "summary": "Revised after interview round 2: fixes the vendor-based binding that would have stopped kc-paseo answering, the default-steer contradiction, the missing reply rule, a no-task exchange record, an incoming ask during an open gate, and checking the FO's own backlog before opening a task. The design worker kept the source check unchanged because D2 is the Captain's. Worse under D1: a busy peer may not answer within five minutes and the asker researches itself; Paseo may still interrupt on a requested reply. Worse under D2: the relayed-ruling class stays observer-only until the new task lands."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:peers-rules-name-each-host-binding:ideation:attempt-2:revision-1:item-2",
+      "uri": "git-root://state/f8a7ec8dd1075d62a2778e8a8f91acfcdf996438/fo-interviews-extension/round-2-batch7-texts.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:b62adeae467dadeafe562e448810565526e62ebaa48f3dde9126c601d75577df"
+    }
+  ]
+}
