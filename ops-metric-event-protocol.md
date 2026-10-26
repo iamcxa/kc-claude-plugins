@@ -1,6 +1,6 @@
 ---
 title: Any project sends a key metric to its ops inbox the same way, and kc-ops-inbox's contract v1 lands on main so projects can depend on it
-status: ideation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -64,7 +64,7 @@ gates:
                 reason: 'Captain 2026-10-26 in chat: 「准。第一版接受缺陷，後續再補」 — accepts D1-D8 as recommended (D8 at-most-once loss accepted for v1, to be fixed later) and the engineering-review fixes as dispositioned.'
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 started: 2026-10-26T14:32:33Z
 ---
 
