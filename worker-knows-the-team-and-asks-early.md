@@ -15,6 +15,17 @@ gates:
                 id: briefing:worker-knows-the-team-and-asks-early:backlog:attempt-1:revision-1
                 digest: sha256:80552830fef60c96866e01329cc23c37d5c4d0c491f095580b20dd75f4291551
                 room-ref: ./worker-knows-the-team-and-asks-early/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-knows-the-team-and-asks-early:backlog:1
+                briefing: briefing:worker-knows-the-team-and-asks-early:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-26T15:37:33.824933Z"
+                decision: approve
+                reason: Captain 「准」 (chat, 2026-10-26) answering 「需要你決定：第 7 批三張任務的待辦關卡，要不要一起批准進入設計階段？我建議全部批准。」; accepts FO's recommendation
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
