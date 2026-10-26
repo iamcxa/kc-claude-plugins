@@ -1,6 +1,6 @@
 ---
 title: A Paseo daemon in Docker, reached through Paseo Hub, turns one event into one First Officer run that files an ops task with only a scoped GitHub token, and the Captain talks to that agent from the Paseo app
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
@@ -46,8 +46,11 @@ gates:
                 reason: Captain answered 「准」 in chat on 2026-10-26 to the validation gate question, which stated that approving accepts closing this POC as PASSED for its recorded outcome with the goal not met, no PR, the branch kept as reference, and r1 kept as the dispatch and authority design while the Hub path's untested levers wait for a later probe; cleanup is asked separately.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-25T04:19:20Z
+verdict: PASSED
+completed: 2026-10-26T14:09:59Z
+archived: 2026-10-26T14:09:59Z
 ---
 
 Tests whether Paseo Hub plus a deployed Paseo daemon can replace kc-ops-inbox r1's internet-facing inbox, trigger repository and GitHub-hosted runner, and add live conversation with the agent (the Captain's priority 7), without losing platform-enforced agent authority (priority 0). r1 (`ops-inbox-r1-setup-and-isolation`, dev2) is built locally and its live setup is paused until this POC closes.
