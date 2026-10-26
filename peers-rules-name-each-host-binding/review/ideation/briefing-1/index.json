@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:peers-rules-name-each-host-binding:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of peers-rules-name-each-host-binding to enter implementation with the source check moved out? FO recommends approve; approving accepts that recommendation and both decisions as FO recommends: D1 the host split as designed (Claude Code keeps its probe and opening line, a new optional dev2 paseo extension sends routine questions only to idle peers and points to Paseo's own skill, other hosts are not run); D2 the structured Captain-source check and its backfill of active tasks leave this task for a new backlog task coordinated with adr-required-statement, so AC-4 and the source part of AC-5 are superseded by a Captain amendment.",
+  "artifacts": [
+    {
+      "id": "artifact:peers-rules-name-each-host-binding:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/64de62a1959e20a81da498b09719a3f774262923/peers-rules-name-each-host-binding.md",
+      "rev": "sha256:8485b92a0afedb6cf5da6ebb51f8bca09e6e006e3bab2d6581556542a7934850",
+      "mediaType": "text/markdown",
+      "summary": "Design: peers carries the FO collaboration mindset and one binding per host; a new paseo extension covers fleet-internal Paseo use. Reading cost: a Claude or unsupported-host FO reads 277 fewer words at its first peer need; a Paseo FO reads 2096 (new route). FO's reason for D2: the designed check requires a structured source entry for every Captain ruling and holds active tasks it cannot backfill, against a bite of two relayed rulings in one adopter, and adr-required-statement (another session) designs its own Captain-rulings section for the same check. Worse under D2: the relayed-ruling class stays observer-only until that task lands."
+    }
+  ]
+}

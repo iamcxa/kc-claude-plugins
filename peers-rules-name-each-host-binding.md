@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:peers-rules-name-each-host-binding:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:peers-rules-name-each-host-binding-ideation-1
+              briefing:
+                id: briefing:peers-rules-name-each-host-binding:ideation:attempt-1:revision-1
+                digest: sha256:2004a428bde8c417b7979525a600690db1f999f87e3190f24a06247b45aabfd1
+                room-ref: ./peers-rules-name-each-host-binding/review/ideation/briefing-1
 ---
 
 ## Scope
