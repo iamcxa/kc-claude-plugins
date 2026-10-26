@@ -5,7 +5,7 @@ variant: kc-dev-flow-2
 profile: poc
 merge: pr
 worktree: .worktrees/spacedock-ensign-paseo-hub-docker-ops-poc
-pr:
+pr: local-merge:c70f1b22cb1e4a66fd15c617647c778d54c59ec9
 gates:
     version: 1
     records:
