@@ -15,6 +15,7 @@ status: backlog
 - Bite: a validator ran a bare `git reset` in the shared state checkout and could have unstaged another FO's file (2026-10-24); a validator ran `git config` in a scratch clone (2026-10-25); several workers were unsure whether to signal `team-lead` or `main`; workers re-derived facts another session already held (FO relayed them by hand).
 - Upstream first: Spacedock ensign skill (generic; changing it needs its owner and the Captain's approval); dev2 README `Dispatch facts` context section (read by every dispatch); `peers` EXTENSION.md; backlog new-work-checks-what-exists-first (same "check what exists first" theme for new work; ideation decides merge or order).
 - Non-goals: letting workers message peer sessions directly; changing who decides.
+- Added 2026-10-26, the Captain (chat, 2026-10-26): 「派工worker合作心態那張呢？考慮一個點，peers 放入 FO 合作心態，然後 paseo ext 放入如何使用 paseo cli 以及相關功能，這樣合理嗎？」, then, answering 「需要你決定：paseo 擴充放在 dev2 裡（跟 peers 放一起，比較好找），還是放在 spacedock 的 Paseo 外掛（符合 10/21 的裁定）？」: 「paseo ext 放到 dev2，而 SD+paseo 則是更高層次的人與 agent fleet 的合作關係，前者是 fleet 內怎麼合作」. The FO half of the mindset goes to `peers` (task peers-rules-name-each-host-binding); this task keeps the worker half, carried by every dispatch, since `peers` is FO-only and optional.
 
 ## FO alignment
 
