@@ -53,6 +53,17 @@ gates:
                 id: briefing:fo-written-lines-checked-before-dispatch:validation:attempt-1:revision-1
                 digest: sha256:3a8e289f4b17a16aceddadd6431e9d2da6064eebe8d6f2c3b57cb68a5b69a8ec
                 room-ref: ./fo-written-lines-checked-before-dispatch/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-written-lines-checked-before-dispatch:validation:1
+                briefing: briefing:fo-written-lines-checked-before-dispatch:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-26T01:13:23.731213Z"
+                decision: approve
+                reason: 'Captain 「合併」 (chat, 2026-10-26) answering the merge ask for #724 at b0b2cbf3; accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-25T17:52:33Z
 worktree: .worktrees/spacedock-ensign-fo-written-lines-checked-before-dispatch
 pr: iamcxa/kc-claude-plugins#724
