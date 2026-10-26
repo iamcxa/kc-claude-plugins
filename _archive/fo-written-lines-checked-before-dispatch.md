@@ -3,7 +3,7 @@ title: Three FO-written lines are checked before dispatch and gate, not found by
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「合併」 (chat, 2026-10-26) answering the merge ask for #724 at b0b2cbf3; accepts FO''s recommendation'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-25T17:52:33Z
 worktree: .worktrees/spacedock-ensign-fo-written-lines-checked-before-dispatch
 pr: pr-merge:724
+verdict: PASSED
+completed: 2026-10-26T01:19:26Z
+archived: 2026-10-26T01:19:26Z
 ---
 
 ## Scope
