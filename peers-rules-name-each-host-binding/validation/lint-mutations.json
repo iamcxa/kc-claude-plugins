@@ -1,0 +1,16 @@
+[
+  {
+    "mutant": "drop-dependency-check",
+    "exit": 1,
+    "test": "RouteMutationTests.test_peers_alone_and_optional_paseo_selection"
+  },
+  {
+    "mutant": "drop-document-check",
+    "exit": 1,
+    "test": "RouteMutationTests.test_missing_optional_extension_document_is_named"
+  },
+  {
+    "base_goal_check": "extension selection contract absent",
+    "exit": 1
+  }
+]

@@ -443,3 +443,28 @@ This report supersedes the earlier ideation report and summary. Revised peers/pa
 ### Summary
 
 Implemented and pushed transport-based peers rules, the optional Paseo extension, installation/lint changes and ADR 0038 at bff1d8147b626ae91c6ca431f7dde459a63f254d. The final fresh FO replay follows all 22 scenarios after correcting taskless notices; local checks pass, while scratch trace mutations are bounded evidence and live delivery remains untested. RoboRev is incomplete because its daemon is stopped; FO owns Draft PR creation and CI using the prepared body, with raw evidence and input hashes retained in /tmp/peers-evidence/.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #730 head bff1d814 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at bff1d8147b626ae91c6ca431f7dde459a63f254d against base c70f1b22cb1e4a66fd15c617647c778d54c59ec9 within the accepted prose/manual-replay boundary; criterion matrix and limits: peers-rules-name-each-host-binding/validation/evidence.md. AC-4 and source migration are withdrawn by amendment 1.
+- DONE: Rule on FO's reading of RoboRev 1229 (PR body): whether the tier check and the new paseo-requires-peers dependency check in kc-dev-flow-2/scripts/lint-skills.py can ever see an adopter's extensions list, and if not whether the dependency check has any consumer; CI on the head was read by FO: 5 of 5 pass (2026-10-27)
+  FO is correct: neither check reads an adopted README; --root selects a package-shaped tree. The helper's callers are package lint and tests; paseo-specific refusal has no adopter consumer and only adds a diagnostic to a template already refused by old tier rules (selection-probe.txt); F1 below. CI 5/5 is FO evidence, not a validator rerun.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five steps in peers-rules-name-each-host-binding/validation/acceptance.sh ran unchanged with bash --noprofile --norc, exit 0; full observed output in acceptance-output.txt. Equivalent supplied Codex package ADR command used --since c70f1b22cb1e4a66fd15c617647c778d54c59ec9 --require 0038: 37 ADR files, 0 legacy, exit 0.
+- DONE: Re-run accepted host/record falsifiers at their declared boundary.
+  37 manual event traces and 17 bad-trace rejections rerun: AC-1 vendor routing/unlisted reads, AC-2 busy sends/deadline resets/receipts, AC-3 duplicate task/lost record/briefing edit/relayed authority; real SD and pr_watch omit the task-shaped .notes record. These audit selected events, not automatic compliance with policy prose.
+- DONE: Exercise optional activation and full-bundle reading-cost counterexamples.
+  AC-7 mandatory-paseo tier mutation is refused and three-way merges preserve all three custom/default/opt-in lists; AC-6 missing upstream or inbound bundle fails the independent sum check. Proactive 2475 <= 2481, incoming/gate 2185 <= 2191, other peer routes 805 <= 811; all unaffected lifecycle totals unchanged.
+- DONE: Verify regressions, document impact, dispatch records and numbered decision.
+  46 lint + 182 design + 113 watcher + 6 POC README tests pass; real SD dispatch fixtures pass; removing dependency/document guards fails their respective tests. ADR/number/comment/dispatch/design checks exit 0; 0/25 added comments, 0%, maximum 5%; all four doc_impact dispositions confirmed.
+- SKIPPED: Real peer delivery, repeated fresh model-reader runs and hosted CI execution.
+  No live send is authorized or claimed; base/initial/final model-reader transcripts were inspected, not rerun. Fake replay never reads policy files; actual host semantics were checked against current skill/tool schema and CLI help. Hosted CI remains FO evidence; no CI trigger changed and per-PR cost is not measured.
+
+### Findings
+
+- F1 Polish: the new paseo dependency helper has no adopter-list consumer and adds no new refusal on the current package path. User/workflow: maintainer package lint and FO-led adopter selection; observable harm: none; affected protected criterion: none (AC-7 installation refusal is prose); trigger: all three adopter lists still pass [learn, peers] to the helper, and deleting its check leaves the malformed template refused. Recommend removing redundant automation or explicitly retaining template-only diagnostics; FO disposition remains required before delivery.
+
+### Summary
+
+Independent validation PASSED for the exact head at the accepted local/paper-replay boundary, with no Material findings and one Polish finding; report and raw evidence are in the task's validation folder. Goal sufficiency is supported within that boundary, while the dependency helper's incremental necessity is not established and requires FO disposition; no repair, merge permission, adoption enforcement or real delivery is implied. Candidate bytes and entity frontmatter are unchanged; temporary detached checkouts were removed, the PR remains open/draft, and FO retains the validation gate and delivery decision.

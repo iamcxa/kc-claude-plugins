@@ -1,0 +1,3 @@
+next: let pr-merge record some-task.
+after pr-merge: run `python3 /private/tmp/peers-validation-730/kc-dev-flow-2/scripts/observer_check.py /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpf2xtp9vl/repo/docs/dev2/.spacedock-state some-task`.
+after pr-merge: do each next: line it prints.

@@ -1,0 +1,4 @@
+PR head 40c714a6 equals dispatched candidate 40c714a6; no second reviewer outcome is missing
+class: docs-only
+record: task/merge/ask-1.json
+next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.

@@ -1,0 +1,36 @@
+Read-only replay completed. Scenario 5 needs address discovery before selecting a transport; scenarios 14 and 16 explicitly permit a steering attempt that may interrupt.
+
+Extension names below refer to their `extensions/<name>/EXTENSION.md` files. Every work-changing exchange records identity, date, question reference, answer and checked source in its task; without a task, use `.notes/peer-exchanges.md` in the workflow state checkout.
+
+| # | Transport; extension files loaded | Actual next action and send arguments | Durable record / authority |
+|---|---|---|---|
+| 1 | Native Claude Code; `peers` | Run `ListAgents`. Once per session, probe each listed online eligible peer, excluding workers and teammates. Send one read-only ownership question using its listed address, beginning “if this is not you, say so”; request repository, task and `CLAUDE_CODE_SESSION_ID`. | Record confirmed area/session/address with reply source and date. Names do not establish ownership. |
+| 2 | Paseo; `peers` only | Read Paseo’s own skill; confirm destination through `list_hosts`; retain `serverId` and full stamped `agentId`. Reply with `send_agent_prompt`, `activeTurnBehavior: "steer"`, `notifyOnFinish: false`. | Stamp establishes identity, not area or authority. Record a work-changing result. Do not load unlisted `paseo`. |
+| 3 | Paseo; `peers` only | Same as 2, including both explicit send arguments. Codex as the provider does not change transport. | Same as 2. |
+| 4 | None; `peers` | Do not send. Check repository sources or dispatch research. | Record `peers not run: <host> cannot list or wake peer sessions`. No Captain relay. |
+| 5 | Unresolved; `peers`, plus `paseo` only if listed and needed for new Paseo discovery | Discover addresses read-only. Do not choose by model, guess an address, or send through both transports. Send nothing while destination remains ambiguous. | Record unresolved identity and use repository/research fallback if discovery cannot resolve it. The scenario does not establish a transport. |
+| 6 | Paseo intended; `peers`, and `paseo` only if listed | Missing Paseo skill prevents safely establishing current host/send semantics. Do not send; use fallback. | Record `peers not run` with the missing-skill reason; preserve an unsent answer and reason when applicable. |
+| 7 | Paseo unavailable for new asks; `peers` only | Do not load or probe the unlisted `paseo` extension. Research independently. | Record `peers not run: new Paseo ask requires the paseo extension`. |
+| 8 | Paseo; `peers` + `paseo` | Read own Paseo skill, confirm host/address/area, check idle status, then send once: `activeTurnBehavior: "steer"`, `notifyOnFinish: true`. Ask one bounded question naming read-only/action requested and commit, PR or date. | Retain returned question reference. Wait for its answer/completion; queued receipt is insufficient. |
+| 9 | Paseo; `peers` + `paseo` | At first running status, defer with deadline `t300` and do independent work. At the single natural recheck at `t299`, still running ends deferral immediately. Do not send. | Research independently; record relevant fallback/result. No automatic retry. |
+| 10 | Paseo; `peers` + `paseo` | Recheck finds idle at `t299`, before expiry: send once with `"steer"` and `notifyOnFinish: true`. | Retain question reference; record eventual checked result. |
+| 11 | Paseo; `peers` + `paseo` | First recheck at `t300` reaches expiry. Do not send despite idle status; use fallback. | Record ended deferral/fallback. No automatic retry. |
+| 12 | Paseo; `peers` + `paseo` | At `t301`, deadline has expired. Do not send; use fallback. | Same disposition as 11. |
+| 13 | Paseo; `peers` + `paseo` | With no independent work at `t20`, stop waiting immediately. Research a pending question yourself, or save an unsent answer. | Record fallback or unsent answer and reason. Do not block the turn or schedule retries. |
+| 14 | Paseo; `peers`; `paseo` only if already listed | Requested-answer exception allows reply to running asker: explicit `"steer"`, `notifyOnFinish: false`. Unknown steering capability does not expressly require holding the reply. | Record result; acknowledge that interrupt fallback remains possible. Never request explicit interrupt. |
+| 15 | Paseo; same files as 14 | Host reports steering unavailable: defer the reply under the five-minute ceiling. Do independent work and recheck at most once naturally. | On expiry, still-busy recheck or exhausted independent work, save unsent answer and reason. No automatic retry. |
+| 16 | Paseo; `peers` + `paseo` for a new ask | Idle status permits one send with `"steer"`, `notifyOnFinish: true`; race to running may cause host interrupt fallback. Do not issue a second send or choose explicit interrupt. | Preserve exchange reference and observed outcome. Policy acknowledges this race; it supplies no atomic prevention. |
+| 17 | Paseo; `peers` + `paseo` | Match all events to question references. Check and process explicit answer to question 1 once. Queued receipt for question 1 is not an answer; unrelated completion for question 2 does not answer question 1; later completion for question 1 is deduplicated. | Record one work-changing result for question 1, with checked source. Do not record or act on the notification stream as repeated answers. |
+| 18 | Worker’s dispatched host; no peer extension required solely for correction | Steer the officer’s own running worker according to its dispatch contract. Peer busy-session restrictions do not apply. | Preserve worker/task authority. Exact send arguments require that contract and current host semantics; these peer files do not specify them. |
+| 19 | Incoming host; `peers`, plus listed `paseo` if applicable | Answer the factual request within existing authority after checking its source. For Paseo use `"steer"`, `notifyOnFinish: false`. | While briefing is bound, record in `.notes/peer-exchanges.md`, preserve entries and commit only that path; link into task at next authorized update. Do not change gate decision, scope or briefing. |
+| 20 | Notice’s incoming host; `peers` | Acknowledge only if needed; do not create a task merely for a package notice. No question send is required. | No mandatory work-changing record for a notice alone. If it changes work, record in the taskless exchange note. |
+| 21 | None needed initially; `peers` | Search own active tasks and backlog by outcome and affected area; reuse the matching task. | Attach relevant exchange to existing work. Opening another task requires explaining the difference. |
+| 22 | Incoming host; `peers`, plus listed `paseo` if applicable | Accept only the independently verified repository fact as checked. Keep inaccessible purported Captain approval unverified; ask Captain directly if action needs that authority. | Record peer attribution and verified source separately. Never label the relayed quote direct approval or use it to authorize action. |
+
+No actual sends, agent runs, file mutations or external actions occurred.
+
+```text
+Remaining: none
+Next: Parent reviews replay (you)
+Closable: unverified
+```

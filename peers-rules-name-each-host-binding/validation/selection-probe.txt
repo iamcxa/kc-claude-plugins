@@ -1,0 +1,9 @@
+adopter [learn, peers]: template lint PASS; dependency input=['learn', 'peers']
+adopter [learn, peers, paseo]: template lint PASS; dependency input=['learn', 'peers']
+adopter [learn, paseo]: template lint PASS; dependency input=['learn', 'peers']
+invalid package template: ["README.md: `peers` is required but references/sd/workflow.md extensions: does not list it", "references/sd/workflow.md: extensions: lists `paseo` but its README tier is `optional, requires peers`, not `required`", "extensions: `paseo` requires `peers`"]
+same invalid package without dependency check: still REFUSED: ["README.md: `peers` is required but references/sd/workflow.md extensions: does not list it", "references/sd/workflow.md: extensions: lists `paseo` but its README tier is `optional, requires peers`, not `required`"]
+default: original extension list retained byte-for-byte
+custom: original extension list retained byte-for-byte
+opt-in: original extension list retained byte-for-byte
+Consumer verdict: package template lint calls helper; adopted README has no caller; paseo-specific rejection exercised only by invalid-template/test inputs.

@@ -1,0 +1,115 @@
+{
+  "base_sha": "c70f1b22cb1e4a66fd15c617647c778d54c59ec9",
+  "upstream_paseo": {
+    "words": 1380,
+    "sha256": "4081a50ae285a7a4e48eda8f95ad230e660d3cf629e647e44aa0bf94b27279c3"
+  },
+  "outputs": {
+    "OPEN": 29,
+    "MERGED": 20,
+    "archive": 28,
+    "merge": 57
+  },
+  "routes": {
+    "base": {
+      "startup_without_exchange": 5631,
+      "idle_open": 1045,
+      "idle_merged": 1318,
+      "after_archive": 3276,
+      "merge_ask": 742,
+      "native_claude": 742,
+      "unsupported": 742,
+      "first_task_opening": 0,
+      "proactive_paseo": 742,
+      "unlisted_incoming": 742,
+      "gate_reply": 742,
+      "warm_exchange": 0,
+      "source_repair": 0
+    },
+    "candidate": {
+      "startup_without_exchange": 5631,
+      "idle_open": 1045,
+      "idle_merged": 1318,
+      "after_archive": 3276,
+      "merge_ask": 742,
+      "native_claude": 805,
+      "unsupported": 805,
+      "first_task_opening": 805,
+      "proactive_paseo": 2475,
+      "unlisted_incoming": 2185,
+      "gate_reply": 2185,
+      "warm_exchange": 0,
+      "source_repair": 0
+    }
+  },
+  "sd_inputs": {
+    "first-officer-shared-core.md#Startup": {
+      "words": 133,
+      "sha256": "a7cb2c915425781a46200bea65b3a0c7a47b5cad9b54308deeac4ba3867cf38d"
+    },
+    "claude-fo-dispatch.md#Awaiting Completion": {
+      "words": 507,
+      "sha256": "76048cb63f86817b75a5ccdc6c042d49043f3a8ad85b18901276b733b50b030a"
+    }
+  },
+  "base": {
+    "inputs": {
+      "references/sd/workflow.md": {
+        "words": 5421,
+        "sha256": "a5b0d9b973d7f3ed44dd4635217e54b5dc2dd9c3f41272b2110afa188654173a"
+      },
+      "references/sd/mods/kc-dev-flow-2.md": {
+        "words": 48,
+        "sha256": "b2fc121dcc078d5fa990f9bb86485d71ee6bf53965350f39bf5dd75b333cfd1b"
+      },
+      "extensions/learn/EXTENSION.md": {
+        "words": 282,
+        "sha256": "81b1b225fb78559de2a43861432919450614f05b02574cc5b842e40a06c3440b"
+      },
+      "skills/learn/SKILL.md": {
+        "words": 2918,
+        "sha256": "428063102810ad71556522e18edee63ab926924951cdec41c5dc158e307f142c"
+      },
+      "extensions/peers/EXTENSION.md": {
+        "words": 742,
+        "sha256": "6e7fc0df1de6af5a51703f77852dd71f077f65549ea3675ef47a275681acbbc1"
+      }
+    },
+    "sections": {
+      "Delivery authority": 461,
+      "Extensions": 224
+    }
+  },
+  "candidate": {
+    "inputs": {
+      "references/sd/workflow.md": {
+        "words": 5421,
+        "sha256": "a5b0d9b973d7f3ed44dd4635217e54b5dc2dd9c3f41272b2110afa188654173a"
+      },
+      "references/sd/mods/kc-dev-flow-2.md": {
+        "words": 48,
+        "sha256": "b2fc121dcc078d5fa990f9bb86485d71ee6bf53965350f39bf5dd75b333cfd1b"
+      },
+      "extensions/learn/EXTENSION.md": {
+        "words": 282,
+        "sha256": "81b1b225fb78559de2a43861432919450614f05b02574cc5b842e40a06c3440b"
+      },
+      "skills/learn/SKILL.md": {
+        "words": 2918,
+        "sha256": "428063102810ad71556522e18edee63ab926924951cdec41c5dc158e307f142c"
+      },
+      "extensions/peers/EXTENSION.md": {
+        "words": 805,
+        "sha256": "cc8bf78ea065cd69b5979e4c07e492b19159bd8700d311f14d44ba082c2dafbb"
+      },
+      "extensions/paseo/EXTENSION.md": {
+        "words": 290,
+        "sha256": "9ebfb027350b5f520939e92889cea7c64af92f75916bb0536ac5837116d0e63a"
+      }
+    },
+    "sections": {
+      "Delivery authority": 461,
+      "Extensions": 224
+    }
+  }
+}

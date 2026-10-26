@@ -1,0 +1,30 @@
+Files read: base `peers/EXTENSION.md`, plus Extensions sections in base `README.md` and `references/sd/adoption.md`. Base defines Claude Code transport, excludes Codex, and provides no Paseo binding. “Record” below means a proposed disposition; nothing was written or sent.
+
+1. **Native Claude, owner unknown, online:** Claude Code `ListAgents`, then `SendMessage` to each eligible listed peer once, excluding own workers/teammates. Probe for repository, task and session ID; begin “if this is not you, say so,” mark read-only and name the reference date. Record returned address mapping; check facts before acting.
+2. **Claude provider in Paseo, stamped incoming ask, only learn/peers enabled:** Paseo transport unspecified; provider identity does not establish Claude Code transport. Read peers only; stamp-triggered loading unspecified. Handle the request within existing authority; reply arguments unspecified. Record if task work changes.
+3. **Codex provider, otherwise same:** Codex transport not covered; no send binding. Read peers only; incoming stamp rules unspecified. Handle only within existing authority; independently verify consequential claims.
+4. **Bare Codex, cannot wake:** No transport. Note `peers not run: Codex cannot list or wake peer sessions`; find the answer independently. Record consequential exchange only if one exists.
+5. **Two ambiguous transports, no confirmed address:** Selection between transports unspecified. Do not guess a session; use supported addressing discovery if available, otherwise investigate independently. No speculative send; no authority gained.
+6. **Incoming Paseo ask, own skill missing:** Paseo transport and missing-skill procedure unspecified. No mandatory skill-loading rule appears here. Requests remain constrained by existing authority; reply arguments unspecified.
+7. **New Paseo ask, paseo unlisted:** No Paseo extension declared in these base documents; an unlisted extension is not probed. Peers supplies no Paseo binding. Find the answer independently; no send.
+8. **New ask, opted-in idle confirmed Paseo peer:** Paseo delivery and “opted-in” treatment unspecified. Confirmation does not supply a supported binding. No prescribed send arguments; independently obtain the answer.
+9. **Known running peer at t0, still running at t299:** Busy-state and elapsed-time rules unspecified. Peers says not to wait: when the next step requires the missing answer, investigate independently. Paseo send arguments unspecified.
+10. **Peer idle at t299:** No idle exception or 299-second rule. Same independent fallback when the answer is needed; no prescribed Paseo send.
+11. **Peer idle at t300:** No 300-second threshold. Same disposition as row 10.
+12. **Peer idle at t301:** No 301-second threshold. Same disposition as row 10.
+13. **No independent work at t20:** Once the next step needs the unanswered information, find it independently. No waiting allowance or 20-second rule; blocked-answer escalation otherwise unspecified.
+14. **Requested answer to running asker, steering support unknown:** Requested replies and steering capability checks have no special rule. Reply transport/arguments unspecified; remain within existing authority.
+15. **Steering explicitly unavailable:** Steering fallback unspecified. No authorization to interrupt follows from this policy; independently continue when an unanswered question blocks progress.
+16. **Idle races running; steer falls back to interrupt:** Race handling, steering and interrupt fallback unspecified. The base provides no dedicated interruption safeguard or send arguments.
+17. **Explicit reply q1; queued receipt q1; unrelated completion q2; completion q1:** Question correlation and completion semantics unspecified. A receipt is not an answer under any stated rule; offline queued sends trigger relisting. Verify the actual answer before acting and record exchanges changing task work.
+18. **Own dispatched worker needs correction:** Explicitly outside peer addressing: own workers are not peers. Use the governing worker workflow; correction transport/arguments unspecified in these files. Peers grants no additional authority.
+19. **Work-changing fact request while Captain gate briefing is bound:** Gate-briefing handling unspecified. Any message changing a peer’s work goes to the Captain first; a purely read-only question may proceed through supported transport. Verify facts and record consequential exchange.
+20. **Taskless package notice:** Taskless notice routing unspecified. Peers does not create task, scope or action authority. No required task record unless an exchange changes an existing task’s work.
+21. **Matching active/backlog outcome exists:** Outcome matching and duplicate handling unspecified. Do not infer permission for a new task or scope change; use governing task workflow. Record an exchange against the task whose work changes.
+22. **Peer quotes Captain approval; original inaccessible; repository fact verified:** Accept only the independently verified repository fact. The quote cannot become a Captain ruling; original approval remains unverified. Obtain the Captain’s own sourced words before an action requiring that approval.
+
+```text
+Remaining: Parent policy comparison.
+Next: Compare this base trace with the candidate trace (you).
+Closable: unverified
+```

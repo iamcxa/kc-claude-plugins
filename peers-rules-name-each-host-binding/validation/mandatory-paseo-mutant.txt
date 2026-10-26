@@ -1,0 +1,2 @@
+Mandatory-Paseo mutant REJECTED:
+README.md: `paseo` is required but references/sd/workflow.md extensions: does not list it

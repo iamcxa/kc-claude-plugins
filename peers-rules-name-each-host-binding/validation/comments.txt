@@ -1,0 +1,2 @@
+code lines 25, comment lines 0, 0.0%
+maximum 5% (package default) met

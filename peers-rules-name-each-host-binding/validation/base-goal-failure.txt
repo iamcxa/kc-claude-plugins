@@ -1,0 +1,46 @@
+test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection) ... 
+  test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection) (selected=['learn', 'peers']) ... ERROR
+  test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection) (selected=['learn', 'peers', 'paseo']) ... ERROR
+  test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection) (selected=['peers', 'codex', 'paseo']) ... ERROR
+test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection) ... ERROR
+
+======================================================================
+ERROR: test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection) (selected=['learn', 'peers'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpntjhi00j/kc-dev-flow-2/scripts/test_lint_skills.py", line 208, in test_peers_alone_and_optional_paseo_selection
+    self.assertEqual(lint.extension_dependency_errors(self.root, selected), [])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'flow_lint' has no attribute 'extension_dependency_errors'
+
+======================================================================
+ERROR: test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection) (selected=['learn', 'peers', 'paseo'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpntjhi00j/kc-dev-flow-2/scripts/test_lint_skills.py", line 208, in test_peers_alone_and_optional_paseo_selection
+    self.assertEqual(lint.extension_dependency_errors(self.root, selected), [])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'flow_lint' has no attribute 'extension_dependency_errors'
+
+======================================================================
+ERROR: test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection) (selected=['peers', 'codex', 'paseo'])
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpntjhi00j/kc-dev-flow-2/scripts/test_lint_skills.py", line 208, in test_peers_alone_and_optional_paseo_selection
+    self.assertEqual(lint.extension_dependency_errors(self.root, selected), [])
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'flow_lint' has no attribute 'extension_dependency_errors'
+
+======================================================================
+ERROR: test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpntjhi00j/kc-dev-flow-2/scripts/test_lint_skills.py", line 209, in test_peers_alone_and_optional_paseo_selection
+    self.assertEqual(lint.extension_dependency_errors(self.root, ["learn", "paseo"]),
+                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: module 'flow_lint' has no attribute 'extension_dependency_errors'
+
+----------------------------------------------------------------------
+Ran 1 test in 0.095s
+
+FAILED (errors=4)

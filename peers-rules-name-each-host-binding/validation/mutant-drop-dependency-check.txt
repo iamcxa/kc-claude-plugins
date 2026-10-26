@@ -1,0 +1,21 @@
+test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection) ... FAIL
+
+======================================================================
+FAIL: test_peers_alone_and_optional_paseo_selection (__main__.RouteMutationTests.test_peers_alone_and_optional_paseo_selection)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpj5xg36_4/kc-dev-flow-2/scripts/test_lint_skills.py", line 209, in test_peers_alone_and_optional_paseo_selection
+    self.assertEqual(lint.extension_dependency_errors(self.root, ["learn", "paseo"]),
+AssertionError: Lists differ: [] != ['extensions: `paseo` requires `peers`']
+
+Second list contains 1 additional elements.
+First extra element 0:
+'extensions: `paseo` requires `peers`'
+
+- []
++ ['extensions: `paseo` requires `peers`']
+
+----------------------------------------------------------------------
+Ran 1 test in 0.092s
+
+FAILED (failures=1)
