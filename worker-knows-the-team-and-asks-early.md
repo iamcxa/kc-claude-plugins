@@ -358,3 +358,51 @@ The existing Dispatch facts transport can carry one 99-word collaboration instru
 ### Summary
 
 This report supersedes the earlier ideation report: the revised Team rule names the shared records, reports an unavailable required check before dependent work, ends a no-channel worker's turn with its question/findings, and forbids answering its own or its reviewers' permission requests. It costs 144 words (45 more than the withdrawn proposal), recommending a conditional 5421 -> 5565 budget and the unchanged separate upstream-first follow-up. Transport, recount and current design checks passed; live worker behavior and the Captain's budget decision remain unverified/pending.
+
+
+## Stage Report: implementation
+
+- DONE: Continue implementation-1 without the native-host worker replays: the Team bullet, the kc-dev-flow-2/scripts/lint-skills.py budget step with the Captain's quoted words and loaded moment, ADR 0037, and every structural acceptance evidence your sandbox can run
+  981a4309c4ac2abbccd7e5c6a0211682ca6c554c, based on origin/main c70f1b22cb1e4a66fd15c617647c778d54c59ec9; exactly five approved paths; no version/config changes.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (c70f1b22cb1e4a66fd15c617647c778d54c59ec9) implementing the approved design and acceptance criteria in the task file; the 144-word Team bullet under Dispatch facts in kc-dev-flow-2/references/sd/workflow.md, the kc-dev-flow-2/scripts/lint-skills.py budget step 5421 to 5565 quoting the Captain's 「全准」 with its loaded moment, and ADR 0037; only the files the design names
+  Product committed and branch push succeeded without force or -u; FO owns Draft PR creation and CI reading; title/body at /tmp/impl-worker-knows-the-team-and-asks-early-pr.md.
+- DONE: ADR 0037 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md records the original team/handoff quotes and ideation attempt 2 「全准」, its exact question, +144 cost and loaded moments.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Structural checks and mutations below passed; native behavioral criteria remain unverified under implementation-2, not green by wording or interview opinion.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since <base> --require 0037 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  Repository lint 5565/5565; ADR lint 37 records/0 legacy; number guards PASS at base c70f1b22/head 981a4309; comment ratio 1/86=1.2%, maximum 5%; push and PR text done; FO CI reading pending; CI cost not measured, triggers unchanged.
+- DONE: AC-1 structural delivery and falsifiers
+  Real dispatch suite passes 10 route/stage/host combinations in fresh/reused modes (20 exact fetched contexts), plus 10 mutations rejecting lost corrections/selectors, absent/duplicate Team or peer permission; raw /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-c73zx406/{commands.jsonl,team-loss-controls.json}. Actual launcher 0.27.2, plugin root 0.27.3; exact 0.27.3 runtime proof unverified.
+- DONE: AC-4 word budget, lifecycle cost and structural mutations
+  /tmp/worker-team-structural: base/candidate counts.json reproduce Team 144, README 5421→5565, startup 5863→6007, contexts 630/1365/1550 (POC 1365/1550), warm totals 765/718/55/415 unchanged; mutations.json records exit 1 for extra word, +99 step, missing quote/loaded moment and restored POC ideation, using python3 -B and cleared disposable caches.
+- DONE: AC-5 structural authority, customization and decision evidence
+  POC tests 7/7; lint tests 43/43; unchanged-base comparator rejects absent Team; occupied ADR reuse exits 1; disposable git merge-file retains custom wrapper/extensions, and wrapper-loss control rejects replacement; evidence /tmp/worker-team-structural. No release or adopter sync performed.
+- SKIPPED: AC-2 native base/candidate worker replay
+  native-host replays run at validation (FO, 2026-10-27): the implementation sandbox cannot start codex exec; /tmp/worker-team-capability/codex.stderr. No record-read, reuse, inaccessible-record or ownership action-order verdict claimed.
+- SKIPPED: AC-3 native base/candidate worker replay
+  native-host replays run at validation (FO, 2026-10-27): the implementation sandbox cannot start codex exec; /tmp/worker-team-capability/codex.stderr. No browser/hosted/authority/channel/retry/terminal-handback behavior verdict or timing claimed.
+- SKIPPED: AC-5 native base/candidate worker replay
+  native-host replays run at validation (FO, 2026-10-27): the implementation sandbox cannot start codex exec; /tmp/worker-team-capability/codex.stderr. Both worker/reviewer permission origins and channel branches await validation; Claude probe ended, no retry or credentials touched.
+- SKIPPED: AC-6 native base/candidate worker replay
+  native-host replays run at validation (FO, 2026-10-27): the implementation sandbox cannot start codex exec; /tmp/worker-team-capability/codex.stderr. Independent validation must score transcripts and action ordering; actual question/reply and redispatch costs remain unmeasured.
+- DONE: AC-6 evidence-bound recommendation and upfront limits
+  Required host limits were sent to FO before product edits; FO routed implementation-2 before work resumed. Recommend continue to independent validation, hold acceptance pending behavioral replay and review; failed launches are not reviewer/model runs.
+- SKIPPED: RoboRev review proof
+  Ran packaged roborev_gate.py after commit, exit 3: incomplete: the roborev daemon is not running. No review evidence= or clean verdict claimed.
+- DONE: Affected documents: docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md
+  updated: enduring team/handoff ruling, accepted cost and budget pointer.
+- DONE: Affected documents: docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md
+  unaffected: existing equality/quoted-ruling policy is followed; no ruling text changed.
+- DONE: Affected documents: kc-dev-flow-2/README.md
+  unaffected: documented six original pilot handoffs remain exercised; additional POC/reuse coverage changes no command, declared schema or existing documented guarantee.
+- DONE: Affected documents: kc-dev-flow-2/references/sd/adoption.md
+  unaffected: existing disposable graph/handoff tests and separate authorized README-sync route remain valid; customization merge exercised.
+- DONE: Affected documents: kc-dev-flow-2/skills/maintain-flow/SKILL.md
+  unaffected: budget equality and quoted raise followed; behavior replay remains required before release and is routed to validation, not waived.
+- DONE: Affected documents: learning.md
+  unaffected: per-moment measurement, protected prior records and config-write boundaries followed; no learning activated.
+
+### Summary
+
+Implemented and pushed the approved shared Team rule, 144-word budget step and ADR 0037 at 981a4309; the structural transport, derivation, budget, mutation and customization checks passed. Native behavior remains unverified under FO's implementation-2 routing, RoboRev is incomplete, and FO must open the prepared Draft PR/read its CI before acceptance can proceed. No compliance, savings, hosted CI or independent-validation outcome is inferred from structural checks.
