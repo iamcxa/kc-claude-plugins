@@ -497,7 +497,7 @@ Disposition: the P3-2 rule closed half of it and the half left was real, so a co
 ### Checks
 - `node --test kc-ops-inbox/test/contract.test.mjs`: 19 pass, 0 fail. `scripts/version-parity-check.sh`, `skill-frontmatter-lint.sh`, `marketplace-verify.sh`: pass; `kc-ops-inbox` has no plugin.json or release-please package, so no registration is needed and a commit pin is the only pin.
 - `comment_ratio.py origin/main HEAD`: `code lines 613, comment lines 16, 2.6%`, maximum 5% met, exit 0. `doc_impact.py`: one document, `kc-ops-inbox/contract/README.md`, `updated` (new file). `design_surfaces.py check`: presentable, exit 0. No ADR added, no `## Number guards`, no migration.
-- Limits: the Mermaid and the inbox-side runtime are not built (stated gaps in the README); CI on Node 20 was run in a container, not on the runner image beyond PR #727's job (passed). Two additions beyond the field table, flagged in the PR body under `without-it unanswered`: heartbeat severity fixed to `info`, and safe-integer checks.
+- Limits: the inbox-side runtime is not built (stated gaps in the README); Node 20 was run in a container and on PR #727's runner job (passed). Two additions beyond the field table, flagged in the PR body under `without-it unanswered`: heartbeat severity fixed to `info`, and safe-integer checks.
 
 ### Summary
 Contract v1 is a standalone module with six metric fixtures, refusal fixtures and a mutation script that proves each check; the README carries the protocol with a Source column per rule. Draft PR #727 is open and not marked ready. One security finding from the FO was fixed in the contract, and GitGuardian's red check on the published test secret is left for a ruling.
