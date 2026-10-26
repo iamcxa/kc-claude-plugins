@@ -336,6 +336,13 @@ Named task-by-task cross-check: `peers-rules-name-each-host-binding` is this des
 
 Recommended order: FO resolves the two policy decisions; coordinate the source schema with `adr-required-statement` before implementation so its future Captain-rulings entries point to these sources rather than create competing authorities; reserve one ADR number separately from sibling reservations. Land worker Dispatch-facts changes and this peers change sequentially if both touch lint, retaining the worker/FO split. The codex reader and other unrelated tasks may proceed independently. Re-read all listed live heads before editing; do the combined lifecycle recount last. The current design does not add or widen CI, so no new per-PR CI cost is claimed or measured.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-27, chat
+Captain: 「全准」 (chat, 2026-10-27)
+Asked: 「需要你決定：第 7 批三張任務的設計（其中兩張已經照第 2 輪訪談修過），要不要一起批准進入實作？我建議全部批准，每一題都照我的建議。」, with the peers row 「「你的裁定要附結構化出處」那個檢查拆成新待辦，和另一個 session 的 `adr-required-statement` 一起設計，我建議拆。」
+Supersedes: AC-4 and the active-task migration clause of AC-5 (no replacement in this task: the structured Captain-source check and its backfill move to backlog task captain-ruling-sources-checked)
+
 ## Stage Report: ideation
 
 - DONE: A design for peers and a new dev2 paseo extension: the FO collaboration mindset text, one binding section per host (Claude Code kept with its probe and opening line, Paseo added, other hosts not run) built from each host's own docs (Paseo: its paseo skill and `paseo agent --help`), what the paseo extension says versus what it points to in Paseo's own skill, and the script FO already runs that can refuse a Captain ruling recorded from a peer's relayed words; measured against the round-1 interview record fo-interviews-extension/peers-round-1.md
