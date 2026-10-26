@@ -15,6 +15,17 @@ gates:
                 id: briefing:codex-reader-same-head-unresolved:backlog:attempt-1:revision-1
                 digest: sha256:bd1dfd93a625b2697560df7463c9977af324c65cacd268a4612eeaa8d9f11436
                 room-ref: ./codex-reader-same-head-unresolved/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-same-head-unresolved:backlog:1
+                briefing: briefing:codex-reader-same-head-unresolved:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-26T15:37:39.908924Z"
+                decision: approve
+                reason: Captain 「准」 (chat, 2026-10-26) answering 「需要你決定：第 7 批三張任務的待辦關卡，要不要一起批准進入設計階段？我建議全部批准。」; accepts FO's recommendation
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
