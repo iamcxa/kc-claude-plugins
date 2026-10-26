@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.31.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.30.0...kc-dev-flow-2-v0.31.0) (2026-10-26)
+
+
+### Features
+
+* **kc-dev-flow-2:** a chief-engineer call must be dated no earlier than the newest review round ([#719](https://github.com/iamcxa/kc-claude-plugins/issues/719)) ([82798a2](https://github.com/iamcxa/kc-claude-plugins/commit/82798a24ccae05c67cab16befb44d30438857371))
+* **kc-dev-flow-2:** a worker corrects a stage report with a complete new report under the same heading ([#721](https://github.com/iamcxa/kc-claude-plugins/issues/721)) ([454e5bf](https://github.com/iamcxa/kc-claude-plugins/commit/454e5bfcd4261ffca95cf3f8ae058546f0f93280))
+* **kc-dev-flow-2:** check the Result line, amendment backslashes, the merge hold-out clause and Override placement before FO writes them ([#724](https://github.com/iamcxa/kc-claude-plugins/issues/724)) ([1a6149f](https://github.com/iamcxa/kc-claude-plugins/commit/1a6149f545b6035a796c3d9ca942f6a560cd95ec))
+* **kc-dev-flow-2:** report a stalled Codex review and let the summary decide over a stuck eyes reaction ([#722](https://github.com/iamcxa/kc-claude-plugins/issues/722)) ([d7eb99c](https://github.com/iamcxa/kc-claude-plugins/commit/d7eb99c6682a3dd11821ace26bb7a53d3a977d37))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** delivery_gate and dispatch_records read a folder task, and a reserved ADR may land on a named sibling PR ([#720](https://github.com/iamcxa/kc-claude-plugins/issues/720)) ([be137f2](https://github.com/iamcxa/kc-claude-plugins/commit/be137f20c32868c1f7a20520593883bf8bb6e280))
+
 ## [0.30.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.29.0...kc-dev-flow-2-v0.30.0) (2026-10-25)
 
 
