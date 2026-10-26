@@ -1,6 +1,6 @@
 ---
 title: A Paseo daemon in Docker, reached through Paseo Hub, turns one event into one First Officer run that files an ops task with only a scoped GitHub token, and the Captain talks to that agent from the Paseo app
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: poc
 merge: pr
