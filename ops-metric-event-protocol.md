@@ -363,3 +363,28 @@ Budget: about 2 days, at the edge of the cap. Contract split 0.25 d; types, kind
 - F9 PostHog `docs-search`, 2026-10-26: capture uses a public project token; the uuid dedupe rule was not found; issue #30692 reports non-unique uuids.
 - F10 qnow `spacedock-state/dev2` `production-on-qnow-tw-clerk-live.md` (ad96a010c, read 2026-10-26): usage period 2026-10-17 to 2026-11-17 (ADR 0051); no usage or billing alert endpoint found by the CLI; the earlier ops-inbox FO advice (Postgres atomic increment, `<period>-<threshold>` id, check `sms.created` first). `sms-usage-alert.md`: the PostHog interim scope.
 - F11 kc-claude-plugins `origin/main` c70f1b22: `release-please-config.json` packages, and `scripts/version-parity-check.sh` enumerating `*/.claude-plugin/plugin.json`.
+
+## Stage Report: ideation
+
+- DONE: Author the protocol design in the task file for AC-1 to AC-4 with reproducible evidence clauses: the project-side and inbox-side boundary, the metric event type and its fixed fields, crossing, recovered and heartbeat events, environment and severity routing, sender rules (same id on retry, response codes and retry, per-incident cap), context pointers and enumerated values, signing-secret provisioning and rotation, pre-inbox delivery with the same body, and how relay.capacity.ceiling and qnow's SMS usage map onto it; name each unresolved decision with one recommendation.
+  `## Design` (commit 42466615): boundary table with a Source column, three `ops.metric.*` types with fixed fields and a derived id, routing table, sender rules with the response-code table, signing secrets, pre-inbox delivery, relay and qnow mappings, D1-D6 each with one recommendation, and the acceptance evidence plan.
+- DONE: Record, without building, a store recommendation for raw events, counts and threshold records and the PostHog projection, ranked for a Netlify runtime and for one long-running process, using the evidence already gathered; and check the contract v1 on branch spacedock-ensign/ops-inbox-r1-setup-and-isolation for what must change.
+  `### Store recommendation` (Netlify: Blobs per-event keys, then Postgres, then DynamoDB; one process: JSONL and DuckDB, then Postgres, then DynamoDB), and `### What must change in contract v1` (8 items, first the contract split out of the core).
+- DONE: Send the draft to qnow dev2 FO (Paseo agent 519ab4c8) as first-adopter reviewer through FO only (send it to me; I relay), and deliver the PRFAQ and Mermaid plus one package-value observation.
+  Delivered to FO for relay in the completion handback. No agent was messaged directly, and qnow FO's review has not happened yet. The PRFAQ and Mermaid are in `## Design`; the observation is below.
+
+### Per criterion
+- AC-1: not yet verified (ideation). The plan is the README's Source column traced to C1-C8 and F1-F11; the design's boundary table already carries one source per row.
+- AC-2: not yet verified. Current evidence is the gap itself: probe P1 (F1) shows contract v1 at 1e65b046 accepts free text, a spaced `source` and an underived id (exit 0). The planned fixtures and expected refusal reasons are listed.
+- AC-3: not yet verified. Nothing is merged. The plan is a contract-only PR from `origin/main`, needed because the validator imports the core (F2).
+- AC-4: not yet verified. Existing core tests cover 202, 200 duplicate, 400, 401, 413, 502 and 504 (F8: 25 of 25 pass at 1e65b046, 2026-10-26). 405, 200 `recorded`, 429 and the routing outcomes are stated gaps.
+
+### Checks
+- `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/design_surfaces.py check <task>`: `design surfaces presentable`, exit 0.
+- Mermaid: `alt`/`opt`/`end` balanced by script (depth 0). It was not rendered, because the mermaid-cli install was refused by the permission classifier.
+
+### Package-value observation
+r1's contract passed its ideation gate described as "allowlisted data" and "one module, `kc-ops-inbox/contract/`". The code does neither: the validator imports the inbox core, and an allowlisted field takes a 500-character instruction. Its seven fixtures all behave as documented. One adversarial fixture (P1) found the gap; the shipped fixtures could not, because each tests a field's presence, not its content. The package's value here is the contract that lets two projects retry and resend without double counting, and that value holds only once a pinned validator refuses free text.
+
+### Summary
+The protocol is designed: projects own the count and send derived-id crossing, recovered and heartbeat events with enumerated fields only, and the inbox routes by environment and severity. Contract v1 needs a split from the core and a tightening before relay and qnow pin it. Six decisions (D1-D6) await the Captain. Budget is about 2 days, at the cap, with the inbox-side runtime gaps stated rather than built. r1's reserved ADR 0031 collides with main's 0031 (FO number-guard item).
