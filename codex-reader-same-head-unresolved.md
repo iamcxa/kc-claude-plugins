@@ -3,7 +3,7 @@ title: The Codex reader does not call a head clean while a finding on that head 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
