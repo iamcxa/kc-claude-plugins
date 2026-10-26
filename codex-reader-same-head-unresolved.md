@@ -226,3 +226,50 @@ The Codex reader reads a head as clean from its latest result, so a no-issues re
 ### Summary
 
 The Codex reader now lets any finding on a head decide over a later no-issues result on that head: exit 1, the finding's single `evidence=` id, and `not cleared by the later no-issues <id>`. Live #716 flips from clean to findings and the 375-head replay changes exactly that one head. One note for FO: the dispatch's package root is 0.31.0, the loaded skill is 0.29.0; the checks ran from 0.31.0 scripts and the 0.29.0 stage references, which agree on everything this task used.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #728 head c2f3e313 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED on c2f3e313f4c04c243f5a49b4f72b876ff35b4d9b (PR head confirmed by `gh pr view 728`, base c70f1b22 = origin/main), checked in throwaway detached worktrees, removed. 35 tests pass on the candidate, 29 on the base; the base test file run against the candidate code fails exactly 3 tests with `1 != 0` (the three old assertions). Falsifiers I ran on a scratch copy (python3 -B): AC-1/2/5 `top = max(evidence)` 22 failures; AC-2 `held` limited to line findings 5 failures (4 issue-comment-badge pairs plus the shape test); AC-4 exit-5 test on `max(evidence)` 1 failure; AC-5 receipt id printed as `evidence=` 17 failures; AC-6 below; AC-8 old usage top line 1 failure; summary-path `found_before` guard restored 4 summary pairs fail. Live #716, base: exit 0 `clean ... evidence=comment:6393874798`; candidate: exit 1 `evidence=review:5641501111 ...; not cleared by the later no-issues comment:6393874798` (AC-1); `pr_watch.reader()` base `('clean','comment:6393874798')`, candidate `('findings','review:5641501111')` (AC-5); `git diff c70f1b22..c2f3e313 -- codex_review.py | grep -c '^+.*\(gh(\|pages(\)'` prints 0 (AC-7); no-argument run prints the new rule (AC-8). Also ran `scripts/test_pr_watch.py` on the candidate: 113 OK. Limits judged: summary-only older-head clean not replayable, acceptable, that path already refused clean after a finding; `pr_watch wait` not firing on a same-head re-run, acceptable, verdict and evidence are unchanged by design (F2); thread-resolved marks not read, Captain-settled D1 (F3).
+- DONE: Repeat the implementation's replay over #600 to #726 yourself on the candidate and the base: exactly one head (#716 8340c3baa) may change, and say why any other would
+  Own fetch (`gh api --paginate --slurp`, 121 PRs, 6 non-PRs 617/621/622/677/678/684) and own replay script, not the implementation's: 375 heads, 54 PRs with a non-4 verdict; base exits 0/1/4 = 38/119/218, candidate 37/120/218; exactly one head changes, #716 `8340c3baa` exit 0 to 1, evidence `comment:6393874798` to `review:5641501111`; #700 to #726: 65 heads, 15 PRs, same single change; no Codex-reviewed head missing from the commits lists. No other head changes because the mechanism only replaces a clean with a held finding on the same head, and no other head holds a finding followed by a later no-issues result.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME PATH bash --noprofile --norc` on 2026-10-27, output as shown. `python3 -B <0.31.0>/scripts/adr_lint.py docs/adr --since c70f1b22cb1e4a66fd15c617647c778d54c59ec9` at the candidate: `36 ADR file(s) checked, 0 legacy`, exit 0 (0.29.0 copy also exit 0). Also at the candidate: comment_ratio 0 of 74 lines exit 0; number_guards `PASS: no findings` exit 0; doc_impact 0 documents; design_surfaces exit 0; dispatch_records 3 records complete; lint-skills PASS (run from the candidate checkout). CI on the PR head (read only): multi-profile route gate, unit tests, version parity, GitGuardian all SUCCESS. Verdict PASSED on c2f3e313; no Material finding.
+
+### Findings
+
+- F1 Polish: the `not cleared by the later no-issues <id>` text names `max(later)`; a mutation to `min(later)` passes all 35 tests, so which receipt is named when two later no-issues results exist is unpinned. No exit code or evidence id depends on it. Would become Material only if a round counter read that text, and `pr_watch.reader()` reads only the `evidence=` token.
+- F2 Deferred risk: `pr_watch wait` fires no outcome for a same-head re-run because verdict and evidence are unchanged (stated in the PRFAQ); FO learns the re-run finished only by running the reader. Would become Material if a supported workflow relied on `wait` to detect a same-head re-ask result.
+- F3 Deferred risk: a person's "resolved" mark on the GitHub thread does not clear a same-head finding (D1). Settled by the Captain at the ideation gate (recommendation accepted); not reopened. Would become Material if a head with a resolved thread and a later no-issues receipt occurs; none of 28 resolved threads in #600 to #726 is on such a head.
+
+### Minimal acceptance script
+
+Run in one bash shell on the Captain's machine; needs `git`, `python3`, and `gh` signed in (the live #716 read is read-only).
+
+    R=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo
+    git -C $R worktree add --detach /tmp/pr728-cand c2f3e313f4c04c243f5a49b4f72b876ff35b4d9b >/dev/null 2>&1 && git -C $R worktree add --detach /tmp/pr728-base c70f1b22cb1e4a66fd15c617647c778d54c59ec9 >/dev/null 2>&1; git -C /tmp/pr728-cand rev-parse HEAD
+    python3 -B /tmp/pr728-cand/kc-dev-flow-2/extensions/codex/test_codex_review.py 2>&1 | tail -3
+    python3 -B /tmp/pr728-base/kc-dev-flow-2/extensions/codex/codex_review.py iamcxa/kc-claude-plugins 716; echo "exit $?"
+    python3 -B /tmp/pr728-cand/kc-dev-flow-2/extensions/codex/codex_review.py iamcxa/kc-claude-plugins 716; echo "exit $?"
+    python3 -B /tmp/pr728-cand/kc-dev-flow-2/extensions/codex/codex_review.py | sed -n 4,5p
+    git -C $R worktree remove --force /tmp/pr728-cand; git -C $R worktree remove --force /tmp/pr728-base; ls -d /tmp/pr728-* 2>&1
+
+Observed output:
+
+    c2f3e313f4c04c243f5a49b4f72b876ff35b4d9b
+    Ran 35 tests in 0.003s
+    
+    OK
+    clean on 8340c3baa: Codex Review comment says no issues on the head; evidence=comment:6393874798 at 2026-10-25T05:22:39Z
+    exit 0
+    findings on 8340c3baa: 1 line finding(s), 1 badge(s), 0 at P0/P1; evidence=review:5641501111 at 2026-10-25T04:30:35Z; not cleared by the later no-issues comment:6393874798
+    exit 1
+    A finding on the head decides over a later no-issues result; otherwise the latest result
+    decides. The deciding evidence id is printed so a round is counted once per id.
+    ls: /tmp/pr728-*: No such file or directory
+
+Expected: the first line is the head above; 35 tests OK; the base reads `clean`, exit 0 (the bug); the candidate reads `findings`, exit 1, naming `review:5641501111` and `not cleared by the later no-issues comment:6393874798`; the usage shows the new rule; the last line says the checkouts are gone. Does not cover: the 16-pair shape table (the unit test does), the 375-head replay (this stage reran it), a GitHub "resolved" mark (D1), or `pr_watch` end to end beyond `reader()`. The live #716 read depends on #716's recorded comments staying as they are.
+
+### Summary
+
+PASSED on c2f3e313. All eight criteria hold on my own runs and mutations, my independent 375-head replay changes only #716 `8340c3baa`, and every package check exits 0. Three findings, none Material (one Polish, two Deferred risk); the Captain's script ran as written and its observed output is above.
