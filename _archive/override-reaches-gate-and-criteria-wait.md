@@ -3,7 +3,10 @@ title: An Override written in a task reaches its gate record, and a superseded c
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-26T01:18:45Z
+archived: 2026-10-26T01:18:45Z
 ---
 
 ## Scope
