@@ -34,6 +34,10 @@ gates:
                 id: briefing:peers-rules-name-each-host-binding:ideation:attempt-1:revision-1
                 digest: sha256:2004a428bde8c417b7979525a600690db1f999f87e3190f24a06247b45aabfd1
                 room-ref: ./peers-rules-name-each-host-binding/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-10-26T16:50:01.696373Z"
+                reason: Interview round 2 (fo-interviews-extension/round-2-batch7-texts.md, 2026-10-27) found the proposed text cannot be followed as written on several hosts; the design returns to its ideation worker for revision before the Captain decides.
 ---
 
 ## Scope
