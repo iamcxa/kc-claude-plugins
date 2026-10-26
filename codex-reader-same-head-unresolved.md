@@ -205,3 +205,23 @@ Recommended order: any; this task shares no file or check with the others, so FO
 ### Summary
 
 The Codex reader reads a head as clean from its latest result, so a no-issues receipt after a finding on the same head cleared it (#716 shipped a P2 that way); the design makes any finding on the head decide over a later no-issues result and prints the finding's own id with `not cleared by <receipt>`. A 375-head replay changes only #716; the thread-resolved variant has no observed consumer and needs a new GraphQL call, so D1 recommends against it. The installed 0.29.0 skill differs from the dispatch's 0.31.0 package root; scripts ran from the skill's root per Dispatch facts and the design reads `origin/main` 0.31.0 as the dispatch asked.
+
+## Stage Report: implementation
+
+- DONE: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (c70f1b22cb1e4a66fd15c617647c778d54c59ec9) implementing the approved design and acceptance criteria in the task file; the kc-dev-flow-2/extensions/codex/codex_review.py change and tests the design names, with the design's replay over #600 to #726 repeated on the candidate; only the files the design names
+  Branch `spacedock-ensign/codex-reader-same-head-unresolved` pushed (no force, no -u) at c2f3e313, one commit on c70f1b22, two files (`codex_review.py`, `test_codex_review.py`). No gh run (sandbox rule): title and body are in /tmp/impl-codex-reader-same-head-unresolved-pr.md; FO opens the Draft PR. Replay at c2f3e313 (script in /tmp/replay-5c03/scripts, data in /tmp/replay-5c03/data): 121 PRs, 375 heads, 54 PRs with evidence (#700-#726: 65 heads, 15 PRs); exactly one head differs, #716 `8340c3baa` exit 0 to 1; base exits 0/1/4 = 38/119/218, candidate 37/120/218; no Codex-reviewed head missing from commits.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1 live #716 exit 1, `evidence=review:5641501111 ...; not cleared by the later no-issues comment:6393874798`, plus `test_the_recorded_716_shape_...`; AC-2 16-pair table test; AC-3 29 old tests, 3 assertions changed (exactly the three the design names; two test names that stated the old rule renamed); AC-4 test, mutation to `max(evidence)` in the exit-5 test fails it; AC-5 `line.count("evidence=") == 1`, `pr_watch.reader()` returns `('findings', 'review:5641501111')` (base `clean`); AC-6 replay above; AC-7 `grep -c` prints 0; AC-8 no-argument run prints the new rule and not the old top line, pinned by `test_the_usage_text_states_the_rule`.
+  Mutations, each failing only the tests that claim it: `top = max(evidence)` 22 failures (AC-1/2/5); held limited to line findings 8 pair failures + body-badge assertion (AC-2); old exit-5 test 1 failure, `..._is_findings_not_unrecognized` (AC-4); receipt id printed as `evidence=` 17 failures (AC-5); old usage line 1 failure (AC-8); summary-path guard restored 4 summary-pair failures. Note: my first exit-5 test used a comment time earlier than the receipt, so mutation M3 survived; fixed the time and re-ran, it then failed as shown.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py, adr_lint.py docs/adr --since <base>, number_guards.py check exit 0; comment_ratio.py within its maximum
+  lint-skills 0; adr_lint 0 (36 ADR files, `--since c70f1b22`); number_guards `PASS: no findings` (0); comment_ratio `code lines 74, comment lines 0, 0.0%`, max 5%; doc_impact.py lists 0 documents; design_surfaces.py check 0.
+- DONE: roborev evidence= line
+  `clean on c2f3e313f; evidence=roborev:1227`
+- DONE: push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  Pushed as above; PR body written; CI cost: no new CI step, the existing `kc-dev-flow-2-tests.yml` step runs 6 more tests; run time not measured. CI on the PR head is for FO to read after opening the Draft PR.
+- SKIPPED: Version bump and ADR
+  No version edit (release-please owns it); the task's `## Number guards` reserves none and the change records no new decision (D1 was settled at the gate), so adr_lint had nothing to require.
+
+### Summary
+
+The Codex reader now lets any finding on a head decide over a later no-issues result on that head: exit 1, the finding's single `evidence=` id, and `not cleared by the later no-issues <id>`. Live #716 flips from clean to findings and the 375-head replay changes exactly that one head. One note for FO: the dispatch's package root is 0.31.0, the loaded skill is 0.29.0; the checks ran from 0.31.0 scripts and the 0.29.0 stage references, which agree on everything this task used.
