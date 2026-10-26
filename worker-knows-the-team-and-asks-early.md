@@ -34,6 +34,10 @@ gates:
                 id: briefing:worker-knows-the-team-and-asks-early:ideation:attempt-1:revision-1
                 digest: sha256:1efa06ee92b98c7903dafc0c1ea4ed2001f0f7d762c7b656ff3516d1d44b8b2c
                 room-ref: ./worker-knows-the-team-and-asks-early/review/ideation/briefing-1
+              withdrawal:
+                by: agent:first-officer
+                at: "2026-10-26T16:49:58.734463Z"
+                reason: Interview round 2 (fo-interviews-extension/round-2-batch7-texts.md, 2026-10-27) found the proposed text cannot be followed as written on several hosts; the design returns to its ideation worker for revision before the Captain decides.
 ---
 
 ## Scope
