@@ -37,6 +37,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:ops-metric-event-protocol:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:ops-metric-event-protocol-ideation-1
+              briefing:
+                id: briefing:ops-metric-event-protocol:ideation:attempt-1:revision-1
+                digest: sha256:c304584b452078daa5de9cd1d317f7e320423f596013dfdf4aa491b44bb6bb1d
+                room-ref: ./ops-metric-event-protocol/review/ideation/briefing-1
 started: 2026-10-26T14:32:33Z
 ---
 
