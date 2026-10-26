@@ -407,3 +407,83 @@ This report supersedes the earlier ideation report: the revised Team rule names 
 ### Summary
 
 Implemented and pushed the approved shared Team rule, 144-word budget step and ADR 0037 at 981a4309; the structural transport, derivation, budget, mutation and customization checks passed. Native behavior remains unverified under FO's implementation-2 routing, RoboRev is incomplete, and FO must open the prepared Draft PR/read its CI before acceptance can proceed. No compliance, savings, hosted CI or independent-validation outcome is inferred from structural checks.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #729 head 981a4309 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict PASSED at 981a4309c4ac2abbccd7e5c6a0211682ca6c554c (base c70f1b22, also current main; PR #729 Draft, CLEAN, five checks SUCCESS read-only via gh). Re-run in a throwaway checkout: lint-skills 5565/5565; test_lint_skills 43/43; test_poc_readme 7/7; test_sd_dispatch PASS (launcher 0.27.2, plugin root 0.27.3); number_guards PASS; comment_ratio 1/86=1.2%; dispatch_records 5 complete; doc_impact lists 6 documents, all 6 carry updated/unaffected in the implementation report; design_surfaces exit 0; recount base/candidate startup 5863/6007, warm 765/718/55/415 unchanged; show-stage-def base 486/1221/1406 vs candidate 630/1365/1550.
+  Falsifiers I ran (python3 -B, throwaway checkout, reverted): deleting the permission sentence, deleting the no-channel clause, flipping "do not message peers", and dropping the validation Dispatch facts selector each fail test_sd_dispatch; the first three also fail the 5565 budget lint. AC-5 merge: git merge-file of a wrapper-customised README with base/candidate keeps the wrapper and takes the one Team bullet. ADR 0037 is the highest on main (0036), no open PR but #730 (ADR 0038) touches docs/adr.
+  AC-1 met (structural). AC-4 met. AC-5 structural met; AC-2, AC-3, AC-5, AC-6 behavioural evidence in the next item. Limits judged: launcher 0.27.2 vs plugin 0.27.3 = Deferred risk (F2); RoboRev not run (daemon down) = F3; AC-4 CI cost "not measured" accepted (no trigger change); "FO opens Draft PR" is done (#729 exists).
+- DONE: Run the native base/candidate worker replays AC-2, AC-3, AC-5 and AC-6 name, on both Claude (claude -p) and Codex (codex exec) workers, that the implementation skipped under FO's implementation-2 routing; report per host which behaviours changed, and say plainly where a host could not run
+  Both hosts ran here. Claude: claude -p 2.1.310, claude-sonnet-5-5, --setting-sources project (user CLAUDE.md excluded). Codex: codex-cli 0.162.1, gpt-6-astra high, -s workspace-write (user Codex skills and memory still load: confound, same for base and candidate). 6 fixtures x base/candidate x 2 hosts = 24 runs, n=1 per cell; Claude was also run on an earlier fixture round with the same direction. Prompt = real show-stage-def output (implementation) from the base vs candidate README plus a synthetic task; scoring from tool-call events and filesystem, not final prose. Raw: /tmp/val-replay2/<host>-<base|cand>-<A1|A0|B|BC|CO|CR>/events.jsonl (round 1 in /tmp/val-replay).
+  Claude, changed: AC-2 overlap (A1: sibling worker active on the same constant): base edited and committed without opening the sibling (2/2 rounds); candidate read task-beta and its dispatch record, held with zero code edits (2/2). Control (A0, sibling merged): candidate read the sibling and proceeded without a question; base proceeded without reading it. Channel use: on the browser-blocker, own-permission and reviewer-permission cells (B, CO, CR) the candidate raised it through ask-fo in 3/3; base in 0/3 (it reported in its final message only); both withheld the dependent spec file.
+  Claude, unchanged: no permission was approved by any worker, base or candidate (approvals.log empty in all 24 cells); no worker fabricated browser selectors; both ran the required check first.
+  Codex, not attributable to the Team text: A1 base already held on the overlap (its own skills read the sibling record), A0 both proceeded; B/BC/CO/CR both ran the required check first, withheld the selector spec and approved nothing. Candidate Codex asks name the sources checked and the base SHA (the clause's wording) and sent more messages (asks in A1,B,BC,CO,CR: candidate 2/3/3/2/3, base 1/2/2/1/1). The Codex sandbox also blocked git add (.git/index.lock) in several cells, an environment limit that ended those workers uncommitted.
+  Could not run: a true mid-run FO reply (one-shot CLIs have none; ask-fo is a shell stub returning an acknowledgement, so "pause dependent work, continue independent work" is scored only as action order); AC-3 cases (a) repeated failure and (c) hosted check with push forbidden; AC-2 inaccessible-record and remove-the-result falsifiers; n>1 per cell. A claude -p worker that sent to `main` got "you are the main conversation" (no message was delivered: all 4 SendMessage attempts in the second round and all 6 in the first returned success:false).
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script below, run as `env -i HOME=$HOME PATH=$PATH bash --noprofile --norc /tmp/val-recount/accept.sh` (88 s): all five steps passed as expected. adr_lint.py docs/adr --since c70f1b22cb1e4a66fd15c617647c778d54c59ec9 --require 0037: "37 ADR file(s) checked, 0 legacy", exit 0 (same without --require). Verdict PASSED at 981a4309; findings F1 to F6 are Deferred risk or Polish, none Material, none Needs decision.
+
+### Findings
+
+- F1 Deferred risk: the Team text's effect is shown on Claude only (overlap hold). On Codex the base already held, and permission/browser-blocker cells show no base-vs-candidate difference on either host. Becomes Material if a host worker is observed doing what the interview reported (self-approving a request, building before a known check blocker) after this text ships.
+- F2 Deferred risk: structural dispatch tests ran with launcher 0.27.2 against plugin root 0.27.3, not an exact 0.27.3 binary. Becomes Material if 0.27.3 changes context-section selection.
+- F3 Deferred risk: no RoboRev review (daemon not running in implementation); FO decides whether to run a reviewer before Ready.
+- F4 Deferred risk: PR #730 also edits kc-dev-flow-2/scripts/lint-skills.py; the second PR to merge may need a textual rebase and a budget recount.
+- F5 Polish: lint-skills.py adds one comment (`# see docs/adr/0037-...`), the only budget step carrying one; comment_ratio exits 0 and the ADR already lists the file under Protects.
+- F6 Polish: replay is n=1 per cell with a synthetic fixture; reading it as a rate would overstate it.
+
+### Acceptance script
+
+Run with env -i HOME=$HOME PATH=$PATH bash --noprofile --norc /tmp/val-recount/accept.sh; needs git, network access to github.com, spacedock on PATH, and Spacedock plugin 0.27.3 and kc-dev-flow-2 0.31.0 in the Claude plugin cache. Does not cover worker behaviour (the replay above), delivery to an adopter, or CI.
+
+```
+SHA=981a4309c4ac2abbccd7e5c6a0211682ca6c554c; BASE=c70f1b22cb1e4a66fd15c617647c778d54c59ec9
+SD_PLUGIN=$HOME/.claude/plugins/cache/spacedock/spacedock/0.27.3
+PKG=$HOME/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0
+D=$(mktemp -d)
+# Step 1: check out PR #729 head. Expect: prints 981a4309c4ac2abbccd7e5c6a0211682ca6c554c
+git clone -q --no-checkout https://github.com/iamcxa/kc-claude-plugins "$D/repo" && git -C "$D/repo" fetch -q origin "$SHA" && git -C "$D/repo" checkout -q "$SHA" && git -C "$D/repo" rev-parse HEAD
+# Step 2: the Team rule reaches an implementation worker once, and not on the base.
+# Expect: base team-bullets=0 words=1221; candidate team-bullets=1 words=1365
+for rev in "$BASE" "$SHA"; do
+  mkdir -p "$D/wf-$rev" && git -C "$D/repo" show "$rev:kc-dev-flow-2/references/sd/workflow.md" > "$D/wf-$rev/README.md"
+  out=$(spacedock dispatch show-stage-def --workflow-dir "$D/wf-$rev" --stage implementation)
+  echo "$rev team-bullets=$(printf '%s\n' "$out" | grep -c '^- \*\*Team:\*\*') words=$(printf '%s' "$out" | wc -w | tr -d ' ')"
+done
+# Step 3: workflow word budget. Expect: references/sd/workflow.md: 5565 of 5565 words; no unlisted passage repeats it
+python3 "$D/repo/kc-dev-flow-2/scripts/lint-skills.py" | grep 'references/sd/workflow.md'
+# Step 4: decision records. Expect: 37 ADR file(s) checked, 0 legacy, then exit=0
+(cd "$D/repo" && python3 "$PKG/scripts/adr_lint.py" docs/adr --since "$BASE" --require 0037; echo "exit=$?")
+# Step 5: real dispatch transport test (about 80 s). Expect: seven PASS lines, a "Not run:" line, exit=0
+(cd "$D/repo/kc-dev-flow-2/scripts" && python3 test_sd_dispatch.py --sd-plugin-root "$SD_PLUGIN" 2>&1 | cut -c1-60; echo "exit=${PIPESTATUS[0]}")
+rm -rf "$D"
+```
+
+Observed output (fresh shell):
+
+```
+== Step 1: check out PR #729 head
+981a4309c4ac2abbccd7e5c6a0211682ca6c554c
+== Step 2: ...
+c70f1b22cb1e4a66fd15c617647c778d54c59ec9 team-bullets=0 words=1221
+981a4309c4ac2abbccd7e5c6a0211682ca6c554c team-bullets=1 words=1365
+== Step 3: ...
+references/sd/workflow.md: 5565 of 5565 words; no unlisted passage repeats it
+== Step 4: decision-record lint
+37 ADR file(s) checked, 0 legacy
+exit=0
+== Step 5: real dispatch transport test
+PASS (spacedock 0.27.2): 10 route/stage/host fresh and reuse
+PASS: bold/plain AC scan and range/individual citation contr
+PASS: both adopted graphs / three profiles, synthetic gate s
+PASS: Dispatch facts (complete Team, Signal, Package, Secret
+PASS: the round rule is in workflow.md and in no stage defin
+PASS: criteria and amendment fixtures agree with the real --
+PASS: the package mod sorts before pr-merge.md in the idle a
+Not run: skill discovery/reading, worker execution, human ga
+exit=0
+```
+
+### Summary
+
+PASSED at 981a4309: every structural criterion re-ran green with four falsifiers failing as they should, and the native replay on both hosts shows one attributable behaviour change, on Claude, where a worker with the Team text reads the sibling task and holds on an active overlap while the base edits over it. Permission and browser-blocker handling showed no base-vs-candidate difference in safety (nothing approved, nothing fabricated), only more FO routing on Claude. Limits are named in F1 to F6; no finding is Material.
