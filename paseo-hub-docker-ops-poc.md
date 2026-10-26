@@ -36,6 +36,17 @@ gates:
                 id: briefing:paseo-hub-docker-ops-poc:validation:attempt-1:revision-1
                 digest: sha256:536fd3b4ce7990bd4e02476f440065560081a08976dde2a034c3a7fbe5ef1ed4
                 room-ref: ./paseo-hub-docker-ops-poc/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-hub-docker-ops-poc:validation:1
+                briefing: briefing:paseo-hub-docker-ops-poc:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-26T14:06:36.682709Z"
+                decision: approve
+                reason: Captain answered 「准」 in chat on 2026-10-26 to the validation gate question, which stated that approving accepts closing this POC as PASSED for its recorded outcome with the goal not met, no PR, the branch kept as reference, and r1 kept as the dispatch and authority design while the Hub path's untested levers wait for a later probe; cleanup is asked separately.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-25T04:19:20Z
 ---
 
