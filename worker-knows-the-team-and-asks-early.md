@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:worker-knows-the-team-and-asks-early:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:worker-knows-the-team-and-asks-early-ideation-1
+              briefing:
+                id: briefing:worker-knows-the-team-and-asks-early:ideation:attempt-1:revision-1
+                digest: sha256:1efa06ee92b98c7903dafc0c1ea4ed2001f0f7d762c7b656ff3516d1d44b8b2c
+                room-ref: ./worker-knows-the-team-and-asks-early/review/ideation/briefing-1
 ---
 
 ## Scope

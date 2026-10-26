@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-knows-the-team-and-asks-early:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of worker-knows-the-team-and-asks-early to enter implementation? FO recommends approve; approving accepts that recommendation and both decisions as recommended: D1 new-work-checks-what-exists-first follows as its own task rather than merging in; D2 the workflow word budget rises by exactly 99 words, 5421 to 5520, for one Team bullet under Dispatch facts that every worker stage reads.",
+  "artifacts": [
+    {
+      "id": "artifact:worker-knows-the-team-and-asks-early:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ac429e12993800ffdf86550633874d5bf95ed865/worker-knows-the-team-and-asks-early.md",
+      "rev": "sha256:82f0df3713379badab1e5516b6befe7b5aae0fac2584dd14a86c1f079339c15b",
+      "mediaType": "text/markdown",
+      "summary": "Design: one 99-word Team bullet in references/sd/workflow.md Dispatch facts: the worker serves the team goal, checks prior work and shared records before substantial work or a retry, asks FO early on overlap, repeated failure, missing authority or an infeasible target, returns what it checked and found, and does not message peers. Worse: every worker and README load is 99 words longer; instruction text does not prove behaviour (AC-6 ends in accept, repair or stop). Needs an ADR number at implementation."
+    }
+  ]
+}
