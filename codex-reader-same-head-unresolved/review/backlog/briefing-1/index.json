@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-same-head-unresolved:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of codex-reader-same-head-unresolved to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the Codex reader never reports a head clean while a finding Codex left on that same head is unresolved, even after a later no-issues receipt on that head; profile pilot (script text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-same-head-unresolved:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4486a3079e494b2b1580aa6b72b069b5460d7c5c/codex-reader-same-head-unresolved.md",
+      "rev": "sha256:16e8398bd7acaab43453076eb3a11a129d6d209a76d196ef58febe60c8fe3e04",
+      "mediaType": "text/markdown",
+      "summary": "Bite: #716 head 8340c3ba had a Codex P2 at 04:30Z and a no-issues receipt at 05:22Z; the 0.31.0 reader prints clean and exits 0, FO told the Captain #716 was clean, and the P2 shipped (filed as journey-probe-finds-nested-maps)."
+    }
+  ]
+}
