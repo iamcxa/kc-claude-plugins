@@ -1,0 +1,10 @@
+{
+  "secret": "whsec_a2Mtb3BzLWluYm94LWZpeHR1cmUtc2VjcmV0LW5vdC1hLWNyZWRlbnRpYWw=",
+  "now": 1792454430,
+  "headers": {
+    "webhook-id": "msg_publish-bound-site-ceiling.prod.d2026-10-20.c80.l100",
+    "webhook-timestamp": "1792454430",
+    "webhook-signature": "v1,LW0UfTAlA0yz3zulc/PBCqnHURGORRZ32Wtc7yXjE9g="
+  },
+  "body": "{\"specversion\":\"1.0\",\"id\":\"publish-bound-site-ceiling.prod.d2026-10-20.c80.l100\",\"source\":\"urn:relay:capacity\",\"type\":\"ops.metric.crossed\",\"subject\":\"metric/prod/publish-bound-site-ceiling/d2026-10-20\",\"time\":\"2026-10-20T09:15:00Z\",\"environment\":\"prod\",\"severity\":\"warning\",\"dataschema\":\"https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/ops.metric.crossed.json\",\"datacontenttype\":\"application/json\",\"data\":{\"metric\":\"publish-bound-site-ceiling\",\"window\":\"day\",\"period\":\"2026-10-20\",\"limitSource\":\"default\",\"value\":80,\"level\":80,\"runbook\":\"docs/runbooks/relay-ceiling.md\",\"dashboard\":\"https://dashboard.example/relay/ceiling\",\"adrs\":[\"0049\",\"0060\"]}}"
+}
