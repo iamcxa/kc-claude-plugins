@@ -3,7 +3,7 @@ title: The Codex reader does not call a head clean while a finding on that head 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain 「全准」 (chat, 2026-10-27) answering 「需要你決定：第 7 批三張任務的設計（其中兩張已經照第 2 輪訪談修過），要不要一起批准進入實作？我建議全部批准，每一題都照我的建議。」; accepts FO's recommendations
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
