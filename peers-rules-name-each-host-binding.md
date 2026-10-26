@@ -357,6 +357,10 @@ Verified by: disposable fixtures for an old active task with readable originals,
 
 ADR: 0038
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-27): on #730 bff1d814, RoboRev (roborev:1229) left 1 High, counted as P1 under step 5, and validation-1 left F1 Polish (the paseo dependency check has no adopter-list consumer); both in kc-dev-flow-2/scripts/lint-skills.py, to fix; investigation first, then FO fix authorization, then revalidation.
+
 ## Stage Report: ideation
 
 - DONE: A design for peers and a new dev2 paseo extension: the FO collaboration mindset text, one binding section per host (Claude Code kept with its probe and opening line, Paseo added, other hosts not run) built from each host's own docs (Paseo: its paseo skill and `paseo agent --help`), what the paseo extension says versus what it points to in Paseo's own skill, and the script FO already runs that can refuse a Captain ruling recorded from a peer's relayed words; measured against the round-1 interview record fo-interviews-extension/peers-round-1.md
