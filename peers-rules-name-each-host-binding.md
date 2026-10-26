@@ -3,7 +3,7 @@ title: The peers rules name each host's binding, Paseo included, and keep their 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
