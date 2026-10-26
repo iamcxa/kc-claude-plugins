@@ -155,3 +155,64 @@ AC-1, AC-2, AC-3 (qualified) and AC-5 second half are recorded with primary evid
 - Fresh event, key `ac4-poc-20261026T131524`, sent 13:15:24Z, run `d4608b88-9432-4b0c-8fbc-7d9bd5bfdb5e`, no steering. Agent `ab1f5c9` (name "Hub agent", codex) was created 13:15:28Z, opened Draft PR https://github.com/iamcxa/ops-inbox-probe-scratch/pull/9 (head `ops/poc-20261026t131558z`), called `hub.finish_execution`, and ended `status closed`, `Archived: true`, `ArchivedAt 2026-10-26T13:18:48Z`: 3 min 20 s after start, at the moment it finished. It was never idle and unarchived, so there was no window for the Captain's message, and none was sent to it (timeline holds the Hub prompt and the agent's own turns only).
 - Finding: on the unattended path Hub closes and archives the agent when `hub.finish_execution` is called. The Captain can talk to a Hub-started agent only while its execution is still open (cycle 1's held agent was archived by Hub at 29 min, 15:39Z). "Agent that files the ops task, then the Captain talks to it" therefore needs the agent to stay unfinished, or a continuation, which Hub documents as restoring an archived workspace when a later event arrives for the same continuation key. Not tested here.
 - AC-4 stays not met; no Captain message from the Paseo app was ever recorded in either agent's timeline.
+
+## Stage Report: validation
+
+- DONE: Independently verify AC-1 to AC-5 against the exact artifacts (candidate on spacedock-ensign/paseo-hub-docker-ops-poc, Draft PRs 8 and 9 in iamcxa/ops-inbox-probe-scratch, the running container ops-poc-paseo with read-only commands) and name every claim only the implementer's report or the Captain's statements support.
+  Candidate c0cf7488 (8 files, 168 insertions on base 7a5c79c6). Read-only only: gh reads, `docker exec` of `paseo ls -a`, `paseo inspect`, `paseo logs`, `paseo hub status`, `ls`, `/opt/poc/audit.sh` (prints names only); nothing sent, stopped, logged in or pushed. Per-AC result in Findings; the implementer-only claims are listed under Unverified obligations.
+- DONE: Write a minimal acceptance script of read-only commands the First Officer can run exactly as written in a fresh shell, each with its expected output.
+  Six steps below, run by me with `env -i HOME PATH bash` on 2026-10-26T13:58Z; every expected output is the observed one.
+- DONE: Give the verdict on goal sufficiency and minimal necessity, run `python3 .../adr_lint.py docs/adr --since 7a5c79c64249ee15dac1c1da378c60f36dd0ed3e` with its exit code, list unverified obligations, state what the POC result means for choosing between r1 and the Paseo Hub path, and add one package-value observation.
+  adr_lint exit 0 ("34 ADR file(s) checked, 0 legacy") run in the candidate worktree; verdicts, obligations, r1 comparison and observation below. comment_ratio exit 0 (0 code lines counted, not enforced), doc_impact exit 0 (0 documents), dispatch_records exit 0 (11 complete).
+
+### Verdict
+
+Recommend PASSED as a recorded POC outcome, not as a met goal. The recorded proof is accurate and decision-ready; no repair is possible inside this candidate because the failures are Hub behaviour, not candidate defects. Goal sufficiency: NOT sufficient. The goal has two halves; "event to one FO run that files an ops task under a scoped token" is shown (AC-1, AC-2 with caveats), "the Captain talks to that agent from the Paseo app" is not (AC-4, accepted by the Captain 2026-10-26), and AC-3 (strict) and AC-5 first half fail. Minimal necessity: the candidate is evidence, not a deliverable; I recommend no merge. Every file maps to an AC except `rehearse-remote.sh` (28 lines, local rehearsal only; the live run did not use it; without it nothing in AC-1 to AC-5 changes). `ops-event-poc.yml` is not the deployed artifact (placeholders, header says "not yet checked against Hub" though a trigger was deployed), so the candidate alone does not reproduce the proof. `boundary-crossed: none` by my read: the daemon, Hub trigger, App install and two Draft PRs persist but are cleanup debt, none is a duty the proof needs. Budget: exceeded. Implementation started 2026-10-25T04:19Z; this check is at 2026-10-26T13:58Z, about 34 hours against a 1-day budget.
+
+### Findings
+
+- F1 AC-1 met on my checks, one link implementer-only: daemon log holds exactly 2 `create_agent_request` from transport hub (15:10:24Z 10-25 and 13:15:28Z 10-26) and `paseo ls -a` lists exactly agents 2e9a99f and ab1f5c9, so the key `ac1c` run made one agent; the two HTTP 200 bodies with one receipt id are the implementer's report only.
+- F2 AC-2 met with two caveats. Verified: PRs 8 and 9 are Draft, OPEN, author `app/paseo-bot`, all commits by `paseo-bot[bot]`, master still fe8dd63c; the agent timeline shows `/installation/repositories` listed only the scratch repository and `gh issue create` refused.
+- F3 AC-2 caveat a: the push and merge refusals come from the repository rulesets (main-protect 25482703, ops-branches 25482704, no bypass actors), as the messages say ("repository rule violations", "approval from someone other than the last pusher"). The token did accept a branch push, so the refusals prove the ruleset, not a Hub token limit; the "another repository" probe read a public repository and proves nothing.
+- F4 AC-2 caveat b: the token's permission read-back is `all false` and shows no grant, so contents and pull-request write are shown only by behaviour (branch push and Draft PR accepted, issue write refused).
+- F5 AC-3 fails as written. I ran `/opt/poc/audit.sh` in the container now: exit 1, `hub-relationship.json`, `daemon-keypair.json`, `local-credential` readable by uid 1000 (the agent's uid), plus the allowed Codex `auth.json`. The same three appear in the agent's own audit. Passes only on the weaker "no Captain credential" reading.
+- F6 AC-3 blind spots: `PASEO_HUB_CONFIG_JSON` is in the agent environment, matches no audit pattern, is not in the daemon source in the image (injected by Hub), and its content is unknown; `hub-credentials.json` is 64 bytes, below the audit's 100-byte "present" threshold, and was not read. My audit ran in a `docker exec` shell, so it covers the files only, not the agent's environment.
+- F7 AC-4 not met, confirmed: ab1f5c9's timeline has 1 `[User]` entry (the Hub prompt), 2e9a99f's has 3 (Hub prompt and two operator steers), neither holds a Captain message; both are `Archived true` (ArchivedAt 2026-10-25T15:39:40Z and 2026-10-26T13:18:48Z); the daemon log has an `archive_workspace_request` from Hub at 15:39:41Z. That the Captain's app connected password-free to 127.0.0.1:6768 is his statement plus loopback client connections, not an app capture.
+- F8 AC-5 first half not met and second half met, both on the implementer's evidence: I did not stop the container or send. What I could check: the daemon log has no create request after the 10-25 restart other than the two above, which matches "nothing runs when the daemon comes back".
+- F9 Stop condition 4 ("the Paseo app cannot reach the container's agent") is read by the implementer as not fired. The app reached the daemon; the agent was archived by Hub. Whether that fires the "r1 as designed" fallback is the Captain's reading, already accepted as AC-4 not met.
+- F10 Live residue: container `ops-poc-paseo` is still up and healthy (23 hours), the Hub trigger `ops-event-poc` is still active and cannot be disabled from the Hub UI, the agent runs `mode: full-access`, and the cleanup the implementation listed has not been done. Needs the Captain's decision; I took no action.
+- F11 Minor: the report says ab1f5c9 ended `status closed`; the daemon shows `idle` with `Archived true`. The archive is what matters.
+
+### Minimal acceptance script
+
+Read-only, about one minute, needs `gh` logged in, Docker, and the container still running; it does not cover Hub's own activity record, the API responses (needs the API key), AC-5 (needs stopping the container), or any message from the Paseo app.
+
+```bash
+WT=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-poc-route/.worktrees/spacedock-ensign-paseo-hub-docker-ops-poc
+R=iamcxa/ops-inbox-probe-scratch
+echo "--- 1"; for n in 8 9; do gh pr view $n -R $R --json isDraft,author,headRefName,state --jq '[.isDraft,.author.login,.headRefName,.state]|@tsv'; done
+echo "--- 2"; gh api repos/$R/commits/master --jq .sha
+echo "--- 3"; docker exec -u paseo ops-poc-paseo paseo ls -a | tail -n +2 | wc -l; docker exec ops-poc-paseo sh -c "grep -h -o '\"requestType\":\"create_agent_request\"' /home/paseo/.paseo/*daemon.log | wc -l"
+echo "--- 4"; docker exec -u paseo ops-poc-paseo /opt/poc/audit.sh; echo "exit=$?"
+echo "--- 5"; for a in ab1f5c9 2e9a99f; do echo $a; docker exec -u paseo ops-poc-paseo paseo logs $a | grep -c '^\[User\]'; docker exec -u paseo ops-poc-paseo paseo inspect $a | grep -E '^Archived '; done
+echo "--- 6"; git -C "$WT" diff --shortstat 7a5c79c6 c0cf7488; cd "$WT" && python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since 7a5c79c64249ee15dac1c1da378c60f36dd0ed3e; echo "exit=$?"
+```
+
+Expected, in order: step 1 two lines `true<TAB>app/paseo-bot<TAB>ops/poc-20261025t151042z<TAB>OPEN` and `...ops/poc-20261026t131558z<TAB>OPEN` (AC-2: Draft, bot author). Step 2 `fe8dd63c55c12c81f58d880c9e6d8f1c5000ecd0` (master unchanged). Step 3 `2` then `2` (AC-1: two agents ever, two Hub create requests ever; a count above 2 means a duplicate run). Step 4 three `daemon credential file present: /home/paseo/.paseo/{hub-relationship.json,daemon-keypair.json,local-credential} (readable by uid 1000)` lines, `model credential present (allowed): /home/paseo/.codex/auth.json`, `exit=1` (AC-3 fails as written). Step 5 `ab1f5c9`, `1`, `Archived            true`, then `2e9a99f`, `3`, `Archived            true` (AC-4: no Captain message, both archived by Hub). Step 6 ` 8 files changed, 168 insertions(+)`, `34 ADR file(s) checked, 0 legacy`, `exit=0`.
+
+### Unverified obligations
+
+- Implementer's report or Captain's statement only: both HTTP 200 responses and the shared receipt id for key `ac1c`; the Hub activity record; the earlier failed attempts and their cause (GitHub App installation grant, fixed by the Captain's 「補好了」); AC-5 first half (offline sends answered 200 `running`); the Captain's message sent from the Paseo desktop app; the token expiry time; that `ac2-probe.sh` ran as described (read from the agent timeline, not re-run); the cycle-1 negative rehearsals of `audit.sh`.
+- Not run by anyone: phone path; `PASEO_HUB_CONFIG_JSON` content; Hub's continuation-key restore of an archived agent; the self-hosted Hub; a run with no operator (one run, ab1f5c9, shows it works once); untrusted event text beyond contract v1 (free strings up to 500 characters reach the prompt); model cost; the deployed trigger's actual configuration (needs a Hub login).
+
+### What this means for r1 versus the Paseo Hub path
+
+The result supports keeping r1 as designed for dispatch and agent authority, and does not yet support replacing it. For priority 0, platform-enforced agent authority: the no-merge and no-default-push guard held only because the repository rulesets already exist (same as under r1), while the Hub path adds a full-access agent that can read the daemon's own identity files and an unknown Hub config variable. For dispatch: an offline daemon is accepted as `running` and ends `failed` later, with no failure detail visible to the sender or to the Captain's key, so a lost event is silent. For priority 7, conversation with the agent: not obtained, because Hub archives the agent at `hub.finish_execution`. What it does not prove either way: self-hosted Hub, continuation-key conversation, and reliability beyond two successful runs. Hub is not shown better than r1 on anything r1 lacks except live conversation, and that is the one untested lever.
+
+### Package-value observation
+
+The AC text credited a token for refusals that the repository rulesets produced. The validation principle "does the without-it observation justify it" caught this only because I read the refusal messages; the package could ask a security AC to name which layer refuses, since the evidence for AC-2 would read the same with an over-scoped token.
+
+### Summary
+
+I verified AC-1 and AC-2 against the live artifacts, reproduced AC-3's failure and AC-4's non-delivery, and listed what only the implementer or Captain support. Recommend PASSED as a POC outcome with the goal not met: Hub dispatches and files the task, but not under platform-held isolation, not with a refusal for an offline daemon, and not with a window for the Captain's conversation. The budget was exceeded; the live container, Hub trigger and two Draft PRs remain until the Captain decides cleanup.
