@@ -43,6 +43,17 @@ gates:
                 id: briefing:peers-rules-name-each-host-binding:ideation:attempt-2:revision-1
                 digest: sha256:26a669fe6b255cf35b6deb02527a1c2b8d8fee88b45c0e922ce2131b3a461491
                 room-ref: ./peers-rules-name-each-host-binding/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:peers-rules-name-each-host-binding:ideation:2
+                briefing: briefing:peers-rules-name-each-host-binding:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-26T17:06:10.49973Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-27) answering 「需要你決定：第 7 批三張任務的設計（其中兩張已經照第 2 輪訪談修過），要不要一起批准進入實作？我建議全部批准，每一題都照我的建議。」; accepts FO's recommendations
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
