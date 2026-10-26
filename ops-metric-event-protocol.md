@@ -49,6 +49,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-26T15:48:31.958159Z"
                 reason: 'Independent engineering review (engineering-review-2026-10-26.md) returned sound-with-fixes: P1 duplicate-key free text reaches the agent, P2 id derivation collides before the pin; the design is revised before the Captain rules, so this briefing no longer matches.'
+            - id: gate-attempt:ops-metric-event-protocol-ideation-2
+              briefing:
+                id: briefing:ops-metric-event-protocol:ideation:attempt-2:revision-1
+                digest: sha256:e2234125ec7dc83888f7b94d7caeaee7f2d14a17a60e6ab7b0ad0806514256e9
+                room-ref: ./ops-metric-event-protocol/review/ideation/briefing-2
 started: 2026-10-26T14:32:33Z
 ---
 

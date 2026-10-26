@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ops-metric-event-protocol:ideation:attempt-2:revision-1",
+  "question": "Approve the protocol design with D1 to D8 as recommended (D1 the project counts and sends crossings, the heartbeat carries the value; D2 retire relay.capacity.ceiling and express relay's ceiling as ops.metric.*; D3 recovered marks the ops task closable without a model run and never closes the Draft PR; D4 reach the Captain means a Slack mention of his Slack user; D5 separate prod and preview/dev signing secrets; D6 store recommendation recorded, not built: per-event create-only Blobs keys on Netlify, JSONL plus DuckDB on one process; D7 the project decides period membership at its exact boundary instant and period stays that instant's UTC date; D8 accept for v1 that an event can be lost when GitHub does not answer the dispatch, with the Captain mentioned on the uncertain notice), the engineering-review fixes as dispositioned (canonical body refuses duplicate keys, window and cause in the id, crossings-only cap, dashboard never fetched by the agent, keys scoped by source prefix), and a contract-only PR from origin/main landed first? Approving accepts all of these as written and enters implementation.",
+  "artifacts": [
+    {
+      "id": "artifact:ops-metric-event-protocol:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/0a46ca6443e0a78a0b830c0ebd67e16ffa598d7b/ops-metric-event-protocol.md",
+      "rev": "sha256:e2834659d84db1bf2c4dbb7c29e4a511c9d9e576679ca18d264dddcd0e62414f",
+      "mediaType": "text/markdown",
+      "summary": "Protocol: projects own the count and send signed crossed, recovered and heartbeat events whose fields are numbers, dates, enumerated values or short patterns, with ids derived from the event; the inbox routes by environment and severity. An independent engineering review found a duplicate-key free-text hole (P1) and id collisions (P2); both are fixed in the contract design, ten of eleven findings adopted, inbox-runtime fixes stated as r1 gaps. New D8: at-most-once loss when GitHub does not answer. qnow cannot send crossings until its task adds a per-period counter."
+    }
+  ]
+}
