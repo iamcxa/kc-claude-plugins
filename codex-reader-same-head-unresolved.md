@@ -50,6 +50,7 @@ Release review: not needed: workflow maintenance, on no journey map.
 - *Why did the reader say clean?* It has said "the latest Codex result on the head decides" since #603 (`49c670cb`). The summary path in the same file also refuses clean after an earlier finding; the comment and review paths never did. The three tests that pin the old rule are `test_the_latest_result_on_one_head_decides_and_names_itself`, `test_the_latest_of_a_receipt_and_a_review_on_one_head_decides` and the last assertion of `test_a_completed_summary_after_findings_is_not_clean`.
 - *How is a same-head finding ever cleared?* By moving the head (a repair is read afresh; a finding made on an older head is not counted, as today), or by FO's step-5 disposition in the gate summary. Not by a second Codex run on the same head, because that run does not say what became of the first finding.
 - *Is a second run on the same head a new round?* No. The printed `evidence=` id is the finding's, already counted.
+- *How does FO learn the second run finished?* Only by running the reader again: with verdict and evidence unchanged, `pr_watch wait` fires no outcome for a same-head re-run, and `check` shows the later receipt id in the line. That is acceptable because a same-head re-ask is the step this design makes unable to clear a finding.
 - *Does it cost a call?* No. It reads the same four `gh api` lists as today.
 
 ## Design
@@ -74,7 +75,7 @@ sequenceDiagram
 
 **Chain checked (2026-10-26).** Spacedock: its plugin cache has no Codex review reader (`grep -rIl "codex-review-state" ~/.claude/plugins/cache/spacedock` finds nothing). kc-dev-flow-2 at `origin/main` 0.31.0: one reader, `extensions/codex/codex_review.py`; consumers are `scripts/pr_watch.py` (`CODEX`, `reader()`), `extensions/codex/EXTENSION.md`, the `codex-round` pins in `scripts/test_sd_dispatch.py`, and the fakes in `scripts/test_pr_watch.py`. Sibling adopters (qnow, subspace-relay, subspace-web, subspace-v0 checkouts in `~/conductor/repos`): `git grep "codex_review\|codex-review-state"` finds no vendored copy, so one fix reaches all. Codex's own comment shapes are read from recorded PR data, not from an adopter's workaround.
 
-**Existing-code check.** This repairs a named broken seam (the reader's verdict rule), so the capability check is skipped by its own rule. Two bounded searches for other readers of the verdict: the `git grep` above and the pr_watch run below. Unknowns: FO reading the printed line by eye on other machines.
+**Existing-code check.** This repairs a named broken seam (the reader's verdict rule), so the capability check is skipped by its own rule. Two bounded searches for other readers of the verdict: the `git grep` above and the pr_watch run below. `role_triggers.py` counts review ids with inline comments from `pulls/N/comments` itself (`review_facts`), not the reader's verdict, so the cycle-3 trigger is unchanged. Unknowns: FO reading the printed line by eye on other machines.
 
 **Mechanism (scratch candidate, not a repository file; run against recorded data).** In `state()`: (1) delete the `found_before` guard on the summary path (every clean now yields to a finding, so it is redundant); (2) `held = [e for e in evidence if e[2] == 1]` and `top = max(held or evidence)`; (3) use `top` in the exit-5 test (a finding then a clean then an unread newer comment is exit 1, not 5) and in the final return; (4) when `top` is a finding and a no-issues entry is later, append `; not cleared by the later no-issues <id>`. No new `gh` call; the docstring's top line and exit-0 clause say "a finding on the head decides over a later no-issues result; otherwise the latest result decides". `EXTENSION.md` stays as is: it never states "latest decides", so it already reads true and adds no words.
 
@@ -141,7 +142,7 @@ Recommended order: any; this task shares no file or check with the others, so FO
 
 **AC-5**: The line prints exactly one `evidence=` token, the held finding's, and `pr_watch.reader()` run on the candidate returns `('findings', <that id>)`. Evidence: `line.count("evidence=") == 1` in the test, and the `pr_watch.reader` run on #716 (scratch: `('findings', 'review:5641501111')`). Falsifier: print both ids and `pr_watch` reads the later one, the receipt's.
 
-**AC-6**: Replayed over #600 to #726 with the method above, the candidate changes the exit code or evidence id of exactly one head, #716 `8340c3baa`. Evidence: the implementation worker re-runs the replay at its candidate SHA and lists the changed heads; scratch result 375 heads, 1 change. Falsifier: a second changed head, or none.
+**AC-6**: Replayed over #600 to #726 with the method above, the candidate differs from the base on exactly one head, #716 `8340c3baa`, comparing the exit code and the `evidence=` token (an id differs only where the exit code does under this mechanism, because the held finding replaces a clean, never the reverse). Evidence: the implementation worker re-runs the replay at its candidate SHA and lists the changed heads; scratch result 375 heads, 1 change. Falsifier: a second changed head, or none.
 
 **AC-7**: The change adds no `gh` or `pages(` call. Evidence: `git diff <base>..<candidate> -- kc-dev-flow-2/extensions/codex/codex_review.py | grep -c '^+.*\(gh(\|pages(\)'` prints 0 (the existing calls are only moved or untouched). Falsifier: a GraphQL or extra REST call.
 
@@ -149,4 +150,37 @@ Recommended order: any; this task shares no file or check with the others, so FO
 
 ## Unresolved decisions for the Captain
 
-**D1. Does a person's "resolved" mark in GitHub clear a same-head finding?** Recommendation: no. A same-head finding holds until the head moves or FO dispositions it in step 5 (gate summary). Why: in 375 heads the question never arose (all 28 resolved threads sit on heads that moved on), marker `has_unresolved_findings` is not a resolution signal (17 of 17 equal `has_any_findings`), and honoring the thread needs a new GraphQL call with pagination and a new exit-2 failure path. What gets worse: a finding someone resolved in the GitHub page on an unchanged head still reads `findings`, so FO must write the decline in the gate summary instead, and `pr_watch wait` will not wake on a same-head re-run because verdict and evidence are unchanged (the line still names the later receipt in `check`).
+**D1. Does a person's "resolved" mark in GitHub clear a same-head finding?** Past rulings read first (`git -C <state> grep -n 'Override:'` and `docs/adr/` at `origin/main`, 2026-10-26): no `Override:` line concerns how the Codex reader weighs a finding; ADR 0004 (rounds counted by rule, a finding follows steps 1 to 4 in rounds 1 and 2) and ADR 0013 ("keep the reader's rule positive": clean needs a positive result) both agree with this design, which only withholds clean and adds no refusal wording. Recommendation: no. A same-head finding holds until the head moves or FO dispositions it in step 5 (gate summary). Why: in 375 heads the question never arose (all 28 resolved threads sit on heads that moved on), marker `has_unresolved_findings` is not a resolution signal (17 of 17 equal `has_any_findings`), and honoring the thread needs a new GraphQL call with pagination and a new exit-2 failure path. What gets worse: a finding someone resolved in the GitHub page on an unchanged head still reads `findings`, so FO must write the decline in the gate summary instead.
+
+## Stage Report: ideation
+
+- DONE: A design for the Codex reader's verdict when one head has an unresolved Codex finding and a later no-issues receipt, with a replay of the reader over recent kc-claude-plugins PRs (at least #700 to #726) listing every head whose verdict changes, and the reason for each
+  `## Design`: a finding on the head decides over a later no-issues result; replay of #600 to #726 (375 heads, #700 to #726 inside it: 65) changes exactly one head, #716 `8340c3baa` exit 0 to 1, reason in the table.
+- DONE: A `### Batch overlap` section naming each file the design would change and each other batch task (peers-rules-name-each-host-binding, worker-knows-the-team-and-asks-early, codex-reader-same-head-unresolved) and live task of other sessions (adr-required-statement, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Changes `codex_review.py` and `test_codex_review.py` only; all ten other tasks read as they stand, none shares a file or check; `Recommended order:` any.
+- DONE: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  Table in `## Design`: startup 310 to 310, idle on an open PR same words, review round and merge ask 15 to 21 only for a held finding, merged and archive 0 to 0 (`wc -w`).
+- DONE: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  `## Acceptance criteria` AC-1 to AC-8 each carry evidence and a falsifier; one decision, D1, with recommendation, past rulings read (no `Override:` on the Codex reader; ADR 0004, 0013 agree) and what gets worse.
+- DONE: AC-1 on #716 the reader exits 1 and names the finding
+  Scratch candidate against live #716 (2026-10-26): exit 1, `evidence=review:5641501111 ...; not cleared by the later no-issues comment:6393874798`; base exit 0. Fixture test not yet written.
+- DONE: AC-2 every finding shape holds over every clean shape
+  Scratch run of the 4 by 4 matrix: base mixed 0 and 1, candidate 1 on all 16. Repository test not yet written.
+- DONE: AC-3 verdicts outside the rule do not move
+  Scratch candidate against the existing suite: 26 of 29 pass, 3 fail at exactly the three assertions named in the PRFAQ; older-head finding with a clean on H is 0 and clean then finding is 1, both as base.
+- DONE: AC-4 an unread newer comment cannot turn a held finding into exit 5
+  Scratch run: finding, clean, newer `receipt:v2` comment: base 5, candidate 1. Repository test not yet written.
+- DONE: AC-5 one `evidence=` token and `pr_watch` reads it
+  Scratch: `line.count("evidence=") == 1`; `pr_watch.reader()` on the candidate and live #716 returns `('findings', 'review:5641501111')`, base `('clean', 'comment:6393874798')`. Repository assertion not yet written.
+- DONE: AC-6 the replay differs on exactly one head
+  Replay of #600 to #726 with base and scratch candidate: 375 heads, one differing head, #716 `8340c3baa`; the implementation worker re-runs it at its candidate SHA.
+- SKIPPED: AC-7 the change adds no `gh` or `pages(` call
+  Not yet verified: the check is a diff of the implementation candidate and no repository diff exists at ideation; the scratch mechanism adds none by reading.
+- SKIPPED: AC-8 the no-argument usage text states the rule
+  Not yet verified: the scratch candidate did not rewrite the docstring; checked by running the script at the implementation candidate.
+- DONE: `design_surfaces.py check` on this task
+  Output, exit 0: `codex-reader-same-head-unresolved.md: design surfaces presentable`.
+
+### Summary
+
+The Codex reader reads a head as clean from its latest result, so a no-issues receipt after a finding on the same head cleared it (#716 shipped a P2 that way); the design makes any finding on the head decide over a later no-issues result and prints the finding's own id with `not cleared by <receipt>`. A 375-head replay changes only #716; the thread-resolved variant has no observed consumer and needs a new GraphQL call, so D1 recommends against it. The installed 0.29.0 skill differs from the dispatch's 0.31.0 package root; scripts ran from the skill's root per Dispatch facts and the design reads `origin/main` 0.31.0 as the dispatch asked.
