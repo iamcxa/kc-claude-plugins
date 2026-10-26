@@ -54,6 +54,17 @@ gates:
                 id: briefing:ops-metric-event-protocol:ideation:attempt-2:revision-1
                 digest: sha256:e2234125ec7dc83888f7b94d7caeaee7f2d14a17a60e6ab7b0ad0806514256e9
                 room-ref: ./ops-metric-event-protocol/review/ideation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ops-metric-event-protocol:ideation:2
+                briefing: briefing:ops-metric-event-protocol:ideation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-26T15:54:25.494519Z"
+                decision: approve
+                reason: 'Captain 2026-10-26 in chat: 「准。第一版接受缺陷，後續再補」 — accepts D1-D8 as recommended (D8 at-most-once loss accepted for v1, to be fixed later) and the engineering-review fixes as dispositioned.'
+              application:
+                target-stage: implementation
+                state: pending
 started: 2026-10-26T14:32:33Z
 ---
 
