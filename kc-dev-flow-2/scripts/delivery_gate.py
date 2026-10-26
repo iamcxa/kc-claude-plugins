@@ -13,8 +13,8 @@ The PR head is compared, as a prefix, with each line; it passes when it matches 
 --text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
 at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token. Each `;`-separated item after `Declined...:` or
-`FO declines...:` (up to the next sentence that opens with a label and a colon, or a blank line; a label after `e.g.` or `i.e.`
-does not end it) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
+`FO declines...:` (up to the next sentence that opens with a label and a colon, a blank line, or a line that opens a new decline; a label
+after `e.g.` or `i.e.`, or inside the item, does not start another) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
 it is a reason. When the newest `## Stage Report: validation` lists `- F<N> Deferred risk:` or `- F<N> Polish:` bullets, fewer
 declined items than those bullets holds; a report with no such bullets is not joined.
 The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
@@ -34,6 +34,11 @@ Exit 0 prints `point:` lines (pointers into the records and the changed paths, a
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
 and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask. The `class:` line ends
 `(verdict ask)` when the saved verdict is `ask`.
+
+Usage: delivery_gate.py question <task file or task folder> --text-file <file>
+Runs the text checks of `check` on the validation gate question before `gate prepare`, and also refuses text that names the merge with
+`--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `he`, `you`, `the Captain` or `Captain`, then `say`, then `merge` or `hold`). Exit 0
+prints `gate text complete`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge that clause.
 """
 import argparse
 import datetime
@@ -73,7 +78,7 @@ NOT_RUN = re.compile(r"\b[\w.-]+ not run:\s*\S", re.I)
 AC_NOT_RUN = re.compile(r"(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b", re.I)
 AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
-DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
+DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n|\n(?=[ \t]*(?:[-*+][ \t]+)?(?:[\w.-]+[ \t]+)?(?:Declined|FO declines)\b)")
 FINDING = re.compile(r"^\s*[-*]\s*\*{0,2}F\d+\*{0,2}\s*[:(]?\s*\(?\s*(?:Deferred risk|Polish)\b", re.M)
 MAX_POINTS = 12
 CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
@@ -191,10 +196,13 @@ def unstated_second_reviewers(text):
 
 
 def declined_items(text):
-    items = []
+    items, stop = [], 0
     for start in DECLINE_START.finditer(text):
+        if start.start() < stop:
+            continue
         rest = text[start.end():]
         end = DECLINE_END.search(rest)
+        stop = start.end() + (end.start() if end else len(rest))
         depth, item = 0, ""
         for ch in (rest[:end.start()] if end else rest).strip().rstrip("."):
             depth = max(depth + (ch in "([") - (ch in ")]"), 0)
@@ -218,6 +226,14 @@ def brackets(item):
             if not expect:
                 found.append(item[start:i])
     return found
+
+
+GRANT = re.compile(r"--match-head-commit")
+HOLD_OUT = re.compile(r"\b(?:unless|if)\b\s+(?:he|you|the\s+captain|captain)\s+says?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b", re.I)
+
+
+def grant_without_hold_out(text):
+    return bool(GRANT.search(text)) and not HOLD_OUT.search(text)
 
 
 def clause(text, label):
@@ -375,6 +391,30 @@ def write_record(task, rec):
     return path
 
 
+def text_problems(task_text, gate_text, at_gate=False):
+    problems, nexts = [], []
+    for reviewer in unstated_second_reviewers(gate_text):
+        nexts.append("next: hold the ask until each second reviewer has an outcome.")
+        problems.append(f"second reviewer {reviewer} has no stated outcome: "
+                        f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
+
+    for item in unreasoned_items(gate_text):
+        problems.append(f"declined item has no reason: {tok(item)}")
+        nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
+
+    if (why := findings_join(task_text, gate_text)):
+        problems.append(why)
+        nexts.append("next: hold the ask; write one declined item for each finding, then run this check again.")
+
+    for label in unstated_confirmations(gate_text):
+        problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
+        nexts.append("next: hold the ask; add the missing clause to the question or summary.")
+    if at_gate and grant_without_hold_out(gate_text):
+        problems.append("the gate text names the merge with --match-head-commit but not 'unless he says he merges or holds'")
+        nexts.append("next: hold the gate; add the clause that lets him keep the merge, then run this check again.")
+    return problems, nexts
+
+
 def check(args):
     task, text_file = Path(args.task), Path(args.text_file)
     if task.is_dir():
@@ -477,22 +517,9 @@ def check(args):
         problems.append(error)
         nexts.append("next: hold the ask; run the validation security review at this head, or tell the Captain.")
 
-    for reviewer in unstated_second_reviewers(gate_text):
-        nexts.append("next: hold the ask until each second reviewer has an outcome.")
-        problems.append(f"second reviewer {reviewer} has no stated outcome: "
-                        f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
-
-    for item in unreasoned_items(gate_text):
-        problems.append(f"declined item has no reason: {tok(item)}")
-        nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
-
-    if (why := findings_join(task_text, gate_text)):
-        problems.append(why)
-        nexts.append("next: hold the ask; write one declined item for each finding, then run this check again.")
-
-    for label in unstated_confirmations(gate_text):
-        problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
-        nexts.append("next: hold the ask; add the missing clause to the question or summary.")
+    found, wanted = text_problems(task_text, gate_text)
+    problems += found
+    nexts += wanted
 
     try:
         code, said = owed_role_calls(task)
@@ -533,6 +560,20 @@ def check(args):
     return 0
 
 
+def question(args):
+    task = Path(args.task)
+    try:
+        task_text, gate_text = (task / "index.md" if task.is_dir() else task).read_text(), Path(args.text_file).read_text()
+    except OSError as error:
+        emit(f"cannot read input: {error}")
+        return 2
+    problems, nexts = text_problems(task_text, gate_text, at_gate=True)
+    emit(*problems, *dict.fromkeys(nexts))
+    if not problems:
+        emit("gate text complete")
+    return 1 if problems else 0
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(prog="delivery_gate.py", description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -544,8 +585,11 @@ def main(argv=None):
     sub.add_argument("--head")
     sub.add_argument("--sibling-pr", action="append", default=[])
     sub.add_argument("--workflow-dir")
+    ask = commands.add_parser("question")
+    ask.add_argument("task")
+    ask.add_argument("--text-file", required=True)
     args = parser.parse_args(argv)
-    return check(args)
+    return question(args) if args.command == "question" else check(args)
 
 
 if __name__ == "__main__":

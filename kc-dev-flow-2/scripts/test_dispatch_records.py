@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+import types
 import unittest
 
 spec = importlib.util.spec_from_file_location("dispatch_records", Path(__file__).with_name("dispatch_records.py"))
@@ -265,7 +266,7 @@ NOTES_WITH_BOTH = COMPLETE.replace("Package root:", "ADR: 0020\nMigration: 0007\
 
 
 class TaskFactTests(unittest.TestCase):
-    def run_names(self, task, records, target="implementation-1.md", folder="task", index=False):
+    def run_names(self, task, records, target="implementation-1.md", folder="task", index=False, module=None):
         with tempfile.TemporaryDirectory() as d:
             if task is not None:
                 entry = Path(d, folder, "index.md") if index else Path(d, f"{folder}.md")
@@ -275,7 +276,7 @@ class TaskFactTests(unittest.TestCase):
                 Path(d, folder, "dispatch", name).parent.mkdir(parents=True, exist_ok=True)
                 Path(d, folder, "dispatch", name).write_text(text)
             with contextlib.redirect_stdout(io.StringIO()) as out:
-                code = records_module.main(["--names", str(Path(d, folder, "dispatch", target))])
+                code = (module or records_module).main(["--names", str(Path(d, folder, "dispatch", target))])
             return code, out.getvalue().replace(d + "/", "").splitlines()
 
     def test_a_first_implementation_record_must_carry_each_reserved_line_in_its_scope_notes(self):
@@ -367,6 +368,45 @@ class TaskFactTests(unittest.TestCase):
         code, out = self.run_names(AMENDMENTS, {"implementation-1.md": COMPLETE}, folder="_archive/task")
         self.assertEqual(code, 1)
         self.assertEqual(len(out), 2)
+
+    def test_an_ideation_record_is_refused_when_its_task_owes_a_result_line(self):
+        needed = "\n## FO alignment\n\nAlignment: needed before ideation: which checks run where.\nSurfaces: none\n"
+        code, out = self.run_names(needed, {"ideation-1.md": COMPLETE}, "ideation-1.md")
+        self.assertEqual(code, 1)
+        self.assertEqual([line.split(";")[0] for line in out],
+                         ["task/dispatch/ideation-1.md:1: '## FO alignment' records alignment as needed with no 'Result:' line"])
+        cases = {"result recorded": needed.replace("Surfaces:", "Result: aligned by his answer.\nSurfaces:"),
+                 "alignment not needed": needed.replace("needed before ideation: which checks run where", "not needed"),
+                 "alignment line only in a fence": "\n## FO alignment\n\n```\nAlignment: needed\n```\nSurfaces: none\n",
+                 "another spelling": "\n## FO alignment\n\nNeeded at ideation: yes.\nSurfaces: none\n"}
+        for label, task in cases.items():
+            with self.subTest(label):
+                self.assertEqual(self.run_names(task, {"ideation-1.md": COMPLETE}, "ideation-1.md"), (0, []))
+        self.assertEqual(self.run_names(needed, {"implementation-1.md": COMPLETE}), (0, []))
+
+    def test_mutation_dropping_the_result_check_lets_the_record_pass(self):
+        needed = "\n## FO alignment\n\nAlignment: needed before ideation: x.\n"
+        source = Path(__file__).with_name("dispatch_records.py").read_text()
+        old = " and alignment_owes_result(text):"
+        self.assertEqual(source.count(old), 1)
+        mutant = types.ModuleType("dispatch_records_mutant")
+        mutant.__file__ = str(Path(__file__).with_name("dispatch_records.py"))
+        exec(compile(source.replace(old, " and False:"), mutant.__file__, "exec"), mutant.__dict__)
+        self.assertEqual(self.run_names(needed, {"ideation-1.md": COMPLETE}, "ideation-1.md")[0], 1)
+        self.assertEqual(self.run_names(needed, {"ideation-1.md": COMPLETE}, "ideation-1.md", module=mutant)[0], 0)
+
+    def test_a_backslash_quote_on_an_amendment_line_is_refused_unless_it_sits_in_a_moved_criterion(self):
+        named = COMPLETE.replace("1. Independent", "1. Captain amendment 1. Independent")
+        task = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nAsked: {asked}\n{tail}"
+        code, out = self.run_names(task.format(asked='he said \\"yes\\"', tail=""), {"implementation-1.md": named})
+        self.assertEqual((code, [line.split(";")[0] for line in out]),
+                         (1, ["task/dispatch/implementation-1.md:1: Captain amendment 1 Asked line holds a backslash-quote copied from JSON"]))
+        moved = task.format(asked="he said yes", tail='Superseded text:\n**AC-1**: a \\"quoted\\" word.\n')
+        self.assertEqual(self.run_names(moved, {"implementation-1.md": named}), (0, []))
+        self.assertEqual(self.run_names(task.format(asked="he said yes", tail=""), {"implementation-1.md": named}), (0, []))
+        for other in ('Design: the \\"old\\" paragraph.\n', 'a continuation with \\"x\\"\n'):
+            with self.subTest(other):
+                self.assertEqual(self.run_names(task.format(asked="he said yes", tail=other), {"implementation-1.md": named}), (0, []))
 
 
 ROBOREV_PATH = "/abs/kc-dev-flow-2/extensions/roborev/roborev_gate.py"

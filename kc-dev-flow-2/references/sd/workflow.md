@@ -521,6 +521,8 @@ to finalize/archive. Where `learn` is listed, the sentinel waits for a committed
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
 
+Before the validation `gate prepare`, FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question-and-summary file>`.
+
 Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
 --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask, as does a head other than the latest `Candidate:`; FO shows the Captain what it printed.
 

@@ -182,7 +182,9 @@ def l2_dispatch_record_complete(ctx):
             for line in lines if code == 1 else []:
                 match = re.fullmatch(r"(.+\.md):(\d+): (bare package script name \S+|no 'Candidate: <40-hex head>' line|"
                                      r"reserved line '[^']+' missing from scope notes|"
-                                     r"Captain amendment \d+ named in no dispatch checklist)(?:;.*)?", line)
+                                     r"Captain amendment \d+ named in no dispatch checklist|"
+                                     r"'## FO alignment' records alignment as needed with no 'Result:' line|"
+                                     r"Captain amendment \d+ (?:Captain|Asked) line holds a backslash-quote copied from JSON)(?:;.*)?", line)
                 if not match:
                     raise Cannot(f"dispatch_records.py --names exited 1 with output this runner does not parse: {line}")
                 key = next((v for v in mine.values() if str(Path(tmp) / v[0]) == match[1]), None)
