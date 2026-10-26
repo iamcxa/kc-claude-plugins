@@ -1,7 +1,7 @@
 # implementation-1
 
 Dispatched: a11707d5ec19ee34777c7bdeac4c4d100bc84857 (workflow checkout, kc-dev-flow-2 0.31.0 README); batch 7, first implementation dispatch
-Model: gpt-6.1-sol (Codex via Paseo, thinking high)
+Model: sonnet (Claude; the replay needs the GitHub API, which the Codex sandbox did not reach on 2026-10-26)
 
 ## Checklist
 
