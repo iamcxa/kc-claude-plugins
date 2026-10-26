@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ops-metric-event-protocol:backlog:attempt-2:revision-1",
+  "question": "Admit ops-metric-event-protocol as a Pilot (five-stage route) with the four criteria, the widened scope (the protocol with lifecycle, routing, sender rules and complete information with injection guard; contract v1 and the metric type landed on main; a recorded store recommendation without building it), the non-goals, a 2-day budget and the stop conditions as written? Approving accepts all of them as written, including the 2-day budget, and enters ideation on opus.",
+  "artifacts": [
+    {
+      "id": "artifact:ops-metric-event-protocol:backlog:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/3edc9d4aed891a5c771b38bd92893af5d0c08587/ops-metric-event-protocol.md",
+      "rev": "sha256:9b8ecf203cac3d577892136da5e8258a6a3c72978d4cfeed96213cab844f67d8",
+      "mediaType": "text/markdown",
+      "summary": "A shared key-metric event protocol owned by kc-ops-inbox, widened by the Captain on 2026-10-26: crossing, recovered and heartbeat events; environment and severity routing; sender retry and response-code rules with a per-incident cap; context pointers and enumerated values instead of free text. Lands contract v1 plus the metric type on main with relay and qnow fixtures, and records a store recommendation without building it."
+    }
+  ]
+}

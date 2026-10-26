@@ -21,6 +21,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-26T14:31:05.182949Z"
                 reason: 'Captain widened the protocol scope before ruling (2026-10-26 Ask UI: lifecycle, routing, sender rules, complete information and injection guard); the briefing no longer matches the scope.'
+            - id: gate-attempt:ops-metric-event-protocol-backlog-2
+              briefing:
+                id: briefing:ops-metric-event-protocol:backlog:attempt-2:revision-1
+                digest: sha256:9883b6d6a94c76bdb62726bc9b5b8463384e079193d646ff242239d35f7c3200
+                room-ref: ./ops-metric-event-protocol/review/backlog/briefing-2
 ---
 
 A shared protocol for key-metric events, owned by kc-ops-inbox, with qnow as its first adopter and relay's capacity ceiling as the shape to generalize. It also lands contract v1 (today only on the paused r1 branch) on the kc-claude-plugins default branch, because no project can depend on a contract that lives on an unmerged branch.
