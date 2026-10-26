@@ -249,3 +249,5 @@ Closed 2026-10-21 at the ideation gate. Captain 「關掉」, on FO's revised re
 Reopen when a committed task file or gate question is found that one of these shapes misjudges: a nested `Declined:` label counted twice, a fenced `## Scope` example taken as the real section, or a fenced criteria example satisfying the criteria check.
 
 Archive blocked as for spacedock-dev/spacedock#847: FO does not use `--force`.
+
+Added 2026-10-26: its parser fixes landed in iamcxa/kc-claude-plugins#724 (merged 1a6149f5) as that task's AC-9. Not archived: its ideation gate holds a `hold` decision, and Spacedock cannot archive a held entity (spacedock-dev/spacedock#847); see retire-task-with-unconsumed-approval.
