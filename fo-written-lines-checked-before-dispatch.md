@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-25T17:52:33Z
 worktree: .worktrees/spacedock-ensign-fo-written-lines-checked-before-dispatch
-pr: iamcxa/kc-claude-plugins#724
+pr: pr-merge:724
 ---
 
 ## Scope
