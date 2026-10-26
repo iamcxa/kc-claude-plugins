@@ -54,6 +54,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-26T17:08:20Z
+worktree: .worktrees/spacedock-ensign-worker-knows-the-team-and-asks-early
 ---
 
 ## Scope
