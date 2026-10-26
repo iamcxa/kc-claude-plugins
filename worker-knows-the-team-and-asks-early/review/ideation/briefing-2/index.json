@@ -1,0 +1,24 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-knows-the-team-and-asks-early:ideation:attempt-2:revision-1",
+  "question": "Approve the revised ideation of worker-knows-the-team-and-asks-early to enter implementation? FO recommends approve; approving accepts that recommendation and both decisions as recommended: D1 new-work-checks-what-exists-first follows as its own task rather than merging in; D2 the workflow word budget rises by exactly 144 words, 5421 to 5565, for one Team bullet under Dispatch facts that every worker stage reads.",
+  "artifacts": [
+    {
+      "id": "artifact:worker-knows-the-team-and-asks-early:ideation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/0c9efba0cbaaffd6da771ad8d21c864fdab59196/worker-knows-the-team-and-asks-early.md",
+      "rev": "sha256:5c8330d35c6f0a0a42a74e02ac4005888780ed05f71ebcaf77442c2386c5ba3e",
+      "mediaType": "text/markdown",
+      "summary": "Revised after interview round 2 (5 FOs). The 144-word Team bullet names which records to check (prior reports, linked sibling tasks and PRs, workflow state), tells a worker to say first when its environment cannot run a required check, to pause dependent work only when it has a mid-run FO channel and otherwise end its turn with the handback, and never to answer its own or its reviewers' permission requests. Round 2: qnow 3, relay 2, kc-paseo 1 and web 1 (partly) worker events would have changed. Worse: every worker and README load is 144 words longer; text does not prove behaviour (AC-6 ends in accept, repair or stop). Needs an ADR number at implementation."
+    }
+  ],
+  "context": [
+    {
+      "type": "Reference",
+      "id": "reference:worker-knows-the-team-and-asks-early:ideation:attempt-2:revision-1:item-2",
+      "uri": "git-root://state/0c9efba0cbaaffd6da771ad8d21c864fdab59196/fo-interviews-extension/round-2-batch7-texts.md",
+      "mediaType": "text/markdown",
+      "rev": "sha256:b62adeae467dadeafe562e448810565526e62ebaa48f3dde9126c601d75577df"
+    }
+  ]
+}

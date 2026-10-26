@@ -38,6 +38,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-26T16:49:58.734463Z"
                 reason: Interview round 2 (fo-interviews-extension/round-2-batch7-texts.md, 2026-10-27) found the proposed text cannot be followed as written on several hosts; the design returns to its ideation worker for revision before the Captain decides.
+            - id: gate-attempt:worker-knows-the-team-and-asks-early-ideation-2
+              briefing:
+                id: briefing:worker-knows-the-team-and-asks-early:ideation:attempt-2:revision-1
+                digest: sha256:d9a3bf099e24f2ee1344481c867afec7a3c3cd692806973480917b40d31559b3
+                room-ref: ./worker-knows-the-team-and-asks-early/review/ideation/briefing-2
 ---
 
 ## Scope
