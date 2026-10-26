@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:worker-knows-the-team-and-asks-early:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of worker-knows-the-team-and-asks-early to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that every dispatch tells the worker it is one member of a team finishing the project task together, to check whether someone already did, hit or is busy on this, and to hand back to FO early with what it found rather than push toward an impossible target; ideation also decides whether new-work-checks-what-exists-first merges in or follows; profile pilot (workflow text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:worker-knows-the-team-and-asks-early:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4555e8a47e690309e3738bf10e12988bbdc6c9b4/worker-knows-the-team-and-asks-early.md",
+      "rev": "sha256:554bad28801834567b55dd8ea56ad71292b7c560e2065d2a44fa27cca1c67264",
+      "mediaType": "text/markdown",
+      "summary": "Bite: a validator ran a bare git reset in the shared state checkout (10-24), another ran git config in a scratch clone (10-25), workers were unsure whether to signal team-lead or main, and workers re-derived facts other sessions held. Risk: workflow.md is at its 5421-word budget, so a raise quoting the Captain is likely."
+    }
+  ]
+}

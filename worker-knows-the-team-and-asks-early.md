@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:worker-knows-the-team-and-asks-early:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:worker-knows-the-team-and-asks-early-backlog-1
+              briefing:
+                id: briefing:worker-knows-the-team-and-asks-early:backlog:attempt-1:revision-1
+                digest: sha256:80552830fef60c96866e01329cc23c37d5c4d0c491f095580b20dd75f4291551
+                room-ref: ./worker-knows-the-team-and-asks-early/review/backlog/briefing-1
 ---
 
 ## Scope
