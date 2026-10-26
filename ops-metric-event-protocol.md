@@ -21,8 +21,9 @@ Inputs: contract v1 at kc-claude-plugins branch spacedock-ensign/ops-inbox-r1-se
 
 - The metric-event protocol: the project-side and inbox-side boundary, the event type and data fields for a key metric, whether periodic snapshots are in v1, how a project obtains and rotates its signing secret, and how a project delivers the same event body before its inbox is live.
 - Contract v1 and the metric type landed on the default branch with the validator, schemas, fixtures for relay's ceiling and qnow's SMS usage, and the contract-digest test.
-- Non-goals: any inbox runtime (r1 and the Paseo Hub POC own that); qnow's or relay's own emitter code (each project's task); live delivery.
-- Budget: to be set at this gate (FO proposal: 1 day).
+- Decide, not build, the inbox-side store for raw events, counts and threshold records and the PostHog projection, as a recorded recommendation for the Captain; the build waits until the inbox runtime is settled.
+- Non-goals: any inbox runtime or store build (r1 owns the runtime; the Paseo Hub POC closed 2026-10-26 with r1 kept); qnow's or relay's own emitter code (each project's task); live delivery.
+- Budget: at most 1 day (FO proposal).
 - Stop conditions: the protocol needs a field that carries personal data; the Paseo Hub POC result changes the event body (not only the transport); the estimate exceeds the budget.
 
 ## Acceptance criteria
