@@ -4,7 +4,7 @@ status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-worktree:
+worktree: .worktrees/spacedock-ensign-ops-metric-event-protocol
 pr:
 gates:
     version: 1
