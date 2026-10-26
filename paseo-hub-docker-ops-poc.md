@@ -74,6 +74,7 @@ Surfaces: none
 Visible change: none
 Captain standing ask, 2026-10-21: 「請持續針對套件的意義做觀察與回饋」. FO reports a package-value observation at each gate.
 Release review: not needed: the kc-ops-inbox journey map (branch iamcxa/kc-ops-inbox at 0a1d59ce, not on the trunk) already holds this capability as the open host question on story run-own-instance.
+Captain ruling, 2026-10-26 (chat): 「好」. Asked: 「接受 AC-4 沒過，把這個 POC 送去驗證嗎？」, after FO's account that on the unattended run Hub closed and archived the agent 3 min 20 s after start, so no window existed for his message, that the same approach had failed twice, that the 1-day budget was spent, and that Hub's documented continuation-key mechanism, the PASEO_HUB_CONFIG_JSON contents and separate daemon and agent accounts move to the next step (self-hosted Hub on exe.dev).
 
 ## Stage Report: implementation
 
