@@ -6,6 +6,17 @@ profile: pilot
 merge: pr
 worktree:
 pr:
+gates:
+    version: 1
+    records:
+        - id: gate:ops-metric-event-protocol:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:ops-metric-event-protocol-backlog-1
+              briefing:
+                id: briefing:ops-metric-event-protocol:backlog:attempt-1:revision-1
+                digest: sha256:e45198ee9013ca4fe71b8d304aa335538188da59c6491e9582f93b14c8cccb6b
+                room-ref: ./ops-metric-event-protocol/review/backlog/briefing-1
 ---
 
 A shared protocol for key-metric events, owned by kc-ops-inbox, with qnow as its first adopter and relay's capacity ceiling as the shape to generalize. It also lands contract v1 (today only on the paused r1 branch) on the kc-claude-plugins default branch, because no project can depend on a contract that lives on an unmerged branch.

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ops-metric-event-protocol:backlog:attempt-1:revision-1",
+  "question": "Admit ops-metric-event-protocol as a Pilot (five-stage route) with the three criteria, the scope (the protocol, contract v1 and the metric type landed on main, and a recorded store recommendation without building it), the non-goals, a 1-day budget and the stop conditions as written? Approving accepts all of them as written, including the 1-day budget, and enters ideation on opus.",
+  "artifacts": [
+    {
+      "id": "artifact:ops-metric-event-protocol:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/085ba5bc4fcc146395304e000d2f2720d89abb7e/ops-metric-event-protocol.md",
+      "rev": "sha256:8a0bb2a74a8191766dc228e9f250990f14e22d60e5fc8e176cf3e446a3b18a06",
+      "mediaType": "text/markdown",
+      "summary": "A shared key-metric event protocol owned by kc-ops-inbox: the project measures, holds the threshold and sends one signed event per crossing with counts only; the inbox verifies, dedupes, groups and routes. Lands contract v1 plus the metric type on the kc-claude-plugins default branch with fixtures for relay's ceiling and qnow's SMS usage, so qnow and relay can pin it. Records, without building, a store recommendation for raw events, counts and the PostHog projection."
+    }
+  ]
+}
