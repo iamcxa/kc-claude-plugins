@@ -15,6 +15,17 @@ gates:
                 id: briefing:peers-rules-name-each-host-binding:backlog:attempt-1:revision-1
                 digest: sha256:6ac11ec8ba1a4e25ef6a8bdafa43428be14c48746c9bc19cd6262f29f315dd8a
                 room-ref: ./peers-rules-name-each-host-binding/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:peers-rules-name-each-host-binding:backlog:1
+                briefing: briefing:peers-rules-name-each-host-binding:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-26T15:37:27.24333Z"
+                decision: approve
+                reason: Captain 「准」 (chat, 2026-10-26) answering 「需要你決定：第 7 批三張任務的待辦關卡，要不要一起批准進入設計階段？我建議全部批准。」; accepts FO's recommendation
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
