@@ -1,6 +1,6 @@
 ---
 title: Any project sends a key metric to its ops inbox the same way, and kc-ops-inbox's contract v1 lands on main so projects can depend on it
-status: backlog
+status: ideation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -36,7 +36,7 @@ gates:
                 reason: Captain answered 「准」 in chat on 2026-10-26 to the backlog gate question (attempt 2), which stated that approving accepts the four criteria, the widened scope, the non-goals, the 2-day budget and the stop conditions as written, and enters ideation on opus.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 A shared protocol for key-metric events, owned by kc-ops-inbox, with qnow as its first adopter and relay's capacity ceiling as the shape to generalize. It also lands contract v1 (today only on the paused r1 branch) on the kc-claude-plugins default branch, because no project can depend on a contract that lives on an unmerged branch.
