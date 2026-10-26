@@ -28,6 +28,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:paseo-hub-docker-ops-poc:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:paseo-hub-docker-ops-poc-validation-1
+              briefing:
+                id: briefing:paseo-hub-docker-ops-poc:validation:attempt-1:revision-1
+                digest: sha256:536fd3b4ce7990bd4e02476f440065560081a08976dde2a034c3a7fbe5ef1ed4
+                room-ref: ./paseo-hub-docker-ops-poc/review/validation/briefing-1
 started: 2026-10-25T04:19:20Z
 ---
 

@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-hub-docker-ops-poc:validation:attempt-1:revision-1",
+  "question": "Close this POC as PASSED for its recorded outcome with the goal not met, no PR, branch spacedock-ensign/paseo-hub-docker-ops-poc kept as reference, and keep r1 as the dispatch and authority design while the Hub path's untested levers (continuation key, self-hosted Hub, separate daemon and agent accounts, phone) wait for a later probe? Approving accepts that recommendation; cleanup of the container, Hub trigger, Hub App install and Draft PRs 8 and 9 is asked separately.",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-hub-docker-ops-poc:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/1043ad50d9450cb8139b7bce2052043332829fcd/paseo-hub-docker-ops-poc.md",
+      "rev": "sha256:de3a3c1d07d1af310eab41d8d00012340ba3c8aa41444faabe1556f487e5da5f",
+      "mediaType": "text/markdown",
+      "summary": "Hub dispatch works once the GitHub App grant is right: one deliveryKey gives one run; a Codex agent on a Docker daemon filed Draft PRs 8 and 9 with a Hub-minted token, and the repository rulesets refused push and merge. Not met: the agent can read the daemon's own credential files (AC-3), Hub archives the agent at finish so the Captain could not talk to it (AC-4), and offline sends are accepted as running then fail silently (AC-5 first half). Budget exceeded (about 34 hours against 1 day)."
+    }
+  ]
+}
