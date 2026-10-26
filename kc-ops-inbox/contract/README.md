@@ -158,6 +158,7 @@ Before a project's inbox is live, the project sends the same body to its pre-inb
 
 - dedupe: `sha256(source + "\n" + id)`; a repeat is accepted once.
 - incident: `sha256(source + "\n" + subject)`; events with one incident key join one ops task. A crossing and its recovery share a subject; a heartbeat has its own.
+- A `sentry.issue.alert` or `ops.inbox.selftest` that names a non-prod `environment` has `<environment>\n` prepended to both hashes, so a preview key cannot claim a dedupe key or join an incident of the same `source` and `id` or `subject` in prod. `ops.metric.*` ids and subjects already carry the environment, and an event without `environment` is keyed as before (ER P3-2).
 
 ## Versions
 
@@ -173,8 +174,8 @@ Fixture shape: `{ secret? | keys?, now?, headers, body }`. `secret` (falling bac
 
 Fixtures (a published test secret, not a credential; `generate.mjs` writes them):
 
-- valid: `relay-crossed`, `relay-recovered`, `relay-heartbeat`, `qnow-crossed`, `qnow-recovered`, `qnow-heartbeat`, `sentry-issue`, and `key-allowed` (the prod key signs a `prod` event with a prod and a preview key configured). The qnow values are synthetic: no monthly budget is on record.
-- refused, each with its own reason: `missing-limit`, `extra-field`, `id-not-derived`, `recovered-id-without-cause`, `bad-signature`, `unknown-environment`, `unknown-severity`, `free-text-limit-source`, `duplicate-key`, `key-not-allowed` (the preview key signs a `prod` event).
+- valid: `relay-crossed`, `relay-recovered`, `relay-heartbeat`, `qnow-crossed`, `qnow-recovered`, `qnow-heartbeat`, `sentry-issue`, `sentry-preview` (a preview-only Sentry key signs an event that names `preview`) and `key-allowed` (the prod key signs a `prod` event with a prod and a preview key configured). The qnow values are synthetic: no monthly budget is on record.
+- refused, each with its own reason: `missing-limit`, `extra-field`, `id-not-derived`, `recovered-id-without-cause`, `bad-signature`, `unknown-environment`, `unknown-severity`, `free-text-limit-source`, `duplicate-key`, `key-not-allowed` (the preview key signs a `prod` event) and `key-not-allowed-no-environment` (a preview-only key signs an event without `environment`, which counts as `prod`).
 
 `node --test test/contract.test.mjs` runs them; `node test/mutations.mjs` removes each check in a temporary copy and requires the named test to fail.
 

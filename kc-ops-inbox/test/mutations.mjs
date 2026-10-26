@@ -24,6 +24,8 @@ const MUTATIONS = [
   ["key environments: any configured key's environments count", "k.environments.includes(environment)", "keys.some((x) => x.environments.includes(environment))", REFUSALS],
   ["key environments: no scope check", "if (!signed.some(", "if (false && !signed.some(", REFUSALS],
   ["key source prefix", "k.sources.some((prefix) => source.startsWith(prefix))", "true", "a key signs only the environments and the source prefixes it lists"],
+  ["environment-less event counts as prod", 'const { environment = "prod", source }', 'const { environment = "dev", source }', REFUSALS],
+  ["non-prod environment not in the keys of a non-metric type", '!TYPES[ev.type].metric && ev.environment && ev.environment !== "prod" ? `${ev.environment}\\n` : ""', '""', "a non-prod event of a non-metric type is keyed apart from the prod event with the same source and id"],
   ["heartbeat severity above info", 'severities: ["info"],', "severities: SEVERITIES,", RULES],
   ["crossed value below its level", "valueAgrees: (d) => d.value * 100 >= d.level * d.limit,", "valueAgrees: () => true,", RULES],
   ["subject of another environment", 'if (spec.subjectOf && ev.subject !== spec.subjectOf(ev)) return refuse("subject-mismatch");', "", RULES],

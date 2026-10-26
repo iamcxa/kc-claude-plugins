@@ -13,7 +13,7 @@ const validate = (name, extra = []) =>
   spawnSync("node", [join(root, "contract/validate.mjs"), join(root, "contract/fixtures", name), ...extra], { encoding: "utf8" });
 
 test("valid fixtures print the type and both keys, exit 0", () => {
-  const valid = ["relay-crossed", "relay-recovered", "relay-heartbeat", "qnow-crossed", "qnow-recovered", "qnow-heartbeat", "sentry-issue", "key-allowed"];
+  const valid = ["relay-crossed", "relay-recovered", "relay-heartbeat", "qnow-crossed", "qnow-recovered", "qnow-heartbeat", "sentry-issue", "sentry-preview", "key-allowed"];
   for (const name of valid) {
     const r = validate(`${name}.json`);
     assert.equal(r.status, 0, name);
@@ -33,8 +33,9 @@ test("each refusal fixture is refused with its own reason, exit 1", () => {
     "free-text-limit-source.json": "invalid-value: data.limitSource",
     "duplicate-key.json": "non-canonical-body",
     "key-not-allowed.json": "key-not-allowed",
+    "key-not-allowed-no-environment.json": "key-not-allowed",
   };
-  assert.deepEqual(Object.keys(want).concat(["relay-crossed", "relay-recovered", "relay-heartbeat", "qnow-crossed", "qnow-recovered", "qnow-heartbeat", "sentry-issue", "key-allowed"].map((n) => `${n}.json`)).sort(), Object.keys(FIXTURES).sort());
+  assert.deepEqual(Object.keys(want).concat(["relay-crossed", "relay-recovered", "relay-heartbeat", "qnow-crossed", "qnow-recovered", "qnow-heartbeat", "sentry-issue", "sentry-preview", "key-allowed"].map((n) => `${n}.json`)).sort(), Object.keys(FIXTURES).sort());
   for (const [name, reason] of Object.entries(want)) {
     const r = validate(name);
     assert.equal(r.status, 1, name);
@@ -171,6 +172,18 @@ test("a key signs only the environments and the source prefixes it lists", () =>
   for (const [label, ev, keys] of cases) assert.equal(parseEvent(signed(ev, { keys })).reason, "key-not-allowed", label);
   assert.equal(parseEvent(signed(fixtureEvent("sentry-issue.json"), { keys: [key(["prod"], ["urn:sentry:"])] })).ok, true);
   assert.equal(parseEvent(signed(crossed(), { keys: [PROD_KEY, PREVIEW_KEY], secret: PROD_KEY.secret })).ok, true);
+});
+
+test("a non-prod event of a non-metric type is keyed apart from the prod event with the same source and id", () => {
+  const keys = (n) => validate(n).stdout.trim().split(" ").slice(2);
+  const [prodDedupe, prodIncident] = keys("sentry-issue.json");
+  const [previewDedupe, previewIncident] = keys("sentry-preview.json");
+  assert.notEqual(previewDedupe, prodDedupe);
+  assert.notEqual(previewIncident, prodIncident);
+  const { source, id, subject } = fixtureEvent("sentry-issue.json");
+  const sha = (s) => createHash("sha256").update(s).digest("hex");
+  assert.deepEqual([prodDedupe, prodIncident], [sha(`${source}\n${id}`), sha(`${source}\n${subject}`)]);
+  assert.equal(keys("relay-crossed.json")[0], sha(`urn:relay:capacity\npublish-bound-site-ceiling.prod.d2026-10-20.c80.l100`));
 });
 
 test("a signature header with an old and a new key's signature is accepted by either key", () => {

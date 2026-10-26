@@ -104,8 +104,11 @@ export const TYPES = {
 };
 
 export const sha256hex = (s) => createHash("sha256").update(s).digest("hex");
-export const dedupeKey = (ev) => sha256hex(`${ev.source}\n${ev.id}`);
-export const incidentKey = (ev) => sha256hex(`${ev.source}\n${ev.subject}`);
+// A non-metric event that names a non-prod environment is keyed apart from the prod event with the same
+// source and id or subject (metric ids and subjects already carry the environment).
+const keyScope = (ev) => (!TYPES[ev.type].metric && ev.environment && ev.environment !== "prod" ? `${ev.environment}\n` : "");
+export const dedupeKey = (ev) => sha256hex(`${keyScope(ev)}${ev.source}\n${ev.id}`);
+export const incidentKey = (ev) => sha256hex(`${keyScope(ev)}${ev.source}\n${ev.subject}`);
 
 export function verifySignature({ secret, id, timestamp, signatureHeader, body, nowS }) {
   if (!id || !timestamp || !signatureHeader) return "missing-headers";
