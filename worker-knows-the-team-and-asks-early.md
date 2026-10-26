@@ -3,7 +3,7 @@ title: A dispatched worker knows it works in a team toward one goal, checks what
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
