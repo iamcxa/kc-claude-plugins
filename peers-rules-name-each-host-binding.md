@@ -472,3 +472,24 @@ Implemented and pushed transport-based peers rules, the optional Paseo extension
 ### Summary
 
 Independent validation PASSED for the exact head at the accepted local/paper-replay boundary, with no Material findings and one Polish finding; report and raw evidence are in the task's validation folder. Goal sufficiency is supported within that boundary, while the dependency helper's incremental necessity is not established and requires FO disposition; no repair, merge permission, adoption enforcement or real delivery is implied. Candidate bytes and entity frontmatter are unchanged; temporary detached checkouts were removed, the PR remains open/draft, and FO retains the validation gate and delivery decision.
+
+## Stage Report: implementation
+
+- DONE: Fix F1: delete extension_dependency_errors from kc-dev-flow-2/scripts/lint-skills.py, its call in extension_tier_errors and its two dedicated tests in kc-dev-flow-2/scripts/test_lint_skills.py; keep the EXTENSION.md presence check and the installation text rule
+  Commit dc3916fbb4ce9655dc37c5e4185653694e029de4 changes only the two named scripts: 23 deleted lines. The helper and call are absent, the two dedicated tests are removed, and EXTENSION.md presence checking plus the installation refusal text are retained.
+- DONE: Do not change the tier check RoboRev 1229 flagged: phase 1 found it unreachable by adopters, pre-existing at the base and consistent with ADR 0035; FO takes it to the Captain if it recurs
+  Compared AST statements with bff1d814: removing the single helper call leaves extension_tier_errors identical. The required-only template rule is unchanged; this report does not waive or close the RoboRev High. FO owns its disposition under the repair authorization.
+- DONE: Run every remaining kc-dev-flow-2 test file; show the default template passing, a template listing an optional extension still refused, and the three adopter lists not changing the template result
+  All 25 remaining test files exit 0 under python3 -B: 875 unittest cases pass, 1 optional journey integration case skips because its node/journey-accept dependency probe is unavailable, plus the SD dispatch and observer-recovery assertion runners; lint tests now number 44. boundary-proof.txt exercises default PASS, optional-paseo template REFUSED, all three adopter lists leaving template PASS unchanged, and missing extension document REFUSED. Raw logs/manifest: /tmp/peers-repair-730-kwhk4n6h/.
+- DONE: Commit (named files only), push with an explicit remote and branch, no force and no -u; append a complete new `## Stage Report: implementation` ending in a superseding `### Summary`, and commit it with `spacedock state commit peers-rules-name-each-host-binding --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2`; FO runs RoboRev and reads CI on the new head
+  Code committed and pushed explicitly to origin spacedock-ensign/peers-rules-name-each-host-binding without force or -u (bff1d814 -> dc3916fb). This complete report is appended under the exact implementation heading; its state save uses the dispatched spacedock state commit command. RoboRev and CI on this head are assigned to FO; no gh call or PR comment made.
+- DONE: Run retained local guards and record their actual limits.
+  Repository lint passes at 5421/5421 words; ADR lint checks 37 files, 0 legacy, requiring 0038; number guards pass at base c70f1b22/head dc3916fb. comment_ratio: code lines 6, comment lines 0, 0.0%; maximum 5% not enforced because fewer than 20 added code lines. Design surfaces check exits 0.
+- DONE: Review affected documents without widening the authorized repair.
+  doc_impact(bff1d814, HEAD): ADR 0020 unaffected (budget unchanged); package README unaffected (required/template equality claim preserved); maintain-flow skill unaffected (lint/replay instructions unchanged); learning.md unaffected (no adopted practice altered). Peer policy and its reading bundles are unchanged by this code-only removal.
+- SKIPPED: Execute RoboRev or hosted CI on the new head.
+  Explicitly delegated to FO by implementation-3.md; prior review and CI evidence do not establish results for dc3916fb. CI triggers unchanged; per-PR cost not measured.
+
+### Summary
+
+Removed the redundant dependency helper, its call and its two dedicated tests at dc3916fbb4ce9655dc37c5e4185653694e029de4; the authorized tier and document checks and installation policy remain. All 25 remaining test files and the default/optional/adopter boundary probes pass, and the code branch is pushed. This complete report supersedes the earlier implementation report for the current candidate; FO owns RoboRev, CI, any recurring High disposition and revalidation, with no merge or acceptance implied.
