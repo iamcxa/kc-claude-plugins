@@ -307,6 +307,10 @@ for name,n in rows.items():print(name,n,n+(delta if name=='startup' else 0))
 (root/'counts.json').write_text(json.dumps(dict(static=static,outputs={k:words(v) for k,v in results.items()},moments=rows),indent=2))
 ```
 
+## Number guards
+
+ADR: 0037
+
 ## Stage Report: ideation
 
 - DONE: A design for the worker collaboration text every dispatch carries (team purpose, check whether someone already did, hit or is busy on this, hand back to FO early with what was found), naming where it lives (README Dispatch facts, stage skills or the ensign skill) and its word cost against the 5421-word workflow budget; and a recommendation whether new-work-checks-what-exists-first merges in or follows, with what gets worse either way
