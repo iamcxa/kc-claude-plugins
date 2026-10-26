@@ -69,27 +69,47 @@ Result: aligned 2026-10-26 on the outcome by the Captain's 「准」 answering t
 
 **Where does the rule live?** One `Team` bullet in `kc-dev-flow-2/references/sd/workflow.md`, under `## Dispatch facts`, before `Signal`. Each existing stage's `context-sections` already includes that section. Stage skills need no duplicate paragraph; `peers` remains FO-facing; no Spacedock ensign change is needed for this bounded package improvement. Generic upstream adoption could be proposed later, but is not a prerequisite or an external action authorized by this design.
 
-**How much checking?** Read the assigned task's prior reports and linked evidence, relevant local history and known shared ownership records. Check whether an old result still matches the current candidate. This is a bounded read, not a scan of every session, an obligation to ask on every routine step, or permission to edit shared state owned by another task. If the needed record cannot be accessed, name that limit to FO instead of treating absence as proof nobody did the work.
+**How much checking?** Read this task's prior stage reports, its linked sibling task files and PRs, and relevant workflow state (the assigned state checkout's task status/ownership records and dispatch records). These are the named shared records; use the assigned locations and repository-qualified PR links, not an inferred session title or an unrestricted scan. Check whether an old result still matches the current candidate. This is a bounded read, not a scan of every session, an obligation to ask on every routine step, or permission to edit shared state owned by another task. If the needed record cannot be accessed, name that limit to FO instead of treating absence as proof nobody did the work.
 
-**When does the worker ask?** Before duplicating known work, retrying a known failure without a new hypothesis, touching overlapping ownership, assuming missing authority/evidence, or expanding scope to make an infeasible target appear complete. Send what was checked, found and tried, plus the specific answer or action needed. Pause only dependent work; continue independent work that is safe and already authorized. On an early stop, commit the findings/report under the ensign contract and hand back; do not label unfinished checklist items DONE.
+**When does the worker ask?** Before duplicating known work, retrying a known failure without a new hypothesis, touching overlapping ownership, assuming missing authority/evidence, or expanding scope to make an infeasible target appear complete. Send what was checked, found and tried, plus the specific answer or action needed. At entry, check the required checklist against the environment and authority actually available: when a required check cannot run, tell FO which check, the observed restriction and what depends on it before building that dependent work. A safe capability probe can establish a limit; an untested assumption does not. With an effective mid-run FO channel, pause dependent work and continue safe authorized independent work. Without that channel, do not pause awaiting an answer or poll indefinitely: commit the findings/report under the ensign contract and end the current turn with the specific question and findings for FO to route. Resume dependent work only after FO supplies the answer or routes an authorized change; unfinished checklist items are not DONE.
 
-**Who talks to whom?** The worker asks its own FO through the host's existing clarification channel; it neither discovers nor messages peer sessions. FO verifies shared facts, uses the peers extension where available, and routes a decision to the Captain when authority requires it. Transport restrictions remain real: a queued message is not a reply, and a host without an effective live channel uses its worker-thread handback. No new messaging tool, host binding, timeout, automatic retry or state field is introduced.
+**Who talks to whom?** The worker asks its own FO through the host's existing clarification channel; it neither discovers nor messages peer sessions. FO verifies shared facts, uses the peers extension where available, and routes a decision to the Captain when authority requires it. Transport restrictions remain real: a queued message is not a reply. A bare execution or background worker without a mid-run channel ends its turn with the question and findings, rather than waiting or using a permission-request description as an improvised chat channel. Never answer the worker's own or its reviewers' permission requests: return the actual requested operation and its reason to FO, which handles it within the existing approval boundary. This forbids self-approval, not submitting a legitimate tool permission request; silence, an interview answer or a pending permission prompt grants no authority. No new messaging tool, host binding, timeout, automatic retry or state field is introduced.
 
-**What is not claimed?** Instruction delivery does not prove compliance or time saved. No host parity, behavior improvement or avoidance of every shared-index incident is established by a word-count or substring check. The ensign's existing path-scoped state-commit rule still governs commits.
+**What is not claimed?** Instruction delivery does not prove compliance or time saved. No host parity, behavior improvement or avoidance of every shared-index incident is established by a word-count or substring check. The ensign's existing path-scoped state-commit rule still governs commits. Validator independence, including whether implementer evidence must be rerun independently, belongs to validation's rules and is out of scope for this bullet; checking prior work does not waive it.
+
+### Interview round 2 disposition
+
+Source: `fo-interviews-extension/round-2-batch7-texts.md`, all five FO answers and `FO reading` Text A, read 2026-10-27. Their counterfactual expectations are operator evidence, not demonstrated behavior or Captain approval. The earlier briefing was withdrawn before this revision.
+
+| Interview finding | Revision and evidence owed |
+| --- | --- |
+| web and kc-paseo: no mid-run channel; qnow: questions arriving as permission descriptions | explicit channel branch: end the turn with question/findings when no channel exists; AC-3 checks terminal output and the absence of waiting/dependent writes |
+| web: browser unavailable while specs were written; relay: required hosted check but pushing forbidden | report the required check/environment restriction before dependent building; AC-3 scores that action order with a capable-environment control |
+| relay: worker asked to approve its reviewer's permission request | explicit ban on answering own/reviewer requests; route the actual request to FO; AC-5 tests both request origins and refuses self-granted approval |
+| ops-inbox: which shared records? | name prior task reports, linked sibling tasks/PRs and relevant workflow state; AC-2 supplies these records and inaccessible-record controls |
+| qnow: overlapping journal ownership/repeated probes; relay: repeated reviewer spawn failures; kc-paseo: impossible host-owned control | keep early ownership/failure/infeasibility handback, with checked facts rather than assumed feasibility; a failed spawn is a finding to report, not evidence a reviewer ran |
+| relay: validator reused implementer mutation evidence | out of scope: preserve validation independence, do not add a new independence rule to Team |
+| web/kc-paseo: old package scripts; relay: worker cwd | existing Package/dispatch routing duties, not a new Team transport or cwd mechanism; report a resulting required-check blocker upfront and let FO correct the dispatch |
+
+Everything round 2 did not question remains: one Dispatch facts home, worker-to-FO routing, no peer messages, the separate upstream-first task, the named file footprint and conditional Captain budget decision.
 
 ### Proposed dispatch text
 
-The following bullet is 99 whitespace-separated words, including its Markdown list marker and label, using the same `len(text.split())` method as the package lint.
+The following bullet is 144 whitespace-separated words, including its Markdown list marker and label, using the same `len(text.split())` method as the package lint.
 
 ```markdown
 - **Team:** You are one worker in a team completing the project goal; your stage
   and handoff serve that goal. Before substantial work or retrying a failure,
-  read the task's relevant prior work and available shared records: did someone
-  already do this, hit this, or own it now? Ask FO early when ownership overlaps,
-  a known failure repeats, authority or evidence is missing, or the target appears
-  infeasible. Return what you checked, found, tried, and the specific help needed;
-  pause dependent work, continue safe independent work. FO coordinates peers and
-  decisions; do not message peers or change others' work.
+  check this task's prior reports, linked sibling tasks and PRs, and relevant
+  workflow state: did someone already do this, hit this, or own it now? If your
+  environment cannot run a required checklist check, tell FO before building
+  work that depends on it. Ask FO early about overlapping ownership, repeated
+  failures, missing authority or evidence, or infeasible targets. Give checked
+  sources, findings, attempts and the specific question. With a mid-run FO
+  channel, pause dependent work and continue safe independent work; without
+  one, end your turn with that handback instead of waiting. Never answer your
+  own or your reviewers' permission requests; route them to FO. FO coordinates
+  peers and decisions; do not message peers or change others' work.
 ```
 
 ### Chain and bounded existing-code check
@@ -100,60 +120,64 @@ Checked 2026-10-26 in this order:
 2. **kc-dev-flow-2:** `git fetch origin` succeeded after the sandbox denied writing FETCH_HEAD; source pinned to `c70f1b22cb1e4a66fd15c617647c778d54c59ec9`, released manifest version **0.31.0**. Read the workflow, peers extension, three-stage dispatch transport test and the implementation principles' Existing-code capability check. The latter deliberately excludes greenfield/mechanical work and checks capability, not who already owns or attempted the work. Two bounded searches covered the context selectors/dispatcher consumers and the worker/peer instructions; no second worker collaboration mechanism was found in that boundary. The actual `show-stage-def` probe below establishes the existing delivery seam, not just a missing phrase.
 3. **Sibling adopters, local read-only snapshots:** relay at `ab570dbe4125db7a57b27160a8d1c9e39591b3b9` (`beirut-dev2/docs/dev2/README.md`, marker 0.30.0), qnow at `278f79ca3eb03a8c1286817f542c4ec4b744bfed` (`qnow-adopt-dev2/docs/dev2/README.md`, marker 0.27.0), web at `29c85eabcd022462e8861c76e79f6ae5e2056cd1` (`dev2-fo/docs/dev2/README.md` and `docs/dev2-poc/README.md`, marker 0.31.0). Their Dispatch facts contain Signal/Package/Secrets and no Team bullet. qnow substitutes its own secret wrapper. These are observed local README bytes, not a claim about their remote deployed/adopted versions; they supply no third-party contract authority. Subsequent adoption preserves wrapper, extensions and other project-specific lines through the existing sync route.
 
-Current proof: a disposable README copy with the proposed bullet, passed to the real `/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir <copy> --stage <stage>`, returned exactly one complete Team bullet in all three stages. `poc_readme.py` derivation retained it in both POC worker stages. Removing the bullet (the unchanged base control) returned zero instances. The stage output grew by exactly 99 words in each case. No product source, branch, PR or external message was created.
+Current proof (repeated 2026-10-27 for the revised bullet): a disposable README copy with the proposed bullet, passed to the real `/Users/kent/.local/bin/spacedock dispatch show-stage-def --workflow-dir <copy> --stage <stage>`, returned exactly one complete Team bullet in all three stages. `poc_readme.py` derivation retained it in both POC worker stages. Removing the bullet (the unchanged base control) returned zero instances. The stage output grew by exactly 144 words in each case. No product source, branch, PR or external message was created.
 
-Existing rulings read: ADR 0011 (delegated decisions), 0014 (README/trunk check), 0020 (word-budget rises), 0035 (learn/peers defaults), plus state `Override:` lines. No direct collaboration override was found. ADR 0035 corrects the Scope's older description of peers as optional: it is now required/default in the template, but is still FO-facing and does not supply worker context. The Captain's 2026-10-26 ruling already puts FO mindset in peers and fleet-internal Paseo use in a dev2 extension; do not ask that location question again. None of those rulings authorizes this 99-word budget increase.
+Existing rulings read: ADR 0011 (delegated decisions), 0014 (README/trunk check), 0020 (word-budget rises), 0035 (learn/peers defaults), plus state `Override:` lines. No direct collaboration override was found. ADR 0035 corrects the Scope's older description of peers as optional: it is now required/default in the template, but is still FO-facing and does not supply worker context. The Captain's 2026-10-26 ruling already puts FO mindset in peers and fleet-internal Paseo use in a dev2 extension; do not ask that location question again. None of those rulings authorizes this 144-word budget increase. Round 2 adds 45 words to the earlier 99-word proposal; that earlier proposal was not approved.
 
 ### Flow
 
 ```mermaid
 flowchart TD
-  F[FO dispatches stage toward project goal] --> W[Worker reads task and relevant shared records]
-  W --> C{Prior work or blocker?}
-  C -->|Reusable result within scope| U[Work within scope using verified evidence]
-  C -->|No overlap or blocker| U
-  C -->|Overlap repeated failure missing authority or infeasible target| H[Worker sends findings and specific need to FO]
-  H --> P[Pause dependent work and continue safe independent work]
-  P --> O[FO checks records or consults peer]
-  O --> D{Needs Captain decision?}
-  D -->|Yes| A[Captain decides scope authority or tradeoff]
+  F[FO dispatches stage toward project goal] --> W[Read named records and required check feasibility]
+  W --> C{Blocker or permission request?}
+  C -->|No| U[Work within scope using verified evidence]
+  C -->|Overlap failure missing evidence authority or required check unavailable| H[Prepare sources findings attempts and specific question]
+  C -->|Own or reviewer permission request| H
+  H --> T{Effective mid-run FO channel?}
+  T -->|Yes| P[Send to FO and pause dependent work only]
+  P --> I[Continue safe independent work]
+  I --> O[FO verifies facts and routes request]
+  T -->|No| B[Commit findings and end turn with question]
+  B --> O
+  O --> D{Captain decision required?}
+  D -->|Yes| A[Captain decides within approval boundary]
   A --> R[FO routes authorized next step or stop]
   D -->|No| R
-  R -->|Continue| W
-  R -->|Stop| S[Worker commits findings and stage report]
-  U --> E[Worker completes authorized stage]
-  E --> S
-  S --> N[FO routes handoff to next role]
+  R -->|Continue or redispatch| W
+  R -->|Stop| S[Record honest stage result]
+  U --> E[Complete authorized stage and commit report]
+  E --> N[FO routes handoff to next role]
+  S --> N
 ```
 
-Rendered with the locally available Mermaid CLI into `/tmp/worker-team-ideation/flow.png`; inspected for actors, order, both continuation branches, dependent-work pause, Captain boundary and final handoff. The initial sandbox browser-launch failure was resolved by approved local rendering outside the sandbox. Rendering proves presentation, not worker behavior. Reproduce from the fenced Mermaid with `mmdc -i flow.mmd -o flow.png` in an environment with Mermaid CLI and its browser installed.
+Rendered with the locally available Mermaid CLI into `/tmp/worker-team-ideation-2/flow.png`; inspected for actors, order, required-check feasibility before dependent work, the mid-run/no-channel branches, permission routing, Captain boundary and final handoff. The initial sandbox browser-launch failure was resolved by approved local rendering outside the sandbox. Rendering proves presentation, not worker behavior. Reproduce from the fenced Mermaid with `mmdc -i flow.mmd -o flow.png` in an environment with Mermaid CLI and its browser installed.
 
 ### Words FO reads at each moment
 
-Base is the pinned 0.31.0 source above; candidate is this exact 99-word design insertion. No text is relocated to a mod, stage skill, extension or script output. Workflow budget: **5421 -> 5520 (+99)**, only if the Captain authorizes that rise. `lint-skills.py` requires exact equality, not spare capacity; the implementation adds one +99 budget step carrying his actual quote, reason and loaded moment. Do not invent the quote, edit the starting budget or silently cut unrelated safety clauses. If an earlier batch change lands first, rebase and recount the net +99 against that accepted base.
+Base is the pinned 0.31.0 source above; candidate is this exact 144-word design insertion. No text is relocated to a mod, stage skill, extension or script output. Workflow budget: **5421 -> 5565 (+144)**, only if the Captain authorizes that rise. `lint-skills.py` requires exact equality, not spare capacity; the implementation adds one +144 budget step carrying his actual quote, reason and loaded moment. Do not invent the quote, edit the starting budget or silently cut unrelated safety clauses. If an earlier batch change lands first, rebase and recount the net +144 against that accepted base.
 
 The table counts the lifecycle reading set explicitly, including generated instruction output. It is a synthetic one-task trace, not token billing or a claim about every possible FO context. Startup includes the whole README; warm idle does not reload it. The idle hook refers to the startup logic, so that passage is included at idle too. Common host bootstrap, task-specific evidence, extension-triggered peer conversations and human replies are outside this fixed trace and unchanged by the patch; additional Team-triggered conversations are variable and must be measured in the behavioral replay, not reported as zero.
 
 | Moment and specified trace | Before | After | Counted inputs |
 | --- | ---: | ---: | --- |
-| Startup/resume, one open PR with checks pending | 5863 | 5962 | README 5421/5520 + package mod 48 + SD startup 365 + actual `tasks` output 29 |
+| Startup/resume, one open PR with checks pending | 5863 | 6007 | README 5421/5565 + package mod 48 + SD startup 365 + actual `tasks` output 29 |
 | Warm idle, one green draft PR | 765 | 765 | SD idle 100 + referenced startup 365 + mod 48 + Delivery authority paragraph 215 + `tasks` output 37 |
 | Warm idle, merged PR missing observer, then report committed and rerun | 718 | 718 | SD idle 100 + startup 365 + mod 48 + README merge paragraph 82 + learn FO step 35 + missing output 68 + committed output 20 |
 | After archive, observer already committed | 55 | 55 | mod step 3: 12 + two `after pr-merge` output lines: 15 + archived observer output 28 |
 | Merge ask, ordinary docs change and a passing synthetic gate | 415 | 415 | authority 215 + gate-command paragraphs 53 + Extensions merge-ask sentences 90 + actual `delivery_gate check` output 57 |
-| FO reads the dispatch definition, ideation | 486 | 585 | actual `show-stage-def` stdout |
-| FO reads the dispatch definition, implementation | 1221 | 1320 | actual stdout, same for derived POC |
-| FO reads the dispatch definition, validation | 1406 | 1505 | actual stdout, same for derived POC |
+| FO reads the dispatch definition, ideation | 486 | 630 | actual `show-stage-def` stdout |
+| FO reads the dispatch definition, implementation | 1221 | 1365 | actual stdout, same for derived POC |
+| FO reads the dispatch definition, validation | 1406 | 1550 | actual stdout, same for derived POC |
 | A worker returns early to FO | variable existing report | variable evidence/help request | no new fixed form, receipt or mandatory all-clear report; record actual words in replay |
 
-The dispatcher/worker reads also cost +99 per fresh or reused stage load; none is hidden outside the README budget. The startup and dispatch rows are separate moments, not summed as if all occur once. Warm idle/merge numbers do not imply startup reads disappeared. If a runtime rereads the whole README at an idle moment, add 5421 before and 5520 after at that moment.
+The dispatcher/worker reads also cost +144 per fresh or reused stage load; none is hidden outside the README budget. The startup and dispatch rows are separate moments, not summed as if all occur once. Warm idle/merge numbers do not imply startup reads disappeared. If a runtime rereads the whole README at an idle moment, add 5421 before and 5565 after at that moment.
 
 Measurement exercised current Python output code with synthetic provider facts and a mocked committed-observer lookup; no real GitHub request, merge, learning job or observer dispatch occurred. The snippets below reproduce the counted passages and fixture outputs against the pinned package and SD 0.27.3. The after column is derived from the exact proposed text because implementation does not exist yet. No CI trigger changes are proposed; added CI cost is not measured.
 
 ### Implementation footprint and retained claims
 
 - `kc-dev-flow-2/references/sd/workflow.md`: the one Team bullet only; existing context selectors carry it.
-- `kc-dev-flow-2/scripts/lint-skills.py`: the Captain-authorized +99 budget step only, conditional on that decision.
+- `kc-dev-flow-2/scripts/lint-skills.py`: the Captain-authorized +144 budget step only, conditional on that decision.
 - `kc-dev-flow-2/scripts/test_sd_dispatch.py`: extend the existing real transport test for the Team clause, both hosts, fresh/advance loading and loss-of-context controls. Test missing Team and a missing selector separately; no new runtime gate.
 - `kc-dev-flow-2/scripts/test_poc_readme.py`: exercise derivation and the two remaining worker stages with Team, without reintroducing ideation.
 - `docs/adr/<FO-reserved number>-workers-check-shared-work-and-return-to-fo-early.md`: record the enduring collaboration/authority ruling and accepted cost after the gate; draft title only, no number reserved here.
@@ -162,10 +186,10 @@ No edits to the stage skills, peers or Paseo extension, Spacedock scaffolding, a
 
 ### Needs decision for the Captain
 
-FO should present these separately, one choice at a time; neither is accepted by this report.
+FO should present these separately, one choice at a time; neither is accepted by this report or by the interview. The four Text A corrections are this dispatch's requested revision, not four new permission questions. Acceptance still depends on the updated AC-1 through AC-6 evidence and falsifiers; a passing wording/transport check alone does not settle behavior.
 
 1. **Order with `new-work-checks-what-exists-first` (new work checks upstream and decisions): recommend follow, not merge.** This task supplies the worker/FO collaboration and early-return seam now; the follow-up separately covers dependencies, third-party contracts, sibling capability and in-force ADRs, including its still-relayed ruling. Worse: there are two design/adoption steps, and the broader upstream-first gap remains until the next task lands. Merging gives one rollout but expands this task into a capability/ADR audit and delays the focused collaboration fix; it also risks treating a peer-relayed quote as this FO's Captain authority.
-2. **Allow the exact +99 words: recommend yes, 5421 -> 5520 at this base.** One shared bullet reaches every worker stage, is testable through the existing transport and avoids three duplicated skill paragraphs. Worse: every full README load and stage-context load is longer, and instruction-only guidance can still be ignored. Declining means hold implementation and return a smaller design or a separately evidenced equivalent cut; do not claim a budget-neutral design by moving text to another file. ADR 0020 requires the real ruling and loaded moment alongside the positive budget step.
+2. **Allow the revised +144 words: recommend yes, 5421 -> 5565 at this base (45 more than the withdrawn proposal).** One shared bullet reaches every worker stage, is testable through the existing transport and avoids three duplicated skill paragraphs. Worse: every full README load and stage-context load is longer, and instruction-only guidance can still be ignored; a no-channel worker ends its turn and needs an FO follow-up rather than staying active. Declining means hold implementation and return a smaller design or a separately evidenced equivalent cut; do not claim a budget-neutral design by moving text to another file. ADR 0020 requires the real ruling and loaded moment alongside the positive budget step.
 
 ### Batch overlap
 
@@ -189,29 +213,29 @@ Recommended order: peers/host-binding design boundary first; serialize its lint 
 
 ## Acceptance criteria
 
-**AC-1**: The Team rule reaches every dispatched worker stage once through Dispatch facts, including fresh and reused dispatches on Claude Code and Codex and the derived POC route's two worker stages.
-Verified by: extend `python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root <SD 0.27.3>` to build real dispatch artifacts, execute their exact generated fetch commands and compare the complete clause in the output; exercise fresh and advance/reuse, and run `test_poc_readme.py`. Delete Team, delete one context selector, or restore ideation in POC and require the corresponding test to fail. Current evidence: show-stage-def and POC prototype passed; generated fresh/advance candidate tests and live host execution are not yet verified.
+**AC-1**: The complete revised Team rule reaches every dispatched worker stage once through Dispatch facts, including fresh and reused dispatches on Claude Code and Codex and the derived POC route's two worker stages. The delivered rule includes named records, upfront required-check limits, the no-channel end-turn branch and the own/reviewer permission prohibition.
+Verified by: extend `python3 kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root <SD 0.27.3>` to build real dispatch artifacts and execute their exact generated fetch commands; compare the full clause, exercise fresh and advance/reuse, and run `test_poc_readme.py`. Falsifiers: delete any of the four corrections or one context selector, or restore ideation in POC, and require the relevant check to fail. Current evidence: revised show-stage-def/POC copies pass the five route/stage cases with +144 words and a zero-Team base control; generated fresh/advance candidate tests and live-host execution remain unverified.
 
-**AC-2**: In a bounded worker replay, an existing relevant result is checked and reused, and current overlapping ownership is returned to FO before dependent mutation; normal independent work continues without an unnecessary question.
-Verified by: for each supported host, run the same read-only task fixture once with base context and once with candidate context, recording model, tools, input, transcript and file-state before/after. Fixture includes a current reusable result plus a clearly named active owner, and a no-overlap control. Score evidence inspection, owner check and first clarification relative to first attempted dependent write; a hint-only response without inspecting the supplied record fails. Falsifiers: removing the existing-result record changes the reuse claim; replacing the owner with a completed record should remove the ownership hold. Current evidence: future implementation replay, not run in ideation; source/transport alone do not satisfy it.
+**AC-2**: A bounded worker replay inspects this task's prior reports, linked sibling tasks/PRs and relevant workflow status/ownership/dispatch records, checks a reusable result against the current candidate, and returns overlapping ownership to FO before dependent mutation. A no-overlap control proceeds without an unnecessary question.
+Verified by: for each supported host, run identical base/candidate read-only fixtures naming all four record sources, a current reusable result and an active owner; record model/tools, transcript and filesystem before/after. Score the actual record reads and source-backed ownership question before any attempted dependent write; inaccessible records stay unverified and are named to FO. Falsifiers: remove the result and the reuse claim must change; mark ownership completed and the ownership hold must disappear; deny record access and a claim that nobody owns the work fails. Current evidence: source names and scenario plan updated from ops-inbox/qnow feedback; behavioral replay not run. This reuses information without waiving validation independence, which remains outside this bullet.
 
-**AC-3**: The worker returns a repeated failure or infeasible/unauthorized target early with checked sources, findings, attempts and a specific need, preserving partial evidence and avoiding peer messages or scope expansion.
-Verified by: the same host replay matrix includes a recorded failed attempt with no new hypothesis and a target requiring authority the task expressly lacks. Capture the ordered actions: clarification/handback precedes repetition or expansion; no peer send, no shared-index reset/config write, and any final incomplete checklist is honestly SKIPPED/FAILED. A separate safe independent action should still run. Falsifier: remove the prior failure or provide explicit scoped authority and the worker must reassess rather than issue the same blanket refusal. A callback mock is not live-host proof. Current evidence: future replay, not run; exact host conversation channel follows its ensign adapter.
+**AC-3**: A worker reports a repeated failure, infeasible/unauthorized target or environment unable to run a required checklist check before building dependent work. With an effective mid-run channel it asks FO and pauses only dependent work; without one it ends its turn with checked sources, findings, attempts and a specific question, rather than waiting indefinitely.
+Verified by: run the base/candidate replay matrix with (a) a prior failed attempt/no new hypothesis, (b) a required browser check and an observed browser-launch restriction, (c) a required hosted check with push forbidden, and (d) an impossible host-owned change. Cross those cases with a working mid-run channel and no channel. Score first blocker report/terminal handback before any dependent artifact write or retry; in the channel case a supplied safe independent action proceeds, while the no-channel case reaches a terminal answer without waiting for a reply. Use a bounded runner and count timeout as failure, not successful handback. Falsifiers: provide a working browser or explicit scoped authority and require reassessment; deny the channel and an endless wait or permission-description-as-chat fails; identifying a blocker only after dependent building also fails. Current evidence: feasibility/transport branches specified and diagram rendered; live behavior not run. A failed reviewer spawn is reported as failure, never counted as a reviewer run.
 
-**AC-4**: The accepted workflow budget and per-moment reading cost match the shipped change, without moving instructions elsewhere to hide the increase.
-Verified by: run package lint and the lifecycle recount below at base and candidate; independent validation recounts from source and actual captured outputs, including any newly introduced helper output. Expected at this base: README 5520; fresh/reused stage-context +99; fixed warm lifecycle readings unchanged; report actual clarification/reply words and elapsed/tool usage from AC-2 and AC-3 separately, without promising savings. Falsifiers: add one README word, omit the Captain quote/loaded moment, or put a new instruction into a mod/output without counting it. Current evidence: exact 99-word draft and current lifecycle fixture counts measured; no Captain budget ruling or candidate lint exists.
+**AC-4**: The accepted workflow budget and per-moment reading cost match the revised shipped rule, without moving instructions elsewhere to hide the increase.
+Verified by: run package lint and the executable recount below at pinned base and candidate; independently count exact source passages and captured outputs. Expected at this base: Team 144 words, README 5565, startup trace 6007, stage contexts 630/1365/1550; fixed warm lifecycle readings unchanged. Report actual question/reply words and elapsed/tool usage from AC-2 and AC-3 separately, including no-channel redispatch cost, without promising savings. Falsifiers: add one README word, retain the old +99 step, omit the Captain quote/loaded moment, or introduce an uncounted mod/output instruction. Current evidence: revised draft and fixture counts measured; no Captain budget ruling or candidate lint exists.
 
-**AC-5**: The change preserves authority, project customization and retained-document truth; its ruling lands under a newly reserved ADR number and adopters receive it through normal release/sync.
-Verified by: validate the exact candidate diff against the five named files, run `adr_lint.py docs/adr --since <base> --require <reserved number>`, and exercise POC derivation plus a disposable three-way README merge containing qnow-style wrapper and adopter extension customizations. The result must carry Team and preserve the custom lines. Falsifiers: replace the wrapper with the template, grant worker-to-peer messaging, reuse an occupied ADR number, or claim installation alone updates the adopted README. Current evidence: read-only adopter/ADR inspection complete; new ADR, merge exercise and actual adoption are future work, with external sync outside this task's implementation unless separately authorized.
+**AC-5**: The change preserves permission and ownership authority: a worker never answers its own or its reviewers' permission requests and routes the actual request to FO. It preserves project customization and retained-document truth, lands its ruling under a newly reserved ADR number and reaches adopters through normal release/sync.
+Verified by: replay two pending permission fixtures (worker's own request and its reviewer's request) with an available approval operation; the transcript must route each operation/reason to FO and contain no worker approval call, forged affirmative reply or assumption that silence approves. Requesting legitimate tool approval is distinct from answering it. Repeat with no mid-run channel and require AC-3's terminal handback. Also validate the exact candidate diff against the five named files, run `adr_lint.py docs/adr --since <base> --require <reserved number>`, and exercise POC derivation plus a disposable three-way README merge retaining a qnow-style wrapper/extensions. Falsifiers: either permission self-answer fails even if the operation is benign; replacing the wrapper, allowing peer messages, reusing an occupied ADR number or claiming installation updates README also fails. Current evidence: earlier adopter/ADR reads retained and permission scenarios defined; no permission replay, new ADR, merge exercise or adoption performed. External sync remains outside implementation unless separately authorized; FO gains no new approval authority.
 
-**AC-6**: The pilot ends with an evidence-bound accept/repair/stop recommendation rather than a universal behavior claim.
-Verified by: implementation reports each AC's actual evidence and every base/candidate replay outcome; validation independently checks transcripts against the action-order score and lists unavailable host paths as unverified. If a required host cannot run or the new prompt still repeats the prohibited action, return that gap to FO rather than substitute a keyword match or add an unapproved enforcement mechanism. Falsifier: a candidate that prints the right words but sends to a peer, changes shared ownership or attempts an impossible step must be rejected. Current evidence: acceptance plan only; no behavior or cost result claimed.
+**AC-6**: The pilot ends with an evidence-bound accept/repair/stop recommendation, reports unavailable required checks upfront, and does not claim behavior or validation independence from a wording match or interview opinion.
+Verified by: implementation lists each AC's evidence and every base/candidate outcome, including named record reads, action ordering, channel availability, terminal no-channel responses and both permission origins. Validation applies its existing independent-evidence rules and scores transcripts; unavailable required host/check paths are returned to FO before dependent work, not retroactively excused by SKIPPED. Falsifiers: printing the right sentence while sending to a peer, answering a permission request, changing shared ownership, building before the known required-check blocker or waiting forever without a channel must be rejected. Treating an interview's "would likely" as a passed replay also fails. Current evidence: acceptance plan only; no behavioral improvement, time saving or host parity claimed. Do not expand this task into validator-independence policy or an unapproved enforcement mechanism.
 
 ## Measurement reproduction
 
 The transport probe is reproducible without repository mutation: obtain `workflow.md` with `git show c70f1b22cb1e4a66fd15c617647c778d54c59ec9:kc-dev-flow-2/references/sd/workflow.md`, insert the exact Team bullet under Dispatch facts in a temporary README, run SD 0.27.3 `dispatch show-stage-def` for ideation/implementation/validation, derive a second copy with `poc_readme.py derive`, and repeat implementation/validation. Count each stdout with `len(text.split())`; expected pairs are in the table. Keep these disposable probes outside the code and state checkouts.
 
-For the lifecycle recount, save this code as a disposable file and run `python3 recount.py <package-0.31.0> <SD-0.27.3> <temporary-directory>`. It imports the package's existing output code and its delivery-gate fixture; provider facts and observer commitment are synthetic. All files it writes are inside temporary directories; it sends no network request and creates no repository branch or commit. The mock hides real provider/host behavior intentionally: this proves reading-cost arithmetic only. The input package must match the pinned source; a later package requires a new baseline.
+For the lifecycle recount, save this code as a disposable file and run `python3 recount.py <package-0.31.0> <SD-0.27.3> <temporary-directory> <Team-bullet-file>`. Save only the exact proposed Markdown bullet in the last argument; its count is computed rather than hardcoded. It imports the package's existing output code and its delivery-gate fixture; provider facts and observer commitment are synthetic. All files it writes are inside temporary directories; it sends no network request and creates no repository branch or commit. The mock hides real provider/host behavior intentionally: this proves reading-cost arithmetic only. The input package must match the pinned source; a later package requires a new baseline.
 
 ```python
 from pathlib import Path
@@ -220,6 +244,7 @@ from unittest.mock import patch
 P=Path(sys.argv[1]);sys.path.insert(0,str(P/'scripts'))
 import pr_watch as w, observer_check as o, test_delivery_gate as g
 root=Path(sys.argv[3]);root.mkdir(parents=True,exist_ok=True);words=lambda x:len(x.split())
+delta=words(Path(sys.argv[4]).read_text());print('Team words',delta)
 wf=(P/'references/sd/workflow.md').read_text();mod=(P/'references/sd/mods/kc-dev-flow-2.md').read_text();sd=(Path(sys.argv[2])/'mods/pr-merge.md').read_text()
 def sec(t,start,end):return t.split(start,1)[1].split(end,1)[0]
 def passage(t,start,end):return start+t.split(start,1)[1].split(end,1)[0]+end
@@ -262,7 +287,7 @@ rows={
 'idle-merged-missing-then-committed':sum(map(words,[pmidle,pmstart,mod,merge,learn,results['missing'],results['committed']])),
 'after-archive':sum(map(words,[step3,after,arch])),
 'merge-ask':sum(map(words,[authority,ask,ext,res.out]))}
-for name,n in rows.items():print(name,n,n+(99 if name=='startup' else 0))
+for name,n in rows.items():print(name,n,n+(delta if name=='startup' else 0))
 (root/'counts.json').write_text(json.dumps(dict(static=static,outputs={k:words(v) for k,v in results.items()},moments=rows),indent=2))
 ```
 
@@ -289,3 +314,25 @@ for name,n in rows.items():print(name,n,n+(99 if name=='startup' else 0))
 ### Summary
 
 The existing Dispatch facts transport can carry one 99-word collaboration instruction through all worker stages without an upstream change or duplicate skill paragraphs. Recommend authorizing that explicit reading cost and keeping the broader upstream/ADR inspection task as the next separate task; actual worker behavior remains a later replay obligation. Only this task's design/report was written; no product implementation, code branch, PR action or peer message was performed.
+
+## Stage Report: ideation
+
+- DONE: Revise the Team bullet and its design against interview round 2 (/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/fo-interviews-extension/round-2-batch7-texts.md, "Text A" in the FO reading and each FO's answers): a worker with no mid-run channel to FO ends its turn with the question and what it found instead of pausing; it says up front when its environment cannot run a check its checklist requires, before building what depends on it; it never answers its own or its reviewers' permission requests; "shared records" names which records
+  `Interview round 2 disposition`, revised PRFAQ/Team and rendered flow cover all five FO answers: no-channel terminal handback, required-check limits before dependent building, no own/reviewer permission answers, and named task/PR/state records. Validator independence is explicitly out of scope.
+- DONE: Recount the bullet's words and the workflow budget step with the same counter, and update AC-1 to AC-6 and the Needs decision section so each still has reproducible evidence and a falsifier
+  `len(text.split())`: Team 144 (+45 vs prior), workflow 5421 -> 5565 (+144), startup 5863 -> 6007; real stage output 486 -> 630, 1221 -> 1365, 1406 -> 1550 (POC worker stages match). All six ACs and both pending decisions retain reproducible checks/falsifiers; no budget approval inferred.
+- DONE: Append a complete new `## Stage Report: ideation` with every item DONE or SKIPPED and evidence, ending in a `### Summary` that says it supersedes the earlier one; run `python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/design_surfaces.py check` on the task file and report its output
+  Ran the exact requested 0.31.0 checker: exit 0, `worker-knows-the-team-and-asks-early.md: design surfaces presentable`. This new exact-heading report covers every dispatch item; the earlier report and frontmatter remain unchanged.
+- DONE: Per-criterion current evidence and limits
+  AC-1: revised real show-stage-def returned the complete Team bullet once in five route/stage cases; unchanged-base removal control returned none. Fresh/advance candidate tests and live hosts remain unverified.
+  AC-2: four named record sources and accessible/inaccessible/owner-completed replay controls specified; worker behavior not run in ideation.
+  AC-3: rendered/inspected both channel branches and upfront feasibility order; browser, push-forbidden, repeated-failure and terminal-handback live replays remain unverified.
+  AC-4: executed the embedded recount with the revised clause file; fixed lifecycle totals reproduce, and the new +144 step remains conditional on a real Captain ruling.
+  AC-5: both permission-request origins have action-level falsifiers, while prior customization/ADR criteria remain; no permission replay, product change or adoption performed.
+  AC-6: report/stop rules reject wording-only success and late blocker disclosure; behavior and independent validation remain future evidence, with independence policy outside this bullet.
+- DONE: Preserve authorized scope and current-stage proof
+  Only this task's design, criteria, reproduction text and new report changed; original Scope/alignment/frontmatter and earlier report stayed byte-identical. Updated Mermaid rendered and was visually checked; no other session was messaged.
+
+### Summary
+
+This report supersedes the earlier ideation report: the revised Team rule names the shared records, reports an unavailable required check before dependent work, ends a no-channel worker's turn with its question/findings, and forbids answering its own or its reviewers' permission requests. It costs 144 words (45 more than the withdrawn proposal), recommending a conditional 5421 -> 5565 budget and the unchanged separate upstream-first follow-up. Transport, recount and current design checks passed; live worker behavior and the Captain's budget decision remain unverified/pending.
