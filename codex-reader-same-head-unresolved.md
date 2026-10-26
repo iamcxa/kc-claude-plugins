@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-26T17:08:13Z
+worktree: .worktrees/spacedock-ensign-codex-reader-same-head-unresolved
 ---
 
 ## Scope
