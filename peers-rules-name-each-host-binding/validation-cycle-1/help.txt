@@ -1,0 +1,21 @@
+[1027/015455.382359:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)
+Usage: paseo agent send [options] <id> [prompt]
+
+Send a message/task to an existing agent
+
+Arguments:
+  id                     Agent ID (or prefix)
+  prompt                 The message to send
+
+Options:
+  --prompt <text>        Provide the message inline as a flag
+  --prompt-file <path>   Read the message from a UTF-8 text file
+  --image <path>         Attach image(s) to the message (default: [])
+  --behavior <behavior>  Active-turn behavior (agent default: steer; otherwise:
+                         interrupt) (choices: "interrupt", "steer")
+  --no-wait              Return immediately without waiting for completion
+  --json                 Output in JSON format
+  --host <host>          Explicit daemon endpoint: host:port, TCP, socket, SSH,
+                         or pairing URL (default: local home)
+  --home <path>          Select a local daemon home (default: ~/.paseo)
+  -h, --help             display help for command

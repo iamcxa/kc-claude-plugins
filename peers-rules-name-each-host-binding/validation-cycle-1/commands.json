@@ -1,0 +1,12 @@
+{
+  "lint": "python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+  "adr": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since c70f1b22cb1e4a66fd15c617647c778d54c59ec9 --require 0038",
+  "numbers": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/number_guards.py check --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2 --task /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/peers-rules-name-each-host-binding.md",
+  "comments": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/comment_ratio.py c70f1b22cb1e4a66fd15c617647c778d54c59ec9 dc3916fbb4ce9655dc37c5e4185653694e029de4 --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+  "records": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/dispatch_records.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/peers-rules-name-each-host-binding",
+  "docimpact": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/doc_impact.py bff1d8147b626ae91c6ca431f7dde459a63f254d dc3916fbb4ce9655dc37c5e4185653694e029de4",
+  "surfaces": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/design_surfaces.py check /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/peers-rules-name-each-host-binding.md",
+  "replay": "python3 -B /tmp/peers-validation-730-cycle1-evidence/replay.py",
+  "recount": "python3 -B /tmp/peers-validation-730-cycle1-evidence/recount.py",
+  "help": "paseo agent send --help"
+}

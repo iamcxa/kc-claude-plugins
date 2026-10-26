@@ -1,0 +1,16 @@
+test_missing_optional_extension_document_is_named (__main__.RouteMutationTests.test_missing_optional_extension_document_is_named) ... FAIL
+
+======================================================================
+FAIL: test_missing_optional_extension_document_is_named (__main__.RouteMutationTests.test_missing_optional_extension_document_is_named)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9eo7jypy/kc-dev-flow-2/scripts/test_lint_skills.py", line 207, in test_missing_optional_extension_document_is_named
+    self.refuses("extension `paseo` has no EXTENSION.md")
+  File "/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp9eo7jypy/kc-dev-flow-2/scripts/test_lint_skills.py", line 37, in refuses
+    self.assertTrue(any(expected in error for error in errors), errors)
+AssertionError: False is not true : []
+
+----------------------------------------------------------------------
+Ran 1 test in 0.198s
+
+FAILED (failures=1)

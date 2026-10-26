@@ -1,0 +1,17 @@
+POC README matches the five-stage README without ideation
+--- derived
++++ /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4gkldtlz/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false
+......
+----------------------------------------------------------------------
+Ran 6 tests in 0.006s
+
+OK

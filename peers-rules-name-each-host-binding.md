@@ -493,3 +493,29 @@ Independent validation PASSED for the exact head at the accepted local/paper-rep
 ### Summary
 
 Removed the redundant dependency helper, its call and its two dedicated tests at dc3916fbb4ce9655dc37c5e4185653694e029de4; the authorized tier and document checks and installation policy remain. All 25 remaining test files and the default/optional/adopter boundary probes pass, and the code branch is pushed. This complete report supersedes the earlier implementation report for the current candidate; FO owns RoboRev, CI, any recurring High disposition and revalidation, with no merge or acceptance implied.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #730 head dc3916fb against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at dc3916fbb4ce9655dc37c5e4185653694e029de4, base c70f1b22cb1e4a66fd15c617647c778d54c59ec9, within the accepted prose/manual-replay and local-check boundary; complete criterion matrix, commands and limits: peers-rules-name-each-host-binding/validation-cycle-1/evidence.md.
+- DONE: Recheck the Cycle 1 repair: extension_dependency_errors, its call and its two tests are gone, the tier check is byte-identical to the base, and the rest is unchanged since bff1d814; RoboRev on this head (FO, 2026-10-27): clean on dc3916fbb, evidence=roborev:1230; CI on this head read by FO: 5 of 5 pass
+  Executed repair-proof.py: exactly 23 deletions in two scripts, helper/call/two tests absent, tier-enforcement bytes identical to base, presence guard retained and all other paths unchanged; prior F1 resolved. RoboRev 1230 clean and CI 5/5 are explicitly FO-supplied evidence.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five steps in validation-cycle-1/acceptance.sh ran unchanged with bash --noprofile --norc, exit 0; full output in acceptance-output.txt. Supplied equivalent Codex package ADR lint used --since c70f1b22cb1e4a66fd15c617647c778d54c59ec9 --require 0038: 37 records, 0 legacy, exit 0.
+- DONE: Re-run AC-1, AC-2 and AC-3 host/record evidence and falsifiers.
+  37 manual traces/17 rejected bad-event mutants: vendor routing/unlisted reads, missing send behavior/busy sends/expired or reset deadlines/receipt-as-answer, duplicate task/lost record/bound-briefing edit/relayed authority all rejected; real SD discovery and pr_watch omit the task-shaped hidden note. These exercise the scratch auditor, not an automatic policy executor.
+- DONE: Re-run AC-7 optional-activation and AC-6 complete reading-bundle checks.
+  Default template passes, optional-paseo template is refused, three adopter lists leave the package result unchanged, and three-way merges preserve their values; mandatory-paseo mutation is rejected. Full-bundle recount stays 805/290/1380 words, proactive 2475, incoming/gate 2185; unaffected lifecycle totals unchanged; omitting upstream or inbound words fails the independent sum check.
+- DONE: Run every remaining test file and retained local guards.
+  All 25 files exit 0: 875 unittest cases pass, 1 optional integration case skips, plus SD dispatch/observer-recovery assertion runners; lint now 44 tests. Removing the retained presence guard fails its named test. Lint/ADR/number/comment/dispatch/design checks exit 0; 7 dispatch records complete; all four doc_impact dispositions confirmed.
+- SKIPPED: Optional journey integration, real peer delivery, fresh model-reader reruns and validator execution of hosted review/CI.
+  One unchanged test cannot locate node/journey-accept.mjs or its YAML dependency; no exact cause inferred. Policy bytes are unchanged and earlier model-reader transcripts remain bounded read evidence; no live send made. FO supplied this head's review/CI; final GitHub API re-read failed, so no further remote verification or mutation was attempted.
+
+### Findings
+
+Prior F1 (redundant dependency automation) is resolved; no product-code repair finding remains.
+- F2 Polish: the successful PR-body read this cycle still claims dependency/document checks, 46 lint tests and prior-head review/comment results. User/workflow: reviewer reads PR #730; observable issue: stale description beside dc3916fb; affected protected criterion: none (review clarity only); trigger: captured API response at cycle entry. FO should refresh the description to this head's results before delivery; the final API re-read failed, so later remote edits are unverified.
+
+### Summary
+
+Cycle 1 independent validation PASSED for dc3916fbb4ce9655dc37c5e4185653694e029de4; F1 is resolved, goal sufficiency and minimal necessity are supported at the accepted local/paper-replay boundary, and F2 is a nonblocking PR-description refresh for FO. The comment check reports 0/6 added comments (0%) but does not enforce its maximum below 20 code lines; CI triggers are unchanged and per-PR cost is unmeasured; no live delivery, adoption enforcement or merge is implied. This complete report supersedes the earlier validation report for the current candidate; candidate bytes/frontmatter remain unchanged, temporary validation worktrees are removed, and FO retains the gate and delivery decision.

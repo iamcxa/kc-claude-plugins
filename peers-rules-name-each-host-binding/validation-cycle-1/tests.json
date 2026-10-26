@@ -1,0 +1,279 @@
+[
+  {
+    "file": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "exit": 0,
+    "seconds": 0.09,
+    "log": "kc-dev-flow-2_extensions_codex_test_codex_review.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "exit": 0,
+    "seconds": 0.06,
+    "log": "kc-dev-flow-2_extensions_copilot_test_copilot_review.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "exit": 0,
+    "seconds": 0.29,
+    "log": "kc-dev-flow-2_extensions_journey-map_test_map_footprint.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "exit": 0,
+    "seconds": 1.42,
+    "log": "kc-dev-flow-2_extensions_release-acceptance_test_release_acceptance.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "exit": 0,
+    "seconds": 2.01,
+    "log": "kc-dev-flow-2_extensions_roborev_test_roborev_gate.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "exit": 0,
+    "seconds": 1.04,
+    "log": "kc-dev-flow-2_scripts_test_adr_doc_checks.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "exit": 0,
+    "seconds": 7.27,
+    "log": "kc-dev-flow-2_scripts_test_comment_ratio.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "exit": 0,
+    "seconds": 0.08,
+    "log": "kc-dev-flow-2_scripts_test_decision_ledger.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "exit": 0,
+    "seconds": 56.43,
+    "log": "kc-dev-flow-2_scripts_test_delivery_gate.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "exit": 0,
+    "seconds": 10.55,
+    "log": "kc-dev-flow-2_scripts_test_design_surfaces.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "exit": 0,
+    "seconds": 1.26,
+    "log": "kc-dev-flow-2_scripts_test_dispatch_records.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "exit": 0,
+    "seconds": 31.48,
+    "log": "kc-dev-flow-2_scripts_test_laws_check.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_learning.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "exit": 0,
+    "seconds": 49.72,
+    "log": "kc-dev-flow-2_scripts_test_learning.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_lint_skills.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "seconds": 9.66,
+    "log": "kc-dev-flow-2_scripts_test_lint_skills.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_number_guards.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "exit": 0,
+    "seconds": 18.4,
+    "log": "kc-dev-flow-2_scripts_test_number_guards.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "exit": 0,
+    "seconds": 7.63,
+    "log": "kc-dev-flow-2_scripts_test_observer_check.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_observer_recovery.py"
+    ],
+    "exit": 0,
+    "seconds": 3.18,
+    "log": "kc-dev-flow-2_scripts_test_observer_recovery.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_package_version.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "exit": 0,
+    "seconds": 0.06,
+    "log": "kc-dev-flow-2_scripts_test_package_version.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 0,
+    "seconds": 0.06,
+    "log": "kc-dev-flow-2_scripts_test_poc_readme.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "exit": 0,
+    "seconds": 38.09,
+    "log": "kc-dev-flow-2_scripts_test_pr_watch.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "exit": 0,
+    "seconds": 5.27,
+    "log": "kc-dev-flow-2_scripts_test_replay_dispatch.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0,
+    "seconds": 17.95,
+    "log": "kc-dev-flow-2_scripts_test_role_triggers.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "exit": 0,
+    "seconds": 20.64,
+    "log": "kc-dev-flow-2_scripts_test_sd_dispatch.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_validation_security.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "exit": 0,
+    "seconds": 0.76,
+    "log": "kc-dev-flow-2_scripts_test_validation_security.py.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "exit": 0,
+    "seconds": 7.71,
+    "log": "kc-dev-flow-2_scripts_test_workflow_checkout.py.log"
+  }
+]

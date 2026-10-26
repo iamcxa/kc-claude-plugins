@@ -1,0 +1,13 @@
+Repair identity PASS: helper/call/two tests removed; 23 deletions in two scripts; every other path unchanged.
+Tier-check bytes match base exactly; presence-check addition retained.
+Default package template PASS
+Adopter [learn, peers]: package result unchanged PASS
+Adopter [learn, peers, paseo]: package result unchanged PASS
+Adopter [learn, paseo]: package result unchanged PASS
+Optional extension in package template REFUSED: references/sd/workflow.md: extensions: lists `paseo` but its README tier is `optional, requires peers`, not `required`
+AC-7 mandatory-Paseo mutant REJECTED
+Missing extension document REFUSED
+Three-way merge preserved [learn, peers]
+Three-way merge preserved [learn, peers, roborev]
+Three-way merge preserved [learn, peers, paseo]
+Removed-document-guard mutant: named test FAILED as expected (exit 1)

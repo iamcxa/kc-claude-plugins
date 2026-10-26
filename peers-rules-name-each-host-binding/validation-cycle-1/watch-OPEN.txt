@@ -1,0 +1,3 @@
+fact: o/r#7 OPEN draft=False checks=green
+next: run `python3 /private/tmp/peers-validation-730-cycle1/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpr7g479h9/watch.json wait` in the background, unless one is running.
+next: when it exits, do the next: lines it prints.

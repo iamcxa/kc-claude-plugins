@@ -1,0 +1,5 @@
+docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md	review	kc-dev-flow-2/scripts/lint-skills.py
+kc-dev-flow-2/README.md	review	kc-dev-flow-2/scripts/lint-skills.py
+kc-dev-flow-2/skills/maintain-flow/SKILL.md	review	kc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_lint_skills.py
+learning.md	review	kc-dev-flow-2/scripts/lint-skills.py
+4 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'

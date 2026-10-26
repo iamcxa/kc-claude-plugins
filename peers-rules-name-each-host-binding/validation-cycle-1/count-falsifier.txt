@@ -1,0 +1,3 @@
+omit upstream: REJECTED
+omit inbound: REJECTED
+Complete route sums PASS; approved ceilings independently checked by recount-independent.py.

@@ -1,0 +1,23 @@
+1 ADR file(s) checked, 0 legacy; changed records not checked (no --since or --require)
+required ADR 2: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+2 ADR file(s) checked, 0 legacy
+1 ADR file(s) checked, 0 legacy
+0002-first.md: Decision needs a '**Words:**' line
+0002-first.md: Decision needs a '**Options considered:**' line
+0002-first.md: sections must be exactly Status, Context, Decision, Consequences in that order
+0002-first.md: section 'Context' is empty
+0002-first.md: status 'Done' is not Proposed, Accepted, Deprecated or 'Superseded by NNNN'
+0002-first.md: superseded by 0009, which does not exist
+0002-first.md: first line must be '# 2. <title>'
+0002-first.md: needs a 'Date: YYYY-MM-DD' line before the first section
+2-first.md: file name must be NNNN-short-title.md
+0002-second.md: number 2 is also used by 0002-first.md
+2 ADR file(s) checked, 1 legacy
+required ADR 1 is a legacy record; a new ruling needs its own file
+required ADR 3 does not exist
+1 ADR file(s) checked, 0 legacy
+.........
+----------------------------------------------------------------------
+Ran 9 tests in 0.978s
+
+OK

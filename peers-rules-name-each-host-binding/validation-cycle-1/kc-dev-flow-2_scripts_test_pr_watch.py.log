@@ -1,0 +1,8 @@
+................................usage: test_pr_watch.py [-h] [--state STATE] [--codex] [--copilot]
+                        {add,check,wait,tasks} [args ...]
+test_pr_watch.py: error: argument command: invalid choice: 'no-such-command' (choose from 'add', 'check', 'wait', 'tasks')
+.................................................................................
+----------------------------------------------------------------------
+Ran 113 tests in 37.975s
+
+OK

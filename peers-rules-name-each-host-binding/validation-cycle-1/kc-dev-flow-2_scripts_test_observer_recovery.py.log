@@ -1,0 +1,1 @@
+PASS: archive without observer.md detected; state commit refused for the late report; path-scoped commit then state commit published it; validate VALID; check exits 0
