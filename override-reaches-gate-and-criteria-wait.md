@@ -22,3 +22,7 @@ Alignment: not needed before ideation; the Captain chose the narrowed scope.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Closed
+
+Closed 2026-10-26, the Captain 「可以關，如果都涵蓋了」 (chat), answering FO's ask to close the three tasks folded into fo-written-lines-checked-before-dispatch. Covered by iamcxa/kc-claude-plugins#724 (merged 1a6149f5): point 1 is that task's AC-5 (`design_surfaces.py check` notes an `Override:` line outside a gate resolution reason), point 2 is its AC-6 (a superseded criterion waits until a dispatch checklist names its amendment). Point 3 stays with the observer under the Captain's 2026-10-21 ruling.
