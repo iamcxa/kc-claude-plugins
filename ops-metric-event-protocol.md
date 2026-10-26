@@ -118,10 +118,12 @@ sequenceDiagram
         Note over K: projection only, insights count distinct ce_id (stop)
     else inbox live
         P->>I: POST signed body, webhook-id msg_<id>
-        alt signature, timestamp or key-environment check fails
+        alt signature or timestamp check fails
             I-->>P: 401, nothing stored (stop, sender retries once only for timestamp)
         else not contract v1 (missing or extra field, free text in an enumerated field, id not derived)
             I-->>P: 400, nothing stored (stop, sender does not retry)
+        else the signing key may not sign this environment
+            I-->>P: 401 key-not-allowed-for-environment, nothing stored (stop)
         else source and id already stored
             I-->>P: 200 duplicate (stop)
         else heartbeat
@@ -131,12 +133,11 @@ sequenceDiagram
             I-->>P: 429 incident-cap (stop, sender does not retry)
         else crossed or recovered
             I->>B: raw event
-            I->>I: route = table(environment, severity), recovered always routes record
-            alt route record
-                I->>I: join an open incident if one exists, else nothing to open
-                I-->>P: 200 recorded (stop)
-            else route agent or captain
-                I->>A: dispatch open (new incident) or join
+            I->>I: route = table(environment, severity), a recovered event goes to its incident
+            alt crossed routed record, or recovered with no open incident
+                I-->>P: 200 recorded, no dispatch, no write to any ops task (stop)
+            else crossed routed agent or captain, or recovered joining its open incident
+                I->>A: dispatch open (new incident) or join (no model run, the join run writes the event file)
                 alt GitHub refused
                     I-->>P: 502, claims released, sender retries with the same id
                 else no answer
@@ -213,16 +214,17 @@ Default table. An instance may change a cell in its own configuration, which the
 | preview | record | record | agent |
 | dev | record | record | record |
 
-- **record** (record-and-close): the event is stored and, if its incident is open, joins it. No agent runs and no notice is sent. The answer is 200 `recorded`.
+- **record** (record-and-close): the event is kept in the inbox store only. No dispatch, no notice, and no write to any ops task, even when its incident is open, because the inbox holds only a dispatch credential and only a trigger run writes the state branch (POC2 AC-4, r1 isolation). The answer is 200 `recorded`.
 - **agent** (wake the agent): r1's path, which opens or joins the incident and posts a Slack notice, then an agent run files one recommendation. The answer is 202.
 - **captain**: the agent path, and the notice mentions the Captain's Slack user from the instance configuration (D4).
-- `recovered` always routes record and joins its incident. The ops run records it and marks the task closable (D3).
+- `recovered`: when its incident claim exists, the inbox dispatches it in mode join (202). r1's join run writes the event file without a model run and marks the task closable (D3). With no open incident, it is 200 `recorded`.
 - Heartbeats never open or join an incident. An event without the extension attributes, such as a Sentry alert, keeps r1's behaviour (agent).
 - `preview × critical = agent` keeps r1's live test possible: its AC-12 sends from a relay deploy preview.
 
 ### Sender rules
 
 - **Same id on retry:** the id is derived, so a retry, a resend or a second process produces the same id. `webhook-id` is `msg_<id>`, and `webhook-timestamp` is fresh on each attempt.
+- **Check order at the inbox:** 413 size, then 401 signature and timestamp, then 400 contract, then 401 key-environment, because `environment` is read from the validated body.
 - **Response codes** (the codes in the first rows exist in r1's `handle()`, F2; the codes marked new are inbox-side and not built here):
 
 | Answer | Meaning | Sender |
@@ -316,7 +318,7 @@ Used, and repaired rather than replaced: r1's `TYPES` table as the one source of
 
 - **D1 Who counts.** Recommended: the project counts and sends crossings, and the heartbeat carries the value as the snapshot. Alternative: every unit (each SMS, each publish) goes to the inbox, which counts and holds the thresholds. That makes the inbox an ingest path for product traffic, and C2 already puts the count in the project. Worse under the recommendation: the inbox's raw data is crossings and hourly or daily values, not each unit.
 - **D2 Retire `relay.capacity.ceiling` in v1 before landing.** Recommended: yes. relay's ceiling becomes `ops.metric.*`. Worse: r1's relay fixtures and tests change when r1 merges main.
-- **D3 What recovered does.** Recommended: it joins the incident and marks the ops task closable. It never closes or merges the Draft PR, which stays the Captain's act.
+- **D3 What recovered does.** Recommended: a join dispatch (no model run) whose run writes the event and marks the ops task closable. It never closes or merges the Draft PR, which stays the Captain's act.
 - **D4 What "reach the Captain" is.** Recommended: the Slack notice mentions the Captain's Slack user, set in the instance configuration. Slack is the only channel measured (POC2), and Paseo push is not documented (Paseo Hub POC).
 - **D5 One key per environment group.** Recommended: separate `prod` and `preview`/`dev` secrets, with the inbox refusing a key outside its environments. The cost is a second Captain-only secret per project. Without it, any preview build holding the project's one secret can sign a `prod` critical event that reaches the Captain.
 - **D6 Store and "DDB".** Recommended: Blobs per-event keys on Netlify, and JSONL plus DuckDB for one process, both as above. The build waits for the runtime decision. Ask the Captain whether DDB meant DynamoDB or DuckDB only if he wants a store other than the recommendation.
@@ -339,6 +341,7 @@ Budget: about 2 days, at the edge of the cap. Contract split 0.25 d; types, kind
 
 - `ops-inbox-r1-setup-and-isolation` (implementation, paused): both touch `kc-ops-inbox/contract/**`, `core/inbox-core.mjs` (the import moves), `test/contract.test.mjs`, `test/inbox.test.mjs` (relay fixtures under D2), `contract-versions.json`, `package.json`, and `.github/workflows/kc-ops-inbox-tests.yml`.
   - Recommended order: this task lands first, from a branch cut from `origin/main` that carries only the contract; r1 then merges main and moves its core import and relay tests.
+  - Under the default table, `preview × warning = record`, so r1's live preview test as AC-9 is written would see the near event (warning) send no notice and open nothing. Only full (critical) opens. Fix: r1 sets the instance override `preview × warning → agent` for its live test, or tests on prod.
   - Found while checking: r1's axis ADR is `docs/adr/0031-every-ops-event-becomes-a-prepared-decision.md` on its branch, while main's 0031 is `a-release-is-accepted-by-walking-it…` (landed dde14c43, #714, 2026-10-24). r1's reserved number is taken, which is an FO number-guard item.
 - Every other live task (`adr-required-statement`, `journey-server-host-pilot`, `pr-review-lite-value-pilot`, `adoption-asks-which-extensions`, `adr-silent-undo-probe`, `comment-check-reaches-delivery-gate`, `fo-write-checks-parse-top-level`, `journey-canvas-hosted-poc`): none. This task adds no ADR and touches no file outside `kc-ops-inbox/` and that workflow file.
 
