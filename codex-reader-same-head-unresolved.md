@@ -34,6 +34,17 @@ gates:
                 id: briefing:codex-reader-same-head-unresolved:ideation:attempt-1:revision-1
                 digest: sha256:80f65e621c2fa650464fd7725af22eebaabc9e3e2b2a68c13c44ca4a7b9135e1
                 room-ref: ./codex-reader-same-head-unresolved/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-same-head-unresolved:ideation:1
+                briefing: briefing:codex-reader-same-head-unresolved:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-26T17:05:57.33005Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-27) answering 「需要你決定：第 7 批三張任務的設計（其中兩張已經照第 2 輪訪談修過），要不要一起批准進入實作？我建議全部批准，每一題都照我的建議。」; accepts FO's recommendations
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
