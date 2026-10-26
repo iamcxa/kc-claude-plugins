@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-same-head-unresolved:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of codex-reader-same-head-unresolved to enter implementation? FO recommends approve; approving accepts that recommendation and D1 as recommended: a person's resolved mark on a GitHub thread does not clear a finding on an unchanged head; the finding holds until the head moves or FO declines it in the gate summary.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-same-head-unresolved:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/824de8d67422e9e4bdd1137ee398fbc549b45385/codex-reader-same-head-unresolved.md",
+      "rev": "sha256:b8bd1f8db4272e4d48ac3aec4de8c677780f05e4c88cf49aee104d05f9dbfee3",
+      "mediaType": "text/markdown",
+      "summary": "Design: a Codex finding on a head decides over a later no-issues receipt on the same head (three edits in codex_review.py, no new gh call). Replay over #600 to #726 (375 heads): exactly one head changes, #716 8340c3baa, clean to findings. Worse under D1: a thread resolved on GitHub without a new push still reads as findings, so FO writes a decline."
+    }
+  ]
+}

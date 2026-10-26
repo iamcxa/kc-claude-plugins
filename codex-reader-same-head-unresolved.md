@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:codex-reader-same-head-unresolved:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:codex-reader-same-head-unresolved-ideation-1
+              briefing:
+                id: briefing:codex-reader-same-head-unresolved:ideation:attempt-1:revision-1
+                digest: sha256:80f65e621c2fa650464fd7725af22eebaabc9e3e2b2a68c13c44ca4a7b9135e1
+                room-ref: ./codex-reader-same-head-unresolved/review/ideation/briefing-1
 ---
 
 ## Scope
