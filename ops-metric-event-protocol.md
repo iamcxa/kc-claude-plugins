@@ -47,8 +47,11 @@ Inputs: contract v1 at kc-claude-plugins branch spacedock-ensign/ops-inbox-r1-se
 **AC-1**: The protocol document states the project side, the inbox side and the shared rules, and every rule traces to the Captain's words or to a verified fact.
 Verified by: the document on the default branch and a reviewer's trace of each rule to its source.
 
-**AC-2**: The validator accepts the relay ceiling and qnow SMS usage fixtures under the metric type and refuses a metric event with a missing field, a field outside the allowlist, a non-deterministic id or a bad signature.
+**AC-2**: The validator accepts the relay ceiling and qnow SMS usage fixtures as crossing events, plus a recovered event and a heartbeat for each, and refuses a metric event with a missing field, a field outside the allowlist, a non-deterministic id, a bad signature, an unknown environment or severity, or free text where the protocol requires an enumerated value.
 Verified by: the validator's output and exit code on each fixture.
+
+**AC-4**: The protocol document states the sender rules (same id on retry, the meaning of each response code and whether to retry, the per-incident event cap) and the routing rule from environment and severity to record-and-close, wake the agent, or reach the Captain.
+Verified by: the document on the default branch, and the inbox core's tests (or a stated gap) for each response code and routing outcome.
 
 **AC-3**: Contract v1 is on the kc-claude-plugins default branch at a commit qnow and relay can pin.
 Verified by: the merged PR and `git ls-tree` of the contract at that commit.
