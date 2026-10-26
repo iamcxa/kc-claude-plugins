@@ -202,6 +202,21 @@ class RouteMutationTests(unittest.TestCase):
         self.change("README.md", "(extensions/codex/EXTENSION.md) | recommended |", "(extensions/codex/EXTENSION.md) | required |")
         self.refuses("`codex` is required but " + lint.WORKFLOW + " extensions: does not list it")
 
+    def test_peers_alone_and_optional_paseo_selection(self):
+        for selected in (["learn", "peers"], ["learn", "peers", "paseo"], ["peers", "codex", "paseo"]):
+            with self.subTest(selected=selected):
+                self.assertEqual(lint.extension_dependency_errors(self.root, selected), [])
+        self.assertEqual(lint.extension_dependency_errors(self.root, ["learn", "paseo"]),
+                         ["extensions: `paseo` requires `peers`"])
+
+    def test_paseo_without_peers_is_refused_in_the_workflow(self):
+        self.change(lint.WORKFLOW, "extensions: [learn, peers]", "extensions: [learn, paseo]")
+        self.refuses("extensions: `paseo` requires `peers`")
+
+    def test_missing_optional_extension_document_is_named(self):
+        (self.root / "extensions/paseo/EXTENSION.md").unlink()
+        self.refuses("extension `paseo` has no EXTENSION.md")
+
     def test_workflow_over_its_word_budget(self):
         self.with_words(lint.workflow_budget(SHIPPED) - len(self.workflow_text().split()) + 1)
         self.refuses(f"exceeds the budget of {lint.workflow_budget()}")

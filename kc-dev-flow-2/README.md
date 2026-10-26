@@ -178,7 +178,8 @@ rows; the install ask in [`adoption.md`](references/sd/adoption.md) offers the r
 | --- | --- | --- | --- |
 | [codex](extensions/codex/EXTENSION.md) | recommended | FO review rounds and the merge ask | reads Codex GitHub review rounds on the PR head |
 | [roborev](extensions/roborev/EXTENSION.md) | recommended | implementation, before the report | a local roborev review of the committed changes |
-| [peers](extensions/peers/EXTENSION.md) | required | FO, when the answer lives in a live peer session's work | asks that peer in the same harness, with addressing, message and authority rules; otherwise FO finds the answer itself |
+| [peers](extensions/peers/EXTENSION.md) | required | FO, before opening a task or exchanging peer facts | selects the peer transport, answers incoming asks, searches existing work and checks facts within existing authority |
+| [paseo](extensions/paseo/EXTENSION.md) | optional, requires peers | FO, before a new Paseo peer ask | initiates fleet cooperation through Paseo; peers owns basic incoming replies |
 | [copilot](extensions/copilot/EXTENSION.md) | optional | FO review rounds, each push and the merge ask | requests and reads GitHub Copilot review rounds on the PR head |
 | [learn](extensions/learn/EXTENSION.md) | required | FO, through the `kc-dev-flow-2` mod in `references/sd/mods/`, before the merge sentinel and right after a task is archived | checks `observer.md` is committed before the sentinel (`scripts/observer_check.py`), runs `learn` and the observer, and presents both results |
 | [journey-map](extensions/journey-map/EXTENSION.md) | recommended | FO, after a gate ruling on a journey task, before `merge guard`, and after the archive | writes a footprint for a ruling that answers a map question, checks it before the merge guard, and folds it into the map as a docs-only pull request |

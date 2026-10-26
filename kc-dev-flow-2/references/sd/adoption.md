@@ -165,17 +165,20 @@ Ask which recommended or optional rows to add once, before the Captain reviews t
 1. Probe each row's **Needs** read-only and show the result beside it: `journey-map` with
    `release-acceptance` needs a `docs/journey/*.yaml` file, `python3` and `node`; `codex` needs `gh auth
    status` to pass; `roborev` needs `roborev status` to pass; `copilot` needs `gh` 2.92 or later
-   authenticated. Show a row whose probe failed unchecked with the reason.
+   authenticated; `paseo` needs peers, Paseo's own `paseo` skill and read-only host/agent
+   discovery. Show a row whose probe failed unchecked with the reason.
 2. Put one multi-select to the Captain through the host's structured Ask UI, or in plain chat
    when none is available: the required rows shown as already on, `journey-map` with
    `release-acceptance` as one choice that writes both names, `codex`, `roborev`, and `copilot`
-   unchecked and marked quota-limited.
+   unchecked and marked quota-limited, and `paseo` unchecked for new fleet asks. Basic incoming
+   Paseo replies already belong to peers.
 3. Write the chosen names after the required ones. Never list a row whose probe failed; report
    `not listed: <name>, <reason>` and list it only when the Captain insists after seeing the reason.
 4. With no answer, or a worker that cannot ask, keep the template line and report
    `recommended not chosen: <names>`, naming each recommended extension (`journey-map` and `release-acceptance` are two names)
-   in the order step 2 lists them, whatever its probe said, and not the optional `copilot`.
-5. When `codex` and `copilot` are both listed, write `second-reviewer: copilot`; otherwise leave it empty.
+   in the order step 2 lists them, whatever its probe said, and not the optional `copilot` or `paseo`.
+5. Refuse a selection of `paseo` without `peers`.
+6. When `codex` and `copilot` are both listed, write `second-reviewer: copilot`; otherwise leave it empty.
 
 The `extensions:` line is the adopter's own after adoption. At a re-sync, `git merge-file` against
 the template's new line merges an adopter `[]` clean to `[learn, peers]`, merges an equal list
