@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:dispatch-carries-reserved-adr-number:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of dispatch-carries-reserved-adr-number to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that a dispatch record for a task holding a reserved ADR number is refused without its Number guards line; profile pilot (script and text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:dispatch-carries-reserved-adr-number:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a21e5f0010eed9e58707c07f03c1fbbb75ab1614/dispatch-carries-reserved-adr-number.md",
+      "rev": "sha256:f9d12d8f00b127f86241321f292a1eb48568b544d503f4738f371d58d44760ee",
+      "mediaType": "text/markdown",
+      "summary": "Bite: relay pair-once implementation-1 lacked ADR: 0069 and dispatch_records.py --names passed it."
+    }
+  ]
+}
