@@ -3,7 +3,7 @@ title: The Codex reader's same-head rule is recorded as an ADR quoting the Capta
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
