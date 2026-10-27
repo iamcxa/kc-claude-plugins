@@ -402,3 +402,119 @@ Historical observer review uses the pinned Relay input: current compatibility fa
 ### Summary
 
 Implemented and pushed the amended seed-only bounds check at `2f3966a6`; schema, template, watcher and historical guidance agree, with ADR 0041 and replacement AC-8/9/10 recorded. Tests, mutations, native seams and both corpus snapshots pass their stated boundaries; FO still owns the Draft PR, RoboRev and hosted CI. Historical observer wording was manually reviewed, not executed by a live observer; without matching event-time README bytes, historical operator fault is `can't tell`.
+
+
+## Validation acceptance script — 2026-10-28
+
+Candidate `2f3966a6ca1394a5154034637a55314613180875`, own diff against stacked base `207c0a7eb51d08c00e68dbe52e9b364793750484` (PR #737). No application screen changes; this four-step CLI script covers seed admission only, not native creation, historical replay, live worker/observer execution or hosted delivery. Run the four numbered steps together in `bash --noprofile --norc`; the assigned code worktree must still contain the reviewed head. Expected: step 1 confirms head, step 2 succeeds, steps 3 and 4 name missing Budget and return 1 from the checker; the overall script should return 0. At this candidate step 4 incorrectly returns 0, so the overall script exits 1.
+
+```bash
+#!/usr/bin/env bash
+set -eu
+
+# Step 1: bind this run to the reviewed candidate.
+cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-seed-check-requires-schema-fields
+test "$(git rev-parse HEAD)" = 2f3966a6ca1394a5154034637a55314613180875
+SEED_ACCEPT_DIR=$(mktemp -d /tmp/seed-acceptance-738.XXXXXX)
+trap 'rm -r "$SEED_ACCEPT_DIR"' EXIT
+printf 'candidate 2f3966a6 verified\n'
+
+# Step 2: a complete seed without stored id must pass.
+cat > "$SEED_ACCEPT_DIR/valid.md" <<'TASK'
+---
+title: bounded task
+status: backlog
+variant: kc-dev-flow-2
+profile: pilot
+---
+## Scope
+Non-goals: migrations
+Budget: one task
+Stop condition: upstream changes needed
+## FO alignment
+Surfaces: none
+Visible change: none
+TASK
+python3 -B kc-dev-flow-2/scripts/design_surfaces.py check --seed "$SEED_ACCEPT_DIR/valid.md"
+
+# Step 3: deleting Budget must be refused with exit 1.
+sed '/^Budget:/d' "$SEED_ACCEPT_DIR/valid.md" > "$SEED_ACCEPT_DIR/missing.md"
+seed_status=0
+python3 -B kc-dev-flow-2/scripts/design_surfaces.py check --seed "$SEED_ACCEPT_DIR/missing.md" || seed_status=$?
+printf 'missing Budget exit=%s (expected 1)\n' "$seed_status"
+test "$seed_status" -eq 1
+
+# Step 4: a quoted placeholder is not a Budget and must also be refused.
+cat > "$SEED_ACCEPT_DIR/quoted.md" <<'TASK'
+---
+title: quoted budget
+status: backlog
+variant: kc-dev-flow-2
+profile: pilot
+---
+## Non-goals
+No migrations.
+## Budget
+ > <approved bound>
+## Stop condition
+Upstream changes needed.
+## FO alignment
+Surfaces: none
+Visible change: none
+TASK
+seed_status=0
+python3 -B kc-dev-flow-2/scripts/design_surfaces.py check --seed "$SEED_ACCEPT_DIR/quoted.md" || seed_status=$?
+printf 'quoted placeholder exit=%s (expected 1)\n' "$seed_status"
+test "$seed_status" -eq 1
+```
+
+Observed verbatim in a fresh `bash --noprofile --norc /tmp/seed-validation-738-evidence/acceptance.sh` (exit 1):
+
+```text
+candidate 2f3966a6 verified
+valid.md: seed fields and FO alignment recorded
+missing.md: missing required body field: Budget
+missing Budget exit=1 (expected 1)
+quoted.md: seed fields and FO alignment recorded
+quoted placeholder exit=0 (expected 1)
+```
+
+Raw independent evidence: `/tmp/seed-validation-738-evidence/` (`tests.json`, `guards.json`, `mutation-summary-final.json`, three corpus JSON files and `replay-summary.json`, `lifecycle.json`, `quote-probe.json`, native logs and the acceptance script/output). Corpus input bytes were reverified against their recorded Git snapshots before and after execution; no adopter state was edited. The independent detached checkout was removed after checking its clean status; the assigned branch stays at the reviewed head.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #738 head 2f3966a6 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at `2f3966a6ca1394a5154034637a55314613180875`: independent execution and eleven behavior mutations completed; the additional quoted-placeholder counterexample violates AC-2/AC-8 (F1 below).
+- DONE: The PR is stacked on #737 (base spacedock-ensign/idle-hook-names-merged-tasks-without-learn at 207c0a7e): judge only its own diff against that base, and check it merges cleanly onto that base; check Captain amendment 1 directly (stored id optional under id-style: slug; Non-goals, Budget, Stop condition required; new seeds only, replay counts reported not enforced); if references/sd/workflow.md grew past its budget, say whether the raise step quotes a Captain ruling that actually approves that raise; RoboRev on this head (FO, 2026-10-28): clean on 2f3966a6c, evidence=roborev:1268; CI on this head read by FO: 5 of 5 pass
+  Only the ten-file diff against `207c0a7e` assessed; merge-tree exits 0 and returns candidate tree `ad5f7cb7e037214654ebb1d0d7e211852f426d14`. Amendment, budget approval and supplied provider evidence assessed below.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step script above run unchanged in fresh bash: exit 1 at quoted placeholder. Supplied Codex 0.32.0 `python3 <package>/scripts/adr_lint.py docs/adr --since 207c0a7eb51d08c00e68dbe52e9b364793750484 --require 0041` exits 0: 40 ADR files, 0 legacy; Package rule selects Codex root over dispatch's Claude path.
+- FAILED: AC-2 and AC-8 — quoted or placeholder-only body content must not satisfy a required bound.
+  Existing 189 checker tests pass, but `## Budget` followed by ` > <approved bound>` passes seed mode; the same quote with zero spaces correctly exits 1. One, two and three leading spaces all incorrectly exit 0; inputs unchanged.
+- DONE: AC-8 remainder and Captain amendment 1 — optional stored id, three required bounds, no added frontmatter/Scope requirement.
+  Flat/folder deletion, empty/placeholder and dedicated-section tests pass; require-stored-id, drop-seed-call and accept-placeholders mutations fail their named cases. F1 is the uncovered quote form, not a request for new fields.
+- DONE: AC-9 — actual native creation and seed subprocess.
+  Native Spacedock 0.27.2 with supplied plugin root 0.27.3 passes flat/folder × omitted/matching id, refuses mismatching id, refuses deleted Budget and all unfilled template bounds; requiring id or dropping bounds is detected by the independent matrix mutations. No upstream change needed.
+- DONE: AC-10 — existing backlog/idle route and consumer compatibility.
+  Watcher 123, dispatch records 54, delivery 101, POC 7 and native dispatch/recovery pass; actual missing-Budget subprocess prints the reminder. Suppressing that subprocess or restoring alignment-only wording makes the integration case fail; non-backlog/POC filters retain behavior.
+- DONE: AC-5 — complete read-only replay and historical-evidence boundary.
+  Pinned `0d8847df` and implementation-time `a20f1526`: 163 each, 138 seed pass→fail, 23 fail→fail, 2 pass→pass; new reasons 94 Budget+Stop, 39 all three, 3 Stop, 1 Non-goals+Stop, 1 Non-goals+Budget. Relay `d20ff925` adds Budget/Stop refusal; all default output/exit pairs match (73/90, 79/84, 1/0). Unconditional default enforcement fails its mutation; removing historical qualification would wrongly label the unchanged Relay snapshot a historical violation without event-time README evidence.
+- DONE: AC-6 — approved budget, schema/template, lifecycle output and ADR.
+  Workflow 5565→5576; the positive step quotes 「其他全照建議」 from the accepted ideation gate, whose artifact `f262e0d3` explicitly recommends +12 (Captain decision line 208); amendment narrows fields and leaves that budget intact. +11 is covered; removing the quote fails budget_errors. ADR 0041 matches the amendment.
+- DONE: AC-6 — independent complete lifecycle recount.
+  Startup 8680→8696; valid backlog 44→45; refused backlog 44→51; idle seed refusal 48→76; open idle 77→77; merged idle 348→348; archive 285→285; merge ask 742→742 including both section headings (implementation counted 737 without their five words). Full fixed outputs retained; no savings claimed.
+- DONE: AC-7 — read-only boundary, existing CI-selected checks and document scope.
+  All 23 unit suites: 900 tests run, one existing skip, all others pass; lint/native checks pass. Input-write/process/network mutations fail; ten named files only, no CI/provider hook/version/adopter edits. Number guards and four dispatch records exit 0; comment ratio 2/187 = 1.1% ≤5%; added comments reviewed. CI cost per PR not measured; CI unchanged.
+- DONE: Affected documents and necessity.
+  doc_impact rerun: README and ADR 0041 updated; ADR 0020/0037, adoption.md, maintain-flow skill and learning.md correctly unaffected. Each retained source/test/doc change supports the accepted seed/refusal/diagnostic boundary or ADR obligation; removing the seed call loses the intended missing-bound refusal, but goal sufficiency still fails F1.
+- SKIPPED: Independent live provider, model-agent and historical operator verification.
+  FO supplied CI 5/5 and RoboRev clean `evidence=roborev:1268` on this exact head; not queried here. Native dispatch is synthetic (not host discovery/worker/human-gate/remote-merge proof). Observer qualification is a manual source/Relay replay review, not a live observer run; historical fault remains `can't tell`. These limits are correctly bounded and do not clear F1.
+
+### Findings
+
+- F1 Material: FO admitting a new seed in the supported dedicated-section form can get exit 0 with no actual Budget: `## Budget` followed by one to three spaces then `> <approved bound>`. Harm: a quoted unfilled example clears the required-bound check and permits backlog gate preparation. Protected claim: `value-ac[AC-2]` excludes quotes/empty content and `value-ac[AC-8]` requires Budget. Trigger: four-case `quote-probe.json` and acceptance step 4; `design_surfaces.py` filters `>` only at column zero, then strips the placeholder and counts the remaining `>` as content. Return through implementation feedback; candidate bytes preserved.
+- F2 Polish: implementation's merge-ask total excludes five section-heading words (737 versus independently counted 742 on both base and candidate). No behavior, approval boundary or growth comparison changes; this report provides the inclusive count.
+
+### Summary
+
+REJECTED at `2f3966a6ca1394a5154034637a55314613180875` because an indented quoted placeholder passes the required Budget check; AC-2/AC-8 remain unmet despite green existing suites and provider evidence supplied by FO. The stack merges cleanly and the +11 word step is backed by the approved +12 design allowance; other tested criteria pass within their stated local/native/manual limits. FO should disposition F1 and route repair, then validate a new exact head; no product change, PR action or delivery was performed.
