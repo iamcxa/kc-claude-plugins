@@ -252,3 +252,35 @@ Recommended order: this correction can proceed independently of the currently na
 ### Summary
 
 Designed one recursive, read-only map-presence probe with no new helper or selection policy, plus a regression test that executes the documentation's command. Seven fixture cases and three falsifying mutations distinguish the fix from the flat-only defect; design checks and rendered diagram pass, while implementation and live installation evidence remain outstanding. Pilot scope and existing Captain approval boundaries remain unchanged.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and acceptance criteria; only the files the design names
+  Code 159b21232dea8ce68fcf9402461e185ff59d327c, one commit off fetched origin/main 8bf4f3582411e8e4238f19fbadda8ddeca6767be; diff names adoption.md and test_lint_skills.py under kc-dev-flow-2 only. No ADR, version, CI, adopter, host or schema change.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (8bf4f3582411e8e4238f19fbadda8ddeca6767be) implementing the approved design and acceptance criteria in the task file; the kc-dev-flow-2/references/sd/adoption.md probe change and the tests the design names, as designed; only the files the design names
+  Implementation and push are complete; FO owns opening the Draft PR because the worker sandbox cannot reach GitHub API. English title/body: /tmp/impl-journey-probe-finds-nested-maps-pr.md.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1–AC-5 evidence and the checker limit follow below; Python ran with -B, disposable mutation copies excluded/cleared __pycache__, and all copies were removed. No live Ask UI or model-driven adoption claim.
+- DONE: AC-1 — recursive regular-file discovery
+  New test extracts the command from Extensions step 1 and runs sh in seven fixtures; flat/nested/deeper-space match printed paths. Before the documentation edit it fails (0 extracted commands); restoring the flat pattern or adding -maxdepth 1 each fails the test (depth limit fails nested).
+- DONE: AC-2 — negative cases and traversal failure
+  Empty, missing, .tldr/.yml/outside-root YAML and .yaml-directory fixtures assert paths and exit status; missing root also needs stderr. Removing file type, suffix or root constraints, changing suffix, or hiding traversal failure each fails the new test. A chmod-000 traversal returns nonzero with stderr despite printing visible.yaml; retained failed-probe wording was read, host presentation untested.
+- DONE: AC-3 — selection, runtimes and activation preserved
+  Candidate equals the pinned reference with just the approved phrase replaced; Extensions steps 2–6, re-sync preservation and Before activation are byte-identical. Mutating required defaults, selection, or empty/nonzero-result treatment fails this preservation comparison; test_lint_skills.py 45/45 and repository lint-skills.py exit 0.
+- DONE: AC-4 — reading cost
+  Whitespace recount: adoption 2069→2085 and Extensions 350→366 (+16); adding an instruction fails the count comparison. Complete diff contains no workflow/mod/output-producer change, so startup, both idle paths, merge ask and archive each add 0 instruction words; workflow remains 5565/5565.
+- DONE: AC-5 — bounded scope and design agreement
+  Installed design_surfaces.py check exits 0; removing the acceptance heading exits 1. Two-path comparison passes and an added adopter path fails it. Approved PRFAQ/Mermaid remain unchanged; deleting the approval→activation branch fails explicit diagram comparison. Generic checker accepts a changed Mermaid fence label and does not prove semantics; rendered diagram evidence is the retained ideation evidence, not a new rendering.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  Available local portions: repository lint exit 0; installed Codex package /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0 scripts used per FO/runtime routing. adr_lint checks 39 ADRs exit 0; number_guards on candidate exit 0 (no migrations-path); comment_ratio: code lines 33, comment lines 0, 0.0%, maximum 5% met; diff --check passes. git push origin spacedock-ensign/journey-probe-finds-nested-maps succeeded without force or -u; PR body written. External portions are explicitly skipped below.
+- SKIPPED: roborev evidence= line; FO reads CI on the PR head
+  RoboRev not run: worker sandbox cannot reach the daemon, as FO instructed; no evidence= line exists. No gh command run. FO opens PR, runs RoboRev and reads CI on 159b2123. CI cost per PR not measured; no CI job/trigger/dependency change.
+- DONE: Affected documents
+  doc_impact.py <base> HEAD lists kc-dev-flow-2/skills/maintain-flow/SKILL.md — unaffected: existing test command and mutation guidance still apply; no lint behavior or maintenance route changed. adoption.md is updated with the exact approved probe phrase.
+- DONE: Proceed with implementation-1 now: archive-waits-for-observer-report is not writing kc-dev-flow-2/references/sd/adoption.md; its implementation waits for spacedock-dev/spacedock#855 and is ordered last in batch 8, after this task merges
+  Read FO's committed dispatch/implementation-2.md before editing; this task proceeds first and FO serializes the later adoption.md change.
+
+### Summary
+
+The documented install probe now discovers nested product maps, with an executable regression tied to the documentation and seven discovery mutations caught. Local checks pass at 159b2123 and the code branch is pushed; FO still owes Draft PR creation, RoboRev and CI evidence before validation/delivery. Pilot scope remains the approved two-file correction, with unchanged extension selection and activation authority.
