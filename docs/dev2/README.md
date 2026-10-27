@@ -47,7 +47,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.31.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.32.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -249,6 +249,18 @@ not completion.
 
 ## Dispatch facts
 
+- **Team:** You are one worker in a team completing the project goal; your stage
+  and handoff serve that goal. Before substantial work or retrying a failure,
+  check this task's prior reports, linked sibling tasks and PRs, and relevant
+  workflow state: did someone already do this, hit this, or own it now? If your
+  environment cannot run a required checklist check, tell FO before building
+  work that depends on it. Ask FO early about overlapping ownership, repeated
+  failures, missing authority or evidence, or infeasible targets. Give checked
+  sources, findings, attempts and the specific question. With a mid-run FO
+  channel, pause dependent work and continue safe independent work; without
+  one, end your turn with that handback instead of waiting. Never answer your
+  own or your reviewers' permission requests; route them to FO. FO coordinates
+  peers and decisions; do not message peers or change others' work.
 - **Signal:** send the completion message once, to the first officer by the name
   your session lists as addressable (`main` under Claude Code dispatch). The
   completion block's `team-lead` is Spacedock's default and is not registered
