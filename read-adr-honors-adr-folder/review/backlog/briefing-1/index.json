@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:read-adr-honors-adr-folder:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of read-adr-honors-adr-folder to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that read-adr lists the ADR folder its caller names, and none means no records; profile pilot (script and text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:read-adr-honors-adr-folder:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ea8f1b816f1c0989dfd76e4e2069b77c89003d92/read-adr-honors-adr-folder.md",
+      "rev": "sha256:b4edce1579ca26cdbbf6bc07426fe572a67711587e33ace47a05f9710832837d",
+      "mediaType": "text/markdown",
+      "summary": "Bite: Codex P2 on #713 that FO misread as still running; it ships in both the kc-adr skill and the kc-dev-flow-2 copy."
+    }
+  ]
+}

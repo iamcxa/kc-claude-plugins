@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:read-adr-honors-adr-folder:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:read-adr-honors-adr-folder-backlog-1
+              briefing:
+                id: briefing:read-adr-honors-adr-folder:backlog:attempt-1:revision-1
+                digest: sha256:de9d44dc4079f89275b7ff302e75cec8b363d063d3fce5724582faa9cc61b07d
+                room-ref: ./read-adr-honors-adr-folder/review/backlog/briefing-1
 ---
 
 ## Scope
