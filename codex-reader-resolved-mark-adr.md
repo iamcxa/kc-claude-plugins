@@ -42,3 +42,7 @@ Alignment: not needed: the ruling and its words are recorded in the archived tas
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Number guards
+
+ADR: 0039
