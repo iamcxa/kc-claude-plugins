@@ -591,9 +591,9 @@ Push the fixes to the same branch (PR #727 stays Draft), rerun the contract test
 - DONE: Rerun `node --test kc-ops-inbox/test/contract.test.mjs`, `node kc-ops-inbox/test/mutations.mjs` and `validate.mjs` on every fixture at the new head; report the new head SHA and that all PR checks pass.
   New head 194f0b835a9b0d1dcefd55be36ecedcb72ab23dc (PR #727 still Draft). At that head: contract tests 26 pass, 0 fail; mutations 41 caught, 0 survived, exit 0 (about 3 minutes); `validate.mjs` over all 22 fixtures: 9 exit 0, 13 exit 1 each with its own reason, none exit 2; `gh pr checks 727 -R iamcxa/kc-claude-plugins`: GitGuardian, kc-ops-inbox contract tests, multi-profile route gate, review CI routing, version parity all pass. `v1/` schemas and `contract-versions.json` were regenerated (no consumer has pinned them yet).
 
-### Checks (cycle 2)
+### Checks
 - `python3 <package>/scripts/comment_ratio.py <merge-base> HEAD`: `code lines 811, comment lines 19, 2.3%`, maximum 5% met, exit 0. `python3 <package>/scripts/doc_impact.py <merge-base> HEAD`: `kc-ops-inbox/contract/README.md` `updated`. `scripts/version-parity-check.sh`: consistent. The PR body evidence was refreshed.
 - Limits: `test/mutations.mjs` now takes about 3 minutes in CI (job timeout raised to 15 minutes). Mutation text is matched literally, so a later edit to a mutated line fails the run until the mutation is updated, by design.
 
-### Summary (cycle 2)
+### Summary
 All seven findings are fixed in the contract with a test and mutation each, the README states the declined items as limits, and PR #727 at 194f0b83 has all five checks green. One reading to confirm: the UTC-time rule covers all three metric types.
