@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:copilot-not-run-line-carries-quote:validation:attempt-1:revision-1",
+  "question": "Approve validation of copilot-not-run-line-carries-quote and merge iamcxa/kc-claude-plugins#736 at head 784e038979bea6d2c6d7984fb95a665d6e36c52f with `gh pr merge 736 --squash --match-head-commit 784e038979bea6d2c6d7984fb95a665d6e36c52f`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:copilot-not-run-line-carries-quote:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6cb0fb8d93265d59fdb23527bfbe248e7e53f275/copilot-not-run-line-carries-quote.md",
+      "rev": "sha256:36c5584b3e22d6802c149e2e25bedaa808a53243e2b90cf7ad25406f8c4c3268",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: delivery_gate.py now refuses a merge ask without the second-reviewer line where the README trigger holds, and a copilot not run line without the printed quote and a retry offer, case-insensitively for answer= tokens, and an older refusal without the not-read disclosure for the current head; enforced on new asks only; validation PASSED at this head (894 tests, both repair falsifiers fail as they should); batch-8 chief-engineer review recommends merge.\nNecessity: three files (kc-dev-flow-2/extensions/copilot/EXTENSION.md, kc-dev-flow-2/scripts/delivery_gate.py, kc-dev-flow-2/scripts/test_delivery_gate.py).\nExternal rounds: Codex 1 (round 1 on this head: code review completed with no findings, evidence=summary:6447853204@784e03897). RoboRev 3 (1263 and 1265 each one High, repaired in Cycles 1 and 2; this head clean, evidence=roborev:1267). second reviewer: copilot because the change touches review rules; copilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\" (copilot_review.py exit 5, answer=review:5670937809); the Captain may ask FO to retry Copilot instead of merging."
+    }
+  ]
+}

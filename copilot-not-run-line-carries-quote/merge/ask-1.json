@@ -1,0 +1,19 @@
+{
+  "class": "never",
+  "head": "784e038979bea6d2c6d7984fb95a665d6e36c52f",
+  "model": "not run",
+  "necessity": "three files (kc-dev-flow-2/extensions/copilot/EXTENSION.md, kc-dev-flow-2/scripts/delivery_gate.py, kc-dev-flow-2/scripts/test_delivery_gate.py).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'PASSED for PR #736 head 784e038979bea6d2c6d7984fb95a665d6e36c52f;'",
+    "point: not-run: 'External rounds: Codex 1 (round 1'",
+    "point: path: 'kc-dev-flow-2/extensions/copilot/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/scripts/delivery_gate.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_delivery_gate.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#736",
+  "sufficiency": "delivery_gate.py now refuses a merge ask without the second-reviewer line where the README trigger holds, and a copilot not run line without the printed quote and a retry offer, case-insensitively for",
+  "time": "2026-10-27T17:30:01Z",
+  "verdict": "ask"
+}

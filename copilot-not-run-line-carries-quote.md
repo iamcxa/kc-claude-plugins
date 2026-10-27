@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:copilot-not-run-line-carries-quote:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:copilot-not-run-line-carries-quote-validation-1
+              briefing:
+                id: briefing:copilot-not-run-line-carries-quote:validation:attempt-1:revision-1
+                digest: sha256:29a96254b42f9715eec533bd948496e55f11305719ad8ada94526c547739227d
+                room-ref: ./copilot-not-run-line-carries-quote/review/validation/briefing-1
 started: 2026-10-27T16:00:07Z
 worktree: .worktrees/spacedock-ensign-copilot-not-run-line-carries-quote
 pr: iamcxa/kc-claude-plugins#736
