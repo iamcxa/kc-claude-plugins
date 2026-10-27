@@ -1495,14 +1495,14 @@ DECLARATION = "Second reviewer: copilot because review rules.\n"
 RETRY = "Copilot retry: available when the Captain confirms quota is back."
 
 
-def refusal(body):
+def refusal(body, head=HEAD40):
     path = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_review.py"
     spec = importlib.util.spec_from_file_location("copilot_reader", path)
     reader = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(reader)
-    review = dict(id=17, user=dict(login=reader.BOT), commit_id="a" * 40,
+    review = dict(id=17, user=dict(login=reader.BOT), commit_id=head,
                   submitted_at="2026-10-27T00:00:00Z", body=body)
-    code, printed = reader.state("o/r", "9", call=lambda *a: dict(headRefOid="a" * 40),
+    code, printed = reader.state("o/r", "9", call=lambda *a: dict(headRefOid=head),
                                  pages=lambda p: [review] if p.endswith("/reviews") else [])
     assert code == 5, printed
     return printed + "\n", 'copilot not run: "' + reader.quote(body) + '"; answer=review:17\n'
@@ -1511,7 +1511,7 @@ def refusal(body):
 class ReviewerDeclarationTests(unittest.TestCase):
     def run_cli(self, command, text=DECLARATION + "Copilot review:18.", source=None, config=REVIEWERS,
                 task=TASK, title="fix(x): y", module=None, folder=False, split=False, explicit=False,
-                source_error=False, missing_readme=False, readme_error=False, before_question=None):
+                source_error=False, missing_readme=False, readme_error=False, before_question=None, head_arg=HEAD40):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)
             readme(d, config)
@@ -1533,7 +1533,7 @@ class ReviewerDeclarationTests(unittest.TestCase):
             text_file.write_text(CLAUSES + text)
             argv = [command, str(entry.parent if folder else entry), "--text-file", str(text_file)]
             if command == "check":
-                argv += ["--pr", "o/r#9", "--head", HEAD40]
+                argv += ["--pr", "o/r#9", "--head", head_arg]
             if explicit:
                 argv += ["--workflow-dir", d]
             out = io.StringIO()
@@ -1602,6 +1602,38 @@ class ReviewerDeclarationTests(unittest.TestCase):
                         self.assertEqual(code, 0, out)
                 code, out = self.run_cli(command, DECLARATION + f"Copilot {token.upper()}:18.")
                 self.assertEqual(code, 1, out)
+
+    def test_older_refusal_requires_a_separate_disclosure_with_both_matching_heads(self):
+        source, line = refusal("quota unavailable", head="a" * 40)
+        text = DECLARATION + line + RETRY
+        disclosure = f"Copilot not read: {HEAD40}; last refusal: aaaaaaaaa"
+        for suffix in ("", "\n" + disclosure.replace(HEAD40, "b" * 40),
+                       "\n" + disclosure.replace("aaaaaaaaa", "bbbbbbbbb"),
+                       "\n" + disclosure.replace(HEAD40, HEAD40[:9]), "\nSummary: " + disclosure):
+            with self.subTest(suffix=suffix):
+                code, out = self.run_cli("check", text + suffix, source=source, head_arg=HEAD40[:7])
+                self.assertEqual(code, 1, out)
+                self.assertIn("last refusal: aaaaaaaaa", out)
+
+    def test_older_refusal_remains_usable_with_the_matching_unread_disclosure(self):
+        source, line = refusal("quota unavailable", head="a" * 40)
+        text = DECLARATION + line + RETRY + f"\nCopilot not read: {HEAD40}; last refusal: aaaaaaaaa"
+        code, out = self.run_cli("check", text, source=source, head_arg=HEAD40[:7])
+        self.assertEqual(code, 0, out)
+
+    def test_same_head_refusal_does_not_need_an_older_head_disclosure(self):
+        source, line = refusal("quota unavailable")
+        code, out = self.run_cli("check", DECLARATION + line + RETRY, source=source)
+        self.assertEqual(code, 0, out)
+
+    def test_question_defers_head_comparison_but_preserves_refusal_validation(self):
+        source, line = refusal("quota unavailable", head="a" * 40)
+        text = DECLARATION + line + RETRY
+        self.assertEqual(self.run_cli("question", text, source=source)[0], 0)
+        for bad in (text.replace("quota unavailable", "quota"),
+                    text.replace("answer=review:17", "answer=review:18"), DECLARATION + line):
+            with self.subTest(text=bad):
+                self.assertEqual(self.run_cli("question", bad, source=source)[0], 1)
 
     def test_real_reader_quote_matrix_and_mismatches(self):
         for body in ("額度不足，請稍候", 'The "quoted" answer', "No &quot;quota&quot;\n\t left &amp; unavailable",

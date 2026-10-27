@@ -311,7 +311,7 @@ def reviewer_config(scalars, lists):
     return second, extensions
 
 
-def reviewer_problems(task, task_text, text, second, extensions, title=None):
+def reviewer_problems(task, task_text, text, second, extensions, title=None, head=None):
     problems = []
     if second:
         rows = re.findall(r"(?i)\bsecond reviewer:[ \t]*([^\n]*)", text)
@@ -342,12 +342,16 @@ def reviewer_problems(task, task_text, text, second, extensions, title=None):
                 printed = saved.read_text()
             except (OSError, UnicodeDecodeError) as error:
                 raise OSError(f"cannot read saved Copilot output {saved}: {error}; save the reader's exit-5 stdout there") from error
-            source = re.fullmatch(r'not a review of [0-9a-f]{9}: "(.*)"; answer=review:(\d+) at (\S+)\n?', printed)
+            source = re.fullmatch(r'not a review of (?P<head>[0-9a-f]{9}): "(?P<quote>.*)"; answer=review:(?P<id>\d+) at \S+\n?', printed)
             own_line = not text[text.rfind("\n", 0, refusal.start()) + 1:refusal.start()].strip()
             if not source:
                 problems.append("saved Copilot output is not a readable exit-5 result")
-            elif not own_line or value != f'"{source[1]}"; answer=review:{source[2]}':
+            elif not own_line or value != f'"{source["quote"]}"; answer=review:{source["id"]}':
                 problems.append("copilot not run must copy the saved printed quote and answer id")
+            if source and head and not head.lower().startswith(source["head"]):
+                disclosure = f'Copilot not read: {head.lower()}; last refusal: {source["head"]}'
+                if not re.search(rf"(?im)^{re.escape(disclosure)}[.]?[ \t]*$", text):
+                    problems.append(f"Copilot refusal is for {source['head']}, not PR head {head.lower()}; add a separate '{disclosure}' line")
             if not re.search(r"(?im)^Copilot retry: available when the Captain confirms quota is back\.[ \t]*$", text):
                 problems.append("copilot not run needs the conditional retry offer")
     return problems, (["next: hold the ask; repair the reviewer declaration, saved quote/id or conditional retry offer."] if problems else [])
@@ -583,7 +587,8 @@ def check(args):
     problems += found
     nexts += wanted
     try:
-        found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions, (facts or {}).get("title"))
+        found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions,
+                                         (facts or {}).get("title"), (facts or {}).get("headRefOid"))
     except OSError as error:
         emit(*problems, str(error))
         return 2
