@@ -15,6 +15,17 @@ gates:
                 id: briefing:journey-probe-finds-nested-maps:backlog:attempt-1:revision-1
                 digest: sha256:f3a012ccc0de1f03a67e45fc1124106055aa0816db1921076d713a47d5666f60
                 room-ref: ./journey-probe-finds-nested-maps/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-probe-finds-nested-maps:backlog:1
+                briefing: briefing:journey-probe-finds-nested-maps:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T15:13:21.741603Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-27) answering 「需要你決定：第 8 批 7 張任務的待辦關卡，要不要一起批准進入設計階段？同時把已經做完的 `peers-paseo-host-binding` 關掉。我建議全部批准，也關掉那張。」; accepts FO's recommendation
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
