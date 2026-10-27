@@ -724,3 +724,22 @@ FO disposition. Fix-authorized, owned by this task. Change only what each item n
 Out of scope this round: Gemini P3-1/P3-2 (header-string exit code, empty key list masking missing headers), G4-G7 Polish.
 
 Push to the same branch (PR #727 stays Draft), rerun the contract tests, mutations and every fixture, and append `## Stage Report: implementation (cycle 3)` with plain `### Checks` and `### Summary` subheadings and the new head.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Fix items 1-4 of the validation cycle 2 FO disposition on PR #727's branch, each with a refusal test or fixture and a mutation that fails without it; correct the README Sentry sentence.
+  Commit 5dee91fb on spacedock-ensign/ops-metric-event-protocol. Per item (tests in `test/contract.test.mjs`, mutations in `test/mutations.mjs`):
+  - 1 Keys: `isUsableKey` in `contract.mjs` (secret beyond `whsec_`; `environments` and `sources` non-empty arrays of non-empty strings; every source prefix ends with `:`); `parseEvent` skips any other key, `validate.mjs` exits 2 on one. Test "a key that cannot sign anything is skipped, never used and never thrown on" (ten unusable shapes, including a prefix-only secret that would otherwise verify, plus a mixed list); three validator fixtures in the exit-2 test; 6 mutations.
+  - 2 Sentry source: `sourcePattern` `^urn:sentry(:[a-z0-9-]{1,32}){1,3}$` on `sentry.issue.alert` (also in its published schema). Test "a sentry.issue.alert must come from a urn:sentry: source"; 1 mutation. README: the `urn:sentry:` rule, the sentence that said bounded fields limit what a cross-signed event carries is replaced by `title` and `culprit` staying free up to 500 characters each, with key scoping by type left as a deferred risk for r1. Existing fixtures already used `urn:sentry:issue-alert`.
+  - 3 `web_url`: `^https://[A-Za-z0-9._~:/@!$&*,;=-]{1,480}$`; `?`, `#`, `%`, `+` refused. Cases added to the Sentry bounds test; 1 new mutation (the character class) beside the existing one.
+  - 4 `period`: `format: "date"` checked by components (Feb 30, Apr 31, non-leap Feb 29, month 13, month 0, day 0 and 32 refused; 2024-02-29 accepted) on crossed, recovered and heartbeat. Test "period must be a date on the calendar"; 2 mutations. The README limit "period is a pattern" is removed.
+  - README: new Sources entries VR 8 to 11 and the usable-key rule under Signing; `v1/` schemas and `contract-versions.json` regenerated.
+- DONE: Rerun the contract tests, mutations and validate.mjs on every fixture at the new head; report the new head SHA and that all PR checks pass.
+  New head 5dee91fb7fbfaa5cbd627bd2965c3bd4bae204f2 (PR #727 still Draft). At that head: contract tests 29 pass, 0 fail; mutations 51 caught, 0 survived, exit 0 (about 4 minutes locally, the CI job 1m49s); `validate.mjs` over all 22 fixtures: 9 exit 0, 13 exit 1 each with its own reason, none exit 2; `gh pr checks 727 -R iamcxa/kc-claude-plugins`: GitGuardian, kc-ops-inbox contract tests, multi-profile route gate, review CI routing, version parity all pass. The PR body evidence was refreshed to this head.
+
+### Checks
+- `python3 <package>/scripts/comment_ratio.py <merge-base> HEAD`: `code lines 880, comment lines 21, 2.4%`, maximum 5% met. `python3 <package>/scripts/doc_impact.py <merge-base> HEAD`: `kc-ops-inbox/contract/README.md` `updated`. `scripts/version-parity-check.sh`: consistent.
+- Out of scope as ordered, not touched: Gemini P3-1/P3-2 (header-string exit code, empty key list masking missing headers) and validator G4 to G7 Polish.
+
+### Summary
+All four cycle-2 items are fixed in the contract with a test and a mutation each, the README Sentry sentence is corrected, and PR #727 at 5dee91fb has all five checks green. The merge stays the Captain's.
