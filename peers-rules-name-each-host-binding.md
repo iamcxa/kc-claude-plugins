@@ -75,7 +75,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Result: aligned 2026-10-26 on the outcome by the Captain's 「准」 answering this task's backlog briefing-1 question, which named the FO mindset in peers, one binding per host with Claude Code kept and Paseo added, a dev2 paseo extension pointing to Paseo's own skill, and a check for relayed rulings; the per-host checks and where the relayed-ruling check runs are put to him as decisions at the ideation gate.
-
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-27 — do these amendments withdraw what the Captain approved, and what changes in the build? Answer: no extra withdrawal (Amendment 1 drops only AC-4 and the migration clauses of AC-5, as the ideation briefing-2 question named); nothing shipped promises the moved check; three Polish items; proceed.
 
 ## Design
 
