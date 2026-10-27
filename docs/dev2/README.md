@@ -47,7 +47,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.32.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.32.1 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -60,14 +60,15 @@ IDs and tasks in their recorded workflow; new work does not migrate old work.
 
 ## Schema
 
-Record `id`, `title`, `status`, `variant: kc-dev-flow-2`, and the user's selected
-`profile`. The five-stage route accepts `pilot` or `prod`; the POC adaptation
+Record `title`, `status`, `variant: kc-dev-flow-2`, and the user's selected
+`profile`; `id` is optional under `id-style: slug`. The five-stage route accepts
+`pilot` or `prod`; the POC adaptation
 removes ideation from both frontmatter and Stages and accepts `poc` only.
-Before admission and dispatch, FO checks that the selected profile matches this
-workflow's actual ordered stages. Unknown/mismatched profiles require a hold,
-not an invented transition or default. SD does not enforce this profile rule.
-Preserve the approved outcome, scope, non-goals, budget and stop condition in the
-body. Use bold **AC-N** declarations with individual evidence clauses.
+Before admission and dispatch, FO holds unknown/mismatched profiles;
+SD does not enforce this rule. Preserve approved outcome and scope.
+New seeds require non-empty `Non-goals:`, `Budget:` and `Stop condition:` lines
+under `## Scope` or matching level-two sections. Replay counts do not enforce
+these on existing tasks. Use bold **AC-N** declarations with individual evidence clauses.
 
 ## Stages
 
@@ -133,8 +134,7 @@ differently, or `Visible change: none`.
   `Visible change:` lines on the five-stage route.
 - **Seed check:** On the five-stage route, before `gate prepare`, FO runs
   `python3 <package>/scripts/design_surfaces.py check --seed <task>` and holds the
-  gate until it exits 0. An FO that skips this step still dispatches; the worker's own
-  check is the backstop.
+  gate until it exits 0. An FO that skips this step still dispatches; no runtime hook blocks it.
 - **Release review:** Applies to a task that belongs to a release on a journey map
   (`journey`, `journey-release`, `journey-story`); a task with no release, such as a
   bug, infrastructure or workflow maintenance, is outside it. Four signals: (1) a task
@@ -593,7 +593,10 @@ pr:
 
 ## Scope
 
-<Approved scope, non-goals, budget and stop condition.>
+<Approved outcome and scope.>
+Non-goals: <exclusions>
+Budget: <approved bound>
+Stop condition: <when to return to the Captain>
 
 ## Acceptance criteria
 
