@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "981a4309c4ac2abbccd7e5c6a0211682ca6c554c",
+  "model": "not run",
+  "necessity": "five files (docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md, kc-dev-flow-2/references/sd/workflow.md, kc-dev-flow-2/scripts/lint-skills.py, test_poc_readme.py, test_sd_dispatch.py).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'AC-1 met (structural). AC-4 met. AC-5'",
+    "point: deferred: 'Script below, run as `env -i'",
+    "point: deferred: '- F1 Deferred risk: the Team'",
+    "point: deferred: '- F2 Deferred risk: structural dispatch'",
+    "point: deferred: '- F3 Deferred risk: no RoboRev'",
+    "point: deferred: '- F4 Deferred risk: PR #730'",
+    "point: deferred: '- F1 Deferred risk: the Team'",
+    "point: deferred: 'FO declines: Deferred risk F1, the'",
+    "point: not-run: 'Could not run: a true mid-run'",
+    "point: not-run: 'Table below. Cells agy could not'",
+    "point: not-run: 'External rounds: Codex 1 (the first'",
+    "point: acceptance-not-run: 'AC-1 met (structural). AC-4 met. AC-5'",
+    "point: more: 7 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#729",
+  "sufficiency": "every worker dispatch now carries a 144-word Team bullet under Dispatch facts (check prior reports, sibling tasks, PRs and workflow state; say first when the environment cannot run a required check; p",
+  "time": "2026-10-27T04:12:24Z",
+  "verdict": "ask"
+}
