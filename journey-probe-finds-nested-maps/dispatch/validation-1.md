@@ -1,6 +1,6 @@
 # validation-1
 
-Dispatched: 8bf4f3582411e8e4238f19fbadda8ddeca6767be (workflow checkout, kc-dev-flow-2 0.32.0 README); batch 7
+Dispatched: 8bf4f3582411e8e4238f19fbadda8ddeca6767be (workflow checkout, kc-dev-flow-2 0.32.0 README); batch 8
 Candidate: 159b21232dea8ce68fcf9402461e185ff59d327c
 Model: gpt-6-astra (Codex via Paseo, thinking high; the Captain's interim dispatch directive, chat 2026-10-26: 「接下來派工結束後新的派工盡量用 sol / astra，推理等級可以比 claude 高一級」)
 
