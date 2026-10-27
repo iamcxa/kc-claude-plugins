@@ -5,7 +5,7 @@ Model: gpt-6.1-sol (Codex via Paseo, thinking high; the Captain's interim dispat
 
 ## Checklist
 
-Apply Captain amendment 2: in kc-dev-flow-2/scripts/pr_watch.py the archived-task scan skips a task whose frontmatter variant or profile learn rejects, in the three approved files only, with no new record and no change to kc-dev-flow-2/skills/learn/SKILL.md or kc-dev-flow-2/scripts/learning.py; add a parity test in kc-dev-flow-2/scripts/test_pr_watch.py against learning.py's eligibility for those two fields; restate AC-8 marked 'Amended by Captain, amendment 2', with its falsifier
+Apply Captain amendment 2: in kc-dev-flow-2/scripts/pr_watch.py the archived-task scan skips a task whose frontmatter variant or profile learn rejects, in the three approved files only, with no new record and no change to kc-dev-flow-2/skills/learn/SKILL.md or kc-dev-flow-2/scripts/learning.py; add a parity test in kc-dev-flow-2/scripts/test_pr_watch.py against kc-dev-flow-2/scripts/learning.py's eligibility for those two fields; restate AC-8 marked 'Amended by Captain, amendment 2', with its falsifier
 Run every kc-dev-flow-2 test file; commit (named files only), push with an explicit remote and branch, no force, no -u; append a complete new `## Stage Report: implementation` ending in a superseding `### Summary`, committed with `spacedock state commit idle-hook-names-merged-tasks-without-learn --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2`; FO runs RoboRev and reads CI
 
 ## Scope notes
