@@ -269,17 +269,11 @@ Recommended order: coordinate the shared watcher files with `idle-hook-names-mer
 
 ## Acceptance criteria
 
-**AC-1**: Seed mode refuses each absent or empty required frontmatter field with a field-specific diagnostic and exit 1; a complete seed with no optional fields exits 0, in flat and folder form.
-Verified by: in `test_design_surfaces.py`, start with one complete seed, delete or blank each of the five fields individually, then restore it. Include quoted empty/null/comment-only/placeholder values, nested lookalikes, body lookalikes, malformed frontmatter and ambiguous duplicate keys. Verify input bytes unchanged. Falsifier: remove the new seed-field call or search the entire text instead of opening top-level frontmatter; each must make a named negative case pass and fail the test. Future implementation evidence; the current checker gap was observed, not fixed.
 
 **AC-2**: Scope and the three explicit body records are required in the accepted forms, without treating fenced examples, unrelated sections or empty labels as content; no missing value is invented.
 Verified by: a complete seed using Scope labels and one using dedicated sections both pass; remove each field separately and test backtick/tilde fenced impostors and headings in quotes. Relay's unchanged pinned task produces exactly the new id/Budget/Stop-condition reasons in seed mode. Falsifier: accept label-only content, scan all body sections, or remove fence exclusion; the corresponding impostor must flip from refused to accepted. Future implementation evidence; the disposable classifier covered the ordinary historical forms only.
 
-**AC-3**: The unchanged `spacedock new` mechanism can create a compliant slug seed when given the matching stored id; it does not itself enforce the package's required bounds.
-Verified by: in a disposable workflow, run the selected native binary on otherwise identical complete stdin with id omitted and with `id: <slug>` supplied. Creation succeeds for both; the proposed seed check refuses the first and passes the second. Include folder creation and a mismatching supplied id, which native Spacedock refuses. Falsifier: treating filename identity as the stored field makes the omitted-id negative case pass. Current evidence: the installed 0.27.2 executable created both omission and matching-id flat cases; the proposed-check/folder/mismatch matrix remains future work.
 
-**AC-4**: The refusal reaches the existing backlog/idle route with useful wording, while default `check`, imported helpers, optional fields and the proof-of-concept route preserve their behavior.
-Verified by: run `test_pr_watch.py`, `test_sd_dispatch.py --sd-plugin-root <selected Spacedock package>`, `test_poc_readme.py`, `test_dispatch_records.py`, `test_delivery_gate.py` and checker tests at the candidate. Use one backlog/needs-preparation task with valid alignment but missing id, invoking the actual seed subprocess rather than a stubbed refusal; require the reminder naming seed fields. Verify non-backlog rows stay filtered and a POC workflow gets no seed/ideation gate. Falsifier: suppress the helper call, keep the old FO-alignment-only instruction, or move the new field check before the seed branch; the relevant test must fail. Future evidence, not tested as a candidate in this stage.
 
 **AC-5**: Every changed corpus verdict is explained at the exact implementation candidate, with no silent archive/adopter repairs and no historical fault inferred solely from the new format.
 Verified by: execute base and candidate in both modes over all 163 pinned local tasks plus Relay, then repeat on all newly committed entities present at implementation time; retain path, input digest, exit and output. Seed changes must match accepted required-field failures; default outputs/exits must remain unchanged on identical history/artifacts. Test the observer instruction against an old free-prose snapshot and its event-time README, yielding current incompatibility or `can't tell`, not invented old-format violation. Falsifier: make seed enforcement unconditional or remove the historical qualification; the default comparison or retrospective case fails. Current evidence is the 164-file base run and explicit design projection above, not a candidate comparison.
@@ -290,12 +284,34 @@ Verified by: run package lint at the final rebased candidate with the actual Cap
 **AC-7**: The feature remains a read-only package seed check with no new upstream hook, provider request, automatic task migration or CI trigger.
 Verified by: run the seed matrix with input byte comparisons and network/process calls observed; inspect the named-file candidate diff and run the relevant existing package tests already selected by the current CI workflow. No implementation change outside the approved files without FO routing. Falsifier: add task mutation, a remote request, seed enforcement to default mode, or a new CI trigger; the byte comparison/call observation/diff review must fail. CI cost per PR was not measured in this design stage; no CI configuration change is proposed.
 
+Amendment 1 governs the remaining replay clauses too: no stored-id refusal or new frontmatter/Scope enforcement is owed; historical results are compatibility counts, not enforcement on existing tasks.
+
+**AC-8**: Amended by Captain, amendment 1 (replaces AC-1): Seed mode requires only the three new body bounds, Non-goals, Budget and Stop condition. A stored id is optional under id-style: slug; no new frontmatter or Scope check is added.
+Verified by: delete or empty each bound in flat and folder seeds, retain the field-specific exit-1 diagnostic and unchanged bytes, and pass seeds with omitted/matching id. Falsifier: disable the seed-bound call, accept empty/placeholders, or add a stored-id requirement; the matrix must fail.
+
+**AC-9**: Amended by Captain, amendment 1 (replaces AC-3): Native Spacedock creates compliant slug seeds with omitted or matching stored id in flat/folder form; the package checks bounds, and native creation still refuses a mismatching id.
+Verified by: actual native new and the actual candidate seed subprocess on all four creation cases, then remove Budget and require refusal. Falsifier: require stored id or drop bound enforcement; the corresponding creation/check case must fail.
+
+**AC-10**: Amended by Captain, amendment 1 (replaces AC-4): Newly admitted seeds reach the backlog/idle check with useful wording; existing tasks are replayed for counts without enforcement or migration. Default check, imported helpers, optional fields and the proof-of-concept route preserve behavior.
+Verified by: actual seed subprocess on a backlog/needs-preparation task with valid alignment but missing Budget; existing route filters and consumer/POC suites; base/candidate corpus outputs and hashes. Falsifier: suppress the seed call, retain alignment-only wording, or enforce the new bounds in default mode; the relevant test/comparison must fail.
+
 ## Captain amendments
 
 ### Amendment 1 — 2026-10-27, chat
 Captain: 「其他全照建議」 (chat, 2026-10-27)
 Asked: 「需要你決定：第 8 批的設計，照首席工程師的建議一起處理，可以嗎？6 張進入實作，1 張直接關掉，再送一份 issue 給 Spacedock。我和首席工程師都建議照這樣做。」, with this task's row 「任務缺必要欄位要擋 ｜ 縮小範圍 ｜ `id` 改成可不寫（Spacedock 本來就不寫，163 個裡有 162 個沒有）；只要求「不做的事」「預算」「停止條件」三項；只檢查新任務」
 Supersedes: AC-1, AC-3 and AC-4 as written (the implementation worker restates them for an optional stored id under id-style: slug, the three required body records, and new seeds only with replay counts reported)
+
+Superseded text:
+
+**AC-1**: Seed mode refuses each absent or empty required frontmatter field with a field-specific diagnostic and exit 1; a complete seed with no optional fields exits 0, in flat and folder form.
+Verified by: in `test_design_surfaces.py`, start with one complete seed, delete or blank each of the five fields individually, then restore it. Include quoted empty/null/comment-only/placeholder values, nested lookalikes, body lookalikes, malformed frontmatter and ambiguous duplicate keys. Verify input bytes unchanged. Falsifier: remove the new seed-field call or search the entire text instead of opening top-level frontmatter; each must make a named negative case pass and fail the test. Future implementation evidence; the current checker gap was observed, not fixed.
+
+**AC-3**: The unchanged `spacedock new` mechanism can create a compliant slug seed when given the matching stored id; it does not itself enforce the package's required bounds.
+Verified by: in a disposable workflow, run the selected native binary on otherwise identical complete stdin with id omitted and with `id: <slug>` supplied. Creation succeeds for both; the proposed seed check refuses the first and passes the second. Include folder creation and a mismatching supplied id, which native Spacedock refuses. Falsifier: treating filename identity as the stored field makes the omitted-id negative case pass. Current evidence: the installed 0.27.2 executable created both omission and matching-id flat cases; the proposed-check/folder/mismatch matrix remains future work.
+
+**AC-4**: The refusal reaches the existing backlog/idle route with useful wording, while default `check`, imported helpers, optional fields and the proof-of-concept route preserve their behavior.
+Verified by: run `test_pr_watch.py`, `test_sd_dispatch.py --sd-plugin-root <selected Spacedock package>`, `test_poc_readme.py`, `test_dispatch_records.py`, `test_delivery_gate.py` and checker tests at the candidate. Use one backlog/needs-preparation task with valid alignment but missing id, invoking the actual seed subprocess rather than a stubbed refusal; require the reminder naming seed fields. Verify non-backlog rows stay filtered and a POC workflow gets no seed/ideation gate. Falsifier: suppress the helper call, keep the old FO-alignment-only instruction, or move the new field check before the seed branch; the relevant test must fail. Future evidence, not tested as a candidate in this stage.
 
 ## Number guards
 
@@ -331,3 +347,57 @@ ADR: 0041
 ### Summary
 
 Designed a seed-only repair against released 0.32.0, with required/optional schema fields, native Spacedock evidence, a 164-task replay and refreshed batch ordering. The Captain still decides the explicit schema, including stored id despite native slug omission and the +12 workflow-word cost; no implementation, historical migration or remote PR claim is made. This report completes the pilot ideation assignment only.
+
+
+## Implementation evidence
+
+Candidate: `2f3966a6ca1394a5154034637a55314613180875`; base: `207c0a7eb51d08c00e68dbe52e9b364793750484`. Local raw evidence: `/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/seed-schema-evidence-hksgnuxy/` (`manifest.json`, corpus JSON with per-path digest/exit/output, `replay-summary.json`, mutation source/logs/runner, lifecycle counts/complete output, historical review and test logs); native commands/stdin/exits: `/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-ubp66rkn/commands.jsonl`.
+
+The 138 newly refused seeds in each 163-task snapshot group as Budget+Stop condition 94; all three bounds 39; Stop condition 3; Non-goals+Stop condition 1; Non-goals+Budget 1. The 23 prior failures stay failed with only accepted missing-bound diagnostics added; 2 prior passes stay passed. Default pass/fail counts are 73/90 at pinned `0d8847df7b0ef6e9046d8ff99dd6331bff010d2b`, 79/84 at current `a20f15267689a47c58111466acada1c0b2c42b0d`, and 1/0 on Relay `d20ff925992d34e70808b4291b32560afbc7fee5`; within every identical snapshot, base and candidate outputs/exits match. Relay input SHA-256 remains `a385615b692934c41a1c1664d3b1444cc09020cb03622c1ec7c0e95ed2ec0fa6`.
+
+Actual whitespace counts retain all baseline passages; these measure the declared package passages plus complete controlled script output, not total model context. Open/merged/archive/merge-ask output is byte-identical across the two script variants; seed output and its reminder intentionally change. Provider interfaces are local fixtures; no live provider query is part of this evidence.
+
+| FO moment and complete measured passages/output | Base | Candidate |
+| --- | --- | --- |
+| Startup: package README + workflow + mod | 3067+5565+48 = 8680 | 3072+5576+48 = 8696 |
+| Valid backlog: seed bullet + actual seed output | 40+4 = 44 | 38+7 = 45 |
+| Refused backlog, Relay-shaped bounds: bullet + output | 40+4 = 44 | 38+13 = 51 |
+| Idle, refused backlog: mod + actual reminder | 48+0 = 48 | 48+28 = 76 |
+| Open idle, no seed defect: mod + full output | 48+29 = 77 | 48+29 = 77 |
+| Merged idle: mod + learn extension + full output | 48+280+20 = 348 | 48+280+20 = 348 |
+| Archived: learn extension + full output | 280+5 = 285 | 280+5 = 285 |
+| Merge ask: Delivery authority + Extensions + full output | 680+57 = 737 | 680+57 = 737 |
+
+Historical observer review uses the pinned Relay input: current compatibility fails for Budget/Stop condition; historical operator fault is `can't tell` without matching event-time README bytes. Removing the qualification restores an unsupported historical-violation claim and fails that manual review; live observer behavior was not exercised. Named-file review rejects the negative case of adding a CI trigger because it is outside the approved files; no trigger was installed or run.
+
+
+## Stage Report: implementation
+
+- DONE: Implement the approved design and Captain amendment 1 on the assigned branch; only the files the design names.
+  Candidate `2f3966a6ca1394a5154034637a55314613180875`, stacked on `207c0a7eb51d08c00e68dbe52e9b364793750484`; 10 named files, clean code worktree; branch pushed without force or -u. No version, adopter, upstream or CI edits.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (8bf4f3582411e8e4238f19fbadda8ddeca6767be) implementing the approved design and acceptance criteria in the task file; the kc-dev-flow-2/scripts/design_surfaces.py seed check, README schema and kc-dev-flow-2/scripts/pr_watch.py seeds() changes the design names, with Captain amendment 1 applied: a stored id optional under id-style: slug; Non-goals, Budget and Stop condition required; new seeds only, with the replay counts reported and not enforced on existing tasks; restate AC-1, AC-3 and AC-4 marked 'Amended by Captain, amendment 1'. Stack on idle-hook-names-merged-tasks-without-learn: base your branch on origin/spacedock-ensign/idle-hook-names-merged-tasks-without-learn (207c0a7e), not origin/main, because both change kc-dev-flow-2/scripts/pr_watch.py and that PR (#737) lands first; only the files the design names
+  Implementation and push complete; only opening the Draft PR is delegated to FO. Title/body: `/tmp/impl-seed-check-requires-schema-fields-pr.md`; no gh command run.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Current AC-2, AC-5–AC-10 proved below; AC-1/3/4 moved verbatim into amendment 1 and replaced by fresh AC-8/9/10. Eleven isolated behavior mutations under python3 -B each fail named tests; the quote-removal mutation is refused by budget_errors; no mutant caches reused.
+- DONE: AC-2 and AC-8 — require the three actual bounds, preserve the optional slug id and add no frontmatter/Scope enforcement.
+  `test_design_surfaces.py` 189/189: flat/folder missing-bound matrix, both accepted forms, empty/placeholders, quoted/unrelated/fenced impostors, fence length/kind, unchanged bytes and no process/network calls; removing the helper, widening section scanning, dropping fences, accepting placeholders or requiring id fails its named case.
+- DONE: AC-9 — native creation and the actual seed subprocess agree with the amended contract.
+  `test_sd_dispatch.py --sd-plugin-root <supplied 0.27.3>` passes using native 0.27.2: flat/folder × omitted/matching id all create and pass; removing Budget refuses, mismatching native id refuses, unfilled template refuses all three bounds and filled template passes. A stored-id requirement or missing bound call fails this matrix.
+- DONE: AC-10 — refusal reaches the existing backlog/idle route and consumers retain their behavior.
+  Watcher 123/123, dispatch records 54/54, delivery 101/101, POC 7/7 and native dispatch/recovery pass; the real missing-Budget subprocess reaches the reminder. Suppressing that subprocess or restoring alignment-only wording fails the integration test; unconditional enforcement fails default-mode preservation.
+- DONE: AC-5 — replay every pinned/current committed task in both modes without changing inputs or enforcing results on existing tasks.
+  Pinned `0d8847df` 163 tasks and current `a20f1526` 163 tasks each retain 23 seed failures and 2 passes, with 138 newly refused; Relay `d20ff925` adds 1 refusal for Budget/Stop condition. Every default exit/output stays identical; all input digests match git snapshots. See Implementation evidence above for grouped reasons and historical-review limit.
+- DONE: AC-6 — schema, template, reminder, lifecycle wording, explicit budget and durable ruling agree.
+  Workflow 5565→5576 (+11 within approved +12), package README 3067→3072, Captain quote retained in the budget step; removing it fails the check. ADR 0041 records amendment 1. Complete fixed lifecycle outputs/counts are retained above; default-mode or template regressions fail their executable checks.
+- DONE: AC-7 — read-only package check without a new hook, provider request, migration or CI trigger.
+  Input byte comparisons and process/network rejection probes pass; named-file candidate diff has only the approved 10 files. All 23 CI-listed unit suites pass: 900 tests, one pre-existing skip; native dispatch/recovery pass. A task write, seed process/network call, default enforcement or CI edit fails the byte/call/default/diff boundary.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  All available checks, push and PR text are complete below; only RoboRev and hosted PR/CI evidence are delegated to FO by the sandbox override. No roborev evidence= line exists: RoboRev not run because its daemon is unreachable; gh not run. CI cost per PR not measured; no CI configuration change.
+- DONE: Required lint, ADR, number and comment guards.
+  Repository lint exits 0 at 5576/5576 words; supplied Codex 0.32.0 adr_lint --since 207c0a7e --require 0041 exits 0 (40 ADRs, 0 legacy); number_guards check exits 0 (trunk base 8bf4f358, head 2f3966a6, migration check inapplicable); comment_ratio exits 0: 187 code lines, 2 comment lines, 1.1% ≤5%.
+- DONE: Affected-document dispositions at the committed candidate.
+  Updated: `kc-dev-flow-2/README.md`, ADR 0041. Unaffected: ADR 0020 (equality/quote rule retained), ADR 0037 (Team step retained), `references/sd/adoption.md` (same native dispatch command and scope), `skills/maintain-flow/SKILL.md` (same equality/maintenance commands), root `learning.md` (all learned practices retained and exercised).
+
+### Summary
+
+Implemented and pushed the amended seed-only bounds check at `2f3966a6`; schema, template, watcher and historical guidance agree, with ADR 0041 and replacement AC-8/9/10 recorded. Tests, mutations, native seams and both corpus snapshots pass their stated boundaries; FO still owns the Draft PR, RoboRev and hosted CI. Historical observer wording was manually reviewed, not executed by a live observer; without matching event-time README bytes, historical operator fault is `can't tell`.
