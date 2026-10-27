@@ -163,7 +163,8 @@ The template lists the `required` extensions of the package README table (`learn
 Ask which recommended or optional rows to add once, before the Captain reviews the README:
 
 1. Probe each row's **Needs** read-only and show the result beside it: `journey-map` with
-   `release-acceptance` needs a `docs/journey/*.yaml` file, `python3` and `node`; `codex` needs `gh auth
+   `release-acceptance` needs a `.yaml` file under `docs/journey/`, including product folders
+   (`find docs/journey -type f -name '*.yaml' -print` from the code root), `python3` and `node`; `codex` needs `gh auth
    status` to pass; `roborev` needs `roborev status` to pass; `copilot` needs `gh` 2.92 or later
    authenticated; `paseo` needs peers, Paseo's own `paseo` skill and read-only host/agent
    discovery. Show a row whose probe failed unchecked with the reason.
