@@ -12,7 +12,13 @@ the dispatched head the PR head equals, every finding disposed); a profile that 
 The PR head is compared, as a prefix, with each line; it passes when it matches one (--head, else `gh pr view --json headRefOid`).
 --text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
 at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
-or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token. Each `;`-separated item after `Declined...:` or
+or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token; `answer=review:<id>` is no review.
+Both commands require exactly one configured second-reviewer declaration, including `not triggered` when applicable.
+Prod/db cannot claim `not triggered`. Listed Copilot refusals must copy the quote/id from
+`<task>/review/copilot-not-run.txt` and offer `Copilot retry: available when the Captain confirms quota is back.`
+Missing/unreadable source is exit 2, malformed/different content exit 1; configuration errors need a reason only.
+Unsupported Copilot PR types may be skipped; `check` compares that type to the PR title.
+Each `;`-separated item after `Declined...:` or
 `FO declines...:` (up to the next sentence that opens with a label and a colon, a blank line, or a line that opens a new decline; a label
 after `e.g.` or `i.e.`, or inside the item, does not start another) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
 it is a reason. When the newest `## Stage Report: validation` lists `- F<N> Deferred risk:` or `- F<N> Polish:` bullets, fewer
@@ -35,7 +41,7 @@ one `class:` line (never, docs-only, script-with-test or other, by allowlist), t
 and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask. The `class:` line ends
 `(verdict ask)` when the saved verdict is `ask`.
 
-Usage: delivery_gate.py question <task file or task folder> --text-file <file>
+Usage: delivery_gate.py question <task file or task folder> --text-file <file> [--workflow-dir <dir>]
 Runs the text checks of `check` on the validation gate question before `gate prepare`, and also refuses text that names the merge with
 `--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `he`, `you`, `the Captain` or `Captain`, then `say`, then `merge` or `hold`). Exit 0
 prints `gate text complete`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge that clause.
@@ -56,7 +62,7 @@ ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
 CANDIDATE = re.compile(r"^Candidate:[ \t]+([0-9a-f]{40})[ \t]*$", re.M)
 RECORD = re.compile(r"^validation-(\d+)\.md$")
 SECOND_REVIEWER = re.compile(r"Second reviewer:\s*([\w.-]+)\s+because", re.I)
-OUTCOME_TOKEN = re.compile(r"\b(?:review|comment):\d+")
+OUTCOME_TOKEN = re.compile(r"(?<!answer=)\b(?:review|comment):\d+")
 PR = re.compile(r"^([\w.-]+/[\w.-]+)#(\d+)$")
 CONVENTIONAL = re.compile(r"^(?:feat|fix|docs|chore|refactor|test|style|perf|ci|build|revert)(?:\([\w./-]+\))?!?: \S[\x20-\x7e]{0,99}$")
 CODE = {".py", ".sh", ".js", ".mjs", ".ts", ".tsx", ".jsx", ".go", ".rb"}
@@ -188,9 +194,10 @@ def unstated_second_reviewers(text):
         rest = SECOND_REVIEWER.sub("", text)
         named = re.compile(rf"(?<![\w-]){re.escape(reviewer)}(?![\w-])", re.I)
         not_run = re.search(rf"(?<![\w-]){re.escape(reviewer)}\s+not run:\s*\S", rest, re.I)
+        skipped = reviewer == "copilot" and re.search(r"\bcopilot skipped: [\w-]+ PR\b", rest, re.I)
         sentences = re.split(r"(?<=[.!?])\s+|\n", rest)
         cited = any(named.search(s) and OUTCOME_TOKEN.search(s) for s in sentences)
-        if not (not_run or cited):
+        if not (not_run or cited or skipped):
             missing.append(reviewer)
     return missing
 
@@ -269,7 +276,7 @@ def adr_names(repo, head, adr_dir):
 
 def readme_front(path):
     scalars, lists, key = {}, {}, None
-    lines = path.read_text(errors="replace").split("\n") if path.is_file() else []
+    lines = path.read_text().split("\n") if path.is_file() else []
     for line in lines[1:] if lines and lines[0] == "---" else []:
         if line == "---":
             break
@@ -294,6 +301,56 @@ def find_readme(task, workflow_dir):
 
 def repo_root(folder):
     return next((p for p in [folder.resolve(), *folder.resolve().parents] if (p / ".git").exists()), None)
+
+
+def reviewer_config(scalars, lists):
+    extensions = set(lists.get("extensions", []))
+    second = scalars.get("second-reviewer", "")
+    if second and (second not in {"codex", "copilot"} or not {"codex", "copilot"} <= extensions):
+        raise ValueError("second-reviewer must name a listed remote reviewer with another remote reviewer listed")
+    return second, extensions
+
+
+def reviewer_problems(task, task_text, text, second, extensions, title=None):
+    problems = []
+    if second:
+        rows = re.findall(r"(?i)\bsecond reviewer:[ \t]*([^\n]*)", text)
+        if len(rows) != 1:
+            problems.append("second reviewer declaration missing or duplicated: require exactly one configured reviewer or not triggered")
+        elif re.match(r"not triggered(?:[.;(\s]|$)", rows[0], re.I):
+            front = re.match(r"---\n(.*?)\n---", task_text, re.S)
+            prod = bool(front and (m := FM_PROFILE.search(front[1])) and m[1] == "prod")
+            if prod or re.search(r"^Surfaces:.*\bdb\b", task_text, re.M):
+                problems.append("second reviewer not triggered contradicts the structured prod/db trigger")
+        elif not re.match(re.escape(second) + r"[ \t]+because[ \t]+\S", rows[0], re.I):
+            problems.append(f"second reviewer declaration must name {second} because <nonempty trigger>, or not triggered")
+    if "copilot" in extensions:
+        for skipped in re.finditer(r"(?i)\bcopilot skipped:[ \t]*([^\n]*)", text):
+            kind = re.fullmatch(r"([a-z]+) PR[.]?[ \t]*", skipped[1], re.I)
+            pr_type = re.match(r"([a-z]+)(?:\([^\n)]*\))?!?: ", title or "")
+            if (not kind or kind[1].lower() in {"feat", "fix", "refactor", "perf"}
+                    or (title is not None and (not pr_type or kind[1].lower() != pr_type[1]))):
+                problems.append("copilot skipped type must be unsupported and match the PR title at check")
+        for refusal in re.finditer(r"(?im)(?<![\w-])copilot not run:[ \t]*([^\n]*)", text):
+            value = refusal[1].rstrip()
+            if value.lower().startswith("configuration error:"):
+                if not value[len("configuration error:"):].strip():
+                    problems.append("copilot configuration error needs a nonempty reason")
+                continue
+            saved = task_folder(task) / "review/copilot-not-run.txt"
+            try:
+                printed = saved.read_text()
+            except (OSError, UnicodeDecodeError) as error:
+                raise OSError(f"cannot read saved Copilot output {saved}: {error}; save the reader's exit-5 stdout there") from error
+            source = re.fullmatch(r'not a review of [0-9a-f]{9}: "(.*)"; answer=review:(\d+) at (\S+)\n?', printed)
+            own_line = not text[text.rfind("\n", 0, refusal.start()) + 1:refusal.start()].strip()
+            if not source:
+                problems.append("saved Copilot output is not a readable exit-5 result")
+            elif not own_line or value != f'"{source[1]}"; answer=review:{source[2]}':
+                problems.append("copilot not run must copy the saved printed quote and answer id")
+            if not re.search(r"(?im)^Copilot retry: available when the Captain confirms quota is back\.[ \t]*$", text):
+                problems.append("copilot not run needs the conditional retry offer")
+    return problems, (["next: hold the ask; repair the reviewer declaration, saved quote/id or conditional retry offer."] if problems else [])
 
 
 def never_paths(paths, workflow_dir, scalars):
@@ -422,7 +479,7 @@ def check(args):
     pr = PR.match(args.pr)
     try:
         task_text, gate_text = task.read_text(), text_file.read_text()
-    except OSError as error:
+    except (OSError, UnicodeDecodeError) as error:
         emit(f"cannot read input: {error}")
         return 2
     if not pr:
@@ -430,9 +487,14 @@ def check(args):
         return 2
     repo, number = pr.groups()
     problems, holds, nexts, sibling_notes = [], [], [], []
-    workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
-    if not workflow_dir:
-        holds.append("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
+    try:
+        workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
+        if not workflow_dir:
+            raise ValueError("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
+        second, extensions = reviewer_config(scalars, lists)
+    except (OSError, UnicodeDecodeError, ValueError) as error:
+        emit(f"cannot read reviewer configuration: {error}")
+        return 2
 
     candidates, record = dispatched_candidates(task)
     if not candidates:
@@ -520,6 +582,13 @@ def check(args):
     found, wanted = text_problems(task_text, gate_text)
     problems += found
     nexts += wanted
+    try:
+        found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions, (facts or {}).get("title"))
+    except OSError as error:
+        emit(*problems, str(error))
+        return 2
+    problems += found
+    nexts += wanted
 
     try:
         code, said = owed_role_calls(task)
@@ -562,12 +631,21 @@ def check(args):
 
 def question(args):
     task = Path(args.task)
+    if task.is_dir():
+        task = task / "index.md"
     try:
-        task_text, gate_text = (task / "index.md" if task.is_dir() else task).read_text(), Path(args.text_file).read_text()
-    except OSError as error:
+        task_text, gate_text = task.read_text(), Path(args.text_file).read_text()
+        workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
+        if not workflow_dir:
+            raise ValueError("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
+        second, extensions = reviewer_config(scalars, lists)
+        found, wanted = reviewer_problems(task, task_text, gate_text, second, extensions)
+    except (OSError, UnicodeDecodeError, ValueError) as error:
         emit(f"cannot read input: {error}")
         return 2
     problems, nexts = text_problems(task_text, gate_text, at_gate=True)
+    problems += found
+    nexts += wanted
     emit(*problems, *dict.fromkeys(nexts))
     if not problems:
         emit("gate text complete")
@@ -588,6 +666,7 @@ def main(argv=None):
     ask = commands.add_parser("question")
     ask.add_argument("task")
     ask.add_argument("--text-file", required=True)
+    ask.add_argument("--workflow-dir")
     args = parser.parse_args(argv)
     return question(args) if args.command == "question" else check(args)
 

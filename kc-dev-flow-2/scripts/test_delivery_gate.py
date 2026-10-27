@@ -1295,6 +1295,7 @@ HOLD_OUT_TAIL = {"unless he says he merges or holds": ", unless he says he merge
 class QuestionTests(unittest.TestCase):
     def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False):
         with tempfile.TemporaryDirectory() as d:
+            readme(d)
             if as_folder:
                 Path(d, "t").mkdir()
                 Path(d, "t", "index.md").write_text(task)
@@ -1487,6 +1488,168 @@ class SiblingPrTests(unittest.TestCase):
     def test_a_merged_sibling_passes(self):
         result = run_check(task=ADR_TASK, records=self.TWO, adr=["0022-other.md"], siblings=SIB(state="MERGED"))
         self.assertEqual(result.code, 0, result.out)
+
+
+REVIEWERS = "extensions: [roborev, codex, copilot]\nsecond-reviewer: copilot\n"
+DECLARATION = "Second reviewer: copilot because review rules.\n"
+RETRY = "Copilot retry: available when the Captain confirms quota is back."
+
+
+def refusal(body):
+    path = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_review.py"
+    spec = importlib.util.spec_from_file_location("copilot_reader", path)
+    reader = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(reader)
+    review = dict(id=17, user=dict(login=reader.BOT), commit_id="a" * 40,
+                  submitted_at="2026-10-27T00:00:00Z", body=body)
+    code, printed = reader.state("o/r", "9", call=lambda *a: dict(headRefOid="a" * 40),
+                                 pages=lambda p: [review] if p.endswith("/reviews") else [])
+    assert code == 5, printed
+    return printed + "\n", 'copilot not run: "' + reader.quote(body) + '"; answer=review:17\n'
+
+
+class ReviewerDeclarationTests(unittest.TestCase):
+    def run_cli(self, command, text=DECLARATION + "Copilot review:18.", source=None, config=REVIEWERS,
+                task=TASK, title="fix(x): y", module=None, folder=False, split=False, explicit=False,
+                source_error=False, missing_readme=False, readme_error=False, before_question=None):
+        with tempfile.TemporaryDirectory() as d:
+            root = Path(d)
+            readme(d, config)
+            if missing_readme:
+                (root / "README.md").unlink()
+            entries = root / "state" if split else root
+            entry = entries / "task/index.md" if folder else entries / "task.md"
+            entry.parent.mkdir(parents=True, exist_ok=True)
+            entry.write_text(task)
+            artifacts = gate.task_folder(entry)
+            dispatch = artifacts / "dispatch"
+            dispatch.mkdir(parents=True, exist_ok=True)
+            (dispatch / "validation-1.md").write_text(record(HEAD40))
+            saved = artifacts / "review/copilot-not-run.txt"
+            if source is not None:
+                saved.parent.mkdir(parents=True, exist_ok=True)
+                saved.write_text(source)
+            text_file = root / "gate.txt"
+            text_file.write_text(CLAUSES + text)
+            argv = [command, str(entry.parent if folder else entry), "--text-file", str(text_file)]
+            if command == "check":
+                argv += ["--pr", "o/r#9", "--head", HEAD40]
+            if explicit:
+                argv += ["--workflow-dir", d]
+            out = io.StringIO()
+            read = Path.read_text
+            def read_input(path, *a, **kw):
+                if source_error and path == saved:
+                    raise PermissionError("saved output unreadable")
+                if readme_error and path == root / "README.md":
+                    raise PermissionError("README unreadable")
+                return read(path, *a, **kw)
+            with stubbed(d, pr=pr_json(title=title)), contextlib.redirect_stdout(out), \
+                    mock.patch.object(Path, "read_text", read_input), \
+                    mock.patch.object(module or gate, "owed_role_calls", return_value=(0, [])):
+                if before_question is not None:
+                    text_file.write_text(CLAUSES + before_question)
+                    self.assertEqual((module or gate).main(["question", str(entry), "--text-file", str(text_file)]), 0)
+                    self.assertEqual(list((artifacts / "merge").glob("ask-*.json")), [])
+                    text_file.write_text(CLAUSES + text)
+                code = (module or gate).main(argv)
+            calls = root / "stub/calls.log"
+            calls = calls.read_text() if calls.exists() else ""
+            self.assertNotRegex(calls, r"POST|PATCH|DELETE|pr edit|pr merge|requested_reviewers")
+            if command == "question":
+                self.assertEqual(calls, "")
+            written = list((artifacts / "merge").glob("ask-*.json"))
+            self.assertEqual(len(written), int(command == "check" and code == 0), out.getvalue())
+            return code, out.getvalue()
+
+    def test_configured_declaration_matrix_on_both_commands(self):
+        cases = [("", 1), ("Second reviewer: copilot triggered by review rules.", 1),
+                 ("Second reviewer: codex because review rules. Codex review:18.", 1),
+                 (DECLARATION * 2 + "Copilot review:18.", 1),
+                 ("Second reviewer: copilot because \nCopilot review:18.", 1),
+                 (DECLARATION + "Copilot answer=review:18.", 1),
+                 (DECLARATION + "Copilot review:18.", 0),
+                 ("second REVIEWER: not triggered (Surfaces none).", 0)]
+        for command in ("question", "check"):
+            for text, want in cases:
+                with self.subTest(command=command, text=text):
+                    self.assertEqual(self.run_cli(command, text)[0], want)
+            for task in (TASK.replace("pilot", "prod"), TASK + "\nSurfaces: ui, db\n"):
+                with self.subTest(command=command, task=task):
+                    code, out = self.run_cli(command, "Second reviewer: not triggered.", task=task)
+                    self.assertEqual(code, 1, out)
+                    self.assertIn("structured", out)
+            for config in ("extensions: []\nsecond-reviewer:\n", "extensions: [learn]\n",
+                           "extensions: [codex, copilot]\nsecond-reviewer: codex\n"):
+                text = "Second reviewer: codex because review rules. Codex review:18." if "second-reviewer: codex" in config else ""
+                self.assertEqual(self.run_cli(command, text, config=config)[0], 0)
+
+    def test_real_reader_quote_matrix_and_mismatches(self):
+        for body in ("額度不足，請稍候", 'The "quoted" answer', "No &quot;quota&quot;\n\t left &amp; unavailable",
+                     "x" * 140, "", "evidence=review:999 unavailable"):
+            source, line = refusal(body)
+            for command in ("question", "check"):
+                with self.subTest(command=command, body=body):
+                    good = DECLARATION + line + RETRY
+                    self.assertEqual(self.run_cli(command, good, source=source)[0], 0)
+                    for bad in (good.replace('not run: "', 'not run: "X', 1),
+                                good.replace("answer=review:17", "answer=review:18"),
+                                DECLARATION + 'copilot not run: "quota"; answer=review:17\n' + RETRY,
+                                DECLARATION.rstrip() + " " + line + RETRY):
+                        code, out = self.run_cli(command, bad, source=source)
+                        self.assertEqual(code, 1, out)
+
+    def test_source_errors_and_retry_are_distinct_from_refusal_content(self):
+        source, line = refusal("quota unavailable")
+        for command in ("question", "check"):
+            good = DECLARATION + line + RETRY
+            for kwargs, want in ((dict(), 2), (dict(source=source, source_error=True), 2),
+                                 (dict(source="not reader output"), 1)):
+                code, out = self.run_cli(command, good, **kwargs)
+                self.assertEqual(code, want, out)
+            for text, task in ((DECLARATION + line, TASK), (DECLARATION + line + "no retry", TASK),
+                               (DECLARATION + line, TASK + "\n" + RETRY)):
+                code, out = self.run_cli(command, text, source=source, task=task)
+                self.assertEqual(code, 1, out)
+                self.assertIn("retry offer", out)
+
+    def test_adjacent_outcomes_and_type_skip(self):
+        for command in ("question", "check"):
+            for text, config in (
+                    (DECLARATION + "copilot not run: configuration error: gh unavailable", REVIEWERS),
+                    ("Second reviewer: not triggered.", REVIEWERS),
+                    (DECLARATION + "Copilot evidence=review:18.", REVIEWERS),
+                    ("copilot not run: quota", "extensions: [codex]\nsecond-reviewer:\n")):
+                self.assertEqual(self.run_cli(command, text, config=config)[0], 0)
+            code, out = self.run_cli(command, DECLARATION + "copilot not run: configuration error:")
+            self.assertEqual(code, 1, out)
+            for kind in ("docs", "chore", "test", "ci", "build", "style", "revert"):
+                self.assertEqual(self.run_cli(command, DECLARATION + f"copilot skipped: {kind} PR",
+                                              title=f"{kind}(x): y")[0], 0)
+            for kind in ("feat", "fix", "refactor", "perf"):
+                self.assertEqual(self.run_cli(command, DECLARATION + f"copilot skipped: {kind} PR")[0], 1)
+        self.assertEqual(self.run_cli("question", DECLARATION + "copilot skipped: docs PR")[0], 0)
+        self.assertEqual(self.run_cli("check", DECLARATION + "copilot skipped: docs PR", title="fix(x): y")[0], 1)
+
+    def test_configuration_and_discovery_fail_closed(self):
+        for command in ("question", "check"):
+            for config in ("extensions: [codex]\nsecond-reviewer: copilot\n",
+                           "extensions: [copilot]\nsecond-reviewer: copilot\n",
+                           "extensions: [codex, copilot]\nsecond-reviewer: other\n"):
+                code, out = self.run_cli(command, config=config)
+                self.assertEqual(code, 2, out)
+            self.assertEqual(self.run_cli(command, missing_readme=True)[0], 2)
+            self.assertEqual(self.run_cli(command, readme_error=True)[0], 2)
+            for folder in (False, True):
+                for split in (False, True):
+                    for explicit in (False, True):
+                        with self.subTest(command=command, folder=folder, split=split, explicit=explicit):
+                            self.assertEqual(self.run_cli(command, folder=folder, split=split, explicit=explicit)[0], 0)
+
+    def test_a_valid_question_does_not_clear_modified_text_at_check(self):
+        code, out = self.run_cli("check", "", before_question=DECLARATION + "Copilot review:18.")
+        self.assertEqual(code, 1, out)
+        self.assertIn("second reviewer", out)
 
 
 def tearDownModule():

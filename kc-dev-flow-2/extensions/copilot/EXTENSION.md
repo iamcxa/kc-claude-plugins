@@ -28,11 +28,13 @@ by listing `copilot` under `extensions:` in its workflow README frontmatter.
   not counted. FO does not ask for merge while a request it made is unanswered; with no
   review of the head after a push it chose not to re-request, the merge ask names Copilot
   as not read, as **When** says. Exit 2 is a configuration error, reported as `copilot not
-  run: <reason>`. Exit 5 (an answer with no review heading and no line comment of its own,
+  run: configuration error: <reason>`. Exit 5 (an answer with no review heading and no line comment of its own,
   such as a quota refusal) is reported as `copilot not run: <the printed quote>`: it is no
   round, not clean, not waited for, and FO does not request Copilot again in this task until
   the Captain says its quota is back. The merge ask names Copilot as not read with the
-  printed quote, and offers a retry. On exit 0 FO reads that review with `gh api repos/<owner/repo>/pulls/<N>/reviews/<id>`
+  printed quote, and offers a retry.
+  On exit 5, save stdout to `<task>/review/copilot-not-run.txt`; copy its quote and `answer=review:<id>` into `copilot not run: "<quote>"; answer=review:<id>`. Add `Copilot retry: available when the Captain confirms quota is back.` The delivery check compares the saved output.
+  On exit 0 FO reads that review with `gh api repos/<owner/repo>/pulls/<N>/reviews/<id>`
   and its line comments, and records the round in the committed gate summary with the
   heading line quoted. The round is clean only when Copilot recommends approval and lists
   no open or previously missed finding and no line comment; otherwise each finding goes
