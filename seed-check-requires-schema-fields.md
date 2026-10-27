@@ -331,6 +331,11 @@ Verified by: run `test_pr_watch.py`, `test_sd_dispatch.py --sd-plugin-root <sele
 
 ADR: 0041
 
+### Amendment 2 — 2026-10-28, chat
+Captain: 「全准」 (chat, 2026-10-28)
+Asked: FO's batch-8 second merge sitting, item 「**要你裁定的：你批准的「只檢查新任務」，「新」指的是什麼？** 工程審查員發現，現在的寫法把「所有還沒通過待辦關卡的任務」都當成「新」。目前待辦清單裡 54 張全部缺這三項，其中 42 張已經寫好對齊說明，等著開待辦關卡。」 with 「**我建議：就照現在這樣，「新」＝還沒通過待辦關卡的任務。** 以後我要拿一張舊待辦給你批之前，先補上「不做的事、預算、停止條件」三行。」
+Supersedes: AC-2 and AC-5's remaining Scope requirement and existing-task replay clauses (no replacement: a new seed is any backlog task not yet admitted, and FO adds the three bounds to an older task before presenting its backlog gate)
+
 ## Stage Report: ideation
 
 - DONE: A design for /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/design_surfaces.py check --seed to refuse a task missing a field the workflow README's schema actually requires (read the README schema first and list which fields are required and which optional), replayed over every task file in this workflow and the relay room-specs-follow-web-part-select task read only
