@@ -53,6 +53,17 @@ gates:
                 id: briefing:seed-check-requires-schema-fields:validation:attempt-1:revision-1
                 digest: sha256:c9892c62c31f6037ac757c9b2c2b02e6859aaa088b17f5250099479456afd37c
                 room-ref: ./seed-check-requires-schema-fields/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:seed-check-requires-schema-fields:validation:1
+                briefing: briefing:seed-check-requires-schema-fields:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T19:07:05.796212Z"
+                decision: approve
+                reason: 'Captain 「全准」 (chat, 2026-10-28) answering FO''s batch-8 second merge sitting (both merge asks and, for #740, the meaning of a new seed, all with FO''s recommendations); accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-27T16:18:25Z
 worktree: .worktrees/spacedock-ensign-seed-check-requires-schema-fields
 pr: iamcxa/kc-claude-plugins#740
