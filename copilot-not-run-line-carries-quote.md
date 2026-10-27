@@ -3,7 +3,7 @@ title: The delivery check refuses a `copilot not run` line without the printed q
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
