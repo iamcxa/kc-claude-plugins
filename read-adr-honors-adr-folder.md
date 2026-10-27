@@ -34,6 +34,17 @@ gates:
                 id: briefing:read-adr-honors-adr-folder:ideation:attempt-1:revision-1
                 digest: sha256:cb3a6e5c7e6db45400c6f568fde1e99351dcd4b41b0f4e39f6c60b25d934f8dd
                 room-ref: ./read-adr-honors-adr-folder/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:read-adr-honors-adr-folder:ideation:1
+                briefing: briefing:read-adr-honors-adr-folder:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T15:56:42.061355Z"
+                decision: approve
+                reason: Captain 「其他全照建議」 (chat, 2026-10-27) answering 「需要你決定：第 8 批的設計，照首席工程師的建議一起處理，可以嗎？6 張進入實作，1 張直接關掉，再送一份 issue 給 Spacedock。我和首席工程師都建議照這樣做。」, after he declined a second, unanchored batch review (「不須要」); accepts FO's recommendation
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
