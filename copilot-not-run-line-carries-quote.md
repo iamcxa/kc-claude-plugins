@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:copilot-not-run-line-carries-quote:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:copilot-not-run-line-carries-quote-ideation-1
+              briefing:
+                id: briefing:copilot-not-run-line-carries-quote:ideation:attempt-1:revision-1
+                digest: sha256:7ac2eaf2d4b7e40b67cb2a82224053222cbc5dcd0ea2c307ecf1d60500ecf7d4
+                room-ref: ./copilot-not-run-line-carries-quote/review/ideation/briefing-1
 ---
 
 ## Scope

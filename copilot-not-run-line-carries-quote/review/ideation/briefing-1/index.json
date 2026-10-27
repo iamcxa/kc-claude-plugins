@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:copilot-not-run-line-carries-quote:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of copilot-not-run-line-carries-quote to enter implementation? FO recommends approve; approving accepts that recommendation as designed, enforced on new merge asks only, with the replay counts reported instead of enforced on saved asks.",
+  "artifacts": [
+    {
+      "id": "artifact:copilot-not-run-line-carries-quote:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/5124aec76df411d0ffa043cfb1c1b484b89b2cea/copilot-not-run-line-carries-quote.md",
+      "rev": "sha256:c239c5d159d97024cfc56f30477c71899214e5c4b0b0c1da19383a34935df81b",
+      "mediaType": "text/markdown",
+      "summary": "Design: delivery_gate.py refuses a merge ask with no second-reviewer line when the README trigger holds, and a copilot not run line without the printed quote (kept from the saved exit-5 output) and a retry offer. Replay: 47 saved asks newly held (35 already broke the copilot EXTENSION.md rule), 6 not judgeable. Chief-engineer reviewed the whole batch (2026-10-27) and recommends this disposition."
+    }
+  ]
+}
