@@ -15,6 +15,17 @@ gates:
                 id: briefing:codex-reader-resolved-mark-adr:backlog:attempt-1:revision-1
                 digest: sha256:09f9ce1765893fba36540791d4288b78dc7f71460c23c21773ba89d1e69881ad
                 room-ref: ./codex-reader-resolved-mark-adr/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-resolved-mark-adr:backlog:1
+                briefing: briefing:codex-reader-resolved-mark-adr:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T01:45:06.031633Z"
+                decision: approve
+                reason: Captain 「補」 (chat, 2026-10-27) answering 「需要你決定：要不要開一張小任務，補一份 ADR 記下 D1？我建議補。」; accepts FO's recommendation
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
