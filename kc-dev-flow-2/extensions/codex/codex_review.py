@@ -123,6 +123,7 @@ def state(repo, pr, call=gh, pages=pages, now=None):
     stalled = running and (time.time() if now is None else now) - epoch(since) >= STALL_SECONDS
     if running and not stalled or summary is None and any(r["content"] == "eyes" for r in reactions):
         return 3, f"running: a Codex review is in progress; head {head[:9]}"
+    # see docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md
     held = [e for e in evidence if e[2] == 1]
     top = max(held or evidence, default=None)
     known = {e[1] for e in evidence}
