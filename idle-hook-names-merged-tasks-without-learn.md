@@ -53,6 +53,17 @@ gates:
                 id: briefing:idle-hook-names-merged-tasks-without-learn:validation:attempt-1:revision-1
                 digest: sha256:43554d4e7235c4cc6299b5bbc748a4f28fa41954263cad0ba6f5f3d6b20ad803
                 room-ref: ./idle-hook-names-merged-tasks-without-learn/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:idle-hook-names-merged-tasks-without-learn:validation:1
+                briefing: briefing:idle-hook-names-merged-tasks-without-learn:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T19:06:58.079641Z"
+                decision: approve
+                reason: 'Captain 「全准」 (chat, 2026-10-28) answering FO''s batch-8 second merge sitting (both merge asks and, for #740, the meaning of a new seed, all with FO''s recommendations); accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-27T16:00:30Z
 worktree: .worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn
 pr: iamcxa/kc-claude-plugins#737
