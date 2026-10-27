@@ -1,6 +1,6 @@
 ---
 title: Any project sends a key metric to its ops inbox the same way, and kc-ops-inbox's contract v1 lands on main so projects can depend on it
-status: implementation
+status: validation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
