@@ -696,3 +696,119 @@ PASSED at `e31e3022056f279ea41af1b24b4488d611adcf21`: both Cycle 1 findings are 
 ### Summary
 
 Created and pushed `spacedock-ensign/seed-check-requires-schema-fields-main` at `bd8a2c93bf1552468c5a2780c839930d3669114d`, directly on fetched main `4b78f020`, with only this task's two commits and no conflicts or further product edits; the old branch is unchanged. Every package test file, required guard and the rebound acceptance script passes, the combined feature patch is identical, and the replacement PR file is ready for FO. This complete report supersedes the earlier implementation reports for the replacement delivery; FO still owns the new PR, old-PR close, review/CI and revalidation.
+
+
+## Replacement PR validation acceptance script — 2026-10-28
+
+Replacement PR #740 candidate `bd8a2c93bf1552468c5a2780c839930d3669114d`, directly based on pinned main `4b78f020c2e4b5e8cdfa9e8a7e0133f63e9dd2d0`. No application screen changes. Run these four steps together in a fresh `bash --noprofile --norc` shell; the assigned worktree path must contain this exact head (its authorized replacement branch is `spacedock-ensign/seed-check-requires-schema-fields-main`). Expected: step 1 confirms the candidate, step 2 passes without a stored id, steps 3 and 4 each name missing Budget and return 1 from the checker; overall script exits 0. The script covers seed admission only, not native creation, corpus compatibility, model-agent execution or hosted delivery.
+
+```bash
+#!/usr/bin/env bash
+set -eu
+
+# Step 1: bind this run to the reviewed candidate.
+cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-seed-check-requires-schema-fields
+test "$(git rev-parse HEAD)" = bd8a2c93bf1552468c5a2780c839930d3669114d
+SEED_ACCEPT_DIR=$(mktemp -d /tmp/seed-acceptance-738.XXXXXX)
+trap 'rm -r "$SEED_ACCEPT_DIR"' EXIT
+printf 'candidate bd8a2c93 verified\n'
+
+# Step 2: a complete seed without stored id must pass.
+cat > "$SEED_ACCEPT_DIR/valid.md" <<'TASK'
+---
+title: bounded task
+status: backlog
+variant: kc-dev-flow-2
+profile: pilot
+---
+## Scope
+Non-goals: migrations
+Budget: one task
+Stop condition: upstream changes needed
+## FO alignment
+Surfaces: none
+Visible change: none
+TASK
+python3 -B kc-dev-flow-2/scripts/design_surfaces.py check --seed "$SEED_ACCEPT_DIR/valid.md"
+
+# Step 3: deleting Budget must be refused with exit 1.
+sed '/^Budget:/d' "$SEED_ACCEPT_DIR/valid.md" > "$SEED_ACCEPT_DIR/missing.md"
+seed_status=0
+python3 -B kc-dev-flow-2/scripts/design_surfaces.py check --seed "$SEED_ACCEPT_DIR/missing.md" || seed_status=$?
+printf 'missing Budget exit=%s (expected 1)\n' "$seed_status"
+test "$seed_status" -eq 1
+
+# Step 4: a quoted placeholder is not a Budget and must also be refused.
+cat > "$SEED_ACCEPT_DIR/quoted.md" <<'TASK'
+---
+title: quoted budget
+status: backlog
+variant: kc-dev-flow-2
+profile: pilot
+---
+## Non-goals
+No migrations.
+## Budget
+ > <approved bound>
+## Stop condition
+Upstream changes needed.
+## FO alignment
+Surfaces: none
+Visible change: none
+TASK
+seed_status=0
+python3 -B kc-dev-flow-2/scripts/design_surfaces.py check --seed "$SEED_ACCEPT_DIR/quoted.md" || seed_status=$?
+printf 'quoted placeholder exit=%s (expected 1)\n' "$seed_status"
+test "$seed_status" -eq 1
+```
+
+Observed verbatim from `bash --noprofile --norc /tmp/seed-validation-740-evidence/acceptance.sh`, exit 0:
+
+```text
+candidate bd8a2c93 verified
+valid.md: seed fields and FO alignment recorded
+missing.md: missing required body field: Budget
+missing Budget exit=1 (expected 1)
+quoted.md: missing required body field: Budget
+quoted placeholder exit=1 (expected 1)
+```
+
+Independent raw evidence: `/tmp/seed-validation-740-evidence/` — `decoupling.json`, `tests.json`, `guards.json`, `quote-recheck.json`, `old-quote-predicate.log`, `mutation-summary-final.json`, five corpus JSON files and `replay-summary.json`, `lifecycle.json` / `lifecycle-totals.json`, native logs and acceptance script/output. The new committed-state snapshot is pinned at `9a520194c95cf7d1c1e1f1d0272dc8b1b05269e1`. All candidate execution used an independent detached checkout; its status was clean before removal. The assigned replacement branch remains at the reviewed candidate and the old branch remains at `e31e3022`.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #740 head bd8a2c93 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at `bd8a2c93bf1552468c5a2780c839930d3669114d`: AC-2 and AC-5–AC-10 checked under amendment 1, evidence commands and criterion-specific falsifiers rerun. Prior quote/count findings remain resolved; implementation limits judged below.
+- DONE: Recheck the decoupling: #740 replaces #738; its change equals #738's own commits after 207c0a7e cherry-picked onto origin/main, with nothing of #737 included and nothing else changed beyond conflict resolution; the earlier PASSED verdict at e31e3022 still holds on this head; RoboRev on this head (FO, 2026-10-28): clean on bd8a2c93b, evidence=roborev:1272; CI on this head read by FO: 5 of 5 pass
+  `range-diff` pairs both own commits with `=` (2f3966a6→a3027e934, e31e3022→bd8a2c93); both combined patch IDs are `e5f345374e70dfba903954e225eb225ca6f56fda`, and every added/deleted line matches including whitespace. Same ten-file patch, eight byte-identical own files; watcher/test contain only that patch atop main. Old branch stays e31e3022; 207c0a7e is not an ancestor. Clean merge-tree onto 4b78f020 returns candidate tree `622bd635673f09213a117ac15a952cc93c498c5c`.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step acceptance above exits 0 in fresh bash. Supplied Codex 0.32.0 `python3 <package>/scripts/adr_lint.py docs/adr --since 4b78f020c2e4b5e8cdfa9e8a7e0133f63e9dd2d0 --require 0041` exits 0: 40 ADR files, 0 legacy. Loaded Package rule selects the Codex root over the dispatch's Claude path.
+- DONE: AC-2 / AC-8 — require only the accepted body bounds and preserve optional slug id.
+  Checker 191 tests and 72 independent actual CLI cases pass: three fields × four indents × quoted placeholder/quoted real text/valid text × flat/folder; 48 quote refusals, 24 valid passes, exact missing-field diagnostics and unchanged bytes. Old-predicate mutation restores 36 negative failures, with zero errors; drop-call, placeholder, unrelated-section, fence and required-id mutations are caught. No new frontmatter or Scope enforcement.
+- DONE: AC-9 — native flat/folder creation and the actual seed subprocess remain compliant.
+  Spacedock binary 0.27.2 with plugin root 0.27.3 passes omitted/matching id in both forms, rejects mismatching id, and refuses deleted Budget/all unfilled template bounds. The missing-bound and stored-id falsifiers are caught; no upstream mechanism is added.
+- DONE: AC-10 — existing backlog/idle route and consumers retain the new main base's behavior.
+  Watcher 114, dispatch records 54, delivery 113 and POC 7 tests pass, plus native dispatch/recovery. Actual missing-Budget subprocess reaches the seed-fields reminder; suppressing that subprocess or restoring alignment-only wording fails its case. Default-mode preservation and non-backlog/POC filtering pass; excluded #737 archive reminders are not part of this candidate.
+- DONE: AC-5 — replay each required historical and current snapshot without modifying inputs.
+  Main base, old validated e31e3022 checker and replacement candidate each run both modes over 0d8847df (163), a20f1526 (163), fdfecaa4 (163), replacement-state 9a520194 (163), and Relay d20ff925 (1): 653 snapshot instances / 3918 executions. Every input matches its Git bytes/digest; old validated checker and new head have zero exit/output changes, and all default outputs equal main base (pass/fail 73/90, 79/84, 80/83, 81/82, 1/0).
+- DONE: AC-5 — explain every seed refusal and preserve the historical-evidence boundary.
+  Each local snapshot adds 138 refusals, retains 23 failures and 2 passes: 94 Budget+Stop, 39 all three, 3 Stop, 1 Non-goals+Stop, 1 Non-goals+Budget. Relay adds Budget/Stop. Unconditional default enforcement fails its mutation; deleting the observer qualification would wrongly convert current incompatibility into historical fault without event-time README evidence. No archive migration or retroactive enforcement occurs.
+- DONE: AC-6 — retain schema/template/ruling and prove the budget authority on the new base.
+  Workflow is 5576/5576 (+11 over main's 5565); quote 「其他全照建議」 binds the accepted ideation artifact f262e0d3, whose Captain decision explicitly allows +12. Amendment 1 narrows the fields without withdrawing that allowance; ADR 0041 matches it. Removing the quote fails budget_errors; native template placeholders refuse.
+- DONE: AC-6 — recompute complete lifecycle evidence for this composition, not the former stack.
+  Main→candidate totals: startup 8680→8696; valid backlog 44→45; refused backlog 44→51; idle seed refusal 48→76; open idle 77→77; merged idle 350→350; archive 282→282; merge ask 742→742. Excluding #737 restores the 282-word learn reference and emits no archived-task reminder; the old stack's 348/285 totals do not apply. Full fixed outputs retained; same 685 section words +57 merge-output words=742, with headings included.
+- DONE: AC-7 — read-only boundary, complete new-head tests and named-file scope.
+  All 25 test files exit 0: 23 unit suites run 906 tests, one pre-existing skip, all others pass; both native suites pass. Eleven behavior mutations detect writes, process/network calls and other boundary losses. No CI/version/upstream/provider-hook/adopter change; CI cost per PR unmeasured, CI configuration unchanged. Exact own-patch equality excludes unrelated #737 code.
+- DONE: Required guards, document impact, sufficiency and minimal necessity.
+  Lint, number guards, nine dispatch records, task design check and diff --check exit 0; comment ratio 2/212=0.9% ≤5%. doc_impact dispositions verified: README/ADR 0041 updated; ADR 0020/0037, main's adoption.md, maintain-flow and learning.md unaffected because current-base rules/commands remain accurate and unedited. The seed call is necessary to refuse absent bounds; its quote predicate is necessary to reject the reproduced bypass, and both losses are caught by rerun falsifiers.
+- SKIPPED: Independent live provider or model-agent execution beyond the assigned evidence boundary.
+  FO supplies CI 5/5 and RoboRev clean `evidence=roborev:1272` on bd8a2c93; not queried here. Replacement identity is supplied by FO and current task metadata, not a fresh API read; no old-PR closure/merge claim is made. Native fixtures do not establish live skill discovery, worker/observer execution, human gates or remote merge. Historical observer qualification remains a manual review plus exact CLI replay; historical operator fault is still `can't tell` without event-time README evidence. These limits do not leave an in-scope criterion unmet.
+
+### Findings
+
+- F1 Material — remains resolved: indented quoted placeholders cannot satisfy any of the three bounds; actual CLI cases refuse and restoring the old predicate reopens 36 negative cases.
+- F2 Polish — remains resolved: inclusive merge-ask count stays 742. New-base merged/archive totals are explicitly recomputed above, so old stack output is not reused as replacement-head evidence. No new Material, Deferred risk, Polish or Needs decision finding.
+
+### Summary
+
+PASSED for replacement PR #740 at `bd8a2c93bf1552468c5a2780c839930d3669114d`, directly on main `4b78f020`: the exact two-commit feature patch is preserved, #737 is excluded, and the previously accepted repaired behavior passes all current criteria, falsifiers, native seams, five corpus replays and the fresh-shell acceptance script. FO retains the Captain's validation/delivery gate; provider evidence supplied by FO and local/native/manual evidence remain distinct, with no code or PR delivery action by validation. This complete replacement-head validation report supersedes all earlier validation reports for delivery; their findings and verdicts remain historical evidence for their original heads only.
