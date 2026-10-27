@@ -418,6 +418,9 @@ def exercise(base, binary, sd_root):
         template = TEMPLATE.read_text().split("```markdown\n", 1)[1].split("```", 1)[0]
         entity.write_text(template.replace("<task-id>", slug).replace("<selected-profile>", profile)
                           .replace("<bounded outcome>", "Synthetic CLI fixture, not product acceptance")
+                          .replace("<exclusions>", "no migrations")
+                          .replace("<approved bound>", "one fixture")
+                          .replace("<when to return to the Captain>", "upstream change needed")
                           .replace("status: backlog", f"status: {stage}"))
         run(["git", "-C", state, "add", "--", entity.name])
         run(["git", "-C", state, "commit", "-m", "test: seed synthetic task state"])
@@ -576,6 +579,17 @@ def exercise(base, binary, sd_root):
         header = entity.read_text().split("\n## Scope", 1)[0] + FO_RECORD
         report = "\n## Stage Report: ideation\n\nSynthetic parser context only; no worker ran.\n"
         checker = ROOT / "scripts/design_surfaces.py"
+        template = TEMPLATE.read_text().split("```markdown\n", 1)[1].split("```", 1)[0]
+        template_seed = base / "template-seed.md"
+        template_seed.write_text(template + FO_RECORD)
+        unfilled = run(["python3", "-B", checker, "check", "--seed", template_seed], repo, expected=1)
+        assert len(unfilled.stdout.splitlines()) == 3, unfilled.stdout
+        assert all(f"missing required body field: {field}" in unfilled.stdout
+                   for field in ("Non-goals", "Budget", "Stop condition")), unfilled.stdout
+        template_seed.write_text((template + FO_RECORD).replace("<exclusions>", "migrations")
+                                 .replace("<approved bound>", "one fixture")
+                                 .replace("<when to return to the Captain>", "upstream change"))
+        run(["python3", "-B", checker, "check", "--seed", template_seed], repo)
 
         def parity(body, extra=""):
             entity.write_text(header + body + report + extra)
@@ -633,6 +647,27 @@ def exercise(base, binary, sd_root):
 
         backlog = run([binary, "dispatch", "show-stage-def", "--workflow-dir", repo, "--stage", "backlog"], repo).stdout
         assert SEED_STEP in backlog, "backlog stage definition lacks the seed check"
+        bounds = "\n## Scope\nNon-goals: migrations\nBudget: one fixture\nStop condition: upstream changes\n"
+        checker = ROOT / "scripts/design_surfaces.py"
+        for folder in (False, True):
+            for stored in (False, True):
+                slug = f"seed-{token}-{int(folder)}-{int(stored)}"
+                front = f"---\ntitle: seed\nstatus: backlog\nvariant: kc-dev-flow-2\nprofile: pilot\n"
+                front += f"id: {slug}\n" if stored else ""
+                body = front + "---\n" + bounds + FO_RECORD
+                args = [binary, "new", "--workflow-dir", repo, *(["--folder"] if folder else []), slug]
+                run(args, repo, body)
+                created = repo / ".spacedock-state" / (f"{slug}/index.md" if folder else f"{slug}.md")
+                before = created.read_bytes()
+                run(["python3", "-B", checker, "check", "--seed", created], repo)
+                assert created.read_bytes() == before, "seed check mutated native task"
+                created.write_text(created.read_text().replace("Budget: one fixture\n", ""))
+                missing = run(["python3", "-B", checker, "check", "--seed", created], repo, expected=1)
+                assert "missing required body field: Budget" in missing.stdout, missing.stdout
+        bad = run([binary, "new", "--workflow-dir", repo, f"mismatch-{token}"],
+                  repo, "---\nid: wrong-slug\ntitle: mismatch\nstatus: backlog\n---\n", expected=None)
+        assert bad.returncode != 0, "native new accepted mismatching stored id"
+
         source = TEMPLATE.read_text()
         trimmed = re.sub(r"- \*\*Seed check:\*\*.*?(?=\n### )", "", source, flags=re.DOTALL)
         assert trimmed != source
@@ -871,6 +906,7 @@ def exercise(base, binary, sd_root):
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
         print("PASS: Dispatch facts (complete Team, Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone; a correction without a Summary refused and named alone by the checklist read, a complete report under the exact heading accepted")
         print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the " + str(len(FIXES)) + " wording fixes (" + ", ".join(FIXES) + ") are each asserted present, and each reverted alone to its previous text reports only its own gaps")
+        print("PASS: native flat/folder slug creation with omitted/matching id passes the seed check; missing Budget and all template placeholders refuse; mismatching native id refuses")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
