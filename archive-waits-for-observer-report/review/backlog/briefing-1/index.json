@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:archive-waits-for-observer-report:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of archive-waits-for-observer-report to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that a learn-listed task cannot be archived before its observer report is committed; profile pilot (script and text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:archive-waits-for-observer-report:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a814255e050ea7436b3723c2c935bced0b3ee98e/archive-waits-for-observer-report.md",
+      "rev": "sha256:067932af87d174a22ce0ace42e8a0c9810c3945c1fa4e6a872c1a4a36ed8e111",
+      "mediaType": "text/markdown",
+      "summary": "Bite: three times: relay pair-once, this workflow's #724, kc-ops-inbox's ops-metric-event-protocol; observer_check.py names the step but nothing refuses the archive. Ideation owes where the refusal lives (Spacedock merge guard upstream, or the package's mod)."
+    }
+  ]
+}
