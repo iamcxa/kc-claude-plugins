@@ -99,6 +99,17 @@ gates:
                 id: briefing:ops-metric-event-protocol:validation:attempt-3:revision-1
                 digest: sha256:68813896f45ea673c077f9d4b36b2fe90450ffb86b3d7cb7f18059d14f8d6138
                 room-ref: ./ops-metric-event-protocol/review/validation/briefing-3
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ops-metric-event-protocol:validation:3
+                briefing: briefing:ops-metric-event-protocol:validation:attempt-3:revision-1
+                by: person:captain
+                at: "2026-10-27T05:37:05.632346Z"
+                decision: approve
+                reason: 'Captain 2026-10-27 in chat: 「准」 — accepts validation cycle 3 PASSED at 5dee91fb, delivery by FO merging that full head, and H1 as the first contract item r1 fixes.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-26T14:32:33Z
 ---
 
