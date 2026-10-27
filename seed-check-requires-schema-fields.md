@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-27T16:18:25Z
 worktree: .worktrees/spacedock-ensign-seed-check-requires-schema-fields
-pr: iamcxa/kc-claude-plugins#740
+pr: pr-merge:740
 ---
 
 ## Scope
