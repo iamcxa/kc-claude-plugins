@@ -42,6 +42,10 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=14, why="FO runs delivery_gate.py question on the validation gate question before gate prepare, so the merges-or-holds clause is checked before the Captain is asked",
          captain="「全准」 (chat, 2026-10-25), answering the batch-6 ideation sitting that listed the ideation briefing-1 question of fo-written-lines-checked-before-dispatch with its decisions as recommended, D3 among them",
          loaded="startup and resume of the First Officer, and its validation gate preparation"),
+    # see docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md
+    dict(delta=144, why="one Team bullet carries the worker collaboration and early handback rule",
+         captain="「全准」 (Captain, chat, 2026-10-27), answering 「需要你決定：第 7 批三張任務的設計（其中兩張已經照第 2 輪訪談修過），要不要一起批准進入實作？我建議全部批准，每一題都照我的建議。」; ideation gate attempt 2, 2026-10-26T17:06:03.756936Z, accepted the recommended +144 rise from 5421 to 5565",
+         loaded="startup and resume of the First Officer, and each fresh or reused worker-stage dispatch definition read by FO and its worker"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
