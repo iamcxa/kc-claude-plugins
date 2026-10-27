@@ -3,7 +3,7 @@ title: The peers rules name each host's binding, Paseo included, and keep their 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -72,10 +72,13 @@ gates:
                 reason: 'Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #730 at f7516476; accepts FO''s recommendation'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-26T17:08:27Z
 worktree: .worktrees/spacedock-ensign-peers-rules-name-each-host-binding
 pr: pr-merge:730
+verdict: PASSED
+completed: 2026-10-27T05:36:57Z
+archived: 2026-10-27T05:36:57Z
 ---
 
 ## Scope
