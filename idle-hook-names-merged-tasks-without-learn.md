@@ -34,6 +34,17 @@ gates:
                 id: briefing:idle-hook-names-merged-tasks-without-learn:ideation:attempt-1:revision-1
                 digest: sha256:0ff6d8843e676fa93a00daba5b8bfe0761c77243d138435f34c2bd2781de58d9
                 room-ref: ./idle-hook-names-merged-tasks-without-learn/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:idle-hook-names-merged-tasks-without-learn:ideation:1
+                briefing: briefing:idle-hook-names-merged-tasks-without-learn:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T15:56:17.92761Z"
+                decision: approve
+                reason: Captain 「其他全照建議」 (chat, 2026-10-27) answering 「需要你決定：第 8 批的設計，照首席工程師的建議一起處理，可以嗎？6 張進入實作，1 張直接關掉，再送一份 issue 給 Spacedock。我和首席工程師都建議照這樣做。」, after he declined a second, unanchored batch review (「不須要」); accepts FO's recommendation
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
