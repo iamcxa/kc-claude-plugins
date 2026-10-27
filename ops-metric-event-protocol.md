@@ -65,6 +65,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:ops-metric-event-protocol:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:ops-metric-event-protocol-validation-1
+              briefing:
+                id: briefing:ops-metric-event-protocol:validation:attempt-1:revision-1
+                digest: sha256:d537582187032281311ee61ac28ba4ddcf69d36042bc419f9a9369ec3fe919fe
+                room-ref: ./ops-metric-event-protocol/review/validation/briefing-1
 started: 2026-10-26T14:32:33Z
 ---
 
