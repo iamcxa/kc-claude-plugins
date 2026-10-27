@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:journey-probe-finds-nested-maps:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:journey-probe-finds-nested-maps-backlog-1
+              briefing:
+                id: briefing:journey-probe-finds-nested-maps:backlog:attempt-1:revision-1
+                digest: sha256:f3a012ccc0de1f03a67e45fc1124106055aa0816db1921076d713a47d5666f60
+                room-ref: ./journey-probe-finds-nested-maps/review/backlog/briefing-1
 ---
 
 ## Scope
