@@ -296,6 +296,10 @@ Verified by: actual native new and the actual candidate seed subprocess on all f
 **AC-10**: Amended by Captain, amendment 1 (replaces AC-4): Newly admitted seeds reach the backlog/idle check with useful wording; existing tasks are replayed for counts without enforcement or migration. Default check, imported helpers, optional fields and the proof-of-concept route preserve behavior.
 Verified by: actual seed subprocess on a backlog/needs-preparation task with valid alignment but missing Budget; existing route filters and consumer/POC suites; base/candidate corpus outputs and hashes. Falsifier: suppress the seed call, retain alignment-only wording, or enforce the new bounds in default mode; the relevant test/comparison must fail.
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-28): validation-1 on #738 2f3966a6, F1 Material: a `## Budget` section holding only an indented quote (one to three spaces then `> <approved bound>`) passes as a real budget, because design_surfaces.py filters `>` only at column zero; to fix; investigation first, then FO fix authorization, then validation. F2 Polish (a five-word count gap in the merge-ask total) goes with it.
+
 ## Captain amendments
 
 ### Amendment 1 — 2026-10-27, chat
