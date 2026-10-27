@@ -347,6 +347,7 @@ Recommended order: FO settles archive-waits-for-observer-report's enforcement lo
 ### Feedback Cycles
 
 - Cycle 1 (FO, 2026-10-28): validation-1 on #737 207c0a7e, F1: AC-8 as implemented names a task learn held ineligible again on every idle pass, while the recommendation the Captain accepted in Amendment 1 says such a task is not named on every pass (「不會每次都被重複點名」). The accepted recommendation governs; AC-8 and the implementation change to it. To fix; investigation first, then FO fix authorization, then validation.
+- Cycle 1 phase 1 result (FO, 2026-10-28): not repeating an ineligible task needs a record the scan can read; the worker's smallest proposal appends a bound `learn not run: <reason>` result to the archived task, which also changes skills/learn/SKILL.md (it forbids changing a closed task). That widens scope beyond the approved files, so FO holds the fix for the Captain at the batch sitting (step 4); no fix authorized yet.
 
 ## Captain amendments
 
