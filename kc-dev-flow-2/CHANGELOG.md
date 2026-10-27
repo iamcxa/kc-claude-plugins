@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.32.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.32.0...kc-dev-flow-2-v0.32.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* **kc-adr:** honor caller ADR folders during uncited lookup ([#735](https://github.com/iamcxa/kc-claude-plugins/issues/735)) ([4b78f02](https://github.com/iamcxa/kc-claude-plugins/commit/4b78f020c2e4b5e8cdfa9e8a7e0133f63e9dd2d0))
+* **kc-dev-flow-2:** discover nested journey maps during adoption ([#734](https://github.com/iamcxa/kc-claude-plugins/issues/734)) ([5471acd](https://github.com/iamcxa/kc-claude-plugins/commit/5471acd6a9387e2cdce450d2385c18df967aa2b8))
+* **kc-dev-flow-2:** name archived tasks missing learn jobs ([#737](https://github.com/iamcxa/kc-claude-plugins/issues/737)) ([a565e4c](https://github.com/iamcxa/kc-claude-plugins/commit/a565e4c9c409e595c2bb5a7efbc94fdff1946375))
+* **kc-dev-flow-2:** require explicit bounds in new task seeds ([#740](https://github.com/iamcxa/kc-claude-plugins/issues/740)) ([6089621](https://github.com/iamcxa/kc-claude-plugins/commit/60896216d1c4ca842327e6a5beb2191a64993657))
+* **kc-dev-flow-2:** validate second reviewer refusal evidence ([#736](https://github.com/iamcxa/kc-claude-plugins/issues/736)) ([e840c3a](https://github.com/iamcxa/kc-claude-plugins/commit/e840c3a404976e77b7b32a05c7c549c880a2e219))
+
 ## [0.32.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.31.0...kc-dev-flow-2-v0.32.0) (2026-10-27)
 
 
