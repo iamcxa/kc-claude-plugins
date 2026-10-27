@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-probe-finds-nested-maps:validation:attempt-1:revision-1",
+  "question": "Approve validation of journey-probe-finds-nested-maps and merge iamcxa/kc-claude-plugins#734 at head 159b21232dea8ce68fcf9402461e185ff59d327c with `gh pr merge 734 --squash --match-head-commit 159b21232dea8ce68fcf9402461e185ff59d327c`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:journey-probe-finds-nested-maps:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e561555e89bb13500f361f11c71fc8f862f8ef05/journey-probe-finds-nested-maps.md",
+      "rev": "sha256:c4280df2a9fd3fa75b1070c40f5beecf9868fd8af8bbc786e5d319391108fe23",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: the journey-extension install probe in adoption.md finds maps in nested product folders (docs/journey/\u003cproduct\u003e/\u003cjourney\u003e.yaml) as kc-journey-map locates them, fixing the Codex P2 that #716 shipped; validation PASSED at this head (five criteria, 45 tests, seven discovery mutations caught, a fresh-shell acceptance script); batch-8 chief-engineer review recommends merge.\nNecessity: two files (kc-dev-flow-2/references/sd/adoption.md, kc-dev-flow-2/scripts/test_lint_skills.py).\nExternal rounds: Codex 1 (round 1 on this head: code review completed with no findings, evidence=summary:6447313257@159b21232). RoboRev clean on this head, run by FO because the Codex sandbox could not reach the daemon (evidence=roborev:1260). second reviewer: not triggered."
+    }
+  ]
+}

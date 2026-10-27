@@ -1,0 +1,15 @@
+{
+  "class": "never",
+  "head": "159b21232dea8ce68fcf9402461e185ff59d327c",
+  "model": "not run",
+  "necessity": "two files (kc-dev-flow-2/references/sd/adoption.md, kc-dev-flow-2/scripts/test_lint_skills.py).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: path: 'kc-dev-flow-2/references/sd/adoption.md'",
+    "point: path: 'kc-dev-flow-2/scripts/test_lint_skills.py'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#734",
+  "sufficiency": "the journey-extension install probe in adoption.md finds maps in nested product folders (docs/journey/<product>/<journey>.yaml) as kc-journey-map locates them, fixing the Codex P2 that #716 shipped; v",
+  "time": "2026-10-27T17:29:55Z",
+  "verdict": "ask"
+}

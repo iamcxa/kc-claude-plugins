@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:journey-probe-finds-nested-maps:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:journey-probe-finds-nested-maps-validation-1
+              briefing:
+                id: briefing:journey-probe-finds-nested-maps:validation:attempt-1:revision-1
+                digest: sha256:e209487f221351340a45dc3d6472e6fb45e3fbe4f801c23b0c812462e1f906ac
+                room-ref: ./journey-probe-finds-nested-maps/review/validation/briefing-1
 started: 2026-10-27T16:00:15Z
 worktree: .worktrees/spacedock-ensign-journey-probe-finds-nested-maps
 pr: iamcxa/kc-claude-plugins#734
