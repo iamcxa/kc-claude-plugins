@@ -229,6 +229,11 @@ Superseded text:
 
 **AC-3** Omitting the caller field uses the instruction-file folder, then `docs/adr` if no folder is declared; an explicitly missing folder returns no records without fallback. An outside or ambiguous supplied path stops and reports the unresolved path. Evidence: repeat the fixture sessions for these four inputs, retaining output and read trace; compare base/candidate using the same fixture, prompt and host settings. Falsifiers: always use docs/adr, fall back after an empty listing, or silently reinterpret an outside path. Current evidence: all three Git listings and the missing-folder result observed; model precedence/refusal remains unverified.
 
+### Amendment 2 — 2026-10-28, chat
+Captain: 「全准」 (chat, 2026-10-28)
+Asked: FO's batch-8 merge sitting, item 「**#735 read-adr 照指定資料夾讀**（`7bb241c2`）：驗證找到了能證明改善的測試，舊寫法 7 次都讀錯、新寫法 7 次都沒讀錯。另外要你單獨裁定一點：Claude 遇到 repo 內的絕對路徑會自己默默轉換，規定是要停下來回報（Codex 有照做）。所以驗證雖然通過，有一條驗收在 Claude 上沒過，不能算全綠。沒有造成任何傷害，我建議接受這個限制，不加字。」
+Supersedes: AC-8's falsifier for an absolute path inside R on Claude (no replacement: accepted as a host limit with no added words)
+
 ## Stage Report: ideation
 
 - DONE: A design for the read-adr skill (kc-adr's skill and the kc-dev-flow-2 copy) to list the ADR folder its caller names and to treat none as no records, read from the Codex P2 on iamcxa/kc-claude-plugins#713, with how the two copies stay identical

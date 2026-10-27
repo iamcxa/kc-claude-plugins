@@ -1,0 +1,17 @@
+{
+  "class": "never",
+  "head": "813e0b09cb641b82b8ca04630879cc69e922288e",
+  "model": "not run",
+  "necessity": "two files (kc-adr/skills/read-adr/SKILL.md, kc-dev-flow-2/skills/read-adr/SKILL.md).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'External rounds: Codex 1 (round 1'",
+    "point: path: 'kc-adr/skills/read-adr/SKILL.md'",
+    "point: path: 'kc-dev-flow-2/skills/read-adr/SKILL.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#735",
+  "sufficiency": "read-adr lists the ADR folder its caller names and treats none as no records, in both the kc-adr skill and the kc-dev-flow-2 copy, fixing the Codex P2 on #713; validation PASSED at this head with a di",
+  "time": "2026-10-27T17:49:31Z",
+  "verdict": "ask"
+}
