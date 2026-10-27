@@ -64,6 +64,7 @@ Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Result: aligned 2026-10-27 on the outcome by the Captain's 「全准」 answering this task's backlog briefing-1 question, which named the idle hook naming every archived task with a merged PR and no learn job; the hook's exact output is put to him at the ideation gate.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-27 — batch 8 review at the ideation gate (the Captain's batch ruling 2026-10-27): per-task disposition, the Captain's decisions, order and batch risk.
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-28 — do these amendments withdraw what the Captain approved, and what changes in the build? Answer: no overreach; the code skips only tasks whose frontmatter variant or profile learn rejects, as Amendment 2's Asked item described, and the shipped text agrees; four task-file passages (Design mechanism, Needs decision, PRFAQ, AC-1) still say every task; proceed.
 
 ## Design
 
