@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:copilot-not-run-line-carries-quote:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:copilot-not-run-line-carries-quote-backlog-1
+              briefing:
+                id: briefing:copilot-not-run-line-carries-quote:backlog:attempt-1:revision-1
+                digest: sha256:e5a0f48abcb05f28f0bd5e830638c59dbd362eb94fe075425b2a0d1af622275e
+                room-ref: ./copilot-not-run-line-carries-quote/review/backlog/briefing-1
 ---
 
 ## Scope

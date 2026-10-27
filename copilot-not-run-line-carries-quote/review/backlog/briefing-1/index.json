@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:copilot-not-run-line-carries-quote:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of copilot-not-run-line-carries-quote to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the delivery check refuses a merge ask whose second-reviewer line is missing or whose copilot not run line lacks the printed quote and a retry offer; profile pilot (script and text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:copilot-not-run-line-carries-quote:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/29f18e92407219f0d7fb494bc8f6d2ebe4d2dce6/copilot-not-run-line-carries-quote.md",
+      "rev": "sha256:4fe7a6a913a58032f17072b9880a60eb320a1e2070ed37f0710873bc1b22ad06",
+      "mediaType": "text/markdown",
+      "summary": "Bite: #724 (no quote, no retry offer) and #728 (no second reviewer line at all, while delivery_gate.py said no outcome was missing)."
+    }
+  ]
+}
