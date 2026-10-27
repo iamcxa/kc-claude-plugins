@@ -238,25 +238,29 @@ test("triggers are read from the inline, list and block forms of on:", () => {
 const GATE = (id, login, sha, decision = "approve") => `---\ngates:\n    records:\n        - attempts:\n            - resolution:\n                by: person:captain\n                decision: ${decision}\n                reason: 'GitHub review ${id} by ${login} on ${sha}: ok | followed yes'\n---\n`;
 const HEAD = "b".repeat(40);
 const gateRow = async (over) => { const gh = await rig(); const rows = await readback(ctxFor(world(over), gh), args()); gh.close(); return rows.find((r) => r.id === "R22"); };
-const rev = (id, state, login = "captain", sha = HEAD) => ({ id, state, commit_id: sha, user: { login } });
+const rev = (id, state, login = "captain", sha = HEAD, body = "") => ({ id, state, commit_id: sha, user: { login }, body });
 
 test("R22 passes for a gate that follows from the Captain's review on the head and fails for a forged one", async () => {
   assert.equal((await gateRow({})).v, "PASS");
   const good = await gateRow({ gates: { inc: GATE(9, "captain", HEAD) }, reviews: { inc: [rev(9, "APPROVED")] } });
   assert.equal(good.v, "PASS");
   assert.match(good.obs, /1 recorded gate\(s\) checked/);
+  const option = await gateRow({ gates: { inc: GATE(9, "captain", HEAD, "revise") }, reviews: { inc: [rev(9, "COMMENTED", "captain", HEAD, "Option 2")] } });
+  assert.equal(option.v, "PASS");
   const forged = [
     ["no such review", { gates: { inc: GATE(9, "captain", HEAD) }, reviews: { inc: [rev(8, "APPROVED")] } }],
     ["review by someone else", { gates: { inc: GATE(9, "captain", HEAD) }, reviews: { inc: [rev(9, "APPROVED", "stranger")] } }],
     ["gate names another login", { gates: { inc: GATE(9, "stranger", HEAD) }, reviews: { inc: [rev(9, "APPROVED", "stranger")] } }],
     ["review on an old commit", { gates: { inc: GATE(9, "captain", "c".repeat(40)) }, reviews: { inc: [rev(9, "APPROVED", "captain", "c".repeat(40))] } }],
     ["decision differs from the review", { gates: { inc: GATE(9, "captain", HEAD, "approve") }, reviews: { inc: [rev(9, "CHANGES_REQUESTED")] } }],
+    ["a Comment that names no option", { gates: { inc: GATE(9, "captain", HEAD, "revise") }, reviews: { inc: [rev(9, "COMMENTED", "captain", HEAD, "why not?")] } }],
+    ["a Comment that names two options", { gates: { inc: GATE(9, "captain", HEAD, "revise") }, reviews: { inc: [rev(9, "COMMENTED", "captain", HEAD, "Option 1 or option 2")] } }],
     ["a reason that cites no review", { gates: { inc: "---\n                decision: approve\n                reason: trust me\n---\n" }, reviews: { inc: [] } }],
   ];
   for (const [label, over] of forged) {
     const row = await gateRow(over);
     assert.equal(row.v, "FAIL", label);
-    assert.match(row.obs, /inc \(approve\)/, label);
+    assert.match(row.obs, /inc \((approve|revise)\)/, label);
   }
 });
 

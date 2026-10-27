@@ -8,6 +8,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
 import { signBody, SCHEMA_BASE } from "../contract/contract.mjs";
+import { namedOption } from "./record-gate.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const SETUP = join(here, "../setup");
@@ -339,7 +340,7 @@ export async function readback(ctx, { project, trigger, inbox, slackLink, workfl
         const reason = reasonRaw.replace(/^'|'$/g, "").replace(/''/g, "'");
         const m = reason.match(/^GitHub review (\d+) by (\S+) on ([0-9a-f]{40}):/);
         const rev = m && reviews.ok ? reviews.json.find((r) => String(r.id) === m[1]) : null;
-        const ok = m && rev && m[2] === login && rev.user?.login === login && rev.commit_id === m[3] && prs[0].head.sha === m[3] && GATE_DECISIONS[decision]?.includes(rev.state);
+        const ok = m && rev && m[2] === login && rev.user?.login === login && rev.commit_id === m[3] && prs[0].head.sha === m[3] && GATE_DECISIONS[decision]?.includes(rev.state) && (rev.state !== "COMMENTED" || namedOption(rev.body));
         if (!ok) forged.push(`${slug} (${decision})`);
       }
     }
