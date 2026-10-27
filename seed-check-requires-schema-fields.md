@@ -64,6 +64,7 @@ Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Result: aligned 2026-10-27 on the outcome by the Captain's 「全准」 answering this task's backlog briefing-1 question, which named the seed check refusing a task missing its schema's required fields; which fields are required is put to him at the ideation gate.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-27 — batch 8 review at the ideation gate (the Captain's batch ruling 2026-10-27): per-task disposition, the Captain's decisions, order and batch risk.
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-28 — do these amendments withdraw what the Captain approved, and what changes in the build? Answer: the shipped narrowing matches the Asked row; but the build reads 「只檢查新任務」 as every not-yet-admitted backlog seed (all 54 current backlog tasks fail the body bounds; 42 with FO alignment would be held at their backlog gate), AC-2 and AC-5 still carry superseded promises, and the meaning of new is the Captain's; escalate.
 
 ## PRFAQ
 
