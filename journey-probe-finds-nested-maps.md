@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:journey-probe-finds-nested-maps:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:journey-probe-finds-nested-maps-ideation-1
+              briefing:
+                id: briefing:journey-probe-finds-nested-maps:ideation:attempt-1:revision-1
+                digest: sha256:96acd95aae57b402d16244041075f269a7d395b73f58c6fe66c342cef2cc1eaf
+                room-ref: ./journey-probe-finds-nested-maps/review/ideation/briefing-1
 ---
 
 ## Scope

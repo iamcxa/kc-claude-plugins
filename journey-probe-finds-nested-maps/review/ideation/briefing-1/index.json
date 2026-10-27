@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:journey-probe-finds-nested-maps:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of journey-probe-finds-nested-maps to enter implementation? FO recommends approve; approving accepts that recommendation as designed.",
+  "artifacts": [
+    {
+      "id": "artifact:journey-probe-finds-nested-maps:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/057edb7a1d7450e36218f675bfee46085e080b0a/journey-probe-finds-nested-maps.md",
+      "rev": "sha256:fd61d78956b939bc3116b18cd0a99b8ddb8ca5e1665a0af25a889de8cdf0d774",
+      "mediaType": "text/markdown",
+      "summary": "Design: the install probe in adoption.md finds maps in nested product folders the way kc-journey-map locates them (16 more words); seven fixtures pass. The #716 Codex P2 is still on main. Chief-engineer reviewed the whole batch (2026-10-27) and recommends this disposition."
+    }
+  ]
+}
