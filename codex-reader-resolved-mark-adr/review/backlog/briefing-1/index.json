@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-resolved-mark-adr:backlog:attempt-1:revision-1",
+  "question": "需要你決定：要不要開一張小任務，補一份 ADR 記下 D1？我建議補。",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-resolved-mark-adr:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/7a9c8746696382a974f05e0ca62133784cf8c7cb/codex-reader-resolved-mark-adr.md",
+      "rev": "sha256:2c3f5cb719aad7ab355d97ef2d07373476092f4e26795840cac8665c56c1d9b2",
+      "mediaType": "text/markdown",
+      "summary": "FO recommends approve; approving accepts that recommendation: a worker drafts one ADR quoting the Captain's 「全准」 on D1 of codex-reader-same-head-unresolved (a GitHub resolved mark does not clear a same-head Codex finding), shown at the ideation gate as its exact text, then landed as a docs-only PR for his merge. Bite: the archived task's observer found D1 with no ADR."
+    }
+  ]
+}
