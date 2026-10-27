@@ -273,6 +273,7 @@ print('CONTROLS',len(tests),'passed','READER',code,printed)
 ### Feedback Cycles
 
 - Cycle 1 (FO, 2026-10-28): on #736 87c1d1b7, RoboRev (roborev:1263) left 1 High, counted as P1 under step 5: `answer=review:<id>` is excluded case-sensitively in kc-dev-flow-2/scripts/delivery_gate.py, so `Copilot ANSWER=review:18` passes; to fix; investigation first, then FO fix authorization, then validation.
+- Cycle 2 (FO, 2026-10-28): on #736 1a4918c7, RoboRev (roborev:1265) left 1 High, counted as P1 under step 5: the saved Copilot refusal's abbreviated commit is parsed but never compared with the PR head in delivery_gate.py check, so a refusal from an earlier head satisfies the second-reviewer outcome after a push; round 2, to fix; investigation first, then FO fix authorization, then validation.
 
 ## Stage Report: ideation
 
