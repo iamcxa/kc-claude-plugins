@@ -47,7 +47,7 @@ gates:
                 state: consumed
 started: 2026-10-27T16:18:25Z
 worktree: .worktrees/spacedock-ensign-seed-check-requires-schema-fields
-pr: iamcxa/kc-claude-plugins#738
+pr: iamcxa/kc-claude-plugins#740
 ---
 
 ## Scope
