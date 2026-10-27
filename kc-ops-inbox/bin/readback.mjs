@@ -31,11 +31,11 @@ export const ROW_DEFS = [
   ["R7", "S3", "dispatch token: actions write on the trigger repository only"],
   ["R8", "S3", "dispatch App cannot start or re-run anything in the project"],
   ["R9", "S4", "agent token: contents and PR write on the project only"],
-  ["R10", "S5", "App key and signing secret stored (names only)"],
+  ["R10", "S5", "dispatch App key stored on the inbox (name only)"],
   ["R11", "S6", "signing secret matches the inbox"],
   ["R12", "S6", "model token stored (name only)"],
   ["R13", "S7", "Slack webhook accepted the self-test notice"],
-  ["R14", "S12", "self-test notice seen in the channel"],
+  ["R14", "S13", "self-test notice seen in the channel"],
   ["R15", "S10", "ruleset main matches its file, no bypass"],
   ["R16", "S10", "ruleset ops-branches matches its file, no bypass"],
   ["R17", "S10", "ruleset state-branch matches its file, no bypass"],
@@ -43,7 +43,9 @@ export const ROW_DEFS = [
   ["R19", "S10", "ruleset trigger-main matches its file, no bypass"],
   ["R20", "S11", "ops-gate.yml is on the default branch, pinned to a commit"],
   ["R21", "S9", "project variable OPS_CAPTAIN_LOGIN is set"],
-  ["R22", "S12", "every recorded gate names the Captain's review on that pull request's head"],
+  ["R22", "S13", "every recorded gate names the Captain's review on that pull request's head"],
+  ["R23", "S6", "inbox key list: every key has its secret, and none signs both prod and a non-prod environment"],
+  ["R24", "S12", "inbox trigger rules are valid, and the Captain's Slack user is set when a rule routes to him"],
 ];
 const GATE_DECISIONS = { approve: ["APPROVED"], revise: ["CHANGES_REQUESTED", "COMMENTED"] };
 
@@ -202,7 +204,13 @@ export async function readback(ctx, { project, trigger, inbox, slackLink, workfl
     const h = await res.json();
     const ok = res.status === 200 && h.contract === "v1" && h.settings.present === h.settings.total && h.secrets.present === h.secrets.total;
     set("R4", ok ? "PASS" : "FAIL", `contract ${h.contract}, settings ${h.settings.present} of ${h.settings.total}, secrets ${h.secrets.present} of ${h.secrets.total}${h.secrets.missing?.length ? `, missing ${[...h.secrets.missing, ...h.settings.missing].join(" ")}` : ""}`, ok ? null : "set the missing names (S5 to S8), redeploy, read back again");
-    set("R10", h.secrets.missing?.some((n) => n !== "SLACK_WEBHOOK_URL") ? "FAIL" : "PASS", `inbox secrets present ${h.secrets.present} of ${h.secrets.total}`, "set DISPATCH_APP_PRIVATE_KEY and WEBHOOK_SECRET on the inbox (S5, S6)");
+    set("R10", h.secrets.missing?.some((n) => n !== "SLACK_WEBHOOK_URL") ? "FAIL" : "PASS", `inbox secrets present ${h.secrets.present} of ${h.secrets.total}`, "set DISPATCH_APP_PRIVATE_KEY on the inbox (S5)");
+    const c = h.config ?? { ok: false, keys: { error: "health reports no config" }, rules: { error: "health reports no config" } };
+    const keyFault = Array.isArray(c.keys) ? null : c.keys?.error;
+    const mixed = Array.isArray(c.keys) ? c.keys.filter((k) => k.environments.includes("prod") && k.environments.some((e) => e !== "prod")).map((k) => k.name) : [];
+    set("R23", keyFault || mixed.length ? "FAIL" : "PASS", keyFault ?? (mixed.length ? `key ${mixed.join(", ")} signs prod and a non-prod environment` : c.keys.map((k) => `${k.name}: ${k.environments.join("+")} ${k.sources.join("+")}`).join("; ")), "set OPS_KEYS and each key's secret, one key for prod and one for preview and dev (S6)");
+    const ruleFault = c.rules?.error ?? c.captain?.error ?? null;
+    set("R24", ruleFault ? "FAIL" : "PASS", ruleFault ?? `${c.rules.source} rule list, ${c.rules.count} rules`, "fix OPS_RULES or set OPS_CAPTAIN_SLACK_USER, redeploy (S13)");
   });
 
   await guard(["R5"], async () => {
@@ -234,14 +242,14 @@ export async function readback(ctx, { project, trigger, inbox, slackLink, workfl
   const projectRuns = () => { const r = ctx.ghJson(["api", `repos/${project}/actions/runs?per_page=1`]); return r.ok ? r.json.total_count : null; };
   const before = projectRuns();
   await guard(["R7", "R8", "R9", "R11", "R13"], async () => {
-    const secret = ctx.env.WEBHOOK_SECRET;
-    if (!secret) throw new Error("WEBHOOK_SECRET is not in the environment; run through your secrets wrapper");
+    const secret = ctx.env.OPS_READBACK_SECRET;
+    if (!secret) throw new Error("OPS_READBACK_SECRET is not in the environment; run through your secrets wrapper");
     const id = `readback-selftest-${randomUUID()}`;
     const event = JSON.stringify({ specversion: "1.0", id, source: "urn:ops-inbox:readback", type: "ops.inbox.selftest", subject: `selftest/${id}`, time: new Date(ctx.now()).toISOString(), dataschema: `${SCHEMA_BASE}/ops.inbox.selftest.json`, data: { v: 1, project } });
     const ts = String(Math.floor(ctx.now() / 1000));
     const res = await ctx.fetch(inbox, { method: "POST", headers: { "content-type": "application/cloudevents+json", "webhook-id": `msg_${id}`, "webhook-timestamp": ts, "webhook-signature": signBody({ secret, id: `msg_${id}`, timestamp: ts, body: event }) }, body: event });
     const out = await res.json().catch(() => ({}));
-    set("R11", res.status === 200 ? "PASS" : "FAIL", `signed POST answered ${res.status}${out.error ? ` (${out.error})` : ""}`, res.status === 401 ? "WEBHOOK_SECRET differs from the inbox's (S6)" : "read the inbox log, then read back again");
+    set("R11", res.status === 200 ? "PASS" : "FAIL", `signed POST answered ${res.status}${out.error ? ` (${out.error})` : ""}`, res.status === 401 ? "OPS_READBACK_SECRET differs from the inbox's readback key, or that key does not allow prod and urn:ops-inbox: (S6)" : "read the inbox log, then read back again");
     if (res.status !== 200) return;
     const exact = out.mint_trigger?.permissions?.actions === "write" && Object.keys(out.mint_trigger.permissions).length === 1 && out.mint_trigger.repositories?.length === 1 && out.mint_trigger.repositories[0] === trigger;
     set("R7", exact ? "PASS" : "FAIL", `actions:${out.mint_trigger?.permissions?.actions}, repositories ${JSON.stringify(out.mint_trigger?.repositories)}`, "install the dispatch App on the trigger repository only, Actions write only (S3)");
@@ -388,7 +396,7 @@ export function parseArgs(argv) {
 if (import.meta.url === `file://${process.argv[1]}`) {
   const args = parseArgs(process.argv.slice(2));
   if (!args) {
-    console.error("usage: node readback.mjs --project <owner/name> --trigger <owner/name> --inbox <https://.../inbox> [--slack-link <link>] [--workflows-checked]\nneeds WEBHOOK_SECRET in the environment (use your secrets wrapper)");
+    console.error("usage: node readback.mjs --project <owner/name> --trigger <owner/name> --inbox <https://.../inbox> [--slack-link <link>] [--workflows-checked]\nneeds OPS_READBACK_SECRET in the environment (use your secrets wrapper)");
     process.exit(2);
   }
   const rows = await readback(makeCtx(), args);

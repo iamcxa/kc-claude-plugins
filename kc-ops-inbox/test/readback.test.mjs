@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 import { readback, render, rulesetMatches, holdsSecret, tokenCanWrite, triggersOf, exposedWorkflows, parseArgs, ROW_DEFS } from "../bin/readback.mjs";
 import { handle } from "../core/inbox-core.mjs";
-import { rig, SECRET, TRIGGER, PROJECT } from "./rig.mjs";
+import { rig, READBACK_SECRET, KEYS, TRIGGER, PROJECT } from "./rig.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const setup = (f) => JSON.parse(readFileSync(join(root, "setup", f), "utf8"));
@@ -62,7 +62,7 @@ function ctxFor(w, gh, { slackKnown = true } = {}) {
     return fail(`unexpected ${key}`);
   };
   return {
-    env: { WEBHOOK_SECRET: SECRET, READBACK_POLL_MS: "1" },
+    env: { OPS_READBACK_SECRET: READBACK_SECRET, READBACK_POLL_MS: "1" },
     ghJson: (args) => answer(args),
     sh: (cmd, args) => {
       if (cmd === "netlify") return { ok: w.netlifyLinked !== false, out: JSON.stringify({ siteData: { name: "site" } }), err: "" };
@@ -86,7 +86,7 @@ test("a fully set up project reads back every row PASS, with the self-test going
   assert.deepEqual(rows.filter((r) => r.v !== "PASS").map((r) => `${r.id} ${r.v} ${r.obs}`), []);
   assert.equal(rows.length, ROW_DEFS.length);
   assert.equal(gh.state.dispatches[0].inputs.mode, "selftest");
-  assert.match(render(rows, { banner: "b" }), /22 PASS, 0 FAIL, 0 ERROR, 0 WAIT of 22\nConnected/);
+  assert.match(render(rows, { banner: "b" }), new RegExp(`${ROW_DEFS.length} PASS, 0 FAIL, 0 ERROR, 0 WAIT of ${ROW_DEFS.length}\\nConnected`));
   gh.close();
 });
 
@@ -107,6 +107,27 @@ test("each broken resource fails its own row and no other, and the run is not co
     assert.match(render(rows, { banner: "b" }), /The project is not connected\. Exit 1\./);
     gh.close();
   }
+});
+
+test("R23 and R24 read the inbox's own key and rule configuration from its health", async () => {
+  const cases = [
+    ["R23", (env) => { env.OPS_KEYS = JSON.stringify([{ ...KEYS[0], environments: ["prod", "preview"] }, KEYS[2]]); }],
+    ["R23", (env) => { delete env.KEY_PROD; }],
+    ["R24", (env) => { env.OPS_RULES = "[]"; }],
+    ["R24", (env) => { delete env.OPS_CAPTAIN_SLACK_USER; }],
+  ];
+  for (const [id, apply] of cases) {
+    const gh = await rig();
+    apply(gh.env);
+    const row = (await readback(ctxFor(world(), gh), args())).find((r) => r.id === id);
+    assert.equal(row.v, "FAIL", `${id}: ${row.obs}`);
+    gh.close();
+  }
+  const gh = await rig();
+  const rows = await readback(ctxFor(world(), gh), args());
+  assert.match(rows.find((r) => r.id === "R23").obs, /prod: prod urn:relay:\+urn:sentry:; preview: preview\+dev urn:relay:; readback: prod urn:ops-inbox:/);
+  assert.match(rows.find((r) => r.id === "R24").obs, /default rule list, 5 rules/);
+  gh.close();
 });
 
 test("a ruleset with a bypass actor, an extra rule or changed parameters does not match its file", () => {
@@ -132,7 +153,7 @@ test("a dispatch App that can reach the project fails R7 and R8; a signing secre
   };
   const rows = await readback(ctx, args());
   assert.equal(verdicts(rows).R8, "FAIL");
-  const wrong = await rig(); wrong.env.WEBHOOK_SECRET = "whsec_" + Buffer.from("other").toString("base64");
+  const wrong = await rig(); wrong.env.KEY_READBACK = "whsec_" + Buffer.from("a-different-readback-secret-123").toString("base64");
   const rows2 = await readback(ctxFor(world(), wrong), args());
   assert.equal(verdicts(rows2).R11, "FAIL");
   assert.match(rows2.find((r) => r.id === "R11").next, /differs from the inbox/);
@@ -285,7 +306,7 @@ test("argument checking", () => {
 test("the runbook gives every step an owner and a command, and names exactly the rows the read-back reports", () => {
   const text = readFileSync(join(root, "setup/RUNBOOK.md"), "utf8");
   const steps = [...text.matchAll(/^## (S\d+) · (CAPTAIN ONLY|AGENT MAY RUN|ANYONE) · .+$([\s\S]*?)(?=^## S\d+ ·|(?![\s\S]))/gm)];
-  assert.deepEqual(steps.map((m) => m[1]), Array.from({ length: 12 }, (_, i) => `S${i + 1}`));
+  assert.deepEqual(steps.map((m) => m[1]), Array.from({ length: 13 }, (_, i) => `S${i + 1}`));
   for (const [, id, , body] of steps) assert.match(body, /^    \S/m, `${id} has no command`);
   const named = steps.flatMap(([, id, , body]) => { const m = body.match(/^Read back by: (.+)$/m); assert.ok(m, `${id} names no rows`); return m[1] === "every row" ? [] : m[1].split(/\s+/).map((r) => [r, id]); });
   const defs = Object.fromEntries(ROW_DEFS.map(([r, s]) => [r, s]));

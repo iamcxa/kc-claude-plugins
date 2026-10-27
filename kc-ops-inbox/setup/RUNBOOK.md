@@ -1,6 +1,6 @@
 # Connect a project to its ops inbox (runbook, r1)
 
-Run the steps in order. A step marked CAPTAIN ONLY touches an App, a key, a secret, a webhook, a ruleset or a merge; nobody else runs it. Each step names the read-back rows that prove it; S12 reads all of them.
+Run the steps in order. A step marked CAPTAIN ONLY touches an App, a key, a secret, a webhook, a ruleset or a merge; nobody else runs it. Each step names the read-back rows that prove it; S13 reads all of them.
 
 Set these once in the shell you use, from a checkout of kc-claude-plugins at the commit you will pin (`SHA`):
 
@@ -58,21 +58,30 @@ Then delete the two downloaded key files from your disk (not read back).
 
 Read back by: R10
 
-## S6 · CAPTAIN ONLY · Create and store the signing secret and the model token
+## S6 · CAPTAIN ONLY · Create the signing keys and store the model token
 
-The signing secret goes to the inbox and to the producer, never into a repository. `OPS_INBOX_SECRET` is a placeholder: use the variable name the producer's emitter reads.
+The inbox holds a list of keys, so a key can sign only what it lists (D5): one key for `prod`, one for `preview` and `dev`, and one for the read-back's own self-test. The Captain creates all three; each value goes only to the places named here, never into a repository. `OPS_INBOX_SECRET` is a placeholder: use the variable name the producer's emitter reads. `OPS_KEYS` names each key, its secret variable and its scope, and holds no value.
 
-    V=whsec_$(openssl rand -base64 24)
-    netlify env:set WEBHOOK_SECRET "$V" --secret
-    (cd $RELAY_CHECKOUT && netlify env:set OPS_INBOX_SECRET "$V" --secret --context deploy-preview); unset V
+| Key | Secret variable on the inbox | Signs | Value also goes to |
+| --- | --- | --- | --- |
+| relay-prod | `KEY_RELAY_PROD` | environment `prod`, sources `urn:relay:` and `urn:sentry:` | the producer's production context |
+| relay-preview | `KEY_RELAY_PREVIEW` | environments `preview` and `dev`, source `urn:relay:` | the producer's deploy-preview context |
+| readback | `KEY_READBACK` | environment `prod`, source `urn:ops-inbox:` | your secrets wrapper as `OPS_READBACK_SECRET` |
+
+    V=whsec_$(openssl rand -base64 24); netlify env:set KEY_RELAY_PROD "$V" --secret
+    (cd $RELAY_CHECKOUT && netlify env:set OPS_INBOX_SECRET "$V" --secret --context production)
+    V=whsec_$(openssl rand -base64 24); netlify env:set KEY_RELAY_PREVIEW "$V" --secret
+    (cd $RELAY_CHECKOUT && netlify env:set OPS_INBOX_SECRET "$V" --secret --context deploy-preview)
+    V=whsec_$(openssl rand -base64 24); netlify env:set KEY_READBACK "$V" --secret; unset V   # store the same value in your secrets wrapper as OPS_READBACK_SECRET
+    netlify env:set OPS_KEYS '[{"name":"relay-prod","secretEnv":"KEY_RELAY_PROD","environments":["prod"],"sources":["urn:relay:","urn:sentry:"]},{"name":"relay-preview","secretEnv":"KEY_RELAY_PREVIEW","environments":["preview","dev"],"sources":["urn:relay:"]},{"name":"readback","secretEnv":"KEY_READBACK","environments":["prod"],"sources":["urn:ops-inbox:"]}]'
     claude setup-token
     gh secret set CLAUDE_CODE_OAUTH_TOKEN -R $T   # paste the token setup-token printed; gh reads it from standard input
 
-Read back by: R11 R12
+Read back by: R11 R12 R23
 
 ## S7 · CAPTAIN ONLY · Store the Slack webhook
 
-Create an incoming webhook for one channel in Slack first. R14, seeing the notice in the channel, is proven in S12.
+Create an incoming webhook for one channel in Slack first. R14, seeing the notice in the channel, is proven in S13.
 
     read -rs V   # paste the webhook URL; it stays out of shell history
     netlify env:set SLACK_WEBHOOK_URL "$V" --secret; unset V
@@ -104,7 +113,7 @@ Read back by: R6 R21
 
 ## S10 · CAPTAIN ONLY · Apply the rulesets, one command each
 
-Rerun only the line a read-back row names. The first four lines protect the project; the fifth protects the trigger repository. Then check that no project workflow holds a secret an agent branch could reach: read the workflows R18 lists, and if none runs with its secret on a push to a non-default branch or on a pull request from any author, give `--workflows-checked` to the read-back in S12. A project that fails the check applies the sixth line instead.
+Rerun only the line a read-back row names. The first four lines protect the project; the fifth protects the trigger repository. Then check that no project workflow holds a secret an agent branch could reach: read the workflows R18 lists, and if none runs with its secret on a push to a non-default branch or on a pull request from any author, give `--workflows-checked` to the read-back in S13. A project that fails the check applies the sixth line instead.
 
     gh api -X POST repos/$P/rulesets --input kc-ops-inbox/setup/ruleset-main.json
     gh api -X POST repos/$P/rulesets --input kc-ops-inbox/setup/ruleset-ops-branches.json
@@ -123,12 +132,21 @@ So `ops-gate.yml` is on the default branch before any ops PR opens.
 
 Read back by: R20
 
-## S12 · ANYONE · Read every step back
+## S12 · CAPTAIN ONLY · Set the trigger rules and your Slack user
+
+The inbox decides what each verified event does by an ordered rule list, first match wins. Leave `OPS_RULES` unset to use the default list, which is the approved routing table: prod warning goes to the agent, prod critical to the agent and a mention of you, preview critical to the agent, every other event with an environment is only recorded, and an event without an environment (a Sentry alert) goes to the agent. Heartbeats are always only recorded, and a recovered event joins its open incident or is recorded when none is open. To change a cell, set `OPS_RULES` to a list of `{name, match, receiver}`: `match` may hold `type`, `source` (prefixes ending in `:`), `environment` and `severity`, each a list of alternatives, all of which must match; `receiver` is `record`, `agent` or `captain`; the last rule must have `match` `{}`. An invalid list makes the inbox refuse every event with 500. Your Slack user id (the profile menu's Copy member ID) is needed because the default list routes to you.
+
+    netlify env:set OPS_CAPTAIN_SLACK_USER <your Slack member ID>
+    # optional: netlify env:set OPS_RULES '[{"name":"prod-critical","match":{"environment":["prod"],"severity":["critical"]},"receiver":"captain"},{"name":"rest","match":{},"receiver":"record"}]'
+
+Read back by: R24
+
+## S13 · ANYONE · Read every step back
 
 Reads with your gh and netlify logins and sends one signed self-test event. The first run always waits on R14: open the self-test notice in Slack, Copy link, and run the same command again with `--slack-link`. Exit 0 only when every row is PASS.
 
     <wrapper> node kc-ops-inbox/bin/readback.mjs --project $P --trigger $T --inbox $INBOX [--slack-link <link>] [--workflows-checked]
 
-`<wrapper>` is your secrets wrapper, which puts `WEBHOOK_SECRET` in the read-back's environment without printing it.
+`<wrapper>` is your secrets wrapper, which puts `OPS_READBACK_SECRET` in the read-back's environment without printing it.
 
 Read back by: R14 R22

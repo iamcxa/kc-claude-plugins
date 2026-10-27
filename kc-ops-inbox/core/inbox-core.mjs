@@ -1,5 +1,6 @@
 import { createSign } from "node:crypto";
-import { CONTRACT_VERSION, ENVIRONMENTS, parseEvent } from "../contract/contract.mjs";
+import { CONTRACT_VERSION, parseEvent } from "../contract/contract.mjs";
+import { loadConfig, configReport, routeFor } from "./inbox-config.mjs";
 
 // How each event type reads in a Slack notice and in the record's title. The contract owns what an
 // event may carry; this table only chooses which of it to show.
@@ -15,10 +16,6 @@ const DESCRIBE = {
 };
 export const describeEvent = (ev) => DESCRIBE[ev.type](ev);
 
-// The one key this instance verifies with; per-environment and per-source keys are a runtime gap the
-// contract README assigns to r1.
-const keysFrom = (env) => [{ secret: env.WEBHOOK_SECRET, environments: ENVIRONMENTS, sources: ["urn:"] }];
-
 // ---- Notices ---------------------------------------------------------------
 
 const slackEscape = (t) => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -30,7 +27,7 @@ export function incidentBranch(ev, incident) {
 }
 
 // kind: opened | joined | refused | uncertain | selftest
-export function buildNotice(kind, { ev, branch, runUrl, number, status, triggerRepo }) {
+export function buildNotice(kind, { ev, branch, runUrl, number, status, triggerRepo, mention = "" }) {
   const { head, body } = describeEvent(ev);
   const agent = {
     opened: `:white_check_mark: New incident \`${slackEscape(ev.subject)}\` · agent started · ${runLink(runUrl, "run for this incident")}; its Draft PR links from the run`,
@@ -41,7 +38,7 @@ export function buildNotice(kind, { ev, branch, runUrl, number, status, triggerR
   }[kind];
   const blocks = [
     { type: "section", text: { type: "mrkdwn", text: `*${slackEscape(head)}*\n${slackEscape(body)}` } },
-    { type: "section", text: { type: "mrkdwn", text: agent } },
+    { type: "section", text: { type: "mrkdwn", text: `${mention}${agent}` } },
     { type: "context", elements: [{ type: "mrkdwn", text: slackEscape(`event ${ev.id} · source ${ev.source} · contract ${CONTRACT_VERSION}`) }] },
   ];
   const text = `${slackEscape(head)}: ${slackEscape(body)}`;
@@ -60,11 +57,11 @@ export function appJwt({ appId, privateKeyPem, nowS }) {
 }
 
 const SETTINGS = ["OPS_TRIGGER_REPO", "OPS_WORKFLOW", "DISPATCH_APP_ID", "DISPATCH_INSTALLATION_ID"];
-const SECRETS = ["WEBHOOK_SECRET", "DISPATCH_APP_PRIVATE_KEY", "SLACK_WEBHOOK_URL"];
+const SECRETS = ["DISPATCH_APP_PRIVATE_KEY", "SLACK_WEBHOOK_URL"];
 
 export function health(env) {
   const present = (names) => ({ present: names.filter((n) => env[n]).length, total: names.length, missing: names.filter((n) => !env[n]) });
-  return { contract: CONTRACT_VERSION, settings: present(SETTINGS), secrets: present(SECRETS) };
+  return { contract: CONTRACT_VERSION, settings: present(SETTINGS), secrets: present(SECRETS), config: configReport(env) };
 }
 
 const json = (status, body) => new Response(JSON.stringify(body), { status, headers: { "content-type": "application/json" } });
@@ -102,8 +99,15 @@ export async function handle(req, deps) {
   if (req.method === "GET" && new URL(req.url).pathname.endsWith("/health")) return json(200, health(env));
   if (req.method !== "POST") return json(405, { error: "method" });
 
+  let config;
+  try {
+    config = loadConfig(env);
+  } catch (err) {
+    log(JSON.stringify({ evt: "misconfigured", error: err.message }));
+    return json(500, { error: "inbox-misconfigured" });
+  }
   const body = await req.text();
-  const parsed = parseEvent({ keys: keysFrom(env), headers: req.headers, body, nowS: Math.floor(t.arrival / 1000) });
+  const parsed = parseEvent({ keys: config.keys, headers: req.headers, body, nowS: Math.floor(t.arrival / 1000) });
   if (!parsed.ok) {
     log(JSON.stringify({ evt: "rejected", reason: parsed.reason, status: parsed.status }));
     return json(parsed.status, { error: parsed.reason });
@@ -111,20 +115,35 @@ export async function handle(req, deps) {
   const { event: ev, keys } = parsed;
   const triggerRepo = env.OPS_TRIGGER_REPO;
 
+  const selftest = ev.type === "ops.inbox.selftest";
+  const incidentClaim = `incident.${keys.incident}`;
+  // A recovered event goes to its open incident whatever the table says, and is only recorded when there is none.
+  const recovery = ev.type === "ops.metric.recovered";
+  const openIncident = recovery ? await store.get(incidentClaim) : null;
+  let route = selftest ? { rule: "selftest", receiver: "agent" } : routeFor(ev, config.rules);
+  if (recovery) route = openIncident ? { rule: "recovered-joins", receiver: route.receiver === "record" ? "agent" : route.receiver } : { rule: "recovered-no-incident", receiver: "record" };
+  const mention = route.receiver === "captain" ? `<@${config.captainUser}> ` : "";
+
   const eventClaim = `event.${keys.dedupe}`;
-  const first = await store.set(eventClaim, JSON.stringify({ id: ev.id, source: ev.source, claimedAt: now() }), { onlyIfNew: true });
+  const claim = { id: ev.id, source: ev.source, claimedAt: now() };
+  const first = await store.set(eventClaim, JSON.stringify(route.receiver === "record" ? { ...claim, route: "record", rule: route.rule, event: body } : claim), { onlyIfNew: true });
   if (!first.modified) {
     log(JSON.stringify({ evt: "duplicate", id: ev.id }));
     return json(200, { status: "duplicate", id: ev.id });
   }
+  if (route.receiver === "record") {
+    log(JSON.stringify({ evt: "recorded", id: ev.id, rule: route.rule }));
+    return json(200, { status: "recorded", id: ev.id, rule: route.rule });
+  }
 
-  const selftest = ev.type === "ops.inbox.selftest";
   const branch = selftest ? null : incidentBranch(ev, keys.incident);
-  const incidentClaim = `incident.${keys.incident}`;
   let mode = "selftest";
   let opening = null;
   let madeIncident = false;
-  if (!selftest) {
+  if (recovery) {
+    mode = "join";
+    opening = JSON.parse(openIncident);
+  } else if (!selftest) {
     const made = await store.set(incidentClaim, JSON.stringify({ branch, firstEventId: ev.id, runId: null, runUrl: null }), { onlyIfNew: true });
     madeIncident = made.modified;
     mode = madeIncident ? "open" : "join";
@@ -150,7 +169,7 @@ export async function handle(req, deps) {
     await release();
     const status = err.status ?? 0;
     log(JSON.stringify({ evt: "dispatch-failed", id: ev.id, mode, stage: "mint", error: String(err.message), released: true }));
-    await post(buildNotice("refused", { ev, status: status || "no answer", triggerRepo }));
+    await post(buildNotice("refused", { ev, status: status || "no answer", triggerRepo, mention }));
     return json(502, { error: "dispatch-refused" });
   }
 
@@ -170,11 +189,11 @@ export async function handle(req, deps) {
     if (err.status && err.status < 500) {
       await release();
       log(JSON.stringify({ evt: "dispatch-failed", id: ev.id, mode, stage: "dispatch", error: err.message, released: true }));
-      await post(buildNotice("refused", { ev, status: err.status, triggerRepo }));
+      await post(buildNotice("refused", { ev, status: err.status, triggerRepo, mention }));
       return json(502, { error: "dispatch-refused" });
     }
     log(JSON.stringify({ evt: "dispatch-failed", id: ev.id, mode, stage: "dispatch", error: String(err.message), released: false }));
-    await post(buildNotice("uncertain", { ev, triggerRepo }));
+    await post(buildNotice("uncertain", { ev, triggerRepo, mention }));
     return json(504, { error: "dispatch-ambiguous" });
   }
 
@@ -206,11 +225,11 @@ export async function handle(req, deps) {
 
   if (madeIncident) {
     await store.set(incidentClaim, JSON.stringify({ ...opening, branch, firstEventId: ev.id, runId, runUrl }));
-    slack = await post(buildNotice("opened", { ev, branch, runUrl }));
+    slack = await post(buildNotice("opened", { ev, branch, runUrl, mention }));
   } else {
     let number = 2;
     while (number < 100 && !(await store.set(`${incidentClaim}.event.${number}`, ev.id, { onlyIfNew: true })).modified) number += 1;
-    slack = await post(buildNotice("joined", { ev, branch, runUrl: opening.runUrl ?? runUrl, number }));
+    slack = await post(buildNotice("joined", { ev, branch, runUrl: opening.runUrl ?? runUrl, number, mention }));
     out.event_number = number;
   }
   log(JSON.stringify({ evt: "delivered", id: ev.id, mode, branch, run_id: runId, slack }));

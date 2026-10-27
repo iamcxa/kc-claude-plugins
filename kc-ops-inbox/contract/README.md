@@ -135,7 +135,7 @@ Response codes (the codes in rows without "new" exist in r1's `handle()`; "new" 
 | --- | --- | --- | --- |
 | 202 | accepted and an agent was dispatched (open or join) | done | F2 |
 | 200 `duplicate` | this `source` and `id` were already accepted | done | F2 |
-| 200 `recorded` (new) | stored, routed record | done | C7 |
+| 200 `recorded` | stored, routed record | done | C7 |
 | 400 `<reason>` | not contract v1 | do not retry; log the reason; a sender bug | F2 |
 | 401 `timestamp-out-of-tolerance` | clock skew over 300 s | retry once with a fresh timestamp | F2 |
 | 401 other, including `key-not-allowed` | wrong key, or a key not allowed for this environment or source | do not retry; a Captain key step | D5, ER P3-2 |
@@ -194,11 +194,11 @@ Accepted for v1 and recorded so a producer does not rely on the opposite:
 
 Not built here, because the inbox runtime is r1's. Each is a rule above marked **runtime**; r1 builds it or a follow-up task does:
 
-- `200 recorded` and the three routing outcomes (record, agent, captain), including the Captain mention on the NOT started and UNCERTAIN notices.
+- Built (r1 `core/inbox-config.mjs`): `200 recorded` and the three routing outcomes (record, agent, captain) as an ordered rule list whose default is the table above, including the Captain mention on the NOT started and UNCERTAIN notices.
 - `429 incident-cap`, with the cap's claim released on a 502.
 - The event claim states `claimed`, `dispatching`, `dispatched` with a takeover of a stale `claimed` (older than 120 s); a 70-day claim retention. (A GitHub 5xx answered as 504 is built.)
 - Heartbeat last seen per environment and metric, and the silent-producer incident (no heartbeat for 2 × `every`, routed as warning).
-- Verifying with a list of keys inside `handle()` (`parseEvent({ keys })` exists here).
+- Built (r1): verifying with a list of keys inside `handle()`, read from `OPS_KEYS`.
 - Scoping a key by event type: a key is scoped by environment and source prefix, so a metric project's key can sign a `sentry.issue.alert` under its own source prefix. Since a `sentry.issue.alert` must carry a `urn:sentry:` source (VR 9), a key whose prefixes are its project's own cannot sign one; a key holding `urn:` or `urn:sentry:` can. Deferred risk for r1: scoping keys by type. `title` and `culprit` stay free text, up to 500 characters each.
 - Forwarding the re-serialized event to the agent run; the agent not fetching `dashboard`; resolving `adrs` at the checked-out commit.
 - The store for raw events and the PostHog projection (recorded as a recommendation in the task, not decided).

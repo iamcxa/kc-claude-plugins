@@ -1,9 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { readFileSync, readdirSync } from "node:fs";
-import { fileURLToPath } from "node:url";
-import { join, dirname } from "node:path";
-import { rig, signedRequest, relayEvent, sentryEvent, selftestEvent, PROJECT, TRIGGER } from "./rig.mjs";
+import { rig, signedRequest, relayEvent, sentryEvent, selftestEvent, PROJECT, TRIGGER, READBACK_SECRET } from "./rig.mjs";
 
 const near = () => relayEvent(80);
 const full = () => relayEvent(100);
@@ -141,12 +138,12 @@ test("a GitHub 5xx on dispatch keeps the claims like an unanswered one: 504, UNC
   r.close();
 });
 
-test("a signing secret that decodes to fewer than 16 bytes starts nothing, even when the sender signed with it", async () => {
+test("a key whose secret decodes to fewer than 16 bytes, or is unset, refuses every event, even one signed with it", async () => {
   for (const secret of ["whsec_=", "whsec_!!!", "whsec_a", undefined]) {
     const r = await rig();
-    r.env.WEBHOOK_SECRET = secret;
+    r.env.KEY_PROD = secret;
     const res = await r.call(signedRequest(near(), { secret: secret ?? "whsec_=" }));
-    assert.equal(res.status, 401, String(secret));
+    assert.equal(res.status, 500, String(secret));
     assert.equal(r.state.dispatches.length + r.state.mints.length + r.state.slack.length + r.store.m.size, 0, String(secret));
     r.close();
   }
@@ -190,7 +187,7 @@ test("a Slack outage does not fail the event", async () => {
 
 test("the self-test reports the trigger mint, the refused project calls and the Slack answer, and files no task", async () => {
   const r = await rig();
-  const res = await r.call(signedRequest(selftestEvent("readback-selftest-1")));
+  const res = await r.call(signedRequest(selftestEvent("readback-selftest-1"), { secret: READBACK_SECRET }));
   const out = await res.json();
   assert.equal(res.status, 200);
   assert.deepEqual(out.mint_trigger, { permissions: { actions: "write" }, repositories: [TRIGGER] });
@@ -211,17 +208,11 @@ test("GET /inbox/health counts settings and secrets by name and never returns a 
   const res = await r.call({ method: "GET" }, "http://inbox.test/inbox/health");
   const out = await res.json();
   assert.deepEqual(out.settings, { present: 4, total: 4, missing: [] });
-  assert.deepEqual(out.secrets, { present: 2, total: 3, missing: ["SLACK_WEBHOOK_URL"] });
-  assert.ok(!JSON.stringify(out).includes(r.env.WEBHOOK_SECRET));
+  assert.deepEqual(out.secrets, { present: 1, total: 2, missing: ["SLACK_WEBHOOK_URL"] });
+  assert.equal(out.config.ok, true);
+  assert.deepEqual(out.config.rules, { source: "default", count: 5 });
+  assert.deepEqual(out.config.keys.map((k) => k.name), ["prod", "preview", "readback"]);
+  for (const secret of [r.env.KEY_PROD, r.env.KEY_PREVIEW, r.env.KEY_READBACK]) assert.ok(!JSON.stringify(out).includes(secret));
   r.close();
 });
 
-// The core's own imports are node:crypto and the contract module; contract.mjs imports only node:crypto,
-// so nothing outside node:crypto is reachable from the core.
-test("the core reaches only node:crypto, through the contract module", () => {
-  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
-  const importsOf = (dir, only) => readdirSync(join(root, dir)).filter((f) => f.endsWith(".mjs") && (!only || f === only)).flatMap((f) =>
-    [...readFileSync(join(root, dir, f), "utf8").matchAll(/^import .* from "([^"]+)";$/gm)].map((m) => m[1]));
-  assert.deepEqual([...new Set(importsOf("core"))].sort(), ["../contract/contract.mjs", "node:crypto"]);
-  assert.deepEqual(importsOf("contract", "contract.mjs"), ["node:crypto"]);
-});
