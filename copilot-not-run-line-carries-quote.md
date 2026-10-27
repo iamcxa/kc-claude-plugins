@@ -388,3 +388,57 @@ The complete entity prefix and frontmatter preceding this report are preserved; 
 ### Summary
 
 This complete report supersedes the earlier implementation reports: delivered and pushed 784e038979bea6d2c6d7984fb95a665d6e36c52f, requiring an exact current-head/last-refusal disclosure when check encounters an older refusal while keeping that refusal usable and question head-independent. All package test files ran without failing cases, one integration skip is disclosed, and the removed-comparison mutant is caught; both prior declaration/quote/retry and case-exclusion behavior remain covered. FO must run RoboRev and read CI on this new head before validation proceeds; this report grants no gate or merge approval.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #736 head 784e0389 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 784e038979bea6d2c6d7984fb95a665d6e36c52f, base 8bf4f3582411e8e4238f19fbadda8ddeca6767be, in an independent detached worktree; all eight criteria assessed below with negative controls. Product bytes were unchanged.
+- DONE: Check both repair cycles directly (Cycle 1: answer= excluded regardless of case for review: and comment:; Cycle 2: an older refusal needs the current-head not-read disclosure, question defers the head comparison when no head is known); RoboRev on this head (FO, 2026-10-28): clean on 784e03897, evidence=roborev:1267 (earlier: 1263 and 1265 one High each, repaired); CI on this head read by FO
+  Both repairs pass directly; reverting case exclusion produces 8 assertion failures, removing head comparison produces 5, with zero test errors. FO-supplied evidence only: RoboRev clean evidence=roborev:1267 and CI 4/4 pass on this exact head; no provider/daemon call made by validation.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step acceptance script below ran unchanged via bash --noprofile --norc, exit 0; 12 declaration/repair tests and 15 reader tests pass. Required ADR lint exits 0 (39 files, zero legacy); no new review findings in any disposition class.
+- SKIPPED: Live provider evidence, unchanged release-acceptance integration, and a fresh design render
+  FO owns hosted CI/RoboRev; one unchanged Node/journey-accept/YAML integration test skips. No UI/design changed; accepted ideation render is prior evidence, not independently rerendered (mmdc absent; optional npx probe interrupted without a renderer result).
+
+### Acceptance evidence
+
+- AC-1: Both CLI routes cover configured/empty reviewers, duplicates/wrong/malformed declarations and prod/db contradictions; declaration/structured-trigger removals cause 14/4 failures.
+- AC-2: Unchanged real reader feeds Unicode, internal quotes, HTML, long and empty answers into both routes; altered quote/id and missing/unreadable/malformed source have expected exits. Punctuation-only/id-only mutants cause 12/12 failures; wrong missing-source exit causes 1.
+- AC-3: Removed/negative/task-only offers fail; subprocess spies reject review requests and question makes no provider call. Any-retry-word and added-request mutants each cause 1 failure; task-level no-automatic-retry remains intact.
+- AC-4: Config-error reason, untriggered/unlisted reviewer, valid review/comment and unsupported-type skips pass; answer= is rejected regardless of prefix case. Outcome/unlisted/title mutants cause 2/1/1 failures; both repair matrices and the unchanged reader pass.
+- AC-5: Fresh archive of state c652d02fd6ba6bfd95f940a395d295387a5677b1 reproduces 71 records/65 unique texts/6 unknown; baseline 62 pass/3 hold, candidate 23/42, 39 changed. Both historical task pairs hold, corrected copies pass both CLI routes; removing declaration/refusal checks admits their counterexamples. Prototype 15/50 differs by eight valid parenthesized untriggered declarations, as reported.
+- AC-6: Flat/folder/split-root discovery, invalid/missing/unreadable config, full head/authority/CI checks and no-success-record failures pass; unwiring check/question or prematurely writing a record causes 1/7/1 failures. Valid question followed by incomplete check text still holds.
+- AC-7: Independently rerun archived lifecycle fixture and complete bundles: startup 5775, idle-open 1045, idle-merged 1318, archive 3276, no-Copilot merge 742 unchanged; Copilot merge 1482→1520, successful question 3→3. Extension +38 = approved instruction 36 + configuration-error spelling 2; retry 10, sample source/quote 28/24, mismatch output 34 and disclosure 7 words. README-only delta 0 fails to represent measured bundle delta 38. No workflow/CI/version edit or budget increase; CI cost not measured.
+- AC-8: Ideation-only publication criterion remains satisfied by the approved unchanged design; design_surfaces exits 0 and removing Acceptance criteria from a disposable copy exits 1. The complete existing entity prefix/frontmatter is preserved; no new design artifact is claimed.
+
+### Checks and limits
+
+All 25 package test files exit 0: 894 unit cases pass, one integration case skips, both local Spacedock harnesses pass; delivery suite 113/113. lint-skills passes at 5565/5565 words; number_guards has no findings; comment_ratio is 287 code/0 comment lines (0.0% ≤ 5%); doc_impact reports 0 documents; 7 dispatch records complete; diff --check passes. Copilot EXTENSION.md is updated at its existing read step; no ADR or migration was added.
+Exact required command, run from the detached candidate: `python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since 8bf4f3582411e8e4238f19fbadda8ddeca6767be` → exit 0, `39 ADR file(s) checked, 0 legacy`. Codex package path is selected by the loaded skill/dispatch adapter; installed baseline gate/extension/workflow bytes match the pinned base.
+Limits judged valid: local synthetic CLI 0.27.2/plugin 0.27.3 harnesses do not prove CI's 0.27.2 plugin pin, native worker obedience, human approval or provider merge. Saved stdout equality authenticates neither provider provenance nor semantic trigger truth; six historical unknowns, original temporary-text identity and historical head disclosures remain unknown. No source was invented for the replay. The three changed files are necessary for the proven checks/tests/read instructions; removing each enforcement branch fails a named control. Goal sufficient within the approved Pilot boundary, with no new production obligation.
+Evidence: `/tmp/copilot-validation-evidence-784e0389/` contains all-tests.log, tests/results.json and per-file logs, checks.json, mutation-results.json, cycle1-mutation.log, cycle2-mutation.log, replay.py/replay-records.json/replay-summary.json, word-counts.json, disclosure-cost.json, ac8-falsifier.txt and acceptance.sh/acceptance.log. All negative mutants ran in memory or disposable files; no product repair or PR mutation.
+
+### Minimal acceptance script
+
+No user-visible screen changed. Run these four numbered steps together in a fresh Bash shell; they verify local refusal/declaration/head behavior and the reader, not live provider responses or merge authority. Expected: exact candidate extracted; 12 tests OK; 15 tests OK; final cleanup message. Observed exactly those outputs, exit 0 (12 tests: 11.601s; 15 tests: 0.000s).
+```bash
+set -euo pipefail
+# 1. Extract a disposable source snapshot at the reviewed revision.
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-copilot-not-run-line-carries-quote
+PROBE=$(mktemp -d /tmp/copilot-acceptance.XXXXXX)
+git -C "$REPO" archive --output="$PROBE/source.tar" 784e038979bea6d2c6d7984fb95a665d6e36c52f
+tar -xf "$PROBE/source.tar" -C "$PROBE"
+printf 'Candidate 784e038979bea6d2c6d7984fb95a665d6e36c52f extracted.\n'
+# 2. Exercise declarations, quote/id, retry, both repairs and no-write failures.
+python3 -B "$PROBE/kc-dev-flow-2/scripts/test_delivery_gate.py" ReviewerDeclarationTests
+# 3. Check the unchanged real reader's refusal/review behavior.
+python3 -B "$PROBE/kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+# 4. Remove this disposable source snapshot.
+python3 -c 'import shutil,sys; shutil.rmtree(sys.argv[1])' "$PROBE"
+printf 'Acceptance passed; disposable snapshot removed.\n'
+```
+
+### Summary
+
+PASSED for PR #736 head 784e038979bea6d2c6d7984fb95a665d6e36c52f; no Material, Deferred risk, Polish or Needs decision finding was added. Exact-head local verification and falsifiers support the accepted declaration/quote/retry behavior and both repairs; hosted CI/RoboRev remain explicitly FO-supplied evidence. Validation does not approve delivery: the Captain's gate/merge decision remains with FO.
