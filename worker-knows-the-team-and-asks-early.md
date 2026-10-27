@@ -71,6 +71,17 @@ gates:
                 id: briefing:worker-knows-the-team-and-asks-early:validation:attempt-2:revision-1
                 digest: sha256:cd3e05b04bd17604d831c09120793c752e855bb555d3e013857e24063e448c60
                 room-ref: ./worker-knows-the-team-and-asks-early/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:worker-knows-the-team-and-asks-early:validation:2
+                briefing: briefing:worker-knows-the-team-and-asks-early:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-27T04:12:16.620123Z"
+                decision: approve
+                reason: 'Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #729 at 981a4309; accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-26T17:08:20Z
 worktree: .worktrees/spacedock-ensign-worker-knows-the-team-and-asks-early
 pr: iamcxa/kc-claude-plugins#729
