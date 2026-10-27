@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-27T16:00:23Z
 worktree: .worktrees/spacedock-ensign-read-adr-honors-adr-folder
-pr: iamcxa/kc-claude-plugins#735
+pr: pr-merge:735
 ---
 
 ## Scope
