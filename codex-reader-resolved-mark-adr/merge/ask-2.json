@@ -1,0 +1,17 @@
+{
+  "class": "never",
+  "head": "24663871a8863e15097fcfd2c41b9584f1c5a48f",
+  "model": "not run",
+  "necessity": "two files (docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md, kc-dev-flow-2/extensions/codex/codex_review.py).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'External rounds: Codex 1 (round 1'",
+    "point: path: 'docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.'",
+    "point: path: 'kc-dev-flow-2/extensions/codex/codex_review.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#732",
+  "sufficiency": "ADR 0039 records D1 of codex-reader-same-head-unresolved (a person's resolved mark on a GitHub thread does not clear a Codex finding on an unchanged head), quoting the Captain's \u300c\u5168\u51c6\u300d gate resolution b",
+  "time": "2026-10-27T04:45:21Z",
+  "verdict": "ask"
+}
