@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-resolved-mark-adr:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of codex-reader-resolved-mark-adr to enter implementation? FO recommends approve; approving accepts that recommendation and its one decision as recommended: besides ADR 0039 (exact text in the task's Design), the PR adds the one pointer comment adr_lint requires in the protected code, '# see docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md' above the held-findings line in kc-dev-flow-2/extensions/codex/codex_review.py.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-resolved-mark-adr:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/87633f60bade98912e15091bbe24d5790c44040f/codex-reader-resolved-mark-adr.md",
+      "rev": "sha256:f2862e3c2f1ee71eb06684f7f3199c92499bc605f4dbc35c15fdd14259944b96",
+      "mediaType": "text/markdown",
+      "summary": "ADR 0039 records D1 of codex-reader-same-head-unresolved: a person's resolved mark on a GitHub thread does not clear a Codex finding on an unchanged head. It quotes the Captain's 「全准」 gate resolution verbatim with its state commit and resolution id, and protects codex_review.py state(). The ADR alone fails adr_lint ('codex_review.py has no pointer'); the one comment makes it exit 0. Worse: one comment line in product code; without it the ADR cannot land without changing the linter or dropping Protects."
+    }
+  ]
+}
