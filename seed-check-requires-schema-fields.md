@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:seed-check-requires-schema-fields:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:seed-check-requires-schema-fields-validation-1
+              briefing:
+                id: briefing:seed-check-requires-schema-fields:validation:attempt-1:revision-1
+                digest: sha256:c9892c62c31f6037ac757c9b2c2b02e6859aaa088b17f5250099479456afd37c
+                room-ref: ./seed-check-requires-schema-fields/review/validation/briefing-1
 started: 2026-10-27T16:18:25Z
 worktree: .worktrees/spacedock-ensign-seed-check-requires-schema-fields
 pr: iamcxa/kc-claude-plugins#740

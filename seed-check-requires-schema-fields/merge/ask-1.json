@@ -1,0 +1,26 @@
+{
+  "class": "never",
+  "head": "bd8a2c93bf1552468c5a2780c839930d3669114d",
+  "model": "not run",
+  "necessity": "ten files (docs/adr/0041-seed-admission-enforces-required-fields.md, kc-dev-flow-2/README.md, kc-dev-flow-2/references/sd/workflow.md, kc-dev-flow-2/scripts/design_surfaces.py, lint-skills.py, pr_watc",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F2 Polish \u2014 resolved: the'",
+    "point: deferred: '- F2 Polish \u2014 remains resolved:'",
+    "point: not-run: 'External rounds: Codex 1 (the first'",
+    "point: path: 'docs/adr/0041-seed-admission-enforces-required-fields.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_design_surfaces.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_sd_dispatch.py'",
+    "point: path: 'kc-dev-flow-2/skills/observer/SKILL.md'",
+    "point: more: 1 not shown"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#740",
+  "sufficiency": "under Captain amendment 1, the seed check requires Non-goals, Budget and Stop condition on new seeds, a stored id is optional under id-style: slug, and existing tasks get replay counts only; ADR 0041 ",
+  "time": "2026-10-27T18:58:35Z",
+  "verdict": "ask"
+}

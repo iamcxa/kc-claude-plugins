@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:seed-check-requires-schema-fields:validation:attempt-1:revision-1",
+  "question": "Approve validation of seed-check-requires-schema-fields and merge iamcxa/kc-claude-plugins#740 at head bd8a2c93bf1552468c5a2780c839930d3669114d with `gh pr merge 740 --squash --match-head-commit bd8a2c93bf1552468c5a2780c839930d3669114d`? FO recommends approve; approving accepts that recommendation and the reading that a new seed is any backlog task not yet admitted (engineering-reviewer: all 54 current backlog tasks fail the body bounds, so FO adds Non-goals, Budget and Stop condition to an older task before presenting its backlog gate; recorded as Captain amendment 2, superseding AC-2 and AC-5's remaining Scope and replay clauses), covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:seed-check-requires-schema-fields:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4208a8f1f300751f8581213eb6fb92a5da5c0e66/seed-check-requires-schema-fields.md",
+      "rev": "sha256:e2a3eea8c3ed4a52694d5afb0a7b2fe3bab444d8733f26cc9eeef55fe3b158e7",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: under Captain amendment 1, the seed check requires Non-goals, Budget and Stop condition on new seeds, a stored id is optional under id-style: slug, and existing tasks get replay counts only; ADR 0041 records the ruling; validation PASSED, then failed Material on an indented quoted placeholder that passed as a Budget, repaired in Cycle 1 and PASSED again; the change moved from the stacked #738 to this PR on main at the Captain's 「全准」, and revalidation confirmed it carries #738's own commits only (906 tests).\nNecessity: ten files (docs/adr/0041-seed-admission-enforces-required-fields.md, kc-dev-flow-2/README.md, kc-dev-flow-2/references/sd/workflow.md, kc-dev-flow-2/scripts/design_surfaces.py, lint-skills.py, pr_watch.py, test_design_surfaces.py, test_pr_watch.py, test_sd_dispatch.py, kc-dev-flow-2/skills/observer/SKILL.md).\nExternal rounds: Codex 1 (the first run stalled from 2026-10-27T18:16:55Z; FO re-requested once; round 1 on this head: code review completed with no findings, evidence=summary:6449978692@bd8a2c93b). RoboRev clean on this head, run by FO (evidence=roborev:1272). second reviewer: copilot because the change sets what a task needs to be admitted at the backlog gate (approval rules); copilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\" (copilot_review.py exit 5, answer=review:5672261495); the Captain may ask FO to retry Copilot instead of merging.\nFO declines: Material F1, an indented quoted placeholder passed as a Budget (resolved in Cycle 1 and revalidated twice); Polish F2, the merge-ask count said 737 (corrected to 742 in Cycle 1)."
+    }
+  ]
+}
