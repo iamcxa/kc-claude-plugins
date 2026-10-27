@@ -1,6 +1,6 @@
 ---
 title: Any project sends a key metric to its ops inbox the same way, and kc-ops-inbox's contract v1 lands on main so projects can depend on it
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -708,3 +708,19 @@ Expected: step 1 prints `194f0b835a9b0d1dcefd55be36ecedcb72ab23dc`; step 2 `ℹ 
 
 ### Summary
 PASSED at 194f0b83: all seven disposition items are fixed, each shown by a signed input that the old head accepted or crashed on and the new head refuses with the intended reason, with accepted controls on both. The implementer's four calls are accepted (UTC rule on all three types, the redundant `issue_id` pattern, the `period` and Sentry-slug limits, the mutation job at 1m29s in CI). Open and not Material: G1 (`web_url` can carry an encoded sentence) and G3 (an empty signing secret verifies), both Deferred; G2 and G4-G7 Polish. My cycle-1 PASSED missed the deep-nesting crash, the missing clock, the other Sentry fields and the preview-metric key collision; the probes for them are in the acceptance script.
+
+### FO disposition: validation cycle 2 (2026-10-27)
+
+
+Candidate: PR #727 head 194f0b835a9b0d1dcefd55be36ecedcb72ab23dc. Evidence: the validator's cycle-2 report (G1, G2, G3) and the three re-reviews saved in the task folder (`code-review-r2-*-2026-10-27.md`).
+
+FO disposition. Fix-authorized, owned by this task. Change only what each item names, keep every approved id, subject and field shape otherwise, and add a refusal test or fixture plus a mutation for each new check.
+
+1. Key configuration (Codex P2, Gemini P2-1, ER P3-2, validator G3 / cycle-1 F3): a key is usable only when `secret` is a non-empty string beyond the `whsec_` prefix, `environments` and `sources` are non-empty arrays of non-empty strings, and every source prefix ends with `:`; any other key is skipped, never thrown on. Same rule in `validate.mjs`'s key check.
+2. Sentry source (ER P3-1): `sentry.issue.alert` requires `source` matching `^urn:sentry:`; update fixtures that use another source. Correct the README sentence that says the Sentry fields bound what such an event can carry: `title` and `culprit` stay free (up to 500 characters each).
+3. `web_url` (validator G1, Codex P3, ER P3-3): no `?`, `#`, `%` or `+`, as the `dashboard` pattern already does.
+4. `period` (validator G2): calendar-valid date, by components, on every metric type.
+
+Out of scope this round: Gemini P3-1/P3-2 (header-string exit code, empty key list masking missing headers), G4-G7 Polish.
+
+Push to the same branch (PR #727 stays Draft), rerun the contract tests, mutations and every fixture, and append `## Stage Report: implementation (cycle 3)` with plain `### Checks` and `### Summary` subheadings and the new head.
