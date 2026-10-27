@@ -84,7 +84,7 @@ gates:
                 state: pending
 started: 2026-10-26T17:08:20Z
 worktree: .worktrees/spacedock-ensign-worker-knows-the-team-and-asks-early
-pr: iamcxa/kc-claude-plugins#729
+pr: pr-merge:729
 ---
 
 ## Scope
