@@ -23,3 +23,7 @@ Alignment: not needed before ideation; the Captain chose the shape.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Closed
+
+Closed 2026-10-27, the Captain 「全准」 (chat) answering 「需要你決定：第 8 批 7 張任務的待辦關卡，要不要一起批准進入設計階段？同時把已經做完的 `peers-paseo-host-binding` 關掉。我建議全部批准，也關掉那張。」. Done by peers-rules-name-each-host-binding (iamcxa/kc-claude-plugins#730, merged 2b3e505c): peers binds by how a peer reaches the session, so an FO under Paseo lists and messages peers through Paseo, and the optional paseo extension covers proactive asks.
