@@ -124,9 +124,11 @@ FO outward actions, 2026-10-23, on the Captain's 「同意」: pushed branch spa
 Captain direction, 2026-10-25 (chat): 「可以，先用 docker 做 poc，如果可行再測試 exe.dev，然後拉回 doceker 繼續整合」, answering whether to pause r1's live setup and first run a POC of Paseo Hub plus a deployed daemon as intake and First Officer runner. r1's live setup (App key rotation, transfer and install, Netlify deploy, relay task) is paused until that POC closes; the trigger repository spacedock-dev/subspace-relay-ops-trigger and the Netlify site subspace-relay-ops-inbox stay as created.
 FO note, 2026-10-26: number collision. This task's reserved ADR 0031 (axis ADR, on branch spacedock-ensign/ops-inbox-r1-setup-and-isolation at 770ce166) collides with main's 0031 (a-release-is-accepted-by-walking-it, merged in #714 on 2026-10-24). Nothing of this task is applied, so under Number guards it renumbers: when r1 resumes, FO deletes the `ADR:` line, runs reserve again, and the task returns to implementation with the new number. Also from ops-metric-event-protocol ideation (2026-10-26): r1 must later merge main, import the contract module that task lands, change its relay fixtures to the protocol's metric type, and its live preview test needs a routing override (preview × warning → agent) or a production test.
 
+Captain 2026-10-27 (chat): 「恢復 r1。但是確認一下有沒有哪些 ext 該開沒開的」. FO resumed r1 after contract v1 landed on main (PR #727, merge d7eeeef2, task ops-metric-event-protocol archived). Number guard: the stale `ADR: 0031` was deleted and reserve returned `ADR: 0040`; the axis ADR renumbers to 0040. Carried in from ops-metric-event-protocol: H1 (a signing secret that decodes to zero bytes verifies a forged signature) is the first contract item r1 fixes, per the Captain's approval of that task's delivery gate; D8 (at-most-once loss at 504) was accepted for v1 with 「第一版接受缺陷，後續再補」 and is not in this resume.
+
 ## Number guards
 
-ADR: 0031
+ADR: 0040
 FO note: this task holds one ADR number, for the axis ADR (AC-6). The trigger-repository and state-branch ruling (D2, D3) needs a second ADR; per Number guards a second ADR returns to FO, so FO files it as a follow-up task instead of reserving a second number here.
 
 ## Captain amendments
