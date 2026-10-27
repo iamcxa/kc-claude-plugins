@@ -1,6 +1,6 @@
 ---
 title: Any project sends a key metric to its ops inbox the same way, and kc-ops-inbox's contract v1 lands on main so projects can depend on it
-status: validation
+status: done
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -109,9 +109,12 @@ gates:
                 reason: 'Captain 2026-10-27 in chat: 「准」 — accepts validation cycle 3 PASSED at 5dee91fb, delivery by FO merging that full head, and H1 as the first contract item r1 fixes.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-26T14:32:33Z
-mod-block: merge:pr-merge
+mod-block:
+verdict: PASSED
+completed: 2026-10-27T05:37:58Z
+archived: 2026-10-27T05:37:58Z
 ---
 
 A shared protocol for key-metric events, owned by kc-ops-inbox, with qnow as its first adopter and relay's capacity ceiling as the shape to generalize. It also lands contract v1 (today only on the paused r1 branch) on the kc-claude-plugins default branch, because no project can depend on a contract that lives on an unmerged branch.
