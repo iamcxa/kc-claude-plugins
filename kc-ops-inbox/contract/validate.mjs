@@ -21,15 +21,24 @@ try {
   console.error(`cannot read fixture: ${err.message}`);
   process.exit(2);
 }
-const secret = fixture.secret ?? process.env.OPS_WEBHOOK_SECRET;
-const keys = fixture.keys ?? (secret ? [{ secret, environments: ENVIRONMENTS, sources: ["urn:"] }] : []);
-if (keys.length === 0 || typeof fixture.body !== "string" || typeof fixture.headers !== "object") {
+const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
+const isKey = (k) => isObject(k) && typeof k.secret === "string" && Array.isArray(k.environments) && Array.isArray(k.sources);
+const secret = fixture?.secret ?? process.env.OPS_WEBHOOK_SECRET;
+const keys = fixture?.keys ?? (secret ? [{ secret, environments: ENVIRONMENTS, sources: ["urn:"] }] : []);
+if (!isObject(fixture) || !isObject(fixture.headers) || typeof fixture.body !== "string" || !Array.isArray(keys) || keys.length === 0 || !keys.every(isKey) ||
+  (fixture.now !== undefined && !Number.isFinite(fixture.now))) {
   console.error(USAGE);
   process.exit(2);
 }
 
 const nowS = nowArg !== undefined ? Number(nowArg) : fixture.now ?? Math.floor(Date.now() / 1000);
-const result = parseEvent({ keys, headers: new Headers(fixture.headers), body: fixture.body, nowS });
+let result;
+try {
+  result = parseEvent({ keys, headers: new Headers(fixture.headers), body: fixture.body, nowS });
+} catch (err) {
+  console.error(`cannot validate fixture: ${err.message}`);
+  process.exit(2);
+}
 if (!result.ok) {
   console.log(result.reason);
   process.exit(1);

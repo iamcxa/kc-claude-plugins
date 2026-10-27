@@ -2,7 +2,7 @@
 
 What a project sends to its ops inbox, and what the inbox does with it. The rules are executable in `contract.mjs` (`parseEvent`, `validateBody`); the published schemas in `v1/` are derived from the same `TYPES` table by `generate.mjs`, and `contract-versions.json` pins each schema's digest. The module imports only `node:crypto`, so a project can copy or pin it without installing anything.
 
-Pin a commit of this directory on the default branch. Rules in this file that the validator does not check are marked **runtime**: they belong to the inbox runtime, which is owned by the task `ops-inbox-r1-setup-and-isolation` ("r1"), not to this contract; the list of what is not built is under [Inbox runtime gaps](#inbox-runtime-gaps-owned-by-r1). Source labels (C, F, D, ER, Q) are defined under [Sources](#sources).
+Pin a commit of this directory on the default branch. Rules in this file that the validator does not check are marked **runtime**: they belong to the inbox runtime, which is owned by the task `ops-inbox-r1-setup-and-isolation` ("r1"), not to this contract; the list of what is not built is under [Inbox runtime gaps](#inbox-runtime-gaps-owned-by-r1). Source labels (C, F, D, ER, Q, VR) are defined under [Sources](#sources).
 
 ## Transport
 
@@ -10,11 +10,11 @@ Pin a commit of this directory on the default branch. Rules in this file that th
 
 | Header | Value |
 | --- | --- |
-| `webhook-id` | `msg_<event id>` |
-| `webhook-timestamp` | Unix seconds, fresh on each attempt; the inbox refuses a difference over 300 s from its clock |
+| `webhook-id` | by convention `msg_<event id>`; the contract does not check it, because dedupe is on `source` and `id` (VR 7) |
+| `webhook-timestamp` | decimal digits only (`^\d+$`), Unix seconds, fresh on each attempt; the inbox refuses a difference over 300 s from its clock, and refuses every timestamp when its clock value is not a finite number (VR 4) |
 | `webhook-signature` | `v1,<base64 HMAC-SHA256 of "<webhook-id>.<webhook-timestamp>.<raw body>">`, key = the base64 part of the `whsec_` secret; several space-separated `v1,` signatures are accepted |
 
-The raw body must equal `JSON.stringify(JSON.parse(body))` (reason `non-canonical-body`). A sender that serializes with `JSON.stringify` already conforms; a body with a duplicate key does not, because `JSON.parse` keeps the last copy and the raw bytes keep both (ER P1-1).
+The raw body must equal `JSON.stringify(JSON.parse(body))` (reason `non-canonical-body`). The body is a string; any other input is refused as `not-json` and nothing is thrown (VR 3). A sender that serializes with `JSON.stringify` already conforms; a body with a duplicate key does not, because `JSON.parse` keeps the last copy and the raw bytes keep both (ER P1-1).
 
 ## Envelope
 
@@ -25,7 +25,7 @@ The raw body must equal `JSON.stringify(JSON.parse(body))` (reason `non-canonica
 | `source` | `^urn:[a-z0-9-]{1,32}(:[a-z0-9-]{1,32}){1,3}$`, for example `urn:relay:capacity`; the producing project | F1 (a source with spaces passed before), ER P3-1 |
 | `type` | `ops.metric.crossed`, `ops.metric.recovered`, `ops.metric.heartbeat`, `sentry.issue.alert` or `ops.inbox.selftest` | C3, D2 |
 | `subject` | `^[A-Za-z0-9._/-]{1,100}$` and the per-type rule below; names the incident within the source | F2 |
-| `time` | RFC 3339 | F2 |
+| `time` | RFC 3339 with calendar-valid components (Feb 30, hour 24 and month 13 are refused as `invalid-value: time`); on `ops.metric.*` it must end in `Z` | F2, VR 1 |
 | `environment` | `prod`, `preview` or `dev`. Required on `ops.metric.*`; optional on the other types, which the key check treats as `prod` | C7, D5, ER P3-2 |
 | `severity` | `info`, `warning` or `critical`. Required on `ops.metric.*`; a heartbeat's must be `info` | C7 |
 | `dataschema` | `https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/<type>.json`; an identifier the validator compares, nothing fetches it | F2, ER P3-5 |
@@ -57,6 +57,8 @@ Generic: a new project adds no type. The project-specific parts are `source` and
 | `dashboard` | optional; `^https://[a-z0-9.-]{1,64}/[A-Za-z0-9._~/-]{0,100}$` (no query or fragment); a link for the Captain, which the agent does not fetch (**runtime**) | all | C7, ER P2-5 |
 | `adrs` | optional; at most 5 strings `^[0-9]{4}$`, ADR numbers the agent resolves at the commit it checks out (**runtime**) | all | C7 |
 
+### Deterministic id
+
 Cross-field checks (reasons `invalid-value: data.value`, `subject-mismatch`, `id-not-deterministic`, checked in that order):
 
 - crossed: `value × 100 ≥ level × limit`. Recovered with cause `below`: `value × 100 < level × limit`.
@@ -64,19 +66,21 @@ Cross-field checks (reasons `invalid-value: data.value`, `subject-mismatch`, `id
 - id, with `<c>` = `b` for `below` and `p` for `period-ended`:
   - crossed: `<metric>.<environment>.<w><period>.c<level>.l<limit>`
   - recovered: `<metric>.<environment>.<w><period>.r<level><c>.l<limit>`
-  - heartbeat: `<metric>.<environment>.hb<w>.<bucket>`, `<bucket>` = `time` cut to `YYYY-MM-DDTHH` for `every: hour` and to `YYYY-MM-DD` for `every: day`
+  - heartbeat: `<metric>.<environment>.hb<w>.<bucket>`, `<bucket>` = the UTC `time` string cut to `YYYY-MM-DDTHH` for `every: hour` and to `YYYY-MM-DD` for `every: day` (`time` must end in `Z`, so the cut is the UTC hour or day; VR 1)
 
 The id is derived from the event's own fields, so a retry, a resend or a second process produces the same id (source: C3, Q1). `limit` is in the id, so a level crossed again after a limit raise is a new event; `window` and `cause` are in the id so a day and a month window, or a `below` and a `period-ended` recovery, derive different ids (ER P2-1; `test/contract.test.mjs`, "the four ids of relay's ceiling"). `environment` is in the id and the subject, so a preview crossing does not suppress or join a production one.
 
 Stated limit (ER P2-1): a limit lowered back, within one period, to a value it already had re-derives that value's ids, and the repeat is answered `200 duplicate`. Accepted because only an operator lowers a limit; a sequence number would need project state.
 
+### No free text
+
 On these three types every string is an enumerated value or matches a bounded pattern that excludes whitespace, so no field carries a sentence. Residual (ER P3-1): no spaces is not no text; `metric`, `runbook`, the `dashboard` path and `source` can spell a kebab-case phrase. The agent prompt's rule that event content is data, never instructions, stays the second guard (**runtime**).
 
 ### `sentry.issue.alert`, `ops.inbox.selftest`
 
-`sentry.issue.alert` — subject `issue/<issue_id>`. Data: required `issue_id`, `title`, `level`, `project`, `web_url` (`https://`); optional `event_id`, `culprit`, `triggered_rule`, `datetime`, `release`. Strings are at most 500 characters. It keeps its free `title` and `culprit`; the residual is as r1 recorded it (F4).
+`sentry.issue.alert` — subject `issue/<issue_id>`. Data: required `issue_id`, `title`, `level`, `project`, `web_url`; optional `event_id`, `culprit`, `triggered_rule`, `datetime`, `release`. `title` and `culprit` (at most 500 characters) are the only free-text fields of this type, and the residual is as r1 recorded it (F4). Every other field is bounded (VR 2): `issue_id`, `event_id`, `project` and `triggered_rule` match `^[A-Za-z0-9._-]{1,64}$`; `level` is `fatal`, `error`, `warning`, `info` or `debug`; `release` matches `^[A-Za-z0-9._@+-]{1,100}$`; `web_url` matches `^https://[A-Za-z0-9._~:/?#@!$&*+,;=%-]{1,480}$`; `datetime` is a calendar-valid RFC 3339 time. A producer whose rule names or projects contain spaces slugs them before sending.
 
-`ops.inbox.selftest` — sent by the setup read-back; subject `selftest/<id>`; data `v`, `project` (`owner/name`). It files no task.
+`ops.inbox.selftest` — sent by the setup read-back; subject `selftest/<id>` (checked, reason `subject-mismatch`); data `v`, `project` (`owner/name`). It files no task.
 
 ### Retired
 
@@ -119,7 +123,7 @@ A heartbeat does not open or join an incident. An event without `environment`, s
 
 | Rule | Source |
 | --- | --- |
-| **Same id on retry.** The id is derived, so a retry, a resend or a second process produces the same id; `webhook-id` is `msg_<id>`; `webhook-timestamp` is fresh on each attempt. | C7, Q1 |
+| **Same id on retry.** The id is derived, so a retry, a resend or a second process produces the same id; `webhook-id` is `msg_<id>` by convention (not checked); `webhook-timestamp` is fresh on each attempt. | C7, Q1 |
 | **Check order at the inbox:** 413 size, then 401 signature and timestamp, then 400 contract (canonical body first), then 401 key not allowed. The key check comes last because `environment` and `source` are read from the validated body; all four run before any claim. `parseEvent` implements this order. | ER P3-2 |
 | **Retry budget:** up to 3 attempts inside the request that detected the change (0 s, 1 s, 4 s). Then the next heartbeat run resends every `crossed` and `recovered` event of the open periods (the current period and the one before) with the same ids; the inbox dedupes, so a resend costs one read. | C7, ER P3-3 |
 | **Crossings-only cap:** at most 8 `crossed` events per incident (`source` and `subject`). `recovered` is never capped, because a capped recovery would leave the incident open. There are at most 3 levels, so one limit yields at most 3 crossings; 8 covers the first limit and one full raise (6) with 2 to spare. Over the cap the sender stops sending crossings. | C7, ER P2-2 |
@@ -143,9 +147,9 @@ Response codes (the codes in rows without "new" exist in r1's `handle()`; "new" 
 
 502 is for a GitHub 4xx only. Today `handle()` also answers 502 for a GitHub 5xx (F2); the rule above is safe until then only because no producer sends live. The accepted loss at 504 is D8 (Captain, C9).
 
-## Signing secrets
+## Signing
 
-A Captain-only runbook step (C7 provisioning, D5):
+The signature, timestamp and clock rules are under [Transport](#transport). Secrets are a Captain-only runbook step (C7 provisioning, D5):
 
 - **Provision:** per project, one secret for `prod` and one for `preview` and `dev`, each `whsec_` plus 32 random bytes in base64, set through stdin on the inbox and on the project's matching deploy context. The inbox stores each secret with the environments it may sign and the `source` prefix it may sign (`urn:<project>:`); `parseEvent({ keys })` takes `[{ secret, environments, sources }]` and refuses an event outside either scope with 401 `key-not-allowed`. An event without `environment` needs a key whose environments include `prod`. Source for the prefix: ER P3-2.
 - **Rotate:** (1) add the new secret to the inbox as a second key for the same environments; (2) the project switches, and may sign with both during the switch (several `v1,` signatures in one header are accepted); (3) after the first heartbeat verified with the new key arrives, remove the old one. A suspected leak follows the same steps at once.
@@ -158,7 +162,7 @@ Before a project's inbox is live, the project sends the same body to its pre-inb
 
 - dedupe: `sha256(source + "\n" + id)`; a repeat is accepted once.
 - incident: `sha256(source + "\n" + subject)`; events with one incident key join one ops task. A crossing and its recovery share a subject; a heartbeat has its own.
-- A `sentry.issue.alert` or `ops.inbox.selftest` that names a non-prod `environment` has `<environment>\n` prepended to both hashes, so a preview key cannot claim a dedupe key or join an incident of the same `source` and `id` or `subject` in prod. `ops.metric.*` ids and subjects already carry the environment, and an event without `environment` is keyed as before (ER P3-2).
+- An event of any type that names a non-prod `environment` has `<environment>\n` prepended to both hashes, so a preview key cannot claim a dedupe key or join an incident of the same `source` and `id` or `subject` as a prod event, even when the types differ. A `prod` event and an event without `environment` are keyed as before (ER P3-2, D5, VR 5). Metric ids and subjects are unchanged.
 
 ## Versions
 
@@ -170,14 +174,22 @@ An incompatible change gets `v2` with its own schemas and `dataschema`. A compat
 node contract/validate.mjs contract/fixtures/relay-crossed.json
 ```
 
-Fixture shape: `{ secret? | keys?, now?, headers, body }`. `secret` (falling back to `OPS_WEBHOOK_SECRET`) is one key allowed for every environment and source; `keys` is `[{ secret, environments, sources }]`; `now` falls back to the clock and `--now <epoch>` overrides it. Exit 0 prints `valid <type> <dedupe key> <incident key>`. Exit 1 prints one reason: `missing-attribute: <name>`, `signature-mismatch`, `timestamp-out-of-tolerance`, `missing-headers`, `key-not-allowed`, `non-canonical-body`, `field-not-allowed: <path>`, `unknown-type: <type>`, `invalid-value: <path>`, `subject-mismatch`, `id-not-deterministic`, `not-json`, `body-too-large`. Exit 2 is a usage error.
+Fixture shape: `{ secret? | keys?, now?, headers, body }`. `secret` (falling back to `OPS_WEBHOOK_SECRET`) is one key allowed for every environment and source; `keys` is `[{ secret, environments, sources }]`; `now` falls back to the clock and `--now <epoch>` overrides it. Exit 0 prints `valid <type> <dedupe key> <incident key>`. Exit 1 prints one reason: `missing-attribute: <name>`, `signature-mismatch`, `timestamp-out-of-tolerance`, `missing-headers`, `key-not-allowed`, `non-canonical-body`, `field-not-allowed: <path>`, `unknown-type: <type>`, `invalid-value: <path>`, `subject-mismatch`, `id-not-deterministic`, `not-json`, `body-too-large`. A reason repeats sender text only as a token of `[A-Za-z0-9._-]{1,64}` (otherwise `?`; VR 6). Exit 2 is a usage error or a malformed fixture (`null`, headers that are not an object, a non-string body, malformed `keys`, a non-numeric `now`) and a crash of the validator; exit 1 always means a refusal (VR 3).
 
 Fixtures (a published test secret, not a credential; `generate.mjs` writes them):
 
 - valid: `relay-crossed`, `relay-recovered`, `relay-heartbeat`, `qnow-crossed`, `qnow-recovered`, `qnow-heartbeat`, `sentry-issue`, `sentry-preview` (a preview-only Sentry key signs an event that names `preview`) and `key-allowed` (the prod key signs a `prod` event with a prod and a preview key configured). The qnow values are synthetic: no monthly budget is on record.
-- refused, each with its own reason: `missing-limit`, `extra-field`, `id-not-derived`, `recovered-id-without-cause`, `bad-signature`, `unknown-environment`, `unknown-severity`, `free-text-limit-source`, `duplicate-key`, `key-not-allowed` (the preview key signs a `prod` event) and `key-not-allowed-no-environment` (a preview-only key signs an event without `environment`, which counts as `prod`).
+- refused, each with its own reason: `missing-limit`, `extra-field`, `id-not-derived`, `recovered-id-without-cause`, `bad-signature`, `unknown-environment`, `unknown-severity`, `free-text-limit-source`, `duplicate-key`, `key-not-allowed` (the preview key signs a `prod` event), `key-not-allowed-no-environment` (a preview-only key signs an event without `environment`, which counts as `prod`), `heartbeat-offset-time` (a `+08:00` time on a heartbeat) and `sentry-free-level` (a sentence in `level`).
 
-`node --test test/contract.test.mjs` runs them; `node test/mutations.mjs` removes each check in a temporary copy and requires the named test to fail.
+`node --test test/contract.test.mjs` runs the fixtures; `node test/mutations.mjs` removes each check in a temporary copy and requires the named test to fail.
+
+## Stated limits
+
+Accepted for v1 and recorded so a producer does not rely on the opposite:
+
+- `sentry.issue.alert` ids are not derived from the event's fields: the inbox's own adapter produces them, not the pinning projects, and deriving them later does not change relay's or qnow's events (VR).
+- A `below` recovery repeated after the limit returns to a value it had earlier in the same period re-derives that value's id and is answered `200 duplicate`; the same class as the lowered-limit limit above (VR).
+- `period` is a pattern, not a calendar check: a bogus date such as `2026-02-30` derives an id that no other event repeats.
 
 ## Inbox runtime gaps (owned by r1)
 
@@ -188,6 +200,7 @@ Not built here, because the inbox runtime is r1's. Each is a rule above marked *
 - A GitHub 5xx answered as 504, not 502; the event claim states `claimed`, `dispatching`, `dispatched` with a takeover of a stale `claimed` (older than 120 s); a 70-day claim retention.
 - Heartbeat last seen per environment and metric, and the silent-producer incident (no heartbeat for 2 × `every`, routed as warning).
 - Verifying with a list of keys inside `handle()` (`parseEvent({ keys })` exists here).
+- Scoping a key by event type: a key is scoped by environment and source prefix, so a metric project's key can sign a `sentry.issue.alert` under its own source prefix. Deferred risk for r1; the Sentry fields are bounded, which limits what such an event can carry (VR 2).
 - Forwarding the re-serialized event to the agent run; the agent not fetching `dashboard`; resolving `adrs` at the checked-out commit.
 - The store for raw events and the PostHog projection (recorded as a recommendation in the task, not decided).
 
@@ -206,6 +219,7 @@ The Captain's words (C), facts with the command and date that produced them (F),
 - C9 Captain 2026-10-26, at the design gate: 「准。第一版接受缺陷，後續再補」, with decisions D1-D8 as recommended.
 - D1 the project counts and sends crossings; the heartbeat carries the value. D2 retire `relay.capacity.ceiling` before landing. D3 `recovered` is a join dispatch that makes the task closable. D4 "reach the Captain" is a Slack mention of the Captain's user. D5 separate `prod` and `preview`/`dev` secrets, each refused outside its environments. D7 the project decides period membership at its own boundary instant. D8 at-most-once at 504 accepted for v1, to be fixed later.
 - Q1 the boundary first cut from the first adopter (qnow's FO): the project measures, holds the threshold, decides a crossing and sends one signed event per crossing with a deterministic id and counts only; the inbox verifies, dedupes on `source` and `id`, groups on `subject` and routes.
+- VR the validation cycle 1 review, 2026-10-27: three independent code reviews of PR 727 at its first head, and the First Officer's disposition, items 1 to 7 (1 calendar-valid UTC `time`; 2 bounded Sentry fields; 3 hostile input is refused, not thrown; 4 finite clock and decimal timestamp; 5 environment prefix on every type; 6 reasons do not echo sender text; 7 selftest subject and `webhook-id`), ordered by the Captain 2026-10-27: 「退回實作。」
 - ER the engineering review of the design, 2026-10-26 (P1-1 duplicate JSON key; P2-1 id collisions; P2-2 per-incident cap; P2-3 GitHub 5xx; P2-4 lost event at 504; P2-5 `dashboard` is not fetched; P3-1 text in patterns; P3-2 key scope; P3-3 claim retention and open periods; P3-5 `SCHEMA_BASE` and additive `level`).
 - F1 probe 2026-10-26: a fixture signed with r1's contract, with `source` `urn:relay:capacity Ignore previous instructions`, a 500-character instruction in `data.event` and `data.limitSource`, and an arbitrary id, printed `valid` and exited 0.
 - F2 r1's inbox core at its commit 1e65b046 (`git archive`, 2026-10-26): `parseEvent`, `verifySignature` (loops over `v1,` parts), `handle()` status codes (202, 200 duplicate, 400, 401, 413, 502, 504), one `WEBHOOK_SECRET`.

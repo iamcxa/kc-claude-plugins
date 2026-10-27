@@ -11,10 +11,22 @@ export const SEVERITIES = ["info", "warning", "critical"];
 const ID_RE = /^[A-Za-z0-9._-]{1,64}$/;
 const SUBJECT_RE = /^[A-Za-z0-9._/-]{1,100}$/;
 const SOURCE_RE = /^urn:[a-z0-9-]{1,32}(:[a-z0-9-]{1,32}){1,3}$/;
-const TIME_RE = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})$/;
+const TIME_RE = /^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2})(\.\d+)?(Z|[+-](?:[01]\d|2[0-3]):[0-5]\d)$/;
+const NAME_RE = /^[A-Za-z0-9._-]{1,64}$/;
 const DAY_RE = /^\d{4}-\d{2}-\d{2}$/;
 const METRIC_RE = /^[a-z][a-z0-9.-]{0,28}$/;
 const MAX_STRING = 500;
+
+// A refusal reason carries sender text only when it is a bounded token.
+const echo = (v) => (typeof v === "string" && NAME_RE.test(v) ? v : "?");
+
+// The date and time components must exist on the calendar; Date alone rolls Feb 31 over to March.
+function validTime(t) {
+  const m = typeof t === "string" ? TIME_RE.exec(t) : null;
+  if (!m) return false;
+  const d = new Date(`${m[1]}Z`);
+  return !Number.isNaN(d.getTime()) && d.toISOString().slice(0, 19) === m[1];
+}
 
 const REQUIRED_ATTRS = ["specversion", "id", "source", "type", "subject", "time", "dataschema"];
 const ALLOWED_ATTRS = new Set([...REQUIRED_ATTRS, "datacontenttype", "data", "environment", "severity"]);
@@ -81,16 +93,16 @@ export const TYPES = {
     title: "Sentry issue alert",
     subjectPattern: "^issue/[A-Za-z0-9._-]{1,64}$",
     fields: {
-      issue_id: str,
-      event_id: str,
+      issue_id: { ...str, pattern: "^[A-Za-z0-9._-]{1,64}$" },
+      event_id: { ...str, pattern: "^[A-Za-z0-9._-]{1,64}$" },
       title: str,
-      level: str,
+      level: enumOf("fatal", "error", "warning", "info", "debug"),
       culprit: str,
-      project: str,
-      web_url: { ...str, pattern: "^https://" },
-      triggered_rule: str,
+      project: { ...str, pattern: "^[A-Za-z0-9._-]{1,64}$" },
+      web_url: { ...str, pattern: "^https://[A-Za-z0-9._~:/?#@!$&*+,;=%-]{1,480}$" },
+      triggered_rule: { ...str, pattern: "^[A-Za-z0-9._-]{1,64}$" },
       datetime: { ...str, format: "date-time" },
-      release: str,
+      release: { ...str, pattern: "^[A-Za-z0-9._@+-]{1,100}$" },
     },
     required: ["issue_id", "title", "level", "project", "web_url"],
     subjectOf: (ev) => `issue/${ev.data.issue_id}`,
@@ -100,20 +112,22 @@ export const TYPES = {
     subjectPattern: "^selftest/[A-Za-z0-9._-]{1,64}$",
     fields: { v: { ...int, minimum: 1 }, project: { ...str, pattern: "^[A-Za-z0-9._-]+/[A-Za-z0-9._-]+$" } },
     required: ["v", "project"],
+    subjectOf: (ev) => `selftest/${ev.id}`,
   },
 };
 
 export const sha256hex = (s) => createHash("sha256").update(s).digest("hex");
-// A non-metric event that names a non-prod environment is keyed apart from the prod event with the same
-// source and id or subject (metric ids and subjects already carry the environment).
-const keyScope = (ev) => (!TYPES[ev.type].metric && ev.environment && ev.environment !== "prod" ? `${ev.environment}\n` : "");
+// An event that names a non-prod environment is keyed apart from a prod event (or one without
+// environment) with the same source and id or subject, whatever the types.
+const keyScope = (ev) => (ev.environment && ev.environment !== "prod" ? `${ev.environment}\n` : "");
 export const dedupeKey = (ev) => sha256hex(`${keyScope(ev)}${ev.source}\n${ev.id}`);
 export const incidentKey = (ev) => sha256hex(`${keyScope(ev)}${ev.source}\n${ev.subject}`);
 
 export function verifySignature({ secret, id, timestamp, signatureHeader, body, nowS }) {
-  if (!id || !timestamp || !signatureHeader) return "missing-headers";
-  const ts = Number(timestamp);
-  if (!Number.isInteger(ts) || Math.abs(nowS - ts) > TOLERANCE_S) return "timestamp-out-of-tolerance";
+  if (![id, timestamp, signatureHeader].every((v) => typeof v === "string" && v)) return "missing-headers";
+  if (typeof secret !== "string") return "signature-mismatch";
+  if (!/^\d+$/.test(timestamp) || !Number.isFinite(nowS)) return "timestamp-out-of-tolerance";
+  if (!(Math.abs(nowS - Number(timestamp)) <= TOLERANCE_S)) return "timestamp-out-of-tolerance";
   const key = Buffer.from(secret.replace(/^whsec_/, ""), "base64");
   const expected = createHmac("sha256", key).update(`${id}.${timestamp}.${body}`).digest();
   for (const part of signatureHeader.split(" ")) {
@@ -140,7 +154,7 @@ function checkValue(spec, value, path) {
   if (spec.kind === "string") {
     if (typeof value !== "string" || value.length > MAX_STRING) return invalid;
     if (spec.pattern && !new RegExp(spec.pattern).test(value)) return invalid;
-    if (spec.format === "date-time" && !(TIME_RE.test(value) && !Number.isNaN(Date.parse(value)))) return invalid;
+    if (spec.format === "date-time" && !validTime(value)) return invalid;
     return null;
   }
   if (!Number.isSafeInteger(value) || value < (spec.minimum ?? -Infinity) || value > (spec.maximum ?? Infinity)) return invalid;
@@ -153,10 +167,13 @@ function checkValue(spec, value, path) {
 // 413 and 401 (signature) are decided before the body is trusted; 400 means the signed body is not
 // contract v1; the key's scope is checked last, because environment and source come from the body.
 export function parseEvent({ keys, headers, body, nowS }) {
+  if (typeof body !== "string") return { ok: false, status: 400, reason: "not-json" };
   if (Buffer.byteLength(body) > MAX_BODY_BYTES) return { ok: false, status: 413, reason: "body-too-large" };
+  if (!headers || typeof headers.get !== "function") return { ok: false, status: 401, reason: "missing-headers" };
   const signed = [];
   let reason = "signature-mismatch";
-  for (const key of keys) {
+  const usable = Array.isArray(keys) ? keys.filter((k) => k && typeof k.secret === "string" && Array.isArray(k.environments) && Array.isArray(k.sources)) : [];
+  for (const key of usable) {
     const bad = verifySignature({
       secret: key.secret,
       id: headers.get("webhook-id"),
@@ -182,23 +199,27 @@ export function parseEvent({ keys, headers, body, nowS }) {
 export function validateBody(body) {
   const refuse = (reason) => ({ ok: false, status: 400, reason });
 
+  if (typeof body !== "string") return refuse("not-json");
   let ev;
   try { ev = JSON.parse(body); } catch { return refuse("not-json"); }
   if (ev === null || typeof ev !== "object" || Array.isArray(ev)) return refuse("not-json-object");
-  if (body !== JSON.stringify(ev)) return refuse("non-canonical-body");
+  let canonical;
+  try { canonical = JSON.stringify(ev); } catch { return refuse("non-canonical-body"); }
+  if (body !== canonical) return refuse("non-canonical-body");
   for (const name of REQUIRED_ATTRS) if (!(name in ev)) return refuse(`missing-attribute: ${name}`);
-  for (const name of Object.keys(ev)) if (!ALLOWED_ATTRS.has(name)) return refuse(`field-not-allowed: ${name}`);
+  for (const name of Object.keys(ev)) if (!ALLOWED_ATTRS.has(name)) return refuse(`field-not-allowed: ${echo(name)}`);
 
   if (ev.specversion !== "1.0") return refuse("invalid-value: specversion");
   if (typeof ev.id !== "string" || !ID_RE.test(ev.id)) return refuse("invalid-value: id");
   if (typeof ev.source !== "string" || !SOURCE_RE.test(ev.source)) return refuse("invalid-value: source");
-  if (typeof ev.type !== "string" || !Object.hasOwn(TYPES, ev.type)) return refuse(`unknown-type: ${ev.type}`);
+  if (typeof ev.type !== "string" || !Object.hasOwn(TYPES, ev.type)) return refuse(`unknown-type: ${echo(ev.type)}`);
   if (typeof ev.subject !== "string" || !SUBJECT_RE.test(ev.subject)) return refuse("invalid-value: subject");
-  if (typeof ev.time !== "string" || !TIME_RE.test(ev.time) || Number.isNaN(Date.parse(ev.time))) return refuse("invalid-value: time");
+  if (!validTime(ev.time)) return refuse("invalid-value: time");
   if (ev.dataschema !== `${SCHEMA_BASE}/${ev.type}.json`) return refuse("invalid-value: dataschema");
   if ("datacontenttype" in ev && ev.datacontenttype !== "application/json") return refuse("invalid-value: datacontenttype");
 
   const spec = TYPES[ev.type];
+  if (spec.metric && !ev.time.endsWith("Z")) return refuse("invalid-value: time");
   for (const name of ["environment", "severity"]) {
     if (!(name in ev)) {
       if (spec.metric) return refuse(`missing-attribute: ${name}`);
@@ -211,7 +232,7 @@ export function validateBody(body) {
   const data = ev.data;
   if (data === null || typeof data !== "object" || Array.isArray(data)) return refuse("missing-attribute: data");
   for (const name of spec.required) if (!(name in data)) return refuse(`missing-attribute: data.${name}`);
-  for (const name of Object.keys(data)) if (!Object.hasOwn(spec.fields, name)) return refuse(`field-not-allowed: data.${name}`);
+  for (const name of Object.keys(data)) if (!Object.hasOwn(spec.fields, name)) return refuse(`field-not-allowed: data.${echo(name)}`);
   for (const [name, value] of Object.entries(data)) {
     const err = checkValue(spec.fields[name], value, `data.${name}`);
     if (err) return refuse(err);
@@ -254,7 +275,7 @@ export function jsonSchemaFor(type) {
       source: { type: "string", pattern: SOURCE_RE.source },
       type: { const: type },
       subject: { type: "string", pattern: spec.subjectPattern },
-      time: { type: "string", format: "date-time" },
+      time: { type: "string", format: "date-time", ...(spec.metric && { pattern: "Z$" }) },
       environment: { enum: ENVIRONMENTS },
       severity: { enum: spec.severities ?? SEVERITIES },
       dataschema: { const: `${SCHEMA_BASE}/${type}.json` },
