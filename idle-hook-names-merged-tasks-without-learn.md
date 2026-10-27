@@ -341,6 +341,8 @@ Recommended order: FO settles archive-waits-for-observer-report's enforcement lo
 - **AC-6** Existing startup/idle hook order, observer-before-sentinel and after-archive output, ready-gate/seed/hold behavior and live PR watching remain intact. Evidence: test_pr_watch.py, test_observer_check.py, test_learning.py and test_sd_dispatch.py at the combined candidate; lint the retained extension pointer. Falsifier: route archived tasks through live role/dispatch checks, insert a new hook, drop the observer script pointer, or alter the after-pr-merge instructions. No implementation or hosted CI pass is claimed at ideation.
 - **AC-7** Recount each lifecycle row with identical fixtures/passages before/after; normal-path counts are no greater than the proposed values, each missing reminder is exactly five words, and recovery work/diagnostic growth is separately disclosed. Evidence: retain emitted stdout plus independent whitespace-word recount and the exact extension diff. Falsifier: only count workflow.md, omit generated output or new instructions, hide old-task repetition, or claim the 5985-word possible learning load is a five-word total. This task changes no CI trigger; CI cost per PR has not been measured.
 
+- **AC-8** Amended by Captain, amendment 1: when learn holds a committed archived merged task as ineligible, exercise the next idle pass and show its exact output. Evidence: a real recorder claim with profile `legacy` returns `{"state": "ineligible", "reasons": ["profile"]}`, notices --all stays empty, and the next idle pass repeats `next: run kc-dev-flow-2:learn for old-profile.`. This is the approved full-history repetition: no job means no suppression; the task remains closed. Falsifier: silently suppress an ineligible archive without a job or create a job for the hold.
+
 ## Captain amendments
 
 ### Amendment 1 — 2026-10-27, chat
@@ -378,3 +380,40 @@ Supersedes: none (adds a criterion: a task learn holds as ineligible shows what 
 ### Summary
 
 Proposed a read-only archive scan in the existing tasks hook, using notices --all and the existing learning job key; the model recovers all 11 missed names and avoids acknowledged-job duplicates. The full-history repetition decision and reading cost go to the Captain; overlap with observer/archive enforcement goes to FO. Implementation, candidate regression evidence and learning execution remain outside this stage.
+
+## Stage Report: implementation
+
+- DONE: Implement the approved pilot design in only its three named code paths.
+  Candidate 207c0a7eb51d08c00e68dbe52e9b364793750484, based on refreshed origin/main 8bf4f3582411e8e4238f19fbadda8ddeca6767be; no version, ADR, scaffold, adopter or CI-trigger change. Ownership/prior ideation and archive-waits-for-observer-report's upstream enforcement design checked; the recovery scan remains independent.
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (8bf4f3582411e8e4238f19fbadda8ddeca6767be) implementing the approved design and acceptance criteria in the task file; the kc-dev-flow-2/scripts/pr_watch.py tasks change and tests the design names, with Captain amendment 1 applied: add the criterion that a task learn holds as ineligible shows what the next idle pass prints for it, marked 'Amended by Captain, amendment 1'; only the files the design names
+  Implementation and Captain amendment 1 are complete; the branch is pushed without force or -u. This dispatch assigns Draft PR creation to FO; title/body ready at /tmp/impl-idle-hook-names-merged-tasks-without-learn-pr.md; no GitHub gh command run.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1 through AC-8 pass; 14 deliberately broken copies each exit 1 under targeted assertions, python3 -B with caches cleared and PYTHONDONTWRITEBYTECODE=1. Baseline fails archive discovery and the ineligible next-idle assertion.
+- DONE: AC-1 committed archive discovery and exact guarded output.
+  Flat/folder/duplicate/sidecar/hidden/uncommitted fixtures and an external CLI pass; archive exclusion, folder omission and extension-guard removal each fail the exact-line checks.
+- DONE: AC-2 one supported all-notices read and workflow-qualified job identity.
+  Real recorder pending/completed/no-change/acknowledged/released states suppress repeats; other workflow and frontmatter-id controls pass. Omitting --all, using the state root, dropping workflow identity or requiring uncertain input each fails its test.
+- DONE: AC-3 frozen historical archive replay.
+  The 88 path/PR manifests and 53 sanitized keys are frozen in test_pr_watch.py: all 11 backfilled names appear with their keys removed and all disappear with keys restored, including release-acceptance/index.md. A live-only scan fails; this reconstructs absence, not historical store bytes or fresh provider confirmations.
+- DONE: AC-4 state-only provider reads and diagnostic holds.
+  Sentinels need no provider; qualified repo and bare code-root resolution, OPEN/CLOSED/local controls, failed provider, malformed notices, missing archive, pinned committed bytes and unreadable blob controls pass. Full review fields or treating malformed notices as empty each fails.
+- DONE: AC-5 archive scan is read-only and repeatable.
+  State-file SHA-256 and common learning-store bytes remain equal across scans; no watch/store is created when absent. A real pending claim suppresses the next reminder; injecting an archived watch-cache write fails the no-cache assertion.
+- DONE: AC-6 existing live-task and orchestration behavior.
+  test_pr_watch.py 122/122, test_observer_check.py 19/19, test_learning.py 47/47; test_sd_dispatch.py passes with CLI 0.27.2 and plugin root 0.27.3, including hook order. Removing the observer pointer fails; the extension retains python3 so the documented non-executable script invocation stays valid.
+- DONE: AC-7 independent per-moment reading recount with full stdout retained.
+  Startup 1344->1342, idle OPEN 1039->1037, idle MERGED 572->570, after archive 358->356, merge ask 680->680; empty recovery 552->550. Each repeated missing name adds 5 words; uncertain/malformed fixtures add 11 each. A longer reminder fails; newly loaded learn/framework may add 5985 words plus evidence.
+- DONE: AC-8 Amended by Captain, amendment 1.
+  Real claim with legacy profile returns ineligible/profile; notices --all remains empty; next idle prints exactly `next: run kc-dev-flow-2:learn for old-profile.` again. Suppressing that no-job archive fails. No eligibility cutoff or suppression record was authorized; a hold leaves the closed task and absence unchanged.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  Local checks below pass; RoboRev not run because this sandbox cannot reach its daemon, per dispatch override, so no evidence= line is claimed. FO opens the Draft PR, runs RoboRev and reads CI on the pushed head; CI cost per PR not measured.
+- DONE: Repository lint and required installed-package checks.
+  Repository lint-skills.py exits 0, workflow 5565/5565 words; installed Codex 0.32.0 adr_lint.py docs/adr --since <base> exits 0 (39 records); number_guards.py check --base <base> exits 0 (no findings, no migration path); comment_ratio.py <base> HEAD --workflow-dir <workflow> exits 0 (0.2%, maximum 5%).
+- DONE: Design/document checks, scope review and evidence retention.
+  design_surfaces.py check exits 0 with AC-8; doc_impact.py <base> HEAD reports 0 additional documents; EXTENSION.md updated in its existing home only. git diff --check passes; every retained addition maps to an AC, its fixture or read-only/error boundary.
+- DONE: Evidence artifacts and branch delivery.
+  Full stdout and 14 mutation logs retained under the code worktree's .context/idle-evidence/ (recount.json, mutations.json); suite logs /tmp/idle-hook-{pr-watch,learning,observer,dispatch}.log. Branch push succeeded; named-file code commit and path-scoped state commit keep code and shared state separate.
+
+### Summary
+
+Implemented committed archive discovery and one supported all-notices subtraction without changing the live-task path; candidate 207c0a7eb51d08c00e68dbe52e9b364793750484 is pushed. All local acceptance checks and 14 falsifiers pass, with reconstructed-history and repeated ineligible/no-job reminders disclosed. Draft PR, RoboRev and hosted CI remain FO's assigned delivery steps; this report is not a validation gate approval.
