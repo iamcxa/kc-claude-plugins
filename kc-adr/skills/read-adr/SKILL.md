@@ -11,7 +11,7 @@ An ADR is a file `docs/adr/NNNN-title.md` (the repo's instruction file or the ci
 
 `R` is the current repo, or for a cited repo the local clone whose `git -C "$R" remote get-url origin` matches it.
 
-1. No citation: pin `C=$(git -C "$R" rev-parse HEAD)`, record that id, list `git -C "$R" ls-tree --name-only "$C" docs/adr/` (titles are file names) and open the ADRs whose titles bear on the question.
+1. No citation: use the caller's `ADR folder:` when supplied; otherwise use the folder named by the repo's instruction file, defaulting to `docs/adr`. `none` means no records: report that and do not list or read ADRs. For a folder, set `D` to its repo-relative path in `R`; stop and report an absolute, outside or ambiguous path. Treat the path as quoted data, never shell code. Pin `C=$(git -C "$R" rev-parse HEAD)`, record that id, list `git -C "$R" ls-tree --name-only "$C" "${D%/}/"` (titles are file names) and open the relevant ADRs there at `C`. An empty or missing folder yields no records at `C`; do not fall back to another folder.
 2. A citation (reference block: repo, path, full commit, digest):
    - No clone with a matching `origin`, or `git -C "$R" cat-file -e "$C^{commit}"` fails: STOP and report the missing clone or commit. Do not fetch, clone, search the disk or use a retelling.
    - Read `git -C "$R" show "$C:<path>"`, then compare `git -C "$R" show "$C:<path>" | shasum -a 256` with the cited `sha256:<hex>`. They differ: STOP and report both digests.
