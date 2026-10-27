@@ -66,6 +66,7 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 Reviewer: kc-dev-flow-2:chief-engineer opus 2026-10-27 — batch 8 review at the ideation gate (the Captain's batch ruling 2026-10-27): per-task disposition, the Captain's decisions, order and batch risk.
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-28 — do these amendments withdraw what the Captain approved, and what changes in the build? Answer: no; Amendment 1 drops only the two things the batch-8 question named and the shipped step 1 promises neither; F1 means amended AC-8's falsifier fails on Claude, so the merge ask must put F1 to the Captain as its own ruling; stale Design text is FO's to repair.
 
 ## Design
 
