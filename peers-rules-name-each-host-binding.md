@@ -380,6 +380,13 @@ ADR: 0038
 
 - Cycle 1 (FO, 2026-10-27): on #730 bff1d814, RoboRev (roborev:1229) left 1 High, counted as P1 under step 5, and validation-1 left F1 Polish (the paseo dependency check has no adopter-list consumer); both in kc-dev-flow-2/scripts/lint-skills.py, to fix; investigation first, then FO fix authorization, then revalidation.
 
+### Captain waivers
+
+- RoboRev 1229 High on bff1d814 (`kc-dev-flow-2/scripts/lint-skills.py` `extension_tier_errors` refuses any extension the template lists whose README tier is not `required`), counted as P1 under the README's FO steps: review findings step 5, waived after the merge of #730 (2b3e505c).
+  Captain: 「豁免」 (chat, 2026-10-27)
+  Asked: 「需要你決定：要不要事後批准豁免這個 High？我建議豁免。」, after the observer found the merge ask called the High cleared when the flagged check was unchanged and no waiver was recorded; then, to his 「豁免代價要修復吧？」, FO's answer that the check deliberately keeps the template to the required defaults of ADR 0035 and that RoboRev's fix would remove that.
+  Reason: the check predates #730, reads only the package template (no adopter reaches it), and enforces ADR 0035's defaults.
+
 ## Stage Report: ideation
 
 - DONE: A design for peers and a new dev2 paseo extension: the FO collaboration mindset text, one binding section per host (Claude Code kept with its probe and opening line, Paseo added, other hosts not run) built from each host's own docs (Paseo: its paseo skill and `paseo agent --help`), what the paseo extension says versus what it points to in Paseo's own skill, and the script FO already runs that can refuse a Captain ruling recorded from a peer's relayed words; measured against the round-1 interview record fo-interviews-extension/peers-round-1.md
