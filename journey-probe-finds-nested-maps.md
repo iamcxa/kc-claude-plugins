@@ -34,6 +34,17 @@ gates:
                 id: briefing:journey-probe-finds-nested-maps:ideation:attempt-1:revision-1
                 digest: sha256:96acd95aae57b402d16244041075f269a7d395b73f58c6fe66c342cef2cc1eaf
                 room-ref: ./journey-probe-finds-nested-maps/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-probe-finds-nested-maps:ideation:1
+                briefing: briefing:journey-probe-finds-nested-maps:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T15:56:36.035887Z"
+                decision: approve
+                reason: Captain 「其他全照建議」 (chat, 2026-10-27) answering 「需要你決定：第 8 批的設計，照首席工程師的建議一起處理，可以嗎？6 張進入實作，1 張直接關掉，再送一份 issue 給 Spacedock。我和首席工程師都建議照這樣做。」, after he declined a second, unanchored batch review (「不須要」); accepts FO's recommendation
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
