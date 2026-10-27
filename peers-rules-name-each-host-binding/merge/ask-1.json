@@ -1,0 +1,22 @@
+{
+  "class": "never",
+  "head": "f7516476989b59fb45e4e5cb520d41ed9bc563ce",
+  "model": "not run",
+  "necessity": "seven files (docs/adr/0038-peer-facts-and-human-ruling-sources.md, kc-dev-flow-2/README.md, kc-dev-flow-2/extensions/paseo/EXTENSION.md, kc-dev-flow-2/extensions/peers/EXTENSION.md, kc-dev-flow-2/refe",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'External rounds: Codex 2 (round 1'",
+    "point: amendment: 'Amendment 1 dated 2026-10-27'",
+    "point: path: 'docs/adr/0038-peer-facts-and-human-ruling-sources.md'",
+    "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/extensions/peers/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/references/sd/adoption.md'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_lint_skills.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#730",
+  "sufficiency": "peers now carries the FO collaboration rules and chooses its binding by how peers actually reach the session (Claude Code keeps its probe and opening line; a session inside Paseo uses Paseo, and can a",
+  "time": "2026-10-27T04:53:32Z",
+  "verdict": "ask"
+}

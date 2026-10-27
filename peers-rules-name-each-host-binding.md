@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:peers-rules-name-each-host-binding:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:peers-rules-name-each-host-binding-validation-1
+              briefing:
+                id: briefing:peers-rules-name-each-host-binding:validation:attempt-1:revision-1
+                digest: sha256:d66f1a3489fa772ac961336f61c4027c3265033a94195bd2344140465206ef89
+                room-ref: ./peers-rules-name-each-host-binding/review/validation/briefing-1
 started: 2026-10-26T17:08:27Z
 worktree: .worktrees/spacedock-ensign-peers-rules-name-each-host-binding
 pr: iamcxa/kc-claude-plugins#730
