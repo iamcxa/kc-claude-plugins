@@ -1,6 +1,6 @@
 ---
 title: Any project sends a key metric to its ops inbox the same way, and kc-ops-inbox's contract v1 lands on main so projects can depend on it
-status: validation
+status: implementation
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
@@ -556,3 +556,22 @@ Each step runs in a fresh bash/zsh with git, node 20+, gh; script text is `/tmp/
 
 ### Summary
 PASSED on the exact candidate 36973c77: the contract, 20 fixtures, 19 tests and 18 mutations all reproduce in a fresh checkout, the PR is contract-only, and no probe got free text or a wrong-environment event through; the security fix (`keyScope`) holds. Seven non-Material findings are open for FO to disposition (the cheapest worth taking: F1 one Sources line, F3 refuse an empty key secret). AC-3's merge remains the Captain's.
+
+### FO disposition: validation cycle 1 (2026-10-27)
+
+
+Candidate: PR #727 head 36973c775d7d3fa00b36a44e505bdf9bdce5eb3e. Evidence: the three code reviews saved verbatim in the task folder (`code-review-codex-astra-2026-10-27.md`, `code-review-gemini-argon-2026-10-27.md`, `code-review-engineering-reviewer-2026-10-27.md`, brief `code-review-brief-2026-10-27.md`). FO probes at that head, 2026-10-27: `validateBody('{"x":' + '['.repeat(7000) + '0' + ']'.repeat(7000) + '}')` throws `RangeError: Maximum call stack size exceeded` (also 8000-deep object); `verifySignature` computes `Math.abs(nowS - ts) > TOLERANCE_S`, which is false for `nowS` undefined (NaN), so the window is skipped; `web_url` pattern is `^https://` with no end anchor.
+
+FO disposition. All items below are fix-authorized for this round (Captain revise accepting FO's list). Each is owned by this task. Change only what the item names, keep D1-D8 and the approved id shapes for metric crossed/recovered, and add a refusal fixture or test plus a mutation for each new check.
+
+1. Material, `contract[kc-ops-inbox/contract/README.md#deterministic-id]` (pin-locked): heartbeat `time` on `ops.metric.*` must be UTC `Z` and calendar-valid (`new Date(t).toISOString().slice(0,19) === t.slice(0,19)`); also apply calendar validity to every `time` / date-time field. Do not derive the bucket from `toISOString()`. (All three reviewers.)
+2. Material, `contract[kc-ops-inbox/contract/README.md#no-free-text]`: `sentry.issue.alert` bounds every field except `title` and `culprit` (`issue_id`, `event_id`, `project`, `release`, `triggered_rule` patterns; `level` enum of Sentry's values; `web_url` `^https://` + no-space, anchored, bounded). README lists `title` and `culprit` as the only free-text fields of that type. (All three.)
+3. Material, `value-ac[AC-2]`: hostile input is refused, never thrown, by `validateBody` and `parseEvent` (deep nesting during canonical re-serialization, non-string `type` in reasons, non-string body, null or non-object headers); `validate.mjs` exits 2 on a malformed fixture. (Codex, Gemini; FO reproduced the depth crash.)
+4. Material, `contract[kc-ops-inbox/contract/README.md#signing]`: `verifySignature` / `parseEvent` fail closed when `nowS` is not a finite number; `webhook-timestamp` must match `^\d+$`. (Gemini; FO confirmed from code.)
+5. Material, `captain-ruling[2026-10-26]` (D5 environment separation): the environment prefix applies to the dedupe and incident keys of every type, so a preview metric id cannot equal a prod event's key; keep metric ids and subjects as approved. (Codex.)
+6. Polish, fixed this round because it is cheap: refusal reasons never echo sender text (cut to `[A-Za-z0-9._-]{1,64}` or drop). (engineering-reviewer.)
+7. Polish, fixed this round: `ops.inbox.selftest` subject must be `selftest/<id>`; `webhook-id` must equal `msg_<id>` or the README marks the rule runtime-only. (All three.)
+
+Declined this round, recorded in README as stated limits: sentry event id is not derived from its fields (sentry events are produced by the inbox's own adapter, not by the pinning projects; changing it later does not break relay or qnow); a recovery repeated after a limit returns to an earlier value within one period (same class as the accepted lowered-limit limit). Key scoping by event type (Gemini) is Deferred risk for r1.
+
+Push the fixes to the same branch (PR #727 stays Draft), rerun the contract tests, mutations and every fixture, update `## Stage Report: implementation` with the new head, and keep the earlier report lines.
