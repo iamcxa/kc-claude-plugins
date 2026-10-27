@@ -222,3 +222,7 @@ Recommended order: FO settles D1 before dispatching implementation for this task
 ### Summary
 
 The current package already implements the reported first-record refusal; the relay failure began with reservation after dispatch, not a missing comparison in today's checker. Recommend reusing that mechanism and closing as already covered only if the Captain accepts D1; checking later dispatches remains a separate unresolved coverage choice, so no implementation or task-state advancement was performed. Only this state task body/report was changed; original frontmatter and Scope were preserved.
+
+## Closed
+
+Closed 2026-10-27 at the ideation gate, the Captain 「其他全照建議」 (chat), answering 「需要你決定：第 8 批的設計，照首席工程師的建議一起處理，可以嗎？6 張進入實作，1 張直接關掉，再送一份 issue 給 Spacedock。我和首席工程師都建議照這樣做。」, with this task's row 「派工說明漏寫 ADR 編號要擋 ｜ 關掉，不改程式 ｜ 現有檢查已經會擋；relay 那次真正的原因是編號在派工之後才預留，這種檢查看不出來」. Evidence (ideation and chief-engineer, 2026-10-27): `dispatch_records.py` `check_task_facts()` refuses the relay case at 16809dc9 (exit 1) where it passed at 70c8f952 (exit 0).
