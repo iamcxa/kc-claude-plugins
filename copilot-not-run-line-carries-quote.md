@@ -15,6 +15,17 @@ gates:
                 id: briefing:copilot-not-run-line-carries-quote:backlog:attempt-1:revision-1
                 digest: sha256:e5a0f48abcb05f28f0bd5e830638c59dbd362eb94fe075425b2a0d1af622275e
                 room-ref: ./copilot-not-run-line-carries-quote/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:copilot-not-run-line-carries-quote:backlog:1
+                briefing: briefing:copilot-not-run-line-carries-quote:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T15:13:03.735763Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-27) answering 「需要你決定：第 8 批 7 張任務的待辦關卡，要不要一起批准進入設計階段？同時把已經做完的 `peers-paseo-host-binding` 關掉。我建議全部批准，也關掉那張。」; accepts FO's recommendation
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
