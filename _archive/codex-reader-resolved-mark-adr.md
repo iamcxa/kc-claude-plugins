@@ -3,7 +3,7 @@ title: The Codex reader's same-head rule is recorded as an ADR quoting the Capta
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #732 at 24663871; accepts FO''s recommendation'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-27T03:12:37Z
 worktree: .worktrees/spacedock-ensign-codex-reader-resolved-mark-adr
 pr: pr-merge:732
+verdict: PASSED
+completed: 2026-10-27T04:50:14Z
+archived: 2026-10-27T04:50:14Z
 ---
 
 ## Scope
