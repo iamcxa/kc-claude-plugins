@@ -270,3 +270,35 @@ Only standard Python/git plus the package named by the dispatch are needed for t
 ### Summary
 
 The exact ADR draft preserves the Captain's accepted same-head ruling, its verbatim gate reason and original source, with batch overlap, lifecycle reading costs and reproducible acceptance clauses. Current lint proves the one-file scope cannot meet the required Protects contract: recommend one reverse-reference comment, with implementation held until the Captain authorizes that sole scope expansion. Design checks and scratch positive/negative probes pass within their stated limits; these are design evidence, not delivered implementation or new approval.
+
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (d8e9204bfae64ab4a76ec1a2ef0357a2b8fc7b44) implementing the approved design and acceptance criteria in the task file; docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md with the exact text in the task's Design, and the one pointer comment above the held-findings line in kc-dev-flow-2/extensions/codex/codex_review.py; no other file; only the files the design names
+  Candidate 24663871a8863e15097fcfd2c41b9584f1c5a48f implements exactly those two paths, committed on spacedock-ensign/codex-reader-resolved-mark-adr after fetch + fast-forward to the named base and pushed without force or -u; dispatch delegates Draft PR creation to FO because this worker cannot reach the GitHub API.
+- DONE: ADR 0039 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  Exact Design draft extracted unchanged; source state 3e25da97432fb22a1a6a7da973730e7c829f3619 digest d451d987c66ac89cb2d7ea550df780377a71edecf24f350f2a7a7d724276085e verified; full gate reason and Words UTF-8 byte comparisons pass. This task's ideation approval 「准」 authorizes the one comment.
+- DONE: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  AC-1–AC-4 candidate checks and throwaway mutations pass as detailed below; every Python probe used -B, scratch __pycache__ directories cleared before the runtime mutation; no negative control changed candidate/state bytes.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since <base> --require 0039 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  Repository lint and Codex-installed 0.31.0 ADR/number/comment/design checks exit 0; push and PR body done. RoboRev and FO's PR/CI observation are deferred by explicit dispatch; no evidence= fabricated. Comment check exemption, not a ratio below 5%, is recorded below. CI cost per PR not measured; no CI change.
+- DONE: AC-1 — exact approved record and falsifiers
+  verify.py checks draft equality, committed source digest, full gate reason and sole Words quote; changing 全准 to 准 separately in the gate quote and Words trips the byte assertions.
+- DONE: AC-2 — truthful ADR protection and falsifiers
+  adr_lint.py docs/adr --since d8e9204bfae64ab4a76ec1a2ef0357a2b8fc7b44 --require 0039 exits 0 (37 records, 0 legacy); scratch lints removing pointer/Words or requiring absent 9999 each exit 1. Protects names state() and its actual held-findings selection.
+- DONE: AC-3 — existing behavior and falsifiers
+  Existing test_codex_review.py: 35 tests pass; recorded finding/later-clean fixture returns exit 1 with evidence=review:5641501111 and the later-receipt note, identical to base. Latest-result-wins mutation causes 22 failures including that regression; executable-statement and unrelated-file controls fail AST/scope assertions. Exact diff adds one pointer only; FO disposition/reader verdict and Captain waiver prose checked separately.
+- DONE: AC-4 — design, lifecycle measurement and falsifiers
+  design_surfaces.py check exits 0; exact Mermaid extracted, rendered with @mermaid-js/mermaid-cli 12.0.0 and visually checked for both Captain stops, actors and repair loop. Missing bold AC exits 1; missing graph fails exactly-one extraction; implementation-before-approval fails order assertions; runtime instruction/output changes fail equality/cost checks.
+- DONE: Lifecycle costs measured on this candidate
+  Whitespace words before/after: startup EXTENSION.md 310/310, open-PR idle token 1/1, recorded review/merge fixture 21/21, merged idle/archive added reads 0/0; conditional ADR 0/470 and code-site pointer 0/3. Runtime instructions, reader AST and fixture output equal base; no reading reduction or future compliance claimed.
+- DONE: Required package checks and affected-document verdict
+  Repository lint: PASS, workflow 5421/5421 words; number_guards.py check: PASS no findings (no migration path); comment_ratio.py: 1 added code line, 1 comment, 100%, exit 0 because the 5% maximum is not enforced below 20 lines. doc_impact.py lists only ADR 0039: updated. git diff --check clean.
+- DONE: Reviewable delivery handoff
+  /tmp/impl-codex-reader-resolved-mark-adr-pr.md contains the Conventional Commit title, exact candidate/base, behavior, validation and limits; /tmp/codex-reader-adr-implementation/verify.py, *.log and diagram.{mmd,png} are disposable reproduction evidence, not shipped dependencies. Package scripts use the explicitly supplied Codex cache root /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0.
+- SKIPPED: RoboRev local review, Draft PR creation and hosted CI evidence
+  RoboRev not run: worker sandbox cannot reach the daemon; FO runs it. No gh command run; FO opens the prepared Draft PR and checks its head/CI. No provider behavior, merge, release, version bump or task-state transition is claimed.
+
+### Summary
+
+Committed and pushed the approved ADR 0039 and its single code reference at 24663871a8863e15097fcfd2c41b9584f1c5a48f, preserving executable behavior and the Captain's original words. Candidate checks, all 35 reader tests and the specified falsifiers passed; the diagram was rendered and visually verified. FO must run RoboRev, open the prepared Draft PR and read CI before delivery continues; cost per PR was not measured.
