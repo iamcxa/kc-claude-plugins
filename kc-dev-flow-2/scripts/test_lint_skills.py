@@ -206,6 +206,40 @@ class RouteMutationTests(unittest.TestCase):
         (self.root / "extensions/paseo/EXTENSION.md").unlink()
         self.refuses("extension `paseo` has no EXTENSION.md")
 
+    def test_documented_journey_probe_finds_regular_yaml_at_each_depth(self):
+        adoption = (self.root / "references/sd/adoption.md").read_text()
+        step = adoption.split("## Extensions\n", 1)[1].split("\n2. ", 1)[0]
+        commands = re.findall(r"`(find [^`]+)`", step)
+        self.assertEqual(len(commands), 1, "Extensions step 1 must supply a runnable map probe")
+        cases = {
+            "flat": ["docs/journey/a.yaml"],
+            "nested": ["docs/journey/product/a.yaml"],
+            "deep-space": ["docs/journey/product A/domain/a map.yaml"],
+            "empty": [],
+            "non-map": ["docs/journey/a.tldr", "docs/journey/a.yml", "other/a.yaml"],
+            "yaml-directory": [],
+            "missing": [],
+        }
+        for name, files in cases.items():
+            with self.subTest(name=name):
+                root = Path(self.temp.name) / name
+                root.mkdir()
+                if name != "missing":
+                    (root / "docs/journey").mkdir(parents=True)
+                if name == "yaml-directory":
+                    (root / "docs/journey/directory.yaml").mkdir()
+                for filename in files:
+                    path = root / filename
+                    path.parent.mkdir(parents=True, exist_ok=True)
+                    path.write_text("journey: synthetic\n")
+                result = subprocess.run(["sh", "-c", commands[0]], cwd=root,
+                                        capture_output=True, text=True)
+                expected = files if name in {"flat", "nested", "deep-space"} else []
+                self.assertEqual(sorted(result.stdout.splitlines()), sorted(expected))
+                self.assertEqual(result.returncode != 0, name == "missing", result.stderr)
+                if name == "missing":
+                    self.assertTrue(result.stderr.strip(), "failed probe needs a reason")
+
     def test_workflow_over_its_word_budget(self):
         self.with_words(lint.workflow_budget(SHIPPED) - len(self.workflow_text().split()) + 1)
         self.refuses(f"exceeds the budget of {lint.workflow_budget()}")
