@@ -554,6 +554,161 @@ def view(state="OPEN", draft=False, checks="SUCCESS", mergeable="MERGEABLE"):
             "statusCheckRollup": [{"conclusion": checks}], "title": "feat: x"}
 
 
+# Sanitized path/PR manifest at state revision 1158adc584637bdbf1b2f347b91a4c63844d6c00.
+ARCHIVE_MANIFEST = [['_archive/adr-protected-path-guard.md', 'pr-merge:712'],
+ ['_archive/agent-reads-governing-adr.md', 'pr-merge:698'],
+ ['_archive/amendment-form-check.md', 'pr-merge:650'],
+ ['_archive/board-optout.md', 'pr-merge:543'],
+ ['_archive/canvas-document-popup.md', 'pr-merge:468'],
+ ['_archive/captain-question-load.md', 'pr-merge:675'],
+ ['_archive/chat-only-evidence-observer-blind.md', 'pr-merge:679'],
+ ['_archive/codex-reader-counts-code-review-only.md', 'pr-merge:702'],
+ ['_archive/codex-reader-reads-receipt-marker.md', 'pr-merge:693'],
+ ['_archive/codex-review-hang-detected.md', 'pr-merge:722'],
+ ['_archive/codex-review-round3-followups.md', ''],
+ ['_archive/commissioned-by-names-spacedock.md', 'pr-merge:685'],
+ ['_archive/copilot-quota-refusal-is-not-a-review.md', 'pr-merge:630'],
+ ['_archive/db-surface-without-migrations.md', 'pr-merge:686'],
+ ['_archive/delivery-gate-candidate-followups.md', ''],
+ ['_archive/delivery-gate-reads-folder-tasks.md', 'pr-merge:720'],
+ ['_archive/delivery-gate-settles-skipped-checks-followups.md', ''],
+ ['_archive/delivery-gate-settles-skipped-checks.md', 'pr-merge:680'],
+ ['_archive/delivery-gate-verdict-form.md', 'pr-merge:647'],
+ ['_archive/design-director-runs-ui-design-review.md', 'pr-merge:708'],
+ ['_archive/dev2-laws-check.md', 'pr-merge:651'],
+ ['_archive/dispatch-and-report-hygiene.md', 'pr-merge:535'],
+ ['_archive/extension-defaults-and-install-choice.md', 'pr-merge:716'],
+ ['_archive/extension-instruction-reaches-dispatch.md', 'pr-merge:652'],
+ ['_archive/fo-batch-sittings.md', 'pr-merge:689'],
+ ['_archive/fo-lifecycle-mod.md', 'pr-merge:643'],
+ ['_archive/fo-record-checks.md', 'pr-merge:640'],
+ ['_archive/fo-write-checks-followups.md', ''],
+ ['_archive/fo-write-checks.md', 'pr-merge:671'],
+ ['_archive/fo-write-rules-checked.md', 'pr-merge:687'],
+ ['_archive/fo-written-lines-checked-before-dispatch.md', 'pr-merge:724'],
+ ['_archive/followup-dispatch-records-checked.md', 'pr-merge:642'],
+ ['_archive/followup-dispatch-records-round3-followups.md', ''],
+ ['_archive/ideation-gaps.md', 'pr-merge:537'],
+ ['_archive/idle-names-failing-seeds.md', 'pr-merge:694'],
+ ['_archive/journey-map-dev2-contract.md', 'pr-merge:628'],
+ ['_archive/journey-render-keeps-annotations.md', 'pr-merge:558'],
+ ['_archive/kc-adr-format-source.md', 'pr-merge:710'],
+ ['_archive/kc-adr-tools-with-dev2-copy.md', 'pr-merge:713'],
+ ['_archive/kc-decision-log-cli.md', 'pr-merge:695'],
+ ['_archive/kc-decision-log-p1/index.md', ''],
+ ['_archive/laws-check-followups.md', ''],
+ ['_archive/learn-delivery-follow-through.md', 'pr-merge:639'],
+ ['_archive/learn-delivery-round3-followups.md', ''],
+ ['_archive/learning-serialize-evaluation.md', 'pr-merge:473'],
+ ['_archive/merge-ask-holds-missing-clauses.md', 'pr-merge:703'],
+ ['_archive/merge-gatekeeper-followups.md', ''],
+ ['_archive/merge-gatekeeper.md', 'pr-merge:666'],
+ ['_archive/migration-and-number-guards.md', 'pr-merge:533'],
+ ['_archive/names-check-before-dispatch.md', 'pr-merge:649'],
+ ['_archive/new-work-starts-from-a-story-map.md', 'pr-merge:705'],
+ ['_archive/number-guards-readme-shrink-followups.md', ''],
+ ['_archive/number-guards-readme-shrink.md', 'pr-merge:670'],
+ ['_archive/observer-before-merge-guard.md', 'pr-merge:632'],
+ ['_archive/observer-check-round3-followups.md', ''],
+ ['_archive/override-reaches-gate-and-criteria-wait.md', ''],
+ ['_archive/patch-0102.md', 'pr-merge:549'],
+ ['_archive/patch-0103.md', 'pr-merge:553'],
+ ['_archive/poc-no-migrations.md', 'pr-merge:555'],
+ ['_archive/pr-watch-round3-followups.md', ''],
+ ['_archive/pr-watch-state-per-session.md', 'pr-merge:646'],
+ ['_archive/pr-watch-tasks-round3-followups.md', ''],
+ ['_archive/prod-security-review-gates.md', 'pr-merge:656'],
+ ['_archive/prod-security-validation-gate-followups.md', ''],
+ ['_archive/prod-security-validation-gate.md', 'pr-merge:659'],
+ ['_archive/read-adr-reporting-rule-followup.md', 'pr-merge:706'],
+ ['_archive/reflow-order.md', 'pr-merge:544'],
+ ['_archive/release-acceptance/index.md', 'pr-merge:709'],
+ ['_archive/release-please-exclude-paths.md', 'pr-merge:467'],
+ ['_archive/release-review-staleness-held-at-dispatch.md', 'pr-merge:711'],
+ ['_archive/release-review.md', 'pr-merge:540'],
+ ['_archive/release-walk-picky-reviewers-and-director.md', 'pr-merge:714'],
+ ['_archive/replay-control-arm-round3-followups.md', ''],
+ ['_archive/review-cadence.md', 'pr-merge:536'],
+ ['_archive/review-followups-0102.md', ''],
+ ['_archive/role-triggers-owe-ce-on-review-drift.md', 'pr-merge:719'],
+ ['_archive/special-role-calls-fire-when-needed.md', 'pr-merge:682'],
+ ['_archive/special-role-triggers-followups.md', ''],
+ ['_archive/special-role-triggers.md', 'pr-merge:664'],
+ ['_archive/stage-report-correction-path.md', 'pr-merge:721'],
+ ['_archive/ui-design-review-in-ideation.md', 'pr-merge:663'],
+ ['_archive/ui-design-review-round3-followups.md', ''],
+ ['_archive/worker-completion-goes-to-main.md', 'pr-merge:633'],
+ ['_archive/worker-loads-declared-package.md', 'pr-merge:661'],
+ ['_archive/workflow-budget-ratchet-followups.md', ''],
+ ['_archive/workflow-budget-ratchet.md', 'pr-merge:658'],
+ ['_archive/workflow-checkout-must-match-trunk-readme.md', 'pr-merge:631'],
+ ['_archive/workflow-gaps-from-qnow-1270.md', '']]
+ARCHIVE_JOB_KEYS = ['03768d7afea14ec480f55b049e7a8c5807dfcca54ee980adb4b58b1f62607247',
+ '0519f142d8ce26351f82de8f6a1737e435f6f6833a2240d0f433227d1cf33c15',
+ '08fcffef857b105eb2ce9a84e87250cfea604636f0a9764672fd2faeee12d3dc',
+ '119eb47ef655b2d418c3968fecb24b73233d064e9b14062d6309a02fb43ff71a',
+ '12af920036eed5d6d577773b877b42c697cef3b64de387346da66673f9f0b556',
+ '197d9c21df78b3027a569e1bf660d539da864df18b0b7f22ed98764673cc04ce',
+ '1c25da09e5c89306d382f4648ae49679102d5e36d816eed57b4d84800e821a24',
+ '1dff94d268e11724aeb16a55beeac230dd77b29c93e92141207377e92966a0b8',
+ '1fecd3653070ada6ea9f5128e6896334ca3d903f4d9479fc35926c42d09241ad',
+ '229f31f6bcedba12c9b6dc9b4383239b154afcf292f33714d0715ac074fbc6a8',
+ '25e51433345d9189e4443a8d8a66c8803e8e3f5e75f60aae4eb082dd0ed8b865',
+ '275120f832382be70c21ab848312ce86d7d43226bbbeded67126ec44fd6e12b0',
+ '28c47203d5ddc515c985658b9af36e93a618b07ab798a94975ec3e7f888d92b1',
+ '294809442c66bb39baba36ad475526b2935671f0462766d26b74c5b9c1974fe7',
+ '3d6a684bb18106c8add21026e71c2be3769be66feeafec598e39ed350d18b255',
+ '3ddcc1a3f15a9da51b0b2596e6dce3a4f5cc10da0b47a317dafe2f95832cfdbb',
+ '441fe280d07513b3bfa7c1cd29444490994538c6e7fe6202b76d177129a67303',
+ '49a91123986e0bc6d7d4c1e20e88df598cb3d2c2719b191a514977d0617e8865',
+ '4a1a751ff2ca64298bd17643e6d4f003ceddfd88a3d1477e11999a91a2588371',
+ '525727f4a28a21f439db6aa14dd2b4569fe39680ed1c0254f962ae7d1d968a9e',
+ '590050db5006bb295881d588f99c54f8dbdd75088d8a526414f73b2dc395cfaa',
+ '5d9d53163b93e2a21c7054e7ec97a58334e8c72e393d1c70a8e921b087fa07b9',
+ '5df3940db9be34289535af9ebd3b14e7a2fc7257e326f110cf842770ab81e96e',
+ '7c9058e89ee59439423e240748c24e5693773de309e8015e374ef9a25074277c',
+ '863804ad3c7ab702bb7c4b3eae3ac86ff6a063628dbfcf0419350863a8ad569f',
+ '8b56b9c500211d3bfd7337f335944d2cb86e2424c44af42de3f37df4622fe4fc',
+ '8bc3d55097b0142bdc4fe9ec22ac7765b187d60bcf167d50aa7d360ec7dd9322',
+ '90dba82771bcf1ea1e635b503b6a2cff0afd575f2e3cd005e6885985c837a63d',
+ '91a95ca9ead7f5feb1fbd33ff3cf883e77d5079e8e92a235a567489d4984d4bc',
+ '92da235be7f7d7e06554be0903fd9c2fc9dd5708588c69c4820a82d112293937',
+ 'a22107a3d634a30e0fe25ab8bd82409f7d943841be697417087197caa3d23c5d',
+ 'a23d0a84798616cf1dc2a2b3ee4276eda6563f6222eb2e7774585a5795beee79',
+ 'ad929ab91b38657a02102a12f2c5c14f75e36934d8f83631ae5a94d9e65f04d5',
+ 'b183ebfaf87286e43c4c31b22611f8745450393f3315d28905609ec8c1338514',
+ 'b513bb7c0c5448c1a42943f81a3ce46ca0361ac482f258eee68da2c00c911115',
+ 'be495105d8e52dd6ff08e4c35a71d278934536d89f72533184b77ca86b123c19',
+ 'be609ffc0af1f8d10ce78f5404078db17304c867faa1337876800078e382b24f',
+ 'c0eba66706da2852f069b26704d2d06de62bf00fe3db04c7497251a4764b2939',
+ 'caa9b488ed7dcf10cd3f54d5f9268967102963d97e8cb5173bc0f416e96d338b',
+ 'cb9bfddbc8c1e236ad39ca3f27ca0d3df807c6910e3bd8b73673a8be687d2259',
+ 'cf7529a150be092197ebc6c22725a03faf94a8d5cb6ae317249ffcb41f85dd70',
+ 'd208c1e1e7801df668a41fa13f48bc83d6537d9964d7826eb831e553fded820e',
+ 'd761c4cc077d5ff46081cecb8b902443443a07f90040bdbc6fc5b402eafc4704',
+ 'd829872c2ba7e3e7ee8d4959f55d1447fe80038165a88731d5566dc460bf84b9',
+ 'dbe9895e1982889ac0e9781e3685df11aff26318e56b57273d36bee0be162bf9',
+ 'dc30682c6438230fc9667d7f20de96f0d7a528fc10a4479fc89def41917a0767',
+ 'e3f45b766abad5658438796705b45886afc2359d727024e92677b0c472ed8b68',
+ 'ea9e586dcefd513f3ffe44c1a357dfb2db603e75eae19278781b1f2adb348aa7',
+ 'ecce2c7e736707dfa1206327c6c783a42b6f79f1a1f83021aa072dcf40ccaf0a',
+ 'ed2d3ee114280792035b9f231a95202d61ce3360dddf3bc31a84955474b1d28e',
+ 'efee0619799d0c728a8fd9bd41ecc5fdcd97fbbfb4c8df6b326efa5c53c2b78a',
+ 'f365864cf47f1aaa6e3af779acbdb23f03795067ca45de283a4a362b19072b77',
+ 'f37c7420ecbbfbc662148641dc11f86d1df4abc1930c6a0c19288207e6840fbd']
+BACKFILLED = ['codex-review-hang-detected',
+ 'delivery-gate-reads-folder-tasks',
+ 'design-director-runs-ui-design-review',
+ 'extension-defaults-and-install-choice',
+ 'fo-written-lines-checked-before-dispatch',
+ 'kc-adr-tools-with-dev2-copy',
+ 'release-acceptance',
+ 'release-review-staleness-held-at-dispatch',
+ 'release-walk-picky-reviewers-and-director',
+ 'role-triggers-owe-ce-on-review-drift',
+ 'stage-report-correction-path']
+
+
 class TasksTests(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -625,6 +780,275 @@ class TasksTests(unittest.TestCase):
 
     def watched(self):
         return json.loads(self.watch.read_text()) if self.watch.exists() else {}
+
+    def archive(self, slug, pr="pr-merge:7", folder=False, commit=True, extra=""):
+        path = self.state / "_archive" / (f"{slug}/index.md" if folder else f"{slug}.md")
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(f"---\nstatus: done\npr: {pr}\n{extra}---\n")
+        if commit:
+            self.git(self.state, "add", "_archive")
+            self.git(self.state, "commit", "-qm", "archive fixture")
+        return path
+
+    def learn(self, *args):
+        done = subprocess.run([sys.executable, "-B", str(watch.SCRIPTS / "learning.py"),
+                               "--repo", str(self.repo), *map(str, args)], capture_output=True, text=True)
+        self.assertEqual(done.returncode, 0, done.stdout + done.stderr)
+        return json.loads(done.stdout)
+
+    def claim_archive(self, slug, **changes):
+        value = {"schema_version": 1, "workflow": "docs/dev2", "task_id": slug,
+                 "variant": "kc-dev-flow-2", "profile": "pilot", "closed": True, "merged": True,
+                 "verdict": "passed", "learning_task": False, "closure_revision": "a" * 40,
+                 "landed_revision": "b" * 40, "pr": "o/r#7", "evidence": ["fixture"],
+                 "learning": [], "project_rules": [], **changes}
+        pack = self.root / "pack.json"
+        pack.write_text(json.dumps(value))
+        return self.learn("claim", "--input", pack, "--owner", "fixture")
+
+    def notice_run(self, notices):
+        actual = subprocess.run
+        calls = []
+        def run(argv, **kw):
+            if len(argv) > 1 and argv[1] == str(watch.SCRIPTS / "learning.py"):
+                calls.append(argv)
+                return subprocess.CompletedProcess(argv, 0, json.dumps(notices), "")
+            return actual(argv, **kw)
+        return calls, mock.patch.object(watch.subprocess, "run", side_effect=run)
+
+    def test_archive_shapes_are_sorted_deduplicated_and_guarded(self):
+        self.readme("learn")
+        self.archive("z-flat")
+        self.archive("a-folder", folder=True)
+        self.archive("both", pr="o/r#9")
+        self.archive("both", folder=True)
+        self.archive(".hidden")
+        self.archive("_mods", folder=True)
+        self.archive("sidecar/observer")
+        self.archive("pending", commit=False)
+        code, lines = self.tasks({}, look=lambda *a, **k: self.fail("archive used live reader"))
+        self.assertEqual((code, lines), (0, [f"next: run kc-dev-flow-2:learn for {s}."
+                                           for s in ("a-folder", "both", "z-flat")]))
+        self.assertFalse(self.watch.exists())
+        self.assertFalse((self.repo / ".git/kc-dev-flow-2").exists())
+        self.readme("")
+        calls, patch = self.notice_run({"notices": []})
+        with patch:
+            self.assertEqual(self.tasks({}), (0, []))
+        self.assertEqual(calls, [])
+
+    def test_real_claim_completed_acknowledged_and_released_jobs_suppress_repeats(self):
+        self.readme("learn")
+        self.archive("one", extra="id: unrelated-id\n")
+        expected = (0, ["next: run kc-dev-flow-2:learn for one."])
+        before = self.git(self.state, "status", "--porcelain")
+        state_bytes = {str(p.relative_to(self.state)): watch.hashlib.sha256(p.read_bytes()).hexdigest()
+                       for p in self.state.rglob("*") if p.is_file() and ".git" not in p.parts}
+        self.assertEqual(self.tasks({}), expected)
+        self.assertEqual(self.tasks({}), expected)
+        claim = self.claim_archive("one")
+        home = self.repo / ".git/kc-dev-flow-2/learning"
+        def snapshot():
+            return {str(p.relative_to(home)): p.read_bytes() for p in home.rglob("*") if p.is_file()}
+        pending = snapshot()
+        self.assertEqual(self.tasks({}), (0, []))
+        self.assertEqual(snapshot(), pending)
+        result = self.root / "result.json"
+        result.write_text(json.dumps({"schema_version": 1, "decisions": [
+            {"action": "no-change", "entry": None, "reason": "fixture", "evidence": []}]}))
+        self.learn("complete", "--job", claim["job"], "--token", claim["token"], "--result", result)
+        self.assertEqual(self.tasks({}), (0, []))
+        notice = self.learn("notices", "--all")["notices"][0]
+        self.learn("ack", "--job", claim["job"], "--expected", notice["notice_digest"])
+        self.assertEqual(self.learn("notices")["notices"], [])
+        self.assertEqual(self.tasks({}), (0, []))
+        self.assertEqual({str(p.relative_to(self.state)): watch.hashlib.sha256(p.read_bytes()).hexdigest()
+                          for p in self.state.rglob("*") if p.is_file() and ".git" not in p.parts}, state_bytes)
+        self.archive("released")
+        state_bytes = {str(p.relative_to(self.state)): watch.hashlib.sha256(p.read_bytes()).hexdigest()
+                       for p in self.state.rglob("*") if p.is_file() and ".git" not in p.parts}
+        claim = self.claim_archive("released")
+        result.write_text(json.dumps({"schema_version": 1, "decisions": [
+            {"action": "add", "entry": {"Applicability": "fixture", "Practice": "fixture", "Evidence": "fixture"},
+             "reason": "fixture", "evidence": ["fixture"]}]}))
+        self.learn("complete", "--job", claim["job"], "--token", claim["token"], "--result", result)
+        notice = next(n for n in self.learn("notices", "--all")["notices"] if n["job"] == claim["job"])
+        self.learn("release", "--job", claim["job"], "--owner", "fixture", "--reason", "fixture settled",
+                   "--expected", notice["notice_digest"])
+        released = snapshot()
+        self.assertEqual(self.tasks({}), (0, []))
+        self.assertEqual(snapshot(), released)
+        self.assertEqual(self.git(self.state, "status", "--porcelain"), before)
+        self.assertEqual({str(p.relative_to(self.state)): watch.hashlib.sha256(p.read_bytes()).hexdigest()
+                          for p in self.state.rglob("*") if p.is_file() and ".git" not in p.parts}, state_bytes)
+        self.assertFalse(self.watch.exists())
+        other = self.repo / "docs/other"
+        other.mkdir()
+        (other / "README.md").write_text("---\nextensions: [learn]\nstate: ../dev2/.spacedock-state\n---\n")
+        self.workflow = other
+        self.assertEqual(self.tasks({}), (0, expected[1] + ["next: run kc-dev-flow-2:learn for released."]))
+
+    def test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold(self):
+        self.readme("learn")
+        self.archive("one")
+        key = watch.job_key({"workflow": "docs/dev2", "task_id": "one"})
+        calls, patch = self.notice_run({"notices": [{"job": key, "state": "uncertain"}]})
+        with patch:
+            self.assertEqual(self.tasks({}), (0, [f"next: inspect learn job {key} for one; its record is uncertain."]))
+        self.assertEqual(calls, [[sys.executable, str(watch.SCRIPTS / "learning.py"), "--repo",
+                                 str(self.repo.resolve()), "notices", "--all"]])
+        self.task("live", pr="o/r#8", worktree=False)
+        for bad in ({}, {"notices": {}}, {"notices": [None]}, {"notices": [{"job": "bad"}]},
+                    {"notices": [{"job": key, "state": "invalid"}]}):
+            with self.subTest(bad=bad):
+                _, patch = self.notice_run(bad)
+                with patch:
+                    code, lines = self.tasks({"pr view 8": view()})
+                self.assertEqual(code, 2, lines)
+                self.assertTrue(any(line.startswith("fact: o/r#8 OPEN") for line in lines), lines)
+                self.assertTrue(any(line.startswith("next: report missing learn jobs to the Captain:") for line in lines), lines)
+                self.assertFalse(any("run kc-dev-flow-2:learn" in line for line in lines), lines)
+
+    def test_failed_notice_command_and_invalid_json_are_errors_never_absence(self):
+        self.readme("learn")
+        self.archive("one")
+        actual = subprocess.run
+        for status, stdout in ((1, "unreadable store"), (0, "not JSON")):
+            def run(argv, **kw):
+                if len(argv) > 1 and argv[1] == str(watch.SCRIPTS / "learning.py"):
+                    return subprocess.CompletedProcess(argv, status, stdout, "")
+                return actual(argv, **kw)
+            with mock.patch.object(watch.subprocess, "run", side_effect=run):
+                code, lines = self.tasks({})
+            self.assertEqual(code, 2, lines)
+            self.assertEqual(len(lines), 1, lines)
+            self.assertTrue(lines[0].startswith("next: report missing learn jobs to the Captain:"))
+
+    def test_inline_workflow_and_external_definition_and_missing_origin(self):
+        self.readme("learn")
+        self.archive("one")
+        outside = self.root / "outside.md"
+        outside.write_bytes((self.workflow / "README.md").read_bytes())
+        (self.workflow / "README.md").unlink()
+        (self.workflow / "README.md").symlink_to(outside)
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2, lines)
+        self.assertFalse(any("run kc-dev-flow-2:learn" in line for line in lines))
+        (self.workflow / "README.md").unlink()
+        self.readme("learn")
+        linked = self.repo / "docs/linked"
+        external = self.root / "external"
+        external.mkdir()
+        self.git(external, "init", "-q", "-b", "main")
+        (external / "README.md").write_bytes((self.workflow / "README.md").read_bytes())
+        (external / ".spacedock-state").symlink_to(self.state)
+        linked.symlink_to(external, target_is_directory=True)
+        original_workflow = self.workflow
+        self.workflow = linked
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2, lines)
+        self.assertFalse(any("run kc-dev-flow-2:learn" in line for line in lines))
+        self.workflow = original_workflow
+        self.archive("bare", pr="7")
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2, lines)
+        self.assertIn("next: run kc-dev-flow-2:learn for one.", lines)
+        self.assertTrue(any("report bare to the Captain:" in line for line in lines))
+        inline = self.repo / "docs/inline"
+        (inline / "_archive").mkdir(parents=True)
+        (inline / "README.md").write_text("---\nextensions: [learn]\n---\n")
+        (inline / "_archive/one.md").write_text("---\npr: pr-merge:7\n---\n")
+        self.git(self.repo, "add", "docs/inline")
+        self.git(self.repo, "commit", "-qm", "inline workflow")
+        self.workflow = inline
+        self.assertEqual(self.tasks({}), (0, ["next: run kc-dev-flow-2:learn for one."]))
+        done = subprocess.run([sys.executable, "-B", str(watch.SCRIPTS / "pr_watch.py"),
+                               "--state", str(self.watch), "tasks", str(inline)],
+                              capture_output=True, text=True, env={**os.environ, **self.sd_env()})
+        self.assertEqual((done.returncode, done.stdout), (0, "next: run kc-dev-flow-2:learn for one.\n"))
+
+    def test_archive_provider_reads_only_state_and_preserves_qualified_repository(self):
+        self.readme("learn")
+        self.git(self.repo, "remote", "add", "origin", "https://github.com/o/r.git")
+        for slug, pr in (("bare", "#7"), ("qualified", "else/where#8"), ("open", "o/r#9"),
+                         ("closed", "o/r#10"), ("local", "local-merge:abc"), ("sentinel", "pr-merge:11"),
+                         ("failure", "o/r#12")):
+            self.archive(slug, pr)
+        calls = []
+        def ask(*args):
+            calls.append(args)
+            if args[:2] == ("repo", "view"):
+                self.assertIn("https://github.com/o/r.git", args)
+                return {"nameWithOwner": "o/r"}
+            self.assertEqual(args[:2], ("pr", "view"))
+            self.assertEqual(args[-2:], ("--json", "state"))
+            if args[2] == "12":
+                raise RuntimeError("provider unavailable")
+            return {"state": {"7": "MERGED", "8": "MERGED", "9": "OPEN", "10": "CLOSED"}[args[2]]}
+        with mock.patch.object(watch, "gh", side_effect=ask):
+            out = io.StringIO()
+            with mock.patch.dict(os.environ, self.sd_env()), contextlib.redirect_stdout(out):
+                code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], ask=ask,
+                                  look=lambda *a, **k: self.fail("full archive review"))
+        lines = out.getvalue().splitlines()
+        self.assertEqual(code, 2, lines)
+        self.assertEqual([s for s in lines if "run kc-dev-flow-2:learn" in s],
+                         [f"next: run kc-dev-flow-2:learn for {s}." for s in ("bare", "qualified", "sentinel")])
+        self.assertIn(("pr", "view", "8", "--repo", "else/where", "--json", "state"), calls)
+        self.assertTrue(any("report failure to the Captain: provider unavailable" in s for s in lines))
+        self.assertFalse(self.watch.exists())
+
+    def test_committed_archive_snapshot_ignores_disk_changes_and_missing_archive_is_empty(self):
+        self.readme("learn")
+        self.task("empty", worktree=False)
+        calls, patch = self.notice_run({"notices": []})
+        with patch:
+            self.assertEqual(self.tasks({}), (0, []))
+        self.assertEqual(calls, [])
+        path = self.archive("committed")
+        path.write_text("---\npr: o/r#8\n---\n")
+        self.archive("untracked", commit=False)
+        self.assertEqual(self.tasks({}), (0, ["next: run kc-dev-flow-2:learn for committed."]))
+        actual = watch.git
+        def failed(*args):
+            if "show" in args:
+                raise RuntimeError("tracked blob unreadable")
+            return actual(*args)
+        with mock.patch.object(watch, "git", side_effect=failed):
+            code, lines = self.tasks({})
+        self.assertEqual(code, 2, lines)
+        self.assertTrue(any("tracked blob unreadable" in s for s in lines))
+
+    def test_frozen_archive_replay_recovers_all_eleven_and_suppresses_backfilled_jobs(self):
+        self.readme("learn")
+        for path, pr in ARCHIVE_MANIFEST:
+            target = self.state / path
+            target.parent.mkdir(parents=True, exist_ok=True)
+            target.write_text(f"---\nstatus: done\npr: {pr}\n---\n")
+        self.git(self.state, "add", "_archive")
+        self.git(self.state, "commit", "-qm", "frozen 88-entity manifest")
+        target_keys = {watch.job_key({"workflow": "docs/dev2", "task_id": s}) for s in BACKFILLED}
+        self.assertEqual((len(ARCHIVE_MANIFEST), len(ARCHIVE_JOB_KEYS), len(target_keys)), (88, 53, 11))
+        for backfilled in (False, True):
+            notices = [{"job": k, "state": "completed", "unread": False} for k in ARCHIVE_JOB_KEYS
+                       if backfilled or k not in target_keys]
+            _, patch = self.notice_run({"notices": notices})
+            with patch:
+                code, lines = self.tasks({})
+            self.assertEqual(code, 0, lines)
+            for slug in BACKFILLED:
+                self.assertEqual(f"next: run kc-dev-flow-2:learn for {slug}." in lines, not backfilled, slug)
+
+    def test_ineligible_learn_hold_leaves_no_job_and_next_idle_repeats_the_name(self):
+        self.readme("learn")
+        self.archive("old-profile")
+        line = "next: run kc-dev-flow-2:learn for old-profile."
+        self.assertEqual(self.tasks({}), (0, [line]))
+        self.assertEqual(self.claim_archive("old-profile", profile="legacy"),
+                         {"state": "ineligible", "reasons": ["profile"]})
+        self.assertEqual(self.learn("notices", "--all"), {"notices": []})
+        self.assertEqual(self.tasks({}), (0, [line]))
+        self.assertEqual(len(line.split()), 5)
 
     def test_a_pr_a_worker_opened_is_recorded_with_two_commands_and_then_watched(self):
         self.readme("roborev")
