@@ -57,6 +57,7 @@ worktree: .worktrees/spacedock-ensign-read-adr-honors-adr-folder
 - Fix lives in kc-adr (the source); `scripts/kc-adr-copy-sync.sh sync` carries it to the dev2 copy in the same PR, per the D4 ruling of kc-adr-tools-with-dev2-copy.
 - Non-goals: other read-adr wording.
 
+- Added 2026-10-28 (FO routing): the implementation sandbox could start neither Claude (no login) nor Codex exec (in-process app-server: Operation not permitted, /tmp/read-adr-implementation-evidence/codex-runtime.stderr); validation runs both hosts' native traces from a Claude validator that can start `claude -p` and `codex exec`, as worker-knows-the-team-and-asks-early's validation did.
 ## FO alignment
 
 Alignment: not needed: a reviewer finding in shipped text, fixed in its source.
