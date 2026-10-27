@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:read-adr-honors-adr-folder:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:read-adr-honors-adr-folder-validation-1
+              briefing:
+                id: briefing:read-adr-honors-adr-folder:validation:attempt-1:revision-1
+                digest: sha256:7bb241c24752e1437b98b4f52380bfc670d956f24d1e4de72801a9c0bf1cc451
+                room-ref: ./read-adr-honors-adr-folder/review/validation/briefing-1
 started: 2026-10-27T16:00:23Z
 worktree: .worktrees/spacedock-ensign-read-adr-honors-adr-folder
 pr: iamcxa/kc-claude-plugins#735

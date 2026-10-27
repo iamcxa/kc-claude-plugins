@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:read-adr-honors-adr-folder:validation:attempt-1:revision-1",
+  "question": "Approve validation of read-adr-honors-adr-folder and merge iamcxa/kc-claude-plugins#735 at head 813e0b09cb641b82b8ca04630879cc69e922288e with `gh pr merge 735 --squash --match-head-commit 813e0b09cb641b82b8ca04630879cc69e922288e`? FO recommends approve; approving accepts that recommendation and, as a separate ruling, accepts F1 as a host limit with no added words: Claude silently converts an absolute path inside the repository to a relative one where the skill says to stop (amended AC-8's falsifier fails on Claude in 4 of 4 sessions; Codex stops 2 of 2), with no harm observed, so the PASSED verdict is not all-green, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:read-adr-honors-adr-folder:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/33144c66a9c458f98712e825f024fb43f4bba9b1/read-adr-honors-adr-folder.md",
+      "rev": "sha256:85e8e87d3d4fb5263e86bd63f36f6be6231d8a7777aaf3d05a42bc8fc352b65a",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: read-adr lists the ADR folder its caller names and treats none as no records, in both the kc-adr skill and the kc-dev-flow-2 copy, fixing the Codex P2 on #713; validation PASSED at this head with a discriminating control: with ADR folder none on a natural prompt, the old skill read a decoy record in 7 of 7 Claude sessions and enumerated both folders on Codex, the new one read none; batch-8 chief-engineer review recommends merge and accepting F1.\nNecessity: two files (kc-adr/skills/read-adr/SKILL.md, kc-dev-flow-2/skills/read-adr/SKILL.md).\nExternal rounds: Codex 1 (round 1 on this head: code review completed with no findings, evidence=summary:6447607306@813e0b09c). RoboRev clean on this head, run by FO (evidence=roborev:1262). second reviewer: copilot because the change governs how Captain rulings are read (authority rules); copilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\" (copilot_review.py exit 5, answer=review:5670936684); the Captain may ask FO to retry Copilot instead of merging.\nFO declines: Polish F2, AC-5 says 848 words where the skill has 852 and the Design text and its Proposed step 1 quote still describe absolute conversion (task text only; the shipped step 1 forbids conversion, engineering-reviewer 2026-10-28); Polish F3, the implementation's natural custom-folder control did not discriminate (validation found a control that does, with ADR folder none)."
+    }
+  ]
+}
