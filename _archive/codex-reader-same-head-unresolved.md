@@ -3,7 +3,7 @@ title: The Codex reader does not call a head clean while a finding on that head 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #728 at c2f3e313; accepts FO''s recommendation'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-26T17:08:13Z
 worktree: .worktrees/spacedock-ensign-codex-reader-same-head-unresolved
 pr: pr-merge:728
+verdict: PASSED
+completed: 2026-10-27T00:41:27Z
+archived: 2026-10-27T00:41:27Z
 ---
 
 ## Scope
