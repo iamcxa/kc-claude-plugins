@@ -62,6 +62,17 @@ gates:
                 id: briefing:peers-rules-name-each-host-binding:validation:attempt-1:revision-1
                 digest: sha256:d66f1a3489fa772ac961336f61c4027c3265033a94195bd2344140465206ef89
                 room-ref: ./peers-rules-name-each-host-binding/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:peers-rules-name-each-host-binding:validation:1
+                briefing: briefing:peers-rules-name-each-host-binding:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T05:01:34.307296Z"
+                decision: approve
+                reason: 'Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #730 at f7516476; accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-26T17:08:27Z
 worktree: .worktrees/spacedock-ensign-peers-rules-name-each-host-binding
 pr: iamcxa/kc-claude-plugins#730
