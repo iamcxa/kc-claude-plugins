@@ -3,7 +3,7 @@ title: The delivery check refuses a `copilot not run` line without the printed q
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「全准」 (chat, 2026-10-28) answering FO''s batch-8 merge sitting (each PR''s merge ask, the Copilot-not-read item and, for #735, the separate F1 ruling, all presented with FO''s recommendations); accepts FO''s recommendation'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-27T16:00:07Z
 worktree: .worktrees/spacedock-ensign-copilot-not-run-line-carries-quote
 pr: pr-merge:736
+verdict: PASSED
+completed: 2026-10-27T17:53:04Z
+archived: 2026-10-27T17:53:04Z
 ---
 
 ## Scope
