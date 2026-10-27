@@ -1,0 +1,2 @@
+code lines 6, comment lines 0, 0.0%
+maximum 5% (package default) not enforced: 6 code lines added, fewer than 20

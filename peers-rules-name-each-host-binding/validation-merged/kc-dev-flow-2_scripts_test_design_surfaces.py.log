@@ -1,0 +1,45 @@
+task.md: '## FO alignment' has 2 'Surfaces:' lines, expected exactly 1
+task.md: design surfaces presentable
+scope check not run: no frontmatter
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+scope check not run: no frontmatter
+task.md: 'Surfaces:' has unknown value(s) api
+scope check not run: no frontmatter
+task.md: 'Surfaces:' combines 'none' with other values
+scope check not run: no frontmatter
+task.md: '## FO alignment' needs a 'Visible change:' line
+scope check not run: no frontmatter
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+scope check not run: no frontmatter
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+scope check not run: no frontmatter
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+scope check not run: no frontmatter
+task.md: surface 'ui' Preview 'missing.html' does not exist
+scope check not run: no frontmatter
+task.md: surface 'db' needs a 'Migration source:' line with a value
+scope check not run: no frontmatter
+task.md: surface 'db' needs a schema shown as a Mermaid erDiagram or a markdown table
+scope check not run: no frontmatter
+task.md: design surfaces presentable
+scope check not run: no frontmatter
+task.md: FO alignment recorded
+task.md: FO alignment recorded
+task.md: FO alignment recorded
+task.md: surface 'ui' needs a 'UI proposal:' line with text
+task.md: surface 'ui' needs a 'Preview:' line
+scope check not run: no frontmatter
+task.md: missing '## FO alignment' section
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: '## FO alignment' needs a 'Visible change:' line
+task.md: '## FO alignment' needs a non-empty 'Surfaces:' line
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Surfaces:' has unknown value(s) api
+task.md: 'Visible change:' is not 'none' but 'Surfaces:' has no 'ui'
+task.md: 'Visible change: none' contradicts 'ui' in 'Surfaces:'
+......................................................................................................................................................................................
+----------------------------------------------------------------------
+Ran 182 tests in 27.346s
+
+OK

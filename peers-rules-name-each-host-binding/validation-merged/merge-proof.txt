@@ -1,0 +1,5 @@
+Three-way lint merge reproduced without conflicts; exact candidate bytes match.
+Main budget list byte-identical; +144 step and extension-document guard retained; removed helper stays absent.
+PR-owned files unchanged from prior candidate except merged lint; all other incoming files exactly match main.
+Parents: dc3916fbb4ce9655dc37c5e4185653694e029de4 b8ce84e584cf5c5cb482009d9d08d7316ce2a6ac
+Merged base: b8ce84e584cf5c5cb482009d9d08d7316ce2a6ac ; original common ancestor: c70f1b22cb1e4a66fd15c617647c778d54c59ec9

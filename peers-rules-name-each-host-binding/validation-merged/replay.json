@@ -1,0 +1,687 @@
+{
+  "method": "manual decisions replayed through a fake event auditor; no model executed and no real message sent",
+  "cases": [
+    {
+      "name": "inbound-claude",
+      "source": "AC-1; round-2 Qnow/kc-paseo",
+      "route": "Paseo",
+      "action": "reply",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "provider": "claude",
+      "incoming": "Paseo",
+      "extensions": [
+        "peers"
+      ],
+      "reads": [
+        "peers",
+        "own-paseo-skill"
+      ],
+      "behavior": "steer",
+      "notify": false
+    },
+    {
+      "name": "inbound-codex",
+      "source": "AC-1; round-2 Qnow/kc-paseo",
+      "route": "Paseo",
+      "action": "reply",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "provider": "codex",
+      "incoming": "Paseo",
+      "extensions": [
+        "peers"
+      ],
+      "reads": [
+        "peers",
+        "own-paseo-skill"
+      ],
+      "behavior": "steer",
+      "notify": false
+    },
+    {
+      "name": "native-unknown",
+      "source": "AC-1; round-1 probes",
+      "route": "Claude Code",
+      "action": "probe-then-question",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "provider": "claude",
+      "opening": "if this is not you, say so",
+      "probe": 1
+    },
+    {
+      "name": "bare-codex",
+      "source": "AC-1; binding fallback",
+      "route": "fallback",
+      "action": "research",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "peers not run; repository checked",
+        "checked_source": "repo@c70f1b22"
+      },
+      "sends": 0
+    },
+    {
+      "name": "missing-skill",
+      "source": "AC-1; binding fallback",
+      "route": "fallback",
+      "action": "research",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "peers not run; repository checked",
+        "checked_source": "repo@c70f1b22"
+      },
+      "sends": 0
+    },
+    {
+      "name": "missing-tool",
+      "source": "AC-1; binding fallback",
+      "route": "fallback",
+      "action": "research",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "peers not run; repository checked",
+        "checked_source": "repo@c70f1b22"
+      },
+      "sends": 0
+    },
+    {
+      "name": "ambiguous-dual-transport",
+      "source": "AC-1; binding fallback",
+      "route": "fallback",
+      "action": "research",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "peers not run; repository checked",
+        "checked_source": "repo@c70f1b22"
+      },
+      "sends": 0
+    },
+    {
+      "name": "unlisted-new-ask",
+      "source": "AC-1; binding fallback",
+      "route": "fallback",
+      "action": "research",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "peers not run; repository checked",
+        "checked_source": "repo@c70f1b22"
+      },
+      "sends": 0
+    },
+    {
+      "name": "clock-0",
+      "source": "AC-2; fixed deadline at 300",
+      "route": "Paseo",
+      "action": "defer",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "now": 0,
+      "deadline": 300,
+      "rechecks": 0,
+      "polls": 0,
+      "status": "running",
+      "independent": true,
+      "behavior": "steer",
+      "notify": true,
+      "sends": 0
+    },
+    {
+      "name": "clock-299",
+      "source": "AC-2; fixed deadline at 300",
+      "route": "Paseo",
+      "action": "question",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "now": 299,
+      "deadline": 300,
+      "rechecks": 1,
+      "polls": 0,
+      "status": "idle",
+      "independent": true,
+      "behavior": "steer",
+      "notify": true,
+      "sends": 1
+    },
+    {
+      "name": "clock-300",
+      "source": "AC-2; fixed deadline at 300",
+      "route": "Paseo",
+      "action": "research",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "now": 300,
+      "deadline": 300,
+      "rechecks": 1,
+      "polls": 0,
+      "status": "idle",
+      "independent": true,
+      "behavior": "steer",
+      "notify": true,
+      "sends": 0
+    },
+    {
+      "name": "clock-301",
+      "source": "AC-2; fixed deadline at 300",
+      "route": "Paseo",
+      "action": "research",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "now": 301,
+      "deadline": 300,
+      "rechecks": 1,
+      "polls": 0,
+      "status": "idle",
+      "independent": true,
+      "behavior": "steer",
+      "notify": true,
+      "sends": 0
+    },
+    {
+      "name": "clock-20",
+      "source": "AC-2; fixed deadline at 300",
+      "route": "Paseo",
+      "action": "research",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "now": 20,
+      "deadline": 300,
+      "rechecks": 1,
+      "polls": 0,
+      "status": "running",
+      "independent": false,
+      "behavior": "steer",
+      "notify": true,
+      "sends": 0
+    },
+    {
+      "name": "clock-30",
+      "source": "AC-2; fixed deadline at 300",
+      "route": "Paseo",
+      "action": "research",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "now": 30,
+      "deadline": 300,
+      "rechecks": 1,
+      "polls": 0,
+      "status": "running",
+      "independent": true,
+      "behavior": "steer",
+      "notify": true,
+      "sends": 0
+    },
+    {
+      "name": "reported-steering-unavailable",
+      "source": "AC-2",
+      "route": "Paseo",
+      "action": "defer-answer",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "unsent; host reported steer unavailable",
+        "checked_source": "repo@c70f1b22"
+      },
+      "sends": 0
+    },
+    {
+      "name": "unknown-capability",
+      "source": "AC-2; host-owned fallback",
+      "route": "Paseo",
+      "action": "reply",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "behavior": "steer",
+      "notify": false,
+      "host_effect": "interrupt fallback observed in fake host"
+    },
+    {
+      "name": "status-race",
+      "source": "AC-2; host-owned fallback",
+      "route": "Paseo",
+      "action": "reply",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "behavior": "steer",
+      "notify": false,
+      "host_effect": "interrupt fallback observed in fake host"
+    },
+    {
+      "name": "idle-new",
+      "source": "AC-2",
+      "route": "Paseo",
+      "action": "question",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "status": "idle",
+      "behavior": "steer",
+      "notify": true,
+      "sends": 1
+    },
+    {
+      "name": "callback-correlation",
+      "source": "AC-2",
+      "route": "Paseo",
+      "action": "deduplicate",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22"
+      },
+      "receipts": [
+        "queued:q1",
+        "done:unrelated",
+        "explicit:q1",
+        "callback:q1"
+      ],
+      "answers": 1,
+      "actions": 1,
+      "sends": 1
+    },
+    {
+      "name": "worker-control",
+      "source": "AC-2; round-2 Qnow",
+      "route": "dispatch-contract",
+      "action": "worker-followup",
+      "record": {},
+      "status": "running",
+      "sends": 1
+    },
+    {
+      "name": "round1-five-paseo",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "confirm area",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "transport identity",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round1-opening",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "omit on stamped Paseo",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "Claude-specific opening",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round1-wrong-fo",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "ownership question or fallback",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "identity does not prove area",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round1-swallowed-question",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "no new busy send",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "bounded deferral",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round1-codex-workers",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "hand back",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "workers ask own FO",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round1-relayed-rulings",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "original unavailable remains unverified",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "peer data not authority",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "unverified"
+    },
+    {
+      "name": "round1-hotfix-limit-vault-adr",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "check pinned repository fact",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "verify cited source",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round1-missing-record",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "append exchange",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "durable exchange fields",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round2-unlisted-reply",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "reply without optional extension",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "incoming transport",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round2-default-steering",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "defer new busy ask",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "explicit steering and fixed deadline",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round2-running-asker",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "steer reply; no callback loop",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "requested reply exception",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round2-own-worker",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "follow dispatch contract",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "peer policy excludes workers",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round2-taskless",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "append exchange; no task",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "note"
+      },
+      "instruction": "state note",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round2-open-gate",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "answer facts; append note",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "note"
+      },
+      "instruction": "preserve bound briefing",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round2-duplicate-backlog",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "reuse matching task",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "search own work by outcome",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "existing"
+    },
+    {
+      "name": "round2-unreadable-original",
+      "source": "task Interview replay / Round-2 replay",
+      "route": "manual",
+      "action": "ask Captain when authority needed",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "task"
+      },
+      "instruction": "unverified before authority",
+      "created_tasks": 0,
+      "briefing_changed": false,
+      "authority": "unverified"
+    },
+    {
+      "name": "package-notice",
+      "source": "AC-3",
+      "route": "manual",
+      "action": "record notice",
+      "record": {
+        "peer": "server-id/full-agent-id",
+        "date": "2026-10-27",
+        "question": "exchange:q1",
+        "answer": "repository fact at pinned revision",
+        "checked_source": "repo@c70f1b22",
+        "location": "note"
+      },
+      "created_tasks": 0
+    }
+  ],
+  "rejected_trace_mutants": [
+    "vendor-route",
+    "unlisted-read",
+    "no-probe",
+    "no-opening",
+    "missing-behavior",
+    "explicit-interrupt",
+    "busy-new-question",
+    "poll",
+    "deadline-reset",
+    "expired-send",
+    "worker-block",
+    "receipt-as-answer",
+    "duplicate-send",
+    "duplicate-task",
+    "lost-note",
+    "briefing-edit",
+    "relayed-authority"
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "base": {
+    "startup_without_exchange": 5775,
+    "idle_open": 1045,
+    "idle_merged": 1318,
+    "after_archive": 3276,
+    "merge_ask": 742,
+    "native_claude": 742,
+    "unsupported": 742,
+    "first_task_opening": 0,
+    "proactive_paseo": 742,
+    "unlisted_incoming": 742,
+    "gate_reply": 742,
+    "warm_exchange": 0,
+    "source_repair": 0
+  },
+  "candidate": {
+    "startup_without_exchange": 5775,
+    "idle_open": 1045,
+    "idle_merged": 1318,
+    "after_archive": 3276,
+    "merge_ask": 742,
+    "native_claude": 805,
+    "unsupported": 805,
+    "first_task_opening": 805,
+    "proactive_paseo": 2475,
+    "unlisted_incoming": 2185,
+    "gate_reply": 2185,
+    "warm_exchange": 0,
+    "source_repair": 0
+  }
+}

@@ -1,0 +1,1 @@
+37 manual traces audited; 17 bad trace mutations rejected. This does not prove agent compliance with prose.

@@ -1,0 +1,1 @@
+Successful API read this turn: head f7516476989b59fb45e4e5cb520d41ed9bc563ce, OPEN, isDraft=false. PR description still gives comment ratio 0/25, maximum 5%, and historical dc3916fb validation/review evidence. Validator made no PR mutation.

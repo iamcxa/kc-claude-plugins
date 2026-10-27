@@ -1,0 +1,3 @@
+observer report committed: _archive/some-task/observer.md at HEAD.
+next: run kc-dev-flow-2:learn for some-task.
+next: send learn's notice, then the observer report unedited, in one message; answer none of its findings.

@@ -1,0 +1,1 @@
+{"command":"status","entities":[{"id":"some-task","slug":"some-task","status":"validation","title":"some-task","score":""}],"pagination":{"page":"1","limit":"0","total":"1","start":"1","end":"1","has_next":"false"}}

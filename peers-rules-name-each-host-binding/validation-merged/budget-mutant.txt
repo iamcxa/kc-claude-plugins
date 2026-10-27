@@ -1,0 +1,2 @@
+Dropping merged +144 budget step REJECTED:
+references/sd/workflow.md: 5565 words exceeds the budget of 5421; move the added text out of the README, or add a raise step of 144 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS

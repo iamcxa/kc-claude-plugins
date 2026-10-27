@@ -1,0 +1,3 @@
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5565 of 5565 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior

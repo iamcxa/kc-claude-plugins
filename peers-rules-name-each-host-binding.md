@@ -540,3 +540,29 @@ Cycle 1 independent validation PASSED for dc3916fbb4ce9655dc37c5e4185653694e029d
 ### Summary
 
 Merged origin/main b8ce84e5 into the existing branch as f7516476989b59fb45e4e5cb520d41ed9bc563ce, retaining both lint changes without conflict or additional source edits. All 25 test files exit 0 and independent full-bundle recount agrees; startup rises 144 words with main while the peer bundles stay within their approved ceilings. This complete report supersedes earlier implementation reports for the current candidate; the branch is pushed and FO retains RoboRev, CI, revalidation and delivery decisions.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #730 head f7516476 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at f7516476989b59fb45e4e5cb520d41ed9bc563ce against merged base b8ce84e584cf5c5cb482009d9d08d7316ce2a6ac within the accepted local/prose/manual-replay boundary; complete AC-1/2/3/7/6 matrix, commands, observations and limits: peers-rules-name-each-host-binding/validation-merged/evidence.md.
+- DONE: Recheck the merge of origin/main (b8ce84e5) into the branch: the merge commit changes nothing of this PR beyond conflict resolution in kc-dev-flow-2/scripts/lint-skills.py, both #729's budget step and this PR's extension-document check are present, and the reading recount and tests the implementation report gives reproduce; RoboRev (FO, 2026-10-27): clean on f75164769, evidence=roborev:1243; CI on this head read by FO: 5 of 5 pass
+  Both parents verified; git merge-file independently reproduces lint byte-for-byte without a conflict, all other PR files match dc3916fb and incoming files match main. Main's +144 budget step and the document guard survive; helper remains absent. Full two-arm reading manifest equals implementation's; RoboRev 1243/CI 5 of 5 are FO-supplied evidence.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five exact steps in validation-merged/acceptance.sh ran unchanged with bash --noprofile --norc, exit 0; full output in acceptance-output.txt. Equivalent supplied Codex package ADR lint used --since b8ce84e584cf5c5cb482009d9d08d7316ce2a6ac --require 0038: 38 records, 0 legacy, exit 0.
+- DONE: Re-run host/record/activation evidence and at least one falsifier per active criterion.
+  37 manual traces and 17 rejected bad-event mutants cover AC-1 vendor routing/unlisted reads, AC-2 busy/expired sends and receipt handling, AC-3 duplicate task/lost record/briefing edit/relayed authority; real base/candidate SD and pr_watch discovery omit hidden notes. AC-7 mandatory-paseo mutation refuses, custom lists survive merge, and adopted lists do not change package lint.
+- DONE: Independently recount complete routes and exercise integration-loss counterexamples.
+  Workflow 5421 -> 5565 and startup 5631 -> 5775 are the same +144 from main in both arms; all other lifecycle moments unchanged. Peers/paseo/upstream remain 805/290/1380, proactive 2475 <= 2481, incoming/gate 2185 <= 2191. AC-6 omitted upstream/inbound sums fail; dropped budget step refuses 5565 words; removing document guard fails its named test.
+- DONE: Run all remaining tests, retained guards and document-impact checks.
+  All 25 files exit 0: 882 unittest cases passed, 1 skipped, plus SD dispatch and observer-recovery assertion runners; Codex tests 35, POC README 7, lint 44. Lint 5565/5565, number/design/comment checks pass, 9 dispatch records complete, and all five doc_impact dispositions confirmed, including ADR 0037's protected budget step.
+- SKIPPED: Optional journey integration, live peer delivery, new model-reader runs and validator execution of hosted review/CI.
+  The unchanged optional integration's probe cannot locate node/journey-accept.mjs or its YAML dependency; no exact missing component inferred. Scratch traces audit manually chosen events rather than policy execution; earlier reader evidence still applies to unchanged policy bytes. Source authentication/migration remain withdrawn, and no host-delivery or adoption-enforcement claim is added.
+
+### Findings
+
+F1 (unused dependency automation) remains resolved. No new product-code finding is established.
+- F2 Polish (remaining part): the current-head API read still shows comment ratio 0/25 and maximum 5% in the PR description; the actual check reports 0/6 and does not enforce the maximum below 20 added code lines. User/workflow: PR reviewer; observed issue: inaccurate evidence; protected criterion: none, review clarity only; trigger: successful f7516476 PR-body read. FO should refresh the description with the merged-head numbers and review receipt before delivery.
+
+### Summary
+
+Independent validation PASSED for f7516476989b59fb45e4e5cb520d41ed9bc563ce: both merged changes survive, every active criterion has rerun evidence and a counterexample, and goal sufficiency/minimal necessity remain supported at the accepted boundary. This complete report supersedes all earlier validation reports for the current candidate; F2 is only a PR-description correction, candidate/frontmatter bytes remain unchanged, and temporary validation worktrees are removed. CI triggers are unchanged and per-PR cost unmeasured; the PR is open/non-draft as observed, no readiness or delivery action was taken, and FO retains the gate and delivery decision.
