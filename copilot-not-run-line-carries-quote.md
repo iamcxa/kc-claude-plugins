@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-27T16:00:07Z
 worktree: .worktrees/spacedock-ensign-copilot-not-run-line-carries-quote
-pr: iamcxa/kc-claude-plugins#736
+pr: pr-merge:736
 ---
 
 ## Scope
