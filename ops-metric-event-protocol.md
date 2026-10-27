@@ -94,6 +94,11 @@ gates:
                 at: "2026-10-27T05:02:31.361077Z"
                 decision: revise
                 reason: 'Captain 2026-10-27 in chat: 「退回實作修復問題」 — accepts FO''s recommendation: one short fix round for the four round-2 items (key configuration validation incl. string elements, non-empty sources and environments, non-empty secret; sentry.issue.alert source restricted to urn:sentry: and the README Sentry sentence corrected; web_url without percent-encoded text; period calendar-checked), rechecked by the validator only, then delivery.'
+            - id: gate-attempt:ops-metric-event-protocol-validation-3
+              briefing:
+                id: briefing:ops-metric-event-protocol:validation:attempt-3:revision-1
+                digest: sha256:68813896f45ea673c077f9d4b36b2fe90450ffb86b3d7cb7f18059d14f8d6138
+                room-ref: ./ops-metric-event-protocol/review/validation/briefing-3
 started: 2026-10-26T14:32:33Z
 ---
 

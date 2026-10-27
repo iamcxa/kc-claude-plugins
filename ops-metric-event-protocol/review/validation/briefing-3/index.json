@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ops-metric-event-protocol:validation:attempt-3:revision-1",
+  "question": "Accept validation cycle 3 PASSED for PR #727 at head 5dee91fb7fbfaa5cbd627bd2965c3bd4bae204f2 and deliver it: FO marks PR #727 ready, and approval also covers later external-review rounds on the same PR, merging the full head that `delivery_gate.py check` passes with `--match-head-commit` set to it, and removing its clean, pushed worktree, unless you say you merge or hold. Approving also accepts H1 (a signing secret that decodes to zero bytes still verifies a forged signature) as the first contract item r1 fixes before it builds keys from environment values.",
+  "artifacts": [
+    {
+      "id": "artifact:ops-metric-event-protocol:validation:attempt-3:revision-1:item-1",
+      "uri": "git-root://state/5c905a7af1cdc4da35503223406c1e33cfbc8962/ops-metric-event-protocol.md",
+      "rev": "sha256:eaa2470c418d03f766aba050c6b43e0c91153952bcfc9cefd46756c822f1d39a",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: the validator's cycle 3 PASSED at 5dee91fb with every item shown by a signed input the previous head accepted and this head refuses, controls accepted at both heads; FO reran the acceptance script in a fresh shell and every line matched (29 tests, 51 of 51 mutations caught, 22 fixtures, 50 signed probes, 5 of 5 PR checks).\nNecessity: the PR adds only the contract module, its two test files and one path-filtered CI workflow; the validator ruled each without-it item (heartbeat severity info, safe-integer checks, mutations in CI, UTC rule on all metric types, redundant issue_id pattern) keep.\nSecond reviewer: Cross-model review because the contract is pinned by relay and qnow. Cross-model review not run: the Captain ruled cycle 3 validator-only; Codex gpt-6-astra, Gemini 4 Argon and engineering-reviewer reviewed 36973c77 and 194f0b83, and every item they raised in round 2 is fixed or declined below.\nFO declines: H1 empty-key forgery (deferred to r1, which builds keys); H2 no usable key reads as signature-mismatch (polish, configuration fault only); Gemini P3-1 header string exit code (validator tool only, no runtime effect); Gemini P3-2 empty key list masks missing headers (polish, configuration fault only); G4 non-finite clock reason wording (polish, sender sees 401); G5 leading-zero timestamp accepted (signed literal, harmless); G6 Sentry slug duty unlisted (runtime adapter duty for r1); G7 mutation job on push to main (CI minutes only, 1m49s)."
+    }
+  ]
+}

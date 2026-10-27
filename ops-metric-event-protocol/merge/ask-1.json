@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "5dee91fb7fbfaa5cbd627bd2965c3bd4bae204f2",
+  "model": "not run",
+  "necessity": "the PR adds only the contract module, its two test files and one path-filtered CI workflow; the validator ruled each without-it item (heartbeat severity info, safe-integer checks, mutations in CI, UTC",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F3 Deferred risk: `parseEvent` accepts'",
+    "point: deferred: 'Declined this round, recorded in README'",
+    "point: deferred: \"- DONE: Rule on the implementer's\"",
+    "point: deferred: '- The two README limits I'",
+    "point: deferred: '- G1 Deferred risk: `sentry.issue.alert` `web_url`'",
+    "point: deferred: '- G3 Deferred risk (cycle-1 F3,'",
+    "point: deferred: '- H1 Deferred risk (the remainder'",
+    "point: deferred: '- Still open and unchanged, not'",
+    "point: deferred: 'Second reviewer: Cross-model review because the'",
+    "point: not-run: 'Second reviewer: Cross-model review because the'",
+    "point: path: '.github/workflows/kc-ops-inbox-tests.yml'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#727",
+  "sufficiency": "the validator's cycle 3 PASSED at 5dee91fb with every item shown by a signed input the previous head accepted and this head refuses, controls accepted at both heads; FO reran the acceptance script in ",
+  "time": "2026-10-27T05:31:51Z",
+  "verdict": "ask"
+}
