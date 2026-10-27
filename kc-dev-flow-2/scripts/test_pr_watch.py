@@ -16,6 +16,10 @@ spec = importlib.util.spec_from_file_location("pr_watch", Path(__file__).with_na
 watch = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(watch)
 
+learn_spec = importlib.util.spec_from_file_location("learning_parity", Path(__file__).with_name("learning.py"))
+learn = importlib.util.module_from_spec(learn_spec)
+learn_spec.loader.exec_module(learn)
+
 gate_spec = importlib.util.spec_from_file_location("delivery_gate", Path(__file__).with_name("delivery_gate.py"))
 gate = importlib.util.module_from_spec(gate_spec)
 gate_spec.loader.exec_module(gate)
@@ -555,94 +559,94 @@ def view(state="OPEN", draft=False, checks="SUCCESS", mergeable="MERGEABLE"):
 
 
 # Sanitized path/PR manifest at state revision 1158adc584637bdbf1b2f347b91a4c63844d6c00.
-ARCHIVE_MANIFEST = [['_archive/adr-protected-path-guard.md', 'pr-merge:712'],
- ['_archive/agent-reads-governing-adr.md', 'pr-merge:698'],
- ['_archive/amendment-form-check.md', 'pr-merge:650'],
- ['_archive/board-optout.md', 'pr-merge:543'],
- ['_archive/canvas-document-popup.md', 'pr-merge:468'],
- ['_archive/captain-question-load.md', 'pr-merge:675'],
- ['_archive/chat-only-evidence-observer-blind.md', 'pr-merge:679'],
- ['_archive/codex-reader-counts-code-review-only.md', 'pr-merge:702'],
- ['_archive/codex-reader-reads-receipt-marker.md', 'pr-merge:693'],
- ['_archive/codex-review-hang-detected.md', 'pr-merge:722'],
- ['_archive/codex-review-round3-followups.md', ''],
- ['_archive/commissioned-by-names-spacedock.md', 'pr-merge:685'],
- ['_archive/copilot-quota-refusal-is-not-a-review.md', 'pr-merge:630'],
- ['_archive/db-surface-without-migrations.md', 'pr-merge:686'],
- ['_archive/delivery-gate-candidate-followups.md', ''],
- ['_archive/delivery-gate-reads-folder-tasks.md', 'pr-merge:720'],
- ['_archive/delivery-gate-settles-skipped-checks-followups.md', ''],
- ['_archive/delivery-gate-settles-skipped-checks.md', 'pr-merge:680'],
- ['_archive/delivery-gate-verdict-form.md', 'pr-merge:647'],
- ['_archive/design-director-runs-ui-design-review.md', 'pr-merge:708'],
- ['_archive/dev2-laws-check.md', 'pr-merge:651'],
- ['_archive/dispatch-and-report-hygiene.md', 'pr-merge:535'],
- ['_archive/extension-defaults-and-install-choice.md', 'pr-merge:716'],
- ['_archive/extension-instruction-reaches-dispatch.md', 'pr-merge:652'],
- ['_archive/fo-batch-sittings.md', 'pr-merge:689'],
- ['_archive/fo-lifecycle-mod.md', 'pr-merge:643'],
- ['_archive/fo-record-checks.md', 'pr-merge:640'],
- ['_archive/fo-write-checks-followups.md', ''],
- ['_archive/fo-write-checks.md', 'pr-merge:671'],
- ['_archive/fo-write-rules-checked.md', 'pr-merge:687'],
- ['_archive/fo-written-lines-checked-before-dispatch.md', 'pr-merge:724'],
- ['_archive/followup-dispatch-records-checked.md', 'pr-merge:642'],
- ['_archive/followup-dispatch-records-round3-followups.md', ''],
- ['_archive/ideation-gaps.md', 'pr-merge:537'],
- ['_archive/idle-names-failing-seeds.md', 'pr-merge:694'],
- ['_archive/journey-map-dev2-contract.md', 'pr-merge:628'],
- ['_archive/journey-render-keeps-annotations.md', 'pr-merge:558'],
- ['_archive/kc-adr-format-source.md', 'pr-merge:710'],
- ['_archive/kc-adr-tools-with-dev2-copy.md', 'pr-merge:713'],
- ['_archive/kc-decision-log-cli.md', 'pr-merge:695'],
- ['_archive/kc-decision-log-p1/index.md', ''],
- ['_archive/laws-check-followups.md', ''],
- ['_archive/learn-delivery-follow-through.md', 'pr-merge:639'],
- ['_archive/learn-delivery-round3-followups.md', ''],
- ['_archive/learning-serialize-evaluation.md', 'pr-merge:473'],
- ['_archive/merge-ask-holds-missing-clauses.md', 'pr-merge:703'],
- ['_archive/merge-gatekeeper-followups.md', ''],
- ['_archive/merge-gatekeeper.md', 'pr-merge:666'],
- ['_archive/migration-and-number-guards.md', 'pr-merge:533'],
- ['_archive/names-check-before-dispatch.md', 'pr-merge:649'],
- ['_archive/new-work-starts-from-a-story-map.md', 'pr-merge:705'],
- ['_archive/number-guards-readme-shrink-followups.md', ''],
- ['_archive/number-guards-readme-shrink.md', 'pr-merge:670'],
- ['_archive/observer-before-merge-guard.md', 'pr-merge:632'],
- ['_archive/observer-check-round3-followups.md', ''],
- ['_archive/override-reaches-gate-and-criteria-wait.md', ''],
- ['_archive/patch-0102.md', 'pr-merge:549'],
- ['_archive/patch-0103.md', 'pr-merge:553'],
- ['_archive/poc-no-migrations.md', 'pr-merge:555'],
- ['_archive/pr-watch-round3-followups.md', ''],
- ['_archive/pr-watch-state-per-session.md', 'pr-merge:646'],
- ['_archive/pr-watch-tasks-round3-followups.md', ''],
- ['_archive/prod-security-review-gates.md', 'pr-merge:656'],
- ['_archive/prod-security-validation-gate-followups.md', ''],
- ['_archive/prod-security-validation-gate.md', 'pr-merge:659'],
- ['_archive/read-adr-reporting-rule-followup.md', 'pr-merge:706'],
- ['_archive/reflow-order.md', 'pr-merge:544'],
- ['_archive/release-acceptance/index.md', 'pr-merge:709'],
- ['_archive/release-please-exclude-paths.md', 'pr-merge:467'],
- ['_archive/release-review-staleness-held-at-dispatch.md', 'pr-merge:711'],
- ['_archive/release-review.md', 'pr-merge:540'],
- ['_archive/release-walk-picky-reviewers-and-director.md', 'pr-merge:714'],
- ['_archive/replay-control-arm-round3-followups.md', ''],
- ['_archive/review-cadence.md', 'pr-merge:536'],
- ['_archive/review-followups-0102.md', ''],
- ['_archive/role-triggers-owe-ce-on-review-drift.md', 'pr-merge:719'],
- ['_archive/special-role-calls-fire-when-needed.md', 'pr-merge:682'],
- ['_archive/special-role-triggers-followups.md', ''],
- ['_archive/special-role-triggers.md', 'pr-merge:664'],
- ['_archive/stage-report-correction-path.md', 'pr-merge:721'],
- ['_archive/ui-design-review-in-ideation.md', 'pr-merge:663'],
- ['_archive/ui-design-review-round3-followups.md', ''],
- ['_archive/worker-completion-goes-to-main.md', 'pr-merge:633'],
- ['_archive/worker-loads-declared-package.md', 'pr-merge:661'],
- ['_archive/workflow-budget-ratchet-followups.md', ''],
- ['_archive/workflow-budget-ratchet.md', 'pr-merge:658'],
- ['_archive/workflow-checkout-must-match-trunk-readme.md', 'pr-merge:631'],
- ['_archive/workflow-gaps-from-qnow-1270.md', '']]
+ARCHIVE_MANIFEST = [['_archive/adr-protected-path-guard.md', 'pr-merge:712', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/agent-reads-governing-adr.md', 'pr-merge:698', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/amendment-form-check.md', 'pr-merge:650', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/board-optout.md', 'pr-merge:543', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/canvas-document-popup.md', 'pr-merge:468', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/captain-question-load.md', 'pr-merge:675', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/chat-only-evidence-observer-blind.md', 'pr-merge:679', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/codex-reader-counts-code-review-only.md', 'pr-merge:702', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/codex-reader-reads-receipt-marker.md', 'pr-merge:693', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/codex-review-hang-detected.md', 'pr-merge:722', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/codex-review-round3-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/commissioned-by-names-spacedock.md', 'pr-merge:685', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/copilot-quota-refusal-is-not-a-review.md', 'pr-merge:630', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/db-surface-without-migrations.md', 'pr-merge:686', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/delivery-gate-candidate-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/delivery-gate-reads-folder-tasks.md', 'pr-merge:720', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/delivery-gate-settles-skipped-checks-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/delivery-gate-settles-skipped-checks.md', 'pr-merge:680', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/delivery-gate-verdict-form.md', 'pr-merge:647', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/design-director-runs-ui-design-review.md', 'pr-merge:708', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/dev2-laws-check.md', 'pr-merge:651', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/dispatch-and-report-hygiene.md', 'pr-merge:535', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/extension-defaults-and-install-choice.md', 'pr-merge:716', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/extension-instruction-reaches-dispatch.md', 'pr-merge:652', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/fo-batch-sittings.md', 'pr-merge:689', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/fo-lifecycle-mod.md', 'pr-merge:643', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/fo-record-checks.md', 'pr-merge:640', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/fo-write-checks-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/fo-write-checks.md', 'pr-merge:671', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/fo-write-rules-checked.md', 'pr-merge:687', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/fo-written-lines-checked-before-dispatch.md', 'pr-merge:724', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/followup-dispatch-records-checked.md', 'pr-merge:642', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/followup-dispatch-records-round3-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/ideation-gaps.md', 'pr-merge:537', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/idle-names-failing-seeds.md', 'pr-merge:694', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/journey-map-dev2-contract.md', 'pr-merge:628', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/journey-render-keeps-annotations.md', 'pr-merge:558', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/kc-adr-format-source.md', 'pr-merge:710', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/kc-adr-tools-with-dev2-copy.md', 'pr-merge:713', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/kc-decision-log-cli.md', 'pr-merge:695', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/kc-decision-log-p1/index.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/laws-check-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/learn-delivery-follow-through.md', 'pr-merge:639', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/learn-delivery-round3-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/learning-serialize-evaluation.md', 'pr-merge:473', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/merge-ask-holds-missing-clauses.md', 'pr-merge:703', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/merge-gatekeeper-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/merge-gatekeeper.md', 'pr-merge:666', 'kc-dev-flow-2', 'prod'],
+ ['_archive/migration-and-number-guards.md', 'pr-merge:533', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/names-check-before-dispatch.md', 'pr-merge:649', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/new-work-starts-from-a-story-map.md', 'pr-merge:705', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/number-guards-readme-shrink-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/number-guards-readme-shrink.md', 'pr-merge:670', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/observer-before-merge-guard.md', 'pr-merge:632', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/observer-check-round3-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/override-reaches-gate-and-criteria-wait.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/patch-0102.md', 'pr-merge:549', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/patch-0103.md', 'pr-merge:553', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/poc-no-migrations.md', 'pr-merge:555', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/pr-watch-round3-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/pr-watch-state-per-session.md', 'pr-merge:646', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/pr-watch-tasks-round3-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/prod-security-review-gates.md', 'pr-merge:656', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/prod-security-validation-gate-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/prod-security-validation-gate.md', 'pr-merge:659', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/read-adr-reporting-rule-followup.md', 'pr-merge:706', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/reflow-order.md', 'pr-merge:544', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/release-acceptance/index.md', 'pr-merge:709', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/release-please-exclude-paths.md', 'pr-merge:467', 'kc-dev-flow-2', 'prod'],
+ ['_archive/release-review-staleness-held-at-dispatch.md', 'pr-merge:711', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/release-review.md', 'pr-merge:540', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/release-walk-picky-reviewers-and-director.md', 'pr-merge:714', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/replay-control-arm-round3-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/review-cadence.md', 'pr-merge:536', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/review-followups-0102.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/role-triggers-owe-ce-on-review-drift.md', 'pr-merge:719', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/special-role-calls-fire-when-needed.md', 'pr-merge:682', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/special-role-triggers-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/special-role-triggers.md', 'pr-merge:664', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/stage-report-correction-path.md', 'pr-merge:721', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/ui-design-review-in-ideation.md', 'pr-merge:663', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/ui-design-review-round3-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/worker-completion-goes-to-main.md', 'pr-merge:633', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/worker-loads-declared-package.md', 'pr-merge:661', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/workflow-budget-ratchet-followups.md', '', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/workflow-budget-ratchet.md', 'pr-merge:658', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/workflow-checkout-must-match-trunk-readme.md', 'pr-merge:631', 'kc-dev-flow-2', 'pilot'],
+ ['_archive/workflow-gaps-from-qnow-1270.md', '', 'kc-dev-flow-2', 'pilot']]
 ARCHIVE_JOB_KEYS = ['03768d7afea14ec480f55b049e7a8c5807dfcca54ee980adb4b58b1f62607247',
  '0519f142d8ce26351f82de8f6a1737e435f6f6833a2240d0f433227d1cf33c15',
  '08fcffef857b105eb2ce9a84e87250cfea604636f0a9764672fd2faeee12d3dc',
@@ -781,10 +785,13 @@ class TasksTests(unittest.TestCase):
     def watched(self):
         return json.loads(self.watch.read_text()) if self.watch.exists() else {}
 
-    def archive(self, slug, pr="pr-merge:7", folder=False, commit=True, extra=""):
+    def archive(self, slug, pr="pr-merge:7", folder=False, commit=True, extra="",
+                variant="kc-dev-flow-2", profile="pilot"):
         path = self.state / "_archive" / (f"{slug}/index.md" if folder else f"{slug}.md")
         path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(f"---\nstatus: done\npr: {pr}\n{extra}---\n")
+        fields = f"variant: {variant}\n" if variant is not None else ""
+        fields += f"profile: {profile}\n" if profile is not None else ""
+        path.write_text(f"---\nstatus: done\npr: {pr}\n{fields}{extra}---\n")
         if commit:
             self.git(self.state, "add", "_archive")
             self.git(self.state, "commit", "-qm", "archive fixture")
@@ -957,7 +964,7 @@ class TasksTests(unittest.TestCase):
         inline = self.repo / "docs/inline"
         (inline / "_archive").mkdir(parents=True)
         (inline / "README.md").write_text("---\nextensions: [learn]\n---\n")
-        (inline / "_archive/one.md").write_text("---\npr: pr-merge:7\n---\n")
+        (inline / "_archive/one.md").write_text("---\npr: pr-merge:7\nvariant: kc-dev-flow-2\nprofile: pilot\n---\n")
         self.git(self.repo, "add", "docs/inline")
         self.git(self.repo, "commit", "-qm", "inline workflow")
         self.workflow = inline
@@ -1021,10 +1028,12 @@ class TasksTests(unittest.TestCase):
 
     def test_frozen_archive_replay_recovers_all_eleven_and_suppresses_backfilled_jobs(self):
         self.readme("learn")
-        for path, pr in ARCHIVE_MANIFEST:
+        for path, pr, variant, profile in ARCHIVE_MANIFEST:
             target = self.state / path
             target.parent.mkdir(parents=True, exist_ok=True)
-            target.write_text(f"---\nstatus: done\npr: {pr}\n---\n")
+            fields = f"variant: {variant}\n" if variant is not None else ""
+            fields += f"profile: {profile}\n" if profile is not None else ""
+            target.write_text(f"---\nstatus: done\npr: {pr}\n{fields}---\n")
         self.git(self.state, "add", "_archive")
         self.git(self.state, "commit", "-qm", "frozen 88-entity manifest")
         target_keys = {watch.job_key({"workflow": "docs/dev2", "task_id": s}) for s in BACKFILLED}
@@ -1039,13 +1048,49 @@ class TasksTests(unittest.TestCase):
             for slug in BACKFILLED:
                 self.assertEqual(f"next: run kc-dev-flow-2:learn for {slug}." in lines, not backfilled, slug)
 
-    def test_ineligible_learn_hold_leaves_no_job_and_next_idle_repeats_the_name(self):
+    def test_archive_variant_profile_filter_matches_learning_eligibility(self):
         self.readme("learn")
-        self.archive("old-profile")
-        line = "next: run kc-dev-flow-2:learn for old-profile."
-        self.assertEqual(self.tasks({}), (0, [line]))
+        expected = []
+        for vi, variant in enumerate((None, "", "kc-dev-flow-2", "kc-dev-flow", "other")):
+            for pi, profile in enumerate((None, "", "poc", "pilot", "prod", "legacy", "POC")):
+                value = {"variant": variant, "profile": profile, "closed": True, "merged": True,
+                         "verdict": "passed", "learning_task": False, "closure_revision": "a" * 40,
+                         "landed_revision": "b" * 40, "pr": "o/r#7", "evidence": ["fixture"]}
+                eligible = not learn.eligibility(value)
+                slug = f"case-{vi}-{pi}"
+                self.archive(slug, variant=variant, profile=profile, commit=False,
+                             pr="pr-merge:7" if eligible else "o/r#99", folder=pi % 2 == 0)
+                if eligible:
+                    expected.append(f"next: run kc-dev-flow-2:learn for {slug}.")
+        self.git(self.state, "add", "_archive")
+        self.git(self.state, "commit", "-qm", "variant/profile parity matrix")
+        before = {str(p.relative_to(self.state)): p.read_bytes() for p in self.state.rglob("*")
+                  if p.is_file() and ".git" not in p.parts}
+        for _ in range(2):
+            self.assertEqual(self.tasks({}), (0, sorted(expected)))
+        self.assertEqual({str(p.relative_to(self.state)): p.read_bytes() for p in self.state.rglob("*")
+                          if p.is_file() and ".git" not in p.parts}, before)
+        self.assertFalse(self.watch.exists())
+        self.assertFalse((self.repo / ".git/kc-dev-flow-2").exists())
+
+    def test_frontmatter_ineligible_learn_hold_is_skipped_without_a_record(self):
+        self.readme("learn")
+        self.archive("old-profile", profile="legacy")
+        self.assertEqual(self.tasks({}), (0, []))
         self.assertEqual(self.claim_archive("old-profile", profile="legacy"),
                          {"state": "ineligible", "reasons": ["profile"]})
+        self.assertEqual(self.learn("notices", "--all"), {"notices": []})
+        self.assertEqual(self.tasks({}), (0, []))
+        self.assertFalse(self.watch.exists())
+        self.assertFalse((self.repo / ".git/kc-dev-flow-2").exists())
+
+    def test_other_ineligibility_reasons_may_still_repeat(self):
+        self.readme("learn")
+        self.archive("other-hold", extra="verdict: rejected\n")
+        line = "next: run kc-dev-flow-2:learn for other-hold."
+        self.assertEqual(self.tasks({}), (0, [line]))
+        self.assertEqual(self.claim_archive("other-hold", verdict="rejected"),
+                         {"state": "ineligible", "reasons": ["verdict"]})
         self.assertEqual(self.learn("notices", "--all"), {"notices": []})
         self.assertEqual(self.tasks({}), (0, [line]))
         self.assertEqual(len(line.split()), 5)

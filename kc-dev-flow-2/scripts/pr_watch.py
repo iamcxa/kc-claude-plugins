@@ -481,6 +481,8 @@ def archived_learning(workflow, state, ask):
     for slug, path in sorted(found.items()):
         try:
             meta = front_text(git("-C", str(state), "show", f"{rev}:./{path}"))
+            if meta.get("variant") != "kc-dev-flow-2" or meta.get("profile") not in ("poc", "pilot", "prod"):
+                continue
             pr = meta.get("pr", "")
             merged = bool(re.fullmatch(r"pr-merge:\d+", pr))
             qualified = re.fullmatch(r"([\w.-]+/[\w.-]+)#(\d+)", pr)
