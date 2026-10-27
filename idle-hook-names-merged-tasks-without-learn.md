@@ -342,7 +342,7 @@ Recommended order: FO settles archive-waits-for-observer-report's enforcement lo
 - **AC-6** Existing startup/idle hook order, observer-before-sentinel and after-archive output, ready-gate/seed/hold behavior and live PR watching remain intact. Evidence: test_pr_watch.py, test_observer_check.py, test_learning.py and test_sd_dispatch.py at the combined candidate; lint the retained extension pointer. Falsifier: route archived tasks through live role/dispatch checks, insert a new hook, drop the observer script pointer, or alter the after-pr-merge instructions. No implementation or hosted CI pass is claimed at ideation.
 - **AC-7** Recount each lifecycle row with identical fixtures/passages before/after; normal-path counts are no greater than the proposed values, each missing reminder is exactly five words, and recovery work/diagnostic growth is separately disclosed. Evidence: retain emitted stdout plus independent whitespace-word recount and the exact extension diff. Falsifier: only count workflow.md, omit generated output or new instructions, hide old-task repetition, or claim the 5985-word possible learning load is a five-word total. This task changes no CI trigger; CI cost per PR has not been measured.
 
-- **AC-8** Amended by Captain, amendment 1: when learn holds a committed archived merged task as ineligible, exercise the next idle pass and show its exact output. Evidence: a real recorder claim with profile `legacy` returns `{"state": "ineligible", "reasons": ["profile"]}`, notices --all stays empty, and the next idle pass repeats `next: run kc-dev-flow-2:learn for old-profile.`. This is the approved full-history repetition: no job means no suppression; the task remains closed. Falsifier: silently suppress an ineligible archive without a job or create a job for the hold.
+- **AC-9** Amended by Captain, amendment 2: the committed archive scan skips every task whose frontmatter variant or profile learning.py eligibility rejects, including missing values, before querying its PR. It names eligible merged missing-job tasks as AC-1 specifies, writes no record and changes only the three approved code files. Evidence: a 35-case variant/profile matrix compares actual tasks output with learning.py eligibility, repeats the read-only scan, and exercises a real legacy-profile ineligible claim with empty notices and no next-idle reminder. Other ineligibility reasons may still repeat, as the Captain accepted. Falsifier: remove either field check, let either check drift from learning.py, remind a legacy-profile task, suppress an otherwise eligible task held only for its verdict, or create a record.
 
 ### Feedback Cycles
 
@@ -360,6 +360,9 @@ Supersedes: none (adds a criterion: a task learn holds as ineligible shows what 
 Captain: 「全准」 (chat, 2026-10-28)
 Asked: FO's batch-8 merge sitting, item 「**三、#737 閒置檢查：照首席工程師的方案修** - **怎麼修：** learn 判為「不適用」的任務，閒置檢查直接跳過，判斷依據是任務檔開頭的類型和規格欄位，只改原本那三個檔案，不另外存紀錄。 - **變差的地方：** 判斷規則是複製 learn 的，沒有共用；因為其他原因被判不適用的任務，仍然會重複出現。 - 修好、驗證過後，再拿合併詢問給你。」
 Supersedes: AC-8 as written (the implementation worker restates it: an archived task whose variant or profile learn rejects is skipped by the scan, with a parity test against learning.py's eligibility, in the three approved files and with no new record)
+
+Superseded text:
+- **AC-8** Amended by Captain, amendment 1: when learn holds a committed archived merged task as ineligible, exercise the next idle pass and show its exact output. Evidence: a real recorder claim with profile `legacy` returns `{"state": "ineligible", "reasons": ["profile"]}`, notices --all stays empty, and the next idle pass repeats `next: run kc-dev-flow-2:learn for old-profile.`. This is the approved full-history repetition: no job means no suppression; the task remains closed. Falsifier: silently suppress an ineligible archive without a job or create a job for the hold.
 
 ## Stage Report: ideation
 
@@ -469,3 +472,38 @@ Implemented committed archive discovery and one supported all-notices subtractio
 ### Summary
 
 Validation of PR #737 head 207c0a7eb51d08c00e68dbe52e9b364793750484 is complete with recommendation REJECTED pending F1 (Needs decision); no demonstrated implementation failure against AC-1–AC-7 or AC-8's written repeat expectation. All local checks and 14 falsifiers pass, but the real next-idle behavior conflicts with the Captain wording preserved in Amendment 1, so green tests do not establish the accepted outcome. FO owns disposition and any subsequent feedback or Captain decision; merge/adoption remain unapproved.
+
+## Stage Report: implementation
+
+- DONE: Apply Captain amendment 2: in kc-dev-flow-2/scripts/pr_watch.py the archived-task scan skips a task whose frontmatter variant or profile learn rejects, in the three approved files only, with no new record and no change to kc-dev-flow-2/skills/learn/SKILL.md or kc-dev-flow-2/scripts/learning.py; add a parity test in kc-dev-flow-2/scripts/test_pr_watch.py against kc-dev-flow-2/scripts/learning.py's eligibility for those two fields; restate AC-8 marked 'Amended by Captain, amendment 2', with its falsifier
+  Candidate aa0f280f8e94f8b5549b4a8cd26fe30560a9842c adds only the two-field filter, parity/regression fixtures and extension wording in the three approved code paths; learning.py and skills/learn/SKILL.md are unchanged. AC-8's exact old text moved under Amendment 2; its replacement is AC-9, marked Amended by Captain, amendment 2, following the fresh-ID rule.
+- DONE: Run every kc-dev-flow-2 test file; commit (named files only), push with an explicit remote and branch, no force, no -u; append a complete new `## Stage Report: implementation` ending in a superseding `### Summary`, committed with `spacedock state commit idle-hook-names-merged-tasks-without-learn --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2`; FO runs RoboRev and reads CI
+  All 25 discovered package test files exit 0: 894 unittest cases plus native dispatch/recovery checks; 124 watcher tests pass. Code committed with named staging and pushed to origin spacedock-ensign/idle-hook-names-merged-tasks-without-learn without force or -u; state report uses the dispatched spacedock state commit command.
+- DONE: AC-1 committed archive enumeration and guarded exact output.
+  Flat/folder/dedup/sidecar/hidden/uncommitted cases pass with frontmatter-qualified fixtures; archive exclusion, folder omission and extension-guard mutations fail. Amendment 2 excludes unsupported variant/profile values before any archived PR lookup.
+- DONE: AC-2 supported all-notices lookup and workflow identity.
+  Real pending/completed/acknowledged/no-change/released records suppress; keyed uncertainty without input is inspected. Omitting --all, using the state root, dropping workflow identity or requiring uncertain input each causes assertion failure.
+- DONE: AC-3 frozen 88-entity recovery replay.
+  Frozen manifests now retain variant/profile from state revision 1158adc584637bdbf1b2f347b91a4c63844d6c00. All 11 backfilled names appear with keys removed and disappear when restored; reconstructed total remains 29 before/18 after. Live-only mutation fails; historical store bytes and fresh provider checks are not claimed.
+- DONE: AC-4 state-only provider reads and failure boundaries.
+  Sentinel/no-provider, qualified/bare repository binding, OPEN/CLOSED/local exclusions, committed snapshot and error controls pass. Full-provider-fields and malformed-notices-as-empty mutations fail; rejected frontmatter never reaches its deliberately unavailable provider fixture.
+- DONE: AC-5 read-only archive scan.
+  Repeated parity scans preserve state bytes and create no watch or learning store. Existing archive-only state/store hash and real-claim suppression checks pass; injecting an archived watch-cache write fails.
+- DONE: AC-6 existing lifecycle and every package test file.
+  all-tests.json lists all 25 exit codes, including native test_sd_dispatch.py and test_observer_recovery.py with CLI 0.27.2/plugin 0.27.3. Observer-pointer removal fails; no hook or observer/after-archive behavior changed.
+- DONE: AC-7 complete per-moment reading recount.
+  Startup 1344->1342, idle OPEN 1039->1037, idle MERGED 572->570, after archive 358->356, merge ask 680->680, empty recovery 552->550. Full stdout retained; missing reminders remain 5 words, uncertainty/malformed fixtures 11; a longer reminder fails. A newly loaded learn/framework may add 5985 words plus evidence.
+- DONE: AC-9 replaces superseded AC-8 under Captain amendment 2.
+  The 35-case matrix agrees with learning.py eligibility for variant/profile, including missing/empty values and all three accepted profiles. Legacy-profile learn returns ineligible with empty notices and no idle line; verdict-only ineligibility still repeats as accepted. Removing either filter or changing learning.py to accept legacy makes parity assertions fail.
+- DONE: All 16 falsifiers fail by assertion, not fixture/import errors.
+  python3 -B with caches cleared and PYTHONDONTWRITEBYTECODE=1 ran isolated copies; cycle1/mutations.json and AC-*.log retain each exit 1. The previous candidate also fails the new parity and legacy-profile tests before the repair.
+- DONE: Required repository and installed-package checks.
+  Repository lint-skills.py exits 0 (workflow 5565/5565 words); installed Codex 0.32.0 adr_lint.py docs/adr --since 8bf4f3582411e8e4238f19fbadda8ddeca6767be exits 0 (39 records); number_guards.py check exits 0; comment_ratio.py <base> HEAD exits 0 (0.2%, maximum 5%); design_surfaces.py check and git diff --check exit 0.
+- DONE: Retained documents, evidence and bounded scope.
+  EXTENSION.md updated without reading growth; doc_impact.py <base> HEAD lists 0 additional documents. Evidence is in the code worktree's .context/idle-evidence/cycle1/ (all-tests.json, per-file logs, mutations.json, recount.json, replay-counts.json); no new record, version, ADR, schema, CI trigger or persistent reminder marker.
+- SKIPPED: RoboRev and hosted CI on the repaired head.
+  Dispatch reserves both to FO because this sandbox cannot reach GitHub API or the RoboRev daemon. Prior clean review/CI at 207c0a7e does not prove aa0f280f; no gh/PR mutation/review request/ready/merge action run. CI cost per PR not measured.
+
+### Summary
+
+This complete report supersedes the earlier implementation report and its AC-8 repetition claim: Captain amendment 2 is implemented at aa0f280f8e94f8b5549b4a8cd26fe30560a9842c, with the replacement recorded as AC-9 and the old text preserved. All 25 package test files and 16 falsifiers pass; unsupported variant/profile tasks are skipped without a record, while other ineligible holds may still repeat as the Captain accepted. The repaired branch is pushed; FO owns independent revalidation, RoboRev, current-head CI and the later merge ask.
