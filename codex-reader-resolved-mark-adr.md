@@ -34,6 +34,17 @@ gates:
                 id: briefing:codex-reader-resolved-mark-adr:ideation:attempt-1:revision-1
                 digest: sha256:756fc5c9f978c1ee485192daf337a47ac7e8f1e0733a5ee2521c363473d20319
                 room-ref: ./codex-reader-resolved-mark-adr/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-resolved-mark-adr:ideation:1
+                briefing: briefing:codex-reader-resolved-mark-adr:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T03:12:23.694452Z"
+                decision: approve
+                reason: Captain 「准」 (chat, 2026-10-27) answering 「需要你決定：ADR 0039 照這份草稿寫，同時在讀取器程式裡加一行指向這份 ADR 的註解，可以嗎？我建議可以」; accepts FO's recommendation
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
