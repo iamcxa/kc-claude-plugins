@@ -1,0 +1,19 @@
+{
+  "class": "never",
+  "head": "c2f3e313f4c04c243f5a49b4f72b876ff35b4d9b",
+  "model": "not run",
+  "necessity": "two files (kc-dev-flow-2/extensions/codex/codex_review.py, test_codex_review.py).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: '- F2 Deferred risk: `pr_watch wait`'",
+    "point: deferred: \"- F3 Deferred risk: a person's\"",
+    "point: deferred: 'PASSED on c2f3e313. All eight criteria'",
+    "point: deferred: 'FO declines: Polish F1, the `not'",
+    "point: path: 'kc-dev-flow-2/extensions/codex/codex_review.py'",
+    "point: path: 'kc-dev-flow-2/extensions/codex/test_codex_review.py'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#728",
+  "sufficiency": "the Codex reader now exits 1 on a head where Codex left a finding even after a later no-issues receipt on that same head, naming the finding's evidence id and `not cleared by` the receipt; validation ",
+  "time": "2026-10-27T00:37:43Z",
+  "verdict": "ask"
+}
