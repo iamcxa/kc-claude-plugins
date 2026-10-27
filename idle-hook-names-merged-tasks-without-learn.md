@@ -339,6 +339,12 @@ Recommended order: FO settles archive-waits-for-observer-report's enforcement lo
 - **AC-6** Existing startup/idle hook order, observer-before-sentinel and after-archive output, ready-gate/seed/hold behavior and live PR watching remain intact. Evidence: test_pr_watch.py, test_observer_check.py, test_learning.py and test_sd_dispatch.py at the combined candidate; lint the retained extension pointer. Falsifier: route archived tasks through live role/dispatch checks, insert a new hook, drop the observer script pointer, or alter the after-pr-merge instructions. No implementation or hosted CI pass is claimed at ideation.
 - **AC-7** Recount each lifecycle row with identical fixtures/passages before/after; normal-path counts are no greater than the proposed values, each missing reminder is exactly five words, and recovery work/diagnostic growth is separately disclosed. Evidence: retain emitted stdout plus independent whitespace-word recount and the exact extension diff. Falsifier: only count workflow.md, omit generated output or new instructions, hide old-task repetition, or claim the 5985-word possible learning load is a five-word total. This task changes no CI trigger; CI cost per PR has not been measured.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-27, chat
+Captain: 「其他全照建議」 (chat, 2026-10-27)
+Asked: 「需要你決定：第 8 批的設計，照首席工程師的建議一起處理，可以嗎？6 張進入實作，1 張直接關掉，再送一份 issue 給 Spacedock。我和首席工程師都建議照這樣做。」, with this task's row 「閒置檢查提醒還沒跑的 learn ｜ 照設計做，加一條驗收 ｜ 要確認 learn 判為「不適用」的任務，不會每次都被重複點名」
+Supersedes: none (adds a criterion: a task learn holds as ineligible shows what the next idle pass prints for it)
 
 ## Stage Report: ideation
 
