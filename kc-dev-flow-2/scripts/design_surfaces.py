@@ -767,9 +767,52 @@ def scope_hold(task):
     return "hold", SCOPE_HOLD.format(what=what, sha=sha[:8], line=changed[0].strip()[:80])
 
 
+# see docs/adr/0041-seed-admission-enforces-required-fields.md
+def check_seed_fields(name, text):
+    front = FRONTMATTER.match(text)
+    body = text[front.end():] if front else text
+    body = re.sub(r"<!--.*?-->", "", body, flags=re.S)
+    fields = (("Non-goals", r"Non-goals?"), ("Budget", r"Budget"),
+              ("Stop condition", r"Stop conditions?"))
+    found, current, fence = set(), "", None
+    for line in body.splitlines():
+        marker = re.match(r"^ {0,3}(`{3,}|~{3,})(.*)$", line)
+        if fence:
+            if marker and marker[1][0] == fence[0] and len(marker[1]) >= len(fence) and not marker[2].strip():
+                fence = None
+            continue
+        if marker:
+            fence = marker[1]
+            continue
+        heading = re.match(r"^##[ \t]+(.+?)[ \t]*$", line)
+        if heading:
+            current = heading[1].lower()
+            continue
+        if re.match(r"^#{1,6}[ \t]", line):
+            current = ""
+        if line.lstrip().startswith(">") or line.startswith(("    ", "\t", "#")):
+            continue
+        for label, pattern in fields:
+            value = None
+            if re.fullmatch(pattern, current, re.I):
+                value = line
+            elif current == "scope":
+                match = re.match(r"^(?:[-*] )?" + pattern + r":[ \t]*(.*)$", line, re.I)
+                if match:
+                    value = match[1]
+            if value is not None:
+                value = re.sub(r"<[^>]*>", "", value).strip(" \t-'\"*")
+                if value:
+                    found.add(label)
+    return [f"{name}: missing required body field: {label}" for label, _ in fields if label not in found]
+
+
 def check_task(path, seed=False, notes=None):
     errors = []
-    text = path.read_text()
+    try:
+        text = path.read_text()
+    except (OSError, UnicodeError) as exc:
+        return [f"{path.name}: cannot read task: {exc}"]
     if not FO_HEADING.search(text):
         errors.append(f"{path.name}: missing '## FO alignment' section")
     _, body = split_fo(text)
@@ -800,7 +843,7 @@ def check_task(path, seed=False, notes=None):
             errors.append(f"{path.name}: 'Visible change: none' contradicts 'ui' in 'Surfaces:'")
 
     if seed:
-        return errors
+        return check_seed_fields(path.name, text) + errors
     if "ui" in surfaces:
         check_ui(path.name, body, path.resolve().parent, errors)
     if "db" in surfaces:
@@ -836,7 +879,7 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     sub = parser.add_subparsers(dest="command", required=True)
     check = sub.add_parser("check", help="check a task file: FO alignment, surface artifacts, acceptance criteria, Captain amendments")
-    check.add_argument("--seed", action="store_true", help="check only the FO-alignment record, before ideation is dispatched")
+    check.add_argument("--seed", action="store_true", help="check seed fields and FO alignment before admitting a new task")
     check.add_argument("task")
     args = parser.parse_args(argv)
     path = Path(args.task)
@@ -848,7 +891,7 @@ def main(argv=None):
     for error in errors:
         print(error)
     if not errors:
-        print(f"{path.name}: {'FO alignment recorded' if args.seed else 'design surfaces presentable'}")
+        print(f"{path.name}: {'seed fields and FO alignment recorded' if args.seed else 'design surfaces presentable'}")
         for note in notes:
             print(note)
     if verdict == "not run":

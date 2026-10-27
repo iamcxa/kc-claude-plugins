@@ -1597,6 +1597,7 @@ class TasksTests(unittest.TestCase):
 
     def backlog(self, slug, surfaces="none", visible="none", heading=True):
         record = f"## FO alignment\n\nSurfaces: {surfaces}\nVisible change: {visible}\n" if heading else "## Scope\n\nnothing\n"
+        record += "\n## Scope\nNon-goals: migrations\nBudget: one task\nStop condition: upstream change\n"
         self.task(slug, status="backlog", worktree=False, body=record.encode())
 
     def seed_lines(self, lines):
@@ -1611,6 +1612,20 @@ class TasksTests(unittest.TestCase):
         self.addCleanup(patch.stop)
         return lambda: log.read_text().splitlines() if log.exists() else []
 
+    def test_real_seed_subprocess_names_a_missing_bound_with_valid_alignment(self):
+        self.ideation_readme()
+        self.backlog("missing-budget")
+        task = self.state / "missing-budget.md"
+        task.write_text(task.read_text().replace("Budget: one task\n", ""))
+        before = task.read_bytes()
+        self.gates(("missing-budget", "backlog", "needs-preparation"))
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(len(self.seed_lines(lines)), 1, lines)
+        self.assertIn("(missing-budget)", self.seed_lines(lines)[0])
+        self.assertIn("fix the reported seed fields and run", self.seed_lines(lines)[0])
+        self.assertEqual(task.read_bytes(), before)
+
     def test_a_backlog_task_the_seed_check_refuses_is_named_in_one_line_and_an_accepted_one_is_not(self):
         self.ideation_readme()
         self.backlog("bad", visible="a change you can see")
@@ -1620,7 +1635,7 @@ class TasksTests(unittest.TestCase):
         self.assertEqual(code, 0, lines)
         self.assertEqual(len(lines), 1, lines)
         self.assertEqual(lines[0], "next: the seed check fails for these backlog tasks (bad); before preparing the gate of one, "
-                                   f"fix its ## FO alignment and run `python3 {watch.SEED} check --seed <task>`.")
+                                   f"fix the reported seed fields and run `python3 {watch.SEED} check --seed <task>`.")
         self.assertEqual(len(lines[0].split()), 28)
 
     def test_the_seed_line_names_every_slug_once_one_word_each_and_writes_no_file(self):
@@ -1676,7 +1691,11 @@ class TasksTests(unittest.TestCase):
     def test_tasks_makes_one_status_call_and_a_crash_in_the_seed_check_is_reported_beside_the_sitting_line(self):
         self.ideation_readme()
         self.backlog("broken")
-        (self.state / "broken.md").write_bytes(b"---\nstatus: backlog\n---\n## FO alignment\n\xff\n")
+        crashed = self.root / "crashed_seed.py"
+        crashed.write_text("raise RuntimeError('seed crash')\n")
+        patch = mock.patch.object(watch, "SEED", crashed)
+        patch.start()
+        self.addCleanup(patch.stop)
         self.gates(("broken", "backlog", "needs-preparation"), ("a", "ideation", "awaiting-captain"), ("b", "ideation", "awaiting-captain"))
         self.log_calls = True
         code, lines = self.tasks({})
