@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-27T16:18:25Z
+worktree: .worktrees/spacedock-ensign-seed-check-requires-schema-fields
 ---
 
 ## Scope
