@@ -66,6 +66,11 @@ gates:
                 by: agent:first-officer
                 at: "2026-10-27T03:37:58.20295Z"
                 reason: 'Captain asked to add Gemini worker replays through agy before deciding (chat, 2026-10-27: 「既然是這樣多測試一次 gemini，用 agy」); the briefing gains that evidence.'
+            - id: gate-attempt:worker-knows-the-team-and-asks-early-validation-2
+              briefing:
+                id: briefing:worker-knows-the-team-and-asks-early:validation:attempt-2:revision-1
+                digest: sha256:cd3e05b04bd17604d831c09120793c752e855bb555d3e013857e24063e448c60
+                room-ref: ./worker-knows-the-team-and-asks-early/review/validation/briefing-2
 started: 2026-10-26T17:08:20Z
 worktree: .worktrees/spacedock-ensign-worker-knows-the-team-and-asks-early
 pr: iamcxa/kc-claude-plugins#729
