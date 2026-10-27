@@ -351,6 +351,10 @@ Captain: 「其他全照建議」 (chat, 2026-10-27)
 Asked: 「需要你決定：第 8 批的設計，照首席工程師的建議一起處理，可以嗎？6 張進入實作，1 張直接關掉，再送一份 issue 給 Spacedock。我和首席工程師都建議照這樣做。」, with this task's row 「閒置檢查提醒還沒跑的 learn ｜ 照設計做，加一條驗收 ｜ 要確認 learn 判為「不適用」的任務，不會每次都被重複點名」
 Supersedes: none (adds a criterion: a task learn holds as ineligible shows what the next idle pass prints for it)
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-28): validation-1 on #737 207c0a7e, F1: AC-8 as implemented names a task learn held ineligible again on every idle pass, while the recommendation the Captain accepted in Amendment 1 says such a task is not named on every pass (「不會每次都被重複點名」). The accepted recommendation governs; AC-8 and the implementation change to it. To fix; investigation first, then FO fix authorization, then validation.
+
 ## Stage Report: ideation
 
 - DONE: A design for /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/pr_watch.py tasks to name every archived task with a merged PR and no learn job, using /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/learning.py notices --all as the job list, with its exact output line and a replay over this workflow's archive (the 11 tasks backfilled on 2026-10-26 must all appear on the state before the backfill)
