@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:idle-hook-names-merged-tasks-without-learn:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:idle-hook-names-merged-tasks-without-learn-backlog-1
+              briefing:
+                id: briefing:idle-hook-names-merged-tasks-without-learn:backlog:attempt-1:revision-1
+                digest: sha256:b7ff3b018751224984c8593881c186e56d8a1a64a86cb4a51f1746122dd16a23
+                room-ref: ./idle-hook-names-merged-tasks-without-learn/review/backlog/briefing-1
 ---
 
 ## Scope

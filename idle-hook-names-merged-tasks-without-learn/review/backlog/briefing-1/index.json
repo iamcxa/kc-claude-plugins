@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:idle-hook-names-merged-tasks-without-learn:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of idle-hook-names-merged-tasks-without-learn to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the idle hook names every archived task with a merged PR and no learn job; profile pilot (script and text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:idle-hook-names-merged-tasks-without-learn:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/ef3ee0ac90d78a33b993fdb00781882750f1be4c/idle-hook-names-merged-tasks-without-learn.md",
+      "rev": "sha256:1c1fcef75df556522e162429439c8c5e260a2547cedda7d9b984da311591e271",
+      "mediaType": "text/markdown",
+      "summary": "Bite: 11 tasks (#708 to #724, 2026-10-23 to 26) archived without learn and backfilled at the Captain's 「補跑」; observer_check.py prints the learn step only when FO runs it."
+    }
+  ]
+}
