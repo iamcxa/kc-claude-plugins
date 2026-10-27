@@ -356,6 +356,11 @@ Captain: 「其他全照建議」 (chat, 2026-10-27)
 Asked: 「需要你決定：第 8 批的設計，照首席工程師的建議一起處理，可以嗎？6 張進入實作，1 張直接關掉，再送一份 issue 給 Spacedock。我和首席工程師都建議照這樣做。」, with this task's row 「閒置檢查提醒還沒跑的 learn ｜ 照設計做，加一條驗收 ｜ 要確認 learn 判為「不適用」的任務，不會每次都被重複點名」
 Supersedes: none (adds a criterion: a task learn holds as ineligible shows what the next idle pass prints for it)
 
+### Amendment 2 — 2026-10-28, chat
+Captain: 「全准」 (chat, 2026-10-28)
+Asked: FO's batch-8 merge sitting, item 「**三、#737 閒置檢查：照首席工程師的方案修** - **怎麼修：** learn 判為「不適用」的任務，閒置檢查直接跳過，判斷依據是任務檔開頭的類型和規格欄位，只改原本那三個檔案，不另外存紀錄。 - **變差的地方：** 判斷規則是複製 learn 的，沒有共用；因為其他原因被判不適用的任務，仍然會重複出現。 - 修好、驗證過後，再拿合併詢問給你。」
+Supersedes: AC-8 as written (the implementation worker restates it: an archived task whose variant or profile learn rejects is skipped by the scan, with a parity test against learning.py's eligibility, in the three approved files and with no new record)
+
 ## Stage Report: ideation
 
 - DONE: A design for /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/pr_watch.py tasks to name every archived task with a merged PR and no learn job, using /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/learning.py notices --all as the job list, with its exact output line and a replay over this workflow's archive (the 11 tasks backfilled on 2026-10-26 must all appear on the state before the backfill)
