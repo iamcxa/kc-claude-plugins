@@ -20,6 +20,8 @@ const MAX_STRING = 500;
 // A refusal reason carries sender text only when it is a bounded token.
 const echo = (v) => (typeof v === "string" && NAME_RE.test(v) ? v : "?");
 
+const validDate = (d) => typeof d === "string" && DAY_RE.test(d) && !Number.isNaN(new Date(`${d}T00:00:00Z`).getTime()) && new Date(`${d}T00:00:00Z`).toISOString().slice(0, 10) === d;
+
 // The date and time components must exist on the calendar; Date alone rolls Feb 31 over to March.
 function validTime(t) {
   const m = typeof t === "string" ? TIME_RE.exec(t) : null;
@@ -41,7 +43,7 @@ const windowCode = (data) => (data.window === "day" ? "d" : "m");
 const metricFields = {
   metric: { ...str, pattern: METRIC_RE.source },
   window: enumOf("day", "month"),
-  period: { ...str, pattern: DAY_RE.source },
+  period: { ...str, pattern: DAY_RE.source, format: "date" },
   value: { ...int, minimum: 0 },
   limit: { ...int, minimum: 1, maximum: 9999999 },
   limitSource: enumOf("default", "override"),
@@ -99,11 +101,12 @@ export const TYPES = {
       level: enumOf("fatal", "error", "warning", "info", "debug"),
       culprit: str,
       project: { ...str, pattern: "^[A-Za-z0-9._-]{1,64}$" },
-      web_url: { ...str, pattern: "^https://[A-Za-z0-9._~:/?#@!$&*+,;=%-]{1,480}$" },
+      web_url: { ...str, pattern: "^https://[A-Za-z0-9._~:/@!$&*,;=-]{1,480}$" },
       triggered_rule: { ...str, pattern: "^[A-Za-z0-9._-]{1,64}$" },
       datetime: { ...str, format: "date-time" },
       release: { ...str, pattern: "^[A-Za-z0-9._@+-]{1,100}$" },
     },
+    sourcePattern: "^urn:sentry(:[a-z0-9-]{1,32}){1,3}$",
     required: ["issue_id", "title", "level", "project", "web_url"],
     subjectOf: (ev) => `issue/${ev.data.issue_id}`,
   },
@@ -155,11 +158,21 @@ function checkValue(spec, value, path) {
     if (typeof value !== "string" || value.length > MAX_STRING) return invalid;
     if (spec.pattern && !new RegExp(spec.pattern).test(value)) return invalid;
     if (spec.format === "date-time" && !validTime(value)) return invalid;
+    if (spec.format === "date" && !validDate(value)) return invalid;
     return null;
   }
   if (!Number.isSafeInteger(value) || value < (spec.minimum ?? -Infinity) || value > (spec.maximum ?? Infinity)) return invalid;
   return null;
 }
+
+// A key is usable only when it can sign something: a secret beyond the prefix, at least one environment,
+// and source prefixes that end in ":" so "urn:relay" cannot cover "urn:relayx:...".
+const nonEmptyStrings = (a) => Array.isArray(a) && a.length > 0 && a.every((v) => typeof v === "string" && v.length > 0);
+export const isUsableKey = (k) =>
+  k !== null && typeof k === "object" &&
+  typeof k.secret === "string" && k.secret.replace(/^whsec_/, "").length > 0 &&
+  nonEmptyStrings(k.environments) &&
+  nonEmptyStrings(k.sources) && k.sources.every((p) => p.endsWith(":"));
 
 // `keys` is a list of { secret, environments, sources }: a signature from a key counts only for
 // events whose environment (prod when absent) and source prefix that key lists.
@@ -172,7 +185,7 @@ export function parseEvent({ keys, headers, body, nowS }) {
   if (!headers || typeof headers.get !== "function") return { ok: false, status: 401, reason: "missing-headers" };
   const signed = [];
   let reason = "signature-mismatch";
-  const usable = Array.isArray(keys) ? keys.filter((k) => k && typeof k.secret === "string" && Array.isArray(k.environments) && Array.isArray(k.sources)) : [];
+  const usable = Array.isArray(keys) ? keys.filter(isUsableKey) : [];
   for (const key of usable) {
     const bad = verifySignature({
       secret: key.secret,
@@ -220,6 +233,7 @@ export function validateBody(body) {
 
   const spec = TYPES[ev.type];
   if (spec.metric && !ev.time.endsWith("Z")) return refuse("invalid-value: time");
+  if (spec.sourcePattern && !new RegExp(spec.sourcePattern).test(ev.source)) return refuse("invalid-value: source");
   for (const name of ["environment", "severity"]) {
     if (!(name in ev)) {
       if (spec.metric) return refuse(`missing-attribute: ${name}`);
@@ -272,7 +286,7 @@ export function jsonSchemaFor(type) {
     properties: {
       specversion: { const: "1.0" },
       id: { type: "string", pattern: ID_RE.source },
-      source: { type: "string", pattern: SOURCE_RE.source },
+      source: { type: "string", pattern: spec.sourcePattern ?? SOURCE_RE.source },
       type: { const: type },
       subject: { type: "string", pattern: spec.subjectPattern },
       time: { type: "string", format: "date-time", ...(spec.metric && { pattern: "Z$" }) },

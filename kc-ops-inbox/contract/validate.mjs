@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { readFileSync } from "node:fs";
-import { parseEvent, ENVIRONMENTS } from "./contract.mjs";
+import { parseEvent, isUsableKey, ENVIRONMENTS } from "./contract.mjs";
 
 const USAGE = "usage: node validate.mjs <fixture.json> [--now <epoch-seconds>]\n" +
   "fixture: { secret? | keys?: [{secret, environments, sources}], now?, headers: {webhook-id, webhook-timestamp, webhook-signature}, body: <raw string> }\n" +
@@ -22,10 +22,9 @@ try {
   process.exit(2);
 }
 const isObject = (v) => v !== null && typeof v === "object" && !Array.isArray(v);
-const isKey = (k) => isObject(k) && typeof k.secret === "string" && Array.isArray(k.environments) && Array.isArray(k.sources);
 const secret = fixture?.secret ?? process.env.OPS_WEBHOOK_SECRET;
 const keys = fixture?.keys ?? (secret ? [{ secret, environments: ENVIRONMENTS, sources: ["urn:"] }] : []);
-if (!isObject(fixture) || !isObject(fixture.headers) || typeof fixture.body !== "string" || !Array.isArray(keys) || keys.length === 0 || !keys.every(isKey) ||
+if (!isObject(fixture) || !isObject(fixture.headers) || typeof fixture.body !== "string" || !Array.isArray(keys) || keys.length === 0 || !keys.every(isUsableKey) ||
   (fixture.now !== undefined && !Number.isFinite(fixture.now))) {
   console.error(USAGE);
   process.exit(2);

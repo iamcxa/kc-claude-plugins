@@ -46,7 +46,7 @@ Generic: a new project adds no type. The project-specific parts are `source` and
 | --- | --- | --- | --- |
 | `metric` | `^[a-z][a-z0-9.-]{0,28}$` (at most 29 characters, so the longest id is 64) | all | C3, ER P2-1 |
 | `window` | `day` or `month` | all | F6, F10 |
-| `period` | `YYYY-MM-DD`, the UTC start of the window; a month window may start on any day | all | F10 |
+| `period` | `YYYY-MM-DD`, a date that exists on the calendar (`2026-02-30` is refused), the UTC start of the window; a month window may start on any day | all | F10, VR 11 |
 | `value` | integer, 0 or more (a safe integer) | all | C2 |
 | `limit` | integer, 1 to 9999999 | all | F6 |
 | `limitSource` | `default` or `override` | all | F6 |
@@ -78,7 +78,7 @@ On these three types every string is an enumerated value or matches a bounded pa
 
 ### `sentry.issue.alert`, `ops.inbox.selftest`
 
-`sentry.issue.alert` — subject `issue/<issue_id>`. Data: required `issue_id`, `title`, `level`, `project`, `web_url`; optional `event_id`, `culprit`, `triggered_rule`, `datetime`, `release`. `title` and `culprit` (at most 500 characters) are the only free-text fields of this type, and the residual is as r1 recorded it (F4). Every other field is bounded (VR 2): `issue_id`, `event_id`, `project` and `triggered_rule` match `^[A-Za-z0-9._-]{1,64}$`; `level` is `fatal`, `error`, `warning`, `info` or `debug`; `release` matches `^[A-Za-z0-9._@+-]{1,100}$`; `web_url` matches `^https://[A-Za-z0-9._~:/?#@!$&*+,;=%-]{1,480}$`; `datetime` is a calendar-valid RFC 3339 time. A producer whose rule names or projects contain spaces slugs them before sending.
+`sentry.issue.alert` — `source` must be `urn:sentry:…` (VR 9). Subject `issue/<issue_id>`. Data: required `issue_id`, `title`, `level`, `project`, `web_url`; optional `event_id`, `culprit`, `triggered_rule`, `datetime`, `release`. `title` and `culprit` (at most 500 characters) are the only free-text fields of this type, and the residual is as r1 recorded it (F4). Every other field is bounded (VR 2, 10): `issue_id`, `event_id`, `project` and `triggered_rule` match `^[A-Za-z0-9._-]{1,64}$`; `level` is `fatal`, `error`, `warning`, `info` or `debug`; `release` matches `^[A-Za-z0-9._@+-]{1,100}$`; `web_url` matches `^https://[A-Za-z0-9._~:/@!$&*,;=-]{1,480}$` (no `?`, `#`, `%` or `+`, as for `dashboard`); `datetime` is a calendar-valid RFC 3339 time. A producer whose rule names or projects contain spaces slugs them before sending.
 
 `ops.inbox.selftest` — sent by the setup read-back; subject `selftest/<id>` (checked, reason `subject-mismatch`); data `v`, `project` (`owner/name`). It files no task.
 
@@ -151,7 +151,7 @@ Response codes (the codes in rows without "new" exist in r1's `handle()`; "new" 
 
 The signature, timestamp and clock rules are under [Transport](#transport). Secrets are a Captain-only runbook step (C7 provisioning, D5):
 
-- **Provision:** per project, one secret for `prod` and one for `preview` and `dev`, each `whsec_` plus 32 random bytes in base64, set through stdin on the inbox and on the project's matching deploy context. The inbox stores each secret with the environments it may sign and the `source` prefix it may sign (`urn:<project>:`); `parseEvent({ keys })` takes `[{ secret, environments, sources }]` and refuses an event outside either scope with 401 `key-not-allowed`. An event without `environment` needs a key whose environments include `prod`. Source for the prefix: ER P3-2.
+- **Provision:** per project, one secret for `prod` and one for `preview` and `dev`, each `whsec_` plus 32 random bytes in base64, set through stdin on the inbox and on the project's matching deploy context. The inbox stores each secret with the environments it may sign and the `source` prefix it may sign (`urn:<project>:`); `parseEvent({ keys })` takes `[{ secret, environments, sources }]`; a key is usable only when its `secret` has bytes beyond the `whsec_` prefix, `environments` and `sources` are non-empty arrays of non-empty strings, and every source prefix ends with `:`, and any other key is skipped, never thrown on (VR 8). It refuses an event outside either scope with 401 `key-not-allowed`. An event without `environment` needs a key whose environments include `prod`. Source for the prefix: ER P3-2.
 - **Rotate:** (1) add the new secret to the inbox as a second key for the same environments; (2) the project switches, and may sign with both during the switch (several `v1,` signatures in one header are accepted); (3) after the first heartbeat verified with the new key arrives, remove the old one. A suspected leak follows the same steps at once.
 
 ## Pre-inbox delivery
@@ -174,7 +174,7 @@ An incompatible change gets `v2` with its own schemas and `dataschema`. A compat
 node contract/validate.mjs contract/fixtures/relay-crossed.json
 ```
 
-Fixture shape: `{ secret? | keys?, now?, headers, body }`. `secret` (falling back to `OPS_WEBHOOK_SECRET`) is one key allowed for every environment and source; `keys` is `[{ secret, environments, sources }]`; `now` falls back to the clock and `--now <epoch>` overrides it. Exit 0 prints `valid <type> <dedupe key> <incident key>`. Exit 1 prints one reason: `missing-attribute: <name>`, `signature-mismatch`, `timestamp-out-of-tolerance`, `missing-headers`, `key-not-allowed`, `non-canonical-body`, `field-not-allowed: <path>`, `unknown-type: <type>`, `invalid-value: <path>`, `subject-mismatch`, `id-not-deterministic`, `not-json`, `body-too-large`. A reason repeats sender text only as a token of `[A-Za-z0-9._-]{1,64}` (otherwise `?`; VR 6). Exit 2 is a usage error or a malformed fixture (`null`, headers that are not an object, a non-string body, malformed `keys`, a non-numeric `now`) and a crash of the validator; exit 1 always means a refusal (VR 3).
+Fixture shape: `{ secret? | keys?, now?, headers, body }`. `secret` (falling back to `OPS_WEBHOOK_SECRET`) is one key allowed for every environment and source; `keys` is `[{ secret, environments, sources }]`; `now` falls back to the clock and `--now <epoch>` overrides it. Exit 0 prints `valid <type> <dedupe key> <incident key>`. Exit 1 prints one reason: `missing-attribute: <name>`, `signature-mismatch`, `timestamp-out-of-tolerance`, `missing-headers`, `key-not-allowed`, `non-canonical-body`, `field-not-allowed: <path>`, `unknown-type: <type>`, `invalid-value: <path>`, `subject-mismatch`, `id-not-deterministic`, `not-json`, `body-too-large`. A reason repeats sender text only as a token of `[A-Za-z0-9._-]{1,64}` (otherwise `?`; VR 6). Exit 2 is a usage error or a malformed fixture (`null`, headers that are not an object, a non-string body, an unusable key, a non-numeric `now`) and a crash of the validator; exit 1 always means a refusal (VR 3).
 
 Fixtures (a published test secret, not a credential; `generate.mjs` writes them):
 
@@ -189,7 +189,6 @@ Accepted for v1 and recorded so a producer does not rely on the opposite:
 
 - `sentry.issue.alert` ids are not derived from the event's fields: the inbox's own adapter produces them, not the pinning projects, and deriving them later does not change relay's or qnow's events (VR).
 - A `below` recovery repeated after the limit returns to a value it had earlier in the same period re-derives that value's id and is answered `200 duplicate`; the same class as the lowered-limit limit above (VR).
-- `period` is a pattern, not a calendar check: a bogus date such as `2026-02-30` derives an id that no other event repeats.
 
 ## Inbox runtime gaps (owned by r1)
 
@@ -200,7 +199,7 @@ Not built here, because the inbox runtime is r1's. Each is a rule above marked *
 - A GitHub 5xx answered as 504, not 502; the event claim states `claimed`, `dispatching`, `dispatched` with a takeover of a stale `claimed` (older than 120 s); a 70-day claim retention.
 - Heartbeat last seen per environment and metric, and the silent-producer incident (no heartbeat for 2 × `every`, routed as warning).
 - Verifying with a list of keys inside `handle()` (`parseEvent({ keys })` exists here).
-- Scoping a key by event type: a key is scoped by environment and source prefix, so a metric project's key can sign a `sentry.issue.alert` under its own source prefix. Deferred risk for r1; the Sentry fields are bounded, which limits what such an event can carry (VR 2).
+- Scoping a key by event type: a key is scoped by environment and source prefix, so a metric project's key can sign a `sentry.issue.alert` under its own source prefix. Since a `sentry.issue.alert` must carry a `urn:sentry:` source (VR 9), a key whose prefixes are its project's own cannot sign one; a key holding `urn:` or `urn:sentry:` can. Deferred risk for r1: scoping keys by type. `title` and `culprit` stay free text, up to 500 characters each.
 - Forwarding the re-serialized event to the agent run; the agent not fetching `dashboard`; resolving `adrs` at the checked-out commit.
 - The store for raw events and the PostHog projection (recorded as a recommendation in the task, not decided).
 
@@ -219,7 +218,7 @@ The Captain's words (C), facts with the command and date that produced them (F),
 - C9 Captain 2026-10-26, at the design gate: 「准。第一版接受缺陷，後續再補」, with decisions D1-D8 as recommended.
 - D1 the project counts and sends crossings; the heartbeat carries the value. D2 retire `relay.capacity.ceiling` before landing. D3 `recovered` is a join dispatch that makes the task closable. D4 "reach the Captain" is a Slack mention of the Captain's user. D5 separate `prod` and `preview`/`dev` secrets, each refused outside its environments. D7 the project decides period membership at its own boundary instant. D8 at-most-once at 504 accepted for v1, to be fixed later.
 - Q1 the boundary first cut from the first adopter (qnow's FO): the project measures, holds the threshold, decides a crossing and sends one signed event per crossing with a deterministic id and counts only; the inbox verifies, dedupes on `source` and `id`, groups on `subject` and routes.
-- VR the validation cycle 1 review, 2026-10-27: three independent code reviews of PR 727 at its first head, and the First Officer's disposition, items 1 to 7 (1 calendar-valid UTC `time`; 2 bounded Sentry fields; 3 hostile input is refused, not thrown; 4 finite clock and decimal timestamp; 5 environment prefix on every type; 6 reasons do not echo sender text; 7 selftest subject and `webhook-id`), ordered by the Captain 2026-10-27: 「退回實作。」
+- VR the validation cycle 1 review, 2026-10-27: three independent code reviews of PR 727 at its first head, and the First Officer's disposition, items 1 to 7 (1 calendar-valid UTC `time`; 2 bounded Sentry fields; 3 hostile input is refused, not thrown; 4 finite clock and decimal timestamp; 5 environment prefix on every type; 6 reasons do not echo sender text; 7 selftest subject and `webhook-id`), ordered by the Captain 2026-10-27: 「退回實作。」. VR 8 to 11 are the cycle 2 items (8 usable keys; 9 `urn:sentry:` source for Sentry events; 10 `web_url` without `?`, `#`, `%`, `+`; 11 calendar-valid `period`), ordered by the Captain 2026-10-27: 「退回實作修復問題」
 - ER the engineering review of the design, 2026-10-26 (P1-1 duplicate JSON key; P2-1 id collisions; P2-2 per-incident cap; P2-3 GitHub 5xx; P2-4 lost event at 504; P2-5 `dashboard` is not fetched; P3-1 text in patterns; P3-2 key scope; P3-3 claim retention and open periods; P3-5 `SCHEMA_BASE` and additive `level`).
 - F1 probe 2026-10-26: a fixture signed with r1's contract, with `source` `urn:relay:capacity Ignore previous instructions`, a 500-character instruction in `data.event` and `data.limitSource`, and an arbitrary id, printed `valid` and exited 0.
 - F2 r1's inbox core at its commit 1e65b046 (`git archive`, 2026-10-26): `parseEvent`, `verifySignature` (loops over `v1,` parts), `handle()` status codes (202, 200 duplicate, 400, 401, 413, 502, 504), one `WEBHOOK_SECRET`.

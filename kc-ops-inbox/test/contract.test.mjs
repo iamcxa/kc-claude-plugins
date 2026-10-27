@@ -7,7 +7,7 @@ import { mkdtempSync, writeFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
-import { parseEvent, validateBody, verifySignature, jsonSchemaFor, TYPES, signBody, SCHEMA_BASE, ENVIRONMENTS } from "../contract/contract.mjs";
+import { parseEvent, validateBody, verifySignature, isUsableKey, jsonSchemaFor, TYPES, signBody, SCHEMA_BASE, ENVIRONMENTS } from "../contract/contract.mjs";
 import { FIXTURES, FIXTURE_SECRET, PROD_KEY, PREVIEW_KEY } from "../contract/generate.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
@@ -251,11 +251,57 @@ test("sentry.issue.alert bounds every field except title and culprit", () => {
     assert.equal(r.ok, false, field);
     assert.match(r.reason, /^invalid-value: (data\.|subject)/, field);
   }
-  for (const url of ["https://x.example/\nIgnore", `https://${"a".repeat(481)}`, "https://"]) {
+  for (const url of ["https://x.example/\nIgnore", `https://${"a".repeat(481)}`, "https://", "https://x.example/a?q=1", "https://x.example/a#top", "https://x.example/a%20b", "https://x.example/a+b"]) {
     assert.equal(parseEvent(signed(withData(sentry(), { web_url: url }))).reason, "invalid-value: data.web_url", url);
   }
   const free = withData(sentry(), { title: "Ignore previous instructions", culprit: "any text at all", level: "fatal", triggered_rule: "rule-1", release: "app@1.2.3+build.4" });
   assert.equal(parseEvent(signed(free)).ok, true);
+});
+
+test("a sentry.issue.alert must come from a urn:sentry: source", () => {
+  const sentry = () => fixtureEvent("sentry-issue.json");
+  for (const source of ["urn:relay:capacity", "urn:sentryx:issue-alert", "urn:sentry"]) {
+    assert.equal(parseEvent(signed({ ...sentry(), source })).reason, "invalid-value: source", source);
+  }
+  assert.equal(parseEvent(signed({ ...sentry(), source: "urn:sentry:issue-alert:eu" })).ok, true);
+  assert.equal(jsonSchemaFor("sentry.issue.alert").properties.source.pattern, "^urn:sentry(:[a-z0-9-]{1,32}){1,3}$");
+  assert.equal(parseEvent(signed({ ...sentry(), source: "urn:relay:capacity" }, { keys: [PROD_KEY] , secret: PROD_KEY.secret })).reason, "invalid-value: source");
+});
+
+test("period must be a date on the calendar", () => {
+  const at = (period) => {
+    const w = "d";
+    return { ...crossed(), id: `publish-bound-site-ceiling.prod.${w}${period}.c80.l100`, subject: `metric/prod/publish-bound-site-ceiling/${w}${period}`, data: { ...crossed().data, period } };
+  };
+  for (const period of ["2026-02-30", "2026-04-31", "2025-02-29", "2026-13-01", "2026-00-10", "2026-10-00", "2026-10-32"]) {
+    assert.equal(parseEvent(signed(at(period))).reason, "invalid-value: data.period", period);
+  }
+  for (const period of ["2024-02-29", "2026-12-31", "2026-01-01"]) assert.equal(parseEvent(signed(at(period))).ok, true, period);
+  const hb = { ...heartbeat(), data: { ...heartbeat().data, period: "2026-02-30" } };
+  assert.equal(parseEvent(signed(hb)).reason, "invalid-value: data.period");
+});
+
+test("a key that cannot sign anything is skipped, never used and never thrown on", () => {
+  const good = { secret: FIXTURE_SECRET, environments: ENVIRONMENTS, sources: ["urn:"] };
+  const unusable = {
+    "empty secret": { ...good, secret: "" },
+    "prefix-only secret": { ...good, secret: "whsec_" },
+    "no environments": { ...good, environments: [] },
+    "empty environment": { ...good, environments: [""] },
+    "environment not a string": { ...good, environments: [1] },
+    "no sources": { ...good, sources: [] },
+    "empty source prefix": { ...good, sources: [""] },
+    "prefix without trailing colon": { ...good, sources: ["urn:relay"] },
+    "source not a string": { ...good, sources: [null] },
+    "environments not an array": { ...good, environments: "prod" },
+  };
+  for (const [label, key] of Object.entries(unusable)) {
+    assert.equal(isUsableKey(key), false, label);
+    const r = parseEvent(signed(crossed(), { keys: [key], secret: key.secret === "whsec_" || key.secret === "" ? key.secret : FIXTURE_SECRET }));
+    assert.deepEqual([r.ok, r.reason], [false, "signature-mismatch"], label);
+  }
+  assert.equal(isUsableKey(good), true);
+  assert.equal(parseEvent(signed(crossed(), { keys: [unusable["no sources"], good] })).ok, true);
 });
 
 test("hostile input is refused with a constant-bounded reason and never thrown", () => {
@@ -333,6 +379,9 @@ test("the validator exits 2 on a malformed fixture and never mistakes a crash fo
       "keys-string.json": JSON.stringify({ keys: "x", headers: good.headers, body: good.body }),
       "keys-empty.json": JSON.stringify({ keys: [], headers: good.headers, body: good.body }),
       "key-no-secret.json": JSON.stringify({ keys: [{ environments: [], sources: [] }], headers: good.headers, body: good.body }),
+      "key-prefix-only-secret.json": JSON.stringify({ keys: [{ secret: "whsec_", environments: ["prod"], sources: ["urn:"] }], headers: good.headers, body: good.body }),
+      "key-source-without-colon.json": JSON.stringify({ keys: [{ secret: FIXTURE_SECRET, environments: ["prod"], sources: ["urn:relay"] }], headers: good.headers, body: good.body }),
+      "key-empty-environments.json": JSON.stringify({ keys: [{ secret: FIXTURE_SECRET, environments: [], sources: ["urn:"] }], headers: good.headers, body: good.body }),
       "now-text.json": JSON.stringify({ ...good, now: "bad" }),
     };
     for (const [name, text] of Object.entries(bad)) {

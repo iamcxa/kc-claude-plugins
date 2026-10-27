@@ -17,6 +17,8 @@ const ECHO = "a refusal reason repeats sender text only as a short token";
 const CLOCK = "the clock must be a finite number and the timestamp decimal digits";
 const KEYED = "a non-prod event is keyed apart from the prod event with the same source and id, whatever the type";
 const VALIDATOR = "the validator exits 2 on a malformed fixture and never mistakes a crash for a refusal";
+const PERIOD = "period must be a date on the calendar";
+const KEYS = "a key that cannot sign anything is skipped, never used and never thrown on";
 const SCHEMAS = "the published schemas equal the ones derived from the code and match the pinned digests";
 const sentryField = (name, pattern) => [`sentry ${name} bounded`, `${name}: ${pattern}`, `${name}: str`, SENTRY];
 
@@ -43,20 +45,30 @@ const MUTATIONS = [
   sentryField("event_id", '{ ...str, pattern: "^[A-Za-z0-9._-]{1,64}$" }'),
   sentryField("level", 'enumOf("fatal", "error", "warning", "info", "debug")'),
   sentryField("project", '{ ...str, pattern: "^[A-Za-z0-9._-]{1,64}$" }'),
-  sentryField("web_url", '{ ...str, pattern: "^https://[A-Za-z0-9._~:/?#@!$&*+,;=%-]{1,480}$" }'),
+  sentryField("web_url", '{ ...str, pattern: "^https://[A-Za-z0-9._~:/@!$&*,;=-]{1,480}$" }'),
+  ["web_url excludes query, fragment, percent and plus", "https://[A-Za-z0-9._~:/@!$&*,;=-]{1,480}", "https://[A-Za-z0-9._~:/?#@!$&*+,;=%-]{1,480}", SENTRY],
   sentryField("triggered_rule", '{ ...str, pattern: "^[A-Za-z0-9._-]{1,64}$" }'),
   sentryField("release", '{ ...str, pattern: "^[A-Za-z0-9._@+-]{1,100}$" }'),
   ["canonical re-serialization does not throw", 'try { canonical = JSON.stringify(ev); } catch { return refuse("non-canonical-body"); }', "canonical = JSON.stringify(ev);", HOSTILE],
   ["validateBody refuses a non-string body", 'if (typeof body !== "string") return refuse("not-json");', "", HOSTILE],
   ["parseEvent refuses a non-string body", 'if (typeof body !== "string") return { ok: false, status: 400, reason: "not-json" };', "", HOSTILE],
   ["parseEvent refuses headers without get", 'if (!headers || typeof headers.get !== "function") return { ok: false, status: 401, reason: "missing-headers" };', "", HOSTILE],
-  ["parseEvent ignores malformed keys", 'Array.isArray(keys) ? keys.filter((k) => k && typeof k.secret === "string" && Array.isArray(k.environments) && Array.isArray(k.sources)) : []', "keys", HOSTILE],
+  ["parseEvent ignores unusable keys", "Array.isArray(keys) ? keys.filter(isUsableKey) : []", "keys", HOSTILE],
   ["reason does not echo the type", "unknown-type: ${echo(ev.type)}", "unknown-type: ${ev.type}", ECHO],
   ["reason does not echo an attribute name", "`field-not-allowed: ${echo(name)}`", "`field-not-allowed: ${name}`", ECHO],
   ["reason does not echo a data field name", "`field-not-allowed: data.${echo(name)}`", "`field-not-allowed: data.${name}`", ECHO],
   ["clock must be finite", " || !Number.isFinite(nowS)", "", CLOCK],
   ["timestamp must be decimal digits", "!/^\\d+$/.test(timestamp)", "Number.isNaN(Number(timestamp))", CLOCK],
   ["selftest subject", "subjectOf: (ev) => `selftest/${ev.id}`,", "", "an ops.inbox.selftest subject must be selftest/<id>"],
+  ["period calendar roundtrip", "new Date(`${d}T00:00:00Z`).toISOString().slice(0, 10) === d", "true", PERIOD],
+  ["period format is checked", 'period: { ...str, pattern: DAY_RE.source, format: "date" },', "period: { ...str, pattern: DAY_RE.source },", PERIOD],
+  ["sentry source must be urn:sentry:", 'if (spec.sourcePattern && !new RegExp(spec.sourcePattern).test(ev.source)) return refuse("invalid-value: source");', "", "a sentry.issue.alert must come from a urn:sentry: source"],
+  ["key secret beyond the prefix", 'k.secret.replace(/^whsec_/, "").length > 0', "k.secret.length > 0", KEYS],
+  ["key needs an environment and a source", "a.length > 0 && ", "", KEYS],
+  ["key environments and sources are non-empty strings", 'a.every((v) => typeof v === "string" && v.length > 0)', "true", KEYS],
+  ["key environments and sources are arrays", "Array.isArray(a) && ", "", KEYS],
+  ["key source prefix ends with a colon", 'k.sources.every((p) => p.endsWith(":"))', "true", KEYS],
+  ["validator rejects an unusable key", " || !keys.every(isUsableKey)", "", VALIDATOR, "contract/validate.mjs"],
   ["validator rejects a fixture whose headers are not an object", "!isObject(fixture.headers) || ", "", VALIDATOR, "contract/validate.mjs"],
   ["validator reports a crash as exit 2", "console.error(`cannot validate fixture: ${err.message}`);\n  process.exit(2);", "console.error(`cannot validate fixture: ${err.message}`);\n  process.exit(1);", VALIDATOR, "contract/validate.mjs"],
   ["heartbeat severity above info", 'severities: ["info"],', "severities: SEVERITIES,", RULES],
