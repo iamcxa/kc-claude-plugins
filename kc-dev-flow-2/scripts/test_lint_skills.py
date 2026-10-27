@@ -202,6 +202,10 @@ class RouteMutationTests(unittest.TestCase):
         self.change("README.md", "(extensions/codex/EXTENSION.md) | recommended |", "(extensions/codex/EXTENSION.md) | required |")
         self.refuses("`codex` is required but " + lint.WORKFLOW + " extensions: does not list it")
 
+    def test_missing_optional_extension_document_is_named(self):
+        (self.root / "extensions/paseo/EXTENSION.md").unlink()
+        self.refuses("extension `paseo` has no EXTENSION.md")
+
     def test_workflow_over_its_word_budget(self):
         self.with_words(lint.workflow_budget(SHIPPED) - len(self.workflow_text().split()) + 1)
         self.refuses(f"exceeds the budget of {lint.workflow_budget()}")

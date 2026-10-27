@@ -258,6 +258,9 @@ def extension_tier_errors(root):
               for name, tier in tiers.items() if tier == "required" and name not in listed]
     errors += [f"{WORKFLOW}: extensions: lists `{name}` but its README tier is `{tiers.get(name, 'absent')}`, not `required`"
                for name in listed if tiers.get(name) != "required"]
+    for name in tiers:
+        if not (root / "extensions" / name / "EXTENSION.md").is_file():
+            errors.append(f"README.md: extension `{name}` has no EXTENSION.md")
     return errors
 
 
