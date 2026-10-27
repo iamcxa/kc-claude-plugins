@@ -53,6 +53,17 @@ gates:
                 id: briefing:copilot-not-run-line-carries-quote:validation:attempt-1:revision-1
                 digest: sha256:29a96254b42f9715eec533bd948496e55f11305719ad8ada94526c547739227d
                 room-ref: ./copilot-not-run-line-carries-quote/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:copilot-not-run-line-carries-quote:validation:1
+                briefing: briefing:copilot-not-run-line-carries-quote:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T17:49:19.543477Z"
+                decision: approve
+                reason: 'Captain 「全准」 (chat, 2026-10-28) answering FO''s batch-8 merge sitting (each PR''s merge ask, the Copilot-not-read item and, for #735, the separate F1 ruling, all presented with FO''s recommendations); accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-27T16:00:07Z
 worktree: .worktrees/spacedock-ensign-copilot-not-run-line-carries-quote
 pr: iamcxa/kc-claude-plugins#736
