@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:archive-waits-for-observer-report:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of archive-waits-for-observer-report to enter implementation? FO recommends approve; approving accepts that recommendation as designed, with the refusal owned by Spacedock: FO sends the drafted upstream request (an archive-requires declaration in the package mod, checked by merge guard before archive) to spacedock-dev/spacedock, and this task's implementation waits until Spacedock ships it.",
+  "artifacts": [
+    {
+      "id": "artifact:archive-waits-for-observer-report:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/cdbfae07247ee50c9ef709e9c83cc8006c266a8d/archive-waits-for-observer-report.md",
+      "rev": "sha256:6938591a9877c51453013ff49937f57f41f0463dc332eee51b59f1d132fb3e70",
+      "mediaType": "text/markdown",
+      "summary": "Design: Spacedock's finalize archived a fixture with no observer report (exit 0); the package keeps observer_check.py as the early diagnostic. Three bites replayed. Worse: archive-before-report stays possible until Spacedock ships. spacedock-dev/spacedock is not the Captain's repository, so sending the request is an outward step he approves here. Chief-engineer reviewed the whole batch (2026-10-27) and recommends this disposition."
+    }
+  ]
+}

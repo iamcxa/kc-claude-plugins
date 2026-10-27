@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:archive-waits-for-observer-report:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:archive-waits-for-observer-report-ideation-1
+              briefing:
+                id: briefing:archive-waits-for-observer-report:ideation:attempt-1:revision-1
+                digest: sha256:06ccf0faf3893ffdc5fce83a6d0153f2d32b09a4a20544ff75bd9b255d400adb
+                room-ref: ./archive-waits-for-observer-report/review/ideation/briefing-1
 ---
 
 ## Scope
