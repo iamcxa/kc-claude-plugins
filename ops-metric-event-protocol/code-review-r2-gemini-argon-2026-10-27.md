@@ -1,0 +1,36 @@
+# Gemini 4 Argon re-review of PR #727 at 194f0b83, 2026-10-27 (verbatim; file links point at a path that did not exist, the files were inlined)
+
+**Verdict:** sound with fixes
+
+### (a) Round-1 Items (1–7)
+
+| # | Status | Concrete Input & Trace |
+| :- | :--- | :--- |
+| 1 | **fixed** | Valid `ops.metric.heartbeat` (`every: "hour"`): with `time: "2026-02-29T08:00:00Z"`, passes lines 188–203 of [`validateBody`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L186-L232) and fails [`validTime`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L21-L26) at line 204 (`"2026-03-01T08:00:00" !== "2026-02-29T08:00:00"`) → `invalid-value: time`. With `time: "2026-10-27T08:00:00+08:00"`, passes [`validTime`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L21-L26) and fails `!ev.time.endsWith("Z")` at line 209 → `invalid-value: time`. With `time: "2026-10-27T08:15:00Z"` and `id` ending in `.2026-10-27T09`, reaches `spec.deriveId` (`ev.time.slice(0, 13)`) at line 229 → `id-not-deterministic`. |
+| 2 | **fixed** | Valid `sentry.issue.alert` with `data.level: "pwned"` (or `data.web_url: "https://a.com/b c"`, or `data.datetime: "2026-02-30T00:00:00Z"`) passes envelope and required-field checks (lines 188–222) and fails [`checkValue`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L136-L150) at line 224 → `invalid-value: data.level` (`data.web_url`, `data.datetime`). No free-text path remains outside `title` and `culprit` (capped at `MAX_STRING = 500`). |
+| 3 | **partly** | Deep nesting (`'{"a":'.repeat(5000)+'1'+'}'.repeat(5000)` → `not-json` at line 190), non-string `body: 123` (`not-json` at line 158/188), `"type": "__proto__"` (`unknown-type: __proto__` via `Object.hasOwn` at line 202), and `headers: {}` (`missing-headers` at line 159) are refused without throwing. **However**, `keys` with non-string `sources` elements and `fixture.headers` with non-HTTP-token/non-ByteString strings still throw (see P2-1, P3-1). |
+| 4 | **fixed** | Valid signed request with `nowS: undefined` / `NaN` / `Infinity` or `webhook-timestamp: "1700000000.0"` passes lines 114–115 of [`verifySignature`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L113-L129) and fails `!/^\d+$/.test(timestamp) \|\| !Number.isFinite(nowS)` at line 116 → `401 timestamp-out-of-tolerance`. |
+| 5 | **fixed** | Valid `sentry.issue.alert` with `environment: "preview"`, `source: "urn:sentry:app"`, `id: "e1"`, `subject: "issue/1"` passes [`validateBody`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L186-L232) and reaches [`dedupeKey`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L110) / [`incidentKey`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L111) at line 231, where [`keyScope`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L109) prepends `"preview\n"` to both SHA-256 inputs. |
+| 6 | **fixed** | Canonical JSON with all `REQUIRED_ATTRS` and `"type": "Ignore previous instructions"` passes lines 188–201, reaches [`echo`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L18) at line 202 (`NAME_RE` fails on spaces), and returns `unknown-type: ?`. Disallowed keys `"a b": 1` in `ev` or `ev.data` reach lines 195 / 222 and return `field-not-allowed: ?` / `field-not-allowed: data.?`. |
+| 7 | **fixed** | Canonical `ops.inbox.selftest` with `id: "t1"`, `subject: "selftest/t2"`, `data: {"v":1,"project":"o/r"}` passes `SUBJECT_RE` (line 203) and `spec.subjectPattern` (line 218), reaches `ev.subject !== spec.subjectOf(ev)` at line 228, and is refused with `subject-mismatch`. |
+
+### (b) New Findings
+
+- **P2-1 — [`parseEvent`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L162-L181) / [`isKey`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/validate.mjs#L22): unvalidated `k.sources` elements allow wildcard source bypass (`""` or `[]`) and throw on non-strings**
+  - **Input:** Valid signed event (`source: "urn:other:proj"`) with:
+    1. `keys: [{ secret, environments: ["prod"], sources: [[]] }]` (or `sources: [""]`, valid JSON in `validate.mjs`), or
+    2. `keys: [{ secret, environments: ["prod"], sources: [/urn:/] }]` (or `[Symbol()]` / `[Object.create(null)]`).
+  - **Result:** Both pass `usable` (line 162, which checks only `Array.isArray(k.sources)`), [`verifySignature`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L113-L129) (line 164), and [`validateBody`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L186-L232) (line 176), reaching `source.startsWith(prefix)` at line 179. Input (1) coerces `[]` via `ToString([])` to `""`, so `source.startsWith("")` returns `true` and accepts any `source` (`{ ok: true }` instead of `401 key-not-allowed`). Input (2) throws an uncaught `TypeError`.
+  - **Smallest fix:** In `usable` ([contract.mjs](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L162)) and [`isKey`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/validate.mjs#L22), require `k.environments.every((e) => typeof e === "string")` and `k.sources.every((s) => typeof s === "string" && s.length > 0)`.
+
+- **P3-1 — [`validate.mjs`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/validate.mjs#L25-L36) / [`parseEvent`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L157): hostile header strings throw in `new Headers()` (exit 2 instead of exit 1), and null/missing options throw on destructuring**
+  - **Input:** Fixture with `headers: { "webhook-id": "msg_1\n2", "webhook-timestamp": "1700000000", "webhook-signature": "v1,a" }` (or non-ByteString `"webhook-id": "ā"`), or calling `parseEvent(null)` / `verifySignature(null)`.
+  - **Result:** Passes `isObject(fixture.headers)` at [validate.mjs](file:///tmp/opsmetric-review/kc-ops-inbox/contract/validate.mjs#L25), then `new Headers(fixture.headers)` at line 33 throws `TypeError`, exiting `2` ("crash of the validator") instead of refusing with exit `1`. `parseEvent(null)` throws `TypeError` when destructuring `{ keys, headers, body, nowS }`.
+  - **Smallest fix:** Default `= {}` on destructured parameters in [`parseEvent`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L157) and [`verifySignature`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L113), and in [validate.mjs](file:///tmp/opsmetric-review/kc-ops-inbox/contract/validate.mjs#L33) pass a case-insensitive own-string-property reader `{ get: (name) => ... }` instead of `new Headers(fixture.headers)`.
+
+- **P3-2 — [`parseEvent`](file:///tmp/opsmetric-review/kc-ops-inbox/contract/contract.mjs#L160-L175): empty `usable` key list masks `missing-headers` as `signature-mismatch`**
+  - **Input:** `parseEvent({ keys: [], headers: new Headers(), body: "{}", nowS: 1700000000 })`.
+  - **Result:** Passes lines 158–159, skips the `for (const key of usable)` loop because `usable` is `[]`, and returns `{ ok: false, status: 401, reason: "signature-mismatch" }` at line 175 without checking header presence.
+  - **Smallest fix:** Check `webhook-id`, `webhook-timestamp`, and `webhook-signature` presence before the `for (const key of usable)` loop.
+
+- **Free-text bypasses / post-pin breaking changes:** none.

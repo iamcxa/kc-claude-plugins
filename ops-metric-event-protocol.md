@@ -542,7 +542,7 @@ Contract v1 is a standalone module with six metric fixtures, refusal fixtures an
 - F7 Polish: comment in `jsonSchemaFor` ("so the code and the file cannot differ") is an absolute enforced only by the schema-digest test; README "no field carries a sentence" is bounded by its own stated residual.
 
 ### Checks and limits
-- `comment_ratio.py c70f1b22 36973c77`: code 613, comments 16, 2.6%, max 5%, exit 0. `doc_impact.py`: one document (`contract/README.md`), `updated` (new file). `adr_lint.py docs/adr --since c70f1b22` at the candidate clone: exit 0, 36 files, no ADR added (a first run from the FO's `iamcxa/kc-ops-inbox` checkout exited 1 on ADR 0002 and is not the candidate). `dispatch_records.py`: 2 records complete, exit 0. No `## Number guards`; `Surfaces: none`, so no design_surfaces check.
+- `python3 <package>/scripts/comment_ratio.py c70f1b22 36973c77`: code 613, comments 16, 2.6%, max 5%, exit 0. `python3 <package>/scripts/doc_impact.py`: one document (`contract/README.md`), `updated` (new file). `python3 <package>/scripts/adr_lint.py docs/adr --since c70f1b22` at the candidate clone: exit 0, 36 files, no ADR added (a first run from the FO's `iamcxa/kc-ops-inbox` checkout exited 1 on ADR 0002 and is not the candidate). `python3 <package>/scripts/dispatch_records.py`: 2 records complete, exit 0. No `## Number guards`; `Surfaces: none`, so no design_surfaces check.
 - Node 24.18 locally; the PR's CI node version not read by me; the implementer ran node:20 in a container. Merge, release pin and the inbox runtime (all the README's "runtime" rules) are unverified obligations. Design D1-D8 held as recommended; D8 (loss at 504) is the Captain's accepted v1 defect and is stated in the README.
 
 ### Minimal acceptance script
