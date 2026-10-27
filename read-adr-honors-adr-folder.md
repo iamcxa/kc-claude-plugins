@@ -53,6 +53,17 @@ gates:
                 id: briefing:read-adr-honors-adr-folder:validation:attempt-1:revision-1
                 digest: sha256:7bb241c24752e1437b98b4f52380bfc670d956f24d1e4de72801a9c0bf1cc451
                 room-ref: ./read-adr-honors-adr-folder/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:read-adr-honors-adr-folder:validation:1
+                briefing: briefing:read-adr-honors-adr-folder:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T17:49:25.275728Z"
+                decision: approve
+                reason: 'Captain 「全准」 (chat, 2026-10-28) answering FO''s batch-8 merge sitting (each PR''s merge ask, the Copilot-not-read item and, for #735, the separate F1 ruling, all presented with FO''s recommendations); accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-27T16:00:23Z
 worktree: .worktrees/spacedock-ensign-read-adr-honors-adr-folder
 pr: iamcxa/kc-claude-plugins#735
