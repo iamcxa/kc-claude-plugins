@@ -15,6 +15,17 @@ gates:
                 id: briefing:archive-waits-for-observer-report:backlog:attempt-1:revision-1
                 digest: sha256:64f490b862f1eb401fa474320e8328ae3e48a0724d9ef44da6db83e4cd144e90
                 room-ref: ./archive-waits-for-observer-report/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:archive-waits-for-observer-report:backlog:1
+                briefing: briefing:archive-waits-for-observer-report:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T15:12:52.000973Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-27) answering 「需要你決定：第 8 批 7 張任務的待辦關卡，要不要一起批准進入設計階段？同時把已經做完的 `peers-paseo-host-binding` 關掉。我建議全部批准，也關掉那張。」; accepts FO's recommendation
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
