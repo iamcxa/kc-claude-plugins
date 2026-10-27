@@ -15,6 +15,17 @@ gates:
                 id: briefing:idle-hook-names-merged-tasks-without-learn:backlog:attempt-1:revision-1
                 digest: sha256:b7ff3b018751224984c8593881c186e56d8a1a64a86cb4a51f1746122dd16a23
                 room-ref: ./idle-hook-names-merged-tasks-without-learn/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:idle-hook-names-merged-tasks-without-learn:backlog:1
+                briefing: briefing:idle-hook-names-merged-tasks-without-learn:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T15:12:58.002633Z"
+                decision: approve
+                reason: Captain 「全准」 (chat, 2026-10-27) answering 「需要你決定：第 8 批 7 張任務的待辦關卡，要不要一起批准進入設計階段？同時把已經做完的 `peers-paseo-host-binding` 關掉。我建議全部批准，也關掉那張。」; accepts FO's recommendation
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
