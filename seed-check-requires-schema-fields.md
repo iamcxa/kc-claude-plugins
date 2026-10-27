@@ -338,14 +338,14 @@ Verified by: in a disposable workflow, run the selected native binary on otherwi
 **AC-4**: The refusal reaches the existing backlog/idle route with useful wording, while default `check`, imported helpers, optional fields and the proof-of-concept route preserve their behavior.
 Verified by: run `test_pr_watch.py`, `test_sd_dispatch.py --sd-plugin-root <selected Spacedock package>`, `test_poc_readme.py`, `test_dispatch_records.py`, `test_delivery_gate.py` and checker tests at the candidate. Use one backlog/needs-preparation task with valid alignment but missing id, invoking the actual seed subprocess rather than a stubbed refusal; require the reminder naming seed fields. Verify non-backlog rows stay filtered and a POC workflow gets no seed/ideation gate. Falsifier: suppress the helper call, keep the old FO-alignment-only instruction, or move the new field check before the seed branch; the relevant test must fail. Future evidence, not tested as a candidate in this stage.
 
-## Number guards
-
-ADR: 0041
-
 ### Amendment 2 — 2026-10-28, chat
 Captain: 「全准」 (chat, 2026-10-28)
 Asked: FO's batch-8 second merge sitting, item 「**要你裁定的：你批准的「只檢查新任務」，「新」指的是什麼？** 工程審查員發現，現在的寫法把「所有還沒通過待辦關卡的任務」都當成「新」。目前待辦清單裡 54 張全部缺這三項，其中 42 張已經寫好對齊說明，等著開待辦關卡。」 with 「**我建議：就照現在這樣，「新」＝還沒通過待辦關卡的任務。** 以後我要拿一張舊待辦給你批之前，先補上「不做的事、預算、停止條件」三行。」
 Supersedes: AC-2 and AC-5's remaining Scope requirement and existing-task replay clauses (no replacement: a new seed is any backlog task not yet admitted, and FO adds the three bounds to an older task before presenting its backlog gate)
+
+## Number guards
+
+ADR: 0041
 
 ## Stage Report: ideation
 
