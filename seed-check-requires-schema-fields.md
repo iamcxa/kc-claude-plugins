@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:seed-check-requires-schema-fields:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:seed-check-requires-schema-fields-backlog-1
+              briefing:
+                id: briefing:seed-check-requires-schema-fields:backlog:attempt-1:revision-1
+                digest: sha256:dc63436ce0050258853ef8628ce43caff1e38886de1223d255cb4d35acb051bd
+                room-ref: ./seed-check-requires-schema-fields/review/backlog/briefing-1
 ---
 
 ## Scope

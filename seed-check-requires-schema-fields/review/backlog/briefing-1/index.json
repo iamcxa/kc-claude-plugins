@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:seed-check-requires-schema-fields:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of seed-check-requires-schema-fields to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the seed check refuses a task missing its schema's required fields; profile pilot (script and text, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:seed-check-requires-schema-fields:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/c5c3b3a5f3f1550a8e89f22f9a3be8cebbfe0e21/seed-check-requires-schema-fields.md",
+      "rev": "sha256:aedec21e022b769b88240200a40886632b8eb17dac80de1c07db093312805f73",
+      "mediaType": "text/markdown",
+      "summary": "Bite: relay room-specs-follow-web-part-select had no budget, stop condition or id and design_surfaces.py check --seed passed it. Ideation owes which fields the schema actually requires."
+    }
+  ]
+}
