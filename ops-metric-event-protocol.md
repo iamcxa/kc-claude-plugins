@@ -86,6 +86,14 @@ gates:
                 id: briefing:ops-metric-event-protocol:validation:attempt-2:revision-1
                 digest: sha256:ef6da834120288f6800d65f264b8f9636cbc2457c9326ea57cfdaf1e1a7d6ea9
                 room-ref: ./ops-metric-event-protocol/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:ops-metric-event-protocol:validation:2
+                briefing: briefing:ops-metric-event-protocol:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-27T05:02:31.361077Z"
+                decision: revise
+                reason: 'Captain 2026-10-27 in chat: 「退回實作修復問題」 — accepts FO''s recommendation: one short fix round for the four round-2 items (key configuration validation incl. string elements, non-empty sources and environments, non-empty secret; sentry.issue.alert source restricted to urn:sentry: and the README Sentry sentence corrected; web_url without percent-encoded text; period calendar-checked), rechecked by the validator only, then delivery.'
 started: 2026-10-26T14:32:33Z
 ---
 
