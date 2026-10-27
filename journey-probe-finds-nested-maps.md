@@ -53,6 +53,17 @@ gates:
                 id: briefing:journey-probe-finds-nested-maps:validation:attempt-1:revision-1
                 digest: sha256:e209487f221351340a45dc3d6472e6fb45e3fbe4f801c23b0c812462e1f906ac
                 room-ref: ./journey-probe-finds-nested-maps/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:journey-probe-finds-nested-maps:validation:1
+                briefing: briefing:journey-probe-finds-nested-maps:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T17:49:13.775792Z"
+                decision: approve
+                reason: 'Captain 「全准」 (chat, 2026-10-28) answering FO''s batch-8 merge sitting (each PR''s merge ask, the Copilot-not-read item and, for #735, the separate F1 ruling, all presented with FO''s recommendations); accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-27T16:00:15Z
 worktree: .worktrees/spacedock-ensign-journey-probe-finds-nested-maps
 pr: iamcxa/kc-claude-plugins#734
