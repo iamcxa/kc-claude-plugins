@@ -3,7 +3,7 @@ title: The Codex reader's same-head rule is recorded as an ADR quoting the Capta
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: Captain 「補」 (chat, 2026-10-27) answering 「需要你決定：要不要開一張小任務，補一份 ADR 記下 D1？我建議補。」; accepts FO's recommendation
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
