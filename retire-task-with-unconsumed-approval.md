@@ -15,6 +15,7 @@ status: backlog
 - Checked 2026-10-25: not fixed in Spacedock v0.28.0-pre5 (2026-10-22), which is also spacedock-dev/spacedock main (230c77e43). `pendingTerminalApproval` in `internal/status/merge.go` still accepts only a pending advance to a terminal successor, a gate-less entity, or consumed nonterminal history, and returns the same refusal otherwise; the gate subcommands are still prepare, withdraw, record and consume; the pre5 release notes cover installers, Review and Compass only.
 - Non-goals: editing state by hand or forcing a terminal `status --set`.
 - Added 2026-10-26: the kc-adr FO (Paseo 1bcf070c) reports the same family is already filed upstream as spacedock-dev/spacedock#847 (2026-10-21, a held entity cannot be archived: `merge guard --verdict rejected` and `status --set status=done` both refuse). adr-required-statement and adr-silent-undo-probe are closed by Captain holds and wait only on #847. This task's variant (an approved but unconsumed backlog approval) is a note on #847, not a separate upstream issue; posting that note needs the Captain's approval.
+- Added 2026-10-27: another instance: dispatch-carries-reserved-adr-number, closed at its ideation gate by the Captain, refused by `merge guard --verdict rejected` ('entity carries no binding pending terminal-target approval (condition "ineligible")'); left closed in place.
 
 ## FO alignment
 
