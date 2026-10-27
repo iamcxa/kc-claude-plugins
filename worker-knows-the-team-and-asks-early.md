@@ -54,6 +54,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:worker-knows-the-team-and-asks-early:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:worker-knows-the-team-and-asks-early-validation-1
+              briefing:
+                id: briefing:worker-knows-the-team-and-asks-early:validation:attempt-1:revision-1
+                digest: sha256:dc073d1f848b7017f4c78167574a19427e5037ee5d573d73804688e03fab4b05
+                room-ref: ./worker-knows-the-team-and-asks-early/review/validation/briefing-1
 started: 2026-10-26T17:08:20Z
 worktree: .worktrees/spacedock-ensign-worker-knows-the-team-and-asks-early
 pr: iamcxa/kc-claude-plugins#729
