@@ -303,3 +303,117 @@ The exact ADR draft preserves the Captain's accepted same-head ruling, its verba
 ### Summary
 
 Committed and pushed the approved ADR 0039 and its single code reference at 24663871a8863e15097fcfd2c41b9584f1c5a48f, preserving executable behavior and the Captain's original words. Candidate checks, all 35 reader tests and the specified falsifiers passed; the diagram was rendered and visually verified. FO must run RoboRev, open the prepared Draft PR and read CI before delivery continues; cost per PR was not measured.
+
+
+## Validation acceptance script
+
+No user-visible screen changes. Run the following four numbered steps together in a fresh `bash --noprofile --norc` shell; they need this repository's local objects, Python 3, Git and the explicitly named Codex package 0.31.0 installation. The temporary checkout is owned by this script. Expected: step 1 checks out 24663871a; step 2 prints PASS; step 3 runs 35 passing tests, checks 37 ADRs with exit 0, then demonstrates missing-pointer exit 1 and restores the candidate; step 4 prints cleanup PASS. This bounded acceptance does not reproduce the separate diagram render, all mutations, hosted checks, merge or future agent behavior.
+
+```bash
+# Step 1: create an isolated checkout at the reviewed revision.
+set -euo pipefail
+export AC_REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-codex-reader-resolved-mark-adr
+export AC_STATE=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state
+export AC_PACKAGE=/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0
+export AC_BASE=d8e9204bfae64ab4a76ec1a2ef0357a2b8fc7b44
+export AC_HEAD=24663871a8863e15097fcfd2c41b9584f1c5a48f
+export AC_TMP=$(mktemp -d /tmp/codex-adr-acceptance.XXXXXX)
+git -C "$AC_REPO" worktree add --detach "$AC_TMP/tree" "$AC_HEAD"
+cd "$AC_TMP/tree"
+# Step 2: check the original quote, approved draft, exact scope and executable syntax.
+python3 -B - <<'CHECK'
+import ast, os, pathlib, re, subprocess
+E=os.environ
+W=pathlib.Path.cwd()
+def git(root,*args): return subprocess.check_output(['git','-C',str(root),*args],text=True)
+a='docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md'
+c='kc-dev-flow-2/extensions/codex/codex_review.py'
+assert git(W,'rev-parse','HEAD').strip()==E['AC_HEAD']
+s=git(E['AC_STATE'],'show','3e25da97432fb22a1a6a7da973730e7c829f3619:_archive/codex-reader-same-head-unresolved.md')
+r=s.split('stage: ideation\n',1)[1].split('reason: ',1)[1].splitlines()[0]
+t=(W/a).read_text(); q=re.findall(r'^> (.*)$',t,re.M)
+assert len(q)==1 and q[0].encode('utf-8')==r.encode('utf-8')
+assert re.search(r'^\*\*Words:\*\* (「.*?」)',t,re.M)[1]==re.search(r'Captain (「.*?」)',r)[1]
+d=(pathlib.Path(E['AC_STATE'])/'codex-reader-resolved-mark-adr.md').read_text()
+assert t==re.search(r'### Exact ADR text.*?```markdown\n(.*?)\n```',d,re.S)[1]+'\n'
+b=git(W,'show',E['AC_BASE']+':'+c); n=(W/c).read_text()
+assert n==b.replace('    held =','    # see '+a+'\n    held =',1)
+assert ast.dump(ast.parse(b))==ast.dump(ast.parse(n))
+assert set(git(W,'diff','--name-only',E['AC_BASE'],E['AC_HEAD']).splitlines())=={a,c}
+print('PASS: exact quotes, approved draft, two paths, one comment, identical executable syntax')
+CHECK
+# Step 3: run existing behavior tests and demonstrate that protection needs the pointer.
+python3 -B kc-dev-flow-2/extensions/codex/test_codex_review.py
+python3 -B "$AC_PACKAGE/scripts/adr_lint.py" docs/adr --since "$AC_BASE" --require 0039
+python3 -B - <<'MUTATE'
+from pathlib import Path
+p=Path('kc-dev-flow-2/extensions/codex/codex_review.py')
+p.write_text(''.join(x for x in p.read_text().splitlines(keepends=True) if '# see docs/adr/0039-' not in x))
+MUTATE
+set +e
+python3 -B "$AC_PACKAGE/scripts/adr_lint.py" docs/adr --since "$AC_BASE" --require 0039
+AC_RC=$?
+set -e
+git -C "$AC_TMP/tree" restore -- kc-dev-flow-2/extensions/codex/codex_review.py
+test "$AC_RC" -eq 1
+printf 'PASS: missing-pointer control exited %s; candidate restored\n' "$AC_RC"
+# Step 4: verify cleanliness and remove only this acceptance checkout.
+test -z "$(git -C "$AC_TMP/tree" status --porcelain)"
+cd "$AC_REPO"
+git -C "$AC_REPO" worktree remove "$AC_TMP/tree"
+rmdir "$AC_TMP"
+printf 'PASS: acceptance checkout removed\n'
+```
+
+Executed exactly as written with `bash --noprofile --norc /tmp/codex-reader-adr-validation-evidence/acceptance.sh`, exit 0; observed output:
+
+```text
+Preparing worktree (detached HEAD 24663871a)
+HEAD is now at 24663871a docs(kc-dev-flow-2): record the same-head Codex finding ruling
+PASS: exact quotes, approved draft, two paths, one comment, identical executable syntax
+...................................
+----------------------------------------------------------------------
+Ran 35 tests in 0.005s
+
+OK
+37 ADR file(s) checked, 0 legacy
+0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md: kc-dev-flow-2/extensions/codex/codex_review.py has no pointer; add a comment line 'see docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md'
+PASS: missing-pointer control exited 1; candidate restored
+PASS: acceptance checkout removed
+```
+
+The first sandboxed attempt stopped before creating its Git worktree because Git metadata was outside the writable roots; the successful fresh-shell run received tool approval for that local operation. No script change was made between attempts.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #732 head 24663871 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 24663871a8863e15097fcfd2c41b9584f1c5a48f against base d8e9204bfae64ab4a76ec1a2ef0357a2b8fc7b44, in a fresh detached checkout; AC-1–AC-4 and all stated mutations rerun. No product repair; one nonblocking Polish finding below.
+- DONE: Check the ADR's quoted gate resolution byte for byte against _archive/codex-reader-same-head-unresolved.md at state commit 3e25da97, that the only code change is the one pointer comment, and that adr_lint fails without the comment and passes with it; RoboRev (FO, 2026-10-27): clean on 24663871a, evidence=roborev:1234; CI on this head read by FO: 5 of 5 pass
+  Original source SHA-256 d451d987c66ac89cb2d7ea550df780377a71edecf24f350f2a7a7d724276085e, full reason and Words match UTF-8 bytes; exactly ADR plus one comment. Pointer removal exits 1, original exits 0. RoboRev/CI are FO-supplied same-head evidence, not independently queried here.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step script and full observed output immediately above; fresh bash exits 0. Per Dispatch facts and the supplied Codex root, used python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.31.0/scripts/adr_lint.py docs/adr --since d8e9204bfae64ab4a76ec1a2ef0357a2b8fc7b44 --require 0039: exit 0, 37 records, 0 legacy.
+- DONE: AC-1 — approved record, exact source and quote falsifiers
+  Reviewed and reran implementation's probe in the detached checkout, redirecting only checkout/output paths; draft equality, dated attempt/resolution/source and both quotations pass. Replacing 全准 with 准 separately in the blockquote and Words fails each assertion; current task's distinct 「准」 approval explicitly permits the pointer.
+- DONE: AC-2 — truthful protection and minimal necessity
+  Protects names the actual state() held-finding selection; complete ADR lint passes. Independently removing the pointer, removing **Words:** or requiring absent 9999 produces exit 1; omitting the ADR would leave its reserved ruling unrecorded. Both retained files are necessary for the approved record plus protection contract.
+- DONE: AC-3 — existing reader behavior and executable/scope falsifiers
+  python3 -B kc-dev-flow-2/extensions/codex/test_codex_review.py: 35 passed; recorded finding/later-receipt fixture returns 1 and the same 21-word line as base. Latest-result-wins mutation causes 22 failures including that fixture; executable-statement and unrelated-path controls fail AST/scope assertions. AST equality and exact one-comment diff preserve behavior; prose preserves FO disposition versus reader verdict and Captain-only waiver authority.
+- DONE: AC-4 — design, rendered route and measured reading costs
+  design_surfaces.py check exits 0; missing bold AC exits 1, graph removal fails exactly-one extraction, and implementation-before-scope-approval fails order assertions. Mermaid CLI 12.0.0 freshly rendered diagram.png and visual review confirms both Captain stops, actors and repair loop; sandbox launch needed approved local execution. Runtime instruction/output mutations fail equality checks.
+- DONE: Lifecycle measurement and required checks
+  Recounted startup 310/310, open-PR idle 1/1, review/merge fixture 21/21, merged idle/archive added reads 0/0; conditional ADR 0/470, pointer 0/3. Repository lint exits 0 (5421/5421 words); number_guards.py check exits 0, no findings; dispatch_records.py exits 0, three complete records; git diff --check clean. Package root is the Codex 0.31.0 path above.
+- DONE: Comment and affected-document review
+  comment_ratio.py <base> <head> --workflow-dir <workflow> exits 0: 1 code line, 1 comment, 100%, maximum 5% not enforced below 20 added lines. The pointer supplies the enforced reverse reference and is justified. doc_impact.py <base> <head> lists only ADR 0039: updated, with exact accepted text; no other affected document listed.
+- DONE: Implementation limits judged against this candidate
+  Agreed: local/mocked reader proof establishes no provider behavior or future agent adherence; lifecycle counts are touched passages, not a complete FO transcript; no reading saving is claimed. FO now supplies PR #732, clean roborev:1234 and 5/5 CI, resolving the implementation worker's deferred evidence by attribution only. CI cost per PR was not measured; no CI change. Temporary probes are disposable and the full acceptance script is embedded above, not a hidden dependency.
+- SKIPPED: Independent provider review and delivery actions
+  No GitHub query, review request, PR mutation, code push, merge, release, adopter sync or task/gate transition; the supplied FO evidence and existing gate remain the authority. Local state-report commit is the required completion artifact.
+
+### Findings
+
+- F1 Polish: `codex-reader-resolved-mark-adr/dispatch/implementation-1.md` Scope notes attribute this task's ideation approval to Captain 「全准」 and batch 7; its committed gate records Captain 「准」 answering the ADR-plus-comment scope question. User/workflow: FO dispatching this task; observable harm: inaccurate historical attribution, no loss of approved behavior; boundary: contract[docs/dev2/README.md#captain-amendments], preserve the Captain's actual ruling; trigger: compare that scope sentence with this task's ideation resolution. The candidate quotes the predecessor's actual 「全准」 correctly, and the current gate independently authorizes both files; this does not establish Material. FO should correct its dispatch attribution, not change the candidate.
+
+### Summary
+
+Recommend PASSED for PR #732 head 24663871a8863e15097fcfd2c41b9584f1c5a48f: all four criteria, existing 35-test suite, decisive mutations and the fresh-shell acceptance script passed; the two retained files are sufficient and minimally necessary. One nonblocking dispatch-attribution Polish finding returns to FO; hosted evidence remains attributed to FO, and Captain delivery approval is still pending. Pilot boundary remains a record plus inert reference comment, with no new runtime or production obligation.
