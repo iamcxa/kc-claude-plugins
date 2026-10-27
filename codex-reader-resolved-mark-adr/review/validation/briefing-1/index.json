@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:codex-reader-resolved-mark-adr:validation:attempt-1:revision-1",
+  "question": "Approve validation of codex-reader-resolved-mark-adr and merge iamcxa/kc-claude-plugins#732 at head 24663871a8863e15097fcfd2c41b9584f1c5a48f with `gh pr merge 732 --squash --match-head-commit 24663871a8863e15097fcfd2c41b9584f1c5a48f`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:codex-reader-resolved-mark-adr:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/368ee1966263e22d144529e1d95a5d0fbd271a7a/codex-reader-resolved-mark-adr.md",
+      "rev": "sha256:950a9d126df628f9b964ba22d65d52148f9c75650cc7a55d7a824d00f45eea60",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: ADR 0039 records D1 of codex-reader-same-head-unresolved (a person's resolved mark on a GitHub thread does not clear a Codex finding on an unchanged head), quoting the Captain's 「全准」 gate resolution byte for byte with its state commit and resolution id, plus the one pointer comment adr_lint requires in codex_review.py; validation PASSED at this head (four criteria, adr_lint exits 1 without the comment and 0 with it, 35 existing tests, a fresh-shell acceptance script).\nNecessity: two files (docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md, kc-dev-flow-2/extensions/codex/codex_review.py).\nExternal rounds: Codex 1 (round 1 on this head: code review completed with no findings, evidence=summary:6433042411@24663871a). RoboRev clean on this head, run by FO because the Codex sandbox could not reach the daemon (evidence=roborev:1234). second reviewer: copilot because the ADR records a review rule; copilot not run: docs PR (the copilot extension requests a review only for feat, fix, refactor or perf titles).\nFO declines: Polish F1, implementation-1's scope notes said the ideation approval was 「全准」 in batch 7 where the gate record holds 「准」 [FO's dispatch helper restated ruling words; fixed in impl1.py on 2026-10-27, the candidate quotes the correct predecessor words]."
+    }
+  ]
+}

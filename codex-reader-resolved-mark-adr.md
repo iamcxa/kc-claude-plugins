@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:codex-reader-resolved-mark-adr:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:codex-reader-resolved-mark-adr-validation-1
+              briefing:
+                id: briefing:codex-reader-resolved-mark-adr:validation:attempt-1:revision-1
+                digest: sha256:5f4c22bb36cb761b18f0e82f09e6fd2345582b9a53670b4f84bf102ebcd0de68
+                room-ref: ./codex-reader-resolved-mark-adr/review/validation/briefing-1
 started: 2026-10-27T03:12:37Z
 worktree: .worktrees/spacedock-ensign-codex-reader-resolved-mark-adr
 pr: iamcxa/kc-claude-plugins#732
