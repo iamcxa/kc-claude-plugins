@@ -3,6 +3,8 @@ from pathlib import Path
 import tempfile
 import unittest
 
+from test_sd_dispatch import TEAM_RULE, assert_team
+
 ROOT = Path(__file__).resolve().parents[1]
 spec = importlib.util.spec_from_file_location("poc_readme", ROOT / "scripts/poc_readme.py")
 poc = importlib.util.module_from_spec(spec)
@@ -38,6 +40,15 @@ class DeriveTests(unittest.TestCase):
             start = derived.index(f"    - name: {stage}\n")
             end = derived.index("\n    - name:", start)
             self.assertIn("        - Number guards", derived[start:end])
+
+    def test_team_survives_derivation_with_context_in_both_worker_stages(self):
+        derived = poc.derive(SOURCE)
+        assert_team(derived)
+        self.assertIn(TEAM_RULE, derived)
+        for stage in ("implementation", "validation"):
+            start = derived.index(f"    - name: {stage}\n")
+            end = derived.index("\n    - name:", start)
+            self.assertIn("        - Dispatch facts", derived[start:end])
 
     def test_the_number_guards_section_names_the_adr_path_default_the_script_cannot_tell_its_reader(self):
         section = SOURCE.split("\n## Number guards\n")[1].split("\n## ")[0]
