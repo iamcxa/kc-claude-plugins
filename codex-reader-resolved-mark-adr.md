@@ -53,6 +53,17 @@ gates:
                 id: briefing:codex-reader-resolved-mark-adr:validation:attempt-1:revision-1
                 digest: sha256:5f4c22bb36cb761b18f0e82f09e6fd2345582b9a53670b4f84bf102ebcd0de68
                 room-ref: ./codex-reader-resolved-mark-adr/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-resolved-mark-adr:validation:1
+                briefing: briefing:codex-reader-resolved-mark-adr:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T04:45:02.664288Z"
+                decision: approve
+                reason: 'Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #732 at 24663871; accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-27T03:12:37Z
 worktree: .worktrees/spacedock-ensign-codex-reader-resolved-mark-adr
 pr: iamcxa/kc-claude-plugins#732
