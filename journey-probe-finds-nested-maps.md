@@ -285,3 +285,36 @@ Designed one recursive, read-only map-presence probe with no new helper or selec
 ### Summary
 
 The documented install probe now discovers nested product maps, with an executable regression tied to the documentation and seven discovery mutations caught. Local checks pass at 159b2123 and the code branch is pushed; FO still owes Draft PR creation, RoboRev and CI evidence before validation/delivery. Pilot scope remains the approved two-file correction, with unchanged extension selection and activation authority.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #734 head 159b2123 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at 159b21232dea8ce68fcf9402461e185ff59d327c against 8bf4f3582411e8e4238f19fbadda8ddeca6767be; all five criteria pass independently. Detailed commands, falsifiers and limits: [validation evidence](journey-probe-finds-nested-maps/validation/evidence.md).
+- DONE: RoboRev on this head (FO, 2026-10-28): clean on 159b21232, evidence=roborev:1260; CI on this head read by FO: 4 of 4 pass
+  Read dispatch/validation-1.md; these are FO-supplied exact-head results, not validator reruns or fresh GitHub queries.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  [Five-step script](journey-probe-finds-nested-maps/validation/acceptance.sh) ran unchanged via bash --noprofile --norc, exit 0; full observed output is in evidence.md. The skill-routed Codex 0.32.0 package supplied adr_lint.py: 39 ADRs, 0 legacy, exit 0. No findings in any disposition class.
+- DONE: AC-1 — nested discovery
+  The candidate test executes all seven fixtures; flat, product-folder and deeper-space paths match exactly. Restoring the old phrase fails extraction and adding -maxdepth 1 loses the nested path.
+- DONE: AC-2 — negative fixtures and failed traversal
+  Empty/missing/suffix/outside-root/directory assertions pass; removing type, suffix or root constraints, changing suffix, or hiding nonzero exit each fails. chmod-000 traversal returns exit 1 plus stderr despite visible.yaml stdout.
+- DONE: AC-3 — preserve choice and activation
+  Entire adoption text equals base plus the exact approved replacement; mutations to defaults, selection, no-answer handling, failed-probe interpretation and approval fail this comparison. Candidate test suite: 45/45, lint exit 0.
+- DONE: AC-4 — lifecycle reading cost
+  Independent whitespace count: adoption 2069→2085; Extensions 350→366; extra instruction fails. No workflow/mod/output-producer change, hence startup, both idle paths, merge ask and archive each +0; workflow budget 5565/5565.
+- DONE: AC-5 — bounded scope and diagram
+  Exactly the two approved paths; added adopter path fails scope comparison. Current Mermaid matches retained rendered source, whose image was independently inspected; deleting approval edge fails comparison, removing acceptance heading makes design checker exit 1.
+- DONE: Required workflow and document checks
+  design_surfaces, dispatch_records (4 complete), number_guards, comment_ratio (33 code/0 comments; 0.0% ≤5%), adr_lint and git diff --check pass; no ADR reservation/migration. doc_impact names maintain-flow/SKILL.md: unaffected because its test command and mutation guidance still apply; adoption.md updated.
+- DONE: Goal sufficiency and minimal necessity
+  Exact documentation command finds the accepted layouts; without the phrase replacement discovery fails, and without the executable regression the old flat defect is unguarded. No helper, policy, version, CI, host, schema or adopter change is needed.
+- DONE: Implementation limits assessed
+  Generic design checker accepts a changed Mermaid fence: confirmed, with independent visual comparison supplying this task's proof. Presence-only YAML, .yml/symlink exclusions and unchanged model-driven selection are accepted boundaries; FO's supplied PR/review/CI results resolve the implementation's pending external work.
+- DONE: Candidate preservation and cleanup
+  Detached validation and acceptance worktrees removed; assigned branch remains spacedock-ensign/journey-probe-finds-nested-maps at 159b2123, clean. Only this task's state report/evidence changed; no code commit, Git config write, PR mutation or explicit push.
+- SKIPPED: Live host Ask UI, actual adoption/activation and fresh hosted review queries
+  No changed UI surface; unchanged host behavior is not claimed. The original diagram rendering was reused with exact source comparison and fresh image inspection. CI cost per PR was not measured; no CI trigger changed.
+
+### Summary
+
+Recommend PASSED for PR #734 at 159b21232dea8ce68fcf9402461e185ff59d327c: all five acceptance criteria, falsifiers and required local checks pass, and the five-step acceptance script exits 0. Candidate bytes are unchanged and disposable worktrees are removed; FO still runs the script before presenting the validation gate and the Captain retains delivery authority.

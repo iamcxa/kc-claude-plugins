@@ -1,0 +1,13 @@
+flowchart TD
+ A["FO resolves code root and probes map plus runtimes"] --> B{"Needs pass?"}
+ B -->|Yes| C["Offer journey-map plus release-acceptance together"]
+ B -->|No| D["Show unchecked with reason"]
+ C --> E{"Captain selection"}
+ D --> E
+ E -->|No answer or not chosen| F["Keep required defaults and report not chosen"]
+ E -->|Chooses passing pair| G["Include both in proposed README"]
+ E -->|Insists after failed probe reason| G
+ F --> H["Captain reviews concrete README"]
+ G --> H
+ H -->|Approved and readiness passes| I["FO activates through Spacedock"]
+ H -->|Not approved or readiness fails| J["Hold activation"]
