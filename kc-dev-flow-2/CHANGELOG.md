@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.32.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.31.0...kc-dev-flow-2-v0.32.0) (2026-10-27)
+
+
+### Features
+
+* **kc-dev-flow-2:** bind peer cooperation to each host transport ([#730](https://github.com/iamcxa/kc-claude-plugins/issues/730)) ([2b3e505](https://github.com/iamcxa/kc-claude-plugins/commit/2b3e505c798ecd10de3a5cf18cfff91b4775d7bd))
+* **kc-dev-flow-2:** give workers team context and early FO handback ([#729](https://github.com/iamcxa/kc-claude-plugins/issues/729)) ([b8ce84e](https://github.com/iamcxa/kc-claude-plugins/commit/b8ce84e584cf5c5cb482009d9d08d7316ce2a6ac))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** a Codex finding on a head decides over a later no-issues receipt on the same head ([#728](https://github.com/iamcxa/kc-claude-plugins/issues/728)) ([d8e9204](https://github.com/iamcxa/kc-claude-plugins/commit/d8e9204bfae64ab4a76ec1a2ef0357a2b8fc7b44))
+
 ## [0.31.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.30.0...kc-dev-flow-2-v0.31.0) (2026-10-26)
 
 
