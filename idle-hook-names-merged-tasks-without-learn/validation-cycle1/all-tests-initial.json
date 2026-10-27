@@ -1,0 +1,306 @@
+[
+  {
+    "file": "kc-dev-flow-2/extensions/codex/test_codex_review.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/extensions/codex/test_codex_review.py"
+    ],
+    "exit": 0,
+    "seconds": 0.24,
+    "tests": 35,
+    "log": "test_codex_review.log"
+  },
+  {
+    "file": "kc-dev-flow-2/extensions/copilot/test_copilot_review.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/extensions/copilot/test_copilot_review.py"
+    ],
+    "exit": 0,
+    "seconds": 0.17,
+    "tests": 15,
+    "log": "test_copilot_review.log"
+  },
+  {
+    "file": "kc-dev-flow-2/extensions/journey-map/test_map_footprint.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/extensions/journey-map/test_map_footprint.py"
+    ],
+    "exit": 0,
+    "seconds": 0.53,
+    "tests": 23,
+    "log": "test_map_footprint.log"
+  },
+  {
+    "file": "kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py"
+    ],
+    "exit": 0,
+    "seconds": 1.94,
+    "tests": 78,
+    "log": "test_release_acceptance.log"
+  },
+  {
+    "file": "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "exit": 0,
+    "seconds": 4.36,
+    "tests": 5,
+    "log": "test_roborev_gate.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_adr_doc_checks.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_adr_doc_checks.py"
+    ],
+    "exit": 0,
+    "seconds": 1.96,
+    "tests": 9,
+    "log": "test_adr_doc_checks.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_comment_ratio.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_comment_ratio.py"
+    ],
+    "exit": 0,
+    "seconds": 12.92,
+    "tests": 14,
+    "log": "test_comment_ratio.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_decision_ledger.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_decision_ledger.py"
+    ],
+    "exit": 0,
+    "seconds": 0.11,
+    "tests": 8,
+    "log": "test_decision_ledger.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_delivery_gate.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_delivery_gate.py"
+    ],
+    "exit": 0,
+    "seconds": 81.73,
+    "tests": 101,
+    "log": "test_delivery_gate.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_design_surfaces.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_design_surfaces.py"
+    ],
+    "exit": 0,
+    "seconds": 17.35,
+    "tests": 182,
+    "log": "test_design_surfaces.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_dispatch_records.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_dispatch_records.py"
+    ],
+    "exit": 0,
+    "seconds": 2.22,
+    "tests": 54,
+    "log": "test_dispatch_records.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_laws_check.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_laws_check.py"
+    ],
+    "exit": 0,
+    "seconds": 54.76,
+    "tests": 44,
+    "log": "test_laws_check.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_learning.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_learning.py"
+    ],
+    "exit": 0,
+    "seconds": 80.76,
+    "tests": 47,
+    "log": "test_learning.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_lint_skills.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_lint_skills.py"
+    ],
+    "exit": 0,
+    "seconds": 17.8,
+    "tests": 44,
+    "log": "test_lint_skills.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_number_guards.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_number_guards.py"
+    ],
+    "exit": 0,
+    "seconds": 33.74,
+    "tests": 28,
+    "log": "test_number_guards.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_observer_check.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_observer_check.py"
+    ],
+    "exit": 0,
+    "seconds": 14.31,
+    "tests": 19,
+    "log": "test_observer_check.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_observer_recovery.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_observer_recovery.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "exit": 2,
+    "seconds": 0.26,
+    "tests": null,
+    "log": "test_observer_recovery.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_package_version.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_package_version.py"
+    ],
+    "exit": 0,
+    "seconds": 0.14,
+    "tests": 6,
+    "log": "test_package_version.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_poc_readme.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_poc_readme.py"
+    ],
+    "exit": 0,
+    "seconds": 0.13,
+    "tests": 7,
+    "log": "test_poc_readme.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_pr_watch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_pr_watch.py"
+    ],
+    "exit": 0,
+    "seconds": 81.63,
+    "tests": 124,
+    "log": "test_pr_watch.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_replay_dispatch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_replay_dispatch.py"
+    ],
+    "exit": 0,
+    "seconds": 6.07,
+    "tests": 8,
+    "log": "test_replay_dispatch.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_role_triggers.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_role_triggers.py"
+    ],
+    "exit": 0,
+    "seconds": 38.55,
+    "tests": 25,
+    "log": "test_role_triggers.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_sd_dispatch.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_sd_dispatch.py",
+      "--sd-plugin-root",
+      "/Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3"
+    ],
+    "exit": 0,
+    "seconds": 49.44,
+    "tests": null,
+    "log": "test_sd_dispatch.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_validation_security.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_validation_security.py"
+    ],
+    "exit": 0,
+    "seconds": 2.66,
+    "tests": 5,
+    "log": "test_validation_security.log"
+  },
+  {
+    "file": "kc-dev-flow-2/scripts/test_workflow_checkout.py",
+    "command": [
+      "/Users/kent/.pyenv/versions/3.11.14/bin/python3",
+      "-B",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/kc-dev-flow-2/scripts/test_workflow_checkout.py"
+    ],
+    "exit": 0,
+    "seconds": 15.76,
+    "tests": 13,
+    "log": "test_workflow_checkout.log"
+  }
+]

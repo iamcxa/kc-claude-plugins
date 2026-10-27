@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_archive_shapes_are_sorted_deduplicated_and_guarded (__main__.TasksTests.test_archive_shapes_are_sorted_deduplicated_and_guarded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/mutant/scripts/test_pr_watch.py", line 839, in test_archive_shapes_are_sorted_deduplicated_and_guarded
+    self.assertFalse(self.watch.exists())
+AssertionError: True is not false
+
+----------------------------------------------------------------------
+Ran 1 test in 0.842s
+
+FAILED (failures=1)

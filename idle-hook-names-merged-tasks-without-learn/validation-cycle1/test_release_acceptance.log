@@ -1,0 +1,6 @@
+not run: node or journey-accept.mjs missing, or its yaml dependency is not installed
+.................................................s............................
+----------------------------------------------------------------------
+Ran 78 tests in 1.734s
+
+OK (skipped=1)

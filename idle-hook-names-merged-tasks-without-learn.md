@@ -507,3 +507,42 @@ Validation of PR #737 head 207c0a7eb51d08c00e68dbe52e9b364793750484 is complete 
 ### Summary
 
 This complete report supersedes the earlier implementation report and its AC-8 repetition claim: Captain amendment 2 is implemented at aa0f280f8e94f8b5549b4a8cd26fe30560a9842c, with the replacement recorded as AC-9 and the old text preserved. All 25 package test files and 16 falsifiers pass; unsupported variant/profile tasks are skipped without a record, while other ineligible holds may still repeat as the Captain accepted. The repaired branch is pushed; FO owns independent revalidation, RoboRev, current-head CI and the later merge ask.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #737 head aa0f280f against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at aa0f280f8e94f8b5549b4a8cd26fe30560a9842c against AC-1–AC-7 and AC-9 under Captain amendment 2; comparison base 8bf4f3582411e8e4238f19fbadda8ddeca6767be. [Primary evidence and limits](idle-hook-names-merged-tasks-without-learn/validation-cycle1/evidence.md).
+- DONE: Recheck the Cycle 1 repair under Captain amendment 2: an archived task whose variant or profile learn rejects is skipped by the scan, with a parity test against kc-dev-flow-2/scripts/learning.py eligibility for those fields; the three approved files only; validation-1 F1 resolved; RoboRev on this head (FO, 2026-10-28): clean on aa0f280f8, evidence=roborev:1271; CI on this head read by FO: 4 of 4 pass
+  The 35-case parity test, real legacy-profile claim and watcher CLI pass; rejected fields skip PR lookup without records. Only three approved files changed; learning.py/learn skill unchanged. F1 resolved by Amendment 2 plus repaired behavior; RoboRev/CI are head-bound FO-supplied evidence.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Run `bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/idle-hook-names-merged-tasks-without-learn/validation-cycle1/acceptance.sh`: five exact steps/expected outputs; exit 0, six tests in 25.002s, empty idle before/after legacy hold, eligible reminder, ADR lint 39 records/exit 0, cleanup complete. [Observed output](idle-hook-names-merged-tasks-without-learn/validation-cycle1/acceptance.log); dispatched Codex package used, no live-provider/FO/merge proof.
+- DONE: AC-1 committed archive discovery within Amendment 2's field boundary.
+  Exact sorted flat/folder/dedup/sidecar/hidden/uncommitted output and learn guard pass; archive exclusion, folder omission and removed extension guard each fail by assertion.
+- DONE: AC-2 sole supported job source and workflow-qualified identity.
+  Real pending/completed/acknowledged/no-change/released states suppress; one code-root notices --all call and uncertainty handling pass; unread-only, wrong workflow, state-root and requiring uncertain input each fail.
+- DONE: AC-3 frozen historical recovery replay.
+  Independently compared all 88 path/PR/variant/profile rows with state 1158adc584637bdbf1b2f347b91a4c63844d6c00: exact match; 29 reminders include all 11 targets before restoration, 18 include none after, including folder release-acceptance. Live-only mutation fails; 53 keys reconstruct absence, not original store bytes or fresh provider confirmations.
+- DONE: AC-4 provider calls and diagnostic boundary.
+  Sentinel/no-provider, state-only qualified/bare repository binding, OPEN/CLOSED/local exclusions, pinned committed bytes and exit-2 failures preserve live output; full-review query and malformed-as-empty mutations fail. Rejected variant/profile fixtures never query their unavailable provider.
+- DONE: AC-5 read-only scans, repeatability and real pending suppression.
+  Repeated archive/parity scans preserve state/store bytes and create no watch/store; real pending claim suppresses the next eligible reminder; injected archive-cache write fails.
+- DONE: AC-6 existing lifecycle and all package test files.
+  All 25 test files pass: 894 unittest cases including 124 watcher cases, plus native dispatch/recovery checks (CLI 0.27.2/plugin 0.27.3); removed observer pointer fails. [all-tests.json](idle-hook-names-merged-tasks-without-learn/validation-cycle1/all-tests.json) retains exact commands and the corrected observer-recovery invocation after a validator-only unsupported-flag error.
+- DONE: AC-7 complete per-moment reading recount.
+  Independently recounted startup 1344→1342, idle OPEN 1039→1037, idle MERGED 572→570, after archive 358→356, merge ask 680→680, empty recovery 552→550; missing reminders add 5 words/pass, uncertainty/malformed fixtures 11, learn/framework up to 5985 plus evidence. Longer-reminder mutation fails; no CI trigger changed and CI cost per PR is not measured.
+- DONE: AC-9, Amended by Captain, amendment 2.
+  35 variant/profile pairs agree with real learning.py eligibility, including missing/empty fields and all accepted profiles; real legacy hold yields ineligible/profile, empty notices, and no next-idle line. Verdict-only holds still repeat as accepted. Removing either filter or drifting learning eligibility fails; prior-head watcher fails both new repair tests.
+- DONE: Superseded criterion and prior finding disposition.
+  AC-8's old text is preserved under Amendment 2, replaced by fresh AC-9 as ADR 0005/0016 require; this explicit accepted field-only rule resolves validation-1 F1 (Needs decision). No new Material, Deferred risk, Polish or Needs decision finding.
+- DONE: Required checks, retained documents and comments.
+  [checks.json](idle-hook-names-merged-tasks-without-learn/validation-cycle1/checks.json): repository lint and installed ADR/number-guard/comment/doc-impact/design/dispatch checks all exit 0; 39 ADRs, six dispatch records, comment ratio 0.2%≤5%, workflow 5565/5565, zero additional impacted documents, clean diff. Extension pointer retained and field restriction explained without word growth; added provenance comment reviewed.
+- DONE: Goal sufficiency, minimal necessity and implementation limits.
+  Eligible missing jobs are recovered and accepted field exclusions are silent/read-only; the two-line filter, parity fixtures, historical field data and extension wording each serve that outcome. Duplicated eligibility logic, other-reason repeats, reconstructed notices, controlled provider seams and unproved native FO/adoption behavior remain disclosed limits, not expanded promises.
+- DONE: Fresh evidence, source preservation and checkout cleanup.
+  All 16 mutants fail by assertion without import/fixture errors; raw logs, all-suite results, recounts, history comparison and the fresh-shell script are retained in validation-cycle1/. Both detached checkouts removed; assigned code worktree remains clean at aa0f280f. No product, frontmatter, PR or approval changes.
+- SKIPPED: Independent hosted RoboRev/GitHub/CI rerun.
+  Dispatch assigns those reads to FO and supplies evidence=roborev:1271 plus 4/4 CI on this head; no external rerun, code push, review request, PR mutation, merge or adoption claimed.
+
+### Summary
+
+This complete Cycle 1 revalidation report supersedes the earlier validation report and its REJECTED recommendation: PR #737 head aa0f280f8e94f8b5549b4a8cd26fe30560a9842c is PASSED against the active criteria under Captain amendment 2, with validation-1 F1 resolved and no new findings. All 25 package test files, 16 falsifiers and the five-step fresh-shell acceptance script pass; unsupported variant/profile tasks are skipped without records, while other ineligible holds may still repeat as accepted. FO retains the gate presentation and later merge ask; this verdict does not approve merge or adoption.

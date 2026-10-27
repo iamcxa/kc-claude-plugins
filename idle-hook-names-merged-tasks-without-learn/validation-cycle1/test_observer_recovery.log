@@ -1,0 +1,2 @@
+usage: test_observer_recovery.py [-h]
+test_observer_recovery.py: error: unrecognized arguments: --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3

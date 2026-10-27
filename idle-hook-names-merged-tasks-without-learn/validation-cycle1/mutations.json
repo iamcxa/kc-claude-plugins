@@ -1,0 +1,98 @@
+[
+  {
+    "case": "AC-1 archive exclusion",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-1-0.log"
+  },
+  {
+    "case": "AC-1 folder omission",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-1-1.log"
+  },
+  {
+    "case": "AC-1 extension guard",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-1-2.log"
+  },
+  {
+    "case": "AC-2 unread-only",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-2-3.log"
+  },
+  {
+    "case": "AC-2 wrong workflow key",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-2-4.log"
+  },
+  {
+    "case": "AC-2 state repository",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-2-5.log"
+  },
+  {
+    "case": "AC-2 uncertain missing input",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-2-6.log"
+  },
+  {
+    "case": "AC-3 live-only replay",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-3-7.log"
+  },
+  {
+    "case": "AC-4 full provider read",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-4-8.log"
+  },
+  {
+    "case": "AC-4 assume unreadable list empty",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-4-9.log"
+  },
+  {
+    "case": "AC-5 archive cache write",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-5-10.log"
+  },
+  {
+    "case": "AC-6 observer pointer removed",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-6-11.log"
+  },
+  {
+    "case": "AC-7 longer reminder",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-7-12.log"
+  },
+  {
+    "case": "AC-9 variant guard removed",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-9-13.log"
+  },
+  {
+    "case": "AC-9 profile guard removed",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-9-14.log"
+  },
+  {
+    "case": "AC-9 eligibility drift",
+    "exit": 1,
+    "detected": true,
+    "log": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/AC-9-15.log"
+  }
+]

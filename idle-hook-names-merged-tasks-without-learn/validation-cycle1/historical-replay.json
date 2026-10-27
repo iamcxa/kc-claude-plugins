@@ -1,0 +1,67 @@
+{
+  "state": "1158adc584637bdbf1b2f347b91a4c63844d6c00",
+  "exact_manifest_rows": 88,
+  "rows": [
+    {
+      "restored": false,
+      "named": 29,
+      "target_names": 11,
+      "stdout": [
+        "next: run kc-dev-flow-2:learn for agent-reads-governing-adr.",
+        "next: run kc-dev-flow-2:learn for board-optout.",
+        "next: run kc-dev-flow-2:learn for codex-reader-counts-code-review-only.",
+        "next: run kc-dev-flow-2:learn for codex-reader-reads-receipt-marker.",
+        "next: run kc-dev-flow-2:learn for codex-review-hang-detected.",
+        "next: run kc-dev-flow-2:learn for delivery-gate-reads-folder-tasks.",
+        "next: run kc-dev-flow-2:learn for design-director-runs-ui-design-review.",
+        "next: run kc-dev-flow-2:learn for dispatch-and-report-hygiene.",
+        "next: run kc-dev-flow-2:learn for extension-defaults-and-install-choice.",
+        "next: run kc-dev-flow-2:learn for fo-written-lines-checked-before-dispatch.",
+        "next: run kc-dev-flow-2:learn for ideation-gaps.",
+        "next: run kc-dev-flow-2:learn for idle-names-failing-seeds.",
+        "next: run kc-dev-flow-2:learn for journey-render-keeps-annotations.",
+        "next: run kc-dev-flow-2:learn for kc-adr-tools-with-dev2-copy.",
+        "next: run kc-dev-flow-2:learn for learning-serialize-evaluation.",
+        "next: run kc-dev-flow-2:learn for merge-ask-holds-missing-clauses.",
+        "next: run kc-dev-flow-2:learn for migration-and-number-guards.",
+        "next: run kc-dev-flow-2:learn for new-work-starts-from-a-story-map.",
+        "next: run kc-dev-flow-2:learn for patch-0102.",
+        "next: run kc-dev-flow-2:learn for patch-0103.",
+        "next: run kc-dev-flow-2:learn for poc-no-migrations.",
+        "next: run kc-dev-flow-2:learn for reflow-order.",
+        "next: run kc-dev-flow-2:learn for release-acceptance.",
+        "next: run kc-dev-flow-2:learn for release-review.",
+        "next: run kc-dev-flow-2:learn for release-review-staleness-held-at-dispatch.",
+        "next: run kc-dev-flow-2:learn for release-walk-picky-reviewers-and-director.",
+        "next: run kc-dev-flow-2:learn for review-cadence.",
+        "next: run kc-dev-flow-2:learn for role-triggers-owe-ce-on-review-drift.",
+        "next: run kc-dev-flow-2:learn for stage-report-correction-path."
+      ]
+    },
+    {
+      "restored": true,
+      "named": 18,
+      "target_names": 0,
+      "stdout": [
+        "next: run kc-dev-flow-2:learn for agent-reads-governing-adr.",
+        "next: run kc-dev-flow-2:learn for board-optout.",
+        "next: run kc-dev-flow-2:learn for codex-reader-counts-code-review-only.",
+        "next: run kc-dev-flow-2:learn for codex-reader-reads-receipt-marker.",
+        "next: run kc-dev-flow-2:learn for dispatch-and-report-hygiene.",
+        "next: run kc-dev-flow-2:learn for ideation-gaps.",
+        "next: run kc-dev-flow-2:learn for idle-names-failing-seeds.",
+        "next: run kc-dev-flow-2:learn for journey-render-keeps-annotations.",
+        "next: run kc-dev-flow-2:learn for learning-serialize-evaluation.",
+        "next: run kc-dev-flow-2:learn for merge-ask-holds-missing-clauses.",
+        "next: run kc-dev-flow-2:learn for migration-and-number-guards.",
+        "next: run kc-dev-flow-2:learn for new-work-starts-from-a-story-map.",
+        "next: run kc-dev-flow-2:learn for patch-0102.",
+        "next: run kc-dev-flow-2:learn for patch-0103.",
+        "next: run kc-dev-flow-2:learn for poc-no-migrations.",
+        "next: run kc-dev-flow-2:learn for reflow-order.",
+        "next: run kc-dev-flow-2:learn for release-review.",
+        "next: run kc-dev-flow-2:learn for review-cadence."
+      ]
+    }
+  ]
+}

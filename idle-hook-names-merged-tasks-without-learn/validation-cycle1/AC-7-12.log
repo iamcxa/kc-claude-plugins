@@ -1,0 +1,22 @@
+F
+======================================================================
+FAIL: test_other_ineligibility_reasons_may_still_repeat (__main__.TasksTests.test_other_ineligibility_reasons_may_still_repeat)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/mutant/scripts/test_pr_watch.py", line 1091, in test_other_ineligibility_reasons_may_still_repeat
+    self.assertEqual(self.tasks({}), (0, [line]))
+AssertionError: Tuples differ: (0, ['next: please run kc-dev-flow-2:learn for other-hold.']) != (0, ['next: run kc-dev-flow-2:learn for other-hold.'])
+
+First differing element 1:
+['next: please run kc-dev-flow-2:learn for other-hold.']
+['next: run kc-dev-flow-2:learn for other-hold.']
+
+- (0, ['next: please run kc-dev-flow-2:learn for other-hold.'])
+?             -------
+
++ (0, ['next: run kc-dev-flow-2:learn for other-hold.'])
+
+----------------------------------------------------------------------
+Ran 1 test in 0.384s
+
+FAILED (failures=1)

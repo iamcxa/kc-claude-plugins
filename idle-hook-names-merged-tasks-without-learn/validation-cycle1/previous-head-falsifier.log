@@ -1,0 +1,34 @@
+FF
+======================================================================
+FAIL: test_archive_variant_profile_filter_matches_learning_eligibility (__main__.TasksTests.test_archive_variant_profile_filter_matches_learning_eligibility)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/mutant/scripts/test_pr_watch.py", line 1070, in test_archive_variant_profile_filter_matches_learning_eligibility
+    self.assertEqual(self.tasks({}), (0, sorted(expected)))
+AssertionError: Tuples differ: (2, ['next: run kc-dev-flow-2:learn for ca[3299 chars]e.']) != (0, ['next: run kc-dev-flow-2:learn for ca[99 chars]4.'])
+
+First differing element 0:
+2
+0
+
+Diff is 3875 characters long. Set self.maxDiff to None to see it.
+
+======================================================================
+FAIL: test_frontmatter_ineligible_learn_hold_is_skipped_without_a_record (__main__.TasksTests.test_frontmatter_ineligible_learn_hold_is_skipped_without_a_record)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/mutant/scripts/test_pr_watch.py", line 1079, in test_frontmatter_ineligible_learn_hold_is_skipped_without_a_record
+    self.assertEqual(self.tasks({}), (0, []))
+AssertionError: Tuples differ: (0, ['next: run kc-dev-flow-2:learn for old-profile.']) != (0, [])
+
+First differing element 1:
+['next: run kc-dev-flow-2:learn for old-profile.']
+[]
+
+- (0, ['next: run kc-dev-flow-2:learn for old-profile.'])
++ (0, [])
+
+----------------------------------------------------------------------
+Ran 2 tests in 3.093s
+
+FAILED (failures=2)

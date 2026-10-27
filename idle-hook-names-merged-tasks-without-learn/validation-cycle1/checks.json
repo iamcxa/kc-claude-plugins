@@ -1,0 +1,96 @@
+[
+  {
+    "command": [
+      "python3",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "stdout": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5565 of 5565 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "8bf4f3582411e8e4238f19fbadda8ddeca6767be"
+    ],
+    "exit": 0,
+    "stdout": "39 ADR file(s) checked, 0 legacy\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/idle-hook-names-merged-tasks-without-learn.md",
+      "--base",
+      "8bf4f3582411e8e4238f19fbadda8ddeca6767be"
+    ],
+    "exit": 0,
+    "stdout": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase 8bf4f3582411 head aa0f280f8e94 merge-base 8bf4f3582411\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/comment_ratio.py",
+      "8bf4f3582411e8e4238f19fbadda8ddeca6767be",
+      "aa0f280f8e94f8b5549b4a8cd26fe30560a9842c",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "stdout": "code lines 515, comment lines 1, 0.2%\n   1/ 451 kc-dev-flow-2/scripts/test_pr_watch.py\nmaximum 5% (package default) met\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/doc_impact.py",
+      "8bf4f3582411e8e4238f19fbadda8ddeca6767be",
+      "aa0f280f8e94f8b5549b4a8cd26fe30560a9842c"
+    ],
+    "exit": 0,
+    "stdout": "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/idle-hook-names-merged-tasks-without-learn.md"
+    ],
+    "exit": 0,
+    "stdout": "idle-hook-names-merged-tasks-without-learn.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "python3",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/dispatch_records.py",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/idle-hook-names-merged-tasks-without-learn"
+    ],
+    "exit": 0,
+    "stdout": "6 dispatch record(s) complete\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "git",
+      "-C",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1",
+      "diff",
+      "--check"
+    ],
+    "exit": 0,
+    "stdout": "",
+    "stderr": ""
+  }
+]

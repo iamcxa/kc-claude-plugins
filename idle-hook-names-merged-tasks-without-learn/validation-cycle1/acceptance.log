@@ -1,0 +1,17 @@
+Preparing worktree (detached HEAD aa0f280f8)
+HEAD is now at aa0f280f8 fix(kc-dev-flow-2): skip unsupported archived learning tasks
+aa0f280f8e94f8b5549b4a8cd26fe30560a9842c
+......
+----------------------------------------------------------------------
+Ran 6 tests in 25.002s
+
+OK
+idle before hold: <empty>
+{"state": "ineligible", "reasons": ["profile"]}
+{"notices": []}
+idle after hold: <empty>
+eligible task: next: run kc-dev-flow-2:learn for eligible.
+PASS: rejected profile skipped; eligible task named; no record or task mutation
+39 ADR file(s) checked, 0 legacy
+adr_lint exit=0
+cleanup complete

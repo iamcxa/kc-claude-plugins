@@ -1,0 +1,23 @@
+F
+======================================================================
+FAIL: test_archive_shapes_are_sorted_deduplicated_and_guarded (__main__.TasksTests.test_archive_shapes_are_sorted_deduplicated_and_guarded)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/mutant/scripts/test_pr_watch.py", line 837, in test_archive_shapes_are_sorted_deduplicated_and_guarded
+    self.assertEqual((code, lines), (0, [f"next: run kc-dev-flow-2:learn for {s}."
+AssertionError: Tuples differ: (0, []) != (0, ['next: run kc-dev-flow-2:learn for a-fold[89 chars]t.'])
+
+First differing element 1:
+[]
+['next: run kc-dev-flow-2:learn for a-fold[88 chars]at.']
+
+- (0, [])
++ (0,
++  ['next: run kc-dev-flow-2:learn for a-folder.',
++   'next: run kc-dev-flow-2:learn for both.',
++   'next: run kc-dev-flow-2:learn for z-flat.'])
+
+----------------------------------------------------------------------
+Ran 1 test in 0.927s
+
+FAILED (failures=1)

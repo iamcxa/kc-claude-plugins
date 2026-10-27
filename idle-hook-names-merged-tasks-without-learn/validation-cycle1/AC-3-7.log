@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_frozen_archive_replay_recovers_all_eleven_and_suppresses_backfilled_jobs (__main__.TasksTests.test_frozen_archive_replay_recovers_all_eleven_and_suppresses_backfilled_jobs)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737-cycle1/.context/idle-evidence/cycle1/mutant/scripts/test_pr_watch.py", line 1049, in test_frozen_archive_replay_recovers_all_eleven_and_suppresses_backfilled_jobs
+    self.assertEqual(f"next: run kc-dev-flow-2:learn for {slug}." in lines, not backfilled, slug)
+AssertionError: False != True : codex-review-hang-detected
+
+----------------------------------------------------------------------
+Ran 1 test in 0.347s
+
+FAILED (failures=1)
