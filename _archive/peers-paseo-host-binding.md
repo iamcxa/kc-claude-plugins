@@ -3,7 +3,10 @@ title: The peers extension carries a Paseo host binding, so an FO under Paseo ca
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: done
+verdict: REJECTED
+completed: 2026-10-27T15:13:47Z
+archived: 2026-10-27T15:13:47Z
 ---
 
 ## Scope
