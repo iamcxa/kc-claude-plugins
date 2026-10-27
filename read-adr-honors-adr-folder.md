@@ -234,3 +234,40 @@ Superseded text:
 ### Summary
 
 The pilot design repairs uncited ADR discovery in kc-adr and carries it unchanged to dev2 with the existing copy mechanism. The task records source evidence, all requested overlaps, reading cost and falsifiable acceptance plans; native agent behavior and delivery remain unverified until later stages. Only this split-root task body/report was changed; frontmatter and sibling tasks were preserved.
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (8bf4f3582411e8e4238f19fbadda8ddeca6767be) implementing the approved design and acceptance criteria in the task file; the read-adr skill change in both copies the design names, with Captain amendment 1 applied: no absolute-path conversion, and the design-director none case on one host; restate AC-1 to AC-3 as amendment 1 says, marking each 'Amended by Captain, amendment 1'; only the files the design names
+  Code 813e0b09cb641b82b8ca04630879cc69e922288e changes only the two named skills and is pushed; FO opens the Draft PR from /tmp/impl-read-adr-honors-adr-folder-pr.md. Full acceptance remains pending Claude validation.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Codex behavior and the command/comparison falsifiers below pass; Claude traces are deferred by implementation-2. No all-criteria-green claim; native hardcoded/custom and cwd controls compensate rather than discriminate.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  All runnable checks exit 0 using the assigned Codex package path; RoboRev evidence and hosted CI belong to FO, so this combined delivery checklist is incomplete. CI cost per PR was not measured.
+- DONE: Captain amendment 1 applied to the task and the two skill files
+  Original AC-1/2/3 moved verbatim into amendment 1; fresh AC-6/7/8 each say “Amended by Captain, amendment 1”. No absolute-path conversion; Codex alone runs director none/custom. design_surfaces.py check exits 0 after FO's explicit Supersedes-id repair.
+- DONE: Codex portion of AC-6 and AC-8: selected folder, pinned bytes, precedence, missing folder and path refusal
+  /tmp/read-adr-implementation-evidence/{kc-adr,kc-dev-flow-2}-matrix.jsonl retains actual tools/results for eight cases per namespace; both read amber at fixture 04bb7e2046a55b9ee8b36f5d3acc482bc5b69c2e despite an orange uncommitted file, use green/violet for instruction/default, and refuse invalid inputs. Hardcoded listing selects violet; cwd listing is empty.
+- DONE: Codex portion of AC-7 and the unchanged design-director caller
+  Both *-none.jsonl traces contain no ADR enumeration/read; director-none.jsonl returns adrs_read: none and director-custom.jsonl lists decisions/product rules/0001-caller-rule.md (Accepted). Removing none behavior opens green, so the no-read/no-ruling assertion fails.
+- DONE: Native fallback/path falsifiers and literal-command selection controls
+  Native mutation-fallback and mutation-invalid return violet and fail acceptance; literal-command-controls.json executes extracted candidate/base/cwd commands, accepting only candidate. Native hardcoded/custom and cwd runs instead return amber: they do not prove a causal adherence gain.
+- DONE: AC-4 source/copy equality and unchanged remaining instructions
+  sync/check and kc-adr-copy-sync.test.sh pass (12/12); local_checks.py verifies every byte outside step 1 unchanged. One-byte source/copy mutations each make real check exit 1, resync exits 0; suppressing comparison makes the mismatch assertion fail. Candidate skill sha256:5a76ac946fecc7bb6524699f6742e1b93bf41fe05dd9316ec73703f3079bf5d8.
+- DONE: AC-5 bounded diff and measured reading cost
+  local-checks.json confirms only the two planned files changed; skill 775→852 (+77, amended wording), workflow 5565→5565, mod 48→48, watcher/observer/delivery sources unchanged. Injected startup text fails the byte-equality control; routine source-reading delta 0. No published version observed.
+- DONE: Repository lint, ADR/number/comment guards and affected documents
+  Repository lint exits 0 at 5565/5565 workflow words; assigned-package adr_lint checks 39 records with 0 legacy; number_guards passes at 813e0b09 against 8bf4f358; comment_ratio reports 0 code/0 comment, 0.0%, maximum 5% not enforced below the 20-line floor; doc_impact lists 0 documents; diff --check passes. No ADR added or changed.
+- DONE: Reproducible local evidence, cache discipline and source-bound native runs
+  Evidence directory /tmp/read-adr-implementation-evidence retains replay.py, fixture commit, raw JSONL/prompts/stderr, assess_native.py/native-assessment.json, local_checks.py/local-checks.json and literal-command-controls.json. Python probes use -B after clearing fixture caches; native runs are read-only, exact source paths, one matrix/session per namespace, not a published install test.
+- SKIPPED: Native Claude traces for AC-6, AC-7 and AC-8
+  native Claude traces run at validation (FO, 2026-10-28): the implementation sandbox has no Claude login. No credentials touched; Codex startup required approved escalation, then used its read-only sandbox.
+- SKIPPED: RoboRev local daemon review and its evidence= line
+  Not run: the implementation sandbox cannot reach the RoboRev daemon, per FO dispatch; FO runs it. No substitute evidence= or incomplete: line fabricated.
+- DONE: Named-file code delivery and PR draft text
+  Commit 813e0b09 was pushed with git push origin spacedock-ensign/read-adr-honors-adr-folder, no force and no -u; ls-remote confirms the exact SHA. /tmp/impl-read-adr-honors-adr-folder-pr.md has the scoped Conventional Commit title and body for FO; no gh run.
+- SKIPPED: FO opens the Draft PR and reads CI on its head
+  Explicitly delegated by dispatch; neither PR creation nor hosted CI is claimed here.
+
+### Summary
+
+Implemented the approved Pilot repair in source and copy, applied amendment 1, and pushed 813e0b09. Candidate Codex behavior, existing checks and direct command/comparison mutation controls pass; two native mutation arms compensate, so their causal evidence is limited. Native Claude, RoboRev, the Draft PR and hosted CI remain with FO/validation; this is not an all-acceptance-green report.
