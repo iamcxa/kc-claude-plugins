@@ -270,6 +270,10 @@ for name,(want,text,source) in tests.items():
 print('CONTROLS',len(tests),'passed','READER',code,printed)
 ```
 
+### Feedback Cycles
+
+- Cycle 1 (FO, 2026-10-28): on #736 87c1d1b7, RoboRev (roborev:1263) left 1 High, counted as P1 under step 5: `answer=review:<id>` is excluded case-sensitively in kc-dev-flow-2/scripts/delivery_gate.py, so `Copilot ANSWER=review:18` passes; to fix; investigation first, then FO fix authorization, then validation.
+
 ## Stage Report: ideation
 
 - DONE: A design for /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/delivery_gate.py to refuse a merge ask that lacks the second-reviewer line when the README's trigger holds, and a copilot not run line without the quote /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/extensions/copilot/copilot_review.py printed and a retry offer, replayed over the saved merge asks under merge/ in this workflow's tasks
