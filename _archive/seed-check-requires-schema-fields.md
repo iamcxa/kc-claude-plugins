@@ -3,7 +3,7 @@ title: The seed check refuses a task missing its schema's required fields
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「全准」 (chat, 2026-10-28) answering FO''s batch-8 second merge sitting (both merge asks and, for #740, the meaning of a new seed, all with FO''s recommendations); accepts FO''s recommendation'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-27T16:18:25Z
 worktree: .worktrees/spacedock-ensign-seed-check-requires-schema-fields
 pr: pr-merge:740
+verdict: PASSED
+completed: 2026-10-27T19:13:14Z
+archived: 2026-10-27T19:13:14Z
 ---
 
 ## Scope
