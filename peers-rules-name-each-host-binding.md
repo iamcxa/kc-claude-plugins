@@ -75,7 +75,7 @@ gates:
                 state: pending
 started: 2026-10-26T17:08:27Z
 worktree: .worktrees/spacedock-ensign-peers-rules-name-each-host-binding
-pr: iamcxa/kc-claude-plugins#730
+pr: pr-merge:730
 ---
 
 ## Scope
