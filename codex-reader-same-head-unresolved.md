@@ -53,6 +53,17 @@ gates:
                 id: briefing:codex-reader-same-head-unresolved:validation:attempt-1:revision-1
                 digest: sha256:e508a79badf5857bd9590ba92fa6df8b33f7e42e8eef723924b4db7aecd9ed14
                 room-ref: ./codex-reader-same-head-unresolved/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:codex-reader-same-head-unresolved:validation:1
+                briefing: briefing:codex-reader-same-head-unresolved:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-27T00:37:37.190615Z"
+                decision: approve
+                reason: 'Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #728 at c2f3e313; accepts FO''s recommendation'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-26T17:08:13Z
 worktree: .worktrees/spacedock-ensign-codex-reader-same-head-unresolved
 pr: iamcxa/kc-claude-plugins#728
