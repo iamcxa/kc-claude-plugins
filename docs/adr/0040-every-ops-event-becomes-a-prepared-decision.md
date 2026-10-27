@@ -1,4 +1,4 @@
-# 0031. Every ops event becomes a decision an agent has prepared, and each decision makes the next easier to hand to an agent
+# 0040. Every ops event becomes a decision an agent has prepared, and each decision makes the next easier to hand to an agent
 
 Date: 2026-10-23
 
