@@ -1,0 +1,28 @@
+name: kc-ops-inbox tests
+
+# The contract imports only node:crypto, so this job installs nothing.
+on:
+  pull_request:
+    paths:
+      - "kc-ops-inbox/**"
+      - ".github/workflows/kc-ops-inbox-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "kc-ops-inbox/**"
+      - ".github/workflows/kc-ops-inbox-tests.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: kc-ops-inbox contract tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Contract tests
+        run: node --test kc-ops-inbox/test/contract.test.mjs
+      - name: Each check removed in a temporary copy fails its test
+        run: node kc-ops-inbox/test/mutations.mjs

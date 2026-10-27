@@ -1,0 +1,9 @@
+{
+  "v1": {
+    "ops.inbox.selftest": "sha256:b444027accafdd02450a81f747634d4ef70f97db6935ae1e7e2b0e13298ea1fc",
+    "ops.metric.crossed": "sha256:8eba848d0e92e37c5b35fc760360ce967c588287f2da0909ba0fa4ea26bea013",
+    "ops.metric.heartbeat": "sha256:0d95433fc74eedbd0817251ffd26e0a53133e4b7fdef6a5f4b85d8993c3aceac",
+    "ops.metric.recovered": "sha256:5deaa10210973ec687135303c31430e7bab41cdda84b2dc8573f97acfa11c219",
+    "sentry.issue.alert": "sha256:cfb37604936637459d0ac7ca423f8415fd9468e9cfbf5e3178fe5f9b4a2b37e2"
+  }
+}
