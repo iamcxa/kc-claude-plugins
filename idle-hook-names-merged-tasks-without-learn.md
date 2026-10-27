@@ -3,7 +3,7 @@ title: The idle hook names an archived task with a merged PR and no learn job
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
