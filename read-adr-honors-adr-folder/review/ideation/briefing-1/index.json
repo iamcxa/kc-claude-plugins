@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:read-adr-honors-adr-folder:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of read-adr-honors-adr-folder to enter implementation? FO recommends approve; approving accepts that recommendation with lighter evidence: no absolute-path conversion (nothing has needed it), and the design-director none case run on one host instead of two hosts times two namespaces.",
+  "artifacts": [
+    {
+      "id": "artifact:read-adr-honors-adr-folder:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/bd5da7a9c0bf90d8392b2e358deefeb55bcfd4df/read-adr-honors-adr-folder.md",
+      "rev": "sha256:7f1998789a392b517c3600ae61d4f692f441df0b44da79ad7bb36a6765b56e9b",
+      "mediaType": "text/markdown",
+      "summary": "Design: read-adr step 1 stops hardcoding docs/adr/ and lists the folder its caller names, none meaning no records; the kc-adr skill and the kc-dev-flow-2 copy stay identical. The #713 Codex P2. Chief-engineer reviewed the whole batch (2026-10-27) and recommends this disposition."
+    }
+  ]
+}

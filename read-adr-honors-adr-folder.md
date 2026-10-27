@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:read-adr-honors-adr-folder:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:read-adr-honors-adr-folder-ideation-1
+              briefing:
+                id: briefing:read-adr-honors-adr-folder:ideation:attempt-1:revision-1
+                digest: sha256:cb3a6e5c7e6db45400c6f568fde1e99351dcd4b41b0f4e39f6c60b25d934f8dd
+                room-ref: ./read-adr-honors-adr-folder/review/ideation/briefing-1
 ---
 
 ## Scope
