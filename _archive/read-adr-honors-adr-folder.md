@@ -3,7 +3,7 @@ title: read-adr lists the ADR folder its caller names, and none means no records
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: 'Captain 「全准」 (chat, 2026-10-28) answering FO''s batch-8 merge sitting (each PR''s merge ask, the Copilot-not-read item and, for #735, the separate F1 ruling, all presented with FO''s recommendations); accepts FO''s recommendation'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-27T16:00:23Z
 worktree: .worktrees/spacedock-ensign-read-adr-honors-adr-folder
 pr: pr-merge:735
+verdict: PASSED
+completed: 2026-10-27T17:53:53Z
+archived: 2026-10-27T17:53:53Z
 ---
 
 ## Scope
