@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-27T16:00:15Z
 worktree: .worktrees/spacedock-ensign-journey-probe-finds-nested-maps
-pr: iamcxa/kc-claude-plugins#734
+pr: pr-merge:734
 ---
 
 ## Scope
