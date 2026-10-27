@@ -158,6 +158,11 @@ Verified by: the Slack message with its time, the task and Draft PR, the gate re
 **AC-5**: The inbox core passes the same tests under the Netlify adapter and under a second adapter or plain Node harness.
 Verified by: both test runs and the core's import list.
 
+### Amendment 3 — 2026-10-27, chat
+Captain: 「對，加入且修訂」 (chat, 2026-10-27)
+Asked: 「要請你決定：r1 是否加入「觸發規則（預設等於核准的分流表）＋多把金鑰」，並同時修訂 AC-13？」
+Supersedes: AC-13
+
 ## Design
 
 Cycle 2 (2026-10-23), after amendment 1. Kept from attempt 1, as the Captain asked: contract v1, the trigger-repository isolation, the state-branch gate record. Redone: everything else, ordered by the confirmed axis (`asked-day2-axis-2026-10-23.md`). `## Scope`, the title and `Visible change:` are not edited here; the re-cut below is the proposal for the next ideation gate.
