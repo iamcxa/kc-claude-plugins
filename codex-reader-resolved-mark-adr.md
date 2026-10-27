@@ -3,7 +3,7 @@ title: The Codex reader's same-head rule is recorded as an ADR quoting the Capta
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: ideation
+status: implementation
 gates:
     version: 1
     records:
@@ -44,7 +44,7 @@ gates:
                 reason: Captain 「准」 (chat, 2026-10-27) answering 「需要你決定：ADR 0039 照這份草稿寫，同時在讀取器程式裡加一行指向這份 ADR 的註解，可以嗎？我建議可以」; accepts FO's recommendation
               application:
                 target-stage: implementation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
