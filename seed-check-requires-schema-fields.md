@@ -371,7 +371,7 @@ Actual whitespace counts retain all baseline passages; these measure the declare
 | Open idle, no seed defect: mod + full output | 48+29 = 77 | 48+29 = 77 |
 | Merged idle: mod + learn extension + full output | 48+280+20 = 348 | 48+280+20 = 348 |
 | Archived: learn extension + full output | 280+5 = 285 | 280+5 = 285 |
-| Merge ask: Delivery authority + Extensions + full output | 680+57 = 737 | 680+57 = 737 |
+| Merge ask: Delivery authority + Extensions + full output | 685+57 = 742 | 685+57 = 742 |
 
 Historical observer review uses the pinned Relay input: current compatibility fails for Budget/Stop condition; historical operator fault is `can't tell` without matching event-time README bytes. Removing the qualification restores an unsupported historical-violation claim and fails that manual review; live observer behavior was not exercised. Named-file review rejects the negative case of adding a CI trigger because it is outside the approved files; no trigger was installed or run.
 
@@ -522,3 +522,33 @@ Raw independent evidence: `/tmp/seed-validation-738-evidence/` (`tests.json`, `g
 ### Summary
 
 REJECTED at `2f3966a6ca1394a5154034637a55314613180875` because an indented quoted placeholder passes the required Budget check; AC-2/AC-8 remain unmet despite green existing suites and provider evidence supplied by FO. The stack merges cleanly and the +11 word step is backed by the approved +12 design allowance; other tested criteria pass within their stated local/native/manual limits. FO should disposition F1 and route repair, then validate a new exact head; no product change, PR action or delivery was performed.
+
+
+## Stage Report: implementation
+
+- DONE: Fix Cycle 1 as you proposed: in kc-dev-flow-2/scripts/design_surfaces.py test a quote with `line.lstrip().startswith(">")` and keep the original indentation for every other parse; add the three sections × four indents tests (quoted placeholder, quoted real text, valid content) to kc-dev-flow-2/scripts/test_design_surfaces.py, and show the old test fails them; correct the merge-ask count to 685 + 57 = 742 wherever the task or ADR 0041 states it
+  Repair `e31e3022056f279ea41af1b24b4488d611adcf21` changes only the quote predicate and its two regression methods; the task's implementation table is corrected to 685+57=742 on both sides. ADR 0041 contains no count and remains unchanged.
+- DONE: Run every kc-dev-flow-2 test file; commit (named files only), push with an explicit remote and branch, no force, no -u; append a complete new `## Stage Report: implementation` ending in a superseding `### Summary`, committed with `spacedock state commit seed-check-requires-schema-fields --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2`; FO runs RoboRev and reads CI
+  All 25 test files exit 0 (23 unit suites: 902 tests, one existing skip; two native integration files). Two named code files committed and pushed via `git push origin spacedock-ensign/seed-check-requires-schema-fields`; this complete report uses the requested state-commit command. FO's new-head checks remain delegated below.
+- DONE: AC-2 / AC-8 — quoted examples cannot supply any of the three required bounds.
+  Non-goals/Budget/Stop condition × 0–3 spaces × quoted placeholder/quoted real text/valid text × flat/folder = 72 subcases pass. Before the fix and in an isolated old-predicate replay, 36 quoted subcases fail their expected-refusal assertions; the valid-content method passes. python3 -B with a fresh empty cache confirms no cached candidate reuse.
+- DONE: AC-2 / AC-8 — confirm the validator's actual CLI failure is repaired.
+  All 24 original phase-1 quote probes now exit 1 with the affected field and unchanged bytes; the four-step validator acceptance script, rebinding only candidate identity/git root to this head, exits 0 in fresh bash. Restoring the old column-zero quote predicate reopens the 36 negative cases.
+- DONE: AC-9 / AC-10 — retain native creation, slug identity, route filtering and consumer behavior.
+  Fresh native Spacedock 0.27.2 / plugin 0.27.3 dispatch and recovery pass; checker 191, watcher 123, dispatch records 54, delivery 101 and POC 7 tests pass. The existing native omitted/matching-id, missing-bound/template and mismatching-id matrix remains green.
+- DONE: AC-5 — compare both checker modes over the original snapshots and all newly committed task state.
+  Repair-base 2f3966a6 versus this head: pinned 0d8847df (163), implementation-time a20f1526 (163), Relay d20ff925 (1), and latest fdfecaa42a27dbab02e4a43064ecd1c9ecdd2465 (163) have zero exit/output changes in either mode; all input bytes/digests match Git snapshots. No task migration or historical enforcement occurred.
+- DONE: AC-6 — correct the count and retain the approved schema/budget/ruling.
+  Merge-ask sections including headings are 685 words, plus the same 57-word output =742 on both base and candidate; only the former table arithmetic changes. Workflow remains 5576/5576 words; ADR 0041 and its Captain amendment remain in force. Earlier validation's discussion of the old 737 count is retained as historical finding evidence.
+- DONE: AC-7 — keep the approved read-only repair boundary.
+  Incremental code diff is two approved files; phase-1 probe bytes remain unchanged and the full package suites retain their process/network/default-mode controls. No CI, version, provider-hook, upstream or adopter edit; CI cost per PR not measured.
+- DONE: Required guards and document impact at e31e3022.
+  Repository lint exits 0; supplied Codex 0.32.0 adr_lint --since 207c0a7e --require 0041 exits 0 (40 ADRs, 0 legacy); number_guards exits 0 (trunk base 8bf4f358, migrations inapplicable); comment_ratio 2/212 =0.9% ≤5%. doc_impact lists only ADR 0041: unaffected, its no-example/no-placeholder rule is restored by this repair.
+- DONE: Preserve the complete prior delivery scope and record exact evidence.
+  Full branch still stacks on 207c0a7e with the original ten named files; amendment replacements AC-8/9/10 and optional stored slug id remain. Raw evidence: `/tmp/seed-738-cycle1-phase2-kk_1f_oe/` (manifest, all-tests.json, red/old-predicate logs, fixed quote probes, four replay JSON files/summary and acceptance.sh/log).
+- SKIPPED: RoboRev and hosted CI on the repaired head.
+  Delegated to FO by dispatch: sandbox cannot reach the daemon or GitHub API; no gh, PR comment/review request, ready action or RoboRev run. Prior evidence=roborev:1268 and CI 5/5 belong only to 2f3966a6 and do not clear this new head.
+
+### Summary
+
+Cycle 1 repair is implemented and pushed at `e31e3022056f279ea41af1b24b4488d611adcf21`: indented quotes no longer supply any bound, legitimate indentation is retained, and the inclusive merge-ask count is 742. All 25 package test files, regression falsifier, validator acceptance script, snapshot replay and required guards pass within the stated local/native scope; FO still owns new-head RoboRev, CI and independent revalidation. This complete report supersedes the earlier implementation report; validation-1 remains the historical rejection of 2f3966a6.
