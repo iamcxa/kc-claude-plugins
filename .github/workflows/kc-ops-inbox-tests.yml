@@ -38,3 +38,6 @@ jobs:
         env:
           OPS_REQUIRE_SPACEDOCK: "1"
         run: npm test
+      - name: Each contract check removed in a temporary copy fails its test
+        working-directory: kc-ops-inbox
+        run: node test/mutations.mjs

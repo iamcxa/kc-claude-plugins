@@ -64,6 +64,9 @@ jobs:
       - name: extensions/journey-map/test_map_footprint.py
         run: python3 kc-dev-flow-2/extensions/journey-map/test_map_footprint.py
 
+      - name: extensions/release-acceptance/test_release_acceptance.py
+        run: python3 kc-dev-flow-2/extensions/release-acceptance/test_release_acceptance.py
+
       - name: test_dispatch_records.py
         run: python3 kc-dev-flow-2/scripts/test_dispatch_records.py
 

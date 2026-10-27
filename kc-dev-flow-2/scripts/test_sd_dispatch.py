@@ -12,6 +12,8 @@ import subprocess
 import tempfile
 import uuid
 
+from poc_readme import derive
+
 ROOT = Path(__file__).resolve().parents[1]
 TEMPLATE = ROOT / "references/sd/workflow.md"
 MODS = ROOT / "references/sd/mods"
@@ -25,6 +27,25 @@ ROUND_RULE = ("A round is one verdict of an external reviewer of the delivery",
 WORKER_RULE = ("Before repair authorization, product bytes and the recorded candidate revision stay unchanged",
                "The four evidence fields are", "- **Needs decision:**")
 MAIN_LINE = "Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here)."
+TEAM_RULE = """- **Team:** You are one worker in a team completing the project goal; your stage
+  and handoff serve that goal. Before substantial work or retrying a failure,
+  check this task's prior reports, linked sibling tasks and PRs, and relevant
+  workflow state: did someone already do this, hit this, or own it now? If your
+  environment cannot run a required checklist check, tell FO before building
+  work that depends on it. Ask FO early about overlapping ownership, repeated
+  failures, missing authority or evidence, or infeasible targets. Give checked
+  sources, findings, attempts and the specific question. With a mid-run FO
+  channel, pause dependent work and continue safe independent work; without
+  one, end your turn with that handback instead of waiting. Never answer your
+  own or your reviewers' permission requests; route them to FO. FO coordinates
+  peers and decisions; do not message peers or change others' work."""
+
+
+def assert_team(text):
+    clauses = re.findall(r"^- \*\*Team:\*\*.*?(?=^\S|\Z)", text, re.MULTILINE | re.DOTALL)
+    assert [" ".join(clause.split()) for clause in clauses] == [" ".join(TEAM_RULE.split())], "complete Team rule missing or duplicated"
+
+
 SEED_STEP = "design_surfaces.py check --seed"
 FO_RECORD = "\n## FO alignment\n\nSurfaces: none\nVisible change: none\n"
 LANE_RULE = ("`concurrency` limits only what `status --next` proposes",
@@ -311,6 +332,10 @@ FIXES = {
         need=("follow-up message with a line telling the worker to send its completion message to `main`",),
         old=(),
         swaps=((r" and follow-up message with a line telling the worker to send its completion message to `main`, because the completion block Spacedock appends names `team-lead`\.", "."),)),
+    "correction-request": dict(
+        need=("with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one",),
+        old=(),
+        swaps=((r" with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one,", ","),)),
 }
 
 
@@ -362,10 +387,7 @@ def exercise(base, binary, sd_root):
 
     def route_definition(profile):
         definition = TEMPLATE.read_text()
-        if profile == "poc":
-            definition = re.sub(r"    - name: ideation\n.*?(?=    - name: implementation)", "", definition, flags=re.DOTALL)
-            definition = re.sub(r"### `ideation`\n.*?(?=### `implementation`)", "", definition, flags=re.DOTALL)
-        return definition
+        return derive(definition) if profile == "poc" else definition
 
     def seed(name, stage, definition=None, profile="pilot", with_mod=True):
         repo = base / name
@@ -411,11 +433,12 @@ def exercise(base, binary, sd_root):
 
     try:
         version = run([binary, "--version"]).stdout.splitlines()[0]
-        for stage in STAGES:
+        routes = [("pilot", stage) for stage in STAGES] + [("poc", stage) for stage in ("implementation", "validation")]
+        for profile, stage in routes:
             for host in ("claude", "codex"):
-                repo, entity = seed(f"{host}-{stage}", stage)
+                repo, entity = seed(f"{profile}-{host}-{stage}", stage, profile=profile)
                 payload = request(repo, entity, stage, host)
-                payload_path = base / f"{host}-{stage}.json"
+                payload_path = base / f"{profile}-{host}-{stage}.json"
                 payload_path.write_text(json.dumps(payload))
                 checklist_path = base / "transport-checklist.txt"
                 checklist_path.write_text("Synthetic dispatch only; no worker execution\n")
@@ -435,7 +458,7 @@ def exercise(base, binary, sd_root):
                     raise AssertionError("unexpected dispatch artifact ownership")
                 artifacts.append(artifact)
                 body = artifact.read_text()
-                (base / f"{host}-{stage}-dispatch.md").write_text(body)
+                (base / f"{profile}-{host}-{stage}-dispatch.md").write_text(body)
                 assert str(entity) in body and f"Stage: {stage}" in body
                 assert str(artifact) in envelope["prompt"]
                 assert envelope["subagent_type"] == "spacedock:ensign"
@@ -450,6 +473,7 @@ def exercise(base, binary, sd_root):
                 assert "## Dispatch facts" in definition, stage
                 assert "## FO steps" not in definition and "## Delivery authority" not in definition, ("FO-only section reached a stage", host, stage)
                 facts = definition.split("## Dispatch facts", 1)[1].split("\n## ", 1)[0]
+                assert_team(definition)
                 for label in ("Signal", "Package", "Secrets"):
                     assert f"- **{label}:**" in facts, (stage, label)
                 assert "dispatch show-stage-def" in body and f"--stage {stage}" in body
@@ -467,6 +491,56 @@ def exercise(base, binary, sd_root):
                     flat = " ".join(definition.split())
                     assert [p for p in WORKER_RULE if p not in flat] == [], ("worker-visible rule missing", host, stage)
                     assert [p for p in ROUND_RULE if p in flat] == [], ("round rule reached a worker", host, stage)
+
+                reused = json.loads(run([binary, "dispatch", "build", "--workflow-dir", repo,
+                                         "--entity-path", entity, "--stage", stage, "--host", host,
+                                         "--checklist-file", checklist_path, "--advance"], repo).stdout)
+                reused_artifact = Path(reused["dispatch_file_path"])
+                assert token in reused_artifact.name
+                artifacts.append(reused_artifact)
+                (base / f"{profile}-{host}-{stage}-advance.md").write_text(reused_artifact.read_text())
+                assert reused["prompt"].startswith(f"Advancing to next stage: {stage}.")
+                assert str(reused_artifact) in reused["prompt"]
+                assert f"## Advancing to next stage: {stage}" in reused_artifact.read_text()
+                assert [shlex.split(command) for command in reused["fetch_commands"]] == [expected]
+                assert_team(run(shlex.split(reused["fetch_commands"][0]), repo).stdout)
+
+        source = TEMPLATE.read_text()
+        corrections = {
+            "named-records": "check this task's prior reports, linked sibling tasks and PRs, and relevant\n  workflow state:",
+            "required-check": "If your\n  environment cannot run a required checklist check, tell FO before building\n  work that depends on it.",
+            "no-channel": "without\n  one, end your turn with that handback instead of waiting.",
+            "permission": "Never answer your\n  own or your reviewers' permission requests; route them to FO.",
+            "whole-team": TEAM_RULE,
+        }
+        controls = [(name, "ideation", source.replace(removed, "")) for name, removed in corrections.items()]
+        controls += [("duplicate-team", "ideation", source.replace(TEAM_RULE, TEAM_RULE + "\n" + TEAM_RULE)),
+                     ("peer-permission", "ideation", source.replace("do not message peers", "message peers"))]
+        for stage in STAGES:
+            start = source.index(f"    - name: {stage}\n")
+            end = source.index("\n    - name:", start)
+            entry = source[start:end].replace("        - Dispatch facts", "", 1)
+            if stage == "ideation":
+                entry = entry.replace("      context-sections:\n", "      context-sections: []\n")
+            controls.append((f"selector-{stage}", stage, source[:start] + entry + source[end:]))
+        losses = []
+        for name, stage, trimmed in controls:
+            assert trimmed != source, name
+            workflow, entity = seed(f"team-loss-{name}", stage, trimmed)
+            envelope = json.loads(run([binary, "dispatch", "build", "--workflow-dir", workflow,
+                                      "--entity-path", entity, "--stage", stage, "--host", "codex",
+                                      "--checklist-file", checklist_path, "--stamp"], workflow).stdout)
+            artifact = Path(envelope["dispatch_file_path"])
+            assert token in artifact.name
+            artifacts.append(artifact)
+            fetched = run(shlex.split(envelope["fetch_commands"][0]), workflow).stdout
+            try:
+                assert_team(fetched)
+            except AssertionError as error:
+                losses.append({"mutation": name, "rejected": str(error)})
+            else:
+                raise AssertionError(f"Team loss control was accepted: {name}")
+        (base / "team-loss-controls.json").write_text(json.dumps(losses, indent=2))
 
         template_flat = " ".join(TEMPLATE.read_text().split())
         assert [p for p in ROUND_RULE if p not in template_flat] == [], "round rule missing from workflow.md"
@@ -540,6 +614,12 @@ def exercise(base, binary, sd_root):
         old = "**AC-2**: replaced outcome.\nVerified by: y\n"
         ids, checked = parity(criteria.format(old="") + amendment.format(moved="Superseded text:\n" + old))
         assert ids == ["AC-1"] and checked.returncode == 0, (ids, checked.stdout)
+        ids, checked = parity(criteria.format(old="**AC-2** (superseded by amendment 1): replaced outcome.\n")
+                              + amendment.format(moved=""))
+        assert ids == ["AC-1", "AC-2"] and checked.returncode == 0, ("the criterion waits until a checklist names the amendment", ids, checked.stdout)
+        records = entity.parent / entity.stem / "dispatch"
+        records.mkdir(parents=True)
+        (records / "implementation-1.md").write_text("## Checklist\n\n- Captain amendment 1\n")
         ids, checked = parity(criteria.format(old="**AC-2** (superseded by amendment 1): replaced outcome.\n")
                               + amendment.format(moved=""))
         assert ids == ["AC-1", "AC-2"] and checked.returncode == 1, (ids, checked.stdout)
@@ -685,6 +765,36 @@ def exercise(base, binary, sd_root):
         run(["git", "-C", entity.parent, "commit", "-m", "test: report without the FAILED bullet"])
         run(advance, workflow)
 
+        workflow, entity = seed("corrected-report", "implementation")
+        stamped(workflow, entity, "implementation")
+
+        def append_report(text, message):
+            entity.write_text(entity.read_text() + text)
+            run(["git", "-C", entity.parent, "add", "--", entity.name])
+            run(["git", "-C", entity.parent, "commit", "-m", message])
+
+        advance = [binary, "status", "--workflow-dir", workflow, "--set", entity.stem, "status=validation", "started"]
+        append_report("\n## Stage Report: implementation\n\n"
+                      "- DONE: Synthetic first item\n  Synthetic evidence.\n"
+                      "- FAILED: Synthetic second item\n  Synthetic failure.\n\n### Summary\n\nSynthetic first report.\n",
+                      "test: report with a FAILED item")
+        refused = run(advance, workflow, expected=None)
+        assert refused.returncode != 0 and "durable, complete" in refused.stderr + refused.stdout, refused
+        append_report("\n## Stage Report: implementation (correction)\n\n"
+                      "- DONE: Synthetic second item\n  Synthetic evidence.\n",
+                      "test: correction without a Summary")
+        refused = run(advance, workflow, expected=None)
+        assert refused.returncode != 0 and "durable, complete" in refused.stderr + refused.stdout, refused
+        named = run([binary, "status", "--workflow-dir", workflow, "--read", entity.stem,
+                     "--stage", "implementation", "--checklist"], workflow).stdout
+        assert "Synthetic second item" in named and "Synthetic first item" not in named, named
+        append_report("\n## Stage Report: implementation\n\n"
+                      "- DONE: Synthetic first item\n  Synthetic evidence.\n"
+                      "- DONE: Synthetic second item\n  Synthetic evidence.\n\n"
+                      "### Summary\n\nThis report supersedes the two reports above it.\n",
+                      "test: complete report under the exact heading")
+        run(advance, workflow)
+
         source = " ".join(TEMPLATE.read_text().split())
         assert lane_gaps(source) == ([], []), lane_gaps(source)
         old_lane = re.sub(r"A feedback-reflow repair and an FO fix.*?will be delivered\.", OLD_LANE, source)
@@ -756,10 +866,10 @@ def exercise(base, binary, sd_root):
         held = json.loads(run([binary, "merge", "guard", entity.stem, "--workflow-dir", workflow,
                                "--verdict", "passed", "--json"], workflow).stdout)
         assert (held["signal"], held["action"]) == ("blocked", "await-pr"), held
-        print(f"PASS ({version}): 6 stage/host dispatch handoffs; wrong-stage and missing-stage refusals")
+        print(f"PASS ({version}): 10 route/stage/host fresh and reused dispatch handoffs; 10 Team loss controls; wrong-stage and missing-stage refusals")
         print("PASS: bold/plain AC scan and range/individual citation controls; mixed-marker refusal and cleaned Claude autodetection")
         print("PASS: both adopted graphs / three profiles, synthetic gate successors, split-root worktree reuse, canonical merge hook arm and no-hook negative control")
-        print("PASS: Dispatch facts (Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone")
+        print("PASS: Dispatch facts (complete Team, Signal, Package, Secrets) printed for each stage on both hosts, scope notes with the package root and the `main` completion line carried into the dispatch file ahead of the checklist beside the builder's `team-lead` block; a FAILED-none report refused, named by the checklist read, accepted once the bullet is gone; a correction without a Summary refused and named alone by the checklist read, a complete report under the exact heading accepted")
         print("PASS: the round rule is in workflow.md and in no stage definition, Delivery authority and the FO steps sections reach no stage, the worker-visible finding vocabulary stays in both worker stages, and an implementation fixture that lists the FO steps section does inline the round rule; a feedback-reflow repair is built while another entity holds the only implementation slot; the lane and Applied wording is asserted present and its 0.10.0 form is reported as gaps; the " + str(len(FIXES)) + " wording fixes (" + ", ".join(FIXES) + ") are each asserted present, and each reverted alone to its previous text reports only its own gaps")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist")

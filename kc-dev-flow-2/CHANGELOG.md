@@ -1,5 +1,57 @@
 # Changelog
 
+## [0.32.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.31.0...kc-dev-flow-2-v0.32.0) (2026-10-27)
+
+
+### Features
+
+* **kc-dev-flow-2:** bind peer cooperation to each host transport ([#730](https://github.com/iamcxa/kc-claude-plugins/issues/730)) ([2b3e505](https://github.com/iamcxa/kc-claude-plugins/commit/2b3e505c798ecd10de3a5cf18cfff91b4775d7bd))
+* **kc-dev-flow-2:** give workers team context and early FO handback ([#729](https://github.com/iamcxa/kc-claude-plugins/issues/729)) ([b8ce84e](https://github.com/iamcxa/kc-claude-plugins/commit/b8ce84e584cf5c5cb482009d9d08d7316ce2a6ac))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** a Codex finding on a head decides over a later no-issues receipt on the same head ([#728](https://github.com/iamcxa/kc-claude-plugins/issues/728)) ([d8e9204](https://github.com/iamcxa/kc-claude-plugins/commit/d8e9204bfae64ab4a76ec1a2ef0357a2b8fc7b44))
+
+## [0.31.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.30.0...kc-dev-flow-2-v0.31.0) (2026-10-26)
+
+
+### Features
+
+* **kc-dev-flow-2:** a chief-engineer call must be dated no earlier than the newest review round ([#719](https://github.com/iamcxa/kc-claude-plugins/issues/719)) ([82798a2](https://github.com/iamcxa/kc-claude-plugins/commit/82798a24ccae05c67cab16befb44d30438857371))
+* **kc-dev-flow-2:** a worker corrects a stage report with a complete new report under the same heading ([#721](https://github.com/iamcxa/kc-claude-plugins/issues/721)) ([454e5bf](https://github.com/iamcxa/kc-claude-plugins/commit/454e5bfcd4261ffca95cf3f8ae058546f0f93280))
+* **kc-dev-flow-2:** check the Result line, amendment backslashes, the merge hold-out clause and Override placement before FO writes them ([#724](https://github.com/iamcxa/kc-claude-plugins/issues/724)) ([1a6149f](https://github.com/iamcxa/kc-claude-plugins/commit/1a6149f545b6035a796c3d9ca942f6a560cd95ec))
+* **kc-dev-flow-2:** report a stalled Codex review and let the summary decide over a stuck eyes reaction ([#722](https://github.com/iamcxa/kc-claude-plugins/issues/722)) ([d7eb99c](https://github.com/iamcxa/kc-claude-plugins/commit/d7eb99c6682a3dd11821ace26bb7a53d3a977d37))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** delivery_gate and dispatch_records read a folder task, and a reserved ADR may land on a named sibling PR ([#720](https://github.com/iamcxa/kc-claude-plugins/issues/720)) ([be137f2](https://github.com/iamcxa/kc-claude-plugins/commit/be137f20c32868c1f7a20520593883bf8bb6e280))
+
+## [0.30.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.29.0...kc-dev-flow-2-v0.30.0) (2026-10-25)
+
+
+### Features
+
+* **kc-dev-flow-2:** ship learn and peers as the template default and tier the extensions ([#716](https://github.com/iamcxa/kc-claude-plugins/issues/716)) ([d496ac3](https://github.com/iamcxa/kc-claude-plugins/commit/d496ac3d1a3dc606f0f48b1fc804b0b36f4af177))
+
+## [0.29.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.28.0...kc-dev-flow-2-v0.29.0) (2026-10-24)
+
+
+### Features
+
+* **kc-dev-flow-2:** a named design director runs the ui design review and rules on every decline ([#708](https://github.com/iamcxa/kc-claude-plugins/issues/708)) ([0701aa8](https://github.com/iamcxa/kc-claude-plugins/commit/0701aa8debd45b3fe7eab7e930141319d52f3aa2))
+* **kc-dev-flow-2:** ask once whether to draw a story map, and list open decisions before a sitting ([#705](https://github.com/iamcxa/kc-claude-plugins/issues/705)) ([c351487](https://github.com/iamcxa/kc-claude-plugins/commit/c3514876339cb732d0bea8b2d2dd45c234bcdeaf))
+* **kc-dev-flow-2:** CI-synced copies of kc-adr's ADR template, linter and read-adr skill ([#713](https://github.com/iamcxa/kc-claude-plugins/issues/713)) ([bc69b67](https://github.com/iamcxa/kc-claude-plugins/commit/bc69b6754b74912f4fa43814e24f5605174e8977))
+* **kc-dev-flow-2:** hold a merge ask on a task whose committed state owes a repair-pass or amendment call ([#703](https://github.com/iamcxa/kc-claude-plugins/issues/703)) ([126efaf](https://github.com/iamcxa/kc-claude-plugins/commit/126efaf06b4d3f06c29d6b071189ed7771c41ee9))
+* **kc-dev-flow-2:** hold the first implementation dispatch while a release-changed mark has no review line ([#711](https://github.com/iamcxa/kc-claude-plugins/issues/711)) ([ac1d410](https://github.com/iamcxa/kc-claude-plugins/commit/ac1d41033081ec6b8b2696f98f986ee5ad4f99e0))
+* **kc-dev-flow-2:** walk a release with picky-user reviewers and have the design director rule on it ([#714](https://github.com/iamcxa/kc-claude-plugins/issues/714)) ([dde14c4](https://github.com/iamcxa/kc-claude-plugins/commit/dde14c434593f645c8806aa96f910911243c1868))
+
+
+### Bug Fixes
+
+* **kc-dev-flow-2:** count a Codex round from the summary's code review, never from a security review ([#702](https://github.com/iamcxa/kc-claude-plugins/issues/702)) ([8bfac96](https://github.com/iamcxa/kc-claude-plugins/commit/8bfac961ddb0167acff2005e256493dfc7942bc5))
+
 ## [0.28.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-dev-flow-2-v0.27.0...kc-dev-flow-2-v0.28.0) (2026-10-22)
 
 

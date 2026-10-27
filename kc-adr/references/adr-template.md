@@ -20,6 +20,8 @@ What forced the decision, with the evidence and where it came from.
 
 **Recommended:** the option the recommender recommended; `none — a direct instruction` when there was no recommendation; `not recorded` on an older record a later change touches
 
+**Protects:** none
+
 The rule later work must follow, stated plainly.
 
 ## Consequences

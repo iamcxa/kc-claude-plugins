@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import subprocess
 import tempfile
+import types
 import unittest
 
 spec = importlib.util.spec_from_file_location("dispatch_records", Path(__file__).with_name("dispatch_records.py"))
@@ -265,16 +266,17 @@ NOTES_WITH_BOTH = COMPLETE.replace("Package root:", "ADR: 0020\nMigration: 0007\
 
 
 class TaskFactTests(unittest.TestCase):
-    def run_names(self, task, records, target="implementation-1.md", folder="task"):
+    def run_names(self, task, records, target="implementation-1.md", folder="task", index=False, module=None):
         with tempfile.TemporaryDirectory() as d:
             if task is not None:
-                Path(d, folder).parent.mkdir(parents=True, exist_ok=True)
-                Path(d, f"{folder}.md").write_text(f"---\nprofile: pilot\n---\n\n# task\n{task}")
+                entry = Path(d, folder, "index.md") if index else Path(d, f"{folder}.md")
+                entry.parent.mkdir(parents=True, exist_ok=True)
+                entry.write_text(f"---\nprofile: pilot\n---\n\n# task\n{task}")
             for name, text in records.items():
                 Path(d, folder, "dispatch", name).parent.mkdir(parents=True, exist_ok=True)
                 Path(d, folder, "dispatch", name).write_text(text)
             with contextlib.redirect_stdout(io.StringIO()) as out:
-                code = records_module.main(["--names", str(Path(d, folder, "dispatch", target))])
+                code = (module or records_module).main(["--names", str(Path(d, folder, "dispatch", target))])
             return code, out.getvalue().replace(d + "/", "").splitlines()
 
     def test_a_first_implementation_record_must_carry_each_reserved_line_in_its_scope_notes(self):
@@ -286,6 +288,21 @@ class TaskFactTests(unittest.TestCase):
         self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": NOTES_WITH_BOTH}), (0, []))
         short = COMPLETE.replace("Package root:", "ADR: 20\nMigration: 7\nPackage root:")
         self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": short}), (0, []))
+
+    def test_a_folder_task_is_judged_for_reserved_lines_like_a_flat_task(self):
+        flat = self.run_names(GUARDS, {"implementation-1.md": COMPLETE})
+        self.assertEqual(flat[0], 1)
+        self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": COMPLETE}, index=True), flat)
+        self.assertEqual(self.run_names(GUARDS, {"implementation-1.md": NOTES_WITH_BOTH}, index=True), (0, []))
+
+    def test_a_folder_task_given_by_index_names_its_dispatch_records(self):
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "task", "dispatch").mkdir(parents=True)
+            Path(d, "task", "index.md").write_text("---\nprofile: pilot\n---\n")
+            Path(d, "task", "dispatch", "implementation-1.md").write_text(COMPLETE)
+            with contextlib.redirect_stdout(io.StringIO()) as out:
+                records_module.main([str(Path(d, "task", "index.md"))])
+            self.assertNotIn("no dispatch records", out.getvalue())
 
     def test_a_reserved_number_named_only_outside_the_scope_notes_or_inside_a_longer_number_is_missing(self):
         in_checklist = COMPLETE.replace("1. Independent", "1. ADR: 0020 and Migration: 0007. Independent")
@@ -351,6 +368,45 @@ class TaskFactTests(unittest.TestCase):
         code, out = self.run_names(AMENDMENTS, {"implementation-1.md": COMPLETE}, folder="_archive/task")
         self.assertEqual(code, 1)
         self.assertEqual(len(out), 2)
+
+    def test_an_ideation_record_is_refused_when_its_task_owes_a_result_line(self):
+        needed = "\n## FO alignment\n\nAlignment: needed before ideation: which checks run where.\nSurfaces: none\n"
+        code, out = self.run_names(needed, {"ideation-1.md": COMPLETE}, "ideation-1.md")
+        self.assertEqual(code, 1)
+        self.assertEqual([line.split(";")[0] for line in out],
+                         ["task/dispatch/ideation-1.md:1: '## FO alignment' records alignment as needed with no 'Result:' line"])
+        cases = {"result recorded": needed.replace("Surfaces:", "Result: aligned by his answer.\nSurfaces:"),
+                 "alignment not needed": needed.replace("needed before ideation: which checks run where", "not needed"),
+                 "alignment line only in a fence": "\n## FO alignment\n\n```\nAlignment: needed\n```\nSurfaces: none\n",
+                 "another spelling": "\n## FO alignment\n\nNeeded at ideation: yes.\nSurfaces: none\n"}
+        for label, task in cases.items():
+            with self.subTest(label):
+                self.assertEqual(self.run_names(task, {"ideation-1.md": COMPLETE}, "ideation-1.md"), (0, []))
+        self.assertEqual(self.run_names(needed, {"implementation-1.md": COMPLETE}), (0, []))
+
+    def test_mutation_dropping_the_result_check_lets_the_record_pass(self):
+        needed = "\n## FO alignment\n\nAlignment: needed before ideation: x.\n"
+        source = Path(__file__).with_name("dispatch_records.py").read_text()
+        old = " and alignment_owes_result(text):"
+        self.assertEqual(source.count(old), 1)
+        mutant = types.ModuleType("dispatch_records_mutant")
+        mutant.__file__ = str(Path(__file__).with_name("dispatch_records.py"))
+        exec(compile(source.replace(old, " and False:"), mutant.__file__, "exec"), mutant.__dict__)
+        self.assertEqual(self.run_names(needed, {"ideation-1.md": COMPLETE}, "ideation-1.md")[0], 1)
+        self.assertEqual(self.run_names(needed, {"ideation-1.md": COMPLETE}, "ideation-1.md", module=mutant)[0], 0)
+
+    def test_a_backslash_quote_on_an_amendment_line_is_refused_unless_it_sits_in_a_moved_criterion(self):
+        named = COMPLETE.replace("1. Independent", "1. Captain amendment 1. Independent")
+        task = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nAsked: {asked}\n{tail}"
+        code, out = self.run_names(task.format(asked='he said \\"yes\\"', tail=""), {"implementation-1.md": named})
+        self.assertEqual((code, [line.split(";")[0] for line in out]),
+                         (1, ["task/dispatch/implementation-1.md:1: Captain amendment 1 Asked line holds a backslash-quote copied from JSON"]))
+        moved = task.format(asked="he said yes", tail='Superseded text:\n**AC-1**: a \\"quoted\\" word.\n')
+        self.assertEqual(self.run_names(moved, {"implementation-1.md": named}), (0, []))
+        self.assertEqual(self.run_names(task.format(asked="he said yes", tail=""), {"implementation-1.md": named}), (0, []))
+        for other in ('Design: the \\"old\\" paragraph.\n', 'a continuation with \\"x\\"\n'):
+            with self.subTest(other):
+                self.assertEqual(self.run_names(task.format(asked="he said yes", tail=other), {"implementation-1.md": named}), (0, []))
 
 
 ROBOREV_PATH = "/abs/kc-dev-flow-2/extensions/roborev/roborev_gate.py"
@@ -426,6 +482,37 @@ class ExtensionInstructionTests(unittest.TestCase):
         for ending in ("", "\n", ".", ".\n"):
             with self.subTest(repr(ending)):
                 self.assertEqual(self.check({"implementation-1.md": COMPLETE + f"Run {ROBOREV_PATH}{ending}"})[0], 0)
+
+    def test_journey_map_and_release_acceptance_stay_quiet_without_an_acceptance_instruction(self):
+        readme = "---\nentity-type: task\nextensions: [learn, peers, journey-map, release-acceptance, codex]\n---\n"
+        code, out = self.check({"implementation-1.md": COMPLETE}, readme=readme)
+        self.assertEqual(code, 0, out)
+        self.assertNotIn("journey-map", out)
+        self.assertNotIn("release-acceptance", out)
+        for name in ("journey-map", "release-acceptance"):
+            text = Path(records.PACKAGE, "extensions", name, "EXTENSION.md").read_text()
+            self.assertIn("under `docs/journey/`; ", text)
+
+    def test_release_acceptance_turns_loud_when_its_bullet_carries_the_instruction_label(self):
+        readme = "---\nentity-type: task\nextensions: [release-acceptance]\n---\n"
+        source = Path(records.PACKAGE, "extensions", "release-acceptance", "EXTENSION.md").read_text()
+        label = "- **Acceptance task's implementation scope notes:** FO adds"
+        self.assertIn(label, source)
+        loud = source.replace(label, "- **Joins:** implementation\n- **Instruction FO adds to the scope notes:** "
+                                     "run python3 <package>/extensions/release-acceptance/release_acceptance.py; FO adds", 1)
+        with tempfile.TemporaryDirectory() as d:
+            package = Path(d, "pkg")
+            (package / "extensions" / "release-acceptance").mkdir(parents=True)
+            (package / "extensions" / "release-acceptance" / "EXTENSION.md").write_text(loud)
+            Path(d, "README.md").write_text(readme)
+            folder = Path(d, "task")
+            (folder / "dispatch").mkdir(parents=True)
+            (folder / "dispatch" / "implementation-1.md").write_text(COMPLETE)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = records.main([str(folder)], package=package)
+        self.assertEqual(code, 1)
+        self.assertIn("release-acceptance worker instruction is absent", out.getvalue())
 
     def test_an_unlisted_extension_is_not_checked(self):
         self.assertEqual(self.check({"implementation-1.md": COMPLETE}, readme=NO_EXTENSIONS)[0], 0)

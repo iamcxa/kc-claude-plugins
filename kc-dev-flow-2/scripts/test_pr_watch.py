@@ -16,6 +16,10 @@ spec = importlib.util.spec_from_file_location("pr_watch", Path(__file__).with_na
 watch = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(watch)
 
+gate_spec = importlib.util.spec_from_file_location("delivery_gate", Path(__file__).with_name("delivery_gate.py"))
+gate = importlib.util.module_from_spec(gate_spec)
+gate_spec.loader.exec_module(gate)
+
 REF = "o/r#1"
 
 
@@ -96,6 +100,59 @@ class PrWatchTests(unittest.TestCase):
             finally:
                 watch.CODEX = old
         self.assertFalse(watch.outcome("codex", "not-reviewed", "unrecognized(comment:31)"))
+
+    def test_the_codex_reader_names_a_stalled_review_by_its_start_and_it_is_no_outcome(self):
+        with tempfile.TemporaryDirectory() as d:
+            fake = Path(d, "codex_review.py")
+            fake.write_text("print('stalled: the Codex code review of aaa shows running with no update; stalled=2026-10-10T10:00:00Z')\nraise SystemExit(6)\n")
+            old, watch.CODEX = watch.CODEX, fake
+            try:
+                self.assertEqual(watch.codex("o/r", "1"), ("stalled(2026-10-10T10:00:00Z)", "-"))
+            finally:
+                watch.CODEX = old
+        self.assertFalse(watch.outcome("codex", "running", "stalled(2026-10-10T10:00:00Z)"))
+        self.assertEqual(watch.facts(REF, snap(codex="stalled(t)", **{"watch-codex": True})), f"fact: {REF} OPEN draft=False checks=green codex=stalled(t)")
+
+    def test_wait_asks_for_one_re_request_then_names_codex_unread_once_per_head(self):
+        stalled = lambda since, head="aaaaaaaaa": snap(codex=f"stalled({since})", head=head, **{"watch-codex": True})
+        clean = snap(codex="clean", **{"codex-evidence": "summary:5"})
+        asks, unread = "next: comment `@codex review` on o/r#1 once", "codex not run: review stalled twice on aaaaaaaaa"
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            code, first, slept = self.wait_with_clock(state, [stalled("t1")] * 40, 60)
+            self.assertEqual((code, slept), (0, 0))
+            self.assertIn(asks, first)
+            self.assertNotIn("stalled twice", first)
+            code, again, slept = self.wait_with_clock(state, [stalled("t1")] * 2 + [clean], 60)
+            self.assertNotIn(asks, again)
+            self.assertNotIn("stalled twice", again)
+            self.assertEqual(slept, 2)
+            code, second, slept = self.wait_with_clock(state, [stalled("t2")] * 40, 60)
+            self.assertIn(unread, second)
+            self.assertIn("the Captain decides", second)
+            self.assertNotIn(asks, second)
+            code, third, slept = self.wait_with_clock(state, [stalled("t3")] * 2 + [clean], 60)
+            self.assertNotIn("stalled twice", third)
+            self.assertNotIn(asks, third)
+            code, other, slept = self.wait_with_clock(state, [stalled("t4", "bbbbbbbbb")] * 40, 60)
+            self.assertIn(asks, other)
+            self.assertNotIn("stalled twice", other)
+        mine = lambda text: [line for line in text.splitlines() if "codex=stalled(" in line or line.startswith("next:")]
+        self.assertEqual((len(mine(first)), len(mine(second))), (2, 2))
+        self.assertLessEqual(sum(len(line.split()) for line in mine(first)), 26)
+        self.assertLessEqual(sum(len(line.split()) for line in mine(second)), 37)
+
+    def test_a_stalled_review_gives_an_unread_line_the_gate_pattern_accepts(self):
+        self.assertTrue(gate.NOT_RUN.search("codex not run: review stalled twice on abc123"))
+        with tempfile.TemporaryDirectory() as d:
+            state = Path(d, "w.json")
+            self.run_main(["add", REF], [snap(codex="not-reviewed")], state)
+            looks = lambda since: [snap(codex=f"stalled({since})", **{"watch-codex": True})] * 40
+            self.wait_with_clock(state, looks("t1"), 60)
+            code, out, slept = self.wait_with_clock(state, looks("t2"), 60)
+            self.assertTrue(gate.NOT_RUN.search(out))
+            self.assertNotIn("evidence=", out)
 
     def wait_with_clock(self, state, looks, step):
         seq, now, slept = iter(looks), [0], []
@@ -467,6 +524,8 @@ GH_STUB = """#!/usr/bin/env python3
 import json, os, sys
 table = json.load(open(os.environ["GH_STUB"]))
 args = sys.argv[1:]
+if args[:2] == ["api", "repos/o/r/pulls/7/comments"] and os.environ.get("GH_COMMENT_LOG"):
+    open(os.environ["GH_COMMENT_LOG"], "a").write("read\\n")
 answer = table.get(" ".join(args[:3] if args[:2] == ["pr", "view"] else args[:2]))
 if answer is None:
     sys.stderr.write("stub gh: no answer for " + " ".join(args))
@@ -558,7 +617,7 @@ class TasksTests(unittest.TestCase):
         table = self.root / "gh.json"
         quiet = {f"api repos/o/r/pulls/{n}/comments": [[]] for n in (7, 8, 9)}
         table.write_text(json.dumps({"repo view": {"nameWithOwner": "o/r"}, **quiet, **answers}))
-        env = {"PATH": f"{self.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table), **self.sd_env()}
+        env = {"PATH": f"{self.root / 'bin'}{os.pathsep}{os.environ['PATH']}", "GH_STUB": str(table), "GH_COMMENT_LOG": str(self.root / "comments.log"), **self.sd_env()}
         out = io.StringIO()
         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
@@ -612,6 +671,16 @@ class TasksTests(unittest.TestCase):
         self.readme("roborev, codex")
         self.task("some-task", pr="o/r#7")
         self.assertEqual(self.tasks({"pr view 7": view("MERGED")}), (0, []))
+
+    def test_peers_and_the_journey_extensions_add_no_line_while_a_pr_is_open(self):
+        self.task("some-task", pr="o/r#7")
+        outputs = []
+        for listed in ("", "peers, journey-map, release-acceptance"):
+            self.watch.unlink(missing_ok=True)
+            self.readme(listed)
+            outputs.append(self.tasks({"pr view 7": view()}))
+        self.assertEqual(outputs[0], outputs[1])
+        self.assertEqual(outputs[0][0], 0)
 
     def test_codex_and_copilot_are_added_with_their_watch_columns_only_when_listed(self):
         self.task("some-task", pr="o/r#7")
@@ -891,6 +960,31 @@ class TasksTests(unittest.TestCase):
         self.assertRegex(roles[0], r"^next: some-task has 2 review rounds; dispatch kc-dev-flow-2:chief-engineer ")
         self.assertLessEqual(len(roles[0].split()), 60)
 
+    def dated(self, *rounds):
+        page = [{"pull_request_review_id": rid, "created_at": at} for rid, at in rounds]
+        return {"api repos/o/r/pulls/7/comments": [page[:1], page[1:]]}
+
+    def call_recorded(self, date):
+        text = (self.state / "some-task.md").read_text() + f"## FO alignment\nReviewer: kc-dev-flow-2:chief-engineer opus {date} — q\n"
+        (self.state / "some-task.md").write_text(text)
+        self.git(self.state, "add", "-A")
+        self.git(self.state, "commit", "-qm", "call")
+
+    def test_a_call_older_than_the_newest_review_round_leaves_the_line_and_names_its_date(self):
+        self.readme("roborev")
+        self.task("some-task", pr="o/r#7")
+        self.call_recorded("2026-10-23")
+        rounds = self.dated((5636050872, "2026-10-24T01:13:27Z"), (5636392914, "2026-10-24T02:18:49Z"), (5636428225, "2026-10-24T02:30:30Z"))
+        code, lines = self.tasks({"pr view 7": view(), **rounds})
+        roles = [line for line in lines if "chief-engineer" in line]
+        self.assertEqual((code, len(roles)), (0, 1), lines)
+        self.assertRegex(roles[0], r"^next: some-task has 3 review rounds, the newest on 2026-10-24; dispatch kc-dev-flow-2:chief-engineer ")
+        self.assertLessEqual(len(roles[0].split()), 56)
+        self.assertEqual((self.root / "comments.log").read_text(), "read\n")
+        self.call_recorded("2026-10-24")
+        code, lines = self.tasks({"pr view 7": view(), **rounds})
+        self.assertEqual((code, [line for line in lines if "chief-engineer" in line]), (0, []))
+
     def test_one_review_id_with_many_comments_and_no_comments_owe_nothing(self):
         self.readme("roborev")
         self.task("some-task", pr="o/r#7")
@@ -1142,6 +1236,124 @@ class TasksTests(unittest.TestCase):
         code, lines = self.tasks({})
         self.assertEqual(code, 2, lines)
         self.assertEqual(self.seed_lines(lines), [])
+
+    R4_MARK = "Release: j/r4. Signal 1 (task filed into a release by the Captain's ruling).\n"
+
+    def aligned(self, slug, lines, status="implementation", extra="journey: j\n", heading="## FO alignment"):
+        body = f"\nbody\n\n{heading}\n\n{lines}Surfaces: none\n"
+        target = self.state / f"{slug}.md"
+        target.write_text(f"---\ntitle: {slug}\nstatus: {status}\n{extra}---\n{body}")
+        self.git(self.state, "add", "-A")
+        self.git(self.state, "commit", "-qm", f"task {slug}")
+
+    def held_slugs(self):
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        held = [line for line in lines if line.startswith("next: hold the first implementation dispatch of ")]
+        self.assertLessEqual(len(held), 1, lines)
+        return held[0].split(" of ", 1)[1].split(":", 1)[0].split(", ") if held else []
+
+    def test_the_record_shape_of_a_release_changed_task_with_no_review_line_is_held_by_name(self):
+        self.readme("roborev")
+        self.aligned("r4", self.R4_MARK)
+        code, lines = self.tasks({})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual(lines, ["next: hold the first implementation dispatch of r4: each ## FO alignment marks a release changed by "
+                                 "signal 1 or 2 with no Release review: line after it. Dispatch kc-journey-map's review-release, write its "
+                                 "Release review: line (or Release review: not needed: <reason>) under ## FO alignment, then run this again."])
+        self.assertEqual(len(lines[0].split()), 50)
+
+    def test_only_a_documented_review_line_after_the_last_mark_clears_the_hold(self):
+        self.readme("roborev")
+        cleared = {
+            "a later review at a commit": self.R4_MARK + "Release review: j/r4 at abc1234\n",
+            "a later not-needed review": self.R4_MARK + "Release review: not needed: map unchanged\n",
+            "a later review quoting a signal": self.R4_MARK + "Release review: j/r4 at abc1234 (covers signal 1)\n",
+        }
+        held = {
+            "a review before the mark": "Release review: j/r4 at abc1234\n" + self.R4_MARK,
+            "a review-looking line that is a mark": self.R4_MARK + "Release review: j/r4 changed (signal 2).\n",
+            "a not-needed review with no reason": self.R4_MARK + "Release review: not needed:\n",
+            "a review with no commit": self.R4_MARK + "Release review: j/r4 at\n",
+            "a new mark after the review": self.R4_MARK + "Release review: j/r4 at abc1234\nSignal 2 (goal reworded).\n",
+        }
+        for index, (name, lines) in enumerate({**cleared, **held}.items()):
+            self.aligned(f"c{index}", lines)
+        got = self.held_slugs()
+        for index, name in enumerate({**cleared, **held}):
+            with self.subTest(name):
+                self.assertEqual(f"c{index}" in got, name in held)
+
+    def test_every_mark_form_seen_in_adopter_history_holds(self):
+        self.readme("roborev")
+        forms = [
+            "Release: j/r4. Signal 1 (task filed).\n",
+            "Release r4 marked changed (signal 1: new story membership).\n",
+            "Release review: r4 is marked changed by signal 1 (admitted).\n",
+            "Release review: j/r4 changed (signal 2).\n",
+            "Release review: signal 1, new membership proposed.\n",
+            "Release review: signal 1 \u2014 admitted into a story.\n",
+            "marked changed: signal 1 (admitted) and signal 2 (goal reworded).\n",
+        ]
+        for index, text in enumerate(forms):
+            self.aligned(f"f{index}", text)
+        self.assertEqual(self.held_slugs(), [f"f{index}" for index in range(len(forms))])
+
+    def test_a_task_outside_the_first_implementation_dispatch_or_with_no_mark_is_not_held(self):
+        self.readme("roborev")
+        self.aligned("backlog-task", self.R4_MARK, status="backlog")
+        self.aligned("validation-task", self.R4_MARK, status="validation")
+        self.aligned("worktree-task", self.R4_MARK, extra="journey: j\npr: o/r#7\nworktree: .worktrees/worktree-task\n")
+        self.aligned("recorded", self.R4_MARK)
+        self.record("recorded", "## Checklist\n\nnothing\n")
+        self.aligned("no-section", self.R4_MARK, heading="## Scope")
+        self.aligned("no-mark", "Needed at ideation: none.\n")
+        self.aligned("later-signals", "Signal 3 (UAT failure).\nsignal 4 (batch checkpoint).\n")
+        self.aligned("shorter", "Signals 12 and signal 10 are not marks.\n")
+        (self.state / "other-heading.md").write_text(
+            "---\ntitle: x\nstatus: implementation\n---\n## FO alignment\n\nSurfaces: none\n\n## Notes\n\n" + self.R4_MARK)
+        self.git(self.state, "add", "-A")
+        self.git(self.state, "commit", "-qm", "other heading")
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertEqual([line for line in lines if "hold the first implementation dispatch" in line], [])
+
+    def test_the_hold_names_every_held_slug_in_one_line_after_the_seed_line_and_before_the_wait_lines(self):
+        self.ideation_readme()
+        self.task("some-task", pr="o/r#7")
+        self.backlog("bad", visible="shown")
+        self.aligned("one", self.R4_MARK)
+        self.aligned("two", "Signal 2 (goal reworded).\n")
+        self.gates(("bad", "backlog", "needs-preparation"))
+        code, lines = self.tasks({"pr view 7": view()})
+        self.assertEqual(code, 0, lines)
+        self.assertTrue(lines[-4].startswith("next: the seed check fails"), lines)
+        self.assertTrue(lines[-3].startswith("next: hold the first implementation dispatch of one, two: "), lines)
+        self.assertTrue(lines[-2].startswith("next: run `python3 "), lines)
+        self.assertEqual(len(lines[-3].split()), 51)
+
+    def test_the_hold_still_prints_when_the_status_call_fails_and_writes_no_file(self):
+        self.readme("roborev")
+        self.aligned("r4", self.R4_MARK)
+        self.tasks({})
+        self.next.write_text("FAIL")
+
+        def tree():
+            return {str(p): p.read_bytes() for p in self.root.rglob("*") if p.is_file() and ".git" not in p.parts}
+        before = tree()
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2, lines)
+        self.assertEqual(len([line for line in lines if line.startswith("next: hold the first implementation dispatch of r4: ")]), 1, lines)
+        self.assertEqual(len([line for line in lines if line.startswith("next: report the awaiting gates")]), 1, lines)
+        self.assertEqual(tree(), before)
+
+    def test_an_unreadable_task_file_is_reported_to_the_captain_beside_the_held_one(self):
+        self.readme("roborev")
+        self.aligned("r4", self.R4_MARK)
+        line, errors = watch.holds([("ghost", self.state / "ghost.md"), ("r4", self.state / "r4.md")], self.state)
+        self.assertEqual(len(errors), 1)
+        self.assertRegex(errors[0], r"^next: report ghost to the Captain: ")
+        self.assertTrue(line[0].startswith("next: hold the first implementation dispatch of r4: "), line)
 
     def test_tasks_needs_one_workflow_directory(self):
         with contextlib.redirect_stdout(io.StringIO()):

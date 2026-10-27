@@ -11,7 +11,7 @@ test("under the Netlify adapter the core takes an event, drops its repeat and an
   const adapter = makeHandler((opts) => { opened.push(opts); return store; }, r.env);
   const post = (init, url = "http://inbox.test/inbox") => adapter(new Request(url, init));
 
-  const req = signedRequest(relayEvent("e1", "bound-ceiling-near", 40));
+  const req = signedRequest(relayEvent(80));
   const first = await post(req);
   const again = await post(req);
   assert.deepEqual([first.status, again.status], [202, 200]);

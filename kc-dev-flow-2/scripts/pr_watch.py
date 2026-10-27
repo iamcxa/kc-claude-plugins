@@ -27,6 +27,12 @@ A Codex comment the reader does not recognize (codex=unrecognized(comment:ID)) i
 next read RECHECK_SECONDS later still finds that comment unrecognized, wait stops once for that comment and
 prints it with the next: lines for the merge ask and the report upstream. A look that fails is not a read.
 
+A Codex review the reader reports stalled (codex=stalled(SINCE): the summary shows the code review of the head
+running with no update for STALL_SECONDS of codex_review.py and no result on the head) is not an outcome either. wait stops once with
+the `next:` line to comment `@codex review` once; a stall with a different SINCE on the same head stops it once
+more with the line for the merge ask as `codex not run: review stalled twice on <head>`. The mark that FO asked
+is in the per-session state file, so a new session asks once more.
+
 A merged or closed PR is reported once, then dropped. The codex and copilot columns are read
 only for a PR added with --codex or --copilot, from that extension's reader when it is
 present. Exit 2 is a configuration error.
@@ -37,11 +43,14 @@ with their review id) and one `next:` line per action FO owes: recording a PR a 
 draft ready, the observer check ahead of the merge sentinel, keeping one wait running, a task's newest
 dispatch record that names a package script without a directory (dispatch_records.py --newest), and a
 chief-engineer or engineering-reviewer call a live task owes (role_triggers.py, given the number of review ids
-that left inline comments on the task's open PR), and one `next:` line per stage where two or more gates
+that left inline comments on the task's open PR and the date of the newest of those rounds), and one `next:` line per stage where two or more gates
 await the Captain (spacedock status --next; SPACEDOCK_BIN names the executable), and one `next:` line naming
 each backlog task that is waiting for its gate, holds a `## FO alignment` section and fails
-design_surfaces.py check --seed, when the workflow has an ideation stage. It prints no merge-ask
-or hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
+design_surfaces.py check --seed, when the workflow has an ideation stage, and one `next:` line naming each
+task at implementation with no worktree and no dispatch/implementation-*.md whose `## FO alignment` marks a
+release changed by `signal 1` or `signal 2` with no `Release review:` line after the last mark (a hold
+FO owes, not a gate: spacedock dispatch build still builds it). It prints no merge-ask
+or merge-hold line: FO runs delivery_gate.py under the README. wait prints a `next:` line after each decisive
 change. Exit 2 when a task cannot be read.
 """
 import argparse
@@ -57,6 +66,9 @@ import subprocess
 import sys
 import time
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from role_triggers import review_facts  # noqa: E402
+
 SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 SCRIPTS = Path(__file__).resolve().parent
 CODEX = Path(__file__).resolve().parents[1] / "extensions/codex/codex_review.py"
@@ -64,6 +76,8 @@ COPILOT = Path(__file__).resolve().parents[1] / "extensions/copilot/copilot_revi
 SEED = SCRIPTS / "design_surfaces.py"
 FO_HEADING = re.compile(r"^## FO alignment[ \t]*$", re.M)
 IDEATION_STAGE = re.compile(r"^[ \t]*-[ \t]+name:[ \t]*ideation[ \t]*$", re.M)
+RELEASE_MARK = re.compile(r"\bsignals?[ \t]+[12]\b", re.I)
+RELEASE_REVIEW = re.compile(r"^[ \t]*Release review:[ \t]+(?:not needed:[ \t]*\S|\S+/\S+[ \t]+at[ \t]+\S)")
 FIELDS = "state,isDraft,mergeable,mergeStateStatus,headRefOid,statusCheckRollup,title"
 SETTLE_SECONDS = 60
 RECHECK_SECONDS = 180
@@ -108,9 +122,10 @@ def reader(script, repo, number, words=None):
         return "-", "-"
     done = subprocess.run([sys.executable, str(script), repo, number], capture_output=True, text=True)
     evidence = (re.findall(r"evidence=(\S+)", done.stdout) or [None])[-1]
-    verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed", 5: "unrecognized"}).get(done.returncode, "error")
-    odd = re.findall(r"unrecognized=(\S+)", done.stdout)
-    return (f"{verdict}({odd[-1]})" if odd and verdict == "unrecognized" else verdict), evidence or "-"
+    verdict = (words or {0: "clean", 1: "findings", 3: "running", 4: "not-reviewed", 5: "unrecognized", 6: "stalled"}
+               ).get(done.returncode, "error")
+    odd = re.findall(r"(?:unrecognized|stalled)=(\S+)", done.stdout)
+    return (f"{verdict}({odd[-1]})" if odd and verdict in ("unrecognized", "stalled") else verdict), evidence or "-"
 
 
 def codex(repo, number):
@@ -198,6 +213,25 @@ def unread_lines(state, first, clock, read):
                   "that holds kc-dev-flow-2 itself, file a backlog task; elsewhere, if `peers` is listed and a kc-dev-flow-2 maintainer FO "
                   "is reachable, send it through `peers`; otherwise draft the issue and ask the Captain whether to file it."]
         update(state, put={ref: {"codex-reported": word}}, keep_flags=True)
+    return lines
+
+
+def stall_lines(state, read):
+    lines = []
+    for ref, snap in load(state).items():
+        word, head, mark = snap.get("codex", ""), snap.get("head"), snap.get("codex-stalled") or {}
+        if ref not in read or not word.startswith("stalled(") or (mark.get("head") == head and mark.get("step") == 2):
+            continue
+        since = word[len("stalled("):-1]
+        if mark.get("head") == head and mark.get("since") == since:
+            continue
+        again = mark.get("head") == head
+        lines += ([f"{ref} codex={word}: stalled again after the re-request.",
+                   f"next: report `codex not run: review stalled twice on {head}` and name Codex as not read in the merge ask; the Captain decides."]
+                  if again else
+                  [f"{ref} codex={word}: running past the stall limit.",
+                   f"next: comment `@codex review` on {ref} once; a stalled review is no round and never clean."])
+        update(state, put={ref: {"codex-stalled": {"head": head, "since": since, "step": 2 if again else 1}}}, keep_flags=True)
     return lines
 
 
@@ -307,7 +341,7 @@ def repo_of(worktree, ask):
 def review_rounds(ref, ask):
     repo, number = ref.split("#")
     pages = ask("api", f"repos/{repo}/pulls/{number}/comments", "--paginate", "--slurp")
-    return len({c["pull_request_review_id"] for page in pages for c in page})
+    return review_facts([c for page in pages for c in page])
 
 
 def opened_pr(worktree, ask):
@@ -381,6 +415,33 @@ def seeds(rows, found, readme):
     return line, errors
 
 
+def holds(found, state):
+    held, errors = [], []
+    for slug, task in found:
+        try:
+            meta = front(task)
+            if meta.get("status") != "implementation" or meta.get("worktree") or any((state / slug / "dispatch").glob("implementation-*.md")):
+                continue
+            mark = review = -1
+            inside = False
+            for number, line in enumerate(task.read_text(errors="replace").split("\n")):
+                if line.startswith("## "):
+                    inside = bool(FO_HEADING.match(line))
+                elif inside and RELEASE_REVIEW.match(line):
+                    review = number
+                elif inside and RELEASE_MARK.search(line):
+                    mark = number
+        except OSError as error:
+            errors.append(f"next: report {slug} to the Captain: {str(error)[:120]}.")
+            continue
+        if mark > review:
+            held.append(slug)
+    line = [f"next: hold the first implementation dispatch of {', '.join(held)}: each ## FO alignment marks a release changed by "
+            "signal 1 or 2 with no Release review: line after it. Dispatch kc-journey-map's review-release, write its "
+            "Release review: line (or Release review: not needed: <reason>) under ## FO alignment, then run this again."] if held else []
+    return line, errors
+
+
 def tasks(opts, look=look, ask=gh, clock=time.time):
     workflow = Path(opts.args[0]).resolve()
     readme = front(workflow / "README.md")
@@ -442,7 +503,8 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
                 out += [f"next: let pr-merge record {slug}.", f"after pr-merge: run `{check}`.",
                         "after pr-merge: do each next: line it prints."]
     for slug in live:
-        asked = [] if slug not in rounds else ["--review-rounds", str(rounds[slug])]
+        count, newest = rounds.get(slug, (None, None))
+        asked = [] if count is None else ["--review-rounds", str(count)] + (["--drift-date", newest] if newest else [])
         done = subprocess.run([sys.executable, str(SCRIPTS / "role_triggers.py"), str(state), slug, *asked], capture_output=True, text=True)
         if done.returncode == 1:
             out += done.stdout.splitlines()
@@ -457,6 +519,9 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
         line, broken = seeds(rows, dict(found), (workflow / "README.md").read_text(errors="replace"))
         out += line
         errors += broken
+    line, broken = holds(found, state)
+    out += line
+    errors += broken
     if snaps:
         already, _ = record(opts.state, load(opts.state), snaps)
         out += already + [f"next: run `{wait} wait` in the background, unless one is running.",
@@ -509,7 +574,7 @@ def main(argv=None, look=look, sleep=time.sleep, ask=gh, clock=time.time):
             if any(decisive for _, decisive in changes) or not watching:
                 print("\n".join([line for line, _ in changes] + nexts or ["watch list is empty"]))
                 return 0
-            gave_up = unread_lines(opts.state, first, clock, read)
+            gave_up = unread_lines(opts.state, first, clock, read) + stall_lines(opts.state, read)
             if gave_up:
                 print("\n".join([line for line, _ in changes] + gave_up))
                 return 0

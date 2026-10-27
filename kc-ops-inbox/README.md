@@ -1,11 +1,11 @@
 # kc-ops-inbox
 
-A signed ops event becomes one decision an agent has prepared for the Captain (docs/adr/0031). Not yet a plugin: there is no `plugin.json` or marketplace entry, so nothing here is released.
+A signed ops event becomes one decision an agent has prepared for the Captain (docs/adr/0040). Not yet a plugin: there is no `plugin.json` or marketplace entry, so nothing here is released.
 
 | Path | What it is |
 | --- | --- |
 | `contract/` | Contract v1: what a producer sends, the validator, published schemas, fixtures. Start with `contract/README.md`. |
-| `core/inbox-core.mjs` | The platform-neutral inbox: verifies, claims event and incident, dispatches the trigger workflow, posts the Slack notice. Imports only `node:crypto`. |
+| `core/inbox-core.mjs` | The platform-neutral inbox: verifies, claims event and incident, dispatches the trigger workflow, posts the Slack notice. Imports `node:crypto` and the contract module, which imports only `node:crypto`. |
 | `netlify/functions/inbox.mjs` | The Netlify adapter (Blobs store). Another host writes its own adapter over the same core. |
 | `trigger/` | `ops-event.yml` (the one workflow in the trigger repository), the First Officer prompt and launcher, and the git credential helper that answers only for https on the GitHub host. |
 | `bin/ops-run.mjs` | The trigger run: opens an incident (record, Draft PR, gate) or joins an event to it. |

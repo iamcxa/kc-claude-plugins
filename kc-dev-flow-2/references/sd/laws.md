@@ -26,20 +26,26 @@ the runner's registry differ.
 
 - **Rule.** Each dispatch record has every part `<package>/scripts/dispatch_records.py` requires and names no package script
   without its directory; a first implementation record carries each `ADR:` or `Migration:` line its task reserves; and each
-  Captain amendment of its task is named in a dispatch checklist.
+  Captain amendment of its task is named in a dispatch checklist; an ideation record's task records a `Result:` line when
+  its `## FO alignment` says `Alignment: needed`; and no `Captain:` or `Asked:` amendment line holds a JSON backslash-quote.
 - **Event.** A commit in the range that adds a `dispatch/<name>.md` record, status added, or renamed from a path
   that is not a dispatch record. A record added, then corrected or deleted in a later commit of the same push, is
   judged as added; a record deleted and added again is judged at each add. Archiving a task or renaming its folder
   is no event.
 - **Judged by.** `<package>/scripts/dispatch_records.py <task folder>` and
   `<package>/scripts/dispatch_records.py --names <records>`, both over the record, its folder and the task file beside the
-  folder as committed at that commit. The two added checks print `reserved line '<kind>: NNNN' missing from scope notes` and
-  `Captain amendment N named in no dispatch checklist`.
+  folder as committed at that commit. The added checks print `reserved line '<kind>: NNNN' missing from scope notes`,
+  `Captain amendment N named in no dispatch checklist`, `'## FO alignment' records alignment as needed with no 'Result:' line`
+  and `Captain amendment N Captain line holds a backslash-quote copied from JSON` (or `Asked line`).
 - **Bit.** Measured 2026-10-16 on this repository's state branch: 15 missing parts in 10 of 48 records
   added after commit `49da5ddb` at its commit `e73634e6` (4 bare script names, 7 without the completion recipient
   `main`, 4 without an absolute `Package root:`). Measured 2026-10-19 on the same branch at `4e635405`: 4 of 7
   first implementation records whose task reserved a number lacked the line, and 1 of 237 record adds left an
   amendment named in no checklist (`f4bb51b3`).
+  Measured 2026-10-26 on the same branch at `91257c14`: 16 of the 24 ideation records of tasks with `Alignment: needed` were
+  added with no `Result:` line in their task, and one task file held a backslash-quote on an amendment line.
 - **Bounds.** The folder run is given the README supplied at run time, so a first implementation record is also
   judged against that README's `extensions:` list; a different README can judge the same range differently. A record
-  whose task file is absent at its commit is not judged for the reserved line or the amendment.
+  whose task file is absent at its commit is not judged for the reserved line or the amendment. The alignment line is read
+  only as `Alignment: needed`; another spelling is not judged, and the `Result:` line is checked for presence, not for truth
+  or for being written before the dispatch inside one state commit.

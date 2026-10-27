@@ -1,0 +1,10 @@
+{
+  "secret": "whsec_a2Mtb3BzLWluYm94LWZpeHR1cmUtc2VjcmV0LW5vdC1hLWNyZWRlbnRpYWw=",
+  "now": 1792454430,
+  "headers": {
+    "webhook-id": "msg_publish-bound-site-ceiling.prod.hbd.2026-10-20",
+    "webhook-timestamp": "1792454430",
+    "webhook-signature": "v1,M7yj3nu2duN/zJPzbwLq9RnFf51g82GnjFjX+VpLuec="
+  },
+  "body": "{\"specversion\":\"1.0\",\"id\":\"publish-bound-site-ceiling.prod.hbd.2026-10-20\",\"source\":\"urn:relay:capacity\",\"type\":\"ops.metric.heartbeat\",\"subject\":\"heartbeat/prod/publish-bound-site-ceiling/d\",\"time\":\"2026-10-20T03:00:00Z\",\"environment\":\"prod\",\"severity\":\"info\",\"dataschema\":\"https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/ops.metric.heartbeat.json\",\"datacontenttype\":\"application/json\",\"data\":{\"metric\":\"publish-bound-site-ceiling\",\"window\":\"day\",\"period\":\"2026-10-20\",\"limit\":100,\"limitSource\":\"default\",\"value\":42,\"every\":\"day\"}}"
+}

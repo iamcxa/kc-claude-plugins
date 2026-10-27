@@ -1,6 +1,6 @@
 {
   "name": "kc-dev-flow-2",
-  "version": "0.28.0",
+  "version": "0.32.0",
   "description": "Development workflow run by Spacedock, with profile principles, stage skills, advisory roles, an observer and optional extensions.",
   "author": {
     "name": "Kent Chen",

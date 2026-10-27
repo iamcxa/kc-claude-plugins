@@ -407,3 +407,48 @@ main-versus-candidate verdict comparison for a newly refusing checker (grep of t
 package README, references and skills for corpus, newly refus and existing task file
 finds nothing); the nine root learning.md entries cover consumers of printed output,
 persistence inputs and README pointers, not this.
+
+## Name a new skill mode in the skill's description in the same change
+
+### Applicability
+
+A change in this repository that adds a mode, command or intent to an existing skill
+(a new row in the SKILL.md mode table and a reference file) and is reviewed or
+accepted before anyone checks the skill's frontmatter description.
+
+### Practice
+
+In the same change that adds the mode, edit the frontmatter `description` of that
+SKILL.md to name the new intent and the phrases a user would type for it, and keep
+it within the 1024-character limit; the mode-table row alone does not make a request
+reach the skill. scripts/skill-frontmatter-lint.sh checks only that name and
+description are present and non-empty, and says it does not judge the description
+text, so nothing but review catches the omission. Bounded: one task; live
+skill-discovery routing was not run, so this record does not show that the added
+phrases route a request such as 'accept this release' to the skill, only that the
+missing intent was a review P1 and the one-line repair cleared it; and the author's
+design named the mode-table row and the reference file but not the description, so
+the record does not show the author would have caught it unprompted.
+
+### Evidence
+
+Task release-acceptance (iamcxa/kc-claude-plugins#709, closure revision
+99f2a409826eb2be170f3ff16aebb01519df5955, landed
+1694ade349babde54f6c9791df77be8c63b48bbb). Codex round 1 on head e3a92e98 left one
+P1: kc-journey-map/skills/kc-journey-map/SKILL.md frontmatter description did not
+mention the new accept-release mode, so a plain request such as 'accept this
+release' might not load the skill. The head had passed validation cycle 1 (263
+tests, mutations, clean merge) with the mode-table row and accept-release.md already
+in place and the description unchanged. Repair d84ebde0 changed one description line
+(698 to 892 characters; four trigger phrases and the accept-release sentence),
+skill-frontmatter-lint.sh exited 0 before and after, Codex round 2 found nothing,
+and the cost was one investigation, FO fix authorization, one repair cycle and a
+fresh validation recheck. FO decided to add no test because a substring test on
+metadata proves no routing. Existing rules checked: the project CLAUDE.md and
+docs/dev2 README state only that the lint requires a parseable frontmatter with
+non-empty name and description; the implementation, ideation and validation
+principles and the pilot profile say nothing about a skill's discovery description;
+the ten root learning.md entries (blob b6ba5556) cover none of it. Recorded in
+spacedock-state/dev2:_archive/release-acceptance/index.md under '### Feedback
+Cycles', '## Stage Report: implementation (cycle 1 repair)' and '## Stage Report:
+validation (cycle 2)'.

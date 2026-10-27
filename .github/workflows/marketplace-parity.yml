@@ -79,3 +79,9 @@ jobs:
 
       - name: Validate split-root state prerequisite
         run: ./scripts/dev-flow-state-prereq.test.sh
+
+      - name: Validate kc-adr copies in kc-dev-flow-2 and kc-adr linter tests
+        run: |
+          ./scripts/kc-adr-copy-sync.test.sh
+          ./scripts/kc-adr-copy-sync.sh check
+          python3 -B kc-adr/scripts/test_adr_lint.py

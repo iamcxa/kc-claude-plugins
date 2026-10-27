@@ -2,25 +2,34 @@
 """Report the Codex review state of a pull request's head commit.
 
 Usage: codex_review.py <owner/repo> <pr>
-The latest Codex result on the head decides, and its evidence id is printed so a round
-is counted once per id.
-Exit 0 clean: that result is Codex's "Didn't find any major issues" on the head, as a
+A finding on the head decides over a later no-issues result; otherwise the latest result
+decides. The deciding evidence id is printed so a round is counted once per id.
+Exit 0 clean: the latest result is Codex's "Didn't find any major issues" on the head, as a
   comment naming the head or a badge-free review of it, or its summary marking the code
-  review of the head completed with no finding, and no finding on the head before it.
-Exit 1 findings: that result carries a severity badge on the head, in a review, a line
-  comment, or a comment that names the head or names no commit (fail closed).
+  review of the head completed with no finding, and no finding on the head at any time.
+Exit 1 findings: a result on the head carries a severity badge, in a review, a line
+  comment, or a comment that names the head or names no commit (fail closed). The latest
+  such finding is printed; a later no-issues result is named as `not cleared by <id>`.
 Exit 2 configuration error: bad arguments or a gh call that failed.
-Exit 3 running: Codex's eyes reaction is on the pull request.
+Exit 3 running: Codex's summary shows the code review of the head running and updated less than STALL_SECONDS
+  ago, or, with no summary marker, Codex's eyes reaction is on the pull request. Once a summary marker exists the
+  summary decides and an eyes reaction does not.
 Exit 4 not reviewed: no Codex evidence covers the head commit yet, or the head moved while reading.
-Exit 5 not recognized: no evidence covers the head, or the newest evidence is clean and a newer Codex comment
+Exit 5 not recognized: no evidence covers the head, or the deciding evidence is clean and a newer Codex comment
   names the head in a shape this reader does not read (unrecognized=comment:<id>, its first 120 characters
   quoted); no evidence= token, so no round.
+Exit 6 stalled: the summary shows the code review of the head running, with no update and no person's
+  "@codex review" for STALL_SECONDS, and no result on the head (stalled=<since>, the later of the summary's
+  update and that comment); no evidence= token, so no round and never clean.
 """
 import json
 import re
 import subprocess
 import sys
+import time
+from datetime import datetime
 
+STALL_SECONDS = 1800
 BOT = "chatgpt-codex-connector[bot]"
 SUMMARY = "<!-- codex-pull-request-review-summary -->"
 MARKER = re.compile(r"^<!-- codex-review-state:v1 (\{[^\n]*\}) -->$", re.M)
@@ -51,7 +60,17 @@ def pages(path):
     return [item for page in gh("api", "--paginate", "--slurp", path) for item in page]
 
 
-def state(repo, pr, call=gh, pages=pages):
+def epoch(stamp):
+    return datetime.fromisoformat(stamp.replace("Z", "+00:00")).timestamp()
+
+
+def code_row(comments):
+    summaries = sorted((c for c in comments if c["body"].startswith(SUMMARY)), key=lambda c: c["created_at"])
+    marks = MARKER.findall(summaries[-1]["body"].split("\n## ", 1)[0]) if summaries else []
+    return (summaries[-1], json.loads(marks[-1]).get("code_review") or {}) if marks else (None, {})
+
+
+def state(repo, pr, call=gh, pages=pages, now=None):
     head = call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"]
     reactions = [r for r in pages(f"repos/{repo}/issues/{pr}/reactions") if r["user"]["login"] == BOT]
     inline = [c for c in pages(f"repos/{repo}/pulls/{pr}/comments")
@@ -92,25 +111,36 @@ def state(repo, pr, call=gh, pages=pages):
         if c["body"].startswith(SUMMARY):
             for m in MARKER.finditer(c["body"].split("\n## ", 1)[0]):
                 review = json.loads(m.group(1)).get("code_review") or {}
-                found_before = any(e[2] == 1 and e[0] <= c["updated_at"] for e in evidence)
                 if (review.get("status") == "completed" and review.get("has_any_findings") is False
-                        and review.get("commit_sha") == head and not found_before):
+                        and review.get("commit_sha") == head):
                     evidence.append((c["updated_at"], f"summary:{c['id']}@{head[:9]}", 0, "summary marks the code review of the head completed"))
     if call("pr", "view", pr, "--repo", repo, "--json", "headRefOid")["headRefOid"] != head:
         return 4, f"not reviewed: the head moved from {head[:9]} while its review was being read"
-    if any(r["content"] == "eyes" for r in reactions):
+    summary, row = code_row(issue)
+    running = row.get("status") == "running" and row.get("commit_sha") == head
+    since = max([summary["updated_at"], *[t["created_at"] for t in triggers if t["user"]["login"] != BOT]],
+                key=epoch) if running else None
+    stalled = running and (time.time() if now is None else now) - epoch(since) >= STALL_SECONDS
+    if running and not stalled or summary is None and any(r["content"] == "eyes" for r in reactions):
         return 3, f"running: a Codex review is in progress; head {head[:9]}"
+    # see docs/adr/0039-a-resolved-thread-does-not-clear-a-codex-finding-on-the-same-head.md
+    held = [e for e in evidence if e[2] == 1]
+    top = max(held or evidence, default=None)
     known = {e[1] for e in evidence}
     odd = [c for c in issue if not c["body"].startswith(SUMMARY) and names_head(c["body"]) and f"comment:{c['id']}" not in known]
-    if odd and (not evidence or max(evidence)[2] == 0 and max(c["created_at"] for c in odd) > max(evidence)[0]):
+    if odd and (not evidence or top[2] == 0 and max(c["created_at"] for c in odd) > top[0]):
         last = max(odd, key=lambda c: c["created_at"])
         quote = " ".join(last["body"].split())[:120].replace("evidence=", "evidence:")
         return 5, f'not recognized on {head[:9]}: "{quote}"; unrecognized=comment:{last["id"]} at {last["created_at"]}'
+    if not evidence and stalled:
+        return 6, f"stalled: the Codex code review of {head[:9]} shows running with no update; stalled={since}"
     if not evidence:
         return 4, f"not reviewed: no Codex evidence covers {head[:9]}"
-    when, ident, code, detail = max(evidence)
+    when, ident, code, detail = top
     word = "findings" if code else "clean"
-    return code, f"{word} on {head[:9]}: {detail}; evidence={ident} at {when}"
+    later = [e for e in evidence if e[2] == 0 and e > top] if code else []
+    note = f"; not cleared by the later no-issues {max(later)[1]}" if later else ""
+    return code, f"{word} on {head[:9]}: {detail}; evidence={ident} at {when}{note}"
 
 
 def main(argv=None):

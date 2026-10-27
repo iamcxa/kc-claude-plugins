@@ -1,0 +1,10 @@
+{
+  "secret": "whsec_a2Mtb3BzLWluYm94LWZpeHR1cmUtc2VjcmV0LW5vdC1hLWNyZWRlbnRpYWw=",
+  "now": 1792454430,
+  "headers": {
+    "webhook-id": "msg_sms.sent.prod.m2026-10-17.r80b.l1000",
+    "webhook-timestamp": "1792454430",
+    "webhook-signature": "v1,D1hKLqy4YISYoMB6tubH1T2+SU7iUJ+9bLN9KfSWLjQ="
+  },
+  "body": "{\"specversion\":\"1.0\",\"id\":\"sms.sent.prod.m2026-10-17.r80b.l1000\",\"source\":\"urn:qnow:clerk-sms\",\"type\":\"ops.metric.recovered\",\"subject\":\"metric/prod/sms.sent/m2026-10-17\",\"time\":\"2026-10-20T12:00:00Z\",\"environment\":\"prod\",\"severity\":\"warning\",\"dataschema\":\"https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/ops.metric.recovered.json\",\"datacontenttype\":\"application/json\",\"data\":{\"metric\":\"sms.sent\",\"window\":\"month\",\"period\":\"2026-10-17\",\"limit\":1000,\"limitSource\":\"default\",\"value\":300,\"level\":80,\"cause\":\"below\"}}"
+}

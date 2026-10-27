@@ -1,18 +1,18 @@
-import { TYPES, CONTRACT_VERSION } from "../../core/inbox-core.mjs";
+import { CONTRACT_VERSION } from "../../contract/contract.mjs";
+import { describeEvent } from "../../core/inbox-core.mjs";
 
 const PLACEHOLDER = "(to be written by the First Officer)";
 
 const cell = (v) => String(v).replace(/\|/g, "\\|").replace(/\n/g, " ");
 
 export function eventRow(n, ev, received) {
-  const what = ev.data.event ?? ev.type;
-  const fields = Object.entries(ev.data).filter(([k]) => !["v", "event", "at"].includes(k)).map(([k, v]) => `${k} ${v}`).join("; ");
-  return `| ${n} | ${received} | \`${ev.id}\` | ${cell(what)} | ${cell(fields)} |`;
+  const fields = Object.entries(ev.data).map(([k, v]) => `${k} ${v}`).join("; ");
+  return `| ${n} | ${received} | \`${ev.id}\` | ${cell(ev.type)} | ${cell(fields)} |`;
 }
 
 // The part of the record the inbox knows; the First Officer fills the four marked sections.
 export function skeleton({ ev, slug, received }) {
-  const { head } = TYPES[ev.type].describe(ev);
+  const { head } = describeEvent(ev);
   return [
     `# ops: ${head}`,
     "",

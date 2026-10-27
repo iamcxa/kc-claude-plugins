@@ -343,6 +343,52 @@ class L2Test(Base):
         repo.commit("named", **{"t__dispatch__implementation-3": record(checklist="- Captain amendment 1: do it")})
         self.assertEqual(self.judge(repo, second)[0], 0)
 
+    def test_an_ideation_record_whose_task_owes_a_result_line_is_an_l2_violation_and_the_result_clears_it(self):
+        needed = "\n## FO alignment\n\nAlignment: needed before ideation: which checks run where.\n"
+        repo = Repo(self.tmp / "l2-result")
+        before = repo.commit("base", keep="x")
+        bare = repo.commit("record", t=task(body=needed), **{"t__dispatch__ideation-1": record()})
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, rf"record=t/dispatch/ideation-1\.md commit={bare[:12]} .*records alignment as needed with no 'Result:' line")
+        repo.commit("result", t=task(body=needed + "Result: aligned by his answer.\n"), **{"t__dispatch__ideation-2": record()})
+        self.assertEqual(self.judge(repo, bare)[0], 0)
+
+    def test_a_backslash_quote_on_an_amendment_line_is_an_l2_violation(self):
+        amended = '\n## Captain amendments\n\n### Amendment 1 — 2026-10-17, chat\nCaptain: x\nAsked: \\"half a question\n'
+        repo = Repo(self.tmp / "l2-backslash")
+        before = repo.commit("base", keep="x")
+        repo.commit("record", t=task(body=amended), **{"t__dispatch__implementation-1": record(checklist="- Captain amendment 1: do it")})
+        code, out = self.judge(repo, before)
+        self.assertEqual(code, 1, out)
+        self.assertRegex(out, r"record=t/dispatch/implementation-1\.md .*Captain amendment 1 Asked line holds a backslash-quote")
+
+    def test_a_backslash_quote_on_a_design_or_continuation_line_is_no_l2_event_and_does_not_abort_the_runner(self):
+        for line in ('Design: the \\"old\\" paragraph.\n', 'a continuation with \\"x\\"\n'):
+            with self.subTest(line):
+                amended = "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-17, chat\nCaptain: x\nAsked: y\n" + line
+                repo = Repo(self.tmp / f"l2-other-{abs(hash(line))}")
+                before = repo.commit("base", keep="x")
+                repo.commit("record", t=task(body=amended), **{"t__dispatch__implementation-2": record(checklist="- Captain amendment 1: do it")})
+                code, out = self.judge(repo, before)
+                self.assertEqual(code, 0, out)
+
+    def test_mutation_reverting_the_runner_pattern_makes_the_new_lines_unjudgeable(self):
+        scripts = self.tmp / "reverted"
+        shutil.copytree(SCRIPTS, scripts, ignore=shutil.ignore_patterns("__pycache__", "test_*"))
+        source = (scripts / "laws_check.py").read_text()
+        reverted = re.sub(r"\|\"\n\s+r\"'## FO alignment'.*?from JSON\)", ")", source, flags=re.S)
+        self.assertNotEqual(reverted, source)
+        (scripts / "laws_check.py").write_text(reverted)
+        needed = "\n## FO alignment\n\nAlignment: needed before ideation: x.\n"
+        repo = Repo(self.tmp / "l2-reverted")
+        before = repo.commit("base", keep="x")
+        repo.commit("record", t=task(body=needed), **{"t__dispatch__ideation-1": record()})
+        self.assertEqual(self.judge(repo, before)[0], 1)
+        code, out = self.judge(repo, before, runner=scripts / "laws_check.py")
+        self.assertEqual(code, 2, out)
+        self.assertIn("output this runner does not parse", out)
+
     def test_dispatch_records_printing_a_new_names_shape_exits_2_not_1(self):
         repo = Repo(self.tmp / "l2-shape")
         before = repo.commit("base", keep="x")

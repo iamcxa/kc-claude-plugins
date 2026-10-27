@@ -1,6 +1,7 @@
 import http from "node:http";
 import { generateKeyPairSync, createVerify } from "node:crypto";
-import { handle, signBody, SCHEMA_BASE } from "../core/inbox-core.mjs";
+import { handle } from "../core/inbox-core.mjs";
+import { signBody, SCHEMA_BASE } from "../contract/contract.mjs";
 import { FIXTURE_SECRET } from "../contract/generate.mjs";
 
 export const SECRET = FIXTURE_SECRET;
@@ -22,12 +23,14 @@ export function memoryStore(delayMs = 0) {
   };
 }
 
-export function relayEvent(id, event, count, { tier = "signed-in", day = "2026-10-20" } = {}) {
+// A relay-shaped ops.metric.crossed event with its derived id (contract README, "Deterministic id").
+// The value is the smallest count that reaches the level.
+export function relayEvent(level, { metric = "capacity.signed-in", day = "2026-10-20", environment = "prod", severity = "warning", limit = 50 } = {}) {
   return {
-    specversion: "1.0", id, source: "urn:relay:capacity", type: "relay.capacity.ceiling",
-    subject: `ceiling/${tier}/${day}`, time: `${day}T00:00:00Z`,
-    dataschema: `${SCHEMA_BASE}/relay.capacity.ceiling.json`, datacontenttype: "application/json",
-    data: { v: 1, event, at: `${day}T00:00:00Z`, day, count, limit: 50, limitSource: "default" },
+    specversion: "1.0", id: `${metric}.${environment}.d${day}.c${level}.l${limit}`, source: "urn:relay:capacity", type: "ops.metric.crossed",
+    subject: `metric/${environment}/${metric}/d${day}`, time: `${day}T00:00:00Z`, environment, severity,
+    dataschema: `${SCHEMA_BASE}/ops.metric.crossed.json`, datacontenttype: "application/json",
+    data: { metric, window: "day", period: day, value: (level * limit) / 100, limit, limitSource: "default", level },
   };
 }
 
@@ -50,7 +53,7 @@ export function signedRequest(event, { secret = SECRET, timestamp = Math.floor(D
   let body = JSON.stringify(event);
   const id = `msg_${event.id}`;
   const signature = signBody({ secret, id, timestamp: String(timestamp), body });
-  if (tamper) body = body.replace('"count":', '"count":1');
+  if (tamper) body = body.replace('"value":', '"value":1');
   return { method: "POST", headers: { "webhook-id": id, "webhook-timestamp": String(timestamp), "webhook-signature": signature }, body };
 }
 

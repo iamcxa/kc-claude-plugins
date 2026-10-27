@@ -34,13 +34,16 @@ if a[:2] == ["pr", "merge"] or os.environ.get("STUB_GH_FAIL"):
     sys.stderr.write(os.environ.get("STUB_GH_FAIL", ""))
     sys.exit(1)
 if a[:2] == ["pr", "view"]:
-    data = json.load(open(os.path.join(d, "pr.json")))
+    own = os.path.join(d, "pr-" + a[2] + ".json")
+    data = json.load(open(own if os.path.exists(own) else os.path.join(d, "pr.json")))
     print(json.dumps({{k: data[k] for k in a[a.index("--json") + 1].split(",") if k in data}}))
 elif a[0] == "api" and "actions/runs" in " ".join(a):
     runs = os.path.join(d, "runs.json")
     print(open(runs).read() if os.path.exists(runs) else '{{"total_count": 0, "workflow_runs": []}}')
 elif a[0] == "api" and "/contents/" in " ".join(a):
     adr = os.path.join(d, "adr.txt")
+    at = os.path.join(d, "adr-" + " ".join(a).split("?ref=")[1].split()[0] + ".txt")
+    adr = at if os.path.exists(at) else adr
     want = "/contents/" + os.environ.get("STUB_ADR_DIR", "docs/adr") + "?ref="
     if os.environ.get("STUB_GH_CONTENTS_FAIL") or not os.path.exists(adr) or want not in " ".join(a):
         sys.stderr.write(os.environ.get("STUB_GH_CONTENTS_FAIL") or "gh: Not Found (HTTP 404)")
@@ -400,10 +403,13 @@ def variant_of(old, new):
 
 
 def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=None, readme_body="extensions: [roborev, codex]\n",
-              records=RECORDS, setup=None, argv_head="same", stub_fail=None, workflow_dir_arg=None, runs=None, clauses=True, roles=False):
+              records=RECORDS, setup=None, argv_head="same", stub_fail=None, workflow_dir_arg=None, runs=None, clauses=True, roles=False,
+              folder=False, arg_dir=False, siblings=(), adr=None):
     with tempfile.TemporaryDirectory() as d:
         readme(d, readme_body)
-        Path(d, "task.md").write_text(task)
+        entry = Path(d, "task", "index.md") if folder else Path(d, "task.md")
+        entry.parent.mkdir(exist_ok=True)
+        entry.write_text(task)
         Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + text)
         for name, content in (records or {}).items():
             Path(d, "task", "dispatch").mkdir(parents=True, exist_ok=True)
@@ -411,11 +417,16 @@ def run_check(task=TASK, text="", head=HEAD40, files=("docs/notes.md",), facts=N
         if setup:
             setup(d)
         shown = head if argv_head == "same" else argv_head
-        argv = ["check", str(Path(d, "task.md")), "--pr", "o/r#9", "--text-file", str(Path(d, "gate.txt"))] + (["--head", shown] if shown else [])
+        argv = ["check", str(entry.parent if arg_dir else entry), "--pr", "o/r#9", "--text-file", str(Path(d, "gate.txt"))] + (["--head", shown] if shown else [])
+        for number, sibling_head, sibling_state, sibling_adr in siblings:
+            argv += ["--sibling-pr", f"o/r#{number}"]
+            Path(d, "stub").mkdir(exist_ok=True)
+            Path(d, "stub", f"pr-{number}.json").write_text(json.dumps(dict(headRefOid=sibling_head, state=sibling_state)))
+            Path(d, "stub", f"adr-{sibling_head}.txt").write_text("\n".join(sibling_adr))
         if workflow_dir_arg:
             argv += ["--workflow-dir", str(Path(d, workflow_dir_arg))]
         out = io.StringIO()
-        with stubbed(d, head=head, files=files, pr=pr_json(head=head, files=len(files), **(facts or {})), runs=runs), \
+        with stubbed(d, head=head, files=files, pr=pr_json(head=head, files=len(files), **(facts or {})), runs=runs, adr=adr), \
                 mock.patch.dict(os.environ, {"STUB_GH_FAIL": stub_fail or ""}), \
                 contextlib.redirect_stdout(out), (contextlib.nullcontext() if roles else quiet_roles()):
             code = gate.main(argv)
@@ -1254,6 +1265,87 @@ class FoWriteRuleTests(unittest.TestCase):
         self.assertEqual(self.check(task=roman, text=reasoned(1))[0], 1)
         self.assertEqual(self.check(task=roman, text=reasoned(2))[0], 0)
 
+    def test_a_label_inside_an_item_run_already_read_adds_no_item(self):
+        nested = "Declined: F1 a (see Declined: F9 x (y z)); F2 b (two words)."
+        self.assertEqual(len(gate.declined_items(nested)), 2)
+        task = with_report("- F1 Polish: one.", "- F2 Polish: two.", "- F3 Polish: three.")
+        code, out = self.check(task=task, text=nested)
+        self.assertEqual(code, 1, out)
+        self.assertIn("declined items (2) are fewer than the validation report's Deferred risk and Polish findings (3)", out)
+        overlapping = variant_of("        if start.start() < stop:\n            continue\n", "")
+        self.assertEqual(len(overlapping.declined_items(nested)), 4)
+
+    def test_a_bulleted_decline_list_keeps_its_count_and_each_bullet_its_own_reason_check(self):
+        for text in ("- Declined: F1 a (two words).\n- Declined: F2 b (two words).",
+                     "- V8 Declined, low: F1 a (two words).\n- V10 Declined, low: F2 b (two words)."):
+            with self.subTest(text):
+                self.assertEqual((len(gate.declined_items(text)), gate.unreasoned_items(text)), (2, []))
+        bare = "- Declined: F1 a\n- Declined: F2 b (two words)"
+        self.assertEqual(len(gate.unreasoned_items(bare)), 1)
+        joined = variant_of("|\\n(?=[ \\t]*(?:[-*+][ \\t]+)?(?:[\\w.-]+[ \\t]+)?(?:Declined|FO declines)\\b)", "")
+        self.assertEqual(len(joined.declined_items("- Declined: F1 a (two words).\n- Declined: F2 b (two words).")), 1)
+
+
+MERGE_ASK = "Deliver #9 head 40c714a6. Approving merges it with gh pr merge --match-head-commit 40c714a6{tail}"
+HOLD_OUT_TAIL = {"unless he says he merges or holds": ", unless he says he merges or holds.",
+                 "if the Captain says he merges or holds": ". If the Captain says he merges or holds, ask again.",
+                 "unless you say you merge or hold": ", unless you say you merge or hold."}
+
+
+class QuestionTests(unittest.TestCase):
+    def ask(self, text, task=TASK, module=None, clauses=True, as_folder=False):
+        with tempfile.TemporaryDirectory() as d:
+            if as_folder:
+                Path(d, "t").mkdir()
+                Path(d, "t", "index.md").write_text(task)
+                entry = Path(d, "t")
+            else:
+                entry = Path(d, "task.md")
+                entry.write_text(task)
+            Path(d, "gate.txt").write_text((CLAUSES if clauses else "") + text)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = (module or gate).main(["question", str(entry), "--text-file", str(Path(d, "gate.txt"))])
+            return code, out.getvalue()
+
+    def test_a_question_that_names_the_merge_without_the_hold_out_clause_is_refused(self):
+        code, out = self.ask(MERGE_ASK.format(tail="."))
+        self.assertEqual(code, 1)
+        self.assertIn("names the merge with --match-head-commit but not 'unless he says he merges or holds'", out)
+        self.assertIn("next: hold the gate; add the clause that lets him keep the merge, then run this check again.", out)
+        self.assertNotIn("gate text complete", out)
+
+    def test_both_wordings_in_use_and_a_question_that_names_no_merge_pass(self):
+        for label, tail in HOLD_OUT_TAIL.items():
+            with self.subTest(label):
+                self.assertEqual(self.ask(MERGE_ASK.format(tail=tail)), (0, "gate text complete\n"))
+        self.assertEqual(self.ask("Admit the sample task?"), (0, "gate text complete\n"))
+        self.assertEqual(self.ask(MERGE_ASK.format(tail="."), as_folder=True)[0], 1)
+
+    def test_the_other_text_checks_run_and_an_unreadable_input_exits_2(self):
+        code, out = self.ask(MERGE_ASK.format(tail=HOLD_OUT_TAIL["unless he says he merges or holds"]), clauses=False)
+        self.assertEqual(code, 1)
+        self.assertIn("the gate text has no 'Sufficiency:' clause", out)
+        with contextlib.redirect_stdout(io.StringIO()) as said:
+            self.assertEqual(gate.main(["question", "/nonexistent/task.md", "--text-file", "/nonexistent/gate.txt"]), 2)
+        self.assertIn("cannot read input", said.getvalue())
+
+    def test_mutation_accepting_any_merge_word_lets_the_clause_less_question_pass(self):
+        wide = variant_of(r'\b(?:unless|if)\b\s+(?:he|you|the\s+captain|captain)\s+says?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b', r"merge")
+        self.assertEqual(self.ask(MERGE_ASK.format(tail="."))[0], 1)
+        self.assertEqual(self.ask(MERGE_ASK.format(tail="."), module=wide)[0], 0)
+        for tail in (", if CI is green; the merge holds until then.", ", unless CI says it merges or holds."):
+            with self.subTest(tail):
+                unrelated = MERGE_ASK.format(tail=tail)
+                self.assertEqual(self.ask(unrelated)[0], 1)
+                self.assertEqual(self.ask(unrelated, module=wide)[0], 0)
+
+    def test_the_merge_time_check_does_not_judge_the_hold_out_clause(self):
+        text = MERGE_ASK.format(tail=".")
+        self.assertNotIn("keep the merge", run_check(text=text).out)
+        gated = variant_of("found, wanted = text_problems(task_text, gate_text)", "found, wanted = text_problems(task_text, gate_text, at_gate=True)")
+        self.assertIn("keep the merge", run_variant(gated, text=text).out)
+
 
 ALIGNED = "---\nprofile: pilot\n---\n\n# task\n\n## FO alignment\n\nAlignment: not needed.\n"
 AMENDED = ALIGNED + "\n## Captain amendments\n\n### Amendment 1 \u2014 2026-10-20\n\nSupersedes: AC-1\n"
@@ -1267,6 +1359,15 @@ def committed(text):
         subprocess.run([*git, "init", "-q", "-b", "main"], check=True)
         Path(d, "task.md").write_text(text)
         subprocess.run([*git, "add", "task.md"], check=True)
+        subprocess.run([*git, "commit", "-qm", "task"], check=True)
+    return setup
+
+
+def committed_folder(text):
+    def setup(d):
+        git = ["git", "-C", d, "-c", "user.name=t", "-c", "user.email=t@t", "-c", "core.hooksPath=/dev/null", "-c", "commit.gpgsign=false"]
+        subprocess.run([*git, "init", "-q", "-b", "main"], check=True)
+        subprocess.run([*git, "add", "task/index.md"], check=True)
         subprocess.run([*git, "commit", "-qm", "task"], check=True)
     return setup
 
@@ -1321,6 +1422,71 @@ class OwedRoleCallTests(unittest.TestCase):
             result = run_check(roles=True)
         self.assertEqual(result.code, 2, result.out)
         self.assertIn("cannot run role_triggers.py: no interpreter", result.lines)
+
+
+class FolderTaskTests(unittest.TestCase):
+    def test_a_folder_task_by_index_or_by_folder_passes_like_a_flat_task_and_saves_in_its_own_folder(self):
+        flat = run_check()
+        for label, kw in (("index.md", {}), ("the folder", dict(arg_dir=True))):
+            with self.subTest(label):
+                result = run_check(folder=True, **kw)
+                self.assertEqual((result.code, list(result.written)), (0, ["ask-1.json"]), result.out)
+                self.assertEqual(result.out, flat.out)
+
+    def test_the_hold_for_a_missing_dispatch_record_names_the_task_folder_not_index(self):
+        result = run_check(folder=True, records=None)
+        self.assertEqual(result.code, 2, result.out)
+        self.assertTrue(any(l.endswith("task/dispatch has a 'Candidate: <40-hex head>' line") for l in result.lines), result.out)
+        self.assertNotIn("index/dispatch", result.out)
+
+    def test_the_readme_above_a_split_root_state_checkout_is_found_for_either_form(self):
+        with tempfile.TemporaryDirectory() as d:
+            readme(d)
+            for entry in (Path(d, "state", "task", "index.md"), Path(d, "state", "task.md")):
+                entry.parent.mkdir(parents=True, exist_ok=True)
+                entry.write_text(TASK)
+                self.assertEqual(gate.find_readme(entry, None)[0], Path(d), entry)
+
+    def test_an_owed_role_call_is_read_and_named_by_the_task_not_by_index(self):
+        result = run_check(task=AMENDED, folder=True, setup=committed_folder(AMENDED), roles=True)
+        self.assertEqual(result.code, 1, result.out)
+        self.assertIn("task owes a special-role call (role_triggers.py reads the task as committed)", result.lines)
+        self.assertTrue(any(l.startswith("next: task has replacing amendment 1;") for l in result.lines), result.out)
+
+
+S3 = "3" * 40
+SIB = lambda state="OPEN", head=S3, adr=("0023-the-decision.md",): [(7, head, state, adr)]
+
+
+class SiblingPrTests(unittest.TestCase):
+    TWO = {"validation-1.md": record(HEAD40, S3)}
+
+    def test_a_reserved_adr_on_a_sibling_head_that_was_dispatched_passes_and_is_recorded(self):
+        result = run_check(task=ADR_TASK, records=self.TWO, adr=["0022-other.md"], siblings=SIB())
+        self.assertEqual(result.code, 0, result.out)
+        self.assertIn("sibling: reserved ADR 0023 is at o/r#7 head 333333333333, a dispatched candidate of this task", result.lines)
+        self.assertEqual(result.written["ask-1.json"]["siblings"], ["sibling: reserved ADR 0023 is at o/r#7 head 333333333333, a dispatched candidate of this task"])
+
+    def test_without_the_flag_or_with_the_adr_nowhere_it_still_holds(self):
+        for label, kw in (("no flag", dict()), ("adr absent at the sibling", dict(siblings=SIB(adr=("0099-x.md",))))):
+            with self.subTest(label):
+                result = run_check(task=ADR_TASK, records=self.TWO, adr=["0022-other.md"], **kw)
+                self.assertEqual(result.code, 1, result.out)
+                self.assertIn("reserved ADR 0023 has no docs/adr/0023-*.md at PR head 40c714a60000", result.out)
+                self.assertEqual(result.written, {})
+
+    def test_a_sibling_that_is_closed_or_not_a_dispatched_candidate_holds(self):
+        for label, sib, why in (("closed", SIB(state="CLOSED"), "closed without merging"),
+                                ("undispatched head", SIB(head="4" * 40), "is not a dispatched candidate")):
+            with self.subTest(label):
+                result = run_check(task=ADR_TASK, records=self.TWO, adr=["0022-other.md"], siblings=sib)
+                self.assertEqual(result.code, 1, result.out)
+                self.assertIn(why, result.out)
+                self.assertEqual(result.written, {})
+
+    def test_a_merged_sibling_passes(self):
+        result = run_check(task=ADR_TASK, records=self.TWO, adr=["0022-other.md"], siblings=SIB(state="MERGED"))
+        self.assertEqual(result.code, 0, result.out)
 
 
 def tearDownModule():

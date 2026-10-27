@@ -101,7 +101,7 @@ PY
 const baseEnv = (f, gh, ev, extra = {}) => ({
   ...process.env, GITHUB_API_URL: gh.url, OPS_GIT_BASE: `file://${f.root}`, OPS_AGENT_APP_CLIENT_ID: "42", OPS_AGENT_APP_PRIVATE_KEY: gh.privateKey,
   PROJECT_REPO: PROJECT, TRIGGER_REPO: "o/trigger", TRIGGER_RUN_URL: "https://example.test/run/1", GITHUB_TOKEN: "ghs_trigger",
-  OPS_EVENT: JSON.stringify(ev), OPS_BRANCH: "ceiling-signed-in-2026-10-20-abcd1234", OPS_RECEIVED: "2026-10-20T00:00:00.000Z", OPS_POLL_MS: "50", OPS_JOIN_WAIT_S: "5",
+  OPS_EVENT: JSON.stringify(ev), OPS_BRANCH: "metric-prod-capacity.signed-in-d2026-10-20-abcd1234", OPS_RECEIVED: "2026-10-20T00:00:00.000Z", OPS_POLL_MS: "50", OPS_JOIN_WAIT_S: "5",
   ...extra,
 });
 
@@ -113,9 +113,9 @@ const withEnv = async (env, fn) => {
   return lines;
 };
 
-const near = relayEvent("signed-in-2026-10-20-80", "bound-ceiling-near", 40);
-const full = relayEvent("signed-in-2026-10-20-100", "bound-ceiling-full", 50);
-const branch = "ceiling-signed-in-2026-10-20-abcd1234";
+const near = relayEvent(80);
+const full = relayEvent(100);
+const branch = "metric-prod-capacity.signed-in-d2026-10-20-abcd1234";
 
 async function openIncident(f, gh, extra = {}) {
   const env = baseEnv(f, gh, near, { OPS_MODE: "open", FO_CMD: fakeFo(f, { cite: extra.fo ?? true }), ...extra.env });
@@ -137,7 +137,7 @@ test("open: an ops/<incident> branch, one Draft PR, the task and its first event
   assert.match(record, /## Measures\n\n- Event received 2026-10-20T00:00:00.000Z · recommendation ready /);
   const files = execFileSync("git", ["-C", f.bare, "ls-tree", "-r", "--name-only", "spacedock-state/ops"], { encoding: "utf8" });
   assert.match(files, new RegExp(`${branch}/index.md`));
-  assert.match(files, new RegExp(`${branch}/events/signed-in-2026-10-20-80.json`));
+  assert.match(files, new RegExp(`${branch}/events/${near.id}.json`));
   assert.match(files, new RegExp(`${branch}/measures.json`));
   const changed = execFileSync("git", ["-C", f.bare, "diff", "--name-only", `main...ops/${branch}`], { encoding: "utf8" }).trim();
   assert.equal(changed, `docs/ops/${branch}.md`);
@@ -172,10 +172,10 @@ test("join: the event lands as a file on the task and a PR comment, the PR's fir
   assert.equal(gh.state.prs.length, 1);
   assert.equal(gh.state.comments.length, 1);
   assert.match(gh.state.comments[0], /Event 2 joined this incident/);
-  assert.match(gh.state.prs[0].body, /^Events joined after this recommendation: 1 \(latest signed-in-2026-10-20-100/);
+  assert.match(gh.state.prs[0].body, new RegExp(`^Events joined after this recommendation: 1 \\(latest ${full.id}`));
   assert.match(gh.state.prs[0].body, /Citations: 1 OK/);
   const files = execFileSync("git", ["-C", f.bare, "ls-tree", "-r", "--name-only", "spacedock-state/ops"], { encoding: "utf8" });
-  assert.match(files, /events\/signed-in-2026-10-20-100.json/);
+  assert.match(files, new RegExp(`events/${full.id}.json`));
   gh.close();
 });
 
@@ -194,7 +194,7 @@ test("join after a failed opening run opens a new incident branch instead of wai
   const env = baseEnv(f, gh, full, { OPS_MODE: "join", OPS_OPENING_RUN: "1001", FO_CMD: fakeFo(f) });
   await withEnv(env, () => run(env));
   assert.equal(gh.state.prs.length, 1);
-  assert.equal(gh.state.prs[0].head.ref, `ops/${branch}-signed-in-2026-10-20-100`);
+  assert.equal(gh.state.prs[0].head.ref, `ops/${branch}-${full.id}`);
   assert.equal(gh.state.comments.length, 0);
   gh.close();
 });
@@ -202,7 +202,7 @@ test("join after a failed opening run opens a new incident branch instead of wai
 test("open when ops/<incident> already exists treats the event as joined (the ref create is the backstop)", opts, async () => {
   const f = fixture(); const gh = await fakeGithub(f);
   await openIncident(f, gh);
-  const second = relayEvent("signed-in-2026-10-20-100", "bound-ceiling-full", 50);
+  const second = relayEvent(100);
   const env = baseEnv(f, gh, second, { OPS_MODE: "open", FO_CMD: fakeFo(f) });
   await withEnv(env, () => run(env));
   assert.equal(gh.state.prs.length, 1);

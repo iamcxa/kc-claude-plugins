@@ -31,6 +31,21 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=15, why="the ideation and validation gate material carries the design check's upheld declines, decision lines and picture paths for the Captain",
          captain="「可以」 (Captain, ideation gate of design-director-runs-ui-design-review, 2026-10-22), answering 「設計總監的設計已經把你的 6 題裁定全部改進去了，可以開設計閘門。要你決定的是：可以進入實作嗎？我建議可以。」 whose presentation named raising this budget by 15 words, 5374 to 5389",
          loaded="startup and resume of the First Officer, and its ideation and validation gate preparation for a ui task"),
+    dict(delta=-5, why="pr_watch.py tasks now reads the Release review line, so the clause 'no script checks that line' is false and goes",
+         captain="「可以」 (chat, 2026-10-23) to the ideation gate question that named deleting 'no script checks that line'"),
+    dict(delta=1, why="the template ships extensions: [learn, peers], one more token than the empty list",
+         captain="「那就這樣做，learn+peers預設開啟，其他建議」 (chat, 2026-10-25), after his peers question",
+         loaded="startup and resume of the First Officer, which reads the README frontmatter"),
+    dict(delta=22, why="FO's step after status --set refuses to leave a stage asks the worker for a complete new report that supersedes the earlier one",
+         captain="「全准」 (Captain, chat, 2026-10-25), answering the ideation gate question of stage-report-correction-path, which named the 22 words and raising the workflow word budget 5385 to 5407",
+         loaded="FO's step after status --set refuses to leave a stage, and startup and resume, which read the README"),
+    dict(delta=14, why="FO runs delivery_gate.py question on the validation gate question before gate prepare, so the merges-or-holds clause is checked before the Captain is asked",
+         captain="「全准」 (chat, 2026-10-25), answering the batch-6 ideation sitting that listed the ideation briefing-1 question of fo-written-lines-checked-before-dispatch with its decisions as recommended, D3 among them",
+         loaded="startup and resume of the First Officer, and its validation gate preparation"),
+    # see docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md
+    dict(delta=144, why="one Team bullet carries the worker collaboration and early handback rule",
+         captain="「全准」 (Captain, chat, 2026-10-27), answering 「需要你決定：第 7 批三張任務的設計（其中兩張已經照第 2 輪訪談修過），要不要一起批准進入實作？我建議全部批准，每一題都照我的建議。」; ideation gate attempt 2, 2026-10-26T17:06:03.756936Z, accepted the recommended +144 rise from 5421 to 5565",
+         loaded="startup and resume of the First Officer, and each fresh or reused worker-stage dispatch definition read by FO and its worker"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
@@ -44,6 +59,9 @@ KNOWN_DUPLICATES = {
 }
 OBSERVER = "skills/observer/SKILL.md"
 CHAT_ONLY = re.compile(r"<!-- chat-only-rules -->\n(.*?)<!-- /chat-only-rules -->", re.S)
+# Skill folders copied byte for byte from kc-adr by scripts/kc-adr-copy-sync.sh; the copy is
+# checked against its kc-adr source there, not against this package's skill conventions.
+SYNCED_SKILLS = {"read-adr"}
 BOUND_SCRIPT_DIR = re.compile(r"(?:<package>/|(?:\.\./)+|kc-dev-flow-2/)scripts/")
 
 
@@ -85,6 +103,8 @@ def lint_tree(root, basic_lint=BASIC_LINT):
     for skill in sorted(skills):
         path = root / "skills" / skill / "SKILL.md"
         body = read(path)
+        if skill in SYNCED_SKILLS:
+            continue
         calls = re.findall(r"^Invocation: `([^`]+)`$", body, re.MULTILINE)
         if calls != [f"{VARIANT}:{skill}"]:
             errors.append(f"{skill}: expected one exact variant Invocation")
@@ -107,11 +127,15 @@ def lint_tree(root, basic_lint=BASIC_LINT):
         where = path.relative_to(root)
         if UNBOUND_ROOT.search(text):
             errors.append(f"{where}: package path must be <package>/scripts/NAME, not {{package}} or /absolute/plugin")
+        if where.parts[0] == "skills" and where.parts[1] in SYNCED_SKILLS:
+            continue
         for match in script.finditer(text):
             home, bound = homes[match["name"]]
             if not (match["dir"] and bound.fullmatch(match["dir"])):
                 errors.append(f"{where}: script {match['name']} is named without <package>/{home}")
     for folder in sorted((root / "skills").glob("*")):
+        if folder.name in SYNCED_SKILLS:
+            continue
         if any("<package>" in read(md) for md in folder.rglob("*.md")) and not PACKAGE_ROOT.search(
                 read(folder / "SKILL.md")):
             errors.append(f"skills/{folder.name}/SKILL.md: uses <package> but has no 'Package root:' line")
@@ -173,6 +197,7 @@ def lint_tree(root, basic_lint=BASIC_LINT):
             errors.append(f"{role} agent: existing {policy[0]}/{policy[1]} policy changed")
     errors += workflow_size_and_duplicates(root)
     errors += chat_only_errors(root)
+    errors += extension_tier_errors(root)
     return errors
 
 
@@ -204,6 +229,38 @@ def budget_errors(count, steps=None):
     elif count < budget:
         errors.append(f"{WORKFLOW}: {count} words is {budget - count} under the budget of {budget}; "
                       f"add a cut step of {count - budget} with a 'why' to WORKFLOW_BUDGET_STEPS")
+    return errors
+
+
+def extension_tier_errors(root):
+    readme, workflow = root / "README.md", root / WORKFLOW
+    if not readme.is_file() or not workflow.is_file():
+        return ["README.md or " + WORKFLOW + ": missing, so the extension tiers cannot be compared"]
+    tiers = {}
+    in_table = False
+    for line in readme.read_text().splitlines():
+        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        if not line.startswith("|"):
+            in_table = False
+        elif cells[:2] == ["Extension", "Tier"]:
+            in_table = True
+        elif in_table:
+            match = re.match(r"\[([a-z0-9-]+)\]\(extensions/", cells[0])
+            if match and len(cells) > 1:
+                tiers[match.group(1)] = cells[1]
+    if not tiers:
+        return ["README.md: no `Extension | Tier` table under Extensions"]
+    match = re.search(r"^extensions: \[([^\]]*)\]$", workflow.read_text(), re.MULTILINE)
+    if not match:
+        return [f"{WORKFLOW}: no one-line `extensions: [...]` in the frontmatter"]
+    listed = [name.strip() for name in match.group(1).split(",") if name.strip()]
+    errors = [f"README.md: `{name}` is required but {WORKFLOW} extensions: does not list it"
+              for name, tier in tiers.items() if tier == "required" and name not in listed]
+    errors += [f"{WORKFLOW}: extensions: lists `{name}` but its README tier is `{tiers.get(name, 'absent')}`, not `required`"
+               for name in listed if tiers.get(name) != "required"]
+    for name in tiers:
+        if not (root / "extensions" / name / "EXTENSION.md").is_file():
+            errors.append(f"README.md: extension `{name}` has no EXTENSION.md")
     return errors
 
 

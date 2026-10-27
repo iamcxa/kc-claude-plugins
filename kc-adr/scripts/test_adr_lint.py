@@ -127,5 +127,113 @@ class AdrLintTests(unittest.TestCase):
         self.assertEqual(self.run_lint({"0002-new.md": record(2)}, "3"), 1)
 
 
+def protecting(number, *paths, status="Accepted"):
+    lines = "\n".join(f"- `{path}` — the read-back before mailing" for path in paths)
+    return record(number, status).replace("**Protects:** none", f"**Protects:**\n{lines}")
+
+
+class ProtectedPathTests(unittest.TestCase):
+    def lint(self, adrs, sites, *extra):
+        import contextlib, io
+        with tempfile.TemporaryDirectory() as d:
+            for name, text in adrs.items():
+                Path(d, "docs/adr", name).parent.mkdir(parents=True, exist_ok=True)
+                Path(d, "docs/adr", name).write_text(text)
+            for name, text in sites.items():
+                Path(d, name).parent.mkdir(parents=True, exist_ok=True)
+                Path(d, name).write_text(text)
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                code = adr.main([str(Path(d, "docs/adr")), "--root", d, *extra])
+            return code, out.getvalue()
+
+    def test_the_template_carries_a_none_label_and_an_adr_without_the_line_passes(self):
+        self.assertIn("**Protects:** none", TEMPLATE)
+        self.assertEqual(self.lint({"0002-a.md": record(2)}, {})[0], 0)
+        self.assertEqual(self.lint({"0002-a.md": record(2).replace("**Protects:** none\n\n", "")}, {})[0], 0)
+
+    def test_a_listed_file_that_is_missing_fails_and_names_the_adr_and_path(self):
+        code, out = self.lint({"0002-a.md": protecting(2, "src/mailer.js")}, {})
+        self.assertEqual(code, 1)
+        self.assertIn("0002-a.md: protects src/mailer.js, which does not exist", out)
+
+    def test_a_listed_file_without_a_pointer_fails_and_suggests_the_full_name(self):
+        code, out = self.lint({"0002-a.md": protecting(2, "src/mailer.js")}, {"src/mailer.js": "send()\n"})
+        self.assertEqual(code, 1)
+        self.assertIn("src/mailer.js has no pointer; add a comment line 'see docs/adr/0002-a.md'", out)
+
+    def test_a_pointer_to_a_different_adr_does_not_count(self):
+        adrs = {"0002-a.md": protecting(2, "src/mailer.js"), "0003-b.md": record(3)}
+        self.assertEqual(self.lint(adrs, {"src/mailer.js": "// see docs/adr/0003-b.md\n"})[0], 1)
+
+    def test_a_correct_pointer_passes_in_full_path_and_number_only_forms(self):
+        for text in ("// see docs/adr/0002-a.md\n", "# (docs/adr/0002)\n", "<!-- see docs/adr/0002-a.md -->\n"):
+            with self.subTest(text):
+                self.assertEqual(self.lint({"0002-a.md": protecting(2, "src/mailer.js")}, {"src/mailer.js": text})[0], 0)
+
+    def test_a_longer_number_is_not_the_same_adr(self):
+        site = {"src/mailer.js": "// see docs/adr/00021-x.md\n"}
+        self.assertEqual(self.lint({"0002-a.md": protecting(2, "src/mailer.js")}, site)[0], 1)
+
+    def test_the_pointer_uses_the_real_adr_folder(self):
+        import contextlib, io
+        with tempfile.TemporaryDirectory() as d:
+            Path(d, "doc/decisions").mkdir(parents=True)
+            Path(d, "doc/decisions/0002-a.md").write_text(protecting(2, "src/mailer.js"))
+            Path(d, "src").mkdir()
+            Path(d, "src/mailer.js").write_text("// see docs/adr/0002-a.md\n")
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(adr.main([str(Path(d, "doc/decisions")), "--root", d]), 1)
+            Path(d, "src/mailer.js").write_text("// see doc/decisions/0002-a.md\n")
+            with contextlib.redirect_stdout(io.StringIO()):
+                self.assertEqual(adr.main([str(Path(d, "doc/decisions")), "--root", d]), 0)
+
+    def test_an_adr_folder_outside_the_root_asks_for_root(self):
+        import contextlib, io
+        with tempfile.TemporaryDirectory() as d, tempfile.TemporaryDirectory() as other:
+            Path(d, "0002-a.md").write_text(protecting(2, "src/mailer.js"))
+            out = io.StringIO()
+            with contextlib.redirect_stdout(out):
+                self.assertEqual(adr.main([d, "--root", other]), 1)
+            self.assertIn("pass --root", out.getvalue())
+
+    def test_a_file_pointing_at_a_superseded_adr_fails_naming_file_and_newer_adr(self):
+        adrs = {"0002-a.md": protecting(2, "src/mailer.js", status="Superseded by 0003"),
+                "0003-b.md": protecting(3, "src/mailer.js")}
+        code, out = self.lint(adrs, {"src/mailer.js": "// see docs/adr/0002-a.md\n// see docs/adr/0003-b.md\n"})
+        self.assertEqual(code, 1)
+        self.assertIn("src/mailer.js: points at ADR 0002, Superseded by 0003", out)
+
+    def test_the_same_file_pointing_only_at_the_newer_adr_passes(self):
+        adrs = {"0002-a.md": protecting(2, "src/mailer.js", status="Superseded by 0003"),
+                "0003-b.md": protecting(3, "src/mailer.js")}
+        self.assertEqual(self.lint(adrs, {"src/mailer.js": "// see docs/adr/0003-b.md\n"})[0], 0)
+
+    def test_only_accepted_adrs_must_have_their_file(self):
+        for status in ("Proposed", "Deprecated"):
+            with self.subTest(status):
+                self.assertEqual(self.lint({"0002-a.md": protecting(2, "src/gone.js", status=status)}, {})[0], 0)
+        adrs = {"0002-a.md": protecting(2, "src/gone.js", status="Superseded by 0003"), "0003-b.md": record(3)}
+        self.assertEqual(self.lint(adrs, {})[0], 0)
+
+    def test_malformed_entries_fail(self):
+        base = protecting(2, "src/mailer.js")
+        cases = {
+            "no backticks": base.replace("- `src/mailer.js`", "- src/mailer.js"),
+            "absolute path": base.replace("`src/mailer.js`", "`/src/mailer.js`"),
+            "parent part": base.replace("`src/mailer.js`", "`../mailer.js`"),
+            "text with no list": record(2).replace("**Protects:** none", "**Protects:** maybe"),
+        }
+        for label, text in cases.items():
+            with self.subTest(label):
+                self.assertEqual(self.lint({"0002-a.md": text}, {"src/mailer.js": "// see docs/adr/0002-a.md\n"})[0], 1)
+
+    def test_a_file_no_adr_lists_is_not_scanned(self):
+        adrs = {"0002-a.md": record(2, "Superseded by 0003"), "0003-b.md": protecting(3, "src/mailer.js")}
+        sites = {"src/mailer.js": "// see docs/adr/0003-b.md\n", "src/other.js": "// see docs/adr/0002-a.md\n",
+                 "README.md": "docs/adr/0002-a.md\n"}
+        self.assertEqual(self.lint(adrs, sites)[0], 0)
+
+
 if __name__ == "__main__":
     unittest.main()

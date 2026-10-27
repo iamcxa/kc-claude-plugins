@@ -5,8 +5,8 @@ import { fileURLToPath } from "node:url";
 import { join, dirname } from "node:path";
 import { rig, signedRequest, relayEvent, sentryEvent, selftestEvent, PROJECT, TRIGGER } from "./rig.mjs";
 
-const near = (id = "signed-in-2026-10-20-80") => relayEvent(id, "bound-ceiling-near", 40);
-const full = (id = "signed-in-2026-10-20-100") => relayEvent(id, "bound-ceiling-full", 50);
+const near = () => relayEvent(80);
+const full = () => relayEvent(100);
 const agentLine = (n) => n.blocks ? n.blocks[1].text.text : n.attachments[0].blocks[1].text.text;
 
 test("a new incident opens: one dispatch in mode open, one 'New incident' notice", async () => {
@@ -16,12 +16,12 @@ test("a new incident opens: one dispatch in mode open, one 'New incident' notice
   assert.equal(r.state.dispatches.length, 1);
   const d = r.state.dispatches[0];
   assert.equal(d.inputs.mode, "open");
-  assert.equal(JSON.parse(d.inputs.event).id, "signed-in-2026-10-20-80");
-  assert.match(d.inputs.branch, /^ceiling-signed-in-2026-10-20-[0-9a-f]{8}$/);
+  assert.equal(JSON.parse(d.inputs.event).id, near().id);
+  assert.match(d.inputs.branch, /^metric-prod-capacity\.signed-in-d2026-10-20-[0-9a-f]{8}$/);
   assert.equal(d.return_run_details, true);
   assert.match(d.inputs.received, /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
   assert.equal(r.state.slack.length, 1);
-  assert.match(agentLine(r.state.slack[0]), /New incident `ceiling\/signed-in\/2026-10-20` · agent started/);
+  assert.match(agentLine(r.state.slack[0]), /New incident `metric\/prod\/capacity\.signed-in\/d2026-10-20` · agent started/);
   r.close();
 });
 
@@ -34,14 +34,14 @@ test("a later event of the same incident joins: mode join, the opening run named
   assert.deepEqual(r.state.dispatches.map((d) => d.inputs.mode), ["open", "join"]);
   assert.equal(r.state.dispatches[1].inputs.opening_run, "1001");
   assert.equal(r.state.dispatches[1].inputs.branch, r.state.dispatches[0].inputs.branch);
-  assert.match(agentLine(r.state.slack[1]), /Joins incident `ceiling\/signed-in\/2026-10-20` \(event 2\) · recorded on its ops task, no new agent run/);
+  assert.match(agentLine(r.state.slack[1]), /Joins incident `metric\/prod\/capacity\.signed-in\/d2026-10-20` \(event 2\) · recorded on its ops task, no new agent run/);
   r.close();
 });
 
 test("another subject is a second incident, opened separately", async () => {
   const r = await rig();
   await r.call(signedRequest(near()));
-  await r.call(signedRequest(relayEvent("anonymous-2026-10-20-100", "bound-ceiling-full", 50, { tier: "anonymous" })));
+  await r.call(signedRequest(relayEvent(100, { metric: "capacity.anonymous" })));
   assert.deepEqual(r.state.dispatches.map((d) => d.inputs.mode), ["open", "open"]);
   assert.notEqual(r.state.dispatches[0].inputs.branch, r.state.dispatches[1].inputs.branch);
   r.close();
@@ -62,11 +62,11 @@ test("a resent copy of an accepted event gives no notice, dispatch or claim, eve
 
 test("concurrent sends: identical copies dispatch once; different events of one incident open exactly once", async () => {
   const r = await rig();
-  const same = signedRequest(near("e1"));
+  const same = signedRequest(near());
   const out = await Promise.all([r.call(same), r.call(same), r.call(same)]);
   assert.equal(out.filter((x) => x.status === 202).length, 1);
   const r2 = await rig();
-  const mixed = await Promise.all(["a", "b", "c"].map((id) => r2.call(signedRequest(near(id)))));
+  const mixed = await Promise.all([50, 80, 100].map((level) => r2.call(signedRequest(relayEvent(level)))));
   assert.deepEqual(mixed.map((x) => x.status), [202, 202, 202]);
   assert.equal(r2.state.dispatches.filter((d) => d.inputs.mode === "open").length, 1);
   assert.equal(r2.state.dispatches.filter((d) => d.inputs.mode === "join").length, 2);
@@ -105,11 +105,11 @@ test("a refused dispatch releases the claims, says NOT started, and the sender's
 test("a refused join releases only its own event claim and leaves the incident open", async () => {
   const r = await rig();
   await r.call(signedRequest(near()));
-  r.state.flags.dispatchStatus = 500;
+  r.state.flags.dispatchStatus = 403;
   const res = await r.call(signedRequest(full()));
   assert.equal(res.status, 502);
   assert.ok([...r.store.m.keys()].some((k) => k.startsWith("incident.")));
-  assert.ok(![...r.store.m.keys()].some((k) => k.startsWith("event.") && JSON.parse(r.store.m.get(k)).id === "signed-in-2026-10-20-100"));
+  assert.ok(![...r.store.m.keys()].some((k) => k.startsWith("event.") && JSON.parse(r.store.m.get(k)).id === full().id));
   r.close();
 });
 
@@ -125,6 +125,31 @@ test("an unanswered dispatch keeps the claims (at-most-once), says UNCERTAIN, an
   assert.equal(r.state.dispatches.length, 0);
   assert.ok(r.logs.some((l) => l.evt === "dispatch-failed" && l.released === false));
   r.close();
+});
+
+test("a GitHub 5xx on dispatch keeps the claims like an unanswered one: 504, UNCERTAIN, a resend starts nothing", async () => {
+  const r = await rig({ dispatchStatus: 500 });
+  const res = await r.call(signedRequest(near()));
+  assert.equal(res.status, 504);
+  assert.equal((await res.json()).error, "dispatch-ambiguous");
+  assert.match(agentLine(r.state.slack[0]), /Needs a look · agent start UNCERTAIN/);
+  assert.ok(r.logs.some((l) => l.evt === "dispatch-failed" && l.released === false));
+  r.state.flags.dispatchStatus = 200;
+  const resend = await r.call(signedRequest(near()));
+  assert.equal((await resend.json()).status, "duplicate");
+  assert.equal(r.state.dispatches.length, 0);
+  r.close();
+});
+
+test("a signing secret that decodes to fewer than 16 bytes starts nothing, even when the sender signed with it", async () => {
+  for (const secret of ["whsec_=", "whsec_!!!", "whsec_a", undefined]) {
+    const r = await rig();
+    r.env.WEBHOOK_SECRET = secret;
+    const res = await r.call(signedRequest(near(), { secret: secret ?? "whsec_=" }));
+    assert.equal(res.status, 401, String(secret));
+    assert.equal(r.state.dispatches.length + r.state.mints.length + r.state.slack.length + r.store.m.size, 0, String(secret));
+    r.close();
+  }
 });
 
 test("a refused token mint releases the claims and starts nothing", async () => {
@@ -191,9 +216,12 @@ test("GET /inbox/health counts settings and secrets by name and never returns a 
   r.close();
 });
 
-test("the core imports only node:crypto", () => {
-  const dir = join(dirname(fileURLToPath(import.meta.url)), "../core");
-  const imports = readdirSync(dir).flatMap((f) => readFileSync(join(dir, f), "utf8").split("\n").filter((l) => /^import /.test(l)));
-  assert.equal(imports.length, 1);
-  assert.match(imports[0], /from "node:crypto";$/);
+// The core's own imports are node:crypto and the contract module; contract.mjs imports only node:crypto,
+// so nothing outside node:crypto is reachable from the core.
+test("the core reaches only node:crypto, through the contract module", () => {
+  const root = join(dirname(fileURLToPath(import.meta.url)), "..");
+  const importsOf = (dir, only) => readdirSync(join(root, dir)).filter((f) => f.endsWith(".mjs") && (!only || f === only)).flatMap((f) =>
+    [...readFileSync(join(root, dir, f), "utf8").matchAll(/^import .* from "([^"]+)";$/gm)].map((m) => m[1]));
+  assert.deepEqual([...new Set(importsOf("core"))].sort(), ["../contract/contract.mjs", "node:crypto"]);
+  assert.deepEqual(importsOf("contract", "contract.mjs"), ["node:crypto"]);
 });

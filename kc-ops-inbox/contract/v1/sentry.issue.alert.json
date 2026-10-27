@@ -24,8 +24,7 @@
     },
     "source": {
       "type": "string",
-      "minLength": 1,
-      "maxLength": 200
+      "pattern": "^urn:sentry(:[a-z0-9-]{1,32}){1,3}$"
     },
     "type": {
       "const": "sentry.issue.alert"
@@ -37,6 +36,20 @@
     "time": {
       "type": "string",
       "format": "date-time"
+    },
+    "environment": {
+      "enum": [
+        "prod",
+        "preview",
+        "dev"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "warning",
+        "critical"
+      ]
     },
     "dataschema": {
       "const": "https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/sentry.issue.alert.json"
@@ -57,10 +70,12 @@
       "properties": {
         "issue_id": {
           "type": "string",
+          "pattern": "^[A-Za-z0-9._-]{1,64}$",
           "maxLength": 500
         },
         "event_id": {
           "type": "string",
+          "pattern": "^[A-Za-z0-9._-]{1,64}$",
           "maxLength": 500
         },
         "title": {
@@ -69,6 +84,13 @@
         },
         "level": {
           "type": "string",
+          "enum": [
+            "fatal",
+            "error",
+            "warning",
+            "info",
+            "debug"
+          ],
           "maxLength": 500
         },
         "culprit": {
@@ -77,15 +99,17 @@
         },
         "project": {
           "type": "string",
+          "pattern": "^[A-Za-z0-9._-]{1,64}$",
           "maxLength": 500
         },
         "web_url": {
           "type": "string",
-          "pattern": "^https://",
+          "pattern": "^https://[A-Za-z0-9._~:/@!$&*,;=-]{1,480}$",
           "maxLength": 500
         },
         "triggered_rule": {
           "type": "string",
+          "pattern": "^[A-Za-z0-9._-]{1,64}$",
           "maxLength": 500
         },
         "datetime": {
@@ -95,6 +119,7 @@
         },
         "release": {
           "type": "string",
+          "pattern": "^[A-Za-z0-9._@+-]{1,100}$",
           "maxLength": 500
         }
       }

@@ -24,8 +24,7 @@
     },
     "source": {
       "type": "string",
-      "minLength": 1,
-      "maxLength": 200
+      "pattern": "^urn:[a-z0-9-]{1,32}(:[a-z0-9-]{1,32}){1,3}$"
     },
     "type": {
       "const": "ops.inbox.selftest"
@@ -37,6 +36,20 @@
     "time": {
       "type": "string",
       "format": "date-time"
+    },
+    "environment": {
+      "enum": [
+        "prod",
+        "preview",
+        "dev"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "warning",
+        "critical"
+      ]
     },
     "dataschema": {
       "const": "https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/ops.inbox.selftest.json"

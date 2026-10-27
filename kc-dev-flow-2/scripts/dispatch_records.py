@@ -24,6 +24,9 @@ For a record in `<task folder>/dispatch/` with the task `<task folder>.md` besid
 for each `ADR: NNNN` or `Migration: NNNN` the task's `## Number guards` reserves, and
 `<file>:1: Captain amendment N named in no dispatch checklist; ...` when an `### Amendment N` entry of the task's
 `## Captain amendments` (fenced lines skipped) is named by no `amendment N` phrase in any `## Checklist` of that folder's records.
+`<file>:1: '## FO alignment' records alignment as needed with no 'Result:' line; ...` for an `ideation-<N>.md` whose task has an unfenced
+`Alignment: needed` line and no `Result: <text>` line, and `<file>:1: Captain amendment N <Captain|Asked> line holds a backslash-quote copied from JSON; ...`
+for a `\\"` on a `Captain:` or `Asked:` amendment line outside a `Superseded text:` block.
 A record whose task file is absent is not judged.
 --newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
 is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
@@ -35,7 +38,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
-from design_surfaces import AMENDMENTS_HEADING, section, unfenced  # noqa: E402
+from design_surfaces import AMENDMENTS_HEADING, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, section, task_folder, unfenced  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent.parent
@@ -164,8 +167,8 @@ def check_candidates(files):
     return 1 if found else 0
 
 
+NUMBER = re.compile(r"\d+")
 AMENDMENT_ENTRY = re.compile(r"(?m)^(?=### )")
-AMENDMENT_NAMED = re.compile(r"amendments?[ \t]+((?:\d+(?:[ \t]*(?:,[ \t]*(?:and|&)?|and|&|to|-)[ \t]*)?)+)", re.I)
 
 
 def named_section(text, heading):
@@ -185,7 +188,7 @@ def check_task_facts(files):
     for file in files:
         path = Path(file).resolve()
         folder = path.parent.parent
-        task = folder.parent / f"{folder.name}.md"
+        task = next((t for t in (folder / "index.md", folder.parent / f"{folder.name}.md") if t.is_file()), folder / "index.md")
         if path.parent.name != "dispatch" or not task.is_file():
             continue
         facts, lines = task_facts(task), []
@@ -195,12 +198,15 @@ def check_task_facts(files):
             lines += [f"{file}:1: reserved line '{kind}: {n:04d}' missing from scope notes; copy it from the task's "
                       "'## Number guards' into this record's '## Scope notes', then run this check again"
                       for kind, n in reserved if not re.search(rf"(?m)^[ \t]*(?:[-*][ \t]+)?(?:Number guards:[ \t]*)?{kind}:[ \t]*0*{n}\b", notes)]
-        named = {int(n) for record in path.parent.glob("*.md")
-                 for m in AMENDMENT_NAMED.finditer(named_section(record.read_text(), "Checklist"))
-                 for n in re.findall(r"\d+", m.group(1))}
+        text = task.read_text()
+        if re.fullmatch(r"ideation-\d+\.md", path.name) and alignment_owes_result(text):
+            lines.append(f"{file}:1: '## FO alignment' records alignment as needed with no 'Result:' line; record the Captain's alignment result as 'Result: <what he answered>' there, then run this check again")
+        lines += [f"{file}:1: Captain amendment {NUMBER.search(title).group()} {key} line holds a backslash-quote copied from JSON; write his words as he said them, then run this check again"
+                  for title, key in escaped_amendment_lines(text.split("\n")) if NUMBER.search(title)]
+        named = dispatched_amendments(folder)
         lines += [f"{file}:1: Captain amendment {n} named in no dispatch checklist; write 'Captain amendment {n}' "
                   "in a checklist line of this record, then run this check again"
-                  for n in amendment_numbers(task.read_text()) if int(n) not in named]
+                  for n in amendment_numbers(text) if int(n) not in named]
         for line in lines:
             print(line)
         found = found or bool(lines)
@@ -240,7 +246,7 @@ def main(argv=None, package=PACKAGE):
         print(__doc__.strip())
         return 2
     task = Path(args[0])
-    folder = task.with_suffix("") if task.suffix == ".md" else task
+    folder = task_folder(task) if task.suffix == ".md" else task
     records = sorted((folder / "dispatch").glob("*.md"))
     if not records:
         print(f"{folder}: no dispatch records under dispatch/")

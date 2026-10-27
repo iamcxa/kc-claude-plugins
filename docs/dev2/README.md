@@ -47,7 +47,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.27.0 x-release-please-version -->
+<!-- kc-dev-flow-2 0.32.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -110,7 +110,7 @@ A checklist or scope-notes line that names a package script writes
 name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`
 on the saved record and rewrites each name it lists. When `status --set` refuses to leave a stage, run `spacedock status --workflow-dir
 <dir> --read <task> --stage <stage> --checklist`, return any line it reports as neither
-DONE nor SKIPPED to the worker, and do not edit the worker's report. The refusal itself
+DONE nor SKIPPED to the worker with the request to append a complete new report under the same heading, ending in a Summary that supersedes the earlier one, and do not edit the worker's report. The refusal itself
 does not say why; other causes are a missing evidence line or Summary and an uncommitted
 report.
 
@@ -154,7 +154,7 @@ differently, or `Visible change: none`.
   runs the review at once. FO writes no map and no candidate; the Captain accepts
   membership in conversation or at this gate. FO records under `## FO alignment` either
   `Release review: <journey>/<release-id> at <journey-file commit>` or
-  `Release review: not needed: <reason>`; no script checks that line. When FO approves
+  `Release review: not needed: <reason>`. When FO approves
   a task into a release story at this gate it sets the three fields with
   `spacedock status --workflow-dir <dir> --set <task> journey=<the map's journey: value> journey-release=<id> journey-story=<id>`;
   a worker never edits frontmatter. Where the adopter tracks completion with
@@ -188,9 +188,9 @@ ADR draft live in the task file, and a draft carries no ADR number.
   approvals and stops, acceptance evidence/limits, and each recorded
   `Surfaces:` value's artifact. The gate is not presentable without the
   artifact each recorded surface owes. Before `spacedock gate prepare`, FO runs
-  `python3 <package>/scripts/design_surfaces.py check <task>`; a non-zero exit
-  means the gate is not presentable, and FO includes the checker's output in
-  the gate material. Required diagram defects or missing current-stage
+  `python3 <package>/scripts/design_surfaces.py check <task>`, includes its
+  output in the gate material at any exit, and treats a non-zero exit as the gate
+  not presentable. Required diagram defects or missing current-stage
   evidence block recommendation and gate preparation/presentation; honest
   unverified future checks do not.
   FO may correct design prose/Mermaid to reflect established decisions under an
@@ -225,7 +225,9 @@ repair is dispatched under the lane in Stages.
   `python3 <package>/scripts/adr_lint.py docs/adr --since <base>` command run with its exit
   code, and unverified obligations recorded in the existing SD Stage Report.
 - **Gate content:** Show actual checks and acceptance evidence, material findings
-  and limits, and the user's pending delivery decision. Before the gate, FO runs the
+  and limits, and the user's pending delivery decision. For a `ui` task FO runs
+  `python3 <package>/scripts/design_surfaces.py check <task>` and includes its
+  output. Before the gate, FO runs the
   stage's minimal acceptance script exactly as written in a fresh shell, then presents
   every step in full beside its observed output, never a pointer or a shortened step.
   A step FO cannot run (a secret, a sign-in, the Captain's own device) is marked not
@@ -247,6 +249,18 @@ not completion.
 
 ## Dispatch facts
 
+- **Team:** You are one worker in a team completing the project goal; your stage
+  and handoff serve that goal. Before substantial work or retrying a failure,
+  check this task's prior reports, linked sibling tasks and PRs, and relevant
+  workflow state: did someone already do this, hit this, or own it now? If your
+  environment cannot run a required checklist check, tell FO before building
+  work that depends on it. Ask FO early about overlapping ownership, repeated
+  failures, missing authority or evidence, or infeasible targets. Give checked
+  sources, findings, attempts and the specific question. With a mid-run FO
+  channel, pause dependent work and continue safe independent work; without
+  one, end your turn with that handback instead of waiting. Never answer your
+  own or your reviewers' permission requests; route them to FO. FO coordinates
+  peers and decisions; do not message peers or change others' work.
 - **Signal:** send the completion message once, to the first officer by the name
   your session lists as addressable (`main` under Claude Code dispatch). The
   completion block's `team-lead` is Spacedock's default and is not registered
@@ -518,6 +532,8 @@ repository-qualified PR merge before recording its landed sentinel and running S
 to finalize/archive. Where `learn` is listed, the sentinel waits for a committed observer report.
 CI green, PR creation, gate approval and a locally manufactured sentinel do not prove merge.
 FO's startup and idle steps are in `_mods/kc-dev-flow-2.md`, copied from `<package>/references/sd/mods/`.
+
+Before the validation `gate prepare`, FO runs `python3 <package>/scripts/delivery_gate.py question <task> --text-file <question-and-summary file>`.
 
 Before merging or asking, FO runs `python3 <package>/scripts/delivery_gate.py check <task>
 --pr <owner/repo>#<N> --text-file <question and summary>`; exit 1 or 2 holds the ask, as does a head other than the latest `Candidate:`; FO shows the Captain what it printed.

@@ -225,3 +225,22 @@ test('the real reader lists orphans from the task listing and the refresh CLI ex
 	assert.equal(held.status, 1)
 	assert.deepEqual(JSON.parse(held.stdout).orphans, [{ slug: 'e', id: 'e0', release: 'R2', story: 'ghost' }])
 })
+
+test('a release-acceptance task with no journey fields is not an orphan; with a journey and release but no story it is', (t) => {
+	const acceptance = { slug: 'r1-acceptance', id: 'r1-acceptance', 'release-acceptance': 'demo/R1' }
+	assert.deepEqual(findOrphans(model, [acceptance]), [])
+	assert.deepEqual(findOrphans(model, [{ ...acceptance, journey: 'demo', 'journey-release': 'R1' }]),
+		[{ slug: 'r1-acceptance', id: 'r1-acceptance', release: 'R1', story: null }])
+
+	const f = fixture(t, 'slug')
+	f.tasks[1].status = 'done'; f.tasks[2].status = 'done'; f.tasks[4].journey = 'other'; f.save()
+	const task = join(f.workflow, 'r1-acceptance.md')
+	const refresh = () => spawnSync(process.execPath, [join(plugin, 'lib/journey-progress.mjs'), f.path, '--workflow-dir', f.workflow], { encoding: 'utf8' })
+	writeFileSync(task, `---\n${stringify({ title: 'R1 acceptance', status: 'implementation', 'release-acceptance': 'demo/R1' })}---\n`)
+	const clean = refresh()
+	assert.deepEqual([clean.status, JSON.parse(clean.stdout).orphans], [0, []], clean.stderr)
+	writeFileSync(task, `---\n${stringify({ title: 'R1 acceptance', status: 'implementation', journey: 'demo', 'journey-release': 'R1' })}---\n`)
+	const held = refresh()
+	assert.equal(held.status, 1)
+	assert.deepEqual(JSON.parse(held.stdout).orphans, [{ slug: 'r1-acceptance', id: 'r1-acceptance', release: 'R1', story: '' }])
+})

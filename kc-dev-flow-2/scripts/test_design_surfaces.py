@@ -286,9 +286,12 @@ class CriteriaTests(unittest.TestCase):
 
 
 class AmendmentTests(unittest.TestCase):
-    def errors(self, extra, criteria="**AC-1**: a driver sees seats.\n" + REPLACEMENT, module=ds):
+    def errors(self, extra, criteria="**AC-1**: a driver sees seats.\n" + REPLACEMENT, module=ds, named=()):
         text = BASE.split("## Acceptance criteria")[0] + "## Acceptance criteria\n\n" + criteria + extra
         with tempfile.TemporaryDirectory() as d:
+            if named:
+                Path(d, "task", "dispatch").mkdir(parents=True)
+                Path(d, "task", "dispatch", "implementation-1.md").write_text("## Checklist\n\n" + "".join(f"- Captain amendment {n}\n" for n in named))
             return module.check_task(write_task(d, text))
 
     def test_a_relocated_criterion_none_no_amendments_and_a_fenced_example_pass(self):
@@ -306,9 +309,9 @@ class AmendmentTests(unittest.TestCase):
                 self.assertTrue(any("no 'Captain:' line" in e for e in errors), errors)
 
     def test_a_superseded_id_still_declared_is_refused_including_a_redeclared_id(self):
-        errors = self.errors(AMENDMENT, BOTH)
+        errors = self.errors(AMENDMENT, BOTH, named=(1,))
         self.assertTrue(any("supersedes AC-2 but it is still declared" in e for e in errors), errors)
-        redeclared = self.errors(AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-1"), "**AC-1**: new text.\n")
+        redeclared = self.errors(AMENDMENT.replace("Supersedes: AC-2", "Supersedes: AC-1"), "**AC-1**: new text.\n", named=(1,))
         self.assertTrue(any("supersedes AC-1" in e for e in redeclared), redeclared)
 
     def test_an_entry_holding_a_criterion_its_supersedes_line_does_not_name_is_refused(self):
@@ -380,6 +383,35 @@ class AmendmentTests(unittest.TestCase):
         cited = AMENDMENT.replace("**AC-2**: the old outcome.\n", "**AC-2**: the old outcome.\nVerified by: a test; see **AC-5** for the shared fixture.\n")
         self.assertEqual(self.errors(cited), [])
 
+    def test_a_superseded_criterion_waits_in_place_until_a_dispatch_checklist_names_the_amendment(self):
+        both = BOTH + REPLACEMENT
+        self.assertEqual(self.errors(AMENDMENT, both), [])
+        self.assertEqual(self.errors(AMENDMENT, both, named=(2,)), [])
+        errors = self.errors(AMENDMENT, both, named=(1,))
+        self.assertTrue(any("supersedes AC-2 but it is still declared" in e for e in errors), errors)
+        eager = mutated("set() if waits else named & declared", "named & declared")
+        self.assertTrue(self.errors(AMENDMENT, both, eager))
+
+    def test_a_backslash_quote_on_any_other_amendment_line_is_not_judged(self):
+        for line in ('Design: the \\"old\\" paragraph.\n', 'Supersedes: AC-2 \\"x\\"\n', 'a continuation line with \\"x\\"\n'):
+            with self.subTest(line):
+                text = AMENDMENT.replace("Supersedes: AC-2\n", "Supersedes: AC-2\n" + line, 1)
+                self.assertEqual(ds.escaped_amendment_lines(text.split("\n")), [])
+                self.assertFalse(any("backslash-quote" in e for e in self.errors(text)), self.errors(text))
+
+    def test_a_backslash_quote_on_a_captain_or_asked_line_is_refused_outside_a_moved_criterion(self):
+        for key in ("Captain", "Asked"):
+            with self.subTest(key):
+                line = f'{key}: 「he said \\"yes\\"」\n'
+                text = AMENDMENT.replace("Supersedes: AC-2\n", line + "Supersedes: AC-2\n")
+                errors = self.errors(text)
+                self.assertTrue(any(f"'### Amendment 1" in e and f"{key} line holds a backslash-quote" in e for e in errors), errors)
+        moved = AMENDMENT.replace("**AC-2**: the old outcome.", '**AC-2**: the old outcome.\nAsked: the \\"old\\" question')
+        self.assertEqual(self.errors(moved), [])
+        self.assertEqual(self.errors(AMENDMENT.replace("Supersedes: AC-2\n", 'Asked: he said "yes"\nSupersedes: AC-2\n')), [])
+        unskipped = mutated('moved = moved or line.startswith("Superseded text:")', "moved = False")
+        self.assertTrue(self.errors(moved, module=unskipped))
+
     def test_the_design_line_is_not_read(self):
         text = AMENDMENT.replace("Supersedes: AC-2\n", "Supersedes: AC-2\nDesign: the whole paragraph, reworded by FO beyond his words.\n")
         self.assertEqual(self.errors(text), [])
@@ -391,7 +423,7 @@ class AmendmentTests(unittest.TestCase):
                 errors = self.errors(text)
                 self.assertTrue(any("no 'Captain:' line" in e for e in errors), errors)
                 self.assertTrue(any("supersedes AC-2 but it is still declared" in e for e in self.errors(
-                    AMENDMENT.replace("## Captain amendments", heading), BOTH)))
+                    AMENDMENT.replace("## Captain amendments", heading), BOTH, named=(1,))))
 
     def test_mutation_matching_the_amendments_heading_case_sensitively_fails_its_case(self):
         mutant = mutated('## Captain amendments{GO_SPACE}$", re.I)', '## Captain amendments{GO_SPACE}$")')
@@ -401,8 +433,8 @@ class AmendmentTests(unittest.TestCase):
 
     def test_mutation_dropping_the_disjointness_rule_fails_its_case(self):
         mutant = mutated("& declared", "& set()")
-        self.assertTrue(self.errors(AMENDMENT, BOTH + REPLACEMENT))
-        self.assertEqual(self.errors(AMENDMENT, BOTH + REPLACEMENT, mutant), [])
+        self.assertTrue(self.errors(AMENDMENT, BOTH + REPLACEMENT, named=(1,)))
+        self.assertEqual(self.errors(AMENDMENT, BOTH + REPLACEMENT, mutant, named=(1,)), [])
 
     def test_mutation_dropping_the_moved_criterion_rule_fails_its_case(self):
         mutant = mutated("        if held - named:\n", "        if False:\n")
@@ -1306,6 +1338,64 @@ GIT_ENV = {"GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@example.invalid", "GIT
            "GIT_CONFIG_GLOBAL": os.devnull, "GIT_CONFIG_SYSTEM": os.devnull}
 
 
+OVERRIDE_LINE = "Override: recommended option A; Captain chose option B; area: db"
+RESOLVED = """---
+title: t
+profile: pilot
+status: implementation
+gates:
+    version: 1
+    records:
+        - id: gate:t:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:t-ideation-1
+              briefing:
+                room-ref: ./t/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                by: person:captain
+                at: "2026-10-03T01:00:00Z"
+                decision: approve
+                reason: '{reason}'
+---
+
+"""
+
+
+class OverrideNoteTests(unittest.TestCase):
+    def notes(self, body_line, reason="ok", module=ds):
+        text = RESOLVED.format(reason=reason) + BASE + "\n" + body_line + "\n"
+        notes = []
+        with tempfile.TemporaryDirectory() as d:
+            errors = module.check_task(write_task(d, text), notes=notes)
+        return errors, notes
+
+    def test_an_override_line_no_gate_reason_carries_prints_one_note_and_changes_no_verdict(self):
+        errors, notes = self.notes(OVERRIDE_LINE)
+        self.assertEqual((errors, len(notes)), ([], 1))
+        self.assertIn(OVERRIDE_LINE, notes[0])
+        self.assertEqual(self.notes("")[1], [])
+
+    def test_a_reason_carrying_the_chosen_text_prints_nothing_even_when_the_rest_of_the_line_differs(self):
+        self.assertEqual(self.notes(OVERRIDE_LINE, reason="Override: recommended option C; Captain chose option B; area: ui")[1], [])
+        self.assertEqual(self.notes(OVERRIDE_LINE, reason=OVERRIDE_LINE)[1], [])
+
+    def test_a_placeholder_form_a_fenced_line_and_a_plain_chose_clause_print_nothing(self):
+        for line in ("Override: recommended <option>; Captain chose <option>; area: <area>",
+                     "Override: recommended ...; Captain chose ...; area: db",
+                     f"```\n{OVERRIDE_LINE}\n```"):
+            with self.subTest(line):
+                self.assertEqual(self.notes(line)[1], [])
+
+    def test_mutation_dropping_the_placeholder_test_or_the_carried_test_prints_a_note(self):
+        placeholder = mutated('not m.group("rec").startswith(("<", ".", "\u2026")) and ', "")
+        self.assertEqual(self.notes("Override: recommended <option>; Captain chose <option>; area: <area>")[1], [])
+        self.assertEqual(len(self.notes("Override: recommended <option>; Captain chose <option>; area: <area>", module=placeholder)[1]), 1)
+        uncarried = mutated("[:18] not in chosen", "[:18] not in set()")
+        self.assertEqual(len(self.notes(OVERRIDE_LINE, reason=OVERRIDE_LINE, module=uncarried)[1]), 1)
+
+
 class ScopeCheckTests(unittest.TestCase):
     """A Scope change after the backlog gate, on a task in a linked git worktree (as a split-root state checkout is, its .git a file)."""
 
@@ -1459,6 +1549,42 @@ class ScopeCheckTests(unittest.TestCase):
         self.assertEqual(ds.scope_hold(self.task), ("not run", "backlog briefing unreadable"))
         index.unlink()
         self.assertEqual(ds.scope_hold(self.task), ("not run", "backlog briefing unreadable"))
+
+    def rebase_on(self, text):
+        self.task.write_text(text)
+        sha = self.commit("t.md", "task with a look-alike heading")
+        index = self.work / "t" / "review" / "backlog" / "briefing-1" / "index.json"
+        index.write_text(f'{{"artifacts": [{{"uri": "git-root://state/{sha}/t.md"}}]}}')
+        self.commit("t/review/backlog/briefing-1/index.json", "briefing")
+
+    def test_the_scope_is_the_first_scope_heading_outside_a_fence(self):
+        fence = "```"
+        self.rebase_on(GATED.replace("## Scope", f"## Design\n\n{fence}\n## Scope\n- example\n{fence}\n\n## Scope", 1))
+        self.assertEqual(ds.scope_hold(self.task)[0], "clean")
+        self.add_line()
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+        self.assertEqual(self.run_main()[0], 1)
+        flat = mutated('        elif not inside and line.startswith("## "):', '        elif line.startswith("## "):')
+        self.assertEqual(flat.scope_hold(self.task)[0], "clean")
+
+    def test_fenced_lines_inside_the_real_scope_stay_compared_and_a_fenced_heading_does_not_end_it(self):
+        fence = "```"
+        self.rebase_on(GATED.replace("- Non-goals: to be set at ideation.", f"{fence}\ncode line\n{fence}\n- Non-goals: to be set at ideation.", 1))
+        self.edit("code line", "code line changed")
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+        self.edit("code line changed", "code line")
+        self.assertEqual(ds.scope_hold(self.task)[0], "clean")
+        self.edit("code line", "## Not a heading")
+        self.rebase_on(self.task.read_text())
+        self.add_line()
+        self.assertEqual(ds.scope_hold(self.task)[0], "hold")
+        text = self.task.read_text()
+        self.assertIn("- Captain asked for one more thing.", ds.scope_lines(text))
+        flat = mutated('        elif not inside and line.startswith("## "):', '        elif line.startswith("## "):')
+        self.assertNotIn("- Captain asked for one more thing.", flat.scope_lines(text))
+        self.assertEqual(ds.scope_lines("## Scope\n```\nx\n```\n- a\n"), ["```", "x", "```", "- a"])
+        dropped = mutated("return text[start:at].splitlines()", "return unfenced(text[start:at].splitlines())")
+        self.assertNotIn("x", dropped.scope_lines("## Scope\n```\nx\n```\n- a\n## Next\n"))
 
     def test_a_task_extracted_without_git_history_is_not_run_as_the_observer_replays_it(self):
         self.add_line()

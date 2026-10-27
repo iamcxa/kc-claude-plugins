@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/ops.metric.crossed.json",
+  "title": "A metric crossed a threshold level",
+  "type": "object",
+  "required": [
+    "specversion",
+    "id",
+    "source",
+    "type",
+    "subject",
+    "time",
+    "dataschema",
+    "data",
+    "environment",
+    "severity"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "specversion": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9._-]{1,64}$"
+    },
+    "source": {
+      "type": "string",
+      "pattern": "^urn:[a-z0-9-]{1,32}(:[a-z0-9-]{1,32}){1,3}$"
+    },
+    "type": {
+      "const": "ops.metric.crossed"
+    },
+    "subject": {
+      "type": "string",
+      "pattern": "^metric/(prod|preview|dev)/[a-z][a-z0-9.-]{0,28}/[dm]\\d{4}-\\d{2}-\\d{2}$"
+    },
+    "time": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "environment": {
+      "enum": [
+        "prod",
+        "preview",
+        "dev"
+      ]
+    },
+    "severity": {
+      "enum": [
+        "info",
+        "warning",
+        "critical"
+      ]
+    },
+    "dataschema": {
+      "const": "https://github.com/iamcxa/kc-claude-plugins/blob/main/kc-ops-inbox/contract/v1/ops.metric.crossed.json"
+    },
+    "datacontenttype": {
+      "const": "application/json"
+    },
+    "data": {
+      "type": "object",
+      "required": [
+        "metric",
+        "window",
+        "period",
+        "value",
+        "limit",
+        "limitSource",
+        "level"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "metric": {
+          "type": "string",
+          "pattern": "^[a-z][a-z0-9.-]{0,28}$",
+          "maxLength": 500
+        },
+        "window": {
+          "type": "string",
+          "enum": [
+            "day",
+            "month"
+          ],
+          "maxLength": 500
+        },
+        "period": {
+          "type": "string",
+          "format": "date",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}$",
+          "maxLength": 500
+        },
+        "value": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 9999999
+        },
+        "limitSource": {
+          "type": "string",
+          "enum": [
+            "default",
+            "override"
+          ],
+          "maxLength": 500
+        },
+        "runbook": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{1,32}(/[A-Za-z0-9_-]{1,32}){0,3}\\.md$",
+          "maxLength": 500
+        },
+        "dashboard": {
+          "type": "string",
+          "pattern": "^https://[a-z0-9.-]{1,64}/[A-Za-z0-9._~/-]{0,100}$",
+          "maxLength": 500
+        },
+        "adrs": {
+          "type": "array",
+          "maxItems": 5,
+          "items": {
+            "type": "string",
+            "pattern": "^[0-9]{4}$",
+            "maxLength": 500
+          }
+        },
+        "level": {
+          "type": "integer",
+          "enum": [
+            50,
+            80,
+            100
+          ]
+        }
+      }
+    }
+  }
+}

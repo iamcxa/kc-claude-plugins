@@ -7,7 +7,7 @@ import { readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { parse as parseYaml } from "yaml";
-import { signBody, SCHEMA_BASE } from "../core/inbox-core.mjs";
+import { signBody, SCHEMA_BASE } from "../contract/contract.mjs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const SETUP = join(here, "../setup");

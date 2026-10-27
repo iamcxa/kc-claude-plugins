@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Check what FO is about to ask the Captain to merge.
 
-Usage: delivery_gate.py check <task file> --pr <owner/repo>#<N> --text-file <file> [--head <sha>] [--workflow-dir <dir>]
+Usage: delivery_gate.py check <task file or task folder> --pr <owner/repo>#<N> --text-file <file> [--head <sha>] [--sibling-pr <owner/repo>#<N>]... [--workflow-dir <dir>]
+
+A task is `<slug>.md` or `<slug>/index.md`; a folder argument means its `index.md`. Records are read and saved in the task's own folder `<slug>/`.
 
 The dispatched heads are the whole `Candidate: <40-hex head>` lines above the first `## ` heading of the
 highest-numbered `<task folder>/dispatch/validation-<N>.md` record; the check reads no validation verdict.
@@ -11,14 +13,15 @@ The PR head is compared, as a prefix, with each line; it passes when it matches 
 --text-file holds the gate question and summary: it needs a `Sufficiency: <text>` and a `Necessity: <text>` clause on one line each,
 at a line start or after a sentence end (presence only; the saved record keeps each cut at 200 characters), and each `Second reviewer: <X> because` needs `<X> not run: <reason>`
 or, in one sentence naming <X>, a `review:<id>` or `comment:<id>` token. Each `;`-separated item after `Declined...:` or
-`FO declines...:` (up to the next sentence that opens with a label and a colon, or a blank line; a label after `e.g.` or `i.e.`
-does not end it) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
+`FO declines...:` (up to the next sentence that opens with a label and a colon, a blank line, or a line that opens a new decline; a label
+after `e.g.` or `i.e.`, or inside the item, does not start another) needs a bracket, `( )` or `[ ]`, of two or more words holding its reason; this proves a bracket exists, not that
 it is a reason. When the newest `## Stage Report: validation` lists `- F<N> Deferred risk:` or `- F<N> Polish:` bullets, fewer
 declined items than those bullets holds; a report with no such bullets is not joined.
 The PR is also read with `gh pr view` and `gh api --paginate .../pulls/<N>/files`. Exit 1 holds the ask when the head differs,
 a confirmation clause is missing, a second reviewer has no stated outcome, a declined item has no bracketed reason, an `ADR: NNNN` the task reserves under
 `## Number guards` has no `<adr-path>/NNNN-*.md` in the directory at the PR head (README `adr-path:`, default `docs/adr`;
-the directory is read, not the PR's file list), a prod task's security review fails, a check on the head is not finished or finished
+the directory is read, not the PR's file list; a `--sibling-pr` whose head is a dispatched Candidate and not closed supplies the file instead, and
+is recorded as `siblings`), a prod task's security review fails, a check on the head is not finished or finished
 other than SUCCESS, SKIPPED or NEUTRAL, no check on the head finished SUCCESS
 (an empty rollup, or only skipped and neutral checks), a workflow run on the head is not completed and successful (a skipped run
 included), the PR is a draft or not mergeable, its base is not the README's
@@ -31,6 +34,11 @@ Exit 0 prints `point:` lines (pointers into the records and the changed paths, a
 one `class:` line (never, docs-only, script-with-test or other, by allowlist), the saved record `<task>/merge/ask-<N>.json`
 and one last `next:` line, the `ASK` line: merge when the approved question named the merge, else ask. The `class:` line ends
 `(verdict ask)` when the saved verdict is `ask`.
+
+Usage: delivery_gate.py question <task file or task folder> --text-file <file>
+Runs the text checks of `check` on the validation gate question before `gate prepare`, and also refuses text that names the merge with
+`--match-head-commit` and has no sentence of the form "unless he says he merges or holds" (`unless` or `if`, then `he`, `you`, `the Captain` or `Captain`, then `say`, then `merge` or `hold`). Exit 0
+prints `gate text complete`; exit 1 prints each problem; exit 2 when an input cannot be read. `check` does not judge that clause.
 """
 import argparse
 import datetime
@@ -41,7 +49,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from design_surfaces import FM_PROFILE
+from design_surfaces import FM_PROFILE, task_folder
 from number_guards import task_facts
 
 ROLE_TRIGGERS = Path(__file__).resolve().parent / "role_triggers.py"
@@ -70,7 +78,7 @@ NOT_RUN = re.compile(r"\b[\w.-]+ not run:\s*\S", re.I)
 AC_NOT_RUN = re.compile(r"(?:\bAC-\d+\b|\bacceptance\b).*\bnot run\b", re.I)
 AMENDMENT = re.compile(r"^### Amendment (\d+) — (\d{4}-\d{2}-\d{2})", re.M)
 DECLINE_START = re.compile(r"\bDeclined\b[^:\n]{0,60}:|\bFO declines\b[^:\n]{0,60}:")
-DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n")
+DECLINE_END = re.compile(r"(?<![eE]\.[gG]\.)(?<![iI]\.[eE]\.)(?<=[.)\]])\s+(?=[A-Z][^.:\n]{0,40}:)|\n\n|\n(?=[ \t]*(?:[-*+][ \t]+)?(?:[\w.-]+[ \t]+)?(?:Declined|FO declines)\b)")
 FINDING = re.compile(r"^\s*[-*]\s*\*{0,2}F\d+\*{0,2}\s*[:(]?\s*\(?\s*(?:Deferred risk|Polish)\b", re.M)
 MAX_POINTS = 12
 CONFIRMATIONS = {"Sufficiency": "the acceptance criteria this candidate met, from its validation report",
@@ -96,7 +104,7 @@ def utcnow():
 
 
 def dispatched_candidates(task):
-    records = [(int(m.group(1)), path) for path in (task.with_suffix("") / "dispatch").glob("validation-*.md")
+    records = [(int(m.group(1)), path) for path in (task_folder(task) / "dispatch").glob("validation-*.md")
                if (m := RECORD.match(path.name))]
     if not records:
         return [], None
@@ -109,7 +117,8 @@ def dispatched_candidates(task):
 
 
 def owed_role_calls(task):
-    done = subprocess.run([sys.executable, str(ROLE_TRIGGERS), str(task.parent), task.stem], capture_output=True, text=True)
+    folder = task_folder(task)
+    done = subprocess.run([sys.executable, str(ROLE_TRIGGERS), str(folder.parent), folder.name], capture_output=True, text=True)
     return done.returncode, [clean(line) for line in (done.stdout or done.stderr).splitlines()]
 
 
@@ -140,6 +149,28 @@ def pr_runs(repo, head):
     return runs
 
 
+def sibling_adr_names(siblings, adr_dir, candidates, problems, nexts):
+    found = []
+    for text in siblings:
+        pr = PR.match(text)
+        if not pr:
+            problems.append(f"--sibling-pr must look like owner/repo#N, got {tok(text)}")
+            nexts.append("next: hold the ask; write each sibling PR as owner/repo#N.")
+            continue
+        repo, number = pr.groups()
+        info = json.loads(gh("pr", "view", number, "--repo", repo, "--json", "headRefOid,state"))
+        head = str(info["headRefOid"]).lower()
+        if info.get("state") == "CLOSED":
+            problems.append(f"sibling {text} is closed without merging: an ADR it carries will not land")
+            nexts.append("next: hold the ask; reopen the sibling PR or land the ADR file on this PR.")
+        elif head not in candidates:
+            problems.append(f"sibling {text} head {head[:12]} is not a dispatched candidate ({' '.join(candidates) or 'none'})")
+            nexts.append("next: hold the ask; revalidate the sibling head with a Candidate line, or tell the Captain.")
+        else:
+            found.append((f"{text} head {head[:12]}", adr_names(repo, head, adr_dir)))
+    return found
+
+
 def pr_files(repo, number):
     text, files, decoder, at = gh("api", "--paginate", f"repos/{repo}/pulls/{number}/files"), [], json.JSONDecoder(), 0
     while at < len(text):
@@ -165,10 +196,13 @@ def unstated_second_reviewers(text):
 
 
 def declined_items(text):
-    items = []
+    items, stop = [], 0
     for start in DECLINE_START.finditer(text):
+        if start.start() < stop:
+            continue
         rest = text[start.end():]
         end = DECLINE_END.search(rest)
+        stop = start.end() + (end.start() if end else len(rest))
         depth, item = 0, ""
         for ch in (rest[:end.start()] if end else rest).strip().rstrip("."):
             depth = max(depth + (ch in "([") - (ch in ")]"), 0)
@@ -192,6 +226,14 @@ def brackets(item):
             if not expect:
                 found.append(item[start:i])
     return found
+
+
+GRANT = re.compile(r"--match-head-commit")
+HOLD_OUT = re.compile(r"\b(?:unless|if)\b\s+(?:he|you|the\s+captain|captain)\s+says?\b[^.;\n]{0,30}\b(?:merges?|holds?)\b", re.I)
+
+
+def grant_without_hold_out(text):
+    return bool(GRANT.search(text)) and not HOLD_OUT.search(text)
 
 
 def clause(text, label):
@@ -242,7 +284,8 @@ def readme_front(path):
 
 
 def find_readme(task, workflow_dir):
-    for folder in ([Path(workflow_dir)] if workflow_dir else [task.parent, task.parent.parent]):
+    entries = task_folder(task).parent
+    for folder in ([Path(workflow_dir)] if workflow_dir else [entries, entries.parent]):
         scalars, lists = readme_front(folder / "README.md")
         if "trunk" in scalars:
             return folder, scalars, lists
@@ -340,7 +383,7 @@ def runs_problem(runs):
 
 
 def write_record(task, rec):
-    folder = task.with_suffix("") / "merge"
+    folder = task_folder(task) / "merge"
     folder.mkdir(parents=True, exist_ok=True)
     taken = [int(m.group(1)) for p in folder.glob("ask-*.json") if (m := re.fullmatch(r"ask-(\d+)\.json", p.name))]
     path = folder / f"ask-{max(taken, default=0) + 1}.json"
@@ -348,8 +391,34 @@ def write_record(task, rec):
     return path
 
 
+def text_problems(task_text, gate_text, at_gate=False):
+    problems, nexts = [], []
+    for reviewer in unstated_second_reviewers(gate_text):
+        nexts.append("next: hold the ask until each second reviewer has an outcome.")
+        problems.append(f"second reviewer {reviewer} has no stated outcome: "
+                        f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
+
+    for item in unreasoned_items(gate_text):
+        problems.append(f"declined item has no reason: {tok(item)}")
+        nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
+
+    if (why := findings_join(task_text, gate_text)):
+        problems.append(why)
+        nexts.append("next: hold the ask; write one declined item for each finding, then run this check again.")
+
+    for label in unstated_confirmations(gate_text):
+        problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
+        nexts.append("next: hold the ask; add the missing clause to the question or summary.")
+    if at_gate and grant_without_hold_out(gate_text):
+        problems.append("the gate text names the merge with --match-head-commit but not 'unless he says he merges or holds'")
+        nexts.append("next: hold the gate; add the clause that lets him keep the merge, then run this check again.")
+    return problems, nexts
+
+
 def check(args):
     task, text_file = Path(args.task), Path(args.text_file)
+    if task.is_dir():
+        task = task / "index.md"
     pr = PR.match(args.pr)
     try:
         task_text, gate_text = task.read_text(), text_file.read_text()
@@ -360,14 +429,14 @@ def check(args):
         emit(f"--pr must look like owner/repo#N, got {tok(args.pr)}")
         return 2
     repo, number = pr.groups()
-    problems, holds, nexts = [], [], []
+    problems, holds, nexts, sibling_notes = [], [], [], []
     workflow_dir, scalars, lists = find_readme(task, args.workflow_dir)
     if not workflow_dir:
         holds.append("cannot find the workflow README with a trunk: next to the task or in --workflow-dir")
 
     candidates, record = dispatched_candidates(task)
     if not candidates:
-        holds.append(f"no latest validation dispatch record under {task.with_suffix('')}/dispatch has a 'Candidate: <40-hex head>' line")
+        holds.append(f"no latest validation dispatch record under {task_folder(task)}/dispatch has a 'Candidate: <40-hex head>' line")
         nexts.append("next: hold the ask; dispatch validation of this head with a Candidate line, or tell the Captain.")
     if args.head:
         head = args.head.lower()
@@ -420,13 +489,21 @@ def check(args):
         adr_dir = (scalars.get("adr-path") or "docs/adr").strip("/")
         try:
             names = adr_names(repo, str(facts["headRefOid"]).lower(), adr_dir)
-        except (OSError, RuntimeError, subprocess.SubprocessError) as error:
-            holds.append(f"cannot read {adr_dir} at the head of {args.pr}: {error}")
+            others = sibling_adr_names(args.sibling_pr, adr_dir, candidates, problems, nexts)
+        except (OSError, RuntimeError, ValueError, KeyError, subprocess.SubprocessError) as error:
+            holds.append(f"cannot read {adr_dir} at the head of {args.pr} or a sibling PR: {error}")
         else:
             for number in reserved:
-                if not any(re.fullmatch(rf"{number:04d}-.+\.md", name) for name in names):
-                    problems.append(f"reserved ADR {number:04d} has no {adr_dir}/{number:04d}-*.md at PR head {str(facts['headRefOid'])[:12]}")
-                    nexts.append(f"next: hold the ask; land the ADR file on this PR or delete the 'ADR: {number:04d}' line from the task, then run this check again.")
+                has = lambda listed: any(re.fullmatch(rf"{number:04d}-.+\.md", name) for name in listed)
+                if has(names):
+                    continue
+                where = [label for label, listed in others if has(listed)]
+                if where:
+                    sibling_notes.append(f"sibling: reserved ADR {number:04d} is at {where[0]}, a dispatched candidate of this task")
+                    continue
+                problems.append(f"reserved ADR {number:04d} has no {adr_dir}/{number:04d}-*.md at PR head {str(facts['headRefOid'])[:12]}")
+                nexts.append(f"next: hold the ask; land the ADR file on this PR or delete the 'ADR: {number:04d}' line from the task, then run this check again.")
+                nexts.append("next: when this task delivers the ADR on another PR, run this check again with --sibling-pr <owner/repo>#<N>.")
 
     security_errors, security_note = [], None
     at_head = [c for c in candidates if head and c.startswith(head)]
@@ -440,29 +517,16 @@ def check(args):
         problems.append(error)
         nexts.append("next: hold the ask; run the validation security review at this head, or tell the Captain.")
 
-    for reviewer in unstated_second_reviewers(gate_text):
-        nexts.append("next: hold the ask until each second reviewer has an outcome.")
-        problems.append(f"second reviewer {reviewer} has no stated outcome: "
-                        f"add '{reviewer} not run: <reason>' or a review:<id> or comment:<id> in a sentence naming {reviewer}")
-
-    for item in unreasoned_items(gate_text):
-        problems.append(f"declined item has no reason: {tok(item)}")
-        nexts.append("next: hold the ask; write each declined item as '<class>, <finding> (<reason, two or more words>)', then run this check again.")
-
-    if (why := findings_join(task_text, gate_text)):
-        problems.append(why)
-        nexts.append("next: hold the ask; write one declined item for each finding, then run this check again.")
-
-    for label in unstated_confirmations(gate_text):
-        problems.append(f"the gate text has no '{label}:' clause: add '{label}: <{CONFIRMATIONS[label]}>'")
-        nexts.append("next: hold the ask; add the missing clause to the question or summary.")
+    found, wanted = text_problems(task_text, gate_text)
+    problems += found
+    nexts += wanted
 
     try:
         code, said = owed_role_calls(task)
     except OSError as error:
         code, said = 2, [f"cannot run role_triggers.py: {clean(str(error))}"]
     if code == 1:
-        problems.append(f"{task.stem} owes a special-role call (role_triggers.py reads the task as committed)")
+        problems.append(f"{task_folder(task).name} owes a special-role call (role_triggers.py reads the task as committed)")
         nexts.extend(said)
     elif code:
         holds.extend(said or [f"role_triggers.py exited {code} with no message"])
@@ -474,7 +538,7 @@ def check(args):
     if holds:
         emit(*(dict.fromkeys(nexts) or ["next: hold the ask and show the Captain these lines."]))
         return 2
-    emit(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing")
+    emit(f"PR head {head} equals dispatched candidate {head}; no second reviewer outcome is missing", *sibling_notes)
     if security_note:
         emit(security_note)
     paths = list(dict.fromkeys(p for f in files for p in (f.get("filename"), f.get("previous_filename")) if p))
@@ -489,11 +553,25 @@ def check(args):
     emit(*points, f"class: {cls}" + (" (verdict ask)" if verdict == "ask" else ""))
 
     saved = write_record(task, {"pr": args.pr, "head": full, "class": cls, "verdict": verdict, "model": "not run",
-                                "points": points, "next": ASK,
+                                "points": points, "next": ASK, **({"siblings": sibling_notes} if sibling_notes else {}),
                                 "sufficiency": clean(clause(gate_text, "Sufficiency"))[:200],
                                 "necessity": clean(clause(gate_text, "Necessity"))[:200], "time": utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")})
-    emit(f"record: {task.stem}/merge/{saved.name}", ASK)
+    emit(f"record: {task_folder(task).name}/merge/{saved.name}", ASK)
     return 0
+
+
+def question(args):
+    task = Path(args.task)
+    try:
+        task_text, gate_text = (task / "index.md" if task.is_dir() else task).read_text(), Path(args.text_file).read_text()
+    except OSError as error:
+        emit(f"cannot read input: {error}")
+        return 2
+    problems, nexts = text_problems(task_text, gate_text, at_gate=True)
+    emit(*problems, *dict.fromkeys(nexts))
+    if not problems:
+        emit("gate text complete")
+    return 1 if problems else 0
 
 
 def main(argv=None):
@@ -505,9 +583,13 @@ def main(argv=None):
     sub.add_argument("--pr", required=True)
     sub.add_argument("--text-file", required=True)
     sub.add_argument("--head")
+    sub.add_argument("--sibling-pr", action="append", default=[])
     sub.add_argument("--workflow-dir")
+    ask = commands.add_parser("question")
+    ask.add_argument("task")
+    ask.add_argument("--text-file", required=True)
     args = parser.parse_args(argv)
-    return check(args)
+    return question(args) if args.command == "question" else check(args)
 
 
 if __name__ == "__main__":

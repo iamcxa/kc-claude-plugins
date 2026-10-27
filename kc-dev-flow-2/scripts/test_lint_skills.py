@@ -137,6 +137,28 @@ class RouteMutationTests(unittest.TestCase):
         self.change("skills/implementation/SKILL.md", "Package root: ${CLAUDE_PLUGIN_ROOT}\n", "")
         self.refuses("skills/implementation/SKILL.md: uses <package> but has no 'Package root:' line")
 
+    def copy_kc_adr_skill(self, name):
+        shutil.copytree(ROOT.parent / "kc-adr/skills/read-adr", self.root / "skills" / name, dirs_exist_ok=True)
+
+    def test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not(self):
+        self.copy_kc_adr_skill("read-adr")
+        self.assertEqual(lint.lint_tree(self.root), [])
+        self.copy_kc_adr_skill("read-adr-unlisted")
+        self.refuses("read-adr-unlisted: expected one exact variant Invocation")
+        self.refuses("skills/read-adr-unlisted/writing.md: script adr_lint.py is named without <package>/scripts/")
+        self.refuses("skills/read-adr-unlisted/SKILL.md: uses <package> but has no 'Package root:' line")
+
+    def test_a_synced_skill_is_checked_only_when_listed(self):
+        self.copy_kc_adr_skill("read-adr")
+        with mock.patch.object(lint, "SYNCED_SKILLS", set()):
+            self.refuses("read-adr: expected one exact variant Invocation")
+
+    def test_a_synced_skill_still_refuses_an_unbound_package_path(self):
+        self.copy_kc_adr_skill("read-adr")
+        path = self.root / "skills/read-adr/writing.md"
+        path.write_text(path.read_text() + "\n{package}/scripts/number_guards.py\n")
+        self.refuses("skills/read-adr/writing.md: package path must be <package>/scripts/NAME")
+
     def test_a_chat_only_rule_the_workflow_no_longer_says_is_named(self):
         self.change("references/sd/workflow.md", "presents\n  every step in full beside its observed output", "shows\n  each step with its output")
         self.refuses("chat-only rule 'presents every step in full beside its observed output' is not in references/sd/workflow.md")
@@ -167,6 +189,22 @@ class RouteMutationTests(unittest.TestCase):
         patch = mock.patch.object(lint, "WORKFLOW_BUDGET_STEPS", steps)
         patch.start()
         self.addCleanup(patch.stop)
+
+    def test_a_required_extension_missing_from_the_template_line_is_named(self):
+        self.change(lint.WORKFLOW, "extensions: [learn, peers]", "extensions: [learn]")
+        self.refuses("`peers` is required but " + lint.WORKFLOW + " extensions: does not list it")
+
+    def test_a_listed_extension_that_is_not_required_is_named(self):
+        self.change(lint.WORKFLOW, "extensions: [learn, peers]", "extensions: [learn, peers, codex]")
+        self.refuses("extensions: lists `codex` but its README tier is `recommended`, not `required`")
+
+    def test_a_row_marked_required_that_the_template_omits_is_named(self):
+        self.change("README.md", "(extensions/codex/EXTENSION.md) | recommended |", "(extensions/codex/EXTENSION.md) | required |")
+        self.refuses("`codex` is required but " + lint.WORKFLOW + " extensions: does not list it")
+
+    def test_missing_optional_extension_document_is_named(self):
+        (self.root / "extensions/paseo/EXTENSION.md").unlink()
+        self.refuses("extension `paseo` has no EXTENSION.md")
 
     def test_workflow_over_its_word_budget(self):
         self.with_words(lint.workflow_budget(SHIPPED) - len(self.workflow_text().split()) + 1)
