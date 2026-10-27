@@ -3,7 +3,7 @@ title: A dispatched worker knows it works in a team toward one goal, checks what
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -81,10 +81,13 @@ gates:
                 reason: 'Captain 「合併」 (chat, 2026-10-27) answering the merge ask for #729 at 981a4309; accepts FO''s recommendation'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-26T17:08:20Z
 worktree: .worktrees/spacedock-ensign-worker-knows-the-team-and-asks-early
 pr: pr-merge:729
+verdict: PASSED
+completed: 2026-10-27T04:17:10Z
+archived: 2026-10-27T04:17:10Z
 ---
 
 ## Scope
