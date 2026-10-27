@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-27T03:12:37Z
 worktree: .worktrees/spacedock-ensign-codex-reader-resolved-mark-adr
-pr: iamcxa/kc-claude-plugins#732
+pr: pr-merge:732
 ---
 
 ## Scope
