@@ -8,7 +8,7 @@ frontmatter.
   `kc-dev-flow-2:evaluate-learning` and `kc-dev-flow-2:observer` skills, and the observer
   agent.
 - **Joins:** FO, through the package mod, before the landed sentinel of a merged task PR and after its archive.
-- **FO step:** the package mod runs `python3 <package>/scripts/pr_watch.py tasks <workflow dir>` at startup and idle. For a merged task PR it runs `python3 <package>/scripts/observer_check.py` before the sentinel, and its output names each next step.
+- **FO step:** the package mod runs `python3 <package>/scripts/pr_watch.py tasks <workflow dir>` at startup and idle. Runs `python3 <package>/scripts/observer_check.py` before merge sentinels and names archived merged tasks with supported variant/profile but no job.
 - **Read:** learn's result is its notice (no-change, proposal, pending or uncertain). A
   proposal is delivered only under learn's own delivery authority, never by this step.
   The observer report is one line per finding, each with its quoted rule and evidence.

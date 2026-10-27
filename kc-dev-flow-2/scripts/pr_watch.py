@@ -68,6 +68,7 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from role_triggers import review_facts  # noqa: E402
+from learning import job_key  # noqa: E402
 
 SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
 SCRIPTS = Path(__file__).resolve().parent
@@ -311,7 +312,11 @@ def sweep(state, look=look, nexts=None, clock=time.time, read=None):
 
 
 def front(path):
-    lines = path.read_text(errors="replace").split("\n")
+    return front_text(path.read_text(errors="replace"))
+
+
+def front_text(text):
+    lines = text.split("\n")
     found = {}
     for line in lines[1:] if lines and lines[0] == "---" else []:
         if line == "---":
@@ -442,6 +447,64 @@ def holds(found, state):
     return line, errors
 
 
+def archived_learning(workflow, state, ask):
+    out, errors = [], []
+    try:
+        rev = git("-C", str(state), "rev-parse", "HEAD")
+        paths = git("-C", str(state), "ls-tree", "-r", "-z", "--name-only", rev, "--", "./_archive")
+        found = {}
+        for name in paths.split("\0"):
+            match = re.fullmatch(r"_archive/([^/.][^/]*)(\.md|/index\.md)", name)
+            if match and match[1] != "_mods":
+                slug = match[1]
+                if name.endswith("/index.md") or slug not in found:
+                    found[slug] = name
+        if not found:
+            return out, errors
+        root = toplevel(workflow.parent if workflow.is_symlink() else workflow).resolve()
+        key = workflow.resolve().relative_to(root).as_posix()
+        (workflow / "README.md").resolve().relative_to(root)
+        done = subprocess.run([sys.executable, str(SCRIPTS / "learning.py"), "--repo", str(root),
+                               "notices", "--all"], capture_output=True, text=True)
+        if done.returncode:
+            raise RuntimeError((done.stderr or done.stdout).strip()[:120] or "learning notices failed")
+        data = json.loads(done.stdout)
+        notices = data.get("notices") if isinstance(data, dict) else None
+        if not isinstance(notices, list) or any(not isinstance(n, dict) or
+                not isinstance(n.get("job"), str) or not re.fullmatch(r"[0-9a-f]{64}", n["job"])
+                or n.get("state") not in ("pending", "completed", "uncertain", "missing")
+                for n in notices):
+            raise ValueError("malformed learn notices")
+        jobs = {n["job"]: n for n in notices}
+    except (RuntimeError, ValueError, OSError) as error:
+        return [], [f"next: report missing learn jobs to the Captain: {str(error)[:120]}."]
+    for slug, path in sorted(found.items()):
+        try:
+            meta = front_text(git("-C", str(state), "show", f"{rev}:./{path}"))
+            if meta.get("variant") != "kc-dev-flow-2" or meta.get("profile") not in ("poc", "pilot", "prod"):
+                continue
+            pr = meta.get("pr", "")
+            merged = bool(re.fullmatch(r"pr-merge:\d+", pr))
+            qualified = re.fullmatch(r"([\w.-]+/[\w.-]+)#(\d+)", pr)
+            bare = re.fullmatch(r"#?(\d+)", pr)
+            if not merged and (qualified or bare):
+                repo, number = qualified.groups() if qualified else (repo_of(root, ask), bare[1])
+                response = ask("pr", "view", number, "--repo", repo, "--json", "state")
+                if not isinstance(response, dict) or response.get("state") not in ("OPEN", "CLOSED", "MERGED"):
+                    raise ValueError("unrecognized PR state")
+                merged = response["state"] == "MERGED"
+            if not merged:
+                continue
+            job = job_key({"workflow": key, "task_id": slug})
+            if job not in jobs:
+                out.append(f"next: run kc-dev-flow-2:learn for {slug}.")
+            elif jobs[job].get("state") in ("uncertain", "missing"):
+                out.append(f"next: inspect learn job {job} for {slug}; its record is uncertain.")
+        except (RuntimeError, KeyError, ValueError, OSError) as error:
+            errors.append(f"next: report {slug} to the Captain: {str(error)[:120]}.")
+    return out, errors
+
+
 def tasks(opts, look=look, ask=gh, clock=time.time):
     workflow = Path(opts.args[0]).resolve()
     readme = front(workflow / "README.md")
@@ -522,6 +585,10 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     line, broken = holds(found, state)
     out += line
     errors += broken
+    if "learn" in listed:
+        line, broken = archived_learning(Path(opts.args[0]).absolute(), state, ask)
+        out += line
+        errors += broken
     if snaps:
         already, _ = record(opts.state, load(opts.state), snaps)
         out += already + [f"next: run `{wait} wait` in the background, unless one is running.",
