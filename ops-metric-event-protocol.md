@@ -5,7 +5,7 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 worktree: .worktrees/spacedock-ensign-ops-metric-event-protocol
-pr:
+pr: 727
 gates:
     version: 1
     records:
@@ -111,6 +111,7 @@ gates:
                 target-stage: done
                 state: pending
 started: 2026-10-26T14:32:33Z
+mod-block: merge:pr-merge
 ---
 
 A shared protocol for key-metric events, owned by kc-ops-inbox, with qnow as its first adopter and relay's capacity ceiling as the shape to generalize. It also lands contract v1 (today only on the paused r1 branch) on the kc-claude-plugins default branch, because no project can depend on a contract that lives on an unmerged branch.
