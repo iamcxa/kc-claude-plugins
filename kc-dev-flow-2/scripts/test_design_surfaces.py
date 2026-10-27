@@ -279,6 +279,33 @@ class SeedBoundsTests(unittest.TestCase):
             text = self.BOUNDS.replace("Budget: one task\n", "") + impostor + self.ALIGNMENT
             self.assertIn("task.md: missing required body field: Budget", self.check(text), impostor)
 
+    def test_dedicated_bounds_reject_quotes_at_zero_to_three_spaces(self):
+        values = {"Non-goals": "No migrations.", "Budget": "One task.",
+                  "Stop condition": "Upstream change."}
+        for field in values:
+            for indent in range(4):
+                for quoted in ("<approved bound>", values[field]):
+                    for folder in (False, True):
+                        with self.subTest(field=field, indent=indent, quoted=quoted, folder=folder):
+                            body = "".join(f"## {label}\n" + (
+                                " " * indent + "> " + quoted if label == field else value
+                            ) + "\n" for label, value in values.items())
+                            name = "index.md" if folder else "task.md"
+                            self.assertEqual(self.check(body + self.ALIGNMENT, folder),
+                                             [f"{name}: missing required body field: {field}"])
+
+    def test_dedicated_bounds_accept_real_content_at_zero_to_three_spaces(self):
+        values = {"Non-goals": "No migrations.", "Budget": "One task.",
+                  "Stop condition": "Upstream change."}
+        for field in values:
+            for indent in range(4):
+                for folder in (False, True):
+                    with self.subTest(field=field, indent=indent, folder=folder):
+                        body = "".join(f"## {label}\n" + (
+                            " " * indent + value if label == field else value
+                        ) + "\n" for label, value in values.items())
+                        self.assertEqual(self.check(body + self.ALIGNMENT, folder), [])
+
     def test_slug_id_frontmatter_and_scope_are_not_new_requirements(self):
         text = "## Non-goals\nNo migration.\n## Budget\nOne task.\n## Stop condition\nUpstream needed.\n" + self.ALIGNMENT
         for front in ("", "---\ntitle: seed\nstatus: backlog\n---\n",

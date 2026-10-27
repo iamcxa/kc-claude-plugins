@@ -790,7 +790,7 @@ def check_seed_fields(name, text):
             continue
         if re.match(r"^#{1,6}[ \t]", line):
             current = ""
-        if line.startswith((">", "    ", "\t", "#")):
+        if line.lstrip().startswith(">") or line.startswith(("    ", "\t", "#")):
             continue
         for label, pattern in fields:
             value = None
