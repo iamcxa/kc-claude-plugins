@@ -1,0 +1,18 @@
+{
+  "class": "never",
+  "head": "aa0f280f8e94f8b5549b4a8cd26fe30560a9842c",
+  "model": "not run",
+  "necessity": "three files (kc-dev-flow-2/extensions/learn/EXTENSION.md, kc-dev-flow-2/scripts/pr_watch.py, kc-dev-flow-2/scripts/test_pr_watch.py).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: \"AC-8's old text is preserved under\"",
+    "point: amendment: 'Amendment 2 dated 2026-10-28'",
+    "point: path: 'kc-dev-flow-2/extensions/learn/EXTENSION.md'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#737",
+  "sufficiency": "pr_watch.py tasks names every archived task with a merged PR and no learn job (the replay names all 11 tasks backfilled on 2026-10-26), and under Captain amendment 2 skips a task whose frontmatter var",
+  "time": "2026-10-27T18:24:59Z",
+  "verdict": "ask"
+}

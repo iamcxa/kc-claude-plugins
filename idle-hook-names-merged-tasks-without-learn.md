@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:idle-hook-names-merged-tasks-without-learn:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:idle-hook-names-merged-tasks-without-learn-validation-1
+              briefing:
+                id: briefing:idle-hook-names-merged-tasks-without-learn:validation:attempt-1:revision-1
+                digest: sha256:43554d4e7235c4cc6299b5bbc748a4f28fa41954263cad0ba6f5f3d6b20ad803
+                room-ref: ./idle-hook-names-merged-tasks-without-learn/review/validation/briefing-1
 started: 2026-10-27T16:00:30Z
 worktree: .worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn
 pr: iamcxa/kc-claude-plugins#737

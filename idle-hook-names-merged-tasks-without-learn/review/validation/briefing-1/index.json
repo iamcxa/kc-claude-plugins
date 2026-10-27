@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:idle-hook-names-merged-tasks-without-learn:validation:attempt-1:revision-1",
+  "question": "Approve validation of idle-hook-names-merged-tasks-without-learn and merge iamcxa/kc-claude-plugins#737 at head aa0f280f8e94f8b5549b4a8cd26fe30560a9842c with `gh pr merge 737 --squash --match-head-commit aa0f280f8e94f8b5549b4a8cd26fe30560a9842c`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:idle-hook-names-merged-tasks-without-learn:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/834f1400e82096278f3f612a86f4c0f5d7994bb3/idle-hook-names-merged-tasks-without-learn.md",
+      "rev": "sha256:4bc9b22a3831f5ba1e1c219a226be55de1383f8a78b56d6e64b634cfb7f09e4a",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: pr_watch.py tasks names every archived task with a merged PR and no learn job (the replay names all 11 tasks backfilled on 2026-10-26), and under Captain amendment 2 skips a task whose frontmatter variant or profile learn rejects, with a parity test against learning.py's eligibility; validation PASSED at this head after Cycle 1 (25 test files, 16 falsifiers, a five-step acceptance script).\nNecessity: three files (kc-dev-flow-2/extensions/learn/EXTENSION.md, kc-dev-flow-2/scripts/pr_watch.py, kc-dev-flow-2/scripts/test_pr_watch.py).\nExternal rounds: Codex 1 (round 1 on this head: code review completed with no findings, evidence=summary:6449903696@aa0f280f8). RoboRev clean on this head, run by FO (evidence=roborev:1271). second reviewer: not triggered.\nFO declines: Polish ER-1, four task-file passages (the Design mechanism, the Needs decision section, the PRFAQ proposition and AC-1) still say every archived task is named (task text only; Amendment 2 and the shipped EXTENSION.md say supported variant and profile, engineering-reviewer 2026-10-28)."
+    }
+  ]
+}
