@@ -109,8 +109,14 @@ Verified by: the Slack message link with its time, the task and the Draft PR (`d
 **AC-12**: One event emitted by relay's own code on a relay deploy, not by a fixture or a send script, travels the path of AC-9 to AC-11 to a recorded gate. Amended by Captain, amendment 1.
 Verified by: relay's function log line for the event id, the inbox log line for the same id, and AC-11's evidence for that id.
 
-**AC-13**: The inbox core imports only node:crypto and its tests pass under the Netlify adapter. Amended by Captain, amendment 2.
-Verified by: `grep -h '^import' kc-ops-inbox/core/*.mjs` printing only `node:crypto`, and the core's test run under the Netlify adapter with zero failures.
+**AC-14**: The inbox core and every module it imports, transitively, import only `node:crypto` from outside the package, and its tests pass under the Netlify adapter. Amended by Captain, amendment 3.
+Verified by: `node kc-ops-inbox/bin/import-closure.mjs` printing `node:crypto` only (exit 0; it walks the core's import closure and prints each external import), and the core's test run under the Netlify adapter (`test/netlify-adapter.test.mjs`) with zero failures.
+
+**AC-15**: The inbox applies an ordered rule list from its configuration: each rule matches only the contract fields type, source prefix, environment and severity, the first match wins, and each rule names one receiver (record, agent or captain). The default list gives every cell of the routing table approved in the archived task `ops-metric-event-protocol`, heartbeats are only recorded, a recovered event joins its open incident or is recorded when none is open, and an invalid list makes the inbox refuse every event. Amended by Captain, amendment 3.
+Verified by: `node --test kc-ops-inbox/test/rules.test.mjs` with zero failures, which sends a signed event for each of the nine environment-by-severity cells and asserts `200 recorded` with no dispatch, notice or task write for record, `202` with a dispatch for agent, and `202` with the Captain's Slack mention for captain; asserts the heartbeat and recovered cases; and asserts `500 inbox-misconfigured` with nothing claimed for each of thirteen invalid lists.
+
+**AC-16**: The inbox verifies with a list of keys from its configuration, and a key signs only the environments and source prefixes it lists, so a preview key cannot sign a prod event (D5). The read-back and the runbook name each key and who creates it. Amended by Captain, amendment 3.
+Verified by: `node --test kc-ops-inbox/test/rules.test.mjs`, which asserts `401 key-not-allowed` with nothing claimed when the preview key signs a prod event, the prod key a preview event, or the read-back key a relay event, and `500 inbox-misconfigured` for each of twelve invalid key lists; and `node --test kc-ops-inbox/test/readback.test.mjs`, which asserts row R23 FAIL when a key signs both prod and a non-prod environment or lacks its secret.
 
 ## FO alignment
 
@@ -162,6 +168,10 @@ Verified by: both test runs and the core's import list.
 Captain: 「對，加入且修訂」 (chat, 2026-10-27)
 Asked: 「要請你決定：r1 是否加入「觸發規則（預設等於核准的分流表）＋多把金鑰」，並同時修訂 AC-13？」
 Supersedes: AC-13
+Superseded text:
+
+**AC-13**: The inbox core imports only node:crypto and its tests pass under the Netlify adapter. Amended by Captain, amendment 2.
+Verified by: `grep -h '^import' kc-ops-inbox/core/*.mjs` printing only `node:crypto`, and the core's test run under the Netlify adapter with zero failures.
 
 ## Design
 
@@ -367,6 +377,23 @@ The relay task's emitter, deployed on a relay deploy preview with the signing se
 ### Platform-neutral core (AC-5)
 
 Kept from attempt 1: `core/` takes a Web `Request`, a store (`create-if-new`, `get`, `delete`), `fetch`, an env map and a clock, and imports only `node:crypto`; adapters for Netlify (`@netlify/blobs`, strong consistency) and plain Node. D10 proposes deferring the second adapter and keeping the import-list check. A path-filtered CI job runs the tests on pull requests that touch `kc-ops-inbox/**` (cost not measured).
+
+### Paseo Hub trigger shape, read 2026-10-27 (AC-15)
+
+Read for how Hub names a trigger's event, match conditions and receiver; nothing here depends on Hub at runtime. Sources, all fetched 2026-10-27: https://paseo.sh/docs/hub/triggers.md, https://paseo.sh/docs/hub/configuration/hub-yml.md, https://paseo.sh/docs/hub/workflows.md and https://hub.paseo.sh/api/openapi.json (its `/api/v1/triggers`, `/triggers/validate` and `/triggers/install` take one trigger YAML document and validate it before it activates).
+
+| Hub | What it is | r1's rule |
+| --- | --- | --- |
+| `on: github.issue_created`, `slack.mention` ... | the provider event, named `<provider>.<event>`; the provider is the channel | `match.type`, the contract's event type (`ops.metric.crossed`); the channel is `match.source`, a producer prefix such as `urn:relay:` |
+| `filters:` with `repo`, `channels`, `from_users`, `connection` | resource conditions and a required sender allowlist; a list inside one filter is a set of alternatives; "all supplied filters compose with AND"; no `any` mode | `match` with `type`, `source`, `environment`, `severity`; a list is alternatives, fields are ANDed, an absent field matches anything, an event lacking an attribute never matches a rule that names it |
+| `steps[].agent`, `run.target` (daemon, cwd), `run.agent`, `allow_outputs` | what receives the event | `receiver`: `record`, `agent` or `captain`; r1 has no choice of agent or machine |
+| validation at `triggers/validate` and at install | a bad trigger is refused when saved, naming the field | an invalid list fails closed: every event gets 500 and `/inbox/health` names the fault |
+
+Where r1 differs, and why: Hub triggers are unordered and every match runs ("Both run. Triggers are not ordered and do not shadow each other"), while r1's rules are ordered and the first match wins, because the approved routing table gives each event exactly one outcome (record, agent or captain) and an event that was both recorded and dispatched would break the table's meaning. Hub requires a sender allowlist on every trigger, while r1 relies on the key list, which already limits each key to environments and source prefixes. Hub matches resources by exact id, while r1's `source` is a prefix, because the contract's key scope is a prefix. Hub's rules live in a repository and are installed through its API; r1's are one setting on the inbox (`OPS_RULES`), unset meaning the default list.
+
+### Trigger rules and key list (AC-15, AC-16)
+
+Rules are `OPS_RULES`, a JSON list of `{name, match, receiver}`; keys are `OPS_KEYS`, a JSON list of `{name, secretEnv, environments, sources}` naming the environment variable that holds each secret, so the list holds no value. Both are checked together by `loadConfig`; any fault is a startup fault: the Netlify adapter logs it once at load, every event then gets 500, and `/inbox/health` reports each part (rules, keys, Captain Slack user) separately, by name only. The default rule list: a self-test from a `urn:ops-inbox:` source to the self-test run (a self-test from any other source is refused 403 before any claim); prod critical to captain; prod warning to agent; preview critical to agent; any other event with an environment to record; everything else (an event without an environment, such as a Sentry alert) to agent. Fixed by type, outside the list: a heartbeat is always recorded, and a recovered event joins its open incident whatever the table says and is recorded when none is open (archived task `ops-metric-event-protocol`, "Routing (inbox side)" and its flow diagram). A recorded event is kept whole in its event claim in the inbox store, and writes nothing to any task. The captain route mentions the Slack user in `OPS_CAPTAIN_SLACK_USER` on the opening or joining notice and on the NOT started and UNCERTAIN notices. Not built: the recovered join does not mark the task closable (no closable state exists in the ops workflow yet).
 
 ### Acceptance evidence plan
 
@@ -585,3 +612,34 @@ Main's contract v1 is now the only contract in the package and the core imports 
 ### Package-value observation
 
 The merge shrank the core by half because the contract's own review had already closed holes r1's copy still carried (empty keys, free-text types, unbounded ids); a second copy of a rule drifted within a week. The gap list shows the inbox runtime still decides nothing about which events deserve an agent, and that is where the next cost sits.
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: Apply Captain amendment 3: move AC-13 verbatim into amendment 3 under `Superseded text:`, write AC-14, AC-15 and AC-16 each with a `Verified by:` a test can fail.
+  `## Acceptance criteria` now holds AC-14 (import closure; `bin/import-closure.mjs`), AC-15 (trigger rules), AC-16 (key list); AC-13 sits under Amendment 3 `Superseded text:`.
+- DONE: Read Paseo Hub's trigger documentation and record URL, read date, and how a Hub trigger names its channel, match conditions and receiver; mirror and say where r1 differs.
+  `### Paseo Hub trigger shape, read 2026-10-27` in `## Design`: paseo.sh/docs/hub/triggers.md, hub-yml.md, workflows.md and hub.paseo.sh/api/openapi.json. Mirrored: `on` as type, `filters` as `match` (alternatives within a field, AND across fields), receiver, validation before activation. Differs: ordered first-match instead of every-match (the approved table gives one outcome per event); no required sender allowlist (the key list does that); `source` is a prefix. No runtime dependency on Hub.
+- DONE: Build trigger rules in the inbox, with default rules equal to the approved routing table, heartbeat and recovered handling and `200 recorded`, a test per table cell, and a fail-closed invalid list.
+  `core/inbox-config.mjs` (`OPS_RULES`, `DEFAULT_RULES`, `routeFor`, `loadConfig`) and `handle()`. `test/rules.test.mjs`: nine cell tests through a signed `handle()` call (record: 200 `recorded`, no dispatch, mint, notice or incident claim, event kept whole in its claim; agent: 202; captain: 202 with the Slack mention), changing any default rule fails its cell; heartbeat recorded even under an all-agent list; recovered joins an open incident at any severity and is recorded with none; thirteen invalid lists each give 500 `inbox-misconfigured` with nothing claimed and health naming the fault; captain mention on the NOT started and UNCERTAIN notices. Not built: the recovered join does not mark the task closable (no closable state exists in the ops workflow); it writes the event file and the PR comment like any join.
+- DONE: Build the key list: `handle()` takes several keys from configuration and uses `parseEvent` key scoping so a preview key cannot sign prod; the read-back and runbook name each key and who creates it.
+  `OPS_KEYS` (names and scope; each secret in its own variable). Tests: the preview key signing prod, the prod key signing preview and the read-back key signing a relay event each give 401 `key-not-allowed` with nothing claimed; twelve invalid key lists give 500. Runbook S6 names three keys (relay-prod, relay-preview, readback), their variables, scopes and where each value also goes, all created by the Captain; new S12 for the rules and `OPS_CAPTAIN_SLACK_USER`, S13 is the read-back; read-back rows R23 (keys, none signing both prod and a non-prod environment) and R24 (rules). The read-back's own signing variable is now `OPS_READBACK_SECRET`. No secret is read or printed.
+- DONE: Rerun `npm test`, `node test/mutations.mjs` and the roborev gate (at most twice), push the branch.
+  Head 7aa5ccad2, pushed, no PR. `npm test`: 133 tests, 133 pass, 0 skipped. `node test/mutations.mjs`: 53 caught, 0 survived (contract unchanged this round). Rules, keys, self-test and closure: 17 by-hand mutations, each caught by its named test file (heartbeat force, each default cell, catch-all check, absent-attribute match, captain-user check, key usability, shared secret variable, recovered join, mention, key list use, fail-closed 500, record path, closure allowlist and walk, R23 mixed key, self-test source check, self-test routing, fence block). Roborev run 1 `evidence=roborev:1256` (two High, one fixed, one refuted below); after fixes run 2 `evidence=roborev:1258` (two High, both disposed below).
+- DONE: Disposition of the FO's automated security note: a self-test skips the rules and always wakes the agent.
+  Reachable in part: a self-test selected no rule, and a key whose sources covered the event's source could send one, which starts a trigger run in mode `selftest` (an Actions run and a Slack notice; no model run, no incident). Closed in 7aa5ccad2: a self-test is routed by `routeFor` (the default list's first rule names it; a custom list may record it), a self-test from a source outside `urn:ops-inbox:` is refused 403 `selftest-source-not-allowed` before any claim, and a key that does not list `urn:ops-inbox:` already gives 401 `key-not-allowed`. Test "a self-test is routed by the rules and accepted only from the read-back's source and key" (inputs: self-test signed by the prod key with source `urn:relay:capacity` gives 403, by the preview key gives 401, by the prod key with the read-back source gives 401, by the read-back key gives 200 and a selftest dispatch, and under a rule list that records self-tests gives 200 `recorded` with no dispatch); two mutations (source check removed, selftest forced to agent) each fail it. The read-back self-test (AC-8) still passes all rows.
+- DONE: Comment ratio and number guards.
+  `comment_ratio.py origin/main HEAD`: code 2521, comment 50, 2.0%, max 5% met. `number_guards.py check --base origin/main`: PASS; `adr_lint.py docs/adr --require 0040` exit 0.
+
+### Checks
+
+`npm test` 133/133; contract mutations 53/53; by-hand mutations above; `node bin/import-closure.mjs` prints `node:crypto`, exit 0; roborev run 2 on 7aa5ccad2 `evidence=roborev:1258` with two findings left for FO. Not run: anything live.
+
+Findings left for FO from roborev run 2: (1) "workflow dispatch returns 204, so run_id is null and R9 fails": refuted, GitHub's REST description (rest-api-description `api.github.com.json`, read 2026-10-27) lists `return_run_details` on `POST /repos/{owner}/{repo}/actions/workflows/{workflow_id}/dispatches`, answering 200 with the run id when true and 204 only when false; the inbox sends `true`; the read-back is proven only against a fake GitHub, so the live R9 stays unproven until the Apps exist. (2) "`Bash(git:*)` lets a git alias run shell with the project and model tokens in the environment": the same item (b) reported in cycle 1, POC1 design, real sandbox is r2; unchanged.
+
+### Summary
+
+The inbox now routes by an ordered rule list whose default equals the approved table, verifies with a scoped key list so a preview key cannot sign prod, accepts a self-test only from its own source, and refuses everything with 500 while its rule or key configuration is invalid; the read-back and runbook cover both. Two limits for FO: the recovered join does not mark the task closable (no such state exists), and the instance now needs `OPS_KEYS`, one secret variable per key and `OPS_CAPTAIN_SLACK_USER` set before it accepts any event, which the runbook S6 and S12 state.
+
+### Package-value observation
+
+Writing the rules against Hub's trigger vocabulary kept r1's configuration small, but it also showed that Hub lets every matching trigger run while the approved table needs exactly one outcome; that single difference is the reason for first-match-wins and is worth stating to any project that reads both.
