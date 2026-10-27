@@ -1584,6 +1584,25 @@ class ReviewerDeclarationTests(unittest.TestCase):
                 text = "Second reviewer: codex because review rules. Codex review:18." if "second-reviewer: codex" in config else ""
                 self.assertEqual(self.run_cli(command, text, config=config)[0], 0)
 
+    def test_answer_prefix_never_establishes_a_review_or_comment_outcome(self):
+        for command in ("question", "check"):
+            for token in ("review", "comment"):
+                for prefix in ("answer=", "ANSWER=", "AnSwEr="):
+                    with self.subTest(command=command, token=token, prefix=prefix):
+                        code, out = self.run_cli(command, DECLARATION + f"Copilot {prefix}{token}:18.")
+                        self.assertEqual(code, 1, out)
+                        self.assertIn("second reviewer copilot has no stated outcome", out)
+
+    def test_existing_evidence_and_case_policy_are_preserved(self):
+        for command in ("question", "check"):
+            for token in ("review", "comment"):
+                for prefix in ("", "evidence=", "EVIDENCE="):
+                    with self.subTest(command=command, token=token, prefix=prefix):
+                        code, out = self.run_cli(command, DECLARATION + f"Copilot {prefix}{token}:18.")
+                        self.assertEqual(code, 0, out)
+                code, out = self.run_cli(command, DECLARATION + f"Copilot {token.upper()}:18.")
+                self.assertEqual(code, 1, out)
+
     def test_real_reader_quote_matrix_and_mismatches(self):
         for body in ("額度不足，請稍候", 'The "quoted" answer', "No &quot;quota&quot;\n\t left &amp; unavailable",
                      "x" * 140, "", "evidence=review:999 unavailable"):
