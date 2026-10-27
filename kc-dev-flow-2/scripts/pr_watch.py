@@ -411,7 +411,7 @@ def seeds(rows, found, readme):
             why = ((done.stdout or done.stderr).strip().splitlines() or [f"exit {done.returncode}"])[-1]
             errors.append(f"next: report {row['slug']} to the Captain: {why[:120]}.")
     line = [f"next: the seed check fails for these backlog tasks ({', '.join(failing)}); before preparing the gate of one, "
-            f"fix its ## FO alignment and run `python3 {SEED} check --seed <task>`."] if failing else []
+            f"fix the reported seed fields and run `python3 {SEED} check --seed <task>`."] if failing else []
     return line, errors
 
 

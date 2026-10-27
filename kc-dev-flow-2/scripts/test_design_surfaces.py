@@ -15,6 +15,12 @@ spec.loader.exec_module(ds)
 
 BASE = """# Design: seats remaining
 
+## Scope
+
+Non-goals: migrations
+Budget: one task
+Stop condition: upstream changes needed
+
 ## FO alignment
 
 Surfaces: ui, db
@@ -214,12 +220,98 @@ class SeedModeTests(unittest.TestCase):
             self.assertFalse(any("missing '## FO alignment'" in e for e in mutant.check_task(path, seed=True)))
 
     def test_mutation_running_the_artifact_rules_in_seed_mode_fails_its_case(self):
-        mutant = mutated("    if seed:\n        return errors\n", "")
+        mutant = mutated("    if seed:\n        return check_seed_fields(path.name, text) + errors\n", "")
         text = BASE.replace("UI proposal: add a seats-remaining label to each slot row.\n", "")
         with tempfile.TemporaryDirectory() as d:
             path = write_task(d, text)
             self.assertEqual(ds.check_task(path, seed=True), [])
             self.assertTrue(mutant.check_task(path, seed=True))
+
+
+
+class SeedBoundsTests(unittest.TestCase):
+    BOUNDS = "## Scope\n\nShip the bounded checker.\nNon-goals: migrations\nBudget: one task\nStop condition: new upstream hook needed\n"
+    ALIGNMENT = "## FO alignment\n\nSurfaces: none\nVisible change: none\n"
+
+    def check(self, text, folder=False, module=ds):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d, "task", "index.md") if folder else Path(d, "task.md")
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.write_text(text)
+            before = path.read_bytes()
+            errors = module.check_task(path, seed=True)
+            self.assertEqual(path.read_bytes(), before)
+            return errors
+
+    def test_three_bounds_required_individually_in_both_task_forms(self):
+        for folder in (False, True):
+            text = self.BOUNDS + self.ALIGNMENT
+            self.assertEqual(self.check(text, folder), [])
+            for field in ("Non-goals", "Budget", "Stop condition"):
+                lines = text.splitlines(True)
+                missing = "".join(line for line in lines if not line.startswith(field + ":"))
+                self.assertEqual(self.check(missing, folder),
+                                 [f"{'index.md' if folder else 'task.md'}: missing required body field: {field}"])
+
+    def test_dedicated_sections_and_scope_bullets_and_plural_forms(self):
+        for text in (
+            "## Non-goals\nNo migrations.\n## Budget\nOne task.\n## Stop conditions\nNeeds upstream.\n",
+            "## Scope\n- Non-goal: migrations\n* Budget: one task\n- Stop conditions: upstream change\n",
+        ):
+            self.assertEqual(self.check(text + self.ALIGNMENT), [])
+
+    def test_empty_placeholder_quote_report_and_fenced_impostors_are_refused(self):
+        for value in ("", "   ", "<approved bound>", "<approved> <bound>", "<!-- decide later -->"):
+            text = self.BOUNDS.replace("Budget: one task", "Budget: " + value)
+            self.assertIn("task.md: missing required body field: Budget", self.check(text + self.ALIGNMENT))
+        for impostor in (
+            "## Report\nBudget: one task\n",
+            "# Report\nBudget: one task\n",
+            "### Report\nBudget: one task\n",
+            "> ## Budget\n> one task\n",
+            "## Scope\n> Budget: one task\n",
+            "## Scope\n" + "    Budget: one task\n",
+            "## Scope\n" + "~~~markdown\nBudget: one task\n~~~\n",
+            "## Scope\n" + "```markdown\nBudget: one task\n```\n",
+            "## Budget\n~~~\none task\n~~~\n",
+            "---\nnotes: |\n  ## Budget\n  one task\n---\n",
+        ):
+            text = self.BOUNDS.replace("Budget: one task\n", "") + impostor + self.ALIGNMENT
+            self.assertIn("task.md: missing required body field: Budget", self.check(text), impostor)
+
+    def test_slug_id_frontmatter_and_scope_are_not_new_requirements(self):
+        text = "## Non-goals\nNo migration.\n## Budget\nOne task.\n## Stop condition\nUpstream needed.\n" + self.ALIGNMENT
+        for front in ("", "---\ntitle: seed\nstatus: backlog\n---\n",
+                      "---\nid: task\ntitle: seed\nstatus: backlog\n---\n"):
+            self.assertEqual(self.check(front + text), [])
+
+    def test_default_mode_preserves_missing_bounds_and_seed_uses_no_process(self):
+        from unittest import mock
+        text = self.ALIGNMENT + "## Acceptance criteria\n**AC-1**: bounded.\nVerified by: execution.\n"
+        with tempfile.TemporaryDirectory() as d:
+            path = write_task(d, text)
+            self.assertEqual(ds.check_task(path), [])
+            with mock.patch.object(ds.subprocess, "run", side_effect=AssertionError("unexpected process")), \
+                    mock.patch("socket.socket.connect", side_effect=AssertionError("unexpected network")):
+                self.assertEqual(len(ds.check_task(path, seed=True)), 3)
+
+    def test_unreadable_seed_is_a_diagnostic_and_nonzero_without_traceback(self):
+        with tempfile.TemporaryDirectory() as d:
+            path = Path(d, "task.md")
+            for raw in (None, b"\xff"):
+                if raw is not None:
+                    path.write_bytes(raw)
+                stream = io.StringIO()
+                with contextlib.redirect_stdout(stream):
+                    self.assertEqual(ds.main(["check", "--seed", str(path)]), 1)
+                self.assertIn("cannot read task:", stream.getvalue())
+                self.assertNotIn("Traceback", stream.getvalue())
+
+    def test_fence_length_and_kind_keep_impostors_hidden(self):
+        for fence, short in (("````", "```"), ("~~~~", "~~~"), ("~~~", "```")):
+            text = self.BOUNDS.replace("Budget: one task\n", "")
+            text += f"## Scope\n{fence}\n{short}\nBudget: one task\n{fence}\n"
+            self.assertIn("task.md: missing required body field: Budget", self.check(text + self.ALIGNMENT))
 
 
 class CriteriaTests(unittest.TestCase):
@@ -1317,6 +1409,8 @@ gates:
 - Source: issue 1.
 - Bite: the first thing.
 - Non-goals: to be set at ideation.
+- Budget: one task.
+- Stop condition: upstream change.
 
 ## FO alignment
 
@@ -1601,7 +1695,7 @@ class ScopeCheckTests(unittest.TestCase):
         out = io.StringIO()
         with contextlib.redirect_stdout(out):
             self.assertEqual(ds.main(["check", "--seed", str(self.task)]), 0)
-        self.assertEqual(out.getvalue(), "t.md: FO alignment recorded\n")
+        self.assertEqual(out.getvalue(), "t.md: seed fields and FO alignment recorded\n")
 
     def amended_commit(self):
         self.add_line()

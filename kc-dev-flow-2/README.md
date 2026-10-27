@@ -131,8 +131,8 @@ workers author the bounded deliverable. For a route that includes ideation,
 use a PRFAQ with Mermaid whose actors, order, branches and approval boundaries
 match the prose. FO's recorded `Surfaces:` line picks the owed artifact: a `ui`
 preview, a `db` schema, or `none` for PRFAQ/Mermaid alone;
-`scripts/design_surfaces.py check --seed` checks the FO record before ideation is
-dispatched; its default mode checks the markers, the artifacts, a usable
+`scripts/design_surfaces.py check --seed` checks seed fields and the FO record before a new task is
+admitted; its default mode checks the markers, the artifacts, a usable
 `## Acceptance criteria` section and any `## Captain amendments` before the gate.
 A change the Captain makes after accepting a design is recorded there and applied
 by the next worker, as [workflow](references/sd/workflow.md) states.

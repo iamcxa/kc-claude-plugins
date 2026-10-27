@@ -46,6 +46,9 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=144, why="one Team bullet carries the worker collaboration and early handback rule",
          captain="「全准」 (Captain, chat, 2026-10-27), answering 「需要你決定：第 7 批三張任務的設計（其中兩張已經照第 2 輪訪談修過），要不要一起批准進入實作？我建議全部批准，每一題都照我的建議。」; ideation gate attempt 2, 2026-10-26T17:06:03.756936Z, accepted the recommended +144 rise from 5421 to 5565",
          loaded="startup and resume of the First Officer, and each fresh or reused worker-stage dispatch definition read by FO and its worker"),
+    dict(delta=11, why="the amended seed schema makes stored id optional for slug identity and names three bounds for new admission",
+         captain="「其他全照建議」 (Captain, chat, 2026-10-27), ideation gate approval and amendment 1 of seed-check-requires-schema-fields; the approved design allowed +12 words, narrowed to +11 under the amendment",
+         loaded="startup and resume of the First Officer, and backlog admission"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.
