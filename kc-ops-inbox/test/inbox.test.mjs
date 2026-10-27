@@ -210,7 +210,7 @@ test("GET /inbox/health counts settings and secrets by name and never returns a 
   assert.deepEqual(out.settings, { present: 4, total: 4, missing: [] });
   assert.deepEqual(out.secrets, { present: 1, total: 2, missing: ["SLACK_WEBHOOK_URL"] });
   assert.equal(out.config.ok, true);
-  assert.deepEqual(out.config.rules, { source: "default", count: 5 });
+  assert.deepEqual(out.config.rules, { source: "default", count: 6 });
   assert.deepEqual(out.config.keys.map((k) => k.name), ["prod", "preview", "readback"]);
   for (const secret of [r.env.KEY_PROD, r.env.KEY_PREVIEW, r.env.KEY_READBACK]) assert.ok(!JSON.stringify(out).includes(secret));
   r.close();

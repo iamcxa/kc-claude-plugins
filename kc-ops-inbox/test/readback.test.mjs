@@ -126,7 +126,7 @@ test("R23 and R24 read the inbox's own key and rule configuration from its healt
   const gh = await rig();
   const rows = await readback(ctxFor(world(), gh), args());
   assert.match(rows.find((r) => r.id === "R23").obs, /prod: prod urn:relay:\+urn:sentry:; preview: preview\+dev urn:relay:; readback: prod urn:ops-inbox:/);
-  assert.match(rows.find((r) => r.id === "R24").obs, /default rule list, 5 rules/);
+  assert.match(rows.find((r) => r.id === "R24").obs, /default rule list, 6 rules/);
   gh.close();
 });
 

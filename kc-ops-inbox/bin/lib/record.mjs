@@ -5,6 +5,10 @@ const PLACEHOLDER = "(to be written by the First Officer)";
 
 const cell = (v) => String(v).replace(/\|/g, "\\|").replace(/\n/g, " ");
 
+// The event as the First Officer reads it. JSON.stringify writes a newline inside a string as \n, so no
+// line of the block can start with a fence or a heading, whatever a Sentry title or culprit holds.
+export const eventBlock = (ev) => ["```json", JSON.stringify(ev, null, 2), "```"];
+
 export function eventRow(n, ev, received) {
   const fields = Object.entries(ev.data).map(([k, v]) => `${k} ${v}`).join("; ");
   return `| ${n} | ${received} | \`${ev.id}\` | ${cell(ev.type)} | ${cell(fields)} |`;

@@ -4,7 +4,10 @@ export const RECEIVERS = ["record", "agent", "captain"];
 
 // First match wins. The cells of the approved routing table (environment x severity) come first; an event
 // without environment, such as a Sentry alert, falls through to the last rule and keeps the agent route.
+export const SELFTEST_SOURCE = "urn:ops-inbox:";
+
 export const DEFAULT_RULES = [
+  { name: "selftest", match: { type: ["ops.inbox.selftest"], source: [SELFTEST_SOURCE] }, receiver: "agent" },
   { name: "prod-critical", match: { environment: ["prod"], severity: ["critical"] }, receiver: "captain" },
   { name: "prod-warning", match: { environment: ["prod"], severity: ["warning"] }, receiver: "agent" },
   { name: "preview-critical", match: { environment: ["preview"], severity: ["critical"] }, receiver: "agent" },

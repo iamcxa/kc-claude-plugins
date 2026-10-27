@@ -1,6 +1,6 @@
 import { createSign } from "node:crypto";
 import { CONTRACT_VERSION, parseEvent } from "../contract/contract.mjs";
-import { loadConfig, configReport, routeFor } from "./inbox-config.mjs";
+import { loadConfig, configReport, routeFor, SELFTEST_SOURCE } from "./inbox-config.mjs";
 
 // How each event type reads in a Slack notice and in the record's title. The contract owns what an
 // event may carry; this table only chooses which of it to show.
@@ -116,11 +116,15 @@ export async function handle(req, deps) {
   const triggerRepo = env.OPS_TRIGGER_REPO;
 
   const selftest = ev.type === "ops.inbox.selftest";
+  if (selftest && !ev.source.startsWith(SELFTEST_SOURCE)) {
+    log(JSON.stringify({ evt: "rejected", reason: "selftest-source-not-allowed", status: 403 }));
+    return json(403, { error: "selftest-source-not-allowed" });
+  }
   const incidentClaim = `incident.${keys.incident}`;
   // A recovered event goes to its open incident whatever the table says, and is only recorded when there is none.
   const recovery = ev.type === "ops.metric.recovered";
   const openIncident = recovery ? await store.get(incidentClaim) : null;
-  let route = selftest ? { rule: "selftest", receiver: "agent" } : routeFor(ev, config.rules);
+  let route = routeFor(ev, config.rules);
   if (recovery) route = openIncident ? { rule: "recovered-joins", receiver: route.receiver === "record" ? "agent" : route.receiver } : { rule: "recovered-no-incident", receiver: "record" };
   const mention = route.receiver === "captain" ? `<@${config.captainUser}> ` : "";
 
