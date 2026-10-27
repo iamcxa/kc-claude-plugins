@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/iamcxa/kc-claude-plugins/compare/kc-adr-v0.2.0...kc-adr-v0.2.1) (2026-10-27)
+
+
+### Bug Fixes
+
+* **kc-adr:** honor caller ADR folders during uncited lookup ([#735](https://github.com/iamcxa/kc-claude-plugins/issues/735)) ([4b78f02](https://github.com/iamcxa/kc-claude-plugins/commit/4b78f020c2e4b5e8cdfa9e8a7e0133f63e9dd2d0))
+
 ## [0.2.0](https://github.com/iamcxa/kc-claude-plugins/compare/kc-adr-v0.1.1...kc-adr-v0.2.0) (2026-10-24)
 
 
