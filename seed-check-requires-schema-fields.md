@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:seed-check-requires-schema-fields:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:seed-check-requires-schema-fields-ideation-1
+              briefing:
+                id: briefing:seed-check-requires-schema-fields:ideation:attempt-1:revision-1
+                digest: sha256:64caa608237851af576a889ee7df38d34e811cbcc80b966c360e3ec02083082c
+                room-ref: ./seed-check-requires-schema-fields/review/ideation/briefing-1
 ---
 
 ## Scope

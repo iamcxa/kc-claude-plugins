@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:seed-check-requires-schema-fields:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of seed-check-requires-schema-fields to enter implementation? FO recommends approve; approving accepts that recommendation narrowed: the README makes a stored id optional under id-style: slug (Spacedock omits it; 162 of 163 tasks lack it), the seed check requires Non-goals, Budget and Stop condition, and it applies to new seeds only, with the replay counts reported instead of enforced on existing tasks.",
+  "artifacts": [
+    {
+      "id": "artifact:seed-check-requires-schema-fields:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f262e0d357bea6a4ccdeb78108f802ab68727ed4/seed-check-requires-schema-fields.md",
+      "rev": "sha256:b15b1878bd50ec0cb2cabda7937a242d4657b20d92ff732bf2664544d605682e",
+      "mediaType": "text/markdown",
+      "summary": "Replay of the design as first written: 141 of 164 tasks newly refused, all seven of this batch's own seeds among them; pr_watch.py seeds() would also flag up to 53 current backlog tasks. Worse under the narrowing: three more lines per new seed, with no recorded harm from a missing budget yet; the other choice is to drop those lines from the README. Chief-engineer reviewed the whole batch (2026-10-27) and recommends this disposition."
+    }
+  ]
+}
