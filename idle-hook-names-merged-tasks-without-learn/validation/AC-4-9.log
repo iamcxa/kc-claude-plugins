@@ -1,0 +1,45 @@
+FFFFF
+======================================================================
+FAIL: test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold (__main__.TasksTests.test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold) (bad={})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 907, in test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold
+    self.assertEqual(code, 2, lines)
+AssertionError: 0 != 2 : ['fact: o/r#8 OPEN draft=False checks=green', 'next: run kc-dev-flow-2:learn for one.', 'next: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpty59brd_/watch.json wait` in the background, unless one is running.', 'next: when it exits, do the next: lines it prints.']
+
+======================================================================
+FAIL: test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold (__main__.TasksTests.test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold) (bad={'notices': {}})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 907, in test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold
+    self.assertEqual(code, 2, lines)
+AssertionError: 0 != 2 : ['fact: o/r#8 OPEN draft=False checks=green', 'next: run kc-dev-flow-2:learn for one.', 'next: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpty59brd_/watch.json wait` in the background, unless one is running.', 'next: when it exits, do the next: lines it prints.']
+
+======================================================================
+FAIL: test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold (__main__.TasksTests.test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold) (bad={'notices': [None]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 907, in test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold
+    self.assertEqual(code, 2, lines)
+AssertionError: 0 != 2 : ['fact: o/r#8 OPEN draft=False checks=green', 'next: run kc-dev-flow-2:learn for one.', 'next: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpty59brd_/watch.json wait` in the background, unless one is running.', 'next: when it exits, do the next: lines it prints.']
+
+======================================================================
+FAIL: test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold (__main__.TasksTests.test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold) (bad={'notices': [{'job': 'bad'}]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 907, in test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold
+    self.assertEqual(code, 2, lines)
+AssertionError: 0 != 2 : ['fact: o/r#8 OPEN draft=False checks=green', 'next: run kc-dev-flow-2:learn for one.', 'next: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpty59brd_/watch.json wait` in the background, unless one is running.', 'next: when it exits, do the next: lines it prints.']
+
+======================================================================
+FAIL: test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold (__main__.TasksTests.test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold) (bad={'notices': [{'job': '2368d88fa45e7e2c021fa70c20026e9c9517dd3d738fcf6bc459769ca69ff4e8', 'state': 'invalid'}]})
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 907, in test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold
+    self.assertEqual(code, 2, lines)
+AssertionError: 0 != 2 : ['fact: o/r#8 OPEN draft=False checks=green', 'next: run kc-dev-flow-2:learn for one.', 'next: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpty59brd_/watch.json wait` in the background, unless one is running.', 'next: when it exits, do the next: lines it prints.']
+
+----------------------------------------------------------------------
+Ran 1 test in 2.070s
+
+FAILED (failures=5)

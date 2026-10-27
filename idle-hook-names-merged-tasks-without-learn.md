@@ -418,3 +418,44 @@ Proposed a read-only archive scan in the existing tasks hook, using notices --al
 ### Summary
 
 Implemented committed archive discovery and one supported all-notices subtraction without changing the live-task path; candidate 207c0a7eb51d08c00e68dbe52e9b364793750484 is pushed. All local acceptance checks and 14 falsifiers pass, with reconstructed-history and repeated ineligible/no-job reminders disclosed. Draft PR, RoboRev and hosted CI remain FO's assigned delivery steps; this report is not a validation gate approval.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #737 head 207c0a7e against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED pending F1 disposition at candidate 207c0a7eb51d08c00e68dbe52e9b364793750484, base 8bf4f3582411e8e4238f19fbadda8ddeca6767be; AC-1–AC-7 pass and AC-8's mechanics pass, but its acceptance wording conflicts with Amendment 1. [Primary evidence](idle-hook-names-merged-tasks-without-learn/validation/evidence.md).
+- DONE: RoboRev on this head (FO, 2026-10-28): clean on 207c0a7eb, evidence=roborev:1264; CI on this head read by FO: 4 of 4 pass; check Captain amendment 1's added criterion (a task learn holds as ineligible) directly
+  RoboRev and CI are FO-supplied evidence, not independently queried; real recorder plus watcher subprocess reproduce ineligible/profile, empty notices, then the identical next-idle line; F1 remains.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Run `bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/idle-hook-names-merged-tasks-without-learn/validation/acceptance.sh`: five exact steps/expected outputs, fresh disposable candidate, 5 tests OK, F1 reproduced, ADR lint exit 0 (39 records), cleanup complete; [observed output](idle-hook-names-merged-tasks-without-learn/validation/acceptance.log). Installed Codex package substituted as dispatched; no live provider/FO/merge proof.
+- DONE: AC-1 committed archive discovery and extension guard.
+  Exact sorted flat/folder/dedup/sidecar/uncommitted behavior passes; archive exclusion, folder omission and removing the learn guard each produce assertion failure (mutation subprocess exit 1).
+- DONE: AC-2 supported job source and workflow identity.
+  Real pending/completed/acknowledged/no-change/released jobs suppress; one code-root notices --all read asserted; unread-only, wrong workflow, state-root and uncertain-input mutations each fail.
+- DONE: AC-3 historical replay and limit.
+  Independently matched all 88 frozen path/PR pairs to committed state 1158adc584637bdbf1b2f347b91a4c63844d6c00; all 11 removed keys appear and restored keys disappear, including release-acceptance; live-only mutation fails. The 53 keys reconstruct absence, not original historical store bytes or fresh GitHub confirmations.
+- DONE: AC-4 provider and read-failure boundary.
+  Sentinel no-provider, qualified state-only reads, OPEN/CLOSED/local exclusions, pinned blobs and exit-2 failures pass while preserving live output; full-review-query and malformed-as-empty mutations fail.
+- DONE: AC-5 read-only repetition and pending suppression.
+  State hashes/store bytes match before/after; absent store/watch stay absent; repeated reminders stop after a real pending claim; injected archive-cache write fails.
+- DONE: AC-6 existing lifecycle behavior.
+  Candidate test_pr_watch.py 122/122, test_observer_check.py 19/19, test_learning.py 47/47 and test_sd_dispatch.py exit 0 (CLI 0.27.2/plugin 0.27.3); removed observer-pointer mutation fails. Native FO execution and remote delivery remain unproven.
+- DONE: AC-7 reading cost.
+  Independent recount: startup 1344→1342; idle OPEN 1039→1037; idle MERGED 572→570; after archive 358→356; merge ask 680→680; empty recovery 552→550. Each missing name adds 5 words each pass, uncertainty/malformed fixtures 11; learn/framework may add 5985 plus evidence; longer-line mutation fails. No CI-trigger change; CI cost per PR not measured.
+- FAILED: AC-8 and Captain amendment 1 acceptance consistency.
+  Current test passes repeated `next: run kc-dev-flow-2:learn for old-profile.` after `{"state": "ineligible", "reasons": ["profile"]}` and `{"notices": []}`; silent-suppression mutation fails that test. Amendment 1's accepted Asked row instead says 「不會每次都被重複點名」; a green repetition test cannot settle the conflict.
+- DONE: Required checks, dispatch provenance and retained documents.
+  [checks.json](idle-hook-names-merged-tasks-without-learn/validation/checks.json): installed adr_lint/number_guards/comment_ratio/doc_impact/design_surfaces/dispatch_records and repository lint all exit 0; 3 dispatch records complete, comments 0.2%≤5%, 0 additional impacted documents, workflow 5565/5565 words; git diff --check clean. Extension pointer updated in place; added provenance comment reviewed.
+- DONE: Goal sufficiency, minimal necessity and implementation limits.
+  Three-path change is sufficient for archive discovery and each retained change serves recovery, falsification or the existing reader pointer; full approved outcome remains unsettled by F1. Implementation's reconstructed-history, repeated-work cost and host/provider limits stand; its claimed approval of repetition is not verified.
+- DONE: Evidence preservation and candidate isolation.
+  All suites, 14 freshly run falsifiers, recount, five-step script and exact stdout retained under this task's validation/; detached validation checkout and acceptance checkout removed, candidate/source worktree remains clean at 207c0a7e. No code, frontmatter, PR or approval changed.
+- SKIPPED: Independent RoboRev/GitHub/hosted CI rerun.
+  Dispatch supplies FO's head-bound RoboRev and 4/4 CI results; no network read, PR mutation, review request, merge or delivery claim made.
+
+### Findings
+
+- F1 Needs decision: Amendment 1's quoted Asked requires no repeated naming after ineligibility, whereas AC-8 and the full-history design require repetition. Released user/workflow: FO idle scan after a legacy-profile learn hold; observed harm: every idle pass repeats an unactionable instruction; affected boundary: captain-ruling[2026-10-27] no-repeat words conflict with value-ac[AC-8] explicit repeat; trigger: acceptance.sh step 3, real recorder and watcher CLI, unchanged archived task. FO must reconcile the governing requirement before repair authorization or delivery; the validator has made neither choice.
+
+### Summary
+
+Validation of PR #737 head 207c0a7eb51d08c00e68dbe52e9b364793750484 is complete with recommendation REJECTED pending F1 (Needs decision); no demonstrated implementation failure against AC-1–AC-7 or AC-8's written repeat expectation. All local checks and 14 falsifiers pass, but the real next-idle behavior conflicts with the Captain wording preserved in Amendment 1, so green tests do not establish the accepted outcome. FO owns disposition and any subsequent feedback or Captain decision; merge/adoption remain unapproved.

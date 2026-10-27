@@ -1,0 +1,16 @@
+Preparing worktree (detached HEAD 207c0a7eb)
+HEAD is now at 207c0a7eb fix(kc-dev-flow-2): name archived tasks missing learn jobs
+207c0a7eb51d08c00e68dbe52e9b364793750484
+.....
+----------------------------------------------------------------------
+Ran 5 tests in 9.332s
+
+OK
+next: run kc-dev-flow-2:learn for old-profile.
+{"state": "ineligible", "reasons": ["profile"]}
+{"notices": []}
+next: run kc-dev-flow-2:learn for old-profile.
+AMENDMENT CONFLICT: ineligible task is named again; closed task unchanged.
+39 ADR file(s) checked, 0 legacy
+adr_lint exit=0
+cleanup complete

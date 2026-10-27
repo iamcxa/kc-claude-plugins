@@ -1,0 +1,20 @@
+F
+======================================================================
+FAIL: test_ineligible_learn_hold_leaves_no_job_and_next_idle_repeats_the_name (__main__.TasksTests.test_ineligible_learn_hold_leaves_no_job_and_next_idle_repeats_the_name)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 1046, in test_ineligible_learn_hold_leaves_no_job_and_next_idle_repeats_the_name
+    self.assertEqual(self.tasks({}), (0, [line]))
+AssertionError: Tuples differ: (0, []) != (0, ['next: run kc-dev-flow-2:learn for old-profile.'])
+
+First differing element 1:
+[]
+['next: run kc-dev-flow-2:learn for old-profile.']
+
+- (0, [])
++ (0, ['next: run kc-dev-flow-2:learn for old-profile.'])
+
+----------------------------------------------------------------------
+Ran 1 test in 0.353s
+
+FAILED (failures=1)

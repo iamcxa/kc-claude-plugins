@@ -1,0 +1,20 @@
+F
+======================================================================
+FAIL: test_real_claim_completed_acknowledged_and_released_jobs_suppress_repeats (__main__.TasksTests.test_real_claim_completed_acknowledged_and_released_jobs_suppress_repeats)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 854, in test_real_claim_completed_acknowledged_and_released_jobs_suppress_repeats
+    self.assertEqual(self.tasks({}), (0, []))
+AssertionError: Tuples differ: (0, ['next: run kc-dev-flow-2:learn for one.']) != (0, [])
+
+First differing element 1:
+['next: run kc-dev-flow-2:learn for one.']
+[]
+
+- (0, ['next: run kc-dev-flow-2:learn for one.'])
++ (0, [])
+
+----------------------------------------------------------------------
+Ran 1 test in 1.266s
+
+FAILED (failures=1)

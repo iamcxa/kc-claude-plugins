@@ -1,0 +1,23 @@
+F
+======================================================================
+FAIL: test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold (__main__.TasksTests.test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 897, in test_keyed_uncertain_notices_without_input_are_inspected_and_malformed_lists_hold
+    self.assertEqual(self.tasks({}), (0, [f"next: inspect learn job {key} for one; its record is uncertain."]))
+AssertionError: Tuples differ: (0, ['next: run kc-dev-flow-2:learn for one.']) != (0, ['next: inspect learn job 2368d88fa45e7e2c021fa70[73 chars]n.'])
+
+First differing element 1:
+['next: run kc-dev-flow-2:learn for one.']
+['next: inspect learn job 2368d88fa45e7e2c021fa70[72 chars]in.']
+
+- (0, ['next: run kc-dev-flow-2:learn for one.'])
++ (0,
++  ['next: inspect learn job '
++   '2368d88fa45e7e2c021fa70c20026e9c9517dd3d738fcf6bc459769ca69ff4e8 for one; '
++   'its record is uncertain.'])
+
+----------------------------------------------------------------------
+Ran 1 test in 0.328s
+
+FAILED (failures=1)

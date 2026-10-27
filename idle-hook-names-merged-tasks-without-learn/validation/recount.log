@@ -1,0 +1,75 @@
+{
+  "passages": {
+    "before": {
+      "dev": 763,
+      "mod": 48,
+      "learn": 282,
+      "extensions": 222,
+      "delivery": 458
+    },
+    "after": {
+      "dev": 763,
+      "mod": 48,
+      "learn": 280,
+      "extensions": 222,
+      "delivery": 458
+    }
+  },
+  "rows": {
+    "before": {
+      "startup": 1344,
+      "idle_open": 1039,
+      "idle_merged": 572,
+      "after_archive": 358,
+      "merge_ask": 680,
+      "recovery_idle": 552
+    },
+    "after": {
+      "startup": 1342,
+      "idle_open": 1037,
+      "idle_merged": 570,
+      "after_archive": 356,
+      "merge_ask": 680,
+      "recovery_idle": 550
+    }
+  },
+  "outputs": {
+    "before:open": {
+      "words": 29,
+      "stdout": "fact: o/r#7 OPEN draft=False checks=green\nnext: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpkttfpyid/watch.json wait` in the background, unless one is running.\nnext: when it exits, do the next: lines it prints.\n"
+    },
+    "before:merged": {
+      "words": 20,
+      "stdout": "next: let pr-merge record one.\nafter pr-merge: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/kc-dev-flow-2/scripts/observer_check.py /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp4i0rh7fy/repo/docs/dev2/.spacedock-state one`.\nafter pr-merge: do each next: line it prints.\n"
+    },
+    "before:after_archive": {
+      "words": 28,
+      "stdout": "observer report committed: _archive/one/observer.md at HEAD.\nnext: run kc-dev-flow-2:learn for one.\nnext: send learn's notice, then the observer report unedited, in one message; answer none of its findings.\n"
+    },
+    "after:open": {
+      "words": 29,
+      "stdout": "fact: o/r#7 OPEN draft=False checks=green\nnext: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/kc-dev-flow-2/scripts/pr_watch.py --state /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmptrnuptf0/watch.json wait` in the background, unless one is running.\nnext: when it exits, do the next: lines it prints.\n"
+    },
+    "after:merged": {
+      "words": 20,
+      "stdout": "next: let pr-merge record one.\nafter pr-merge: run `python3 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/kc-dev-flow-2/scripts/observer_check.py /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmp6bmeaev1/repo/docs/dev2/.spacedock-state one`.\nafter pr-merge: do each next: line it prints.\n"
+    },
+    "after:after_archive": {
+      "words": 28,
+      "stdout": "observer report committed: _archive/one/observer.md at HEAD.\nnext: run kc-dev-flow-2:learn for one.\nnext: send learn's notice, then the observer report unedited, in one message; answer none of its findings.\n"
+    }
+  },
+  "missing": {
+    "stdout": "next: run kc-dev-flow-2:learn for missing.",
+    "words": 5
+  },
+  "uncertain": {
+    "stdout": "next: inspect learn job 2d760457d7819695ffb596166f0a5ba52ba944165d5309a41c7e0c4fa714628c for missing; its record is uncertain.",
+    "words": 11
+  },
+  "diagnostic": {
+    "stdout": "next: report missing learn jobs to the Captain: malformed learn notices.",
+    "words": 11
+  },
+  "limits": "5 words per repeated missing name; 55 for 11, 145 for reconstructed 29, 90 for current-key model 18. A newly loaded learn skill plus framework may add 5985 words; task/provider evidence adds more. CI cost per PR not measured."
+}

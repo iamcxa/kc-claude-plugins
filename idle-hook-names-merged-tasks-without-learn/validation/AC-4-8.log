@@ -1,0 +1,33 @@
+F
+======================================================================
+FAIL: test_archive_provider_reads_only_state_and_preserves_qualified_repository (__main__.TasksTests.test_archive_provider_reads_only_state_and_preserves_qualified_repository)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 991, in test_archive_provider_reads_only_state_and_preserves_qualified_repository
+    code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], ask=ask,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/pr_watch.py", line 617, in main
+    return tasks(opts, look, ask, clock)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/pr_watch.py", line 587, in tasks
+    line, broken = archived_learning(Path(opts.args[0]).absolute(), state, ask)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/pr_watch.py", line 490, in archived_learning
+    response = ask("pr", "view", number, "--repo", repo, "--json", FIELDS)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn/.context/validation-737/.context/idle-evidence/mutant/scripts/test_pr_watch.py", line 984, in ask
+    self.assertEqual(args[-2:], ("--json", "state"))
+AssertionError: Tuples differ: ('--json', 'state,isDraft,mergeable,mergeStateStatus,headR[26 chars]tle') != ('--json', 'state')
+
+First differing element 1:
+'state,isDraft,mergeable,mergeStateStatus,headRefOid,statusCheckRollup,title'
+'state'
+
++ ('--json', 'state')
+- ('--json',
+-  'state,isDraft,mergeable,mergeStateStatus,headRefOid,statusCheckRollup,title')
+
+----------------------------------------------------------------------
+Ran 1 test in 0.917s
+
+FAILED (failures=1)
