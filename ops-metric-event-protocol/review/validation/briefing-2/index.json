@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:ops-metric-event-protocol:validation:attempt-2:revision-1",
+  "question": "Accept validation cycle 2 PASSED for Draft PR #727 at head 194f0b83 and deliver it now, with the remaining round-2 review items (key configuration: non-string or empty sources and environments, empty secret; sentry.issue.alert source not restricted to urn:sentry:, with the README's accepted-risk sentence about Sentry fields being false; web_url still carrying percent-encoded text; period not calendar-checked) handed to r1? FO recommends revise instead: one short fix round for exactly those items, rechecked by the validator only, then delivery. Approving accepts delivery now: FO marks PR #727 ready and the Captain merges it, unless you say you merge or hold.",
+  "artifacts": [
+    {
+      "id": "artifact:ops-metric-event-protocol:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/3f7dabc6dd3d6232e74c9a482aa5e60556250d1e/ops-metric-event-protocol.md",
+      "rev": "sha256:05b122607e0d792234193e8d3f58b2a14d7a2e781d7630f229e050f7ec56d166",
+      "mediaType": "text/markdown",
+      "summary": "Cycle 2: the validator PASSED at 194f0b83 on its own probes, each run at both heads; FO reran its acceptance script in a fresh shell and every output matched (26 tests, 41 of 41 mutations caught, 22 fixtures with their reasons, 21 signed probes). The three cross-model re-reviews (Codex gpt-6-astra, Gemini 4 Argon, engineering-reviewer) all say sound with fixes, no P1, nothing pin-locked: key configuration still throws or wildcards on non-string or empty sources, a preview key can send a Sentry alert with 1000 characters of free title and culprit to the agent while the README says the fields are bounded, and web_url carries percent-encoded text."
+    }
+  ]
+}

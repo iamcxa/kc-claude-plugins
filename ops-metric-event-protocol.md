@@ -81,6 +81,11 @@ gates:
                 at: "2026-10-27T04:06:53.573933Z"
                 decision: revise
                 reason: 'Captain 2026-10-27 in chat: 「退回實作。」 — accepts FO''s recommendation to send PR #727 back to implementation with the three-way code review fixes (heartbeat time UTC-only with calendar check; sentry fields bounded except title/culprit, web_url pattern; hostile input refused not thrown; missing nowS fails closed with decimal-only timestamp; refusal reasons do not echo sender text; selftest subject and webhook-id binding checked or marked runtime; environment in every type''s dedupe and incident keys). Deferred and documented: sentry id derivation; recovery repeat after a limit returns to an earlier value.'
+            - id: gate-attempt:ops-metric-event-protocol-validation-2
+              briefing:
+                id: briefing:ops-metric-event-protocol:validation:attempt-2:revision-1
+                digest: sha256:ef6da834120288f6800d65f264b8f9636cbc2457c9326ea57cfdaf1e1a7d6ea9
+                room-ref: ./ops-metric-event-protocol/review/validation/briefing-2
 started: 2026-10-26T14:32:33Z
 ---
 
