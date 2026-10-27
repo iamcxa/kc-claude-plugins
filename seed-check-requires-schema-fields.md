@@ -668,3 +668,31 @@ Independent raw evidence: `/tmp/seed-validation-738-cycle1-evidence/` — `candi
 ### Summary
 
 PASSED at `e31e3022056f279ea41af1b24b4488d611adcf21`: both Cycle 1 findings are resolved, all current acceptance criteria and their falsifiers pass within the stated local/native/manual boundaries, and the candidate merges cleanly onto `207c0a7e`. FO still owns the Captain's validation/delivery gate; supplied CI/RoboRev evidence is distinguished from checks rerun here, and no code, PR or delivery action was performed. This complete Cycle 1 validation report supersedes the previous validation report; its rejection remains historical evidence for `2f3966a6` only.
+
+
+## Stage Report: implementation
+
+- DONE: Decouple from #737: `git fetch origin`, create branch spacedock-ensign/seed-check-requires-schema-fields-main from origin/main (now including #734, #735 and #736), cherry-pick only this task's own commits (those on spacedock-ensign/seed-check-requires-schema-fields after 207c0a7e, ending at e31e3022), resolving any conflict without changing behaviour; leave the old branch untouched
+  Fetched/pinned main `4b78f020c2e4b5e8cdfa9e8a7e0133f63e9dd2d0`; created the new branch with --no-track; cherry-picked only 2f3966a6→a3027e934 and e31e3022→bd8a2c93b, without conflicts. Old branch remains e31e3022; 207c0a7e is not an ancestor of the new head.
+- DONE: Run every kc-dev-flow-2 test file and kc-dev-flow-2/scripts/lint-skills.py, /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <origin/main> --require 0041 and /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/number_guards.py check on the new branch; push it with an explicit remote and branch name, no force, no -u; write the PR title and body (same as #738's, saying it replaces #738 and is no longer stacked) to /tmp/impl-seed-check-requires-schema-fields-main-pr.md; append a complete new `## Stage Report: implementation` ending in a superseding `### Summary` naming the new head, committed with `spacedock state commit seed-check-requires-schema-fields --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2`
+  All 25 test files and required guards exit 0 at `bd8a2c93bf1552468c5a2780c839930d3669114d`; explicit `git push origin spacedock-ensign/seed-check-requires-schema-fields-main` succeeds. Replacement PR text uses FO's current /tmp/pr738-current.md; report persistence uses the requested state-commit command.
+- DONE: Preserve the approved feature and Cycle 1 repair while excluding the sibling dependency.
+  Combined zero-context stable patch-id is e5f345374e70dfba903954e225eb225ca6f56fda for both old 207c0a7e→e31e3022 and new 4b78f020→bd8a2c93; both diffs contain the same ten approved files. Eight own files are byte-identical; watcher and its test retain only this task's patch atop the new base, without #737's additions.
+- DONE: Fresh complete package test execution on the new branch.
+  23 unit suites run 906 tests, one existing skip, all others pass; native dispatch/recovery both pass. Main's delivery/lint additions and the omitted #737 tests account for the changed total. Raw per-file exits/output are in all-tests.json and its logs.
+- DONE: Re-exercise the preserved acceptance boundaries.
+  Checker 191 (including the 72 quote/real-content subcases), watcher 114 with the actual missing-Budget subprocess, dispatch records 54, delivery 113 and POC 7 pass. Native flat/folder omitted/matching-id creation and missing-bound/template refusal pass; four-step seed acceptance exits 0 in fresh bash after binding it to bd8a2c93.
+- DONE: Required lint, ADR, number and comment guards at the replacement head.
+  Repository lint exits 0 at 5576/5576 words; supplied Codex 0.32.0 adr_lint --since 4b78f020 --require 0041 exits 0 (40 ADRs, 0 legacy); number_guards exits 0 with base/merge-base 4b78f020 and migrations inapplicable; comment_ratio exits 0, 2/212 =0.9% ≤5%; diff --check is clean.
+- DONE: Preserve schema, Captain amendment 1, document ownership and bounded evidence.
+  Optional stored slug id, three new-seed bounds, replacement AC-8/9/10, historical-review qualification and ADR 0041 are retained. doc_impact: package README and ADR 0041 updated; ADR 0020/0037, current-main adoption.md, maintain-flow and learning.md unaffected because their rules/commands remain accurate and their current-main bytes are preserved.
+- DONE: Replacement PR title/body prepared from the exact provider snapshot FO supplied.
+  /tmp/impl-seed-check-requires-schema-fields-main-pr.md preserves the title and body except the replacement/unstacking note and new-head evidence; names #738 as replaced, direct main base 4b78f020 and head bd8a2c93. Old-head RoboRev line removed so FO can append its new result; no PR API action taken.
+- DONE: Pin the new artifact and keep prior evidence scoped to its original head.
+  Evidence directory /tmp/seed-schema-main-jjp50pmb/ contains manifest.json, decoupling-proof.json, all 25 test logs/results and rebound acceptance.sh/log. Old e31e3022 validation remains historical evidence; its CI/RoboRev and the old stacked lifecycle measurements are not asserted for this new composition.
+- SKIPPED: New Draft PR, closing #738, RoboRev, hosted CI and independent revalidation.
+  FO owns these actions under implementation-5. No gh, PR comment, review request, ready/merge action or RoboRev run; the sandbox cannot reach its daemon or GitHub API. CI cost per PR is not measured; no CI or version configuration changed.
+
+### Summary
+
+Created and pushed `spacedock-ensign/seed-check-requires-schema-fields-main` at `bd8a2c93bf1552468c5a2780c839930d3669114d`, directly on fetched main `4b78f020`, with only this task's two commits and no conflicts or further product edits; the old branch is unchanged. Every package test file, required guard and the rebound acceptance script passes, the combined feature patch is identical, and the replacement PR file is ready for FO. This complete report supersedes the earlier implementation reports for the replacement delivery; FO still owns the new PR, old-PR close, review/CI and revalidation.
