@@ -3,7 +3,7 @@ title: read-adr lists the ADR folder its caller names, and none means no records
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
