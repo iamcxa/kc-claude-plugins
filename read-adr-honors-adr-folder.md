@@ -190,6 +190,13 @@ No additional material scope or authority question is unresolved. Recommend appr
 
 This is pilot scope: no new service, secret, migration, ongoing support obligation or provider write. Native model adherence, integration checks and the release remain future evidence, not outcomes of ideation. The current proof is the source diagnosis, the local Git-command observation and the rendered design; no implementation, PR or repository-code commit was made.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-27, chat
+Captain: 「其他全照建議」 (chat, 2026-10-27)
+Asked: 「需要你決定：第 8 批的設計，照首席工程師的建議一起處理，可以嗎？6 張進入實作，1 張直接關掉，再送一份 issue 給 Spacedock。我和首席工程師都建議照這樣做。」, with this task's row 「read-adr 照指定資料夾讀 ｜ 照設計做，減少驗證 ｜ 拿掉沒人用過的絕對路徑轉換；設計總監的測試只跑一種環境」
+Supersedes: the absolute-path conversion and the two-host, two-namespace design-director none evidence in AC-1 to AC-3 (the implementation worker restates them for one host)
+
 ## Stage Report: ideation
 
 - DONE: A design for the read-adr skill (kc-adr's skill and the kc-dev-flow-2 copy) to list the ADR folder its caller names and to treat none as no records, read from the Codex P2 on iamcxa/kc-claude-plugins#713, with how the two copies stay identical
