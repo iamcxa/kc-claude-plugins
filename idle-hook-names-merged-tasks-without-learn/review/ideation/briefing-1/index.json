@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:idle-hook-names-merged-tasks-without-learn:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of idle-hook-names-merged-tasks-without-learn to enter implementation? FO recommends approve; approving accepts that recommendation as designed plus one acceptance criterion: a task learn holds as ineligible (no job written) shows what the next idle pass prints for it.",
+  "artifacts": [
+    {
+      "id": "artifact:idle-hook-names-merged-tasks-without-learn:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/f13fdbb85833dc13c0406b7ffdaedca3eb1de85e/idle-hook-names-merged-tasks-without-learn.md",
+      "rev": "sha256:fe5eab8d135571a1ea507bcf158f8d433be47d831879096a9d8faa0469f53d4a",
+      "mediaType": "text/markdown",
+      "summary": "Design: pr_watch.py tasks names every archived task with a merged PR and no learn job, from learning.py notices --all; the replay names all 11 tasks backfilled on 2026-10-26. Chief-engineer reviewed the whole batch (2026-10-27) and recommends this disposition."
+    }
+  ]
+}

@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:idle-hook-names-merged-tasks-without-learn:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:idle-hook-names-merged-tasks-without-learn-ideation-1
+              briefing:
+                id: briefing:idle-hook-names-merged-tasks-without-learn:ideation:attempt-1:revision-1
+                digest: sha256:0ff6d8843e676fa93a00daba5b8bfe0761c77243d138435f34c2bd2781de58d9
+                room-ref: ./idle-hook-names-merged-tasks-without-learn/review/ideation/briefing-1
 ---
 
 ## Scope
