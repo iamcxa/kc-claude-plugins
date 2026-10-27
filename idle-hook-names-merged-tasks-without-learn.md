@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-27T16:00:30Z
+worktree: .worktrees/spacedock-ensign-idle-hook-names-merged-tasks-without-learn
 ---
 
 ## Scope
