@@ -272,3 +272,97 @@ The pilot design repairs uncited ADR discovery in kc-adr and carries it unchange
 ### Summary
 
 Implemented the approved Pilot repair in source and copy, applied amendment 1, and pushed 813e0b09. Candidate Codex behavior, existing checks and direct command/comparison mutation controls pass; two native mutation arms compensate, so their causal evidence is limited. Native Claude, RoboRev, the Draft PR and hosted CI remain with FO/validation; this is not an all-acceptance-green report.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #735 head 813e0b09 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Candidate 813e0b09 (two files: kc-adr and kc-dev-flow-2 read-adr SKILL.md, step 1 only; copies byte-identical, outside-step-1 diff empty). AC-4, AC-5 (except F2), AC-7 met; AC-6 met; AC-8 met on Codex and on Claude except one clause (F1). Every implementation limit judged under "Limits judged".
+- DONE: Run the native Claude traces (claude -p) the implementation skipped, and rerun the Codex ones; the implementation found its native custom-folder control non-discriminating (Codex picked the supplied folder even with the old hardcoded skill), so design and run a control that the old skill fails on at least one host, or report plainly that no such control was found; RoboRev on this head (FO, 2026-10-28): clean on 813e0b09c, evidence=roborev:1262; CI on this head read by FO: 4 of 4 pass
+  Found a control the old skill fails on both hosts: `ADR folder: none` with a natural prompt, base skill 8bf4f358 vs candidate, own fixture, native `claude -p --plugin-dir <skill dir>` (sonnet-5-5, auto permission mode, Skill tool, Bash/Read only) and `codex exec` (0.162.1, read-only). See "Native evidence". RoboRev evidence=roborev:1262 clean and CI 4 of 4 pass were read by FO; not re-run.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Script and its observed output below; adr_lint ran exit 0 (39 records, 0 legacy); verdict PASSED for head 813e0b09cb641b82b8ca04630879cc69e922288e with F1 as a Needs decision for the Captain.
+
+### Findings
+
+- F1 Needs decision: AC-8 (amended): an absolute path INSIDE R is silently converted to repo-relative by Claude (4 of 4 sessions, both namespaces; reported folder `decisions/product rules`, read the caller's record, said nothing of conversion), though step 1 says "stop and report an absolute ... path". Codex stops and reports (1 of 1 per namespace). Absolute path OUTSIDE R stops on both hosts (3 of 3 Claude, 2 of 2 Codex). Observable harm: none (the right record in the right folder is read; no wrong ruling), so not Material; whether to accept or add words (+~5) is the Captain's call (the amendment removed conversion; the skill text already forbids it). Evidence fields: user/workflow = design-director or any caller passing an absolute path; harm = none observed; boundary = value-ac[AC-8] falsifier "silently reinterpret an unusable path"; trigger = out/new.*.absolute.nat.1..2 traces.
+- F2 Polish: AC-5 says 848 words for the proposal; delivered skill is 852 (+77 over 775) because amendment 1 reworded step 1. Design text "Which folder wins?" still describes absolute conversion; amendment 1 Supersedes names only AC-1..3. Bookkeeping, no behaviour at risk.
+- F3 Polish: the implementation's natural-prompt custom-folder control is non-discriminating (confirmed: base 2 of 2 amber on a natural prompt); not a defect in the candidate, see limits.
+
+### Native evidence (own fixture; my scripts and 100+ raw traces kept under /tmp/val-read-adr, session-local)
+
+Fixture: git repo with docs/adr (violet decoy), decisions/product rules (amber), policy/adr (green, named by AGENTS.md), plus an uncommitted "orange" edit; no session ever read orange (pinned commit honoured). Claude sessions are one case per session.
+- Candidate, Claude (natural prompt, 2 per case per namespace): custom 4/4 amber, trailing 4/4 amber, instruction 4/4 green, default 4/4 violet, none 7/7 no ADR read, missing 4/4 no record and no fallback, outside 4/4 stop, ambiguous 4/4 stop, absolute-outside-R 3/3 stop, absolute-inside-R 0/4 stop (F1). Literal-adherence prompt: custom, instruction, missing, none 2/2 each.
+- Candidate, Codex (1 per case per namespace, 18 sessions plus 2 absolute-outside): all expected (absolute stops).
+- Control (base skill): `none` natural prompt reads the violet decoy 7/7 on Claude (5 kc-adr, 2 kc-dev-flow-2; plus 3 of 3 in my acceptance script) and enumerates docs/adr (and policy/adr) 2/2 on Codex. Literal-adherence prompt: base custom 0/2 and missing 0/2 correct. Natural-prompt custom, instruction, missing: base passes (models compensate). So the discriminating control is `none` and literal custom/missing; natural custom folder is not.
+- Design director (Codex, AC-7 one host): candidate custom 2/2 `adrs_read` lists the caller record (Accepted) at the pinned commit; candidate none 2/2 `adrs_read: none` with zero ls-tree; base none 2/2 same answer but enumerates docs/adr (trace-only difference).
+
+### Local checks I ran (candidate 813e0b09 vs base 8bf4f358, throwaway worktrees, removed)
+
+kc-adr-copy-sync check exit 0; its test 12 passed 0 failed; lint-skills PASS (5565 of 5565 words); number_guards PASS (no migrations-path); comment_ratio 0 code/0 comment, exit 0; doc_impact 0 documents; dispatch_records 4 complete; design_surfaces presentable; git diff --check clean. Mutations (disposable archive copy): one byte on dev2 copy then on source, each `check` exit 1 naming the pair, resync exit 0; dev2 copy set to OLD step 1 only, `check` exit 1. Not re-run by me: workflow/mod word recount (relied on lint-skills 5565/5565) and a startup-rule injection mutation.
+
+### Limits judged
+
+- Implementation: native custom control non-discriminating: confirmed and bounded by the `none` control above.
+- Codex samples were 1 per case (impl: 1 session per namespace); Claude 2 to 7: small samples, stochastic models; sonnet-5-5 only; Codex 0.162.1 only.
+- Candidate bytes loaded by `--plugin-dir` or exact path, not a published install; release and published version not observed.
+- Absolute-inside-R behaviour differs by host (F1). Uncommitted-record reading and cwd-resolution falsifier (impl literal-command control) not re-run natively by me.
+
+### Acceptance script (run by me as `bash --noprofile --norc`, fresh shell, observed output follows; it needs a checkout at REPO, `claude` logged in, python3, network for the one fetch; not covered: Codex, the other cases, published install)
+
+```bash
+set -u
+REPO=/Users/kent/Project/kc-claude-workspace/kc-claude-plugins   # any checkout of iamcxa/kc-claude-plugins
+CAND=813e0b09cb641b82b8ca04630879cc69e922288e; BASE=8bf4f3582411e8e4238f19fbadda8ddeca6767be
+PKG=/Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0
+
+echo "## Step 1: check out the candidate and its base, and build a two-record fixture repo"
+W=$(mktemp -d); git -C "$REPO" fetch -q origin $CAND
+git -C "$REPO" worktree add -q --detach "$W/cand" $CAND && git -C "$REPO" worktree add -q --detach "$W/base" $BASE
+FX="$W/fx"; git init -q "$FX"; cd "$FX"
+export GIT_AUTHOR_NAME=fx GIT_AUTHOR_EMAIL=fx@example.invalid GIT_COMMITTER_NAME=fx GIT_COMMITTER_EMAIL=fx@example.invalid
+for p in "docs/adr/0001-default-decoy.md violet" "decisions/product rules/0001-caller-rule.md amber"; do f=${p% *}; c=${p##* }
+  mkdir -p "$(dirname "$f")"; printf '# 0001. rule\n\n## Status\n\nAccepted\n\n## Decision\n\nUse %s buttons.\n' "$c" > "$f"; done
+git add -A && git commit -q -m fixture && C=$(git rev-parse HEAD); echo "fixture commit $C"
+
+echo "## Step 2: the two skill copies are byte-identical and CI's copy check passes (expect: cmp silent, exit=0)"
+cmp "$W/cand/kc-adr/skills/read-adr/SKILL.md" "$W/cand/kc-dev-flow-2/skills/read-adr/SKILL.md"; "$W/cand/scripts/kc-adr-copy-sync.sh" check; echo "exit=$?"
+
+echo "## Step 3: the candidate's listing command picks the named folder; a missing folder lists nothing (expect: the caller-rule path then exit=0; then only exit=0, nothing listed)"
+for D in "decisions/product rules/" "missing/adr"; do git -C "$FX" ls-tree --name-only "$C" "${D%/}/"; echo "exit=$?"; done
+
+echo "## Step 4: Claude with ADR folder: none (expect: base runs 1 or more Bash commands and reads the docs/adr record; candidate runs 0)"
+for arm in base cand; do
+  P="Invoke the skill kc-adr:read-adr with the Skill tool and apply it. Context: R=$FX; no citation; ADR folder: none. Question: what button color does the relevant ruling require? Read-only tools only. Report the selected folder, the opened path and the ruling, or why no record can be used."
+  n=$(cd "$W" && claude -p --model sonnet --no-session-persistence --setting-sources "" --strict-mcp-config --plugin-dir "$W/$arm/kc-adr" --permission-mode auto --tools Bash,Read,Skill --allowedTools Skill Read "Bash(git *)" "Bash(R=*)" "Bash(C=*)" "Bash(echo *)" --output-format stream-json --verbose "$P" </dev/null | grep -o '"name":"Bash"' | wc -l)
+  echo "$arm: Bash commands run = $n"
+done
+
+echo "## Step 5: ADR lint on the candidate (expect: exit=0), then clean up"
+(cd "$W/cand" && python3 -B "$PKG/scripts/adr_lint.py" docs/adr --since $BASE; echo "exit=$?")
+git -C "$REPO" worktree remove --force "$W/cand"; git -C "$REPO" worktree remove --force "$W/base"; rm -rf "$W"
+```
+
+Observed output (adr_lint line included):
+
+```
+## Step 1: check out the candidate and its base, and build a two-record fixture repo
+fixture commit a3cc0ea403042058b1e93c588f78d6f2ba5b7722
+## Step 2: the two skill copies are byte-identical and CI's copy check passes (expect: cmp silent, exit=0)
+exit=0
+## Step 3: the candidate's listing command picks the named folder; a missing folder lists nothing (expect: the caller-rule path then exit=0; then only exit=0, nothing listed)
+decisions/product rules/0001-caller-rule.md
+exit=0
+exit=0
+## Step 4: Claude with ADR folder: none (expect: base runs 1 or more Bash commands and reads the docs/adr record; candidate runs 0)
+base: Bash commands run =        2
+cand: Bash commands run =        0
+## Step 5: ADR lint on the candidate (expect: exit=0), then clean up
+39 ADR file(s) checked, 0 legacy
+exit=0
+```
+
+`python3 /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.0/scripts/adr_lint.py docs/adr --since 8bf4f3582411e8e4238f19fbadda8ddeca6767be`: "39 ADR file(s) checked, 0 legacy", exit 0. Package note: the loaded validation skill resolves to 0.29.0; I ran package scripts from the 0.32.0 path the checklist names.
+
+### Summary
+
+Recommend PASSED for head 813e0b09cb641b82b8ca04630879cc69e922288e: both copies carry the intended step 1; Codex and Claude native traces select the caller folder, honour `none` with no ADR enumeration, never fall back, and refuse outside or ambiguous paths. The old skill fails the `none` control on both hosts, so the change has a measured effect. One Needs decision (F1: Claude converts an in-repo absolute path) and two Polish items go to FO and the Captain.
