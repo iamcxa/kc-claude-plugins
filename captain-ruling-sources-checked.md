@@ -53,3 +53,21 @@ Alignment: needed before ideation; the scope of the check and any backfill are t
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+
+## Stage Report: ideation
+
+- FAILED: A design for refusing, in scripts/design_surfaces.py check, a Captain ruling recorded from a peer's relayed words, reconciled with adr-required-statement's ## Captain rulings design (read its task file as it stands); the two qnow bites in fo-interviews-extension/peers-round-1.md replayed as refused; the scope of any active-task backfill left as a Captain decision
+  HOLD before design: FO alignment says "needed before ideation" but records no Result: line; the loaded ideation/principles.md explicitly requires stopping. No design or replay was performed, and no backfill scope was selected.
+- SKIPPED: A `### Batch overlap` section naming each file the design would change and each other batch task (reused-worker-dispatch-leaves-a-record, paseo-codex-dispatch-practice, captain-ruling-sources-checked, batch-reaches-each-gate-together, fo-interviews-extension) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Deferred with design: sibling task inspection and proposed file ownership were not started after the required alignment hold.
+- SKIPPED: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  Deferred with design: no before/after wording or word-cost claim was authored.
+- SKIPPED: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  Deferred with design: no criteria were authored; check run below confirms the present task is not gate-ready. FO must record actual alignment, not infer it from dispatch or backlog approval.
+- DONE: Run the selected package's design-surface check before reporting.
+  `python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/design_surfaces.py check <this-task>` exited 1: `captain-ruling-sources-checked.md: missing '## Acceptance criteria' section`; this checks the current missing criteria only and does not mechanically establish the missing-Result hold.
+
+### Summary
+
+Ideation is held, not completed: the pilot route requires a recorded FO alignment result before design, and this task has none. FO should record the actual aligned direction and redispatch; no package design, repository code, branch, sibling task, Captain ruling, gate state or backfill decision was changed. Only this task-body hold report is submitted; current origin/main, GitHub, the upstream/adopter chain, batch overlaps and the two qnow replays remain unexamined because design did not start.
