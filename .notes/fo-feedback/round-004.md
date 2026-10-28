@@ -20,7 +20,7 @@
 | --- | --- | --- |
 | kc-paseo-plugins | answered | answered (not enabled) |
 | ops-inbox | answered | answered (not enabled) |
-| web/v0 | deferred (running) | deferred (running) |
+| web/v0 | pending (sent when idle) | pending (sent when idle) |
 | relay | answered | answered (not enabled) |
 | qnow | answered | answered (not enabled) |
 
