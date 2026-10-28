@@ -1,0 +1,27 @@
+# Interview round 3: the design director (2026-10-28)
+
+Asked by: the dev2 package FO, under the Captain's ruling of 2026-10-26 (「由你直接問」). Prompted by the Captain (chat, 2026-10-28): 「現在有沒有需要手動訪談其他fo？特別是哪時候派設計總監，哪時候 FO 自己看可以兼顧嚴謹跟效率？或是怎樣可以加快設計總監腳步，例如減少 reasoning 程度，或是限制時間？」
+
+## Records first
+
+A Claude sonnet subagent scanned five adopter state checkouts and their Claude Code transcripts (2026-10-28; working files in /tmp/ddscan, not kept). FO re-ran the run-time medians from its inv3.json and they matched; its total of 6.3 h recomputed as 7.26 h of wall time over 160 runs.
+
+- 160 design director runs, 2026-10-19 to 10-28: web 14 tasks, kc-paseo-plugins (project-env) 22, relay 8, v0 1, qnow free-form 1.
+- Model: 158 runs Claude sonnet 5.5 (the declared tier), 2 qnow runs Opus 5.5.
+- Median wall time by pass: 1a 96 s, 1b 88 s, 2a 133 s, 2b 60 s, 3 about 313 s (2 runs). Pictures are read one per model turn; generation is about 85% of wall time in 1a and 2a.
+- Share of stage time, one task (web sidebar-head): 6.4 of 65.7 min of ideation, 3.6 of 21 min of validation.
+- Ideation findings (last review per task): 485; 31% fixed or turned into criteria, 63% declined by the author, the rest decisions. Declines overruled by the director: 24 of 181 rulings.
+- Built-screen review (2a), last run per task, findings that changed something: web 6 of 63, relay 1 of 11, project-env 0 of 24.
+- Not measurable from records: whether FO, the author or the validator had already raised the same finding.
+
+## Questions sent
+
+To the web, relay and project-env FOs, each anchored on that repo's recorded events:
+1. One run that found what nobody else had, and one that added nothing.
+2. Were the declined findings mostly noise, or real points fair to defer?
+3. If FO could skip the director, for which tasks, and for which must it always run?
+4. What slowed you most: the run, the decline round, or the repair cycles its findings caused?
+
+## Answers
+
+(pending)
