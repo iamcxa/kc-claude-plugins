@@ -1,0 +1,187 @@
+{
+  "scope": "Manual fixture replay and executable checks; no model/transport/adoption execution or live batch completion claim",
+  "controls": [
+    "AC-1 required-tier mutation",
+    "AC-1 missing-extension mutation",
+    "AC-1 silent paseo enablement",
+    "AC-2 count validation sitting",
+    "AC-2 second open round",
+    "AC-2 resend uncertain bundle",
+    "AC-2 cancel moves anchor",
+    "AC-2 early reset without authority",
+    "AC-2 partial loses gaps",
+    "AC-7 lost unavailable respondent",
+    "AC-7 no event becomes compliance",
+    "AC-7 per-rule rows required",
+    "AC-7 four separate sends",
+    "AC-7 missing fixed question",
+    "AC-8 lost respondent peers-round-1.md",
+    "AC-8 lost original link peers-round-1.md",
+    "AC-8 lost respondent round-2-batch7-texts.md",
+    "AC-8 lost original link round-2-batch7-texts.md",
+    "AC-8 lost respondent round-3-design-director.md",
+    "AC-8 lost original link round-3-design-director.md",
+    "AC-8 fabricated round2_benefit",
+    "AC-8 fabricated round3_respondents",
+    "AC-8 fabricated measurement",
+    "AC-8 fabricated full_ids",
+    "AC-8 fabricated preview_skip",
+    "AC-5 duplicate existing task",
+    "AC-5 operator becomes Captain",
+    "AC-5 overwrite observer",
+    "AC-5 automatic capability claims",
+    "AC-5 unverified ruling promoted"
+  ],
+  "tier": "candidate and row absent pass; required-without-default and missing extension refused",
+  "adoption_transcripts": [
+    {
+      "input": "no answer",
+      "selected": [
+        "learn",
+        "peers"
+      ]
+    },
+    {
+      "input": "failed transport, selected request",
+      "selected": [
+        "learn",
+        "peers"
+      ]
+    },
+    {
+      "input": "new Paseo ask, paseo not selected",
+      "selected": [
+        "learn",
+        "peers"
+      ]
+    },
+    {
+      "input": "all prerequisites, separate paseo opt-in",
+      "selected": [
+        "learn",
+        "peers",
+        "paseo",
+        "fo-feedback"
+      ]
+    }
+  ],
+  "cadence": {
+    "two": "not due",
+    "three": "due",
+    "duplicate": "3 distinct",
+    "unknown": "0",
+    "validation sitting": "0",
+    "sources": "synthetic accepted membership and archived fixture files"
+  },
+  "recovery_trace": {
+    "open_round": "004",
+    "opened": [
+      "004"
+    ],
+    "resumed": "004",
+    "anchor_before": "batch-3",
+    "anchor_after": "batch-3",
+    "cancelled_anchor": "batch-3",
+    "early_authority": null,
+    "early_anchor": "batch-3",
+    "partial": {
+      "status": "closed-partial",
+      "gaps": [
+        "unavailable FO"
+      ],
+      "anchor": "batch-3"
+    },
+    "exchanges": [
+      {
+        "key": [
+          "004",
+          "confirmed-FO",
+          "peers"
+        ],
+        "state": "uncertain",
+        "sends": 1
+      }
+    ]
+  },
+  "coverage_trace": {
+    "roster": [
+      "confirmed-FO",
+      "unavailable-FO"
+    ],
+    "topics": [
+      {
+        "fo": "confirmed-FO",
+        "topic": "peers",
+        "enabled": true,
+        "event": "none recorded",
+        "compliant": null
+      },
+      {
+        "fo": "confirmed-FO",
+        "topic": "copilot",
+        "enabled": false
+      },
+      {
+        "fo": "unavailable-FO",
+        "topic": "peers",
+        "enabled": true,
+        "outcome": "unavailable"
+      }
+    ],
+    "sends": [
+      {
+        "fo": "confirmed-FO",
+        "topic": "peers",
+        "questions": [
+          "use/need with dated task",
+          "bypass and reason",
+          "benefit with event",
+          "failure/cost and evidence"
+        ],
+        "messages": 1
+      }
+    ],
+    "late": [
+      "new-topic: next round"
+    ],
+    "rule_rows": false
+  },
+  "history": [
+    {
+      "source": "peers-round-1.md",
+      "sha256": "cb6f28b7fefd4172039935b65be10bcc8787107cd413b760498b6b262147e693",
+      "respondents": 5
+    },
+    {
+      "source": "round-2-batch7-texts.md",
+      "sha256": "b62adeae467dadeafe562e448810565526e62ebaa48f3dde9126c601d75577df",
+      "respondents": 5
+    },
+    {
+      "source": "round-3-design-director.md",
+      "sha256": "1711d7666da299a34029800f1ccbec30937f98d5ad2f51cff4117ce63d8b85a8",
+      "respondents": 3
+    }
+  ],
+  "historical_limits": {
+    "round2_benefit": "not asked",
+    "round3_respondents": 3,
+    "measurement": "not independently remeasured",
+    "full_ids": "not inferred",
+    "preview_skip": "disputed"
+  },
+  "finding_trace": {
+    "existing": [
+      "captain-ruling-sources-checked",
+      "design-director-runs-where-it-pays"
+    ],
+    "duplicates": [],
+    "failure": "bounded backlog proposal",
+    "positive": "capability candidate",
+    "relayed": "unverified",
+    "observer": "independent disagreeing verdict retained",
+    "ruler": "operator",
+    "automatic_readme": false
+  },
+  "boundaries": "all tracked bytes outside four allowed files match base, including scripts/mods/workflow/defaults/versions/CI"
+}

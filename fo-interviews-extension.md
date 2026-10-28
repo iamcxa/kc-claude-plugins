@@ -723,3 +723,31 @@ Independent validation 2 recommends REJECTED for bd328daf6e64a73ad5e54f728880329
 ### Summary
 
 Merged origin/main with a merge commit and resolved only the extensions conflict, retaining both paseo and fo-feedback; the five task files remain the entire diff, and acceptance criteria are unchanged under Captain amendment 3. All dispatched checks pass, including 772 repository unit tests and the native dispatch transport checks; candidate c42adb4f2b8c14f50c065dc57922a55c6b0824ac is pushed and remotely verified, while first-occurrence operational evidence and FO delivery checks remain due.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #745 head c42adb4f against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at c42adb4f2b8c14f50c065dc57922a55c6b0824ac for the amended pre-merge boundary; all six active criteria and per-criterion falsifiers assessed in [validation-3/review.md](fo-interviews-extension/validation-3/review.md). Actual tier-parser negatives, 30 bounded fixture controls and three accounting controls rerun; inverted policy still passes fixtures, so no native behavior is claimed.
+- DONE: Third validation, on the head after main (with #742 and #744) was merged in: confirm the merge commit only resolves docs/dev2/README.md extensions: to keep both paseo and fo-feedback and that the diff against origin/main is this task's five files; under Captain amendment 3 the criteria validation-2 left unmet are shown at their first real occurrence, not before merge, so judge the rest against round 004 and validation-2; RoboRev evidence=roborev:1309 clean on c42adb4f2, run by FO
+  Parents are bd328daf6 and 6bc82b501; remerge diff contains only the README extensions conflict, retaining paseo and fo-feedback; five approved files only. Acceptance-section hash is unchanged. Round 004 remains real but limited evidence; amendments 2/3 settle the former pre-merge hold while retaining first-occurrence obligations. RoboRev 1309 and hosted CI/CLEAN are FO-attributed.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step [acceptance.sh](fo-interviews-extension/validation-3/acceptance.sh) ran unchanged in fresh bash, exit 0, about 123 seconds; [output](fo-interviews-extension/validation-3/acceptance-output.txt) retained. ADR lint --since 6bc82b501 exits 0, 42 records/0 legacy; no changed/reserved ADR needs --require, as F2 was declined. Findings are classified below.
+- DONE: Merged-head repository tests, native dispatch checks and local boundaries.
+  772 unit tests pass in 375.418s; 45 lint tests pass; lint 5754/5754 words, number/design/doc-impact/seven-dispatch/whitespace checks pass; comment ratio 0.0%. Native dispatch checks reject Team-loss and stale-binding controls. Both temporary candidate checkouts were removed and the owned branch remains clean at the candidate.
+- DONE: Recount the bounded reading corpus against the merged base and preserve historical evidence.
+  Startup 6959→7558 (+599), adoption +97; idle 862/833, archive 333, merge 2408 each +0; due round 3628 includes merged Paseo instructions (+272 versus validation 2). Actual reads remain due; all 13 original respondents and pinned bytes remain unchanged.
+- SKIPPED: First-occurrence native adoption/recovery/reading/pending-send and scheduled cadence execution.
+  Captain amendments 2/3 explicitly defer these proofs; no new interview send, adoption or test agent was authorized or performed. Round-004 limitations are retained, not declared repaired.
+- SKIPPED: Independent hosted PR-body/provider reconciliation and delivery.
+  Git/local-only dispatch; prepared-body correction is locally visible, published text/readiness remain FO checks. No code push, PR comment, review request, ready action, merge or release; CI cost per PR not measured, no CI trigger changed.
+- F1 Deferred risk: First-occurrence native evidence remains unverified under the Captain's timing ruling.
+  Maintainer interview workflow; no demonstrated harm; value-ac[AC-1/9/6/7] preserves adoption/recovery/reading/comparability; trigger is missing receipts plus fixture insensitivity. Former Needs decision is settled by amendment 3; a real violating trace or missed due proof re-enters disposition.
+- F3 Polish: Retained corpus/proof assumptions predate round 004, the README opt-in and merged base.
+  Diagnostic copies disclose the scope corrections and whole-heading extraction; old reports remain untouched and current task growth deltas are unaffected.
+- F5 Polish: Some historical finding links retain paths now archived.
+  Existing outcomes resolve in local archive/history; no duplicate task or authority loss observed. State-index upkeep belongs to FO, outside immutable candidate review.
+
+### Summary
+
+Independent validation 3 recommends PASSED for c42adb4f2b8c14f50c065dc57922a55c6b0824ac under Captain amendments 2/3, superseding validation 2's pre-merge rejection without claiming its native-evidence gaps are proven. The merge preserves both extensions and only the five approved task files differ; the complete local suite and fresh-shell acceptance pass, with no new Material or unresolved Needs decision finding. FO retains delivery checks/disposition and the explicitly deferred first-occurrence evidence obligations.
