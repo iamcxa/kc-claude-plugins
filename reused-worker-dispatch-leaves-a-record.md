@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-28T07:06:45Z
 worktree: .worktrees/spacedock-ensign-reused-worker-dispatch-leaves-a-record
-pr: iamcxa/kc-claude-plugins#743
+pr: pr-merge:743
 ---
 
 ## Scope
