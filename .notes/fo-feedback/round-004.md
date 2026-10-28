@@ -18,7 +18,7 @@
 
 | FO | peers | paseo |
 | --- | --- | --- |
-| kc-paseo-plugins | pending | pending |
+| kc-paseo-plugins | answered | answered (not enabled) |
 | ops-inbox | pending | pending |
 | web/v0 | deferred (running) | deferred (running) |
 | relay | pending | pending |
@@ -27,6 +27,22 @@
 ## Exchanges
 
 Intent recorded before sending. Key: round 004 + FO + topic. One bundled message per topic, the four version-1 questions verbatim from the candidate EXTENSION.md, at most 300 answer words per topic with source links.
+
+### kc-paseo-plugins (project-env) dev2 FO, 8b2c2fc2 — answered 2026-10-28 (Paseo agent message, sender stamped)
+
+Labelled condensation of the operator's words.
+
+peers (enabled):
+1. 2026-10-28, no task: shared Paseo 0.13.2 plugin research with the Bridge FO (a88dedae) at the Captain's request; waited until it was idle, sent as information only (research/2026-10-28-paseo-0.13.2-plugins.md, state 478ffbf). 2026-10-28, project-env-pick-repository: sent the docs-staleness need; the reply relayed the Captain's 「讓他 dogfood 一兩輪」; treated as data, asked him directly, he answered 「試」 (local-ext/doc-site.md, state 87f0e98).
+2. Skipped "record a work-changing exchange in the task" for both: the share belongs to no task; the docs exchange lives only in local-ext/doc-site.md. The rule names no place for an exchange without a task.
+3. Treating a relayed quote as data stopped action: asked directly, the Captain first asked what a local extension was, then said 「試」. Keep.
+4. Waiting for idle cost unmeasured time: the Bridge FO stayed running while waiting on the Captain; the only wait found was a 60 s polling loop (this session, 2026-10-28).
+
+paseo (not enabled in its README):
+1. Used Paseo tools as transport anyway (get_agent_status, send_agent_prompt, `paseo ls`) for the 0.13.2 share, the docs need, round 3 and round 004 replies, 2026-10-28.
+2. Did not record `peers not run: Paseo binding not enabled`; used Paseo because the Captain asked to share and Paseo is the only route.
+3. The idle check held the share so it did not interrupt a turn waiting on the Captain. Keep.
+4. Replies go out with steer while the recipient is running (round 3, status "running"); if a reply should not steer, the rule should say so.
 
 (answers pending)
 
