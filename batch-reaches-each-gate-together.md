@@ -56,3 +56,18 @@ Alignment: needed before ideation; how a batch is held at a gate and what the ba
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+## Stage Report: ideation
+
+- FAILED: A design for holding a batch at each gate and presenting it in one sitting (rules in the workflow README and, if needed, scripts/decision_ledger.py), with the batch reviewer chosen by the batch's kind and given the task files rather than FO's conclusions; batch 7's four separate merge asks replayed as one sitting; whether a product-director role is needed decided from evidence
+  Hold before design: FO alignment says "Alignment: needed before ideation" but has no Result line; selected pilot ideation principles and the dispatched stage definition require FO to record that result before design/dispatch.
+- SKIPPED: A `### Batch overlap` section naming each file the design would change and each other batch task (reused-worker-dispatch-leaves-a-record, paseo-codex-dispatch-practice, captain-ruling-sources-checked, batch-reaches-each-gate-together, fo-interviews-extension) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  No design or file-change proposal authored while the required alignment result is missing; overlap research remains owed on redispatch.
+- SKIPPED: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  The current root learning rule was read; no candidate exists to measure, so no before/after count or reduction is claimed.
+- SKIPPED: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  No criteria authored before alignment; FO must first record the alignment result or route the unresolved alignment to the Captain.
+
+### Summary
+
+Held pilot ideation before design because the task's FO alignment requires alignment but lacks the mandatory Result line; the recorded backlog approval was not treated as a substitute. Read the operating contract, selected ideation route and current task; git fetch origin succeeded, pinning origin/main to e57feb6eec956b74a1d4b29f26f1d0a7d1693785 with package version 0.32.1, and inspected Spacedock 0.27.3 gate lifecycle/presentation docs, but the full upstream/package/adopter chain, batch replay and design checks remain unperformed. FO next records the actual alignment result and redispatches; this report changes only this entity's body and grants no gate or implementation authority.
