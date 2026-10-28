@@ -146,6 +146,12 @@ FIXES = {
         need=("A follow-up message to a worker FO resumes is a dispatch", "never a pointer to another record"),
         old=(),
         swaps=((r"A follow-up message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record\. ", ""),)),
+    "dispatch-coverage": dict(
+        need=("After each worker report, before advancing or preparing its gate",
+              "dispatch_records.py --coverage <task> --stage <stage>",
+              "nonzero holds that task", "This check does not observe unrecorded messages"),
+        old=(),
+        swaps=((r"After each worker report, before advancing or preparing its gate.*?This check does not observe unrecorded messages\. ", ""),)),
     "adr-since": dict(
         need=("for each `ADR:` number the task's `## Number guards` reserves",
               "which requires every record the candidate added or changed",),

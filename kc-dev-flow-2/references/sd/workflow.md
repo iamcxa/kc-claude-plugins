@@ -106,6 +106,9 @@ committed with that dispatch's `spacedock state commit <slug> --workflow-dir <di
 the instruction a worker followed outlives the session that wrote it; FO runs
 `python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists. A follow-up
 message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record.
+After each worker report, before advancing or preparing its gate, FO runs
+`python3 <package>/scripts/dispatch_records.py --coverage <task> --stage <stage>`; nonzero holds that task.
+This check does not observe unrecorded messages.
 A checklist or scope-notes line that names a package script writes
 `<package>/scripts/NAME.py` with the absolute root substituted, never the bare script
 name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`

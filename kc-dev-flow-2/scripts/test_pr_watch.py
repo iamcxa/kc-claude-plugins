@@ -743,7 +743,7 @@ class TasksTests(unittest.TestCase):
         return done.stdout
 
     def readme(self, extensions):
-        (self.workflow / "README.md").write_text(f"---\nentity-type: task\nextensions: [{extensions}]\nstate: .spacedock-state\n---\n")
+        (self.workflow / "README.md").write_text(f"---\nentity-type: task\nextensions: [{extensions}]\nstate: .spacedock-state\nstages:\n  states:\n    - name: implementation\n    - name: validation\n---\n")
 
     def task(self, slug, pr="", worktree=True, branch="feat-x", status="validation", folder=False, body=b"body\n"):
         where = self.repo / ".worktrees" / slug
@@ -781,6 +781,51 @@ class TasksTests(unittest.TestCase):
         with mock.patch.dict(os.environ, env), contextlib.redirect_stdout(out):
             code = watch.main(["--state", str(self.watch), "tasks", str(self.workflow)], **({"look": look} if look else {}), **({"clock": clock} if clock else {}))
         return code, out.getvalue().splitlines()
+
+
+    def test_coverage_without_directory_or_pr_and_with_provider_failure(self):
+        self.readme("")
+        self.task("missing", worktree=False, body=b"## Stage Report: validation\n")
+        expected = "next: missing has no dispatch record for completed validation; hold advancement and gate preparation and report the gap to Captain."
+        self.assertEqual(self.tasks({}), (0, [expected]))
+        self.task("provider", pr="o/r#7", body=b"## Stage Report: validation\n")
+        def offline(*args, **kwargs):
+            raise RuntimeError("provider offline")
+        code, lines = self.tasks({}, look=offline)
+        self.assertEqual(code, 2)
+        self.assertEqual(lines.count(expected), 1)
+        self.assertEqual(sum("provider has no dispatch record" in line for line in lines), 1)
+        self.assertTrue(any("provider offline" in line for line in lines))
+
+    def test_coverage_clean_folder_task_and_not_due_add_no_line(self):
+        self.readme("")
+        self.task("covered", worktree=False, folder=True, body=b"## Stage Report: validation (cycle 3)\n")
+        dispatch = self.state / "covered/dispatch"
+        dispatch.mkdir()
+        (dispatch / "validation-2-message-1.md").write_text("presence only")
+        self.task("pending", worktree=False)
+        self.assertEqual(self.tasks({}), (0, []))
+
+    def test_coverage_read_error_uses_task_error_route(self):
+        self.readme("")
+        self.task("unreadable", worktree=False, body=b"\xff")
+        code, lines = self.tasks({})
+        self.assertEqual(code, 2)
+        self.assertTrue(any(line.startswith("next: report unreadable to the Captain:") for line in lines))
+        self.assertFalse(any("has no dispatch record" in line for line in lines))
+
+    def test_coverage_cannot_read_task_reports_its_task_error(self):
+        self.readme("")
+        self.task("unreadable", worktree=False)
+        original = watch.front
+        def denied(path):
+            if path.name == "unreadable.md":
+                raise PermissionError("task read denied")
+            return original(path)
+        with mock.patch.object(watch, "front", side_effect=denied):
+            code, lines = self.tasks({})
+        self.assertEqual(code, 2)
+        self.assertIn("next: report unreadable to the Captain: task read denied.", lines)
 
     def watched(self):
         return json.loads(self.watch.read_text()) if self.watch.exists() else {}
