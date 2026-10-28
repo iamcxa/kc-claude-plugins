@@ -9,6 +9,7 @@ bullet, the first record of its `Joins:` stage (`implementation-1.md`) also need
 `<package>` replaced by the record's own `Package root:` value, or a line `<name> not run: <reason>`.
 
 Usage: dispatch_records.py [--readme FILE] <task folder or task .md file>
+       dispatch_records.py [--readme FILE] --coverage <task .md file> --stage <worker stage>
        dispatch_records.py --names <record file>...
        dispatch_records.py --newest <state checkout> <task slug>
 Exit 1 naming each record that lacks a part, or when the task has no dispatch records. The README is FILE, else the
@@ -30,7 +31,11 @@ for a `\\"` on a `Captain:` or `Asked:` amendment line outside a `Superseded tex
 A record whose task file is absent is not judged.
 --newest runs that scan on the file added by the latest commit that adds a file under <slug>/dispatch/, read as it
 is on disk: exit 0 when it is clean or the task has no record, 1 when a name is found, 2 when git cannot read the state.
+--coverage checks presence for a declared ideation, implementation or validation stage after an unfenced report:
+exit 0 when not due or covered, 1 when missing, 2 for invalid input or read errors. A positive-numbered stage
+record or stage message record covers repeated reports; contents and historical send timing are not checked.
 """
+import argparse
 import re
 import subprocess
 import sys
@@ -39,6 +44,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from delivery_gate import CANDIDATE, RECORD  # noqa: E402
 from design_surfaces import AMENDMENTS_HEADING, alignment_owes_result, dispatched_amendments, escaped_amendment_lines, section, task_folder, unfenced  # noqa: E402
+from role_triggers import outside_fences  # noqa: E402
 from number_guards import Misconfigured, frontmatter, task_facts  # noqa: E402
 
 PACKAGE = Path(__file__).resolve().parent.parent
@@ -225,6 +231,54 @@ def check_newest(state, slug, package):
     return check_names([record], package) if record and record.is_file() else 0
 
 
+def worker_stages(readme):
+    text = Path(readme).read_text()
+    parts = text.split("---", 2)
+    if len(parts) != 3 or parts[0].strip() or "entity-type" not in frontmatter(Path(readme)):
+        raise ValueError(f"{readme}: invalid workflow frontmatter")
+    declared = set(re.findall(r"^[ \t]*-[ \t]+name:[ \t]*([\w-]+)[ \t]*$", parts[1], re.M))
+    stages = declared & {"ideation", "implementation", "validation"}
+    if not stages:
+        raise ValueError(f"{readme}: no adopted worker stages")
+    return stages
+
+
+def coverage(task, stage, readme):
+    task = Path(task)
+    if stage not in worker_stages(readme):
+        raise ValueError(f"{readme}: invalid worker stage {stage}")
+    reported = any(re.match(r"^## Stage Report: " + re.escape(stage) + r"(?:\s|$)", line)
+                   for line in outside_fences(task.read_text()))
+    if not reported:
+        return "not due"
+    dispatch = task_folder(task) / "dispatch"
+    pattern = re.compile(re.escape(stage) + r"-[1-9][0-9]*(?:-message-[1-9][0-9]*)?\.md")
+    records = dispatch.iterdir() if dispatch.exists() else ()
+    return "complete" if any(pattern.fullmatch(p.name) and p.is_file() for p in records) else "missing"
+
+
+def check_coverage(args, readme):
+    parser = argparse.ArgumentParser(add_help=False)
+    parser.add_argument("--coverage", required=True, type=Path)
+    parser.add_argument("--stage", required=True)
+    try:
+        opts = parser.parse_args(args)
+        readme = readme or find_readme(task_folder(opts.coverage))
+        if readme is None:
+            raise ValueError(f"{opts.coverage}: no workflow README found")
+        result = coverage(opts.coverage, opts.stage, readme)
+    except SystemExit:
+        return 2
+    except (OSError, UnicodeError, ValueError, Misconfigured) as error:
+        print(f"dispatch coverage error: {error}")
+        return 2
+    if result == "missing":
+        print(f"{opts.coverage}: no dispatch record for completed {opts.stage}; hold advancement and gate preparation")
+        return 1
+    print(f"dispatch coverage {result}: {opts.stage}")
+    return 0
+
+
 def main(argv=None, package=PACKAGE):
     args = sys.argv[1:] if argv is None else argv
     if args[:1] == ["--names"] and len(args) > 1:
@@ -242,6 +296,8 @@ def main(argv=None, package=PACKAGE):
         if not readme.is_file():
             print(f"--readme {readme}: no such file")
             return 2
+    if "--coverage" in args:
+        return check_coverage(args, readme)
     if len(args) != 1 or args[0] in ("--names", "--newest"):
         print(__doc__.strip())
         return 2
