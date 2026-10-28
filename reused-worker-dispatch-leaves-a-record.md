@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:reused-worker-dispatch-leaves-a-record:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:reused-worker-dispatch-leaves-a-record-ideation-1
+              briefing:
+                id: briefing:reused-worker-dispatch-leaves-a-record:ideation:attempt-1:revision-1
+                digest: sha256:7ed148a3a494d32e0f5ae3498effbf487b7530bb7bd8d0d3286b0edf17dcfbe4
+                room-ref: ./reused-worker-dispatch-leaves-a-record/review/ideation/briefing-1
 ---
 
 ## Scope

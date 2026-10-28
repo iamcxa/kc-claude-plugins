@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:reused-worker-dispatch-leaves-a-record:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of reused-worker-dispatch-leaves-a-record to enter implementation? FO recommends approve with one Captain amendment; approving accepts it: build `dispatch_records.py --coverage` and its `pr_watch.py tasks` line, and drop `--before-send` with its HEAD-byte and symlink checks (chief-engineer batch review: the README already requires a check on follow-up messages and FO skipped it, so one more FO-run command would be skipped too). The workflow word raise is decided jointly with batch-reaches-each-gate-together as one raise of about 180 words, recounted on the real base.",
+  "artifacts": [
+    {
+      "id": "artifact:reused-worker-dispatch-leaves-a-record:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a21e0bfc3afd2992b38350ed0413a000a4225209/reused-worker-dispatch-leaves-a-record.md",
+      "rev": "sha256:2fcdf94e31959931223919854630a2e06d2a2ae06370d1f67e70f6f6d8615c1a",
+      "mediaType": "text/markdown",
+      "summary": "Design: a coverage check run by pr_watch.py tasks names a reused-worker follow-up dispatch with no record; replays #727 as caught. Chief-engineer: keep --coverage, cut --before-send."
+    }
+  ]
+}
