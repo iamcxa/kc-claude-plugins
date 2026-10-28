@@ -8,7 +8,7 @@ Model: gpt-6.1-sol (Codex via Paseo, thinking high; the Captain's interim dispat
 In the worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-interviews-extension on branch spacedock-ensign/fo-interviews-extension at bd328daf6e64a73ad5e54f7288803295cae9ef68, `git fetch origin` and merge origin/main (6bc82b501ede77f48d0ba19fa1f76e5569afa094, which holds #742 and #744) with a merge commit; no rebase, no force
 Resolve the one conflict FO's probe found, in docs/dev2/README.md frontmatter `extensions:`, so the line keeps both main's `paseo` and this branch's `fo-feedback`; change nothing else
 kc-dev-flow-2/scripts/lint-skills.py and the repository tests this task touched exit 0 on the merged head (python3 -B, caches cleared); `git diff origin/main..HEAD --stat` lists only this task's files
-Captain amendment 3 applies: the criteria validation-2 left unmet (optional adoption, interrupted-round recovery, actual reading counts, pending-send comparability) are shown at their first real occurrence, not before merge; under each such criterion in ## Acceptance criteria add one line "Evidence timing: at first real occurrence, Captain amendment 3" and change nothing else in it
+Captain amendment 3 applies: it moves when the evidence for the criteria validation-2 left unmet is due (at their first real occurrence, not before merge); it changes no criterion text, so edit no line of ## Acceptance criteria
 Push without force and without -u; report the new full head SHA and the diff stat against origin/main
 
 ## Scope notes
