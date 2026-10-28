@@ -16,6 +16,18 @@ status: backlog
 - Added 2026-10-27: from batch 8's chief-engineer review: FO put its own four suspicions into the reviewer's brief and the reviewer confirmed all four, so the review may have been anchored; a batch reviewer gets the task files, not FO's conclusions. The batch reviewer runs on a model of a different family from the batch's workers (batch 8: workers Codex gpt-6-astra, reviewer Claude opus).
 - Upstream first: archived fo-batch-sittings (and its `decision_ledger.py --sittings`), Spacedock Review and `gate prepare` (one briefing per task today), the relay and web FOs' answers on carrying several HTML previews (interview 2026-10-27, to be recorded under fo-interviews-extension).
 
+## Non-goals
+
+- The Spacedock Review deck with several previews (in the web and relay FOs' backlogs); a product-director role unless ideation shows the need.
+
+## Budget
+
+- One package PR to the workflow rules and, if needed, `scripts/decision_ledger.py`; no change to Spacedock gate commands.
+
+## Stop condition
+
+- Batch 7's four separate merge asks replay as one sitting under the new rule. Return to the Captain if holding a batch at a gate needs a Spacedock change.
+
 ## FO alignment
 
 Alignment: needed before ideation; how a batch is held at a gate and what the batch review owes are the Captain's.
