@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:reused-worker-dispatch-leaves-a-record:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of reused-worker-dispatch-leaves-a-record to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that a follow-up dispatch to a reused worker leaves a dispatch record before it is sent, and a missing one is named before the next gate; profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:reused-worker-dispatch-leaves-a-record:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/df32480a31d03a4f51111b1953853f7ab84e3f4b/reused-worker-dispatch-leaves-a-record.md",
+      "rev": "sha256:499c8f2f26c2bbd2d2be83d8d7ae60b73079e6ac966ea70fbafa93fb7cf69335",
+      "mediaType": "text/markdown",
+      "summary": "Bite: kc-ops-inbox ops-metric-event-protocol (#727): reused-worker dispatches left no record, and the later misses all sat on that path. Ideation owes where the check runs."
+    }
+  ]
+}

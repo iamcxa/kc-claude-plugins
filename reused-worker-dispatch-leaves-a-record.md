@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:reused-worker-dispatch-leaves-a-record:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:reused-worker-dispatch-leaves-a-record-backlog-1
+              briefing:
+                id: briefing:reused-worker-dispatch-leaves-a-record:backlog:attempt-1:revision-1
+                digest: sha256:9682249dd49b43628e358a80e2df2fc1ef8b35a3a5f9dd97772029e8cf766227
+                room-ref: ./reused-worker-dispatch-leaves-a-record/review/backlog/briefing-1
 ---
 
 ## Scope
