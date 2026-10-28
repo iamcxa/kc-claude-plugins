@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:paseo-codex-dispatch-practice:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:paseo-codex-dispatch-practice-ideation-1
+              briefing:
+                id: briefing:paseo-codex-dispatch-practice:ideation:attempt-1:revision-1
+                digest: sha256:4c6b143c8a666824dd31141e6d6291c3445c311308b0d7e40a4f67ea0d0bc996
+                room-ref: ./paseo-codex-dispatch-practice/review/ideation/briefing-1
 ---
 
 ## Scope

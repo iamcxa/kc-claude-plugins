@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-codex-dispatch-practice:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of paseo-codex-dispatch-practice to enter implementation, together with listing `paseo` in this workflow's `extensions:`? FO recommends approve; approving accepts both, and the ADR narrowing ADR 0015 for the Paseo Codex delivery exception (worker commits locally; FO pushes, opens the PR and runs RoboRev). Without the listing the new text loads in no workflow that bit (chief-engineer batch review: this workflow lists roborev, codex, copilot, learn, peers).",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-codex-dispatch-practice:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d48b5fbc8bf0d03d0938464a803947650a6a0c2f/paseo-codex-dispatch-practice.md",
+      "rev": "sha256:3666b4c8be7b74383d25cbc616d5cee406fcd1629fd23443bdd53d011bdd2e55",
+      "mediaType": "text/markdown",
+      "summary": "Design: paseo extension text for Codex workers via Paseo plus an ADR. Chief-engineer: no bitten workflow enables paseo; pair approval with enabling it here."
+    }
+  ]
+}
