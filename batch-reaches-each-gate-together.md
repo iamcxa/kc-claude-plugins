@@ -66,6 +66,30 @@ Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
 
+## Captain amendments
+
+### Amendment 1 — 2026-10-28, ideation gate (batch-9 joint sitting)
+Captain: 「照建議」 (chat, 2026-10-28)
+Asked: 「決定：五張全照建議（四張准並照上面刪減，一張暫緩）；如果哪張要改，直接說。」, with the batch-reaches-each-gate-together row 「| 一批只開一次會 | 准，刪兩處 | 刪掉「設計總監看整批」，畫面批次還沒出過問題；刪掉重述 Spacedock 步驟的那一段。「整批等齊才審」寫成一份 ADR（架構決策紀錄），因為它改了之前 ADR 0028「不等落後者」的規則；這次開會本身就當作實測 |」; gate question: Approve the ideation of batch-reaches-each-gate-together to enter implementation? FO recommends approve with two Captain amendments and one ADR; approving accepts them: cut the `Pass: batch` design-director exception (no screen batch has bitten), trim the 271-word workflow section by its fifth paragraph (it restates Spacedock's per-task prepare, record and consume), record the batch-waiting rule as an ADR beside ADR 0028's "do not wait for stragglers", and use this batch-9 sitting as the live replay instead of three fresh-model FO replays. The word raise is one joint raise of about 180 words with reused-worker-dispatch-leaves-a-record, recounted on the real base; implementation follows that task.
+Supersedes: AC-1, AC-3
+Design:
+
+Then use Spacedock's existing per-task preparation, commit and presentation checks. Present all members in one sitting, each with its bound snapshot, recommendation, question and delivery conditions. List decisions once, discuss one at a time, and record each answer only against its named tasks. Revise/hold does not approve another task. Resume approved work through existing authority; stale evidence needs replacement bindings. A review pass or a batch answer grants no extra merge authority.
+```
+<!-- batch-workflow-proposal:end -->
+
+### Proposed design-director pass
+
+Add the following 97-word pass, add “batch advice from task files” to the skill and agent descriptions, and allow the table's `batch` input row to point to this exception. The extra description/table tokens must be recounted at implementation; no other pass gains task-file access.
+
+<!-- batch-director-proposal:start -->
+```markdown
+## Batch advice
+
+`Pass: batch` reads the caller's committed task files, their linked previews or screenshots, and applicable product ADRs. This pass is the exception to the task-file exclusion above. Review whether the screen slice delivers one coherent journey, where task designs contradict, and which decision or missing evidence changes the recommendation. Return one recommendation with task-specific findings, evidence links, limitations and the Captain decisions needed. Do not accept FO's suspicions as review inputs. Do not replace task design reviews, adjudicate their declines, approve a gate or operate a release walk. The existing pass-specific contracts remain unchanged.
+```
+<!-- batch-director-proposal:end -->
+
 ## Stage Report: ideation
 
 - FAILED: A design for holding a batch at each gate and presenting it in one sitting (rules in the workflow README and, if needed, scripts/decision_ledger.py), with the batch reviewer chosen by the batch's kind and given the task files rather than FO's conclusions; batch 7's four separate merge asks replayed as one sitting; whether a product-director role is needed decided from evidence
