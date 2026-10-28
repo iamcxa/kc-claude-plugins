@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:batch-reaches-each-gate-together:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of batch-reaches-each-gate-together to enter implementation? FO recommends approve with two Captain amendments and one ADR; approving accepts them: cut the `Pass: batch` design-director exception (no screen batch has bitten), trim the 271-word workflow section by its fifth paragraph (it restates Spacedock's per-task prepare, record and consume), record the batch-waiting rule as an ADR beside ADR 0028's \"do not wait for stragglers\", and use this batch-9 sitting as the live replay instead of three fresh-model FO replays. The word raise is one joint raise of about 180 words with reused-worker-dispatch-leaves-a-record, recounted on the real base; implementation follows that task.",
+  "artifacts": [
+    {
+      "id": "artifact:batch-reaches-each-gate-together:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/b0055d05af5d2e75828f408e846e6f18c789f112/batch-reaches-each-gate-together.md",
+      "rev": "sha256:2e5b1beaf6fb543380784fb8821f0efb68bdf75af39252a0116739ac1a0a3997",
+      "mediaType": "text/markdown",
+      "summary": "Design: a batch is held at each gate and presented in one sitting; batch reviewer by batch kind, given task files only. Chief-engineer: trim, cut the director batch pass, keep the ADR."
+    }
+  ]
+}
