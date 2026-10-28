@@ -12,6 +12,18 @@ status: backlog
 - Bite: kc-ops-inbox task ops-metric-event-protocol (PR #727, two rejected validation cycles; its observer report at state commit f25c224f6, relayed by its FO 2026-10-27): no dispatch records for the implementation or validation dispatches sent to reused workers, and the misses that followed (no delivery_gate question before validation briefings 1 and 2, no Override line, polish items left out of FO declines) all sat on that path, where no `dispatch build --stamp` runs and nothing prompts the record. The README already says a follow-up message to a worker FO resumes is a dispatch.
 - Upstream first: the README's Stages (follow-up dispatch rule), `scripts/dispatch_records.py`, `scripts/pr_watch.py tasks`, Spacedock `dispatch build`.
 
+## Non-goals
+
+- A change to Spacedock `dispatch build`; recording messages that are not dispatches (a question answered, a status read).
+
+## Budget
+
+- One package PR; extend `scripts/dispatch_records.py`, no new script.
+
+## Stop condition
+
+- The ops-metric-event-protocol path replays as caught (a reused-worker follow-up with no record is named before the next gate) and every current task with records still passes. Return to the Captain if the record can only be enforced inside Spacedock.
+
 ## FO alignment
 
 Alignment: needed before ideation; where the check or rule lives is a package design choice.
