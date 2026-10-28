@@ -184,8 +184,12 @@ rows; the install ask in [`adoption.md`](references/sd/adoption.md) offers the r
 | [learn](extensions/learn/EXTENSION.md) | required | FO, through the `kc-dev-flow-2` mod in `references/sd/mods/`, before the merge sentinel and right after a task is archived | checks `observer.md` is committed before the sentinel (`scripts/observer_check.py`), runs `learn` and the observer, and presents both results |
 | [journey-map](extensions/journey-map/EXTENSION.md) | recommended | FO, after a gate ruling on a journey task, before `merge guard`, and after the archive | writes a footprint for a ruling that answers a map question, checks it before the merge guard, and folds it into the map as a docs-only pull request |
 | [release-acceptance](extensions/release-acceptance/EXTENSION.md) | recommended, with journey-map | an acceptance task for a release, from implementation to the validation gate and the close | walks a finished release with reviewers on different Claude models, has the design director rule on their complaints and the deferred findings, and records the walk in the task folder |
+| [fo-feedback](extensions/fo-feedback/EXTENSION.md) | optional, requires peers | interviewing maintainer, at attended resume and named batch close | gathers operator experience every three completed batches beside independent observer findings |
 
 ## Learning loop
+
+Optional [operator feedback](extensions/fo-feedback/EXTENSION.md) records failures,
+workarounds and useful events; findings follow the existing backlog and Captain decisions.
 
 The loop runs on three lines. Project learning: `learn` evaluates one closed task and
 may propose a root learning.md rule as a Draft PR. Package improvement: the
