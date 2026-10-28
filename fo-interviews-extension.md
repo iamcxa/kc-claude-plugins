@@ -79,7 +79,7 @@ gates:
                 state: pending
 started: 2026-10-28T07:45:45Z
 worktree: .worktrees/spacedock-ensign-fo-interviews-extension
-pr: iamcxa/kc-claude-plugins#745
+pr: pr-merge:745
 ---
 
 ## Scope
