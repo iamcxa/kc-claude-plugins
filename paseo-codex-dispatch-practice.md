@@ -1,5 +1,5 @@
 ---
-title: The paseo extension says how FO dispatches a Codex worker through Paseo: commit locally, FO pushes and opens the PR, and the worker's workspace is its worktree
+title: The paseo extension says how FO dispatches a Codex worker through Paseo; commit locally, FO pushes and opens the PR, and the worker's workspace is its worktree
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
