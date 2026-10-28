@@ -50,6 +50,7 @@ gates:
 ## FO alignment
 
 Alignment: needed before ideation; the scope of the check and any backfill are the Captain's.
+Result: aligned at backlog: the Captain 「准」 (chat, 2026-10-28) to FO's batch-9 backlog sitting, which asked 「決定：五張全准進入設計階段；要拿掉或換掉哪張，直接說。」, approved the outcome and bounds in this file. The scope of the check and any backfill of active tasks stay his: ideation returns them as decisions at the ideation gate.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
