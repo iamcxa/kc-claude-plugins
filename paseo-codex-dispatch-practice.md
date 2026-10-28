@@ -279,3 +279,53 @@ Designed a bounded paseo-extension procedure using explicit task-workspace place
 ### Summary
 
 Committed the approved three-file Paseo Codex procedure and authority record as 9a70a3350436fac9e51d0795b3b4299693f020f8, with local checks, bounded mutations and reading-cost evidence. Per FO's committed follow-up, publication, Draft PR, exact-head RoboRev and CI belong to FO; native placement is unverified, and this report is neither validation nor delivery approval.
+
+## Stage Report: validation
+
+- SKIPPED: Independent verdict on PR #742 head 9a70a335 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  Verdict REJECTED for full acceptance: all six criteria assessed and all available local commands/counterexamples rerun, but AC-2's native success/control and AC-6's native field transport were not exercised; no test agents were authorized by implementation-1-message-1. This is missing proof, not a demonstrated placement defect (F1).
+- DONE: Captain amendment 1 applies (paseo listed in docs/dev2/README.md extensions:); AC-3 and AC-4 evidence is FO's publication of this exact head (push of 9a70a335 to the branch, Draft PR #742 opened by FO, RoboRev evidence=roborev:1296 clean on 9a70a3350); AC-2's disposable native-worker proof was reported not verified by implementation
+  Three approved paths only; amendment and ADR 0042 agree. Publication/review are FO-supplied committed dispatch evidence (d98200c32, validation-1.md); local tracking ref matches 9a70a3350436fac9e51d0795b3b4299693f020f8. Hosted checks are FO-reported, not independently queried.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Four-step script below ran unchanged with bash --noprofile --norc, exit 0. Used the explicitly supplied equivalent Codex package 0.32.1; ADR lint with --since e57feb6eec956b74a1d4b29f26f1d0a7d1693785 --require 0042 exits 0: 41 ADR file(s) checked, 0 legacy.
+- DONE: AC-1 — bounded document scope and independent reader trace
+  PASS: original peer bytes preserved; exact approved 272-word addition; enabled Paseo/Codex selects FO publication, other-provider and unlisted cases retain existing ownership. A broadened all-host/always-enabled wording counterexample changes those negative-case decisions and fails exact approved-text comparison; this is document review, not runtime enforcement.
+- SKIPPED: AC-2 — native worker placement success and inherited-workspace control
+  Paseo 0.13.0 live help and freshly extracted vendor source pass three stub-client routing cases; omitting newWorkspace:'local' yields no explicit workspace ID and fails placement assertion. Full native spawn arguments/returned workspace/pwd/git-root/permission-mode comparison is absent; both implementation report and this worker's actual launch pwd name colombo, not the task worktree.
+- DONE: AC-3 — candidate handoff and publication identity
+  Local branch/base/full head and prepared PR text agree with FO's Draft PR #742 receipt; no validator publication. Independent reader cases hold without grant and reuse a matching PR; substituting base SHA in the receipt fails the validator's identity assertion. These negative cases do not establish executed provider duplicate prevention or historical absence of every worker push.
+- DONE: AC-4 — review gate outcomes and FO evidence
+  Five existing fixtures pass; three executed gate mutations accepting old head, failed job or unavailable daemon as clean each fail the existing negative test. FO supplies roborev:1296 clean on this head; unlisted roborev reader case invokes nothing. No new daemon review or independent hosted receipt was fabricated.
+- DONE: AC-5 — independent lifecycle recount and omitted-note counterexample
+  Anchored-heading recount: startup 7071→7343; idle/open 1152→1424; idle/merged 1123→1395; archive 623→895; merge ask 2698→2970; first dispatch 1670→2006. Existing watcher fixtures output 29/29/0/5 words and sitting 90; omitted 64-word emitted notes gives 1942, failing 2006. Workflow stays 5576; conditional ADR adds 476; F2 corrects prior totals.
+- DONE: AC-6 — authority, document checks and bounded dispatch transport
+  ADR 0015 and workflow/budget bytes unchanged; reserved ADR 0042, doc-impact (0 documents), number guards, comment ratio (0 code/0 comments), design surfaces and 4 dispatch records all pass. Removing ADR Recommended yields exit 1. Existing Spacedock integration passes 10 handoffs/10 Team-loss controls and scope-note/host-marker negatives; executable 0.27.2/plugin 0.27.3 proves generated artifacts, not native model/runtime-field preservation (F1).
+
+### Findings and evidence limits
+
+- F1 Needs decision: The enabled Paseo/Codex FO-to-worker journey owes real placement and unchanged runtime fields under value-ac[AC-2] and value-ac[AC-6]. Harm is not demonstrated; the trigger evidence is the inherited colombo launch root and absent native success/control receipts. FO's instruction to report not verified does not amend the Captain's criteria. Return the missing-proof decision to the Captain: authorize the disposable native comparison, or explicitly amend acceptance; do not infer a waiver or repair product bytes.
+- F2 Polish: The prior reading-cost report starts its Extensions extraction at the inline reference in workflow.md:334, counting 451 words instead of the real heading's 224. Retained passages confirm the extra 227 in idle/open, idle/merged and merge ask on both revisions; corrected totals are above. No reading-growth delta, workflow budget or savings claim changes; no present product harm or protected threshold breach established. FO may disposition this report-only discrepancy.
+- Evidence: /tmp/validation-paseo-742-evidence/ contains checks.json, recount.py/json, falsifiers.py, routing-probe.cjs, captured vendor source/help, sd-dispatch.log and acceptance.sh/log. Local tests do not prove native placement, prompt savings, model compliance, hosted CI, merge or adoption. CI cost per PR was not measured; this candidate changes no CI. No user-visible surface exists. The three retained changes are necessary for the scoped procedure, explicit adoption and durable ADR exception; goal sufficiency remains unverified at the native seam.
+
+### Minimal acceptance script
+
+Run on this Mac with the named existing candidate worktree and Codex package. The four steps cover local structure, ADR and review-gate refusal behavior only; they do not satisfy F1 or query GitHub. Each command below ran exactly as written in a fresh bash shell; the complete script exited 0.
+
+```bash
+set -e
+# 1. Expected: exactly the three paths shown in the observed output below.
+cd /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice
+test "$(git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice rev-parse HEAD)" = 9a70a3350436fac9e51d0795b3b4299693f020f8
+git -C /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice diff --name-only e57feb6eec956b74a1d4b29f26f1d0a7d1693785 HEAD
+# 2. Expected: PASS and 5576 of 5576 words.
+python3 -B kc-dev-flow-2/scripts/lint-skills.py
+# 3. Expected: 41 ADR file(s) checked, 0 legacy; exit 0.
+python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since e57feb6eec956b74a1d4b29f26f1d0a7d1693785 --require 0042
+# 4. Expected: Ran 5 tests; OK.
+python3 -B kc-dev-flow-2/extensions/roborev/test_roborev_gate.py
+```
+Observed step 1: docs/adr/0042-paseo-codex-workers-hand-publication-and-local-review-to-fo.md; docs/dev2/README.md; kc-dev-flow-2/extensions/paseo/EXTENSION.md. Step 2: PASS: basic frontmatter, declared profile routes, role bindings and package script paths; references/sd/workflow.md: 5576 of 5576 words; no unlisted passage repeats it; Not checked: full Agent Skills conformance or host/workflow behavior. Step 3: 41 ADR file(s) checked, 0 legacy. Step 4: Ran 5 tests; OK. All steps exit 0.
+
+### Summary
+
+Independently assessed PR #742 at 9a70a3350436fac9e51d0795b3b4299693f020f8 against base e57feb6eec956b74a1d4b29f26f1d0a7d1693785 in a clean detached throwaway worktree, with available local checks and a counterexample per criterion. Recommend REJECTED pending the native evidence/acceptance decision (F1); the corrected absolute reading totals are report-only Polish (F2), and FO publication/review/CI evidence remains explicitly attributed. Product bytes and entity frontmatter remain unchanged; no test agents, PR actions or product push were performed.
