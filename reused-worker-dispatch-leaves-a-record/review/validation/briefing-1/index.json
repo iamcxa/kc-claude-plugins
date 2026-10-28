@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:reused-worker-dispatch-leaves-a-record:validation:attempt-1:revision-1",
+  "question": "Approve validation of reused-worker-dispatch-leaves-a-record and merge iamcxa/kc-claude-plugins#743 at head ea84b08d4c726e33460609b2247599afb2d54c2b with `gh pr merge 743 --squash --match-head-commit ea84b08d4c726e33460609b2247599afb2d54c2b`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:reused-worker-dispatch-leaves-a-record:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/30253d4d7e04ae363875b92b5b8a4551dce95f39/reused-worker-dispatch-leaves-a-record.md",
+      "rev": "sha256:5bfeaa01f997e8ca9503edc49a4832da2e772489aa603cefaee29930f437520e",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: under Captain amendment 1, `dispatch_records.py --coverage` names a completed worker stage that has no dispatch record and `pr_watch.py tasks` prints it as a next line; the ops-metric-event-protocol replay at real state 064e61a15 is caught; all 2,055 old-mode results are unchanged; validation PASSED with no findings.\nNecessity: seven files (kc-dev-flow-2/references/sd/workflow.md, kc-dev-flow-2/scripts/dispatch_records.py, lint-skills.py, pr_watch.py, test_dispatch_records.py, test_pr_watch.py, test_sd_dispatch.py); +29 workflow words inside the joint raise the Captain approved.\nExternal rounds: Codex 1 (code review completed with no findings, evidence=summary:6470247830@ea84b08d4). RoboRev clean on this head, run by FO (evidence=roborev:1297).\nSecond reviewer: copilot because the change holds gate preparation until a dispatch record exists (approval rules).\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5683339875\nCopilot retry: available when the Captain confirms quota is back."
+    }
+  ]
+}

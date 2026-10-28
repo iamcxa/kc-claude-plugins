@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:reused-worker-dispatch-leaves-a-record:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:reused-worker-dispatch-leaves-a-record-validation-1
+              briefing:
+                id: briefing:reused-worker-dispatch-leaves-a-record:validation:attempt-1:revision-1
+                digest: sha256:989ea0cebe80f3402a699399570204bbf473bbf8e816fd7aa0b224cac8576449
+                room-ref: ./reused-worker-dispatch-leaves-a-record/review/validation/briefing-1
 started: 2026-10-28T07:06:45Z
 worktree: .worktrees/spacedock-ensign-reused-worker-dispatch-leaves-a-record
 pr: iamcxa/kc-claude-plugins#743
