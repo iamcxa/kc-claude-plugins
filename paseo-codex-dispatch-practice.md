@@ -34,6 +34,17 @@ gates:
                 id: briefing:paseo-codex-dispatch-practice:ideation:attempt-1:revision-1
                 digest: sha256:4c6b143c8a666824dd31141e6d6291c3445c311308b0d7e40a4f67ea0d0bc996
                 room-ref: ./paseo-codex-dispatch-practice/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-codex-dispatch-practice:ideation:1
+                briefing: briefing:paseo-codex-dispatch-practice:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T07:05:33.55118Z"
+                decision: approve
+                reason: The Captain 「照建議」 (chat, 2026-10-28), answering FO's joint batch-9 ideation sitting of five gates whose ask was 「決定：五張全照建議（四張准並照上面刪減，一張暫緩）；如果哪張要改，直接說。」; accepts FO's recommendation for this task as stated in the gate question, recorded as Captain amendment 1.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
