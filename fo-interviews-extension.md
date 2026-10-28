@@ -368,6 +368,11 @@ Superseded text:
 
 **AC-2 — Cadence, ownership and interrupted rounds.** Evidence: an attended maintainer replay uses sourced batch membership/completion records; duplicate checks count once, two completions do not trigger, three do, unknown membership does not count, one interrupted round resumes, cancellation does not advance the anchor, partial closure preserves explicit gaps, and an early targeted round does not reset the anchor without authority. Falsifier: count validation sittings as completed batches, open a second round or resend an uncertain exchange and the trace fails. Current evidence: five design-only counting examples pass; actual FO behavior and host recovery remain unverified.
 
+
+### Amendment 3 — 2026-10-29, validation gate (second batch-9 delivery sitting)
+Captain: 「准」 (chat, 2026-10-29)
+Asked: 「決定：三張全照建議（合併 #744、合併 #742、#745 改條件後在 #744 之後合併）；如果哪張要改，直接說。」; gate question: Approve fo-interviews-extension with its remaining native criteria shown at first occurrence, and merge iamcxa/kc-claude-plugins#745 at head bd328daf6e64a73ad5e54f7288803295cae9ef68 after #744? FO recommends approve; approving accepts that recommendation and records it as Captain amendment 3: the criteria validation-2 left unmet (optional adoption, interrupted-round recovery, actual reading counts and pending-send comparability) are shown the first time each happens in a real round, not before merge, as amendment 2 already did for the three-batch cadence. It covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.
+Supersedes: none
 ## Stage Report: ideation
 
 - DONE: A design for an optional interview extension beside learn (cadence, a fixed short question set per extension, record format in the state checkout, findings filed as backlog tasks), reproducing rounds 1 to 3 (fo-interviews-extension/peers-round-1.md, round-2-batch7-texts.md, round-3-design-director.md) as its first records; cadence and the question set returned as Captain decisions
