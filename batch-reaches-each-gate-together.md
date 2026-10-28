@@ -101,6 +101,10 @@ Add the following 97-word pass, add “batch advice from task files” to the sk
 ```
 <!-- batch-director-proposal:end -->
 
+## Number guards
+
+ADR: 0043
+
 ## Stage Report: ideation
 
 - FAILED: A design for holding a batch at each gate and presenting it in one sitting (rules in the workflow README and, if needed, scripts/decision_ledger.py), with the batch reviewer chosen by the batch's kind and given the task files rather than FO's conclusions; batch 7's four separate merge asks replayed as one sitting; whether a product-director role is needed decided from evidence
