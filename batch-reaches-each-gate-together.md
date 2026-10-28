@@ -53,6 +53,17 @@ gates:
                 id: briefing:batch-reaches-each-gate-together:validation:attempt-1:revision-1
                 digest: sha256:0f62d8ced01df7558d184921edf8f22e860467338b8f688bfb9aee8e8048132c
                 room-ref: ./batch-reaches-each-gate-together/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:batch-reaches-each-gate-together:validation:1
+                briefing: briefing:batch-reaches-each-gate-together:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T14:29:09.687403Z"
+                decision: approve
+                reason: The Captain 「准」 (chat, 2026-10-28), answering FO's joint batch-9 delivery sitting of four gates whose ask was 「決定：四張全照建議（#743 合併、#744 接著合併、#742 我補一次再驗收、#745 提早跑第 4 輪訪談並照上面修）；如果哪張要改，直接說。」; accepts FO's recommendation for this task as stated in the gate question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-28T07:28:06Z
 worktree: .worktrees/spacedock-ensign-batch-reaches-each-gate-together
 pr: iamcxa/kc-claude-plugins#744
