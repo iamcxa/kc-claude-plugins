@@ -43,7 +43,7 @@ stages:
 ---
 
 # Development workflow
-<!-- kc-dev-flow-2 0.32.1 x-release-please-version -->
+<!-- kc-dev-flow-2 0.33.0 x-release-please-version -->
 
 This is the adopted workflow's authority for SD stages and task schema. Resolve
 its absolute directory and retain `--workflow-dir` on SD commands, including
@@ -65,6 +65,16 @@ SD does not enforce this rule. Preserve approved outcome and scope.
 New seeds require non-empty `Non-goals:`, `Budget:` and `Stop condition:` lines
 under `## Scope` or matching level-two sections. Replay counts do not enforce
 these on existing tasks. Use bold **AC-N** declarations with individual evidence clauses.
+
+## Batch gates
+
+A Captain-approved batch covers one release slice or theme. Recover members from accepted scopes/questions, without another list. Unclear membership holds presentation; membership changes or splits need his decision. Incompatible stage graphs need an explicitly approved split.
+
+At each next gate, wait for every member's sufficient committed evidence, then present the batch in one sitting. Early finishers prompt no decision. Continue authorized repairs/validation. A blocker needing Captain authority gets one exception question naming the member and effect. Do not manufacture hold resolutions.
+
+`<package>/scripts/pr_watch.py tasks` sitting hints remain subject to this boundary; stage alone joins neither unrelated tasks nor incomplete batches. Unbatched tasks retain ordinary gates.
+
+When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from all workers or ask the Captain. Review advises, without approval authority.
 
 ## Stages
 
@@ -102,6 +112,9 @@ committed with that dispatch's `spacedock state commit <slug> --workflow-dir <di
 the instruction a worker followed outlives the session that wrote it; FO runs
 `python3 <package>/scripts/dispatch_records.py <task folder>` before committing and fixes each part it lists. A follow-up
 message to a worker FO resumes is a dispatch too, with the same check and a checklist of the items that message asks, never a pointer to another record.
+After each worker report, before advancing or preparing its gate, FO runs
+`python3 <package>/scripts/dispatch_records.py --coverage <task> --stage <stage>`; nonzero holds that task.
+This check does not observe unrecorded messages.
 A checklist or scope-notes line that names a package script writes
 `<package>/scripts/NAME.py` with the absolute root substituted, never the bare script
 name; before `dispatch build`, FO runs `python3 <package>/scripts/dispatch_records.py --names <record>`
