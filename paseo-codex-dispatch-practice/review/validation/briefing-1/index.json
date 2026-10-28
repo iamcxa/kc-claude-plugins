@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-codex-dispatch-practice:validation:attempt-1:revision-1",
+  "question": "Hold paseo-codex-dispatch-practice at validation while FO closes the one open finding? FO recommends hold; approving accepts it: FO builds one more validation dispatch for #742's unchanged head 9a70a3350436fac9e51d0795b3b4299693f020f8 and starts it in the same shell command, with nothing between build and spawn (validation-3's F1: FO read a trial agent and committed receipts in between), a fourth validation judges only that order, and #742 then comes back for one merge ask.",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-codex-dispatch-practice:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/108712f172b62a08b8a7d8e83a667d75d659c607/paseo-codex-dispatch-practice.md",
+      "rev": "sha256:75790eff311988edd0c591935b633f49743f175959e2ad409dcfe4cb2f6f67ff",
+      "mediaType": "text/markdown",
+      "summary": "Validation-3 REJECTED with F1 narrowed to immediate-spawn order: worktree placement (CLI --new-workspace local and MCP workspaceId), the generated prompt byte-for-byte, and the model, thinking and mode all held; FO broke the order. Chief-engineer: repair first, no product change. Seen on the candidate route, for the Captain's knowledge: an agent started with `paseo agent run` sends FO no completion notice, and a worker placed in its worktree needs one approved escalation to write the task state."
+    }
+  ]
+}

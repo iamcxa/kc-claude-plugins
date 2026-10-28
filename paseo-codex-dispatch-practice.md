@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:paseo-codex-dispatch-practice:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:paseo-codex-dispatch-practice-validation-1
+              briefing:
+                id: briefing:paseo-codex-dispatch-practice:validation:attempt-1:revision-1
+                digest: sha256:750f8921569011c8b0e8271493de14dd96b3fed978e8d6f6e43e4176cd06e4b6
+                room-ref: ./paseo-codex-dispatch-practice/review/validation/briefing-1
 started: 2026-10-28T07:06:37Z
 worktree: .worktrees/spacedock-ensign-paseo-codex-dispatch-practice
 pr: iamcxa/kc-claude-plugins#742
