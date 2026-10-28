@@ -1,0 +1,24 @@
+{
+  "class": "never",
+  "head": "ea84b08d4c726e33460609b2247599afb2d54c2b",
+  "model": "not run",
+  "necessity": "seven files (kc-dev-flow-2/references/sd/workflow.md, kc-dev-flow-2/scripts/dispatch_records.py, lint-skills.py, pr_watch.py, test_dispatch_records.py, test_pr_watch.py, test_sd_dispatch.py); +29 work",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: deferred: 'Five steps and expected/observed output are'",
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-10-28'",
+    "point: path: 'kc-dev-flow-2/references/sd/workflow.md'",
+    "point: path: 'kc-dev-flow-2/scripts/dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/lint-skills.py'",
+    "point: path: 'kc-dev-flow-2/scripts/pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_dispatch_records.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_pr_watch.py'",
+    "point: path: 'kc-dev-flow-2/scripts/test_sd_dispatch.py'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#743",
+  "sufficiency": "under Captain amendment 1, `dispatch_records.py --coverage` names a completed worker stage that has no dispatch record and `pr_watch.py tasks` prints it as a next line; the ops-metric-event-protocol r",
+  "time": "2026-10-28T14:29:28Z",
+  "verdict": "ask"
+}
