@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-28T07:28:06Z
+worktree: .worktrees/spacedock-ensign-batch-reaches-each-gate-together
 ---
 
 ## Scope
