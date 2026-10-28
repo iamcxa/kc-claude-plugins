@@ -472,3 +472,27 @@ Implemented and pushed the amended named-batch rule and ADR 0043 at e4bd4d06a153
 PASSED for the amended Pilot instruction change at e4bd4d06a1538ed166205609002e5eef1ebf0983, with local command proof, committed live-sitting records and independent scenario behavior kept distinct. The four-step fresh-shell acceptance script passes; FO retains gate/delivery authority and must recheck the actual integration head after the stacked base lands.
 
 - F1 Deferred risk: native optional-reviewer execution remains unverified. Released user/workflow: FO requesting advice on a complete process batch; possible harm: wrong role/family, anchored input or advisory authority mistaken for approval; boundary: value-ac[AC-9] neutral, eligible advisory review; trigger evidence: scenarios pass but no live reviewer was launched, so no observed harm. A supported live invocation that violates one of those boundaries would make this Material.
+
+## Stage Report: implementation (cycle 2)
+
+- DONE: In the worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-batch-reaches-each-gate-together on branch spacedock-ensign/batch-reaches-each-gate-together at e4bd4d06a1538ed166205609002e5eef1ebf0983, `git fetch origin` and merge origin/main (bfa5354b40ba99e297e7cb2d3e70b41f7d0fece9, which holds #743 squashed as bfa5354b4) with a merge commit; no rebase, no force
+  Fetch exited 0; merge b61a708dadf9cbd9ac1e6d727720c67cf9f06076 has exactly the dispatched head and bfa5354b40ba99e297e7cb2d3e70b41f7d0fece9 as its two parents. No rebase or force operation.
+- DONE: Resolve the one conflict FO's probe found, in kc-dev-flow-2/scripts/lint-skills.py (the workflow word-budget step), so the budget equals the joint raise: +29 from #743 plus +149 from this task, +178 in total; change nothing else
+  Only lint-skills.py conflicted; retained the joint +178 step and its Captain quote/load moment. HEAD tree equals e4bd4d06a1538ed166205609002e5eef1ebf0983's tree byte-for-byte; exact-parent/tree assertions and git diff --check passed.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py and kc-dev-flow-2/scripts/test_poc_readme.py exit 0 on the merged head (python3 -B, caches cleared); `git diff origin/main..HEAD --stat` lists only this task's five files
+  Cleared worktree Python caches, then all three python3 -B commands exited 0: lint checks budget equality (5754/5754; wrong delta fails); POC 8 tests check batch-rule retention/ideation omission (dropping the rule fails); real CLI dispatch/gate fixtures check worker isolation and separate authority (inlining/stale-binding controls exercise failures). CLI 0.27.2 with declared SD plugin root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3; exact five-file set assertion passed.
+- DONE: Push without force and without -u; report the new full head SHA and the diff stat against origin/main
+  git push origin HEAD:refs/heads/spacedock-ensign/batch-reaches-each-gate-together exited 0, advancing e4bd4d06a to b61a708dadf9cbd9ac1e6d727720c67cf9f06076; no force/-u, gh or PR operation. Diff against origin/main at bfa5354b40ba99e297e7cb2d3e70b41f7d0fece9:
+
+```text
+ docs/adr/0043-a-named-batch-waits-for-its-next-gate-before-one-sitting.md | 54 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ kc-dev-flow-2/references/sd/workflow.md                                   | 10 ++++++++++
+ kc-dev-flow-2/scripts/lint-skills.py                                      |  4 ++--
+ kc-dev-flow-2/scripts/test_poc_readme.py                                  |  7 +++++++
+ kc-dev-flow-2/scripts/test_sd_dispatch.py                                 | 62 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 135 insertions(+), 2 deletions(-)
+```
+
+### Summary
+
+Merged origin/main into the authorized branch and pushed b61a708dadf9cbd9ac1e6d727720c67cf9f06076, retaining the single joint +178-word budget step and the exact prior candidate tree. All three requested checks exit 0 and only the task's five files differ from main; hosted CI, RoboRev and delivery remain with FO, and this report changes no task frontmatter or gate authority.
