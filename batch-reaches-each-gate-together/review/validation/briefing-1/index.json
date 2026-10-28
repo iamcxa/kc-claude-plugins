@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:batch-reaches-each-gate-together:validation:attempt-1:revision-1",
+  "question": "Approve validation of batch-reaches-each-gate-together and merge iamcxa/kc-claude-plugins#744 at head e4bd4d06a1538ed166205609002e5eef1ebf0983 after #743, with `gh pr merge 744 --squash --match-head-commit e4bd4d06a1538ed166205609002e5eef1ebf0983`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, and covers, once #743 is merged, retargeting #744's base to main and merging this same head if GitHub reports it mergeable; if it is not mergeable, FO merges main into the branch (no rebase, no force) and runs one validation on the new head before asking again; FO merges after it reruns delivery_gate.py check unless he says he merges or holds, then removes its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:batch-reaches-each-gate-together:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/3dc8105cc2e03853c7a4da498389b56a2cb9f6e7/batch-reaches-each-gate-together.md",
+      "rev": "sha256:9172354f9bef0f8b19f8ac8d89ceea5067e8d22cd036c23c824d2bd8f3acc844",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: under Captain amendment 1, a named batch is held until every member reaches the next gate and is presented in one sitting, the batch reviewer follows the batch's kind and gets task files, not FO's conclusions; ADR 0043 records the rule beside ADR 0028; the batch-7 four-ask replay and the real CLI gate replay pass; validation PASSED with one Deferred risk.\nNecessity: five files (docs/adr/0043-a-named-batch-waits-for-its-next-gate-before-one-sitting.md, kc-dev-flow-2/references/sd/workflow.md, lint-skills.py, test_poc_readme.py, test_sd_dispatch.py); +149 workflow words, so +178 with #743, inside the joint raise of about 180 the Captain approved.\nExternal rounds: Codex 1 (code review completed with no findings, evidence=summary:6470249787@e4bd4d06a). RoboRev clean on this head, run by FO (evidence=roborev:1298). Engineering-reviewer on the amendment: the build drops the director pass and keeps one sitting; the cut fifth paragraph's authority sentences now live in ADR 0043 only, as the Captain's cut implies.\nFO declines: Deferred risk F1, native optional-reviewer execution unverified (this batch's two chief-engineer runs are live instances, recorded with model and verbatim briefs in batch-reaches-each-gate-together/batch-9-reviews/).\nSecond reviewer: copilot because the change sets how and when the Captain is asked at gates (approval rules).\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5683342005\nCopilot retry: available when the Captain confirms quota is back."
+    }
+  ]
+}

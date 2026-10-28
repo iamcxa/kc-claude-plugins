@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:batch-reaches-each-gate-together:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:batch-reaches-each-gate-together-validation-1
+              briefing:
+                id: briefing:batch-reaches-each-gate-together:validation:attempt-1:revision-1
+                digest: sha256:0f62d8ced01df7558d184921edf8f22e860467338b8f688bfb9aee8e8048132c
+                room-ref: ./batch-reaches-each-gate-together/review/validation/briefing-1
 started: 2026-10-28T07:28:06Z
 worktree: .worktrees/spacedock-ensign-batch-reaches-each-gate-together
 pr: iamcxa/kc-claude-plugins#744
