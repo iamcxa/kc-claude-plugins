@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-interviews-extension:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of fo-interviews-extension to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that an optional extension in which the dev2 maintainer interviews every FO each few batches about each extension and rule; profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:fo-interviews-extension:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/cfce27813848e841404e8ccd1f6da397e7c2511a/fo-interviews-extension.md",
+      "rev": "sha256:d860234ec66edd79e8a76824fde481adb0869f07b9c0cfe4f94d353219fd88ba",
+      "mediaType": "text/markdown",
+      "summary": "Bite: none as a failure; rounds 1 and 2 ran by hand (peers-round-1.md, round-2-batch7-texts.md) and found the relayed-ruling and Codex-dispatch gaps. Ideation owes cadence and the question set, which are the Captain's."
+    }
+  ]
+}
