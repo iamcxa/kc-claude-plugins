@@ -38,4 +38,17 @@ To the web, relay and project-env FOs, each anchored on that repo's recorded eve
 3. Skip for wording the Captain already worded, a repair cycle touching no client file (already skipped docs-site validation-2 built review), and a built screen whose pictures match the approved previews with a logic-only diff. Always run for a new screen or screen state, anything public (the docs site), and any picture the Captain sees for the first time at a gate.
 4. The run is not the cost; the decline round and its bookkeeping are (writing declines, 1b/2b rulings, preview-path fixes for design_surfaces.py, overruled declines turned into fixes, criteria or decisions). Its findings caused about two extra cycles, both judged worth it. Wall time per round not measured.
 
-(relay pending: its FO was busy at send time)
+### subspace-relay FO (Paseo 1671c3a9), 2026-10-28
+
+1. Found new: rr-pairs-once validation-1 built-screen pass, 2026-10-28: at 40 columns the share URL is cut after "/r/di" and the expiry is gone (became Material F2, which the validator had missed; the validator had seen the paired status clipped). Added nothing: pair-once validation-5 (false MAJOR from abbreviated criterion text, cleared in validation-6). Missed on pair-once: the Captain's "code-route block too crowded" (the director saw only TUI captures, not the CLI pairing screens) and the approved "code is emphasized" requirement the build left out.
+2. Not known across tasks; on rr-pairs-once the one decline (clipped help text at 80 columns) was real, fair to defer, and upheld.
+3. Skip when there is no visible text or layout change, or the text is exactly Captain-approved wording already in the preview. Always run for anything rendered in a terminal at narrow widths, or where tests check a model field rather than the rendered screen (rr-pairs-once F1: the test checked m.base.flash while the screen cut it off). Most value came from capturing the real rendered screen; the ruling added one finding on top.
+4. The run took minutes; the slow part was the repair cycle its findings start (legitimate). The false MAJOR in pair-once cost one full validation cycle, the worst case seen. 1b/2b cost not known.
+
+## FO reading (not a ruling)
+
+- No one reports the run itself as slow; reasoning level and time limits are not where the cost is.
+- Cost: the decline round's bookkeeping (web, project-env) and full cycles started by a false or late finding (relay).
+- Skip cases all three name in some form: no visible change; a repair touching no client file or only tests; Captain-approved wording already in the preview; product bytes unchanged since the last built-screen review. Always-run cases: a new screen or screen state, anything public, a picture the Captain first sees at a gate, terminal output at narrow widths.
+- Disputed: "built screen matches the approved preview" as a skip reason (project-env yes; web no, since matching is what 2a establishes).
+- Misses come from inputs: the director saw only the captures it was given (relay CLI screens absent), and pixel-level faults were found by measuring (web).
