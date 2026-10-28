@@ -3,7 +3,7 @@ title: A follow-up dispatch to a reused worker leaves a dispatch record before i
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -63,10 +63,13 @@ gates:
                 reason: The Captain 「准」 (chat, 2026-10-28), answering FO's joint batch-9 delivery sitting of four gates whose ask was 「決定：四張全照建議（#743 合併、#744 接著合併、#742 我補一次再驗收、#745 提早跑第 4 輪訪談並照上面修）；如果哪張要改，直接說。」; accepts FO's recommendation for this task as stated in the gate question.
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-28T07:06:45Z
 worktree: .worktrees/spacedock-ensign-reused-worker-dispatch-leaves-a-record
 pr: pr-merge:743
+verdict: PASSED
+completed: 2026-10-28T14:35:22Z
+archived: 2026-10-28T14:35:22Z
 ---
 
 ## Scope
