@@ -13,6 +13,18 @@ status: backlog
 - Input: the design in peers-rules-name-each-host-binding (section "Structured refusal at the existing check" and its ideation decision 2, at its 2026-10-27 head): a `## Captain sources` section, `design_surfaces.py check` refusing missing, unknown or peer-relay origins, and backfill of active tasks. FO's concern at the gate: every Captain ruling would need a structured entry and active tasks without readable originals would hold, against two bites in one adopter.
 - Upstream first: adr-required-statement (another session; designs a `## Captain rulings` section for the same check), `scripts/design_surfaces.py`, `scripts/decision_ledger.py`.
 
+## Non-goals
+
+- Designing adr-required-statement (another session; coordinate only); checking rulings in archived tasks.
+
+## Budget
+
+- One package PR in `scripts/design_surfaces.py`; a backfill of active tasks only if the Captain accepts it at ideation.
+
+## Stop condition
+
+- The two qnow bites replay as refused and current active tasks pass or are listed by name. Return to the Captain if the design needs a structured entry for every Captain ruling (FO's concern at the 2026-10-27 gate).
+
 ## FO alignment
 
 Alignment: needed before ideation; the scope of the check and any backfill are the Captain's.
