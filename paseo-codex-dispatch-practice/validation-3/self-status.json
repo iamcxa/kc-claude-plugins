@@ -1,0 +1,121 @@
+{
+  "status": "running",
+  "snapshot": {
+    "id": "1d987cbe-a8e1-4ca0-8b20-950040598cbc",
+    "provider": "codex",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice",
+    "workspaceId": "wks_c4f3d3de2a4e440b",
+    "model": "gpt-6-astra",
+    "thinkingOptionId": "high",
+    "effectiveThinkingOptionId": "high",
+    "runtimeInfo": {
+      "provider": "codex",
+      "sessionId": "01a18263-bb2f-7c23-ad2b-c2d6c69a785f",
+      "model": "gpt-6-astra",
+      "thinkingOptionId": "high",
+      "modeId": "auto-review",
+      "extra": {
+        "collaborationMode": "Default"
+      }
+    },
+    "createdAt": "2026-10-28T12:02:16.469Z",
+    "updatedAt": "2026-10-28T12:03:29.380Z",
+    "lastUserMessageAt": null,
+    "status": "running",
+    "activeTurn": {
+      "turnId": "codex-turn-0",
+      "startedAt": "2026-10-28T12:02:16.876Z"
+    },
+    "capabilities": {
+      "supportsStreaming": true,
+      "supportsSessionPersistence": true,
+      "supportsSessionListing": true,
+      "supportsDynamicModes": false,
+      "supportsMcpServers": true,
+      "supportsReasoningStream": true,
+      "supportsToolInvocations": true,
+      "supportsRewindConversation": true,
+      "supportsRewindFiles": false,
+      "supportsRewindBoth": false
+    },
+    "currentModeId": "auto-review",
+    "availableModes": [
+      {
+        "id": "auto",
+        "label": "Default Permissions",
+        "description": "Edit files and run commands with Codex's default approval flow."
+      },
+      {
+        "id": "auto-review",
+        "label": "Auto-review",
+        "description": "Same workspace-write permissions as Default, but eligible `on-request` approvals are routed through the auto-reviewer subagent."
+      },
+      {
+        "id": "full-access",
+        "label": "Full Access",
+        "description": "Edit files, run commands, and access the network without additional prompts."
+      }
+    ],
+    "features": [
+      {
+        "type": "select",
+        "id": "service_tier",
+        "label": "Speed",
+        "description": "Choose processing speed. Faster tiers increase usage.",
+        "tooltip": "Select speed",
+        "icon": "zap",
+        "desktopTrigger": "icon",
+        "value": "default",
+        "options": [
+          {
+            "id": "default",
+            "label": "Normal",
+            "isDefault": true
+          },
+          {
+            "id": "priority",
+            "label": "Fast"
+          }
+        ]
+      },
+      {
+        "type": "toggle",
+        "id": "plan_mode",
+        "label": "Plan",
+        "description": "Switch Codex into planning-only collaboration mode",
+        "tooltip": "Toggle plan mode",
+        "icon": "list-todo",
+        "value": false
+      }
+    ],
+    "pendingPermissions": [],
+    "persistence": {
+      "provider": "codex",
+      "sessionId": "01a18263-bb2f-7c23-ad2b-c2d6c69a785f",
+      "metadata": {
+        "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice"
+      }
+    },
+    "title": "ensign b9: paseo-codex validation-3 (astra, candidate route)",
+    "labels": {
+      "role": "ensign",
+      "task": "paseo-codex-dispatch-practice",
+      "stage": "validation",
+      "batch": "9",
+      "paseo.parent-agent-id": "2e87a82e-a8a9-4e41-973a-7483aa46e39d"
+    },
+    "archivedAt": null,
+    "lastUsage": {
+      "inputTokens": 49353,
+      "cachedInputTokens": 44160,
+      "outputTokens": 651,
+      "contextWindowMaxTokens": 258400,
+      "contextWindowUsedTokens": 50004
+    },
+    "requiresAttention": false,
+    "attentionReason": null,
+    "attentionTimestamp": null
+  },
+  "serverId": "srv_Vu_gVMYcYLxv"
+}
+

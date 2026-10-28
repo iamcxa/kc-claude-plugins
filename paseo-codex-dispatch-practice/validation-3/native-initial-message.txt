@@ -1,0 +1,3 @@
+<paseo-system version="1" kind="agent-message" source-agent-id="2e87a82e-a8a9-4e41-973a-7483aa46e39d" message-id="2a946a7d-ece6-46ba-a351-3738851a107b" source-agent-title="kc-plugin dev2 FO">
+Skill(skill=&quot;spacedock:ensign&quot;); then Read /tmp/spacedock-dispatch/5c030106-8d82-4542-855e-1498b2563c69-spacedock-ensign-paseo-codex-dispatch-practice-validation.md and treat its content as your assignment.
+</paseo-system>

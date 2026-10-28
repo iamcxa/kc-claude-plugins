@@ -1,0 +1,95 @@
+{
+  "lint": {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/scripts/lint-skills.py"
+    ],
+    "exit": 0,
+    "output": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5576 of 5576 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+  },
+  "adr": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py",
+      "docs/adr",
+      "--since",
+      "e57feb6eec956b74a1d4b29f26f1d0a7d1693785",
+      "--require",
+      "0042"
+    ],
+    "exit": 0,
+    "output": "41 ADR file(s) checked, 0 legacy\n"
+  },
+  "doc-impact": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/doc_impact.py",
+      "e57feb6eec956b74a1d4b29f26f1d0a7d1693785",
+      "HEAD"
+    ],
+    "exit": 0,
+    "output": "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+  },
+  "number-guards": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/number_guards.py",
+      "check",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2",
+      "--task",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-codex-dispatch-practice.md"
+    ],
+    "exit": 0,
+    "output": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase e57feb6eec95 head 9a70a3350436 merge-base e57feb6eec95\n"
+  },
+  "comment-ratio": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/comment_ratio.py",
+      "e57feb6eec956b74a1d4b29f26f1d0a7d1693785",
+      "HEAD",
+      "--workflow-dir",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2"
+    ],
+    "exit": 0,
+    "output": "code lines 0, comment lines 0, 0.0%\nmaximum 5% (package default) not enforced: 0 code lines added, fewer than 20\n"
+  },
+  "design": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/design_surfaces.py",
+      "check",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-codex-dispatch-practice.md"
+    ],
+    "exit": 0,
+    "output": "paseo-codex-dispatch-practice.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+  },
+  "dispatch-records": {
+    "command": [
+      "python3",
+      "-B",
+      "/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/dispatch_records.py",
+      "--readme",
+      "docs/dev2/README.md",
+      "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-codex-dispatch-practice.md"
+    ],
+    "exit": 0,
+    "output": "7 dispatch record(s) complete\n"
+  },
+  "roborev-fixtures": {
+    "command": [
+      "python3",
+      "-B",
+      "kc-dev-flow-2/extensions/roborev/test_roborev_gate.py"
+    ],
+    "exit": 0,
+    "output": ".....\n----------------------------------------------------------------------\nRan 5 tests in 3.809s\n\nOK\n"
+  }
+}

@@ -1,0 +1,11 @@
+docs/adr/0042-paseo-codex-workers-hand-publication-and-local-review-to-fo.md
+docs/dev2/README.md
+kc-dev-flow-2/extensions/paseo/EXTENSION.md
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5576 of 5576 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+41 ADR file(s) checked, 0 legacy
+PASS: 206-byte prompt, assignment SHA256 and native runtime match; 6 mutants rejected.
+FAIL: AC-2 immediate spawn: 2 intervening calls (activity read; receipt write/state commit).
+
+Observed exit: 1

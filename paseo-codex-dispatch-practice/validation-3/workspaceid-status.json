@@ -1,0 +1,125 @@
+{
+  "status": "idle",
+  "snapshot": {
+    "id": "ddf30e67-af43-4778-823a-cdc378278700",
+    "provider": "codex",
+    "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice",
+    "workspaceId": "wks_89650ac90ec290d6",
+    "model": "gpt-6.1-sol",
+    "thinkingOptionId": "low",
+    "effectiveThinkingOptionId": "low",
+    "runtimeInfo": {
+      "provider": "codex",
+      "sessionId": "01a18263-1269-74b2-824d-26ab3bd5b760",
+      "model": "gpt-6.1-sol",
+      "thinkingOptionId": "low",
+      "modeId": "auto-review",
+      "extra": {
+        "collaborationMode": "Default"
+      }
+    },
+    "createdAt": "2026-10-28T12:01:33.283Z",
+    "updatedAt": "2026-10-28T12:01:48.042Z",
+    "lastUserMessageAt": null,
+    "status": "idle",
+    "activeTurn": null,
+    "capabilities": {
+      "supportsStreaming": true,
+      "supportsSessionPersistence": true,
+      "supportsSessionListing": true,
+      "supportsDynamicModes": false,
+      "supportsMcpServers": true,
+      "supportsReasoningStream": true,
+      "supportsToolInvocations": true,
+      "supportsRewindConversation": true,
+      "supportsRewindFiles": false,
+      "supportsRewindBoth": false
+    },
+    "currentModeId": "auto-review",
+    "availableModes": [
+      {
+        "id": "auto",
+        "label": "Default Permissions",
+        "description": "Edit files and run commands with Codex's default approval flow."
+      },
+      {
+        "id": "auto-review",
+        "label": "Auto-review",
+        "description": "Same workspace-write permissions as Default, but eligible `on-request` approvals are routed through the auto-reviewer subagent."
+      },
+      {
+        "id": "full-access",
+        "label": "Full Access",
+        "description": "Edit files, run commands, and access the network without additional prompts."
+      }
+    ],
+    "features": [
+      {
+        "type": "select",
+        "id": "service_tier",
+        "label": "Speed",
+        "description": "Choose processing speed. Faster tiers increase usage.",
+        "tooltip": "Select speed",
+        "icon": "zap",
+        "desktopTrigger": "icon",
+        "value": "default",
+        "options": [
+          {
+            "id": "default",
+            "label": "Normal",
+            "isDefault": true
+          },
+          {
+            "id": "priority",
+            "label": "Fast"
+          }
+        ]
+      },
+      {
+        "type": "toggle",
+        "id": "plan_mode",
+        "label": "Plan",
+        "description": "Switch Codex into planning-only collaboration mode",
+        "tooltip": "Toggle plan mode",
+        "icon": "list-todo",
+        "value": false
+      }
+    ],
+    "pendingPermissions": [],
+    "persistence": {
+      "provider": "codex",
+      "sessionId": "01a18263-1269-74b2-824d-26ab3bd5b760",
+      "nativeHandle": "01a18263-1269-74b2-824d-26ab3bd5b760",
+      "metadata": {
+        "provider": "codex",
+        "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice",
+        "title": "b9 placement trial: create_agent workspaceId",
+        "threadId": "01a18263-1269-74b2-824d-26ab3bd5b760",
+        "modeId": "auto-review",
+        "model": "gpt-6.1-sol",
+        "thinkingOptionId": "low",
+        "asyncQuestions": []
+      }
+    },
+    "title": "b9 placement trial: create_agent workspaceId",
+    "labels": {
+      "role": "trial",
+      "task": "paseo-codex-dispatch-practice",
+      "paseo.parent-server-id": "srv_Vu_gVMYcYLxv",
+      "paseo.parent-agent-id": "2e87a82e-a8a9-4e41-973a-7483aa46e39d"
+    },
+    "archivedAt": null,
+    "lastUsage": {
+      "inputTokens": 30549,
+      "cachedInputTokens": 30208,
+      "outputTokens": 95,
+      "contextWindowMaxTokens": 475000,
+      "contextWindowUsedTokens": 30644
+    },
+    "requiresAttention": true,
+    "attentionReason": "finished",
+    "attentionTimestamp": "2026-10-28T12:01:48.041Z"
+  },
+  "serverId": "srv_Vu_gVMYcYLxv"
+}
+
