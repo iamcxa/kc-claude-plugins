@@ -79,6 +79,7 @@ Result: aligned at backlog: the Captain 「准」 (chat, 2026-10-28) to FO's bat
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+Reviewer: kc-dev-flow-2:engineering-reviewer opus 2026-10-28 — do these amendments withdraw what the Captain approved, and what changes in the build?
 
 ## Captain amendments
 
