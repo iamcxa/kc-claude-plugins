@@ -12,6 +12,18 @@ status: backlog
 - Bite: batch 7 (2026-10-26/27): Codex workers created with Paseo create_agent could not reach the GitHub API (sync and implementation workers; gh failed, git push worked) or the local RoboRev daemon, so FO pushed, opened PRs and ran RoboRev for them; the relay FO reported its Paseo Codex workers' cwd stays the FO's workspace, so every worktree write needs a permission prompt, dozens per task (interview round 2). FO's 0.32.0 sync briefs that said commit locally and leave delivery to FO ran with no failure.
 - Upstream first: `extensions/paseo/EXTENSION.md` (0.32.0), Paseo's own `paseo` skill and `paseo agent --help` (workspace and cwd options), Codex sandbox docs.
 
+## Non-goals
+
+- Changing Paseo or the Codex sandbox; any Paseo-only rule in Spacedock core (the Captain's 2026-10-26 placement ruling); making FO-side push and PR the rule on hosts other than Paseo Codex.
+
+## Budget
+
+- One package PR editing `extensions/paseo`; no new script.
+
+## Stop condition
+
+- The extension states the practice batches 7 and 8 ran (worker commits locally; FO pushes, opens the PR and runs RoboRev; the worker's working directory is its worktree), with the working-directory option checked once against `paseo agent --help`. Return to the Captain if Paseo cannot set a worker's working directory.
+
 ## FO alignment
 
 Alignment: needed before ideation; where the check or rule lives is a package design choice.
