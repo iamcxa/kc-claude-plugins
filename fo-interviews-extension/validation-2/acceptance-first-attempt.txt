@@ -1,0 +1,33 @@
+Step 1: bd328daf6e64a73ad5e54f7288803295cae9ef68 detached and clean
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5576 of 5576 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+----------------------------------------------------------------------
+Ran 45 tests in 9.402s
+
+OK
+Step 2: lint and 45 tests passed
+Original recipe: exit 1, obsolete assertion forbids the authorized round-004
+History-only correction: exit 1, obsolete four-file boundary rejects approved README opt-in
+{
+  "tier": "candidate and row absent pass; required-without-default and missing extension refused",
+  "mutations_caught": 30,
+  "respondents": 13,
+  "scope": "Manual fixture replay and executable checks; no model/transport/adoption execution or live batch completion claim"
+}
+Wrong-policy control: still exit 0; fixture checks do not prove policy-following
+Step 3: startup 6781->7380 (+599); idle 862/833; archive 333; merge 2408; due round 3356; adoption +97; 3 accounting controls
+40 ADR file(s) checked, 0 legacy
+ADR lint exit: 0 (F2 declined; no ADR added or updated)
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base bfa5354b40ba head bd328daf6e64 merge-base e57feb6eec95
+code lines 0, comment lines 0, 0.0%
+maximum 5% (package default) not enforced: 0 code lines added, fewer than 20
+fo-interviews-extension.md: design surfaces presentable
+scope check not run: stage is validation, not ideation
+0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'
+5 dispatch record(s) complete
+Traceback (most recent call last):
+  File "<stdin>", line 17, in <module>
+AssertionError
