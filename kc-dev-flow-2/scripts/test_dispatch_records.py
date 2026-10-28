@@ -4,6 +4,7 @@ import io
 import os
 from pathlib import Path
 import subprocess
+import sys
 import tempfile
 import types
 import unittest
@@ -628,6 +629,111 @@ class NewestTests(unittest.TestCase):
             code, out = self.newest(state=plain)
         self.assertEqual(code, 2)
         self.assertIn("git cannot read the dispatch records", out)
+
+
+
+WORKFLOW = """---
+entity-type: task
+stages:
+  states:
+    - name: backlog
+      initial: true
+    - name: ideation
+    - name: implementation
+    - name: validation
+    - name: done
+      terminal: true
+---
+"""
+
+
+class CoverageTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.tmp.cleanup)
+        self.root = Path(self.tmp.name)
+        self.readme = self.root / "README.md"
+        self.readme.write_text(WORKFLOW)
+        self.task = self.root / "task.md"
+        self.task.write_text("## Stage Report: implementation\n")
+        self.folder = self.root / "task"
+
+    def run_cli(self, stage="implementation", task=None, extra=()):
+        done = subprocess.run([sys.executable, "-B", str(Path(records.__file__)),
+                               "--coverage", str(task or self.task), "--stage", stage, *extra],
+                              text=True, capture_output=True)
+        self.assertEqual(done.stderr, "")
+        return done.returncode, done.stdout
+
+    def record(self, name):
+        dispatch = self.folder / "dispatch"
+        dispatch.mkdir(parents=True, exist_ok=True)
+        (dispatch / name).write_text(COMPLETE)
+
+    def test_historical_064e61a15_redacted_replay_stops_before_advancement_and_gate(self):
+        self.task.write_text("## Stage Report: implementation\n\n## Stage Report: validation\n")
+        self.record("ideation-1.md")
+        self.record("ideation-2.md")
+        out = io.StringIO()
+        with contextlib.redirect_stdout(out):
+            self.assertEqual(records.main([str(self.task)]), 0)
+        self.assertEqual(out.getvalue(), "2 dispatch record(s) complete\n")
+        for stage, action in (("implementation", "advance"), ("validation", "prepare gate")):
+            calls = []
+            code, output = self.run_cli(stage)
+            if code == 0:
+                calls.append(action)
+            self.assertEqual(calls, [])
+            self.assertEqual(code, 1)
+            self.assertIn(f"no dispatch record for completed {stage}; hold advancement and gate preparation", output)
+            self.record(f"{stage}-1.md")
+            code, output = self.run_cli(stage)
+            if code == 0:
+                calls.append(action)
+            self.assertEqual(calls, [action])
+            self.assertEqual(output, f"dispatch coverage complete: {stage}\n")
+
+    def test_fences_exact_stage_and_no_report(self):
+        for body in ("", "## Stage Report: implementation-extra\n",
+                     "```md\n## Stage Report: implementation\n```\n",
+                     "~~~md\n## Stage Report: implementation\n~~~\n",
+                     "## Stage Report: ideation\n"):
+            self.task.write_text(body)
+            self.assertEqual(self.run_cli(), (0, "dispatch coverage not due: implementation\n"))
+
+    def test_both_layouts_and_message_record_do_not_count_repaired_reports(self):
+        self.record("implementation-2-message-1.md")
+        body = "## Stage Report: implementation (cycle 3)\n## Stage Report: implementation\n"
+        for task in (self.task, self.folder / "index.md"):
+            task.write_text(body)
+            self.assertEqual(self.run_cli(task=task), (0, "dispatch coverage complete: implementation\n"))
+        self.task.write_text("## Stage Report: ideation\n## Stage Report: validation\n")
+        self.record("validation-1.md")
+        self.assertEqual(self.run_cli("validation")[0], 0)
+
+    def test_invalid_record_names_and_directory_do_not_cover(self):
+        for name in ("implementation-0.md", "implementation-01.md", "implementation-1-message-0.md",
+                     "implementation-other-1.md", "validation-1.md", "implementation-1.txt"):
+            self.record(name)
+        (self.folder / "dispatch/implementation-9.md").mkdir()
+        self.assertEqual(self.run_cli()[0], 1)
+
+    def test_invalid_stage_missing_or_unreadable_task_and_workflow_are_errors(self):
+        for stage in ("backlog", "done", "unknown", "implementation-extra"):
+            self.assertEqual(self.run_cli(stage)[0], 2)
+        self.assertEqual(self.run_cli(task=self.root / "missing.md")[0], 2)
+        self.task.write_bytes(b"\xff")
+        self.assertEqual(self.run_cli()[0], 2)
+        self.task.write_text("")
+        self.readme.write_text("no workflow")
+        self.assertEqual(self.run_cli(extra=("--readme", str(self.readme)))[0], 2)
+
+    def test_poc_rejects_ideation_and_override_reads_without_mutation(self):
+        self.readme.write_text(WORKFLOW.replace("    - name: ideation\n", ""))
+        self.assertEqual(self.run_cli("ideation")[0], 2)
+        before = {p.relative_to(self.root): p.read_bytes() for p in self.root.rglob("*") if p.is_file()}
+        self.assertEqual(self.run_cli(extra=("--readme", str(self.readme)))[0], 1)
+        self.assertEqual(before, {p.relative_to(self.root): p.read_bytes() for p in self.root.rglob("*") if p.is_file()})
 
 
 if __name__ == "__main__":

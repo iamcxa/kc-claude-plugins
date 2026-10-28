@@ -68,6 +68,7 @@ import time
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from role_triggers import review_facts  # noqa: E402
+from dispatch_records import coverage, worker_stages  # noqa: E402
 from learning import job_key  # noqa: E402
 
 SESSION_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}")
@@ -513,11 +514,25 @@ def tasks(opts, look=look, ask=gh, clock=time.time):
     wait = f"python3 {SCRIPTS / 'pr_watch.py'}" + (f" --state {shlex.quote(str(opts.state))}" if opts.given else "")
     out, snaps, errors, live, rounds = [], {}, [], [], {}
     found = entities(state)
+    stages = None
     for slug, task in found:
-        meta = front(task)
+        try:
+            meta = front(task)
+        except (OSError, UnicodeError, ValueError) as error:
+            errors.append(f"next: report {slug} to the Captain: {str(error)[:120]}.")
+            continue
         if "status" not in meta:
             continue
         live.append(slug)
+        if meta["status"] in {"ideation", "implementation", "validation"}:
+            try:
+                if stages is None:
+                    stages = worker_stages(workflow / "README.md")
+                if meta["status"] in stages and coverage(task, meta["status"], workflow / "README.md") == "missing":
+                    out.append(f"next: {slug} has no dispatch record for completed {meta['status']}; "
+                               "hold advancement and gate preparation and report the gap to Captain.")
+            except (OSError, UnicodeError, ValueError) as error:
+                errors.append(f"next: report {slug} to the Captain: {str(error)[:120]}.")
         if (state / slug / "dispatch").is_dir():
             done = subprocess.run([sys.executable, str(SCRIPTS / "dispatch_records.py"), "--newest", str(state), slug],
                                   capture_output=True, text=True)
