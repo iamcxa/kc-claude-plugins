@@ -66,7 +66,7 @@ gates:
                 state: pending
 started: 2026-10-28T07:28:06Z
 worktree: .worktrees/spacedock-ensign-batch-reaches-each-gate-together
-pr: iamcxa/kc-claude-plugins#744
+pr: pr-merge:744
 ---
 
 ## Scope
