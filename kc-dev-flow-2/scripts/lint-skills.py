@@ -49,9 +49,9 @@ WORKFLOW_BUDGET_STEPS = [
     dict(delta=11, why="the amended seed schema makes stored id optional for slug identity and names three bounds for new admission",
          captain="「其他全照建議」 (Captain, chat, 2026-10-27), ideation gate approval and amendment 1 of seed-check-requires-schema-fields; the approved design allowed +12 words, narrowed to +11 under the amendment",
          loaded="startup and resume of the First Officer, and backlog admission"),
-    dict(delta=29, why="this is the coverage share of the joint batch workflow raise; before-send was withdrawn",
+    dict(delta=178, why="joint raise for reused-worker coverage and named batches waiting for one sitting; before-send and the director batch pass were withdrawn",
          captain="「照建議」 (Captain, chat, 2026-10-28), answering 「決定：五張全照建議（四張准並照上面刪減，一張暫緩）；如果哪張要改，直接說。」; amendment 1 of reused-worker-dispatch-leaves-a-record accepts coverage and a joint raise of about 180 words with batch-reaches-each-gate-together",
-         loaded="startup and resume of the First Officer, and after each worker report before advancement or gate preparation"),
+         loaded="startup and resume of the First Officer, after each worker report before advancement or gate preparation, and batch readiness, optional review and sitting preparation"),
 ]
 DUPLICATE_RUN = 12
 # Known overlaps awaiting a decision on which copy survives, keyed by file and opening words.

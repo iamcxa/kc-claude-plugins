@@ -70,6 +70,16 @@ New seeds require non-empty `Non-goals:`, `Budget:` and `Stop condition:` lines
 under `## Scope` or matching level-two sections. Replay counts do not enforce
 these on existing tasks. Use bold **AC-N** declarations with individual evidence clauses.
 
+## Batch gates
+
+A Captain-approved batch covers one release slice or theme. Recover members from accepted scopes/questions, without another list. Unclear membership holds presentation; membership changes or splits need his decision. Incompatible stage graphs need an explicitly approved split.
+
+At each next gate, wait for every member's sufficient committed evidence, then present the batch in one sitting. Early finishers prompt no decision. Continue authorized repairs/validation. A blocker needing Captain authority gets one exception question naming the member and effect. Do not manufacture hold resolutions.
+
+`<package>/scripts/pr_watch.py tasks` sitting hints remain subject to this boundary; stage alone joins neither unrelated tasks nor incomplete batches. Unbatched tasks retain ordinary gates.
+
+When requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from all workers or ask the Captain. Review advises, without approval authority.
+
 ## Stages
 
 Stage workers run on the workflow's default model.
