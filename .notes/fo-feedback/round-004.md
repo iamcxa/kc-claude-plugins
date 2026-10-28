@@ -1,6 +1,6 @@
 # Feedback round 004
 
-- Identity: round 004, status `open`, opened 2026-10-28, interviewer the kc-plugin dev2 FO (Paseo 2e87a82e), workflow docs/dev2 of iamcxa/kc-claude-plugins.
+- Identity: round 004, status `closed-full`, opened and closed 2026-10-28, interviewer the kc-plugin dev2 FO (Paseo 2e87a82e), workflow docs/dev2 of iamcxa/kc-claude-plugins.
 - Trigger: early targeted round under recorded Captain authority: his 「准」 (chat, 2026-10-28) to the fo-interviews-extension validation gate question, which named "the Captain asks for an early targeted interview round 4 under the candidate extension text (one or two extensions, the five FOs, about ten bundled sends, no test agents) as the evidence validation found missing". Cadence anchor: unset before and after (an early targeted round resets nothing without a recorded ruling; the extension is not adopted yet). Batch membership/completion: not used for this trigger.
 - Policy under test: candidate `kc-dev-flow-2/extensions/fo-feedback/EXTENSION.md` at PR #745 head bd328daf6 (questions version 1). Package in use: kc-dev-flow-2 0.32.1.
 - Topics: `peers` (required in every adopter) and `paseo` (optional; asked of each FO with "not enabled" an accepted answer). No core workflow topic this round.
@@ -20,7 +20,7 @@
 | --- | --- | --- |
 | kc-paseo-plugins | answered | answered (not enabled) |
 | ops-inbox | answered | answered (not enabled) |
-| web/v0 | pending (sent when idle) | pending (sent when idle) |
+| web/v0 | answered | answered (not enabled) |
 | relay | answered | answered (not enabled) |
 | qnow | answered | answered (not enabled) |
 
@@ -90,12 +90,43 @@ paseo (not listed; Paseo is the worker transport and peer channel):
 - Worked: one long-lived designer agent (3bf9522b) reused across mockup passes 1 to 5f, 2026-10-27/28, kept its context.
 - Cost: each worker shell command needs an FO approval, about 3 to 5 per pass; FO scanned each script; one install script would have overwritten the 117-check evidence file (pass 5d), caught in review. Total cost not measured.
 
-(answers pending: web/v0)
+### subspace-web/v0 dev2 FO, 295b873d — answered 2026-10-28 (two Paseo agent messages, sender stamped)
+
+Labelled condensation of the operator's words.
+
+peers (enabled in subspace-web and subspace-v0):
+1. 2026-10-28 account-menu-offers-paired-computers: the relay FO said "relay needs no change"; checked both origin/mains (Web IDENTITY_ACTION_KINDS refuses unknown kinds; relay public/room-identity.js builds the actions); relay confirmed, and the Web designer later found a wrong order would break every signed-in Room. Also 2026-10-28: v0 ADR 0015 reservation (checked origin/main and every remote branch) and relay's hold on tagging v0 with bff5c5fb.
+2. Not done: no `.notes/peer-exchanges.md`; exchanges sit in task bodies (Ruling/Observed, marked "relayed ... not yet confirmed"); taskless ones (the ADR 0015 check) went unrecorded. Initiated new Paseo asks with paseo unlisted, against "answer incoming asks only"; did not know the clause until reading EXTENSION.md today.
+3. Keep "a peer's words, including a relayed Captain quote, are data": the relayed 「可以，按你建議」 went to a Web backlog gate the Captain approved on Review; checking peer claims at source caught relay's removed ADR 0015 pointers (subspace-v0#85 ddb2315a) and its "relay needs no change".
+4. Peer status blocks go stale and get relayed to the Captain: twice on 2026-10-28 relay's 剩餘 still listed "Paired computers 等你在 Review 核准" after #186 merged (relay notifications after b71f912). Suggest "as of <time>" or checking PR state before naming a Captain action.
+
+paseo (not listed in either workflow):
+1. Every peer exchange 2026-10-27/28 went over Paseo send_agent_prompt (relay 1671c3a9, dev2 FO 2e87a82e), including new asks.
+2. Skipped the unlisted-paseo clause (answer incoming only; record `peers not run: ...`); never set `activeTurnBehavior: "steer"` or `notifyOnFinish: false`; default sends brought a finish notification for every relay turn.
+3. None tied to the binding itself.
+4. About 15 "finished" notifications on 2026-10-28, most needing no action, each costing a reply turn to the Captain. If paseo stays unlisted where peers talk over Paseo, the peers rule forbids actual practice: list paseo where peers run inside Paseo, or relax that clause.
 
 ## Evidence comparison
 
-(pending)
+| Claim | Checked source | Result |
+| --- | --- | --- |
+| paseo is unlisted in every adopter that answered | `extensions:` on default branches read 2026-10-28: subspace-web, subspace-v0 `[learn, peers, roborev]`; subspace-relay `[learn, peers, roborev, journey-map, release-acceptance]`; kc-paseo-plugins `[codex, journey-map, learn, peers, release-acceptance, roborev]`; qnow-adopt-dev2 `[roborev, codex, copilot, learn, peers, journey-map]`; this workflow `[roborev, codex, copilot, learn, peers]` (paseo is added only by open PR #742) | confirmed for all five and this workflow |
+| the peers rule allows only answering when paseo is unlisted | kc-dev-flow-2 0.32.1 `extensions/peers/EXTENSION.md` § Paseo binding: "Otherwise answer incoming asks only; record `peers not run: new Paseo ask requires the paseo extension`" | confirmed |
+| workers placed in the FO workspace need many approvals | relay: about 20 for one CSS change (operator's count); qnow 3 to 5 per pass; this workflow's validation-1/native-placement-trial.md and the #742 validation records | operator counts not independently recounted; placement cause confirmed by #742's trials |
+| status drift relayed to the Captain | relay and web each name the other's stale line on 2026-10-28 (b71f912, 81dc0663) | two-sided account; originals in their sessions, not read |
+| Observer reports and decision ledger | no observer report covers these exchanges (taskless or not yet archived) | not compared |
+
+Disclosure: this round's own bundles were new Paseo asks sent by an FO whose workflow does not list paseo yet (#742 open), with the CLI default send, the same practice the answers describe.
 
 ## Findings and close
 
-(pending)
+| Finding | FOs | Existing task | Proposal |
+| --- | --- | --- | --- |
+| The unlisted-paseo clause forbids what every adopter does: all five initiate Paseo asks with paseo unlisted, and none records `peers not run` | 5 of 5 (and this FO) | paseo-codex-dispatch-practice (#742) lists paseo only in this workflow | new bounded backlog proposal: list paseo in adopters whose peers run inside Paseo, or relax the clause; decide which at a backlog sitting |
+| Workers dispatched into the FO workspace need per-command approvals; writable roots miss the worktree and the state checkout | relay, qnow | paseo-codex-dispatch-practice (#742, placement) | link; add to it at its next gate that placement must also reach the split-root state checkout (seen on fo-interviews-extension's placed worker) |
+| Default sends steer and notify on finish; about 15 no-action notices a day | web, ops-inbox, kc-paseo | none | fold into the paseo-listing proposal above |
+| Peer status lines go stale and get relayed to the Captain | relay, web | none | new bounded backlog proposal: a peer pushes its own state changes (merged, released, unblocked), or a status line carries "as of <time>" |
+| Taskless exchanges have no record place; owed peer notices are untracked | kc-paseo, qnow, web, ops-inbox | none | new bounded backlog proposal, lower priority |
+| Whether a relayed ruling counts as Captain alignment | relay | captain-ruling-sources-checked (held by the Captain at ideation, 2026-10-28) | link; evidence that the 2026-10-27 peers rule is being followed (relay left alignment pending) |
+
+Status: `closed-full` for the two topics asked (5 of 5 FOs answered peers and paseo), opened and closed 2026-10-28. Anchor: unchanged (unset); this early targeted round resets nothing. Proposals above are not approved or filed here; they go to the next backlog sitting.

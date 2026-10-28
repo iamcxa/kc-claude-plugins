@@ -6,7 +6,7 @@ This index preserves historical interviews. The optional extension is not adopte
 - Historical interviewer: maintainer FO; future round owner: not appointed here.
 - Policy: `kc-dev-flow-2/extensions/fo-feedback/EXTENSION.md` in the selected code checkout/package, selected separately at adoption.
 - Cadence/question ruling: [task, Captain amendment 1](../../fo-interviews-extension.md#captain-amendments), 2026-10-28: every three completed batches, four questions per extension in one message; no per-rule coverage rows.
-- Adoption anchor and first scheduled round: not approved or inferred here. Last closed cadence anchor: unset. Open round: [round 004](round-004.md), an early targeted round under the Captain's 「准」 of 2026-10-28 (candidate text at #745 head bd328daf6); it moves no anchor.
+- Adoption anchor and first scheduled round: not approved or inferred here. Last closed cadence anchor: unset. Open round: none. [Round 004](round-004.md), an early targeted round under the Captain's 「准」 of 2026-10-28 (candidate text at #745 head bd328daf6), closed-full for peers and paseo; it moved no anchor.
 - At adoption record the selected package commit, prerequisites, confirmed round owner and Captain-approved anchor/question grant before sending. Recover batch membership from accepted scopes/questions and amendments under the workflow batch rule, not gate dates; link completion sources instead of keeping another batch store.
 
 ## Historical rounds
