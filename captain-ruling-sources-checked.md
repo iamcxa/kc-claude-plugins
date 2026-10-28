@@ -34,6 +34,14 @@ gates:
                 id: briefing:captain-ruling-sources-checked:ideation:attempt-1:revision-1
                 digest: sha256:7c824a21837310a174a75d811108c7c35b19d5915cb0c7d5e5833bc9653e781d
                 room-ref: ./captain-ruling-sources-checked/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:captain-ruling-sources-checked:ideation:1
+                briefing: briefing:captain-ruling-sources-checked:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T07:05:49.089787Z"
+                decision: hold
+                reason: 'The Captain 「照建議」 (chat, 2026-10-28), answering FO''s joint batch-9 ideation sitting of five gates whose ask was 「決定：五張全照建議（四張准並照上面刪減，一張暫緩）；如果哪張要改，直接說。」; accepts FO''s recommendation to hold and defer: the design stays on file and nothing is built until the peers rule of 2026-10-27 fails in an adopter that has it.'
 ---
 
 ## Scope
