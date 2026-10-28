@@ -132,6 +132,8 @@ FO note, 2026-10-26: number collision. This task's reserved ADR 0031 (axis ADR, 
 
 Captain 2026-10-27 (chat): 「恢復 r1。但是確認一下有沒有哪些 ext 該開沒開的」. FO resumed r1 after contract v1 landed on main (PR #727, merge d7eeeef2, task ops-metric-event-protocol archived). Number guard: the stale `ADR: 0031` was deleted and reserve returned `ADR: 0040`; the axis ADR renumbers to 0040. Carried in from ops-metric-event-protocol: H1 (a signing secret that decodes to zero bytes verifies a forged signature) is the first contract item r1 fixes, per the Captain's approval of that task's delivery gate; D8 (at-most-once loss at 504) was accepted for v1 with 「第一版接受缺陷，後續再補」 and is not in this resume.
 
+Captain 2026-10-29 (chat): 「開始 r1 上線」. FO outward action the same day: S1 repin, `ops-event.yml` in spacedock-dev/subspace-relay-ops-trigger now pins kc-claude-plugins 7aa5ccad2b631400bd6ec8239f6c6c2f1d929d41 (trigger repo commit bc10c5a4; read back: `ref:` line and `actions/workflows` total_count 1). relay FO (Paseo 1671c3a9) asked the same day to file relay's emitter task against contract d7eeeef2.
+
 ## Number guards
 
 ADR: 0040
