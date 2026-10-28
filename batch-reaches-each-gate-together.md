@@ -53,6 +53,7 @@ gates:
 ## FO alignment
 
 Alignment: needed before ideation; how a batch is held at a gate and what the batch review owes are the Captain's.
+Result: aligned at backlog: the Captain 「准」 (chat, 2026-10-28) to FO's batch-9 backlog sitting, which asked 「決定：五張全准進入設計階段；要拿掉或換掉哪張，直接說。」, approved the outcome and bounds in this file. His rules for a batch are his words of 2026-10-27 quoted in Scope. How a batch is held at a gate and what the batch review owes stay his: ideation returns them as decisions at the ideation gate.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
