@@ -1,0 +1,11 @@
+{
+  "id": "exec-da0f6316-3026-4763-9d2d-83818bedf17b",
+  "cwd": "file:///Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice",
+  "command": [
+    "/bin/zsh",
+    "-lc",
+    "cat /tmp/spacedock-dispatch/5c030106-8d82-4542-855e-1498b2563c69-spacedock-ensign-paseo-codex-dispatch-practice-validation.md"
+  ],
+  "exit_code": 0,
+  "status": "completed"
+}

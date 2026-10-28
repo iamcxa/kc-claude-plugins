@@ -1,0 +1,10 @@
+docs/adr/0042-paseo-codex-workers-hand-publication-and-local-review-to-fo.md
+docs/dev2/README.md
+kc-dev-flow-2/extensions/paseo/EXTENSION.md
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5576 of 5576 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+41 ADR file(s) checked, 0 legacy
+PASS: 206-byte native prompt; 6107-byte first assignment read; runtime; 7 altered values rejected.
+PASS: corrected single build/spawn call; only prompt forwarding; prior 2-call violation and inserted commit rejected.
+LIMIT: FO supplied the command/timestamps; no build-time assignment hash was retained.

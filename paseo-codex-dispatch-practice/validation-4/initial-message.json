@@ -1,0 +1,39 @@
+{
+  "timestamp": "2026-10-28T14:42:20.831Z",
+  "ordinal": 8,
+  "type": "response_item",
+  "payload": {
+    "type": "message",
+    "id": "msg_01a182f6-481f-74b3-a1ba-f3dc842ea5b9",
+    "role": "user",
+    "content": [
+      {
+        "type": "input_text",
+        "text": "<paseo-system version=\"1\" kind=\"agent-message\" source-agent-id=\"2e87a82e-a8a9-4e41-973a-7483aa46e39d\" message-id=\"09ad854e-452e-471f-b6ad-e6a34bb7b4b9\" source-agent-title=\"kc-plugin dev2 FO\">\nSkill(skill=&quot;spacedock:ensign&quot;); then Read /tmp/spacedock-dispatch/5c030106-8d82-4542-855e-1498b2563c69-spacedock-ensign-paseo-codex-dispatch-practice-validation.md and treat its content as your assignment.\n</paseo-system>"
+      }
+    ],
+    "internal_chat_message_metadata_passthrough": {
+      "turn_id": "01a182f6-388d-7773-a96e-6ea384b81768",
+      "create_time": 1793198540.831099,
+      "content_item_kinds": [
+        "user.text"
+      ]
+    }
+  },
+  "metadata": {
+    "retained_source": {
+      "id": {
+        "message_id": "msg_01a182f6-481f-74b3-a1ba-f3dc842ea5b9",
+        "turn_id": "01a182f6-388d-7773-a96e-6ea384b81768",
+        "role": "user"
+      },
+      "revision": "retained_01a182f6-481f-74b3-a1ba-f3fb4d73df02",
+      "complete": true
+    },
+    "client_authored": false,
+    "user_input_order": 0,
+    "mcp_attribution": {
+      "status": "none"
+    }
+  }
+}

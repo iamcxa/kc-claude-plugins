@@ -1,0 +1,69 @@
+[
+  {
+    "status": "fulfilled",
+    "value": {
+      "cmd": "python3 -B kc-dev-flow-2/scripts/lint-skills.py",
+      "chunk_id": "a6f338",
+      "wall_time_seconds": 0.361580791,
+      "exit_code": 0,
+      "original_token_count": 59,
+      "output": "PASS: basic frontmatter, declared profile routes, role bindings and package script paths\nreferences/sd/workflow.md: 5576 of 5576 words; no unlisted passage repeats it\nNot checked: full Agent Skills conformance or host/workflow behavior\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "cmd": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/number_guards.py check --workflow-dir /tmp/paseo-742-validation-4-check/docs/dev2 --task /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-codex-dispatch-practice.md",
+      "chunk_id": "083883",
+      "wall_time_seconds": 0.350396958,
+      "exit_code": 0,
+      "original_token_count": 33,
+      "output": "migration guard skipped: no migrations-path declared\nPASS: no findings\nbase bfa5354b40ba head 9a70a3350436 merge-base e57feb6eec95\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "cmd": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/doc_impact.py e57feb6eec956b74a1d4b29f26f1d0a7d1693785 9a70a3350436fac9e51d0795b3b4299693f020f8",
+      "chunk_id": "9fbfce",
+      "wall_time_seconds": 0.241614584,
+      "exit_code": 0,
+      "original_token_count": 21,
+      "output": "0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "cmd": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/comment_ratio.py e57feb6eec956b74a1d4b29f26f1d0a7d1693785 9a70a3350436fac9e51d0795b3b4299693f020f8 --workflow-dir /tmp/paseo-742-validation-4-check/docs/dev2",
+      "chunk_id": "ef6bc7",
+      "wall_time_seconds": 0.121867833,
+      "exit_code": 0,
+      "original_token_count": 29,
+      "output": "code lines 0, comment lines 0, 0.0%\nmaximum 5% (package default) not enforced: 0 code lines added, fewer than 20\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "cmd": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/design_surfaces.py check /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-codex-dispatch-practice.md",
+      "chunk_id": "273523",
+      "wall_time_seconds": 0.118012791,
+      "exit_code": 0,
+      "original_token_count": 30,
+      "output": "paseo-codex-dispatch-practice.md: design surfaces presentable\nscope check not run: stage is validation, not ideation\n"
+    }
+  },
+  {
+    "status": "fulfilled",
+    "value": {
+      "cmd": "python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/dispatch_records.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/paseo-codex-dispatch-practice",
+      "chunk_id": "da09dc",
+      "wall_time_seconds": 0.224077875,
+      "exit_code": 0,
+      "original_token_count": 8,
+      "output": "10 dispatch record(s) complete\n"
+    }
+  }
+]
+
