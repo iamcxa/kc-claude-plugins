@@ -3,7 +3,7 @@ title: The paseo extension says how FO dispatches a Codex worker through Paseo; 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
