@@ -24,4 +24,11 @@ To the web, relay and project-env FOs, each anchored on that repo's recorded eve
 
 ## Answers
 
-(pending)
+### subspace-web and v0 FO (Paseo 295b873d), 2026-10-28
+
+1. Found new: web-serves-formats-list validation 2026-10-23 (chevron-less phone toggle); app-frame-contrasts-with-document ideation 2026-10-28 (8 findings, 2 fixed, 5 into criteria; the undrawn-states list behind AC-8 believed to come from it, yaml not re-read). Added nothing: sidebar-head-stays-level-after-send validation 2026-10-28 (4 MINOR, all identical on main, declined and upheld); frame-reaches-window-bottom validation round 2 (no findings). Missed: frame-reaches-window-bottom validation round 1 pass 2a did not see a 14 px edge fade over the scroll thumb; the validator found it by measuring pixels.
+2. Mostly real but not the task's (base build "identical on main"), plus a few taste calls; fair to defer. Few pure-noise declines seen; not counted.
+3. Skip for test-only or CI repairs, for validation rounds with product bytes unchanged since the last pass 2a, and for Visible change: none. Always run at ideation when a screen is new or changes, and the first pass 2a of a ui change on the real page. "Built screen matches the approved preview" is a weak skip reason: matching is what 2a establishes.
+4. The run is cheap. The cost is the decline round's bookkeeping (design_surfaces needs a single `preview:` path; a decline check fails if the latest review does not list the decline; declines carried as prose), then re-runs after a redraw (most of review-page-polish-on-the-real-page's 44 min believed to be repeated 1a after redraws; split not known).
+
+(relay and project-env pending)
