@@ -31,4 +31,11 @@ To the web, relay and project-env FOs, each anchored on that repo's recorded eve
 3. Skip for test-only or CI repairs, for validation rounds with product bytes unchanged since the last pass 2a, and for Visible change: none. Always run at ideation when a screen is new or changes, and the first pass 2a of a ui change on the real page. "Built screen matches the approved preview" is a weak skip reason: matching is what 2a establishes.
 4. The run is cheap. The cost is the decline round's bookkeeping (design_surfaces needs a single `preview:` path; a decline check fails if the latest review does not list the decline; declines carried as prose), then re-runs after a redraw (most of review-page-polish-on-the-real-page's 44 min believed to be repeated 1a after redraws; split not known).
 
-(relay and project-env pending)
+### kc-paseo-plugins (project-env) FO (Paseo 8b2c2fc2), 2026-10-28
+
+1. Found new: project-env-docs-site ideation cycle 2, 2026-10-28 (ideation-3.yaml MAJOR: nothing told a new teammate how to sign in to the 1Password CLI; author, FO and validator had missed it; became Install steps 3a to 3c); pick-repository finding 1 (no way back after adding a repo, became AC-2); docs-site findings 3 and 7 (host-look, led the Captain to change theme). Added nothing: project-env-vault-change-repoints-refs built-screen review 2026-10-25 (2 MINOR, declined as already ruled); project-env-built-in-agent-notice built-screen review 2026-10-26 (4 MINOR, all declined).
+2. Mostly fair to defer, not noise: host components the plugin cannot change (SettingsRow, SettingsSelect, the host's Back line), earlier Captain rulings, things scoped out. Pure taste rare. Each still costs a written decline and a 1b/2b ruling.
+3. Skip for wording the Captain already worded, a repair cycle touching no client file (already skipped docs-site validation-2 built review), and a built screen whose pictures match the approved previews with a logic-only diff. Always run for a new screen or screen state, anything public (the docs site), and any picture the Captain sees for the first time at a gate.
+4. The run is not the cost; the decline round and its bookkeeping are (writing declines, 1b/2b rulings, preview-path fixes for design_surfaces.py, overruled declines turned into fixes, criteria or decisions). Its findings caused about two extra cycles, both judged worth it. Wall time per round not measured.
+
+(relay pending: its FO was busy at send time)
