@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-28T07:45:45Z
+worktree: .worktrees/spacedock-ensign-fo-interviews-extension
 ---
 
 ## Scope
