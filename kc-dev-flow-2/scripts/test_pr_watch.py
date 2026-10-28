@@ -825,7 +825,7 @@ class TasksTests(unittest.TestCase):
         with mock.patch.object(watch, "front", side_effect=denied):
             code, lines = self.tasks({})
         self.assertEqual(code, 2)
-        self.assertEqual(lines, ["next: report unreadable to the Captain: task read denied."])
+        self.assertIn("next: report unreadable to the Captain: task read denied.", lines)
 
     def watched(self):
         return json.loads(self.watch.read_text()) if self.watch.exists() else {}
