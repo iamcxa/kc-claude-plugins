@@ -419,3 +419,36 @@ This second ideation report supersedes the earlier alignment hold without deleti
 ### Summary
 
 Implemented and pushed the amended named-batch rule and ADR 0043 at e4bd4d06a1538ed166205609002e5eef1ebf0983; local checks and bounded replay controls pass, with one joint 178-word budget raise. Code worktree is clean, all original task frontmatter is preserved, and four task evidence artifacts are saved under implementation-evidence; this report grants no gate or merge authority. FO must open the stacked Draft PR, run RoboRev, read CI and judge the explicitly unverified native reviewer coverage before treating all acceptance proof as green.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #744 head e4bd4d06 against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at e4bd4d06a1538ed166205609002e5eef1ebf0983 against ea84b08d4c726e33460609b2247599afb2d54c2b; independent commands, mutations, scenario replay and judgments are in [validation evidence](batch-reaches-each-gate-together/validation-evidence/evidence.md); one Deferred risk below, no Material finding or Needs decision.
+- DONE: Captain amendment 1 applies (director batch pass and the restating fifth paragraph cut; AC-1 and AC-3 superseded, replacements AC-8 and AC-9 written by implementation); PR #744 is stacked on #743 (base spacedock-ensign/reused-worker-dispatch-leaves-a-record at ea84b08d4), so judge the diff against that base and the joint word raise (+29 from #743, +149 here, budget step +178) against the Captain's recorded approval; RoboRev evidence=roborev:1298 clean on e4bd4d06a, run by FO
+  Verified the five-file stacked diff, withdrawn paragraphs, fresh replacement IDs and joint gate question at cdbd5e8f3; workflow 5605→5754 (+149), one joint +178 step within “about 180”; RoboRev 1298 and hosted checks are FO-supplied exact-head evidence, not independently queried.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  [Four exact steps](batch-reaches-each-gate-together/validation-evidence/acceptance.sh), run with bash --noprofile --norc, exit 0; [observed output](batch-reaches-each-gate-together/validation-evidence/acceptance-output.txt); selected Codex package adr_lint.py docs/adr --since ea84b08d4c726e33460609b2247599afb2d54c2b --require 0043 exits 0: 41 ADR files, 0 legacy.
+- DONE: AC-2 — Repairs, exceptions and recovery.
+  Fresh-context nine-scenario replay continues authorized repair, separates exceptions/unbatched work and refuses invented hold/drop; independent silent-removal/unrelated-join controls reject; real commands preserve separate answers and one consumption; full FO restart remains scenario-level.
+- DONE: AC-4 — One sitting, separate authority.
+  Real Spacedock suite passes; four prepared/committed bindings pass eight structured checklist/AC reads before the synthetic sitting; stale binding/nonapprovals refuse and resumed approval is one-use; copying approvals to all advances an unnamed task and trips the existing assertion (exit 1), with raw commands retained.
+- DONE: AC-5 — Batch-7 one-sitting proof.
+  Declared-package ledger independently re-read all four exact heads/asks and the later #732 incorporation: barrier emits one four-task sitting, eager mutation four; this is a counterfactual, while amendment 1 substitutes AC-8's actual batch-9 records for withdrawn AC-1's fresh replay.
+- DONE: AC-6 — Lifecycle cost and scope.
+  Reproduced 6810→6959 startup, 1089→1238 open idle, 1060→1209 merged idle, 333→333 archive, 2635→2784 merge sitting; unchanged fixture outputs 29/29/0/5/90 words; quote/load/budget/early-presentation controls reject, worker output stays byte-identical and inline mutations reach Pilot/POC; lint, 45 lint tests and 8 POC tests pass.
+- DONE: AC-7 — Integration and regression.
+  Exactly five authorized files, unchanged roles/ledger/provider/CI commands, number guard clean and 113 delivery tests pass; altered-director-file scope control rejects; rendered and visually inspected [flow.png](batch-reaches-each-gate-together/validation-evidence/flow.png), with authority/order/stop agreement; remote overlap remains FO-sourced.
+- DONE: AC-8 — Named batch live sitting (Amended by Captain, amendment 1).
+  Independently checked ten committed binding hashes, ancestor snapshots, joint quoted asks/answers and sufficient latest ideation reports: five backlog approvals, then four approve/one hold; changed artifact and omitted member reject; full chat/no-intervening-ask claim stays FO-attested as AC-8 explicitly allows.
+- DONE: AC-9 — Optional existing-role advice (Amended by Captain, amendment 1).
+  [Fresh-reader inputs/actions and exact proposed prompts](batch-reaches-each-gate-together/validation-evidence/scenario-replay.md) refuse anchored inputs, silent family substitution, invented director access and reviewer merge authority; no-request adds no gate; this is executed scenario reasoning, not a native reviewer launch.
+- DONE: Required checks, affected documents and implementation limits.
+  Dispatch records: 5 complete; design surfaces presentable; comment ratio 0/68=0.0% ≤5%; six doc-impact results each independently judged unaffected in evidence.md; every reported limit is dispositioned there, including actual CLI 0.27.2/skill package 0.27.3, provider attestations, unmeasured unchanged-CI cost and unverified hosted/reviewer behavior.
+- DONE: Goal sufficiency, minimal necessity and candidate preservation.
+  Named-cohort waiting is supplied where unchanged stage-only hints lack it; budget/ADR edits are required obligations and two test changes cover accepted boundaries; no extra store/role/provider surface; detached throwaway removed, original candidate worktree clean at the exact head, no product repair or PR operation.
+
+### Summary
+
+PASSED for the amended Pilot instruction change at e4bd4d06a1538ed166205609002e5eef1ebf0983, with local command proof, committed live-sitting records and independent scenario behavior kept distinct. The four-step fresh-shell acceptance script passes; FO retains gate/delivery authority and must recheck the actual integration head after the stacked base lands.
+
+- F1 Deferred risk: native optional-reviewer execution remains unverified. Released user/workflow: FO requesting advice on a complete process batch; possible harm: wrong role/family, anchored input or advisory authority mistaken for approval; boundary: value-ac[AC-9] neutral, eligible advisory review; trigger evidence: scenarios pass but no live reviewer was launched, so no observed harm. A supported live invocation that violates one of those boundaries would make this Material.

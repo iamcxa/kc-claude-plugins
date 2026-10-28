@@ -1,0 +1,10 @@
+FAIL: fixtures and raw CLI evidence retained at /private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-uzmfu4ui
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-batch-reaches-each-gate-together/.validation-pr744/kc-dev-flow-2/scripts/.validation-bulk-answer.py", line 1014, in <module>
+    main()
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-batch-reaches-each-gate-together/.validation-pr744/kc-dev-flow-2/scripts/.validation-bulk-answer.py", line 1003, in main
+    exercise(base, str(Path(binary).resolve()), args.sd_plugin_root.resolve())
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-batch-reaches-each-gate-together/.validation-pr744/kc-dev-flow-2/scripts/.validation-bulk-answer.py", line 784, in exercise
+    assert refused.returncode != 0, (entity, refused.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (PosixPath('/private/var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/dev-flow-2-sd-uzmfu4ui/batch-authority/docs/dev2/.spacedock-state/df2-fb85a708f3-batch-authority-revise.md'), 'gate=gate:df2-fb85a708f3-batch-authority-revise:ideation attempt=gate-attempt:df2-fb85a708f3-batch-authority-revise-ideation-1 application=advance/consumed condition=approved-pending eligible=true consumed=true target-stage=implementation\nsync=local-only phase=consume\n')

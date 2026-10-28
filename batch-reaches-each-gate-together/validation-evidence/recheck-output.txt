@@ -1,0 +1,32 @@
+REJECTED mutation: AC-5 eager policy makes four asks
+REJECTED mutation: AC-2 silent member removal
+REJECTED mutation: AC-2 unrelated member joins
+PASS AC-5: four exact historical heads/questions; later #732 explicitly included only in counterfactual; one sitting, eager policy four.
+REJECTED mutation: AC-8 changed bound artifact backlog/reused-worker-dispatch-leaves-a-record
+PASS AC-8: backlog reused-worker-dispatch-leaves-a-record approve df32480a31d03a4f51111b1953853f7ab84e3f4b
+REJECTED mutation: AC-8 changed bound artifact backlog/paseo-codex-dispatch-practice
+PASS AC-8: backlog paseo-codex-dispatch-practice approve 4e0288f1003e64738b8e17cdbe6c9d6c7dcbe8ee
+REJECTED mutation: AC-8 changed bound artifact backlog/captain-ruling-sources-checked
+PASS AC-8: backlog captain-ruling-sources-checked approve d3c676524c611bec083d28769fd2c694083eaa47
+REJECTED mutation: AC-8 changed bound artifact backlog/batch-reaches-each-gate-together
+PASS AC-8: backlog batch-reaches-each-gate-together approve 73074e68c0f5cf7283f958129cf4c4accd62cfa5
+REJECTED mutation: AC-8 changed bound artifact backlog/fo-interviews-extension
+PASS AC-8: backlog fo-interviews-extension approve cfce27813848e841404e8ccd1f6da397e7c2511a
+REJECTED mutation: AC-8 changed bound artifact ideation/reused-worker-dispatch-leaves-a-record
+PASS AC-8: ideation reused-worker-dispatch-leaves-a-record approve a21e0bfc3afd2992b38350ed0413a000a4225209
+REJECTED mutation: AC-8 changed bound artifact ideation/batch-reaches-each-gate-together
+PASS AC-8: ideation batch-reaches-each-gate-together approve b0055d05af5d2e75828f408e846e6f18c789f112
+REJECTED mutation: AC-8 changed bound artifact ideation/paseo-codex-dispatch-practice
+PASS AC-8: ideation paseo-codex-dispatch-practice approve d48b5fbc8bf0d03d0938464a803947650a6a0c2f
+REJECTED mutation: AC-8 changed bound artifact ideation/fo-interviews-extension
+PASS AC-8: ideation fo-interviews-extension approve e971cf0a20dd9aa2fc80d360411d608e1fb66300
+REJECTED mutation: AC-8 changed bound artifact ideation/captain-ruling-sources-checked
+PASS AC-8: ideation captain-ruling-sources-checked hold 6057cff3d347f1e45472c0f647fa03110e22161a
+REJECTED mutation: AC-8 omitted live member
+REJECTED mutation: AC-6 missing captain ["references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[10] raises the budget by 178 and its 'captain' has no quoted words"]
+REJECTED mutation: AC-6 missing loaded ["references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[10] raises the budget by 178 and has no 'loaded' moment"]
+REJECTED mutation: AC-6 omitted word from budget ["references/sd/workflow.md: 5755 words exceeds the budget of 5754; move the added text out of the README, or add a raise step of 1 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"]
+REJECTED mutation: AC-7 altered director authority
+PASS AC-7: five named files only; role inputs, command implementations, ledger, CI and provider scripts unchanged.
+PASS AC-6: {"base": {"startup": 6810, "idle open": 1089, "idle merged": 1060, "after archive": 333, "merge ask": 2635}, "candidate": {"startup": 6959, "idle open": 1238, "idle merged": 1209, "after archive": 333, "merge ask": 2784}} unchanged output words {'startup': 29, 'idle open': 29, 'idle merged': 0, 'after archive': 5, 'merge ask': 90}
+LIMIT: committed quotes/bindings prove recorded decisions, not complete chat or absence of early asks; scenarios do not execute a reviewer.

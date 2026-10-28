@@ -1,0 +1,24 @@
+flowchart TD
+ A[Captain accepts one slice or theme and task scopes] --> B[FO recovers membership and next shared gate]
+ B --> C{All members have sufficient committed evidence?}
+ C -->|No| D{Captain authority needed to unblock?}
+ D -->|No| E[Workers continue authorized repair and validation]
+ E --> C
+ D -->|Yes| F[FO asks one bounded exception question]
+ F --> G[Captain decides unblock or explicit split]
+ G --> B
+ C -->|Yes| H{Optional batch review still owed?}
+ H -->|Yes| I[Reviewer reads task files and artifacts]
+ I --> J[FO routes repairs or carries decisions to sitting]
+ J --> C
+ H -->|No or review complete| K[FO prepares and commits each task briefing]
+ K --> L{Every binding current and presentation checks pass?}
+ L -->|No| M[Stop and repair or replace stale bindings]
+ M --> C
+ L -->|Yes| N[FO presents one sitting with each task question]
+ N --> O[Captain answers named decisions one at a time]
+ O --> P[FO records separate task resolutions]
+ P --> Q{Decision for this task?}
+ Q -->|Approve| R[Existing consume or authorized delivery route]
+ Q -->|Revise| E
+ Q -->|Hold or unanswered| S[Task waits with no extra authority]
