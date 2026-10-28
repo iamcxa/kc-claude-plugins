@@ -14,6 +14,20 @@ status: backlog
 - Upstream first: dev2 today has `design_surfaces.py check` requiring a `Preview:` line that exists for a `ui` task and a `design_review` naming it (origin/main, 2026-10-24); it says nothing about the preview's form. Spacedock Review publishing is relay's Release 2.1a, not built.
 - Open for the Captain: whether to adopt, which points, and in which release; whether the design-surfaces check enforces any of them.
 
+- Added 2026-10-28: the subspace-web dev2 FO (Paseo 295b873d) relayed the Captain's preference from its session: 「之後預覽組合統一使用類似的 layout，這樣比較方便讀，請跟 dev2 fo 講一下」. The layout he saw that day on web task decided-review-shows-amber's spike (six options): a left menu listing today and each option with a one-line description, then screen (desktop, widths, phone, real page), theme and state, with combinations that have no picture disabled; the chosen picture on the right with today beside it by default (toggle); arrow keys up/down for option and left/right for state; on a phone the menu becomes a sticky top bar; generated from picture file names `<option>-<screen>-<theme>-<state>.png`, with the long measurement table one link away. Reference copy: spacedock-dev/subspace-web, branch spacedock-state/dev2, decided-review-shows-amber/preview/viewer/index.html (about 45 lines, one file, no dependencies). Relayed words, not a ruling in this session; it refines point (2) above (a left menu, not a top bar, on a wide screen).
+
+## Non-goals
+
+- Spacedock Review publishing of the preview (relay's Release 2.1a); judging a design's content.
+
+## Budget
+
+- One package PR: the preview form in the ideation and design-director guidance, plus the viewer file if the package ships one; a `design_surfaces.py` check only if the Captain asks for enforcement.
+
+## Stop condition
+
+- web decided-review-shows-amber's six-option spike and one relay prototype replay as readable through the agreed form; return to the Captain on which points are required and whether a check enforces them.
+
 ## FO alignment
 
 Alignment: needed before ideation; adoption is the Captain's.
