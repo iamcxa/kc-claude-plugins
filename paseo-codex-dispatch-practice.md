@@ -45,6 +45,8 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+started: 2026-10-28T07:06:37Z
+worktree: .worktrees/spacedock-ensign-paseo-codex-dispatch-practice
 ---
 
 ## Scope
