@@ -3,7 +3,7 @@ title: The paseo extension says how FO dispatches a Codex worker through Paseo; 
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: validation
+status: done
 gates:
     version: 1
     records:
@@ -76,10 +76,13 @@ gates:
                 reason: 'The Captain 「准」 (chat, 2026-10-29), answering FO''s second batch-9 delivery sitting whose ask was 「決定：三張全照建議（合併 #744、合併 #742、#745 改條件後在 #744 之後合併）；如果哪張要改，直接說。」; accepts FO''s recommendation for this task as stated in the gate question.'
               application:
                 target-stage: done
-                state: pending
+                state: consumed
 started: 2026-10-28T07:06:37Z
 worktree: .worktrees/spacedock-ensign-paseo-codex-dispatch-practice
 pr: pr-merge:742
+verdict: PASSED
+completed: 2026-10-28T16:10:20Z
+archived: 2026-10-28T16:10:21Z
 ---
 
 ## Scope
