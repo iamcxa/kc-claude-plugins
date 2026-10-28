@@ -34,6 +34,17 @@ gates:
                 id: briefing:batch-reaches-each-gate-together:ideation:attempt-1:revision-1
                 digest: sha256:6564159bae786bda127baba676e3a34e7ee493c1bd187590a1a39d65610d3c6a
                 room-ref: ./batch-reaches-each-gate-together/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:batch-reaches-each-gate-together:ideation:1
+                briefing: briefing:batch-reaches-each-gate-together:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T07:05:24.286961Z"
+                decision: approve
+                reason: The Captain 「照建議」 (chat, 2026-10-28), answering FO's joint batch-9 ideation sitting of five gates whose ask was 「決定：五張全照建議（四張准並照上面刪減，一張暫緩）；如果哪張要改，直接說。」; accepts FO's recommendation for this task as stated in the gate question, recorded as Captain amendment 1.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
