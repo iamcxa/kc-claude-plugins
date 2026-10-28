@@ -1,0 +1,9 @@
+Created workspace wks_31fac51fb7a34677 - spacedock-ensign/paseo-codex-dispatch-practice
+Tip: pass --workspace <id> (or set PASEO_WORKSPACE_ID) to run in an existing workspace.
+{
+  "agentId": "b23132a3-bbf6-4127-bf68-6551b18ec471",
+  "status": "running",
+  "provider": "codex",
+  "cwd": "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice",
+  "title": "ensign b9: paseo-codex validation-4 (astra, immediate spawn)"
+}
