@@ -3,7 +3,7 @@ title: The dev2 maintainer interviews every FO each few batches about each exten
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: backlog
+status: ideation
 gates:
     version: 1
     records:
@@ -25,7 +25,7 @@ gates:
                 reason: The Captain 「准」 (chat, 2026-10-28), answering FO's joint batch-9 backlog presentation of five gates whose ask was 「決定：五張全准進入設計階段；要拿掉或換掉哪張，直接說。」; accepts FO's recommendation to enter ideation on the pilot profile.
               application:
                 target-stage: ideation
-                state: pending
+                state: consumed
 ---
 
 ## Scope
