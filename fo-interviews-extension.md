@@ -342,6 +342,11 @@ Superseded text:
 
 **AC-4 — Reproduce rounds 1–3 without fabricated evidence.** Evidence: create the three state wrappers and index against the pinned sources; compare all original bytes/hashes and all 13 respondent sections, historical question sets, partial coverage, prediction labels, disputed skip reason, absent full IDs and unavailable raw measurements. Rerun the described loss controls. Falsifier: remove a respondent, mark round 2's benefit question answered, claim all FOs in round 3 or rewrite 7.26 hours as independently remeasured and the semantic check fails. Current evidence: disposable representation round-trip and three dropped-respondent controls passed; actual state wrappers await implementation.
 
+
+### Amendment 2 — 2026-10-28, validation gate (batch-9 joint delivery sitting)
+Captain: 「准」 (chat, 2026-10-28)
+Asked: 「決定：四張全照建議（#743 合併、#744 接著合併、#742 我補一次再驗收、#745 提早跑第 4 輪訪談並照上面修）；如果哪張要改，直接說。」; gate question: Hold fo-interviews-extension at validation until it has operational evidence? FO recommends hold; approving accepts it and these four steps: the Captain asks for an early targeted interview round 4 under the candidate extension text (one or two extensions, the five FOs, about ten bundled sends, no test agents) as the evidence validation found missing; a repair lists `fo-feedback` in this workflow's README `extensions:` and removes the 30-mutation claim from the PR body (validation inverted the policy and those fixtures still passed); AC-2's live three-batch cadence is shown at the first due round, not before merge, recorded as a Captain amendment; #745 merges after #744, whose batch rule it reads. F2 is declined (adr_lint.py --require names the ADRs a change adds or updates; #745 adds or updates none).
+Supersedes: AC-2
 ## Stage Report: ideation
 
 - DONE: A design for an optional interview extension beside learn (cadence, a fixed short question set per extension, record format in the state checkout, findings filed as backlog tasks), reproducing rounds 1 to 3 (fo-interviews-extension/peers-round-1.md, round-2-batch7-texts.md, round-3-design-director.md) as its first records; cadence and the question set returned as Captain decisions
