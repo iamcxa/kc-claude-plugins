@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:captain-ruling-sources-checked:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of captain-ruling-sources-checked to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that a Captain ruling recorded from a peer's relayed words is refused by design_surfaces.py check; profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:captain-ruling-sources-checked:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/d3c676524c611bec083d28769fd2c694083eaa47/captain-ruling-sources-checked.md",
+      "rev": "sha256:b6590b749dcfe9f3a94a77cf9ec7fad575d2747c02cdef0b4b8b5573b54707e9",
+      "mediaType": "text/markdown",
+      "summary": "Bite: interview round 1: qnow recorded two relayed rulings as the Captain's. Ideation owes the check's scope and whether active tasks are backfilled; designed beside adr-required-statement."
+    }
+  ]
+}
