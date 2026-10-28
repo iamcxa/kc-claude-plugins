@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-interviews-extension:ideation:attempt-1:revision-1",
+  "question": "Approve the ideation of fo-interviews-extension to enter implementation? FO recommends approve with two Captain amendments and two settings; approving accepts them: drop the one-question-per-send rule and the per-rule coverage rows, replace the three historical wrappers with index links to the original round records, interview every three completed batches, and send four questions per extension bundled in one message. Implementation goes after batch-reaches-each-gate-together, which defines a completed batch.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-interviews-extension:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/e971cf0a20dd9aa2fc80d360411d608e1fb66300/fo-interviews-extension.md",
+      "rev": "sha256:b557d7dff2770e1823128f03d5cb05996c62870e10d59b7a02ddc5bc2d282971",
+      "mediaType": "text/markdown",
+      "summary": "Design: an optional interview extension beside learn reproducing rounds 1 to 3. Chief-engineer: shrink; cadence and question set are the Captain's."
+    }
+  ]
+}

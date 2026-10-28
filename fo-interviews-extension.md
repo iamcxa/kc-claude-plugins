@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:fo-interviews-extension:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:fo-interviews-extension-ideation-1
+              briefing:
+                id: briefing:fo-interviews-extension:ideation:attempt-1:revision-1
+                digest: sha256:c2af7a30a16afdc4e8bf35a18e2520f8fb53964606ace6a509c465d8c809f999
+                room-ref: ./fo-interviews-extension/review/ideation/briefing-1
 ---
 
 ## Scope
