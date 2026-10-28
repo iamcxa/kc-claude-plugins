@@ -53,6 +53,14 @@ gates:
                 id: briefing:fo-interviews-extension:validation:attempt-1:revision-1
                 digest: sha256:f0435a58ebd588865391a6df7423c3db22b593e81a068cd2f36feec89cedab18
                 room-ref: ./fo-interviews-extension/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-interviews-extension:validation:1
+                briefing: briefing:fo-interviews-extension:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T14:29:16.661321Z"
+                decision: hold
+                reason: The Captain 「准」 (chat, 2026-10-28), answering FO's joint batch-9 delivery sitting of four gates whose ask was 「決定：四張全照建議（#743 合併、#744 接著合併、#742 我補一次再驗收、#745 提早跑第 4 輪訪談並照上面修）；如果哪張要改，直接說。」; accepts FO's recommendation to hold this task at validation and the steps the gate question names.
 started: 2026-10-28T07:45:45Z
 worktree: .worktrees/spacedock-ensign-fo-interviews-extension
 pr: iamcxa/kc-claude-plugins#745
