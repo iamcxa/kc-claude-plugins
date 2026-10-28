@@ -15,6 +15,17 @@ gates:
                 id: briefing:reused-worker-dispatch-leaves-a-record:backlog:attempt-1:revision-1
                 digest: sha256:9682249dd49b43628e358a80e2df2fc1ef8b35a3a5f9dd97772029e8cf766227
                 room-ref: ./reused-worker-dispatch-leaves-a-record/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:reused-worker-dispatch-leaves-a-record:backlog:1
+                briefing: briefing:reused-worker-dispatch-leaves-a-record:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T05:38:45.589286Z"
+                decision: approve
+                reason: The Captain 「准」 (chat, 2026-10-28), answering FO's joint batch-9 backlog presentation of five gates whose ask was 「決定：五張全准進入設計階段；要拿掉或換掉哪張，直接說。」; accepts FO's recommendation to enter ideation on the pilot profile.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
