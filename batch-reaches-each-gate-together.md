@@ -3,7 +3,7 @@ title: A batch reaches each gate together and the Captain answers it in one sitt
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
