@@ -312,13 +312,13 @@ Asked: 「決定：五張全照建議（四張准並照上面刪減，一張暫�
 Supersedes: AC-3, AC-4
 Design:
 
-- **Read:** at round opening, use [the round template](round-template.md). Freeze the roster of all known adopting FOs and the versioned extension and rule inventory. Keep each unavailable FO, disabled extension and unobserved rule visible. For each enabled extension, ask the fixed questions one at a time through peers; include core workflow rules as a separate topic. Name the rule text or source heading with its commit. Do not infer a compliant rule from an absent example.
+For each enabled extension, ask the fixed questions one at a time through peers; include core workflow rules as a separate topic.
 
-One row per FO and extension or core-rule topic: enabled, disabled or unknown; each rule has used, skipped, unobserved or not asked plus source. Every fixed question has an answer reference, none recorded, unknown or not asked. Partial coverage never means all FOs or all rules answered.
+One row per FO and extension or core-rule topic: enabled, disabled or unknown; each rule has used, skipped, unobserved or not asked plus source.
 
-Enumerate all known active adopter FOs from confirmed identities/areas at round start; the roster records its source and date and never means an unknowable global fleet. Every roster member receives coverage rows for every extension in the package index plus the core rules applicable to its adopted profile. Disabled extensions are `disabled`, not failures; newly discovered FOs/rules after the snapshot are explicit additions or next-round entries. An enabled extension's versioned rules all get a coverage state even if there is no event. Four fixed questions are asked per enabled extension/topic, one at a time, not four messages per individual rule; answers reference the rule rows. This bounds message growth while exposing unobserved rules.
+An enabled extension's versioned rules all get a coverage state even if there is no event. Four fixed questions are asked per enabled extension/topic, one at a time, not four messages per individual rule; answers reference the rule rows.
 
-The first records are historical-import wrappers under `.notes/fo-feedback/`, linked by the index to the existing source files below at state commit `6658c9b0c3bbaaa78d6086ffdcb95ab1ef495842`. Original files remain byte-identical, including condensed answers, missing sources and the old bundled-question practice. They are not evidence that the new policy was followed. Do not infer full host identities from the short IDs or invent a cadence anchor.
+The first records are historical-import wrappers under `.notes/fo-feedback/`, linked by the index to the existing source files below at state commit `6658c9b0c3bbaaa78d6086ffdcb95ab1ef495842`.
 
 Superseded text:
 
