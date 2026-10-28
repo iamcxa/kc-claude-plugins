@@ -1,0 +1,14 @@
+test_batch_presentation_survives_poc_derivation_outside_worker_context (early_ask.DeriveTests.test_batch_presentation_survives_poc_derivation_outside_worker_context) ... FAIL
+
+======================================================================
+FAIL: test_batch_presentation_survives_poc_derivation_outside_worker_context (early_ask.DeriveTests.test_batch_presentation_survives_poc_derivation_outside_worker_context)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-batch-reaches-each-gate-together/.validation-pr744-round2/kc-dev-flow-2/scripts/test_poc_readme.py", line 64, in test_batch_presentation_survives_poc_derivation_outside_worker_context
+    self.assertIn("present the batch in one sitting", section)
+AssertionError: 'present the batch in one sitting' not found in "\nA Captain-approved batch covers one release slice or theme. Recover members from accepted scopes/questions, without another list. Unclear membership holds presentation; membership changes or splits need his decision. Incompatible stage graphs need an explicitly approved split.\n\nAt each next gate, wait for every member's sufficient committed evidence, then present each ready task immediately. Early finishers prompt no decision. Continue authorized repairs/validation. A blocker needing Captain authority gets one exception question naming the member and effect. Do not manufacture hold resolutions.\n\n`<package>/scripts/pr_watch.py tasks` sitting hints remain subject to this boundary; stage alone joins neither unrelated tasks nor incomplete batches. Unbatched tasks retain ordinary gates.\n\nWhen requested, chief-engineer reviews the complete package/process batch before briefing bindings; engineering-reviewer handles contested hard-to-reverse claims. Give committed task files/artifact links, not FO's suspicions/conclusions. Record reviewer/model/evidence; use a different family from all workers or ask the Captain. Review advises, without approval authority.\n"
+
+----------------------------------------------------------------------
+Ran 1 test in 0.002s
+
+FAILED (failures=1)

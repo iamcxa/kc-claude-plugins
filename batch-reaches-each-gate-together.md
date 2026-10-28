@@ -496,3 +496,37 @@ PASSED for the amended Pilot instruction change at e4bd4d06a1538ed166205609002e5
 ### Summary
 
 Merged origin/main into the authorized branch and pushed b61a708dadf9cbd9ac1e6d727720c67cf9f06076, retaining the single joint +178-word budget step and the exact prior candidate tree. All three requested checks exit 0 and only the task's five files differ from main; hosted CI, RoboRev and delivery remain with FO, and this report changes no task frontmatter or gate authority.
+
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #744 head b61a708d against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED on b61a708dadf9cbd9ac1e6d727720c67cf9f06076 against main bfa5354b40ba99e297e7cb2d3e70b41f7d0fece9; current-head checks, scenario actions and at least one negative control per active criterion are in [second validation evidence](batch-reaches-each-gate-together/validation-2-evidence/evidence.md).
+- DONE: Second validation, on the head after main was merged in (the Captain's delivery approval: "if it is not mergeable, FO merges main into the branch (no rebase, no force) and runs one validation on the new head before asking again"): confirm the merge commit changes only the kc-dev-flow-2/scripts/lint-skills.py budget step to the joint +178 and that the diff against origin/main is this task's five files; rerun kc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py, kc-dev-flow-2/scripts/test_poc_readme.py and the batch replays; PR base is now main; RoboRev evidence=roborev:1307 clean on b61a708da, run by FO; validation-1 PASSED on e4bd4d06a
+  Independently proved both parents, identical tree to validation-1 head, sole three-way budget-step conflict and exact five-file main diff; +178 joint step retained. Three requested commands and batch replays exit 0; base main/CLEAN, five hosted checks and roborev:1307 clean are FO-provided, not independently queried.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  [Four exact steps](batch-reaches-each-gate-together/validation-2-evidence/acceptance.sh) ran unchanged with bash --noprofile --norc, exit 0; [observed output](batch-reaches-each-gate-together/validation-2-evidence/acceptance-output.txt). Declared Codex package adr_lint.py docs/adr --since bfa5354b40ba99e297e7cb2d3e70b41f7d0fece9 --require 0043 exits 0: 41 ADR files, 0 legacy; no new Material or Needs decision finding.
+- DONE: AC-2 — Repairs, exceptions and recovery.
+  Replayed nine scenarios; authorized repair continues, uncertainty holds presentation, partial answers retain scope; silent omission/unrelated-join controls reject, while actual command recovery refuses duplicate consumption. Full FO restart remains simulated.
+- DONE: AC-4 — One sitting, separate authority.
+  Four disposable prepared/committed bindings pass eight structured reads before presentation; mapped answers and stale refusal pass. Bulk-approval mutation exits 1 because the revise task improperly advances; raw commands retained.
+- DONE: AC-5 — Batch-7 one-sitting proof.
+  Re-read four exact historical heads/asks and later #732 inclusion: barrier gives one sitting, eager mutation four; counterfactual remains separate from amended batch-9 live records.
+- DONE: AC-6 — Lifecycle cost and scope.
+  Workflow 5605→5754 (+149), joint step +178; lifecycle 6810→6959 / 1089→1238 / 1060→1209 / 333→333 / 2635→2784, stdout 29/29/0/5/90 unchanged. Quote/load/budget/early-ask controls reject; worker output unchanged and inline controls reach Pilot/POC; 45 lint and 8 POC tests pass.
+- DONE: AC-7 — Integration and regression.
+  Exactly five files; altered-director scope control rejects; roles/ledger/provider/gate/CI unchanged. Unchanged Mermaid source matches the prior render, visually inspected again for actor/order/stop agreement; rendering reused from validation 1. ADR guard passes; remote overlap is FO-sourced.
+- DONE: AC-8 — Named batch live sitting (Amended by Captain, amendment 1).
+  Independently verified ten committed binding hashes, ancestor snapshots, sufficient stage reports and joint quoted asks/answers: five backlog approvals, four ideation approvals/one hold; changed artifacts and missing member reject. Full chat/no-early-ask remains FO-attested.
+- DONE: AC-9 — Optional existing-role advice (Amended by Captain, amendment 1).
+  Captured current-context scenario actions and unsent prompts refuse anchored inputs, silent family substitution, director task access and reviewer approval; no-request adds no gate. Native reviewer execution remains unverified, not a new requirement.
+- DONE: Required checks, affected documents and all implementation limits.
+  113 delivery tests pass; 7 dispatch records complete; design surfaces presentable; comments 0/68=0.0% <=5%; all six doc-impact paths are judged unaffected in evidence.md. CLI 0.27.2/skill package 0.27.3, provider attestations and unmeasured unchanged-CI cost remain explicit.
+- DONE: Goal sufficiency, minimal necessity and candidate preservation.
+  Cohort waiting supplies the missing presentation boundary; ADR/budget and two tests serve accepted obligations. Detached checkout removed; original branch clean at b61a708dadf9cbd9ac1e6d727720c67cf9f06076; no product repair, PR action or code push.
+
+### Summary
+
+Second validation PASSED on b61a708dadf9cbd9ac1e6d727720c67cf9f06076 after main was merged; this report supersedes the first validation verdict for candidate identity. The exact four-step fresh-shell acceptance passed; evidence separates real local commands, committed live-sitting records, scenario reasoning and FO-supplied provider facts. FO retains the next gate/delivery action.
+
+- F1 Deferred risk (retained): optional native reviewer execution remains unverified; workflow is requested complete-batch advice, possible harm is anchored/wrong-family advice or mistaken approval, boundary value-ac[AC-9] requires neutral eligible advice, and current trigger evidence is passing scenarios only. A supported live invocation violating that boundary would make it Material; no observed harm or new blocker.

@@ -1,0 +1,167 @@
+$ python3 -B kc-dev-flow-2/scripts/lint-skills.py
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5754 of 5754 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+
+exit=0
+
+$ python3 -B kc-dev-flow-2/scripts/test_poc_readme.py
+........
+----------------------------------------------------------------------
+Ran 8 tests in 0.006s
+
+OK
+POC README matches the five-stage README without ideation
+--- derived
++++ /var/folders/tm/dk0m7pgx4h3gxqv_v2v8nds00000gp/T/tmpmalwhxhn/poc.md
+@@ -7,7 +7,7 @@
+ extensions: [learn, peers]
+ second-reviewer: ""
+ state: .spacedock-state
+-trunk: next
++trunk: main
+ stages:
+   defaults:
+     worktree: false
+
+exit=0
+
+$ python3 -B kc-dev-flow-2/scripts/test_lint_skills.py
+test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines (__main__.RouteMutationTests.test_a_chat_only_rule_survives_a_reflow_of_the_workflow_lines) ... ok
+test_a_chat_only_rule_the_workflow_no_longer_says_is_named (__main__.RouteMutationTests.test_a_chat_only_rule_the_workflow_no_longer_says_is_named) ... ok
+test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused (__main__.RouteMutationTests.test_a_cut_step_needs_only_a_reason_and_a_step_without_one_is_refused) ... ok
+test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way (__main__.RouteMutationTests.test_a_ledger_whose_sum_differs_from_the_count_is_refused_either_way) ... ok
+test_a_listed_extension_that_is_not_required_is_named (__main__.RouteMutationTests.test_a_listed_extension_that_is_not_required_is_named) ... ok
+test_a_passage_copied_from_the_workflow_into_another_file (__main__.RouteMutationTests.test_a_passage_copied_from_the_workflow_into_another_file) ... ok
+test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment (__main__.RouteMutationTests.test_a_raise_step_needs_the_captains_quoted_words_and_a_loaded_moment) ... ok
+test_a_required_extension_missing_from_the_template_line_is_named (__main__.RouteMutationTests.test_a_required_extension_missing_from_the_template_line_is_named) ... ok
+test_a_row_marked_required_that_the_template_omits_is_named (__main__.RouteMutationTests.test_a_row_marked_required_that_the_template_omits_is_named) ... ok
+test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not (__main__.RouteMutationTests.test_a_synced_skill_copy_passes_and_an_unlisted_copy_does_not) ... ok
+test_a_synced_skill_is_checked_only_when_listed (__main__.RouteMutationTests.test_a_synced_skill_is_checked_only_when_listed) ... ok
+test_a_synced_skill_still_refuses_an_unbound_package_path (__main__.RouteMutationTests.test_a_synced_skill_still_refuses_an_unbound_package_path) ... ok
+test_bare_script_name (__main__.RouteMutationTests.test_bare_script_name) ... ok
+test_brace_placeholder (__main__.RouteMutationTests.test_brace_placeholder) ... ok
+test_cli_exits_one_naming_the_file (__main__.RouteMutationTests.test_cli_exits_one_naming_the_file) ... ok
+test_cross_profile_route (__main__.RouteMutationTests.test_cross_profile_route) ... ok
+test_cross_stage_route (__main__.RouteMutationTests.test_cross_stage_route) ... ok
+test_design_director_keeps_its_declared_model (__main__.RouteMutationTests.test_design_director_keeps_its_declared_model) ... ok
+test_design_director_needs_its_skill (__main__.RouteMutationTests.test_design_director_needs_its_skill) ... ok
+test_documented_journey_probe_finds_regular_yaml_at_each_depth (__main__.RouteMutationTests.test_documented_journey_probe_finds_regular_yaml_at_each_depth) ... ok
+test_duplicate_profile (__main__.RouteMutationTests.test_duplicate_profile) ... ok
+test_existing_frontmatter_validator_is_used (__main__.RouteMutationTests.test_existing_frontmatter_validator_is_used) ... ok
+test_extension_script_named_without_its_extension_path (__main__.RouteMutationTests.test_extension_script_named_without_its_extension_path) ... ok
+test_external_reference_symlink (__main__.RouteMutationTests.test_external_reference_symlink) ... ok
+test_machine_path_placeholder (__main__.RouteMutationTests.test_machine_path_placeholder) ... ok
+test_missing_markdown_table_separator (__main__.RouteMutationTests.test_missing_markdown_table_separator) ... ok
+test_missing_optional_extension_document_is_named (__main__.RouteMutationTests.test_missing_optional_extension_document_is_named) ... ok
+test_missing_principles (__main__.RouteMutationTests.test_missing_principles) ... ok
+test_missing_profile_reference (__main__.RouteMutationTests.test_missing_profile_reference) ... ok
+test_observer_keeps_its_declared_model (__main__.RouteMutationTests.test_observer_keeps_its_declared_model) ... ok
+test_old_variant_invocation (__main__.RouteMutationTests.test_old_variant_invocation) ... ok
+test_package_placeholder_without_root_line (__main__.RouteMutationTests.test_package_placeholder_without_root_line) ... ok
+test_poc_cannot_declare_ideation_active (__main__.RouteMutationTests.test_poc_cannot_declare_ideation_active) ... ok
+test_reversed_routing_markers (__main__.RouteMutationTests.test_reversed_routing_markers) ... ok
+test_role_binding_and_model_policy (__main__.RouteMutationTests.test_role_binding_and_model_policy) ... ok
+test_script_named_by_link_label_only (__main__.RouteMutationTests.test_script_named_by_link_label_only) ... ok
+test_the_chat_only_list_must_exist (__main__.RouteMutationTests.test_the_chat_only_list_must_exist) ... ok
+test_the_chat_only_list_must_hold_a_rule (__main__.RouteMutationTests.test_the_chat_only_list_must_hold_a_rule) ... ok
+test_the_known_overlap_is_listed_and_a_new_one_is_not (__main__.RouteMutationTests.test_the_known_overlap_is_listed_and_a_new_one_is_not) ... ok
+test_unknown_profile (__main__.RouteMutationTests.test_unknown_profile) ... ok
+test_valid_scaffold (__main__.RouteMutationTests.test_valid_scaffold) ... ok
+test_workflow_equal_to_its_word_budget_passes_and_prints_the_count (__main__.RouteMutationTests.test_workflow_equal_to_its_word_budget_passes_and_prints_the_count) ... ok
+test_workflow_over_its_word_budget (__main__.RouteMutationTests.test_workflow_over_its_word_budget) ... ok
+test_workflow_under_its_word_budget_names_the_cut_step (__main__.RouteMutationTests.test_workflow_under_its_word_budget_names_the_cut_step) ... ok
+test_wrong_shared_principle (__main__.RouteMutationTests.test_wrong_shared_principle) ... ok
+
+----------------------------------------------------------------------
+Ran 45 tests in 10.156s
+
+OK
+
+exit=0
+
+$ python3 -B kc-dev-flow-2/scripts/test_delivery_gate.py
+.................................................................................................................
+----------------------------------------------------------------------
+Ran 113 tests in 82.027s
+
+OK
+
+exit=0
+
+$ python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since bfa5354b40ba99e297e7cb2d3e70b41f7d0fece9 --require 0043
+41 ADR file(s) checked, 0 legacy
+
+exit=0
+
+$ python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/number_guards.py check --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2 --task /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/batch-reaches-each-gate-together.md
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base bfa5354b40ba head b61a708dadf9 merge-base bfa5354b40ba
+
+exit=0
+
+$ python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/comment_ratio.py bfa5354b40ba99e297e7cb2d3e70b41f7d0fece9 HEAD --workflow-dir /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2
+code lines 68, comment lines 0, 0.0%
+maximum 5% (package default) met
+
+exit=0
+
+$ python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/dispatch_records.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/batch-reaches-each-gate-together
+7 dispatch record(s) complete
+
+exit=0
+
+$ python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/design_surfaces.py check /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/batch-reaches-each-gate-together.md
+batch-reaches-each-gate-together.md: design surfaces presentable
+scope check not run: stage is validation, not ideation
+
+exit=0
+
+$ python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/doc_impact.py bfa5354b40ba99e297e7cb2d3e70b41f7d0fece9 HEAD
+docs/adr/0020-a-rise-in-the-workflow-word-budget-needs-a-captain-ruling-recorded-with-it.md	review	kc-dev-flow-2/scripts/lint-skills.py
+docs/adr/0037-workers-check-shared-work-and-return-to-fo-early.md	review	kc-dev-flow-2/scripts/lint-skills.py
+kc-dev-flow-2/README.md	review	kc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py
+kc-dev-flow-2/references/sd/adoption.md	review	kc-dev-flow-2/scripts/test_sd_dispatch.py
+kc-dev-flow-2/skills/maintain-flow/SKILL.md	review	kc-dev-flow-2/scripts/lint-skills.py
+learning.md	review	kc-dev-flow-2/scripts/lint-skills.py, kc-dev-flow-2/scripts/test_sd_dispatch.py
+6 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'
+
+exit=0
+
+$ python3 -B /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/batch-reaches-each-gate-together/validation-2-evidence/recheck.py /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-batch-reaches-each-gate-together/.validation-pr744-round2 /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1 /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3
+REJECTED mutation: AC-5 eager policy makes four asks
+REJECTED mutation: AC-2 silent member removal
+REJECTED mutation: AC-2 unrelated member joins
+PASS AC-5: four exact historical heads/questions; later #732 explicitly included only in counterfactual; one sitting, eager policy four.
+REJECTED mutation: AC-8 changed bound artifact backlog/reused-worker-dispatch-leaves-a-record
+PASS AC-8: backlog reused-worker-dispatch-leaves-a-record approve df32480a31d03a4f51111b1953853f7ab84e3f4b
+REJECTED mutation: AC-8 changed bound artifact backlog/paseo-codex-dispatch-practice
+PASS AC-8: backlog paseo-codex-dispatch-practice approve 4e0288f1003e64738b8e17cdbe6c9d6c7dcbe8ee
+REJECTED mutation: AC-8 changed bound artifact backlog/captain-ruling-sources-checked
+PASS AC-8: backlog captain-ruling-sources-checked approve d3c676524c611bec083d28769fd2c694083eaa47
+REJECTED mutation: AC-8 changed bound artifact backlog/batch-reaches-each-gate-together
+PASS AC-8: backlog batch-reaches-each-gate-together approve 73074e68c0f5cf7283f958129cf4c4accd62cfa5
+REJECTED mutation: AC-8 changed bound artifact backlog/fo-interviews-extension
+PASS AC-8: backlog fo-interviews-extension approve cfce27813848e841404e8ccd1f6da397e7c2511a
+REJECTED mutation: AC-8 changed bound artifact ideation/reused-worker-dispatch-leaves-a-record
+PASS AC-8: ideation reused-worker-dispatch-leaves-a-record approve a21e0bfc3afd2992b38350ed0413a000a4225209
+REJECTED mutation: AC-8 changed bound artifact ideation/batch-reaches-each-gate-together
+PASS AC-8: ideation batch-reaches-each-gate-together approve b0055d05af5d2e75828f408e846e6f18c789f112
+REJECTED mutation: AC-8 changed bound artifact ideation/paseo-codex-dispatch-practice
+PASS AC-8: ideation paseo-codex-dispatch-practice approve d48b5fbc8bf0d03d0938464a803947650a6a0c2f
+REJECTED mutation: AC-8 changed bound artifact ideation/fo-interviews-extension
+PASS AC-8: ideation fo-interviews-extension approve e971cf0a20dd9aa2fc80d360411d608e1fb66300
+REJECTED mutation: AC-8 changed bound artifact ideation/captain-ruling-sources-checked
+PASS AC-8: ideation captain-ruling-sources-checked hold 6057cff3d347f1e45472c0f647fa03110e22161a
+REJECTED mutation: AC-8 omitted live member
+REJECTED mutation: AC-6 missing captain ["references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[10] raises the budget by 178 and its 'captain' has no quoted words"]
+REJECTED mutation: AC-6 missing loaded ["references/sd/workflow.md: WORKFLOW_BUDGET_STEPS[10] raises the budget by 178 and has no 'loaded' moment"]
+REJECTED mutation: AC-6 omitted word from budget ["references/sd/workflow.md: 5755 words exceeds the budget of 5754; move the added text out of the README, or add a raise step of 1 with 'captain' and 'loaded' to WORKFLOW_BUDGET_STEPS"]
+REJECTED mutation: AC-7 altered director authority
+PASS AC-7: five named files only; role inputs, command implementations, ledger, CI and provider scripts unchanged.
+PASS AC-6: {"base": {"startup": 6810, "idle open": 1089, "idle merged": 1060, "after archive": 333, "merge ask": 2635}, "candidate": {"startup": 6959, "idle open": 1238, "idle merged": 1209, "after archive": 333, "merge ask": 2784}} unchanged output words {'startup': 29, 'idle open': 29, 'idle merged': 0, 'after archive': 5, 'merge ask': 90}
+LIMIT: committed quotes/bindings prove recorded decisions, not complete chat or absence of early asks; scenarios do not execute a reviewer.
+
+exit=0
+
