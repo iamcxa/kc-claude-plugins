@@ -543,3 +543,66 @@ print(json.dumps(result,indent=2))
 ### Summary
 
 Implemented and pushed the optional feedback extension, round template and two package entry points at 5f9276bd6955c66c192f74415c685b3a09f8ac16; the task applies Captain amendment 1 and its state index preserves the original historical interviews. Local checks pass within their explicit fixture/byte scope; Draft PR creation, RoboRev, hosted CI and native evidence sufficiency remain with FO, so this is an implementation handoff with outstanding proof, not a claim that every acceptance criterion is green.
+
+
+## Validation evidence — 2026-10-28
+
+Candidate: `5f9276bd6955c66c192f74415c685b3a09f8ac16`; base: `e57feb6eec956b74a1d4b29f26f1d0a7d1693785`. Evaluated detached; no candidate changes retained. Profile: pilot, bounded real use; documentation/fixture success does not replace the accepted real seams. The installed Codex package at `/Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1` supplies validation scripts, as dispatched.
+
+### Acceptance script and observed output
+
+There is no changed application screen. The five steps in [acceptance.sh](fo-interviews-extension/validation/acceptance.sh) create an exact detached checkout, run lint/tests, rerun both retained recipes with empty cache prefixes, run the boundary checks including the expected strict ADR failure, and remove the checkout. Requirements: this full Git repository/history, Python 3, the state checkout with its original records, and the explicitly named installed package/Spacedock/Paseo files. No login, network, plugin installation, interview send or adoption is performed. This is a bounded diagnostic script, not a full acceptance pass; native adoption, batch/host recovery, findings admission and actual reading traces remain outside its proof.
+
+Run the following in a fresh shell; it runs the five steps exactly as retained:
+
+```bash
+bash --noprofile --norc /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/docs/dev2/.spacedock-state/fo-interviews-extension/validation/acceptance.sh
+```
+
+Executed the identical script bytes with `bash --noprofile --norc` from the validator's temporary evidence folder. The first sandboxed launch stopped before setup because Git could not write its shared worktree metadata; the authorized retry completed with exit 0. [Observed output](fo-interviews-extension/validation/acceptance-output.txt) records every step: exact clean candidate; lint and 45 tests pass; 30 fixture mutations and 13 preserved respondents; startup +599 words and first-round 3356 words, with 3 accounting controls; baseline ADR lint 40 records/exit 0; required ADR lint exit 1; remaining checks pass; checkout removed. Script exit 0 means those expected observations reproduced, not that the candidate passed acceptance.
+
+### Criterion decisions and limits
+
+| Accepted criterion | Independent result and falsifier exercised |
+| --- | --- |
+| AC-1, optional adoption | Partial: actual tier parser accepts optional/absent rows and rejects required-without-default/missing-file controls; all tracked bytes outside the four approved docs equal base. Adoption transcripts come from a hardcoded local function, not candidate-driven adoption; silent-opt-in control tests that function only. |
+| AC-2, cadence and recovery | Not established: 2/3 completions, duplicates, unknown membership, validation-only, cancellation, partial gaps, early reset and uncertain-send fixtures reproduce; second-round/uncertain-resend mutations are caught. No attended maintainer/native host replay or real batch completion evidence exists. |
+| AC-5, findings and authority | Not established: existing source/director task links and historical operator/observer disagreement remain intact; duplicate-task, forged-Captain, replaced-observer and automatic-capability fixture mutations are caught. The recipe builds the expected finding dictionary itself; it does not execute filing/admission or authenticate missing sources. |
+| AC-6, reading and boundaries | Partial: per-moment bounded corpus and actual stubbed pr_watch output reproduce 6781→7380 selected startup, 1089/1060 idle, 333 archive, 2635 merge, adoption 2085→2182; first round 3356. Omitted-transport/archive-template/false-GitHub controls fire. Actual native reads and live remote overlap are not established. |
+| AC-7, amended bundled topics | Partial: policy has four questions in one bundle and no per-rule rows; fixture controls catch dropped unavailable FO, fake compliance, per-rule rows, split sends and missing question. Its miniature hardcoded coverage does not freeze an actual versioned package/core-topic inventory and does not demonstrate candidate-driven pending-send behavior. |
+| AC-8, amended original links | PASSED: all three index links resolve; source bytes equal state pin 6658c9b0c3bbaaa78d6086ffdcb95ab1ef495842 and recorded SHA-256 values, with 5/5/3 respondents. Removed-link/respondent controls fail. Direct reading confirms round 2's benefit question absent, round 3 only three FOs, disputed preview skip, condensed/predictive answers, short identities and unavailable raw 7.26-hour measurements remain qualified; no wrapper or anchor was inferred. |
+
+AC-3 and AC-4 are withdrawn under Captain amendment 1; their moved blocks and fresh AC-7/AC-8 markings pass design_surfaces.py. They are not failed requirements.
+
+An additional validator-designed sensitivity probe changed only the disposable candidate's allowed documents: `every three completions`→`every four completions`; `bundle these four questions in one message`→`send these four questions in four messages`; operator data became Captain rulings/replacement observer verdicts; `No answer leaves it off`→`No answer turns it on`. The unchanged implementation proof still exited 0 with all 30 controls reported caught ([output](fo-interviews-extension/validation/policy-mutant.txt)); original bytes were restored in `finally` and Git confirmed clean. This demonstrates that the synthetic behavioral assertions are disconnected from these product policies, not that the real candidate contains those wrong policies. The three accounting controls likewise compare a dictionary with itself after mutation; they cannot prove a real agent read the stated manifest.
+
+### Existing-record, ownership and delivery boundaries
+
+The required command `python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since e57feb6eec956b74a1d4b29f26f1d0a7d1693785` exits 0, `40 ADR file(s) checked, 0 legacy`. Adding `--require 0005 0016 0020 0035 0038` for the records named by implementation exits 1: `required ADR 0005: Decision needs a '**Recommended:**' line`. The same strict failure reproduces in a full detached base checkout; all ADR bytes are unchanged. Earlier partial-directory probes also hit missing-root/protected-file setup errors and are not the attribution proof. The full base checkout is the decisive check. No ADR repair is authorized by the four-document scope.
+
+Number guards, comment ratio (0 code/0 comments), design surfaces, doc impact (0 additional documents), dispatch records (3 complete) and whitespace checks pass. No migration or reserved ADR is present. All added document text was reviewed; no code comment was added. The four retained changes each have a role: discoverability, explicit opt-in, interview policy, and reusable record format; no runtime/default/workflow/version/CI change is present. Minimal scope is supported; goal sufficiency is not yet demonstrated.
+
+Local sibling state was refreshed read-only: dispatch/batch/Paseo siblings have PR 743/744/742; source-check and historical-adoption tasks remain ideation, with source-check sharing adoption.md. Batch membership/completion follows accepted scopes/amendments, not gate dates. Other named sibling records were inspected without claiming their remote PR state; notably adr-required-statement locally says validation while its design is marked CLOSED. Live PR ownership remains FO's reconciliation. No sibling work was changed.
+
+RoboRev `evidence=roborev:1301` clean and GitGuardian, live Spacedock route gate, version parity and Python CI passes on the exact head are FO-supplied evidence from dispatch, not independently queried provider results. They close the implementation report's earlier pending provider checks only to that attributed scope; they do not supply the missing native acceptance traces. CI cost per PR was not measured; no CI change was made. Fresh filing, adoption, real interviews, source authentication, native recovery and native reading remain explicitly unverified, as the implementation report states.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #745 head 5f9276bd against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  REJECTED at 5f9276bd6955c66c192f74415c685b3a09f8ac16: AC-8 passes; AC-1/6/7 are partial and AC-2/5 lack their accepted operational proof. Both retained recipes rerun: 30 fixture mutations plus 3 accounting controls caught; the independent wrong-policy probe still passes, exposing their bounded sensitivity.
+- DONE: Captain amendment 1 applies (one-question-per-send rule and per-rule coverage rows dropped, wrappers replaced by index links, cadence every three completed batches, four questions per extension bundled; AC-3 and AC-4 superseded, replacements AC-7 and AC-8 written by implementation); RoboRev evidence=roborev:1301 clean on 5f9276bd6, run by FO; implementation reports native FO behaviour as not shown (fixture and corpus replays only)
+  Amendment move/marking and actual candidate prose agree; three historical sources and 13 respondents remain byte-identical. RoboRev and hosted CI are attributed to FO; no native evidence is inferred from them.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five-step validation/acceptance.sh was run unchanged in fresh bash: 45 lint tests, all bounded checks and expected strict-ADR blocker reproduced; full output retained. Installed Codex package equivalent used as instructed; baseline ADR exit 0, required-record variant exit 1, with full-base reproduction.
+- FAILED: The required named-ADR validation check exits 0.
+  --require 0005 0016 0020 0035 0038 fails on ADR 0005's missing Recommended line on both candidate and base; unchanged inherited record, not a newly introduced regression.
+- SKIPPED: Native adoption/interview/admission execution and independent live-provider reconciliation.
+  No fresh native trace was supplied; no send, adoption or external mutation performed. Recorded local/provider evidence remains bounded and attributed; accepting less proof requires Captain authority.
+- F1 Needs decision: The accepted operational evidence is missing (AC-1/2/5/6/7); fixture success cannot justify delivery.
+  User/workflow: adopting maintainer conducting attended interviews; harm: goal sufficiency unproven, no demonstrated product loss; boundary: value-ac[AC-2] attended cadence/recovery and value-ac[AC-6] actual reading trace (also AC-1/5/7); trigger: absent native receipts and a reversed-policy candidate still producing 30 passing fixture controls. FO must obtain the accepted proof or return an evidence-scope amendment to the Captain; do not waive it here.
+- F2 Needs decision: The mandatory named-record check fails on an inherited ADR outside this task's four-document scope.
+  User/workflow: validator running Decision records; harm: required gate proof cannot pass, no new product regression; boundary: contract[docs/dev2/README.md#decision-records] require every implementation-named record; trigger: identical ADR 0005 error on exact candidate and full base. FO must route ownership/repair or an explicit ruling; this validator makes no candidate edit.
+
+### Summary
+
+Independent verdict: REJECTED for 5f9276bd6955c66c192f74415c685b3a09f8ac16. The optional documents, amendment and historical preservation are bounded and the local suites pass, but the accepted operational evidence is absent and the required named-ADR check exposes a pre-existing failure. Return these two Needs decision findings to FO for disposition; gate approval, adoption and delivery remain pending.

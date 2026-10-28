@@ -1,0 +1,31 @@
+Step 1: exact candidate, detached and clean
+PASS: basic frontmatter, declared profile routes, role bindings and package script paths
+references/sd/workflow.md: 5576 of 5576 words; no unlisted passage repeats it
+Not checked: full Agent Skills conformance or host/workflow behavior
+----------------------------------------------------------------------
+Ran 45 tests in 10.447s
+
+OK
+Step 2: lint and 45 existing tests passed
+{
+  "tier": "candidate and row absent pass; required-without-default and missing extension refused",
+  "mutations_caught": 30,
+  "respondents": 13,
+  "scope": "Manual fixture replay and executable checks; no model/transport/adoption execution or live batch completion claim"
+}
+Step 3: 30 fixture mutations; 13 respondents; startup +599 words; first round 3356 words; 3 accounting controls
+40 ADR file(s) checked, 0 legacy
+required ADR 0005: Decision needs a '**Recommended:**' line; a record written before that line existed takes '**Recommended:** not recorded', never a reconstructed recommendation
+Required ADR check exit: 1 (expected blocker: ADR 0005 lacks Recommended)
+migration guard skipped: no migrations-path declared
+PASS: no findings
+base e57feb6eec95 head 5f9276bd6955 merge-base e57feb6eec95
+code lines 0, comment lines 0, 0.0%
+maximum 5% (package default) not enforced: 0 code lines added, fewer than 20
+fo-interviews-extension.md: design surfaces presentable
+scope check not run: stage is validation, not ideation
+0 document(s) mention what changed; each needs 'updated' or 'unaffected: <reason>'
+3 dispatch record(s) complete
+Step 4: boundary checks passed; required ADR blocker reproduced
+Step 5: candidate unchanged; disposable checkout removed
+REJECTED: native acceptance evidence remains missing; the expected ADR failure is not an acceptance pass.

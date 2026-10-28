@@ -1,0 +1,7 @@
+exit=0
+{
+  "tier": "candidate and row absent pass; required-without-default and missing extension refused",
+  "mutations_caught": 30,
+  "respondents": 13,
+  "scope": "Manual fixture replay and executable checks; no model/transport/adoption execution or live batch completion claim"
+}
