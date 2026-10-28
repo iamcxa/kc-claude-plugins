@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:batch-reaches-each-gate-together:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of batch-reaches-each-gate-together to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that a batch is one release slice or one theme, held until every task reaches the next gate, reviewed by the batch reviewer, then answered in one sitting; profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:batch-reaches-each-gate-together:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/73074e68c0f5cf7283f958129cf4c4accd62cfa5/batch-reaches-each-gate-together.md",
+      "rev": "sha256:f46a86fa1852e1da5cfbb74619fcefa503cd36c855520f9dbffc658e711fc234",
+      "mediaType": "text/markdown",
+      "summary": "Bite: batch 7 put four separate merge asks to the Captain. Ideation owes how a batch is held at a gate and what the batch review owes; the multi-preview Review deck stays with the web and relay FOs."
+    }
+  ]
+}
