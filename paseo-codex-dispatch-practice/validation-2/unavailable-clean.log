@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_anything_unbound_or_unavailable_is_incomplete_never_clean (reviewtests.RoborevGateTests.test_anything_unbound_or_unavailable_is_incomplete_never_clean)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/tmp/validate2-paseo-codex-742/kc-dev-flow-2/extensions/roborev/test_roborev_gate.py", line 72, in test_anything_unbound_or_unavailable_is_incomplete_never_clean
+    self.assertEqual(self.check(daemon=False)[0], 3)
+AssertionError: 0 != 3
+
+----------------------------------------------------------------------
+Ran 1 test in 0.506s
+
+FAILED (failures=1)

@@ -1,0 +1,3 @@
+PASS: live placement, workspace, model, thinking and mode match FO trial.
+EXPECTED FAIL AC-2: inherited control cannot satisfy assigned-root assertion.
+EXPECTED FAIL AC-6: widened mode rejected by runtime receipt comparison.
