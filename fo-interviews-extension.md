@@ -49,6 +49,7 @@ gates:
 ## FO alignment
 
 Alignment: needed before ideation: cadence, question set and the README rewrite are the Captain's.
+Result: aligned at backlog: the Captain 「准」 (chat, 2026-10-28) to FO's batch-9 backlog sitting, which asked 「決定：五張全准進入設計階段；要拿掉或換掉哪張，直接說。」, approved the outcome and bounds in this file. Cadence, the question set and the README rewrite stay his: ideation returns them as decisions at the ideation gate. His ruling of 2026-10-26 on who asks (FO, by hand first) holds.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
