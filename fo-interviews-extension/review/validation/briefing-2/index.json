@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-interviews-extension:validation:attempt-2:revision-1",
+  "question": "Approve fo-interviews-extension with its remaining native criteria shown at first occurrence, and merge iamcxa/kc-claude-plugins#745 at head bd328daf6e64a73ad5e54f7288803295cae9ef68 after #744? FO recommends approve; approving accepts that recommendation and records it as Captain amendment 3: the criteria validation-2 left unmet (optional adoption, interrupted-round recovery, actual reading counts and pending-send comparability) are shown the first time each happens in a real round, not before merge, as amendment 2 already did for the three-batch cadence. It covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:fo-interviews-extension:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/9948c3eb9aa0cb61959080da6f2776de9881fab4/fo-interviews-extension.md",
+      "rev": "sha256:e3479311b566f7bcf9329e36d886cef8304b0eed23d130f613a2db8596c8f849",
+      "mediaType": "text/markdown",
+      "summary": "Validation-2 REJECTED with F1 narrowed: interview round 004 (closed-full, five FOs, peers and paseo, under this head's text) is real evidence for opening a round, bundled sends, recording, comparison and close; adoption, recovery, reading counts and pending-send comparability have not occurred in a real round. F2 settled; F3 and F4 Polish. Two validations failed on the same class of native evidence, so FO stops retrying and asks. Cost of approving: interrupted-round recovery stays unshown until a round is interrupted."
+    }
+  ]
+}
