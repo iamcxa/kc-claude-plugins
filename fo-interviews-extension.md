@@ -290,13 +290,17 @@ Recommended order: settle cadence/questions here; let the batch task establish t
 
 **AC-2 — Cadence, ownership and interrupted rounds.** Evidence: an attended maintainer replay uses sourced batch membership/completion records; duplicate checks count once, two completions do not trigger, three do, unknown membership does not count, one interrupted round resumes, cancellation does not advance the anchor, partial closure preserves explicit gaps, and an early targeted round does not reset the anchor without authority. Falsifier: count validation sittings as completed batches, open a second round or resend an uncertain exchange and the trace fails. Current evidence: five design-only counting examples pass; actual FO behavior and host recovery remain unverified.
 
-**AC-3 — All known FOs, each extension and rule, comparable questions.** Evidence: freeze a fixture roster including an unavailable FO, a disabled extension, an enabled rule with no event and a new rule discovered after snapshot; review the resulting coverage table and sent-question trace. Four versioned questions appear once each per enabled topic, with one question per send; missing answers are visible. Falsifier: drop the unavailable respondent, turn an unobserved rule into compliance or bundle the four questions and the relevant trace/coverage assertion fails. Current evidence: historical 5/5/3 coverage extracted; future complete-round behavior unverified.
 
-**AC-4 — Reproduce rounds 1–3 without fabricated evidence.** Evidence: create the three state wrappers and index against the pinned sources; compare all original bytes/hashes and all 13 respondent sections, historical question sets, partial coverage, prediction labels, disputed skip reason, absent full IDs and unavailable raw measurements. Rerun the described loss controls. Falsifier: remove a respondent, mark round 2's benefit question answered, claim all FOs in round 3 or rewrite 7.26 hours as independently remeasured and the semantic check fails. Current evidence: disposable representation round-trip and three dropped-respondent controls passed; actual state wrappers await implementation.
+
+
 
 **AC-5 — Findings reach the backlog without acquiring authority.** Evidence: replay one observed failure, one useful event, one unverifiable relayed ruling and one operator/observer disagreement through the record template. Link the already-existing source/director tasks; a genuinely new finding creates only a bounded backlog proposal under existing admission rules. Missing observer/ledger sources stay unavailable; the useful event stays a capability candidate. Falsifier: duplicate an existing task, convert an answer to person:captain, overwrite an observer verdict or rewrite capability claims automatically and the trace fails. Current evidence: named existing finding tasks/source records were checked; fresh filing/agent behavior unverified.
 
 **AC-6 — Measured reading and retained boundaries.** Evidence: rerun the printed corpus measurement against base and final candidate, then inspect an attended startup/due-round trace listing every additional instruction passage and instruction output (including adoption, peers, transport, record-template reads). Unlisted adds zero recurring feedback instructions; ordinary idle/merge/archive add none; opted-in startup and due rounds report their actual increases with data separated. Run applicable existing lint, design-surfaces check and whitespace checks; review final overlap against current sibling state/PRs. Falsifier: report only workflow.md size, omit a transport dependency, load the template on each ordinary archive or claim unreachable GitHub was checked and the accounting fails. Current evidence: proposal counts and four actual fixture scans plus sitting formatter ran successfully, diagram rendered/inspected; candidate full lint, native reads and live PR reconciliation remain unverified.
+
+**AC-7 — Bundled comparable extension feedback (Amended by Captain, amendment 1).** Evidence: freeze all known adopting FOs and the versioned extension/core-topic inventory, including an unavailable FO, disabled extension, topic with no event and a topic discovered after snapshot. Review the roster/topic coverage and pending-send trace: four versioned questions in one message per enabled extension/topic; missing answers and late additions stay visible, with no per-rule coverage rows. Falsifier: drop an unavailable respondent, treat no event as compliance, require per-rule rows or split the bundle into four sends; the corresponding trace assertion fails.
+
+**AC-8 — Original historical links (Amended by Captain, amendment 1).** Evidence: create only the state index linking the three original round records at the pinned source commit; compare original bytes/hashes and all 13 respondent sections, retaining their historical question sets, partial coverage, predictions, disputed skip reason, missing full IDs and unavailable raw measurements. Do not create historical-import wrappers or infer an anchor. Falsifier: lose a link/respondent, mark round 2's benefit question answered, claim all FOs answered round 3, or call 7.26 hours independently remeasured; the corresponding preservation/semantic assertion fails.
 
 ## Captain amendments
 
@@ -313,6 +317,12 @@ One row per FO and extension or core-rule topic: enabled, disabled or unknown; e
 Enumerate all known active adopter FOs from confirmed identities/areas at round start; the roster records its source and date and never means an unknowable global fleet. Every roster member receives coverage rows for every extension in the package index plus the core rules applicable to its adopted profile. Disabled extensions are `disabled`, not failures; newly discovered FOs/rules after the snapshot are explicit additions or next-round entries. An enabled extension's versioned rules all get a coverage state even if there is no event. Four fixed questions are asked per enabled extension/topic, one at a time, not four messages per individual rule; answers reference the rule rows. This bounds message growth while exposing unobserved rules.
 
 The first records are historical-import wrappers under `.notes/fo-feedback/`, linked by the index to the existing source files below at state commit `6658c9b0c3bbaaa78d6086ffdcb95ab1ef495842`. Original files remain byte-identical, including condensed answers, missing sources and the old bundled-question practice. They are not evidence that the new policy was followed. Do not infer full host identities from the short IDs or invent a cadence anchor.
+
+Superseded text:
+
+**AC-3 — All known FOs, each extension and rule, comparable questions.** Evidence: freeze a fixture roster including an unavailable FO, a disabled extension, an enabled rule with no event and a new rule discovered after snapshot; review the resulting coverage table and sent-question trace. Four versioned questions appear once each per enabled topic, with one question per send; missing answers are visible. Falsifier: drop the unavailable respondent, turn an unobserved rule into compliance or bundle the four questions and the relevant trace/coverage assertion fails. Current evidence: historical 5/5/3 coverage extracted; future complete-round behavior unverified.
+
+**AC-4 — Reproduce rounds 1–3 without fabricated evidence.** Evidence: create the three state wrappers and index against the pinned sources; compare all original bytes/hashes and all 13 respondent sections, historical question sets, partial coverage, prediction labels, disputed skip reason, absent full IDs and unavailable raw measurements. Rerun the described loss controls. Falsifier: remove a respondent, mark round 2's benefit question answered, claim all FOs in round 3 or rewrite 7.26 hours as independently remeasured and the semantic check fails. Current evidence: disposable representation round-trip and three dropped-respondent controls passed; actual state wrappers await implementation.
 
 ## Stage Report: ideation
 
@@ -340,3 +350,195 @@ The first records are historical-import wrappers under `.notes/fo-feedback/`, li
 ### Summary
 
 Designed a manual optional operator-feedback extension, preserving the observer and Captain authority while turning sourced operator findings into ordinary backlog proposals. The first three historical rounds are reproducible as partial imports; the proposed three-batch cadence and four fixed questions await separate Captain decisions. Only this task body changed; product implementation, adoption, real interviews and live PR reconciliation remain future work.
+
+## Implementation evidence
+
+Candidate: `5f9276bd` on base `e57feb6eec956b74a1d4b29f26f1d0a7d1693785`. Four package documents changed; all other tracked bytes match base. Batch semantics were read from sibling candidate `e4bd4d06a1538ed166205609002e5eef1ebf0983` (PR 744 stacked on 743); its accepted scopes/amendments recover membership, while reaching a gate alone does not complete a batch. No sibling code or workflow is edited.
+
+### Evidence limits and manual case trace
+
+The following recipes run executable tier/byte checks and synthetic record/cadence models. They do not invoke a fresh FO, send an interview, activate adoption, verify live batch completion, authenticate a relayed Captain ruling or alter a backlog task. Their mutation sensitivity proves those local assertions, not that an agent follows Markdown policy. Native behavior and real-host recovery remain unverified. The all-criteria-green checklist is not met by this evidence.
+
+- Adoption procedure replay: no answer preserves learn/peers; failed transport stays unselected; selecting feedback without the separately selected Paseo transport stays unselected; all prerequisites plus separate Paseo opt-in permits the proposal, not a send. Existing tier lint actually passes candidate/absent row and refuses required-without-default/missing extension.
+- Cadence fixtures: each accepted membership document names one member with a terminal fixture source. Two distinct completions are not due; three are due; duplicate adds nothing; unknown membership and validation-only add zero. Interrupted round 004 resumes; uncertain bundle stays at one send; cancellation and early rounds without reset authority preserve anchor; partial closure keeps gaps. These are synthetic batch records, not proof of live attended FO behavior.
+- Roster/topic fixture: confirmed FO plus unavailable FO; enabled peers has no observed event, disabled copilot stays disabled, and a new topic is deferred explicitly. One four-question bundle; no rule rows. Actual original source records retain 5/5/3 respondents and pinned SHA-256 values; the index has three original links and no wrappers.
+- Findings record rehearsal uses round 1's qnow relayed-ruling failure/benefit and round 3's preview-match disagreement. Existing source/director tasks are linked, missing originals/observer sources stay unavailable, original verdicts remain independent, and positive stale-ADR discovery stays a capability candidate. A hypothetical new event-recording gap is only a bounded proposal: investigate one missing event reference, with no implementation or admission. No fresh filing or peer/observer rerun occurred.
+- Missing-round-2 benefit, targeted round 3, short IDs, disputed skip and unavailable raw 7.26-hour measurements remain explicit. Thirty local mutations were caught; scripts below name each. Their fixtures are authored expected records, not captured model/host output.
+- Remote overlap was not checked via GitHub. Named sibling state was refreshed read-only: source-check task remains ideation and may share adoption.md; dispatch and batch siblings have PR 742/743/744 in state. The FO owns live provider reconciliation.
+
+### Reading ledger
+
+Whitespace-split bounded instruction corpus plus actual provider-stubbed pr_watch stdout: startup 6781 to 7380 when selected (+599), unlisted 6781 unchanged; idle open 1089, idle merged 1060, ordinary archive 333 and merge ask 2635 unchanged. Stdout words are 29/29/0/5/90. Adoption reference 2085 to 2182 (+97 once). The first Paseo due-round manifest totals 3356 fixed instruction words: feedback 599, template 282, peers 805, paseo 290 and host skill 1380. At a batch close before due, load feedback plus index/completion data; on resume count feedback once and each dependency actually reloaded.
+
+Variable data is separate: state index, accepted membership/completion sources, versioned inventory, roster identity/area evidence, answers, dated event sources, observer reports and ruling sources. Unchanged shared Spacedock runtime/host reads are common to both arms but excluded from this bounded differential; they are not asserted zero. These are manual reading manifests, not a native FO trace or total model context. No interview runtime output/hook exists. Three accounting controls catch omitted transport, loading the template on ordinary archives and falsely claiming GitHub verification.
+
+### Reproduce the executable checks
+
+Requirements: Python 3, Git, full candidate repository, this state checkout with original history pin, selected Spacedock 0.27.3 package and the selected Paseo skill. Save each block below to a disposable `.py` file outside the repository. Run the first as `python3 -B -X pycache_prefix=<new-empty-cache-path> <proof.py> <absolute-code-worktree> <absolute-state-checkout>` and the second as `python3 -B -X pycache_prefix=<another-new-empty-cache-path> <measure.py> <absolute-code-worktree> <absolute-Spacedock-package> <absolute-Paseo-SKILL.md>`. Both produce declared disposable JSON under `/tmp`; no runtime behavior depends on those outputs. The recipes are retained here so /tmp persistence is not a verification prerequisite.
+
+```python
+import copy, hashlib, importlib.util, json, pathlib, re, shutil, subprocess, tempfile
+import sys
+sys.dont_write_bytecode=True
+WT=pathlib.Path(sys.argv[1]).resolve()
+P=WT/'kc-dev-flow-2'; S=pathlib.Path(sys.argv[2]).resolve(); BASE='e57feb6eec956b74a1d4b29f26f1d0a7d1693785'
+result={'scope':'Manual fixture replay and executable checks; no model/transport/adoption execution or live batch completion claim','controls':[]}
+def module(name,path):
+ spec=importlib.util.spec_from_file_location(name,path); m=importlib.util.module_from_spec(spec);spec.loader.exec_module(m);return m
+def git(*args,cwd=WT):return subprocess.check_output(['git','-C',str(cwd),*args])
+def fail(name,fn):
+ try:fn()
+ except (AssertionError,ValueError):result['controls'].append(name);return
+ raise AssertionError('mutation escaped: '+name)
+def require(v):assert v
+lint=module('lint',P/'scripts/lint-skills.py')
+with tempfile.TemporaryDirectory(prefix='feedback-proof-') as td:
+ root=pathlib.Path(td)/'package';shutil.copytree(P,root,ignore=shutil.ignore_patterns('__pycache__','*.pyc'))
+ assert lint.extension_tier_errors(root)==[]
+ readme=root/'README.md'; original=readme.read_text();row=next(x for x in original.splitlines() if x.startswith('| [fo-feedback]'))
+ readme.write_text(original.replace(row+'\n',''));assert lint.extension_tier_errors(root)==[]
+ readme.write_text(original.replace('| optional, requires peers | interviewing','| required | interviewing'))
+ fail('AC-1 required-tier mutation',lambda:require(not lint.extension_tier_errors(root)))
+ readme.write_text(original); ext=root/'extensions/fo-feedback/EXTENSION.md';text=ext.read_text();ext.unlink()
+ fail('AC-1 missing-extension mutation',lambda:require(not lint.extension_tier_errors(root)));ext.write_text(text)
+result['tier']='candidate and row absent pass; required-without-default and missing extension refused'
+# Exercise the adopted record procedure on explicit fixture inputs, never real delivery.
+def admission(prereqs,answer,paseo=False,transport='paseo'):
+ names=['learn','peers']
+ if answer and all(prereqs.values()) and (transport!='paseo' or paseo):
+  names+=['paseo','fo-feedback'] if transport=='paseo' else ['fo-feedback']
+ return names
+needs=dict(maintainer=True,state=True,peers=True,records=True,transport=True)
+result['adoption_transcripts']=[{'input':'no answer','selected':admission(needs,None)}, {'input':'failed transport, selected request','selected':admission(dict(needs,transport=False),True,True)}, {'input':'new Paseo ask, paseo not selected','selected':admission(needs,True)}, {'input':'all prerequisites, separate paseo opt-in','selected':admission(needs,True,True)}]
+assert [x['selected'] for x in result['adoption_transcripts']]==[['learn','peers']]*3+[['learn','peers','paseo','fo-feedback']]
+fail('AC-1 silent paseo enablement',lambda:require(['learn','peers','paseo']==admission(needs,None)))
+# Accepted fixture scopes and terminal evidence are explicit files; not a new product batch schema.
+with tempfile.TemporaryDirectory(prefix='feedback-batches-') as td:
+ d=pathlib.Path(td)
+ for i in range(1,4):
+  (d/f'batch-{i}.md').write_text(f'# Accepted fixture batch {i}\nMembers: task-{i}\nAuthority: synthetic Captain fixture\n')
+  (d/f'task-{i}.md').write_text('# Fixture task\nStatus: archived\n')
+ batches=[dict(ref=f'batch-{i}',membership_source=str(d/f'batch-{i}.md'),members=[dict(source=str(d/f'task-{i}.md'),terminal=True)]) for i in range(1,4)]
+ def count(records):
+  return len({b['ref'] for b in records if b.get('membership_source') and pathlib.Path(b['membership_source']).exists() and b.get('members') and all(m.get('terminal') or m.get('captain_removal') for m in b['members'])})
+ assert count(batches[:2])==2;assert count(batches)==3;assert count(batches+[batches[0]])==3
+ unknown=dict(batches[0],ref='unknown',membership_source=None);assert count([unknown])==0
+ sitting=dict(batches[0],members=[dict(terminal=False,stage='validation')]);assert count([sitting])==0
+ fail('AC-2 count validation sitting',lambda:require(1==count([sitting])))
+ result['cadence']={'two':'not due','three':'due','duplicate':'3 distinct','unknown':'0','validation sitting':'0','sources':'synthetic accepted membership and archived fixture files'}
+# Independently written replay actions checked against the declared record boundaries.
+trace=dict(open_round='004',opened=['004'],resumed='004',anchor_before='batch-3',anchor_after='batch-3',cancelled_anchor='batch-3',early_authority=None,early_anchor='batch-3',partial=dict(status='closed-partial',gaps=['unavailable FO'],anchor='batch-3'),exchanges=[dict(key=['004','confirmed-FO','peers'],state='uncertain',sends=1)])
+def recovery(t):
+ assert len(t['opened'])==1 and t['resumed']==t['open_round'];assert t['cancelled_anchor']==t['anchor_before'];assert t['partial']['gaps'];assert t['early_authority'] or t['early_anchor']==t['anchor_before'];assert all(x['sends']==1 for x in t['exchanges'] if x['state']=='uncertain')
+recovery(trace)
+for name,mutate in [('second open round',lambda t:t['opened'].append('005')),('resend uncertain bundle',lambda t:t['exchanges'][0].update(sends=2)),('cancel moves anchor',lambda t:t.update(cancelled_anchor='batch-4')),('early reset without authority',lambda t:t.update(early_anchor='batch-4')),('partial loses gaps',lambda t:t['partial'].update(gaps=[]))]:
+ t=copy.deepcopy(trace);mutate(t);fail('AC-2 '+name,lambda:recovery(t))
+result['recovery_trace']=trace
+questions=['use/need with dated task','bypass and reason','benefit with event','failure/cost and evidence']
+coverage=dict(roster=['confirmed-FO','unavailable-FO'],topics=[dict(fo='confirmed-FO',topic='peers',enabled=True,event='none recorded',compliant=None),dict(fo='confirmed-FO',topic='copilot',enabled=False),dict(fo='unavailable-FO',topic='peers',enabled=True,outcome='unavailable')],sends=[dict(fo='confirmed-FO',topic='peers',questions=questions,messages=1)],late=['new-topic: next round'],rule_rows=False)
+def comparable(t):
+ assert t['roster']==['confirmed-FO','unavailable-FO'];assert any(x.get('outcome')=='unavailable' for x in t['topics']);assert t['late'];assert not t['rule_rows'];assert all(x.get('compliant') is None for x in t['topics'] if x.get('event')=='none recorded');assert all(x['questions']==questions and x['messages']==1 for x in t['sends'])
+comparable(coverage)
+for name,mutate in [('lost unavailable respondent',lambda t:t['roster'].pop()),('no event becomes compliance',lambda t:t['topics'][0].update(compliant=True)),('per-rule rows required',lambda t:t.update(rule_rows=True)),('four separate sends',lambda t:t['sends'][0].update(messages=4)),('missing fixed question',lambda t:t['sends'][0]['questions'].pop())]:
+ t=copy.deepcopy(coverage);mutate(t);fail('AC-7 '+name,lambda:comparable(t))
+result['coverage_trace']=coverage
+index=(S/'.notes/fo-feedback/index.md').read_text();history=[]
+for name,total,digest in [('peers-round-1.md',5,'cb6f28b7fefd4172039935b65be10bcc8787107cd413b760498b6b262147e693'),('round-2-batch7-texts.md',5,'b62adeae467dadeafe562e448810565526e62ebaa48f3dde9126c601d75577df'),('round-3-design-director.md',3,'1711d7666da299a34029800f1ccbec30937f98d5ad2f51cff4117ce63d8b85a8')]:
+ raw=(S/'fo-interviews-extension'/name).read_bytes(); pinned=git('show','6658c9b0c3bbaaa78d6086ffdcb95ab1ef495842:fo-interviews-extension/'+name,cwd=S);assert raw==pinned;assert hashlib.sha256(raw).hexdigest()==digest
+ heads=re.findall(r'^#{2,3} (?:kc-paseo-plugins|kc-ops-inbox|subspace-web|relay FO|qnow dev2 FO|subspace-relay).+',raw.decode(),re.M);assert len(heads)==total
+ fail('AC-8 lost respondent '+name,lambda:require(len(heads[:-1])==total)); fail('AC-8 lost original link '+name,lambda:require(name in index.replace(name,'')))
+ history.append(dict(source=name,sha256=digest,respondents=len(heads)))
+assert not list((S/'.notes/fo-feedback').glob('round-00*.md'))
+result['history']=history
+historical=dict(round2_benefit='not asked',round3_respondents=3,measurement='not independently remeasured',full_ids='not inferred',preview_skip='disputed')
+def historical_limits(t):assert t==historical
+for field,value in [('round2_benefit','answered'),('round3_respondents',5),('measurement','independently remeasured'),('full_ids','inferred'),('preview_skip','resolved')]:
+ t=dict(historical);t[field]=value;fail('AC-8 fabricated '+field,lambda:historical_limits(t))
+result['historical_limits']=historical
+finding=dict(existing=['captain-ruling-sources-checked','design-director-runs-where-it-pays'],duplicates=[],failure='bounded backlog proposal',positive='capability candidate',relayed='unverified',observer='independent disagreeing verdict retained',ruler='operator',automatic_readme=False)
+def authority(t):assert t['duplicates']==[] and t['failure']=='bounded backlog proposal' and t['positive']=='capability candidate' and t['relayed']=='unverified' and t['observer']==finding['observer'] and t['ruler']=='operator' and not t['automatic_readme']
+authority(finding)
+for name,change in [('duplicate existing task',dict(duplicates=['design-director-runs-where-it-pays'])),('operator becomes Captain',dict(ruler='person:captain')),('overwrite observer',dict(observer='compliant')),('automatic capability claims',dict(automatic_readme=True)),('unverified ruling promoted',dict(relayed='verified'))]:
+ t=dict(finding,**change);fail('AC-5 '+name,lambda:authority(t))
+result['finding_trace']=finding
+# Complete diff boundary: exclude the four approved docs, require every other tracked byte unchanged.
+allowed={'kc-dev-flow-2/README.md','kc-dev-flow-2/references/sd/adoption.md','kc-dev-flow-2/extensions/fo-feedback/EXTENSION.md','kc-dev-flow-2/extensions/fo-feedback/round-template.md'}
+tracked=git('ls-tree','-r','--name-only',BASE).decode().splitlines()
+for path in tracked:
+ if path in allowed:continue
+ assert (WT/path).read_bytes()==git('show',BASE+':'+path),path
+result['boundaries']='all tracked bytes outside four allowed files match base, including scripts/mods/workflow/defaults/versions/CI'
+# Link targets from the two new package documents are actual local files.
+for path in (P/'extensions/fo-feedback').glob('*.md'):
+ for target in re.findall(r'\]\(([^)]+)\)',path.read_text()):assert (path.parent/target).exists(),target
+pathlib.Path('/tmp/fo-feedback-proof.json').write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps({'tier':result['tier'],'mutations_caught':len(result['controls']),'respondents':sum(x['respondents'] for x in history),'scope':result['scope']},indent=2))
+```
+
+```python
+import importlib.util,json,pathlib,sys,subprocess
+sys.dont_write_bytecode=True
+p=pathlib.Path(sys.argv[1]).resolve()/'kc-dev-flow-2'
+sd=pathlib.Path(sys.argv[2]).resolve()
+read=lambda f:(p/f).read_text(); words=lambda t:len(t.split())
+def section(t,h):
+ a=t.index(h);b=t.find('\n## ',a+len(h));return t[a:b if b>=0 else None]
+base=read('references/sd/workflow.md')
+spec=importlib.util.spec_from_file_location('test_pr_watch',p/'scripts/test_pr_watch.py');t=importlib.util.module_from_spec(spec);spec.loader.exec_module(t)
+outputs={}
+for moment in ['startup','idle open','idle merged','after archive']:
+ case=t.TasksTests();case.setUp();case.readme('learn' if moment=='after archive' else '')
+ try:
+  if moment=='after archive':case.archive('task-0')
+  else:case.task('task-0',pr='o/r#7')
+  code,lines=case.tasks({'pr view 7':{'state':'MERGED'}} if moment=='after archive' else {},look=lambda *a,**k:t.snap(state='MERGED' if moment=='idle merged' else 'OPEN',checks='pending'))
+  assert code==0;outputs[moment]={'exit':code,'text':'\n'.join(lines)}
+ finally:case.doCleanups()
+outputs['merge ask']={'exit':0,'text':'\n'.join(t.watch.sittings([dict(slug=f'task-{i}',current='validation',readiness='awaiting-captain') for i in range(4)]))}
+mod=read('references/sd/mods/kc-dev-flow-2.md');pm=(sd/'mods/pr-merge.md').read_text();authority=section(base,'## Delivery authority');ext=section(base,'## Extensions')
+corpus={'startup':base+read('skills/dev/SKILL.md')+mod+section(pm,'## Hook: startup'),'idle open':mod+section(pm,'## Hook: idle')+authority+ext,'idle merged':mod+section(pm,'## Hook: idle')+authority+ext,'after archive':mod+read('extensions/learn/EXTENSION.md'),'merge ask':authority+ext+(sd/'skills/fo-gate-lifecycle/SKILL.md').read_text()+(sd/'skills/present-gate/SKILL.md').read_text()}
+e=words(read('extensions/fo-feedback/EXTENSION.md'));q=words(read('extensions/fo-feedback/round-template.md'));peers=words(read('extensions/peers/EXTENSION.md'));paseo=words(read('extensions/paseo/EXTENSION.md'));host=words(pathlib.Path(sys.argv[3]).read_text())
+old_adoption=subprocess.check_output(['git','-C',str(p.parent),'show','e57feb6eec956b74a1d4b29f26f1d0a7d1693785:kc-dev-flow-2/references/sd/adoption.md']).decode()
+result={'scope':'bounded corpus plus actual provider-stubbed pr_watch output; manual reading manifest, not total model context/native FO behavior','additional':{'extension':e,'template':q,'peers':peers,'paseo':paseo,'Paseo host skill':host},'adoption_once':{'base':words(old_adoption),'candidate':words(read('references/sd/adoption.md'))},'moments':{}}
+for moment,v in corpus.items():
+ before=words(v)+words(outputs[moment]['text']);delta=e if moment=='startup' else 0
+ result['moments'][moment]={'base':before,'unlisted':before,'listed':before+delta,'delta':delta,'output_words':words(outputs[moment]['text']),'output':outputs[moment]}
+result['due_round']={'fixed_instructions':e+q+peers+paseo+host,'manifest':['extensions/fo-feedback/EXTENSION.md','extensions/fo-feedback/round-template.md','extensions/peers/EXTENSION.md','extensions/paseo/EXTENSION.md','Paseo host skill'],'variable_data':['state feedback index','accepted batch membership/completion sources','versioned inventory','roster identity/area evidence','answers/event/observer/ruling sources'],'instruction_output':'pr_watch stdout already counted; no interview hook output exists','resume':'startup extension counted once; include each dependency actually reloaded','shared_upstream':'unchanged Spacedock first-officer runtime, mod and host instructions are common to both arms; excluded from bounded differential, not asserted zero'}
+for name,mutate in [('omit transport dependency',lambda a:a.pop('paseo')),('template on archive',lambda a:a.update(archive=q)),('claim unreachable GitHub checked',lambda a:a.update(github='verified'))]:
+ a=dict(result['additional']);mutate(a)
+ try:
+  assert a==result['additional']
+ except AssertionError:result.setdefault('controls',[]).append(name)
+ else:raise AssertionError(name)
+pathlib.Path('/tmp/fo-feedback-measure.json').write_text(json.dumps(result,indent=2)+'\n')
+print(json.dumps(result,indent=2))
+```
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (e57feb6eec956b74a1d4b29f26f1d0a7d1693785) implementing the approved design and acceptance criteria in the task file; Captain amendment 1 applies (drop the one-question-per-send rule and the per-rule coverage rows, replace the three historical-import wrappers with index links to the original round records, cadence every three completed batches, four questions per extension bundled in one message; AC-3 and AC-4 are superseded and you write their replacements marked 'Amended by Captain, amendment 1'); a completed batch is as defined by batch-reaches-each-gate-together (PR #744, stacked on #743), which this task reads but does not change; only the files the design names
+  Four approved package paths implemented at 5f9276bd6955c66c192f74415c685b3a09f8ac16, based on e57feb6eec956b74a1d4b29f26f1d0a7d1693785 and pushed without force/-u. AC-3/4 moved verbatim under amendment 1; AC-7/8 replace them. State index links originals only. Draft PR delegated to FO: /tmp/impl-fo-interviews-extension-pr.md; no gh call, review request, version change or merge.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Executable tier/history/boundary checks plus explicit synthetic/manual replay catch 30 local mutations with python3 -B and empty cache prefixes. Native FO/adoption/transport replay, real completed-batch counting and fresh finding filing remain unverified; the retained recipes and limits are in Implementation evidence. These checks do not satisfy the all-criteria-green claim.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since <base> exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  Repository lint and 45 existing lint tests pass; ADR lint (40 records), number guards, design surfaces and whitespace checks exit 0. Comment ratio 0 code/0 comments, 0.0% (5% threshold not enforced below 20 code lines). RoboRev exit 3: incomplete: the roborev daemon is not running. Code push/PR text done; FO owns Draft PR, RoboRev and exact-head CI. CI cost per PR not measured; no CI changes.
+- DONE: AC-1 — bounded optional-tier and unchanged-runtime checks.
+  Real tier parser accepts optional/absent row and refuses required-without-default/missing-file mutations. All tracked bytes outside four approved docs match base, including defaults, workflow, mods, scripts, versions and CI; silent opt-in is caught in the synthetic admission transcript, not a native adoption run.
+- SKIPPED: AC-2 — attended live-batch and host-recovery proof.
+  Synthetic sourced fixtures exercise 2/3 completions, duplicate/unknown/validation-only, resume, cancellation, partial gaps and early resets; mutations fail on validation-as-completion, second open round and uncertain resend. Real attended maintainer/host execution remains unverified.
+- SKIPPED: AC-5 — actual findings admission and source authentication.
+  Manual source-based rehearsal links existing source/director tasks, keeps useful events as candidates, relayed authority unverified and observer disagreement independent; record mutations reject duplicates, Captain impersonation, overwritten verdicts and automatic README changes. No fresh filing/native behavior or inaccessible source verification is claimed.
+- DONE: AC-7 — amended bundled-topic fixture and policy.
+  Frozen fixture includes unavailable FO, disabled extension, no-event topic and late addition; one four-question bundle, no per-rule rows. Lost respondent, fake compliance, per-rule rows, split sends and missing-question mutations fail the local trace assertions; native FO behavior remains unverified.
+- DONE: AC-8 — amended historical-link preservation.
+  Index links three original records, pinned bytes/SHA-256 and all 5/5/3 respondents match; no wrappers or inferred anchor. Removing each link/respondent and fabricating benefit, all-FO coverage, independent remeasurement, full IDs or resolved dispute fails its local assertion.
+- SKIPPED: AC-6 — full native reading trace and live PR reconciliation.
+  Bounded stdout-inclusive corpus: selected startup 6781→7380 (+599), idle open/merged 1089/1060, archive 333 and merge ask 2635 unchanged; first Paseo round 3356 fixed words plus variable data, adoption +97 once. Omitted transport/archive-template/false-GitHub-verification controls fail; native total reads/live remote ownership remain unverified.
+- DONE: Affected documents and retained boundaries.
+  doc_impact.py base HEAD reports 0 additional documents; README/adoption are updated within scope. No ADR is added/changed/reserved; existing ADR 0005/0016 amendment, 0020 budget, 0035 optional/default and 0038 authority boundaries are retained. Sibling batch/source/dispatch state was read; no sibling bytes changed.
+- DONE: Reproducible local evidence is retained without a hidden /tmp dependency.
+  Implementation evidence contains parameterized proof/measurement recipes, required inputs, manual trace/variable-data ledger and exact limits. Disposable JSON output under /tmp is optional; no new production/test script or host runtime is installed.
+
+### Summary
+
+Implemented and pushed the optional feedback extension, round template and two package entry points at 5f9276bd6955c66c192f74415c685b3a09f8ac16; the task applies Captain amendment 1 and its state index preserves the original historical interviews. Local checks pass within their explicit fixture/byte scope; Draft PR creation, RoboRev, hosted CI and native evidence sufficiency remain with FO, so this is an implementation handoff with outstanding proof, not a claim that every acceptance criterion is green.
