@@ -34,6 +34,17 @@ gates:
                 id: briefing:reused-worker-dispatch-leaves-a-record:ideation:attempt-1:revision-1
                 digest: sha256:7ed148a3a494d32e0f5ae3498effbf487b7530bb7bd8d0d3286b0edf17dcfbe4
                 room-ref: ./reused-worker-dispatch-leaves-a-record/review/ideation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:reused-worker-dispatch-leaves-a-record:ideation:1
+                briefing: briefing:reused-worker-dispatch-leaves-a-record:ideation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T07:05:14.119423Z"
+                decision: approve
+                reason: The Captain 「照建議」 (chat, 2026-10-28), answering FO's joint batch-9 ideation sitting of five gates whose ask was 「決定：五張全照建議（四張准並照上面刪減，一張暫緩）；如果哪張要改，直接說。」; accepts FO's recommendation for this task as stated in the gate question, recorded as Captain amendment 1.
+              application:
+                target-stage: implementation
+                state: pending
 ---
 
 ## Scope
