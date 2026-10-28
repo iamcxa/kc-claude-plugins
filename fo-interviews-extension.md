@@ -16,6 +16,14 @@ status: backlog
 - Non-goals: FOs changing each other's work; treating an interview answer as a Captain ruling.
 - Ruled 2026-10-26, the Captain (chat): 「由你直接問。我問說co是因為它就是一個這樣一對多的特殊角色。但是現在先由你來問比較適合，先走幾輪看看再說。」, answering 「需要你決定：訪談由誰來問？我建議先由我直接問，用固定題目、引用具體事件來降低偏差；跑過一輪後，如果你覺得回饋太客氣，再改成由 CO 來問。」 FO's recommended shape in the same message (not ruled beyond the interviewer): name it 操作者回饋 / `fo-feedback`, not retro; a general extension like learn, used for dev2 first; one interviewer (the package maintainer) asks every FO.
 
+## Budget
+
+- One package PR adding an optional extension beside `learn`; no new script unless a round record needs a checker.
+
+## Stop condition
+
+- The extension can reproduce interview rounds 1 and 2 (fo-interviews-extension/peers-round-1.md, round-2-batch7-texts.md) as its first records; the README rewrite of core capabilities is a later task. Return to the Captain for cadence and the question set.
+
 ## FO alignment
 
 Alignment: needed before ideation: cadence, question set and the README rewrite are the Captain's.
