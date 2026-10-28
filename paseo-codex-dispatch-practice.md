@@ -79,7 +79,7 @@ gates:
                 state: pending
 started: 2026-10-28T07:06:37Z
 worktree: .worktrees/spacedock-ensign-paseo-codex-dispatch-practice
-pr: iamcxa/kc-claude-plugins#742
+pr: pr-merge:742
 ---
 
 ## Scope
