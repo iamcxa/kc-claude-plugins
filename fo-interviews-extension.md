@@ -696,3 +696,30 @@ Repair cycle 2 enables the optional feedback extension in this repository with o
 ### Summary
 
 Independent validation 2 recommends REJECTED for bd328daf6e64a73ad5e54f7288803295cae9ef68 and supersedes validation-1 for this candidate: real round-004 evidence narrows F1, F2 is settled, and no new Material product defect is established. Minimal necessity is supported; goal sufficiency remains unproven at the remaining accepted native-evidence boundary, with hosted-body correction still unverified. FO retains gate/delivery disposition; the first due round retains its deferred cadence obligation.
+
+
+## Stage Report: implementation (cycle 3)
+
+- DONE: In the worktree /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-fo-interviews-extension on branch spacedock-ensign/fo-interviews-extension at bd328daf6e64a73ad5e54f7288803295cae9ef68, `git fetch origin` and merge origin/main (6bc82b501ede77f48d0ba19fa1f76e5569afa094, which holds #742 and #744) with a merge commit; no rebase, no force
+  Fetched origin; origin/main is exactly 6bc82b501ede77f48d0ba19fa1f76e5569afa094. Merge commit c42adb4f2b8c14f50c065dc57922a55c6b0824ac has parents bd328daf6e64a73ad5e54f7288803295cae9ef68 and 6bc82b501ede77f48d0ba19fa1f76e5569afa094; no rebase or force.
+- DONE: Resolve the one conflict FO's probe found, in docs/dev2/README.md frontmatter `extensions:`, so the line keeps both main's `paseo` and this branch's `fo-feedback`; change nothing else
+  Only one conflict occurred. Resolved extensions to [roborev, codex, copilot, learn, peers, paseo, fo-feedback]; byte comparison proves docs/dev2/README.md equals origin/main with only fo-feedback added, and the worktree is clean.
+- DONE: kc-dev-flow-2/scripts/lint-skills.py and the repository tests this task touched exit 0 on the merged head (python3 -B, caches cleared); `git diff origin/main..HEAD --stat` lists only this task's files
+  On the merged head, python3 -B kc-dev-flow-2/scripts/lint-skills.py exits 0 (5754/5754 words) and python3 -B -m unittest discover -s kc-dev-flow-2/scripts -p 'test_*.py' exits 0 (772 tests, 355.444s); package caches cleared before/after. Extension/default and missing-document controls reject mismatched required rows or missing optional EXTENSION.md. python3 -B kc-dev-flow-2/scripts/test_sd_dispatch.py --sd-plugin-root /Users/kent/.codex/plugins/cache/spacedock/spacedock/0.27.3 exits 0 on installed spacedock 0.27.2, exercising both hosts, Team-loss controls and four batch gates; stale-binding mutation refuses. Repository design_surfaces.py and dispatch_records.py exit 0 (6 dispatch records); diff --check passes and only the five task files differ from origin/main.
+- DONE: Captain amendment 3 applies: it moves when the evidence for the criteria validation-2 left unmet is due (at their first real occurrence, not before merge); it changes no criterion text, so edit no line of ## Acceptance criteria
+  Amendment 3 is applied as an evidence-timing ruling only: optional adoption, recovery, actual reading and pending-send proof remain owed at their first real occurrence. Acceptance-section SHA-256 remains 1aafc60f80ac5fac882e5985458b1d76d8aa48ed5d75cf42139827b36ca856d2; no criterion, frontmatter or prior report was edited.
+- DONE: Push without force and without -u; report the new full head SHA and the diff stat against origin/main
+  Normal push origin HEAD:refs/heads/spacedock-ensign/fo-interviews-extension exits 0, without force/-u; git ls-remote independently returns c42adb4f2b8c14f50c065dc57922a55c6b0824ac. Diff stat against origin/main follows; hosted CI, RoboRev and merge disposition remain with FO.
+
+```text
+ docs/dev2/README.md                                 |  2 +-
+ kc-dev-flow-2/README.md                             |  4 ++++
+ kc-dev-flow-2/extensions/fo-feedback/EXTENSION.md   | 13 +++++++++++++
+ .../extensions/fo-feedback/round-template.md        | 21 +++++++++++++++++++++
+ kc-dev-flow-2/references/sd/adoption.md             | 15 +++++++++++----
+ 5 files changed, 50 insertions(+), 5 deletions(-)
+```
+
+### Summary
+
+Merged origin/main with a merge commit and resolved only the extensions conflict, retaining both paseo and fo-feedback; the five task files remain the entire diff, and acceptance criteria are unchanged under Captain amendment 3. All dispatched checks pass, including 772 repository unit tests and the native dispatch transport checks; candidate c42adb4f2b8c14f50c065dc57922a55c6b0824ac is pushed and remotely verified, while first-occurrence operational evidence and FO delivery checks remain due.
