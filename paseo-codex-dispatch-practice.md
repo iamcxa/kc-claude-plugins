@@ -211,6 +211,10 @@ Captain: 「照建議」 (chat, 2026-10-28)
 Asked: 「決定：五張全照建議（四張准並照上面刪減，一張暫緩）；如果哪張要改，直接說。」, with the paseo-codex-dispatch-practice row 「| 用 Paseo 派 Codex 工作者的做法 | 准，同時在本工作流啟用 paseo 外掛 | 本工作流目前沒列 paseo，沒列的話新寫的規則不會被任何人讀到；另寫一份 ADR，記下「FO 代為推送和開 PR」這個例外 |」; gate question: Approve the ideation of paseo-codex-dispatch-practice to enter implementation, together with listing `paseo` in this workflow's `extensions:`? FO recommends approve; approving accepts both, and the ADR narrowing ADR 0015 for the Paseo Codex delivery exception (worker commits locally; FO pushes, opens the PR and runs RoboRev). Without the listing the new text loads in no workflow that bit (chief-engineer batch review: this workflow lists roborev, codex, copilot, learn, peers).
 Supersedes: none
 
+## Number guards
+
+ADR: 0042
+
 ## Stage Report: ideation
 
 - DONE: A design for the paseo extension's Codex-worker dispatch practice (the worker commits locally; FO pushes, opens the PR and runs RoboRev; the worker's working directory is its worktree), with the working-directory option checked against `paseo agent --help` or Paseo's own docs; the batch 7 and 8 records and fo-interviews-extension/round-2-batch7-texts.md as evidence
