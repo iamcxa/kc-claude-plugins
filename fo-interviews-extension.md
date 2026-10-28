@@ -66,6 +66,17 @@ gates:
                 id: briefing:fo-interviews-extension:validation:attempt-2:revision-1
                 digest: sha256:b7e1dec9d4dd817966def81b9f887f85854cf262f704407d944df4ddd84ad496
                 room-ref: ./fo-interviews-extension/review/validation/briefing-2
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:fo-interviews-extension:validation:2
+                briefing: briefing:fo-interviews-extension:validation:attempt-2:revision-1
+                by: person:captain
+                at: "2026-10-28T16:04:51.196425Z"
+                decision: approve
+                reason: 'The Captain 「准」 (chat, 2026-10-29), answering FO''s second batch-9 delivery sitting whose ask was 「決定：三張全照建議（合併 #744、合併 #742、#745 改條件後在 #744 之後合併）；如果哪張要改，直接說。」; accepts FO''s recommendation for this task as stated in the gate question.'
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-28T07:45:45Z
 worktree: .worktrees/spacedock-ensign-fo-interviews-extension
 pr: iamcxa/kc-claude-plugins#745
