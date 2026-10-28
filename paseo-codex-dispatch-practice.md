@@ -247,3 +247,34 @@ ADR: 0042
 ### Summary
 
 Designed a bounded paseo-extension procedure using explicit task-workspace placement and local worker commits, with exact-head publication/review owned by FO under existing authority. The design preserves Spacedock's immediate-spawn order, reports measured reading increases, and returns one coupled Captain decision for the scoped ADR 0015 exception and its new decision record; GitHub/live-worker proof remains unverified.
+
+## Stage Report: implementation
+
+- SKIPPED: One Draft PR (Conventional Commit title scoped to the plugin) from a branch off origin/main (e57feb6eec956b74a1d4b29f26f1d0a7d1693785) implementing the approved design and acceptance criteria in the task file; Captain amendment 1 applies: also list `paseo` in this repository's workflow README frontmatter `extensions:` (docs/dev2/README.md); ADR 0042 records the Paseo Codex delivery exception that narrows ADR 0015; only the files the design names
+  Commit 9a70a3350436fac9e51d0795b3b4299693f020f8 changes exactly the approved extension, workflow selection and ADR 0042; implementation-1-message-1 assigns push/Draft PR to FO, not yet run. PR text: /tmp/impl-paseo-codex-dispatch-practice-pr.md.
+- DONE: ADR 0042 records the ruling the design names, quoting the Captain's words from the task file and its gate records
+  ADR 0042 quotes 「照建議」 and amendment 1's accepted row; required ADR lint exits 0. ADR 0015 remains Accepted and unchanged at base e57feb6e; SHA256 1c1559d6d627a792c758aca23195e378a14fb75c37ae36a795fcfea82dafd1ad.
+- SKIPPED: Every acceptance criterion green with the evidence each names; each falsifier shown failing by a mutation you run (python3 -B, caches cleared)
+  Bounded checks/mutations below pass; native AC-2 placement is unverified, AC-3 publication/AC-4 actual review await FO, and independent/native AC-1/AC-6 traces are not local results. No claim that all six criteria are green.
+- SKIPPED: kc-dev-flow-2/scripts/lint-skills.py (the repository copy CI runs), /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since <base> --require 0042 exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/number_guards.py check exit 0; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/comment_ratio.py within its maximum; roborev evidence= line; push without force and without -u; PR body written for FO; FO reads CI on the PR head; CI cost measured or stated as not measured
+  Repository lint, Codex package 0.32.1 ADR/number checks exit 0; ratio: code 0, comments 0, 0.0%, 5% maximum not enforced below 20 code lines. RoboRev exits 3: `incomplete: the roborev daemon is not running`; FO owns review/PR/CI; message-1 supersedes product push. CI cost per PR not measured; no CI changes.
+- DONE: Implement the approved files under Captain amendment 1 and run bounded local checks and mutations (python3 -B, caches cleared)
+  Exact 272-word approved section appended, original peer text preserved, three approved paths changed. Python -B checks/review mutants rerun with fresh absent PYTHONPYCACHEPREFIX and bytecode writes disabled; evidence logs: /tmp/impl-paseo-codex-dispatch-practice-evidence/.
+- DONE: Do not push: commit locally on a branch based on origin/main e57feb6eec956b74a1d4b29f26f1d0a7d1693785 and write the PR title and body to /tmp/impl-paseo-codex-dispatch-practice-pr.md; FO pushes, opens the Draft PR and runs /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/extensions/roborev/roborev_gate.py on the exact head, which is this task's own AC-3 and AC-4 trace
+  One local commit from fetched base; no product push or gh invocation. Conventional Commit title/full PR body prepared at the named path, mode 0600; FO trace remains pending.
+- DONE: Report AC-2's disposable native-worker proof as not verified, naming that this worker itself started in the FO's workspace (the inherited-workspace case) rather than its worktree
+  Launch root: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo, not assigned code worktree. Candidate operations pinned to assigned root; no native success or permission-prompt saving claimed.
+- DONE: Create no test agents and claim no native proof
+  No agents/workspaces created. Paseo 0.13.0 PTY help retained; three extracted vendor routing cases with stub client/source builder pass. Omitting newWorkspace:'local' leaves workspace id absent and fails the placement assertion; daemon/sandbox behavior unverified.
+- DONE: Hand off branch, base, full head SHA and PR text path in the stage report
+  Worktree: /Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-paseo-codex-dispatch-practice; branch: spacedock-ensign/paseo-codex-dispatch-practice; base: e57feb6eec956b74a1d4b29f26f1d0a7d1693785; head: 9a70a3350436fac9e51d0795b3b4299693f020f8; PR text: /tmp/impl-paseo-codex-dispatch-practice-pr.md.
+- DONE: Bounded review falsifiers and existing dispatch checks
+  Five RoboRev fixtures pass; accepting an old head, failed job or unavailable-daemon-as-clean each fails the existing negative test. Removing ADR recommendation makes lint exit 1. Spacedock dispatch integration checks pass with executable 0.27.2/plugin 0.27.3, including Team-loss/marker/scope-note controls; no worker execution or live runtime-field proof.
+- DONE: AC-5 lifecycle recount and reading-cost falsifier
+  Base→candidate: startup 7071→7343; idle/open 1379→1651; idle/merged 1350→1622; archive 623→895; merge ask 2925→3197; first dispatch 1670→2006. Regex recount agrees; omitting emitted notes yields 1942 rather than 2006 and fails. Workflow source/budget unchanged at 5576; conditional ADR load adds 476 words; no time/permission savings measured.
+- DONE: Affected documents and dispatch-state checks
+  doc_impact.py base HEAD exits 0 with 0 listed documents; design_surfaces.py check exits 0; dispatch_records.py exits 0 for three records. No workflow-source/budget, version, CI, adapter or sandbox edits; independent validation remains pending.
+
+### Summary
+
+Committed the approved three-file Paseo Codex procedure and authority record as 9a70a3350436fac9e51d0795b3b4299693f020f8, with local checks, bounded mutations and reading-cost evidence. Per FO's committed follow-up, publication, Draft PR, exact-head RoboRev and CI belong to FO; native placement is unverified, and this report is neither validation nor delivery approval.
