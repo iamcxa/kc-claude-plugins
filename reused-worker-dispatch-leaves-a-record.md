@@ -52,3 +52,19 @@ Alignment: needed before ideation; where the check or rule lives is a package de
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
+
+
+## Stage Report: ideation
+
+- FAILED: A design for where a follow-up dispatch to a reused worker gets its record checked (scripts/dispatch_records.py, scripts/pr_watch.py tasks, or the gate path), replaying kc-ops-inbox ops-metric-event-protocol (PR #727) as caught; read kc-ops-inbox state only through read-only commands
+  Hold before design: `## FO alignment` says `Alignment: needed before ideation` but contains no `Result:`; the selected ideation principles explicitly require stopping at this missing input. No replay or adopter-state inspection performed.
+- SKIPPED: A `### Batch overlap` section naming each file the design would change and each other batch task (reused-worker-dispatch-leaves-a-record, paseo-codex-dispatch-practice, captain-ruling-sources-checked, batch-reaches-each-gate-together, fo-interviews-extension) and live task of other sessions (adoption-asks-which-extensions, adr-required-statement, adr-silent-undo-probe, comment-check-reaches-delivery-gate, journey-canvas-hosted-poc, journey-server-host-pilot, ops-inbox-r1-setup-and-isolation, pr-review-lite-value-pilot (driven by other sessions; read only)) that changes the same file or check, so FO can order implementation
+  Deferred with design until FO records its required alignment result; no sibling files edited.
+- SKIPPED: The words FO reads at each lifecycle moment, before and after, per root learning.md "Measure the words FO reads at each moment, not one file's size"
+  No design authored, so no lifecycle-word comparison claimed.
+- FAILED: Acceptance criteria with reproducible evidence clauses and falsifiers, and unresolved decisions for the Captain, each with a recommendation and what gets worse under it
+  No acceptance criteria authored under the hold; `python3 /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/design_surfaces.py check <this-task>` exited 1: `missing '## Acceptance criteria' section`; gate is not presentable.
+
+### Summary
+
+Ideation is held, not completed: the required FO alignment result is absent. Authority: the loaded `skills/ideation/SKILL.md` routes pilot to `skills/ideation/principles.md`, whose opening paragraph says that alignment needed with no `Result:` means “stop and report instead of starting the design”; FO must record its actual alignment result and redispatch. The generated stage definition was read successfully, `git fetch origin` succeeded, and `origin/main:kc-dev-flow-2/.claude-plugin/plugin.json` reports 0.32.1; no GitHub API request, product edit, branch creation, or design/replay claim was made.
