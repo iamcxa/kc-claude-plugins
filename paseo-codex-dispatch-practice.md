@@ -49,6 +49,7 @@ gates:
 ## FO alignment
 
 Alignment: needed before ideation; where the check or rule lives is a package design choice.
+Result: aligned at backlog: the Captain 「准」 (chat, 2026-10-28) to FO's batch-9 backlog sitting, which asked 「決定：五張全准進入設計階段；要拿掉或換掉哪張，直接說。」, approved the outcome and bounds in this file. Where the rule lives is a package design choice ideation proposes and the ideation gate rules; the placement ruling of 2026-10-26 (within-fleet Paseo use is a dev2 `paseo` extension) already holds.
 Surfaces: none
 Visible change: none
 Release review: not needed: workflow maintenance, on no journey map.
