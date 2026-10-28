@@ -53,6 +53,17 @@ gates:
                 id: briefing:reused-worker-dispatch-leaves-a-record:validation:attempt-1:revision-1
                 digest: sha256:989ea0cebe80f3402a699399570204bbf473bbf8e816fd7aa0b224cac8576449
                 room-ref: ./reused-worker-dispatch-leaves-a-record/review/validation/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:reused-worker-dispatch-leaves-a-record:validation:1
+                briefing: briefing:reused-worker-dispatch-leaves-a-record:validation:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T14:29:05.494286Z"
+                decision: approve
+                reason: The Captain 「准」 (chat, 2026-10-28), answering FO's joint batch-9 delivery sitting of four gates whose ask was 「決定：四張全照建議（#743 合併、#744 接著合併、#742 我補一次再驗收、#745 提早跑第 4 輪訪談並照上面修）；如果哪張要改，直接說。」; accepts FO's recommendation for this task as stated in the gate question.
+              application:
+                target-stage: done
+                state: pending
 started: 2026-10-28T07:06:45Z
 worktree: .worktrees/spacedock-ensign-reused-worker-dispatch-leaves-a-record
 pr: iamcxa/kc-claude-plugins#743
