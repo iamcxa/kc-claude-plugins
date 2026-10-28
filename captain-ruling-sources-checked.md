@@ -26,6 +26,14 @@ gates:
               application:
                 target-stage: ideation
                 state: consumed
+        - id: gate:captain-ruling-sources-checked:ideation
+          stage: ideation
+          attempts:
+            - id: gate-attempt:captain-ruling-sources-checked-ideation-1
+              briefing:
+                id: briefing:captain-ruling-sources-checked:ideation:attempt-1:revision-1
+                digest: sha256:7c824a21837310a174a75d811108c7c35b19d5915cb0c7d5e5833bc9653e781d
+                room-ref: ./captain-ruling-sources-checked/review/ideation/briefing-1
 ---
 
 ## Scope

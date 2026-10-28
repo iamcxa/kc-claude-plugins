@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:captain-ruling-sources-checked:ideation:attempt-1:revision-1",
+  "question": "Hold captain-ruling-sources-checked at ideation and defer it? FO recommends hold; approving that recommendation keeps the design on file and builds nothing now. Reason (chief-engineer batch review): its own Stop condition fires (a declaration on every task; 18 active tasks would hold); the peers extension has said since 2026-10-27 \"never mark a peer claim direct\", after both bites; qnow, where it bit, runs 0.27.0, so the rule is untested where it bit. Reopen when that rule fails in an adopter that has it.",
+  "artifacts": [
+    {
+      "id": "artifact:captain-ruling-sources-checked:ideation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/6057cff3d347f1e45472c0f647fa03110e22161a/captain-ruling-sources-checked.md",
+      "rev": "sha256:1411009da7c7256a41f4c4e92c7baaca3001d7a6bab5d65e62400bf589f53b37",
+      "mediaType": "text/markdown",
+      "summary": "Design: a design_surfaces.py check refusing relayed rulings via a declared Origin field. Chief-engineer: defer; stop condition fired."
+    }
+  ]
+}
