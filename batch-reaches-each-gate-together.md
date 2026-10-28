@@ -15,6 +15,17 @@ gates:
                 id: briefing:batch-reaches-each-gate-together:backlog:attempt-1:revision-1
                 digest: sha256:75fa236d431a3f1bf2f93ffe8e25cd1cc12081a41231caba7741f35ae4df7e53
                 room-ref: ./batch-reaches-each-gate-together/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:batch-reaches-each-gate-together:backlog:1
+                briefing: briefing:batch-reaches-each-gate-together:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T05:39:03.680242Z"
+                decision: approve
+                reason: The Captain 「准」 (chat, 2026-10-28), answering FO's joint batch-9 backlog presentation of five gates whose ask was 「決定：五張全准進入設計階段；要拿掉或換掉哪張，直接說。」; accepts FO's recommendation to enter ideation on the pilot profile.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
