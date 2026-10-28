@@ -61,6 +61,11 @@ gates:
                 at: "2026-10-28T14:29:13.030894Z"
                 decision: hold
                 reason: The Captain 「准」 (chat, 2026-10-28), answering FO's joint batch-9 delivery sitting of four gates whose ask was 「決定：四張全照建議（#743 合併、#744 接著合併、#742 我補一次再驗收、#745 提早跑第 4 輪訪談並照上面修）；如果哪張要改，直接說。」; accepts FO's recommendation to hold this task at validation and the steps the gate question names.
+            - id: gate-attempt:paseo-codex-dispatch-practice-validation-2
+              briefing:
+                id: briefing:paseo-codex-dispatch-practice:validation:attempt-2:revision-1
+                digest: sha256:8642acb03b6e699d73660b69f3b1cba41f498110e9cdc37b4328ef77d0bbdaed
+                room-ref: ./paseo-codex-dispatch-practice/review/validation/briefing-2
 started: 2026-10-28T07:06:37Z
 worktree: .worktrees/spacedock-ensign-paseo-codex-dispatch-practice
 pr: iamcxa/kc-claude-plugins#742

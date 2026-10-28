@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-codex-dispatch-practice:validation:attempt-2:revision-1",
+  "question": "Approve validation of paseo-codex-dispatch-practice and merge iamcxa/kc-claude-plugins#742 at head 9a70a3350436fac9e51d0795b3b4299693f020f8 with `gh pr merge 742 --squash --match-head-commit 9a70a3350436fac9e51d0795b3b4299693f020f8`? FO recommends approve; approving accepts that recommendation, covers later external-review rounds on this PR, merging this full head after FO reruns delivery_gate.py check unless he says he merges or holds, and removing its clean, pushed worktree; FO merges this one PR only; every other PR, the Release PR included, is asked one at a time.",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-codex-dispatch-practice:validation:attempt-2:revision-1:item-1",
+      "uri": "git-root://state/f9cd8f92bd60c15085d8dfdc09d67f2acc87ccd9/paseo-codex-dispatch-practice.md",
+      "rev": "sha256:5d4b78776f31b8d93371750fee15a729e194957a44f20f0fc16a756bb752caa8",
+      "mediaType": "text/markdown",
+      "summary": "Sufficiency: under Captain amendment 1 the paseo extension states the Paseo Codex worker practice (worker placed in its worktree and commits locally; FO pushes, opens the Draft PR and runs RoboRev), docs/dev2/README.md lists paseo, and ADR 0042 records the exception narrowing ADR 0015; validation-4 PASSED, closing the evidence gap of validations 1 to 3 with FO's native trials (placement by --new-workspace local and by workspaceId, the generated prompt passed byte-for-byte, and build and spawn in one shell command).\nNecessity: three files (docs/adr/0042-paseo-codex-workers-hand-publication-and-local-review-to-fo.md, docs/dev2/README.md, kc-dev-flow-2/extensions/paseo/EXTENSION.md).\nExternal rounds: Codex 1 (code review completed with no findings, evidence=summary:6472742871@9a70a3350). RoboRev clean on this head, run by FO (evidence=roborev:1296).\nFO declines: Polish F2, reading totals counted an inline Extensions reference (corrected in validation-1, no budget or delta change); Polish F3, FO's first validation-4 receipt quoted its own writer (corrected with history kept before the verdict).\nSecond reviewer: copilot because the change moves PR publication and review from the worker to FO (merge and review rules).\ncopilot not run: \"Copilot was unable to review this pull request because the user who requested the review has insufficient remaining quot\"; answer=review:5684956869\nCopilot retry: available when the Captain confirms quota is back."
+    }
+  ]
+}

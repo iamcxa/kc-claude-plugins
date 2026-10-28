@@ -1,0 +1,19 @@
+{
+  "class": "never",
+  "head": "9a70a3350436fac9e51d0795b3b4299693f020f8",
+  "model": "not run",
+  "necessity": "three files (docs/adr/0042-paseo-codex-workers-hand-publication-and-local-review-to-fo.md, docs/dev2/README.md, kc-dev-flow-2/extensions/paseo/EXTENSION.md).",
+  "next": "next: merge this head if the approved question named the merge and he did not say he merges or holds, else ask for merge with this text. Every other PR, the Release PR included, is asked one at a time.",
+  "points": [
+    "point: not-run: 'copilot not run: \"Copilot was unable'",
+    "point: amendment: 'Amendment 1 dated 2026-10-28'",
+    "point: path: 'docs/adr/0042-paseo-codex-workers-hand-publication-and-local-review-to-fo.md'",
+    "point: path: 'docs/dev2/README.md'",
+    "point: path: 'kc-dev-flow-2/extensions/paseo/EXTENSION.md'",
+    "point: second-reviewer: 'copilot'"
+  ],
+  "pr": "iamcxa/kc-claude-plugins#742",
+  "sufficiency": "under Captain amendment 1 the paseo extension states the Paseo Codex worker practice (worker placed in its worktree and commits locally; FO pushes, opens the Draft PR and runs RoboRev), docs/dev2/READ",
+  "time": "2026-10-28T16:03:25Z",
+  "verdict": "ask"
+}
