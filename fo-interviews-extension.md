@@ -3,7 +3,7 @@ title: The dev2 maintainer interviews every FO each few batches about each exten
 variant: kc-dev-flow-2
 profile: pilot
 merge: pr
-status: implementation
+status: validation
 gates:
     version: 1
     records:
