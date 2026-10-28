@@ -754,6 +754,47 @@ def exercise(base, binary, sd_root):
             (base / f"{entity.stem}-{stage}.md").write_text(artifact.read_text())
             return re.search(r"^worktree:[ \t]*(.*)$", entity.read_text(), re.MULTILINE)[1]
 
+        workflow, first = seed("batch-authority", "ideation")
+        members = [first]
+        for label in ("revise", "hold", "unanswered"):
+            entity = first.with_name(first.stem + "-" + label + ".md")
+            entity.write_text(first.read_text().replace(first.stem, entity.stem))
+            members.append(entity)
+        run(["git", "-C", first.parent, "add", "--", *[e.name for e in members]])
+        run(["git", "-C", first.parent, "commit", "-m", "test: synthetic batch membership"])
+        for entity in members:
+            synthetic_report(entity, "ideation")
+            run([binary, "gate", "prepare", entity.stem, "--workflow-dir", workflow,
+                 "--question", f"Synthetic batch question for {entity.stem}?", "--artifact", entity,
+                 "--summary", "SYNTHETIC batch fixture; no human approval."], workflow)
+            run([binary, "state", "commit", entity.stem, "--workflow-dir", workflow], workflow)
+        (base / "batch-sitting.md").write_text("SYNTHETIC one-sitting presentation; no human acceptance.\n" +
+                                                 "\n".join(e.read_text() for e in members))
+        for entity, decision in zip(members, ("approve", "revise", "hold")):
+            run([binary, "gate", "record", entity.stem, "--workflow-dir", workflow,
+                 "--decision", decision, "--actor", "person:captain",
+                 "--reason", "SYNTHETIC mapped answer only; no real grant."], workflow)
+        for entity in members[1:]:
+            before = entity.read_bytes()
+            refused = run([binary, "gate", "consume", entity.stem, "--workflow-dir", workflow],
+                          workflow, expected=None)
+            assert refused.returncode != 0, (entity, refused.stdout)
+            assert entity.read_bytes() == before, entity
+        approved = first.read_text()
+        stale, count = re.subn(r"(?m)^(\s+briefing:) briefing:[^\n]+$",
+                               r"\1 briefing:stale-fixture", approved, count=1)
+        assert count == 1
+        first.write_text(stale)
+        refused = run([binary, "gate", "consume", first.stem, "--workflow-dir", workflow],
+                      workflow, expected=None)
+        assert refused.returncode != 0, refused.stdout
+        first.write_text(approved)
+        resumed = run([binary, "gate", "consume", first.stem, "--workflow-dir", workflow], workflow)
+        assert "target-stage=implementation" in resumed.stdout
+        before = first.read_bytes()
+        run([binary, "gate", "consume", first.stem, "--workflow-dir", workflow], workflow, expected=None)
+        assert first.read_bytes() == before, "resume duplicated a resolution"
+
         for profile in ("poc", "pilot", "prod"):
             workflow, entity = seed(f"route-{profile}", "backlog", profile=profile)
             boot = run([binary, "status", "--workflow-dir", workflow, "--boot"], workflow).stdout
@@ -785,6 +826,25 @@ def exercise(base, binary, sd_root):
             assert entity.exists() and "status: validation" in entity.read_text()
             assert run(["git", "-C", workflow, "rev-parse", "HEAD"]).stdout == code_head
             assert not run(["git", "-C", workflow, "status", "--porcelain"]).stdout.strip()
+
+        batch_section = re.search(r"\n## Batch gates\n.*?(?=\n## )", TEMPLATE.read_text(), re.DOTALL)[0]
+        without_batch = TEMPLATE.read_text().replace(batch_section, "", 1)
+        for profile in ("pilot", "poc"):
+            stages = ("implementation", "validation") if profile == "poc" else STAGES
+            workflow, _ = seed(f"batch-context-{profile}", "implementation", profile=profile)
+            baseline, _ = seed(f"batch-context-base-{profile}", "implementation",
+                               derive(without_batch) if profile == "poc" else without_batch, profile=profile)
+            for stage in stages:
+                command = [binary, "dispatch", "show-stage-def", "--stage", stage, "--workflow-dir"]
+                actual = run([*command, workflow], workflow).stdout
+                assert actual == run([*command, baseline], baseline).stdout, (profile, stage)
+                assert "## Batch gates" not in actual
+            leaked = re.sub(r"(    - name: implementation\n.*?        - Number guards\n)",
+                            r"\1        - Batch gates\n", route_definition(profile), count=1, flags=re.DOTALL)
+            mutation, _ = seed(f"batch-context-leak-{profile}", "implementation", leaked, profile=profile)
+            output = run([binary, "dispatch", "show-stage-def", "--stage", "implementation",
+                          "--workflow-dir", mutation], mutation).stdout
+            assert "## Batch gates" in output, "worker-inline mutation did not reach the boundary"
 
         workflow, entity = seed("failed-none", "implementation")
         stamped(workflow, entity, "implementation")
@@ -915,6 +975,8 @@ def exercise(base, binary, sd_root):
         print("PASS: native flat/folder slug creation with omitted/matching id passes the seed check; missing Budget and all template placeholders refuse; mismatching native id refuses")
         print("PASS: criteria and amendment fixtures agree with the real --ac-scan and design_surfaces.py check; the backlog stage definition prints the seed check and a copy without it does not")
         print("PASS: the package mod sorts before pr-merge.md in the idle and startup lines and adds no merge hook, merge guard still arms pr-merge, a recorded pr arms no hook, and no mod names a package script that does not exist")
+        print("PASS: Batch gates survives POC derivation but changes no pilot/POC worker stage definition; inlining mutations reach both implementation definitions")
+        print("PASS: four separately prepared/committed batch gates retain mapped approve/revise/hold/unanswered authority; stale-binding mutation refuses; resumed approval advances its own task without duplicate resolution")
         print("Not run: skill discovery/reading, worker execution, human gates, delivery hook body or remote merge")
     finally:
         for artifact in artifacts:

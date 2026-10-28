@@ -58,6 +58,13 @@ class DeriveTests(unittest.TestCase):
         import re
         self.assertEqual(re.findall(r"\]\((?!https?://)[^)#]+\)", SOURCE), [])
 
+    def test_batch_presentation_survives_poc_derivation_outside_worker_context(self):
+        section = SOURCE.split("\n## Batch gates\n", 1)[1].split("\n## ", 1)[0]
+        self.assertIn("## Batch gates\n" + section, poc.derive(SOURCE))
+        self.assertIn("present the batch in one sitting", section)
+        self.assertIn("Unbatched tasks retain ordinary gates", section)
+        self.assertNotIn("        - Batch gates", poc.derive(SOURCE))
+
     def test_check_reports_drift_and_accepts_a_fresh_derivation(self):
         with tempfile.TemporaryDirectory() as d:
             five, poc_path = Path(d, "five.md"), Path(d, "poc.md")
