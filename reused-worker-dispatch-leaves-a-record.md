@@ -321,3 +321,60 @@ Design completed: 4 dispatched checklist items done, 7 future implementation-ver
 
 Implemented coverage and the task-scan reminder at ea84b08d4c726e33460609b2247599afb2d54c2b, with legacy behavior unchanged across 448 task files and the historical omission caught. FO must open the Draft PR using /tmp/impl-reused-worker-dispatch-leaves-a-record-pr.md, run RoboRev and read CI; joint workflow/budget files must be reconciled with the batch task on the eventual merge base.
 ADRs: none: the approved design introduces no new enduring ruling; amendment 1 applies the existing workflow-budget and structured-check decisions.
+
+## Validation acceptance — PR 743 at ea84b08d4
+
+No user-visible screen changed. Prerequisites: the named local repository contains this commit, Python 3 and Git are installed, and the named Codex package 0.32.1 is present. Run these five numbered steps together in a fresh `bash --noprofile --norc` shell; they take under five minutes and contact no provider. They exercise local missing-record recovery and idle/provider-failure behavior, not native model compliance, real message interception, adoption or hosted delivery.
+
+```bash
+# 1. Create a disposable checkout of the exact candidate.
+set -eu
+REPO=/Users/kent/conductor/workspaces/kc-claude-plugins/colombo/.context/dev2-adoption/worktree/.worktrees/spacedock-ensign-reused-worker-dispatch-leaves-a-record
+ACCEPT_ROOT=$(mktemp -d /tmp/pr743-acceptance.XXXXXX)
+git -C "$REPO" worktree add --detach "$ACCEPT_ROOT/candidate" ea84b08d4c726e33460609b2247599afb2d54c2b
+cd "$ACCEPT_ROOT/candidate"
+# 2. Show missing stages hold advancement and correct records clear the hold.
+python3 -B kc-dev-flow-2/scripts/test_dispatch_records.py CoverageTests.test_historical_064e61a15_redacted_replay_stops_before_advancement_and_gate -v
+# 3. Show the reminder works without a directory or PR and survives provider failure.
+python3 -B kc-dev-flow-2/scripts/test_pr_watch.py TasksTests.test_coverage_without_directory_or_pr_and_with_provider_failure TasksTests.test_coverage_clean_folder_task_and_not_due_add_no_line -v
+# 4. Check the approved word budget and decision records.
+python3 -B kc-dev-flow-2/scripts/lint-skills.py
+python3 -B /Users/kent/.codex/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since e57feb6eec956b74a1d4b29f26f1d0a7d1693785
+# 5. Remove this disposable checkout.
+cd /tmp
+git -C "$REPO" worktree remove "$ACCEPT_ROOT/candidate"
+rmdir "$ACCEPT_ROOT"
+printf 'Acceptance complete; disposable checkout removed.\n'
+```
+
+Observed exactly as written in a fresh Bash shell: step 1 checked out `ea84b08d4`; step 2 ran 1 test, OK (0.254s); step 3 ran 2 tests, OK (0.953s); step 4 printed `PASS: basic frontmatter, declared profile routes, role bindings and package script paths`, `5605 of 5605 words`, and `40 ADR file(s) checked, 0 legacy`; step 5 printed `Acceptance complete; disposable checkout removed.`. Every command exited 0. Initial sandbox execution could not create Git worktree metadata; the unchanged script passed under the approved execution permission.
+
+## Stage Report: validation
+
+- DONE: Independent verdict on PR #743 head ea84b08d against every acceptance criterion in the task file, re-running each evidence command and at least one falsifier per criterion yourself, and judging each limit the implementation report states
+  PASSED at ea84b08d4c726e33460609b2247599afb2d54c2b against base e57feb6eec956b74a1d4b29f26f1d0a7d1693785; independent detached checkout, retained AC-3 through AC-7 exercised below; no product changes.
+- DONE: Captain amendment 1 applies (--before-send dropped; AC-1 and AC-2 superseded with no replacement); RoboRev evidence=roborev:1297 clean on ea84b08d4, run by FO; PR #743 is the base of a stacked batch-reaches-each-gate-together PR
+  Applied the recorded amendment, including its narrowed Design block at state 16129ea4c; RoboRev and four passing hosted checks are FO-provided evidence, not independently rerun. The stacked batch task owns its later combined head and joint budget reconciliation.
+- DONE: A minimal acceptance script the Captain can run (three to six steps, exact commands, expected output), run by you exactly as written in a fresh bash shell, with its observed output; /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1/scripts/adr_lint.py docs/adr --since <base> with its exit code; your verdict naming the head, with findings classified by the workflow's Review-finding disposition
+  Five steps and expected/observed output are immediately above; the dispatch-authorized identical Codex package supplied adr_lint.py: exit 0, 40 records, 0 legacy. Findings: Material 0, Deferred risk 0, Polish 0, Needs decision 0.
+- DONE: AC-3 — historical missed stages, stop and recovery
+  Re-exported actual state 064e61a15: base default exit 0 / two complete ideation records; candidate implementation and validation coverage exit 1, naming each gap. The committed redacted test proves no fake advance/gate before recovery; accepting any-stage records causes its forbidden-advance assertion to fail.
+- DONE: AC-4 — unchanged legacy modes and four pinned state corpora
+  Re-ran default/--names/--newest exit/stdout/stderr comparisons at all four design pins: 2,055 identical results, including 2 state README documents (446 task files; implementation's 448 count included those READMEs). All 29 live recorded tasks pass; only the two previously named no-record tasks are missing. Mutating empty --newest to exit 1 fails NewestTests.
+- DONE: AC-5 — bounded grammar, current-stage scope and read errors
+  All 60 dispatch tests pass for both layouts, backtick/tilde fences, exact stages, message filenames, repaired reports, no report and exit-2 errors; removing fence filtering and counting reports each causes the relevant assertion to fail. No cycle-to-message identity or content validity is claimed by presence.
+- DONE: AC-6 — idle integration without directory, PR or provider
+  All 129 pr_watch tests pass, including one local reminder without a directory/PR, none when covered/not due, retained provider-error exit 2 and task-read error routing; reinstating the directory guard makes the no-directory assertion fail. Gate-time behavior is separately exercised by AC-3.
+- DONE: AC-7 — authority, instruction costs, retained rules and flow
+  Independently counted 5,576 -> 5,605 workflow words (+29), tied to the recorded joint Captain approval; completion passage 22+7 words, sends +0, idle +0 clean/+20 per gap, merge/archive +0. Coverage stdout complete/not-due/missing/error = 4/5/12/8 words, stderr 0; stage-def bytes unchanged at 630/1,365/1,550 words. Eight mutation probes total reject their intended defect, including missing pre-gate phrase, pointer prohibition and Captain quote.
+  Derived POC tests retain coverage and pointer wording; Mermaid CLI 12.0.0 rendered the implementation's amended flow and visual inspection confirms report-before-check, task-specific hold, truthful recovery and Captain gate. This disposable diagram interprets amendment 1; the original pre-amendment diagram is not evidence for a retained before-send feature.
+- DONE: Required checks and retained documents
+  test_laws_check 44, test_poc_readme 7, test_lint_skills 45 and repository lint pass; test_sd_dispatch passes 10 real route/stage/host handoffs and 45 wording controls with CLI 0.27.2 and explicitly supplied plugin 0.27.3. ADR/number/design/dispatch checks pass; comment ratio is 209 code lines, 0 comments, 0.0% <= 5%; no CI trigger changed and CI cost per PR was not measured.
+  doc_impact repeats the same six paths; all unaffected rationales hold: ADR 0020 equality/quote rule, ADR 0037 Team transport, package README maintenance/bounded evidence, adoption derivation/sync, maintain-flow budget/replay, and learning's retained compatibility rules. No ADR is reserved or introduced.
+- DONE: Implementation limits, sufficient outcome and minimal scope
+  The historical omission is caught at the accepted local seam; coverage/caller, regression tests and workflow/budget controls account for all seven changed paths. Package checks can still be skipped, an older same-stage record can cover later unrecorded messages, and presence is not a send receipt; these are accepted boundaries, not repaired or expanded scope.
+  Implementation's daemon/PR/CI limitations were subsequently resolved by FO's supplied evidence; no independent GitHub/provider verification, real host interception, native model execution, release, adoption or merge is claimed. Eventual stacked-head validation and delivery remain FO-owned. Local reproduction logs and disposable probes are under /tmp/pr743-validation-evidence; unchanged candidate and source worktree verified clean before cleanup.
+
+### Summary
+
+PASSED for PR #743 at ea84b08d4c726e33460609b2247599afb2d54c2b within the amended Pilot boundary. The historical gap, legacy compatibility, bounded grammar, provider-independent reminder and approved reading cost have independent positive and negative evidence; the fresh-shell acceptance script passed. FO retains gate and delivery authority, including the later stacked candidate and joint budget.
