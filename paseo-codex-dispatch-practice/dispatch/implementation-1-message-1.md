@@ -16,3 +16,5 @@ Hand off branch, base, full head SHA and PR text path in the stage report
 Package root: /Users/kent/.claude/plugins/cache/kc-claude-plugins/kc-dev-flow-2/0.32.1
 
 This message supersedes implementation-1's checklist line "push without force and without -u" for this task only, because the approved design (AC-3) makes FO the only publisher. Everything else in implementation-1 stands. Never run `git remote set-url` or any `git config` write in a worktree of this repository.
+
+Send your completion message to `main` (the README's Dispatch facts: `team-lead` is not registered here); through Paseo, your final reply is that message.
