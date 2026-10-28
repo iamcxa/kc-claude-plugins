@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:paseo-codex-dispatch-practice:backlog:attempt-1:revision-1",
+  "question": "Approve the backlog of paseo-codex-dispatch-practice to enter ideation on the pilot profile? FO recommends approve; approving accepts that recommendation: the outcome is that the paseo extension states how FO dispatches a Codex worker through Paseo (worker commits locally; FO pushes, opens the PR and runs RoboRev; the worker works in its worktree); profile pilot (package rules and scripts, reversible, no product code).",
+  "artifacts": [
+    {
+      "id": "artifact:paseo-codex-dispatch-practice:backlog:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/4e0288f1003e64738b8e17cdbe6c9d6c7dcbe8ee/paseo-codex-dispatch-practice.md",
+      "rev": "sha256:3aa4412f55c60ba37d24d177f7471795d48818e60b70ee91d28237f8facc8f82",
+      "mediaType": "text/markdown",
+      "summary": "Bite: batches 7 and 8: Paseo Codex workers could not reach the GitHub API or RoboRev, and relay's workers ran from the FO workspace with dozens of permission prompts. Ideation owes whether Paseo can set the worker's directory."
+    }
+  ]
+}

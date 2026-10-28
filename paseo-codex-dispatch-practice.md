@@ -4,6 +4,17 @@ variant: kc-dev-flow-2
 profile: pilot
 merge: pr
 status: backlog
+gates:
+    version: 1
+    records:
+        - id: gate:paseo-codex-dispatch-practice:backlog
+          stage: backlog
+          attempts:
+            - id: gate-attempt:paseo-codex-dispatch-practice-backlog-1
+              briefing:
+                id: briefing:paseo-codex-dispatch-practice:backlog:attempt-1:revision-1
+                digest: sha256:bbb9dbd400df56b0fd0e3110c9c7021cce95e6d93a26fd82653a5cd8ebe9f16f
+                room-ref: ./paseo-codex-dispatch-practice/review/backlog/briefing-1
 ---
 
 ## Scope
