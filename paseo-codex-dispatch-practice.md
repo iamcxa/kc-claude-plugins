@@ -15,6 +15,17 @@ gates:
                 id: briefing:paseo-codex-dispatch-practice:backlog:attempt-1:revision-1
                 digest: sha256:bbb9dbd400df56b0fd0e3110c9c7021cce95e6d93a26fd82653a5cd8ebe9f16f
                 room-ref: ./paseo-codex-dispatch-practice/review/backlog/briefing-1
+              resolution:
+                type: Resolution
+                id: resolution:spacedock:paseo-codex-dispatch-practice:backlog:1
+                briefing: briefing:paseo-codex-dispatch-practice:backlog:attempt-1:revision-1
+                by: person:captain
+                at: "2026-10-28T05:38:51.707782Z"
+                decision: approve
+                reason: The Captain 「准」 (chat, 2026-10-28), answering FO's joint batch-9 backlog presentation of five gates whose ask was 「決定：五張全准進入設計階段；要拿掉或換掉哪張，直接說。」; accepts FO's recommendation to enter ideation on the pilot profile.
+              application:
+                target-stage: ideation
+                state: pending
 ---
 
 ## Scope
