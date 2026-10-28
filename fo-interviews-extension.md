@@ -45,6 +45,14 @@ gates:
               application:
                 target-stage: implementation
                 state: consumed
+        - id: gate:fo-interviews-extension:validation
+          stage: validation
+          attempts:
+            - id: gate-attempt:fo-interviews-extension-validation-1
+              briefing:
+                id: briefing:fo-interviews-extension:validation:attempt-1:revision-1
+                digest: sha256:f0435a58ebd588865391a6df7423c3db22b593e81a068cd2f36feec89cedab18
+                room-ref: ./fo-interviews-extension/review/validation/briefing-1
 started: 2026-10-28T07:45:45Z
 worktree: .worktrees/spacedock-ensign-fo-interviews-extension
 pr: iamcxa/kc-claude-plugins#745

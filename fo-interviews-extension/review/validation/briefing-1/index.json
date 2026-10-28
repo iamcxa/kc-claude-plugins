@@ -1,0 +1,15 @@
+{
+  "type": "Briefing",
+  "version": "1",
+  "id": "briefing:fo-interviews-extension:validation:attempt-1:revision-1",
+  "question": "Hold fo-interviews-extension at validation until it has operational evidence? FO recommends hold; approving accepts it and these four steps: the Captain asks for an early targeted interview round 4 under the candidate extension text (one or two extensions, the five FOs, about ten bundled sends, no test agents) as the evidence validation found missing; a repair lists `fo-feedback` in this workflow's README `extensions:` and removes the 30-mutation claim from the PR body (validation inverted the policy and those fixtures still passed); AC-2's live three-batch cadence is shown at the first due round, not before merge, recorded as a Captain amendment; #745 merges after #744, whose batch rule it reads. F2 is declined (adr_lint.py --require names the ADRs a change adds or updates; #745 adds or updates none).",
+  "artifacts": [
+    {
+      "id": "artifact:fo-interviews-extension:validation:attempt-1:revision-1:item-1",
+      "uri": "git-root://state/a02f33f8bc546df48cf0cdbc4c8bceff7a4436a4/fo-interviews-extension.md",
+      "rev": "sha256:32e9f7f1b4f89970834fbedb1c640a86b72324964ac803b6645fcd10c44cf693",
+      "mediaType": "text/markdown",
+      "summary": "Validation REJECTED: the four package docs match amendment 1 and local checks pass, but no real interview round has run under the extension (F1), and the fixture controls did not read the policy text (chief-engineer, validation/policy-mutant.txt). Engineering-reviewer: the build keeps the roster and visibility rules the Captain kept."
+    }
+  ]
+}
