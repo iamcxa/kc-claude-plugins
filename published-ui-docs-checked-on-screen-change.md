@@ -13,6 +13,7 @@ status: backlog
 - Bite: none yet. The adopter FO will send the first real staleness event; until then the adopter carries a dispatch line on its ui tasks and walks the pages at release acceptance.
 - Upstream first: `scripts/doc_impact.py` catches docs naming changed paths or code identifiers, not UI labels, step wording or screenshots; `extensions/release-acceptance` walks the release, not the docs; e2e-pipeline `e2e-doc-sync` covers that plugin's own docs only.
 
+- Added 2026-10-28: the Captain (chat, this session): 「你有收到 paseo fo 跟你討論是否可以設計一個 local ext 的模式嗎？例如管理該 repo 專有的 doc site？我不太確定是否適合，你可再跟他討論看看，例如讓他 dogfood 一兩輪，再主動跟你討論」. FO asked the project-env FO the same day to run its doc-site check as a repo-local extension (a file in its own repository, loaded by a dispatch line) for one or two rounds and then report what it caught, what it cost, and what the package would need for a local extension; the package has no repo-local extension today.
 ## Non-goals
 
 - Writing or rewriting user docs; checking docs for screens the task did not change.
