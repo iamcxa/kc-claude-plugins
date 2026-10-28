@@ -1,0 +1,52 @@
+[1028/153421.943347:ERROR:electron/shell/common/mac/codesign_util.cc:79] task_name_for_pid: (os/kern) failure (5)
+Usage: paseo agent run [options] <prompt>
+
+Create and start an agent with a task
+
+Arguments:
+  prompt                            The task/prompt for the agent
+
+Options:
+  --no-wait                         Return immediately without waiting for
+                                    completion
+  --title <title>                   Assign a title to the agent
+  --provider <provider>             Agent provider, or provider/model (e.g.
+                                    codex or codex/gpt-5.4)
+  --model <model>                   Model to use (e.g.,
+                                    claude-sonnet-4-20250514,
+                                    claude-3-5-haiku-20241022)
+  --thinking <id>                   Thinking option ID to use for this run
+  --mode <mode>                     Provider-specific mode (e.g., plan,
+                                    default, bypass)
+  --new-workspace <local|worktree>  Create a separate local or worktree
+                                    workspace
+  --worktree-mode <mode>            Worktree mode: branch-off, checkout-branch,
+                                    or checkout-pr
+  --worktree-slug <slug>            Managed worktree path slug
+  --new-branch <name>               New branch name for branch-off mode
+  --base <ref>                      Base ref for branch-off mode
+  --branch <name>                   Existing branch for checkout-branch mode
+  --pr-number <n>                   Pull request or change request number for
+                                    checkout-pr mode
+  --forge <forge>                   Forge for checkout-pr mode
+  --workspace <id>                  Run in an existing workspace (defaults to
+                                    the caller workspace when agent-scoped)
+  --image <path>                    Attach image(s) to the initial prompt (can
+                                    be used multiple times) (default: [])
+  --cwd <path>                      Working directory (default: current)
+  --env <key=value>                 Set environment variable(s) for the agent
+                                    process (can be used multiple times)
+                                    (default: [])
+  --label <key=value>               Add label(s) to the agent (can be used
+                                    multiple times) (default: [])
+  --wait-timeout <duration>         Maximum time to wait for agent to finish
+                                    (e.g., 30s, 5m, 1h). Default: no limit
+  --output-schema <schema>          Output JSON matching the provided schema
+                                    file path or inline JSON schema
+  --json                            Output in JSON format
+  --host <host>                     Explicit daemon endpoint: host:port, TCP,
+                                    socket, SSH, or pairing URL (default: local
+                                    home)
+  --home <path>                     Select a local daemon home (default:
+                                    ~/.paseo)
+  -h, --help                        display help for command
